@@ -9,6 +9,12 @@ import javax.swing.filechooser.FileFilter;
 
 import oripa.ORIPA;
 
+/**
+ * 
+ * @author OUCHI Koji
+ *
+ */
+
 public class FileChooser extends JFileChooser {
 	
 	public FileChooser() {
@@ -35,34 +41,36 @@ public class FileChooser extends JFileChooser {
 	}
 	
 	
+	public String replaceExtension(String path, String ext){
+		
+		String path_new = new String(path);
+	
+		path_new.replaceAll("\\.\\w+$", "");
+		path_new += ext;
+
+		return path_new;
+	}
+	
 	/**
 	 * this method does not change {@code path}.
 	 * @param path 
 	 * @param ext ex) ".png"
 	 * @return path string with new extension
 	 */
-	public static String correctExtension(String path, String[] extensions){
+	public String correctExtension(String path, String[] extensions){
 		
 		String path_new = new String(path);
 
-		if(extensions.length == 1){
-			String ext = extensions[0];
-	
-			path_new.replaceAll("\\.\\w+$", "");
-			path_new += ext;
+		boolean isCorrect = false;
+		for (int i = 0; i < extensions.length; i++) {
+			if(path.endsWith(extensions[i])){
+				isCorrect = true;
+				break;
+			}
 		}
-		else {
-			boolean isCorrect = false;
-			for (int i = 0; i < extensions.length; i++) {
-				if(path.endsWith(extensions[i])){
-					isCorrect = true;
-					break;
-				}
-			}
-			
-			if(isCorrect == false){
-				return null;
-			}
+		
+		if(isCorrect == false){
+			path_new = replaceExtension(path_new, extensions[0]);
 		}
 		
 		

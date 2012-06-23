@@ -2,6 +2,11 @@ package oripa.file;
 
 public class FileFilterEx extends javax.swing.filechooser.FileFilter {
 
+	/**
+	 * 
+	 * @author OUCHI Koji
+	 *
+	 */
     public interface SavingAction {
     	public boolean save(String path);
     }

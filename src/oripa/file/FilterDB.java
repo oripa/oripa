@@ -10,22 +10,28 @@ import oripa.ExporterSVG;
 import oripa.ORIPA;
 import oripa.file.FileFilterEx.SavingAction;
 
+
+/**
+ * 
+ * @author OUCHI Koji
+ *
+ */
 public class FilterDB {
 
 	private HashMap<String, FileFilterEx> filters = new HashMap<>();
 	
 	public FilterDB(){
 		
-		this.putFilter("ORIPA_File", 
+		this.putFilter("opx", 
 	    		new FileFilterEx(
 	    				new String[]{".opx"}, 
 	    				"(*.opx) " + ORIPA.res.getString("ORIPA_File")
 	    				));
 	                    
-		this.putFilter("Picture_File",
+		this.putFilter("pict",
 				new FileFilterEx(
-			    		new String[]{".jpg", ".png"}, 
-	            		"(*.jpg, *.png) " + ORIPA.res.getString("Picture_File")					
+			    		new String[]{".png", ".jpg"}, 
+	            		"(*.png, *.jpg) " + ORIPA.res.getString("Picture_File")					
 	    				));
 
 	

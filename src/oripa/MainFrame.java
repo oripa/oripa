@@ -44,8 +44,13 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 	private JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
 	private JMenuItem menuItemClear = new JMenuItem(ORIPA.res.getString("New"));
 	private JMenuItem menuItemOpen = new JMenuItem(ORIPA.res.getString("Open"));
+	
 	private JMenuItem menuItemSave = new JMenuItem(ORIPA.res.getString("Save"));
 	private JMenuItem menuItemSaveAs = new JMenuItem(ORIPA.res.getString("SaveAs"));
+	private JMenuItem menuItemSaveAsImage = new JMenuItem(ORIPA.res.getString("SaveAsImage"));
+
+	
+	
 	private JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
 	private JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
 	private JMenuItem menuItemExportCP = new JMenuItem("Export CP");
@@ -73,8 +78,8 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 	private FilterDB filterDB = new FilterDB();
 	private FileFilterEx[] fileFilters = new FileFilterEx[]{
 
-			filterDB.getFilter("ORIPA_File"),
-			filterDB.getFilter("Picture_File")
+			filterDB.getFilter("opx"),
+			filterDB.getFilter("pict")
 	};
 
 
@@ -96,6 +101,7 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 		menuItemSave.addActionListener(this);
 		menuItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		menuItemSaveAs.addActionListener(this);
+		menuItemSaveAsImage.addActionListener(this);
 		menuItemExit.addActionListener(this);
 		menuItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
 		menuItemUndo.addActionListener(this);
@@ -198,7 +204,7 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 
 	private void addSavingActions(){
 		
-		filterDB.getFilter("ORIPA_File").setSavingAction(
+		filterDB.getFilter("opx").setSavingAction(
 				new SavingAction() {
 
 					@Override
@@ -209,7 +215,7 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 				}
 				);
 
-		filterDB.getFilter("Picture_File").setSavingAction(
+		filterDB.getFilter("pict").setSavingAction(
 				new SavingAction() {
 
 					@Override
@@ -400,12 +406,14 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 			if (!(ORIPA.doc.dataFilePath).equals("")) {
 				saveOpxFile(ORIPA.doc.dataFilePath);
 			} else {
-				saveFile();
+				saveOpxFile(lastPath);
 				updateTitleText();
 			}
 		} else if (e.getSource() == menuItemSaveAs) {
-			saveFile();
+			lastPath = saveFile(lastPath, fileFilters);
 			updateTitleText();
+		} else if (e.getSource() == menuItemSaveAsImage) {
+			saveFile(null, new FileFilterEx[]{filterDB.getFilter("pict")});
 		} else if (e.getSource() == menuItemExportDXF) {
 			exportFile("dxf");
 		} else if (e.getSource() == menuItemExportOBJ) {
@@ -479,6 +487,28 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 		setTitle(fileName + " - " + ORIPA.TITLE);
 	}
 
+
+
+	private String saveFile(String homePath, FileFilterEx[] filters) {
+		FileChooserFactory chooserFactory = new FileChooserFactory();
+		FileChooser chooser = 
+				chooserFactory.createChooser(homePath, filters);
+
+		String path = chooser.saveFile(this);
+		if(path != null){
+			if(path.endsWith(".opx")){
+				updateMenu(path);
+			}
+		}
+		else{
+			path = homePath;
+		}
+		
+		return path;
+
+	}
+
+	
 	public void exportFile(String ext) {
 		if ("obj".equals(ext)) {
 			if (!ORIPA.doc.hasModel) {
@@ -490,13 +520,8 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 				}
 			}
 		}
-
-		FileChooserFactory choosingTool = new FileChooserFactory();
-		FileChooser  chooser = choosingTool.createChooser(null, 
-				new FileFilterEx[]{filterDB.getFilter(ext)});
-
-		String filePath = chooser.saveFile(this);
-				lastPath = filePath;
+		
+		saveFile(null, new FileFilterEx[]{filterDB.getFilter(ext)});
 	}
 
 	private void buildMenuFile() {
@@ -506,6 +531,7 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 		menuFile.add(menuItemOpen);
 		menuFile.add(menuItemSave);
 		menuFile.add(menuItemSaveAs);
+		menuFile.add(menuItemSaveAsImage);
 		menuFile.add(menuItemExportDXF);
 		menuFile.add(menuItemExportOBJ);
 		menuFile.add(menuItemExportCP);
@@ -564,23 +590,6 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 		}
 	}
 
-
-
-	private void saveFile() {
-		FileChooserFactory choosingTool = new FileChooserFactory();
-
-		FileChooser chooser = 
-				choosingTool.createChooser(lastPath, fileFilters);
-
-		String path = chooser.saveFile(this);
-		if(path != null){
-			if(path.endsWith(".opx")){
-				updateMenu(path);
-			}
-			lastPath = path;
-
-		}
-	}
 
 
 

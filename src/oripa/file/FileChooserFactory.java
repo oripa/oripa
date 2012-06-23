@@ -19,6 +19,7 @@ public class FileChooserFactory {
 	createChooser(String path, FileFilterEx[] filters){
 
 		FileChooser fileChooser;
+		
 		if(path != null){
 			fileChooser = new FileChooser(path);
 		}
@@ -30,6 +31,9 @@ public class FileChooserFactory {
 			fileChooser.addChoosableFileFilter(filters[i]);			
 		}
 
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.setFileFilter(filters[0]);
+		
 		return  fileChooser;
 	}
 
