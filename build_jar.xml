@@ -3,7 +3,7 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="create_run_jar">
-        <jar destfile="C:/Users/koji/workspace/java/oripas/oripaS.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="C:/Users/koji/workspace/java/oripaS.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="oripa.ORIPA"/>
                 <attribute name="Class-Path" value="."/>
