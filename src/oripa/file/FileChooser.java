@@ -17,6 +17,12 @@ import oripa.ORIPA;
 
 public class FileChooser extends JFileChooser {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4700305827321319095L;
+
+
 	public FileChooser() {
 	
 		super();
@@ -24,7 +30,14 @@ public class FileChooser extends JFileChooser {
 	
 	public FileChooser(String path) {
 		super(path);
+		String trimmedPath = replaceExtension(path, "");
 		
+
+//		File file = new File(trimmedPath);
+		File file = new File(path);
+		this.setSelectedFile(file);
+		
+		System.out.println(path);
 	}
 
 	/**
@@ -43,9 +56,9 @@ public class FileChooser extends JFileChooser {
 	
 	public String replaceExtension(String path, String ext){
 		
-		String path_new = new String(path);
+		String path_new;
 	
-		path_new.replaceAll("\\.\\w+$", "");
+		path_new = path.replaceAll("\\.\\w+$", "");
 		path_new += ext;
 
 		return path_new;
@@ -80,6 +93,7 @@ public class FileChooser extends JFileChooser {
 
 	public String saveFile(Component parent) {
 
+		
 		if (JFileChooser.APPROVE_OPTION != this.showSaveDialog(parent)) {
         	return null;
         }

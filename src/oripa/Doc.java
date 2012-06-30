@@ -18,6 +18,7 @@
 
 package oripa;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -103,6 +104,22 @@ public class Doc {
         lines.add(l3);
     }
 
+    public void setDataFilePath(String path){
+    	this.dataFilePath = path;
+    }
+    
+    public String getDataFilePath(){
+    	return dataFilePath;
+    }
+    
+    public String getDataFileName(){
+		File file = new File(ORIPA.doc.dataFilePath);
+		String fileName = file.getName();
+
+		return fileName;
+    	
+    }
+    
     public void setNextORMat() {
         if (currentORmatIndex < overlapRelations.size() - 1) {
             currentORmatIndex++;

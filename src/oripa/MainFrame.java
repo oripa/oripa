@@ -398,22 +398,31 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 			}
 		}
 
+		File lastFile = new File(lastPath);
+		String lastDirectory = lastFile.getParent();
+		
 		if (e.getSource() == menuItemOpen) {
 			fileOpen();
 			mainScreen.repaint();
 			updateTitleText();
 		} else if (e.getSource() == menuItemSave) {
 			if (!(ORIPA.doc.dataFilePath).equals("")) {
-				saveOpxFile(ORIPA.doc.dataFilePath);
+				saveOpxFile(ORIPA.doc.getDataFilePath());
 			} else {
 				saveOpxFile(lastPath);
 				updateTitleText();
 			}
 		} else if (e.getSource() == menuItemSaveAs) {
-			lastPath = saveFile(lastPath, fileFilters);
+
+			lastPath = saveFile(
+					lastDirectory, ORIPA.doc.getDataFileName(), fileFilters);
 			updateTitleText();
+
 		} else if (e.getSource() == menuItemSaveAsImage) {
-			saveFile(null, new FileFilterEx[]{filterDB.getFilter("pict")});
+			
+			saveFile(lastDirectory, ORIPA.doc.getDataFileName(), 
+					new FileFilterEx[]{filterDB.getFilter("pict")});
+			
 		} else if (e.getSource() == menuItemExportDXF) {
 			exportFile("dxf");
 		} else if (e.getSource() == menuItemExportOBJ) {
@@ -475,19 +484,27 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 
 	}
 
+	
 	public void updateTitleText() {
 		String fileName;
 		if ((ORIPA.doc.dataFilePath).equals("")) {
 			fileName = ORIPA.res.getString("DefaultFileName");
 		} else {
-			File file = new File(ORIPA.doc.dataFilePath);
-			fileName = file.getName();
+			fileName = ORIPA.doc.getDataFileName();
 		}
 
 		setTitle(fileName + " - " + ORIPA.TITLE);
 	}
 
 
+	
+	private String saveFile(String directory, String fileName, 
+			FileFilterEx[] filters){
+
+		File givenFile = new File(directory, fileName);
+		
+		return saveFile(givenFile.getPath(), filters);
+	}
 
 	private String saveFile(String homePath, FileFilterEx[] filters) {
 		FileChooserFactory chooserFactory = new FileChooserFactory();
@@ -716,6 +733,8 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
+		//TODO: comfirm saving editted opx
+		
 		saveIniFile();
 	}
 

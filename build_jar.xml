@@ -3,12 +3,12 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="create_run_jar">
-        <jar destfile="C:/Users/koji/workspace/java/oripaS.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="../oripaS.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="oripa.ORIPA"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="C:/Users/koji/workspace/java/oripas/bin"/>
+            <fileset dir="bin"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Java/Java3D/1.5.2/lib/ext/j3dcore.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Java/Java3D/1.5.2/lib/ext/j3dutils.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Java/Java3D/1.5.2/lib/ext/vecmath.jar"/>

@@ -171,6 +171,8 @@ public class MainScreen extends JPanel
             drawGridLine(g2d);
         }
 
+        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
         g2d.setStroke(Config.STROKE_VALLEY);
         g2d.setColor(Color.black);
         for (OriLine line : ORIPA.doc.lines) {
