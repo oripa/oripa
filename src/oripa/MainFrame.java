@@ -75,7 +75,7 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 
 
 	
-	private FilterDB filterDB = new FilterDB();
+	private FilterDB filterDB = FilterDB.getInstance();
 	private FileFilterEx[] fileFilters = new FileFilterEx[]{
 
 			filterDB.getFilter("opx"),
@@ -204,16 +204,6 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 
 	private void addSavingActions(){
 		
-		filterDB.getFilter("opx").setSavingAction(
-				new SavingAction() {
-
-					@Override
-					public boolean save(String path) {
-						saveOpxFile(path);
-						return true;
-					}
-				}
-				);
 
 		filterDB.getFilter("pict").setSavingAction(
 				new SavingAction() {
@@ -233,78 +223,12 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 				}
 				);
 		
-		filterDB.getFilter("dxf").setSavingAction(
-				new SavingAction() {
-
-					@Override
-					public boolean save(String path) {
-						try {
-							ExporterDXF.export(ORIPA.doc, path);
-						} catch (Exception e) {
-							e.printStackTrace();
-							return false;
-						}
-						return true;
-					}
-				}
-				);
-		
-		filterDB.getFilter("cp").setSavingAction(
-				new SavingAction() {
-
-					@Override
-					public boolean save(String path) {
-						try {
-							ExporterCP.export(ORIPA.doc, path);
-						} catch (Exception e) {
-							e.printStackTrace();
-							return false;
-						}
-						return true;
-					}
-				}
-				);
-
-		filterDB.getFilter("obj").setSavingAction(
-				new SavingAction() {
-
-					@Override
-					public boolean save(String path) {
-						try {
-							ExporterOBJ.export(ORIPA.doc, path);
-						} catch (Exception e) {
-							e.printStackTrace();
-							return false;
-						}
-						return true;
-					}
-				}
-				);
-
-	
-		filterDB.getFilter("svg").setSavingAction(
-				new SavingAction() {
-
-					@Override
-					public boolean save(String path) {
-						try {
-							ExporterSVG.export(ORIPA.doc, path);
-						} catch (Exception e) {
-							e.printStackTrace();
-							return false;
-						}
-						return true;
-					}
-				}
-				);
-
 	}
 	
 	
 	private void saveOpxFile(String filePath) {
 		ExporterXML exporter = new ExporterXML();
-		DataSet data = new DataSet(ORIPA.doc);
-		exporter.export(data, filePath);
+		exporter.export(ORIPA.doc, filePath);
 		ORIPA.doc.dataFilePath = filePath;
 	}
 
@@ -514,6 +438,7 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 		String path = chooser.saveFile(this);
 		if(path != null){
 			if(path.endsWith(".opx")){
+				ORIPA.doc.setDataFilePath(path);
 				updateMenu(path);
 			}
 		}
@@ -585,14 +510,14 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 	private void fileOpen() {
 		JFileChooser fileChooser = new JFileChooser(lastPath);
 		fileChooser.addChoosableFileFilter(
-				new FileFilterEx(new String[]{".cp"}, "(*.cp) original Crease Pattern file", null));
+				new FileFilterEx(new String[]{".cp"}, "(*.cp) original Crease Pattern file"));
 		fileChooser.addChoosableFileFilter(
-				new FileFilterEx(new String[]{".pdf"}, "(*.pdf) PDF file", null));
+				new FileFilterEx(new String[]{".pdf"}, "(*.pdf) PDF file"));
 		fileChooser.addChoosableFileFilter(
-				new FileFilterEx(new String[]{".dxf"}, "(*.dxf) DXF file", null));
+				new FileFilterEx(new String[]{".dxf"}, "(*.dxf) DXF file"));
 		fileChooser.addChoosableFileFilter(
 				new FileFilterEx(new String[]{".opx", ".xml"}, "(*.opx, *.xml) " + 
-						ORIPA.res.getString("ORIPA_File"), null));
+						ORIPA.res.getString("ORIPA_File")));
 		if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(this)) {
 			try {
 				String filePath = fileChooser.getSelectedFile().getPath();

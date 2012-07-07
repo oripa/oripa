@@ -1,0 +1,64 @@
+package oripa.paint;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+
+import oripa.Config;
+import oripa.Globals;
+import oripa.geom.OriLine;
+
+public class ElementSelector {
+
+	public Color selectColorByPickupOrder(int order){
+		if(order > 0){
+			return Color.RED;
+		}
+		
+		return Color.GREEN;
+	}
+	
+	public Color selectColorByLineType(int lineType){
+        Color color;
+		switch (lineType) {
+        case OriLine.TYPE_NONE:
+            color = Config.LINE_COLOR_AUX;
+            break;
+        case OriLine.TYPE_CUT:
+            color = Color.BLACK;
+            break;
+        case OriLine.TYPE_RIDGE:
+            color = Config.LINE_COLOR_RIDGE;
+            break;
+        case OriLine.TYPE_VALLEY:
+        	color = Config.LINE_COLOR_VALLEY;
+            break;
+        default:
+        	color = Color.BLACK;
+		}
+
+		return color;
+	}
+	
+	public BasicStroke selectStroke(int lineType){
+		BasicStroke stroke;
+		switch (lineType) {
+		case OriLine.TYPE_NONE:
+			stroke = Config.STROKE_CUT;
+			break;
+		case OriLine.TYPE_CUT:
+			stroke = Config.STROKE_CUT;
+			break;
+		case OriLine.TYPE_RIDGE:
+			stroke = Config.STROKE_RIDGE;
+			break;
+		case OriLine.TYPE_VALLEY:
+			stroke = Config.STROKE_VALLEY;
+			break;
+		default:
+			stroke = Config.STROKE_CUT;
+		}
+		
+		return stroke;
+	}
+	
+}

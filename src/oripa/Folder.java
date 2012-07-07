@@ -21,6 +21,9 @@ package oripa;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.vecmath.Vector2d;
+
+import oripa.file.Exporter;
+import oripa.file.ExporterEPS;
 import oripa.geom.*;
 
 public class Folder {
@@ -553,7 +556,8 @@ public class Folder {
 
         if (Config.FOR_STUDY) {
             try {
-                ExporterEPS.export(doc, "c:\\_jun\\tmp\\te.eps");
+            	Exporter exporter = new ExporterEPS();
+                exporter.export(doc, "c:\\_jun\\tmp\\te.eps");
             } catch (Exception e) {
             }
         }

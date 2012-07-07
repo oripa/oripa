@@ -23,6 +23,9 @@ import java.awt.event.ItemEvent;
 import java.io.File;
 import javax.swing.*;
 
+import oripa.file.Exporter;
+import oripa.file.ExporterORmat;
+import oripa.file.ExporterSVG;
 import oripa.file.FileFilterEx;
 
 public class RenderUI extends JPanel {
@@ -258,9 +261,9 @@ public class RenderUI extends JPanel {
                     String ext2 = "svg";
                     JFileChooser fileChooser = new JFileChooser();
                     FileFilterEx f1 = new FileFilterEx(new String[]{"." + ext1},
-                            "(*." + ext1 + ")" + ext1 + ORIPA.res.getString("File"), null);
+                            "(*." + ext1 + ")" + ext1 + ORIPA.res.getString("File"));
                     FileFilterEx f2 = new FileFilterEx(new String[]{"." + ext2},
-                            "(*." + ext2 + ")" + ext2 + ORIPA.res.getString("File"), null);
+                            "(*." + ext2 + ")" + ext2 + ORIPA.res.getString("File"));
                     fileChooser.addChoosableFileFilter(f1);
                     fileChooser.addChoosableFileFilter(f2);
                     fileChooser.setAcceptAllFileFilterUsed(false);
@@ -282,7 +285,8 @@ public class RenderUI extends JPanel {
                                 if (!filePath.endsWith("." + ext1)) {
                                     filePath += "." + ext1;
                                 }
-                                ExporterORmat.export(ORIPA.doc, filePath);
+                                Exporter exporter = new ExporterORmat();
+                                exporter.export(ORIPA.doc, filePath);
                             } else if (fileChooser.getFileFilter().equals(f2)) {
                                 if (!filePath.endsWith("." + ext2)) {
                                     filePath += "." + ext2;

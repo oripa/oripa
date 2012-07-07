@@ -36,6 +36,10 @@ import javax.swing.border.EtchedBorder;
 
 import oripa.file.ImageResourceLoader;
 import oripa.geom.OriLine;
+import oripa.paint.MouseContext;
+import oripa.paint.line.TwoPointLineAction;
+import oripa.paint.pbisec.TwoPointBisectorAction;
+import oripa.paint.segment.TwoPointSegmentAction;
 
 public class UIPanel extends JPanel implements ActionListener, PropertyChangeListener, KeyListener {
     // Edit mode
@@ -280,6 +284,7 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
         gridBagConstraints_i8.fill = java.awt.GridBagConstraints.HORIZONTAL;
 
 
+        // put operation buttons in order
         mainPanel.add(lineInputDirectVButton, gridBagConstraints_i0);
         n++;
         mainPanel.add(lineInputOnVButton, gridBagConstraints_i1);
@@ -306,7 +311,7 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
 
 		ImageResourceLoader imgLoader = new ImageResourceLoader();
         lineInputDirectVButton.setIcon(imgLoader.loadAsIcon("icon/segment.gif"));
-        lineInputDirectVButton.setIcon(imgLoader.loadAsIcon("icon/segment_p.gif"));
+        lineInputDirectVButton.setSelectedIcon(imgLoader.loadAsIcon("icon/segment_p.gif"));
 
         lineInputOnVButton.setIcon(imgLoader.loadAsIcon("icon/line.gif"));
         lineInputOnVButton.setSelectedIcon(imgLoader.loadAsIcon("icon/line_p.gif"));
@@ -522,17 +527,39 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == lineInputDirectVButton) {
+
+    	MouseContext.getInstance().clear();
+    	
+    	if (ae.getSource() == lineInputDirectVButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;
             Globals.lineInputMode = Constants.LineInputMode.DIRECT_V;
+            
+            Globals.mouseAction = new TwoPointSegmentAction();
+            
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
-        } else if (ae.getSource() == lineInputOnVButton) {
+        } 
+        else if (ae.getSource() == lineInputOnVButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;
             Globals.lineInputMode = Constants.LineInputMode.ON_V;
+            
+            Globals.mouseAction = new TwoPointLineAction();
+            
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
-        } else if (ae.getSource() == lineInputOverlapVButton) {
+        } 
+        else if (ae.getSource() == lineInputPBisectorButton) {
+            Globals.editMode = Constants.EditMode.INPUT_LINE;
+            Globals.lineInputMode = Constants.LineInputMode.PBISECTOR;
+            
+            Globals.mouseAction = new TwoPointBisectorAction();
+            
+            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
+            modeChanged();
+            
+        } 
+        
+        else if (ae.getSource() == lineInputOverlapVButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;
             Globals.lineInputMode = Constants.LineInputMode.OVERLAP_V;
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
@@ -542,11 +569,7 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
             Globals.lineInputMode = Constants.LineInputMode.OVERLAP_E;
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
-        } else if (ae.getSource() == lineInputPBisectorButton) {
-            Globals.editMode = Constants.EditMode.INPUT_LINE;
-            Globals.lineInputMode = Constants.LineInputMode.PBISECTOR;
-            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
-            modeChanged();
+
         } else if (ae.getSource() == lineInputBisectorButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;
             Globals.lineInputMode = Constants.LineInputMode.BISECTOR;

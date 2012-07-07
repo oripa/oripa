@@ -23,6 +23,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.vecmath.Vector2d;
 import oripa.geom.*;
+import oripa.paint.ElementSelector;
+import oripa.paint.GraphicMouseAction;
+import oripa.paint.MouseContext;
 
 
 public class MainScreen extends JPanel
@@ -52,7 +56,7 @@ public class MainScreen extends JPanel
     private Vector2d prepreprePickV = null;
     private Vector2d pickCandidateV = null;
     private OriLine pickCandidateL = null;
-    private ArrayList<Vector2d> tmpOutline = new ArrayList<>(); // Contour line when editting
+    private ArrayList<Vector2d> tmpOutline = new ArrayList<>(); // Contour line when editing
     private boolean dispGrid = true;
     // Affine transformation information
     private Dimension preSize;
@@ -111,6 +115,8 @@ public class MainScreen extends JPanel
             }
 
             g2d.setColor(Color.BLACK);
+         
+            
             for (OriFace face : ORIPA.doc.faces) {
                 g2d.drawString("" + face.z_order, (int) face.getCenter().x,
                         (int) face.getCenter().y);
@@ -132,12 +138,52 @@ public class MainScreen extends JPanel
         affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
         affineTransform.scale(scale, scale);
         affineTransform.translate(transX, transY);
+        
     }
 
     
     public Image getCreasePatternImage(){
     	
     	return bufferImage;
+    }
+    
+    
+    private void drawLines(Graphics2D g2d, ArrayList<OriLine> lines){
+    	
+    	ElementSelector selector = new ElementSelector();
+        for (OriLine line : lines) {
+            if (line.type == OriLine.TYPE_NONE &&!Globals.dispAuxLines) {
+                continue;
+            }
+
+            if ((line.type == OriLine.TYPE_RIDGE || line.type == OriLine.TYPE_VALLEY)
+            		&& !Globals.dispMVLines) {
+                continue;
+            }
+            
+        	g2d.setColor(selector.selectColorByLineType(line.type));
+        	g2d.setStroke(selector.selectStroke(line.type));
+        	
+            if ((Globals.editMode == Constants.EditMode.INPUT_LINE
+                    && Globals.lineInputMode == Constants.LineInputMode.MIRROR
+                    && line.selected)
+                    || (Globals.editMode == Constants.EditMode.PICK_LINE
+                    && line.selected)) {
+                g2d.setColor(Config.LINE_COLOR_PICKED);
+                g2d.setStroke(Config.STROKE_PICKED);
+            }
+
+            if (line == prePickLine) {
+                g2d.setColor(Color.RED);
+                g2d.setStroke(Config.STROKE_PICKED);
+            } else if (line == pickCandidateL) {
+                g2d.setColor(Config.LINE_COLOR_CANDIDATE);
+                g2d.setStroke(Config.STROKE_PICKED);
+            }
+
+            g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
+        }
+
     }
     
     // Scaling relative to the center of the screen
@@ -175,55 +221,9 @@ public class MainScreen extends JPanel
         
         g2d.setStroke(Config.STROKE_VALLEY);
         g2d.setColor(Color.black);
-        for (OriLine line : ORIPA.doc.lines) {
-            switch (line.type) {
-                case OriLine.TYPE_NONE:
-                    if (!Globals.dispAuxLines) {
-                        continue;
-                    }
-                    g2d.setColor(Config.LINE_COLOR_AUX);
-                    g2d.setStroke(Config.STROKE_CUT);
-                    break;
-                case OriLine.TYPE_CUT:
-                    g2d.setColor(Color.BLACK);
-                    g2d.setStroke(Config.STROKE_CUT);
-                    break;
-                case OriLine.TYPE_RIDGE:
-                    if (!Globals.dispMVLines) {
-                        continue;
-                    }
-                    g2d.setColor(Config.LINE_COLOR_RIDGE);
-                    g2d.setStroke(Config.STROKE_RIDGE);
-                    break;
-                case OriLine.TYPE_VALLEY:
-                    if (!Globals.dispMVLines) {
-                        continue;
-                    }
-                    g2d.setColor(Config.LINE_COLOR_VALLEY);
-                    g2d.setStroke(Config.STROKE_VALLEY);
-                    break;
-            }
 
-            if ((Globals.editMode == Constants.EditMode.INPUT_LINE
-                    && Globals.lineInputMode == Constants.LineInputMode.MIRROR
-                    && line.selected)
-                    || (Globals.editMode == Constants.EditMode.PICK_LINE
-                    && line.selected)) {
-                g2d.setColor(Config.LINE_COLOR_PICKED);
-                g2d.setStroke(Config.STROKE_PICKED);
-            }
-
-            if (line == prePickLine) {
-                g2d.setColor(Color.RED);
-                g2d.setStroke(Config.STROKE_PICKED);
-            } else if (line == pickCandidateL) {
-                g2d.setColor(Config.LINE_COLOR_CANDIDATE);
-                g2d.setStroke(Config.STROKE_PICKED);
-            }
-
-            g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
-        }
-
+        drawLines(g2d, ORIPA.doc.lines);
+        
         // Shows of the outline of the editing
         int outlineVnum = tmpOutline.size();
         if (outlineVnum != 0) {
@@ -271,7 +271,6 @@ public class MainScreen extends JPanel
         }
 
 
-
         if (prepreprePickV != null) {
             g2d.setColor(Color.RED);
             g2d.fill(new Rectangle2D.Double(prepreprePickV.x - 5.0 / scale,
@@ -306,14 +305,7 @@ public class MainScreen extends JPanel
             g2d.fill(new Rectangle2D.Double(prePickV.x - 5.0 / scale,
                     prePickV.y - 5.0 / scale, 10.0 / scale, 10.0 / scale));
 
-            if (Globals.lineInputMode == Constants.LineInputMode.ON_V
-                    || Globals.lineInputMode == Constants.LineInputMode.DIRECT_V) {
-                Vector2d cv = pickCandidateV == null
-                        ? new Vector2d(currentMousePointLogic.getX(), currentMousePointLogic.getY())
-                        : pickCandidateV;
-                g2d.draw(new Line2D.Double(prePickV.x, prePickV.y,
-                        cv.x, cv.y));
-            } else if (Globals.lineInputMode == Constants.LineInputMode.OVERLAP_V) {
+            if (Globals.lineInputMode == Constants.LineInputMode.OVERLAP_V) {
                 if (pickCandidateV != null) {
                     Vector2d v = pickCandidateV;
                     Vector2d cv = new Vector2d((prePickV.x + v.x) / 2.0, (prePickV.y + v.y) / 2.0);
@@ -452,6 +444,13 @@ public class MainScreen extends JPanel
             }
         }
 
+        if (Globals.lineInputMode == Constants.LineInputMode.ON_V
+                || Globals.lineInputMode == Constants.LineInputMode.DIRECT_V
+                || Globals.lineInputMode == Constants.LineInputMode.PBISECTOR) {
+        	Globals.mouseAction.onDraw(g2d, mouseContext);
+        	
+        }
+
         g.drawImage(bufferImage, 0, 0, this);
 
         if (pickCandidateV != null) {
@@ -579,8 +578,27 @@ public class MainScreen extends JPanel
         }
     }
 
+    MouseContext mouseContext = MouseContext.getInstance();
+    
     @Override
     public void mouseClicked(MouseEvent e) {
+    	
+    	if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
+            if (Globals.lineInputMode == Constants.LineInputMode.DIRECT_V 
+            		|| Globals.lineInputMode == Constants.LineInputMode.ON_V
+            		|| Globals.lineInputMode == Constants.LineInputMode.PBISECTOR) {
+            	    
+            	if(javax.swing.SwingUtilities.isRightMouseButton(e)){
+            		Globals.mouseAction.onRightClick(
+            				mouseContext, affineTransform, e);
+            	}
+            	else {
+            		Globals.mouseAction.onLeftClick(mouseContext, affineTransform, e);
+            	}
+            	return;
+            }
+    	}
+    	
         if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
             if (prepreprePickV != null) {
                 prepreprePickV = null;
@@ -1111,6 +1129,20 @@ public class MainScreen extends JPanel
         }
     }
 
+    
+    
+    private Point2D.Double getLogicalPoint(Point p){
+    	Point2D.Double logicalPoint = new Point2D.Double();
+        try {
+			affineTransform.inverseTransform(p, logicalPoint);
+		} catch (NoninvertibleTransformException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        return logicalPoint;
+    }
+    
     @Override
     public void mouseMoved(MouseEvent e) {
         // Gets the value of the current logical coordinates of the mouse
@@ -1119,8 +1151,23 @@ public class MainScreen extends JPanel
         } catch (Exception ex) {
             return;
         }
+        
+        
+        mouseContext.scale = scale;
+        mouseContext.dispGrid = dispGrid;
+        mouseContext.mousePoint = getLogicalPoint(e.getPoint());
+        
+    	if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
+            if (Globals.lineInputMode == Constants.LineInputMode.DIRECT_V
+            		|| Globals.lineInputMode == Constants.LineInputMode.ON_V
+            		|| Globals.lineInputMode == Constants.LineInputMode.PBISECTOR) {
+                this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
+            	repaint();
+            	return;
+            }
+    	}
 
-        if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
+    	if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
             if (Globals.lineInputMode == Constants.LineInputMode.DIRECT_V
                     || Globals.lineInputMode == Constants.LineInputMode.ON_V
                     || Globals.lineInputMode == Constants.LineInputMode.OVERLAP_V

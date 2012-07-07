@@ -26,6 +26,9 @@ import java.awt.event.AdjustmentListener;
 import java.io.File;
 import javax.swing.*;
 
+import oripa.file.Exporter;
+import oripa.file.ExporterDXF;
+import oripa.file.ExporterOBJ2;
 import oripa.file.FileFilterEx;
 
 public class ModelViewFrame extends JFrame implements ActionListener, AdjustmentListener {
@@ -144,7 +147,7 @@ public class ModelViewFrame extends JFrame implements ActionListener, Adjustment
     private void exportFile(String ext) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.addChoosableFileFilter(new FileFilterEx(new String[]{"." + ext}, 
-                "(*." + ext + ")" + ext + ORIPA.res.getString("File"), null));
+                "(*." + ext + ")" + ext + ORIPA.res.getString("File")));
         if (JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(this)) {
             try {
                 String filePath = fileChooser.getSelectedFile().getPath();
@@ -167,7 +170,8 @@ public class ModelViewFrame extends JFrame implements ActionListener, Adjustment
                         ExporterDXF.exportModel(ORIPA.doc, filePath);
                         break;
                     case "obj":
-                        ExporterOBJ2.export(ORIPA.doc, filePath);
+                        Exporter exporter = new ExporterOBJ2();
+                        exporter.export(ORIPA.doc, filePath);
                         break;
                 }
 

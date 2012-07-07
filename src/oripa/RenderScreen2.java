@@ -56,7 +56,7 @@ public class RenderScreen2 extends JPanel
     private boolean m_bUseColor = true;
     private boolean m_bFillFaces = true;
     private boolean m_bAmbientOcclusion = false;
-    static boolean m_bFaceOrderFlip = false;
+    private static boolean m_bFaceOrderFlip = false;
     static private double m_rotAngle = 0;
     static private double m_scale = 0.8;
     static private boolean m_bDrawEdges = true;
@@ -140,7 +140,7 @@ public class RenderScreen2 extends JPanel
     }
 
     public void flipFaces(boolean bFlip) {
-        m_bFaceOrderFlip = bFlip;
+        setM_bFaceOrderFlip(bFlip);
         redrawOrigami();
     }
 
@@ -290,7 +290,7 @@ public class RenderScreen2 extends JPanel
 
         for (OriFace face : ORIPA.doc.faces) {
 
-            face.trianglateAndSetColor(m_bUseColor, m_bFaceOrderFlip);
+            face.trianglateAndSetColor(m_bUseColor, isM_bFaceOrderFlip());
 
             for (TriangleFace tri : face.triangles) {
                 for (int i = 0; i < 3; i++) {
@@ -332,7 +332,7 @@ public class RenderScreen2 extends JPanel
         }
 
         if (m_bAmbientOcclusion) {
-            int renderFace = m_bFaceOrderFlip ? oripa.Doc.UPPER : oripa.Doc.LOWER;
+            int renderFace = isM_bFaceOrderFlip() ? oripa.Doc.UPPER : oripa.Doc.LOWER;
             int r = 10;
             int s = (int) (r * r * Math.PI);
             // For every pixel
@@ -465,7 +465,7 @@ public class RenderScreen2 extends JPanel
 
                 int p = offset + x;
 
-                int renderFace = m_bFaceOrderFlip ? oripa.Doc.UPPER : oripa.Doc.LOWER;
+                int renderFace = isM_bFaceOrderFlip() ? oripa.Doc.UPPER : oripa.Doc.LOWER;
 
                 if (zbuf[p] == -1 || ORIPA.doc.overlapRelation[zbuf[p]][id] == renderFace) {
 
@@ -486,14 +486,14 @@ public class RenderScreen2 extends JPanel
                             int textureColor = textureImage.getRGB(tx, ty);
 
 
-                            if (m_bFillFaces && (tri.face.faceFront ^ m_bFaceOrderFlip)) {
+                            if (m_bFillFaces && (tri.face.faceFront ^ isM_bFaceOrderFlip())) {
                                 pbuf[p] = textureColor;
                             } else {
                                 pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
 
                             }
                         } else {
-                            if (m_bFillFaces && (tri.face.faceFront ^ m_bFaceOrderFlip)) {
+                            if (m_bFillFaces && (tri.face.faceFront ^ isM_bFaceOrderFlip())) {
                                 pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
                             } else {
                                 pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
@@ -633,6 +633,14 @@ public class RenderScreen2 extends JPanel
     public BufferedImage getBufferImage() {
         return bufferImage;
     }
+
+	public static boolean isM_bFaceOrderFlip() {
+		return m_bFaceOrderFlip;
+	}
+
+	public static void setM_bFaceOrderFlip(boolean m_bFaceOrderFlip) {
+		RenderScreen2.m_bFaceOrderFlip = m_bFaceOrderFlip;
+	}
 
     
     
