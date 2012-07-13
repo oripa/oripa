@@ -29,6 +29,7 @@ public class Config {
     final public static Color LINE_COLOR_AUX = Color.LIGHT_GRAY;
     final public static Color LINE_COLOR_GRID = Color.LIGHT_GRAY;
     final public static Color LINE_COLOR_CANDIDATE = Color.GREEN;
+    final public static Color LINE_COLOR_CANDIDATE2 = Color.MAGENTA;
     final public static Color LINE_COLOR_PICKED = Color.GREEN;
     
     final static float dash[] = {3.0f};

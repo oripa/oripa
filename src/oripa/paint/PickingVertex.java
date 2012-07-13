@@ -12,7 +12,7 @@ import oripa.paint.ActionState;
  * @author koji
  *
  */
-public abstract class PickingVertex extends AbstractAction {
+public abstract class PickingVertex extends AbstractActionState {
 	
 
 	public PickingVertex(){

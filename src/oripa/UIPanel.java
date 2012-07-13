@@ -38,6 +38,7 @@ import oripa.file.ImageResourceLoader;
 import oripa.geom.OriLine;
 import oripa.paint.MouseContext;
 import oripa.paint.line.TwoPointLineAction;
+import oripa.paint.mirror.MirrorCopyAction;
 import oripa.paint.pbisec.TwoPointBisectorAction;
 import oripa.paint.segment.TwoPointSegmentAction;
 import oripa.paint.vertical.VerticalLineAction;
@@ -569,6 +570,14 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
             
+        } else if (ae.getSource() == lineInputMirrorButton) {
+            Globals.editMode = Constants.EditMode.INPUT_LINE;
+            Globals.lineInputMode = Constants.LineInputMode.MIRROR;
+            
+            Globals.mouseAction = new MirrorCopyAction();
+            
+            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
+            modeChanged();
         } 
         
         else if (ae.getSource() == lineInputOverlapVButton) {
@@ -596,11 +605,6 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
         } else if (ae.getSource() == lineInputSymmetricButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;
             Globals.lineInputMode = Constants.LineInputMode.SYMMETRIC_LINE;
-            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
-            modeChanged();
-        } else if (ae.getSource() == lineInputMirrorButton) {
-            Globals.editMode = Constants.EditMode.INPUT_LINE;
-            Globals.lineInputMode = Constants.LineInputMode.MIRROR;
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
         } else if (ae.getSource() == editModeInputLineButton) {

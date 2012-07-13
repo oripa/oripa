@@ -69,7 +69,7 @@ public class MouseContext {
     }
     	    
     public void pushLine(OriLine picked){
-    	picked.selected = true;
+    //	picked.selected = true;
     	pickedLines.push(picked);
     }
     

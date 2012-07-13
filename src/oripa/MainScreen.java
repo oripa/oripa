@@ -173,18 +173,50 @@ public class MainScreen extends JPanel
                 g2d.setStroke(Config.STROKE_PICKED);
             }
 
-            if (line == prePickLine) {
-                g2d.setColor(Color.RED);
-                g2d.setStroke(Config.STROKE_PICKED);
-            } else if (line == pickCandidateL) {
-                g2d.setColor(Config.LINE_COLOR_CANDIDATE);
-                g2d.setStroke(Config.STROKE_PICKED);
+            if(Globals.mouseAction != null){
+            	if(line.selected == false){
+            		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
+            	}
+            }
+            else {
+            	if (line == prePickLine) {
+	                g2d.setColor(Color.RED);
+	                g2d.setStroke(Config.STROKE_PICKED);
+	            } else if (line == pickCandidateL) {
+	                g2d.setColor(Config.LINE_COLOR_CANDIDATE);
+	                g2d.setStroke(Config.STROKE_PICKED);
+	            }
+                g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
             }
 
-            g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
         }
 
     }
+    
+    void drawVertexRectangles(Graphics2D g2d){
+        g2d.setColor(Color.BLACK);
+        double vertexDrawSize = 2.0;
+        for (OriLine line : ORIPA.doc.lines) {
+            if (!Globals.dispAuxLines && line.type == OriLine.TYPE_NONE) {
+                continue;
+            }
+            if (!Globals.dispMVLines && (line.type == OriLine.TYPE_RIDGE
+                    || line.type == OriLine.TYPE_VALLEY)) {
+                continue;
+            }
+            Vector2d v0 = line.p0;
+            Vector2d v1 = line.p1;
+
+            g2d.fill(new Rectangle2D.Double(v0.x - vertexDrawSize / scale,
+                    v0.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
+                    vertexDrawSize * 2 / scale));
+            g2d.fill(new Rectangle2D.Double(v1.x - vertexDrawSize / scale,
+                    v1.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
+                    vertexDrawSize * 2 / scale));
+        }
+
+    }
+    
     
     // Scaling relative to the center of the screen
     @Override
@@ -248,26 +280,7 @@ public class MainScreen extends JPanel
         if (Globals.editMode == Constants.EditMode.ADD_VERTEX
                 || Globals.editMode == Constants.EditMode.DELETE_VERTEX
                 || Globals.dispVertex) {
-            g2d.setColor(Color.BLACK);
-            double vertexDrawSize = 2.0;
-            for (OriLine line : ORIPA.doc.lines) {
-                if (!Globals.dispAuxLines && line.type == OriLine.TYPE_NONE) {
-                    continue;
-                }
-                if (!Globals.dispMVLines && (line.type == OriLine.TYPE_RIDGE
-                        || line.type == OriLine.TYPE_VALLEY)) {
-                    continue;
-                }
-                Vector2d v0 = line.p0;
-                Vector2d v1 = line.p1;
-
-                g2d.fill(new Rectangle2D.Double(v0.x - vertexDrawSize / scale,
-                        v0.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
-                        vertexDrawSize * 2 / scale));
-                g2d.fill(new Rectangle2D.Double(v1.x - vertexDrawSize / scale,
-                        v1.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
-                        vertexDrawSize * 2 / scale));
-            }
+        	drawVertexRectangles(g2d);
         }
 
 
@@ -710,44 +723,8 @@ public class MainScreen extends JPanel
             }
             return;
         } else if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
-            if (Globals.lineInputMode == Constants.LineInputMode.DIRECT_V) {
-                Vector2d v = pickVertex(clickPoint);
 
-                if (v == null) {
-                    if ((e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
-                        // If Ctrl is pressed, an arbitrary point can be choosed
-                        OriLine l = pickLine(clickPoint);
-                        if (l != null) {
-                            v = new Vector2d();
-                            Vector2d cp = new Vector2d(clickPoint.x, clickPoint.y);
-                            GeomUtil.DistancePointToSegment(cp, l.p0, l.p1, v);
-                        }
-                    }
-                }
-
-                if (v != null) {
-                    if (prePickV == null) {
-                        prePickV = v;
-                    } else {
-                        OriLine line = new OriLine(prePickV, v, Globals.inputLineType);
-                        ORIPA.doc.pushUndoInfo();
-                        ORIPA.doc.addLine(line);
-                        prePickV = null;
-                    }
-                }
-            } else if (Globals.lineInputMode == Constants.LineInputMode.PBISECTOR) {
-                Vector2d v = pickVertex(clickPoint);
-
-                if (v != null) {
-                    if (prePickV == null) {
-                        prePickV = v;
-                    } else {
-                        ORIPA.doc.pushUndoInfo();
-                        ORIPA.doc.addPBisector(prePickV, v);
-                        prePickV = null;
-                    }
-                }
-            } else if (Globals.lineInputMode == Constants.LineInputMode.COPY_AND_PASTE) {
+        	if (Globals.lineInputMode == Constants.LineInputMode.COPY_AND_PASTE) {
                 Vector2d v = pickVertex(clickPoint);
                 if (v != null) {
                     if (!ORIPA.doc.tmpSelectedLines.isEmpty()) {
@@ -771,38 +748,7 @@ public class MainScreen extends JPanel
                 }
 
 
-            } else if (Globals.lineInputMode == Constants.LineInputMode.ON_V) {
-                Vector2d v = pickVertex(clickPoint);
-
-                if (v == null) {
-                    if ((e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
-                        // If Ctrl is pressed, an arbitrary point can be choosed
-                        OriLine l = pickLine(clickPoint);
-                        if (l != null) {
-                            v = new Vector2d();
-                            Vector2d cp = new Vector2d(clickPoint.x, clickPoint.y);
-                            GeomUtil.DistancePointToSegment(cp, l.p0, l.p1, v);
-                        }
-                    }
-                }
-
-                if (v != null) {
-                    if (prePickV == null) {
-                        prePickV = v;
-                    } else {
-                        Vector2d dir = new Vector2d(v.x - prePickV.x, v.y - prePickV.y);
-                        dir.normalize();
-                        dir.scale(Constants.DEFAULT_PAPER_SIZE * 8);
-                        OriLine line = new OriLine(prePickV.x - dir.x, prePickV.y - dir.y,
-                                prePickV.x + dir.x, prePickV.y + dir.y, Globals.inputLineType);
-                        if (GeomUtil.clipLine(line, ORIPA.doc.size / 2)) {
-                            ORIPA.doc.pushUndoInfo();
-                            ORIPA.doc.addLine(line);
-                        }
-                        prePickV = null;
-                    }
-                }
-
+            
             } else if (Globals.lineInputMode == Constants.LineInputMode.SYMMETRIC_LINE) {
                 Vector2d v = pickVertex(clickPoint);
                 if (v != null) {
@@ -860,22 +806,7 @@ public class MainScreen extends JPanel
                     }
                 }
 
-            } else if (Globals.lineInputMode == Constants.LineInputMode.VERTICAL_LINE) {
-                if (prePickV == null) {
-                    prePickV = pickVertex(clickPoint);
-                    if (prePickV != null) {
-                        pickCandidateV = null;
-                    }
-                    pickCandidateV = null;
-                } else {
-                    OriLine l = pickLine(clickPoint);
-                    if (l != null) {
-                        OriLine vl = GeomUtil.getVerticalLine(prePickV, l, Globals.inputLineType);
-                        ORIPA.doc.pushUndoInfo();
-                        ORIPA.doc.addLine(vl);
-                        prePickV = null;
-                    }
-                }
+         
             } else if (Globals.lineInputMode == Constants.LineInputMode.MIRROR) {
                 OriLine l = pickLine(clickPoint);
                 if (l != null) {
@@ -1217,20 +1148,7 @@ public class MainScreen extends JPanel
                         repaint();
                     }
                 }
-            } else if (Globals.lineInputMode == Constants.LineInputMode.VERTICAL_LINE) {
-                if (prePickV == null) {
-                    Vector2d preV = pickCandidateV;
-                    pickCandidateV = this.pickVertex(currentMousePointLogic);
-                    if (pickCandidateV != preV || prePickV != null) {
-                        repaint();
-                    }
-                } else {
-                    OriLine preLine = pickCandidateL;
-                    pickCandidateL = pickLine(currentMousePointLogic);
-                    if (preLine != pickCandidateL) {
-                        repaint();
-                    }
-                }
+            
             } else if (Globals.lineInputMode == Constants.LineInputMode.MIRROR) {
                 OriLine preLine = pickCandidateL;
                 pickCandidateL = pickLine(currentMousePointLogic);

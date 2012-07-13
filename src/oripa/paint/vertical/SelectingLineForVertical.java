@@ -24,7 +24,7 @@ public class SelectingLineForVertical extends PickingLine {
 	
 	}
 
-
+	
 
 	@Override
 	protected void onResult(MouseContext context) {

@@ -55,6 +55,7 @@ public abstract class GraphicMouseAction {
 		state = state.undo(context);
 	}
 	
+	
 	public Vector2d onMove(MouseContext context, AffineTransform affine, MouseEvent event) {
 		Point2D.Double current = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
 
@@ -63,10 +64,12 @@ public abstract class GraphicMouseAction {
 
 		context.pickCandidateV = closeVertex;
 		
-		OriLine closeLine = GeometricalOperation.pickLine(
+		OriLine closeLine;
+		closeLine = GeometricalOperation.pickLine(
 				context, current);
 		
 		context.pickCandidateL = closeLine;
+
 		return closeVertex;
 	}
 
@@ -82,7 +85,7 @@ public abstract class GraphicMouseAction {
 	
 	private void drawPickedLines(Graphics2D g2d, MouseContext context){
 		for(int i = 0; i < context.getLineCount(); i++){
-			g2d.setColor(Config.LINE_COLOR_CANDIDATE);
+			g2d.setColor(Config.LINE_COLOR_PICKED);
 			g2d.setStroke(Config.STROKE_PICKED);
 			
 			OriLine line = context.getLine(i);

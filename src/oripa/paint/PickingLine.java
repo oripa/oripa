@@ -13,7 +13,7 @@ import oripa.paint.ActionState;
  * @author koji
  *
  */
-public abstract class PickingLine extends AbstractAction {
+public abstract class PickingLine extends AbstractActionState {
 	
 
 	public PickingLine(){
@@ -27,7 +27,7 @@ public abstract class PickingLine extends AbstractAction {
 	
 	@Override
 	protected boolean onAct(MouseContext context, Double currentPoint,
-			boolean freeSelection) {
+			boolean doSpecial) {
 
 		OriLine picked = GeometricalOperation.pickLine(
 				currentPoint, context.scale);
@@ -51,10 +51,7 @@ public abstract class PickingLine extends AbstractAction {
 	@Override
 	protected void undoAction(MouseContext context) {
 		
-		if(context.getLineCount() > 0){
-			context.popLine();
-		}
-		
+		context.popLine();		
 	}
 
 	

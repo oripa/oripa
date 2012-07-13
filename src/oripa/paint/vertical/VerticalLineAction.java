@@ -33,6 +33,30 @@ public class VerticalLineAction extends GraphicMouseAction {
 
 
 
+	private OriLine closeLine = null;
+
+	@Override
+	public Vector2d onMove(MouseContext context, AffineTransform affine,
+			MouseEvent event) {
+		// TODO Auto-generated method stub
+		Vector2d result = super.onMove(context, affine, event);
+
+		if(context.getVertexCount() == 1){
+			if(closeLine != null){
+				closeLine.selected = false;
+			}
+			
+			closeLine = context.pickCandidateL;
+	
+			if(closeLine != null){
+				closeLine.selected = true;
+			}
+		}		
+		return result;
+	}
+
+
+
 
 	@Override
 	public void onDrag(MouseContext context, AffineTransform affine, MouseEvent event) {
@@ -65,6 +89,7 @@ public class VerticalLineAction extends GraphicMouseAction {
 			}
 		}
 		else if(context.getVertexCount() == 1){
+			
 			OriLine closeLine = context.pickCandidateL;
 
 			if(closeLine != null){
