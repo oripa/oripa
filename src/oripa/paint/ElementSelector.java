@@ -11,14 +11,31 @@ public class ElementSelector {
 
 	public Color selectColorByPickupOrder(int order){
 		if(order > 0){
-			return Color.RED;
+			return selectColorByLineType(Globals.inputLineType);
 		}
 		
 		return Color.GREEN;
 	}
 	
+	public Color selectLineColor(OriLine line){
+
+		Color color;
+		
+		if(line.selected){
+			color = Config.LINE_COLOR_CANDIDATE;
+		}
+		else {
+			color = selectColorByLineType(line.type);
+		}
+		
+		return color;
+		
+	}
+	
+	
 	public Color selectColorByLineType(int lineType){
         Color color;
+        
 		switch (lineType) {
         case OriLine.TYPE_NONE:
             color = Config.LINE_COLOR_AUX;

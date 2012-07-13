@@ -51,6 +51,8 @@ public class GeometricalOperation {
         }
     }
 
+    
+    
     public static boolean pickPointOnLine(Point2D.Double p, Object[] line_vertex, double scale) {
         double minDistance = Double.MAX_VALUE;
         OriLine bestLine = null;
@@ -114,8 +116,8 @@ public class GeometricalOperation {
         }
     }
 
-	public static Vector2d pickVertexByContext(MouseContext context, Point2D.Double currentPoint,
-			boolean freeSelection){
+	public static Vector2d pickVertex(MouseContext context, 
+			Point2D.Double currentPoint, boolean freeSelection){
 		Vector2d picked = pickVertex(
 				currentPoint, 
 				context.scale, context.dispGrid);
@@ -136,6 +138,12 @@ public class GeometricalOperation {
 		return picked;
 	}
 
+	
+    public static OriLine pickLine(MouseContext context, 
+    		Point2D.Double currentPoint) {
+    	return pickLine(currentPoint, context.scale);
+    }
+    
 	public static Vector2d getCandidateVertex(MouseContext context, boolean enableMousePoint){
 		
 		Vector2d candidate = context.pickCandidateV;

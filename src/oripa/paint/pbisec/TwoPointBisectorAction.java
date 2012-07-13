@@ -58,7 +58,7 @@ public class TwoPointBisectorAction extends GraphicMouseAction {
 		
 		if (closeVertex != null) {
             g2d.setColor(selector.selectColorByLineType(Globals.inputLineType));
-            drawPickedVertex(g2d, context, closeVertex.x, closeVertex.y);
+            drawVertex(g2d, context, closeVertex.x, closeVertex.y);
         }
 
 

@@ -444,9 +444,7 @@ public class MainScreen extends JPanel
             }
         }
 
-        if (Globals.lineInputMode == Constants.LineInputMode.ON_V
-                || Globals.lineInputMode == Constants.LineInputMode.DIRECT_V
-                || Globals.lineInputMode == Constants.LineInputMode.PBISECTOR) {
+        if (Globals.mouseAction != null) {
         	Globals.mouseAction.onDraw(g2d, mouseContext);
         	
         }
@@ -459,6 +457,7 @@ public class MainScreen extends JPanel
         }
 
     }
+    
 
     public void setDispGrid(boolean dispGrid) {
         this.dispGrid = dispGrid;
@@ -584,10 +583,8 @@ public class MainScreen extends JPanel
     public void mouseClicked(MouseEvent e) {
     	
     	if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
-            if (Globals.lineInputMode == Constants.LineInputMode.DIRECT_V 
-            		|| Globals.lineInputMode == Constants.LineInputMode.ON_V
-            		|| Globals.lineInputMode == Constants.LineInputMode.PBISECTOR) {
-            	    
+            if (Globals.mouseAction != null) {
+    
             	if(javax.swing.SwingUtilities.isRightMouseButton(e)){
             		Globals.mouseAction.onRightClick(
             				mouseContext, affineTransform, e);
@@ -1146,7 +1143,8 @@ public class MainScreen extends JPanel
     @Override
     public void mouseMoved(MouseEvent e) {
         // Gets the value of the current logical coordinates of the mouse
-        try {
+   
+    	try {
             affineTransform.inverseTransform(e.getPoint(), currentMousePointLogic);
         } catch (Exception ex) {
             return;
@@ -1158,9 +1156,7 @@ public class MainScreen extends JPanel
         mouseContext.mousePoint = getLogicalPoint(e.getPoint());
         
     	if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
-            if (Globals.lineInputMode == Constants.LineInputMode.DIRECT_V
-            		|| Globals.lineInputMode == Constants.LineInputMode.ON_V
-            		|| Globals.lineInputMode == Constants.LineInputMode.PBISECTOR) {
+            if (Globals.mouseAction != null) {
                 this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
             	repaint();
             	return;

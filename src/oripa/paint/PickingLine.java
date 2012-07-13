@@ -5,6 +5,7 @@ import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
+import oripa.geom.OriLine;
 import oripa.paint.ActionState;
 
 /**
@@ -12,45 +13,46 @@ import oripa.paint.ActionState;
  * @author koji
  *
  */
-public abstract class PickingVertex extends AbstractAction {
+public abstract class PickingLine extends AbstractAction {
 	
 
-	public PickingVertex(){
+	public PickingLine(){
 		super();
 	}
 	
 	/**
-	 * Picks the nearest vertex and push it into context.
-	 * @return Next state if vertex is found, else itself.
+	 * Picks the nearest line and push it into context.
+	 * @return true if the action succeed, false otherwise.
 	 */
 	
 	@Override
 	protected boolean onAct(MouseContext context, Double currentPoint,
 			boolean freeSelection) {
 
-		Vector2d picked = GeometricalOperation.pickVertex(
-				context, currentPoint, freeSelection);
+		OriLine picked = GeometricalOperation.pickLine(
+				currentPoint, context.scale);
 
 		if(picked == null){
 			System.out.println("onAct() failed");
 			return false;
 		}
 		
-		context.pushVertex(picked);		
+		context.pushLine(picked);		
+		
 		
 		return true;
 	}
 	
 	
 	/**
-	 * delete from context the latest picked vertex.
+	 * delete from context the latest picked line.
 	 * @return Previous state
 	 */
 	@Override
 	protected void undoAction(MouseContext context) {
 		
-		if(context.getVertexCount() > 0){
-			context.popVertex();
+		if(context.getLineCount() > 0){
+			context.popLine();
 		}
 		
 	}

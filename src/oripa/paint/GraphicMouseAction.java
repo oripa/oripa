@@ -37,40 +37,13 @@ public abstract class GraphicMouseAction {
 		log(p.x, p.y);
 	}	
 	
-	
-
-	protected Point2D.Double getLogicalPoint(AffineTransform affine, Point p){		// Gets the logical coordinates of the click
-		return GeometricalOperation.getLogicalPoint(affine, p);
-	}
-	  // returns the OriLine sufficiently closer to point p
-    public OriLine pickLine(Point2D.Double p, double scale) {
-    	return GeometricalOperation.pickLine(p, scale);
-    }
-    
-    private boolean pickPointOnLine(Point2D.Double p, Object[] line_vertex, double scale) {
-    	return GeometricalOperation.pickPointOnLine(p, line_vertex, scale);
-    }
-
-    public Vector2d pickVertex(Point2D.Double p, double scale, boolean dispGrid) {
-    	return GeometricalOperation.pickVertex(p, scale, dispGrid);
-    }
-
-	public Vector2d pick(MouseContext context, Point2D.Double currentPoint,
-			boolean freeSelection){
-		return GeometricalOperation.pickVertexByContext(context, currentPoint, freeSelection);
-	}
-
-	public Vector2d getCandidateVertex(MouseContext context, boolean enableMousePoint){
-		return GeometricalOperation.getCandidateVertex(context, enableMousePoint);
-	}
-
 	private ActionState state;
 	protected void setActionState(ActionState state){
 		this.state = state;
 	}
 		
     public void onLeftClick(MouseContext context, AffineTransform affine, MouseEvent event){
-		Point2D.Double clickPoint = getLogicalPoint(affine, event.getPoint());
+		Point2D.Double clickPoint = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
 		
 		state = state.doAction(context, 
 				clickPoint, buttonCTRLIsPressed(event));
@@ -83,13 +56,18 @@ public abstract class GraphicMouseAction {
 	}
 	
 	public Vector2d onMove(MouseContext context, AffineTransform affine, MouseEvent event) {
-		Point2D.Double current = getLogicalPoint(affine, event.getPoint());
+		Point2D.Double current = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
 
-		Vector2d picked = pick(context, current, buttonCTRLIsPressed(event));
+		Vector2d closeVertex = GeometricalOperation.pickVertex(
+				context, current, buttonCTRLIsPressed(event));
 
-		context.pickCandidateV = picked;
+		context.pickCandidateV = closeVertex;
 		
-		return picked;
+		OriLine closeLine = GeometricalOperation.pickLine(
+				context, current);
+		
+		context.pickCandidateL = closeLine;
+		return closeVertex;
 	}
 
 	public abstract void onDrag(MouseContext context, AffineTransform affine, MouseEvent event);
@@ -122,12 +100,13 @@ public abstract class GraphicMouseAction {
 			g2d.setColor(selector.selectColorByPickupOrder(i));
 			
 			Vector2d vertex = context.getVertex(i);
-            drawPickedVertex(g2d, context, vertex.x, vertex.y);
+            drawVertex(g2d, context, vertex.x, vertex.y);
 		}		
 	}
 
 
-    public void drawPickedVertex(Graphics2D g2d, MouseContext context, double x, double y){
+    public void drawVertex(Graphics2D g2d, MouseContext context, 
+    		double x, double y){
     	double scale = context.scale;
         g2d.fill(new Rectangle2D.Double(x - 5.0 / scale,
                 y - 5.0 / scale, 10.0 / scale, 10.0 / scale));
@@ -145,7 +124,15 @@ public abstract class GraphicMouseAction {
 				p1.x, p1.y));
     	
     }
-    
+
+    /**
+     * draws the line between the most recently selected line and the vertex
+     * close to the mouse cursor.
+     * if every vertex is far from cursor, this method uses the cursor point
+     * instead of close vertex.
+     * @param g2d
+     * @param context
+     */
     public void drawCandidateLine(Graphics2D g2d, MouseContext context){
 		ElementSelector selector = new ElementSelector();
 
@@ -154,7 +141,7 @@ public abstract class GraphicMouseAction {
 
 			Color color = selector.selectColorByLineType(Globals.inputLineType);
 			g2d.setColor(color);
-			drawLine(g2d, picked, getCandidateVertex(context, true));
+			drawLine(g2d, picked, GeometricalOperation.getCandidateVertex(context, true));
 		}
     	
     }

@@ -42,6 +42,14 @@ public class MouseContext {
     }
     
     public void clear(){
+    	
+    	
+    	if(pickedLines.empty() == false){
+	    	for(OriLine l : pickedLines){
+	    		l.selected = false;
+	    	}
+    	}    	
+    	
     	pickedLines.clear();
     	pickedVertices.clear();
     	tmpOutline.clear();
@@ -60,23 +68,34 @@ public class MouseContext {
     	pickedVertices.push(picked);
     }
     	    
-    void pushLine(OriLine picked){
+    public void pushLine(OriLine picked){
+    	picked.selected = true;
     	pickedLines.push(picked);
     }
     
-    Vector2d popVertex(){
+    public Vector2d popVertex(){
+    	if(pickedVertices.empty()){
+    		return null;
+    	}
+
     	return pickedVertices.pop();
     }
 
-    OriLine popLine(){
-    	return pickedLines.pop();
+    public OriLine popLine(){
+    	if(pickedLines.empty()){
+    		return null;
+    	}
+    	
+    	OriLine line = pickedLines.pop();
+    	line.selected = false;
+    	return line;
     }
     
-    Vector2d peekVertex(){
+    public Vector2d peekVertex(){
     	return pickedVertices.peek();
     }
     
-    OriLine peekLine(){
+    public OriLine peekLine(){
     	return pickedLines.peek();
     }
 

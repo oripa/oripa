@@ -40,6 +40,7 @@ import oripa.paint.MouseContext;
 import oripa.paint.line.TwoPointLineAction;
 import oripa.paint.pbisec.TwoPointBisectorAction;
 import oripa.paint.segment.TwoPointSegmentAction;
+import oripa.paint.vertical.VerticalLineAction;
 
 public class UIPanel extends JPanel implements ActionListener, PropertyChangeListener, KeyListener {
     // Edit mode
@@ -529,6 +530,8 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
     public void actionPerformed(ActionEvent ae) {
 
     	MouseContext.getInstance().clear();
+    	Globals.mouseAction = null;
+    	
     	
     	if (ae.getSource() == lineInputDirectVButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;
@@ -557,6 +560,15 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
             
+        } else if (ae.getSource() == lineInputVerticalLineButton) {
+            Globals.editMode = Constants.EditMode.INPUT_LINE;
+            Globals.lineInputMode = Constants.LineInputMode.VERTICAL_LINE;
+
+            Globals.mouseAction = new VerticalLineAction();
+            
+            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
+            modeChanged();
+            
         } 
         
         else if (ae.getSource() == lineInputOverlapVButton) {
@@ -580,11 +592,7 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
             Globals.lineInputMode = Constants.LineInputMode.TRIANGLE_SPLIT;
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
-        } else if (ae.getSource() == lineInputVerticalLineButton) {
-            Globals.editMode = Constants.EditMode.INPUT_LINE;
-            Globals.lineInputMode = Constants.LineInputMode.VERTICAL_LINE;
-            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
-            modeChanged();
+
         } else if (ae.getSource() == lineInputSymmetricButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;
             Globals.lineInputMode = Constants.LineInputMode.SYMMETRIC_LINE;
