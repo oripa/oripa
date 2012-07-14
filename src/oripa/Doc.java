@@ -20,6 +20,7 @@ package oripa;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Stack;
@@ -53,9 +54,6 @@ class FaceOrderComparator implements Comparator {
     }
 }
 
-class UndoInfo {
-    public ArrayList<OriLine> lines = new ArrayList<OriLine>();
-}
 
 public class Doc {
 
@@ -65,7 +63,6 @@ public class Doc {
     public ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
     public ArrayList<OriEdge> edges = new ArrayList<OriEdge>();
     public ArrayList<OriLine> tmpSelectedLines = new ArrayList<OriLine>();
-    private Stack<UndoInfo> undoStack = new Stack<UndoInfo>();
     public boolean isValidPattern = false;
     public double size;
     public boolean hasModel = false;
@@ -88,6 +85,8 @@ public class Doc {
     public String memo;
     public Vector2d foldedBBoxLT;
     public Vector2d foldedBBoxRB;
+
+    private UndoManager undoManager = new UndoManager();
     
     int debugCount = 0;
 
@@ -146,21 +145,37 @@ public class Doc {
 
     }
 
-    public void pushUndoInfo() {
-        UndoInfo ui = new UndoInfo();
-        for (OriLine l : lines) {
-            ui.lines.add(new OriLine(l));
-        }
-        undoStack.push(ui);
+    public UndoInfo createUndoInfo(){
+        UndoInfo undoInfo = new UndoInfo(lines);
+        return undoInfo;
+    }
+    
+    public void cacheUndoInfo(){
+    	undoManager.setCache(createUndoInfo());
     }
 
-    public void popUndoInfo() {
-        if (undoStack.isEmpty()) {
-            return;
+    public void pushCachedUndoInfo(){
+    	undoManager.pushCachedInfo();
+    }
+    
+    public void pushUndoInfo() {
+        UndoInfo ui = new UndoInfo(lines);
+        undoManager.push(ui);
+    }
+    
+    public void pushUndoInfo(UndoInfo uinfo){
+    	undoManager.push(uinfo);
+    }
+
+    public void loadUndoInfo() {
+        UndoInfo info = undoManager.pop();
+        
+        if(info == null){
+        	return;
         }
-        UndoInfo ui = undoStack.pop();
+        
         lines.clear();
-        lines.addAll(ui.lines);
+        lines.addAll(info.getLines());
     }
 
     private OriVertex addAndGetVertexFromVVec(Vector2d p) {
@@ -356,7 +371,14 @@ public class Doc {
     }
 
     public void mirrorCopyBy(OriLine l) {
-        ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
+    	mirrorCopyBy(l, lines);
+    }
+    
+    
+    public void mirrorCopyBy(OriLine l, 
+    		Collection<OriLine> lines) {
+
+    	ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
         for (OriLine line : lines) {
             if (!line.selected) {
                 continue;
@@ -371,7 +393,8 @@ public class Doc {
         for (OriLine line : copiedLines) {
             addLine(line);
         }
-    }
+    	
+    }    
 
     public void removeLine(OriLine l) {
         lines.remove(l);

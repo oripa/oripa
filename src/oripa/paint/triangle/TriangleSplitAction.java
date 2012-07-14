@@ -1,4 +1,4 @@
-package oripa.paint.vertical;
+package oripa.paint.triangle;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -24,35 +24,35 @@ import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
 import oripa.paint.segment.SelectingFirstVertexForSegment;
 
-public class VerticalLineAction extends GraphicMouseAction {
+public class TriangleSplitAction extends GraphicMouseAction {
 
 
-	public VerticalLineAction(){
-		setActionState(new SelectingVertexForVertical());
+	public TriangleSplitAction(){
+		setActionState(new SelectingVertexForTriangleSplit());
 	}
 
 
 
-	private OriLine closeLine = null;
-
-	@Override
-	public Vector2d onMove(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-		Vector2d result = super.onMove(context, affine, event);
-
-		if(context.getVertexCount() == 1){
-			if(closeLine != null){
-				closeLine.selected = false;
-			}
-			
-			closeLine = context.pickCandidateL;
-	
-			if(closeLine != null){
-				closeLine.selected = true;
-			}
-		}		
-		return result;
-	}
+//	private OriLine closeLine = null;
+//
+//	@Override
+//	public Vector2d onMove(MouseContext context, AffineTransform affine,
+//			MouseEvent event) {
+//		Vector2d result = super.onMove(context, affine, event);
+//
+//		if(context.getVertexCount() == 3){
+//			if(closeLine != null){
+//				closeLine.selected = false;
+//			}
+//			
+//			closeLine = context.pickCandidateL;
+//	
+//			if(closeLine != null){
+//				closeLine.selected = true;
+//			}
+//		}		
+//		return result;
+//	}
 
 
 
@@ -79,22 +79,11 @@ public class VerticalLineAction extends GraphicMouseAction {
 
 		ElementSelector selector = new ElementSelector();
 
-		if(context.getVertexCount() == 0){
-			Vector2d closeVertex = context.pickCandidateV;
+		Vector2d closeVertex = context.pickCandidateV;
 
-			if (closeVertex != null) {
-				g2d.setColor(selector.selectColorByLineType(Globals.inputLineType));
-				drawVertex(g2d, context, closeVertex.x, closeVertex.y);
-			}
-		}
-		else if(context.getVertexCount() == 1){
-			
-			OriLine closeLine = context.pickCandidateL;
-
-			if(closeLine != null){
-				g2d.setColor(Config.LINE_COLOR_CANDIDATE);
-				drawLine(g2d, closeLine);
-			}
+		if (closeVertex != null) {
+			g2d.setColor(selector.selectColorByLineType(Globals.inputLineType));
+			drawVertex(g2d, context, closeVertex.x, closeVertex.y);
 		}
 	}
 

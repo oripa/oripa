@@ -22,8 +22,8 @@ import java.util.ListResourceBundle;
 
 public class StringResource_en extends ListResourceBundle {
     static final Object[][] strings = { 
-    	{ "Title", "ORIPA : Origami Pattern Editor" }, 
-//        { "Title", "ORIPAS : Origami Pattern Editor Saving as Image" }, 
+//    	{ "Title", "ORIPA : Origami Pattern Editor" }, 
+        { "Title", "oripaS : Origami Pattern Editor Saving as Image, based on ORIPA" }, 
         { "File", "File" }, 
         { "Edit", "Edit" }, 
         { "Help", "Help" }, 

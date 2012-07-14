@@ -13,7 +13,9 @@ public class MouseContext {
     public OriLine prePickLine = null;
     
     private Stack<Vector2d> pickedVertices = new Stack<>();
-    private Stack<OriLine> pickedLines = new Stack<>();
+
+
+	private Stack<OriLine> pickedLines = new Stack<>();
     
     public Vector2d pickCandidateV = new Vector2d();
     public OriLine pickCandidateL = new OriLine();
@@ -55,7 +57,15 @@ public class MouseContext {
     	tmpOutline.clear();
     }
     
-    public OriLine getLine(int index){
+    public Stack<Vector2d> getVertices() {
+		return pickedVertices;
+	}
+    
+    public Stack<OriLine> getLines() {
+		return pickedLines;
+	}
+
+	public OriLine getLine(int index){
     	return pickedLines.get(index);
     }
     
@@ -89,6 +99,16 @@ public class MouseContext {
     	OriLine line = pickedLines.pop();
     	line.selected = false;
     	return line;
+    }
+    
+    /**
+     * performs the same as {@code Vector.remove(Object o)}.
+     * @param line
+     * @return
+     */
+    public boolean removeLine(OriLine line){
+    	
+    	return pickedLines.remove(line);
     }
     
     public Vector2d peekVertex(){

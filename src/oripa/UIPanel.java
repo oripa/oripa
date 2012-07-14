@@ -37,10 +37,12 @@ import javax.swing.border.EtchedBorder;
 import oripa.file.ImageResourceLoader;
 import oripa.geom.OriLine;
 import oripa.paint.MouseContext;
+import oripa.paint.bisector.AngleBisectorAction;
 import oripa.paint.line.TwoPointLineAction;
 import oripa.paint.mirror.MirrorCopyAction;
 import oripa.paint.pbisec.TwoPointBisectorAction;
 import oripa.paint.segment.TwoPointSegmentAction;
+import oripa.paint.triangle.TriangleSplitAction;
 import oripa.paint.vertical.VerticalLineAction;
 
 public class UIPanel extends JPanel implements ActionListener, PropertyChangeListener, KeyListener {
@@ -526,7 +528,7 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
 
 
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent ae) {
 
@@ -561,7 +563,8 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
             
-        } else if (ae.getSource() == lineInputVerticalLineButton) {
+        } 
+        else if (ae.getSource() == lineInputVerticalLineButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;
             Globals.lineInputMode = Constants.LineInputMode.VERTICAL_LINE;
 
@@ -570,7 +573,8 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
             
-        } else if (ae.getSource() == lineInputMirrorButton) {
+        } 
+        else if (ae.getSource() == lineInputMirrorButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;
             Globals.lineInputMode = Constants.LineInputMode.MIRROR;
             
@@ -578,6 +582,25 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
             
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
+        } 
+        else if (ae.getSource() == lineInputBisectorButton) {
+            Globals.editMode = Constants.EditMode.INPUT_LINE;
+            Globals.lineInputMode = Constants.LineInputMode.BISECTOR;
+            
+            Globals.mouseAction = new AngleBisectorAction();
+            
+            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
+            modeChanged();
+        }
+        else if (ae.getSource() == lineInputTriangleSplitButton) {
+            Globals.editMode = Constants.EditMode.INPUT_LINE;
+            Globals.lineInputMode = Constants.LineInputMode.TRIANGLE_SPLIT;
+            
+            Globals.mouseAction = new TriangleSplitAction();
+            
+            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
+            modeChanged();
+
         } 
         
         else if (ae.getSource() == lineInputOverlapVButton) {
@@ -591,16 +614,6 @@ public class UIPanel extends JPanel implements ActionListener, PropertyChangeLis
             editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
             modeChanged();
 
-        } else if (ae.getSource() == lineInputBisectorButton) {
-            Globals.editMode = Constants.EditMode.INPUT_LINE;
-            Globals.lineInputMode = Constants.LineInputMode.BISECTOR;
-            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
-            modeChanged();
-        } else if (ae.getSource() == lineInputTriangleSplitButton) {
-            Globals.editMode = Constants.EditMode.INPUT_LINE;
-            Globals.lineInputMode = Constants.LineInputMode.TRIANGLE_SPLIT;
-            editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
-            modeChanged();
 
         } else if (ae.getSource() == lineInputSymmetricButton) {
             Globals.editMode = Constants.EditMode.INPUT_LINE;

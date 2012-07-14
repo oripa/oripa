@@ -8,8 +8,6 @@ public interface ActionState {
 
 	public ActionState undo(MouseContext context);
 	
-	public ActionState cloneForNext();
-
 //	public void onResult(MouseContext context);
 	
 	// syntax error. why?

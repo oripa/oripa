@@ -363,7 +363,7 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 			saveIniFile();
 			System.exit(0);
 		} else if (e.getSource() == menuItemUndo) {
-			ORIPA.doc.popUndoInfo();
+			ORIPA.doc.loadUndoInfo();
 			mainScreen.repaint();
 		} else if (e.getSource() == menuItemClear) {
 			ORIPA.doc = new Doc(Constants.DEFAULT_PAPER_SIZE);

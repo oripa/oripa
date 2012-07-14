@@ -4,7 +4,10 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
+import javax.vecmath.Vector2d;
+
 import oripa.Config;
+import oripa.geom.OriLine;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
 
@@ -15,23 +18,41 @@ public class MirrorCopyAction extends GraphicMouseAction {
 		setActionState(new SelectingLineForMirror());
 	}
 	
+	private OriLine closeLine = null;
+
+//	@Override
+//	public Vector2d onMove(MouseContext context, AffineTransform affine,
+//			MouseEvent event) {
+//		Vector2d result = super.onMove(context, affine, event);
+//
+//		if(closeLine != null){
+//			closeLine.selected = false;
+//		}
+//			
+//		closeLine = context.pickCandidateL;
+//	
+//		if(closeLine != null){
+//			closeLine.selected = true;
+//		}
+//			
+//		return result;
+//	}
+
 	@Override
 	public void onDrag(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onRelease(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onDraw(Graphics2D g2d, MouseContext context) {
-		// TODO Auto-generated method stub
+
 		super.onDraw(g2d, context);
 		
 		if(context.pickCandidateL != null){

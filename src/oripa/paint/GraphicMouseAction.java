@@ -41,6 +41,10 @@ public abstract class GraphicMouseAction {
 	protected void setActionState(ActionState state){
 		this.state = state;
 	}
+	
+	protected boolean currentStateIs(Class<? extends ActionState> s){
+		return state.equals(s);
+	}
 		
     public void onLeftClick(MouseContext context, AffineTransform affine, MouseEvent event){
 		Point2D.Double clickPoint = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
@@ -55,7 +59,15 @@ public abstract class GraphicMouseAction {
 		state = state.undo(context);
 	}
 	
-	
+	/**
+	 * searches vertex and line close enough to the mouse cursor.
+	 * The result is stored into context.pickCandidateL(and V).
+	 * 
+	 * @param context
+	 * @param affine
+	 * @param event
+	 * @return close vertex
+	 */
 	public Vector2d onMove(MouseContext context, AffineTransform affine, MouseEvent event) {
 		Point2D.Double current = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
 
@@ -77,6 +89,13 @@ public abstract class GraphicMouseAction {
 
 	public abstract void onRelease(MouseContext context, AffineTransform affine, MouseEvent event);
 	
+	
+	/**
+	 * draws selected lines and selected vertices as selected state.
+	 * 
+	 * @param g2d
+	 * @param context
+	 */
 	public void onDraw(Graphics2D g2d, MouseContext context){
 		drawPickedLines(g2d, context);
 		drawPickedVertices(g2d, context);
@@ -129,8 +148,8 @@ public abstract class GraphicMouseAction {
     }
 
     /**
-     * draws the line between the most recently selected line and the vertex
-     * close to the mouse cursor.
+     * draws the line between the most recently selected vertex and 
+     * the closest vertex sufficiently to the mouse cursor.
      * if every vertex is far from cursor, this method uses the cursor point
      * instead of close vertex.
      * @param g2d

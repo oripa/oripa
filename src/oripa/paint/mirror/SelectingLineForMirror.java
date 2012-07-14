@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
+import oripa.Doc;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.paint.MouseContext;
@@ -19,18 +20,16 @@ public class SelectingLineForMirror extends PickingLine {
 
 	@Override
 	protected void initialize() {
-		setNextClass(this.getClass());
-		setPreviousClass(this.getClass());
 	}
 
 	
 	private OriLine axis;
 	private boolean doingFirstAction = true;
-
+	
 	/**
 	 * This class keeps selecting line while {@value doSpecial} is false.
 	 * When {@value doSpecial} is true, it executes mirror copy where the
-	 * axis of mirror copy is the select line.
+	 * axis of mirror copy is the selected line.
 	 * 
 	 * @param doSpecial true if copy should be done.
 	 * @return true if copy is done.
@@ -40,7 +39,7 @@ public class SelectingLineForMirror extends PickingLine {
 			boolean doSpecial) {
 		if(doingFirstAction){
 			doingFirstAction = false;
-	        ORIPA.doc.pushUndoInfo();
+			ORIPA.doc.cacheUndoInfo();
 			
 		}
 
@@ -53,7 +52,16 @@ public class SelectingLineForMirror extends PickingLine {
             } 
 			else {
 				OriLine line = context.peekLine();
-                line.selected = !line.selected;
+
+				if(line.selected){
+                	line.selected = false;
+                	context.popLine();
+                	context.removeLine(line);
+                }
+                else {
+                	line.selected = true;
+                }
+
                 result = false;
             }
 		}
@@ -62,11 +70,20 @@ public class SelectingLineForMirror extends PickingLine {
 		return result;
 	}
 
+	
+	
+	@Override
+	protected void undoAction(MouseContext context) {
+		// TODO Auto-generated method stub
+		super.undoAction(context);
+	}
+
 	@Override
 	protected void onResult(MouseContext context) {
 		// TODO Auto-generated method stub
+        ORIPA.doc.pushCachedUndoInfo();
 
-		ORIPA.doc.mirrorCopyBy(axis);
+		ORIPA.doc.mirrorCopyBy(axis, context.getLines());
 
         doingFirstAction = true;
         context.clear();

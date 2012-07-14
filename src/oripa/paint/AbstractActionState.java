@@ -20,34 +20,7 @@ import oripa.paint.ActionState;
  */
 public abstract class AbstractActionState implements ActionState {
 	private Class<? extends ActionState> next, prev;
-	
-//	/**
-//	 * defines the final action of doAction().
-//	 * usually you do nothing or push the result of action into ORIPA document class.
-//	 * @param context
-//	 */
-//	public interface OnResultListener{
-//
-//		public void onResult(MouseContext context);
-//	}
-//	
-//	private OnResultListener resultAction = null;
-//
-//	
-//	
-//	public OnResultListener getResultAction() {
-//		return resultAction;
-//	}
-//
-//	public void setResultAction(OnResultListener resultAction) {
-//		this.resultAction = resultAction;
-//	}
-//
-//	public PickingVertex(OnResultListener l){
-//		resultAction = l;
-//	}
-
-	
+		
 	public AbstractActionState(){
 		initialize();
 	}
@@ -66,8 +39,12 @@ public abstract class AbstractActionState implements ActionState {
 	}
 
 	/**
-	 * Picks the nearest vertex and push it into context.
-	 * @return Next state if vertex is found, else itself.
+	 * first this method calls onAct(),  then calls onResult() 
+	 * if onAct() returns true. 
+	 * 
+	 * @return A new instance of next state. 
+	 *         if class of next state is not set (or is null),
+	 *         returns {@value this}.
 	 */
 	@Override
 	public final ActionState doAction(MouseContext context, 
@@ -82,27 +59,19 @@ public abstract class AbstractActionState implements ActionState {
 
 		onResult(context);
 
-		if(next == null){
-			System.out.println("null next state class");
-//			return this.cloneForNext();
-			return this;
-		}
-
-		ActionState nextState = null;
-
-		try {
-			nextState = next.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+		ActionState nextState = getNextState();
 		
 		return nextState;
 	}
 	
+	/**
+	 * defines what to do after onAct() succeeded.
+	 * @param context
+	 */
 	protected abstract void onResult(MouseContext context);
 
 	/**
+	 * defines the job of this class.
 	 * 
 	 * @param context information relating mouse action.
 	 * @param currentPoint current point of mouse cursor.
@@ -121,14 +90,7 @@ public abstract class AbstractActionState implements ActionState {
 		
 		undoAction(context);
 		
-		ActionState prevState = null;
-		try {
-			prevState = prev.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+		ActionState prevState = getPreviousState();
 		
 		return prevState;
 	}
@@ -153,25 +115,23 @@ public abstract class AbstractActionState implements ActionState {
 
 	@Override
 	public ActionState getNextState() {
-		ActionState state = null;
-
-		try {
-			state = next.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-		
-		return state;
+		return createInstance(next);
 	}
 
 	@Override
 	public ActionState getPreviousState() {
+		return createInstance(prev);
+	}
+
+	private ActionState createInstance(Class<? extends ActionState> c){
 		ActionState state = null;
 
+		if(c == null){
+			return this;
+		}
+		
 		try {
-			state = prev.newInstance();
+			state = c.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -179,46 +139,8 @@ public abstract class AbstractActionState implements ActionState {
 		}
 		
 		return state;
+		
 	}
 
-	@Override
-	public ActionState cloneForNext() {
 
-//		ActionState state = null;
-//		
-//		try {
-//			state = create(this.getClass(), getPreviousState(), getNextState());
-//
-//		} catch (InstantiationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		ActionState state = null;
-		try {
-			state = this.getClass().newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-		
-		return state;
-	}
-
-//	public static ActionState create(
-//			Class<? extends AbstractAction> stateClass, 
-//			ActionState prev, ActionState next)
-//					throws InstantiationException, IllegalAccessException{
-//
-//		AbstractAction state = stateClass.newInstance();
-//
-//		state.setNextState(next);
-//		state.setPreviousState(prev);
-//		
-//		return state;
-//	}
 }

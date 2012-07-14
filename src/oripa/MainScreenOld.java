@@ -676,7 +676,7 @@ public class MainScreenOld extends JPanel
             if (pickPointOnLine(currentMousePointLogic, line_vertex)) {
                 ORIPA.doc.pushUndoInfo();
                 if (!ORIPA.doc.addVertexOnLine((OriLine) line_vertex[0], (Vector2d) line_vertex[1])) {
-                    ORIPA.doc.popUndoInfo();
+                    ORIPA.doc.loadUndoInfo();
                 }
                 this.pickCandidateV = null;
                 repaint();
