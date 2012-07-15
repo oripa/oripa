@@ -9,12 +9,12 @@ import oripa.geom.OriLine;
 
 public class ElementSelector {
 
-	public Color selectColorByPickupOrder(int order){
-		if(order > 0){
-			return selectColorByLineType(Globals.inputLineType);
+	public Color selectColorByPickupOrder(int order, int count){
+		if(order == count - 1){
+			return Color.GREEN;
 		}
 		
-		return Color.GREEN;
+		return selectColorByLineType(Globals.inputLineType);
 	}
 	
 	public Color selectLineColor(OriLine line){

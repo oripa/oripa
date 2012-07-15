@@ -27,6 +27,9 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -35,10 +38,11 @@ import oripa.geom.*;
 import oripa.paint.ElementSelector;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
+import oripa.paint.byvalue.ValueDB;
 
 
 public class MainScreen extends JPanel
-        implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener, ComponentListener {
+        implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener, ComponentListener{
 
     private boolean bDrawFaceID = false;
     private Image bufferImage;
@@ -373,8 +377,9 @@ public class MainScreen extends JPanel
                 && Globals.subLineInputMode == Constants.SubLineInputMode.NONE
                 && pickCandidateV != null) {
             try {
-                double length = Double.valueOf(ORIPA.mainFrame.uiPanel.textFieldLength.getText());
-                double angle = Math.toRadians(Double.valueOf(ORIPA.mainFrame.uiPanel.textFieldAngle.getText()));
+            	ValueDB valDB = ValueDB.getInstance();
+                double length = valDB.getLength();
+                double angle = Math.toRadians(valDB.getAngle());
 
                 switch (Globals.inputLineType) {
                     case OriLine.TYPE_NONE:
@@ -603,7 +608,8 @@ public class MainScreen extends JPanel
             				mouseContext, affineTransform, e);
             	}
             	else {
-            		Globals.mouseAction.onLeftClick(mouseContext, affineTransform, e);
+            		Globals.mouseAction = Globals.mouseAction.onLeftClick(
+            				mouseContext, affineTransform, e);
             	}
             	return;
             }
@@ -767,109 +773,6 @@ public class MainScreen extends JPanel
                         preprePickV = null;
                     }
 
-                }
-
-            } else if (Globals.lineInputMode == Constants.LineInputMode.TRIANGLE_SPLIT) {
-                Vector2d v = pickVertex(clickPoint);
-                if (v != null) {
-                    if (preprePickV == null) {
-                        preprePickV = v;
-                    } else if (prePickV == null) {
-                        prePickV = v;
-                    } else {
-                        ORIPA.doc.pushUndoInfo();
-                        ORIPA.doc.addTriangleDivideLines(v, prePickV, preprePickV);
-                        prePickV = null;
-                        preprePickV = null;
-                    }
-
-                }
-
-            } else if (Globals.lineInputMode == Constants.LineInputMode.BISECTOR) {
-                if (prepreprePickV == null) {
-                    prepreprePickV = pickVertex(clickPoint);
-                    if (prepreprePickV != null) {
-                        pickCandidateV = null;
-                    }
-                } else if (preprePickV == null) {
-                    preprePickV = pickVertex(clickPoint);
-                } else if (prePickV == null) {
-                    prePickV = pickVertex(clickPoint);
-                } else {
-                    OriLine l = pickLine(clickPoint);
-                    if (l != null) {
-                        ORIPA.doc.pushUndoInfo();
-                        ORIPA.doc.addBisectorLine(prepreprePickV, preprePickV, prePickV, l);
-                        prePickV = null;
-                        preprePickV = null;
-                        prepreprePickV = null;
-                    }
-                }
-
-         
-            } else if (Globals.lineInputMode == Constants.LineInputMode.MIRROR) {
-                OriLine l = pickLine(clickPoint);
-                if (l != null) {
-                    if ((e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
-                        ORIPA.doc.mirrorCopyBy(l);
-                        ORIPA.doc.resetSelectedOriLines();
-                        ORIPA.doc.pushUndoInfo();
-                    } else {
-                        l.selected = !l.selected;
-                    }
-                }
-                repaint();
-                return;
-            } else if (Globals.lineInputMode == Constants.LineInputMode.BY_VALUE) {
-                if (Globals.subLineInputMode == Constants.SubLineInputMode.NONE) {
-                    Vector2d v = pickVertex(clickPoint);
-                    if (v != null) {
-                        double length;
-                        double angle;
-                        try {
-                            length = Double.valueOf(ORIPA.mainFrame.uiPanel.textFieldLength.getText());
-                            angle = Double.valueOf(ORIPA.mainFrame.uiPanel.textFieldAngle.getText());
-
-                            if (length > 0) {
-                                OriLine vl = GeomUtil.getLineByValue(v, length, -angle, Globals.inputLineType);
-
-                                ORIPA.doc.pushUndoInfo();
-                                ORIPA.doc.addLine(vl);
-                            }
-                        } catch (Exception ex) {
-                        }
-                    }
-                } else if (Globals.subLineInputMode == Constants.SubLineInputMode.PICK_LENGTH) {
-                    Vector2d v = pickVertex(clickPoint);
-                    if (v != null) {
-                        if (prePickV == null) {
-                            prePickV = v;
-                        } else {
-                            double length = GeomUtil.Distance(prePickV, v);
-                            ORIPA.mainFrame.uiPanel.textFieldLength.setValue(new Double(length));
-                            Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
-                            ORIPA.mainFrame.uiPanel.modeChanged();
-                        }
-                    }
-                } else if (Globals.subLineInputMode == Constants.SubLineInputMode.PICK_ANGLE) {
-                    Vector2d v = pickVertex(clickPoint);
-                    if (v != null) {
-                        if (preprePickV == null) {
-                            preprePickV = v;
-                        } else if (prePickV == null) {
-                            prePickV = v;
-                        } else {
-                            Vector2d dir1 = new Vector2d(v);
-                            Vector2d dir2 = new Vector2d(preprePickV);
-                            dir1.sub(prePickV);
-                            dir2.sub(prePickV);
-
-                            double deg_angle = Math.toDegrees(dir1.angle(dir2));
-                            ORIPA.mainFrame.uiPanel.textFieldAngle.setValue(new Double(deg_angle));
-                            Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
-                            ORIPA.mainFrame.uiPanel.modeChanged();
-                        }
-                    }
                 }
             }
         }
@@ -1258,4 +1161,6 @@ public class MainScreen extends JPanel
     public void componentHidden(ComponentEvent arg0) {
         // TODO Auto-generated method stub
     }
+
+
 }

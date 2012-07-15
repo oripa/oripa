@@ -28,14 +28,18 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import oripa.file.*;
 import oripa.file.FileFilterEx.SavingAction;
+import oripa.paint.byvalue.ValueDB;
 
-public class MainFrame extends JFrame implements ActionListener, ComponentListener, WindowListener {
+public class MainFrame extends JFrame 
+implements ActionListener, ComponentListener, WindowListener{
 
 	MainScreen mainScreen;
 	public ArrayList<String> MRUFiles = new ArrayList<>();
@@ -663,6 +667,8 @@ public class MainFrame extends JFrame implements ActionListener, ComponentListen
 		saveIniFile();
 	}
 
+	
+	
 	@Override
 	public void windowClosed(WindowEvent arg0) {
 	}

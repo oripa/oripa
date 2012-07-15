@@ -24,7 +24,10 @@ public class MouseContext {
     public double scale;
 
     
+    private boolean missionCompleted = false;
+    
     private static MouseContext instance = null;
+    
 
     public static MouseContext getInstance(){
     	if(instance == null){
@@ -55,9 +58,21 @@ public class MouseContext {
     	pickedLines.clear();
     	pickedVertices.clear();
     	tmpOutline.clear();
+    	
+    	missionCompleted = false;
     }
+
     
-    public Stack<Vector2d> getVertices() {
+    
+    public boolean isMissionCompleted() {
+		return missionCompleted;
+	}
+
+	public void setMissionCompleted(boolean missionCompleted) {
+		this.missionCompleted = missionCompleted;
+	}
+
+	public Stack<Vector2d> getVertices() {
 		return pickedVertices;
 	}
     

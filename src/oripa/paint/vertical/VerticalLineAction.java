@@ -77,24 +77,13 @@ public class VerticalLineAction extends GraphicMouseAction {
 		super.onDraw(g2d, context);
 
 
-		ElementSelector selector = new ElementSelector();
-
 		if(context.getVertexCount() == 0){
-			Vector2d closeVertex = context.pickCandidateV;
 
-			if (closeVertex != null) {
-				g2d.setColor(selector.selectColorByLineType(Globals.inputLineType));
-				drawVertex(g2d, context, closeVertex.x, closeVertex.y);
-			}
+			drawPickCandidateVertex(g2d, context);
 		}
 		else if(context.getVertexCount() == 1){
+			drawPickCandidateLine(g2d, context);
 			
-			OriLine closeLine = context.pickCandidateL;
-
-			if(closeLine != null){
-				g2d.setColor(Config.LINE_COLOR_CANDIDATE);
-				drawLine(g2d, closeLine);
-			}
 		}
 	}
 

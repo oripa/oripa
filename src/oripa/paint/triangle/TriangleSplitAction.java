@@ -77,14 +77,7 @@ public class TriangleSplitAction extends GraphicMouseAction {
 		super.onDraw(g2d, context);
 
 
-		ElementSelector selector = new ElementSelector();
-
-		Vector2d closeVertex = context.pickCandidateV;
-
-		if (closeVertex != null) {
-			g2d.setColor(selector.selectColorByLineType(Globals.inputLineType));
-			drawVertex(g2d, context, closeVertex.x, closeVertex.y);
-		}
+		drawPickCandidateVertex(g2d, context);
 	}
 
 }

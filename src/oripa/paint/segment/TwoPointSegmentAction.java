@@ -52,16 +52,9 @@ public class TwoPointSegmentAction extends GraphicMouseAction {
 
 		super.onDraw(g2d, context);
 		
-		Vector2d closeVertex = context.pickCandidateV;
 
-		ElementSelector selector = new ElementSelector();
-
-		drawCandidateLine(g2d, context);
-		
-		if (closeVertex != null) {
-            g2d.setColor(selector.selectColorByLineType(Globals.inputLineType));
-            drawVertex(g2d, context, closeVertex.x, closeVertex.y);
-        }
+		drawTemporaryLine(g2d, context);
+		drawPickCandidateVertex(g2d, context);
 
 
 	}

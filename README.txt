@@ -1,4 +1,4 @@
-ORIPAS v1.0 (2012/06/23) by OUCHI Koji
+ORIPAS v1.05 (2012/06/23) by OUCHI Koji
 	ORIPA with function of saving as image.
 *** Copyright (C) 2012 OUCHI Koji
 
@@ -16,9 +16,18 @@ ORIPAS v1.0 (2012/06/23) by OUCHI Koji
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 --> Changes from the last version:
+2012/07/15 Bug fix:
+	Codes for inputting line are refactored (just partially).
+	Undo of mirror copy is available.
+	It corrects a problem that the color of selected line remains green.
+
 2012/06/23 Saving as JPG or PNG is available.
 
 
+--> Next challenges:
+	fix wrong undo of changing line type.
+	fix bug crashing when you input Ctrl + X.
+	
 The following is the original ORIPA's read me.
 ===========================
 

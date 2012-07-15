@@ -38,7 +38,7 @@ public abstract class GraphicMouseAction {
 	}	
 	
 	private ActionState state;
-	protected void setActionState(ActionState state){
+	protected final void setActionState(ActionState state){
 		this.state = state;
 	}
 	
@@ -46,14 +46,32 @@ public abstract class GraphicMouseAction {
 		return state.equals(s);
 	}
 		
-    public void onLeftClick(MouseContext context, AffineTransform affine, MouseEvent event){
+	
+	/**
+	 * performs action.
+	 * 
+	 * @param context
+	 * @param affine
+	 * @param event
+	 * 
+	 * @return Next mouse action. This class returns {@code this} object.
+	 */
+    public GraphicMouseAction onLeftClick(MouseContext context, 
+    		AffineTransform affine, MouseEvent event){
 		Point2D.Double clickPoint = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
 		
 		state = state.doAction(context, 
 				clickPoint, buttonCTRLIsPressed(event));
 
+		return this;
     }
 
+    /**
+     * undo action.
+     * @param context
+     * @param affine
+     * @param event
+     */
 	public void onRightClick(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
 		state = state.undo(context);
@@ -92,6 +110,7 @@ public abstract class GraphicMouseAction {
 	
 	/**
 	 * draws selected lines and selected vertices as selected state.
+	 * Override for more drawing.
 	 * 
 	 * @param g2d
 	 * @param context
@@ -119,7 +138,7 @@ public abstract class GraphicMouseAction {
 		ElementSelector selector = new ElementSelector();
 
 		for(int i = 0; i < context.getVertexCount(); i++){
-			g2d.setColor(selector.selectColorByPickupOrder(i));
+			g2d.setColor(selector.selectColorByLineType(Globals.inputLineType));
 			
 			Vector2d vertex = context.getVertex(i);
             drawVertex(g2d, context, vertex.x, vertex.y);
@@ -135,6 +154,14 @@ public abstract class GraphicMouseAction {
 
     }
     
+    public void drawPickCandidateVertex(Graphics2D g2d, MouseContext context){
+    	if (context.pickCandidateV != null) {
+    		g2d.setColor(Config.LINE_COLOR_CANDIDATE);
+    		Vector2d candidate = context.pickCandidateV;
+    		drawVertex(g2d, context, candidate.x, candidate.y);
+    	}
+    }
+    
     public void drawLine(Graphics2D g2d, OriLine line){
 		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, 
 				line.p1.x, line.p1.y));
@@ -147,6 +174,15 @@ public abstract class GraphicMouseAction {
     	
     }
 
+    public void drawPickCandidateLine(Graphics2D g2d, MouseContext context){
+    	if (context.pickCandidateL!= null) {
+    		g2d.setColor(Config.LINE_COLOR_CANDIDATE);
+    		OriLine candidate = context.pickCandidateL;
+    		drawLine(g2d, candidate);
+    	}
+    }
+    
+    
     /**
      * draws the line between the most recently selected vertex and 
      * the closest vertex sufficiently to the mouse cursor.
@@ -155,7 +191,7 @@ public abstract class GraphicMouseAction {
      * @param g2d
      * @param context
      */
-    public void drawCandidateLine(Graphics2D g2d, MouseContext context){
+    public void drawTemporaryLine(Graphics2D g2d, MouseContext context){
 		ElementSelector selector = new ElementSelector();
 
 		if(context.getVertexCount() > 0){

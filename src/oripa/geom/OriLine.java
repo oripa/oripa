@@ -23,7 +23,9 @@ import javax.vecmath.Vector2d;
 
 public class OriLine {
 
-    final public static int TYPE_NONE = 0;
+	public enum Type{NONE, CUT, RIDGE, VALLEY};
+
+	final public static int TYPE_NONE = 0;
     final public static int TYPE_CUT = 1;
     final public static int TYPE_RIDGE = 2;
     final public static int TYPE_VALLEY = 3;

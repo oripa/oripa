@@ -1,7 +1,8 @@
 oripaS
 ======
 
-A great drawer ORIPA originally composed by MITANI Jun for origami crease pattern. Funciton of saving as image is added.
+A great drawer ORIPA is originally composed by MITANI Jun for origami crease pattern.
+oripaS fixes some bugs and provides function of saving as image.
 
 The following is a read-me text by MITANI Jun:
 

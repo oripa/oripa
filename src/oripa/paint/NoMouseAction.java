@@ -9,10 +9,10 @@ import javax.vecmath.Vector2d;
 public class NoMouseAction extends GraphicMouseAction {
 
 	@Override
-	public void onLeftClick(MouseContext context, AffineTransform affine,
+	public GraphicMouseAction onLeftClick(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
-		// TODO Auto-generated method stub
 
+		return this;
 	}
 
 	@Override

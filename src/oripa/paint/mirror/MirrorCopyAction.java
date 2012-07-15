@@ -54,11 +54,8 @@ public class MirrorCopyAction extends GraphicMouseAction {
 	public void onDraw(Graphics2D g2d, MouseContext context) {
 
 		super.onDraw(g2d, context);
-		
-		if(context.pickCandidateL != null){
-			g2d.setColor(Config.LINE_COLOR_CANDIDATE);
-			drawLine(g2d, context.pickCandidateL);
-		}
+
+		drawPickCandidateLine(g2d, context);
 	}
 	
 	

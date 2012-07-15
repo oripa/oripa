@@ -10,9 +10,6 @@ public class UndoInfo {
 
     
     
-    public ArrayList<OriLine> getLines() {
-		return lines;
-	}
 
 	public UndoInfo(){}
     
@@ -20,7 +17,12 @@ public class UndoInfo {
     	setLines(lines);
     }
     
+    public ArrayList<OriLine> getLines() {
+		return lines;
+	}
+
     public void setLines(Collection<OriLine> lines){
+    	this.lines.clear();
         for (OriLine l : lines) {
             this.lines.add(new OriLine(l));
         }
