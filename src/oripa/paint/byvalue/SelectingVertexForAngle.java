@@ -6,10 +6,10 @@ import javax.vecmath.Vector2d;
 
 import oripa.Constants;
 import oripa.Doc;
-import oripa.Globals;
 import oripa.ORIPA;
 import oripa.UndoInfo;
 import oripa.geom.GeomUtil;
+import oripa.paint.Globals;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingVertex;
 

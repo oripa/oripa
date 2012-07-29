@@ -17,7 +17,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.Config;
 import oripa.Constants;
-import oripa.Globals;
 import oripa.ORIPA;
 import oripa.Constants.EditMode;
 import oripa.geom.GeomUtil;

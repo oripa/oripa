@@ -8,7 +8,6 @@ import java.awt.geom.Point2D;
 import javax.vecmath.Vector2d;
 
 import oripa.Constants;
-import oripa.Globals;
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;

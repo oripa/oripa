@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 
 import oripa.Config;
-import oripa.Globals;
 import oripa.geom.OriLine;
 
 public class ElementSelector {

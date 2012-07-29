@@ -2,9 +2,9 @@ package oripa.paint.segment;
 
 import javax.management.RuntimeErrorException;
 
-import oripa.Globals;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
+import oripa.paint.Globals;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingVertex;
 
@@ -36,6 +36,6 @@ public class SelectingSecondVertexForSegment extends PickingVertex{
 		setPreviousClass(SelectingFirstVertexForSegment.class);
 		setNextClass(SelectingFirstVertexForSegment.class);
 
-		System.out.println("SelectingSecondVertex.initialize() is called");
+//		System.out.println("SelectingSecondVertex.initialize() is called");
 	}
 }	

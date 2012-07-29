@@ -15,11 +15,11 @@ import javax.vecmath.Vector2d;
 
 import oripa.Config;
 import oripa.Constants;
-import oripa.Globals;
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
 import oripa.paint.ElementSelector;
+import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
 import oripa.paint.segment.SelectingFirstVertexForSegment;

@@ -1,19 +1,19 @@
-package oripa.paint.byvalue;
+package oripa.paint.symmetric;
 
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D.Double;
 
-import oripa.Constants;
+import javax.vecmath.Vector2d;
+
 import oripa.Doc;
 import oripa.ORIPA;
 import oripa.UndoInfo;
-import oripa.geom.GeomUtil;
-import oripa.paint.Globals;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingVertex;
 
-public class SelectingVertexForLength extends PickingVertex{
+public class SelectingVertexForSymmetric extends PickingVertex{
 	
-	public SelectingVertexForLength(){
+	public SelectingVertexForSymmetric(){
 		super();
 	}
 	
@@ -23,11 +23,12 @@ public class SelectingVertexForLength extends PickingVertex{
 
 
 	private boolean doingFirstAction = true;
+	
+	private boolean doSpecial = false;
+	
 	@Override
 	protected boolean onAct(MouseContext context, Double currentPoint,
 			boolean doSpecial) {
-		
-		context.setMissionCompleted(false);
 		
 		if(doingFirstAction){
 			ORIPA.doc.cacheUndoInfo();
@@ -37,31 +38,33 @@ public class SelectingVertexForLength extends PickingVertex{
 		boolean result = super.onAct(context, currentPoint, doSpecial);
 		
 		if(result == true){
-			if(context.getVertexCount() < 2){
+			if(context.getVertexCount() < 3){
 				result = false;
 			}
 		}
+
+		this.doSpecial = doSpecial;
 		
 		return result;
 	}
 
 	@Override
 	public void onResult(MouseContext context) {
-
-        double length = GeomUtil.Distance(
-        		context.getVertex(0), context.getVertex(1));
-
-        ValueDB valDB = ValueDB.getInstance();
-        valDB.setLength(length);
-        valDB.notifyObservers();
-
-        Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
-
+		ORIPA.doc.pushCachedUndoInfo();
 		
+		Vector2d first = context.getVertex(0);
+		Vector2d second = context.getVertex(1);
+		Vector2d third = context.getVertex(2);
+		
+        if (doSpecial) {
+            ORIPA.doc.addSymmetricLineAutoWalk(
+            		first, second, third, 0, first);
+        } else {
+            ORIPA.doc.addSymmetricLine(first, second, third);
+        }
+
         doingFirstAction = true;
         context.clear();
-
-        context.setMissionCompleted(true);
 	}
 
 	

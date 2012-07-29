@@ -29,6 +29,7 @@ import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 import oripa.geom.*;
+import oripa.paint.Globals;
 
 class PointComparatorX implements Comparator {
 
@@ -86,7 +87,7 @@ public class Doc {
     public Vector2d foldedBBoxLT;
     public Vector2d foldedBBoxRB;
 
-    private UndoManager undoManager = new UndoManager();
+    private UndoManager<UndoInfo> undoManager = new UndoManager<>();
     
     int debugCount = 0;
 
@@ -1421,9 +1422,7 @@ public class Doc {
 
     }
 
-    public void alterLineType(OriLine l) {
-        int lineTypeFromIndex = ORIPA.mainFrame.uiPanel.alterLine_combo_from.getSelectedIndex();
-        int lineTypeToIndex = ORIPA.mainFrame.uiPanel.alterLine_combo_to.getSelectedIndex();
+    public void alterLineType(OriLine l, int lineTypeFromIndex,  int lineTypeToIndex) {
         if (lineTypeFromIndex == 1 /*M*/ && l.type != OriLine.TYPE_RIDGE) {
             return;
         }

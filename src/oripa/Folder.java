@@ -25,6 +25,7 @@ import javax.vecmath.Vector2d;
 import oripa.file.Exporter;
 import oripa.file.ExporterEPS;
 import oripa.geom.*;
+import oripa.paint.Globals;
 
 public class Folder {
 

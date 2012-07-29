@@ -4,10 +4,10 @@ import javax.management.RuntimeErrorException;
 import javax.vecmath.Vector2d;
 
 import oripa.Constants;
-import oripa.Globals;
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
+import oripa.paint.Globals;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingVertex;
 
@@ -47,6 +47,6 @@ public class SelectingSecondVertexForLine extends PickingVertex{
 		setPreviousClass(SelectingFirstVertexForLine.class);
 		setNextClass(SelectingFirstVertexForLine.class);
 
-		System.out.println("SelectingSecondVertex.initialize() is called");
+		//System.out.println("SelectingSecondVertex.initialize() is called");
 	}
 }	

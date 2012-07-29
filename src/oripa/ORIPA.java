@@ -25,6 +25,12 @@ import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import oripa.view.CheckFrame;
+import oripa.view.MainFrame;
+import oripa.view.ModelViewFrame;
+import oripa.view.ModelViewFrame3D;
+import oripa.view.RenderFrame;
+
 
 public class ORIPA {
 

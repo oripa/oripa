@@ -50,6 +50,14 @@ public class ValueDB extends Observable{
 
 		this.setChanged();
 	}
+
+	/**
+	 * @return full-path class name
+	 */
+	@Override
+	public String toString() {
+		return this.getClass().getName();
+	}
 	
 	
 	

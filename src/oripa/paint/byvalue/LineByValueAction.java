@@ -9,10 +9,10 @@ import java.awt.geom.Line2D;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
-import oripa.Globals;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.paint.ElementSelector;
+import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
 

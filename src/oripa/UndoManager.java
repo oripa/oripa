@@ -6,21 +6,17 @@ import java.util.Stack;
 
 import oripa.geom.OriLine;
 
-public class UndoManager {
+public class UndoManager<Backup> {
 
-	private Stack<UndoInfo> undoStack = new Stack<UndoInfo>();
-	private UndoInfo cache;
+	private Stack<Backup> undoStack = new Stack<Backup>();
+	private Backup cache;
 	
-	public UndoInfo createUndoInfo(Collection<OriLine> lines){
-		UndoInfo undoInfo = new UndoInfo(lines);
-		return undoInfo;
-	}
 
-	public void push(UndoInfo uinfo){
+	public void push(Backup uinfo){
 		undoStack.push(uinfo);
 	}
 
-	public UndoInfo pop() {
+	public Backup pop() {
 		if (undoStack.isEmpty()) {
 			return null;
 		}
@@ -28,11 +24,11 @@ public class UndoManager {
 		return undoStack.pop();
 	}
 
-	public void setCache(UndoInfo info){
+	public void setCache(Backup info){
 		cache = info;
 	}
 	
-	public UndoInfo getCache(){
+	public Backup getCache(){
 		return cache;
 	}
 	
