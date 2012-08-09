@@ -875,7 +875,8 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 
 
 	/**
-	 * observes ValueDB for reflecting the changes to text fields.
+	 * observes DB for reflecting the changes to views.
+	 * toString() of given DB has to return a unique value among DB classes.
 	 * @param o Observable class which implements toString() 
 	 *          to return its class name.
 	 * @param arg A parameter to specify the action 
@@ -886,13 +887,13 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		
 		//System.out.println(o.toString());
 
-		switch(o.toString()){
-		case "oripa.paint.byvalue.ValueDB":
+		if(o.toString() == ValueDB.getInstance().toString()){
 			ValueDB valueDB = (ValueDB) o;
 			textFieldAngle.setValue(valueDB.getAngle());
 			textFieldLength.setValue(valueDB.getLength());
-			break;
-		case "oripa.view.UIPanelSettingDB":
+		}
+		else if(o.toString() == UIPanelSettingDB.getInstance().toString()){
+		
 			UIPanelSettingDB setting = (UIPanelSettingDB) o;
 			subPanel1.setVisible(setting.isSubPanelVisible());
 			subPanel2.setVisible(setting.isSubPanelVisible());
@@ -907,8 +908,6 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			lineTypeSubButton.setEnabled(setting.isAuxButtonEnabled());
 
 			repaint();
-
-			break;
 		}
 		
 	}
