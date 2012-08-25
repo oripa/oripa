@@ -24,10 +24,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import oripa.DataSet;
+import oripa.Doc;
+import oripa.ORIPA;
 
-public class LoaderXML {
+public class LoaderXML implements Loader{
 
-    public DataSet load(String filePath) {
+    public DataSet loadAsDataSet(String filePath) {
         DataSet dataset;
         try {
             XMLDecoder dec = new XMLDecoder(
@@ -42,4 +44,22 @@ public class LoaderXML {
 
         return dataset;
     }
+
+	@Override
+	public Doc load(String filePath) throws FileVersionError {
+		
+		Doc doc = new Doc();
+		
+		DataSet data = loadAsDataSet(filePath);
+		
+		if (data.getMainVersion() > ORIPA.FILE_MAJOR_VERSION) {
+			throw new FileVersionError();
+		}
+		
+		
+		data.recover(doc);
+		
+		
+		return doc;
+	}
 }

@@ -1,7 +1,5 @@
 package oripa.paint.segment;
 
-import javax.management.RuntimeErrorException;
-
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.paint.Globals;

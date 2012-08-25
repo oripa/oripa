@@ -1,15 +1,5 @@
 package oripa.file;
 
-import java.awt.Component;
-import java.io.File;
-import java.util.HashMap;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
-
-import oripa.file.FileFilterEx;
-import oripa.ORIPA;
 
 public class FileChooserFactory {
 

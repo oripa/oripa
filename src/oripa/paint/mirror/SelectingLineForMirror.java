@@ -1,10 +1,7 @@
 package oripa.paint.mirror;
 
-import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 
-import oripa.Doc;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.paint.MouseContext;

@@ -4,9 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
-import javax.vecmath.Vector2d;
-
-import oripa.Config;
 import oripa.geom.OriLine;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;

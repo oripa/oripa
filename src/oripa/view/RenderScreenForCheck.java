@@ -169,7 +169,7 @@ public class RenderScreenForCheck extends JPanel
         g2d.setStroke(Config.STROKE_VALLEY);
         g2d.setColor(Color.black);
         for (OriLine line : ORIPA.doc.lines) {
-            switch (line.type) {
+            switch (line.typeVal) {
                 case OriLine.TYPE_NONE:
                     if (!Globals.dispAuxLines) {
                         continue;
@@ -412,7 +412,7 @@ public class RenderScreenForCheck extends JPanel
                 ORIPA.doc.pushUndoInfo();
                 if ((e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
                     // When you press the Ctrl: outline
-                    l.type = OriLine.TYPE_CUT;
+                    l.typeVal = OriLine.TYPE_CUT;
                 } else {
                     l.changeToNextType();
                 }
@@ -432,10 +432,10 @@ public class RenderScreenForCheck extends JPanel
             OriLine l = pickLine(clickPoint);
             if (l != null) {
                 // skip if ocult
-                if (!Globals.dispMVLines && (l.type == OriLine.TYPE_RIDGE || l.type == OriLine.TYPE_VALLEY)) {
+                if (!Globals.dispMVLines && (l.typeVal == OriLine.TYPE_RIDGE || l.typeVal == OriLine.TYPE_VALLEY)) {
                     return;
                 }
-                if (!Globals.dispAuxLines && l.type == OriLine.TYPE_NONE) {
+                if (!Globals.dispAuxLines && l.typeVal == OriLine.TYPE_NONE) {
                     return;
                 }
 
@@ -541,7 +541,7 @@ public class RenderScreenForCheck extends JPanel
                             double ex = mx + l.p1.x - ox;
                             double ey = my + l.p1.y - oy;
 
-                            OriLine line = new OriLine(sx, sy, ex, ey, l.type);
+                            OriLine line = new OriLine(sx, sy, ex, ey, l.typeVal);
                             ORIPA.doc.addLine(line);
                         }
                     }
@@ -751,7 +751,7 @@ public class RenderScreenForCheck extends JPanel
         // Delete the current outline
         ArrayList<OriLine> outlines = new ArrayList<>();
         for (OriLine line : ORIPA.doc.lines) {
-            if (line.type == OriLine.TYPE_CUT) {
+            if (line.typeVal == OriLine.TYPE_CUT) {
                 outlines.add(line);
             }
         }
@@ -771,7 +771,7 @@ public class RenderScreenForCheck extends JPanel
         while (true) {
             boolean bDeleteLine = false;
             for (OriLine line : ORIPA.doc.lines) {
-                if (line.type == OriLine.TYPE_CUT) {
+                if (line.typeVal == OriLine.TYPE_CUT) {
                     continue;
                 }
                 Vector2d OnPoint0 = isOnTmpOutlineLoop(line.p0);
@@ -822,15 +822,15 @@ public class RenderScreenForCheck extends JPanel
                         Math.max(sp.x, ep.x),
                         Math.max(sp.y, ep.y));
                 for (OriLine l : ORIPA.doc.lines) {
-                    if (l.type == OriLine.TYPE_CUT) {
+                    if (l.typeVal == OriLine.TYPE_CUT) {
                         continue;
                     }
                     // skip if ocult
-                    if (!Globals.dispMVLines && (l.type == OriLine.TYPE_RIDGE || 
-                            l.type == OriLine.TYPE_VALLEY)) {
+                    if (!Globals.dispMVLines && (l.typeVal == OriLine.TYPE_RIDGE || 
+                            l.typeVal == OriLine.TYPE_VALLEY)) {
                         continue;
                     }
-                    if (!Globals.dispAuxLines && l.type == OriLine.TYPE_NONE) {
+                    if (!Globals.dispAuxLines && l.typeVal == OriLine.TYPE_NONE) {
                         continue;
                     }
                     if (clipper.clipTest(l)) {

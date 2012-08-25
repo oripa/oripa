@@ -27,7 +27,7 @@ import javax.vecmath.Vector2d;
 import oripa.Doc;
 import oripa.geom.OriLine;
 
-public class LoaderLines {
+public class LoaderLines implements Loader{
 
     public ArrayList<OriLine> lines = new ArrayList<>();
 
@@ -55,8 +55,8 @@ public class LoaderLines {
                 line = new OriLine();
                 lines.add(line);
 
-                line.type = Integer.parseInt(st.sval);// == 1 ? OriLine.TYPE_RIDGE : OriLine.TYPE_VALLEY;
-                System.out.println("line type " + line.type);
+                line.typeVal = Integer.parseInt(st.sval);// == 1 ? OriLine.TYPE_RIDGE : OriLine.TYPE_VALLEY;
+                System.out.println("line type " + line.typeVal);
 
                 token = st.nextToken();
                 line.p0.x = Double.parseDouble(st.sval);

@@ -125,7 +125,7 @@ public class ExporterDXF implements Exporter{
             bw.write("LINE\n");
             bw.write("  8\n");
             String layerName = "noname";
-            switch (line.type) {
+            switch (line.typeVal) {
                 case OriLine.TYPE_CUT:
                     layerName = "CutLine";
                     break;
@@ -140,7 +140,7 @@ public class ExporterDXF implements Exporter{
             bw.write("CONTINUOUS\n");  // Line type
             bw.write(" 62\n"); // 1＝red 2＝yellow 3＝green 4＝cyan 5＝blue 6＝magenta 7＝white
             int colorNumber = 0;
-            switch (line.type) {
+            switch (line.typeVal) {
                 case OriLine.TYPE_CUT:
                     colorNumber = 250; // 51,51,51
                     break;

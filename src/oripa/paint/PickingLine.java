@@ -1,12 +1,8 @@
 package oripa.paint;
 
-import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.OriLine;
-import oripa.paint.ActionState;
 
 /**
  * abstract class specified for picking vertex.

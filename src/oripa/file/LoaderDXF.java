@@ -29,7 +29,7 @@ import oripa.Doc;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
 
-public class LoaderDXF {
+public class LoaderDXF implements Loader{
 
     public Doc load(String filePath) {
         Doc doc = new Doc(400);
@@ -68,15 +68,15 @@ public class LoaderDXF {
                             System.out.println("color = " + color);
                             if (color == 1 || (9 < color && color < 40)) {
                                 //Reds are mountains
-                                line.type = OriLine.TYPE_RIDGE;
+                                line.typeVal = OriLine.TYPE_RIDGE;
                             } else if (color == 2 || color == 5 || (139 < color && color < 200)) {
                                 //Blues are valleys
-                                line.type = OriLine.TYPE_VALLEY;
+                                line.typeVal = OriLine.TYPE_VALLEY;
                             } else if (color == 3 || (59 < color && color < 130)) {
                                 //greens are cuts
-                                line.type = OriLine.TYPE_CUT;
+                                line.typeVal = OriLine.TYPE_CUT;
                             } else {
-                                line.type = OriLine.TYPE_NONE;
+                                line.typeVal = OriLine.TYPE_NONE;
                             }
                         } else if (token == StreamTokenizer.TT_WORD && st.sval.equals("10")) {
                             st.nextToken();

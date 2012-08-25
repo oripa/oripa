@@ -24,7 +24,7 @@ public class ElementSelector {
 			color = Config.LINE_COLOR_CANDIDATE;
 		}
 		else {
-			color = selectColorByLineType(line.type);
+			color = selectColorByLineType(line.typeVal);
 		}
 		
 		return color;

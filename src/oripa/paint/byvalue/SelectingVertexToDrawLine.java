@@ -1,16 +1,12 @@
 package oripa.paint.byvalue;
 
-import java.awt.geom.Point2D.Double;
-
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
-import oripa.paint.AbstractActionState;
 import oripa.paint.Globals;
 import oripa.paint.MouseContext;
-import oripa.paint.PickingLine;
 import oripa.paint.PickingVertex;
 
 public class SelectingVertexToDrawLine extends PickingVertex {

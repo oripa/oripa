@@ -2,9 +2,7 @@ package oripa.paint.triangle;
 
 import java.awt.geom.Point2D.Double;
 
-import oripa.Doc;
 import oripa.ORIPA;
-import oripa.UndoInfo;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingVertex;
 

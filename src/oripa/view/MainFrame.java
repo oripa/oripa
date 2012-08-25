@@ -22,32 +22,55 @@ package oripa.view;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 import oripa.Config;
 import oripa.Constants;
-import oripa.DataSet;
+
 import oripa.Doc;
 import oripa.FilterDB;
 import oripa.InitData;
 import oripa.ORIPA;
-import oripa.Constants.EditMode;
-import oripa.Constants.LineInputMode;
-import oripa.Constants.SubLineInputMode;
-import oripa.file.*;
+import oripa.file.ExporterXML;
+import oripa.file.FileChooser;
+import oripa.file.FileChooserFactory;
+import oripa.file.FileFilterEx;
 import oripa.file.FileFilterEx.SavingAction;
+import oripa.file.FileVersionError;
+import oripa.file.ImageResourceLoader;
+import oripa.file.Loader;
+import oripa.file.LoaderDXF;
+import oripa.file.LoaderLines;
+import oripa.file.LoaderPDF;
+import oripa.file.LoaderXML;
 import oripa.paint.Globals;
-import oripa.paint.byvalue.ValueDB;
 
 public class MainFrame extends JFrame 
 implements ActionListener, ComponentListener, WindowListener{
@@ -245,6 +268,8 @@ implements ActionListener, ComponentListener, WindowListener{
 		ExporterXML exporter = new ExporterXML();
 		exporter.export(ORIPA.doc, filePath);
 		ORIPA.doc.dataFilePath = filePath;
+		
+		ORIPA.doc.clearChanged();
 	}
 
 	private void savePictureFile(Image cpImage, String filePath) 
@@ -454,6 +479,8 @@ implements ActionListener, ComponentListener, WindowListener{
 		if(path != null){
 			if(path.endsWith(".opx")){
 				ORIPA.doc.setDataFilePath(path);
+				ORIPA.doc.clearChanged();
+
 				updateMenu(path);
 			}
 		}
@@ -549,63 +576,51 @@ implements ActionListener, ComponentListener, WindowListener{
 
 
 
-
-	private void openFile(String filePath) {
+	private Doc loadFile(Loader loader, String path){
 		ORIPA.modelFrame.setVisible(false);
 		ORIPA.renderFrame.setVisible(false);
 		ORIPA.mainFrame.uiPanel.dispGridCheckBox.setSelected(false);
 		ORIPA.mainFrame.mainScreen.setDispGrid(false);
-		if (filePath.endsWith(".dxf")) {
-			LoaderDXF loader = new LoaderDXF();
-			Doc doc = loader.load(filePath);
-			if (doc != null) {
-				ORIPA.doc = doc;
-				ORIPA.doc.dataFilePath = filePath;
+
+		Doc doc = null;
+			try{
+				doc = loader.load(path);
+				if (doc != null) {
+					ORIPA.doc = doc;
+					ORIPA.doc.dataFilePath = path;
+				}
 			}
-			return;
-		} else if (filePath.endsWith(".pdf")) {
-			LoaderPDF loader = new LoaderPDF();
-			Doc doc = loader.load(filePath);
-			if (doc != null) {
-				ORIPA.doc = doc;
-				ORIPA.doc.dataFilePath = filePath;
+			catch(FileVersionError e){
+				JOptionPane.showMessageDialog(
+						this, "This file is compatible with a new version. "
+								+ "Please obtain the latest version of ORIPA", "Failed to load the file",
+								JOptionPane.ERROR_MESSAGE);
+				
 			}
-			return;
-		} else if (filePath.endsWith(".cp")) {
-			LoaderLines loader = new LoaderLines();
-			Doc doc = loader.load(filePath);
-			if (doc != null) {
-				ORIPA.doc = doc;
-				ORIPA.doc.dataFilePath = filePath;
-			}
-			return;
-		}
+			return doc;
+		
+	}
 
-		LoaderXML loader = new LoaderXML();
-		DataSet data = loader.load(filePath);
-		if (data == null) {
-			return;
-		}
+	private void openFile(String filePath) {
+		
+		Loader loader = null;
+		
+		String extension = filePath.substring(filePath.lastIndexOf('.')); 
+		switch(extension) {
+		case ".dxf":
+			loader = new LoaderDXF();
+			break;
+		case ".pdf":
+			loader = new LoaderPDF();
+			break;
+		case ".cp":
+			loader = new LoaderLines();
+			break;
+		case ".opx":
+			loader = new LoaderXML();
+		} 
 
-		if (data.getMainVersion() > ORIPA.FILE_MAJOR_VERSION) {
-			JOptionPane.showMessageDialog(
-					this, "This file is compatible with a new version. "
-							+ "Please obtain the latest version of ORIPA", "Failed to load the file",
-							JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		if (data.getSubVersion() > ORIPA.FILE_MINOR_VERSION) {
-			JOptionPane.showMessageDialog(
-					this, "This file is compatible with a new version. "
-							+ "Please obtain the latest version of ORIPA", "Failed to load the file",
-							JOptionPane.ERROR_MESSAGE);
-		}
-
-		Doc doc = new Doc(ORIPA.doc.size);
-		data.recover(doc);
-		ORIPA.doc = doc;
-		ORIPA.doc.dataFilePath = filePath;
+		loadFile( loader, filePath);
 	}
 
 	private void saveIniFile() {
@@ -673,7 +688,11 @@ implements ActionListener, ComponentListener, WindowListener{
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
-		//TODO: comfirm saving editted opx
+		
+		if(ORIPA.doc.isChanged()){
+			//TODO: confirm saving edited opx
+			
+		}
 		
 		saveIniFile();
 	}

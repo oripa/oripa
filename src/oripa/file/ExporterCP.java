@@ -31,8 +31,8 @@ public class ExporterCP implements Exporter{
         BufferedWriter bw = new BufferedWriter(fw);
 
         for(OriLine line : ORIPA.doc.lines) {
-            if(line.type == OriLine.TYPE_NONE) continue;
-            bw.write(line.type + " " + line.p0.x + " " + line.p0.y + " " + line.p1.x + " " + line.p1.y + "\n");
+            if(line.typeVal == OriLine.TYPE_NONE) continue;
+            bw.write(line.typeVal + " " + line.p0.x + " " + line.p0.y + " " + line.p1.x + " " + line.p1.y + "\n");
         }
         bw.close();
         

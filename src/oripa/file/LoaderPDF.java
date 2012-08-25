@@ -28,8 +28,8 @@ import oripa.Doc;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
 
-public class LoaderPDF {
-
+public class LoaderPDF implements Loader {
+	
     public static ArrayList<OriLine> lines = new ArrayList<>();
 
     public Doc load(String filePath) {
@@ -66,9 +66,9 @@ public class LoaderPDF {
                     line = new OriLine();
                     lines.add(line);
                     System.out.println("new Line " + st.sval);
-                    line.type = Integer.parseInt(st.sval) == 1 ? OriLine.TYPE_RIDGE : OriLine.TYPE_VALLEY;
+                    line.typeVal = Integer.parseInt(st.sval) == 1 ? OriLine.TYPE_RIDGE : OriLine.TYPE_VALLEY;
 
-                    System.out.println("line type " + line.type);
+                    System.out.println("line type " + line.typeVal);
                     token = st.nextToken(); // eat "w"
 
                     token = st.nextToken();

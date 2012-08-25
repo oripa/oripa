@@ -18,7 +18,11 @@
 
 package oripa.view;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -30,9 +34,17 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.*;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
@@ -40,9 +52,6 @@ import oripa.Config;
 import oripa.Constants;
 import oripa.Folder;
 import oripa.ORIPA;
-import oripa.Constants.EditMode;
-import oripa.Constants.LineInputMode;
-import oripa.Constants.SubLineInputMode;
 import oripa.file.ImageResourceLoader;
 import oripa.geom.OriLine;
 import oripa.paint.Globals;
@@ -53,6 +62,7 @@ import oripa.paint.byvalue.LengthMeasuringAction;
 import oripa.paint.byvalue.LineByValueAction;
 import oripa.paint.byvalue.ValueDB;
 import oripa.paint.line.TwoPointLineAction;
+import oripa.paint.linetype.ChangeLineTypeAction;
 import oripa.paint.mirror.MirrorCopyAction;
 import oripa.paint.pbisec.TwoPointBisectorAction;
 import oripa.paint.segment.TwoPointSegmentAction;
@@ -714,6 +724,11 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
 			modeChanged();
 
+		} else if (ae.getSource() == editModeLineTypeButton) {
+			Globals.mouseAction = new ChangeLineTypeAction();
+			
+			Globals.editMode = Constants.EditMode.CHANGE_LINE_TYPE;
+			modeChanged();
 
 		} else if (ae.getSource() == editModeInputLineButton) {
 			Globals.editMode = Constants.EditMode.INPUT_LINE;
@@ -723,9 +738,6 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			modeChanged();
 		} else if (ae.getSource() == editModeDeleteLineButton) {
 			Globals.editMode = Constants.EditMode.DELETE_LINE;
-			modeChanged();
-		} else if (ae.getSource() == editModeLineTypeButton) {
-			Globals.editMode = Constants.EditMode.CHANGE_LINE_TYPE;
 			modeChanged();
 		} else if (ae.getSource() == editModeAddVertex) {
 			Globals.editMode = Constants.EditMode.ADD_VERTEX;

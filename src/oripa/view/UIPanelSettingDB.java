@@ -3,11 +3,9 @@ package oripa.view;
 import java.util.Observable;
 
 import oripa.Constants;
-import oripa.Constants.EditMode;
-import oripa.Constants.LineInputMode;
 import oripa.paint.Globals;
 
-class UIPanelSettingDB extends Observable{
+public class UIPanelSettingDB extends Observable{
 	private boolean subPanelVisible = false;
 	private boolean alterLineTypePanelVisible = true; 
 	private boolean mountainButtonEnabled = true;

@@ -5,10 +5,7 @@ import java.awt.geom.Point2D.Double;
 import javax.vecmath.Vector2d;
 
 import oripa.Constants;
-import oripa.Doc;
 import oripa.ORIPA;
-import oripa.UndoInfo;
-import oripa.geom.GeomUtil;
 import oripa.paint.Globals;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingVertex;

@@ -1,6 +1,5 @@
 package oripa.paint.byvalue;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -8,9 +7,6 @@ import java.awt.geom.Line2D;
 
 import javax.vecmath.Vector2d;
 
-import oripa.Config;
-import oripa.ORIPA;
-import oripa.geom.OriLine;
 import oripa.paint.ElementSelector;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;

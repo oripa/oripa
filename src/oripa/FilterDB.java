@@ -1,6 +1,5 @@
 package oripa;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import oripa.file.ExporterCP;
@@ -9,7 +8,6 @@ import oripa.file.ExporterOBJ;
 import oripa.file.ExporterSVG;
 import oripa.file.ExporterXML;
 import oripa.file.FileFilterEx;
-import oripa.file.FileFilterEx.SavingAction;
 
 
 /**

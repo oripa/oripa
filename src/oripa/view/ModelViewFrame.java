@@ -24,11 +24,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.io.File;
-import javax.swing.*;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollBar;
 
 import oripa.Constants;
 import oripa.ORIPA;
-import oripa.Constants.ModelDispMode;
 import oripa.file.Exporter;
 import oripa.file.ExporterDXF;
 import oripa.file.ExporterOBJ2;

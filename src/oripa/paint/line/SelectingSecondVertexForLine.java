@@ -1,6 +1,5 @@
 package oripa.paint.line;
 
-import javax.management.RuntimeErrorException;
 import javax.vecmath.Vector2d;
 
 import oripa.Constants;

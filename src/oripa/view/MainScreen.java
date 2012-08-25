@@ -19,16 +19,27 @@
 
 package oripa.view;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -39,15 +50,15 @@ import oripa.Config;
 import oripa.Constants;
 import oripa.Doc;
 import oripa.ORIPA;
-import oripa.Constants.EditMode;
-import oripa.Constants.LineInputMode;
-import oripa.Constants.SubLineInputMode;
-import oripa.geom.*;
+import oripa.geom.GeomUtil;
+import oripa.geom.Line;
+import oripa.geom.OriFace;
+import oripa.geom.OriLine;
+import oripa.geom.OriVertex;
+import oripa.geom.RectangleClipper;
 import oripa.paint.ElementSelector;
 import oripa.paint.Globals;
-import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
-import oripa.paint.byvalue.ValueDB;
 
 
 public class MainScreen extends JPanel
@@ -165,17 +176,17 @@ public class MainScreen extends JPanel
     	
     	ElementSelector selector = new ElementSelector();
         for (OriLine line : lines) {
-            if (line.type == OriLine.TYPE_NONE &&!Globals.dispAuxLines) {
+            if (line.typeVal == OriLine.TYPE_NONE &&!Globals.dispAuxLines) {
                 continue;
             }
 
-            if ((line.type == OriLine.TYPE_RIDGE || line.type == OriLine.TYPE_VALLEY)
+            if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY)
             		&& !Globals.dispMVLines) {
                 continue;
             }
             
-        	g2d.setColor(selector.selectColorByLineType(line.type));
-        	g2d.setStroke(selector.selectStroke(line.type));
+        	g2d.setColor(selector.selectColorByLineType(line.typeVal));
+        	g2d.setStroke(selector.selectStroke(line.typeVal));
         	
             if ((Globals.editMode == Constants.EditMode.INPUT_LINE
                     && Globals.lineInputMode == Constants.LineInputMode.MIRROR
@@ -210,11 +221,11 @@ public class MainScreen extends JPanel
         g2d.setColor(Color.BLACK);
         double vertexDrawSize = 2.0;
         for (OriLine line : ORIPA.doc.lines) {
-            if (!Globals.dispAuxLines && line.type == OriLine.TYPE_NONE) {
+            if (!Globals.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
                 continue;
             }
-            if (!Globals.dispMVLines && (line.type == OriLine.TYPE_RIDGE
-                    || line.type == OriLine.TYPE_VALLEY)) {
+            if (!Globals.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
+                    || line.typeVal == OriLine.TYPE_VALLEY)) {
                 continue;
             }
             Vector2d v0 = line.p0;
@@ -381,42 +392,6 @@ public class MainScreen extends JPanel
             }
         }
 
-        if (Globals.editMode == Constants.EditMode.INPUT_LINE
-                && Globals.lineInputMode == Constants.LineInputMode.BY_VALUE
-                && Globals.subLineInputMode == Constants.SubLineInputMode.NONE
-                && pickCandidateV != null) {
-            try {
-            	ValueDB valDB = ValueDB.getInstance();
-                double length = valDB.getLength();
-                double angle = Math.toRadians(valDB.getAngle());
-
-                switch (Globals.inputLineType) {
-                    case OriLine.TYPE_NONE:
-                        g2d.setColor(Config.LINE_COLOR_AUX);
-                        g2d.setStroke(Config.STROKE_CUT);
-                        break;
-                    case OriLine.TYPE_CUT:
-                        g2d.setColor(Color.BLACK);
-                        g2d.setStroke(Config.STROKE_CUT);
-                        break;
-                    case OriLine.TYPE_RIDGE:
-                        g2d.setColor(Config.LINE_COLOR_RIDGE);
-                        g2d.setStroke(Config.STROKE_RIDGE);
-                        break;
-                    case OriLine.TYPE_VALLEY:
-                        g2d.setColor(Config.LINE_COLOR_VALLEY);
-                        g2d.setStroke(Config.STROKE_VALLEY);
-                        break;
-                }
-                Vector2d v = pickCandidateV;
-                Vector2d dir = new Vector2d(Math.cos(angle), -Math.sin(angle));
-                dir.scale(length);
-                g2d.draw(new Line2D.Double(v.x, v.y, v.x + dir.x, v.y + dir.y));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         if (Globals.bDispCrossLine) {
             if (!ORIPA.doc.crossLines.isEmpty()) {
                 g2d.setStroke(Config.STROKE_TMP_OUTLINE);
@@ -473,16 +448,24 @@ public class MainScreen extends JPanel
 
         if (Globals.mouseAction != null) {
         	Globals.mouseAction.onDraw(g2d, mouseContext);
-        	
+
+        	g.drawImage(bufferImage, 0, 0, this);
+
+        	Vector2d candidate = mouseContext.pickCandidateV;
+            if(candidate != null){
+                g.setColor(Color.BLACK);
+            	g.drawString("(" + candidate.x + 
+            		"," + candidate.y + ")", 0, 10);
+            }	
         }
-
-        g.drawImage(bufferImage, 0, 0, this);
-
-        if (pickCandidateV != null) {
-            g.setColor(Color.BLACK);
-            g.drawString("(" + pickCandidateV.x + "," + pickCandidateV.y + ")", 0, 10);
+        else {
+	        g.drawImage(bufferImage, 0, 0, this);
+	
+	        if (pickCandidateV != null) {
+	            g.setColor(Color.BLACK);
+	            g.drawString("(" + pickCandidateV.x + "," + pickCandidateV.y + ")", 0, 10);
+	        }
         }
-
     }
     
 
@@ -609,20 +592,18 @@ public class MainScreen extends JPanel
     @Override
     public void mouseClicked(MouseEvent e) {
     	
-    	if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
-            if (Globals.mouseAction != null) {
-    
-            	if(javax.swing.SwingUtilities.isRightMouseButton(e)){
-            		Globals.mouseAction.onRightClick(
-            				mouseContext, affineTransform, e);
-            	}
-            	else {
-            		Globals.mouseAction = Globals.mouseAction.onLeftClick(
-            				mouseContext, affineTransform, e);
-            	}
-            	return;
-            }
-    	}
+        if (Globals.mouseAction != null) {
+            
+        	if(javax.swing.SwingUtilities.isRightMouseButton(e)){
+        		Globals.mouseAction.onRightClick(
+        				mouseContext, affineTransform, e);
+        	}
+        	else {
+        		Globals.mouseAction = Globals.mouseAction.onLeftClick(
+        				mouseContext, affineTransform, e);
+        	}
+        	return;
+        }
     	
         if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
             if (prepreprePickV != null) {
@@ -684,10 +665,10 @@ public class MainScreen extends JPanel
             OriLine l = pickLine(clickPoint);
             if (l != null) {
                 // If it is out of the redered model frame, do nothing
-                if (!Globals.dispMVLines && (l.type == OriLine.TYPE_RIDGE || l.type == OriLine.TYPE_VALLEY)) {
+                if (!Globals.dispMVLines && (l.typeVal == OriLine.TYPE_RIDGE || l.typeVal == OriLine.TYPE_VALLEY)) {
                     return;
                 }
-                if (!Globals.dispAuxLines && l.type == OriLine.TYPE_NONE) {
+                if (!Globals.dispAuxLines && l.typeVal == OriLine.TYPE_NONE) {
                     return;
                 }
 
@@ -758,7 +739,7 @@ public class MainScreen extends JPanel
                             double ex = mx + l.p1.x - ox;
                             double ey = my + l.p1.y - oy;
 
-                            OriLine line = new OriLine(sx, sy, ex, ey, l.type);
+                            OriLine line = new OriLine(sx, sy, ex, ey, l.typeVal);
                             ORIPA.doc.addLine(line);
                         }
                     }
@@ -803,7 +784,7 @@ public class MainScreen extends JPanel
         // Delete the current outline
         ArrayList<OriLine> outlines = new ArrayList<>();
         for (OriLine line : ORIPA.doc.lines) {
-            if (line.type == OriLine.TYPE_CUT) {
+            if (line.typeVal == OriLine.TYPE_CUT) {
                 outlines.add(line);
             }
         }
@@ -823,7 +804,7 @@ public class MainScreen extends JPanel
         while (true) {
             boolean bDeleteLine = false;
             for (OriLine line : ORIPA.doc.lines) {
-                if (line.type == OriLine.TYPE_CUT) {
+                if (line.typeVal == OriLine.TYPE_CUT) {
                     continue;
                 }
                 Vector2d OnPoint0 = isOnTmpOutlineLoop(line.p0);
@@ -879,15 +860,15 @@ public class MainScreen extends JPanel
                     // Selection process
                     if (Globals.editMode == Constants.EditMode.PICK_LINE) {
 
-                        if (l.type == OriLine.TYPE_CUT) {
+                        if (l.typeVal == OriLine.TYPE_CUT) {
                             continue;
                         }
                         // Don't select if the line is hidden
-                        if (!Globals.dispMVLines && (l.type == OriLine.TYPE_RIDGE
-                                || l.type == OriLine.TYPE_VALLEY)) {
+                        if (!Globals.dispMVLines && (l.typeVal == OriLine.TYPE_RIDGE
+                                || l.typeVal == OriLine.TYPE_VALLEY)) {
                             continue;
                         }
-                        if (!Globals.dispAuxLines && l.type == OriLine.TYPE_NONE) {
+                        if (!Globals.dispAuxLines && l.typeVal == OriLine.TYPE_NONE) {
                             continue;
                         }
 

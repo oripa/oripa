@@ -1,9 +1,6 @@
 package oripa.paint.bisector;
 
 import oripa.ORIPA;
-import oripa.geom.GeomUtil;
-import oripa.geom.OriLine;
-import oripa.paint.Globals;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingLine;
 

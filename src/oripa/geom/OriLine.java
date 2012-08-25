@@ -23,43 +23,93 @@ import javax.vecmath.Vector2d;
 
 public class OriLine {
 
-	public enum Type{NONE, CUT, RIDGE, VALLEY};
-
 	final public static int TYPE_NONE = 0;
     final public static int TYPE_CUT = 1;
     final public static int TYPE_RIDGE = 2;
     final public static int TYPE_VALLEY = 3;
+
+    // currently switching to use enum...
+    public enum Type{
+		
+		NONE(TYPE_NONE), CUT(TYPE_CUT), RIDGE(TYPE_RIDGE), VALLEY(TYPE_VALLEY);
+
+		private int val;
+		
+		private Type(int val){
+			this.val = val;
+		}
+		
+		public int toInt(){
+			return val;
+		}
+	
+		public static Type fromInt(int val){
+			Type type;
+			switch(val){
+			
+			case TYPE_CUT:
+				type = CUT;
+				
+				break;
+				
+			case TYPE_RIDGE:
+				type = RIDGE;
+				break;
+					
+			case TYPE_VALLEY:
+				type = VALLEY;
+				break;
+				
+			case TYPE_NONE:
+			default:
+				type = NONE;
+				break;
+				
+			}
+			
+			return type;
+		}
+	};
+
+	private Type type = Type.NONE;
+	
     public boolean selected;
-    public int type = TYPE_NONE;
+    public int typeVal = TYPE_NONE;  // eventually unneeded
     public Vector2d p0 = new Vector2d();
     public Vector2d p1 = new Vector2d();
 
     public OriLine() {
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setTypeValue(int type) { // eventually unneeded
+    	this.type = Type.fromInt(type);
+        this.typeVal = type;
+    }
+    
+    public void setType(Type type){
+    	this.type = type;
+    	this.typeVal = type.toInt(); // eventually unneeded
     }
 
-    public int getType() {
-        return type;
+    public int getTypeValue() { // eventually unneeded
+        return typeVal;
     }
 
     public OriLine(OriLine l) {
         selected = l.selected;
         p0.set(l.p0);
         p1.set(l.p1);
-        type = l.type;
+        typeVal = l.typeVal;
     }
 
     public OriLine(Vector2d p0, Vector2d p1, int type) {
-        this.type = type;
+        this.typeVal = type;
         this.p0.set(p0);
         this.p1.set(p1);
     }
 
     public OriLine(double x0, double y0, double x1, double y1, int type) {
-        this.type = type;
+        this.typeVal = type;
         this.p0.set(x0, y0);
         this.p1.set(x1, y1);
     }
@@ -70,18 +120,18 @@ public class OriLine {
     }
 
     public void changeToNextType() {
-        switch (type) {
+        switch (typeVal) {
             case 3:
-                type = 0;
+                typeVal = 0;
                 break;
             case 2:
-                type = 3;
+                typeVal = 3;
                 break;
             case 1:
-                type = 2;
+                typeVal = 2;
                 break;
             case 0:
-                type = 2;
+                typeVal = 2;
                 break;
         }
     }

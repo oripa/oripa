@@ -20,11 +20,6 @@ package oripa.paint;
 
 import oripa.Config;
 import oripa.Constants;
-import oripa.Constants.EditMode;
-import oripa.Constants.LineInputMode;
-import oripa.Constants.ModelDispMode;
-import oripa.Constants.ModelEditMode;
-import oripa.Constants.SubLineInputMode;
 import oripa.paint.segment.TwoPointSegmentAction;
 
 public class Globals {

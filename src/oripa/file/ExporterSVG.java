@@ -2,8 +2,8 @@ package oripa.file;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.Writer;
 import java.util.ArrayList;
+
 import javax.vecmath.Vector2d;
 
 import oripa.Doc;
@@ -131,7 +131,7 @@ public class ExporterSVG implements Exporter{
             for (OriLine line : doc.lines) {
                 bw.write(" <line style=\"");
                 String style = "stroke:gray;stroke-width:1;";
-                switch (line.type) {
+                switch (line.typeVal) {
                     case OriLine.TYPE_CUT:
                         style = "stroke:black;stroke-width:4;";
                         break;
@@ -167,7 +167,7 @@ public class ExporterSVG implements Exporter{
             for (OriLine line : doc.lines) {
                 bw.write(" <line style=\"");
                 String style = "stroke:gray;stroke-width:1;";
-                switch (line.type) {
+                switch (line.typeVal) {
                     case OriLine.TYPE_CUT:
                         style = "stroke:black;stroke-width:5;";
                         break;

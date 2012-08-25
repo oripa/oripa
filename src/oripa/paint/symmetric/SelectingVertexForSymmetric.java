@@ -1,13 +1,10 @@
 package oripa.paint.symmetric;
 
-import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
-import oripa.Doc;
 import oripa.ORIPA;
-import oripa.UndoInfo;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingVertex;
 

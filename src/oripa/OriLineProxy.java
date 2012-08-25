@@ -34,7 +34,7 @@ public class OriLineProxy {
         y0 = l.p0.y;
         x1 = l.p1.x;
         y1 = l.p1.y;
-        type = l.type;
+        type = l.typeVal;
     }
     
     public OriLine getLine() {

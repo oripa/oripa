@@ -23,35 +23,41 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Stack;
 
-import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
-import oripa.geom.*;
+
+import oripa.geom.GeomUtil;
+import oripa.geom.Line;
+import oripa.geom.OriEdge;
+import oripa.geom.OriFace;
+import oripa.geom.OriHalfedge;
+import oripa.geom.OriLine;
+import oripa.geom.OriVertex;
+import oripa.geom.Ray;
 import oripa.paint.Globals;
 
-class PointComparatorX implements Comparator {
+class PointComparatorX implements Comparator<Vector2d> {
 
     @Override
-    public int compare(Object v1, Object v2) {
-        return ((Vector2d) v1).x > ((Vector2d) v2).x ? 1 : -1;
+    public int compare(Vector2d v1, Vector2d v2) {
+        return v1.x > v2.x ? 1 : -1;
     }
 }
 
-class PointComparatorY implements Comparator {
+class PointComparatorY implements Comparator<Vector2d> {
 
     @Override
-    public int compare(Object v1, Object v2) {
+    public int compare(Vector2d v1, Vector2d v2) {
         return ((Vector2d) v1).y > ((Vector2d) v2).y ? 1 : -1;
     }
 }
 
-class FaceOrderComparator implements Comparator {
+class FaceOrderComparator implements Comparator<OriFace> {
 
     @Override
-    public int compare(Object f1, Object f2) {
-        return ((OriFace) f1).z_order > ((OriFace) f2).z_order ? 1 : -1;
+    public int compare(OriFace f1, OriFace f2) {
+        return f1.z_order > f2.z_order ? 1 : -1;
     }
 }
 
@@ -91,7 +97,16 @@ public class Doc {
     
     int debugCount = 0;
 
+    public Doc(){
+    	initialize(Constants.DEFAULT_PAPER_SIZE);
+    }   
+    
     public Doc(double size) {
+    	initialize(size);
+    }
+
+    private void initialize(double size){
+    	
         this.size = size;
 
         OriLine l0 = new OriLine(-size / 2.0, -size / 2.0, size / 2.0, -size / 2.0, OriLine.TYPE_CUT);
@@ -102,8 +117,9 @@ public class Doc {
         lines.add(l1);
         lines.add(l2);
         lines.add(l3);
-    }
 
+    }
+    
     public void setDataFilePath(String path){
     	this.dataFilePath = path;
     }
@@ -179,6 +195,18 @@ public class Doc {
         lines.addAll(info.getLines());
     }
 
+    public boolean canUndo(){
+    	return undoManager.canUndo();
+    }
+
+    public boolean isChanged(){
+    	return undoManager.isChanged();
+    }
+    
+    public void clearChanged(){
+    	undoManager.clearChanged();
+    }
+    
     private OriVertex addAndGetVertexFromVVec(Vector2d p) {
         OriVertex vtx = null;
         for (OriVertex v : vertices) {
@@ -334,7 +362,7 @@ public class Doc {
 
     public void selectAllOriLines() {
         for (OriLine l : lines) {
-            if (l.type != OriLine.TYPE_CUT) {
+            if (l.typeVal != OriLine.TYPE_CUT) {
                 l.selected = true;
             }
         }
@@ -366,7 +394,7 @@ public class Doc {
                 line.p1.x + dir1.x * dist1 * 2,
                 line.p1.y + dir1.y * dist1 * 2);
 
-        OriLine oriLine = new OriLine(q0, q1, line.type);
+        OriLine oriLine = new OriLine(q0, q1, line.typeVal);
 
         return oriLine;
     }
@@ -436,7 +464,7 @@ public class Doc {
         OriLine l0 = sharedLines.get(0);
         OriLine l1 = sharedLines.get(1);
 
-        if (l0.type != l1.type) {
+        if (l0.typeVal != l1.typeVal) {
             return;
         }
 
@@ -468,7 +496,7 @@ public class Doc {
 
         lines.remove(l0);
         lines.remove(l1);
-        OriLine li = new OriLine(p0, p1, l0.type);
+        OriLine li = new OriLine(p0, p1, l0.typeVal);
         lines.add(li);
     }
 
@@ -571,13 +599,13 @@ public class Doc {
 
         for (int i = 0; i < lineNum; i++) {
             OriLine l = lines.get(i);
-            if (l.type == OriLine.TYPE_NONE) {
+            if (l.typeVal == OriLine.TYPE_NONE) {
                 continue;
             }
 
             OriVertex sv = addAndGetVertexFromVVec(l.p0);
             OriVertex ev = addAndGetVertexFromVVec(l.p1);
-            OriEdge eg = new OriEdge(sv, ev, l.type);
+            OriEdge eg = new OriEdge(sv, ev, l.typeVal);
             edges.add(eg);
             sv.addEdge(eg);
             ev.addEdge(eg);
@@ -663,13 +691,13 @@ public class Doc {
         // Create the edges from the vertexes
         for (int i = 0; i < lineNum; i++) {
             OriLine l = lines.get(i);
-            if (l.type == OriLine.TYPE_NONE) {
+            if (l.typeVal == OriLine.TYPE_NONE) {
                 continue;
             }
 
             OriVertex sv = addAndGetVertexFromVVec(l.p0);
             OriVertex ev = addAndGetVertexFromVVec(l.p1);
-            OriEdge eg = new OriEdge(sv, ev, l.type);
+            OriEdge eg = new OriEdge(sv, ev, l.typeVal);
             edges.add(eg);
             sv.addEdge(eg);
             ev.addEdge(eg);
@@ -982,8 +1010,8 @@ public class Doc {
                 || GeomUtil.Distance(line.p1, v) < this.size * 0.001) {
             return false;
         }
-        OriLine l0 = new OriLine(line.p0, v, line.type);
-        OriLine l1 = new OriLine(v, line.p1, line.type);
+        OriLine l0 = new OriLine(line.p0, v, line.typeVal);
+        OriLine l1 = new OriLine(v, line.p1, line.typeVal);
         lines.remove(line);
         lines.add(l0);
         lines.add(l1);
@@ -1249,7 +1277,7 @@ public class Doc {
         // If it intersects other line, devide them
         for (OriLine line : tmpLines) {
             // Inputted line does not intersect
-            if (inputLine.type == OriLine.TYPE_NONE && line.type != OriLine.TYPE_NONE) {
+            if (inputLine.typeVal == OriLine.TYPE_NONE && line.typeVal != OriLine.TYPE_NONE) {
                 continue;
             }
             Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
@@ -1261,11 +1289,11 @@ public class Doc {
             lines.remove(line);
 
             if (GeomUtil.Distance(line.p0, crossPoint) > POINT_EPS) {
-                lines.add(new OriLine(line.p0, crossPoint, line.type));
+                lines.add(new OriLine(line.p0, crossPoint, line.typeVal));
             }
 
             if (GeomUtil.Distance(line.p1, crossPoint) > POINT_EPS) {
-                lines.add(new OriLine(line.p1, crossPoint, line.type));
+                lines.add(new OriLine(line.p1, crossPoint, line.typeVal));
             }
         }
 
@@ -1276,7 +1304,7 @@ public class Doc {
         for (OriLine line : lines) {
 
             // Dont devide if the type of line is aux is Aux
-            if (inputLine.type != OriLine.TYPE_NONE && line.type == OriLine.TYPE_NONE) {
+            if (inputLine.typeVal != OriLine.TYPE_NONE && line.typeVal == OriLine.TYPE_NONE) {
                 continue;
             }
 
@@ -1322,7 +1350,7 @@ public class Doc {
                 continue;
             }
 
-            lines.add(new OriLine(prePoint, p, inputLine.type));
+            lines.add(new OriLine(prePoint, p, inputLine.typeVal));
             prePoint = p;
         }
     }
@@ -1423,34 +1451,34 @@ public class Doc {
     }
 
     public void alterLineType(OriLine l, int lineTypeFromIndex,  int lineTypeToIndex) {
-        if (lineTypeFromIndex == 1 /*M*/ && l.type != OriLine.TYPE_RIDGE) {
+        if (lineTypeFromIndex == 1 /*M*/ && l.typeVal != OriLine.TYPE_RIDGE) {
             return;
         }
-        if (lineTypeFromIndex == 2 /*V*/ && l.type != OriLine.TYPE_VALLEY) {
+        if (lineTypeFromIndex == 2 /*V*/ && l.typeVal != OriLine.TYPE_VALLEY) {
             return;
         }
 
         switch (lineTypeToIndex) {
             case 0:
-                l.type = OriLine.TYPE_RIDGE;
+                l.typeVal = OriLine.TYPE_RIDGE;
                 break;
             case 1:
-                l.type = OriLine.TYPE_VALLEY;
+                l.typeVal = OriLine.TYPE_VALLEY;
                 break;
             case 2:
-                l.type = OriLine.TYPE_NONE;
+                l.typeVal = OriLine.TYPE_NONE;
                 break;
             case 3:
-                l.type = OriLine.TYPE_CUT;
+                l.typeVal = OriLine.TYPE_CUT;
                 break;
             case 4:
                 removeLine(l);
                 break;
             case 5: {
-                if (l.type == OriLine.TYPE_RIDGE) {
-                    l.type = OriLine.TYPE_VALLEY;
-                } else if (l.type == OriLine.TYPE_VALLEY) {
-                    l.type = OriLine.TYPE_RIDGE;
+                if (l.typeVal == OriLine.TYPE_RIDGE) {
+                    l.typeVal = OriLine.TYPE_VALLEY;
+                } else if (l.typeVal == OriLine.TYPE_VALLEY) {
+                    l.typeVal = OriLine.TYPE_RIDGE;
                 }
 
             }

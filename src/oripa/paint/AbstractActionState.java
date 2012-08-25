@@ -2,10 +2,6 @@ package oripa.paint;
 
 import java.awt.geom.Point2D;
 
-import javax.vecmath.Vector2d;
-
-import oripa.paint.ActionState;
-
 /**
  * a frame work of State pattern with undo, 
  * which can get back to previous state.

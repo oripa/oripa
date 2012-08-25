@@ -2,24 +2,15 @@ package oripa.paint;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Stack;
 
-import javax.vecmath.Point2d;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
-import oripa.Constants;
-import oripa.ORIPA;
-import oripa.Constants.EditMode;
-import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
 
 public abstract class GraphicMouseAction {
