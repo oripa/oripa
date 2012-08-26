@@ -136,4 +136,32 @@ public class FileChooser extends JFileChooser {
 		return filePath;
 	}
 	
+	
+	public String loadFile(Component parent) {
+		String filePath = null;
+		
+		if (JFileChooser.APPROVE_OPTION == this.showOpenDialog(parent)) {
+			try {
+				filePath = this.getSelectedFile().getPath();
+				FileFilterEx filter = ((FileFilterEx)this.getFileFilter());
+
+				filter.getLoadingAction().load(filePath);
+			} 
+			catch (FileVersionError v_err) {
+				JOptionPane.showMessageDialog(
+						this, "This file is compatible with a new version. "
+								+ "Please obtain the latest version of ORIPA", "Failed to load the file",
+								JOptionPane.ERROR_MESSAGE);
+				
+			}
+			catch (Exception e) {
+				JOptionPane.showMessageDialog(
+						this, e.toString(), ORIPA.res.getString("Error_FileLoadFailed"),
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	
+		return filePath;
+	}
+
 }

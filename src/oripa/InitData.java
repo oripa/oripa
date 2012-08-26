@@ -28,5 +28,20 @@ public class InitData {
     public void setMRUFiles(String[] s) {MRUFiles = s; }   
     public String[] getMRUFiles() { return MRUFiles; }
     public void setLastUsedFile(String s) { lastUsedFile = s; }
-    public String getLastUsedFile() { return lastUsedFile; }
+    
+    
+    public String getLastUsedFile() {
+    	if(MRUFiles != null){
+    		if(MRUFiles.length > 0){	
+    			if(lastUsedFile == null){
+    				lastUsedFile = MRUFiles[0];
+    			}
+    			else if(lastUsedFile == ""){
+    				lastUsedFile = MRUFiles[0];
+    				
+    			}
+    		}
+    	}
+    	return lastUsedFile; 
+    }
 }

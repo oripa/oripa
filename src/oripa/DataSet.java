@@ -34,8 +34,8 @@ public class DataSet {
     }
 
     public DataSet(Doc doc) {
-        mainVersion = ORIPA.FILE_MAJOR_VERSION;
-        subVersion = ORIPA.FILE_MINOR_VERSION;
+        mainVersion = Version.FILE_MAJOR_VERSION;
+        subVersion = Version.FILE_MINOR_VERSION;
 
         int lineNum = doc.lines.size();
         lines = new OriLineProxy[lineNum];

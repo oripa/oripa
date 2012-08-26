@@ -25,7 +25,7 @@ import java.io.FileNotFoundException;
 
 import oripa.DataSet;
 import oripa.Doc;
-import oripa.ORIPA;
+import oripa.Version;
 
 public class LoaderXML implements Loader{
 
@@ -52,7 +52,7 @@ public class LoaderXML implements Loader{
 		
 		DataSet data = loadAsDataSet(filePath);
 		
-		if (data.getMainVersion() > ORIPA.FILE_MAJOR_VERSION) {
+		if (data.getMainVersion() > Version.FILE_MAJOR_VERSION) {
 			throw new FileVersionError();
 		}
 		

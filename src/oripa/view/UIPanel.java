@@ -711,18 +711,27 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			
 			editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
 			modeChanged();
-		} 
+			
+		} else if (ae.getSource() == lineInputByValueButton) {
+			Globals.lineInputMode = Constants.LineInputMode.BY_VALUE;
+			Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
 
-		else if (ae.getSource() == lineInputOverlapVButton) {
-			Globals.editMode = Constants.EditMode.INPUT_LINE;
-			Globals.lineInputMode = Constants.LineInputMode.OVERLAP_V;
-			editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
+			Globals.mouseAction = new LineByValueAction();
+
 			modeChanged();
-		} else if (ae.getSource() == lineInputOverlapEButton) {
-			Globals.editMode = Constants.EditMode.INPUT_LINE;
-			Globals.lineInputMode = Constants.LineInputMode.OVERLAP_E;
-			editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
-			modeChanged();
+
+//		} 
+//
+//		else if (ae.getSource() == lineInputOverlapVButton) {
+//			Globals.editMode = Constants.EditMode.INPUT_LINE;
+//			Globals.lineInputMode = Constants.LineInputMode.OVERLAP_V;
+//			editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
+//			modeChanged();
+//		} else if (ae.getSource() == lineInputOverlapEButton) {
+//			Globals.editMode = Constants.EditMode.INPUT_LINE;
+//			Globals.lineInputMode = Constants.LineInputMode.OVERLAP_E;
+//			editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
+//			modeChanged();
 
 		} else if (ae.getSource() == editModeLineTypeButton) {
 			Globals.mouseAction = new ChangeLineTypeAction();
@@ -814,13 +823,6 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			
 			Globals.mouseAction = new AngleMeasuringAction();
 			
-			modeChanged();
-		} else if (ae.getSource() == lineInputByValueButton) {
-			Globals.lineInputMode = Constants.LineInputMode.BY_VALUE;
-			Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
-
-			Globals.mouseAction = new LineByValueAction();
-
 			modeChanged();
 		} else if (ae.getSource() == gridChangeButton) {
 			int value;

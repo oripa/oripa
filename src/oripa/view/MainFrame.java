@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -62,12 +63,13 @@ import oripa.file.ExporterXML;
 import oripa.file.FileChooser;
 import oripa.file.FileChooserFactory;
 import oripa.file.FileFilterEx;
-import oripa.file.FileFilterEx.SavingAction;
+import oripa.file.FileHistory;
+import oripa.file.SavingAction;
 import oripa.file.FileVersionError;
 import oripa.file.ImageResourceLoader;
 import oripa.file.Loader;
 import oripa.file.LoaderDXF;
-import oripa.file.LoaderLines;
+import oripa.file.LoaderCP;
 import oripa.file.LoaderPDF;
 import oripa.file.LoaderXML;
 import oripa.paint.Globals;
@@ -76,7 +78,6 @@ public class MainFrame extends JFrame
 implements ActionListener, ComponentListener, WindowListener{
 
 	MainScreen mainScreen;
-	public ArrayList<String> MRUFiles = new ArrayList<>();
 	private JMenu menuFile = new JMenu(ORIPA.res.getString("File"));
 	private JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
 	private JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
@@ -105,13 +106,13 @@ implements ActionListener, ComponentListener, WindowListener{
 	private JMenuItem menuItemDeleteSelectedLines = new JMenuItem("Delete Selected Lines");
 	private JMenuItem menuItemCopyAndPaste = new JMenuItem("Copy and Paste");
 	private JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
-	private String lastPath = "";
+
 	private RepeatCopyDialog arrayCopyDialog;
 	private CircleCopyDialog circleCopyDialog;
 	public static JLabel hintLabel = new JLabel();
 	public UIPanel uiPanel;
 
-
+	private FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 	
 	private FilterDB filterDB = FilterDB.getInstance();
 	private FileFilterEx[] fileFilters = new FileFilterEx[]{
@@ -261,13 +262,32 @@ implements ActionListener, ComponentListener, WindowListener{
 				}
 				);
 		
+		filterDB.getFilter("opx").setSavingAction(
+				new SavingAction() {
+					
+					@Override
+					public boolean save(String path) {
+						try {
+							saveOpxFile(path);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							return false;
+						}
+						return true;
+
+					}
+				}
+				);
 	}
 	
 	
 	private void saveOpxFile(String filePath) {
 		ExporterXML exporter = new ExporterXML();
 		exporter.export(ORIPA.doc, filePath);
-		ORIPA.doc.dataFilePath = filePath;
+		ORIPA.doc.setDataFilePath(filePath);
+		
+		updateMenu(filePath);
 		
 		ORIPA.doc.clearChanged();
 	}
@@ -350,7 +370,6 @@ implements ActionListener, ComponentListener, WindowListener{
 				try {
 					String filePath = MRUFilesMenuItem[i].getText();
 					openFile(filePath);
-					updateMenu(filePath);
 					updateTitleText();
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(
@@ -362,24 +381,21 @@ implements ActionListener, ComponentListener, WindowListener{
 			}
 		}
 
-		File lastFile = new File(lastPath);
-		String lastDirectory = lastFile.getParent();
+		String lastPath = fileHistory.getLastPath();
+		String lastDirectory = fileHistory.getLastDirectory();
 		
 		if (e.getSource() == menuItemOpen) {
-			fileOpen();
+			openFile(null);
 			mainScreen.repaint();
 			updateTitleText();
-		} else if (e.getSource() == menuItemSave) {
-			if (!(ORIPA.doc.dataFilePath).equals("")) {
+		} else if (e.getSource() == menuItemSave && !ORIPA.doc.dataFilePath.equals("")) {
 				saveOpxFile(ORIPA.doc.getDataFilePath());
-			} else {
-				saveOpxFile(lastPath);
-				updateTitleText();
-			}
-		} else if (e.getSource() == menuItemSaveAs) {
+			
+		} else if (e.getSource() == menuItemSaveAs || e.getSource() == menuItemSave) {
 
-			lastPath = saveFile(
-					lastDirectory, ORIPA.doc.getDataFileName(), fileFilters);
+			String path = saveFile(lastDirectory, ORIPA.doc.getDataFileName(), fileFilters);
+			
+			updateMenu(path);
 			updateTitleText();
 
 		} else if (e.getSource() == menuItemSaveAsImage) {
@@ -477,12 +493,12 @@ implements ActionListener, ComponentListener, WindowListener{
 
 		String path = chooser.saveFile(this);
 		if(path != null){
-			if(path.endsWith(".opx")){
-				ORIPA.doc.setDataFilePath(path);
-				ORIPA.doc.clearChanged();
-
-				updateMenu(path);
-			}
+//			if(path.endsWith(".opx")){
+//				ORIPA.doc.setDataFilePath(path);
+//				ORIPA.doc.clearChanged();
+//
+//				updateMenu(path);
+//			}
 		}
 		else{
 			path = homePath;
@@ -524,15 +540,16 @@ implements ActionListener, ComponentListener, WindowListener{
 		menuFile.add(menuItemProperty);
 		menuFile.addSeparator();
 
-		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
-			int index = MRUFiles.size() - 1 - i;
-			if (index >= 0) {
-				String path = MRUFiles.get(index);
-				MRUFilesMenuItem[i].setText(path);
-				menuFile.add(MRUFilesMenuItem[i]);
-			} else {
-				MRUFilesMenuItem[i].setText("");
-			}
+		int i = 0;
+		for (String path : fileHistory.getHistory()) {
+			MRUFilesMenuItem[i].setText(path);
+			menuFile.add(MRUFilesMenuItem[i]);
+		
+			i++;
+		}
+		while(i < MRUFilesMenuItem.length){
+			MRUFilesMenuItem[i].setText("");
+			i++;
 		}
 
 		menuFile.addSeparator();
@@ -540,130 +557,95 @@ implements ActionListener, ComponentListener, WindowListener{
 	}
 
 	public void updateMenu(String filePath) {
-		if (MRUFiles.contains(filePath)) {
+
+		if(filterDB.getLoadableFilterOf(filePath) == null){
 			return;
 		}
-
-		MRUFiles.add(filePath);
-
+		
+		fileHistory.useFile(filePath);
+		
 		buildMenuFile();
 	}
 
-	private void fileOpen() {
-		JFileChooser fileChooser = new JFileChooser(lastPath);
-		fileChooser.addChoosableFileFilter(
-				new FileFilterEx(new String[]{".cp"}, "(*.cp) original Crease Pattern file"));
-		fileChooser.addChoosableFileFilter(
-				new FileFilterEx(new String[]{".pdf"}, "(*.pdf) PDF file"));
-		fileChooser.addChoosableFileFilter(
-				new FileFilterEx(new String[]{".dxf"}, "(*.dxf) DXF file"));
-		fileChooser.addChoosableFileFilter(
-				new FileFilterEx(new String[]{".opx", ".xml"}, "(*.opx, *.xml) " + 
-						ORIPA.res.getString("ORIPA_File")));
-		if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(this)) {
-			try {
-				String filePath = fileChooser.getSelectedFile().getPath();
-				openFile(filePath);
-				updateMenu(filePath);
-				lastPath = filePath;
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(
-						this, e.toString(), ORIPA.res.getString("Error_FileLoadFailed"),
-						JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	}
-
-
-
-	private Doc loadFile(Loader loader, String path){
+	/**
+	 * if filePath is null, this method opens a dialog to select the target.
+	 * otherwise, it tries to read data from the path.
+	 * @param filePath
+	 */
+	private void openFile(String filePath) {
 		ORIPA.modelFrame.setVisible(false);
 		ORIPA.renderFrame.setVisible(false);
 		ORIPA.mainFrame.uiPanel.dispGridCheckBox.setSelected(false);
 		ORIPA.mainFrame.mainScreen.setDispGrid(false);
 
-		Doc doc = null;
-			try{
-				doc = loader.load(path);
-				if (doc != null) {
-					ORIPA.doc = doc;
-					ORIPA.doc.dataFilePath = path;
-				}
-			}
-			catch(FileVersionError e){
-				JOptionPane.showMessageDialog(
-						this, "This file is compatible with a new version. "
-								+ "Please obtain the latest version of ORIPA", "Failed to load the file",
-								JOptionPane.ERROR_MESSAGE);
-				
-			}
-			return doc;
+		String path = null;
+		
+		if(filePath != null){
+			path = loadFile(filePath);
+		}
+		else {
+			FileChooserFactory factory = new FileChooserFactory();
+			FileChooser fileChooser = factory.createChooser(
+					fileHistory.getLastPath(), FilterDB.getInstance().getLoadables());
+	
+			fileChooser.setFileFilter(FilterDB.getInstance().getFilter("opx"));
+			
+			path = fileChooser.loadFile(this);
+		
+		}
+	
+		if(path == null){
+			path = ORIPA.doc.getDataFilePath();
+		}
+		else{
+			updateMenu(path);
+	
+		}
 		
 	}
 
-	private void openFile(String filePath) {
+	
+	/**
+	 * Do not call directly. Please use openFile().
+	 * @param filePath
+	 * @return
+	 */
+	private String loadFile(String filePath) {
 		
-		Loader loader = null;
-		
-		String extension = filePath.substring(filePath.lastIndexOf('.')); 
-		switch(extension) {
-		case ".dxf":
-			loader = new LoaderDXF();
-			break;
-		case ".pdf":
-			loader = new LoaderPDF();
-			break;
-		case ".cp":
-			loader = new LoaderLines();
-			break;
-		case ".opx":
-			loader = new LoaderXML();
-		} 
+		FileFilterEx[] filters = FilterDB.getInstance().getLoadables();
 
-		loadFile( loader, filePath);
+		File file = new File(filePath);
+
+		boolean loaded = false;
+		for(FileFilterEx filter : filters){
+			if(filter.accept(file) && ! file.isDirectory()){
+				try{
+					loaded = filter.getLoadingAction().load(filePath);
+				}
+				catch (FileVersionError e) {
+					JOptionPane.showMessageDialog(
+							this, "This file is compatible with a new version. "
+									+ "Please obtain the latest version of ORIPA", "Failed to load the file",
+									JOptionPane.ERROR_MESSAGE);
+				}
+				break;
+			}
+		}
+		
+		if(!loaded){
+			return null;
+		}
+		
+		return filePath;
 	}
 
 	private void saveIniFile() {
-		String fileNames[] = new String[Config.MRUFILE_NUM];
-		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
-			fileNames[i] = MRUFilesMenuItem[i].getText();
-		}
-
-		InitData initData = new InitData();
-
-		initData.setMRUFiles(fileNames);
-		initData.setLastUsedFile(lastPath);
-
-		try {
-			XMLEncoder enc = new XMLEncoder(
-					new BufferedOutputStream(
-							new FileOutputStream(System.getProperty("user.home") + "\\oripa.ini")));
-			enc.writeObject(initData);
-			enc.close();
-		} catch (FileNotFoundException e) {
-		}
+		fileHistory.saveToFile(ORIPA.iniFilePath);
 	}
 
+	
 	private void loadIniFile() {
-		InitData initData;
-		try {
-			XMLDecoder dec = new XMLDecoder(
-					new BufferedInputStream(
-							new FileInputStream(System.getProperty("user.home") + "\\oripa.ini")));
-			initData = (InitData) dec.readObject();
-			dec.close();
-
-			for (int i = 0; i < Config.MRUFILE_NUM; i++) {
-				if (initData.MRUFiles[i] != null && !initData.MRUFiles[i].equals("")) {
-					MRUFiles.add(0, initData.MRUFiles[i]);
-				}
-			}
-
-			lastPath = initData.getLastUsedFile();
-
-		} catch (Exception e) {
-		}
-
+		fileHistory.loadFromFile(ORIPA.iniFilePath);
 	}
 
 	@Override
@@ -691,7 +673,16 @@ implements ActionListener, ComponentListener, WindowListener{
 		
 		if(ORIPA.doc.isChanged()){
 			//TODO: confirm saving edited opx
-			
+			int selected = JOptionPane.showConfirmDialog(this, 
+					"The crease pattern has been modified. Would you like to save?", 
+					"Comfirm to save", JOptionPane.YES_NO_OPTION);
+			if(selected == JOptionPane.YES_OPTION){
+				String path = saveFile(fileHistory.getLastDirectory(),
+						ORIPA.doc.getDataFileName(), fileFilters);			
+				if(path == null){
+					
+				}
+			}
 		}
 		
 		saveIniFile();

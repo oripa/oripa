@@ -43,8 +43,7 @@ public class ORIPA {
             "This program comes with ABSOLUTELY NO WARRANTY;\n"+
             "This is free software, and you are welcome to redistribute it\n"+
             "under certain conditions; For details check:\nhttp://www.gnu.org/licenses/gpl.html";
-    public static int FILE_MAJOR_VERSION = 1;
-    public static int FILE_MINOR_VERSION = 1;
+ 
     public static ResourceBundle res;
     public static ModelViewFrame3D modelFrame3D;
     public static int tmpInt;
@@ -52,6 +51,9 @@ public class ORIPA {
     ;
     public static CheckFrame checkFrame;
 
+	public static String iniFilePath = System.getProperty("user.home") + "\\oripa.ini";
+
+    
     public static void main(String[] args) {
         try {
             res = ResourceBundle.getBundle("oripa.StringResource",
@@ -62,7 +64,7 @@ public class ORIPA {
         }
         res = ResourceBundle.getBundle("oripa.StringResource", Locale.ENGLISH);
 
-        TITLE = ORIPA.res.getString("Title") + "  v0.35";
+        TITLE = ORIPA.res.getString("Title") + "  v" + Version.ORIPA_VERSION;
 
         int uiPanelWidth = 0;//150;
         int modelFrameWidth = 400;

@@ -342,16 +342,16 @@ public class MainScreen extends JPanel
             g2d.fill(new Rectangle2D.Double(prePickV.x - 5.0 / scale,
                     prePickV.y - 5.0 / scale, 10.0 / scale, 10.0 / scale));
 
-            if (Globals.lineInputMode == Constants.LineInputMode.OVERLAP_V) {
-                if (pickCandidateV != null) {
-                    Vector2d v = pickCandidateV;
-                    Vector2d cv = new Vector2d((prePickV.x + v.x) / 2.0, (prePickV.y + v.y) / 2.0);
-                    Vector2d dir = new Vector2d(prePickV.y - v.y, v.x - prePickV.x);
-                    dir.normalize();
-                    dir.scale(Constants.DEFAULT_PAPER_SIZE * 4);
-                    g2d.draw(new Line2D.Double(cv.x - dir.x, cv.y - dir.y, cv.x + dir.x, cv.y + dir.y));
-                }
-            }
+//            if (Globals.lineInputMode == Constants.LineInputMode.OVERLAP_V) {
+//                if (pickCandidateV != null) {
+//                    Vector2d v = pickCandidateV;
+//                    Vector2d cv = new Vector2d((prePickV.x + v.x) / 2.0, (prePickV.y + v.y) / 2.0);
+//                    Vector2d dir = new Vector2d(prePickV.y - v.y, v.x - prePickV.x);
+//                    dir.normalize();
+//                    dir.scale(Constants.DEFAULT_PAPER_SIZE * 4);
+//                    g2d.draw(new Line2D.Double(cv.x - dir.x, cv.y - dir.y, cv.x + dir.x, cv.y + dir.y));
+//                }
+//            }
         }
 
         for (Vector2d v : crossPoints) {
