@@ -30,20 +30,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -54,29 +44,29 @@ import javax.swing.KeyStroke;
 
 import oripa.Config;
 import oripa.Constants;
-
 import oripa.Doc;
 import oripa.FilterDB;
-import oripa.InitData;
 import oripa.ORIPA;
 import oripa.file.ExporterXML;
 import oripa.file.FileChooser;
 import oripa.file.FileChooserFactory;
 import oripa.file.FileFilterEx;
 import oripa.file.FileHistory;
-import oripa.file.SavingAction;
 import oripa.file.FileVersionError;
 import oripa.file.ImageResourceLoader;
-import oripa.file.Loader;
-import oripa.file.LoaderDXF;
-import oripa.file.LoaderCP;
-import oripa.file.LoaderPDF;
-import oripa.file.LoaderXML;
+import oripa.file.SavingAction;
 import oripa.paint.Globals;
+import oripa.paint.MouseContext;
 
 public class MainFrame extends JFrame 
 implements ActionListener, ComponentListener, WindowListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 272369294032419950L;
+	
+	
 	MainScreen mainScreen;
 	private JMenu menuFile = new JMenu(ORIPA.res.getString("File"));
 	private JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
@@ -381,7 +371,7 @@ implements ActionListener, ComponentListener, WindowListener{
 			}
 		}
 
-		String lastPath = fileHistory.getLastPath();
+//		String lastPath = fileHistory.getLastPath();
 		String lastDirectory = fileHistory.getLastDirectory();
 		
 		if (e.getSource() == menuItemOpen) {
@@ -419,7 +409,13 @@ implements ActionListener, ComponentListener, WindowListener{
 			saveIniFile();
 			System.exit(0);
 		} else if (e.getSource() == menuItemUndo) {
-			ORIPA.doc.loadUndoInfo();
+			if(Globals.getMouseAction() != null){
+				MouseContext mouseContext = MouseContext.getInstance();
+				Globals.getMouseAction().undo(mouseContext);
+			}
+			else{
+				ORIPA.doc.loadUndoInfo();
+			}
 			mainScreen.repaint();
 		} else if (e.getSource() == menuItemClear) {
 			ORIPA.doc = new Doc(Constants.DEFAULT_PAPER_SIZE);

@@ -409,9 +409,9 @@ public class MainScreen extends JPanel
             }
         }
 
-        if (currentMouseDraggingPoint != null
-                && (Globals.editMode == Constants.EditMode.PICK_LINE
-                || Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE)) {
+        if (currentMouseDraggingPoint != null &&
+        	(//Globals.editMode == Constants.EditMode.PICK_LINE||
+              		Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE)) {
             Point2D.Double sp = new Point2D.Double();
             Point2D.Double ep = new Point2D.Double();
             try {
@@ -881,15 +881,15 @@ public class MainScreen extends JPanel
             preMousePoint = e.getPoint();
             updateAffineTransform();
             repaint();
+            
         } else if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
             transX += (double) (e.getX() - preMousePoint.getX()) / scale;
             transY += (double) (e.getY() - preMousePoint.getY()) / scale;
             preMousePoint = e.getPoint();
             updateAffineTransform();
             repaint();
-        } else if (Globals.editMode == Constants.EditMode.PICK_LINE
-                || Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE) {
-            currentMouseDraggingPoint = e.getPoint();
+        } else {
+            Globals.getMouseAction().onDragged(mouseContext, affineTransform, e);
             repaint();
         }
     }

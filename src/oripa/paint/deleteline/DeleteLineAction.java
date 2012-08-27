@@ -1,4 +1,4 @@
-package oripa.paint.linetype;
+package oripa.paint.deleteline;
 
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -14,15 +14,18 @@ import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
 import oripa.view.UIPanelSettingDB;
 
-public class ChangeLineTypeAction extends GraphicMouseAction {
+public class DeleteLineAction extends GraphicMouseAction {
 
 
-	public ChangeLineTypeAction(){
-		setActionState(new SelectingLineForLineType());
+	public DeleteLineAction(){
+		setEditMode(EditMode.OTHER);
+
+		setActionState(new DeletingLine());
+
 	}
 
-	private OriLine closeLine = null;
-
+	//	private OriLine closeLine = null;
+	//
 	//	@Override
 	//	public Vector2d onMove(MouseContext context, AffineTransform affine,
 	//			MouseEvent event) {
@@ -41,23 +44,16 @@ public class ChangeLineTypeAction extends GraphicMouseAction {
 	//		return result;
 	//	}
 
-	private java.awt.Point startPoint;
-	@Override
-	public void onPressed(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-		startPoint = event.getPoint();
-
-	}
-
 	@Override
 	public void onDragged(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
 
 	}
 
+
+	java.awt.Point startPoint;
 	@Override
-	public void onReleased(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onReleased(MouseContext context, AffineTransform affine, MouseEvent event) {
 		java.awt.Point currentPoint = event.getPoint();
 
 		Point2D.Double sp = new Point2D.Double();
@@ -83,9 +79,7 @@ public class ChangeLineTypeAction extends GraphicMouseAction {
 		if (context.getLineCount() > 0) {
 			ORIPA.doc.pushUndoInfo();
 			for (OriLine l : context.getLines()) {
-				// Change line type
-				UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-				ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
+				ORIPA.doc.removeLine(l);
 			}
 
 			context.clear(false);
@@ -103,6 +97,11 @@ public class ChangeLineTypeAction extends GraphicMouseAction {
 		drawPickCandidateLine(g2d, context);
 	}
 
+	@Override
+	public void onPressed(MouseContext context, AffineTransform affine,
+			MouseEvent event) {
+		startPoint = event.getPoint();
+	}
 
 
 

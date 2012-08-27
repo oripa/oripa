@@ -83,13 +83,17 @@ public abstract class GraphicMouseAction {
 	public void onRightClick(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
 
+		undo(context);
+	}
+	
+	public void undo(MouseContext context){
 		if(context.getLineCount() > 0 || context.getVertexCount() > 0){
 			state = state.undo(context);
 		}
 		else {
 			ORIPA.doc.loadUndoInfo();
 		}
-
+		
 	}
 	
 	/**

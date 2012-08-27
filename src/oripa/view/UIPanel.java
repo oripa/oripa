@@ -63,6 +63,8 @@ import oripa.paint.byvalue.AngleMeasuringAction;
 import oripa.paint.byvalue.LengthMeasuringAction;
 import oripa.paint.byvalue.LineByValueAction;
 import oripa.paint.byvalue.ValueDB;
+import oripa.paint.deleteline.DeleteLineAction;
+import oripa.paint.deletevertex.DeleteVertexAction;
 import oripa.paint.line.TwoPointLineAction;
 import oripa.paint.linetype.ChangeLineTypeAction;
 import oripa.paint.mirror.MirrorCopyAction;
@@ -780,10 +782,11 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 				}
 			}
 			
-			Globals.mouseAction = null;
+			Globals.setMouseAction(new DeleteLineAction());
 
 			Globals.editMode = Constants.EditMode.DELETE_LINE;
 			modeChanged();
+
 		} else if (ae.getSource() == editModeAddVertex) {
 			if(Globals.mouseAction != null){
 				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
@@ -800,7 +803,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 					previousMouseAction = Globals.mouseAction;
 				}
 			}
-			Globals.mouseAction = null;
+			Globals.setMouseAction(new DeleteVertexAction());
 
 			Globals.editMode = Constants.EditMode.DELETE_VERTEX;
 			modeChanged();
