@@ -45,10 +45,10 @@ public class MouseContext {
     	this.dispGrid = dispGrid;
     }
     
-    public void clear(){
+    public void clear(boolean unselect){
     	
     	
-    	if(pickedLines.empty() == false){
+    	if(unselect && pickedLines.empty() == false){
 	    	for(OriLine l : pickedLines){
 	    		l.selected = false;
 	    	}

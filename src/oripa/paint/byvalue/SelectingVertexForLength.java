@@ -57,7 +57,7 @@ public class SelectingVertexForLength extends PickingVertex{
 
 		
         doingFirstAction = true;
-        context.clear();
+        context.clear(false);
 
         context.setMissionCompleted(true);
 	}

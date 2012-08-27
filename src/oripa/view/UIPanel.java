@@ -55,6 +55,8 @@ import oripa.ORIPA;
 import oripa.file.ImageResourceLoader;
 import oripa.geom.OriLine;
 import oripa.paint.Globals;
+import oripa.paint.GraphicMouseAction;
+import oripa.paint.GraphicMouseAction.EditMode;
 import oripa.paint.MouseContext;
 import oripa.paint.bisector.AngleBisectorAction;
 import oripa.paint.byvalue.AngleMeasuringAction;
@@ -66,6 +68,7 @@ import oripa.paint.linetype.ChangeLineTypeAction;
 import oripa.paint.mirror.MirrorCopyAction;
 import oripa.paint.pbisec.TwoPointBisectorAction;
 import oripa.paint.segment.TwoPointSegmentAction;
+import oripa.paint.selectline.SelectLineAction;
 import oripa.paint.symmetric.SymmetricalLineAction;
 import oripa.paint.triangle.TriangleSplitAction;
 import oripa.paint.vertical.VerticalLineAction;
@@ -631,12 +634,15 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		ValueDB.getInstance().addObserver(this);
 	}
 
+	
+	
+	private GraphicMouseAction previousMouseAction = null;
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 
-		MouseContext.getInstance().clear();
-		Globals.mouseAction = null;
-
+		if(Globals.mouseAction != null){
+			Globals.mouseAction.onDestroy(MouseContext.getInstance());
+		}
 
 		if (ae.getSource() == lineInputDirectVButton) {
 			Globals.editMode = Constants.EditMode.INPUT_LINE;
@@ -680,7 +686,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			Globals.editMode = Constants.EditMode.INPUT_LINE;
 			Globals.lineInputMode = Constants.LineInputMode.MIRROR;
 
-			Globals.mouseAction = new MirrorCopyAction();
+			Globals.mouseAction = new MirrorCopyAction(MouseContext.getInstance());
 
 			editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
 			modeChanged();
@@ -734,26 +740,72 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 //			modeChanged();
 
 		} else if (ae.getSource() == editModeLineTypeButton) {
+			
+			if(Globals.mouseAction != null){
+				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+					previousMouseAction = Globals.mouseAction;
+				}
+			}
+			
 			Globals.mouseAction = new ChangeLineTypeAction();
 			
 			Globals.editMode = Constants.EditMode.CHANGE_LINE_TYPE;
 			modeChanged();
 
 		} else if (ae.getSource() == editModeInputLineButton) {
+			// recover
+			if(previousMouseAction != null){
+				previousMouseAction.recover(MouseContext.getInstance());
+				Globals.setMouseAction(previousMouseAction);
+			}
 			Globals.editMode = Constants.EditMode.INPUT_LINE;
 			modeChanged();
+			
 		} else if (ae.getSource() == editModePickLineButton) {
+			if(Globals.mouseAction != null){
+				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+					previousMouseAction = Globals.mouseAction;
+				}
+			}
+			
+			
+			Globals.setMouseAction(new SelectLineAction(MouseContext.getInstance()));
+			
 			Globals.editMode = Constants.EditMode.PICK_LINE;
 			modeChanged();
 		} else if (ae.getSource() == editModeDeleteLineButton) {
+			if(Globals.mouseAction != null){
+				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+					previousMouseAction = Globals.mouseAction;
+				}
+			}
+			
+			Globals.mouseAction = null;
+
 			Globals.editMode = Constants.EditMode.DELETE_LINE;
 			modeChanged();
 		} else if (ae.getSource() == editModeAddVertex) {
+			if(Globals.mouseAction != null){
+				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+					previousMouseAction = Globals.mouseAction;
+				}
+			}
+			Globals.mouseAction = null;
+
 			Globals.editMode = Constants.EditMode.ADD_VERTEX;
 			modeChanged();
 		} else if (ae.getSource() == editModeDeleteVertex) {
+			if(Globals.mouseAction != null){
+				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+					previousMouseAction = Globals.mouseAction;
+				}
+			}
+			Globals.mouseAction = null;
+
 			Globals.editMode = Constants.EditMode.DELETE_VERTEX;
 			modeChanged();
+			
+			
 		} else if (ae.getSource() == dispGridCheckBox) {
 			screen.setDispGrid(dispGridCheckBox.isSelected());
 		} else if (ae.getSource() == gridSmallButton) {

@@ -11,6 +11,7 @@ import java.awt.geom.Rectangle2D;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
+import oripa.ORIPA;
 import oripa.geom.OriLine;
 
 public abstract class GraphicMouseAction {
@@ -34,6 +35,23 @@ public abstract class GraphicMouseAction {
 	
 	protected boolean currentStateIs(Class<? extends ActionState> s){
 		return state.equals(s);
+	}
+	
+	public enum EditMode{
+		NORMAL, SELECT, OTHER
+	}
+
+	private EditMode editMode = EditMode.NORMAL;
+
+	protected final void setEditMode(EditMode mode){
+		editMode = mode;
+	}
+	public EditMode getEditMode(){
+		return editMode;
+	}
+	
+	public void onDestroy(MouseContext context){
+		context.clear(false);
 	}
 		
 	
@@ -64,7 +82,14 @@ public abstract class GraphicMouseAction {
      */
 	public void onRightClick(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
-		state = state.undo(context);
+
+		if(context.getLineCount() > 0 || context.getVertexCount() > 0){
+			state = state.undo(context);
+		}
+		else {
+			ORIPA.doc.loadUndoInfo();
+		}
+
 	}
 	
 	/**
@@ -93,10 +118,12 @@ public abstract class GraphicMouseAction {
 		return closeVertex;
 	}
 
-	public abstract void onDrag(MouseContext context, AffineTransform affine, MouseEvent event);
+	public abstract void onPressed(MouseContext context, AffineTransform affine, MouseEvent event);
+	public abstract void onDragged(MouseContext context, AffineTransform affine, MouseEvent event);
 
-	public abstract void onRelease(MouseContext context, AffineTransform affine, MouseEvent event);
+	public abstract void onReleased(MouseContext context, AffineTransform affine, MouseEvent event);
 	
+	public void recover(MouseContext context){}
 	
 	/**
 	 * draws selected lines and selected vertices as selected state.
@@ -199,5 +226,6 @@ public abstract class GraphicMouseAction {
 		return ((event.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) 
 				== MouseEvent.CTRL_DOWN_MASK);		
 	}
+
 
 }

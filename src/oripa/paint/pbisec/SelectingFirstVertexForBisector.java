@@ -11,7 +11,7 @@ public class SelectingFirstVertexForBisector extends PickingVertex{
 	
 	@Override
 	public void undoAction(MouseContext context) {
-		context.clear();
+		context.clear(false);
 	}
 
 	@Override

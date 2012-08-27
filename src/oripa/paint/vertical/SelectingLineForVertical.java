@@ -20,7 +20,7 @@ public class SelectingLineForVertical extends PickingLine {
 	
 	@Override
 	protected void undoAction(MouseContext context) {
-		context.clear();
+		context.clear(false);
 	
 	}
 
@@ -39,7 +39,7 @@ public class SelectingLineForVertical extends PickingLine {
         ORIPA.doc.pushUndoInfo();
         ORIPA.doc.addLine(vl);
 
-        context.clear();
+        context.clear(false);
 	}
 
 }

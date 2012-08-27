@@ -46,7 +46,7 @@ public class SelectingVertexForTriangleSplit extends PickingVertex{
         		context.getVertex(1), context.getVertex(2));
 
         doingFirstAction = true;
-        context.clear();
+        context.clear(false);
 	}
 
 	

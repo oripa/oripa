@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
+import oripa.ORIPA;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
 
@@ -38,16 +39,31 @@ public class AngleBisectorAction extends GraphicMouseAction {
 //	}
 
 
+	
 
 
 	@Override
-	public void onDrag(MouseContext context, AffineTransform affine, MouseEvent event) {
+	public void onDragged(MouseContext context, AffineTransform affine, MouseEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(MouseContext context, AffineTransform affine,
+	public void onRightClick(MouseContext context, AffineTransform affine,
+			MouseEvent event) {
+		// TODO Auto-generated method stub
+		if(context.getLineCount() > 0 || context.getVertexCount() > 0){
+			super.onRightClick(context, affine, event);			
+		}
+		else {
+			ORIPA.doc.loadUndoInfo();
+		}
+	}
+
+
+
+	@Override
+	public void onReleased(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
 		// TODO Auto-generated method stub
 
@@ -66,6 +82,15 @@ public class AngleBisectorAction extends GraphicMouseAction {
 		else {
 			drawPickCandidateLine(g2d, context);
 		}
+	}
+
+
+
+	@Override
+	public void onPressed(MouseContext context, AffineTransform affine,
+			MouseEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -30,14 +30,14 @@ public class NoMouseAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDrag(MouseContext context, AffineTransform affine,
+	public void onDragged(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(MouseContext context, AffineTransform affine,
+	public void onReleased(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
 		// TODO Auto-generated method stub
 
@@ -47,6 +47,13 @@ public class NoMouseAction extends GraphicMouseAction {
 	public void onDraw(Graphics2D g2d, MouseContext context) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onPressed(MouseContext context, AffineTransform affine,
+			MouseEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

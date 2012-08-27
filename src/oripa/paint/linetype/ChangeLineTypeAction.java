@@ -3,10 +3,16 @@ package oripa.paint.linetype;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
+import oripa.Constants;
+import oripa.ORIPA;
 import oripa.geom.OriLine;
+import oripa.geom.RectangleClipper;
+import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
+import oripa.view.UIPanelSettingDB;
 
 public class ChangeLineTypeAction extends GraphicMouseAction {
 
@@ -35,15 +41,62 @@ public class ChangeLineTypeAction extends GraphicMouseAction {
 //		return result;
 //	}
 
+	private java.awt.Point startPoint;
 	@Override
-	public void onDrag(MouseContext context, AffineTransform affine,
+	public void onPressed(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
+		startPoint = event.getPoint();
+		
+	}
+
+	@Override
+	public void onDragged(MouseContext context, AffineTransform affine,
+			MouseEvent event) {
+		java.awt.Point currentPoint = event.getPoint();
+
+		Point2D.Double sp = new Point2D.Double();
+		Point2D.Double ep = new Point2D.Double();
+		try {
+			affine.inverseTransform(startPoint, sp);
+			affine.inverseTransform(currentPoint, ep);
+
+			RectangleClipper clipper = new RectangleClipper(Math.min(sp.x, ep.x),
+                    Math.min(sp.y, ep.y),
+                    Math.max(sp.x, ep.x),
+                    Math.max(sp.y, ep.y));
+            for (OriLine l : ORIPA.doc.lines) {
+
+            	if (Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE) {
+                    if (clipper.clipTest(l)) {
+                        context.pushLine(l);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        }
+
+        if (context.getLineCount() > 0) {
+            ORIPA.doc.pushUndoInfo();
+            for (OriLine l : context.getLines()) {
+                // Change line type
+            	UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
+                ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
+            }
+            
+            context.clear(false);
+
+        }
+
 
 	}
 
 	@Override
-	public void onRelease(MouseContext context, AffineTransform affine,
+	public void onReleased(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
+		java.awt.Point currentPoint = event.getPoint();
+
+		Point2D.Double sp = new Point2D.Double();
+		Point2D.Double ep = new Point2D.Double();
 
 	}
 
@@ -54,6 +107,7 @@ public class ChangeLineTypeAction extends GraphicMouseAction {
 
 		drawPickCandidateLine(g2d, context);
 	}
+
 	
 	
 

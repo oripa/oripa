@@ -38,7 +38,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 		catch (Exception ex) {
 		}
 
-		context.clear();
+		context.clear(false);
 	}
 
 

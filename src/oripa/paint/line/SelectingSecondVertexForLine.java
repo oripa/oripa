@@ -38,7 +38,7 @@ public class SelectingSecondVertexForLine extends PickingVertex{
 			ORIPA.doc.addLine(line);
 		}
 
-		context.clear();
+		context.clear(false);
 	}
 
 	@Override

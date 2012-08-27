@@ -36,7 +36,7 @@ public class SelectingLineForBisector extends PickingLine {
         		context.getVertex(0), context.getVertex(1), context.getVertex(2), 
         		context.getLine(0));
 
-        context.clear();
+        context.clear(false);
 	}
 
 }

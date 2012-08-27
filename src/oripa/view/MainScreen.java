@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -45,6 +46,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.vecmath.Vector2d;
+import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
 
 import oripa.Config;
 import oripa.Constants;
@@ -188,17 +190,17 @@ public class MainScreen extends JPanel
         	g2d.setColor(selector.selectColorByLineType(line.typeVal));
         	g2d.setStroke(selector.selectStroke(line.typeVal));
         	
-            if ((Globals.editMode == Constants.EditMode.INPUT_LINE
-                    && Globals.lineInputMode == Constants.LineInputMode.MIRROR
-                    && line.selected)
-                    || (Globals.editMode == Constants.EditMode.PICK_LINE
-                    && line.selected)) {
-                g2d.setColor(Config.LINE_COLOR_PICKED);
-                g2d.setStroke(Config.STROKE_PICKED);
-            }
+//            if ((Globals.editMode == Constants.EditMode.INPUT_LINE
+//                    && Globals.lineInputMode == Constants.LineInputMode.MIRROR
+//                    && line.selected)
+//                    || (Globals.editMode == Constants.EditMode.PICK_LINE
+//                    && line.selected)) {
+//                g2d.setColor(Config.LINE_COLOR_PICKED);
+//                g2d.setStroke(Config.STROKE_PICKED);
+//            }
 
             if(Globals.mouseAction != null){
-            	if(line.selected == false){
+            	if(mouseContext.getLines().contains(line) == false){
             		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
             	}
             }
@@ -836,66 +838,23 @@ public class MainScreen extends JPanel
 
     @Override
     public void mousePressed(MouseEvent e) {
+    	
+    	if(Globals.mouseAction != null){
+    		Globals.mouseAction.onPressed(mouseContext, affineTransform, e);
+    	
+    	}    	
+    	
         preMousePoint = e.getPoint();
     }
 
     @Override
-    public void mouseReleased(MouseEvent arg0) {
-        // Retangular Selection
-        if (Globals.editMode == Constants.EditMode.PICK_LINE
-                || Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE) {
-            ArrayList<OriLine> selectedLines = new ArrayList<>();
-            Point2D.Double sp = new Point2D.Double();
-            Point2D.Double ep = new Point2D.Double();
-            try {
-                affineTransform.inverseTransform(preMousePoint, sp);
-                affineTransform.inverseTransform(currentMouseDraggingPoint, ep);
-
-                RectangleClipper clipper = new RectangleClipper(Math.min(sp.x, ep.x),
-                        Math.min(sp.y, ep.y),
-                        Math.max(sp.x, ep.x),
-                        Math.max(sp.y, ep.y));
-                for (OriLine l : ORIPA.doc.lines) {
-
-                    // Selection process
-                    if (Globals.editMode == Constants.EditMode.PICK_LINE) {
-
-                        if (l.typeVal == OriLine.TYPE_CUT) {
-                            continue;
-                        }
-                        // Don't select if the line is hidden
-                        if (!Globals.dispMVLines && (l.typeVal == OriLine.TYPE_RIDGE
-                                || l.typeVal == OriLine.TYPE_VALLEY)) {
-                            continue;
-                        }
-                        if (!Globals.dispAuxLines && l.typeVal == OriLine.TYPE_NONE) {
-                            continue;
-                        }
-
-                        if (clipper.clipTest(l)) {
-                            l.selected = true;
-                        }
-                    } else if (Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE) {
-                        if (clipper.clipTest(l)) {
-                            selectedLines.add(l);
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-            }
-
-            if (!selectedLines.isEmpty()) {
-                ORIPA.doc.pushUndoInfo();
-                for (OriLine l : selectedLines) {
-                    // Change line type
-                	UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-                    ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
-                }
-
-            }
-
-        }
-
+    public void mouseReleased(MouseEvent e) {
+        // Rectangular Selection
+    	
+    	if(Globals.mouseAction != null){
+    		Globals.mouseAction.onReleased(mouseContext, affineTransform, e);
+    	}
+    	
         currentMouseDraggingPoint = null;
         repaint();
     }
@@ -964,14 +923,12 @@ public class MainScreen extends JPanel
         mouseContext.dispGrid = dispGrid;
         mouseContext.mousePoint = getLogicalPoint(e.getPoint());
         
-    	if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
-            if (Globals.mouseAction != null) {
-            	Globals.mouseAction.onMove(mouseContext, affineTransform, e);
-            	//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
-            	repaint();
-            	return;
-            }
-    	}
+        if (Globals.mouseAction != null) {
+        	Globals.mouseAction.onMove(mouseContext, affineTransform, e);
+        	//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
+        	repaint();
+        	return;
+        }
 
     	if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
             if (Globals.lineInputMode == Constants.LineInputMode.ON_V

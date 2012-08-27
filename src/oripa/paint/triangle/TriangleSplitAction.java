@@ -41,13 +41,13 @@ public class TriangleSplitAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDrag(MouseContext context, AffineTransform affine, MouseEvent event) {
+	public void onDragged(MouseContext context, AffineTransform affine, MouseEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(MouseContext context, AffineTransform affine,
+	public void onReleased(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
 		// TODO Auto-generated method stub
 
@@ -61,6 +61,15 @@ public class TriangleSplitAction extends GraphicMouseAction {
 
 
 		drawPickCandidateVertex(g2d, context);
+	}
+
+
+
+	@Override
+	public void onPressed(MouseContext context, AffineTransform affine,
+			MouseEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

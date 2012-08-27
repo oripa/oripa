@@ -1,4 +1,4 @@
-package oripa.paint.mirror;
+package oripa.paint.selectline;
 
 import java.awt.geom.Point2D;
 
@@ -7,11 +7,11 @@ import oripa.geom.OriLine;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingLine;
 
-public class SelectingLineForMirror extends PickingLine {
+public class SelectingLine extends PickingLine {
 
 	
 	
-	public SelectingLineForMirror() {
+	public SelectingLine() {
 		super();
 	}
 
@@ -34,32 +34,19 @@ public class SelectingLineForMirror extends PickingLine {
 	@Override
 	protected boolean onAct(MouseContext context, Point2D.Double currentPoint,
 			boolean doSpecial) {
-		if(doingFirstAction){
-			doingFirstAction = false;
-			ORIPA.doc.cacheUndoInfo();
-			
-		}
 
 		boolean result = super.onAct(context, currentPoint, doSpecial);
 		
 		if(result == true){
-			if(doSpecial){
-				axis = context.popLine();
-				result = true;
-            } 
-			else {
 				OriLine line = context.peekLine();
 
-				if(line.selected){
-                	line.selected = false;
-                	context.popLine();
-                	context.removeLine(line);
-                }
-                else {
-                	line.selected = true;
-                }
-
-                result = false;
+			if(line.selected){
+            	line.selected = false;
+            	context.popLine();
+            	context.removeLine(line);
+            }
+            else {
+            	line.selected = true;
             }
 		}
 		
@@ -78,12 +65,7 @@ public class SelectingLineForMirror extends PickingLine {
 	@Override
 	protected void onResult(MouseContext context) {
 		// TODO Auto-generated method stub
-        ORIPA.doc.pushCachedUndoInfo();
 
-		ORIPA.doc.mirrorCopyBy(axis, context.getLines());
-
-        doingFirstAction = true;
-        context.clear(true);
 	}
 
 }

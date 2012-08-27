@@ -35,7 +35,7 @@ public class SelectingLineForLineType extends PickingLine {
     	UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
         ORIPA.doc.alterLineType(context.peekLine(), setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
 
-        context.clear();
+        context.clear(false);
 	}
 
 }

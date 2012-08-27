@@ -26,7 +26,7 @@ public class SelectingSecondVertexForSegment extends PickingVertex{
 		ORIPA.doc.pushUndoInfo();
         ORIPA.doc.addLine(line);
 
-        context.clear();
+        context.clear(false);
 	}
 
 	@Override

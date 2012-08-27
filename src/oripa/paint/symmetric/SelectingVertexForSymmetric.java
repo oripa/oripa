@@ -61,7 +61,7 @@ public class SelectingVertexForSymmetric extends PickingVertex{
         }
 
         doingFirstAction = true;
-        context.clear();
+        context.clear(false);
 	}
 
 	

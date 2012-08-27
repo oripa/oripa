@@ -32,14 +32,14 @@ public class AngleMeasuringAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDrag(MouseContext context, AffineTransform affine,
+	public void onDragged(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(MouseContext context, AffineTransform affine,
+	public void onReleased(MouseContext context, AffineTransform affine,
 			MouseEvent event) {
 		// TODO Auto-generated method stub
 
@@ -53,5 +53,14 @@ public class AngleMeasuringAction extends GraphicMouseAction {
 		drawPickCandidateVertex(g2d, context);
 
 
+	}
+
+
+
+	@Override
+	public void onPressed(MouseContext context, AffineTransform affine,
+			MouseEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }

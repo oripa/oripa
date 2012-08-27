@@ -26,7 +26,7 @@ public class SelectingSecondVertexForBisector extends PickingVertex{
         ORIPA.doc.pushUndoInfo();
         ORIPA.doc.addPBisector(p0, p1);
 
-        context.clear();
+        context.clear(false);
 	}
 
 	@Override
