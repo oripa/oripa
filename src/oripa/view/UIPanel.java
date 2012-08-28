@@ -58,6 +58,7 @@ import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.GraphicMouseAction.EditMode;
 import oripa.paint.MouseContext;
+import oripa.paint.addvertex.AddVertexAction;
 import oripa.paint.bisector.AngleBisectorAction;
 import oripa.paint.byvalue.AngleMeasuringAction;
 import oripa.paint.byvalue.LengthMeasuringAction;
@@ -642,10 +643,13 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 
+		
+		
+		
 		if(Globals.mouseAction != null){
 			Globals.mouseAction.onDestroy(MouseContext.getInstance());
 		}
-
+		
 		if (ae.getSource() == lineInputDirectVButton) {
 			Globals.editMode = Constants.EditMode.INPUT_LINE;
 			Globals.lineInputMode = Constants.LineInputMode.DIRECT_V;
@@ -757,15 +761,17 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		} else if (ae.getSource() == editModeInputLineButton) {
 			// recover
 			if(previousMouseAction != null){
-				previousMouseAction.recover(MouseContext.getInstance());
+				previousMouseAction.recoverSelection(MouseContext.getInstance());
 				Globals.setMouseAction(previousMouseAction);
 			}
 			Globals.editMode = Constants.EditMode.INPUT_LINE;
 			modeChanged();
 			
 		} else if (ae.getSource() == editModePickLineButton) {
-			if(Globals.mouseAction != null){
-				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+
+			GraphicMouseAction action = Globals.mouseAction;
+			if(action != null){
+				if(action.getEditMode() == EditMode.NORMAL){
 					previousMouseAction = Globals.mouseAction;
 				}
 			}
@@ -776,8 +782,9 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			Globals.editMode = Constants.EditMode.PICK_LINE;
 			modeChanged();
 		} else if (ae.getSource() == editModeDeleteLineButton) {
-			if(Globals.mouseAction != null){
-				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+			GraphicMouseAction action = Globals.mouseAction;
+			if(action != null){
+				if(action.getEditMode() == EditMode.NORMAL){
 					previousMouseAction = Globals.mouseAction;
 				}
 			}
@@ -788,18 +795,20 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			modeChanged();
 
 		} else if (ae.getSource() == editModeAddVertex) {
-			if(Globals.mouseAction != null){
-				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+			GraphicMouseAction action = Globals.mouseAction;
+			if(action != null){
+				if(action.getEditMode() == EditMode.NORMAL){
 					previousMouseAction = Globals.mouseAction;
 				}
 			}
-			Globals.mouseAction = null;
+			Globals.mouseAction = new AddVertexAction();
 
 			Globals.editMode = Constants.EditMode.ADD_VERTEX;
 			modeChanged();
 		} else if (ae.getSource() == editModeDeleteVertex) {
-			if(Globals.mouseAction != null){
-				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+			GraphicMouseAction action = Globals.mouseAction;
+			if(action != null){
+				if(action.getEditMode() == EditMode.NORMAL){
 					previousMouseAction = Globals.mouseAction;
 				}
 			}
@@ -893,6 +902,11 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			} catch (Exception ex) {
 				System.out.println(ex);
 			}
+		}
+
+		
+		if(Globals.mouseAction.needSelect() == false){
+			ORIPA.doc.resetSelectedOriLines();
 		}
 
 	}

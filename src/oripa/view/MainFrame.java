@@ -57,6 +57,7 @@ import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
 import oripa.paint.Globals;
 import oripa.paint.MouseContext;
+import oripa.paint.selectline.SelectLineAction;
 
 public class MainFrame extends JFrame 
 implements ActionListener, ComponentListener, WindowListener{
@@ -152,6 +153,8 @@ implements ActionListener, ComponentListener, WindowListener{
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				ORIPA.doc.selectAllOriLines();
+				Globals.setMouseAction(new SelectLineAction(MouseContext.getInstance()));
+				
 				Globals.editMode = Constants.EditMode.PICK_LINE;
 				uiPanel.editModePickLineButton.setSelected(true);
 				uiPanel.modeChanged();
@@ -165,6 +168,7 @@ implements ActionListener, ComponentListener, WindowListener{
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				ORIPA.doc.resetSelectedOriLines();
+				MouseContext.getInstance().clear(false);
 				mainScreen.repaint();
 			}
 		});
@@ -174,6 +178,7 @@ implements ActionListener, ComponentListener, WindowListener{
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				ORIPA.doc.pushUndoInfo();
 				ORIPA.doc.deleteSelectedLines();
+				MouseContext.getInstance().clear(false);
 				mainScreen.repaint();
 			}
 		});

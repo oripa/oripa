@@ -1,99 +1,37 @@
 package oripa.paint.linetype;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
+import java.util.Collection;
 
-import oripa.Constants;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.geom.RectangleClipper;
-import oripa.paint.Globals;
-import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
+import oripa.paint.RectangularSelectableAction;
 import oripa.view.UIPanelSettingDB;
 
-public class ChangeLineTypeAction extends GraphicMouseAction {
+public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 
 	public ChangeLineTypeAction(){
 		setActionState(new SelectingLineForLineType());
 	}
 
-	private OriLine closeLine = null;
-
-	//	@Override
-	//	public Vector2d onMove(MouseContext context, AffineTransform affine,
-	//			MouseEvent event) {
-	//		Vector2d result = super.onMove(context, affine, event);
-	//
-	//		if(closeLine != null){
-	//			closeLine.selected = false;
-	//		}
-	//			
-	//		closeLine = context.pickCandidateL;
-	//	
-	//		if(closeLine != null){
-	//			closeLine.selected = true;
-	//		}
-	//			
-	//		return result;
-	//	}
-
-	private java.awt.Point startPoint;
-	@Override
-	public void onPressed(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-		startPoint = event.getPoint();
-
-	}
 
 	@Override
-	public void onDragged(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-
-	}
-
-	@Override
-	public void onReleased(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-		java.awt.Point currentPoint = event.getPoint();
-
-		Point2D.Double sp = new Point2D.Double();
-		Point2D.Double ep = new Point2D.Double();
-		try {
-			affine.inverseTransform(startPoint, sp);
-			affine.inverseTransform(currentPoint, ep);
-
-			RectangleClipper clipper = new RectangleClipper(Math.min(sp.x, ep.x),
-					Math.min(sp.y, ep.y),
-					Math.max(sp.x, ep.x),
-					Math.max(sp.y, ep.y));
-			for (OriLine l : ORIPA.doc.lines) {
-
-				if (clipper.clipTest(l)) {
-					context.pushLine(l);
-				}
-
-			}
-		} catch (Exception ex) {
-		}
-
-		if (context.getLineCount() > 0) {
+	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
+			MouseContext context) {
+		if(selectedLines.isEmpty() == false){
 			ORIPA.doc.pushUndoInfo();
-			for (OriLine l : context.getLines()) {
+
+			UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
+			for (OriLine l : selectedLines) {
 				// Change line type
-				UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 				ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
 			}
 
-			context.clear(false);
-
 		}
-
-
 	}
+
 
 	@Override
 	public void onDraw(Graphics2D g2d, MouseContext context) {
@@ -102,7 +40,6 @@ public class ChangeLineTypeAction extends GraphicMouseAction {
 
 		drawPickCandidateLine(g2d, context);
 	}
-
 
 
 

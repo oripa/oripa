@@ -1,9 +1,6 @@
 package oripa.paint.linetype;
 
-import java.awt.geom.Point2D;
-
 import oripa.ORIPA;
-import oripa.geom.OriLine;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingLine;
 import oripa.view.UIPanelSettingDB;

@@ -8,11 +8,6 @@ public class SelectingFirstVertexForBisector extends PickingVertex{
 	public SelectingFirstVertexForBisector(){
 		super();
 	}
-	
-	@Override
-	public void undoAction(MouseContext context) {
-		context.clear(false);
-	}
 
 	@Override
 	public void onResult(MouseContext context) {

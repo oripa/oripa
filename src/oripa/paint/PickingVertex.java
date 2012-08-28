@@ -29,7 +29,6 @@ public abstract class PickingVertex extends AbstractActionState {
 				context, currentPoint, freeSelection);
 
 		if(picked == null){
-			System.out.println("onAct() failed");
 			return false;
 		}
 		

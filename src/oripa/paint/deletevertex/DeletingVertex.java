@@ -13,12 +13,15 @@ public class DeletingVertex extends PickingVertex {
 
 	@Override
 	protected void onResult(MouseContext context) {
-		// TODO Auto-generated method stub
+
 		if(context.getVertexCount() > 0){
 			ORIPA.doc.pushUndoInfo();
+			
 			ORIPA.doc.removeVertex(context.popVertex());
 
 		}
+		
+		context.clear(false);
 	}
 
 }

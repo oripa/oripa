@@ -24,11 +24,12 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 	public SelectLineAction(MouseContext context){
 		setEditMode(EditMode.SELECT);
-
+		setNeedSelect(true);
+		
 		setActionState(new SelectingLine());
 
 
-		recover(context);
+		recoverSelection(context);
 	}
 
 	
@@ -38,12 +39,12 @@ public class SelectLineAction extends RectangularSelectableAction {
 			MouseEvent event) {
 		ORIPA.doc.loadUndoInfo();
 
-		recover(context);
+		recoverSelection(context);
 	}
 
 
 	@Override
-	public void recover(MouseContext context) {
+	public void recoverSelection(MouseContext context) {
 		context.clear(false);
 
 		for(OriLine line : ORIPA.doc.lines){

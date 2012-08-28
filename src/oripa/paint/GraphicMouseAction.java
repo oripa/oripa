@@ -16,6 +16,13 @@ import oripa.geom.OriLine;
 
 public abstract class GraphicMouseAction {
 
+	public enum EditMode{
+		NORMAL, SELECT, VERTEX, OTHER
+	}
+
+	private EditMode editMode = EditMode.NORMAL;
+	private boolean needSelect = false;
+
 	protected void log(double x, double y){
 		System.out.println(x + "," + y);
 		
@@ -37,18 +44,25 @@ public abstract class GraphicMouseAction {
 		return state.equals(s);
 	}
 	
-	public enum EditMode{
-		NORMAL, SELECT, OTHER
+
+	public boolean needSelect() {
+		return needSelect;
 	}
 
-	private EditMode editMode = EditMode.NORMAL;
+	protected void setNeedSelect(boolean selectable) {
+		this.needSelect = selectable;
+	}
 
-	protected final void setEditMode(EditMode mode){
+	protected void setEditMode(EditMode mode){
 		editMode = mode;
 	}
 	public EditMode getEditMode(){
 		return editMode;
 	}
+	
+	
+	
+	
 	
 	public void onDestroy(MouseContext context){
 		context.clear(false);
@@ -67,11 +81,16 @@ public abstract class GraphicMouseAction {
     public GraphicMouseAction onLeftClick(MouseContext context, 
     		AffineTransform affine, MouseEvent event){
 		Point2D.Double clickPoint = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
+
+    	doAction(context, clickPoint, buttonCTRLIsPressed(event));
+		return this;
+    }
+    
+    public void doAction(MouseContext context, Point2D.Double point, boolean differntAction){
 		
 		state = state.doAction(context, 
-				clickPoint, buttonCTRLIsPressed(event));
-
-		return this;
+				point, differntAction);
+    	
     }
 
     /**
@@ -120,14 +139,14 @@ public abstract class GraphicMouseAction {
 		context.pickCandidateL = closeLine;
 
 		return closeVertex;
-	}
-
+	}	
+	
 	public abstract void onPressed(MouseContext context, AffineTransform affine, MouseEvent event);
 	public abstract void onDragged(MouseContext context, AffineTransform affine, MouseEvent event);
 
 	public abstract void onReleased(MouseContext context, AffineTransform affine, MouseEvent event);
 	
-	public void recover(MouseContext context){}
+	public void recoverSelection(MouseContext context){}
 	
 	/**
 	 * draws selected lines and selected vertices as selected state.

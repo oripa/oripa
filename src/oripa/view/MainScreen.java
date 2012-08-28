@@ -309,7 +309,7 @@ public class MainScreen extends JPanel
         	drawVertexRectangles(g2d);
         }
 
-
+/*
         if (prepreprePickV != null) {
             g2d.setColor(Color.RED);
             g2d.fill(new Rectangle2D.Double(prepreprePickV.x - 5.0 / scale,
@@ -356,17 +356,18 @@ public class MainScreen extends JPanel
 //            }
         }
 
+*/
         for (Vector2d v : crossPoints) {
             g2d.setColor(Color.RED);
             g2d.fill(new Rectangle2D.Double(v.x - 5.0 / scale, v.y - 5.0 / scale,
                     10.0 / scale, 10.0 / scale));
         }
 
-        if (pickCandidateV != null) {
-            g2d.setColor(Color.GREEN);
-            g2d.fill(new Rectangle2D.Double(pickCandidateV.x - 5.0 / scale,
-                    pickCandidateV.y - 5.0 / scale, 10.0 / scale, 10.0 / scale));
-        }
+//        if (pickCandidateV != null) {
+//            g2d.setColor(Color.GREEN);
+//            g2d.fill(new Rectangle2D.Double(pickCandidateV.x - 5.0 / scale,
+//                    pickCandidateV.y - 5.0 / scale, 10.0 / scale, 10.0 / scale));
+//        }
 
         // display copy and paste target
         if (Globals.lineInputMode == Constants.LineInputMode.COPY_AND_PASTE) {
@@ -409,25 +410,25 @@ public class MainScreen extends JPanel
             }
         }
 
-        if (currentMouseDraggingPoint != null &&
-        	(//Globals.editMode == Constants.EditMode.PICK_LINE||
-              		Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE)) {
-            Point2D.Double sp = new Point2D.Double();
-            Point2D.Double ep = new Point2D.Double();
-            try {
-                affineTransform.inverseTransform(preMousePoint, sp);
-                affineTransform.inverseTransform(currentMouseDraggingPoint, ep);
-                g2d.setStroke(Config.STROKE_SELECT_BY_AREA);
-                g2d.setColor(Color.BLACK);
-                double sx = Math.min(sp.x, ep.x);
-                double sy = Math.min(sp.y, ep.y);
-                double w = Math.abs(sp.x - ep.x);
-                double h = Math.abs(sp.y - ep.y);
-                g2d.draw(new Rectangle2D.Double(sx, sy, w, h));
-            } catch (Exception ex) {
-            }
-
-        }
+//        if (currentMouseDraggingPoint != null &&
+//        	(//Globals.editMode == Constants.EditMode.PICK_LINE||
+//              		Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE)) {
+//            Point2D.Double sp = new Point2D.Double();
+//            Point2D.Double ep = new Point2D.Double();
+//            try {
+//                affineTransform.inverseTransform(preMousePoint, sp);
+//                affineTransform.inverseTransform(currentMouseDraggingPoint, ep);
+//                g2d.setStroke(Config.STROKE_SELECT_BY_AREA);
+//                g2d.setColor(Color.BLACK);
+//                double sx = Math.min(sp.x, ep.x);
+//                double sy = Math.min(sp.y, ep.y);
+//                double w = Math.abs(sp.x - ep.x);
+//                double h = Math.abs(sp.y - ep.y);
+//                g2d.draw(new Rectangle2D.Double(sx, sy, w, h));
+//            } catch (Exception ex) {
+//            }
+//
+//        }
 
         // Line that links the pair of unsetled faces
         if (Config.FOR_STUDY) {
@@ -604,6 +605,8 @@ public class MainScreen extends JPanel
         		Globals.mouseAction = Globals.mouseAction.onLeftClick(
         				mouseContext, affineTransform, e);
         	}
+        	
+        	repaint();
         	return;
         }
     	
@@ -645,60 +648,61 @@ public class MainScreen extends JPanel
             return;
         }
 
+
         if (Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE) {
-            OriLine l = pickLine(clickPoint);
-            if (l == null) {
-                return;
-            }
-        	UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-            ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
-            repaint();
-            return;
-        } else if (Globals.editMode == Constants.EditMode.DELETE_LINE) {
-            OriLine l = pickLine(clickPoint);
-            if (l != null) {
-                ORIPA.doc.pushUndoInfo();
-                ORIPA.doc.removeLine(l);
-            }
-            repaint();
-            return;
-
-        } else if (Globals.editMode == Constants.EditMode.PICK_LINE) {
-            OriLine l = pickLine(clickPoint);
-            if (l != null) {
-                // If it is out of the redered model frame, do nothing
-                if (!Globals.dispMVLines && (l.typeVal == OriLine.TYPE_RIDGE || l.typeVal == OriLine.TYPE_VALLEY)) {
-                    return;
-                }
-                if (!Globals.dispAuxLines && l.typeVal == OriLine.TYPE_NONE) {
-                    return;
-                }
-
-
-                l.selected = !l.selected;
-            }
-            repaint();
-            return;
-
-        } else if (Globals.editMode == Constants.EditMode.ADD_VERTEX) {
-            Object[] line_vertex = new Object[2];
-            if (pickPointOnLine(currentMousePointLogic, line_vertex)) {
-                ORIPA.doc.pushUndoInfo();
-                if (!ORIPA.doc.addVertexOnLine((OriLine) line_vertex[0], (Vector2d) line_vertex[1])) {
-                    ORIPA.doc.loadUndoInfo();
-                }
-                this.pickCandidateV = null;
-                repaint();
-            }
-            return;
-        } else if (Globals.editMode == Constants.EditMode.DELETE_VERTEX) {
-            Vector2d v = pickVertex(clickPoint);
-            if (v != null) {
-                ORIPA.doc.pushUndoInfo();
-                ORIPA.doc.removeVertex(v);
-                repaint();
-            }
-            return;
+//            OriLine l = pickLine(clickPoint);
+//            if (l == null) {
+//                return;
+//            }
+//        	UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
+//            ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
+//            repaint();
+//            return;
+//        } else if (Globals.editMode == Constants.EditMode.DELETE_LINE) {
+//            OriLine l = pickLine(clickPoint);
+//            if (l != null) {
+//                ORIPA.doc.pushUndoInfo();
+//                ORIPA.doc.removeLine(l);
+//            }
+//            repaint();
+//            return;
+//
+//        } else if (Globals.editMode == Constants.EditMode.PICK_LINE) {
+//            OriLine l = pickLine(clickPoint);
+//            if (l != null) {
+//                // If it is out of the redered model frame, do nothing
+//                if (!Globals.dispMVLines && (l.typeVal == OriLine.TYPE_RIDGE || l.typeVal == OriLine.TYPE_VALLEY)) {
+//                    return;
+//                }
+//                if (!Globals.dispAuxLines && l.typeVal == OriLine.TYPE_NONE) {
+//                    return;
+//                }
+//
+//
+//                l.selected = !l.selected;
+//            }
+//            repaint();
+//            return;
+//
+//        } else if (Globals.editMode == Constants.EditMode.ADD_VERTEX) {
+//            Object[] line_vertex = new Object[2];
+//            if (pickPointOnLine(currentMousePointLogic, line_vertex)) {
+//                ORIPA.doc.pushUndoInfo();
+//                if (!ORIPA.doc.addVertexOnLine((OriLine) line_vertex[0], (Vector2d) line_vertex[1])) {
+//                    ORIPA.doc.loadUndoInfo();
+//                }
+//                this.pickCandidateV = null;
+//                repaint();
+//            }
+//            return;
+//        } else if (Globals.editMode == Constants.EditMode.DELETE_VERTEX) {
+//            Vector2d v = pickVertex(clickPoint);
+//            if (v != null) {
+//                ORIPA.doc.pushUndoInfo();
+//                ORIPA.doc.removeVertex(v);
+//                repaint();
+//            }
+//            return;
         } else if (Globals.editMode == Constants.EditMode.EDIT_OUTLINE) {
             Vector2d v = pickVertex(currentMousePointLogic);
             // Add the outline being edited
