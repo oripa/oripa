@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.vecmath.Vector2d;
 
@@ -153,6 +155,24 @@ public class GeometricalOperation {
 		}
 
 		return candidate;
+	}
+	
+	public static Collection<OriLine> shiftLines(Collection<OriLine> lines, double diffX, double diffY){
+		LinkedList<OriLine> shiftedLines = new LinkedList<>();
+		
+        for (OriLine l : lines) {
+
+            double sx = l.p0.x + diffX;
+            double sy = l.p0.y + diffY;
+            
+            double ex = l.p1.x + diffX;
+            double ey = l.p1.y + diffY;
+
+            OriLine line = new OriLine(sx, sy, ex, ey, l.typeVal);
+            shiftedLines.add(line);
+        }
+		
+		return shiftedLines;
 	}
 
 }

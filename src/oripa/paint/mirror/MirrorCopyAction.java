@@ -12,7 +12,7 @@ public class MirrorCopyAction extends SelectLineAction {
 	public MirrorCopyAction(MouseContext context){
 		super(context);
 
-		setEditMode(EditMode.NORMAL);
+		setEditMode(EditMode.INPUT);
 		setNeedSelect(true);
 		
 		setActionState(new SelectingLineForMirror());
@@ -21,7 +21,7 @@ public class MirrorCopyAction extends SelectLineAction {
 	
 	
 	@Override
-	public void onDestroy(MouseContext context) {
+	public void destory(MouseContext context) {
 		context.clear(false);
 	}
 

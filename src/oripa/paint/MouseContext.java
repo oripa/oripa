@@ -18,8 +18,9 @@ public class MouseContext {
     
     public Vector2d pickCandidateV = new Vector2d();
     public OriLine pickCandidateL = new OriLine();
-    public ArrayList<Vector2d> tmpOutline = new ArrayList<>(); // Contour line when editing
-    public boolean dispGrid = true;
+    private ArrayList<Vector2d> tmpOutline = new ArrayList<>(); // Contour line when editing
+
+	public boolean dispGrid = true;
     public double scale;
 
     
@@ -62,6 +63,9 @@ public class MouseContext {
     }
 
     
+    public ArrayList<Vector2d> getTmpOutline() {
+		return tmpOutline;
+	}
     
     public boolean isMissionCompleted() {
 		return missionCompleted;

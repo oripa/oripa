@@ -17,10 +17,10 @@ import oripa.geom.OriLine;
 public abstract class GraphicMouseAction {
 
 	public enum EditMode{
-		NORMAL, SELECT, VERTEX, OTHER
+		INPUT, SELECT, VERTEX, OTHER
 	}
 
-	private EditMode editMode = EditMode.NORMAL;
+	private EditMode editMode = EditMode.INPUT;
 	private boolean needSelect = false;
 
 	protected void log(double x, double y){
@@ -64,7 +64,7 @@ public abstract class GraphicMouseAction {
 	
 	
 	
-	public void onDestroy(MouseContext context){
+	public void destory(MouseContext context){
 		context.clear(false);
 	}
 		
@@ -146,7 +146,8 @@ public abstract class GraphicMouseAction {
 
 	public abstract void onReleased(MouseContext context, AffineTransform affine, MouseEvent event);
 	
-	public void recoverSelection(MouseContext context){}
+	public void recoverSelection(MouseContext context){
+	}
 	
 	/**
 	 * draws selected lines and selected vertices as selected state.
@@ -186,6 +187,13 @@ public abstract class GraphicMouseAction {
 	}
 
 
+	/**
+	 * draw a vertex as an small rectangle at (x, y)
+	 * @param g2d
+	 * @param context
+	 * @param x
+	 * @param y
+	 */
     public void drawVertex(Graphics2D g2d, MouseContext context, 
     		double x, double y){
     	double scale = context.scale;

@@ -1,4 +1,4 @@
-ORIPAS v1.05 (2012/06/23) by OUCHI Koji
+ORIPA S v1.11 (2012/08/28) by OUCHI Koji
 	ORIPA with function of saving as image.
 *** Copyright (C) 2012 OUCHI Koji
 
@@ -16,6 +16,10 @@ ORIPAS v1.05 (2012/06/23) by OUCHI Koji
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 --> Changes from the last version:
+2012/08/28 Bug fix, improve usability:
+	Undo of changing line type is fixed.
+	Ctrl + z acts as undo command the same as right mouse button.
+
 2012/07/15 Bug fix:
 	Codes for inputting line are refactored (just partially).
 	Undo of mirror copy is available.
@@ -25,8 +29,8 @@ ORIPAS v1.05 (2012/06/23) by OUCHI Koji
 
 
 --> Next challenges:
-	fix wrong undo of changing line type.
 	fix bug crashing when you input Ctrl + X.
+	draw copyright on saved picture.
 	
 The following is the original ORIPA's read me.
 ===========================

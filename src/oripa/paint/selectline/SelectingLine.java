@@ -36,9 +36,11 @@ public class SelectingLine extends PickingLine {
 		
 		OriLine line = context.peekLine();
 
+		// toggle selection
 		if(line.selected){
 	    	line.selected = false;
 	    	context.popLine();
+	    	// line should be already stored.
 	    	context.removeLine(line);
 	    }
 	    else {

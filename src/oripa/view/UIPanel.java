@@ -136,7 +136,33 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 	JButton buttonCheckWindow = new JButton("Check Window");
 	MainScreen screen;
 
+	
+	private MouseContext context = MouseContext.getInstance();
 
+	private class NormalCommandSetter implements ActionListener{
+		
+		private GraphicMouseAction mouseAction;
+		private JRadioButton modeButton;
+
+		public NormalCommandSetter(GraphicMouseAction mouseAction, JRadioButton modeButton) {
+			this.mouseAction = mouseAction;
+			this.modeButton = modeButton;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Globals.mouseAction.destory(context);
+			mouseAction.recoverSelection(context);
+			
+			Globals.mouseAction = mouseAction;
+		
+			editModeGroup.setSelected(modeButton.getModel(), true);
+
+			modeChanged();
+
+
+		}
+	}	
 	
 	
 	
@@ -405,8 +431,14 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 
 		lineInputDirectVButton.addActionListener(this);
 		lineInputOnVButton.addActionListener(this);
-		lineInputOverlapVButton.addActionListener(this);
-		lineInputOverlapEButton.addActionListener(this);
+		
+//		lineInputDirectVButton.addActionListener(
+//				new NormalCommandSetter(new TwoPointSegmentAction(), editModeInputLineButton));
+//		
+//		lineInputOnVButton.addActionListener(
+//				new NormalCommandSetter(new TwoPointLineAction(), editModeInputLineButton));
+//		lineInputOverlapVButton.addActionListener(this);
+//		lineInputOverlapEButton.addActionListener(this);
 		lineInputTriangleSplitButton.addActionListener(this);
 		lineInputBisectorButton.addActionListener(this);
 		lineInputVerticalLineButton.addActionListener(this);
@@ -647,7 +679,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		
 		
 		if(Globals.mouseAction != null){
-			Globals.mouseAction.onDestroy(MouseContext.getInstance());
+			Globals.mouseAction.destory(context);
 		}
 		
 		if (ae.getSource() == lineInputDirectVButton) {
@@ -658,6 +690,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 
 			editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
 			modeChanged();
+			
 		} 
 		else if (ae.getSource() == lineInputOnVButton) {
 			Globals.editMode = Constants.EditMode.INPUT_LINE;
@@ -692,7 +725,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			Globals.editMode = Constants.EditMode.INPUT_LINE;
 			Globals.lineInputMode = Constants.LineInputMode.MIRROR;
 
-			Globals.mouseAction = new MirrorCopyAction(MouseContext.getInstance());
+			Globals.mouseAction = new MirrorCopyAction(context);
 
 			editModeGroup.setSelected(editModeInputLineButton.getModel(), true);
 			modeChanged();
@@ -748,7 +781,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		} else if (ae.getSource() == editModeLineTypeButton) {
 			
 			if(Globals.mouseAction != null){
-				if(Globals.mouseAction.getEditMode() == EditMode.NORMAL){
+				if(Globals.mouseAction.getEditMode() == EditMode.INPUT){
 					previousMouseAction = Globals.mouseAction;
 				}
 			}
@@ -761,7 +794,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		} else if (ae.getSource() == editModeInputLineButton) {
 			// recover
 			if(previousMouseAction != null){
-				previousMouseAction.recoverSelection(MouseContext.getInstance());
+				previousMouseAction.recoverSelection(context);
 				Globals.setMouseAction(previousMouseAction);
 			}
 			Globals.editMode = Constants.EditMode.INPUT_LINE;
@@ -771,20 +804,20 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 
 			GraphicMouseAction action = Globals.mouseAction;
 			if(action != null){
-				if(action.getEditMode() == EditMode.NORMAL){
+				if(action.getEditMode() == EditMode.INPUT){
 					previousMouseAction = Globals.mouseAction;
 				}
 			}
 			
 			
-			Globals.setMouseAction(new SelectLineAction(MouseContext.getInstance()));
+			Globals.setMouseAction(new SelectLineAction(context));
 			
 			Globals.editMode = Constants.EditMode.PICK_LINE;
 			modeChanged();
 		} else if (ae.getSource() == editModeDeleteLineButton) {
 			GraphicMouseAction action = Globals.mouseAction;
 			if(action != null){
-				if(action.getEditMode() == EditMode.NORMAL){
+				if(action.getEditMode() == EditMode.INPUT){
 					previousMouseAction = Globals.mouseAction;
 				}
 			}
@@ -797,7 +830,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		} else if (ae.getSource() == editModeAddVertex) {
 			GraphicMouseAction action = Globals.mouseAction;
 			if(action != null){
-				if(action.getEditMode() == EditMode.NORMAL){
+				if(action.getEditMode() == EditMode.INPUT){
 					previousMouseAction = Globals.mouseAction;
 				}
 			}
@@ -808,7 +841,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		} else if (ae.getSource() == editModeDeleteVertex) {
 			GraphicMouseAction action = Globals.mouseAction;
 			if(action != null){
-				if(action.getEditMode() == EditMode.NORMAL){
+				if(action.getEditMode() == EditMode.INPUT){
 					previousMouseAction = Globals.mouseAction;
 				}
 			}

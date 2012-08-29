@@ -57,6 +57,7 @@ import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
 import oripa.paint.Globals;
 import oripa.paint.MouseContext;
+import oripa.paint.copypaste.PasteAction;
 import oripa.paint.selectline.SelectLineAction;
 
 public class MainFrame extends JFrame 
@@ -197,6 +198,9 @@ implements ActionListener, ComponentListener, WindowListener{
 				} else {
 					Globals.editMode = Constants.EditMode.INPUT_LINE;
 					Globals.lineInputMode = Constants.LineInputMode.COPY_AND_PASTE;
+					
+					Globals.setMouseAction(new PasteAction());
+					
 					uiPanel.editModeInputLineButton.setSelected(true);
 					uiPanel.modeChanged();
 					ORIPA.doc.prepareForCopyAndPaste();
