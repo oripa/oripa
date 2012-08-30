@@ -276,25 +276,25 @@ public class MainScreen extends JPanel
         
 
         
-        // Shows of the outline of the editing
-        int outlineVnum = tmpOutline.size();
-        if (outlineVnum != 0) {
-            g2d.setColor(Color.GREEN);
-            g2d.setStroke(Config.STROKE_TMP_OUTLINE);
-            for (int i = 0; i < outlineVnum - 1; i++) {
-                Vector2d p0 = tmpOutline.get(i);
-                Vector2d p1 = tmpOutline.get((i + 1) % outlineVnum);
-                g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
-            }
-
-            Vector2d cv = pickCandidateV == null
-                    ? new Vector2d(currentMousePointLogic.getX(), currentMousePointLogic.getY())
-                    : pickCandidateV;
-            g2d.draw(new Line2D.Double(tmpOutline.get(0).x, tmpOutline.get(0).y,
-                    cv.x, cv.y));
-            g2d.draw(new Line2D.Double(tmpOutline.get(outlineVnum - 1).x,
-                    tmpOutline.get(outlineVnum - 1).y, cv.x, cv.y));
-        }
+//        // Shows of the outline of the editing
+//        int outlineVnum = tmpOutline.size();
+//        if (outlineVnum != 0) {
+//            g2d.setColor(Color.GREEN);
+//            g2d.setStroke(Config.STROKE_TMP_OUTLINE);
+//            for (int i = 0; i < outlineVnum - 1; i++) {
+//                Vector2d p0 = tmpOutline.get(i);
+//                Vector2d p1 = tmpOutline.get((i + 1) % outlineVnum);
+//                g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
+//            }
+//
+//            Vector2d cv = pickCandidateV == null
+//                    ? new Vector2d(currentMousePointLogic.getX(), currentMousePointLogic.getY())
+//                    : pickCandidateV;
+//            g2d.draw(new Line2D.Double(tmpOutline.get(0).x, tmpOutline.get(0).y,
+//                    cv.x, cv.y));
+//            g2d.draw(new Line2D.Double(tmpOutline.get(outlineVnum - 1).x,
+//                    tmpOutline.get(outlineVnum - 1).y, cv.x, cv.y));
+//        }
 
         // Drawing of the vertices
         if (Globals.editMode == Constants.EditMode.ADD_VERTEX
@@ -548,56 +548,56 @@ public class MainScreen extends JPanel
 //                repaint();
 //            }
         } else if (Globals.editMode == Constants.EditMode.EDIT_OUTLINE) {
-            Vector2d v = pickVertex(currentMousePointLogic);
-            // Add the outline being edited
-            if (v != null) {
-                // Closes if it matches an existing point
-                boolean bClose = false;
-                for (Vector2d tv : tmpOutline) {
-                    if (GeomUtil.Distance(v, tv) < 1) {
-                        bClose = true;
-                        break;
-                    }
-                }
+//            Vector2d v = pickVertex(currentMousePointLogic);
+//            // Add the outline being edited
+//            if (v != null) {
+//                // Closes if it matches an existing point
+//                boolean bClose = false;
+//                for (Vector2d tv : tmpOutline) {
+//                    if (GeomUtil.Distance(v, tv) < 1) {
+//                        bClose = true;
+//                        break;
+//                    }
+//                }
+//
+//                if (bClose) {
+//                    if (tmpOutline.size() > 2) {
+//                        closeTmpOutline();
+//                    }
+//                } else {
+//                    tmpOutline.add(v);
+//                }
+//                repaint();
+//            }
+//            return;
+//        } else if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
 
-                if (bClose) {
-                    if (tmpOutline.size() > 2) {
-                        closeTmpOutline();
-                    }
-                } else {
-                    tmpOutline.add(v);
-                }
-                repaint();
-            }
-            return;
-        } else if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
-
-        	if (Globals.lineInputMode == Constants.LineInputMode.COPY_AND_PASTE) {
-                Vector2d v = pickVertex(clickPoint);
-                if (v != null) {
-                    if (!ORIPA.doc.tmpSelectedLines.isEmpty()) {
-                        ORIPA.doc.pushUndoInfo();
-                        double ox = ORIPA.doc.tmpSelectedLines.get(0).p0.x;
-                        double oy = ORIPA.doc.tmpSelectedLines.get(0).p0.y;
-
-                        for (OriLine l : ORIPA.doc.tmpSelectedLines) {
-                            double mx = v.x;
-                            double my = v.y;
-
-                            double sx = mx + l.p0.x - ox;
-                            double sy = my + l.p0.y - oy;
-                            double ex = mx + l.p1.x - ox;
-                            double ey = my + l.p1.y - oy;
-
-                            OriLine line = new OriLine(sx, sy, ex, ey, l.typeVal);
-                            ORIPA.doc.addLine(line);
-                        }
-                    }
-                }
+//        	if (Globals.lineInputMode == Constants.LineInputMode.COPY_AND_PASTE) {
+//                Vector2d v = pickVertex(clickPoint);
+//                if (v != null) {
+//                    if (!ORIPA.doc.tmpSelectedLines.isEmpty()) {
+//                        ORIPA.doc.pushUndoInfo();
+//                        double ox = ORIPA.doc.tmpSelectedLines.get(0).p0.x;
+//                        double oy = ORIPA.doc.tmpSelectedLines.get(0).p0.y;
+//
+//                        for (OriLine l : ORIPA.doc.tmpSelectedLines) {
+//                            double mx = v.x;
+//                            double my = v.y;
+//
+//                            double sx = mx + l.p0.x - ox;
+//                            double sy = my + l.p0.y - oy;
+//                            double ex = mx + l.p1.x - ox;
+//                            double ey = my + l.p1.y - oy;
+//
+//                            OriLine line = new OriLine(sx, sy, ex, ey, l.typeVal);
+//                            ORIPA.doc.addLine(line);
+//                        }
+//                    }
+//                }
 
 
             
-            }
+//            }
         }
 
         repaint();
@@ -769,7 +769,7 @@ public class MainScreen extends JPanel
         
         mouseContext.scale = scale;
         mouseContext.dispGrid = dispGrid;
-        mouseContext.mousePoint = getLogicalPoint(e.getPoint());
+        mouseContext.setMousePoint( getLogicalPoint(e.getPoint()) );
         
         if (Globals.mouseAction != null) {
         	Globals.mouseAction.onMove(mouseContext, affineTransform, e);

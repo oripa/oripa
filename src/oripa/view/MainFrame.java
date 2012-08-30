@@ -58,6 +58,7 @@ import oripa.file.SavingAction;
 import oripa.paint.Globals;
 import oripa.paint.MouseContext;
 import oripa.paint.copypaste.PasteAction;
+import oripa.paint.outline.EditOutlineAction;
 import oripa.paint.selectline.SelectLineAction;
 
 public class MainFrame extends JFrame 
@@ -413,6 +414,9 @@ implements ActionListener, ComponentListener, WindowListener{
 		} else if (e.getSource() == menuItemChangeOutline) {
 			Globals.preEditMode = Globals.editMode;
 			Globals.editMode = Constants.EditMode.EDIT_OUTLINE;
+			
+			Globals.setMouseAction(new EditOutlineAction());
+			
 			uiPanel.modeChanged();
 		} else if (e.getSource() == menuItemExit) {
 			saveIniFile();

@@ -150,7 +150,7 @@ public class GeometricalOperation {
 		Vector2d candidate = context.pickCandidateV;
 
 		if(candidate == null && enableMousePoint){
-			Point2D.Double mp = context.mousePoint;
+			Point2D.Double mp = context.getMousePoint();
 			candidate = new Vector2d(mp.x, mp.y);
 		}
 
