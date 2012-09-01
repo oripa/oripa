@@ -18,6 +18,8 @@
 
 package oripa;
 
+import oripa.resource.Version;
+
 public class DataSet {
 
     private int mainVersion;

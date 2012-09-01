@@ -12,6 +12,7 @@ import oripa.geom.RectangleClipper;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
 import oripa.paint.RectangularSelectableAction;
+import oripa.viewsetting.main.MainScreenSettingDB;
 
 public class DeleteLineAction extends RectangularSelectableAction {
 
@@ -29,6 +30,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 		super.onDraw(g2d, context);
 
 		drawPickCandidateLine(g2d, context);
+		
 	}
 
 	@Override

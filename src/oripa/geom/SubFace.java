@@ -20,10 +20,10 @@ package oripa.geom;
 
 import java.util.ArrayList;
 import javax.vecmath.Vector2d;
-import oripa.Condition3;
-import oripa.Condition4;
 import oripa.Doc;
 import oripa.ORIPA;
+import oripa.folder.Condition3;
+import oripa.folder.Condition4;
 
 public class SubFace {
 

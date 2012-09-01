@@ -2,12 +2,12 @@ package oripa.paint.byvalue;
 
 import java.awt.geom.Point2D.Double;
 
-import oripa.Constants;
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.paint.Globals;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingVertex;
+import oripa.resource.Constants;
 
 public class SelectingVertexForLength extends PickingVertex{
 	

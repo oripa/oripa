@@ -24,10 +24,10 @@ import java.io.File;
 import javax.swing.*;
 
 import oripa.ORIPA;
-import oripa.file.Exporter;
-import oripa.file.ExporterORmat;
-import oripa.file.ExporterSVG;
 import oripa.file.FileFilterEx;
+import oripa.file.exporter.Exporter;
+import oripa.file.exporter.ExporterORmat;
+import oripa.file.exporter.ExporterSVG;
 
 public class RenderUI extends JPanel {
 

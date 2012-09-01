@@ -14,10 +14,10 @@ public class IsOnTempOutlineLoop implements PairLoop.Block<Vector2d> {
 	private Vector2d target;
 	
 	public Vector2d execute(
-			Collection<Vector2d> outlineVertice, Vector2d v) {
+			Collection<Vector2d> outlineVertices, Vector2d v) {
 
 		target = v;
-    	return PairLoop.iterateAll(outlineVertice, this);
+    	return PairLoop.iterateAll(outlineVertices, this);
 
 	}
 	

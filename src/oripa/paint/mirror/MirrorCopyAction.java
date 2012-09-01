@@ -21,7 +21,7 @@ public class MirrorCopyAction extends SelectLineAction {
 	
 	
 	@Override
-	public void destory(MouseContext context) {
+	public void destroy(MouseContext context) {
 		context.clear(false);
 	}
 

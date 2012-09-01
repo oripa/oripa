@@ -4,19 +4,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import oripa.file.Exporter;
-import oripa.file.ExporterCP;
-import oripa.file.ExporterDXF;
-import oripa.file.ExporterOBJ;
-import oripa.file.ExporterSVG;
-import oripa.file.ExporterXML;
 import oripa.file.FileFilterEx;
-import oripa.file.LoaderCP;
-import oripa.file.LoaderDXF;
-import oripa.file.LoaderPDF;
-import oripa.file.LoaderXML;
 import oripa.file.LoadingAction;
 import oripa.file.SavingAction;
+import oripa.file.exporter.Exporter;
+import oripa.file.exporter.ExporterCP;
+import oripa.file.exporter.ExporterDXF;
+import oripa.file.exporter.ExporterOBJ;
+import oripa.file.exporter.ExporterSVG;
+import oripa.file.exporter.ExporterXML;
+import oripa.file.loader.LoaderCP;
+import oripa.file.loader.LoaderDXF;
+import oripa.file.loader.LoaderPDF;
+import oripa.file.loader.LoaderXML;
 
 
 /**

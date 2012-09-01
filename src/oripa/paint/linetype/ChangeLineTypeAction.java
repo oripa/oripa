@@ -7,7 +7,7 @@ import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.paint.MouseContext;
 import oripa.paint.RectangularSelectableAction;
-import oripa.view.UIPanelSettingDB;
+import oripa.viewsetting.uipanel.UIPanelSettingDB;
 
 public class ChangeLineTypeAction extends RectangularSelectableAction {
 

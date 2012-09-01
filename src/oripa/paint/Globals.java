@@ -19,8 +19,8 @@
 package oripa.paint;
 
 import oripa.Config;
-import oripa.Constants;
 import oripa.paint.segment.TwoPointSegmentAction;
+import oripa.resource.Constants;
 
 public class Globals {
 

@@ -18,6 +18,15 @@ public class TwoPointBisectorAction extends GraphicMouseAction {
 	
 
 	@Override
+	public void destroy(MouseContext context) {
+		super.destroy(context);
+		setActionState(new SelectingFirstVertexForBisector());
+	}
+
+
+
+
+	@Override
 	public void onDragged(MouseContext context, AffineTransform affine, MouseEvent event) {
 		// TODO Auto-generated method stub
 
@@ -29,6 +38,7 @@ public class TwoPointBisectorAction extends GraphicMouseAction {
 		// TODO Auto-generated method stub
 
 	}
+	
 
 	
 	@Override

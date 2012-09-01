@@ -18,6 +18,13 @@ public class VerticalLineAction extends GraphicMouseAction {
 	}
 
 
+	@Override
+	public void destroy(MouseContext context) {
+		super.destroy(context);
+		setActionState(new SelectingVertexForVertical());
+		
+	}
+
 
 	private OriLine closeLine = null;
 
@@ -39,6 +46,9 @@ public class VerticalLineAction extends GraphicMouseAction {
 		}		
 		return result;
 	}
+
+
+
 
 
 

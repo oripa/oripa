@@ -3,7 +3,7 @@ package oripa;
 import javax.swing.JOptionPane;
 
 import oripa.file.FileVersionError;
-import oripa.file.Loader;
+import oripa.file.loader.Loader;
 
 public class LoadingDoc implements oripa.file.LoadingAction{
 

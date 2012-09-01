@@ -9,10 +9,10 @@ import java.util.LinkedList;
 
 import javax.vecmath.Vector2d;
 
-import oripa.Constants;
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
+import oripa.resource.Constants;
 
 public class GeometricalOperation {
 	public static Point2D.Double getLogicalPoint(AffineTransform affine, Point p){		
@@ -150,7 +150,7 @@ public class GeometricalOperation {
 		Vector2d candidate = context.pickCandidateV;
 
 		if(candidate == null && enableMousePoint){
-			Point2D.Double mp = context.getMousePoint();
+			Point2D.Double mp = context.getLogicalMousePoint();
 			candidate = new Vector2d(mp.x, mp.y);
 		}
 

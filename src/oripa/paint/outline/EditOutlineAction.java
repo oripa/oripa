@@ -19,6 +19,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 	public EditOutlineAction(){
 		setActionState(new SelectingVertexForOutline());
+		setEditMode(EditMode.OTHER);
 	}
 
 
@@ -26,15 +27,15 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 		private Graphics2D g2d;
 
-		public void execute(Graphics2D g2d, Collection<Vector2d> outlineVertice){
+		public void execute(Graphics2D g2d, Collection<Vector2d> outlinevertices){
 			this.g2d = g2d;
 
 			g2d.setColor(Color.GREEN);
 			g2d.setStroke(Config.STROKE_TMP_OUTLINE);
 
-			if(outlineVertice.size() > 1){
+			if(outlinevertices.size() > 1){
 				PairLoop.iterateWithCount(
-					outlineVertice, outlineVertice.size() - 1, this);
+					outlinevertices, outlinevertices.size() - 1, this);
 			}
 		}
 
@@ -57,23 +58,23 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 		this.drawPickCandidateVertex(g2d, context);
 		
-		Stack<Vector2d> outlineVertice = context.getVertices();
+		Stack<Vector2d> outlinevertices = context.getVertices();
 
-		// Shows of the outline of the editing
-		int outlineVnum = outlineVertice.size();
+		// Shows the outline of the editing
+		int outlineVnum = outlinevertices.size();
 
 		if (outlineVnum != 0) {
 
-			(new DrawTempOutlines()).execute(g2d, outlineVertice);
+			(new DrawTempOutlines()).execute(g2d, outlinevertices);
 
 			Vector2d cv = (context.pickCandidateV == null)
-					? new Vector2d(context.getMousePoint().getX(), context.getMousePoint().getY())
+					? new Vector2d(context.getLogicalMousePoint().getX(), context.getLogicalMousePoint().getY())
 			: context.pickCandidateV;
-					g2d.draw(new Line2D.Double(outlineVertice.get(0).x, 
-							outlineVertice.get(0).y,
+					g2d.draw(new Line2D.Double(outlinevertices.get(0).x, 
+							outlinevertices.get(0).y,
 							cv.x, cv.y));
-					g2d.draw(new Line2D.Double(outlineVertice.get(outlineVnum - 1).x,
-							outlineVertice.get(outlineVnum - 1).y, cv.x, cv.y));
+					g2d.draw(new Line2D.Double(outlinevertices.get(outlineVnum - 1).x,
+							outlinevertices.get(outlineVnum - 1).y, cv.x, cv.y));
 		}
 
 	}

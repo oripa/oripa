@@ -42,12 +42,12 @@ import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
-import oripa.Constants;
 import oripa.ORIPA;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 import oripa.geom.OriLine;
 import oripa.paint.Globals;
+import oripa.resource.Constants;
 
 public class ModelViewScreen extends JPanel
         implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener, ComponentListener {
@@ -224,7 +224,7 @@ public class ModelViewScreen extends JPanel
 
         ORIPA.doc.setCrossLine(crossLine);
         repaint();
-        ORIPA.mainFrame.mainScreen.repaint();
+        ORIPA.mainFrame.repaint();
     }
 
     @Override

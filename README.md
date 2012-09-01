@@ -23,11 +23,10 @@ A great drawer ORIPA is originally composed by MITANI Jun for origami crease pat
 
 
 --> Known bugs:
-	cannot edit outlines.
-	
+	crashing when you input Ctrl + X.
+
 
 --> Next challenges:
-	fix bug crashing when you input Ctrl + X.
 	draw copyright on saved picture.
 
 

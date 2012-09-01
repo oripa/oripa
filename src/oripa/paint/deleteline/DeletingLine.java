@@ -24,6 +24,8 @@ public class DeletingLine extends PickingLine {
 			ORIPA.doc.pushUndoInfo();
 			ORIPA.doc.removeLine(context.popLine());
 		}
+		
+		context.clear(false);
 	}
 
 }

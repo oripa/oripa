@@ -19,6 +19,15 @@ public class TwoPointSegmentAction extends GraphicMouseAction {
 	
 
 	@Override
+	public void destroy(MouseContext context) {
+		super.destroy(context);
+		setActionState(new SelectingFirstVertexForSegment());
+	}
+
+
+
+
+	@Override
 	public void onDragged(MouseContext context, AffineTransform affine, MouseEvent event) {
 		// TODO Auto-generated method stub
 

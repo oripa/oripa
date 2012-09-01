@@ -24,6 +24,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -37,15 +39,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
-import oripa.Constants;
 import oripa.ORIPA;
-import oripa.file.Exporter;
-import oripa.file.ExporterDXF;
-import oripa.file.ExporterOBJ2;
 import oripa.file.FileFilterEx;
+import oripa.file.exporter.Exporter;
+import oripa.file.exporter.ExporterDXF;
+import oripa.file.exporter.ExporterOBJ2;
 import oripa.paint.Globals;
+import oripa.resource.Constants;
+import oripa.viewsetting.model.ModelFrameSettingDB;
 
-public class ModelViewFrame extends JFrame implements ActionListener, AdjustmentListener {
+public class ModelViewFrame extends JFrame 
+implements ActionListener, AdjustmentListener, Observer{
+
+	private ModelFrameSettingDB setting = ModelFrameSettingDB.getInstance();
 
     ModelViewScreen screen;
     private JMenu menuDisp = new JMenu(ORIPA.res.getString("MENU_Disp"));
@@ -65,6 +71,9 @@ public class ModelViewFrame extends JFrame implements ActionListener, Adjustment
     private JScrollBar scrollBarPosition = new JScrollBar(JScrollBar.VERTICAL, 0, 5, -150, 150);
 
     public ModelViewFrame() {
+    	
+    	setting.addObserver(this);
+    	
         setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));
         screen = new ModelViewScreen();
 
@@ -123,7 +132,7 @@ public class ModelViewFrame extends JFrame implements ActionListener, Adjustment
                 screen.recalcCrossLine();
             } else {
                 screen.repaint();
-                ORIPA.mainFrame.mainScreen.repaint();
+                ORIPA.mainFrame.repaint();
             }
         } else if (e.getSource() == menuItemExportDXF) {
             exportFile("dxf");
@@ -195,5 +204,17 @@ public class ModelViewFrame extends JFrame implements ActionListener, Adjustment
                         JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+    
+    @Override
+    public void update(Observable o, Object arg) {
+    	
+    	if(setting.isFrameVisible()){
+			ORIPA.modelFrame.setVisible(true);
+			ORIPA.modelFrame.screen.resetViewMatrix();
+			ORIPA.modelFrame.menuItemSlideFaces.setSelected(false);
+			ORIPA.modelFrame.repaint();
+
+    	}
     }
 }

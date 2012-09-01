@@ -4,11 +4,11 @@ import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
-import oripa.Constants;
 import oripa.ORIPA;
 import oripa.paint.Globals;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingVertex;
+import oripa.resource.Constants;
 
 public class SelectingVertexForAngle extends PickingVertex{
 	

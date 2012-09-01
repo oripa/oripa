@@ -27,7 +27,6 @@ public class MouseContext {
     private boolean missionCompleted = false;
 
     private Point2D.Double mousePoint;
-    private Vector2d logicalMousePoint;
     
     private static MouseContext instance = null;
     
@@ -43,11 +42,11 @@ public class MouseContext {
     private MouseContext(){}
     
     
-    public Point2D.Double getMousePoint() {
+    public Point2D.Double getLogicalMousePoint() {
 		return mousePoint;
 	}
 
-	public void setMousePoint(Point2D.Double mousePoint) {
+	public void setLogicalMousePoint(Point2D.Double mousePoint) {
 		this.mousePoint = mousePoint;
 	}
 

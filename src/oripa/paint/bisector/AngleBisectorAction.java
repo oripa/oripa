@@ -16,6 +16,7 @@ public class AngleBisectorAction extends GraphicMouseAction {
 	}
 
 
+	
 
 //	private OriLine closeLine = null;
 //
@@ -43,22 +44,28 @@ public class AngleBisectorAction extends GraphicMouseAction {
 
 
 	@Override
+	public void recover(MouseContext context) {
+		
+	}
+
+
+
+
+	@Override
+	public void destroy(MouseContext context) {
+		super.destroy(context);
+		setActionState(new SelectingVertexForBisector());
+	}
+
+
+
+
+	@Override
 	public void onDragged(MouseContext context, AffineTransform affine, MouseEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
-	public void onRightClick(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-		// TODO Auto-generated method stub
-		if(context.getLineCount() > 0 || context.getVertexCount() > 0){
-			super.onRightClick(context, affine, event);			
-		}
-		else {
-			ORIPA.doc.loadUndoInfo();
-		}
-	}
 
 
 

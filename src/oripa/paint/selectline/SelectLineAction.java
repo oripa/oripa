@@ -9,7 +9,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
 import oripa.Config;
-import oripa.Constants;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.geom.RectangleClipper;
@@ -18,6 +17,7 @@ import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.MouseContext;
 import oripa.paint.RectangularSelectableAction;
+import oripa.resource.Constants;
 
 public class SelectLineAction extends RectangularSelectableAction {
 
@@ -29,7 +29,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 		setActionState(new SelectingLine());
 
 
-		recoverSelection(context);
+		recover(context);
 	}
 
 	
@@ -39,12 +39,12 @@ public class SelectLineAction extends RectangularSelectableAction {
 			MouseEvent event) {
 		ORIPA.doc.loadUndoInfo();
 
-		recoverSelection(context);
+		recover(context);
 	}
 
 
 	@Override
-	public void recoverSelection(MouseContext context) {
+	public void recover(MouseContext context) {
 		context.clear(false);
 
 		for(OriLine line : ORIPA.doc.lines){

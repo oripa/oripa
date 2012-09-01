@@ -1,7 +1,7 @@
 package oripa;
 
-import oripa.file.Exporter;
 import oripa.file.SavingAction;
+import oripa.file.exporter.Exporter;
 
 public class SavingDoc implements SavingAction{
 

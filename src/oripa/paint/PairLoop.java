@@ -4,6 +4,14 @@ import java.util.Iterator;
 
 public class PairLoop {
 
+	/**
+	 * loop of (begin, begin+1), ... , (n-2, n-1), (n-1, 0).
+	 * @param begin
+	 * @param elements Loop target
+	 * @param block What to do for the pairs
+	 * @return The first element of the last pair, in other word, i of (i, i+1).
+	 *         null if {@code block} never made a break by returning false.
+	 */
 	public static <Element> Element iterateFrom(Iterator<Element> begin,
 			Iterable<Element> elements, Block<Element> block){
 
@@ -81,7 +89,7 @@ public class PairLoop {
 		 * this method must return true to go next.
 		 * @param element
 		 * @param nextElement
-		 * @return continue or not.
+		 * @return true if the loop continues, otherwise false.
 		 */
 		public boolean yield(Element element, Element nextElement);
 	}

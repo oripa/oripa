@@ -15,17 +15,17 @@ public class IsOutsideOfTempOutlineLoop implements PairLoop.Block<Vector2d> {
     boolean CCWFlg;
 	
 	public boolean execute(
-			Collection<Vector2d> outLineVertice, Vector2d v) {
+			Collection<Vector2d> outLineVertices, Vector2d v) {
 
 		target = v;
 		
-		Iterator<Vector2d> iterator = outLineVertice.iterator();
+		Iterator<Vector2d> iterator = outLineVertices.iterator();
 		Vector2d p0 = iterator.next();
 		Vector2d p1 = iterator.next();
 		
 		CCWFlg = GeomUtil.CCWcheck(p0, p1, target);
 		
-    	return PairLoop.iterateFrom(iterator, outLineVertice, this) != null;
+    	return PairLoop.iterateFrom(iterator, outLineVertices, this) != null;
 
 	}
 	

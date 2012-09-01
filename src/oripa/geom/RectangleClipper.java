@@ -107,16 +107,16 @@ public class RectangleClipper {
 
     // Returns false if not included in the area
     public boolean clip(OriLine l) {
-        if (Math.abs(l.p0.x - m_minX) < oripa.Constants.EPS && Math.abs(l.p1.x - m_minX) < oripa.Constants.EPS) {
+        if (Math.abs(l.p0.x - m_minX) < oripa.resource.Constants.EPS && Math.abs(l.p1.x - m_minX) < oripa.resource.Constants.EPS) {
             return false;
         }
-        if (Math.abs(l.p0.x - m_maxX) < oripa.Constants.EPS && Math.abs(l.p1.x - m_maxX) < oripa.Constants.EPS) {
+        if (Math.abs(l.p0.x - m_maxX) < oripa.resource.Constants.EPS && Math.abs(l.p1.x - m_maxX) < oripa.resource.Constants.EPS) {
             return false;
         }
-        if (Math.abs(l.p0.y - m_minY) < oripa.Constants.EPS && Math.abs(l.p1.y - m_minY) < oripa.Constants.EPS) {
+        if (Math.abs(l.p0.y - m_minY) < oripa.resource.Constants.EPS && Math.abs(l.p1.y - m_minY) < oripa.resource.Constants.EPS) {
             return false;
         }
-        if (Math.abs(l.p0.y - m_maxY) < oripa.Constants.EPS && Math.abs(l.p1.y - m_maxY) < oripa.Constants.EPS) {
+        if (Math.abs(l.p0.y - m_maxY) < oripa.resource.Constants.EPS && Math.abs(l.p1.y - m_maxY) < oripa.resource.Constants.EPS) {
             return false;
         }
 

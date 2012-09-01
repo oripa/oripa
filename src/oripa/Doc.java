@@ -27,6 +27,7 @@ import java.util.Comparator;
 import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
+import oripa.folder.Folder;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.OriEdge;
@@ -36,33 +37,34 @@ import oripa.geom.OriLine;
 import oripa.geom.OriVertex;
 import oripa.geom.Ray;
 import oripa.paint.Globals;
-
-class PointComparatorX implements Comparator<Vector2d> {
-
-    @Override
-    public int compare(Vector2d v1, Vector2d v2) {
-        return v1.x > v2.x ? 1 : -1;
-    }
-}
-
-class PointComparatorY implements Comparator<Vector2d> {
-
-    @Override
-    public int compare(Vector2d v1, Vector2d v2) {
-        return ((Vector2d) v1).y > ((Vector2d) v2).y ? 1 : -1;
-    }
-}
-
-class FaceOrderComparator implements Comparator<OriFace> {
-
-    @Override
-    public int compare(OriFace f1, OriFace f2) {
-        return f1.z_order > f2.z_order ? 1 : -1;
-    }
-}
+import oripa.resource.Constants;
 
 
 public class Doc {
+	class PointComparatorX implements Comparator<Vector2d> {
+
+	    @Override
+	    public int compare(Vector2d v1, Vector2d v2) {
+	        return v1.x > v2.x ? 1 : -1;
+	    }
+	}
+
+	class PointComparatorY implements Comparator<Vector2d> {
+
+	    @Override
+	    public int compare(Vector2d v1, Vector2d v2) {
+	        return ((Vector2d) v1).y > ((Vector2d) v2).y ? 1 : -1;
+	    }
+	}
+
+	class FaceOrderComparator implements Comparator<OriFace> {
+
+	    @Override
+	    public int compare(OriFace f1, OriFace f2) {
+	        return f1.z_order > f2.z_order ? 1 : -1;
+	    }
+	}
+
 
     public ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
     public ArrayList<OriLine> lines = new ArrayList<OriLine>();

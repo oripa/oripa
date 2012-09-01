@@ -21,17 +21,27 @@ package oripa.view;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import oripa.ORIPA;
+import oripa.viewsetting.render.RenderFrameSettingDB;
 
-public class RenderFrame extends JFrame implements ActionListener {
 
-    RenderScreen2 screen;
+public class RenderFrame extends JFrame implements ActionListener, Observer {
+
+	private RenderFrameSettingDB setting = RenderFrameSettingDB.getInstance();
+
+	RenderScreen2 screen;
     RenderUI ui;
     public JLabel hintLabel;
 
     public RenderFrame() {
+    	setting.addObserver(this);
+    	
         setTitle("Folded Origami");
         screen = new RenderScreen2();
         ui = new RenderUI();
@@ -48,5 +58,17 @@ public class RenderFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent arg0) {
         // TODO Auto-generated method stub
+    }
+    
+    @Override
+    public void update(Observable o, Object arg) {
+
+    	
+    	if(setting.isFrameVisible()){
+	    	screen.resetViewMatrix();
+			screen.redrawOrigami();
+			ui.updateLabel();
+			setVisible(true);
+    	}    	
     }
 }

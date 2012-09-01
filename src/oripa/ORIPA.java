@@ -25,11 +25,13 @@ import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import oripa.resource.Constants;
+import oripa.resource.Version;
 import oripa.view.CheckFrame;
-import oripa.view.MainFrame;
 import oripa.view.ModelViewFrame;
 import oripa.view.ModelViewFrame3D;
 import oripa.view.RenderFrame;
+import oripa.view.main.MainFrame;
 
 
 public class ORIPA {
@@ -56,13 +58,13 @@ public class ORIPA {
     
     public static void main(String[] args) {
         try {
-            res = ResourceBundle.getBundle("oripa.StringResource",
+            res = ResourceBundle.getBundle("oripa.resource.StringResource",
                     Locale.getDefault());
         } catch (Exception e) {
-            res = ResourceBundle.getBundle("oripa.StringResource",
+            res = ResourceBundle.getBundle("oripa.resource.StringResource",
                     Locale.ENGLISH);
         }
-        res = ResourceBundle.getBundle("oripa.StringResource", Locale.ENGLISH);
+        res = ResourceBundle.getBundle("oripa.resource.StringResource", Locale.ENGLISH);
 
         TITLE = ORIPA.res.getString("Title") + "  v" + Version.ORIPA_VERSION;
 

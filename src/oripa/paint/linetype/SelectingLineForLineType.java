@@ -3,7 +3,7 @@ package oripa.paint.linetype;
 import oripa.ORIPA;
 import oripa.paint.MouseContext;
 import oripa.paint.PickingLine;
-import oripa.view.UIPanelSettingDB;
+import oripa.viewsetting.uipanel.UIPanelSettingDB;
 
 public class SelectingLineForLineType extends PickingLine {
 

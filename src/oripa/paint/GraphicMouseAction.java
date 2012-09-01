@@ -13,6 +13,7 @@ import javax.vecmath.Vector2d;
 import oripa.Config;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
+import oripa.viewsetting.main.MainScreenSettingDB;
 
 public abstract class GraphicMouseAction {
 
@@ -64,7 +65,7 @@ public abstract class GraphicMouseAction {
 	
 	
 	
-	public void destory(MouseContext context){
+	public void destroy(MouseContext context){
 		context.clear(false);
 	}
 		
@@ -91,6 +92,8 @@ public abstract class GraphicMouseAction {
 		state = state.doAction(context, 
 				point, differntAction);
     	
+		MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
+		screenSetting.requestRedraw();
     }
 
     /**
@@ -146,7 +149,7 @@ public abstract class GraphicMouseAction {
 
 	public abstract void onReleased(MouseContext context, AffineTransform affine, MouseEvent event);
 	
-	public void recoverSelection(MouseContext context){
+	public void recover(MouseContext context){
 	}
 	
 	/**
