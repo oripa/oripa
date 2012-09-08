@@ -65,6 +65,7 @@ import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 import oripa.paint.copypaste.CopyAndPasteAction;
 import oripa.paint.outline.EditOutlineAction;
+import oripa.paint.selectline.SelectLineAction;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -218,7 +219,14 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				ORIPA.doc.selectAllOriLines();
-				(new OnSelectButtonSelected()).changeViewSetting();
+//				Collection<ActionListener> listners = binder.getBoundListeners(
+//						new SelectLineAction(mouseContext), StringID.Menu.SELECT_ALL_ID);
+//
+//				for(ActionListener listener : listners){
+//					listener.actionPerformed(e);
+//				}
+				
+//				(new OnSelectButtonSelected()).changeViewSetting();
 			}
 		});
 

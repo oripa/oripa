@@ -3,13 +3,19 @@ ORIPA S
 
 A great drawer ORIPA is originally composed by MITANI Jun for origami crease pattern.
 "ORIPA S" fixes some bugs and provides function of saving as image.
+Executable file: https://dl.dropbox.com/u/45296904/oripaS.jar
+
 
 --> History of updates:
+2012/09/08 Improve usability:
+	On copy-and-paste mode, you can select the orgin vertex by pressing Ctrl key.
+
+
 2012/08/28 Bug fix, improve usability:
 	Undo of changing line type is fixed.
 	Ctrl + z acts as undo command the same as right mouse button.
-	On mirror copy mode, you can select multi-lines by Dragging.
-	On delete line mode, you can delete multi-lines by Dragging.	
+	On mirror-copy mode, you can select multi-lines by Dragging.
+	On delete-line mode, you can delete multi-lines by Dragging.	
 	It comfirms to save on closing window if you have edited.
 	Codes for inputting line are refactored (just partially).
 	
@@ -24,7 +30,7 @@ A great drawer ORIPA is originally composed by MITANI Jun for origami crease pat
 
 --> Known bugs:
 	crashing when you input Ctrl + X.
-
+	behaviors of editing contour and that of copy and paste are different from the original ORIPA.
 
 --> Next challenges:
 	draw copyright on saved picture.

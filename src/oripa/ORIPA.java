@@ -45,6 +45,7 @@ public class ORIPA {
     public static MainFrame mainFrame;
     public static ModelViewFrame modelFrame;
     public static String infoString = "oripaS: (c) 2012 OUCHI Koji\n" +
+    		"http://github.com/Ooouch1" +
     		"ORIPA: (c) 2005-2009 Jun Mitani\nhttp://mitani.cs.tsukuba.ac.jp/\n\n"+
             "This program comes with ABSOLUTELY NO WARRANTY;\n"+
             "This is free software, and you are welcome to redistribute it\n"+
