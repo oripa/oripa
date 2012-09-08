@@ -17,9 +17,12 @@ public class StringID {
 	    public static final String EXIT_ID =  "Exit"; 
 	    public static final String UNDO_ID =  "Undo"; 
 	    public static final String ABOUT_ID =  "About"; 
+		public static final String COPY_PASTE_ID = "Menu Copy and Paste";
+		public static final String CONTOUR_ID = "EditContour";
+		
 	}
 
-	public static class CommandHint{
+	public static class Command{
 		public static final String DIRECT_V_ID =  "Direction_DirectV"; 
 	    public static final String ON_V_ID =  "Direction_OnV"; 
 	    public static final String SYMMETRIC_ID =  "Direction_Symmetric"; 
@@ -37,6 +40,7 @@ public class StringID {
 	    public static final String CONTOUR_ID =  "Direction_EditContour"; 
 		public static final String PERPENDICULAR_BISECTOR_ID = "Direction_PBisec";
 		public static final String SELECT_ID = "Direction_select";
+		public static final String COPY_PASTE_ID = "Direction_Copy_and_Paste";
 	}
 	
 	public static class Error{

@@ -345,7 +345,7 @@ public class RenderScreen2 extends JPanel
         }
 
         if (m_bAmbientOcclusion) {
-            int renderFace = isM_bFaceOrderFlip() ? oripa.Doc.UPPER : oripa.Doc.LOWER;
+            int renderFace = isM_bFaceOrderFlip() ? oripa.doc.Doc.UPPER : oripa.doc.Doc.LOWER;
             int r = 10;
             int s = (int) (r * r * Math.PI);
             // For every pixel
@@ -478,7 +478,7 @@ public class RenderScreen2 extends JPanel
 
                 int p = offset + x;
 
-                int renderFace = isM_bFaceOrderFlip() ? oripa.Doc.UPPER : oripa.Doc.LOWER;
+                int renderFace = isM_bFaceOrderFlip() ? oripa.doc.Doc.UPPER : oripa.doc.Doc.LOWER;
 
                 if (zbuf[p] == -1 || ORIPA.doc.overlapRelation[zbuf[p]][id] == renderFace) {
 

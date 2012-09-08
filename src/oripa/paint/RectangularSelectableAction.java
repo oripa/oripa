@@ -2,7 +2,6 @@ package oripa.paint;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -13,10 +12,11 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.geom.RectangleClipper;
-import oripa.paint.GeometricalOperation;
+import oripa.mouse.MouseUtility;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
+import oripa.paint.geometry.GeometricOperation;
 import oripa.resource.Constants;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
@@ -26,23 +26,23 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	private Point2D.Double draggingPoint = null; 
 
 	@Override
-	public void onPressed(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-		startPoint = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
+	public void onPress(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
+		startPoint = context.getLogicalMousePoint();
 	}
 
 	@Override
-	public void onDragged(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onDrag(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		
-		draggingPoint = GeometricalOperation.getLogicalPoint(affine, event.getPoint());		
+		draggingPoint = context.getLogicalMousePoint();
 	
 	}
 
 
 
 	@Override
-	public void onReleased(MouseContext context, AffineTransform affine, MouseEvent event) {
+	public void onRelease(PaintContext context, AffineTransform affine, boolean differentAction) {
 
 		if(startPoint != null && draggingPoint != null){
 			selectByRectangularArea(context);
@@ -53,9 +53,9 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 		
 	}
 
-	protected abstract void afterRectangularSelection(Collection<OriLine> selectedLines, MouseContext context);
+	protected abstract void afterRectangularSelection(Collection<OriLine> selectedLines, PaintContext context);
 	
-	protected final void selectByRectangularArea(MouseContext context){
+	protected final void selectByRectangularArea(PaintContext context){
 		LinkedList<OriLine> selectedLines = new LinkedList<>();
 
 		try {
@@ -83,7 +83,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	
 	
 	@Override
-	public void onDraw(Graphics2D g2d, MouseContext context) {
+	public void onDraw(Graphics2D g2d, PaintContext context) {
 
 		super.onDraw(g2d, context);
 

@@ -2,7 +2,6 @@ package oripa.paint.selectline;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -12,17 +11,17 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.geom.RectangleClipper;
-import oripa.paint.GeometricalOperation;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.RectangularSelectableAction;
+import oripa.paint.geometry.GeometricOperation;
 import oripa.resource.Constants;
 
 public class SelectLineAction extends RectangularSelectableAction {
 
 
-	public SelectLineAction(MouseContext context){
+	public SelectLineAction(PaintContext context){
 		setEditMode(EditMode.SELECT);
 		setNeedSelect(true);
 		
@@ -35,8 +34,8 @@ public class SelectLineAction extends RectangularSelectableAction {
 	
 
 	@Override
-	public void onRightClick(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onRightClick(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		ORIPA.doc.loadUndoInfo();
 
 		recover(context);
@@ -44,7 +43,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 
 	@Override
-	public void recover(MouseContext context) {
+	public void recover(PaintContext context) {
 		context.clear(false);
 
 		for(OriLine line : ORIPA.doc.lines){
@@ -57,7 +56,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
-			MouseContext context) {
+			PaintContext context) {
 
 		if(selectedLines.isEmpty() == false){
 
@@ -89,7 +88,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 
 	@Override
-	public void onDraw(Graphics2D g2d, MouseContext context) {
+	public void onDraw(Graphics2D g2d, PaintContext context) {
 		super.onDraw(g2d, context);
 
 		this.drawPickCandidateLine(g2d, context);

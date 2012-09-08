@@ -23,10 +23,10 @@ import java.util.Random;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
-import oripa.Doc;
 import oripa.ORIPA;
-import oripa.file.exporter.Exporter;
-import oripa.file.exporter.ExporterEPS;
+import oripa.doc.Doc;
+import oripa.doc.exporter.Exporter;
+import oripa.doc.exporter.ExporterEPS;
 import oripa.geom.*;
 import oripa.paint.Globals;
 

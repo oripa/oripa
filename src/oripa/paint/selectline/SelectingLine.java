@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingLine;
 
 public class SelectingLine extends PickingLine {
@@ -23,13 +23,13 @@ public class SelectingLine extends PickingLine {
 	
 	
 	@Override
-	protected void undoAction(MouseContext context) {
+	protected void undoAction(PaintContext context) {
 		// TODO Auto-generated method stub
 		super.undoAction(context);
 	}
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 		
 		ORIPA.doc.pushUndoInfo();
 		

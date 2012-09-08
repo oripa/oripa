@@ -22,10 +22,14 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import oripa.doc.Doc;
 import oripa.resource.Constants;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
 import oripa.resource.Version;
 import oripa.view.CheckFrame;
 import oripa.view.ModelViewFrame;
@@ -55,17 +59,35 @@ public class ORIPA {
 
 	public static String iniFilePath = System.getProperty("user.home") + "\\oripa.ini";
 
-    
-    public static void main(String[] args) {
+	
+	private static final String resourcePackage = "oripa.resource";
+
+	
+	private static ResourceBundle createResource(String classPath){
+		ResourceBundle bundle;
         try {
-            res = ResourceBundle.getBundle("oripa.resource.StringResource",
+            bundle = ResourceBundle.getBundle(classPath,
                     Locale.getDefault());
         } catch (Exception e) {
-            res = ResourceBundle.getBundle("oripa.resource.StringResource",
+            bundle = ResourceBundle.getBundle(classPath,
                     Locale.ENGLISH);
         }
-        res = ResourceBundle.getBundle("oripa.resource.StringResource", Locale.ENGLISH);
-
+        bundle = ResourceBundle.getBundle(classPath, Locale.ENGLISH);
+		
+		
+		return bundle;
+	}
+	
+    public static void main(String[] args) {
+        res = createResource(resourcePackage+".StringResource");
+ 
+        ResourceHolder resources = ResourceHolder.getInstance();
+        resources.addResource(ResourceKey.EXPLANATION, 
+        		createResource(resourcePackage + ".ExplanationStringResource_en") );
+        resources.addResource(ResourceKey.LABEL, 
+        		createResource(resourcePackage + ".LabelStringResource_en") );
+        
+        		
         TITLE = ORIPA.res.getString("Title") + "  v" + Version.ORIPA_VERSION;
 
         int uiPanelWidth = 0;//150;

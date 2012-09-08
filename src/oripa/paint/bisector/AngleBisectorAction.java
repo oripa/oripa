@@ -1,12 +1,11 @@
 package oripa.paint.bisector;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
 import oripa.ORIPA;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 
 public class AngleBisectorAction extends GraphicMouseAction {
 
@@ -44,7 +43,7 @@ public class AngleBisectorAction extends GraphicMouseAction {
 
 
 	@Override
-	public void recover(MouseContext context) {
+	public void recover(PaintContext context) {
 		
 	}
 
@@ -52,7 +51,7 @@ public class AngleBisectorAction extends GraphicMouseAction {
 
 
 	@Override
-	public void destroy(MouseContext context) {
+	public void destroy(PaintContext context) {
 		super.destroy(context);
 		setActionState(new SelectingVertexForBisector());
 	}
@@ -61,7 +60,7 @@ public class AngleBisectorAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDragged(MouseContext context, AffineTransform affine, MouseEvent event) {
+	public void onDrag(PaintContext context, AffineTransform affine, boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
@@ -70,15 +69,15 @@ public class AngleBisectorAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onReleased(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onRelease(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 
 	@Override
-	public void onDraw(Graphics2D g2d, MouseContext context) {
+	public void onDraw(Graphics2D g2d, PaintContext context) {
 
 		super.onDraw(g2d, context);
 
@@ -94,8 +93,8 @@ public class AngleBisectorAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onPressed(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onPress(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		// TODO Auto-generated method stub
 		
 	}

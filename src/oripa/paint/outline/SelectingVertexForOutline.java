@@ -13,7 +13,7 @@ import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.OriLine;
 import oripa.paint.Globals;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PairLoop;
 import oripa.paint.PickingVertex;
 import oripa.viewsetting.uipanel.UIPanelSettingDB;
@@ -30,7 +30,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 	
 
 	@Override
-	protected boolean onAct(MouseContext context, Point2D.Double currentPoint,
+	protected boolean onAct(PaintContext context, Point2D.Double currentPoint,
 			boolean freeSelection) {
 		return super.onAct(context, currentPoint, freeSelection);
 	}
@@ -39,7 +39,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 		
 		Vector2d v = context.popVertex();
 		

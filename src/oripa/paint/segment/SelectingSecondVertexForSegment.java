@@ -3,7 +3,7 @@ package oripa.paint.segment;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.paint.Globals;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 
 public class SelectingSecondVertexForSegment extends PickingVertex{
@@ -14,7 +14,7 @@ public class SelectingSecondVertexForSegment extends PickingVertex{
 	}
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 		
 		if(context.getVertexCount() != 2){
 			throw new RuntimeException();

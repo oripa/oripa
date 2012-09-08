@@ -1,7 +1,7 @@
 package oripa.paint.linetype;
 
 import oripa.ORIPA;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingLine;
 import oripa.viewsetting.uipanel.UIPanelSettingDB;
 
@@ -19,13 +19,13 @@ public class SelectingLineForLineType extends PickingLine {
 	
 	
 	@Override
-	protected void undoAction(MouseContext context) {
+	protected void undoAction(PaintContext context) {
 		// TODO Auto-generated method stub
 		super.undoAction(context);
 	}
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 		// TODO Auto-generated method stub
         ORIPA.doc.pushUndoInfo();
 

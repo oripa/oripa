@@ -1,6 +1,6 @@
 package oripa.paint.pbisec;
 
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 
 public class SelectingFirstVertexForBisector extends PickingVertex{
@@ -10,7 +10,7 @@ public class SelectingFirstVertexForBisector extends PickingVertex{
 	}
 
 	@Override
-	public void onResult(MouseContext context) {
+	public void onResult(PaintContext context) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -191,9 +191,6 @@ public class ModelViewScreen extends JPanel
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (Globals.editMode == Constants.EditMode.NONE) {
-            return;
-        }
         Point2D.Double clickPoint = new Point2D.Double();
         try {
             affineTransform.inverseTransform(e.getPoint(), clickPoint);

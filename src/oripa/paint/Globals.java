@@ -32,7 +32,7 @@ public class Globals {
 		Globals.mouseAction = mouseAction;
 	}
 
-	public static Constants.EditMode editMode = Constants.EditMode.INPUT_LINE;
+//	public static Constants.EditMode editMode = Constants.EditMode.INPUT_LINE;
     public static Constants.ModelEditMode modelEditMode = Constants.ModelEditMode.INPUT_CROSS_LINE;
     public static Constants.EditMode preEditMode = Constants.EditMode.INPUT_LINE;
     public static Constants.LineInputMode lineInputMode = Constants.LineInputMode.DIRECT_V;

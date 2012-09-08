@@ -4,7 +4,7 @@ import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
 import oripa.paint.Globals;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingLine;
 
 public class SelectingLineForVertical extends PickingLine {
@@ -19,7 +19,7 @@ public class SelectingLineForVertical extends PickingLine {
 	
 	
 	@Override
-	protected void undoAction(MouseContext context) {
+	protected void undoAction(PaintContext context) {
 		context.clear(false);
 	
 	}
@@ -27,7 +27,7 @@ public class SelectingLineForVertical extends PickingLine {
 	
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 		if(context.getLineCount() != 1 || 
 				context.getVertexCount() != 1){
 			throw new RuntimeException();

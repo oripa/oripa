@@ -10,7 +10,7 @@ import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.geom.RectangleClipper;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.RectangularSelectableAction;
 import oripa.viewsetting.main.MainScreenSettingDB;
 
@@ -25,7 +25,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, MouseContext context) {
+	public void onDraw(Graphics2D g2d, PaintContext context) {
 
 		super.onDraw(g2d, context);
 
@@ -35,7 +35,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
-			MouseContext context) {
+			PaintContext context) {
 
 		if(selectedLines.isEmpty() == false){
 			ORIPA.doc.pushUndoInfo();

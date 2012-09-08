@@ -1,6 +1,6 @@
 package oripa.paint.line;
 
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.segment.TwoPointSegmentAction;
 
 public class TwoPointLineAction extends TwoPointSegmentAction {
@@ -13,7 +13,7 @@ public class TwoPointLineAction extends TwoPointSegmentAction {
 	
 	
 	@Override
-	public void destroy(MouseContext context) {
+	public void destroy(PaintContext context) {
 		// TODO Auto-generated method stub
 		super.destroy(context);
 		setActionState(new SelectingFirstVertexForLine());
@@ -22,7 +22,7 @@ public class TwoPointLineAction extends TwoPointSegmentAction {
 
 
 	@Override
-	public void recover(MouseContext context) {
+	public void recover(PaintContext context) {
 		
 	}
 	

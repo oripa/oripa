@@ -3,7 +3,7 @@ package oripa.paint.pbisec;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 
 public class SelectingSecondVertexForBisector extends PickingVertex{
@@ -13,7 +13,7 @@ public class SelectingSecondVertexForBisector extends PickingVertex{
 	}
 	
 	@Override
-	public void onResult(MouseContext context) {
+	public void onResult(PaintContext context) {
 		
 		if(context.getVertexCount() != 2){
 			throw new RuntimeException();

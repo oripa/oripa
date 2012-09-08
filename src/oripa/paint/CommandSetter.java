@@ -24,7 +24,7 @@ public class CommandSetter implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		MouseContext context = MouseContext.getInstance();
+		PaintContext context = PaintContext.getInstance();
 
 		Globals.mouseAction.destroy(context);
 		mouseAction.recover(context);

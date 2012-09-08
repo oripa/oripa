@@ -5,7 +5,7 @@ import java.awt.geom.Point2D.Double;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 
 public class SelectingVertexForSymmetric extends PickingVertex{
@@ -24,7 +24,7 @@ public class SelectingVertexForSymmetric extends PickingVertex{
 	private boolean doSpecial = false;
 	
 	@Override
-	protected boolean onAct(MouseContext context, Double currentPoint,
+	protected boolean onAct(PaintContext context, Double currentPoint,
 			boolean doSpecial) {
 		
 		if(doingFirstAction){
@@ -46,7 +46,7 @@ public class SelectingVertexForSymmetric extends PickingVertex{
 	}
 
 	@Override
-	public void onResult(MouseContext context) {
+	public void onResult(PaintContext context) {
 		ORIPA.doc.pushCachedUndoInfo();
 		
 		Vector2d first = context.getVertex(0);

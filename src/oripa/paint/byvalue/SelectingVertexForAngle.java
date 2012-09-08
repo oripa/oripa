@@ -6,7 +6,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.paint.Globals;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 import oripa.resource.Constants;
 
@@ -23,7 +23,7 @@ public class SelectingVertexForAngle extends PickingVertex{
 
 	private boolean doingFirstAction = true;
 	@Override
-	protected boolean onAct(MouseContext context, Double currentPoint,
+	protected boolean onAct(PaintContext context, Double currentPoint,
 			boolean doSpecial) {
 		
 		context.setMissionCompleted(false);
@@ -45,7 +45,7 @@ public class SelectingVertexForAngle extends PickingVertex{
 	}
 
 	@Override
-	public void onResult(MouseContext context) {
+	public void onResult(PaintContext context) {
         
         Vector2d first = context.getVertex(0);
         Vector2d second = context.getVertex(1);

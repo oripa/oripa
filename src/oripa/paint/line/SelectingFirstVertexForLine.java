@@ -1,6 +1,6 @@
 package oripa.paint.line;
 
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 
 public class SelectingFirstVertexForLine extends PickingVertex{
@@ -10,12 +10,12 @@ public class SelectingFirstVertexForLine extends PickingVertex{
 	}
 	
 	@Override
-	public void undoAction(MouseContext context) {
+	public void undoAction(PaintContext context) {
 		context.clear(false);
 	}
 
 	@Override
-	public void onResult(MouseContext context) {
+	public void onResult(PaintContext context) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,7 +1,6 @@
 package oripa.paint.byvalue;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 
@@ -10,7 +9,7 @@ import javax.vecmath.Vector2d;
 import oripa.paint.ElementSelector;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 
 public class LineByValueAction extends GraphicMouseAction {
 
@@ -20,21 +19,21 @@ public class LineByValueAction extends GraphicMouseAction {
 	}
 	
 	@Override
-	public void onDragged(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onDrag(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onReleased(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onRelease(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, MouseContext context) {
+	public void onDraw(Graphics2D g2d, PaintContext context) {
 		super.onDraw(g2d, context);
 		
 		drawPickCandidateVertex(g2d, context);
@@ -60,8 +59,8 @@ public class LineByValueAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPressed(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onPress(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		// TODO Auto-generated method stub
 		
 	}

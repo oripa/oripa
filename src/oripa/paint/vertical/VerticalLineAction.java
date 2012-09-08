@@ -1,14 +1,13 @@
 package oripa.paint.vertical;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
 
 import oripa.geom.OriLine;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 
 public class VerticalLineAction extends GraphicMouseAction {
 
@@ -19,7 +18,7 @@ public class VerticalLineAction extends GraphicMouseAction {
 
 
 	@Override
-	public void destroy(MouseContext context) {
+	public void destroy(PaintContext context) {
 		super.destroy(context);
 		setActionState(new SelectingVertexForVertical());
 		
@@ -29,9 +28,9 @@ public class VerticalLineAction extends GraphicMouseAction {
 	private OriLine closeLine = null;
 
 	@Override
-	public Vector2d onMove(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-		Vector2d result = super.onMove(context, affine, event);
+	public Vector2d onMove(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
+		Vector2d result = super.onMove(context, affine, differentAction);
 
 		if(context.getVertexCount() == 1){
 			if(closeLine != null){
@@ -54,21 +53,21 @@ public class VerticalLineAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDragged(MouseContext context, AffineTransform affine, MouseEvent event) {
+	public void onDrag(PaintContext context, AffineTransform affine, boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onReleased(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onRelease(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 
 	@Override
-	public void onDraw(Graphics2D g2d, MouseContext context) {
+	public void onDraw(Graphics2D g2d, PaintContext context) {
 
 		super.onDraw(g2d, context);
 
@@ -87,8 +86,8 @@ public class VerticalLineAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onPressed(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onPress(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		// TODO Auto-generated method stub
 		
 	}

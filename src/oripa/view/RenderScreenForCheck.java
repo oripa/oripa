@@ -29,6 +29,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.vecmath.Vector2d;
+
+import oripa.doc.Doc;
 import oripa.geom.*;
 import oripa.paint.Globals;
 import oripa.resource.Constants;

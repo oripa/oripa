@@ -3,10 +3,10 @@ package oripa.paint;
 import java.awt.geom.Point2D;
 
 public interface ActionState {
-	public ActionState doAction(MouseContext context, 
+	public ActionState doAction(PaintContext context, 
 			Point2D.Double currentPoint, boolean differentAction);
 
-	public ActionState undo(MouseContext context);
+	public ActionState undo(PaintContext context);
 	
 //	public void onResult(MouseContext context);
 	

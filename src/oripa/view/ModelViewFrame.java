@@ -40,10 +40,10 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
 import oripa.ORIPA;
+import oripa.doc.exporter.Exporter;
+import oripa.doc.exporter.ExporterDXF;
+import oripa.doc.exporter.ExporterOBJ2;
 import oripa.file.FileFilterEx;
-import oripa.file.exporter.Exporter;
-import oripa.file.exporter.ExporterDXF;
-import oripa.file.exporter.ExporterOBJ2;
 import oripa.paint.Globals;
 import oripa.resource.Constants;
 import oripa.viewsetting.model.ModelFrameSettingDB;

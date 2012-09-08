@@ -20,6 +20,7 @@ package oripa.resource;
 
 import java.util.ListResourceBundle;
 
+
 public class StringResource_en extends ListResourceBundle {
 
 	
@@ -39,25 +40,9 @@ public class StringResource_en extends ListResourceBundle {
         { StringID.Menu.EXIT_ID, "Exit" }, 
         { StringID.Menu.UNDO_ID, "Undo" }, 
         { StringID.Menu.ABOUT_ID, "About" }, 
+        { StringID.Menu.COPY_PASTE_ID, "Copy and Paste" }, 
+        { StringID.Menu.CONTOUR_ID, "Edit Contour" }, 
         
-        { StringID.CommandHint.DIRECT_V_ID, "Specify two end poionts.[Ctrl] allows to pick any point on an edge." }, 
-        { StringID.CommandHint.ON_V_ID, "Specify two points that lie on the line" }, 
-        { StringID.CommandHint.SYMMETRIC_ID, "Input a symmetrical segment. 1st, 2nd are for target. 2nd, 3rd are for base.+[Ctrl] continues automatically." }, 
-        { StringID.CommandHint.TRIANGLE_ID, "Specify 3 points to input 3 segments to incenter." }, 
-        { StringID.CommandHint.BISECTOR_ID, "Input a bisector. Specify 3 points and a segment." }, 
-        { StringID.CommandHint.VERTICAL_ID, "Input a vertical line. Specify a point and a line." }, 
-        { StringID.CommandHint.MIRROR_ID, "Mirror copy. Pick target segments and [Ctrl]+Click for the base segment." }, 
-        { StringID.CommandHint.BY_VALUE_ID, "Input length and angle, then specify the start point. Push [Mesure] button to get value from segment." }, 
-        { StringID.CommandHint.PICK_LENGTH_ID, "Mesure distance between 2 points." }, 
-        { StringID.CommandHint.PICK_ANGLE_ID, "Mesure angle. Specify 3 points" }, 
-        { StringID.CommandHint.CHANGE_LINE_TYPE_ID, "Change type of a segment. Pick a segment." }, 
-        { StringID.CommandHint.DELETE_LINE_ID, "Delete a segment. Pick a segment" }, 
-        { StringID.CommandHint.ADD_VERTEX_ID, "Add vertex on a segment." }, 
-        { StringID.CommandHint.DELETE_VERTEX_ID, "Delete vertex that does not change the structure." }, 
-        { StringID.CommandHint.CONTOUR_ID, "Edit contour. The contour must be convex." }, 
-        { StringID.CommandHint.PERPENDICULAR_BISECTOR_ID, "Input Perpendicular Bisector of two vertices. Select two vertices by left click." }, 
-        { StringID.CommandHint.SELECT_ID, "Select/UnSelect Lines by Left Click or Left Drag"},
-
         
         { StringID.Default.FILE_NAME_ID, "NoTitle" }, 
         { StringID.DIALOG_TITLE_SAVE_ID, "Save" }, 
@@ -73,7 +58,7 @@ public class StringResource_en extends ListResourceBundle {
         { StringID.UI.CHANGE_LINE_TYPE_ID, "Change Line Type" }, 
         { StringID.UI.ADD_VERTEX_ID, "Add Vertex" }, 
         { StringID.UI.DELETE_VERTEX_ID, "Delete Vertex" }, 
-        { StringID.UI.MEASURE_ID, "Mesure" }, 
+        { StringID.UI.MEASURE_ID, "Measure" }, 
         { StringID.UI.FOLD_ID, "Fold..." }, 
         { StringID.UI.GRID_SIZE_CHANGE_ID, "Set" }, 
         { StringID.UI.SHOW_VERTICES_ID, "Show Vertices" }, 
@@ -83,19 +68,20 @@ public class StringResource_en extends ListResourceBundle {
         { StringID.UI.ANGLE_ID, "Angle"},
         { StringID.UI.GRID_DIVIDE_NUM_ID, "Div Num"},
 
-        { "Warning_foldFail1", "Failed to fold. Try again by deleting duplicating segments?"},
-        { "Warning_foldFail2", "Failed to fold. It seems the pattern has basic problems."},
-        { "MENU_Disp", "Display" },
-        { "MENU_ExportModelLine_DXF", "Export Model Line(DXF)" },
-        { "MENU_Invert", "Invert" },
-        { "MENU_SlideFaces", "Slide Faces" },
-        { "Direction_Basic", "    L: Rot R:Move Wheel:Zoom " },
-        { "MENU_DispType", "Drawing type" },
-        { "MENU_FillColor", "Fill Color: may be wrong" },
-        { "MENU_FillWhite", "Fill White: may be wrong" },
-        { "MENU_FillAlpha", "Fill Transmission" },
-        { "MENU_DrawLines", "Draw Lines" },
-        { "ExpectedFoldedOrigami", "Expected Folded Origami" }
+        { StringID.Warning.FOLD_FAILED_DUPLICATION_ID, "Failed to fold. Try again by deleting duplicating segments?"},
+        { StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID, "Failed to fold. It seems the pattern has basic problems."},
+
+        { StringID.ModelMenu.DISPLAY_ID, "Display" },
+        { StringID.ModelMenu.EXPORT_DXF_ID, "Export Model Line(DXF)" },
+        {StringID.ModelMenu.INVERT_ID, "Invert" },
+        {StringID.ModelMenu.SLIDE_FACES_ID, "Slide Faces" },
+        {StringID.ModelMenu.DIRECTION_BASIC_ID, "    L: Rot R:Move Wheel:Zoom " },
+        {StringID.ModelMenu.DISPLAY_TYPE_ID, "Drawing type" },
+        {StringID.ModelMenu.FILL_COLOR_ID, "Fill Color: may be wrong" },
+        {StringID.ModelMenu.FILL_WHITE_ID, "Fill White: may be wrong" },
+        {StringID.ModelMenu.FILL_ALPHA_ID, "Fill Transmission" },
+        {StringID.ModelMenu.DRAW_LINES_ID, "Draw Lines" },
+        {StringID.ModelMenu.TITLE_ID, "Expected Folded Origami" }
     };
     
     @Override

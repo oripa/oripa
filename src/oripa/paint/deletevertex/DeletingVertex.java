@@ -1,7 +1,7 @@
 package oripa.paint.deletevertex;
 
 import oripa.ORIPA;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 
 public class DeletingVertex extends PickingVertex {
@@ -12,7 +12,7 @@ public class DeletingVertex extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 
 		if(context.getVertexCount() > 0){
 			ORIPA.doc.pushUndoInfo();

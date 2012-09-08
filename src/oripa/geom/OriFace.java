@@ -23,6 +23,7 @@ import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
+
 import oripa.ORIPA;
 import oripa.folder.Condition3;
 import oripa.folder.Condition4;

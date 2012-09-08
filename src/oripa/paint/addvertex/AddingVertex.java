@@ -8,9 +8,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.paint.GeometricalOperation;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
+import oripa.paint.geometry.GeometricOperation;
 
 public class AddingVertex extends PickingVertex {
 
@@ -22,15 +22,15 @@ public class AddingVertex extends PickingVertex {
 	
 	
 	@Override
-	protected boolean onAct(MouseContext context, Point2D.Double currentPoint,
+	protected boolean onAct(PaintContext context, Point2D.Double currentPoint,
 			boolean freeSelection) {
 		
 		boolean result = super.onAct(context, currentPoint, true);
 		
 		if(result == true){
 			Vector2d picked = context.getVertex(0);
-			OriLine line = GeometricalOperation.pickLine(
-					context, new Point2D.Double(picked.x, picked.y));
+			OriLine line = GeometricOperation.pickLine(
+					context);
 			if(line != null){
 				context.pushLine(line);
 			}
@@ -45,7 +45,7 @@ public class AddingVertex extends PickingVertex {
 
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 
 		if(context.getVertexCount() > 0){
 			

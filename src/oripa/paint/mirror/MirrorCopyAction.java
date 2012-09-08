@@ -1,15 +1,14 @@
 package oripa.paint.mirror;
 
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.selectline.SelectLineAction;
 
 public class MirrorCopyAction extends SelectLineAction {
 
 	
-	public MirrorCopyAction(MouseContext context){
+	public MirrorCopyAction(PaintContext context){
 		super(context);
 
 		setEditMode(EditMode.INPUT);
@@ -21,15 +20,15 @@ public class MirrorCopyAction extends SelectLineAction {
 	
 	
 	@Override
-	public void destroy(MouseContext context) {
+	public void destroy(PaintContext context) {
 		context.clear(false);
 	}
 
 
 
 	@Override
-	public void onRightClick(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onRightClick(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		undo(context);
 	}
 

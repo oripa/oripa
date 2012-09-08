@@ -1,7 +1,7 @@
 package oripa.paint.bisector;
 
 import oripa.ORIPA;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingLine;
 
 public class SelectingLineForBisector extends PickingLine {
@@ -16,7 +16,7 @@ public class SelectingLineForBisector extends PickingLine {
 	
 	
 	@Override
-	protected void undoAction(MouseContext context) {
+	protected void undoAction(PaintContext context) {
 		context.popVertex();
 	
 	}
@@ -24,7 +24,7 @@ public class SelectingLineForBisector extends PickingLine {
 	
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 		if(context.getLineCount() != 1 || 
 				context.getVertexCount() != 3){
 			throw new RuntimeException();

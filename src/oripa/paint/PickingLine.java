@@ -3,6 +3,7 @@ package oripa.paint;
 import java.awt.geom.Point2D.Double;
 
 import oripa.geom.OriLine;
+import oripa.paint.geometry.GeometricOperation;
 
 /**
  * abstract class specified for picking vertex.
@@ -22,10 +23,10 @@ public abstract class PickingLine extends AbstractActionState {
 	 */
 	
 	@Override
-	protected boolean onAct(MouseContext context, Double currentPoint,
+	protected boolean onAct(PaintContext context, Double currentPoint,
 			boolean doSpecial) {
 
-		OriLine picked = GeometricalOperation.pickLine(
+		OriLine picked = GeometricOperation.pickLine(
 				currentPoint, context.scale);
 
 		if(picked == null){
@@ -45,7 +46,7 @@ public abstract class PickingLine extends AbstractActionState {
 	 * @return Previous state
 	 */
 	@Override
-	protected void undoAction(MouseContext context) {
+	protected void undoAction(PaintContext context) {
 		
 		context.popLine();		
 	}

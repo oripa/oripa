@@ -6,9 +6,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.paint.GeometricalOperation;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
+import oripa.paint.geometry.GeometricOperation;
 
 public class PastingOnVertex extends PickingVertex {
 
@@ -19,14 +19,14 @@ public class PastingOnVertex extends PickingVertex {
 	
 	
 	@Override
-	protected void undoAction(MouseContext context) {
+	protected void undoAction(PaintContext context) {
 		ORIPA.doc.loadUndoInfo();
 	}
 
 
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 
         Vector2d v = context.popVertex();
         
@@ -34,11 +34,13 @@ public class PastingOnVertex extends PickingVertex {
 
         	ORIPA.doc.pushUndoInfo();
 
-            double ox = context.getLine(0).p0.x;
-            double oy = context.getLine(0).p0.y;
+        	Vector2d origin = OriginHolder.getInstance().getOrigin(context);
+
+        	double ox = origin.x;
+            double oy = origin.y;
 
             Collection<OriLine> shiftedLines = 
-            		GeometricalOperation.shiftLines(context.getLines(), v.x - ox, v.y -oy);
+            		GeometricOperation.shiftLines(context.getLines(), v.x - ox, v.y -oy);
             
             for(OriLine line : shiftedLines){
             	ORIPA.doc.addLine(line);

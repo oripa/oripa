@@ -43,7 +43,7 @@ public abstract class AbstractActionState implements ActionState {
 	 *         returns {@value this}.
 	 */
 	@Override
-	public final ActionState doAction(MouseContext context, 
+	public final ActionState doAction(PaintContext context, 
 			Point2D.Double currentPoint, boolean freeSelection) {
 
 		boolean success = onAct(context, currentPoint, freeSelection);
@@ -64,7 +64,7 @@ public abstract class AbstractActionState implements ActionState {
 	 * defines what to do after onAct() succeeded.
 	 * @param context
 	 */
-	protected abstract void onResult(MouseContext context);
+	protected abstract void onResult(PaintContext context);
 
 	/**
 	 * defines the job of this class.
@@ -74,7 +74,7 @@ public abstract class AbstractActionState implements ActionState {
 	 * @param doSpecial true if you want switch the action.
 	 * @return true if the action succeeded, otherwise false.
 	 */
-	protected abstract boolean onAct(MouseContext context, 
+	protected abstract boolean onAct(PaintContext context, 
 			Point2D.Double currentPoint, boolean doSpecial);
 	
 	/**
@@ -82,7 +82,7 @@ public abstract class AbstractActionState implements ActionState {
 	 * @return Previous state
 	 */
 	@Override
-	public final ActionState undo(MouseContext context) {
+	public final ActionState undo(PaintContext context) {
 		
 		undoAction(context);
 		
@@ -97,7 +97,7 @@ public abstract class AbstractActionState implements ActionState {
 	 * (and change previous state class if you need.)
 	 * @param context
 	 */
-	protected abstract void undoAction(MouseContext context);
+	protected abstract void undoAction(PaintContext context);
 	
 	@Override
 	public void setNextState(ActionState state){

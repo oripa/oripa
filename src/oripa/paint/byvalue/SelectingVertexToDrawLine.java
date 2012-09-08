@@ -6,7 +6,7 @@ import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
 import oripa.paint.Globals;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 
 public class SelectingVertexToDrawLine extends PickingVertex {
@@ -17,7 +17,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 		Vector2d vertex = context.getVertex(0);
 
 		double length;

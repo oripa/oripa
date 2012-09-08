@@ -51,17 +51,19 @@ import javax.vecmath.Vector2d;
 import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
 
 import oripa.Config;
-import oripa.Doc;
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.OriFace;
 import oripa.geom.OriLine;
 import oripa.geom.OriVertex;
 import oripa.geom.RectangleClipper;
+import oripa.mouse.MouseUtility;
 import oripa.paint.ElementSelector;
 import oripa.paint.Globals;
-import oripa.paint.MouseContext;
+import oripa.paint.GraphicMouseAction.EditMode;
+import oripa.paint.PaintContext;
 import oripa.resource.Constants;
 import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.uipanel.UIPanelSettingDB;
@@ -269,8 +271,7 @@ public class MainScreen extends JPanel
        
 
         // Drawing of the vertices
-        if (Globals.editMode == Constants.EditMode.ADD_VERTEX
-                || Globals.editMode == Constants.EditMode.DELETE_VERTEX
+        if (Globals.getMouseAction().getEditMode() == EditMode.VERTEX 
                 || Globals.dispVertex) {
         	drawVertexRectangles(g2d);
         }
@@ -352,7 +353,7 @@ public class MainScreen extends JPanel
     }
 
 
-    MouseContext mouseContext = MouseContext.getInstance();
+    PaintContext mouseContext = PaintContext.getInstance();
     
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -361,11 +362,11 @@ public class MainScreen extends JPanel
             
         	if(javax.swing.SwingUtilities.isRightMouseButton(e)){
         		Globals.mouseAction.onRightClick(
-        				mouseContext, affineTransform, e);
+        				mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
         	}
         	else {
         		Globals.mouseAction = Globals.mouseAction.onLeftClick(
-        				mouseContext, affineTransform, e);
+        				mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
         	}
         	
         	repaint();
@@ -389,7 +390,7 @@ public class MainScreen extends JPanel
     public void mousePressed(MouseEvent e) {
     	
     	if(Globals.mouseAction != null){
-    		Globals.mouseAction.onPressed(mouseContext, affineTransform, e);
+    		Globals.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
     	
     	}    	
     	
@@ -401,7 +402,7 @@ public class MainScreen extends JPanel
         // Rectangular Selection
     	
     	if(Globals.mouseAction != null){
-    		Globals.mouseAction.onReleased(mouseContext, affineTransform, e);
+    		Globals.mouseAction.onRelease(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
     	}
         repaint();
     }
@@ -436,25 +437,13 @@ public class MainScreen extends JPanel
             updateAffineTransform();
             repaint();
         } else {
-            Globals.getMouseAction().onDragged(mouseContext, affineTransform, e);
+            mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
+            Globals.getMouseAction().onDrag(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
             repaint();
         }
     }
 
-    
-    
-    private Point2D.Double getLogicalPoint(Point p){
-    	Point2D.Double logicalPoint = new Point2D.Double();
-        try {
-			affineTransform.inverseTransform(p, logicalPoint);
-		} catch (NoninvertibleTransformException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-        return logicalPoint;
-    }
-    
+       
     @Override
     public void mouseMoved(MouseEvent e) {
         // Gets the value of the current logical coordinates of the mouse
@@ -467,10 +456,10 @@ public class MainScreen extends JPanel
         
         mouseContext.scale = scale;
         mouseContext.dispGrid = setting.isGridVisible();
-        mouseContext.setLogicalMousePoint( getLogicalPoint(e.getPoint()) );
+        mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
         
         if (Globals.mouseAction != null) {
-        	Globals.mouseAction.onMove(mouseContext, affineTransform, e);
+        	Globals.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
         	//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
         	repaint();
         	return;

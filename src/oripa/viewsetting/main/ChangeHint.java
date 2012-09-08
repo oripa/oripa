@@ -1,6 +1,10 @@
 package oripa.viewsetting.main;
 
+import java.util.ResourceBundle;
+
 import oripa.ORIPA;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
 import oripa.viewsetting.ChangeViewSetting;
 
 public class ChangeHint implements ChangeViewSetting {
@@ -15,7 +19,18 @@ public class ChangeHint implements ChangeViewSetting {
 	
 	@Override
 	public void changeViewSetting() {
-		frameSetting.setHint(ORIPA.res.getString(id));
+		ResourceHolder holder = ResourceHolder.getInstance();
+		
+		ResourceBundle resource = holder.getResource(ResourceKey.EXPLANATION);
+
+		String hint = null;
+		try{
+			hint = resource.getString(id);
+		}
+		catch (Exception e) {
+			//e.printStackTrace();
+		}
+		frameSetting.setHint(hint);
 		
 		frameSetting.notifyObservers();
 	}

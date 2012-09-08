@@ -1,22 +1,21 @@
 package oripa.paint.addvertex;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
-import oripa.paint.GeometricalOperation;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
+import oripa.paint.geometry.GeometricOperation;
 
 public class AddVertexAction extends GraphicMouseAction {
 
 
 	public AddVertexAction(){
-		setEditMode(EditMode.OTHER);
+		setEditMode(EditMode.VERTEX);
 
 		setActionState(new AddingVertex());
 
@@ -24,36 +23,36 @@ public class AddVertexAction extends GraphicMouseAction {
 
 
 
+//	@Override
+//	public Vector2d onMove(MouseContext context, AffineTransform affine,
+//			boolean differentAction) {
+//		Point2D.Double current = GeometricalOperation.getLogicalPoint(affine, differentAction.getPoint());
+//
+//		Vector2d closeVertex = GeometricalOperation.pickVertex(
+//				context, current, true);
+//
+//		context.pickCandidateV = closeVertex;
+//		
+//		return closeVertex;
+//	}
+
+
+
 	@Override
-	public Vector2d onMove(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-		Point2D.Double current = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
+	public void onDrag(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 
-		Vector2d closeVertex = GeometricalOperation.pickVertex(
-				context, current, true);
-
-		context.pickCandidateV = closeVertex;
-		
-		return closeVertex;
 	}
 
 
-
 	@Override
-	public void onDragged(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
-
-	}
-
-
-	@Override
-	public void onReleased(MouseContext context, AffineTransform affine, MouseEvent event) {
+	public void onRelease(PaintContext context, AffineTransform affine, boolean differentAction) {
 
 
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, MouseContext context) {
+	public void onDraw(Graphics2D g2d, PaintContext context) {
 
 		super.onDraw(g2d, context);
 
@@ -61,8 +60,8 @@ public class AddVertexAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPressed(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onPress(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 	}
 
 

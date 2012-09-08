@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingLine;
 
 public class SelectingLineForMirror extends PickingLine {
@@ -32,7 +32,7 @@ public class SelectingLineForMirror extends PickingLine {
 	 * @return true if copy is done.
 	 */
 	@Override
-	protected boolean onAct(MouseContext context, Point2D.Double currentPoint,
+	protected boolean onAct(PaintContext context, Point2D.Double currentPoint,
 			boolean doSpecial) {
 		if(doingFirstAction){
 			doingFirstAction = false;
@@ -70,13 +70,13 @@ public class SelectingLineForMirror extends PickingLine {
 	
 	
 	@Override
-	protected void undoAction(MouseContext context) {
+	protected void undoAction(PaintContext context) {
 		// TODO Auto-generated method stub
 		super.undoAction(context);
 	}
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 		// TODO Auto-generated method stub
         ORIPA.doc.pushCachedUndoInfo();
 

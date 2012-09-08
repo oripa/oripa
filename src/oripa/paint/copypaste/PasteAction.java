@@ -2,7 +2,6 @@ package oripa.paint.copypaste;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Collection;
@@ -12,9 +11,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.paint.GeometricalOperation;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
+import oripa.paint.geometry.GeometricOperation;
 
 public class PasteAction extends GraphicMouseAction {
 
@@ -29,37 +28,53 @@ public class PasteAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDragged(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void recover(PaintContext context) {
+		context.clear(false);
+
+		for(OriLine line : ORIPA.doc.lines){
+			if(line.selected){
+				context.pushLine(line);
+			}
+		}
+
+		ORIPA.doc.prepareForCopyAndPaste();
 
 	}
 
 
 	@Override
-	public void onReleased(MouseContext context, AffineTransform affine, MouseEvent event) {
+	public void onDrag(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
+
+	}
+
+
+	@Override
+	public void onRelease(PaintContext context, AffineTransform affine, boolean differentAction) {
 
 
 	}
 
 
 	private Collection<OriLine> shiftedLines = new LinkedList<>();
-
+	private OriginHolder originHolder = OriginHolder.getInstance();
 	@Override
-	public Vector2d onMove(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public Vector2d onMove(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 		
-		super.onMove(context, affine, event);
+		super.onMove(context, affine, differentAction);
 		
-		Point2D.Double current = GeometricalOperation.getLogicalPoint(affine, event.getPoint());
+		Point2D.Double current = context.getLogicalMousePoint();
 
 		Vector2d v = new Vector2d(current.x, current.y);
 		
 		if (context.getLineCount() > 0) {
-
-			double ox = context.getLine(0).p0.x;
-			double oy = context.getLine(0).p0.y;
+			
+			Vector2d origin = originHolder.getOrigin(context);
+			double ox = origin.x;
+			double oy = origin.y;
 			shiftedLines = 
-					GeometricalOperation.shiftLines(context.getLines(), v.x - ox, v.y -oy);
+					GeometricOperation.shiftLines(context.getLines(), v.x - ox, v.y -oy);
 
 		}		
 		return v;
@@ -67,15 +82,16 @@ public class PasteAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDraw(Graphics2D g2d, MouseContext context) {
+	public void onDraw(Graphics2D g2d, PaintContext context) {
 
 		super.onDraw(g2d, context);
 
 		drawPickCandidateVertex(g2d, context);
 
 		if(shiftedLines.isEmpty() == false){
-			double ox = context.getLine(0).p0.x;
-			double oy = context.getLine(0).p0.y;
+			Vector2d origin = originHolder.getOrigin(context);
+			double ox = origin.x;
+			double oy = origin.y;
 			
 			g2d.setColor(Color.GREEN);
 			drawVertex(g2d, context, ox, oy);
@@ -89,8 +105,8 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPressed(MouseContext context, AffineTransform affine,
-			MouseEvent event) {
+	public void onPress(PaintContext context, AffineTransform affine,
+			boolean differentAction) {
 	}
 
 

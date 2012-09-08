@@ -32,6 +32,7 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -45,9 +46,13 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import oripa.Config;
-import oripa.Doc;
-import oripa.FilterDB;
 import oripa.ORIPA;
+import oripa.command.BinderInterface;
+import oripa.command.GetCachedCommandAction;
+import oripa.doc.Doc;
+import oripa.doc.exporter.ExporterXML;
+import oripa.entity.FilterDB;
+import oripa.entity.PaintActionBinder;
 import oripa.file.FileChooser;
 import oripa.file.FileChooserFactory;
 import oripa.file.FileFilterEx;
@@ -55,27 +60,50 @@ import oripa.file.FileHistory;
 import oripa.file.FileVersionError;
 import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
-import oripa.file.exporter.ExporterXML;
-import oripa.paint.CommandSetter;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
-import oripa.paint.copypaste.PasteAction;
+import oripa.paint.PaintContext;
+import oripa.paint.copypaste.CopyAndPasteAction;
 import oripa.paint.outline.EditOutlineAction;
-import oripa.paint.selectline.SelectLineAction;
 import oripa.resource.Constants;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
 import oripa.view.PropertyDialog;
 import oripa.view.uipanel.UIPanel;
-import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.uipanel.OnNormalCommandButtonSelected;
 import oripa.viewsetting.uipanel.OnSelectButtonSelected;
-import oripa.viewsetting.uipanel.UIPanelSettingDB;
 
 public class MainFrame extends JFrame 
 implements ActionListener, ComponentListener, WindowListener, Observer{
+	private BinderInterface<GraphicMouseAction> binder = new PaintActionBinder();
 
+	private class CopyPasteListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (ORIPA.doc.getSelectedLineNum() == 0) {
+				JOptionPane.showMessageDialog(
+						ORIPA.mainFrame, "Select target lines", "Copy and Paste",
+						JOptionPane.WARNING_MESSAGE);
+				(new GetCachedCommandAction()).actionPerformed(null);
+			} else {
+				BinderInterface<GraphicMouseAction> binder = new PaintActionBinder();
+				Collection<ActionListener> listeners = binder.getBoundListeners(
+						new CopyAndPasteAction(), StringID.Command.COPY_PASTE_ID);
+				
+				for (ActionListener listener : listeners) {
+					listener.actionPerformed(e);
+				}
+				
+				(new OnNormalCommandButtonSelected()).changeViewSetting();
+				mainScreen.repaint();
+			}
+	
+		}
+	}
+	
 	/**
 	 * 
 	 */
@@ -83,11 +111,10 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 		
 	
 	private MainFrameSettingDB setting = MainFrameSettingDB.getInstance();
-	private UIPanelSettingDB uiPanelSetting = UIPanelSettingDB.getInstance();
 	private MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
 	
 	MainScreen mainScreen;
-	private JMenu menuFile = new JMenu(ORIPA.res.getString("File"));
+	private JMenu menuFile = new JMenu(ORIPA.res.getString(StringID.Menu.FILE_ID));
 	private JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
 	private JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
 	private JMenuItem menuItemClear = new JMenuItem(ORIPA.res.getString("New"));
@@ -103,9 +130,24 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 	private JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
 	private JMenuItem menuItemExportCP = new JMenuItem("Export CP");
 	private JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
-	private JMenuItem menuItemChangeOutline = new JMenuItem(ORIPA.res.getString("EditContour"));
-	private JMenuItem menuItemProperty = new JMenuItem(ORIPA.res.getString("Property"));
-	private JMenuItem menuItemExit = new JMenuItem(ORIPA.res.getString("Exit"));
+
+	
+	private JMenuItem menuItemChangeOutline = (JMenuItem) binder.createButton(
+			JMenuItem.class, new EditOutlineAction(), StringID.Command.CONTOUR_ID);
+//	private JMenuItem menuItemChangeOutline = new JMenuItem(ORIPA.res.getString("EditContour"));
+
+	private JMenuItem menuItemCopyAndPaste = new JMenuItem();
+//	private JMenuItem menuItemCopyAndPaste =  (JMenuItem) binder.createButton(
+//			JMenuItem.class, new PasteAction(), StringID.CommandHint.COPY_PASTE_ID);
+	
+	private ResourceHolder resourceHolder = ResourceHolder.getInstance();
+//	private JMenuItem menuItemProperty = new JMenuItem(
+//			resourceHolder.getString(ResourceKey.LABEL, StringID.Menu.PROPERTY_ID));
+	private JMenuItem menuItemProperty = (JMenuItem) binder.createButton(
+			JMenuItem.class, null, StringID.Menu.PROPERTY_ID);
+
+	private JMenuItem menuItemExit = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Menu.EXIT_ID));
 	private JMenuItem menuItemUndo = new JMenuItem(ORIPA.res.getString("Undo"));
 	private JMenuItem menuItemAbout = new JMenuItem(ORIPA.res.getString("About"));
 	private JMenuItem menuItemRepeatCopy = new JMenuItem("Array Copy");
@@ -113,7 +155,6 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 	private JMenuItem menuItemUnSelectAll = new JMenuItem("UnSelect All");
 	private JMenuItem menuItemSelectAll = new JMenuItem("Select All");
 	private JMenuItem menuItemDeleteSelectedLines = new JMenuItem("Delete Selected Lines");
-	private JMenuItem menuItemCopyAndPaste = new JMenuItem("Copy and Paste");
 	private JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
 
 	private RepeatCopyDialog arrayCopyDialog;
@@ -130,11 +171,14 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 			filterDB.getFilter("pict")
 	};
 
-
+	private PaintContext mouseContext = PaintContext.getInstance();
 	
 	public MainFrame() {
 		
 		setting.addObserver(this);
+		
+		menuItemCopyAndPaste.setText(ORIPA.res.getString(StringID.Menu.COPY_PASTE_ID));
+		menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 		
 		mainScreen = new MainScreen();
 		addWindowListener(this);
@@ -184,7 +228,7 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				ORIPA.doc.resetSelectedOriLines();
-				MouseContext.getInstance().clear(false);
+				mouseContext.clear(false);
 				mainScreen.repaint();
 			}
 		});
@@ -194,7 +238,7 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				ORIPA.doc.pushUndoInfo();
 				ORIPA.doc.deleteSelectedLines();
-				MouseContext.getInstance().clear(false);
+				mouseContext.clear(false);
 				mainScreen.repaint();
 			}
 		});
@@ -202,24 +246,7 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 
 		menuItemCopyAndPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 
-		menuItemCopyAndPaste.addActionListener(new java.awt.event.ActionListener() {
-			@Override
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				if (ORIPA.doc.getSelectedLineNum() == 0) {
-					JOptionPane.showMessageDialog(
-							ORIPA.mainFrame, "Select target lines", "Copy and Paste",
-							JOptionPane.WARNING_MESSAGE);
-
-				} else {
-					CommandSetter setter = new CommandSetter(new PasteAction());
-					setter.actionPerformed(e);
-
-					(new OnNormalCommandButtonSelected()).changeViewSetting();
-					ORIPA.doc.prepareForCopyAndPaste();
-					mainScreen.repaint();
-				}
-			}
-		});
+		menuItemCopyAndPaste.addActionListener(new CopyPasteListener());
 
 		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
 			MRUFilesMenuItem[i] = new JMenuItem();
@@ -247,7 +274,7 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 		menuBar.add(menuEdit);
 		menuBar.add(menuHelp);
 		setJMenuBar(menuBar);
-		updateHint();
+		
 		
 		addSavingActions();
 	}
@@ -322,56 +349,6 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 		circleCopyDialog = new CircleCopyDialog(this);
 	}
 
-	public static void updateHint() {
-		String message = "";
-
-		if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
-			if (Globals.lineInputMode == Constants.LineInputMode.DIRECT_V) {
-				message = ORIPA.res.getString("Direction_DirectV");
-			} else if (Globals.lineInputMode == Constants.LineInputMode.ON_V) {
-				message = ORIPA.res.getString("Direction_OnV");
-			} else if (Globals.lineInputMode == Constants.LineInputMode.OVERLAP_V) {
-			} else if (Globals.lineInputMode == Constants.LineInputMode.OVERLAP_E) {
-			} else if (Globals.lineInputMode == Constants.LineInputMode.SYMMETRIC_LINE) {
-				message = ORIPA.res.getString("Direction_Symmetric");
-			} else if (Globals.lineInputMode == Constants.LineInputMode.TRIANGLE_SPLIT) {
-				message = ORIPA.res.getString("Direction_TriangleSplit");
-			} else if (Globals.lineInputMode == Constants.LineInputMode.BISECTOR) {
-				message = ORIPA.res.getString("Direction_Bisector");
-			} else if (Globals.lineInputMode == Constants.LineInputMode.PBISECTOR) {
-				message = "Input Perpendicular Bisector of two vertices. Select two vertices by left click.";
-			} else if (Globals.lineInputMode == Constants.LineInputMode.VERTICAL_LINE) {
-				message = ORIPA.res.getString("Direction_VerticalLine");
-			} else if (Globals.lineInputMode == Constants.LineInputMode.MIRROR) {
-				message = ORIPA.res.getString("Direction_Mirror");
-			} else if (Globals.lineInputMode == Constants.LineInputMode.BY_VALUE) {
-				if (Globals.subLineInputMode == Constants.SubLineInputMode.NONE) {
-					message = ORIPA.res.getString("Direction_ByValue");
-				} else if (Globals.subLineInputMode == Constants.SubLineInputMode.PICK_LENGTH) {
-					message = ORIPA.res.getString("Direction_PickLength");
-				} else if (Globals.subLineInputMode == Constants.SubLineInputMode.PICK_ANGLE) {
-					message = ORIPA.res.getString("Direction_PickAngle");
-				}
-			} else if (Globals.lineInputMode == Constants.LineInputMode.COPY_AND_PASTE) {
-				message = "Left Click for Paste. Right Click for End.";
-			}
-		} else if (Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE) {
-			message = "Click a line then the type switches (Press Ctrl key for switching to CUT Line).";
-		} else if (Globals.editMode == Constants.EditMode.DELETE_LINE) {
-			message = ORIPA.res.getString("Direction_DeleteLine");
-		} else if (Globals.editMode == Constants.EditMode.PICK_LINE) {
-			message = "Select/UnSelect Lines by Left Click or Left Drag";
-		} else if (Globals.editMode == Constants.EditMode.ADD_VERTEX) {
-			message = ORIPA.res.getString("Direction_AddVertex");
-		} else if (Globals.editMode == Constants.EditMode.DELETE_VERTEX) {
-			message = ORIPA.res.getString("Direction_DeleteVertex");
-		} else if (Globals.editMode == Constants.EditMode.EDIT_OUTLINE) {
-			message = ORIPA.res.getString("Direction_EditContour");
-		}
-
-		hintLabel.setText("    " + message);
-		hintLabel.repaint();
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -423,8 +400,8 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 		} else if (e.getSource() == menuItemExportSVG) {
 			exportFile("svg");
 		} else if (e.getSource() == menuItemChangeOutline) {
-			Globals.preEditMode = Globals.editMode;
-			Globals.editMode = Constants.EditMode.EDIT_OUTLINE;
+//			Globals.preEditMode = Globals.editMode;
+//			Globals.editMode = Constants.EditMode.EDIT_OUTLINE;
 			
 			Globals.setMouseAction(new EditOutlineAction());
 			
@@ -434,7 +411,6 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 			System.exit(0);
 		} else if (e.getSource() == menuItemUndo) {
 			if(Globals.getMouseAction() != null){
-				MouseContext mouseContext = MouseContext.getInstance();
 				Globals.getMouseAction().undo(mouseContext);
 			}
 			else{

@@ -52,13 +52,19 @@ import javax.swing.border.EtchedBorder;
 
 import oripa.Config;
 import oripa.ORIPA;
+import oripa.command.BinderInterface;
+import oripa.command.CacheCommandAction;
+import oripa.command.GetCachedCommandAction;
+import oripa.command.PopCommandAction;
+import oripa.command.PushCommandAction;
+import oripa.entity.PaintActionBinder;
 import oripa.file.ImageResourceLoader;
 import oripa.folder.Folder;
 import oripa.geom.OriLine;
 import oripa.paint.CommandSetter;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.addvertex.AddVertexAction;
 import oripa.paint.bisector.AngleBisectorAction;
 import oripa.paint.byvalue.AngleMeasuringAction;
@@ -81,11 +87,6 @@ import oripa.view.main.MainFrame;
 import oripa.view.main.MainScreen;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewSettingActionListener;
-import oripa.viewsetting.command.CacheCommandAction;
-import oripa.viewsetting.command.CommandBinder;
-import oripa.viewsetting.command.GetCachedCommandAction;
-import oripa.viewsetting.command.PopCommandAction;
-import oripa.viewsetting.command.PushCommandAction;
 import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.model.ModelFrameSettingDB;
 import oripa.viewsetting.render.RenderFrameSettingDB;
@@ -101,27 +102,28 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 	
 	
 	private UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
-	private MouseContext mouseContext = MouseContext.getInstance();
+	private ValueDB valueDB = ValueDB.getInstance();
+	private PaintContext mouseContext = PaintContext.getInstance();
 			
-	CommandBinder binder = new CommandBinder();
+	BinderInterface<GraphicMouseAction> binder = new PaintActionBinder();
 
 	// Edit mode
 
 	JRadioButton editModeInputLineButton = new JRadioButton("InputLine", true);
 	JRadioButton editModePickLineButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new SelectLineAction(mouseContext), StringID.CommandHint.SELECT_ID);
+			JRadioButton.class, new SelectLineAction(mouseContext), StringID.Command.SELECT_ID);
 
 	JRadioButton editModeDeleteLineButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new DeleteLineAction(), StringID.CommandHint.DELETE_LINE_ID);
+			JRadioButton.class, new DeleteLineAction(), StringID.Command.DELETE_LINE_ID);
 
 	JRadioButton editModeLineTypeButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new ChangeLineTypeAction(), StringID.CommandHint.CHANGE_LINE_TYPE_ID);
+			JRadioButton.class, new ChangeLineTypeAction(), StringID.Command.CHANGE_LINE_TYPE_ID);
 
 	JRadioButton editModeAddVertex =(JRadioButton) binder.createButton(
-			JRadioButton.class, new AddVertexAction(), StringID.CommandHint.ADD_VERTEX_ID);
+			JRadioButton.class, new AddVertexAction(), StringID.Command.ADD_VERTEX_ID);
 
 	JRadioButton editModeDeleteVertex = (JRadioButton) binder.createButton(
-			JRadioButton.class, new DeleteVertexAction(), StringID.CommandHint.DELETE_VERTEX_ID);
+			JRadioButton.class, new DeleteVertexAction(), StringID.Command.DELETE_VERTEX_ID);
 
 
 	JRadioButton lineTypeSubButton = new JRadioButton("Aux");
@@ -131,31 +133,31 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 	// How to enter the line
 
 	JRadioButton lineInputDirectVButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new TwoPointSegmentAction(), StringID.CommandHint.DIRECT_V_ID);
+			JRadioButton.class, new TwoPointSegmentAction(), StringID.Command.DIRECT_V_ID);
 
 	JRadioButton lineInputOnVButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new TwoPointLineAction(), StringID.CommandHint.ON_V_ID);
+			JRadioButton.class, new TwoPointLineAction(), StringID.Command.ON_V_ID);
 
 	JRadioButton lineInputVerticalLineButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new VerticalLineAction(), StringID.CommandHint.VERTICAL_ID);
+			JRadioButton.class, new VerticalLineAction(), StringID.Command.VERTICAL_ID);
 
 	JRadioButton lineInputAngleBisectorButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new AngleBisectorAction(), StringID.CommandHint.BISECTOR_ID);
+			JRadioButton.class, new AngleBisectorAction(), StringID.Command.BISECTOR_ID);
 
 	JRadioButton lineInputTriangleSplitButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new TriangleSplitAction(), StringID.CommandHint.TRIANGLE_ID);
+			JRadioButton.class, new TriangleSplitAction(), StringID.Command.TRIANGLE_ID);
 
 	JRadioButton lineInputSymmetricButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new SymmetricalLineAction(), StringID.CommandHint.SYMMETRIC_ID);
+			JRadioButton.class, new SymmetricalLineAction(), StringID.Command.SYMMETRIC_ID);
 
 	JRadioButton lineInputMirrorButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new MirrorCopyAction(mouseContext), StringID.CommandHint.MIRROR_ID);
+			JRadioButton.class, new MirrorCopyAction(mouseContext), StringID.Command.MIRROR_ID);
 
 	JRadioButton lineInputByValueButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new LineByValueAction(), StringID.CommandHint.BY_VALUE_ID);
+			JRadioButton.class, new LineByValueAction(), StringID.Command.BY_VALUE_ID);
 
 	JRadioButton lineInputPBisectorButton = (JRadioButton) binder.createButton(
-			JRadioButton.class, new TwoPointBisectorAction(), StringID.CommandHint.PERPENDICULAR_BISECTOR_ID);
+			JRadioButton.class, new TwoPointBisectorAction(), StringID.Command.PERPENDICULAR_BISECTOR_ID);
 
 	
 //	JRadioButton lineInputDirectVButton = new JRadioButton();
@@ -201,7 +203,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 	MainScreen screen;
 
 	
-	private MouseContext context = MouseContext.getInstance();
+	private PaintContext context = PaintContext.getInstance();
 
 
 	private class MyViewSettingActionListener extends ViewSettingActionListener{
@@ -545,11 +547,11 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			@Override
 			public void keyReleased(KeyEvent e) {
 
-				double angle = ValueDB.getInstance().getAngle();
+				double angle = valueDB.getAngle();
 				try{
 					angle = java.lang.Double.valueOf(
 							textFieldAngle.getText());
-					ValueDB.getInstance().setAngle(angle);
+					valueDB.setAngle(angle);
 				}catch(Exception ex){
 				}
 			}
@@ -665,6 +667,8 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		lineTypeValleyButton.setMnemonic('V');
 
 		ValueDB.getInstance().addObserver(this);
+		
+		lineInputDirectVButton.doClick();
 	}
 
 
@@ -691,6 +695,12 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		
 	}
 	
+	private void addByValueCommandListener(AbstractButton button, JRadioButton modeButton){
+		button.addActionListener(
+				new MyViewSettingActionListener(new OnByValueButtonSelected(), modeButton));
+		button.addActionListener(new CacheCommandAction());
+		
+	}
 	private void addListenerToComponents(){
 		
 		addNormalCommandListener(lineInputDirectVButton, editModeInputLineButton);
@@ -707,7 +717,7 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 
 		addNormalCommandListener(lineInputMirrorButton, editModeInputLineButton);
 
-		addNormalCommandListener(lineInputByValueButton, editModeInputLineButton);
+		addByValueCommandListener(lineInputByValueButton, editModeInputLineButton);
 
 		addNormalCommandListener(lineInputPBisectorButton, editModeInputLineButton);
 
@@ -932,7 +942,6 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 			alterLineTypePanel.setVisible(setting.isAlterLineTypePanelVisible());
 			screen.modeChanged();
 
-			MainFrame.updateHint();
 
 			lineTypeMountainButton.setEnabled(setting.isMountainButtonEnabled());
 			lineTypeValleyButton.setEnabled(setting.isValleyButtonEnabled());

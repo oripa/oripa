@@ -6,7 +6,7 @@ import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
 import oripa.paint.Globals;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 import oripa.resource.Constants;
 
@@ -18,7 +18,7 @@ public class SelectingSecondVertexForLine extends PickingVertex{
 	}
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 
 		if(context.getVertexCount() != 2){
 			throw new RuntimeException();

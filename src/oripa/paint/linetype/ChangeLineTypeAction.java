@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.RectangularSelectableAction;
 import oripa.viewsetting.uipanel.UIPanelSettingDB;
 
@@ -19,7 +19,7 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
-			MouseContext context) {
+			PaintContext context) {
 		if(selectedLines.isEmpty() == false){
 			ORIPA.doc.pushUndoInfo();
 
@@ -34,7 +34,7 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 
 	@Override
-	public void onDraw(Graphics2D g2d, MouseContext context) {
+	public void onDraw(Graphics2D g2d, PaintContext context) {
 
 		super.onDraw(g2d, context);
 

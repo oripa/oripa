@@ -3,7 +3,7 @@ package oripa.paint.triangle;
 import java.awt.geom.Point2D.Double;
 
 import oripa.ORIPA;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 
 public class SelectingVertexForTriangleSplit extends PickingVertex{
@@ -19,7 +19,7 @@ public class SelectingVertexForTriangleSplit extends PickingVertex{
 
 	private boolean doingFirstAction = true;
 	@Override
-	protected boolean onAct(MouseContext context, Double currentPoint,
+	protected boolean onAct(PaintContext context, Double currentPoint,
 			boolean doSpecial) {
 		
 		if(doingFirstAction){
@@ -39,7 +39,7 @@ public class SelectingVertexForTriangleSplit extends PickingVertex{
 	}
 
 	@Override
-	public void onResult(MouseContext context) {
+	public void onResult(PaintContext context) {
 		ORIPA.doc.pushCachedUndoInfo();
 		
         ORIPA.doc.addTriangleDivideLines(context.getVertex(0),

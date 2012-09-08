@@ -1,7 +1,7 @@
 package oripa.paint.deleteline;
 
 import oripa.ORIPA;
-import oripa.paint.MouseContext;
+import oripa.paint.PaintContext;
 import oripa.paint.PickingLine;
 
 public class DeletingLine extends PickingLine {
@@ -18,7 +18,7 @@ public class DeletingLine extends PickingLine {
 	
 
 	@Override
-	protected void onResult(MouseContext context) {
+	protected void onResult(PaintContext context) {
 
 		if(context.getLineCount() > 0){
 			ORIPA.doc.pushUndoInfo();
