@@ -11,7 +11,7 @@ History of updates
 -------
 * __2012/09/08 Improve usability:__
  * On copy-and-paste mode, you can select the origin vertex by pressing Ctrl key.
-  
+<p>
 
 * __2012/08/28 Bug fix, improve usability:__
     * Undo of changing line type is fixed.
@@ -20,15 +20,18 @@ History of updates
     * On delete-line mode, you can delete multi-lines by Dragging.	
     * It comfirms to save on closing window if you have edited.
     * Codes for inputting line are refactored (just partially).
+<p>
  	
 
 * __2012/07/15 Bug fix:__
     * Codes for inputting line are refactored (just partially).
     * Undo of mirror copy is available.
     * It corrects a problem that the color of selected line remains green.
+<p>
  
  
 * __2012/06/23 Saving as JPG or PNG is available.__
+<p>
 
 
 Known bugs
