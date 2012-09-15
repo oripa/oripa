@@ -3,41 +3,47 @@ ORIPA S
 
 A great drawer ORIPA is originally composed by MITANI Jun for origami crease pattern.
 "ORIPA S" fixes some bugs and provides function of saving as image.
+
 Executable file: https://dl.dropbox.com/u/45296904/oripaS.jar
 
 
---> History of updates:
-2012/09/08 Improve usability:
-	On copy-and-paste mode, you can select the orgin vertex by pressing Ctrl key.
+History of updates
+-------
+* __2012/09/08 Improve usability:__
+ * On copy-and-paste mode, you can select the origin vertex by pressing Ctrl key.
+  
+
+* __2012/08/28 Bug fix, improve usability:__
+    * Undo of changing line type is fixed.
+    * Ctrl + z acts as undo command the same as right mouse button.
+    * On mirror-copy mode, you can select multi-lines by Dragging.
+    * On delete-line mode, you can delete multi-lines by Dragging.	
+    * It comfirms to save on closing window if you have edited.
+    * Codes for inputting line are refactored (just partially).
+ 	
+
+* __2012/07/15 Bug fix:__
+    * Codes for inputting line are refactored (just partially).
+    * Undo of mirror copy is available.
+    * It corrects a problem that the color of selected line remains green.
+ 
+ 
+* __2012/06/23 Saving as JPG or PNG is available.__
 
 
-2012/08/28 Bug fix, improve usability:
-	Undo of changing line type is fixed.
-	Ctrl + z acts as undo command the same as right mouse button.
-	On mirror-copy mode, you can select multi-lines by Dragging.
-	On delete-line mode, you can delete multi-lines by Dragging.	
-	It comfirms to save on closing window if you have edited.
-	Codes for inputting line are refactored (just partially).
-	
+Known bugs
+--------
+* crashing when you input Ctrl + X.
+* behaviors of editing contour and that of copy and paste are different from the original ORIPA.
 
-2012/07/15 Bug fix:
-	Codes for inputting line are refactored (just partially).
-	Undo of mirror copy is available.
-	It corrects a problem that the color of selected line remains green.
+Next challenge(s)
+--------
 
-2012/06/23 Saving as JPG or PNG is available.
-
-
---> Known bugs:
-	crashing when you input Ctrl + X.
-	behaviors of editing contour and that of copy and paste are different from the original ORIPA.
-
---> Next challenges:
-	draw copyright on saved picture.
+* drawing copyright on saved picture.
 
 
 The following is a read-me text by MITANI Jun:
-
+----
 ORIPA v0.35 (2012/06/17) by Jun Mitani (jmitani@gmail.com)
 
 Distribution version
