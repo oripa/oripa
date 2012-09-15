@@ -38,7 +38,6 @@ Known bugs
 
 Next challenge(s)
 --------
-
 * drawing copyright on saved picture.
 
 
