@@ -2,6 +2,7 @@ package oripa.viewsetting.uipanel;
 
 import java.util.Observable;
 
+import oripa.paint.EditMode;
 import oripa.paint.Globals;
 import oripa.resource.Constants;
 import oripa.viewsetting.ViewSettingDataBase;
@@ -13,7 +14,7 @@ public class UIPanelSettingDB extends ViewSettingDataBase{
 	private boolean valleyButtonEnabled = true;
 	private boolean auxButtonEnabled = true;
 	
-	
+	private EditMode forcedMode = EditMode.NONE;
 
 	private int lineTypeFromIndex;
 	private int lineTypeToIndex;
@@ -95,27 +96,20 @@ public class UIPanelSettingDB extends ViewSettingDataBase{
 		this.setChanged();
 	}
 
-//	public void updateView(){
-//		boolean bDispValuePanel = false;
-//		if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
-//			if (Globals.lineInputMode == Constants.LineInputMode.BY_VALUE) {
-//				bDispValuePanel = true;
-//			}
-//		}
-//		
-//		setValuePanelVisible(bDispValuePanel);
-//		setAlterLineTypePanelVisible(Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE);
-//		setMountainButtonEnabled(Globals.editMode == Constants.EditMode.INPUT_LINE);
-//		setValleyButtonEnabled(Globals.editMode == Constants.EditMode.INPUT_LINE);
-//		setAuxButtonEnabled(Globals.editMode == Constants.EditMode.INPUT_LINE);
-//
-//		
-//		
-//		notifyObservers();
-//
-//	}
-	
 
+	public void forceSelectMode(){
+		forcedMode = EditMode.SELECT;
+		this.setChanged();
+	}
+	
+	public EditMode getForcedMode(){
+		EditMode ret = forcedMode;
+
+		forcedMode = EditMode.NONE;
+		
+		return ret;
+	}
+	
 	@Override
 	public String getName() {
 		return this.getClass().getName();

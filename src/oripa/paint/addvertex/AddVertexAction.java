@@ -7,6 +7,7 @@ import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
+import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 import oripa.paint.geometry.GeometricOperation;

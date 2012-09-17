@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -46,13 +47,13 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import oripa.Config;
+import oripa.FilterDB;
 import oripa.ORIPA;
-import oripa.command.BinderInterface;
-import oripa.command.GetCachedCommandAction;
+import oripa.bind.BinderInterface;
+import oripa.bind.CopyAndPasteActionWrapper;
+import oripa.bind.PaintActionBinder;
 import oripa.doc.Doc;
 import oripa.doc.exporter.ExporterXML;
-import oripa.entity.FilterDB;
-import oripa.entity.PaintActionBinder;
 import oripa.file.FileChooser;
 import oripa.file.FileChooserFactory;
 import oripa.file.FileFilterEx;
@@ -60,6 +61,7 @@ import oripa.file.FileHistory;
 import oripa.file.FileVersionError;
 import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
+import oripa.history.GetCachedCommandAction;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
@@ -78,7 +80,7 @@ import oripa.viewsetting.uipanel.OnNormalCommandButtonSelected;
 import oripa.viewsetting.uipanel.OnSelectButtonSelected;
 
 public class MainFrame extends JFrame 
-implements ActionListener, ComponentListener, WindowListener, Observer{
+implements ActionListener, ComponentListener, WindowListener, KeyListener, Observer{
 	private BinderInterface<GraphicMouseAction> binder = new PaintActionBinder();
 
 	private class CopyPasteListener implements ActionListener{
@@ -92,7 +94,7 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 			} else {
 				BinderInterface<GraphicMouseAction> binder = new PaintActionBinder();
 				Collection<ActionListener> listeners = binder.getBoundListeners(
-						new CopyAndPasteAction(), StringID.Command.COPY_PASTE_ID);
+						new CopyAndPasteActionWrapper(), StringID.Command.COPY_PASTE_ID);
 				
 				for (ActionListener listener : listeners) {
 					listener.actionPerformed(e);
@@ -144,7 +146,7 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 	private ResourceHolder resourceHolder = ResourceHolder.getInstance();
 //	private JMenuItem menuItemProperty = new JMenuItem(
 //			resourceHolder.getString(ResourceKey.LABEL, StringID.Menu.PROPERTY_ID));
-	private JMenuItem menuItemProperty = (JMenuItem) binder.createButton(
+	private JMenuItem menuItemProperty = (JMenuItem) binder.createMultiCommandButton(
 			JMenuItem.class, null, StringID.Menu.PROPERTY_ID);
 
 	private JMenuItem menuItemExit = new JMenuItem(
@@ -178,6 +180,9 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 		
 		setting.addObserver(this);
 		
+		addKeyListener(this);
+		
+		
 		menuItemCopyAndPaste.setText(ORIPA.res.getString(StringID.Menu.COPY_PASTE_ID));
 		menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 		
@@ -191,7 +196,7 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 		
 		ImageResourceLoader imgLoader = new ImageResourceLoader();
 		this.setIconImage(imgLoader.loadAsIcon("icon/oripa.gif", getClass()).getImage());
-
+		
 		menuItemOpen.addActionListener(this);
 		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 		menuItemSave.addActionListener(this);
@@ -219,14 +224,14 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				ORIPA.doc.selectAllOriLines();
-//				Collection<ActionListener> listners = binder.getBoundListeners(
-//						new SelectLineAction(mouseContext), StringID.Menu.SELECT_ALL_ID);
-//
-//				for(ActionListener listener : listners){
-//					listener.actionPerformed(e);
-//				}
+				Collection<ActionListener> listners = binder.getBoundListeners(
+						new SelectLineAction(mouseContext), StringID.Menu.SELECT_ALL_ID);
+
+				for(ActionListener listener : listners){
+					listener.actionPerformed(e);
+				}
 				
-//				(new OnSelectButtonSelected()).changeViewSetting();
+				(new OnSelectButtonSelected()).changeViewSetting();
 			}
 		});
 
@@ -719,6 +724,30 @@ implements ActionListener, ComponentListener, WindowListener, Observer{
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
 	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {
+		if(e.isControlDown()){
+			screenSetting.requestRedraw();
+		}		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.isControlDown()){
+			screenSetting.requestRedraw();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if(e.isControlDown()){
+			screenSetting.requestRedraw();
+		}
+	
+	}
+
 	
 	
 	@Override

@@ -2,6 +2,7 @@ package oripa.paint.mirror;
 
 import java.awt.geom.AffineTransform;
 
+import oripa.paint.EditMode;
 import oripa.paint.PaintContext;
 import oripa.paint.selectline.SelectLineAction;
 

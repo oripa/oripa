@@ -11,6 +11,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
+import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 import oripa.paint.geometry.GeometricOperation;

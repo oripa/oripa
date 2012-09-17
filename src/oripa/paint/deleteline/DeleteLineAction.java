@@ -9,6 +9,7 @@ import java.util.Collection;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.geom.RectangleClipper;
+import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 import oripa.paint.RectangularSelectableAction;

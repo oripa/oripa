@@ -11,6 +11,7 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.geom.RectangleClipper;
+import oripa.paint.EditMode;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;

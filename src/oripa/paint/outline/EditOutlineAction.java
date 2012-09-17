@@ -10,6 +10,7 @@ import java.util.Stack;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
+import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 import oripa.paint.PairLoop;

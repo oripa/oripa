@@ -3,6 +3,7 @@ package oripa.paint.deletevertex;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
+import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 

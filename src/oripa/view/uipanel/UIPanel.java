@@ -40,7 +40,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -52,16 +51,15 @@ import javax.swing.border.EtchedBorder;
 
 import oripa.Config;
 import oripa.ORIPA;
-import oripa.command.BinderInterface;
-import oripa.command.CacheCommandAction;
-import oripa.command.GetCachedCommandAction;
-import oripa.command.PopCommandAction;
-import oripa.command.PushCommandAction;
-import oripa.entity.PaintActionBinder;
+import oripa.bind.BinderInterface;
+import oripa.bind.CommandSetter;
+import oripa.bind.PaintActionBinder;
 import oripa.file.ImageResourceLoader;
 import oripa.folder.Folder;
 import oripa.geom.OriLine;
-import oripa.paint.CommandSetter;
+import oripa.history.CacheCommandAction;
+import oripa.history.GetCachedCommandAction;
+import oripa.paint.EditMode;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
@@ -83,11 +81,11 @@ import oripa.paint.symmetric.SymmetricalLineAction;
 import oripa.paint.triangle.TriangleSplitAction;
 import oripa.paint.vertical.VerticalLineAction;
 import oripa.resource.StringID;
-import oripa.view.main.MainFrame;
 import oripa.view.main.MainScreen;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewSettingActionListener;
 import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.ScreenUpdater;
 import oripa.viewsetting.model.ModelFrameSettingDB;
 import oripa.viewsetting.render.RenderFrameSettingDB;
 import oripa.viewsetting.uipanel.OnByValueButtonSelected;
@@ -98,7 +96,7 @@ import oripa.viewsetting.uipanel.OnSelectButtonSelected;
 import oripa.viewsetting.uipanel.UIPanelSettingDB;
 
 public class UIPanel extends JPanel 
-implements ActionListener, PropertyChangeListener, KeyListener, Observer {
+implements ActionListener, PropertyChangeListener, Observer {
 	
 	
 	private UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
@@ -492,7 +490,6 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		lineInputByValueButton.setSelectedIcon(imgLoader.loadAsIcon("icon/by_value_p.gif"));
 
 
-
 		addListenerToComponents();
 		
 		setLayout(new FlowLayout());
@@ -726,10 +723,11 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 				new GetCachedCommandAction());
 		editModeInputLineButton.addActionListener(
 				new ViewSettingActionListener(new OnNormalCommandButtonSelected()));
+		editModeInputLineButton.addKeyListener(new ScreenUpdater());
 		
 		editModePickLineButton.addActionListener(
 				new ViewSettingActionListener(new OnSelectButtonSelected()));
-		
+		editModePickLineButton.addKeyListener(new ScreenUpdater());
 		
 		
 		editModeDeleteLineButton.addActionListener(
@@ -884,27 +882,6 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 	}
 
 
-//	void modeChanged() {
-//		
-//		UIPanelSettingDB setting = settingDB;
-//		
-//		boolean bDispSubPanel = false;
-//		if (Globals.editMode == Constants.EditMode.INPUT_LINE) {
-//			if (Globals.lineInputMode == Constants.LineInputMode.BY_VALUE) {
-//				bDispSubPanel = true;
-//			}
-//		}
-//		
-//		setting.setValuePanelVisible(bDispSubPanel);
-//		setting.setAlterLineTypePanelVisible(Globals.editMode == Constants.EditMode.CHANGE_LINE_TYPE);
-//		setting.setMountainButtonEnabled(Globals.editMode == Constants.EditMode.INPUT_LINE);
-//		setting.setValleyButtonEnabled(Globals.editMode == Constants.EditMode.INPUT_LINE);
-//		setting.setAuxButtonEnabled(Globals.editMode == Constants.EditMode.INPUT_LINE);
-//
-//		setting.notifyObservers();
-//		
-//	}
-
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		//        if (e.getSource() == textFieldLength) {
@@ -929,13 +906,30 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 		//System.out.println(o.toString());
 
 		if(o.toString() == ValueDB.getInstance().toString()){
+			// update text field of values
 			ValueDB valueDB = (ValueDB) o;
 			textFieldAngle.setValue(valueDB.getAngle());
 			textFieldLength.setValue(valueDB.getLength());
 		}
 		else if(o.toString() == settingDB.getName()){
-		
+			// update GUI
 			UIPanelSettingDB setting = (UIPanelSettingDB) o;
+			
+			switch (setting.getForcedMode()) {
+			case SELECT:
+				virtualClick(editModePickLineButton);
+				break;
+
+			default:
+				break;
+			}
+			
+			
+			if(Globals.getMouseAction().getEditMode() == EditMode.SELECT){
+				this.editModePickLineButton.setSelected(true);
+			}
+			
+			
 			subPanel1.setVisible(setting.isValuePanelVisible());
 			subPanel2.setVisible(setting.isValuePanelVisible());
 
@@ -960,16 +954,9 @@ implements ActionListener, PropertyChangeListener, KeyListener, Observer {
 	}
 
 
-	@Override
-	public void keyTyped(KeyEvent e) {
+	private void virtualClick(AbstractButton button){
+		button.setSelected(true);
+		button.doClick();
 	}
 
-	@Override
-	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-	}
 }

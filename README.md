@@ -9,8 +9,14 @@ Executable file: https://dl.dropbox.com/u/45296904/oripaS.jar
 
 History of updates
 -------
+
+* __2012/09/17 Bug fix:__
+    * Behavior of right click on copy-and-paste mode becomes the same as original ORIPA. It will get back to "Select" mode.
+<p></p>
+
+
 * __2012/09/08 Improve usability:__
- * On copy-and-paste mode, you can select the origin vertex by pressing Ctrl key.
+    * On copy-and-paste mode, you can select the origin vertex by pressing Ctrl key.
 <p></p>
 
 * __2012/08/28 Bug fix, improve usability:__
@@ -37,29 +43,30 @@ History of updates
 Known bugs
 --------
 * crashing when you input Ctrl + X.
-* behaviors of editing contour and that of copy and paste are different from the original ORIPA.
+* behavior of editing contour is different from the original ORIPA.
 
 Next challenge(s)
 --------
 * drawing copyright on saved picture.
 
 
-The following is a read-me text by MITANI Jun:
+The original read-me text by MITANI Jun:
 ----
 ORIPA v0.35 (2012/06/17) by Jun Mitani (jmitani@gmail.com)
 
 Distribution version
 
---> Contents:
-	- source code folder (file encoding: UTF-8);
-	- ORIPA jar file;
-	- ORIPA User Manual;
+#### Contents:
+- source code folder (file encoding: UTF-8);
+- ORIPA jar file;
+- ORIPA User Manual;
 
 Source code is written in Java for JRE1.7.
 Java3D is required.
 
-ORIPA - Origami Pattern Editor 
-*** Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
+#### ORIPA - Origami Pattern Editor 
+
+Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -76,12 +83,13 @@ ORIPA - Origami Pattern Editor
 
 
 
---> Changes from the last version:
-	- Added icon for the Main Window;
-	- Added export SGV functionality for crease pattern;
-	- Added export SGV functionality for folded origami;
+#### Changes from the last version:
+
+- Added icon for the Main Window;
+- Added export SGV functionality for crease pattern;
+- Added export SGV functionality for folded origami;
 
 
-Acknowledgments
+#### Acknowledgments
 
 I appreciate the help received from Hugo Alves Akitaya for releasing the source codes.

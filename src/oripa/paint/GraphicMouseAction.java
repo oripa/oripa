@@ -17,10 +17,6 @@ import oripa.viewsetting.main.MainScreenSettingDB;
 
 public abstract class GraphicMouseAction {
 
-	public enum EditMode{
-		INPUT, SELECT, VERTEX, OTHER
-	}
-
 	private EditMode editMode = EditMode.INPUT;
 	private boolean needSelect = false;
 
@@ -65,11 +61,23 @@ public abstract class GraphicMouseAction {
 
 
 
+	/**
+	 * define action on destroy.
+	 * @param context
+	 */
 	public void destroy(PaintContext context){
 		context.clear(false);
 	}
 
 
+	/**
+	 * define action for recovering the status of this object 
+	 * with given context.
+	 * @param context
+	 */
+	public void recover(PaintContext context){
+	}
+	
 	/**
 	 * performs action.
 	 * 
@@ -149,8 +157,6 @@ public abstract class GraphicMouseAction {
 
 	public abstract void onRelease(PaintContext context, AffineTransform affine, boolean differentAction);
 
-	public void recover(PaintContext context){
-	}
 
 	/**
 	 * draws selected lines and selected vertices as selected state.
@@ -219,13 +225,13 @@ public abstract class GraphicMouseAction {
 
 	}
 
-	public void drawLine(Graphics2D g2d, Vector2d p0, Vector2d p1){
+	protected void drawLine(Graphics2D g2d, Vector2d p0, Vector2d p1){
 		g2d.draw(new Line2D.Double(p0.x, p0.y, 
 				p1.x, p1.y));
 
 	}
 
-	public void drawPickCandidateLine(Graphics2D g2d, PaintContext context){
+	protected void drawPickCandidateLine(Graphics2D g2d, PaintContext context){
 		if (context.pickCandidateL!= null) {
 			g2d.setColor(Config.LINE_COLOR_CANDIDATE);
 			OriLine candidate = context.pickCandidateL;
@@ -242,7 +248,7 @@ public abstract class GraphicMouseAction {
 	 * @param g2d
 	 * @param context
 	 */
-	public void drawTemporaryLine(Graphics2D g2d, PaintContext context){
+	protected void drawTemporaryLine(Graphics2D g2d, PaintContext context){
 		ElementSelector selector = new ElementSelector();
 
 		if(context.getVertexCount() > 0){

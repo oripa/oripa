@@ -1,11 +1,13 @@
-package oripa.paint;
+package oripa.bind;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JRadioButton;
-
 import oripa.ORIPA;
+import oripa.paint.Globals;
+import oripa.paint.GraphicMouseAction;
+import oripa.paint.PaintContext;
+import oripa.viewsetting.main.ScreenUpdater;
 
 
 /**
@@ -34,6 +36,11 @@ public class CommandSetter implements ActionListener{
 		if(mouseAction.needSelect() == false){
 			ORIPA.doc.resetSelectedOriLines();
 		}
+				
+		ScreenUpdater screenUpdater  = new ScreenUpdater();
+		screenUpdater.updateScreen();
 	}
+	
+
 }	
 
