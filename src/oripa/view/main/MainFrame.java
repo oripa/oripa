@@ -65,7 +65,6 @@ import oripa.history.GetCachedCommandAction;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
-import oripa.paint.copypaste.CopyAndPasteAction;
 import oripa.paint.outline.EditOutlineAction;
 import oripa.paint.selectline.SelectLineAction;
 import oripa.resource.Constants;
@@ -433,7 +432,7 @@ implements ActionListener, ComponentListener, WindowListener, KeyListener, Obser
 		} else if (e.getSource() == menuItemClear) {
 			ORIPA.doc = new Doc(Constants.DEFAULT_PAPER_SIZE);
 			ORIPA.modelFrame.repaint();
-			mainScreen.modeChanged();
+
 			ORIPA.modelFrame.setVisible(false);
 			ORIPA.renderFrame.setVisible(false);
 	

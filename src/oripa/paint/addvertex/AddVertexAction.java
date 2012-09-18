@@ -2,15 +2,10 @@ package oripa.paint.addvertex;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
-
-import javax.vecmath.Vector2d;
 
 import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
-import oripa.paint.geometry.GeometricOperation;
 
 public class AddVertexAction extends GraphicMouseAction {
 

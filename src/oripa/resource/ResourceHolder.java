@@ -1,7 +1,6 @@
 package oripa.resource;
 
 import java.util.HashMap;
-import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
 
 public class ResourceHolder {

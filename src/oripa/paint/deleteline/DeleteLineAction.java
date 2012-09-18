@@ -1,19 +1,13 @@
 package oripa.paint.deleteline;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.util.Collection;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.geom.RectangleClipper;
 import oripa.paint.EditMode;
-import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 import oripa.paint.RectangularSelectableAction;
-import oripa.viewsetting.main.MainScreenSettingDB;
 
 public class DeleteLineAction extends RectangularSelectableAction {
 

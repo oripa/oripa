@@ -5,8 +5,6 @@ import java.util.Collection;
 
 import javax.swing.AbstractButton;
 
-import oripa.paint.GraphicMouseAction;
-
 public interface BinderInterface<Command> {
 
 	public abstract AbstractButton createButton(

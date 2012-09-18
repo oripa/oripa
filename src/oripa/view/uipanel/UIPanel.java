@@ -54,6 +54,7 @@ import oripa.ORIPA;
 import oripa.bind.BinderInterface;
 import oripa.bind.CommandSetter;
 import oripa.bind.PaintActionBinder;
+import oripa.bind.ViewSettingBinder;
 import oripa.file.ImageResourceLoader;
 import oripa.folder.Folder;
 import oripa.geom.OriLine;
@@ -80,6 +81,8 @@ import oripa.paint.selectline.SelectLineAction;
 import oripa.paint.symmetric.SymmetricalLineAction;
 import oripa.paint.triangle.TriangleSplitAction;
 import oripa.paint.vertical.VerticalLineAction;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.view.main.MainScreen;
 import oripa.viewsetting.ChangeViewSetting;
@@ -103,58 +106,66 @@ implements ActionListener, PropertyChangeListener, Observer {
 	private ValueDB valueDB = ValueDB.getInstance();
 	private PaintContext mouseContext = PaintContext.getInstance();
 			
-	BinderInterface<GraphicMouseAction> binder = new PaintActionBinder();
+	BinderInterface<GraphicMouseAction> paintBinder = new PaintActionBinder();
+	BinderInterface<ChangeViewSetting> settingBinder = new ViewSettingBinder();
 
 	// Edit mode
 
-	JRadioButton editModeInputLineButton = new JRadioButton("InputLine", true);
-	JRadioButton editModePickLineButton = (JRadioButton) binder.createButton(
+//	JRadioButton editModeInputLineButton = new JRadioButton("InputLine", true);
+	JRadioButton editModeInputLineButton = (JRadioButton) settingBinder.createButton(
+			JRadioButton.class, new OnNormalCommandButtonSelected(), StringID.UI.INPUT_LINE_ID);
+
+	JRadioButton editModePickLineButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new SelectLineAction(mouseContext), StringID.Command.SELECT_ID);
 
-	JRadioButton editModeDeleteLineButton = (JRadioButton) binder.createButton(
+	JRadioButton editModeDeleteLineButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new DeleteLineAction(), StringID.Command.DELETE_LINE_ID);
 
-	JRadioButton editModeLineTypeButton = (JRadioButton) binder.createButton(
+	JRadioButton editModeLineTypeButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new ChangeLineTypeAction(), StringID.Command.CHANGE_LINE_TYPE_ID);
 
-	JRadioButton editModeAddVertex =(JRadioButton) binder.createButton(
+	JRadioButton editModeAddVertex =(JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new AddVertexAction(), StringID.Command.ADD_VERTEX_ID);
 
-	JRadioButton editModeDeleteVertex = (JRadioButton) binder.createButton(
+	JRadioButton editModeDeleteVertex = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new DeleteVertexAction(), StringID.Command.DELETE_VERTEX_ID);
 
 
-	JRadioButton lineTypeSubButton = new JRadioButton("Aux");
-	JRadioButton lineTypeMountainButton = new JRadioButton("Mountain");
-	JRadioButton lineTypeValleyButton = new JRadioButton("Valley");
+	ResourceHolder resources = ResourceHolder.getInstance();
+	JRadioButton lineTypeSubButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
+	JRadioButton lineTypeMountainButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
+	JRadioButton lineTypeValleyButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
 
 	// How to enter the line
 
-	JRadioButton lineInputDirectVButton = (JRadioButton) binder.createButton(
+	JRadioButton lineInputDirectVButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new TwoPointSegmentAction(), StringID.Command.DIRECT_V_ID);
 
-	JRadioButton lineInputOnVButton = (JRadioButton) binder.createButton(
+	JRadioButton lineInputOnVButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new TwoPointLineAction(), StringID.Command.ON_V_ID);
 
-	JRadioButton lineInputVerticalLineButton = (JRadioButton) binder.createButton(
+	JRadioButton lineInputVerticalLineButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new VerticalLineAction(), StringID.Command.VERTICAL_ID);
 
-	JRadioButton lineInputAngleBisectorButton = (JRadioButton) binder.createButton(
+	JRadioButton lineInputAngleBisectorButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new AngleBisectorAction(), StringID.Command.BISECTOR_ID);
 
-	JRadioButton lineInputTriangleSplitButton = (JRadioButton) binder.createButton(
+	JRadioButton lineInputTriangleSplitButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new TriangleSplitAction(), StringID.Command.TRIANGLE_ID);
 
-	JRadioButton lineInputSymmetricButton = (JRadioButton) binder.createButton(
+	JRadioButton lineInputSymmetricButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new SymmetricalLineAction(), StringID.Command.SYMMETRIC_ID);
 
-	JRadioButton lineInputMirrorButton = (JRadioButton) binder.createButton(
+	JRadioButton lineInputMirrorButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new MirrorCopyAction(mouseContext), StringID.Command.MIRROR_ID);
 
-	JRadioButton lineInputByValueButton = (JRadioButton) binder.createButton(
+	JRadioButton lineInputByValueButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new LineByValueAction(), StringID.Command.BY_VALUE_ID);
 
-	JRadioButton lineInputPBisectorButton = (JRadioButton) binder.createButton(
+	JRadioButton lineInputPBisectorButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, new TwoPointBisectorAction(), StringID.Command.PERPENDICULAR_BISECTOR_ID);
 
 	
@@ -174,9 +185,14 @@ implements ActionListener, PropertyChangeListener, Observer {
 	JFormattedTextField textFieldLength;
 	JFormattedTextField textFieldAngle;
 	JFormattedTextField textFieldGrid;
-	JButton buttonLength = new JButton(ORIPA.res.getString("UI_Mesure"));
-	JButton buttonAngle = new JButton(ORIPA.res.getString("UI_Mesure"));
-	JButton buildButton = new JButton(ORIPA.res.getString("UI_Fold"));
+	
+	JButton buttonLength = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
+	JButton buttonAngle = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
+
+	JButton buildButton = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
 	JButton resetButton = new JButton("Reset");
 	JCheckBox dispGridCheckBox = new JCheckBox(ORIPA.res.getString("UI_ShowGrid"), true);
 	JButton gridSmallButton = new JButton("x2");
@@ -201,7 +217,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 	MainScreen screen;
 
 	
-	private PaintContext context = PaintContext.getInstance();
+//	private PaintContext context = PaintContext.getInstance();
 
 
 	private class MyViewSettingActionListener extends ViewSettingActionListener{
@@ -217,7 +233,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
 			super.actionPerformed(e);
 			editModeGroup.setSelected(modeButton.getModel(), true);
 
@@ -228,6 +243,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 	public UIPanel(MainScreen __screen) {
 
 		setModeButtonText();
+		editModeInputLineButton.setSelected(true);
 		
 		this.screen = __screen;
 		setPreferredSize(new Dimension(210, 400));
@@ -675,7 +691,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 	}
 	
 	private void setModeButtonText(){
-		setResourceText(editModeInputLineButton, StringID.UI.INPUT_LINE_ID);
+//		setResourceText(editModeInputLineButton, StringID.UI.INPUT_LINE_ID);
 		setResourceText(editModePickLineButton, StringID.UI.SELECT_ID);
 		setResourceText(editModeDeleteLineButton, StringID.UI.DELETE_LINE_ID);
 		setResourceText(editModeLineTypeButton, StringID.UI.CHANGE_LINE_TYPE_ID);
@@ -721,8 +737,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 		editModeInputLineButton.addActionListener(
 				new GetCachedCommandAction());
-		editModeInputLineButton.addActionListener(
-				new ViewSettingActionListener(new OnNormalCommandButtonSelected()));
 		editModeInputLineButton.addKeyListener(new ScreenUpdater());
 		
 		editModePickLineButton.addActionListener(
@@ -794,32 +808,38 @@ implements ActionListener, PropertyChangeListener, Observer {
 	}
 	
 	
-	private GraphicMouseAction previousMouseAction = null;
+//	private GraphicMouseAction previousMouseAction = null;
 	private MainScreenSettingDB screenDB = MainScreenSettingDB.getInstance();
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {		
 
+		ScreenUpdater screenUpdater = new ScreenUpdater();
 			
 		if (ae.getSource() == dispGridCheckBox) {
 			screenDB.setGridVisible(dispGridCheckBox.isSelected());
 			screenDB.notifyObservers();
+
+			screenUpdater.updateScreen();			
 			
 		} else if (ae.getSource() == gridSmallButton) {
 			if (Globals.gridDivNum < 65) {
 				Globals.gridDivNum *= 2;
 				textFieldGrid.setValue(new Integer(Globals.gridDivNum));
-				screen.repaint();
+
+				screenUpdater.updateScreen();			
 			}
 		} else if (ae.getSource() == gridLargeButton) {
 			if (Globals.gridDivNum > 3) {
 				Globals.gridDivNum /= 2;
 				textFieldGrid.setValue(new Integer(Globals.gridDivNum));
-				screen.repaint();
+
+				screenUpdater.updateScreen();			
 			}
 		} else if (ae.getSource() == dispVertexCheckBox) {
 			Globals.dispVertex = dispVertexCheckBox.isSelected();
-			screen.repaint();
+
+			screenUpdater.updateScreen();			
 		} else if (ae.getSource() == resetButton) {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;
@@ -870,7 +890,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 				if (value < 128 && value > 2) {
 					textFieldGrid.setValue(value);
 					Globals.gridDivNum = value;
-					screen.repaint();
+					screenUpdater.updateScreen();			
 				}
 			} catch (Exception ex) {
 				System.out.println(ex);
@@ -905,13 +925,13 @@ implements ActionListener, PropertyChangeListener, Observer {
 		
 		//System.out.println(o.toString());
 
-		if(o.toString() == ValueDB.getInstance().toString()){
+		if(o.toString().equals(ValueDB.getInstance().toString())){
 			// update text field of values
 			ValueDB valueDB = (ValueDB) o;
 			textFieldAngle.setValue(valueDB.getAngle());
 			textFieldLength.setValue(valueDB.getLength());
 		}
-		else if(o.toString() == settingDB.getName()){
+		else if(settingDB.hasGivenName(o.toString())){
 			// update GUI
 			UIPanelSettingDB setting = (UIPanelSettingDB) o;
 			
@@ -934,7 +954,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 			subPanel2.setVisible(setting.isValuePanelVisible());
 
 			alterLineTypePanel.setVisible(setting.isAlterLineTypePanelVisible());
-			screen.modeChanged();
 
 
 			lineTypeMountainButton.setEnabled(setting.isMountainButtonEnabled());
@@ -943,11 +962,12 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 			repaint();
 		}
-		else if(o.toString() == screenDB.getName()){
+		else if(screenDB.hasGivenName(o.toString())){
 			if(screenDB.isGridVisible() != dispGridCheckBox.isSelected()){
 				dispGridCheckBox.setSelected(screenDB.isGridVisible());
+				
 			}
-			
+
 			repaint();
 		}
 		

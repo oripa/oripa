@@ -27,7 +27,6 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import oripa.ORIPA;
 import oripa.viewsetting.render.RenderFrameSettingDB;
 
 

@@ -79,6 +79,9 @@ public class StringID {
 	    public static final String LENGTH_ID =  "UI_Length";
 	    public static final String ANGLE_ID =  "UI_Angle";
 	    public static final String GRID_DIVIDE_NUM_ID =  "UI_GridDivideNum";
+		public static final String AUX_ID = "UI_Aux";
+		public static final String VALLEY_ID = "UI_Valley";
+		public static final String MOUNTAIN_ID = "UI_Mountain";
     }
 
 

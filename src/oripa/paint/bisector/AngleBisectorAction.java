@@ -3,7 +3,6 @@ package oripa.paint.bisector;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import oripa.ORIPA;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 

@@ -30,7 +30,7 @@ import oripa.doc.Doc;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
-import oripa.resource.Version;
+import oripa.resource.StringID;
 import oripa.view.CheckFrame;
 import oripa.view.ModelViewFrame;
 import oripa.view.ModelViewFrame3D;
@@ -89,7 +89,8 @@ public class ORIPA {
         		createResource(resourcePackage + ".LabelStringResource_en") );
         
         		
-        TITLE = ORIPA.res.getString("Title") + "  v" + Version.ORIPA_VERSION;
+        TITLE = resources.getString(ResourceKey.LABEL, StringID.Menu.TITLE_ID);
+//        TITLE = ORIPA.res.getString("Title") + "  v" + Version.ORIPA_VERSION;
 
         int uiPanelWidth = 0;//150;
         int modelFrameWidth = 400;

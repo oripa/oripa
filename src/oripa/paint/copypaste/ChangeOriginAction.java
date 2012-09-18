@@ -8,12 +8,9 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.LineType;
 import oripa.geom.OriLine;
-import oripa.paint.ElementSelector;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
-import oripa.resource.Constants;
 
 public class ChangeOriginAction extends GraphicMouseAction{
 

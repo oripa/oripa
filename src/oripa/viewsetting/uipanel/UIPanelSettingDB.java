@@ -1,10 +1,6 @@
 package oripa.viewsetting.uipanel;
 
-import java.util.Observable;
-
 import oripa.paint.EditMode;
-import oripa.paint.Globals;
-import oripa.resource.Constants;
 import oripa.viewsetting.ViewSettingDataBase;
 
 public class UIPanelSettingDB extends ViewSettingDataBase{

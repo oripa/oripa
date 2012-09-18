@@ -1,6 +1,5 @@
 package oripa.bind;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +10,6 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewSettingActionListener;
-import oripa.viewsetting.main.ChangeHint;
 
 public class ViewSettingBinder implements BinderInterface<ChangeViewSetting> {
 

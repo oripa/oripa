@@ -7,9 +7,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.paint.Globals;
 import oripa.paint.PairLoop;
-import oripa.viewsetting.uipanel.UIPanelSettingDB;
 
 public class CloseTempOutline {
 

@@ -1,10 +1,6 @@
 package oripa.paint.addvertex;
 
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
-
-import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
@@ -28,9 +24,9 @@ public class AddingVertex extends PickingVertex {
 		boolean result = super.onAct(context, currentPoint, true);
 		
 		if(result == true){
-			Vector2d picked = context.getVertex(0);
 			OriLine line = GeometricOperation.pickLine(
 					context);
+
 			if(line != null){
 				context.pushLine(line);
 			}

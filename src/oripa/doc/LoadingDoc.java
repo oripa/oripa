@@ -1,7 +1,5 @@
 package oripa.doc;
 
-import javax.swing.JOptionPane;
-
 import oripa.ORIPA;
 import oripa.doc.loader.Loader;
 import oripa.file.FileVersionError;

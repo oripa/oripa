@@ -1,7 +1,6 @@
 package oripa.file;
 
 import oripa.doc.Doc;
-import oripa.doc.exporter.Exporter;
 
 public class FileFilterEx extends javax.swing.filechooser.FileFilter {
 

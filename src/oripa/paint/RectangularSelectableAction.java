@@ -12,12 +12,6 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.geom.RectangleClipper;
-import oripa.mouse.MouseUtility;
-import oripa.paint.Globals;
-import oripa.paint.GraphicMouseAction;
-import oripa.paint.PaintContext;
-import oripa.paint.geometry.GeometricOperation;
-import oripa.resource.Constants;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
 

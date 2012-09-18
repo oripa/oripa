@@ -1,7 +1,5 @@
 package oripa.paint.selectline;
 
-import java.awt.geom.Point2D;
-
 import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.paint.PaintContext;

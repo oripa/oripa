@@ -1,23 +1,14 @@
 package oripa.paint.selectline;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
-import oripa.Config;
 import oripa.ORIPA;
 import oripa.geom.OriLine;
-import oripa.geom.RectangleClipper;
 import oripa.paint.EditMode;
 import oripa.paint.Globals;
-import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 import oripa.paint.RectangularSelectableAction;
-import oripa.paint.geometry.GeometricOperation;
-import oripa.resource.Constants;
 
 public class SelectLineAction extends RectangularSelectableAction {
 
@@ -32,11 +23,9 @@ public class SelectLineAction extends RectangularSelectableAction {
 		recover(context);
 	}
 
-	
-
+		
 	@Override
-	public void onRightClick(PaintContext context, AffineTransform affine,
-			boolean differentAction) {
+	public void undo(PaintContext context) {
 		ORIPA.doc.loadUndoInfo();
 
 		recover(context);

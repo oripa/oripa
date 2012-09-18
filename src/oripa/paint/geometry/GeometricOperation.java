@@ -1,8 +1,5 @@
 package oripa.paint.geometry;
 
-import java.awt.Point;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -13,7 +10,6 @@ import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.OriLine;
 import oripa.paint.PaintContext;
-import oripa.resource.Constants;
 
 
 /**

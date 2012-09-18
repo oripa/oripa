@@ -18,23 +18,30 @@
 
 package oripa.view;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.vecmath.Vector2d;
 
+import oripa.Config;
+import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.geom.*;
+import oripa.geom.OriFace;
+import oripa.geom.OriLine;
+import oripa.geom.OriVertex;
 import oripa.paint.Globals;
-import oripa.resource.Constants;
-import oripa.*;
 
 public class RenderScreenForCheck extends JPanel
         implements ComponentListener {

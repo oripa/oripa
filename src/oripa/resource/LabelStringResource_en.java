@@ -6,7 +6,8 @@ public class LabelStringResource_en extends ListResourceBundle {
 
 		
 	    static final Object[][] strings = { 
-	        { StringID.Menu.TITLE_ID, "ORIPA S " + Version.ORIPAS_VERSION + ": Origami Pattern Editor based on ORIPA" }, 
+	        { StringID.Menu.TITLE_ID, "ORIPA S " + Version.ORIPAS_VERSION + 
+	        	": Origami Pattern Editor based on ORIPA" + "  v" + Version.ORIPA_VERSION }, 
 	        { StringID.Menu.FILE_ID, "File" }, 
 	        { StringID.Menu.EDIT_ID, "Edit" }, 
 	        { StringID.Menu.HELP_ID, "Help" }, 
@@ -26,6 +27,10 @@ public class LabelStringResource_en extends ListResourceBundle {
 	        { StringID.Menu.SELECT_ALL_ID, "select all"},
 	        
 	        
+	        { StringID.UI.AUX_ID, "Aux" }, 
+	        { StringID.UI.VALLEY_ID, "Valley" }, 
+	        { StringID.UI.MOUNTAIN_ID, "Mountain" }, 
+
 	        { StringID.UI.INPUT_LINE_ID, "Input Line" }, 
 	        { StringID.UI.SELECT_ID, "Select" }, 
 	        { StringID.UI.DELETE_LINE_ID, "Delete Line" }, 
