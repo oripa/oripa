@@ -37,7 +37,7 @@ public class CommandSetter implements ActionListener{
 			ORIPA.doc.resetSelectedOriLines();
 		}
 				
-		ScreenUpdater screenUpdater  = new ScreenUpdater();
+		ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
 		screenUpdater.updateScreen();
 	}
 	

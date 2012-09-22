@@ -64,7 +64,8 @@ public class PaintActionBinder implements BinderInterface<GraphicMouseAction> {
 		}
 		
 		// For catching key actions with immediately drawing
-		button.addKeyListener(new ScreenUpdater());
+		ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+		button.addKeyListener(screenUpdater.new KeyListener());
 
 
 		return button;

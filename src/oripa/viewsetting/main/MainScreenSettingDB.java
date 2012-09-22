@@ -4,7 +4,6 @@ import oripa.viewsetting.ViewSettingDataBase;
 
 public class MainScreenSettingDB extends ViewSettingDataBase{
 
-	public static final String REDRAW_REQUESTED = "redraw requested";
 	
 	private boolean gridVisible = true;
 
@@ -22,10 +21,11 @@ public class MainScreenSettingDB extends ViewSettingDataBase{
 		return instance;
 	}
 
-	public void requestRedraw(){
-		setChanged();
-		notifyObservers(REDRAW_REQUESTED);
-	}
+//	public static final String REDRAW_REQUESTED = "redraw requested";
+//	public void requestRedraw(){
+//		setChanged();
+//		notifyObservers(REDRAW_REQUESTED);
+//	}
 	
 	
 	public boolean isGridVisible() {
@@ -40,8 +40,8 @@ public class MainScreenSettingDB extends ViewSettingDataBase{
 	}
 
 
-	@Override
-	public String getName() {
-		return this.getClass().getName();
-	}
+//	@Override
+//	public String getName() {
+//		return this.getClass().getName();
+//	}
 }

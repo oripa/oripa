@@ -6,47 +6,74 @@ import java.awt.event.KeyListener;
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.copypaste.CopyAndPasteAction;
+import oripa.viewsetting.ViewSettingDataBase;
 
-public class ScreenUpdater implements KeyListener {
+public class ScreenUpdater extends ViewSettingDataBase {
 
-	public void updateScreen(){
-		MainScreenSettingDB screenDB = MainScreenSettingDB.getInstance();
-		screenDB.requestRedraw();						
+	public static final String REDRAW_REQUESTED = "redraw requested";
 
+
+
+	//-------------------------
+	// singleton
+	//-------------------------
+	private static ScreenUpdater instance = null;
+
+	private ScreenUpdater() {
 	}
 
-	@Override
-	public void keyTyped(KeyEvent e) {
 
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.isControlDown()){
-			GraphicMouseAction action = Globals.getMouseAction();
-
-			if(action instanceof CopyAndPasteAction){
-				CopyAndPasteAction casted = (CopyAndPasteAction) action;
-				casted.changeAction(true);
-
-				updateScreen();
-			}
-
+	public static ScreenUpdater getInstance(){
+		if(instance == null){
+			instance = new ScreenUpdater();
 		}
 
+		return instance;
+	}
+	//-------------------------
+
+
+	public void updateScreen(){
+		setChanged();
+		notifyObservers(REDRAW_REQUESTED);
+
 	}
 
-	@Override
-	public void keyReleased(KeyEvent e) {
+	
+	private void updateIfCopyAndPaste(boolean changeToOrigin){
 		GraphicMouseAction action = Globals.getMouseAction();
 
 		if(action instanceof CopyAndPasteAction){
 			CopyAndPasteAction casted = (CopyAndPasteAction) action;
-			casted.changeAction(false);
+			casted.changeAction(changeToOrigin);
+
 			updateScreen();
 		}
-
-
+		
 	}
 
+	public class KeyListener implements java.awt.event.KeyListener{
+		@Override
+		public void keyTyped(KeyEvent e) {
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			
+			if(e.isControlDown()){
+				updateIfCopyAndPaste(true);
+			}
+			else if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+				updateScreen();
+				
+			}
+
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			updateIfCopyAndPaste(false);
+		}
+
+	}
 }

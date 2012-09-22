@@ -30,7 +30,7 @@ public class SelectingLineForLineType extends PickingLine {
         ORIPA.doc.pushUndoInfo();
 
     	UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-        ORIPA.doc.alterLineType(context.peekLine(), setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
+        ORIPA.doc.alterLineType(context.peekLine(),  setting.getTypeFrom(), setting.getTypeTo());
 
         context.clear(false);
 	}

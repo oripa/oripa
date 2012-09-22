@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 
+import oripa.paint.Globals;
+
 public class CacheCommandAction implements ActionListener{
 	CommandHistory history = CommandHistory.getInstance();
 
@@ -14,7 +16,8 @@ public class CacheCommandAction implements ActionListener{
 			return;
 		}
 		AbstractButton source = (AbstractButton)e.getSource();
-		history.setCache(source.getActionListeners());			
+		history.setCache(new HistoryInfo(
+				Globals.mouseAction.getEditMode(), source.getActionListeners()));			
 		
 		
 	}

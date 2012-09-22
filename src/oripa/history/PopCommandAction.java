@@ -10,7 +10,7 @@ public class PopCommandAction implements ActionListener{
 		if(history.canUndo() == false){
 			return;
 		}
-		ActionListener[] actions = history.pop();
+		ActionListener[] actions = history.pop().listeners;
 		for(ActionListener action : actions){
 			action.actionPerformed(null);
 		}

@@ -81,9 +81,9 @@ public class GeometricOperation {
 		}
 		
 		
-		Point2D.Double currentPoint = context.getLogicalMousePoint();
 
 		if(picked == null && freeSelection == true){
+			Point2D.Double currentPoint = context.getLogicalMousePoint();
 
 			OriLine l = pickLine(currentPoint, context.scale);
 			if(l != null) {

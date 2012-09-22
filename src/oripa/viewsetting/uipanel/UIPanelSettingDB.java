@@ -1,9 +1,27 @@
 package oripa.viewsetting.uipanel;
 
+import oripa.doc.TypeForChange;
 import oripa.paint.EditMode;
 import oripa.viewsetting.ViewSettingDataBase;
 
 public class UIPanelSettingDB extends ViewSettingDataBase{
+	//-------------------------------------------------------
+		// singleton pattern
+		
+		private static UIPanelSettingDB settingDB = null;
+		
+		private UIPanelSettingDB(){}
+		
+		public static UIPanelSettingDB getInstance(){
+			if(settingDB == null){
+				settingDB = new UIPanelSettingDB();
+			}
+			
+			return settingDB;
+		}
+	//-------------------------------------------------------
+
+		
 	private boolean subPanelVisible = false;
 	private boolean alterLineTypePanelVisible = true; 
 	private boolean mountainButtonEnabled = true;
@@ -15,18 +33,24 @@ public class UIPanelSettingDB extends ViewSettingDataBase{
 	private int lineTypeFromIndex;
 	private int lineTypeToIndex;
 	
-	// singleton pattern
-	
-	private static UIPanelSettingDB settingDB = null;
-	
-	private UIPanelSettingDB(){}
-	
-	public static UIPanelSettingDB getInstance(){
-		if(settingDB == null){
-			settingDB = new UIPanelSettingDB();
-		}
-		
-		return settingDB;
+	private TypeForChange typeFrom = TypeForChange.EMPTY;
+	private TypeForChange typeTo = TypeForChange.EMPTY;
+
+
+	public TypeForChange getTypeFrom() {
+		return typeFrom;
+	}
+
+	public void setTypeFrom(TypeForChange typeFrom) {
+		this.typeFrom = typeFrom;
+	}
+
+	public TypeForChange getTypeTo() {
+		return typeTo;
+	}
+
+	public void setTypeTo(TypeForChange typeTo) {
+		this.typeTo = typeTo;
 	}
 
 	

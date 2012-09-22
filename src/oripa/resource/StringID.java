@@ -17,7 +17,7 @@ public class StringID {
 	    public static final String EXIT_ID =  "Exit"; 
 	    public static final String UNDO_ID =  "Undo"; 
 	    public static final String ABOUT_ID =  "About"; 
-		public static final String COPY_PASTE_ID = "Menu Copy and Paste";
+		public static final String COPY_PASTE_ID = "Copy_and_Paste";
 		public static final String CONTOUR_ID = "EditContour";
 		public static final String SELECT_ALL_ID = "selectAll";
 	}
@@ -37,10 +37,10 @@ public class StringID {
 	    public static final String DELETE_LINE_ID =  "Direction_DeleteLine"; 
 	    public static final String ADD_VERTEX_ID =  "Direction_AddVertex"; 
 	    public static final String DELETE_VERTEX_ID =  "Direction_DeleteVertex"; 
-	    public static final String CONTOUR_ID =  "Direction_EditContour"; 
+	    public static final String CONTOUR_ID =  "EditContour"; 
 		public static final String PERPENDICULAR_BISECTOR_ID = "Direction_PBisec";
 		public static final String SELECT_ID = "Direction_select";
-		public static final String COPY_PASTE_ID = "Direction_Copy_and_Paste";
+		public static final String COPY_PASTE_ID = "Copy_and_Paste";
 	}
 	
 	public static class Error{

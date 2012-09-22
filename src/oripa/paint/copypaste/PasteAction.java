@@ -63,13 +63,16 @@ public class PasteAction extends GraphicMouseAction {
 	public Vector2d onMove(PaintContext context, AffineTransform affine,
 			boolean differentAction) {
 		
-		super.onMove(context, affine, differentAction);
+		Vector2d v = null;
+		v = super.onMove(context, affine, differentAction);
 		
-		Point2D.Double current = context.getLogicalMousePoint();
 
-		Vector2d v = new Vector2d(current.x, current.y);
 		
 		if (context.getLineCount() > 0) {
+			if(v == null) {
+				Point2D.Double current = context.getLogicalMousePoint();
+				v = new Vector2d(current.x, current.y);
+			}
 			
 			Vector2d origin = originHolder.getOrigin(context);
 			double ox = origin.x;

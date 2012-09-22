@@ -51,6 +51,7 @@ import oripa.FilterDB;
 import oripa.ORIPA;
 import oripa.bind.BinderInterface;
 import oripa.bind.CopyAndPasteActionWrapper;
+import oripa.bind.EditOutlineActionWrapper;
 import oripa.bind.PaintActionBinder;
 import oripa.doc.Doc;
 import oripa.doc.exporter.ExporterXML;
@@ -75,11 +76,12 @@ import oripa.view.PropertyDialog;
 import oripa.view.uipanel.UIPanel;
 import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
-import oripa.viewsetting.uipanel.OnNormalCommandButtonSelected;
+import oripa.viewsetting.main.ScreenUpdater;
+import oripa.viewsetting.uipanel.OnInputCommandButtonSelected;
 import oripa.viewsetting.uipanel.OnSelectButtonSelected;
 
 public class MainFrame extends JFrame 
-implements ActionListener, ComponentListener, WindowListener, KeyListener, Observer{
+implements ActionListener, ComponentListener, WindowListener, Observer{
 	private BinderInterface<GraphicMouseAction> binder = new PaintActionBinder();
 
 	private class CopyPasteListener implements ActionListener{
@@ -99,7 +101,7 @@ implements ActionListener, ComponentListener, WindowListener, KeyListener, Obser
 					listener.actionPerformed(e);
 				}
 				
-				(new OnNormalCommandButtonSelected()).changeViewSetting();
+				(new OnInputCommandButtonSelected()).changeViewSetting();
 				mainScreen.repaint();
 			}
 	
@@ -114,6 +116,7 @@ implements ActionListener, ComponentListener, WindowListener, KeyListener, Obser
 	
 	private MainFrameSettingDB setting = MainFrameSettingDB.getInstance();
 	private MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
+	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
 	
 	MainScreen mainScreen;
 	private JMenu menuFile = new JMenu(ORIPA.res.getString(StringID.Menu.FILE_ID));
@@ -135,7 +138,7 @@ implements ActionListener, ComponentListener, WindowListener, KeyListener, Obser
 
 	
 	private JMenuItem menuItemChangeOutline = (JMenuItem) binder.createButton(
-			JMenuItem.class, new EditOutlineAction(), StringID.Command.CONTOUR_ID);
+			JMenuItem.class, new EditOutlineActionWrapper(), StringID.Command.CONTOUR_ID);
 //	private JMenuItem menuItemChangeOutline = new JMenuItem(ORIPA.res.getString("EditContour"));
 
 	private JMenuItem menuItemCopyAndPaste = new JMenuItem();
@@ -179,11 +182,11 @@ implements ActionListener, ComponentListener, WindowListener, KeyListener, Obser
 		
 		setting.addObserver(this);
 		
-		addKeyListener(this);
+//		addKeyListener(this);
 		
 		
 		menuItemCopyAndPaste.setText(ORIPA.res.getString(StringID.Menu.COPY_PASTE_ID));
-		menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
+//		menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 		
 		mainScreen = new MainScreen();
 		addWindowListener(this);
@@ -415,7 +418,7 @@ implements ActionListener, ComponentListener, WindowListener, KeyListener, Obser
 //			Globals.preEditMode = Globals.editMode;
 //			Globals.editMode = Constants.EditMode.EDIT_OUTLINE;
 			
-			Globals.setMouseAction(new EditOutlineAction());
+//			Globals.setMouseAction(new EditOutlineAction());
 			
 			
 		} else if (e.getSource() == menuItemExit) {
@@ -724,28 +727,27 @@ implements ActionListener, ComponentListener, WindowListener, KeyListener, Obser
 	public void windowDeactivated(WindowEvent arg0) {
 	}
 	
-	@Override
-	public void keyTyped(KeyEvent e) {
-		if(e.isControlDown()){
-			screenSetting.requestRedraw();
-		}		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.isControlDown()){
-			screenSetting.requestRedraw();
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		if(e.isControlDown()){
-			screenSetting.requestRedraw();
-		}
-	
-	}
+//	@Override
+//	public void keyTyped(KeyEvent e) {
+//		if(e.isControlDown()){
+//			screenUpdater.updateScreen();
+//		}
+//	}
+//
+//	@Override
+//	public void keyPressed(KeyEvent e) {
+//		if(e.isControlDown()){
+//			screenUpdater.updateScreen();
+//		}
+//	}
+//
+//	@Override
+//	public void keyReleased(KeyEvent e) {
+//		if(e.isControlDown()){
+//			screenUpdater.updateScreen();
+//		}
+//	
+//	}
 
 	
 	

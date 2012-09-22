@@ -58,6 +58,7 @@ import oripa.paint.ElementSelector;
 import oripa.paint.Globals;
 import oripa.paint.PaintContext;
 import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.ScreenUpdater;
 
 
 public class MainScreen extends JPanel
@@ -66,7 +67,8 @@ public class MainScreen extends JPanel
 
 
 	private MainScreenSettingDB setting = MainScreenSettingDB.getInstance();
-
+	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+	
 	private boolean bDrawFaceID = false;
 	private Image bufferImage;
 	private Graphics2D bufferg;
@@ -90,7 +92,7 @@ public class MainScreen extends JPanel
 		addMouseWheelListener(this);
 		addComponentListener(this);
 
-		
+		screenUpdater.addObserver(this);
 		setting.addObserver(this);
 
 		scale = 1.5;
@@ -495,9 +497,10 @@ public class MainScreen extends JPanel
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if(o.toString().equals(setting.getName())){
+		String name = o.toString();
+		if(name.equals(screenUpdater.getName())){
 			if(arg != null){
-				if(arg.equals(MainScreenSettingDB.REDRAW_REQUESTED)){
+				if(arg.equals(ScreenUpdater.REDRAW_REQUESTED)){
 					repaint();    		
 				}
 			}

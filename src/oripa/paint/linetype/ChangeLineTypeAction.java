@@ -26,7 +26,8 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 			UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 			for (OriLine l : selectedLines) {
 				// Change line type
-				ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
+				ORIPA.doc.alterLineType(l, setting.getTypeFrom(), setting.getTypeTo());
+				//ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
 			}
 
 		}

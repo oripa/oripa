@@ -1,8 +1,7 @@
 package oripa.history;
 
-import java.awt.event.ActionListener;
 
-public class CommandHistory extends oripa.undo.UndoManager<ActionListener[]>{
+public class CommandHistory extends oripa.undo.UndoManager<HistoryInfo>{
 
 	private static CommandHistory instance = null;
 	

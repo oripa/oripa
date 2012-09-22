@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 
+import oripa.paint.Globals;
+
 public class PushCommandAction implements ActionListener{
 	CommandHistory history = CommandHistory.getInstance();
 	@Override
@@ -13,7 +15,9 @@ public class PushCommandAction implements ActionListener{
 			return;
 		}
 		AbstractButton source = (AbstractButton)e.getSource();
-		history.push(source.getActionListeners());			
+		history.push(new HistoryInfo(
+				Globals.mouseAction.getEditMode(), source.getActionListeners()));			
+					
 		
 		
 	}

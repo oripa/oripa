@@ -8,7 +8,7 @@ public class GetCachedCommandAction  implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		ActionListener[] actions = history.getCache();
+		ActionListener[] actions = history.getCache().listeners;
 		if(actions == null){
 			return;
 		}

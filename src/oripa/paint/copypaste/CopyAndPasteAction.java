@@ -43,6 +43,15 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 		return this;
 	}
 	
+	
+	
+//	@Override
+//	public void onRightClick(PaintContext context, AffineTransform affine,
+//			boolean differentAction) {
+//		// TODO Auto-generated method stub
+//		super.onRightClick(context, affine, differentAction);
+//	}
+
 	@Override
 	public void doAction(PaintContext context, Double point,
 			boolean differntAction) {

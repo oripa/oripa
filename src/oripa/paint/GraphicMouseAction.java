@@ -14,6 +14,7 @@ import oripa.ORIPA;
 import oripa.geom.OriLine;
 import oripa.paint.geometry.GeometricOperation;
 import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.ScreenUpdater;
 
 public abstract class GraphicMouseAction {
 
@@ -100,8 +101,8 @@ public abstract class GraphicMouseAction {
 		state = state.doAction(context, 
 				point, differntAction);
 
-		MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
-		screenSetting.requestRedraw();
+		ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+		screenUpdater.updateScreen();
 	}
 
 	/**
@@ -133,7 +134,7 @@ public abstract class GraphicMouseAction {
 	 * @param context
 	 * @param affine
 	 * @param differentAction
-	 * @return close vertex
+	 * @return close vertex. null if not found.
 	 */
 	public Vector2d onMove(
 			PaintContext context, AffineTransform affine, boolean differentAction) {

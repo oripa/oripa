@@ -1454,6 +1454,11 @@ public class Doc {
 
     }
 
+    public void alterLineType(OriLine l, TypeForChange from,  TypeForChange to) {
+    	LineTypeChanger changer = new LineTypeChanger();
+    	changer.alterLineType(l, this, from, to);
+    }
+    
     public void alterLineType(OriLine l, int lineTypeFromIndex,  int lineTypeToIndex) {
         if (lineTypeFromIndex == 1 /*M*/ && l.typeVal != OriLine.TYPE_RIDGE) {
             return;

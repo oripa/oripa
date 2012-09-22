@@ -4,8 +4,11 @@ import java.util.Observable;
 
 public abstract class ViewSettingDataBase extends Observable {
 
-	public abstract String getName();
+//	public abstract String getName();
 	
+	public String getName(){
+		return this.getClass().getName();		
+	}
 
 	
 	
