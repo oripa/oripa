@@ -4,14 +4,16 @@ ORIPA S
 A great drawer ORIPA is originally composed by MITANI Jun for origami crease pattern.
 "ORIPA S" fixes some bugs and provides function of saving as image.
 
-Executable file: https://dl.dropbox.com/u/45296904/oripaS.jar
+Executable file(stable): https://dl.dropbox.com/u/45296904/oripaS1_21.jar
 
+For developer: By my mistake, the master branch is now including bug on right click action.
 
 History of updates
 -------
+The latest is of stable version.
 
 * __2012/09/17 Bug fix:__
-    * Behavior of right click on copy-and-paste mode becomes the same as original ORIPA. It will get back to "Select" mode.
+    * Behavior of right click on copy-and-paste mode becomes similar to original ORIPA. It will get back to "Select" mode.
 <p></p>
 
 
@@ -48,6 +50,12 @@ Known bugs
 Next challenge(s)
 --------
 * drawing copyright on saved picture.
+
+What going on
+---------
+You can try the followings with unstable version.
+* Cut-and-copy mode by Ctrl+x. 
+* Emulating the original behavior of right click on copy-and-paste mode and editing contour.
 
 
 The original read-me text by MITANI Jun:
