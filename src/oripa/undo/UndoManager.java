@@ -26,6 +26,14 @@ public class UndoManager<Backup> {
 		return undoStack.pop();
 	}
 
+	public Backup peek(){
+		if (undoStack.isEmpty()) {
+			return null;
+		}
+
+		return undoStack.peek();
+	}
+	
 	public boolean isChanged(){
 		return changed;
 	}

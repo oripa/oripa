@@ -6,9 +6,8 @@ import oripa.paint.PaintContext;
 
 public class OriginHolder {
 
+//--------------------------------------------------------------
 	private static OriginHolder holder = null;
-	
-	private Vector2d origin = null;
 	
 	private OriginHolder(){}
 	
@@ -19,6 +18,9 @@ public class OriginHolder {
 		
 		return holder;
 	}
+//--------------------------------------------------------------
+
+	private Vector2d origin = null;
 	
 	public void setOrigin(Vector2d p){
 		origin = p;

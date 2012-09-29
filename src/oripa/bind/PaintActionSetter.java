@@ -16,11 +16,11 @@ import oripa.viewsetting.main.ScreenUpdater;
  * @author koji
  *
  */
-public class CommandSetter implements ActionListener{
+public class PaintActionSetter implements ActionListener{
 	
 	private GraphicMouseAction mouseAction;
 	
-	public CommandSetter(GraphicMouseAction mouseAction) {
+	public PaintActionSetter(GraphicMouseAction mouseAction) {
 		this.mouseAction = mouseAction;
 	}
 	

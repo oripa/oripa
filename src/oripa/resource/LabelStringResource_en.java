@@ -6,25 +6,26 @@ public class LabelStringResource_en extends ListResourceBundle {
 
 		
 	    static final Object[][] strings = { 
-	        { StringID.Menu.TITLE_ID, "ORIPA S " + Version.ORIPAS_VERSION + 
+	        { StringID.Main.TITLE_ID, "ORIPA S " + Version.ORIPAS_VERSION + 
 	        	": Origami Pattern Editor based on ORIPA" + "  v" + Version.ORIPA_VERSION }, 
-	        { StringID.Menu.FILE_ID, "File" }, 
-	        { StringID.Menu.EDIT_ID, "Edit" }, 
-	        { StringID.Menu.HELP_ID, "Help" }, 
-	        { StringID.Menu.NEW_ID, "New" }, 
-	        { StringID.Menu.OPEN_ID, "Open" }, 
-	        { StringID.Menu.SAVE_ID, "Save" }, 
-	        { StringID.Menu.SAVE_AS_ID, "Save As ..." }, 
-	        { StringID.Menu.SAVE_AS_IMAGE_ID, "Save As Image ..." }, 
-	        { StringID.Menu.EXPORT_DXF_ID, "Export (DXF)" }, 
-	        { StringID.Menu.EDIT_CONTOUR_ID, "Edit Contour" }, 
-	        { StringID.Menu.PROPERTY_ID, "Property" }, 
-	        { StringID.Menu.EXIT_ID, "Exit" }, 
-	        { StringID.Menu.ABOUT_ID, "About" }, 
-	        { StringID.Menu.UNDO_ID, "Undo" }, 
-	        { StringID.Menu.COPY_PASTE_ID, "Copy and Paste" }, 
-	        { StringID.Menu.CONTOUR_ID, "Edit Contour" }, 
-	        { StringID.Menu.SELECT_ALL_ID, "select all"},
+	        { StringID.Main.FILE_ID, "File" }, 
+	        { StringID.Main.EDIT_ID, "Edit" }, 
+	        { StringID.Main.HELP_ID, "Help" }, 
+	        { StringID.Main.NEW_ID, "New" }, 
+	        { StringID.Main.OPEN_ID, "Open" }, 
+	        { StringID.Main.SAVE_ID, "Save" }, 
+	        { StringID.Main.SAVE_AS_ID, "Save As ..." }, 
+	        { StringID.Main.SAVE_AS_IMAGE_ID, "Save As Image ..." }, 
+	        { StringID.Main.EXPORT_DXF_ID, "Export (DXF)" }, 
+	        { StringID.Main.EDIT_CONTOUR_ID, "Edit Contour" }, 
+	        { StringID.Main.PROPERTY_ID, "Property" }, 
+	        { StringID.Main.EXIT_ID, "Exit" }, 
+	        { StringID.Main.ABOUT_ID, "About" }, 
+	        { StringID.Main.UNDO_ID, "Undo" }, 
+	        { StringID.Main.COPY_PASTE_ID, "Copy and Paste" }, 
+	        { StringID.Main.CUT_PASTE_ID, "Cut and Paste" }, 
+	        { StringID.Main.CONTOUR_ID, "Edit Contour" }, 
+	        { StringID.Main.SELECT_ALL_ID, "select all"},
 	        
 	        
 	        { StringID.UI.AUX_ID, "Aux" }, 
@@ -34,12 +35,23 @@ public class LabelStringResource_en extends ListResourceBundle {
 	        { StringID.UI.INPUT_LINE_ID, "Input Line" }, 
 	        { StringID.UI.SELECT_ID, "Select" }, 
 	        { StringID.UI.DELETE_LINE_ID, "Delete Line" }, 
+	        
 	        { StringID.UI.SHOW_GRID_ID, "Show Grid" }, 
+	        { StringID.UI.SHOW_MV_ID, "Show M/V Lines"},
+	        { StringID.UI.SHOW_AUX_ID, "Show Aux Lines"},
+
 	        { StringID.UI.CHANGE_LINE_TYPE_ID, "Change Line Type" }, 
+	        { StringID.UI.CHANGE_LINE_TYPE_FROM_ID, "  from" }, 
+	        { StringID.UI.CHANGE_LINE_TYPE_TO_ID, "to" }, 
+	        
+	        
 	        { StringID.UI.ADD_VERTEX_ID, "Add Vertex" }, 
 	        { StringID.UI.DELETE_VERTEX_ID, "Delete Vertex" }, 
 	        { StringID.UI.MEASURE_ID, "Measure" }, 
 	        { StringID.UI.FOLD_ID, "Fold..." }, 
+	        { StringID.UI.FULL_ESTIMATION_ID, "Full Estimation"},
+	        { StringID.UI.CHECK_WINDOW_ID, "Check Window"},
+	        
 	        { StringID.UI.GRID_SIZE_CHANGE_ID, "Set" }, 
 	        { StringID.UI.SHOW_VERTICES_ID, "Show Vertices" }, 
 	        { StringID.UI.EDIT_MODE_ID, "Edit Mode" }, 
@@ -47,7 +59,6 @@ public class LabelStringResource_en extends ListResourceBundle {
 	        { StringID.UI.LENGTH_ID, "Length"},
 	        { StringID.UI.ANGLE_ID, "Angle"},
 	        { StringID.UI.GRID_DIVIDE_NUM_ID, "Div Num"}
-
 
 	    
 	    };

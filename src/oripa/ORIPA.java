@@ -83,13 +83,8 @@ public class ORIPA {
         res = createResource(resourcePackage+".StringResource");
  
         ResourceHolder resources = ResourceHolder.getInstance();
-        resources.addResource(ResourceKey.EXPLANATION, 
-        		createResource(resourcePackage + ".ExplanationStringResource_en") );
-        resources.addResource(ResourceKey.LABEL, 
-        		createResource(resourcePackage + ".LabelStringResource_en") );
-        
         		
-        TITLE = resources.getString(ResourceKey.LABEL, StringID.Menu.TITLE_ID);
+        TITLE = resources.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID);
 //        TITLE = ORIPA.res.getString("Title") + "  v" + Version.ORIPA_VERSION;
 
         int uiPanelWidth = 0;//150;

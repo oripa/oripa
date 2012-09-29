@@ -1,7 +1,7 @@
 package oripa.resource;
 
 public class StringID {
-	public static class Menu{
+	public static class Main{
 		public static final String TITLE_ID = "Title";
 		public static final String FILE_ID =  "File"; 
 	    public static final String EDIT_ID =  "Edit"; 
@@ -18,6 +18,7 @@ public class StringID {
 	    public static final String UNDO_ID =  "Undo"; 
 	    public static final String ABOUT_ID =  "About"; 
 		public static final String COPY_PASTE_ID = "Copy_and_Paste";
+		public static final String CUT_PASTE_ID = "Cut_and_Paste";
 		public static final String CONTOUR_ID = "EditContour";
 		public static final String SELECT_ALL_ID = "selectAll";
 	}
@@ -66,14 +67,24 @@ public class StringID {
 	    public static final String INPUT_LINE_ID =  "UI_InputLine"; 
 	    public static final String SELECT_ID =  "UI_Select"; 
 	    public static final String DELETE_LINE_ID =  "UI_DeleteLine"; 
-	    public static final String SHOW_GRID_ID =  "UI_ShowGrid"; 
+
+	    public static final String SHOW_GRID_ID =  "UI_ShowGrid";
+	    public static final String SHOW_MV_ID =  "UI_ShowMountainValley";	    
+	    public static final String SHOW_AUX_ID =  "UI_ShowAux";	    
+	    public static final String SHOW_VERTICES_ID =  "UI_ShowVertices"; 
+
 	    public static final String CHANGE_LINE_TYPE_ID =  "UI_ChangeLineType"; 
+	    public static final String CHANGE_LINE_TYPE_FROM_ID =  "UI_ChangeLineTypeFrom"; 
+	    public static final String CHANGE_LINE_TYPE_TO_ID =  "UI_ChangeLineTypeTo"; 
+
 	    public static final String ADD_VERTEX_ID =  "UI_AddVertex"; 
 	    public static final String DELETE_VERTEX_ID =  "UI_DeleteVertex"; 
 	    public static final String MEASURE_ID =  "UI_Mesure"; 
 	    public static final String FOLD_ID =  "UI_Fold"; 
+		public static final String FULL_ESTIMATION_ID = "UI_FullEstimation";
+		public static final String CHECK_WINDOW_ID = "UI_CheckWindow";
+
 	    public static final String GRID_SIZE_CHANGE_ID =  "UI_GridSizeChange"; 
-	    public static final String SHOW_VERTICES_ID =  "UI_ShowVertices"; 
 	    public static final String EDIT_MODE_ID =  "UI_EditMode"; 
 	    public static final String LINE_INPUT_MODE_ID =  "UI_LineInputMode";
 	    public static final String LENGTH_ID =  "UI_Length";
@@ -82,6 +93,7 @@ public class StringID {
 		public static final String AUX_ID = "UI_Aux";
 		public static final String VALLEY_ID = "UI_Valley";
 		public static final String MOUNTAIN_ID = "UI_Mountain";
+		
     }
 
 

@@ -1,23 +1,22 @@
 package oripa.bind;
 
 import java.awt.event.ActionListener;
-import java.util.Collection;
 
 import javax.swing.AbstractButton;
 
-public interface BinderInterface<Command> {
+public interface BinderInterface<ToBeBound> {
 
-	public abstract AbstractButton createButton(
+	/**
+	 * 
+	 * @param buttonClass Class object of a button to be created
+	 * @param target An object to be bound to button.doClick()
+	 * @param textID {@code StringID} member for label
+	 * @return
+	 */
+	public AbstractButton createButton(
 			Class<? extends AbstractButton> buttonClass,
-			Command command, String id);
-
-	public abstract AbstractButton createMultiCommandButton(
-			Class<? extends AbstractButton> buttonClass,
-			Command[] commands, String id);
+			ToBeBound target, String id);
 	
-	public abstract Collection<ActionListener> getBoundListeners(
-			Command command, String id);
+//	public void setOptionalActionListeners(ActionListener[] others);
 
-	public abstract Collection<ActionListener> getBoundListeners(
-			Command[] commands, String id);
 }

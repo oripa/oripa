@@ -97,6 +97,20 @@ public class GeometricOperation {
 		return picked;
 	}
 
+	public static Vector2d pickVertexFromPickedLines(PaintContext context){
+
+		
+		NearestPoint nearestPosition;
+		nearestPosition = NearestVertexFinder.findFromPickedLine(context);
+		
+
+		Vector2d picked = null; 
+		if (nearestPosition.distance < 10.0 / context.scale) {
+			picked = nearestPosition.point;
+		}
+		
+		return picked;
+	}
 
 	public static OriLine pickLine(PaintContext context) {
 		return pickLine(context.getLogicalMousePoint(), context.scale);

@@ -3,6 +3,7 @@ package oripa.paint;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Stack;
 
 import javax.vecmath.Vector2d;
@@ -16,8 +17,9 @@ public class PaintContext {
 
 
 	private Stack<OriLine> pickedLines = new Stack<>();
-    
-    public Vector2d pickCandidateV = new Vector2d();
+    private boolean isPasting = false;	
+	
+	public Vector2d pickCandidateV = new Vector2d();
     public OriLine pickCandidateL = new OriLine();
 
 	public boolean dispGrid = true;
@@ -52,6 +54,19 @@ public class PaintContext {
 
 //--------------------------------------------------
     
+    public boolean isPasting() {
+		return isPasting;
+	}
+
+	public void startPasting() {
+		this.isPasting = true;
+	}
+	
+	public void finishPasting() {
+		this.isPasting = false;
+	}
+	
+
 	public void setLogicalMousePoint(Point2D.Double logicalPoint) {
 		this.mousePoint = logicalPoint;
 	}

@@ -11,6 +11,7 @@ import javax.vecmath.Vector2d;
 import oripa.geom.OriLine;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
+import oripa.paint.geometry.GeometricOperation;
 
 public class ChangeOriginAction extends GraphicMouseAction{
 
@@ -54,7 +55,8 @@ public class ChangeOriginAction extends GraphicMouseAction{
 	@Override
 	public Vector2d onMove(PaintContext context, AffineTransform affine,
 			boolean differentAction) {
-		Vector2d closeVertex = super.onMove(context, affine, false);
+		Vector2d closeVertex = GeometricOperation.pickVertexFromPickedLines(context);
+		context.pickCandidateV = closeVertex;
 		
 		if(closeVertex != null){
 			OriginHolder holder = OriginHolder.getInstance();

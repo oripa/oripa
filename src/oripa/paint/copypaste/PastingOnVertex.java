@@ -1,5 +1,6 @@
 package oripa.paint.copypaste;
 
+import java.awt.geom.Point2D.Double;
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
@@ -21,6 +22,22 @@ public class PastingOnVertex extends PickingVertex {
 	@Override
 	protected void undoAction(PaintContext context) {
 		ORIPA.doc.loadUndoInfo();
+	}
+
+
+	
+	
+
+	@Override
+	protected boolean onAct(PaintContext context, Double currentPoint,
+			boolean freeSelection) {
+		if(context.pickCandidateV == null){
+			return false;
+		}
+		
+		context.pushVertex(context.pickCandidateV);
+		
+		return true;
 	}
 
 

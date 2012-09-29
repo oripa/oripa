@@ -1,7 +1,6 @@
 package oripa.viewsetting.main;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import oripa.paint.Globals;
 import oripa.paint.GraphicMouseAction;
@@ -40,12 +39,12 @@ public class ScreenUpdater extends ViewSettingDataBase {
 	}
 
 	
-	private void updateIfCopyAndPaste(boolean changeToOrigin){
+	private void updateIfCopyAndPaste(boolean changeOrigin){
 		GraphicMouseAction action = Globals.getMouseAction();
 
 		if(action instanceof CopyAndPasteAction){
 			CopyAndPasteAction casted = (CopyAndPasteAction) action;
-			casted.changeAction(changeToOrigin);
+			casted.changeAction(changeOrigin);
 
 			updateScreen();
 		}

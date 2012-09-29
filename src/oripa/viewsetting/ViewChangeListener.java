@@ -3,11 +3,11 @@ package oripa.viewsetting;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ViewSettingActionListener implements ActionListener{
+public class ViewChangeListener implements ActionListener{
 
 	private ChangeViewSetting command;
 	
-	public ViewSettingActionListener(ChangeViewSetting command) {
+	public ViewChangeListener(ChangeViewSetting command) {
 		this.command = command;
 	}
 	

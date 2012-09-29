@@ -36,6 +36,11 @@ public class SelectLineAction extends RectangularSelectableAction {
 	public void recover(PaintContext context) {
 		context.clear(false);
 
+		Collection<OriLine> docLines = ORIPA.doc.lines;
+		if(docLines == null){
+			return;
+		}
+		
 		for(OriLine line : ORIPA.doc.lines){
 			if(line.selected){
 				context.pushLine(line);

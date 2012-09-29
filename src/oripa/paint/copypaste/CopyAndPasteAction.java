@@ -13,22 +13,33 @@ import oripa.paint.PaintContext;
 
 public class CopyAndPasteAction extends GraphicMouseAction {
 
-	ChangeOriginAction originAction = new ChangeOriginAction();
-	PasteAction pasteAction = new PasteAction();
+	private ChangeOriginAction originAction = new ChangeOriginAction();
+	private PasteAction pasteAction = new PasteAction();
 	
-	GraphicMouseAction action = pasteAction;
+	private GraphicMouseAction action = pasteAction;
 
 	
 	public CopyAndPasteAction() {
-		setEditMode(EditMode.INPUT);
+		setEditMode(EditMode.OTHER);
 		setNeedSelect(true);
 	}
-	
+
+	private OriginHolder originHolder = OriginHolder.getInstance();
+
 	@Override
 	public void recover(PaintContext context) {
+		originHolder.getOrigin(context);
 		action.recover(context);
 	}
 	
+	
+	
+	@Override
+	public void destroy(PaintContext context) {
+		originHolder.setOrigin(null);
+		action.destroy(context);
+	}
+
 	@Override
 	public void undo(PaintContext context) {
 		ORIPA.doc.loadUndoInfo();
@@ -55,7 +66,6 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	@Override
 	public void doAction(PaintContext context, Double point,
 			boolean differntAction) {
-		// TODO Auto-generated method stub
 		action.doAction(context, point, differntAction);
 	}
 	
@@ -78,7 +88,10 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 		action.onRelease(context, affine, differentAction);
 	}
 	
-	
+	/**
+	 * 
+	 * @param changingOrigin {@code true} for selecting origin, {@code false} for pasting.
+	 */
 	public void changeAction(boolean changingOrigin){
 		if(changingOrigin){
 			action = originAction;

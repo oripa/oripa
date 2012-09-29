@@ -15,10 +15,16 @@ import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 import oripa.paint.geometry.GeometricOperation;
+import oripa.paint.geometry.NearestPoint;
+import oripa.paint.geometry.NearestVertexFinder;
 
 public class PasteAction extends GraphicMouseAction {
 
 
+	private Collection<OriLine> shiftedLines = new LinkedList<>();
+	private OriginHolder originHolder = OriginHolder.getInstance();
+
+	
 	public PasteAction(){
 		setEditMode(EditMode.INPUT);
 		setNeedSelect(true);
@@ -31,6 +37,8 @@ public class PasteAction extends GraphicMouseAction {
 	@Override
 	public void recover(PaintContext context) {
 		context.clear(false);
+		shiftedLines.clear();
+		context.startPasting();
 
 		for(OriLine line : ORIPA.doc.lines){
 			if(line.selected){
@@ -40,6 +48,14 @@ public class PasteAction extends GraphicMouseAction {
 
 		ORIPA.doc.prepareForCopyAndPaste();
 
+	}
+
+	
+
+	@Override
+	public void destroy(PaintContext context) {
+		super.destroy(context);
+		context.finishPasting();
 	}
 
 
@@ -57,31 +73,41 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 
-	private Collection<OriLine> shiftedLines = new LinkedList<>();
-	private OriginHolder originHolder = OriginHolder.getInstance();
 	@Override
 	public Vector2d onMove(PaintContext context, AffineTransform affine,
 			boolean differentAction) {
 		
-		Vector2d v = null;
-		v = super.onMove(context, affine, differentAction);
-		
+		Vector2d closeVertex = super.onMove(context, affine, differentAction);
+		Vector2d closeVertexOfLines = GeometricOperation.pickVertexFromPickedLines(context);
 
+		if(closeVertex == null){
+			closeVertex = closeVertexOfLines;
+		}
+		
+		
+		Point2D.Double current = context.getLogicalMousePoint();
+		if(closeVertex != null && closeVertexOfLines != null){
+
+			closeVertex = NearestVertexFinder.findNearestOf(
+					current, closeVertex, closeVertexOfLines);
+
+		}
+
+		context.pickCandidateV = closeVertex;
 		
 		if (context.getLineCount() > 0) {
-			if(v == null) {
-				Point2D.Double current = context.getLogicalMousePoint();
-				v = new Vector2d(current.x, current.y);
+			if(closeVertex == null) {
+				closeVertex = new Vector2d(current.x, current.y);
 			}
 			
 			Vector2d origin = originHolder.getOrigin(context);
 			double ox = origin.x;
 			double oy = origin.y;
 			shiftedLines = 
-					GeometricOperation.shiftLines(context.getLines(), v.x - ox, v.y -oy);
+					GeometricOperation.shiftLines(context.getLines(), closeVertex.x - ox, closeVertex.y -oy);
 
 		}		
-		return v;
+		return closeVertex;
 	}
 
 
@@ -92,8 +118,13 @@ public class PasteAction extends GraphicMouseAction {
 
 		drawPickCandidateVertex(g2d, context);
 
+		Vector2d origin = originHolder.getOrigin(context);
+
+		if(origin == null){
+			return;
+		}
+		
 		if(shiftedLines.isEmpty() == false){
-			Vector2d origin = originHolder.getOrigin(context);
 			double ox = origin.x;
 			double oy = origin.y;
 			
