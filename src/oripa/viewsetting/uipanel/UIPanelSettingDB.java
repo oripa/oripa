@@ -133,7 +133,7 @@ public class UIPanelSettingDB extends ViewSettingDataBase{
 		this.setChanged();
 	}
 	
-	public void selectedeleteLineMode(){
+	public void selectDeleteLineMode(){
 		selectedMode = EditMode.DELETE_LINE;
 		this.setChanged();
 	}
@@ -143,13 +143,13 @@ public class UIPanelSettingDB extends ViewSettingDataBase{
 		this.setChanged();
 	}
 
-	public void selectedeleteVertexMode(){
+	public void selectDeleteVertexMode(){
 		selectedMode = EditMode.DELETE_VERTEX;
 		this.setChanged();
 	}
 
 	
-	public EditMode getselectedMode(){
+	public EditMode getSelectedMode(){
 		EditMode ret = selectedMode;
 
 		selectedMode = EditMode.NONE;

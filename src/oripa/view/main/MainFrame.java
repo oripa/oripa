@@ -46,9 +46,11 @@ import javax.swing.KeyStroke;
 import oripa.Config;
 import oripa.FilterDB;
 import oripa.ORIPA;
+import oripa.bind.ButtonFactory;
 import oripa.bind.CopyAndPasteActionWrapper;
 import oripa.bind.CopyPasteErrorListener;
 import oripa.bind.EditOutlineActionWrapper;
+import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.doc.Doc;
@@ -111,47 +113,31 @@ public class MainFrame extends JFrame implements ActionListener,
 	// -----------------------------------------------------------------------------------------------------------
 	// Binding state to button
 
-	private PaintBoundStateFactory stateFactory = new PaintBoundStateFactory(
-			this, new ActionListener[] {});
-	private ApplicationStateButtonBinder buttonBinder = new ApplicationStateButtonBinder();
-
+	ButtonFactory buttonFactory = new PaintActionButtonFactory();
+	
 	/**
 	 * For changing outline
 	 */
-	private JMenuItem menuItemChangeOutline = (JMenuItem) buttonBinder.createButton(
-			JMenuItem.class, stateFactory.create(
-					new EditOutlineActionWrapper(),
-					StringID.Command.CONTOUR_ID, new ActionListener[] {new ViewChangeListener(new ChangeOnOtherCommandButtonSelected())}),
-					StringID.Command.CONTOUR_ID);
+	private JMenuItem menuItemChangeOutline = (JMenuItem) buttonFactory.create(
+			this, JMenuItem.class, StringID.EDIT_CONTOUR_ID);
 
 	/**
 	 * For selecting all lines
 	 */
-	private JMenuItem menuItemSelectAll = (JMenuItem) buttonBinder.createButton(
-			JMenuItem.class, stateFactory.create(
-					new SelectAllLineAction(mouseContext),
-					StringID.Command.SELECT_ID, new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())}),
-					StringID.Main.SELECT_ALL_ID);
+	private JMenuItem menuItemSelectAll = (JMenuItem) buttonFactory.create(
+			this, JMenuItem.class, StringID.SELECT_ALL_LINE_ID);
 
 	/**
 	 * For starting copy-and-paste
 	 */
-	private JMenuItem menuItemCopyAndPaste = (JMenuItem) buttonBinder.createButton(
-			JMenuItem.class, stateFactory.create(
-					new CopyAndPasteActionWrapper(false),
-					new CopyPasteErrorListener(),
-					StringID.Command.COPY_PASTE_ID, new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())}),
-					StringID.Command.COPY_PASTE_ID);
+	private JMenuItem menuItemCopyAndPaste = (JMenuItem) buttonFactory.create(
+			this, JMenuItem.class, StringID.COPY_PASTE_ID);
 
 	/**
 	 * For starting cut-and-paste
 	 */
-	private JMenuItem menuItemCutAndPaste = (JMenuItem) buttonBinder.createButton(
-			JMenuItem.class, stateFactory.create(
-					new CopyAndPasteActionWrapper(true),
-					new CopyPasteErrorListener(),
-					StringID.Command.COPY_PASTE_ID, new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())}),
-					StringID.Command.COPY_PASTE_ID);
+	private JMenuItem menuItemCutAndPaste = (JMenuItem) buttonFactory.create(
+			this, JMenuItem.class, StringID.CUT_PASTE_ID);
 
 	// -----------------------------------------------------------------------------------------------------------
 

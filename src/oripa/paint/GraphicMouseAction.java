@@ -38,6 +38,10 @@ public abstract class GraphicMouseAction {
 		this.state = state;
 	}
 
+	protected final ActionState getActionState(){
+		return state;
+	}
+	
 	protected final boolean currentStateIs(Class<? extends ActionState> s){
 		return state.equals(s);
 	}
@@ -118,13 +122,7 @@ public abstract class GraphicMouseAction {
 	}
 
 	public void undo(PaintContext context){
-		if(context.getLineCount() > 0 || context.getVertexCount() > 0){
-			state = state.undo(context);
-		}
-		else {
-			ORIPA.doc.loadUndoInfo();
-		}
-
+		BasicUndo.undo(state, context);
 	}
 
 	/**

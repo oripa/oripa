@@ -7,7 +7,14 @@ public class SelectAllLineAction extends SelectLineAction {
 
 	public SelectAllLineAction(PaintContext context) {
 		super(context);
-		ORIPA.doc.selectAllOriLines();
 	}
+
+	@Override
+	public void recover(PaintContext context) {
+		ORIPA.doc.selectAllOriLines();
+		super.recover(context);
+	}
+	
+
 
 }

@@ -8,6 +8,8 @@ public class ChangeOnSelectButtonSelected implements ChangeViewSetting {
 	public void changeViewSetting() {
 		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 		
+		setting.selectSelectMode();
+		
 		setting.setValuePanelVisible(false);
 		
 		setting.setAlterLineTypePanelVisible(false);

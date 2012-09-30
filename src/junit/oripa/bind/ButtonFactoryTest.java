@@ -40,13 +40,13 @@ public class ButtonFactoryTest {
 		// edit buttons
 		assertButtonCreated(parent, StringID.SELECT_ID, true);
 		assertButtonCreated(parent, StringID.ADD_VERTEX_ID, true); 
+		assertButtonCreated(parent, StringID.CHANGE_LINE_TYPE_ID, true); 
+		assertButtonCreated(parent, StringID.DELETE_LINE_ID, true); 
+		assertButtonCreated(parent, StringID.DELETE_VERTEX_ID, true); 
 		assertButtonCreated(parent, StringID.COPY_PASTE_ID, true);
 		assertButtonCreated(parent, StringID.CUT_PASTE_ID, true);
 		assertButtonCreated(parent, StringID.EDIT_CONTOUR_ID, true); 
 		assertButtonCreated(parent, StringID.SELECT_ALL_LINE_ID, true);
-		assertButtonCreated(parent, StringID.CHANGE_LINE_TYPE_ID, true); 
-		assertButtonCreated(parent, StringID.DELETE_LINE_ID, true); 
-		assertButtonCreated(parent, StringID.DELETE_VERTEX_ID, true); 
 	}
 
 	private void assertButtonCreated(Component parent, String id, boolean hasLabel){
