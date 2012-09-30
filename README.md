@@ -6,6 +6,19 @@ A great drawer ORIPA is originally composed by MITANI Jun for origami crease pat
 
 Executable file(stable): https://dl.dropbox.com/u/45296904/oripaS.jar
 
+Known bugs
+--------
+* Nothing? Please tell me if you find.
+
+
+What going on
+---------
+<!-- You can try the following(s) with unstable version. -->
+* Erasing vertex automatically after deleting selected lines.
+
+Next challenge(s)
+--------
+* Drawing copyright on saved picture.
 
 History of updates
 -------
@@ -46,19 +59,6 @@ The latest is of stable version.
 * __2012/06/23 Saving as JPG or PNG is available.__
 <p></p>
 
-
-Known bugs
---------
-* behavior of editing contour is different from the original ORIPA.
-
-Next challenge(s)
---------
-* drawing copyright on saved picture.
-
-What going on
----------
-You can try the followings with unstable version.
-* Emulating the original behavior of right click on editing contour.
 
 
 The original read-me text by MITANI Jun:

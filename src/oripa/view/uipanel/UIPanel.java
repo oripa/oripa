@@ -52,20 +52,21 @@ import javax.swing.border.EtchedBorder;
 import oripa.Config;
 import oripa.ORIPA;
 import oripa.appstate.ApplicationState;
-import oripa.bind.BinderInterface;
-import oripa.bind.PaintActionSetter;
-import oripa.bind.ApplicationStateButtonBinder;
-import oripa.bind.ViewChangeBinder;
-import oripa.bind.state.InputCommandStatePopper;
+import oripa.appstate.InputCommandStatePopper;
+import oripa.appstate.StatePopper;
+import oripa.bind.binder.ApplicationStateButtonBinder;
+import oripa.bind.binder.BinderInterface;
+import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.PaintBoundState;
 import oripa.bind.state.PaintBoundStateFactory;
-import oripa.bind.state.StatePopper;
+import oripa.bind.state.action.PaintActionSetter;
 import oripa.doc.TypeForChange;
 import oripa.file.ImageResourceLoader;
 import oripa.folder.Folder;
 import oripa.geom.OriLine;
 import oripa.paint.EditMode;
 import oripa.paint.Globals;
+import oripa.paint.LineTypeSetter;
 import oripa.paint.PaintContext;
 import oripa.paint.addvertex.AddVertexAction;
 import oripa.paint.bisector.AngleBisectorAction;
@@ -94,11 +95,13 @@ import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.ScreenUpdater;
 import oripa.viewsetting.model.ModelFrameSettingDB;
 import oripa.viewsetting.render.RenderFrameSettingDB;
-import oripa.viewsetting.uipanel.OnByValueButtonSelected;
-import oripa.viewsetting.uipanel.OnChangeTypeButtonSelected;
-import oripa.viewsetting.uipanel.OnInputCommandButtonSelected;
-import oripa.viewsetting.uipanel.OnOtherCommandButtonSelected;
-import oripa.viewsetting.uipanel.OnSelectButtonSelected;
+import oripa.viewsetting.uipanel.FromLineTypeItemListener;
+import oripa.viewsetting.uipanel.ChangeOnByValueButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnAlterTypeButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnPaintInputButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnOtherCommandButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnSelectButtonSelected;
+import oripa.viewsetting.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.uipanel.UIPanelSettingDB;
 
 public class UIPanel extends JPanel 
@@ -144,38 +147,38 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 	//	JRadioButton editModeInputLineButton = new JRadioButton("InputLine", true);
 	JRadioButton editModeInputLineButton = (JRadioButton) viewChangeBinder.createButton(
-			JRadioButton.class, new OnInputCommandButtonSelected(), StringID.UI.INPUT_LINE_ID);
+			JRadioButton.class, new ChangeOnPaintInputButtonSelected(), StringID.UI.INPUT_LINE_ID);
 
 	JRadioButton editModePickLineButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, 
 			new PaintBoundState(new SelectLineAction(mouseContext), StringID.Command.SELECT_ID, 
-					new ActionListener[] {new ViewChangeListener(new OnSelectButtonSelected())}), 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())}), 
 			StringID.UI.SELECT_ID);
 
 	JRadioButton editModeDeleteLineButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, 
 			new PaintBoundState(new DeleteLineAction(), StringID.Command.DELETE_LINE_ID, 
-					new ActionListener[] {new ViewChangeListener(new OnOtherCommandButtonSelected())}), 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnOtherCommandButtonSelected())}), 
  
 			StringID.UI.DELETE_LINE_ID);
 
 	JRadioButton editModeLineTypeButton = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, 
 			new PaintBoundState(new ChangeLineTypeAction(), StringID.Command.CHANGE_LINE_TYPE_ID, 
-					new ActionListener[] {new ViewChangeListener(new OnChangeTypeButtonSelected())}), 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnAlterTypeButtonSelected())}), 
 			 
 			StringID.UI.CHANGE_LINE_TYPE_ID);
 
 	JRadioButton editModeAddVertex =(JRadioButton) paintBinder.createButton(
 			JRadioButton.class, 
 			new PaintBoundState(new AddVertexAction(), StringID.Command.ADD_VERTEX_ID, 
-					new ActionListener[] {new ViewChangeListener(new OnOtherCommandButtonSelected())}),			 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnOtherCommandButtonSelected())}),			 
 			StringID.UI.ADD_VERTEX_ID);
 
 	JRadioButton editModeDeleteVertex = (JRadioButton) paintBinder.createButton(
 			JRadioButton.class, 
 			new PaintBoundState(new DeleteVertexAction(), StringID.Command.DELETE_VERTEX_ID, 
-					new ActionListener[] {new ViewChangeListener(new OnOtherCommandButtonSelected())}),
+					new ActionListener[] {new ViewChangeListener(new ChangeOnOtherCommandButtonSelected())}),
 					StringID.UI.DELETE_VERTEX_ID);
 
 	//---------------------------------------------------------------------------------------------------------------------------
@@ -192,7 +195,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 	// Binding how to enter the line
 
 	private PaintBoundStateFactory stateFactory = new PaintBoundStateFactory(this, 
-			new ActionListener[] {new ButtonSelectionLinkedListener(new OnInputCommandButtonSelected(), editModeInputLineButton)} );
+			new ActionListener[] {new ButtonSelectionLinkedListener(new ChangeOnPaintInputButtonSelected(), editModeInputLineButton)} );
 	private BinderInterface<ApplicationState<EditMode>> inputCommandBinder = new ApplicationStateButtonBinder();
 	
 	JRadioButton lineInputDirectVButton = (JRadioButton) inputCommandBinder.createButton(
@@ -242,7 +245,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 			JRadioButton.class, 
 			stateFactory.create(new LineByValueAction(), 
 					StringID.Command.BY_VALUE_ID, 
-					new ActionListener[] {new ViewChangeListener(new OnByValueButtonSelected())} ),
+					new ActionListener[] {new ViewChangeListener(new ChangeOnByValueButtonSelected())} ),
 			StringID.Command.BY_VALUE_ID);
 
 	JRadioButton lineInputPBisectorButton = (JRadioButton) inputCommandBinder.createButton(
@@ -602,12 +605,12 @@ implements ActionListener, PropertyChangeListener, Observer {
 		buttonLength.addActionListener(
 				new PaintActionSetter(new LengthMeasuringAction()));
 		buttonLength.addActionListener(
-				new ButtonSelectionLinkedListener(new OnByValueButtonSelected(), editModeInputLineButton));
+				new ButtonSelectionLinkedListener(new ChangeOnByValueButtonSelected(), editModeInputLineButton));
 
 		buttonAngle.addActionListener(
 				new PaintActionSetter(new AngleMeasuringAction()));
 		buttonAngle.addActionListener(
-				new ButtonSelectionLinkedListener(new OnByValueButtonSelected(), editModeInputLineButton));
+				new ButtonSelectionLinkedListener(new ChangeOnByValueButtonSelected(), editModeInputLineButton));
 
 		add(subPanel1);
 		add(subPanel2);
@@ -690,69 +693,39 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 		ValueDB.getInstance().addObserver(this);
 
+		addListenerToComponents();
+
+		//-------------------------------------------------
+		// Initialize selection
+		//-------------------------------------------------
+
+		// of paint command
 		lineInputDirectVButton.doClick();
 		
-		
-		addListenerToComponents();
+		// of line type on DB
+		settingDB.setTypeFrom((TypeForChange)alterLine_combo_from.getSelectedItem());
+		settingDB.setTypeTo((TypeForChange)alterLine_combo_to.getSelectedItem());
 
 	}
 
 	private void addListenerToComponents(){
 
 
-		alterLine_combo_from.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				settingDB.setTypeFrom(
-						(TypeForChange)alterLine_combo_from.getSelectedItem());				
-			}
-		});
-
-		alterLine_combo_to.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				TypeForChange selected = (TypeForChange)(alterLine_combo_to.getSelectedItem());
-				settingDB.setTypeTo(selected);
-			}
-		});
+		alterLine_combo_from.addItemListener(new FromLineTypeItemListener());
+		alterLine_combo_to.addItemListener(new ToLineTypeItemListener());
 
 
-		lineTypeMountainButton.addActionListener(new java.awt.event.ActionListener() {
+		lineTypeMountainButton.addActionListener(
+				new LineTypeSetter(OriLine.TYPE_RIDGE));
 
-			@Override
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				Globals.inputLineType = OriLine.TYPE_RIDGE;
-			}
-		});
-		lineTypeValleyButton.addActionListener(new java.awt.event.ActionListener() {
-
-			@Override
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				Globals.inputLineType = OriLine.TYPE_VALLEY;
-			}
-		});
-		lineTypeSubButton.addActionListener(new java.awt.event.ActionListener() {
-
-			@Override
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				Globals.inputLineType = OriLine.TYPE_NONE;
-			}
-		});
+		lineTypeValleyButton.addActionListener(
+				new LineTypeSetter(OriLine.TYPE_VALLEY));
+			
+		lineTypeSubButton.addActionListener(
+				new LineTypeSetter(OriLine.TYPE_NONE));
 
 		editModeInputLineButton.addActionListener(new InputCommandStatePopper());
 		
-		editModeLineTypeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				settingDB.setTypeFrom(
-						(TypeForChange)alterLine_combo_from.getSelectedItem());				
-				settingDB.setTypeTo(
-						(TypeForChange)alterLine_combo_to.getSelectedItem());	
-
-			}
-		});
 
 		textFieldLength.addKeyListener(new KeyListener() {
 
@@ -983,6 +956,12 @@ implements ActionListener, PropertyChangeListener, Observer {
 			// update GUI
 			UIPanelSettingDB setting = (UIPanelSettingDB) o;
 
+			switch(setting.getselectedMode()){
+			case INPUT:
+				selectEditModeButton(editModeInputLineButton);
+				break;
+			}
+			
 			subPanel1.setVisible(setting.isValuePanelVisible());
 			subPanel2.setVisible(setting.isValuePanelVisible());
 
@@ -1006,10 +985,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 	}
 
+	private void selectEditModeButton(AbstractButton modeButton){
+		editModeGroup.setSelected(modeButton.getModel(), true);
 
-	private void virtualClick(AbstractButton button){
-		button.setSelected(true);
-		button.doClick();
 	}
 
 }

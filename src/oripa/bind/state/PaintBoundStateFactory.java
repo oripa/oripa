@@ -14,7 +14,7 @@ public class PaintBoundStateFactory {
 
 	/**
 	 * 
-	 * @param parent		A parent component. {@value null} indicates to avoid error on performActions() of created state.
+	 * @param parent		A parent component. {@code null} indicates to avoid error on performActions() of created state.
 	 * @param basicActions	Actions for all created states.
 	 */
 	public PaintBoundStateFactory(Component parent, ActionListener[] basicActions) {

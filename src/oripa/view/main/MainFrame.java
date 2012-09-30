@@ -46,10 +46,10 @@ import javax.swing.KeyStroke;
 import oripa.Config;
 import oripa.FilterDB;
 import oripa.ORIPA;
-import oripa.bind.ApplicationStateButtonBinder;
 import oripa.bind.CopyAndPasteActionWrapper;
+import oripa.bind.CopyPasteErrorListener;
 import oripa.bind.EditOutlineActionWrapper;
-import oripa.bind.state.CopyPasteErrorListener;
+import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.doc.Doc;
 import oripa.doc.exporter.ExporterXML;
@@ -73,9 +73,8 @@ import oripa.view.uipanel.UIPanel;
 import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
-import oripa.viewsetting.main.ScreenUpdater;
-import oripa.viewsetting.uipanel.OnOtherCommandButtonSelected;
-import oripa.viewsetting.uipanel.OnSelectButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnOtherCommandButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnSelectButtonSelected;
 
 public class MainFrame extends JFrame implements ActionListener,
 		ComponentListener, WindowListener, Observer {
@@ -87,9 +86,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private static final long serialVersionUID = 272369294032419950L;
 
 	private MainFrameSettingDB setting = MainFrameSettingDB.getInstance();
-	private MainScreenSettingDB screenSetting = MainScreenSettingDB
-			.getInstance();
-	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+	private MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
 	private PaintContext mouseContext = PaintContext.getInstance();
 
 	MainScreen mainScreen;
@@ -112,7 +109,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
 
 	// -----------------------------------------------------------------------------------------------------------
-	// Binding button to state
+	// Binding state to button
 
 	private PaintBoundStateFactory stateFactory = new PaintBoundStateFactory(
 			this, new ActionListener[] {});
@@ -124,7 +121,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private JMenuItem menuItemChangeOutline = (JMenuItem) buttonBinder.createButton(
 			JMenuItem.class, stateFactory.create(
 					new EditOutlineActionWrapper(),
-					StringID.Command.CONTOUR_ID, new ActionListener[] {new ViewChangeListener(new OnOtherCommandButtonSelected())}),
+					StringID.Command.CONTOUR_ID, new ActionListener[] {new ViewChangeListener(new ChangeOnOtherCommandButtonSelected())}),
 					StringID.Command.CONTOUR_ID);
 
 	/**
@@ -133,7 +130,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private JMenuItem menuItemSelectAll = (JMenuItem) buttonBinder.createButton(
 			JMenuItem.class, stateFactory.create(
 					new SelectAllLineAction(mouseContext),
-					StringID.Command.SELECT_ID, new ActionListener[] {new ViewChangeListener(new OnSelectButtonSelected())}),
+					StringID.Command.SELECT_ID, new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())}),
 					StringID.Main.SELECT_ALL_ID);
 
 	/**
@@ -143,7 +140,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			JMenuItem.class, stateFactory.create(
 					new CopyAndPasteActionWrapper(false),
 					new CopyPasteErrorListener(),
-					StringID.Command.COPY_PASTE_ID, new ActionListener[] {new ViewChangeListener(new OnSelectButtonSelected())}),
+					StringID.Command.COPY_PASTE_ID, new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())}),
 					StringID.Command.COPY_PASTE_ID);
 
 	/**
@@ -153,7 +150,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			JMenuItem.class, stateFactory.create(
 					new CopyAndPasteActionWrapper(true),
 					new CopyPasteErrorListener(),
-					StringID.Command.COPY_PASTE_ID, new ActionListener[] {new ViewChangeListener(new OnSelectButtonSelected())}),
+					StringID.Command.COPY_PASTE_ID, new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())}),
 					StringID.Command.COPY_PASTE_ID);
 
 	// -----------------------------------------------------------------------------------------------------------

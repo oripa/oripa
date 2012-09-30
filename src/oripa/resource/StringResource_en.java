@@ -41,7 +41,7 @@ public class StringResource_en extends ListResourceBundle {
         { StringID.Main.UNDO_ID, "Undo" }, 
         { StringID.Main.ABOUT_ID, "About" }, 
         { StringID.Main.COPY_PASTE_ID, "Copy and Paste" }, 
-        { StringID.Main.CONTOUR_ID, "Edit Contour" }, 
+        { StringID.Main.EDIT_CONTOUR_ID, "Edit Contour" }, 
         
         
         { StringID.Default.FILE_NAME_ID, "NoTitle" }, 

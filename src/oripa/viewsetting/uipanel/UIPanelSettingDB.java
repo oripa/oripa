@@ -28,7 +28,7 @@ public class UIPanelSettingDB extends ViewSettingDataBase{
 	private boolean valleyButtonEnabled = true;
 	private boolean auxButtonEnabled = true;
 	
-	private EditMode forcedMode = EditMode.NONE;
+	private EditMode selectedMode = EditMode.NONE;
 
 	private int lineTypeFromIndex;
 	private int lineTypeToIndex;
@@ -117,42 +117,42 @@ public class UIPanelSettingDB extends ViewSettingDataBase{
 	}
 
 
-	public void forceInputMode(){
-		forcedMode = EditMode.INPUT;
+	public void selectInputMode(){
+		selectedMode = EditMode.INPUT;
 		this.setChanged();
 	}
 	
-	public void forceChangeLineTypeMode(){
-		forcedMode = EditMode.CHANGE_TYPE;
+	public void selectChangeLineTypeMode(){
+		selectedMode = EditMode.CHANGE_TYPE;
 		this.setChanged();
 	}
 	
 
-	public void forceSelectMode(){
-		forcedMode = EditMode.SELECT;
+	public void selectSelectMode(){
+		selectedMode = EditMode.SELECT;
 		this.setChanged();
 	}
 	
-	public void forceDeleteLineMode(){
-		forcedMode = EditMode.DELETE_LINE;
+	public void selectedeleteLineMode(){
+		selectedMode = EditMode.DELETE_LINE;
 		this.setChanged();
 	}
 	
-	public void forceAddVertexMode(){
-		forcedMode = EditMode.ADD_VERTEX;
+	public void selectAddVertexMode(){
+		selectedMode = EditMode.ADD_VERTEX;
 		this.setChanged();
 	}
 
-	public void forceDeleteVertexMode(){
-		forcedMode = EditMode.DELETE_VERTEX;
+	public void selectedeleteVertexMode(){
+		selectedMode = EditMode.DELETE_VERTEX;
 		this.setChanged();
 	}
 
 	
-	public EditMode getForcedMode(){
-		EditMode ret = forcedMode;
+	public EditMode getselectedMode(){
+		EditMode ret = selectedMode;
 
-		forcedMode = EditMode.NONE;
+		selectedMode = EditMode.NONE;
 		
 		return ret;
 	}

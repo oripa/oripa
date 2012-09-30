@@ -27,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import oripa.doc.Doc;
+import oripa.doc.DocHolder;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -97,7 +98,8 @@ public class ORIPA {
         int appTotalHeight = mainFrameHeight;
 
         doc = new Doc(Constants.DEFAULT_PAPER_SIZE);
-
+//        doc = DocHolder.getInstance().getDoc();
+        
         // Construction of the main frame
         mainFrame = new MainFrame();
 

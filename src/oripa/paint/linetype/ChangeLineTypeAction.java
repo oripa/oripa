@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import oripa.ORIPA;
 import oripa.geom.OriLine;
+import oripa.paint.EditMode;
 import oripa.paint.PaintContext;
 import oripa.paint.RectangularSelectableAction;
 import oripa.viewsetting.uipanel.UIPanelSettingDB;
@@ -13,6 +14,7 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 
 	public ChangeLineTypeAction(){
+		setEditMode(EditMode.CHANGE_TYPE);
 		setActionState(new SelectingLineForLineType());
 	}
 
