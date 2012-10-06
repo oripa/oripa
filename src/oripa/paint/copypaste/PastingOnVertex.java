@@ -14,7 +14,7 @@ import oripa.paint.geometry.GeometricOperation;
 
 public class PastingOnVertex extends PickingVertex {
 
-	private ArrayList<OriLine> shiftedLines;
+	private FilledOriLineArrayList shiftedLines;
 
 	@Override
 	protected void initialize() {
@@ -61,7 +61,7 @@ public class PastingOnVertex extends PickingVertex {
             double oy = origin.y;
 
 
-            shiftedLines = new ArrayList<>(context.getLineCount());
+            shiftedLines = new FilledOriLineArrayList(context.getLineCount());
         	GeometricOperation.shiftLines(context.getLines(), shiftedLines, v.x - ox, v.y -oy);
             
             for(int i = 0; i < context.getLineCount(); i++){

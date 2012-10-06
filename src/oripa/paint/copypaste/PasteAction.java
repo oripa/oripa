@@ -22,7 +22,7 @@ import oripa.paint.geometry.NearestVertexFinder;
 public class PasteAction extends GraphicMouseAction {
 
 
-	private ArrayList<OriLine> shiftedLines = new ArrayList<>();
+	private FilledOriLineArrayList shiftedLines = new FilledOriLineArrayList(0);
 
 	private OriginHolder originHolder = OriginHolder.getInstance();
 
@@ -39,8 +39,8 @@ public class PasteAction extends GraphicMouseAction {
 	@Override
 	public void recover(PaintContext context) {
 		context.clear(false);
-		initializeShiftedLines(context.getLineCount());
 		
+		shiftedLines = new FilledOriLineArrayList(context.getLineCount());
 		
 		context.startPasting();
 
@@ -107,7 +107,7 @@ public class PasteAction extends GraphicMouseAction {
 			}
 			
 			if(shiftedLines.size() < context.getLineCount()){
-				initializeShiftedLines(context.getLineCount());
+				shiftedLines = new FilledOriLineArrayList(context.getLineCount());
 			}
 			
 			Vector2d origin = originHolder.getOrigin(context);
@@ -121,13 +121,6 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 	
-	private void initializeShiftedLines(int size){
-		shiftedLines = new ArrayList<>(size);
-		
-		for(int i = 0; i < size; i++){
-			shiftedLines.add(new OriLine());
-		}
-	}
 
 	@Override
 	public void onDraw(Graphics2D g2d, PaintContext context) {
