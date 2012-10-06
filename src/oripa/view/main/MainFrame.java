@@ -47,12 +47,7 @@ import oripa.Config;
 import oripa.FilterDB;
 import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
-import oripa.bind.CopyAndPasteActionWrapper;
-import oripa.bind.CopyPasteErrorListener;
-import oripa.bind.EditOutlineActionWrapper;
 import oripa.bind.PaintActionButtonFactory;
-import oripa.bind.binder.ApplicationStateButtonBinder;
-import oripa.bind.state.PaintBoundStateFactory;
 import oripa.doc.Doc;
 import oripa.doc.exporter.ExporterXML;
 import oripa.file.FileChooser;
@@ -65,18 +60,14 @@ import oripa.file.SavingAction;
 import oripa.paint.DeleteSelectedLines;
 import oripa.paint.Globals;
 import oripa.paint.PaintContext;
-import oripa.paint.selectline.SelectAllLineAction;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.view.PropertyDialog;
 import oripa.view.uipanel.UIPanel;
-import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
-import oripa.viewsetting.uipanel.ChangeOnOtherCommandButtonSelected;
-import oripa.viewsetting.uipanel.ChangeOnSelectButtonSelected;
 
 public class MainFrame extends JFrame implements ActionListener,
 		ComponentListener, WindowListener, Observer {
@@ -111,7 +102,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
 
 	// -----------------------------------------------------------------------------------------------------------
-	// Binding state to button
+	// Create paint button
 
 	ButtonFactory buttonFactory = new PaintActionButtonFactory();
 	

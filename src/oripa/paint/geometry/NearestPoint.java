@@ -6,6 +6,9 @@ public class NearestPoint {
 	public Vector2d point = new Vector2d();
 	public double distance = Double.MAX_VALUE;
 
+	/**
+	 * distance is set to maximum. point is nut null but dummy.
+	 */
 	public NearestPoint() {
 	}
 	

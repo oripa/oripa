@@ -549,7 +549,7 @@ public class Folder {
 
     private ArrayList<SubFace> makeSubFaces() {
         Doc doc = new Doc(m_doc.size);
-        doc.lines.clear();        
+        doc.creasePattern.clear();        
         for (OriFace face : m_doc.faces) {
             for (OriHalfedge he : face.halfedges) {
                 doc.addLine(new OriLine(he.positionAfterFolded, he.next.positionAfterFolded, OriLine.TYPE_RIDGE));

@@ -44,7 +44,7 @@ import oripa.resource.Constants;
 import oripa.undo.UndoManager;
 
 
-public class Doc {
+public class Doc2 extends Doc{
 	class PointComparatorX implements Comparator<Vector2d> {
 
 		@Override
@@ -78,7 +78,7 @@ public class Doc {
 
 	public ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
 //	public ArrayList<OriLine> lines = new ArrayList<OriLine>();
-	public CreasePatternManager creasePattern = null;
+	public Collection<OriLine> lines = null;
 
 	public ArrayList<OriFace> faces = new ArrayList<OriFace>();
 	public ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
@@ -111,27 +111,27 @@ public class Doc {
 
 	int debugCount = 0;
 
-	public Doc(){
+	public Doc2(){
 		initialize(Constants.DEFAULT_PAPER_SIZE);
 	}   
 
-	public Doc(double size) {
+	public Doc2(double size) {
+		lines = new CreasePatternManager(size);
 		initialize(size);
 	}
 
 	private void initialize(double size){
 
-		creasePattern = new CreasePatternManager(size);
 		this.size = size;
 
 		OriLine l0 = new OriLine(-size / 2.0, -size / 2.0, size / 2.0, -size / 2.0, OriLine.TYPE_CUT);
 		OriLine l1 = new OriLine(size / 2.0, -size / 2.0, size / 2.0, size / 2.0, OriLine.TYPE_CUT);
 		OriLine l2 = new OriLine(size / 2.0, size / 2.0, -size / 2.0, size / 2.0, OriLine.TYPE_CUT);
 		OriLine l3 = new OriLine(-size / 2.0, size / 2.0, -size / 2.0, -size / 2.0, OriLine.TYPE_CUT);
-		creasePattern.add(l0);
-		creasePattern.add(l1);
-		creasePattern.add(l2);
-		creasePattern.add(l3);
+		lines.add(l0);
+		lines.add(l1);
+		lines.add(l2);
+		lines.add(l3);
 
 	}
 
@@ -168,7 +168,7 @@ public class Doc {
 
 	public int getSelectedLineNum() {
 		int count = 0;
-		for (OriLine l : creasePattern) {
+		for (OriLine l : lines) {
 			if (l.selected) {
 				count++;
 			}
@@ -178,7 +178,7 @@ public class Doc {
 	}
 
 	public UndoInfo createUndoInfo(){
-		UndoInfo undoInfo = new UndoInfo(creasePattern);
+		UndoInfo undoInfo = new UndoInfo(lines);
 		return undoInfo;
 	}
 
@@ -191,7 +191,7 @@ public class Doc {
 	}
 
 	public void pushUndoInfo() {
-		UndoInfo ui = new UndoInfo(creasePattern);
+		UndoInfo ui = new UndoInfo(lines);
 		undoManager.push(ui);
 	}
 
@@ -206,8 +206,8 @@ public class Doc {
 			return;
 		}
 
-		creasePattern.clear();
-		creasePattern.addAll(info.getLines());
+		lines.clear();
+		lines.addAll(info.getLines());
 	}
 
 	public boolean canUndo(){
@@ -330,9 +330,9 @@ public class Doc {
 
 	public boolean cleanDuplicatedLines() {
 		debugCount = 0;
-		System.out.println("pre cleanDuplicatedLines " + creasePattern.size());
+		System.out.println("pre cleanDuplicatedLines " + lines.size());
 		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>();
-		for (OriLine l : creasePattern) {
+		for (OriLine l : lines) {
 			OriLine ll = l;
 
 			boolean bSame = false;
@@ -349,26 +349,26 @@ public class Doc {
 			tmpLines.add(ll);
 		}
 
-		if (creasePattern.size() == tmpLines.size()) {
+		if (lines.size() == tmpLines.size()) {
 			return false;
 		}
 
-		creasePattern.clear();
-		creasePattern.addAll(tmpLines);
-		System.out.println("after cleanDuplicatedLines " + creasePattern.size());
+		lines.clear();
+		lines.addAll(tmpLines);
+		System.out.println("after cleanDuplicatedLines " + lines.size());
 
 		return true;
 	}
 
 	// Unselect all lines
 	public void resetSelectedOriLines() {
-		for (OriLine line : creasePattern) {
+		for (OriLine line : lines) {
 			line.selected = false;
 		}
 	}
 
 	public void selectAllOriLines() {
-		for (OriLine l : creasePattern) {
+		for (OriLine l : lines) {
 			if (l.typeVal != OriLine.TYPE_CUT) {
 				l.selected = true;
 			}
@@ -407,7 +407,7 @@ public class Doc {
 	}
 
 	public void mirrorCopyBy(OriLine l) {
-		mirrorCopyBy(l, creasePattern);
+		mirrorCopyBy(l, lines);
 	}
 
 
@@ -433,7 +433,7 @@ public class Doc {
 	}    
 
 	public void removeLine(OriLine l) {
-		creasePattern.remove(l);
+		lines.remove(l);
 		// merge the lines if possible, to prevent unnecessary vertexes
 		merge2LinesAt(l.p0);
 		merge2LinesAt(l.p1);
@@ -445,20 +445,20 @@ public class Doc {
 
 	public void deleteSelectedLines() {
 		ArrayList<OriLine> selectedLines = new ArrayList<OriLine>();
-		for (OriLine line : creasePattern) {
+		for (OriLine line : lines) {
 			if (line.selected) {
 				selectedLines.add(line);
 			}
 		}
 
 		for (OriLine line : selectedLines) {
-			creasePattern.remove(line);
+			lines.remove(line);
 		}
 	}
 
 	private void merge2LinesAt(Vector2d p) {
 		ArrayList<OriLine> sharedLines = new ArrayList<OriLine>();
-		for (OriLine line : creasePattern) {
+		for (OriLine line : lines) {
 			if (GeomUtil.Distance(line.p0, p) < 0.001 || GeomUtil.Distance(line.p1, p) < 0.001) {
 				sharedLines.add(line);
 			}
@@ -501,10 +501,10 @@ public class Doc {
 			p1.set(l1.p0);
 		}
 
-		creasePattern.remove(l0);
-		creasePattern.remove(l1);
+		lines.remove(l0);
+		lines.remove(l1);
 		OriLine li = new OriLine(p0, p1, l0.typeVal);
-		creasePattern.add(li);
+		lines.add(li);
 	}
 
 	public void CircleCopy(double cx, double cy, double angleDeg, int num) {
@@ -517,7 +517,7 @@ public class Doc {
 
 		for (int i = 0; i < num; i++) {
 			double angleRad = angle * (i + 1);
-			for (OriLine l : creasePattern) {
+			for (OriLine l : lines) {
 				if (!l.selected) {
 					continue;
 				}
@@ -571,7 +571,7 @@ public class Doc {
 				}
 
 				// copies the selected lines
-				for (OriLine l : creasePattern) {
+				for (OriLine l : lines) {
 					if (!l.selected) {
 						continue;
 					}
@@ -601,7 +601,7 @@ public class Doc {
 		faces.clear();
 
 
-		for (OriLine l : creasePattern) {
+		for (OriLine l : lines) {
 			if (l.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
@@ -691,7 +691,7 @@ public class Doc {
 		}
 
 		// Create the edges from the vertexes
-		for (OriLine l : creasePattern) {
+		for (OriLine l : lines) {
 			if (l.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
@@ -1013,9 +1013,9 @@ public class Doc {
 		}
 		OriLine l0 = new OriLine(line.p0, v, line.typeVal);
 		OriLine l1 = new OriLine(v, line.p1, line.typeVal);
-		creasePattern.remove(line);
-		creasePattern.add(l0);
-		creasePattern.add(l1);
+		lines.remove(line);
+		lines.add(l0);
+		lines.add(l1);
 
 		return true;
 	}
@@ -1185,7 +1185,7 @@ public class Doc {
 
 		double minDist = Double.MAX_VALUE;
 		Vector2d bestPoint = null;
-		for (OriLine l : creasePattern) {
+		for (OriLine l : lines) {
 			Vector2d crossPoint = GeomUtil.getCrossPoint(ray, l.getSegment());
 			if (crossPoint == null) {
 				continue;
@@ -1221,7 +1221,7 @@ public class Doc {
 		double minDist = Double.MAX_VALUE;
 		Vector2d bestPoint = null;
 		OriLine bestLine = null;
-		for (OriLine l : creasePattern) {
+		for (OriLine l : lines) {
 			Vector2d crossPoint = GeomUtil.getCrossPoint(ray, l.getSegment());
 			if (crossPoint == null) {
 				continue;
@@ -1270,7 +1270,7 @@ public class Doc {
 		LinkedList<OriLine> toBeAdded = new LinkedList<>();
 		
 		// If it intersects other line, divide them
-		for (Iterator<OriLine> iterator = creasePattern.iterator(); iterator.hasNext();) {
+		for (Iterator<OriLine> iterator = lines.iterator(); iterator.hasNext();) {
 			OriLine line = iterator.next();
 			
 			
@@ -1297,7 +1297,7 @@ public class Doc {
 		}
 
 		for(OriLine line : toBeAdded){
-			creasePattern.add(line);
+			lines.add(line);
 		}
 		
 		return true;
@@ -1313,7 +1313,7 @@ public class Doc {
 		points.add(inputLine.p1);
 
 		// If it already exists, do nothing
-		for (OriLine line : creasePattern) {
+		for (OriLine line : lines) {
 			if (GeomUtil.isSameLineSegment(line, inputLine)) {
 				return;
 			}
@@ -1324,7 +1324,7 @@ public class Doc {
 			addAuxLine(inputLine);
 		}
 		else{   
-			for (OriLine line : creasePattern) {
+			for (OriLine line : lines) {
 
 				// Dont devide if the type of line is aux is Aux
 				if (//inputLine.typeVal != OriLine.TYPE_NONE && 
@@ -1378,7 +1378,7 @@ public class Doc {
 				continue;
 			}
 
-			creasePattern.add(new OriLine(prePoint, p, inputLine.typeVal));
+			lines.add(new OriLine(prePoint, p, inputLine.typeVal));
 			prePoint = p;
 		}
 		
@@ -1516,25 +1516,6 @@ public class Doc {
 			}
 
 		}
-		
 		}
 	}
-	
-		
-		
-	public Collection<Vector2d> getVerticesAround(Vector2d v){
-		return creasePattern.getVerticesAround(v);
-	}
-	
-	public Collection<Collection<Vector2d>> getVerticesArea(
-			double x, double y, double distance){
-		
-		return creasePattern.getVerticesArea(x, y, distance);
-	}
-	
-	public CreasePatternManager getCreasePatternManager(){
-		return creasePattern;
-	}
-	
-	
 }

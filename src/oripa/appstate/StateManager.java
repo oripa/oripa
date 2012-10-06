@@ -52,10 +52,14 @@ public class StateManager implements StateManagerInterface<EditMode>{
 
 	/**
 	 * pop previous state. It  will be set to current state.
-	 * @return previous state.
+	 * @return previous state. null if empty.
 	 */
 	@Override
 	public ApplicationState<EditMode> pop(){
+		if(current == previous){
+			return null;
+		}
+		
 		current = previous;
 		return current;
 	}
@@ -83,8 +87,12 @@ public class StateManager implements StateManagerInterface<EditMode>{
 	 * @return state of the last input command
 	 */
 	public ApplicationState<EditMode> popLastInputCommand(){
+		if(current == lastInputCommand){
+			return null;
+		}
 		previous = current;
 		current = lastInputCommand;
+
 		return current;
 	}
 	

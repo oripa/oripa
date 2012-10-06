@@ -58,7 +58,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 					Math.min(startPoint.y, draggingPoint.y),
 					Math.max(startPoint.x, draggingPoint.x),
 					Math.max(startPoint.y, draggingPoint.y));
-			for (OriLine l : ORIPA.doc.lines) {
+			for (OriLine l : ORIPA.doc.creasePattern) {
 
 
 					if (clipper.clipTest(l)) {

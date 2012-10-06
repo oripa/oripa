@@ -39,7 +39,7 @@ public class StringID {
 	    public static final String DELETE_VERTEX_ID =  "DeleteVertex"; 
 	    public static final String CONTOUR_ID =  "EditContour"; 
 		public static final String PERPENDICULAR_BISECTOR_ID = "PBisec";
-		public static final String SELECT_ID = "select";
+		public static final String SELECT_ID = "SelectLine";
 		public static final String COPY_PASTE_ID = "Copy_and_Paste";
 	}
 	

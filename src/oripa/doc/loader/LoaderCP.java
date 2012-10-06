@@ -103,11 +103,11 @@ public class LoaderCP implements Loader{
         }
 
         Doc doc = new Doc(400);
-        doc.lines.clear();
+        doc.creasePattern.clear();
 
         for (OriLine l : lines) {
             doc.addLine(l);
-            System.out.println("Linenum=" + doc.lines.size());
+            System.out.println("Linenum=" + doc.creasePattern.size());
         }
         return doc;
 

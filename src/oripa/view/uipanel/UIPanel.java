@@ -25,8 +25,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
@@ -51,41 +49,23 @@ import javax.swing.border.EtchedBorder;
 
 import oripa.Config;
 import oripa.ORIPA;
-import oripa.appstate.ApplicationState;
 import oripa.appstate.InputCommandStatePopper;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
-import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
-import oripa.bind.state.PaintBoundState;
-import oripa.bind.state.PaintBoundStateFactory;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.doc.TypeForChange;
 import oripa.file.ImageResourceLoader;
 import oripa.folder.Folder;
 import oripa.geom.OriLine;
-import oripa.paint.EditMode;
 import oripa.paint.Globals;
 import oripa.paint.LineTypeSetter;
-import oripa.paint.PaintContext;
-import oripa.paint.addvertex.AddVertexAction;
-import oripa.paint.bisector.AngleBisectorAction;
 import oripa.paint.byvalue.AngleMeasuringAction;
+import oripa.paint.byvalue.AngleValueInputListener;
 import oripa.paint.byvalue.LengthMeasuringAction;
-import oripa.paint.byvalue.LineByValueAction;
+import oripa.paint.byvalue.LengthValueInputListener;
 import oripa.paint.byvalue.ValueDB;
-import oripa.paint.deleteline.DeleteLineAction;
-import oripa.paint.deletevertex.DeleteVertexAction;
-import oripa.paint.line.TwoPointLineAction;
-import oripa.paint.linetype.ChangeLineTypeAction;
-import oripa.paint.mirror.MirrorCopyAction;
-import oripa.paint.pbisec.TwoPointBisectorAction;
-import oripa.paint.segment.TwoPointSegmentAction;
-import oripa.paint.selectline.SelectLineAction;
-import oripa.paint.symmetric.SymmetricalLineAction;
-import oripa.paint.triangle.TriangleSplitAction;
-import oripa.paint.vertical.VerticalLineAction;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -96,11 +76,8 @@ import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.ScreenUpdater;
 import oripa.viewsetting.model.ModelFrameSettingDB;
 import oripa.viewsetting.render.RenderFrameSettingDB;
-import oripa.viewsetting.uipanel.ChangeOnAlterTypeButtonSelected;
 import oripa.viewsetting.uipanel.ChangeOnByValueButtonSelected;
-import oripa.viewsetting.uipanel.ChangeOnOtherCommandButtonSelected;
 import oripa.viewsetting.uipanel.ChangeOnPaintInputButtonSelected;
-import oripa.viewsetting.uipanel.ChangeOnSelectButtonSelected;
 import oripa.viewsetting.uipanel.FromLineTypeItemListener;
 import oripa.viewsetting.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.uipanel.UIPanelSettingDB;
@@ -110,34 +87,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 
 	private UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
-	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
-	private ValueDB valueDB = ValueDB.getInstance();
-	private PaintContext mouseContext = PaintContext.getInstance();
 	ResourceHolder resources = ResourceHolder.getInstance();
-
-	private class ButtonSelectionLinkedListener extends ViewChangeListener{
-
-		AbstractButton modeButton;
-
-		public ButtonSelectionLinkedListener(
-				ChangeViewSetting command, AbstractButton modeButton) {
-
-			super(command);
-			this.modeButton = modeButton;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			super.actionPerformed(e);
-			
-			if(modeButton == null){
-				return;
-			}
-			
-			editModeGroup.setSelected(modeButton.getModel(), true);
-
-		}
-	}	
 
 	
 	//---------------------------------------------------------------------------------------------------------------------------
@@ -146,7 +96,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 	private BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
 	ButtonFactory buttonFactory = new PaintActionButtonFactory();
 
-	//	JRadioButton editModeInputLineButton = new JRadioButton("InputLine", true);
 	JRadioButton editModeInputLineButton = (JRadioButton) viewChangeBinder.createButton(
 			JRadioButton.class, new ChangeOnPaintInputButtonSelected(), StringID.UI.INPUT_LINE_ID);
 
@@ -165,15 +114,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 	JRadioButton editModeDeleteVertex = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.DELETE_VERTEX_ID);
 
-	//---------------------------------------------------------------------------------------------------------------------------
-
-
-	JRadioButton lineTypeSubButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
-	JRadioButton lineTypeMountainButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
-	JRadioButton lineTypeValleyButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
 
 	//---------------------------------------------------------------------------------------------------------------------------
 	// Binding how to enter the line
@@ -209,17 +149,16 @@ implements ActionListener, PropertyChangeListener, Observer {
 	//---------------------------------------------------------------------------------------------------------------------------
 
 
-	//	JRadioButton lineInputDirectVButton = new JRadioButton();
-	//	JRadioButton lineInputVerticalLineButton = new JRadioButton();
-	//	JRadioButton lineInputOnVButton = new JRadioButton();
-	//	JRadioButton lineInputOverlapVButton = new JRadioButton();
-	//	JRadioButton lineInputOverlapEButton = new JRadioButton();
-	//	JRadioButton lineInputAngleBisectorButton = new JRadioButton();
-	//	JRadioButton lineInputTriangleSplitButton = new JRadioButton();
-	//	JRadioButton lineInputSymmetricButton = new JRadioButton();
-	//	JRadioButton lineInputMirrorButton = new JRadioButton();
-	//	JRadioButton lineInputByValueButton = new JRadioButton();
-	//	JRadioButton lineInputPBisectorButton = new JRadioButton(); // perpendicular bisector
+	JRadioButton lineTypeSubButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
+	JRadioButton lineTypeMountainButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
+	JRadioButton lineTypeValleyButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
+
+	//---------------------------------------------------------------------------------------------------------------------------
+
+
 	ButtonGroup editModeGroup;
 	// Text box
 	JFormattedTextField textFieldLength;
@@ -417,70 +356,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 		mainPanel.add(label1, gridBagConstraints8);
 		n++;
 
-		int gridy_base = 9;
-		GridBagConstraints gridBagConstraints_i0 = new GridBagConstraints();
-		gridBagConstraints_i0.gridx = 1;
-		gridBagConstraints_i0.gridy = gridy_base;
-		GridBagConstraints gridBagConstraints_i1 = new GridBagConstraints();
-		gridBagConstraints_i1.gridx = 2;
-		gridBagConstraints_i1.gridy = gridy_base;
-		GridBagConstraints gridBagConstraints_i2 = new GridBagConstraints();
-		gridBagConstraints_i2.gridx = 3;
-		gridBagConstraints_i2.gridy = gridy_base;
-		GridBagConstraints gridBagConstraints_i3 = new GridBagConstraints();
-		gridBagConstraints_i3.gridx = 4;
-		gridBagConstraints_i3.gridy = gridy_base;
-		GridBagConstraints gridBagConstraints_i4 = new GridBagConstraints();
 
-		gridy_base++;
-
-		gridBagConstraints_i4.gridx = 1;
-		gridBagConstraints_i4.gridy = gridy_base;
-		GridBagConstraints gridBagConstraints_i5 = new GridBagConstraints();
-		gridBagConstraints_i5.gridx = 2;
-		gridBagConstraints_i5.gridy = gridy_base;
-		GridBagConstraints gridBagConstraints_i6 = new GridBagConstraints();
-		gridBagConstraints_i6.gridx = 3;
-		gridBagConstraints_i6.gridy = gridy_base;
-		GridBagConstraints gridBagConstraints_i7 = new GridBagConstraints();
-		gridBagConstraints_i7.gridx = 4;
-		gridBagConstraints_i7.gridy = gridy_base;
-		GridBagConstraints gridBagConstraints_i8 = new GridBagConstraints();
-		gridy_base++;
-		gridBagConstraints_i8.gridx = 1;
-		gridBagConstraints_i8.gridy = gridy_base;
-
-		gridBagConstraints_i0.fill = java.awt.GridBagConstraints.HORIZONTAL;
-		gridBagConstraints_i1.fill = java.awt.GridBagConstraints.HORIZONTAL;
-		gridBagConstraints_i2.fill = java.awt.GridBagConstraints.HORIZONTAL;
-		gridBagConstraints_i3.fill = java.awt.GridBagConstraints.HORIZONTAL;
-		gridBagConstraints_i4.fill = java.awt.GridBagConstraints.HORIZONTAL;
-		gridBagConstraints_i5.fill = java.awt.GridBagConstraints.HORIZONTAL;
-		gridBagConstraints_i6.fill = java.awt.GridBagConstraints.HORIZONTAL;
-		gridBagConstraints_i7.fill = java.awt.GridBagConstraints.HORIZONTAL;
-		gridBagConstraints_i8.fill = java.awt.GridBagConstraints.HORIZONTAL;
-
-
-		// put operation buttons in order
-		mainPanel.add(lineInputDirectVButton, gridBagConstraints_i0);
-		n++;
-		mainPanel.add(lineInputOnVButton, gridBagConstraints_i1);
-		n++;
-		mainPanel.add(lineInputPBisectorButton, gridBagConstraints_i2);
-		n++;
-		mainPanel.add(lineInputAngleBisectorButton, gridBagConstraints_i3);
-		n++;
-		mainPanel.add(lineInputTriangleSplitButton, gridBagConstraints_i4);
-		n++;
-		mainPanel.add(lineInputVerticalLineButton, gridBagConstraints_i5);
-		n++;
-		mainPanel.add(lineInputSymmetricButton, gridBagConstraints_i6);
-		n++;
-		mainPanel.add(lineInputMirrorButton, gridBagConstraints_i7);
-		n++;
-		mainPanel.add(lineInputByValueButton, gridBagConstraints_i8);
-		n++;
-
+		addPaintActionButtons(4, 9);
 
 		lineInputDirectVButton.setSelected(true);
 
@@ -529,6 +406,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 		JLabel subLabel2 = new JLabel(
 				resources.getString(ResourceKey.LABEL, StringID.UI.ANGLE_ID));
 
+//		subPanel1.setVisible(true);
+//		subPanel2.setVisible(true);
 		subPanel1.setVisible(false);
 		subPanel2.setVisible(false);
 
@@ -554,15 +433,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 		subPanel2.add(subLabel2);
 		subPanel2.add(textFieldAngle);
 		subPanel2.add(buttonAngle);
-		buttonLength.addActionListener(
-				new PaintActionSetter(new LengthMeasuringAction()));
-		buttonLength.addActionListener(
-				new ButtonSelectionLinkedListener(new ChangeOnByValueButtonSelected(), editModeInputLineButton));
-
-		buttonAngle.addActionListener(
-				new PaintActionSetter(new AngleMeasuringAction()));
-		buttonAngle.addActionListener(
-				new ButtonSelectionLinkedListener(new ChangeOnByValueButtonSelected(), editModeInputLineButton));
 
 		add(subPanel1);
 		add(subPanel2);
@@ -645,6 +515,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 		ValueDB.getInstance().addObserver(this);
 
+
 		addListenerToComponents();
 
 		//-------------------------------------------------
@@ -660,12 +531,51 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 	}
 
+	
+	private void addPaintActionButtons(int gridWidth, int gridy_start){
+
+		paintActionButtonCount = 0;
+		// put operation buttons in order
+		addPaintActionButton(lineInputDirectVButton, gridWidth, gridy_start);
+		addPaintActionButton(lineInputOnVButton,  gridWidth, gridy_start);
+		addPaintActionButton(lineInputPBisectorButton,  gridWidth, gridy_start);
+		addPaintActionButton(lineInputAngleBisectorButton,  gridWidth, gridy_start);
+		addPaintActionButton(lineInputTriangleSplitButton,  gridWidth, gridy_start);
+		addPaintActionButton(lineInputVerticalLineButton,  gridWidth, gridy_start);
+		addPaintActionButton(lineInputSymmetricButton, gridWidth, gridy_start);
+		addPaintActionButton(lineInputMirrorButton, gridWidth, gridy_start);
+		addPaintActionButton(lineInputByValueButton, gridWidth, gridy_start);
+	}
+
+	private int paintActionButtonCount = 0;
+	private void addPaintActionButton(AbstractButton button, int gridWidth, int gridy){
+		
+		GridBagConstraints gridBagConstraints = new GridBagConstraints();
+		gridBagConstraints.gridx = paintActionButtonCount % gridWidth + 1;
+		gridBagConstraints.gridy = gridy + paintActionButtonCount / gridWidth;
+		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+		mainPanel.add(button, gridBagConstraints);
+
+		paintActionButtonCount++;
+		
+		
+	}
+	
 	private void addListenerToComponents(){
 
 
 		alterLine_combo_from.addItemListener(new FromLineTypeItemListener());
 		alterLine_combo_to.addItemListener(new ToLineTypeItemListener());
 
+		buttonLength.addActionListener(
+				new PaintActionSetter(new LengthMeasuringAction()));
+		buttonLength.addActionListener(
+				new ViewChangeListener(new ChangeOnByValueButtonSelected()));
+
+		buttonAngle.addActionListener(
+				new PaintActionSetter(new AngleMeasuringAction()));
+		buttonAngle.addActionListener(
+				new ViewChangeListener(new ChangeOnByValueButtonSelected()));
 
 		lineTypeMountainButton.addActionListener(
 				new LineTypeSetter(OriLine.TYPE_RIDGE));
@@ -677,58 +587,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 				new LineTypeSetter(OriLine.TYPE_NONE));
 
 		editModeInputLineButton.addActionListener(new InputCommandStatePopper());
-		
 
-		textFieldLength.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-				double length = ValueDB.getInstance().getLength();
-				try{
-					length = java.lang.Double.valueOf(
-							textFieldLength.getText());
-					ValueDB.getInstance().setLength(length);
-				}catch(Exception ex){
-				}
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-
-		textFieldAngle.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-				double angle = valueDB.getAngle();
-				try{
-					angle = java.lang.Double.valueOf(
-							textFieldAngle.getText());
-					valueDB.setAngle(angle);
-				}catch(Exception ex){
-				}
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-
+		textFieldLength.getDocument().addDocumentListener(new LengthValueInputListener());
+		textFieldAngle.getDocument().addDocumentListener(new AngleValueInputListener());
 
 
 		dispGridCheckBox.addActionListener(this);

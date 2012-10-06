@@ -20,7 +20,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 
 	
 	public CopyAndPasteAction() {
-		setEditMode(EditMode.OTHER);
+		setEditMode(EditMode.COPY);
 		setNeedSelect(true);
 	}
 

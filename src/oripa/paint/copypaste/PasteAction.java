@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -21,7 +22,8 @@ import oripa.paint.geometry.NearestVertexFinder;
 public class PasteAction extends GraphicMouseAction {
 
 
-	private Collection<OriLine> shiftedLines = new LinkedList<>();
+	private ArrayList<OriLine> shiftedLines = new ArrayList<>();
+
 	private OriginHolder originHolder = OriginHolder.getInstance();
 
 	
@@ -37,24 +39,28 @@ public class PasteAction extends GraphicMouseAction {
 	@Override
 	public void recover(PaintContext context) {
 		context.clear(false);
-		shiftedLines.clear();
+		initializeShiftedLines(context.getLineCount());
+		
+		
 		context.startPasting();
 
-		for(OriLine line : ORIPA.doc.lines){
+		for(OriLine line : ORIPA.doc.creasePattern){
 			if(line.selected){
 				context.pushLine(line);
 			}
 		}
 
-		ORIPA.doc.prepareForCopyAndPaste();
 
 	}
 
 	
 
+	/**
+	 * Clear context and mark lines as unselected.
+	 */
 	@Override
 	public void destroy(PaintContext context) {
-		super.destroy(context);
+		context.clear(true);
 		context.finishPasting();
 	}
 
@@ -100,16 +106,28 @@ public class PasteAction extends GraphicMouseAction {
 				closeVertex = new Vector2d(current.x, current.y);
 			}
 			
+			if(shiftedLines.size() < context.getLineCount()){
+				initializeShiftedLines(context.getLineCount());
+			}
+			
 			Vector2d origin = originHolder.getOrigin(context);
 			double ox = origin.x;
 			double oy = origin.y;
-			shiftedLines = 
-					GeometricOperation.shiftLines(context.getLines(), closeVertex.x - ox, closeVertex.y -oy);
+			GeometricOperation.shiftLines(context.getLines(), shiftedLines,
+					closeVertex.x - ox, closeVertex.y -oy);
 
 		}		
 		return closeVertex;
 	}
 
+	
+	private void initializeShiftedLines(int size){
+		shiftedLines = new ArrayList<>(size);
+		
+		for(int i = 0; i < size; i++){
+			shiftedLines.add(new OriLine());
+		}
+	}
 
 	@Override
 	public void onDraw(Graphics2D g2d, PaintContext context) {

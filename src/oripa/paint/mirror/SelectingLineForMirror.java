@@ -24,7 +24,7 @@ public class SelectingLineForMirror extends PickingLine {
 	private boolean doingFirstAction = true;
 	
 	/**
-	 * This class keeps selecting line while {@value doSpecial} is false.
+	 * This class keeps selecting line while {@code doSpecial} is false.
 	 * When {@value doSpecial} is true, it executes mirror copy where the
 	 * axis of mirror copy is the selected line.
 	 * 

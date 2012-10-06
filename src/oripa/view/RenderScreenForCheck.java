@@ -164,7 +164,7 @@ public class RenderScreenForCheck extends JPanel
 
         g2d.setStroke(Config.STROKE_VALLEY);
         g2d.setColor(Color.black);
-        for (OriLine line : ORIPA.doc.lines) {
+        for (OriLine line : ORIPA.doc.creasePattern) {
             switch (line.typeVal) {
                 case OriLine.TYPE_NONE:
                     if (!Globals.dispAuxLines) {

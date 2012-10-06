@@ -1,6 +1,7 @@
 package oripa.paint.copypaste;
 
 import java.awt.geom.Point2D.Double;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
@@ -13,6 +14,8 @@ import oripa.paint.geometry.GeometricOperation;
 
 public class PastingOnVertex extends PickingVertex {
 
+	private ArrayList<OriLine> shiftedLines;
+
 	@Override
 	protected void initialize() {
 	}
@@ -21,6 +24,7 @@ public class PastingOnVertex extends PickingVertex {
 	
 	@Override
 	protected void undoAction(PaintContext context) {
+		context.setMissionCompleted(false);
 		ORIPA.doc.loadUndoInfo();
 	}
 
@@ -56,12 +60,15 @@ public class PastingOnVertex extends PickingVertex {
         	double ox = origin.x;
             double oy = origin.y;
 
-            Collection<OriLine> shiftedLines = 
-            		GeometricOperation.shiftLines(context.getLines(), v.x - ox, v.y -oy);
+
+            shiftedLines = new ArrayList<>(context.getLineCount());
+        	GeometricOperation.shiftLines(context.getLines(), shiftedLines, v.x - ox, v.y -oy);
             
-            for(OriLine line : shiftedLines){
-            	ORIPA.doc.addLine(line);
+            for(int i = 0; i < context.getLineCount(); i++){
+            	ORIPA.doc.addLine(shiftedLines.get(i));
             }
+            
+            context.setMissionCompleted(true);
         }
 		
 	}

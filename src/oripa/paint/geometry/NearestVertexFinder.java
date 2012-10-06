@@ -46,11 +46,6 @@ public class NearestVertexFinder {
 		return nearest;
 	}
 
-	private static NearestPoint findNearestOrigamiVertex(Point2D.Double p){
-
-		return findNearestVertexFromLines(p, ORIPA.doc.lines);
-
-	}
 
 	private static NearestPoint findNearestVertexFromLines(
 			Point2D.Double p, Collection<OriLine> lines){
@@ -68,6 +63,12 @@ public class NearestVertexFinder {
 
 	}
 		
+	/**
+	 * Find the nearest of p among vertices
+	 * @param p
+	 * @param vertices
+	 * @return nearest point
+	 */
 	private static NearestPoint findNearestVertex(Point2D.Double p, Collection<Vector2d> vertices){
 
 		NearestPoint minPosition = new NearestPoint();
@@ -79,12 +80,30 @@ public class NearestVertexFinder {
 		return minPosition;
 	}
 
-	public static NearestPoint find(PaintContext context){
-		NearestPoint nearestPosition;
+	/**
+	 * find the nearest of current mouse point in the circle whose radius = {@code distance}.
+	 * @param context
+	 * @param distance
+	 * @return nearestPoint in the limit. null if there are no such vertex.
+	 */
+	public static NearestPoint findAround(PaintContext context, double distance){
+		NearestPoint nearestPosition = new NearestPoint();
 
 		Point2D.Double currentPoint = context.getLogicalMousePoint();
-		nearestPosition = findNearestOrigamiVertex(currentPoint);
 		
+		
+		Collection<Collection<Vector2d>> vertices = ORIPA.doc.getVerticesArea(
+				currentPoint.x, currentPoint.y, distance);	
+	
+		for(Collection<Vector2d> locals : vertices){
+			NearestPoint nearest;
+			nearest = findNearestVertex(currentPoint, locals);
+	
+			if(nearest.distance < nearestPosition.distance){
+				nearestPosition = nearest;
+			}
+		}
+
 		if (context.dispGrid) {
 
 			NearestPoint nearestGrid = findNearestVertex(
@@ -95,6 +114,19 @@ public class NearestVertexFinder {
 			}
 			
 		}
+		
+		if (nearestPosition.distance >= distance) {
+			return null;
+		}
+		else {
+			
+//			System.out.println("#area " + vertices.size() + 
+//					", #v(area1) " + vertices.iterator().next().size() +
+//					", scaled limit = " + distance);
+			
+		}
+
+
 
 		return nearestPosition;
 	}

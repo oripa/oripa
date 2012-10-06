@@ -97,14 +97,14 @@ public class LoaderPDF implements Loader {
         }
 
         Doc doc = new Doc(400);
-        doc.lines.clear();
+        doc.creasePattern.clear();
 
         for (OriLine l : lines) {
-            doc.lines.add(l);
+            doc.creasePattern.add(l);
         }
 
 
-        for (OriLine line : doc.lines) {
+        for (OriLine line : doc.creasePattern) {
             minV.x = Math.min(minV.x, line.p0.x);
             minV.x = Math.min(minV.x, line.p1.x);
             minV.y = Math.min(minV.y, line.p0.y);
@@ -121,7 +121,7 @@ public class LoaderPDF implements Loader {
         doc.size = size;
         Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
         double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
-        for (OriLine line : doc.lines) {
+        for (OriLine line : doc.creasePattern) {
             line.p0.x = (line.p0.x - center.x) / bboxSize * size;
             line.p0.y = (line.p0.y - center.y) / bboxSize * size;
             line.p1.x = (line.p1.x - center.x) / bboxSize * size;
@@ -132,12 +132,15 @@ public class LoaderPDF implements Loader {
         // Delete duplicate lines
 
         ArrayList<OriLine> delLines = new ArrayList<>();
-        int lineNum = doc.lines.size();
+        int lineNum = doc.creasePattern.size();
 
+        OriLine[] lines = new OriLine[lineNum];
+        doc.creasePattern.toArray(lines);
+        
         for (int i = 0; i < lineNum; i++) {
             for (int j = i + 1; j < lineNum; j++) {
-                OriLine l0 = doc.lines.get(i);
-                OriLine l1 = doc.lines.get(j);
+                OriLine l0 = lines[i];
+                OriLine l1 = lines[j];
 
                 if ((GeomUtil.Distance(l0.p0, l1.p0) < 0.01 && GeomUtil.Distance(l0.p1, l1.p1) < 0.01)
                         || (GeomUtil.Distance(l0.p1, l1.p0) < 0.01 && GeomUtil.Distance(l0.p0, l1.p1) < 0.01)) {
@@ -148,7 +151,7 @@ public class LoaderPDF implements Loader {
         }
 
         for (OriLine delLine : delLines) {
-            doc.lines.remove(delLine);
+            doc.creasePattern.remove(delLine);
         }
 
 

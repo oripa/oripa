@@ -13,6 +13,23 @@ import oripa.geom.OriLine;
 
 public class PaintContext {
     
+    
+    private static PaintContext instance = null;
+    
+
+    public static PaintContext getInstance(){
+    	if(instance == null){
+    		instance = new PaintContext();
+    	}
+    	
+    	return instance;
+    }
+    
+    private PaintContext(){}
+    
+    
+//--------------------------------------------------
+    
     private Stack<Vector2d> pickedVertices = new Stack<>();
 
 
@@ -32,28 +49,11 @@ public class PaintContext {
     
     private Point2D.Double mousePoint;
 
-//---------------------------------------------------
-    
-    private static PaintContext instance = null;
-    
 
-    public static PaintContext getInstance(){
-    	if(instance == null){
-    		instance = new PaintContext();
-    	}
-    	
-    	return instance;
-    }
-    
-    private PaintContext(){}
-    
-    
     public Point2D.Double getLogicalMousePoint() {
 		return mousePoint;
 	}
 
-//--------------------------------------------------
-    
     public boolean isPasting() {
 		return isPasting;
 	}
@@ -92,7 +92,12 @@ public class PaintContext {
         return gridPoints;
 	}
 	
-	
+
+	/**
+	 * remove all lines and all vertices in this context.
+	 * 
+	 * @param unselect	true if the removed lines should be marked as unselected.
+	 */
     public void clear(boolean unselect){
     	
     	
@@ -156,6 +161,11 @@ public class PaintContext {
     	return pickedVertices.pop();
     }
 
+    
+    /**
+     * pop the last pushed line and mark it unselected.
+     * @return popped line. null if no line is pushed.
+     */
     public OriLine popLine(){
     	if(pickedLines.empty()){
     		return null;

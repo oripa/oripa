@@ -1,17 +1,32 @@
 package oripa.undo;
 
-import java.util.Stack;
+import java.util.Deque;
+import java.util.LinkedList;
 
 public class UndoManager<Backup> {
 
-	private Stack<Backup> undoStack = new Stack<Backup>();
+	private Deque<Backup> undoStack = new LinkedList<>();
 	private Backup cache;
 	
 	private boolean changed = false;
+
+	private int max = Integer.MAX_VALUE;
+
+	public UndoManager() {
+		
+	}
 	
+	public UndoManager(int max){
+		this.max = max;
+	}
 
 	public void push(Backup uinfo){
 		undoStack.push(uinfo);
+		
+		if(undoStack.size() > max){
+			undoStack.removeFirst();
+		}
+		
 		changed = true;
 	}
 

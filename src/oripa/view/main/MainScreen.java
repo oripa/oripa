@@ -38,6 +38,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -171,7 +172,7 @@ public class MainScreen extends JPanel
 	}
 
 
-	private void drawLines(Graphics2D g2d, ArrayList<OriLine> lines){
+	private void drawLines(Graphics2D g2d, Collection<OriLine> lines){
 
 		ElementSelector selector = new ElementSelector();
 		for (OriLine line : lines) {
@@ -199,8 +200,8 @@ public class MainScreen extends JPanel
 
 	void drawVertexRectangles(Graphics2D g2d){
 		g2d.setColor(Color.BLACK);
-		double vertexDrawSize = 2.0;
-		for (OriLine line : ORIPA.doc.lines) {
+		final double vertexDrawSize = 2.0;
+		for (OriLine line : ORIPA.doc.creasePattern) {
 			if (!Globals.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
@@ -259,7 +260,7 @@ public class MainScreen extends JPanel
 		g2d.setStroke(Config.STROKE_VALLEY);
 		g2d.setColor(Color.black);
 
-		drawLines(g2d, ORIPA.doc.lines);
+		drawLines(g2d, ORIPA.doc.creasePattern);
 
 
 

@@ -4,69 +4,185 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
+import oripa.bind.EditOutlineActionWrapper;
+import oripa.bind.copypaste.CopyAndPasteActionWrapper;
+import oripa.bind.copypaste.CopyPasteErrorListener;
 import oripa.paint.EditMode;
-import oripa.paint.GraphicMouseAction;
+import oripa.paint.PaintContext;
+import oripa.paint.addvertex.AddVertexAction;
+import oripa.paint.bisector.AngleBisectorAction;
+import oripa.paint.byvalue.LineByValueAction;
+import oripa.paint.deleteline.DeleteLineAction;
+import oripa.paint.deletevertex.DeleteVertexAction;
+import oripa.paint.line.TwoPointLineAction;
+import oripa.paint.linetype.ChangeLineTypeAction;
+import oripa.paint.mirror.MirrorCopyAction;
+import oripa.paint.pbisec.TwoPointBisectorAction;
+import oripa.paint.segment.TwoPointSegmentAction;
+import oripa.paint.selectline.SelectAllLineAction;
+import oripa.paint.selectline.SelectLineAction;
+import oripa.paint.symmetric.SymmetricalLineAction;
+import oripa.paint.triangle.TriangleSplitAction;
+import oripa.paint.vertical.VerticalLineAction;
+import oripa.resource.StringID;
+import oripa.viewsetting.ViewChangeListener;
+import oripa.viewsetting.uipanel.ChangeOnAlterTypeButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnByValueButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnOtherCommandButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnPaintInputButtonSelected;
+import oripa.viewsetting.uipanel.ChangeOnSelectButtonSelected;
 
 public class PaintBoundStateFactory {
 
-	private ActionListener[] basicActions;
-	private Component parent = null;
-
-	/**
-	 * 
-	 * @param parent		A parent component. {@code null} indicates to avoid error on performActions() of created state.
-	 * @param basicActions	Actions for all created states.
-	 */
-	public PaintBoundStateFactory(Component parent, ActionListener[] basicActions) {
-		this.basicActions = basicActions;
-		this.parent = parent;
-	}
+	PaintContext context = PaintContext.getInstance();
 
 	
 
 	/**
-	 * Create a state with error handler.
-	 * @param mouseAction		Action for painting
-	 * @param errorListener		For managing error on {@code performActions()} of created state.
-	 * @param textID			ID for hint of painting.
-	 * @param actions			Additional actions.
+	 * Create a state specified by ID
+	 * @param parent
+	 * @param id A member of StringID
 	 * @return
 	 */
-	public ApplicationState<EditMode> create(
-			GraphicMouseAction mouseAction,
-			ErrorListener errorListener, 
-			String textID,
-			ActionListener[] actions){
-		
-		PaintBoundState state = new PaintBoundState(
-				parent, errorListener, mouseAction, textID, basicActions);
+	public ApplicationState<EditMode> create(Component parent, String id){
 
-		state.addActions(actions);
-		state.setErrorListener(errorListener);
-		
+		LocalPaintBoundStateFactory stateFactory = 
+				new LocalPaintBoundStateFactory(parent, null);
+
+
+		ApplicationState<EditMode> state = null;
+
+		switch(id){
+		case StringID.SELECT_ID:
+			state = stateFactory.create(
+					new SelectLineAction(context), id, 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())});
+			break;
+			
+		case StringID.DELETE_LINE_ID:
+			state =	stateFactory.create(
+					new DeleteLineAction(), id, 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnOtherCommandButtonSelected())});		 
+			break;
+
+		case StringID.CHANGE_LINE_TYPE_ID:
+			state = stateFactory.create(
+					new ChangeLineTypeAction(), id, 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnAlterTypeButtonSelected())});
+			break;
+			
+		case StringID.ADD_VERTEX_ID:
+			state =	stateFactory.create(new AddVertexAction(), id, 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnOtherCommandButtonSelected())});
+			break;
+			
+		case StringID.DELETE_VERTEX_ID:
+			state =	stateFactory.create(new DeleteVertexAction(), id, 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnOtherCommandButtonSelected())});
+			break;
+
+		case StringID.EDIT_CONTOUR_ID:
+			state = stateFactory.create(
+					new EditOutlineActionWrapper(),	id, 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnOtherCommandButtonSelected())});
+			break;
+			
+		case StringID.SELECT_ALL_LINE_ID:
+			state = stateFactory.create(
+					new SelectAllLineAction(context), id, 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())});
+			break;
+			
+		case StringID.COPY_PASTE_ID:
+			state = stateFactory.create(
+					new CopyAndPasteActionWrapper(false),
+					new CopyPasteErrorListener(), id, 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())});
+			break;
+			
+		case StringID.CUT_PASTE_ID:
+			state = stateFactory.create(
+					new CopyAndPasteActionWrapper(true),
+					new CopyPasteErrorListener(), id, 
+					new ActionListener[] {new ViewChangeListener(new ChangeOnSelectButtonSelected())});
+			break;
+
+
+		default:
+			state = createLineInputState(parent, id);
+		}
+
+		if(state == null){
+			throw new NullPointerException("Wrong ID for creating state");
+		}
+
+
 		return state;
 	}
-	
-	/**
-	 * 
-	 * Create a state.
-	 * @param mouseAction		Action for painting
-	 * @param textID			ID for hint of painting.
-	 * @param actions			Additional actions.
-	 * @return
-	 */
-	public ApplicationState<EditMode> create(
-			GraphicMouseAction mouseAction,
-			String textID,
-			ActionListener[] actions){
 
-		ApplicationState<EditMode> state = new PaintBoundState(
-				mouseAction, textID, basicActions);
+	private ApplicationState<EditMode> createLineInputState(
+			Component parent, String id){
 
-		state.addActions(actions);
-		
+		LocalPaintBoundStateFactory stateFactory = 
+				new LocalPaintBoundStateFactory(parent, 
+				new ActionListener[] {new ViewChangeListener(
+						new ChangeOnPaintInputButtonSelected())} );
+
+
+		ApplicationState<EditMode> state = null;
+		switch(id){
+		case StringID.DIRECT_V_ID:
+
+			state = stateFactory.create(new TwoPointSegmentAction(), 
+					id, null);
+			break;
+			
+		case StringID.ON_V_ID:
+			state =	stateFactory.create(new TwoPointLineAction(), 
+					id, null);
+			break;
+		case StringID.VERTICAL_ID:
+			state = stateFactory.create(new VerticalLineAction(), 
+					id, null);
+			break;
+			
+		case StringID.BISECTOR_ID:
+			state = stateFactory.create(new AngleBisectorAction(), 
+					id, null);
+			break;
+			
+		case StringID.TRIANGLE_ID:
+			state = stateFactory.create(new TriangleSplitAction(), 
+					id, null);
+
+			break;
+
+		case StringID.SYMMETRIC_ID:
+			state = stateFactory.create(new SymmetricalLineAction(), 
+					id, null);
+
+			break;
+		case StringID.MIRROR_ID:
+			state = stateFactory.create(new MirrorCopyAction(context), 
+					id, null);
+
+			break;
+
+		case StringID.BY_VALUE_ID:
+			LocalPaintBoundStateFactory byValueFactory = new LocalPaintBoundStateFactory(
+					parent, new ActionListener[] {new ViewChangeListener(new ChangeOnByValueButtonSelected())});
+
+			state = byValueFactory.create(new LineByValueAction(), 
+					id,	null );
+
+			break;
+
+		case StringID.PERPENDICULAR_BISECTOR_ID:
+			state = stateFactory.create(new TwoPointBisectorAction(), 
+					id, null);
+
+		}
+
 		return state;
-		
 	}
-	
 }

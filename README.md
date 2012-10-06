@@ -8,13 +8,15 @@ Executable file(stable): https://dl.dropbox.com/u/45296904/oripaS.jar
 
 Known bugs
 --------
-* Nothing? Please tell me if you find.
+* Crashing when you draw a massive crease pattern. More detail is needed.
 
 
 What going on
 ---------
 <!-- You can try the following(s) with unstable version. -->
 * Erasing vertex automatically after deleting selected lines.
+* Fix origin position of second copy(cut)-and-paste.
+* Accept [Enter] input of division number.
 
 Next challenge(s)
 --------

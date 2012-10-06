@@ -1,11 +1,7 @@
 package oripa.bind.binder;
 
-import java.awt.Component;
-import java.awt.event.ActionListener;
-
 import javax.swing.AbstractButton;
 
-import oripa.bind.state.PaintBoundStateFactory;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
