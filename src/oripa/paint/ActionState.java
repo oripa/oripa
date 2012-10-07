@@ -8,10 +8,6 @@ public interface ActionState {
 
 	public ActionState undo(PaintContext context);
 	
-//	public void onResult(MouseContext context);
-	
-	// syntax error. why?
-//	public void setNextState(Class<? ActionState> state);	
 
 	public void setNextState(ActionState state);	
 	public void setPreviousState(ActionState state);

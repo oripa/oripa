@@ -60,7 +60,7 @@ public class GeometricOperation {
 		Vector2d picked = null;		
 
 		if(nearestPosition != null){
-			picked = nearestPosition.point;		
+			picked = new Vector2d(nearestPosition.point);		
 		}
 		
 		if(picked == null && freeSelection == true){

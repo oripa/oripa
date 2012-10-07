@@ -17,7 +17,6 @@ public class LabelStringResource_en extends ListResourceBundle {
 	        { StringID.Main.SAVE_AS_ID, "Save As ..." }, 
 	        { StringID.Main.SAVE_AS_IMAGE_ID, "Save As Image ..." }, 
 	        { StringID.Main.EXPORT_DXF_ID, "Export (DXF)" }, 
-	        { StringID.Main.EDIT_CONTOUR_ID, "Edit Contour" }, 
 	        { StringID.Main.PROPERTY_ID, "Property" }, 
 	        { StringID.Main.EXIT_ID, "Exit" }, 
 	        { StringID.Main.ABOUT_ID, "About" }, 

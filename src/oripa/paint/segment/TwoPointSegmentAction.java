@@ -20,10 +20,13 @@ public class TwoPointSegmentAction extends GraphicMouseAction {
 	@Override
 	public void destroy(PaintContext context) {
 		super.destroy(context);
-		setActionState(new SelectingFirstVertexForSegment());
 	}
 
-
+	@Override
+	public void recover(PaintContext context) {
+		// TODO Auto-generated method stub
+		setActionState(new SelectingFirstVertexForSegment());
+	}
 
 
 	@Override

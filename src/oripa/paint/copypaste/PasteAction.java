@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +28,7 @@ public class PasteAction extends GraphicMouseAction {
 
 	private OriginHolder originHolder = OriginHolder.getInstance();
 
-	
+
 	public PasteAction(){
 		setEditMode(EditMode.INPUT);
 		setNeedSelect(true);
@@ -40,8 +41,8 @@ public class PasteAction extends GraphicMouseAction {
 	@Override
 	public void recover(PaintContext context) {
 		context.clear(false);
-		
-		
+
+
 		context.startPasting();
 
 		for(OriLine line : ORIPA.doc.creasePattern){
@@ -54,7 +55,7 @@ public class PasteAction extends GraphicMouseAction {
 
 	}
 
-	
+
 
 	/**
 	 * Clear context and mark lines as unselected.
@@ -83,36 +84,43 @@ public class PasteAction extends GraphicMouseAction {
 	@Override
 	public Vector2d onMove(PaintContext context, AffineTransform affine,
 			boolean differentAction) {
-		
-		Vector2d closeVertex = super.onMove(context, affine, differentAction);
-		Vector2d closeVertexOfLines = GeometricOperation.pickVertexFromPickedLines(context);
+
+		// vertex-only super's action
+		setCandidateVertexOnMove(context, differentAction);
+		Vector2d closeVertex = context.pickCandidateV;
+
+
+		Vector2d closeVertexOfLines = 
+				GeometricOperation.pickVertexFromPickedLines(context);
 
 		if(closeVertex == null){
 			closeVertex = closeVertexOfLines;
 		}
-		
-		
+
+
 		Point2D.Double current = context.getLogicalMousePoint();
 		if(closeVertex != null && closeVertexOfLines != null){
-
+			// get the nearest to current
 			closeVertex = NearestVertexFinder.findNearestOf(
 					current, closeVertex, closeVertexOfLines);
 
 		}
 
 		context.pickCandidateV = closeVertex;
-		
-		if (context.getLineCount() > 0) {
-			if(closeVertex == null) {
-				closeVertex = new Vector2d(current.x, current.y);
-			}
-			
-		}		
+
+//		if (context.getLineCount() > 0) {
+//			if(closeVertex == null) {
+//				closeVertex = new Vector2d(current.x, current.y);
+//			}
+//
+//		}		
 		return closeVertex;
 	}
 
-	
 
+
+	Line2D.Double g2dLine = new Line2D.Double();
+	double diffX, diffY;
 	@Override
 	public void onDraw(Graphics2D g2d, PaintContext context) {
 
@@ -121,27 +129,45 @@ public class PasteAction extends GraphicMouseAction {
 		drawPickCandidateVertex(g2d, context);
 
 		Vector2d origin = originHolder.getOrigin(context);
-		Vector2d closeVertex;
-		Point.Double current = context.getLogicalMousePoint();
-		closeVertex = new Vector2d(current.x, current.y);
-		
+
 		if(origin == null){
 			return;
 		}
 
-				
+
 		double ox = origin.x;
 		double oy = origin.y;
-		GeometricOperation.shiftLines(context.getLines(), shiftedLines,
-				closeVertex.x - ox, closeVertex.y -oy);
 
-		
 		g2d.setColor(Color.GREEN);
 		drawVertex(g2d, context, ox, oy);
-		
-        g2d.setColor(Color.MAGENTA);
-		for(OriLine line : shiftedLines){
-			this.drawLine(g2d, line);
+
+		if(context.pickCandidateV != null){
+			diffX = context.pickCandidateV.x - ox;
+			diffY = context.pickCandidateV.y - oy;
+		}
+		else {
+			diffX = context.getLogicalMousePoint().x - ox;
+			diffY = context.getLogicalMousePoint().y -oy;
+		}
+		g2d.setColor(Color.MAGENTA);
+
+		//		GeometricOperation.shiftLines(context.getLines(), shiftedLines,
+		//				current.x - ox, current.y -oy);
+		//		
+		//		for(OriLine line : shiftedLines){
+		//			this.drawLine(g2d, line);
+		//		}
+
+		// a little faster
+		for(OriLine l : context.getLines()){
+
+			g2dLine.x1 = l.p0.x + diffX;
+			g2dLine.y1 = l.p0.y + diffY;
+
+			g2dLine.x2 = l.p1.x + diffX;
+			g2dLine.y2 = l.p1.y + diffY;
+
+			g2d.draw(g2dLine);
 		}
 
 	}

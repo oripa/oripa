@@ -42,10 +42,10 @@ public class StateManager implements StateManagerInterface<EditMode>{
 	 */
 	@Override
 	public void push(ApplicationState<EditMode> s){
-		// keep for popLastInputCommand()
 
 		
 		if(s.getGroup() == EditMode.INPUT){
+			// keep for popLastInputCommand()
 			lastInputCommand = s;
 		}
 		else if(current != null){

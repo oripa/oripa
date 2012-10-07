@@ -32,6 +32,7 @@ import javax.vecmath.Vector2d;
 import oripa.ORIPA;
 import oripa.doc.command.AddLine;
 import oripa.doc.command.PasteLines;
+import oripa.doc.command.RemoveElement;
 import oripa.doc.core.CreasePattern;
 import oripa.folder.Folder;
 import oripa.geom.GeomUtil;
@@ -434,15 +435,13 @@ public class Doc {
 
 	}    
 
+	RemoveElement remover = new RemoveElement();
 	public void removeLine(OriLine l) {
-		creasePattern.remove(l);
-		// merge the lines if possible, to prevent unnecessary vertexes
-		merge2LinesAt(l.p0);
-		merge2LinesAt(l.p1);
+		remover.removeLine(l, creasePattern);
 	}
 
 	public void removeVertex(Vector2d v) {
-		merge2LinesAt(v);
+		remover.removeVertex(v, creasePattern);
 	}
 
 	public void deleteSelectedLines() {
@@ -458,56 +457,6 @@ public class Doc {
 		}
 	}
 
-	private void merge2LinesAt(Vector2d p) {
-		ArrayList<OriLine> sharedLines = new ArrayList<OriLine>();
-		for (OriLine line : creasePattern) {
-			if (GeomUtil.Distance(line.p0, p) < 0.001 || GeomUtil.Distance(line.p1, p) < 0.001) {
-				sharedLines.add(line);
-			}
-		}
-
-		if (sharedLines.size() != 2) {
-			return;
-		}
-
-		OriLine l0 = sharedLines.get(0);
-		OriLine l1 = sharedLines.get(1);
-
-		if (l0.typeVal != l1.typeVal) {
-			return;
-		}
-
-		// Check if the lines have the same angle
-		Vector2d dir0 = new Vector2d(l0.p1.x - l0.p0.x, l0.p1.y - l0.p0.y);
-		Vector2d dir1 = new Vector2d(l1.p1.x - l1.p0.x, l1.p1.y - l1.p0.y);
-
-		dir0.normalize();
-		dir1.normalize();
-
-		if (!GeomUtil.isParallel(dir0, dir1)) {
-			return;
-		}
-
-		// Merge possibility found
-		Vector2d p0 = new Vector2d();
-		Vector2d p1 = new Vector2d();
-
-		if (GeomUtil.Distance(l0.p0, p) < 0.001) {
-			p0.set(l0.p1);
-		} else {
-			p0.set(l0.p0);
-		}
-		if (GeomUtil.Distance(l1.p0, p) < 0.001) {
-			p1.set(l1.p1);
-		} else {
-			p1.set(l1.p0);
-		}
-
-		creasePattern.remove(l0);
-		creasePattern.remove(l1);
-		OriLine li = new OriLine(p0, p1, l0.typeVal);
-		creasePattern.add(li);
-	}
 
 	public void CircleCopy(double cx, double cy, double angleDeg, int num) {
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
@@ -1264,12 +1213,12 @@ public class Doc {
 	}
 
 
-	private AddLine adder = new AddLine();
+	private AddLine lineAdder = new AddLine();
 	// Adds a new OriLine, also searching for intersections with others 
 	// that would cause their mutual division
 	public void addLine(OriLine inputLine) {
 		
-		adder.addLine(inputLine, creasePattern);		
+		lineAdder.addLine(inputLine, creasePattern);		
 	}
 
 	public void pasteLines(Collection<OriLine> lines){
@@ -1376,46 +1325,9 @@ public class Doc {
 
 	public void alterLineType(OriLine l, TypeForChange from,  TypeForChange to) {
 		LineTypeChanger changer = new LineTypeChanger();
-		changer.alterLineType(l, this, from, to);
+		changer.alterLineType(l, creasePattern, from, to);
 	}
 
-	public void alterLineType(OriLine l, int lineTypeFromIndex,  int lineTypeToIndex) {
-		if (lineTypeFromIndex == 1 /*M*/ && l.typeVal != OriLine.TYPE_RIDGE) {
-			return;
-		}
-		if (lineTypeFromIndex == 2 /*V*/ && l.typeVal != OriLine.TYPE_VALLEY) {
-			return;
-		}
-
-		switch (lineTypeToIndex) {
-		case 0:
-			l.typeVal = OriLine.TYPE_RIDGE;
-			break;
-		case 1:
-			l.typeVal = OriLine.TYPE_VALLEY;
-			break;
-		case 2:
-			l.typeVal = OriLine.TYPE_NONE;
-			break;
-		case 3:
-			l.typeVal = OriLine.TYPE_CUT;
-			break;
-		case 4:
-			removeLine(l);
-			break;
-		case 5: {
-			if (l.typeVal == OriLine.TYPE_RIDGE) {
-				l.typeVal = OriLine.TYPE_VALLEY;
-			} else if (l.typeVal == OriLine.TYPE_VALLEY) {
-				l.typeVal = OriLine.TYPE_RIDGE;
-			}
-
-		}
-		
-		}
-	}
-	
-		
 		
 	public Collection<Vector2d> getVerticesAround(Vector2d v){
 		return creasePattern.getVerticesAround(v);

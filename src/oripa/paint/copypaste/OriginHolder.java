@@ -4,7 +4,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.paint.PaintContext;
 
-public class OriginHolder {
+class OriginHolder {
 
 //--------------------------------------------------------------
 	private static OriginHolder holder = null;

@@ -47,7 +47,13 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 		
 	}
 
-	protected abstract void afterRectangularSelection(Collection<OriLine> selectedLines, PaintContext context);
+	/**
+	 * defines what to do for the selected lines.
+	 * @param selectedLines		lines selected by dragging
+	 * @param context
+	 */
+	protected abstract void afterRectangularSelection(
+			Collection<OriLine> selectedLines, PaintContext context);
 	
 	protected final void selectByRectangularArea(PaintContext context){
 		LinkedList<OriLine> selectedLines = new LinkedList<>();

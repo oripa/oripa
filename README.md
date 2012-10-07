@@ -4,27 +4,36 @@ ORIPA S
 A great drawer ORIPA is originally composed by MITANI Jun for origami crease pattern.
 "ORIPA S" fixes some bugs and provides function of saving as image.
 
-Executable file(stable): https://dl.dropbox.com/u/45296904/oripaS.jar
+Executable file(latest): https://dl.dropbox.com/u/45296904/oripaS.jar
+Executable file(old): https://dl.dropbox.com/u/45296904/oripaS1_24.jar
+
+
+<!--- Executable file(unstable): https://dl.dropbox.com/u/45296904/oripaS_unstable.jar ---!>
 
 Known bugs
 --------
-* Crashing when you draw a massive crease pattern. More detail is needed.
-
+* Getting slow for a massive data. (It is a  problem of implementation and computational time rather than a bug.)
 
 What going on
 ---------
 <!-- You can try the following(s) with unstable version. -->
 * Erasing vertex automatically after deleting selected lines.
-* Fix origin position of second copy(cut)-and-paste.
 * Accept [Enter] input of division number.
 
 Next challenge(s)
 --------
 * Drawing copyright on saved picture.
+* Screenshot of folded model.
 
 History of updates
 -------
-The latest is of stable version.
+
+* __2012/10/07 Bug fix:__
+   * Speed up: finding the nearest vertex, pasting lines and adding line. Maybe it won't hang up now. 
+   (but slow in a test with 100*100 grid data.)
+   * Bug fixed. The last update was incomplete :P
+   * Correct origin position of second copy(cut)-and-paste.
+<p></p>
 
 * __2012/09/29 Bug fix:__
    * Cut-and-copy mode by Ctrl+x. (Actually the crash was not a bug. Closing window was a correct action defined by MITANI Jun.)

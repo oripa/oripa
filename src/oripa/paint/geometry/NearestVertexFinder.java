@@ -20,7 +20,7 @@ public class NearestVertexFinder {
 	 * 
 	 * @return nearest point to p
 	 */
-	private static NearestPoint findNearestOf(
+	private static void findNearestOf(
 			Point2D.Double p, NearestPoint nearest, Vector2d other){
 		
 		
@@ -30,7 +30,6 @@ public class NearestVertexFinder {
 			nearest.distance = dist;
 		}
 		
-		return nearest;
 	}
 
 	public static Vector2d findNearestOf(
@@ -54,8 +53,8 @@ public class NearestVertexFinder {
 
 		for (OriLine line : lines) {			
 
-			minPosition = findNearestOf(p, minPosition, line.p0);
-			minPosition = findNearestOf(p, minPosition, line.p1);
+			findNearestOf(p, minPosition, line.p0);
+			findNearestOf(p, minPosition, line.p1);
 			
 		}
 
@@ -74,7 +73,7 @@ public class NearestVertexFinder {
 		NearestPoint minPosition = new NearestPoint();
 
 		for(Vector2d vertex : vertices){
-			minPosition = findNearestOf(p, minPosition, vertex);
+			findNearestOf(p, minPosition, vertex);
 		}
 
 		return minPosition;

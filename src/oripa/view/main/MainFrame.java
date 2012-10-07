@@ -170,9 +170,9 @@ public class MainFrame extends JFrame implements ActionListener,
 		// addKeyListener(this);
 
 		menuItemCopyAndPaste.setText(resourceHolder.getString(
-				ResourceKey.LABEL, StringID.Main.COPY_PASTE_ID));
-		menuItemCutAndPaste.setText(resourceHolder.getString(ResourceKey.LABEL,
-				StringID.Main.CUT_PASTE_ID));
+				ResourceKey.LABEL, StringID.COPY_PASTE_ID));
+		menuItemCutAndPaste.setText(resourceHolder.getString(
+				ResourceKey.LABEL, StringID.CUT_PASTE_ID));
 		// menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 
 		mainScreen = new MainScreen();

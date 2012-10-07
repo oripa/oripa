@@ -69,6 +69,7 @@ public class MainScreen extends JPanel
 
 	private MainScreenSettingDB setting = MainScreenSettingDB.getInstance();
 	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+	private PaintContext mouseContext = PaintContext.getInstance();
 	
 	private boolean bDrawFaceID = false;
 	private Image bufferImage;
@@ -317,17 +318,22 @@ public class MainScreen extends JPanel
 
 			g.drawImage(bufferImage, 0, 0, this);
 
-			Vector2d candidate = mouseContext.pickCandidateV;
-			if(candidate != null){
-				g.setColor(Color.BLACK);
-				g.drawString("(" + candidate.x + 
-						"," + candidate.y + ")", 0, 10);
-			}	
+			drawCandidatePosition(g);
 		}
 		else {
 			g.drawImage(bufferImage, 0, 0, this);
 
 		}
+	}
+	
+	private void drawCandidatePosition(Graphics g){
+		Vector2d candidate = mouseContext.pickCandidateV;
+		if(candidate != null){
+			g.setColor(Color.BLACK);
+			g.drawString("(" + candidate.x + 
+					"," + candidate.y + ")", 0, 10);
+		}	
+		
 	}
 
 
@@ -345,36 +351,33 @@ public class MainScreen extends JPanel
 
 
 
-	PaintContext mouseContext = PaintContext.getInstance();
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
-		if (Globals.mouseAction != null) {
-
-			if(javax.swing.SwingUtilities.isRightMouseButton(e)){
-				Globals.mouseAction.onRightClick(
-						mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
-			}
-			else {
-				Globals.mouseAction = Globals.mouseAction.onLeftClick(
-						mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
-			}
-
-			repaint();
+		if (Globals.mouseAction == null) {
 			return;
 		}
 
-		repaint();
+		if(javax.swing.SwingUtilities.isRightMouseButton(e)){
+			Globals.mouseAction.onRightClick(
+					mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+		}
+		else {
+			Globals.mouseAction = Globals.mouseAction.onLeftClick(
+					mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+		}
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 
-		if(Globals.mouseAction != null){
-			Globals.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
-
-		}    	
+		if(Globals.mouseAction == null){
+			return;
+		}
+		
+		Globals.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
 
 		preMousePoint = e.getPoint();
 	}
@@ -440,12 +443,14 @@ public class MainScreen extends JPanel
 		mouseContext.dispGrid = setting.isGridVisible();
 		mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
 
-		if (Globals.mouseAction != null) {
-			Globals.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
-			//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
-			repaint();
+		if (Globals.mouseAction == null) {
 			return;
 		}
+
+		Globals.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+		//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
+		repaint();
+		
 	}
 
 	@Override

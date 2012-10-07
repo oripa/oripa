@@ -16,32 +16,12 @@ public class StringID {
 	    public static final String EXIT_ID =  "Exit"; 
 	    public static final String UNDO_ID =  "Undo"; 
 	    public static final String ABOUT_ID =  "About"; 
-		public static final String COPY_PASTE_ID = "Copy_and_Paste";
-		public static final String CUT_PASTE_ID = "Cut_and_Paste";
-	    public static final String EDIT_CONTOUR_ID =  "EditContour"; 
+//		public static final String COPY_PASTE_ID = "Copy_and_Paste";
+//		public static final String CUT_PASTE_ID = "Cut_and_Paste";
+//	    public static final String EDIT_CONTOUR_ID =  "EditContour"; 
 		public static final String SELECT_ALL_ID = "selectAll";
 	}
 
-	public static class Command{
-		public static final String DIRECT_V_ID =  "DirectV"; 
-	    public static final String ON_V_ID =  "OnV"; 
-	    public static final String SYMMETRIC_ID =  "Symmetric"; 
-	    public static final String TRIANGLE_ID =  "TriangleSplit"; 
-	    public static final String BISECTOR_ID =  "Bisector"; 
-	    public static final String VERTICAL_ID =  "VerticalLine"; 
-	    public static final String MIRROR_ID =  "Mirror"; 
-	    public static final String BY_VALUE_ID =  "ByValue"; 
-	    public static final String PICK_LENGTH_ID =  "PickLength"; 
-	    public static final String PICK_ANGLE_ID =  "PickAngle"; 
-	    public static final String CHANGE_LINE_TYPE_ID =  "ChangeLineType"; 
-	    public static final String DELETE_LINE_ID =  "DeleteLine"; 
-	    public static final String ADD_VERTEX_ID =  "AddVertex"; 
-	    public static final String DELETE_VERTEX_ID =  "DeleteVertex"; 
-	    public static final String CONTOUR_ID =  "EditContour"; 
-		public static final String PERPENDICULAR_BISECTOR_ID = "PBisec";
-		public static final String SELECT_ID = "SelectLine";
-		public static final String COPY_PASTE_ID = "Copy_and_Paste";
-	}
 	
 	public static class Error{
 	    public static final String SAVE_FAILED_ID =  "Error_FileSaveFailed"; 
@@ -72,12 +52,9 @@ public class StringID {
 	    public static final String SHOW_AUX_ID =  "UI_ShowAux";	    
 	    public static final String SHOW_VERTICES_ID =  "UI_ShowVertices"; 
 
-	    public static final String CHANGE_LINE_TYPE_ID =  "ChangeLineType"; 
 	    public static final String CHANGE_LINE_TYPE_FROM_ID =  "UI_ChangeLineTypeFrom"; 
 	    public static final String CHANGE_LINE_TYPE_TO_ID =  "UI_ChangeLineTypeTo"; 
 
-	    public static final String ADD_VERTEX_ID =  "AddVertex"; 
-	    public static final String DELETE_VERTEX_ID =  "DeleteVertex"; 
 	    public static final String MEASURE_ID =  "UI_Measure"; 
 	    public static final String FOLD_ID =  "UI_Fold"; 
 		public static final String FULL_ESTIMATION_ID = "UI_FullEstimation";
