@@ -10,6 +10,9 @@ import oripa.geom.OriLine;
 
 public class PasteLines {
 
+	/**
+	 * A rectangle domain
+	 */
 	private class Domain{
 		double left, right, top, bottom;
 
@@ -17,12 +20,41 @@ public class PasteLines {
 		 * reset variables by the most opposite value.
 		 */
 		public Domain() {
+			initialize();
+		}
+
+		/**
+		 * A rectangle domain fitting to given lines
+		 * @param target
+		 */
+		public Domain(Collection<OriLine> target){
+
+			initialize();
+						
+			for(OriLine line : target){
+				enlargeDomain(this, line.p0);
+				enlargeDomain(this, line.p1);
+			}
+			
+		}
+
+		private void initialize(){
 			left = Double.MAX_VALUE;
 			right = Double.MIN_VALUE;
 			top = Double.MAX_VALUE;
 			bottom = Double.MIN_VALUE;
+
 		}
-	}
+		
+		public void enlargeDomain(Domain domain, Vector2d v){
+			domain.left = Math.min(domain.left, v.x);
+			domain.right = Math.max(domain.right, v.x);
+			domain.top = Math.min(domain.top, v.y);
+			domain.bottom = Math.max(domain.bottom, v.y);
+			
+		}
+		
+}
 	
 	/**
 	 * 
@@ -38,7 +70,7 @@ public class PasteLines {
 		// found lines are removed from the current list.
 		//----------------------------------------------------------
 		
-		Domain domain = createDomain(toBePasted);
+		Domain domain = new Domain(toBePasted);
 		LinkedList<OriLine> crossables = new LinkedList<>();
 				
 		for(Iterator<OriLine> itrator = currentLines.iterator();
@@ -75,26 +107,6 @@ public class PasteLines {
 			currentLines.add(line);
 		}
 
-		
-	}
-	
-	private Domain createDomain(Collection<OriLine> target){
-
-		Domain domain = new Domain();		
-		
-		for(OriLine line : target){
-			enlargeDomain(domain, line.p0);
-			enlargeDomain(domain, line.p1);
-		}
-		
-		return domain;
-	}
-
-	private void enlargeDomain(Domain domain, Vector2d v){
-		domain.left = Math.min(domain.left, v.x);
-		domain.right = Math.max(domain.right, v.x);
-		domain.top = Math.min(domain.top, v.y);
-		domain.bottom = Math.max(domain.bottom, v.y);
 		
 	}
 	

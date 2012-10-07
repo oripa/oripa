@@ -138,16 +138,6 @@ public class NearestVertexFinder {
 		nearestPosition = findNearestVertexFromLines(
 				currentPoint, context.getLines());
 		
-//		if (context.dispGrid) {
-//
-//			NearestPoint nearestGrid = findNearestVertex(
-//					currentPoint, context.updateGrids(Globals.gridDivNum));
-//			
-//			if(nearestGrid.distance < nearestPosition.distance){
-//				nearestPosition = nearestGrid;
-//			}
-//			
-//		}
 
 		return nearestPosition;
 	}

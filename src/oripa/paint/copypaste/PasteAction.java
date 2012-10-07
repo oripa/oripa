@@ -121,9 +121,11 @@ public class PasteAction extends GraphicMouseAction {
 		drawPickCandidateVertex(g2d, context);
 
 		Vector2d origin = originHolder.getOrigin(context);
-		Vector2d closeVertex = context.pickCandidateV;
+		Vector2d closeVertex;
+		Point.Double current = context.getLogicalMousePoint();
+		closeVertex = new Vector2d(current.x, current.y);
 		
-		if(origin == null || closeVertex == null){
+		if(origin == null){
 			return;
 		}
 

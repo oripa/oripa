@@ -26,13 +26,17 @@ public class OriginHolder {
 		origin = p;
 	}
 	
-	public Vector2d getOrigin(PaintContext context){
+	public void resetOrigin(PaintContext context){
     	if(origin == null){
     		if(context.getLineCount() > 0){
     			origin = context.getLine(0).p0;
     		}
-		}
-
+		}	
+	}
+	
+	public Vector2d getOrigin(PaintContext context){
+		resetOrigin(context);
+		
 		return origin;
 	}
 	

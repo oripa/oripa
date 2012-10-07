@@ -44,12 +44,7 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 		}
 		
 		// a case having switched copy to cut.
-		if(isCut && prev.getGroup() == EditMode.COPY){
-			
-		}
-		else {
-			prev.performActions(null);
-		}
+		prev.performActions(null);
 	}
 
 	
