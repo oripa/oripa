@@ -130,8 +130,6 @@ public class GeometricOperation {
 
 	public static void shiftLines(Collection<OriLine> lines, 
 			ArrayList<OriLine> shiftedLines, double diffX, double diffY){
-
-		shiftedLines.ensureCapacity(lines.size());
 		
 		int i = 0;
 		for (OriLine l : lines) {

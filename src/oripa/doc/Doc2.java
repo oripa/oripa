@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.doc.core.CreasePattern;
 import oripa.folder.Folder;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
@@ -116,7 +117,7 @@ public class Doc2 extends Doc{
 	}   
 
 	public Doc2(double size) {
-		lines = new CreasePatternManager(size);
+		lines = new CreasePattern(size);
 		initialize(size);
 	}
 

@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.doc.VerticesManager;
+import oripa.doc.core.VerticesManager;
 import oripa.geom.OriLine;
 import oripa.paint.PaintContext;
 import oripa.paint.geometry.GeometricOperation;
@@ -23,7 +23,7 @@ public class VerticesManagerTest extends TestCase{
 
 	final double paperSize = 400;
 	Doc doc = new Doc(paperSize);
-	double interval = doc.getCreasePatternManager().getVerticesManager().interval;
+	double interval = doc.getCreasePattern().getVerticesManager().interval;
 
 	@Test
 	protected void setUp() throws Exception {
@@ -56,7 +56,7 @@ public class VerticesManagerTest extends TestCase{
 		Point.Double mousePoint = new Point.Double(0, 0);
 		context.setLogicalMousePoint(mousePoint);
 
-		VerticesManager manager = doc.getCreasePatternManager().getVerticesManager();
+		VerticesManager manager = doc.getCreasePattern().getVerticesManager();
 
 		final double distance = 10;
 		Collection<Collection<Vector2d>> area = manager.getArea(
@@ -71,7 +71,7 @@ public class VerticesManagerTest extends TestCase{
 	@Test
 	public void testManager() {
 		
-		VerticesManager manager = doc.getCreasePatternManager().getVerticesManager();
+		VerticesManager manager = doc.getCreasePattern().getVerticesManager();
 		
 
 

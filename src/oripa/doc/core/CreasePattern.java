@@ -1,4 +1,4 @@
-package oripa.doc;
+package oripa.doc.core;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -9,7 +9,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.geom.OriLine;
 
-public class CreasePatternManager implements Collection<OriLine> {
+public class CreasePattern implements Collection<OriLine> {
 	
 
 	/**
@@ -20,7 +20,7 @@ public class CreasePatternManager implements Collection<OriLine> {
 	private LinkedList<OriLine> lines;
 	private VerticesManager vertices;
 	
-	public CreasePatternManager(double paperSize) {
+	public CreasePattern(double paperSize) {
 		lines = new LinkedList<>();
 		vertices = new VerticesManager(paperSize);
 	}

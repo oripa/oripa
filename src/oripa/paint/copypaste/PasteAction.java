@@ -2,6 +2,7 @@ package oripa.paint.copypaste;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -40,7 +41,6 @@ public class PasteAction extends GraphicMouseAction {
 	public void recover(PaintContext context) {
 		context.clear(false);
 		
-		shiftedLines = new FilledOriLineArrayList(context.getLineCount());
 		
 		context.startPasting();
 
@@ -50,6 +50,7 @@ public class PasteAction extends GraphicMouseAction {
 			}
 		}
 
+		shiftedLines = new FilledOriLineArrayList(context.getLines());
 
 	}
 
@@ -106,16 +107,6 @@ public class PasteAction extends GraphicMouseAction {
 				closeVertex = new Vector2d(current.x, current.y);
 			}
 			
-			if(shiftedLines.size() < context.getLineCount()){
-				shiftedLines = new FilledOriLineArrayList(context.getLineCount());
-			}
-			
-			Vector2d origin = originHolder.getOrigin(context);
-			double ox = origin.x;
-			double oy = origin.y;
-			GeometricOperation.shiftLines(context.getLines(), shiftedLines,
-					closeVertex.x - ox, closeVertex.y -oy);
-
 		}		
 		return closeVertex;
 	}
@@ -130,22 +121,25 @@ public class PasteAction extends GraphicMouseAction {
 		drawPickCandidateVertex(g2d, context);
 
 		Vector2d origin = originHolder.getOrigin(context);
-
-		if(origin == null){
+		Vector2d closeVertex = context.pickCandidateV;
+		
+		if(origin == null || closeVertex == null){
 			return;
 		}
+
+				
+		double ox = origin.x;
+		double oy = origin.y;
+		GeometricOperation.shiftLines(context.getLines(), shiftedLines,
+				closeVertex.x - ox, closeVertex.y -oy);
+
 		
-		if(shiftedLines.isEmpty() == false){
-			double ox = origin.x;
-			double oy = origin.y;
-			
-			g2d.setColor(Color.GREEN);
-			drawVertex(g2d, context, ox, oy);
-			
-	        g2d.setColor(Color.MAGENTA);
-			for(OriLine line : shiftedLines){
-				this.drawLine(g2d, line);
-			}
+		g2d.setColor(Color.GREEN);
+		drawVertex(g2d, context, ox, oy);
+		
+        g2d.setColor(Color.MAGENTA);
+		for(OriLine line : shiftedLines){
+			this.drawLine(g2d, line);
 		}
 
 	}

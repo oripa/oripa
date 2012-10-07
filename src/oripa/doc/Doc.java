@@ -30,6 +30,9 @@ import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.doc.command.AddLine;
+import oripa.doc.command.PasteLines;
+import oripa.doc.core.CreasePattern;
 import oripa.folder.Folder;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
@@ -78,7 +81,7 @@ public class Doc {
 
 	public ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
 //	public ArrayList<OriLine> lines = new ArrayList<OriLine>();
-	public CreasePatternManager creasePattern = null;
+	public CreasePattern creasePattern = null;
 
 	public ArrayList<OriFace> faces = new ArrayList<OriFace>();
 	public ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
@@ -89,7 +92,6 @@ public class Doc {
 	public boolean hasModel = false;
 	public boolean bFolded = false;
 	public ArrayList<OriFace> sortedFaces = new ArrayList<OriFace>();
-	public static final double POINT_EPS = 1.0;
 	boolean bOutLog = true;
 	public String dataFilePath = "";
 	final public static int NO_OVERLAP = 0;
@@ -121,7 +123,7 @@ public class Doc {
 
 	private void initialize(double size){
 
-		creasePattern = new CreasePatternManager(size);
+		creasePattern = new CreasePattern(size);
 		this.size = size;
 
 		OriLine l0 = new OriLine(-size / 2.0, -size / 2.0, size / 2.0, -size / 2.0, OriLine.TYPE_CUT);
@@ -225,7 +227,7 @@ public class Doc {
 	private OriVertex addAndGetVertexFromVVec(Vector2d p) {
 		OriVertex vtx = null;
 		for (OriVertex v : vertices) {
-			if (GeomUtil.Distance(v.p, p) < POINT_EPS) {
+			if (GeomUtil.Distance(v.p, p) < CalculationResource.POINT_EPS) {
 				vtx = v;
 			}
 		}
@@ -1191,7 +1193,7 @@ public class Doc {
 				continue;
 			}
 			double distance = GeomUtil.Distance(crossPoint, v1);
-			if (distance < POINT_EPS) {
+			if (distance < CalculationResource.POINT_EPS) {
 				continue;
 			}
 
@@ -1227,7 +1229,7 @@ public class Doc {
 				continue;
 			}
 			double distance = GeomUtil.Distance(crossPoint, v1);
-			if (distance < POINT_EPS) {
+			if (distance < CalculationResource.POINT_EPS) {
 				continue;
 			}
 
@@ -1244,7 +1246,7 @@ public class Doc {
 
 		addLine(new OriLine(v1, bestPoint, Globals.inputLineType));
 
-		if (GeomUtil.Distance(bestPoint, startV) < POINT_EPS) {
+		if (GeomUtil.Distance(bestPoint, startV) < CalculationResource.POINT_EPS) {
 			return;
 		}
 
@@ -1261,129 +1263,22 @@ public class Doc {
 
 	}
 
-	private boolean addAuxLine(OriLine inputLine){
-		
-		if(inputLine.typeVal != OriLine.TYPE_NONE){
-			return false;
-		}
-		
-		LinkedList<OriLine> toBeAdded = new LinkedList<>();
-		
-		// If it intersects other line, divide them
-		for (Iterator<OriLine> iterator = creasePattern.iterator(); iterator.hasNext();) {
-			OriLine line = iterator.next();
-			
-			
-			// Inputted line does not intersect
-			if (line.typeVal != OriLine.TYPE_NONE) {
-				continue;
-			}
-			Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
-			if (crossPoint == null) {
-				continue;
-			}
-			
-			iterator.remove();
 
-			if (GeomUtil.Distance(line.p0, crossPoint) > POINT_EPS) {
-				toBeAdded.add(new OriLine(line.p0, crossPoint, line.typeVal));
-			}
-
-			if (GeomUtil.Distance(line.p1, crossPoint) > POINT_EPS) {
-				toBeAdded.add(new OriLine(line.p1, crossPoint, line.typeVal));
-			}
-
-			//crossingLines.add(line);
-		}
-
-		for(OriLine line : toBeAdded){
-			creasePattern.add(line);
-		}
-		
-		return true;
-	}
-	
+	private AddLine adder = new AddLine();
 	// Adds a new OriLine, also searching for intersections with others 
 	// that would cause their mutual division
 	public void addLine(OriLine inputLine) {
-		//ArrayList<OriLine> crossingLines = new ArrayList<OriLine>(); // for debug? 
-
-		ArrayList<Vector2d> points = new ArrayList<Vector2d>();
-		points.add(inputLine.p0);
-		points.add(inputLine.p1);
-
-		// If it already exists, do nothing
-		for (OriLine line : creasePattern) {
-			if (GeomUtil.isSameLineSegment(line, inputLine)) {
-				return;
-			}
-		}
-
-		if (inputLine.typeVal == OriLine.TYPE_NONE){
-			// for the case of aux input
-			addAuxLine(inputLine);
-		}
-		else{   
-			for (OriLine line : creasePattern) {
-
-				// Dont devide if the type of line is aux is Aux
-				if (//inputLine.typeVal != OriLine.TYPE_NONE && 
-						line.typeVal == OriLine.TYPE_NONE) {
-					continue;
-				}
-
-				// If the intersection is on the end of the line, skip
-				if (GeomUtil.Distance(inputLine.p0, line.p0) < POINT_EPS) {
-					continue;
-				}
-				if (GeomUtil.Distance(inputLine.p0, line.p1) < POINT_EPS) {
-					continue;
-				}
-				if (GeomUtil.Distance(inputLine.p1, line.p0) < POINT_EPS) {
-					continue;
-				}
-				if (GeomUtil.Distance(inputLine.p1, line.p1) < POINT_EPS) {
-					continue;
-				}
-				if (GeomUtil.DistancePointToSegment(line.p0, inputLine.p0, inputLine.p1) < POINT_EPS) {
-					points.add(line.p0);
-				}
-				if (GeomUtil.DistancePointToSegment(line.p1, inputLine.p0, inputLine.p1) < POINT_EPS) {
-					points.add(line.p1);
-				}
-
-				// Calculates the intersection
-				Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
-				if (crossPoint != null) {
-					points.add(crossPoint);
-				}
-
-			}
-		}
-		// sorting for finding very close point
-		// the sort is done on longer direction in order to suppress underflow error???
-		boolean sortByX = Math.abs(inputLine.p0.x - inputLine.p1.x) > Math.abs(inputLine.p0.y - inputLine.p1.y);
-		if (sortByX) {
-			Collections.sort(points, new PointComparatorX());
-		} else {
-			Collections.sort(points, new PointComparatorY());
-		}
-
-		Vector2d prePoint = points.get(0);
-
-		// remove very close point
-		for (int i = 1; i < points.size(); i++) {
-			Vector2d p = points.get(i);
-			if (GeomUtil.Distance(prePoint, p) < POINT_EPS) {
-				continue;
-			}
-
-			creasePattern.add(new OriLine(prePoint, p, inputLine.typeVal));
-			prePoint = p;
-		}
 		
+		adder.addLine(inputLine, creasePattern);		
 	}
 
+	public void pasteLines(Collection<OriLine> lines){
+		PasteLines paster = new PasteLines();
+		
+		paster.paste(lines, creasePattern);
+	}
+	
+	
 	public void makeEdges() {
 		edges.clear();
 
@@ -1532,7 +1427,7 @@ public class Doc {
 		return creasePattern.getVerticesArea(x, y, distance);
 	}
 	
-	public CreasePatternManager getCreasePatternManager(){
+	public CreasePattern getCreasePattern(){
 		return creasePattern;
 	}
 	

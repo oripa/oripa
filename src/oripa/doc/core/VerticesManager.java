@@ -1,4 +1,4 @@
-package oripa.doc;
+package oripa.doc.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,10 +18,14 @@ import oripa.geom.OriLine;
  */
 public class VerticesManager {
 
-	public final int divNum = 32;
+	/*
+	 * divides paper equally to localize accessing to vertices
+	 */
+	static public final int divNum = 32;
 
 	public final double interval;
 	public final double paperCenter;
+
 	
 	public class AreaPosition{
 		public int x, y;
@@ -36,20 +40,21 @@ public class VerticesManager {
 			this.y = toDiv(y);
 		}
 		
-		private int toDiv(double p){
-			int div = (int) ((p + paperCenter) / interval);
-						
-			if(div < 0){
-				return 0;
-			}
-			
-			if(div >= divNum){
-				return divNum-1;
-			}
-			
-			return div;
-		}
 
+	}
+
+	int toDiv(double p){
+		int div = (int) ((p + paperCenter) / interval);
+					
+		if(div < 0){
+			return 0;
+		}
+		
+		if(div >= divNum){
+			return divNum-1;
+		}
+		
+		return div;
 	}
 	
 	//[div_x][div_y]
@@ -100,13 +105,18 @@ public class VerticesManager {
 	public Collection<Collection<Vector2d>> getArea(
 			double x, double y, double distance){
 
-		Collection<Collection<Vector2d>> result = new HashSet<>();
+		Collection<Collection<Vector2d>> result = new LinkedList<>();		
 		
+		int leftDiv   = toDiv(x - distance);
+		int rightDiv  = toDiv(x + distance);
+		int topDiv    = toDiv(y - distance);
+		int bottomDiv = toDiv(y + distance);
 		
-		result.add(getVertices(new AreaPosition(x - distance, y - distance)));
-		result.add(getVertices(new AreaPosition(x - distance, y + distance)));
-		result.add(getVertices(new AreaPosition(x + distance, y - distance)));
-		result.add(getVertices(new AreaPosition(x + distance, y + distance)));
+		for(int xDiv = leftDiv; xDiv <= rightDiv; xDiv++){
+			for(int yDiv = topDiv; yDiv <= bottomDiv; yDiv++){
+				result.add(vertices[xDiv][yDiv]);
+			}
+		}
 		
 		
 		return result;

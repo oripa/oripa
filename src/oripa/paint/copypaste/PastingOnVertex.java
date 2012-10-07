@@ -64,9 +64,11 @@ public class PastingOnVertex extends PickingVertex {
             shiftedLines = new FilledOriLineArrayList(context.getLineCount());
         	GeometricOperation.shiftLines(context.getLines(), shiftedLines, v.x - ox, v.y -oy);
             
-            for(int i = 0; i < context.getLineCount(); i++){
-            	ORIPA.doc.addLine(shiftedLines.get(i));
-            }
+//            for(int i = 0; i < context.getLineCount(); i++){
+//            	ORIPA.doc.addLine(shiftedLines.get(i));
+//            }
+        	
+        	ORIPA.doc.pasteLines(shiftedLines);
             
             context.setMissionCompleted(true);
         }
