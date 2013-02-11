@@ -2,25 +2,19 @@ ORIPA S
 ======
 
 A great drawer ORIPA is originally composed by MITANI Jun for origami crease pattern.
-"ORIPA S" fixes some bugs and provides function of saving as image.
+"ORIPA S" fixes some bugs and provides functionality of saving as image.
 
 Executable file: https://sourceforge.net/projects/oripas/files/
 
-
-Known bugs
---------
-* Getting slow for a massive data. (It is a  problem of implementation and computational time rather than a bug.)
-
-What going on
----------
-<!-- You can try the following(s) with unstable version. -->
-* Erasing vertex automatically after deleting selected lines.
-* Accept [Enter] input of division number.
 
 Next challenge(s)
 --------
 * Drawing copyright on saved picture.
 * Screenshot of folded model.
+
+Bugs, requests
+--------
+See "issues" tab.
 
 History of updates
 -------
