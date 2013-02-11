@@ -20,7 +20,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 
 	
 	public CopyAndPasteAction() {
-		setEditMode(EditMode.OTHER);
+		setEditMode(EditMode.COPY);
 		setNeedSelect(true);
 	}
 
@@ -28,7 +28,8 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 
 	@Override
 	public void recover(PaintContext context) {
-		originHolder.getOrigin(context);
+		originHolder.resetOrigin(context);
+		action = pasteAction;
 		action.recover(context);
 	}
 	

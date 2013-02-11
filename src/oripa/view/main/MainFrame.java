@@ -46,11 +46,8 @@ import javax.swing.KeyStroke;
 import oripa.Config;
 import oripa.FilterDB;
 import oripa.ORIPA;
-import oripa.bind.ApplicationStateButtonBinder;
-import oripa.bind.CopyAndPasteActionWrapper;
-import oripa.bind.EditOutlineActionWrapper;
-import oripa.bind.state.CopyPasteErrorListener;
-import oripa.bind.state.PaintBoundStateFactory;
+import oripa.bind.ButtonFactory;
+import oripa.bind.PaintActionButtonFactory;
 import oripa.doc.Doc;
 import oripa.doc.exporter.ExporterXML;
 import oripa.file.FileChooser;
@@ -63,19 +60,14 @@ import oripa.file.SavingAction;
 import oripa.paint.DeleteSelectedLines;
 import oripa.paint.Globals;
 import oripa.paint.PaintContext;
-import oripa.paint.selectline.SelectAllLineAction;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.view.PropertyDialog;
 import oripa.view.uipanel.UIPanel;
-import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
-import oripa.viewsetting.main.ScreenUpdater;
-import oripa.viewsetting.uipanel.OnOtherCommandButtonSelected;
-import oripa.viewsetting.uipanel.OnSelectButtonSelected;
 
 public class MainFrame extends JFrame implements ActionListener,
 		ComponentListener, WindowListener, Observer {
@@ -87,9 +79,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private static final long serialVersionUID = 272369294032419950L;
 
 	private MainFrameSettingDB setting = MainFrameSettingDB.getInstance();
-	private MainScreenSettingDB screenSetting = MainScreenSettingDB
-			.getInstance();
-	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+	private MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
 	private PaintContext mouseContext = PaintContext.getInstance();
 
 	MainScreen mainScreen;
@@ -112,49 +102,33 @@ public class MainFrame extends JFrame implements ActionListener,
 	private JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
 
 	// -----------------------------------------------------------------------------------------------------------
-	// Binding button to state
+	// Create paint button
 
-	private PaintBoundStateFactory stateFactory = new PaintBoundStateFactory(
-			this, new ActionListener[] {});
-	private ApplicationStateButtonBinder buttonBinder = new ApplicationStateButtonBinder();
-
+	ButtonFactory buttonFactory = new PaintActionButtonFactory();
+	
 	/**
 	 * For changing outline
 	 */
-	private JMenuItem menuItemChangeOutline = (JMenuItem) buttonBinder.createButton(
-			JMenuItem.class, stateFactory.create(
-					new EditOutlineActionWrapper(),
-					StringID.Command.CONTOUR_ID, new ActionListener[] {new ViewChangeListener(new OnOtherCommandButtonSelected())}),
-					StringID.Command.CONTOUR_ID);
+	private JMenuItem menuItemChangeOutline = (JMenuItem) buttonFactory.create(
+			this, JMenuItem.class, StringID.EDIT_CONTOUR_ID);
 
 	/**
 	 * For selecting all lines
 	 */
-	private JMenuItem menuItemSelectAll = (JMenuItem) buttonBinder.createButton(
-			JMenuItem.class, stateFactory.create(
-					new SelectAllLineAction(mouseContext),
-					StringID.Command.SELECT_ID, new ActionListener[] {new ViewChangeListener(new OnSelectButtonSelected())}),
-					StringID.Main.SELECT_ALL_ID);
+	private JMenuItem menuItemSelectAll = (JMenuItem) buttonFactory.create(
+			this, JMenuItem.class, StringID.SELECT_ALL_LINE_ID);
 
 	/**
 	 * For starting copy-and-paste
 	 */
-	private JMenuItem menuItemCopyAndPaste = (JMenuItem) buttonBinder.createButton(
-			JMenuItem.class, stateFactory.create(
-					new CopyAndPasteActionWrapper(false),
-					new CopyPasteErrorListener(),
-					StringID.Command.COPY_PASTE_ID, new ActionListener[] {new ViewChangeListener(new OnSelectButtonSelected())}),
-					StringID.Command.COPY_PASTE_ID);
+	private JMenuItem menuItemCopyAndPaste = (JMenuItem) buttonFactory.create(
+			this, JMenuItem.class, StringID.COPY_PASTE_ID);
 
 	/**
 	 * For starting cut-and-paste
 	 */
-	private JMenuItem menuItemCutAndPaste = (JMenuItem) buttonBinder.createButton(
-			JMenuItem.class, stateFactory.create(
-					new CopyAndPasteActionWrapper(true),
-					new CopyPasteErrorListener(),
-					StringID.Command.COPY_PASTE_ID, new ActionListener[] {new ViewChangeListener(new OnSelectButtonSelected())}),
-					StringID.Command.COPY_PASTE_ID);
+	private JMenuItem menuItemCutAndPaste = (JMenuItem) buttonFactory.create(
+			this, JMenuItem.class, StringID.CUT_PASTE_ID);
 
 	// -----------------------------------------------------------------------------------------------------------
 
@@ -196,9 +170,9 @@ public class MainFrame extends JFrame implements ActionListener,
 		// addKeyListener(this);
 
 		menuItemCopyAndPaste.setText(resourceHolder.getString(
-				ResourceKey.LABEL, StringID.Main.COPY_PASTE_ID));
-		menuItemCutAndPaste.setText(resourceHolder.getString(ResourceKey.LABEL,
-				StringID.Main.CUT_PASTE_ID));
+				ResourceKey.LABEL, StringID.COPY_PASTE_ID));
+		menuItemCutAndPaste.setText(resourceHolder.getString(
+				ResourceKey.LABEL, StringID.CUT_PASTE_ID));
 		// menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 
 		mainScreen = new MainScreen();

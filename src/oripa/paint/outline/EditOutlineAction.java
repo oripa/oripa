@@ -27,15 +27,15 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 		private Graphics2D g2d;
 
-		public void execute(Graphics2D g2d, Collection<Vector2d> outlinevertices){
+		public void execute(Graphics2D g2d, Collection<Vector2d> outlineVertices){
 			this.g2d = g2d;
 
 			g2d.setColor(Color.GREEN);
 			g2d.setStroke(Config.STROKE_TMP_OUTLINE);
 
-			if(outlinevertices.size() > 1){
+			if(outlineVertices.size() > 1){
 				PairLoop.iterateWithCount(
-					outlinevertices, outlinevertices.size() - 1, this);
+					outlineVertices, outlineVertices.size() - 1, this);
 			}
 		}
 

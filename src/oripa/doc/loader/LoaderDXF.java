@@ -33,7 +33,7 @@ public class LoaderDXF implements Loader{
 
     public Doc load(String filePath) {
         Doc doc = new Doc(400);
-        doc.lines.clear();
+        doc.creasePattern.clear();
 
         Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
         Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
@@ -60,7 +60,7 @@ public class LoaderDXF implements Loader{
 
                     while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
                         if (token == StreamTokenizer.TT_WORD && st.sval.equals("0")) {
-                            doc.lines.add(line);
+                            doc.creasePattern.add(line);
                             break;
                         } else if (token == StreamTokenizer.TT_WORD && st.sval.equals("62")) {
                             st.nextToken();
@@ -104,7 +104,7 @@ public class LoaderDXF implements Loader{
 
                             if (GeomUtil.Distance(line.p0, line.p1) < 0.001) {
                                 System.out.println("########### NULL EDGE");
-                                doc.lines.remove(line);
+                                doc.creasePattern.remove(line);
                             }
 
                         } else {
@@ -120,7 +120,7 @@ public class LoaderDXF implements Loader{
             return null;
         }
 
-        if (doc.lines.isEmpty()) {
+        if (doc.creasePattern.isEmpty()) {
             return null;
         }
 
@@ -129,7 +129,7 @@ public class LoaderDXF implements Loader{
         Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
         double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
         // size normalization
-        for (OriLine line : doc.lines) {
+        for (OriLine line : doc.creasePattern) {
             line.p0.x = (line.p0.x - center.x) / bboxSize * size;
             line.p0.y = (line.p0.y - center.y) / bboxSize * size;
             line.p1.x = (line.p1.x - center.x) / bboxSize * size;
@@ -138,12 +138,15 @@ public class LoaderDXF implements Loader{
 
 
         ArrayList<OriLine> delLines = new ArrayList<>();
-        int lineNum = doc.lines.size();
+        int lineNum = doc.creasePattern.size();
 
+        OriLine[] lines = new OriLine[lineNum];
+        doc.creasePattern.toArray(lines);
+        
         for (int i = 0; i < lineNum; i++) {
             for (int j = i + 1; j < lineNum; j++) {
-                OriLine l0 = doc.lines.get(i);
-                OriLine l1 = doc.lines.get(j);
+                OriLine l0 = lines[i];
+                OriLine l1 = lines[j];
 
                 if ((GeomUtil.Distance(l0.p0, l1.p0) < 0.01 && GeomUtil.Distance(l0.p1, l1.p1) < 0.01)
                         || (GeomUtil.Distance(l0.p1, l1.p0) < 0.01 && GeomUtil.Distance(l0.p0, l1.p1) < 0.01)) {
@@ -154,7 +157,7 @@ public class LoaderDXF implements Loader{
         }
 
         for (OriLine delLine : delLines) {
-            doc.lines.remove(delLine);
+            doc.creasePattern.remove(delLine);
         }
 
         return doc;

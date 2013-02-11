@@ -35,7 +35,7 @@ public class ExporterEPS implements Exporter{
         bw.write("%%BoundingBox:-200 -200 400 400\n");
         bw.write("\n");
 
-        for (OriLine line : doc.lines) {
+        for (OriLine line : doc.creasePattern) {
             bw.write("[] 0 setdash\n");
             bw.write("" + line.p0.x + " " + line.p0.y + " moveto\n");
             bw.write("" + line.p1.x + " " + line.p1.y + " lineto\n");

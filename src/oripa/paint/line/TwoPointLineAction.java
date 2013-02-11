@@ -16,13 +16,13 @@ public class TwoPointLineAction extends TwoPointSegmentAction {
 	public void destroy(PaintContext context) {
 		// TODO Auto-generated method stub
 		super.destroy(context);
-		setActionState(new SelectingFirstVertexForLine());
 	}
 
 
 
 	@Override
 	public void recover(PaintContext context) {
+		setActionState(new SelectingFirstVertexForLine());
 		
 	}
 	

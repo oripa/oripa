@@ -4,7 +4,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.paint.PaintContext;
 
-public class OriginHolder {
+class OriginHolder {
 
 //--------------------------------------------------------------
 	private static OriginHolder holder = null;
@@ -26,13 +26,17 @@ public class OriginHolder {
 		origin = p;
 	}
 	
-	public Vector2d getOrigin(PaintContext context){
+	public void resetOrigin(PaintContext context){
     	if(origin == null){
     		if(context.getLineCount() > 0){
     			origin = context.getLine(0).p0;
     		}
-		}
-
+		}	
+	}
+	
+	public Vector2d getOrigin(PaintContext context){
+		resetOrigin(context);
+		
 		return origin;
 	}
 	

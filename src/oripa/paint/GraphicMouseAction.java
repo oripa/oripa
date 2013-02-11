@@ -20,6 +20,7 @@ public abstract class GraphicMouseAction {
 
 	private EditMode editMode = EditMode.INPUT;
 	private boolean needSelect = false;
+	private ActionState state;
 
 	protected void log(double x, double y){
 		System.out.println(x + "," + y);
@@ -33,11 +34,14 @@ public abstract class GraphicMouseAction {
 		log(p.x, p.y);
 	}	
 
-	private ActionState state;
 	protected final void setActionState(ActionState state){
 		this.state = state;
 	}
 
+	protected final ActionState getActionState(){
+		return state;
+	}
+	
 	protected final boolean currentStateIs(Class<? extends ActionState> s){
 		return state.equals(s);
 	}
@@ -118,17 +122,11 @@ public abstract class GraphicMouseAction {
 	}
 
 	public void undo(PaintContext context){
-		if(context.getLineCount() > 0 || context.getVertexCount() > 0){
-			state = state.undo(context);
-		}
-		else {
-			ORIPA.doc.loadUndoInfo();
-		}
-
+		state = BasicUndo.undo(state, context);
 	}
 
 	/**
-	 * searches vertex and line close enough to the mouse cursor.
+	 * searches a vertex and a line close enough to the mouse cursor.
 	 * The result is stored into context.pickCandidateL(and V).
 	 * 
 	 * @param context
@@ -139,20 +137,26 @@ public abstract class GraphicMouseAction {
 	public Vector2d onMove(
 			PaintContext context, AffineTransform affine, boolean differentAction) {
 
-		Vector2d closeVertex = GeometricOperation.pickVertex(
-				context, differentAction);
 
-		context.pickCandidateV = closeVertex;
+		setCandidateVertexOnMove(context, differentAction);
+		setCandidateLineOnMove(context);
 
-		OriLine closeLine;
-		closeLine = GeometricOperation.pickLine(
-				context);
-
-		context.pickCandidateL = closeLine;
-
-		return closeVertex;
+		return context.pickCandidateV;
 	}	
 
+	protected final void setCandidateVertexOnMove(
+			PaintContext context, boolean differentAction) {
+		context.pickCandidateV = GeometricOperation.pickVertex(
+				context, differentAction);		
+		
+	}
+
+	
+	protected final void setCandidateLineOnMove(PaintContext context) {
+		context.pickCandidateL = GeometricOperation.pickLine(
+				context);		
+	}
+	
 	public abstract void onPress(PaintContext context, AffineTransform affine, boolean differentAction);
 	public abstract void onDrag(PaintContext context, AffineTransform affine, boolean differentAction);
 

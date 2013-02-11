@@ -24,6 +24,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 	@Override
 	protected boolean onAct(PaintContext context, Point2D.Double currentPoint,
 			boolean freeSelection) {
+        context.setMissionCompleted(false);
 		return super.onAct(context, currentPoint, freeSelection);
 	}
 
@@ -45,14 +46,19 @@ public class SelectingVertexForOutline extends PickingVertex {
 
         if (bClose) {
             if (context.getVertexCount() > 2) {
+            	// finish editing
+            	
             	ORIPA.doc.pushUndoInfo();
                 closeTmpOutline(context.getVertices());
 
                 context.clear(false);
+                context.setMissionCompleted(true);
             }
         } else {
+        	// continue selecting
         	context.pushVertex(v);
         }
+        
 
 	}
 

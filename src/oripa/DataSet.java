@@ -19,6 +19,7 @@
 package oripa;
 
 import oripa.doc.Doc;
+import oripa.geom.OriLine;
 import oripa.resource.Version;
 
 public class DataSet {
@@ -40,10 +41,12 @@ public class DataSet {
         mainVersion = Version.FILE_MAJOR_VERSION;
         subVersion = Version.FILE_MINOR_VERSION;
 
-        int lineNum = doc.lines.size();
+        int lineNum = doc.creasePattern.size();
         lines = new OriLineProxy[lineNum];
+        OriLine[] docLines = new OriLine[lineNum];
+        doc.creasePattern.toArray(docLines);
         for (int i = 0; i < lineNum; i++) {
-            lines[i] = new OriLineProxy(doc.lines.get(i));
+            lines[i] = new OriLineProxy(docLines[i]);
         }
         paperSize = doc.size;
 
@@ -55,9 +58,9 @@ public class DataSet {
     }
 
     public void recover(Doc doc) {
-        doc.lines.clear();
+        doc.creasePattern.clear();
         for (int i = 0; i < lines.length; i++) {
-            doc.lines.add(lines[i].getLine());
+            doc.creasePattern.add(lines[i].getLine());
         }
         doc.size = paperSize;
         doc.title = title;

@@ -2,8 +2,11 @@ package oripa.paint.copypaste;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -21,10 +24,11 @@ import oripa.paint.geometry.NearestVertexFinder;
 public class PasteAction extends GraphicMouseAction {
 
 
-	private Collection<OriLine> shiftedLines = new LinkedList<>();
+	private FilledOriLineArrayList shiftedLines = new FilledOriLineArrayList(0);
+
 	private OriginHolder originHolder = OriginHolder.getInstance();
 
-	
+
 	public PasteAction(){
 		setEditMode(EditMode.INPUT);
 		setNeedSelect(true);
@@ -37,24 +41,28 @@ public class PasteAction extends GraphicMouseAction {
 	@Override
 	public void recover(PaintContext context) {
 		context.clear(false);
-		shiftedLines.clear();
+
+
 		context.startPasting();
 
-		for(OriLine line : ORIPA.doc.lines){
+		for(OriLine line : ORIPA.doc.creasePattern){
 			if(line.selected){
 				context.pushLine(line);
 			}
 		}
 
-		ORIPA.doc.prepareForCopyAndPaste();
+		shiftedLines = new FilledOriLineArrayList(context.getLines());
 
 	}
 
-	
 
+
+	/**
+	 * Clear context and mark lines as unselected.
+	 */
 	@Override
 	public void destroy(PaintContext context) {
-		super.destroy(context);
+		context.clear(true);
 		context.finishPasting();
 	}
 
@@ -76,41 +84,43 @@ public class PasteAction extends GraphicMouseAction {
 	@Override
 	public Vector2d onMove(PaintContext context, AffineTransform affine,
 			boolean differentAction) {
-		
-		Vector2d closeVertex = super.onMove(context, affine, differentAction);
-		Vector2d closeVertexOfLines = GeometricOperation.pickVertexFromPickedLines(context);
+
+		// vertex-only super's action
+		setCandidateVertexOnMove(context, differentAction);
+		Vector2d closeVertex = context.pickCandidateV;
+
+
+		Vector2d closeVertexOfLines = 
+				GeometricOperation.pickVertexFromPickedLines(context);
 
 		if(closeVertex == null){
 			closeVertex = closeVertexOfLines;
 		}
-		
-		
+
+
 		Point2D.Double current = context.getLogicalMousePoint();
 		if(closeVertex != null && closeVertexOfLines != null){
-
+			// get the nearest to current
 			closeVertex = NearestVertexFinder.findNearestOf(
 					current, closeVertex, closeVertexOfLines);
 
 		}
 
 		context.pickCandidateV = closeVertex;
-		
-		if (context.getLineCount() > 0) {
-			if(closeVertex == null) {
-				closeVertex = new Vector2d(current.x, current.y);
-			}
-			
-			Vector2d origin = originHolder.getOrigin(context);
-			double ox = origin.x;
-			double oy = origin.y;
-			shiftedLines = 
-					GeometricOperation.shiftLines(context.getLines(), closeVertex.x - ox, closeVertex.y -oy);
 
-		}		
+//		if (context.getLineCount() > 0) {
+//			if(closeVertex == null) {
+//				closeVertex = new Vector2d(current.x, current.y);
+//			}
+//
+//		}		
 		return closeVertex;
 	}
 
 
+
+	Line2D.Double g2dLine = new Line2D.Double();
+	double diffX, diffY;
 	@Override
 	public void onDraw(Graphics2D g2d, PaintContext context) {
 
@@ -123,18 +133,41 @@ public class PasteAction extends GraphicMouseAction {
 		if(origin == null){
 			return;
 		}
-		
-		if(shiftedLines.isEmpty() == false){
-			double ox = origin.x;
-			double oy = origin.y;
-			
-			g2d.setColor(Color.GREEN);
-			drawVertex(g2d, context, ox, oy);
-			
-	        g2d.setColor(Color.MAGENTA);
-			for(OriLine line : shiftedLines){
-				this.drawLine(g2d, line);
-			}
+
+
+		double ox = origin.x;
+		double oy = origin.y;
+
+		g2d.setColor(Color.GREEN);
+		drawVertex(g2d, context, ox, oy);
+
+		if(context.pickCandidateV != null){
+			diffX = context.pickCandidateV.x - ox;
+			diffY = context.pickCandidateV.y - oy;
+		}
+		else {
+			diffX = context.getLogicalMousePoint().x - ox;
+			diffY = context.getLogicalMousePoint().y -oy;
+		}
+		g2d.setColor(Color.MAGENTA);
+
+		//		GeometricOperation.shiftLines(context.getLines(), shiftedLines,
+		//				current.x - ox, current.y -oy);
+		//		
+		//		for(OriLine line : shiftedLines){
+		//			this.drawLine(g2d, line);
+		//		}
+
+		// a little faster
+		for(OriLine l : context.getLines()){
+
+			g2dLine.x1 = l.p0.x + diffX;
+			g2dLine.y1 = l.p0.y + diffY;
+
+			g2dLine.x2 = l.p1.x + diffX;
+			g2dLine.y2 = l.p1.y + diffY;
+
+			g2d.draw(g2dLine);
 		}
 
 	}

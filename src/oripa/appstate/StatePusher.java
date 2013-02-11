@@ -1,9 +1,9 @@
-package oripa.bind.state;
+package oripa.appstate;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import oripa.appstate.StateManager;
+import oripa.bind.state.PaintBoundState;
 
 public class StatePusher implements ActionListener{
 	private PaintBoundState state;

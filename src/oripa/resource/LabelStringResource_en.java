@@ -17,15 +17,11 @@ public class LabelStringResource_en extends ListResourceBundle {
 	        { StringID.Main.SAVE_AS_ID, "Save As ..." }, 
 	        { StringID.Main.SAVE_AS_IMAGE_ID, "Save As Image ..." }, 
 	        { StringID.Main.EXPORT_DXF_ID, "Export (DXF)" }, 
-	        { StringID.Main.EDIT_CONTOUR_ID, "Edit Contour" }, 
 	        { StringID.Main.PROPERTY_ID, "Property" }, 
 	        { StringID.Main.EXIT_ID, "Exit" }, 
 	        { StringID.Main.ABOUT_ID, "About" }, 
 	        { StringID.Main.UNDO_ID, "Undo" }, 
-	        { StringID.Main.COPY_PASTE_ID, "Copy and Paste" }, 
-	        { StringID.Main.CUT_PASTE_ID, "Cut and Paste" }, 
-	        { StringID.Main.CONTOUR_ID, "Edit Contour" }, 
-	        { StringID.Main.SELECT_ALL_ID, "select all"},
+	        { StringID.Main.SELECT_ALL_ID, "Select all"},
 	        
 	        
 	        { StringID.UI.AUX_ID, "Aux" }, 
@@ -40,13 +36,23 @@ public class LabelStringResource_en extends ListResourceBundle {
 	        { StringID.UI.SHOW_MV_ID, "Show M/V Lines"},
 	        { StringID.UI.SHOW_AUX_ID, "Show Aux Lines"},
 
-	        { StringID.UI.CHANGE_LINE_TYPE_ID, "Change Line Type" }, 
 	        { StringID.UI.CHANGE_LINE_TYPE_FROM_ID, "  from" }, 
 	        { StringID.UI.CHANGE_LINE_TYPE_TO_ID, "to" }, 
 	        
+
 	        
-	        { StringID.UI.ADD_VERTEX_ID, "Add Vertex" }, 
-	        { StringID.UI.DELETE_VERTEX_ID, "Delete Vertex" }, 
+	        //---------------------------------------------------------
+	        // Integrated IDs
+	        { StringID.COPY_PASTE_ID, "Copy and Paste" }, 
+	        { StringID.CUT_PASTE_ID, "Cut and Paste" }, 
+	        { StringID.EDIT_CONTOUR_ID, "Edit Contour" }, 
+	        { StringID.SELECT_ID, "Select" }, 
+	        { StringID.DELETE_LINE_ID, "Delete Line" }, 
+	        { StringID.CHANGE_LINE_TYPE_ID, "Change Line Type" }, 
+	        { StringID.ADD_VERTEX_ID, "Add Vertex" }, 
+	        { StringID.DELETE_VERTEX_ID, "Delete Vertex" }, 
+	        { StringID.SELECT_ALL_LINE_ID, "Select All" }, 
+
 	        { StringID.UI.MEASURE_ID, "Measure" }, 
 	        { StringID.UI.FOLD_ID, "Fold..." }, 
 	        { StringID.UI.FULL_ESTIMATION_ID, "Full Estimation"},

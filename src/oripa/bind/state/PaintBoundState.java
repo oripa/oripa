@@ -5,7 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
-import oripa.bind.PaintActionSetter;
+import oripa.appstate.StatePusher;
+import oripa.bind.state.action.PaintActionSetter;
 import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseAction;
 import oripa.viewsetting.ViewChangeListener;

@@ -47,7 +47,6 @@ public abstract class PickingLine extends AbstractActionState {
 	 */
 	@Override
 	protected void undoAction(PaintContext context) {
-		
 		context.popLine();		
 	}
 

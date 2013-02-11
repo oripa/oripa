@@ -2,14 +2,17 @@ package oripa.viewsetting.uipanel;
 
 import oripa.viewsetting.ChangeViewSetting;
 
-public class OnChangeTypeButtonSelected implements ChangeViewSetting{
+public class ChangeOnSelectButtonSelected implements ChangeViewSetting {
+
 	@Override
 	public void changeViewSetting() {
 		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 		
+		setting.selectSelectMode();
+		
 		setting.setValuePanelVisible(false);
 		
-		setting.setAlterLineTypePanelVisible(true);
+		setting.setAlterLineTypePanelVisible(false);
 
 		setting.setMountainButtonEnabled(false);
 		setting.setValleyButtonEnabled(false);

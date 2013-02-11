@@ -14,7 +14,7 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 	private final GroupEnum group;
 	
 	private ArrayList<ActionListener> actions = new ArrayList<ActionListener>();
-	// TODO: use class different from ActionListener which performs with no parameters.
+	// TODO: use a class different from ActionListener which performs with no parameters.
 	
 	/**
 	 * A constructor which binds a group and actions.

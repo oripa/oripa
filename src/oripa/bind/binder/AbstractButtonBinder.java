@@ -1,16 +1,12 @@
-package oripa.bind;
-
-import java.awt.Component;
-import java.awt.event.ActionListener;
+package oripa.bind.binder;
 
 import javax.swing.AbstractButton;
 
-import oripa.bind.state.PaintBoundStateFactory;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
-//public 
-abstract class AbstractButtonBinder<ToBeBound> implements BinderInterface<ToBeBound>{
+public abstract class AbstractButtonBinder<ToBeBound> 
+implements BinderInterface<ToBeBound>{
 
 	
 	/**

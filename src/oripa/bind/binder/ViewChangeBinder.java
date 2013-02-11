@@ -1,4 +1,4 @@
-package oripa.bind;
+package oripa.bind.binder;
 
 import javax.swing.AbstractButton;
 

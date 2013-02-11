@@ -3,12 +3,14 @@ package oripa.viewsetting.uipanel;
 import oripa.viewsetting.ChangeViewSetting;
 
 
-public class OnInputCommandButtonSelected implements ChangeViewSetting {
+public class ChangeOnPaintInputButtonSelected implements ChangeViewSetting {
 
 	@Override
 	public void changeViewSetting() {
 		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-				
+		
+		setting.selectInputMode();
+		
 		setting.setValuePanelVisible(false);
 		
 		setting.setAlterLineTypePanelVisible(false);

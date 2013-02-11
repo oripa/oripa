@@ -1,4 +1,4 @@
-package oripa.bind.state;
+package oripa.bind.copypaste;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import oripa.ORIPA;
+import oripa.bind.state.ErrorListener;
 
 public class CopyPasteErrorListener implements ErrorListener {
 

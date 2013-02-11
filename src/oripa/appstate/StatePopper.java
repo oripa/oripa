@@ -1,10 +1,8 @@
-package oripa.bind.state;
+package oripa.appstate;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import oripa.appstate.ApplicationState;
-import oripa.appstate.StateManager;
 import oripa.paint.EditMode;
 
 public class StatePopper implements ActionListener{

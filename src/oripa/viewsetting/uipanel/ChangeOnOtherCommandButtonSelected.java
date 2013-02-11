@@ -2,7 +2,7 @@ package oripa.viewsetting.uipanel;
 
 import oripa.viewsetting.ChangeViewSetting;
 
-public class OnSelectButtonSelected implements ChangeViewSetting {
+public class ChangeOnOtherCommandButtonSelected implements ChangeViewSetting{
 
 	@Override
 	public void changeViewSetting() {

@@ -1,4 +1,4 @@
-package oripa.bind;
+package oripa.bind.binder;
 
 import java.awt.event.ActionListener;
 

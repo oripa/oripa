@@ -1,10 +1,10 @@
-package oripa.bind;
+package oripa.bind.binder;
 
 
 import javax.swing.AbstractButton;
 
 import oripa.appstate.ApplicationState;
-import oripa.bind.state.StateActionPerformer;
+import oripa.bind.state.action.StateActionPerformer;
 import oripa.paint.EditMode;
 import oripa.viewsetting.main.ScreenUpdater;
 
@@ -21,7 +21,7 @@ public class ApplicationStateButtonBinder extends AbstractButtonBinder<Applicati
 
 	/**
 	 * This method binds a MouseListener to push the state 
-	 * and an ActionListener to perform the actions of state.
+	 * and an ActionListener to perform the actions of the state.
 	 * 
 	 * @param buttonClass
 	 * @param state

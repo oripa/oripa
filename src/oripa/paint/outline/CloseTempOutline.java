@@ -15,13 +15,13 @@ public class CloseTempOutline {
 
 		// Delete the current outline
 		ArrayList<OriLine> outlines = new ArrayList<>();
-		for (OriLine line : ORIPA.doc.lines) {
+		for (OriLine line : ORIPA.doc.creasePattern) {
 			if (line.typeVal == OriLine.TYPE_CUT) {
 				outlines.add(line);
 			}
 		}
 		for (OriLine line : outlines) {
-			ORIPA.doc.lines.remove(line);
+			ORIPA.doc.creasePattern.remove(line);
 		}
 
 		// Update the contour line
@@ -41,7 +41,7 @@ public class CloseTempOutline {
 		// To delete a segment out of the contour
 		while (true) {
 			boolean bDeleteLine = false;
-			for (OriLine line : ORIPA.doc.lines) {
+			for (OriLine line : ORIPA.doc.creasePattern) {
 				if (line.typeVal == OriLine.TYPE_CUT) {
 					continue;
 				}

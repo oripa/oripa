@@ -128,7 +128,7 @@ public class ExporterSVG implements Exporter{
         FileWriter fw = new FileWriter(filepath);
         try (BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(head);
-            for (OriLine line : doc.lines) {
+            for (OriLine line : doc.creasePattern) {
                 bw.write(" <line style=\"");
                 String style = "stroke:gray;stroke-width:1;";
                 switch (line.typeVal) {
@@ -164,7 +164,7 @@ public class ExporterSVG implements Exporter{
         FileWriter fw = new FileWriter(filepath);
         try (BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(head);
-            for (OriLine line : doc.lines) {
+            for (OriLine line : doc.creasePattern) {
                 bw.write(" <line style=\"");
                 String style = "stroke:gray;stroke-width:1;";
                 switch (line.typeVal) {

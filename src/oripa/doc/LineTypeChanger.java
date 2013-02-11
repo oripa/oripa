@@ -1,11 +1,14 @@
 package oripa.doc;
 
+import java.util.Collection;
+
+import oripa.doc.command.RemoveElement;
 import oripa.geom.OriLine;
 
 //public 
 class LineTypeChanger {
 
-	public void alterLineType(OriLine l, Doc doc,
+	public void alterLineType(OriLine l, Collection<OriLine> lines,
     		TypeForChange from, TypeForChange to) {
         if (from == TypeForChange.RIDGE  && l.typeVal != OriLine.TYPE_RIDGE) {
             return;
@@ -28,7 +31,8 @@ class LineTypeChanger {
                 l.typeVal = OriLine.TYPE_CUT;
                 break;
             case DELETE:
-                doc.removeLine(l);
+                RemoveElement remover = new RemoveElement();
+            	remover.removeLine(l, lines);
                 break;
             case FLIP: {
                 if (l.typeVal == OriLine.TYPE_RIDGE) {

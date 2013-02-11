@@ -38,6 +38,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -68,6 +69,7 @@ public class MainScreen extends JPanel
 
 	private MainScreenSettingDB setting = MainScreenSettingDB.getInstance();
 	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+	private PaintContext mouseContext = PaintContext.getInstance();
 	
 	private boolean bDrawFaceID = false;
 	private Image bufferImage;
@@ -171,7 +173,7 @@ public class MainScreen extends JPanel
 	}
 
 
-	private void drawLines(Graphics2D g2d, ArrayList<OriLine> lines){
+	private void drawLines(Graphics2D g2d, Collection<OriLine> lines){
 
 		ElementSelector selector = new ElementSelector();
 		for (OriLine line : lines) {
@@ -199,8 +201,8 @@ public class MainScreen extends JPanel
 
 	void drawVertexRectangles(Graphics2D g2d){
 		g2d.setColor(Color.BLACK);
-		double vertexDrawSize = 2.0;
-		for (OriLine line : ORIPA.doc.lines) {
+		final double vertexDrawSize = 2.0;
+		for (OriLine line : ORIPA.doc.creasePattern) {
 			if (!Globals.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
@@ -259,7 +261,7 @@ public class MainScreen extends JPanel
 		g2d.setStroke(Config.STROKE_VALLEY);
 		g2d.setColor(Color.black);
 
-		drawLines(g2d, ORIPA.doc.lines);
+		drawLines(g2d, ORIPA.doc.creasePattern);
 
 
 
@@ -316,17 +318,22 @@ public class MainScreen extends JPanel
 
 			g.drawImage(bufferImage, 0, 0, this);
 
-			Vector2d candidate = mouseContext.pickCandidateV;
-			if(candidate != null){
-				g.setColor(Color.BLACK);
-				g.drawString("(" + candidate.x + 
-						"," + candidate.y + ")", 0, 10);
-			}	
+			drawCandidatePosition(g);
 		}
 		else {
 			g.drawImage(bufferImage, 0, 0, this);
 
 		}
+	}
+	
+	private void drawCandidatePosition(Graphics g){
+		Vector2d candidate = mouseContext.pickCandidateV;
+		if(candidate != null){
+			g.setColor(Color.BLACK);
+			g.drawString("(" + candidate.x + 
+					"," + candidate.y + ")", 0, 10);
+		}	
+		
 	}
 
 
@@ -344,36 +351,33 @@ public class MainScreen extends JPanel
 
 
 
-	PaintContext mouseContext = PaintContext.getInstance();
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
-		if (Globals.mouseAction != null) {
-
-			if(javax.swing.SwingUtilities.isRightMouseButton(e)){
-				Globals.mouseAction.onRightClick(
-						mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
-			}
-			else {
-				Globals.mouseAction = Globals.mouseAction.onLeftClick(
-						mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
-			}
-
-			repaint();
+		if (Globals.mouseAction == null) {
 			return;
 		}
 
-		repaint();
+		if(javax.swing.SwingUtilities.isRightMouseButton(e)){
+			Globals.mouseAction.onRightClick(
+					mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+		}
+		else {
+			Globals.mouseAction = Globals.mouseAction.onLeftClick(
+					mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+		}
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 
-		if(Globals.mouseAction != null){
-			Globals.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
-
-		}    	
+		if(Globals.mouseAction == null){
+			return;
+		}
+		
+		Globals.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
 
 		preMousePoint = e.getPoint();
 	}
@@ -439,12 +443,14 @@ public class MainScreen extends JPanel
 		mouseContext.dispGrid = setting.isGridVisible();
 		mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
 
-		if (Globals.mouseAction != null) {
-			Globals.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
-			//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
-			repaint();
+		if (Globals.mouseAction == null) {
 			return;
 		}
+
+		Globals.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+		//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
+		repaint();
+		
 	}
 
 	@Override

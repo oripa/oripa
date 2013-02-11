@@ -120,7 +120,7 @@ public class ExporterDXF implements Exporter{
         bw.write("  2\n");
         bw.write("ENTITIES\n");
 
-        for (OriLine line : doc.lines) {
+        for (OriLine line : doc.creasePattern) {
             bw.write("  0\n");
             bw.write("LINE\n");
             bw.write("  8\n");
