@@ -39,6 +39,8 @@ public class ResourceHolder {
         		createResource(resourcePackage + ".ExplanationStringResource_en") );
         resources.addResource(ResourceKey.LABEL, 
         		createResource(resourcePackage + ".LabelStringResource_en") );
+        resources.addResource(ResourceKey.WARNING, 
+        		createResource(resourcePackage + ".WarningStringResource_en") );
         
 
 	}

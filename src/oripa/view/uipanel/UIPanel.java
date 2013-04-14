@@ -682,14 +682,14 @@ implements ActionListener, PropertyChangeListener, Observer {
 				buildOK = true;
 			} else {
 				if (JOptionPane.showConfirmDialog(
-						ORIPA.mainFrame, resources.getString(ResourceKey.LABEL, StringID.Warning.FOLD_FAILED_DUPLICATION_ID), 
+						ORIPA.mainFrame, resources.getString(ResourceKey.WARNING, StringID.Warning.FOLD_FAILED_DUPLICATION_ID), 
 						"Failed", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
 						== JOptionPane.YES_OPTION) {
 					if (ORIPA.doc.buildOrigami3(false)) {
 						buildOK = true;
 					} else {
 						JOptionPane.showMessageDialog(
-								ORIPA.mainFrame, resources.getString(ResourceKey.LABEL, StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID), 
+								ORIPA.mainFrame, resources.getString(ResourceKey.WARNING, StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID), 
 								"Failed Level1",JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
