@@ -1,7 +1,8 @@
 *.class
-bin/*
-target/*
-build/*
+/bin
+/target
+/build
+/.gradle
 
 # Package Files #
 *.jar
