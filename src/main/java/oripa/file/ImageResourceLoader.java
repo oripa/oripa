@@ -14,7 +14,7 @@ public class ImageResourceLoader {
 
 	public ImageIcon loadAsIcon(String name, Class<?> c){
 		ClassLoader classLoader = c.getClassLoader();
-		URL url=classLoader.getResource("resource/" + name);
+		URL url=classLoader.getResource(name);
 		
 		System.out.println(url.toString());
 		
