@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Rsrc-Class-Path: ./ j3dcore.jar j3dutils.jar vecmath.jar
-Class-Path: .
-Rsrc-Main-Class: oripa.ORIPA
-Main-Class: org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader
