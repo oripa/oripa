@@ -5,7 +5,7 @@ version = '0.35'
 
 jar {
 	manifest {
-		attributes 'Manifest-Version' : '1.0', 'Main-Class' : 'oripa.ORIPA'
+		attributes 'Main-Class' : 'oripa.ORIPA'
 	}
 }
 
