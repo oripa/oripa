@@ -44,7 +44,7 @@ public class Globals {
     public static boolean dispAuxLines = true;
     public static boolean bDispCrossLine = false;
     public static boolean bDoFullEstimation = true;
-    public static int inputLineType = oripa.geom.OriLine.TYPE_RIDGE;
+    public static int inputLineType = oripa.doc.value.OriLine.TYPE_RIDGE;
     
     public static GraphicMouseAction mouseAction = new TwoPointSegmentAction();
 }

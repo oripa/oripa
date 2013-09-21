@@ -5,7 +5,7 @@ import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
 
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 

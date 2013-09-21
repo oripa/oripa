@@ -16,12 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.geom;
+package oripa.doc.value;
 
 import javax.vecmath.Vector2d;
 
+import oripa.geom.Line;
+import oripa.geom.Segment;
 
-public class OriLine {
+
+public class OriLine implements Comparable<OriLine> {
 
 	final public static int TYPE_NONE = 0;
     final public static int TYPE_CUT = 1;
@@ -75,8 +78,8 @@ public class OriLine {
 	
     public boolean selected;
     public int typeVal = TYPE_NONE;  // eventually unneeded
-    public Vector2d p0 = new Vector2d();
-    public Vector2d p1 = new Vector2d();
+    public OriPoint p0 = new OriPoint();
+    public OriPoint p1 = new OriPoint();
 
     public OriLine() {
     }
@@ -143,4 +146,65 @@ public class OriLine {
     public Line getLine() {
         return new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
     }
+
+
+    /**
+     * gives order to this class's object.
+     *
+     * line type is not in comparison because
+     * there is only one line in the real world if 
+     * the two ends of the line are determined.
+	 *
+     * @param oline
+     * @return
+     */
+    @Override
+    public int compareTo(OriLine oline) {
+
+    	int comparison00 = this.p0.compareTo(oline.p0);
+    	int comparison11 = this.p1.compareTo(oline.p1);
+
+    	if (comparison00 == 0) {
+    		return comparison11;
+    	}
+
+    	return comparison00;
+    }
+
+    /**
+     * 
+     * line type is not compared because
+     * there is only one line in the real world if 
+     * the two ends of the line are determined.
+     */
+	@Override
+	public boolean equals(Object obj) {
+
+		// same class?
+    	if (!(obj instanceof OriLine)) {
+    		return false;
+    	}
+		
+		OriLine oline = (OriLine)obj;
+    	int comparison00 = this.p0.compareTo(oline.p0);
+    	int comparison01 = this.p0.compareTo(oline.p1);
+    	int comparison10 = this.p1.compareTo(oline.p0);
+    	int comparison11 = this.p1.compareTo(oline.p1);
+
+    	// same direction?
+    	if (comparison00 == 0 && comparison11 == 0) {
+    		return true;
+    	}
+
+    	// reversed direction?
+    	if (comparison01 == 0 && comparison10 == 0) {
+    		return true;
+    	}
+
+    	// differs
+    	return false;
+	}
+
+
+    
 }

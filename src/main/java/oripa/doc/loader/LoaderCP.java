@@ -22,10 +22,11 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
+
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 
 public class LoaderCP implements Loader{
 

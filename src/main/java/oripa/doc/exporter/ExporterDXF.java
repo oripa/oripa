@@ -20,13 +20,14 @@ package oripa.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.doc.value.OriLine;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
-import oripa.geom.OriLine;
 
 public class ExporterDXF implements Exporter{
 

@@ -7,7 +7,7 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;
 import oripa.paint.geometry.GeometricOperation;

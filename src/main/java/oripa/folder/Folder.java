@@ -20,6 +20,7 @@ package oripa.folder;
 
 import java.util.ArrayList;
 import java.util.Random;
+
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
@@ -27,6 +28,7 @@ import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterEPS;
+import oripa.doc.value.OriLine;
 import oripa.geom.*;
 import oripa.paint.Globals;
 

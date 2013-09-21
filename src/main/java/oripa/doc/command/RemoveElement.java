@@ -5,8 +5,8 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
+import oripa.doc.value.OriLine;
 import oripa.geom.GeomUtil;
-import oripa.geom.OriLine;
 
 public class RemoveElement {
 	public void removeLine(OriLine l, Collection<OriLine> creasePattern) {

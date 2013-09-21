@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 import javax.vecmath.Vector2d;
 
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 
 public class PasteLines {
 

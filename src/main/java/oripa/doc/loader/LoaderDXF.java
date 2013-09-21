@@ -23,11 +23,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
+
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
+import oripa.doc.value.OriLine;
 import oripa.geom.GeomUtil;
-import oripa.geom.OriLine;
 
 public class LoaderDXF implements Loader{
 

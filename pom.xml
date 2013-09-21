@@ -28,6 +28,7 @@
 			<!-- Java3D dependencies. the latest version in the maven repository is 1.3.1.
 			This POM requires you to install version 1.5.2 into your local repo by
 			"mvn install:install-file" command. Or, degrade to 1.3.1. -->
+			
 			<dependencies>
 				<dependency>
 					<groupId>java3d</groupId>

@@ -1,7 +1,7 @@
 package oripa.paint.segment;
 
 import oripa.ORIPA;
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 import oripa.paint.Globals;
 import oripa.paint.PaintContext;
 import oripa.paint.PickingVertex;

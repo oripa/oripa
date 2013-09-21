@@ -1,14 +1,14 @@
 package oripa.doc.core;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.vecmath.Vector2d;
 
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 
 
 /**
@@ -26,10 +26,19 @@ public class VerticesManager {
 	public final double interval;
 	public final double paperCenter;
 
-	
+	/**
+	 * the index of divided paper area.
+	 * A given point is converted to the index it should belongs to.
+	 * 
+	 * @author Koji
+	 *
+	 */
 	public class AreaPosition{
 		public int x, y;
-		
+
+		/**
+		 * doubles point to index
+		 */
 		public AreaPosition(Vector2d v) {
 			x = toDiv(v.x);
 			y = toDiv(v.y);
@@ -43,7 +52,12 @@ public class VerticesManager {
 
 	}
 
-	int toDiv(double p){
+	/**
+	 * Computes a index on one axis.
+	 * @param p
+	 * @return
+	 */
+	private int toDiv(double p){
 		int div = (int) ((p + paperCenter) / interval);
 					
 		if(div < 0){
@@ -57,14 +71,25 @@ public class VerticesManager {
 		return div;
 	}
 	
-	//[div_x][div_y]
-	private HashSet<Vector2d>[][] vertices = new HashSet[divNum][divNum];
 
-	
+	/**
+	 * [div_x][div_y] is a vertices in the divided area.
+	 */
+	private HashSet<Vector2d>[][] vertices = new HashSet[divNum][divNum];
+	/**
+	 * count existence of same values.
+	 */
+	private Map<Vector2d, Integer> counts = new HashMap<>();
+
+	/**
+	 * Constructor to initialize fields.
+	 * @param paperSize	paper size in double.
+	 */
 	public VerticesManager(double paperSize) {
 		interval = paperSize / divNum;
 		paperCenter = paperSize/2;
-		
+
+		// allocate memory for each area
 		for(int x = 0; x < divNum; x++){
 			for(int y = 0; y < divNum; y++){
 				vertices[x][y] = new HashSet<Vector2d>();
@@ -72,36 +97,92 @@ public class VerticesManager {
 		}
 		
 	}
-	
+
+	/**
+	 * remove all vertices.
+	 */
 	public void clear(){
 		for(int x = 0; x < divNum; x++){
 			for(int y = 0; y < divNum; y++){
 				vertices[x][y].clear();
 			}
-		}		
+		}
+		counts.clear();
 	}
-	
+
+	/**
+	 * return vertices in the specified area.
+	 * @param ap	index of area.
+	 * @return		vertices in the specified area.
+	 */
 	private HashSet<Vector2d> getVertices(AreaPosition ap){
 		return vertices[ap.x][ap.y];
 	}
 	
+	/**
+	 * add given vertex to appropriate area.
+	 * @param v	vertex to be managed by this class.
+	 */
 	public void add(Vector2d v){
+				
 		HashSet<Vector2d> vertices = getVertices(new AreaPosition(v));
 
-		vertices.add(v);
-				
+		// v is a new value
+		if (vertices.add(v)) {
+			counts.put(v, 1);
+			return;
+		}
+		
+		// count duplication.
+		Integer count = counts.get(v);
+		counts.put(v, count+1);
+		
 	}
 	
+
+	/**
+	 * returns vertices in the area which the given vertex belongs to.
+	 * @param v		vertex
+	 * @return
+	 */
 	public Collection<Vector2d> getAround(Vector2d v){
 		AreaPosition ap = new AreaPosition(v);
 		return getVertices(ap);
 	}
 	
+
+	/**
+	 * remove the given vertex from this class.
+	 * @param v
+	 */
 	public void remove(Vector2d v){
 		AreaPosition ap = new AreaPosition(v);
-		getVertices(ap).remove(v);
+		Integer count = counts.get(v);
+		
+		// should never happen.
+		if (count <= 0) {
+			throw new IllegalStateException("Nothing to remove");
+		}
+		
+		// No longer same vertices exist.s
+		if (count == 1) {
+			getVertices(ap).remove(v);
+			counts.remove(v);
+			return;
+		}
+
+		// decrement existence.
+		counts.put(v, count-1);
 	}
-	
+
+	/**
+	 * similar to #getAround(). this method returns some areas in a large rectangle
+	 * (x-distanse, y-distance, x+distance, y+distance).
+	 * @param x
+	 * @param y
+	 * @param distance
+	 * @return
+	 */
 	public Collection<Collection<Vector2d>> getArea(
 			double x, double y, double distance){
 
@@ -121,7 +202,11 @@ public class VerticesManager {
 		
 		return result;
 	}
-	
+
+	/**
+	 * set all vertices of given lines
+	 * @param lines
+	 */
 	public void load(Collection<OriLine> lines){
 		this.clear();
 		for(OriLine line : lines){
@@ -131,5 +216,15 @@ public class VerticesManager {
 		
 	}
 	
-	
+	public boolean isEmpty() {
+		for (HashSet<Vector2d>[] vertexSets : vertices) {
+			for (HashSet<Vector2d> vertexSet : vertexSets) {
+				if (! vertexSet.isEmpty()) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
 }

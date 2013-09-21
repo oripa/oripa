@@ -2,7 +2,7 @@ package oripa.paint;
 
 import java.awt.geom.Point2D.Double;
 
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 import oripa.paint.geometry.GeometricOperation;
 
 /**

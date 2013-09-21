@@ -3,7 +3,7 @@ package oripa.doc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 
 public class UndoInfo {
     private ArrayList<OriLine> lines = new ArrayList<OriLine>();

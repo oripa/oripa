@@ -2,26 +2,61 @@ package oripa.doc.core;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.ListIterator;
 
 import javax.vecmath.Vector2d;
 
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 
 public class CreasePattern implements Collection<OriLine> {
-	
+
+	/**
+	 * Wrapper to treat vertices and line at the same time
+	 * 
+	 * basically default iterator is enough but it cannot
+	 * remove corresponding vertices.
+	 *
+	 * @author Koji
+	 *
+	 */
+	private class CreasePatternIterator implements Iterator<OriLine> {
+
+		private Iterator<OriLine> lineIter;
+		private OriLine current;
+
+		public CreasePatternIterator(Iterator<OriLine> iter) {
+			lineIter = iter;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return lineIter.hasNext();
+		}
+
+		@Override
+		public OriLine next() {
+			current = lineIter.next();
+			return current;
+		}
+
+		@Override
+		public void remove() {
+			lineIter.remove();
+			vertices.remove(current.p0);
+			vertices.remove(current.p1);
+		}
+		
+	}
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6919017534440930379L;
 
-	private LinkedList<OriLine> lines;
+	private LineManager     lines;
 	private VerticesManager vertices;
 	
 	public CreasePattern(double paperSize) {
-		lines = new LinkedList<>();
+		lines    = new LineManager();
 		vertices = new VerticesManager(paperSize);
 	}
 	
@@ -39,18 +74,25 @@ public class CreasePattern implements Collection<OriLine> {
 
 	@Override
 	public boolean add(OriLine e) {
-		vertices.add(e.p0);
-		vertices.add(e.p1);
-		return lines.add(e);
+		if (lines.add(e)) {
+			vertices.add(e.p0);
+			vertices.add(e.p1);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public boolean remove(Object o) {
 		OriLine l = (OriLine) o;
-		vertices.remove(l.p0);
-		vertices.remove(l.p1);
 
-		return lines.remove(o);
+		if (lines.remove(o)) {
+			vertices.remove(l.p0);
+			vertices.remove(l.p1);
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -58,13 +100,6 @@ public class CreasePattern implements Collection<OriLine> {
 		lines.clear();
 	}
 
-
-
-	@Override
-	public Object clone() {
-		// TODO Auto-generated method stub
-		return lines.clone();
-	}
 
 	@Override
 	public Object[] toArray() {
@@ -74,20 +109,25 @@ public class CreasePattern implements Collection<OriLine> {
 
 	@Override
 	public <T> T[] toArray(T[] a) {
-		// TODO Auto-generated method stub
 		return lines.toArray(a);
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return lines.isEmpty();
+
+		if (lines.isEmpty()) {
+			if (!vertices.isEmpty()) {
+				throw new IllegalStateException("no lines but some vertices exist.");
+			}
+			
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public Iterator<OriLine> iterator() {
-		// TODO Auto-generated method stub
-		return lines.iterator();
+		return new CreasePatternIterator(lines.iterator());
 	}
 
 	@Override
@@ -110,12 +150,13 @@ public class CreasePattern implements Collection<OriLine> {
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		
-		
+		boolean changed = false;
+
 		for(OriLine line : (Collection<OriLine>)c){
-			vertices.remove(line.p0);
-			vertices.remove(line.p1);
+			changed |= remove(line);
 		}
-		return lines.removeAll(c);
+		
+		return changed;
 	}
 
 	@Override
@@ -146,6 +187,12 @@ public class CreasePattern implements Collection<OriLine> {
 		return vertices.getArea(x, y, distance);
 	}
 
+	/**
+	 * DO NOT USE THIS.
+	 * this is for junit.
+	 * @return
+	 */
+	@Deprecated
 	public VerticesManager getVerticesManager(){
 		return vertices;
 	}

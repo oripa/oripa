@@ -8,7 +8,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;
 import oripa.paint.geometry.GeometricOperation;

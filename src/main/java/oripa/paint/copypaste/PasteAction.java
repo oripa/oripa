@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseAction;
 import oripa.paint.PaintContext;

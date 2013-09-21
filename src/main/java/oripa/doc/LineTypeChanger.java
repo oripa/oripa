@@ -3,7 +3,7 @@ package oripa.doc;
 import java.util.Collection;
 
 import oripa.doc.command.RemoveElement;
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 
 //public 
 class LineTypeChanger {

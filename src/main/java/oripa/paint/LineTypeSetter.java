@@ -3,7 +3,7 @@ package oripa.paint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 
 public class LineTypeSetter implements ActionListener {
 

@@ -21,10 +21,12 @@ package oripa.geom;
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
+
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import oripa.ORIPA;
+import oripa.doc.value.OriLine;
 import oripa.folder.Condition3;
 import oripa.folder.Condition4;
 

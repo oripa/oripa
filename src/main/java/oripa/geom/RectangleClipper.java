@@ -20,6 +20,8 @@ package oripa.geom;
 
 import javax.vecmath.Vector2d;
 
+import oripa.doc.value.OriLine;
+
 public class RectangleClipper {
 
     final static int LEFT = 1;

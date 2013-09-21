@@ -43,9 +43,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.Config;
 import oripa.ORIPA;
+import oripa.doc.value.OriLine;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
-import oripa.geom.OriLine;
 import oripa.paint.Globals;
 import oripa.resource.Constants;
 

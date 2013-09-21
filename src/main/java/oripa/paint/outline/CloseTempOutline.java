@@ -6,7 +6,7 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 import oripa.paint.PairLoop;
 
 public class CloseTempOutline {

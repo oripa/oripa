@@ -21,6 +21,8 @@ package oripa.geom;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import oripa.doc.value.OriLine;
+
 public class GeomUtil {
 
     public final static double EPS = 1.0e-6;

@@ -19,7 +19,7 @@
 package oripa;
 
 import oripa.doc.Doc;
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 import oripa.resource.Version;
 
 public class DataSet {

@@ -3,7 +3,7 @@ package test;
 import oripa.doc.Doc;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterXML;
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 
 public class TestDataBuilder {
 

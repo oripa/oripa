@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 import oripa.Config;
 import oripa.ORIPA;
-import oripa.geom.OriLine;
+import oripa.doc.value.OriLine;
 import oripa.geom.RectangleClipper;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
