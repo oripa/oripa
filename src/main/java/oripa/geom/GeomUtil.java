@@ -21,7 +21,7 @@ package oripa.geom;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
 public class GeomUtil {
 

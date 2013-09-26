@@ -7,7 +7,7 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import oripa.doc.core.CreasePattern;
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
 public class CreasePatternTest {
 

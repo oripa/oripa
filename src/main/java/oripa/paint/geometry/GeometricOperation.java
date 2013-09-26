@@ -9,9 +9,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.CalculationResource;
-import oripa.doc.value.OriLine;
 import oripa.geom.GeomUtil;
-import oripa.paint.PaintContext;
+import oripa.paint.core.PaintContext;
+import oripa.value.OriLine;
 
 
 /**

@@ -5,8 +5,8 @@ import java.awt.geom.Point2D.Double;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 
 public class SelectingVertexForSymmetric extends PickingVertex{
 	

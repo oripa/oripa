@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
 /**
  * Manager of all lines.

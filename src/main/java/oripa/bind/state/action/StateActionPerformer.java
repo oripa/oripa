@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
-import oripa.paint.EditMode;
+import oripa.paint.core.EditMode;
 
 
 public class StateActionPerformer implements ActionListener{

@@ -43,11 +43,11 @@ import javax.vecmath.Vector2d;
 
 import oripa.Config;
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
-import oripa.paint.Globals;
+import oripa.paint.core.Globals;
 import oripa.resource.Constants;
+import oripa.value.OriLine;
 
 public class ModelViewScreen extends JPanel
         implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener, ComponentListener {

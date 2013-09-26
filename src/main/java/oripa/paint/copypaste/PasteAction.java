@@ -13,13 +13,13 @@ import java.util.LinkedList;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
-import oripa.paint.EditMode;
-import oripa.paint.GraphicMouseAction;
-import oripa.paint.PaintContext;
+import oripa.paint.core.EditMode;
+import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintContext;
 import oripa.paint.geometry.GeometricOperation;
 import oripa.paint.geometry.NearestPoint;
 import oripa.paint.geometry.NearestVertexFinder;
+import oripa.value.OriLine;
 
 public class PasteAction extends GraphicMouseAction {
 

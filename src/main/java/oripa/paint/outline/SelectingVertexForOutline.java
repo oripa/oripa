@@ -7,8 +7,8 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 
 public class SelectingVertexForOutline extends PickingVertex {
 

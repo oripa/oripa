@@ -1,8 +1,8 @@
 package oripa.paint.linetype;
 
 import oripa.ORIPA;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingLine;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingLine;
 import oripa.viewsetting.uipanel.UIPanelSettingDB;
 
 public class SelectingLineForLineType extends PickingLine {

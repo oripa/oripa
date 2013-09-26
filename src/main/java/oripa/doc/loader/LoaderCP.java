@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
 public class LoaderCP implements Loader{
 

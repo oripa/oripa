@@ -38,10 +38,10 @@ import javax.vecmath.Vector2d;
 import oripa.Config;
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.doc.value.OriLine;
 import oripa.geom.OriFace;
 import oripa.geom.OriVertex;
-import oripa.paint.Globals;
+import oripa.paint.core.Globals;
+import oripa.value.OriLine;
 
 public class RenderScreenForCheck extends JPanel
         implements ComponentListener {

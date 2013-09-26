@@ -6,10 +6,10 @@ import java.awt.geom.Line2D;
 
 import javax.vecmath.Vector2d;
 
-import oripa.paint.ElementSelector;
-import oripa.paint.Globals;
-import oripa.paint.GraphicMouseAction;
-import oripa.paint.PaintContext;
+import oripa.paint.core.Globals;
+import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintContext;
+import oripa.paint.util.ElementSelector;
 
 public class LineByValueAction extends GraphicMouseAction {
 

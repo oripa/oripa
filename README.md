@@ -4,63 +4,26 @@ ORIPA S
 A great drawer ORIPA is originally composed by MITANI Jun for origami crease pattern.
 "ORIPA S" fixes some bugs and provides functionality of saving as image.
 
-Executable file: https://sourceforge.net/projects/oripas/files/
+Executable file and release notes: https://sourceforge.net/projects/oripas/files/
+
+Fanctionalities
+-------
+* Various methods to input lines inherited from ORIPA.
+* You can save your crease pattern as a JPG or PNG image file.
+* Cut by Ctrl+x or copy by Ctrl+c, paste by clicking left mouse button.
+  On pasting mode, you can select the origin vertex by pressing Ctrl key.
+* Undo by pressing Ctrl + z or clicking right mouse button.
+* You can select multi-lines by Dragging.
+* On delete-line mode, you can delete multi-lines by Dragging.	
 
 
 Next challenge(s)
 --------
+* Dividing lines by an input circle.
+* Enlarging selected lines.
+* Importing other crease pattern.
 * Drawing copyright on saved picture.
 * Screenshot of folded model.
-
-Bugs, requests
---------
-See "issues" tab.
-
-History of updates
--------
-
-* __2012/10/07 Bug fix:__
-   * Speed up: finding the nearest vertex, pasting lines and adding line. Maybe it won't hang up now. 
-   (but slow in a test with 100*100 grid data.)
-   * Bug fixed. The last update was incomplete :P
-   * Correct origin position of second copy(cut)-and-paste.
-<p></p>
-
-* __2012/09/29 Bug fix:__
-   * Cut-and-copy mode by Ctrl+x. (Actually the crash was not a bug. Closing window was a correct action defined by MITANI Jun.)
-   * Behavior of right click on copy-and-paste mode becomes the same as original ORIPA. 
-     It will finish copy & paste then get back to last selection mode ("Select" or mirror copy).
-<p></p>
-
-* __2012/09/17 Bug fix:__
-    * Behavior of right click on copy-and-paste mode becomes similar to original ORIPA. It will get back to "Select" mode.
-<p></p>
-
-
-* __2012/09/08 Improve usability:__
-    * On copy-and-paste mode, you can select the origin vertex by pressing Ctrl key.
-<p></p>
-
-* __2012/08/28 Bug fix, improve usability:__
-    * Undo of changing line type is fixed.
-    * Ctrl + z acts as undo command the same as right mouse button.
-    * On mirror-copy mode, you can select multi-lines by Dragging.
-    * On delete-line mode, you can delete multi-lines by Dragging.	
-    * It comfirms to save on closing window if you have edited.
-    * Codes for inputting line are refactored (just partially).
-<p></p>
- 	
-
-* __2012/07/15 Bug fix:__
-    * Codes for inputting line are refactored (just partially).
-    * Undo of mirror copy is available.
-    * It corrects a problem that the color of selected line remains green.
-<p></p>
- 
- 
-* __2012/06/23 Saving as JPG or PNG is available.__
-<p></p>
-
 
 
 The original read-me text by MITANI Jun:

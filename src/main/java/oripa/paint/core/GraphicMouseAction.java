@@ -1,4 +1,4 @@
-package oripa.paint;
+package oripa.paint.core;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -11,8 +11,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.Config;
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
 import oripa.paint.geometry.GeometricOperation;
+import oripa.paint.util.ElementSelector;
+import oripa.value.OriLine;
 import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.ScreenUpdater;
 

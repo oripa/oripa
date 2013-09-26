@@ -1,4 +1,4 @@
-package oripa.undo;
+package oripa.doc;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -10,7 +10,7 @@ public class UndoManager<Backup> {
 	
 	private boolean changed = false;
 
-	private int max = Integer.MAX_VALUE;
+	private int max = 1000;
 
 	public UndoManager() {
 		

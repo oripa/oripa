@@ -3,8 +3,8 @@ package oripa.paint.bisector;
 import java.awt.geom.Point2D.Double;
 
 import oripa.ORIPA;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 
 public class SelectingVertexForBisector extends PickingVertex{
 	

@@ -1,9 +1,9 @@
 package oripa.paint.selectline;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingLine;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingLine;
+import oripa.value.OriLine;
 
 public class SelectingLine extends PickingLine {
 

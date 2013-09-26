@@ -2,10 +2,10 @@ package oripa.paint.mirror;
 
 import java.awt.geom.AffineTransform;
 
-import oripa.paint.BasicUndo;
-import oripa.paint.EditMode;
-import oripa.paint.GraphicMouseAction;
-import oripa.paint.PaintContext;
+import oripa.paint.core.BasicUndo;
+import oripa.paint.core.EditMode;
+import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintContext;
 import oripa.paint.selectline.SelectLineAction;
 
 public class MirrorCopyAction extends SelectLineAction {

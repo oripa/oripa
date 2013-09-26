@@ -1,10 +1,11 @@
-package oripa.paint;
+package oripa.paint.util;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 
 import oripa.Config;
-import oripa.doc.value.OriLine;
+import oripa.paint.core.Globals;
+import oripa.value.OriLine;
 
 public class ElementSelector {
 

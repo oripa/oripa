@@ -2,7 +2,7 @@ package oripa.paint.copypaste;
 
 import javax.vecmath.Vector2d;
 
-import oripa.paint.PaintContext;
+import oripa.paint.core.PaintContext;
 
 class OriginHolder {
 

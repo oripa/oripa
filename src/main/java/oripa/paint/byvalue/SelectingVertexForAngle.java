@@ -5,10 +5,8 @@ import java.awt.geom.Point2D.Double;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.Globals;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
-import oripa.resource.Constants;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 
 public class SelectingVertexForAngle extends PickingVertex{
 	
@@ -63,7 +61,7 @@ public class SelectingVertexForAngle extends PickingVertex{
         valDB.setAngle(deg_angle);
         valDB.notifyObservers();
  
-        Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
+ //       Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
 
 		
         doingFirstAction = true;

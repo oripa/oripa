@@ -26,9 +26,9 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
 import oripa.folder.Condition3;
 import oripa.folder.Condition4;
+import oripa.value.OriLine;
 
 
 public class OriFace {

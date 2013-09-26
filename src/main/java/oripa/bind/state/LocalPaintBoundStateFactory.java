@@ -4,9 +4,9 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
-import oripa.paint.EditMode;
-import oripa.paint.GraphicMouseAction;
-import oripa.paint.PaintContext;
+import oripa.paint.core.EditMode;
+import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintContext;
 
 class LocalPaintBoundStateFactory {
 

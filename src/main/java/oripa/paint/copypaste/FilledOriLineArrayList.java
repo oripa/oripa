@@ -3,7 +3,7 @@ package oripa.paint.copypaste;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
 public class FilledOriLineArrayList extends ArrayList<OriLine>{
 

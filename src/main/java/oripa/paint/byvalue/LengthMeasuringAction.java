@@ -3,8 +3,8 @@ package oripa.paint.byvalue;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import oripa.paint.GraphicMouseAction;
-import oripa.paint.PaintContext;
+import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintContext;
 
 public class LengthMeasuringAction extends GraphicMouseAction {
 

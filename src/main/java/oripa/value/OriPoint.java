@@ -1,4 +1,4 @@
-package oripa.doc.value;
+package oripa.value;
 
 import javax.vecmath.Vector2d;
 

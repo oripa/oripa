@@ -1,4 +1,4 @@
-package oripa.paint;
+package oripa.paint.core;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.Stack;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
 public class PaintContext {
     

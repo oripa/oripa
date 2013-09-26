@@ -1,4 +1,4 @@
-package oripa.paint;
+package oripa.paint.util;
 
 import java.util.Iterator;
 

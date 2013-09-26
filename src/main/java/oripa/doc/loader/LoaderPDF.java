@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
-import oripa.doc.value.OriLine;
 import oripa.geom.GeomUtil;
+import oripa.value.OriLine;
 
 public class LoaderPDF implements Loader {
 	

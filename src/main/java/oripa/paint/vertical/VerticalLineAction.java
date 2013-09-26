@@ -5,9 +5,9 @@ import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
 
-import oripa.doc.value.OriLine;
-import oripa.paint.GraphicMouseAction;
-import oripa.paint.PaintContext;
+import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintContext;
+import oripa.value.OriLine;
 
 public class VerticalLineAction extends GraphicMouseAction {
 

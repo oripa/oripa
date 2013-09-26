@@ -7,10 +7,10 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 import oripa.paint.geometry.GeometricOperation;
+import oripa.value.OriLine;
 
 public class PastingOnVertex extends PickingVertex {
 

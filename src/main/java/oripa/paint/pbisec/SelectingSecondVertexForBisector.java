@@ -3,8 +3,8 @@ package oripa.paint.pbisec;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 
 public class SelectingSecondVertexForBisector extends PickingVertex{
 	

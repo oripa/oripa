@@ -3,12 +3,12 @@ package oripa.paint.line;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
 import oripa.geom.GeomUtil;
-import oripa.paint.Globals;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
+import oripa.paint.core.Globals;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 import oripa.resource.Constants;
+import oripa.value.OriLine;
 
 public class SelectingSecondVertexForLine extends PickingVertex{
 

@@ -23,7 +23,7 @@ import java.io.FileWriter;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
 public class ExporterCP implements Exporter{
     public boolean export(Doc doc, String filepath) throws Exception {

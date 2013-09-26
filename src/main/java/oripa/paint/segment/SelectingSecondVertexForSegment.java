@@ -1,10 +1,10 @@
 package oripa.paint.segment;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
-import oripa.paint.Globals;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
+import oripa.paint.core.Globals;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
+import oripa.value.OriLine;
 
 public class SelectingSecondVertexForSegment extends PickingVertex{
 

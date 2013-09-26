@@ -1,4 +1,4 @@
-package oripa.paint;
+package oripa.paint.core;
 
 import java.awt.geom.Point2D;
 

@@ -1,7 +1,7 @@
 package oripa.paint.selectline;
 
 import oripa.ORIPA;
-import oripa.paint.PaintContext;
+import oripa.paint.core.PaintContext;
 
 public class SelectAllLineAction extends SelectLineAction {
 

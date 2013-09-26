@@ -1,7 +1,7 @@
 package oripa.paint.pbisec;
 
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 
 public class SelectingFirstVertexForBisector extends PickingVertex{
 	

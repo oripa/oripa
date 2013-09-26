@@ -11,7 +11,7 @@ import oripa.appstate.ApplicationState;
 import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
-import oripa.paint.EditMode;
+import oripa.paint.core.EditMode;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;

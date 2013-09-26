@@ -5,10 +5,20 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.doc.value.OriLine;
 import oripa.geom.GeomUtil;
+import oripa.value.OriLine;
 
+/**
+ * This class defines how to remove line/vertex from crease pattern.
+ * @author Koji
+ *
+ */
 public class RemoveElement {
+	/**
+	 * remove line from crease pattern
+	 * @param l
+	 * @param creasePattern
+	 */
 	public void removeLine(OriLine l, Collection<OriLine> creasePattern) {
 		creasePattern.remove(l);
 		// merge the lines if possible, to prevent unnecessary vertexes
@@ -16,6 +26,11 @@ public class RemoveElement {
 		merge2LinesAt(l.p1, creasePattern);
 	}
 
+	/**
+	 * remove vertex from crease pattern
+	 * @param v
+	 * @param creasePattern
+	 */
 	public void removeVertex(Vector2d v, Collection<OriLine> creasePattern) {
 		merge2LinesAt(v, creasePattern);
 	}

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
-import oripa.paint.PairLoop;
+import oripa.paint.util.PairLoop;
 
 
 public class IsOutsideOfTempOutlineLoop implements PairLoop.Block<Vector2d> {

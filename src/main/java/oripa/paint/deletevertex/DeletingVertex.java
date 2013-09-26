@@ -1,8 +1,8 @@
 package oripa.paint.deletevertex;
 
 import oripa.ORIPA;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 
 public class DeletingVertex extends PickingVertex {
 

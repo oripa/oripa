@@ -22,7 +22,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import oripa.doc.Doc;
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
 public class ExporterEPS implements Exporter{
 

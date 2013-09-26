@@ -44,7 +44,7 @@ import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterDXF;
 import oripa.doc.exporter.ExporterOBJ2;
 import oripa.file.FileFilterEx;
-import oripa.paint.Globals;
+import oripa.paint.core.Globals;
 import oripa.resource.Constants;
 import oripa.viewsetting.model.ModelFrameSettingDB;
 

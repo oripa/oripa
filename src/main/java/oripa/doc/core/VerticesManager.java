@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.vecmath.Vector2d;
 
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
 
 /**
@@ -19,7 +19,7 @@ import oripa.doc.value.OriLine;
 public class VerticesManager {
 
 	/*
-	 * divides paper equally to localize accessing to vertices
+	 * divides paper equally in order to localize access to vertices
 	 */
 	static public final int divNum = 32;
 

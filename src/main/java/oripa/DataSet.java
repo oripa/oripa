@@ -19,8 +19,8 @@
 package oripa;
 
 import oripa.doc.Doc;
-import oripa.doc.value.OriLine;
 import oripa.resource.Version;
+import oripa.value.OriLine;
 
 public class DataSet {
 

@@ -1,4 +1,4 @@
-package oripa.paint;
+package oripa.paint.core;
 
 import oripa.ORIPA;
 

@@ -10,10 +10,10 @@ import java.util.Stack;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
-import oripa.paint.EditMode;
-import oripa.paint.GraphicMouseAction;
-import oripa.paint.PaintContext;
-import oripa.paint.PairLoop;
+import oripa.paint.core.EditMode;
+import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintContext;
+import oripa.paint.util.PairLoop;
 
 public class EditOutlineAction extends GraphicMouseAction {
 

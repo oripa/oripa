@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import oripa.doc.core.VerticesManager;
-import oripa.doc.value.OriPoint;
+import oripa.value.OriPoint;
 
 public class VerticesManagerTest extends TestCase{
 

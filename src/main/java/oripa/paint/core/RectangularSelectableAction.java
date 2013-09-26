@@ -1,4 +1,4 @@
-package oripa.paint;
+package oripa.paint.core;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -10,8 +10,8 @@ import java.util.LinkedList;
 
 import oripa.Config;
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
 import oripa.geom.RectangleClipper;
+import oripa.value.OriLine;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
 

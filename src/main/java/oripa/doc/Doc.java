@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
@@ -34,7 +32,6 @@ import oripa.doc.command.AddLine;
 import oripa.doc.command.PasteLines;
 import oripa.doc.command.RemoveElement;
 import oripa.doc.core.CreasePattern;
-import oripa.doc.value.OriLine;
 import oripa.folder.Folder;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
@@ -43,9 +40,9 @@ import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 import oripa.geom.OriVertex;
 import oripa.geom.Ray;
-import oripa.paint.Globals;
+import oripa.paint.core.Globals;
 import oripa.resource.Constants;
-import oripa.undo.UndoManager;
+import oripa.value.OriLine;
 
 
 public class Doc {
@@ -1213,10 +1210,10 @@ public class Doc {
 	}
 
 
-	private AddLine lineAdder = new AddLine();
 	// Adds a new OriLine, also searching for intersections with others 
 	// that would cause their mutual division
 	public void addLine(OriLine inputLine) {
+		AddLine lineAdder = new AddLine();
 		
 		lineAdder.addLine(inputLine, creasePattern);		
 	}
@@ -1228,7 +1225,7 @@ public class Doc {
 	}
 	
 	
-	public void makeEdges() {
+	private void makeEdges() {
 		edges.clear();
 
 		ArrayList<OriHalfedge> tmpHalfedges = new ArrayList<OriHalfedge>();

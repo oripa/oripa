@@ -6,9 +6,9 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
-import oripa.paint.Globals;
-import oripa.paint.PaintContext;
+import oripa.paint.core.Globals;
+import oripa.paint.core.PaintContext;
+import oripa.value.OriLine;
 
 public class NearestVertexFinder {
 	/**

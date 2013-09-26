@@ -1,8 +1,8 @@
 package oripa.paint.bisector;
 
 import oripa.ORIPA;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingLine;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingLine;
 
 public class SelectingLineForBisector extends PickingLine {
 

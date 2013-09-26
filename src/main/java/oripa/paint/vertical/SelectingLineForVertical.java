@@ -1,11 +1,11 @@
 package oripa.paint.vertical;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
 import oripa.geom.GeomUtil;
-import oripa.paint.Globals;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingLine;
+import oripa.paint.core.Globals;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingLine;
+import oripa.value.OriLine;
 
 public class SelectingLineForVertical extends PickingLine {
 

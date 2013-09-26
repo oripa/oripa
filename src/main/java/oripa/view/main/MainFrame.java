@@ -57,9 +57,9 @@ import oripa.file.FileHistory;
 import oripa.file.FileVersionError;
 import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
-import oripa.paint.DeleteSelectedLines;
-import oripa.paint.Globals;
-import oripa.paint.PaintContext;
+import oripa.paint.core.Globals;
+import oripa.paint.core.PaintContext;
+import oripa.paint.util.DeleteSelectedLines;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -358,6 +358,8 @@ public class MainFrame extends JFrame implements ActionListener,
 			}
 		}
 
+		//TODO Refactor the long, long if-else sequences!
+		
 		// String lastPath = fileHistory.getLastPath();
 		String lastDirectory = fileHistory.getLastDirectory();
 
@@ -600,22 +602,28 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		File file = new File(filePath);
 
+		// find appropriate loader
 		boolean loaded = false;
 		for (FileFilterEx filter : filters) {
-			if (filter.accept(file) && !file.isDirectory()) {
-				try {
-					loaded = filter.getLoadingAction().load(filePath);
-				} catch (FileVersionError e) {
-					JOptionPane
-							.showMessageDialog(
-									this,
-									"This file is compatible with a new version. "
-											+ "Please obtain the latest version of ORIPA",
-									"Failed to load the file",
-									JOptionPane.ERROR_MESSAGE);
-				}
-				break;
+			if (!filter.accept(file)){
+				continue;
 			}
+			if (file.isDirectory()) {
+				continue;
+			}
+
+			try {
+				loaded = filter.getLoadingAction().load(filePath);
+			} catch (FileVersionError e) {
+				JOptionPane.showMessageDialog(
+						this,
+						"This file is compatible with a new version. "
+								+ "Please obtain the latest version of ORIPA",
+						"Failed to load the file",
+						JOptionPane.ERROR_MESSAGE);
+			}
+			break;
+			
 		}
 
 		if (!loaded) {

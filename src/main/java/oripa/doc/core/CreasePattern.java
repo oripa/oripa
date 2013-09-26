@@ -5,8 +5,18 @@ import java.util.Iterator;
 
 import javax.vecmath.Vector2d;
 
-import oripa.doc.value.OriLine;
+import oripa.value.OriLine;
 
+/**
+ * Crease pattern
+ * 
+ * Implementation of line-and-vertices structure.
+ * Original ORIPA uses line-only struture, which
+ * may cause a slow vertex search if the CP is massive.
+ * 
+ * @author Koji
+ *
+ */
 public class CreasePattern implements Collection<OriLine> {
 
 	/**

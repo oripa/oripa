@@ -1,6 +1,6 @@
 package oripa.paint.line;
 
-import oripa.paint.PaintContext;
+import oripa.paint.core.PaintContext;
 import oripa.paint.segment.TwoPointSegmentAction;
 
 public class TwoPointLineAction extends TwoPointSegmentAction {

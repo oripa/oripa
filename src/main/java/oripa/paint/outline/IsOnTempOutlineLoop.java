@@ -7,7 +7,7 @@ import javax.vecmath.Vector2d;
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
-import oripa.paint.PairLoop;
+import oripa.paint.util.PairLoop;
 
 public class IsOnTempOutlineLoop implements PairLoop.Block<Vector2d> {
 

@@ -28,9 +28,9 @@ import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterEPS;
-import oripa.doc.value.OriLine;
 import oripa.geom.*;
-import oripa.paint.Globals;
+import oripa.paint.core.Globals;
+import oripa.value.OriLine;
 
 public class Folder {
 

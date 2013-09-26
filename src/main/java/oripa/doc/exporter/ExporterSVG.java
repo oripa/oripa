@@ -8,9 +8,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.doc.value.OriLine;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
+import oripa.value.OriLine;
 import oripa.view.RenderScreen2;
 
 public class ExporterSVG implements Exporter{

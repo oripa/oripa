@@ -1,9 +1,10 @@
-package oripa.paint;
+package oripa.paint.util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.ORIPA;
+import oripa.paint.core.PaintContext;
 import oripa.viewsetting.main.ScreenUpdater;
 
 public class DeleteSelectedLines implements ActionListener {

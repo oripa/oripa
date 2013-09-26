@@ -2,9 +2,9 @@ package oripa.viewsetting.main;
 
 import java.awt.event.KeyEvent;
 
-import oripa.paint.Globals;
-import oripa.paint.GraphicMouseAction;
 import oripa.paint.copypaste.CopyAndPasteAction;
+import oripa.paint.core.Globals;
+import oripa.paint.core.GraphicMouseAction;
 import oripa.viewsetting.ViewSettingDataBase;
 
 public class ScreenUpdater extends ViewSettingDataBase {

@@ -7,9 +7,9 @@ import java.awt.geom.Point2D.Double;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.EditMode;
-import oripa.paint.GraphicMouseAction;
-import oripa.paint.PaintContext;
+import oripa.paint.core.EditMode;
+import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintContext;
 
 public class CopyAndPasteAction extends GraphicMouseAction {
 

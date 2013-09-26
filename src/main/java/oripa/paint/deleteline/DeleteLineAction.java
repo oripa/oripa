@@ -4,10 +4,10 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
-import oripa.paint.EditMode;
-import oripa.paint.PaintContext;
-import oripa.paint.RectangularSelectableAction;
+import oripa.paint.core.EditMode;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.RectangularSelectableAction;
+import oripa.value.OriLine;
 
 public class DeleteLineAction extends RectangularSelectableAction {
 

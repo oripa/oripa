@@ -4,10 +4,8 @@ import java.awt.geom.Point2D.Double;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
-import oripa.paint.Globals;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingVertex;
-import oripa.resource.Constants;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingVertex;
 
 public class SelectingVertexForLength extends PickingVertex{
 	
@@ -53,7 +51,7 @@ public class SelectingVertexForLength extends PickingVertex{
         valDB.setLength(length);
         valDB.notifyObservers();
 
-        Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
+//        Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
 
 		
         doingFirstAction = true;

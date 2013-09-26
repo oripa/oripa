@@ -3,9 +3,9 @@ package oripa.paint.mirror;
 import java.awt.geom.Point2D;
 
 import oripa.ORIPA;
-import oripa.doc.value.OriLine;
-import oripa.paint.PaintContext;
-import oripa.paint.PickingLine;
+import oripa.paint.core.PaintContext;
+import oripa.paint.core.PickingLine;
+import oripa.value.OriLine;
 
 public class SelectingLineForMirror extends PickingLine {
 
@@ -42,15 +42,15 @@ public class SelectingLineForMirror extends PickingLine {
 
 		boolean result = super.onAct(context, currentPoint, doSpecial);
 		
-		if(result == true){
-			if(doSpecial){
+		if (result == true) {
+			if (doSpecial) {
 				axis = context.popLine();
 				result = true;
             } 
 			else {
 				OriLine line = context.peekLine();
 
-				if(line.selected){
+				if (line.selected) {
                 	line.selected = false;
                 	context.popLine();
                 	context.removeLine(line);
@@ -71,8 +71,11 @@ public class SelectingLineForMirror extends PickingLine {
 	
 	@Override
 	protected void undoAction(PaintContext context) {
-		// TODO Auto-generated method stub
-		super.undoAction(context);
+//		if (doingFirstAction) {
+//			super.undoAction(context);
+//			return;
+//		}
+		context.popLine();
 	}
 
 	@Override

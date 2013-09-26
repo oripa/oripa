@@ -1,9 +1,10 @@
-package oripa.paint;
+package oripa.paint.util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import oripa.doc.value.OriLine;
+import oripa.paint.core.Globals;
+import oripa.value.OriLine;
 
 public class LineTypeSetter implements ActionListener {
 
