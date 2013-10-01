@@ -28,11 +28,11 @@ import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.command.AddLine;
-import oripa.doc.command.PasteLines;
-import oripa.doc.command.RemoveElement;
+import oripa.doc.command.ElementRemover;
+import oripa.doc.command.LineAdder;
+import oripa.doc.command.LinePaster;
 import oripa.doc.core.CreasePattern;
-import oripa.folder.Folder;
+import oripa.fold.Folder;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.OriEdge;
@@ -432,7 +432,7 @@ public class Doc {
 
 	}    
 
-	RemoveElement remover = new RemoveElement();
+	ElementRemover remover = new ElementRemover();
 	public void removeLine(OriLine l) {
 		remover.removeLine(l, creasePattern);
 	}
@@ -1213,13 +1213,13 @@ public class Doc {
 	// Adds a new OriLine, also searching for intersections with others 
 	// that would cause their mutual division
 	public void addLine(OriLine inputLine) {
-		AddLine lineAdder = new AddLine();
+		LineAdder lineAdder = new LineAdder();
 		
 		lineAdder.addLine(inputLine, creasePattern);		
 	}
 
 	public void pasteLines(Collection<OriLine> lines){
-		PasteLines paster = new PasteLines();
+		LinePaster paster = new LinePaster();
 		
 		paster.paste(lines, creasePattern);
 	}

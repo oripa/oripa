@@ -16,13 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa;
+package oripa.fold;
 
+public class Condition4 {
 
-public class Config {
-
-    
-    final public static boolean FOR_STUDY = false;
-    final public static int DEFAULT_GRID_DIV_NUM = 4;
-    final public static int MRUFILE_NUM = 10;
+    public int upper1;
+    public int lower1;
+    public int upper2;
+    public int lower2;
 }

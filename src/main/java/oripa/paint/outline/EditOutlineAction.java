@@ -9,9 +9,9 @@ import java.util.Stack;
 
 import javax.vecmath.Vector2d;
 
-import oripa.Config;
 import oripa.paint.core.EditMode;
 import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintContext;
 import oripa.paint.util.PairLoop;
 
@@ -31,7 +31,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 			this.g2d = g2d;
 
 			g2d.setColor(Color.GREEN);
-			g2d.setStroke(Config.STROKE_TMP_OUTLINE);
+			g2d.setStroke(LineSetting.STROKE_TMP_OUTLINE);
 
 			if(outlineVertices.size() > 1){
 				PairLoop.iterateWithCount(

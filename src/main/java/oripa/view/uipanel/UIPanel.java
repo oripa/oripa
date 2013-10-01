@@ -57,7 +57,7 @@ import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.doc.TypeForChange;
 import oripa.file.ImageResourceLoader;
-import oripa.folder.Folder;
+import oripa.fold.Folder;
 import oripa.paint.byvalue.AngleMeasuringAction;
 import oripa.paint.byvalue.AngleValueInputListener;
 import oripa.paint.byvalue.LengthMeasuringAction;

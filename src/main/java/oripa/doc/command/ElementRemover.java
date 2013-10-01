@@ -13,7 +13,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class RemoveElement {
+public class ElementRemover {
 	/**
 	 * remove line from crease pattern
 	 * @param l

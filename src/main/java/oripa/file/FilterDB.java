@@ -1,9 +1,10 @@
-package oripa;
+package oripa.file;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import oripa.ORIPA;
 import oripa.doc.LoadingDoc;
 import oripa.doc.SavingDoc;
 import oripa.doc.exporter.ExporterCP;
@@ -15,7 +16,6 @@ import oripa.doc.loader.LoaderCP;
 import oripa.doc.loader.LoaderDXF;
 import oripa.doc.loader.LoaderPDF;
 import oripa.doc.loader.LoaderXML;
-import oripa.file.FileFilterEx;
 
 
 /**

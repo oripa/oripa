@@ -55,6 +55,7 @@ import oripa.geom.OriVertex;
 import oripa.mouse.MouseUtility;
 import oripa.paint.core.EditMode;
 import oripa.paint.core.Globals;
+import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintContext;
 import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
@@ -258,7 +259,7 @@ public class MainScreen extends JPanel
 
 		//g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		g2d.setStroke(Config.STROKE_VALLEY);
+		g2d.setStroke(LineSetting.STROKE_VALLEY);
 		g2d.setColor(Color.black);
 
 		drawLines(g2d, ORIPA.doc.creasePattern);
@@ -281,7 +282,7 @@ public class MainScreen extends JPanel
 
 		if (Globals.bDispCrossLine) {
 			if (!ORIPA.doc.crossLines.isEmpty()) {
-				g2d.setStroke(Config.STROKE_TMP_OUTLINE);
+				g2d.setStroke(LineSetting.STROKE_TMP_OUTLINE);
 				g2d.setColor(Color.MAGENTA);
 
 				for (OriLine line : ORIPA.doc.crossLines) {
@@ -297,7 +298,7 @@ public class MainScreen extends JPanel
 		// Line that links the pair of unsetled faces
 		if (Config.FOR_STUDY) {
 			if (ORIPA.doc.overlapRelation != null) {
-				g2d.setStroke(Config.STROKE_RIDGE);
+				g2d.setStroke(LineSetting.STROKE_RIDGE);
 				g2d.setColor(Color.MAGENTA);
 				int size = ORIPA.doc.faces.size();
 				for (int i = 0; i < size; i++) {
@@ -339,7 +340,7 @@ public class MainScreen extends JPanel
 
 	private void drawGridLine(Graphics2D g2d) {
 		g2d.setColor(Color.LIGHT_GRAY);
-		g2d.setStroke(Config.STROKE_GRID);
+		g2d.setStroke(LineSetting.STROKE_GRID);
 
 		int lineNum = Globals.gridDivNum;
 		double step = ORIPA.doc.size / lineNum;

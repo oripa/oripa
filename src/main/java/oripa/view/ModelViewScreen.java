@@ -41,11 +41,11 @@ import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
-import oripa.Config;
 import oripa.ORIPA;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 import oripa.paint.core.Globals;
+import oripa.paint.core.LineSetting;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
@@ -126,9 +126,9 @@ public class ModelViewScreen extends JPanel
             g2d.setColor(Color.BLACK);
             for (OriHalfedge he : face.halfedges) {
                 if (he.pair == null) {
-                    g2d.setStroke(Config.MODEL_STROKE_CUT);
+                    g2d.setStroke(LineSetting.MODEL_STROKE_CUT);
                 } else {
-                    g2d.setStroke(Config.STROKE_CUT);
+                    g2d.setStroke(LineSetting.STROKE_CUT);
                 }
                 g2d.draw(new Line2D.Double(he.positionForDisplay.x, 
                         he.positionForDisplay.y, he.next.positionForDisplay.x, 
@@ -138,7 +138,7 @@ public class ModelViewScreen extends JPanel
 
         if (Globals.bDispCrossLine) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-            g2d.setStroke(Config.MODEL_STROKE_CUT);
+            g2d.setStroke(LineSetting.MODEL_STROKE_CUT);
             g2d.setColor(Color.RED);
 
             g2d.draw(new Line2D.Double(crossLine.p0.x, crossLine.p0.y, crossLine.p1.x, crossLine.p1.y));
@@ -180,7 +180,7 @@ public class ModelViewScreen extends JPanel
 
 
         if (ORIPA.doc.hasModel) {
-            g2d.setStroke(Config.STROKE_CUT);
+            g2d.setStroke(LineSetting.STROKE_CUT);
             if (Globals.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
             }

@@ -6,8 +6,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
+/**
+ * Utility Module for mouse
+ * @author Koji
+ *
+ */
 public class MouseUtility {
 
+	private MouseUtility() {}
+	
 	public static boolean isControlButtonPressed(MouseEvent event){
 		return ((event.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) 
 				== MouseEvent.CTRL_DOWN_MASK);		

@@ -41,6 +41,7 @@ import oripa.doc.Doc;
 import oripa.geom.OriFace;
 import oripa.geom.OriVertex;
 import oripa.paint.core.Globals;
+import oripa.paint.core.LineSetting;
 import oripa.value.OriLine;
 
 public class RenderScreenForCheck extends JPanel
@@ -162,7 +163,7 @@ public class RenderScreenForCheck extends JPanel
 
         Graphics2D g2d = bufferg;
 
-        g2d.setStroke(Config.STROKE_VALLEY);
+        g2d.setStroke(LineSetting.STROKE_VALLEY);
         g2d.setColor(Color.black);
         for (OriLine line : ORIPA.doc.creasePattern) {
             switch (line.typeVal) {
@@ -170,26 +171,26 @@ public class RenderScreenForCheck extends JPanel
                     if (!Globals.dispAuxLines) {
                         continue;
                     }
-                    g2d.setColor(Config.LINE_COLOR_AUX);
-                    g2d.setStroke(Config.STROKE_CUT);
+                    g2d.setColor(LineSetting.LINE_COLOR_AUX);
+                    g2d.setStroke(LineSetting.STROKE_CUT);
                     break;
                 case OriLine.TYPE_CUT:
                     g2d.setColor(Color.BLACK);
-                    g2d.setStroke(Config.STROKE_CUT);
+                    g2d.setStroke(LineSetting.STROKE_CUT);
                     break;
                 case OriLine.TYPE_RIDGE:
                     if (!Globals.dispMVLines) {
                         continue;
                     }
-                    g2d.setColor(Config.LINE_COLOR_RIDGE);
-                    g2d.setStroke(Config.STROKE_RIDGE);
+                    g2d.setColor(LineSetting.LINE_COLOR_RIDGE);
+                    g2d.setStroke(LineSetting.STROKE_RIDGE);
                     break;
                 case OriLine.TYPE_VALLEY:
                     if (!Globals.dispMVLines) {
                         continue;
                     }
-                    g2d.setColor(Config.LINE_COLOR_VALLEY);
-                    g2d.setStroke(Config.STROKE_VALLEY);
+                    g2d.setColor(LineSetting.LINE_COLOR_VALLEY);
+                    g2d.setStroke(LineSetting.STROKE_VALLEY);
                     break;
             }
 
@@ -218,7 +219,7 @@ public class RenderScreenForCheck extends JPanel
         // Line connecting the pair of unsetled faces
         if (Config.FOR_STUDY) {
             if (ORIPA.doc.overlapRelation != null) {
-                g2d.setStroke(Config.STROKE_RIDGE);
+                g2d.setStroke(LineSetting.STROKE_RIDGE);
                 g2d.setColor(Color.MAGENTA);
                 int size = ORIPA.doc.faces.size();
                 for (int i = 0; i < size; i++) {

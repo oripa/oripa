@@ -16,12 +16,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.folder;
+package oripa.file;
 
-public class Condition4 {
+public class InitData {
+    public String lastUsedFile = "";
+    public String[] MRUFiles;
 
-    public int upper1;
-    public int lower1;
-    public int upper2;
-    public int lower2;
+    public InitData() {
+    }
+    
+    public void setMRUFiles(String[] s) {MRUFiles = s; }   
+    public String[] getMRUFiles() { return MRUFiles; }
+    public void setLastUsedFile(String s) { lastUsedFile = s; }
+    
+    
+    public String getLastUsedFile() {
+    	if(MRUFiles != null){
+    		if(MRUFiles.length > 0){	
+    			if(lastUsedFile == null){
+    				lastUsedFile = MRUFiles[0];
+    			}
+    			else if(lastUsedFile == ""){
+    				lastUsedFile = MRUFiles[0];
+    				
+    			}
+    		}
+    	}
+    	return lastUsedFile; 
+    }
 }

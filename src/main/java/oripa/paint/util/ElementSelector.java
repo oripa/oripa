@@ -3,8 +3,8 @@ package oripa.paint.util;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
-import oripa.Config;
 import oripa.paint.core.Globals;
+import oripa.paint.core.LineSetting;
 import oripa.value.OriLine;
 
 public class ElementSelector {
@@ -22,7 +22,7 @@ public class ElementSelector {
 		Color color;
 		
 		if(line.selected){
-			color = Config.LINE_COLOR_CANDIDATE;
+			color = LineSetting.LINE_COLOR_CANDIDATE;
 		}
 		else {
 			color = selectColorByLineType(line.typeVal);
@@ -38,16 +38,16 @@ public class ElementSelector {
         
 		switch (lineType) {
         case OriLine.TYPE_NONE:
-            color = Config.LINE_COLOR_AUX;
+            color = LineSetting.LINE_COLOR_AUX;
             break;
         case OriLine.TYPE_CUT:
             color = Color.BLACK;
             break;
         case OriLine.TYPE_RIDGE:
-            color = Config.LINE_COLOR_RIDGE;
+            color = LineSetting.LINE_COLOR_RIDGE;
             break;
         case OriLine.TYPE_VALLEY:
-        	color = Config.LINE_COLOR_VALLEY;
+        	color = LineSetting.LINE_COLOR_VALLEY;
             break;
         default:
         	color = Color.BLACK;
@@ -60,19 +60,19 @@ public class ElementSelector {
 		BasicStroke stroke;
 		switch (lineType) {
 		case OriLine.TYPE_NONE:
-			stroke = Config.STROKE_CUT;
+			stroke = LineSetting.STROKE_CUT;
 			break;
 		case OriLine.TYPE_CUT:
-			stroke = Config.STROKE_CUT;
+			stroke = LineSetting.STROKE_CUT;
 			break;
 		case OriLine.TYPE_RIDGE:
-			stroke = Config.STROKE_RIDGE;
+			stroke = LineSetting.STROKE_RIDGE;
 			break;
 		case OriLine.TYPE_VALLEY:
-			stroke = Config.STROKE_VALLEY;
+			stroke = LineSetting.STROKE_VALLEY;
 			break;
 		default:
-			stroke = Config.STROKE_CUT;
+			stroke = LineSetting.STROKE_CUT;
 		}
 		
 		return stroke;

@@ -14,7 +14,7 @@ import oripa.doc.CalculationResource;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
-public class AddLine {
+public class LineAdder {
 	class PointComparatorX implements Comparator<Vector2d> {
 
 		@Override

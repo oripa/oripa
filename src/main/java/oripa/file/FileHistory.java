@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import oripa.InitData;
+
 
 public class FileHistory {
 	private LinkedList<String> mostRecentlyUsedHistory = new LinkedList<>();

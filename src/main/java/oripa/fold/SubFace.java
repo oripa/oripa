@@ -16,15 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.geom;
+package oripa.fold;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.Doc;
-import oripa.folder.Condition3;
-import oripa.folder.Condition4;
+import oripa.geom.OriFace;
+import oripa.geom.OriHalfedge;
 
 public class SubFace {
 
@@ -44,7 +45,7 @@ public class SubFace {
 		sortedFaces = new ArrayList<>();
 	}
 
-	public int sortFaceOverlapOrder(int[][] mat) {
+	public int sortFaceOverlapOrder(List<OriFace> modelFaces, int[][] mat) {
 		sortedFaces.clear();
 		for (int i = 0; i < faces.size(); i++) {
 			sortedFaces.add(null);
@@ -55,7 +56,7 @@ public class SubFace {
 		int f_num = faces.size();
 		for (int i = 0; i < f_num; i++) {
 			for (int j = i + 1; j < f_num; j++) {
-				if (mat[faces.get(i).tmpInt][faces.get(j).tmpInt] == Doc.UNDEFINED) {
+				if (mat[faces.get(i).tmpInt][faces.get(j).tmpInt] == FolderTool.UNDEFINED) {
 					cnt++;
 				}
 			}
@@ -84,7 +85,7 @@ public class SubFace {
 			}
 
 			for (OriFace ff : faces) {
-				if (mat[f.tmpInt][ff.tmpInt] == Doc.LOWER) {
+				if (mat[f.tmpInt][ff.tmpInt] == FolderTool.LOWER) {
 					f.condition2s.add(new Integer(ff.tmpInt));
 				}
 			}
@@ -96,7 +97,7 @@ public class SubFace {
 		}
 
 		// From the bottom
-		sort(0);
+		sort(modelFaces, 0);
 
 		// Returns the number of solutions obtained
 		return answerStacks.size();
@@ -111,7 +112,7 @@ public class SubFace {
 		return c;
 	}
 
-	private void sort(int index) {
+	private void sort(List<OriFace> modelFaces, int index) {
 
 		for (OriFace f : faces) {
 			if (f.alreadyStacked) {
@@ -121,7 +122,7 @@ public class SubFace {
 			boolean isOK = true;
 
 			for (Integer ii : f.condition2s) {
-				if (!ORIPA.doc.faces.get(ii.intValue()).alreadyStacked) {
+				if (!modelFaces.get(ii.intValue()).alreadyStacked) {
 					isOK = false;
 					break;
 				}
@@ -131,7 +132,7 @@ public class SubFace {
 				continue;
 			}
 
-			isOK = checkForSortLocally3(f);
+			isOK = checkForSortLocally3(modelFaces, f);
 			if (!isOK) {
 				continue;
 			}
@@ -153,7 +154,7 @@ public class SubFace {
 				f.tmpInt2 = -1;
 				continue;
 			} else {
-				sort(index + 1);
+				sort(modelFaces, index + 1);
 			}
 		}
 
@@ -169,11 +170,11 @@ public class SubFace {
 
 	}
 
-	private boolean checkForSortLocally3(OriFace face) {
+	private boolean checkForSortLocally3(List<OriFace> modelFaces, OriFace face) {
 
 		for (Condition3 cond : face.condition3s) {
-			if (ORIPA.doc.faces.get(cond.lower).alreadyStacked
-					&& !ORIPA.doc.faces.get(cond.upper).alreadyStacked) {
+			if (modelFaces.get(cond.lower).alreadyStacked
+					&& !modelFaces.get(cond.upper).alreadyStacked) {
 				return false;
 			}
 		}
@@ -189,18 +190,18 @@ public class SubFace {
 		for (Condition4 cond : face.condition4s) {
 
 			if (face.tmpInt == cond.upper2
-					&& ORIPA.doc.faces.get(cond.lower2).alreadyStacked
-					&& ORIPA.doc.faces.get(cond.lower1).alreadyStacked
-					&& !ORIPA.doc.faces.get(cond.upper1).alreadyStacked
-					&& ORIPA.doc.faces.get(cond.lower2).tmpInt2 < ORIPA.doc.faces
+					&& modelFaces.get(cond.lower2).alreadyStacked
+					&& modelFaces.get(cond.lower1).alreadyStacked
+					&& !modelFaces.get(cond.upper1).alreadyStacked
+					&& modelFaces.get(cond.lower2).tmpInt2 < modelFaces
 							.get(cond.lower1).tmpInt2) {
 				return false;
 			}
 			if (face.tmpInt == cond.upper1
-					&& ORIPA.doc.faces.get(cond.lower2).alreadyStacked
-					&& ORIPA.doc.faces.get(cond.lower1).alreadyStacked
-					&& !ORIPA.doc.faces.get(cond.upper2).alreadyStacked
-					&& ORIPA.doc.faces.get(cond.lower1).tmpInt2 < ORIPA.doc.faces
+					&& modelFaces.get(cond.lower2).alreadyStacked
+					&& modelFaces.get(cond.lower1).alreadyStacked
+					&& !modelFaces.get(cond.upper2).alreadyStacked
+					&& modelFaces.get(cond.lower1).tmpInt2 < modelFaces
 							.get(cond.lower2).tmpInt2) {
 				return false;
 			}

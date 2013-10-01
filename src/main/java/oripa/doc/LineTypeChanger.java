@@ -2,7 +2,7 @@ package oripa.doc;
 
 import java.util.Collection;
 
-import oripa.doc.command.RemoveElement;
+import oripa.doc.command.ElementRemover;
 import oripa.value.OriLine;
 
 //public 
@@ -31,7 +31,7 @@ class LineTypeChanger {
                 l.typeVal = OriLine.TYPE_CUT;
                 break;
             case DELETE:
-                RemoveElement remover = new RemoveElement();
+                ElementRemover remover = new ElementRemover();
             	remover.removeLine(l, lines);
                 break;
             case FLIP: {

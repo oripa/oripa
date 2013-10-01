@@ -9,7 +9,6 @@ import java.awt.geom.Rectangle2D;
 
 import javax.vecmath.Vector2d;
 
-import oripa.Config;
 import oripa.ORIPA;
 import oripa.paint.geometry.GeometricOperation;
 import oripa.paint.util.ElementSelector;
@@ -179,8 +178,8 @@ public abstract class GraphicMouseAction {
 
 	private void drawPickedLines(Graphics2D g2d, PaintContext context){
 		for(int i = 0; i < context.getLineCount(); i++){
-			g2d.setColor(Config.LINE_COLOR_PICKED);
-			g2d.setStroke(Config.STROKE_PICKED);
+			g2d.setColor(LineSetting.LINE_COLOR_PICKED);
+			g2d.setStroke(LineSetting.STROKE_PICKED);
 
 			OriLine line = context.getLine(i);
 
@@ -219,7 +218,7 @@ public abstract class GraphicMouseAction {
 
 	protected void drawPickCandidateVertex(Graphics2D g2d, PaintContext context){
 		if (context.pickCandidateV != null) {
-			g2d.setColor(Config.LINE_COLOR_CANDIDATE);
+			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
 			Vector2d candidate = context.pickCandidateV;
 			drawVertex(g2d, context, candidate.x, candidate.y);
 		}
@@ -239,7 +238,7 @@ public abstract class GraphicMouseAction {
 
 	protected void drawPickCandidateLine(Graphics2D g2d, PaintContext context){
 		if (context.pickCandidateL!= null) {
-			g2d.setColor(Config.LINE_COLOR_CANDIDATE);
+			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
 			OriLine candidate = context.pickCandidateL;
 			drawLine(g2d, candidate);
 		}

@@ -44,7 +44,6 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import oripa.Config;
-import oripa.FilterDB;
 import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
@@ -55,6 +54,7 @@ import oripa.file.FileChooserFactory;
 import oripa.file.FileFilterEx;
 import oripa.file.FileHistory;
 import oripa.file.FileVersionError;
+import oripa.file.FilterDB;
 import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
 import oripa.paint.core.Globals;

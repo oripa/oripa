@@ -8,7 +8,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import oripa.Config;
 import oripa.ORIPA;
 import oripa.geom.RectangleClipper;
 import oripa.value.OriLine;
@@ -89,7 +88,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 
 		if(startPoint != null && draggingPoint != null){
 						
-	        g2d.setStroke(Config.STROKE_SELECT_BY_AREA);
+	        g2d.setStroke(LineSetting.STROKE_SELECT_BY_AREA);
 	        g2d.setColor(Color.BLACK);
 	        double sx = Math.min(startPoint.x, draggingPoint.x);
 	        double sy = Math.min(startPoint.y, draggingPoint.y);

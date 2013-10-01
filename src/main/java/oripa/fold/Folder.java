@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.folder;
+package oripa.fold;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -28,7 +28,11 @@ import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterEPS;
-import oripa.geom.*;
+import oripa.geom.GeomUtil;
+import oripa.geom.Line;
+import oripa.geom.OriEdge;
+import oripa.geom.OriFace;
+import oripa.geom.OriHalfedge;
 import oripa.paint.core.Globals;
 import oripa.value.OriLine;
 
@@ -78,7 +82,7 @@ public class Folder {
         ORIPA.tmpInt = 0;
 
         for (SubFace sub : subFaces) {
-            sub.sortFaceOverlapOrder(workORmat);
+            sub.sortFaceOverlapOrder(m_doc.faces, workORmat);
         }
 
         findAnswer(0, m_doc.overlapRelation);

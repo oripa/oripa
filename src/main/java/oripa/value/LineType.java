@@ -1,4 +1,4 @@
-package oripa;
+package oripa.value;
 
 public enum LineType {
 	NONE("NONE", 0), CUT("CUT", 1), VALLEY("VALLEY", 2), RIDGE("RIDGE", 3);

@@ -8,7 +8,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.value.OriLine;
 
-public class PasteLines {
+public class LinePaster {
 
 	/**
 	 * A rectangle domain
@@ -93,7 +93,7 @@ public class PasteLines {
 		// make them crossed
 		//-----------------------------------------------
 		
-		AddLine adder = new AddLine();
+		LineAdder adder = new LineAdder();
 		
 		for(OriLine line : toBePasted){
 			// the result is stored into crossables.
