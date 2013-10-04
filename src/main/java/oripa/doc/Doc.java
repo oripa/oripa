@@ -81,7 +81,7 @@ public class Doc {
 //	public ArrayList<OriLine> lines = new ArrayList<OriLine>();
 	private CreasePattern creasePattern = null;
 
-	public ArrayList<OriFace> faces = new ArrayList<OriFace>();
+	private ArrayList<OriFace> faces = new ArrayList<OriFace>();
 	public ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
 	public ArrayList<OriEdge> edges = new ArrayList<OriEdge>();
 	//    public ArrayList<OriLine> tmpSelectedLines = new ArrayList<OriLine>();

@@ -20,8 +20,8 @@ package oripa.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.List;
 
-import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
@@ -48,7 +48,9 @@ public class ExporterORmat implements Exporter{
             id++;
         }
 
-        for (OriFace face : ORIPA.doc.faces) {
+        List<OriFace> faces = doc.getFaces();
+
+        for (OriFace face : faces) {
             bw.write("f");
             for (OriHalfedge he : face.halfedges) {
                 bw.write(" " + he.vertex.tmpInt);
@@ -56,7 +58,7 @@ public class ExporterORmat implements Exporter{
             bw.write("\n");
         }
 
-        int faceNum = doc.faces.size();
+        int faceNum = faces.size();
         bw.write("# overlap relation matrix\n");
         bw.write("# 0: NO_OVERLAP\n");
         bw.write("# 1: face[row_index] located LOWER than face[col_index]\n");

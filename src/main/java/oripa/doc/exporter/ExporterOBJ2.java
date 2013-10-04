@@ -20,6 +20,7 @@ package oripa.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.List;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
@@ -38,6 +39,8 @@ public class ExporterOBJ2 implements Exporter{
         // Align the center of the model, combine scales
         bw.write("# Created by ORIPA\n");
         bw.write("\n");
+        
+        List<OriFace> faces = doc.getFaces();
 
         int id = 1;
         for (OriVertex vertex : doc.vertices) {
@@ -50,7 +53,7 @@ public class ExporterOBJ2 implements Exporter{
             bw.write("vt " + (vertex.preP.x + doc.size / 2) / doc.size + " " + (vertex.preP.y + doc.size / 2) / doc.size + "\n");
         }
 
-        for (OriFace face : ORIPA.doc.faces) {
+        for (OriFace face : faces) {
             bw.write("f");
             for (OriHalfedge he : face.halfedges) {
                 bw.write(" " + he.vertex.tmpInt + "/" + he.vertex.tmpInt);
@@ -69,6 +72,8 @@ public class ExporterOBJ2 implements Exporter{
         bw.write("# Created by ORIPA\n");
         bw.write("\n");
 
+        List<OriFace> faces = doc.getFaces();
+
         int id = 1;
         for (OriVertex vertex : doc.vertices) {
             bw.write("v " + vertex.p.x + " " + vertex.p.y + " 0.0\n");
@@ -76,7 +81,8 @@ public class ExporterOBJ2 implements Exporter{
             id++;
         }
 
-        for (OriFace face : ORIPA.doc.faces) {
+
+        for (OriFace face : faces) {
             bw.write("f");
             for (OriHalfedge he : face.halfedges) {
                 bw.write(" " + he.vertex.tmpInt);

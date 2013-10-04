@@ -29,6 +29,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -77,7 +78,9 @@ public class RenderScreenForCheck extends JPanel
     }
 
     public void drawModel(Graphics2D g2d) {
-        for (OriFace face : ORIPA.doc.faces) {
+        List<OriFace> faces = ORIPA.doc.getFaces();
+
+        for (OriFace face : faces) {
             g2d.setColor(new Color(255, 210, 210));
             g2d.fill(face.preOutline);
         }
@@ -92,14 +95,14 @@ public class RenderScreenForCheck extends JPanel
 
         if (bDrawFaceID) {
             g2d.setColor(Color.BLACK);
-            for (OriFace face : ORIPA.doc.faces) {
+            for (OriFace face : faces) {
                 g2d.drawString("" + face.tmpInt, (int) face.getCenter().x, (int) face.getCenter().y);
             }
         }
 
         if (Config.FOR_STUDY) {
             g2d.setColor(new Color(255, 210, 220));
-            for (OriFace face : ORIPA.doc.faces) {
+            for (OriFace face : faces) {
                 if (face.tmpInt2 == 0) {
                     g2d.setColor(Color.RED);
                     g2d.fill(face.preOutline);
@@ -121,7 +124,7 @@ public class RenderScreenForCheck extends JPanel
             }
 
             g2d.setColor(Color.BLACK);
-            for (OriFace face : ORIPA.doc.faces) {
+            for (OriFace face : faces) {
                 g2d.drawString("" + face.z_order, (int) face.getCenter().x, 
                         (int) face.getCenter().y);
             }
@@ -221,15 +224,17 @@ public class RenderScreenForCheck extends JPanel
 
         // Line connecting the pair of unsetled faces
         if (Config.FOR_STUDY) {
+            List<OriFace> faces = ORIPA.doc.getFaces();
+
             if (ORIPA.doc.overlapRelation != null) {
                 g2d.setStroke(LineSetting.STROKE_RIDGE);
                 g2d.setColor(Color.MAGENTA);
-                int size = ORIPA.doc.faces.size();
+                int size = faces.size();
                 for (int i = 0; i < size; i++) {
                     for (int j = i + 1; j < size; j++) {
                         if (ORIPA.doc.overlapRelation[i][j] == Doc.UNDEFINED) {
-                            Vector2d v0 = ORIPA.doc.faces.get(i).getCenter();
-                            Vector2d v1 = ORIPA.doc.faces.get(j).getCenter();
+                            Vector2d v0 = faces.get(i).getCenter();
+                            Vector2d v1 = faces.get(j).getCenter();
                             g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));
 
                         }

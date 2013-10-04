@@ -20,6 +20,7 @@ package oripa.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
 
@@ -41,7 +42,9 @@ public class ExporterDXF implements Exporter{
         Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
         Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
         Vector2d modelCenter = new Vector2d();
-        for (OriFace face : ORIPA.doc.faces) {
+        
+        List<OriFace> faces = ORIPA.doc.getFaces();
+        for (OriFace face : faces) {
             for (OriHalfedge he : face.halfedges) {
                 maxV.x = Math.max(maxV.x, he.vertex.p.x);
                 maxV.y = Math.max(maxV.y, he.vertex.p.y);

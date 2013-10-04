@@ -37,6 +37,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
@@ -83,6 +84,8 @@ public class ModelViewScreen extends JPanel
     }
 
     public void resetViewMatrix() {
+        List<OriFace> faces = ORIPA.doc.getFaces();
+
         rotateAngle = 0;
         if (!ORIPA.doc.hasModel) {
             scale = 1.0;
@@ -90,7 +93,7 @@ public class ModelViewScreen extends JPanel
             // Align the center of the model, combined scale
             Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
             Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-            for (OriFace face : ORIPA.doc.faces) {
+            for (OriFace face : faces) {
                 for (OriHalfedge he : face.halfedges) {
                     maxV.x = Math.max(maxV.x, he.vertex.p.x);
                     maxV.y = Math.max(maxV.y, he.vertex.p.y);

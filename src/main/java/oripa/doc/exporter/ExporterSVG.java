@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
 
@@ -53,7 +54,10 @@ public class ExporterSVG implements Exporter{
             Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
             Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
             Vector2d modelCenter = new Vector2d();
-            for (OriFace face : ORIPA.doc.faces) {
+            
+            List<OriFace> faces = doc.getFaces();
+
+            for (OriFace face : faces) {
                 for (OriHalfedge he : face.halfedges) {
                     maxV.x = Math.max(maxV.x, he.vertex.p.x);
                     maxV.y = Math.max(maxV.y, he.vertex.p.y);
@@ -67,8 +71,8 @@ public class ExporterSVG implements Exporter{
             bw.write(gradient);
             
             ArrayList<OriFace> sortedFaces = new ArrayList<>();
-            boolean [] isSorted = new boolean[ORIPA.doc.faces.size()];
-            for (int i = 0; i < ORIPA.doc.faces.size(); i++) {
+            boolean [] isSorted = new boolean[faces.size()];
+            for (int i = 0; i < faces.size(); i++) {
                 for (int j = 0; j < ORIPA.doc.overlapRelation.length; j++) {
                     int numberOf2 = 0;
                     if(!isSorted[j]){
@@ -79,7 +83,7 @@ public class ExporterSVG implements Exporter{
                         }
                         if(numberOf2==0){
                             isSorted[j] = true;
-                            sortedFaces.add(ORIPA.doc.faces.get(j));
+                            sortedFaces.add(faces.get(j));
                             break;
                         }                        
                     }

@@ -20,6 +20,7 @@ package oripa.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.List;
 
 import oripa.doc.Doc;
 import oripa.geom.OriEdge;
@@ -37,6 +38,8 @@ public class ExporterOBJ implements Exporter{
         bw.write("# Created by ORIPA\n");
         bw.write("\n");
 
+        List<OriFace> faces = doc.getFaces();
+        
         int id = 1;
         for (OriVertex vertex : doc.vertices) {
             bw.write("v " + vertex.preP.x + " " + vertex.preP.y + " 0.0\n");
@@ -44,7 +47,7 @@ public class ExporterOBJ implements Exporter{
             id++;
         }
 
-        for (OriFace face : doc.faces) {
+        for (OriFace face : faces) {
             bw.write("f");
             for (OriHalfedge he : face.halfedges) {
                 bw.write(" " + he.vertex.tmpInt);

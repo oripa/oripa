@@ -35,6 +35,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.io.File;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -288,6 +289,8 @@ public class RenderScreen2 extends JPanel
     }
 
     public void drawOrigami() {
+        List<OriFace> faces = ORIPA.doc.getFaces();
+
         if (!ORIPA.doc.bFolded) {
             return;
         }
@@ -301,7 +304,7 @@ public class RenderScreen2 extends JPanel
         double angle = m_rotAngle * Math.PI / 180;
         localScale *= m_scale;
 
-        for (OriFace face : ORIPA.doc.faces) {
+        for (OriFace face : faces) {
 
             face.trianglateAndSetColor(m_bUseColor, isM_bFaceOrderFlip());
 
