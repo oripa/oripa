@@ -15,11 +15,22 @@ public class MouseUtility {
 
 	private MouseUtility() {}
 	
-	public static boolean isControlButtonPressed(MouseEvent event){
+	/**
+	 * 
+	 * @param event
+	 * @return true if Ctrl key is pressed, otherwise false.
+	 */
+	public static boolean isControlKeyPressed(MouseEvent event){
 		return ((event.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) 
 				== MouseEvent.CTRL_DOWN_MASK);		
 	}
 	
+	/**
+	 * 
+	 * @param affine
+	 * @param p A point obtained via {@link MouseEvent}.
+	 * @return A point in logical coordinate.
+	 */
     public static Point2D.Double getLogicalPoint(AffineTransform affine, Point p){
     	Point2D.Double logicalPoint = new Point2D.Double();
         try {

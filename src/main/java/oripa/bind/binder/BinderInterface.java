@@ -1,9 +1,14 @@
 package oripa.bind.binder;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.AbstractButton;
 
+/**
+ * This interface provides a general format of
+ * linking some object to a GUI button with ID.
+ * @author Koji
+ *
+ * @param <ToBeBound>
+ */
 public interface BinderInterface<ToBeBound> {
 
 	/**

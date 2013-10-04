@@ -3,12 +3,12 @@ package oripa.paint.geometry;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.CalculationResource;
+import oripa.doc.core.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.paint.core.PaintContext;
 import oripa.value.OriLine;
@@ -31,7 +31,9 @@ public class GeometricOperation {
 		double minDistance = Double.MAX_VALUE;
 		OriLine bestLine = null;
 
-		for (OriLine line : ORIPA.doc.creasePattern) {
+        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+
+		for (OriLine line : creasePattern) {
 			double dist = GeomUtil.DistancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
 			if (dist < minDistance) {
 				minDistance = dist;

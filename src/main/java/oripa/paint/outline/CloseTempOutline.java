@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.doc.core.CreasePattern;
 import oripa.paint.util.PairLoop;
 import oripa.value.OriLine;
 
@@ -13,15 +14,17 @@ public class CloseTempOutline {
 
 	public void execute(Collection<Vector2d> outlinevertices){
 
+        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+
 		// Delete the current outline
 		ArrayList<OriLine> outlines = new ArrayList<>();
-		for (OriLine line : ORIPA.doc.creasePattern) {
+		for (OriLine line : creasePattern) {
 			if (line.typeVal == OriLine.TYPE_CUT) {
 				outlines.add(line);
 			}
 		}
 		for (OriLine line : outlines) {
-			ORIPA.doc.creasePattern.remove(line);
+			creasePattern.remove(line);
 		}
 
 		// Update the contour line
@@ -41,7 +44,7 @@ public class CloseTempOutline {
 		// To delete a segment out of the contour
 		while (true) {
 			boolean bDeleteLine = false;
-			for (OriLine line : ORIPA.doc.creasePattern) {
+			for (OriLine line : creasePattern) {
 				if (line.typeVal == OriLine.TYPE_CUT) {
 					continue;
 				}

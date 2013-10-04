@@ -8,6 +8,12 @@ import oripa.paint.core.EditMode;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 
+/**
+ * Helper class
+ * 
+ * @author Koji
+ *
+ */
 class LocalPaintBoundStateFactory {
 
 	private ActionListener[] basicActions;

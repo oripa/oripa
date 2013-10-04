@@ -13,6 +13,12 @@ import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.ChangeHint;
 
 /**
+ * A state when user is painting.
+ * This class performs:
+ * - state management actions
+ * - switching view 
+ * - switching paiting action
+ * 
  * @author koji
  *
  */

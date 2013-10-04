@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
+import oripa.doc.core.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -34,7 +35,9 @@ public class LoaderDXF implements Loader{
 
     public Doc load(String filePath) {
         Doc doc = new Doc(400);
-        doc.creasePattern.clear();
+        CreasePattern creasePattern = doc.getCreasePattern();
+        
+        creasePattern.clear();
 
         Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
         Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
@@ -61,7 +64,7 @@ public class LoaderDXF implements Loader{
 
                     while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
                         if (token == StreamTokenizer.TT_WORD && st.sval.equals("0")) {
-                            doc.creasePattern.add(line);
+                            creasePattern.add(line);
                             break;
                         } else if (token == StreamTokenizer.TT_WORD && st.sval.equals("62")) {
                             st.nextToken();
@@ -105,7 +108,7 @@ public class LoaderDXF implements Loader{
 
                             if (GeomUtil.Distance(line.p0, line.p1) < 0.001) {
                                 System.out.println("########### NULL EDGE");
-                                doc.creasePattern.remove(line);
+                                creasePattern.remove(line);
                             }
 
                         } else {
@@ -121,7 +124,7 @@ public class LoaderDXF implements Loader{
             return null;
         }
 
-        if (doc.creasePattern.isEmpty()) {
+        if (creasePattern.isEmpty()) {
             return null;
         }
 
@@ -130,7 +133,7 @@ public class LoaderDXF implements Loader{
         Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
         double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
         // size normalization
-        for (OriLine line : doc.creasePattern) {
+        for (OriLine line : creasePattern) {
             line.p0.x = (line.p0.x - center.x) / bboxSize * size;
             line.p0.y = (line.p0.y - center.y) / bboxSize * size;
             line.p1.x = (line.p1.x - center.x) / bboxSize * size;
@@ -139,10 +142,10 @@ public class LoaderDXF implements Loader{
 
 
         ArrayList<OriLine> delLines = new ArrayList<>();
-        int lineNum = doc.creasePattern.size();
+        int lineNum = creasePattern.size();
 
         OriLine[] lines = new OriLine[lineNum];
-        doc.creasePattern.toArray(lines);
+        creasePattern.toArray(lines);
         
         for (int i = 0; i < lineNum; i++) {
             for (int j = i + 1; j < lineNum; j++) {
@@ -158,7 +161,7 @@ public class LoaderDXF implements Loader{
         }
 
         for (OriLine delLine : delLines) {
-            doc.creasePattern.remove(delLine);
+            creasePattern.remove(delLine);
         }
 
         return doc;

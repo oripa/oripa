@@ -19,6 +19,7 @@
 package oripa;
 
 import oripa.doc.Doc;
+import oripa.doc.core.CreasePattern;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
@@ -41,14 +42,15 @@ public class DataSet {
         mainVersion = Version.FILE_MAJOR_VERSION;
         subVersion = Version.FILE_MINOR_VERSION;
 
-        int lineNum = doc.creasePattern.size();
+        CreasePattern creasePattern = doc.getCreasePattern();
+        int lineNum = creasePattern.size();
         lines = new OriLineProxy[lineNum];
         OriLine[] docLines = new OriLine[lineNum];
-        doc.creasePattern.toArray(docLines);
+        creasePattern.toArray(docLines);
         for (int i = 0; i < lineNum; i++) {
             lines[i] = new OriLineProxy(docLines[i]);
         }
-        paperSize = doc.size;
+        paperSize = doc.getSize();
 
         title = doc.title;
         editorName = doc.editorName;
@@ -58,11 +60,12 @@ public class DataSet {
     }
 
     public void recover(Doc doc) {
-        doc.creasePattern.clear();
+    	CreasePattern creasePattern = doc.getCreasePattern();
+        creasePattern.clear();
         for (int i = 0; i < lines.length; i++) {
-            doc.creasePattern.add(lines[i].getLine());
+            creasePattern.add(lines[i].getLine());
         }
-        doc.size = paperSize;
+        doc.setSize(paperSize);
         doc.title = title;
         doc.editorName = editorName;
         doc.originalAuthorName = originalAuthorName;

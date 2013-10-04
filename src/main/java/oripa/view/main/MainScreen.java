@@ -39,6 +39,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -50,6 +51,7 @@ import javax.vecmath.Vector2d;
 import oripa.Config;
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.doc.core.CreasePattern;
 import oripa.geom.OriFace;
 import oripa.geom.OriVertex;
 import oripa.mouse.MouseUtility;
@@ -201,9 +203,11 @@ public class MainScreen extends JPanel
 	}
 
 	void drawVertexRectangles(Graphics2D g2d){
+        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+
 		g2d.setColor(Color.BLACK);
 		final double vertexDrawSize = 2.0;
-		for (OriLine line : ORIPA.doc.creasePattern) {
+		for (OriLine line : creasePattern) {
 			if (!Globals.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
@@ -262,7 +266,9 @@ public class MainScreen extends JPanel
 		g2d.setStroke(LineSetting.STROKE_VALLEY);
 		g2d.setColor(Color.black);
 
-		drawLines(g2d, ORIPA.doc.creasePattern);
+        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+
+		drawLines(g2d, creasePattern);
 
 
 
@@ -281,11 +287,12 @@ public class MainScreen extends JPanel
 
 
 		if (Globals.bDispCrossLine) {
-			if (!ORIPA.doc.crossLines.isEmpty()) {
+			List<OriLine> crossLines = ORIPA.doc.getCrossLines();
+			if (!crossLines.isEmpty()) {
 				g2d.setStroke(LineSetting.STROKE_TMP_OUTLINE);
 				g2d.setColor(Color.MAGENTA);
 
-				for (OriLine line : ORIPA.doc.crossLines) {
+				for (OriLine line : crossLines) {
 					Vector2d v0 = line.p0;
 					Vector2d v1 = line.p1;
 
@@ -362,11 +369,11 @@ public class MainScreen extends JPanel
 
 		if(javax.swing.SwingUtilities.isRightMouseButton(e)){
 			Globals.mouseAction.onRightClick(
-					mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+					mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		}
 		else {
 			Globals.mouseAction = Globals.mouseAction.onLeftClick(
-					mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+					mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		}
 
 	}
@@ -378,7 +385,7 @@ public class MainScreen extends JPanel
 			return;
 		}
 		
-		Globals.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+		Globals.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 
 		preMousePoint = e.getPoint();
 	}
@@ -388,7 +395,7 @@ public class MainScreen extends JPanel
 		// Rectangular Selection
 
 		if(Globals.mouseAction != null){
-			Globals.mouseAction.onRelease(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+			Globals.mouseAction.onRelease(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		}
 		repaint();
 	}
@@ -424,7 +431,7 @@ public class MainScreen extends JPanel
 			repaint();
 		} else {
 			mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
-			Globals.getMouseAction().onDrag(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+			Globals.getMouseAction().onDrag(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 			repaint();
 		}
 	}
@@ -448,7 +455,7 @@ public class MainScreen extends JPanel
 			return;
 		}
 
-		Globals.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlButtonPressed(e));
+		Globals.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
 		repaint();
 		

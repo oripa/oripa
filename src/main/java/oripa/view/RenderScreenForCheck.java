@@ -38,6 +38,7 @@ import javax.vecmath.Vector2d;
 import oripa.Config;
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.doc.core.CreasePattern;
 import oripa.geom.OriFace;
 import oripa.geom.OriVertex;
 import oripa.paint.core.Globals;
@@ -163,9 +164,11 @@ public class RenderScreenForCheck extends JPanel
 
         Graphics2D g2d = bufferg;
 
+        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+
         g2d.setStroke(LineSetting.STROKE_VALLEY);
         g2d.setColor(Color.black);
-        for (OriLine line : ORIPA.doc.creasePattern) {
+        for (OriLine line : creasePattern) {
             switch (line.typeVal) {
                 case OriLine.TYPE_NONE:
                     if (!Globals.dispAuxLines) {

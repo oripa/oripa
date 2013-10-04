@@ -77,9 +77,9 @@ public class Doc {
 	}
 
 
-	public ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
+	private ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
 //	public ArrayList<OriLine> lines = new ArrayList<OriLine>();
-	public CreasePattern creasePattern = null;
+	private CreasePattern creasePattern = null;
 
 	public ArrayList<OriFace> faces = new ArrayList<OriFace>();
 	public ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
@@ -1339,6 +1339,151 @@ public class Doc {
 	public CreasePattern getCreasePattern(){
 		return creasePattern;
 	}
+
+	
+	//-------------------------------------------------------------------
+	// eventually unnecessary
+	
+	/**
+	 * @return crossLines
+	 */
+	public ArrayList<OriLine> getCrossLines() {
+		return crossLines;
+	}
+
+	/**
+	 * @param crossLines crossLinesを登録する
+	 */
+	public void setCrossLines(ArrayList<OriLine> crossLines) {
+		this.crossLines = crossLines;
+	}
+
+	/**
+	 * @return faces
+	 */
+	public ArrayList<OriFace> getFaces() {
+		return faces;
+	}
+
+	/**
+	 * @param faces facesを登録する
+	 */
+	public void setFaces(ArrayList<OriFace> faces) {
+		this.faces = faces;
+	}
+
+	/**
+	 * @return edges
+	 */
+	public ArrayList<OriEdge> getEdges() {
+		return edges;
+	}
+
+	/**
+	 * @param edges edgesを登録する
+	 */
+	public void setEdges(ArrayList<OriEdge> edges) {
+		this.edges = edges;
+	}
+
+	/**
+	 * @return isValidPattern
+	 */
+	public boolean isValidPattern() {
+		return isValidPattern;
+	}
+
+	/**
+	 * @param isValidPattern isValidPatternを登録する
+	 */
+	public void setValidPattern(boolean isValidPattern) {
+		this.isValidPattern = isValidPattern;
+	}
+
+	/**
+	 * @return hasModel
+	 */
+	public boolean isHasModel() {
+		return hasModel;
+	}
+
+	/**
+	 * @param hasModel hasModelを登録する
+	 */
+	public void setHasModel(boolean hasModel) {
+		this.hasModel = hasModel;
+	}
+
+	/**
+	 * @return sortedFaces
+	 */
+	public ArrayList<OriFace> getSortedFaces() {
+		return sortedFaces;
+	}
+
+	/**
+	 * @param sortedFaces sortedFacesを登録する
+	 */
+	public void setSortedFaces(ArrayList<OriFace> sortedFaces) {
+		this.sortedFaces = sortedFaces;
+	}
+
+	/**
+	 * @return currentORmatIndex
+	 */
+	public int getCurrentORmatIndex() {
+		return currentORmatIndex;
+	}
+
+	/**
+	 * @param currentORmatIndex currentORmatIndexを登録する
+	 */
+	public void setCurrentORmatIndex(int currentORmatIndex) {
+		this.currentORmatIndex = currentORmatIndex;
+	}
+
+	/**
+	 * @return foldedBBoxLT
+	 */
+	public Vector2d getFoldedBBoxLT() {
+		return foldedBBoxLT;
+	}
+
+	/**
+	 * @param foldedBBoxLT foldedBBoxLTを登録する
+	 */
+	public void setFoldedBBoxLT(Vector2d foldedBBoxLT) {
+		this.foldedBBoxLT = foldedBBoxLT;
+	}
+
+	/**
+	 * @return foldedBBoxRB
+	 */
+	public Vector2d getFoldedBBoxRB() {
+		return foldedBBoxRB;
+	}
+
+	/**
+	 * @param foldedBBoxRB foldedBBoxRBを登録する
+	 */
+	public void setFoldedBBoxRB(Vector2d foldedBBoxRB) {
+		this.foldedBBoxRB = foldedBBoxRB;
+	}
+
+	/**
+	 * @return size
+	 */
+	public double getSize() {
+		return size;
+	}
+
+	/**
+	 * @param size sizeを登録する
+	 */
+	public void setSize(double size) {
+		this.size = size;
+	}
+	
 	
 	
 }

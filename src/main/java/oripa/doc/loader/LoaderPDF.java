@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
+import oripa.doc.core.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -98,14 +99,15 @@ public class LoaderPDF implements Loader {
         }
 
         Doc doc = new Doc(400);
-        doc.creasePattern.clear();
+        CreasePattern creasePattern = doc.getCreasePattern();
+        creasePattern.clear();
 
         for (OriLine l : lines) {
-            doc.creasePattern.add(l);
+            creasePattern.add(l);
         }
 
 
-        for (OriLine line : doc.creasePattern) {
+        for (OriLine line : creasePattern) {
             minV.x = Math.min(minV.x, line.p0.x);
             minV.x = Math.min(minV.x, line.p1.x);
             minV.y = Math.min(minV.y, line.p0.y);
@@ -122,7 +124,7 @@ public class LoaderPDF implements Loader {
         doc.size = size;
         Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
         double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
-        for (OriLine line : doc.creasePattern) {
+        for (OriLine line : creasePattern) {
             line.p0.x = (line.p0.x - center.x) / bboxSize * size;
             line.p0.y = (line.p0.y - center.y) / bboxSize * size;
             line.p1.x = (line.p1.x - center.x) / bboxSize * size;
@@ -133,10 +135,10 @@ public class LoaderPDF implements Loader {
         // Delete duplicate lines
 
         ArrayList<OriLine> delLines = new ArrayList<>();
-        int lineNum = doc.creasePattern.size();
+        int lineNum = creasePattern.size();
 
         OriLine[] lines = new OriLine[lineNum];
-        doc.creasePattern.toArray(lines);
+        creasePattern.toArray(lines);
         
         for (int i = 0; i < lineNum; i++) {
             for (int j = i + 1; j < lineNum; j++) {
@@ -152,7 +154,7 @@ public class LoaderPDF implements Loader {
         }
 
         for (OriLine delLine : delLines) {
-            doc.creasePattern.remove(delLine);
+            creasePattern.remove(delLine);
         }
 
 

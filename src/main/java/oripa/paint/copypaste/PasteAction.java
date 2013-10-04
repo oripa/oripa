@@ -2,22 +2,18 @@ package oripa.paint.copypaste;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.doc.core.CreasePattern;
 import oripa.paint.core.EditMode;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 import oripa.paint.geometry.GeometricOperation;
-import oripa.paint.geometry.NearestPoint;
 import oripa.paint.geometry.NearestVertexFinder;
 import oripa.value.OriLine;
 
@@ -45,7 +41,9 @@ public class PasteAction extends GraphicMouseAction {
 
 		context.startPasting();
 
-		for(OriLine line : ORIPA.doc.creasePattern){
+        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+
+		for(OriLine line : creasePattern){
 			if(line.selected){
 				context.pushLine(line);
 			}

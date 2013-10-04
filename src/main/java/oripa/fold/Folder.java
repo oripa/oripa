@@ -26,6 +26,7 @@ import javax.vecmath.Vector2d;
 import oripa.Config;
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.doc.core.CreasePattern;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterEPS;
 import oripa.geom.GeomUtil;
@@ -555,7 +556,9 @@ public class Folder {
 
     private ArrayList<SubFace> makeSubFaces() {
         Doc doc = new Doc(m_doc.size);
-        doc.creasePattern.clear();        
+        CreasePattern creasePattern = doc.getCreasePattern();
+
+        creasePattern.clear();        
         for (OriFace face : m_doc.faces) {
             for (OriHalfedge he : face.halfedges) {
                 doc.addLine(new OriLine(he.positionAfterFolded, he.next.positionAfterFolded, OriLine.TYPE_RIDGE));

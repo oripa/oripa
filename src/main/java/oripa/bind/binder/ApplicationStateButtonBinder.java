@@ -14,7 +14,8 @@ import oripa.viewsetting.main.ScreenUpdater;
  * @author koji
  *
  */
-public class ApplicationStateButtonBinder extends AbstractButtonBinder<ApplicationState<EditMode>>{
+public class ApplicationStateButtonBinder
+	extends AbstractButtonBinder<ApplicationState<EditMode>>{
 
 
 

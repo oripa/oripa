@@ -21,16 +21,18 @@ package oripa.doc.exporter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
-import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.doc.core.CreasePattern;
 import oripa.value.OriLine;
 
 public class ExporterCP implements Exporter{
-    public boolean export(Doc doc, String filepath) throws Exception {
+
+	public boolean export(Doc doc, String filepath) throws Exception {
         FileWriter fw = new FileWriter(filepath);
         BufferedWriter bw = new BufferedWriter(fw);
 
-        for(OriLine line : ORIPA.doc.creasePattern) {
+        CreasePattern creasePattern = doc.getCreasePattern();
+        for(OriLine line : creasePattern) {
             if(line.typeVal == OriLine.TYPE_NONE) continue;
             bw.write(line.typeVal + " " + line.p0.x + " " + line.p0.y + " " + line.p1.x + " " + line.p1.y + "\n");
         }

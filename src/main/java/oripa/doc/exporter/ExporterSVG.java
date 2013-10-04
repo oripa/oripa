@@ -2,12 +2,14 @@ package oripa.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.doc.core.CreasePattern;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 import oripa.value.OriLine;
@@ -123,12 +125,14 @@ public class ExporterSVG implements Exporter{
     }
 
     public boolean export(Doc doc, String filepath) throws Exception {
+    	CreasePattern creasePattern = doc.getCreasePattern();
+    	
         double scale = size / doc.size;
         double center = size / 2;
         FileWriter fw = new FileWriter(filepath);
         try (BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(head);
-            for (OriLine line : doc.creasePattern) {
+            for (OriLine line : creasePattern) {
                 bw.write(" <line style=\"");
                 String style = "stroke:gray;stroke-width:1;";
                 switch (line.typeVal) {
@@ -158,13 +162,16 @@ public class ExporterSVG implements Exporter{
         return true;
     }    
     
-    public static void exportDotted(Doc doc, String filepath) throws Exception {
+    
+    public static void exportDotted(Doc doc, String filepath) throws IOException  {
+    	CreasePattern creasePattern = doc.getCreasePattern();
+    	
         double scale = size / doc.size;
         double center = size / 2;
         FileWriter fw = new FileWriter(filepath);
         try (BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(head);
-            for (OriLine line : doc.creasePattern) {
+            for (OriLine line : creasePattern) {
                 bw.write(" <line style=\"");
                 String style = "stroke:gray;stroke-width:1;";
                 switch (line.typeVal) {
