@@ -21,7 +21,14 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
 import java.io.File;
-import javax.swing.*;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import oripa.ORIPA;
 import oripa.doc.exporter.Exporter;
@@ -79,8 +86,10 @@ public class RenderUI extends JPanel {
     }
 
     public void updateLabel() {
+		List<int[][]> foldableOverlapRelations = ORIPA.doc.getFoldableOverlapRelations();
+
         jLabel.setText("Folded model [" + (ORIPA.doc.currentORmatIndex + 1) + "/"
-                + ORIPA.doc.foldableOverlapRelations.size() + "]");
+                + foldableOverlapRelations.size() + "]");
 
     }
 

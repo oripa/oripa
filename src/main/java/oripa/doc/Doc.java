@@ -105,7 +105,7 @@ public class Doc {
 	// Folded Model Information (Result of Estimation)
 
 	private int overlapRelation[][];
-	public ArrayList<int[][]> foldableOverlapRelations = new ArrayList<int[][]>();
+	private ArrayList<int[][]> foldableOverlapRelations = new ArrayList<int[][]>();
 	public int currentORmatIndex;
 	public Vector2d foldedBBoxLT;
 	public Vector2d foldedBBoxRB;
@@ -1544,6 +1544,21 @@ public class Doc {
 	 */
 	public void setOverlapRelation(int[][] overlapRelation) {
 		this.overlapRelation = overlapRelation;
+	}
+
+	/**
+	 * @return foldableOverlapRelations
+	 */
+	public ArrayList<int[][]> getFoldableOverlapRelations() {
+		return foldableOverlapRelations;
+	}
+
+	/**
+	 * @param foldableOverlapRelations foldableOverlapRelationsを登録する
+	 */
+	public void setFoldableOverlapRelations(
+			ArrayList<int[][]> foldableOverlapRelations) {
+		this.foldableOverlapRelations = foldableOverlapRelations;
 	}
 	
 	

@@ -52,8 +52,8 @@ public class Folder {
 	public int fold() {
 		List<OriFace> faces = m_doc.getFaces();
         List<OriFace> sortedFaces = m_doc.getSortedFaces();
-
-        m_doc.foldableOverlapRelations.clear();
+        List<int[][]> foldableOverlapRelations = m_doc.getFoldableOverlapRelations();
+        foldableOverlapRelations.clear();
 
 		simpleFoldWithoutZorder();
 		m_doc.calcFoldedBoundingBox();
@@ -96,11 +96,11 @@ public class Folder {
 		findAnswer(0, overlapRelation);
 
 		m_doc.currentORmatIndex = 0;
-		if (m_doc.foldableOverlapRelations.isEmpty()) {
+		if (foldableOverlapRelations.isEmpty()) {
 			ORIPA.outMessage("No answer was found");
 			return 0;
 		} else {
-			matrixCopy(m_doc.foldableOverlapRelations.get(0), overlapRelation);
+			matrixCopy(foldableOverlapRelations.get(0), overlapRelation);
 		}
 
 		m_doc.setFacesOutline(false);
@@ -130,11 +130,12 @@ public class Folder {
 		}
 
 		m_doc.setFolded(true);;
-		return m_doc.foldableOverlapRelations.size();
+		return foldableOverlapRelations.size();
 	}
 
 	private void findAnswer(int subFaceIndex, int[][] orMat) {
 		SubFace sub = subFaces.get(subFaceIndex);
+		List<int[][]> foldableOverlapRelations = m_doc.getFoldableOverlapRelations();
 
 		if (sub.allFaceOrderDecided) {
 			int s = orMat.length;
@@ -149,7 +150,7 @@ public class Folder {
 				for (int i = 0; i < s; i++) {
 					System.arraycopy(passMat[i], 0, ansMat[i], 0, s);
 				}
-				m_doc.foldableOverlapRelations.add(ansMat);
+				foldableOverlapRelations.add(ansMat);
 			} else {
 				findAnswer(subFaceIndex + 1, passMat);
 			}
@@ -196,7 +197,7 @@ public class Folder {
 					for (int i = 0; i < s; i++) {
 						System.arraycopy(passMat[i], 0, ansMat[i], 0, s);
 					}
-					m_doc.foldableOverlapRelations.add(ansMat);
+					foldableOverlapRelations.add(ansMat);
 				} else {
 					findAnswer(subFaceIndex + 1, passMat);
 				}
