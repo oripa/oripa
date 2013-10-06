@@ -51,15 +51,18 @@ public class Folder {
 
 	public int fold() {
 		List<OriFace> faces = m_doc.getFaces();
-		m_doc.overlapRelations.clear();
+        List<OriFace> sortedFaces = m_doc.getSortedFaces();
+
+        m_doc.overlapRelations.clear();
 
 		simpleFoldWithoutZorder();
 		m_doc.calcFoldedBoundingBox();
-		m_doc.sortedFaces.addAll(faces);
+		sortedFaces.addAll(faces);
 		m_doc.setFacesOutline(false);
 
+
 		if (!Globals.bDoFullEstimation) {
-			m_doc.bFolded = true;
+			m_doc.setFolded(true);
 			return 0;
 		}
 
@@ -124,7 +127,7 @@ public class Folder {
 			face.intColor = (r << 16) | (g << 8) | b | 0xff000000;
 		}
 
-		m_doc.bFolded = true;
+		m_doc.setFolded(true);;
 		return m_doc.overlapRelations.size();
 	}
 

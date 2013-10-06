@@ -29,6 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
@@ -58,6 +59,7 @@ import oripa.bind.state.action.PaintActionSetter;
 import oripa.doc.TypeForChange;
 import oripa.file.ImageResourceLoader;
 import oripa.fold.Folder;
+import oripa.geom.OriFace;
 import oripa.paint.byvalue.AngleMeasuringAction;
 import oripa.paint.byvalue.AngleValueInputListener;
 import oripa.paint.byvalue.LengthMeasuringAction;
@@ -677,7 +679,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 		} else if (ae.getSource() == resetButton) {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;
-			ORIPA.doc.sortedFaces.clear();
+	        List<OriFace> sortedFaces = ORIPA.doc.getSortedFaces();
+
+			sortedFaces.clear();
 			if (ORIPA.doc.buildOrigami3(false)) {
 				buildOK = true;
 			} else {

@@ -18,18 +18,35 @@
 
 package oripa.view;
 
-import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
-import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
-import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
-import com.sun.j3d.utils.picking.PickCanvas;
-import com.sun.j3d.utils.picking.PickResult;
-import com.sun.j3d.utils.picking.behaviors.PickMouseBehavior;
-import com.sun.j3d.utils.universe.SimpleUniverse;
 import java.awt.Color;
 import java.awt.GraphicsConfiguration;
-import java.awt.event.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
-import javax.media.j3d.*;
+import java.util.List;
+
+import javax.media.j3d.AmbientLight;
+import javax.media.j3d.Appearance;
+import javax.media.j3d.Background;
+import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.Bounds;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Canvas3D;
+import javax.media.j3d.DirectionalLight;
+import javax.media.j3d.Geometry;
+import javax.media.j3d.GeometryArray;
+import javax.media.j3d.LineArray;
+import javax.media.j3d.LineAttributes;
+import javax.media.j3d.Node;
+import javax.media.j3d.PolygonAttributes;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.TransformGroup;
+import javax.media.j3d.TriangleArray;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
@@ -38,6 +55,14 @@ import javax.vecmath.Vector3f;
 import oripa.ORIPA;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
+
+import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
+import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
+import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
+import com.sun.j3d.utils.picking.PickCanvas;
+import com.sun.j3d.utils.picking.PickResult;
+import com.sun.j3d.utils.picking.behaviors.PickMouseBehavior;
+import com.sun.j3d.utils.universe.SimpleUniverse;
 
 class J3DFace {
 
@@ -84,6 +109,8 @@ public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseM
 
     public void setModel() {
         faces.clear();
+        List<OriFace> sortedFaces = ORIPA.doc.getSortedFaces();
+
         BranchGroup faceBG = new BranchGroup();
         BranchGroup lineBG = new BranchGroup();
 
@@ -93,7 +120,7 @@ public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseM
         int fCount = 0;
         Point2d maxPoint = new Point2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
         Point2d minPoint = new Point2d(Double.MAX_VALUE, Double.MAX_VALUE);
-        for (OriFace face : ORIPA.doc.sortedFaces) {
+        for (OriFace face : sortedFaces) {
             for (OriHalfedge he : face.halfedges) {
                 maxPoint.x = Math.max(maxPoint.x, he.positionForDisplay.x);
                 maxPoint.y = Math.max(maxPoint.y, he.positionForDisplay.y);
@@ -115,11 +142,11 @@ public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseM
                 LineAttributes.PATTERN_SOLID, // Line type
                 false); // Whether to handle anti-aliasing
 
-        for (OriFace face : ORIPA.doc.sortedFaces) {
+        for (OriFace face : sortedFaces) {
             J3DFace j3dFace = new J3DFace(face);
             faces.add(j3dFace);
 
-            double z = (fCount - ORIPA.doc.sortedFaces.size() * 0.5) * (-10);
+            double z = (fCount - sortedFaces.size() * 0.5) * (-10);
             OriHalfedge startHe = face.halfedges.get(0);
             Point3d[] p = new Point3d[3];
             p[0] = new Point3d(startHe.positionForDisplay.x, startHe.positionForDisplay.y, z);

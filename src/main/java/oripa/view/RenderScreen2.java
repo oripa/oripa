@@ -290,8 +290,8 @@ public class RenderScreen2 extends JPanel
 
     public void drawOrigami() {
         List<OriFace> faces = ORIPA.doc.getFaces();
-
-        if (!ORIPA.doc.bFolded) {
+        boolean folded = ORIPA.doc.isFolded();
+        if (!folded) {
             return;
         }
         long time0 = System.currentTimeMillis();

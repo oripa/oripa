@@ -72,7 +72,8 @@ public class ExporterDXF implements Exporter{
         bw.write("  2\n");
         bw.write("ENTITIES\n");
 
-        for (OriFace face : ORIPA.doc.sortedFaces) {
+        List<OriFace> sortedFaces = ORIPA.doc.getSortedFaces();
+        for (OriFace face : sortedFaces) {
             for (OriHalfedge he : face.halfedges) {
 
                 bw.write("  0\n");

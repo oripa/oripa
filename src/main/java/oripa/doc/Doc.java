@@ -77,39 +77,58 @@ public class Doc {
 	}
 
 
+	
+	private double paperSize;
+
+	// Crease Pattern
+
+	private CreasePattern creasePattern = null;
 	private ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
 //	public ArrayList<OriLine> lines = new ArrayList<OriLine>();
-	private CreasePattern creasePattern = null;
 
+	// Origami Model for Estimation
+	
 	private ArrayList<OriFace> faces = new ArrayList<OriFace>();
 	private ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
 	private ArrayList<OriEdge> edges = new ArrayList<OriEdge>();
 	//    public ArrayList<OriLine> tmpSelectedLines = new ArrayList<OriLine>();
 	private boolean isValidPattern = false; // used in this class only.
-	private double paperSize;
+	
+	// TODO make clear the difference of following two variables
 	private boolean hasModel = false;
-	public boolean bFolded = false;
-	public ArrayList<OriFace> sortedFaces = new ArrayList<OriFace>();
+	private boolean folded = false;
+
+	private ArrayList<OriFace> sortedFaces = new ArrayList<OriFace>();
+	
 	boolean bOutLog = true;
-	public String dataFilePath = "";
+
+	// Folded Model Information (Result of Estimation)
+
+	public int overlapRelation[][];
+	public ArrayList<int[][]> overlapRelations = new ArrayList<int[][]>();
+	public int currentORmatIndex;
+	public Vector2d foldedBBoxLT;
+	public Vector2d foldedBBoxRB;
+
 	final public static int NO_OVERLAP = 0;
 	final public static int UPPER = 1;
 	final public static int LOWER = 2;
 	final public static int UNDEFINED = 9;
-	public int overlapRelation[][];
-	public ArrayList<int[][]> overlapRelations = new ArrayList<int[][]>();
-	public int currentORmatIndex;
+
+	// Project data
+
+	public String dataFilePath = "";
 	public String title;
 	public String editorName;
 	public String originalAuthorName;
 	public String reference;
 	public String memo;
-	public Vector2d foldedBBoxLT;
-	public Vector2d foldedBBoxRB;
-
 	private UndoManager<UndoInfo> undoManager = new UndoManager<>(30);
 
+
+
 	int debugCount = 0;
+
 
 	public Doc(){
 		initialize(Constants.DEFAULT_PAPER_SIZE);
@@ -1497,6 +1516,20 @@ public class Doc {
 	 */
 	public void setPaperSize(double size) {
 		this.paperSize = size;
+	}
+
+	/**
+	 * @return folded
+	 */
+	public boolean isFolded() {
+		return folded;
+	}
+
+	/**
+	 * @param folded foldedを登録する
+	 */
+	public void setFolded(boolean folded) {
+		this.folded = folded;
 	}
 	
 	
