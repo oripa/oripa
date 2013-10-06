@@ -33,7 +33,7 @@ import oripa.value.OriLine;
 public class ExporterDXF implements Exporter{
 
     public static void exportModel(Doc doc, String filepath) throws Exception {
-        double scale = 6.0 / doc.size; // 6.0 inch width
+        double scale = 6.0 / doc.paperSize; // 6.0 inch width
         double center = 4.0; // inch
         FileWriter fw = new FileWriter(filepath);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -104,7 +104,7 @@ public class ExporterDXF implements Exporter{
     }
 
     public boolean export(Doc doc, String filepath) throws Exception {
-        double scale = 6.0 / doc.size; // 6.0 inch width
+        double scale = 6.0 / doc.paperSize; // 6.0 inch width
         double center = 4.0; // inch
         FileWriter fw = new FileWriter(filepath);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -159,11 +159,11 @@ public class ExporterDXF implements Exporter{
             bw.write(" 10\n");
             bw.write("" + (line.p0.x * scale + center) + "\n");
             bw.write(" 20\n");
-            bw.write("" + ((doc.size / 2 - line.p0.y) * scale + center) + "\n");
+            bw.write("" + ((doc.paperSize / 2 - line.p0.y) * scale + center) + "\n");
             bw.write(" 11\n");
             bw.write("" + (line.p1.x * scale + center) + "\n");
             bw.write(" 21\n");
-            bw.write("" + ((doc.size / 2 - line.p1.y) * scale + center) + "\n");
+            bw.write("" + ((doc.paperSize / 2 - line.p1.y) * scale + center) + "\n");
         }
 
         bw.write("  0\n");

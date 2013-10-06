@@ -82,11 +82,11 @@ public class Doc {
 	private CreasePattern creasePattern = null;
 
 	private ArrayList<OriFace> faces = new ArrayList<OriFace>();
-	public ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
-	public ArrayList<OriEdge> edges = new ArrayList<OriEdge>();
+	private ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
+	private ArrayList<OriEdge> edges = new ArrayList<OriEdge>();
 	//    public ArrayList<OriLine> tmpSelectedLines = new ArrayList<OriLine>();
-	public boolean isValidPattern = false;
-	public double size;
+	private boolean isValidPattern = false; // used in this class only.
+	public double paperSize;
 	public boolean hasModel = false;
 	public boolean bFolded = false;
 	public ArrayList<OriFace> sortedFaces = new ArrayList<OriFace>();
@@ -122,7 +122,7 @@ public class Doc {
 	private void initialize(double size){
 
 		creasePattern = new CreasePattern(size);
-		this.size = size;
+		this.paperSize = size;
 
 		OriLine l0 = new OriLine(-size / 2.0, -size / 2.0, size / 2.0, -size / 2.0, OriLine.TYPE_CUT);
 		OriLine l1 = new OriLine(size / 2.0, -size / 2.0, size / 2.0, size / 2.0, OriLine.TYPE_CUT);
@@ -460,7 +460,7 @@ public class Doc {
 
 		pushUndoInfo();
 
-		oripa.geom.RectangleClipper clipper = new oripa.geom.RectangleClipper(-size / 2, -size / 2, size / 2, size / 2);
+		oripa.geom.RectangleClipper clipper = new oripa.geom.RectangleClipper(-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
 		double angle = angleDeg * Math.PI / 180.0;
 
 		for (int i = 0; i < num; i++) {
@@ -500,10 +500,10 @@ public class Doc {
 	}
 
 	public void ArrayCopy(int row, int col, double interX, double interY, boolean bFillSheet) {
-		int startRow = bFillSheet ? (int) (-size / interY) : 0;
-		int startCol = bFillSheet ? (int) (-size / interX) : 0;
-		int endRow = bFillSheet ? (int) (size / interY + 0.5) : row;
-		int endCol = bFillSheet ? (int) (size / interX + 0.5) : col;
+		int startRow = bFillSheet ? (int) (-paperSize / interY) : 0;
+		int startCol = bFillSheet ? (int) (-paperSize / interX) : 0;
+		int endRow = bFillSheet ? (int) (paperSize / interY + 0.5) : row;
+		int endCol = bFillSheet ? (int) (paperSize / interX + 0.5) : col;
 
 		pushUndoInfo();
 
@@ -511,7 +511,7 @@ public class Doc {
 
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
-		oripa.geom.RectangleClipper clipper = new oripa.geom.RectangleClipper(-size / 2, -size / 2, size / 2, size / 2);
+		oripa.geom.RectangleClipper clipper = new oripa.geom.RectangleClipper(-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
 		for (int x = startCol; x < endCol; x++) {
 			for (int y = startRow; y < endRow; y++) {
 				if (x == 0 && y == 0) {
@@ -911,7 +911,7 @@ public class Doc {
 			if (preCrossPoint == null) {
 				preCrossPoint = cp;
 			} else {
-				if (GeomUtil.Distance(cp, preCrossPoint) > size * 0.001) {
+				if (GeomUtil.Distance(cp, preCrossPoint) > paperSize * 0.001) {
 					return true;
 				}
 			}
@@ -935,7 +935,7 @@ public class Doc {
 		// Return false if the vector is on the contour of the face
 		for (int i = 0; i < heNum; i++) {
 			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.DistancePointToSegment(v, he.positionAfterFolded, he.next.positionAfterFolded) < size * 0.001) {
+			if (GeomUtil.DistancePointToSegment(v, he.positionAfterFolded, he.next.positionAfterFolded) < paperSize * 0.001) {
 				return false;
 			}
 		}
@@ -955,8 +955,8 @@ public class Doc {
 
 	public boolean addVertexOnLine(OriLine line, Vector2d v) {
 		// Normally you dont want to add a vertex too close to the end of the line
-		if (GeomUtil.Distance(line.p0, v) < this.size * 0.001
-				|| GeomUtil.Distance(line.p1, v) < this.size * 0.001) {
+		if (GeomUtil.Distance(line.p0, v) < this.paperSize * 0.001
+				|| GeomUtil.Distance(line.p1, v) < this.paperSize * 0.001) {
 			return false;
 		}
 		OriLine l0 = new OriLine(line.p0, v, line.typeVal);
@@ -1122,7 +1122,7 @@ public class Doc {
 		dir.scale(Constants.DEFAULT_PAPER_SIZE * 8);
 
 		OriLine l = new OriLine(cp.x - dir.x, cp.y - dir.y, cp.x + dir.x, cp.y + dir.y, Globals.inputLineType);
-		GeomUtil.clipLine(l, size / 2);
+		GeomUtil.clipLine(l, paperSize / 2);
 		addLine(l);
 	}
 
@@ -1379,6 +1379,21 @@ public class Doc {
 		return edges;
 	}
 
+	
+	/**
+	 * @return vertices
+	 */
+	public ArrayList<OriVertex> getVertices() {
+		return vertices;
+	}
+
+	/**
+	 * @param vertices verticesを登録する
+	 */
+	public void setVertices(ArrayList<OriVertex> vertices) {
+		this.vertices = vertices;
+	}
+
 	/**
 	 * @param edges edgesを登録する
 	 */
@@ -1473,15 +1488,15 @@ public class Doc {
 	/**
 	 * @return size
 	 */
-	public double getSize() {
-		return size;
+	public double getPaperSize() {
+		return paperSize;
 	}
 
 	/**
 	 * @param size sizeを登録する
 	 */
-	public void setSize(double size) {
-		this.size = size;
+	public void setPaperSize(double size) {
+		this.paperSize = size;
 	}
 	
 	

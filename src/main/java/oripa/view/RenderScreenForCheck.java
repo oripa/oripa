@@ -79,6 +79,7 @@ public class RenderScreenForCheck extends JPanel
 
     public void drawModel(Graphics2D g2d) {
         List<OriFace> faces = ORIPA.doc.getFaces();
+        List<OriVertex> vertices = ORIPA.doc.getVertices();
 
         for (OriFace face : faces) {
             g2d.setColor(new Color(255, 210, 210));
@@ -86,7 +87,7 @@ public class RenderScreenForCheck extends JPanel
         }
 
         g2d.setColor(Color.RED);
-        for (OriVertex v : ORIPA.doc.vertices) {
+        for (OriVertex v : vertices) {
             if (v.hasProblem) {
                 g2d.fill(new Rectangle2D.Double(v.preP.x - 8.0 / scale, 
                         v.preP.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
@@ -130,7 +131,7 @@ public class RenderScreenForCheck extends JPanel
             }
 
             g2d.setColor(Color.RED);
-            for (OriVertex v : ORIPA.doc.vertices) {
+            for (OriVertex v : vertices) {
                 if (v.hasProblem) {
                     g2d.fill(new Rectangle2D.Double(v.p.x - 8.0 / scale, 
                             v.p.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
@@ -206,7 +207,9 @@ public class RenderScreenForCheck extends JPanel
 
 
         // Drawing of the vertices
-        for (OriVertex v : ORIPA.doc.vertices) {
+        List<OriVertex> vertices = ORIPA.doc.getVertices();
+
+        for (OriVertex v : vertices) {
             double vertexDrawSize = 2.0;
             g2d.setColor(Color.BLACK);
 

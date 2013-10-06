@@ -50,7 +50,7 @@ public class DataSet {
         for (int i = 0; i < lineNum; i++) {
             lines[i] = new OriLineProxy(docLines[i]);
         }
-        paperSize = doc.getSize();
+        paperSize = doc.getPaperSize();
 
         title = doc.title;
         editorName = doc.editorName;
@@ -65,7 +65,7 @@ public class DataSet {
         for (int i = 0; i < lines.length; i++) {
             creasePattern.add(lines[i].getLine());
         }
-        doc.setSize(paperSize);
+        doc.setPaperSize(paperSize);
         doc.title = title;
         doc.editorName = editorName;
         doc.originalAuthorName = originalAuthorName;

@@ -131,14 +131,14 @@ public class OriFace {
 			tri.v[1].color = new Vector3d(halfedges.get(i).vertexColor);
 			tri.v[2].color = new Vector3d(halfedges.get(i + 1).vertexColor);
 
-			tri.v[0].uv = new Vector2d(startHe.vertex.preP.x / ORIPA.doc.size
-					+ 0.5, startHe.vertex.preP.y / ORIPA.doc.size + 0.5);
+			tri.v[0].uv = new Vector2d(startHe.vertex.preP.x / ORIPA.doc.paperSize
+					+ 0.5, startHe.vertex.preP.y / ORIPA.doc.paperSize + 0.5);
 			tri.v[1].uv = new Vector2d(halfedges.get(i).vertex.preP.x
-					/ ORIPA.doc.size + 0.5, halfedges.get(i).vertex.preP.y
-					/ ORIPA.doc.size + 0.5);
+					/ ORIPA.doc.paperSize + 0.5, halfedges.get(i).vertex.preP.y
+					/ ORIPA.doc.paperSize + 0.5);
 			tri.v[2].uv = new Vector2d(halfedges.get(i + 1).vertex.preP.x
-					/ ORIPA.doc.size + 0.5, halfedges.get(i + 1).vertex.preP.y
-					/ ORIPA.doc.size + 0.5);
+					/ ORIPA.doc.paperSize + 0.5, halfedges.get(i + 1).vertex.preP.y
+					/ ORIPA.doc.paperSize + 0.5);
 			triangles.add(tri);
 		}
 	}

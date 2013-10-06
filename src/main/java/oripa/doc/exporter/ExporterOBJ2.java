@@ -22,7 +22,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.List;
 
-import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.geom.OriEdge;
 import oripa.geom.OriFace;
@@ -41,16 +40,17 @@ public class ExporterOBJ2 implements Exporter{
         bw.write("\n");
         
         List<OriFace> faces = doc.getFaces();
+        List<OriVertex> vertices = doc.getVertices();
 
         int id = 1;
-        for (OriVertex vertex : doc.vertices) {
+        for (OriVertex vertex : vertices) {
             bw.write("v " + vertex.p.x + " " + vertex.p.y + " 0.0\n");
             vertex.tmpInt = id;
             id++;
         }
 
-        for (OriVertex vertex : doc.vertices) {
-            bw.write("vt " + (vertex.preP.x + doc.size / 2) / doc.size + " " + (vertex.preP.y + doc.size / 2) / doc.size + "\n");
+        for (OriVertex vertex : vertices) {
+            bw.write("vt " + (vertex.preP.x + doc.paperSize / 2) / doc.paperSize + " " + (vertex.preP.y + doc.paperSize / 2) / doc.paperSize + "\n");
         }
 
         for (OriFace face : faces) {
@@ -72,10 +72,12 @@ public class ExporterOBJ2 implements Exporter{
         bw.write("# Created by ORIPA\n");
         bw.write("\n");
 
-        List<OriFace> faces = doc.getFaces();
+        List<OriFace>   faces    = doc.getFaces();
+        List<OriVertex> vertices = doc.getVertices();
+        List<OriEdge>   edges    = doc.getEdges();
 
         int id = 1;
-        for (OriVertex vertex : doc.vertices) {
+        for (OriVertex vertex : vertices) {
             bw.write("v " + vertex.p.x + " " + vertex.p.y + " 0.0\n");
             vertex.tmpInt = id;
             id++;
@@ -90,7 +92,7 @@ public class ExporterOBJ2 implements Exporter{
             bw.write("\n");
         }
 
-        for (OriEdge edge : ORIPA.doc.edges) {
+        for (OriEdge edge : edges) {
             bw.write("e " + edge.sv.tmpInt + " " + edge.ev.tmpInt + " " + edge.type + " 180\n");
         }
 

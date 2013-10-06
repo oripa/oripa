@@ -41,8 +41,10 @@ public class ExporterORmat implements Exporter{
         bw.write("# f (index list of contour vertices. Index number starts from 1.)\n");
         bw.write("\n");
 
+        List<OriVertex> vertices = doc.getVertices();
+
         int id = 1;
-        for (OriVertex vertex : doc.vertices) {
+        for (OriVertex vertex : vertices) {
             bw.write("v " + vertex.preP.x + " " + vertex.preP.y + " " + vertex.p.x + " " + vertex.p.y + "\n");
             vertex.tmpInt = id;
             id++;

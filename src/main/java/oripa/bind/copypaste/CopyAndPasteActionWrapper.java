@@ -8,7 +8,6 @@ import oripa.appstate.StateManager;
 import oripa.paint.copypaste.CopyAndPasteAction;
 import oripa.paint.core.EditMode;
 import oripa.paint.core.PaintContext;
-import oripa.value.OriLine;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 

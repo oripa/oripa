@@ -33,7 +33,7 @@ public class SelectingSecondVertexForLine extends PickingVertex{
 		dir.scale(Constants.DEFAULT_PAPER_SIZE * 8);
 		OriLine line = new OriLine(p0.x - dir.x, p0.y - dir.y,
 				p0.x + dir.x, p0.y + dir.y, Globals.inputLineType);
-		if (GeomUtil.clipLine(line, ORIPA.doc.size / 2)) {
+		if (GeomUtil.clipLine(line, ORIPA.doc.paperSize / 2)) {
 			ORIPA.doc.pushUndoInfo();
 			ORIPA.doc.addLine(line);
 		}

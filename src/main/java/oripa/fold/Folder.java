@@ -260,17 +260,18 @@ public class Folder {
 	}
 
 	private void holdCondition4s() {
+        List<OriEdge>   edges    = m_doc.getEdges();
 
-		int edgeNum = m_doc.edges.size();
+		int edgeNum = edges.size();
 		System.out.println("edgeNum = " + edgeNum);
 
 		for (int i = 0; i < edgeNum; i++) {
-			OriEdge e0 = m_doc.edges.get(i);
+			OriEdge e0 = edges.get(i);
 			if (e0.left == null || e0.right == null) {
 				continue;
 			}
 			for (int j = i + 1; j < edgeNum; j++) {
-				OriEdge e1 = m_doc.edges.get(j);
+				OriEdge e1 = edges.get(j);
 				if (e1.left == null || e1.right == null) {
 					continue;
 				}
@@ -564,7 +565,7 @@ public class Folder {
 
 		List<OriFace> faces = m_doc.getFaces();
 
-		Doc doc = new Doc(m_doc.size);
+		Doc doc = new Doc(m_doc.paperSize);
 		CreasePattern creasePattern = doc.getCreasePattern();
 
 		creasePattern.clear();        
@@ -607,7 +608,7 @@ public class Folder {
 			cnt++;
 			Vector2d innerPoint = sub.getInnerPoint();
 			for (OriFace face : faces) {
-				if (GeomUtil.isContainsPointFoldedFace(face, innerPoint, m_doc.size / 1000)) {
+				if (GeomUtil.isContainsPointFoldedFace(face, innerPoint, m_doc.paperSize / 1000)) {
 					sub.faces.add(face);
 				}
 			}
@@ -651,8 +652,10 @@ public class Folder {
 	}
 
 	private void simpleFoldWithoutZorder() {
-		int id = 0;
-		List<OriFace> faces = m_doc.getFaces();
+		List<OriFace>   faces    = m_doc.getFaces();
+        List<OriEdge>   edges    = m_doc.getEdges();
+
+        int id = 0;
 		for (OriFace face : faces) {
 			face.faceFront = true;
 			face.tmpFlg = false;
@@ -667,7 +670,7 @@ public class Folder {
 
 		walkFace(faces.get(0));
 
-		for (OriEdge e : m_doc.edges) {
+		for (OriEdge e : edges) {
 			e.sv.p.set(e.left.tmpVec);
 			if (e.right != null) {
 				e.ev.p.set(e.right.tmpVec);

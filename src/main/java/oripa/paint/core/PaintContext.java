@@ -79,11 +79,11 @@ public class PaintContext {
 	public Collection<Vector2d> updateGrids(int gridDivNum){
 		gridPoints = new ArrayList<>();
 		
-        double step = ORIPA.doc.size / gridDivNum;
+        double step = ORIPA.doc.paperSize / gridDivNum;
         for (int ix = 0; ix < Globals.gridDivNum + 1; ix++) {
             for (int iy = 0; iy < gridDivNum + 1; iy++) {
-                double x = -ORIPA.doc.size / 2 + step * ix;
-                double y = -ORIPA.doc.size / 2 + step * iy;
+                double x = -ORIPA.doc.paperSize / 2 + step * ix;
+                double y = -ORIPA.doc.paperSize / 2 + step * iy;
                 
                 gridPoints.add(new Vector2d(x, y));
             }

@@ -66,14 +66,14 @@ import oripa.viewsetting.main.ScreenUpdater;
 
 
 public class MainScreen extends JPanel
-	implements MouseListener, MouseMotionListener, MouseWheelListener, 
-	ActionListener, ComponentListener, Observer{
+implements MouseListener, MouseMotionListener, MouseWheelListener, 
+ActionListener, ComponentListener, Observer{
 
 
 	private MainScreenSettingDB setting = MainScreenSettingDB.getInstance();
 	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
 	private PaintContext mouseContext = PaintContext.getInstance();
-	
+
 	private boolean bDrawFaceID = false;
 	private Image bufferImage;
 	private Graphics2D bufferg;
@@ -111,53 +111,58 @@ public class MainScreen extends JPanel
 	}
 
 	public void drawModel(Graphics2D g2d) {
-        List<OriFace> faces = ORIPA.doc.getFaces();
 
-		if (Config.FOR_STUDY) {
-			if (bDrawFaceID) {
-				g2d.setColor(Color.BLACK);
-				for (OriFace face : faces) {
-					g2d.drawString("" + face.tmpInt, (int) face.getCenter().x,
-							(int) face.getCenter().y);
-				}
-			}
+		if (! Config.FOR_STUDY) {
+			return;
+		}
 
-			g2d.setColor(new Color(255, 210, 220));
-			for (OriFace face : faces) {
-				if (face.tmpInt2 == 0) {
-					g2d.setColor(Color.RED);
-					g2d.fill(face.preOutline);
-				} else {
-					g2d.setColor(face.color);
-				}
+		List<OriFace> faces = ORIPA.doc.getFaces();
+		List<OriVertex> vertices = ORIPA.doc.getVertices();
 
-				if (face.hasProblem) {
-					g2d.setColor(Color.RED);
-				} else {
-					if (face.faceFront) {
-						g2d.setColor(new Color(255, 200, 200));
-					} else {
-						g2d.setColor(new Color(200, 200, 255));
-					}
-				}
 
-				g2d.fill(face.preOutline);
-			}
-
+		if (bDrawFaceID) {
 			g2d.setColor(Color.BLACK);
-
-
 			for (OriFace face : faces) {
-				g2d.drawString("" + face.z_order, (int) face.getCenter().x,
+				g2d.drawString("" + face.tmpInt, (int) face.getCenter().x,
 						(int) face.getCenter().y);
 			}
+		}
 
-			g2d.setColor(Color.RED);
-			for (OriVertex v : ORIPA.doc.vertices) {
-				if (v.hasProblem) {
-					g2d.fill(new Rectangle2D.Double(v.p.x - 8.0 / scale,
-							v.p.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
+		g2d.setColor(new Color(255, 210, 220));
+		for (OriFace face : faces) {
+			if (face.tmpInt2 == 0) {
+				g2d.setColor(Color.RED);
+				g2d.fill(face.preOutline);
+			} else {
+				g2d.setColor(face.color);
+			}
+
+			if (face.hasProblem) {
+				g2d.setColor(Color.RED);
+			} else {
+				if (face.faceFront) {
+					g2d.setColor(new Color(255, 200, 200));
+				} else {
+					g2d.setColor(new Color(200, 200, 255));
 				}
+			}
+
+			g2d.fill(face.preOutline);
+		}
+
+		g2d.setColor(Color.BLACK);
+
+
+		for (OriFace face : faces) {
+			g2d.drawString("" + face.z_order, (int) face.getCenter().x,
+					(int) face.getCenter().y);
+		}
+
+		g2d.setColor(Color.RED);
+		for (OriVertex v : vertices) {
+			if (v.hasProblem) {
+				g2d.fill(new Rectangle2D.Double(v.p.x - 8.0 / scale,
+						v.p.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
 			}
 		}
 	}
@@ -205,7 +210,7 @@ public class MainScreen extends JPanel
 	}
 
 	void drawVertexRectangles(Graphics2D g2d){
-        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+		CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
 
 		g2d.setColor(Color.BLACK);
 		final double vertexDrawSize = 2.0;
@@ -268,7 +273,7 @@ public class MainScreen extends JPanel
 		g2d.setStroke(LineSetting.STROKE_VALLEY);
 		g2d.setColor(Color.black);
 
-        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+		CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
 
 		drawLines(g2d, creasePattern);
 
@@ -306,7 +311,7 @@ public class MainScreen extends JPanel
 
 		// Line that links the pair of unsetled faces
 		if (Config.FOR_STUDY) {
-	        List<OriFace> faces = ORIPA.doc.getFaces();
+			List<OriFace> faces = ORIPA.doc.getFaces();
 
 			if (ORIPA.doc.overlapRelation != null) {
 				g2d.setStroke(LineSetting.STROKE_RIDGE);
@@ -337,7 +342,7 @@ public class MainScreen extends JPanel
 
 		}
 	}
-	
+
 	private void drawCandidatePosition(Graphics g){
 		Vector2d candidate = mouseContext.pickCandidateV;
 		if(candidate != null){
@@ -345,7 +350,7 @@ public class MainScreen extends JPanel
 			g.drawString("(" + candidate.x + 
 					"," + candidate.y + ")", 0, 10);
 		}	
-		
+
 	}
 
 
@@ -354,10 +359,10 @@ public class MainScreen extends JPanel
 		g2d.setStroke(LineSetting.STROKE_GRID);
 
 		int lineNum = Globals.gridDivNum;
-		double step = ORIPA.doc.size / lineNum;
+		double step = ORIPA.doc.paperSize / lineNum;
 		for (int i = 1; i < lineNum; i++) {
-			g2d.draw(new Line2D.Double(step * i - ORIPA.doc.size / 2.0, -ORIPA.doc.size / 2.0, step * i - ORIPA.doc.size / 2.0, ORIPA.doc.size / 2.0));
-			g2d.draw(new Line2D.Double(-ORIPA.doc.size / 2.0, step * i - ORIPA.doc.size / 2.0, ORIPA.doc.size / 2.0, step * i - ORIPA.doc.size / 2.0));
+			g2d.draw(new Line2D.Double(step * i - ORIPA.doc.paperSize / 2.0, -ORIPA.doc.paperSize / 2.0, step * i - ORIPA.doc.paperSize / 2.0, ORIPA.doc.paperSize / 2.0));
+			g2d.draw(new Line2D.Double(-ORIPA.doc.paperSize / 2.0, step * i - ORIPA.doc.paperSize / 2.0, ORIPA.doc.paperSize / 2.0, step * i - ORIPA.doc.paperSize / 2.0));
 		}
 	}
 
@@ -388,7 +393,7 @@ public class MainScreen extends JPanel
 		if(Globals.mouseAction == null){
 			return;
 		}
-		
+
 		Globals.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 
 		preMousePoint = e.getPoint();
@@ -462,7 +467,7 @@ public class MainScreen extends JPanel
 		Globals.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
 		repaint();
-		
+
 	}
 
 	@Override
