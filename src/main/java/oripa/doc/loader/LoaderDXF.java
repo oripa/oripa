@@ -129,7 +129,8 @@ public class LoaderDXF implements Loader{
         }
 
         double size = 400;
-        doc.paperSize = size;
+        doc.setPaperSize(size);
+
         Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
         double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
         // size normalization

@@ -260,7 +260,8 @@ ActionListener, ComponentListener, Observer{
 
 		Graphics2D g2d = bufferg;
 
-		if (ORIPA.doc.hasModel) {
+		boolean hasModel = ORIPA.doc.hasModel();
+		if (hasModel) {
 			drawModel(g2d);
 		}
 		if (setting.isGridVisible()) {
@@ -358,11 +359,19 @@ ActionListener, ComponentListener, Observer{
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.setStroke(LineSetting.STROKE_GRID);
 
+		double paperSize = ORIPA.doc.getPaperSize();
+		
 		int lineNum = Globals.gridDivNum;
-		double step = ORIPA.doc.paperSize / lineNum;
+		double step = paperSize / lineNum;
+
 		for (int i = 1; i < lineNum; i++) {
-			g2d.draw(new Line2D.Double(step * i - ORIPA.doc.paperSize / 2.0, -ORIPA.doc.paperSize / 2.0, step * i - ORIPA.doc.paperSize / 2.0, ORIPA.doc.paperSize / 2.0));
-			g2d.draw(new Line2D.Double(-ORIPA.doc.paperSize / 2.0, step * i - ORIPA.doc.paperSize / 2.0, ORIPA.doc.paperSize / 2.0, step * i - ORIPA.doc.paperSize / 2.0));
+			g2d.draw(new Line2D.Double(
+					step * i - paperSize / 2.0, -paperSize / 2.0,
+					step * i - paperSize / 2.0, paperSize / 2.0));
+
+			g2d.draw(new Line2D.Double(
+					-paperSize / 2.0, step * i - paperSize / 2.0,
+					paperSize / 2.0, step * i - paperSize / 2.0));
 		}
 	}
 

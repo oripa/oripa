@@ -494,16 +494,18 @@ public class MainFrame extends JFrame implements ActionListener,
 	}
 
 	public void exportFile(String ext) {
-		if ("obj".equals(ext)) {
-			if (!ORIPA.doc.hasModel) {
-				if (!ORIPA.doc.buildOrigami(true)) {
-					JOptionPane.showConfirmDialog(null,
-							"Warning: Building a set of polygons from crease pattern "
-									+ "was failed.", "Warning",
+
+		boolean hasModel = ORIPA.doc.hasModel();
+
+		if ("obj".equals(ext) == false) {
+			
+		} else if (!(hasModel || ORIPA.doc.buildOrigami(true))) {
+			JOptionPane.showConfirmDialog(null,
+					"Warning: Building a set of polygons from crease pattern "
+							+ "was failed.", "Warning",
 							JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE);
-				}
-			}
 		}
+
 
 		saveFile(null, new FileFilterEx[] { filterDB.getFilter(ext) });
 	}

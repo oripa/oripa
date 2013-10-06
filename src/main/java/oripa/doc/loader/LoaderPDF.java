@@ -98,7 +98,8 @@ public class LoaderPDF implements Loader {
             e.printStackTrace();
         }
 
-        Doc doc = new Doc(400);
+        double size = 400;
+        Doc doc = new Doc(size);
         CreasePattern creasePattern = doc.getCreasePattern();
         creasePattern.clear();
 
@@ -120,8 +121,7 @@ public class LoaderPDF implements Loader {
         }
 
         // size normalization
-        double size = 400;
-        doc.paperSize = size;
+        
         Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
         double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
         for (OriLine line : creasePattern) {

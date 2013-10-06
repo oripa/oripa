@@ -86,8 +86,8 @@ public class Doc {
 	private ArrayList<OriEdge> edges = new ArrayList<OriEdge>();
 	//    public ArrayList<OriLine> tmpSelectedLines = new ArrayList<OriLine>();
 	private boolean isValidPattern = false; // used in this class only.
-	public double paperSize;
-	public boolean hasModel = false;
+	private double paperSize;
+	private boolean hasModel = false;
 	public boolean bFolded = false;
 	public ArrayList<OriFace> sortedFaces = new ArrayList<OriFace>();
 	boolean bOutLog = true;
@@ -1418,16 +1418,16 @@ public class Doc {
 	/**
 	 * @return hasModel
 	 */
-	public boolean isHasModel() {
+	public boolean hasModel() {
 		return hasModel;
 	}
 
-	/**
-	 * @param hasModel hasModelを登録する
-	 */
-	public void setHasModel(boolean hasModel) {
-		this.hasModel = hasModel;
-	}
+//	/**
+//	 * @param hasModel hasModelを登録する
+//	 */
+//	public void setHasModel(boolean hasModel) {
+//		this.hasModel = hasModel;
+//	}
 
 	/**
 	 * @return sortedFaces

@@ -564,8 +564,9 @@ public class Folder {
 	private ArrayList<SubFace> makeSubFaces() {
 
 		List<OriFace> faces = m_doc.getFaces();
+		double paperSize = m_doc.getPaperSize();
 
-		Doc doc = new Doc(m_doc.paperSize);
+		Doc doc = new Doc(paperSize);
 		CreasePattern creasePattern = doc.getCreasePattern();
 
 		creasePattern.clear();        
@@ -608,7 +609,7 @@ public class Folder {
 			cnt++;
 			Vector2d innerPoint = sub.getInnerPoint();
 			for (OriFace face : faces) {
-				if (GeomUtil.isContainsPointFoldedFace(face, innerPoint, m_doc.paperSize / 1000)) {
+				if (GeomUtil.isContainsPointFoldedFace(face, innerPoint, paperSize / 1000)) {
 					sub.faces.add(face);
 				}
 			}

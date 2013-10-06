@@ -3,7 +3,6 @@ package oripa.paint.core;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Stack;
 
 import javax.vecmath.Vector2d;
@@ -78,12 +77,13 @@ public class PaintContext {
 
 	public Collection<Vector2d> updateGrids(int gridDivNum){
 		gridPoints = new ArrayList<>();
-		
-        double step = ORIPA.doc.paperSize / gridDivNum;
+		double paperSize = ORIPA.doc.getPaperSize();
+
+        double step = paperSize / gridDivNum;
         for (int ix = 0; ix < Globals.gridDivNum + 1; ix++) {
             for (int iy = 0; iy < gridDivNum + 1; iy++) {
-                double x = -ORIPA.doc.paperSize / 2 + step * ix;
-                double y = -ORIPA.doc.paperSize / 2 + step * iy;
+                double x = -paperSize / 2 + step * ix;
+                double y = -paperSize / 2 + step * iy;
                 
                 gridPoints.add(new Vector2d(x, y));
             }

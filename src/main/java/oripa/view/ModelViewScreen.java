@@ -86,8 +86,10 @@ public class ModelViewScreen extends JPanel
     public void resetViewMatrix() {
         List<OriFace> faces = ORIPA.doc.getFaces();
 
+        boolean hasModel = ORIPA.doc.hasModel();
+        
         rotateAngle = 0;
-        if (!ORIPA.doc.hasModel) {
+        if (!hasModel) {
             scale = 1.0;
         } else {
             // Align the center of the model, combined scale
@@ -182,7 +184,9 @@ public class ModelViewScreen extends JPanel
         Graphics2D g2d = bufferg;
 
 
-        if (ORIPA.doc.hasModel) {
+        boolean hasModel = ORIPA.doc.hasModel();
+
+        if (hasModel) {
             g2d.setStroke(LineSetting.STROKE_CUT);
             if (Globals.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));

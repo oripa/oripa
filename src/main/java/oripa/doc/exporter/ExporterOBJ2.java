@@ -32,7 +32,9 @@ import oripa.geom.OriVertex;
 public class ExporterOBJ2 implements Exporter{
 
     public static void export_bk(Doc doc, String filepath) throws Exception {
-        FileWriter fw = new FileWriter(filepath);
+    	double paperSize = doc.getPaperSize();
+
+    	FileWriter fw = new FileWriter(filepath);
         BufferedWriter bw = new BufferedWriter(fw);
 
         // Align the center of the model, combine scales
@@ -50,7 +52,7 @@ public class ExporterOBJ2 implements Exporter{
         }
 
         for (OriVertex vertex : vertices) {
-            bw.write("vt " + (vertex.preP.x + doc.paperSize / 2) / doc.paperSize + " " + (vertex.preP.y + doc.paperSize / 2) / doc.paperSize + "\n");
+            bw.write("vt " + (vertex.preP.x + paperSize / 2) / paperSize + " " + (vertex.preP.y + paperSize / 2) / paperSize + "\n");
         }
 
         for (OriFace face : faces) {

@@ -31,9 +31,15 @@ public class SelectingSecondVertexForLine extends PickingVertex{
 		Vector2d dir = new Vector2d(p0.x - p1.x, p0.y - p1.y);
 		dir.normalize();
 		dir.scale(Constants.DEFAULT_PAPER_SIZE * 8);
+
+		// create new line
 		OriLine line = new OriLine(p0.x - dir.x, p0.y - dir.y,
 				p0.x + dir.x, p0.y + dir.y, Globals.inputLineType);
-		if (GeomUtil.clipLine(line, ORIPA.doc.paperSize / 2)) {
+
+		double paperSize = ORIPA.doc.getPaperSize();
+
+		// add new line to crease pattern
+		if (GeomUtil.clipLine(line, paperSize / 2)) {
 			ORIPA.doc.pushUndoInfo();
 			ORIPA.doc.addLine(line);
 		}

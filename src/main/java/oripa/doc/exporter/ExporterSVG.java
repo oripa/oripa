@@ -47,7 +47,8 @@ public class ExporterSVG implements Exporter{
 
 
     public static void exportModel(Doc doc, String filepath) throws Exception {
-        double scale = (size-5) / doc.paperSize;
+    	double paperSize = doc.getPaperSize();
+        double scale = (size-5) / paperSize;
         double center = size / 2;
         FileWriter fw = new FileWriter(filepath);
         try (BufferedWriter bw = new BufferedWriter(fw)) {
@@ -130,8 +131,9 @@ public class ExporterSVG implements Exporter{
 
     public boolean export(Doc doc, String filepath) throws Exception {
     	CreasePattern creasePattern = doc.getCreasePattern();
-    	
-        double scale = size / doc.paperSize;
+    	double paperSize = doc.getPaperSize();
+
+        double scale = size / paperSize;
         double center = size / 2;
         FileWriter fw = new FileWriter(filepath);
         try (BufferedWriter bw = new BufferedWriter(fw)) {
@@ -154,11 +156,11 @@ public class ExporterSVG implements Exporter{
                 bw.write("x1=\"");
                 bw.write("" + (line.p0.x * scale + center) + "\"");
                 bw.write(" y1=\"");
-                bw.write("" + ((doc.paperSize / 2 - line.p0.y) * scale) + "\"");
+                bw.write("" + ((paperSize / 2 - line.p0.y) * scale) + "\"");
                 bw.write(" x2=\"");
                 bw.write("" + (line.p1.x * scale + center) + "\"");
                 bw.write(" y2=\"");
-                bw.write("" + ((doc.paperSize / 2 - line.p1.y) * scale) + "\" />\n");
+                bw.write("" + ((paperSize / 2 - line.p1.y) * scale) + "\" />\n");
             }
             bw.write(end);
         }
@@ -169,8 +171,9 @@ public class ExporterSVG implements Exporter{
     
     public static void exportDotted(Doc doc, String filepath) throws IOException  {
     	CreasePattern creasePattern = doc.getCreasePattern();
-    	
-        double scale = size / doc.paperSize;
+    	double paperSize = doc.getPaperSize();
+
+        double scale = size / paperSize;
         double center = size / 2;
         FileWriter fw = new FileWriter(filepath);
         try (BufferedWriter bw = new BufferedWriter(fw)) {
@@ -193,11 +196,11 @@ public class ExporterSVG implements Exporter{
                 bw.write("x1=\"");
                 bw.write("" + (line.p0.x * scale + center) + "\"");
                 bw.write(" y1=\"");
-                bw.write("" + ((doc.paperSize / 2 - line.p0.y) * scale) + "\"");
+                bw.write("" + ((paperSize / 2 - line.p0.y) * scale) + "\"");
                 bw.write(" x2=\"");
                 bw.write("" + (line.p1.x * scale + center) + "\"");
                 bw.write(" y2=\"");
-                bw.write("" + ((doc.paperSize / 2 - line.p1.y) * scale) + "\" />\n");
+                bw.write("" + ((paperSize / 2 - line.p1.y) * scale) + "\" />\n");
             }
             bw.write(end);
         }
