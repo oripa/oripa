@@ -74,11 +74,13 @@ public class ExporterSVG implements Exporter{
             ArrayList<OriFace> sortedFaces = new ArrayList<>();
             boolean [] isSorted = new boolean[faces.size()];
             for (int i = 0; i < faces.size(); i++) {
-                for (int j = 0; j < ORIPA.doc.overlapRelation.length; j++) {
+                int[][] overlapRelation = ORIPA.doc.getOverlapRelation();
+
+                for (int j = 0; j < overlapRelation.length; j++) {
                     int numberOf2 = 0;
                     if(!isSorted[j]){
                         for (int k = 0; k < isSorted.length; k++) {
-                            if ((!isSorted[k]) && ORIPA.doc.overlapRelation[j][k]==2) {
+                            if ((!isSorted[k]) && overlapRelation[j][k]==2) {
                                 numberOf2++;
                             }
                         }

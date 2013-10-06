@@ -375,7 +375,9 @@ public class RenderScreen2 extends JPanel
                             if (f_id == -1 && f_id2 != -1) {
                                 cnt++;
                             } else {
-                                if (f_id2 != -1 && ORIPA.doc.overlapRelation[f_id][f_id2] == renderFace) {
+                				int[][] overlapRelation = ORIPA.doc.getOverlapRelation();
+
+                                if (f_id2 != -1 && overlapRelation[f_id][f_id2] == renderFace) {
                                     cnt++;
                                 }
                             }
@@ -483,7 +485,9 @@ public class RenderScreen2 extends JPanel
 
                 int renderFace = isM_bFaceOrderFlip() ? oripa.doc.Doc.UPPER : oripa.doc.Doc.LOWER;
 
-                if (zbuf[p] == -1 || ORIPA.doc.overlapRelation[zbuf[p]][id] == renderFace) {
+				int[][] overlapRelation = ORIPA.doc.getOverlapRelation();
+
+                if (zbuf[p] == -1 || overlapRelation[zbuf[p]][id] == renderFace) {
 
                     int tr = r >> 16;
                     int tg = g >> 16;

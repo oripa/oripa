@@ -80,7 +80,7 @@ public class RenderUI extends JPanel {
 
     public void updateLabel() {
         jLabel.setText("Folded model [" + (ORIPA.doc.currentORmatIndex + 1) + "/"
-                + ORIPA.doc.overlapRelations.size() + "]");
+                + ORIPA.doc.foldableOverlapRelations.size() + "]");
 
     }
 

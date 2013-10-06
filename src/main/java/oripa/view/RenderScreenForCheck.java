@@ -229,13 +229,15 @@ public class RenderScreenForCheck extends JPanel
         if (Config.FOR_STUDY) {
             List<OriFace> faces = ORIPA.doc.getFaces();
 
-            if (ORIPA.doc.overlapRelation != null) {
+			int[][] overlapRelation = ORIPA.doc.getOverlapRelation();
+
+            if (overlapRelation != null) {
                 g2d.setStroke(LineSetting.STROKE_RIDGE);
                 g2d.setColor(Color.MAGENTA);
                 int size = faces.size();
                 for (int i = 0; i < size; i++) {
                     for (int j = i + 1; j < size; j++) {
-                        if (ORIPA.doc.overlapRelation[i][j] == Doc.UNDEFINED) {
+                        if (overlapRelation[i][j] == Doc.UNDEFINED) {
                             Vector2d v0 = faces.get(i).getCenter();
                             Vector2d v1 = faces.get(j).getCenter();
                             g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));

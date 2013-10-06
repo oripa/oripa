@@ -104,8 +104,8 @@ public class Doc {
 
 	// Folded Model Information (Result of Estimation)
 
-	public int overlapRelation[][];
-	public ArrayList<int[][]> overlapRelations = new ArrayList<int[][]>();
+	private int overlapRelation[][];
+	public ArrayList<int[][]> foldableOverlapRelations = new ArrayList<int[][]>();
 	public int currentORmatIndex;
 	public Vector2d foldedBBoxLT;
 	public Vector2d foldedBBoxRB;
@@ -171,16 +171,16 @@ public class Doc {
 	}
 
 	public void setNextORMat() {
-		if (currentORmatIndex < overlapRelations.size() - 1) {
+		if (currentORmatIndex < foldableOverlapRelations.size() - 1) {
 			currentORmatIndex++;
-			Folder.matrixCopy(overlapRelations.get(currentORmatIndex), overlapRelation);
+			Folder.matrixCopy(foldableOverlapRelations.get(currentORmatIndex), overlapRelation);
 		}
 	}
 
 	public void setPrevORMat() {
 		if (currentORmatIndex > 0) {
 			currentORmatIndex--;
-			Folder.matrixCopy(overlapRelations.get(currentORmatIndex), overlapRelation);
+			Folder.matrixCopy(foldableOverlapRelations.get(currentORmatIndex), overlapRelation);
 		}
 
 	}
@@ -1530,6 +1530,20 @@ public class Doc {
 	 */
 	public void setFolded(boolean folded) {
 		this.folded = folded;
+	}
+
+	/**
+	 * @return overlapRelation
+	 */
+	public int[][] getOverlapRelation() {
+		return overlapRelation;
+	}
+
+	/**
+	 * @param overlapRelation overlapRelationを登録する
+	 */
+	public void setOverlapRelation(int[][] overlapRelation) {
+		this.overlapRelation = overlapRelation;
 	}
 	
 	

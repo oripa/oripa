@@ -53,7 +53,7 @@ public class Folder {
 		List<OriFace> faces = m_doc.getFaces();
         List<OriFace> sortedFaces = m_doc.getSortedFaces();
 
-        m_doc.overlapRelations.clear();
+        m_doc.foldableOverlapRelations.clear();
 
 		simpleFoldWithoutZorder();
 		m_doc.calcFoldedBoundingBox();
@@ -77,12 +77,14 @@ public class Folder {
 		holdCondition3s();
 		holdCondition4s();
 
-		estimation(m_doc.overlapRelation);
+        int[][] overlapRelation = m_doc.getOverlapRelation();
+
+		estimation(overlapRelation);
 
 		int size = faces.size();
 		workORmat = new int[size][size];
 		for (int i = 0; i < size; i++) {
-			System.arraycopy(m_doc.overlapRelation[i], 0, workORmat[i], 0, size);
+			System.arraycopy(overlapRelation[i], 0, workORmat[i], 0, size);
 		}
 
 		ORIPA.tmpInt = 0;
@@ -91,14 +93,14 @@ public class Folder {
 			sub.sortFaceOverlapOrder(faces, workORmat);
 		}
 
-		findAnswer(0, m_doc.overlapRelation);
+		findAnswer(0, overlapRelation);
 
 		m_doc.currentORmatIndex = 0;
-		if (m_doc.overlapRelations.isEmpty()) {
+		if (m_doc.foldableOverlapRelations.isEmpty()) {
 			ORIPA.outMessage("No answer was found");
 			return 0;
 		} else {
-			matrixCopy(m_doc.overlapRelations.get(0), m_doc.overlapRelation);
+			matrixCopy(m_doc.foldableOverlapRelations.get(0), overlapRelation);
 		}
 
 		m_doc.setFacesOutline(false);
@@ -128,7 +130,7 @@ public class Folder {
 		}
 
 		m_doc.setFolded(true);;
-		return m_doc.overlapRelations.size();
+		return m_doc.foldableOverlapRelations.size();
 	}
 
 	private void findAnswer(int subFaceIndex, int[][] orMat) {
@@ -147,7 +149,7 @@ public class Folder {
 				for (int i = 0; i < s; i++) {
 					System.arraycopy(passMat[i], 0, ansMat[i], 0, s);
 				}
-				m_doc.overlapRelations.add(ansMat);
+				m_doc.foldableOverlapRelations.add(ansMat);
 			} else {
 				findAnswer(subFaceIndex + 1, passMat);
 			}
@@ -194,7 +196,7 @@ public class Folder {
 					for (int i = 0; i < s; i++) {
 						System.arraycopy(passMat[i], 0, ansMat[i], 0, s);
 					}
-					m_doc.overlapRelations.add(ansMat);
+					m_doc.foldableOverlapRelations.add(ansMat);
 				} else {
 					findAnswer(subFaceIndex + 1, passMat);
 				}
@@ -229,8 +231,11 @@ public class Folder {
 				if (he.pair == null) {
 					continue;
 				}
+
+                int[][] overlapRelation = m_doc.getOverlapRelation();
+
 				OriFace f_j = he.pair.face;
-				if (m_doc.overlapRelation[f_i.tmpInt][f_j.tmpInt] != Doc.LOWER) {
+				if (overlapRelation[f_i.tmpInt][f_j.tmpInt] != Doc.LOWER) {
 					continue;
 				}
 				for (OriFace f_k : faces) {
@@ -268,6 +273,8 @@ public class Folder {
 		int edgeNum = edges.size();
 		System.out.println("edgeNum = " + edgeNum);
 
+        int[][] overlapRelation = m_doc.getOverlapRelation();
+
 		for (int i = 0; i < edgeNum; i++) {
 			OriEdge e0 = edges.get(i);
 			if (e0.left == null || e0.right == null) {
@@ -278,11 +285,12 @@ public class Folder {
 				if (e1.left == null || e1.right == null) {
 					continue;
 				}
+				//TODO extract as function
 				if (GeomUtil.isLineSegmentsOverlap(e0.left.positionAfterFolded, e0.left.next.positionAfterFolded,
 						e1.left.positionAfterFolded, e1.left.next.positionAfterFolded)) {
 					Condition4 cond_f;
-					if (m_doc.overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == Doc.UPPER) {
-						if (m_doc.overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == Doc.UPPER) {
+					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == Doc.UPPER) {
+						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == Doc.UPPER) {
 							cond_f = new Condition4();
 							cond_f.upper1 = e0.right.face.tmpInt;
 							cond_f.lower1 = e0.left.face.tmpInt;
@@ -312,7 +320,7 @@ public class Folder {
 							e1.left.face.condition4s.add(cond_f);
 						}
 					} else {
-						if (m_doc.overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == Doc.UPPER) {
+						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == Doc.UPPER) {
 							cond_f = new Condition4();
 							cond_f.upper1 = e0.left.face.tmpInt;
 							cond_f.lower1 = e0.right.face.tmpInt;
@@ -351,14 +359,14 @@ public class Folder {
 						}
 					}
 
-					if (m_doc.overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == Doc.UPPER) {
+					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == Doc.UPPER) {
 						cond.upper1 = e0.right.face.tmpInt;
 						cond.lower1 = e0.left.face.tmpInt;
 					} else {
 						cond.upper1 = e0.left.face.tmpInt;
 						cond.lower1 = e0.right.face.tmpInt;
 					}
-					if (m_doc.overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == Doc.UPPER) {
+					if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == Doc.UPPER) {
 						cond.upper2 = e1.right.face.tmpInt;
 						cond.lower2 = e1.left.face.tmpInt;
 					} else {
@@ -779,20 +787,23 @@ public class Folder {
 
 		int overlapCount = 0;
 		int size = faces.size();
-		m_doc.overlapRelation = new int[size][size];
+		int[][] overlapRelation = new int[size][size];
+
 		for (int i = 0; i < size; i++) {
-			m_doc.overlapRelation[i][i] = Doc.NO_OVERLAP;
+			overlapRelation[i][i] = Doc.NO_OVERLAP;
 			for (int j = i + 1; j < size; j++) {
 				if (GeomUtil.isFaceOverlap(faces.get(i), faces.get(j), size * 0.00001)) {
-					m_doc.overlapRelation[i][j] = Doc.UNDEFINED;
-					m_doc.overlapRelation[j][i] = Doc.UNDEFINED;
+					overlapRelation[i][j] = Doc.UNDEFINED;
+					overlapRelation[j][i] = Doc.UNDEFINED;
 					overlapCount++;
 				} else {
-					m_doc.overlapRelation[i][j] = Doc.NO_OVERLAP;
-					m_doc.overlapRelation[j][i] = Doc.NO_OVERLAP;
+					overlapRelation[i][j] = Doc.NO_OVERLAP;
+					overlapRelation[j][i] = Doc.NO_OVERLAP;
 				}
 			}
 		}
+
+		m_doc.setOverlapRelation(overlapRelation);
 	}
 
 
@@ -806,19 +817,20 @@ public class Folder {
 				}
 				OriFace pairFace = he.pair.face;
 
+				int[][] overlapRelation = m_doc.getOverlapRelation();
 				// If the relation is already decided, skip
-				if (m_doc.overlapRelation[face.tmpInt][pairFace.tmpInt] == Doc.UPPER
-						|| m_doc.overlapRelation[face.tmpInt][pairFace.tmpInt] == Doc.LOWER) {
+				if (overlapRelation[face.tmpInt][pairFace.tmpInt] == Doc.UPPER
+						|| overlapRelation[face.tmpInt][pairFace.tmpInt] == Doc.LOWER) {
 					continue;
 				}
 
 				if ((face.faceFront && he.edge.type == OriLine.TYPE_RIDGE)
 						|| (!face.faceFront && he.edge.type == OriLine.TYPE_VALLEY)) {
-					m_doc.overlapRelation[face.tmpInt][pairFace.tmpInt] = Doc.UPPER;
-					m_doc.overlapRelation[pairFace.tmpInt][face.tmpInt] = Doc.LOWER;
+					overlapRelation[face.tmpInt][pairFace.tmpInt] = Doc.UPPER;
+					overlapRelation[pairFace.tmpInt][face.tmpInt] = Doc.LOWER;
 				} else {
-					m_doc.overlapRelation[face.tmpInt][pairFace.tmpInt] = Doc.LOWER;
-					m_doc.overlapRelation[pairFace.tmpInt][face.tmpInt] = Doc.UPPER;
+					overlapRelation[face.tmpInt][pairFace.tmpInt] = Doc.LOWER;
+					overlapRelation[pairFace.tmpInt][face.tmpInt] = Doc.UPPER;
 				}
 			}
 		}
