@@ -368,7 +368,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			mainScreen.repaint();
 			updateTitleText();
 		} else if (e.getSource() == menuItemSave
-				&& !ORIPA.doc.dataFilePath.equals("")) {
+				&& !ORIPA.doc.getDataFilePath().equals("")) {
 			saveOpxFile(ORIPA.doc.getDataFilePath());
 
 		} else if (e.getSource() == menuItemSaveAs
@@ -456,7 +456,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	public void updateTitleText() {
 		String fileName;
-		if ((ORIPA.doc.dataFilePath).equals("")) {
+		if ((ORIPA.doc.getDataFilePath()).equals("")) {
 			fileName = ORIPA.res.getString("DefaultFileName");
 		} else {
 			fileName = ORIPA.doc.getDataFileName();

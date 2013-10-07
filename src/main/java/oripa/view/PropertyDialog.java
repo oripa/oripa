@@ -21,9 +21,17 @@ package oripa.view;
 import java.awt.GridBagConstraints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import javax.swing.*;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 
 public class PropertyDialog extends JDialog implements ComponentListener {
 
@@ -54,19 +62,21 @@ public class PropertyDialog extends JDialog implements ComponentListener {
     }
 
     public void setValue() {
-        TitleTextField.setText(ORIPA.doc.title);
-        EditorNameTextField.setText(ORIPA.doc.editorName);
-        OriginalAuthorTextField.setText(ORIPA.doc.originalAuthorName);
-        ReferenceTextField.setText(ORIPA.doc.reference);
-        MemoTextArea.setText(ORIPA.doc.memo);
+    	Doc document = ORIPA.doc;
+        TitleTextField.setText(document.getTitle());
+        EditorNameTextField.setText(document.getEditorName());
+        OriginalAuthorTextField.setText(document.getOriginalAuthorName());
+        ReferenceTextField.setText(document.getReference());
+        MemoTextArea.setText(document.memo);
     }
 
     private void storeValue() {
-        ORIPA.doc.title = TitleTextField.getText();
-        ORIPA.doc.editorName = EditorNameTextField.getText();
-        ORIPA.doc.originalAuthorName = OriginalAuthorTextField.getText();
-        ORIPA.doc.reference = ReferenceTextField.getText();
-        ORIPA.doc.memo = MemoTextArea.getText();
+    	Doc document = ORIPA.doc;
+    	document.setTitle(TitleTextField.getText());
+    	document.setEditorName(EditorNameTextField.getText());
+    	document.setOriginalAuthorName(OriginalAuthorTextField.getText());
+    	document.setReference(ReferenceTextField.getText());
+    	document.setMemo(MemoTextArea.getText());
     }
 
     /**

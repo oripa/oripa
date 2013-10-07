@@ -52,11 +52,11 @@ public class DataSet {
         }
         paperSize = doc.getPaperSize();
 
-        title = doc.title;
-        editorName = doc.editorName;
-        originalAuthorName = doc.originalAuthorName;
-        reference = doc.reference;
-        memo = doc.memo;
+        title = doc.getTitle();
+        editorName = doc.getEditorName();
+        originalAuthorName = doc.getOriginalAuthorName();
+        reference = doc.getReference();
+        memo = doc.getMemo();
     }
 
     public void recover(Doc doc) {
@@ -66,11 +66,11 @@ public class DataSet {
             creasePattern.add(lines[i].getLine());
         }
         doc.setPaperSize(paperSize);
-        doc.title = title;
-        doc.editorName = editorName;
-        doc.originalAuthorName = originalAuthorName;
-        doc.reference = reference;
-        doc.memo = memo;
+        doc.setTitle(title);
+        doc.setEditorName(editorName);
+        doc.setOriginalAuthorName(originalAuthorName);
+        doc.setReference(reference);
+        doc.setMemo(memo);;
     }
 
     public void setPaperSize(double d) {

@@ -42,6 +42,7 @@ import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.geom.OriFace;
 import oripa.geom.TriangleFace;
 import oripa.geom.TriangleVertex;
@@ -289,18 +290,22 @@ public class RenderScreen2 extends JPanel
     }
 
     public void drawOrigami() {
-        List<OriFace> faces = ORIPA.doc.getFaces();
-        boolean folded = ORIPA.doc.isFolded();
+    	Doc document = ORIPA.doc;
+        List<OriFace> faces = document.getFaces();
+        boolean folded = document.isFolded();
         if (!folded) {
             return;
         }
         long time0 = System.currentTimeMillis();
 
-        Vector2d center = new Vector2d((ORIPA.doc.foldedBBoxLT.x + ORIPA.doc.foldedBBoxRB.x) / 2,
-                (ORIPA.doc.foldedBBoxLT.y + ORIPA.doc.foldedBBoxRB.y) / 2);
+        Vector2d leftAndTop = document.getFoldedBBoxLT();
+        Vector2d rightAndBottom = document.getFoldedBBoxRB();
+        
+        Vector2d center = new Vector2d((leftAndTop.x + rightAndBottom.x) / 2,
+                (leftAndTop.y + rightAndBottom.y) / 2);
         double localScale = Math.min(
-                BUFFERW / (ORIPA.doc.foldedBBoxRB.x - ORIPA.doc.foldedBBoxLT.x),
-                BUFFERH / (ORIPA.doc.foldedBBoxRB.y - ORIPA.doc.foldedBBoxLT.y)) * 0.95;
+                BUFFERW / (rightAndBottom.x - leftAndTop.x),
+                BUFFERH / (rightAndBottom.y - leftAndTop.y)) * 0.95;
         double angle = m_rotAngle * Math.PI / 180;
         localScale *= m_scale;
 
@@ -375,7 +380,7 @@ public class RenderScreen2 extends JPanel
                             if (f_id == -1 && f_id2 != -1) {
                                 cnt++;
                             } else {
-                				int[][] overlapRelation = ORIPA.doc.getOverlapRelation();
+                				int[][] overlapRelation = document.getOverlapRelation();
 
                                 if (f_id2 != -1 && overlapRelation[f_id][f_id2] == renderFace) {
                                     cnt++;

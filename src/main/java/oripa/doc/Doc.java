@@ -100,15 +100,15 @@ public class Doc {
 
 	private ArrayList<OriFace> sortedFaces = new ArrayList<OriFace>();
 	
-	boolean bOutLog = true;
+	private boolean bOutLog = true;
 
 	// Folded Model Information (Result of Estimation)
 
 	private int overlapRelation[][];
 	private ArrayList<int[][]> foldableOverlapRelations = new ArrayList<int[][]>();
-	public int currentORmatIndex;
-	public Vector2d foldedBBoxLT;
-	public Vector2d foldedBBoxRB;
+	private int currentORmatIndex;
+	private Vector2d foldedBBoxLT;
+	private Vector2d foldedBBoxRB;
 
 	final public static int NO_OVERLAP = 0;
 	final public static int UPPER = 1;
@@ -117,11 +117,11 @@ public class Doc {
 
 	// Project data
 
-	public String dataFilePath = "";
-	public String title;
-	public String editorName;
-	public String originalAuthorName;
-	public String reference;
+	private String dataFilePath = "";
+	private String title;
+	private String editorName;
+	private String originalAuthorName;
+	private String reference;
 	public String memo;
 	private UndoManager<UndoInfo> undoManager = new UndoManager<>(30);
 
@@ -1560,6 +1560,77 @@ public class Doc {
 			ArrayList<int[][]> foldableOverlapRelations) {
 		this.foldableOverlapRelations = foldableOverlapRelations;
 	}
+
+	/**
+	 * @return title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title titleを登録する
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return editorName
+	 */
+	public String getEditorName() {
+		return editorName;
+	}
+
+	/**
+	 * @param editorName editorNameを登録する
+	 */
+	public void setEditorName(String editorName) {
+		this.editorName = editorName;
+	}
+
+	/**
+	 * @return originalAuthorName
+	 */
+	public String getOriginalAuthorName() {
+		return originalAuthorName;
+	}
+
+	/**
+	 * @param originalAuthorName originalAuthorNameを登録する
+	 */
+	public void setOriginalAuthorName(String originalAuthorName) {
+		this.originalAuthorName = originalAuthorName;
+	}
+
+	/**
+	 * @return memo
+	 */
+	public String getMemo() {
+		return memo;
+	}
+
+	/**
+	 * @param memo memoを登録する
+	 */
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+
+	/**
+	 * @return reference
+	 */
+	public String getReference() {
+		return reference;
+	}
+
+	/**
+	 * @param reference referenceを登録する
+	 */
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
+	
 	
 	
 	

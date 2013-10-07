@@ -95,7 +95,7 @@ public class Folder {
 
 		findAnswer(0, overlapRelation);
 
-		m_doc.currentORmatIndex = 0;
+		m_doc.setCurrentORmatIndex(0);
 		if (foldableOverlapRelations.isEmpty()) {
 			ORIPA.outMessage("No answer was found");
 			return 0;
