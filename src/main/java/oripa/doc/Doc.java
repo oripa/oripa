@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
@@ -33,6 +34,7 @@ import oripa.doc.command.LineAdder;
 import oripa.doc.command.LinePaster;
 import oripa.doc.core.CreasePattern;
 import oripa.fold.Folder;
+import oripa.fold.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.OriEdge;
@@ -84,12 +86,12 @@ public class Doc {
 
 	private CreasePattern creasePattern = null;
 	private ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
-//	public ArrayList<OriLine> lines = new ArrayList<OriLine>();
+
 
 	// Origami Model for Estimation
-	
-	private ArrayList<OriFace> faces = new ArrayList<OriFace>();
-	private ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
+	private OrigamiModel origamiModel = null;
+
+	//private ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
 	private ArrayList<OriEdge> edges = new ArrayList<OriEdge>();
 	//    public ArrayList<OriLine> tmpSelectedLines = new ArrayList<OriLine>();
 	private boolean isValidPattern = false; // used in this class only.
@@ -151,6 +153,9 @@ public class Doc {
 		creasePattern.add(l1);
 		creasePattern.add(l2);
 		creasePattern.add(l3);
+
+		
+		origamiModel  = new OrigamiModel(size);
 
 	}
 
@@ -242,6 +247,8 @@ public class Doc {
 	}
 
 	private OriVertex addAndGetVertexFromVVec(Vector2d p) {
+		List<OriVertex> vertices = origamiModel.getVertices();
+
 		OriVertex vtx = null;
 		for (OriVertex v : vertices) {
 			if (GeomUtil.Distance(v.p, p) < CalculationResource.POINT_EPS) {
@@ -262,7 +269,9 @@ public class Doc {
 	public void filpAll() {
 		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-		for (OriFace face : ORIPA.doc.faces) {
+	
+		List<OriFace> faces = origamiModel.getFaces();
+		for (OriFace face : faces) {
 			face.z_order = -face.z_order;
 			for (OriHalfedge he : face.halfedges) {
 				maxV.x = Math.max(maxV.x, he.vertex.p.x);
@@ -274,13 +283,13 @@ public class Doc {
 
 		double centerX = (maxV.x + minV.x) / 2;
 
-		for (OriFace face : ORIPA.doc.faces) {
+		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				he.positionForDisplay.x = 2 * centerX - he.positionForDisplay.x;
 			}
 		}
 
-		for (OriFace face : ORIPA.doc.faces) {
+		for (OriFace face : faces) {
 			face.faceFront = !face.faceFront;
 			face.setOutline();
 		}
@@ -296,6 +305,9 @@ public class Doc {
 	public void setFacesOutline(boolean isSlide) {
 		int minDepth = Integer.MAX_VALUE;
 		int maxDepth = -Integer.MAX_VALUE;
+
+		List<OriFace> faces = origamiModel.getFaces();
+		List<OriVertex> vertices = origamiModel.getVertices();
 
 		for (OriFace f : faces) {
 			minDepth = Math.min(minDepth, f.z_order);
@@ -563,6 +575,10 @@ public class Doc {
 	}
 
 	public boolean buildOrigami(boolean needCleanUp) {
+		List<OriFace> faces = origamiModel.getFaces();
+
+		List<OriVertex> vertices = origamiModel.getVertices();
+
 		edges.clear();
 		vertices.clear();
 		faces.clear();
@@ -642,6 +658,9 @@ public class Doc {
 	}
 
 	public boolean buildOrigami3(boolean needCleanUp) {
+		List<OriFace> faces = origamiModel.getFaces();
+		List<OriVertex> vertices = origamiModel.getVertices();
+
 		edges.clear();
 		vertices.clear();
 		faces.clear();
@@ -806,6 +825,8 @@ public class Doc {
 	public boolean checkPatternValidity() {
 		boolean isOK = true;
 
+		List<OriFace> faces = origamiModel.getFaces();
+
 		// Check if the faces are convex
 		for (OriFace face : faces) {
 			if (face.halfedges.size() == 3) {
@@ -828,6 +849,7 @@ public class Doc {
 		}
 
 		// Check Maekawa's theorem for all vertexes
+		List<OriVertex> vertices = origamiModel.getVertices();
 		for (OriVertex v : vertices) {
 			int ridgeCount = 0;
 			int valleyCount = 0;
@@ -988,6 +1010,8 @@ public class Doc {
 	}
 
 	public boolean foldWithoutLineType() {
+		List<OriFace> faces = origamiModel.getFaces();
+
 		for (OriFace face : faces) {
 			face.faceFront = true;
 		}
@@ -1015,6 +1039,8 @@ public class Doc {
 	public void calcFoldedBoundingBox() {
 		foldedBBoxLT = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 		foldedBBoxRB = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
+
+		List<OriFace> faces = origamiModel.getFaces();
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				foldedBBoxLT.x = Math.min(foldedBBoxLT.x, he.tmpVec.x);
@@ -1111,6 +1137,8 @@ public class Doc {
 			}
 			face.faceFront = !face.faceFront;
 		}
+
+		List<OriFace> faces = origamiModel.getFaces();
 
 		faces.remove(face);
 		faces.add(face);
@@ -1247,6 +1275,8 @@ public class Doc {
 	private void makeEdges() {
 		edges.clear();
 
+		List<OriFace> faces = origamiModel.getFaces();
+
 		ArrayList<OriHalfedge> tmpHalfedges = new ArrayList<OriHalfedge>();
 
 		// Clear all the Halfedges
@@ -1380,21 +1410,22 @@ public class Doc {
 	/**
 	 * @return faces
 	 */
-	public ArrayList<OriFace> getFaces() {
+	public List<OriFace> getFaces() {
+		List<OriFace> faces = origamiModel.getFaces();
 		return faces;
 	}
 
 	/**
 	 * @param faces facesを登録する
 	 */
-	public void setFaces(ArrayList<OriFace> faces) {
-		this.faces = faces;
+	public void setFaces(List<OriFace> faces) {
+		origamiModel.setFaces(faces);
 	}
 
 	/**
 	 * @return edges
 	 */
-	public ArrayList<OriEdge> getEdges() {
+	public List<OriEdge> getEdges() {
 		return edges;
 	}
 
@@ -1402,15 +1433,17 @@ public class Doc {
 	/**
 	 * @return vertices
 	 */
-	public ArrayList<OriVertex> getVertices() {
+	public List<OriVertex> getVertices() {
+		List<OriVertex> vertices = origamiModel.getVertices();
+
 		return vertices;
 	}
 
 	/**
 	 * @param vertices verticesを登録する
 	 */
-	public void setVertices(ArrayList<OriVertex> vertices) {
-		this.vertices = vertices;
+	public void setVertices(List<OriVertex> vertices) {
+		origamiModel.setVertices(vertices);;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package oripa.fold;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import oripa.geom.OriEdge;
 import oripa.geom.OriFace;
@@ -15,14 +16,14 @@ import oripa.value.OriLine;
  */
 public class OrigamiModel {
 	
-	private ArrayList<OriFace> faces = new ArrayList<OriFace>();
-	private ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
-	private ArrayList<OriEdge> edges = new ArrayList<OriEdge>();
+	private List<OriFace> faces = new ArrayList<OriFace>();
+	private List<OriVertex> vertices = new ArrayList<OriVertex>();
+	private List<OriEdge> edges = new ArrayList<OriEdge>();
 	//    public ArrayList<OriLine> tmpSelectedLines = new ArrayList<OriLine>();
 
-	private ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
+	private List<OriLine> crossLines = new ArrayList<OriLine>();
 
-	private ArrayList<OriFace> sortedFaces = new ArrayList<OriFace>();
+	private List<OriFace> sortedFaces = new ArrayList<OriFace>();
 
 	private FoldedModelInfo foldedModelInfo = new FoldedModelInfo();
 	
@@ -32,6 +33,26 @@ public class OrigamiModel {
 	private boolean folded = false;
 
 	
+
+	private BoundBox boundBox;
+	
+	private double paperSize = -1;
+	
+
+	//=============================================================
+	// Constructors
+	//=============================================================
+			
+	private OrigamiModel() {}
+
+	public OrigamiModel(double paperSize) {
+		setPaperSize(paperSize);
+	}
+	
+	//=============================================================
+	// Getter/Setter
+	//=============================================================
+
 	public boolean isFolded() {
 		return folded;
 	}
@@ -40,37 +61,21 @@ public class OrigamiModel {
 		this.folded = folded;
 	}
 
-	private BoundBox boundBox;
-	
-	private double paperSize = -1;
-	
-//	public void setFaces(ArrayList<OriFace> faces) {
-//		this.faces = faces;
-//	}
-//	public void setVertices(ArrayList<OriVertex> vertices) {
-//		this.vertices = vertices;
-//	}
-//	public void setEdges(ArrayList<OriEdge> edges) {
-//		this.edges = edges;
-//	}
-
-	private OrigamiModel() {}
-	
-	public OrigamiModel(double paperSize) {
-		setPaperSize(paperSize);
-	}
 	
 	public void setValidPattern(boolean isValidPattern) {
 		this.isValidPattern = isValidPattern;
 	}
 
-	public ArrayList<OriFace> getFaces() {
+	public List<OriFace> getFaces() {
 		return faces;
 	}
-	public ArrayList<OriVertex> getVertices() {
+	
+	
+	
+	public List<OriVertex> getVertices() {
 		return vertices;
 	}
-	public ArrayList<OriEdge> getEdges() {
+	public List<OriEdge> getEdges() {
 		return edges;
 	}
 	public boolean isValidPattern() {
@@ -85,11 +90,11 @@ public class OrigamiModel {
 		this.boundBox = boundBox;
 	}
 
-	public ArrayList<OriLine> getCrossLines() {
+	public List<OriLine> getCrossLines() {
 		return crossLines;
 	}
 
-	public void setCrossLines(ArrayList<OriLine> crossLines) {
+	public void setCrossLines(List<OriLine> crossLines) {
 		this.crossLines = crossLines;
 	}
 
@@ -101,11 +106,11 @@ public class OrigamiModel {
 		this.paperSize = paperSize;
 	}
 
-	public ArrayList<OriFace> getSortedFaces() {
+	public List<OriFace> getSortedFaces() {
 		return sortedFaces;
 	}
 
-	public void setSortedFaces(ArrayList<OriFace> sortedFaces) {
+	public void setSortedFaces(List<OriFace> sortedFaces) {
 		this.sortedFaces = sortedFaces;
 	}
 
@@ -116,10 +121,31 @@ public class OrigamiModel {
 	public void setFoldedModelInfo(FoldedModelInfo foldedModelInfo) {
 		this.foldedModelInfo = foldedModelInfo;
 	}
-	
-	
-	
 
+	/**
+	 * @param faces facesを登録する
+	 */
+	public void setFaces(List<OriFace> faces) {
+		this.faces = faces;
+	}
+
+	/**
+	 * @param vertices verticesを登録する
+	 */
+	public void setVertices(List<OriVertex> vertices) {
+		this.vertices = vertices;
+	}
+
+	/**
+	 * @param edges edgesを登録する
+	 */
+	public void setEdges(List<OriEdge> edges) {
+		this.edges = edges;
+	}
+	
+	
+	
+	
 	
 	
 	
