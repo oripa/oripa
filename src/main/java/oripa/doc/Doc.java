@@ -91,14 +91,7 @@ public class Doc {
 	// Origami Model for Estimation
 	private OrigamiModel origamiModel = null;
 
-	
-	// TODO make clear the difference of following two variables
-	private boolean folded = false;
-
-	private ArrayList<OriFace> sortedFaces = new ArrayList<OriFace>();
-	
-	private boolean bOutLog = true;
-
+		
 	// Folded Model Information (Result of Estimation)
 
 	private int overlapRelation[][];
@@ -291,6 +284,7 @@ public class Doc {
 
 		Collections.sort(faces, new FaceOrderComparator());
 
+		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 		Collections.reverse(sortedFaces);
 
 
@@ -1020,6 +1014,8 @@ public class Doc {
 		walkFace(faces.get(0));
 
 		Collections.sort(faces, new FaceOrderComparator());
+
+		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 		sortedFaces.clear();
 		sortedFaces.addAll(faces);
 
@@ -1331,6 +1327,9 @@ public class Doc {
 
 	public void setCrossLine(OriLine line) {
 		crossLines.clear();
+
+		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+
 		for (OriFace face : sortedFaces) {
 			ArrayList<Vector2d> vv = new ArrayList<Vector2d>();
 			int crossCount = 0;
@@ -1486,15 +1485,16 @@ public class Doc {
 	/**
 	 * @return sortedFaces
 	 */
-	public ArrayList<OriFace> getSortedFaces() {
+	public List<OriFace> getSortedFaces() {
+		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 		return sortedFaces;
 	}
 
 	/**
 	 * @param sortedFaces sortedFacesを登録する
 	 */
-	public void setSortedFaces(ArrayList<OriFace> sortedFaces) {
-		this.sortedFaces = sortedFaces;
+	public void setSortedFaces(List<OriFace> sortedFaces) {
+		origamiModel.setSortedFaces(sortedFaces);
 	}
 
 	/**
@@ -1557,14 +1557,14 @@ public class Doc {
 	 * @return folded
 	 */
 	public boolean isFolded() {
-		return folded;
+		return origamiModel.isFolded();
 	}
 
 	/**
 	 * @param folded foldedを登録する
 	 */
 	public void setFolded(boolean folded) {
-		this.folded = folded;
+		origamiModel.setFolded(folded);
 	}
 
 	/**
