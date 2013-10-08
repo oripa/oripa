@@ -19,7 +19,6 @@ public class OrigamiModel {
 	private List<OriFace> faces = new ArrayList<OriFace>();
 	private List<OriVertex> vertices = new ArrayList<OriVertex>();
 	private List<OriEdge> edges = new ArrayList<OriEdge>();
-	//    public ArrayList<OriLine> tmpSelectedLines = new ArrayList<OriLine>();
 
 	private List<OriLine> crossLines = new ArrayList<OriLine>();
 
@@ -32,6 +31,7 @@ public class OrigamiModel {
 
 	private boolean folded = false;
 
+	private boolean hasModel = false;
 	
 
 	private BoundBox boundBox;
@@ -141,6 +141,20 @@ public class OrigamiModel {
 	 */
 	public void setEdges(List<OriEdge> edges) {
 		this.edges = edges;
+	}
+
+	/**
+	 * @return hasModel
+	 */
+	public boolean hasModel() {
+		return hasModel;
+	}
+
+	/**
+	 * @param hasModel hasModelを登録する
+	 */
+	public void setHasModel(boolean hasModel) {
+		this.hasModel = hasModel;
 	}
 	
 	

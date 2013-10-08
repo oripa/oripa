@@ -91,13 +91,8 @@ public class Doc {
 	// Origami Model for Estimation
 	private OrigamiModel origamiModel = null;
 
-	//private ArrayList<OriVertex> vertices = new ArrayList<OriVertex>();
-	private ArrayList<OriEdge> edges = new ArrayList<OriEdge>();
-	//    public ArrayList<OriLine> tmpSelectedLines = new ArrayList<OriLine>();
-	private boolean isValidPattern = false; // used in this class only.
 	
 	// TODO make clear the difference of following two variables
-	private boolean hasModel = false;
 	private boolean folded = false;
 
 	private ArrayList<OriFace> sortedFaces = new ArrayList<OriFace>();
@@ -576,7 +571,7 @@ public class Doc {
 
 	public boolean buildOrigami(boolean needCleanUp) {
 		List<OriFace> faces = origamiModel.getFaces();
-
+		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriVertex> vertices = origamiModel.getVertices();
 
 		edges.clear();
@@ -651,7 +646,8 @@ public class Doc {
 			e.type = e.left.tmpInt;
 		}
 
-		hasModel = true;
+		
+		origamiModel.setHasModel(true);
 
 		return true;
 
@@ -659,6 +655,7 @@ public class Doc {
 
 	public boolean buildOrigami3(boolean needCleanUp) {
 		List<OriFace> faces = origamiModel.getFaces();
+		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriVertex> vertices = origamiModel.getVertices();
 
 		edges.clear();
@@ -817,7 +814,7 @@ public class Doc {
 			e.type = e.left.tmpInt;
 		}
 
-		hasModel = true;
+		origamiModel.setHasModel(true);
 
 		return checkPatternValidity();
 	}
@@ -918,7 +915,7 @@ public class Doc {
 			}
 		}
 
-		isValidPattern = isOK;
+		origamiModel.setValidPattern(isOK);
 		calcFoldedBoundingBox();
 		return isOK;
 	}
@@ -1011,6 +1008,7 @@ public class Doc {
 
 	public boolean foldWithoutLineType() {
 		List<OriFace> faces = origamiModel.getFaces();
+		List<OriEdge> edges = origamiModel.getEdges();
 
 		for (OriFace face : faces) {
 			face.faceFront = true;
@@ -1273,6 +1271,7 @@ public class Doc {
 	
 	
 	private void makeEdges() {
+		List<OriEdge> edges = origamiModel.getEdges();
 		edges.clear();
 
 		List<OriFace> faces = origamiModel.getFaces();
@@ -1426,6 +1425,8 @@ public class Doc {
 	 * @return edges
 	 */
 	public List<OriEdge> getEdges() {
+		List<OriEdge> edges = origamiModel.getEdges();
+
 		return edges;
 	}
 
@@ -1450,28 +1451,29 @@ public class Doc {
 	 * @param edges edgesを登録する
 	 */
 	public void setEdges(ArrayList<OriEdge> edges) {
-		this.edges = edges;
+		origamiModel.setEdges(edges);
 	}
 
 	/**
 	 * @return isValidPattern
 	 */
 	public boolean isValidPattern() {
-		return isValidPattern;
+		
+		return origamiModel.isValidPattern();
 	}
 
 	/**
 	 * @param isValidPattern isValidPatternを登録する
 	 */
 	public void setValidPattern(boolean isValidPattern) {
-		this.isValidPattern = isValidPattern;
+			origamiModel.setValidPattern(isValidPattern);
 	}
 
 	/**
 	 * @return hasModel
 	 */
 	public boolean hasModel() {
-		return hasModel;
+		return origamiModel.hasModel();
 	}
 
 //	/**
