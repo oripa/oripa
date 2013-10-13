@@ -108,6 +108,7 @@ public class CreasePattern implements Collection<OriLine> {
 	@Override
 	public void clear() {
 		lines.clear();
+		vertices.clear();
 	}
 
 

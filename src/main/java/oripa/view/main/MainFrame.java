@@ -80,7 +80,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
 	private PaintContext mouseContext = PaintContext.getInstance();
 
-	MainScreen mainScreen;
+	PainterScreen mainScreen;
 	private JMenu menuFile = new JMenu(
 			ORIPA.res.getString(StringID.Main.FILE_ID));
 	private JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
@@ -173,7 +173,7 @@ public class MainFrame extends JFrame implements ActionListener,
 				ResourceKey.LABEL, StringID.CUT_PASTE_ID));
 		// menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 
-		mainScreen = new MainScreen();
+		mainScreen = new PainterScreen();
 		addWindowListener(this);
 		uiPanel = new UIPanel(mainScreen);
 		getContentPane().setLayout(new BorderLayout());

@@ -212,7 +212,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 			resources.getString(ResourceKey.LABEL, StringID.UI.FULL_ESTIMATION_ID), false);
 	JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
-	MainScreen screen;
+	PainterScreen screen;
 
 
 	//	private PaintContext context = PaintContext.getInstance();
@@ -220,7 +220,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 
 
-	public UIPanel(MainScreen __screen) {
+	public UIPanel(PainterScreen __screen) {
 
 		//setModeButtonText();
 		editModeInputLineButton.setSelected(true);
