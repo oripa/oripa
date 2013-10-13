@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 
 import oripa.ORIPA;
-import oripa.paint.core.EditMode;
+import oripa.paint.EditMode;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.RectangularSelectableAction;
 import oripa.value.OriLine;

@@ -2,9 +2,8 @@ package oripa.paint.mirror;
 
 import java.awt.geom.AffineTransform;
 
+import oripa.paint.EditMode;
 import oripa.paint.core.BasicUndo;
-import oripa.paint.core.EditMode;
-import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 import oripa.paint.selectline.SelectLineAction;
 
@@ -29,6 +28,9 @@ public class MirrorCopyAction extends SelectLineAction {
 
 
 
+	/**
+	 * do usual undo.
+	 */
 	@Override
 	public void onRightClick(PaintContext context, AffineTransform affine,
 			boolean differentAction) {

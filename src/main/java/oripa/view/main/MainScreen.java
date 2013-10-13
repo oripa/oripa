@@ -55,8 +55,8 @@ import oripa.doc.core.CreasePattern;
 import oripa.geom.OriFace;
 import oripa.geom.OriVertex;
 import oripa.mouse.MouseUtility;
-import oripa.paint.core.EditMode;
-import oripa.paint.core.Globals;
+import oripa.paint.EditMode;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintContext;
 import oripa.paint.util.ElementSelector;
@@ -187,19 +187,19 @@ ActionListener, ComponentListener, Observer{
 
 		ElementSelector selector = new ElementSelector();
 		for (OriLine line : lines) {
-			if (line.typeVal == OriLine.TYPE_NONE &&!Globals.dispAuxLines) {
+			if (line.typeVal == OriLine.TYPE_NONE &&!PaintConfig.dispAuxLines) {
 				continue;
 			}
 
 			if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY)
-					&& !Globals.dispMVLines) {
+					&& !PaintConfig.dispMVLines) {
 				continue;
 			}
 
 			g2d.setColor(selector.selectColorByLineType(line.typeVal));
 			g2d.setStroke(selector.selectStroke(line.typeVal));
 
-			if(Globals.mouseAction != null){
+			if(PaintConfig.mouseAction != null){
 				if(mouseContext.getLines().contains(line) == false){
 					g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
 				}
@@ -215,10 +215,10 @@ ActionListener, ComponentListener, Observer{
 		g2d.setColor(Color.BLACK);
 		final double vertexDrawSize = 2.0;
 		for (OriLine line : creasePattern) {
-			if (!Globals.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
+			if (!PaintConfig.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
-			if (!Globals.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
+			if (!PaintConfig.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
 					|| line.typeVal == OriLine.TYPE_VALLEY)) {
 				continue;
 			}
@@ -281,8 +281,8 @@ ActionListener, ComponentListener, Observer{
 
 
 		// Drawing of the vertices
-		if (Globals.getMouseAction().getEditMode() == EditMode.VERTEX 
-				|| Globals.dispVertex) {
+		if (PaintConfig.getMouseAction().getEditMode() == EditMode.VERTEX 
+				|| PaintConfig.dispVertex) {
 			drawVertexRectangles(g2d);
 		}
 
@@ -294,7 +294,7 @@ ActionListener, ComponentListener, Observer{
 		}
 
 
-		if (Globals.bDispCrossLine) {
+		if (PaintConfig.bDispCrossLine) {
 			List<OriLine> crossLines = ORIPA.doc.getCrossLines();
 			if (!crossLines.isEmpty()) {
 				g2d.setStroke(LineSetting.STROKE_TMP_OUTLINE);
@@ -333,8 +333,8 @@ ActionListener, ComponentListener, Observer{
 			}
 		}
 
-		if (Globals.mouseAction != null) {
-			Globals.mouseAction.onDraw(g2d, mouseContext);
+		if (PaintConfig.mouseAction != null) {
+			PaintConfig.mouseAction.onDraw(g2d, mouseContext);
 
 			g.drawImage(bufferImage, 0, 0, this);
 
@@ -363,7 +363,7 @@ ActionListener, ComponentListener, Observer{
 
 		double paperSize = ORIPA.doc.getPaperSize();
 		
-		int lineNum = Globals.gridDivNum;
+		int lineNum = PaintConfig.gridDivNum;
 		double step = paperSize / lineNum;
 
 		for (int i = 1; i < lineNum; i++) {
@@ -383,16 +383,16 @@ ActionListener, ComponentListener, Observer{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
-		if (Globals.mouseAction == null) {
+		if (PaintConfig.mouseAction == null) {
 			return;
 		}
 
 		if(javax.swing.SwingUtilities.isRightMouseButton(e)){
-			Globals.mouseAction.onRightClick(
+			PaintConfig.mouseAction.onRightClick(
 					mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		}
 		else {
-			Globals.mouseAction = Globals.mouseAction.onLeftClick(
+			PaintConfig.mouseAction = PaintConfig.mouseAction.onLeftClick(
 					mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		}
 
@@ -401,11 +401,11 @@ ActionListener, ComponentListener, Observer{
 	@Override
 	public void mousePressed(MouseEvent e) {
 
-		if(Globals.mouseAction == null){
+		if(PaintConfig.mouseAction == null){
 			return;
 		}
 
-		Globals.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+		PaintConfig.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 
 		preMousePoint = e.getPoint();
 	}
@@ -414,8 +414,8 @@ ActionListener, ComponentListener, Observer{
 	public void mouseReleased(MouseEvent e) {
 		// Rectangular Selection
 
-		if(Globals.mouseAction != null){
-			Globals.mouseAction.onRelease(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+		if(PaintConfig.mouseAction != null){
+			PaintConfig.mouseAction.onRelease(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		}
 		repaint();
 	}
@@ -451,7 +451,7 @@ ActionListener, ComponentListener, Observer{
 			repaint();
 		} else {
 			mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
-			Globals.getMouseAction().onDrag(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+			PaintConfig.getMouseAction().onDrag(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 			repaint();
 		}
 	}
@@ -471,11 +471,11 @@ ActionListener, ComponentListener, Observer{
 		mouseContext.dispGrid = setting.isGridVisible();
 		mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
 
-		if (Globals.mouseAction == null) {
+		if (PaintConfig.mouseAction == null) {
 			return;
 		}
 
-		Globals.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+		PaintConfig.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
 		repaint();
 

@@ -4,8 +4,8 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
-import oripa.paint.core.EditMode;
-import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.EditMode;
+import oripa.paint.GraphicMouseActionInterface;
 import oripa.paint.core.PaintContext;
 
 /**
@@ -42,7 +42,7 @@ class LocalPaintBoundStateFactory {
 	 * @return
 	 */
 	public ApplicationState<EditMode> create(
-			GraphicMouseAction mouseAction,
+			GraphicMouseActionInterface mouseAction,
 			ErrorListener errorListener, 
 			String textID,
 			ActionListener[] actions){
@@ -65,7 +65,7 @@ class LocalPaintBoundStateFactory {
 	 * @return
 	 */
 	public ApplicationState<EditMode> create(
-			GraphicMouseAction mouseAction,
+			GraphicMouseActionInterface mouseAction,
 			String textID,
 			ActionListener[] actions){
 

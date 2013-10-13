@@ -6,7 +6,7 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.value.OriLine;
 
@@ -106,7 +106,7 @@ public class NearestVertexFinder {
 		if (context.dispGrid) {
 
 			NearestPoint nearestGrid = findNearestVertex(
-					currentPoint, context.updateGrids(Globals.gridDivNum));
+					currentPoint, context.updateGrids(PaintConfig.gridDivNum));
 			
 			if(nearestGrid.distance < nearestPosition.distance){
 				nearestPosition = nearestGrid;

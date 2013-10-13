@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.ORIPA;
+import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.core.PaintContext;
 import oripa.viewsetting.main.ScreenUpdater;
 
@@ -21,7 +22,7 @@ public class DeleteSelectedLines implements ActionListener {
 			context.clear(false);
 		}
 		
-		ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 		
 		screenUpdater.updateScreen();
 

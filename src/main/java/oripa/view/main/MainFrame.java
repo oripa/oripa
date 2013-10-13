@@ -57,7 +57,7 @@ import oripa.file.FileVersionError;
 import oripa.file.FilterDB;
 import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.util.DeleteSelectedLines;
 import oripa.resource.Constants;
@@ -403,8 +403,8 @@ public class MainFrame extends JFrame implements ActionListener,
 			saveIniFile();
 			System.exit(0);
 		} else if (e.getSource() == menuItemUndo) {
-			if (Globals.getMouseAction() != null) {
-				Globals.getMouseAction().undo(mouseContext);
+			if (PaintConfig.getMouseAction() != null) {
+				PaintConfig.getMouseAction().undo(mouseContext);
 			} else {
 				ORIPA.doc.loadUndoInfo();
 			}

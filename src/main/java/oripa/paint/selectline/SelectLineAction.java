@@ -4,8 +4,8 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 
 import oripa.ORIPA;
-import oripa.paint.core.EditMode;
-import oripa.paint.core.Globals;
+import oripa.paint.EditMode;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.RectangularSelectableAction;
 import oripa.value.OriLine;
@@ -23,7 +23,9 @@ public class SelectLineAction extends RectangularSelectableAction {
 		recover(context);
 	}
 
-		
+	/**
+	 * set old line-selected marks to current context.s
+	 */
 	@Override
 	public void undo(PaintContext context) {
 		ORIPA.doc.loadUndoInfo();
@@ -62,11 +64,11 @@ public class SelectLineAction extends RectangularSelectableAction {
 					continue;
 				}
 				// Don't select if the line is hidden
-				if (!Globals.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
+				if (!PaintConfig.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
 						|| line.typeVal == OriLine.TYPE_VALLEY)) {
 					continue;
 				}
-				if (!Globals.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
+				if (!PaintConfig.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
 					continue;
 				}
 

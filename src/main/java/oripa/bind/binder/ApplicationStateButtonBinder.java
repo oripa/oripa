@@ -5,7 +5,8 @@ import javax.swing.AbstractButton;
 
 import oripa.appstate.ApplicationState;
 import oripa.bind.state.action.StateActionPerformer;
-import oripa.paint.core.EditMode;
+import oripa.paint.EditMode;
+import oripa.paint.ScreenUpdaterInterface;
 import oripa.viewsetting.main.ScreenUpdater;
 
 
@@ -37,8 +38,8 @@ public class ApplicationStateButtonBinder
 		AbstractButton button = createEmptyButton(buttonClass, textID);
 
 		// For catching key actions which requires immediate drawing(e.g., for catching Ctrl pressed)
-		ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
-		button.addKeyListener(screenUpdater.new KeyListener());
+		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
+		button.addKeyListener(screenUpdater.getKeyListener());
 
 
 		/*

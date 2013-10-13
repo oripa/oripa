@@ -17,7 +17,7 @@ import oripa.geom.OriEdge;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 import oripa.geom.OriVertex;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.value.OriLine;
 
 public class FolderTool {
@@ -673,7 +673,7 @@ public class FolderTool {
 			int crossCount = 0;
 			for (OriHalfedge he : face.halfedges) {
 				OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
-						he.next.positionForDisplay.x, he.next.positionForDisplay.y, Globals.inputLineType);
+						he.next.positionForDisplay.x, he.next.positionForDisplay.y, PaintConfig.inputLineType);
 
 				double params[] = new double[2];
 				boolean res = GeomUtil.getCrossPointParam(line.p0, line.p1, l.p0, l.p1, params);
@@ -699,7 +699,7 @@ public class FolderTool {
 			}
 
 			if (vv.size() >= 2) {
-				crossLines.add(new OriLine(vv.get(0), vv.get(1), Globals.inputLineType));
+				crossLines.add(new OriLine(vv.get(0), vv.get(1), PaintConfig.inputLineType));
 			}
 		}
 

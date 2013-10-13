@@ -2,12 +2,13 @@ package oripa.viewsetting.main;
 
 import java.awt.event.KeyEvent;
 
+import oripa.paint.GraphicMouseActionInterface;
+import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.copypaste.CopyAndPasteAction;
-import oripa.paint.core.Globals;
-import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintConfig;
 import oripa.viewsetting.ViewSettingDataBase;
 
-public class ScreenUpdater extends ViewSettingDataBase {
+public class ScreenUpdater extends ViewSettingDataBase implements ScreenUpdaterInterface {
 
 	public static final String REDRAW_REQUESTED = "redraw requested";
 
@@ -32,6 +33,10 @@ public class ScreenUpdater extends ViewSettingDataBase {
 	//-------------------------
 
 
+	/* (非 Javadoc)
+	 * @see oripa.paint.ScreenUpdaterInterface#updateScreen()
+	 */
+	@Override
 	public void updateScreen(){
 		setChanged();
 		notifyObservers(REDRAW_REQUESTED);
@@ -39,18 +44,6 @@ public class ScreenUpdater extends ViewSettingDataBase {
 	}
 
 	
-	private void updateIfCopyAndPaste(boolean changeOrigin){
-		GraphicMouseAction action = Globals.getMouseAction();
-
-		if(action instanceof CopyAndPasteAction){
-			CopyAndPasteAction casted = (CopyAndPasteAction) action;
-			casted.changeAction(changeOrigin);
-
-			updateScreen();
-		}
-		
-	}
-
 	public class KeyListener implements java.awt.event.KeyListener{
 		@Override
 		public void keyTyped(KeyEvent e) {
@@ -75,4 +68,25 @@ public class ScreenUpdater extends ViewSettingDataBase {
 		}
 
 	}
+	
+	private void updateIfCopyAndPaste(boolean changeOrigin){
+		GraphicMouseActionInterface action = PaintConfig.getMouseAction();
+
+		if(action instanceof CopyAndPasteAction){
+			CopyAndPasteAction casted = (CopyAndPasteAction) action;
+			casted.changeAction(changeOrigin);
+
+			updateScreen();
+		}
+		
+	}
+
+	/* (非 Javadoc)
+	 * @see oripa.paint.ScreenUpdaterInterface#getKeyListener()
+	 */
+	@Override
+	public java.awt.event.KeyListener getKeyListener() {
+		return new KeyListener();
+	}
+
 }

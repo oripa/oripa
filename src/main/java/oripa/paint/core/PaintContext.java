@@ -80,7 +80,7 @@ public class PaintContext {
 		double paperSize = ORIPA.doc.getPaperSize();
 
         double step = paperSize / gridDivNum;
-        for (int ix = 0; ix < Globals.gridDivNum + 1; ix++) {
+        for (int ix = 0; ix < PaintConfig.gridDivNum + 1; ix++) {
             for (int iy = 0; iy < gridDivNum + 1; iy++) {
                 double x = -paperSize / 2 + step * ix;
                 double y = -paperSize / 2 + step * iy;

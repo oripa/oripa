@@ -9,14 +9,15 @@ import java.awt.geom.Rectangle2D;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
+import oripa.paint.EditMode;
+import oripa.paint.GraphicMouseActionInterface;
+import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.geometry.GeometricOperation;
 import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
-import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.ScreenUpdater;
 
-public abstract class GraphicMouseAction {
+public abstract class GraphicMouseAction implements GraphicMouseActionInterface {
 
 	private EditMode editMode = EditMode.INPUT;
 	private boolean needSelect = false;
@@ -47,6 +48,10 @@ public abstract class GraphicMouseAction {
 	}
 
 
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#needSelect()
+	 */
+	@Override
 	public final boolean needSelect() {
 		return needSelect;
 	}
@@ -58,6 +63,10 @@ public abstract class GraphicMouseAction {
 	protected final void setEditMode(EditMode mode){
 		editMode = mode;
 	}
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#getEditMode()
+	 */
+	@Override
 	public final EditMode getEditMode(){
 		return editMode;
 	}
@@ -66,33 +75,27 @@ public abstract class GraphicMouseAction {
 
 
 
-	/**
-	 * define action on destroy.
-	 * @param context
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#destroy(oripa.paint.core.PaintContext)
 	 */
+	@Override
 	public void destroy(PaintContext context){
 		context.clear(false);
 	}
 
 
-	/**
-	 * define action for recovering the status of this object 
-	 * with given context.
-	 * @param context
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#recover(oripa.paint.core.PaintContext)
 	 */
+	@Override
 	public void recover(PaintContext context){
 	}
 	
-	/**
-	 * performs action.
-	 * 
-	 * @param context
-	 * @param affine
-	 * @param differentAction
-	 * 
-	 * @return Next mouse action. This class returns {@code this} object.
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#onLeftClick(oripa.paint.core.PaintContext, java.awt.geom.AffineTransform, boolean)
 	 */
-	public GraphicMouseAction onLeftClick(PaintContext context, 
+	@Override
+	public GraphicMouseActionInterface onLeftClick(PaintContext context, 
 			AffineTransform affine, boolean differentAction){
 		Point2D.Double clickPoint = context.getLogicalMousePoint();
 
@@ -100,40 +103,42 @@ public abstract class GraphicMouseAction {
 		return this;
 	}
 
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#doAction(oripa.paint.core.PaintContext, java.awt.geom.Point2D.Double, boolean)
+	 */
+	@Override
 	public void doAction(PaintContext context, Point2D.Double point, boolean differntAction){
 
 		state = state.doAction(context, 
 				point, differntAction);
 
-		ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+		// TODO move this variable to parameter
+		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 		screenUpdater.updateScreen();
 	}
 
-	/**
-	 * undo action.
-	 * @param context
-	 * @param affine
-	 * @param differentAction
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#onRightClick(oripa.paint.core.PaintContext, java.awt.geom.AffineTransform, boolean)
 	 */
+	@Override
 	public void onRightClick(PaintContext context, AffineTransform affine,
 			boolean differentAction) {
 
 		undo(context);
 	}
 
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#undo(oripa.paint.core.PaintContext)
+	 */
+	@Override
 	public void undo(PaintContext context){
 		state = BasicUndo.undo(state, context);
 	}
 
-	/**
-	 * searches a vertex and a line close enough to the mouse cursor.
-	 * The result is stored into context.pickCandidateL(and V).
-	 * 
-	 * @param context
-	 * @param affine
-	 * @param differentAction
-	 * @return close vertex. null if not found.
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#onMove(oripa.paint.core.PaintContext, java.awt.geom.AffineTransform, boolean)
 	 */
+	@Override
 	public Vector2d onMove(
 			PaintContext context, AffineTransform affine, boolean differentAction) {
 
@@ -157,19 +162,28 @@ public abstract class GraphicMouseAction {
 				context);		
 	}
 	
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#onPress(oripa.paint.core.PaintContext, java.awt.geom.AffineTransform, boolean)
+	 */
+	@Override
 	public abstract void onPress(PaintContext context, AffineTransform affine, boolean differentAction);
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#onDrag(oripa.paint.core.PaintContext, java.awt.geom.AffineTransform, boolean)
+	 */
+	@Override
 	public abstract void onDrag(PaintContext context, AffineTransform affine, boolean differentAction);
 
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#onRelease(oripa.paint.core.PaintContext, java.awt.geom.AffineTransform, boolean)
+	 */
+	@Override
 	public abstract void onRelease(PaintContext context, AffineTransform affine, boolean differentAction);
 
 
-	/**
-	 * draws selected lines and selected vertices as selected state.
-	 * Override for more drawing.
-	 * 
-	 * @param g2d
-	 * @param context
+	/* (非 Javadoc)
+	 * @see oripa.paint.core.GraphicMouseActionInterface#onDraw(java.awt.Graphics2D, oripa.paint.core.PaintContext)
 	 */
+	@Override
 	public void onDraw(Graphics2D g2d, PaintContext context){
 		drawPickedLines(g2d, context);
 		drawPickedVertices(g2d, context);
@@ -193,7 +207,7 @@ public abstract class GraphicMouseAction {
 		ElementSelector selector = new ElementSelector();
 
 		for(int i = 0; i < context.getVertexCount(); i++){
-			g2d.setColor(selector.selectColorByLineType(Globals.inputLineType));
+			g2d.setColor(selector.selectColorByLineType(PaintConfig.inputLineType));
 
 			Vector2d vertex = context.getVertex(i);
 			drawVertex(g2d, context, vertex.x, vertex.y);
@@ -259,7 +273,7 @@ public abstract class GraphicMouseAction {
 		if(context.getVertexCount() > 0){
 			Vector2d picked = context.peekVertex();
 
-			Color color = selector.selectColorByLineType(Globals.inputLineType);
+			Color color = selector.selectColorByLineType(PaintConfig.inputLineType);
 			g2d.setColor(color);
 			drawLine(g2d, picked, GeometricOperation.getCandidateVertex(context, true));
 		}

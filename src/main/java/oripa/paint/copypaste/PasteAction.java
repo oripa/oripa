@@ -10,7 +10,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.core.CreasePattern;
-import oripa.paint.core.EditMode;
+import oripa.paint.EditMode;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 import oripa.paint.geometry.GeometricOperation;

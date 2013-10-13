@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StatePusher;
 import oripa.bind.state.action.PaintActionSetter;
-import oripa.paint.core.EditMode;
-import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.EditMode;
+import oripa.paint.GraphicMouseActionInterface;
 import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.ChangeHint;
 
@@ -30,7 +30,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 * @param textID  ID for hint.
 	 * @param actions additional actions.
 	 */
-	public PaintBoundState(GraphicMouseAction mouseAction,
+	public PaintBoundState(GraphicMouseActionInterface mouseAction,
 			String textID,
 			ActionListener[] actions) {
 		super(mouseAction.getEditMode(), actions);
@@ -52,7 +52,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 */
 	public PaintBoundState(Component parent, 
 			ErrorListener el,
-			GraphicMouseAction mouseAction, String textID,
+			GraphicMouseActionInterface mouseAction, String textID,
 			ActionListener[] actions) {
 		
 		super(mouseAction.getEditMode(), actions);
@@ -65,7 +65,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 		setErrorListener(el);
 	}
 
-	private void addBasicListeners(GraphicMouseAction mouseAction, String textID){
+	private void addBasicListeners(GraphicMouseActionInterface mouseAction, String textID){
 		
 		// add a listener to push this state to the history stack.
 		addAction(new StatePusher(this));

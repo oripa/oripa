@@ -4,7 +4,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingVertex;
 import oripa.value.OriLine;
@@ -29,7 +29,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 
 
 			if (length > 0) {
-				OriLine vl = GeomUtil.getLineByValue(vertex, length, -angle, Globals.inputLineType);
+				OriLine vl = GeomUtil.getLineByValue(vertex, length, -angle, PaintConfig.inputLineType);
 
 				ORIPA.doc.pushUndoInfo();
 				ORIPA.doc.addLine(vl);

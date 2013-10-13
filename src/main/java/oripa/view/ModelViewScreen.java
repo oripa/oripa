@@ -45,7 +45,7 @@ import javax.vecmath.Vector2d;
 import oripa.ORIPA;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.LineSetting;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
@@ -115,17 +115,17 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		List<OriFace> sortedFaces = ORIPA.doc.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
-			if (Globals.modelDispMode == Constants.ModelDispMode.FILL_COLOR) {
+			if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_COLOR) {
 				if (face.faceFront) {
 					g2d.setColor(new Color(255, 200, 200));
 				} else {
 					g2d.setColor(new Color(200, 200, 255));
 				}
 				g2d.fill(face.outline);
-			} else if (Globals.modelDispMode == Constants.ModelDispMode.FILL_WHITE) {
+			} else if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_WHITE) {
 				g2d.setColor(Color.WHITE);
 				g2d.fill(face.outline);
-			} else if (Globals.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
+			} else if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
 				g2d.setColor(new Color(100, 100, 100));
 				g2d.fill(face.outline);
 			}
@@ -143,7 +143,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 			}
 		}
 
-		if (Globals.bDispCrossLine) {
+		if (PaintConfig.bDispCrossLine) {
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 			g2d.setStroke(LineSetting.MODEL_STROKE_CUT);
 			g2d.setColor(Color.RED);
@@ -190,7 +190,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 
 		if (hasModel) {
 			g2d.setStroke(LineSetting.STROKE_CUT);
-			if (Globals.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
+			if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 			}
 			drawModel(g2d);

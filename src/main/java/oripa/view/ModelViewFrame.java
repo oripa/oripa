@@ -44,7 +44,7 @@ import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterDXF;
 import oripa.doc.exporter.ExporterOBJ2;
 import oripa.file.FileFilterEx;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.resource.Constants;
 import oripa.viewsetting.model.ModelFrameSettingDB;
 
@@ -127,7 +127,7 @@ implements ActionListener, AdjustmentListener, Observer{
             ORIPA.doc.setFacesOutline(menuItemSlideFaces.isSelected());
             screen.repaint();
         } else if (e.getSource() == menuItemCrossLine) {
-            Globals.bDispCrossLine = menuItemCrossLine.isSelected();
+            PaintConfig.bDispCrossLine = menuItemCrossLine.isSelected();
             if (menuItemCrossLine.isSelected()) {
                 screen.recalcCrossLine();
             } else {
@@ -143,16 +143,16 @@ implements ActionListener, AdjustmentListener, Observer{
                 || e.getSource() == menuItemFillAlpha
                 || e.getSource() == menuItemFillNone) {
             if (menuItemFillColor.isSelected()) {
-                Globals.modelDispMode = Constants.ModelDispMode.FILL_COLOR;
+                PaintConfig.modelDispMode = Constants.ModelDispMode.FILL_COLOR;
             } else if (menuItemFillWhite.isSelected()) {
-                Globals.modelDispMode = Constants.ModelDispMode.FILL_WHITE;
+                PaintConfig.modelDispMode = Constants.ModelDispMode.FILL_WHITE;
             } else if (menuItemFillAlpha.isSelected()) {
-                Globals.modelDispMode = Constants.ModelDispMode.FILL_ALPHA;
+                PaintConfig.modelDispMode = Constants.ModelDispMode.FILL_ALPHA;
             } else if (menuItemFillNone.isSelected()) {
-                Globals.modelDispMode = Constants.ModelDispMode.FILL_NONE;
+                PaintConfig.modelDispMode = Constants.ModelDispMode.FILL_NONE;
             }
 
-            System.out.println("fillMode" + Globals.modelDispMode);
+            System.out.println("fillMode" + PaintConfig.modelDispMode);
             screen.repaint();
         }
     }

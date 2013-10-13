@@ -4,7 +4,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingVertex;
 import oripa.resource.Constants;
@@ -34,7 +34,7 @@ public class SelectingSecondVertexForLine extends PickingVertex{
 
 		// create new line
 		OriLine line = new OriLine(p0.x - dir.x, p0.y - dir.y,
-				p0.x + dir.x, p0.y + dir.y, Globals.inputLineType);
+				p0.x + dir.x, p0.y + dir.y, PaintConfig.inputLineType);
 
 		double paperSize = ORIPA.doc.getPaperSize();
 

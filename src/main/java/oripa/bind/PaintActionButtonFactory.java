@@ -7,7 +7,7 @@ import javax.swing.AbstractButton;
 import oripa.appstate.ApplicationState;
 import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.state.PaintBoundStateFactory;
-import oripa.paint.core.EditMode;
+import oripa.paint.EditMode;
 import oripa.paint.core.PaintContext;
 
 

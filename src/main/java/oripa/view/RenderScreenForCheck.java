@@ -42,7 +42,7 @@ import oripa.doc.Doc;
 import oripa.doc.core.CreasePattern;
 import oripa.geom.OriFace;
 import oripa.geom.OriVertex;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.LineSetting;
 import oripa.value.OriLine;
 
@@ -175,7 +175,7 @@ public class RenderScreenForCheck extends JPanel
         for (OriLine line : creasePattern) {
             switch (line.typeVal) {
                 case OriLine.TYPE_NONE:
-                    if (!Globals.dispAuxLines) {
+                    if (!PaintConfig.dispAuxLines) {
                         continue;
                     }
                     g2d.setColor(LineSetting.LINE_COLOR_AUX);
@@ -186,14 +186,14 @@ public class RenderScreenForCheck extends JPanel
                     g2d.setStroke(LineSetting.STROKE_CUT);
                     break;
                 case OriLine.TYPE_RIDGE:
-                    if (!Globals.dispMVLines) {
+                    if (!PaintConfig.dispMVLines) {
                         continue;
                     }
                     g2d.setColor(LineSetting.LINE_COLOR_RIDGE);
                     g2d.setStroke(LineSetting.STROKE_RIDGE);
                     break;
                 case OriLine.TYPE_VALLEY:
-                    if (!Globals.dispMVLines) {
+                    if (!PaintConfig.dispMVLines) {
                         continue;
                     }
                     g2d.setColor(LineSetting.LINE_COLOR_VALLEY);

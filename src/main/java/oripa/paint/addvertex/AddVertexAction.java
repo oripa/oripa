@@ -3,7 +3,7 @@ package oripa.paint.addvertex;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import oripa.paint.core.EditMode;
+import oripa.paint.EditMode;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 

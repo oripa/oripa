@@ -60,12 +60,13 @@ import oripa.doc.TypeForChange;
 import oripa.file.ImageResourceLoader;
 import oripa.fold.Folder;
 import oripa.geom.OriFace;
+import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.byvalue.AngleMeasuringAction;
 import oripa.paint.byvalue.AngleValueInputListener;
 import oripa.paint.byvalue.LengthMeasuringAction;
 import oripa.paint.byvalue.LengthValueInputListener;
 import oripa.paint.byvalue.ValueDB;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.util.LineTypeSetter;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -601,12 +602,12 @@ implements ActionListener, PropertyChangeListener, Observer {
 		resetButton.addActionListener(this);
 		dispVertexCheckBox.addActionListener(this);
 		dispVertexCheckBox.setSelected(true);
-		Globals.dispVertex = true;
+		PaintConfig.dispVertex = true;
 		dispMVLinesCheckBox.addActionListener(new java.awt.event.ActionListener() {
 
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				Globals.dispMVLines = dispMVLinesCheckBox.isSelected();
+				PaintConfig.dispMVLines = dispMVLinesCheckBox.isSelected();
 				screen.repaint();
 			}
 		});
@@ -614,18 +615,18 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				Globals.dispAuxLines = dispAuxLinesCheckBox.isSelected();
+				PaintConfig.dispAuxLines = dispAuxLinesCheckBox.isSelected();
 				screen.repaint();
 			}
 		});
 
 		doFullEstimationCheckBox.setSelected(true);
-		Globals.bDoFullEstimation = true;
+		PaintConfig.bDoFullEstimation = true;
 		doFullEstimationCheckBox.addActionListener(new java.awt.event.ActionListener() {
 
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				Globals.bDoFullEstimation = doFullEstimationCheckBox.isSelected();
+				PaintConfig.bDoFullEstimation = doFullEstimationCheckBox.isSelected();
 				screen.repaint();
 			}
 		});
@@ -650,7 +651,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 	@Override
 	public void actionPerformed(ActionEvent ae) {		
 
-		ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 
 		if (ae.getSource() == dispGridCheckBox) {
 			screenDB.setGridVisible(dispGridCheckBox.isSelected());
@@ -659,21 +660,21 @@ implements ActionListener, PropertyChangeListener, Observer {
 			screenUpdater.updateScreen();			
 
 		} else if (ae.getSource() == gridSmallButton) {
-			if (Globals.gridDivNum < 65) {
-				Globals.gridDivNum *= 2;
-				textFieldGrid.setValue(new Integer(Globals.gridDivNum));
+			if (PaintConfig.gridDivNum < 65) {
+				PaintConfig.gridDivNum *= 2;
+				textFieldGrid.setValue(new Integer(PaintConfig.gridDivNum));
 
 				screenUpdater.updateScreen();			
 			}
 		} else if (ae.getSource() == gridLargeButton) {
-			if (Globals.gridDivNum > 3) {
-				Globals.gridDivNum /= 2;
-				textFieldGrid.setValue(new Integer(Globals.gridDivNum));
+			if (PaintConfig.gridDivNum > 3) {
+				PaintConfig.gridDivNum /= 2;
+				textFieldGrid.setValue(new Integer(PaintConfig.gridDivNum));
 
 				screenUpdater.updateScreen();			
 			}
 		} else if (ae.getSource() == dispVertexCheckBox) {
-			Globals.dispVertex = dispVertexCheckBox.isSelected();
+			PaintConfig.dispVertex = dispVertexCheckBox.isSelected();
 
 			screenUpdater.updateScreen();			
 		} else if (ae.getSource() == resetButton) {
@@ -727,7 +728,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 				if (value < 128 && value > 2) {
 					textFieldGrid.setValue(value);
-					Globals.gridDivNum = value;
+					PaintConfig.gridDivNum = value;
 					screenUpdater.updateScreen();			
 				}
 			} catch (Exception ex) {

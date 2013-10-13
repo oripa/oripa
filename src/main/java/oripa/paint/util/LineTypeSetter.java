@@ -3,7 +3,7 @@ package oripa.paint.util;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.value.OriLine;
 
 public class LineTypeSetter implements ActionListener {
@@ -16,7 +16,7 @@ public class LineTypeSetter implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Globals.inputLineType = lineType;
+		PaintConfig.inputLineType = lineType;
 
 	}
 

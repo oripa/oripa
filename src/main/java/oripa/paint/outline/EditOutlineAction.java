@@ -9,7 +9,7 @@ import java.util.Stack;
 
 import javax.vecmath.Vector2d;
 
-import oripa.paint.core.EditMode;
+import oripa.paint.EditMode;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintContext;

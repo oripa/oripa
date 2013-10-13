@@ -3,7 +3,7 @@ package oripa.paint.util;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.LineSetting;
 import oripa.value.OriLine;
 
@@ -14,7 +14,7 @@ public class ElementSelector {
 			return Color.GREEN;
 		}
 		
-		return selectColorByLineType(Globals.inputLineType);
+		return selectColorByLineType(PaintConfig.inputLineType);
 	}
 	
 	public Color selectLineColor(OriLine line){

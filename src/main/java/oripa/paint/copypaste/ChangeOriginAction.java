@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
+import oripa.paint.GraphicMouseActionInterface;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 import oripa.paint.geometry.GeometricOperation;
@@ -18,7 +19,7 @@ public class ChangeOriginAction extends GraphicMouseAction{
 
 	
 	@Override
-	public GraphicMouseAction onLeftClick(PaintContext context,
+	public GraphicMouseActionInterface onLeftClick(PaintContext context,
 			AffineTransform affine, boolean keepDoing) {
 
 		return this;

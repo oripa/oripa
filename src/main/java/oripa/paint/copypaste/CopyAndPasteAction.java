@@ -7,7 +7,8 @@ import java.awt.geom.Point2D.Double;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.core.EditMode;
+import oripa.paint.EditMode;
+import oripa.paint.GraphicMouseActionInterface;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 
@@ -16,7 +17,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	private ChangeOriginAction originAction = new ChangeOriginAction();
 	private PasteAction pasteAction = new PasteAction();
 	
-	private GraphicMouseAction action = pasteAction;
+	private GraphicMouseActionInterface action = pasteAction;
 
 	
 	public CopyAndPasteAction() {
@@ -48,7 +49,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	
 	
 	@Override
-	public GraphicMouseAction onLeftClick(PaintContext context,
+	public GraphicMouseActionInterface onLeftClick(PaintContext context,
 			AffineTransform affine, boolean differentAction) {
 		action.onLeftClick(context, affine, differentAction);
 		

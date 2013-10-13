@@ -42,7 +42,7 @@ import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 import oripa.geom.OriVertex;
 import oripa.geom.Ray;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
@@ -1145,9 +1145,9 @@ public class Doc {
 		if (c == null) {
 			System.out.print("Failed to calculate incenter of the triangle");
 		}
-		addLine(new OriLine(c, v0, Globals.inputLineType));
-		addLine(new OriLine(c, v1, Globals.inputLineType));
-		addLine(new OriLine(c, v2, Globals.inputLineType));
+		addLine(new OriLine(c, v0, PaintConfig.inputLineType));
+		addLine(new OriLine(c, v1, PaintConfig.inputLineType));
+		addLine(new OriLine(c, v2, PaintConfig.inputLineType));
 	}
 
 	// Adds perpendicular bisector
@@ -1162,7 +1162,7 @@ public class Doc {
 		dir.x = tmp;
 		dir.scale(Constants.DEFAULT_PAPER_SIZE * 8);
 
-		OriLine l = new OriLine(cp.x - dir.x, cp.y - dir.y, cp.x + dir.x, cp.y + dir.y, Globals.inputLineType);
+		OriLine l = new OriLine(cp.x - dir.x, cp.y - dir.y, cp.x + dir.x, cp.y + dir.y, PaintConfig.inputLineType);
 		GeomUtil.clipLine(l, paperSize / 2);
 		addLine(l);
 	}
@@ -1194,7 +1194,7 @@ public class Doc {
 			return;
 		}
 
-		addLine(new OriLine(v1, bestPoint, Globals.inputLineType));
+		addLine(new OriLine(v1, bestPoint, PaintConfig.inputLineType));
 	}
 
 	// v1-v2 is the symmetry line, v0-v1 is the sbject to be copied.
@@ -1231,7 +1231,7 @@ public class Doc {
 			return;
 		}
 
-		addLine(new OriLine(v1, bestPoint, Globals.inputLineType));
+		addLine(new OriLine(v1, bestPoint, PaintConfig.inputLineType));
 
 		if (GeomUtil.Distance(bestPoint, startV) < CalculationResource.POINT_EPS) {
 			return;
@@ -1245,7 +1245,7 @@ public class Doc {
 		Vector2d dir = GeomUtil.getBisectorVec(v0, v1, v2);
 		Vector2d cp = GeomUtil.getCrossPoint(new Line(l.p0, new Vector2d(l.p1.x - l.p0.x, l.p1.y - l.p0.y)), new Line(v1, dir));
 
-		OriLine nl = new OriLine(v1, cp, Globals.inputLineType);
+		OriLine nl = new OriLine(v1, cp, PaintConfig.inputLineType);
 		addLine(nl);
 
 	}
@@ -1335,7 +1335,7 @@ public class Doc {
 			int crossCount = 0;
 			for (OriHalfedge he : face.halfedges) {
 				OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
-						he.next.positionForDisplay.x, he.next.positionForDisplay.y, Globals.inputLineType);
+						he.next.positionForDisplay.x, he.next.positionForDisplay.y, PaintConfig.inputLineType);
 
 				double params[] = new double[2];
 				boolean res = GeomUtil.getCrossPointParam(line.p0, line.p1, l.p0, l.p1, params);
@@ -1361,7 +1361,7 @@ public class Doc {
 			}
 
 			if (vv.size() >= 2) {
-				crossLines.add(new OriLine(vv.get(0), vv.get(1), Globals.inputLineType));
+				crossLines.add(new OriLine(vv.get(0), vv.get(1), PaintConfig.inputLineType));
 			}
 		}
 

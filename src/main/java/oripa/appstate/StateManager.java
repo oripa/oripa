@@ -1,6 +1,6 @@
 package oripa.appstate;
 
-import oripa.paint.core.EditMode;
+import oripa.paint.EditMode;
 
 
 /**

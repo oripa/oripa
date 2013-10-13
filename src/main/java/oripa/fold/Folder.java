@@ -35,7 +35,7 @@ import oripa.geom.Line;
 import oripa.geom.OriEdge;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
-import oripa.paint.core.Globals;
+import oripa.paint.core.PaintConfig;
 import oripa.value.OriLine;
 
 public class Folder {
@@ -61,7 +61,7 @@ public class Folder {
 		m_doc.setFacesOutline(false);
 
 
-		if (!Globals.bDoFullEstimation) {
+		if (!PaintConfig.bDoFullEstimation) {
 			m_doc.setFolded(true);
 			return 0;
 		}
