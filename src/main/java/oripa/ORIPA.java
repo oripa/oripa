@@ -32,11 +32,11 @@ import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.view.CheckFrame;
-import oripa.view.ModelViewFrame;
-import oripa.view.ModelViewFrame3D;
-import oripa.view.RenderFrame;
+import oripa.view.estimation.CheckFrame;
+import oripa.view.estimation.RenderFrame;
 import oripa.view.main.MainFrame;
+import oripa.view.model.ModelViewFrame;
+import oripa.view.model.ModelViewFrame3D;
 
 
 public class ORIPA {

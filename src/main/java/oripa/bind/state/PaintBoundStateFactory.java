@@ -26,11 +26,11 @@ import oripa.paint.triangle.TriangleSplitAction;
 import oripa.paint.vertical.VerticalLineAction;
 import oripa.resource.StringID;
 import oripa.viewsetting.ViewChangeListener;
-import oripa.viewsetting.uipanel.ChangeOnAlterTypeButtonSelected;
-import oripa.viewsetting.uipanel.ChangeOnByValueButtonSelected;
-import oripa.viewsetting.uipanel.ChangeOnOtherCommandButtonSelected;
-import oripa.viewsetting.uipanel.ChangeOnPaintInputButtonSelected;
-import oripa.viewsetting.uipanel.ChangeOnSelectButtonSelected;
+import oripa.viewsetting.main.uipanel.ChangeOnAlterTypeButtonSelected;
+import oripa.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
+import oripa.viewsetting.main.uipanel.ChangeOnOtherCommandButtonSelected;
+import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
+import oripa.viewsetting.main.uipanel.ChangeOnSelectButtonSelected;
 
 public class PaintBoundStateFactory {
 

@@ -3,16 +3,12 @@ package oripa.viewsetting.main;
 import java.awt.event.KeyEvent;
 
 import oripa.paint.GraphicMouseActionInterface;
-import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.copypaste.CopyAndPasteAction;
 import oripa.paint.core.PaintConfig;
+import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.ViewSettingDataBase;
 
-public class ScreenUpdater extends ViewSettingDataBase implements ScreenUpdaterInterface {
-
-	public static final String REDRAW_REQUESTED = "redraw requested";
-
-
+public class ScreenUpdater extends ViewSettingDataBase implements ViewScreenUpdater {
 
 	//-------------------------
 	// singleton
@@ -34,7 +30,7 @@ public class ScreenUpdater extends ViewSettingDataBase implements ScreenUpdaterI
 
 
 	/* (非 Javadoc)
-	 * @see oripa.paint.ScreenUpdaterInterface#updateScreen()
+	 * @see oripa.viewsetting.main.ViewScreenUpdater#updateScreen()
 	 */
 	@Override
 	public void updateScreen(){
@@ -82,7 +78,7 @@ public class ScreenUpdater extends ViewSettingDataBase implements ScreenUpdaterI
 	}
 
 	/* (非 Javadoc)
-	 * @see oripa.paint.ScreenUpdaterInterface#getKeyListener()
+	 * @see oripa.viewsetting.main.ViewScreenUpdater#getKeyListener()
 	 */
 	@Override
 	public java.awt.event.KeyListener getKeyListener() {

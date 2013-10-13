@@ -61,6 +61,7 @@ import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintContext;
 import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
+import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.ScreenUpdater;
 
@@ -534,7 +535,7 @@ ActionListener, ComponentListener, Observer{
 		String name = o.toString();
 		if(name.equals(screenUpdater.getName())){
 			if(arg != null){
-				if(arg.equals(ScreenUpdater.REDRAW_REQUESTED)){
+				if(arg.equals(ViewScreenUpdater.REDRAW_REQUESTED)){
 					repaint();    		
 				}
 			}

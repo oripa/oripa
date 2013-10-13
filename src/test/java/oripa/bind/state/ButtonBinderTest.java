@@ -16,7 +16,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.viewsetting.ChangeViewSetting;
-import oripa.viewsetting.uipanel.ChangeOnPaintInputButtonSelected;
+import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 
 public class ButtonBinderTest {
 

@@ -1,6 +1,5 @@
 package oripa.paint;
 
-import java.awt.event.KeyListener;
 
 public interface ScreenUpdaterInterface {
 
@@ -9,10 +8,5 @@ public interface ScreenUpdaterInterface {
 	 */
 	public abstract void updateScreen();
 
-	/**
-	 * a option to change behavior.
-	 * @return
-	 */
-	public abstract KeyListener getKeyListener();
 
 }
