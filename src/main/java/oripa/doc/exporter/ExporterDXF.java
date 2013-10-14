@@ -24,8 +24,8 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 import oripa.value.OriLine;
@@ -33,8 +33,10 @@ import oripa.value.OriLine;
 public class ExporterDXF implements Exporter{
 
     public static void exportModel(Doc doc, String filepath) throws Exception {
-    	double paperSize = doc.getPaperSize();
-        double scale = 6.0 / paperSize; // 6.0 inch width
+        OrigamiModel origamiModel = doc.getOrigamiModel();
+    	double paperSize = origamiModel.getPaperSize();
+
+    	double scale = 6.0 / paperSize; // 6.0 inch width
         double center = 4.0; // inch
         FileWriter fw = new FileWriter(filepath);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -44,7 +46,10 @@ public class ExporterDXF implements Exporter{
         Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
         Vector2d modelCenter = new Vector2d();
         
-        List<OriFace> faces = ORIPA.doc.getFaces();
+        
+        List<OriFace> faces = origamiModel.getFaces();
+        List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+
         for (OriFace face : faces) {
             for (OriHalfedge he : face.halfedges) {
                 maxV.x = Math.max(maxV.x, he.vertex.p.x);
@@ -72,7 +77,6 @@ public class ExporterDXF implements Exporter{
         bw.write("  2\n");
         bw.write("ENTITIES\n");
 
-        List<OriFace> sortedFaces = ORIPA.doc.getSortedFaces();
         for (OriFace face : sortedFaces) {
             for (OriHalfedge he : face.halfedges) {
 

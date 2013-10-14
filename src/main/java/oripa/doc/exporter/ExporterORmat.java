@@ -23,6 +23,7 @@ import java.io.FileWriter;
 import java.util.List;
 
 import oripa.doc.Doc;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 import oripa.geom.OriVertex;
@@ -31,7 +32,9 @@ import oripa.geom.OriVertex;
 public class ExporterORmat implements Exporter{
 
     public boolean export(Doc doc, String filepath) throws Exception {
-        FileWriter fw = new FileWriter(filepath);
+    	OrigamiModel origamiModel = doc.getOrigamiModel();
+
+    	FileWriter fw = new FileWriter(filepath);
         BufferedWriter bw = new BufferedWriter(fw);
 
         // Align the center of the model, combine scale
@@ -41,7 +44,7 @@ public class ExporterORmat implements Exporter{
         bw.write("# f (index list of contour vertices. Index number starts from 1.)\n");
         bw.write("\n");
 
-        List<OriVertex> vertices = doc.getVertices();
+        List<OriVertex> vertices = origamiModel.getVertices();
 
         int id = 1;
         for (OriVertex vertex : vertices) {
@@ -50,7 +53,7 @@ public class ExporterORmat implements Exporter{
             id++;
         }
 
-        List<OriFace> faces = doc.getFaces();
+        List<OriFace> faces = origamiModel.getFaces();
 
         for (OriFace face : faces) {
             bw.write("f");

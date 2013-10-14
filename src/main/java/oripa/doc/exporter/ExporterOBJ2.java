@@ -23,6 +23,7 @@ import java.io.FileWriter;
 import java.util.List;
 
 import oripa.doc.Doc;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriEdge;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
@@ -32,17 +33,19 @@ import oripa.geom.OriVertex;
 public class ExporterOBJ2 implements Exporter{
 
     public static void export_bk(Doc doc, String filepath) throws Exception {
-    	double paperSize = doc.getPaperSize();
+    	OrigamiModel origamiModel = doc.getOrigamiModel();
+    	double paperSize = origamiModel.getPaperSize();
 
-    	FileWriter fw = new FileWriter(filepath);
+        List<OriFace> faces = origamiModel.getFaces();
+        List<OriVertex> vertices = origamiModel.getVertices();
+
+        FileWriter fw = new FileWriter(filepath);
         BufferedWriter bw = new BufferedWriter(fw);
 
         // Align the center of the model, combine scales
         bw.write("# Created by ORIPA\n");
         bw.write("\n");
         
-        List<OriFace> faces = doc.getFaces();
-        List<OriVertex> vertices = doc.getVertices();
 
         int id = 1;
         for (OriVertex vertex : vertices) {
@@ -74,9 +77,10 @@ public class ExporterOBJ2 implements Exporter{
         bw.write("# Created by ORIPA\n");
         bw.write("\n");
 
-        List<OriFace>   faces    = doc.getFaces();
-        List<OriVertex> vertices = doc.getVertices();
-        List<OriEdge>   edges    = doc.getEdges();
+        OrigamiModel origamiModel = doc.getOrigamiModel();
+        List<OriFace>   faces    = origamiModel.getFaces();
+        List<OriVertex> vertices = origamiModel.getVertices();
+        List<OriEdge>   edges    = origamiModel.getEdges();
 
         int id = 1;
         for (OriVertex vertex : vertices) {

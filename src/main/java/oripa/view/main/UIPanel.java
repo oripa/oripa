@@ -56,9 +56,11 @@ import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.action.PaintActionSetter;
+import oripa.doc.Doc;
 import oripa.doc.TypeForChange;
 import oripa.file.ImageResourceLoader;
 import oripa.fold.Folder;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.byvalue.AngleMeasuringAction;
@@ -663,7 +665,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 				PaintConfig.gridDivNum *= 2;
 				textFieldGrid.setValue(new Integer(PaintConfig.gridDivNum));
 
-				screenUpdater.updateScreen();			
+				screenUpdater.updateScreen();
 			}
 		} else if (ae.getSource() == gridLargeButton) {
 			if (PaintConfig.gridDivNum > 3) {
@@ -679,7 +681,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 		} else if (ae.getSource() == resetButton) {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;
-	        List<OriFace> sortedFaces = ORIPA.doc.getSortedFaces();
+			Doc document = ORIPA.doc;
+			OrigamiModel origamiModel = document.getOrigamiModel();
+	        List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 			sortedFaces.clear();
 			if (ORIPA.doc.buildOrigami3(false)) {

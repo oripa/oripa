@@ -50,8 +50,10 @@ public class Folder {
 	}
 
 	public int fold() {
-		List<OriFace> faces = m_doc.getFaces();
-        List<OriFace> sortedFaces = m_doc.getSortedFaces();
+		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		List<OriFace> faces = origamiModel.getFaces();
+        List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+
         List<int[][]> foldableOverlapRelations = m_doc.getFoldableOverlapRelations();
         foldableOverlapRelations.clear();
 
@@ -62,7 +64,7 @@ public class Folder {
 
 
 		if (!PaintConfig.bDoFullEstimation) {
-			m_doc.setFolded(true);
+			origamiModel.setFolded(true);
 			return 0;
 		}
 
@@ -129,7 +131,7 @@ public class Folder {
 			face.intColor = (r << 16) | (g << 8) | b | 0xff000000;
 		}
 
-		m_doc.setFolded(true);;
+		origamiModel.setFolded(true);;
 		return foldableOverlapRelations.size();
 	}
 
@@ -225,7 +227,8 @@ public class Folder {
 	// If face[i] and face[j] touching edge is covered by face[k]
 	// then OR[i][k] = OR[j][k] 
 	private void holdCondition3s() {
-		List<OriFace> faces = m_doc.getFaces();
+		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		List<OriFace> faces = origamiModel.getFaces();
 
 		for (OriFace f_i : faces) {
 			for (OriHalfedge he : f_i.halfedges) {
@@ -269,7 +272,8 @@ public class Folder {
 	}
 
 	private void holdCondition4s() {
-        List<OriEdge>   edges    = m_doc.getEdges();
+		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		List<OriEdge>   edges    = origamiModel.getEdges();
 
 		int edgeNum = edges.size();
 		System.out.println("edgeNum = " + edgeNum);
@@ -541,7 +545,8 @@ public class Folder {
 	// If face[i] and face[j] touching edge is covered by face[k]
 	// then OR[i][k] = OR[j][k] 
 	private boolean estimate_by3faces(int[][] orMat) {
-		List<OriFace> faces = m_doc.getFaces();
+		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		List<OriFace> faces = origamiModel.getFaces();
 
 		boolean bChanged = false;
 		for (OriFace f_i : faces) {
@@ -574,26 +579,26 @@ public class Folder {
 	}
 
 	private ArrayList<SubFace> makeSubFaces() {
+		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		List<OriFace> faces = origamiModel.getFaces();
+		double paperSize = origamiModel.getPaperSize();
 
-		List<OriFace> faces = m_doc.getFaces();
-		double paperSize = m_doc.getPaperSize();
-
-		Doc doc = new Doc(paperSize);
-		CreasePattern creasePattern = doc.getCreasePattern();
+		Doc temp_doc = new Doc(paperSize);
+		CreasePattern creasePattern = temp_doc.getCreasePattern();
 
 		creasePattern.clear();        
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
-				doc.addLine(new OriLine(he.positionAfterFolded, he.next.positionAfterFolded, OriLine.TYPE_RIDGE));
+				temp_doc.addLine(new OriLine(he.positionAfterFolded, he.next.positionAfterFolded, OriLine.TYPE_RIDGE));
 			}
 		}
 
-		doc.cleanDuplicatedLines();
+		temp_doc.cleanDuplicatedLines();
 
 		if (Config.FOR_STUDY) {
 			try {
 				Exporter exporter = new ExporterEPS();
-				exporter.export(doc, "c:\\_jun\\tmp\\te.eps");
+				exporter.export(temp_doc, "c:\\_jun\\tmp\\te.eps");
 			} catch (Exception e) {
 			}
 		}
@@ -607,11 +612,12 @@ public class Folder {
 		int crossNum = GeomUtil.getCrossPoint(dummy1, dummy2, sp1, ep1, sp2, ep2);
 		System.out.println("getCrossPoint results " + crossNum + "::::" + dummy1 + ", " + dummy2);
 
-		doc.buildOrigami(false);
+		temp_doc.buildOrigami(false);
 
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();
 
-		List<OriFace> subFaceSources = doc.getFaces();
+		OrigamiModel temp_origamiModel = temp_doc.getOrigamiModel();
+		List<OriFace> subFaceSources = temp_origamiModel.getFaces();
 		for (OriFace face : subFaceSources) {
 			localSubFaces.add(new SubFace(face));
 		}
@@ -665,8 +671,9 @@ public class Folder {
 	}
 
 	private void simpleFoldWithoutZorder() {
-		List<OriFace>   faces    = m_doc.getFaces();
-        List<OriEdge>   edges    = m_doc.getEdges();
+		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		List<OriFace>   faces    = origamiModel.getFaces();
+        List<OriEdge>   edges    = origamiModel.getEdges();
 
         int id = 0;
 		for (OriFace face : faces) {
@@ -784,7 +791,8 @@ public class Folder {
 
 	//creates the matrix overlapRelation and fills it with "no overlap" or "undifined"
 	private void setOverlapRelation() {
-		List<OriFace> faces = m_doc.getFaces();
+		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		List<OriFace> faces = origamiModel.getFaces();
 
 		int overlapCount = 0;
 		int size = faces.size();
@@ -810,7 +818,8 @@ public class Folder {
 
 	// Determines the overlap relations
 	private void step1() {
-		List<OriFace> faces = m_doc.getFaces();
+		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		List<OriFace> faces = origamiModel.getFaces();
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				if (he.pair == null) {

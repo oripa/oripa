@@ -43,6 +43,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.TriangleFace;
 import oripa.geom.TriangleVertex;
@@ -296,8 +297,10 @@ public class RenderScreen2 extends JPanel
 
     public void drawOrigami() {
     	Doc document = ORIPA.doc;
-        List<OriFace> faces = document.getFaces();
-        boolean folded = document.isFolded();
+    	OrigamiModel origamiModel = document.getOrigamiModel();
+    	
+        List<OriFace> faces = origamiModel.getFaces();
+        boolean folded = origamiModel.isFolded();
         if (!folded) {
             return;
         }

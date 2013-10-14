@@ -11,6 +11,7 @@ import javax.vecmath.Vector2d;
 import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.doc.core.CreasePattern;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 import oripa.value.OriLine;
@@ -47,7 +48,9 @@ public class ExporterSVG implements Exporter{
 
 
     public static void exportModel(Doc doc, String filepath) throws Exception {
-    	double paperSize = doc.getPaperSize();
+    	OrigamiModel origamiModel = doc.getOrigamiModel();
+    	double paperSize = origamiModel.getPaperSize();
+    	
         double scale = (size-5) / paperSize;
         double center = size / 2;
         FileWriter fw = new FileWriter(filepath);
@@ -56,7 +59,7 @@ public class ExporterSVG implements Exporter{
             Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
             Vector2d modelCenter = new Vector2d();
             
-            List<OriFace> faces = doc.getFaces();
+            List<OriFace> faces = origamiModel.getFaces();
 
             for (OriFace face : faces) {
                 for (OriHalfedge he : face.halfedges) {

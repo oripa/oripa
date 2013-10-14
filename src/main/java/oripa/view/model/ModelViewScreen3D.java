@@ -53,6 +53,8 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
 
@@ -108,8 +110,11 @@ public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseM
     }
 
     public void setModel() {
-        faces.clear();
-        List<OriFace> sortedFaces = ORIPA.doc.getSortedFaces();
+    	faces.clear();
+    	
+    	Doc document = ORIPA.doc;
+    	OrigamiModel origamiModel = document.getOrigamiModel();
+    	List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
         BranchGroup faceBG = new BranchGroup();
         BranchGroup lineBG = new BranchGroup();

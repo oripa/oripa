@@ -23,6 +23,7 @@ import java.io.FileWriter;
 import java.util.List;
 
 import oripa.doc.Doc;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriEdge;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
@@ -38,9 +39,10 @@ public class ExporterOBJ implements Exporter{
         bw.write("# Created by ORIPA\n");
         bw.write("\n");
 
-        List<OriFace>   faces =    doc.getFaces();
-        List<OriVertex> vertices = doc.getVertices();
-        List<OriEdge>   edges =    doc.getEdges();
+        OrigamiModel origamiModel = doc.getOrigamiModel();
+        List<OriFace>   faces =    origamiModel.getFaces();
+        List<OriVertex> vertices = origamiModel.getVertices();
+        List<OriEdge>   edges =    origamiModel.getEdges();
         int id = 1;
         for (OriVertex vertex : vertices) {
             bw.write("v " + vertex.preP.x + " " + vertex.preP.y + " 0.0\n");

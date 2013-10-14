@@ -57,6 +57,7 @@ import oripa.file.FileVersionError;
 import oripa.file.FilterDB;
 import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
+import oripa.fold.OrigamiModel;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.util.DeleteSelectedLines;
@@ -492,12 +493,13 @@ public class MainFrame extends JFrame implements ActionListener,
 	}
 
 	public void exportFile(String ext) {
-
-		boolean hasModel = ORIPA.doc.hasModel();
+		Doc document = ORIPA.doc;
+		OrigamiModel origamiModel = document.getOrigamiModel();
+		boolean hasModel = origamiModel.hasModel();
 
 		if ("obj".equals(ext) == false) {
 			
-		} else if (!(hasModel || ORIPA.doc.buildOrigami(true))) {
+		} else if (!hasModel && !document.buildOrigami(true)) {
 			JOptionPane.showConfirmDialog(null,
 					"Warning: Building a set of polygons from crease pattern "
 							+ "was failed.", "Warning",

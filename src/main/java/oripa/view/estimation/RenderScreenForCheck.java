@@ -40,6 +40,7 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.doc.core.CreasePattern;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriVertex;
 import oripa.paint.core.LineSetting;
@@ -83,8 +84,9 @@ public class RenderScreenForCheck extends JPanel
     }
 
     public void drawModel(Graphics2D g2d) {
-        List<OriFace> faces = ORIPA.doc.getFaces();
-        List<OriVertex> vertices = ORIPA.doc.getVertices();
+    	OrigamiModel origamiModel = ORIPA.doc.getOrigamiModel();
+    	List<OriFace> faces = origamiModel.getFaces();
+        List<OriVertex> vertices = origamiModel.getVertices();
 
         for (OriFace face : faces) {
             g2d.setColor(new Color(255, 210, 210));
@@ -173,8 +175,10 @@ public class RenderScreenForCheck extends JPanel
 
         Graphics2D g2d = bufferg;
 
-        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
-
+        Doc document = ORIPA.doc;
+        CreasePattern creasePattern = document.getCreasePattern();
+        OrigamiModel  origamiModel  = document.getOrigamiModel();
+        		
         g2d.setStroke(LineSetting.STROKE_VALLEY);
         g2d.setColor(Color.black);
         for (OriLine line : creasePattern) {
@@ -212,7 +216,7 @@ public class RenderScreenForCheck extends JPanel
 
 
         // Drawing of the vertices
-        List<OriVertex> vertices = ORIPA.doc.getVertices();
+        List<OriVertex> vertices = origamiModel.getVertices();
 
         for (OriVertex v : vertices) {
             double vertexDrawSize = 2.0;
@@ -232,7 +236,7 @@ public class RenderScreenForCheck extends JPanel
 
         // Line connecting the pair of unsetled faces
         if (Config.FOR_STUDY) {
-            List<OriFace> faces = ORIPA.doc.getFaces();
+            List<OriFace> faces = origamiModel.getFaces();
 
 			int[][] overlapRelation = ORIPA.doc.getOverlapRelation();
 

@@ -43,10 +43,12 @@ import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
-import oripa.paint.core.PaintConfig;
 import oripa.paint.core.LineSetting;
+import oripa.paint.core.PaintConfig;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
@@ -84,9 +86,11 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	}
 
 	public void resetViewMatrix() {
-		List<OriFace> faces = ORIPA.doc.getFaces();
+		Doc document = ORIPA.doc;
+		OrigamiModel origamiModel = document.getOrigamiModel();
+		List<OriFace> faces = origamiModel.getFaces();
 
-		boolean hasModel = ORIPA.doc.hasModel();
+		boolean hasModel = origamiModel.hasModel();
 
 		rotateAngle = 0;
 		if (!hasModel) {
@@ -112,7 +116,9 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	}
 
 	public void drawModel(Graphics2D g2d) {
-		List<OriFace> sortedFaces = ORIPA.doc.getSortedFaces();
+		Doc document = ORIPA.doc;
+		OrigamiModel origamiModel = document.getOrigamiModel();
+		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
 			if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_COLOR) {
@@ -167,6 +173,9 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
+		Doc document = ORIPA.doc;
+		OrigamiModel orirgamiModel = document.getOrigamiModel();
+		
 		if (bufferImage == null) {
 			bufferImage = createImage(getWidth(), getHeight());
 			bufferg = (Graphics2D) bufferImage.getGraphics();
@@ -185,8 +194,8 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 
 		Graphics2D g2d = bufferg;
 
-
-		boolean hasModel = ORIPA.doc.hasModel();
+		
+		boolean hasModel = orirgamiModel.hasModel();
 
 		if (hasModel) {
 			g2d.setStroke(LineSetting.STROKE_CUT);

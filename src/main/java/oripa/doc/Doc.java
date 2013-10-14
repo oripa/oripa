@@ -33,6 +33,8 @@ import oripa.doc.command.ElementRemover;
 import oripa.doc.command.LineAdder;
 import oripa.doc.command.LinePaster;
 import oripa.doc.core.CreasePattern;
+import oripa.fold.BoundBox;
+import oripa.fold.FoldedModelInfo;
 import oripa.fold.Folder;
 import oripa.fold.OrigamiModel;
 import oripa.geom.GeomUtil;
@@ -94,11 +96,8 @@ public class Doc {
 		
 	// Folded Model Information (Result of Estimation)
 
-	private int overlapRelation[][];
-	private ArrayList<int[][]> foldableOverlapRelations = new ArrayList<int[][]>();
-	private int currentORmatIndex;
-	private Vector2d foldedBBoxLT;
-	private Vector2d foldedBBoxRB;
+	private FoldedModelInfo foldedModelInfo = null;
+	
 
 	final public static int NO_OVERLAP = 0;
 	final public static int UPPER = 1;
@@ -130,9 +129,10 @@ public class Doc {
 
 	private void initialize(double size){
 
-		creasePattern = new CreasePattern(size);
 		this.paperSize = size;
+		creasePattern = new CreasePattern(size);	
 
+		
 		OriLine l0 = new OriLine(-size / 2.0, -size / 2.0, size / 2.0, -size / 2.0, OriLine.TYPE_CUT);
 		OriLine l1 = new OriLine(size / 2.0, -size / 2.0, size / 2.0, size / 2.0, OriLine.TYPE_CUT);
 		OriLine l2 = new OriLine(size / 2.0, size / 2.0, -size / 2.0, size / 2.0, OriLine.TYPE_CUT);
@@ -144,7 +144,7 @@ public class Doc {
 
 		
 		origamiModel  = new OrigamiModel(size);
-
+		foldedModelInfo = new FoldedModelInfo();
 	}
 
 	public void setDataFilePath(String path){
@@ -164,16 +164,26 @@ public class Doc {
 	}
 
 	public void setNextORMat() {
+		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
+		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
+
 		if (currentORmatIndex < foldableOverlapRelations.size() - 1) {
-			currentORmatIndex++;
-			Folder.matrixCopy(foldableOverlapRelations.get(currentORmatIndex), overlapRelation);
+			int nextIndex = currentORmatIndex + 1;
+			foldedModelInfo.setCurrentORmatIndex(nextIndex);
+			Folder.matrixCopy(foldableOverlapRelations.get(nextIndex), overlapRelation);
 		}
 	}
 
 	public void setPrevORMat() {
+		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
+		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
+
 		if (currentORmatIndex > 0) {
-			currentORmatIndex--;
-			Folder.matrixCopy(foldableOverlapRelations.get(currentORmatIndex), overlapRelation);
+			int prevIndex = currentORmatIndex - 1;
+			foldedModelInfo.setCurrentORmatIndex(prevIndex);
+			Folder.matrixCopy(foldableOverlapRelations.get(prevIndex), overlapRelation);
 		}
 
 	}
@@ -1031,8 +1041,8 @@ public class Doc {
 	}
 
 	public void calcFoldedBoundingBox() {
-		foldedBBoxLT = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-		foldedBBoxRB = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
+		Vector2d foldedBBoxLT = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
+		Vector2d foldedBBoxRB = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 
 		List<OriFace> faces = origamiModel.getFaces();
 		for (OriFace face : faces) {
@@ -1043,6 +1053,8 @@ public class Doc {
 				foldedBBoxRB.y = Math.max(foldedBBoxRB.y, he.tmpVec.y);
 			}
 		}
+		
+		foldedModelInfo.setBoundBox(new BoundBox(foldedBBoxLT, foldedBBoxRB));
 	}
 
 
@@ -1387,9 +1399,15 @@ public class Doc {
 		return creasePattern;
 	}
 
+	/**
+	 * @return origamiModel
+	 */
+	public OrigamiModel getOrigamiModel() {
+		return origamiModel;
+	}
 	
-	//-------------------------------------------------------------------
-	// eventually unnecessary
+	//======================================================================
+	// Getter/Setter eventually unnecessary
 	
 	/**
 	 * @return crossLines
@@ -1405,102 +1423,126 @@ public class Doc {
 		this.crossLines = crossLines;
 	}
 
-	/**
-	 * @return faces
-	 */
-	public List<OriFace> getFaces() {
-		List<OriFace> faces = origamiModel.getFaces();
-		return faces;
-	}
-
-	/**
-	 * @param faces facesを登録する
-	 */
-	public void setFaces(List<OriFace> faces) {
-		origamiModel.setFaces(faces);
-	}
-
-	/**
-	 * @return edges
-	 */
-	public List<OriEdge> getEdges() {
-		List<OriEdge> edges = origamiModel.getEdges();
-
-		return edges;
-	}
-
 	
-	/**
-	 * @return vertices
-	 */
-	public List<OriVertex> getVertices() {
-		List<OriVertex> vertices = origamiModel.getVertices();
+	
 
-		return vertices;
-	}
-
-	/**
-	 * @param vertices verticesを登録する
-	 */
-	public void setVertices(List<OriVertex> vertices) {
-		origamiModel.setVertices(vertices);;
-	}
-
-	/**
-	 * @param edges edgesを登録する
-	 */
-	public void setEdges(ArrayList<OriEdge> edges) {
-		origamiModel.setEdges(edges);
-	}
-
-	/**
-	 * @return isValidPattern
-	 */
-	public boolean isValidPattern() {
-		
-		return origamiModel.isValidPattern();
-	}
-
-	/**
-	 * @param isValidPattern isValidPatternを登録する
-	 */
-	public void setValidPattern(boolean isValidPattern) {
-			origamiModel.setValidPattern(isValidPattern);
-	}
-
-	/**
-	 * @return hasModel
-	 */
-	public boolean hasModel() {
-		return origamiModel.hasModel();
-	}
-
+	//-------------------------------------------------------------
+	// moved to OrigamiModel
+	
 //	/**
-//	 * @param hasModel hasModelを登録する
+//	 * @return faces
 //	 */
-//	public void setHasModel(boolean hasModel) {
-//		this.hasModel = hasModel;
+//	public List<OriFace> getFaces() {
+//		List<OriFace> faces = origamiModel.getFaces();
+//		return faces;
+//	}
+//
+//	/**
+//	 * @param faces facesを登録する
+//	 */
+//	public void setFaces(List<OriFace> faces) {
+//		origamiModel.setFaces(faces);
+//	}
+//
+//	/**
+//	 * @return edges
+//	 */
+//	public List<OriEdge> getEdges() {
+//		List<OriEdge> edges = origamiModel.getEdges();
+//
+//		return edges;
+//	}
+//
+//	
+//	/**
+//	 * @return vertices
+//	 */
+//	public List<OriVertex> getVertices() {
+//		List<OriVertex> vertices = origamiModel.getVertices();
+//
+//		return vertices;
+//	}
+//
+//	/**
+//	 * @param vertices verticesを登録する
+//	 */
+//	public void setVertices(List<OriVertex> vertices) {
+//		origamiModel.setVertices(vertices);;
+//	}
+//
+//	/**
+//	 * @param edges edgesを登録する
+//	 */
+//	public void setEdges(ArrayList<OriEdge> edges) {
+//		origamiModel.setEdges(edges);
+//	}
+//
+//	/**
+//	 * @return isValidPattern
+//	 */
+//	public boolean isValidPattern() {
+//		
+//		return origamiModel.isValidPattern();
+//	}
+//
+//	/**
+//	 * @param isValidPattern isValidPatternを登録する
+//	 */
+//	public void setValidPattern(boolean isValidPattern) {
+//			origamiModel.setValidPattern(isValidPattern);
+//	}
+//
+//	/**
+//	 * @return hasModel
+//	 */
+//	public boolean hasModel() {
+//		return origamiModel.hasModel();
+//	}
+//
+////	/**
+////	 * @param hasModel hasModelを登録する
+////	 */
+////	public void setHasModel(boolean hasModel) {
+////		this.hasModel = hasModel;
+////	}
+//
+//	/**
+//	 * @return sortedFaces
+//	 */
+//	public List<OriFace> getSortedFaces() {
+//		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+//		return sortedFaces;
+//	}
+//
+//	/**
+//	 * @param sortedFaces sortedFacesを登録する
+//	 */
+//	public void setSortedFaces(List<OriFace> sortedFaces) {
+//		origamiModel.setSortedFaces(sortedFaces);
+//	}
+//
+//	/**
+//	 * @return folded
+//	 */
+//	public boolean isFolded() {
+//		return origamiModel.isFolded();
+//	}
+//
+//	/**
+//	 * @param folded foldedを登録する
+//	 */
+//	public void setFolded(boolean folded) {
+//		origamiModel.setFolded(folded);
 //	}
 
-	/**
-	 * @return sortedFaces
-	 */
-	public List<OriFace> getSortedFaces() {
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-		return sortedFaces;
-	}
-
-	/**
-	 * @param sortedFaces sortedFacesを登録する
-	 */
-	public void setSortedFaces(List<OriFace> sortedFaces) {
-		origamiModel.setSortedFaces(sortedFaces);
-	}
+	//-------------------------------------------------------------
 
 	/**
 	 * @return currentORmatIndex
 	 */
 	public int getCurrentORmatIndex() {
+		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
+
 		return currentORmatIndex;
 	}
 
@@ -1508,36 +1550,24 @@ public class Doc {
 	 * @param currentORmatIndex currentORmatIndexを登録する
 	 */
 	public void setCurrentORmatIndex(int currentORmatIndex) {
-		this.currentORmatIndex = currentORmatIndex;
+		foldedModelInfo.setCurrentORmatIndex(currentORmatIndex);
 	}
 
 	/**
 	 * @return foldedBBoxLT
 	 */
 	public Vector2d getFoldedBBoxLT() {
-		return foldedBBoxLT;
+		return foldedModelInfo.getBoundBox().getLeftAndTop();
 	}
 
-	/**
-	 * @param foldedBBoxLT foldedBBoxLTを登録する
-	 */
-	public void setFoldedBBoxLT(Vector2d foldedBBoxLT) {
-		this.foldedBBoxLT = foldedBBoxLT;
-	}
 
 	/**
 	 * @return foldedBBoxRB
 	 */
 	public Vector2d getFoldedBBoxRB() {
-		return foldedBBoxRB;
+		return foldedModelInfo.getBoundBox().getRightAndBottom();
 	}
 
-	/**
-	 * @param foldedBBoxRB foldedBBoxRBを登録する
-	 */
-	public void setFoldedBBoxRB(Vector2d foldedBBoxRB) {
-		this.foldedBBoxRB = foldedBBoxRB;
-	}
 
 	/**
 	 * @return size
@@ -1554,23 +1584,10 @@ public class Doc {
 	}
 
 	/**
-	 * @return folded
-	 */
-	public boolean isFolded() {
-		return origamiModel.isFolded();
-	}
-
-	/**
-	 * @param folded foldedを登録する
-	 */
-	public void setFolded(boolean folded) {
-		origamiModel.setFolded(folded);
-	}
-
-	/**
 	 * @return overlapRelation
 	 */
 	public int[][] getOverlapRelation() {
+		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 		return overlapRelation;
 	}
 
@@ -1578,13 +1595,15 @@ public class Doc {
 	 * @param overlapRelation overlapRelationを登録する
 	 */
 	public void setOverlapRelation(int[][] overlapRelation) {
-		this.overlapRelation = overlapRelation;
+		foldedModelInfo.setOverlapRelation(overlapRelation);
 	}
 
 	/**
 	 * @return foldableOverlapRelations
 	 */
-	public ArrayList<int[][]> getFoldableOverlapRelations() {
+	public List<int[][]> getFoldableOverlapRelations() {
+		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
+
 		return foldableOverlapRelations;
 	}
 
@@ -1592,8 +1611,9 @@ public class Doc {
 	 * @param foldableOverlapRelations foldableOverlapRelationsを登録する
 	 */
 	public void setFoldableOverlapRelations(
-			ArrayList<int[][]> foldableOverlapRelations) {
-		this.foldableOverlapRelations = foldableOverlapRelations;
+			List<int[][]> foldableOverlapRelations) {
+
+		foldedModelInfo.setFoldableOverlapRelations(foldableOverlapRelations);
 	}
 
 	/**

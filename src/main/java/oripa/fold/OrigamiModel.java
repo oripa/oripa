@@ -24,7 +24,7 @@ public class OrigamiModel {
 
 	private List<OriFace> sortedFaces = new ArrayList<OriFace>();
 
-	private FoldedModelInfo foldedModelInfo = new FoldedModelInfo();
+	//private FoldedModelInfo foldedModelInfo = new FoldedModelInfo();
 	
 	// FIXME ambiguous name
 	private boolean isValidPattern = false;
@@ -114,13 +114,13 @@ public class OrigamiModel {
 		this.sortedFaces = sortedFaces;
 	}
 
-	public FoldedModelInfo getFoldedModelInfo() {
-		return foldedModelInfo;
-	}
-
-	public void setFoldedModelInfo(FoldedModelInfo foldedModelInfo) {
-		this.foldedModelInfo = foldedModelInfo;
-	}
+//	public FoldedModelInfo getFoldedModelInfo() {
+//		return foldedModelInfo;
+//	}
+//
+//	public void setFoldedModelInfo(FoldedModelInfo foldedModelInfo) {
+//		this.foldedModelInfo = foldedModelInfo;
+//	}
 
 	/**
 	 * @param faces facesを登録する

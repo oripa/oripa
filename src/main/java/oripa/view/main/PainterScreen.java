@@ -52,12 +52,13 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.doc.core.CreasePattern;
+import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriVertex;
 import oripa.mouse.MouseUtility;
 import oripa.paint.EditMode;
-import oripa.paint.core.PaintConfig;
 import oripa.paint.core.LineSetting;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
@@ -111,14 +112,21 @@ ActionListener, ComponentListener, Observer{
 		preSize = getSize();
 	}
 
+	/**
+	 * for verifying algorithm
+	 * @param g2d
+	 */
 	public void drawModel(Graphics2D g2d) {
 
 		if (! Config.FOR_STUDY) {
 			return;
 		}
 
-		List<OriFace> faces = ORIPA.doc.getFaces();
-		List<OriVertex> vertices = ORIPA.doc.getVertices();
+		Doc document = ORIPA.doc;
+		OrigamiModel origamiModel = document.getOrigamiModel();
+
+		List<OriFace> faces = origamiModel.getFaces();
+		List<OriVertex> vertices = origamiModel.getVertices();
 
 
 		if (bDrawFaceID) {
@@ -261,7 +269,9 @@ ActionListener, ComponentListener, Observer{
 
 		Graphics2D g2d = bufferg;
 
-		boolean hasModel = ORIPA.doc.hasModel();
+		Doc document = ORIPA.doc;
+		OrigamiModel origamiModel = document.getOrigamiModel();
+		boolean hasModel = origamiModel.hasModel();
 		if (hasModel) {
 			drawModel(g2d);
 		}
@@ -275,7 +285,7 @@ ActionListener, ComponentListener, Observer{
 		g2d.setStroke(LineSetting.STROKE_VALLEY);
 		g2d.setColor(Color.black);
 
-		CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+		CreasePattern creasePattern = document.getCreasePattern();
 
 		drawLines(g2d, creasePattern);
 
@@ -296,7 +306,7 @@ ActionListener, ComponentListener, Observer{
 
 
 		if (PaintConfig.bDispCrossLine) {
-			List<OriLine> crossLines = ORIPA.doc.getCrossLines();
+			List<OriLine> crossLines = document.getCrossLines();
 			if (!crossLines.isEmpty()) {
 				g2d.setStroke(LineSetting.STROKE_TMP_OUTLINE);
 				g2d.setColor(Color.MAGENTA);
@@ -313,9 +323,9 @@ ActionListener, ComponentListener, Observer{
 
 		// Line that links the pair of unsetled faces
 		if (Config.FOR_STUDY) {
-			List<OriFace> faces = ORIPA.doc.getFaces();
+			List<OriFace> faces = origamiModel.getFaces();
 
-			int[][] overlapRelation = ORIPA.doc.getOverlapRelation();
+			int[][] overlapRelation = document.getOverlapRelation();
 
 			if (overlapRelation != null) {
 				g2d.setStroke(LineSetting.STROKE_RIDGE);
