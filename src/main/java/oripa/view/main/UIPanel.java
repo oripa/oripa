@@ -697,7 +697,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 						ORIPA.mainFrame, resources.getString(ResourceKey.WARNING, StringID.Warning.FOLD_FAILED_DUPLICATION_ID), 
 						"Failed", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
 						== JOptionPane.YES_OPTION) {
-//					if (document.buildOrigami3(origamiModel, false)) {
+
+					//if (document.buildOrigami3(origamiModel, false)) {
 					if (document.buildOrigami3(false)) {
 						buildOK = true;
 					} else {
@@ -708,8 +709,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 				}
 			}
 
+			Folder folder = new Folder(document);
+
 			if (buildOK) {
-				Folder folder = new Folder(document);
 				int answerNum = folder.fold();
 				System.out.println("RenderFrame");
 				if (answerNum != 0) {
@@ -719,7 +721,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 				}
 
 			} else {
-				document.foldWithoutLineType();
+				folder.foldWithoutLineType(origamiModel);
 			}
 
 			ModelFrameSettingDB modelSetting = ModelFrameSettingDB.getInstance();

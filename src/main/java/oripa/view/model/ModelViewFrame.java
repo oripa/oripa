@@ -40,10 +40,13 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterDXF;
 import oripa.doc.exporter.ExporterOBJ2;
 import oripa.file.FileFilterEx;
+import oripa.fold.FolderTool;
+import oripa.fold.OrigamiModel;
 import oripa.paint.core.PaintConfig;
 import oripa.resource.Constants;
 import oripa.viewsetting.model.ModelFrameSettingDB;
@@ -125,11 +128,18 @@ implements ActionListener, AdjustmentListener, Observer{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == menuItemFlip) {
-            ORIPA.doc.filpAll();
+    	Doc document = ORIPA.doc;
+    	OrigamiModel origamiModel = document.getOrigamiModel();
+		
+    	FolderTool folderTool = new FolderTool();
+
+		if (e.getSource() == menuItemFlip) {
+    		folderTool.filpAll(origamiModel);
             screen.repaint();
         } else if (e.getSource() == menuItemSlideFaces) {
-            ORIPA.doc.setFacesOutline(menuItemSlideFaces.isSelected());
+            folderTool.setFacesOutline(
+            		origamiModel.getVertices(), origamiModel.getFaces(),
+            		menuItemSlideFaces.isSelected());
             screen.repaint();
         } else if (e.getSource() == menuItemCrossLine) {
             PaintConfig.bDispCrossLine = menuItemCrossLine.isSelected();

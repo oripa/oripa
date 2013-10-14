@@ -19,6 +19,7 @@
 package oripa.fold;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -35,6 +36,7 @@ import oripa.geom.Line;
 import oripa.geom.OriEdge;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
+import oripa.geom.OriVertex;
 import oripa.paint.core.PaintConfig;
 import oripa.value.OriLine;
 
@@ -49,19 +51,24 @@ public class Folder {
 		m_doc = doc;
 	}
 
+//	public int fold(OrigamiModel origamiModel, FoldedModelInfo foldedModelInfo) {
 	public int fold() {
 		OrigamiModel origamiModel = m_doc.getOrigamiModel();
 		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
+
 		List<OriFace> faces = origamiModel.getFaces();
         List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-
+        List<OriVertex> vertices = origamiModel.getVertices();
+        
         List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
         foldableOverlapRelations.clear();
 
+        FolderTool folderTool = new FolderTool();
+        
 		simpleFoldWithoutZorder();
 		m_doc.calcFoldedBoundingBox();
 		sortedFaces.addAll(faces);
-		m_doc.setFacesOutline(false);
+		folderTool.setFacesOutline(vertices, faces, false);
 
 
 		if (!PaintConfig.bDoFullEstimation) {
@@ -106,7 +113,7 @@ public class Folder {
 			matrixCopy(foldableOverlapRelations.get(0), overlapRelation);
 		}
 
-		m_doc.setFacesOutline(false);
+		folderTool.setFacesOutline(vertices, faces, false);
 
 		// Color the faces
 		Random rand = new Random();
@@ -854,5 +861,127 @@ public class Folder {
 			}
 		}
 	}
+
+	FolderTool folderTool = new FolderTool();
+
+
+	public boolean foldWithoutLineType(
+			OrigamiModel model) {
+		List<OriVertex> vertices = model.getVertices();
+		List<OriEdge>   edges    = model.getEdges();
+		List<OriFace>   faces    = model.getFaces();
+
+			for (OriFace face : faces) {
+			face.faceFront = true;
+		}
+
+		faces.get(0).z_order = 0;
+
+		walkFace(faces, faces.get(0), 0);
+		
+		Collections.sort(faces, new FaceOrderComparator());
+		model.getSortedFaces().clear();
+		model.getSortedFaces().addAll(faces);
+
+
+		for (OriEdge e : edges) {
+			e.sv.p.set(e.left.tmpVec);
+			e.sv.tmpFlg = false;
+		}
+
+		folderTool.setFacesOutline(vertices, faces, false);
+		folderTool.calcFoldedBoundingBox(faces);
+		return true;
+	}
+
+	// Make the folds by flipping the faces 
+	private void walkFace(List<OriFace> faces, OriFace face, int walkFaceCount) {
+		face.tmpFlg = true;
+		if (walkFaceCount > 1000) {
+			System.out.println("walkFace too deap");
+			return;
+		}
+		for (OriHalfedge he : face.halfedges) {
+			if (he.pair == null) {
+				continue;
+			}
+			if (he.pair.face.tmpFlg) {
+				continue;
+			}
+
+			flipFace2(faces, he.pair.face, he);
+			he.pair.face.tmpFlg = true;
+			walkFace(faces, he.pair.face, walkFaceCount + 1);
+		}
+	}
+
+	// Method that doesnt use sin con 
+	private void flipFace2(List<OriFace> faces, OriFace face, OriHalfedge baseHe) {
+
+		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
+		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
+
+		// Creates the base unit vector for before the rotation
+		Vector2d baseDir = new Vector2d();
+		baseDir.sub(baseHe.pair.tmpVec, baseHe.pair.next.tmpVec);
+
+		// Creates the base unit vector for after the rotation
+		Vector2d afterDir = new Vector2d();
+		afterDir.sub(baseHe.next.tmpVec, baseHe.tmpVec);
+		afterDir.normalize();
+
+		Line preLine = new Line(preOrigin, baseDir);
+
+		for (OriHalfedge he : face.halfedges) {
+			double param[] = new double[1];
+			double d0 = GeomUtil.Distance(he.tmpVec, preLine, param);
+			double d1 = param[0];
+
+			Vector2d footV = new Vector2d(afterOrigin);
+			footV.x += d1 * afterDir.x;
+			footV.y += d1 * afterDir.y;
+
+			Vector2d afterDirFromFoot = new Vector2d();
+			afterDirFromFoot.x = afterDir.y;
+			afterDirFromFoot.y = -afterDir.x;
+
+			he.tmpVec.x = footV.x + d0 * afterDirFromFoot.x;
+			he.tmpVec.y = footV.y + d0 * afterDirFromFoot.y;
+
+		}
+
+		// Ivertion
+		if (face.faceFront == baseHe.face.faceFront) {
+			Vector2d ep = baseHe.next.tmpVec;
+			Vector2d sp = baseHe.tmpVec;
+
+			Vector2d b = new Vector2d();
+			b.sub(ep, sp);
+			for (OriHalfedge he : face.halfedges) {
+
+				if (GeomUtil.Distance(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
+					continue;
+				}
+				if (Math.abs(b.y) < GeomUtil.EPS) {
+					Vector2d a = new Vector2d();
+					a.sub(he.tmpVec, sp);
+					a.y = -a.y;
+					he.tmpVec.y = a.y + sp.y;
+				} else {
+					Vector2d a = new Vector2d();
+					a.sub(he.tmpVec, sp);
+					he.tmpVec.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x) / b.lengthSquared();
+					he.tmpVec.x = b.x / b.y * a.y - a.x + b.x / b.y * he.tmpVec.y;
+					he.tmpVec.x += sp.x;
+					he.tmpVec.y += sp.y;
+				}
+			}
+			face.faceFront = !face.faceFront;
+		}
+
+		faces.remove(face);
+		faces.add(face);
+	}
+
 
 }

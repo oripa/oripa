@@ -21,7 +21,6 @@ package oripa.doc;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -264,99 +263,69 @@ public class Doc {
 
 
 	// Turn the model over
-	public void filpAll() {
-		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-	
-		List<OriFace> faces = origamiModel.getFaces();
-		for (OriFace face : faces) {
-			face.z_order = -face.z_order;
-			for (OriHalfedge he : face.halfedges) {
-				maxV.x = Math.max(maxV.x, he.vertex.p.x);
-				maxV.y = Math.max(maxV.y, he.vertex.p.y);
-				minV.x = Math.min(minV.x, he.vertex.p.x);
-				minV.y = Math.min(minV.y, he.vertex.p.y);
-			}
-		}
-
-		double centerX = (maxV.x + minV.x) / 2;
-
-		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
-				he.positionForDisplay.x = 2 * centerX - he.positionForDisplay.x;
-			}
-		}
-
-		for (OriFace face : faces) {
-			face.faceFront = !face.faceFront;
-			face.setOutline();
-		}
-
-		Collections.sort(faces, new FaceOrderComparator());
-
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-		Collections.reverse(sortedFaces);
-
-
-	}
+//	public void filpAll(OrigamiModel origamiModel) {
+//		FolderTool folderTool = new FolderTool();
+//		folderTool.filpAll(origamiModel);
+//
+//	}
 
 	// 
-	public void setFacesOutline(boolean isSlide) {
-		int minDepth = Integer.MAX_VALUE;
-		int maxDepth = -Integer.MAX_VALUE;
-
-		List<OriFace> faces = origamiModel.getFaces();
-		List<OriVertex> vertices = origamiModel.getVertices();
-
-		for (OriFace f : faces) {
-			minDepth = Math.min(minDepth, f.z_order);
-			maxDepth = Math.max(minDepth, f.z_order);
-			for (OriHalfedge he : f.halfedges) {
-				he.positionForDisplay.set(he.vertex.p);
-			}
-			f.setOutline();
-		}
-
-
-		if (isSlide) {
-			double slideUnit = 10.0 / (maxDepth - minDepth);
-			for (OriVertex v : vertices) {
-				v.tmpFlg = false;
-				v.tmpVec.set(v.p);
-			}
-
-			for (OriFace f : faces) {
-				Vector2d faceCenter = new Vector2d();
-				for (OriHalfedge he : f.halfedges) {
-					faceCenter.add(he.vertex.p);
-				}
-				faceCenter.scale(1.0 / f.halfedges.size());
-
-				for (OriHalfedge he : f.halfedges) {
-					if (he.vertex.tmpFlg) {
-						continue;
-					}
-					he.vertex.tmpFlg = true;
-
-					he.vertex.tmpVec.x += slideUnit * f.z_order;
-					he.vertex.tmpVec.y += slideUnit * f.z_order;
-
-					Vector2d dirToCenter = new Vector2d(faceCenter);
-					dirToCenter.sub(he.vertex.tmpVec);
-					dirToCenter.normalize();
-					dirToCenter.scale(6.0);
-					he.vertex.tmpVec.add(dirToCenter);
-				}
-			}
-
-			for (OriFace f : faces) {
-				for (OriHalfedge he : f.halfedges) {
-					he.positionForDisplay.set(he.vertex.tmpVec);
-				}
-				f.setOutline();
-			}
-		}
-	}
+//	public void setFacesOutline(boolean isSlide) {
+//		int minDepth = Integer.MAX_VALUE;
+//		int maxDepth = -Integer.MAX_VALUE;
+//
+//		List<OriFace> faces = origamiModel.getFaces();
+//		List<OriVertex> vertices = origamiModel.getVertices();
+//
+//		for (OriFace f : faces) {
+//			minDepth = Math.min(minDepth, f.z_order);
+//			maxDepth = Math.max(minDepth, f.z_order);
+//			for (OriHalfedge he : f.halfedges) {
+//				he.positionForDisplay.set(he.vertex.p);
+//			}
+//			f.setOutline();
+//		}
+//
+//
+//		if (isSlide) {
+//			double slideUnit = 10.0 / (maxDepth - minDepth);
+//			for (OriVertex v : vertices) {
+//				v.tmpFlg = false;
+//				v.tmpVec.set(v.p);
+//			}
+//
+//			for (OriFace f : faces) {
+//				Vector2d faceCenter = new Vector2d();
+//				for (OriHalfedge he : f.halfedges) {
+//					faceCenter.add(he.vertex.p);
+//				}
+//				faceCenter.scale(1.0 / f.halfedges.size());
+//
+//				for (OriHalfedge he : f.halfedges) {
+//					if (he.vertex.tmpFlg) {
+//						continue;
+//					}
+//					he.vertex.tmpFlg = true;
+//
+//					he.vertex.tmpVec.x += slideUnit * f.z_order;
+//					he.vertex.tmpVec.y += slideUnit * f.z_order;
+//
+//					Vector2d dirToCenter = new Vector2d(faceCenter);
+//					dirToCenter.sub(he.vertex.tmpVec);
+//					dirToCenter.normalize();
+//					dirToCenter.scale(6.0);
+//					he.vertex.tmpVec.add(dirToCenter);
+//				}
+//			}
+//
+//			for (OriFace f : faces) {
+//				for (OriHalfedge he : f.halfedges) {
+//					he.positionForDisplay.set(he.vertex.tmpVec);
+//				}
+//				f.setOutline();
+//			}
+//		}
+//	}
 
 	public boolean cleanDuplicatedLines() {
 		debugCount = 0;
@@ -1010,35 +979,36 @@ public class Doc {
 		return true;
 	}
 
-	public boolean foldWithoutLineType() {
-		List<OriFace> faces = origamiModel.getFaces();
-		List<OriEdge> edges = origamiModel.getEdges();
-
-		for (OriFace face : faces) {
-			face.faceFront = true;
-		}
-
-		faces.get(0).z_order = 0;
-		debugCount = 0;
-
-		walkFace(faces.get(0));
-
-		Collections.sort(faces, new FaceOrderComparator());
-
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-		sortedFaces.clear();
-		sortedFaces.addAll(faces);
-
-
-		for (OriEdge e : edges) {
-			e.sv.p.set(e.left.tmpVec);
-			e.sv.tmpFlg = false;
-		}
-
-		setFacesOutline(false);
-		calcFoldedBoundingBox();
-		return true;
-	}
+//	public boolean foldWithoutLineType() {
+//		List<OriFace> faces = origamiModel.getFaces();
+//		List<OriEdge> edges = origamiModel.getEdges();
+//		List<OriVertex> vertices = origamiModel.getVertices();
+//		for (OriFace face : faces) {
+//			face.faceFront = true;
+//		}
+//
+//		faces.get(0).z_order = 0;
+//		debugCount = 0;
+//
+//		walkFace(faces.get(0));
+//
+//		Collections.sort(faces, new FaceOrderComparator());
+//
+//		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+//		sortedFaces.clear();
+//		sortedFaces.addAll(faces);
+//
+//
+//		for (OriEdge e : edges) {
+//			e.sv.p.set(e.left.tmpVec);
+//			e.sv.tmpFlg = false;
+//		}
+//
+//		FolderTool folderTool = new FolderTool();
+//		folderTool.setFacesOutline(vertices, faces, false);
+//		calcFoldedBoundingBox();
+//		return true;
+//	}
 
 	public void calcFoldedBoundingBox() {
 		Vector2d foldedBBoxLT = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);

@@ -3,7 +3,6 @@ package oripa.fold;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -21,15 +20,6 @@ import oripa.paint.core.PaintConfig;
 import oripa.value.OriLine;
 
 public class FolderTool {
-	class FaceOrderComparator implements Comparator<OriFace> {
-
-		@Override
-		public int compare(OriFace f1, OriFace f2) {
-			return f1.z_order > f2.z_order ? 1 : -1;
-		}
-	}
-
-
 	final public static int NO_OVERLAP = 0;
 	final public static int UPPER = 1;
 	final public static int LOWER = 2;
@@ -63,11 +53,11 @@ public class FolderTool {
 
 	
 	// Turn the model over
-	public void filpAll(OrigamiModel foldedModel) {
+	public void filpAll(OrigamiModel origamiModel) {
 		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 		
-		List<OriFace> faces = foldedModel.getFaces();
+		List<OriFace> faces = origamiModel.getFaces();
 		for (OriFace face : faces) {
 			face.z_order = -face.z_order;
 			for (OriHalfedge he : face.halfedges) {
@@ -93,7 +83,7 @@ public class FolderTool {
 
 		Collections.sort(faces, new FaceOrderComparator());
 
-		Collections.reverse(foldedModel.getSortedFaces());
+		Collections.reverse(origamiModel.getSortedFaces());
 
 
 	}
@@ -706,35 +696,6 @@ public class FolderTool {
 	}
 
 
-	public boolean foldWithoutLineType(
-			OrigamiModel model) {
-		List<OriVertex> vertices = model.getVertices();
-		List<OriEdge>   edges    = model.getEdges();
-		List<OriFace>   faces    = model.getFaces();
-
-			for (OriFace face : faces) {
-			face.faceFront = true;
-		}
-
-		faces.get(0).z_order = 0;
-		debugCount = 0;
-
-		walkFace(faces, faces.get(0));
-
-		Collections.sort(faces, new FaceOrderComparator());
-		model.getSortedFaces().clear();
-		model.getSortedFaces().addAll(faces);
-
-
-		for (OriEdge e : edges) {
-			e.sv.p.set(e.left.tmpVec);
-			e.sv.tmpFlg = false;
-		}
-
-		setFacesOutline(vertices, faces, false);
-		calcFoldedBoundingBox(faces);
-		return true;
-	}
 
 	
 	public BoundBox calcFoldedBoundingBox(List<OriFace> faces) {
@@ -754,95 +715,6 @@ public class FolderTool {
 	}
 
 
-	// Make the folds by flipping the faces 
-	private void walkFace(List<OriFace> faces, OriFace face) {
-		face.tmpFlg = true;
-		if (debugCount++ > 1000) {
-			System.out.println("walkFace too deap");
-			return;
-		}
-		for (OriHalfedge he : face.halfedges) {
-			if (he.pair == null) {
-				continue;
-			}
-			if (he.pair.face.tmpFlg) {
-				continue;
-			}
-
-			flipFace2(faces, he.pair.face, he);
-			he.pair.face.tmpFlg = true;
-			walkFace(faces, he.pair.face);
-		}
-	}
-
-
-	// Method that doesnt use sin con 
-	private void flipFace2(List<OriFace> faces, OriFace face, OriHalfedge baseHe) {
-
-		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
-		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
-
-		// Creates the base unit vector for before the rotation
-		Vector2d baseDir = new Vector2d();
-		baseDir.sub(baseHe.pair.tmpVec, baseHe.pair.next.tmpVec);
-
-		// Creates the base unit vector for after the rotation
-		Vector2d afterDir = new Vector2d();
-		afterDir.sub(baseHe.next.tmpVec, baseHe.tmpVec);
-		afterDir.normalize();
-
-		Line preLine = new Line(preOrigin, baseDir);
-
-		for (OriHalfedge he : face.halfedges) {
-			double param[] = new double[1];
-			double d0 = GeomUtil.Distance(he.tmpVec, preLine, param);
-			double d1 = param[0];
-
-			Vector2d footV = new Vector2d(afterOrigin);
-			footV.x += d1 * afterDir.x;
-			footV.y += d1 * afterDir.y;
-
-			Vector2d afterDirFromFoot = new Vector2d();
-			afterDirFromFoot.x = afterDir.y;
-			afterDirFromFoot.y = -afterDir.x;
-
-			he.tmpVec.x = footV.x + d0 * afterDirFromFoot.x;
-			he.tmpVec.y = footV.y + d0 * afterDirFromFoot.y;
-
-		}
-
-		// Ivertion
-		if (face.faceFront == baseHe.face.faceFront) {
-			Vector2d ep = baseHe.next.tmpVec;
-			Vector2d sp = baseHe.tmpVec;
-
-			Vector2d b = new Vector2d();
-			b.sub(ep, sp);
-			for (OriHalfedge he : face.halfedges) {
-
-				if (GeomUtil.Distance(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
-					continue;
-				}
-				if (Math.abs(b.y) < GeomUtil.EPS) {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					a.y = -a.y;
-					he.tmpVec.y = a.y + sp.y;
-				} else {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					he.tmpVec.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x) / b.lengthSquared();
-					he.tmpVec.x = b.x / b.y * a.y - a.x + b.x / b.y * he.tmpVec.y;
-					he.tmpVec.x += sp.x;
-					he.tmpVec.y += sp.y;
-				}
-			}
-			face.faceFront = !face.faceFront;
-		}
-
-		faces.remove(face);
-		faces.add(face);
-	}
 
 
 
