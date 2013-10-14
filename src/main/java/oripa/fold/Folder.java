@@ -603,7 +603,8 @@ public class Folder {
 
 		Doc temp_doc = new Doc(paperSize);
 		CreasePattern temp_creasePattern = temp_doc.getCreasePattern();
-
+		OrigamiModel  temp_origamiModel  = temp_doc.getOrigamiModel();
+		
 		temp_creasePattern.clear();        
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
@@ -631,11 +632,10 @@ public class Folder {
 		System.out.println("getCrossPoint results " + crossNum + "::::" + dummy1 + ", " + dummy2);
 
 		//temp_doc.buildOrigami(origamiModel, false);
-		temp_doc.buildOrigami(false);
-
+		folderTool.buildOrigami(temp_creasePattern, temp_origamiModel, false);
+		
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();
 
-		OrigamiModel temp_origamiModel = temp_doc.getOrigamiModel();
 		List<OriFace> subFaceSources = temp_origamiModel.getFaces();
 		for (OriFace face : subFaceSources) {
 			localSubFaces.add(new SubFace(face));

@@ -58,6 +58,7 @@ import oripa.file.FileVersionError;
 import oripa.file.FilterDB;
 import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
+import oripa.fold.FolderTool;
 import oripa.fold.OrigamiModel;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
@@ -498,13 +499,17 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	public void exportFile(String ext) {
 		Doc document = ORIPA.doc;
+		CreasePattern creasePattern = document.getCreasePattern();
 		OrigamiModel origamiModel = document.getOrigamiModel();
+
 		boolean hasModel = origamiModel.hasModel();
 
+		FolderTool folderTool = new FolderTool();
+		
 		if ("obj".equals(ext) == false) {
+
+		} else if (!hasModel && !folderTool.buildOrigami(creasePattern,origamiModel, true)) {
 			
-		} else if (!hasModel && !document.buildOrigami(true)) {
-//		} else if (!hasModel && !document.buildOrigami(origamiModel, true)) {
 			JOptionPane.showConfirmDialog(null,
 					"Warning: Building a set of polygons from crease pattern "
 							+ "was failed.", "Warning",
