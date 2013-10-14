@@ -16,9 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.geom;
+package oripa.fold;
 
 import java.util.ArrayList;
+
 import javax.vecmath.Vector2d;
 
 public class OriVertex {

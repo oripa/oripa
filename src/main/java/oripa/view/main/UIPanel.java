@@ -64,9 +64,9 @@ import oripa.file.ImageResourceLoader;
 import oripa.fold.BoundBox;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.Folder;
-import oripa.fold.FolderTool;
+import oripa.fold.OriFace;
+import oripa.fold.OrigamiModelFactory;
 import oripa.fold.OrigamiModel;
-import oripa.geom.OriFace;
 import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.byvalue.AngleMeasuringAction;
 import oripa.paint.byvalue.AngleValueInputListener;
@@ -645,7 +645,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 				OrigamiModel origamiModel = document.getOrigamiModel();
 				Collection<OriLine> creasePattern = document.getCreasePattern();
 
-				FolderTool folderTool = new FolderTool();
+				OrigamiModelFactory folderTool = new OrigamiModelFactory();
 				folderTool.buildOrigami3(creasePattern, origamiModel, false);
 
 //				boolean isValidPattern =
@@ -705,7 +705,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 			sortedFaces.clear();
 //			if (document.buildOrigami3(origamiModel, false)) {
-			FolderTool folderTool = new FolderTool();
+			OrigamiModelFactory folderTool = new OrigamiModelFactory();
 			if (folderTool.buildOrigami3(creasePattern, origamiModel, false)) {
 				buildOK = true;
 			} else {

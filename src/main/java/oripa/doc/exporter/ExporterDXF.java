@@ -25,9 +25,9 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
+import oripa.fold.OriFace;
+import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
-import oripa.geom.OriFace;
-import oripa.geom.OriHalfedge;
 import oripa.value.OriLine;
 
 public class ExporterDXF implements Exporter{

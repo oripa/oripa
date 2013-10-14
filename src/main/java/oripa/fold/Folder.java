@@ -33,22 +33,19 @@ import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterEPS;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
-import oripa.geom.OriEdge;
-import oripa.geom.OriFace;
-import oripa.geom.OriHalfedge;
-import oripa.geom.OriVertex;
 import oripa.paint.core.PaintConfig;
 import oripa.value.OriLine;
 
 public class Folder {
 
 	private ArrayList<Condition4> condition4s = new ArrayList<>();
-	int workORmat[][];
-	ArrayList<SubFace> subFaces;
+	private int workORmat[][];
+	private ArrayList<SubFace> subFaces;
 
 	// helper object
-    FolderTool folderTool = new FolderTool();
-
+    private OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+    private FolderTool folderTool = new FolderTool();
+    
 	public Folder() {
 	}
 
@@ -632,7 +629,7 @@ public class Folder {
 		System.out.println("getCrossPoint results " + crossNum + "::::" + dummy1 + ", " + dummy2);
 
 		//temp_doc.buildOrigami(origamiModel, false);
-		folderTool.buildOrigami(temp_creasePattern, temp_origamiModel, false);
+		modelFactory.buildOrigami(temp_creasePattern, temp_origamiModel, false);
 		
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();
 

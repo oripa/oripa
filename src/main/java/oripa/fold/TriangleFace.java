@@ -16,29 +16,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.geom;
+package oripa.fold;
 
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
 
-public class OriHalfedge {
+public class TriangleFace {
 
-    public OriHalfedge next = null;
-    public OriHalfedge prev = null;
-    public OriHalfedge pair = null;
-    public OriEdge edge = null;
-    public OriVertex vertex = null;
-    public OriFace face = null;
-    public int tmpInt = 0;
-    public Vector2d tmpVec = new Vector2d();
-    public Vector2d p = new Vector2d();
-    public Vector2d positionForDisplay = new Vector2d();
-    public Vector2d positionAfterFolded = new Vector2d();
-    public Vector3d vertexColor = new Vector3d();
+    public TriangleVertex[] v;
+    public OriFace face;
 
-    public OriHalfedge(OriVertex v, OriFace f) {
-        vertex = v;
+    public TriangleFace(OriFace f) {
         face = f;
-        tmpVec.set(v.p);
+        v = new TriangleVertex[3];
+        for (int i = 0; i < 3; i++) {
+            v[i] = new TriangleVertex();
+        }
     }
 }

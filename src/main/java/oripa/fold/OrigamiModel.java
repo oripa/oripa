@@ -3,9 +3,6 @@ package oripa.fold;
 import java.util.ArrayList;
 import java.util.List;
 
-import oripa.geom.OriEdge;
-import oripa.geom.OriFace;
-import oripa.geom.OriVertex;
 import oripa.value.OriLine;
 
 
@@ -26,16 +23,10 @@ public class OrigamiModel {
 
 	//private FoldedModelInfo foldedModelInfo = new FoldedModelInfo();
 	
-	// FIXME ambiguous name
-	private boolean isValidPattern = false;
-
 	private boolean folded = false;
 
 	private boolean hasModel = false;
-	
-
-	private BoundBox boundBox;
-	
+		
 	private double paperSize = -1;
 	
 
@@ -62,10 +53,6 @@ public class OrigamiModel {
 	}
 
 	
-	public void setValidPattern(boolean isValidPattern) {
-		this.isValidPattern = isValidPattern;
-	}
-
 	public List<OriFace> getFaces() {
 		return faces;
 	}
@@ -79,13 +66,6 @@ public class OrigamiModel {
 		return edges;
 	}
 
-	public BoundBox getBoundBox() {
-		return boundBox;
-	}
-
-	public void setBoundBox(BoundBox boundBox) {
-		this.boundBox = boundBox;
-	}
 
 	public List<OriLine> getCrossLines() {
 		return crossLines;

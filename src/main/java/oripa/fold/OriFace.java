@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.geom;
+package oripa.fold;
 
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
@@ -26,8 +26,6 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import oripa.ORIPA;
-import oripa.fold.Condition3;
-import oripa.fold.Condition4;
 import oripa.value.OriLine;
 
 

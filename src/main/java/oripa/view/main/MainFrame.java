@@ -58,7 +58,7 @@ import oripa.file.FileVersionError;
 import oripa.file.FilterDB;
 import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
-import oripa.fold.FolderTool;
+import oripa.fold.OrigamiModelFactory;
 import oripa.fold.OrigamiModel;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
@@ -504,7 +504,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		boolean hasModel = origamiModel.hasModel();
 
-		FolderTool folderTool = new FolderTool();
+		OrigamiModelFactory folderTool = new OrigamiModelFactory();
 		
 		if ("obj".equals(ext) == false) {
 

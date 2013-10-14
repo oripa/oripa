@@ -16,26 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.geom;
+package oripa.fold;
 
-public class OriEdge {
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector3d;
 
-    public OriVertex sv = null;
-    public OriVertex ev = null;
-    public OriHalfedge left = null;
-    public OriHalfedge right = null;
-    public int type = 0;
+public class TriangleVertex {
 
-    public OriEdge() {
-    }
-
-    public OriEdge(OriVertex sv, OriVertex ev, int type) {
-        this.type = type;
-        this.sv = sv;
-        this.ev = ev;
-    }
-
-    public OriVertex oppositeVertex(OriVertex v) {
-        return v == sv ? ev : sv;
-    }
+    public Vector2d p = new Vector2d();
+    public Vector2d uv = new Vector2d();
+    public Vector3d color = new Vector3d();
 }

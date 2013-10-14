@@ -45,10 +45,10 @@ import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.fold.BoundBox;
 import oripa.fold.FoldedModelInfo;
+import oripa.fold.OriFace;
 import oripa.fold.OrigamiModel;
-import oripa.geom.OriFace;
-import oripa.geom.TriangleFace;
-import oripa.geom.TriangleVertex;
+import oripa.fold.TriangleFace;
+import oripa.fold.TriangleVertex;
 
 /**
  * A screen to show whether Maekawa theorem and Kawasaki theorem holds.

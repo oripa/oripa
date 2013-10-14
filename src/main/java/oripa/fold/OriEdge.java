@@ -16,18 +16,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.geom;
+package oripa.fold;
 
-public class TriangleFace {
 
-    public TriangleVertex[] v;
-    public OriFace face;
+public class OriEdge {
 
-    public TriangleFace(OriFace f) {
-        face = f;
-        v = new TriangleVertex[3];
-        for (int i = 0; i < 3; i++) {
-            v[i] = new TriangleVertex();
-        }
+    public OriVertex sv = null;
+    public OriVertex ev = null;
+    public OriHalfedge left = null;
+    public OriHalfedge right = null;
+    public int type = 0;
+
+    public OriEdge() {
+    }
+
+    public OriEdge(OriVertex sv, OriVertex ev, int type) {
+        this.type = type;
+        this.sv = sv;
+        this.ev = ev;
+    }
+
+    public OriVertex oppositeVertex(OriVertex v) {
+        return v == sv ? ev : sv;
     }
 }

@@ -2,8 +2,6 @@ package oripa.fold;
 
 import java.util.Comparator;
 
-import oripa.geom.OriFace;
-
 public class FaceOrderComparator implements Comparator<OriFace> {
 
 	@Override

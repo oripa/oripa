@@ -132,7 +132,6 @@ implements ActionListener, AdjustmentListener, Observer{
     	OrigamiModel origamiModel = document.getOrigamiModel();
 		
     	FolderTool folderTool = new FolderTool();
-
 		if (e.getSource() == menuItemFlip) {
     		folderTool.filpAll(origamiModel);
             screen.repaint();

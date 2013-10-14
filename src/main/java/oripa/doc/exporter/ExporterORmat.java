@@ -24,10 +24,10 @@ import java.util.List;
 
 import oripa.doc.Doc;
 import oripa.fold.FoldedModelInfo;
+import oripa.fold.OriFace;
+import oripa.fold.OriHalfedge;
+import oripa.fold.OriVertex;
 import oripa.fold.OrigamiModel;
-import oripa.geom.OriFace;
-import oripa.geom.OriHalfedge;
-import oripa.geom.OriVertex;
 
 // export folded model
 public class ExporterORmat implements Exporter{
