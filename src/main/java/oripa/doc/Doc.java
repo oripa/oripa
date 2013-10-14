@@ -163,7 +163,7 @@ public class Doc {
 
 	}
 
-	public void setNextORMat() {
+	public void setNextORMat(FoldedModelInfo foldedModelInfo) {
 		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
@@ -175,7 +175,7 @@ public class Doc {
 		}
 	}
 
-	public void setPrevORMat() {
+	public void setPrevORMat(FoldedModelInfo foldedModelInfo) {
 		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
@@ -188,7 +188,7 @@ public class Doc {
 
 	}
 
-	public int getSelectedLineNum() {
+	public int countSelectedLineNum(Collection<OriLine> creasePattern) {
 		int count = 0;
 		for (OriLine l : creasePattern) {
 			if (l.selected) {

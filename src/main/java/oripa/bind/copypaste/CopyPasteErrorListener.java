@@ -2,17 +2,22 @@ package oripa.bind.copypaste;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 
 import javax.swing.JOptionPane;
 
 import oripa.ORIPA;
 import oripa.bind.state.ErrorListener;
+import oripa.doc.Doc;
+import oripa.value.OriLine;
 
 public class CopyPasteErrorListener implements ErrorListener {
 
 	@Override
 	public boolean isError(ActionEvent e) {
-		return (ORIPA.doc.getSelectedLineNum() == 0);
+		Doc document = ORIPA.doc;
+		Collection<OriLine> creasePattern = document.getCreasePattern();
+		return (document.countSelectedLineNum(creasePattern) == 0);
 	}
 
 	@Override

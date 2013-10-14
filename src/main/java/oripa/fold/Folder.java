@@ -132,7 +132,7 @@ public class Folder {
 			face.intColor = (r << 16) | (g << 8) | b | 0xff000000;
 		}
 
-		origamiModel.setFolded(true);;
+		origamiModel.setFolded(true);
 		return foldableOverlapRelations.size();
 	}
 
@@ -618,6 +618,7 @@ public class Folder {
 		int crossNum = GeomUtil.getCrossPoint(dummy1, dummy2, sp1, ep1, sp2, ep2);
 		System.out.println("getCrossPoint results " + crossNum + "::::" + dummy1 + ", " + dummy2);
 
+		//temp_doc.buildOrigami(origamiModel, false);
 		temp_doc.buildOrigami(false);
 
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();

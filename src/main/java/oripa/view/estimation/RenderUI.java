@@ -104,7 +104,8 @@ public class RenderUI extends JPanel {
      * @return javax.swing.JButton
      */
     private JButton getJButtonNextAnswer() {
-        if (jButtonNextAnswer == null) {
+
+    	if (jButtonNextAnswer == null) {
             jButtonNextAnswer = new JButton();
             jButtonNextAnswer.setText("Next");
             jButtonNextAnswer.setBounds(new Rectangle(109, 4, 87, 27));
@@ -113,7 +114,9 @@ public class RenderUI extends JPanel {
 
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    ORIPA.doc.setNextORMat();
+                	Doc document = ORIPA.doc;
+                	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
+                    document.setNextORMat(foldedModelInfo);
                     screen.redrawOrigami();
                     updateLabel();
                 }
@@ -137,7 +140,10 @@ public class RenderUI extends JPanel {
 
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    ORIPA.doc.setPrevORMat();
+                	Doc document = ORIPA.doc;
+                	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
+                	
+                	document.setPrevORMat(foldedModelInfo);
                     screen.redrawOrigami();
                     updateLabel();
                 }

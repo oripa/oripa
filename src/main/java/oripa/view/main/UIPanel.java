@@ -636,8 +636,11 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				ORIPA.doc.buildOrigami3(false);
-				ORIPA.doc.checkPatternValidity();
+				Doc document = ORIPA.doc;
+				OrigamiModel origamiModel = document.getOrigamiModel();
+				document.buildOrigami3(false);
+//				document.buildOrigami3(origamiModel, false);
+				document.checkPatternValidity();
 				ORIPA.checkFrame.setVisible(true);
 				ORIPA.checkFrame.repaint();
 			}
@@ -651,6 +654,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {		
+		Doc document = ORIPA.doc;
 
 		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 
@@ -681,19 +685,20 @@ implements ActionListener, PropertyChangeListener, Observer {
 		} else if (ae.getSource() == resetButton) {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;
-			Doc document = ORIPA.doc;
 			OrigamiModel origamiModel = document.getOrigamiModel();
 	        List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 			sortedFaces.clear();
-			if (ORIPA.doc.buildOrigami3(false)) {
+//			if (document.buildOrigami3(origamiModel, false)) {
+			if (document.buildOrigami3(false)) {
 				buildOK = true;
 			} else {
 				if (JOptionPane.showConfirmDialog(
 						ORIPA.mainFrame, resources.getString(ResourceKey.WARNING, StringID.Warning.FOLD_FAILED_DUPLICATION_ID), 
 						"Failed", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
 						== JOptionPane.YES_OPTION) {
-					if (ORIPA.doc.buildOrigami3(false)) {
+//					if (document.buildOrigami3(origamiModel, false)) {
+					if (document.buildOrigami3(false)) {
 						buildOK = true;
 					} else {
 						JOptionPane.showMessageDialog(
@@ -704,7 +709,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 			}
 
 			if (buildOK) {
-				Folder folder = new Folder(ORIPA.doc);
+				Folder folder = new Folder(document);
 				int answerNum = folder.fold();
 				System.out.println("RenderFrame");
 				if (answerNum != 0) {
@@ -714,7 +719,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 				}
 
 			} else {
-				ORIPA.doc.foldWithoutLineType();
+				document.foldWithoutLineType();
 			}
 
 			ModelFrameSettingDB modelSetting = ModelFrameSettingDB.getInstance();

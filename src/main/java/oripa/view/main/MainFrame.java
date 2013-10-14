@@ -48,6 +48,7 @@ import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.doc.Doc;
+import oripa.doc.core.CreasePattern;
 import oripa.doc.exporter.ExporterXML;
 import oripa.file.FileChooser;
 import oripa.file.FileChooserFactory;
@@ -340,6 +341,9 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Doc document = ORIPA.doc;
+		CreasePattern creasePattern = document.getCreasePattern();
+
 		// Check the last opened files
 		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
 			if (e.getSource() == MRUFilesMenuItem[i]) {
@@ -434,7 +438,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			dialog.setModal(true);
 			dialog.setVisible(true);
 		} else if (e.getSource() == menuItemRepeatCopy) {
-			if (ORIPA.doc.getSelectedLineNum() == 0) {
+			if (document.countSelectedLineNum(creasePattern) == 0) {
 				JOptionPane.showMessageDialog(this, "Select target lines",
 						"ArrayCopy", JOptionPane.WARNING_MESSAGE);
 
@@ -442,7 +446,7 @@ public class MainFrame extends JFrame implements ActionListener,
 				arrayCopyDialog.setVisible(true);
 			}
 		} else if (e.getSource() == menuItemCircleCopy) {
-			if (ORIPA.doc.getSelectedLineNum() == 0) {
+			if (document.countSelectedLineNum(creasePattern) == 0) {
 				JOptionPane.showMessageDialog(this, "Select target lines",
 						"ArrayCopy", JOptionPane.WARNING_MESSAGE);
 
@@ -500,6 +504,7 @@ public class MainFrame extends JFrame implements ActionListener,
 		if ("obj".equals(ext) == false) {
 			
 		} else if (!hasModel && !document.buildOrigami(true)) {
+//		} else if (!hasModel && !document.buildOrigami(origamiModel, true)) {
 			JOptionPane.showConfirmDialog(null,
 					"Warning: Building a set of polygons from crease pattern "
 							+ "was failed.", "Warning",
