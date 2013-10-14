@@ -47,6 +47,9 @@ public class Folder {
 	int workORmat[][];
 	ArrayList<SubFace> subFaces;
 
+	// helper object
+    FolderTool folderTool = new FolderTool();
+
 	public Folder(Doc doc) {
 		m_doc = doc;
 	}
@@ -56,17 +59,21 @@ public class Folder {
 		OrigamiModel origamiModel = m_doc.getOrigamiModel();
 		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 
-		List<OriFace> faces = origamiModel.getFaces();
         List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+
+        List<OriFace>   faces    = origamiModel.getFaces();
         List<OriVertex> vertices = origamiModel.getVertices();
+        List<OriEdge>   edges    = origamiModel.getEdges();
         
         List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
         foldableOverlapRelations.clear();
 
-        FolderTool folderTool = new FolderTool();
         
-		simpleFoldWithoutZorder();
-		m_doc.calcFoldedBoundingBox();
+		simpleFoldWithoutZorder(faces, edges);
+		
+		foldedModelInfo.setBoundBox(
+				folderTool.calcFoldedBoundingBox(faces));
+		
 		sortedFaces.addAll(faces);
 		folderTool.setFacesOutline(vertices, faces, false);
 
@@ -77,19 +84,21 @@ public class Folder {
 		}
 
 		// After folding construct the sbfaces
-		subFaces = makeSubFaces();
+		subFaces = makeSubFaces(origamiModel);
 		System.out.println("subFaces.size() = " + subFaces.size());
-		foldedModelInfo.setOverlapRelation(createOverlapRelation());
+
+		foldedModelInfo.setOverlapRelation(
+				createOverlapRelation());
 
 		// Set overlap relations based on valley/mountain folds information
 		step1();
 
-		holdCondition3s();
-		holdCondition4s();
+		holdCondition3s(origamiModel, foldedModelInfo);
+		holdCondition4s(origamiModel, foldedModelInfo);
 
         int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
-		estimation(overlapRelation);
+		estimation(origamiModel, overlapRelation);
 
 		int size = faces.size();
 		workORmat = new int[size][size];
@@ -103,7 +112,7 @@ public class Folder {
 			sub.sortFaceOverlapOrder(faces, workORmat);
 		}
 
-		findAnswer(0, overlapRelation);
+		findAnswer(foldedModelInfo, 0, overlapRelation);
 
 		foldedModelInfo.setCurrentORmatIndex(0);
 		if (foldableOverlapRelations.isEmpty()) {
@@ -143,8 +152,9 @@ public class Folder {
 		return foldableOverlapRelations.size();
 	}
 
-	private void findAnswer(int subFaceIndex, int[][] orMat) {
-		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
+	private void findAnswer(
+			FoldedModelInfo foldedModelInfo, int subFaceIndex, int[][] orMat) {
+		//FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 		SubFace sub = subFaces.get(subFaceIndex);
 		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 
@@ -163,7 +173,7 @@ public class Folder {
 				}
 				foldableOverlapRelations.add(ansMat);
 			} else {
-				findAnswer(subFaceIndex + 1, passMat);
+				findAnswer(foldedModelInfo, subFaceIndex + 1, passMat);
 			}
 
 		} else {
@@ -210,17 +220,18 @@ public class Folder {
 					}
 					foldableOverlapRelations.add(ansMat);
 				} else {
-					findAnswer(subFaceIndex + 1, passMat);
+					findAnswer(foldedModelInfo, subFaceIndex + 1, passMat);
 				}
 			}
 		}
 	}
 
-	private void estimation(int[][] orMat) {
+	private void estimation(
+			OrigamiModel origamiModel, int[][] orMat) {
 		boolean bChanged;
 		do {
 			bChanged = false;
-			if (estimate_by3faces(orMat)) {
+			if (estimate_by3faces(origamiModel, orMat)) {
 				bChanged = true;
 			}
 			if (estimate_by3faces2(orMat)) {
@@ -235,9 +246,10 @@ public class Folder {
 
 	// If face[i] and face[j] touching edge is covered by face[k]
 	// then OR[i][k] = OR[j][k] 
-	private void holdCondition3s() {
-		OrigamiModel origamiModel = m_doc.getOrigamiModel();
-		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
+	private void holdCondition3s(
+			OrigamiModel origamiModel, FoldedModelInfo foldedModelInfo) {
+		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		// FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 		
 		List<OriFace> faces = origamiModel.getFaces();
 
@@ -282,9 +294,10 @@ public class Folder {
 		}
 	}
 
-	private void holdCondition4s() {
-		OrigamiModel origamiModel = m_doc.getOrigamiModel();
-		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
+	private void holdCondition4s(
+			OrigamiModel origamiModel, FoldedModelInfo foldedModelInfo) {
+		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		// FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 
 		List<OriEdge>   edges    = origamiModel.getEdges();
 
@@ -557,8 +570,10 @@ public class Folder {
 
 	// If face[i] and face[j] touching edge is covered by face[k]
 	// then OR[i][k] = OR[j][k] 
-	private boolean estimate_by3faces(int[][] orMat) {
-		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+	private boolean estimate_by3faces(
+			OrigamiModel origamiModel,
+			int[][] orMat) {
+//		OrigamiModel origamiModel = m_doc.getOrigamiModel();
 		List<OriFace> faces = origamiModel.getFaces();
 
 		boolean bChanged = false;
@@ -591,15 +606,16 @@ public class Folder {
 		return bChanged;
 	}
 
-	private ArrayList<SubFace> makeSubFaces() {
-		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+	private ArrayList<SubFace> makeSubFaces(
+			OrigamiModel origamiModel) {
+		//OrigamiModel origamiModel = m_doc.getOrigamiModel();
 		List<OriFace> faces = origamiModel.getFaces();
 		double paperSize = origamiModel.getPaperSize();
 
 		Doc temp_doc = new Doc(paperSize);
-		CreasePattern creasePattern = temp_doc.getCreasePattern();
+		CreasePattern temp_creasePattern = temp_doc.getCreasePattern();
 
-		creasePattern.clear();        
+		temp_creasePattern.clear();        
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				temp_doc.addLine(new OriLine(he.positionAfterFolded, he.next.positionAfterFolded, OriLine.TYPE_RIDGE));
@@ -684,10 +700,11 @@ public class Folder {
 		return localSubFaces;
 	}
 
-	private void simpleFoldWithoutZorder() {
-		OrigamiModel origamiModel = m_doc.getOrigamiModel();
-		List<OriFace>   faces    = origamiModel.getFaces();
-        List<OriEdge>   edges    = origamiModel.getEdges();
+	private void simpleFoldWithoutZorder(
+			List<OriFace> faces, List<OriEdge> edges) {
+		//OrigamiModel origamiModel = m_doc.getOrigamiModel();
+//		List<OriFace>   faces    = origamiModel.getFaces();
+//        List<OriEdge>   edges    = origamiModel.getEdges();
 
         int id = 0;
 		for (OriFace face : faces) {
@@ -862,10 +879,8 @@ public class Folder {
 		}
 	}
 
-	FolderTool folderTool = new FolderTool();
 
-
-	public boolean foldWithoutLineType(
+	public BoundBox foldWithoutLineType(
 			OrigamiModel model) {
 		List<OriVertex> vertices = model.getVertices();
 		List<OriEdge>   edges    = model.getEdges();
@@ -890,8 +905,9 @@ public class Folder {
 		}
 
 		folderTool.setFacesOutline(vertices, faces, false);
-		folderTool.calcFoldedBoundingBox(faces);
-		return true;
+		
+		return folderTool.calcFoldedBoundingBox(faces);
+
 	}
 
 	// Make the folds by flipping the faces 

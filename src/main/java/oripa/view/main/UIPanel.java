@@ -59,6 +59,8 @@ import oripa.bind.state.action.PaintActionSetter;
 import oripa.doc.Doc;
 import oripa.doc.TypeForChange;
 import oripa.file.ImageResourceLoader;
+import oripa.fold.BoundBox;
+import oripa.fold.FoldedModelInfo;
 import oripa.fold.Folder;
 import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
@@ -721,7 +723,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 				}
 
 			} else {
-				folder.foldWithoutLineType(origamiModel);
+				BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
+				FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
+				foldedModelInfo.setBoundBox(boundBox);
 			}
 
 			ModelFrameSettingDB modelSetting = ModelFrameSettingDB.getInstance();

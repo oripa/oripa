@@ -34,7 +34,6 @@ import oripa.doc.command.LinePaster;
 import oripa.doc.core.CreasePattern;
 import oripa.fold.BoundBox;
 import oripa.fold.FoldedModelInfo;
-import oripa.fold.Folder;
 import oripa.fold.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
@@ -162,30 +161,6 @@ public class Doc {
 
 	}
 
-	public void setNextORMat(FoldedModelInfo foldedModelInfo) {
-		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
-		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
-		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
-
-		if (currentORmatIndex < foldableOverlapRelations.size() - 1) {
-			int nextIndex = currentORmatIndex + 1;
-			foldedModelInfo.setCurrentORmatIndex(nextIndex);
-			Folder.matrixCopy(foldableOverlapRelations.get(nextIndex), overlapRelation);
-		}
-	}
-
-	public void setPrevORMat(FoldedModelInfo foldedModelInfo) {
-		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
-		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
-		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
-
-		if (currentORmatIndex > 0) {
-			int prevIndex = currentORmatIndex - 1;
-			foldedModelInfo.setCurrentORmatIndex(prevIndex);
-			Folder.matrixCopy(foldableOverlapRelations.get(prevIndex), overlapRelation);
-		}
-
-	}
 
 	public int countSelectedLineNum(Collection<OriLine> creasePattern) {
 		int count = 0;

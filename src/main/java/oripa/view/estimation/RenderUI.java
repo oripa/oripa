@@ -116,7 +116,7 @@ public class RenderUI extends JPanel {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                 	Doc document = ORIPA.doc;
                 	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
-                    document.setNextORMat(foldedModelInfo);
+                    foldedModelInfo.setNextORMat();
                     screen.redrawOrigami();
                     updateLabel();
                 }
@@ -143,7 +143,7 @@ public class RenderUI extends JPanel {
                 	Doc document = ORIPA.doc;
                 	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
                 	
-                	document.setPrevORMat(foldedModelInfo);
+                	foldedModelInfo.setPrevORMat();
                     screen.redrawOrigami();
                     updateLabel();
                 }
