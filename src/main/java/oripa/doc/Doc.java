@@ -31,7 +31,6 @@ import oripa.doc.command.ElementRemover;
 import oripa.doc.command.LineAdder;
 import oripa.doc.command.LinePaster;
 import oripa.doc.core.CreasePattern;
-import oripa.fold.BoundBox;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.geom.GeomUtil;
@@ -766,106 +765,106 @@ public class Doc {
 //		return checkPatternValidity();
 //	}
 
-	public boolean checkPatternValidity() {
-		boolean isOK = true;
-
-		List<OriFace> faces = origamiModel.getFaces();
-
-		// Check if the faces are convex
-		for (OriFace face : faces) {
-			if (face.halfedges.size() == 3) {
-				continue;
-			}
-
-			OriHalfedge baseHe = face.halfedges.get(0);
-			boolean baseFlg = GeomUtil.CCWcheck(baseHe.prev.vertex.p, 
-					baseHe.vertex.p, baseHe.next.vertex.p);
-
-			for (int i = 1; i < face.halfedges.size(); i++) {
-				OriHalfedge he = face.halfedges.get(i);
-				if (GeomUtil.CCWcheck(he.prev.vertex.p, he.vertex.p, he.next.vertex.p) != baseFlg) {
-					isOK = false;
-					face.hasProblem = true;
-					break;
-				}
-
-			}
-		}
-
-		// Check Maekawa's theorem for all vertexes
-		List<OriVertex> vertices = origamiModel.getVertices();
-		for (OriVertex v : vertices) {
-			int ridgeCount = 0;
-			int valleyCount = 0;
-			boolean isCorner = false;
-			for (OriEdge e : v.edges) {
-				if (e.type == OriLine.TYPE_RIDGE) {
-					ridgeCount++;
-				} else if (e.type == OriLine.TYPE_VALLEY) {
-					valleyCount++;
-				} else if (e.type == OriLine.TYPE_CUT) {
-					isCorner = true;
-					break;
-				}
-			}
-
-			if (isCorner) {
-				continue;
-			}
-
-			if (Math.abs(ridgeCount - valleyCount) != 2) {
-				System.out.println("edge type count invalid: "+ v+" "+Math.abs(ridgeCount - valleyCount));
-				v.hasProblem = true;
-				isOK = false;
-			}
-		}
-
-		// Check Kawasaki's theorem for every vertex
-
-		for (OriVertex v : vertices) {
-			if (v.hasProblem) {
-				continue;
-			}
-			Vector2d p = v.p;
-			double oddSum = 0;
-			double evenSum = 0;
-			boolean isCorner = false;
-			for (int i = 0; i < v.edges.size(); i++) {
-				OriEdge e = v.edges.get(i);
-				if (e.type == OriLine.TYPE_CUT) {
-					isCorner = true;
-					break;
-				}
-
-				Vector2d preP = new Vector2d(v.edges.get(i).oppositeVertex(v).p);
-				Vector2d nxtP = new Vector2d(v.edges.get((i + 1) % v.edges.size()).oppositeVertex(v).p);
-
-				nxtP.sub(p);
-				preP.sub(p);
-
-				if (i % 2 == 0) {
-					oddSum += preP.angle(nxtP);
-				} else {
-					evenSum += preP.angle(nxtP);
-				}
-			}
-
-			if (isCorner) {
-				continue;
-			}
-
-			//System.out.println("oddSum = " + oddSum + "/ evenSum = " + evenSum);
-			if (Math.abs(oddSum - Math.PI) > Math.PI / 180 / 2) {
-				System.out.println("edge angle sum invalid");
-				v.hasProblem = true;
-				isOK = false;
-			}
-		}
-
-		origamiModel.setValidPattern(isOK);
-		calcFoldedBoundingBox();
-		return isOK;
-	}
+//	public boolean checkPatternValidity() {
+//		boolean isOK = true;
+//
+//		List<OriFace> faces = origamiModel.getFaces();
+//
+//		// Check if the faces are convex
+//		for (OriFace face : faces) {
+//			if (face.halfedges.size() == 3) {
+//				continue;
+//			}
+//
+//			OriHalfedge baseHe = face.halfedges.get(0);
+//			boolean baseFlg = GeomUtil.CCWcheck(baseHe.prev.vertex.p, 
+//					baseHe.vertex.p, baseHe.next.vertex.p);
+//
+//			for (int i = 1; i < face.halfedges.size(); i++) {
+//				OriHalfedge he = face.halfedges.get(i);
+//				if (GeomUtil.CCWcheck(he.prev.vertex.p, he.vertex.p, he.next.vertex.p) != baseFlg) {
+//					isOK = false;
+//					face.hasProblem = true;
+//					break;
+//				}
+//
+//			}
+//		}
+//
+//		// Check Maekawa's theorem for all vertexes
+//		List<OriVertex> vertices = origamiModel.getVertices();
+//		for (OriVertex v : vertices) {
+//			int ridgeCount = 0;
+//			int valleyCount = 0;
+//			boolean isCorner = false;
+//			for (OriEdge e : v.edges) {
+//				if (e.type == OriLine.TYPE_RIDGE) {
+//					ridgeCount++;
+//				} else if (e.type == OriLine.TYPE_VALLEY) {
+//					valleyCount++;
+//				} else if (e.type == OriLine.TYPE_CUT) {
+//					isCorner = true;
+//					break;
+//				}
+//			}
+//
+//			if (isCorner) {
+//				continue;
+//			}
+//
+//			if (Math.abs(ridgeCount - valleyCount) != 2) {
+//				System.out.println("edge type count invalid: "+ v+" "+Math.abs(ridgeCount - valleyCount));
+//				v.hasProblem = true;
+//				isOK = false;
+//			}
+//		}
+//
+//		// Check Kawasaki's theorem for every vertex
+//
+//		for (OriVertex v : vertices) {
+//			if (v.hasProblem) {
+//				continue;
+//			}
+//			Vector2d p = v.p;
+//			double oddSum = 0;
+//			double evenSum = 0;
+//			boolean isCorner = false;
+//			for (int i = 0; i < v.edges.size(); i++) {
+//				OriEdge e = v.edges.get(i);
+//				if (e.type == OriLine.TYPE_CUT) {
+//					isCorner = true;
+//					break;
+//				}
+//
+//				Vector2d preP = new Vector2d(v.edges.get(i).oppositeVertex(v).p);
+//				Vector2d nxtP = new Vector2d(v.edges.get((i + 1) % v.edges.size()).oppositeVertex(v).p);
+//
+//				nxtP.sub(p);
+//				preP.sub(p);
+//
+//				if (i % 2 == 0) {
+//					oddSum += preP.angle(nxtP);
+//				} else {
+//					evenSum += preP.angle(nxtP);
+//				}
+//			}
+//
+//			if (isCorner) {
+//				continue;
+//			}
+//
+//			//System.out.println("oddSum = " + oddSum + "/ evenSum = " + evenSum);
+//			if (Math.abs(oddSum - Math.PI) > Math.PI / 180 / 2) {
+//				System.out.println("edge angle sum invalid");
+//				v.hasProblem = true;
+//				isOK = false;
+//			}
+//		}
+//
+//		origamiModel.setValidPattern(isOK);
+//		calcFoldedBoundingBox();
+//		return isOK;
+//	}
 	boolean sortFinished = false;
 
 //	public boolean isLineCrossFace4(OriFace face, OriHalfedge heg) {
@@ -913,30 +912,30 @@ public class Doc {
 //		return false;
 //	}
 
-	public boolean isOnFace(OriFace face, Vector2d v) {
-
-		int heNum = face.halfedges.size();
-
-		// Return false if the vector is on the contour of the face
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.DistancePointToSegment(v, he.positionAfterFolded, he.next.positionAfterFolded) < paperSize * 0.001) {
-				return false;
-			}
-		}
-
-		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.positionAfterFolded, baseHe.next.positionAfterFolded, v);
-
-		for (int i = 1; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.positionAfterFolded, he.next.positionAfterFolded, v) != baseFlg) {
-				return false;
-			}
-		}
-
-		return true;
-	}
+//	public boolean isOnFace(OriFace face, Vector2d v) {
+//
+//		int heNum = face.halfedges.size();
+//
+//		// Return false if the vector is on the contour of the face
+//		for (int i = 0; i < heNum; i++) {
+//			OriHalfedge he = face.halfedges.get(i);
+//			if (GeomUtil.DistancePointToSegment(v, he.positionAfterFolded, he.next.positionAfterFolded) < paperSize * 0.001) {
+//				return false;
+//			}
+//		}
+//
+//		OriHalfedge baseHe = face.halfedges.get(0);
+//		boolean baseFlg = GeomUtil.CCWcheck(baseHe.positionAfterFolded, baseHe.next.positionAfterFolded, v);
+//
+//		for (int i = 1; i < heNum; i++) {
+//			OriHalfedge he = face.halfedges.get(i);
+//			if (GeomUtil.CCWcheck(he.positionAfterFolded, he.next.positionAfterFolded, v) != baseFlg) {
+//				return false;
+//			}
+//		}
+//
+//		return true;
+//	}
 
 	public boolean addVertexOnLine(OriLine line, Vector2d v) {
 		// Normally you dont want to add a vertex too close to the end of the line
@@ -984,116 +983,116 @@ public class Doc {
 //		return true;
 //	}
 
-	public void calcFoldedBoundingBox() {
-		Vector2d foldedBBoxLT = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-		Vector2d foldedBBoxRB = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
+//	public void calcFoldedBoundingBox() {
+//		Vector2d foldedBBoxLT = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
+//		Vector2d foldedBBoxRB = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
+//
+//		List<OriFace> faces = origamiModel.getFaces();
+//		for (OriFace face : faces) {
+//			for (OriHalfedge he : face.halfedges) {
+//				foldedBBoxLT.x = Math.min(foldedBBoxLT.x, he.tmpVec.x);
+//				foldedBBoxLT.y = Math.min(foldedBBoxLT.y, he.tmpVec.y);
+//				foldedBBoxRB.x = Math.max(foldedBBoxRB.x, he.tmpVec.x);
+//				foldedBBoxRB.y = Math.max(foldedBBoxRB.y, he.tmpVec.y);
+//			}
+//		}
+//		
+//		foldedModelInfo.setBoundBox(new BoundBox(foldedBBoxLT, foldedBBoxRB));
+//	}
+//
 
-		List<OriFace> faces = origamiModel.getFaces();
-		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
-				foldedBBoxLT.x = Math.min(foldedBBoxLT.x, he.tmpVec.x);
-				foldedBBoxLT.y = Math.min(foldedBBoxLT.y, he.tmpVec.y);
-				foldedBBoxRB.x = Math.max(foldedBBoxRB.x, he.tmpVec.x);
-				foldedBBoxRB.y = Math.max(foldedBBoxRB.y, he.tmpVec.y);
-			}
-		}
-		
-		foldedModelInfo.setBoundBox(new BoundBox(foldedBBoxLT, foldedBBoxRB));
-	}
+//	// Make the folds by flipping the faces 
+//	private void walkFace(OriFace face) {
+//		face.tmpFlg = true;
+//		if (debugCount++ > 1000) {
+//			System.out.println("walkFace too deap");
+//			return;
+//		}
+//		for (OriHalfedge he : face.halfedges) {
+//			if (he.pair == null) {
+//				continue;
+//			}
+//			if (he.pair.face.tmpFlg) {
+//				continue;
+//			}
+//
+//			flipFace2(he.pair.face, he);
+//			he.pair.face.tmpFlg = true;
+//			walkFace(he.pair.face);
+//		}
+//	}
 
 
-	// Make the folds by flipping the faces 
-	private void walkFace(OriFace face) {
-		face.tmpFlg = true;
-		if (debugCount++ > 1000) {
-			System.out.println("walkFace too deap");
-			return;
-		}
-		for (OriHalfedge he : face.halfedges) {
-			if (he.pair == null) {
-				continue;
-			}
-			if (he.pair.face.tmpFlg) {
-				continue;
-			}
-
-			flipFace2(he.pair.face, he);
-			he.pair.face.tmpFlg = true;
-			walkFace(he.pair.face);
-		}
-	}
-
-
-	// Method that doesnt use sin con 
-	private void flipFace2(OriFace face, OriHalfedge baseHe) {
-
-		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
-		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
-
-		// Creates the base unit vector for before the rotation
-		Vector2d baseDir = new Vector2d();
-		baseDir.sub(baseHe.pair.tmpVec, baseHe.pair.next.tmpVec);
-
-		// Creates the base unit vector for after the rotation
-		Vector2d afterDir = new Vector2d();
-		afterDir.sub(baseHe.next.tmpVec, baseHe.tmpVec);
-		afterDir.normalize();
-
-		Line preLine = new Line(preOrigin, baseDir);
-
-		for (OriHalfedge he : face.halfedges) {
-			double param[] = new double[1];
-			double d0 = GeomUtil.Distance(he.tmpVec, preLine, param);
-			double d1 = param[0];
-
-			Vector2d footV = new Vector2d(afterOrigin);
-			footV.x += d1 * afterDir.x;
-			footV.y += d1 * afterDir.y;
-
-			Vector2d afterDirFromFoot = new Vector2d();
-			afterDirFromFoot.x = afterDir.y;
-			afterDirFromFoot.y = -afterDir.x;
-
-			he.tmpVec.x = footV.x + d0 * afterDirFromFoot.x;
-			he.tmpVec.y = footV.y + d0 * afterDirFromFoot.y;
-
-		}
-
-		// Ivertion
-		if (face.faceFront == baseHe.face.faceFront) {
-			Vector2d ep = baseHe.next.tmpVec;
-			Vector2d sp = baseHe.tmpVec;
-
-			Vector2d b = new Vector2d();
-			b.sub(ep, sp);
-			for (OriHalfedge he : face.halfedges) {
-
-				if (GeomUtil.Distance(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
-					continue;
-				}
-				if (Math.abs(b.y) < GeomUtil.EPS) {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					a.y = -a.y;
-					he.tmpVec.y = a.y + sp.y;
-				} else {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					he.tmpVec.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x) / b.lengthSquared();
-					he.tmpVec.x = b.x / b.y * a.y - a.x + b.x / b.y * he.tmpVec.y;
-					he.tmpVec.x += sp.x;
-					he.tmpVec.y += sp.y;
-				}
-			}
-			face.faceFront = !face.faceFront;
-		}
-
-		List<OriFace> faces = origamiModel.getFaces();
-
-		faces.remove(face);
-		faces.add(face);
-	}
-
+//	// Method that doesnt use sin con 
+//	private void flipFace2(OriFace face, OriHalfedge baseHe) {
+//
+//		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
+//		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
+//
+//		// Creates the base unit vector for before the rotation
+//		Vector2d baseDir = new Vector2d();
+//		baseDir.sub(baseHe.pair.tmpVec, baseHe.pair.next.tmpVec);
+//
+//		// Creates the base unit vector for after the rotation
+//		Vector2d afterDir = new Vector2d();
+//		afterDir.sub(baseHe.next.tmpVec, baseHe.tmpVec);
+//		afterDir.normalize();
+//
+//		Line preLine = new Line(preOrigin, baseDir);
+//
+//		for (OriHalfedge he : face.halfedges) {
+//			double param[] = new double[1];
+//			double d0 = GeomUtil.Distance(he.tmpVec, preLine, param);
+//			double d1 = param[0];
+//
+//			Vector2d footV = new Vector2d(afterOrigin);
+//			footV.x += d1 * afterDir.x;
+//			footV.y += d1 * afterDir.y;
+//
+//			Vector2d afterDirFromFoot = new Vector2d();
+//			afterDirFromFoot.x = afterDir.y;
+//			afterDirFromFoot.y = -afterDir.x;
+//
+//			he.tmpVec.x = footV.x + d0 * afterDirFromFoot.x;
+//			he.tmpVec.y = footV.y + d0 * afterDirFromFoot.y;
+//
+//		}
+//
+//		// Ivertion
+//		if (face.faceFront == baseHe.face.faceFront) {
+//			Vector2d ep = baseHe.next.tmpVec;
+//			Vector2d sp = baseHe.tmpVec;
+//
+//			Vector2d b = new Vector2d();
+//			b.sub(ep, sp);
+//			for (OriHalfedge he : face.halfedges) {
+//
+//				if (GeomUtil.Distance(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
+//					continue;
+//				}
+//				if (Math.abs(b.y) < GeomUtil.EPS) {
+//					Vector2d a = new Vector2d();
+//					a.sub(he.tmpVec, sp);
+//					a.y = -a.y;
+//					he.tmpVec.y = a.y + sp.y;
+//				} else {
+//					Vector2d a = new Vector2d();
+//					a.sub(he.tmpVec, sp);
+//					he.tmpVec.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x) / b.lengthSquared();
+//					he.tmpVec.x = b.x / b.y * a.y - a.x + b.x / b.y * he.tmpVec.y;
+//					he.tmpVec.x += sp.x;
+//					he.tmpVec.y += sp.y;
+//				}
+//			}
+//			face.faceFront = !face.faceFront;
+//		}
+//
+//		List<OriFace> faces = origamiModel.getFaces();
+//
+//		faces.remove(face);
+//		faces.add(face);
+//	}
+//
 
 	// Adds a rabbit-ear molecule given a triangle
 	public void addTriangleDivideLines(Vector2d v0, Vector2d v1, Vector2d v2) {
