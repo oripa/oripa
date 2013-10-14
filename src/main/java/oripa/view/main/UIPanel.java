@@ -688,7 +688,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;
 			OrigamiModel origamiModel = document.getOrigamiModel();
-	        List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+			FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
+
+			List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 			sortedFaces.clear();
 //			if (document.buildOrigami3(origamiModel, false)) {
@@ -711,10 +713,10 @@ implements ActionListener, PropertyChangeListener, Observer {
 				}
 			}
 
-			Folder folder = new Folder(document);
-
+			Folder folder = new Folder();
+			
 			if (buildOK) {
-				int answerNum = folder.fold();
+				int answerNum = folder.fold(origamiModel, foldedModelInfo);
 				System.out.println("RenderFrame");
 				if (answerNum != 0) {
 					RenderFrameSettingDB renderSetting = RenderFrameSettingDB.getInstance();
@@ -724,7 +726,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 			} else {
 				BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
-				FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 				foldedModelInfo.setBoundBox(boundBox);
 			}
 

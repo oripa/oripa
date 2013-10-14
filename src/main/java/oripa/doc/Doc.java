@@ -869,50 +869,50 @@ public class Doc {
 	}
 	boolean sortFinished = false;
 
-	public boolean isLineCrossFace4(OriFace face, OriHalfedge heg) {
-		Vector2d p1 = heg.positionAfterFolded;
-		Vector2d p2 = heg.next.positionAfterFolded;
-		Vector2d dir = new Vector2d();
-		dir.sub(p2, p1);
-		Line heLine = new Line(p1, dir);
-
-		for (OriHalfedge he : face.halfedges) {
-			// About the relation of contours (?)
-
-			// Check if the line is on the countour of the face
-			if (GeomUtil.DistancePointToLine(he.positionAfterFolded, heLine) < 1
-					&& GeomUtil.DistancePointToLine(he.next.positionAfterFolded, heLine) < 1) {
-				return false;
-			}
-		}
-
-		Vector2d preCrossPoint = null;
-		for (OriHalfedge he : face.halfedges) {
-			// Checks if the line crosses any of the edges of the face
-			Vector2d cp = GeomUtil.getCrossPoint(he.positionAfterFolded, he.next.positionAfterFolded, heg.positionAfterFolded, heg.next.positionAfterFolded);
-			if (cp == null) {
-				continue;
-			}
-
-			if (preCrossPoint == null) {
-				preCrossPoint = cp;
-			} else {
-				if (GeomUtil.Distance(cp, preCrossPoint) > paperSize * 0.001) {
-					return true;
-				}
-			}
-		}
-
-		// Checkes if the line is in the interior of the face
-		if (isOnFace(face, heg.positionAfterFolded)) {
-			return true;
-		}
-		if (isOnFace(face, heg.next.positionAfterFolded)) {
-			return true;
-		}
-
-		return false;
-	}
+//	public boolean isLineCrossFace4(OriFace face, OriHalfedge heg) {
+//		Vector2d p1 = heg.positionAfterFolded;
+//		Vector2d p2 = heg.next.positionAfterFolded;
+//		Vector2d dir = new Vector2d();
+//		dir.sub(p2, p1);
+//		Line heLine = new Line(p1, dir);
+//
+//		for (OriHalfedge he : face.halfedges) {
+//			// About the relation of contours (?)
+//
+//			// Check if the line is on the countour of the face
+//			if (GeomUtil.DistancePointToLine(he.positionAfterFolded, heLine) < 1
+//					&& GeomUtil.DistancePointToLine(he.next.positionAfterFolded, heLine) < 1) {
+//				return false;
+//			}
+//		}
+//
+//		Vector2d preCrossPoint = null;
+//		for (OriHalfedge he : face.halfedges) {
+//			// Checks if the line crosses any of the edges of the face
+//			Vector2d cp = GeomUtil.getCrossPoint(he.positionAfterFolded, he.next.positionAfterFolded, heg.positionAfterFolded, heg.next.positionAfterFolded);
+//			if (cp == null) {
+//				continue;
+//			}
+//
+//			if (preCrossPoint == null) {
+//				preCrossPoint = cp;
+//			} else {
+//				if (GeomUtil.Distance(cp, preCrossPoint) > paperSize * 0.001) {
+//					return true;
+//				}
+//			}
+//		}
+//
+//		// Checkes if the line is in the interior of the face
+//		if (isOnFace(face, heg.positionAfterFolded)) {
+//			return true;
+//		}
+//		if (isOnFace(face, heg.next.positionAfterFolded)) {
+//			return true;
+//		}
+//
+//		return false;
+//	}
 
 	public boolean isOnFace(OriFace face, Vector2d v) {
 

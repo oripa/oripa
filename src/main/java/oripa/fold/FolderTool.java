@@ -147,11 +147,11 @@ public class FolderTool {
 	
 	/**
 	 * 
-	 * @param lines
+	 * @param creasePattern
 	 * @param needCleanUp
 	 * @return Folded model if success, otherwise null.
 	 */
-	public OrigamiModel buildOrigami(Collection<OriLine> lines, double paperSize, boolean needCleanUp) {
+	public OrigamiModel buildOrigami(Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {
 
 		OrigamiModel     model = new OrigamiModel(paperSize);
 		
@@ -159,11 +159,7 @@ public class FolderTool {
 		List<OriVertex> vertices = model.getVertices();
 		List<OriFace>   faces    = model.getFaces();
 
-		ArrayList<OriLine> creasePattern = new ArrayList<>();
-		creasePattern.addAll(lines);
 
-		Collections.sort(creasePattern);
-		
 		for (OriLine l : creasePattern) {
 			if (l.typeVal == OriLine.TYPE_NONE) {
 				continue;
@@ -235,18 +231,12 @@ public class FolderTool {
 
 	}
 
-	public OrigamiModel buildOrigami3(
-			Collection<OriLine> lines, double paperSize, boolean needCleanUp) {
+	public OrigamiModel buildOrigami3(Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {
 		OrigamiModel     model = new OrigamiModel(paperSize);
 		
 		List<OriEdge>   edges    = model.getEdges();
 		List<OriVertex> vertices = model.getVertices();
 		List<OriFace>   faces    = model.getFaces();
-
-		ArrayList<OriLine> creasePattern = new ArrayList<>();
-		creasePattern.addAll(lines);
-
-		Collections.sort(creasePattern);
 
 		// Remove lines with the same position
 		debugCount = 0;
