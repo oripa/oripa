@@ -231,173 +231,172 @@ public class FolderTool {
 
 	}
 
-	public OrigamiModel buildOrigami3(Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {
-		OrigamiModel     model = new OrigamiModel(paperSize);
-		
-		List<OriEdge>   edges    = model.getEdges();
-		List<OriVertex> vertices = model.getVertices();
-		List<OriFace>   faces    = model.getFaces();
+	public boolean buildOrigami3(Collection<OriLine> creasePattern, OrigamiModel origamiModel, boolean needCleanUp) {	
+	List<OriFace> faces = origamiModel.getFaces();
+	List<OriEdge> edges = origamiModel.getEdges();
+	List<OriVertex> vertices = origamiModel.getVertices();
 
-		// Remove lines with the same position
-		debugCount = 0;
-		if (needCleanUp) {
-			if (cleanDuplicatedLines(creasePattern)) {
-				JOptionPane.showMessageDialog(
-						ORIPA.mainFrame, "Removing multiples edges with the same position ",
-						"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
-			}
+	edges.clear();
+	vertices.clear();
+	faces.clear();
 
+	// Remove lines with the same position
+	debugCount = 0;
+	if (needCleanUp) {
+		if (cleanDuplicatedLines(creasePattern)) {
+			JOptionPane.showMessageDialog(
+					ORIPA.mainFrame, "Removing multiples edges with the same position ",
+					"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
 		}
 
-		// Create the edges from the vertexes
-		for (OriLine l : creasePattern) {
-			if (l.typeVal == OriLine.TYPE_NONE) {
-				continue;
-			}
-
-			OriVertex sv = addAndGetVertexFromVVec(vertices, l.p0);
-			OriVertex ev = addAndGetVertexFromVVec(vertices, l.p1);
-			OriEdge eg = new OriEdge(sv, ev, l.typeVal);
-			edges.add(eg);
-			sv.addEdge(eg);
-			ev.addEdge(eg);
-		}
-
-
-		// Check if there are vertexes with just 2 collinear edges with same type
-		// merge the edges and delete the vertex for efficiency 
-		ArrayList<OriEdge> eds = new ArrayList<OriEdge>();
-		ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
-		tmpVVec.addAll(vertices);
-		for (OriVertex v : tmpVVec) {
-			eds.clear();
-			for (OriEdge e : edges) {
-				if (e.sv == v || e.ev == v) {
-					eds.add(e);
-				}
-			}
-
-			if (eds.size() != 2) {
-				continue;
-			}
-
-			// If the types of the edges are different, do nothing
-			if (eds.get(0).type != eds.get(1).type) {
-				continue;
-			}
-
-			OriEdge e0 = eds.get(0);
-			OriEdge e1 = eds.get(1);
-
-			// Check if they are collinear
-			Vector2d dir0 = new Vector2d(e0.ev.p.x - e0.sv.p.x, e0.ev.p.y - e0.sv.p.y);
-			Vector2d dir1 = new Vector2d(e1.ev.p.x - e1.sv.p.x, e1.ev.p.y - e1.sv.p.y);
-
-			dir0.normalize();
-			dir1.normalize();
-
-			if (GeomUtil.Distance(dir0, dir1) > 0.001
-					&& Math.abs(GeomUtil.Distance(dir0, dir1) - 2.0) > 0.001) {
-				continue;
-			}
-
-			// found mergeable edge 
-			edges.remove(e0);
-			edges.remove(e1);
-			vertices.remove(v);
-			e0.sv.edges.remove(e0);
-			e0.ev.edges.remove(e0);
-			e1.sv.edges.remove(e1);
-			e1.ev.edges.remove(e1);
-			if (e0.sv == v && e1.sv == v) {
-				OriEdge ne = new OriEdge(e0.ev, e1.ev, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			} else if (e0.sv == v && e1.ev == v) {
-				OriEdge ne = new OriEdge(e0.ev, e1.sv, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			} else if (e0.ev == v && e1.sv == v) {
-				OriEdge ne = new OriEdge(e0.sv, e1.ev, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			} else {
-				OriEdge ne = new OriEdge(e0.sv, e1.sv, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			}
-		}
-
-		// System.out.println("vnum=" + vertices.size());
-		// System.out.println("enum=" + edges.size());
-
-
-		// Construct the faces
-		for (OriVertex v : vertices) {
-
-			for (OriEdge e : v.edges) {
-
-				if (e.type == OriLine.TYPE_CUT) {
-					continue;
-				}
-
-				if (v == e.sv) {
-					if (e.left != null) {
-						continue;
-					}
-				} else {
-					if (e.right != null) {
-						continue;
-					}
-				}
-
-				OriFace face = new OriFace();
-				faces.add(face);
-				OriVertex walkV = v;
-				OriEdge walkE = e;
-				debugCount = 0;
-				while (true) {
-					if (debugCount++ > 100) {
-						System.out.println("ERROR");
-						return null;
-					}
-					OriHalfedge he = new OriHalfedge(walkV, face);
-					face.halfedges.add(he);
-					he.tmpInt = walkE.type;
-					if (walkE.sv == walkV) {
-						walkE.left = he;
-					} else {
-						walkE.right = he;
-					}
-					walkV = walkE.oppositeVertex(walkV);
-					walkE = walkV.getPrevEdge(walkE);
-					if (walkV == v) {
-						break;
-					}
-				}
-				face.makeHalfedgeLoop();
-				face.setOutline();
-				face.setPreOutline();
-			}
-		}
-
-		this.makeEdges(edges, faces);
-		for (OriEdge e : edges) {
-			e.type = e.left.tmpInt;
-		}
-
-		//hasModel = true;
-
-		model.setValidPattern(checkPatternValidity(edges, vertices, faces));
-		model.setBoundBox(calcFoldedBoundingBox(faces));
-
-		return model;
 	}
 
+	// Create the edges from the vertexes
+	for (OriLine l : creasePattern) {
+		if (l.typeVal == OriLine.TYPE_NONE) {
+			continue;
+		}
+
+		OriVertex sv = addAndGetVertexFromVVec(vertices, l.p0);
+		OriVertex ev = addAndGetVertexFromVVec(vertices, l.p1);
+		OriEdge eg = new OriEdge(sv, ev, l.typeVal);
+		edges.add(eg);
+		sv.addEdge(eg);
+		ev.addEdge(eg);
+	}
+
+
+	// Check if there are vertexes with just 2 collinear edges with same type
+	// merge the edges and delete the vertex for efficiency 
+	ArrayList<OriEdge> eds = new ArrayList<OriEdge>();
+	ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
+	tmpVVec.addAll(vertices);
+	for (OriVertex v : tmpVVec) {
+		eds.clear();
+		for (OriEdge e : edges) {
+			if (e.sv == v || e.ev == v) {
+				eds.add(e);
+			}
+		}
+
+		if (eds.size() != 2) {
+			continue;
+		}
+
+		// If the types of the edges are different, do nothing
+		if (eds.get(0).type != eds.get(1).type) {
+			continue;
+		}
+
+		OriEdge e0 = eds.get(0);
+		OriEdge e1 = eds.get(1);
+
+		// Check if they are collinear
+		Vector2d dir0 = new Vector2d(e0.ev.p.x - e0.sv.p.x, e0.ev.p.y - e0.sv.p.y);
+		Vector2d dir1 = new Vector2d(e1.ev.p.x - e1.sv.p.x, e1.ev.p.y - e1.sv.p.y);
+
+		dir0.normalize();
+		dir1.normalize();
+
+		if (GeomUtil.Distance(dir0, dir1) > 0.001
+				&& Math.abs(GeomUtil.Distance(dir0, dir1) - 2.0) > 0.001) {
+			continue;
+		}
+
+		// found mergeable edge 
+		edges.remove(e0);
+		edges.remove(e1);
+		vertices.remove(v);
+		e0.sv.edges.remove(e0);
+		e0.ev.edges.remove(e0);
+		e1.sv.edges.remove(e1);
+		e1.ev.edges.remove(e1);
+		if (e0.sv == v && e1.sv == v) {
+			OriEdge ne = new OriEdge(e0.ev, e1.ev, e0.type);
+			edges.add(ne);
+			ne.sv.addEdge(ne);
+			ne.ev.addEdge(ne);
+		} else if (e0.sv == v && e1.ev == v) {
+			OriEdge ne = new OriEdge(e0.ev, e1.sv, e0.type);
+			edges.add(ne);
+			ne.sv.addEdge(ne);
+			ne.ev.addEdge(ne);
+		} else if (e0.ev == v && e1.sv == v) {
+			OriEdge ne = new OriEdge(e0.sv, e1.ev, e0.type);
+			edges.add(ne);
+			ne.sv.addEdge(ne);
+			ne.ev.addEdge(ne);
+		} else {
+			OriEdge ne = new OriEdge(e0.sv, e1.sv, e0.type);
+			edges.add(ne);
+			ne.sv.addEdge(ne);
+			ne.ev.addEdge(ne);
+		}
+	}
+
+	// System.out.println("vnum=" + vertices.size());
+	// System.out.println("enum=" + edges.size());
+
+
+	// Construct the faces
+	for (OriVertex v : vertices) {
+
+		for (OriEdge e : v.edges) {
+
+			if (e.type == OriLine.TYPE_CUT) {
+				continue;
+			}
+
+			if (v == e.sv) {
+				if (e.left != null) {
+					continue;
+				}
+			} else {
+				if (e.right != null) {
+					continue;
+				}
+			}
+
+			OriFace face = new OriFace();
+			faces.add(face);
+			OriVertex walkV = v;
+			OriEdge walkE = e;
+			debugCount = 0;
+			while (true) {
+				if (debugCount++ > 100) {
+					System.out.println("ERROR");
+					return false;
+				}
+				OriHalfedge he = new OriHalfedge(walkV, face);
+				face.halfedges.add(he);
+				he.tmpInt = walkE.type;
+				if (walkE.sv == walkV) {
+					walkE.left = he;
+				} else {
+					walkE.right = he;
+				}
+				walkV = walkE.oppositeVertex(walkV);
+				walkE = walkV.getPrevEdge(walkE);
+				if (walkV == v) {
+					break;
+				}
+			}
+			face.makeHalfedgeLoop();
+			face.setOutline();
+			face.setPreOutline();
+		}
+	}
+
+	makeEdges(edges, faces);
+	for (OriEdge e : edges) {
+		e.type = e.left.tmpInt;
+	}
+
+	origamiModel.setHasModel(true);
+
+	return checkPatternValidity(edges, vertices, faces);
+}
+	
 
 	public boolean cleanDuplicatedLines(Collection<OriLine> creasePattern) {
 		debugCount = 0;
@@ -527,6 +526,7 @@ public class FolderTool {
 			}
 		}
 
+		
 		return isOK;
 	}
 	boolean sortFinished = false;

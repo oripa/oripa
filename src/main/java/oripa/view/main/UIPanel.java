@@ -29,6 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
@@ -58,10 +59,12 @@ import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.doc.Doc;
 import oripa.doc.TypeForChange;
+import oripa.doc.core.CreasePattern;
 import oripa.file.ImageResourceLoader;
 import oripa.fold.BoundBox;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.Folder;
+import oripa.fold.FolderTool;
 import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.paint.ScreenUpdaterInterface;
@@ -640,9 +643,16 @@ implements ActionListener, PropertyChangeListener, Observer {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				Doc document = ORIPA.doc;
 				OrigamiModel origamiModel = document.getOrigamiModel();
-				document.buildOrigami3(false);
-//				document.buildOrigami3(origamiModel, false);
-				document.checkPatternValidity();
+				Collection<OriLine> creasePattern = document.getCreasePattern();
+
+				FolderTool folderTool = new FolderTool();
+				folderTool.buildOrigami3(creasePattern, origamiModel, false);
+
+//				boolean isValidPattern =
+//						folderTool.checkPatternValidity(
+//								origamiModel.getEdges(), origamiModel.getVertices(), origamiModel.getFaces() );
+
+				
 				ORIPA.checkFrame.setVisible(true);
 				ORIPA.checkFrame.repaint();
 			}
@@ -687,6 +697,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 		} else if (ae.getSource() == resetButton) {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;
+			CreasePattern creasePattern = document.getCreasePattern();
 			OrigamiModel origamiModel = document.getOrigamiModel();
 			FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 
@@ -694,7 +705,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 			sortedFaces.clear();
 //			if (document.buildOrigami3(origamiModel, false)) {
-			if (document.buildOrigami3(false)) {
+			FolderTool folderTool = new FolderTool();
+			if (folderTool.buildOrigami3(creasePattern, origamiModel, false)) {
 				buildOK = true;
 			} else {
 				if (JOptionPane.showConfirmDialog(
@@ -703,7 +715,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 						== JOptionPane.YES_OPTION) {
 
 					//if (document.buildOrigami3(origamiModel, false)) {
-					if (document.buildOrigami3(false)) {
+					if (folderTool.buildOrigami3(creasePattern, origamiModel, false)) {
 						buildOK = true;
 					} else {
 						JOptionPane.showMessageDialog(

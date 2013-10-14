@@ -78,9 +78,6 @@ public class OrigamiModel {
 	public List<OriEdge> getEdges() {
 		return edges;
 	}
-	public boolean isValidPattern() {
-		return isValidPattern;
-	}
 
 	public BoundBox getBoundBox() {
 		return boundBox;
