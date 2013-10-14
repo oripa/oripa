@@ -43,6 +43,8 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.fold.BoundBox;
+import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.TriangleFace;
@@ -298,6 +300,7 @@ public class RenderScreen2 extends JPanel
     public void drawOrigami() {
     	Doc document = ORIPA.doc;
     	OrigamiModel origamiModel = document.getOrigamiModel();
+    	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
     	
         List<OriFace> faces = origamiModel.getFaces();
         boolean folded = origamiModel.isFolded();
@@ -306,8 +309,9 @@ public class RenderScreen2 extends JPanel
         }
         long time0 = System.currentTimeMillis();
 
-        Vector2d leftAndTop = document.getFoldedBBoxLT();
-        Vector2d rightAndBottom = document.getFoldedBBoxRB();
+        BoundBox boundBox = foldedModelInfo.getBoundBox();
+        Vector2d leftAndTop = boundBox.getLeftAndTop();
+        Vector2d rightAndBottom = boundBox.getRightAndBottom();
         
         Vector2d center = new Vector2d((leftAndTop.x + rightAndBottom.x) / 2,
                 (leftAndTop.y + rightAndBottom.y) / 2);
@@ -388,7 +392,7 @@ public class RenderScreen2 extends JPanel
                             if (f_id == -1 && f_id2 != -1) {
                                 cnt++;
                             } else {
-                				int[][] overlapRelation = document.getOverlapRelation();
+                				int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
                                 if (f_id2 != -1 && overlapRelation[f_id][f_id2] == renderFace) {
                                     cnt++;
@@ -424,6 +428,8 @@ public class RenderScreen2 extends JPanel
     //
     //--------------------------------------------------------------------
     private void drawTriangle(TriangleFace tri, int id, int color) {
+    	Doc document = ORIPA.doc;
+    	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 
 
         //(For speed) set the range of use of the buffer
@@ -498,7 +504,7 @@ public class RenderScreen2 extends JPanel
 
                 int renderFace = isM_bFaceOrderFlip() ? oripa.doc.Doc.UPPER : oripa.doc.Doc.LOWER;
 
-				int[][] overlapRelation = ORIPA.doc.getOverlapRelation();
+				int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
                 if (zbuf[p] == -1 || overlapRelation[zbuf[p]][id] == renderFace) {
 

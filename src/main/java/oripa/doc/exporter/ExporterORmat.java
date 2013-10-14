@@ -23,6 +23,7 @@ import java.io.FileWriter;
 import java.util.List;
 
 import oripa.doc.Doc;
+import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
@@ -33,6 +34,7 @@ public class ExporterORmat implements Exporter{
 
     public boolean export(Doc doc, String filepath) throws Exception {
     	OrigamiModel origamiModel = doc.getOrigamiModel();
+    	FoldedModelInfo foldedModelInfo = doc.getFoldedModelInfo();
 
     	FileWriter fw = new FileWriter(filepath);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -45,6 +47,7 @@ public class ExporterORmat implements Exporter{
         bw.write("\n");
 
         List<OriVertex> vertices = origamiModel.getVertices();
+        List<OriFace> faces = origamiModel.getFaces();
 
         int id = 1;
         for (OriVertex vertex : vertices) {
@@ -53,7 +56,6 @@ public class ExporterORmat implements Exporter{
             id++;
         }
 
-        List<OriFace> faces = origamiModel.getFaces();
 
         for (OriFace face : faces) {
             bw.write("f");
@@ -71,7 +73,7 @@ public class ExporterORmat implements Exporter{
         bw.write("# 9: UNDEFINED (not used)\n");
         bw.write("# matrix size (face num) =" + faceNum + "\n");
 
-        int[][] overlapRelation = doc.getOverlapRelation();
+        int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
         for (int f0 = 0; f0 < faceNum; f0++) {
             for (int f1 = 0; f1 < faceNum; f1++) {
                 bw.write("" + overlapRelation[f0][f1] + " ");

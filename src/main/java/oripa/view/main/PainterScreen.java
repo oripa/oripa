@@ -52,6 +52,7 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.doc.core.CreasePattern;
+import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriVertex;
@@ -270,7 +271,10 @@ ActionListener, ComponentListener, Observer{
 		Graphics2D g2d = bufferg;
 
 		Doc document = ORIPA.doc;
+		CreasePattern creasePattern = document.getCreasePattern();
 		OrigamiModel origamiModel = document.getOrigamiModel();
+		FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
+		
 		boolean hasModel = origamiModel.hasModel();
 		if (hasModel) {
 			drawModel(g2d);
@@ -285,7 +289,6 @@ ActionListener, ComponentListener, Observer{
 		g2d.setStroke(LineSetting.STROKE_VALLEY);
 		g2d.setColor(Color.black);
 
-		CreasePattern creasePattern = document.getCreasePattern();
 
 		drawLines(g2d, creasePattern);
 
@@ -325,7 +328,7 @@ ActionListener, ComponentListener, Observer{
 		if (Config.FOR_STUDY) {
 			List<OriFace> faces = origamiModel.getFaces();
 
-			int[][] overlapRelation = document.getOverlapRelation();
+			int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
 			if (overlapRelation != null) {
 				g2d.setStroke(LineSetting.STROKE_RIDGE);

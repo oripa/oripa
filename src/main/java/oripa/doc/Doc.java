@@ -1406,9 +1406,25 @@ public class Doc {
 		return origamiModel;
 	}
 	
+	
+	
 	//======================================================================
 	// Getter/Setter eventually unnecessary
 	
+	/**
+	 * @return foldedModelInfo
+	 */
+	public FoldedModelInfo getFoldedModelInfo() {
+		return foldedModelInfo;
+	}
+
+	/**
+	 * @param foldedModelInfo foldedModelInfoを登録する
+	 */
+	public void setFoldedModelInfo(FoldedModelInfo foldedModelInfo) {
+		this.foldedModelInfo = foldedModelInfo;
+	}
+
 	/**
 	 * @return crossLines
 	 */
@@ -1537,83 +1553,86 @@ public class Doc {
 
 	//-------------------------------------------------------------
 
-	/**
-	 * @return currentORmatIndex
-	 */
-	public int getCurrentORmatIndex() {
-		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
-
-		return currentORmatIndex;
-	}
-
-	/**
-	 * @param currentORmatIndex currentORmatIndexを登録する
-	 */
-	public void setCurrentORmatIndex(int currentORmatIndex) {
-		foldedModelInfo.setCurrentORmatIndex(currentORmatIndex);
-	}
-
-	/**
-	 * @return foldedBBoxLT
-	 */
-	public Vector2d getFoldedBBoxLT() {
-		return foldedModelInfo.getBoundBox().getLeftAndTop();
-	}
-
-
-	/**
-	 * @return foldedBBoxRB
-	 */
-	public Vector2d getFoldedBBoxRB() {
-		return foldedModelInfo.getBoundBox().getRightAndBottom();
-	}
-
-
-	/**
-	 * @return size
-	 */
-	public double getPaperSize() {
-		return paperSize;
-	}
+//	/**
+//	 * @return currentORmatIndex
+//	 */
+//	public int getCurrentORmatIndex() {
+//		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
+//
+//		return currentORmatIndex;
+//	}
+//
+//	/**
+//	 * @param currentORmatIndex currentORmatIndexを登録する
+//	 */
+//	public void setCurrentORmatIndex(int currentORmatIndex) {
+//		foldedModelInfo.setCurrentORmatIndex(currentORmatIndex);
+//	}
+//
+//	/**
+//	 * @return foldedBBoxLT
+//	 */
+//	public Vector2d getFoldedBBoxLT() {
+//		return foldedModelInfo.getBoundBox().getLeftAndTop();
+//	}
+//
+//
+//	/**
+//	 * @return foldedBBoxRB
+//	 */
+//	public Vector2d getFoldedBBoxRB() {
+//		return foldedModelInfo.getBoundBox().getRightAndBottom();
+//	}
+//
+//
+//
+//
+//	/**
+//	 * @return overlapRelation
+//	 */
+//	public int[][] getOverlapRelation() {
+//		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+//		return overlapRelation;
+//	}
+//
+//	/**
+//	 * @param overlapRelation overlapRelationを登録する
+//	 */
+//	public void setOverlapRelation(int[][] overlapRelation) {
+//		foldedModelInfo.setOverlapRelation(overlapRelation);
+//	}
+//
+//	/**
+//	 * @return foldableOverlapRelations
+//	 */
+//	public List<int[][]> getFoldableOverlapRelations() {
+//		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
+//
+//		return foldableOverlapRelations;
+//	}
+//
+//	/**
+//	 * @param foldableOverlapRelations foldableOverlapRelationsを登録する
+//	 */
+//	public void setFoldableOverlapRelations(
+//			List<int[][]> foldableOverlapRelations) {
+//
+//		foldedModelInfo.setFoldableOverlapRelations(foldableOverlapRelations);
+//	}
 
 	/**
 	 * @param size sizeを登録する
 	 */
 	public void setPaperSize(double size) {
 		this.paperSize = size;
+		origamiModel.setPaperSize(size);
+		creasePattern.changePaperSize(size);
 	}
-
 	/**
-	 * @return overlapRelation
+	 * @return size
 	 */
-	public int[][] getOverlapRelation() {
-		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
-		return overlapRelation;
-	}
-
-	/**
-	 * @param overlapRelation overlapRelationを登録する
-	 */
-	public void setOverlapRelation(int[][] overlapRelation) {
-		foldedModelInfo.setOverlapRelation(overlapRelation);
-	}
-
-	/**
-	 * @return foldableOverlapRelations
-	 */
-	public List<int[][]> getFoldableOverlapRelations() {
-		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
-
-		return foldableOverlapRelations;
-	}
-
-	/**
-	 * @param foldableOverlapRelations foldableOverlapRelationsを登録する
-	 */
-	public void setFoldableOverlapRelations(
-			List<int[][]> foldableOverlapRelations) {
-
-		foldedModelInfo.setFoldableOverlapRelations(foldableOverlapRelations);
+	public double getPaperSize() {
+		return paperSize;
 	}
 
 	/**

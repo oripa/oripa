@@ -23,8 +23,8 @@ public class VerticesManager {
 	 */
 	static public final int divNum = 32;
 
-	public final double interval;
-	public final double paperCenter;
+	public double interval;
+	public double paperCenter;
 
 	/**
 	 * the index of divided paper area.
@@ -86,9 +86,8 @@ public class VerticesManager {
 	 * @param paperSize	paper size in double.
 	 */
 	public VerticesManager(double paperSize) {
-		interval = paperSize / divNum;
-		paperCenter = paperSize/2;
-
+		changePaperSize(paperSize);
+		
 		// allocate memory for each area
 		for(int x = 0; x < divNum; x++){
 			for(int y = 0; y < divNum; y++){
@@ -98,6 +97,12 @@ public class VerticesManager {
 		
 	}
 
+	public void changePaperSize(double paperSize) {
+		interval = paperSize / divNum;
+		paperCenter = paperSize/2;
+		
+	}
+	
 	/**
 	 * remove all vertices.
 	 */

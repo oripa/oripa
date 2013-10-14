@@ -8,9 +8,9 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.doc.core.CreasePattern;
+import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.geom.OriFace;
 import oripa.geom.OriHalfedge;
@@ -49,6 +49,7 @@ public class ExporterSVG implements Exporter{
 
     public static void exportModel(Doc doc, String filepath) throws Exception {
     	OrigamiModel origamiModel = doc.getOrigamiModel();
+    	FoldedModelInfo foldedModelInfo = doc.getFoldedModelInfo();
     	double paperSize = origamiModel.getPaperSize();
     	
         double scale = (size-5) / paperSize;
@@ -77,7 +78,7 @@ public class ExporterSVG implements Exporter{
             ArrayList<OriFace> sortedFaces = new ArrayList<>();
             boolean [] isSorted = new boolean[faces.size()];
             for (int i = 0; i < faces.size(); i++) {
-                int[][] overlapRelation = ORIPA.doc.getOverlapRelation();
+                int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
                 for (int j = 0; j < overlapRelation.length; j++) {
                     int numberOf2 = 0;

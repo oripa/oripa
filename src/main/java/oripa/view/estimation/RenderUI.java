@@ -36,6 +36,7 @@ import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterORmat;
 import oripa.doc.exporter.ExporterSVG;
 import oripa.file.FileFilterEx;
+import oripa.fold.FoldedModelInfo;
 
 public class RenderUI extends JPanel {
 
@@ -88,9 +89,11 @@ public class RenderUI extends JPanel {
 
     public void updateLabel() {
     	Doc document = ORIPA.doc;
-		List<int[][]> foldableOverlapRelations = document.getFoldableOverlapRelations();
+    	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
+    	
+		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 
-        jLabel.setText("Folded model [" + (document.getCurrentORmatIndex() + 1) + "/"
+        jLabel.setText("Folded model [" + (foldedModelInfo.getCurrentORmatIndex() + 1) + "/"
                 + foldableOverlapRelations.size() + "]");
 
     }

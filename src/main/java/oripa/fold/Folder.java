@@ -51,10 +51,11 @@ public class Folder {
 
 	public int fold() {
 		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 		List<OriFace> faces = origamiModel.getFaces();
         List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
-        List<int[][]> foldableOverlapRelations = m_doc.getFoldableOverlapRelations();
+        List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
         foldableOverlapRelations.clear();
 
 		simpleFoldWithoutZorder();
@@ -71,7 +72,7 @@ public class Folder {
 		// After folding construct the sbfaces
 		subFaces = makeSubFaces();
 		System.out.println("subFaces.size() = " + subFaces.size());
-		setOverlapRelation();
+		foldedModelInfo.setOverlapRelation(createOverlapRelation());
 
 		// Set overlap relations based on valley/mountain folds information
 		step1();
@@ -79,7 +80,7 @@ public class Folder {
 		holdCondition3s();
 		holdCondition4s();
 
-        int[][] overlapRelation = m_doc.getOverlapRelation();
+        int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
 		estimation(overlapRelation);
 
@@ -97,7 +98,7 @@ public class Folder {
 
 		findAnswer(0, overlapRelation);
 
-		m_doc.setCurrentORmatIndex(0);
+		foldedModelInfo.setCurrentORmatIndex(0);
 		if (foldableOverlapRelations.isEmpty()) {
 			ORIPA.outMessage("No answer was found");
 			return 0;
@@ -136,8 +137,9 @@ public class Folder {
 	}
 
 	private void findAnswer(int subFaceIndex, int[][] orMat) {
+		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 		SubFace sub = subFaces.get(subFaceIndex);
-		List<int[][]> foldableOverlapRelations = m_doc.getFoldableOverlapRelations();
+		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 
 		if (sub.allFaceOrderDecided) {
 			int s = orMat.length;
@@ -228,6 +230,8 @@ public class Folder {
 	// then OR[i][k] = OR[j][k] 
 	private void holdCondition3s() {
 		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
+		
 		List<OriFace> faces = origamiModel.getFaces();
 
 		for (OriFace f_i : faces) {
@@ -236,7 +240,7 @@ public class Folder {
 					continue;
 				}
 
-                int[][] overlapRelation = m_doc.getOverlapRelation();
+                int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
 				OriFace f_j = he.pair.face;
 				if (overlapRelation[f_i.tmpInt][f_j.tmpInt] != Doc.LOWER) {
@@ -273,12 +277,14 @@ public class Folder {
 
 	private void holdCondition4s() {
 		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
+
 		List<OriEdge>   edges    = origamiModel.getEdges();
 
 		int edgeNum = edges.size();
 		System.out.println("edgeNum = " + edgeNum);
 
-        int[][] overlapRelation = m_doc.getOverlapRelation();
+        int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
 		for (int i = 0; i < edgeNum; i++) {
 			OriEdge e0 = edges.get(i);
@@ -790,7 +796,7 @@ public class Folder {
 	}
 
 	//creates the matrix overlapRelation and fills it with "no overlap" or "undifined"
-	private void setOverlapRelation() {
+	private int[][] createOverlapRelation() {
 		OrigamiModel origamiModel = m_doc.getOrigamiModel();
 		List<OriFace> faces = origamiModel.getFaces();
 
@@ -812,13 +818,15 @@ public class Folder {
 			}
 		}
 
-		m_doc.setOverlapRelation(overlapRelation);
+		return overlapRelation;
 	}
 
 
 	// Determines the overlap relations
 	private void step1() {
 		OrigamiModel origamiModel = m_doc.getOrigamiModel();
+		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
+		
 		List<OriFace> faces = origamiModel.getFaces();
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
@@ -827,7 +835,7 @@ public class Folder {
 				}
 				OriFace pairFace = he.pair.face;
 
-				int[][] overlapRelation = m_doc.getOverlapRelation();
+				int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 				// If the relation is already decided, skip
 				if (overlapRelation[face.tmpInt][pairFace.tmpInt] == Doc.UPPER
 						|| overlapRelation[face.tmpInt][pairFace.tmpInt] == Doc.LOWER) {

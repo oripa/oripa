@@ -70,6 +70,9 @@ public class CreasePattern implements Collection<OriLine> {
 		vertices = new VerticesManager(paperSize);
 	}
 	
+	public void changePaperSize(double paperSize) {
+		vertices.changePaperSize(paperSize);
+	}
 	
 	@Override
 	public boolean contains(Object o) {
