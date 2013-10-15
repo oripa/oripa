@@ -629,7 +629,8 @@ public class Folder {
 		System.out.println("getCrossPoint results " + crossNum + "::::" + dummy1 + ", " + dummy2);
 
 		//temp_doc.buildOrigami(origamiModel, false);
-		modelFactory.buildOrigami(temp_creasePattern, temp_origamiModel, false);
+		temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, temp_doc.getPaperSize(), false);
+		temp_doc.setOrigamiModel(temp_origamiModel);
 		
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();
 

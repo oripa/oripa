@@ -21,8 +21,13 @@ package oripa.view.estimation;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 import javax.swing.JFrame;
+
+import oripa.fold.FoldedModelInfo;
+import oripa.fold.OrigamiModel;
+import oripa.value.OriLine;
 
 public class FoldabilityCheckFrame extends JFrame implements ActionListener {
 
@@ -42,4 +47,12 @@ public class FoldabilityCheckFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent arg0) {
         // TODO Auto-generated method stub
     }
+
+    public void showModel(
+    		OrigamiModel origamiModel, 
+    		Collection<OriLine> creasePattern, FoldedModelInfo foldedModelInfo) {
+    	screen.showModel(origamiModel, creasePattern, foldedModelInfo);
+    	this.setVisible(true);
+    }
+
 }

@@ -26,7 +26,9 @@ public class OrigamiModel {
 	private boolean folded = false;
 
 	private boolean hasModel = false;
-		
+
+	private boolean probablyFoldable = false;
+	
 	private double paperSize = -1;
 	
 
@@ -53,6 +55,21 @@ public class OrigamiModel {
 	}
 
 	
+	
+	/**
+	 * @return probablyFoldable
+	 */
+	public boolean isProbablyFoldable() {
+		return probablyFoldable;
+	}
+
+	/**
+	 * @param probablyFoldable probablyFoldableを登録する
+	 */
+	public void setProbablyFoldable(boolean probablyFoldable) {
+		this.probablyFoldable = probablyFoldable;
+	}
+
 	public List<OriFace> getFaces() {
 		return faces;
 	}

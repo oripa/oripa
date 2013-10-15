@@ -29,6 +29,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JMenuItem;
@@ -37,9 +38,7 @@ import javax.swing.JPopupMenu;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
-import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.doc.core.CreasePattern;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.OriFace;
 import oripa.fold.OriVertex;
@@ -73,7 +72,12 @@ public class FoldabilityScreen extends JPanel
     private JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
     private JMenuItem popupItem_FlipFace = new JMenuItem("Face Inversion");
 
+    private OrigamiModel origamiModel = null;
+    private Collection<OriLine> creasePattern = null;
+    private FoldedModelInfo foldedModelInfo = null;
+    
     FoldabilityScreen() {
+    	
         addComponentListener(this);
 
         scale = 1.5;
@@ -84,8 +88,21 @@ public class FoldabilityScreen extends JPanel
         preSize = getSize();
     }
 
+    public void showModel(
+    		OrigamiModel origamiModel, 
+    		Collection<OriLine> creasePattern, FoldedModelInfo foldedModelInfo) {
+    	this.origamiModel = origamiModel;
+    	this.creasePattern = creasePattern;
+    	this.foldedModelInfo = foldedModelInfo;
+    	
+    	this.setVisible(true);
+    }
+    
     public void drawModel(Graphics2D g2d) {
-    	OrigamiModel origamiModel = ORIPA.doc.getOrigamiModel();
+    	if (origamiModel == null) {
+    		return;
+    	}
+    	
     	List<OriFace> faces = origamiModel.getFaces();
         List<OriVertex> vertices = origamiModel.getVertices();
 
@@ -176,10 +193,6 @@ public class FoldabilityScreen extends JPanel
 
         Graphics2D g2d = bufferg;
 
-        Doc document = ORIPA.doc;
-        CreasePattern creasePattern = document.getCreasePattern();
-        OrigamiModel  origamiModel  = document.getOrigamiModel();
-        FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
         		
         g2d.setStroke(LineSetting.STROKE_VALLEY);
         g2d.setColor(Color.black);

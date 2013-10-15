@@ -644,7 +644,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 				Collection<OriLine> creasePattern = document.getCreasePattern();
 
 				OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-				origamiModel = modelFactory.buildOrigami3(creasePattern, document.getPaperSize(), false);
+				origamiModel = modelFactory.createOrigamiModel3(creasePattern, document.getPaperSize(), false);
 
 				document.setOrigamiModel(origamiModel);
 //				boolean isValidPattern =
@@ -700,11 +700,11 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 //			if (document.buildOrigami3(origamiModel, false)) {
 			OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-			OrigamiModel origamiModel = modelFactory.buildOrigami3(
+			OrigamiModel origamiModel = modelFactory.createOrigamiModel3(
 					creasePattern, document.getPaperSize(), false);
 			FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 
-			if (origamiModel != null) {
+			if (origamiModel.isProbablyFoldable()) {
 				buildOK = true;
 			} else {
 				if (JOptionPane.showConfirmDialog(
@@ -712,10 +712,10 @@ implements ActionListener, PropertyChangeListener, Observer {
 						"Failed", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
 						== JOptionPane.YES_OPTION) {
 
-					origamiModel = modelFactory.buildOrigami3(
+					origamiModel = modelFactory.createOrigamiModel3(
 							creasePattern, document.getPaperSize(), true);
 					//if (document.buildOrigami3(origamiModel, false)) {
-					if (origamiModel != null) {
+					if (origamiModel.isProbablyFoldable()) {
 						buildOK = true;
 					} else {
 						JOptionPane.showMessageDialog(
@@ -728,8 +728,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 			Folder folder = new Folder();
 			
 			if (buildOK) {
-				document.setOrigamiModel(origamiModel);
 				int answerNum = folder.fold(origamiModel, foldedModelInfo);
+				document.setOrigamiModel(origamiModel);
+
 				System.out.println("RenderFrame");
 				if (answerNum != 0) {
 					RenderFrameSettingDB renderSetting = RenderFrameSettingDB.getInstance();

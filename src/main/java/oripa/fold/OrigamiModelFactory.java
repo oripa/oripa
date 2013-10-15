@@ -46,9 +46,9 @@ public class OrigamiModelFactory {
 
 
 	//TODO: change as: return OrigamiModel. throw error if creation failed.
-	public boolean buildOrigami(
-			Collection<OriLine> creasePattern, OrigamiModel origamiModel, boolean needCleanUp) {
-
+	public OrigamiModel buildOrigami(
+			Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {
+		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriVertex> vertices = origamiModel.getVertices();
@@ -97,7 +97,7 @@ public class OrigamiModelFactory {
 				while (true) {
 					if (debugCount++ > 200) {
 						System.out.println("ERROR");
-						return false;
+						return origamiModel;
 					}
 					OriHalfedge he = new OriHalfedge(walkV, face);
 					face.halfedges.add(he);
@@ -127,99 +127,22 @@ public class OrigamiModelFactory {
 
 
 		origamiModel.setHasModel(true);
-
-		return true;
+		origamiModel.setProbablyFoldable(true);
+		
+		return origamiModel;
 
 	}
 
-	//	/**
-	//	 * 
-	//	 * @param creasePattern
-	//	 * @param needCleanUp
-	//	 * @return Folded model if success, otherwise null.
-	//	 */
-	//	public OrigamiModel buildOrigami(Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {
-	//
-	//		OrigamiModel     model = new OrigamiModel(paperSize);
-	//		
-	//		List<OriEdge>   edges    = model.getEdges();
-	//		List<OriVertex> vertices = model.getVertices();
-	//		List<OriFace>   faces    = model.getFaces();
-	//
-	//
-	//		for (OriLine l : creasePattern) {
-	//			if (l.typeVal == OriLine.TYPE_NONE) {
-	//				continue;
-	//			}
-	//
-	//			OriVertex sv = addAndGetVertexFromVVec(vertices, l.p0);
-	//			OriVertex ev = addAndGetVertexFromVVec(vertices, l.p1);
-	//			OriEdge eg = new OriEdge(sv, ev, l.typeVal);
-	//			edges.add(eg);
-	//			sv.addEdge(eg);
-	//			ev.addEdge(eg);
-	//		}
-	//
-	//		for (OriVertex v : vertices) {
-	//
-	//			for (OriEdge e : v.edges) {
-	//
-	//				if (e.type == OriLine.TYPE_CUT) {
-	//					continue;
-	//				}
-	//
-	//				if (v == e.sv) {
-	//					if (e.left != null) {
-	//						continue;
-	//					}
-	//				} else {
-	//					if (e.right != null) {
-	//						continue;
-	//					}
-	//				}
-	//
-	//				OriFace face = new OriFace();
-	//				faces.add(face);
-	//				OriVertex walkV = v;
-	//				OriEdge walkE = e;
-	//				debugCount = 0;
-	//				while (true) {
-	//					if (debugCount++ > 200) {
-	//						System.out.println("ERROR");
-	//						return null;
-	//					}
-	//					OriHalfedge he = new OriHalfedge(walkV, face);
-	//					face.halfedges.add(he);
-	//					he.tmpInt = walkE.type;
-	//					if (walkE.sv == walkV) {
-	//						walkE.left = he;
-	//					} else {
-	//						walkE.right = he;
-	//					}
-	//					walkV = walkE.oppositeVertex(walkV);
-	//					walkE = walkV.getPrevEdge(walkE);
-	//
-	//					if (walkV == v) {
-	//						break;
-	//					}
-	//				}
-	//				face.makeHalfedgeLoop();
-	//				face.setOutline();
-	//				face.setPreOutline();
-	//			}
-	//		}
-	//
-	//		this.makeEdges(edges, faces);
-	//		for (OriEdge e : edges) {
-	//			e.type = e.left.tmpInt;
-	//		}
-	//
-	//		return model;
-	//
-	//	}
 
+	/**
+	 * 
+	 * @param creasePattern
+	 * @param paperSize
+	 * @param needCleanUp
+	 * @return A model data converted from crease pattern.
+	 */
 	//TODO: change as: return OrigamiModel. throw error if creation failed.
-	public OrigamiModel buildOrigami3(
+	public OrigamiModel createOrigamiModel3(
 			Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {	
 
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
@@ -360,7 +283,8 @@ public class OrigamiModelFactory {
 				while (true) {
 					if (debugCount++ > 100) {
 						System.out.println("ERROR");
-						return null;
+//						throw new UnfoldableModelException("algorithmic error");
+						return origamiModel;
 					}
 					OriHalfedge he = new OriHalfedge(walkV, face);
 					face.halfedges.add(he);
@@ -388,10 +312,8 @@ public class OrigamiModelFactory {
 		}
 
 		origamiModel.setHasModel(true);
+		origamiModel.setProbablyFoldable(checkPatternValidity(edges, vertices, faces));
 
-		if(! checkPatternValidity(edges, vertices, faces)){
-			return null;
-		}
 		return origamiModel;
 	}
 

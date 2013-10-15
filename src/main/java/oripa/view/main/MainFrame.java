@@ -58,8 +58,8 @@ import oripa.file.FileVersionError;
 import oripa.file.FilterDB;
 import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
-import oripa.fold.OrigamiModelFactory;
 import oripa.fold.OrigamiModel;
+import oripa.fold.OrigamiModelFactory;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.util.DeleteSelectedLines;
@@ -504,11 +504,13 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		boolean hasModel = origamiModel.hasModel();
 
-		OrigamiModelFactory folderTool = new OrigamiModelFactory();
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		origamiModel = modelFactory.buildOrigami(creasePattern, document.getPaperSize(), true);
+		document.setOrigamiModel(origamiModel);
 		
 		if ("obj".equals(ext) == false) {
 
-		} else if (!hasModel && !folderTool.buildOrigami(creasePattern,origamiModel, true)) {
+		} else if (!hasModel && !origamiModel.isProbablyFoldable()) {
 			
 			JOptionPane.showConfirmDialog(null,
 					"Warning: Building a set of polygons from crease pattern "
