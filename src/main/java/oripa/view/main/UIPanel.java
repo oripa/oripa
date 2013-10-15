@@ -30,7 +30,6 @@ import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
@@ -64,9 +63,8 @@ import oripa.file.ImageResourceLoader;
 import oripa.fold.BoundBox;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.Folder;
-import oripa.fold.OriFace;
-import oripa.fold.OrigamiModelFactory;
 import oripa.fold.OrigamiModel;
+import oripa.fold.OrigamiModelFactory;
 import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.byvalue.AngleMeasuringAction;
 import oripa.paint.byvalue.AngleValueInputListener;
@@ -642,12 +640,13 @@ implements ActionListener, PropertyChangeListener, Observer {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				Doc document = ORIPA.doc;
-				OrigamiModel origamiModel = document.getOrigamiModel();
+				OrigamiModel origamiModel;
 				Collection<OriLine> creasePattern = document.getCreasePattern();
 
-				OrigamiModelFactory folderTool = new OrigamiModelFactory();
-				folderTool.buildOrigami3(creasePattern, origamiModel, false);
+				OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+				origamiModel = modelFactory.buildOrigami3(creasePattern, document.getPaperSize(), false);
 
+				document.setOrigamiModel(origamiModel);
 //				boolean isValidPattern =
 //						folderTool.checkPatternValidity(
 //								origamiModel.getEdges(), origamiModel.getVertices(), origamiModel.getFaces() );
@@ -698,15 +697,14 @@ implements ActionListener, PropertyChangeListener, Observer {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;
 			CreasePattern creasePattern = document.getCreasePattern();
-			OrigamiModel origamiModel = document.getOrigamiModel();
+
+//			if (document.buildOrigami3(origamiModel, false)) {
+			OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+			OrigamiModel origamiModel = modelFactory.buildOrigami3(
+					creasePattern, document.getPaperSize(), false);
 			FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 
-			List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-
-			sortedFaces.clear();
-//			if (document.buildOrigami3(origamiModel, false)) {
-			OrigamiModelFactory folderTool = new OrigamiModelFactory();
-			if (folderTool.buildOrigami3(creasePattern, origamiModel, false)) {
+			if (origamiModel != null) {
 				buildOK = true;
 			} else {
 				if (JOptionPane.showConfirmDialog(
@@ -714,8 +712,10 @@ implements ActionListener, PropertyChangeListener, Observer {
 						"Failed", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
 						== JOptionPane.YES_OPTION) {
 
+					origamiModel = modelFactory.buildOrigami3(
+							creasePattern, document.getPaperSize(), true);
 					//if (document.buildOrigami3(origamiModel, false)) {
-					if (folderTool.buildOrigami3(creasePattern, origamiModel, false)) {
+					if (origamiModel != null) {
 						buildOK = true;
 					} else {
 						JOptionPane.showMessageDialog(
@@ -728,6 +728,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 			Folder folder = new Folder();
 			
 			if (buildOK) {
+				document.setOrigamiModel(origamiModel);
 				int answerNum = folder.fold(origamiModel, foldedModelInfo);
 				System.out.println("RenderFrame");
 				if (answerNum != 0) {

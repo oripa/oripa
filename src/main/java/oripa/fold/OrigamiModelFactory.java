@@ -219,12 +219,17 @@ public class OrigamiModelFactory {
 	//	}
 
 	//TODO: change as: return OrigamiModel. throw error if creation failed.
-	public boolean buildOrigami3(
-			Collection<OriLine> creasePattern, OrigamiModel origamiModel, boolean needCleanUp) {	
+	public OrigamiModel buildOrigami3(
+			Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {	
 
+		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriVertex> vertices = origamiModel.getVertices();
+
+		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+
+		sortedFaces.clear();
 
 		edges.clear();
 		vertices.clear();
@@ -355,7 +360,7 @@ public class OrigamiModelFactory {
 				while (true) {
 					if (debugCount++ > 100) {
 						System.out.println("ERROR");
-						return false;
+						return null;
 					}
 					OriHalfedge he = new OriHalfedge(walkV, face);
 					face.halfedges.add(he);
@@ -384,7 +389,10 @@ public class OrigamiModelFactory {
 
 		origamiModel.setHasModel(true);
 
-		return checkPatternValidity(edges, vertices, faces);
+		if(! checkPatternValidity(edges, vertices, faces)){
+			return null;
+		}
+		return origamiModel;
 	}
 
 

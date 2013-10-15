@@ -15,7 +15,7 @@ import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
 import oripa.value.OriLine;
-import oripa.view.estimation.RenderScreen2;
+import oripa.view.estimation.FoldedModelScreen;
 
 public class ExporterSVG implements Exporter{
 
@@ -99,7 +99,7 @@ public class ExporterSVG implements Exporter{
             
             
             for (int i=0; i<sortedFaces.size(); i++) {
-                OriFace face = RenderScreen2.isM_bFaceOrderFlip() ? sortedFaces.get(i)
+                OriFace face = FoldedModelScreen.isM_bFaceOrderFlip() ? sortedFaces.get(i)
                         : sortedFaces.get(sortedFaces.size()-i-1);
                 java.util.ArrayList<Vector2d> points = new java.util.ArrayList<>();
                 for (OriHalfedge he : face.halfedges) {
@@ -119,8 +119,8 @@ public class ExporterSVG implements Exporter{
                         points.add(new Vector2d(x2, y2));
                     }
                 }
-                if((!face.faceFront&&RenderScreen2.isM_bFaceOrderFlip())
-                        || (face.faceFront&&!RenderScreen2.isM_bFaceOrderFlip())){
+                if((!face.faceFront&&FoldedModelScreen.isM_bFaceOrderFlip())
+                        || (face.faceFront&&!FoldedModelScreen.isM_bFaceOrderFlip())){
                     bw.write(polygonStart);
                 }else{
                     bw.write(polygonStart2);

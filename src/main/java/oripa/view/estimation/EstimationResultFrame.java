@@ -21,25 +21,53 @@ package oripa.view.estimation;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
-public class CheckFrame extends JFrame implements ActionListener {
+import oripa.viewsetting.estimation.RenderFrameSettingDB;
 
-    RenderScreenForCheck screen;
 
-    public CheckFrame() {
-        // Called when the "Check window" button is pressed.
-        setTitle("Check Inputed data");
-        screen = new RenderScreenForCheck();
-        setBounds(0, 0, 800, 800);
+public class EstimationResultFrame extends JFrame implements ActionListener, Observer {
+
+	private RenderFrameSettingDB setting = RenderFrameSettingDB.getInstance();
+
+	FoldedModelScreen screen;
+    EstimationResultUI ui;
+    public JLabel hintLabel;
+
+    public EstimationResultFrame() {
+    	setting.addObserver(this);
+    	
+        setTitle("Folded Origami");
+        screen = new FoldedModelScreen();
+        ui = new EstimationResultUI();
+        ui.setScreen(screen);
+        hintLabel = new JLabel("L: Rotate / Wheel: Zoom");
+        setBounds(0, 0, 800, 600);
         getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(ui, BorderLayout.WEST);
         getContentPane().add(screen, BorderLayout.CENTER);
+        getContentPane().add(hintLabel, BorderLayout.SOUTH);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
         // TODO Auto-generated method stub
+    }
+    
+    @Override
+    public void update(Observable o, Object arg) {
+
+    	
+    	if(setting.isFrameVisible()){
+	    	screen.resetViewMatrix();
+			screen.redrawOrigami();
+			ui.updateLabel();
+			setVisible(true);
+    	}    	
     }
 }

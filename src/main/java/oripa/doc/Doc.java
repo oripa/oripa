@@ -810,11 +810,15 @@ public class Doc {
 		return origamiModel;
 	}
 	
+	/**
+	 * @param origamiModel origamiModelを登録する
+	 */
+	public void setOrigamiModel(OrigamiModel origamiModel) {
+		this.origamiModel = origamiModel;
+	}
 	
 	
-	//======================================================================
-	// Getter/Setter eventually unnecessary
-	
+
 	/**
 	 * @return foldedModelInfo
 	 */
@@ -828,6 +832,10 @@ public class Doc {
 	public void setFoldedModelInfo(FoldedModelInfo foldedModelInfo) {
 		this.foldedModelInfo = foldedModelInfo;
 	}
+
+	//======================================================================
+	// Getter/Setter eventually unnecessary
+	
 
 	/**
 	 * @return crossLines

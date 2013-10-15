@@ -53,7 +53,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class RenderScreenForCheck extends JPanel
+public class FoldabilityScreen extends JPanel
         implements ComponentListener {
 
     private boolean bDrawFaceID = false;
@@ -73,7 +73,7 @@ public class RenderScreenForCheck extends JPanel
     private JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
     private JMenuItem popupItem_FlipFace = new JMenuItem("Face Inversion");
 
-    RenderScreenForCheck() {
+    FoldabilityScreen() {
         addComponentListener(this);
 
         scale = 1.5;

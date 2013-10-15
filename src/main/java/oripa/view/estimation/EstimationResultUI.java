@@ -38,7 +38,7 @@ import oripa.doc.exporter.ExporterSVG;
 import oripa.file.FileFilterEx;
 import oripa.fold.FoldedModelInfo;
 
-public class RenderUI extends JPanel {
+public class EstimationResultUI extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JButton jButtonNextAnswer = null;
@@ -46,7 +46,7 @@ public class RenderUI extends JPanel {
     private JCheckBox jCheckBoxOrder = null;
     private JCheckBox jCheckBoxShadow = null;
     private JLabel jLabel = null;
-    private RenderScreen2 screen;
+    private FoldedModelScreen screen;
     private JCheckBox jCheckBoxUseColor = null;
     private JCheckBox jCheckBoxEdge = null;
     private JCheckBox jCheckBoxFillFace = null;
@@ -55,12 +55,12 @@ public class RenderUI extends JPanel {
     /**
      * This is the default constructor
      */
-    public RenderUI() {
+    public EstimationResultUI() {
         super();
         initialize();
     }
 
-    public void setScreen(RenderScreen2 s) {
+    public void setScreen(FoldedModelScreen s) {
         screen = s;
     }
 

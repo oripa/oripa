@@ -55,7 +55,7 @@ import oripa.fold.TriangleVertex;
  * @author Koji
  *
  */
-public class RenderScreen2 extends JPanel
+public class FoldedModelScreen extends JPanel
         implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     private BufferedImage bufferImage;
@@ -93,7 +93,7 @@ public class RenderScreen2 extends JPanel
     private BufferedImage textureImage = null;
     private boolean bUseTexture = false;
 
-    public RenderScreen2() {
+    public FoldedModelScreen() {
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
@@ -678,7 +678,7 @@ public class RenderScreen2 extends JPanel
 	}
 
 	public static void setM_bFaceOrderFlip(boolean m_bFaceOrderFlip) {
-		RenderScreen2.m_bFaceOrderFlip = m_bFaceOrderFlip;
+		FoldedModelScreen.m_bFaceOrderFlip = m_bFaceOrderFlip;
 	}
 
     

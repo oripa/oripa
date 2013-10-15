@@ -32,8 +32,8 @@ import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.view.estimation.CheckFrame;
-import oripa.view.estimation.RenderFrame;
+import oripa.view.estimation.FoldabilityCheckFrame;
+import oripa.view.estimation.EstimationResultFrame;
 import oripa.view.main.MainFrame;
 import oripa.view.model.ModelViewFrame;
 import oripa.view.model.ModelViewFrame3D;
@@ -55,9 +55,9 @@ public class ORIPA {
     public static ResourceBundle res;
     public static ModelViewFrame3D modelFrame3D;
     public static int tmpInt;
-    public static RenderFrame renderFrame;
+    public static EstimationResultFrame renderFrame;
     ;
-    public static CheckFrame checkFrame;
+    public static FoldabilityCheckFrame checkFrame;
 
 	public static String iniFilePath = System.getProperty("user.home") + "\\oripa.ini";
 
@@ -121,11 +121,11 @@ public class ORIPA {
         modelFrame.setVisible(false);
 
         // "Folded origami" frame. Estimation of the folded form.
-        renderFrame = new RenderFrame();
+        renderFrame = new EstimationResultFrame();
         renderFrame.setVisible(false);
 
         // "Check Window". Check inputed data.
-        checkFrame = new CheckFrame();
+        checkFrame = new FoldabilityCheckFrame();
         checkFrame.setVisible(false);
 
 

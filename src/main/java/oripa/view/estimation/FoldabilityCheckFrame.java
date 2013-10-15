@@ -21,53 +21,25 @@ package oripa.view.estimation;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
-import oripa.viewsetting.estimation.RenderFrameSettingDB;
+public class FoldabilityCheckFrame extends JFrame implements ActionListener {
 
+    FoldabilityScreen screen;
 
-public class RenderFrame extends JFrame implements ActionListener, Observer {
-
-	private RenderFrameSettingDB setting = RenderFrameSettingDB.getInstance();
-
-	RenderScreen2 screen;
-    RenderUI ui;
-    public JLabel hintLabel;
-
-    public RenderFrame() {
-    	setting.addObserver(this);
-    	
-        setTitle("Folded Origami");
-        screen = new RenderScreen2();
-        ui = new RenderUI();
-        ui.setScreen(screen);
-        hintLabel = new JLabel("L: Rotate / Wheel: Zoom");
-        setBounds(0, 0, 800, 600);
+    public FoldabilityCheckFrame() {
+        // Called when the "Check window" button is pressed.
+        setTitle("Check Inputed data");
+        screen = new FoldabilityScreen();
+        setBounds(0, 0, 800, 800);
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(ui, BorderLayout.WEST);
         getContentPane().add(screen, BorderLayout.CENTER);
-        getContentPane().add(hintLabel, BorderLayout.SOUTH);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
         // TODO Auto-generated method stub
-    }
-    
-    @Override
-    public void update(Observable o, Object arg) {
-
-    	
-    	if(setting.isFrameVisible()){
-	    	screen.resetViewMatrix();
-			screen.redrawOrigami();
-			ui.updateLabel();
-			setVisible(true);
-    	}    	
     }
 }
