@@ -64,14 +64,24 @@ public class CreasePattern implements Collection<OriLine> {
 
 	private LineManager     lines;
 	private VerticesManager vertices;
+	private double paperSize = 400;
+	
+	private CreasePattern(){}
 	
 	public CreasePattern(double paperSize) {
 		lines    = new LineManager();
 		vertices = new VerticesManager(paperSize);
+
+		this.paperSize = paperSize;
 	}
 	
 	public void changePaperSize(double paperSize) {
+		this.paperSize = paperSize;
 		vertices.changePaperSize(paperSize);
+	}
+
+	public double getPaperSize() {
+		return paperSize;
 	}
 	
 	@Override

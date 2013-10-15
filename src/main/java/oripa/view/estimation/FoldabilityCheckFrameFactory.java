@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import javax.swing.JFrame;
 
-import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.value.OriLine;
 
@@ -13,13 +12,15 @@ public class FoldabilityCheckFrameFactory {
 
 	public JFrame createFrame(
 			OrigamiModel origamiModel, 
-    		Collection<OriLine> creasePattern, FoldedModelInfo foldedModelInfo) {
+    		Collection<OriLine> creasePattern //, FoldedModelInfo foldedModelInfo
+    		) {
 
 		if (frame == null) {
 			frame = new FoldabilityCheckFrame();
 		}
 
-		frame.showModel(origamiModel, creasePattern, foldedModelInfo);
+		frame.setModel(origamiModel, creasePattern //, foldedModelInfo
+				);
 		return frame;
 	}
 }

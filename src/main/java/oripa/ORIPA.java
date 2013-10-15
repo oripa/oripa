@@ -27,12 +27,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import oripa.doc.Doc;
-import oripa.doc.DocHolder;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.view.estimation.FoldabilityCheckFrame;
 import oripa.view.estimation.EstimationResultFrame;
 import oripa.view.main.MainFrame;
 import oripa.view.model.ModelViewFrame;
@@ -57,7 +55,7 @@ public class ORIPA {
     public static int tmpInt;
     public static EstimationResultFrame renderFrame;
     ;
-    public static FoldabilityCheckFrame checkFrame;
+//    public static FoldabilityCheckFrame checkFrame;
 
 	public static String iniFilePath = System.getProperty("user.home") + "\\oripa.ini";
 
@@ -125,8 +123,8 @@ public class ORIPA {
         renderFrame.setVisible(false);
 
         // "Check Window". Check inputed data.
-        checkFrame = new FoldabilityCheckFrame();
-        checkFrame.setVisible(false);
+//        checkFrame = new FoldabilityCheckFrame();
+//        checkFrame.setVisible(false);
 
 
 

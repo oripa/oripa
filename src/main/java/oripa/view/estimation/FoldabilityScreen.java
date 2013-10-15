@@ -38,8 +38,6 @@ import javax.swing.JPopupMenu;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
-import oripa.doc.Doc;
-import oripa.fold.FoldedModelInfo;
 import oripa.fold.OriFace;
 import oripa.fold.OriVertex;
 import oripa.fold.OrigamiModel;
@@ -74,7 +72,7 @@ public class FoldabilityScreen extends JPanel
 
     private OrigamiModel origamiModel = null;
     private Collection<OriLine> creasePattern = null;
-    private FoldedModelInfo foldedModelInfo = null;
+//    private FoldedModelInfo foldedModelInfo = null;
     
     FoldabilityScreen() {
     	
@@ -90,10 +88,11 @@ public class FoldabilityScreen extends JPanel
 
     public void showModel(
     		OrigamiModel origamiModel, 
-    		Collection<OriLine> creasePattern, FoldedModelInfo foldedModelInfo) {
+    		Collection<OriLine> creasePattern  //, FoldedModelInfo foldedModelInfo
+    		) {
     	this.origamiModel = origamiModel;
     	this.creasePattern = creasePattern;
-    	this.foldedModelInfo = foldedModelInfo;
+//    	this.foldedModelInfo = foldedModelInfo;
     	
     	this.setVisible(true);
     }
@@ -250,27 +249,27 @@ public class FoldabilityScreen extends JPanel
         }
 
         // Line connecting the pair of unsetled faces
-        if (Config.FOR_STUDY) {
-            List<OriFace> faces = origamiModel.getFaces();
-
-			int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
-
-            if (overlapRelation != null) {
-                g2d.setStroke(LineSetting.STROKE_RIDGE);
-                g2d.setColor(Color.MAGENTA);
-                int size = faces.size();
-                for (int i = 0; i < size; i++) {
-                    for (int j = i + 1; j < size; j++) {
-                        if (overlapRelation[i][j] == Doc.UNDEFINED) {
-                            Vector2d v0 = faces.get(i).getCenter();
-                            Vector2d v1 = faces.get(j).getCenter();
-                            g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));
-
-                        }
-                    }
-                }
-            }
-        }
+//        if (Config.FOR_STUDY) {
+//            List<OriFace> faces = origamiModel.getFaces();
+//
+//			int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+//
+//            if (overlapRelation != null) {
+//                g2d.setStroke(LineSetting.STROKE_RIDGE);
+//                g2d.setColor(Color.MAGENTA);
+//                int size = faces.size();
+//                for (int i = 0; i < size; i++) {
+//                    for (int j = i + 1; j < size; j++) {
+//                        if (overlapRelation[i][j] == Doc.UNDEFINED) {
+//                            Vector2d v0 = faces.get(i).getCenter();
+//                            Vector2d v1 = faces.get(j).getCenter();
+//                            g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         drawModel(g2d);
 

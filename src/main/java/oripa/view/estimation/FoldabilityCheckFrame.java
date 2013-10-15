@@ -25,7 +25,6 @@ import java.util.Collection;
 
 import javax.swing.JFrame;
 
-import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.value.OriLine;
 
@@ -48,11 +47,14 @@ public class FoldabilityCheckFrame extends JFrame implements ActionListener {
         // TODO Auto-generated method stub
     }
 
-    public void showModel(
+    public void setModel(
     		OrigamiModel origamiModel, 
-    		Collection<OriLine> creasePattern, FoldedModelInfo foldedModelInfo) {
-    	screen.showModel(origamiModel, creasePattern, foldedModelInfo);
-    	this.setVisible(true);
+    		Collection<OriLine> creasePattern  //, FoldedModelInfo foldedModelInfo
+    		) {
+    	screen.showModel(
+    			origamiModel, creasePattern //, foldedModelInfo
+    			);
+    	//sthis.setVisible(true);
     }
 
 }

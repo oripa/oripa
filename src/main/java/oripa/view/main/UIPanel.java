@@ -40,6 +40,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -77,6 +78,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
+import oripa.view.estimation.FoldabilityCheckFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.estimation.RenderFrameSettingDB;
@@ -646,14 +648,14 @@ implements ActionListener, PropertyChangeListener, Observer {
 				OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 				origamiModel = modelFactory.createOrigamiModel3(creasePattern, document.getPaperSize(), false);
 
-				document.setOrigamiModel(origamiModel);
+				//document.setOrigamiModel(origamiModel);
 //				boolean isValidPattern =
 //						folderTool.checkPatternValidity(
 //								origamiModel.getEdges(), origamiModel.getVertices(), origamiModel.getFaces() );
 
-				
-				ORIPA.checkFrame.setVisible(true);
-				ORIPA.checkFrame.repaint();
+				FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
+				JFrame checker = checkerFactory.createFrame(origamiModel, creasePattern);
+				checker.setVisible(true);
 			}
 		});
 
