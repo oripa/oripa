@@ -1,0 +1,109 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>oripas</groupId>
+	<artifactId>oripas</artifactId>
+	<version>1.27.5</version>
+	<packaging>jar</packaging>
+
+
+	<name>oripas</name>
+	<url>https://github.com/Ooouch1/oripaS</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+
+	<profiles>
+		<profile>
+			<id>java3d-windows-dependencies</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			
+			<!-- Java3D dependencies. the latest version in the maven repository is 1.3.1.
+			This POM requires you to install version 1.5.2 into your local repo by
+			"mvn install:install-file" command. Or, degrade to 1.3.1. -->
+			
+			<dependencies>
+				<dependency>
+					<groupId>java3d</groupId>
+					<artifactId>vecmath</artifactId>
+					<version>1.5.2</version>
+				</dependency>
+				<dependency>
+					<groupId>java3d</groupId>
+					<artifactId>j3dutils</artifactId>
+					<version>1.5.2</version>
+				</dependency>
+				<dependency>
+					<groupId>java3d</groupId>
+					<artifactId>j3dcore</artifactId>
+					<version>1.5.2</version>
+				</dependency>
+			</dependencies>
+
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.4.2</version>
+		</dependency>
+
+	</dependencies>
+
+
+
+	<!-- Run "mvn package" to build a runnable jar -->
+	<build>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>oripa.ORIPA</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="compile" name="oripas">
+	<property name="jar.version"   value="0.35"/>
+	<property name="java.dir"      value="src/main/java"/>
+	<property name="resources.dir" value="src/main/resources"/>
+	<property name="build.dir" value="bin/classes"/>
+
+	<target name="clean">
+		<delete dir="bin" />
+	</target>
+
+	<target name="compile">
+	  <mkdir dir="${build.dir}"/>
+	  <javac destdir="${build.dir}" debug="true" failonerror="true">
+	    <src path="${java.dir}"/>
+	    <!--<classpath refid="master-classpath"/>-->
+	  </javac>
+	</target>
+
+    <target name="jar" depends="compile">
+        <jar jarfile="bin/oripaS-${jar.version}.jar">
+        	<fileset dir="${build.dir}" />
+        	<fileset dir="${resources.dir}"/>
+        	<manifest>
+                <attribute name="Main-Class" value="oripa.ORIPA"/>
+            </manifest>
+        </jar>
+    </target>
+	
+	<target name="ORIPA">
+		<java classname="oripa.ORIPA" failonerror="true" fork="yes">
+			<classpath refid="run.ORIPA.classpath" />
+			<bootclasspath>
+				<path refid="run.ORIPA.bootclasspath" />
+			</bootclasspath>
+		</java>
+	</target>
+</project>
