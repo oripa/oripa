@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="compile" name="oripa">
-	<property name="jar.version"   value="1.27"/>
+	<property name="jar.version"   value="0.36"/>
 	<property name="java.dir"      value="src/main/java"/>
 	<property name="resources.dir" value="src/main/resources"/>
 	<property name="build.dir" value="bin/classes"/>
