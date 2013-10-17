@@ -6,8 +6,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 
 		
 	    static final Object[][] strings = { 
-	        { StringID.Main.TITLE_ID, "ORIPA S " + Version.ORIPAS_VERSION + 
-	        	": Origami Pattern Editor based on ORIPA" + "  v" + Version.ORIPA_VERSION }, 
+	        { StringID.Main.TITLE_ID, "ORIPA " + Version.ORIPA_VERSION }, 
 	        { StringID.Main.FILE_ID, "File" }, 
 	        { StringID.Main.EDIT_ID, "Edit" }, 
 	        { StringID.Main.HELP_ID, "Help" }, 
