@@ -2,14 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>oripas</groupId>
-	<artifactId>oripas</artifactId>
-	<version>1.27.5</version>
+	<groupId>oripa</groupId>
+	<artifactId>oripa</artifactId>
+	<version>0.36</version>
 	<packaging>jar</packaging>
 
 
-	<name>oripas</name>
-	<url>https://github.com/Ooouch1/oripaS</url>
+	<name>oripa</name>
+	<url>https://github.com/oripa/oripa</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
