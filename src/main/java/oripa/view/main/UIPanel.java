@@ -662,7 +662,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 	}
 
 
-	//	private GraphicMouseAction previousMouseAction = null;
 	private MainScreenSettingDB screenDB = MainScreenSettingDB.getInstance();
 
 	@Override
@@ -703,7 +702,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 //			if (document.buildOrigami3(origamiModel, false)) {
 			OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 			OrigamiModel origamiModel = modelFactory.createOrigamiModel3(
-					creasePattern, document.getPaperSize(), false);
+					creasePattern, document.getPaperSize());
 			FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 
 			if (origamiModel.isProbablyFoldable()) {
@@ -714,8 +713,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 						"Failed", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
 						== JOptionPane.YES_OPTION) {
 
-					origamiModel = modelFactory.createOrigamiModel3(
-							creasePattern, document.getPaperSize(), true);
+					origamiModel = modelFactory.createOrigamiModel3NoDuplicateLines(
+							creasePattern, document.getPaperSize());
 					//if (document.buildOrigami3(origamiModel, false)) {
 					if (origamiModel.isProbablyFoldable()) {
 						buildOK = true;
@@ -730,11 +729,12 @@ implements ActionListener, PropertyChangeListener, Observer {
 			Folder folder = new Folder();
 			
 			if (buildOK) {
-				int answerNum = folder.fold(origamiModel, foldedModelInfo);
+				folder.fold(origamiModel, foldedModelInfo);
 				document.setOrigamiModel(origamiModel);
 
-				System.out.println("RenderFrame");
-				if (answerNum != 0) {
+				//TODO move this block out of if(buildOK) statement.
+				if (foldedModelInfo.getFoldablePatternCount() != 0) {
+					System.out.println("RenderFrame");
 					RenderFrameSettingDB renderSetting = RenderFrameSettingDB.getInstance();
 					renderSetting.setFrameVisible(true);
 					renderSetting.notifyObservers();
@@ -743,7 +743,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 			} else {
 				BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
 				foldedModelInfo.setBoundBox(boundBox);
+				document.setOrigamiModel(origamiModel);
 			}
+
 
 			ModelFrameSettingDB modelSetting = ModelFrameSettingDB.getInstance();
 			modelSetting.setFrameVisible(true);

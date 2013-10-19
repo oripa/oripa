@@ -65,6 +65,9 @@ public class FoldedModelInfo {
 		this.boundBox = boundBox;
 	}
 
+	public int getFoldablePatternCount() {
+		return overlapRelations.size();
+	}
 	
 	
 }

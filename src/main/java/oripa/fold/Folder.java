@@ -49,6 +49,7 @@ public class Folder {
 	public Folder() {
 	}
 
+	// TODO: this method should return FoldedModelInfo.
 	public int fold(OrigamiModel origamiModel, FoldedModelInfo foldedModelInfo) {
 //		OrigamiModel origamiModel = m_doc.getOrigamiModel();
 //		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();

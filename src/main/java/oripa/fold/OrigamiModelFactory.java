@@ -45,7 +45,7 @@ public class OrigamiModelFactory {
 	}
 
 
-	//TODO: change as: return OrigamiModel. throw error if creation failed.
+	//TODO: change as: throw error if creation failed.
 	public OrigamiModel buildOrigami(
 			Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
@@ -133,7 +133,15 @@ public class OrigamiModelFactory {
 
 	}
 
+	public OrigamiModel createOrigamiModel3(
+			Collection<OriLine> creasePattern, double paperSize) {
+		return this.createOrigamiModel3(creasePattern, paperSize, false);
+	}
 
+	public OrigamiModel createOrigamiModel3NoDuplicateLines(
+			Collection<OriLine> creasePattern, double paperSize) {	
+		return this.createOrigamiModel3(creasePattern, paperSize, true);
+	}
 	/**
 	 * 
 	 * @param creasePattern
