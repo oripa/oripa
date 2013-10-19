@@ -3,7 +3,7 @@ package oripa.viewsetting.main.uipanel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import oripa.doc.TypeForChange;
+import oripa.paint.creasepattern.command.TypeForChange;
 
 public class FromLineTypeItemListener implements ItemListener {
 

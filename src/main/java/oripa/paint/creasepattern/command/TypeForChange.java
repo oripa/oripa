@@ -1,6 +1,8 @@
-package oripa.doc;
+package oripa.paint.creasepattern.command;
 
-public enum TypeForChange{
+// TODO move to view layer, or integrate with LineTypes
+
+public enum TypeForChange {
 	EMPTY("-"),
 	RIDGE("M"), VALLEY("V"), AUX("Aux"), CUT("Cut"), 
 	DELETE("Del"), FLIP("Flip");

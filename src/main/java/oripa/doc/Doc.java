@@ -32,7 +32,6 @@ import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
 import oripa.geom.GeomUtil;
-import oripa.geom.Line;
 import oripa.geom.Ray;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.creasepattern.CreasePattern;
@@ -247,9 +246,11 @@ public class Doc {
 	public void CircleCopy(double cx, double cy, double angleDeg, int num) {
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
-		pushUndoInfo();
 
-		oripa.geom.RectangleClipper clipper = new oripa.geom.RectangleClipper(-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
+		oripa.geom.RectangleClipper clipper =
+				new oripa.geom.RectangleClipper(
+						-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
+
 		double angle = angleDeg * Math.PI / 180.0;
 
 		for (int i = 0; i < num; i++) {
@@ -295,7 +296,6 @@ public class Doc {
 		int endRow = bFillSheet ? (int) (paperSize / interY + 0.5) : row;
 		int endCol = bFillSheet ? (int) (paperSize / interX + 0.5) : col;
 
-		pushUndoInfo();
 
 		System.out.println("startRow=" + startRow + " startCol=" + startCol + " endRow=" + endRow + " endCol=" + endCol);
 
@@ -334,139 +334,12 @@ public class Doc {
 		painter.resetSelectedOriLines(creasePattern);
 	}
 
-//	public boolean buildOrigami(boolean needCleanUp) {
-//		List<OriFace> faces = origamiModel.getFaces();
-//		List<OriEdge> edges = origamiModel.getEdges();
-//		List<OriVertex> vertices = origamiModel.getVertices();
-//
-//		edges.clear();
-//		vertices.clear();
-//		faces.clear();
-//
-//
-//		for (OriLine l : creasePattern) {
-//			if (l.typeVal == OriLine.TYPE_NONE) {
-//				continue;
-//			}
-//
-//			OriVertex sv = addAndGetVertexFromVVec(l.p0);
-//			OriVertex ev = addAndGetVertexFromVVec(l.p1);
-//			OriEdge eg = new OriEdge(sv, ev, l.typeVal);
-//			edges.add(eg);
-//			sv.addEdge(eg);
-//			ev.addEdge(eg);
-//		}
-//
-//		for (OriVertex v : vertices) {
-//
-//			for (OriEdge e : v.edges) {
-//
-//				if (e.type == OriLine.TYPE_CUT) {
-//					continue;
-//				}
-//
-//				if (v == e.sv) {
-//					if (e.left != null) {
-//						continue;
-//					}
-//				} else {
-//					if (e.right != null) {
-//						continue;
-//					}
-//				}
-//
-//				OriFace face = new OriFace();
-//				faces.add(face);
-//				OriVertex walkV = v;
-//				OriEdge walkE = e;
-//				debugCount = 0;
-//				while (true) {
-//					if (debugCount++ > 200) {
-//						System.out.println("ERROR");
-//						return false;
-//					}
-//					OriHalfedge he = new OriHalfedge(walkV, face);
-//					face.halfedges.add(he);
-//					he.tmpInt = walkE.type;
-//					if (walkE.sv == walkV) {
-//						walkE.left = he;
-//					} else {
-//						walkE.right = he;
-//					}
-//					walkV = walkE.oppositeVertex(walkV);
-//					walkE = walkV.getPrevEdge(walkE);
-//
-//					if (walkV == v) {
-//						break;
-//					}
-//				}
-//				face.makeHalfedgeLoop();
-//				face.setOutline();
-//				face.setPreOutline();
-//			}
-//		}
-//
-//		this.makeEdges();
-//		for (OriEdge e : edges) {
-//			e.type = e.left.tmpInt;
-//		}
-//
-//		
-//		origamiModel.setHasModel(true);
-//
-//		return true;
-//
-//	}
 
 
-	boolean sortFinished = false;
 
 
-	public boolean addVertexOnLine(OriLine line, Vector2d v) {
-		// Normally you dont want to add a vertex too close to the end of the line
-		if (GeomUtil.Distance(line.p0, v) < this.paperSize * 0.001
-				|| GeomUtil.Distance(line.p1, v) < this.paperSize * 0.001) {
-			return false;
-		}
-		OriLine l0 = new OriLine(line.p0, v, line.typeVal);
-		OriLine l1 = new OriLine(v, line.p1, line.typeVal);
-		creasePattern.remove(line);
-		creasePattern.add(l0);
-		creasePattern.add(l1);
 
-		return true;
-	}
-
-
-	// Adds a rabbit-ear molecule given a triangle
-	public void addTriangleDivideLines(Vector2d v0, Vector2d v1, Vector2d v2) {
-		Vector2d c = GeomUtil.getIncenter(v0, v1, v2);
-		if (c == null) {
-			System.out.print("Failed to calculate incenter of the triangle");
-		}
-		addLine(new OriLine(c, v0, PaintConfig.inputLineType));
-		addLine(new OriLine(c, v1, PaintConfig.inputLineType));
-		addLine(new OriLine(c, v2, PaintConfig.inputLineType));
-	}
-
-	// Adds perpendicular bisector
-	public void addPBisector(Vector2d v0, Vector2d v1) {
-		Vector2d cp = new Vector2d(v0);
-		cp.add(v1);
-		cp.scale(0.5);
-		Vector2d dir = new Vector2d();
-		dir.sub(v0, v1);
-		double tmp = dir.y;
-		dir.y = -dir.x;
-		dir.x = tmp;
-		dir.scale(Constants.DEFAULT_PAPER_SIZE * 8);
-
-		OriLine l = new OriLine(cp.x - dir.x, cp.y - dir.y, cp.x + dir.x, cp.y + dir.y, PaintConfig.inputLineType);
-		GeomUtil.clipLine(l, paperSize / 2);
-		addLine(l);
-	}
-
-	// v1-v2 is the symmetry line, v0-v1 is the sbject to be copied. 
+	// v1-v2 is the symmetry line, v0-v1 is the subject to be copied. 
 	public void addSymmetricLine(Vector2d v0, Vector2d v1, Vector2d v2) {
 		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
 		Ray ray = new Ray(v1, new Vector2d(v3.x - v1.x, v3.y - v1.y));
@@ -540,14 +413,6 @@ public class Doc {
 
 	}
 
-	public void addBisectorLine(Vector2d v0, Vector2d v1, Vector2d v2, OriLine l) {
-		Vector2d dir = GeomUtil.getBisectorVec(v0, v1, v2);
-		Vector2d cp = GeomUtil.getCrossPoint(new Line(l.p0, new Vector2d(l.p1.x - l.p0.x, l.p1.y - l.p0.y)), new Line(v1, dir));
-
-		OriLine nl = new OriLine(v1, cp, PaintConfig.inputLineType);
-		addLine(nl);
-
-	}
 
 	// Adds a new OriLine, also searching for intersections with others 
 	// that would cause their mutual division
@@ -610,10 +475,7 @@ public class Doc {
 
 	}
 
-	public void alterLineType(OriLine l, TypeForChange from,  TypeForChange to) {
-		LineTypeChanger changer = new LineTypeChanger();
-		changer.alterLineType(l, creasePattern, from, to);
-	}
+
 
 		
 	public Collection<Vector2d> getVerticesAround(Vector2d v){

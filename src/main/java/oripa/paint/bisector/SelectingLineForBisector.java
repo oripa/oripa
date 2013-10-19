@@ -1,8 +1,11 @@
 package oripa.paint.bisector;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingLine;
+import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.creasepattern.Painter;
 
 public class SelectingLineForBisector extends PickingLine {
 
@@ -30,11 +33,16 @@ public class SelectingLineForBisector extends PickingLine {
 			throw new RuntimeException();
 		}
 		
-        ORIPA.doc.pushCachedUndoInfo();
+		Doc document = ORIPA.doc;
+		CreasePattern creasePattern = document.getCreasePattern();
+		document.pushCachedUndoInfo();
 
-        ORIPA.doc.addBisectorLine(
+		Painter painter = new Painter();
+		
+		painter.addBisectorLine(
         		context.getVertex(0), context.getVertex(1), context.getVertex(2), 
-        		context.getLine(0));
+        		context.getLine(0),
+        		creasePattern);
 
         context.clear(false);
 	}

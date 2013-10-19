@@ -4,9 +4,11 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.paint.EditMode;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.RectangularSelectableAction;
+import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
@@ -22,13 +24,19 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 	@Override
 	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
 			PaintContext context) {
+
 		if(selectedLines.isEmpty() == false){
-			ORIPA.doc.pushUndoInfo();
+			Doc document = ORIPA.doc;
+			Collection<OriLine> creasePattern = document.getCreasePattern();
+			document.pushUndoInfo();
 
 			UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 			for (OriLine l : selectedLines) {
+				Painter painter = new Painter();
 				// Change line type
-				ORIPA.doc.alterLineType(l, setting.getTypeFrom(), setting.getTypeTo());
+				painter.alterLineType(
+						l, setting.getTypeFrom(), setting.getTypeTo(),
+						creasePattern);
 				//ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(), setting.getLineTypeToIndex());
 			}
 

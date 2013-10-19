@@ -1,13 +1,20 @@
-package oripa.doc;
+package oripa.paint.creasepattern.command;
 
 import java.util.Collection;
 
-import oripa.paint.creasepattern.command.ElementRemover;
 import oripa.value.OriLine;
 
-//public 
-class LineTypeChanger {
 
+public class LineTypeChanger {
+
+	//TODO use LineType instead of TypeForChange
+	/**
+	 * 
+	 * @param l
+	 * @param lines
+	 * @param from
+	 * @param to
+	 */
 	public void alterLineType(OriLine l, Collection<OriLine> lines,
     		TypeForChange from, TypeForChange to) {
         if (from == TypeForChange.RIDGE  && l.typeVal != OriLine.TYPE_RIDGE) {

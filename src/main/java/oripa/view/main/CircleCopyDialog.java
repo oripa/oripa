@@ -20,9 +20,16 @@ package oripa.view.main;
 
 import java.awt.Frame;
 import java.awt.Rectangle;
-import javax.swing.*;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 
 public class CircleCopyDialog extends JDialog {
     private static final long serialVersionUID = 1L;
@@ -145,7 +152,11 @@ public class CircleCopyDialog extends JDialog {
                             );            
                         
                     } else {
-                        ORIPA.doc.CircleCopy(m_cx, m_cy, m_angleDeg, m_num);
+                    	Doc document = ORIPA.doc;
+                    	document.pushUndoInfo();
+                    	document.CircleCopy(m_cx, m_cy, m_angleDeg, m_num);
+
+                    	//TODO make it local access
                         ORIPA.mainFrame.repaint();
                         setVisible(false);
                     }

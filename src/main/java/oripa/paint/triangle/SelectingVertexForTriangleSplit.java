@@ -1,10 +1,14 @@
 package oripa.paint.triangle;
 
 import java.awt.geom.Point2D.Double;
+import java.util.Collection;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingVertex;
+import oripa.paint.creasepattern.Painter;
+import oripa.value.OriLine;
 
 public class SelectingVertexForTriangleSplit extends PickingVertex{
 	
@@ -40,10 +44,15 @@ public class SelectingVertexForTriangleSplit extends PickingVertex{
 
 	@Override
 	public void onResult(PaintContext context) {
-		ORIPA.doc.pushCachedUndoInfo();
+		Doc document = ORIPA.doc;
+		Collection<OriLine> creasePattern = document.getCreasePattern();
 		
-        ORIPA.doc.addTriangleDivideLines(context.getVertex(0),
-        		context.getVertex(1), context.getVertex(2));
+		document.pushCachedUndoInfo();
+
+		Painter painter = new Painter();
+		painter.addTriangleDivideLines(
+				context.getVertex(0), context.getVertex(1), context.getVertex(2),
+				creasePattern);
 
         doingFirstAction = true;
         context.clear(false);

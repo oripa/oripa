@@ -13,11 +13,11 @@ import oripa.value.OriLine;
 
 public class CloseTempOutline {
 
-	private class ContourLineUpdater implements PairLoop.Block<Vector2d> {
+	private class ContourLineAdder implements PairLoop.Block<Vector2d> {
 
 		private Collection<OriLine> creasePattern;
 
-		public ContourLineUpdater(Collection<OriLine> creasePattern) {
+		public ContourLineAdder(Collection<OriLine> creasePattern) {
 			this.creasePattern = creasePattern;
 		}
 
@@ -49,7 +49,7 @@ public class CloseTempOutline {
 
 		// Update the contour line
 		PairLoop.iterateAll(
-				outlinevertices, new ContourLineUpdater(creasePattern));
+				outlinevertices, new ContourLineAdder(creasePattern));
 
 
 		// To delete a segment out of the contour

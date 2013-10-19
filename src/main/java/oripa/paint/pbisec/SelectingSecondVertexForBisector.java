@@ -3,8 +3,11 @@ package oripa.paint.pbisec;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingVertex;
+import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.creasepattern.Painter;
 
 public class SelectingSecondVertexForBisector extends PickingVertex{
 	
@@ -19,12 +22,19 @@ public class SelectingSecondVertexForBisector extends PickingVertex{
 			throw new RuntimeException();
 		}
 		
-        Vector2d p0, p1;
-        p0 = context.getVertex(0);
-        p1 = context.getVertex(1);
+		Vector2d p0, p1;
+		p0 = context.getVertex(0);
+		p1 = context.getVertex(1);
+		
+		Doc document = ORIPA.doc;
+		CreasePattern creasePattern = document.getCreasePattern();
 
-        ORIPA.doc.pushUndoInfo();
-        ORIPA.doc.addPBisector(p0, p1);
+        document.pushUndoInfo();
+
+        Painter painter = new Painter();
+        painter.addPBisector(
+        		p0, p1,
+        		creasePattern, creasePattern.getPaperSize());
 
         context.clear(false);
 	}

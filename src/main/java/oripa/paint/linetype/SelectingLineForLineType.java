@@ -1,8 +1,13 @@
 package oripa.paint.linetype;
 
+import java.util.Collection;
+
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingLine;
+import oripa.paint.creasepattern.Painter;
+import oripa.value.OriLine;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 public class SelectingLineForLineType extends PickingLine {
@@ -20,17 +25,21 @@ public class SelectingLineForLineType extends PickingLine {
 	
 	@Override
 	protected void undoAction(PaintContext context) {
-		// TODO Auto-generated method stub
 		super.undoAction(context);
 	}
 
 	@Override
 	protected void onResult(PaintContext context) {
-		// TODO Auto-generated method stub
-        ORIPA.doc.pushUndoInfo();
+		Doc document = ORIPA.doc;
+		Collection<OriLine> creasePattern = document.getCreasePattern();
+
+		document.pushUndoInfo();
 
     	UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-        ORIPA.doc.alterLineType(context.peekLine(),  setting.getTypeFrom(), setting.getTypeTo());
+    	Painter painter = new Painter();
+    	painter.alterLineType(
+    			context.peekLine(),  setting.getTypeFrom(), setting.getTypeTo(),
+    			creasePattern);
 
         context.clear(false);
 	}

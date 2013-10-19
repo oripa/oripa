@@ -20,9 +20,17 @@ package oripa.view.main;
 
 import java.awt.Frame;
 import java.awt.Rectangle;
-import javax.swing.*;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 
 public class RepeatCopyDialog extends JDialog {
 
@@ -235,8 +243,13 @@ public class RepeatCopyDialog extends JDialog {
                                 JOptionPane.INFORMATION_MESSAGE);
 
                     } else {
-                        ORIPA.doc.ArrayCopy(m_row, m_col, m_interX, m_interY, m_bFillSheet);
-                        ORIPA.mainFrame.repaint();
+                    	Doc document = ORIPA.doc;
+                    	document.pushUndoInfo();
+
+                    	document.ArrayCopy(m_row, m_col, m_interX, m_interY, m_bFillSheet);
+
+                    	//TODO make it local access
+                    	ORIPA.mainFrame.repaint();
                         setVisible(false);
                     }
                 }
