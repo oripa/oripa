@@ -19,7 +19,7 @@
 package oripa;
 
 import oripa.doc.Doc;
-import oripa.doc.core.CreasePattern;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 

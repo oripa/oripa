@@ -59,7 +59,6 @@ import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.doc.Doc;
 import oripa.doc.TypeForChange;
-import oripa.doc.core.CreasePattern;
 import oripa.file.ImageResourceLoader;
 import oripa.fold.BoundBox;
 import oripa.fold.FoldedModelInfo;
@@ -73,6 +72,7 @@ import oripa.paint.byvalue.LengthMeasuringAction;
 import oripa.paint.byvalue.LengthValueInputListener;
 import oripa.paint.byvalue.ValueDB;
 import oripa.paint.core.PaintConfig;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.util.LineTypeSetter;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -670,6 +670,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 
+		//TODO decompose this long long if-else.
 		if (ae.getSource() == dispGridCheckBox) {
 			screenDB.setGridVisible(dispGridCheckBox.isSelected());
 			screenDB.notifyObservers();

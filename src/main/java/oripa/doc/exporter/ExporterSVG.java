@@ -9,11 +9,11 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
-import oripa.doc.core.CreasePattern;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 import oripa.view.estimation.FoldedModelScreen;
 

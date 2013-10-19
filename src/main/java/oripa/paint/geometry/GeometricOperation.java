@@ -8,9 +8,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.CalculationResource;
-import oripa.doc.core.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.paint.core.PaintContext;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 

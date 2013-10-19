@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import oripa.doc.core.VerticesManager;
+import oripa.paint.creasepattern.VerticesManager;
 import oripa.value.OriPoint;
 
 public class VerticesManagerTest extends TestCase{

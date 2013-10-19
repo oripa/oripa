@@ -28,12 +28,12 @@ import javax.vecmath.Vector2d;
 import oripa.Config;
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.doc.core.CreasePattern;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterEPS;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.paint.core.PaintConfig;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 public class Folder {
@@ -610,7 +610,7 @@ public class Folder {
 			}
 		}
 
-		temp_doc.cleanDuplicatedLines();
+		folderTool.cleanDuplicatedLines(temp_creasePattern);
 
 		if (Config.FOR_STUDY) {
 			try {

@@ -9,10 +9,10 @@ import java.awt.geom.Point2D;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.core.CreasePattern;
 import oripa.paint.EditMode;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.geometry.GeometricOperation;
 import oripa.paint.geometry.NearestVertexFinder;
 import oripa.value.OriLine;

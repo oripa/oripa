@@ -50,7 +50,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.doc.core.CreasePattern;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.mouse.MouseUtility;
@@ -58,6 +57,7 @@ import oripa.paint.EditMode;
 import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;

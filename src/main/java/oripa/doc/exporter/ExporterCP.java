@@ -22,7 +22,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import oripa.doc.Doc;
-import oripa.doc.core.CreasePattern;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 public class ExporterCP implements Exporter{

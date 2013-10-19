@@ -2,7 +2,7 @@ package oripa.doc;
 
 import java.util.Collection;
 
-import oripa.doc.command.ElementRemover;
+import oripa.paint.creasepattern.command.ElementRemover;
 import oripa.value.OriLine;
 
 //public 

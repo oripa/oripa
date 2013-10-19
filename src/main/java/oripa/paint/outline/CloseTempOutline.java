@@ -6,7 +6,7 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.core.CreasePattern;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.util.PairLoop;
 import oripa.value.OriLine;
 

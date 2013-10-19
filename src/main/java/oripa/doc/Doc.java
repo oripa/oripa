@@ -27,20 +27,20 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.command.ElementRemover;
-import oripa.doc.command.LineAdder;
-import oripa.doc.command.LinePaster;
-import oripa.doc.core.CreasePattern;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.OriEdge;
 import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
-import oripa.fold.OriVertex;
 import oripa.fold.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.Ray;
 import oripa.paint.core.PaintConfig;
+import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.creasepattern.Painter;
+import oripa.paint.creasepattern.command.ElementRemover;
+import oripa.paint.creasepattern.command.LineAdder;
+import oripa.paint.creasepattern.command.LinePaster;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
@@ -216,129 +216,12 @@ public class Doc {
 		undoManager.clearChanged();
 	}
 
-	private OriVertex addAndGetVertexFromVVec(Vector2d p) {
-		List<OriVertex> vertices = origamiModel.getVertices();
-
-		OriVertex vtx = null;
-		for (OriVertex v : vertices) {
-			if (GeomUtil.Distance(v.p, p) < CalculationResource.POINT_EPS) {
-				vtx = v;
-			}
-		}
-
-		if (vtx == null) {
-			vtx = new OriVertex(p);
-			vertices.add(vtx);
-		}
-
-		return vtx;
-	}
 
 
 
-	public boolean cleanDuplicatedLines() {
-		debugCount = 0;
-		System.out.println("pre cleanDuplicatedLines " + creasePattern.size());
-		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>();
-		for (OriLine l : creasePattern) {
-			OriLine ll = l;
-
-			boolean bSame = false;
-			// Test if the line is already in tmpLines to prevent duplicity
-			for (OriLine line : tmpLines) {
-				if (GeomUtil.isSameLineSegment(line, ll)) {
-					bSame = true;
-					break;
-				}
-			}
-			if (bSame) {
-				continue;
-			}
-			tmpLines.add(ll);
-		}
-
-		if (creasePattern.size() == tmpLines.size()) {
-			return false;
-		}
-
-		creasePattern.clear();
-		creasePattern.addAll(tmpLines);
-		System.out.println("after cleanDuplicatedLines " + creasePattern.size());
-
-		return true;
-	}
-
-	// Unselect all lines
-	public void resetSelectedOriLines() {
-		for (OriLine line : creasePattern) {
-			line.selected = false;
-		}
-	}
-
-	public void selectAllOriLines() {
-		for (OriLine l : creasePattern) {
-			if (l.typeVal != OriLine.TYPE_CUT) {
-				l.selected = true;
-			}
-		}
-	}
-
-	private OriLine getMirrorCopiedLine(OriLine line, OriLine baseOriLine) {
-		Line baseLine = baseOriLine.getLine();
-		double dist0 = GeomUtil.Distance(line.p0, baseLine);
-		Vector2d dir0 = new Vector2d();
-		if (GeomUtil.isRightSide(line.p0, baseLine)) {
-			dir0.set(-baseLine.dir.y, baseLine.dir.x);
-		} else {
-			dir0.set(baseLine.dir.y, -baseLine.dir.x);
-		}
-		dir0.normalize();
-		Vector2d q0 = new Vector2d(
-				line.p0.x + dir0.x * dist0 * 2,
-				line.p0.y + dir0.y * dist0 * 2);
-
-		double dist1 = GeomUtil.Distance(line.p1, baseLine);
-		Vector2d dir1 = new Vector2d();
-		if (GeomUtil.isRightSide(line.p1, baseLine)) {
-			dir1.set(-baseLine.dir.y, baseLine.dir.x);
-		} else {
-			dir1.set(baseLine.dir.y, -baseLine.dir.x);
-		}
-		dir1.normalize();
-		Vector2d q1 = new Vector2d(
-				line.p1.x + dir1.x * dist1 * 2,
-				line.p1.y + dir1.y * dist1 * 2);
-
-		OriLine oriLine = new OriLine(q0, q1, line.typeVal);
-
-		return oriLine;
-	}
-
-	public void mirrorCopyBy(OriLine l) {
-		mirrorCopyBy(l, creasePattern);
-	}
 
 
-	public void mirrorCopyBy(OriLine l, 
-			Collection<OriLine> lines) {
 
-		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
-		for (OriLine line : lines) {
-			if (!line.selected) {
-				continue;
-			}
-			if (line == l) {
-				continue;
-			}
-
-			copiedLines.add(getMirrorCopiedLine(line, l));
-		}
-
-		for (OriLine line : copiedLines) {
-			addLine(line);
-		}
-
-	}    
 
 	ElementRemover remover = new ElementRemover();
 	public void removeLine(OriLine l) {
@@ -404,7 +287,8 @@ public class Doc {
 			addLine(l);
 		}
 
-		resetSelectedOriLines();
+		Painter painter = new Painter();
+		painter.resetSelectedOriLines(creasePattern);
 	}
 
 	public void ArrayCopy(int row, int col, double interX, double interY, boolean bFillSheet) {
@@ -448,7 +332,8 @@ public class Doc {
 		for (OriLine l : copiedLines) {
 			addLine(l);
 		}
-		resetSelectedOriLines();
+		Painter painter = new Painter();
+		painter.resetSelectedOriLines(creasePattern);
 	}
 
 //	public boolean buildOrigami(boolean needCleanUp) {
@@ -666,7 +551,6 @@ public class Doc {
 
 	}
 
-
 	// Adds a new OriLine, also searching for intersections with others 
 	// that would cause their mutual division
 	public void addLine(OriLine inputLine) {
@@ -674,6 +558,7 @@ public class Doc {
 		
 		lineAdder.addLine(inputLine, creasePattern);		
 	}
+
 
 	public void pasteLines(Collection<OriLine> lines){
 		LinePaster paster = new LinePaster();

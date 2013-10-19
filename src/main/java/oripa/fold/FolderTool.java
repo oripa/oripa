@@ -1,5 +1,7 @@
 package oripa.fold;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
+import oripa.value.OriLine;
 
 public class FolderTool {
 
@@ -229,6 +232,37 @@ public class FolderTool {
 					f.setOutline();
 				}
 			}
+		}
+
+		public boolean cleanDuplicatedLines(Collection<OriLine> creasePattern) {
+			System.out.println("pre cleanDuplicatedLines " + creasePattern.size());
+			ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(creasePattern.size());
+			for (OriLine l : creasePattern) {
+				OriLine ll = l;
+
+				boolean bSame = false;
+				// Test if the line is already in tmpLines to prevent duplicity
+				for (OriLine line : tmpLines) {
+					if (GeomUtil.isSameLineSegment(line, ll)) {
+						bSame = true;
+						break;
+					}
+				}
+				if (bSame) {
+					continue;
+				}
+				tmpLines.add(ll);
+			}
+
+			if (creasePattern.size() == tmpLines.size()) {
+				return false;
+			}
+
+			creasePattern.clear();
+			creasePattern.addAll(tmpLines);
+			System.out.println("after cleanDuplicatedLines " + creasePattern.size());
+
+			return true;
 		}
 
 }

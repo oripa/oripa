@@ -3,8 +3,11 @@ package oripa.paint.mirror;
 import java.awt.geom.Point2D;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingLine;
+import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
 
 public class SelectingLineForMirror extends PickingLine {
@@ -80,10 +83,13 @@ public class SelectingLineForMirror extends PickingLine {
 
 	@Override
 	protected void onResult(PaintContext context) {
-		// TODO Auto-generated method stub
-        ORIPA.doc.pushCachedUndoInfo();
 
-		ORIPA.doc.mirrorCopyBy(axis, context.getLines());
+		Doc document = ORIPA.doc;
+		CreasePattern creasePattern = document.getCreasePattern();
+		document.pushCachedUndoInfo();
+		
+        Painter painter = new Painter();
+		painter.mirrorCopyBy(axis, context.getLines(), creasePattern);
 
         doingFirstAction = true;
         context.clear(true);

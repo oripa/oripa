@@ -48,7 +48,6 @@ import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.doc.Doc;
-import oripa.doc.core.CreasePattern;
 import oripa.doc.exporter.ExporterXML;
 import oripa.file.FileChooser;
 import oripa.file.FileChooserFactory;
@@ -62,6 +61,8 @@ import oripa.fold.OrigamiModel;
 import oripa.fold.OrigamiModelFactory;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
+import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.creasepattern.Painter;
 import oripa.paint.util.DeleteSelectedLines;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
@@ -230,7 +231,10 @@ public class MainFrame extends JFrame implements ActionListener,
 				.addActionListener(new java.awt.event.ActionListener() {
 					@Override
 					public void actionPerformed(java.awt.event.ActionEvent e) {
-						ORIPA.doc.resetSelectedOriLines();
+						CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+						Painter painter = new Painter();
+						painter.resetSelectedOriLines(creasePattern);
+						
 						mouseContext.clear(false);
 						mainScreen.repaint();
 					}

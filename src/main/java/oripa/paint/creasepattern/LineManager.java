@@ -1,4 +1,4 @@
-package oripa.doc.core;
+package oripa.paint.creasepattern;
 
 import java.util.Collection;
 import java.util.HashSet;

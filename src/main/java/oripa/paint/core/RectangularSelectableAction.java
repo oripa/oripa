@@ -9,8 +9,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import oripa.ORIPA;
-import oripa.doc.core.CreasePattern;
 import oripa.geom.RectangleClipper;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {

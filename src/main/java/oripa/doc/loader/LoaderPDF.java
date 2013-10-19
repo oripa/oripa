@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
-import oripa.doc.core.CreasePattern;
 import oripa.geom.GeomUtil;
+import oripa.paint.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 public class LoaderPDF implements Loader {
