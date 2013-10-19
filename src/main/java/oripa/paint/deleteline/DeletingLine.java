@@ -1,8 +1,13 @@
 package oripa.paint.deleteline;
 
+import java.util.Collection;
+
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingLine;
+import oripa.paint.creasepattern.Painter;
+import oripa.value.OriLine;
 
 public class DeletingLine extends PickingLine {
 
@@ -20,9 +25,14 @@ public class DeletingLine extends PickingLine {
 	@Override
 	protected void onResult(PaintContext context) {
 
+		Doc document = ORIPA.doc;
+		Collection<OriLine> creasePattern = document.getCreasePattern();
+
 		if(context.getLineCount() > 0){
-			ORIPA.doc.pushUndoInfo();
-			ORIPA.doc.removeLine(context.popLine());
+			document.pushUndoInfo();
+
+			Painter painter = new Painter();
+			painter.removeLine(context.popLine(), creasePattern);
 		}
 		
 		context.clear(false);

@@ -28,7 +28,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.fold.FoldedModelInfo;
-import oripa.fold.OriEdge;
 import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
@@ -38,7 +37,6 @@ import oripa.geom.Ray;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
-import oripa.paint.creasepattern.command.ElementRemover;
 import oripa.paint.creasepattern.command.LineAdder;
 import oripa.paint.creasepattern.command.LinePaster;
 import oripa.resource.Constants;
@@ -223,27 +221,27 @@ public class Doc {
 
 
 
-	ElementRemover remover = new ElementRemover();
-	public void removeLine(OriLine l) {
-		remover.removeLine(l, creasePattern);
-	}
+//	ElementRemover remover = new ElementRemover();
+//	public void removeLine(OriLine l) {
+//		remover.removeLine(l, creasePattern);
+//	}
 
-	public void removeVertex(Vector2d v) {
-		remover.removeVertex(v, creasePattern);
-	}
+//	public void removeVertex(Vector2d v) {
+//		remover.removeVertex(v, creasePattern);
+//	}
 
-	public void deleteSelectedLines() {
-		ArrayList<OriLine> selectedLines = new ArrayList<OriLine>();
-		for (OriLine line : creasePattern) {
-			if (line.selected) {
-				selectedLines.add(line);
-			}
-		}
-
-		for (OriLine line : selectedLines) {
-			creasePattern.remove(line);
-		}
-	}
+//	public void deleteSelectedLines(Collection<OriLine> creasePattern) {
+//		ArrayList<OriLine> selectedLines = new ArrayList<OriLine>();
+//		for (OriLine line : creasePattern) {
+//			if (line.selected) {
+//				selectedLines.add(line);
+//			}
+//		}
+//
+//		for (OriLine line : selectedLines) {
+//			creasePattern.remove(line);
+//		}
+//	}
 
 
 	public void CircleCopy(double cx, double cy, double angleDeg, int num) {
@@ -567,62 +565,6 @@ public class Doc {
 	}
 	
 	
-	private void makeEdges() {
-		List<OriEdge> edges = origamiModel.getEdges();
-		edges.clear();
-
-		List<OriFace> faces = origamiModel.getFaces();
-
-		ArrayList<OriHalfedge> tmpHalfedges = new ArrayList<OriHalfedge>();
-
-		// Clear all the Halfedges
-		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
-				he.pair = null;
-				he.edge = null;
-				tmpHalfedges.add(he);
-			}
-		}
-
-		// Search the halfedge pair
-		int heNum = tmpHalfedges.size();
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he0 = tmpHalfedges.get(i);
-			if (he0.pair != null) {
-				continue;
-			}
-
-			for (int j = i + 1; j < heNum; j++) {
-				OriHalfedge he1 = tmpHalfedges.get(j);
-				if (he0.vertex == he1.next.vertex && he0.next.vertex == he1.vertex) {
-					OriEdge edge = new OriEdge();
-					he0.pair = he1;
-					he1.pair = he0;
-					he0.edge = edge;
-					he1.edge = edge;
-					edge.sv = he0.vertex;
-					edge.ev = he1.vertex;
-					edge.left = he0;
-					edge.right = he1;
-					edges.add(edge);
-					edge.type = OriLine.TYPE_NONE;//OriEdge.TYPE_NONE;
-				}
-			}
-		}
-
-		// If the pair wasnt found it should be an edge
-		for (OriHalfedge he : tmpHalfedges) {
-			if (he.pair == null) {
-				OriEdge edge = new OriEdge();
-				he.edge = edge;
-				edge.sv = he.vertex;
-				edge.ev = he.next.vertex;
-				edge.left = he;
-				edges.add(edge);
-				edge.type = OriLine.TYPE_CUT;
-			}
-		}
-	}
 
 
 
@@ -696,7 +638,7 @@ public class Doc {
 	}
 	
 	/**
-	 * @param origamiModel origamiModelを登録する
+	 * @param origamiModel origamiModel is set to this instance.
 	 */
 	public void setOrigamiModel(OrigamiModel origamiModel) {
 		this.origamiModel = origamiModel;
@@ -712,7 +654,7 @@ public class Doc {
 	}
 
 	/**
-	 * @param foldedModelInfo foldedModelInfoを登録する
+	 * @param foldedModelInfo foldedModelInfo is set to this instance.
 	 */
 	public void setFoldedModelInfo(FoldedModelInfo foldedModelInfo) {
 		this.foldedModelInfo = foldedModelInfo;
@@ -730,7 +672,7 @@ public class Doc {
 	}
 
 	/**
-	 * @param crossLines crossLinesを登録する
+	 * @param crossLines crossLines is set to this instance.
 	 */
 	public void setCrossLines(ArrayList<OriLine> crossLines) {
 		this.crossLines = crossLines;
@@ -751,7 +693,7 @@ public class Doc {
 //	}
 //
 //	/**
-//	 * @param faces facesを登録する
+//	 * @param faces faces is set to this instance.
 //	 */
 //	public void setFaces(List<OriFace> faces) {
 //		origamiModel.setFaces(faces);
@@ -777,14 +719,14 @@ public class Doc {
 //	}
 //
 //	/**
-//	 * @param vertices verticesを登録する
+//	 * @param vertices vertices is set to this instance.
 //	 */
 //	public void setVertices(List<OriVertex> vertices) {
 //		origamiModel.setVertices(vertices);;
 //	}
 //
 //	/**
-//	 * @param edges edgesを登録する
+//	 * @param edges edges is set to this instance.
 //	 */
 //	public void setEdges(ArrayList<OriEdge> edges) {
 //		origamiModel.setEdges(edges);
@@ -799,7 +741,7 @@ public class Doc {
 //	}
 //
 //	/**
-//	 * @param isValidPattern isValidPatternを登録する
+//	 * @param isValidPattern isValidPattern is set to this instance.
 //	 */
 //	public void setValidPattern(boolean isValidPattern) {
 //			origamiModel.setValidPattern(isValidPattern);
@@ -813,7 +755,7 @@ public class Doc {
 //	}
 //
 ////	/**
-////	 * @param hasModel hasModelを登録する
+////	 * @param hasModel hasModel is set to this instance.
 ////	 */
 ////	public void setHasModel(boolean hasModel) {
 ////		this.hasModel = hasModel;
@@ -828,7 +770,7 @@ public class Doc {
 //	}
 //
 //	/**
-//	 * @param sortedFaces sortedFacesを登録する
+//	 * @param sortedFaces sortedFaces is set to this instance.
 //	 */
 //	public void setSortedFaces(List<OriFace> sortedFaces) {
 //		origamiModel.setSortedFaces(sortedFaces);
@@ -842,7 +784,7 @@ public class Doc {
 //	}
 //
 //	/**
-//	 * @param folded foldedを登録する
+//	 * @param folded folded is set to this instance.
 //	 */
 //	public void setFolded(boolean folded) {
 //		origamiModel.setFolded(folded);
@@ -860,7 +802,7 @@ public class Doc {
 //	}
 //
 //	/**
-//	 * @param currentORmatIndex currentORmatIndexを登録する
+//	 * @param currentORmatIndex currentORmatIndex is set to this instance.
 //	 */
 //	public void setCurrentORmatIndex(int currentORmatIndex) {
 //		foldedModelInfo.setCurrentORmatIndex(currentORmatIndex);
@@ -893,7 +835,7 @@ public class Doc {
 //	}
 //
 //	/**
-//	 * @param overlapRelation overlapRelationを登録する
+//	 * @param overlapRelation overlapRelation is set to this instance.
 //	 */
 //	public void setOverlapRelation(int[][] overlapRelation) {
 //		foldedModelInfo.setOverlapRelation(overlapRelation);
@@ -909,7 +851,7 @@ public class Doc {
 //	}
 //
 //	/**
-//	 * @param foldableOverlapRelations foldableOverlapRelationsを登録する
+//	 * @param foldableOverlapRelations foldableOverlapRelations is set to this instance.
 //	 */
 //	public void setFoldableOverlapRelations(
 //			List<int[][]> foldableOverlapRelations) {
@@ -918,7 +860,7 @@ public class Doc {
 //	}
 
 	/**
-	 * @param size sizeを登録する
+	 * @param size size is set to this instance.
 	 */
 	public void setPaperSize(double size) {
 		this.paperSize = size;
@@ -940,7 +882,7 @@ public class Doc {
 	}
 
 	/**
-	 * @param title titleを登録する
+	 * @param title title is set to this instance.
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -954,7 +896,7 @@ public class Doc {
 	}
 
 	/**
-	 * @param editorName editorNameを登録する
+	 * @param editorName editorName is set to this instance.
 	 */
 	public void setEditorName(String editorName) {
 		this.editorName = editorName;
@@ -968,7 +910,7 @@ public class Doc {
 	}
 
 	/**
-	 * @param originalAuthorName originalAuthorNameを登録する
+	 * @param originalAuthorName originalAuthorName is set to this instance.
 	 */
 	public void setOriginalAuthorName(String originalAuthorName) {
 		this.originalAuthorName = originalAuthorName;
@@ -982,7 +924,7 @@ public class Doc {
 	}
 
 	/**
-	 * @param memo memoを登録する
+	 * @param memo memo is set to this instance.
 	 */
 	public void setMemo(String memo) {
 		this.memo = memo;
@@ -996,7 +938,7 @@ public class Doc {
 	}
 
 	/**
-	 * @param reference referenceを登録する
+	 * @param reference reference is set to this instance.
 	 */
 	public void setReference(String reference) {
 		this.reference = reference;

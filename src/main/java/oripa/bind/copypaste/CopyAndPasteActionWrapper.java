@@ -1,13 +1,17 @@
 package oripa.bind.copypaste;
 
 import java.awt.geom.AffineTransform;
+import java.util.Collection;
 
 import oripa.ORIPA;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
+import oripa.doc.Doc;
 import oripa.paint.EditMode;
 import oripa.paint.copypaste.CopyAndPasteAction;
 import oripa.paint.core.PaintContext;
+import oripa.paint.creasepattern.Painter;
+import oripa.value.OriLine;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 
@@ -25,9 +29,11 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	@Override
 	public void recover(PaintContext context) {
 		super.recover(context);
-		
+		Doc document = ORIPA.doc;
+		Collection<OriLine> creasePattern = document.getCreasePattern();
 		if(isCut){
-			ORIPA.doc.deleteSelectedLines();
+			Painter painter = new Painter();
+			painter.removeSelectedLines(creasePattern);
 		}
 	}
 	

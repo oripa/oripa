@@ -4,10 +4,12 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.paint.EditMode;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.RectangularSelectableAction;
+import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
 
 public class DeleteLineAction extends RectangularSelectableAction {
@@ -43,10 +45,14 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
 			PaintContext context) {
 
+		Doc document = ORIPA.doc;
+		Collection<OriLine> creasePattern = document.getCreasePattern();
+
 		if(selectedLines.isEmpty() == false){
-			ORIPA.doc.pushUndoInfo();
+			document.pushUndoInfo();
+			Painter painter = new Painter();
 			for (OriLine l : selectedLines) {
-				ORIPA.doc.removeLine(l);
+				painter.removeLine(l, creasePattern);
 			}
 		}		
 	}

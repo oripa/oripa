@@ -19,7 +19,9 @@ public class ElementRemover {
 	 * @param l
 	 * @param creasePattern
 	 */
-	public void removeLine(OriLine l, Collection<OriLine> creasePattern) {
+	public void removeLine(
+			OriLine l, Collection<OriLine> creasePattern) {
+		
 		creasePattern.remove(l);
 		// merge the lines if possible, to prevent unnecessary vertexes
 		merge2LinesAt(l.p0, creasePattern);
@@ -31,10 +33,14 @@ public class ElementRemover {
 	 * @param v
 	 * @param creasePattern
 	 */
-	public void removeVertex(Vector2d v, Collection<OriLine> creasePattern) {
+	public void removeVertex(
+			Vector2d v, Collection<OriLine> creasePattern) {
+		
 		merge2LinesAt(v, creasePattern);
 	}
-	private void merge2LinesAt(Vector2d p, Collection<OriLine> creasePattern) {
+	private void merge2LinesAt(
+			Vector2d p, Collection<OriLine> creasePattern) {
+		
 		ArrayList<OriLine> sharedLines = new ArrayList<OriLine>();
 		for (OriLine line : creasePattern) {
 			if (GeomUtil.Distance(line.p0, p) < 0.001 || GeomUtil.Distance(line.p1, p) < 0.001) {
@@ -83,6 +89,25 @@ public class ElementRemover {
 		creasePattern.remove(l1);
 		OriLine li = new OriLine(p0, p1, l0.typeVal);
 		creasePattern.add(li);
+	}
+
+	/**
+	 * remove lines which is marked "selected" from given collection.
+	 * @param creasePattern collection of lines
+	 */
+	public void removeSelectedLines(
+			Collection<OriLine> creasePattern) {
+
+		ArrayList<OriLine> selectedLines = new ArrayList<OriLine>();
+		for (OriLine line : creasePattern) {
+			if (line.selected) {
+				selectedLines.add(line);
+			}
+		}
+
+		for (OriLine line : selectedLines) {
+			creasePattern.remove(line);
+		}
 	}
 
 }
