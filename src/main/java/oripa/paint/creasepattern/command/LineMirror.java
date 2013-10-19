@@ -8,6 +8,7 @@ import javax.vecmath.Vector2d;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.value.OriLine;
+import oripa.value.OriPoint;
 
 public class LineMirror {
 	/**
@@ -29,48 +30,52 @@ public class LineMirror {
 				continue;
 			}
 
-			copiedLines.add(createMirrorCopiedLine(line, baseLine));
+			copiedLines.add(createMirroredLine(line, baseLine));
 		}
 
 		return copiedLines;
 	}    
 
 	/**
-	 * 
+	 * create a mirrored line.
 	 * @param line         a line to be mirrored
 	 * @param baseOriLine  a line to be axis of symmetry
 	 * @return mirrored line
 	 */
-	private OriLine createMirrorCopiedLine(
+	private OriLine createMirroredLine(
 			OriLine line, OriLine baseOriLine) {
-		Line baseLine = baseOriLine.getLine();
-		double dist0 = GeomUtil.Distance(line.p0, baseLine);
-		Vector2d dir0 = new Vector2d();
-		if (GeomUtil.isRightSide(line.p0, baseLine)) {
-			dir0.set(-baseLine.dir.y, baseLine.dir.x);
-		} else {
-			dir0.set(baseLine.dir.y, -baseLine.dir.x);
-		}
-		dir0.normalize();
-		Vector2d q0 = new Vector2d(
-				line.p0.x + dir0.x * dist0 * 2,
-				line.p0.y + dir0.y * dist0 * 2);
-
-		double dist1 = GeomUtil.Distance(line.p1, baseLine);
-		Vector2d dir1 = new Vector2d();
-		if (GeomUtil.isRightSide(line.p1, baseLine)) {
-			dir1.set(-baseLine.dir.y, baseLine.dir.x);
-		} else {
-			dir1.set(baseLine.dir.y, -baseLine.dir.x);
-		}
-		dir1.normalize();
-		Vector2d q1 = new Vector2d(
-				line.p1.x + dir1.x * dist1 * 2,
-				line.p1.y + dir1.y * dist1 * 2);
+				
+		OriPoint q0 = createMirroredVertex(line.p0, baseOriLine);
+		OriPoint q1 = createMirroredVertex(line.p1, baseOriLine);
 
 		OriLine mirroredLine = new OriLine(q0, q1, line.typeVal);
 
 		return mirroredLine;
 	}
 
+	/**
+	 * create a mirrored vertex.
+	 * @param vertex       p vertex to be mirrored
+	 * @param baseOriLine  a line to be axis of symmetry
+	 * @return
+	 */
+	private OriPoint createMirroredVertex(
+			OriPoint vertex, OriLine baseOriLine) {
+
+		Line baseLine = baseOriLine.getLine();
+		double dist0 = GeomUtil.Distance(vertex, baseLine);
+
+		Vector2d dir0 = new Vector2d();
+		if (GeomUtil.isRightSide(vertex, baseLine)) {
+			dir0.set(-baseLine.dir.y, baseLine.dir.x);
+		} else {
+			dir0.set(baseLine.dir.y, -baseLine.dir.x);
+		}
+		dir0.normalize();
+		OriPoint q0 = new OriPoint(
+				vertex.x + dir0.x * dist0 * 2,
+				vertex.y + dir0.y * dist0 * 2);
+		
+		return q0;
+	}
 }
