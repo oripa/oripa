@@ -64,7 +64,7 @@ public class Painter {
 	}
 
 	/**
-	 * 
+	 * add mirrored lines
 	 * 
 	 * @param baseLine       a line to be the axis of symmetry
 	 * @param lines          lines to be mirrored

@@ -43,22 +43,23 @@ public class SymmetricalLineAction extends GraphicMouseAction {
 	@Override
 	public Vector2d onMove(
 			PaintContext context, AffineTransform affine, boolean differentAction) {
+
 		if (context.getVertexCount() < 2) {
 			return super.onMove(context, affine, differentAction);
 		}
+		
+		// enable auto-walk selection only
 		return super.onMove(context, affine, false);
 	}
 
 	@Override
 	public void onDrag(PaintContext context, AffineTransform affine, boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onRelease(PaintContext context, AffineTransform affine,
 			boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -77,7 +78,6 @@ public class SymmetricalLineAction extends GraphicMouseAction {
 	@Override
 	public void onPress(PaintContext context, AffineTransform affine,
 			boolean differentAction) {
-		// TODO Auto-generated method stub
 		
 	}
 

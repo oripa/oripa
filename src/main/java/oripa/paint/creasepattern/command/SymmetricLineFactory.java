@@ -144,6 +144,9 @@ public class SymmetricLineFactory {
 			Vector2d v0, Vector2d v1, Vector2d v2, int stepCount, Vector2d startV,
 			Collection<OriLine> creasePattern, Collection<OriLine> autoWalkLines)
 					throws PainterCommandFailedException {
+
+		//FIXME this method does not detect loop path. it causes meaningless recursion.
+
 		stepCount++;
 		if (stepCount > 36) {
 			return;
