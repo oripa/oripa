@@ -17,13 +17,6 @@ public class LinePaster {
 		double left, right, top, bottom;
 
 		/**
-		 * reset variables by the most opposite value.
-		 */
-		public Domain() {
-			initialize();
-		}
-
-		/**
 		 * A rectangle domain fitting to given lines
 		 * @param target
 		 */

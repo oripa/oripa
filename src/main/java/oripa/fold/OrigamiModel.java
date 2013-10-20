@@ -36,6 +36,7 @@ public class OrigamiModel {
 	// Constructors
 	//=============================================================
 			
+	@SuppressWarnings("unused")
 	private OrigamiModel() {}
 
 	public OrigamiModel(double paperSize) {

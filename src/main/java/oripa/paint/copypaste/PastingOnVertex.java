@@ -1,16 +1,12 @@
 package oripa.paint.copypaste;
 
 import java.awt.geom.Point2D.Double;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingVertex;
 import oripa.paint.geometry.GeometricOperation;
-import oripa.value.OriLine;
 
 public class PastingOnVertex extends PickingVertex {
 

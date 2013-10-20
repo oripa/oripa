@@ -21,7 +21,6 @@ package oripa.doc;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
@@ -39,39 +38,40 @@ import oripa.paint.creasepattern.Painter;
 import oripa.paint.creasepattern.command.LineAdder;
 import oripa.paint.creasepattern.command.LinePaster;
 import oripa.resource.Constants;
+import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 
 public class Doc {
-	class PointComparatorX implements Comparator<Vector2d> {
-
-		@Override
-		public int compare(Vector2d v1, Vector2d v2) {
-			if(v1.x == v2.x){
-				return 0;
-			}
-			return v1.x > v2.x ? 1 : -1;
-		}
-	}
-
-	class PointComparatorY implements Comparator<Vector2d> {
-
-		@Override
-		public int compare(Vector2d v1, Vector2d v2) {
-			if(v1.y == v2.y){
-				return 0;
-			}
-			return ((Vector2d) v1).y > ((Vector2d) v2).y ? 1 : -1;
-		}
-	}
-
-	class FaceOrderComparator implements Comparator<OriFace> {
-
-		@Override
-		public int compare(OriFace f1, OriFace f2) {
-			return f1.z_order > f2.z_order ? 1 : -1;
-		}
-	}
+//	class PointComparatorX implements Comparator<Vector2d> {
+//
+//		@Override
+//		public int compare(Vector2d v1, Vector2d v2) {
+//			if(v1.x == v2.x){
+//				return 0;
+//			}
+//			return v1.x > v2.x ? 1 : -1;
+//		}
+//	}
+//
+//	class PointComparatorY implements Comparator<Vector2d> {
+//
+//		@Override
+//		public int compare(Vector2d v1, Vector2d v2) {
+//			if(v1.y == v2.y){
+//				return 0;
+//			}
+//			return ((Vector2d) v1).y > ((Vector2d) v2).y ? 1 : -1;
+//		}
+//	}
+//
+//	class FaceOrderComparator implements Comparator<OriFace> {
+//
+//		@Override
+//		public int compare(OriFace f1, OriFace f2) {
+//			return f1.z_order > f2.z_order ? 1 : -1;
+//		}
+//	}
 
 
 	
@@ -339,35 +339,6 @@ public class Doc {
 
 
 
-	// v1-v2 is the symmetry line, v0-v1 is the subject to be copied. 
-	public void addSymmetricLine(Vector2d v0, Vector2d v1, Vector2d v2) {
-		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
-		Ray ray = new Ray(v1, new Vector2d(v3.x - v1.x, v3.y - v1.y));
-
-		double minDist = Double.MAX_VALUE;
-		Vector2d bestPoint = null;
-		for (OriLine l : creasePattern) {
-			Vector2d crossPoint = GeomUtil.getCrossPoint(ray, l.getSegment());
-			if (crossPoint == null) {
-				continue;
-			}
-			double distance = GeomUtil.Distance(crossPoint, v1);
-			if (distance < CalculationResource.POINT_EPS) {
-				continue;
-			}
-
-			if (distance < minDist) {
-				minDist = distance;
-				bestPoint = crossPoint;
-			}
-		}
-
-		if (bestPoint == null) {
-			return;
-		}
-
-		addLine(new OriLine(v1, bestPoint, PaintConfig.inputLineType));
-	}
 
 	// v1-v2 is the symmetry line, v0-v1 is the sbject to be copied.
 	// automatically generates possible rebouncing of the fold (used when Ctrl is pressed)

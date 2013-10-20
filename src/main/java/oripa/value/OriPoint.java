@@ -8,7 +8,7 @@ import javax.vecmath.Vector2d;
  * @author Koji
  *
  */
-public class OriPoint extends Vector2d implements Comparable<OriPoint> {
+public class OriPoint extends Vector2d implements Comparable<Vector2d> {
 
 	/**
 	 * 
@@ -24,7 +24,7 @@ public class OriPoint extends Vector2d implements Comparable<OriPoint> {
 	}
 	
 	@Override
-	public int compareTo(OriPoint o) {
+	public int compareTo(Vector2d o) {
 		if (this.x == o.x) {
 			return (int)Math.signum(this.y - o.y);
 		}

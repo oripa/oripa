@@ -8,8 +8,8 @@ import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.CalculationResource;
 import oripa.geom.GeomUtil;
+import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 public class OrigamiModelFactory {

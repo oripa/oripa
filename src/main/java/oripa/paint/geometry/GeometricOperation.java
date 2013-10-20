@@ -7,10 +7,10 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.CalculationResource;
 import oripa.geom.GeomUtil;
 import oripa.paint.core.PaintContext;
 import oripa.paint.creasepattern.CreasePattern;
+import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 

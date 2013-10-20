@@ -3,8 +3,6 @@ package oripa.paint.creasepattern.command;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.value.OriLine;
@@ -65,7 +63,7 @@ public class LineMirror {
 		Line baseLine = baseOriLine.getLine();
 		double dist0 = GeomUtil.Distance(vertex, baseLine);
 
-		Vector2d dir0 = new Vector2d();
+		OriPoint dir0 = new OriPoint();
 		if (GeomUtil.isRightSide(vertex, baseLine)) {
 			dir0.set(-baseLine.dir.y, baseLine.dir.x);
 		} else {

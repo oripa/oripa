@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.paint.core.PaintConfig;
-import oripa.value.OriLine;
 
 public class LineTypeSetter implements ActionListener {
 

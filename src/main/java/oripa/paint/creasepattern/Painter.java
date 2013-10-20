@@ -5,14 +5,16 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
-import oripa.geom.Line;
 import oripa.paint.core.PaintConfig;
+import oripa.paint.creasepattern.command.BisectorFactory;
 import oripa.paint.creasepattern.command.ElementRemover;
 import oripa.paint.creasepattern.command.LineAdder;
+import oripa.paint.creasepattern.command.LineDivider;
 import oripa.paint.creasepattern.command.LineMirror;
+import oripa.paint.creasepattern.command.LineSelectionModifier;
 import oripa.paint.creasepattern.command.LineTypeChanger;
+import oripa.paint.creasepattern.command.SymmetricLineFactory;
 import oripa.paint.creasepattern.command.TypeForChange;
-import oripa.resource.Constants;
 import oripa.value.OriLine;
 
 public class Painter {
@@ -22,9 +24,8 @@ public class Painter {
 	 * @param creasePattern
 	 */
 	public void resetSelectedOriLines(Collection<OriLine> creasePattern) {
-		for (OriLine line : creasePattern) {
-			line.selected = false;
-		}
+		LineSelectionModifier modifier = new LineSelectionModifier();
+		modifier.resetSelectedOriLines(creasePattern);
 	}
 
 	/**
@@ -32,11 +33,8 @@ public class Painter {
 	 * @param creasePattern
 	 */
 	public void selectAllOriLines(Collection<OriLine> creasePattern) {
-		for (OriLine l : creasePattern) {
-			if (l.typeVal != OriLine.TYPE_CUT) {
-				l.selected = true;
-			}
-		}
+		LineSelectionModifier modifier = new LineSelectionModifier();
+		modifier.selectAllOriLines(creasePattern);
 	}
 
 	/**
@@ -77,8 +75,9 @@ public class Painter {
 		LineMirror mirror = new LineMirror();
 		Collection<OriLine> copiedLines = mirror.createMirroredLines(baseLine, lines);
 
+		LineAdder lineAdder = new LineAdder();
 		for (OriLine line : copiedLines) {
-			addLine(line, creasePattern);
+			lineAdder.addLine(line, creasePattern);
 		}
 
 	}    
@@ -119,20 +118,9 @@ public class Painter {
 	public boolean addVertexOnLine(
 			OriLine line, Vector2d v,
 			Collection<OriLine> creasePattern, double paperSize) {
-		
-		// Normally you don't want to add a vertex too close to the end of the line
-		if (GeomUtil.Distance(line.p0, v) < paperSize * 0.001
-				|| GeomUtil.Distance(line.p1, v) < paperSize * 0.001) {
-			return false;
-		}
 
-		OriLine l0 = new OriLine(line.p0, v, line.typeVal);
-		OriLine l1 = new OriLine(v, line.p1, line.typeVal);
-		creasePattern.remove(line);
-		creasePattern.add(l0);
-		creasePattern.add(l1);
-
-		return true;
+		LineDivider divider = new LineDivider();
+		return divider.divideLineInCollection(line, v, creasePattern, paperSize);
 	}
 
 	/**
@@ -151,9 +139,10 @@ public class Painter {
 		if (c == null) {
 			System.out.print("Failed to calculate incenter of the triangle");
 		}
-		addLine(new OriLine(c, v0, PaintConfig.inputLineType), creasePattern);
-		addLine(new OriLine(c, v1, PaintConfig.inputLineType), creasePattern);
-		addLine(new OriLine(c, v2, PaintConfig.inputLineType), creasePattern);
+		LineAdder adder = new LineAdder();
+		adder.addLine(new OriLine(c, v0, PaintConfig.inputLineType), creasePattern);
+		adder.addLine(new OriLine(c, v1, PaintConfig.inputLineType), creasePattern);
+		adder.addLine(new OriLine(c, v2, PaintConfig.inputLineType), creasePattern);
 	}
 
 	/**
@@ -166,24 +155,13 @@ public class Painter {
 	public void addPBisector(
 			Vector2d v0, Vector2d v1,
 			Collection<OriLine> creasePattern, double paperSize) {
+		
+		BisectorFactory factory = new BisectorFactory();
+		OriLine bisector =
+				factory.createPerpendicularBisector(v0, v1, paperSize);
 
-		Vector2d cp = new Vector2d(v0);
-		cp.add(v1);
-		cp.scale(0.5);
-
-		Vector2d dir = new Vector2d();
-		dir.sub(v0, v1);
-		double tmp = dir.y;
-		dir.y = -dir.x;
-		dir.x = tmp;
-		dir.scale(Constants.DEFAULT_PAPER_SIZE * 8);
-
-		OriLine bisector = new OriLine(
-				cp.x - dir.x, cp.y - dir.y,
-				cp.x + dir.x, cp.y + dir.y, PaintConfig.inputLineType);
-
-		GeomUtil.clipLine(bisector, paperSize / 2);
-		addLine(bisector, creasePattern);
+		LineAdder adder = new LineAdder();
+		adder.addLine(bisector, creasePattern);
 	}
 
 	/**
@@ -199,13 +177,12 @@ public class Painter {
 			OriLine l,
 			Collection<OriLine> creasePattern) {
 		
-		Vector2d dir = GeomUtil.getBisectorVec(v0, v1, v2);
-		Vector2d cp = GeomUtil.getCrossPoint(
-				new Line(l.p0, new Vector2d(l.p1.x - l.p0.x, l.p1.y - l.p0.y)),
-				new Line(v1, dir));
+		BisectorFactory factory = new BisectorFactory();
+		OriLine bisector =
+				factory.createAngleBisectorLine(v0, v1, v2, l);
 
-		OriLine bisector = new OriLine(v1, cp, PaintConfig.inputLineType);
-		addLine(bisector, creasePattern);
+		LineAdder adder = new LineAdder();
+		adder.addLine(bisector, creasePattern);
 
 	}
 
@@ -220,7 +197,30 @@ public class Painter {
 	public void alterLineType(
 			OriLine l, TypeForChange from,  TypeForChange to,
 			Collection<OriLine> creasePattern) {
+
 		LineTypeChanger changer = new LineTypeChanger();
 		changer.alterLineType(l, creasePattern, from, to);
 	}
+
+
+	/**
+	 * v1-v2 is the symmetry line, v0-v1 is the subject to be copied. 
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param creasePattern
+	 */
+	public void addSymmetricLine(
+			Vector2d v0, Vector2d v1, Vector2d v2,
+			Collection<OriLine> creasePattern) {
+
+		SymmetricLineFactory factory = new SymmetricLineFactory();
+		OriLine symmetricLine =
+				factory.createSymmetricLine(v0, v1, v2, creasePattern);
+
+		LineAdder adder = new LineAdder();
+		adder.addLine(symmetricLine, creasePattern);
+	}
+
+
 }

@@ -66,6 +66,7 @@ public class CreasePattern implements Collection<OriLine> {
 	private VerticesManager vertices;
 	private double paperSize = 400;
 	
+	@SuppressWarnings("unused")
 	private CreasePattern(){}
 	
 	public CreasePattern(double paperSize) {

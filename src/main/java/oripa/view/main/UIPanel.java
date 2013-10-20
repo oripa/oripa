@@ -841,6 +841,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 		case SELECT:
 			selectEditModeButton(editModePickLineButton);
 			break;
+		default:
+			break;
 		}
 		
 	}

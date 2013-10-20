@@ -10,8 +10,8 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.doc.CalculationResource;
 import oripa.geom.GeomUtil;
+import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 public class LineAdder {
