@@ -11,6 +11,7 @@ import oripa.paint.creasepattern.command.ElementRemover;
 import oripa.paint.creasepattern.command.LineAdder;
 import oripa.paint.creasepattern.command.LineDivider;
 import oripa.paint.creasepattern.command.LineMirror;
+import oripa.paint.creasepattern.command.LinePaster;
 import oripa.paint.creasepattern.command.LineSelectionModifier;
 import oripa.paint.creasepattern.command.LineTypeChanger;
 import oripa.paint.creasepattern.command.PainterCommandFailedException;
@@ -52,8 +53,9 @@ public class Painter {
 
 	
 	/**
-	 * Adds a new OriLine, also searching for intersections with others 
-	 * that would cause their mutual division.
+	 * add given line to crease pattern.
+	 * All lines which cross with given line are divided at the cross points (given line is also divided).
+	 * 
 	 * @param inputLine      a line to be added
 	 * @param creasePattern  destination of inputLine
 	 */
@@ -64,6 +66,15 @@ public class Painter {
 		lineAdder.addLine(inputLine, creasePattern);		
 	}
 
+	public void pasteLines(
+			Collection<OriLine> lines, Collection<OriLine> creasePattern){
+
+		LinePaster paster = new LinePaster();
+		paster.paste(lines, creasePattern);
+	}
+
+	
+	
 	/**
 	 * add mirrored lines
 	 * 
@@ -270,11 +281,12 @@ public class Painter {
 		Collection<OriLine> copiedLines = factory.createRotatedLines(
 				cx, cy, angleDeg, repetitionCount, creasePattern, paperSize);
 		
+		LineSelectionModifier selectionModifier = new LineSelectionModifier();
+		selectionModifier.resetSelectedOriLines(creasePattern);
+
 		LineAdder adder = new LineAdder();
 		adder.addAll(copiedLines, creasePattern);
 		
-		LineSelectionModifier selectionModifier = new LineSelectionModifier();
-		selectionModifier.resetSelectedOriLines(creasePattern);
 	}
 
 }

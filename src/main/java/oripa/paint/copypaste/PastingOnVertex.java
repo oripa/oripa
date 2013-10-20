@@ -1,11 +1,15 @@
 package oripa.paint.copypaste;
 
 import java.awt.geom.Point2D.Double;
+
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingVertex;
+import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.creasepattern.Painter;
 import oripa.paint.geometry.GeometricOperation;
 
 public class PastingOnVertex extends PickingVertex {
@@ -48,8 +52,9 @@ public class PastingOnVertex extends PickingVertex {
         Vector2d v = context.popVertex();
         
         if (context.getLineCount() > 0) {
-
-        	ORIPA.doc.pushUndoInfo();
+        	Doc document = ORIPA.doc;
+        	CreasePattern creasePattern = document.getCreasePattern();
+        	document.pushUndoInfo();
 
         	Vector2d origin = OriginHolder.getInstance().getOrigin(context);
 
@@ -63,8 +68,9 @@ public class PastingOnVertex extends PickingVertex {
 //            for(int i = 0; i < context.getLineCount(); i++){
 //            	ORIPA.doc.addLine(shiftedLines.get(i));
 //            }
-        	
-        	ORIPA.doc.pasteLines(shiftedLines);
+
+        	Painter painter = new Painter();
+        	painter.pasteLines(shiftedLines, creasePattern);
             
             context.setMissionCompleted(true);
         }

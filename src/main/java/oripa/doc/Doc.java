@@ -35,7 +35,6 @@ import oripa.paint.core.PaintConfig;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 import oripa.paint.creasepattern.command.LineAdder;
-import oripa.paint.creasepattern.command.LinePaster;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
@@ -383,8 +382,6 @@ public class Doc {
 //	}
 
 
-	// Adds a new OriLine, also searching for intersections with others 
-	// that would cause their mutual division
 	public void addLine(OriLine inputLine) {
 		LineAdder lineAdder = new LineAdder();
 		
@@ -392,11 +389,6 @@ public class Doc {
 	}
 
 
-	public void pasteLines(Collection<OriLine> lines){
-		LinePaster paster = new LinePaster();
-		
-		paster.paste(lines, creasePattern);
-	}
 	
 	
 
