@@ -13,6 +13,7 @@ import oripa.paint.creasepattern.command.LineDivider;
 import oripa.paint.creasepattern.command.LineMirror;
 import oripa.paint.creasepattern.command.LineSelectionModifier;
 import oripa.paint.creasepattern.command.LineTypeChanger;
+import oripa.paint.creasepattern.command.PainterCommandFailedException;
 import oripa.paint.creasepattern.command.SymmetricLineFactory;
 import oripa.paint.creasepattern.command.TypeForChange;
 import oripa.value.OriLine;
@@ -75,11 +76,8 @@ public class Painter {
 		LineMirror mirror = new LineMirror();
 		Collection<OriLine> copiedLines = mirror.createMirroredLines(baseLine, lines);
 
-		LineAdder lineAdder = new LineAdder();
-		for (OriLine line : copiedLines) {
-			lineAdder.addLine(line, creasePattern);
-		}
-
+		LineAdder adder = new LineAdder();
+		adder.addAll(copiedLines, creasePattern);
 	}    
 
 
@@ -209,10 +207,11 @@ public class Painter {
 	 * @param v1
 	 * @param v2
 	 * @param creasePattern
+	 * @throws PainterCommandFailedException 
 	 */
 	public void addSymmetricLine(
 			Vector2d v0, Vector2d v1, Vector2d v2,
-			Collection<OriLine> creasePattern) {
+			Collection<OriLine> creasePattern) throws PainterCommandFailedException {
 
 		SymmetricLineFactory factory = new SymmetricLineFactory();
 		OriLine symmetricLine =
@@ -222,5 +221,27 @@ public class Painter {
 		adder.addLine(symmetricLine, creasePattern);
 	}
 
+	/**
+	 * add possible rebouncing of the fold.
+	 * 
+	 * @param v0 terminal point of the line to be copied
+	 * @param v1 connecting point of symmetry line and the line to be copied.
+	 * @param v2 terminal point of symmetry line
+	 * @param startV
+	 * @param creasePattern
+	 * @throws PainterCommandFailedException 
+	 */
+	public void addSymmetricLineAutoWalk(
+			Vector2d v0, Vector2d v1, Vector2d v2, Vector2d startV,
+			Collection<OriLine> creasePattern) throws PainterCommandFailedException {
 
+		SymmetricLineFactory factory = new SymmetricLineFactory();
+
+		Collection<OriLine> autoWalkLines =
+				factory.createSymmetricLineAutoWalk(
+						v0, v1, v2, startV, creasePattern);
+
+		LineAdder adder = new LineAdder();
+		adder.addAll(autoWalkLines, creasePattern);
+	}
 }

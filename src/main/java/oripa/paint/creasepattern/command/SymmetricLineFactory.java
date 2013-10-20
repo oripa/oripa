@@ -48,23 +48,31 @@ public class SymmetricLineFactory {
 	 * @param v1
 	 * @param v2
 	 * @param creasePattern
+	 * @throws PainterCommandFailedException 
 	 */
 	public OriLine createSymmetricLine(
 			Vector2d v0, Vector2d v1, Vector2d v2,
-			Collection<OriLine> creasePattern) {
+			Collection<OriLine> creasePattern) throws PainterCommandFailedException {
 
 		BestPair pair = findBestPair(v0, v1, v2, creasePattern);
+
 		Vector2d bestPoint = pair.getBestPoint();
 		
-		if (bestPoint == null) {
-			return null;
-		}
 		return new OriLine(v1, bestPoint, PaintConfig.inputLineType);
 	}
 
+	/**
+	 * Core logic for creating symmetric line
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param creasePattern
+	 * @return
+	 * @throws PainterCommandFailedException 
+	 */
 	private BestPair findBestPair(
 			Vector2d v0, Vector2d v1, Vector2d v2,
-			Collection<OriLine> creasePattern) {
+			Collection<OriLine> creasePattern) throws PainterCommandFailedException {
 		BestPair bestPair = new BestPair();
 		
 		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
@@ -89,7 +97,7 @@ public class SymmetricLineFactory {
 		}
 
 		if (bestPair.getBestPoint() == null) {
-			return null;
+			throw new PainterCommandFailedException("failed to find the terminal of symmetric line");
 		}
 
 		return bestPair;
@@ -105,11 +113,13 @@ public class SymmetricLineFactory {
 	 * @param v2 terminal point of symmetry line
 	 * @param startV
 	 * @param creasePattern
-	 * @return
+	 * 
+	 * @return a collection of auto walk line
+	 * @throws PainterCommandFailedException 
 	 */
 	public Collection<OriLine> createSymmetricLineAutoWalk(
 			Vector2d v0, Vector2d v1, Vector2d v2, Vector2d startV,
-			Collection<OriLine> creasePattern) {
+			Collection<OriLine> creasePattern) throws PainterCommandFailedException {
 	
 		LinkedList<OriLine> autoWalkLines = new LinkedList<>();
 
@@ -119,23 +129,31 @@ public class SymmetricLineFactory {
 	}
 	
 	
-	// v1-v2 is the symmetry line, v0-v1 is the sbject to be copied.
-	// automatically generates possible rebouncing of the fold (used when Ctrl is pressed)
+	/**
+	 * add new symmetric line to {@code autoWalkLines} recursively.
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param stepCount
+	 * @param startV
+	 * @param creasePattern
+	 * @param autoWalkLines
+	 * @throws PainterCommandFailedException 
+	 */
 	private void addSymmetricLineAutoWalk(
 			Vector2d v0, Vector2d v1, Vector2d v2, int stepCount, Vector2d startV,
-			Collection<OriLine> creasePattern, Collection<OriLine> autoWalkLines) {
+			Collection<OriLine> creasePattern, Collection<OriLine> autoWalkLines)
+					throws PainterCommandFailedException {
 		stepCount++;
 		if (stepCount > 36) {
 			return;
 		}
 
 		BestPair pair = findBestPair(v0, v1, v2, creasePattern);
+
 		Vector2d bestPoint = pair.getBestPoint();
 		OriLine bestLine =  pair.getBestLine();
 		
-		if (bestPoint == null) {
-			return;
-		}
 
 		OriLine autoWalk = new OriLine(
 				v1, bestPoint, PaintConfig.inputLineType);

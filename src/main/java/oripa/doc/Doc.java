@@ -31,14 +31,12 @@ import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
 import oripa.geom.GeomUtil;
-import oripa.geom.Ray;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 import oripa.paint.creasepattern.command.LineAdder;
 import oripa.paint.creasepattern.command.LinePaster;
 import oripa.resource.Constants;
-import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 
@@ -340,49 +338,49 @@ public class Doc {
 
 
 
-	// v1-v2 is the symmetry line, v0-v1 is the sbject to be copied.
-	// automatically generates possible rebouncing of the fold (used when Ctrl is pressed)
-	public void addSymmetricLineAutoWalk(Vector2d v0, Vector2d v1, Vector2d v2, int stepCount, Vector2d startV) {
-		stepCount++;
-		if (stepCount > 36) {
-			return;
-		}
-		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
-		Ray ray = new Ray(v1, new Vector2d(v3.x - v1.x, v3.y - v1.y));
-
-		double minDist = Double.MAX_VALUE;
-		Vector2d bestPoint = null;
-		OriLine bestLine = null;
-		for (OriLine l : creasePattern) {
-			Vector2d crossPoint = GeomUtil.getCrossPoint(ray, l.getSegment());
-			if (crossPoint == null) {
-				continue;
-			}
-			double distance = GeomUtil.Distance(crossPoint, v1);
-			if (distance < CalculationResource.POINT_EPS) {
-				continue;
-			}
-
-			if (distance < minDist) {
-				minDist = distance;
-				bestPoint = crossPoint;
-				bestLine = l;
-			}
-		}
-
-		if (bestPoint == null) {
-			return;
-		}
-
-		addLine(new OriLine(v1, bestPoint, PaintConfig.inputLineType));
-
-		if (GeomUtil.Distance(bestPoint, startV) < CalculationResource.POINT_EPS) {
-			return;
-		}
-
-		addSymmetricLineAutoWalk(v1, bestPoint, bestLine.p0, stepCount, startV);
-
-	}
+//	// v1-v2 is the symmetry line, v0-v1 is the sbject to be copied.
+//	// automatically generates possible rebouncing of the fold (used when Ctrl is pressed)
+//	public void addSymmetricLineAutoWalk(Vector2d v0, Vector2d v1, Vector2d v2, int stepCount, Vector2d startV) {
+//		stepCount++;
+//		if (stepCount > 36) {
+//			return;
+//		}
+//		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
+//		Ray ray = new Ray(v1, new Vector2d(v3.x - v1.x, v3.y - v1.y));
+//
+//		double minDist = Double.MAX_VALUE;
+//		Vector2d bestPoint = null;
+//		OriLine bestLine = null;
+//		for (OriLine l : creasePattern) {
+//			Vector2d crossPoint = GeomUtil.getCrossPoint(ray, l.getSegment());
+//			if (crossPoint == null) {
+//				continue;
+//			}
+//			double distance = GeomUtil.Distance(crossPoint, v1);
+//			if (distance < CalculationResource.POINT_EPS) {
+//				continue;
+//			}
+//
+//			if (distance < minDist) {
+//				minDist = distance;
+//				bestPoint = crossPoint;
+//				bestLine = l;
+//			}
+//		}
+//
+//		if (bestPoint == null) {
+//			return;
+//		}
+//
+//		addLine(new OriLine(v1, bestPoint, PaintConfig.inputLineType));
+//
+//		if (GeomUtil.Distance(bestPoint, startV) < CalculationResource.POINT_EPS) {
+//			return;
+//		}
+//
+//		addSymmetricLineAutoWalk(v1, bestPoint, bestLine.p0, stepCount, startV);
+//
+//	}
 
 
 	// Adds a new OriLine, also searching for intersections with others 

@@ -15,7 +15,7 @@ import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 public class LineAdder {
-	class PointComparatorX implements Comparator<Vector2d> {
+	private class PointComparatorX implements Comparator<Vector2d> {
 
 		@Override
 		public int compare(Vector2d v1, Vector2d v2) {
@@ -26,7 +26,7 @@ public class LineAdder {
 		}
 	}
 
-	class PointComparatorY implements Comparator<Vector2d> {
+	private class PointComparatorY implements Comparator<Vector2d> {
 
 		@Override
 		public int compare(Vector2d v1, Vector2d v2) {
@@ -44,7 +44,7 @@ public class LineAdder {
 	 * @param currentLines
 	 * @return true.
 	 */
-	public boolean divideCurrentLines(OriLine inputLine, Collection<OriLine> currentLines){
+	private boolean divideCurrentLines(OriLine inputLine, Collection<OriLine> currentLines){
 
 		LinkedList<OriLine> toBeAdded = new LinkedList<>();
 
@@ -87,7 +87,7 @@ public class LineAdder {
 	 * @param currentLines
 	 * @return points on input line divided by currentLines
 	 */
-	public List<Vector2d> createInputLinePoints(OriLine inputLine, Collection<OriLine> currentLines){
+	private List<Vector2d> createInputLinePoints(OriLine inputLine, Collection<OriLine> currentLines){
 		ArrayList<Vector2d> points = new ArrayList<Vector2d>();
 		points.add(inputLine.p0);
 		points.add(inputLine.p1);
@@ -175,4 +175,14 @@ public class LineAdder {
 
 	}
 
+	/**
+	 * 
+	 * @param lines        lines to be added
+	 * @param destination  collection as a destination
+	 */
+	public void addAll(Collection<OriLine> lines, Collection<OriLine> destination) {
+		for (OriLine line : lines) {
+			addLine(line, destination);
+		}
+	}
 }

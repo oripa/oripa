@@ -3,6 +3,8 @@ package oripa.paint.symmetric;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
+import javax.vecmath.Vector2d;
+
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 
@@ -38,6 +40,14 @@ public class SymmetricalLineAction extends GraphicMouseAction {
 
 
 
+	@Override
+	public Vector2d onMove(
+			PaintContext context, AffineTransform affine, boolean differentAction) {
+		if (context.getVertexCount() < 2) {
+			return super.onMove(context, affine, differentAction);
+		}
+		return super.onMove(context, affine, false);
+	}
 
 	@Override
 	public void onDrag(PaintContext context, AffineTransform affine, boolean differentAction) {
