@@ -1,6 +1,5 @@
 package oripa.paint.creasepattern;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
@@ -15,6 +14,7 @@ import oripa.paint.creasepattern.command.LineMirror;
 import oripa.paint.creasepattern.command.LineSelectionModifier;
 import oripa.paint.creasepattern.command.LineTypeChanger;
 import oripa.paint.creasepattern.command.PainterCommandFailedException;
+import oripa.paint.creasepattern.command.RotatedLineFactory;
 import oripa.paint.creasepattern.command.SymmetricLineFactory;
 import oripa.paint.creasepattern.command.TypeForChange;
 import oripa.value.OriLine;
@@ -248,48 +248,28 @@ public class Painter {
 
 
 
+	/**
+	 * add copy of selected lines with a rotation around specified center point.
+	 * For a line l, this method creates rotatedLine(l, angleDeg * i) for i = 1 ... repetitionCount.
+	 * 
+	 * @param cx       x of center
+	 * @param cy       y of center
+	 * @param angleDeg         amount of rotation in degrees
+	 * @param repetitionCount  
+	 * @param creasePattern
+	 * @param paperSize
+	 * 
+	 * @return rotated lines
+	 */
 	public void rotatedCopy(
-			double cx, double cy, double angleDeg, int num,
+			double cx, double cy, double angleDeg, int repetitionCount,
 			Collection<OriLine> creasePattern, double paperSize) {
-		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
+		RotatedLineFactory factory = new RotatedLineFactory();
 
-		oripa.geom.RectangleClipper clipper =
-				new oripa.geom.RectangleClipper(
-						-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
-
-		double angle = angleDeg * Math.PI / 180.0;
-
-		for (int i = 0; i < num; i++) {
-			double angleRad = angle * (i + 1);
-			for (OriLine l : creasePattern) {
-				if (!l.selected) {
-					continue;
-				}
-
-				OriLine cl = new OriLine(l);
-				double tx0 = l.p0.x - cx;
-				double ty0 = l.p0.y - cy;
-				double tx1 = l.p1.x - cx;
-				double ty1 = l.p1.y - cy;
-
-				double ttx0 = tx0 * Math.cos(angleRad) - ty0 * Math.sin(angleRad);
-				double tty0 = tx0 * Math.sin(angleRad) + ty0 * Math.cos(angleRad);
-
-				double ttx1 = tx1 * Math.cos(angleRad) - ty1 * Math.sin(angleRad);
-				double tty1 = tx1 * Math.sin(angleRad) + ty1 * Math.cos(angleRad);
-
-				cl.p0.x = ttx0 + cx;
-				cl.p0.y = tty0 + cy;
-				cl.p1.x = ttx1 + cx;
-				cl.p1.y = tty1 + cy;
-
-				if (clipper.clip(cl)) {
-					copiedLines.add(cl);
-				}
-			}
-		}
-
+		Collection<OriLine> copiedLines = factory.createRotatedLines(
+				cx, cy, angleDeg, repetitionCount, creasePattern, paperSize);
+		
 		LineAdder adder = new LineAdder();
 		adder.addAll(copiedLines, creasePattern);
 		
