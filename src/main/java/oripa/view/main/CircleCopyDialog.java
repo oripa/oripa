@@ -30,6 +30,8 @@ import javax.swing.JTextField;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.creasepattern.Painter;
 
 public class CircleCopyDialog extends JDialog {
     private static final long serialVersionUID = 1L;
@@ -153,8 +155,13 @@ public class CircleCopyDialog extends JDialog {
                         
                     } else {
                     	Doc document = ORIPA.doc;
+                    	CreasePattern creasePattern = document.getCreasePattern();
                     	document.pushUndoInfo();
-                    	document.CircleCopy(m_cx, m_cy, m_angleDeg, m_num);
+                    	
+                    	Painter painter = new Painter();
+                    	painter.rotatedCopy(
+                    			m_cx, m_cy, m_angleDeg, m_num,
+                    			creasePattern, creasePattern.getPaperSize());
 
                     	//TODO make it local access
                         ORIPA.mainFrame.repaint();

@@ -241,52 +241,52 @@ public class Doc {
 //	}
 
 
-	public void CircleCopy(double cx, double cy, double angleDeg, int num) {
-		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
-
-
-		oripa.geom.RectangleClipper clipper =
-				new oripa.geom.RectangleClipper(
-						-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
-
-		double angle = angleDeg * Math.PI / 180.0;
-
-		for (int i = 0; i < num; i++) {
-			double angleRad = angle * (i + 1);
-			for (OriLine l : creasePattern) {
-				if (!l.selected) {
-					continue;
-				}
-
-				OriLine cl = new OriLine(l);
-				double tx0 = l.p0.x - cx;
-				double ty0 = l.p0.y - cy;
-				double tx1 = l.p1.x - cx;
-				double ty1 = l.p1.y - cy;
-
-				double ttx0 = tx0 * Math.cos(angleRad) - ty0 * Math.sin(angleRad);
-				double tty0 = tx0 * Math.sin(angleRad) + ty0 * Math.cos(angleRad);
-
-				double ttx1 = tx1 * Math.cos(angleRad) - ty1 * Math.sin(angleRad);
-				double tty1 = tx1 * Math.sin(angleRad) + ty1 * Math.cos(angleRad);
-
-				cl.p0.x = ttx0 + cx;
-				cl.p0.y = tty0 + cy;
-				cl.p1.x = ttx1 + cx;
-				cl.p1.y = tty1 + cy;
-
-				if (clipper.clip(cl)) {
-					copiedLines.add(cl);
-				}
-			}
-		}
-		for (OriLine l : copiedLines) {
-			addLine(l);
-		}
-
-		Painter painter = new Painter();
-		painter.resetSelectedOriLines(creasePattern);
-	}
+//	public void CircleCopy(double cx, double cy, double angleDeg, int num) {
+//		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
+//
+//
+//		oripa.geom.RectangleClipper clipper =
+//				new oripa.geom.RectangleClipper(
+//						-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
+//
+//		double angle = angleDeg * Math.PI / 180.0;
+//
+//		for (int i = 0; i < num; i++) {
+//			double angleRad = angle * (i + 1);
+//			for (OriLine l : creasePattern) {
+//				if (!l.selected) {
+//					continue;
+//				}
+//
+//				OriLine cl = new OriLine(l);
+//				double tx0 = l.p0.x - cx;
+//				double ty0 = l.p0.y - cy;
+//				double tx1 = l.p1.x - cx;
+//				double ty1 = l.p1.y - cy;
+//
+//				double ttx0 = tx0 * Math.cos(angleRad) - ty0 * Math.sin(angleRad);
+//				double tty0 = tx0 * Math.sin(angleRad) + ty0 * Math.cos(angleRad);
+//
+//				double ttx1 = tx1 * Math.cos(angleRad) - ty1 * Math.sin(angleRad);
+//				double tty1 = tx1 * Math.sin(angleRad) + ty1 * Math.cos(angleRad);
+//
+//				cl.p0.x = ttx0 + cx;
+//				cl.p0.y = tty0 + cy;
+//				cl.p1.x = ttx1 + cx;
+//				cl.p1.y = tty1 + cy;
+//
+//				if (clipper.clip(cl)) {
+//					copiedLines.add(cl);
+//				}
+//			}
+//		}
+//		for (OriLine l : copiedLines) {
+//			addLine(l);
+//		}
+//
+//		Painter painter = new Painter();
+//		painter.resetSelectedOriLines(creasePattern);
+//	}
 
 	public void ArrayCopy(int row, int col, double interX, double interY, boolean bFillSheet) {
 		int startRow = bFillSheet ? (int) (-paperSize / interY) : 0;
