@@ -41,6 +41,16 @@ public class Painter {
 	}
 
 	/**
+	 * count how many lines are selected.
+	 * @param creasePattern
+	 * @return
+	 */
+	public int countSelectedLines(Collection<OriLine> creasePattern) {
+		LineSelectionModifier modifier = new LineSelectionModifier();
+		return modifier.countSelectedLines(creasePattern);
+	}
+
+	/**
 	 * 
 	 * @param creasePattern
 	 */
@@ -219,18 +229,26 @@ public class Painter {
 	 * @param v1
 	 * @param v2
 	 * @param creasePattern
+	 * 
+	 * @return true if line is added
 	 * @throws PainterCommandFailedException 
 	 */
-	public void addSymmetricLine(
+	public boolean addSymmetricLine(
 			Vector2d v0, Vector2d v1, Vector2d v2,
-			Collection<OriLine> creasePattern) throws PainterCommandFailedException {
+			Collection<OriLine> creasePattern) {
 
 		SymmetricLineFactory factory = new SymmetricLineFactory();
-		OriLine symmetricLine =
-				factory.createSymmetricLine(v0, v1, v2, creasePattern);
+		OriLine symmetricLine;
+		try {
+			symmetricLine = factory.createSymmetricLine(v0, v1, v2, creasePattern);
+		} catch (PainterCommandFailedException comEx) {
+			return false;
+		}
 
 		LineAdder adder = new LineAdder();
 		adder.addLine(symmetricLine, creasePattern);
+
+		return true;
 	}
 
 	/**
@@ -241,20 +259,29 @@ public class Painter {
 	 * @param v2 terminal point of symmetry line
 	 * @param startV
 	 * @param creasePattern
+	 * 
+	 * @return true if line is added
 	 * @throws PainterCommandFailedException 
 	 */
-	public void addSymmetricLineAutoWalk(
+	public boolean addSymmetricLineAutoWalk(
 			Vector2d v0, Vector2d v1, Vector2d v2, Vector2d startV,
-			Collection<OriLine> creasePattern) throws PainterCommandFailedException {
+			Collection<OriLine> creasePattern) {
 
 		SymmetricLineFactory factory = new SymmetricLineFactory();
 
-		Collection<OriLine> autoWalkLines =
+		Collection<OriLine> autoWalkLines;
+		try {
+		autoWalkLines=
 				factory.createSymmetricLineAutoWalk(
 						v0, v1, v2, startV, creasePattern);
 
+		} catch (PainterCommandFailedException comEx) {
+			return false;
+		}
 		LineAdder adder = new LineAdder();
 		adder.addAll(autoWalkLines, creasePattern);
+
+		return true;
 	}
 
 
@@ -272,7 +299,7 @@ public class Painter {
 	 * 
 	 * @return rotated lines
 	 */
-	public void rotatedCopy(
+	public void copyWithRotation(
 			double cx, double cy, double angleDeg, int repetitionCount,
 			Collection<OriLine> creasePattern, double paperSize) {
 

@@ -26,4 +26,16 @@ public class LineSelectionModifier {
 			}
 		}
 	}
+
+	public int countSelectedLines(Collection<OriLine> creasePattern) {
+		int count = 0;
+		for (OriLine l : creasePattern) {
+			if (l.selected) {
+				count++;
+			}
+		}
+		return count;
+
+	}
+
 }

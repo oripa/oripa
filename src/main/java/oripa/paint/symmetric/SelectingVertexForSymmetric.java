@@ -10,7 +10,6 @@ import oripa.doc.Doc;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingVertex;
 import oripa.paint.creasepattern.Painter;
-import oripa.paint.creasepattern.command.PainterCommandFailedException;
 import oripa.value.OriLine;
 
 public class SelectingVertexForSymmetric extends PickingVertex{
@@ -63,16 +62,12 @@ public class SelectingVertexForSymmetric extends PickingVertex{
 		
 		Painter painter = new Painter();
 
-		try {
-	        if (doSpecial) {
-	            painter.addSymmetricLineAutoWalk(
-	            		first, second, third, first, creasePattern);
-	        } else {
-	            painter.addSymmetricLine(
-	            		first, second, third, creasePattern);
-	        }
-		} catch (PainterCommandFailedException ex) {
-			
+		if (doSpecial) {
+			painter.addSymmetricLineAutoWalk(
+					first, second, third, first, creasePattern);
+		} else {
+			painter.addSymmetricLine(
+					first, second, third, creasePattern);
 		}
 
 		doingFirstAction = true;

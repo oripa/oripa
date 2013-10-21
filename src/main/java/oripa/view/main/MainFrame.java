@@ -443,7 +443,8 @@ public class MainFrame extends JFrame implements ActionListener,
 			dialog.setModal(true);
 			dialog.setVisible(true);
 		} else if (e.getSource() == menuItemRepeatCopy) {
-			if (document.countSelectedLineNum(creasePattern) == 0) {
+			Painter painter = new Painter();
+			if (painter.countSelectedLines(creasePattern) == 0) {
 				JOptionPane.showMessageDialog(this, "Select target lines",
 						"ArrayCopy", JOptionPane.WARNING_MESSAGE);
 
@@ -451,7 +452,8 @@ public class MainFrame extends JFrame implements ActionListener,
 				arrayCopyDialog.setVisible(true);
 			}
 		} else if (e.getSource() == menuItemCircleCopy) {
-			if (document.countSelectedLineNum(creasePattern) == 0) {
+			Painter painter = new Painter();
+			if (painter.countSelectedLines(creasePattern) == 0) {
 				JOptionPane.showMessageDialog(this, "Select target lines",
 						"ArrayCopy", JOptionPane.WARNING_MESSAGE);
 

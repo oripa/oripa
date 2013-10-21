@@ -154,16 +154,6 @@ public class Doc {
 	}
 
 
-	public int countSelectedLineNum(Collection<OriLine> creasePattern) {
-		int count = 0;
-		for (OriLine l : creasePattern) {
-			if (l.selected) {
-				count++;
-			}
-		}
-		return count;
-
-	}
 
 	public UndoInfo createUndoInfo(){
 		UndoInfo undoInfo = new UndoInfo(creasePattern);
@@ -210,34 +200,6 @@ public class Doc {
 		undoManager.clearChanged();
 	}
 
-
-
-
-
-
-
-
-//	ElementRemover remover = new ElementRemover();
-//	public void removeLine(OriLine l) {
-//		remover.removeLine(l, creasePattern);
-//	}
-
-//	public void removeVertex(Vector2d v) {
-//		remover.removeVertex(v, creasePattern);
-//	}
-
-//	public void deleteSelectedLines(Collection<OriLine> creasePattern) {
-//		ArrayList<OriLine> selectedLines = new ArrayList<OriLine>();
-//		for (OriLine line : creasePattern) {
-//			if (line.selected) {
-//				selectedLines.add(line);
-//			}
-//		}
-//
-//		for (OriLine line : selectedLines) {
-//			creasePattern.remove(line);
-//		}
-//	}
 
 
 //	public void CircleCopy(double cx, double cy, double angleDeg, int num) {

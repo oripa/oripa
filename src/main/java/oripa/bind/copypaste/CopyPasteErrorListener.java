@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import oripa.ORIPA;
 import oripa.bind.state.ErrorListener;
 import oripa.doc.Doc;
+import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
 
 public class CopyPasteErrorListener implements ErrorListener {
@@ -17,7 +18,9 @@ public class CopyPasteErrorListener implements ErrorListener {
 	public boolean isError(ActionEvent e) {
 		Doc document = ORIPA.doc;
 		Collection<OriLine> creasePattern = document.getCreasePattern();
-		return (document.countSelectedLineNum(creasePattern) == 0);
+
+		Painter painter = new Painter();
+		return (painter.countSelectedLines(creasePattern) == 0);
 	}
 
 	@Override

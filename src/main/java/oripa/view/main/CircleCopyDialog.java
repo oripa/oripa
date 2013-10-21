@@ -159,7 +159,7 @@ public class CircleCopyDialog extends JDialog {
                     	document.pushUndoInfo();
                     	
                     	Painter painter = new Painter();
-                    	painter.rotatedCopy(
+                    	painter.copyWithRotation(
                     			m_cx, m_cy, m_angleDeg, m_num,
                     			creasePattern, creasePattern.getPaperSize());
 
