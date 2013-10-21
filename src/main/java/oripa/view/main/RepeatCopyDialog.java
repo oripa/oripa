@@ -31,6 +31,9 @@ import javax.swing.JTextField;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.paint.core.PaintContext;
+import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.creasepattern.Painter;
 
 public class RepeatCopyDialog extends JDialog {
 
@@ -48,9 +51,9 @@ public class RepeatCopyDialog extends JDialog {
     private JTextField jTextFieldIntY = null;
     private JButton jButtonOK = null;
     private JButton jButtonCancel = null;
-    int m_row, m_col;
-    double m_interX, m_interY;
-    boolean m_bFillSheet;
+    private int m_row, m_col;
+    private double m_interX, m_interY;
+    private boolean m_bFillSheet;
 
     /**
      * @param owner
@@ -244,10 +247,19 @@ public class RepeatCopyDialog extends JDialog {
 
                     } else {
                     	Doc document = ORIPA.doc;
+                    	CreasePattern creasePattern = document.getCreasePattern();
                     	document.pushUndoInfo();
 
-                    	document.ArrayCopy(m_row, m_col, m_interX, m_interY, m_bFillSheet);
-
+                    	//FIXME no one sets intervals if fill flag is true
+                    	Painter painter = new Painter();
+                    	if (m_bFillSheet) {
+                    		PaintContext context = PaintContext.getInstance();
+                    		painter.fillOut(
+                    				context.getLines(), creasePattern, creasePattern.getPaperSize());
+                    	} else {
+                    		painter.copyWithTiling(
+                    				m_row, m_col, m_interX, m_interX, creasePattern, creasePattern.getPaperSize());
+                    	}
                     	//TODO make it local access
                     	ORIPA.mainFrame.repaint();
                         setVisible(false);

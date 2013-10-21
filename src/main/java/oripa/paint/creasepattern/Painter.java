@@ -17,6 +17,7 @@ import oripa.paint.creasepattern.command.LineTypeChanger;
 import oripa.paint.creasepattern.command.PainterCommandFailedException;
 import oripa.paint.creasepattern.command.RotatedLineFactory;
 import oripa.paint.creasepattern.command.SymmetricLineFactory;
+import oripa.paint.creasepattern.command.TiledLineFactory;
 import oripa.paint.creasepattern.command.TypeForChange;
 import oripa.value.OriLine;
 
@@ -299,6 +300,7 @@ public class Painter {
 	 * 
 	 * @return rotated lines
 	 */
+	//TODO a collection of selected line should be a parameter as like mirror copy.
 	public void copyWithRotation(
 			double cx, double cy, double angleDeg, int repetitionCount,
 			Collection<OriLine> creasePattern, double paperSize) {
@@ -316,4 +318,47 @@ public class Painter {
 		
 	}
 
+	/**
+	 * add copy of selected lines with tiling.
+	 * @param row
+	 * @param col
+	 * @param interX
+	 * @param interY
+	 * @param creasePattern
+	 * @param paperSize
+	 */
+	public void copyWithTiling(
+			int row, int col, double interX, double interY,
+			Collection<OriLine> creasePattern, double paperSize) {
+		
+		TiledLineFactory factory = new TiledLineFactory();
+
+		Collection<OriLine> copiedLines =
+				factory.createTiledLines(
+						row, col, interX, interY,
+						creasePattern, paperSize);
+	
+		LineAdder adder = new LineAdder();
+		adder.addAll(copiedLines, creasePattern);
+	}
+
+	/**
+	 * add copy of selected lines as the paper is filled out.
+	 * @param lines
+	 * @param creasePattern
+	 * @param paperSize
+	 */
+	public void fillOut(
+			Collection<OriLine> lines,
+			Collection<OriLine> creasePattern, double paperSize) {
+
+		TiledLineFactory factory = new TiledLineFactory();
+
+		Collection<OriLine> copiedLines =
+				factory.createFullyTiledLines(lines, creasePattern, paperSize);
+		
+		LineAdder adder = new LineAdder();
+		adder.addAll(copiedLines, creasePattern);
+		
+	}
 }

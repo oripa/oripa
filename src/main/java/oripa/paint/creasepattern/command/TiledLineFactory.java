@@ -9,24 +9,25 @@ public class TiledLineFactory {
 
 	/**
 	 * create lines that fill out the paper.
-	 * @param interX
-	 * @param interY
+	 * @param lines
 	 * @param creasePattern
 	 * @param paperSize
 	 * @return
 	 */
 	public Collection<OriLine> createFullyTiledLines(
-			double interX, double interY,
+			Collection<OriLine> lines,
 			Collection<OriLine> creasePattern, double paperSize) {
 
-		int startRow = (int) (-paperSize / interY);
-		int startCol = (int) (-paperSize / interX);
-		int endRow =  (int) (paperSize / interY + 0.5);
-		int endCol =  (int) (paperSize / interX + 0.5);
+		RectangleDomain domain = new RectangleDomain(lines);
+
+		int startRow = (int) (-paperSize / domain.getHeight());
+		int startCol = (int) (-paperSize / domain.getWidth());
+		int endRow =  (int) (paperSize / domain.getHeight() + 0.5);
+		int endCol =  (int) (paperSize / domain.getWidth() + 0.5);
 
 		return createTiledLinesImpl(
 				startRow, startCol, endRow, endCol,
-				interX, interY, creasePattern, paperSize);
+				domain.getWidth(), domain.getHeight(), creasePattern, paperSize);
 	}
 
 	/**
