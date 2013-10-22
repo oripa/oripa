@@ -237,7 +237,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		crossLine.p0.add(moveVec);
 		crossLine.p1.add(moveVec);
 
-		ORIPA.doc.setCrossLine(crossLine);
+		ORIPA.doc.updateSheetCutOutlines(crossLine);
 		repaint();
 		ORIPA.mainFrame.repaint();
 	}

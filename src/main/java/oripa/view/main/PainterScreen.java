@@ -306,7 +306,7 @@ ActionListener, ComponentListener, Observer{
 
 
 		if (PaintConfig.bDispCrossLine) {
-			List<OriLine> crossLines = document.getCrossLines();
+			List<OriLine> crossLines = document.getSheetCutOutlines();
 			if (!crossLines.isEmpty()) {
 				g2d.setStroke(LineSetting.STROKE_TMP_OUTLINE);
 				g2d.setColor(Color.MAGENTA);

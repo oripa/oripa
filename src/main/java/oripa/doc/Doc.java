@@ -27,14 +27,11 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.fold.FoldedModelInfo;
-import oripa.fold.OriFace;
-import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
-import oripa.geom.GeomUtil;
-import oripa.paint.core.PaintConfig;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.tool.LineAdder;
 import oripa.resource.Constants;
+import oripa.sheetcut.SheetCutOutlineFactory;
 import oripa.value.OriLine;
 
 
@@ -76,7 +73,7 @@ public class Doc {
 	// Crease Pattern
 
 	private CreasePattern creasePattern = null;
-	private ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
+	private List<OriLine> sheetCutLines = new ArrayList<OriLine>();
 
 
 	// Origami Model for Estimation
@@ -311,46 +308,17 @@ public class Doc {
 
 
 
-	public void setCrossLine(OriLine line) {
-		crossLines.clear();
+	/**
+	 * make lines that composes the outline of a shape
+	 * obtained by cutting the folded model.
+	 * @param scissorLine
+	 */
+	public void updateSheetCutOutlines(OriLine scissorLine) {
+		SheetCutOutlineFactory factory = new SheetCutOutlineFactory();
 
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-
-		for (OriFace face : sortedFaces) {
-			ArrayList<Vector2d> vv = new ArrayList<Vector2d>();
-			int crossCount = 0;
-			for (OriHalfedge he : face.halfedges) {
-				OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
-						he.next.positionForDisplay.x, he.next.positionForDisplay.y, PaintConfig.inputLineType);
-
-				double params[] = new double[2];
-				boolean res = GeomUtil.getCrossPointParam(line.p0, line.p1, l.p0, l.p1, params);
-				if (res == true && params[0] > -0.001 && params[1] > -0.001 && params[0] < 1.001 && params[1] < 1.001) {
-					double param = params[1];
-					crossCount++;
-
-					Vector2d crossV = new Vector2d();
-					crossV.x = (1.0 - param) * he.vertex.preP.x + param * he.next.vertex.preP.x;
-					crossV.y = (1.0 - param) * he.vertex.preP.y + param * he.next.vertex.preP.y;
-
-					boolean isNewPoint = true;
-					for (Vector2d v2d : vv) {
-						if (GeomUtil.Distance(v2d, crossV) < 1) {
-							isNewPoint = false;
-							break;
-						}
-					}
-					if (isNewPoint) {
-						vv.add(crossV);
-					}
-				}
-			}
-
-			if (vv.size() >= 2) {
-				crossLines.add(new OriLine(vv.get(0), vv.get(1), PaintConfig.inputLineType));
-			}
-		}
-
+		sheetCutLines.clear();
+		sheetCutLines.addAll(
+				factory.createLines(scissorLine, origamiModel));
 	}
 
 
@@ -407,16 +375,16 @@ public class Doc {
 	/**
 	 * @return crossLines
 	 */
-	public ArrayList<OriLine> getCrossLines() {
-		return crossLines;
+	public List<OriLine> getSheetCutOutlines() {
+		return sheetCutLines;
 	}
 
-	/**
-	 * @param crossLines crossLines is set to this instance.
-	 */
-	public void setCrossLines(ArrayList<OriLine> crossLines) {
-		this.crossLines = crossLines;
-	}
+//	/**
+//	 * @param crossLines crossLines is set to this instance.
+//	 */
+//	public void setCrossLines(List<OriLine> sheetCutOutlines) {
+//		this.sheetCutLines = sheetCutOutlines;
+//	}
 
 	
 	
