@@ -1,4 +1,4 @@
-package oripa.paint.creasepattern.command;
+package oripa.paint.creasepattern.tool;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
+import oripa.paint.creasepattern.tool.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 

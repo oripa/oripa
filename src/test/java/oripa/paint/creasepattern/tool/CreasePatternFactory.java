@@ -1,8 +1,9 @@
-package oripa.paint.creasepattern.command;
+package oripa.paint.creasepattern.tool;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
+import oripa.paint.creasepattern.tool.LineAdder;
 import oripa.value.LineType;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -24,24 +25,35 @@ public class CreasePatternFactory {
 		LinkedList<OriLine> creasePattern = new LinkedList<>();
 		
 		double partSize = size / 2;
-		OriLine slash = new OriLine(
+
+		OriLine slashLeftTop = new OriLine(
 				new OriPoint(center.x - partSize, center.y - partSize),
-				new OriPoint(center.x + partSize, center.y + partSize),
+				center,
 				LineType.RIDGE.toInt());
 
-		OriLine backSlash = new OriLine(
-				new OriPoint(center.x + partSize, center.y + partSize),
-				new OriPoint(center.x - partSize, center.y - partSize),
+		OriLine slashRightTop = new OriLine(
+				new OriPoint(center.x + partSize, center.y - partSize),
+				center,
 				LineType.RIDGE.toInt());
 
 		
-		//FIXME lazy implementation.
-		// we should add four small lines into the collection
-		// in order to ensure correctness of this method.
+		OriLine slashRightBottom = new OriLine(
+				new OriPoint(center.x + partSize, center.y + partSize),
+				center,
+				LineType.RIDGE.toInt());
+
+		OriLine slashLeftBottom = new OriLine(
+				new OriPoint(center.x - partSize, center.y + partSize),
+				center,
+				LineType.RIDGE.toInt());
+		
+		
 		LineAdder adder = new LineAdder();
 		
-		adder.addLine(slash, creasePattern);
-		adder.addLine(backSlash, creasePattern);
+		adder.addLine(slashLeftTop, creasePattern);
+		adder.addLine(slashRightTop, creasePattern);
+		adder.addLine(slashRightBottom, creasePattern);
+		adder.addLine(slashLeftBottom, creasePattern);
 		
 		
 		return creasePattern;

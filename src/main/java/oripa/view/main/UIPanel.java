@@ -72,7 +72,7 @@ import oripa.paint.byvalue.LengthValueInputListener;
 import oripa.paint.byvalue.ValueDB;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.creasepattern.CreasePattern;
-import oripa.paint.creasepattern.command.TypeForChange;
+import oripa.paint.creasepattern.tool.TypeForChange;
 import oripa.paint.util.LineTypeSetter;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;

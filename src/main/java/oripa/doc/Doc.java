@@ -33,8 +33,7 @@ import oripa.fold.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.creasepattern.CreasePattern;
-import oripa.paint.creasepattern.Painter;
-import oripa.paint.creasepattern.command.LineAdder;
+import oripa.paint.creasepattern.tool.LineAdder;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
@@ -248,50 +247,6 @@ public class Doc {
 //		Painter painter = new Painter();
 //		painter.resetSelectedOriLines(creasePattern);
 //	}
-
-	public void ArrayCopy(int row, int col, double interX, double interY, boolean bFillSheet) {
-		int startRow = bFillSheet ? (int) (-paperSize / interY) : 0;
-		int startCol = bFillSheet ? (int) (-paperSize / interX) : 0;
-		int endRow = bFillSheet ? (int) (paperSize / interY + 0.5) : row;
-		int endCol = bFillSheet ? (int) (paperSize / interX + 0.5) : col;
-
-
-		System.out.println("startRow=" + startRow + " startCol=" + startCol + " endRow=" + endRow + " endCol=" + endCol);
-
-		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
-
-		oripa.geom.RectangleClipper clipper = new oripa.geom.RectangleClipper(-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
-		for (int x = startCol; x < endCol; x++) {
-			for (int y = startRow; y < endRow; y++) {
-				if (x == 0 && y == 0) {
-					continue;
-				}
-
-				// copies the selected lines
-				for (OriLine l : creasePattern) {
-					if (!l.selected) {
-						continue;
-					}
-
-					OriLine cl = new OriLine(l);
-					cl.p0.x += interX * x;
-					cl.p0.y += interY * y;
-					cl.p1.x += interX * x;
-					cl.p1.y += interY * y;
-
-					if (clipper.clip(cl)) {
-						copiedLines.add(cl);
-					}
-				}
-			}
-		}
-
-		for (OriLine l : copiedLines) {
-			addLine(l);
-		}
-		Painter painter = new Painter();
-		painter.resetSelectedOriLines(creasePattern);
-	}
 
 
 

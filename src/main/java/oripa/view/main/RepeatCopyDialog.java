@@ -250,7 +250,6 @@ public class RepeatCopyDialog extends JDialog {
                     	CreasePattern creasePattern = document.getCreasePattern();
                     	document.pushUndoInfo();
 
-                    	//FIXME no one sets intervals if fill flag is true
                     	Painter painter = new Painter();
                     	if (m_bFillSheet) {
                     		PaintContext context = PaintContext.getInstance();

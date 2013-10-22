@@ -1,4 +1,4 @@
-package oripa.doc;
+package oripa.paint.creasepattern;
 
 import static org.junit.Assert.*;
 

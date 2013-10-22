@@ -1,4 +1,4 @@
-package oripa.paint.creasepattern.command;
+package oripa.paint.creasepattern.tool;
 
 import java.util.ArrayList;
 import java.util.Collection;

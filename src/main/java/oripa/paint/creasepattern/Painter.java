@@ -6,23 +6,30 @@ import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.creasepattern.command.BisectorFactory;
-import oripa.paint.creasepattern.command.ElementRemover;
-import oripa.paint.creasepattern.command.LineAdder;
-import oripa.paint.creasepattern.command.LineDivider;
-import oripa.paint.creasepattern.command.LineMirror;
-import oripa.paint.creasepattern.command.LinePaster;
-import oripa.paint.creasepattern.command.LineSelectionModifier;
-import oripa.paint.creasepattern.command.LineTypeChanger;
-import oripa.paint.creasepattern.command.PainterCommandFailedException;
-import oripa.paint.creasepattern.command.RotatedLineFactory;
-import oripa.paint.creasepattern.command.SymmetricLineFactory;
-import oripa.paint.creasepattern.command.TiledLineFactory;
-import oripa.paint.creasepattern.command.TypeForChange;
+import oripa.paint.creasepattern.tool.BisectorFactory;
+import oripa.paint.creasepattern.tool.ElementRemover;
+import oripa.paint.creasepattern.tool.LineAdder;
+import oripa.paint.creasepattern.tool.LineDivider;
+import oripa.paint.creasepattern.tool.LineMirror;
+import oripa.paint.creasepattern.tool.LinePaster;
+import oripa.paint.creasepattern.tool.LineSelectionModifier;
+import oripa.paint.creasepattern.tool.LineTypeChanger;
+import oripa.paint.creasepattern.tool.PainterCommandFailedException;
+import oripa.paint.creasepattern.tool.RotatedLineFactory;
+import oripa.paint.creasepattern.tool.SymmetricLineFactory;
+import oripa.paint.creasepattern.tool.TiledLineFactory;
+import oripa.paint.creasepattern.tool.TypeForChange;
 import oripa.value.OriLine;
 
+/**
+ * A tool to modify crease pattern (or line collection)
+ * @author Koji
+ *
+ */
 public class Painter {
-
+	// FIXME all methods should return success/failure
+	//! might be better to separate methods as service classes
+	
 	/**
 	 * reset selection mark of all lines in given collection.
 	 * @param creasePattern
@@ -141,7 +148,20 @@ public class Painter {
 			Collection<OriLine> creasePattern, double paperSize) {
 
 		LineDivider divider = new LineDivider();
-		return divider.divideLineInCollection(line, v, creasePattern, paperSize);
+		Collection<OriLine> dividedLines =
+				divider.divideLineInCollection(line, v, creasePattern, paperSize);
+
+		if (dividedLines == null) {
+			return false;
+		}
+		
+		ElementRemover remover = new ElementRemover();
+		remover.removeLine(line, creasePattern);
+
+		LineAdder adder = new LineAdder();
+		adder.addAll(dividedLines, creasePattern);
+
+		return true;
 	}
 
 	/**

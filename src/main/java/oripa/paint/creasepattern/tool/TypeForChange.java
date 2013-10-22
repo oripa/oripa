@@ -1,4 +1,4 @@
-package oripa.paint.creasepattern.command;
+package oripa.paint.creasepattern.tool;
 
 // TODO move to view layer, or integrate with LineTypes
 

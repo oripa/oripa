@@ -1,7 +1,7 @@
 package oripa.viewsetting.main.uipanel;
 
 import oripa.paint.EditMode;
-import oripa.paint.creasepattern.command.TypeForChange;
+import oripa.paint.creasepattern.tool.TypeForChange;
 import oripa.viewsetting.ViewSettingDataBase;
 
 public class UIPanelSettingDB extends ViewSettingDataBase{
