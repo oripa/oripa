@@ -18,7 +18,10 @@
  */
 package oripa.paint;
 
+import java.util.Collection;
+
 import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.util.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -27,6 +30,13 @@ import oripa.value.OriLine;
  */
 public class CreasePatternFactory {
 
+	/**
+	 * creates non-folded crease pattern.
+	 * Returned collection has only 4 lines which describe the edges of a square paper.
+	 * The center of the paper is set to (0, 0).
+	 * @param paperSize
+	 * @return crease pattern of non-folded case.
+	 */
 	public CreasePatternInterface createCreasePattern(double paperSize) {
 		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
 
@@ -40,6 +50,23 @@ public class CreasePatternFactory {
 		creasePattern.add(l3);
 
 		
+		return creasePattern;
+	}
+
+
+	/**
+	 * creates crease pattern which consists of given lines and no other lines.
+	 * 
+	 * @param lines
+	 * @return
+	 */
+	public CreasePatternInterface createCreasePattern(Collection<OriLine> lines) {
+		RectangleDomain domain = new RectangleDomain(lines);
+		double paperSize = Math.max(domain.getWidth(), domain.getHeight());
+
+		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
+		
+		creasePattern.addAll(lines);
 		return creasePattern;
 	}
 }

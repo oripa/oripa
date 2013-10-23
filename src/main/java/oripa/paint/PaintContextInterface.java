@@ -10,7 +10,6 @@ import oripa.value.OriLine;
 
 /**
  * This interface holds current state of GUI interaction for paint inputting.
- * It implicitly depends on a whole of oripa.paint.* packages.
  * @author Koji
  *
  */
@@ -120,7 +119,7 @@ public interface PaintContextInterface {
 
 	/**
 	 * 
-	 * @param picked a line to be stored as the latest
+	 * @param picked line to be stored as the latest
 	 */
 	public abstract void pushLine(OriLine picked);
 
@@ -132,7 +131,7 @@ public interface PaintContextInterface {
 
 	/**
 	 * 
-	 * @param picked a vertex to be stored as the latest
+	 * @param picked vertex to be stored as the latest
 	 */
 	public abstract void pushVertex(Vector2d picked);
 
