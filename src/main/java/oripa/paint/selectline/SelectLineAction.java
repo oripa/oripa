@@ -72,7 +72,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 					continue;
 				}
 
-				if(context.getLines().contains(line) == false){
+				if(context.getPickedLines().contains(line) == false){
 					line.selected = true;
 					context.pushLine(line);
 				}

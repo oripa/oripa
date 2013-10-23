@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.vecmath.Vector2d;
 
+import oripa.paint.geometry.NearVerticesGettable;
 import oripa.value.OriLine;
 
 
@@ -16,7 +17,7 @@ import oripa.value.OriLine;
  * @author koji
  *
  */
-public class VerticesManager {
+public class VerticesManager implements NearVerticesGettable {
 
 	/*
 	 * divides paper equally in order to localize access to vertices
@@ -33,7 +34,7 @@ public class VerticesManager {
 	 * @author Koji
 	 *
 	 */
-	public class AreaPosition{
+	private class AreaPosition{
 		public int x, y;
 
 		/**
@@ -145,12 +146,11 @@ public class VerticesManager {
 	}
 	
 
-	/**
-	 * returns vertices in the area which the given vertex belongs to.
-	 * @param v		vertex
-	 * @return
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.NearVerticesGettable#getAround(javax.vecmath.Vector2d)
 	 */
-	public Collection<Vector2d> getAround(Vector2d v){
+	@Override
+	public Collection<Vector2d> getVerticesAround(Vector2d v){
 		AreaPosition ap = new AreaPosition(v);
 		return getVertices(ap);
 	}
@@ -180,15 +180,11 @@ public class VerticesManager {
 		counts.put(v, count-1);
 	}
 
-	/**
-	 * similar to #getAround(). this method returns some areas in a large rectangle
-	 * (x-distanse, y-distance, x+distance, y+distance).
-	 * @param x
-	 * @param y
-	 * @param distance
-	 * @return
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.NearVerticesGettable#getArea(double, double, double)
 	 */
-	public Collection<Collection<Vector2d>> getArea(
+	@Override
+	public Collection<Collection<Vector2d>> getVerticesInArea(
 			double x, double y, double distance){
 
 		Collection<Collection<Vector2d>> result = new LinkedList<>();		

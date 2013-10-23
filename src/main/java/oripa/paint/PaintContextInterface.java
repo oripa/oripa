@@ -96,13 +96,13 @@ public interface PaintContextInterface {
 	 * 
 	 * @return unmodifiable list of line which user picked.
 	 */
-	public abstract List<OriLine> getLines();
+	public abstract List<OriLine> getPickedLines();
 
 	/**
 	 * 
 	 * @return unmodifiable list of vertices which user picked.
 	 */
-	public abstract List<Vector2d> getVertices();
+	public abstract List<Vector2d> getPickedVertices();
 
 	/**
 	 * 

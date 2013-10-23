@@ -1,4 +1,4 @@
-package oripa.sheetcut;
+package oripa.cutModel;
 
 import java.util.Collection;
 

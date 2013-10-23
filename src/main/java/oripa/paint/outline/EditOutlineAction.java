@@ -58,7 +58,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 		this.drawPickCandidateVertex(g2d, context);
 		
-		List<Vector2d> outlinevertices = context.getVertices();
+		List<Vector2d> outlinevertices = context.getPickedVertices();
 
 		// Shows the outline of the editing
 		int outlineVnum = outlinevertices.size();

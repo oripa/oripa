@@ -31,9 +31,9 @@ import javax.swing.JTextField;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintContext;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 
 public class RepeatCopyDialog extends JDialog {
@@ -248,14 +248,14 @@ public class RepeatCopyDialog extends JDialog {
 
                     } else {
                     	Doc document = ORIPA.doc;
-                    	CreasePattern creasePattern = document.getCreasePattern();
+                    	CreasePatternInterface creasePattern = document.getCreasePattern();
                     	document.pushUndoInfo();
 
                     	Painter painter = new Painter();
                     	if (m_bFillSheet) {
                     		PaintContextInterface context = PaintContext.getInstance();
                     		painter.fillOut(
-                    				context.getLines(), creasePattern, creasePattern.getPaperSize());
+                    				context.getPickedLines(), creasePattern, creasePattern.getPaperSize());
                     	} else {
                     		painter.copyWithTiling(
                     				m_row, m_col, m_interX, m_interX, creasePattern, creasePattern.getPaperSize());

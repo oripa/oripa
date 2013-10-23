@@ -22,7 +22,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import oripa.doc.Doc;
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.CreasePatternInterface;
 import oripa.value.OriLine;
 
 public class ExporterCP implements Exporter{
@@ -31,7 +31,7 @@ public class ExporterCP implements Exporter{
         FileWriter fw = new FileWriter(filepath);
         BufferedWriter bw = new BufferedWriter(fw);
 
-        CreasePattern creasePattern = doc.getCreasePattern();
+        CreasePatternInterface creasePattern = doc.getCreasePattern();
         for(OriLine line : creasePattern) {
             if(line.typeVal == OriLine.TYPE_NONE) continue;
             bw.write(line.typeVal + " " + line.p0.x + " " + line.p0.y + " " + line.p1.x + " " + line.p1.y + "\n");

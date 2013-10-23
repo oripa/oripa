@@ -53,12 +53,12 @@ import oripa.doc.Doc;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.mouse.MouseUtility;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.EditMode;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;
@@ -208,7 +208,7 @@ ActionListener, ComponentListener, Observer{
 			g2d.setStroke(selector.selectStroke(line.typeVal));
 
 			if(PaintConfig.mouseAction != null){
-				if(mouseContext.getLines().contains(line) == false){
+				if(mouseContext.getPickedLines().contains(line) == false){
 					g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
 				}
 			}
@@ -218,7 +218,7 @@ ActionListener, ComponentListener, Observer{
 	}
 
 	void drawVertexRectangles(Graphics2D g2d){
-		CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+		CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
 
 		g2d.setColor(Color.BLACK);
 		final double vertexDrawSize = 2.0;
@@ -269,7 +269,7 @@ ActionListener, ComponentListener, Observer{
 		Graphics2D g2d = bufferg;
 
 		Doc document = ORIPA.doc;
-		CreasePattern creasePattern = document.getCreasePattern();
+		CreasePatternInterface creasePattern = document.getCreasePattern();
 		OrigamiModel origamiModel = document.getOrigamiModel();
 		FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 		

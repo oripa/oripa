@@ -13,7 +13,7 @@ import oripa.fold.FoldedModelInfo;
 import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.CreasePatternInterface;
 import oripa.value.OriLine;
 import oripa.view.estimation.FoldedModelScreen;
 
@@ -136,7 +136,7 @@ public class ExporterSVG implements Exporter{
     }
 
     public boolean export(Doc doc, String filepath) throws Exception {
-    	CreasePattern creasePattern = doc.getCreasePattern();
+    	CreasePatternInterface creasePattern = doc.getCreasePattern();
     	double paperSize = doc.getPaperSize();
 
         double scale = size / paperSize;
@@ -176,7 +176,7 @@ public class ExporterSVG implements Exporter{
     
     
     public static void exportDotted(Doc doc, String filepath) throws IOException  {
-    	CreasePattern creasePattern = doc.getCreasePattern();
+    	CreasePatternInterface creasePattern = doc.getCreasePattern();
     	double paperSize = doc.getPaperSize();
 
         double scale = size / paperSize;

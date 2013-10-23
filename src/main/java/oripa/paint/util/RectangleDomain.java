@@ -1,4 +1,4 @@
-package oripa.paint.creasepattern.tool;
+package oripa.paint.util;
 
 import java.util.Collection;
 
@@ -12,7 +12,7 @@ import oripa.value.OriLine;
  * Position coordinate is the same as screen.
  * (top is smaller)
  */
-public class RectangleDomain{
+public class RectangleDomain {
 	private double left, right, top, bottom;
 
 	/**

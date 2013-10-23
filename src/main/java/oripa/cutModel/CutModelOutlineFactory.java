@@ -1,4 +1,4 @@
-package oripa.sheetcut;
+package oripa.cutModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import oripa.geom.GeomUtil;
 import oripa.paint.core.PaintConfig;
 import oripa.value.OriLine;
 
-public class SheetCutOutlineFactory {
+public class CutModelOutlineFactory {
 
 	/**
 	 * creates outline of cut origami model

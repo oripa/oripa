@@ -38,10 +38,10 @@ public class PaintContext implements PaintContextInterface {
 	private LinkedList<OriLine> pickedLines = new LinkedList<>();
     private boolean isPasting = false;	
 	
-	private Vector2d pickCandidateV = new Vector2d();
-    private OriLine pickCandidateL = new OriLine();
+	private Vector2d candidateVertexToPick = new Vector2d();
+    private OriLine candidateLineToPick = new OriLine();
 
-	private boolean dispGrid = true;
+	private boolean gridVisible = true;
     private double scale;
 
     private ArrayList<Vector2d> gridPoints;
@@ -99,7 +99,7 @@ public class PaintContext implements PaintContextInterface {
 	@Override
 	public void setDisplayConfig(double scale, boolean dispGrid){
     	this.scale = scale;
-    	this.dispGrid = dispGrid;
+    	this.gridVisible = dispGrid;
     }
 
 	/* (non Javadoc)
@@ -140,8 +140,8 @@ public class PaintContext implements PaintContextInterface {
     	pickedLines.clear();
     	pickedVertices.clear();
     	
-    	pickCandidateL = null;
-    	pickCandidateV = null;
+    	candidateLineToPick = null;
+    	candidateVertexToPick = null;
     	
     	
     	missionCompleted = false;
@@ -169,7 +169,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @see oripa.paint.core.PaintContextInterface#getVertices()
 	 */
 	@Override
-	public List<Vector2d> getVertices() {
+	public List<Vector2d> getPickedVertices() {
 		return Collections.unmodifiableList(pickedVertices);
 	}
     
@@ -177,7 +177,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @see oripa.paint.core.PaintContextInterface#getLines()
 	 */
     @Override
-	public List<OriLine> getLines() {
+	public List<OriLine> getPickedLines() {
 		return Collections.unmodifiableList(pickedLines);
 	}
 
@@ -284,35 +284,35 @@ public class PaintContext implements PaintContextInterface {
     }
 
 	/**
-	 * @return pickCandidateV
+	 * @return a candidate vertex to pick
 	 */
 	@Override
 	public Vector2d getCandidateVertexToPick() {
-		return pickCandidateV;
+		return candidateVertexToPick;
 	}
 
 	/**
-	 * @param pickCandidateV Sets pickCandidateV
+	 * @param candidate Sets candidateVertexToPick
 	 */
 	@Override
-	public void setCandidateVertexToPick(Vector2d pickCandidateV) {
-		this.pickCandidateV = pickCandidateV;
+	public void setCandidateVertexToPick(Vector2d candidate) {
+		this.candidateVertexToPick = candidate;
 	}
 
 	/**
-	 * @return pickCandidateL
+	 * @return candidateLineToPick
 	 */
 	@Override
 	public OriLine getCandidateLineToPick() {
-		return pickCandidateL;
+		return candidateLineToPick;
 	}
 
 	/**
-	 * @param pickCandidateL Sets pickCandidateL
+	 * @param candidate Sets candidateLineToPick
 	 */
 	@Override
-	public void setCandidateLineToPick(OriLine pickCandidateL) {
-		this.pickCandidateL = pickCandidateL;
+	public void setCandidateLineToPick(OriLine candidate) {
+		this.candidateLineToPick = candidate;
 	}
 
 	/**
@@ -320,15 +320,15 @@ public class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public boolean isGridVisible() {
-		return dispGrid;
+		return gridVisible;
 	}
 
 	/**
-	 * @param dispGrid Sets dispGrid
+	 * @param gridVisible Sets gridVisibleS
 	 */
 	@Override
-	public void setGridVisible(boolean dispGrid) {
-		this.dispGrid = dispGrid;
+	public void setGridVisible(boolean gridVisible) {
+		this.gridVisible = gridVisible;
 	}
 
 	/**

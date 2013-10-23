@@ -9,9 +9,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import oripa.ORIPA;
-import oripa.geom.RectangleClipper;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.util.RectangleClipper;
 import oripa.value.OriLine;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
@@ -66,7 +66,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 					Math.max(startPoint.x, draggingPoint.x),
 					Math.max(startPoint.y, draggingPoint.y));
 			
-	        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+	        CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
 
 			for (OriLine l : creasePattern) {
 

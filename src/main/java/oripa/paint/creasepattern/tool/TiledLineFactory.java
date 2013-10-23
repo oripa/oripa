@@ -3,6 +3,7 @@ package oripa.paint.creasepattern.tool;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import oripa.paint.util.RectangleDomain;
 import oripa.value.OriLine;
 
 public class TiledLineFactory {
@@ -66,8 +67,8 @@ public class TiledLineFactory {
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
 	    //FIXME Restrictedly speaking, paper is not always in this position. CreasePattern should have the values??
-		oripa.geom.RectangleClipper clipper =
-				new oripa.geom.RectangleClipper(
+		oripa.paint.util.RectangleClipper clipper =
+				new oripa.paint.util.RectangleClipper(
 						-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
 
 		for (int x = startCol; x < endCol; x++) {

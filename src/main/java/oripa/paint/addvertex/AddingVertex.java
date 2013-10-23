@@ -4,9 +4,9 @@ import java.awt.geom.Point2D;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 import oripa.paint.geometry.NearestVertexFinder;
 import oripa.value.OriLine;
@@ -50,7 +50,7 @@ public class AddingVertex extends PickingVertex {
 			
 			Doc document = ORIPA.doc;
 			document.pushUndoInfo();
-			CreasePattern creasePattern = document.getCreasePattern();
+			CreasePatternInterface creasePattern = document.getCreasePattern();
 
 			Painter painter = new Painter();
 			

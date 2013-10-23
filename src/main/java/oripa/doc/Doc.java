@@ -26,12 +26,13 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.cutModel.CutModelOutlineFactory;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.CreasePatternFactory;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.creasepattern.tool.LineAdder;
 import oripa.resource.Constants;
-import oripa.sheetcut.SheetCutOutlineFactory;
 import oripa.value.OriLine;
 
 
@@ -42,7 +43,7 @@ public class Doc {
 
 	// Crease Pattern
 
-	private CreasePattern creasePattern = null;
+	private CreasePatternInterface creasePattern = null;
 	private List<OriLine> sheetCutLines = new ArrayList<OriLine>();
 
 
@@ -86,17 +87,8 @@ public class Doc {
 	private void initialize(double size){
 
 		this.paperSize = size;
-		creasePattern = new CreasePattern(size);
+		creasePattern = (new CreasePatternFactory()).createCreasePattern(size);
 
-		// FIXME move to factory
-		OriLine l0 = new OriLine(-size / 2.0, -size / 2.0, size / 2.0, -size / 2.0, OriLine.TYPE_CUT);
-		OriLine l1 = new OriLine(size / 2.0, -size / 2.0, size / 2.0, size / 2.0, OriLine.TYPE_CUT);
-		OriLine l2 = new OriLine(size / 2.0, size / 2.0, -size / 2.0, size / 2.0, OriLine.TYPE_CUT);
-		OriLine l3 = new OriLine(-size / 2.0, size / 2.0, -size / 2.0, -size / 2.0, OriLine.TYPE_CUT);
-		creasePattern.add(l0);
-		creasePattern.add(l1);
-		creasePattern.add(l2);
-		creasePattern.add(l3);
 
 		
 		origamiModel  = new OrigamiModel(size);
@@ -182,7 +174,7 @@ public class Doc {
 	 * @param scissorLine
 	 */
 	public void updateSheetCutOutlines(OriLine scissorLine) {
-		SheetCutOutlineFactory factory = new SheetCutOutlineFactory();
+		CutModelOutlineFactory factory = new CutModelOutlineFactory();
 
 		sheetCutLines.clear();
 		sheetCutLines.addAll(
@@ -199,10 +191,10 @@ public class Doc {
 	public Collection<Collection<Vector2d>> getVerticesArea(
 			double x, double y, double distance){
 		
-		return creasePattern.getVerticesArea(x, y, distance);
+		return creasePattern.getVerticesInArea(x, y, distance);
 	}
 	
-	public CreasePattern getCreasePattern(){
+	public CreasePatternInterface getCreasePattern(){
 		return creasePattern;
 	}
 

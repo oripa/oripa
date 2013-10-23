@@ -9,9 +9,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
 
@@ -57,7 +57,7 @@ public class PastingOnVertex extends PickingVertex {
         
         if (context.getLineCount() > 0) {
         	Doc document = ORIPA.doc;
-        	CreasePattern creasePattern = document.getCreasePattern();
+        	CreasePatternInterface creasePattern = document.getCreasePattern();
         	document.pushUndoInfo();
 
         	Vector2d origin = OriginHolder.getInstance().getOrigin(context);
@@ -69,7 +69,7 @@ public class PastingOnVertex extends PickingVertex {
             List<OriLine> shiftedLines;
         	shiftedLines = 
         			shiftLines(
-        					context.getLines(), v.x - ox, v.y -oy);
+        					context.getPickedLines(), v.x - ox, v.y -oy);
         	
 //            for(int i = 0; i < context.getLineCount(); i++){
 //            	ORIPA.doc.addLine(shiftedLines.get(i));

@@ -1,4 +1,4 @@
-package oripa.sheetcut;
+package oripa.cutModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,23 +6,23 @@ import java.util.Collection;
 import oripa.value.OriLine;
 
 /**
- * This class holds the sheet-cut outline.
+ * This class holds the cut model outline.
  * The state of the outline in this class is never changed by others.
  * @author Koji
  *
  */
-public class SheetCutOutlineRepository implements LineCollectionRepository {
+public class CutModelOutlineRepository implements LineCollectionRepository {
 
 	private Collection<OriLine> lines = new ArrayList<>();
 
-	static private SheetCutOutlineFactory repository = new SheetCutOutlineFactory();
+	static private CutModelOutlineFactory repository = new CutModelOutlineFactory();
 	
-	public static SheetCutOutlineFactory getRepository() {
+	public static CutModelOutlineFactory getRepository() {
 		return repository;
 	}
 	
 	
-	private SheetCutOutlineRepository() {}
+	private CutModelOutlineRepository() {}
 	
 	/* (non Javadoc)
 	 * @see oripa.sheetcut.LineCollectionRepository#getLines()

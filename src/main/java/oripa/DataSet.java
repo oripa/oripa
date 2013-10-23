@@ -19,7 +19,7 @@
 package oripa;
 
 import oripa.doc.Doc;
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.CreasePatternInterface;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
@@ -42,7 +42,7 @@ public class DataSet {
         mainVersion = Version.FILE_MAJOR_VERSION;
         subVersion = Version.FILE_MINOR_VERSION;
 
-        CreasePattern creasePattern = doc.getCreasePattern();
+        CreasePatternInterface creasePattern = doc.getCreasePattern();
         int lineNum = creasePattern.size();
         lines = new OriLineProxy[lineNum];
         OriLine[] docLines = new OriLine[lineNum];
@@ -60,7 +60,7 @@ public class DataSet {
     }
 
     public void recover(Doc doc) {
-    	CreasePattern creasePattern = doc.getCreasePattern();
+    	CreasePatternInterface creasePattern = doc.getCreasePattern();
         creasePattern.clear();
         for (int i = 0; i < lines.length; i++) {
             creasePattern.add(lines[i].getLine());

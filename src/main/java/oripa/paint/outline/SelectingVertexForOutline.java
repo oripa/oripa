@@ -37,7 +37,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 		Vector2d v = context.popVertex();
 		
         boolean bClose = false;
-        for (Vector2d tv : context.getVertices()) {
+        for (Vector2d tv : context.getPickedVertices()) {
             if (GeomUtil.Distance(v, tv) < 1) {
                 bClose = true;
                 break;
@@ -49,7 +49,7 @@ public class SelectingVertexForOutline extends PickingVertex {
             	// finish editing
             	
             	ORIPA.doc.pushUndoInfo();
-                closeTmpOutline(context.getVertices());
+                closeTmpOutline(context.getPickedVertices());
 
                 context.clear(false);
                 context.setMissionCompleted(true);

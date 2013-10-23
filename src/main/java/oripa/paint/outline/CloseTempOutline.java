@@ -6,7 +6,7 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.creasepattern.Painter;
 import oripa.paint.util.PairLoop;
 import oripa.value.OriLine;
@@ -34,7 +34,7 @@ public class CloseTempOutline {
 
 	public void execute(Collection<Vector2d> outlinevertices){
 
-        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+		CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
 
         // Delete the current outline
 		ArrayList<OriLine> outlines = new ArrayList<>();

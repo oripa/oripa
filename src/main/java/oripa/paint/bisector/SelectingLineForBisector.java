@@ -6,9 +6,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingLine;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 
 public class SelectingLineForBisector extends PickingLine {
@@ -38,12 +38,12 @@ public class SelectingLineForBisector extends PickingLine {
 		}
 		
 		Doc document = ORIPA.doc;
-		CreasePattern creasePattern = document.getCreasePattern();
+		CreasePatternInterface creasePattern = document.getCreasePattern();
 		document.pushCachedUndoInfo();
 
 		Painter painter = new Painter();
 		
-		List<Vector2d> vertices = context.getVertices();
+		List<Vector2d> vertices = context.getPickedVertices();
 		painter.addBisectorLine(
         		context.getVertex(0), context.getVertex(1), context.getVertex(2), 
         		context.getLine(0),

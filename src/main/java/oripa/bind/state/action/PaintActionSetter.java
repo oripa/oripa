@@ -4,12 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.ORIPA;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.GraphicMouseActionInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 import oripa.viewsetting.main.ScreenUpdater;
 
@@ -38,7 +38,7 @@ public class PaintActionSetter implements ActionListener{
 		PaintConfig.setMouseAction(mouseAction);
 
 		if(mouseAction.needSelect() == false){
-			CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+			CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
 			Painter painter = new Painter();
 			painter.resetSelectedOriLines(creasePattern);
 		}

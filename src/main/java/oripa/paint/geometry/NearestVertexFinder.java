@@ -6,8 +6,8 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
@@ -29,7 +29,7 @@ public class NearestVertexFinder {
 		double minDistance = Double.MAX_VALUE;
 		OriLine bestLine = null;
 
-        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+        CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
 
 		for (OriLine line : creasePattern) {
 			double dist = GeomUtil.DistancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);

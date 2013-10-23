@@ -59,10 +59,10 @@ import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
 import oripa.fold.OrigamiModel;
 import oripa.fold.OrigamiModelFactory;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 import oripa.paint.util.DeleteSelectedLines;
 import oripa.resource.Constants;
@@ -232,7 +232,7 @@ public class MainFrame extends JFrame implements ActionListener,
 				.addActionListener(new java.awt.event.ActionListener() {
 					@Override
 					public void actionPerformed(java.awt.event.ActionEvent e) {
-						CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+						CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
 						Painter painter = new Painter();
 						painter.resetSelectedOriLines(creasePattern);
 						
@@ -348,7 +348,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Doc document = ORIPA.doc;
-		CreasePattern creasePattern = document.getCreasePattern();
+		CreasePatternInterface creasePattern = document.getCreasePattern();
 
 		// Check the last opened files
 		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
@@ -506,7 +506,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	public void exportFile(String ext) {
 		Doc document = ORIPA.doc;
-		CreasePattern creasePattern = document.getCreasePattern();
+		CreasePatternInterface creasePattern = document.getCreasePattern();
 		OrigamiModel origamiModel = document.getOrigamiModel();
 
 		boolean hasModel = origamiModel.hasModel();

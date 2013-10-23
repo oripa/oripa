@@ -72,7 +72,7 @@ public class ChangeOriginAction extends GraphicMouseAction{
 	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 		super.onDraw(g2d, context);		
 
-		Collection<OriLine> lines = context.getLines();
+		Collection<OriLine> lines = context.getPickedLines();
 
 		g2d.setColor(Color.MAGENTA);
 		

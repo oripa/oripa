@@ -9,10 +9,10 @@ import java.awt.geom.Point2D;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.EditMode;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.geometry.NearestVertexFinder;
 import oripa.paint.geometry.NearestVertexFinderHelper;
 import oripa.value.OriLine;
@@ -41,7 +41,7 @@ public class PasteAction extends GraphicMouseAction {
 
 		context.startPasting();
 
-        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+        CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
 
 		for(OriLine line : creasePattern){
 			if(line.selected){
@@ -49,7 +49,7 @@ public class PasteAction extends GraphicMouseAction {
 			}
 		}
 
-		shiftedLines = new FilledOriLineArrayList(context.getLines());
+		shiftedLines = new FilledOriLineArrayList(context.getPickedLines());
 
 	}
 
@@ -158,7 +158,7 @@ public class PasteAction extends GraphicMouseAction {
 		//		}
 
 		// a little faster
-		for(OriLine l : context.getLines()){
+		for(OriLine l : context.getPickedLines()){
 
 			g2dLine.x1 = l.p0.x + diffX;
 			g2dLine.y1 = l.p0.y + diffY;

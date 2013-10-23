@@ -28,14 +28,14 @@ import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
 import oripa.geom.GeomUtil;
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.CreasePatternInterface;
 import oripa.value.OriLine;
 
 public class LoaderDXF implements Loader{
 
     public Doc load(String filePath) {
         Doc doc = new Doc(400);
-        CreasePattern creasePattern = doc.getCreasePattern();
+        CreasePatternInterface creasePattern = doc.getCreasePattern();
         
         creasePattern.clear();
 

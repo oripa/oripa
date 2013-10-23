@@ -194,7 +194,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	private void drawPickedLines(Graphics2D g2d, PaintContextInterface context){
-		for(OriLine line : context.getLines()){
+		for(OriLine line : context.getPickedLines()){
 			g2d.setColor(LineSetting.LINE_COLOR_PICKED);
 			g2d.setStroke(LineSetting.STROKE_PICKED);
 
@@ -207,7 +207,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	private void drawPickedVertices(Graphics2D g2d, PaintContextInterface context){
 		ElementSelector selector = new ElementSelector();
 
-		for(Vector2d vertex : context.getVertices()){
+		for(Vector2d vertex : context.getPickedVertices()){
 			g2d.setColor(selector.selectColorByLineType(PaintConfig.inputLineType));
 
 			drawVertex(g2d, context, vertex.x, vertex.y);

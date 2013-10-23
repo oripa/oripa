@@ -64,6 +64,7 @@ import oripa.fold.FoldedModelInfo;
 import oripa.fold.Folder;
 import oripa.fold.OrigamiModel;
 import oripa.fold.OrigamiModelFactory;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.byvalue.AngleMeasuringAction;
 import oripa.paint.byvalue.AngleValueInputListener;
@@ -71,7 +72,6 @@ import oripa.paint.byvalue.LengthMeasuringAction;
 import oripa.paint.byvalue.LengthValueInputListener;
 import oripa.paint.byvalue.ValueDB;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.tool.TypeForChange;
 import oripa.paint.util.LineTypeSetter;
 import oripa.resource.ResourceHolder;
@@ -698,7 +698,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 		} else if (ae.getSource() == resetButton) {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;
-			CreasePattern creasePattern = document.getCreasePattern();
+			CreasePatternInterface creasePattern = document.getCreasePattern();
 
 //			if (document.buildOrigami3(origamiModel, false)) {
 			OrigamiModelFactory modelFactory = new OrigamiModelFactory();

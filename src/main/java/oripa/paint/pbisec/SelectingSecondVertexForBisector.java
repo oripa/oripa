@@ -4,9 +4,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 
 public class SelectingSecondVertexForBisector extends PickingVertex{
@@ -27,7 +27,7 @@ public class SelectingSecondVertexForBisector extends PickingVertex{
 		p1 = context.getVertex(1);
 		
 		Doc document = ORIPA.doc;
-		CreasePattern creasePattern = document.getCreasePattern();
+		CreasePatternInterface creasePattern = document.getCreasePattern();
 
         document.pushUndoInfo();
 

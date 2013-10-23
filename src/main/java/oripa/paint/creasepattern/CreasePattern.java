@@ -5,19 +5,21 @@ import java.util.Iterator;
 
 import javax.vecmath.Vector2d;
 
+import oripa.paint.CreasePatternInterface;
+import oripa.paint.geometry.NearVerticesGettable;
 import oripa.value.OriLine;
 
 /**
  * Crease pattern
  * 
  * Implementation of line-and-vertices structure.
- * Original ORIPA uses line-only struture, which
+ * Original ORIPA uses line-only structure, which
  * may cause a slow vertex search if the CP is massive.
  * 
  * @author Koji
  *
  */
-public class CreasePattern implements Collection<OriLine> {
+public class CreasePattern implements CreasePatternInterface {
 
 	/**
 	 * Wrapper to treat vertices and line at the same time
@@ -76,26 +78,43 @@ public class CreasePattern implements Collection<OriLine> {
 		this.paperSize = paperSize;
 	}
 	
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#changePaperSize(double)
+	 */
+	@Override
 	public void changePaperSize(double paperSize) {
 		this.paperSize = paperSize;
 		vertices.changePaperSize(paperSize);
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#getPaperSize()
+	 */
+	@Override
 	public double getPaperSize() {
 		return paperSize;
 	}
 	
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#contains(java.lang.Object)
+	 */
 	@Override
 	public boolean contains(Object o) {
 		// TODO Auto-generated method stub
 		return lines.contains(o);
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#size()
+	 */
 	@Override
 	public int size() {
 		return lines.size();
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#add(oripa.value.OriLine)
+	 */
 	@Override
 	public boolean add(OriLine e) {
 		if (lines.add(e)) {
@@ -106,6 +125,9 @@ public class CreasePattern implements Collection<OriLine> {
 		return false;
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#remove(java.lang.Object)
+	 */
 	@Override
 	public boolean remove(Object o) {
 		OriLine l = (OriLine) o;
@@ -119,6 +141,9 @@ public class CreasePattern implements Collection<OriLine> {
 		return false;
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#clear()
+	 */
 	@Override
 	public void clear() {
 		lines.clear();
@@ -126,17 +151,26 @@ public class CreasePattern implements Collection<OriLine> {
 	}
 
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#toArray()
+	 */
 	@Override
 	public Object[] toArray() {
 		// TODO Auto-generated method stub
 		return lines.toArray();
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#toArray(T[])
+	 */
 	@Override
 	public <T> T[] toArray(T[] a) {
 		return lines.toArray(a);
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#isEmpty()
+	 */
 	@Override
 	public boolean isEmpty() {
 
@@ -150,17 +184,26 @@ public class CreasePattern implements Collection<OriLine> {
 		return false;
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#iterator()
+	 */
 	@Override
 	public Iterator<OriLine> iterator() {
 		return new CreasePatternIterator(lines.iterator());
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#containsAll(java.util.Collection)
+	 */
 	@Override
 	public boolean containsAll(Collection<?> c) {
 		// TODO Auto-generated method stub
 		return lines.containsAll(c);
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#addAll(java.util.Collection)
+	 */
 	@Override
 	public boolean addAll(Collection<? extends OriLine> c) {
 		
@@ -172,6 +215,9 @@ public class CreasePattern implements Collection<OriLine> {
 		return lines.addAll(c);
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#removeAll(java.util.Collection)
+	 */
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		
@@ -184,6 +230,9 @@ public class CreasePattern implements Collection<OriLine> {
 		return changed;
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#retainAll(java.util.Collection)
+	 */
 	@Override
 	public boolean retainAll(Collection<?> c) {
 		
@@ -202,23 +251,26 @@ public class CreasePattern implements Collection<OriLine> {
 		return lines.retainAll(c);
 	}
 	
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#getVerticesAround(javax.vecmath.Vector2d)
+	 */
+	@Override
 	public Collection<Vector2d> getVerticesAround(Vector2d v){
-		return vertices.getAround(v);
+		return vertices.getVerticesAround(v);
 	}
 
-	public Collection<Collection<Vector2d>> getVerticesArea(
+	/* (non Javadoc)
+	 * @see oripa.paint.creasepattern.CreasePatternInterface#getVerticesInArea(double, double, double)
+	 */
+	@Override
+	public Collection<Collection<Vector2d>> getVerticesInArea(
 			double x, double y, double distance){
 		
-		return vertices.getArea(x, y, distance);
+		return vertices.getVerticesInArea(x, y, distance);
 	}
 
-	/**
-	 * DO NOT USE THIS.
-	 * this is for junit.
-	 * @return
-	 */
 	@Deprecated
-	public VerticesManager getVerticesManager(){
+	public NearVerticesGettable getVerticesManager(){
 		return vertices;
 	}
 	

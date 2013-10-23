@@ -135,7 +135,7 @@ public class NearestVertexFinderHelper {
 
 		Point2D.Double currentPoint = context.getLogicalMousePoint();
 		nearestPosition = findNearestVertexFromLines(
-				currentPoint, context.getLines());
+				currentPoint, context.getPickedLines());
 		
 
 		return nearestPosition;

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import oripa.paint.util.RectangleDomain;
 import oripa.value.OriLine;
 
 public class LinePaster {

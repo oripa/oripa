@@ -22,7 +22,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import oripa.doc.Doc;
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.paint.CreasePatternInterface;
 import oripa.value.OriLine;
 
 public class ExporterEPS implements Exporter{
@@ -36,7 +36,7 @@ public class ExporterEPS implements Exporter{
         bw.write("%%BoundingBox:-200 -200 400 400\n");
         bw.write("\n");
 
-        CreasePattern creasePattern = doc.getCreasePattern();
+        CreasePatternInterface creasePattern = doc.getCreasePattern();
         for (OriLine line : creasePattern) {
             bw.write("[] 0 setdash\n");
             bw.write("" + line.p0.x + " " + line.p0.y + " moveto\n");

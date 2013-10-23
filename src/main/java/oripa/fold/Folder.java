@@ -32,8 +32,8 @@ import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterEPS;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 public class Folder {
@@ -600,7 +600,7 @@ public class Folder {
 		//OrigamiModel origamiModel = m_doc.getOrigamiModel();
 
 		Doc temp_doc = new Doc(paperSize);
-		CreasePattern temp_creasePattern = temp_doc.getCreasePattern();
+		CreasePatternInterface temp_creasePattern = temp_doc.getCreasePattern();
 		OrigamiModel  temp_origamiModel  = temp_doc.getOrigamiModel();
 		
 		temp_creasePattern.clear();        

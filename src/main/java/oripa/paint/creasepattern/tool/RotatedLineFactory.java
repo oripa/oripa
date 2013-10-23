@@ -28,8 +28,8 @@ public class RotatedLineFactory {
 		ArrayList<OriLine> rotatedLines = new ArrayList<OriLine>();
 
 
-		oripa.geom.RectangleClipper clipper =
-				new oripa.geom.RectangleClipper(
+		oripa.paint.util.RectangleClipper clipper =
+				new oripa.paint.util.RectangleClipper(
 						-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
 
 		double angle = angleDeg * Math.PI / 180.0;
