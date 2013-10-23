@@ -67,9 +67,9 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 			(new DrawTempOutlines()).execute(g2d, outlinevertices);
 
-			Vector2d cv = (context.getPickCandidateV() == null)
+			Vector2d cv = (context.getCandidateVertexToPick() == null)
 					? new Vector2d(context.getLogicalMousePoint().getX(), context.getLogicalMousePoint().getY())
-			: context.getPickCandidateV();
+			: context.getCandidateVertexToPick();
 					g2d.draw(new Line2D.Double(outlinevertices.get(0).x, 
 							outlinevertices.get(0).y,
 							cv.x, cv.y));

@@ -147,12 +147,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		setCandidateVertexOnMove(context, differentAction);
 		setCandidateLineOnMove(context);
 
-		return context.getPickCandidateV();
+		return context.getCandidateVertexToPick();
 	}	
 
 	protected final void setCandidateVertexOnMove(
 			PaintContextInterface context, boolean differentAction) {
-		context.setPickCandidateV(
+		context.setCandidateVertexToPick(
 				NearestVertexFinder.pickVertex(
 						context, differentAction));
 		
@@ -160,7 +160,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	
 	protected final void setCandidateLineOnMove(PaintContextInterface context) {
-		context.setPickCandidateL(
+		context.setCandidateLineToPick(
 				NearestVertexFinder.pickLine(
 				context));
 	}
@@ -231,7 +231,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected void drawPickCandidateVertex(Graphics2D g2d, PaintContextInterface context){
-		Vector2d candidate = context.getPickCandidateV();
+		Vector2d candidate = context.getCandidateVertexToPick();
 		if (candidate != null) {
 			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
 			drawVertex(g2d, context, candidate.x, candidate.y);
@@ -251,7 +251,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected void drawPickCandidateLine(Graphics2D g2d, PaintContextInterface context){
-		OriLine candidate = context.getPickCandidateL();
+		OriLine candidate = context.getCandidateLineToPick();
 		if (candidate!= null) {
 			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
 			drawLine(g2d, candidate);

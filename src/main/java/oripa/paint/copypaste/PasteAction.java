@@ -85,7 +85,7 @@ public class PasteAction extends GraphicMouseAction {
 
 		// vertex-only super's action
 		setCandidateVertexOnMove(context, differentAction);
-		Vector2d closeVertex = context.getPickCandidateV();
+		Vector2d closeVertex = context.getCandidateVertexToPick();
 
 
 		Vector2d closeVertexOfLines = 
@@ -104,7 +104,7 @@ public class PasteAction extends GraphicMouseAction {
 
 		}
 
-		context.setPickCandidateV(closeVertex);
+		context.setCandidateVertexToPick(closeVertex);
 
 //		if (context.getLineCount() > 0) {
 //			if(closeVertex == null) {
@@ -139,7 +139,7 @@ public class PasteAction extends GraphicMouseAction {
 		g2d.setColor(Color.GREEN);
 		drawVertex(g2d, context, ox, oy);
 
-		Vector2d candidateVertex = context.getPickCandidateV();
+		Vector2d candidateVertex = context.getCandidateVertexToPick();
 		if(candidateVertex != null){
 			diffX = candidateVertex.x - ox;
 			diffY = candidateVertex.y - oy;

@@ -99,7 +99,7 @@ public class NearestVertexFinder {
 
 	public static Vector2d getCandidateVertex(PaintContextInterface context, boolean enableMousePoint){
 
-		Vector2d candidate = context.getPickCandidateV();
+		Vector2d candidate = context.getCandidateVertexToPick();
 
 		if(candidate == null && enableMousePoint){
 			Point2D.Double mp = context.getLogicalMousePoint();

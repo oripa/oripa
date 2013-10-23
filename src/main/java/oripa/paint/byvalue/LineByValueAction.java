@@ -37,7 +37,7 @@ public class LineByValueAction extends GraphicMouseAction {
 		super.onDraw(g2d, context);
 		
 		drawPickCandidateVertex(g2d, context);
-        Vector2d v = context.getPickCandidateV();
+        Vector2d v = context.getCandidateVertexToPick();
 		if(v != null){
 	        try {
 	            double length = ValueDB.getInstance().getLength();

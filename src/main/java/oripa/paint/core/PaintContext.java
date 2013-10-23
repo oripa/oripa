@@ -287,7 +287,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @return pickCandidateV
 	 */
 	@Override
-	public Vector2d getPickCandidateV() {
+	public Vector2d getCandidateVertexToPick() {
 		return pickCandidateV;
 	}
 
@@ -295,7 +295,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @param pickCandidateV Sets pickCandidateV
 	 */
 	@Override
-	public void setPickCandidateV(Vector2d pickCandidateV) {
+	public void setCandidateVertexToPick(Vector2d pickCandidateV) {
 		this.pickCandidateV = pickCandidateV;
 	}
 
@@ -303,7 +303,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @return pickCandidateL
 	 */
 	@Override
-	public OriLine getPickCandidateL() {
+	public OriLine getCandidateLineToPick() {
 		return pickCandidateL;
 	}
 
@@ -311,7 +311,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @param pickCandidateL Sets pickCandidateL
 	 */
 	@Override
-	public void setPickCandidateL(OriLine pickCandidateL) {
+	public void setCandidateLineToPick(OriLine pickCandidateL) {
 		this.pickCandidateL = pickCandidateL;
 	}
 
@@ -319,7 +319,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @return dispGrid
 	 */
 	@Override
-	public boolean isDispGrid() {
+	public boolean isGridVisible() {
 		return dispGrid;
 	}
 
@@ -327,7 +327,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @param dispGrid Sets dispGrid
 	 */
 	@Override
-	public void setDispGrid(boolean dispGrid) {
+	public void setGridVisible(boolean dispGrid) {
 		this.dispGrid = dispGrid;
 	}
 

@@ -359,7 +359,7 @@ ActionListener, ComponentListener, Observer{
 	}
 
 	private void drawCandidatePosition(Graphics g){
-		Vector2d candidate = mouseContext.getPickCandidateV();
+		Vector2d candidate = mouseContext.getCandidateVertexToPick();
 		if(candidate != null){
 			g.setColor(Color.BLACK);
 			g.drawString("(" + candidate.x + 
@@ -480,7 +480,7 @@ ActionListener, ComponentListener, Observer{
 		}
 
 		mouseContext.setScale(scale);
-		mouseContext.setDispGrid(setting.isGridVisible());
+		mouseContext.setGridVisible(setting.isGridVisible());
 		mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
 
 		if (PaintConfig.mouseAction == null) {

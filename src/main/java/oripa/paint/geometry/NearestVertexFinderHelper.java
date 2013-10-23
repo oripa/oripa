@@ -103,7 +103,7 @@ public class NearestVertexFinderHelper {
 			}
 		}
 
-		if (context.isDispGrid()) {
+		if (context.isGridVisible()) {
 
 			NearestPoint nearestGrid = findNearestVertex(
 					currentPoint, context.updateGrids(PaintConfig.gridDivNum));

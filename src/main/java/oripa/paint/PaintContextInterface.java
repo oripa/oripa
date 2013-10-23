@@ -179,16 +179,16 @@ public interface PaintContextInterface {
 
 	public abstract double getScale();
 
-	public abstract void setDispGrid(boolean dispGrid);
+	public abstract void setGridVisible(boolean dispGrid);
 
-	public abstract boolean isDispGrid();
+	public abstract boolean isGridVisible();
 
-	public abstract void setPickCandidateL(OriLine pickCandidateL);
+	public abstract void setCandidateLineToPick(OriLine pickCandidateL);
 
-	public abstract OriLine getPickCandidateL();
+	public abstract OriLine getCandidateLineToPick();
 
-	public abstract void setPickCandidateV(Vector2d pickCandidateV);
+	public abstract void setCandidateVertexToPick(Vector2d pickCandidateV);
 
-	public abstract Vector2d getPickCandidateV();
+	public abstract Vector2d getCandidateVertexToPick();
 
 }

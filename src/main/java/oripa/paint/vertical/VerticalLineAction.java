@@ -37,7 +37,7 @@ public class VerticalLineAction extends GraphicMouseAction {
 				closeLine.selected = false;
 			}
 			
-			closeLine = context.getPickCandidateL();
+			closeLine = context.getCandidateLineToPick();
 	
 			if(closeLine != null){
 				closeLine.selected = true;

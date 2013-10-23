@@ -57,7 +57,7 @@ public class ChangeOriginAction extends GraphicMouseAction{
 	public Vector2d onMove(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		Vector2d closeVertex = NearestVertexFinder.pickVertexFromPickedLines(context);
-		context.setPickCandidateV(closeVertex);
+		context.setCandidateVertexToPick(closeVertex);
 		
 		if(closeVertex != null){
 			OriginHolder holder = OriginHolder.getInstance();

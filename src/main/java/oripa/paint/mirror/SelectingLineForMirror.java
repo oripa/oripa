@@ -10,6 +10,8 @@ import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
 
+//TODO separate into FirstState and LatterState to delete state variable
+
 public class SelectingLineForMirror extends PickingLine {
 
 	

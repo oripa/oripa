@@ -38,7 +38,7 @@ public class PastingOnVertex extends PickingVertex {
 	protected boolean onAct(PaintContextInterface context, Double currentPoint,
 			boolean freeSelection) {
 		
-		Vector2d candidate = context.getPickCandidateV();
+		Vector2d candidate = context.getCandidateVertexToPick();
 		if(candidate == null){
 			return false;
 		}
