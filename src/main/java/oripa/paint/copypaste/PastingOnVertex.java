@@ -6,11 +6,11 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
-import oripa.paint.geometry.GeometricOperation;
+import oripa.paint.geometry.NearestVertexFinder;
 
 public class PastingOnVertex extends PickingVertex {
 
@@ -23,7 +23,7 @@ public class PastingOnVertex extends PickingVertex {
 	
 	
 	@Override
-	protected void undoAction(PaintContext context) {
+	protected void undoAction(PaintContextInterface context) {
 		context.setMissionCompleted(false);
 		ORIPA.doc.loadUndoInfo();
 	}
@@ -33,13 +33,15 @@ public class PastingOnVertex extends PickingVertex {
 	
 
 	@Override
-	protected boolean onAct(PaintContext context, Double currentPoint,
+	protected boolean onAct(PaintContextInterface context, Double currentPoint,
 			boolean freeSelection) {
-		if(context.pickCandidateV == null){
+		
+		Vector2d candidate = context.getPickCandidateV();
+		if(candidate == null){
 			return false;
 		}
 		
-		context.pushVertex(context.pickCandidateV);
+		context.pushVertex(candidate);
 		
 		return true;
 	}
@@ -47,7 +49,7 @@ public class PastingOnVertex extends PickingVertex {
 
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 
         Vector2d v = context.popVertex();
         
@@ -63,7 +65,7 @@ public class PastingOnVertex extends PickingVertex {
 
 
             shiftedLines = new FilledOriLineArrayList(context.getLineCount());
-        	GeometricOperation.shiftLines(context.getLines(), shiftedLines, v.x - ox, v.y -oy);
+        	NearestVertexFinder.shiftLines(context.getLines(), shiftedLines, v.x - ox, v.y -oy);
             
 //            for(int i = 0; i < context.getLineCount(); i++){
 //            	ORIPA.doc.addLine(shiftedLines.get(i));

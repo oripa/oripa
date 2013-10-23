@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import oripa.appstate.ApplicationState;
 import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseActionInterface;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintContext;
 
 /**
@@ -19,7 +20,7 @@ class LocalPaintBoundStateFactory {
 	private ActionListener[] basicActions;
 	private Component parent = null;
 
-	PaintContext context = PaintContext.getInstance();
+	PaintContextInterface context = PaintContext.getInstance();
 
 	/**
 	 * 

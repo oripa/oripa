@@ -6,8 +6,6 @@ import java.awt.geom.Point2D;
 
 import javax.vecmath.Vector2d;
 
-import oripa.paint.core.PaintContext;
-
 public interface GraphicMouseActionInterface {
 
 	/**
@@ -24,7 +22,7 @@ public interface GraphicMouseActionInterface {
 	 * default does clear context selection keeping line-selected marks.
 	 * @param context
 	 */
-	public abstract void destroy(PaintContext context);
+	public abstract void destroy(PaintContextInterface context);
 
 	/**
 	 * define action for recovering the status of this object 
@@ -32,7 +30,7 @@ public interface GraphicMouseActionInterface {
 	 * default does nothing.
 	 * @param context
 	 */
-	public abstract void recover(PaintContext context);
+	public abstract void recover(PaintContextInterface context);
 
 	/**
 	 * performs action.
@@ -43,10 +41,10 @@ public interface GraphicMouseActionInterface {
 	 * 
 	 * @return Next mouse action. This class returns {@code this} object.
 	 */
-	public abstract GraphicMouseActionInterface onLeftClick(PaintContext context,
+	public abstract GraphicMouseActionInterface onLeftClick(PaintContextInterface context,
 			AffineTransform affine, boolean differentAction);
 
-	public abstract void doAction(PaintContext context, Point2D.Double point,
+	public abstract void doAction(PaintContextInterface context, Point2D.Double point,
 			boolean differntAction);
 
 	/**
@@ -55,10 +53,10 @@ public interface GraphicMouseActionInterface {
 	 * @param affine
 	 * @param differentAction
 	 */
-	public abstract void onRightClick(PaintContext context,
+	public abstract void onRightClick(PaintContextInterface context,
 			AffineTransform affine, boolean differentAction);
 
-	public abstract void undo(PaintContext context);
+	public abstract void undo(PaintContextInterface context);
 
 	/**
 	 * searches a vertex and a line close enough to the mouse cursor.
@@ -69,16 +67,16 @@ public interface GraphicMouseActionInterface {
 	 * @param differentAction
 	 * @return close vertex. null if not found.
 	 */
-	public abstract Vector2d onMove(PaintContext context,
+	public abstract Vector2d onMove(PaintContextInterface context,
 			AffineTransform affine, boolean differentAction);
 
-	public abstract void onPress(PaintContext context, AffineTransform affine,
+	public abstract void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction);
 
-	public abstract void onDrag(PaintContext context, AffineTransform affine,
+	public abstract void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction);
 
-	public abstract void onRelease(PaintContext context,
+	public abstract void onRelease(PaintContextInterface context,
 			AffineTransform affine, boolean differentAction);
 
 	/**
@@ -88,6 +86,6 @@ public interface GraphicMouseActionInterface {
 	 * @param g2d
 	 * @param context
 	 */
-	public abstract void onDraw(Graphics2D g2d, PaintContext context);
+	public abstract void onDraw(Graphics2D g2d, PaintContextInterface context);
 
 }

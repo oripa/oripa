@@ -8,6 +8,7 @@ import oripa.bind.EditOutlineActionWrapper;
 import oripa.bind.copypaste.CopyAndPasteActionWrapper;
 import oripa.bind.copypaste.CopyPasteErrorListener;
 import oripa.paint.EditMode;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.addvertex.AddVertexAction;
 import oripa.paint.bisector.AngleBisectorAction;
 import oripa.paint.byvalue.LineByValueAction;
@@ -34,7 +35,7 @@ import oripa.viewsetting.main.uipanel.ChangeOnSelectButtonSelected;
 
 public class PaintBoundStateFactory {
 
-	PaintContext context = PaintContext.getInstance();
+	PaintContextInterface context = PaintContext.getInstance();
 
 	
 

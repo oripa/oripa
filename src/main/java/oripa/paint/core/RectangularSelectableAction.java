@@ -10,6 +10,7 @@ import java.util.LinkedList;
 
 import oripa.ORIPA;
 import oripa.geom.RectangleClipper;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
@@ -20,13 +21,13 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	private Point2D.Double draggingPoint = null; 
 
 	@Override
-	public void onPress(PaintContext context, AffineTransform affine,
+	public void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		startPoint = context.getLogicalMousePoint();
 	}
 
 	@Override
-	public void onDrag(PaintContext context, AffineTransform affine,
+	public void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		
 		draggingPoint = context.getLogicalMousePoint();
@@ -36,7 +37,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onRelease(PaintContext context, AffineTransform affine, boolean differentAction) {
+	public void onRelease(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
 
 		if(startPoint != null && draggingPoint != null){
 			selectByRectangularArea(context);
@@ -53,9 +54,9 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	 * @param context
 	 */
 	protected abstract void afterRectangularSelection(
-			Collection<OriLine> selectedLines, PaintContext context);
+			Collection<OriLine> selectedLines, PaintContextInterface context);
 	
-	protected final void selectByRectangularArea(PaintContext context){
+	protected final void selectByRectangularArea(PaintContextInterface context){
 		LinkedList<OriLine> selectedLines = new LinkedList<>();
 
 		try {
@@ -86,7 +87,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	
 	
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 

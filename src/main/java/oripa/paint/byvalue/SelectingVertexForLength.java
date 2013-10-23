@@ -4,7 +4,7 @@ import java.awt.geom.Point2D.Double;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
 
 public class SelectingVertexForLength extends PickingVertex{
@@ -20,7 +20,7 @@ public class SelectingVertexForLength extends PickingVertex{
 
 	private boolean doingFirstAction = true;
 	@Override
-	protected boolean onAct(PaintContext context, Double currentPoint,
+	protected boolean onAct(PaintContextInterface context, Double currentPoint,
 			boolean doSpecial) {
 		
 		context.setMissionCompleted(false);
@@ -42,7 +42,7 @@ public class SelectingVertexForLength extends PickingVertex{
 	}
 
 	@Override
-	public void onResult(PaintContext context) {
+	public void onResult(PaintContextInterface context) {
 
         double length = GeomUtil.Distance(
         		context.getVertex(0), context.getVertex(1));

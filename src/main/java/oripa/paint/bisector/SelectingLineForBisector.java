@@ -1,8 +1,12 @@
 package oripa.paint.bisector;
 
+import java.util.List;
+
+import javax.vecmath.Vector2d;
+
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingLine;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
@@ -19,7 +23,7 @@ public class SelectingLineForBisector extends PickingLine {
 	
 	
 	@Override
-	protected void undoAction(PaintContext context) {
+	protected void undoAction(PaintContextInterface context) {
 		context.popVertex();
 	
 	}
@@ -27,7 +31,7 @@ public class SelectingLineForBisector extends PickingLine {
 	
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 		if(context.getLineCount() != 1 || 
 				context.getVertexCount() != 3){
 			throw new RuntimeException();
@@ -39,6 +43,7 @@ public class SelectingLineForBisector extends PickingLine {
 
 		Painter painter = new Painter();
 		
+		List<Vector2d> vertices = context.getVertices();
 		painter.addBisectorLine(
         		context.getVertex(0), context.getVertex(1), context.getVertex(2), 
         		context.getLine(0),

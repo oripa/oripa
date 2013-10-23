@@ -1,7 +1,7 @@
 package oripa.paint.selectline;
 
 import oripa.ORIPA;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingLine;
 import oripa.value.OriLine;
 
@@ -21,13 +21,13 @@ public class SelectingLine extends PickingLine {
 	
 	
 	@Override
-	protected void undoAction(PaintContext context) {
+	protected void undoAction(PaintContextInterface context) {
 		// TODO Auto-generated method stub
 		super.undoAction(context);
 	}
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 		
 		ORIPA.doc.pushUndoInfo();
 		

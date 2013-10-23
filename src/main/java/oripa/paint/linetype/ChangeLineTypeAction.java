@@ -6,7 +6,7 @@ import java.util.Collection;
 import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.paint.EditMode;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.RectangularSelectableAction;
 import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
@@ -23,7 +23,7 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
-			PaintContext context) {
+			PaintContextInterface context) {
 
 		if(selectedLines.isEmpty() == false){
 			Doc document = ORIPA.doc;
@@ -45,7 +45,7 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 

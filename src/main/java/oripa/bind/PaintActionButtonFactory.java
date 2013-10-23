@@ -8,6 +8,7 @@ import oripa.appstate.ApplicationState;
 import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.paint.EditMode;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintContext;
 
 
@@ -18,7 +19,7 @@ import oripa.paint.core.PaintContext;
  */
 public class PaintActionButtonFactory implements ButtonFactory {
 
-	PaintContext context = PaintContext.getInstance();
+	PaintContextInterface context = PaintContext.getInstance();
 
 	/* (non-Javadoc)
 	 * @see oripa.bind.ButtonFactory#create(java.awt.Component, java.lang.Class, java.lang.String)

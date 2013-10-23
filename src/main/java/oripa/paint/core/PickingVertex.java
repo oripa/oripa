@@ -4,7 +4,8 @@ import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
-import oripa.paint.geometry.GeometricOperation;
+import oripa.paint.PaintContextInterface;
+import oripa.paint.geometry.NearestVertexFinder;
 
 /**
  * abstract class specified for picking vertex.
@@ -24,10 +25,10 @@ public abstract class PickingVertex extends AbstractActionState {
 	 */
 	
 	@Override
-	protected boolean onAct(PaintContext context, Double currentPoint,
+	protected boolean onAct(PaintContextInterface context, Double currentPoint,
 			boolean freeSelection) {
 
-		Vector2d picked = GeometricOperation.pickVertex(
+		Vector2d picked = NearestVertexFinder.pickVertex(
 				context, freeSelection);
 
 		if(picked == null){
@@ -45,7 +46,7 @@ public abstract class PickingVertex extends AbstractActionState {
 	 * @return Previous state
 	 */
 	@Override
-	protected void undoAction(PaintContext context) {
+	protected void undoAction(PaintContextInterface context) {
 		
 		if(context.getVertexCount() > 0){
 			context.popVertex();

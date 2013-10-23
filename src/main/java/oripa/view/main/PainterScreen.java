@@ -54,6 +54,7 @@ import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.mouse.MouseUtility;
 import oripa.paint.EditMode;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
@@ -72,7 +73,7 @@ ActionListener, ComponentListener, Observer{
 
 	private MainScreenSettingDB setting = MainScreenSettingDB.getInstance();
 	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
-	private PaintContext mouseContext = PaintContext.getInstance();
+	private PaintContextInterface mouseContext = PaintContext.getInstance();
 
 	private boolean bDrawFaceID = false;
 	private Image bufferImage;
@@ -358,7 +359,7 @@ ActionListener, ComponentListener, Observer{
 	}
 
 	private void drawCandidatePosition(Graphics g){
-		Vector2d candidate = mouseContext.pickCandidateV;
+		Vector2d candidate = mouseContext.getPickCandidateV();
 		if(candidate != null){
 			g.setColor(Color.BLACK);
 			g.drawString("(" + candidate.x + 
@@ -478,8 +479,8 @@ ActionListener, ComponentListener, Observer{
 			return;
 		}
 
-		mouseContext.scale = scale;
-		mouseContext.dispGrid = setting.isGridVisible();
+		mouseContext.setScale(scale);
+		mouseContext.setDispGrid(setting.isGridVisible());
 		mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
 
 		if (PaintConfig.mouseAction == null) {

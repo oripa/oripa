@@ -5,8 +5,8 @@ import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
 
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
-import oripa.paint.core.PaintContext;
 import oripa.value.OriLine;
 
 public class VerticalLineAction extends GraphicMouseAction {
@@ -18,7 +18,7 @@ public class VerticalLineAction extends GraphicMouseAction {
 
 
 	@Override
-	public void destroy(PaintContext context) {
+	public void destroy(PaintContextInterface context) {
 		super.destroy(context);
 		setActionState(new SelectingVertexForVertical());
 		
@@ -28,7 +28,7 @@ public class VerticalLineAction extends GraphicMouseAction {
 	private OriLine closeLine = null;
 
 	@Override
-	public Vector2d onMove(PaintContext context, AffineTransform affine,
+	public Vector2d onMove(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		Vector2d result = super.onMove(context, affine, differentAction);
 
@@ -37,7 +37,7 @@ public class VerticalLineAction extends GraphicMouseAction {
 				closeLine.selected = false;
 			}
 			
-			closeLine = context.pickCandidateL;
+			closeLine = context.getPickCandidateL();
 	
 			if(closeLine != null){
 				closeLine.selected = true;
@@ -53,13 +53,13 @@ public class VerticalLineAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDrag(PaintContext context, AffineTransform affine, boolean differentAction) {
+	public void onDrag(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(PaintContext context, AffineTransform affine,
+	public void onRelease(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 
@@ -67,7 +67,7 @@ public class VerticalLineAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 
@@ -86,7 +86,7 @@ public class VerticalLineAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onPress(PaintContext context, AffineTransform affine,
+	public void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 		

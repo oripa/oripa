@@ -4,7 +4,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
@@ -16,7 +16,7 @@ public class SelectingSecondVertexForBisector extends PickingVertex{
 	}
 	
 	@Override
-	public void onResult(PaintContext context) {
+	public void onResult(PaintContextInterface context) {
 		
 		if(context.getVertexCount() != 2){
 			throw new RuntimeException();

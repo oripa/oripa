@@ -1,8 +1,8 @@
 package oripa.paint.segment;
 
 import oripa.ORIPA;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingVertex;
 import oripa.value.OriLine;
 
@@ -14,7 +14,7 @@ public class SelectingSecondVertexForSegment extends PickingVertex{
 	}
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 		
 		if(context.getVertexCount() != 2){
 			throw new RuntimeException();

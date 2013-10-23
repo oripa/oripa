@@ -4,8 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import oripa.paint.GraphicMouseActionInterface;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
-import oripa.paint.core.PaintContext;
 
 public class LengthMeasuringAction extends GraphicMouseAction {
 
@@ -16,7 +16,7 @@ public class LengthMeasuringAction extends GraphicMouseAction {
 	
 	
 	@Override
-	public GraphicMouseActionInterface onLeftClick(PaintContext context,
+	public GraphicMouseActionInterface onLeftClick(PaintContextInterface context,
 			AffineTransform affine, boolean differentAction) {
 
 		GraphicMouseActionInterface action;
@@ -32,21 +32,21 @@ public class LengthMeasuringAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDrag(PaintContext context, AffineTransform affine,
+	public void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(PaintContext context, AffineTransform affine,
+	public void onRelease(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 		
@@ -58,7 +58,7 @@ public class LengthMeasuringAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onPress(PaintContext context, AffineTransform affine,
+	public void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 		

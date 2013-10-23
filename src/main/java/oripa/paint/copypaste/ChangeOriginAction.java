@@ -9,9 +9,9 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.paint.GraphicMouseActionInterface;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
-import oripa.paint.core.PaintContext;
-import oripa.paint.geometry.GeometricOperation;
+import oripa.paint.geometry.NearestVertexFinder;
 import oripa.value.OriLine;
 
 public class ChangeOriginAction extends GraphicMouseAction{
@@ -19,45 +19,45 @@ public class ChangeOriginAction extends GraphicMouseAction{
 
 	
 	@Override
-	public GraphicMouseActionInterface onLeftClick(PaintContext context,
+	public GraphicMouseActionInterface onLeftClick(PaintContextInterface context,
 			AffineTransform affine, boolean keepDoing) {
 
 		return this;
 	}
 	
 	@Override
-	public void doAction(PaintContext context, Double point,
+	public void doAction(PaintContextInterface context, Double point,
 			boolean differntAction) {
 
 	}
 	
 	@Override
-	public void undo(PaintContext context) {
+	public void undo(PaintContextInterface context) {
 	}
 	
 	@Override
-	public void onPress(PaintContext context, AffineTransform affine,
+	public void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		
 	}
 
 	@Override
-	public void onDrag(PaintContext context, AffineTransform affine,
+	public void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		
 	}
 
 	@Override
-	public void onRelease(PaintContext context, AffineTransform affine,
+	public void onRelease(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		
 	}
 
 	@Override
-	public Vector2d onMove(PaintContext context, AffineTransform affine,
+	public Vector2d onMove(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
-		Vector2d closeVertex = GeometricOperation.pickVertexFromPickedLines(context);
-		context.pickCandidateV = closeVertex;
+		Vector2d closeVertex = NearestVertexFinder.pickVertexFromPickedLines(context);
+		context.setPickCandidateV(closeVertex);
 		
 		if(closeVertex != null){
 			OriginHolder holder = OriginHolder.getInstance();
@@ -69,7 +69,7 @@ public class ChangeOriginAction extends GraphicMouseAction{
 	
 	
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 		super.onDraw(g2d, context);		
 
 		Collection<OriLine> lines = context.getLines();

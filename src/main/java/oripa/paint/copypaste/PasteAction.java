@@ -10,11 +10,11 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.paint.EditMode;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
-import oripa.paint.core.PaintContext;
 import oripa.paint.creasepattern.CreasePattern;
-import oripa.paint.geometry.GeometricOperation;
 import oripa.paint.geometry.NearestVertexFinder;
+import oripa.paint.geometry.NearestVertexFinderHelper;
 import oripa.value.OriLine;
 
 public class PasteAction extends GraphicMouseAction {
@@ -35,7 +35,7 @@ public class PasteAction extends GraphicMouseAction {
 
 
 	@Override
-	public void recover(PaintContext context) {
+	public void recover(PaintContextInterface context) {
 		context.clear(false);
 
 
@@ -59,37 +59,37 @@ public class PasteAction extends GraphicMouseAction {
 	 * Clear context and mark lines as unselected.
 	 */
 	@Override
-	public void destroy(PaintContext context) {
+	public void destroy(PaintContextInterface context) {
 		context.clear(true);
 		context.finishPasting();
 	}
 
 
 	@Override
-	public void onDrag(PaintContext context, AffineTransform affine,
+	public void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 
 	}
 
 
 	@Override
-	public void onRelease(PaintContext context, AffineTransform affine, boolean differentAction) {
+	public void onRelease(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
 
 
 	}
 
 
 	@Override
-	public Vector2d onMove(PaintContext context, AffineTransform affine,
+	public Vector2d onMove(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 
 		// vertex-only super's action
 		setCandidateVertexOnMove(context, differentAction);
-		Vector2d closeVertex = context.pickCandidateV;
+		Vector2d closeVertex = context.getPickCandidateV();
 
 
 		Vector2d closeVertexOfLines = 
-				GeometricOperation.pickVertexFromPickedLines(context);
+				NearestVertexFinder.pickVertexFromPickedLines(context);
 
 		if(closeVertex == null){
 			closeVertex = closeVertexOfLines;
@@ -99,12 +99,12 @@ public class PasteAction extends GraphicMouseAction {
 		Point2D.Double current = context.getLogicalMousePoint();
 		if(closeVertex != null && closeVertexOfLines != null){
 			// get the nearest to current
-			closeVertex = NearestVertexFinder.findNearestOf(
+			closeVertex = NearestVertexFinderHelper.findNearestOf(
 					current, closeVertex, closeVertexOfLines);
 
 		}
 
-		context.pickCandidateV = closeVertex;
+		context.setPickCandidateV(closeVertex);
 
 //		if (context.getLineCount() > 0) {
 //			if(closeVertex == null) {
@@ -120,7 +120,7 @@ public class PasteAction extends GraphicMouseAction {
 	Line2D.Double g2dLine = new Line2D.Double();
 	double diffX, diffY;
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 
@@ -139,9 +139,10 @@ public class PasteAction extends GraphicMouseAction {
 		g2d.setColor(Color.GREEN);
 		drawVertex(g2d, context, ox, oy);
 
-		if(context.pickCandidateV != null){
-			diffX = context.pickCandidateV.x - ox;
-			diffY = context.pickCandidateV.y - oy;
+		Vector2d candidateVertex = context.getPickCandidateV();
+		if(candidateVertex != null){
+			diffX = candidateVertex.x - ox;
+			diffY = candidateVertex.y - oy;
 		}
 		else {
 			diffX = context.getLogicalMousePoint().x - ox;
@@ -171,7 +172,7 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPress(PaintContext context, AffineTransform affine,
+	public void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 	}
 

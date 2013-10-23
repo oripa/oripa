@@ -7,7 +7,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
 
 public class SelectingVertexForOutline extends PickingVertex {
@@ -22,7 +22,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 	
 
 	@Override
-	protected boolean onAct(PaintContext context, Point2D.Double currentPoint,
+	protected boolean onAct(PaintContextInterface context, Point2D.Double currentPoint,
 			boolean freeSelection) {
         context.setMissionCompleted(false);
 		return super.onAct(context, currentPoint, freeSelection);
@@ -32,7 +32,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 		
 		Vector2d v = context.popVertex();
 		

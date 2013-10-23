@@ -6,9 +6,9 @@ import java.awt.geom.Line2D;
 
 import javax.vecmath.Vector2d;
 
-import oripa.paint.core.PaintConfig;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
-import oripa.paint.core.PaintContext;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.util.ElementSelector;
 
 public class LineByValueAction extends GraphicMouseAction {
@@ -19,25 +19,25 @@ public class LineByValueAction extends GraphicMouseAction {
 	}
 	
 	@Override
-	public void onDrag(PaintContext context, AffineTransform affine,
+	public void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(PaintContext context, AffineTransform affine,
+	public void onRelease(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 		super.onDraw(g2d, context);
 		
 		drawPickCandidateVertex(g2d, context);
-        Vector2d v = context.pickCandidateV;
+        Vector2d v = context.getPickCandidateV();
 		if(v != null){
 	        try {
 	            double length = ValueDB.getInstance().getLength();
@@ -59,7 +59,7 @@ public class LineByValueAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPress(PaintContext context, AffineTransform affine,
+	public void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 		

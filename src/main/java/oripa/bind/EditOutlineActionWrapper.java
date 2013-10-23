@@ -6,8 +6,8 @@ import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseActionInterface;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.core.PaintContext;
 import oripa.paint.outline.EditOutlineAction;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
@@ -18,7 +18,7 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	
 	
 	@Override
-	public GraphicMouseActionInterface onLeftClick(PaintContext context,
+	public GraphicMouseActionInterface onLeftClick(PaintContextInterface context,
 			AffineTransform affine, boolean differentAction) {
 		GraphicMouseActionInterface next = super.onLeftClick(context, affine, differentAction);
 		
@@ -31,7 +31,7 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	}
 
 	@Override
-	public void onRightClick(PaintContext context, AffineTransform affine,
+	public void onRightClick(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 
 		popPreviousState();

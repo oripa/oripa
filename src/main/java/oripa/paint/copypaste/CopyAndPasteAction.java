@@ -9,8 +9,8 @@ import javax.vecmath.Vector2d;
 import oripa.ORIPA;
 import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseActionInterface;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
-import oripa.paint.core.PaintContext;
 
 public class CopyAndPasteAction extends GraphicMouseAction {
 
@@ -28,7 +28,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	private OriginHolder originHolder = OriginHolder.getInstance();
 
 	@Override
-	public void recover(PaintContext context) {
+	public void recover(PaintContextInterface context) {
 		originHolder.resetOrigin(context);
 		action = pasteAction;
 		action.recover(context);
@@ -37,19 +37,19 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	
 	
 	@Override
-	public void destroy(PaintContext context) {
+	public void destroy(PaintContextInterface context) {
 		originHolder.setOrigin(null);
 		action.destroy(context);
 	}
 
 	@Override
-	public void undo(PaintContext context) {
+	public void undo(PaintContextInterface context) {
 		ORIPA.doc.loadUndoInfo();
 	}
 	
 	
 	@Override
-	public GraphicMouseActionInterface onLeftClick(PaintContext context,
+	public GraphicMouseActionInterface onLeftClick(PaintContextInterface context,
 			AffineTransform affine, boolean differentAction) {
 		action.onLeftClick(context, affine, differentAction);
 		
@@ -66,26 +66,26 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 //	}
 
 	@Override
-	public void doAction(PaintContext context, Double point,
+	public void doAction(PaintContextInterface context, Double point,
 			boolean differntAction) {
 		action.doAction(context, point, differntAction);
 	}
 	
 	
 	@Override
-	public void onPress(PaintContext context, AffineTransform affine,
+	public void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		action.onPress(context, affine, differentAction);
 	}
 
 	@Override
-	public void onDrag(PaintContext context, AffineTransform affine,
+	public void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		action.onDrag(context, affine, differentAction);
 	}
 
 	@Override
-	public void onRelease(PaintContext context, AffineTransform affine,
+	public void onRelease(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		action.onRelease(context, affine, differentAction);
 	}
@@ -104,7 +104,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 	
 	@Override
-	public Vector2d onMove(PaintContext context, AffineTransform affine,
+	public Vector2d onMove(PaintContextInterface context, AffineTransform affine,
 			boolean changingOrigin) {
 		
 		changeAction(changingOrigin);
@@ -113,7 +113,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 		// TODO Auto-generated method stub
 		action.onDraw(g2d, context);
 	}

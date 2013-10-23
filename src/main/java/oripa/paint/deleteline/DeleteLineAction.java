@@ -6,6 +6,7 @@ import java.util.Collection;
 import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.paint.EditMode;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.RectangularSelectableAction;
@@ -23,7 +24,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 
@@ -37,13 +38,13 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	 * @param context
 	 */
 	@Override
-	public void recover(PaintContext context) {
+	public void recover(PaintContextInterface context) {
 		context.clear(true);
 	}
 	
 	@Override
 	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
-			PaintContext context) {
+			PaintContextInterface context) {
 
 		Doc document = ORIPA.doc;
 		Collection<OriLine> creasePattern = document.getCreasePattern();

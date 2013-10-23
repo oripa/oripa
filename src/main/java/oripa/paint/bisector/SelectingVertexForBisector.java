@@ -3,7 +3,7 @@ package oripa.paint.bisector;
 import java.awt.geom.Point2D.Double;
 
 import oripa.ORIPA;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
 
 public class SelectingVertexForBisector extends PickingVertex{
@@ -23,7 +23,7 @@ public class SelectingVertexForBisector extends PickingVertex{
 
 	private boolean doingFirstAction = true;
 	@Override
-	protected boolean onAct(PaintContext context, Double currentPoint,
+	protected boolean onAct(PaintContextInterface context, Double currentPoint,
 			boolean doSpecial) {
 		
 		if(doingFirstAction){
@@ -43,7 +43,7 @@ public class SelectingVertexForBisector extends PickingVertex{
 	}
 
 	@Override
-	public void onResult(PaintContext context) {
+	public void onResult(PaintContextInterface context) {
 		
 	}
 

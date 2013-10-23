@@ -2,11 +2,13 @@ package oripa.paint.core;
 
 import java.awt.geom.Point2D;
 
+import oripa.paint.PaintContextInterface;
+
 public interface ActionState {
-	public ActionState doAction(PaintContext context, 
+	public ActionState doAction(PaintContextInterface context, 
 			Point2D.Double currentPoint, boolean differentAction);
 
-	public ActionState undo(PaintContext context);
+	public ActionState undo(PaintContextInterface context);
 	
 
 	public void setNextState(ActionState state);	

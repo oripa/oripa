@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import oripa.ORIPA;
 import oripa.paint.GraphicMouseActionInterface;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
@@ -29,7 +30,7 @@ public class PaintActionSetter implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		PaintContext context = PaintContext.getInstance();
+		PaintContextInterface context = PaintContext.getInstance();
 
 		PaintConfig.getMouseAction().destroy(context);
 		mouseAction.recover(context);

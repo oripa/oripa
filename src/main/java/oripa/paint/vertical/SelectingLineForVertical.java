@@ -2,8 +2,8 @@ package oripa.paint.vertical;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingLine;
 import oripa.value.OriLine;
 
@@ -19,7 +19,7 @@ public class SelectingLineForVertical extends PickingLine {
 	
 	
 	@Override
-	protected void undoAction(PaintContext context) {
+	protected void undoAction(PaintContextInterface context) {
 		context.clear(false);
 	
 	}
@@ -27,7 +27,7 @@ public class SelectingLineForVertical extends PickingLine {
 	
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 		if(context.getLineCount() != 1 || 
 				context.getVertexCount() != 1){
 			throw new RuntimeException();

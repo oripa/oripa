@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
 import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
@@ -17,7 +17,7 @@ public class DeletingVertex extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 		Doc document = ORIPA.doc;
 		Collection<OriLine> creasePattern = document.getCreasePattern();
 

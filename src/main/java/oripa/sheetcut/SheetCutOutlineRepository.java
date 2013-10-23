@@ -5,6 +5,12 @@ import java.util.Collection;
 
 import oripa.value.OriLine;
 
+/**
+ * This class holds the sheet-cut outline.
+ * The state of the outline in this class is never changed by others.
+ * @author Koji
+ *
+ */
 public class SheetCutOutlineRepository implements LineCollectionRepository {
 
 	private Collection<OriLine> lines = new ArrayList<>();

@@ -560,30 +560,6 @@ public class GeomUtil {
         return null;
     }
 
-//    Obtain the parameters for the intersection of the segments p0-p1 and q0-q1
-//    The param stores the position of the intersection
-//    Returns false if parallel
-    public static boolean getCrossPointParam(Vector2d p0, Vector2d p1, Vector2d q0, Vector2d q1, double[] param) {
-
-        Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
-        Vector2d d1 = new Vector2d(q1.x - q0.x, q1.y - q0.y);
-        Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
-        double det = d1.x * d0.y - d1.y * d0.x;
-
-        double epsilon = 1.0e-6;
-        if (det * det > epsilon * d0.lengthSquared() * d1.lengthSquared()) {
-            // Lines intersect in a single point.  Return both s and t values for
-            // use by calling functions.
-            double invDet = 1.0 / det;
-            
-            param[0] = (d1.x * diff.y - d1.y * diff.x) * invDet;
-            param[1] = (d0.x * diff.y - d0.y * diff.x) * invDet;
-            return true;
-        }
-        return false;
-
-    }
-
 
     public static boolean isRightSide(Vector2d p, Line line) {
         Vector3d lineDir = new Vector3d(line.dir.x, line.dir.y, 0);

@@ -5,15 +5,15 @@ import java.util.Collection;
 
 import oripa.ORIPA;
 import oripa.paint.EditMode;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.core.PaintContext;
 import oripa.paint.core.RectangularSelectableAction;
 import oripa.value.OriLine;
 
 public class SelectLineAction extends RectangularSelectableAction {
 
 
-	public SelectLineAction(PaintContext context){
+	public SelectLineAction(PaintContextInterface context){
 		setEditMode(EditMode.SELECT);
 		setNeedSelect(true);
 		
@@ -27,7 +27,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 	 * set old line-selected marks to current context.s
 	 */
 	@Override
-	public void undo(PaintContext context) {
+	public void undo(PaintContextInterface context) {
 		ORIPA.doc.loadUndoInfo();
 
 		recover(context);
@@ -35,7 +35,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 
 	@Override
-	public void recover(PaintContext context) {
+	public void recover(PaintContextInterface context) {
 		context.clear(false);
 
 		Collection<OriLine> creasePattern = ORIPA.doc.getCreasePattern();
@@ -53,7 +53,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
-			PaintContext context) {
+			PaintContextInterface context) {
 
 		if(selectedLines.isEmpty() == false){
 
@@ -85,7 +85,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 		super.onDraw(g2d, context);
 
 		this.drawPickCandidateLine(g2d, context);

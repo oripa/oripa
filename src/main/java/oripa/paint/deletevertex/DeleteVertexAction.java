@@ -4,8 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import oripa.paint.EditMode;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
-import oripa.paint.core.PaintContext;
 
 public class DeleteVertexAction extends GraphicMouseAction {
 
@@ -19,20 +19,20 @@ public class DeleteVertexAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onDrag(PaintContext context, AffineTransform affine,
+	public void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 
 	}
 
 
 	@Override
-	public void onRelease(PaintContext context, AffineTransform affine, boolean differentAction) {
+	public void onRelease(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
 
 
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 
@@ -40,7 +40,7 @@ public class DeleteVertexAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPress(PaintContext context, AffineTransform affine,
+	public void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 	}
 

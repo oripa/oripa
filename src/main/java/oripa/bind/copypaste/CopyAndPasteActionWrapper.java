@@ -8,8 +8,8 @@ import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.doc.Doc;
 import oripa.paint.EditMode;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.copypaste.CopyAndPasteAction;
-import oripa.paint.core.PaintContext;
 import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
 
@@ -27,7 +27,7 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	}
 
 	@Override
-	public void recover(PaintContext context) {
+	public void recover(PaintContextInterface context) {
 		super.recover(context);
 		Doc document = ORIPA.doc;
 		Collection<OriLine> creasePattern = document.getCreasePattern();
@@ -38,7 +38,7 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	}
 	
 	@Override
-	public void onRightClick(PaintContext context, AffineTransform affine,
+	public void onRightClick(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		
 		StateManager stateManager = StateManager.getInstance();

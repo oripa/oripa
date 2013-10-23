@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingLine;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
@@ -35,7 +35,7 @@ public class SelectingLineForMirror extends PickingLine {
 	 * @return true if copy is done.
 	 */
 	@Override
-	protected boolean onAct(PaintContext context, Point2D.Double currentPoint,
+	protected boolean onAct(PaintContextInterface context, Point2D.Double currentPoint,
 			boolean doSpecial) {
 		if(doingFirstAction){
 			doingFirstAction = false;
@@ -73,7 +73,7 @@ public class SelectingLineForMirror extends PickingLine {
 	
 	
 	@Override
-	protected void undoAction(PaintContext context) {
+	protected void undoAction(PaintContextInterface context) {
 //		if (doingFirstAction) {
 //			super.undoAction(context);
 //			return;
@@ -82,7 +82,7 @@ public class SelectingLineForMirror extends PickingLine {
 	}
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 
 		Doc document = ORIPA.doc;
 		CreasePattern creasePattern = document.getCreasePattern();

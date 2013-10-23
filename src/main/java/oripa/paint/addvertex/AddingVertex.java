@@ -4,11 +4,11 @@ import java.awt.geom.Point2D;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
-import oripa.paint.geometry.GeometricOperation;
+import oripa.paint.geometry.NearestVertexFinder;
 import oripa.value.OriLine;
 
 public class AddingVertex extends PickingVertex {
@@ -21,13 +21,13 @@ public class AddingVertex extends PickingVertex {
 	
 	
 	@Override
-	protected boolean onAct(PaintContext context, Point2D.Double currentPoint,
+	protected boolean onAct(PaintContextInterface context, Point2D.Double currentPoint,
 			boolean freeSelection) {
 		
 		boolean result = super.onAct(context, currentPoint, true);
 		
 		if(result == true){
-			OriLine line = GeometricOperation.pickLine(
+			OriLine line = NearestVertexFinder.pickLine(
 					context);
 
 			if(line != null){
@@ -44,7 +44,7 @@ public class AddingVertex extends PickingVertex {
 
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 
 		if(context.getVertexCount() > 0){
 			

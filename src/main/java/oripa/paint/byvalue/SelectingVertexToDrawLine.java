@@ -4,8 +4,8 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.geom.GeomUtil;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.core.PaintContext;
 import oripa.paint.core.PickingVertex;
 import oripa.value.OriLine;
 
@@ -17,7 +17,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(PaintContext context) {
+	protected void onResult(PaintContextInterface context) {
 		Vector2d vertex = context.getVertex(0);
 
 		double length;

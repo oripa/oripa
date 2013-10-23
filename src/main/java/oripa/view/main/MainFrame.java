@@ -59,6 +59,7 @@ import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
 import oripa.fold.OrigamiModel;
 import oripa.fold.OrigamiModelFactory;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.creasepattern.CreasePattern;
@@ -82,7 +83,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	private MainFrameSettingDB setting = MainFrameSettingDB.getInstance();
 	private MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
-	private PaintContext mouseContext = PaintContext.getInstance();
+	private PaintContextInterface mouseContext = PaintContext.getInstance();
 
 	PainterScreen mainScreen;
 	private JMenu menuFile = new JMenu(

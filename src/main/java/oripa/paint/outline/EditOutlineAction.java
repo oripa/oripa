@@ -5,14 +5,14 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.Collection;
-import java.util.Stack;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
 
 import oripa.paint.EditMode;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.LineSetting;
-import oripa.paint.core.PaintContext;
 import oripa.paint.util.PairLoop;
 
 public class EditOutlineAction extends GraphicMouseAction {
@@ -52,13 +52,13 @@ public class EditOutlineAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContext context) {
+	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
 		// TODO Auto-generated method stub
 		super.onDraw(g2d, context);
 
 		this.drawPickCandidateVertex(g2d, context);
 		
-		Stack<Vector2d> outlinevertices = context.getVertices();
+		List<Vector2d> outlinevertices = context.getVertices();
 
 		// Shows the outline of the editing
 		int outlineVnum = outlinevertices.size();
@@ -67,9 +67,9 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 			(new DrawTempOutlines()).execute(g2d, outlinevertices);
 
-			Vector2d cv = (context.pickCandidateV == null)
+			Vector2d cv = (context.getPickCandidateV() == null)
 					? new Vector2d(context.getLogicalMousePoint().getX(), context.getLogicalMousePoint().getY())
-			: context.pickCandidateV;
+			: context.getPickCandidateV();
 					g2d.draw(new Line2D.Double(outlinevertices.get(0).x, 
 							outlinevertices.get(0).y,
 							cv.x, cv.y));
@@ -82,21 +82,21 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 
 	@Override
-	public void onPress(PaintContext context, AffineTransform affine,
+	public void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onDrag(PaintContext context, AffineTransform affine,
+	public void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(PaintContext context, AffineTransform affine,
+	public void onRelease(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
 		// TODO Auto-generated method stub
 

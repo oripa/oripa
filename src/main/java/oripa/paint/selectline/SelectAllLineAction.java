@@ -1,18 +1,18 @@
 package oripa.paint.selectline;
 
 import oripa.ORIPA;
-import oripa.paint.core.PaintContext;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
 
 public class SelectAllLineAction extends SelectLineAction {
 
-	public SelectAllLineAction(PaintContext context) {
+	public SelectAllLineAction(PaintContextInterface context) {
 		super(context);
 	}
 
 	@Override
-	public void recover(PaintContext context) {
+	public void recover(PaintContextInterface context) {
 		Painter painter = new Painter();
 		CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
 		painter.selectAllOriLines(creasePattern);

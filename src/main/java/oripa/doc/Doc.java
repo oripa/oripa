@@ -36,36 +36,6 @@ import oripa.value.OriLine;
 
 
 public class Doc {
-//	class PointComparatorX implements Comparator<Vector2d> {
-//
-//		@Override
-//		public int compare(Vector2d v1, Vector2d v2) {
-//			if(v1.x == v2.x){
-//				return 0;
-//			}
-//			return v1.x > v2.x ? 1 : -1;
-//		}
-//	}
-//
-//	class PointComparatorY implements Comparator<Vector2d> {
-//
-//		@Override
-//		public int compare(Vector2d v1, Vector2d v2) {
-//			if(v1.y == v2.y){
-//				return 0;
-//			}
-//			return ((Vector2d) v1).y > ((Vector2d) v2).y ? 1 : -1;
-//		}
-//	}
-//
-//	class FaceOrderComparator implements Comparator<OriFace> {
-//
-//		@Override
-//		public int compare(OriFace f1, OriFace f2) {
-//			return f1.z_order > f2.z_order ? 1 : -1;
-//		}
-//	}
-
 
 	
 	private double paperSize;
@@ -116,9 +86,9 @@ public class Doc {
 	private void initialize(double size){
 
 		this.paperSize = size;
-		creasePattern = new CreasePattern(size);	
+		creasePattern = new CreasePattern(size);
 
-		
+		// FIXME move to factory
 		OriLine l0 = new OriLine(-size / 2.0, -size / 2.0, size / 2.0, -size / 2.0, OriLine.TYPE_CUT);
 		OriLine l1 = new OriLine(size / 2.0, -size / 2.0, size / 2.0, size / 2.0, OriLine.TYPE_CUT);
 		OriLine l2 = new OriLine(size / 2.0, size / 2.0, -size / 2.0, size / 2.0, OriLine.TYPE_CUT);
@@ -198,114 +168,12 @@ public class Doc {
 
 
 
-//	public void CircleCopy(double cx, double cy, double angleDeg, int num) {
-//		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
-//
-//
-//		oripa.geom.RectangleClipper clipper =
-//				new oripa.geom.RectangleClipper(
-//						-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
-//
-//		double angle = angleDeg * Math.PI / 180.0;
-//
-//		for (int i = 0; i < num; i++) {
-//			double angleRad = angle * (i + 1);
-//			for (OriLine l : creasePattern) {
-//				if (!l.selected) {
-//					continue;
-//				}
-//
-//				OriLine cl = new OriLine(l);
-//				double tx0 = l.p0.x - cx;
-//				double ty0 = l.p0.y - cy;
-//				double tx1 = l.p1.x - cx;
-//				double ty1 = l.p1.y - cy;
-//
-//				double ttx0 = tx0 * Math.cos(angleRad) - ty0 * Math.sin(angleRad);
-//				double tty0 = tx0 * Math.sin(angleRad) + ty0 * Math.cos(angleRad);
-//
-//				double ttx1 = tx1 * Math.cos(angleRad) - ty1 * Math.sin(angleRad);
-//				double tty1 = tx1 * Math.sin(angleRad) + ty1 * Math.cos(angleRad);
-//
-//				cl.p0.x = ttx0 + cx;
-//				cl.p0.y = tty0 + cy;
-//				cl.p1.x = ttx1 + cx;
-//				cl.p1.y = tty1 + cy;
-//
-//				if (clipper.clip(cl)) {
-//					copiedLines.add(cl);
-//				}
-//			}
-//		}
-//		for (OriLine l : copiedLines) {
-//			addLine(l);
-//		}
-//
-//		Painter painter = new Painter();
-//		painter.resetSelectedOriLines(creasePattern);
-//	}
-
-
-
-
-
-
-
-//	// v1-v2 is the symmetry line, v0-v1 is the sbject to be copied.
-//	// automatically generates possible rebouncing of the fold (used when Ctrl is pressed)
-//	public void addSymmetricLineAutoWalk(Vector2d v0, Vector2d v1, Vector2d v2, int stepCount, Vector2d startV) {
-//		stepCount++;
-//		if (stepCount > 36) {
-//			return;
-//		}
-//		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
-//		Ray ray = new Ray(v1, new Vector2d(v3.x - v1.x, v3.y - v1.y));
-//
-//		double minDist = Double.MAX_VALUE;
-//		Vector2d bestPoint = null;
-//		OriLine bestLine = null;
-//		for (OriLine l : creasePattern) {
-//			Vector2d crossPoint = GeomUtil.getCrossPoint(ray, l.getSegment());
-//			if (crossPoint == null) {
-//				continue;
-//			}
-//			double distance = GeomUtil.Distance(crossPoint, v1);
-//			if (distance < CalculationResource.POINT_EPS) {
-//				continue;
-//			}
-//
-//			if (distance < minDist) {
-//				minDist = distance;
-//				bestPoint = crossPoint;
-//				bestLine = l;
-//			}
-//		}
-//
-//		if (bestPoint == null) {
-//			return;
-//		}
-//
-//		addLine(new OriLine(v1, bestPoint, PaintConfig.inputLineType));
-//
-//		if (GeomUtil.Distance(bestPoint, startV) < CalculationResource.POINT_EPS) {
-//			return;
-//		}
-//
-//		addSymmetricLineAutoWalk(v1, bestPoint, bestLine.p0, stepCount, startV);
-//
-//	}
-
 
 	public void addLine(OriLine inputLine) {
 		LineAdder lineAdder = new LineAdder();
 		
 		lineAdder.addLine(inputLine, creasePattern);		
 	}
-
-
-	
-	
-
 
 
 	/**
@@ -386,186 +254,7 @@ public class Doc {
 //		this.sheetCutLines = sheetCutOutlines;
 //	}
 
-	
-	
 
-	//-------------------------------------------------------------
-	// moved to OrigamiModel
-	
-//	/**
-//	 * @return faces
-//	 */
-//	public List<OriFace> getFaces() {
-//		List<OriFace> faces = origamiModel.getFaces();
-//		return faces;
-//	}
-//
-//	/**
-//	 * @param faces faces is set to this instance.
-//	 */
-//	public void setFaces(List<OriFace> faces) {
-//		origamiModel.setFaces(faces);
-//	}
-//
-//	/**
-//	 * @return edges
-//	 */
-//	public List<OriEdge> getEdges() {
-//		List<OriEdge> edges = origamiModel.getEdges();
-//
-//		return edges;
-//	}
-//
-//	
-//	/**
-//	 * @return vertices
-//	 */
-//	public List<OriVertex> getVertices() {
-//		List<OriVertex> vertices = origamiModel.getVertices();
-//
-//		return vertices;
-//	}
-//
-//	/**
-//	 * @param vertices vertices is set to this instance.
-//	 */
-//	public void setVertices(List<OriVertex> vertices) {
-//		origamiModel.setVertices(vertices);;
-//	}
-//
-//	/**
-//	 * @param edges edges is set to this instance.
-//	 */
-//	public void setEdges(ArrayList<OriEdge> edges) {
-//		origamiModel.setEdges(edges);
-//	}
-//
-//	/**
-//	 * @return isValidPattern
-//	 */
-//	public boolean isValidPattern() {
-//		
-//		return origamiModel.isValidPattern();
-//	}
-//
-//	/**
-//	 * @param isValidPattern isValidPattern is set to this instance.
-//	 */
-//	public void setValidPattern(boolean isValidPattern) {
-//			origamiModel.setValidPattern(isValidPattern);
-//	}
-//
-//	/**
-//	 * @return hasModel
-//	 */
-//	public boolean hasModel() {
-//		return origamiModel.hasModel();
-//	}
-//
-////	/**
-////	 * @param hasModel hasModel is set to this instance.
-////	 */
-////	public void setHasModel(boolean hasModel) {
-////		this.hasModel = hasModel;
-////	}
-//
-//	/**
-//	 * @return sortedFaces
-//	 */
-//	public List<OriFace> getSortedFaces() {
-//		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-//		return sortedFaces;
-//	}
-//
-//	/**
-//	 * @param sortedFaces sortedFaces is set to this instance.
-//	 */
-//	public void setSortedFaces(List<OriFace> sortedFaces) {
-//		origamiModel.setSortedFaces(sortedFaces);
-//	}
-//
-//	/**
-//	 * @return folded
-//	 */
-//	public boolean isFolded() {
-//		return origamiModel.isFolded();
-//	}
-//
-//	/**
-//	 * @param folded folded is set to this instance.
-//	 */
-//	public void setFolded(boolean folded) {
-//		origamiModel.setFolded(folded);
-//	}
-
-	//-------------------------------------------------------------
-
-//	/**
-//	 * @return currentORmatIndex
-//	 */
-//	public int getCurrentORmatIndex() {
-//		int currentORmatIndex = foldedModelInfo.getCurrentORmatIndex();
-//
-//		return currentORmatIndex;
-//	}
-//
-//	/**
-//	 * @param currentORmatIndex currentORmatIndex is set to this instance.
-//	 */
-//	public void setCurrentORmatIndex(int currentORmatIndex) {
-//		foldedModelInfo.setCurrentORmatIndex(currentORmatIndex);
-//	}
-//
-//	/**
-//	 * @return foldedBBoxLT
-//	 */
-//	public Vector2d getFoldedBBoxLT() {
-//		return foldedModelInfo.getBoundBox().getLeftAndTop();
-//	}
-//
-//
-//	/**
-//	 * @return foldedBBoxRB
-//	 */
-//	public Vector2d getFoldedBBoxRB() {
-//		return foldedModelInfo.getBoundBox().getRightAndBottom();
-//	}
-//
-//
-//
-//
-//	/**
-//	 * @return overlapRelation
-//	 */
-//	public int[][] getOverlapRelation() {
-//		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
-//		return overlapRelation;
-//	}
-//
-//	/**
-//	 * @param overlapRelation overlapRelation is set to this instance.
-//	 */
-//	public void setOverlapRelation(int[][] overlapRelation) {
-//		foldedModelInfo.setOverlapRelation(overlapRelation);
-//	}
-//
-//	/**
-//	 * @return foldableOverlapRelations
-//	 */
-//	public List<int[][]> getFoldableOverlapRelations() {
-//		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
-//
-//		return foldableOverlapRelations;
-//	}
-//
-//	/**
-//	 * @param foldableOverlapRelations foldableOverlapRelations is set to this instance.
-//	 */
-//	public void setFoldableOverlapRelations(
-//			List<int[][]> foldableOverlapRelations) {
-//
-//		foldedModelInfo.setFoldableOverlapRelations(foldableOverlapRelations);
-//	}
 
 	/**
 	 * @param size size is set to this instance.

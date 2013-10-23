@@ -1,143 +1,134 @@
 package oripa.paint.geometry;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.paint.core.PaintConfig;
-import oripa.paint.core.PaintContext;
+import oripa.geom.GeomUtil;
+import oripa.paint.PaintContextInterface;
+import oripa.paint.creasepattern.CreasePattern;
+import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
+
+/**
+ * Logics using ORIPA data and mouse point in geometric form.
+ * @author koji
+ *
+ */
 public class NearestVertexFinder {
-	/**
-	 * 
-	 * Note that {@code nearest} will be affected.
-	 * @param p 		target point
-	 * @param nearest	current nearest point to p
-	 * @param other		new point to be tested
-	 * 
-	 * @return nearest point to p
-	 */
-	private static void findNearestOf(
-			Point2D.Double p, NearestPoint nearest, Vector2d other){
-		
-		
-		double dist = p.distance(other.x, other.y);
-		if (dist < nearest.distance) {
-			nearest.point = other;
-			nearest.distance = dist;
-		}
-		
+
+	private static double scaleThreshold(PaintContextInterface context){
+		return CalculationResource.CLOSE_THRESHOLD / context.getScale();
 	}
-
-	public static Vector2d findNearestOf(
-			Point2D.Double p, Vector2d nearest, Vector2d other){
-		
-		NearestPoint nearestPoint = new NearestPoint();
-		nearestPoint.point = nearest;
-		nearestPoint.distance = p.distance(nearest.x, nearest.y);
-
-		NearestVertexFinder.findNearestOf(
-				p, nearestPoint, other);
 	
-		return nearest;
-	}
-
-
-	private static NearestPoint findNearestVertexFromLines(
-			Point2D.Double p, Collection<OriLine> lines){
-
-		NearestPoint minPosition = new NearestPoint();
-
-		for (OriLine line : lines) {			
-
-			findNearestOf(p, minPosition, line.p0);
-			findNearestOf(p, minPosition, line.p1);
-			
-		}
-
-		return minPosition;
-
-	}
-		
-	/**
-	 * Find the nearest of p among vertices
-	 * @param p
-	 * @param vertices
-	 * @return nearest point
-	 */
-	private static NearestPoint findNearestVertex(Point2D.Double p, Collection<Vector2d> vertices){
-
-		NearestPoint minPosition = new NearestPoint();
-
-		for(Vector2d vertex : vertices){
-			findNearestOf(p, minPosition, vertex);
-		}
-
-		return minPosition;
-	}
-
-	/**
-	 * find the nearest of current mouse point in the circle whose radius = {@code distance}.
-	 * @param context
-	 * @param distance
-	 * @return nearestPoint in the limit. null if there are no such vertex.
-	 */
-	public static NearestPoint findAround(PaintContext context, double distance){
-		NearestPoint nearestPosition = new NearestPoint();
-
-		Point2D.Double currentPoint = context.getLogicalMousePoint();
-		
-		
-		Collection<Collection<Vector2d>> vertices = ORIPA.doc.getVerticesArea(
-				currentPoint.x, currentPoint.y, distance);	
 	
-		for(Collection<Vector2d> locals : vertices){
-			NearestPoint nearest;
-			nearest = findNearestVertex(currentPoint, locals);
-	
-			if(nearest.distance < nearestPosition.distance){
-				nearestPosition = nearest;
+	// returns the OriLine sufficiently closer to point p
+	public static OriLine pickLine(Point2D.Double p, double scale) {
+		double minDistance = Double.MAX_VALUE;
+		OriLine bestLine = null;
+
+        CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+
+		for (OriLine line : creasePattern) {
+			double dist = GeomUtil.DistancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
+			if (dist < minDistance) {
+				minDistance = dist;
+				bestLine = line;
 			}
 		}
 
-		if (context.dispGrid) {
-
-			NearestPoint nearestGrid = findNearestVertex(
-					currentPoint, context.updateGrids(PaintConfig.gridDivNum));
-			
-			if(nearestGrid.distance < nearestPosition.distance){
-				nearestPosition = nearestGrid;
-			}
-			
-		}
-		
-		if (nearestPosition.distance >= distance) {
+		if (minDistance / scale < 10) {
+			return bestLine;
+		} else {
 			return null;
 		}
-		else {
-			
-//			System.out.println("#area " + vertices.size() + 
-//					", #v(area1) " + vertices.iterator().next().size() +
-//					", scaled limit = " + distance);
-			
-		}
-
-
-
-		return nearestPosition;
 	}
 
-	public static NearestPoint findFromPickedLine(PaintContext context){
+
+
+	public static Vector2d pickVertex(
+			PaintContextInterface context, boolean freeSelection){
+
+		
 		NearestPoint nearestPosition;
 
-		Point2D.Double currentPoint = context.getLogicalMousePoint();
-		nearestPosition = findNearestVertexFromLines(
-				currentPoint, context.getLines());
+		nearestPosition = NearestVertexFinderHelper.findAround(context, scaleThreshold(context));
 		
 
-		return nearestPosition;
+		Vector2d picked = null;		
+
+		if(nearestPosition != null){
+			picked = new Vector2d(nearestPosition.point);		
+		}
+		
+		if(picked == null && freeSelection == true){
+			Point2D.Double currentPoint = context.getLogicalMousePoint();
+
+			OriLine l = pickLine(currentPoint, context.getScale());
+			if(l != null) {
+				picked = new Vector2d();
+				Vector2d cp = new Vector2d(currentPoint.x, currentPoint.y);
+
+				GeomUtil.DistancePointToSegment(cp, l.p0, l.p1, picked);
+			}
+		}
+
+		return picked;
 	}
+
+	public static Vector2d pickVertexFromPickedLines(PaintContextInterface context){
+
+		
+		NearestPoint nearestPosition;
+		nearestPosition = NearestVertexFinderHelper.findFromPickedLine(context);
+		
+
+		Vector2d picked = null; 
+		if (nearestPosition.distance < scaleThreshold(context)) {
+			picked = nearestPosition.point;
+		}
+		
+		return picked;
+	}
+
+	public static OriLine pickLine(PaintContextInterface context) {
+		return pickLine(context.getLogicalMousePoint(), context.getScale());
+	}
+
+	public static Vector2d getCandidateVertex(PaintContextInterface context, boolean enableMousePoint){
+
+		Vector2d candidate = context.getPickCandidateV();
+
+		if(candidate == null && enableMousePoint){
+			Point2D.Double mp = context.getLogicalMousePoint();
+			candidate = new Vector2d(mp.x, mp.y);
+		}
+
+		return candidate;
+	}
+
+	public static void shiftLines(Collection<OriLine> lines, 
+			ArrayList<OriLine> shiftedLines, double diffX, double diffY){
+		
+		int i = 0;
+		for (OriLine l : lines) {
+			OriLine shifted = shiftedLines.get(i);
+
+			shifted.p0.x = l.p0.x + diffX;
+			shifted.p0.y = l.p0.y + diffY;
+
+			shifted.p1.x = l.p1.x + diffX;
+			shifted.p1.y = l.p1.y + diffY;
+
+			shifted.typeVal = l.typeVal;
+			
+			i++;
+		}
+
+	}
+
 }

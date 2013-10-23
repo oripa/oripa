@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.paint.PaintContextInterface;
 import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.core.PaintContext;
 import oripa.paint.creasepattern.Painter;
@@ -14,7 +15,7 @@ import oripa.viewsetting.main.ScreenUpdater;
 
 public class DeleteSelectedLines implements ActionListener {
 
-	PaintContext context = PaintContext.getInstance();
+	PaintContextInterface context = PaintContext.getInstance();
 	
 	
 	@Override

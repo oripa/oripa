@@ -1,6 +1,7 @@
 package oripa.paint.core;
 
 import oripa.ORIPA;
+import oripa.paint.PaintContextInterface;
 
 public class BasicUndo {
 
@@ -12,7 +13,7 @@ public class BasicUndo {
 	 * @param context
 	 * @return next state defined by the given state.
 	 */
-	public static ActionState undo(ActionState state, PaintContext context){
+	public static ActionState undo(ActionState state, PaintContextInterface context){
 		ActionState next = state;
 		
 		if(context.getLineCount() > 0 || context.getVertexCount() > 0){

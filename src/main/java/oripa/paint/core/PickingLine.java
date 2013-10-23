@@ -2,7 +2,8 @@ package oripa.paint.core;
 
 import java.awt.geom.Point2D.Double;
 
-import oripa.paint.geometry.GeometricOperation;
+import oripa.paint.PaintContextInterface;
+import oripa.paint.geometry.NearestVertexFinder;
 import oripa.value.OriLine;
 
 /**
@@ -23,11 +24,11 @@ public abstract class PickingLine extends AbstractActionState {
 	 */
 	
 	@Override
-	protected boolean onAct(PaintContext context, Double currentPoint,
+	protected boolean onAct(PaintContextInterface context, Double currentPoint,
 			boolean doSpecial) {
 
-		OriLine picked = GeometricOperation.pickLine(
-				currentPoint, context.scale);
+		OriLine picked = NearestVertexFinder.pickLine(
+				currentPoint, context.getScale());
 
 		if(picked == null){
 			System.out.println("onAct() failed");
@@ -46,7 +47,7 @@ public abstract class PickingLine extends AbstractActionState {
 	 * @return Previous state
 	 */
 	@Override
-	protected void undoAction(PaintContext context) {
+	protected void undoAction(PaintContextInterface context) {
 		context.popLine();		
 	}
 
