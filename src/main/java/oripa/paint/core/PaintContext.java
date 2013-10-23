@@ -97,7 +97,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @see oripa.paint.core.PaintContextInterface#set(double, boolean)
 	 */
 	@Override
-	public void setConfig(double scale, boolean dispGrid){
+	public void setDisplayConfig(double scale, boolean dispGrid){
     	this.scale = scale;
     	this.dispGrid = dispGrid;
     }

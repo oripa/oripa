@@ -60,7 +60,7 @@ public interface PaintContextInterface {
 	 * @param scale
 	 * @param dispGrid
 	 */
-	public abstract void setConfig(double scale, boolean dispGrid);
+	public abstract void setDisplayConfig(double scale, boolean dispGrid);
 
 	/**
 	 * notify the painting algorithm to update grids

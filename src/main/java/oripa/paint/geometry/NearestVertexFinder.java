@@ -1,8 +1,6 @@
 package oripa.paint.geometry;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
@@ -111,24 +109,5 @@ public class NearestVertexFinder {
 		return candidate;
 	}
 
-	public static void shiftLines(Collection<OriLine> lines, 
-			ArrayList<OriLine> shiftedLines, double diffX, double diffY){
-		
-		int i = 0;
-		for (OriLine l : lines) {
-			OriLine shifted = shiftedLines.get(i);
-
-			shifted.p0.x = l.p0.x + diffX;
-			shifted.p0.y = l.p0.y + diffY;
-
-			shifted.p1.x = l.p1.x + diffX;
-			shifted.p1.y = l.p1.y + diffY;
-
-			shifted.typeVal = l.typeVal;
-			
-			i++;
-		}
-
-	}
 
 }

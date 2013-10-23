@@ -1,6 +1,9 @@
 package oripa.paint.copypaste;
 
 import java.awt.geom.Point2D.Double;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
 
@@ -10,11 +13,10 @@ import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingVertex;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.Painter;
-import oripa.paint.geometry.NearestVertexFinder;
+import oripa.value.OriLine;
 
 public class PastingOnVertex extends PickingVertex {
 
-	private FilledOriLineArrayList shiftedLines;
 
 	@Override
 	protected void initialize() {
@@ -64,9 +66,11 @@ public class PastingOnVertex extends PickingVertex {
             double oy = origin.y;
 
 
-            shiftedLines = new FilledOriLineArrayList(context.getLineCount());
-        	NearestVertexFinder.shiftLines(context.getLines(), shiftedLines, v.x - ox, v.y -oy);
-            
+            List<OriLine> shiftedLines;
+        	shiftedLines = 
+        			shiftLines(
+        					context.getLines(), v.x - ox, v.y -oy);
+        	
 //            for(int i = 0; i < context.getLineCount(); i++){
 //            	ORIPA.doc.addLine(shiftedLines.get(i));
 //            }
@@ -77,6 +81,29 @@ public class PastingOnVertex extends PickingVertex {
             context.setMissionCompleted(true);
         }
 		
+	}
+
+	private List<OriLine> shiftLines(Collection<OriLine> lines, 
+			double diffX, double diffY){
+
+		List<OriLine> shiftedLines = new LinkedList<>();
+		
+		int i = 0;
+		for (OriLine l : lines) {
+			OriLine shifted = new OriLine();
+
+			shifted.p0.x = l.p0.x + diffX;
+			shifted.p0.y = l.p0.y + diffY;
+
+			shifted.p1.x = l.p1.x + diffX;
+			shifted.p1.y = l.p1.y + diffY;
+
+			shifted.typeVal = l.typeVal;
+		
+			shiftedLines.add(shifted);
+		}
+
+		return shiftedLines;
 	}
 
 }
