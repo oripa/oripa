@@ -377,7 +377,7 @@ public class OrigamiModelFactory {
 
 		isOK &= kawasakiConjunction.holds(vertices);
 		
-		for (OriVertex vertex : maekawaConjunction.getViolations()) {
+		for (OriVertex vertex : kawasakiConjunction.getViolations()) {
 			vertex.hasProblem = true;
 		}
 

@@ -25,13 +25,13 @@ import java.util.HashSet;
  * @author Koji
  *
  */
-public class ConjunctionLoop<Input> implements Rule<Collection<Input>> {
+public class ConjunctionLoop<Variable> implements Rule<Collection<Variable>> {
 
-	private Rule<Input> term;
-	private HashSet<Input> violations = new HashSet<>();
+	private Rule<Variable> term;
+	private HashSet<Variable> violations = new HashSet<>();
 	private final boolean shouldIterateAll;
 
-	public ConjunctionLoop(Rule<Input> term, boolean shouldIterateAll){
+	public ConjunctionLoop(Rule<Variable> term, boolean shouldIterateAll){
 		this.term = term;
 		this.shouldIterateAll = shouldIterateAll;
 	}
@@ -41,20 +41,20 @@ public class ConjunctionLoop<Input> implements Rule<Collection<Input>> {
 	 * Constructor which sets shouldIterateAll true.
 	 * @param term
 	 */
-	public ConjunctionLoop(Rule<Input> term){
+	public ConjunctionLoop(Rule<Variable> term){
 		this.term = term;
 		this.shouldIterateAll = true;
 	}
 
-	public boolean holds(Collection<Input> inputs) {
+	public boolean holds(Collection<Variable> inputs) {
 
-		violations.clear();
+		violations = new HashSet<>();
 		
 		boolean result = true;
 
 		// a little messed but faster
 		if (! shouldIterateAll) {
-			for (Input input : inputs) {
+			for (Variable input : inputs) {
 				if (!term.holds(input)) {
 					violations.add(input);
 					return false;
@@ -62,7 +62,7 @@ public class ConjunctionLoop<Input> implements Rule<Collection<Input>> {
 			}
 		}
 		else {
-			for (Input input : inputs) {
+			for (Variable input : inputs) {
 				if (!term.holds(input)) {
 					violations.add(input);
 					result = false;
@@ -76,7 +76,7 @@ public class ConjunctionLoop<Input> implements Rule<Collection<Input>> {
 	/**
 	 * @return violations
 	 */
-	public HashSet<Input> getViolations() {
+	public HashSet<Variable> getViolations() {
 		return violations;
 	}
 

@@ -22,7 +22,7 @@ package oripa.fold.rule;
  * @author Koji
  *
  */
-public interface Rule<Input> {
-	boolean holds(Input in);
+public interface Rule<Variable> {
+	boolean holds(Variable var);
 
 }

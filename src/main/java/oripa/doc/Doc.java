@@ -198,6 +198,9 @@ public class Doc {
 		return creasePattern;
 	}
 
+	public void setCreasePattern(CreasePatternInterface cp){
+		creasePattern = cp;
+	}
 	/**
 	 * @return origamiModel
 	 */

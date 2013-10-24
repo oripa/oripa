@@ -27,7 +27,7 @@ import oripa.value.OriLine;
 /**
  * Kawasaki Theorem
  * 
- * Assume there are vertex v on a paper.
+ * Assume there is a vertex v on a paper.
  * When lines l_i are given for i=1...n
  * such that v is one of the end points for all l_i
  * and the numbering is clockwise order,
@@ -49,7 +49,6 @@ public class KawasakiTheorem implements Rule<OriVertex> {
 	 * @return true if all vertices are passes the theorem test.
 	 */
 	public boolean holds(OriVertex vertex) {
-		// Check Kawasaki's theorem for every vertex
 
 		Vector2d p = vertex.p;
 		double oddSum = 0;

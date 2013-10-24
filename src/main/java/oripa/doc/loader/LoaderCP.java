@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
+import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
 import oripa.value.OriLine;
 
@@ -104,14 +105,14 @@ public class LoaderCP implements Loader{
             line.p1.y = (line.p1.y - center.y) / bboxSize * size;
         }
 
+//        for (OriLine l : lines) {
+//            doc.addLine(l);
+//            System.out.println("Linenum=" + creasePattern.size());
+//        }
+        CreasePatternFactory factory = new CreasePatternFactory();
+        CreasePatternInterface creasePattern = factory.createCreasePattern(lines);
         Doc doc = new Doc(400);
-        CreasePatternInterface creasePattern = doc.getCreasePattern();
-        creasePattern.clear();
-
-        for (OriLine l : lines) {
-            doc.addLine(l);
-            System.out.println("Linenum=" + creasePattern.size());
-        }
+        doc.setCreasePattern(creasePattern);
         return doc;
 
     }
