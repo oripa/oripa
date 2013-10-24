@@ -26,7 +26,7 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.cutModel.CutModelOutlineFactory;
+import oripa.cutmodel.CutModelOutlineFactory;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.paint.CreasePatternFactory;

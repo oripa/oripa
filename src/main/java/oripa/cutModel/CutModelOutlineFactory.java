@@ -1,4 +1,4 @@
-package oripa.cutModel;
+package oripa.cutmodel;
 
 import java.util.ArrayList;
 import java.util.Collection;

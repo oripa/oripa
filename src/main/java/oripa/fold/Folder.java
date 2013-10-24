@@ -25,15 +25,14 @@ import java.util.Random;
 
 import javax.vecmath.Vector2d;
 
-import oripa.Config;
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.doc.exporter.Exporter;
-import oripa.doc.exporter.ExporterEPS;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
+import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
 import oripa.paint.core.PaintConfig;
+import oripa.paint.creasepattern.Painter;
 import oripa.value.OriLine;
 
 public class Folder {
@@ -599,26 +598,30 @@ public class Folder {
 			List<OriFace> faces, double paperSize) {
 		//OrigamiModel origamiModel = m_doc.getOrigamiModel();
 
-		Doc temp_doc = new Doc(paperSize);
-		CreasePatternInterface temp_creasePattern = temp_doc.getCreasePattern();
-		OrigamiModel  temp_origamiModel  = temp_doc.getOrigamiModel();
+		CreasePatternFactory cpFactory = new CreasePatternFactory();
+		OrigamiModelFactory  modelFactory = new OrigamiModelFactory();
+
+		CreasePatternInterface temp_creasePattern = cpFactory.createCreasePattern(paperSize);
+		OrigamiModel  temp_origamiModel  = modelFactory.createOrigamiModel(paperSize);
 		
 		temp_creasePattern.clear();        
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
-				temp_doc.addLine(new OriLine(he.positionAfterFolded, he.next.positionAfterFolded, OriLine.TYPE_RIDGE));
+				OriLine line = new OriLine(he.positionAfterFolded, he.next.positionAfterFolded, OriLine.TYPE_RIDGE);
+				Painter painter = new Painter();
+				painter.addLine(line, temp_creasePattern);
 			}
 		}
 
 		folderTool.cleanDuplicatedLines(temp_creasePattern);
 
-		if (Config.FOR_STUDY) {
-			try {
-				Exporter exporter = new ExporterEPS();
-				exporter.export(temp_doc, "c:\\_jun\\tmp\\te.eps");
-			} catch (Exception e) {
-			}
-		}
+//		if (Config.FOR_STUDY) {
+//			try {
+//				Exporter exporter = new ExporterEPS();
+//				exporter.export(temp_doc, "c:\\_jun\\tmp\\te.eps");
+//			} catch (Exception e) {
+//			}
+//		}
 		System.out.println("debugging");
 		Vector2d sp1 = new Vector2d(0.0, 0.0);
 		Vector2d ep1 = new Vector2d(0.0, 10.0);
@@ -629,9 +632,8 @@ public class Folder {
 		int crossNum = GeomUtil.getCrossPoint(dummy1, dummy2, sp1, ep1, sp2, ep2);
 		System.out.println("getCrossPoint results " + crossNum + "::::" + dummy1 + ", " + dummy2);
 
-		//temp_doc.buildOrigami(origamiModel, false);
-		temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, temp_doc.getPaperSize(), false);
-		temp_doc.setOrigamiModel(temp_origamiModel);
+		temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize, false);
+		//temp_doc.setOrigamiModel(temp_origamiModel);
 		
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();
 
@@ -640,9 +642,7 @@ public class Folder {
 			localSubFaces.add(new SubFace(face));
 		}
 
-		int cnt = 0;
 		for (SubFace sub : localSubFaces) {
-			cnt++;
 			Vector2d innerPoint = sub.getInnerPoint();
 			for (OriFace face : faces) {
 				if (GeomUtil.isContainsPointFoldedFace(face, innerPoint, paperSize / 1000)) {
@@ -811,7 +811,6 @@ public class Folder {
 	//creates the matrix overlapRelation and fills it with "no overlap" or "undifined"
 	private int[][] createOverlapRelation(List<OriFace> faces) {
 
-		int overlapCount = 0;
 		int size = faces.size();
 		int[][] overlapRelation = new int[size][size];
 
@@ -821,7 +820,6 @@ public class Folder {
 				if (GeomUtil.isFaceOverlap(faces.get(i), faces.get(j), size * 0.00001)) {
 					overlapRelation[i][j] = Doc.UNDEFINED;
 					overlapRelation[j][i] = Doc.UNDEFINED;
-					overlapCount++;
 				} else {
 					overlapRelation[i][j] = Doc.NO_OVERLAP;
 					overlapRelation[j][i] = Doc.NO_OVERLAP;

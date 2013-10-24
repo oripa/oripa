@@ -646,7 +646,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 				Collection<OriLine> creasePattern = document.getCreasePattern();
 
 				OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-				origamiModel = modelFactory.createOrigamiModel3(creasePattern, document.getPaperSize(), false);
+				origamiModel = modelFactory.createOrigamiModel(creasePattern, document.getPaperSize());
 
 				//document.setOrigamiModel(origamiModel);
 //				boolean isValidPattern =
@@ -702,7 +702,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 //			if (document.buildOrigami3(origamiModel, false)) {
 			OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-			OrigamiModel origamiModel = modelFactory.createOrigamiModel3(
+			OrigamiModel origamiModel = modelFactory.createOrigamiModel(
 					creasePattern, document.getPaperSize());
 			FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 
@@ -714,7 +714,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 						"Failed", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
 						== JOptionPane.YES_OPTION) {
 
-					origamiModel = modelFactory.createOrigamiModel3NoDuplicateLines(
+					origamiModel = modelFactory.createOrigamiModelNoDuplicateLines(
 							creasePattern, document.getPaperSize());
 					//if (document.buildOrigami3(origamiModel, false)) {
 					if (origamiModel.isProbablyFoldable()) {

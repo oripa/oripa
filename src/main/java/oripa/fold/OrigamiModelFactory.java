@@ -26,23 +26,21 @@ public class OrigamiModelFactory {
 
 
 
-
-	private OriVertex addAndGetVertexFromVVec(
-			List<OriVertex> vertices, Vector2d p) {
-		OriVertex vtx = null;
-		for (OriVertex v : vertices) {
-			if (GeomUtil.Distance(v.p, p) < CalculationResource.POINT_EPS) {
-				vtx = v;
-			}
-		}
-
-		if (vtx == null) {
-			vtx = new OriVertex(p);
-			vertices.add(vtx);
-		}
-
-		return vtx;
+	public OrigamiModel createOrigamiModel(
+			Collection<OriLine> creasePattern, double paperSize) {
+		return this.createOrigamiModelImpl3(creasePattern, paperSize, false);
 	}
+
+	public OrigamiModel createOrigamiModelNoDuplicateLines(
+			Collection<OriLine> creasePattern, double paperSize) {	
+		return this.createOrigamiModelImpl3(creasePattern, paperSize, true);
+	}
+
+	
+	public OrigamiModel createOrigamiModel(double paperSize) {
+		return new OrigamiModel(paperSize);
+	}
+
 
 
 	//TODO: change as: throw error if creation failed.
@@ -132,16 +130,24 @@ public class OrigamiModelFactory {
 		return origamiModel;
 
 	}
+	private OriVertex addAndGetVertexFromVVec(
+			List<OriVertex> vertices, Vector2d p) {
+		OriVertex vtx = null;
+		for (OriVertex v : vertices) {
+			if (GeomUtil.Distance(v.p, p) < CalculationResource.POINT_EPS) {
+				vtx = v;
+			}
+		}
 
-	public OrigamiModel createOrigamiModel3(
-			Collection<OriLine> creasePattern, double paperSize) {
-		return this.createOrigamiModel3(creasePattern, paperSize, false);
+		if (vtx == null) {
+			vtx = new OriVertex(p);
+			vertices.add(vtx);
+		}
+
+		return vtx;
 	}
 
-	public OrigamiModel createOrigamiModel3NoDuplicateLines(
-			Collection<OriLine> creasePattern, double paperSize) {	
-		return this.createOrigamiModel3(creasePattern, paperSize, true);
-	}
+	
 	/**
 	 * 
 	 * @param creasePattern
@@ -150,7 +156,7 @@ public class OrigamiModelFactory {
 	 * @return A model data converted from crease pattern.
 	 */
 	//TODO: change as: return OrigamiModel. throw error if creation failed.
-	public OrigamiModel createOrigamiModel3(
+	private OrigamiModel createOrigamiModelImpl3(
 			Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {	
 
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
@@ -169,7 +175,8 @@ public class OrigamiModelFactory {
 		// Remove lines with the same position
 		debugCount = 0;
 		if (needCleanUp) {
-			if (cleanDuplicatedLines(creasePattern)) {
+			FolderTool tool = new FolderTool();
+			if (tool.cleanDuplicatedLines(creasePattern)) {
 				JOptionPane.showMessageDialog(
 						ORIPA.mainFrame, "Removing multiples edges with the same position ",
 						"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
@@ -326,37 +333,6 @@ public class OrigamiModelFactory {
 	}
 
 
-	private boolean cleanDuplicatedLines(Collection<OriLine> creasePattern) {
-		debugCount = 0;
-		System.out.println("pre cleanDuplicatedLines " + creasePattern.size());
-		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>();
-		for (OriLine l : creasePattern) {
-			OriLine ll = l;
-
-			boolean bSame = false;
-			// Test if the line is already in tmpLines to prevent duplicity
-			for (OriLine line : tmpLines) {
-				if (GeomUtil.isSameLineSegment(line, ll)) {
-					bSame = true;
-					break;
-				}
-			}
-			if (bSame) {
-				continue;
-			}
-			tmpLines.add(ll);
-		}
-
-		if (creasePattern.size() == tmpLines.size()) {
-			return false;
-		}
-
-		creasePattern.clear();
-		creasePattern.addAll(tmpLines);
-		System.out.println("after cleanDuplicatedLines " + creasePattern.size());
-
-		return true;
-	}
 
 	private boolean checkPatternValidity(
 			List<OriEdge>   edges, List<OriVertex> vertices,

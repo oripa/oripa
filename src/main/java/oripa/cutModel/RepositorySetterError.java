@@ -1,4 +1,4 @@
-package oripa.cutModel;
+package oripa.cutmodel;
 
 public class RepositorySetterError extends Exception {
 
