@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.fold;
+package oripa.fold.rule;
 
 public class Condition3 {
     // If face[i] and face[j] touching edge is covered by face[k]

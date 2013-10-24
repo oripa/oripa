@@ -26,6 +26,8 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import oripa.ORIPA;
+import oripa.fold.rule.Condition3;
+import oripa.fold.rule.Condition4;
 import oripa.value.OriLine;
 
 

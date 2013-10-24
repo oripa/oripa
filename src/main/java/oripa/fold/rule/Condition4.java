@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.fold;
+package oripa.fold.rule;
 
 public class Condition4 {
 

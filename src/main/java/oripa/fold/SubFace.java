@@ -24,6 +24,8 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.fold.rule.Condition3;
+import oripa.fold.rule.Condition4;
 
 public class SubFace {
 

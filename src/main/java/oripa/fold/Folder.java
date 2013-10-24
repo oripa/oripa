@@ -27,6 +27,8 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
+import oripa.fold.rule.Condition3;
+import oripa.fold.rule.Condition4;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.paint.CreasePatternFactory;

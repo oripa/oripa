@@ -8,6 +8,10 @@ import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.fold.rule.ConjunctionLoop;
+import oripa.fold.rule.FaceIsConvex;
+import oripa.fold.rule.KawasakiTheorem;
+import oripa.fold.rule.MaekawaTheorem;
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
@@ -337,97 +341,44 @@ public class OrigamiModelFactory {
 	private boolean checkPatternValidity(
 			List<OriEdge>   edges, List<OriVertex> vertices,
 			List<OriFace>   faces) {
+
 		boolean isOK = true;
 
+		//--------
+		// test convex-face condition
+		
+		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
+				new FaceIsConvex());
 
-		// Check if the faces are convex
-		for (OriFace face : faces) {
-			if (face.halfedges.size() == 3) {
-				continue;
-			}
+		isOK &= convexRuleConjunction.holds(faces);
 
-			OriHalfedge baseHe = face.halfedges.get(0);
-			boolean baseFlg = GeomUtil.CCWcheck(baseHe.prev.vertex.p, 
-					baseHe.vertex.p, baseHe.next.vertex.p);
-
-			for (int i = 1; i < face.halfedges.size(); i++) {
-				OriHalfedge he = face.halfedges.get(i);
-				if (GeomUtil.CCWcheck(he.prev.vertex.p, he.vertex.p, he.next.vertex.p) != baseFlg) {
-					isOK = false;
-					face.hasProblem = true;
-					break;
-				}
-
-			}
+		for (OriFace face :convexRuleConjunction.getViolations()) {
+			face.hasProblem = true;
 		}
 
-		// Check Maekawa's theorem for all vertexes
-		for (OriVertex v : vertices) {
-			int ridgeCount = 0;
-			int valleyCount = 0;
-			boolean isCorner = false;
-			for (OriEdge e : v.edges) {
-				if (e.type == OriLine.TYPE_RIDGE) {
-					ridgeCount++;
-				} else if (e.type == OriLine.TYPE_VALLEY) {
-					valleyCount++;
-				} else if (e.type == OriLine.TYPE_CUT) {
-					isCorner = true;
-					break;
-				}
-			}
+		//--------
+		// test Maekawa's theorem
 
-			if (isCorner) {
-				continue;
-			}
+		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
+				new MaekawaTheorem());
 
-			if (Math.abs(ridgeCount - valleyCount) != 2) {
-				System.out.println("edge type count invalid: "+ v+" "+Math.abs(ridgeCount - valleyCount));
-				v.hasProblem = true;
-				isOK = false;
-			}
+		isOK &= maekawaConjunction.holds(vertices);
+
+		for (OriVertex vertex : maekawaConjunction.getViolations()) {
+			vertex.hasProblem = true;
 		}
+		
 
-		// Check Kawasaki's theorem for every vertex
+		//--------
+		// test Kawasaki's theorem
 
-		for (OriVertex v : vertices) {
-			if (v.hasProblem) {
-				continue;
-			}
-			Vector2d p = v.p;
-			double oddSum = 0;
-			double evenSum = 0;
-			boolean isCorner = false;
-			for (int i = 0; i < v.edges.size(); i++) {
-				OriEdge e = v.edges.get(i);
-				if (e.type == OriLine.TYPE_CUT) {
-					isCorner = true;
-					break;
-				}
+		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
+				new KawasakiTheorem());
 
-				Vector2d preP = new Vector2d(v.edges.get(i).oppositeVertex(v).p);
-				Vector2d nxtP = new Vector2d(v.edges.get((i + 1) % v.edges.size()).oppositeVertex(v).p);
-
-				nxtP.sub(p);
-				preP.sub(p);
-
-				if (i % 2 == 0) {
-					oddSum += preP.angle(nxtP);
-				} else {
-					evenSum += preP.angle(nxtP);
-				}
-			}
-
-			if (isCorner) {
-				continue;
-			}
-
-			//System.out.println("oddSum = " + oddSum + "/ evenSum = " + evenSum);
-			if (Math.abs(oddSum - Math.PI) > Math.PI / 180 / 2) {
-				System.out.println("edge angle sum invalid");
-				v.hasProblem = true;
-				isOK = false;
-			}
+		isOK &= kawasakiConjunction.holds(vertices);
+		
+		for (OriVertex vertex : maekawaConjunction.getViolations()) {
+			vertex.hasProblem = true;
 		}
 
 
