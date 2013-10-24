@@ -33,6 +33,9 @@ import oripa.viewsetting.main.uipanel.ChangeOnOtherCommandButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnSelectButtonSelected;
 
+
+//FIXME this ID-based approach is not smart.
+// We should implement button factories for each command.
 public class PaintBoundStateFactory {
 
 	PaintContextInterface context = PaintContext.getInstance();
