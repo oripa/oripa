@@ -32,7 +32,7 @@ public class CutModelOutlineFactory {
 			List<Vector2d> vv = findOutlineEdgeTerminals(cutLine, face);
 
 			if (vv.size() >= 2) {
-				cutLines.add(new OriLine(vv.get(0), vv.get(1), PaintConfig.inputLineType));
+				cutLines.add(new OriLine(vv.get(0), vv.get(1), OriLine.TYPE_CUT_MODEL));
 			}
 		}
 

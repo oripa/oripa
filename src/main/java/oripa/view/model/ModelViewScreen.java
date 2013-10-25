@@ -139,9 +139,9 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 			g2d.setColor(Color.BLACK);
 			for (OriHalfedge he : face.halfedges) {
 				if (he.pair == null) {
-					g2d.setStroke(LineSetting.MODEL_STROKE_CUT);
+					g2d.setStroke(LineSetting.STROKE_CUT_MODEL);
 				} else {
-					g2d.setStroke(LineSetting.STROKE_CUT);
+					g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
 				}
 				g2d.draw(new Line2D.Double(he.positionForDisplay.x, 
 						he.positionForDisplay.y, he.next.positionForDisplay.x, 
@@ -151,7 +151,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 
 		if (PaintConfig.bDispCrossLine) {
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-			g2d.setStroke(LineSetting.MODEL_STROKE_CUT);
+			g2d.setStroke(LineSetting.STROKE_CUT_MODEL);
 			g2d.setColor(Color.RED);
 
 			g2d.draw(new Line2D.Double(crossLine.p0.x, crossLine.p0.y, crossLine.p1.x, crossLine.p1.y));
@@ -198,7 +198,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		boolean hasModel = orirgamiModel.hasModel();
 
 		if (hasModel) {
-			g2d.setStroke(LineSetting.STROKE_CUT);
+			g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
 			if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 			}

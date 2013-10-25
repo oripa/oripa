@@ -13,7 +13,9 @@ public class LineSetting {
 	final public static Color LINE_COLOR_CANDIDATE = Color.GREEN;
 	final public static Color LINE_COLOR_CANDIDATE2 = Color.MAGENTA;
 	final public static Color LINE_COLOR_PICKED = Color.GREEN;
-	final public static BasicStroke STROKE_CUT = new BasicStroke(0.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	final public static Color LINE_COLOR_CUT_MODEL = Color.MAGENTA;
+
+	final public static BasicStroke STROKE_PAPER_EDGE = new BasicStroke(0.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 	final public static BasicStroke STROKE_VALLEY = new BasicStroke(0.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 	final public static BasicStroke STROKE_RIDGE = new BasicStroke(0.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 	final public static BasicStroke STROKE_PICKED = new BasicStroke(0.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
@@ -26,6 +28,6 @@ public class LineSetting {
 
 	// Editing outlines (?)
 	final public static BasicStroke STROKE_TMP_OUTLINE = new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
-	final public static BasicStroke MODEL_STROKE_CUT = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	final public static BasicStroke STROKE_CUT_MODEL = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 
 }

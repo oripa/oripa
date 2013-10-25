@@ -26,7 +26,7 @@ import oripa.geom.GeomUtil;
  * @author Koji
  *
  */
-public class FaceIsConvex implements Rule<OriFace> {
+public class FaceIsConvex extends AbstractRule<OriFace> {
 
 
 	public boolean holds(OriFace face) {

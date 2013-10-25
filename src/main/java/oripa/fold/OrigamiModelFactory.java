@@ -331,7 +331,7 @@ public class OrigamiModelFactory {
 		}
 
 		origamiModel.setHasModel(true);
-		origamiModel.setProbablyFoldable(checkPatternValidity(edges, vertices, faces));
+		origamiModel.setProbablyFoldable(checkPatternValidity(vertices, faces));
 
 		return origamiModel;
 	}
@@ -339,7 +339,7 @@ public class OrigamiModelFactory {
 
 
 	private boolean checkPatternValidity(
-			List<OriEdge>   edges, List<OriVertex> vertices,
+			List<OriVertex> vertices,
 			List<OriFace>   faces) {
 
 		boolean isOK = true;
@@ -350,9 +350,10 @@ public class OrigamiModelFactory {
 		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
 				new FaceIsConvex());
 
-		isOK &= convexRuleConjunction.holds(faces);
+		Collection<OriFace> violatingFaces = convexRuleConjunction.findViolations(faces);
+		isOK &= violatingFaces.isEmpty();
 
-		for (OriFace face :convexRuleConjunction.getViolations()) {
+		for (OriFace face : violatingFaces) {
 			face.hasProblem = true;
 		}
 
@@ -362,24 +363,24 @@ public class OrigamiModelFactory {
 		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
 				new MaekawaTheorem());
 
-		isOK &= maekawaConjunction.holds(vertices);
-
-		for (OriVertex vertex : maekawaConjunction.getViolations()) {
-			vertex.hasProblem = true;
-		}
-		
-
 		//--------
 		// test Kawasaki's theorem
 
 		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
 				new KawasakiTheorem());
 
-		isOK &= kawasakiConjunction.holds(vertices);
+		Collection<OriVertex> violatingVertices =
+				maekawaConjunction.findViolations(vertices);
+
+		violatingVertices.addAll(
+				kawasakiConjunction.findViolations(vertices));
 		
-		for (OriVertex vertex : kawasakiConjunction.getViolations()) {
+		isOK &= violatingVertices.isEmpty();
+
+		for (OriVertex vertex : violatingVertices) {
 			vertex.hasProblem = true;
 		}
+		
 
 
 		return isOK;

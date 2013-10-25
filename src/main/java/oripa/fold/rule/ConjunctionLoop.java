@@ -19,66 +19,48 @@
 package oripa.fold.rule;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * @author Koji
  *
  */
-public class ConjunctionLoop<Variable> implements Rule<Collection<Variable>> {
+public class ConjunctionLoop<Variable> extends AbstractRule<Collection<Variable>> {
 
 	private Rule<Variable> term;
-	private HashSet<Variable> violations = new HashSet<>();
-	private final boolean shouldIterateAll;
-
-	public ConjunctionLoop(Rule<Variable> term, boolean shouldIterateAll){
-		this.term = term;
-		this.shouldIterateAll = shouldIterateAll;
-	}
+//	private HashSet<Variable> violations = new HashSet<>();
 
 	/**
 	 * 
-	 * Constructor which sets shouldIterateAll true.
 	 * @param term
 	 */
-	public ConjunctionLoop(Rule<Variable> term){
+	public ConjunctionLoop(Rule<Variable> term) {
 		this.term = term;
-		this.shouldIterateAll = true;
 	}
 
 	public boolean holds(Collection<Variable> inputs) {
 
-		violations = new HashSet<>();
-		
 		boolean result = true;
 
-		// a little messed but faster
-		if (! shouldIterateAll) {
-			for (Variable input : inputs) {
-				if (!term.holds(input)) {
-					violations.add(input);
-					return false;
-				}
-			}
-		}
-		else {
-			for (Variable input : inputs) {
-				if (!term.holds(input)) {
-					violations.add(input);
-					result = false;
-				}
+		for (Variable input : inputs) {
+			if (!term.holds(input)) {
+				return false;
 			}
 		}
 
 		return result;
 	}
 
-	/**
-	 * @return violations
-	 */
-	public HashSet<Variable> getViolations() {
-		return violations;
+	public Collection<Variable> findViolations(Collection<Variable> inputs) {
+		CollectionFilter<Variable> filter = new CollectionFilter<>(term);
+
+		return filter.findViolations(inputs);
 	}
+//	/**
+//	 * @return violations
+//	 */
+//	public HashSet<Variable> getViolations() {
+//		return violations;
+//	}
 
 
 

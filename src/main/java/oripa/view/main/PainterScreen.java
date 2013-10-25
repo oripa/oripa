@@ -34,11 +34,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -50,16 +48,12 @@ import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
 import oripa.doc.Doc;
-import oripa.fold.FoldedModelInfo;
-import oripa.fold.OrigamiModel;
 import oripa.mouse.MouseUtility;
+import oripa.paint.CreasePatternGraphicDrawer;
 import oripa.paint.CreasePatternInterface;
-import oripa.paint.EditMode;
 import oripa.paint.PaintContextInterface;
-import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
-import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainScreenSettingDB;
@@ -73,7 +67,7 @@ ActionListener, ComponentListener, Observer{
 
 	private MainScreenSettingDB setting = MainScreenSettingDB.getInstance();
 	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
-	private PaintContextInterface mouseContext = PaintContext.getInstance();
+	private PaintContextInterface paintContext = PaintContext.getInstance();
 
 	private boolean bDrawFaceID = false;
 	private Image bufferImage;
@@ -92,6 +86,9 @@ ActionListener, ComponentListener, Observer{
 	private JMenuItem popupItem_DivideFace = new JMenuItem("Dividing face");
 	private JMenuItem popupItem_FlipFace = new JMenuItem("Flipping face");
 
+	
+	private CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
+
 	public PainterScreen() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -102,6 +99,8 @@ ActionListener, ComponentListener, Observer{
 		setting.addObserver(this);
 
 		scale = 1.5;
+		paintContext.setScale(scale);
+
 		setBackground(Color.white);
 
 		popupItem_DivideFace.addActionListener(this);
@@ -191,69 +190,17 @@ ActionListener, ComponentListener, Observer{
 	}
 
 
-	private void drawLines(Graphics2D g2d, Collection<OriLine> lines){
-
-		ElementSelector selector = new ElementSelector();
-		for (OriLine line : lines) {
-			if (line.typeVal == OriLine.TYPE_NONE &&!PaintConfig.dispAuxLines) {
-				continue;
-			}
-
-			if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY)
-					&& !PaintConfig.dispMVLines) {
-				continue;
-			}
-
-			g2d.setColor(selector.selectColorByLineType(line.typeVal));
-			g2d.setStroke(selector.selectStroke(line.typeVal));
-
-			if(PaintConfig.mouseAction != null){
-				if(mouseContext.getPickedLines().contains(line) == false){
-					g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
-				}
-			}
-
-		}
-
+	private void buildBufferImage() {
+		bufferImage = createImage(getWidth(), getHeight());
+		bufferg = (Graphics2D) bufferImage.getGraphics();
+		updateAffineTransform();
+		preSize = getSize();
+		
 	}
 
-	void drawVertexRectangles(Graphics2D g2d){
-		CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
-
-		g2d.setColor(Color.BLACK);
-		final double vertexDrawSize = 2.0;
-		for (OriLine line : creasePattern) {
-			if (!PaintConfig.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
-				continue;
-			}
-			if (!PaintConfig.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
-					|| line.typeVal == OriLine.TYPE_VALLEY)) {
-				continue;
-			}
-			Vector2d v0 = line.p0;
-			Vector2d v1 = line.p1;
-
-			g2d.fill(new Rectangle2D.Double(v0.x - vertexDrawSize / scale,
-					v0.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
-					vertexDrawSize * 2 / scale));
-			g2d.fill(new Rectangle2D.Double(v1.x - vertexDrawSize / scale,
-					v1.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
-					vertexDrawSize * 2 / scale));
-		}
-
-	}
-
-
-	// Scaling relative to the center of the screen
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
+	private Graphics2D updateBufferImage() {
 		if (bufferImage == null) {
-			bufferImage = createImage(getWidth(), getHeight());
-			bufferg = (Graphics2D) bufferImage.getGraphics();
-			updateAffineTransform();
-			preSize = getSize();
+			buildBufferImage();
 		}
 
 		// initialize the AffineTransform of bufferg
@@ -266,61 +213,34 @@ ActionListener, ComponentListener, Observer{
 		// set the AffineTransform of buffer
 		bufferg.setTransform(affineTransform);
 
-		Graphics2D g2d = bufferg;
+		return bufferg;
+	}
+
+	// Scaling relative to the center of the screen
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+
+		Graphics2D bufferG2D = updateBufferImage();
 
 		Doc document = ORIPA.doc;
 		CreasePatternInterface creasePattern = document.getCreasePattern();
-		OrigamiModel origamiModel = document.getOrigamiModel();
-		FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
-		
-//		boolean hasModel = origamiModel.hasModel();
-//		if (hasModel) {
-//			drawModel(g2d);
-//		}
-		if (setting.isGridVisible()) {
 
-			drawGridLine(g2d);
-		}
-
-		//g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-		g2d.setStroke(LineSetting.STROKE_VALLEY);
-		g2d.setColor(Color.black);
-
-
-		drawLines(g2d, creasePattern);
-
-
-
-		// Drawing of the vertices
-		if (PaintConfig.getMouseAction().getEditMode() == EditMode.VERTEX 
-				|| PaintConfig.dispVertex) {
-			drawVertexRectangles(g2d);
-		}
-
+		drawer.draw(bufferG2D, paintContext, creasePattern);
 
 		for (Vector2d v : crossPoints) {
-			g2d.setColor(Color.RED);
-			g2d.fill(new Rectangle2D.Double(v.x - 5.0 / scale, v.y - 5.0 / scale,
+			bufferG2D.setColor(Color.RED);
+			bufferG2D.fill(new Rectangle2D.Double(v.x - 5.0 / scale, v.y - 5.0 / scale,
 					10.0 / scale, 10.0 / scale));
 		}
 
 
 		if (PaintConfig.bDispCrossLine) {
 			List<OriLine> crossLines = document.getSheetCutOutlines();
-			if (!crossLines.isEmpty()) {
-				g2d.setStroke(LineSetting.STROKE_TMP_OUTLINE);
-				g2d.setColor(Color.MAGENTA);
-
-				for (OriLine line : crossLines) {
-					Vector2d v0 = line.p0;
-					Vector2d v1 = line.p1;
-
-					g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));
-
-				}
-			}
+			drawer.drawLines(bufferG2D, crossLines, null);
 		}
+
 
 		// Line that links the pair of unsetled faces
 //		if (Config.FOR_STUDY) {
@@ -345,47 +265,17 @@ ActionListener, ComponentListener, Observer{
 //			}
 //		}
 
+		
 		if (PaintConfig.mouseAction != null) {
-			PaintConfig.mouseAction.onDraw(g2d, mouseContext);
+			PaintConfig.mouseAction.onDraw(bufferG2D, paintContext);
 
 			g.drawImage(bufferImage, 0, 0, this);
 
-			drawCandidatePosition(g);
+			drawer.drawCandidatePositionString((Graphics2D)g, paintContext.getCandidateVertexToPick());
 		}
 		else {
 			g.drawImage(bufferImage, 0, 0, this);
 
-		}
-	}
-
-	private void drawCandidatePosition(Graphics g){
-		Vector2d candidate = mouseContext.getCandidateVertexToPick();
-		if(candidate != null){
-			g.setColor(Color.BLACK);
-			g.drawString("(" + candidate.x + 
-					"," + candidate.y + ")", 0, 10);
-		}	
-
-	}
-
-
-	private void drawGridLine(Graphics2D g2d) {
-		g2d.setColor(Color.LIGHT_GRAY);
-		g2d.setStroke(LineSetting.STROKE_GRID);
-
-		double paperSize = ORIPA.doc.getPaperSize();
-		
-		int lineNum = PaintConfig.gridDivNum;
-		double step = paperSize / lineNum;
-
-		for (int i = 1; i < lineNum; i++) {
-			g2d.draw(new Line2D.Double(
-					step * i - paperSize / 2.0, -paperSize / 2.0,
-					step * i - paperSize / 2.0, paperSize / 2.0));
-
-			g2d.draw(new Line2D.Double(
-					-paperSize / 2.0, step * i - paperSize / 2.0,
-					paperSize / 2.0, step * i - paperSize / 2.0));
 		}
 	}
 
@@ -401,12 +291,14 @@ ActionListener, ComponentListener, Observer{
 
 		if(javax.swing.SwingUtilities.isRightMouseButton(e)){
 			PaintConfig.mouseAction.onRightClick(
-					mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+					paintContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+			
+			return;
 		}
-		else {
-			PaintConfig.mouseAction = PaintConfig.mouseAction.onLeftClick(
-					mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
-		}
+		
+		
+		PaintConfig.mouseAction = PaintConfig.mouseAction.onLeftClick(
+				paintContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 
 	}
 
@@ -417,7 +309,7 @@ ActionListener, ComponentListener, Observer{
 			return;
 		}
 
-		PaintConfig.mouseAction.onPress(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+		PaintConfig.mouseAction.onPress(paintContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 
 		preMousePoint = e.getPoint();
 	}
@@ -427,7 +319,7 @@ ActionListener, ComponentListener, Observer{
 		// Rectangular Selection
 
 		if(PaintConfig.mouseAction != null){
-			PaintConfig.mouseAction.onRelease(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+			PaintConfig.mouseAction.onRelease(paintContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		}
 		repaint();
 	}
@@ -450,22 +342,28 @@ ActionListener, ComponentListener, Observer{
 			if (scale < 0.01) {
 				scale = 0.01;
 			}
-
+			paintContext.setScale(scale);
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
 
-		} else if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
+			return;
+		}
+		
+		if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
 			transX += (double) (e.getX() - preMousePoint.getX()) / scale;
 			transY += (double) (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
-		} else {
-			mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
-			PaintConfig.getMouseAction().onDrag(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
-			repaint();
+
+			return;
 		}
+		
+		// Drag by left button
+		paintContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
+		PaintConfig.getMouseAction().onDrag(paintContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+		repaint();
 	}
 
 
@@ -479,15 +377,14 @@ ActionListener, ComponentListener, Observer{
 			return;
 		}
 
-		mouseContext.setScale(scale);
-		mouseContext.setGridVisible(setting.isGridVisible());
-		mouseContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
+		paintContext.setScale(scale);
+		paintContext.setLogicalMousePoint( MouseUtility.getLogicalPoint(affineTransform, e.getPoint()) );
 
 		if (PaintConfig.mouseAction == null) {
 			return;
 		}
 
-		PaintConfig.mouseAction.onMove(mouseContext, affineTransform, MouseUtility.isControlKeyPressed(e));
+		PaintConfig.mouseAction.onMove(paintContext, affineTransform, MouseUtility.isControlKeyPressed(e));
 		//this.mouseContext.pickCandidateV = Globals.mouseAction.onMove(mouseContext, affineTransform, e);
 		repaint();
 
@@ -497,6 +394,7 @@ ActionListener, ComponentListener, Observer{
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		double scale_ = (100.0 - e.getWheelRotation() * 5) / 100.0;
 		scale *= scale_;
+		paintContext.setScale(scale);
 		updateAffineTransform();
 		repaint();
 	}
@@ -517,10 +415,7 @@ ActionListener, ComponentListener, Observer{
 		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
 
 		// Updating the image buffer
-		bufferImage = createImage(getWidth(), getHeight());
-		bufferg = (Graphics2D) bufferImage.getGraphics();
-
-		updateAffineTransform();
+		buildBufferImage();
 		repaint();
 
 	}
@@ -544,8 +439,9 @@ ActionListener, ComponentListener, Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		String name = o.toString();
-		if(name.equals(screenUpdater.getName())){
-			if(arg != null){
+		paintContext.setGridVisible(setting.isGridVisible());
+		if (name.equals(screenUpdater.getName())) {
+			if (arg != null) {
 				if(arg.equals(ViewScreenUpdater.REDRAW_REQUESTED)){
 					repaint();
 				}

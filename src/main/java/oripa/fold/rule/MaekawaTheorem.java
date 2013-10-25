@@ -26,7 +26,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class MaekawaTheorem implements Rule<OriVertex> {
+public class MaekawaTheorem extends AbstractRule<OriVertex> {
 
 
 	public boolean holds(OriVertex vertex) {

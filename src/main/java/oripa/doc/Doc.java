@@ -256,7 +256,7 @@ public class Doc {
 	 */
 	public void setPaperSize(double size) {
 		this.paperSize = size;
-		origamiModel.setPaperSize(size);
+//		origamiModel.setPaperSize(size);
 		creasePattern.changePaperSize(size);
 	}
 	/**

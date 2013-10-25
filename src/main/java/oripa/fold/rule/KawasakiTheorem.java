@@ -28,20 +28,20 @@ import oripa.value.OriLine;
  * Kawasaki Theorem
  * 
  * Assume there is a vertex v on a paper.
- * When lines l_i are given for i=1...n
+ * When lines l_i are given for i=1...2n
  * such that v is one of the end points for all l_i
  * and the numbering is clockwise order,
  * foldable origami satisfies the following condition:
  * 
- *     sum_{i=1}^{n} {a_i * (-1)^i} = 0 
+ *     a_1 + a_3 + ... = a_2 + a_4 + ... = PI
  *     
- *     where a_i is the angle between l_i and l_{i+1},
- *     especially a_n is the angle between l_1 and l_n
+ *     where a_i is the angle in radian between l_i and l_{i+1},
+ *     especially a_n is the angle between l_1 and l_n.
  *     
  * @author Koji
  *
  */
-public class KawasakiTheorem implements Rule<OriVertex> {
+public class KawasakiTheorem extends AbstractRule<OriVertex> {
 
 	/**
 	 * 
@@ -53,8 +53,6 @@ public class KawasakiTheorem implements Rule<OriVertex> {
 		Vector2d p = vertex.p;
 		double oddSum = 0;
 		double evenSum = 0;
-		boolean isCorner = false;
-		
 		
 		for (int i = 0; i < vertex.edges.size(); i++) {
 			OriEdge e = vertex.edges.get(i);
@@ -79,7 +77,9 @@ public class KawasakiTheorem implements Rule<OriVertex> {
 
 
 		//System.out.println("oddSum = " + oddSum + "/ evenSum = " + evenSum);
-		if (Math.abs(oddSum - Math.PI) > Math.PI / 180 / 2) {
+		final double oneDegreeInRad = Math.PI / 180;
+		final double eps = oneDegreeInRad / 2;
+		if (Math.abs(oddSum - Math.PI) > eps) {
 			System.out.println("edge angle sum invalid");
 			return false;
 		}

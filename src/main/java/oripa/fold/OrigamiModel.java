@@ -3,8 +3,6 @@ package oripa.fold;
 import java.util.ArrayList;
 import java.util.List;
 
-import oripa.value.OriLine;
-
 
 /**
  * Entity for folding-estimation
@@ -17,7 +15,10 @@ public class OrigamiModel {
 	private List<OriVertex> vertices = new ArrayList<OriVertex>();
 	private List<OriEdge> edges = new ArrayList<OriEdge>();
 
-	private List<OriLine> crossLines = new ArrayList<OriLine>();
+	private List<OriVertex> illegalVertices = new ArrayList<>();
+	private List<OriFace>   illegalFaces    = new ArrayList<>();
+	
+//	private List<OriLine> crossLines = new ArrayList<OriLine>();
 
 	private List<OriFace> sortedFaces = new ArrayList<OriFace>();
 
@@ -40,7 +41,7 @@ public class OrigamiModel {
 	private OrigamiModel() {}
 
 	public OrigamiModel(double paperSize) {
-		setPaperSize(paperSize);
+		this.paperSize = paperSize;
 	}
 	
 	//=============================================================
@@ -65,7 +66,7 @@ public class OrigamiModel {
 	}
 
 	/**
-	 * @param probablyFoldable probablyFoldableを登録する
+	 * @param probablyFoldable set to probablyFoldable
 	 */
 	public void setProbablyFoldable(boolean probablyFoldable) {
 		this.probablyFoldable = probablyFoldable;
@@ -85,21 +86,14 @@ public class OrigamiModel {
 	}
 
 
-	public List<OriLine> getCrossLines() {
-		return crossLines;
-	}
-
-	public void setCrossLines(List<OriLine> crossLines) {
-		this.crossLines = crossLines;
-	}
 
 	public double getPaperSize() {
 		return paperSize;
 	}
 
-	public void setPaperSize(double paperSize) {
-		this.paperSize = paperSize;
-	}
+//	public void setPaperSize(double paperSize) {
+//		this.paperSize = paperSize;
+//	}
 
 	public List<OriFace> getSortedFaces() {
 		return sortedFaces;
@@ -157,5 +151,12 @@ public class OrigamiModel {
 	
 	
 	
+//	public List<OriLine> getCrossLines() {
+//		return crossLines;
+//	}
+//
+//	public void setCrossLines(List<OriLine> crossLines) {
+//		this.crossLines = crossLines;
+//	}
 	
 }

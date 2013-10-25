@@ -18,12 +18,42 @@
  */
 package oripa.fold.rule;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
  * @author Koji
  *
  */
-public interface Rule<Variable> {
-	boolean holds(Variable var);
-	boolean violates(Variable var);
-	Rule<Variable> asDenied();
+public class CollectionFilter<Variable> {
+	private Rule<Variable> rule;
+
+	/**
+	 * Constructor
+	 */
+	public CollectionFilter(Rule<Variable> rule) {
+		this.rule = rule;
+	}
+
+	public Collection<Variable> findTargets(Collection<Variable> inputs) {
+
+		return findTargets(inputs, rule);
+	}
+
+	public Collection<Variable> findViolations(Collection<Variable> inputs) {
+		return findTargets(inputs, rule.asDenied());
+	}
+
+	private Collection<Variable> findTargets(Collection<Variable> inputs, Rule<Variable> r) {
+
+		HashSet<Variable> targets = new HashSet<>();
+
+		for (Variable input : inputs) {
+			if (r.holds(input)) {
+				targets.add(input);
+			}
+		}
+		return targets;
+	}
+
 }
