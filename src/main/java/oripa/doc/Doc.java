@@ -31,6 +31,7 @@ import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
+import oripa.paint.CreasePatternUndoFactory;
 import oripa.resource.Constants;
 import oripa.util.history.UndoInfo;
 import oripa.util.history.UndoManager;
@@ -70,7 +71,8 @@ public class Doc {
 	private String originalAuthorName;
 	private String reference;
 	public String memo;
-	private UndoManager<Collection<OriLine>> undoManager = new UndoManager<>(30);
+	private UndoManager<Collection<OriLine>> undoManager =
+			new UndoManager<>(new CreasePatternUndoFactory(), 30);
 
 
 
@@ -113,14 +115,15 @@ public class Doc {
 	}
 
 
+	CreasePatternUndoFactory factory = new CreasePatternUndoFactory();
 
 	public UndoInfo<Collection<OriLine>> createUndoInfo(){
-		UndoInfo<Collection<OriLine>> undoInfo = new CreasePatternUndoInfo(creasePattern);
+		UndoInfo<Collection<OriLine>> undoInfo = factory.create(creasePattern);
 		return undoInfo;
 	}
 
 	public void cacheUndoInfo(){
-		undoManager.setCache(createUndoInfo());
+		undoManager.setCache(creasePattern);
 	}
 
 	public void pushCachedUndoInfo(){
@@ -128,8 +131,7 @@ public class Doc {
 	}
 
 	public void pushUndoInfo() {
-		UndoInfo<Collection<OriLine>> ui = new CreasePatternUndoInfo(creasePattern);
-		undoManager.push(ui);
+		undoManager.push(creasePattern);
 	}
 
 	public void pushUndoInfo(UndoInfo<Collection<OriLine>> uinfo){

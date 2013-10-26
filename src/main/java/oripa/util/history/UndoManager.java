@@ -12,16 +12,26 @@ public class UndoManager<Backup> {
 
 	private int max = 1000;
 
-	public UndoManager() {
-		
+	private UndoInfoFactory<Backup> factory;
+
+	public UndoManager(UndoInfoFactory<Backup> factory) {
+		this.factory = factory;
 	}
 	
-	public UndoManager(int max){
+	public UndoManager(UndoInfoFactory<Backup> factory, int max){
+		this.factory = factory;
 		this.max = max;
 	}
 
-	public void push(UndoInfo<Backup> uinfo){
-		undoStack.push(uinfo);
+	public void push(Backup info){
+		
+		push(factory.create(info));
+		
+	}
+
+	public void push(UndoInfo<Backup> info){
+		
+		undoStack.push(info);
 		
 		if(undoStack.size() > max){
 			undoStack.removeFirst();
@@ -61,8 +71,8 @@ public class UndoManager<Backup> {
 		return ! undoStack.isEmpty();
 	}
 	
-	public void setCache(UndoInfo<Backup> info){
-		cache = info;
+	public void setCache(Backup info){
+		cache = factory.create(info);
 	}
 	
 	public UndoInfo<Backup> getCache(){

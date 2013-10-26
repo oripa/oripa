@@ -1,4 +1,4 @@
-package oripa.doc;
+package oripa.paint;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,12 +6,14 @@ import java.util.Collection;
 import oripa.util.history.UndoInfo;
 import oripa.value.OriLine;
 
-public class CreasePatternUndoInfo implements UndoInfo<Collection<OriLine>> {
+class CreasePatternUndoInfoImpl implements UndoInfo<Collection<OriLine>> {
 
 	private ArrayList<OriLine> lines = new ArrayList<>();
-	public CreasePatternUndoInfo(){}
-    
-    public CreasePatternUndoInfo(Collection<OriLine> lines){
+
+	@SuppressWarnings("unused")
+	private CreasePatternUndoInfoImpl(){}
+
+    public CreasePatternUndoInfoImpl(Collection<OriLine> lines){
     	setInfo(lines);
     }
 
