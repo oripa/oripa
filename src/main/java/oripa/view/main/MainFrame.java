@@ -69,6 +69,7 @@ import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.util.gui.ChildFrameManager;
 import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
 
@@ -420,14 +421,18 @@ public class MainFrame extends JFrame implements ActionListener,
 			mainScreen.repaint();
 		} else if (e.getSource() == menuItemClear) {
 			ORIPA.doc = new Doc(Constants.DEFAULT_PAPER_SIZE);
-			ORIPA.modelFrame.repaint();
 
+			ChildFrameManager manager = ChildFrameManager.getManager();
+			manager.closeAllRecursively(this);
+//			ORIPA.modelFrame.repaint();
+//
 			ORIPA.modelFrame.setVisible(false);
-			ORIPA.renderFrame.setVisible(false);
+//			ORIPA.renderFrame.setVisible(false);
 
 			screenSetting.setGridVisible(true);
 			screenSetting.notifyObservers();
 
+			repaint();
 			// ORIPA.mainFrame.uiPanel.dispGridCheckBox.setSelected(true);
 			updateTitleText();
 		} else if (e.getSource() == menuItemAbout) {
@@ -580,7 +585,9 @@ public class MainFrame extends JFrame implements ActionListener,
 	 */
 	private void openFile(String filePath) {
 		ORIPA.modelFrame.setVisible(false);
-		ORIPA.renderFrame.setVisible(false);
+
+		ChildFrameManager.getManager().closeAllRecursively(this);
+		//ORIPA.renderFrame.setVisible(false);
 
 		screenSetting.setGridVisible(false);
 		screenSetting.notifyObservers();

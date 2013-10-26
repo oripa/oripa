@@ -82,7 +82,6 @@ import oripa.view.estimation.EstimationResultFrameFactory;
 import oripa.view.estimation.FoldabilityCheckFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewChangeListener;
-import oripa.viewsetting.estimation.RenderFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.ScreenUpdater;
 import oripa.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
@@ -655,7 +654,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 //								origamiModel.getEdges(), origamiModel.getVertices(), origamiModel.getFaces() );
 
 				FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
-				JFrame checker = checkerFactory.createFrame(origamiModel, creasePattern);
+				JFrame checker = checkerFactory.createFrame(UIPanel.this, origamiModel, creasePattern);
 				checker.setVisible(true);
 			}
 		});
@@ -717,7 +716,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 					origamiModel = modelFactory.createOrigamiModelNoDuplicateLines(
 							creasePattern, document.getPaperSize());
-					//if (document.buildOrigami3(origamiModel, false)) {
 					if (origamiModel.isProbablyFoldable()) {
 						buildOK = true;
 					} else {
@@ -737,10 +735,9 @@ implements ActionListener, PropertyChangeListener, Observer {
 				//TODO move this block out of if(buildOK) statement.
 				if (foldedModelInfo.getFoldablePatternCount() != 0) {
 					System.out.println("RenderFrame");
-					RenderFrameSettingDB renderSetting = RenderFrameSettingDB.getInstance();
 
 					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
-					JFrame frame = resultFrameFactory.createFrame(origamiModel, foldedModelInfo);
+					JFrame frame = resultFrameFactory.createFrame(this, origamiModel, foldedModelInfo);
 					frame.setVisible(true);
 				}
 

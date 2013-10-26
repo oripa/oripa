@@ -119,8 +119,8 @@ public class ORIPA {
         modelFrame.setVisible(false);
 
         // "Folded origami" frame. Estimation of the folded form.
-        renderFrame = new EstimationResultFrame();
-        renderFrame.setVisible(false);
+//        renderFrame = new EstimationResultFrame();
+//        renderFrame.setVisible(false);
 
         // "Check Window". Check inputed data.
 //        checkFrame = new FoldabilityCheckFrame();

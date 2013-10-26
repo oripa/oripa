@@ -21,7 +21,6 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
 import java.io.File;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -31,7 +30,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import oripa.ORIPA;
-import oripa.doc.Doc;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterORmat;
 import oripa.doc.exporter.ExporterSVG;
@@ -87,14 +85,24 @@ public class EstimationResultUI extends JPanel {
         updateLabel();
     }
 
-    public void updateLabel() {
-    	Doc document = ORIPA.doc;
-    	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
-    	
-		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
+    private FoldedModelInfo foldedModelInfo = null;
+    
+    /**
+	 * @param foldedModelInfo Sets foldedModelInfo
+	 */
+	public void setFoldedModelInfo(FoldedModelInfo foldedModelInfo) {
+		this.foldedModelInfo = foldedModelInfo;
+	}
+
+	public void updateLabel() {
+
+    	if (foldedModelInfo == null) {
+    		return;
+    	}
+    	//List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 
         jLabel.setText("Folded model [" + (foldedModelInfo.getCurrentORmatIndex() + 1) + "/"
-                + foldableOverlapRelations.size() + "]");
+                + foldedModelInfo.getFoldablePatternCount() + "]");
 
     }
 
@@ -114,8 +122,6 @@ public class EstimationResultUI extends JPanel {
 
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                	Doc document = ORIPA.doc;
-                	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
                     foldedModelInfo.setNextORMat();
                     screen.redrawOrigami();
                     updateLabel();
@@ -140,9 +146,6 @@ public class EstimationResultUI extends JPanel {
 
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                	Doc document = ORIPA.doc;
-                	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
-                	
                 	foldedModelInfo.setPrevORMat();
                     screen.redrawOrigami();
                     updateLabel();

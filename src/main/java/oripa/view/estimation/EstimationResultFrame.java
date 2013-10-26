@@ -60,6 +60,7 @@ public class EstimationResultFrame extends JFrame implements ActionListener, Obs
     		OrigamiModel origamiModel, FoldedModelInfo foldedModelInfo) {
 
     	screen.setModel(origamiModel, foldedModelInfo);
+    	ui.setFoldedModelInfo(foldedModelInfo);
 		ui.updateLabel();
 		//setVisible(true);
     }
