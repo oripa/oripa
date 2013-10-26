@@ -26,7 +26,6 @@ import java.util.Random;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.Doc;
 import oripa.fold.rule.Condition3;
 import oripa.fold.rule.Condition4;
 import oripa.geom.GeomUtil;
@@ -182,7 +181,7 @@ public class Folder {
 					int index0 = vec.get(i).tmpInt;
 					for (int j = i + 1; j < size; j++) {
 						int index1 = vec.get(j).tmpInt;
-						if (orMat[index0][index1] == Doc.LOWER) {
+						if (orMat[index0][index1] == FoldedModelInfo.LOWER) {
 							bOK = false;
 							break;
 						}
@@ -204,8 +203,8 @@ public class Folder {
 					int index0 = vec.get(i).tmpInt;
 					for (int j = i + 1; j < size; j++) {
 						int index1 = vec.get(j).tmpInt;
-						passMat[index0][index1] = Doc.UPPER;
-						passMat[index1][index0] = Doc.LOWER;
+						passMat[index0][index1] = FoldedModelInfo.UPPER;
+						passMat[index1][index0] = FoldedModelInfo.LOWER;
 					}
 				}
 
@@ -257,7 +256,7 @@ public class Folder {
 				}
 
 				OriFace f_j = he.pair.face;
-				if (overlapRelation[f_i.tmpInt][f_j.tmpInt] != Doc.LOWER) {
+				if (overlapRelation[f_i.tmpInt][f_j.tmpInt] != FoldedModelInfo.LOWER) {
 					continue;
 				}
 				for (OriFace f_k : faces) {
@@ -312,8 +311,8 @@ public class Folder {
 				if (GeomUtil.isLineSegmentsOverlap(e0.left.positionAfterFolded, e0.left.next.positionAfterFolded,
 						e1.left.positionAfterFolded, e1.left.next.positionAfterFolded)) {
 					Condition4 cond_f;
-					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == Doc.UPPER) {
-						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == Doc.UPPER) {
+					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == FoldedModelInfo.UPPER) {
+						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == FoldedModelInfo.UPPER) {
 							cond_f = new Condition4();
 							cond_f.upper1 = e0.right.face.tmpInt;
 							cond_f.lower1 = e0.left.face.tmpInt;
@@ -343,7 +342,7 @@ public class Folder {
 							e1.left.face.condition4s.add(cond_f);
 						}
 					} else {
-						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == Doc.UPPER) {
+						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == FoldedModelInfo.UPPER) {
 							cond_f = new Condition4();
 							cond_f.upper1 = e0.left.face.tmpInt;
 							cond_f.lower1 = e0.right.face.tmpInt;
@@ -382,14 +381,14 @@ public class Folder {
 						}
 					}
 
-					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == Doc.UPPER) {
+					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == FoldedModelInfo.UPPER) {
 						cond.upper1 = e0.right.face.tmpInt;
 						cond.lower1 = e0.left.face.tmpInt;
 					} else {
 						cond.upper1 = e0.left.face.tmpInt;
 						cond.lower1 = e0.right.face.tmpInt;
 					}
-					if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == Doc.UPPER) {
+					if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == FoldedModelInfo.UPPER) {
 						cond.upper2 = e1.right.face.tmpInt;
 						cond.lower2 = e1.left.face.tmpInt;
 					} else {
@@ -416,18 +415,18 @@ public class Folder {
 	private void setOR(int[][] orMat, int i, int j, int value, boolean bSetPairAtSameTime) {
 		orMat[i][j] = value;
 		if (bSetPairAtSameTime) {
-			if (value == Doc.LOWER) {
-				orMat[j][i] = Doc.UPPER;
+			if (value == FoldedModelInfo.LOWER) {
+				orMat[j][i] = FoldedModelInfo.UPPER;
 			} else {
-				orMat[j][i] = Doc.LOWER;
+				orMat[j][i] = FoldedModelInfo.LOWER;
 			}
 		}
 	}
 
 	private void setLowerValueIfUndefined(int[][] orMat, int i, int j, boolean[] changed) {
-		if (orMat[i][j] == Doc.UNDEFINED) {
-			orMat[i][j] = Doc.LOWER;
-			orMat[j][i] = Doc.UPPER;
+		if (orMat[i][j] == FoldedModelInfo.UNDEFINED) {
+			orMat[i][j] = FoldedModelInfo.LOWER;
+			orMat[j][i] = FoldedModelInfo.UPPER;
 			changed[0] = true;
 		}
 	}
@@ -440,43 +439,43 @@ public class Folder {
 		for (Condition4 cond : condition4s) {
 
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2, lower1 > lower2
-			if (orMat[cond.lower1][cond.upper2] == Doc.LOWER) {
+			if (orMat[cond.lower1][cond.upper2] == FoldedModelInfo.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2, changed);
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
 				setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2, changed);
 			}
 
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1, lower2 > lower1
-			if (orMat[cond.lower2][cond.upper1] == Doc.LOWER) {
+			if (orMat[cond.lower2][cond.upper1] == FoldedModelInfo.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1, changed);
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
 				setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1, changed);
 			}
 
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 > lower1
-			if (orMat[cond.upper1][cond.upper2] == Doc.LOWER
-					&& orMat[cond.upper2][cond.lower1] == Doc.LOWER) {
+			if (orMat[cond.upper1][cond.upper2] == FoldedModelInfo.LOWER
+					&& orMat[cond.upper2][cond.lower1] == FoldedModelInfo.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
 				setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1, changed);
 			}
 
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 > lower1
-			if (orMat[cond.upper1][cond.lower2] == Doc.LOWER
-					&& orMat[cond.lower2][cond.lower1] == Doc.LOWER) {
+			if (orMat[cond.upper1][cond.lower2] == FoldedModelInfo.LOWER
+					&& orMat[cond.lower2][cond.lower1] == FoldedModelInfo.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2, changed);
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
 			}
 
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 > lower2
-			if (orMat[cond.upper2][cond.upper1] == Doc.LOWER
-					&& orMat[cond.upper1][cond.lower2] == Doc.LOWER) {
+			if (orMat[cond.upper2][cond.upper1] == FoldedModelInfo.LOWER
+					&& orMat[cond.upper1][cond.lower2] == FoldedModelInfo.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
 				setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2, changed);
 			}
 
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 > lower2
-			if (orMat[cond.upper2][cond.lower1] == Doc.LOWER
-					&& orMat[cond.lower1][cond.lower2] == Doc.LOWER) {
+			if (orMat[cond.upper2][cond.lower1] == FoldedModelInfo.LOWER
+					&& orMat[cond.lower1][cond.lower2] == FoldedModelInfo.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1, changed);
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
 			}
@@ -504,10 +503,10 @@ public class Folder {
 						int index_i = sub.faces.get(i).tmpInt;
 						int index_j = sub.faces.get(j).tmpInt;
 
-						if (orMat[index_i][index_j] == Doc.NO_OVERLAP) {
+						if (orMat[index_i][index_j] == FoldedModelInfo.NO_OVERLAP) {
 							continue;
 						}
-						if (orMat[index_i][index_j] != Doc.UNDEFINED) {
+						if (orMat[index_i][index_j] != FoldedModelInfo.UNDEFINED) {
 							continue;
 						}
 						// Find the intermediary face
@@ -521,17 +520,17 @@ public class Folder {
 
 							int index_k = sub.faces.get(k).tmpInt;
 
-							if (orMat[index_i][index_k] == Doc.UPPER && orMat[index_k][index_j] == Doc.UPPER) {
-								orMat[index_i][index_j] = Doc.UPPER;
-								orMat[index_j][index_i] = Doc.LOWER;
+							if (orMat[index_i][index_k] == FoldedModelInfo.UPPER && orMat[index_k][index_j] == FoldedModelInfo.UPPER) {
+								orMat[index_i][index_j] = FoldedModelInfo.UPPER;
+								orMat[index_j][index_i] = FoldedModelInfo.LOWER;
 								bFound = true;
 								changed = true;
 								bChanged = true;
 								break;
 							}
-							if (orMat[index_i][index_k] == Doc.LOWER && orMat[index_k][index_j] == Doc.LOWER) {
-								orMat[index_i][index_j] = Doc.LOWER;
-								orMat[index_j][index_i] = Doc.UPPER;
+							if (orMat[index_i][index_k] == FoldedModelInfo.LOWER && orMat[index_k][index_j] == FoldedModelInfo.LOWER) {
+								orMat[index_i][index_j] = FoldedModelInfo.LOWER;
+								orMat[index_j][index_i] = FoldedModelInfo.UPPER;
 								bFound = true;
 								changed = true;
 								bChanged = true;
@@ -579,12 +578,12 @@ public class Folder {
 						continue;
 					}
 					if (GeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
-						if (orMat[f_i.tmpInt][f_k.tmpInt] != Doc.UNDEFINED
-								&& orMat[f_j.tmpInt][f_k.tmpInt] == Doc.UNDEFINED) {
+						if (orMat[f_i.tmpInt][f_k.tmpInt] != FoldedModelInfo.UNDEFINED
+								&& orMat[f_j.tmpInt][f_k.tmpInt] == FoldedModelInfo.UNDEFINED) {
 							setOR(orMat, f_j.tmpInt, f_k.tmpInt, orMat[f_i.tmpInt][f_k.tmpInt], true);
 							bChanged = true;
-						} else if (orMat[f_j.tmpInt][f_k.tmpInt] != Doc.UNDEFINED
-								&& orMat[f_i.tmpInt][f_k.tmpInt] == Doc.UNDEFINED) {
+						} else if (orMat[f_j.tmpInt][f_k.tmpInt] != FoldedModelInfo.UNDEFINED
+								&& orMat[f_i.tmpInt][f_k.tmpInt] == FoldedModelInfo.UNDEFINED) {
 							setOR(orMat, f_i.tmpInt, f_k.tmpInt, orMat[f_j.tmpInt][f_k.tmpInt], true);
 							bChanged = true;
 						}
@@ -817,14 +816,14 @@ public class Folder {
 		int[][] overlapRelation = new int[size][size];
 
 		for (int i = 0; i < size; i++) {
-			overlapRelation[i][i] = Doc.NO_OVERLAP;
+			overlapRelation[i][i] = FoldedModelInfo.NO_OVERLAP;
 			for (int j = i + 1; j < size; j++) {
 				if (GeomUtil.isFaceOverlap(faces.get(i), faces.get(j), size * 0.00001)) {
-					overlapRelation[i][j] = Doc.UNDEFINED;
-					overlapRelation[j][i] = Doc.UNDEFINED;
+					overlapRelation[i][j] = FoldedModelInfo.UNDEFINED;
+					overlapRelation[j][i] = FoldedModelInfo.UNDEFINED;
 				} else {
-					overlapRelation[i][j] = Doc.NO_OVERLAP;
-					overlapRelation[j][i] = Doc.NO_OVERLAP;
+					overlapRelation[i][j] = FoldedModelInfo.NO_OVERLAP;
+					overlapRelation[j][i] = FoldedModelInfo.NO_OVERLAP;
 				}
 			}
 		}
@@ -845,18 +844,18 @@ public class Folder {
 				OriFace pairFace = he.pair.face;
 
 				// If the relation is already decided, skip
-				if (overlapRelation[face.tmpInt][pairFace.tmpInt] == Doc.UPPER
-						|| overlapRelation[face.tmpInt][pairFace.tmpInt] == Doc.LOWER) {
+				if (overlapRelation[face.tmpInt][pairFace.tmpInt] == FoldedModelInfo.UPPER
+						|| overlapRelation[face.tmpInt][pairFace.tmpInt] == FoldedModelInfo.LOWER) {
 					continue;
 				}
 
 				if ((face.faceFront && he.edge.type == OriLine.TYPE_RIDGE)
 						|| (!face.faceFront && he.edge.type == OriLine.TYPE_VALLEY)) {
-					overlapRelation[face.tmpInt][pairFace.tmpInt] = Doc.UPPER;
-					overlapRelation[pairFace.tmpInt][face.tmpInt] = Doc.LOWER;
+					overlapRelation[face.tmpInt][pairFace.tmpInt] = FoldedModelInfo.UPPER;
+					overlapRelation[pairFace.tmpInt][face.tmpInt] = FoldedModelInfo.LOWER;
 				} else {
-					overlapRelation[face.tmpInt][pairFace.tmpInt] = Doc.LOWER;
-					overlapRelation[pairFace.tmpInt][face.tmpInt] = Doc.UPPER;
+					overlapRelation[face.tmpInt][pairFace.tmpInt] = FoldedModelInfo.LOWER;
+					overlapRelation[pairFace.tmpInt][face.tmpInt] = FoldedModelInfo.UPPER;
 				}
 			}
 		}

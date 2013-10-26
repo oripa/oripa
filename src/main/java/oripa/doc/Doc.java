@@ -59,11 +59,6 @@ public class Doc {
 	private FoldedModelInfo foldedModelInfo = null;
 	
 
-	final public static int NO_OVERLAP = 0;
-	final public static int UPPER = 1;
-	final public static int LOWER = 2;
-	final public static int UNDEFINED = 9;
-
 	// Project data
 
 	private String dataFilePath = "";

@@ -378,7 +378,7 @@ public class FoldedModelScreen extends JPanel
         }
 
         if (m_bAmbientOcclusion) {
-            int renderFace = isM_bFaceOrderFlip() ? oripa.doc.Doc.UPPER : oripa.doc.Doc.LOWER;
+            int renderFace = isM_bFaceOrderFlip() ? FoldedModelInfo.UPPER : FoldedModelInfo.LOWER;
             int r = 10;
             int s = (int) (r * r * Math.PI);
             // For every pixel
@@ -441,13 +441,14 @@ public class FoldedModelScreen extends JPanel
     //
     //--------------------------------------------------------------------
     private void drawTriangle(TriangleFace tri, int id, int color) {
+    	// FIXME parameterize foldedModelInfo
     	Doc document = ORIPA.doc;
     	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 
 
         //(For speed) set the range of use of the buffer
-        int top = +2147483647;
-        int btm = -2147483648;
+        int top = Integer.MAX_VALUE; //+2147483647;
+        int btm = Integer.MIN_VALUE;//-2147483648;
         if (top > (int) tri.v[0].p.y) {
             top = (int) tri.v[0].p.y;
         }
@@ -515,7 +516,7 @@ public class FoldedModelScreen extends JPanel
 
                 int p = offset + x;
 
-                int renderFace = isM_bFaceOrderFlip() ? oripa.doc.Doc.UPPER : oripa.doc.Doc.LOWER;
+                int renderFace = isM_bFaceOrderFlip() ? FoldedModelInfo.UPPER : FoldedModelInfo.LOWER;
 
 				int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
