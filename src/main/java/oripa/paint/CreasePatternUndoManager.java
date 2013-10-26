@@ -20,24 +20,20 @@ package oripa.paint;
 
 import java.util.Collection;
 
-import oripa.util.history.UndoInfo;
-import oripa.util.history.UndoInfoFactory;
+import oripa.paint.history.CreasePatternUndoFactory;
+import oripa.util.history.BasicUndoManager;
 import oripa.value.OriLine;
 
 /**
  * @author Koji
  *
  */
-public class CreasePatternUndoFactory implements
-		UndoInfoFactory<Collection<OriLine>> {
+public class CreasePatternUndoManager extends BasicUndoManager<Collection<OriLine>> {
 
-	/* (non Javadoc)
-	 * @see oripa.util.history.UndoInfoFactory#create(java.lang.Object)
+	/**
+	 * Constructor
 	 */
-	@Override
-	public UndoInfo<Collection<OriLine>> create(Collection<OriLine> info) {
-		// TODO 自動生成されたメソッド・スタブ
-		return new CreasePatternUndoInfoImpl(info);
+	public CreasePatternUndoManager(int maxHistory) {
+		super(new CreasePatternUndoFactory(), maxHistory);
 	}
-
 }

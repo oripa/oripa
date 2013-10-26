@@ -78,6 +78,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
+import oripa.view.estimation.EstimationResultFrameFactory;
 import oripa.view.estimation.FoldabilityCheckFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewChangeListener;
@@ -737,8 +738,10 @@ implements ActionListener, PropertyChangeListener, Observer {
 				if (foldedModelInfo.getFoldablePatternCount() != 0) {
 					System.out.println("RenderFrame");
 					RenderFrameSettingDB renderSetting = RenderFrameSettingDB.getInstance();
-					renderSetting.setFrameVisible(true);
-					renderSetting.notifyObservers();
+
+					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
+					JFrame frame = resultFrameFactory.createFrame(origamiModel, foldedModelInfo);
+					frame.setVisible(true);
 				}
 
 			} else {

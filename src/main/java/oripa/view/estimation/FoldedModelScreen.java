@@ -265,6 +265,19 @@ public class FoldedModelScreen extends JPanel
 
         return ret;
     }
+    
+
+    private OrigamiModel origamiModel = null;
+    private FoldedModelInfo foldedModelInfo = null;
+    
+    public void setModel(
+    		OrigamiModel origamiModel, FoldedModelInfo foldedModelInfo) {
+    	this.origamiModel = origamiModel;
+    	this.foldedModelInfo = foldedModelInfo;
+
+    	resetViewMatrix();
+		redrawOrigami();
+    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -298,9 +311,9 @@ public class FoldedModelScreen extends JPanel
     }
 
     public void drawOrigami() {
-    	Doc document = ORIPA.doc;
-    	OrigamiModel origamiModel = document.getOrigamiModel();
-    	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
+    	if (origamiModel == null || foldedModelInfo == null) {
+    		return;
+    	}
     	
         List<OriFace> faces = origamiModel.getFaces();
         boolean folded = origamiModel.isFolded();

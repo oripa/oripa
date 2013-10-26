@@ -1,4 +1,4 @@
-package oripa.paint;
+package oripa.paint.history;
 
 import java.util.ArrayList;
 import java.util.Collection;

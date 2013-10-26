@@ -31,10 +31,11 @@ import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
-import oripa.paint.CreasePatternUndoFactory;
+import oripa.paint.CreasePatternUndoManager;
+import oripa.paint.history.CreasePatternUndoFactory;
 import oripa.resource.Constants;
+import oripa.util.history.AbstractUndoManager;
 import oripa.util.history.UndoInfo;
-import oripa.util.history.UndoManager;
 import oripa.value.OriLine;
 
 
@@ -71,8 +72,8 @@ public class Doc {
 	private String originalAuthorName;
 	private String reference;
 	public String memo;
-	private UndoManager<Collection<OriLine>> undoManager =
-			new UndoManager<>(new CreasePatternUndoFactory(), 30);
+	private AbstractUndoManager<Collection<OriLine>> undoManager =
+			new CreasePatternUndoManager(30);
 
 
 

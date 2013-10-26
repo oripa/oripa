@@ -27,6 +27,8 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import oripa.fold.FoldedModelInfo;
+import oripa.fold.OrigamiModel;
 import oripa.viewsetting.estimation.RenderFrameSettingDB;
 
 
@@ -52,6 +54,14 @@ public class EstimationResultFrame extends JFrame implements ActionListener, Obs
         getContentPane().add(screen, BorderLayout.CENTER);
         getContentPane().add(hintLabel, BorderLayout.SOUTH);
 
+    }
+
+    public void setModel(
+    		OrigamiModel origamiModel, FoldedModelInfo foldedModelInfo) {
+
+    	screen.setModel(origamiModel, foldedModelInfo);
+		ui.updateLabel();
+		//setVisible(true);
     }
 
     @Override
