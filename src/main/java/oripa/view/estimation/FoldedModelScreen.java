@@ -41,8 +41,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
-import oripa.doc.Doc;
 import oripa.fold.BoundBox;
 import oripa.fold.FoldedModelInfo;
 import oripa.fold.OriFace;
@@ -57,6 +55,8 @@ import oripa.fold.TriangleVertex;
  */
 public class FoldedModelScreen extends JPanel
         implements MouseListener, MouseMotionListener, MouseWheelListener {
+
+	//FIXME WHY static! 
 
     private BufferedImage bufferImage;
     private Graphics2D bufferg;
@@ -441,14 +441,10 @@ public class FoldedModelScreen extends JPanel
     //
     //--------------------------------------------------------------------
     private void drawTriangle(TriangleFace tri, int id, int color) {
-    	// FIXME parameterize foldedModelInfo
-    	Doc document = ORIPA.doc;
-    	FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
-
 
         //(For speed) set the range of use of the buffer
-        int top = Integer.MAX_VALUE; //+2147483647;
-        int btm = Integer.MIN_VALUE;//-2147483648;
+        int top = Integer.MAX_VALUE; //Integer.MAX_VALUE;
+        int btm = Integer.MIN_VALUE;//Integer.MIN_VALUE;
         if (top > (int) tri.v[0].p.y) {
             top = (int) tri.v[0].p.y;
         }
@@ -476,8 +472,8 @@ public class FoldedModelScreen extends JPanel
 
         //Maximum and minimum buffer initialization
         for (int i = top; i < btm; i++) {
-            min[i] = +2147483647;
-            max[i] = -2147483648;
+            min[i] = Integer.MAX_VALUE;
+            max[i] = Integer.MIN_VALUE;
         }
 
         ScanEdge(tri.v[0], tri.v[1]);
@@ -488,7 +484,7 @@ public class FoldedModelScreen extends JPanel
         for (int y = top; y < btm; y++) {
 
             //Skip if the buffer is not updated
-            if (min[y] == +2147483647) {
+            if (min[y] == Integer.MAX_VALUE) {
                 continue;
             }
 
