@@ -1,4 +1,4 @@
-package oripa.paint.creasepattern;
+package oripa.paint.cptool;
 
 import java.util.Collection;
 
@@ -6,19 +6,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.creasepattern.tool.BisectorFactory;
-import oripa.paint.creasepattern.tool.ElementRemover;
-import oripa.paint.creasepattern.tool.LineAdder;
-import oripa.paint.creasepattern.tool.LineDivider;
-import oripa.paint.creasepattern.tool.LineMirror;
-import oripa.paint.creasepattern.tool.LinePaster;
-import oripa.paint.creasepattern.tool.LineSelectionModifier;
-import oripa.paint.creasepattern.tool.LineTypeChanger;
-import oripa.paint.creasepattern.tool.PainterCommandFailedException;
-import oripa.paint.creasepattern.tool.RotatedLineFactory;
-import oripa.paint.creasepattern.tool.SymmetricLineFactory;
-import oripa.paint.creasepattern.tool.TiledLineFactory;
-import oripa.paint.creasepattern.tool.TypeForChange;
 import oripa.value.OriLine;
 
 /**

@@ -6,7 +6,7 @@ import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingLine;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 import oripa.value.OriLine;
 
 public class DeletingLine extends PickingLine {

@@ -3,7 +3,7 @@ package oripa.paint.creasepattern.tool;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import oripa.paint.creasepattern.tool.LineAdder;
+import oripa.paint.cptool.LineAdder;
 import oripa.value.LineType;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;

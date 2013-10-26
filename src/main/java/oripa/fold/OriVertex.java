@@ -29,7 +29,6 @@ public class OriVertex {
     public Vector2d tmpVec = new Vector2d();
     public ArrayList<OriEdge> edges = new ArrayList<>();
     public boolean tmpFlg = false;
-    public boolean hasProblem = false;
     public int tmpInt = 0;
 
     public OriVertex(Vector2d p) {

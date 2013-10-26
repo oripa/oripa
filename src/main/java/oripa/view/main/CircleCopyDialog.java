@@ -31,7 +31,7 @@ import javax.swing.JTextField;
 import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.paint.CreasePatternInterface;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 
 public class CircleCopyDialog extends JDialog {
     private static final long serialVersionUID = 1L;

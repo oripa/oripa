@@ -34,7 +34,7 @@ import oripa.geom.Line;
 import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
 import oripa.paint.core.PaintConfig;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 import oripa.value.OriLine;
 
 public class Folder {

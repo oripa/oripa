@@ -47,7 +47,8 @@ public class CreasePatternGraphicDrawer {
 	 */
 	public void draw(
 			Graphics2D g2d,
-			PaintContextInterface context, CreasePatternInterface creasePattern) {
+			PaintContextInterface context, CreasePatternInterface creasePattern,
+			boolean creaseVisible, boolean auxVisible, boolean vertexVisible) {
 
 		if (context.isGridVisible()) {
 
@@ -57,34 +58,79 @@ public class CreasePatternGraphicDrawer {
 		//g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 
-		drawLines(g2d, creasePattern, null);
+		drawLines(g2d, creasePattern, null, creaseVisible, auxVisible);
 
 
 		// Drawing of the vertices
 		if (PaintConfig.getMouseAction().getEditMode() == EditMode.VERTEX 
-				|| PaintConfig.dispVertex) {
-			drawVertexRectangles(g2d, creasePattern, context.getScale());
+				|| vertexVisible) {
+			drawVertices(g2d, creasePattern, context.getScale(), creaseVisible, auxVisible);
 		}
 
 	}
+
+//	/**
+//	 * draws given lines. {@code pickedLines} will be skipped because {@link GraphicMouseActionInterface}
+//	 * should draw them.
+//	 * @param g2d
+//	 * @param lines
+//	 * @param pickedLines lines that user picked. null if nothing is selected.
+//	 */
+//	public void drawLines(
+//			Graphics2D g2d,
+//			Collection<OriLine> lines, Collection<OriLine> pickedLines) {
+//
+//		ElementSelector selector = new ElementSelector();
+//		for (OriLine line : lines) {
+//			if (line.typeVal == OriLine.TYPE_NONE &&!PaintConfig.dispAuxLines) {
+//				continue;
+//			}
+//
+//			if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY)
+//					&& !PaintConfig.dispMVLines) {
+//				continue;
+//			}
+//
+//			g2d.setColor(selector.selectColorByLineType(line.typeVal));
+//			g2d.setStroke(selector.selectStroke(line.typeVal));
+//
+//			
+//			if(pickedLines == null || pickedLines.contains(line) == false){
+//				g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
+//			}
+//
+//		}
+//
+//	}
+
+	public void drawAllLines(
+			Graphics2D g2d, Collection<OriLine> lines) {
+	
+		drawLines(g2d, lines, null, true, true);
+	}
+
 	/**
-	 * draws given lines
+	 * draws given lines. {@code pickedLines} will be skipped because {@link GraphicMouseActionInterface}
+	 * should draw them.
 	 * @param g2d
 	 * @param lines
-	 * @param pickedLines null if you don't wanna show selections.
+	 * @param pickedLines    lines that user picked. null if nothing is selected.
+	 * @param creaseVisible  true if mountain/valley lines should be shown.
+	 * @param auxVisible     true if aux lines should be shown.
 	 */
-	public void drawLines(
+	private void drawLines(
 			Graphics2D g2d,
-			Collection<OriLine> lines, Collection<OriLine> pickedLines) {
+			Collection<OriLine> lines, Collection<OriLine> pickedLines,
+			boolean creaseVisible, boolean auxVisible) {
 
 		ElementSelector selector = new ElementSelector();
 		for (OriLine line : lines) {
-			if (line.typeVal == OriLine.TYPE_NONE &&!PaintConfig.dispAuxLines) {
+			if (line.typeVal == OriLine.TYPE_NONE && !auxVisible) {
 				continue;
 			}
 
 			if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY)
-					&& !PaintConfig.dispMVLines) {
+					&& !creaseVisible) {
 				continue;
 			}
 
@@ -100,16 +146,29 @@ public class CreasePatternGraphicDrawer {
 
 	}
 
-	public void drawVertexRectangles(
-			Graphics2D g2d, Collection<OriLine> creasePattern, double scale){
+	/**
+	 * draws all vertices of mountain/valley lines.
+	 * @param g2d
+	 * @param creasePattern
+	 * @param scale
+	 */
+	public void drawCreaseVertices(
+			Graphics2D g2d, Collection<OriLine> creasePattern, double scale) {
+		drawVertices(g2d, creasePattern, scale, true, false);		
+	}
+
+	
+	private void drawVertices(
+			Graphics2D g2d, Collection<OriLine> creasePattern, double scale,
+			boolean creaseVisible, boolean auxVisible) {
 
 		g2d.setColor(Color.BLACK);
 		final double vertexDrawSize = 2.0;
 		for (OriLine line : creasePattern) {
-			if (!PaintConfig.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
+			if (!auxVisible && line.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
-			if (!PaintConfig.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
+			if (!creaseVisible && (line.typeVal == OriLine.TYPE_RIDGE
 					|| line.typeVal == OriLine.TYPE_VALLEY)) {
 				continue;
 			}

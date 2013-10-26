@@ -10,7 +10,7 @@ import oripa.doc.Doc;
 import oripa.paint.EditMode;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.copypaste.CopyAndPasteAction;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 import oripa.value.OriLine;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {

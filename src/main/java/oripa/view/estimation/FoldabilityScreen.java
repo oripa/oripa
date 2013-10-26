@@ -86,6 +86,7 @@ implements ComponentListener {
 	}
 
 	private Collection<OriVertex> violatingVertices = new ArrayList<>();
+	private Collection<OriFace> violatingFaces = new ArrayList<>();
 	
 	public void showModel(
 			OrigamiModel origamiModel, 
@@ -98,7 +99,10 @@ implements ComponentListener {
 		FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 		violatingVertices = foldabilityChecker.findViolatingVertices(
 				origamiModel.getVertices());
-		
+
+		violatingFaces = foldabilityChecker.findViolatingFaces(
+				origamiModel.getFaces());
+
 		this.setVisible(true);
 	}
 
@@ -143,7 +147,7 @@ implements ComponentListener {
 				g2d.setColor(face.color);
 			}
 
-			if (face.hasProblem) {
+			if (violatingFaces.contains(face)) {
 				g2d.setColor(Color.RED);
 			} else {
 				if (face.faceFront) {
@@ -160,14 +164,6 @@ implements ComponentListener {
 		for (OriFace face : faces) {
 			g2d.drawString("" + face.z_order, (int) face.getCenter().x, 
 					(int) face.getCenter().y);
-		}
-
-		g2d.setColor(Color.RED);
-		for (OriVertex v : vertices) {
-			if (v.hasProblem) {
-				g2d.fill(new Rectangle2D.Double(v.p.x - 8.0 / scale, 
-						v.p.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
-			}
 		}
 
 	}
@@ -201,8 +197,8 @@ implements ComponentListener {
 		Graphics2D g2d = bufferg;
 
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawLines(g2d, creasePattern, null);
-		drawer.drawVertexRectangles(g2d, creasePattern, scale);
+		drawer.drawAllLines(g2d, creasePattern);
+		drawer.drawCreaseVertices(g2d, creasePattern, scale);
 
 
 		for (Vector2d v : crossPoints) {

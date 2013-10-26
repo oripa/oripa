@@ -29,6 +29,21 @@ import oripa.fold.OriVertex;
  */
 public class FoldabilityChecker {
 
+	public boolean modelIsProbablyFoldable(Collection<OriVertex> vertices, Collection<OriFace> faces) {
+
+		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
+				new MaekawaTheorem());
+		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
+				new KawasakiTheorem());
+		
+		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
+				new FaceIsConvex());
+
+		return maekawaConjunction.holds(vertices) &&
+				kawasakiConjunction.holds(vertices) &&
+				convexRuleConjunction.holds(faces);
+	}
+
 	public Collection<OriVertex> findViolatingVertices(Collection<OriVertex> vertices) {
 		//--------
 		// test Maekawa's theorem

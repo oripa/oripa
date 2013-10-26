@@ -31,7 +31,7 @@ import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
-import oripa.paint.creasepattern.tool.LineAdder;
+import oripa.paint.cptool.LineAdder;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 

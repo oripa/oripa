@@ -10,7 +10,7 @@ import oripa.paint.PaintContextInterface;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
 import oripa.paint.core.RectangularSelectableAction;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 import oripa.value.OriLine;
 
 public class DeleteLineAction extends RectangularSelectableAction {

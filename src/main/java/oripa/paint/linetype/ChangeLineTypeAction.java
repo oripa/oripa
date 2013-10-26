@@ -8,7 +8,7 @@ import oripa.doc.Doc;
 import oripa.paint.EditMode;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.RectangularSelectableAction;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 import oripa.value.OriLine;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 

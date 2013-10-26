@@ -3,6 +3,8 @@ package oripa.fold;
 import java.util.ArrayList;
 import java.util.List;
 
+import oripa.fold.rule.FoldabilityChecker;
+
 
 /**
  * Entity for folding-estimation
@@ -14,9 +16,6 @@ public class OrigamiModel {
 	private List<OriFace> faces = new ArrayList<OriFace>();
 	private List<OriVertex> vertices = new ArrayList<OriVertex>();
 	private List<OriEdge> edges = new ArrayList<OriEdge>();
-
-	private List<OriVertex> illegalVertices = new ArrayList<>();
-	private List<OriFace>   illegalFaces    = new ArrayList<>();
 	
 //	private List<OriLine> crossLines = new ArrayList<OriLine>();
 
@@ -62,15 +61,17 @@ public class OrigamiModel {
 	 * @return probablyFoldable
 	 */
 	public boolean isProbablyFoldable() {
-		return probablyFoldable;
+		FoldabilityChecker checker = new FoldabilityChecker();
+
+		return checker.modelIsProbablyFoldable(vertices, faces);
 	}
 
-	/**
-	 * @param probablyFoldable set to probablyFoldable
-	 */
-	public void setProbablyFoldable(boolean probablyFoldable) {
-		this.probablyFoldable = probablyFoldable;
-	}
+//	/**
+//	 * @param probablyFoldable set to probablyFoldable
+//	 */
+//	public void setProbablyFoldable(boolean probablyFoldable) {
+//		this.probablyFoldable = probablyFoldable;
+//	}
 
 	public List<OriFace> getFaces() {
 		return faces;

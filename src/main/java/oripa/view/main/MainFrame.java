@@ -63,7 +63,7 @@ import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 import oripa.paint.util.DeleteSelectedLines;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;

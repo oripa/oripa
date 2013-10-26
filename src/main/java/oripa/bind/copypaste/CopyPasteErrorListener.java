@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import oripa.ORIPA;
 import oripa.bind.state.ErrorListener;
 import oripa.doc.Doc;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 import oripa.value.OriLine;
 
 public class CopyPasteErrorListener implements ErrorListener {

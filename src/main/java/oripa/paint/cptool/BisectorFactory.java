@@ -1,4 +1,4 @@
-package oripa.paint.creasepattern.tool;
+package oripa.paint.cptool;
 
 import javax.vecmath.Vector2d;
 

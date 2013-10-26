@@ -10,7 +10,7 @@ import oripa.paint.PaintContextInterface;
 import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 import oripa.viewsetting.main.ScreenUpdater;
 
 

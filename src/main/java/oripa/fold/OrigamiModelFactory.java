@@ -8,10 +8,6 @@ import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.fold.rule.ConjunctionLoop;
-import oripa.fold.rule.FaceIsConvex;
-import oripa.fold.rule.KawasakiTheorem;
-import oripa.fold.rule.MaekawaTheorem;
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
@@ -129,7 +125,6 @@ public class OrigamiModelFactory {
 
 
 		origamiModel.setHasModel(true);
-		origamiModel.setProbablyFoldable(true);
 		
 		return origamiModel;
 
@@ -331,60 +326,10 @@ public class OrigamiModelFactory {
 		}
 
 		origamiModel.setHasModel(true);
-		origamiModel.setProbablyFoldable(checkPatternValidity(vertices, faces));
 
 		return origamiModel;
 	}
 
-
-
-	private boolean checkPatternValidity(
-			List<OriVertex> vertices,
-			List<OriFace>   faces) {
-
-		boolean isOK = true;
-
-		//--------
-		// test convex-face condition
-		
-		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
-				new FaceIsConvex());
-
-		Collection<OriFace> violatingFaces = convexRuleConjunction.findViolations(faces);
-		isOK &= violatingFaces.isEmpty();
-
-		for (OriFace face : violatingFaces) {
-			face.hasProblem = true;
-		}
-
-		//--------
-		// test Maekawa's theorem
-
-		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
-				new MaekawaTheorem());
-
-		//--------
-		// test Kawasaki's theorem
-
-		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
-				new KawasakiTheorem());
-
-		Collection<OriVertex> violatingVertices =
-				maekawaConjunction.findViolations(vertices);
-
-		violatingVertices.addAll(
-				kawasakiConjunction.findViolations(vertices));
-		
-		isOK &= violatingVertices.isEmpty();
-
-		for (OriVertex vertex : violatingVertices) {
-			vertex.hasProblem = true;
-		}
-		
-
-
-		return isOK;
-	}
 	//boolean sortFinished = false;
 
 	private void makeEdges(List<OriEdge> edges, List<OriFace> faces) {

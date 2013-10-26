@@ -7,7 +7,7 @@ import oripa.doc.Doc;
 import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PickingLine;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 import oripa.value.OriLine;
 
 //TODO separate into FirstState and LatterState to delete state variable

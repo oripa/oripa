@@ -3,7 +3,7 @@ package oripa.paint.selectline;
 import oripa.ORIPA;
 import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
-import oripa.paint.creasepattern.Painter;
+import oripa.paint.cptool.Painter;
 
 public class SelectAllLineAction extends SelectLineAction {
 

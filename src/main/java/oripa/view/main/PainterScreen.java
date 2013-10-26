@@ -227,7 +227,8 @@ ActionListener, ComponentListener, Observer{
 		Doc document = ORIPA.doc;
 		CreasePatternInterface creasePattern = document.getCreasePattern();
 
-		drawer.draw(bufferG2D, paintContext, creasePattern);
+		drawer.draw(bufferG2D, paintContext, creasePattern,
+				PaintConfig.dispMVLines, PaintConfig.dispAuxLines, PaintConfig.dispVertex);
 
 		for (Vector2d v : crossPoints) {
 			bufferG2D.setColor(Color.RED);
@@ -238,7 +239,7 @@ ActionListener, ComponentListener, Observer{
 
 		if (PaintConfig.bDispCrossLine) {
 			List<OriLine> crossLines = document.getSheetCutOutlines();
-			drawer.drawLines(bufferG2D, crossLines, null);
+			drawer.drawAllLines(bufferG2D, crossLines);
 		}
 
 
