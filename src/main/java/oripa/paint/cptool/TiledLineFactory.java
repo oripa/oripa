@@ -66,10 +66,13 @@ public class TiledLineFactory {
 
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
-	    //FIXME Restrictedly speaking, paper is not always in this position. CreasePattern should have the values??
+		RectangleDomain domain = new RectangleDomain(creasePattern);
 		oripa.paint.util.RectangleClipper clipper =
 				new oripa.paint.util.RectangleClipper(
-						-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
+						domain.getLeft(), domain.getTop(), domain.getRight(), domain.getBottom());
+//		oripa.paint.util.RectangleClipper clipper =
+//				new oripa.paint.util.RectangleClipper(
+//						-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
 
 		for (int x = startCol; x < endCol; x++) {
 			for (int y = startRow; y < endRow; y++) {

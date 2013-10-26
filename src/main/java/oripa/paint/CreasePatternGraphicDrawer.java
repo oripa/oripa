@@ -202,6 +202,7 @@ public class CreasePatternGraphicDrawer {
 		int lineNum = PaintConfig.gridDivNum;
 		double step = paperSize / lineNum;
 
+		//FIXME this method depends on implicit position of paper.
 		for (int i = 1; i < lineNum; i++) {
 			g2d.draw(new Line2D.Double(
 					step * i - paperSize / 2.0, -paperSize / 2.0,
