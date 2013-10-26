@@ -3,6 +3,7 @@ package oripa.cutmodel;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import oripa.util.collection.CollectionCloneFactory;
 import oripa.value.OriLine;
 
 /**

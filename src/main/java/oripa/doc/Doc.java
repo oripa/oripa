@@ -31,8 +31,9 @@ import oripa.fold.FoldedModelInfo;
 import oripa.fold.OrigamiModel;
 import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
-import oripa.paint.cptool.LineAdder;
 import oripa.resource.Constants;
+import oripa.util.history.UndoInfo;
+import oripa.util.history.UndoManager;
 import oripa.value.OriLine;
 
 
@@ -69,7 +70,7 @@ public class Doc {
 	private String originalAuthorName;
 	private String reference;
 	public String memo;
-	private UndoManager<UndoInfo> undoManager = new UndoManager<>(30);
+	private UndoManager<Collection<OriLine>> undoManager = new UndoManager<>(30);
 
 
 
@@ -113,8 +114,8 @@ public class Doc {
 
 
 
-	public UndoInfo createUndoInfo(){
-		UndoInfo undoInfo = new UndoInfo(creasePattern);
+	public UndoInfo<Collection<OriLine>> createUndoInfo(){
+		UndoInfo<Collection<OriLine>> undoInfo = new CreasePatternUndoInfo(creasePattern);
 		return undoInfo;
 	}
 
@@ -127,23 +128,23 @@ public class Doc {
 	}
 
 	public void pushUndoInfo() {
-		UndoInfo ui = new UndoInfo(creasePattern);
+		UndoInfo<Collection<OriLine>> ui = new CreasePatternUndoInfo(creasePattern);
 		undoManager.push(ui);
 	}
 
-	public void pushUndoInfo(UndoInfo uinfo){
+	public void pushUndoInfo(UndoInfo<Collection<OriLine>> uinfo){
 		undoManager.push(uinfo);
 	}
 
 	public void loadUndoInfo() {
-		UndoInfo info = undoManager.pop();
+		UndoInfo<Collection<OriLine>> info = undoManager.pop();
 
 		if(info == null){
 			return;
 		}
 
 		creasePattern.clear();
-		creasePattern.addAll(info.getLines());
+		creasePattern.addAll(info.getInfo());
 	}
 
 	public boolean canUndo(){
@@ -156,15 +157,6 @@ public class Doc {
 
 	public void clearChanged(){
 		undoManager.clearChanged();
-	}
-
-
-
-
-	public void addLine(OriLine inputLine) {
-		LineAdder lineAdder = new LineAdder();
-		
-		lineAdder.addLine(inputLine, creasePattern);		
 	}
 
 

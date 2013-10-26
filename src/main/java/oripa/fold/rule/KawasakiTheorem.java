@@ -22,6 +22,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.fold.OriEdge;
 import oripa.fold.OriVertex;
+import oripa.util.collection.AbstractRule;
 import oripa.value.OriLine;
 
 /**

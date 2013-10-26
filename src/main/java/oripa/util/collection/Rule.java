@@ -16,44 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.fold.rule;
-
-import java.util.Collection;
-import java.util.HashSet;
+package oripa.util.collection;
 
 /**
  * @author Koji
  *
  */
-public class CollectionFilter<Variable> {
-	private Rule<Variable> rule;
-
-	/**
-	 * Constructor
-	 */
-	public CollectionFilter(Rule<Variable> rule) {
-		this.rule = rule;
-	}
-
-	public Collection<Variable> findTargets(Collection<Variable> inputs) {
-
-		return findTargets(inputs, rule);
-	}
-
-	public Collection<Variable> findViolations(Collection<Variable> inputs) {
-		return findTargets(inputs, rule.asDenied());
-	}
-
-	private Collection<Variable> findTargets(Collection<Variable> inputs, Rule<Variable> r) {
-
-		HashSet<Variable> targets = new HashSet<>();
-
-		for (Variable input : inputs) {
-			if (r.holds(input)) {
-				targets.add(input);
-			}
-		}
-		return targets;
-	}
-
+public interface Rule<Variable> {
+	boolean holds(Variable var);
+	boolean violates(Variable var);
+	Rule<Variable> asDenied();
 }

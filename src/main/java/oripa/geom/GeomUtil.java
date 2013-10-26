@@ -213,7 +213,8 @@ public class GeomUtil {
         Vector2d p = new Vector2d(l.p0);
         Vector2d dir = new Vector2d();
         dir.sub(l.p1, l.p0);
-
+        //FIXME this method depends on implicit paper position
+        
         // If horizontal
         if (Math.abs(dir.y) < EPS) {
             if (p.y < -halfWidth || p.y > halfWidth) {

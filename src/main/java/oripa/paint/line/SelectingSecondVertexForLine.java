@@ -3,10 +3,13 @@ package oripa.paint.line;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.geom.GeomUtil;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PickingVertex;
+import oripa.paint.cptool.Painter;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
@@ -36,12 +39,16 @@ public class SelectingSecondVertexForLine extends PickingVertex{
 		OriLine line = new OriLine(p0.x - dir.x, p0.y - dir.y,
 				p0.x + dir.x, p0.y + dir.y, PaintConfig.inputLineType);
 
-		double paperSize = ORIPA.doc.getPaperSize();
+		Doc document = ORIPA.doc;
+		CreasePatternInterface creasePattern = document.getCreasePattern();
+		double paperSize = creasePattern.getPaperSize();
 
 		// add new line to crease pattern
 		if (GeomUtil.clipLine(line, paperSize / 2)) {
-			ORIPA.doc.pushUndoInfo();
-			ORIPA.doc.addLine(line);
+			document.pushUndoInfo();
+
+			Painter painter = new Painter();
+			painter.addLine(line, creasePattern);
 		}
 
 		context.clear(false);

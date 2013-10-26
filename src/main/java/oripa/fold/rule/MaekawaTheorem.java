@@ -20,6 +20,7 @@ package oripa.fold.rule;
 
 import oripa.fold.OriEdge;
 import oripa.fold.OriVertex;
+import oripa.util.collection.AbstractRule;
 import oripa.value.OriLine;
 
 /**

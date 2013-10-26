@@ -1,12 +1,12 @@
-package oripa.doc;
+package oripa.util.history;
 
 import java.util.Deque;
 import java.util.LinkedList;
 
 public class UndoManager<Backup> {
 
-	private Deque<Backup> undoStack = new LinkedList<>();
-	private Backup cache;
+	private Deque<UndoInfo<Backup>> undoStack = new LinkedList<>();
+	private UndoInfo<Backup> cache;
 	
 	private boolean changed = false;
 
@@ -20,7 +20,7 @@ public class UndoManager<Backup> {
 		this.max = max;
 	}
 
-	public void push(Backup uinfo){
+	public void push(UndoInfo<Backup> uinfo){
 		undoStack.push(uinfo);
 		
 		if(undoStack.size() > max){
@@ -30,7 +30,7 @@ public class UndoManager<Backup> {
 		changed = true;
 	}
 
-	public Backup pop() {
+	public UndoInfo<Backup> pop() {
 		if (undoStack.isEmpty()) {
 			return null;
 		}
@@ -41,7 +41,7 @@ public class UndoManager<Backup> {
 		return undoStack.pop();
 	}
 
-	public Backup peek(){
+	public UndoInfo<Backup> peek(){
 		if (undoStack.isEmpty()) {
 			return null;
 		}
@@ -61,11 +61,11 @@ public class UndoManager<Backup> {
 		return ! undoStack.isEmpty();
 	}
 	
-	public void setCache(Backup info){
+	public void setCache(UndoInfo<Backup> info){
 		cache = info;
 	}
 	
-	public Backup getCache(){
+	public UndoInfo<Backup> getCache(){
 		return cache;
 	}
 	

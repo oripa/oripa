@@ -1,10 +1,13 @@
 package oripa.paint.vertical;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.geom.GeomUtil;
+import oripa.paint.CreasePatternInterface;
 import oripa.paint.PaintContextInterface;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PickingLine;
+import oripa.paint.cptool.Painter;
 import oripa.value.OriLine;
 
 public class SelectingLineForVertical extends PickingLine {
@@ -36,8 +39,13 @@ public class SelectingLineForVertical extends PickingLine {
         OriLine vl = GeomUtil.getVerticalLine(
         		context.getVertex(0), context.getLine(0), PaintConfig.inputLineType);
 
-        ORIPA.doc.pushUndoInfo();
-        ORIPA.doc.addLine(vl);
+        Doc document = ORIPA.doc;
+		CreasePatternInterface creasePattern = document.getCreasePattern();
+
+        document.pushUndoInfo();
+
+        Painter painter = new Painter();
+        painter.addLine(vl, creasePattern);
 
         context.clear(false);
 	}

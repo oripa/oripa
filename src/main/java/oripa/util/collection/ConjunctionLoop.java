@@ -16,14 +16,52 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.fold.rule;
+package oripa.util.collection;
+
+import java.util.Collection;
 
 /**
  * @author Koji
  *
  */
-public interface Rule<Variable> {
-	boolean holds(Variable var);
-	boolean violates(Variable var);
-	Rule<Variable> asDenied();
+public class ConjunctionLoop<Variable> extends AbstractRule<Collection<Variable>> {
+
+	private Rule<Variable> term;
+//	private HashSet<Variable> violations = new HashSet<>();
+
+	/**
+	 * 
+	 * @param term
+	 */
+	public ConjunctionLoop(Rule<Variable> term) {
+		this.term = term;
+	}
+
+	public boolean holds(Collection<Variable> inputs) {
+
+		boolean result = true;
+
+		for (Variable input : inputs) {
+			if (!term.holds(input)) {
+				return false;
+			}
+		}
+
+		return result;
+	}
+
+	public Collection<Variable> findViolations(Collection<Variable> inputs) {
+		CollectionFilter<Variable> filter = new CollectionFilter<>(term);
+
+		return filter.findViolations(inputs);
+	}
+//	/**
+//	 * @return violations
+//	 */
+//	public HashSet<Variable> getViolations() {
+//		return violations;
+//	}
+
+
+
 }

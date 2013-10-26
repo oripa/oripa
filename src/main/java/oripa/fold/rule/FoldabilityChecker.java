@@ -22,6 +22,7 @@ import java.util.Collection;
 
 import oripa.fold.OriFace;
 import oripa.fold.OriVertex;
+import oripa.util.collection.ConjunctionLoop;
 
 /**
  * @author Koji

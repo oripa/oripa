@@ -16,38 +16,44 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.fold.rule;
+package oripa.util.collection;
 
-import oripa.fold.OriFace;
-import oripa.fold.OriHalfedge;
-import oripa.geom.GeomUtil;
-import oripa.util.collection.AbstractRule;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * @author Koji
  *
  */
-public class FaceIsConvex extends AbstractRule<OriFace> {
+public class CollectionFilter<Variable> {
+	private Rule<Variable> rule;
 
-
-	public boolean holds(OriFace face) {
-
-		if (face.halfedges.size() == 3) {
-			return true;
-		}
-
-		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.prev.vertex.p, 
-				baseHe.vertex.p, baseHe.next.vertex.p);
-
-		for (int i = 1; i < face.halfedges.size(); i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.prev.vertex.p, he.vertex.p, he.next.vertex.p) != baseFlg) {
-				return false;
-			}
-
-		}
-		
-		return true;
+	/**
+	 * Constructor
+	 */
+	public CollectionFilter(Rule<Variable> rule) {
+		this.rule = rule;
 	}
+
+	public Collection<Variable> findTargets(Collection<Variable> inputs) {
+
+		return findTargets(inputs, rule);
+	}
+
+	public Collection<Variable> findViolations(Collection<Variable> inputs) {
+		return findTargets(inputs, rule.asDenied());
+	}
+
+	private Collection<Variable> findTargets(Collection<Variable> inputs, Rule<Variable> r) {
+
+		HashSet<Variable> targets = new HashSet<>();
+
+		for (Variable input : inputs) {
+			if (r.holds(input)) {
+				targets.add(input);
+			}
+		}
+		return targets;
+	}
+
 }
