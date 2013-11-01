@@ -67,7 +67,7 @@ public class PropertyDialog extends JDialog implements ComponentListener {
         EditorNameTextField.setText(document.getEditorName());
         OriginalAuthorTextField.setText(document.getOriginalAuthorName());
         ReferenceTextField.setText(document.getReference());
-        MemoTextArea.setText(document.memo);
+        MemoTextArea.setText(document.getMemo());
     }
 
     private void storeValue() {

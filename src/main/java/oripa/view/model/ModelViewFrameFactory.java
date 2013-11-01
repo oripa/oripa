@@ -16,38 +16,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.gui;
+package oripa.view.model;
 
-import java.util.HashSet;
-
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+
+import oripa.fold.OrigamiModel;
+import oripa.util.gui.ChildFrameManager;
 
 /**
  * @author Koji
  *
  */
-public class ChildFrameList {
+public class ModelViewFrameFactory {
+	private static ModelViewFrame frame = null;
 
-	private HashSet<JFrame> childFrames = new HashSet<>();;
+	public JFrame createFrame(
+			JComponent parent,
+			OrigamiModel origamiModel
+    		) {
 
-	public void addChild(JFrame frame) {
-		childFrames.add(frame);
-	}
-
-	public void remove(JFrame frame) {
-		childFrames.remove(frame);
-	}
-
-	public void clear() {
-		closeAll();
-		childFrames.clear();
-	}
-	
-	public void closeAll() {
-		for (JFrame frame : childFrames) {
-			// TODO make all frames short-life object
-			// then change the following to dispose()
-			frame.setVisible(false);
+		if (frame == null) {
+			frame = new ModelViewFrame();
+			frame.setSize(400, 400);
 		}
+
+		frame.setModel(origamiModel);
+		frame.setVisible(false);
+		frame.repaint();
+		
+		ChildFrameManager.getManager().putChild(parent, frame);
+
+		return frame;
 	}
+
 }

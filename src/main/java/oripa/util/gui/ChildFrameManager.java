@@ -63,6 +63,11 @@ public class ChildFrameManager {
 		children.clear();
 	}
 
+	/**
+	 * Close all child frames of the given component and do the same for
+	 * descendants of the given component.
+	 * @param frame
+	 */
 	public void closeAllRecursively(JFrame frame) {
 		for(Component component : frame.getComponents()) {
 			if (!(component instanceof JComponent)) {
@@ -72,6 +77,7 @@ public class ChildFrameManager {
 			closeAllRecursively(casted);
 		}
 	}
+
 	/**
 	 * Close all child frames of the given component and do the same for
 	 * descendants of the given component.

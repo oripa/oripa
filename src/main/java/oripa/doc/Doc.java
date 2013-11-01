@@ -66,7 +66,7 @@ public class Doc {
 	private String editorName;
 	private String originalAuthorName;
 	private String reference;
-	public String memo;
+	private String memo;
 	private AbstractUndoManager<Collection<OriLine>> undoManager =
 			new CreasePatternUndoManager(30);
 
@@ -83,6 +83,21 @@ public class Doc {
 		initialize(size);
 	}
 
+	public void set(Doc doc) {
+		setCreasePattern(doc.getCreasePattern());
+		setOrigamiModel(doc.getOrigamiModel());
+		setFoldedModelInfo(doc.getFoldedModelInfo());
+		sheetCutLines = doc.getSheetCutOutlines();
+		setPaperSize(doc.getPaperSize());
+		setDataFilePath(doc.getDataFilePath());
+		setTitle(doc.getTitle());
+		setEditorName(doc.getEditorName());
+		setOriginalAuthorName(doc.getOriginalAuthorName());
+		setReference(doc.getReference());
+		setMemo(doc.getMemo());
+		undoManager = doc.undoManager;
+	}
+	
 	private void initialize(double size){
 
 		this.paperSize = size;

@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterORmat;
 import oripa.doc.exporter.ExporterSVG;
@@ -50,6 +51,7 @@ public class EstimationResultUI extends JPanel {
     private JCheckBox jCheckBoxFillFace = null;
     private JButton jButtonExport = null;
 
+    private Doc document = ORIPA.doc;
     /**
      * This is the default constructor
      */

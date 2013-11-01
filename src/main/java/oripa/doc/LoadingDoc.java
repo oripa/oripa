@@ -20,7 +20,7 @@ public class LoadingDoc implements oripa.file.LoadingAction{
 
 		doc = loader.load(path);
 		if (doc != null) {
-			ORIPA.doc = doc;
+			ORIPA.doc.set(doc);
 			if(path != ""){
 				ORIPA.doc.setDataFilePath(path);
 			}

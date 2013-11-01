@@ -29,7 +29,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
@@ -80,6 +79,7 @@ import oripa.resource.StringID;
 import oripa.value.OriLine;
 import oripa.view.estimation.EstimationResultFrameFactory;
 import oripa.view.estimation.FoldabilityCheckFrameFactory;
+import oripa.view.model.ModelViewFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.MainScreenSettingDB;
@@ -89,7 +89,6 @@ import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
-import oripa.viewsetting.model.ModelFrameSettingDB;
 
 public class UIPanel extends JPanel 
 implements ActionListener, PropertyChangeListener, Observer {
@@ -224,6 +223,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 	//	private PaintContext context = PaintContext.getInstance();
 
+	private Doc document = ORIPA.doc;
 
 
 
@@ -641,12 +641,11 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				Doc document = ORIPA.doc;
 				OrigamiModel origamiModel;
-				Collection<OriLine> creasePattern = document.getCreasePattern();
+				CreasePatternInterface creasePattern = document.getCreasePattern();
 
 				OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-				origamiModel = modelFactory.createOrigamiModel(creasePattern, document.getPaperSize());
+				origamiModel = modelFactory.createOrigamiModel(creasePattern, creasePattern.getPaperSize());
 
 				//document.setOrigamiModel(origamiModel);
 //				boolean isValidPattern =
@@ -666,7 +665,6 @@ implements ActionListener, PropertyChangeListener, Observer {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {		
-		Doc document = ORIPA.doc;
 
 		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 
@@ -703,7 +701,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 //			if (document.buildOrigami3(origamiModel, false)) {
 			OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 			OrigamiModel origamiModel = modelFactory.createOrigamiModel(
-					creasePattern, document.getPaperSize());
+					creasePattern, creasePattern.getPaperSize());
 			FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 
 			if (origamiModel.isProbablyFoldable()) {
@@ -715,7 +713,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 						== JOptionPane.YES_OPTION) {
 
 					origamiModel = modelFactory.createOrigamiModelNoDuplicateLines(
-							creasePattern, document.getPaperSize());
+							creasePattern, creasePattern.getPaperSize());
 					if (origamiModel.isProbablyFoldable()) {
 						buildOK = true;
 					} else {
@@ -748,9 +746,14 @@ implements ActionListener, PropertyChangeListener, Observer {
 			}
 
 
-			ModelFrameSettingDB modelSetting = ModelFrameSettingDB.getInstance();
-			modelSetting.setFrameVisible(true);
-			modelSetting.notifyObservers();
+			ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory();
+			JFrame modelView = modelViewFactory.createFrame(this, origamiModel);
+			
+			modelView.setVisible(true);
+
+//			ModelFrameSettingDB modelSetting = ModelFrameSettingDB.getInstance();
+//			modelSetting.setFrameVisible(true);
+//			modelSetting.notifyObservers();
 
 			//			screen.modeChanged();
 

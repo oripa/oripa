@@ -426,7 +426,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			manager.closeAllRecursively(this);
 //			ORIPA.modelFrame.repaint();
 //
-			ORIPA.modelFrame.setVisible(false);
+//			ORIPA.modelFrame.setVisible(false);
 //			ORIPA.renderFrame.setVisible(false);
 
 			screenSetting.setGridVisible(true);
@@ -584,7 +584,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	 * @param filePath
 	 */
 	private void openFile(String filePath) {
-		ORIPA.modelFrame.setVisible(false);
+//		ORIPA.modelFrame.setVisible(false);
 
 		ChildFrameManager.getManager().closeAllRecursively(this);
 		//ORIPA.renderFrame.setVisible(false);

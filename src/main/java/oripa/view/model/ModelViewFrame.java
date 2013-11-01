@@ -40,7 +40,6 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
 import oripa.ORIPA;
-import oripa.doc.Doc;
 import oripa.doc.exporter.Exporter;
 import oripa.doc.exporter.ExporterDXF;
 import oripa.doc.exporter.ExporterOBJ2;
@@ -126,10 +125,16 @@ implements ActionListener, AdjustmentListener, Observer{
 
     }
 
+    private OrigamiModel origamiModel = null;
+    public void setModel(OrigamiModel origamiModel) {
+    	screen.setModel(origamiModel);
+    	this.origamiModel = origamiModel;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-    	Doc document = ORIPA.doc;
-    	OrigamiModel origamiModel = document.getOrigamiModel();
+//    	Doc document = ORIPA.doc;
+//    	OrigamiModel origamiModel = document.getOrigamiModel();
 		
     	FolderTool folderTool = new FolderTool();
 		if (e.getSource() == menuItemFlip) {
@@ -223,12 +228,12 @@ implements ActionListener, AdjustmentListener, Observer{
     @Override
     public void update(Observable o, Object arg) {
     	
-    	if(setting.isFrameVisible()){
-			setVisible(true);
-			screen.resetViewMatrix();
-			menuItemSlideFaces.setSelected(false);
-			repaint();
-
-    	}
+//    	if(setting.isFrameVisible()){
+//			setVisible(true);
+//			//screen.resetViewMatrix();
+//			menuItemSlideFaces.setSelected(false);
+//			repaint();
+//
+//    	}
     }
 }

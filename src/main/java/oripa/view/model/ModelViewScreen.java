@@ -43,7 +43,6 @@ import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.doc.Doc;
 import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
@@ -55,21 +54,23 @@ import oripa.value.OriLine;
 public class ModelViewScreen extends JPanel
 implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener, ComponentListener {
 
-	private Image bufferImage;
-	private Graphics2D bufferg;
+	private Image bufferImage = null;
+	private Graphics2D bufferg = null;
 	private Point2D preMousePoint; // Screen coordinates
 	private Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logical coordinates
-	private double scale;
-	private double transX;
-	private double transY;
+	private double scale = 1;
+	private double transX = 0;
+	private double transY = 0;
 	private Vector2d modelCenter = new Vector2d();
 	private Dimension preSize;
-	private double rotateAngle;
+	private double rotateAngle = 0;
 	private AffineTransform affineTransform = new AffineTransform();
 	public boolean dispSlideFace = false;
 	private OriLine crossLine = null;
 	private int crossLineAngleDegree = 90;
 	private double crossLinePosition = 0;
+
+	private OrigamiModel origamiModel = null;
 
 	public ModelViewScreen() {
 		addMouseListener(this);
@@ -85,9 +86,15 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		preSize = getSize();
 	}
 
-	public void resetViewMatrix() {
-		Doc document = ORIPA.doc;
-		OrigamiModel origamiModel = document.getOrigamiModel();
+	public void setModel(OrigamiModel origamiModel) {
+		this.origamiModel = origamiModel;
+
+		resetViewMatrix();
+	}
+	
+	private void resetViewMatrix() {
+//		Doc document = ORIPA.doc;
+//		OrigamiModel origamiModel = document.getOrigamiModel();
 		List<OriFace> faces = origamiModel.getFaces();
 
 		boolean hasModel = origamiModel.hasModel();
@@ -97,8 +104,8 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 			scale = 1.0;
 		} else {
 			// Align the center of the model, combined scale
-			Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-			Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
+			Vector2d maxV = new Vector2d(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+			Vector2d minV = new Vector2d(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 			for (OriFace face : faces) {
 				for (OriHalfedge he : face.halfedges) {
 					maxV.x = Math.max(maxV.x, he.vertex.p.x);
@@ -116,8 +123,11 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	}
 
 	public void drawModel(Graphics2D g2d) {
-		Doc document = ORIPA.doc;
-		OrigamiModel origamiModel = document.getOrigamiModel();
+		if (origamiModel == null) {
+			return;
+		}
+//		Doc document = ORIPA.doc;
+//		OrigamiModel origamiModel = document.getOrigamiModel();
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
@@ -168,21 +178,26 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		affineTransform.translate(-modelCenter.x, -modelCenter.y);
 	}
 
+	
+	private void buildBufferImage () {
+		bufferImage = createImage(getWidth(), getHeight());
+		bufferg = (Graphics2D) bufferImage.getGraphics();
+
+		updateAffineTransform();
+		
+	}
 	// Scaling relative to the center of the screen
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		Doc document = ORIPA.doc;
-		OrigamiModel orirgamiModel = document.getOrigamiModel();
+//		Doc document = ORIPA.doc;
+//		OrigamiModel orirgamiModel = document.getOrigamiModel();
 		
 		if (bufferImage == null) {
-			bufferImage = createImage(getWidth(), getHeight());
-			bufferg = (Graphics2D) bufferImage.getGraphics();
-
-			updateAffineTransform();
-			preSize = getSize();
+			buildBufferImage();
 		}
+
 		bufferg.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		bufferg.setTransform(new AffineTransform());
@@ -195,7 +210,10 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		Graphics2D g2d = bufferg;
 
 		
-		boolean hasModel = orirgamiModel.hasModel();
+		if (origamiModel == null) {
+			return;
+		}
+		boolean hasModel = origamiModel.hasModel();
 
 		if (hasModel) {
 			g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
@@ -313,10 +331,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
 		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
 
-		bufferImage = createImage(getWidth(), getHeight());
-		bufferg = (Graphics2D) bufferImage.getGraphics();
-
-		updateAffineTransform();
+		buildBufferImage();
 		repaint();
 	}
 

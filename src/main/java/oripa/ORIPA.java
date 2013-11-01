@@ -31,9 +31,7 @@ import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.view.estimation.EstimationResultFrame;
 import oripa.view.main.MainFrame;
-import oripa.view.model.ModelViewFrame;
 import oripa.view.model.ModelViewFrame3D;
 
 
@@ -42,7 +40,7 @@ public class ORIPA {
     public static String TITLE;
     public static Doc doc;
     public static MainFrame mainFrame;
-    public static ModelViewFrame modelFrame;
+//    public static ModelViewFrame modelFrame;
     public static String infoString = "ORIPA S: (c) 2012 OUCHI Koji\n" +
     		"http://github.com/Ooouch1\n" +
     		"ORIPA: (c) 2005-2009 Jun Mitani\nhttp://mitani.cs.tsukuba.ac.jp/\n\n"+
@@ -53,7 +51,6 @@ public class ORIPA {
     public static ResourceBundle res;
     public static ModelViewFrame3D modelFrame3D;
     public static int tmpInt;
-    public static EstimationResultFrame renderFrame;
     ;
 //    public static FoldabilityCheckFrame checkFrame;
 
@@ -113,10 +110,10 @@ public class ORIPA {
         mainFrame.setVisible(true);
 
         // Expected folded origami frame (x-ray)
-        modelFrame = new ModelViewFrame();
-        modelFrame.setBounds(originX + (appTotalWidth - modelFrameWidth) / 2, originY + (appTotalHeight - modelFrameHeight) / 2,
-                modelFrameWidth, modelFrameHeight);
-        modelFrame.setVisible(false);
+//        modelFrame = new ModelViewFrame();
+//        modelFrame.setBounds(originX + (appTotalWidth - modelFrameWidth) / 2, originY + (appTotalHeight - modelFrameHeight) / 2,
+//                modelFrameWidth, modelFrameHeight);
+//        modelFrame.setVisible(false);
 
         // "Folded origami" frame. Estimation of the folded form.
 //        renderFrame = new EstimationResultFrame();
