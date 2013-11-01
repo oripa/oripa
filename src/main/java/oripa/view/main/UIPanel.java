@@ -750,7 +750,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 			JFrame modelView = modelViewFactory.createFrame(this, origamiModel);
 			
 			modelView.setVisible(true);
-
+			modelView.repaint();
 //			ModelFrameSettingDB modelSetting = ModelFrameSettingDB.getInstance();
 //			modelSetting.setFrameVisible(true);
 //			modelSetting.notifyObservers();

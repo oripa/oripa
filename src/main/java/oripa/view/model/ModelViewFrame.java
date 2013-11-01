@@ -77,7 +77,12 @@ implements ActionListener, AdjustmentListener, Observer{
     private JScrollBar scrollBarAngle = new JScrollBar(JScrollBar.HORIZONTAL, 90, 5, 0, 185);
     private JScrollBar scrollBarPosition = new JScrollBar(JScrollBar.VERTICAL, 0, 5, -150, 150);
 
-    public ModelViewFrame() {
+    public ModelViewFrame(int width, int height) {
+    	initialize();
+    	this.setBounds(0, 0, width, height);
+    }
+
+    private void initialize() {
     	
     	setting.addObserver(this);
     	

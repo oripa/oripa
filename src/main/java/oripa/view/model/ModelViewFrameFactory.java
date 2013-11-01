@@ -37,13 +37,12 @@ public class ModelViewFrameFactory {
     		) {
 
 		if (frame == null) {
-			frame = new ModelViewFrame();
-			frame.setSize(400, 400);
+			frame = new ModelViewFrame(400, 400);
 		}
 
 		frame.setModel(origamiModel);
 		frame.setVisible(false);
-		frame.repaint();
+
 		
 		ChildFrameManager.getManager().putChild(parent, frame);
 

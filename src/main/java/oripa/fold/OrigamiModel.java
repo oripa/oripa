@@ -27,8 +27,6 @@ public class OrigamiModel {
 
 	private boolean hasModel = false;
 
-	private boolean probablyFoldable = false;
-	
 	private double paperSize = -1;
 	
 
@@ -113,21 +111,21 @@ public class OrigamiModel {
 //	}
 
 	/**
-	 * @param faces facesを登録する
+	 * @param faces faces
 	 */
 	public void setFaces(List<OriFace> faces) {
 		this.faces = faces;
 	}
 
 	/**
-	 * @param vertices verticesを登録する
+	 * @param vertices vertices
 	 */
 	public void setVertices(List<OriVertex> vertices) {
 		this.vertices = vertices;
 	}
 
 	/**
-	 * @param edges edgesを登録する
+	 * @param edges edges
 	 */
 	public void setEdges(List<OriEdge> edges) {
 		this.edges = edges;
@@ -141,7 +139,7 @@ public class OrigamiModel {
 	}
 
 	/**
-	 * @param hasModel hasModelを登録する
+	 * @param hasModel hasModel
 	 */
 	public void setHasModel(boolean hasModel) {
 		this.hasModel = hasModel;

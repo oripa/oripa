@@ -89,7 +89,6 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	public void setModel(OrigamiModel origamiModel) {
 		this.origamiModel = origamiModel;
 
-		resetViewMatrix();
 	}
 	
 	private void resetViewMatrix() {
@@ -98,6 +97,9 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		List<OriFace> faces = origamiModel.getFaces();
 
 		boolean hasModel = origamiModel.hasModel();
+
+		int height = getHeight();
+		int width  = getWidth();
 
 		rotateAngle = 0;
 		if (!hasModel) {
@@ -116,7 +118,8 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 			}
 			modelCenter.x = (maxV.x + minV.x) / 2;
 			modelCenter.y = (maxV.y + minV.y) / 2;
-			scale = 0.8 * Math.min(getWidth() / (maxV.x - minV.x), getHeight() / (maxV.y - minV.y));
+
+			scale = 0.8 * Math.min(width / (maxV.x - minV.x), height / (maxV.y - minV.y));
 			updateAffineTransform();
 			recalcCrossLine();
 		}
@@ -331,6 +334,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
 		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
 
+		resetViewMatrix();
 		buildBufferImage();
 		repaint();
 	}
