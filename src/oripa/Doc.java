@@ -30,7 +30,12 @@ class PointComparatorX implements Comparator {
 
     @Override
     public int compare(Object v1, Object v2) {
-        return ((Vector2d) v1).x > ((Vector2d) v2).x ? 1 : -1;
+    	if(((Vector2d) v1).x > ((Vector2d) v2).x)
+    		return  1; 
+    	else if(((Vector2d) v1).x < ((Vector2d) v2).x) 
+    		return -1;
+    	else
+    		return 0;
     }
 }
 
@@ -38,7 +43,12 @@ class PointComparatorY implements Comparator {
 
     @Override
     public int compare(Object v1, Object v2) {
-        return ((Vector2d) v1).y > ((Vector2d) v2).y ? 1 : -1;
+    	if(((Vector2d) v1).y > ((Vector2d) v2).y)
+    		return  1; 
+    	else if(((Vector2d) v1).y < ((Vector2d) v2).y) 
+    		return -1;
+    	else
+    		return 0;
     }
 }
 
@@ -46,7 +56,12 @@ class FaceOrderComparator implements Comparator {
 
     @Override
     public int compare(Object f1, Object f2) {
-        return ((OriFace) f1).z_order > ((OriFace) f2).z_order ? 1 : -1;
+    	if(((OriFace) f1).z_order > ((OriFace) f2).z_order)
+    		return 1; 
+    	else if (((OriFace) f1).z_order < ((OriFace) f2).z_order)
+    		return -1;
+    	else
+    		return 0;
     }
 }
 
