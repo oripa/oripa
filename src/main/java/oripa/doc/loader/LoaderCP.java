@@ -30,90 +30,95 @@ import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
 import oripa.value.OriLine;
 
-public class LoaderCP implements Loader{
+public class LoaderCP implements Loader<Doc> {
 
-    public ArrayList<OriLine> lines = new ArrayList<>();
+	public ArrayList<OriLine> lines = new ArrayList<>();
 
-    public Doc load(String filePath) {
-        Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-        Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
+	@Override
+	public Doc load(String filePath) {
+		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
+		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 
-        try {
-            Reader r = new FileReader(filePath);
-            StreamTokenizer st = new StreamTokenizer(r);
-            st.resetSyntax();
-            st.wordChars('0', '9');
-            st.wordChars('.', '.');
-            st.wordChars('0', '\u00FF');
-            st.wordChars('-', '-');
-            st.whitespaceChars(' ', ' ');
-            st.whitespaceChars('\t', '\t');
-            st.whitespaceChars('\n', '\n');
-            st.whitespaceChars('\r', '\r');
+		try {
+			Reader r = new FileReader(filePath);
+			StreamTokenizer st = new StreamTokenizer(r);
+			st.resetSyntax();
+			st.wordChars('0', '9');
+			st.wordChars('.', '.');
+			st.wordChars('0', '\u00FF');
+			st.wordChars('-', '-');
+			st.whitespaceChars(' ', ' ');
+			st.whitespaceChars('\t', '\t');
+			st.whitespaceChars('\n', '\n');
+			st.whitespaceChars('\r', '\r');
 
-            int token;
+			int token;
 
-            OriLine line;
-            while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
-                line = new OriLine();
-                lines.add(line);
+			OriLine line;
+			while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
+				line = new OriLine();
+				lines.add(line);
 
-                line.typeVal = Integer.parseInt(st.sval);// == 1 ? OriLine.TYPE_RIDGE : OriLine.TYPE_VALLEY;
-                System.out.println("line type " + line.typeVal);
+				line.typeVal = Integer.parseInt(st.sval);// == 1 ?
+															// OriLine.TYPE_RIDGE
+															// :
+															// OriLine.TYPE_VALLEY;
+				System.out.println("line type " + line.typeVal);
 
-                token = st.nextToken();
-                line.p0.x = Double.parseDouble(st.sval);
+				token = st.nextToken();
+				line.p0.x = Double.parseDouble(st.sval);
 
-                token = st.nextToken();
-                line.p0.y = Double.parseDouble(st.sval);
+				token = st.nextToken();
+				line.p0.y = Double.parseDouble(st.sval);
 
+				token = st.nextToken();
+				line.p1.x = Double.parseDouble(st.sval);
 
-                token = st.nextToken();
-                line.p1.x = Double.parseDouble(st.sval);
+				token = st.nextToken();
+				line.p1.y = Double.parseDouble(st.sval);
 
-                token = st.nextToken();
-                line.p1.y = Double.parseDouble(st.sval);
+			}
 
-            }
+			System.out.println("end");
 
-            System.out.println("end");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		for (OriLine line : lines) {
+			minV.x = Math.min(minV.x, line.p0.x);
+			minV.x = Math.min(minV.x, line.p1.x);
+			minV.y = Math.min(minV.y, line.p0.y);
+			minV.y = Math.min(minV.y, line.p1.y);
 
-        for (OriLine line : lines) {
-            minV.x = Math.min(minV.x, line.p0.x);
-            minV.x = Math.min(minV.x, line.p1.x);
-            minV.y = Math.min(minV.y, line.p0.y);
-            minV.y = Math.min(minV.y, line.p1.y);
+			maxV.x = Math.max(maxV.x, line.p0.x);
+			maxV.x = Math.max(maxV.x, line.p1.x);
+			maxV.y = Math.max(maxV.y, line.p0.y);
+			maxV.y = Math.max(maxV.y, line.p1.y);
+		}
 
-            maxV.x = Math.max(maxV.x, line.p0.x);
-            maxV.x = Math.max(maxV.x, line.p1.x);
-            maxV.y = Math.max(maxV.y, line.p0.y);
-            maxV.y = Math.max(maxV.y, line.p1.y);
-        }
+		// size normalization
+		double size = 400;
+		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0,
+				(minV.y + maxV.y) / 2.0);
+		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
+		for (OriLine line : lines) {
+			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
+			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
+			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
+			line.p1.y = (line.p1.y - center.y) / bboxSize * size;
+		}
 
-        // size normalization
-        double size = 400;
-        Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
-        double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
-        for (OriLine line : lines) {
-            line.p0.x = (line.p0.x - center.x) / bboxSize * size;
-            line.p0.y = (line.p0.y - center.y) / bboxSize * size;
-            line.p1.x = (line.p1.x - center.x) / bboxSize * size;
-            line.p1.y = (line.p1.y - center.y) / bboxSize * size;
-        }
+		// for (OriLine l : lines) {
+		// doc.addLine(l);
+		// System.out.println("Linenum=" + creasePattern.size());
+		// }
+		CreasePatternFactory factory = new CreasePatternFactory();
+		CreasePatternInterface creasePattern = factory
+				.createCreasePattern(lines);
+		Doc doc = new Doc(400);
+		doc.setCreasePattern(creasePattern);
+		return doc;
 
-//        for (OriLine l : lines) {
-//            doc.addLine(l);
-//            System.out.println("Linenum=" + creasePattern.size());
-//        }
-        CreasePatternFactory factory = new CreasePatternFactory();
-        CreasePatternInterface creasePattern = factory.createCreasePattern(lines);
-        Doc doc = new Doc(400);
-        doc.setCreasePattern(creasePattern);
-        return doc;
-
-    }
+	}
 }

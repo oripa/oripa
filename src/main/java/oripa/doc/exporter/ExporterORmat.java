@@ -30,7 +30,7 @@ import oripa.fold.OriVertex;
 import oripa.fold.OrigamiModel;
 
 // export folded model
-public class ExporterORmat implements Exporter{
+public class ExporterORmat implements DocExporter{
 
     public boolean export(Doc doc, String filepath) throws Exception {
     	OrigamiModel origamiModel = doc.getOrigamiModel();

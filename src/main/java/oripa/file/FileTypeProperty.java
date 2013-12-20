@@ -16,12 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.doc.exporter;
+package oripa.file;
 
 /**
  * @author Koji
- *
+ * 
  */
-public interface Exporter<Data> {
-	public abstract boolean export(Data data, String filePath) throws Exception;
+public interface FileTypeProperty {
+
+	/**
+	 * 
+	 * @return extensions for this file type.
+	 */
+	public abstract String[] getExtensions();
+
+	/**
+	 * @return a text for identifying file type.
+	 */
+	public abstract String getKeyText();
+
 }

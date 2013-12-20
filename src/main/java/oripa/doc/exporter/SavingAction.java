@@ -18,10 +18,36 @@
  */
 package oripa.doc.exporter;
 
+import oripa.doc.Doc;
+
 /**
  * @author Koji
- *
+ * 
  */
-public interface Exporter<Data> {
-	public abstract boolean export(Data data, String filePath) throws Exception;
+public class SavingAction extends oripa.file.AbstractSavingAction<Doc> {
+
+	private Exporter<Doc> exporter = null;
+
+	public SavingAction(Exporter<Doc> exporter) {
+		super(Doc.class);
+		this.exporter = exporter;
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see oripa.file.SavingAction#save(java.lang.String)
+	 */
+	@Override
+	public boolean save(Doc doc) {
+		boolean success = false;
+		try {
+			success = exporter.export(doc, getPath());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return success;
+	}
+
 }

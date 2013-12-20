@@ -28,39 +28,36 @@ import oripa.doc.Doc;
 import oripa.file.FileVersionError;
 import oripa.resource.Version;
 
-public class LoaderXML implements Loader{
+public class LoaderXML implements Loader<Doc> {
 
-    public DataSet loadAsDataSet(String filePath) {
-        DataSet dataset;
-        try {
-            XMLDecoder dec = new XMLDecoder(
-                    new BufferedInputStream(
-                    new FileInputStream(filePath)));
-            dataset = (DataSet) dec.readObject();
-            dec.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+	public DataSet loadAsDataSet(String filePath) {
+		DataSet dataset;
+		try {
+			XMLDecoder dec = new XMLDecoder(new BufferedInputStream(
+					new FileInputStream(filePath)));
+			dataset = (DataSet) dec.readObject();
+			dec.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
 
-        return dataset;
-    }
+		return dataset;
+	}
 
 	@Override
 	public Doc load(String filePath) throws FileVersionError {
-		
+
 		Doc doc = new Doc();
-		
+
 		DataSet data = loadAsDataSet(filePath);
-		
+
 		if (data.getMainVersion() > Version.FILE_MAJOR_VERSION) {
 			throw new FileVersionError();
 		}
-		
-		
+
 		data.recover(doc);
-		
-		
+
 		return doc;
 	}
 }

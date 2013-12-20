@@ -25,7 +25,7 @@ import oripa.doc.Doc;
 import oripa.paint.CreasePatternInterface;
 import oripa.value.OriLine;
 
-public class ExporterEPS implements Exporter{
+public class ExporterEPS implements DocExporter{
 
     public boolean export(Doc doc, String filepath) throws Exception {
         FileWriter fw = new FileWriter(filepath);

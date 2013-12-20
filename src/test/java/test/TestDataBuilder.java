@@ -1,7 +1,7 @@
 package test;
 
 import oripa.doc.Doc;
-import oripa.doc.exporter.Exporter;
+import oripa.doc.exporter.DocExporter;
 import oripa.doc.exporter.ExporterXML;
 import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
@@ -51,7 +51,7 @@ public class TestDataBuilder {
 
 		}
 		
-		Exporter exporter = new ExporterXML();
+		DocExporter exporter = new ExporterXML();
 
 		try{
 			Doc doc = new Doc(SIZE);

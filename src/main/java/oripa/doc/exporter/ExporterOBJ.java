@@ -29,7 +29,7 @@ import oripa.fold.OriHalfedge;
 import oripa.fold.OriVertex;
 import oripa.fold.OrigamiModel;
 
-public class ExporterOBJ implements Exporter{
+public class ExporterOBJ implements DocExporter{
 
     public boolean export(Doc doc, String filepath) throws Exception {
         FileWriter fw = new FileWriter(filepath);

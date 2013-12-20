@@ -1,32 +1,27 @@
 package oripa.file;
 
+public class FileChooserFactory<Data> {
 
-public class FileChooserFactory {
+	public FileChooser<Data>
+			createChooser(String path, FileAccessSupportFilter<Data>[] filters) {
 
-	
+		FileChooser<Data> fileChooser;
 
-	public FileChooser 
-	createChooser(String path, FileFilterEx[] filters){
-
-		FileChooser fileChooser;
-		
-		if(path != null){
-			fileChooser = new FileChooser(path);
+		if (path != null) {
+			fileChooser = new FileChooser<Data>(path);
 		}
 		else {
-			fileChooser = new FileChooser();
+			fileChooser = new FileChooser<Data>();
 		}
-		
+
 		for (int i = 0; i < filters.length; i++) {
-			fileChooser.addChoosableFileFilter(filters[i]);			
+			fileChooser.addChoosableFileFilter(filters[i]);
 		}
 
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.setFileFilter(filters[0]);
-		
-		return  fileChooser;
+
+		return fileChooser;
 	}
-
-
 
 }

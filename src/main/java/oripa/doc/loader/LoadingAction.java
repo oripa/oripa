@@ -16,12 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.doc.exporter;
+package oripa.doc.loader;
+
+import oripa.doc.Doc;
+import oripa.file.AbstractLoadingAction;
+import oripa.file.FileVersionError;
 
 /**
  * @author Koji
- *
+ * 
  */
-public interface Exporter<Data> {
-	public abstract boolean export(Data data, String filePath) throws Exception;
+public class LoadingAction extends AbstractLoadingAction<Doc> {
+
+	private final Loader<Doc> loader;
+
+	/**
+	 * Constructor
+	 */
+	public LoadingAction(Loader l) {
+		loader = l;
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see oripa.file.AbstractLoadingAction#load(java.lang.String)
+	 */
+	@Override
+	public Doc load() throws FileVersionError {
+		Doc document = loader.load(getPath());
+
+		document.setDataFilePath(getPath());
+
+		return document;
+	}
+
 }

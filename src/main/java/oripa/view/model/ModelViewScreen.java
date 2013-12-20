@@ -86,20 +86,24 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		preSize = getSize();
 	}
 
-	public void setModel(OrigamiModel origamiModel) {
+	public void setModel(OrigamiModel origamiModel, int boundSize) {
 		this.origamiModel = origamiModel;
-
+		resetViewMatrix(boundSize);
 	}
 	
-	private void resetViewMatrix() {
+	//! Asynchronous behavior of JComponent causes
+	// delayed response of size changing:
+	//    setSize(w, h);
+	//    resetViewMatrix();
+	// may results scale = zero if it is just after construction.
+	
+	private void resetViewMatrix(int boundSize) {
 //		Doc document = ORIPA.doc;
 //		OrigamiModel origamiModel = document.getOrigamiModel();
 		List<OriFace> faces = origamiModel.getFaces();
 
 		boolean hasModel = origamiModel.hasModel();
 
-		int height = getHeight();
-		int width  = getWidth();
 
 		rotateAngle = 0;
 		if (!hasModel) {
@@ -119,7 +123,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 			modelCenter.x = (maxV.x + minV.x) / 2;
 			modelCenter.y = (maxV.y + minV.y) / 2;
 
-			scale = 0.8 * Math.min(width / (maxV.x - minV.x), height / (maxV.y - minV.y));
+			scale = 0.8 * Math.min(boundSize / (maxV.x - minV.x), boundSize / (maxV.y - minV.y));
 			updateAffineTransform();
 			recalcCrossLine();
 		}
@@ -334,7 +338,6 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
 		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
 
-		resetViewMatrix();
 		buildBufferImage();
 		repaint();
 	}

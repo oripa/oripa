@@ -12,18 +12,18 @@ import oripa.value.OriLine;
 public class FoldabilityCheckFrameFactory {
 	private static FoldabilityCheckFrame frame = null;
 
-	public JFrame createFrame(
-			JComponent parent,
-			OrigamiModel origamiModel, 
-    		Collection<OriLine> creasePattern //, FoldedModelInfo foldedModelInfo
-    		) {
+	public JFrame createFrame(JComponent parent, OrigamiModel origamiModel,
+			Collection<OriLine> creasePattern // , FoldedModelInfo
+												// foldedModelInfo
+	) {
 
 		if (frame == null) {
 			frame = new FoldabilityCheckFrame();
 		}
 
-		frame.setModel(origamiModel, creasePattern //, foldedModelInfo
-				);
+		frame.setModel(origamiModel, creasePattern // , foldedModelInfo
+		);
+		frame.repaint();
 		ChildFrameManager.getManager().putChild(parent, frame);
 
 		return frame;
