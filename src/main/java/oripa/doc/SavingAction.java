@@ -16,12 +16,37 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.doc.exporter;
+package oripa.doc;
+
 
 /**
  * @author Koji
- *
+ * 
  */
-public interface Exporter<Data> {
-	public abstract boolean export(Data data, String filePath) throws Exception;
+public class SavingAction extends oripa.file.AbstractSavingAction<Doc> {
+
+	private Exporter<Doc> exporter = null;
+
+	public SavingAction(Exporter<Doc> exporter) {
+		super(Doc.class);
+		this.exporter = exporter;
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see oripa.file.SavingAction#save(java.lang.String)
+	 */
+	@Override
+	public boolean save(Doc doc) {
+		boolean success = false;
+		try {
+			success = exporter.export(doc, getPath());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return success;
+	}
+
 }

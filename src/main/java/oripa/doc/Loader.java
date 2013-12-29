@@ -1,4 +1,4 @@
-package oripa.doc.loader;
+package oripa.doc;
 
 import oripa.file.FileVersionError;
 

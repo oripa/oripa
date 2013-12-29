@@ -19,129 +19,140 @@
 package oripa;
 
 import oripa.doc.Doc;
+import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
 public class DataSet {
 
-    private int mainVersion;
-    private int subVersion;
-    public OriLineProxy[] lines;
-    private double paperSize;
-    public String title;
-    public String editorName;
-    public String originalAuthorName;
-    public String reference;
-    public String memo;
+	private int mainVersion;
+	private int subVersion;
+	public OriLineProxy[] lines;
+	private double paperSize;
+	public String title;
+	public String editorName;
+	public String originalAuthorName;
+	public String reference;
+	public String memo;
 
-    public DataSet() {
-    }
+	public DataSet() {
+	}
 
-    public DataSet(Doc doc) {
-        mainVersion = Version.FILE_MAJOR_VERSION;
-        subVersion = Version.FILE_MINOR_VERSION;
+	public DataSet(Doc doc) {
+		mainVersion = Version.FILE_MAJOR_VERSION;
+		subVersion = Version.FILE_MINOR_VERSION;
 
-        CreasePatternInterface creasePattern = doc.getCreasePattern();
-        int lineNum = creasePattern.size();
-        lines = new OriLineProxy[lineNum];
-        OriLine[] docLines = new OriLine[lineNum];
-        creasePattern.toArray(docLines);
-        for (int i = 0; i < lineNum; i++) {
-            lines[i] = new OriLineProxy(docLines[i]);
-        }
-        paperSize = doc.getPaperSize();
+		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		int lineNum = creasePattern.size();
+		lines = new OriLineProxy[lineNum];
+		OriLine[] docLines = new OriLine[lineNum];
+		creasePattern.toArray(docLines);
+		for (int i = 0; i < lineNum; i++) {
+			lines[i] = new OriLineProxy(docLines[i]);
+		}
+		paperSize = doc.getPaperSize();
 
-        title = doc.getTitle();
-        editorName = doc.getEditorName();
-        originalAuthorName = doc.getOriginalAuthorName();
-        reference = doc.getReference();
-        memo = doc.getMemo();
-    }
+		title = doc.getTitle();
+		editorName = doc.getEditorName();
+		originalAuthorName = doc.getOriginalAuthorName();
+		reference = doc.getReference();
+		memo = doc.getMemo();
+	}
 
-    public void recover(Doc doc) {
-    	CreasePatternInterface creasePattern = doc.getCreasePattern();
-        creasePattern.clear();
-        for (int i = 0; i < lines.length; i++) {
-            creasePattern.add(lines[i].getLine());
-        }
-        doc.setPaperSize(paperSize);
-        doc.setTitle(title);
-        doc.setEditorName(editorName);
-        doc.setOriginalAuthorName(originalAuthorName);
-        doc.setReference(reference);
-        doc.setMemo(memo);;
-    }
+	public Doc recover() {
 
-    public void setPaperSize(double d) {
-        paperSize = d;
-    }
+		CreasePatternFactory factory = new CreasePatternFactory();
+		CreasePatternInterface creasePattern = factory
+				.createCreasePattern(paperSize);
 
-    public double getPaperSize() {
-        return paperSize;
-    }
+		for (int i = 0; i < lines.length; i++) {
+			creasePattern.add(lines[i].getLine());
+		}
 
-    public void setMainVersion(int i) {
-        mainVersion = i;
-    }
+		Doc doc = new Doc();
+		doc.setCreasePattern(creasePattern);
+		doc.setPaperSize(paperSize);
+		doc.setTitle(title);
+		doc.setEditorName(editorName);
+		doc.setOriginalAuthorName(originalAuthorName);
+		doc.setReference(reference);
+		doc.setMemo(memo);
+		;
 
-    public int getMainVersion() {
-        return mainVersion;
-    }
+		return doc;
 
-    public void setSubVersion(int i) {
-        subVersion = i;
-    }
+	}
 
-    public int getSubVersion() {
-        return subVersion;
-    }
+	public void setPaperSize(double d) {
+		paperSize = d;
+	}
 
-    public void setLines(OriLineProxy[] l) {
-        lines = l;
-    }
+	public double getPaperSize() {
+		return paperSize;
+	}
 
-    public OriLineProxy[] getLines() {
-        return lines;
-    }
+	public void setMainVersion(int i) {
+		mainVersion = i;
+	}
 
-    public void setTitle(String s) {
-        title = s;
-    }
+	public int getMainVersion() {
+		return mainVersion;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setSubVersion(int i) {
+		subVersion = i;
+	}
 
-    public void setEditorName(String s) {
-        editorName = s;
-    }
+	public int getSubVersion() {
+		return subVersion;
+	}
 
-    public String getEditorName() {
-        return editorName;
-    }
+	public void setLines(OriLineProxy[] l) {
+		lines = l;
+	}
 
-    public void setOriginalAuthorName(String s) {
-        originalAuthorName = s;
-    }
+	public OriLineProxy[] getLines() {
+		return lines;
+	}
 
-    public String getOriginalAuthorName() {
-        return originalAuthorName;
-    }
+	public void setTitle(String s) {
+		title = s;
+	}
 
-    public void setReference(String s) {
-        reference = s;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getReference() {
-        return reference;
-    }
+	public void setEditorName(String s) {
+		editorName = s;
+	}
 
-    public void setMemo(String s) {
-        memo = s;
-    }
+	public String getEditorName() {
+		return editorName;
+	}
 
-    public String getMemo() {
-        return memo;
-    }
+	public void setOriginalAuthorName(String s) {
+		originalAuthorName = s;
+	}
+
+	public String getOriginalAuthorName() {
+		return originalAuthorName;
+	}
+
+	public void setReference(String s) {
+		reference = s;
+	}
+
+	public String getReference() {
+		return reference;
+	}
+
+	public void setMemo(String s) {
+		memo = s;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
 }

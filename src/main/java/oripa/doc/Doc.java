@@ -40,7 +40,7 @@ import oripa.value.OriLine;
 
 public class Doc {
 
-	private double paperSize;
+	// private double paperSize;
 
 	// Crease Pattern
 
@@ -85,7 +85,7 @@ public class Doc {
 
 	private void initialize(double size) {
 
-		this.paperSize = size;
+		// this.paperSize = size;
 		creasePattern = (new CreasePatternFactory()).createCreasePattern(size);
 
 		origamiModel = new OrigamiModel(size);
@@ -254,7 +254,7 @@ public class Doc {
 	 *            size is set to this instance.
 	 */
 	public void setPaperSize(double size) {
-		this.paperSize = size;
+		// this.paperSize = size;
 		// origamiModel.setPaperSize(size);
 		creasePattern.changePaperSize(size);
 	}
@@ -263,7 +263,8 @@ public class Doc {
 	 * @return size
 	 */
 	public double getPaperSize() {
-		return paperSize;
+		return creasePattern.getPaperSize();
+		// return paperSize;
 	}
 
 	/**

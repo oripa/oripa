@@ -11,15 +11,14 @@ import oripa.doc.exporter.ExporterSVGFactory;
 import oripa.doc.exporter.ExporterXML;
 import oripa.doc.exporter.ModelExporterOBJ;
 import oripa.doc.exporter.PictureExporter;
-import oripa.doc.exporter.SavingAction;
 import oripa.doc.loader.LoaderCP;
 import oripa.doc.loader.LoaderDXF;
 import oripa.doc.loader.LoaderPDF;
 import oripa.doc.loader.LoaderXML;
-import oripa.doc.loader.LoadingAction;
 import oripa.file.FileAccessSupportFilter;
 
 /**
+ * Manages available filters for file access.
  * 
  * @author OUCHI Koji
  * 

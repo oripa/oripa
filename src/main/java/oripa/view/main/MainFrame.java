@@ -456,7 +456,7 @@ public class MainFrame extends JFrame implements ActionListener,
 		if ((document.getDataFilePath()).equals("")) {
 			fileName = ORIPA.res.getString("DefaultFileName");
 		} else {
-			fileName = ORIPA.doc.getDataFileName();
+			fileName = document.getDataFileName();
 		}
 
 		setTitle(fileName + " - " + ORIPA.TITLE);

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
+import oripa.doc.Loader;
 import oripa.paint.CreasePatternFactory;
 import oripa.paint.CreasePatternInterface;
 import oripa.value.OriLine;
