@@ -10,24 +10,24 @@ import oripa.value.OriLine;
 public class CorrugationChecker {
 
     public int getVertexType(OriVertex v){
-        int[] vertexTypeCount = {0, 0};
+        int[] edgeTypeCount = {0, 0};
         for (OriEdge e: v.edges){
             if (e.type == OriLine.TYPE_CUT){
                 return 0;
             }
             if (e.type == OriLine.TYPE_RIDGE){
-                vertexTypeCount[0]++;
+                edgeTypeCount[0]++;
             }
             if (e.type == OriLine.TYPE_VALLEY){
-                vertexTypeCount[1]++;
+                edgeTypeCount[1]++;
             }
         }
 
-        if(vertexTypeCount[0] < vertexTypeCount[1]){
+        if(edgeTypeCount[0] < edgeTypeCount[1]){
             return -1;
         }
 
-        if(vertexTypeCount[0] > vertexTypeCount[1]){
+        if(edgeTypeCount[0] > edgeTypeCount[1]){
             return 1;
         }
 
