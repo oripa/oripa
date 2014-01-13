@@ -57,6 +57,7 @@ import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.action.PaintActionSetter;
+import oripa.corrugation.CorrugationChecker;
 import oripa.doc.Doc;
 import oripa.file.ImageResourceLoader;
 import oripa.fold.BoundBox;
@@ -219,6 +220,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 			resources.getString(ResourceKey.LABEL, StringID.UI.FULL_ESTIMATION_ID), false);
 	JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
+	JButton buttonCheckCorrugation = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_CORRUGATION_ID));
 	PainterScreen screen;
 
 
@@ -493,6 +496,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 		n++;
 		buttonsPanel.add(buttonCheckWindow);
 		n++;
+		buttonsPanel.add(buttonCheckCorrugation);
+		n++;
 		buttonsPanel.add(buildButton);
 		n++;
 		buttonsPanel.add(doFullEstimationCheckBox);
@@ -656,6 +661,30 @@ implements ActionListener, PropertyChangeListener, Observer {
 				FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
 				JFrame checker = checkerFactory.createFrame(origamiModel, creasePattern);
 				checker.setVisible(true);
+			}
+		});
+
+		buttonCheckCorrugation.addActionListener(new java.awt.event.ActionListener(){
+			@Override
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				Doc document = ORIPA.doc;
+				OrigamiModel origamiModel;
+				Collection<OriLine> creasePattern = document.getCreasePattern();
+				CorrugationChecker corrugationChecker = new CorrugationChecker();
+
+				OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+				origamiModel = modelFactory.createOrigamiModel3(creasePattern, document.getPaperSize(), true);
+
+				boolean isCorrugation = corrugationChecker.evaluate(origamiModel);
+				String corrugationResult;
+				if(isCorrugation){
+					corrugationResult = ORIPA.res.getString(StringID.Corrugation.IS_CORRUGATION);
+				}else{
+					corrugationResult = ORIPA.res.getString(StringID.Corrugation.IS_NOT_CORRUGATION);
+				}
+				JOptionPane.showMessageDialog(
+					ORIPA.mainFrame,corrugationResult , ORIPA.res.getString("Title"), JOptionPane.INFORMATION_MESSAGE);
+
 			}
 		});
 

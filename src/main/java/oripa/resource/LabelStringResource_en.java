@@ -56,6 +56,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 	        { StringID.UI.FOLD_ID, "Fold..." }, 
 	        { StringID.UI.FULL_ESTIMATION_ID, "Full Estimation"},
 	        { StringID.UI.CHECK_WINDOW_ID, "Check Window"},
+	        { StringID.UI.CHECK_CORRUGATION_ID, "Check Corrugation"},
 	        
 	        { StringID.UI.GRID_SIZE_CHANGE_ID, "Set" }, 
 	        { StringID.UI.SHOW_VERTICES_ID, "Show Vertices" }, 

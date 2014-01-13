@@ -59,6 +59,7 @@ public class StringID {
 	    public static final String FOLD_ID =  "UI_Fold"; 
 		public static final String FULL_ESTIMATION_ID = "UI_FullEstimation";
 		public static final String CHECK_WINDOW_ID = "UI_CheckWindow";
+		public static final String CHECK_CORRUGATION_ID = "UI_CheckCorrugation";
 
 	    public static final String GRID_SIZE_CHANGE_ID =  "UI_GridSizeChange"; 
 	    public static final String EDIT_MODE_ID =  "UI_EditMode"; 
@@ -70,6 +71,11 @@ public class StringID {
 		public static final String VALLEY_ID = "UI_Valley";
 		public static final String MOUNTAIN_ID = "UI_Mountain";
 		
+    }
+
+    public static class Corrugation{
+        public static final String IS_CORRUGATION = "Corrugation_true";
+        public static final String IS_NOT_CORRUGATION = "Corrugation_false";
     }
 
     //------------------------------------------------------------------------

@@ -73,6 +73,8 @@ public class StringResource extends ListResourceBundle {
         { "UI_Length", "Length"},
         { "UI_Angle", "Angle"},
         { "UI_GridDivideNum", "Div Num"},
+        { "Corrugation_true", "This is a corrugation"},
+        { "Corrugation_false", "This is not a corrugation"},
         { "Warning_foldFail1", "Failed to fold. Try again by deleting duplicating segments?"},
         { "Warning_foldFail2", "Failed to fold. It seems the pattern has basic problems."},
         { "MENU_Disp", "Display" },
