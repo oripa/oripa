@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import oripa.fold.OrigamiModel;
 import oripa.fold.OriEdge;
+import oripa.fold.OriFace;
+import oripa.fold.OriHalfedge;
 import oripa.fold.OriVertex;
 import oripa.value.OriLine;
 
@@ -70,7 +72,32 @@ public class CorrugationChecker {
         return true;
     }
 
+    public boolean evaluateSingleFaceCondition(OriFace f){
+        int[] edgeTypeCount = {0, 0, 0};
+        for(OriHalfedge he: f.halfedges){
+            if(he.edge.type == OriLine.TYPE_RIDGE){
+                edgeTypeCount[0]++;
+            }
+            if(he.edge.type == OriLine.TYPE_VALLEY){
+                edgeTypeCount[1]++;
+            }
+            if(he.edge.type == OriLine.TYPE_CUT){
+                return true;
+            }
+        }
+        return edgeTypeCount[0] >= 1 && edgeTypeCount[1] >= 1;
+    }
+
+    public boolean evaluateFaceConditionFull(OrigamiModel origamiModel){
+        for (OriFace f: origamiModel.getFaces()){
+            if (!evaluateSingleFaceCondition(f)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean evaluate(OrigamiModel origamiModel){
-        return evaluateVertexConditionFull(origamiModel);
+        return evaluateVertexConditionFull(origamiModel) && evaluateFaceConditionFull(origamiModel);
     }
 }
