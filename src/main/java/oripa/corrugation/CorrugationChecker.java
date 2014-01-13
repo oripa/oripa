@@ -11,11 +11,17 @@ import oripa.value.OriLine;
 
 public class CorrugationChecker {
 
+    final public static int TYPE_EDGE_VERTEX = 0;
+    final public static int TYPE_NONORIENTED_VERTEX = 1;
+    final public static int TYPE_VALLEY_VERTEX = 2;
+    final public static int TYPE_MOUNTAIN_VERTEX = 3;
+
+
     public int getVertexType(OriVertex v){
         int[] edgeTypeCount = {0, 0};
         for (OriEdge e: v.edges){
             if (e.type == OriLine.TYPE_CUT){
-                return 0;
+                return TYPE_EDGE_VERTEX;
             }
             if (e.type == OriLine.TYPE_RIDGE){
                 edgeTypeCount[0]++;
@@ -26,14 +32,14 @@ public class CorrugationChecker {
         }
 
         if(edgeTypeCount[0] < edgeTypeCount[1]){
-            return -1;
+            return TYPE_MOUNTAIN_VERTEX;
         }
 
         if(edgeTypeCount[0] > edgeTypeCount[1]){
-            return 1;
+            return TYPE_VALLEY_VERTEX;
         }
 
-        return 0;
+        return TYPE_NONORIENTED_VERTEX;
     }
 
     public boolean evaluateSingleVertexCondition(OriVertex v){
@@ -41,8 +47,8 @@ public class CorrugationChecker {
         ArrayList<Integer> vertexTypes;
         int thisVertexType = getVertexType(v);
         int oppositeVertexType;
-        boolean allNonOriented = true;
-        if (thisVertexType == 0){
+        boolean anyEdges = false;
+        if (thisVertexType == TYPE_EDGE_VERTEX){
             return true;
         }
 
@@ -53,14 +59,14 @@ public class CorrugationChecker {
                 oppositeVertex = e.sv;
             }
             oppositeVertexType = getVertexType(oppositeVertex);
-            if(oppositeVertexType != 0){
-                allNonOriented = false;
+            if(oppositeVertexType == TYPE_EDGE_VERTEX){
+                anyEdges = true;
             }
-            if(oppositeVertexType != 0 && oppositeVertexType != thisVertexType){
+            if(oppositeVertexType != TYPE_EDGE_VERTEX && oppositeVertexType != TYPE_NONORIENTED_VERTEX && oppositeVertexType != thisVertexType){
                 return true;
             }
         }
-        return allNonOriented;
+        return anyEdges;
     }
 
     public boolean evaluateVertexConditionFull(OrigamiModel origamiModel){
