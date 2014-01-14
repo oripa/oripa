@@ -78,7 +78,7 @@ public class CorrugationChecker {
         return true;
     }
 
-    public boolean evaluateSingleFaceCondition(OriFace f){
+    public boolean facePassesFaceEdgeCondition(OriFace f){
         int[] edgeTypeCount = {0, 0, 0};
         for(OriHalfedge he: f.halfedges){
             if(he.edge.type == OriLine.TYPE_RIDGE){
@@ -88,15 +88,39 @@ public class CorrugationChecker {
                 edgeTypeCount[1]++;
             }
             if(he.edge.type == OriLine.TYPE_CUT){
-                return true;
+                edgeTypeCount[2]++;
             }
         }
-        return edgeTypeCount[0] >= 1 && edgeTypeCount[1] >= 1;
+
+        if (edgeTypeCount[0] + edgeTypeCount[1] > 1){
+            return edgeTypeCount[0] > 0 && edgeTypeCount[1] > 0;
+        }
+        
+        return true;
     }
 
-    public boolean evaluateFaceConditionFull(OrigamiModel origamiModel){
+    public boolean evaluateSingleFaceEdgeCondition(OriFace f){
+        if (facePassesFaceEdgeCondition(f)){
+            return true;
+        }else{
+            /* Each face passes the condition or is adjacent to a face that is. */
+            for(OriHalfedge he: f.halfedges){
+                if(he.pair != null){
+                    if(facePassesFaceEdgeCondition(he.pair.face)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean evaluateFaceEdgeConditionFull(OrigamiModel origamiModel){
+        /***
+         * Each face with more than one crease edge has different crease edges.
+         */
         for (OriFace f: origamiModel.getFaces()){
-            if (!evaluateSingleFaceCondition(f)){
+            if (!evaluateSingleFaceEdgeCondition(f)){
                 return false;
             }
         }
