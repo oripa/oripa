@@ -42,7 +42,7 @@ public class CorrugationChecker {
         return TYPE_NONORIENTED_VERTEX;
     }
 
-    public boolean evaluateSingleVertexCondition(OriVertex v){
+    public boolean evaluateSingleVertexTypeCondition(OriVertex v){
         OriVertex oppositeVertex = v;
         ArrayList<Integer> vertexTypes;
         int thisVertexType = getVertexType(v);
@@ -69,9 +69,36 @@ public class CorrugationChecker {
         return anyEdges;
     }
 
-    public boolean evaluateVertexConditionFull(OrigamiModel origamiModel){
+    public boolean evaluateVertexTypeConditionFull(OrigamiModel origamiModel){
         for (OriVertex v : origamiModel.getVertices()) {
-            if (!evaluateSingleVertexCondition(v)){
+            if (!evaluateSingleVertexTypeCondition(v)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean evaluateSingleVertexEdgeCountCondition(OriVertex v){
+        int[] edgeTypeCount = {0, 0};
+        int mvDifference;
+        for(OriEdge e: v.edges){
+            if(e.type == OriLine.TYPE_CUT){
+                return true;
+            }
+            if(e.type == OriLine.TYPE_RIDGE){
+                edgeTypeCount[0]++;
+            }
+            if(e.type == OriLine.TYPE_VALLEY){
+                edgeTypeCount[1]++;
+            }
+        }
+        mvDifference = Math.abs(edgeTypeCount[0]-edgeTypeCount[1]);
+        return mvDifference == 0 || mvDifference == 2;
+    }
+
+    public boolean evaluateVertexEdgeCountConditionFull(OrigamiModel origamiModel){
+        for (OriVertex v: origamiModel.getVertices()){
+            if (!evaluateSingleVertexEdgeCountCondition(v)){
                 return false;
             }
         }
@@ -128,6 +155,6 @@ public class CorrugationChecker {
     }
 
     public boolean evaluate(OrigamiModel origamiModel){
-        return evaluateVertexConditionFull(origamiModel) && evaluateFaceConditionFull(origamiModel);
+        return evaluateVertexTypeConditionFull(origamiModel) && evaluateFaceEdgeConditionFull(origamiModel);
     }
 }

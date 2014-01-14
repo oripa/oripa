@@ -675,15 +675,31 @@ implements ActionListener, PropertyChangeListener, Observer {
 				OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 				origamiModel = modelFactory.createOrigamiModel3(creasePattern, document.getPaperSize(), true);
 
-				boolean isCorrugation = corrugationChecker.evaluate(origamiModel);
-				String corrugationResult;
-				if(isCorrugation){
-					corrugationResult = ORIPA.res.getString(StringID.Corrugation.IS_CORRUGATION);
+				String corrugationResult = "";
+				// boolean isCorrugation = corrugationChecker.evaluate(origamiModel);
+				// if(isCorrugation){
+				// 	corrugationResult = ORIPA.res.getString(StringID.Corrugation.IS_CORRUGATION);
+				// }else{
+				// 	corrugationResult = ORIPA.res.getString(StringID.Corrugation.IS_NOT_CORRUGATION);
+				// }
+				if(corrugationChecker.evaluateVertexTypeConditionFull(origamiModel)){
+					corrugationResult += "Passes vertex type condition";
 				}else{
-					corrugationResult = ORIPA.res.getString(StringID.Corrugation.IS_NOT_CORRUGATION);
+					corrugationResult += "Fails vertex type condition";
 				}
+				if(corrugationChecker.evaluateFaceEdgeConditionFull(origamiModel)){
+					corrugationResult += " | Passes face condition";
+				}else{
+					corrugationResult += " | Fails face condition";
+				}
+				if(corrugationChecker.evaluateVertexEdgeCountConditionFull(origamiModel)){
+					corrugationResult += " | Passes vertex edge count condition";
+				}else{
+					corrugationResult += " | Fails vertex edge count condition";
+				}
+
 				JOptionPane.showMessageDialog(
-					ORIPA.mainFrame,corrugationResult , ORIPA.res.getString("Title"), JOptionPane.INFORMATION_MESSAGE);
+					ORIPA.mainFrame, corrugationResult, ORIPA.res.getString("Title"), JOptionPane.INFORMATION_MESSAGE);
 
 			}
 		});
