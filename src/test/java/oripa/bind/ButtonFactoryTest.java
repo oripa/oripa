@@ -12,7 +12,7 @@ import org.junit.Test;
 import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
-import oripa.doc.Doc;
+import oripa.persistent.doc.Doc;
 import oripa.resource.StringID;
 
 public class ButtonFactoryTest {

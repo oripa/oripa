@@ -6,11 +6,11 @@ import java.util.Collection;
 import oripa.ORIPA;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.doc.Doc;
-import oripa.paint.EditMode;
-import oripa.paint.PaintContextInterface;
-import oripa.paint.copypaste.CopyAndPasteAction;
-import oripa.paint.cptool.Painter;
+import oripa.controller.paint.EditMode;
+import oripa.controller.paint.PaintContextInterface;
+import oripa.controller.paint.copypaste.CopyAndPasteAction;
+import oripa.domain.cptool.Painter;
+import oripa.persistent.doc.Doc;
 import oripa.value.OriLine;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {

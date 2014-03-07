@@ -3,8 +3,8 @@ package oripa.view.estimation;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import oripa.fold.FoldedModelInfo;
-import oripa.fold.OrigamiModel;
+import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.OrigamiModel;
 import oripa.util.gui.ChildFrameManager;
 
 public class EstimationResultFrameFactory {

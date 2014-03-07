@@ -1,11 +1,11 @@
 package test;
 
-import oripa.doc.Doc;
-import oripa.doc.exporter.DocExporter;
-import oripa.doc.exporter.ExporterXML;
-import oripa.paint.CreasePatternFactory;
-import oripa.paint.CreasePatternInterface;
-import oripa.paint.cptool.Painter;
+import oripa.domain.cptool.Painter;
+import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.exporter.DocExporter;
+import oripa.persistent.doc.exporter.ExporterXML;
 import oripa.value.OriLine;
 
 public class TestDataBuilder {

@@ -28,15 +28,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import oripa.ORIPA;
-import oripa.doc.Doc;
-import oripa.doc.FileTypeKey;
-import oripa.doc.SavingAction;
-import oripa.doc.exporter.ExporterORmat;
-import oripa.doc.exporter.ExporterSVGFactory;
-import oripa.file.FileAccessSupportFilter;
-import oripa.file.FileChooser;
-import oripa.file.FileChooserFactory;
-import oripa.fold.FoldedModelInfo;
+import oripa.domain.fold.FoldedModelInfo;
+import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.FileTypeKey;
+import oripa.persistent.doc.SavingAction;
+import oripa.persistent.doc.exporter.ExporterORmat;
+import oripa.persistent.doc.exporter.ExporterSVGFactory;
+import oripa.persistent.filetool.FileAccessSupportFilter;
+import oripa.persistent.filetool.FileChooser;
+import oripa.persistent.filetool.FileChooserFactory;
 
 public class EstimationResultUI extends JPanel {
 

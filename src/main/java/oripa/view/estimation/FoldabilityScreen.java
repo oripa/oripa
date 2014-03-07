@@ -37,11 +37,11 @@ import javax.swing.JPopupMenu;
 import javax.vecmath.Vector2d;
 
 import oripa.Config;
-import oripa.fold.OriFace;
-import oripa.fold.OriVertex;
-import oripa.fold.OrigamiModel;
-import oripa.fold.rule.FoldabilityChecker;
-import oripa.paint.CreasePatternGraphicDrawer;
+import oripa.controller.paint.CreasePatternGraphicDrawer;
+import oripa.domain.fold.OriFace;
+import oripa.domain.fold.OriVertex;
+import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.rule.FoldabilityChecker;
 import oripa.value.OriLine;
 
 /**

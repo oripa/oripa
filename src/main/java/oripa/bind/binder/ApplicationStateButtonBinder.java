@@ -5,7 +5,7 @@ import javax.swing.AbstractButton;
 
 import oripa.appstate.ApplicationState;
 import oripa.bind.state.action.StateActionPerformer;
-import oripa.paint.EditMode;
+import oripa.controller.paint.EditMode;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.ScreenUpdater;
 

@@ -41,12 +41,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
-import oripa.fold.BoundBox;
-import oripa.fold.FoldedModelInfo;
-import oripa.fold.OriFace;
-import oripa.fold.OrigamiModel;
-import oripa.fold.TriangleFace;
-import oripa.fold.TriangleVertex;
+import oripa.domain.fold.BoundBox;
+import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.OriFace;
+import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.TriangleFace;
+import oripa.domain.fold.TriangleVertex;
 
 /**
  * A screen to show whether Maekawa theorem and Kawasaki theorem holds.

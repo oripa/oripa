@@ -43,11 +43,11 @@ import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.fold.OriFace;
-import oripa.fold.OriHalfedge;
-import oripa.fold.OrigamiModel;
-import oripa.paint.core.LineSetting;
-import oripa.paint.core.PaintConfig;
+import oripa.controller.paint.core.LineSetting;
+import oripa.controller.paint.core.PaintConfig;
+import oripa.domain.fold.OriFace;
+import oripa.domain.fold.OriHalfedge;
+import oripa.domain.fold.OrigamiModel;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 

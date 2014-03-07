@@ -37,7 +37,7 @@ public abstract class AbstractRule<Variable> implements Rule<Variable> {
 		}
 
 		/* (non Javadoc)
-		 * @see oripa.fold.rule.Rule#asDenied()
+		 * @see oripa.domain.fold.rule.Rule#asDenied()
 		 */
 		@Override
 		public Rule<Variable> asDenied() {
@@ -45,7 +45,7 @@ public abstract class AbstractRule<Variable> implements Rule<Variable> {
 		}
 	
 		/* (non Javadoc)
-		 * @see oripa.fold.rule.Rule#holds(java.lang.Object)
+		 * @see oripa.domain.fold.rule.Rule#holds(java.lang.Object)
 		 */
 		@Override
 		public boolean holds(Variable var) {
@@ -53,7 +53,7 @@ public abstract class AbstractRule<Variable> implements Rule<Variable> {
 		}
 
 		/* (non Javadoc)
-		 * @see oripa.fold.rule.Rule#violates(java.lang.Object)
+		 * @see oripa.domain.fold.rule.Rule#violates(java.lang.Object)
 		 */
 		@Override
 		public boolean violates(Variable var) {
@@ -70,7 +70,7 @@ public abstract class AbstractRule<Variable> implements Rule<Variable> {
 
 
 	/* (non Javadoc)
-	 * @see oripa.fold.rule.Rule#asDenied()
+	 * @see oripa.domain.fold.rule.Rule#asDenied()
 	 */
 	@Override
 	public Rule<Variable> asDenied() {

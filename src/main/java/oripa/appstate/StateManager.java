@@ -1,6 +1,6 @@
 package oripa.appstate;
 
-import oripa.paint.EditMode;
+import oripa.controller.paint.EditMode;
 
 
 /**
@@ -82,7 +82,7 @@ public class StateManager implements StateManagerInterface<EditMode>{
 	 * the current state will be dropped to previous state.
 	 * @param group ID.
 	 * @return last state of the group. 
-	 * {@code null} if {@code group} is not {@code oripa.paint.EditMode.INPUT}.
+	 * {@code null} if {@code group} is not {@code oripa.controller.paint.EditMode.INPUT}.
 	 */
 	@Override
 	public ApplicationState<EditMode> popLastOf(EditMode group) {

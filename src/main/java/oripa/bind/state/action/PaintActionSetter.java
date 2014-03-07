@@ -4,49 +4,51 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.ORIPA;
-import oripa.paint.CreasePatternInterface;
-import oripa.paint.GraphicMouseActionInterface;
-import oripa.paint.PaintContextInterface;
-import oripa.paint.ScreenUpdaterInterface;
-import oripa.paint.core.PaintConfig;
-import oripa.paint.core.PaintContext;
-import oripa.paint.cptool.Painter;
+import oripa.controller.paint.GraphicMouseActionInterface;
+import oripa.controller.paint.MouseActionHolder;
+import oripa.controller.paint.PaintContextInterface;
+import oripa.controller.paint.ScreenUpdaterInterface;
+import oripa.controller.paint.core.PaintContext;
+import oripa.domain.cptool.Painter;
+import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.viewsetting.main.ScreenUpdater;
-
 
 /**
  * Add this listener to Button object or something for selecting paint action.
  * 
  * @author koji
- *
+ * 
  */
-public class PaintActionSetter implements ActionListener{
-	
-	private GraphicMouseActionInterface mouseAction;
-	
-	public PaintActionSetter(GraphicMouseActionInterface mouseAction) {
+public class PaintActionSetter implements ActionListener {
+
+	private final GraphicMouseActionInterface mouseAction;
+	private final MouseActionHolder actionHolder;
+
+	public PaintActionSetter(MouseActionHolder actionHolder,
+			GraphicMouseActionInterface mouseAction) {
+		this.actionHolder = actionHolder;
 		this.mouseAction = mouseAction;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		PaintContextInterface context = PaintContext.getInstance();
 
-		PaintConfig.getMouseAction().destroy(context);
+		GraphicMouseActionInterface currentAction = actionHolder
+				.getMouseAction();
+		currentAction.destroy(context);
 		mouseAction.recover(context);
-		
-		PaintConfig.setMouseAction(mouseAction);
 
-		if(mouseAction.needSelect() == false){
+		actionHolder.setMouseAction(mouseAction);
+
+		if (mouseAction.needSelect() == false) {
 			CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
 			Painter painter = new Painter();
 			painter.resetSelectedOriLines(creasePattern);
 		}
-				
+
 		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 		screenUpdater.updateScreen();
 	}
-	
 
-}	
-
+}

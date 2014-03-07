@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 public class CreasePatternTest {

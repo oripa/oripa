@@ -21,8 +21,8 @@ package oripa.geom;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-import oripa.fold.OriFace;
-import oripa.fold.OriHalfedge;
+import oripa.domain.fold.OriFace;
+import oripa.domain.fold.OriHalfedge;
 import oripa.value.OriLine;
 
 public class GeomUtil {

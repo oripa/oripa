@@ -40,14 +40,14 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
 import oripa.ORIPA;
-import oripa.doc.FileTypeKey;
-import oripa.doc.exporter.DocExporter;
-import oripa.doc.exporter.ExporterDXFFactory;
-import oripa.doc.exporter.ModelExporterOBJ;
-import oripa.file.FileAccessSupportFilter;
-import oripa.fold.FolderTool;
-import oripa.fold.OrigamiModel;
-import oripa.paint.core.PaintConfig;
+import oripa.controller.paint.core.PaintConfig;
+import oripa.domain.fold.FolderTool;
+import oripa.domain.fold.OrigamiModel;
+import oripa.persistent.doc.FileTypeKey;
+import oripa.persistent.doc.exporter.DocExporter;
+import oripa.persistent.doc.exporter.ExporterDXFFactory;
+import oripa.persistent.doc.exporter.ModelExporterOBJ;
+import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.resource.Constants;
 import oripa.viewsetting.model.ModelFrameSettingDB;
 

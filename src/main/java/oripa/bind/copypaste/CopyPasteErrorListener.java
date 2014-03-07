@@ -8,8 +8,8 @@ import javax.swing.JOptionPane;
 
 import oripa.ORIPA;
 import oripa.bind.state.ErrorListener;
-import oripa.doc.Doc;
-import oripa.paint.cptool.Painter;
+import oripa.domain.cptool.Painter;
+import oripa.persistent.doc.Doc;
 import oripa.value.OriLine;
 
 public class CopyPasteErrorListener implements ErrorListener {

@@ -18,9 +18,9 @@
 
 package oripa;
 
-import oripa.doc.Doc;
-import oripa.paint.CreasePatternFactory;
-import oripa.paint.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.persistent.doc.Doc;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 

@@ -21,7 +21,7 @@ package oripa.view.model;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import oripa.fold.OrigamiModel;
+import oripa.domain.fold.OrigamiModel;
 import oripa.util.gui.ChildFrameManager;
 
 /**

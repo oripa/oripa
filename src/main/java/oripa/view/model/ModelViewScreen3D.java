@@ -53,10 +53,10 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 
 import oripa.ORIPA;
-import oripa.doc.Doc;
-import oripa.fold.OriFace;
-import oripa.fold.OriHalfedge;
-import oripa.fold.OrigamiModel;
+import oripa.domain.fold.OriFace;
+import oripa.domain.fold.OriHalfedge;
+import oripa.domain.fold.OrigamiModel;
+import oripa.persistent.doc.Doc;
 
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;

@@ -46,23 +46,23 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
-import oripa.doc.Doc;
-import oripa.doc.DocDAO;
-import oripa.doc.DocFilterSelector;
-import oripa.doc.FileTypeKey;
-import oripa.file.AbstractSavingAction;
-import oripa.file.FileAccessSupportFilter;
+import oripa.controller.paint.MouseActionHolder;
+import oripa.controller.paint.PaintContextInterface;
+import oripa.controller.paint.core.PaintContext;
+import oripa.controller.paint.util.DeleteSelectedLines;
+import oripa.domain.cptool.Painter;
+import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.OrigamiModelFactory;
 import oripa.file.FileHistory;
-import oripa.file.FileVersionError;
 import oripa.file.ImageResourceLoader;
-import oripa.fold.OrigamiModel;
-import oripa.fold.OrigamiModelFactory;
-import oripa.paint.CreasePatternInterface;
-import oripa.paint.PaintContextInterface;
-import oripa.paint.core.PaintConfig;
-import oripa.paint.core.PaintContext;
-import oripa.paint.cptool.Painter;
-import oripa.paint.util.DeleteSelectedLines;
+import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.DocDAO;
+import oripa.persistent.doc.DocFilterSelector;
+import oripa.persistent.doc.FileTypeKey;
+import oripa.persistent.filetool.AbstractSavingAction;
+import oripa.persistent.filetool.FileAccessSupportFilter;
+import oripa.persistent.filetool.FileVersionError;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -170,6 +170,9 @@ public class MainFrame extends JFrame implements ActionListener,
 	private final FileAccessSupportFilter[] fileFilters = new FileAccessSupportFilter[] {
 
 			filterDB.getFilter("opx"), filterDB.getFilter("pict") };
+
+	private final MouseActionHolder actionHolder = MouseActionHolder
+			.getInstance();
 
 	public MainFrame() {
 
@@ -393,8 +396,8 @@ public class MainFrame extends JFrame implements ActionListener,
 			saveIniFile();
 			System.exit(0);
 		} else if (e.getSource() == menuItemUndo) {
-			if (PaintConfig.getMouseAction() != null) {
-				PaintConfig.getMouseAction().undo(mouseContext);
+			if (actionHolder.getMouseAction() != null) {
+				actionHolder.getMouseAction().undo(mouseContext);
 			} else {
 				document.loadUndoInfo();
 			}
@@ -658,8 +661,9 @@ public class MainFrame extends JFrame implements ActionListener,
 							"The crease pattern has been modified. Would you like to save?",
 							"Comfirm to save", JOptionPane.YES_NO_OPTION);
 			if (selected == JOptionPane.YES_OPTION) {
+				FileAccessSupportFilter<Doc>[] filters;
 				String path = saveFile(fileHistory.getLastDirectory(),
-						document.getDataFileName(), fileFilters);
+						document.getDataFileName(), filterDB.getSavables());
 				if (path == null) {
 
 				}

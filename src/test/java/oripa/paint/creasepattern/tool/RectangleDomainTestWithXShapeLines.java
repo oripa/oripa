@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import oripa.paint.util.RectangleDomain;
+import oripa.controller.paint.util.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 

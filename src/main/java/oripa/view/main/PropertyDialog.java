@@ -31,7 +31,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import oripa.ORIPA;
-import oripa.doc.Doc;
+import oripa.persistent.doc.Doc;
 
 public class PropertyDialog extends JDialog implements ComponentListener {
 

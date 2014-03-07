@@ -27,8 +27,8 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import oripa.fold.FoldedModelInfo;
-import oripa.fold.OrigamiModel;
+import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.OrigamiModel;
 import oripa.viewsetting.estimation.RenderFrameSettingDB;
 
 
