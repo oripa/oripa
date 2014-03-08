@@ -4,8 +4,9 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 
-public class FileAccessSupportFilter<Data> extends
-		javax.swing.filechooser.FileFilter {
+public class FileAccessSupportFilter<Data>
+		extends javax.swing.filechooser.FileFilter
+		implements Comparable<FileAccessSupportFilter<Data>> {
 
 	/**
 	 * 
@@ -32,55 +33,6 @@ public class FileAccessSupportFilter<Data> extends
 		this.savingAction = savingAction;
 	}
 
-	// public FileFilterEx(String[] extensions, String msg, Exporter exporter) {
-	// this.extensions = extensions;
-	// this.msg = msg;
-	// this.exporter = exporter;
-	//
-	// // this.savingAction = new SavingAction() {
-	// //
-	// // @Override
-	// // public boolean save(String path) {
-	// // boolean success = false;
-	// // try {
-	// // success = FileFilterEx.this.exporter.export(ORIPA.doc, path);
-	// // } catch (Exception e) {
-	// // // TODO Auto-generated catch block
-	// // e.printStackTrace();
-	// // }
-	// // return success;
-	// // }
-	// // };
-	//
-	// }
-
-	// public boolean save(String path) throws Exception{
-	//
-	// boolean success = false;
-	//
-	// if(savingAction != null){
-	// success = savingAction.save(path);
-	// }
-	// // else if(exporter != null){
-	// // success = exporter.export(doc, path);
-	// // }
-	//
-	//
-	// return success;
-	// }
-	//
-	//
-	//
-	// public boolean load(String path) throws Exception{
-	//
-	// boolean success = false;
-	//
-	// if(loadingAction != null){
-	// success = loadingAction.load(path);
-	// }
-	//
-	// return success;
-	// }
 	private String acceptedPath = null;
 
 	public AbstractLoadingAction<Data> getLoadingAction() {
@@ -150,6 +102,21 @@ public class FileAccessSupportFilter<Data> extends
 		return fileType;
 	}
 
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(FileAccessSupportFilter<Data> o) {
+		int cmp = fileType.getOrder().compareTo(o.fileType.getOrder());
+		if (cmp == 0) {
+			return msg.compareTo(o.msg);
+		}
+
+		return cmp;
+	}
+
 	/**
 	 * 
 	 * @param type
@@ -166,7 +133,7 @@ public class FileAccessSupportFilter<Data> extends
 		builder.append("(");
 		builder.append(extensions[0]);
 		for (int i = 1; i < extensions.length; i++) {
-			builder.append(", *.");
+			builder.append(", *");
 			builder.append(extensions[i]);
 		}
 		builder.append(") " + type.getKeyText()

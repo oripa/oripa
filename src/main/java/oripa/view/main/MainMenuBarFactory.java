@@ -16,36 +16,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
+package oripa.view.main;
 
-import oripa.persistent.filetool.AbstractLoadingAction;
-import oripa.persistent.filetool.FileVersionError;
+import java.awt.Component;
+
+import oripa.file.FileHistory;
 
 /**
  * @author Koji
  * 
  */
-public class LoadingAction extends AbstractLoadingAction<Doc> {
-
-	private final Loader<Doc> loader;
+public class MainMenuBarFactory {
 
 	/**
-	 * Constructor
-	 */
-	public LoadingAction(Loader l) {
-		loader = l;
-	}
-
-	/*
-	 * (non Javadoc)
 	 * 
-	 * @see
-	 * oripa.persistent.filetool.AbstractLoadingAction#load(java.lang.String)
+	 * @param owner
+	 *            a component which will own the menu bar.
+	 * @return menu bar
 	 */
-	@Override
-	public Doc load() throws FileVersionError {
-		Doc document = loader.load(getPath());
-		return document;
+	public MainMenuBar createBar(Component owner, FileHistory history) {
+		MainMenuBar bar = new MainMenuBar(owner);
+
+		bar.setFileHistoryPaths(history);
+
+		return bar;
+
 	}
 
 }

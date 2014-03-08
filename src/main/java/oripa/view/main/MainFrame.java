@@ -52,8 +52,7 @@ import oripa.controller.paint.core.PaintContext;
 import oripa.controller.paint.util.DeleteSelectedLines;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.fold.OrigamiModel;
-import oripa.domain.fold.OrigamiModelFactory;
+import oripa.exception.UserCanceledException;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.Doc;
@@ -167,9 +166,6 @@ public class MainFrame extends JFrame implements ActionListener,
 	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 
 	private final DocFilterSelector filterDB = new DocFilterSelector();
-	private final FileAccessSupportFilter[] fileFilters = new FileAccessSupportFilter[] {
-
-			filterDB.getFilter("opx"), filterDB.getFilter("pict") };
 
 	private final MouseActionHolder actionHolder = MouseActionHolder
 			.getInstance();
@@ -312,13 +308,11 @@ public class MainFrame extends JFrame implements ActionListener,
 				});
 	}
 
-	private void saveOpxFile(Doc doc, String filePath) {
-		DocDAO dao = new DocDAO();
-		dao.save(doc, filePath, FileTypeKey.OPX);
+	void saveOpxFile(Doc doc, String filePath) {
+		doc.saveOpxFile(filePath);
 
 		updateMenu(filePath);
 		updateTitleText();
-		doc.clearChanged();
 	}
 
 	public void initialize() {
@@ -361,8 +355,8 @@ public class MainFrame extends JFrame implements ActionListener,
 				&& !document.getDataFilePath().equals("")) {
 			saveOpxFile(document, document.getDataFilePath());
 
-		} else if (e.getSource() == menuItemSaveAs
-				|| e.getSource() == menuItemSave) {
+		} else if (e.getSource() == menuItemSave
+				|| e.getSource() == menuItemSaveAs) {
 
 			String path = saveFile(lastDirectory, document.getDataFileName(),
 					filterDB.getSavables());
@@ -375,8 +369,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			saveFile(
 					lastDirectory,
 					document.getDataFileName(),
-					new FileAccessSupportFilter[] { filterDB
-							.getFilter(FileTypeKey.PICT) });
+					filterDB.getFilter(FileTypeKey.PICT));
 
 		} else if (e.getSource() == menuItemExportDXF) {
 			saveModelFile(FileTypeKey.DXF_MODEL);
@@ -423,7 +416,8 @@ public class MainFrame extends JFrame implements ActionListener,
 					ORIPA.res.getString("Title"),
 					JOptionPane.INFORMATION_MESSAGE);
 		} else if (e.getSource() == menuItemProperty) {
-			PropertyDialog dialog = new PropertyDialog(this);
+			AbstractPropertyDialog dialog = new PropertyDialog(this, document);
+
 			dialog.setValue();
 			Rectangle rec = getBounds();
 			dialog.setLocation(
@@ -465,19 +459,24 @@ public class MainFrame extends JFrame implements ActionListener,
 		setTitle(fileName + " - " + ORIPA.TITLE);
 	}
 
-	private String saveFile(String directory, String fileName,
-			FileAccessSupportFilter<Doc>[] filters) {
+	@SafeVarargs
+	private final String saveFile(String directory, String fileName,
+			FileAccessSupportFilter<Doc>... filters) {
 
 		File givenFile = new File(directory, fileName);
 
 		return saveFile(givenFile.getPath(), filters);
 	}
 
-	private String saveFile(String homePath, FileAccessSupportFilter[] filters) {
+	private String saveFile(String homePath,
+			FileAccessSupportFilter<Doc>... filters) {
 		Doc document = ORIPA.doc;
 
-		DocDAO dao = new DocDAO();
-		return dao.saveWithGUI(document, null, filters, this);
+		try {
+			return document.saveFileUsingGUI(null, this, filters);
+		} catch (UserCanceledException e) {
+			return document.getProperty().getDataFilePath();
+		}
 
 		// if (saver.getPath() == null) {
 		// return homePath;
@@ -495,32 +494,43 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	public void saveModelFile(FileTypeKey type) {
 		Doc document = ORIPA.doc;
-		CreasePatternInterface creasePattern = document.getCreasePattern();
-		OrigamiModel origamiModel = document.getOrigamiModel();
 
-		boolean hasModel = origamiModel.hasModel();
+		try {
+			document.saveModelFile(type, this);
 
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		origamiModel = modelFactory.buildOrigami(creasePattern,
-				document.getPaperSize(), true);
-		document.setOrigamiModel(origamiModel);
+		} catch (UserCanceledException e) {
 
-		if (type == FileTypeKey.OBJ_MODEL) {
-
-		} else if (!hasModel && !origamiModel.isProbablyFoldable()) {
-
-			JOptionPane.showConfirmDialog(null,
-					"Warning: Building a set of polygons from crease pattern "
-							+ "was failed.", "Warning", JOptionPane.OK_OPTION,
-					JOptionPane.WARNING_MESSAGE);
 		}
-
-		DocDAO dao = new DocDAO();
-
-		dao.saveWithGUI(document, null,
-				new FileAccessSupportFilter[] { filterDB.getFilter(type) },
-				this);
-
+		//
+		// CreasePatternInterface creasePattern = document.getCreasePattern();
+		// OrigamiModel origamiModel = document.getOrigamiModel();
+		//
+		// boolean hasModel = origamiModel.hasModel();
+		//
+		// OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		// origamiModel = modelFactory.buildOrigami(creasePattern,
+		// document.getPaperSize(), true);
+		// document.setOrigamiModel(origamiModel);
+		//
+		// if (type == FileTypeKey.OBJ_MODEL) {
+		//
+		// } else if (!hasModel && !origamiModel.isProbablyFoldable()) {
+		//
+		// JOptionPane.showConfirmDialog(null,
+		// "Warning: Building a set of polygons from crease pattern "
+		// + "was failed.", "Warning", JOptionPane.OK_OPTION,
+		// JOptionPane.WARNING_MESSAGE);
+		// }
+		//
+		// DocDAO dao = new DocDAO();
+		//
+		// try {
+		// dao.saveWithGUI(document, null,
+		// this,
+		// new FileAccessSupportFilter[] { filterDB.getFilter(type) });
+		// } catch (FileChooserCanceledException e) {
+		//
+		// }
 	}
 
 	private void buildMenuFile() {
@@ -572,7 +582,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	 * 
 	 * @param filePath
 	 */
-	private void openFile(String filePath) {
+	void openFile(String filePath) {
 		Doc document = ORIPA.doc;
 
 		// ORIPA.modelFrame.setVisible(false);
@@ -595,7 +605,7 @@ public class MainFrame extends JFrame implements ActionListener,
 				path = document.getDataFilePath();
 			} else {
 				DocFilterSelector selector = new DocFilterSelector();
-				document.set(dao.loadWithGUI(
+				document.set(dao.loadUsingGUI(
 						fileHistory.getLastPath(), selector.getLoadables(),
 						this));
 			}
@@ -621,11 +631,11 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	}
 
-	private void saveIniFile() {
+	void saveIniFile() {
 		fileHistory.saveToFile(ORIPA.iniFilePath);
 	}
 
-	private void loadIniFile() {
+	void loadIniFile() {
 		fileHistory.loadFromFile(ORIPA.iniFilePath);
 	}
 

@@ -55,7 +55,7 @@ public class LoaderXML implements Loader<Doc> {
 			throw new FileVersionError();
 		}
 
-		return data.recover();
+		return data.recover(filePath);
 
 	}
 }

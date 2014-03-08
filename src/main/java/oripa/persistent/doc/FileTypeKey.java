@@ -18,37 +18,41 @@
  */
 package oripa.persistent.doc;
 
+import java.util.Comparator;
+
 import oripa.persistent.filetool.FileTypeProperty;
 
 public enum FileTypeKey implements FileTypeProperty {
-	OPX("opx",
-			new String[] { ".opx", ".xml" }),
-	PICT("pict",
-			new String[] { ".png", ".jpg" }),
-	DXF("dxf",
-			new String[] { ".dxf" }),
-	CP("cp",
-			new String[] { ".cp" }),
-	SVG("svg",
-			new String[] { ".svg" }),
-	PDF("pdf",
-			new String[] { ".pdf" }),
+	OPX("opx", 1,
+			".opx", ".xml"),
+	PICT("pict", 2,
+			".png", ".jpg"),
+	DXF("dxf", 3,
+			".dxf"),
+	CP("cp", 4,
+			".cp"),
+	SVG("svg", 5,
+			".svg"),
+	PDF("pdf", 6,
+			".pdf"),
 
-	OBJ_MODEL("obj",
-			new String[] { ".obj" }),
-	DXF_MODEL("dxf",
-			new String[] { ".dxf" }),
+	OBJ_MODEL("obj", 7,
+			".obj"),
+	DXF_MODEL("dxf", 8,
+			".dxf"),
 
-	SVG_FOLDED_MODEL("svg_folded_model",
-			new String[] { ".svg" }),
-	ORMAT_FOLDED_MODEL("ormat",
-			new String[] { ".ormat" });
+	SVG_FOLDED_MODEL("svg_folded_model", 9,
+			".svg"),
+	ORMAT_FOLDED_MODEL("ormat", 10,
+			".ormat");
 
 	private final String keyText;
+	private final Integer order;
 	private final String[] extensions;
 
-	private FileTypeKey(String key, String[] extensions) {
+	private FileTypeKey(String key, Integer order, String... extensions) {
 		this.keyText = key;
+		this.order = order;
 		this.extensions = extensions;
 	}
 
@@ -65,5 +69,29 @@ public enum FileTypeKey implements FileTypeProperty {
 	@Override
 	public String[] getExtensions() {
 		return extensions;
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see oripa.persistent.filetool.FileTypeProperty#getOrder()
+	 */
+	@Override
+	public Integer getOrder() {
+		return order;
+	}
+
+	public static Comparator<FileTypeKey> getOrderComparator() {
+
+		return new Comparator<FileTypeKey>() {
+			@Override
+			public int compare(FileTypeKey o1, FileTypeKey o2) {
+				if (o1.order == o2.order) {
+					return o1.compareTo(o2);
+				}
+
+				return o1.order.compareTo(o2.order);
+			}
+		};
 	}
 }

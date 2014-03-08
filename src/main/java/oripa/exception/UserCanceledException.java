@@ -16,31 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.view.main;
-
-import java.awt.Component;
-
-import oripa.file.FileHistory;
+package oripa.exception;
 
 /**
  * @author Koji
  * 
  */
-public class MainMenuBarBuilder {
+public class UserCanceledException extends Exception {
 
 	/**
 	 * 
-	 * @param owner
-	 *            a component which will own the menu bar.
-	 * @return menu bar
 	 */
-	public MainMenuBar buildBar(Component owner, FileHistory history) {
-		MainMenuBar bar = new MainMenuBar(owner);
+	private static final long serialVersionUID = -4943504465378089160L;
 
-		bar.setFileHistoryPaths(history);
-
-		return bar;
-
+	/**
+	 * Constructor
+	 */
+	public UserCanceledException() {
 	}
-
 }

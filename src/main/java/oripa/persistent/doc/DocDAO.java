@@ -5,6 +5,7 @@ import java.awt.Component;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooser;
+import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileChooserFactory;
 import oripa.persistent.filetool.FileVersionError;
 
@@ -36,13 +37,14 @@ public class DocDAO {
 	 * 
 	 * @param doc
 	 * @param homePath
-	 * @param filters
 	 * @param parent
+	 * @param filters
 	 * @return chosen path
 	 */
-	public String saveWithGUI(Doc doc, String homePath,
-			FileAccessSupportFilter<Doc>[] filters,
-			Component parent) {
+	public String saveUsingGUI(Doc doc, String homePath,
+			Component parent,
+			FileAccessSupportFilter<Doc>... filters)
+			throws FileChooserCanceledException {
 		FileChooserFactory<Doc> chooserFactory = new FileChooserFactory<>();
 		FileChooser<Doc> chooser = chooserFactory.createChooser(homePath,
 				filters);
@@ -67,7 +69,7 @@ public class DocDAO {
 
 	}
 
-	public Doc loadWithGUI(String homePath,
+	public Doc loadUsingGUI(String homePath,
 			FileAccessSupportFilter<Doc>[] filters, Component parent)
 			throws FileVersionError {
 		FileChooserFactory<Doc> factory = new FileChooserFactory<>();

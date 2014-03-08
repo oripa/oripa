@@ -18,10 +18,104 @@
  */
 package oripa.view.main;
 
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
+
 /**
  * @author Koji
- *
+ * 
  */
-public class FileMenu {
+public class FileMenu extends JMenu {
+	private JMenuItem menuItemClear;
+	private JMenuItem menuItemOpen;;
+
+	private JMenuItem menuItemSave;
+	private JMenuItem menuItemSaveAs;
+	private JMenuItem menuItemSaveAsImage;
+	private JMenuItem menuItemExportDXF;
+	private JMenuItem menuItemExportOBJ;
+	private JMenuItem menuItemExportCP;
+	private JMenuItem menuItemExportSVG;
+	private JMenuItem menuItemProperty;
+	private JMenuItem menuItemExit;
+
+	public FileMenu(ResourceHolder resourceHolder) {
+		super();
+		resourceHolder.getString(ResourceKey.LABEL, StringID.Main.FILE_ID);
+
+		initializeElements(resourceHolder);
+		buildFileMenu();
+	}
+
+	private void initializeElements(ResourceHolder resourceHolder) {
+		menuItemClear = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.NEW_ID));
+
+		menuItemOpen = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.OPEN_ID));
+
+		menuItemSave = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.SAVE_ID));
+
+		menuItemSaveAs = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.SAVE_AS_ID));
+
+		menuItemSaveAsImage = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.SAVE_AS_IMAGE_ID));
+
+		menuItemExportDXF = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.EXPORT_DXF_ID));
+
+		menuItemExportOBJ = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.EXPORT_OBJ_ID));
+
+		menuItemExportCP = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.EXPORT_CP_ID));
+
+		menuItemExportSVG = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.EXPORT_SVG_ID));
+
+		menuItemProperty = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.PROPERTY_ID));
+
+		menuItemExit = new JMenuItem(
+				resourceHolder.getString(ResourceKey.LABEL,
+						StringID.Main.EXIT_ID));
+
+	}
+
+	private void buildFileMenu() {
+		removeAll();
+
+		add(menuItemClear);
+		add(menuItemOpen);
+		add(menuItemSave);
+		add(menuItemSaveAs);
+		add(menuItemSaveAsImage);
+		add(menuItemExportDXF);
+		add(menuItemExportOBJ);
+		add(menuItemExportCP);
+		add(menuItemExportSVG);
+		addSeparator();
+		add(menuItemProperty);
+		addSeparator();
+
+		addSeparator();
+		add(menuItemExit);
+	}
 
 }

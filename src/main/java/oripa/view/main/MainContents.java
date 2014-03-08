@@ -16,36 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
-
-import oripa.persistent.filetool.AbstractLoadingAction;
-import oripa.persistent.filetool.FileVersionError;
+package oripa.view.main;
 
 /**
  * @author Koji
- * 
+ *
  */
-public class LoadingAction extends AbstractLoadingAction<Doc> {
-
-	private final Loader<Doc> loader;
-
-	/**
-	 * Constructor
-	 */
-	public LoadingAction(Loader l) {
-		loader = l;
-	}
-
-	/*
-	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.persistent.filetool.AbstractLoadingAction#load(java.lang.String)
-	 */
-	@Override
-	public Doc load() throws FileVersionError {
-		Doc document = loader.load(getPath());
-		return document;
-	}
+public class MainContents {
 
 }

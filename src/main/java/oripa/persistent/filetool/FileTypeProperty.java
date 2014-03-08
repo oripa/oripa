@@ -35,4 +35,6 @@ public interface FileTypeProperty {
 	 */
 	public abstract String getKeyText();
 
+	public abstract Integer getOrder();
+
 }

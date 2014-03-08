@@ -16,36 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
+package oripa.view.main.event;
 
-import oripa.persistent.filetool.AbstractLoadingAction;
-import oripa.persistent.filetool.FileVersionError;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author Koji
  * 
  */
-public class LoadingAction extends AbstractLoadingAction<Doc> {
-
-	private final Loader<Doc> loader;
-
-	/**
-	 * Constructor
-	 */
-	public LoadingAction(Loader l) {
-		loader = l;
-	}
+public class OnClickOpenOldFileButton implements ActionListener {
 
 	/*
 	 * (non Javadoc)
 	 * 
 	 * @see
-	 * oripa.persistent.filetool.AbstractLoadingAction#load(java.lang.String)
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
-	public Doc load() throws FileVersionError {
-		Doc document = loader.load(getPath());
-		return document;
+	public void actionPerformed(ActionEvent e) {
+		// Check the last opened files
+		// try {
+		// String filePath = MRUFilesMenuItem[i].getText();
+		// openFile(filePath);
+		// updateTitleText();
+		// } catch (Exception ex) {
+		// JOptionPane.showMessageDialog(this, e.toString(),
+		// ORIPA.res.getString("Error_FileLoadFailed"),
+		// JOptionPane.ERROR_MESSAGE);
+		// }
+		// mainScreen.repaint();
+		// return;
+		// }
+		//
 	}
 
 }

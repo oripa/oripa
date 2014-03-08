@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import oripa.ORIPA;
+import oripa.exception.UserCanceledException;
 
 /**
  * 
@@ -27,7 +28,7 @@ public class FileChooser<Data> extends JFileChooser {
 		super();
 	}
 
-	public FileChooser(String path) {
+	public FileChooser(final String path) {
 		super(path);
 		String trimmedPath = replaceExtension(path, "");
 
@@ -43,16 +44,17 @@ public class FileChooser<Data> extends JFileChooser {
 	 */
 	@Override
 	@Deprecated
-	public void addChoosableFileFilter(FileFilter filter) {
+	public void addChoosableFileFilter(final FileFilter filter) {
 
 	}
 
-	public void addChoosableFileFilter(FileAccessSupportFilter<Data> filter) {
+	public void addChoosableFileFilter(
+			final FileAccessSupportFilter<Data> filter) {
 		// TODO Auto-generated method stub
 		super.addChoosableFileFilter(filter);
 	}
 
-	public String replaceExtension(String path, String ext) {
+	public String replaceExtension(final String path, final String ext) {
 
 		String path_new;
 
@@ -66,11 +68,11 @@ public class FileChooser<Data> extends JFileChooser {
 	 * this method does not change {@code path}.
 	 * 
 	 * @param path
-	 * @param ext
+	 * @param extensions
 	 *            ex) ".png"
 	 * @return path string with new extension
 	 */
-	public String correctExtension(String path, String[] extensions) {
+	public String correctExtension(final String path, final String[] extensions) {
 
 		String path_new = new String(path);
 
@@ -90,24 +92,34 @@ public class FileChooser<Data> extends JFileChooser {
 	}
 
 	/**
-	 * Opens chooser dialog and return saver object for the chosen file.
+	 * Opens chooser dialog and return saver object for the chosen file. throws
+	 * {@link IllegalArgumentException} if user selected a file which has a
+	 * extension not supported by the selected filter.
 	 * 
 	 * @param parent
 	 *            parent GUI component
 	 * @return saver object.
 	 */
-	public AbstractSavingAction<Data> getActionForSavingFile(Component parent) {
+	public AbstractSavingAction<Data> getActionForSavingFile(
+			final Component parent)
+			throws FileChooserCanceledException {
 
 		if (JFileChooser.APPROVE_OPTION != this.showSaveDialog(parent)) {
-			return null;
+			throw new FileChooserCanceledException();
 		}
 
 		String filePath = null;
 
+		FileFilter rawFilter = this.getFileFilter();
+		if (!(rawFilter instanceof FileAccessSupportFilter<?>)) {
+			throw new RuntimeException("Wrong Implementation!");
+		}
 		try {
 
-			FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) (this
-					.getFileFilter());
+			@SuppressWarnings("unchecked")
+			FileAccessSupportFilter<Data> filter =
+					(FileAccessSupportFilter<Data>) (rawFilter);
+
 			String[] extensions = filter.getExtensions();
 
 			filePath = correctExtension(this.getSelectedFile().getPath(),
@@ -124,7 +136,7 @@ public class FileChooser<Data> extends JFileChooser {
 						ORIPA.res.getString("Warning_SameNameFileExist"),
 						ORIPA.res.getString("DialogTitle_FileSave"),
 						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-					return null;
+					throw new UserCanceledException();
 				}
 			}
 
@@ -147,30 +159,37 @@ public class FileChooser<Data> extends JFileChooser {
 	 * @return loader object.
 	 */
 	public AbstractLoadingAction<Data> getActionForLoadingFile(
-			Component parent) {
+			final Component parent) {
 
-		if (JFileChooser.APPROVE_OPTION == this.showOpenDialog(parent)) {
-			try {
-				String filePath = this.getSelectedFile().getPath();
-				FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) (this
-						.getFileFilter());
-
-				return filter.getLoadingAction().setPath(filePath);
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(this, e.toString(),
-						ORIPA.res.getString("Error_FileLoadFailed"),
-						JOptionPane.ERROR_MESSAGE);
-				return null;
-			}
-			// } catch (FileVersionError v_err) {
-			// JOptionPane.showMessageDialog(this,
-			// "This file is compatible with a new version. "
-			// + "Please obtain the latest version of ORIPA",
-			// "Failed to load the file", JOptionPane.ERROR_MESSAGE);
-			// return null;
+		if (JFileChooser.APPROVE_OPTION != this.showOpenDialog(parent)) {
+			return null;
 		}
 
-		return null;
+		FileFilter rawFilter = this.getFileFilter();
+		if (!(rawFilter instanceof FileAccessSupportFilter<?>)) {
+			throw new RuntimeException("Wrong Implementation!");
+		}
+
+		try {
+			String filePath = this.getSelectedFile().getPath();
+			@SuppressWarnings("unchecked")
+			FileAccessSupportFilter<Data> filter =
+					(FileAccessSupportFilter<Data>) (this.getFileFilter());
+
+			return filter.getLoadingAction().setPath(filePath);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.toString(),
+					ORIPA.res.getString("Error_FileLoadFailed"),
+					JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+		// } catch (FileVersionError v_err) {
+		// JOptionPane.showMessageDialog(this,
+		// "This file is compatible with a new version. "
+		// + "Please obtain the latest version of ORIPA",
+		// "Failed to load the file", JOptionPane.ERROR_MESSAGE);
+		// return null;
+
 	}
 
 	// /*

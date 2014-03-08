@@ -30,7 +30,6 @@ import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.file.FileHistory;
 import oripa.resource.ResourceHolder;
-import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 
 /**
@@ -39,28 +38,10 @@ import oripa.resource.StringID;
  */
 public class MainMenuBar extends JMenuBar {
 
-	private final JMenu fileMenu = new JMenu(
-			ORIPA.res.getString(StringID.Main.FILE_ID));
+	private JMenu fileMenu;
 
 	private final JMenu editMenu = new JMenu(ORIPA.res.getString("Edit"));
 	private final JMenu helpMenu = new JMenu(ORIPA.res.getString("Help"));
-
-	private final JMenuItem menuItemClear = new JMenuItem(
-			ORIPA.res.getString("New"));
-	private final JMenuItem menuItemOpen = new JMenuItem(
-			ORIPA.res.getString("Open"));
-
-	private final JMenuItem menuItemSave = new JMenuItem(
-			ORIPA.res.getString("Save"));
-	private final JMenuItem menuItemSaveAs = new JMenuItem(
-			ORIPA.res.getString("SaveAs"));
-	private final JMenuItem menuItemSaveAsImage = new JMenuItem(
-			ORIPA.res.getString("SaveAsImage"));
-
-	private JMenuItem menuItemExportDXF;
-	private JMenuItem menuItemExportOBJ;
-	private JMenuItem menuItemExportCP;
-	private JMenuItem menuItemExportSVG;
 
 	// -----------------------------------------------------------------------------------------------------------
 	/**
@@ -82,9 +63,6 @@ public class MainMenuBar extends JMenuBar {
 	// -----------------------------------------------------------------------------------------------------------
 
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
-	private JMenuItem menuItemProperty;
-
-	private JMenuItem menuItemExit;
 	private JMenuItem menuItemUndo;
 	private JMenuItem menuItemAbout;
 	private JMenuItem menuItemRepeatCopy;
@@ -109,17 +87,12 @@ public class MainMenuBar extends JMenuBar {
 	private void build(Component owner) {
 		buildMenuItems(owner);
 
-		buildFileMenu();
 		buildEditMenu();
 		buildHelpMenu();
 
 	}
 
 	private void buildMenuItems(Component owner) {
-		menuItemExportDXF = new JMenuItem("Export DXF");
-		menuItemExportOBJ = new JMenuItem("Export OBJ");
-		menuItemExportCP = new JMenuItem("Export CP");
-		menuItemExportSVG = new JMenuItem("Export SVG");
 		/**
 		 * For changing outline
 		 */
@@ -148,13 +121,6 @@ public class MainMenuBar extends JMenuBar {
 
 		ResourceHolder resourceHolder = ResourceHolder
 				.getInstance();
-		menuItemProperty = new JMenuItem(
-				resourceHolder.getString(ResourceKey.LABEL,
-						StringID.Main.PROPERTY_ID));
-
-		menuItemExit = new JMenuItem(
-				resourceHolder.getString(ResourceKey.LABEL,
-						StringID.Main.EXIT_ID));
 		menuItemUndo = new JMenuItem(
 				ORIPA.res.getString("Undo"));
 		menuItemAbout = new JMenuItem(
@@ -169,24 +135,8 @@ public class MainMenuBar extends JMenuBar {
 
 	}
 
-	private void buildFileMenu() {
-		fileMenu.removeAll();
-
-		fileMenu.add(menuItemClear);
-		fileMenu.add(menuItemOpen);
-		fileMenu.add(menuItemSave);
-		fileMenu.add(menuItemSaveAs);
-		fileMenu.add(menuItemSaveAsImage);
-		fileMenu.add(menuItemExportDXF);
-		fileMenu.add(menuItemExportOBJ);
-		fileMenu.add(menuItemExportCP);
-		fileMenu.add(menuItemExportSVG);
-		fileMenu.addSeparator();
-		fileMenu.add(menuItemProperty);
-		fileMenu.addSeparator();
-
-		fileMenu.addSeparator();
-		fileMenu.add(menuItemExit);
+	public void setFileMenu(JMenu menu) {
+		fileMenu = menu;
 	}
 
 	private void buildEditMenu() {

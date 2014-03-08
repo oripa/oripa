@@ -2,6 +2,7 @@ package oripa.persistent.doc;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import oripa.ORIPA;
@@ -25,7 +26,7 @@ import oripa.persistent.filetool.FileAccessSupportFilter;
  */
 public class DocFilterSelector {
 
-	private final HashMap<String, FileAccessSupportFilter<Doc>> filters = new HashMap<>();
+	private final HashMap<FileTypeKey, FileAccessSupportFilter<Doc>> filters = new HashMap<>();
 
 	// private static DocFilterSelector instance = null;
 
@@ -36,34 +37,34 @@ public class DocFilterSelector {
 	// return instance;
 	// }
 
-	/**
-	 * for back compatibility.
-	 */
-	public static final String KEY_OPX = "opx";
-	/**
-	 * for back compatibility.
-	 */
-	public static final String KEY_PICT = "pict";
-	/**
-	 * for back compatibility.
-	 */
-	public static final String KEY_DXF = "dxf";
-	/**
-	 * for back compatibility.
-	 */
-	public static final String KEY_OBJ = "obj";
-	/**
-	 * for back compatibility.
-	 */
-	public static final String KEY_CP = "cp";
-	/**
-	 * for back compatibility.
-	 */
-	public static final String KEY_SVG = "svg";
-	/**
-	 * for back compatibility.
-	 */
-	public static final String KEY_PDF = "pdf";
+	// /**
+	// * for back compatibility.
+	// */
+	// public static final String KEY_OPX = "opx";
+	// /**
+	// * for back compatibility.
+	// */
+	// public static final String KEY_PICT = "pict";
+	// /**
+	// * for back compatibility.
+	// */
+	// public static final String KEY_DXF = "dxf";
+	// /**
+	// * for back compatibility.
+	// */
+	// public static final String KEY_OBJ = "obj";
+	// /**
+	// * for back compatibility.
+	// */
+	// public static final String KEY_CP = "cp";
+	// /**
+	// * for back compatibility.
+	// */
+	// public static final String KEY_SVG = "svg";
+	// /**
+	// * for back compatibility.
+	// */
+	// public static final String KEY_PDF = "pdf";
 
 	/**
 	 * 
@@ -72,62 +73,106 @@ public class DocFilterSelector {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public DocFilterSelector() {
 
-		FileAccessSupportFilter filter;
-
 		FileTypeKey key = FileTypeKey.OPX;
-
-		filter = new FileAccessSupportFilter(key,
-				FileAccessSupportFilter.createDefaultDescription(key,
-						ORIPA.res.getString("ORIPA_File")),
-				new SavingAction(new ExporterXML()));
-		filter.setLoadingAction(new LoadingAction(new LoaderXML()));
-		this.putFilter(key, filter);
+		putFilter(key, createDescription(key, "ORIPA_File"),
+				new ExporterXML(), new LoaderXML());
 
 		key = FileTypeKey.PICT;
-		filter = new FileAccessSupportFilter(key,
-				FileAccessSupportFilter.createDefaultDescription(key,
-						ORIPA.res.getString("Picture_File")),
-				new SavingAction(new PictureExporter()));
-		this.putFilter(FileTypeKey.PICT, filter);
+		putFilter(key, createDescription(key, "Picture_File"),
+				new PictureExporter(), null);
 
 		key = FileTypeKey.DXF;
-		filter = new FileAccessSupportFilter(key,
-				FileAccessSupportFilter.createDefaultDescription(key,
-						ORIPA.res.getString("File")),
-				new SavingAction(
-						ExporterDXFFactory.createCreasePatternExporter()));
-		filter.setLoadingAction(new LoadingAction(new LoaderDXF()));
-		this.putFilter(FileTypeKey.DXF, filter);
+		putFilter(key, createDescription(key, "File"),
+				ExporterDXFFactory.createCreasePatternExporter(),
+				new LoaderDXF());
+		// filter = new FileAccessSupportFilter(key,
+		// FileAccessSupportFilter.createDefaultDescription(key,
+		// ORIPA.res.getString("File")),
+		// new SavingAction(
+		// ExporterDXFFactory.createCreasePatternExporter()));
+		// filter.setLoadingAction(new LoadingAction(new LoaderDXF()));
+		// this.putFilter(FileTypeKey.DXF, filter);
 
 		key = FileTypeKey.OBJ_MODEL;
-		filter = new FileAccessSupportFilter(key,
-				FileAccessSupportFilter.createDefaultDescription(key,
-						ORIPA.res.getString("File")),
-				new SavingAction(new ModelExporterOBJ()));
-		this.putFilter(FileTypeKey.OBJ_MODEL, filter);
+		putFilter(key, createDescription(key, "File"),
+				new ModelExporterOBJ(),
+				null);
+		// filter = new FileAccessSupportFilter(key,
+		// FileAccessSupportFilter.createDefaultDescription(key,
+		// ORIPA.res.getString("File")),
+		// new SavingAction(new ModelExporterOBJ()));
+		// this.putFilter(FileTypeKey.OBJ_MODEL, filter);
 
 		key = FileTypeKey.CP;
-		filter = new FileAccessSupportFilter(key,
-				FileAccessSupportFilter.createDefaultDescription(key,
-						ORIPA.res.getString("File")),
-				new SavingAction(new ExporterCP()));
-		filter.setLoadingAction(new LoadingAction(new LoaderCP()));
-		this.putFilter(FileTypeKey.CP, filter);
+		putFilter(key, createDescription(key, "File"),
+				new ExporterCP(),
+				new LoaderCP());
+		// filter = new FileAccessSupportFilter(key,
+		// FileAccessSupportFilter.createDefaultDescription(key,
+		// ORIPA.res.getString("File")),
+		// new SavingAction(new ExporterCP()));
+		// filter.setLoadingAction(new LoadingAction(new LoaderCP()));
+		// this.putFilter(FileTypeKey.CP, filter);
 
 		key = FileTypeKey.SVG;
-		filter = new FileAccessSupportFilter(key,
-				FileAccessSupportFilter.createDefaultDescription(key,
-						ORIPA.res.getString("File")),
-				new SavingAction(
-						ExporterSVGFactory.createCreasePatternExporter()));
-		this.putFilter(FileTypeKey.SVG, filter);
+		putFilter(key, createDescription(key, "File"),
+				ExporterSVGFactory.createCreasePatternExporter(),
+				null);
+
+		// filter = new FileAccessSupportFilter(key,
+		// FileAccessSupportFilter.createDefaultDescription(key,
+		// ORIPA.res.getString("File")),
+		// new SavingAction(
+		// ExporterSVGFactory.createCreasePatternExporter()));
+		// this.putFilter(FileTypeKey.SVG, filter);
 
 		key = FileTypeKey.PDF;
-		filter = new FileAccessSupportFilter(key,
-				FileAccessSupportFilter.createDefaultDescription(key,
-						ORIPA.res.getString("File")));
-		filter.setLoadingAction(new LoadingAction(new LoaderPDF()));
-		this.putFilter(FileTypeKey.PDF, filter);
+		putFilter(key, createDescription(key, "File"),
+				null,
+				new LoaderPDF());
+
+		// filter = new FileAccessSupportFilter(key,
+		// FileAccessSupportFilter.createDefaultDescription(key,
+		// ORIPA.res.getString("File")));
+		// filter.setLoadingAction(new LoadingAction(new LoaderPDF()));
+		// this.putFilter(FileTypeKey.PDF, filter);
+
+	}
+
+	/**
+	 * 
+	 * @param key
+	 * @param desctiption
+	 * @param exporter
+	 * @param loader
+	 */
+	private void putFilter(FileTypeKey key, String desctiption,
+			Exporter<Doc> exporter, Loader<Doc> loader) {
+		FileAccessSupportFilter<Doc> filter;
+
+		filter = new FileAccessSupportFilter<>(key,
+				desctiption);
+
+		if (exporter != null) {
+			filter.setSavingAction(new SavingAction(exporter));
+		}
+
+		if (loader != null) {
+			filter.setLoadingAction(new LoadingAction(loader));
+		}
+		this.putFilter(key, filter);
+
+	}
+
+	/**
+	 * 
+	 * @param fileTypeKey
+	 * @param resourceKey
+	 * @return
+	 */
+	private String createDescription(FileTypeKey fileTypeKey, String resourceKey) {
+		return FileAccessSupportFilter.createDefaultDescription(fileTypeKey,
+				ORIPA.res.getString(resourceKey));
 
 	}
 
@@ -138,19 +183,19 @@ public class DocFilterSelector {
 	 * @return A filter for given key.
 	 */
 	public FileAccessSupportFilter<Doc> getFilter(FileTypeKey key) {
-		return filters.get(key.getKeyText());
-	}
-
-	/**
-	 * 
-	 * @param key
-	 *            A value that describes the file type you want.
-	 * @return A filter for given key.
-	 */
-	@Deprecated
-	public FileAccessSupportFilter<Doc> getFilter(String key) {
 		return filters.get(key);
 	}
+
+	// /**
+	// *
+	// * @param key
+	// * A value that describes the file type you want.
+	// * @return A filter for given key.
+	// */
+	// @Deprecated
+	// public FileAccessSupportFilter<Doc> getFilter(String key) {
+	// return filters.get(key);
+	// }
 
 	/**
 	 * 
@@ -163,7 +208,7 @@ public class DocFilterSelector {
 
 	public FileAccessSupportFilter<Doc> putFilter(FileTypeKey key,
 			FileAccessSupportFilter<Doc> filter) {
-		return filters.put(key.getKeyText(), filter);
+		return filters.put(key, filter);
 	}
 
 	/**
@@ -176,7 +221,7 @@ public class DocFilterSelector {
 				.size()];
 
 		int i = 0;
-		for (String key : filters.keySet()) {
+		for (FileTypeKey key : filters.keySet()) {
 			array[i] = filters.get(key);
 			i++;
 		}
@@ -191,12 +236,14 @@ public class DocFilterSelector {
 	public FileAccessSupportFilter<Doc>[] getLoadables() {
 		ArrayList<FileAccessSupportFilter<Doc>> loadables = new ArrayList<>();
 
-		for (String key : filters.keySet()) {
+		for (FileTypeKey key : filters.keySet()) {
 			FileAccessSupportFilter<Doc> filter = filters.get(key);
 			if (filter.getLoadingAction() != null) {
 				loadables.add(filter);
 			}
 		}
+
+		Collections.sort(loadables);
 
 		@SuppressWarnings("unchecked")
 		FileAccessSupportFilter<Doc>[] array = new FileAccessSupportFilter[loadables
@@ -235,14 +282,17 @@ public class DocFilterSelector {
 	public FileAccessSupportFilter<Doc>[] getSavables() {
 		ArrayList<FileAccessSupportFilter<Doc>> savables = new ArrayList<>();
 
-		for (String key : filters.keySet()) {
+		for (FileTypeKey key : filters.keySet()) {
 			FileAccessSupportFilter<Doc> filter = filters.get(key);
 			if (filter.getSavingAction() != null) {
 				savables.add(filter);
 			}
 		}
 
-		return (FileAccessSupportFilter<Doc>[]) savables.toArray();
+		Collections.sort(savables);
+
+		return (FileAccessSupportFilter<Doc>[]) savables
+				.toArray(new FileAccessSupportFilter<?>[savables.size()]);
 	}
 
 }

@@ -21,6 +21,7 @@ package oripa;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.Property;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
@@ -44,23 +45,28 @@ public class DataSet {
 		subVersion = Version.FILE_MINOR_VERSION;
 
 		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		Property property = doc.getProperty();
+
 		int lineNum = creasePattern.size();
+
 		lines = new OriLineProxy[lineNum];
+
 		OriLine[] docLines = new OriLine[lineNum];
 		creasePattern.toArray(docLines);
+
 		for (int i = 0; i < lineNum; i++) {
 			lines[i] = new OriLineProxy(docLines[i]);
 		}
 		paperSize = doc.getPaperSize();
 
-		title = doc.getTitle();
-		editorName = doc.getEditorName();
-		originalAuthorName = doc.getOriginalAuthorName();
-		reference = doc.getReference();
-		memo = doc.getMemo();
+		title = property.getTitle();
+		editorName = property.getEditorName();
+		originalAuthorName = property.getOriginalAuthorName();
+		reference = property.getReference();
+		memo = property.getMemo();
 	}
 
-	public Doc recover() {
+	public Doc recover(String filePath) {
 
 		CreasePatternFactory factory = new CreasePatternFactory();
 		CreasePatternInterface creasePattern = factory
@@ -73,15 +79,22 @@ public class DataSet {
 		Doc doc = new Doc();
 		doc.setCreasePattern(creasePattern);
 		doc.setPaperSize(paperSize);
-		doc.setTitle(title);
-		doc.setEditorName(editorName);
-		doc.setOriginalAuthorName(originalAuthorName);
-		doc.setReference(reference);
-		doc.setMemo(memo);
-		;
+
+		doc.setProperty(createProperty(filePath));
 
 		return doc;
 
+	}
+
+	private Property createProperty(String filePath) {
+		Property property = new Property(filePath);
+		property.setTitle(title);
+		property.setEditorName(editorName);
+		property.setOriginalAuthorName(originalAuthorName);
+		property.setReference(reference);
+		property.setMemo(memo);
+
+		return property;
 	}
 
 	public void setPaperSize(double d) {
