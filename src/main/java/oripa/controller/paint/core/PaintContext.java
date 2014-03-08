@@ -9,279 +9,331 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
+import oripa.controller.paint.CreasePatternUndoer;
+import oripa.controller.paint.CreasePatternUndoerInterface;
 import oripa.controller.paint.PaintContextInterface;
+import oripa.domain.cptool.Painter;
+import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.value.OriLine;
 
 public class PaintContext implements PaintContextInterface {
-    
-    
-    private static PaintContextInterface instance = null;
-    
 
-    public static PaintContextInterface getInstance(){
-    	if(instance == null){
-    		instance = new PaintContext();
-    	}
-    	
-    	return instance;
-    }
-    
-    private PaintContext(){}
-    
-    
+	private static PaintContextInterface instance = null;
+
+	public static PaintContextInterface getInstance() {
+		if (instance == null) {
+			instance = new PaintContext();
+		}
+
+		return instance;
+	}
+
+	private PaintContext() {
+	}
+
 //--------------------------------------------------
-    
-    private LinkedList<Vector2d> pickedVertices = new LinkedList<>();
 
+	private CreasePatternInterface creasePattern;
+	private final CreasePatternUndoerInterface undoer = new CreasePatternUndoer(this);
 
-	private LinkedList<OriLine> pickedLines = new LinkedList<>();
-    private boolean isPasting = false;	
-	
+	private final LinkedList<Vector2d> pickedVertices = new LinkedList<>();
+
+	private final LinkedList<OriLine> pickedLines = new LinkedList<>();
+	private boolean isPasting = false;
+
 	private Vector2d candidateVertexToPick = new Vector2d();
-    private OriLine candidateLineToPick = new OriLine();
+	private OriLine candidateLineToPick = new OriLine();
 
 	private boolean gridVisible = true;
-    private double scale;
+	private double scale;
 
-    private ArrayList<Vector2d> gridPoints;
-    
-    private boolean missionCompleted = false;
-    
-    
-    private Point2D.Double mousePoint;
+	private ArrayList<Vector2d> gridPoints;
 
+	private boolean missionCompleted = false;
 
-    /* (non Javadoc)
-	 * @see oripa.controller.paint.core.PaintContextInterface#getLogicalMousePoint()
+	private Point2D.Double mousePoint;
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * oripa.controller.paint.core.PaintContextInterface#getLogicalMousePoint()
 	 */
-    @Override
+	@Override
 	public Point2D.Double getLogicalMousePoint() {
 		return mousePoint;
 	}
 
-    /* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#isPasting()
 	 */
-    @Override
+	@Override
 	public boolean isPasting() {
 		return isPasting;
 	}
 
-	/* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#startPasting()
 	 */
 	@Override
 	public void startPasting() {
 		this.isPasting = true;
 	}
-	
-	/* (non Javadoc)
+
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#finishPasting()
 	 */
 	@Override
 	public void finishPasting() {
 		this.isPasting = false;
 	}
-	
 
-	/* (non Javadoc)
-	 * @see oripa.controller.paint.core.PaintContextInterface#setLogicalMousePoint(java.awt.geom.Point2D.Double)
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * oripa.controller.paint.core.PaintContextInterface#setLogicalMousePoint
+	 * (java.awt.geom.Point2D.Double)
 	 */
 	@Override
-	public void setLogicalMousePoint(Point2D.Double logicalPoint) {
+	public void setLogicalMousePoint(final Point2D.Double logicalPoint) {
 		this.mousePoint = logicalPoint;
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.controller.paint.core.PaintContextInterface#set(double, boolean)
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see oripa.controller.paint.core.PaintContextInterface#set(double,
+	 * boolean)
 	 */
 	@Override
-	public void setDisplayConfig(double scale, boolean dispGrid){
-    	this.scale = scale;
-    	this.gridVisible = dispGrid;
-    }
+	public void setDisplayConfig(final double scale, final boolean dispGrid) {
+		this.scale = scale;
+		this.gridVisible = dispGrid;
+	}
 
-	/* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#updateGrids(int)
 	 */
 	@Override
-	public Collection<Vector2d> updateGrids(int gridDivNum){
+	public Collection<Vector2d> updateGrids(final int gridDivNum) {
 		gridPoints = new ArrayList<>();
-		double paperSize = ORIPA.doc.getPaperSize();
+		double paperSize = creasePattern.getPaperSize();
 
-        double step = paperSize / gridDivNum;
-        for (int ix = 0; ix < PaintConfig.gridDivNum + 1; ix++) {
-            for (int iy = 0; iy < gridDivNum + 1; iy++) {
-                double x = -paperSize / 2 + step * ix;
-                double y = -paperSize / 2 + step * iy;
-                
-                gridPoints.add(new Vector2d(x, y));
-            }
-        }
+		double step = paperSize / gridDivNum;
+		for (int ix = 0; ix < PaintConfig.gridDivNum + 1; ix++) {
+			for (int iy = 0; iy < gridDivNum + 1; iy++) {
+				double x = -paperSize / 2 + step * ix;
+				double y = -paperSize / 2 + step * iy;
 
-        return gridPoints;
+				gridPoints.add(new Vector2d(x, y));
+			}
+		}
+
+		return gridPoints;
 	}
-	
 
-	/* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#clear(boolean)
 	 */
-    @Override
-	public void clear(boolean unselect){
-    	
-    	
-    	if(unselect && pickedLines.isEmpty() == false){
-	    	for(OriLine l : pickedLines){
-	    		l.selected = false;
-	    	}
-    	}    	
-    	
-    	pickedLines.clear();
-    	pickedVertices.clear();
-    	
-    	candidateLineToPick = null;
-    	candidateVertexToPick = null;
-    	
-    	
-    	missionCompleted = false;
-    }
+	@Override
+	public void clear(final boolean unselect) {
 
-   
-    
-    /* (non Javadoc)
-	 * @see oripa.controller.paint.core.PaintContextInterface#isMissionCompleted()
+		if (unselect && pickedLines.isEmpty() == false) {
+			for (OriLine l : pickedLines) {
+				l.selected = false;
+			}
+		}
+
+		pickedLines.clear();
+		pickedVertices.clear();
+
+		candidateLineToPick = null;
+		candidateVertexToPick = null;
+
+		missionCompleted = false;
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * oripa.controller.paint.core.PaintContextInterface#isMissionCompleted()
 	 */
-    @Override
+	@Override
 	public boolean isMissionCompleted() {
 		return missionCompleted;
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.controller.paint.core.PaintContextInterface#setMissionCompleted(boolean)
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * oripa.controller.paint.core.PaintContextInterface#setMissionCompleted
+	 * (boolean)
 	 */
 	@Override
-	public void setMissionCompleted(boolean missionCompleted) {
+	public void setMissionCompleted(final boolean missionCompleted) {
 		this.missionCompleted = missionCompleted;
 	}
 
-	/* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#getVertices()
 	 */
 	@Override
 	public List<Vector2d> getPickedVertices() {
 		return Collections.unmodifiableList(pickedVertices);
 	}
-    
-    /* (non Javadoc)
+
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#getLines()
 	 */
-    @Override
+	@Override
 	public List<OriLine> getPickedLines() {
 		return Collections.unmodifiableList(pickedLines);
 	}
 
-	/* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#getLine(int)
 	 */
 	@Override
-	public OriLine getLine(int index){
-    	return pickedLines.get(index);
-    }
-    
-    
-    /* (non Javadoc)
+	public OriLine getLine(final int index) {
+		return pickedLines.get(index);
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#getVertex(int)
 	 */
-    @Override
-	public Vector2d getVertex(int index){
-    	return pickedVertices.get(index);
-    }
-    
-    /* (non Javadoc)
-	 * @see oripa.controller.paint.core.PaintContextInterface#pushVertex(javax.vecmath.Vector2d)
+	@Override
+	public Vector2d getVertex(final int index) {
+		return pickedVertices.get(index);
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * oripa.controller.paint.core.PaintContextInterface#pushVertex(javax.vecmath
+	 * .Vector2d)
 	 */
-    @Override
-	public void pushVertex(Vector2d picked){
-    	pickedVertices.push(picked);
-    }
-    	    
-    /* (non Javadoc)
-	 * @see oripa.controller.paint.core.PaintContextInterface#pushLine(oripa.value.OriLine)
+	@Override
+	public void pushVertex(final Vector2d picked) {
+		pickedVertices.push(picked);
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * oripa.controller.paint.core.PaintContextInterface#pushLine(oripa.value
+	 * .OriLine)
 	 */
-    @Override
-	public void pushLine(OriLine picked){
-    //	picked.selected = true;
-    	pickedLines.push(picked);
-    }
-    
-    /* (non Javadoc)
+	@Override
+	public void pushLine(final OriLine picked) {
+		// picked.selected = true;
+		pickedLines.push(picked);
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#popVertex()
 	 */
-    @Override
-	public Vector2d popVertex(){
-    	if(pickedVertices.isEmpty()){
-    		return null;
-    	}
+	@Override
+	public Vector2d popVertex() {
+		if (pickedVertices.isEmpty()) {
+			return null;
+		}
 
-    	return pickedVertices.pop();
-    }
+		return pickedVertices.pop();
+	}
 
-    
-    /* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#popLine()
 	 */
-    @Override
-	public OriLine popLine(){
-    	if(pickedLines.isEmpty()){
-    		return null;
-    	}
-    	
-    	OriLine line = pickedLines.pop();
-    	line.selected = false;
-    	return line;
-    }
-    
-    /* (non Javadoc)
-	 * @see oripa.controller.paint.core.PaintContextInterface#removeLine(oripa.value.OriLine)
+	@Override
+	public OriLine popLine() {
+		if (pickedLines.isEmpty()) {
+			return null;
+		}
+
+		OriLine line = pickedLines.pop();
+		line.selected = false;
+		return line;
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * oripa.controller.paint.core.PaintContextInterface#removeLine(oripa.value
+	 * .OriLine)
 	 */
-    @Override
-	public boolean removeLine(OriLine line){
-    	
-    	return pickedLines.remove(line);
-    }
-    
-    /* (non Javadoc)
+	@Override
+	public boolean removeLine(final OriLine line) {
+
+		return pickedLines.remove(line);
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#peekVertex()
 	 */
-    @Override
-	public Vector2d peekVertex(){
-    	return pickedVertices.peek();
-    }
-    
-    /* (non Javadoc)
+	@Override
+	public Vector2d peekVertex() {
+		return pickedVertices.peek();
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#peekLine()
 	 */
-    @Override
-	public OriLine peekLine(){
-    	return pickedLines.peek();
-    }
+	@Override
+	public OriLine peekLine() {
+		return pickedLines.peek();
+	}
 
-    /* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#getLineCount()
 	 */
-    @Override
-	public int getLineCount(){
-    	return pickedLines.size();
-    }
+	@Override
+	public int getLineCount() {
+		return pickedLines.size();
+	}
 
-    /* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.controller.paint.core.PaintContextInterface#getVertexCount()
 	 */
-    @Override
-	public int getVertexCount(){
-    	return pickedVertices.size();
-    }
+	@Override
+	public int getVertexCount() {
+		return pickedVertices.size();
+	}
 
 	/**
 	 * @return a candidate vertex to pick
@@ -292,10 +344,11 @@ public class PaintContext implements PaintContextInterface {
 	}
 
 	/**
-	 * @param candidate Sets candidateVertexToPick
+	 * @param candidate
+	 *            Sets candidateVertexToPick
 	 */
 	@Override
-	public void setCandidateVertexToPick(Vector2d candidate) {
+	public void setCandidateVertexToPick(final Vector2d candidate) {
 		this.candidateVertexToPick = candidate;
 	}
 
@@ -308,10 +361,11 @@ public class PaintContext implements PaintContextInterface {
 	}
 
 	/**
-	 * @param candidate Sets candidateLineToPick
+	 * @param candidate
+	 *            Sets candidateLineToPick
 	 */
 	@Override
-	public void setCandidateLineToPick(OriLine candidate) {
+	public void setCandidateLineToPick(final OriLine candidate) {
 		this.candidateLineToPick = candidate;
 	}
 
@@ -324,10 +378,11 @@ public class PaintContext implements PaintContextInterface {
 	}
 
 	/**
-	 * @param gridVisible Sets gridVisibleS
+	 * @param gridVisible
+	 *            Sets gridVisibleS
 	 */
 	@Override
-	public void setGridVisible(boolean gridVisible) {
+	public void setGridVisible(final boolean gridVisible) {
 		this.gridVisible = gridVisible;
 	}
 
@@ -340,13 +395,41 @@ public class PaintContext implements PaintContextInterface {
 	}
 
 	/**
-	 * @param scale Sets scale
+	 * @param scale
+	 *            Sets scale
 	 */
 	@Override
-	public void setScale(double scale) {
+	public void setScale(final double scale) {
 		this.scale = scale;
 	}
 
-    
+	/**
+	 * returns a painter for current crease pattern instance.
+	 * 
+	 */
+	@Override
+	public Painter getPainter() {
+		return new Painter(creasePattern);
+	}
 
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see oripa.controller.paint.PaintContextInterface#getUndoer()
+	 */
+	@Override
+	public CreasePatternUndoerInterface getUndoer() {
+		return undoer;
+	}
+
+	@Override
+	public void setCreasePattern(final CreasePatternInterface aCreasePattern) {
+		creasePattern = aCreasePattern;
+	}
+
+	@Override
+	public CreasePatternInterface getCreasePattern() {
+		// TODO 自動生成されたメソッド・スタブ
+		return creasePattern;
+	}
 }

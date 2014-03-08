@@ -1,19 +1,12 @@
 package oripa.controller.paint.linetype;
 
-import java.util.Collection;
-
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PickingLine;
 import oripa.domain.cptool.Painter;
-import oripa.persistent.doc.Doc;
-import oripa.value.OriLine;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 public class SelectingLineForLineType extends PickingLine {
 
-	
-	
 	public SelectingLineForLineType() {
 		super();
 	}
@@ -21,27 +14,23 @@ public class SelectingLineForLineType extends PickingLine {
 	@Override
 	protected void initialize() {
 	}
-	
-	
+
 	@Override
-	protected void undoAction(PaintContextInterface context) {
+	protected void undoAction(final PaintContextInterface context) {
 		super.undoAction(context);
 	}
 
 	@Override
-	protected void onResult(PaintContextInterface context) {
-		Doc document = ORIPA.doc;
-		Collection<OriLine> creasePattern = document.getCreasePattern();
+	protected void onResult(final PaintContextInterface context) {
 
-		document.pushUndoInfo();
+		context.getUndoer().pushUndoInfo();
 
-    	UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-    	Painter painter = new Painter();
-    	painter.alterLineType(
-    			context.peekLine(),  setting.getTypeFrom(), setting.getTypeTo(),
-    			creasePattern);
+		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
+		Painter painter = context.getPainter();
+		painter.alterLineType(
+				context.peekLine(), setting.getTypeFrom(), setting.getTypeTo());
 
-        context.clear(false);
+		context.clear(false);
 	}
 
 }

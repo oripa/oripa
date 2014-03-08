@@ -40,7 +40,7 @@ public class DataSet {
 	public DataSet() {
 	}
 
-	public DataSet(Doc doc) {
+	public DataSet(final Doc doc) {
 		mainVersion = Version.FILE_MAJOR_VERSION;
 		subVersion = Version.FILE_MINOR_VERSION;
 
@@ -66,7 +66,7 @@ public class DataSet {
 		memo = property.getMemo();
 	}
 
-	public Doc recover(String filePath) {
+	public Doc recover(final String filePath) {
 
 		CreasePatternFactory factory = new CreasePatternFactory();
 		CreasePatternInterface creasePattern = factory
@@ -76,9 +76,9 @@ public class DataSet {
 			creasePattern.add(lines[i].getLine());
 		}
 
-		Doc doc = new Doc();
+		Doc doc = new Doc(paperSize);
 		doc.setCreasePattern(creasePattern);
-		doc.setPaperSize(paperSize);
+		// doc.setPaperSize(paperSize);
 
 		doc.setProperty(createProperty(filePath));
 
@@ -86,7 +86,7 @@ public class DataSet {
 
 	}
 
-	private Property createProperty(String filePath) {
+	private Property createProperty(final String filePath) {
 		Property property = new Property(filePath);
 		property.setTitle(title);
 		property.setEditorName(editorName);
@@ -97,7 +97,7 @@ public class DataSet {
 		return property;
 	}
 
-	public void setPaperSize(double d) {
+	public void setPaperSize(final double d) {
 		paperSize = d;
 	}
 
@@ -105,7 +105,7 @@ public class DataSet {
 		return paperSize;
 	}
 
-	public void setMainVersion(int i) {
+	public void setMainVersion(final int i) {
 		mainVersion = i;
 	}
 
@@ -113,7 +113,7 @@ public class DataSet {
 		return mainVersion;
 	}
 
-	public void setSubVersion(int i) {
+	public void setSubVersion(final int i) {
 		subVersion = i;
 	}
 
@@ -121,7 +121,7 @@ public class DataSet {
 		return subVersion;
 	}
 
-	public void setLines(OriLineProxy[] l) {
+	public void setLines(final OriLineProxy[] l) {
 		lines = l;
 	}
 
@@ -129,7 +129,7 @@ public class DataSet {
 		return lines;
 	}
 
-	public void setTitle(String s) {
+	public void setTitle(final String s) {
 		title = s;
 	}
 
@@ -137,7 +137,7 @@ public class DataSet {
 		return title;
 	}
 
-	public void setEditorName(String s) {
+	public void setEditorName(final String s) {
 		editorName = s;
 	}
 
@@ -145,7 +145,7 @@ public class DataSet {
 		return editorName;
 	}
 
-	public void setOriginalAuthorName(String s) {
+	public void setOriginalAuthorName(final String s) {
 		originalAuthorName = s;
 	}
 
@@ -153,7 +153,7 @@ public class DataSet {
 		return originalAuthorName;
 	}
 
-	public void setReference(String s) {
+	public void setReference(final String s) {
 		reference = s;
 	}
 
@@ -161,7 +161,7 @@ public class DataSet {
 		return reference;
 	}
 
-	public void setMemo(String s) {
+	public void setMemo(final String s) {
 		memo = s;
 	}
 

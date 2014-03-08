@@ -1,14 +1,11 @@
 package oripa.controller.paint.selectline;
 
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PickingLine;
 import oripa.value.OriLine;
 
 public class SelectingLine extends PickingLine {
 
-	
-	
 	public SelectingLine() {
 		super();
 	}
@@ -17,33 +14,29 @@ public class SelectingLine extends PickingLine {
 	protected void initialize() {
 	}
 
-	
-	
-	
 	@Override
-	protected void undoAction(PaintContextInterface context) {
+	protected void undoAction(final PaintContextInterface context) {
 		// TODO Auto-generated method stub
 		super.undoAction(context);
 	}
 
 	@Override
-	protected void onResult(PaintContextInterface context) {
-		
-		ORIPA.doc.pushUndoInfo();
-		
-		
+	protected void onResult(final PaintContextInterface context) {
+
+		context.getUndoer().pushUndoInfo();
+
 		OriLine line = context.peekLine();
 
 		// toggle selection
-		if(line.selected){
-	    	line.selected = false;
-	    	context.popLine();
-	    	// line should be already stored.
-	    	context.removeLine(line);
-	    }
-	    else {
-	    	line.selected = true;
-	    }
+		if (line.selected) {
+			line.selected = false;
+			context.popLine();
+			// line should be already stored.
+			context.removeLine(line);
+		}
+		else {
+			line.selected = true;
+		}
 
 	}
 

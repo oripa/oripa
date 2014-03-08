@@ -2,28 +2,24 @@ package oripa.controller.paint.line;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PaintConfig;
 import oripa.controller.paint.core.PickingVertex;
 import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.geom.GeomUtil;
-import oripa.persistent.doc.Doc;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
-public class SelectingSecondVertexForLine extends PickingVertex{
+public class SelectingSecondVertexForLine extends PickingVertex {
 
-
-	public SelectingSecondVertexForLine(){
+	public SelectingSecondVertexForLine() {
 		super();
 	}
 
 	@Override
-	protected void onResult(PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context) {
 
-		if(context.getVertexCount() != 2){
+		if (context.getVertexCount() != 2) {
 			throw new RuntimeException();
 		}
 
@@ -39,16 +35,14 @@ public class SelectingSecondVertexForLine extends PickingVertex{
 		OriLine line = new OriLine(p0.x - dir.x, p0.y - dir.y,
 				p0.x + dir.x, p0.y + dir.y, PaintConfig.inputLineType);
 
-		Doc document = ORIPA.doc;
-		CreasePatternInterface creasePattern = document.getCreasePattern();
-		double paperSize = creasePattern.getPaperSize();
+		double paperSize = context.getCreasePattern().getPaperSize();
 
 		// add new line to crease pattern
 		if (GeomUtil.clipLine(line, paperSize / 2)) {
-			document.pushUndoInfo();
+			context.getUndoer().pushUndoInfo();
 
-			Painter painter = new Painter();
-			painter.addLine(line, creasePattern);
+			Painter painter = context.getPainter();
+			painter.addLine(line);
 		}
 
 		context.clear(false);
@@ -59,6 +53,6 @@ public class SelectingSecondVertexForLine extends PickingVertex{
 		setPreviousClass(SelectingFirstVertexForLine.class);
 		setNextClass(SelectingFirstVertexForLine.class);
 
-		//System.out.println("SelectingSecondVertex.initialize() is called");
+		// System.out.println("SelectingSecondVertex.initialize() is called");
 	}
-}	
+}

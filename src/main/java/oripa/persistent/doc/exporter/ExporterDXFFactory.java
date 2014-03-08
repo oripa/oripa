@@ -18,189 +18,35 @@
 
 package oripa.persistent.doc.exporter;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.util.List;
-
-import javax.vecmath.Vector2d;
-
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
+import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.Doc;
-import oripa.value.OriLine;
+import oripa.persistent.entity.exporter.CreasePatternExporterDXF;
+import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
 
 public class ExporterDXFFactory {
 
 	private static class ModelExporter implements DocExporter {
 		@Override
-		public boolean export(Doc doc, String filepath) throws Exception {
+		public boolean export(final Doc doc, final String filePath) throws Exception {
 			OrigamiModel origamiModel = doc.getOrigamiModel();
-			double paperSize = origamiModel.getPaperSize();
 
-			double scale = 6.0 / paperSize; // 6.0 inch width
-			double center = 4.0; // inch
-			FileWriter fw = new FileWriter(filepath);
-			BufferedWriter bw = new BufferedWriter(fw);
+			OrigamiModelExporterDXF exporter = new OrigamiModelExporterDXF();
 
-			// Align the center of the model, combine scales
-			Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-			Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-			Vector2d modelCenter = new Vector2d();
-
-			List<OriFace> faces = origamiModel.getFaces();
-			List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-
-			for (OriFace face : faces) {
-				for (OriHalfedge he : face.halfedges) {
-					maxV.x = Math.max(maxV.x, he.vertex.p.x);
-					maxV.y = Math.max(maxV.y, he.vertex.p.y);
-					minV.x = Math.min(minV.x, he.vertex.p.x);
-					minV.y = Math.min(minV.y, he.vertex.p.y);
-				}
-			}
-
-			modelCenter.x = (maxV.x + minV.x) / 2;
-			modelCenter.y = (maxV.y + minV.y) / 2;
-
-			bw.write("  0\n");
-			bw.write("SECTION\n");
-			bw.write("  2\n");
-			bw.write("HEADER\n");
-			bw.write("  9\n");
-			bw.write("$ACADVER\n");
-			bw.write("  1\n");
-			bw.write("AC1009\n");
-			bw.write("  0\n");
-			bw.write("ENDSEC\n");
-			bw.write("  0\n");
-			bw.write("SECTION\n");
-			bw.write("  2\n");
-			bw.write("ENTITIES\n");
-
-			for (OriFace face : sortedFaces) {
-				for (OriHalfedge he : face.halfedges) {
-
-					bw.write("  0\n");
-					bw.write("LINE\n");
-					bw.write("  8\n");
-					bw.write("_0-0_\n"); // Layer name
-					bw.write("  6\n");
-					bw.write("CONTINUOUS\n"); // Line type
-					bw.write(" 62\n"); // 1＝red 2＝yellow 3＝green 4＝cyan 5＝blue
-										// 6＝magenta 7＝white
-					int colorNumber = 250;
-
-					bw.write("" + colorNumber + "\n");
-					bw.write(" 10\n");
-					bw.write(""
-							+ ((he.positionForDisplay.x - modelCenter.x)
-									* scale + center) + "\n");
-					bw.write(" 20\n");
-					bw.write(""
-							+ (-(he.positionForDisplay.y - modelCenter.y)
-									* scale + center) + "\n");
-					bw.write(" 11\n");
-					bw.write(""
-							+ ((he.next.positionForDisplay.x - modelCenter.x)
-									* scale + center) + "\n");
-					bw.write(" 21\n");
-					bw.write(""
-							+ (-(he.next.positionForDisplay.y - modelCenter.y)
-									* scale + center) + "\n");
-				}
-			}
-
-			bw.write("  0\n");
-			bw.write("ENDSEC\n");
-			bw.write("  0\n");
-			bw.write("EOF\n");
-
-			bw.close();
-
-			return true;
+			return exporter.export(origamiModel, filePath);
 		}
 
 	}
 
 	private static class CreasePatternExporter implements DocExporter {
 		@Override
-		public boolean export(Doc doc, String filepath) throws Exception {
-			double paperSize = doc.getPaperSize();
-			double scale = 6.0 / paperSize; // 6.0 inch width
-			double center = 4.0; // inch
-			FileWriter fw = new FileWriter(filepath);
-			BufferedWriter bw = new BufferedWriter(fw);
+		public boolean export(final Doc doc, final String filePath) throws Exception {
 
-			bw.write("  0\n");
-			bw.write("SECTION\n");
-			bw.write("  2\n");
-			bw.write("HEADER\n");
-			bw.write("  9\n");
-			bw.write("$ACADVER\n");
-			bw.write("  1\n");
-			bw.write("AC1009\n");
-			bw.write("  0\n");
-			bw.write("ENDSEC\n");
-			bw.write("  0\n");
-			bw.write("SECTION\n");
-			bw.write("  2\n");
-			bw.write("ENTITIES\n");
+			CreasePatternInterface creasePattern = doc.getCreasePattern();
 
-			for (OriLine line : doc.getCreasePattern()) {
-				bw.write("  0\n");
-				bw.write("LINE\n");
-				bw.write("  8\n");
-				String layerName = "noname";
-				switch (line.typeVal) {
-				case OriLine.TYPE_CUT:
-					layerName = "CutLine";
-					break;
-				case OriLine.TYPE_RIDGE:
-					layerName = "MountainLine";
-					break;
-				case OriLine.TYPE_VALLEY:
-					layerName = "ValleyLine";
-				}
-				bw.write(layerName + "\n"); // Layer name
-				bw.write("  6\n");
-				bw.write("CONTINUOUS\n"); // Line type
-				bw.write(" 62\n"); // 1＝red 2＝yellow 3＝green 4＝cyan 5＝blue
-									// 6＝magenta
-									// 7＝white
-				int colorNumber = 0;
-				switch (line.typeVal) {
-				case OriLine.TYPE_CUT:
-					colorNumber = 250; // 51,51,51
-					break;
-				case OriLine.TYPE_RIDGE:
-					colorNumber = 5; // blue
-					break;
-				case OriLine.TYPE_VALLEY:
-					colorNumber = 1; // red
-				}
+			CreasePatternExporterDXF exporter = new CreasePatternExporterDXF();
 
-				bw.write("" + colorNumber + "\n");
-				bw.write(" 10\n");
-				bw.write("" + (line.p0.x * scale + center) + "\n");
-				bw.write(" 20\n");
-				bw.write("" + ((paperSize / 2 - line.p0.y) * scale + center)
-						+ "\n");
-				bw.write(" 11\n");
-				bw.write("" + (line.p1.x * scale + center) + "\n");
-				bw.write(" 21\n");
-				bw.write("" + ((paperSize / 2 - line.p1.y) * scale + center)
-						+ "\n");
-			}
-
-			bw.write("  0\n");
-			bw.write("ENDSEC\n");
-			bw.write("  0\n");
-			bw.write("EOF\n");
-
-			bw.close();
-
-			return true;
+			return exporter.export(creasePattern, filePath);
 		}
 
 	}

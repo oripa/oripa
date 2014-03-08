@@ -5,18 +5,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import oripa.ORIPA;
 import oripa.persistent.doc.exporter.ExporterCP;
 import oripa.persistent.doc.exporter.ExporterDXFFactory;
+import oripa.persistent.doc.exporter.ExporterOBJFactory;
 import oripa.persistent.doc.exporter.ExporterSVGFactory;
 import oripa.persistent.doc.exporter.ExporterXML;
-import oripa.persistent.doc.exporter.ModelExporterOBJ;
 import oripa.persistent.doc.exporter.PictureExporter;
 import oripa.persistent.doc.loader.LoaderCP;
 import oripa.persistent.doc.loader.LoaderDXF;
 import oripa.persistent.doc.loader.LoaderPDF;
 import oripa.persistent.doc.loader.LoaderXML;
 import oripa.persistent.filetool.FileAccessSupportFilter;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
 
 /**
  * Manages available filters for file access.
@@ -28,43 +30,7 @@ public class DocFilterSelector {
 
 	private final HashMap<FileTypeKey, FileAccessSupportFilter<Doc>> filters = new HashMap<>();
 
-	// private static DocFilterSelector instance = null;
-
-	// public static FilterDB getInstance() {
-	// if (instance == null) {
-	// instance = new FilterDB();
-	// }
-	// return instance;
-	// }
-
-	// /**
-	// * for back compatibility.
-	// */
-	// public static final String KEY_OPX = "opx";
-	// /**
-	// * for back compatibility.
-	// */
-	// public static final String KEY_PICT = "pict";
-	// /**
-	// * for back compatibility.
-	// */
-	// public static final String KEY_DXF = "dxf";
-	// /**
-	// * for back compatibility.
-	// */
-	// public static final String KEY_OBJ = "obj";
-	// /**
-	// * for back compatibility.
-	// */
-	// public static final String KEY_CP = "cp";
-	// /**
-	// * for back compatibility.
-	// */
-	// public static final String KEY_SVG = "svg";
-	// /**
-	// * for back compatibility.
-	// */
-	// public static final String KEY_PDF = "pdf";
+	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	/**
 	 * 
@@ -74,68 +40,38 @@ public class DocFilterSelector {
 	public DocFilterSelector() {
 
 		FileTypeKey key = FileTypeKey.OPX;
-		putFilter(key, createDescription(key, "ORIPA_File"),
+		putFilter(key, createDescription(key, StringID.Main.ORIPA_FILE_ID),
 				new ExporterXML(), new LoaderXML());
 
 		key = FileTypeKey.PICT;
-		putFilter(key, createDescription(key, "Picture_File"),
+		putFilter(key, createDescription(key, StringID.Main.PICTURE_FILE_ID),
 				new PictureExporter(), null);
 
 		key = FileTypeKey.DXF;
-		putFilter(key, createDescription(key, "File"),
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
 				ExporterDXFFactory.createCreasePatternExporter(),
 				new LoaderDXF());
-		// filter = new FileAccessSupportFilter(key,
-		// FileAccessSupportFilter.createDefaultDescription(key,
-		// ORIPA.res.getString("File")),
-		// new SavingAction(
-		// ExporterDXFFactory.createCreasePatternExporter()));
-		// filter.setLoadingAction(new LoadingAction(new LoaderDXF()));
-		// this.putFilter(FileTypeKey.DXF, filter);
 
 		key = FileTypeKey.OBJ_MODEL;
-		putFilter(key, createDescription(key, "File"),
-				new ModelExporterOBJ(),
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
+				ExporterOBJFactory.createFoldedModelExporter(),
+				// new ModelExporterOBJ(),
 				null);
-		// filter = new FileAccessSupportFilter(key,
-		// FileAccessSupportFilter.createDefaultDescription(key,
-		// ORIPA.res.getString("File")),
-		// new SavingAction(new ModelExporterOBJ()));
-		// this.putFilter(FileTypeKey.OBJ_MODEL, filter);
 
 		key = FileTypeKey.CP;
-		putFilter(key, createDescription(key, "File"),
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
 				new ExporterCP(),
 				new LoaderCP());
-		// filter = new FileAccessSupportFilter(key,
-		// FileAccessSupportFilter.createDefaultDescription(key,
-		// ORIPA.res.getString("File")),
-		// new SavingAction(new ExporterCP()));
-		// filter.setLoadingAction(new LoadingAction(new LoaderCP()));
-		// this.putFilter(FileTypeKey.CP, filter);
 
 		key = FileTypeKey.SVG;
-		putFilter(key, createDescription(key, "File"),
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
 				ExporterSVGFactory.createCreasePatternExporter(),
 				null);
 
-		// filter = new FileAccessSupportFilter(key,
-		// FileAccessSupportFilter.createDefaultDescription(key,
-		// ORIPA.res.getString("File")),
-		// new SavingAction(
-		// ExporterSVGFactory.createCreasePatternExporter()));
-		// this.putFilter(FileTypeKey.SVG, filter);
-
 		key = FileTypeKey.PDF;
-		putFilter(key, createDescription(key, "File"),
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
 				null,
 				new LoaderPDF());
-
-		// filter = new FileAccessSupportFilter(key,
-		// FileAccessSupportFilter.createDefaultDescription(key,
-		// ORIPA.res.getString("File")));
-		// filter.setLoadingAction(new LoadingAction(new LoaderPDF()));
-		// this.putFilter(FileTypeKey.PDF, filter);
 
 	}
 
@@ -146,19 +82,19 @@ public class DocFilterSelector {
 	 * @param exporter
 	 * @param loader
 	 */
-	private void putFilter(FileTypeKey key, String desctiption,
-			Exporter<Doc> exporter, Loader<Doc> loader) {
+	private void putFilter(final FileTypeKey key, final String desctiption,
+			final Exporter<Doc> exporter, final Loader<Doc> loader) {
 		FileAccessSupportFilter<Doc> filter;
 
 		filter = new FileAccessSupportFilter<>(key,
 				desctiption);
 
 		if (exporter != null) {
-			filter.setSavingAction(new SavingAction(exporter));
+			filter.setSavingAction(new SavingDocAction(exporter));
 		}
 
 		if (loader != null) {
-			filter.setLoadingAction(new LoadingAction(loader));
+			filter.setLoadingAction(new LoadingDocAction(loader));
 		}
 		this.putFilter(key, filter);
 
@@ -170,9 +106,9 @@ public class DocFilterSelector {
 	 * @param resourceKey
 	 * @return
 	 */
-	private String createDescription(FileTypeKey fileTypeKey, String resourceKey) {
+	private String createDescription(final FileTypeKey fileTypeKey, final String resourceKey) {
 		return FileAccessSupportFilter.createDefaultDescription(fileTypeKey,
-				ORIPA.res.getString(resourceKey));
+				resourceHolder.getString(ResourceKey.LABEL, resourceKey));
 
 	}
 
@@ -182,7 +118,7 @@ public class DocFilterSelector {
 	 *            A value that describes the file type you want.
 	 * @return A filter for given key.
 	 */
-	public FileAccessSupportFilter<Doc> getFilter(FileTypeKey key) {
+	public FileAccessSupportFilter<Doc> getFilter(final FileTypeKey key) {
 		return filters.get(key);
 	}
 
@@ -206,8 +142,8 @@ public class DocFilterSelector {
 	 * @return A filter for given key.
 	 */
 
-	public FileAccessSupportFilter<Doc> putFilter(FileTypeKey key,
-			FileAccessSupportFilter<Doc> filter) {
+	public FileAccessSupportFilter<Doc> putFilter(final FileTypeKey key,
+			final FileAccessSupportFilter<Doc> filter) {
 		return filters.put(key, filter);
 	}
 
@@ -258,7 +194,7 @@ public class DocFilterSelector {
 	 * @param path
 	 * @return a filter that can load the file at the path.
 	 */
-	public FileAccessSupportFilter<Doc> getLoadableFilterOf(String path) {
+	public FileAccessSupportFilter<Doc> getLoadableFilterOf(final String path) {
 		File file = new File(path);
 		if (file.isDirectory()) {
 			return null;

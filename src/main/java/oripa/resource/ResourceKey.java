@@ -1,5 +1,5 @@
 package oripa.resource;
 
-public enum ResourceKey{
-	EXPLANATION, LABEL, WARNING
+public enum ResourceKey {
+	EXPLANATION, LABEL, WARNING, APP_INFO
 }

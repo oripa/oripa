@@ -1,8 +1,10 @@
 package oripa.persistent.doc;
 
 import java.awt.Component;
+import java.io.IOException;
 
 import oripa.persistent.filetool.AbstractSavingAction;
+import oripa.persistent.filetool.FileAccessActionProvider;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooser;
 import oripa.persistent.filetool.FileChooserCanceledException;
@@ -13,7 +15,7 @@ public class DocDAO {
 
 	// -----------------------------------------------------
 
-	public Doc load(String path) throws FileVersionError {
+	public Doc load(final String path) throws FileVersionError, IOException {
 		DocFilterSelector selecter = new DocFilterSelector();
 
 		Object loaded = selecter.getLoadableFilterOf(path).getLoadingAction()
@@ -23,11 +25,12 @@ public class DocDAO {
 			return (Doc) loaded;
 		}
 
-		return null;
+		throw new IOException("Wrong file");
+
 	}
 
 	@SuppressWarnings("unchecked")
-	public void save(Doc doc, String path, FileTypeKey type) {
+	public void save(final Doc doc, final String path, final FileTypeKey type) {
 		DocFilterSelector selecter = new DocFilterSelector();
 
 		selecter.getFilter(type).getSavingAction().setPath(path).save(doc);
@@ -41,12 +44,12 @@ public class DocDAO {
 	 * @param filters
 	 * @return chosen path
 	 */
-	public String saveUsingGUI(Doc doc, String homePath,
-			Component parent,
-			FileAccessSupportFilter<Doc>... filters)
+	public String saveUsingGUI(final Doc doc, final String homePath,
+			final Component parent,
+			final FileAccessSupportFilter<Doc>... filters)
 			throws FileChooserCanceledException {
 		FileChooserFactory<Doc> chooserFactory = new FileChooserFactory<>();
-		FileChooser<Doc> chooser = chooserFactory.createChooser(homePath,
+		FileAccessActionProvider<Doc> chooser = chooserFactory.createChooser(homePath,
 				filters);
 
 		AbstractSavingAction<Doc> saver = chooser
@@ -69,22 +72,22 @@ public class DocDAO {
 
 	}
 
-	public Doc loadUsingGUI(String homePath,
-			FileAccessSupportFilter<Doc>[] filters, Component parent)
-			throws FileVersionError {
+	public Doc loadUsingGUI(final String homePath,
+			final FileAccessSupportFilter<Doc>[] filters, final Component parent)
+			throws FileVersionError, FileChooserCanceledException {
 		FileChooserFactory<Doc> factory = new FileChooserFactory<>();
 		FileChooser<Doc> fileChooser = factory.createChooser(
 				homePath, filters);
 
 		// set opx as the default filter
-		fileChooser.setFileFilter(findDefaultFilter(filters));
+		// fileChooser.setFileFilter(findDefaultFilter(filters));
 
 		return fileChooser.getActionForLoadingFile(parent).load();
 
 	}
 
 	private FileAccessSupportFilter<Doc> findDefaultFilter(
-			FileAccessSupportFilter<Doc>[] filters) {
+			final FileAccessSupportFilter<Doc>[] filters) {
 
 		for (FileAccessSupportFilter<Doc> filter : filters) {
 			if (filter.getTargetType() == FileTypeKey.OPX) {

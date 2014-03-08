@@ -1,62 +1,54 @@
 package oripa.controller.paint.triangle;
 
 import java.awt.geom.Point2D.Double;
-import java.util.Collection;
 
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PickingVertex;
 import oripa.domain.cptool.Painter;
-import oripa.persistent.doc.Doc;
-import oripa.value.OriLine;
 
-public class SelectingVertexForTriangleSplit extends PickingVertex{
-	
-	public SelectingVertexForTriangleSplit(){
+public class SelectingVertexForTriangleSplit extends PickingVertex {
+
+	public SelectingVertexForTriangleSplit() {
 		super();
 	}
-	
+
 	@Override
 	protected void initialize() {
 	}
 
-
 	private boolean doingFirstAction = true;
+
 	@Override
-	protected boolean onAct(PaintContextInterface context, Double currentPoint,
-			boolean doSpecial) {
-		
-		if(doingFirstAction){
-			ORIPA.doc.cacheUndoInfo();
+	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
+			final boolean doSpecial) {
+
+		if (doingFirstAction) {
+			context.getUndoer().cacheUndoInfo();
 			doingFirstAction = false;
 		}
-		
+
 		boolean result = super.onAct(context, currentPoint, doSpecial);
-		
-		if(result == true){
-			if(context.getVertexCount() < 3){
+
+		if (result == true) {
+			if (context.getVertexCount() < 3) {
 				result = false;
 			}
 		}
-		
+
 		return result;
 	}
 
 	@Override
-	public void onResult(PaintContextInterface context) {
-		Doc document = ORIPA.doc;
-		Collection<OriLine> creasePattern = document.getCreasePattern();
-		
-		document.pushCachedUndoInfo();
+	public void onResult(final PaintContextInterface context) {
 
-		Painter painter = new Painter();
+		context.getUndoer().pushCachedUndoInfo();
+
+		Painter painter = context.getPainter();
 		painter.addTriangleDivideLines(
-				context.getVertex(0), context.getVertex(1), context.getVertex(2),
-				creasePattern);
+				context.getVertex(0), context.getVertex(1), context.getVertex(2));
 
-        doingFirstAction = true;
-        context.clear(false);
+		doingFirstAction = true;
+		context.clear(false);
 	}
 
-	
 }

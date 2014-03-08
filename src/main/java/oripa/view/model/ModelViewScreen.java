@@ -42,37 +42,46 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.controller.paint.core.LineSetting;
 import oripa.controller.paint.core.PaintConfig;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
+import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.resource.Constants;
+import oripa.util.gui.CallbackOnUpdate;
 import oripa.value.OriLine;
 
 public class ModelViewScreen extends JPanel
-implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener, ComponentListener {
+		implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener,
+		ComponentListener {
 
 	private Image bufferImage = null;
 	private Graphics2D bufferg = null;
 	private Point2D preMousePoint; // Screen coordinates
-	private Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logical coordinates
+	private final Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logical
+																				// coordinates
 	private double scale = 1;
 	private double transX = 0;
 	private double transY = 0;
-	private Vector2d modelCenter = new Vector2d();
+	private final Vector2d modelCenter = new Vector2d();
 	private Dimension preSize;
 	private double rotateAngle = 0;
-	private AffineTransform affineTransform = new AffineTransform();
+	private final AffineTransform affineTransform = new AffineTransform();
 	public boolean dispSlideFace = false;
 	private OriLine crossLine = null;
 	private int crossLineAngleDegree = 90;
 	private double crossLinePosition = 0;
 
 	private OrigamiModel origamiModel = null;
+	private final SheetCutOutlinesHolder lineHolder;
+	private final CallbackOnUpdate callbackOnUpdate;
 
-	public ModelViewScreen() {
+	public ModelViewScreen(final SheetCutOutlinesHolder aLineHolder, final CallbackOnUpdate c) {
+
+		lineHolder = aLineHolder;
+		callbackOnUpdate = c;
+
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
@@ -86,24 +95,23 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		preSize = getSize();
 	}
 
-	public void setModel(OrigamiModel origamiModel, int boundSize) {
+	public void setModel(final OrigamiModel origamiModel, final int boundSize) {
 		this.origamiModel = origamiModel;
 		resetViewMatrix(boundSize);
 	}
-	
-	//! Asynchronous behavior of JComponent causes
+
+	// ! Asynchronous behavior of JComponent causes
 	// delayed response of size changing:
-	//    setSize(w, h);
-	//    resetViewMatrix();
+	// setSize(w, h);
+	// resetViewMatrix();
 	// may results scale = zero if it is just after construction.
-	
-	private void resetViewMatrix(int boundSize) {
+
+	private void resetViewMatrix(final int boundSize) {
 //		Doc document = ORIPA.doc;
 //		OrigamiModel origamiModel = document.getOrigamiModel();
 		List<OriFace> faces = origamiModel.getFaces();
 
 		boolean hasModel = origamiModel.hasModel();
-
 
 		rotateAngle = 0;
 		if (!hasModel) {
@@ -129,7 +137,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		}
 	}
 
-	public void drawModel(Graphics2D g2d) {
+	public void drawModel(final Graphics2D g2d) {
 		if (origamiModel == null) {
 			return;
 		}
@@ -160,8 +168,8 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 				} else {
 					g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
 				}
-				g2d.draw(new Line2D.Double(he.positionForDisplay.x, 
-						he.positionForDisplay.y, he.next.positionForDisplay.x, 
+				g2d.draw(new Line2D.Double(he.positionForDisplay.x,
+						he.positionForDisplay.y, he.next.positionForDisplay.x,
 						he.next.positionForDisplay.y));
 			}
 		}
@@ -171,36 +179,37 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 			g2d.setStroke(LineSetting.STROKE_CUT_MODEL);
 			g2d.setColor(Color.RED);
 
-			g2d.draw(new Line2D.Double(crossLine.p0.x, crossLine.p0.y, crossLine.p1.x, crossLine.p1.y));
+			g2d.draw(new Line2D.Double(crossLine.p0.x, crossLine.p0.y, crossLine.p1.x,
+					crossLine.p1.y));
 		}
 	}
 
 	// Update the current AffineTransform
 	private void updateAffineTransform() {
-		affineTransform.setToIdentity(); 
+		affineTransform.setToIdentity();
 		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
-		affineTransform.scale(scale, scale);   
+		affineTransform.scale(scale, scale);
 		affineTransform.translate(transX, transY);
 		affineTransform.rotate(rotateAngle);
 		affineTransform.translate(-modelCenter.x, -modelCenter.y);
 	}
 
-	
-	private void buildBufferImage () {
+	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
 		bufferg = (Graphics2D) bufferImage.getGraphics();
 
 		updateAffineTransform();
-		
+
 	}
+
 	// Scaling relative to the center of the screen
 	@Override
-	public void paintComponent(Graphics g) {
+	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
 //		Doc document = ORIPA.doc;
 //		OrigamiModel orirgamiModel = document.getOrigamiModel();
-		
+
 		if (bufferImage == null) {
 			buildBufferImage();
 		}
@@ -216,7 +225,6 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 
 		Graphics2D g2d = bufferg;
 
-		
 		if (origamiModel == null) {
 			return;
 		}
@@ -233,7 +241,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(final MouseEvent e) {
 		Point2D.Double clickPoint = new Point2D.Double();
 		try {
 			affineTransform.inverseTransform(e.getPoint(), clickPoint);
@@ -241,18 +249,18 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		}
 	}
 
-	public void setCrossLineAngle(int angleDegree) {
+	public void setCrossLineAngle(final int angleDegree) {
 		crossLineAngleDegree = angleDegree;
 		recalcCrossLine();
 	}
 
-	public void setCrossLinePosition(int positionValue) {
+	public void setCrossLinePosition(final int positionValue) {
 		crossLinePosition = positionValue;
 		recalcCrossLine();
 	}
 
 	public void recalcCrossLine() {
-		Vector2d dir = new Vector2d(Math.cos(Math.PI * crossLineAngleDegree / 180.0), 
+		Vector2d dir = new Vector2d(Math.cos(Math.PI * crossLineAngleDegree / 180.0),
 				Math.sin(Math.PI * crossLineAngleDegree / 180.0));
 		crossLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);
 		crossLine.p1.set(modelCenter.x + dir.x * 300, modelCenter.y + dir.y * 300);
@@ -262,42 +270,45 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		crossLine.p0.add(moveVec);
 		crossLine.p1.add(moveVec);
 
-		ORIPA.doc.updateSheetCutOutlines(crossLine);
+		lineHolder.updateSheetCutOutlines(crossLine);
+
 		repaint();
-		ORIPA.mainFrame.repaint();
+
+		callbackOnUpdate.onUpdate();
+		// ORIPA.mainFrame.repaint();
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(final MouseEvent e) {
 		preMousePoint = e.getPoint();
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(final MouseEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseEntered(final MouseEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
+	public void mouseExited(final MouseEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent e) {
+	public void mouseDragged(final MouseEvent e) {
 		if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
-			transX += (double) (e.getX() - preMousePoint.getX()) / scale;
-			transY += (double) (e.getY() - preMousePoint.getY()) / scale;
+			transX += (e.getX() - preMousePoint.getX()) / scale;
+			transY += (e.getY() - preMousePoint.getY()) / scale;
 
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
 		} else if (javax.swing.SwingUtilities.isLeftMouseButton(e)) {
-			rotateAngle += ((double) e.getX() - preMousePoint.getX()) / 100.0;
+			rotateAngle += (e.getX() - preMousePoint.getX()) / 100.0;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
@@ -311,7 +322,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(final MouseEvent e) {
 		try {
 			affineTransform.inverseTransform(e.getPoint(), currentMousePointLogic);
 		} catch (Exception ex) {
@@ -319,7 +330,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(final MouseWheelEvent e) {
 		double scale_ = (100.0 - e.getWheelRotation() * 5) / 100.0;
 		scale *= scale_;
 		updateAffineTransform();
@@ -327,12 +338,12 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(final ActionEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void componentResized(ComponentEvent arg0) {
+	public void componentResized(final ComponentEvent arg0) {
 		preSize = getSize();
 
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
@@ -343,17 +354,17 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent arg0) {
+	public void componentMoved(final ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void componentShown(ComponentEvent arg0) {
+	public void componentShown(final ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
+	public void componentHidden(final ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 }

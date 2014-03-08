@@ -11,7 +11,7 @@ import javax.vecmath.Vector2d;
 import oripa.controller.paint.GraphicMouseActionInterface;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.GraphicMouseAction;
-import oripa.controller.paint.geometry.NearestVertexFinder;
+import oripa.controller.paint.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 public class ChangeOriginAction extends GraphicMouseAction{
@@ -56,7 +56,7 @@ public class ChangeOriginAction extends GraphicMouseAction{
 	@Override
 	public Vector2d onMove(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction) {
-		Vector2d closeVertex = NearestVertexFinder.pickVertexFromPickedLines(context);
+		Vector2d closeVertex = NearestItemFinder.pickVertexFromPickedLines(context);
 		context.setCandidateVertexToPick(closeVertex);
 		
 		if(closeVertex != null){

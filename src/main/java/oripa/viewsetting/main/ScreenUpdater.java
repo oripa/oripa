@@ -46,11 +46,11 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 
 	public class KeyListener implements java.awt.event.KeyListener {
 		@Override
-		public void keyTyped(KeyEvent e) {
+		public void keyTyped(final KeyEvent e) {
 		}
 
 		@Override
-		public void keyPressed(KeyEvent e) {
+		public void keyPressed(final KeyEvent e) {
 
 			if (e.isControlDown()) {
 				updateIfCopyAndPaste(true);
@@ -63,13 +63,13 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 		}
 
 		@Override
-		public void keyReleased(KeyEvent e) {
+		public void keyReleased(final KeyEvent e) {
 			updateIfCopyAndPaste(false);
 		}
 
 	}
 
-	private void updateIfCopyAndPaste(boolean changeOrigin) {
+	private void updateIfCopyAndPaste(final boolean changeOrigin) {
 		GraphicMouseActionInterface action = actionHolder.getMouseAction();
 
 		if (action instanceof CopyAndPasteAction) {

@@ -8,7 +8,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.util.RectangleClipper;
 import oripa.domain.creasepattern.CreasePatternInterface;
@@ -16,66 +15,66 @@ import oripa.value.OriLine;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
 
-
-	private Point2D.Double startPoint = null; 
-	private Point2D.Double draggingPoint = null; 
+	private Point2D.Double startPoint = null;
+	private Point2D.Double draggingPoint = null;
 
 	@Override
-	public void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		startPoint = context.getLogicalMousePoint();
 	}
 
 	@Override
-	public void onDrag(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
-		
+	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
+
 		draggingPoint = context.getLogicalMousePoint();
-	
+
 	}
 
-
-
 	@Override
-	public void onRelease(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 
-		if(startPoint != null && draggingPoint != null){
+		if (startPoint != null && draggingPoint != null) {
 			selectByRectangularArea(context);
 		}
 
 		startPoint = null;
 		draggingPoint = null;
-		
+
 	}
 
 	/**
 	 * defines what to do for the selected lines.
-	 * @param selectedLines		lines selected by dragging
+	 * 
+	 * @param selectedLines
+	 *            lines selected by dragging
 	 * @param context
 	 */
 	protected abstract void afterRectangularSelection(
 			Collection<OriLine> selectedLines, PaintContextInterface context);
-	
-	protected final void selectByRectangularArea(PaintContextInterface context){
+
+	protected final void selectByRectangularArea(final PaintContextInterface context) {
 		LinkedList<OriLine> selectedLines = new LinkedList<>();
 
 		try {
 
-			RectangleClipper clipper = new RectangleClipper(Math.min(startPoint.x, draggingPoint.x),
+			RectangleClipper clipper = new RectangleClipper(
+					Math.min(startPoint.x, draggingPoint.x),
 					Math.min(startPoint.y, draggingPoint.y),
 					Math.max(startPoint.x, draggingPoint.x),
 					Math.max(startPoint.y, draggingPoint.y));
-			
-	        CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
+
+			CreasePatternInterface creasePattern = context.getCreasePattern();
 
 			for (OriLine l : creasePattern) {
 
+				if (clipper.clipTest(l)) {
 
-					if (clipper.clipTest(l)) {
-					
-						selectedLines.addLast(l);
+					selectedLines.addLast(l);
 
-					}
+				}
 			}
 
 		} catch (Exception ex) {
@@ -84,27 +83,24 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 
 		afterRectangularSelection(selectedLines, context);
 	}
-	
-	
+
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 
-		if(startPoint != null && draggingPoint != null){
-						
-	        g2d.setStroke(LineSetting.STROKE_SELECT_BY_AREA);
-	        g2d.setColor(Color.BLACK);
-	        double sx = Math.min(startPoint.x, draggingPoint.x);
-	        double sy = Math.min(startPoint.y, draggingPoint.y);
-	        double w = Math.abs(startPoint.x - draggingPoint.x);
-	        double h = Math.abs(startPoint.y - draggingPoint.y);
-	        g2d.draw(new Rectangle2D.Double(sx, sy, w, h));
+		if (startPoint != null && draggingPoint != null) {
+
+			g2d.setStroke(LineSetting.STROKE_SELECT_BY_AREA);
+			g2d.setColor(Color.BLACK);
+			double sx = Math.min(startPoint.x, draggingPoint.x);
+			double sy = Math.min(startPoint.y, draggingPoint.y);
+			double w = Math.abs(startPoint.x - draggingPoint.x);
+			double h = Math.abs(startPoint.y - draggingPoint.y);
+			g2d.draw(new Rectangle2D.Double(sx, sy, w, h));
 
 		}
 
 	}
-
-
 
 }

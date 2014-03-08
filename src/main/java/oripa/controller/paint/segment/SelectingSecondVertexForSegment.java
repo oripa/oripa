@@ -1,40 +1,33 @@
 package oripa.controller.paint.segment;
 
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PaintConfig;
 import oripa.controller.paint.core.PickingVertex;
 import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.persistent.doc.Doc;
 import oripa.value.OriLine;
 
-public class SelectingSecondVertexForSegment extends PickingVertex{
+public class SelectingSecondVertexForSegment extends PickingVertex {
 
-		
-	public SelectingSecondVertexForSegment(){
+	public SelectingSecondVertexForSegment() {
 		super();
 	}
 
 	@Override
-	protected void onResult(PaintContextInterface context) {
-		
-		if(context.getVertexCount() != 2){
+	protected void onResult(final PaintContextInterface context) {
+
+		if (context.getVertexCount() != 2) {
 			throw new RuntimeException();
 		}
-		
+
 		OriLine line = new OriLine(context.getVertex(0),
 				context.getVertex(1), PaintConfig.inputLineType);
 
-		Doc document = ORIPA.doc;
-		CreasePatternInterface creasePattern = document.getCreasePattern();
+		context.getUndoer().pushUndoInfo();
 
-		document.pushUndoInfo();
+		Painter painter = context.getPainter();
+		painter.addLine(line);
 
-		Painter painter = new Painter();
-		painter.addLine(line, creasePattern);
-
-        context.clear(false);
+		context.clear(false);
 	}
 
 	@Override
@@ -44,4 +37,4 @@ public class SelectingSecondVertexForSegment extends PickingVertex{
 
 //		System.out.println("SelectingSecondVertex.initialize() is called");
 	}
-}	
+}

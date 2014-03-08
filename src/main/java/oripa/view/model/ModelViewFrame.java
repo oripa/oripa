@@ -23,19 +23,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
@@ -44,11 +41,15 @@ import oripa.controller.paint.core.PaintConfig;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.FileTypeKey;
-import oripa.persistent.doc.exporter.DocExporter;
-import oripa.persistent.doc.exporter.ExporterDXFFactory;
-import oripa.persistent.doc.exporter.ModelExporterOBJ;
+import oripa.persistent.doc.SheetCutOutlinesHolder;
+import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
+import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
+import oripa.persistent.filetool.FileAccessActionProvider;
 import oripa.persistent.filetool.FileAccessSupportFilter;
+import oripa.persistent.filetool.FileChooserFactory;
+import oripa.persistent.filetool.SavingActionTemplate;
 import oripa.resource.Constants;
+import oripa.util.gui.CallbackOnUpdate;
 import oripa.viewsetting.model.ModelFrameSettingDB;
 
 /**
@@ -92,17 +93,19 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			JScrollBar.VERTICAL, 0, 5, -150, 150);
 
-	public ModelViewFrame(int width, int height) {
-		initialize();
+	public ModelViewFrame(final int width, final int height,
+			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
+		initialize(lineHolder, onUpdateLine);
 		this.setBounds(0, 0, width, height);
 	}
 
-	private void initialize() {
+	private void initialize(final SheetCutOutlinesHolder lineHolder,
+			final CallbackOnUpdate onUpdateLine) {
 
 		setting.addObserver(this);
 
 		setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));
-		screen = new ModelViewScreen();
+		screen = new ModelViewScreen(lineHolder, onUpdateLine);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(screen, BorderLayout.CENTER);
@@ -147,7 +150,7 @@ public class ModelViewFrame extends JFrame
 
 	private OrigamiModel origamiModel = null;
 
-	public void setModel(OrigamiModel origamiModel) {
+	public void setModel(final OrigamiModel origamiModel) {
 		int boundSize = Math.min(getWidth(), getHeight()
 				- getJMenuBar().getHeight() - 50);
 		screen.setModel(origamiModel, boundSize);
@@ -155,7 +158,7 @@ public class ModelViewFrame extends JFrame
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(final ActionEvent e) {
 		// Doc document = ORIPA.doc;
 		// OrigamiModel origamiModel = document.getOrigamiModel();
 
@@ -200,7 +203,7 @@ public class ModelViewFrame extends JFrame
 	}
 
 	@Override
-	public void adjustmentValueChanged(AdjustmentEvent e) {
+	public void adjustmentValueChanged(final AdjustmentEvent e) {
 		if (e.getSource() == scrollBarAngle) {
 			screen.setCrossLineAngle(e.getValue());
 		} else if (e.getSource() == scrollBarPosition) {
@@ -209,54 +212,89 @@ public class ModelViewFrame extends JFrame
 
 	}
 
-	private void exportFile(FileTypeKey type) {
+	private FileAccessSupportFilter<OrigamiModel> createFilter(final FileTypeKey type) {
+		FileAccessSupportFilter<OrigamiModel> filter = new FileAccessSupportFilter<OrigamiModel>(
+				type,
+				FileAccessSupportFilter.createDefaultDescription(
+						type, ORIPA.res.getString("File"))
+				);
 
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.addChoosableFileFilter(new FileAccessSupportFilter(type,
-				FileAccessSupportFilter.createDefaultDescription(type,
-						ORIPA.res.getString("File"))));
-
-		if (JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(this)) {
-			try {
-				String filePath = fileChooser.getSelectedFile().getPath();
-				File file = new File(filePath);
-				if (file.exists()) {
-					if (JOptionPane.showConfirmDialog(
-							null,
-							ORIPA.res.getString("Warning_SameNameFileExist"),
-							ORIPA.res.getString("DialogTitle_FileSave"),
-							JOptionPane.YES_NO_OPTION,
-							JOptionPane.WARNING_MESSAGE)
-					!= JOptionPane.YES_OPTION) {
-						return;
-					}
-				}
-
-				if (!filePath.endsWith("." + type.getExtensions()[0])) {
-					filePath += "." + type.getExtensions()[0];
-				}
-				switch (type) {
-				case DXF_MODEL:
-					ExporterDXFFactory.createModelExporter().export(ORIPA.doc,
-							filePath);
-					break;
-				case OBJ_MODEL:
-					DocExporter exporter = new ModelExporterOBJ();
-					exporter.export(ORIPA.doc, filePath);
-					break;
-				}
-
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(
-						this, e.toString(),
-						ORIPA.res.getString("Error_FileSaveFailed"),
-						JOptionPane.ERROR_MESSAGE);
-			}
+		switch (type) {
+		case DXF_MODEL:
+			filter.setSavingAction(
+					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterDXF())
+					);
+			break;
+		case OBJ_MODEL:
+			filter.setSavingAction(
+					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterOBJ())
+					);
+			break;
+		default:
+			throw new RuntimeException("Wrong implementation");
 		}
+
+		return filter;
+	}
+
+	private void exportFile(final FileTypeKey type) {
+
+		FileChooserFactory<OrigamiModel> chooserFactory = new FileChooserFactory<>();
+		FileAccessActionProvider<OrigamiModel> chooser = chooserFactory.createChooser(null,
+				createFilter(type));
+
+		try {
+			chooser.getActionForSavingFile(this).save(origamiModel);
+		} catch (Exception e) {
+
+		}
+
+//		JFileChooser fileChooser = new JFileChooser();
+//		fileChooser.addChoosableFileFilter(new FileAccessSupportFilter(type,
+//				FileAccessSupportFilter.createDefaultDescription(type,
+//						ORIPA.res.getString("File"))));
+//
+//		if (JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(this)) {
+//			try {
+//				String filePath = fileChooser.getSelectedFile().getPath();
+//				File file = new File(filePath);
+//				if (file.exists()) {
+//					if (JOptionPane.showConfirmDialog(
+//							null,
+//							ORIPA.res.getString("Warning_SameNameFileExist"),
+//							ORIPA.res.getString("DialogTitle_FileSave"),
+//							JOptionPane.YES_NO_OPTION,
+//							JOptionPane.WARNING_MESSAGE)
+//					!= JOptionPane.YES_OPTION) {
+//						return;
+//					}
+//				}
+//
+//				if (!filePath.endsWith("." + type.getExtensions()[0])) {
+//					filePath += "." + type.getExtensions()[0];
+//				}
+//				switch (type) {
+//				case DXF_MODEL:
+//					ExporterDXFFactory.createModelExporter().export(ORIPA.doc,
+//							filePath);
+//					break;
+//				case OBJ_MODEL:
+//					DocExporter exporter = new ModelExporterOBJ();
+//					exporter.export(ORIPA.doc, filePath);
+//					break;
+//				}
+//
+//			} catch (Exception e) {
+//				JOptionPane.showMessageDialog(
+//						this, e.toString(),
+//						ORIPA.res.getString("Error_FileSaveFailed"),
+//						JOptionPane.ERROR_MESSAGE);
+//			}
+//		}
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(final Observable o, final Object arg) {
 
 		// if(setting.isFrameVisible()){
 		// setVisible(true);

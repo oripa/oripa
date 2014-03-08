@@ -4,71 +4,68 @@ import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PickingVertex;
 
-public class SelectingVertexForAngle extends PickingVertex{
-	
-	public SelectingVertexForAngle(){
+public class SelectingVertexForAngle extends PickingVertex {
+
+	public SelectingVertexForAngle() {
 		super();
 	}
-	
+
 	@Override
 	protected void initialize() {
 	}
 
-
 	private boolean doingFirstAction = true;
+
 	@Override
-	protected boolean onAct(PaintContextInterface context, Double currentPoint,
-			boolean doSpecial) {
-		
+	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
+			final boolean doSpecial) {
+
 		context.setMissionCompleted(false);
-		
-		if(doingFirstAction){
-			ORIPA.doc.cacheUndoInfo();
+
+		if (doingFirstAction) {
+			context.getUndoer().cacheUndoInfo();
 			doingFirstAction = false;
 		}
-		
+
 		boolean result = super.onAct(context, currentPoint, doSpecial);
-		
-		if(result == true){
-			if(context.getVertexCount() < 3){
+
+		if (result == true) {
+			if (context.getVertexCount() < 3) {
 				result = false;
 			}
 		}
-		
+
 		return result;
 	}
 
 	@Override
-	public void onResult(PaintContextInterface context) {
-        
-        Vector2d first = context.getVertex(0);
-        Vector2d second = context.getVertex(1);
-        Vector2d third = context.getVertex(2);
-        
-        Vector2d dir1 = new Vector2d(third);
-        Vector2d dir2 = new Vector2d(first);
-        dir1.sub(second);
-        dir2.sub(second);
+	public void onResult(final PaintContextInterface context) {
 
-        double deg_angle = Math.toDegrees(dir1.angle(dir2));
+		Vector2d first = context.getVertex(0);
+		Vector2d second = context.getVertex(1);
+		Vector2d third = context.getVertex(2);
 
-        ValueDB valDB = ValueDB.getInstance();
+		Vector2d dir1 = new Vector2d(third);
+		Vector2d dir2 = new Vector2d(first);
+		dir1.sub(second);
+		dir2.sub(second);
 
-        valDB.setAngle(deg_angle);
-        valDB.notifyObservers();
- 
- //       Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
+		double deg_angle = Math.toDegrees(dir1.angle(dir2));
 
-		
-        doingFirstAction = true;
-        context.clear(false);
+		ValueDB valDB = ValueDB.getInstance();
 
-        context.setMissionCompleted(true);
+		valDB.setAngle(deg_angle);
+		valDB.notifyObservers();
+
+		// Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
+
+		doingFirstAction = true;
+		context.clear(false);
+
+		context.setMissionCompleted(true);
 	}
 
-	
 }

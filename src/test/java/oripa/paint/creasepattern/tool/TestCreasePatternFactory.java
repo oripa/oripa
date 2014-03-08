@@ -13,7 +13,7 @@ import oripa.value.OriPoint;
  * @author Koji
  *
  */
-public class CreasePatternFactory {
+public class TestCreasePatternFactory {
 
 	/**
 	 * creates a X shape composed by four lines.

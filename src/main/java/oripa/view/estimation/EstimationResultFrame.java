@@ -31,54 +31,52 @@ import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
 import oripa.viewsetting.estimation.RenderFrameSettingDB;
 
-
 public class EstimationResultFrame extends JFrame implements ActionListener, Observer {
 
-	private RenderFrameSettingDB setting = RenderFrameSettingDB.getInstance();
+	private final RenderFrameSettingDB setting = RenderFrameSettingDB.getInstance();
 
 	FoldedModelScreen screen;
-    EstimationResultUI ui;
-    public JLabel hintLabel;
+	EstimationResultUI ui;
+	public JLabel hintLabel;
 
-    public EstimationResultFrame() {
-    	setting.addObserver(this);
-    	
-        setTitle("Folded Origami");
-        screen = new FoldedModelScreen();
-        ui = new EstimationResultUI();
-        ui.setScreen(screen);
-        hintLabel = new JLabel("L: Rotate / Wheel: Zoom");
-        setBounds(0, 0, 800, 600);
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(ui, BorderLayout.WEST);
-        getContentPane().add(screen, BorderLayout.CENTER);
-        getContentPane().add(hintLabel, BorderLayout.SOUTH);
+	public EstimationResultFrame() {
+		setting.addObserver(this);
 
-    }
+		setTitle("Folded Origami");
+		screen = new FoldedModelScreen();
+		ui = new EstimationResultUI();
+		ui.setScreen(screen);
+		hintLabel = new JLabel("L: Rotate / Wheel: Zoom");
+		setBounds(0, 0, 800, 600);
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(ui, BorderLayout.WEST);
+		getContentPane().add(screen, BorderLayout.CENTER);
+		getContentPane().add(hintLabel, BorderLayout.SOUTH);
 
-    public void setModel(
-    		OrigamiModel origamiModel, FoldedModelInfo foldedModelInfo) {
+	}
 
-    	screen.setModel(origamiModel, foldedModelInfo);
-    	ui.setFoldedModelInfo(foldedModelInfo);
+	public void setModel(
+			final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo) {
+
+		screen.setModel(origamiModel, foldedModelInfo);
+		ui.setModel(origamiModel, foldedModelInfo);
 		ui.updateLabel();
-		//setVisible(true);
-    }
+		// setVisible(true);
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent arg0) {
-        // TODO Auto-generated method stub
-    }
-    
-    @Override
-    public void update(Observable o, Object arg) {
+	@Override
+	public void actionPerformed(final ActionEvent arg0) {
+		// TODO Auto-generated method stub
+	}
 
-    	
-    	if(setting.isFrameVisible()){
-	    	screen.resetViewMatrix();
+	@Override
+	public void update(final Observable o, final Object arg) {
+
+		if (setting.isFrameVisible()) {
+			screen.resetViewMatrix();
 			screen.redrawOrigami();
 			ui.updateLabel();
 			setVisible(true);
-    	}    	
-    }
+		}
+	}
 }

@@ -2,8 +2,9 @@ package oripa.persistent.filetool;
 
 public class FileChooserFactory<Data> {
 
-	public FileChooser<Data>
-			createChooser(String path, FileAccessSupportFilter<Data>[] filters) {
+	@SafeVarargs
+	public final FileChooser<Data>
+			createChooser(final String path, final FileAccessSupportFilter<Data>... filters) {
 
 		FileChooser<Data> fileChooser;
 

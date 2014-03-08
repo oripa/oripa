@@ -1,6 +1,12 @@
 package oripa.resource;
 
 public class StringID {
+
+	public static class AppInfo {
+		public static final String ABOUT_THIS_ID = "AboutThis";
+
+	}
+
 	public static class Main {
 		public static final String TITLE_ID = "Title";
 		public static final String FILE_ID = "File";
@@ -23,6 +29,11 @@ public class StringID {
 		// public static final String CUT_PASTE_ID = "Cut_and_Paste";
 		// public static final String EDIT_CONTOUR_ID = "EditContour";
 		public static final String SELECT_ALL_ID = "selectAll";
+
+		public static final String DIALOG_TITLE_SAVE_ID = "DialogTitle_FileSave";
+		public static final String ORIPA_FILE_ID = "ORIPA_File";
+		public static final String PICTURE_FILE_ID = "Picture_File";
+
 	}
 
 	public static class Error {
@@ -39,10 +50,6 @@ public class StringID {
 	public static class Default {
 		public static final String FILE_NAME_ID = "DefaultFileName";
 	}
-
-	public static final String DIALOG_TITLE_SAVE_ID = "DialogTitle_FileSave";
-	public static final String ORIPA_FILE_ID = "ORIPA_File";
-	public static final String PICTURE_FILE_ID = "Picture_File";
 
 	public static class UI {
 		public static final String INPUT_LINE_ID = "UI_InputLine";

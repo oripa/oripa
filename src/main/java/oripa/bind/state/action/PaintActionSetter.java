@@ -3,14 +3,10 @@ package oripa.bind.state.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import oripa.ORIPA;
 import oripa.controller.paint.GraphicMouseActionInterface;
 import oripa.controller.paint.MouseActionHolder;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.ScreenUpdaterInterface;
-import oripa.controller.paint.core.PaintContext;
-import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.viewsetting.main.ScreenUpdater;
 
 /**
@@ -23,16 +19,18 @@ public class PaintActionSetter implements ActionListener {
 
 	private final GraphicMouseActionInterface mouseAction;
 	private final MouseActionHolder actionHolder;
+	private final PaintContextInterface context;
 
-	public PaintActionSetter(MouseActionHolder actionHolder,
-			GraphicMouseActionInterface mouseAction) {
-		this.actionHolder = actionHolder;
-		this.mouseAction = mouseAction;
+	public PaintActionSetter(final MouseActionHolder anActionHolder,
+			final GraphicMouseActionInterface thisMouseAction,
+			final PaintContextInterface aContext) {
+		actionHolder = anActionHolder;
+		mouseAction = thisMouseAction;
+		context = aContext;
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		PaintContextInterface context = PaintContext.getInstance();
+	public void actionPerformed(final ActionEvent e) {
 
 		GraphicMouseActionInterface currentAction = actionHolder
 				.getMouseAction();
@@ -42,9 +40,7 @@ public class PaintActionSetter implements ActionListener {
 		actionHolder.setMouseAction(mouseAction);
 
 		if (mouseAction.needSelect() == false) {
-			CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
-			Painter painter = new Painter();
-			painter.resetSelectedOriLines(creasePattern);
+			context.getPainter().resetSelectedOriLines();
 		}
 
 		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();

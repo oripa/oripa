@@ -5,7 +5,7 @@ import java.awt.geom.Point2D.Double;
 import javax.vecmath.Vector2d;
 
 import oripa.controller.paint.PaintContextInterface;
-import oripa.controller.paint.geometry.NearestVertexFinder;
+import oripa.controller.paint.geometry.NearestItemFinder;
 
 /**
  * abstract class specified for picking vertex.
@@ -28,7 +28,7 @@ public abstract class PickingVertex extends AbstractActionState {
 	protected boolean onAct(PaintContextInterface context, Double currentPoint,
 			boolean freeSelection) {
 
-		Vector2d picked = NearestVertexFinder.pickVertex(
+		Vector2d picked = NearestItemFinder.pickVertex(
 				context, freeSelection);
 
 		if(picked == null){

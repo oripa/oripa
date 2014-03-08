@@ -20,6 +20,7 @@ package oripa.view.main;
 
 import java.awt.Component;
 
+import oripa.controller.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 
 /**
@@ -34,8 +35,12 @@ public class MainMenuBarFactory {
 	 *            a component which will own the menu bar.
 	 * @return menu bar
 	 */
-	public MainMenuBar createBar(Component owner, FileHistory history) {
-		MainMenuBar bar = new MainMenuBar(owner);
+	public MainMenuBar createBar(
+			final Component owner,
+			final PaintContextInterface aContext,
+			final FileHistory history) {
+
+		MainMenuBar bar = new MainMenuBar(owner, aContext);
 
 		bar.setFileHistoryPaths(history);
 

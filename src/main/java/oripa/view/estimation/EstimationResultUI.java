@@ -29,14 +29,14 @@ import javax.swing.JPanel;
 
 import oripa.ORIPA;
 import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.OrigamiModel;
+import oripa.exception.UserCanceledException;
 import oripa.persistent.doc.Doc;
 import oripa.persistent.doc.FileTypeKey;
-import oripa.persistent.doc.SavingAction;
+import oripa.persistent.doc.SavingDocAction;
 import oripa.persistent.doc.exporter.ExporterORmat;
 import oripa.persistent.doc.exporter.ExporterSVGFactory;
 import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.FileChooser;
-import oripa.persistent.filetool.FileChooserFactory;
 
 public class EstimationResultUI extends JPanel {
 
@@ -52,8 +52,6 @@ public class EstimationResultUI extends JPanel {
 	private JCheckBox jCheckBoxFillFace = null;
 	private JButton jButtonExport = null;
 
-	private final Doc document = ORIPA.doc;
-
 	/**
 	 * This is the default constructor
 	 */
@@ -62,7 +60,7 @@ public class EstimationResultUI extends JPanel {
 		initialize();
 	}
 
-	public void setScreen(FoldedModelScreen s) {
+	public void setScreen(final FoldedModelScreen s) {
 		screen = s;
 	}
 
@@ -90,13 +88,16 @@ public class EstimationResultUI extends JPanel {
 	}
 
 	private FoldedModelInfo foldedModelInfo = null;
+	private OrigamiModel origamiModel = null;
 
 	/**
 	 * @param foldedModelInfo
 	 *            Sets foldedModelInfo
 	 */
-	public void setFoldedModelInfo(FoldedModelInfo foldedModelInfo) {
-		this.foldedModelInfo = foldedModelInfo;
+	public void setModel(final OrigamiModel aOrigamiModel,
+			final FoldedModelInfo aFoldedModelInfo) {
+		foldedModelInfo = aFoldedModelInfo;
+		origamiModel = aOrigamiModel;
 	}
 
 	public void updateLabel() {
@@ -129,7 +130,7 @@ public class EstimationResultUI extends JPanel {
 					.addActionListener(new java.awt.event.ActionListener() {
 
 						@Override
-						public void actionPerformed(java.awt.event.ActionEvent e) {
+						public void actionPerformed(final java.awt.event.ActionEvent e) {
 							foldedModelInfo.setNextORMat();
 							screen.redrawOrigami();
 							updateLabel();
@@ -154,7 +155,7 @@ public class EstimationResultUI extends JPanel {
 					.addActionListener(new java.awt.event.ActionListener() {
 
 						@Override
-						public void actionPerformed(java.awt.event.ActionEvent e) {
+						public void actionPerformed(final java.awt.event.ActionEvent e) {
 							foldedModelInfo.setPrevORMat();
 							screen.redrawOrigami();
 							updateLabel();
@@ -177,7 +178,7 @@ public class EstimationResultUI extends JPanel {
 			jCheckBoxOrder.addItemListener(new java.awt.event.ItemListener() {
 
 				@Override
-				public void itemStateChanged(java.awt.event.ItemEvent e) {
+				public void itemStateChanged(final java.awt.event.ItemEvent e) {
 					screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
 				}
 			});
@@ -199,7 +200,7 @@ public class EstimationResultUI extends JPanel {
 			jCheckBoxShadow.addItemListener(new java.awt.event.ItemListener() {
 
 				@Override
-				public void itemStateChanged(java.awt.event.ItemEvent e) {
+				public void itemStateChanged(final java.awt.event.ItemEvent e) {
 					screen.shadeFaces(e.getStateChange() == ItemEvent.SELECTED);
 				}
 			});
@@ -223,7 +224,7 @@ public class EstimationResultUI extends JPanel {
 					.addItemListener(new java.awt.event.ItemListener() {
 
 						@Override
-						public void itemStateChanged(java.awt.event.ItemEvent e) {
+						public void itemStateChanged(final java.awt.event.ItemEvent e) {
 							screen.setUseColor(e.getStateChange() == ItemEvent.SELECTED);
 						}
 					});
@@ -246,7 +247,7 @@ public class EstimationResultUI extends JPanel {
 			jCheckBoxEdge.addItemListener(new java.awt.event.ItemListener() {
 
 				@Override
-				public void itemStateChanged(java.awt.event.ItemEvent e) {
+				public void itemStateChanged(final java.awt.event.ItemEvent e) {
 					screen.drawEdge(e.getStateChange() == ItemEvent.SELECTED);
 				}
 			});
@@ -270,7 +271,7 @@ public class EstimationResultUI extends JPanel {
 					.addItemListener(new java.awt.event.ItemListener() {
 
 						@Override
-						public void itemStateChanged(java.awt.event.ItemEvent e) {
+						public void itemStateChanged(final java.awt.event.ItemEvent e) {
 							screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
 						}
 					});
@@ -292,16 +293,16 @@ public class EstimationResultUI extends JPanel {
 					.addActionListener(new java.awt.event.ActionListener() {
 
 						@Override
-						public void actionPerformed(java.awt.event.ActionEvent e) {
+						public void actionPerformed(final java.awt.event.ActionEvent e) {
 
-							FileChooserFactory<Doc> chooserFactory = new FileChooserFactory<>();
-							FileChooser<Doc> fileChooser = chooserFactory
-									.createChooser(null, createFilters());
+							Doc doc = new Doc();
+							doc.setFoldedModelInfo(foldedModelInfo);
+							doc.setOrigamiModel(origamiModel);
 
 							try {
-								// FIXME doc is not set.
-								fileChooser.getActionForSavingFile(
-										EstimationResultUI.this).save(document);
+								doc.saveFileUsingGUI(
+										null, EstimationResultUI.this, createFilters());
+							} catch (UserCanceledException canceledEx) {
 							} catch (Exception ex) {
 								JOptionPane.showMessageDialog(
 										EstimationResultUI.this,
@@ -310,7 +311,24 @@ public class EstimationResultUI extends JPanel {
 												.getString("Error_FileSaveFaild"),
 										JOptionPane.ERROR_MESSAGE);
 							}
-
+//
+//							FileChooserFactory<Doc> chooserFactory = new FileChooserFactory<>();
+//							FileChooser<Doc> fileChooser = chooserFactory
+//									.createChooser(null, createFilters());
+//
+//							try {
+//								// FIXME doc is not set.
+//								fileChooser.getActionForSavingFile(
+//										EstimationResultUI.this).save(document);
+//							} catch (Exception ex) {
+//								JOptionPane.showMessageDialog(
+//										EstimationResultUI.this,
+//										ex.toString(),
+//										ORIPA.res
+//												.getString("Error_FileSaveFaild"),
+//										JOptionPane.ERROR_MESSAGE);
+//							}
+//
 						}
 					});
 		}
@@ -325,12 +343,12 @@ public class EstimationResultUI extends JPanel {
 				new FileAccessSupportFilter<Doc>(
 						FileTypeKey.ORMAT_FOLDED_MODEL,
 						ORIPA.res.getString("File"),
-						new SavingAction(new ExporterORmat())),
+						new SavingDocAction(new ExporterORmat())),
 
 				new FileAccessSupportFilter<Doc>(
 						FileTypeKey.SVG_FOLDED_MODEL,
 						ORIPA.res.getString("File"),
-						new SavingAction(
+						new SavingDocAction(
 								ExporterSVGFactory.createFoldedModelExporter()))
 		};
 

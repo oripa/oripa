@@ -16,37 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
-
+package oripa.persistent.doc.exporter;
 
 /**
  * @author Koji
  * 
  */
-public class SavingAction extends oripa.persistent.filetool.AbstractSavingAction<Doc> {
+public class ExporterOBJFactory {
 
-	private Exporter<Doc> exporter = null;
-
-	public SavingAction(Exporter<Doc> exporter) {
-		super(Doc.class);
-		this.exporter = exporter;
-	}
-
-	/*
-	 * (non Javadoc)
-	 * 
-	 * @see oripa.persistent.filetool.SavingAction#save(java.lang.String)
-	 */
-	@Override
-	public boolean save(Doc doc) {
-		boolean success = false;
-		try {
-			success = exporter.export(doc, getPath());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return success;
+	public static DocExporter createFoldedModelExporter() {
+		return new ModelExporterOBJ();
 	}
 
 }

@@ -48,10 +48,11 @@ public class CreasePatternGraphicDrawer {
 	 * @param creasePattern
 	 */
 	public void draw(
-			Graphics2D g2d,
-			PaintContextInterface context,
-			CreasePatternInterface creasePattern,
-			boolean creaseVisible, boolean auxVisible, boolean vertexVisible) {
+			final Graphics2D g2d,
+			final PaintContextInterface context,
+			final boolean creaseVisible, final boolean auxVisible, final boolean vertexVisible) {
+
+		CreasePatternInterface creasePattern = context.getCreasePattern();
 
 		if (context.isGridVisible()) {
 
@@ -108,7 +109,7 @@ public class CreasePatternGraphicDrawer {
 	// }
 
 	public void drawAllLines(
-			Graphics2D g2d, Collection<OriLine> lines) {
+			final Graphics2D g2d, final Collection<OriLine> lines) {
 
 		drawLines(g2d, lines, null, true, true);
 	}
@@ -127,9 +128,9 @@ public class CreasePatternGraphicDrawer {
 	 *            true if aux lines should be shown.
 	 */
 	private void drawLines(
-			Graphics2D g2d,
-			Collection<OriLine> lines, Collection<OriLine> pickedLines,
-			boolean creaseVisible, boolean auxVisible) {
+			final Graphics2D g2d,
+			final Collection<OriLine> lines, final Collection<OriLine> pickedLines,
+			final boolean creaseVisible, final boolean auxVisible) {
 
 		ElementSelector selector = new ElementSelector();
 		for (OriLine line : lines) {
@@ -162,13 +163,13 @@ public class CreasePatternGraphicDrawer {
 	 * @param scale
 	 */
 	public void drawCreaseVertices(
-			Graphics2D g2d, Collection<OriLine> creasePattern, double scale) {
+			final Graphics2D g2d, final Collection<OriLine> creasePattern, final double scale) {
 		drawVertices(g2d, creasePattern, scale, true, false);
 	}
 
 	private void drawVertices(
-			Graphics2D g2d, Collection<OriLine> creasePattern, double scale,
-			boolean creaseVisible, boolean auxVisible) {
+			final Graphics2D g2d, final Collection<OriLine> creasePattern, final double scale,
+			final boolean creaseVisible, final boolean auxVisible) {
 
 		g2d.setColor(Color.BLACK);
 		final double vertexDrawSize = 2.0;
@@ -193,7 +194,7 @@ public class CreasePatternGraphicDrawer {
 
 	}
 
-	public void drawCandidatePositionString(Graphics2D g, Vector2d candidate) {
+	public void drawCandidatePositionString(final Graphics2D g, final Vector2d candidate) {
 		if (candidate != null) {
 			g.setColor(Color.BLACK);
 			g.drawString("(" + candidate.x +
@@ -202,7 +203,7 @@ public class CreasePatternGraphicDrawer {
 
 	}
 
-	public void drawGridLines(Graphics2D g2d, double paperSize) {
+	public void drawGridLines(final Graphics2D g2d, final double paperSize) {
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.setStroke(LineSetting.STROKE_GRID);
 

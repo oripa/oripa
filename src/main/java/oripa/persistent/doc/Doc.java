@@ -21,15 +21,10 @@ package oripa.persistent.doc;
 import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
-import oripa.controller.paint.CreasePatternUndoManager;
-import oripa.controller.paint.history.CreasePatternUndoFactory;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlineFactory;
@@ -40,8 +35,6 @@ import oripa.exception.UserCanceledException;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.Constants;
-import oripa.util.history.AbstractUndoManager;
-import oripa.util.history.UndoInfo;
 import oripa.value.OriLine;
 
 /**
@@ -50,7 +43,7 @@ import oripa.value.OriLine;
  * @author Koji
  * 
  */
-public class Doc {
+public class Doc implements SheetCutOutlinesHolder {
 
 	// private double paperSize;
 
@@ -70,9 +63,6 @@ public class Doc {
 
 	private Property property = new Property("");
 
-	private AbstractUndoManager<Collection<OriLine>> undoManager = new CreasePatternUndoManager(
-			30);
-
 	int debugCount = 0;
 
 	public Doc() {
@@ -90,30 +80,24 @@ public class Doc {
 		setProperty(doc.getProperty());
 
 		sheetCutLines = doc.getSheetCutOutlines();
-		setPaperSize(doc.getPaperSize());
+		// setPaperSize(doc.getPaperSize());
 
-		undoManager = doc.undoManager;
 	}
 
 	private void initialize(final double size) {
 
-		// this.paperSize = size;
 		creasePattern = (new CreasePatternFactory()).createCreasePattern(size);
 
 		origamiModel = new OrigamiModel(size);
 		foldedModelInfo = new FoldedModelInfo();
 	}
 
-	// public void setDataFilePath(String path) {
-	// this.property.setDataFilePath(path);
-	// }
-
 	public String getDataFilePath() {
 		return property.getDataFilePath();
 	}
 
 	public String getDataFileName() {
-		File file = new File(ORIPA.doc.property.getDataFilePath());
+		File file = new File(property.getDataFilePath());
 		String fileName = file.getName();
 
 		return fileName;
@@ -158,7 +142,7 @@ public class Doc {
 
 		// updateMenu(filePath);
 		// updateTitleText();
-		clearChanged();
+		// clearChanged();
 	}
 
 	public void saveModelFile(final FileTypeKey type, final Component owner)
@@ -194,78 +178,31 @@ public class Doc {
 
 	}
 
+//	public void loadFileUsingGUI(final String path, final Component owner) throws FileVersionError {
+//		DocDAO dao = new DocDAO();
+//		DocFilterSelector selector = new DocFilterSelector();
+//
+//		set(dao.loadUsingGUI(
+//				path, selector.getLoadables(),
+//				owner));
+//
+//	}
+
 	// ===================================================================================================
 
-	// TODO move undo operations to paint.cptool.Painter
-
-	CreasePatternUndoFactory factory = new CreasePatternUndoFactory();
-
-	public UndoInfo<Collection<OriLine>> createUndoInfo() {
-		UndoInfo<Collection<OriLine>> undoInfo = factory.create(creasePattern);
-		return undoInfo;
-	}
-
-	public void cacheUndoInfo() {
-		undoManager.setCache(creasePattern);
-	}
-
-	public void pushCachedUndoInfo() {
-		undoManager.pushCachedInfo();
-	}
-
-	public void pushUndoInfo() {
-		undoManager.push(creasePattern);
-	}
-
-	public void pushUndoInfo(final UndoInfo<Collection<OriLine>> uinfo) {
-		undoManager.push(uinfo);
-	}
-
-	public void loadUndoInfo() {
-		UndoInfo<Collection<OriLine>> info = undoManager.pop();
-
-		if (info == null) {
-			return;
-		}
-
-		creasePattern.clear();
-		creasePattern.addAll(info.getInfo());
-	}
-
-	public boolean canUndo() {
-		return undoManager.canUndo();
-	}
-
-	public boolean isChanged() {
-		return undoManager.isChanged();
-	}
-
-	public void clearChanged() {
-		undoManager.clearChanged();
-	}
-
-	/**
-	 * make lines that composes the outline of a shape obtained by cutting the
-	 * folded model.
+	/*
+	 * (non Javadoc)
 	 * 
-	 * @param scissorLine
+	 * @see
+	 * oripa.persistent.doc.SheetCutOutlinesHolder#updateSheetCutOutlines(oripa
+	 * .value.OriLine)
 	 */
+	@Override
 	public void updateSheetCutOutlines(final OriLine scissorLine) {
 		CutModelOutlineFactory factory = new CutModelOutlineFactory();
 
 		sheetCutLines.clear();
 		sheetCutLines.addAll(factory.createLines(scissorLine, origamiModel));
-	}
-
-	public Collection<Vector2d> getVerticesAround(final Vector2d v) {
-		return creasePattern.getVerticesAround(v);
-	}
-
-	public Collection<Collection<Vector2d>> getVerticesArea(final double x,
-			final double y,
-			final double distance) {
-
-		return creasePattern.getVerticesInArea(x, y, distance);
 	}
 
 	public CreasePatternInterface getCreasePattern() {
@@ -314,18 +251,21 @@ public class Doc {
 	}
 
 	/**
-	 * @return crossLines
-	 */
-	public List<OriLine> getSheetCutOutlines() {
-		return sheetCutLines;
-	}
-
-	/**
 	 * @param property
 	 *            Sets property
 	 */
 	public void setProperty(final Property property) {
 		this.property = property;
+	}
+
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see oripa.persistent.doc.SheetCutOutlinesHolder#getSheetCutOutlines()
+	 */
+	@Override
+	public List<OriLine> getSheetCutOutlines() {
+		return sheetCutLines;
 	}
 
 	// ======================================================================
@@ -338,15 +278,15 @@ public class Doc {
 	// this.sheetCutLines = sheetCutOutlines;
 	// }
 
-	/**
-	 * @param size
-	 *            size is set to this instance.
-	 */
-	public void setPaperSize(final double size) {
-		// this.paperSize = size;
-		// origamiModel.setPaperSize(size);
-		creasePattern.changePaperSize(size);
-	}
+//	/**
+//	 * @param size
+//	 *            size is set to this instance.
+//	 */
+//	public void setPaperSize(final double size) {
+//		// this.paperSize = size;
+//		// origamiModel.setPaperSize(size);
+//		creasePattern.changePaperSize(size);
+//	}
 
 	/**
 	 * @return size

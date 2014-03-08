@@ -6,7 +6,6 @@ import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.controller.paint.EditMode;
 import oripa.controller.paint.GraphicMouseActionInterface;
 import oripa.controller.paint.PaintContextInterface;
@@ -14,50 +13,44 @@ import oripa.controller.paint.core.GraphicMouseAction;
 
 public class CopyAndPasteAction extends GraphicMouseAction {
 
-	private ChangeOriginAction originAction = new ChangeOriginAction();
-	private PasteAction pasteAction = new PasteAction();
-	
+	private final ChangeOriginAction originAction = new ChangeOriginAction();
+	private final PasteAction pasteAction = new PasteAction();
+
 	private GraphicMouseActionInterface action = pasteAction;
 
-	
 	public CopyAndPasteAction() {
 		setEditMode(EditMode.COPY);
 		setNeedSelect(true);
 	}
 
-	private OriginHolder originHolder = OriginHolder.getInstance();
+	private final OriginHolder originHolder = OriginHolder.getInstance();
 
 	@Override
-	public void recover(PaintContextInterface context) {
+	public void recover(final PaintContextInterface context) {
 		originHolder.resetOrigin(context);
 		action = pasteAction;
 		action.recover(context);
 	}
-	
-	
-	
+
 	@Override
-	public void destroy(PaintContextInterface context) {
+	public void destroy(final PaintContextInterface context) {
 		originHolder.setOrigin(null);
 		action.destroy(context);
 	}
 
 	@Override
-	public void undo(PaintContextInterface context) {
-		ORIPA.doc.loadUndoInfo();
+	public void undo(final PaintContextInterface context) {
+		context.getUndoer().loadUndoInfo();
 	}
-	
-	
+
 	@Override
-	public GraphicMouseActionInterface onLeftClick(PaintContextInterface context,
-			AffineTransform affine, boolean differentAction) {
+	public GraphicMouseActionInterface onLeftClick(final PaintContextInterface context,
+			final AffineTransform affine, final boolean differentAction) {
 		action.onLeftClick(context, affine, differentAction);
-		
+
 		return this;
 	}
-	
-	
-	
+
 //	@Override
 //	public void onRightClick(PaintContext context, AffineTransform affine,
 //			boolean differentAction) {
@@ -66,54 +59,54 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 //	}
 
 	@Override
-	public void doAction(PaintContextInterface context, Double point,
-			boolean differntAction) {
+	public void doAction(final PaintContextInterface context, final Double point,
+			final boolean differntAction) {
 		action.doAction(context, point, differntAction);
 	}
-	
-	
+
 	@Override
-	public void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		action.onPress(context, affine, differentAction);
 	}
 
 	@Override
-	public void onDrag(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		action.onDrag(context, affine, differentAction);
 	}
 
 	@Override
-	public void onRelease(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		action.onRelease(context, affine, differentAction);
 	}
-	
+
 	/**
 	 * 
-	 * @param changingOrigin {@code true} for selecting origin, {@code false} for pasting.
+	 * @param changingOrigin
+	 *            {@code true} for selecting origin, {@code false} for pasting.
 	 */
-	public void changeAction(boolean changingOrigin){
-		if(changingOrigin){
+	public void changeAction(final boolean changingOrigin) {
+		if (changingOrigin) {
 			action = originAction;
 		}
 		else {
 			action = pasteAction;
 		}
 	}
-	
+
 	@Override
-	public Vector2d onMove(PaintContextInterface context, AffineTransform affine,
-			boolean changingOrigin) {
-		
+	public Vector2d onMove(final PaintContextInterface context, final AffineTransform affine,
+			final boolean changingOrigin) {
+
 		changeAction(changingOrigin);
-		
+
 		return action.onMove(context, affine, changingOrigin);
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 		// TODO Auto-generated method stub
 		action.onDraw(g2d, context);
 	}

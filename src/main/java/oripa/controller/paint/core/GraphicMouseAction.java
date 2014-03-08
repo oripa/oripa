@@ -13,7 +13,7 @@ import oripa.controller.paint.EditMode;
 import oripa.controller.paint.GraphicMouseActionInterface;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.ScreenUpdaterInterface;
-import oripa.controller.paint.geometry.NearestVertexFinder;
+import oripa.controller.paint.geometry.NearestItemFinder;
 import oripa.controller.paint.util.ElementSelector;
 import oripa.value.OriLine;
 import oripa.viewsetting.main.ScreenUpdater;
@@ -124,14 +124,14 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	protected final void setCandidateVertexOnMove(
 			PaintContextInterface context, boolean differentAction) {
 		context.setCandidateVertexToPick(
-				NearestVertexFinder.pickVertex(
+				NearestItemFinder.pickVertex(
 						context, differentAction));
 
 	}
 
 	protected final void setCandidateLineOnMove(PaintContextInterface context) {
 		context.setCandidateLineToPick(
-				NearestVertexFinder.pickLine(
+				NearestItemFinder.pickLine(
 						context));
 	}
 
@@ -241,7 +241,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 					.selectColorByLineType(PaintConfig.inputLineType);
 			g2d.setColor(color);
 			drawLine(g2d, picked,
-					NearestVertexFinder.getCandidateVertex(context, true));
+					NearestItemFinder.getCandidateVertex(context, true));
 		}
 
 	}

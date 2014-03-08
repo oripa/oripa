@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.controller.paint.util.PairLoop;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternInterface;
@@ -15,28 +14,27 @@ public class CloseTempOutline {
 
 	private class ContourLineAdder implements PairLoop.Block<Vector2d> {
 
-		private Collection<OriLine> creasePattern;
+		private final CreasePatternInterface creasePattern;
 
-		public ContourLineAdder(Collection<OriLine> creasePattern) {
+		public ContourLineAdder(final CreasePatternInterface creasePattern) {
 			this.creasePattern = creasePattern;
 		}
 
 		@Override
-		public boolean yield(Vector2d element, Vector2d nextElement) {
+		public boolean yield(final Vector2d element, final Vector2d nextElement) {
 			OriLine line;
-	        Painter painter = new Painter();
+			Painter painter = new Painter(creasePattern);
 
 			line = new OriLine(element, nextElement, OriLine.TYPE_CUT);
-			painter.addLine(line, creasePattern);
+			painter.addLine(line);
 			return true;
 		}
 	}
 
-	public void execute(Collection<Vector2d> outlinevertices){
+	public void execute(final CreasePatternInterface creasePattern,
+			final Collection<Vector2d> outlinevertices) {
 
-		CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
-
-        // Delete the current outline
+		// Delete the current outline
 		ArrayList<OriLine> outlines = new ArrayList<>();
 		for (OriLine line : creasePattern) {
 			if (line.typeVal == OriLine.TYPE_CUT) {
@@ -51,7 +49,6 @@ public class CloseTempOutline {
 		PairLoop.iterateAll(
 				outlinevertices, new ContourLineAdder(creasePattern));
 
-
 		// To delete a segment out of the contour
 		while (true) {
 			boolean bDeleteLine = false;
@@ -59,19 +56,20 @@ public class CloseTempOutline {
 				if (line.typeVal == OriLine.TYPE_CUT) {
 					continue;
 				}
-				Vector2d OnPoint0 = isOnTmpOutlineLoop(outlinevertices, line.p0);
-				Vector2d OnPoint1 = isOnTmpOutlineLoop(outlinevertices, line.p1);
+				double eps = creasePattern.getPaperSize() * 0.001;
+				Vector2d OnPoint0 = isOnTmpOutlineLoop(outlinevertices, line.p0, eps);
+				Vector2d OnPoint1 = isOnTmpOutlineLoop(outlinevertices, line.p1, eps);
 
-				Painter painter = new Painter();
+				Painter painter = new Painter(creasePattern);
 				if (OnPoint0 != null && OnPoint0 == OnPoint1) {
-					painter.removeLine(line, creasePattern);
+					painter.removeLine(line);
 					bDeleteLine = true;
 					break;
 				}
 
 				if ((OnPoint0 == null && isOutsideOfTmpOutlineLoop(outlinevertices, line.p0))
 						|| (OnPoint1 == null && isOutsideOfTmpOutlineLoop(outlinevertices, line.p1))) {
-					painter.removeLine(line, creasePattern);
+					painter.removeLine(line);
 					bDeleteLine = true;
 					break;
 				}
@@ -82,22 +80,20 @@ public class CloseTempOutline {
 		}
 
 		outlinevertices.clear();
-		//	        ORIPA.mainFrame.uiPanel.modeChanged();
-
+		// ORIPA.mainFrame.uiPanel.modeChanged();
 
 	}
 
-    
-    private Vector2d isOnTmpOutlineLoop(
-    		Collection<Vector2d> outlinevertices, Vector2d v) {
+	private Vector2d isOnTmpOutlineLoop(
+			final Collection<Vector2d> outlinevertices, final Vector2d v, final double eps) {
 
-    	return (new IsOnTempOutlineLoop()).execute(outlinevertices, v);
-    }
+		return (new IsOnTempOutlineLoop()).execute(outlinevertices, v, eps);
+	}
 
-    private boolean isOutsideOfTmpOutlineLoop(    			
-    		Collection<Vector2d> outlinevertices, Vector2d v) {
+	private boolean isOutsideOfTmpOutlineLoop(
+			final Collection<Vector2d> outlinevertices, final Vector2d v) {
 
-    	return(new IsOutsideOfTempOutlineLoop()).execute(outlinevertices, v);
-    }
+		return (new IsOutsideOfTempOutlineLoop()).execute(outlinevertices, v);
+	}
 
 }

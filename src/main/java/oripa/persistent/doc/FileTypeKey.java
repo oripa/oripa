@@ -18,8 +18,6 @@
  */
 package oripa.persistent.doc;
 
-import java.util.Comparator;
-
 import oripa.persistent.filetool.FileTypeProperty;
 
 public enum FileTypeKey implements FileTypeProperty {
@@ -46,11 +44,22 @@ public enum FileTypeKey implements FileTypeProperty {
 	ORMAT_FOLDED_MODEL("ormat", 10,
 			".ormat");
 
-	private final String keyText;
-	private final Integer order;
-	private final String[] extensions;
+	private final String	keyText;
+	private final Integer	order;
+	private final String[]	extensions;
 
-	private FileTypeKey(String key, Integer order, String... extensions) {
+	/**
+	 * 
+	 * Constructor
+	 * 
+	 * @param key
+	 *            key string
+	 * @param order
+	 *            defines the order of members.
+	 * @param extensions
+	 *            which should be managed as that file type.
+	 */
+	private FileTypeKey(final String key, final Integer order, final String... extensions) {
 		this.keyText = key;
 		this.order = order;
 		this.extensions = extensions;
@@ -81,17 +90,17 @@ public enum FileTypeKey implements FileTypeProperty {
 		return order;
 	}
 
-	public static Comparator<FileTypeKey> getOrderComparator() {
-
-		return new Comparator<FileTypeKey>() {
-			@Override
-			public int compare(FileTypeKey o1, FileTypeKey o2) {
-				if (o1.order == o2.order) {
-					return o1.compareTo(o2);
-				}
-
-				return o1.order.compareTo(o2.order);
-			}
-		};
-	}
+//	public static Comparator<FileTypeKey> getOrderComparator() {
+//
+//		return new Comparator<FileTypeKey>() {
+//			@Override
+//			public int compare(final FileTypeKey o1, final FileTypeKey o2) {
+//				if (o1.order == o2.order) {
+//					return o1.compareTo(o2);
+//				}
+//
+//				return o1.order.compareTo(o2.order);
+//			}
+//		};
+//	}
 }

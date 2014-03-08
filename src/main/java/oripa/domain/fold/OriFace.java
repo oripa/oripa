@@ -25,11 +25,9 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-import oripa.ORIPA;
 import oripa.domain.fold.rule.Condition3;
 import oripa.domain.fold.rule.Condition4;
 import oripa.value.OriLine;
-
 
 public class OriFace {
 
@@ -43,7 +41,8 @@ public class OriFace {
 	public int z_order = 0;
 	public int tmpInt2 = 0;
 	public int tmpInt = 0;
-	public boolean hasProblem = false;  // TODO delete this variable and use bucket approach using ConjunctionLoop
+	public boolean hasProblem = false; // TODO delete this variable and use
+										// bucket approach using ConjunctionLoop
 	public boolean alreadyStacked = false;
 	public ArrayList<TriangleFace> triangles = new ArrayList<>();
 	public int intColor;
@@ -58,7 +57,8 @@ public class OriFace {
 		color = new Color(r, g, b);
 	}
 
-	public void trianglateAndSetColor(boolean bUseColor, boolean bFlip) {
+	public void trianglateAndSetColor(final boolean bUseColor, final boolean bFlip,
+			final double paperSize) {
 		triangles.clear();
 
 		double min_x = Double.MAX_VALUE;
@@ -90,7 +90,7 @@ public class OriFace {
 				val -= 1;
 			}
 
-			double vv = ((double) val + 2) / 4.0;
+			double vv = (val + 2) / 4.0;
 			double v = (0.75 + vv * 0.25);
 
 			v *= 0.9 + 0.15 * (Math.sqrt((he.vertex.p.x - min_x)
@@ -131,7 +131,6 @@ public class OriFace {
 			tri.v[1].color = new Vector3d(halfedges.get(i).vertexColor);
 			tri.v[2].color = new Vector3d(halfedges.get(i + 1).vertexColor);
 
-			double paperSize = ORIPA.doc.getPaperSize();
 			tri.v[0].uv = new Vector2d(startHe.vertex.preP.x / paperSize
 					+ 0.5, startHe.vertex.preP.y / paperSize + 0.5);
 			tri.v[1].uv = new Vector2d(halfedges.get(i).vertex.preP.x

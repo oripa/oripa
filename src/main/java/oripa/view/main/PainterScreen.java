@@ -45,16 +45,14 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.controller.paint.CreasePatternGraphicDrawer;
 import oripa.controller.paint.EditMode;
 import oripa.controller.paint.GraphicMouseActionInterface;
 import oripa.controller.paint.MouseActionHolder;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PaintConfig;
-import oripa.controller.paint.core.PaintContext;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;
@@ -68,8 +66,8 @@ public class PainterScreen extends JPanel
 	private final MainScreenSettingDB setting = MainScreenSettingDB
 			.getInstance();
 	private final ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
-	private final PaintContextInterface paintContext = PaintContext
-			.getInstance();
+	private final PaintContextInterface paintContext;
+	private final SheetCutOutlinesHolder cutOutlinesHolder;
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
@@ -95,7 +93,10 @@ public class PainterScreen extends JPanel
 	private final MouseActionHolder mouseActionHolder = MouseActionHolder
 			.getInstance();
 
-	public PainterScreen() {
+	public PainterScreen(final PaintContextInterface aContext,
+			final SheetCutOutlinesHolder aCutOutlineHolder) {
+		paintContext = aContext;
+		cutOutlinesHolder = aCutOutlineHolder;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
@@ -223,18 +224,16 @@ public class PainterScreen extends JPanel
 
 	// Scaling relative to the center of the screen
 	@Override
-	public void paintComponent(Graphics g) {
+	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
 		Graphics2D bufferG2D = updateBufferImage();
 
-		Doc document = ORIPA.doc;
-		CreasePatternInterface creasePattern = document.getCreasePattern();
+		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
 
 		drawer.draw(
 				bufferG2D,
 				paintContext,
-				creasePattern,
 				PaintConfig.dispMVLines,
 				PaintConfig.dispAuxLines,
 				PaintConfig.dispVertex
@@ -248,7 +247,7 @@ public class PainterScreen extends JPanel
 		}
 
 		if (PaintConfig.bDispCrossLine) {
-			List<OriLine> crossLines = document.getSheetCutOutlines();
+			List<OriLine> crossLines = cutOutlinesHolder.getSheetCutOutlines();
 			drawer.drawAllLines(bufferG2D, crossLines);
 		}
 
@@ -292,7 +291,7 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(final MouseEvent e) {
 		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
 		if (action == null) {
@@ -314,7 +313,7 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(final MouseEvent e) {
 		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
 		if (action == null) {
@@ -328,7 +327,7 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mouseReleased(final MouseEvent e) {
 		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 		// Rectangular Selection
 
@@ -340,15 +339,15 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseEntered(final MouseEvent arg0) {
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
+	public void mouseExited(final MouseEvent arg0) {
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent e) {
+	public void mouseDragged(final MouseEvent e) {
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 && // zoom
 				(e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
 
@@ -387,7 +386,7 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(final MouseEvent e) {
 		// Gets the value of the current logical coordinates of the mouse
 
 		try {
@@ -415,7 +414,7 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(final MouseWheelEvent e) {
 		double scale_ = (100.0 - e.getWheelRotation() * 5) / 100.0;
 		scale *= scale_;
 		paintContext.setScale(scale);
@@ -424,11 +423,11 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent ae) {
+	public void actionPerformed(final ActionEvent ae) {
 	}
 
 	@Override
-	public void componentResized(ComponentEvent arg0) {
+	public void componentResized(final ComponentEvent arg0) {
 		if (getWidth() <= 0 || getHeight() <= 0) {
 			return;
 		}
@@ -445,22 +444,22 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent arg0) {
+	public void componentMoved(final ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void componentShown(ComponentEvent arg0) {
+	public void componentShown(final ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
+	public void componentHidden(final ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(final Observable o, final Object arg) {
 		String name = o.toString();
 		paintContext.setGridVisible(setting.isGridVisible());
 		if (name.equals(screenUpdater.getName())) {

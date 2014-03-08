@@ -4,32 +4,29 @@ import java.awt.geom.Point2D;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
-
 /**
  * Logics using ORIPA data and mouse point in geometric form.
+ * 
  * @author koji
- *
+ * 
  */
-public class NearestVertexFinder {
+public class NearestItemFinder {
 
-	private static double scaleThreshold(PaintContextInterface context){
+	private static double scaleThreshold(final PaintContextInterface context) {
 		return CalculationResource.CLOSE_THRESHOLD / context.getScale();
 	}
-	
-	
+
 	// returns the OriLine sufficiently closer to point p
-	public static OriLine pickLine(Point2D.Double p, double scale) {
+	public static OriLine pickLine(final CreasePatternInterface creasePattern,
+			final Point2D.Double p, final double scale) {
 		double minDistance = Double.MAX_VALUE;
 		OriLine bestLine = null;
-
-        CreasePatternInterface creasePattern = ORIPA.doc.getCreasePattern();
 
 		for (OriLine line : creasePattern) {
 			double dist = GeomUtil.DistancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
@@ -46,28 +43,24 @@ public class NearestVertexFinder {
 		}
 	}
 
-
-
 	public static Vector2d pickVertex(
-			PaintContextInterface context, boolean freeSelection){
+			final PaintContextInterface context, final boolean freeSelection) {
 
-		
 		NearestPoint nearestPosition;
 
 		nearestPosition = NearestVertexFinderHelper.findAround(context, scaleThreshold(context));
-		
 
-		Vector2d picked = null;		
+		Vector2d picked = null;
 
-		if(nearestPosition != null){
-			picked = new Vector2d(nearestPosition.point);		
+		if (nearestPosition != null) {
+			picked = new Vector2d(nearestPosition.point);
 		}
-		
-		if(picked == null && freeSelection == true){
+
+		if (picked == null && freeSelection == true) {
 			Point2D.Double currentPoint = context.getLogicalMousePoint();
 
-			OriLine l = pickLine(currentPoint, context.getScale());
-			if(l != null) {
+			OriLine l = pickLine(context);
+			if (l != null) {
 				picked = new Vector2d();
 				Vector2d cp = new Vector2d(currentPoint.x, currentPoint.y);
 
@@ -78,36 +71,35 @@ public class NearestVertexFinder {
 		return picked;
 	}
 
-	public static Vector2d pickVertexFromPickedLines(PaintContextInterface context){
+	public static Vector2d pickVertexFromPickedLines(final PaintContextInterface context) {
 
-		
 		NearestPoint nearestPosition;
 		nearestPosition = NearestVertexFinderHelper.findFromPickedLine(context);
-		
 
-		Vector2d picked = null; 
+		Vector2d picked = null;
 		if (nearestPosition.distance < scaleThreshold(context)) {
 			picked = nearestPosition.point;
 		}
-		
+
 		return picked;
 	}
 
-	public static OriLine pickLine(PaintContextInterface context) {
-		return pickLine(context.getLogicalMousePoint(), context.getScale());
+	public static OriLine pickLine(final PaintContextInterface context) {
+		return pickLine(context.getCreasePattern(), context.getLogicalMousePoint(),
+				context.getScale());
 	}
 
-	public static Vector2d getCandidateVertex(PaintContextInterface context, boolean enableMousePoint){
+	public static Vector2d getCandidateVertex(final PaintContextInterface context,
+			final boolean enableMousePoint) {
 
 		Vector2d candidate = context.getCandidateVertexToPick();
 
-		if(candidate == null && enableMousePoint){
+		if (candidate == null && enableMousePoint) {
 			Point2D.Double mp = context.getLogicalMousePoint();
 			candidate = new Vector2d(mp.x, mp.y);
 		}
 
 		return candidate;
 	}
-
 
 }

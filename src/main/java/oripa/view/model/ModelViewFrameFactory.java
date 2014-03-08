@@ -22,28 +22,30 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import oripa.domain.fold.OrigamiModel;
+import oripa.persistent.doc.SheetCutOutlinesHolder;
+import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.ChildFrameManager;
 
 /**
  * @author Koji
- *
+ * 
  */
 public class ModelViewFrameFactory {
 	private static ModelViewFrame frame = null;
 
 	public JFrame createFrame(
-			JComponent parent,
-			OrigamiModel origamiModel
-    		) {
+			final JComponent parent,
+			final OrigamiModel origamiModel,
+			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine
+			) {
 
 		if (frame == null) {
-			frame = new ModelViewFrame(400, 400);
+			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine);
 		}
 
 		frame.setModel(origamiModel);
 		frame.setVisible(false);
 
-		
 		ChildFrameManager.getManager().putChild(parent, frame);
 
 		return frame;

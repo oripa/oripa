@@ -2,13 +2,10 @@ package oripa.controller.paint.addvertex;
 
 import java.awt.geom.Point2D;
 
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PickingVertex;
-import oripa.controller.paint.geometry.NearestVertexFinder;
+import oripa.controller.paint.geometry.NearestItemFinder;
 import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.persistent.doc.Doc;
 import oripa.value.OriLine;
 
 public class AddingVertex extends PickingVertex {
@@ -18,50 +15,43 @@ public class AddingVertex extends PickingVertex {
 
 	}
 
-	
-	
 	@Override
-	protected boolean onAct(PaintContextInterface context, Point2D.Double currentPoint,
-			boolean freeSelection) {
-		
+	protected boolean onAct(final PaintContextInterface context, final Point2D.Double currentPoint,
+			final boolean freeSelection) {
+
 		boolean result = super.onAct(context, currentPoint, true);
-		
-		if(result == true){
-			OriLine line = NearestVertexFinder.pickLine(
+
+		if (result == true) {
+			OriLine line = NearestItemFinder.pickLine(
 					context);
 
-			if(line != null){
+			if (line != null) {
 				context.pushLine(line);
 			}
 			else {
 				result = false;
 			}
 		}
-		
+
 		return result;
 	}
 
-
-
 	@Override
-	protected void onResult(PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context) {
 
-		if(context.getVertexCount() > 0){
-			
-			Doc document = ORIPA.doc;
-			document.pushUndoInfo();
-			CreasePatternInterface creasePattern = document.getCreasePattern();
+		if (context.getVertexCount() > 0) {
 
-			Painter painter = new Painter();
-			
+			context.getUndoer().pushUndoInfo();
+
+			Painter painter = context.getPainter();
+
 			if (!painter.addVertexOnLine(
-					context.popLine(), context.popVertex(),
-					creasePattern, creasePattern.getPaperSize())) {
-				ORIPA.doc.loadUndoInfo();
+					context.popLine(), context.popVertex())) {
+				context.getUndoer().loadUndoInfo();
 			}
 
 		}
-		
+
 		context.clear(false);
 	}
 

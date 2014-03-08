@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.controller.paint.util.PairLoop;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
@@ -12,30 +11,32 @@ import oripa.geom.Line;
 public class IsOnTempOutlineLoop implements PairLoop.Block<Vector2d> {
 
 	private Vector2d target;
-	
+	private double eps;
+
 	public Vector2d execute(
-			Collection<Vector2d> outlineVertices, Vector2d v) {
+			final Collection<Vector2d> outlineVertices, final Vector2d v,
+			final double eps) {
 
 		target = v;
-    	return PairLoop.iterateAll(outlineVertices, this);
+		this.eps = eps;
+		return PairLoop.iterateAll(outlineVertices, this);
 
 	}
-	
+
 	@Override
-	public boolean yield(Vector2d p0, Vector2d p1) {
-		double paperSize = ORIPA.doc.getPaperSize();
+	public boolean yield(final Vector2d p0, final Vector2d p1) {
 
 		Line line = new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
-		
-		double distanceToLine = GeomUtil.DistancePointToLine(
-        		target, 
-        		line);
-		
-        if (distanceToLine < paperSize * 0.001) {
-            return false;
-        }
 
-        return true;
+		double distanceToLine = GeomUtil.DistancePointToLine(
+				target,
+				line);
+
+		if (distanceToLine < eps) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

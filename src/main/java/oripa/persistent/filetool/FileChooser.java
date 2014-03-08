@@ -16,27 +16,26 @@ import oripa.exception.UserCanceledException;
  * 
  */
 
-public class FileChooser<Data> extends JFileChooser {
+public class FileChooser<Data> extends JFileChooser implements FileAccessActionProvider<Data> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4700305827321319095L;
 
-	public FileChooser() {
+	FileChooser() {
 
 		super();
 	}
 
-	public FileChooser(final String path) {
+	FileChooser(final String path) {
 		super(path);
-		String trimmedPath = replaceExtension(path, "");
 
 		// File file = new File(trimmedPath);
 		File file = new File(path);
 		this.setSelectedFile(file);
 
-		System.out.println(path);
+		// System.out.println(path);
 	}
 
 	/**
@@ -91,15 +90,14 @@ public class FileChooser<Data> extends JFileChooser {
 		return path_new;
 	}
 
-	/**
-	 * Opens chooser dialog and return saver object for the chosen file. throws
-	 * {@link IllegalArgumentException} if user selected a file which has a
-	 * extension not supported by the selected filter.
+	/*
+	 * (non Javadoc)
 	 * 
-	 * @param parent
-	 *            parent GUI component
-	 * @return saver object.
+	 * @see
+	 * oripa.persistent.filetool.FileAccessActionProvider#getActionForSavingFile
+	 * (java.awt.Component)
 	 */
+	@Override
 	public AbstractSavingAction<Data> getActionForSavingFile(
 			final Component parent)
 			throws FileChooserCanceledException {
@@ -142,6 +140,8 @@ public class FileChooser<Data> extends JFileChooser {
 
 			return filter.getSavingAction().setPath(filePath);
 
+		} catch (UserCanceledException cancel) {
+			throw new FileChooserCanceledException();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(parent, e.toString(),
 					ORIPA.res.getString("Error_FileSaveFailed"),
@@ -151,18 +151,19 @@ public class FileChooser<Data> extends JFileChooser {
 		return null;
 	}
 
-	/**
-	 * Opens chooser dialog and returns loader object for the chosen file.
+	/*
+	 * (non Javadoc)
 	 * 
-	 * @param parent
-	 *            parent GUI component
-	 * @return loader object.
+	 * @see
+	 * oripa.persistent.filetool.FileAccessActionProvider#getActionForLoadingFile
+	 * (java.awt.Component)
 	 */
+	@Override
 	public AbstractLoadingAction<Data> getActionForLoadingFile(
-			final Component parent) {
+			final Component parent) throws FileChooserCanceledException {
 
-		if (JFileChooser.APPROVE_OPTION != this.showOpenDialog(parent)) {
-			return null;
+		if (JFileChooser.APPROVE_OPTION != this.showSaveDialog(parent)) {
+			throw new FileChooserCanceledException();
 		}
 
 		FileFilter rawFilter = this.getFileFilter();

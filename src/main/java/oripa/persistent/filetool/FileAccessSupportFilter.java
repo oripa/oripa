@@ -14,26 +14,46 @@ public class FileAccessSupportFilter<Data>
 	 * 
 	 */
 
-	private final FileTypeProperty fileType;
-	private final String msg;
+	private final FileTypeProperty		fileType;
+	private final String				msg;
 
-	private AbstractSavingAction<Data> savingAction = null;
+	private AbstractSavingAction<Data>	savingAction	= null;
 
-	private AbstractLoadingAction<Data> loadingAction = null;
+	private AbstractLoadingAction<Data>	loadingAction	= null;
 
-	public FileAccessSupportFilter(FileTypeProperty fileType, String msg) {
+	/**
+	 * 
+	 * Constructor.
+	 * 
+	 * @param fileType
+	 *            specifies what to filter
+	 * @param msg
+	 *            message in filter box
+	 */
+	public FileAccessSupportFilter(final FileTypeProperty fileType, final String msg) {
 		this.fileType = fileType;
 		this.msg = msg;
 	}
 
-	public FileAccessSupportFilter(FileTypeProperty fileType, String msg,
-			AbstractSavingAction<Data> savingAction) {
+	/**
+	 * 
+	 * Constructor.
+	 * 
+	 * @param fileType
+	 *            specifies what to filter
+	 * @param msg
+	 *            message in filter box
+	 * @param savingAction
+	 *            default action of saving
+	 */
+	public FileAccessSupportFilter(final FileTypeProperty fileType, final String msg,
+			final AbstractSavingAction<Data> savingAction) {
 		this.fileType = fileType;
 		this.msg = msg;
 		this.savingAction = savingAction;
 	}
 
-	private String acceptedPath = null;
+	private String	acceptedPath	= null;
 
 	public AbstractLoadingAction<Data> getLoadingAction() {
 		if (loadingAction != null) {
@@ -42,8 +62,13 @@ public class FileAccessSupportFilter<Data>
 		return loadingAction;
 	}
 
-	public void setLoadingAction(AbstractLoadingAction<Data> loadingAction) {
-		this.loadingAction = loadingAction;
+	/**
+	 * 
+	 * @param action
+	 *            how to load
+	 */
+	public void setLoadingAction(final AbstractLoadingAction<Data> action) {
+		this.loadingAction = action;
 	}
 
 	// public Loader getLoader() {
@@ -54,10 +79,19 @@ public class FileAccessSupportFilter<Data>
 	// this.loader = loader;
 	// }
 
-	public void setSavingAction(AbstractSavingAction<Data> s) {
-		savingAction = s;
+	/**
+	 * 
+	 * @param action
+	 *            how to save
+	 */
+	public void setSavingAction(final AbstractSavingAction<Data> action) {
+		savingAction = action;
 	}
 
+	/**
+	 * 
+	 * @return object which can save the data
+	 */
 	public AbstractSavingAction<Data> getSavingAction() {
 		if (savingAction != null) {
 			return savingAction.setPath(acceptedPath);
@@ -73,12 +107,16 @@ public class FileAccessSupportFilter<Data>
 	// this.exporter = exporter;
 	// }
 
+	/**
+	 * 
+	 * @return acceptable extensions
+	 */
 	public String[] getExtensions() {
 		return fileType.getExtensions();
 	}
 
 	@Override
-	public boolean accept(java.io.File f) {
+	public boolean accept(final java.io.File f) {
 		if (f.isDirectory()) {
 			return true;
 		}
@@ -102,13 +140,11 @@ public class FileAccessSupportFilter<Data>
 		return fileType;
 	}
 
-	/*
-	 * (non Javadoc)
-	 * 
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	/**
+	 * order property is the most prior, the second is msg property.
 	 */
 	@Override
-	public int compareTo(FileAccessSupportFilter<Data> o) {
+	public int compareTo(final FileAccessSupportFilter<Data> o) {
 		int cmp = fileType.getOrder().compareTo(o.fileType.getOrder());
 		if (cmp == 0) {
 			return msg.compareTo(o.msg);
@@ -125,8 +161,8 @@ public class FileAccessSupportFilter<Data>
 	 * @return in the style of
 	 *         "(*.extension1, *.extension2, ...) ${type.getKeytext()} ${suffix}"
 	 */
-	public static String createDefaultDescription(FileTypeProperty type,
-			String suffix) {
+	public static String createDefaultDescription(final FileTypeProperty type,
+			final String suffix) {
 		String[] extensions = type.getExtensions();
 
 		StringBuilder builder = new StringBuilder();
@@ -139,7 +175,6 @@ public class FileAccessSupportFilter<Data>
 		builder.append(") " + type.getKeyText()
 				+ ResourceHolder.getInstance().getString(
 						ResourceKey.LABEL, StringID.Main.FILE_ID));
-		// ORIPA.res.getString("File"));
 
 		return builder.toString();
 	}

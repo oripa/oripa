@@ -10,6 +10,7 @@ import oripa.bind.state.action.PaintActionSetter;
 import oripa.controller.paint.EditMode;
 import oripa.controller.paint.GraphicMouseActionInterface;
 import oripa.controller.paint.MouseActionHolder;
+import oripa.controller.paint.PaintContextInterface;
 import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.ChangeHint;
 
@@ -36,12 +37,14 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 * @param actions
 	 *            additional actions.
 	 */
-	public PaintBoundState(GraphicMouseActionInterface mouseAction,
-			String textID,
-			ActionListener[] actions) {
+	public PaintBoundState(
+			final GraphicMouseActionInterface mouseAction,
+			final PaintContextInterface context,
+			final String textID,
+			final ActionListener[] actions) {
 		super(mouseAction.getEditMode(), actions);
 
-		addBasicListeners(mouseAction, textID);
+		addBasicListeners(mouseAction, context, textID);
 	}
 
 	/**
@@ -58,28 +61,33 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 * @param actions
 	 *            additional actions.
 	 */
-	public PaintBoundState(Component parent,
-			ErrorListener el,
-			GraphicMouseActionInterface mouseAction, String textID,
-			ActionListener[] actions) {
+	public PaintBoundState(
+			final Component parent,
+			final ErrorListener el,
+			final GraphicMouseActionInterface mouseAction,
+			final PaintContextInterface context,
+			final String textID,
+			final ActionListener[] actions) {
 
 		super(mouseAction.getEditMode(), actions);
 
-		addBasicListeners(mouseAction, textID);
+		addBasicListeners(mouseAction, context, textID);
 
 		// set a listener to handle an error on performActions().
 		this.parent = parent;
 		setErrorListener(el);
 	}
 
-	private void addBasicListeners(GraphicMouseActionInterface mouseAction,
-			String textID) {
+	private void addBasicListeners(
+			final GraphicMouseActionInterface mouseAction,
+			final PaintContextInterface context,
+			final String textID) {
 
 		// add a listener to push this state to the history stack.
 		addAction(new StatePusher(this));
 
 		// add a listener to change paint action.
-		addAction(new PaintActionSetter(actionHolder, mouseAction));
+		addAction(new PaintActionSetter(actionHolder, mouseAction, context));
 
 		if (textID != null) {
 			// add view updater
@@ -88,7 +96,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 
 	}
 
-	public void setErrorListener(ErrorListener el) {
+	public void setErrorListener(final ErrorListener el) {
 		errorListener = el;
 	}
 
@@ -99,7 +107,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 * current paint mode.
 	 */
 	@Override
-	public void performActions(ActionEvent e) {
+	public void performActions(final ActionEvent e) {
 		if (errorListener != null) {
 			if (errorListener.isError(e)) {
 				errorListener.onError(parent, e);

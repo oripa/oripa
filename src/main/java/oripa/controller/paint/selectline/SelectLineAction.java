@@ -3,7 +3,6 @@ package oripa.controller.paint.selectline;
 import java.awt.Graphics2D;
 import java.util.Collection;
 
-import oripa.ORIPA;
 import oripa.controller.paint.EditMode;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PaintConfig;
@@ -12,13 +11,11 @@ import oripa.value.OriLine;
 
 public class SelectLineAction extends RectangularSelectableAction {
 
-
-	public SelectLineAction(PaintContextInterface context){
+	public SelectLineAction(final PaintContextInterface context) {
 		setEditMode(EditMode.SELECT);
 		setNeedSelect(true);
-		
-		setActionState(new SelectingLine());
 
+		setActionState(new SelectingLine());
 
 		recover(context);
 	}
@@ -27,39 +24,37 @@ public class SelectLineAction extends RectangularSelectableAction {
 	 * set old line-selected marks to current context.s
 	 */
 	@Override
-	public void undo(PaintContextInterface context) {
-		ORIPA.doc.loadUndoInfo();
+	public void undo(final PaintContextInterface context) {
+		context.getUndoer().loadUndoInfo();
 
 		recover(context);
 	}
 
-
 	@Override
-	public void recover(PaintContextInterface context) {
+	public void recover(final PaintContextInterface context) {
 		context.clear(false);
 
-		Collection<OriLine> creasePattern = ORIPA.doc.getCreasePattern();
-		if(creasePattern == null){
+		Collection<OriLine> creasePattern = context.getCreasePattern();
+		if (creasePattern == null) {
 			return;
 		}
-		
-		for(OriLine line : creasePattern){
-			if(line.selected){
+
+		for (OriLine line : creasePattern) {
+			if (line.selected) {
 				context.pushLine(line);
 			}
 		}
 	}
 
-
 	@Override
-	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
-			PaintContextInterface context) {
+	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
+			final PaintContextInterface context) {
 
-		if(selectedLines.isEmpty() == false){
+		if (selectedLines.isEmpty() == false) {
 
-			ORIPA.doc.pushUndoInfo();
+			context.getUndoer().pushUndoInfo();
 
-			for(OriLine line : selectedLines){
+			for (OriLine line : selectedLines) {
 				if (line.typeVal == OriLine.TYPE_CUT) {
 					continue;
 				}
@@ -72,7 +67,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 					continue;
 				}
 
-				if(context.getPickedLines().contains(line) == false){
+				if (context.getPickedLines().contains(line) == false) {
 					line.selected = true;
 					context.pushLine(line);
 				}
@@ -82,17 +77,11 @@ public class SelectLineAction extends RectangularSelectableAction {
 		}
 	}
 
-
-
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 		super.onDraw(g2d, context);
 
 		this.drawPickCandidateLine(g2d, context);
 	}
-
-
-
-
 
 }

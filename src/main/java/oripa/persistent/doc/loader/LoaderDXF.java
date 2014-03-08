@@ -35,8 +35,9 @@ import oripa.value.OriLine;
 public class LoaderDXF implements Loader<Doc> {
 
 	@Override
-	public Doc load(String filePath) {
-		Doc doc = new Doc(400);
+	public Doc load(final String filePath) {
+		final double size = 400;
+		Doc doc = new Doc(size);
 		CreasePatternInterface creasePattern = doc.getCreasePattern();
 
 		creasePattern.clear();
@@ -138,8 +139,7 @@ public class LoaderDXF implements Loader<Doc> {
 			return null;
 		}
 
-		double size = 400;
-		doc.setPaperSize(size);
+//		doc.setPaperSize(size);
 
 		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0,
 				(minV.y + maxV.y) / 2.0);

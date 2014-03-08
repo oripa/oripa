@@ -6,21 +6,21 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.cptool.Painter;
 import oripa.value.OriLine;
 
 /**
  * This interface holds current state of GUI interaction for paint inputting.
+ * 
  * @author Koji
- *
+ * 
  */
-public interface PaintContextInterface {
+public interface PaintContextInterface extends CreasePatternHolder {
 
-
-	//=================================================================================
+	// =================================================================================
 	// Mouse position
-	//=================================================================================
-	
-	
+	// =================================================================================
+
 	/**
 	 * 
 	 * @return the point of mouse on screen
@@ -29,14 +29,14 @@ public interface PaintContextInterface {
 
 	/**
 	 * 
-	 * @param logicalPoint set the point of mouse on screen
+	 * @param logicalPoint
+	 *            set the point of mouse on screen
 	 */
 	public abstract void setLogicalMousePoint(Point2D.Double logicalPoint);
 
-
-	//=================================================================================
+	// =================================================================================
 	// State of input instruction
-	//=================================================================================
+	// =================================================================================
 
 	/**
 	 * 
@@ -56,6 +56,7 @@ public interface PaintContextInterface {
 
 	/**
 	 * sets values which user inputed
+	 * 
 	 * @param scale
 	 * @param dispGrid
 	 */
@@ -63,6 +64,7 @@ public interface PaintContextInterface {
 
 	/**
 	 * notify the painting algorithm to update grids
+	 * 
 	 * @param gridDivNum
 	 * @return
 	 */
@@ -70,24 +72,27 @@ public interface PaintContextInterface {
 
 	/**
 	 * provides whether the input instruction finished its job.
+	 * 
 	 * @return true if the input finishes what it should do.
 	 */
 	public abstract boolean isMissionCompleted();
 
 	/**
 	 * 
-	 * @param missionCompleted  state of input instruction (finished or not)
+	 * @param missionCompleted
+	 *            state of input instruction (finished or not)
 	 */
 	public abstract void setMissionCompleted(boolean missionCompleted);
 
-	//=================================================================================
-	// Values which user picked
-	//=================================================================================
-	
+	// =================================================================================
+	// Values Picked by User
+	// =================================================================================
+
 	/**
 	 * remove all lines and all vertices in this context.
 	 * 
-	 * @param unselect	true if the removed lines should be marked as unselected.
+	 * @param unselect
+	 *            true if the removed lines should be marked as unselected.
 	 */
 	public abstract void clear(boolean unselect);
 
@@ -119,32 +124,35 @@ public interface PaintContextInterface {
 
 	/**
 	 * 
-	 * @param picked line to be stored as the latest
+	 * @param picked
+	 *            line to be stored as the latest
 	 */
 	public abstract void pushLine(OriLine picked);
 
 	/**
 	 * pop the last pushed line and mark it unselected.
+	 * 
 	 * @return popped line. null if no line is pushed.
 	 */
 	public abstract OriLine popLine();
 
 	/**
 	 * 
-	 * @param picked vertex to be stored as the latest
+	 * @param picked
+	 *            vertex to be stored as the latest
 	 */
 	public abstract void pushVertex(Vector2d picked);
 
-
 	/**
 	 * pop the last pushed vertex and mark it unselected.
+	 * 
 	 * @return popped line. null if no line is pushed.
 	 */
 	public abstract Vector2d popVertex();
 
-
 	/**
 	 * performs the same as {@code Vector.remove(Object o)}.
+	 * 
 	 * @param line
 	 * @return
 	 */
@@ -189,5 +197,9 @@ public interface PaintContextInterface {
 	public abstract void setCandidateVertexToPick(Vector2d pickCandidateV);
 
 	public abstract Vector2d getCandidateVertexToPick();
+
+	public abstract Painter getPainter();
+
+	public abstract CreasePatternUndoerInterface getUndoer();
 
 }

@@ -1,13 +1,8 @@
 package oripa.controller.paint.deletevertex;
 
-import java.util.Collection;
-
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.core.PickingVertex;
 import oripa.domain.cptool.Painter;
-import oripa.persistent.doc.Doc;
-import oripa.value.OriLine;
 
 public class DeletingVertex extends PickingVertex {
 
@@ -17,18 +12,16 @@ public class DeletingVertex extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(PaintContextInterface context) {
-		Doc document = ORIPA.doc;
-		Collection<OriLine> creasePattern = document.getCreasePattern();
+	protected void onResult(final PaintContextInterface context) {
 
-		if(context.getVertexCount() > 0){
-			document.pushUndoInfo();
+		if (context.getVertexCount() > 0) {
+			context.getUndoer().pushUndoInfo();
 
-			Painter painter = new Painter();
-			painter.removeVertex(context.popVertex(), creasePattern);
+			Painter painter = context.getPainter();
+			painter.removeVertex(context.popVertex());
 
 		}
-		
+
 		context.clear(false);
 	}
 

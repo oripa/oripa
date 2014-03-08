@@ -4,11 +4,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import oripa.ORIPA;
 import oripa.bind.EditOutlineActionWrapper;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.controller.paint.EditMode;
 import oripa.controller.paint.MouseActionHolder;
+import oripa.controller.paint.PaintContextFactory;
+import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.addvertex.AddVertexAction;
 import oripa.controller.paint.bisector.AngleBisectorAction;
 import oripa.controller.paint.byvalue.LineByValueAction;
@@ -33,16 +34,20 @@ public class StateManagerTest {
 		StateManager manager = StateManager.getInstance();
 		PaintBoundStateFactory stateFactory = new PaintBoundStateFactory();
 
-		ORIPA.doc = new Doc();
+		Doc doc = new Doc();
+		PaintContextFactory contextFactory = new PaintContextFactory();
+		PaintContextInterface context = contextFactory.createContext();
+
+		context.setCreasePattern(doc.getCreasePattern());
 
 		manager.push(stateFactory.create(
-				null, StringID.DIRECT_V_ID));
+				null, context, StringID.DIRECT_V_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				TwoPointSegmentAction.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.SELECT_ID));
+				null, context, StringID.SELECT_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				SelectLineAction.class);
@@ -54,25 +59,25 @@ public class StateManagerTest {
 				TwoPointSegmentAction.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.ADD_VERTEX_ID));
+				null, context, StringID.ADD_VERTEX_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				AddVertexAction.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.BISECTOR_ID));
+				null, context, StringID.BISECTOR_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				AngleBisectorAction.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.BY_VALUE_ID));
+				null, context, StringID.BY_VALUE_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				LineByValueAction.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.CHANGE_LINE_TYPE_ID));
+				null, context, StringID.CHANGE_LINE_TYPE_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				ChangeLineTypeAction.class);
@@ -94,37 +99,37 @@ public class StateManagerTest {
 		// CopyAndPasteActionWrapper.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.DELETE_LINE_ID));
+				null, context, StringID.DELETE_LINE_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				DeleteLineAction.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.DELETE_VERTEX_ID));
+				null, context, StringID.DELETE_VERTEX_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				DeleteVertexAction.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.EDIT_CONTOUR_ID));
+				null, context, StringID.EDIT_CONTOUR_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				EditOutlineActionWrapper.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.MIRROR_ID));
+				null, context, StringID.MIRROR_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				MirrorCopyAction.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.ON_V_ID));
+				null, context, StringID.ON_V_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				TwoPointLineAction.class);
 
 		manager.push(stateFactory.create(
-				null, StringID.PERPENDICULAR_BISECTOR_ID));
+				null, context, StringID.PERPENDICULAR_BISECTOR_ID));
 		manager.getCurrent().performActions(null);
 		assertEquals(actionHolder.getMouseAction().getClass(),
 				TwoPointBisectorAction.class);

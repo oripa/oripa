@@ -59,7 +59,7 @@ public class VerticesManagerTest extends TestCase{
 //		
 //		Vector2d mouseVector = new Vector2d(mousePoint.x, mousePoint.y);
 //		assertEquals(mouseVector, 
-//				NearestVertexFinder.findAround(context, distance).point);
+//				NearestItemFinder.findAround(context, distance).point);
 //	}
 //	
 	@Test

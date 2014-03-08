@@ -28,6 +28,7 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
+import oripa.controller.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.resource.ResourceHolder;
 import oripa.resource.StringID;
@@ -72,19 +73,19 @@ public class MainMenuBar extends JMenuBar {
 	private JMenuItem menuItemDeleteSelectedLines;
 	private JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
 
-	private final ButtonFactory buttonFactory = new PaintActionButtonFactory();
+	private final ButtonFactory buttonFactory;
 
 	/**
 	 * Constructor
 	 */
-	public MainMenuBar(Component owner) {
-
+	public MainMenuBar(final Component owner, final PaintContextInterface aContext) {
+		buttonFactory = new PaintActionButtonFactory(aContext);
 		build(owner);
 
 		addMenus();
 	}
 
-	private void build(Component owner) {
+	private void build(final Component owner) {
 		buildMenuItems(owner);
 
 		buildEditMenu();
@@ -92,7 +93,7 @@ public class MainMenuBar extends JMenuBar {
 
 	}
 
-	private void buildMenuItems(Component owner) {
+	private void buildMenuItems(final Component owner) {
 		/**
 		 * For changing outline
 		 */
@@ -135,7 +136,7 @@ public class MainMenuBar extends JMenuBar {
 
 	}
 
-	public void setFileMenu(JMenu menu) {
+	public void setFileMenu(final JMenu menu) {
 		fileMenu = menu;
 	}
 
@@ -165,7 +166,7 @@ public class MainMenuBar extends JMenuBar {
 
 	}
 
-	public void setFileHistoryPaths(FileHistory history) {
+	public void setFileHistoryPaths(final FileHistory history) {
 		int i = 0;
 		for (String path : history.getHistory()) {
 			MRUFilesMenuItem[i].setText(path);

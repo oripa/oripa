@@ -22,12 +22,12 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.List;
 
-import oripa.domain.fold.OriEdge;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.Doc;
+import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 
 /**
  * 
@@ -38,7 +38,7 @@ import oripa.persistent.doc.Doc;
 // export folded model
 public class ModelExporterOBJ implements DocExporter {
 
-	public static void export_bk(Doc doc, String filepath) throws Exception {
+	public static void export_bk(final Doc doc, final String filepath) throws Exception {
 		OrigamiModel origamiModel = doc.getOrigamiModel();
 		double paperSize = origamiModel.getPaperSize();
 
@@ -76,41 +76,13 @@ public class ModelExporterOBJ implements DocExporter {
 	}
 
 	@Override
-	public boolean export(Doc doc, String filepath) throws Exception {
-		FileWriter fw = new FileWriter(filepath);
-		BufferedWriter bw = new BufferedWriter(fw);
-
-		// Align the center of the model, combine scales
-		bw.write("# Created by ORIPA\n");
-		bw.write("\n");
+	public boolean export(final Doc doc, final String filePath) throws Exception {
+		OrigamiModelExporterOBJ exporter = new OrigamiModelExporterOBJ();
 
 		OrigamiModel origamiModel = doc.getOrigamiModel();
-		List<OriFace> faces = origamiModel.getFaces();
-		List<OriVertex> vertices = origamiModel.getVertices();
-		List<OriEdge> edges = origamiModel.getEdges();
 
-		int id = 1;
-		for (OriVertex vertex : vertices) {
-			bw.write("v " + vertex.p.x + " " + vertex.p.y + " 0.0\n");
-			vertex.tmpInt = id;
-			id++;
-		}
+		return exporter.export(origamiModel, filePath);
 
-		for (OriFace face : faces) {
-			bw.write("f");
-			for (OriHalfedge he : face.halfedges) {
-				bw.write(" " + he.vertex.tmpInt);
-			}
-			bw.write("\n");
-		}
-
-		for (OriEdge edge : edges) {
-			bw.write("e " + edge.sv.tmpInt + " " + edge.ev.tmpInt + " "
-					+ edge.type + " 180\n");
-		}
-
-		bw.close();
-
-		return true;
 	}
+
 }
