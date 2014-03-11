@@ -74,7 +74,8 @@ import oripa.domain.fold.Folder;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
 import oripa.file.ImageResourceLoader;
-import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.EstimationEntityHolder;
+import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -192,16 +193,23 @@ public class UIPanel extends JPanel
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 	private final PainterScreen screen;
 
-	// private PaintContext context = PaintContext.getInstance();
-
-	private final Doc document = ORIPA.doc;
+	private final PaintContextInterface paintContext;
 
 	private final MouseActionHolder actionHolder = MouseActionHolder
 			.getInstance();
 
-	public UIPanel(final PainterScreen __screen, final PaintContextInterface context) {
+	private final EstimationEntityHolder estimationHolder;
+	private final SheetCutOutlinesHolder cutOutlinesHolder;
 
-		constructButtons(context);
+	public UIPanel(final PainterScreen __screen, final PaintContextInterface aContext,
+			final EstimationEntityHolder anEstimationHolder,
+			final SheetCutOutlinesHolder aCutOutlinesHolder) {
+
+		paintContext = aContext;
+		estimationHolder = anEstimationHolder;
+		cutOutlinesHolder = aCutOutlinesHolder;
+
+		constructButtons(paintContext);
 
 		// setModeButtonText();
 		editModeInputLineButton.setSelected(true);
@@ -513,7 +521,7 @@ public class UIPanel extends JPanel
 
 		ValueDB.getInstance().addObserver(this);
 
-		addListenerToComponents(context);
+		addListenerToComponents(paintContext);
 
 		// -------------------------------------------------
 		// Initialize selection
@@ -708,7 +716,7 @@ public class UIPanel extends JPanel
 					@Override
 					public void actionPerformed(final java.awt.event.ActionEvent e) {
 						OrigamiModel origamiModel;
-						CreasePatternInterface creasePattern = document
+						CreasePatternInterface creasePattern = context
 								.getCreasePattern();
 
 						OrigamiModelFactory modelFactory = new OrigamiModelFactory();
@@ -766,13 +774,14 @@ public class UIPanel extends JPanel
 		} else if (ae.getSource() == resetButton) {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;
-			CreasePatternInterface creasePattern = document.getCreasePattern();
+			CreasePatternInterface creasePattern = paintContext.getCreasePattern();
 
 			// if (document.buildOrigami3(origamiModel, false)) {
 			OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 			OrigamiModel origamiModel = modelFactory.createOrigamiModel(
 					creasePattern, creasePattern.getPaperSize());
-			FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
+
+			FoldedModelInfo foldedModelInfo = estimationHolder.getFoldedModelInfo();
 
 			if (origamiModel.isProbablyFoldable()) {
 				buildOK = true;
@@ -808,7 +817,7 @@ public class UIPanel extends JPanel
 
 			if (buildOK) {
 				folder.fold(origamiModel, foldedModelInfo);
-				document.setOrigamiModel(origamiModel);
+				estimationHolder.setOrigamiModel(origamiModel);
 
 				// TODO move this block out of if(buildOK) statement.
 				if (foldedModelInfo.getFoldablePatternCount() != 0) {
@@ -823,12 +832,12 @@ public class UIPanel extends JPanel
 			} else {
 				BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
 				foldedModelInfo.setBoundBox(boundBox);
-				document.setOrigamiModel(origamiModel);
+				estimationHolder.setOrigamiModel(origamiModel);
 			}
 
 			ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory();
 			JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
-					document, new ScreenUpdaterAsCallback(screenUpdater));
+					cutOutlinesHolder, new ScreenUpdaterAsCallback(screenUpdater));
 
 			modelView.setVisible(true);
 			modelView.repaint();

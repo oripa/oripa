@@ -172,9 +172,9 @@ public class MainFrame extends JFrame implements ActionListener,
 	private final MouseActionHolder actionHolder = MouseActionHolder
 			.getInstance();
 
-	public MainFrame() {
+	private final Doc document = new Doc();
 
-		Doc document = ORIPA.doc;
+	public MainFrame() {
 
 		document.setCreasePattern(paintContext.getCreasePattern());
 
@@ -190,7 +190,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		mainScreen = new PainterScreen(paintContext, document);
 		addWindowListener(this);
-		uiPanel = new UIPanel(mainScreen, paintContext);
+		uiPanel = new UIPanel(mainScreen, paintContext, document, document);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(uiPanel, BorderLayout.WEST);
 		getContentPane().add(mainScreen, BorderLayout.CENTER);
@@ -329,7 +329,6 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		Doc document = ORIPA.doc;
 
 		// Check the last opened files
 		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
@@ -457,7 +456,6 @@ public class MainFrame extends JFrame implements ActionListener,
 	}
 
 	public void updateTitleText() {
-		Doc document = ORIPA.doc;
 		String fileName;
 		if ((document.getDataFilePath()).equals("")) {
 			fileName = ORIPA.res.getString("DefaultFileName");
@@ -479,7 +477,6 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	private String saveFile(final String homePath,
 			final FileAccessSupportFilter<Doc>... filters) {
-		Doc document = ORIPA.doc;
 
 		try {
 			return document.saveFileUsingGUI(null, this, filters);
@@ -502,7 +499,6 @@ public class MainFrame extends JFrame implements ActionListener,
 	}
 
 	public void saveModelFile(final FileTypeKey type) {
-		Doc document = ORIPA.doc;
 
 		try {
 			document.saveModelFile(type, this);
@@ -592,7 +588,6 @@ public class MainFrame extends JFrame implements ActionListener,
 	 * @param filePath
 	 */
 	private void openFile(final String filePath) {
-		Doc document = ORIPA.doc;
 
 		// ORIPA.modelFrame.setVisible(false);
 
@@ -679,8 +674,6 @@ public class MainFrame extends JFrame implements ActionListener,
 							"The crease pattern has been modified. Would you like to save?",
 							"Comfirm to save", JOptionPane.YES_NO_OPTION);
 			if (selected == JOptionPane.YES_OPTION) {
-
-				Doc document = ORIPA.doc;
 
 				document.setCreasePattern(paintContext.getCreasePattern());
 

@@ -9,19 +9,17 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-import oripa.ORIPA;
 import oripa.controller.paint.PaintContextFactory;
 import oripa.persistent.doc.Doc;
 import oripa.resource.StringID;
 
 public class ButtonFactoryTest {
-
 	@Test
 	public void test() {
 
 		JPanel parent = new JPanel();
 
-		ORIPA.doc = new Doc();
+		Doc doc = new Doc();
 
 		// line input buttons
 		assertButtonCreated(parent, StringID.DIRECT_V_ID, false);

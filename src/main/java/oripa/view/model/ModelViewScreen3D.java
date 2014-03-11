@@ -55,7 +55,7 @@ import javax.vecmath.Vector3f;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.EstimationEntityHolder;
 
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
@@ -112,7 +112,7 @@ public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseM
 
 	}
 
-	public void setModel(final Doc document) {
+	public void setModel(final EstimationEntityHolder document) {
 		faces.clear();
 
 		OrigamiModel origamiModel = document.getOrigamiModel();

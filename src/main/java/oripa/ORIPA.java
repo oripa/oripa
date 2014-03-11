@@ -26,8 +26,6 @@ import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import oripa.persistent.doc.Doc;
-import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -37,7 +35,6 @@ import oripa.view.model.ModelViewFrame3D;
 public class ORIPA {
 
 	public static String TITLE;
-	public static Doc doc;
 	public static MainFrame mainFrame;
 //    public static ModelViewFrame modelFrame;
 	public static String infoString = "ORIPA: (c) 2013- ORIPA OSS Project\n" +
@@ -86,9 +83,6 @@ public class ORIPA {
 
 		int appTotalWidth = mainFrameWidth + uiPanelWidth;
 		int appTotalHeight = mainFrameHeight;
-
-		doc = new Doc(Constants.DEFAULT_PAPER_SIZE);
-//        doc = DocHolder.getInstance().getDoc();
 
 		// Construction of the main frame
 		mainFrame = new MainFrame();

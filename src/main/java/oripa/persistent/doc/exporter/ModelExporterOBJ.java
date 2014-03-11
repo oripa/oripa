@@ -27,6 +27,7 @@ import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.EstimationEntityHolder;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 
 /**
@@ -38,7 +39,7 @@ import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 // export folded model
 public class ModelExporterOBJ implements DocExporter {
 
-	public static void export_bk(final Doc doc, final String filepath) throws Exception {
+	public static void export_bk(final EstimationEntityHolder doc, final String filepath) throws Exception {
 		OrigamiModel origamiModel = doc.getOrigamiModel();
 		double paperSize = origamiModel.getPaperSize();
 

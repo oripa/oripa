@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import oripa.controller.paint.CreasePatternHolder;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlineFactory;
@@ -43,7 +44,7 @@ import oripa.value.OriLine;
  * @author Koji
  * 
  */
-public class Doc implements SheetCutOutlinesHolder {
+public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, EstimationEntityHolder {
 
 	// private double paperSize;
 
@@ -205,40 +206,44 @@ public class Doc implements SheetCutOutlinesHolder {
 		sheetCutLines.addAll(factory.createLines(scissorLine, origamiModel));
 	}
 
+	@Override
 	public CreasePatternInterface getCreasePattern() {
 		return creasePattern;
 	}
 
+	@Override
 	public void setCreasePattern(final CreasePatternInterface cp) {
 		creasePattern = cp;
 	}
 
-	/**
-	 * @return origamiModel
+	/* (non Javadoc)
+	 * @see oripa.persistent.doc.EstimationEntityHolder#getOrigamiModel()
 	 */
+	@Override
 	public OrigamiModel getOrigamiModel() {
 		return origamiModel;
 	}
 
-	/**
-	 * @param origamiModel
-	 *            origamiModel is set to this instance.
+	/* (non Javadoc)
+	 * @see oripa.persistent.doc.EstimationEntityHolder#setOrigamiModel(oripa.domain.fold.OrigamiModel)
 	 */
+	@Override
 	public void setOrigamiModel(final OrigamiModel origamiModel) {
 		this.origamiModel = origamiModel;
 	}
 
-	/**
-	 * @return foldedModelInfo
+	/* (non Javadoc)
+	 * @see oripa.persistent.doc.EstimationEntityHolder#getFoldedModelInfo()
 	 */
+	@Override
 	public FoldedModelInfo getFoldedModelInfo() {
 		return foldedModelInfo;
 	}
 
-	/**
-	 * @param foldedModelInfo
-	 *            foldedModelInfo is set to this instance.
+	/* (non Javadoc)
+	 * @see oripa.persistent.doc.EstimationEntityHolder#setFoldedModelInfo(oripa.domain.fold.FoldedModelInfo)
 	 */
+	@Override
 	public void setFoldedModelInfo(final FoldedModelInfo foldedModelInfo) {
 		this.foldedModelInfo = foldedModelInfo;
 	}
