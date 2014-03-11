@@ -30,7 +30,7 @@ public class SelectingLineForBisector extends PickingLine {
 			throw new RuntimeException();
 		}
 
-		context.getUndoer().pushCachedUndoInfo();
+		context.creasePatternUndo().pushCachedUndoInfo();
 
 		Painter painter = context.getPainter();
 

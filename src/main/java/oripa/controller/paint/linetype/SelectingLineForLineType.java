@@ -23,7 +23,7 @@ public class SelectingLineForLineType extends PickingLine {
 	@Override
 	protected void onResult(final PaintContextInterface context) {
 
-		context.getUndoer().pushUndoInfo();
+		context.creasePatternUndo().pushUndoInfo();
 
 		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 		Painter painter = context.getPainter();

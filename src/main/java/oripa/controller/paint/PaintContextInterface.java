@@ -200,6 +200,6 @@ public interface PaintContextInterface extends CreasePatternHolder {
 
 	public abstract Painter getPainter();
 
-	public abstract CreasePatternUndoerInterface getUndoer();
+	public abstract CreasePatternUndoerInterface creasePatternUndo();
 
 }

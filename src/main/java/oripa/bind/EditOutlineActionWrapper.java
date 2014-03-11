@@ -9,6 +9,7 @@ import oripa.controller.paint.GraphicMouseActionInterface;
 import oripa.controller.paint.MouseActionHolder;
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.outline.EditOutlineAction;
+import oripa.viewsetting.main.ScreenUpdater;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
 
@@ -17,10 +18,11 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(
-			PaintContextInterface context,
-			AffineTransform affine, boolean differentAction) {
-		GraphicMouseActionInterface next = super.onLeftClick(context, affine,
-				differentAction);
+			final PaintContextInterface context,
+			final boolean differentAction,
+			final ScreenUpdater screenUpdater) {
+		GraphicMouseActionInterface next = super.onLeftClick(context,
+				differentAction, screenUpdater);
 
 		if (context.isMissionCompleted()) {
 			popPreviousState();
@@ -31,9 +33,9 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	}
 
 	@Override
-	public void onRightClick(PaintContextInterface context,
-			AffineTransform affine,
-			boolean differentAction) {
+	public void onRightClick(final PaintContextInterface context,
+			final AffineTransform affine,
+			final boolean differentAction) {
 
 		popPreviousState();
 	}

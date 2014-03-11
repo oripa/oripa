@@ -27,7 +27,7 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 			final boolean doSpecial) {
 
 		if (doingFirstAction) {
-			context.getUndoer().cacheUndoInfo();
+			context.creasePatternUndo().cacheUndoInfo();
 			doingFirstAction = false;
 		}
 
@@ -47,7 +47,7 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 	@Override
 	public void onResult(final PaintContextInterface context) {
 
-		context.getUndoer().pushCachedUndoInfo();
+		context.creasePatternUndo().pushCachedUndoInfo();
 
 		Vector2d first = context.getVertex(0);
 		Vector2d second = context.getVertex(1);

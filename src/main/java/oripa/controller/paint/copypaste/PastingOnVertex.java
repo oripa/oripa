@@ -21,7 +21,7 @@ public class PastingOnVertex extends PickingVertex {
 	@Override
 	protected void undoAction(final PaintContextInterface context) {
 		context.setMissionCompleted(false);
-		context.getUndoer().loadUndoInfo();
+		context.creasePatternUndo().loadUndoInfo();
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class PastingOnVertex extends PickingVertex {
 		Vector2d v = context.popVertex();
 
 		if (context.getLineCount() > 0) {
-			context.getUndoer().pushUndoInfo();
+			context.creasePatternUndo().pushUndoInfo();
 
 			Vector2d origin = OriginHolder.getInstance().getOrigin(context);
 

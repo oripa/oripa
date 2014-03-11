@@ -36,7 +36,7 @@ public class SelectingLineForMirror extends PickingLine {
 			final boolean doSpecial) {
 		if (doingFirstAction) {
 			doingFirstAction = false;
-			context.getUndoer().cacheUndoInfo();
+			context.creasePatternUndo().cacheUndoInfo();
 
 		}
 
@@ -78,7 +78,7 @@ public class SelectingLineForMirror extends PickingLine {
 	@Override
 	protected void onResult(final PaintContextInterface context) {
 
-		context.getUndoer().pushCachedUndoInfo();
+		context.creasePatternUndo().pushCachedUndoInfo();
 
 		Painter painter = context.getPainter();
 		painter.mirrorCopyBy(axis, context.getPickedLines());

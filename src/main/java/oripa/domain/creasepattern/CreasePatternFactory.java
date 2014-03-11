@@ -20,7 +20,8 @@ package oripa.domain.creasepattern;
 
 import java.util.Collection;
 
-import oripa.controller.paint.util.RectangleDomain;
+import oripa.domain.creasepattern.impl.CreasePattern;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**

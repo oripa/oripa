@@ -15,7 +15,7 @@ public class DeletingVertex extends PickingVertex {
 	protected void onResult(final PaintContextInterface context) {
 
 		if (context.getVertexCount() > 0) {
-			context.getUndoer().pushUndoInfo();
+			context.creasePatternUndo().pushUndoInfo();
 
 			Painter painter = context.getPainter();
 			painter.removeVertex(context.popVertex());

@@ -18,7 +18,7 @@ public class DeletingLine extends PickingLine {
 	protected void onResult(final PaintContextInterface context) {
 
 		if (context.getLineCount() > 0) {
-			context.getUndoer().pushUndoInfo();
+			context.creasePatternUndo().pushUndoInfo();
 
 			Painter painter = context.getPainter();
 			painter.removeLine(context.popLine());

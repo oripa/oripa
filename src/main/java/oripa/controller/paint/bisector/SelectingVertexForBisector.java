@@ -26,7 +26,7 @@ public class SelectingVertexForBisector extends PickingVertex {
 			final boolean doSpecial) {
 
 		if (doingFirstAction) {
-			context.getUndoer().cacheUndoInfo();
+			context.creasePatternUndo().cacheUndoInfo();
 			doingFirstAction = false;
 		}
 

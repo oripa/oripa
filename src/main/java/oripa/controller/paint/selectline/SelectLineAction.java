@@ -25,7 +25,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 	 */
 	@Override
 	public void undo(final PaintContextInterface context) {
-		context.getUndoer().loadUndoInfo();
+		context.creasePatternUndo().loadUndoInfo();
 
 		recover(context);
 	}
@@ -52,7 +52,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 		if (selectedLines.isEmpty() == false) {
 
-			context.getUndoer().pushUndoInfo();
+			context.creasePatternUndo().pushUndoInfo();
 
 			for (OriLine line : selectedLines) {
 				if (line.typeVal == OriLine.TYPE_CUT) {

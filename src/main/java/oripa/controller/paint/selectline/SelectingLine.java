@@ -23,7 +23,7 @@ public class SelectingLine extends PickingLine {
 	@Override
 	protected void onResult(final PaintContextInterface context) {
 
-		context.getUndoer().pushUndoInfo();
+		context.creasePatternUndo().pushUndoInfo();
 
 		OriLine line = context.peekLine();
 

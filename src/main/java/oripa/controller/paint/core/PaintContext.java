@@ -418,7 +418,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @see oripa.controller.paint.PaintContextInterface#getUndoer()
 	 */
 	@Override
-	public CreasePatternUndoerInterface getUndoer() {
+	public CreasePatternUndoerInterface creasePatternUndo() {
 		return undoer;
 	}
 

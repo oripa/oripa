@@ -22,7 +22,7 @@ public class SelectingSecondVertexForSegment extends PickingVertex {
 		OriLine line = new OriLine(context.getVertex(0),
 				context.getVertex(1), PaintConfig.inputLineType);
 
-		context.getUndoer().pushUndoInfo();
+		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
 		painter.addLine(line);

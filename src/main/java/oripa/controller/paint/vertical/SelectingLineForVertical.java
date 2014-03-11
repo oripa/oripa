@@ -32,7 +32,7 @@ public class SelectingLineForVertical extends PickingLine {
 		OriLine vl = GeomUtil.getVerticalLine(
 				context.getVertex(0), context.getLine(0), PaintConfig.inputLineType);
 
-		context.getUndoer().pushUndoInfo();
+		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
 		painter.addLine(vl);

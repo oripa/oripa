@@ -25,7 +25,7 @@ public class SelectingVertexForLength extends PickingVertex {
 		context.setMissionCompleted(false);
 
 		if (doingFirstAction) {
-			context.getUndoer().cacheUndoInfo();
+			context.creasePatternUndo().cacheUndoInfo();
 			doingFirstAction = false;
 		}
 

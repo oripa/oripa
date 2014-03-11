@@ -23,7 +23,7 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 			final boolean doSpecial) {
 
 		if (doingFirstAction) {
-			context.getUndoer().cacheUndoInfo();
+			context.creasePatternUndo().cacheUndoInfo();
 			doingFirstAction = false;
 		}
 
@@ -41,7 +41,7 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 	@Override
 	public void onResult(final PaintContextInterface context) {
 
-		context.getUndoer().pushCachedUndoInfo();
+		context.creasePatternUndo().pushCachedUndoInfo();
 
 		Painter painter = context.getPainter();
 		painter.addTriangleDivideLines(

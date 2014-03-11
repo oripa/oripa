@@ -1,4 +1,4 @@
-package oripa.domain.creasepattern;
+package oripa.domain.creasepattern.impl;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -6,6 +6,7 @@ import java.util.Iterator;
 import javax.vecmath.Vector2d;
 
 import oripa.controller.paint.geometry.NearVerticesGettable;
+import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.value.OriLine;
 
 /**

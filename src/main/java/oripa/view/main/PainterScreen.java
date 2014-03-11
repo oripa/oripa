@@ -307,8 +307,9 @@ public class PainterScreen extends JPanel
 		}
 
 		mouseActionHolder.setMouseAction(action.onLeftClick(
-				paintContext, affineTransform,
-				MouseUtility.isControlKeyPressed(e)));
+				paintContext,
+				MouseUtility.isControlKeyPressed(e),
+				screenUpdater));
 
 	}
 

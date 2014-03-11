@@ -24,19 +24,19 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	private boolean needSelect = false;
 	private ActionState state;
 
-	protected void log(double x, double y) {
+	protected void log(final double x, final double y) {
 		System.out.println(x + "," + y);
 
 	}
 
-	protected void log(Vector2d p) {
+	protected void log(final Vector2d p) {
 		if (p == null) {
 			return;
 		}
 		log(p.x, p.y);
 	}
 
-	protected final void setActionState(ActionState state) {
+	protected final void setActionState(final ActionState state) {
 		this.state = state;
 	}
 
@@ -44,7 +44,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		return state;
 	}
 
-	protected final boolean currentStateIs(Class<? extends ActionState> s) {
+	protected final boolean currentStateIs(final Class<? extends ActionState> s) {
 		return state.equals(s);
 	}
 
@@ -53,11 +53,11 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		return needSelect;
 	}
 
-	protected final void setNeedSelect(boolean selectable) {
+	protected final void setNeedSelect(final boolean selectable) {
 		this.needSelect = selectable;
 	}
 
-	protected final void setEditMode(EditMode mode) {
+	protected final void setEditMode(final EditMode mode) {
 		editMode = mode;
 	}
 
@@ -67,53 +67,51 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	@Override
-	public void destroy(PaintContextInterface context) {
+	public void destroy(final PaintContextInterface context) {
 		context.clear(false);
 	}
 
 	@Override
-	public void recover(PaintContextInterface context) {
+	public void recover(final PaintContextInterface context) {
 	}
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(
-			PaintContextInterface context,
-			AffineTransform affine, boolean differentAction) {
+			final PaintContextInterface context, final boolean differentAction,
+			final ScreenUpdater screenUpdater) {
 		Point2D.Double clickPoint = context.getLogicalMousePoint();
 
-		doAction(context, clickPoint, differentAction);
+		doAction(context, clickPoint, differentAction, screenUpdater);
 		return this;
 	}
 
 	@Override
-	public void doAction(PaintContextInterface context, Point2D.Double point,
-			boolean differntAction) {
+	public void doAction(final PaintContextInterface context, final Point2D.Double point,
+			final boolean differntAction, final ScreenUpdaterInterface screenUpdater) {
 
 		state = state.doAction(context,
 				point, differntAction);
 
-		// TODO move this variable to parameter
-		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 		screenUpdater.updateScreen();
 	}
 
 	@Override
-	public void onRightClick(PaintContextInterface context,
-			AffineTransform affine,
-			boolean differentAction) {
+	public void onRightClick(final PaintContextInterface context,
+			final AffineTransform affine,
+			final boolean differentAction) {
 
 		undo(context);
 	}
 
 	@Override
-	public void undo(PaintContextInterface context) {
+	public void undo(final PaintContextInterface context) {
 		state = BasicUndo.undo(state, context);
 	}
 
 	@Override
 	public Vector2d onMove(
-			PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+			final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 
 		setCandidateVertexOnMove(context, differentAction);
 		setCandidateLineOnMove(context);
@@ -122,14 +120,14 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected final void setCandidateVertexOnMove(
-			PaintContextInterface context, boolean differentAction) {
+			final PaintContextInterface context, final boolean differentAction) {
 		context.setCandidateVertexToPick(
 				NearestItemFinder.pickVertex(
 						context, differentAction));
 
 	}
 
-	protected final void setCandidateLineOnMove(PaintContextInterface context) {
+	protected final void setCandidateLineOnMove(final PaintContextInterface context) {
 		context.setCandidateLineToPick(
 				NearestItemFinder.pickLine(
 						context));
@@ -148,13 +146,13 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			AffineTransform affine, boolean differentAction);
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 		drawPickedLines(g2d, context);
 		drawPickedVertices(g2d, context);
 
 	}
 
-	private void drawPickedLines(Graphics2D g2d, PaintContextInterface context) {
+	private void drawPickedLines(final Graphics2D g2d, final PaintContextInterface context) {
 		for (OriLine line : context.getPickedLines()) {
 			g2d.setColor(LineSetting.LINE_COLOR_PICKED);
 			g2d.setStroke(LineSetting.STROKE_PICKED);
@@ -164,8 +162,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	}
 
-	private void drawPickedVertices(Graphics2D g2d,
-			PaintContextInterface context) {
+	private void drawPickedVertices(final Graphics2D g2d,
+			final PaintContextInterface context) {
 		ElementSelector selector = new ElementSelector();
 
 		for (Vector2d vertex : context.getPickedVertices()) {
@@ -184,16 +182,16 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 * @param x
 	 * @param y
 	 */
-	protected void drawVertex(Graphics2D g2d, PaintContextInterface context,
-			double x, double y) {
+	protected void drawVertex(final Graphics2D g2d, final PaintContextInterface context,
+			final double x, final double y) {
 		double scale = context.getScale();
 		g2d.fill(new Rectangle2D.Double(x - 5.0 / scale,
 				y - 5.0 / scale, 10.0 / scale, 10.0 / scale));
 
 	}
 
-	protected void drawPickCandidateVertex(Graphics2D g2d,
-			PaintContextInterface context) {
+	protected void drawPickCandidateVertex(final Graphics2D g2d,
+			final PaintContextInterface context) {
 		Vector2d candidate = context.getCandidateVertexToPick();
 		if (candidate != null) {
 			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
@@ -201,20 +199,20 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		}
 	}
 
-	protected void drawLine(Graphics2D g2d, OriLine line) {
+	protected void drawLine(final Graphics2D g2d, final OriLine line) {
 		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y,
 				line.p1.x, line.p1.y));
 
 	}
 
-	protected void drawLine(Graphics2D g2d, Vector2d p0, Vector2d p1) {
+	protected void drawLine(final Graphics2D g2d, final Vector2d p0, final Vector2d p1) {
 		g2d.draw(new Line2D.Double(p0.x, p0.y,
 				p1.x, p1.y));
 
 	}
 
-	protected void drawPickCandidateLine(Graphics2D g2d,
-			PaintContextInterface context) {
+	protected void drawPickCandidateLine(final Graphics2D g2d,
+			final PaintContextInterface context) {
 		OriLine candidate = context.getCandidateLineToPick();
 		if (candidate != null) {
 			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
@@ -230,8 +228,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 * @param g2d
 	 * @param context
 	 */
-	protected void drawTemporaryLine(Graphics2D g2d,
-			PaintContextInterface context) {
+	protected void drawTemporaryLine(final Graphics2D g2d,
+			final PaintContextInterface context) {
 		ElementSelector selector = new ElementSelector();
 
 		if (context.getVertexCount() > 0) {

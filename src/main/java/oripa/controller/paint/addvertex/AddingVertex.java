@@ -41,13 +41,13 @@ public class AddingVertex extends PickingVertex {
 
 		if (context.getVertexCount() > 0) {
 
-			context.getUndoer().pushUndoInfo();
+			context.creasePatternUndo().pushUndoInfo();
 
 			Painter painter = context.getPainter();
 
 			if (!painter.addVertexOnLine(
 					context.popLine(), context.popVertex())) {
-				context.getUndoer().loadUndoInfo();
+				context.creasePatternUndo().loadUndoInfo();
 			}
 
 		}

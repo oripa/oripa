@@ -22,7 +22,7 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 			final PaintContextInterface context) {
 
 		if (selectedLines.isEmpty() == false) {
-			context.getUndoer().pushUndoInfo();
+			context.creasePatternUndo().pushUndoInfo();
 
 			UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 			for (OriLine l : selectedLines) {

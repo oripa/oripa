@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import oripa.controller.paint.geometry.NearVerticesGettable;
-import oripa.domain.creasepattern.VerticesManager;
+import oripa.domain.creasepattern.impl.VerticesManager;
 import oripa.value.OriPoint;
 
 public class VerticesManagerTest extends TestCase{

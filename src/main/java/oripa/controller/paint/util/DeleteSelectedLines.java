@@ -5,22 +5,23 @@ import java.awt.event.ActionListener;
 
 import oripa.controller.paint.PaintContextInterface;
 import oripa.controller.paint.ScreenUpdaterInterface;
-import oripa.controller.paint.core.PaintContext;
 import oripa.domain.cptool.Painter;
-import oripa.viewsetting.main.ScreenUpdater;
 
 public class DeleteSelectedLines implements ActionListener {
 
-	private PaintContextInterface context = PaintContext.getInstance();
+	private final PaintContextInterface context;
+	private final ScreenUpdaterInterface screenUpdater;
 
-	public DeleteSelectedLines(final PaintContextInterface aContext) {
+	public DeleteSelectedLines(final PaintContextInterface aContext,
+			final ScreenUpdaterInterface updater) {
 		context = aContext;
+		screenUpdater = updater;
 	}
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
 
-		context.getUndoer().pushUndoInfo();
+		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
 		painter.removeSelectedLines();
@@ -28,8 +29,6 @@ public class DeleteSelectedLines implements ActionListener {
 		if (context.isPasting() == false) {
 			context.clear(false);
 		}
-
-		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 
 		screenUpdater.updateScreen();
 

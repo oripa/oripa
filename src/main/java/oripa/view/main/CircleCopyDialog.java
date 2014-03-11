@@ -161,7 +161,7 @@ public class CircleCopyDialog extends JDialog {
 								);
 
 					} else {
-						context.getUndoer().pushUndoInfo();
+						context.creasePatternUndo().pushUndoInfo();
 
 						Painter painter = context.getPainter();
 						painter.copyWithRotation(

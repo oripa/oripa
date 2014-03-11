@@ -20,7 +20,7 @@ public class BasicUndo {
 			next = state.undo(context);
 		}
 		else {
-			context.getUndoer().loadUndoInfo();
+			context.creasePatternUndo().loadUndoInfo();
 		}
 
 		return next;

@@ -252,7 +252,7 @@ public class RepeatCopyDialog extends JDialog {
 								JOptionPane.INFORMATION_MESSAGE);
 
 					} else {
-						context.getUndoer().pushUndoInfo();
+						context.creasePatternUndo().pushUndoInfo();
 
 						Painter painter = context.getPainter();
 						if (m_bFillSheet) {

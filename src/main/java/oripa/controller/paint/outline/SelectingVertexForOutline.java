@@ -41,7 +41,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 			if (context.getVertexCount() > 2) {
 				// finish editing
 
-				context.getUndoer().pushUndoInfo();
+				context.creasePatternUndo().pushUndoInfo();
 				closeTmpOutline(context.getPickedVertices(), context.getCreasePattern());
 
 				context.clear(false);

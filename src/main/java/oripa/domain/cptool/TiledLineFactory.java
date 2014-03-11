@@ -3,7 +3,7 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import oripa.controller.paint.util.RectangleDomain;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 public class TiledLineFactory {

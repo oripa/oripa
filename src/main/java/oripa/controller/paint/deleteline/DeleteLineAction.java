@@ -45,7 +45,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 			final PaintContextInterface context) {
 
 		if (selectedLines.isEmpty() == false) {
-			context.getUndoer().pushUndoInfo();
+			context.creasePatternUndo().pushUndoInfo();
 			Painter painter = context.getPainter();
 			for (OriLine l : selectedLines) {
 				painter.removeLine(l);

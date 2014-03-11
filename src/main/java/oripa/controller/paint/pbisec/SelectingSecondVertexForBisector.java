@@ -23,7 +23,7 @@ public class SelectingSecondVertexForBisector extends PickingVertex {
 		p0 = context.getVertex(0);
 		p1 = context.getVertex(1);
 
-		context.getUndoer().pushUndoInfo();
+		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
 		painter.addPBisector(

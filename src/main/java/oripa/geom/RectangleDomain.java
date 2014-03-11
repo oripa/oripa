@@ -1,4 +1,4 @@
-package oripa.controller.paint.util;
+package oripa.geom;
 
 import java.util.Collection;
 

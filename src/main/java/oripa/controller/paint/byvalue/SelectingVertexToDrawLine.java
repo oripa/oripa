@@ -31,7 +31,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 				OriLine vl = GeomUtil.getLineByValue(vertex, length, -angle,
 						PaintConfig.inputLineType);
 
-				context.getUndoer().pushUndoInfo();
+				context.creasePatternUndo().pushUndoInfo();
 
 				Painter painter = context.getPainter();
 				painter.addLine(vl);

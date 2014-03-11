@@ -70,6 +70,7 @@ import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
 import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.ScreenUpdater;
 
 public class MainFrame extends JFrame implements ActionListener,
 		ComponentListener, WindowListener, Observer {
@@ -250,7 +251,8 @@ public class MainFrame extends JFrame implements ActionListener,
 				});
 
 		menuItemDeleteSelectedLines
-				.addActionListener(new DeleteSelectedLines(paintContext));
+				.addActionListener(new DeleteSelectedLines(paintContext, ScreenUpdater
+						.getInstance()));
 		menuItemDeleteSelectedLines.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_DELETE, 0));
 
@@ -397,7 +399,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			if (actionHolder.getMouseAction() != null) {
 				actionHolder.getMouseAction().undo(paintContext);
 			} else {
-				paintContext.getUndoer().loadUndoInfo();
+				paintContext.creasePatternUndo().loadUndoInfo();
 			}
 			mainScreen.repaint();
 		} else if (e.getSource() == menuItemClear) {
@@ -666,7 +668,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	@Override
 	public void windowClosing(final WindowEvent arg0) {
 
-		if (paintContext.getUndoer().changeExists()) {
+		if (paintContext.creasePatternUndo().changeExists()) {
 			// TODO: confirm saving edited opx
 			int selected = JOptionPane
 					.showConfirmDialog(
