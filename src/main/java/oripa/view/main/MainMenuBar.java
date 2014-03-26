@@ -28,7 +28,7 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
-import oripa.controller.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.resource.ResourceHolder;
 import oripa.resource.StringID;

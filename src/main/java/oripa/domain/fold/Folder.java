@@ -18,20 +18,20 @@
 
 package oripa.domain.fold;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.controller.paint.core.PaintConfig;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.rule.Condition3;
 import oripa.domain.fold.rule.Condition4;
+import oripa.domain.paint.core.PaintConfig;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.value.OriLine;
@@ -118,26 +118,27 @@ public class Folder {
 		folderTool.setFacesOutline(vertices, faces, false);
 
 		// Color the faces
-		Random rand = new Random();
+		SecureRandom srand = new SecureRandom();
 		for (OriFace face : faces) {
-			int r = (int) (rand.nextDouble() * 255);
-			int g = (int) (rand.nextDouble() * 255);
-			int b = (int) (rand.nextDouble() * 255);
-			if (r < 0) {
-				r = 0;
-			} else if (r > 255) {
-				r = 255;
-			}
-			if (g < 0) {
-				g = 0;
-			} else if (g > 255) {
-				g = 255;
-			}
-			if (b < 0) {
-				b = 0;
-			} else if (b > 255) {
-				b = 255;
-			}
+
+			int r = srand.nextInt(256); // (int) (rand.nextDouble() * 255);
+			int g = srand.nextInt(256); // (int) (rand.nextDouble() * 255);
+			int b = srand.nextInt(256); // (int) (rand.nextDouble() * 255);
+//			if (r < 0) {
+//				r = 0;
+//			} else if (r > 255) {
+//				r = 255;
+//			}
+//			if (g < 0) {
+//				g = 0;
+//			} else if (g > 255) {
+//				g = 255;
+//			}
+//			if (b < 0) {
+//				b = 0;
+//			} else if (b > 255) {
+//				b = 255;
+//			}
 			face.intColor = (r << 16) | (g << 8) | b | 0xff000000;
 		}
 
@@ -616,11 +617,11 @@ public class Folder {
 		OrigamiModel temp_origamiModel = modelFactory.createOrigamiModel(paperSize);
 
 		temp_creasePattern.clear();
+		Painter painter = new Painter(temp_creasePattern);
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				OriLine line = new OriLine(he.positionAfterFolded, he.next.positionAfterFolded,
 						OriLine.TYPE_RIDGE);
-				Painter painter = new Painter(temp_creasePattern);
 				painter.addLine(line);
 			}
 		}

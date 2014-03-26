@@ -3,10 +3,10 @@ package oripa.bind.state.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import oripa.controller.paint.GraphicMouseActionInterface;
-import oripa.controller.paint.MouseActionHolder;
-import oripa.controller.paint.PaintContextInterface;
-import oripa.controller.paint.ScreenUpdaterInterface;
+import oripa.domain.paint.GraphicMouseActionInterface;
+import oripa.domain.paint.MouseActionHolder;
+import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.viewsetting.main.ScreenUpdater;
 
 /**

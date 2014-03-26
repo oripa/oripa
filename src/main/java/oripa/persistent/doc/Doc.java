@@ -25,13 +25,13 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import oripa.controller.paint.CreasePatternHolder;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlineFactory;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
+import oripa.domain.paint.CreasePatternHolder;
 import oripa.exception.UserCanceledException;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;

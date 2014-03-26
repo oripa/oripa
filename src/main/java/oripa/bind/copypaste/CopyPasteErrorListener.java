@@ -6,8 +6,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import oripa.bind.state.ErrorListener;
-import oripa.controller.paint.PaintContextInterface;
 import oripa.domain.cptool.Painter;
+import oripa.domain.paint.PaintContextInterface;
 
 public class CopyPasteErrorListener implements ErrorListener {
 

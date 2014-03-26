@@ -30,8 +30,8 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import oripa.controller.paint.CreasePatternGraphicDrawer;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.persistent.doc.Doc;
 
 /**

@@ -70,7 +70,7 @@ public class DataSet {
 
 		CreasePatternFactory factory = new CreasePatternFactory();
 		CreasePatternInterface creasePattern = factory
-				.createCreasePattern(paperSize);
+				.createEmptyCreasePattern(paperSize);
 
 		for (int i = 0; i < lines.length; i++) {
 			creasePattern.add(lines[i].getLine());

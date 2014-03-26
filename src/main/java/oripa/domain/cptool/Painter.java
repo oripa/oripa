@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.controller.paint.core.PaintConfig;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.paint.core.PaintConfig;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 

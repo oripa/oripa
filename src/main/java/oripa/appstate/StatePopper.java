@@ -3,7 +3,7 @@ package oripa.appstate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import oripa.controller.paint.EditMode;
+import oripa.domain.paint.EditMode;
 
 public class StatePopper implements ActionListener{
 	public ApplicationState<EditMode> pop(){

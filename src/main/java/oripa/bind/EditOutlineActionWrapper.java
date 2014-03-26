@@ -4,11 +4,11 @@ import java.awt.geom.AffineTransform;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.controller.paint.EditMode;
-import oripa.controller.paint.GraphicMouseActionInterface;
-import oripa.controller.paint.MouseActionHolder;
-import oripa.controller.paint.PaintContextInterface;
-import oripa.controller.paint.outline.EditOutlineAction;
+import oripa.domain.paint.EditMode;
+import oripa.domain.paint.GraphicMouseActionInterface;
+import oripa.domain.paint.MouseActionHolder;
+import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.outline.EditOutlineAction;
 import oripa.viewsetting.main.ScreenUpdater;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {

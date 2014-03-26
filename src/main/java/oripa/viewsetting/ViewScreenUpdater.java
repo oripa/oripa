@@ -1,6 +1,6 @@
 package oripa.viewsetting;
 
-import oripa.controller.paint.ScreenUpdaterInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 
 public interface ViewScreenUpdater extends ScreenUpdaterInterface {
 

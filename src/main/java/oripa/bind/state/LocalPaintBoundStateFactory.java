@@ -4,10 +4,10 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
-import oripa.controller.paint.EditMode;
-import oripa.controller.paint.GraphicMouseActionInterface;
-import oripa.controller.paint.PaintContextInterface;
-import oripa.controller.paint.core.PaintContext;
+import oripa.domain.paint.EditMode;
+import oripa.domain.paint.GraphicMouseActionInterface;
+import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.core.PaintContext;
 
 /**
  * Helper class

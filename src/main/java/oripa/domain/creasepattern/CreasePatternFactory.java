@@ -26,33 +26,45 @@ import oripa.value.OriLine;
 
 /**
  * @author Koji
- *
+ * 
  */
 public class CreasePatternFactory {
 
 	/**
-	 * creates non-folded crease pattern.
-	 * Returned collection has only 4 lines which describe the edges of a square paper.
-	 * The center of the paper is set to (0, 0).
+	 * creates non-folded crease pattern. Returned collection has only 4 lines
+	 * which describe the edges of a square paper. The center of the paper is
+	 * set to (0, 0).
+	 * 
 	 * @param paperSize
 	 * @return crease pattern of non-folded case.
 	 */
-	public CreasePatternInterface createCreasePattern(double paperSize) {
+	public CreasePatternInterface createCreasePattern(final double paperSize) {
 		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
 
-		OriLine l0 = new OriLine(-paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0, OriLine.TYPE_CUT);
-		OriLine l1 = new OriLine(paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0, paperSize / 2.0, OriLine.TYPE_CUT);
-		OriLine l2 = new OriLine(paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0, OriLine.TYPE_CUT);
-		OriLine l3 = new OriLine(-paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0, -paperSize / 2.0, OriLine.TYPE_CUT);
+		OriLine l0 = new OriLine(-paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0,
+				-paperSize / 2.0, OriLine.TYPE_CUT);
+		OriLine l1 = new OriLine(paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0,
+				paperSize / 2.0, OriLine.TYPE_CUT);
+		OriLine l2 = new OriLine(paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0,
+				paperSize / 2.0, OriLine.TYPE_CUT);
+		OriLine l3 = new OriLine(-paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0,
+				-paperSize / 2.0, OriLine.TYPE_CUT);
 		creasePattern.add(l0);
 		creasePattern.add(l1);
 		creasePattern.add(l2);
 		creasePattern.add(l3);
 
-		
 		return creasePattern;
 	}
 
+	/**
+	 * 
+	 * @param paperSize
+	 * @return crease pattern entity with no lines.
+	 */
+	public CreasePatternInterface createEmptyCreasePattern(final double paperSize) {
+		return new CreasePattern(paperSize);
+	}
 
 	/**
 	 * creates crease pattern which consists of given lines and no other lines.
@@ -60,12 +72,12 @@ public class CreasePatternFactory {
 	 * @param lines
 	 * @return
 	 */
-	public CreasePatternInterface createCreasePattern(Collection<OriLine> lines) {
+	public CreasePatternInterface createCreasePattern(final Collection<OriLine> lines) {
 		RectangleDomain domain = new RectangleDomain(lines);
 		double paperSize = Math.max(domain.getWidth(), domain.getHeight());
 
 		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
-		
+
 		creasePattern.addAll(lines);
 		return creasePattern;
 	}

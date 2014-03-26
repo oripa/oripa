@@ -5,8 +5,8 @@ import java.util.Iterator;
 
 import javax.vecmath.Vector2d;
 
-import oripa.controller.paint.geometry.NearVerticesGettable;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.NearVerticesGettable;
 import oripa.value.OriLine;
 
 /**

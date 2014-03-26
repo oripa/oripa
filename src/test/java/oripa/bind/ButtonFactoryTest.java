@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-import oripa.controller.paint.PaintContextFactory;
+import oripa.domain.paint.PaintContextFactory;
 import oripa.persistent.doc.Doc;
 import oripa.resource.StringID;
 

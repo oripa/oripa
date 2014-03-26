@@ -37,9 +37,9 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
 import oripa.ORIPA;
-import oripa.controller.paint.core.PaintConfig;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
+import oripa.domain.paint.core.PaintConfig;
 import oripa.persistent.doc.FileTypeKey;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;

@@ -28,8 +28,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import oripa.controller.paint.PaintContextInterface;
 import oripa.domain.cptool.Painter;
+import oripa.domain.paint.PaintContextInterface;
 
 public class CircleCopyDialog extends JDialog {
 	private static final long serialVersionUID = 1L;

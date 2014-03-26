@@ -20,7 +20,6 @@ package oripa.domain.creasepattern;
 
 import java.util.Collection;
 
-import oripa.controller.paint.geometry.NearVerticesGettable;
 import oripa.value.OriLine;
 
 /**

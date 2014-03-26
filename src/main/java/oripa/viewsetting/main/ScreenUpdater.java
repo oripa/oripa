@@ -2,9 +2,9 @@ package oripa.viewsetting.main;
 
 import java.awt.event.KeyEvent;
 
-import oripa.controller.paint.GraphicMouseActionInterface;
-import oripa.controller.paint.MouseActionHolder;
-import oripa.controller.paint.copypaste.CopyAndPasteAction;
+import oripa.domain.paint.GraphicMouseActionInterface;
+import oripa.domain.paint.MouseActionHolder;
+import oripa.domain.paint.copypaste.CopyAndPasteAction;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.ViewSettingDataBase;
 

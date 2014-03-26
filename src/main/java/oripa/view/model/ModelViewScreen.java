@@ -42,11 +42,11 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
-import oripa.controller.paint.core.LineSetting;
-import oripa.controller.paint.core.PaintConfig;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
+import oripa.domain.paint.core.LineSetting;
+import oripa.domain.paint.core.PaintConfig;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.resource.Constants;
 import oripa.util.gui.CallbackOnUpdate;

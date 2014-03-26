@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.vecmath.Vector2d;
 
-import oripa.controller.paint.geometry.NearVerticesGettable;
+import oripa.domain.creasepattern.NearVerticesGettable;
 import oripa.value.OriLine;
 
 

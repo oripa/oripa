@@ -47,11 +47,11 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
-import oripa.controller.paint.MouseActionHolder;
-import oripa.controller.paint.PaintContextFactory;
-import oripa.controller.paint.PaintContextInterface;
-import oripa.controller.paint.util.DeleteSelectedLines;
+import oripa.controller.DeleteSelectedLinesActionListener;
 import oripa.domain.cptool.Painter;
+import oripa.domain.paint.MouseActionHolder;
+import oripa.domain.paint.PaintContextFactory;
+import oripa.domain.paint.PaintContextInterface;
 import oripa.exception.UserCanceledException;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
@@ -251,7 +251,7 @@ public class MainFrame extends JFrame implements ActionListener,
 				});
 
 		menuItemDeleteSelectedLines
-				.addActionListener(new DeleteSelectedLines(paintContext, ScreenUpdater
+				.addActionListener(new DeleteSelectedLinesActionListener(paintContext, ScreenUpdater
 						.getInstance()));
 		menuItemDeleteSelectedLines.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_DELETE, 0));
@@ -627,6 +627,8 @@ public class MainFrame extends JFrame implements ActionListener,
 			updateMenu(path);
 
 		}
+
+		this.paintContext.setCreasePattern(document.getCreasePattern());
 		updateTitleText();
 
 	}

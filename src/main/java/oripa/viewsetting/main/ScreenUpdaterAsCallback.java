@@ -18,7 +18,7 @@
  */
 package oripa.viewsetting.main;
 
-import oripa.controller.paint.ScreenUpdaterInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.util.gui.CallbackOnUpdate;
 
 /**

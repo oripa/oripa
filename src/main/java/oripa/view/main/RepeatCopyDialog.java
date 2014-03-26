@@ -29,9 +29,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import oripa.controller.paint.PaintContextInterface;
-import oripa.controller.paint.core.PaintContext;
 import oripa.domain.cptool.Painter;
+import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.core.PaintContext;
 
 public class RepeatCopyDialog extends JDialog {
 

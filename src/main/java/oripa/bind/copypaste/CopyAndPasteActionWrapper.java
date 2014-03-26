@@ -4,10 +4,10 @@ import java.awt.geom.AffineTransform;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.controller.paint.EditMode;
-import oripa.controller.paint.PaintContextInterface;
-import oripa.controller.paint.copypaste.CopyAndPasteAction;
 import oripa.domain.cptool.Painter;
+import oripa.domain.paint.EditMode;
+import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.copypaste.CopyAndPasteAction;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 

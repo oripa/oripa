@@ -2,7 +2,7 @@ package oripa.domain.cptool;
 
 import javax.vecmath.Vector2d;
 
-import oripa.controller.paint.core.PaintConfig;
+import oripa.domain.paint.core.PaintConfig;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.resource.Constants;

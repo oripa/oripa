@@ -20,7 +20,7 @@ package oripa.view.main;
 
 import java.awt.Component;
 
-import oripa.controller.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 
 /**

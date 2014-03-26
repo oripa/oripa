@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import javax.vecmath.Vector2d;
 
-import oripa.controller.paint.core.PaintConfig;
+import oripa.domain.paint.core.PaintConfig;
 import oripa.geom.GeomUtil;
 import oripa.geom.Ray;
 import oripa.value.CalculationResource;
