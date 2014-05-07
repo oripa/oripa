@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="compile" name="oripa">
+<project basedir="." default="build_and_run" name="oripa">
 	<property name="jar.version"   value="0.36"/>
-	<property name="java.dir"      value="src/main/java"/>
+    <property name="java.dir"      value="src/main/java"/>
+	<property name="test.dir"      value="src/test/java"/>
 	<property name="resources.dir" value="src/main/resources"/>
-	<property name="build.dir" value="bin/classes"/>
+    <property name="build.dir" value="bin/classes"/>
+    <property name="bin" value="bin"/>
+	<property name="src" value="src"/>
 
 	<target name="clean">
 		<delete dir="bin" />
@@ -11,8 +14,12 @@
 
 	<target name="compile">
 	  <mkdir dir="${build.dir}"/>
-	  <javac destdir="${build.dir}" debug="true" failonerror="true">
-	    <src path="${java.dir}"/>
+      <javac destdir="${build.dir}" debug="true" failonerror="true">
+        <classpath>
+           <pathelement location="/usr/share/java/junit.jar"/>
+        </classpath>
+        <src path="${java.dir}"/>
+	    <src path="${test.dir}"/>
 	    <!--<classpath refid="master-classpath"/>-->
 	  </javac>
 	</target>
@@ -40,6 +47,22 @@
              </classpath>
         </java>
 	</target>
+
+   <target name="junit" depends="jar">
+        <junit printsummary="yes">
+             <classpath>
+               <pathelement location="/usr/share/java/junit.jar"/>
+               <pathelement location="bin/oripa-${jar.version}.jar"/>
+             </classpath>
+            <formatter type="plain" usefile="false" /> <!-- to screen -->
+            
+            <batchtest fork="yes">
+                <fileset dir="${test.dir}">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
 
     <target name="build_and_run" depends="clean,jar,ORIPA" />
 </project>
