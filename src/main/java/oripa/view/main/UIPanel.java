@@ -697,6 +697,11 @@ implements ActionListener, PropertyChangeListener, Observer {
 				}else{
 					corrugationResult += " | Fails vertex edge count condition";
 				}
+				if(corrugationChecker.evaluateVertexAngleConditionFull(origamiModel)){
+					corrugationResult += " | Passes vertex angle condition";
+				}else{
+					corrugationResult += " | Fails vertex angle condition";
+				}
 
 				JOptionPane.showMessageDialog(
 					ORIPA.mainFrame, corrugationResult, ORIPA.res.getString("Title"), JOptionPane.INFORMATION_MESSAGE);

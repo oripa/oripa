@@ -39,4 +39,17 @@ public class OriEdge {
     public OriVertex oppositeVertex(OriVertex v) {
         return v == sv ? ev : sv;
     }
+
+    public OriVertex intersectionVertex(OriEdge e){
+        OriVertex returned = null;
+        if(this.sv == e.sv || this.sv == e.ev){
+            returned = this.sv;
+        }
+
+        if(this.ev == e.sv || this.ev == e.ev){
+            returned = this.ev;
+        }
+
+        return returned;
+    }
 }

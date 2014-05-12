@@ -1,6 +1,7 @@
 package oripa.corrugation;
 
 import java.util.ArrayList;
+import javax.vecmath.Vector2d;
 
 import oripa.fold.OrigamiModel;
 import oripa.fold.OriEdge;
@@ -105,6 +106,70 @@ public class CorrugationChecker {
         return true;
     }
 
+    public double roundOff(double d){
+        int precision = 14;
+        double factor = Math.pow(10, precision);
+        return Math.round(d * factor)/factor;
+
+    }
+
+    private double getAngle(OriEdge e1, OriEdge e2){
+        OriVertex v = e1.intersectionVertex(e2);
+        Vector2d preP = new Vector2d(e1.oppositeVertex(v).p);
+        Vector2d nxtP = new Vector2d(e2.oppositeVertex(v).p);
+
+        nxtP.sub(v.p);
+        preP.sub(v.p);
+
+        return roundOff(preP.angle(nxtP));
+    }
+
+    public boolean evaluateSingleVertexAngleCondition(OriVertex v){
+        boolean isOk = true;
+        double rightAngle = roundOff(Math.PI/2);
+        for (int i = 0; i < v.edges.size(); i++) {
+            int ePrevIdx = i-1;
+            if (ePrevIdx < 0){
+                ePrevIdx += v.edges.size();
+            }
+            OriEdge e1 = v.edges.get(i);
+            OriEdge e2 = v.edges.get((i + 1) % v.edges.size());
+            OriEdge eNext = v.edges.get((i + 2) % v.edges.size());
+            OriEdge ePrev = v.edges.get(ePrevIdx);
+            if (e1.type == OriLine.TYPE_CUT || e2.type == OriLine.TYPE_CUT) {
+                break;
+            }
+
+            double theta = getAngle(e1, e2);
+            
+            if(theta < rightAngle && e1.type == e2.type){
+                isOk = false;
+            }
+
+            if(theta > rightAngle && e1.type != e2.type){
+                isOk = false;
+            }
+
+            // TODO:
+            // if(theta == rightAngle)...
+        }
+        return isOk;
+    }
+
+    public boolean evaluateVertexAngleConditionFull(OrigamiModel origamiModel){
+        /*
+         * At each vertex, adjacent edges meeting at <90° are different.
+         * Edges meeting at >90° are the same.
+         */
+        boolean isOk = true;
+        for (OriVertex v: origamiModel.getVertices()){
+            if(!evaluateSingleVertexAngleCondition(v)){
+                isOk = false;
+            }
+        }
+        return isOk;
+    }
+
     public boolean facePassesFaceEdgeCondition(OriFace f){
         int[] edgeTypeCount = {0, 0, 0};
         for(OriHalfedge he: f.halfedges){
@@ -155,6 +220,12 @@ public class CorrugationChecker {
     }
 
     public boolean evaluate(OrigamiModel origamiModel){
-        return evaluateVertexTypeConditionFull(origamiModel) && evaluateFaceEdgeConditionFull(origamiModel);
+        boolean vertexType = evaluateVertexTypeConditionFull(origamiModel);
+        boolean faceEdge = evaluateFaceEdgeConditionFull(origamiModel);
+        boolean vertexAngle = evaluateVertexAngleConditionFull(origamiModel);
+        System.out.println("Vertex Type:  " + (vertexType ? "PASSED" : "FAILED"));
+        System.out.println("Face Edge:    " + (faceEdge ? "PASSED" : "FAILED"));
+        System.out.println("Vertex Angle: " + (vertexAngle ? "PASSED" : "FAILED"));
+        return vertexType && faceEdge && vertexAngle;
     }
 }
