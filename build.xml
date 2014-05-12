@@ -3,7 +3,8 @@
 	<property name="jar.version"   value="0.36"/>
     <property name="java.dir"      value="src/main/java"/>
 	<property name="test.dir"      value="src/test/java"/>
-	<property name="resources.dir" value="src/main/resources"/>
+    <property name="resources.dir" value="src/main/resources"/>
+	<property name="test.resources.dir" value="src/test/resources"/>
     <property name="build.dir" value="bin/classes"/>
     <property name="bin" value="bin"/>
 	<property name="src" value="src"/>
@@ -27,14 +28,14 @@
     <target name="jar" depends="compile">
         <jar jarfile="bin/oripa-${jar.version}.jar">
         	<fileset dir="${build.dir}" />
-        	<fileset dir="${resources.dir}"/>
-        	<manifest>
+            <fileset dir="${resources.dir}"/>
+            <manifest>
                 <attribute name="Main-Class" value="oripa.ORIPA"/>
             </manifest>
         </jar>
     </target>
-	
-	<target name="ORIPA">
+    
+    <target name="ORIPA">
         <java
             dir="${build.dir}"
             jar="bin/oripa-${jar.version}.jar"
@@ -46,13 +47,14 @@
                <pathelement path="${java.class.path}"/>
              </classpath>
         </java>
-	</target>
+    </target>
 
    <target name="junit" depends="jar">
         <junit printsummary="yes">
              <classpath>
                <pathelement location="/usr/share/java/junit.jar"/>
                <pathelement location="bin/oripa-${jar.version}.jar"/>
+        	   <pathelement location="${test.resources.dir}"/>
              </classpath>
             <formatter type="plain" usefile="false" /> <!-- to screen -->
             
