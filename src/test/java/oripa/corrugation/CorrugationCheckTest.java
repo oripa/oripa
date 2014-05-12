@@ -19,6 +19,8 @@ import oripa.value.OriLine;
 
 public class CorrugationCheckTest {
 
+    private CorrugationChecker checker = new CorrugationChecker();
+
     private OrigamiModel getModelFromFilename(String filename){
         Doc doc;
         OrigamiModelFactory modelFactory = new OrigamiModelFactory();
@@ -44,9 +46,38 @@ public class CorrugationCheckTest {
     }
 
     @Test
-    public void testBadVertexCondition() {
-        CorrugationChecker checker = new CorrugationChecker();
+    public void testBadVertexCondition() {        
         assertFalse(checker.evaluate(getModelFromFilename("corrugation/badvertexcondition.opx")));
+    }
+
+    @Test
+    public void testCraneBase() {
+        assertFalse(checker.evaluate(getModelFromFilename("corrugation/crane-base.opx")));
+    }
+
+    @Test
+    public void testRadial() {
+        assertTrue(checker.evaluate(getModelFromFilename("corrugation/radial.opx")));
+    }
+
+    @Test
+    public void test90same() {
+        assertFalse(checker.evaluate(getModelFromFilename("corrugation/90-same.opx")));
+    }
+
+    @Test
+    public void test90Valid() {
+        assertTrue(checker.evaluate(getModelFromFilename("corrugation/90-valid.opx")));
+    }
+
+    @Test
+    public void test90ValidReverse() {
+        assertTrue(checker.evaluate(getModelFromFilename("corrugation/90-valid-reverse.opx")));
+    }
+
+    @Test
+    public void test90InvalidFace() {
+        assertFalse(checker.evaluate(getModelFromFilename("corrugation/90-invalid-face.opx")));
     }
 
 }
