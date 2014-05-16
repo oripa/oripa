@@ -7,64 +7,64 @@
 	<property name="test.resources.dir" value="src/test/resources"/>
     <property name="build.dir" value="bin/classes"/>
     <property name="bin" value="bin"/>
-	<property name="src" value="src"/>
+    <property name="src" value="src"/>
 
-	<target name="clean">
-		<delete dir="bin" />
-	</target>
+    <target name="clean">
+      <delete dir="bin" />
+    </target>
 
-	<target name="compile">
-	  <mkdir dir="${build.dir}"/>
+    <target name="compile">
+      <mkdir dir="${build.dir}"/>
       <javac destdir="${build.dir}" debug="true" failonerror="true">
         <classpath>
-           <pathelement location="/usr/share/java/junit.jar"/>
+	  <pathelement location="/usr/share/java/junit4.jar"/>
         </classpath>
         <src path="${java.dir}"/>
-	    <src path="${test.dir}"/>
-	    <!--<classpath refid="master-classpath"/>-->
-	  </javac>
-	</target>
+	<src path="${test.dir}"/>
+	<!--<classpath refid="master-classpath"/>-->
+      </javac>
+    </target>
 
     <target name="jar" depends="compile">
-        <jar jarfile="bin/oripa-${jar.version}.jar">
-        	<fileset dir="${build.dir}" />
-            <fileset dir="${resources.dir}"/>
-            <manifest>
-                <attribute name="Main-Class" value="oripa.ORIPA"/>
-            </manifest>
-        </jar>
+      <jar jarfile="bin/oripa-${jar.version}.jar">
+	<fileset dir="${build.dir}" />
+	<fileset dir="${resources.dir}"/>
+	<manifest>
+	  <attribute name="Main-Class" value="oripa.ORIPA"/>
+	</manifest>
+      </jar>
     </target>
     
     <target name="ORIPA">
-        <java
-            dir="${build.dir}"
-            jar="bin/oripa-${jar.version}.jar"
-            fork="true"
-            failonerror="true"
-            maxmemory="1024m">
-             <classpath>
-               <pathelement location="bin/test.jar"/>
-               <pathelement path="${java.class.path}"/>
-             </classpath>
-        </java>
+      <java
+	  dir="${build.dir}"
+	  jar="bin/oripa-${jar.version}.jar"
+	  fork="true"
+	  failonerror="true"
+	  maxmemory="1024m">
+	<classpath>
+	  <pathelement location="bin/test.jar"/>
+	  <pathelement path="${java.class.path}"/>
+	</classpath>
+      </java>
     </target>
-
-   <target name="junit" depends="jar">
-        <junit printsummary="yes">
-             <classpath>
-               <pathelement location="/usr/share/java/junit.jar"/>
-               <pathelement location="bin/oripa-${jar.version}.jar"/>
-        	   <pathelement location="${test.resources.dir}"/>
-             </classpath>
-            <formatter type="plain" usefile="false" /> <!-- to screen -->
-            
-            <batchtest fork="yes">
-                <fileset dir="${test.dir}">
-                    <include name="**/*Test.java"/>
-                </fileset>
-            </batchtest>
-        </junit>
+    
+    <target name="junit" depends="jar">
+      <junit printsummary="yes">
+	<classpath>
+	  <pathelement location="/usr/share/java/junit.jar"/>
+	  <pathelement location="bin/oripa-${jar.version}.jar"/>
+	  <pathelement location="${test.resources.dir}"/>
+	</classpath>
+	<formatter type="plain" usefile="false" /> <!-- to screen -->
+	
+	<batchtest fork="yes">
+	  <fileset dir="${test.dir}">
+	    <include name="**/*Test.java"/>
+	  </fileset>
+	</batchtest>
+      </junit>
     </target>
-
+    
     <target name="build_and_run" depends="clean,jar,ORIPA" />
 </project>
