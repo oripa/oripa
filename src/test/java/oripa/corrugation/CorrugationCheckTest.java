@@ -41,7 +41,6 @@ public class CorrugationCheckTest {
 
     @Test
     public void testMiuraOri() {
-        CorrugationChecker checker = new CorrugationChecker();
         assertTrue(checker.evaluate(getModelFromFilename("corrugation/miura-ori.opx")));
     }
 
