@@ -41,41 +41,49 @@ public class CorrugationCheckTest {
 
     @Test
     public void testMiuraOri() {
+        System.out.println("testMiuraOri");
         assertTrue(checker.evaluate(getModelFromFilename("corrugation/miura-ori.opx")));
     }
 
     @Test
     public void testBadVertexCondition() {        
+        System.out.println("testBadVertexCondition");
         assertFalse(checker.evaluate(getModelFromFilename("corrugation/badvertexcondition.opx")));
     }
 
     @Test
     public void testCraneBase() {
+        System.out.println("testCraneBase");
         assertFalse(checker.evaluate(getModelFromFilename("corrugation/crane-base.opx")));
     }
 
     @Test
     public void testRadial() {
+        System.out.println("testRadial");
         assertTrue(checker.evaluate(getModelFromFilename("corrugation/radial.opx")));
     }
 
     @Test
-    public void test90same() {
+    public void test90Same() {
+        System.out.println("test90Same");
         assertFalse(checker.evaluate(getModelFromFilename("corrugation/90-same.opx")));
     }
 
     @Test
     public void test90Valid() {
+        System.out.println("test90Valid");
         assertTrue(checker.evaluate(getModelFromFilename("corrugation/90-valid.opx")));
     }
 
     @Test
     public void test90ValidReverse() {
+        System.out.println("test90ValidReverse");
         assertTrue(checker.evaluate(getModelFromFilename("corrugation/90-valid-reverse.opx")));
     }
 
     @Test
     public void test90InvalidFace() {
+        System.out.println("test90InvalidFace");
         assertFalse(checker.evaluate(getModelFromFilename("corrugation/90-invalid-face.opx")));
     }
 
