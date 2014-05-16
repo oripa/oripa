@@ -87,4 +87,10 @@ public class CorrugationCheckTest {
         assertFalse(checker.evaluate(getModelFromFilename("corrugation/90-invalid-face.opx")));
     }
 
+    @Test
+    public void testDegree4() {
+        System.out.println("testDegree4");
+        assertTrue(checker.evaluate(getModelFromFilename("corrugation/degree-4.opx")));
+    }
+
 }
