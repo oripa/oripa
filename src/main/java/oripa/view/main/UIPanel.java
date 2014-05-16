@@ -80,6 +80,7 @@ import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
 import oripa.view.estimation.FoldabilityCheckFrameFactory;
+import oripa.view.estimation.CorrugationCheckFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.estimation.RenderFrameSettingDB;
@@ -703,6 +704,10 @@ implements ActionListener, PropertyChangeListener, Observer {
 					corrugationResult += " | Fails vertex angle condition";
 				}
 
+				CorrugationCheckFrameFactory checkerFactory = new CorrugationCheckFrameFactory();
+				JFrame checker = checkerFactory.createFrame(origamiModel, creasePattern, corrugationChecker);
+				checker.setVisible(true);
+				
 				JOptionPane.showMessageDialog(
 					ORIPA.mainFrame, corrugationResult, ORIPA.res.getString("Title"), JOptionPane.INFORMATION_MESSAGE);
 

@@ -1,6 +1,7 @@
 package oripa.corrugation;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.vecmath.Vector2d;
 
 import oripa.fold.OrigamiModel;
@@ -9,6 +10,7 @@ import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
 import oripa.fold.OriVertex;
 import oripa.value.OriLine;
+import oripa.corrugation.EdgePair;
 
 public class CorrugationChecker {
 
@@ -17,7 +19,31 @@ public class CorrugationChecker {
     final public static int TYPE_VALLEY_VERTEX = 2;
     final public static int TYPE_MOUNTAIN_VERTEX = 3;
 
+    private LinkedList<OriVertex> vertexTypeConditionFailures;
+    private LinkedList<OriFace> faceConditionFailures;
+    private LinkedList<OriVertex> vertexEdgeCountConditionFailures; // really just Maekawa's condition violations
+    private LinkedList<EdgePair> vertexAngleConditionFailures;
+    
+    public CorrugationChecker() {
+    	this.vertexTypeConditionFailures = new LinkedList<OriVertex>();
+    	this.vertexEdgeCountConditionFailures = new LinkedList<OriVertex>();
+    	this.faceConditionFailures = new LinkedList<OriFace>();
+    	this.vertexAngleConditionFailures = new LinkedList<EdgePair>();
+    }
 
+    public LinkedList<OriVertex> getVertexTypeFailures() {
+    	return vertexTypeConditionFailures;
+    }
+    public LinkedList<OriFace> getFaceFailures(){
+    	return faceConditionFailures;
+    }
+    public LinkedList<OriVertex> getVertexEdgeCountFailures(){
+    	return vertexEdgeCountConditionFailures;
+    }
+    public LinkedList<EdgePair> getVertexAngleFailures(){
+    	return vertexAngleConditionFailures;
+    }
+    
     public int getVertexType(OriVertex v){
         int[] edgeTypeCount = {0, 0};
         for (OriEdge e: v.edges){
@@ -73,10 +99,10 @@ public class CorrugationChecker {
     public boolean evaluateVertexTypeConditionFull(OrigamiModel origamiModel){
         for (OriVertex v : origamiModel.getVertices()) {
             if (!evaluateSingleVertexTypeCondition(v)){
-                return false;
+                this.vertexTypeConditionFailures.add(v);
             }
         }
-        return true;
+        return this.vertexTypeConditionFailures.isEmpty();
     }
 
     public boolean evaluateSingleVertexEdgeCountCondition(OriVertex v){
@@ -100,10 +126,10 @@ public class CorrugationChecker {
     public boolean evaluateVertexEdgeCountConditionFull(OrigamiModel origamiModel){
         for (OriVertex v: origamiModel.getVertices()){
             if (!evaluateSingleVertexEdgeCountCondition(v)){
-                return false;
+                this.vertexEdgeCountConditionFailures.add(v);
             }
         }
-        return true;
+        return this.vertexEdgeCountConditionFailures.isEmpty();
     }
 
     public double roundOff(double d){
@@ -143,11 +169,15 @@ public class CorrugationChecker {
             double theta = getAngle(e1, e2);
             
             if(theta < rightAngle && e1.type == e2.type){
+            	EdgePair ep = new EdgePair(e1, e2);
+            	this.vertexAngleConditionFailures.add(ep);
                 isOk = false;
             }
 
             if(theta > rightAngle && e1.type != e2.type){
-                isOk = false;
+            	EdgePair ep = new EdgePair(e1, e2);
+            	this.vertexAngleConditionFailures.add(ep);
+            	isOk = false;
             }
 
             // TODO:
@@ -156,7 +186,7 @@ public class CorrugationChecker {
         return isOk;
     }
 
-    public boolean evaluateVertexAngleConditionFull(OrigamiModel origamiModel){
+	public boolean evaluateVertexAngleConditionFull(OrigamiModel origamiModel){
         /*
          * At each vertex, adjacent edges meeting at <90° are different.
          * Edges meeting at >90° are the same.
@@ -202,7 +232,7 @@ public class CorrugationChecker {
         }
 
         if (edgeTypeCount[0] + edgeTypeCount[1] > 1){
-            return edgeTypeCount[0] > 0 && edgeTypeCount[1] > 0;
+            return (edgeTypeCount[0] > 0 && edgeTypeCount[1] > 0);
         }
         
         return true;
@@ -214,13 +244,15 @@ public class CorrugationChecker {
          */
         for (OriFace f: origamiModel.getFaces()){
             if (!evaluateSingleFaceEdgeCondition(f)){
-                return false;
+                this.faceConditionFailures.add(f);
             }
         }
-        return true;
+        return this.faceConditionFailures.isEmpty();
     }
 
+
     public boolean evaluate(OrigamiModel origamiModel){
+
         boolean vertexType = evaluateVertexTypeConditionFull(origamiModel);
         boolean vertexEdgeCount = evaluateVertexEdgeCountConditionFull(origamiModel);
         boolean faceEdge = evaluateFaceEdgeConditionFull(origamiModel);
