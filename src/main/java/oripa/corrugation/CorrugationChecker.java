@@ -170,9 +170,26 @@ public class CorrugationChecker {
         return isOk;
     }
 
-    public boolean facePassesFaceEdgeCondition(OriFace f){
+    public boolean evaluateSingleFaceEdgeCondition(OriFace f){
+        /*
+         * Face condition:
+         *  All faces must have both mountain and valley folds,
+         *  unless the vertices of the face are both edge and internal.
+         *  this is to allow degree 4 with faces on the edge that only
+         *  have mountains/valleys.
+         */
         int[] edgeTypeCount = {0, 0, 0};
+        int[] vertexTypeCount = {0, 0};
         for(OriHalfedge he: f.halfedges){
+            if(getVertexType(he.vertex) == TYPE_EDGE_VERTEX){
+                vertexTypeCount[0]++;
+            }else{
+                vertexTypeCount[1]++;
+            }
+            if (vertexTypeCount[0] > 0 && vertexTypeCount[1] > 0){
+                // Mixed vertex-type face, does not apply.
+                return true;
+            }
             if(he.edge.type == OriLine.TYPE_RIDGE){
                 edgeTypeCount[0]++;
             }
@@ -191,22 +208,6 @@ public class CorrugationChecker {
         return true;
     }
 
-    public boolean evaluateSingleFaceEdgeCondition(OriFace f){
-        if (facePassesFaceEdgeCondition(f)){
-            return true;
-        }else{
-            /* Each face passes the condition or is adjacent to a face that is. */
-            for(OriHalfedge he: f.halfedges){
-                if(he.pair != null){
-                    if(facePassesFaceEdgeCondition(he.pair.face)){
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     public boolean evaluateFaceEdgeConditionFull(OrigamiModel origamiModel){
         /***
          * Each face with more than one crease edge has different crease edges.
@@ -221,11 +222,13 @@ public class CorrugationChecker {
 
     public boolean evaluate(OrigamiModel origamiModel){
         boolean vertexType = evaluateVertexTypeConditionFull(origamiModel);
+        boolean vertexEdgeCount = evaluateVertexEdgeCountConditionFull(origamiModel);
         boolean faceEdge = evaluateFaceEdgeConditionFull(origamiModel);
         boolean vertexAngle = evaluateVertexAngleConditionFull(origamiModel);
         System.out.println("Vertex Type:  " + (vertexType ? "PASSED" : "FAILED"));
+        System.out.println("Vertex Edge Count:  " + (vertexEdgeCount ? "PASSED" : "FAILED"));
         System.out.println("Face Edge:    " + (faceEdge ? "PASSED" : "FAILED"));
         System.out.println("Vertex Angle: " + (vertexAngle ? "PASSED" : "FAILED"));
-        return vertexType && faceEdge && vertexAngle;
+        return vertexEdgeCount && vertexAngle && faceEdge;
     }
 }
