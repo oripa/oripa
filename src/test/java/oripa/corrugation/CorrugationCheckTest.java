@@ -97,9 +97,23 @@ public class CorrugationCheckTest {
 
     @Test
     public void testDegree4() {
-    	checker = new CorrugationChecker();
+        checker = new CorrugationChecker();
         System.out.println("testDegree4");
         assertTrue(checker.evaluate(getModelFromFilename("corrugation/degree-4.opx")));
+    }
+
+    @Test
+    public void test2x2IsoArea() {
+        checker = new CorrugationChecker();
+        System.out.println("test2x2IsoArea");
+        assertTrue(checker.evaluate(getModelFromFilename("corrugation/2x2isoarea.opx")));
+    }
+
+    @Test
+    public void testEquidistantWeave() {
+    	checker = new CorrugationChecker();
+        System.out.println("testEquidistantWeave");
+        assertTrue(checker.evaluate(getModelFromFilename("corrugation/equidistant-weave.opx")));
     }
 
 }
