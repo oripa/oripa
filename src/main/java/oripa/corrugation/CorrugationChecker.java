@@ -124,6 +124,9 @@ public class CorrugationChecker {
     }
 
     public boolean evaluateVertexEdgeCountConditionFull(OrigamiModel origamiModel){
+        /*
+         * Modified Maekawa's theorem: |M-V| = {0,2} to allow radial vertices.
+         */
         for (OriVertex v: origamiModel.getVertices()){
             if (!evaluateSingleVertexEdgeCountCondition(v)){
                 this.vertexEdgeCountConditionFailures.add(v);
