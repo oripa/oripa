@@ -22,7 +22,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
+import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -57,7 +57,7 @@ public class ORIPA {
     ;
 //    public static FoldabilityCheckFrame checkFrame;
 
-	public static String iniFilePath = System.getProperty("user.home") + "\\oripa.ini";
+	public static String iniFilePath = System.getProperty("user.home") + File.separator + "oripa.ini";
 
 	
 	private static final String resourcePackage = "oripa.resource";
