@@ -156,6 +156,7 @@ public class CorrugationChecker {
     public boolean evaluateSingleVertexAngleCondition(OriVertex v){
         boolean isOk = true;
         double rightAngle = roundOff(Math.PI/2);
+        double EPS = 1e-6;
         for (int i = 0; i < v.edges.size(); i++) {
             int ePrevIdx = i-1;
             if (ePrevIdx < 0){
@@ -171,13 +172,13 @@ public class CorrugationChecker {
 
             double theta = getAngle(e1, e2);
             
-            if(theta < rightAngle && e1.type == e2.type){
+            if(theta < rightAngle - EPS && e1.type == e2.type){
             	EdgePair ep = new EdgePair(e1, e2);
             	this.vertexAngleConditionFailures.add(ep);
                 isOk = false;
             }
 
-            if(theta > rightAngle && e1.type != e2.type){
+            if(theta > rightAngle + EPS && e1.type != e2.type){
             	EdgePair ep = new EdgePair(e1, e2);
             	this.vertexAngleConditionFailures.add(ep);
             	isOk = false;
