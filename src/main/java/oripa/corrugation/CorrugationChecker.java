@@ -166,7 +166,7 @@ public class CorrugationChecker {
             OriEdge eNext = v.edges.get((i + 2) % v.edges.size());
             OriEdge ePrev = v.edges.get(ePrevIdx);
             if (e1.type == OriLine.TYPE_CUT || e2.type == OriLine.TYPE_CUT) {
-                break;
+                continue;
             }
 
             double theta = getAngle(e1, e2);
