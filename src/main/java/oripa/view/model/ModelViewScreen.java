@@ -67,6 +67,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	private double rotateAngle;
 	private AffineTransform affineTransform = new AffineTransform();
 	public boolean dispSlideFace = false;
+	private boolean snapCrossLine = false;
 	private OriLine crossLine = null;
 	private int crossLineAngleDegree = 90;
 	private double crossLinePosition = 0;
@@ -174,7 +175,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		super.paintComponent(g);
 
 		Doc document = ORIPA.doc;
-		OrigamiModel orirgamiModel = document.getOrigamiModel();
+		OrigamiModel origamiModel = document.getOrigamiModel();
 		
 		if (bufferImage == null) {
 			bufferImage = createImage(getWidth(), getHeight());
@@ -195,7 +196,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		Graphics2D g2d = bufferg;
 
 		
-		boolean hasModel = orirgamiModel.hasModel();
+		boolean hasModel = origamiModel.hasModel();
 
 		if (hasModel) {
 			g2d.setStroke(LineSetting.STROKE_CUT);
@@ -237,11 +238,19 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		crossLine.p0.add(moveVec);
 		crossLine.p1.add(moveVec);
 
-		ORIPA.doc.setCrossLine(crossLine);
+		ORIPA.doc.setCrossLine(crossLine, snapCrossLine);
 		repaint();
 		ORIPA.mainFrame.repaint();
 	}
 
+	public void setSnapCrossLine(boolean a) {
+		snapCrossLine = a;
+	}
+	
+	public boolean getSnapCrossLine() {
+		return snapCrossLine;
+	}
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		preMousePoint = e.getPoint();

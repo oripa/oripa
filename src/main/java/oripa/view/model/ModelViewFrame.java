@@ -68,6 +68,8 @@ implements ActionListener, AdjustmentListener, Observer{
     private JMenuItem menuItemExportOBJ = new JMenuItem("Export to OBJ file");
     private JMenuItem menuItemFlip = new JMenuItem(ORIPA.res.getString("MENU_Invert"));
     private JCheckBoxMenuItem menuItemCrossLine = new JCheckBoxMenuItem("Show Cross-Line", false);
+    private JMenuItem menuItemAddCrossLineToPattern = new JMenuItem("Add Cross-Line to Pattern");
+    private JCheckBoxMenuItem menuItemSnapCrossLine = new JCheckBoxMenuItem("Snap Cross-Line to Existing");
     public JCheckBoxMenuItem menuItemSlideFaces = new JCheckBoxMenuItem(ORIPA.res.getString("MENU_SlideFaces"), false);
     public JLabel hintLabel = new JLabel(ORIPA.res.getString("Direction_Basic"));
     private JMenu dispSubMenu = new JMenu(ORIPA.res.getString("MENU_DispType"));
@@ -100,6 +102,8 @@ implements ActionListener, AdjustmentListener, Observer{
 
         menuDisp.add(dispSubMenu);
         menuDisp.add(menuItemCrossLine);
+        menuDisp.add(menuItemSnapCrossLine);
+        menuDisp.add(menuItemAddCrossLineToPattern);
         ButtonGroup dispGroup = new ButtonGroup();
         dispGroup.add(menuItemFillAlpha);
         dispSubMenu.add(menuItemFillAlpha);
@@ -116,6 +120,9 @@ implements ActionListener, AdjustmentListener, Observer{
         menuItemExportOBJ.addActionListener(this);
 
         menuItemCrossLine.addActionListener(this);
+        menuItemSnapCrossLine.addActionListener(this);
+        menuItemSnapCrossLine.setEnabled(menuItemCrossLine.isSelected());
+        menuItemAddCrossLineToPattern.addActionListener(this);
         menuBar.add(menuFile);
         menuBar.add(menuDisp);
 
@@ -142,12 +149,23 @@ implements ActionListener, AdjustmentListener, Observer{
             screen.repaint();
         } else if (e.getSource() == menuItemCrossLine) {
             PaintConfig.bDispCrossLine = menuItemCrossLine.isSelected();
-            if (menuItemCrossLine.isSelected()) {
-                screen.recalcCrossLine();
+            menuItemSnapCrossLine.setEnabled(menuItemCrossLine.isSelected());
+            if (menuItemCrossLine.isSelected()) {            	
+            	screen.recalcCrossLine();
             } else {
                 screen.repaint();
                 ORIPA.mainFrame.repaint();
             }
+        } else if (e.getSource() == menuItemSnapCrossLine) {
+        	screen.setSnapCrossLine(menuItemSnapCrossLine.isSelected());
+        	if (menuItemSnapCrossLine.isSelected()) {
+        		screen.recalcCrossLine();
+        	}
+        } else if (e.getSource() == menuItemAddCrossLineToPattern) {
+        	//TODO: actually add cross line to pattern
+        	document.addCrossLineToPattern();
+        	screen.repaint(); // TODO: check if necessary?
+        	ORIPA.mainFrame.repaint(); // TODO: check if necessary?
         } else if (e.getSource() == menuItemExportDXF) {
             exportFile("dxf");
         } else if (e.getSource() == menuItemExportOBJ) {

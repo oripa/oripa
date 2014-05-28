@@ -269,8 +269,8 @@ ActionListener, ComponentListener, Observer{
 
 		Doc document = ORIPA.doc;
 		CreasePattern creasePattern = document.getCreasePattern();
-		OrigamiModel origamiModel = document.getOrigamiModel();
-		FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
+		// OrigamiModel origamiModel = document.getOrigamiModel();
+		// FoldedModelInfo foldedModelInfo = document.getFoldedModelInfo();
 		
 //		boolean hasModel = origamiModel.hasModel();
 //		if (hasModel) {

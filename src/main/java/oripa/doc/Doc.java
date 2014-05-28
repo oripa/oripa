@@ -34,6 +34,7 @@ import oripa.geom.GeomUtil;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.creasepattern.tool.LineAdder;
+import oripa.paint.creasepattern.tool.LinePaster;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
@@ -300,8 +301,8 @@ public class Doc {
 
 
 	public void addLine(OriLine inputLine) {
+		pushUndoInfo();
 		LineAdder lineAdder = new LineAdder();
-		
 		lineAdder.addLine(inputLine, creasePattern);		
 	}
 
@@ -311,14 +312,14 @@ public class Doc {
 
 
 
-	public void setCrossLine(OriLine line) {
+	public void setCrossLine(OriLine line, boolean snapCrossLine) {
 		crossLines.clear();
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
 			ArrayList<Vector2d> vv = new ArrayList<Vector2d>();
-			int crossCount = 0;
+			//int crossCount = 0;
 			for (OriHalfedge he : face.halfedges) {
 				OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
 						he.next.positionForDisplay.x, he.next.positionForDisplay.y, PaintConfig.inputLineType);
@@ -327,7 +328,7 @@ public class Doc {
 				boolean res = GeomUtil.getCrossPointParam(line.p0, line.p1, l.p0, l.p1, params);
 				if (res == true && params[0] > -0.001 && params[1] > -0.001 && params[0] < 1.001 && params[1] < 1.001) {
 					double param = params[1];
-					crossCount++;
+					//crossCount++;
 
 					Vector2d crossV = new Vector2d();
 					crossV.x = (1.0 - param) * he.vertex.preP.x + param * he.next.vertex.preP.x;
@@ -354,6 +355,10 @@ public class Doc {
 	}
 
 
+	public void addCrossLineToPattern() {
+				LinePaster paster = new LinePaster();
+				paster.paste(crossLines, creasePattern);
+	}
 
 		
 	public Collection<Vector2d> getVerticesAround(Vector2d v){
