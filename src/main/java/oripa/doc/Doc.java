@@ -307,12 +307,8 @@ public class Doc {
 	}
 
 
-	
-	
 
-
-
-	public void setCrossLine(OriLine line, boolean snapCrossLine) {
+	public void setCrossLine(OriLine line) {
 		crossLines.clear();
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();

@@ -38,6 +38,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
@@ -69,8 +70,11 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	public boolean dispSlideFace = false;
 	private boolean snapCrossLine = false;
 	private OriLine crossLine = null;
-	private int crossLineAngleDegree = 90;
+	private double crossLineAngleDegree = 90;
 	private double crossLinePosition = 0;
+	private TreeSet<Double> lineAngles = null;
+	public final static double EPS = 1.0e-6; // TODO: fix
+	public final static double ANGLESNAPEPS = 0.087; // about 5 degrees
 
 	public ModelViewScreen() {
 		addMouseListener(this);
@@ -85,7 +89,43 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 
 		preSize = getSize();
 	}
-
+	
+	double getDiffFromNearestAngle(double angle) {
+		double nearestBelow = lineAngles.first();
+		if (nearestBelow < angle) {
+			nearestBelow = lineAngles.floor(angle);
+		}
+		else {
+			nearestBelow = -Math.PI;
+		}
+		double nearestAbove = lineAngles.last();
+		if (nearestAbove > angle) {
+			nearestAbove = lineAngles.ceiling(angle);
+		}
+		else {
+			nearestAbove = Math.PI;
+		}
+		return Math.min(nearestAbove - angle, angle - nearestBelow);	
+	}
+	
+	public void findLineAngles(List<OriFace> faces) {
+		lineAngles = new TreeSet<Double>();
+		for (OriFace face: faces) {
+			for (OriHalfedge he: face.halfedges) {
+				double angle = Math.atan2(he.next.positionForDisplay.y - he.positionForDisplay.y,
+						he.next.positionForDisplay.x - he.positionForDisplay.x);
+				if (angle < 0) {
+					angle += Math.PI;
+				}
+				if (lineAngles.isEmpty() || getDiffFromNearestAngle(angle) > EPS) {
+						lineAngles.add(angle);
+						System.out.print("Angle added: ");
+						System.out.println(angle);
+				}
+			}
+		}
+	}
+	
 	public void resetViewMatrix() {
 		Doc document = ORIPA.doc;
 		OrigamiModel origamiModel = document.getOrigamiModel();
@@ -100,6 +140,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 			// Align the center of the model, combined scale
 			Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 			Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
+			findLineAngles(faces);
 			for (OriFace face : faces) {
 				for (OriHalfedge he : face.halfedges) {
 					maxV.x = Math.max(maxV.x, he.vertex.p.x);
@@ -217,8 +258,40 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		}
 	}
 
-	public void setCrossLineAngle(int angleDegree) {
+	public void setCrossLineAngle(double angleDegree) {
+		double angle = Math.PI * angleDegree / 180.0;
 		crossLineAngleDegree = angleDegree;
+		if (snapCrossLine) {
+			double nearestBelow = lineAngles.first();
+			if (nearestBelow < angle) {
+				nearestBelow = lineAngles.floor(angle);
+			}
+			else {
+				nearestBelow = -Math.PI;
+			}
+			double nearestAbove = lineAngles.last();
+			if (nearestAbove > angle) {
+				nearestAbove = lineAngles.ceiling(angle);
+			}
+			else {
+				nearestAbove = 1.5 * Math.PI;
+			}
+			double nearest;
+			if (angle - nearestBelow < nearestAbove - angle) {
+				nearest = nearestBelow;
+			}
+			else {
+				nearest = nearestAbove;
+			}
+			System.out.print("Angle: ");
+			System.out.print(angle);
+			System.out.print(" Nearest: ");
+			System.out.println(nearest);
+			if (Math.abs(angle - nearest) < ANGLESNAPEPS) {
+				angle = nearest;
+				crossLineAngleDegree = 180.0 * angle / Math.PI;
+			}
+		}
 		recalcCrossLine();
 	}
 
@@ -228,8 +301,8 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	}
 
 	public void recalcCrossLine() {
-		Vector2d dir = new Vector2d(Math.cos(Math.PI * crossLineAngleDegree / 180.0), 
-				Math.sin(Math.PI * crossLineAngleDegree / 180.0));
+		double angle = Math.PI * crossLineAngleDegree / 180.0;
+		Vector2d dir = new Vector2d(Math.cos(angle), Math.sin(angle));
 		crossLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);
 		crossLine.p1.set(modelCenter.x + dir.x * 300, modelCenter.y + dir.y * 300);
 		Vector2d moveVec = new Vector2d(-dir.y, dir.x);
@@ -238,7 +311,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		crossLine.p0.add(moveVec);
 		crossLine.p1.add(moveVec);
 
-		ORIPA.doc.setCrossLine(crossLine, snapCrossLine);
+		ORIPA.doc.setCrossLine(crossLine);
 		repaint();
 		ORIPA.mainFrame.repaint();
 	}

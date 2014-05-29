@@ -128,6 +128,7 @@ implements ActionListener, AdjustmentListener, Observer{
 
         setJMenuBar(menuBar);
 
+        scrollBarAngle.setUnitIncrement(1);
         scrollBarAngle.addAdjustmentListener(this);
         scrollBarPosition.addAdjustmentListener(this);
 
