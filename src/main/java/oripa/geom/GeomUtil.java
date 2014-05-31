@@ -401,7 +401,7 @@ public class GeomUtil {
     }
 
 
-    private static Vector2d getNearestPointToLine(Vector2d p, Vector2d sp, Vector2d ep) {
+    public static Vector2d getNearestPointToLine(Vector2d p, Vector2d sp, Vector2d ep) {
         double x0 = sp.x;
         double y0 = sp.y;
         double x1 = ep.x;

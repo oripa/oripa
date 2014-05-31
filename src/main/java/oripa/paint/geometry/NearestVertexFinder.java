@@ -68,7 +68,7 @@ public class NearestVertexFinder {
 	 * @param vertices
 	 * @return nearest point
 	 */
-	private static NearestPoint findNearestVertex(Point2D.Double p, Collection<Vector2d> vertices){
+	public static NearestPoint findNearestVertex(Point2D.Double p, Collection<Vector2d> vertices){
 
 		NearestPoint minPosition = new NearestPoint();
 

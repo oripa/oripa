@@ -21,6 +21,7 @@ package oripa.view.model;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.geom.Point2D;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -39,6 +40,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
@@ -48,10 +50,15 @@ import oripa.doc.Doc;
 import oripa.fold.OriFace;
 import oripa.fold.OriHalfedge;
 import oripa.fold.OrigamiModel;
+import oripa.geom.GeomUtil;
+import oripa.geom.Line;
 import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintConfig;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
+import oripa.value.OriPoint;
+import oripa.paint.geometry.NearestPoint;
+import oripa.paint.geometry.NearestVertexFinder;
 
 public class ModelViewScreen extends JPanel
 implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener, ComponentListener {
@@ -73,8 +80,10 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	private double crossLineAngleDegree = 90;
 	private double crossLinePosition = 0;
 	private TreeSet<Double> lineAngles = null;
+	private ArrayList<Vector2d> vertices = null;
 	public final static double EPS = 1.0e-6; // TODO: fix
 	public final static double ANGLESNAPEPS = 0.087; // about 5 degrees
+	public final static double POSITIONSNAPEPS = 10; // TODO: fix!!!
 
 	public ModelViewScreen() {
 		addMouseListener(this);
@@ -119,8 +128,25 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 				}
 				if (lineAngles.isEmpty() || getDiffFromNearestAngle(angle) > EPS) {
 						lineAngles.add(angle);
-						System.out.print("Angle added: ");
-						System.out.println(angle);
+						// System.out.print("Angle added: ");
+						// System.out.println(angle);
+				}
+			}
+		}
+	}
+	
+	public void findVertices(List<OriFace> faces) {
+		vertices = new ArrayList<Vector2d>();
+		for (OriFace face: faces) {
+			for (OriHalfedge he: face.halfedges) {
+				Point2D.Double vertex = new Point2D.Double(he.positionForDisplay.x, he.positionForDisplay.y);
+				NearestPoint np = new NearestPoint(NearestVertexFinder.findNearestVertex(vertex, vertices));
+				if (vertices.isEmpty() || np.distance > EPS) {
+						Vector2d tmp = new Vector2d(vertex.x, vertex.y);
+						vertices.add(tmp);
+						System.out.print("Vertex added: ");
+						System.out.println(vertex.x);
+						System.out.println(vertex.y);
 				}
 			}
 		}
@@ -141,6 +167,7 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 			Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 			Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 			findLineAngles(faces);
+			findVertices(faces);
 			for (OriFace face : faces) {
 				for (OriHalfedge he : face.halfedges) {
 					maxV.x = Math.max(maxV.x, he.vertex.p.x);
@@ -283,23 +310,19 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 			else {
 				nearest = nearestAbove;
 			}
-			System.out.print("Angle: ");
-			System.out.print(angle);
-			System.out.print(" Nearest: ");
-			System.out.println(nearest);
+			// System.out.print("Angle: ");
+			// System.out.print(angle);
+			// System.out.print(" Nearest: ");
+			// System.out.println(nearest);
 			if (Math.abs(angle - nearest) < ANGLESNAPEPS) {
 				angle = nearest;
 				crossLineAngleDegree = 180.0 * angle / Math.PI;
 			}
 		}
-		recalcCrossLine();
+		updateCrossLine();
 	}
 
-	public void setCrossLinePosition(int positionValue) {
-		crossLinePosition = positionValue;
-		recalcCrossLine();
-	}
-
+	
 	public void recalcCrossLine() {
 		double angle = Math.PI * crossLineAngleDegree / 180.0;
 		Vector2d dir = new Vector2d(Math.cos(angle), Math.sin(angle));
@@ -309,8 +332,44 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 		moveVec.normalize();
 		moveVec.scale(crossLinePosition);
 		crossLine.p0.add(moveVec);
-		crossLine.p1.add(moveVec);
+		crossLine.p1.add(moveVec);		
+	}
+	
+	public void setCrossLinePosition(double positionValue) {
+		crossLinePosition = positionValue;
+		recalcCrossLine();
+		Line line = crossLine.getLine();
+		if (snapCrossLine) {
+			NearestPoint np = new NearestPoint();
+			for (Vector2d p: vertices) {
+				Double dist = GeomUtil.DistancePointToLine(p, line);
+				if (dist < np.distance) {
+					np.point = p;
+					np.distance = dist;
+				}
+			}
+			if (np.distance < POSITIONSNAPEPS) {
+				Vector2d p2 = new Vector2d(line.p.x + line.dir.x, line.p.y + line.dir.y);
+				Vector2d projection = GeomUtil.getNearestPointToLine(np.point, line.p, p2);
+				//System.out.print("proj: ");
+				//System.out.print(projection.x);
+				//System.out.print(projection.y);
+				//System.out.print(" p: ");
+				//System.out.print(projection.x);
+				//System.out.print(projection.y);
+				System.out.print("crossLinePos: ");
+				System.out.println(crossLinePosition);
+				double product = (np.point.x - projection.x) * (0 - projection.x) + 
+						(np.point.y - projection.y) * (0 - projection.y);
+				crossLinePosition = crossLinePosition -
+						np.distance * Math.signum(crossLinePosition) * Math.signum(product);
+			}
+		}
+		updateCrossLine();
+	}
 
+	public void updateCrossLine() {
+		recalcCrossLine();
 		ORIPA.doc.setCrossLine(crossLine);
 		repaint();
 		ORIPA.mainFrame.repaint();

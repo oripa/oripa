@@ -152,7 +152,7 @@ implements ActionListener, AdjustmentListener, Observer{
             PaintConfig.bDispCrossLine = menuItemCrossLine.isSelected();
             menuItemSnapCrossLine.setEnabled(menuItemCrossLine.isSelected());
             if (menuItemCrossLine.isSelected()) {            	
-            	screen.recalcCrossLine();
+            	screen.updateCrossLine();
             } else {
                 screen.repaint();
                 ORIPA.mainFrame.repaint();
@@ -160,7 +160,7 @@ implements ActionListener, AdjustmentListener, Observer{
         } else if (e.getSource() == menuItemSnapCrossLine) {
         	screen.setSnapCrossLine(menuItemSnapCrossLine.isSelected());
         	if (menuItemSnapCrossLine.isSelected()) {
-        		screen.recalcCrossLine();
+        		screen.updateCrossLine();
         	}
         } else if (e.getSource() == menuItemAddCrossLineToPattern) {
         	//TODO: actually add cross line to pattern
