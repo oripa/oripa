@@ -32,11 +32,16 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.vecmath.Vector2d;
+
+import org.jgrapht.alg.ChromaticNumber;
+import org.jgrapht.graph.*;
 
 import oripa.Config;
 import oripa.fold.OriEdge;
@@ -93,15 +98,27 @@ public class CorrugationScreen extends JPanel
 
     public void showModel(
     		OrigamiModel origamiModel, 
-    		Collection<OriLine> creasePattern,  //, FoldedModelInfo foldedModelInfo
-    		CorrugationChecker corrugationChecker
-    		) {
+    		Collection<OriLine> creasePattern,
+    		CorrugationChecker corrugationChecker) {
     	this.origamiModel = origamiModel;
     	this.creasePattern = creasePattern;
-    	this.corrugationChecker = corrugationChecker;
-//    	this.foldedModelInfo = foldedModelInfo;
-    	
+    	this.corrugationChecker = corrugationChecker;    	
     	this.setVisible(true);
+    }
+
+    private void drawArrow(Graphics2D g, double x1, double y1, double x2, double y2) {
+        Graphics2D g2d = (Graphics2D) g.create();
+        double dx = x2 - x1, dy = y2 - y1;
+        double angle = Math.atan2(dy, dx);
+        double len = Math.sqrt(dx*dx + dy*dy);
+        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g2d.transform(at);
+
+        // Draw horizontal arrow starting in (0, 0)
+        g2d.draw(new Line2D.Double(0, 0, len, 0));
+        g2d.fillPolygon(new int[] {(int)len, (int)len-3, (int)len-3, (int)len},
+                      new int[] {0, -3, 3, 0}, 4);
     }
 
  
@@ -114,8 +131,15 @@ public class CorrugationScreen extends JPanel
     	List<OriFace> faces = origamiModel.getFaces();
         List<OriVertex> vertices = origamiModel.getVertices();
 
-        for (OriFace face : faces) {
+        DefaultDirectedGraph<OriFace, DefaultEdge> graph = corrugationChecker.getFaceGraph(origamiModel);
+        Map<Integer, Set<OriFace>> graphColoring = corrugationChecker.getColoring(new AsUndirectedGraph(graph));
+
+        for (OriFace face: graphColoring.get(0)) {
             g2d.setColor(new Color(255, 210, 210));
+            g2d.fill(face.preOutline);
+        }
+        for (OriFace face: graphColoring.get(1)) {
+            g2d.setColor(new Color(255, 210, 0));
             g2d.fill(face.preOutline);
         }
 
@@ -124,10 +148,21 @@ public class CorrugationScreen extends JPanel
         for (OriFace face: corrugationChecker.getFaceFailures()) {
         	g2d.fill(face.preOutline);	
         }
+
         
         for (OriVertex v : corrugationChecker.getVertexTypeFailures()) {
-        	g2d.fill(new Rectangle2D.Double(v.preP.x - 8.0 / scale, 	
-        			v.preP.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
+            g2d.fill(new Rectangle2D.Double(v.preP.x - 8.0 / scale,     
+                    v.preP.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
+        }
+
+        g2d.setStroke(LineSetting.STROKE_VALLEY);
+        g2d.setColor(Color.BLACK);
+        for (DefaultEdge e: graph.edgeSet()){
+            OriFace s = graph.getEdgeSource(e);
+            OriFace t = graph.getEdgeTarget(e);
+            Vector2d sv = s.getCenter();
+            Vector2d tv = t.getCenter();
+            drawArrow(g2d, sv.x, sv.y, tv.x, tv.y);
         }
 
         for (OriVertex v: corrugationChecker.getVertexEdgeCountFailures()) {

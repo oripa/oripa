@@ -2,7 +2,16 @@ package oripa.corrugation;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import javax.vecmath.Vector2d;
+
+import org.jgrapht.alg.*;
+import org.jgrapht.*;
+import org.jgrapht.graph.*;
+import org.jgrapht.traverse.*;
 
 import oripa.fold.OrigamiModel;
 import oripa.fold.OriEdge;
@@ -242,16 +251,105 @@ public class CorrugationChecker {
         return true;
     }
 
-    public boolean evaluateFaceEdgeConditionFull(OrigamiModel origamiModel){
-        /***
-         * Each face with more than one crease edge has different crease edges.
-         */
-        for (OriFace f: origamiModel.getFaces()){
-            if (!evaluateSingleFaceEdgeCondition(f)){
-                this.faceConditionFailures.add(f);
+    public <V, E> Map<Integer, Set<V>> getColoring(Graph<V, E> graph){
+        NeighborIndex<V, E> neighborindex = new NeighborIndex<V, E>(graph);
+        Set<V> front = new HashSet<V>();
+        Set<V> back = new HashSet<V>();
+        GraphIterator<V, E> iterator = new DepthFirstIterator<V, E>(graph);
+        while (iterator.hasNext()){
+            V f = iterator.next();
+            Set<V> neighbors = neighborindex.neighborsOf(f);
+            if (front.contains(f)){
+                back.addAll(neighbors);
+            }else if(back.contains(f)){
+                front.addAll(neighbors);
+            }else{
+                boolean added = false;
+                for (V n: neighbors){
+                    if (front.contains(n)){
+                        added = true;
+                        front.addAll(neighbors);
+                        back.add(f);
+                        break;
+                    }else if(back.contains(n)){
+                        added = true;
+                        back.addAll(neighbors);
+                        front.add(f);
+                        break;
+                    }
+                }
+                if (!added){
+                    System.out.println("Adding initial face");
+                    front.add(f);
+                    back.addAll(neighbors);
+                }
             }
         }
-        return this.faceConditionFailures.isEmpty();
+        Map<Integer, Set<V>> coloring = new HashMap<Integer, Set<V>>();
+        coloring.put(0, front);
+        coloring.put(1, back);
+        return coloring;
+        // return ChromaticNumber.findGreedyColoredGroups(undirectedFaceGraph);
+    }
+
+    public DefaultDirectedGraph<OriFace, DefaultEdge> getFaceGraph(OrigamiModel origamiModel){
+        SimpleGraph<OriFace, DefaultEdge> undirectedFaceGraph = new SimpleGraph<OriFace, DefaultEdge>(DefaultEdge.class);
+        DefaultDirectedGraph<OriFace, DefaultEdge> faceGraph = new DefaultDirectedGraph<OriFace, DefaultEdge>(DefaultEdge.class);
+        for (OriFace f: origamiModel.getFaces()){
+            undirectedFaceGraph.addVertex(f);
+            faceGraph.addVertex(f);
+        }
+
+        for (OriFace f: origamiModel.getFaces()){
+            for (OriFace n: f.getFaceNeighbors()){
+                undirectedFaceGraph.addEdge(f, n);
+            }
+        }
+
+        Map<Integer, Set<OriFace>> graphColoring = getColoring(undirectedFaceGraph);
+        if (graphColoring.size() > 2){
+            for(int i = 2; i < graphColoring.size(); i++){
+                faceConditionFailures.addAll(graphColoring.get(i));
+            }
+        }
+        Set<OriFace> frontFaces = graphColoring.get(0);
+        Set<OriFace> backFaces = graphColoring.get(1);
+
+        for (DefaultEdge e: undirectedFaceGraph.edgeSet()){
+            OriFace source = undirectedFaceGraph.getEdgeSource(e);
+            OriFace target = undirectedFaceGraph.getEdgeTarget(e);
+            if (
+                    (frontFaces.contains(source) && source.getNeighborEdgeType(target) == OriLine.TYPE_VALLEY) ||
+                    (backFaces.contains(source) && source.getNeighborEdgeType(target) == OriLine.TYPE_RIDGE)){
+                faceGraph.addEdge(source, target);
+            }else if (
+                    (frontFaces.contains(target) && target.getNeighborEdgeType(source) == OriLine.TYPE_VALLEY) ||
+                    (backFaces.contains(target) && target.getNeighborEdgeType(source) == OriLine.TYPE_RIDGE)){
+                faceGraph.addEdge(target, source);
+            }else{
+                System.out.println("Invalid edge" + e);
+            }
+        }
+        return faceGraph;
+    }
+
+    public boolean evaluateFaceEdgeConditionFull(OrigamiModel origamiModel){
+        /***
+         * Each face with more than one crease edge has different crease edges. In graph
+         * theory terms, the directed graph of faces has no internal sources or sinks.
+         */
+
+        DefaultDirectedGraph<OriFace, DefaultEdge> faceGraph = getFaceGraph(origamiModel);
+
+        for (OriFace f: origamiModel.getFaces()){
+            if (
+                f.isInternalFace() && (
+                    faceGraph.incomingEdgesOf(f).size() == 0 ||
+                    faceGraph.outgoingEdgesOf(f).size() == 0)){
+                faceConditionFailures.add(f);
+            }
+        }
+        return faceConditionFailures.isEmpty();
     }
 
 

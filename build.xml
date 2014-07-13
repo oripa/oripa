@@ -1,70 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build_and_run" name="oripa">
-	<property name="jar.version"   value="0.36"/>
-    <property name="java.dir"      value="src/main/java"/>
-	<property name="test.dir"      value="src/test/java"/>
+    <property name="jar.version" value="0.36"/>
+    <property name="java.dir" value="src/main/java"/>
+    <property name="test.dir" value="src/test/java"/>
     <property name="resources.dir" value="src/main/resources"/>
-	<property name="test.resources.dir" value="src/test/resources"/>
+    <property name="test.resources.dir" value="src/test/resources"/>
     <property name="build.dir" value="bin/classes"/>
     <property name="bin" value="bin"/>
     <property name="src" value="src"/>
 
     <target name="clean">
-      <delete dir="bin" />
+        <delete dir="bin"/>
     </target>
 
     <target name="compile">
-      <mkdir dir="${build.dir}"/>
-      <javac destdir="${build.dir}" debug="true" failonerror="true">
-        <classpath>
-	  <pathelement location="/usr/share/java/junit4.jar"/>
-        </classpath>
-        <src path="${java.dir}"/>
-	<src path="${test.dir}"/>
-	<!--<classpath refid="master-classpath"/>-->
-      </javac>
+        <mkdir dir="${build.dir}"/>
+        <javac debug="true" destdir="${build.dir}" failonerror="true">
+            <classpath>
+                <pathelement location="/usr/share/java/junit4.jar"/>
+                <pathelement location="/usr/share/java/jgrapht-0.9.0/lib/jgrapht-core-0.9.0.jar"/>
+            </classpath>
+            <src path="${java.dir}"/>
+            <src path="${test.dir}"/>
+        </javac>
     </target>
 
-    <target name="jar" depends="compile">
-      <jar jarfile="bin/oripa-${jar.version}.jar">
-	<fileset dir="${build.dir}" />
-	<fileset dir="${resources.dir}"/>
-	<manifest>
-	  <attribute name="Main-Class" value="oripa.ORIPA"/>
-	</manifest>
-      </jar>
+    <target depends="compile" name="jar">
+        <jar jarfile="bin/oripa-${jar.version}.jar">
+            <fileset dir="${build.dir}"/>
+            <fileset dir="${resources.dir}"/>
+            <manifest>
+                <attribute name="Main-Class" value="oripa.ORIPA"/>
+                <attribute name="Class-Path" value="/usr/share/java/jgrapht-0.9.0/lib/jgrapht-core-0.9.0.jar"/>
+            </manifest>
+        </jar>
     </target>
-    
+
     <target name="ORIPA">
-      <java
-	  dir="${build.dir}"
-	  jar="bin/oripa-${jar.version}.jar"
-	  fork="true"
-	  failonerror="true"
-	  maxmemory="1024m">
-	<classpath>
-	  <pathelement location="bin/test.jar"/>
-	  <pathelement path="${java.class.path}"/>
-	</classpath>
-      </java>
+        <java
+            dir="${build.dir}"
+            failonerror="true"
+            fork="true"
+            jar="bin/oripa-${jar.version}.jar"
+            maxmemory="1024m">
+        </java>
     </target>
-    
-    <target name="junit" depends="jar">
-      <junit printsummary="yes">
-	<classpath>
-	  <pathelement location="/usr/share/java/junit.jar"/>
-	  <pathelement location="bin/oripa-${jar.version}.jar"/>
-	  <pathelement location="${test.resources.dir}"/>
-	</classpath>
-	<formatter type="plain" usefile="false" /> <!-- to screen -->
-	
-	<batchtest fork="yes">
-	  <fileset dir="${test.dir}">
-	    <include name="**/*Test.java"/>
-	  </fileset>
-	</batchtest>
-      </junit>
+
+    <target depends="jar" name="junit">
+        <junit printsummary="yes">
+            <classpath>
+                <pathelement location="/usr/share/java/junit.jar"/>
+                <pathelement location="bin/oripa-${jar.version}.jar"/>
+                <pathelement location="${test.resources.dir}"/>
+            </classpath>
+            <formatter type="plain" usefile="false"/>
+            <!-- to screen -->
+            <batchtest fork="yes">
+                <fileset dir="${test.dir}">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
     </target>
-    
-    <target name="build_and_run" depends="clean,jar,ORIPA" />
+
+    <target depends="clean,compile,jar,ORIPA" name="build_and_run"/>
 </project>

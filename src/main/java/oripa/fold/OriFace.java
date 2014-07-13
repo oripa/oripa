@@ -21,6 +21,7 @@ package oripa.fold;
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
@@ -55,6 +56,37 @@ public class OriFace {
 		int b = (int) (Math.random() * 255);
 		color = new Color(r, g, b);
 	}
+
+    public ArrayList<OriFace> getFaceNeighbors() {
+        ArrayList<OriFace> neighbors = new ArrayList<>();
+        for (OriHalfedge he: halfedges){
+            if (he.pair != null && he.pair.face != null){
+                neighbors.add(he.pair.face);
+            }
+        }
+        HashSet hsNeighbors = new HashSet(neighbors);
+        neighbors.clear();
+        neighbors.addAll(hsNeighbors);
+        return neighbors;
+    }
+
+    public int getNeighborEdgeType(OriFace face){
+    	for (OriHalfedge he: halfedges){
+    		if (he.pair != null && he.pair.face == face){
+    			return he.edge.type;
+    		}
+    	}
+    	return OriLine.TYPE_NONE;
+    }
+
+    public boolean isInternalFace(){
+    	for (OriHalfedge he: halfedges){
+    		if (he.edge.type == OriLine.TYPE_CUT){
+    			return false;
+    		}
+    	}
+    	return true;
+    }
 
 	public void trianglateAndSetColor(boolean bUseColor, boolean bFlip) {
 		triangles.clear();

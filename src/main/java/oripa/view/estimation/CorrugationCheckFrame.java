@@ -48,15 +48,10 @@ public class CorrugationCheckFrame extends JFrame implements ActionListener {
         // TODO Auto-generated method stub
     }
 
-    public void setModel(
-    		OrigamiModel origamiModel, 
-    		Collection<OriLine> creasePattern,  //, FoldedModelInfo foldedModelInfo
-    		CorrugationChecker corrugationChecker
-    		) {
-    	screen.showModel(
-    			origamiModel, creasePattern, corrugationChecker //, foldedModelInfo
-    			);
-    	//sthis.setVisible(true);
+    public void setModel(OrigamiModel origamiModel, 
+    		Collection<OriLine> creasePattern,
+    		CorrugationChecker corrugationChecker) {
+    	screen.showModel(origamiModel, creasePattern, corrugationChecker);
     }
 
 }

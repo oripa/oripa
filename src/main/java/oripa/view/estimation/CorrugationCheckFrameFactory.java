@@ -14,15 +14,13 @@ public class CorrugationCheckFrameFactory {
 	public JFrame createFrame(
 			OrigamiModel origamiModel, 
     		Collection<OriLine> creasePattern,
-    		CorrugationChecker corrugationChecker//, FoldedModelInfo foldedModelInfo
-    		) {
+    		CorrugationChecker corrugationChecker) {
 
 		if (frame == null) {
 			frame = new CorrugationCheckFrame();
 		}
 
-		frame.setModel(origamiModel, creasePattern, corrugationChecker //, foldedModelInfo
-				);
+		frame.setModel(origamiModel, creasePattern, corrugationChecker);
 		return frame;
 	}
 }
