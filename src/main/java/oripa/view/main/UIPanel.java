@@ -676,41 +676,10 @@ implements ActionListener, PropertyChangeListener, Observer {
 				OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 				origamiModel = modelFactory.createOrigamiModel3(creasePattern, document.getPaperSize(), true);
 
-				String corrugationResult = "";
-				// boolean isCorrugation = corrugationChecker.evaluate(origamiModel);
-				// if(isCorrugation){
-				// 	corrugationResult = ORIPA.res.getString(StringID.Corrugation.IS_CORRUGATION);
-				// }else{
-				// 	corrugationResult = ORIPA.res.getString(StringID.Corrugation.IS_NOT_CORRUGATION);
-				// }
-				if(corrugationChecker.evaluateVertexTypeConditionFull(origamiModel)){
-					corrugationResult += "Passes vertex type condition";
-				}else{
-					corrugationResult += "Fails vertex type condition";
-				}
-				if(corrugationChecker.evaluateFaceEdgeConditionFull(origamiModel)){
-					corrugationResult += " | Passes face condition";
-				}else{
-					corrugationResult += " | Fails face condition";
-				}
-				if(corrugationChecker.evaluateVertexEdgeCountConditionFull(origamiModel)){
-					corrugationResult += " | Passes vertex edge count condition";
-				}else{
-					corrugationResult += " | Fails vertex edge count condition";
-				}
-				if(corrugationChecker.evaluateVertexAngleConditionFull(origamiModel)){
-					corrugationResult += " | Passes vertex angle condition";
-				}else{
-					corrugationResult += " | Fails vertex angle condition";
-				}
-
+				corrugationChecker.evaluate(origamiModel);
 				CorrugationCheckFrameFactory checkerFactory = new CorrugationCheckFrameFactory();
 				JFrame checker = checkerFactory.createFrame(origamiModel, creasePattern, corrugationChecker);
 				checker.setVisible(true);
-				
-				JOptionPane.showMessageDialog(
-					ORIPA.mainFrame, corrugationResult, ORIPA.res.getString("Title"), JOptionPane.INFORMATION_MESSAGE);
-
 			}
 		});
 
