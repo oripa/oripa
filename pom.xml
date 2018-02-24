@@ -7,14 +7,12 @@
 	<version>0.36</version>
 	<packaging>jar</packaging>
 
-
 	<name>oripa</name>
 	<url>https://github.com/oripa/oripa</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
 
 	<profiles>
 		<profile>
@@ -24,26 +22,25 @@
 					<family>windows</family>
 				</os>
 			</activation>
-			
+
 			<!-- Java3D dependencies. the latest version in the maven repository is 1.3.1.
 			This POM requires you to install version 1.5.2 into your local repo by
 			"mvn install:install-file" command. Or, degrade to 1.3.1. -->
-			
 			<dependencies>
 				<dependency>
-					<groupId>java3d</groupId>
+					<groupId>javax.vecmath</groupId>
 					<artifactId>vecmath</artifactId>
 					<version>1.5.2</version>
 				</dependency>
 				<dependency>
 					<groupId>java3d</groupId>
-					<artifactId>j3dutils</artifactId>
-					<version>1.5.2</version>
+					<artifactId>j3d-core-utils</artifactId>
+					<version>1.3.1</version>
 				</dependency>
 				<dependency>
 					<groupId>java3d</groupId>
-					<artifactId>j3dcore</artifactId>
-					<version>1.5.2</version>
+					<artifactId>j3d-core</artifactId>
+					<version>1.3.1</version>
 				</dependency>
 			</dependencies>
 
@@ -57,29 +54,39 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.4.2</version>
 		</dependency>
-
 	</dependencies>
 
-
-
-	<!-- Run "mvn package" to build a runnable jar -->
 	<build>
-
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
+			<!-- Run "mvn exec:java" to run -->
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+				<configuration>
+					<executable>java</executable>
+					<arguments>
+						<argument>-classpath</argument>
+						<classpath/>
+						<argument>oripa.ORIPA</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+
+			<!-- Run "mvn package" to build a runnable jar -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
@@ -103,7 +110,6 @@
 					</archive>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 </project>
