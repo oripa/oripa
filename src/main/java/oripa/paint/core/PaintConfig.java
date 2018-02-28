@@ -35,13 +35,9 @@ public class PaintConfig {
 		PaintConfig.mouseAction = mouseAction;
 	}
 
-//	public static Constants.EditMode editMode = Constants.EditMode.INPUT_LINE;
-//    public static Constants.ModelEditMode modelEditMode = Constants.ModelEditMode.INPUT_CROSS_LINE;
-//    public static Constants.EditMode preEditMode = Constants.EditMode.INPUT_LINE;
-//    public static Constants.LineInputMode lineInputMode = Constants.LineInputMode.DIRECT_V;
-//    public static Constants.SubLineInputMode subLineInputMode = Constants.SubLineInputMode.NONE;
     public static int gridDivNum = Config.DEFAULT_GRID_DIV_NUM;
     public static Constants.ModelDispMode modelDispMode = Constants.ModelDispMode.FILL_ALPHA;
+    public static boolean dispPaper = true;
     public static boolean dispVertex = false;
     public static boolean dispMVLines = true;
     public static boolean dispAuxLines = true;

@@ -98,7 +98,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 	private UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
 	ResourceHolder resources = ResourceHolder.getInstance();
 
-	
+
 	//---------------------------------------------------------------------------------------------------------------------------
 	// Binding edit mode
 
@@ -215,6 +215,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID), true);
 	JCheckBox dispVertexCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID), false);
+	JCheckBox dispPaperCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_PAPER_ID), true);
 	JCheckBox doFullEstimationCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.FULL_ESTIMATION_ID), false);
 	JButton buttonCheckWindow = new JButton(
@@ -491,6 +493,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 		n++;
 		buttonsPanel.add(dispVertexCheckBox);
 		n++;
+		buttonsPanel.add(dispPaperCheckBox);
+		n++;
 		buttonsPanel.add(buttonCheckWindow);
 		n++;
 		buttonsPanel.add(buildButton);
@@ -608,7 +612,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 		resetButton.addActionListener(this);
 		dispVertexCheckBox.addActionListener(this);
 		dispVertexCheckBox.setSelected(false);
-		PaintConfig.dispVertex = false;
+		dispPaperCheckBox.addActionListener(this);
+		dispPaperCheckBox.setSelected(true);
 		dispMVLinesCheckBox.addActionListener(new java.awt.event.ActionListener() {
 
 			@Override
@@ -675,7 +680,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 			screenDB.setGridVisible(dispGridCheckBox.isSelected());
 			screenDB.notifyObservers();
 
-			screenUpdater.updateScreen();			
+			screenUpdater.updateScreen();
 
 		} else if (ae.getSource() == gridSmallButton) {
 			if (PaintConfig.gridDivNum < 65) {
@@ -693,8 +698,10 @@ implements ActionListener, PropertyChangeListener, Observer {
 			}
 		} else if (ae.getSource() == dispVertexCheckBox) {
 			PaintConfig.dispVertex = dispVertexCheckBox.isSelected();
-
-			screenUpdater.updateScreen();			
+			screenUpdater.updateScreen();
+		} else if (ae.getSource() == dispPaperCheckBox) {
+			PaintConfig.dispPaper = dispPaperCheckBox.isSelected();
+			screenUpdater.updateScreen();
 		} else if (ae.getSource() == resetButton) {
 		} else if (ae.getSource() == buildButton) {
 			boolean buildOK = false;

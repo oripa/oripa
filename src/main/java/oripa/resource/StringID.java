@@ -50,9 +50,10 @@ public class StringID {
 	    public static final String SHOW_GRID_ID =  "UI_ShowGrid";
 	    public static final String SHOW_MV_ID =  "UI_ShowMountainValley";	    
 	    public static final String SHOW_AUX_ID =  "UI_ShowAux";	    
-	    public static final String SHOW_VERTICES_ID =  "UI_ShowVertices"; 
+	    public static final String SHOW_VERTICES_ID =  "UI_ShowVertices";
+		public static final String SHOW_PAPER_ID = "UI_ShowPaper";
 
-	    public static final String CHANGE_LINE_TYPE_FROM_ID =  "UI_ChangeLineTypeFrom"; 
+		public static final String CHANGE_LINE_TYPE_FROM_ID =  "UI_ChangeLineTypeFrom";
 	    public static final String CHANGE_LINE_TYPE_TO_ID =  "UI_ChangeLineTypeTo"; 
 
 	    public static final String MEASURE_ID =  "UI_Measure"; 
