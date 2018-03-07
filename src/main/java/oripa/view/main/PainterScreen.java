@@ -28,7 +28,6 @@ import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.creasepattern.CreasePattern;
-import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainScreenSettingDB;
@@ -73,7 +72,6 @@ public class PainterScreen extends JPanel
 		setting.addObserver(this);
 
 		scale = 1.5;
-		setBackground(Color.white);
 
 		preSize = getSize();
 	}
@@ -106,7 +104,7 @@ public class PainterScreen extends JPanel
 		bufferg.setTransform(new AffineTransform());
 
 		// clears the image buffer
-		bufferg.setColor(Color.WHITE);
+		bufferg.setColor(PaintConfig.colors.getBackgroundColor());
 		bufferg.fillRect(0, 0, getWidth(), getHeight());
 
 		// set the AffineTransform of buffer
@@ -116,7 +114,6 @@ public class PainterScreen extends JPanel
 		Graphics2D g2d = bufferg;
 		bufferg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setStroke(LineSetting.STROKE_VALLEY);
-		g2d.setColor(Color.black);
 
 		Doc document = ORIPA.doc;
 		CreasePattern creasePattern = document.getCreasePattern();
@@ -169,19 +166,19 @@ public class PainterScreen extends JPanel
 
 		// build and draw paper polygon
 		Path2D.Double paperShape = new Path2D.Double(Path2D.WIND_EVEN_ODD);
-		paperShape.moveTo(convexHullVerts.get(0).getX(), convexHullVerts.get(0).getY());
-		for(int i = 1; i < convexHullVerts.size(); i++) {
-			paperShape.lineTo(convexHullVerts.get(i).getX(), convexHullVerts.get(i).getY());
-		}
-		g2d.setColor(new Color(247, 249, 255));
+
+		Vector2D startVert = convexHullVerts.remove(0);
+		paperShape.moveTo(startVert.getX(), startVert.getY());
+		convexHullVerts.forEach(v -> paperShape.lineTo(v.getX(), v.getY()));
 		paperShape.closePath();
+
+		g2d.setColor(PaintConfig.colors.getPaperColor());
 		g2d.fill(paperShape);
 	}
 
 	private void drawLines(Graphics2D g2d, Collection<OriLine> lines){
-		ElementSelector selector = new ElementSelector();
 		for (OriLine line : lines) {
-			if (line.typeVal == OriLine.TYPE_NONE &&!PaintConfig.dispAuxLines) {
+			if (line.typeVal == OriLine.TYPE_NONE && !PaintConfig.dispAuxLines) {
 				continue;
 			}
 
@@ -189,8 +186,8 @@ public class PainterScreen extends JPanel
 				continue;
 			}
 
-			g2d.setColor(selector.selectColorByLineType(line.typeVal));
-			g2d.setStroke(new BasicStroke((float) (0.5 / scale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+			g2d.setColor(PaintConfig.colors.getColorForLine(line.getTypeValue()));
+			g2d.setStroke(PaintConfig.colors.getStrokeForLine(line.getTypeValue(), scale));
 
 			if(PaintConfig.mouseAction != null){
 				if(!mouseContext.getLines().contains(line)){
@@ -214,25 +211,26 @@ public class PainterScreen extends JPanel
 			toDraw.add(line.p1);
 		}
 
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(PaintConfig.colors.getVertexColor());
 		final double vertexDrawSize = 2;
 		toDraw.forEach(v -> {
-			g2d.fill(new Ellipse2D.Double(v.x - vertexDrawSize / scale, v.y - vertexDrawSize / scale,
-										  vertexDrawSize * 2.0 / scale, vertexDrawSize * 2.0 / scale));
+			g2d.fill(new Ellipse2D.Double(v.x - vertexDrawSize / scale,
+					v.y - vertexDrawSize / scale, vertexDrawSize * 2.0 / scale,
+					vertexDrawSize * 2.0 / scale));
 		});
 	}
 
 	private void drawCandidatePosition(Graphics g) {
 		Vector2d candidate = mouseContext.pickCandidateV;
 		if(candidate != null){
-			g.setColor(Color.BLACK);
+			g.setColor(PaintConfig.colors.getUiOverlayColor());
 			g.drawString("(" + candidate.x + "," + candidate.y + ")", 0, 10);
 		}
 	}
 
 	private void drawGridLine(Graphics2D g2d) {
-		g2d.setColor(Color.LIGHT_GRAY);
-		g2d.setStroke(LineSetting.STROKE_GRID);
+		g2d.setColor(PaintConfig.colors.getColorForLine(OriLine.TYPE_NONE));
+		g2d.setStroke(PaintConfig.colors.getStrokeForLine(OriLine.TYPE_NONE, scale));
 
 		double paperSize = ORIPA.doc.getPaperSize();
 
@@ -408,7 +406,6 @@ public class PainterScreen extends JPanel
 					repaint();
 				}
 			}
-
 		}
 	}
 }

@@ -22,6 +22,7 @@ package oripa.paint.core;
 
 import oripa.Config;
 import oripa.paint.GraphicMouseActionInterface;
+import oripa.paint.colorscheme.*;
 import oripa.paint.segment.TwoPointSegmentAction;
 import oripa.resource.Constants;
 
@@ -44,6 +45,8 @@ public class PaintConfig {
     public static boolean bDispCrossLine = false;
     public static boolean bDoFullEstimation = true;
     public static int inputLineType = oripa.value.OriLine.TYPE_RIDGE;
+
+    public static ColorScheme colors = new ClassicColorScheme();
     
     public static GraphicMouseActionInterface mouseAction = new TwoPointSegmentAction();
 }
