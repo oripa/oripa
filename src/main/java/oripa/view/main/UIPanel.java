@@ -607,8 +607,8 @@ implements ActionListener, PropertyChangeListener, Observer {
 		buildButton.addActionListener(this);
 		resetButton.addActionListener(this);
 		dispVertexCheckBox.addActionListener(this);
-		dispVertexCheckBox.setSelected(true);
-		PaintConfig.dispVertex = true;
+		dispVertexCheckBox.setSelected(false);
+		PaintConfig.dispVertex = false;
 		dispMVLinesCheckBox.addActionListener(new java.awt.event.ActionListener() {
 
 			@Override

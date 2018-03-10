@@ -1,14 +1,5 @@
 package oripa.paint.core;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-
-import javax.vecmath.Vector2d;
-
 import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseActionInterface;
 import oripa.paint.ScreenUpdaterInterface;
@@ -16,6 +7,13 @@ import oripa.paint.geometry.GeometricOperation;
 import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
 import oripa.viewsetting.main.ScreenUpdater;
+
+import javax.vecmath.Vector2d;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 
 public abstract class GraphicMouseAction implements GraphicMouseActionInterface {
 
@@ -225,8 +223,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	protected void drawVertex(Graphics2D g2d, PaintContext context, 
 			double x, double y){
 		double scale = context.scale;
-		g2d.fill(new Rectangle2D.Double(x - 5.0 / scale,
-				y - 5.0 / scale, 10.0 / scale, 10.0 / scale));
+		g2d.fill(new Ellipse2D.Double(x - 5 / scale, y - 5 / scale, 5 * 2.0 / scale, 5 * 2.0 / scale));
 
 	}
 
