@@ -58,8 +58,9 @@ public class LabelStringResource_en extends ListResourceBundle {
 	        { StringID.UI.CHECK_WINDOW_ID, "Check Window"},
 	        
 	        { StringID.UI.GRID_SIZE_CHANGE_ID, "Set" }, 
-	        { StringID.UI.SHOW_VERTICES_ID, "Show Vertices" }, 
-	        { StringID.UI.EDIT_MODE_ID, "Edit Mode" }, 
+	        { StringID.UI.SHOW_VERTICES_ID, "Show Vertices" },
+			{ StringID.UI.SHOW_PAPER_ID, "Show Paper" },
+			{ StringID.UI.EDIT_MODE_ID, "Edit Mode" },
 	        { StringID.UI.LINE_INPUT_MODE_ID, "Line Input Mode"},
 	        { StringID.UI.LENGTH_ID, "Length"},
 	        { StringID.UI.ANGLE_ID, "Angle"},

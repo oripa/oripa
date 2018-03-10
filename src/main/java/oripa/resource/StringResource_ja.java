@@ -24,7 +24,8 @@ public class StringResource_ja extends ListResourceBundle {
     static final Object[][] strings = { 
         { "Title", "折紙展開図エディタ ORIPA" }, 
         { "File", "ファイル" }, 
-        { "Edit", "編集" }, 
+        { "Edit", "編集" },
+		{ "View", "???" }, // TODO: Translate this
         { "Help", "ヘルプ" }, 
         { "New", "新規作成" }, 
         { "Open", "開く" }, 
@@ -36,7 +37,13 @@ public class StringResource_ja extends ListResourceBundle {
         { "Property", "作品情報" }, 
         { "Exit", "終了" }, 
         { "Undo", "元に戻す" }, 
-        { "About", "情報表示" }, 
+        { "About", "情報表示" },
+		{ "ColorScheme", "???"}, // TODO: Translate this
+		{ "Classic", "???"}, // TODO: Translate this
+		{ "Lang", "???"}, // TODO: Translate this
+		{ "Monokai", "???"}, // TODO: Translate this
+		{ "Solarized", "???"}, // TODO: Translate this
+		{ "SolarizedDark", "???"}, // TODO: Translate this
         { "Direction_DirectV", "入力する線分の2つの端点を指定してください。+[Ctrl]で線分上の任意の点を指定できます。" }, 
         { "Direction_OnV", "入力する線分の乗る2点を指定してください。" }, 
         { "Direction_Symmetric", "3点を指定して対称な線分を入力します。1,2点めで対称位置にある線分、2,3点めで基準となる線分を指定してください。+[Ctrl]で自動継続。" }, 
@@ -62,7 +69,8 @@ public class StringResource_ja extends ListResourceBundle {
         { "UI_InputLine", "線入力" }, 
         { "UI_Select", "選択" }, 
         { "UI_DeleteLine", "線削除" }, 
-        { "UI_ShowGrid", "グリッドを表示する" }, 
+        { "UI_ShowGrid", "グリッドを表示する" },
+        { "UI_ShowPaper", "???"}, // TODO: Translate this
         { "UI_ChangeLineType", "線種変更" }, 
         { "UI_AddVertex", "頂点追加" }, 
         { "UI_DeleteVertex", "頂点削除" }, 

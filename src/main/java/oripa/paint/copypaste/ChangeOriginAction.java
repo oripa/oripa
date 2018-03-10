@@ -10,6 +10,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.paint.GraphicMouseActionInterface;
 import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.geometry.GeometricOperation;
 import oripa.value.OriLine;
@@ -74,7 +75,7 @@ public class ChangeOriginAction extends GraphicMouseAction{
 
 		Collection<OriLine> lines = context.getLines();
 
-		g2d.setColor(Color.MAGENTA);
+		g2d.setColor(PaintConfig.colors.getCandidateColor());
 		
 		for(OriLine line : lines){
 			this.drawVertex(g2d, context, line.p0.x, line.p0.y);

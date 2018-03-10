@@ -18,6 +18,8 @@
 
 package oripa.view.main;
 
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.math3.geometry.euclidean.twod.hull.MonotoneChain;
 import oripa.ORIPA;
 import oripa.doc.Doc;
 import oripa.mouse.MouseUtility;
@@ -26,7 +28,6 @@ import oripa.paint.core.LineSetting;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.creasepattern.CreasePattern;
-import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainScreenSettingDB;
@@ -36,10 +37,7 @@ import javax.swing.*;
 import javax.vecmath.Vector2d;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
+import java.awt.geom.*;
 import java.util.*;
 
 
@@ -74,7 +72,6 @@ public class PainterScreen extends JPanel
 		setting.addObserver(this);
 
 		scale = 1.5;
-		setBackground(Color.white);
 
 		preSize = getSize();
 	}
@@ -107,7 +104,7 @@ public class PainterScreen extends JPanel
 		bufferg.setTransform(new AffineTransform());
 
 		// clears the image buffer
-		bufferg.setColor(Color.WHITE);
+		bufferg.setColor(PaintConfig.colors.getBackgroundColor());
 		bufferg.fillRect(0, 0, getWidth(), getHeight());
 
 		// set the AffineTransform of buffer
@@ -117,10 +114,14 @@ public class PainterScreen extends JPanel
 		Graphics2D g2d = bufferg;
 		bufferg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setStroke(LineSetting.STROKE_VALLEY);
-		g2d.setColor(Color.black);
 
 		Doc document = ORIPA.doc;
 		CreasePattern creasePattern = document.getCreasePattern();
+
+		// draw the faces (for the paper background)
+        if(PaintConfig.dispPaper) {
+            drawPaper(g2d, creasePattern);
+        }
 
 		// draw the lines
 		if (setting.isGridVisible()) {
@@ -129,9 +130,8 @@ public class PainterScreen extends JPanel
 		drawLines(g2d, creasePattern);
 
 		// draw the vertices
-		if (PaintConfig.getMouseAction().getEditMode() == EditMode.VERTEX
-				|| PaintConfig.dispVertex) {
-			drawVertices(g2d);
+		if (PaintConfig.getMouseAction().getEditMode() == EditMode.VERTEX || PaintConfig.dispVertex) {
+			drawVertices(g2d, creasePattern);
 		}
 
 		//Draw the mouse action
@@ -145,21 +145,49 @@ public class PainterScreen extends JPanel
 		}
 	}
 
+	private void drawPaper(Graphics2D g2d, CreasePattern cp) {
+		// only consider de-duplicated boundary vertices
+		HashSet<Vector2D> boundaryVerts = new HashSet<>();
+		for(OriLine line : cp) {
+			if(line.typeVal == OriLine.TYPE_CUT) {
+				boundaryVerts.add(new Vector2D(line.p0.x, line.p0.y));
+				boundaryVerts.add(new Vector2D(line.p1.x, line.p1.y));
+			}
+		}
+
+		// early exit if there's no paper to draw
+		if(boundaryVerts.isEmpty()) {
+			return;
+		}
+
+		// convex hull to estimate paper shape
+		MonotoneChain chain = new MonotoneChain(true);
+		ArrayList<Vector2D> convexHullVerts = new ArrayList<>(chain.findHullVertices(boundaryVerts));
+
+		// build and draw paper polygon
+		Path2D.Double paperShape = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+
+		Vector2D startVert = convexHullVerts.remove(0);
+		paperShape.moveTo(startVert.getX(), startVert.getY());
+		convexHullVerts.forEach(v -> paperShape.lineTo(v.getX(), v.getY()));
+		paperShape.closePath();
+
+		g2d.setColor(PaintConfig.colors.getPaperColor());
+		g2d.fill(paperShape);
+	}
+
 	private void drawLines(Graphics2D g2d, Collection<OriLine> lines){
-
-		ElementSelector selector = new ElementSelector();
 		for (OriLine line : lines) {
-			if (line.typeVal == OriLine.TYPE_NONE &&!PaintConfig.dispAuxLines) {
+			if (line.typeVal == OriLine.TYPE_NONE && !PaintConfig.dispAuxLines) {
 				continue;
 			}
 
-			if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY)
-					&& !PaintConfig.dispMVLines) {
+			if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY) && !PaintConfig.dispMVLines) {
 				continue;
 			}
 
-			g2d.setColor(selector.selectColorByLineType(line.typeVal));
-			g2d.setStroke(new BasicStroke((float) (0.5 / scale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+			g2d.setColor(PaintConfig.colors.getColorForLine(line.getTypeValue()));
+			g2d.setStroke(PaintConfig.colors.getStrokeForLine(line.getTypeValue(), scale));
 
 			if(PaintConfig.mouseAction != null){
 				if(!mouseContext.getLines().contains(line)){
@@ -169,41 +197,40 @@ public class PainterScreen extends JPanel
 		}
 	}
 
-	private void drawVertices(Graphics2D g2d){
-		CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
+	private void drawVertices(Graphics2D g2d, CreasePattern creasePattern) {
+		// consider only de-duplicated vertices attached to lines that will be drawn
 		HashSet<Vector2d> toDraw = new HashSet<>();
 		for (OriLine line : creasePattern) {
 			if (!PaintConfig.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
-			if (!PaintConfig.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
-					|| line.typeVal == OriLine.TYPE_VALLEY)) {
+			if (!PaintConfig.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY)) {
 				continue;
 			}
 			toDraw.add(line.p0);
 			toDraw.add(line.p1);
 		}
 
-		g2d.setColor(Color.DARK_GRAY);
-		final double vertexDrawSize = 2.0;
-
-		toDraw.forEach(v -> g2d.fill(new Ellipse2D.Double(v.x - vertexDrawSize / scale,
-				v.y - vertexDrawSize / scale, vertexDrawSize * 2.0 / scale,
-				vertexDrawSize * 2.0 / scale)));
+		g2d.setColor(PaintConfig.colors.getVertexColor());
+		final double vertexDrawSize = 2;
+		toDraw.forEach(v -> {
+			g2d.fill(new Ellipse2D.Double(v.x - vertexDrawSize / scale,
+					v.y - vertexDrawSize / scale, vertexDrawSize * 2.0 / scale,
+					vertexDrawSize * 2.0 / scale));
+		});
 	}
 
-	private void drawCandidatePosition(Graphics g){
+	private void drawCandidatePosition(Graphics g) {
 		Vector2d candidate = mouseContext.pickCandidateV;
 		if(candidate != null){
-			g.setColor(Color.BLACK);
-			g.drawString("(" + candidate.x +
-					"," + candidate.y + ")", 0, 10);
+			g.setColor(PaintConfig.colors.getUiOverlayColor());
+			g.drawString("(" + candidate.x + "," + candidate.y + ")", 0, 10);
 		}
 	}
 
 	private void drawGridLine(Graphics2D g2d) {
-		g2d.setColor(Color.LIGHT_GRAY);
-		g2d.setStroke(LineSetting.STROKE_GRID);
+		g2d.setColor(PaintConfig.colors.getColorForLine(OriLine.TYPE_NONE));
+		g2d.setStroke(PaintConfig.colors.getStrokeForLine(OriLine.TYPE_NONE, scale));
 
 		double paperSize = ORIPA.doc.getPaperSize();
 
@@ -379,7 +406,6 @@ public class PainterScreen extends JPanel
 					repaint();
 				}
 			}
-
 		}
 	}
 }

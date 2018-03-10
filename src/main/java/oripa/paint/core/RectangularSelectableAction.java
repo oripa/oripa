@@ -1,7 +1,6 @@
 package oripa.paint.core;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -91,9 +90,10 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 		super.onDraw(g2d, context);
 
 		if(startPoint != null && draggingPoint != null){
-						
-	        g2d.setStroke(LineSetting.STROKE_SELECT_BY_AREA);
-	        g2d.setColor(Color.BLACK);
+			float dash[] = {3.0f};
+	        g2d.setStroke(new BasicStroke((float) (0.75 / context.scale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+			g2d.setColor(PaintConfig.colors.getUiOverlayColor());
+
 	        double sx = Math.min(startPoint.x, draggingPoint.x);
 	        double sy = Math.min(startPoint.y, draggingPoint.y);
 	        double w = Math.abs(startPoint.x - draggingPoint.x);

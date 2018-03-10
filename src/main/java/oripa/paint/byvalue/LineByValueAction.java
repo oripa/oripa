@@ -1,6 +1,6 @@
 package oripa.paint.byvalue;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 
@@ -9,7 +9,6 @@ import javax.vecmath.Vector2d;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.GraphicMouseAction;
 import oripa.paint.core.PaintContext;
-import oripa.paint.util.ElementSelector;
 
 public class LineByValueAction extends GraphicMouseAction {
 
@@ -45,11 +44,11 @@ public class LineByValueAction extends GraphicMouseAction {
 	
 	            angle = Math.toRadians(angle);
 	            
-	            ElementSelector selector = new ElementSelector();
-	            g2d.setColor(selector.selectColorByLineType(PaintConfig.inputLineType));
-	            g2d.setStroke(selector.selectStroke(PaintConfig.inputLineType));
-	            
-	            Vector2d dir = new Vector2d(Math.cos(angle), -Math.sin(angle));
+	            g2d.setColor(PaintConfig.colors.getColorForLine(PaintConfig.inputLineType));
+				g2d.setStroke(PaintConfig.colors.getStrokeForLine(PaintConfig.inputLineType, context.scale));
+
+
+				Vector2d dir = new Vector2d(Math.cos(angle), -Math.sin(angle));
 	            dir.scale(length);
 	            g2d.draw(new Line2D.Double(v.x, v.y, v.x + dir.x, v.y + dir.y));
 	        } catch (Exception e) {

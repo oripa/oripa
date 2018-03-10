@@ -59,6 +59,7 @@ import oripa.file.ImageResourceLoader;
 import oripa.file.SavingAction;
 import oripa.fold.OrigamiModel;
 import oripa.fold.OrigamiModelFactory;
+import oripa.paint.colorscheme.*;
 import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.creasepattern.CreasePattern;
@@ -89,6 +90,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			ORIPA.res.getString(StringID.Main.FILE_ID));
 	private JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
 	private JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
+	private JMenu menuView = new JMenu(ORIPA.res.getString("View"));
 	private JMenuItem menuItemClear = new JMenuItem(ORIPA.res.getString("New"));
 	private JMenuItem menuItemOpen = new JMenuItem(ORIPA.res.getString("Open"));
 
@@ -102,6 +104,13 @@ public class MainFrame extends JFrame implements ActionListener,
 	private JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
 	private JMenuItem menuItemExportCP = new JMenuItem("Export CP");
 	private JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
+
+	private JMenu menuColorSchemes = new JMenu(ORIPA.res.getString("ColorScheme"));
+	private JMenuItem menuClassicColor = new JMenuItem(ORIPA.res.getString("Classic"));
+	private JMenuItem menuLangColor = new JMenuItem(ORIPA.res.getString("Lang"));
+	private JMenuItem menuMonokaiColor = new JMenuItem(ORIPA.res.getString("Monokai"));
+	private JMenuItem menuSolarizedColor = new JMenuItem(ORIPA.res.getString("Solarized"));
+	private JMenuItem menuSolarizedDarkColor = new JMenuItem(ORIPA.res.getString("SolarizedDark"));
 
 	// -----------------------------------------------------------------------------------------------------------
 	// Create paint button
@@ -240,6 +249,13 @@ public class MainFrame extends JFrame implements ActionListener,
 					}
 				});
 
+		menuClassicColor.addActionListener(this);
+		menuLangColor.addActionListener(this);
+		menuMonokaiColor.addActionListener(this);
+		menuSolarizedColor.addActionListener(this);
+		menuSolarizedDarkColor.addActionListener(this);
+
+
 		menuItemDeleteSelectedLines
 				.addActionListener(new DeleteSelectedLines());
 		menuItemDeleteSelectedLines.setAccelerator(KeyStroke.getKeyStroke(
@@ -272,10 +288,18 @@ public class MainFrame extends JFrame implements ActionListener,
 		menuEdit.add(menuItemUndo);
 		menuEdit.add(menuItemChangeOutline);
 
+		menuColorSchemes.add(menuClassicColor);
+		menuColorSchemes.add(menuLangColor);
+		menuColorSchemes.add(menuMonokaiColor);
+		menuColorSchemes.add(menuSolarizedColor);
+		menuColorSchemes.add(menuSolarizedDarkColor);
+		menuView.add(menuColorSchemes);
+
 		menuHelp.add(menuItemAbout);
 
 		menuBar.add(menuFile);
 		menuBar.add(menuEdit);
+		menuBar.add(menuView);
 		menuBar.add(menuHelp);
 		setJMenuBar(menuBar);
 
@@ -365,6 +389,8 @@ public class MainFrame extends JFrame implements ActionListener,
 				return;
 			}
 		}
+
+		System.out.println(e);
 
 		//TODO Refactor the long, long if-else sequences!
 		
@@ -460,8 +486,22 @@ public class MainFrame extends JFrame implements ActionListener,
 			} else {
 				circleCopyDialog.setVisible(true);
 			}
+		} else if (e.getSource() == menuClassicColor) {
+			PaintConfig.colors = new ClassicColorScheme();
+			mainScreen.repaint();
+		} else if (e.getSource() == menuLangColor) {
+			PaintConfig.colors = new LangColorScheme();
+			mainScreen.repaint();
+		} else if (e.getSource() == menuMonokaiColor) {
+			PaintConfig.colors = new MonokaiColorScheme();
+			mainScreen.repaint();
+		} else if (e.getSource() == menuSolarizedColor) {
+			PaintConfig.colors = new SolarizedColorScheme();
+			mainScreen.repaint();
+		} else if (e.getSource() == menuSolarizedDarkColor) {
+			PaintConfig.colors = new SolarizedDarkColorScheme();
+			mainScreen.repaint();
 		}
-
 	}
 
 	public void updateTitleText() {

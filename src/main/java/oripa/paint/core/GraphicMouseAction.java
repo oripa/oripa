@@ -4,7 +4,6 @@ import oripa.paint.EditMode;
 import oripa.paint.GraphicMouseActionInterface;
 import oripa.paint.ScreenUpdaterInterface;
 import oripa.paint.geometry.GeometricOperation;
-import oripa.paint.util.ElementSelector;
 import oripa.value.OriLine;
 import oripa.viewsetting.main.ScreenUpdater;
 
@@ -190,11 +189,10 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	private void drawPickedLines(Graphics2D g2d, PaintContext context){
 		for(int i = 0; i < context.getLineCount(); i++){
-			g2d.setColor(LineSetting.LINE_COLOR_PICKED);
-			g2d.setStroke(LineSetting.STROKE_PICKED);
+			g2d.setStroke(new BasicStroke((float) (1.5 / context.scale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+			g2d.setColor(PaintConfig.colors.getSelectionColor());
 
 			OriLine line = context.getLine(i);
-
 			drawLine(g2d, line);
 		}
 
@@ -202,10 +200,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 
 	private void drawPickedVertices(Graphics2D g2d, PaintContext context){
-		ElementSelector selector = new ElementSelector();
-
 		for(int i = 0; i < context.getVertexCount(); i++){
-			g2d.setColor(selector.selectColorByLineType(PaintConfig.inputLineType));
+			g2d.setColor(PaintConfig.colors.getColorForLine(PaintConfig.inputLineType));
 
 			Vector2d vertex = context.getVertex(i);
 			drawVertex(g2d, context, vertex.x, vertex.y);
@@ -229,27 +225,24 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	protected void drawPickCandidateVertex(Graphics2D g2d, PaintContext context){
 		if (context.pickCandidateV != null) {
-			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
+			g2d.setColor(PaintConfig.colors.getCandidateColor());
 			Vector2d candidate = context.pickCandidateV;
 			drawVertex(g2d, context, candidate.x, candidate.y);
 		}
 	}
 
 	protected void drawLine(Graphics2D g2d, OriLine line){
-		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, 
-				line.p1.x, line.p1.y));
-
+		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
 	}
 
 	protected void drawLine(Graphics2D g2d, Vector2d p0, Vector2d p1){
-		g2d.draw(new Line2D.Double(p0.x, p0.y, 
-				p1.x, p1.y));
-
+		g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
 	}
 
 	protected void drawPickCandidateLine(Graphics2D g2d, PaintContext context){
 		if (context.pickCandidateL!= null) {
-			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
+			g2d.setStroke(new BasicStroke((float) (1.5 / context.scale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+			g2d.setColor(PaintConfig.colors.getCandidateColor());
 			OriLine candidate = context.pickCandidateL;
 			drawLine(g2d, candidate);
 		}
@@ -265,13 +258,11 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 * @param context
 	 */
 	protected void drawTemporaryLine(Graphics2D g2d, PaintContext context){
-		ElementSelector selector = new ElementSelector();
-
 		if(context.getVertexCount() > 0){
 			Vector2d picked = context.peekVertex();
 
-			Color color = selector.selectColorByLineType(PaintConfig.inputLineType);
-			g2d.setColor(color);
+			g2d.setStroke(PaintConfig.colors.getStrokeForLine(PaintConfig.inputLineType, context.scale));
+			g2d.setColor(PaintConfig.colors.getColorForLine(PaintConfig.inputLineType));
 			drawLine(g2d, picked, GeometricOperation.getCandidateVertex(context, true));
 		}
 

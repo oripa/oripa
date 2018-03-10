@@ -11,6 +11,7 @@ import javax.vecmath.Vector2d;
 import oripa.ORIPA;
 import oripa.paint.EditMode;
 import oripa.paint.core.GraphicMouseAction;
+import oripa.paint.core.PaintConfig;
 import oripa.paint.core.PaintContext;
 import oripa.paint.creasepattern.CreasePattern;
 import oripa.paint.geometry.GeometricOperation;
@@ -136,7 +137,7 @@ public class PasteAction extends GraphicMouseAction {
 		double ox = origin.x;
 		double oy = origin.y;
 
-		g2d.setColor(Color.GREEN);
+		g2d.setColor(PaintConfig.colors.getSelectionColor());
 		drawVertex(g2d, context, ox, oy);
 
 		if(context.pickCandidateV != null){
@@ -147,7 +148,7 @@ public class PasteAction extends GraphicMouseAction {
 			diffX = context.getLogicalMousePoint().x - ox;
 			diffY = context.getLogicalMousePoint().y -oy;
 		}
-		g2d.setColor(Color.MAGENTA);
+		g2d.setColor(PaintConfig.colors.getCandidateColor());
 
 		//		GeometricOperation.shiftLines(context.getLines(), shiftedLines,
 		//				current.x - ox, current.y -oy);
