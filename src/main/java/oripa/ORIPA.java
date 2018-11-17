@@ -23,8 +23,7 @@ import java.awt.Toolkit;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.io.File;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import oripa.doc.Doc;
 import oripa.resource.Constants;
@@ -97,7 +96,14 @@ public class ORIPA {
 
         doc = new Doc(Constants.DEFAULT_PAPER_SIZE);
 //        doc = DocHolder.getInstance().getDoc();
-        
+
+        //Set system LaF
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            System.err.println("Failed to set native look and feel: " + e);
+        }
+
         // Construction of the main frame
         mainFrame = new MainFrame();
 
