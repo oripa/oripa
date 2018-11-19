@@ -100,6 +100,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private JMenuItem menuItemSaveAsImage = new JMenuItem(
 			ORIPA.res.getString("SaveAsImage"));
 
+	private JMenuItem menuItemExportFOLD = new JMenuItem("Export FOLD");
 	private JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
 	private JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
 	private JMenuItem menuItemExportCP = new JMenuItem("Export CP");
@@ -222,6 +223,7 @@ public class MainFrame extends JFrame implements ActionListener,
 				ActionEvent.CTRL_MASK));
 
 		menuItemAbout.addActionListener(this);
+		menuItemExportFOLD.addActionListener(this);
 		menuItemExportDXF.addActionListener(this);
 		menuItemExportOBJ.addActionListener(this);
 		menuItemExportCP.addActionListener(this);
@@ -419,6 +421,8 @@ public class MainFrame extends JFrame implements ActionListener,
 			saveFile(lastDirectory, ORIPA.doc.getDataFileName(),
 					new FileFilterEx[] { filterDB.getFilter("pict") });
 
+		} else if (e.getSource() == menuItemExportFOLD) {
+			exportFile("fold");
 		} else if (e.getSource() == menuItemExportDXF) {
 			exportFile("dxf");
 		} else if (e.getSource() == menuItemExportOBJ) {
@@ -576,6 +580,7 @@ public class MainFrame extends JFrame implements ActionListener,
 		menuFile.add(menuItemSave);
 		menuFile.add(menuItemSaveAs);
 		menuFile.add(menuItemSaveAsImage);
+		menuFile.add(menuItemExportFOLD);
 		menuFile.add(menuItemExportDXF);
 		menuFile.add(menuItemExportOBJ);
 		menuFile.add(menuItemExportCP);

@@ -7,11 +7,7 @@ import java.util.HashMap;
 import oripa.ORIPA;
 import oripa.doc.LoadingDoc;
 import oripa.doc.SavingDoc;
-import oripa.doc.exporter.ExporterCP;
-import oripa.doc.exporter.ExporterDXF;
-import oripa.doc.exporter.ExporterOBJ;
-import oripa.doc.exporter.ExporterSVG;
-import oripa.doc.exporter.ExporterXML;
+import oripa.doc.exporter.*;
 import oripa.doc.loader.LoaderCP;
 import oripa.doc.loader.LoaderDXF;
 import oripa.doc.loader.LoaderPDF;
@@ -56,8 +52,12 @@ public class FilterDB {
 		this.putFilter("pict", filter);
 
 
+		String key = "fold";
+		filter = new FileFilterEx(new String[]{"." + key },
+				"(*." + key + ") " + key + ORIPA.res.getString("File"), new SavingDoc( new ExporterFold()) );
+		this.putFilter(key, filter);
 	
-		String key = "dxf";
+		key = "dxf";
 		filter = new FileFilterEx(new String[]{"." + key }, 
 				"(*." + key + ") " + key + ORIPA.res.getString("File"), new SavingDoc(new ExporterDXF()) );
 		filter.setLoadingAction(new LoadingDoc(new LoaderDXF()));
