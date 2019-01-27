@@ -52,6 +52,7 @@ public class ExporterFold implements Exporter {
 		//Convert edges to .fold style arrays to vertex IDs
 		ArrayList<int[]> foldEdgeVertices = new ArrayList<>();
 		ArrayList<String> foldEdgeAssignments = new ArrayList<>();
+		ArrayList<Integer> foldEdgeAngleAssignments = new ArrayList<Integer>();
 		for(OriEdge e: modelEdges) {
 			int[] vertexIds = {
 					modelVertices.indexOf(e.sv),
@@ -59,6 +60,7 @@ public class ExporterFold implements Exporter {
 			};
 			foldEdgeVertices.add(vertexIds);
 			foldEdgeAssignments.add(convertToAssignmentString(e.type));
+			foldEdgeAngleAssignments.add(convertToFoldAngle(e.type));
 		}
 
 		//Build the JSON document
@@ -70,7 +72,8 @@ public class ExporterFold implements Exporter {
 				.put("vertices_coords", foldVerticesCoordinates)
 				.put("faces_vertices", foldFaceVertices)
 				.put("edges_vertices", foldEdgeVertices)
-				.put("edges_assignment", foldEdgeAssignments);
+				.put("edges_assignment", foldEdgeAssignments)
+				.put("edges_foldAngle", foldEdgeAngleAssignments);
 
 		//Write the file
 		FileWriter fw = new FileWriter(filepath);
@@ -93,6 +96,17 @@ public class ExporterFold implements Exporter {
 				return "V";
 			default:
 				return "U";
+		}
+	}
+
+	private int convertToFoldAngle(int type) {
+		switch (type) {
+			case OriLine.TYPE_RIDGE:
+				return -180;
+			case OriLine.TYPE_VALLEY:
+				return 180;
+			default:
+				return 0;
 		}
 	}
 }
