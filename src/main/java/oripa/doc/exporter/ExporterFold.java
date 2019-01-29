@@ -87,6 +87,9 @@ public class ExporterFold implements Exporter {
 				.put("file_creator", doc.getEditorName())
 				.put("file_author", doc.getOriginalAuthorName())
 				.put("file_classes", new String[]{"singleModel"})
+				.put("frame_title", "" + doc.getTitle())
+				.put("frame_attributes", new String[]{"2D"})
+				.put("frame_classes", new String[]{"creasePattern"})
 				.put("vertices_coords", foldVerticesCoordinates)
 				.put("faces_vertices", foldFaceVertices)
 				.put("faces_edges", foldFaceEdges)
@@ -103,6 +106,10 @@ public class ExporterFold implements Exporter {
 		return true;
 	}
 
+	/*
+	Oripa uses an enum for line types, while .fold uses a single-character string.
+	This method converts a Oripa line type to a .fold assignment string.
+	 */
 	private String convertToAssignmentString(int type) {
 		switch (type) {
 			case OriLine.TYPE_NONE:
@@ -118,6 +125,10 @@ public class ExporterFold implements Exporter {
 		}
 	}
 
+	/*
+	Since Oripa is only for flat folding models, we'll assume everything is folded all the way. Reference
+	lines and borders aren't folded, so that's 0.
+	 */
 	private int convertToFoldAngle(int type) {
 		switch (type) {
 			case OriLine.TYPE_RIDGE:
