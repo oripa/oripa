@@ -23,8 +23,15 @@ public class ExporterFold implements Exporter {
 
 		//Convert vertices to .fold style arrays of floats
 		ArrayList<double[]> foldVerticesCoordinates = new ArrayList<>();
+		double paperSize = doc.getPaperSize();
 		modelVertices.forEach(v -> {
-			double[] asArray = {v.p.x / doc.getPaperSize(), v.p.y / doc.getPaperSize()};
+			//Normal ORIPA models are one 400 unit-long squares, with the center of the square at (0,0)
+			//Though not enforced in the spec, it seems like most fold files are on a unit square.
+			//We'll convert to that to be more friendly to libraries like RabbitEar.
+			double[] asArray = {
+					(v.p.x + (paperSize / 2.0)) / paperSize,
+					(v.p.y + (paperSize / 2.0)) / paperSize
+			};
 			foldVerticesCoordinates.add(asArray);
 		});
 
