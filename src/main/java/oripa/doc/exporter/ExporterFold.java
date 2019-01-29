@@ -24,35 +24,14 @@ public class ExporterFold implements Exporter {
 		//Convert vertices to .fold style arrays of floats
 		ArrayList<double[]> foldVerticesCoordinates = new ArrayList<>();
 		modelVertices.forEach(v -> {
-			double[] asArray = {v.p.x, v.p.y};
+			double[] asArray = {v.p.x / doc.getPaperSize(), v.p.y / doc.getPaperSize()};
 			foldVerticesCoordinates.add(asArray);
 		});
-
-		//Convert faces to .fold style arrays of vertex IDs
-		ArrayList<int[]> foldFaceVertices = new ArrayList<>();
-		for(OriFace f: modelFaces) {
-			// Helpfully, each of an OriFace's HalfEdge's points go in a nice loop
-			ArrayList<OriVertex> vertices = new ArrayList<>();
-			f.halfedges.forEach(e -> {
-				// We want to add the vertex that is NOT present in the next half edge
-				if(e.edge.sv == e.next.edge.sv || e.edge.sv == e.next.edge.ev) {
-					vertices.add(e.edge.ev);
-				} else {
-					vertices.add(e.edge.sv);
-				}
-			});
-
-			//Search through modelVertices to turn this into a list of vertex IDs
-			int[] vertexIds = vertices.stream()
-					.mapToInt(modelVertices::indexOf)
-					.toArray();
-			foldFaceVertices.add(vertexIds);
-		}
 
 		//Convert edges to .fold style arrays to vertex IDs
 		ArrayList<int[]> foldEdgeVertices = new ArrayList<>();
 		ArrayList<String> foldEdgeAssignments = new ArrayList<>();
-		ArrayList<Integer> foldEdgeAngleAssignments = new ArrayList<Integer>();
+		ArrayList<Integer> foldEdgeAngleAssignments = new ArrayList<>();
 		for(OriEdge e: modelEdges) {
 			int[] vertexIds = {
 					modelVertices.indexOf(e.sv),
@@ -63,6 +42,45 @@ public class ExporterFold implements Exporter {
 			foldEdgeAngleAssignments.add(convertToFoldAngle(e.type));
 		}
 
+		//Convert faces to .fold style arrays of vertex IDs
+		ArrayList<int[]> foldFaceVertices = new ArrayList<>();
+		ArrayList<int[]> foldFaceEdges = new ArrayList<>();
+		for(OriFace f: modelFaces) {
+			// Helpfully, each of an OriFace's HalfEdge's points go in a nice loop
+			ArrayList<OriVertex> vertices = new ArrayList<>();
+			ArrayList<OriEdge> edges = new ArrayList<>();
+			f.halfedges.forEach(e -> {
+				//Keep track of the edges indices
+				edges.add(e.edge);
+
+				// We want to add the vertex that is NOT present in the next half edge
+				if(e.edge.sv == e.next.edge.sv || e.edge.sv == e.next.edge.ev) {
+					vertices.add(e.edge.ev);
+				} else {
+					vertices.add(e.edge.sv);
+				}
+			});
+
+			//Search through modelVertices/modelEdges to turn this into a list of IDs
+			int[] vertexIds = vertices.stream()
+					.mapToInt(modelVertices::indexOf)
+					.toArray();
+			foldFaceVertices.add(vertexIds);
+
+			int[] edgeIds = edges.stream()
+					.mapToInt(e -> {
+						for(int i = 0; i < modelEdges.size(); i++) {
+							if (modelEdges.get(i).sv.p.equals(e.sv.p) &
+								modelEdges.get(i).ev.p.equals(e.ev.p)) {
+								return i;
+							}
+						}
+						return -1;
+					})
+					.toArray();
+			foldFaceEdges.add(edgeIds);
+		}
+
 		//Build the JSON document
 		JSONObject foldJson = new JSONObject();
 		foldJson.put("file_spec", FOLD_SPEC_VERSION)
@@ -71,6 +89,7 @@ public class ExporterFold implements Exporter {
 				.put("file_classes", new String[]{"singleModel"})
 				.put("vertices_coords", foldVerticesCoordinates)
 				.put("faces_vertices", foldFaceVertices)
+				.put("faces_edges", foldFaceEdges)
 				.put("edges_vertices", foldEdgeVertices)
 				.put("edges_assignment", foldEdgeAssignments)
 				.put("edges_foldAngle", foldEdgeAngleAssignments);
