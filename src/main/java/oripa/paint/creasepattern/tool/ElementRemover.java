@@ -41,7 +41,7 @@ public class ElementRemover {
 	private void merge2LinesAt(
 			Vector2d p, Collection<OriLine> creasePattern) {
 		
-		ArrayList<OriLine> sharedLines = new ArrayList<OriLine>();
+		ArrayList<OriLine> sharedLines = new ArrayList<>();
 		for (OriLine line : creasePattern) {
 			if (GeomUtil.Distance(line.p0, p) < 0.001 || GeomUtil.Distance(line.p1, p) < 0.001) {
 				sharedLines.add(line);
@@ -98,7 +98,7 @@ public class ElementRemover {
 	public void removeSelectedLines(
 			Collection<OriLine> creasePattern) {
 
-		ArrayList<OriLine> selectedLines = new ArrayList<OriLine>();
+		ArrayList<OriLine> selectedLines = new ArrayList<>();
 		for (OriLine line : creasePattern) {
 			if (line.selected) {
 				selectedLines.add(line);

@@ -70,26 +70,26 @@ implements MouseListener, MouseMotionListener, MouseWheelListener,
 ActionListener, ComponentListener, Observer{
 
 
-	private MainScreenSettingDB setting = MainScreenSettingDB.getInstance();
-	private ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
-	private PaintContext mouseContext = PaintContext.getInstance();
+	private final MainScreenSettingDB setting = MainScreenSettingDB.getInstance();
+	private final ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+	private final PaintContext mouseContext = PaintContext.getInstance();
 
 	private boolean bDrawFaceID = false;
 	private Image bufferImage;
 	private Graphics2D bufferg;
 	private Point2D preMousePoint; // Screen coordinates
-	private Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logic coordinates
+	private final Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logic coordinates
 	private double scale;
 	private double transX;
 	private double transY;
 	// Temporary information when editing
 	// Affine transformation information
 	private Dimension preSize;
-	private AffineTransform affineTransform = new AffineTransform();
-	private ArrayList<Vector2d> crossPoints = new ArrayList<>();
-	private JPopupMenu popup = new JPopupMenu();
-	private JMenuItem popupItem_DivideFace = new JMenuItem("Dividing face");
-	private JMenuItem popupItem_FlipFace = new JMenuItem("Flipping face");
+	private final AffineTransform affineTransform = new AffineTransform();
+	private final ArrayList<Vector2d> crossPoints = new ArrayList<>();
+	private final JPopupMenu popup = new JPopupMenu();
+	private final JMenuItem popupItem_DivideFace = new JMenuItem("Dividing face");
+	private final JMenuItem popupItem_FlipFace = new JMenuItem("Flipping face");
 
 	public PainterScreen() {
 		addMouseListener(this);

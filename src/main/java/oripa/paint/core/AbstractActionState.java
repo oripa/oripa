@@ -48,7 +48,7 @@ public abstract class AbstractActionState implements ActionState {
 
 		boolean success = onAct(context, currentPoint, freeSelection);
 				
-		if(success == false){
+		if(!success){
 //			return this.cloneForNext();
 			return this;
 		}

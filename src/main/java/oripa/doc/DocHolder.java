@@ -14,7 +14,7 @@ public class DocHolder {
 	}
 //-----------------------------------------------------
 	
-	private Doc doc;
+	private final Doc doc;
 	
 	private DocHolder(){
 		doc = new Doc(Constants.DEFAULT_PAPER_SIZE);

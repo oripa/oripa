@@ -80,88 +80,88 @@ public class MainFrame extends JFrame implements ActionListener,
 	 */
 	private static final long serialVersionUID = 272369294032419950L;
 
-	private MainFrameSettingDB setting = MainFrameSettingDB.getInstance();
-	private MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
-	private PaintContext mouseContext = PaintContext.getInstance();
+	private final MainFrameSettingDB setting = MainFrameSettingDB.getInstance();
+	private final MainScreenSettingDB screenSetting = MainScreenSettingDB.getInstance();
+	private final PaintContext mouseContext = PaintContext.getInstance();
 
-	PainterScreen mainScreen;
-	private JMenu menuFile = new JMenu(
+	final PainterScreen mainScreen;
+	private final JMenu menuFile = new JMenu(
 			ORIPA.res.getString(StringID.Main.FILE_ID));
-	private JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
-	private JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
-	private JMenuItem menuItemClear = new JMenuItem(ORIPA.res.getString("New"));
-	private JMenuItem menuItemOpen = new JMenuItem(ORIPA.res.getString("Open"));
+	private final JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
+	private final JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
+	private final JMenuItem menuItemClear = new JMenuItem(ORIPA.res.getString("New"));
+	private final JMenuItem menuItemOpen = new JMenuItem(ORIPA.res.getString("Open"));
 
-	private JMenuItem menuItemSave = new JMenuItem(ORIPA.res.getString("Save"));
-	private JMenuItem menuItemSaveAs = new JMenuItem(
+	private final JMenuItem menuItemSave = new JMenuItem(ORIPA.res.getString("Save"));
+	private final JMenuItem menuItemSaveAs = new JMenuItem(
 			ORIPA.res.getString("SaveAs"));
-	private JMenuItem menuItemSaveAsImage = new JMenuItem(
+	private final JMenuItem menuItemSaveAsImage = new JMenuItem(
 			ORIPA.res.getString("SaveAsImage"));
 
-	private JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
-	private JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
-	private JMenuItem menuItemExportCP = new JMenuItem("Export CP");
-	private JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
+	private final JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
+	private final JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
+	private final JMenuItem menuItemExportCP = new JMenuItem("Export CP");
+	private final JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
 
 	// -----------------------------------------------------------------------------------------------------------
 	// Create paint button
 
-	ButtonFactory buttonFactory = new PaintActionButtonFactory();
+	final ButtonFactory buttonFactory = new PaintActionButtonFactory();
 	
 	/**
 	 * For changing outline
 	 */
-	private JMenuItem menuItemChangeOutline = (JMenuItem) buttonFactory.create(
+	private final JMenuItem menuItemChangeOutline = (JMenuItem) buttonFactory.create(
 			this, JMenuItem.class, StringID.EDIT_CONTOUR_ID);
 
 	/**
 	 * For selecting all lines
 	 */
-	private JMenuItem menuItemSelectAll = (JMenuItem) buttonFactory.create(
+	private final JMenuItem menuItemSelectAll = (JMenuItem) buttonFactory.create(
 			this, JMenuItem.class, StringID.SELECT_ALL_LINE_ID);
 
 	/**
 	 * For starting copy-and-paste
 	 */
-	private JMenuItem menuItemCopyAndPaste = (JMenuItem) buttonFactory.create(
+	private final JMenuItem menuItemCopyAndPaste = (JMenuItem) buttonFactory.create(
 			this, JMenuItem.class, StringID.COPY_PASTE_ID);
 
 	/**
 	 * For starting cut-and-paste
 	 */
-	private JMenuItem menuItemCutAndPaste = (JMenuItem) buttonFactory.create(
+	private final JMenuItem menuItemCutAndPaste = (JMenuItem) buttonFactory.create(
 			this, JMenuItem.class, StringID.CUT_PASTE_ID);
 
 	// -----------------------------------------------------------------------------------------------------------
 
 
-	private ResourceHolder resourceHolder = ResourceHolder.getInstance();
-	private JMenuItem menuItemProperty = new JMenuItem(
+	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
+	private final JMenuItem menuItemProperty = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL,
 					StringID.Main.PROPERTY_ID));
 
-	private JMenuItem menuItemExit = new JMenuItem(resourceHolder.getString(
+	private final JMenuItem menuItemExit = new JMenuItem(resourceHolder.getString(
 			ResourceKey.LABEL, StringID.Main.EXIT_ID));
-	private JMenuItem menuItemUndo = new JMenuItem(ORIPA.res.getString("Undo"));
-	private JMenuItem menuItemAbout = new JMenuItem(
+	private final JMenuItem menuItemUndo = new JMenuItem(ORIPA.res.getString("Undo"));
+	private final JMenuItem menuItemAbout = new JMenuItem(
 			ORIPA.res.getString("About"));
-	private JMenuItem menuItemRepeatCopy = new JMenuItem("Array Copy");
-	private JMenuItem menuItemCircleCopy = new JMenuItem("Circle Copy");
-	private JMenuItem menuItemUnSelectAll = new JMenuItem("UnSelect All");
+	private final JMenuItem menuItemRepeatCopy = new JMenuItem("Array Copy");
+	private final JMenuItem menuItemCircleCopy = new JMenuItem("Circle Copy");
+	private final JMenuItem menuItemUnSelectAll = new JMenuItem("UnSelect All");
 
-	private JMenuItem menuItemDeleteSelectedLines = new JMenuItem(
+	private final JMenuItem menuItemDeleteSelectedLines = new JMenuItem(
 			"Delete Selected Lines");
-	private JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
+	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
 
 	private RepeatCopyDialog arrayCopyDialog;
 	private CircleCopyDialog circleCopyDialog;
-	public static JLabel hintLabel = new JLabel();
-	public UIPanel uiPanel;
+	public static final JLabel hintLabel = new JLabel();
+	public final UIPanel uiPanel;
 
-	private FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
+	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 
-	private FilterDB filterDB = FilterDB.getInstance();
-	private FileFilterEx[] fileFilters = new FileFilterEx[] {
+	private final FilterDB filterDB = FilterDB.getInstance();
+	private final FileFilterEx[] fileFilters = new FileFilterEx[] {
 
 	filterDB.getFilter("opx"), filterDB.getFilter("pict") };
 
@@ -514,7 +514,7 @@ public class MainFrame extends JFrame implements ActionListener,
 		origamiModel = modelFactory.buildOrigami(creasePattern, document.getPaperSize(), true);
 		document.setOrigamiModel(origamiModel);
 		
-		if ("obj".equals(ext) == false) {
+		if (!"obj".equals(ext)) {
 
 		} else if (!hasModel && !origamiModel.isProbablyFoldable()) {
 			

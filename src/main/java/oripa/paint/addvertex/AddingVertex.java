@@ -26,7 +26,7 @@ public class AddingVertex extends PickingVertex {
 		
 		boolean result = super.onAct(context, currentPoint, true);
 		
-		if(result == true){
+		if(result){
 			OriLine line = GeometricOperation.pickLine(
 					context);
 

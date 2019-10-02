@@ -16,9 +16,10 @@ public class FileChooserFactory {
 		else {
 			fileChooser = new FileChooser();
 		}
-		
-		for (int i = 0; i < filters.length; i++) {
-			fileChooser.addChoosableFileFilter(filters[i]);			
+
+		for (FileFilterEx filter : filters)
+		{
+			fileChooser.addChoosableFileFilter(filter);
 		}
 
 		fileChooser.setAcceptAllFileFilterUsed(false);

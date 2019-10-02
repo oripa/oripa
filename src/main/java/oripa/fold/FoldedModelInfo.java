@@ -5,7 +5,7 @@ import java.util.List;
 
 public class FoldedModelInfo {
 	private int overlapRelation[][] = null;
-	private List<int[][]> overlapRelations = new ArrayList<int[][]>();
+	private List<int[][]> overlapRelations = new ArrayList<>();
 	private int currentORmatIndex = 0;
 
 	BoundBox boundBox = new BoundBox(null, null);

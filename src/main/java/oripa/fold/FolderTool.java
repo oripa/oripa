@@ -236,7 +236,7 @@ public class FolderTool {
 
 		public boolean cleanDuplicatedLines(Collection<OriLine> creasePattern) {
 			System.out.println("pre cleanDuplicatedLines " + creasePattern.size());
-			ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(creasePattern.size());
+			ArrayList<OriLine> tmpLines = new ArrayList<>(creasePattern.size());
 			for (OriLine l : creasePattern) {
 				OriLine ll = l;
 

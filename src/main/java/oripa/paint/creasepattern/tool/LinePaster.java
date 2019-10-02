@@ -55,9 +55,7 @@ public class LinePaster {
 		//-----------------------------------------------
 		// set the result to the current list
 		//-----------------------------------------------
-		for(OriLine line : crossables){
-			currentLines.add(line);
-		}
+		currentLines.addAll(crossables);
 
 		
 	}

@@ -12,8 +12,8 @@ public class FileFilterEx extends javax.swing.filechooser.FileFilter {
 
     
     
-    private String extensions[];
-    private String msg;
+    private final String[] extensions;
+    private final String msg;
     
     private SavingAction savingAction = null;
 

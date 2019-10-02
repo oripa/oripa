@@ -14,7 +14,7 @@ import oripa.viewsetting.main.ScreenUpdater;
 
 public class DeleteSelectedLines implements ActionListener {
 
-	PaintContext context = PaintContext.getInstance();
+	final PaintContext context = PaintContext.getInstance();
 	
 	
 	@Override
@@ -27,7 +27,7 @@ public class DeleteSelectedLines implements ActionListener {
 		Painter painter = new Painter();
 		painter.removeSelectedLines(creasePattern);
 
-		if(context.isPasting() == false){
+		if(!context.isPasting()){
 			context.clear(false);
 		}
 		

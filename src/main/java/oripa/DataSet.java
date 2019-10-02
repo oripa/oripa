@@ -62,8 +62,9 @@ public class DataSet {
     public void recover(Doc doc) {
     	CreasePattern creasePattern = doc.getCreasePattern();
         creasePattern.clear();
-        for (int i = 0; i < lines.length; i++) {
-            creasePattern.add(lines[i].getLine());
+        for (OriLineProxy line : lines)
+        {
+            creasePattern.add(line.getLine());
         }
         doc.setPaperSize(paperSize);
         doc.setTitle(title);

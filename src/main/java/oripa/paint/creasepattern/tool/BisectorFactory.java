@@ -14,7 +14,6 @@ public class BisectorFactory {
 	 * create perpendicular bisector line between v0 and v1
 	 * @param v0
 	 * @param v1
-	 * @param creasePattern
 	 * @param paperSize
 	 */
 	public OriLine createPerpendicularBisector(
@@ -47,7 +46,6 @@ public class BisectorFactory {
 	 * @param v1
 	 * @param v2
 	 * @param l
-	 * @param creasePattern
 	 */
 	public OriLine createAngleBisectorLine(
 			Vector2d v0, Vector2d v1, Vector2d v2,

@@ -36,9 +36,9 @@ public class OriLine implements Comparable<OriLine> {
 		
 		NONE(TYPE_NONE), CUT(TYPE_CUT), RIDGE(TYPE_RIDGE), VALLEY(TYPE_VALLEY);
 
-		private int val;
+		private final int val;
 		
-		private Type(int val){
+		Type(int val){
 			this.val = val;
 		}
 		
@@ -78,8 +78,8 @@ public class OriLine implements Comparable<OriLine> {
 	
     public boolean selected;
     public int typeVal = TYPE_NONE;  // eventually unneeded
-    public OriPoint p0 = new OriPoint();
-    public OriPoint p1 = new OriPoint();
+    public final OriPoint p0 = new OriPoint();
+    public final OriPoint p1 = new OriPoint();
 
     public OriLine() {
     }

@@ -33,7 +33,7 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  *
  */
 public class ModelViewFrame3D extends JFrame implements ActionListener {
-    ModelViewScreen3D screen;
+    final ModelViewScreen3D screen;
 
     public ModelViewFrame3D() {
         setTitle("3D Origami Model Rendering");

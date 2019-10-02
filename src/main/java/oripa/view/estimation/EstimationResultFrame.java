@@ -32,11 +32,11 @@ import oripa.viewsetting.estimation.RenderFrameSettingDB;
 
 public class EstimationResultFrame extends JFrame implements ActionListener, Observer {
 
-	private RenderFrameSettingDB setting = RenderFrameSettingDB.getInstance();
+	private final RenderFrameSettingDB setting = RenderFrameSettingDB.getInstance();
 
-	FoldedModelScreen screen;
-    EstimationResultUI ui;
-    public JLabel hintLabel;
+	final FoldedModelScreen screen;
+    final EstimationResultUI ui;
+    public final JLabel hintLabel;
 
     public EstimationResultFrame() {
     	setting.addObserver(this);

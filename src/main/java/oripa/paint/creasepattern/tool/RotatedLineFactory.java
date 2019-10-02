@@ -25,7 +25,7 @@ public class RotatedLineFactory {
 			Collection<OriLine> creasePattern, double paperSize) {
 
 				
-		ArrayList<OriLine> rotatedLines = new ArrayList<OriLine>();
+		ArrayList<OriLine> rotatedLines = new ArrayList<>();
 
 
 		oripa.geom.RectangleClipper clipper =

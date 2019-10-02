@@ -19,7 +19,7 @@ public class LineMirror {
 	public Collection<OriLine> createMirroredLines(
 			OriLine baseLine, Collection<OriLine> lines) {
 
-		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>(lines.size());
+		ArrayList<OriLine> copiedLines = new ArrayList<>(lines.size());
 		for (OriLine line : lines) {
 			if (!line.selected) {
 				continue;

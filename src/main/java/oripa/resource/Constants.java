@@ -20,7 +20,7 @@ package oripa.resource;
 
 public class Constants {
 
-    public static enum EditMode {
+    public enum EditMode {
 
         NONE,
         INPUT_LINE,
@@ -33,13 +33,13 @@ public class Constants {
         EDIT_OUTLINE
     };
 
-    public static enum ModelEditMode {
+    public enum ModelEditMode {
 
         NONE,
         INPUT_CROSS_LINE
     };
 
-    public static enum LineInputMode {
+    public enum LineInputMode {
 
         DIRECT_V,
         ON_V,
@@ -55,14 +55,14 @@ public class Constants {
         PBISECTOR // perpendicular bisector
     };
 
-    public static enum SubLineInputMode {
+    public enum SubLineInputMode {
 
         NONE,
         PICK_LENGTH,
         PICK_ANGLE
     };
 
-    public static enum ModelDispMode {
+    public enum ModelDispMode {
 
         FILL_COLOR,
         FILL_WHITE,

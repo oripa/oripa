@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 public class ResourceHolder {
 	
 	
-	private HashMap<ResourceKey, ResourceBundle> resources = new HashMap<>();
+	private final HashMap<ResourceKey, ResourceBundle> resources = new HashMap<>();
 	
 //----------------------------------------------------------	
 	private static ResourceHolder instance = null;

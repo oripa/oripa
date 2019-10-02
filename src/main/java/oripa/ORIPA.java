@@ -43,7 +43,7 @@ public class ORIPA {
     public static Doc doc;
     public static MainFrame mainFrame;
     public static ModelViewFrame modelFrame;
-    public static String infoString = "ORIPA S: (c) 2012 OUCHI Koji\n" +
+    public static final String infoString = "ORIPA S: (c) 2012 OUCHI Koji\n" +
     		"http://github.com/Ooouch1\n" +
     		"ORIPA: (c) 2005-2009 Jun Mitani\nhttp://mitani.cs.tsukuba.ac.jp/\n\n"+
             "This program comes with ABSOLUTELY NO WARRANTY;\n"+
@@ -57,7 +57,7 @@ public class ORIPA {
     ;
 //    public static FoldabilityCheckFrame checkFrame;
 
-	public static String iniFilePath = System.getProperty("user.home") + File.separator + "oripa.ini";
+	public static final String iniFilePath = System.getProperty("user.home") + File.separator + "oripa.ini";
 
 	
 	private static final String resourcePackage = "oripa.resource";

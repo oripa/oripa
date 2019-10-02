@@ -6,7 +6,7 @@ import oripa.file.SavingAction;
 
 public class SavingDoc implements SavingAction{
 
-	private Exporter exporter;
+	private final Exporter exporter;
 	
 	public SavingDoc(Exporter exporter){
 		this.exporter = exporter;

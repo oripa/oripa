@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import oripa.bind.state.PaintBoundState;
 
 public class StatePusher implements ActionListener{
-	private PaintBoundState state;
+	private final PaintBoundState state;
 	
 	public StatePusher(PaintBoundState s){
 		state = s;

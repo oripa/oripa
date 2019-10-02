@@ -16,7 +16,7 @@ import oripa.value.OriLine;
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 
 	
-	private boolean isCut;
+	private final boolean isCut;
 	
 	public CopyAndPasteActionWrapper(boolean isCut) {
 		super();

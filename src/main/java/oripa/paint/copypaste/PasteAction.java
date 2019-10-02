@@ -22,7 +22,7 @@ public class PasteAction extends GraphicMouseAction {
 
 	private FilledOriLineArrayList shiftedLines = new FilledOriLineArrayList(0);
 
-	private OriginHolder originHolder = OriginHolder.getInstance();
+	private final OriginHolder originHolder = OriginHolder.getInstance();
 
 
 	public PasteAction(){
@@ -117,7 +117,7 @@ public class PasteAction extends GraphicMouseAction {
 
 
 
-	Line2D.Double g2dLine = new Line2D.Double();
+	final Line2D.Double g2dLine = new Line2D.Double();
 	double diffX, diffY;
 	@Override
 	public void onDraw(Graphics2D g2d, PaintContext context) {

@@ -14,8 +14,8 @@ import java.util.LinkedList;
 
 
 public class FileHistory {
-	private LinkedList<String> mostRecentlyUsedHistory = new LinkedList<>();
-	private int maxSize;
+	private final LinkedList<String> mostRecentlyUsedHistory = new LinkedList<>();
+	private final int maxSize;
 	
 	public FileHistory(int maxSize){
 		this.maxSize = maxSize;
@@ -102,7 +102,7 @@ public class FileHistory {
 			dec.close();
 
 			int initMRUlength = initData.MRUFiles.length;
-			int length = (maxSize < initMRUlength)? maxSize : initMRUlength;
+			int length = Math.min(maxSize, initMRUlength);
 			
 			for (int i = 0; i < length; i++) {
 				if (initData.MRUFiles[i] != null && !initData.MRUFiles[i].equals("")) {

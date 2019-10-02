@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public class UndoManager<Backup> {
 
-	private Deque<Backup> undoStack = new LinkedList<>();
+	private final Deque<Backup> undoStack = new LinkedList<>();
 	private Backup cache;
 	
 	private boolean changed = false;

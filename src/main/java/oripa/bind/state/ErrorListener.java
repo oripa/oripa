@@ -15,7 +15,7 @@ public interface ErrorListener {
 	 * @return {@code true} if an error occurs. otherwise false. 
 	 * 
 	 */
-	public boolean isError(ActionEvent e);
+    boolean isError(ActionEvent e);
 	
 	
 	/**
@@ -23,5 +23,5 @@ public interface ErrorListener {
 	 * @param parent 	an parent component. Use this for showing message, e.g..
 	 * @param e			
 	 */
-	public void onError(Component parent, ActionEvent e);
+    void onError(Component parent, ActionEvent e);
 }

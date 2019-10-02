@@ -28,10 +28,10 @@ public class RectangleClipper {
     final static int RIGHT = 2;
     final static int TOP = 4;
     final static int BOTTOM = 8;
-    private double m_minX;
-    private double m_minY;
-    private double m_maxX;
-    private double m_maxY;
+    private final double m_minX;
+    private final double m_minY;
+    private final double m_maxX;
+    private final double m_maxY;
 
     public RectangleClipper(double x0, double y0, double x1, double y1) {
         m_minX = x0;

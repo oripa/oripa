@@ -21,7 +21,7 @@ import oripa.viewsetting.main.ScreenUpdater;
  */
 public class PaintActionSetter implements ActionListener{
 	
-	private GraphicMouseActionInterface mouseAction;
+	private final GraphicMouseActionInterface mouseAction;
 	
 	public PaintActionSetter(GraphicMouseActionInterface mouseAction) {
 		this.mouseAction = mouseAction;
@@ -36,7 +36,7 @@ public class PaintActionSetter implements ActionListener{
 		
 		PaintConfig.setMouseAction(mouseAction);
 
-		if(mouseAction.needSelect() == false){
+		if(!mouseAction.needSelect()){
 			CreasePattern creasePattern = ORIPA.doc.getCreasePattern();
 			Painter painter = new Painter();
 			painter.resetSelectedOriLines(creasePattern);

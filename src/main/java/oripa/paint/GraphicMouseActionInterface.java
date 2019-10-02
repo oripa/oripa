@@ -15,16 +15,16 @@ public interface GraphicMouseActionInterface {
 	 * default is false.
 	 * @return
 	 */
-	public abstract boolean needSelect();
+    boolean needSelect();
 
-	public abstract EditMode getEditMode();
+	EditMode getEditMode();
 
 	/**
 	 * define action on destroy.
 	 * default does clear context selection keeping line-selected marks.
 	 * @param context
 	 */
-	public abstract void destroy(PaintContext context);
+    void destroy(PaintContext context);
 
 	/**
 	 * define action for recovering the status of this object 
@@ -32,7 +32,7 @@ public interface GraphicMouseActionInterface {
 	 * default does nothing.
 	 * @param context
 	 */
-	public abstract void recover(PaintContext context);
+    void recover(PaintContext context);
 
 	/**
 	 * performs action.
@@ -43,11 +43,9 @@ public interface GraphicMouseActionInterface {
 	 * 
 	 * @return Next mouse action. This class returns {@code this} object.
 	 */
-	public abstract GraphicMouseActionInterface onLeftClick(PaintContext context,
-			AffineTransform affine, boolean differentAction);
+    GraphicMouseActionInterface onLeftClick(PaintContext context, AffineTransform affine, boolean differentAction);
 
-	public abstract void doAction(PaintContext context, Point2D.Double point,
-			boolean differntAction);
+	void doAction(PaintContext context, Point2D.Double point, boolean differntAction);
 
 	/**
 	 * undo action.
@@ -55,10 +53,9 @@ public interface GraphicMouseActionInterface {
 	 * @param affine
 	 * @param differentAction
 	 */
-	public abstract void onRightClick(PaintContext context,
-			AffineTransform affine, boolean differentAction);
+    void onRightClick(PaintContext context, AffineTransform affine, boolean differentAction);
 
-	public abstract void undo(PaintContext context);
+	void undo(PaintContext context);
 
 	/**
 	 * searches a vertex and a line close enough to the mouse cursor.
@@ -69,17 +66,13 @@ public interface GraphicMouseActionInterface {
 	 * @param differentAction
 	 * @return close vertex. null if not found.
 	 */
-	public abstract Vector2d onMove(PaintContext context,
-			AffineTransform affine, boolean differentAction);
+    Vector2d onMove(PaintContext context, AffineTransform affine, boolean differentAction);
 
-	public abstract void onPress(PaintContext context, AffineTransform affine,
-			boolean differentAction);
+	void onPress(PaintContext context, AffineTransform affine, boolean differentAction);
 
-	public abstract void onDrag(PaintContext context, AffineTransform affine,
-			boolean differentAction);
+	void onDrag(PaintContext context, AffineTransform affine, boolean differentAction);
 
-	public abstract void onRelease(PaintContext context,
-			AffineTransform affine, boolean differentAction);
+	void onRelease(PaintContext context, AffineTransform affine, boolean differentAction);
 
 	/**
 	 * draws selected lines and selected vertices as selected state.
@@ -88,6 +81,6 @@ public interface GraphicMouseActionInterface {
 	 * @param g2d
 	 * @param context
 	 */
-	public abstract void onDraw(Graphics2D g2d, PaintContext context);
+    void onDraw(Graphics2D g2d, PaintContext context);
 
 }

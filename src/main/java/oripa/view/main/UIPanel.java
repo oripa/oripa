@@ -95,32 +95,32 @@ public class UIPanel extends JPanel
 implements ActionListener, PropertyChangeListener, Observer {
 
 
-	private UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
-	ResourceHolder resources = ResourceHolder.getInstance();
+	private final UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
+	final ResourceHolder resources = ResourceHolder.getInstance();
 
 	
 	//---------------------------------------------------------------------------------------------------------------------------
 	// Binding edit mode
 
-	private BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
-	ButtonFactory buttonFactory = new PaintActionButtonFactory();
+	private final BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
+	final ButtonFactory buttonFactory = new PaintActionButtonFactory();
 
-	JRadioButton editModeInputLineButton = (JRadioButton) viewChangeBinder.createButton(
+	final JRadioButton editModeInputLineButton = (JRadioButton) viewChangeBinder.createButton(
 			JRadioButton.class, new ChangeOnPaintInputButtonSelected(), StringID.UI.INPUT_LINE_ID);
 
-	JRadioButton editModePickLineButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton editModePickLineButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.SELECT_ID);
 
-	JRadioButton editModeDeleteLineButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton editModeDeleteLineButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.DELETE_LINE_ID);
 
-	JRadioButton editModeLineTypeButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton editModeLineTypeButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID);
 
-	JRadioButton editModeAddVertex =(JRadioButton) buttonFactory.create(
+	final JRadioButton editModeAddVertex =(JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.ADD_VERTEX_ID);
 
-	JRadioButton editModeDeleteVertex = (JRadioButton) buttonFactory.create(
+	final JRadioButton editModeDeleteVertex = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.DELETE_VERTEX_ID);
 
 
@@ -128,98 +128,98 @@ implements ActionListener, PropertyChangeListener, Observer {
 	// Binding how to enter the line
 
 
-	JRadioButton lineInputDirectVButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton lineInputDirectVButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.DIRECT_V_ID);
 
-	JRadioButton lineInputOnVButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton lineInputOnVButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.ON_V_ID);
 
-	JRadioButton lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.VERTICAL_ID);
 
-	JRadioButton lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.BISECTOR_ID);
 
-	JRadioButton lineInputTriangleSplitButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton lineInputTriangleSplitButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.TRIANGLE_ID);
 
-	JRadioButton lineInputSymmetricButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton lineInputSymmetricButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.SYMMETRIC_ID);
 
-	JRadioButton lineInputMirrorButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton lineInputMirrorButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.MIRROR_ID);
 
-	JRadioButton lineInputByValueButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton lineInputByValueButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.BY_VALUE_ID);
 
-	JRadioButton lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
+	final JRadioButton lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
 			this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID);
 
 	//---------------------------------------------------------------------------------------------------------------------------
 
 
-	JRadioButton lineTypeSubButton = new JRadioButton(
+	final JRadioButton lineTypeSubButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
-	JRadioButton lineTypeMountainButton = new JRadioButton(
+	final JRadioButton lineTypeMountainButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
-	JRadioButton lineTypeValleyButton = new JRadioButton(
+	final JRadioButton lineTypeValleyButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
 
 	//---------------------------------------------------------------------------------------------------------------------------
 
 
-	ButtonGroup editModeGroup;
+	final ButtonGroup editModeGroup;
 	// Text box
-	JFormattedTextField textFieldLength;
-	JFormattedTextField textFieldAngle;
-	JFormattedTextField textFieldGrid;
+	final JFormattedTextField textFieldLength;
+	final JFormattedTextField textFieldAngle;
+	final JFormattedTextField textFieldGrid;
 
-	JButton buttonLength = new JButton(
+	final JButton buttonLength = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
-	JButton buttonAngle = new JButton(
+	final JButton buttonAngle = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
 
-	JButton buildButton = new JButton(
+	final JButton buildButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
-	JButton resetButton = new JButton("Reset");
+	final JButton resetButton = new JButton("Reset");
 
-	JCheckBox dispGridCheckBox = new JCheckBox(
+	final JCheckBox dispGridCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID), true);
 	
-	JButton gridSmallButton = new JButton("x2");
-	JButton gridLargeButton = new JButton("x1/2");
-	JButton gridChangeButton = new JButton(
+	final JButton gridSmallButton = new JButton("x2");
+	final JButton gridLargeButton = new JButton("x1/2");
+	final JButton gridChangeButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.GRID_SIZE_CHANGE_ID));
 
-	JPanel mainPanel = new JPanel();
-	JPanel subPanel1 = new JPanel();
-	JPanel subPanel2 = new JPanel();
-	JPanel gridPanel = new JPanel();
-	JPanel lineTypePanel = new JPanel();
+	final JPanel mainPanel = new JPanel();
+	final JPanel subPanel1 = new JPanel();
+	final JPanel subPanel2 = new JPanel();
+	final JPanel gridPanel = new JPanel();
+	final JPanel lineTypePanel = new JPanel();
 	// AlterLineType
-	JPanel alterLineTypePanel = new JPanel();
+	final JPanel alterLineTypePanel = new JPanel();
 
 
-	TypeForChange[] alterLine_comboData_from = 
+	final TypeForChange[] alterLine_comboData_from =
 		{TypeForChange.EMPTY, TypeForChange.RIDGE, TypeForChange.VALLEY};
-	TypeForChange[] alterLine_comboData_to = 
+	final TypeForChange[] alterLine_comboData_to =
 		{TypeForChange.RIDGE, TypeForChange.VALLEY, TypeForChange.AUX, 
 			TypeForChange.CUT, TypeForChange.DELETE, TypeForChange.FLIP};
 
-	JComboBox<TypeForChange> alterLine_combo_from = new JComboBox<>(alterLine_comboData_from);
-	JComboBox<TypeForChange> alterLine_combo_to = new JComboBox<>(alterLine_comboData_to);
+	final JComboBox<TypeForChange> alterLine_combo_from = new JComboBox<>(alterLine_comboData_from);
+	final JComboBox<TypeForChange> alterLine_combo_to = new JComboBox<>(alterLine_comboData_to);
 
-	JCheckBox dispMVLinesCheckBox = new JCheckBox(
+	final JCheckBox dispMVLinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MV_ID), true);
-	JCheckBox dispAuxLinesCheckBox = new JCheckBox(
+	final JCheckBox dispAuxLinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID), true);
-	JCheckBox dispVertexCheckBox = new JCheckBox(
+	final JCheckBox dispVertexCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID), false);
-	JCheckBox doFullEstimationCheckBox = new JCheckBox(
+	final JCheckBox doFullEstimationCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.FULL_ESTIMATION_ID), false);
-	JButton buttonCheckWindow = new JButton(
+	final JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
-	PainterScreen screen;
+	final PainterScreen screen;
 
 
 	//	private PaintContext context = PaintContext.getInstance();
@@ -662,7 +662,7 @@ implements ActionListener, PropertyChangeListener, Observer {
 	}
 
 
-	private MainScreenSettingDB screenDB = MainScreenSettingDB.getInstance();
+	private final MainScreenSettingDB screenDB = MainScreenSettingDB.getInstance();
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {		
