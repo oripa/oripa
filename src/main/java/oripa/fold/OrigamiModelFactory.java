@@ -194,9 +194,8 @@ public class OrigamiModelFactory {
 
 		// Check if there are vertexes with just 2 collinear edges with same type
 		// merge the edges and delete the vertex for efficiency 
-		ArrayList<OriEdge> eds = new ArrayList<OriEdge>();
-		ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
-		tmpVVec.addAll(vertices);
+		ArrayList<OriEdge> eds = new ArrayList<>();
+        ArrayList<OriVertex> tmpVVec = new ArrayList<>(vertices);
 		for (OriVertex v : tmpVVec) {
 			eds.clear();
 			for (OriEdge e : edges) {
@@ -329,7 +328,7 @@ public class OrigamiModelFactory {
 	private boolean cleanDuplicatedLines(Collection<OriLine> creasePattern) {
 		debugCount = 0;
 		System.out.println("pre cleanDuplicatedLines " + creasePattern.size());
-		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>();
+		ArrayList<OriLine> tmpLines = new ArrayList<>();
 		for (OriLine l : creasePattern) {
 			OriLine ll = l;
 
@@ -462,7 +461,7 @@ public class OrigamiModelFactory {
 	private void makeEdges(List<OriEdge> edges, List<OriFace> faces) {
 		edges.clear();
 
-		ArrayList<OriHalfedge> tmpHalfedges = new ArrayList<OriHalfedge>();
+		ArrayList<OriHalfedge> tmpHalfedges = new ArrayList<>();
 
 		// Clear all the Halfedges
 		for (OriFace face : faces) {

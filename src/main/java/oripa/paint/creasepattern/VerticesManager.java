@@ -34,7 +34,8 @@ public class VerticesManager {
 	 *
 	 */
 	public class AreaPosition{
-		public int x, y;
+		public final int x;
+		public final int y;
 
 		/**
 		 * doubles point to index
@@ -75,11 +76,11 @@ public class VerticesManager {
 	/**
 	 * [div_x][div_y] is a vertices in the divided area.
 	 */
-	private HashSet<Vector2d>[][] vertices = new HashSet[divNum][divNum];
+	private final HashSet<Vector2d>[][] vertices = new HashSet[divNum][divNum];
 	/**
 	 * count existence of same values.
 	 */
-	private Map<Vector2d, Integer> counts = new HashMap<>();
+	private final Map<Vector2d, Integer> counts = new HashMap<>();
 
 	/**
 	 * Constructor to initialize fields.
@@ -91,7 +92,7 @@ public class VerticesManager {
 		// allocate memory for each area
 		for(int x = 0; x < divNum; x++){
 			for(int y = 0; y < divNum; y++){
-				vertices[x][y] = new HashSet<Vector2d>();
+				vertices[x][y] = new HashSet<>();
 			}
 		}
 		

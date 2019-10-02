@@ -30,7 +30,7 @@ import oripa.value.OriLine;
 
 public class FoldabilityCheckFrame extends JFrame implements ActionListener {
 
-    FoldabilityScreen screen;
+    final FoldabilityScreen screen;
 
     public FoldabilityCheckFrame() {
         // Called when the "Check window" button is pressed.

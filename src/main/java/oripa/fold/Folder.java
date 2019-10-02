@@ -38,13 +38,13 @@ import oripa.value.OriLine;
 
 public class Folder {
 
-	private ArrayList<Condition4> condition4s = new ArrayList<>();
+	private final ArrayList<Condition4> condition4s = new ArrayList<>();
 	private int workORmat[][];
 	private ArrayList<SubFace> subFaces;
 
 	// helper object
-    private OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-    private FolderTool folderTool = new FolderTool();
+    private final OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+    private final FolderTool folderTool = new FolderTool();
     
 	public Folder() {
 	}

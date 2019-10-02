@@ -48,7 +48,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 		Doc document = ORIPA.doc;
 		Collection<OriLine> creasePattern = document.getCreasePattern();
 
-		if(selectedLines.isEmpty() == false){
+		if(!selectedLines.isEmpty()){
 			document.pushUndoInfo();
 			Painter painter = new Painter();
 			for (OriLine l : selectedLines) {

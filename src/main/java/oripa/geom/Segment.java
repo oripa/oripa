@@ -22,8 +22,8 @@ import javax.vecmath.Vector2d;
 
 public class Segment {
 
-    public Vector2d p0;
-    public Vector2d p1;
+    public final Vector2d p0;
+    public final Vector2d p1;
 
     public Segment(Vector2d p0, Vector2d p1) {
         this.p0 = p0;

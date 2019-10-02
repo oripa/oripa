@@ -7,9 +7,9 @@ public enum TypeForChange {
 	RIDGE("M"), VALLEY("V"), AUX("Aux"), CUT("Cut"), 
 	DELETE("Del"), FLIP("Flip");
 	
-	private String shortName;
+	private final String shortName;
 	
-	private TypeForChange(String shortName) {
+	TypeForChange(String shortName) {
 		this.shortName = shortName;
 	}
 	

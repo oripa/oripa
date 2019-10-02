@@ -6,7 +6,7 @@ import oripa.file.FileVersionError;
 
 public class LoadingDoc implements oripa.file.LoadingAction{
 
-	private Loader loader;
+	private final Loader loader;
 	
 	public LoadingDoc(Loader loader){
 		this.loader = loader;

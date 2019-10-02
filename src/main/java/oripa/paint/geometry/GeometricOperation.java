@@ -65,7 +65,7 @@ public class GeometricOperation {
 			picked = new Vector2d(nearestPosition.point);		
 		}
 		
-		if(picked == null && freeSelection == true){
+		if(picked == null && freeSelection){
 			Point2D.Double currentPoint = context.getLogicalMousePoint();
 
 			OriLine l = pickLine(currentPoint, context.scale);

@@ -28,14 +28,14 @@ import oripa.ORIPA;
 public class SubFace {
 
 
-	public OriFace outline;
-	public ArrayList<OriFace> faces;
-	public ArrayList<OriFace> sortedFaces;
+	public final OriFace outline;
+	public final ArrayList<OriFace> faces;
+	public final ArrayList<OriFace> sortedFaces;
 	public int tmpInt;
-	public ArrayList<Condition4> condition4s = new ArrayList<>();
-	public ArrayList<Condition3> condition3s = new ArrayList<>();
+	public final ArrayList<Condition4> condition4s = new ArrayList<>();
+	public final ArrayList<Condition3> condition3s = new ArrayList<>();
 	public boolean allFaceOrderDecided = false;
-	public ArrayList<ArrayList<OriFace>> answerStacks = new ArrayList<>();
+	public final ArrayList<ArrayList<OriFace>> answerStacks = new ArrayList<>();
 
 	public SubFace(OriFace f) {
 		outline = f;
@@ -141,16 +141,13 @@ public class SubFace {
 
 			if (index == faces.size() - 1) {
 
-				ArrayList<OriFace> ans = new ArrayList<>();
-
-				ans.addAll(sortedFaces);
+				ArrayList<OriFace> ans = new ArrayList<>(sortedFaces);
 				answerStacks.add(ans);
 
 				// Further continue the search for solutions
 				sortedFaces.set(index, null);
 				f.alreadyStacked = false;
 				f.tmpInt2 = -1;
-				continue;
 			} else {
 				sort(modelFaces, index + 1);
 			}

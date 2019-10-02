@@ -25,7 +25,7 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 	protected void afterRectangularSelection(Collection<OriLine> selectedLines,
 			PaintContext context) {
 
-		if(selectedLines.isEmpty() == false){
+		if(!selectedLines.isEmpty()){
 			Doc document = ORIPA.doc;
 			Collection<OriLine> creasePattern = document.getCreasePattern();
 			document.pushUndoInfo();

@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 public class ViewChangeListener implements ActionListener{
 
-	private ChangeViewSetting command;
+	private final ChangeViewSetting command;
 	
 	public ViewChangeListener(ChangeViewSetting command) {
 		this.command = command;

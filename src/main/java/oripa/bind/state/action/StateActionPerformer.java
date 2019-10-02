@@ -8,7 +8,7 @@ import oripa.paint.EditMode;
 
 
 public class StateActionPerformer implements ActionListener{
-	private ApplicationState<EditMode> state;
+	private final ApplicationState<EditMode> state;
 	
 	public StateActionPerformer(ApplicationState<EditMode> s) {
 		state = s;

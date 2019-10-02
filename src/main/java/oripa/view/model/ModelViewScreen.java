@@ -58,14 +58,14 @@ implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListene
 	private Image bufferImage;
 	private Graphics2D bufferg;
 	private Point2D preMousePoint; // Screen coordinates
-	private Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logical coordinates
+	private final Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logical coordinates
 	private double scale;
 	private double transX;
 	private double transY;
-	private Vector2d modelCenter = new Vector2d();
+	private final Vector2d modelCenter = new Vector2d();
 	private Dimension preSize;
 	private double rotateAngle;
-	private AffineTransform affineTransform = new AffineTransform();
+	private final AffineTransform affineTransform = new AffineTransform();
 	public boolean dispSlideFace = false;
 	private OriLine crossLine = null;
 	private int crossLineAngleDegree = 90;

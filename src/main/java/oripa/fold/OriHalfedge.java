@@ -30,11 +30,11 @@ public class OriHalfedge {
     public OriVertex vertex = null;
     public OriFace face = null;
     public int tmpInt = 0;
-    public Vector2d tmpVec = new Vector2d();
+    public final Vector2d tmpVec = new Vector2d();
     public Vector2d p = new Vector2d();
-    public Vector2d positionForDisplay = new Vector2d();
-    public Vector2d positionAfterFolded = new Vector2d();
-    public Vector3d vertexColor = new Vector3d();
+    public final Vector2d positionForDisplay = new Vector2d();
+    public final Vector2d positionAfterFolded = new Vector2d();
+    public final Vector3d vertexColor = new Vector3d();
 
     public OriHalfedge(OriVertex v, OriFace f) {
         vertex = v;

@@ -80,8 +80,8 @@ public class FoldedModelScreen extends JPanel
     private boolean m_bFillFaces = true;
     private boolean m_bAmbientOcclusion = false;
     private static boolean m_bFaceOrderFlip = false;
-    static private double m_rotAngle = 0;
-    static private double m_scale = 0.8;
+    static private final double m_rotAngle = 0;
+    static private final double m_scale = 0.8;
     static private boolean m_bDrawEdges = true;
     private Image renderImage;
     double rotateAngle;
@@ -89,9 +89,9 @@ public class FoldedModelScreen extends JPanel
     double transX;
     double transY;
     private Point2D preMousePoint;
-    private AffineTransform affineTransform;
+    private final AffineTransform affineTransform;
     private BufferedImage textureImage = null;
-    private boolean bUseTexture = false;
+    private final boolean bUseTexture = false;
 
     public FoldedModelScreen() {
         addMouseListener(this);

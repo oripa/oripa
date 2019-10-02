@@ -34,7 +34,7 @@ import oripa.viewsetting.main.uipanel.ChangeOnSelectButtonSelected;
 
 public class PaintBoundStateFactory {
 
-	PaintContext context = PaintContext.getInstance();
+	final PaintContext context = PaintContext.getInstance();
 
 	
 

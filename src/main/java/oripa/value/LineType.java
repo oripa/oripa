@@ -3,10 +3,10 @@ package oripa.value;
 public enum LineType {
 	NONE("NONE", 0), CUT("CUT", 1), VALLEY("VALLEY", 2), RIDGE("RIDGE", 3);
 	
-	private String name;
-	private int val;
+	private final String name;
+	private final int val;
 	
-	private LineType(String name, int val){
+	LineType(String name, int val){
 		this.name = name;
 		this.val = val;
 	}

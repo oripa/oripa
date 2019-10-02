@@ -15,7 +15,7 @@ public class CloseTempOutline {
 
 	private class ContourLineAdder implements PairLoop.Block<Vector2d> {
 
-		private Collection<OriLine> creasePattern;
+		private final Collection<OriLine> creasePattern;
 
 		public ContourLineAdder(Collection<OriLine> creasePattern) {
 			this.creasePattern = creasePattern;

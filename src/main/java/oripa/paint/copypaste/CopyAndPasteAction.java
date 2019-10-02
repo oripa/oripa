@@ -14,8 +14,8 @@ import oripa.paint.core.PaintContext;
 
 public class CopyAndPasteAction extends GraphicMouseAction {
 
-	private ChangeOriginAction originAction = new ChangeOriginAction();
-	private PasteAction pasteAction = new PasteAction();
+	private final ChangeOriginAction originAction = new ChangeOriginAction();
+	private final PasteAction pasteAction = new PasteAction();
 	
 	private GraphicMouseActionInterface action = pasteAction;
 
@@ -25,7 +25,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 		setNeedSelect(true);
 	}
 
-	private OriginHolder originHolder = OriginHolder.getInstance();
+	private final OriginHolder originHolder = OriginHolder.getInstance();
 
 	@Override
 	public void recover(PaintContext context) {

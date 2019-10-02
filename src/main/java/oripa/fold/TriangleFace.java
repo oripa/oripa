@@ -21,8 +21,8 @@ package oripa.fold;
 
 public class TriangleFace {
 
-    public TriangleVertex[] v;
-    public OriFace face;
+    public final TriangleVertex[] v;
+    public final OriFace face;
 
     public TriangleFace(OriFace f) {
         face = f;

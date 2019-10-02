@@ -68,10 +68,10 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 
 class J3DFace {
 
-    OriFace oriFace;
+    final OriFace oriFace;
     Shape3D frontShape3D;
     Shape3D backShape3D;
-    boolean bSelected;
+    final boolean bSelected;
 
     J3DFace(OriFace f) {
         oriFace = f;
@@ -82,15 +82,15 @@ class J3DFace {
 public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseMotionListener, MouseWheelListener,
         ComponentListener {
 
-    ArrayList<J3DFace> faces = new ArrayList<>();
-    TransformGroup objTrans = new TransformGroup();
-    Appearance mainAppearance = new Appearance();
-    SimpleUniverse universe;
-    BranchGroup objRoot = new BranchGroup();
-    BranchGroup scene;
-    Color3f faceColorFront = new Color3f(1.0f, 0.8f, 0.8f);
-    Color3f faceColorBack = new Color3f(0.8f, 0.8f, 1.0f);
-    Color3f faceColorSelected = new Color3f(Color.RED);
+    final ArrayList<J3DFace> faces = new ArrayList<>();
+    final TransformGroup objTrans = new TransformGroup();
+    final Appearance mainAppearance = new Appearance();
+    final SimpleUniverse universe;
+    final BranchGroup objRoot = new BranchGroup();
+    final BranchGroup scene;
+    final Color3f faceColorFront = new Color3f(1.0f, 0.8f, 0.8f);
+    final Color3f faceColorBack = new Color3f(0.8f, 0.8f, 1.0f);
+    final Color3f faceColorSelected = new Color3f(Color.RED);
 
     public ModelViewScreen3D(GraphicsConfiguration config) {
         super(config);

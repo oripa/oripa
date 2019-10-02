@@ -74,9 +74,7 @@ public class LineAdder {
 			//crossingLines.add(line);
 		}
 
-		for(OriLine line : toBeAdded){
-			currentLines.add(line);
-		}
+        currentLines.addAll(toBeAdded);
 
 		return true;
 	}
@@ -88,7 +86,7 @@ public class LineAdder {
 	 * @return points on input line divided by currentLines
 	 */
 	private List<Vector2d> createInputLinePoints(OriLine inputLine, Collection<OriLine> currentLines){
-		ArrayList<Vector2d> points = new ArrayList<Vector2d>();
+		ArrayList<Vector2d> points = new ArrayList<>();
 		points.add(inputLine.p0);
 		points.add(inputLine.p1);
 		

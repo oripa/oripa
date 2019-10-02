@@ -30,7 +30,7 @@ public class CreasePattern implements Collection<OriLine> {
 	 */
 	private class CreasePatternIterator implements Iterator<OriLine> {
 
-		private Iterator<OriLine> lineIter;
+		private final Iterator<OriLine> lineIter;
 		private OriLine current;
 
 		public CreasePatternIterator(Iterator<OriLine> iter) {

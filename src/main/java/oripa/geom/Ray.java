@@ -22,8 +22,8 @@ import javax.vecmath.Vector2d;
 
 public class Ray {
 
-    public Vector2d p;
-    public Vector2d dir;
+    public final Vector2d p;
+    public final Vector2d dir;
 
     public Ray(Vector2d p, Vector2d dir) {
         this.p = p;

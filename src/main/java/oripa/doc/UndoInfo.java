@@ -6,7 +6,7 @@ import java.util.Collection;
 import oripa.value.OriLine;
 
 public class UndoInfo {
-    private ArrayList<OriLine> lines = new ArrayList<OriLine>();
+    private final ArrayList<OriLine> lines = new ArrayList<>();
 
     
     

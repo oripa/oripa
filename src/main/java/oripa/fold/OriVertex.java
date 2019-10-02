@@ -24,10 +24,10 @@ import javax.vecmath.Vector2d;
 
 public class OriVertex {
 
-    public Vector2d p = new Vector2d();
-    public Vector2d preP = new Vector2d();
-    public Vector2d tmpVec = new Vector2d();
-    public ArrayList<OriEdge> edges = new ArrayList<>();
+    public final Vector2d p = new Vector2d();
+    public final Vector2d preP = new Vector2d();
+    public final Vector2d tmpVec = new Vector2d();
+    public final ArrayList<OriEdge> edges = new ArrayList<>();
     public boolean tmpFlg = false;
     public boolean hasProblem = false;
     public int tmpInt = 0;

@@ -63,7 +63,7 @@ public class TiledLineFactory {
 
 		System.out.println("startRow=" + startRow + " startCol=" + startCol + " endRow=" + endRow + " endCol=" + endCol);
 
-		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
+		ArrayList<OriLine> copiedLines = new ArrayList<>();
 
 	    //FIXME Restrictedly speaking, paper is not always in this position. CreasePattern should have the values??
 		oripa.geom.RectangleClipper clipper =

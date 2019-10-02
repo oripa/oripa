@@ -25,7 +25,7 @@ import oripa.doc.loader.LoaderXML;
  */
 public class FilterDB {
 
-	private HashMap<String, FileFilterEx> filters = new HashMap<>();
+	private final HashMap<String, FileFilterEx> filters = new HashMap<>();
 
 	private static FilterDB instance = null;
 

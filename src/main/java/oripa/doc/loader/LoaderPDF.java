@@ -32,7 +32,7 @@ import oripa.value.OriLine;
 
 public class LoaderPDF implements Loader {
 	
-    public static ArrayList<OriLine> lines = new ArrayList<>();
+    public static final ArrayList<OriLine> lines = new ArrayList<>();
 
     public Doc load(String filePath) {
         Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -103,9 +103,7 @@ public class LoaderPDF implements Loader {
         CreasePattern creasePattern = doc.getCreasePattern();
         creasePattern.clear();
 
-        for (OriLine l : lines) {
-            creasePattern.add(l);
-        }
+        creasePattern.addAll(lines);
 
 
         for (OriLine line : creasePattern) {

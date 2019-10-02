@@ -16,7 +16,7 @@ import oripa.paint.core.PaintContext;
  */
 class LocalPaintBoundStateFactory {
 
-	private ActionListener[] basicActions;
+	private final ActionListener[] basicActions;
 	private Component parent = null;
 
 	PaintContext context = PaintContext.getInstance();

@@ -76,7 +76,7 @@ public class Doc {
 	// Crease Pattern
 
 	private CreasePattern creasePattern = null;
-	private ArrayList<OriLine> crossLines = new ArrayList<OriLine>();
+	private ArrayList<OriLine> crossLines = new ArrayList<>();
 
 
 	// Origami Model for Estimation
@@ -101,7 +101,7 @@ public class Doc {
 	private String originalAuthorName;
 	private String reference;
 	public String memo;
-	private UndoManager<UndoInfo> undoManager = new UndoManager<>(30);
+	private final UndoManager<UndoInfo> undoManager = new UndoManager<>(30);
 
 
 
@@ -317,7 +317,7 @@ public class Doc {
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
-			ArrayList<Vector2d> vv = new ArrayList<Vector2d>();
+			ArrayList<Vector2d> vv = new ArrayList<>();
 			int crossCount = 0;
 			for (OriHalfedge he : face.halfedges) {
 				OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
@@ -325,7 +325,7 @@ public class Doc {
 
 				double params[] = new double[2];
 				boolean res = GeomUtil.getCrossPointParam(line.p0, line.p1, l.p0, l.p1, params);
-				if (res == true && params[0] > -0.001 && params[1] > -0.001 && params[0] < 1.001 && params[1] < 1.001) {
+				if (res && params[0] > -0.001 && params[1] > -0.001 && params[0] < 1.001 && params[1] < 1.001) {
 					double param = params[1];
 					crossCount++;
 

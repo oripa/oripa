@@ -67,22 +67,24 @@ public class FileChooser extends JFileChooser {
 	/**
 	 * this method does not change {@code path}.
 	 * @param path 
-	 * @param ext ex) ".png"
+	 * @param extensions ex) ".png"
 	 * @return path string with new extension
 	 */
 	public String correctExtension(String path, String[] extensions){
 		
-		String path_new = new String(path);
+		String path_new = path;
 
 		boolean isCorrect = false;
-		for (int i = 0; i < extensions.length; i++) {
-			if(path.endsWith(extensions[i])){
+		for (String extension : extensions)
+		{
+			if (path.endsWith(extension))
+			{
 				isCorrect = true;
 				break;
 			}
 		}
 		
-		if(isCorrect == false){
+		if(!isCorrect){
 			path_new = replaceExtension(path_new, extensions[0]);
 		}
 		

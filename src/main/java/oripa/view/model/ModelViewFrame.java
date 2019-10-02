@@ -59,24 +59,24 @@ import oripa.viewsetting.model.ModelFrameSettingDB;
 public class ModelViewFrame extends JFrame 
 implements ActionListener, AdjustmentListener, Observer{
 
-	private ModelFrameSettingDB setting = ModelFrameSettingDB.getInstance();
+	private final ModelFrameSettingDB setting = ModelFrameSettingDB.getInstance();
 
-    ModelViewScreen screen;
-    private JMenu menuDisp = new JMenu(ORIPA.res.getString("MENU_Disp"));
-    private JMenu menuFile = new JMenu(ORIPA.res.getString("File"));
-    private JMenuItem menuItemExportDXF = new JMenuItem(ORIPA.res.getString("MENU_ExportModelLine_DXF"));
-    private JMenuItem menuItemExportOBJ = new JMenuItem("Export to OBJ file");
-    private JMenuItem menuItemFlip = new JMenuItem(ORIPA.res.getString("MENU_Invert"));
-    private JCheckBoxMenuItem menuItemCrossLine = new JCheckBoxMenuItem("Show Cross-Line", false);
-    public JCheckBoxMenuItem menuItemSlideFaces = new JCheckBoxMenuItem(ORIPA.res.getString("MENU_SlideFaces"), false);
-    public JLabel hintLabel = new JLabel(ORIPA.res.getString("Direction_Basic"));
-    private JMenu dispSubMenu = new JMenu(ORIPA.res.getString("MENU_DispType"));
-    private JRadioButtonMenuItem menuItemFillColor = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_FillColor"));
-    private JRadioButtonMenuItem menuItemFillWhite = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_FillWhite"));
-    private JRadioButtonMenuItem menuItemFillAlpha = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_FillAlpha"));
-    private JRadioButtonMenuItem menuItemFillNone = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_DrawLines"));
-    private JScrollBar scrollBarAngle = new JScrollBar(JScrollBar.HORIZONTAL, 90, 5, 0, 185);
-    private JScrollBar scrollBarPosition = new JScrollBar(JScrollBar.VERTICAL, 0, 5, -150, 150);
+    final ModelViewScreen screen;
+    private final JMenu menuDisp = new JMenu(ORIPA.res.getString("MENU_Disp"));
+    private final JMenu menuFile = new JMenu(ORIPA.res.getString("File"));
+    private final JMenuItem menuItemExportDXF = new JMenuItem(ORIPA.res.getString("MENU_ExportModelLine_DXF"));
+    private final JMenuItem menuItemExportOBJ = new JMenuItem("Export to OBJ file");
+    private final JMenuItem menuItemFlip = new JMenuItem(ORIPA.res.getString("MENU_Invert"));
+    private final JCheckBoxMenuItem menuItemCrossLine = new JCheckBoxMenuItem("Show Cross-Line", false);
+    public final JCheckBoxMenuItem menuItemSlideFaces = new JCheckBoxMenuItem(ORIPA.res.getString("MENU_SlideFaces"), false);
+    public final JLabel hintLabel = new JLabel(ORIPA.res.getString("Direction_Basic"));
+    private final JMenu dispSubMenu = new JMenu(ORIPA.res.getString("MENU_DispType"));
+    private final JRadioButtonMenuItem menuItemFillColor = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_FillColor"));
+    private final JRadioButtonMenuItem menuItemFillWhite = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_FillWhite"));
+    private final JRadioButtonMenuItem menuItemFillAlpha = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_FillAlpha"));
+    private final JRadioButtonMenuItem menuItemFillNone = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_DrawLines"));
+    private final JScrollBar scrollBarAngle = new JScrollBar(JScrollBar.HORIZONTAL, 90, 5, 0, 185);
+    private final JScrollBar scrollBarPosition = new JScrollBar(JScrollBar.VERTICAL, 0, 5, -150, 150);
 
     public ModelViewFrame() {
     	

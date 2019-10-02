@@ -31,7 +31,7 @@ import oripa.value.OriLine;
 
 public class LoaderCP implements Loader{
 
-    public ArrayList<OriLine> lines = new ArrayList<>();
+    public final ArrayList<OriLine> lines = new ArrayList<>();
 
     public Doc load(String filePath) {
         Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);

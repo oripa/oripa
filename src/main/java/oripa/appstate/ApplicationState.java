@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 	private final GroupEnum group;
 	
-	private ArrayList<ActionListener> actions = new ArrayList<ActionListener>();
+	private final ArrayList<ActionListener> actions = new ArrayList<>();
 	// TODO: use a class different from ActionListener which performs with no parameters.
 	
 	/**

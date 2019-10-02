@@ -13,13 +13,13 @@ import oripa.value.OriLine;
  */
 public class OrigamiModel {
 	
-	private List<OriFace> faces = new ArrayList<OriFace>();
-	private List<OriVertex> vertices = new ArrayList<OriVertex>();
-	private List<OriEdge> edges = new ArrayList<OriEdge>();
+	private List<OriFace> faces = new ArrayList<>();
+	private List<OriVertex> vertices = new ArrayList<>();
+	private List<OriEdge> edges = new ArrayList<>();
 
-	private List<OriLine> crossLines = new ArrayList<OriLine>();
+	private List<OriLine> crossLines = new ArrayList<>();
 
-	private List<OriFace> sortedFaces = new ArrayList<OriFace>();
+	private List<OriFace> sortedFaces = new ArrayList<>();
 
 	//private FoldedModelInfo foldedModelInfo = new FoldedModelInfo();
 	

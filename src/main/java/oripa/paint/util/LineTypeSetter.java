@@ -7,7 +7,7 @@ import oripa.paint.core.PaintConfig;
 
 public class LineTypeSetter implements ActionListener {
 
-	protected int lineType;
+	protected final int lineType;
 	
 	public LineTypeSetter(int type) {
 		lineType = type;

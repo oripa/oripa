@@ -31,23 +31,23 @@ import oripa.value.OriLine;
 
 public class OriFace {
 
-	public ArrayList<OriHalfedge> halfedges = new ArrayList<>();
-	public GeneralPath outline = new GeneralPath();
-	public GeneralPath preOutline = new GeneralPath();
+	public final ArrayList<OriHalfedge> halfedges = new ArrayList<>();
+	public final GeneralPath outline = new GeneralPath();
+	public final GeneralPath preOutline = new GeneralPath();
 	public boolean selected = false;
 	public boolean faceFront = true;
-	public Color color;
+	public final Color color;
 	public boolean tmpFlg = false;
 	public int z_order = 0;
 	public int tmpInt2 = 0;
 	public int tmpInt = 0;
 	public boolean hasProblem = false;
 	public boolean alreadyStacked = false;
-	public ArrayList<TriangleFace> triangles = new ArrayList<>();
+	public final ArrayList<TriangleFace> triangles = new ArrayList<>();
 	public int intColor;
-	public ArrayList<Condition4> condition4s = new ArrayList<>();
-	public ArrayList<Condition3> condition3s = new ArrayList<>();
-	public ArrayList<Integer> condition2s = new ArrayList<>();
+	public final ArrayList<Condition4> condition4s = new ArrayList<>();
+	public final ArrayList<Condition3> condition3s = new ArrayList<>();
+	public final ArrayList<Integer> condition2s = new ArrayList<>();
 
 	public OriFace() {
 		int r = (int) (Math.random() * 255);

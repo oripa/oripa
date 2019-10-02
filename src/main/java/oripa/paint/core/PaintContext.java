@@ -29,10 +29,10 @@ public class PaintContext {
     
 //--------------------------------------------------
     
-    private Stack<Vector2d> pickedVertices = new Stack<>();
+    private final Stack<Vector2d> pickedVertices = new Stack<>();
 
 
-	private Stack<OriLine> pickedLines = new Stack<>();
+	private final Stack<OriLine> pickedLines = new Stack<>();
     private boolean isPasting = false;	
 	
 	public Vector2d pickCandidateV = new Vector2d();

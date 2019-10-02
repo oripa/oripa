@@ -15,12 +15,10 @@ public interface BinderInterface<ToBeBound> {
 	 * 
 	 * @param buttonClass Class object of a button to be created
 	 * @param target An object to be bound to button.doClick()
-	 * @param textID {@code StringID} member for label
+	 * @param id {@code StringID} member for label
 	 * @return
 	 */
-	public AbstractButton createButton(
-			Class<? extends AbstractButton> buttonClass,
-			ToBeBound target, String id);
+    AbstractButton createButton(Class<? extends AbstractButton> buttonClass, ToBeBound target, String id);
 	
 //	public void setOptionalActionListeners(ActionListener[] others);
 

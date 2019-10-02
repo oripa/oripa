@@ -53,22 +53,22 @@ import oripa.value.OriLine;
 public class FoldabilityScreen extends JPanel
         implements ComponentListener {
 
-    private boolean bDrawFaceID = false;
+    private final boolean bDrawFaceID = false;
     private Image bufferImage;
     private Graphics2D bufferg;
-    private double scale;
+    private final double scale;
     private double transX;
     private double transY;
     // Temporary information when editing
-    private ArrayList<Vector2d> tmpOutline = new ArrayList<>(); // Contour line in the edit
+    private final ArrayList<Vector2d> tmpOutline = new ArrayList<>(); // Contour line in the edit
     private boolean dispGrid = true;
     // Affine transformation information
     private Dimension preSize;
-    private AffineTransform affineTransform = new AffineTransform();
-    private ArrayList<Vector2d> crossPoints = new ArrayList<>();
-    private JPopupMenu popup = new JPopupMenu();
-    private JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
-    private JMenuItem popupItem_FlipFace = new JMenuItem("Face Inversion");
+    private final AffineTransform affineTransform = new AffineTransform();
+    private final ArrayList<Vector2d> crossPoints = new ArrayList<>();
+    private final JPopupMenu popup = new JPopupMenu();
+    private final JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
+    private final JMenuItem popupItem_FlipFace = new JMenuItem("Face Inversion");
 
     private OrigamiModel origamiModel = null;
     private Collection<OriLine> creasePattern = null;
