@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import oripa.paint.creasepattern.tool.RectangleDomain;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -17,7 +17,7 @@ public class RectangleDomainTestWithXShapeLines {
 	public void test() {
 		final double shapeSize = 100;
 		final OriPoint center = new OriPoint(50, 50);
-		CreasePatternFactory factory = new CreasePatternFactory();
+		TestCreasePatternFactory factory = new TestCreasePatternFactory();
 		
 		// 'X' shape lines
 		Collection<OriLine> xLines = factory.createCrossedLines(100, center);

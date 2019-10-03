@@ -1,57 +1,48 @@
 package oripa.bind.copypaste;
 
 import java.awt.geom.AffineTransform;
-import java.util.Collection;
 
-import oripa.ORIPA;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.doc.Doc;
-import oripa.paint.EditMode;
-import oripa.paint.copypaste.CopyAndPasteAction;
-import oripa.paint.core.PaintContext;
-import oripa.paint.creasepattern.Painter;
-import oripa.value.OriLine;
+import oripa.domain.cptool.Painter;
+import oripa.domain.paint.EditMode;
+import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.copypaste.CopyAndPasteAction;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 
-	
-	private boolean isCut;
-	
-	public CopyAndPasteActionWrapper(boolean isCut) {
+	private final boolean isCut;
+
+	public CopyAndPasteActionWrapper(final boolean isCut) {
 		super();
 		this.isCut = isCut;
-		if(isCut){
+		if (isCut) {
 			super.setEditMode(EditMode.CUT);
 		}
 	}
 
 	@Override
-	public void recover(PaintContext context) {
+	public void recover(final PaintContextInterface context) {
 		super.recover(context);
-		Doc document = ORIPA.doc;
-		Collection<OriLine> creasePattern = document.getCreasePattern();
-		if(isCut){
-			Painter painter = new Painter();
-			painter.removeSelectedLines(creasePattern);
+		if (isCut) {
+			Painter painter = context.getPainter();
+			painter.removeSelectedLines();
 		}
 	}
-	
+
 	@Override
-	public void onRightClick(PaintContext context, AffineTransform affine,
-			boolean differentAction) {
-		
+	public void onRightClick(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
+
 		StateManager stateManager = StateManager.getInstance();
 		ApplicationState<EditMode> prev = stateManager.pop();
-		
-		if(prev == null){
+
+		if (prev == null) {
 			return;
 		}
-		
+
 		// a case having switched copy to cut.
 		prev.performActions(null);
 	}
 
-	
-	
 }

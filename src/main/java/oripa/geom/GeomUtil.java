@@ -21,8 +21,8 @@ package oripa.geom;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-import oripa.fold.OriFace;
-import oripa.fold.OriHalfedge;
+import oripa.domain.fold.OriFace;
+import oripa.domain.fold.OriHalfedge;
 import oripa.value.OriLine;
 
 public class GeomUtil {
@@ -213,7 +213,8 @@ public class GeomUtil {
         Vector2d p = new Vector2d(l.p0);
         Vector2d dir = new Vector2d();
         dir.sub(l.p1, l.p0);
-
+        //FIXME this method depends on implicit paper position
+        
         // If horizontal
         if (Math.abs(dir.y) < EPS) {
             if (p.y < -halfWidth || p.y > halfWidth) {
@@ -558,30 +559,6 @@ public class GeomUtil {
 
         }
         return null;
-    }
-
-//    Obtain the parameters for the intersection of the segments p0-p1 and q0-q1
-//    The param stores the position of the intersection
-//    Returns false if parallel
-    public static boolean getCrossPointParam(Vector2d p0, Vector2d p1, Vector2d q0, Vector2d q1, double[] param) {
-
-        Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
-        Vector2d d1 = new Vector2d(q1.x - q0.x, q1.y - q0.y);
-        Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
-        double det = d1.x * d0.y - d1.y * d0.x;
-
-        double epsilon = 1.0e-6;
-        if (det * det > epsilon * d0.lengthSquared() * d1.lengthSquared()) {
-            // Lines intersect in a single point.  Return both s and t values for
-            // use by calling functions.
-            double invDet = 1.0 / det;
-            
-            param[0] = (d1.x * diff.y - d1.y * diff.x) * invDet;
-            param[1] = (d0.x * diff.y - d0.y * diff.x) * invDet;
-            return true;
-        }
-        return false;
-
     }
 
 

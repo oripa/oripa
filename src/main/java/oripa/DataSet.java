@@ -18,130 +18,154 @@
 
 package oripa;
 
-import oripa.doc.Doc;
-import oripa.paint.creasepattern.CreasePattern;
+import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.Property;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
 public class DataSet {
 
-    private int mainVersion;
-    private int subVersion;
-    public OriLineProxy[] lines;
-    private double paperSize;
-    public String title;
-    public String editorName;
-    public String originalAuthorName;
-    public String reference;
-    public String memo;
+	private int mainVersion;
+	private int subVersion;
+	public OriLineProxy[] lines;
+	private double paperSize;
+	public String title;
+	public String editorName;
+	public String originalAuthorName;
+	public String reference;
+	public String memo;
 
-    public DataSet() {
-    }
+	public DataSet() {
+	}
 
-    public DataSet(Doc doc) {
-        mainVersion = Version.FILE_MAJOR_VERSION;
-        subVersion = Version.FILE_MINOR_VERSION;
+	public DataSet(final Doc doc) {
+		mainVersion = Version.FILE_MAJOR_VERSION;
+		subVersion = Version.FILE_MINOR_VERSION;
 
-        CreasePattern creasePattern = doc.getCreasePattern();
-        int lineNum = creasePattern.size();
-        lines = new OriLineProxy[lineNum];
-        OriLine[] docLines = new OriLine[lineNum];
-        creasePattern.toArray(docLines);
-        for (int i = 0; i < lineNum; i++) {
-            lines[i] = new OriLineProxy(docLines[i]);
-        }
-        paperSize = doc.getPaperSize();
+		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		Property property = doc.getProperty();
 
-        title = doc.getTitle();
-        editorName = doc.getEditorName();
-        originalAuthorName = doc.getOriginalAuthorName();
-        reference = doc.getReference();
-        memo = doc.getMemo();
-    }
+		int lineNum = creasePattern.size();
 
-    public void recover(Doc doc) {
-    	CreasePattern creasePattern = doc.getCreasePattern();
-        creasePattern.clear();
-        for (int i = 0; i < lines.length; i++) {
-            creasePattern.add(lines[i].getLine());
-        }
-        doc.setPaperSize(paperSize);
-        doc.setTitle(title);
-        doc.setEditorName(editorName);
-        doc.setOriginalAuthorName(originalAuthorName);
-        doc.setReference(reference);
-        doc.setMemo(memo);;
-    }
+		lines = new OriLineProxy[lineNum];
 
-    public void setPaperSize(double d) {
-        paperSize = d;
-    }
+		OriLine[] docLines = new OriLine[lineNum];
+		creasePattern.toArray(docLines);
 
-    public double getPaperSize() {
-        return paperSize;
-    }
+		for (int i = 0; i < lineNum; i++) {
+			lines[i] = new OriLineProxy(docLines[i]);
+		}
+		paperSize = doc.getPaperSize();
 
-    public void setMainVersion(int i) {
-        mainVersion = i;
-    }
+		title = property.getTitle();
+		editorName = property.getEditorName();
+		originalAuthorName = property.getOriginalAuthorName();
+		reference = property.getReference();
+		memo = property.getMemo();
+	}
 
-    public int getMainVersion() {
-        return mainVersion;
-    }
+	public Doc recover(final String filePath) {
 
-    public void setSubVersion(int i) {
-        subVersion = i;
-    }
+		CreasePatternFactory factory = new CreasePatternFactory();
+		CreasePatternInterface creasePattern = factory
+				.createEmptyCreasePattern(paperSize);
 
-    public int getSubVersion() {
-        return subVersion;
-    }
+		for (int i = 0; i < lines.length; i++) {
+			creasePattern.add(lines[i].getLine());
+		}
 
-    public void setLines(OriLineProxy[] l) {
-        lines = l;
-    }
+		Doc doc = new Doc(paperSize);
+		doc.setCreasePattern(creasePattern);
+		// doc.setPaperSize(paperSize);
 
-    public OriLineProxy[] getLines() {
-        return lines;
-    }
+		doc.setProperty(createProperty(filePath));
 
-    public void setTitle(String s) {
-        title = s;
-    }
+		return doc;
 
-    public String getTitle() {
-        return title;
-    }
+	}
 
-    public void setEditorName(String s) {
-        editorName = s;
-    }
+	private Property createProperty(final String filePath) {
+		Property property = new Property(filePath);
+		property.setTitle(title);
+		property.setEditorName(editorName);
+		property.setOriginalAuthorName(originalAuthorName);
+		property.setReference(reference);
+		property.setMemo(memo);
 
-    public String getEditorName() {
-        return editorName;
-    }
+		return property;
+	}
 
-    public void setOriginalAuthorName(String s) {
-        originalAuthorName = s;
-    }
+	public void setPaperSize(final double d) {
+		paperSize = d;
+	}
 
-    public String getOriginalAuthorName() {
-        return originalAuthorName;
-    }
+	public double getPaperSize() {
+		return paperSize;
+	}
 
-    public void setReference(String s) {
-        reference = s;
-    }
+	public void setMainVersion(final int i) {
+		mainVersion = i;
+	}
 
-    public String getReference() {
-        return reference;
-    }
+	public int getMainVersion() {
+		return mainVersion;
+	}
 
-    public void setMemo(String s) {
-        memo = s;
-    }
+	public void setSubVersion(final int i) {
+		subVersion = i;
+	}
 
-    public String getMemo() {
-        return memo;
-    }
+	public int getSubVersion() {
+		return subVersion;
+	}
+
+	public void setLines(final OriLineProxy[] l) {
+		lines = l;
+	}
+
+	public OriLineProxy[] getLines() {
+		return lines;
+	}
+
+	public void setTitle(final String s) {
+		title = s;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setEditorName(final String s) {
+		editorName = s;
+	}
+
+	public String getEditorName() {
+		return editorName;
+	}
+
+	public void setOriginalAuthorName(final String s) {
+		originalAuthorName = s;
+	}
+
+	public String getOriginalAuthorName() {
+		return originalAuthorName;
+	}
+
+	public void setReference(final String s) {
+		reference = s;
+	}
+
+	public String getReference() {
+		return reference;
+	}
+
+	public void setMemo(final String s) {
+		memo = s;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
 }

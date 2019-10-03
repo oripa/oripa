@@ -8,7 +8,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import oripa.paint.creasepattern.VerticesManager;
+import oripa.domain.creasepattern.NearVerticesGettable;
+import oripa.domain.creasepattern.impl.VerticesManager;
 import oripa.value.OriPoint;
 
 public class VerticesManagerTest extends TestCase{
@@ -58,7 +59,7 @@ public class VerticesManagerTest extends TestCase{
 //		
 //		Vector2d mouseVector = new Vector2d(mousePoint.x, mousePoint.y);
 //		assertEquals(mouseVector, 
-//				NearestVertexFinder.findAround(context, distance).point);
+//				NearestItemFinder.findAround(context, distance).point);
 //	}
 //	
 	@Test
@@ -75,9 +76,9 @@ public class VerticesManagerTest extends TestCase{
 
 	}
 
-	private boolean managerContains(VerticesManager manager, Vector2d vertex) {
+	private boolean managerContains(NearVerticesGettable manager, Vector2d vertex) {
 		Collection<Vector2d> vertices;
-		vertices = manager.getAround(vertex);
+		vertices = manager.getVerticesAround(vertex);
 		return vertices.contains(vertex);
 		
 	}
@@ -85,7 +86,7 @@ public class VerticesManagerTest extends TestCase{
 		manager.add(target);
 
 		Collection<Vector2d> vertices;
-		vertices = manager.getAround(target);
+		vertices = manager.getVerticesAround(target);
 
 		System.out.println("target: " + target);
 		for(Vector2d v: vertices){

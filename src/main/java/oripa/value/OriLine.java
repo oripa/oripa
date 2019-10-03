@@ -30,6 +30,7 @@ public class OriLine implements Comparable<OriLine> {
     final public static int TYPE_CUT = 1;
     final public static int TYPE_RIDGE = 2;
     final public static int TYPE_VALLEY = 3;
+    final public static int TYPE_CUT_MODEL = 4;
 
     // currently switching to use enum...
     public enum Type{
@@ -89,11 +90,11 @@ public class OriLine implements Comparable<OriLine> {
         this.typeVal = type;
     }
     
-    public void setType(Type type){
-    	this.type = type;
-    	this.typeVal = type.toInt(); // eventually unneeded
-    }
-
+//    public void setType(Type type){
+//    	this.type = type;
+//    	this.typeVal = type.toInt(); // eventually unneeded
+//    }
+//
     public int getTypeValue() { // eventually unneeded
         return typeVal;
     }
