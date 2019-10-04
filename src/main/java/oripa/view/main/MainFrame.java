@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -78,7 +78,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private static final Logger LOGGER = LogManager.getLogger(MainFrame.class);
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 272369294032419950L;
 
@@ -355,8 +355,9 @@ public class MainFrame extends JFrame implements ActionListener,
 		String lastDirectory = fileHistory.getLastDirectory();
 
 		if (e.getSource() == menuItemOpen) {
-			openFile(null);
+			String path = openFile(null);
 			mainScreen.repaint();
+			updateMenu(path);
 			updateTitleText();
 		} else if (e.getSource() == menuItemSave
 				&& !document.getDataFilePath().equals("")) {
@@ -586,29 +587,20 @@ public class MainFrame extends JFrame implements ActionListener,
 	/**
 	 * if filePath is null, this method opens a dialog to select the target.
 	 * otherwise, it tries to read data from the path.
-	 * 
+	 *
 	 * @param filePath
 	 */
-	private void openFile(final String filePath) {
-
-		// ORIPA.modelFrame.setVisible(false);
-
+	private String openFile(final String filePath) {
 		ChildFrameManager.getManager().closeAllRecursively(this);
-		// ORIPA.renderFrame.setVisible(false);
 
 		screenSetting.setGridVisible(false);
 		screenSetting.notifyObservers();
-
-		// ORIPA.mainFrame.uiPanel.dispGridCheckBox.setSelected(false);
-
-		String path = null;
 
 		DocDAO dao = new DocDAO();
 
 		try {
 			if (filePath != null) {
 				document.set(dao.load(filePath));
-				path = document.getDataFilePath();
 			} else {
 				DocFilterSelector selector = new DocFilterSelector();
 				document.set(dao.loadUsingGUI(
@@ -618,18 +610,12 @@ public class MainFrame extends JFrame implements ActionListener,
 		} catch (FileVersionError | IOException e) {
 			showErrorDialog("Failed to load the file", e);
 		} catch (FileChooserCanceledException cancel) {
-			return;
-		}
-
-		if (path == null) {
-			path = document.getDataFilePath();
-		} else {
-			updateMenu(path);
-
+			return null;
 		}
 
 		this.paintContext.setCreasePattern(document.getCreasePattern());
-		updateTitleText();
+
+		return document.getDataFilePath();
 
 	}
 
