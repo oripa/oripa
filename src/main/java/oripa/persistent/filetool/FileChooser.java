@@ -11,15 +11,15 @@ import oripa.ORIPA;
 import oripa.exception.UserCanceledException;
 
 /**
- * 
+ *
  * @author OUCHI Koji
- * 
+ *
  */
 
 public class FileChooser<Data> extends JFileChooser implements FileAccessActionProvider<Data> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4700305827321319095L;
 
@@ -65,7 +65,7 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 
 	/**
 	 * this method does not change {@code path}.
-	 * 
+	 *
 	 * @param path
 	 * @param extensions
 	 *            ex) ".png"
@@ -92,7 +92,7 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see
 	 * oripa.persistent.filetool.FileAccessActionProvider#getActionForSavingFile
 	 * (java.awt.Component)
@@ -115,8 +115,7 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 		try {
 
 			@SuppressWarnings("unchecked")
-			FileAccessSupportFilter<Data> filter =
-					(FileAccessSupportFilter<Data>) (rawFilter);
+			FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) (rawFilter);
 
 			String[] extensions = filter.getExtensions();
 
@@ -133,7 +132,8 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 				if (JOptionPane.showConfirmDialog(null,
 						ORIPA.res.getString("Warning_SameNameFileExist"),
 						ORIPA.res.getString("DialogTitle_FileSave"),
-						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
 					throw new UserCanceledException();
 				}
 			}
@@ -153,16 +153,15 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.persistent.filetool.FileAccessActionProvider#getActionForLoadingFile
-	 * (java.awt.Component)
+	 *
+	 * @see oripa.persistent.filetool.FileAccessActionProvider#
+	 * getActionForLoadingFile (java.awt.Component)
 	 */
 	@Override
 	public AbstractLoadingAction<Data> getActionForLoadingFile(
 			final Component parent) throws FileChooserCanceledException {
 
-		if (JFileChooser.APPROVE_OPTION != this.showSaveDialog(parent)) {
+		if (JFileChooser.APPROVE_OPTION != this.showOpenDialog(parent)) {
 			throw new FileChooserCanceledException();
 		}
 
@@ -174,8 +173,8 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 		try {
 			String filePath = this.getSelectedFile().getPath();
 			@SuppressWarnings("unchecked")
-			FileAccessSupportFilter<Data> filter =
-					(FileAccessSupportFilter<Data>) (this.getFileFilter());
+			FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) (this
+					.getFileFilter());
 
 			return filter.getLoadingAction().setPath(filePath);
 		} catch (Exception e) {
