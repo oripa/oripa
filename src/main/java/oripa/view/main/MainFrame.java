@@ -482,7 +482,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			final FileAccessSupportFilter<Doc>... filters) {
 
 		try {
-			return document.saveFileUsingGUI(null, this, filters);
+			return document.saveFileUsingGUI(homePath, this, filters);
 		} catch (UserCanceledException e) {
 			return document.getProperty().getDataFilePath();
 		}

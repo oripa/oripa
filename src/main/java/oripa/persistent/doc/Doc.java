@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -40,9 +40,9 @@ import oripa.value.OriLine;
 
 /**
  * Manages all result of this app's action.
- * 
+ *
  * @author Koji
- * 
+ *
  */
 public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, EstimationEntityHolder {
 
@@ -130,7 +130,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 		DocDAO dao = new DocDAO();
 		try {
-			return dao.saveUsingGUI(this, null, owner, filters);
+			return dao.saveUsingGUI(this, homePath, owner, filters);
 		} catch (FileChooserCanceledException e) {
 			throw new UserCanceledException();
 		}
@@ -164,7 +164,8 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 			JOptionPane.showConfirmDialog(null,
 					"Warning: Building a set of polygons from crease pattern "
-							+ "was failed.", "Warning", JOptionPane.OK_OPTION,
+							+ "was failed.",
+					"Warning", JOptionPane.OK_OPTION,
 					JOptionPane.WARNING_MESSAGE);
 		}
 
@@ -193,7 +194,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see
 	 * oripa.persistent.doc.SheetCutOutlinesHolder#updateSheetCutOutlines(oripa
 	 * .value.OriLine)
@@ -216,7 +217,9 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 		creasePattern = cp;
 	}
 
-	/* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.persistent.doc.EstimationEntityHolder#getOrigamiModel()
 	 */
 	@Override
@@ -224,15 +227,21 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 		return origamiModel;
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.doc.EstimationEntityHolder#setOrigamiModel(oripa.domain.fold.OrigamiModel)
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * oripa.persistent.doc.EstimationEntityHolder#setOrigamiModel(oripa.domain.
+	 * fold.OrigamiModel)
 	 */
 	@Override
 	public void setOrigamiModel(final OrigamiModel origamiModel) {
 		this.origamiModel = origamiModel;
 	}
 
-	/* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 * 
 	 * @see oripa.persistent.doc.EstimationEntityHolder#getFoldedModelInfo()
 	 */
 	@Override
@@ -240,8 +249,12 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 		return foldedModelInfo;
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.doc.EstimationEntityHolder#setFoldedModelInfo(oripa.domain.fold.FoldedModelInfo)
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * oripa.persistent.doc.EstimationEntityHolder#setFoldedModelInfo(oripa.
+	 * domain.fold.FoldedModelInfo)
 	 */
 	@Override
 	public void setFoldedModelInfo(final FoldedModelInfo foldedModelInfo) {
@@ -265,7 +278,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.persistent.doc.SheetCutOutlinesHolder#getSheetCutOutlines()
 	 */
 	@Override
