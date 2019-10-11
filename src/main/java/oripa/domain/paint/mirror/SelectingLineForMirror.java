@@ -26,7 +26,7 @@ public class SelectingLineForMirror extends PickingLine {
 	 * This class keeps selecting line while {@code doSpecial} is false. When
 	 * {@value doSpecial} is true, it executes mirror copy where the axis of
 	 * mirror copy is the selected line.
-	 * 
+	 *
 	 * @param doSpecial
 	 *            true if copy should be done.
 	 * @return true if copy is done.
@@ -46,16 +46,14 @@ public class SelectingLineForMirror extends PickingLine {
 			if (doSpecial) {
 				axis = context.popLine();
 				result = true;
-			}
-			else {
+			} else {
 				OriLine line = context.peekLine();
 
 				if (line.selected) {
 					line.selected = false;
 					context.popLine();
 					context.removeLine(line);
-				}
-				else {
+				} else {
 					line.selected = true;
 				}
 
@@ -68,10 +66,6 @@ public class SelectingLineForMirror extends PickingLine {
 
 	@Override
 	protected void undoAction(final PaintContextInterface context) {
-//		if (doingFirstAction) {
-//			super.undoAction(context);
-//			return;
-//		}
 		context.popLine();
 	}
 
