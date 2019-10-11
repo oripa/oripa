@@ -613,7 +613,8 @@ public class MainFrame extends JFrame implements ActionListener,
 			return null;
 		}
 
-		this.paintContext.setCreasePattern(document.getCreasePattern());
+		paintContext.clear(true);
+		paintContext.setCreasePattern(document.getCreasePattern());
 
 		return document.getDataFilePath();
 
