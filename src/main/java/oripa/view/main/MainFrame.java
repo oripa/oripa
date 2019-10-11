@@ -478,11 +478,11 @@ public class MainFrame extends JFrame implements ActionListener,
 		return saveFile(givenFile.getPath(), filters);
 	}
 
-	private String saveFile(final String homePath,
+	private String saveFile(final String filePath,
 			final FileAccessSupportFilter<Doc>... filters) {
 
 		try {
-			return document.saveFileUsingGUI(homePath, this, filters);
+			return document.saveFileUsingGUI(filePath, this, filters);
 		} catch (UserCanceledException e) {
 			return document.getProperty().getDataFilePath();
 		}

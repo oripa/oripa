@@ -111,6 +111,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 	private final DocFilterSelector filterDB = new DocFilterSelector();
 
+	// NOT USED
 	public String saveFileUsingGUI(final String directory,
 			final String fileName,
 			final Component owner,
@@ -123,14 +124,14 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	}
 
 	public String saveFileUsingGUI(
-			final String homePath,
+			final String filePath,
 			final Component owner,
 			@SuppressWarnings("unchecked") final FileAccessSupportFilter<Doc>... filters)
 			throws UserCanceledException {
 
 		DocDAO dao = new DocDAO();
 		try {
-			return dao.saveUsingGUI(this, homePath, owner, filters);
+			return dao.saveUsingGUI(this, filePath, owner, filters);
 		} catch (FileChooserCanceledException e) {
 			throw new UserCanceledException();
 		}
@@ -219,7 +220,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.persistent.doc.EstimationEntityHolder#getOrigamiModel()
 	 */
 	@Override
@@ -229,7 +230,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see
 	 * oripa.persistent.doc.EstimationEntityHolder#setOrigamiModel(oripa.domain.
 	 * fold.OrigamiModel)
@@ -241,7 +242,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.persistent.doc.EstimationEntityHolder#getFoldedModelInfo()
 	 */
 	@Override
@@ -251,7 +252,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see
 	 * oripa.persistent.doc.EstimationEntityHolder#setFoldedModelInfo(oripa.
 	 * domain.fold.FoldedModelInfo)
