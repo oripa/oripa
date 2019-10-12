@@ -320,6 +320,8 @@ public class MainFrame extends JFrame implements ActionListener,
 	void saveOpxFile(final Doc doc, final String filePath) {
 		doc.saveOpxFile(filePath);
 
+		paintContext.creasePatternUndo().clearChanged();
+
 		updateMenu(filePath);
 		updateTitleText();
 	}
@@ -482,9 +484,11 @@ public class MainFrame extends JFrame implements ActionListener,
 			final FileAccessSupportFilter<Doc>... filters) {
 
 		try {
-			return document.saveFileUsingGUI(filePath, this, filters);
+			String savedPath = document.saveFileUsingGUI(filePath, this, filters);
+			paintContext.creasePatternUndo().clearChanged();
+			return savedPath;
 		} catch (UserCanceledException e) {
-			return document.getProperty().getDataFilePath();
+			return document.getDataFilePath();
 		}
 
 		// if (saver.getPath() == null) {
@@ -615,6 +619,8 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		paintContext.clear(true);
 		paintContext.setCreasePattern(document.getCreasePattern());
+
+		paintContext.creasePatternUndo().clear();
 
 		return document.getDataFilePath();
 

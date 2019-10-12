@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -28,7 +28,7 @@ import java.util.LinkedList;
  */
 public abstract class AbstractUndoManager<Backup> {
 
-	private Deque<UndoInfo<Backup>> undoStack = new LinkedList<>();
+	private final Deque<UndoInfo<Backup>> undoStack = new LinkedList<>();
 	private UndoInfo<Backup> cache;
 	private boolean changed = false;
 	protected int max = 1000;
@@ -41,32 +41,31 @@ public abstract class AbstractUndoManager<Backup> {
 	}
 
 	protected abstract UndoInfo<Backup> createUndoInfo(Backup info);
-	
-	public void push(Backup info) {
-		
+
+	public void push(final Backup info) {
+
 		push(createUndoInfo(info));
-		
+
 	}
 
-	public void push(UndoInfo<Backup> info) {
-		
+	public void push(final UndoInfo<Backup> info) {
+
 		undoStack.push(info);
-		
-		if(undoStack.size() > max){
+
+		if (undoStack.size() > max) {
 			undoStack.removeFirst();
 		}
-		
+
 		changed = true;
 	}
 
 	public UndoInfo<Backup> pop() {
 		if (undoStack.isEmpty()) {
 			return null;
-		}
-		else {
+		} else {
 			changed = true;
 		}
-	
+
 		return undoStack.pop();
 	}
 
@@ -74,7 +73,7 @@ public abstract class AbstractUndoManager<Backup> {
 		if (undoStack.isEmpty()) {
 			return null;
 		}
-	
+
 		return undoStack.peek();
 	}
 
@@ -86,11 +85,16 @@ public abstract class AbstractUndoManager<Backup> {
 		changed = false;
 	}
 
-	public boolean canUndo() {
-		return ! undoStack.isEmpty();
+	public void clear() {
+		clearChanged();
+		undoStack.clear();
 	}
 
-	public void setCache(Backup info) {
+	public boolean canUndo() {
+		return !undoStack.isEmpty();
+	}
+
+	public void setCache(final Backup info) {
 		cache = createUndoInfo(info);
 	}
 

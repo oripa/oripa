@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -28,11 +28,11 @@ import oripa.value.OriLine;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class CreasePatternUndoer implements CreasePatternUndoerInterface {
-	private final AbstractUndoManager<Collection<OriLine>> undoManager =
-			new CreasePatternUndoManager(30);
+	private final AbstractUndoManager<Collection<OriLine>> undoManager = new CreasePatternUndoManager(
+			30);
 
 	private final CreasePatternUndoFactory factory = new CreasePatternUndoFactory();
 
@@ -44,7 +44,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#createUndoInfo()
 	 */
 	@Override
@@ -55,7 +55,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#cacheUndoInfo()
 	 */
 	@Override
@@ -65,9 +65,8 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.domain.paint.CreasePatternUndoerInterface#pushCachedUndoInfo()
+	 *
+	 * @see oripa.domain.paint.CreasePatternUndoerInterface#pushCachedUndoInfo()
 	 */
 	@Override
 	public void pushCachedUndoInfo() {
@@ -76,7 +75,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#pushUndoInfo()
 	 */
 	@Override
@@ -86,9 +85,8 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.domain.paint.CreasePatternUndoerInterface#pushUndoInfo(oripa
+	 *
+	 * @see oripa.domain.paint.CreasePatternUndoerInterface#pushUndoInfo(oripa
 	 * .util.history.UndoInfo)
 	 */
 	@Override
@@ -98,7 +96,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#loadUndoInfo()
 	 */
 	@Override
@@ -116,7 +114,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#canUndo()
 	 */
 	@Override
@@ -126,7 +124,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#isChanged()
 	 */
 	@Override
@@ -136,12 +134,22 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#clearChanged()
 	 */
 	@Override
 	public void clearChanged() {
 		undoManager.clearChanged();
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.CreasePatternUndoerInterface#clear()
+	 */
+	@Override
+	public void clear() {
+		undoManager.clear();
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -46,5 +46,7 @@ public interface CreasePatternUndoerInterface {
 	public abstract boolean changeExists();
 
 	public abstract void clearChanged();
+
+	public abstract void clear();
 
 }
