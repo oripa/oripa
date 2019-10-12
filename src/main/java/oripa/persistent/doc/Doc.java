@@ -131,7 +131,8 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 		DocDAO dao = new DocDAO();
 		try {
-			return dao.saveUsingGUI(this, filePath, owner, filters);
+			property.setDataFilePath(dao.saveUsingGUI(this, filePath, owner, filters));
+			return getDataFilePath();
 		} catch (FileChooserCanceledException e) {
 			throw new UserCanceledException();
 		}
@@ -141,10 +142,6 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	public void saveOpxFile(final String filePath) {
 		DocDAO dao = new DocDAO();
 		dao.save(this, filePath, FileTypeKey.OPX);
-
-		// updateMenu(filePath);
-		// updateTitleText();
-		// clearChanged();
 	}
 
 	public void saveModelFile(final FileTypeKey type, final Component owner)
