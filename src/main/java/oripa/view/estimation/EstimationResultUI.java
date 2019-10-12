@@ -66,7 +66,7 @@ public class EstimationResultUI extends JPanel {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -116,7 +116,7 @@ public class EstimationResultUI extends JPanel {
 
 	/**
 	 * This method initializes jButtonNextAnswer
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonNextAnswer() {
@@ -142,7 +142,7 @@ public class EstimationResultUI extends JPanel {
 
 	/**
 	 * This method initializes jButtonPrevAnswer
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonPrevAnswer() {
@@ -167,7 +167,7 @@ public class EstimationResultUI extends JPanel {
 
 	/**
 	 * This method initializes jCheckBoxOrder
-	 * 
+	 *
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxOrder() {
@@ -188,7 +188,7 @@ public class EstimationResultUI extends JPanel {
 
 	/**
 	 * This method initializes jCheckBoxShadow
-	 * 
+	 *
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxShadow() {
@@ -210,7 +210,7 @@ public class EstimationResultUI extends JPanel {
 
 	/**
 	 * This method initializes jCheckBoxUseColor
-	 * 
+	 *
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxUseColor() {
@@ -234,7 +234,7 @@ public class EstimationResultUI extends JPanel {
 
 	/**
 	 * This method initializes jCheckBoxEdge
-	 * 
+	 *
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxEdge() {
@@ -257,7 +257,7 @@ public class EstimationResultUI extends JPanel {
 
 	/**
 	 * This method initializes jCheckBoxFillFace
-	 * 
+	 *
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxFillFace() {
@@ -281,7 +281,7 @@ public class EstimationResultUI extends JPanel {
 
 	/**
 	 * This method initializes jButtonExport
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonExport() {
@@ -342,12 +342,14 @@ public class EstimationResultUI extends JPanel {
 
 				new FileAccessSupportFilter<Doc>(
 						FileTypeKey.ORMAT_FOLDED_MODEL,
-						ORIPA.res.getString("File"),
+						".ormat file",
+						// ORIPA.res.getString("File"),
 						new SavingDocAction(new ExporterORmat())),
 
 				new FileAccessSupportFilter<Doc>(
 						FileTypeKey.SVG_FOLDED_MODEL,
-						ORIPA.res.getString("File"),
+						".svg file",
+						// ORIPA.res.getString("File"),
 						new SavingDocAction(
 								ExporterSVGFactory.createFoldedModelExporter()))
 		};

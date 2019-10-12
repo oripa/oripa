@@ -9,22 +9,22 @@ public class FileAccessSupportFilter<Data>
 		implements Comparable<FileAccessSupportFilter<Data>> {
 
 	/**
-	 * 
+	 *
 	 * @author OUCHI Koji
-	 * 
+	 *
 	 */
 
-	private final FileTypeProperty		fileType;
-	private final String				msg;
+	private final FileTypeProperty fileType;
+	private final String msg;
 
-	private AbstractSavingAction<Data>	savingAction	= null;
+	private AbstractSavingAction<Data> savingAction = null;
 
-	private AbstractLoadingAction<Data>	loadingAction	= null;
+	private AbstractLoadingAction<Data> loadingAction = null;
 
 	/**
-	 * 
+	 *
 	 * Constructor.
-	 * 
+	 *
 	 * @param fileType
 	 *            specifies what to filter
 	 * @param msg
@@ -36,9 +36,9 @@ public class FileAccessSupportFilter<Data>
 	}
 
 	/**
-	 * 
+	 *
 	 * Constructor.
-	 * 
+	 *
 	 * @param fileType
 	 *            specifies what to filter
 	 * @param msg
@@ -53,7 +53,7 @@ public class FileAccessSupportFilter<Data>
 		this.savingAction = savingAction;
 	}
 
-	private String	acceptedPath	= null;
+	private String acceptedPath = null;
 
 	public AbstractLoadingAction<Data> getLoadingAction() {
 		if (loadingAction != null) {
@@ -63,7 +63,7 @@ public class FileAccessSupportFilter<Data>
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 *            how to load
 	 */
@@ -80,7 +80,7 @@ public class FileAccessSupportFilter<Data>
 	// }
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 *            how to save
 	 */
@@ -89,7 +89,7 @@ public class FileAccessSupportFilter<Data>
 	}
 
 	/**
-	 * 
+	 *
 	 * @return object which can save the data
 	 */
 	public AbstractSavingAction<Data> getSavingAction() {
@@ -108,7 +108,7 @@ public class FileAccessSupportFilter<Data>
 	// }
 
 	/**
-	 * 
+	 *
 	 * @return acceptable extensions
 	 */
 	public String[] getExtensions() {
@@ -154,12 +154,12 @@ public class FileAccessSupportFilter<Data>
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type
 	 *            file type
 	 * @param suffix
-	 * @return in the style of
-	 *         "(*.extension1, *.extension2, ...) ${type.getKeytext()} ${suffix}"
+	 * @return in the style of "(*.extension1, *.extension2, ...)
+	 *         ${type.getKeytext()} ${suffix}"
 	 */
 	public static String createDefaultDescription(final FileTypeProperty type,
 			final String suffix) {
@@ -172,9 +172,9 @@ public class FileAccessSupportFilter<Data>
 			builder.append(", *");
 			builder.append(extensions[i]);
 		}
-		builder.append(") " + type.getKeyText()
-				+ ResourceHolder.getInstance().getString(
-						ResourceKey.LABEL, StringID.Main.FILE_ID));
+		builder.append(") " + type.getKeyText());
+		builder.append(" " + ResourceHolder.getInstance().getString(
+				ResourceKey.LABEL, StringID.Main.FILE_ID));
 
 		return builder.toString();
 	}
