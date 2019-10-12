@@ -1,9 +1,5 @@
 package oripa.persistent.filetool;
 
-import oripa.resource.ResourceHolder;
-import oripa.resource.ResourceKey;
-import oripa.resource.StringID;
-
 public class FileAccessSupportFilter<Data>
 		extends javax.swing.filechooser.FileFilter
 		implements Comparable<FileAccessSupportFilter<Data>> {
@@ -157,12 +153,12 @@ public class FileAccessSupportFilter<Data>
 	 *
 	 * @param type
 	 *            file type
-	 * @param suffix
+	 * @param explanation
 	 * @return in the style of "(*.extension1, *.extension2, ...)
-	 *         ${type.getKeytext()} ${suffix}"
+	 *         ${type.getKeytext()} ${explanation}"
 	 */
 	public static String createDefaultDescription(final FileTypeProperty type,
-			final String suffix) {
+			final String explanation) {
 		String[] extensions = type.getExtensions();
 
 		StringBuilder builder = new StringBuilder();
@@ -172,9 +168,9 @@ public class FileAccessSupportFilter<Data>
 			builder.append(", *");
 			builder.append(extensions[i]);
 		}
-		builder.append(") " + type.getKeyText());
-		builder.append(" " + ResourceHolder.getInstance().getString(
-				ResourceKey.LABEL, StringID.Main.FILE_ID));
+		// builder.append(") " + type.getKeyText());
+		builder.append(") ");
+		builder.append(explanation);
 
 		return builder.toString();
 	}
