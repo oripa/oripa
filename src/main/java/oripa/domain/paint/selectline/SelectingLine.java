@@ -29,12 +29,14 @@ public class SelectingLine extends PickingLine {
 
 		// toggle selection
 		if (line.selected) {
-			line.selected = false;
+			// in this case, the context has two reference to the selected line:
+			// at the last position and other somewhere.
+
+			// clear the selection by onAct().
 			context.popLine();
-			// line should be already stored.
+			// remove the line which has been already stored.
 			context.removeLine(line);
-		}
-		else {
+		} else {
 			line.selected = true;
 		}
 
