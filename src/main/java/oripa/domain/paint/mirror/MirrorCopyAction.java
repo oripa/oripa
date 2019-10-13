@@ -7,8 +7,7 @@ import oripa.domain.paint.selectline.SelectLineAction;
 
 public class MirrorCopyAction extends SelectLineAction {
 
-	public MirrorCopyAction(final PaintContextInterface context) {
-		super(context);
+	public MirrorCopyAction() {
 
 		setEditMode(EditMode.INPUT);
 		setNeedSelect(true);

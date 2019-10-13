@@ -6,7 +6,7 @@ import oripa.domain.paint.PaintContextInterface;
 public class SelectAllLineAction extends SelectLineAction {
 
 	public SelectAllLineAction(final PaintContextInterface context) {
-		super(context);
+		super();
 	}
 
 	@Override

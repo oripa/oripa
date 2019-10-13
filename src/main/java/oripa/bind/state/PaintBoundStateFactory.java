@@ -12,7 +12,6 @@ import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.addvertex.AddVertexAction;
 import oripa.domain.paint.bisector.AngleBisectorAction;
 import oripa.domain.paint.byvalue.LineByValueAction;
-import oripa.domain.paint.core.PaintContext;
 import oripa.domain.paint.deleteline.DeleteLineAction;
 import oripa.domain.paint.deletevertex.DeleteVertexAction;
 import oripa.domain.paint.line.TwoPointLineAction;
@@ -37,11 +36,9 @@ import oripa.viewsetting.main.uipanel.ChangeOnSelectButtonSelected;
 // We should implement button factories for each command.
 public class PaintBoundStateFactory {
 
-	PaintContextInterface context = PaintContext.getInstance();
-
 	/**
 	 * Create a state specified by ID
-	 * 
+	 *
 	 * @param parent
 	 * @param id
 	 *            A member of StringID
@@ -51,15 +48,14 @@ public class PaintBoundStateFactory {
 			final PaintContextInterface context,
 			final String id) {
 
-		LocalPaintBoundStateFactory stateFactory =
-				new LocalPaintBoundStateFactory(parent, null);
+		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent, null);
 
 		ApplicationState<EditMode> state = null;
 
 		switch (id) {
 		case StringID.SELECT_ID:
 			state = stateFactory.create(
-					new SelectLineAction(context), id,
+					new SelectLineAction(), id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;
@@ -136,10 +132,9 @@ public class PaintBoundStateFactory {
 	private ApplicationState<EditMode> createLineInputState(
 			final Component parent, final String id) {
 
-		LocalPaintBoundStateFactory stateFactory =
-				new LocalPaintBoundStateFactory(parent,
-						new ActionListener[] { new ViewChangeListener(
-								new ChangeOnPaintInputButtonSelected()) });
+		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
+				new ActionListener[] { new ViewChangeListener(
+						new ChangeOnPaintInputButtonSelected()) });
 
 		ApplicationState<EditMode> state = null;
 		switch (id) {
@@ -175,7 +170,7 @@ public class PaintBoundStateFactory {
 
 			break;
 		case StringID.MIRROR_ID:
-			state = stateFactory.create(new MirrorCopyAction(context),
+			state = stateFactory.create(new MirrorCopyAction(),
 					id, null);
 
 			break;

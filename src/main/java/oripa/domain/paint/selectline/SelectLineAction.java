@@ -11,13 +11,11 @@ import oripa.value.OriLine;
 
 public class SelectLineAction extends RectangularSelectableAction {
 
-	public SelectLineAction(final PaintContextInterface context) {
+	public SelectLineAction() {
 		setEditMode(EditMode.SELECT);
 		setNeedSelect(true);
 
 		setActionState(new SelectingLine());
-
-		recover(context);
 	}
 
 	/**
