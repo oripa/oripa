@@ -474,9 +474,12 @@ public class MainFrame extends JFrame implements ActionListener,
 	}
 
 	@SafeVarargs
-	private final String saveFile(final String directory, final String fileName,
+	private final String saveFile(final String directory, String fileName,
 			final FileAccessSupportFilter<Doc>... filters) {
 
+		if (fileName.isEmpty()) {
+			fileName = "newFile.opx";
+		}
 		File givenFile = new File(directory, fileName);
 
 		return saveFile(givenFile.getPath(), filters);
