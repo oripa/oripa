@@ -30,13 +30,14 @@ import javax.swing.JPanel;
 import oripa.ORIPA;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
-import oripa.exception.UserCanceledException;
 import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.FileTypeKey;
 import oripa.persistent.doc.SavingDocAction;
 import oripa.persistent.doc.exporter.ExporterORmat;
 import oripa.persistent.doc.exporter.ExporterSVGFactory;
 import oripa.persistent.filetool.FileAccessSupportFilter;
+import oripa.persistent.filetool.FileChooserCanceledException;
 
 public class EstimationResultUI extends JPanel {
 
@@ -300,9 +301,10 @@ public class EstimationResultUI extends JPanel {
 							doc.setOrigamiModel(origamiModel);
 
 							try {
-								doc.saveFileUsingGUI(
-										null, EstimationResultUI.this, createFilters());
-							} catch (UserCanceledException canceledEx) {
+								final DocDAO dao = new DocDAO();
+								dao.saveUsingGUI(
+										doc, null, EstimationResultUI.this, createFilters());
+							} catch (FileChooserCanceledException canceledEx) {
 							} catch (Exception ex) {
 								JOptionPane.showMessageDialog(
 										EstimationResultUI.this,

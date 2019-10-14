@@ -3,6 +3,11 @@ package oripa.persistent.doc;
 import java.awt.Component;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
+import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.OrigamiModelFactory;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessActionProvider;
 import oripa.persistent.filetool.FileAccessSupportFilter;
@@ -37,7 +42,7 @@ public class DocDAO {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param doc
 	 * @param homePath
 	 * @param parent
@@ -55,21 +60,40 @@ public class DocDAO {
 		AbstractSavingAction<Doc> saver = chooser
 				.getActionForSavingFile(parent);
 
-		if (saver.getPath() != null) {
-			// if(path.endsWith(".opx")){
-			// ORIPA.doc.setDataFilePath(path);
-			// ORIPA.doc.clearChanged();
-			//
-			// updateMenu(path);
-			// }
-		} else {
+		if (saver.getPath() == null) {
 			saver.setPath(homePath);
 		}
 
 		saver.save(doc);
 
 		return saver.getPath();
+	}
 
+	public void saveUsingGUIWithModelCheck(final Doc doc, final Component owner,
+			final FileAccessSupportFilter<Doc> filter)
+			throws FileChooserCanceledException {
+		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		OrigamiModel origamiModel = doc.getOrigamiModel();
+
+		boolean hasModel = origamiModel.hasModel();
+
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		origamiModel = modelFactory.buildOrigami(creasePattern,
+				doc.getPaperSize(), true);
+		doc.setOrigamiModel(origamiModel);
+
+		if (filter.getTargetType().equals(FileTypeKey.OBJ_MODEL)) {
+
+		} else if (!hasModel && !origamiModel.isProbablyFoldable()) {
+
+			JOptionPane.showConfirmDialog(null,
+					"Warning: Building a set of polygons from crease pattern "
+							+ "was failed.",
+					"Warning", JOptionPane.OK_OPTION,
+					JOptionPane.WARNING_MESSAGE);
+		}
+
+		saveUsingGUI(doc, null, owner, filter);
 	}
 
 	public Doc loadUsingGUI(final String homePath,

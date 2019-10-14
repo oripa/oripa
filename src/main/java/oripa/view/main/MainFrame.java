@@ -52,7 +52,6 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.exception.UserCanceledException;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.Doc;
@@ -299,13 +298,13 @@ public class MainFrame extends JFrame implements ActionListener,
 	@SuppressWarnings("unchecked")
 	private void addSavingActions() {
 
+		// overwrite the action to update GUI after saving.
 		filterDB.getFilter(FileTypeKey.OPX).setSavingAction(
 				new AbstractSavingAction<Doc>() {
 
 					@Override
 					public boolean save(final Doc data) {
 						try {
-
 							saveOpxFile(data, getPath());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
@@ -318,7 +317,10 @@ public class MainFrame extends JFrame implements ActionListener,
 	}
 
 	void saveOpxFile(final Doc doc, final String filePath) {
-		doc.saveOpxFile(filePath);
+		final DocDAO dao = new DocDAO();
+
+		dao.save(doc, filePath, FileTypeKey.OPX);
+		doc.setDataFilePath(filePath);
 
 		paintContext.creasePatternUndo().clearChanged();
 
@@ -382,13 +384,13 @@ public class MainFrame extends JFrame implements ActionListener,
 					filterDB.getFilter(FileTypeKey.PICT));
 
 		} else if (e.getSource() == menuItemExportDXF) {
-			saveModelFile(FileTypeKey.DXF_MODEL);
+			saveFileWithModelCheck(FileTypeKey.DXF_MODEL);
 		} else if (e.getSource() == menuItemExportOBJ) {
-			saveModelFile(FileTypeKey.OBJ_MODEL);
+			saveFileWithModelCheck(FileTypeKey.OBJ_MODEL);
 		} else if (e.getSource() == menuItemExportCP) {
-			saveModelFile(FileTypeKey.CP);
+			saveFileWithModelCheck(FileTypeKey.CP);
 		} else if (e.getSource() == menuItemExportSVG) {
-			saveModelFile(FileTypeKey.SVG);
+			saveFileWithModelCheck(FileTypeKey.SVG);
 		} else if (e.getSource() == menuItemChangeOutline) {
 			// Globals.preEditMode = Globals.editMode;
 			// Globals.editMode = Constants.EditMode.EDIT_OUTLINE;
@@ -484,33 +486,22 @@ public class MainFrame extends JFrame implements ActionListener,
 			final FileAccessSupportFilter<Doc>... filters) {
 
 		try {
-			String savedPath = document.saveFileUsingGUI(filePath, this, filters);
+			final DocDAO dao = new DocDAO();
+			String savedPath = dao.saveUsingGUI(document, filePath, this, filters);
 			paintContext.creasePatternUndo().clearChanged();
 			return savedPath;
-		} catch (UserCanceledException e) {
+		} catch (FileChooserCanceledException e) {
 			return document.getDataFilePath();
 		}
-
-		// if (saver.getPath() == null) {
-		// return homePath;
-		// }
-		//
-		// Image cpImage = mainScreen.getCreasePatternImage();
-		// if (saver.targetClassMatches(document)) {
-		// saver.save(document);
-		// } else if (saver.targetClassMatches(cpImage)) {
-		// saver.save(cpImage);
-		// }
-
-		// return saver.getPath();
 	}
 
-	public void saveModelFile(final FileTypeKey type) {
+	public void saveFileWithModelCheck(final FileTypeKey type) {
 
 		try {
-			document.saveModelFile(type, this);
+			final DocDAO dao = new DocDAO();
+			dao.saveUsingGUIWithModelCheck(document, this, filterDB.getFilter(type));
 
-		} catch (UserCanceledException e) {
+		} catch (FileChooserCanceledException e) {
 
 		}
 		//

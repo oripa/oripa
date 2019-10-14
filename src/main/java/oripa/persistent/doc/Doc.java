@@ -18,23 +18,16 @@
 
 package oripa.persistent.doc;
 
-import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JOptionPane;
 
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlineFactory;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
-import oripa.domain.fold.OrigamiModelFactory;
 import oripa.domain.paint.CreasePatternHolder;
-import oripa.exception.UserCanceledException;
-import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
 
@@ -93,6 +86,10 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 		foldedModelInfo = new FoldedModelInfo();
 	}
 
+	public void setDataFilePath(final String path) {
+		property.setDataFilePath(path);
+	}
+
 	public String getDataFilePath() {
 		return property.getDataFilePath();
 	}
@@ -111,72 +108,55 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 
 	private final DocFilterSelector filterDB = new DocFilterSelector();
 
-	// NOT USED
-	public String saveFileUsingGUI(final String directory,
-			final String fileName,
-			final Component owner,
-			final FileAccessSupportFilter<Doc>[] filters)
-			throws UserCanceledException {
+//	public String saveFileUsingGUI(
+//			final String filePath,
+//			final Component owner,
+//			@SuppressWarnings("unchecked") final FileAccessSupportFilter<Doc>... filters)
+//			throws UserCanceledException {
+//
+//		DocDAO dao = new DocDAO();
+//		try {
+//			dao.saveUsingGUI(this, filePath, owner, filters);
+//			return getDataFilePath();
+//		} catch (FileChooserCanceledException e) {
+//			throw new UserCanceledException();
+//		}
+//
+//	}
 
-		File givenFile = new File(directory, fileName);
-
-		return saveFileUsingGUI(givenFile.getPath(), owner, filters);
-	}
-
-	public String saveFileUsingGUI(
-			final String filePath,
-			final Component owner,
-			@SuppressWarnings("unchecked") final FileAccessSupportFilter<Doc>... filters)
-			throws UserCanceledException {
-
-		DocDAO dao = new DocDAO();
-		try {
-			property.setDataFilePath(dao.saveUsingGUI(this, filePath, owner, filters));
-			return getDataFilePath();
-		} catch (FileChooserCanceledException e) {
-			throw new UserCanceledException();
-		}
-
-	}
-
-	public void saveOpxFile(final String filePath) {
-		DocDAO dao = new DocDAO();
-		dao.save(this, filePath, FileTypeKey.OPX);
-	}
-
-	public void saveModelFile(final FileTypeKey type, final Component owner)
-			throws UserCanceledException {
-		CreasePatternInterface creasePattern = getCreasePattern();
-		OrigamiModel origamiModel = getOrigamiModel();
-
-		boolean hasModel = origamiModel.hasModel();
-
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		origamiModel = modelFactory.buildOrigami(creasePattern,
-				getPaperSize(), true);
-		setOrigamiModel(origamiModel);
-
-		if (type == FileTypeKey.OBJ_MODEL) {
-
-		} else if (!hasModel && !origamiModel.isProbablyFoldable()) {
-
-			JOptionPane.showConfirmDialog(null,
-					"Warning: Building a set of polygons from crease pattern "
-							+ "was failed.",
-					"Warning", JOptionPane.OK_OPTION,
-					JOptionPane.WARNING_MESSAGE);
-		}
-
-		DocDAO dao = new DocDAO();
-
-		try {
-			dao.saveUsingGUI(this, null,
-					owner, filterDB.getFilter(type));
-		} catch (FileChooserCanceledException e) {
-			throw new UserCanceledException();
-		}
-
-	}
+//	public void saveModelFile(final FileTypeKey type, final Component owner)
+//			throws UserCanceledException {
+//		CreasePatternInterface creasePattern = getCreasePattern();
+//		OrigamiModel origamiModel = getOrigamiModel();
+//
+//		boolean hasModel = origamiModel.hasModel();
+//
+//		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+//		origamiModel = modelFactory.buildOrigami(creasePattern,
+//				getPaperSize(), true);
+//		setOrigamiModel(origamiModel);
+//
+//		if (type == FileTypeKey.OBJ_MODEL) {
+//
+//		} else if (!hasModel && !origamiModel.isProbablyFoldable()) {
+//
+//			JOptionPane.showConfirmDialog(null,
+//					"Warning: Building a set of polygons from crease pattern "
+//							+ "was failed.",
+//					"Warning", JOptionPane.OK_OPTION,
+//					JOptionPane.WARNING_MESSAGE);
+//		}
+//
+//		DocDAO dao = new DocDAO();
+//
+//		try {
+//			dao.saveUsingGUI(this, null,
+//					owner, filterDB.getFilter(type));
+//		} catch (FileChooserCanceledException e) {
+//			throw new UserCanceledException();
+//		}
+//
+//	}
 
 //	public void loadFileUsingGUI(final String path, final Component owner) throws FileVersionError {
 //		DocDAO dao = new DocDAO();
