@@ -18,7 +18,12 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContextInterface context) {
-		Vector2d vertex = context.getVertex(0);
+		if (context.getVertexCount() != 1 || context.getLineCount() > 0) {
+			throw new IllegalStateException(
+					"wrong state: impossible selection of vertex and lines.");
+		}
+
+		Vector2d vertex = context.popVertex();
 
 		double length;
 		double angle;
@@ -37,9 +42,8 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 				painter.addLine(vl);
 			}
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-
-		context.clear(false);
 	}
 
 }

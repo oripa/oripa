@@ -16,7 +16,7 @@ public class SelectingVertexForLength extends PickingVertex {
 	protected void initialize() {
 	}
 
-	private boolean doingFirstAction = true;
+	private final boolean doingFirstAction = true;
 
 	@Override
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
@@ -24,20 +24,17 @@ public class SelectingVertexForLength extends PickingVertex {
 
 		context.setMissionCompleted(false);
 
-		if (doingFirstAction) {
-			context.creasePatternUndo().cacheUndoInfo();
-			doingFirstAction = false;
+		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
+
+		if (!vertexIsSelected) {
+			return false;
 		}
 
-		boolean result = super.onAct(context, currentPoint, doSpecial);
-
-		if (result == true) {
-			if (context.getVertexCount() < 2) {
-				result = false;
-			}
+		if (context.getVertexCount() < 2) {
+			return false;
 		}
 
-		return result;
+		return true;
 	}
 
 	@Override
@@ -50,9 +47,6 @@ public class SelectingVertexForLength extends PickingVertex {
 		valDB.setLength(length);
 		valDB.notifyObservers();
 
-//        Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
-
-		doingFirstAction = true;
 		context.clear(false);
 
 		context.setMissionCompleted(true);
