@@ -5,27 +5,21 @@ import oripa.domain.paint.segment.TwoPointSegmentAction;
 
 public class TwoPointLineAction extends TwoPointSegmentAction {
 
-
-	public TwoPointLineAction(){
+	public TwoPointLineAction() {
 		setActionState(new SelectingFirstVertexForLine());
 	}
 
-	
-	
 	@Override
-	public void destroy(PaintContextInterface context) {
+	public void destroy(final PaintContextInterface context) {
 		// TODO Auto-generated method stub
 		super.destroy(context);
 	}
 
-
-
 	@Override
-	public void recover(PaintContextInterface context) {
+	public void recover(final PaintContextInterface context) {
+		context.clear(true);
 		setActionState(new SelectingFirstVertexForLine());
-		
+
 	}
-	
-	
 
 }
