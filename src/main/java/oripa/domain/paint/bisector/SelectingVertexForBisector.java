@@ -19,26 +19,24 @@ public class SelectingVertexForBisector extends PickingVertex {
 //		System.out.println("SelectingFirstVertex.initialize() is called");
 	}
 
-	private boolean doingFirstAction = true;
-
 	@Override
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
 			final boolean doSpecial) {
 
-		if (doingFirstAction) {
+		if (context.getVertexCount() == 0) {
 			context.creasePatternUndo().cacheUndoInfo();
-			doingFirstAction = false;
 		}
 
-		boolean result = super.onAct(context, currentPoint, doSpecial);
+		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
 
-		if (result == true) {
-			if (context.getVertexCount() < 3) {
-				result = false;
-			}
+		if (!vertexIsSelected) {
+			return false;
 		}
 
-		return result;
+		if (context.getVertexCount() < 3) {
+			return false;
+		}
+		return true; // 3 vertices are selected. go to selecting a line.
 	}
 
 	@Override

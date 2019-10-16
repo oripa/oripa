@@ -27,7 +27,7 @@ public class SelectingLineForBisector extends PickingLine {
 	protected void onResult(final PaintContextInterface context) {
 		if (context.getLineCount() != 1 ||
 				context.getVertexCount() != 3) {
-			throw new RuntimeException();
+			throw new IllegalStateException("wrong state: impossible line and vertex selection.");
 		}
 
 		context.creasePatternUndo().pushCachedUndoInfo();
