@@ -8,61 +8,50 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class TwoPointSegmentAction extends GraphicMouseAction {
 
-	
-	
-	public TwoPointSegmentAction(){
+	public TwoPointSegmentAction() {
 		setActionState(new SelectingFirstVertexForSegment());
 	}
-	
-
-	
 
 	@Override
-	public void destroy(PaintContextInterface context) {
+	public void destroy(final PaintContextInterface context) {
 		super.destroy(context);
 	}
 
 	@Override
-	public void recover(PaintContextInterface context) {
-		// TODO Auto-generated method stub
+	public void recover(final PaintContextInterface context) {
+		context.clear(true);
 		setActionState(new SelectingFirstVertexForSegment());
 	}
 
-
 	@Override
-	public void onDrag(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
+	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
-	
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
-		
 
 		drawTemporaryLine(g2d, context);
 		drawPickCandidateVertex(g2d, context);
 
-
 	}
 
-
-
-
 	@Override
-	public void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
