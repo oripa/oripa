@@ -24,7 +24,7 @@ public class DeletingLine extends PickingLine {
 			painter.removeLine(context.popLine());
 		}
 
-		context.clear(false);
+		context.clear(true);
 	}
 
 }
