@@ -40,28 +40,29 @@ public class SelectingLineForMirror extends PickingLine {
 
 		}
 
-		boolean result = super.onAct(context, currentPoint, doSpecial);
+		boolean lineIsSelected = super.onAct(context, currentPoint, doSpecial);
 
-		if (result == true) {
-			if (doSpecial) {
-				axis = context.popLine();
-				result = true;
-			} else {
-				OriLine line = context.peekLine();
-
-				if (line.selected) {
-					line.selected = false;
-					context.popLine();
-					context.removeLine(line);
-				} else {
-					line.selected = true;
-				}
-
-				result = false;
-			}
+		if (!lineIsSelected) {
+			return false;
 		}
 
-		return result;
+		if (doSpecial) {
+			axis = context.popLine();
+			return true;
+		}
+
+		OriLine line = context.peekLine();
+
+		// toggle selection
+		if (line.selected) {
+			context.popLine();
+			context.removeLine(line);
+		} else {
+			line.selected = true;
+		}
+
+		// repeat this state until axis is selected.
+		return false;
 	}
 
 	@Override
