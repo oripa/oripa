@@ -64,6 +64,11 @@ public class CreasePatternUndoManagerTest {
 		assertEquals(6, popLastLine(manager).p0.x, 1e-8);
 		assertEquals(4, manager.size());
 
+		for (int i = 5; i >= 2; i--) {
+			assertEquals(i, popLastLine(manager).p0.x, 1e-8);
+		}
+		assertEquals(0, manager.size());
+
 	}
 
 }
