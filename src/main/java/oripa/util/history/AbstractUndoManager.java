@@ -19,7 +19,7 @@
 package oripa.util.history;
 
 import java.util.Deque;
-import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * @author Koji
@@ -28,7 +28,7 @@ import java.util.LinkedList;
  */
 public abstract class AbstractUndoManager<Backup> {
 
-	private final Deque<UndoInfo<Backup>> undoStack = new LinkedList<>();
+	private final Deque<UndoInfo<Backup>> undoStack = new ConcurrentLinkedDeque<UndoInfo<Backup>>();
 	private UndoInfo<Backup> cache;
 	private boolean changed = false;
 	protected int max = 1000;
@@ -50,9 +50,10 @@ public abstract class AbstractUndoManager<Backup> {
 
 	public void push(final UndoInfo<Backup> info) {
 
-		undoStack.push(info);
+		undoStack.addLast(info);
 
 		if (undoStack.size() > max) {
+			// forget the oldest data
 			undoStack.removeFirst();
 		}
 
@@ -62,11 +63,11 @@ public abstract class AbstractUndoManager<Backup> {
 	public UndoInfo<Backup> pop() {
 		if (undoStack.isEmpty()) {
 			return null;
-		} else {
-			changed = true;
 		}
 
-		return undoStack.pop();
+		changed = true;
+
+		return undoStack.removeLast();
 	}
 
 	public UndoInfo<Backup> peek() {
@@ -74,7 +75,7 @@ public abstract class AbstractUndoManager<Backup> {
 			return null;
 		}
 
-		return undoStack.peek();
+		return undoStack.peekLast();
 	}
 
 	public boolean isChanged() {
@@ -104,6 +105,10 @@ public abstract class AbstractUndoManager<Backup> {
 
 	public void pushCachedInfo() {
 		this.push(cache);
+	}
+
+	public int size() {
+		return undoStack.size();
 	}
 
 }
