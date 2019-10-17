@@ -2,7 +2,6 @@ package oripa.domain.creasepattern.impl;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -77,7 +76,7 @@ public class VerticesManager implements NearVerticesGettable {
 	/**
 	 * [div_x][div_y] is a vertices in the divided area.
 	 */
-	private final Set<Vector2d>[][] vertices = new HashSet[divNum][divNum];
+	private final Set<Vector2d>[][] vertices = new Set[divNum][divNum];
 	/**
 	 * count existence of same values.
 	 */
