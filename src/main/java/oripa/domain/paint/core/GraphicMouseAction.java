@@ -12,11 +12,9 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
-import oripa.viewsetting.main.ScreenUpdater;
 
 public abstract class GraphicMouseAction implements GraphicMouseActionInterface {
 
@@ -77,22 +75,20 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(
-			final PaintContextInterface context, final boolean differentAction,
-			final ScreenUpdater screenUpdater) {
+			final PaintContextInterface context, final boolean differentAction) {
 		Point2D.Double clickPoint = context.getLogicalMousePoint();
 
-		doAction(context, clickPoint, differentAction, screenUpdater);
+		doAction(context, clickPoint, differentAction);
 		return this;
 	}
 
 	@Override
 	public void doAction(final PaintContextInterface context, final Point2D.Double point,
-			final boolean differntAction, final ScreenUpdaterInterface screenUpdater) {
+			final boolean differntAction) {
 
 		state = state.doAction(context,
 				point, differntAction);
 
-		screenUpdater.updateScreen();
 	}
 
 	@Override
@@ -176,7 +172,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	/**
 	 * draw a picked vertex as an small rectangle at (x, y)
-	 * 
+	 *
 	 * @param g2d
 	 * @param context
 	 * @param x
@@ -224,7 +220,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 * draws the line between the most recently selected vertex and the closest
 	 * vertex sufficiently to the mouse cursor. if every vertex is far from
 	 * cursor, this method uses the cursor point instead of close vertex.
-	 * 
+	 *
 	 * @param g2d
 	 * @param context
 	 */

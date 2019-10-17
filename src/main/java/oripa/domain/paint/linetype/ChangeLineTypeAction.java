@@ -21,19 +21,17 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
 			final PaintContextInterface context) {
 
-		if (selectedLines.isEmpty() == false) {
-			context.creasePatternUndo().pushUndoInfo();
+		if (selectedLines.isEmpty()) {
+			return;
+		}
+		context.creasePatternUndo().pushUndoInfo();
 
-			UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-			for (OriLine l : selectedLines) {
-				Painter painter = context.getPainter();
-				// Change line type
-				painter.alterLineType(
-						l, setting.getTypeFrom(), setting.getTypeTo());
-				// ORIPA.doc.alterLineType(l, setting.getLineTypeFromIndex(),
-				// setting.getLineTypeToIndex());
-			}
-
+		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
+		for (OriLine l : selectedLines) {
+			Painter painter = context.getPainter();
+			// Change line type
+			painter.alterLineType(
+					l, setting.getTypeFrom(), setting.getTypeTo());
 		}
 	}
 

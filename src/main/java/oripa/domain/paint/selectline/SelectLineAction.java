@@ -48,31 +48,32 @@ public class SelectLineAction extends RectangularSelectableAction {
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
 			final PaintContextInterface context) {
 
-		if (selectedLines.isEmpty() == false) {
+		if (selectedLines.isEmpty()) {
+			return;
+		}
 
-			context.creasePatternUndo().pushUndoInfo();
+		context.creasePatternUndo().pushUndoInfo();
 
-			for (OriLine line : selectedLines) {
-				if (line.typeVal == OriLine.TYPE_CUT) {
-					continue;
-				}
-				// Don't select if the line is hidden
-				if (!PaintConfig.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
-						|| line.typeVal == OriLine.TYPE_VALLEY)) {
-					continue;
-				}
-				if (!PaintConfig.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
-					continue;
-				}
+		for (OriLine line : selectedLines) {
+			if (line.typeVal == OriLine.TYPE_CUT) {
+				continue;
+			}
+			// Don't select if the line is hidden
+			if (!PaintConfig.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
+					|| line.typeVal == OriLine.TYPE_VALLEY)) {
+				continue;
+			}
+			if (!PaintConfig.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
+				continue;
+			}
 
-				if (context.getPickedLines().contains(line) == false) {
-					line.selected = true;
-					context.pushLine(line);
-				}
-
+			if (context.getPickedLines().contains(line) == false) {
+				line.selected = true;
+				context.pushLine(line);
 			}
 
 		}
+
 	}
 
 	@Override

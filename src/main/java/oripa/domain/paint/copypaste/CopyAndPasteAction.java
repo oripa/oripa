@@ -9,9 +9,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.viewsetting.main.ScreenUpdater;
 
 public class CopyAndPasteAction extends GraphicMouseAction {
 
@@ -47,9 +45,8 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(final PaintContextInterface context,
-			final boolean differentAction,
-			final ScreenUpdater screenUpdater) {
-		action.onLeftClick(context, differentAction, screenUpdater);
+			final boolean differentAction) {
+		action.onLeftClick(context, differentAction);
 
 		return this;
 	}
@@ -63,8 +60,8 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 
 	@Override
 	public void doAction(final PaintContextInterface context, final Double point,
-			final boolean differntAction, final ScreenUpdaterInterface screenUpdater) {
-		action.doAction(context, point, differntAction, screenUpdater);
+			final boolean differntAction) {
+		action.doAction(context, point, differntAction);
 	}
 
 	@Override
@@ -86,15 +83,14 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param changingOrigin
 	 *            {@code true} for selecting origin, {@code false} for pasting.
 	 */
 	public void changeAction(final boolean changingOrigin) {
 		if (changingOrigin) {
 			action = originAction;
-		}
-		else {
+		} else {
 			action = pasteAction;
 		}
 	}

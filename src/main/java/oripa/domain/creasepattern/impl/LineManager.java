@@ -1,29 +1,31 @@
 package oripa.domain.creasepattern.impl;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import oripa.value.OriLine;
 
 /**
  * Manager of all lines.
- * 
+ *
  * @author Koji
  *
  */
 public class LineManager implements Collection<OriLine> {
-	
+
 	// The order of lines affects the position of drawn estimated model.
-	// HashSet is fast to access but does not guarantee that the order is always same.
-	
-	private Set<OriLine> lines = new HashSet<>();
+	// HashSet is fast to access but does not guarantee that the order is always
+	// same.
+
+	private final Set<OriLine> lines = Collections.newSetFromMap(
+			new ConcurrentHashMap<OriLine, Boolean>());
 	// private Set<OriLine> lines = new TreeSet<>();
-	
-	
+
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		// TODO Auto-generated method stub
 		return lines.contains(o);
 	}
@@ -34,12 +36,12 @@ public class LineManager implements Collection<OriLine> {
 	}
 
 	@Override
-	public boolean add(OriLine e) {
+	public boolean add(final OriLine e) {
 		return lines.add(e);
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(final Object o) {
 		OriLine l = (OriLine) o;
 
 		return lines.remove(o);
@@ -50,9 +52,6 @@ public class LineManager implements Collection<OriLine> {
 		lines.clear();
 	}
 
-
-
-
 	@Override
 	public Object[] toArray() {
 		// TODO Auto-generated method stub
@@ -60,7 +59,7 @@ public class LineManager implements Collection<OriLine> {
 	}
 
 	@Override
-	public <T> T[] toArray(T[] a) {
+	public <T> T[] toArray(final T[] a) {
 		// TODO Auto-generated method stub
 		return lines.toArray(a);
 	}
@@ -78,26 +77,26 @@ public class LineManager implements Collection<OriLine> {
 	}
 
 	@Override
-	public boolean containsAll(Collection<?> c) {
+	public boolean containsAll(final Collection<?> c) {
 		// TODO Auto-generated method stub
 		return lines.containsAll(c);
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends OriLine> c) {
-				
+	public boolean addAll(final Collection<? extends OriLine> c) {
+
 		return lines.addAll(c);
 	}
 
 	@Override
-	public boolean removeAll(Collection<?> c) {
-		
+	public boolean removeAll(final Collection<?> c) {
+
 		return lines.removeAll(c);
 	}
 
 	@Override
-	public boolean retainAll(Collection<?> c) {
-		
+	public boolean retainAll(final Collection<?> c) {
+
 		return lines.retainAll(c);
 	}
 }
