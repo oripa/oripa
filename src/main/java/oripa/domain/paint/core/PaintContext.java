@@ -59,7 +59,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @see oripa.domain.paint.core.PaintContextInterface#getLogicalMousePoint()
 	 */
 	@Override
-	public Point2D.Double getLogicalMousePoint() {
+	public synchronized Point2D.Double getLogicalMousePoint() {
 		return mousePoint;
 	}
 
@@ -100,7 +100,7 @@ public class PaintContext implements PaintContextInterface {
 	 * (java.awt.geom.Point2D.Double)
 	 */
 	@Override
-	public void setLogicalMousePoint(final Point2D.Double logicalPoint) {
+	public synchronized void setLogicalMousePoint(final Point2D.Double logicalPoint) {
 		this.mousePoint = logicalPoint;
 	}
 
@@ -422,7 +422,18 @@ public class PaintContext implements PaintContextInterface {
 
 	@Override
 	public CreasePatternInterface getCreasePattern() {
-		// TODO 自動生成されたメソッド・スタブ
 		return creasePattern;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PaintContext: #line=" + pickedLines.size() +
+				", #vertex=" + pickedVertices.size() +
+				", #undoStack=" + undoer.size();
 	}
 }

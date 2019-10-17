@@ -96,7 +96,13 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			final AffineTransform affine,
 			final boolean differentAction) {
 
+		System.out.println(this.getClass().getName());
+		System.out.println("before undo " + context.toString());
+
 		undo(context);
+
+		System.out.println("after undo " + context.toString());
+
 	}
 
 	@Override

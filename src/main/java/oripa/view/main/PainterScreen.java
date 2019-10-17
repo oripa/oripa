@@ -317,7 +317,8 @@ public class PainterScreen extends JPanel
 
 			@Override
 			protected void done() {
-				screenUpdater.updateScreen();
+				repaint();
+				// screenUpdater.updateScreen();
 			}
 		}.execute();
 

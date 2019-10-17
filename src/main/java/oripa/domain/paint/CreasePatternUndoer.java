@@ -59,7 +59,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#cacheUndoInfo()
 	 */
 	@Override
-	public void cacheUndoInfo() {
+	public synchronized void cacheUndoInfo() {
 		undoManager.setCache(owner.getCreasePattern());
 	}
 
@@ -69,7 +69,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#pushCachedUndoInfo()
 	 */
 	@Override
-	public void pushCachedUndoInfo() {
+	public synchronized void pushCachedUndoInfo() {
 		undoManager.pushCachedInfo();
 	}
 
@@ -79,7 +79,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#pushUndoInfo()
 	 */
 	@Override
-	public void pushUndoInfo() {
+	public synchronized void pushUndoInfo() {
 		undoManager.push(owner.getCreasePattern());
 	}
 
@@ -90,7 +90,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 	 * .util.history.UndoInfo)
 	 */
 	@Override
-	public void pushUndoInfo(final UndoInfo<Collection<OriLine>> uinfo) {
+	public synchronized void pushUndoInfo(final UndoInfo<Collection<OriLine>> uinfo) {
 		undoManager.push(uinfo);
 	}
 
@@ -100,7 +100,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#loadUndoInfo()
 	 */
 	@Override
-	public void loadUndoInfo() {
+	public synchronized void loadUndoInfo() {
 		UndoInfo<Collection<OriLine>> info = undoManager.pop();
 
 		if (info == null) {
@@ -150,6 +150,16 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 	@Override
 	public void clear() {
 		undoManager.clear();
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.CreasePatternUndoerInterface#size()
+	 */
+	@Override
+	public int size() {
+		return undoManager.size();
 	}
 
 }

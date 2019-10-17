@@ -49,4 +49,6 @@ public interface CreasePatternUndoerInterface {
 
 	public abstract void clear();
 
+	public abstract int size();
+
 }
