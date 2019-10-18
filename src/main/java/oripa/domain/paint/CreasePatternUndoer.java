@@ -21,7 +21,6 @@ package oripa.domain.paint;
 import java.util.Collection;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.history.CreasePatternUndoFactory;
 import oripa.util.history.AbstractUndoManager;
 import oripa.util.history.UndoInfo;
 import oripa.value.OriLine;
@@ -34,23 +33,10 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 	private final AbstractUndoManager<Collection<OriLine>> undoManager = new CreasePatternUndoManager(
 			30);
 
-	private final CreasePatternUndoFactory factory = new CreasePatternUndoFactory();
-
 	private final CreasePatternHolder owner;
 
 	public CreasePatternUndoer(final CreasePatternHolder aOwner) {
 		owner = aOwner;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#createUndoInfo()
-	 */
-	@Override
-	public UndoInfo<Collection<OriLine>> createUndoInfo() {
-		UndoInfo<Collection<OriLine>> undoInfo = factory.create(owner.getCreasePattern());
-		return undoInfo;
 	}
 
 	/*
