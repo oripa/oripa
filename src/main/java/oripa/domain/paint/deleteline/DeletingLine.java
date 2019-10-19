@@ -15,7 +15,7 @@ public class DeletingLine extends PickingLine {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		if (context.getLineCount() > 0) {
 			context.creasePatternUndo().pushUndoInfo();

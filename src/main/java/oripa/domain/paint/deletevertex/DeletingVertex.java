@@ -12,7 +12,7 @@ public class DeletingVertex extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		if (context.getVertexCount() > 0) {
 			context.creasePatternUndo().pushUndoInfo();

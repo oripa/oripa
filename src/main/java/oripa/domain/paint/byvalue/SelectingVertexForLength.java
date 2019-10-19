@@ -38,7 +38,7 @@ public class SelectingVertexForLength extends PickingVertex {
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context) {
+	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		double length = GeomUtil.Distance(
 				context.getVertex(0), context.getVertex(1));

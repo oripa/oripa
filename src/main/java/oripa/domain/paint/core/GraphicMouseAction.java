@@ -94,7 +94,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	@Override
 	public void onRightClick(final PaintContextInterface context,
 			final AffineTransform affine,
-			final boolean differentAction) {
+			final boolean doSpecial) {
 
 		System.out.println(this.getClass().getName());
 		System.out.println("before undo " + context.toString());

@@ -17,7 +17,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 		if (context.getVertexCount() != 1 || context.getLineCount() > 0) {
 			throw new IllegalStateException(
 					"wrong state: impossible selection of vertex and lines.");

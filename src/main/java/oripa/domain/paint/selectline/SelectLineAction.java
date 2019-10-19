@@ -19,7 +19,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 	}
 
 	/**
-	 * set old line-selected marks to current context.s
+	 * set old line-selected marks to current context.
 	 */
 	@Override
 	public void undo(final PaintContextInterface context) {

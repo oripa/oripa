@@ -47,15 +47,15 @@ public abstract class AbstractActionState implements ActionState {
 	 */
 	@Override
 	public final ActionState doAction(final PaintContextInterface context,
-			final Point2D.Double currentPoint, final boolean freeSelection) {
+			final Point2D.Double currentPoint, final boolean doSpecial) {
 
-		boolean success = onAct(context, currentPoint, freeSelection);
+		boolean success = onAct(context, currentPoint, doSpecial);
 
 		if (!success) {
 			return this;
 		}
 
-		onResult(context);
+		onResult(context, doSpecial);
 
 		ActionState nextState = getNextState();
 
@@ -67,7 +67,7 @@ public abstract class AbstractActionState implements ActionState {
 	 *
 	 * @param context
 	 */
-	protected abstract void onResult(PaintContextInterface context);
+	protected abstract void onResult(PaintContextInterface context, final boolean doSpecial);
 
 	/**
 	 * defines the job of this class.

@@ -37,7 +37,7 @@ public class SelectingVertexForAngle extends PickingVertex {
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context) {
+	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		Vector2d first = context.getVertex(0);
 		Vector2d second = context.getVertex(1);

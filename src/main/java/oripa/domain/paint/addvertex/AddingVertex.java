@@ -27,8 +27,7 @@ public class AddingVertex extends PickingVertex {
 
 			if (line != null) {
 				context.pushLine(line);
-			}
-			else {
+			} else {
 				result = false;
 			}
 		}
@@ -37,7 +36,7 @@ public class AddingVertex extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		if (context.getVertexCount() > 0) {
 

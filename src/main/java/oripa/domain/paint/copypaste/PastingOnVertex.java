@@ -39,7 +39,7 @@ public class PastingOnVertex extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		Vector2d v = context.popVertex();
 
@@ -52,9 +52,8 @@ public class PastingOnVertex extends PickingVertex {
 			double oy = origin.y;
 
 			List<OriLine> shiftedLines;
-			shiftedLines =
-					shiftLines(
-							context.getPickedLines(), v.x - ox, v.y - oy);
+			shiftedLines = shiftLines(
+					context.getPickedLines(), v.x - ox, v.y - oy);
 
 //            for(int i = 0; i < context.getLineCount(); i++){
 //            	ORIPA.doc.addLine(shiftedLines.get(i));
