@@ -18,19 +18,4 @@ public class MirrorCopyAction extends SelectLineAction {
 	public void destroy(final PaintContextInterface context) {
 		context.clear(false);
 	}
-
-//	@Override
-//	public void undo(final PaintContextInterface context) {
-//		BasicUndo.undo(this.getActionState(), context);
-//	}
-
-//	/**
-//	 * do usual undo.
-//	 */
-//	@Override
-//	public void onRightClick(final PaintContextInterface context, final AffineTransform affine,
-//			final boolean differentAction) {
-//		BasicUndo.undo(this.getActionState(), context);
-//	}
-
 }

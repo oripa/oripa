@@ -5,8 +5,6 @@ import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.selectline.SelectingLine;
 import oripa.value.OriLine;
 
-//TODO separate into FirstState and LatterState to delete state variable
-
 public class SelectingLineForMirror extends SelectingLine {
 
 	public SelectingLineForMirror() {
