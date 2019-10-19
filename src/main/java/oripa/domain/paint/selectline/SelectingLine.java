@@ -19,7 +19,7 @@ public class SelectingLine extends PickingLine {
 
 		context.creasePatternUndo().pushUndoInfo();
 
-		OriLine line = context.peekLine();
+		final OriLine line = context.peekLine();
 
 		// toggle selection
 		if (line.selected) {

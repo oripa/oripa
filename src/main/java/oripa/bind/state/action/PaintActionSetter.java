@@ -11,9 +11,9 @@ import oripa.viewsetting.main.ScreenUpdater;
 
 /**
  * Add this listener to Button object or something for selecting paint action.
- * 
+ *
  * @author koji
- * 
+ *
  */
 public class PaintActionSetter implements ActionListener {
 
@@ -38,10 +38,6 @@ public class PaintActionSetter implements ActionListener {
 		mouseAction.recover(context);
 
 		actionHolder.setMouseAction(mouseAction);
-
-		if (mouseAction.needSelect() == false) {
-			context.getPainter().resetSelectedOriLines();
-		}
 
 		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 		screenUpdater.updateScreen();

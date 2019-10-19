@@ -18,8 +18,6 @@ import oripa.value.OriLine;
 
 public class PasteAction extends GraphicMouseAction {
 
-	private FilledOriLineArrayList shiftedLines = new FilledOriLineArrayList(0);
-
 	private final OriginHolder originHolder = OriginHolder.getInstance();
 
 	public PasteAction() {
@@ -31,7 +29,7 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void recover(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContextInterface context) {
 		context.clear(false);
 
 		context.startPasting();
@@ -43,8 +41,6 @@ public class PasteAction extends GraphicMouseAction {
 				context.pushLine(line);
 			}
 		}
-
-		shiftedLines = new FilledOriLineArrayList(context.getPickedLines());
 
 	}
 
@@ -77,8 +73,7 @@ public class PasteAction extends GraphicMouseAction {
 		setCandidateVertexOnMove(context, differentAction);
 		Vector2d closeVertex = context.getCandidateVertexToPick();
 
-		Vector2d closeVertexOfLines =
-				NearestItemFinder.pickVertexFromPickedLines(context);
+		Vector2d closeVertexOfLines = NearestItemFinder.pickVertexFromPickedLines(context);
 
 		if (closeVertex == null) {
 			closeVertex = closeVertexOfLines;
@@ -99,7 +94,7 @@ public class PasteAction extends GraphicMouseAction {
 //				closeVertex = new Vector2d(current.x, current.y);
 //			}
 //
-//		}		
+//		}
 		return closeVertex;
 	}
 
@@ -129,8 +124,7 @@ public class PasteAction extends GraphicMouseAction {
 		if (candidateVertex != null) {
 			diffX = candidateVertex.x - ox;
 			diffY = candidateVertex.y - oy;
-		}
-		else {
+		} else {
 			diffX = context.getLogicalMousePoint().x - ox;
 			diffY = context.getLogicalMousePoint().y - oy;
 		}

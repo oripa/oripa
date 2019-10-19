@@ -29,7 +29,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 	}
 
 	@Override
-	public void recover(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContextInterface context) {
 		context.clear(false);
 
 		Collection<OriLine> creasePattern = context.getCreasePattern();

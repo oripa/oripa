@@ -26,7 +26,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	private final OriginHolder originHolder = OriginHolder.getInstance();
 
 	@Override
-	public void recover(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContextInterface context) {
 		originHolder.resetOrigin(context);
 		action = pasteAction;
 		action.recover(context);
@@ -50,13 +50,6 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 
 		return this;
 	}
-
-//	@Override
-//	public void onRightClick(PaintContext context, AffineTransform affine,
-//			boolean differentAction) {
-//		// TODO Auto-generated method stub
-//		super.onRightClick(context, affine, differentAction);
-//	}
 
 	@Override
 	public void doAction(final PaintContextInterface context, final Double point,
@@ -106,7 +99,6 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
-		// TODO Auto-generated method stub
 		action.onDraw(g2d, context);
 	}
 }

@@ -8,94 +8,47 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class AngleBisectorAction extends GraphicMouseAction {
 
-
-	public AngleBisectorAction(){
+	public AngleBisectorAction() {
 		setActionState(new SelectingVertexForBisector());
 	}
 
-
-	
-
-//	private OriLine closeLine = null;
-//
-//	@Override
-//	public Vector2d onMove(MouseContext context, AffineTransform affine,
-//			MouseEvent event) {
-//		Vector2d result = super.onMove(context, affine, event);
-//
-//		if(context.getVertexCount() == 3){
-//			if(closeLine != null){
-//				closeLine.selected = false;
-//			}
-//			
-//			closeLine = context.pickCandidateL;
-//	
-//			if(closeLine != null){
-//				closeLine.selected = true;
-//			}
-//		}		
-//		return result;
-//	}
-
-
-	
-
-
 	@Override
-	public void recover(PaintContextInterface context) {
-		
-	}
-
-
-
-
-	@Override
-	public void destroy(PaintContextInterface context) {
+	public void destroy(final PaintContextInterface context) {
 		super.destroy(context);
 		setActionState(new SelectingVertexForBisector());
 	}
 
-
-
-
 	@Override
-	public void onDrag(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
+	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
-
-
-
 	@Override
-	public void onRelease(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
-
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 
-
-		if(context.getVertexCount() < 3){
+		if (context.getVertexCount() < 3) {
 			drawPickCandidateVertex(g2d, context);
-		}
-		else {
+		} else {
 			drawPickCandidateLine(g2d, context);
 		}
 	}
 
-
-
 	@Override
-	public void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

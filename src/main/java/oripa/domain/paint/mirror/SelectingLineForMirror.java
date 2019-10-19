@@ -16,8 +16,7 @@ public class SelectingLineForMirror extends SelectingLine {
 		if (doSpecial) {
 			context.creasePatternUndo().pushUndoInfo();
 
-			OriLine axis;
-			axis = context.popLine();
+			final OriLine axis = context.popLine();
 
 			Painter painter = context.getPainter();
 			painter.mirrorCopyBy(axis, context.getPickedLines());

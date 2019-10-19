@@ -16,7 +16,7 @@ public class TwoPointLineAction extends TwoPointSegmentAction {
 	}
 
 	@Override
-	public void recover(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContextInterface context) {
 		context.clear(true);
 		setActionState(new SelectingFirstVertexForLine());
 

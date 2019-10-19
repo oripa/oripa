@@ -39,7 +39,7 @@ public class LineByValueAction extends GraphicMouseAction {
 	 * PaintContextInterface)
 	 */
 	@Override
-	public void recover(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContextInterface context) {
 		context.clear(true);
 	}
 

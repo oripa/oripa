@@ -69,8 +69,25 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		context.clear(false);
 	}
 
+	/**
+	 * This method is called at the first step of
+	 * {@link #recover(PaintContextInterface)}. After this method is done,
+	 * {@code recover()} resets the {@code .selected} property of all lines in
+	 * crease pattern if {@link #needSelect()} is false.
+	 *
+	 * @param context
+	 */
+	protected void recoverImpl(final PaintContextInterface context) {
+	}
+
 	@Override
-	public void recover(final PaintContextInterface context) {
+	public final void recover(final PaintContextInterface context) {
+
+		recoverImpl(context);
+
+		if (!needSelect()) {
+			context.getPainter().resetSelectedOriLines();
+		}
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class TwoPointSegmentAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void recover(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContextInterface context) {
 		context.clear(true);
 		setActionState(new SelectingFirstVertexForSegment());
 	}
