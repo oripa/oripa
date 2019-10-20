@@ -86,7 +86,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#loadUndoInfo()
 	 */
 	@Override
-	public synchronized void loadUndoInfo() {
+	public synchronized void undo() {
 		UndoInfo<Collection<OriLine>> info = undoManager.pop();
 
 		if (info == null) {

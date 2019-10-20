@@ -37,7 +37,7 @@ public interface CreasePatternUndoerInterface {
 
 	public abstract void pushUndoInfo(UndoInfo<Collection<OriLine>> uinfo);
 
-	public abstract void loadUndoInfo();
+	public abstract void undo();
 
 	public abstract boolean canUndo();
 

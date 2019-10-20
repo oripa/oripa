@@ -404,7 +404,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			if (actionHolder.getMouseAction() != null) {
 				actionHolder.getMouseAction().undo(paintContext);
 			} else {
-				paintContext.creasePatternUndo().loadUndoInfo();
+				paintContext.creasePatternUndo().undo();
 			}
 			mainScreen.repaint();
 		} else if (e.getSource() == menuItemClear) {

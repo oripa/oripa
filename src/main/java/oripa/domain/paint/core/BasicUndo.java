@@ -19,7 +19,7 @@ public class BasicUndo {
 			return state.undo(context);
 		}
 
-		context.creasePatternUndo().loadUndoInfo();
+		context.creasePatternUndo().undo();
 
 		return state;
 	}

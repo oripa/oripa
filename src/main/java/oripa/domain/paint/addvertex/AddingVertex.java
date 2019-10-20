@@ -46,7 +46,7 @@ public class AddingVertex extends PickingVertex {
 
 			if (!painter.addVertexOnLine(
 					context.popLine(), context.popVertex())) {
-				context.creasePatternUndo().loadUndoInfo();
+				context.creasePatternUndo().undo();
 			}
 
 		}
