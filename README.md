@@ -7,9 +7,14 @@ The first version of ORIPA was released in 2005. ORIPA was made open source in 2
 
 To find out more about using the software, visit the [ORIPA project's website](http://mitani.cs.tsukuba.ac.jp/oripa/).
 
-This version of ORIPA fixes some bugs and provides functionality of saving as image.
+### Download
+------------
+The newest version is 0.36: https://github.com/oripa/oripa/raw/master/oripa.036.jar
+* Bugs on undo in ver.0.35 is fixed.
+* Faster access to line and vertex when selecting.
+* This is an unstable version because the code has been drastically changed. 
+* You need JRE 7 or 8. If you have not installed JRE, you can use JDK 11.
 
-Executable file and release notes: https://sourceforge.net/projects/oripas/files/
 
 ### Functionalities
 ------------------
@@ -24,6 +29,7 @@ Executable file and release notes: https://sourceforge.net/projects/oripas/files
 
 ### Next challenge(s)
 --------
+* Redo.
 * Dividing lines by an input circle.
 * Enlarging selected lines.
 * Importing other crease pattern.
