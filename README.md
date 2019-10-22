@@ -20,7 +20,7 @@ To find out more about using the software, visit the [ORIPA project's website](h
 
 ### Download
 ------------
-The newest version is 0.36: https://github.com/oripa/oripa/raw/master/oripa-036.jar
+The newest version is 0.36: https://github.com/oripa/oripa/raw/master/oripa-0.36.jar
 * Bugs on undo in ver.0.35 is fixed.
 * Faster access to line and vertex when selecting.
 * This is an unstable version because the code has been drastically changed. 
