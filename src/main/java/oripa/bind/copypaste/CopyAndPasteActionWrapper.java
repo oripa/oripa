@@ -22,8 +22,8 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	}
 
 	@Override
-	public void recover(final PaintContextInterface context) {
-		super.recover(context);
+	protected void recoverImpl(final PaintContextInterface context) {
+		super.recoverImpl(context);
 		if (isCut) {
 			Painter painter = context.getPainter();
 			painter.removeSelectedLines();

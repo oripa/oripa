@@ -6,7 +6,6 @@ import java.awt.geom.AffineTransform;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.viewsetting.main.ScreenUpdater;
 
 public class LengthMeasuringAction extends GraphicMouseAction {
 
@@ -16,11 +15,10 @@ public class LengthMeasuringAction extends GraphicMouseAction {
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(final PaintContextInterface context,
-			final boolean differentAction,
-			final ScreenUpdater screenUpdater) {
+			final boolean differentAction) {
 
 		GraphicMouseActionInterface action;
-		action = super.onLeftClick(context, differentAction, screenUpdater);
+		action = super.onLeftClick(context, differentAction);
 
 		if (context.isMissionCompleted()) {
 			action = new LineByValueAction();

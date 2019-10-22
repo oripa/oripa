@@ -10,20 +10,20 @@ import oripa.value.OriPoint;
 
 public class LineMirror {
 	/**
-	 * 
-	 * 
-	 * @param baseLine       a line to be the axis of symmetry
-	 * @param lines          lines to be mirrored
-	 * @param creasePattern  destination of mirrored lines
+	 *
+	 *
+	 * @param baseLine
+	 *            a line to be the axis of symmetry
+	 * @param lines
+	 *            lines to be mirrored. the .selected field will be ignored.
+	 * @param creasePattern
+	 *            destination of mirrored lines
 	 */
 	public Collection<OriLine> createMirroredLines(
-			OriLine baseLine, Collection<OriLine> lines) {
+			final OriLine baseLine, final Collection<OriLine> lines) {
 
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>(lines.size());
 		for (OriLine line : lines) {
-			if (!line.selected) {
-				continue;
-			}
 			if (line.equals(baseLine)) {
 				continue;
 			}
@@ -32,17 +32,20 @@ public class LineMirror {
 		}
 
 		return copiedLines;
-	}    
+	}
 
 	/**
 	 * create a mirrored line.
-	 * @param line         a line to be mirrored
-	 * @param baseOriLine  a line to be axis of symmetry
+	 *
+	 * @param line
+	 *            a line to be mirrored
+	 * @param baseOriLine
+	 *            a line to be axis of symmetry
 	 * @return mirrored line
 	 */
 	private OriLine createMirroredLine(
-			OriLine line, OriLine baseOriLine) {
-				
+			final OriLine line, final OriLine baseOriLine) {
+
 		OriPoint q0 = createMirroredVertex(line.p0, baseOriLine);
 		OriPoint q1 = createMirroredVertex(line.p1, baseOriLine);
 
@@ -53,12 +56,15 @@ public class LineMirror {
 
 	/**
 	 * create a mirrored vertex.
-	 * @param vertex       p vertex to be mirrored
-	 * @param baseOriLine  a line to be axis of symmetry
+	 *
+	 * @param vertex
+	 *            p vertex to be mirrored
+	 * @param baseOriLine
+	 *            a line to be axis of symmetry
 	 * @return
 	 */
 	private OriPoint createMirroredVertex(
-			OriPoint vertex, OriLine baseOriLine) {
+			final OriPoint vertex, final OriLine baseOriLine) {
 
 		Line baseLine = baseOriLine.getLine();
 		double dist0 = GeomUtil.Distance(vertex, baseLine);
@@ -73,7 +79,7 @@ public class LineMirror {
 		OriPoint q0 = new OriPoint(
 				vertex.x + dir0.x * dist0 * 2,
 				vertex.y + dir0.y * dist0 * 2);
-		
+
 		return q0;
 	}
 }

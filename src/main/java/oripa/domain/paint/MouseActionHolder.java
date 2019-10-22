@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -22,17 +22,17 @@ import oripa.domain.paint.line.TwoPointLineAction;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class MouseActionHolder {
 
 	private static MouseActionHolder instance;
 
 	/**
-	 * 
+	 *
 	 * @return a holder singleton
 	 */
-	public static MouseActionHolder getInstance() {
+	public static synchronized MouseActionHolder getInstance() {
 		if (instance == null) {
 			instance = new MouseActionHolder();
 			instance.setMouseAction(new TwoPointLineAction());
@@ -42,7 +42,7 @@ public class MouseActionHolder {
 
 	/**
 	 * Hidden.
-	 * 
+	 *
 	 * Constructor
 	 */
 	private MouseActionHolder() {
@@ -50,21 +50,21 @@ public class MouseActionHolder {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private GraphicMouseActionInterface action;
 
 	/**
-	 * 
+	 *
 	 * @param a
 	 *            mouse action behavior
 	 */
-	public void setMouseAction(GraphicMouseActionInterface a) {
+	public void setMouseAction(final GraphicMouseActionInterface a) {
 		action = a;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return current mouse action behavior
 	 */
 	public GraphicMouseActionInterface getMouseAction() {

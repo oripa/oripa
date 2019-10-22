@@ -29,8 +29,6 @@ import oripa.value.OriLine;
  */
 public interface CreasePatternUndoerInterface {
 
-	public abstract UndoInfo<Collection<OriLine>> createUndoInfo();
-
 	public abstract void cacheUndoInfo();
 
 	public abstract void pushCachedUndoInfo();
@@ -39,7 +37,7 @@ public interface CreasePatternUndoerInterface {
 
 	public abstract void pushUndoInfo(UndoInfo<Collection<OriLine>> uinfo);
 
-	public abstract void loadUndoInfo();
+	public abstract void undo();
 
 	public abstract boolean canUndo();
 
@@ -48,5 +46,7 @@ public interface CreasePatternUndoerInterface {
 	public abstract void clearChanged();
 
 	public abstract void clear();
+
+	public abstract int size();
 
 }

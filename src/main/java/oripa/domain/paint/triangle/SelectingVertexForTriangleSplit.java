@@ -39,7 +39,7 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context) {
+	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		context.creasePatternUndo().pushCachedUndoInfo();
 

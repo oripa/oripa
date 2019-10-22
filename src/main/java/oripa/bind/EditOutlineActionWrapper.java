@@ -9,7 +9,6 @@ import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.outline.EditOutlineAction;
-import oripa.viewsetting.main.ScreenUpdater;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
 
@@ -19,10 +18,9 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	@Override
 	public GraphicMouseActionInterface onLeftClick(
 			final PaintContextInterface context,
-			final boolean differentAction,
-			final ScreenUpdater screenUpdater) {
+			final boolean differentAction) {
 		GraphicMouseActionInterface next = super.onLeftClick(context,
-				differentAction, screenUpdater);
+				differentAction);
 
 		if (context.isMissionCompleted()) {
 			popPreviousState();

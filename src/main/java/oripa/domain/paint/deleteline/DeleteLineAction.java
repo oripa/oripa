@@ -31,12 +31,12 @@ public class DeleteLineAction extends RectangularSelectableAction {
 
 	/**
 	 * Reset selection mark to avoid undesired deletion.
-	 * 
+	 *
 	 * @see GraphicMouseAction#recover(PaintContext)
 	 * @param context
 	 */
 	@Override
-	public void recover(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContextInterface context) {
 		context.clear(true);
 	}
 

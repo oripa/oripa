@@ -17,32 +17,27 @@ public class SelectingVertexForAngle extends PickingVertex {
 	protected void initialize() {
 	}
 
-	private boolean doingFirstAction = true;
-
 	@Override
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
 			final boolean doSpecial) {
 
 		context.setMissionCompleted(false);
 
-		if (doingFirstAction) {
-			context.creasePatternUndo().cacheUndoInfo();
-			doingFirstAction = false;
+		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
+
+		if (!vertexIsSelected) {
+			return false;
 		}
 
-		boolean result = super.onAct(context, currentPoint, doSpecial);
-
-		if (result == true) {
-			if (context.getVertexCount() < 3) {
-				result = false;
-			}
+		if (context.getVertexCount() < 3) {
+			return false;
 		}
 
-		return result;
+		return true;
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context) {
+	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		Vector2d first = context.getVertex(0);
 		Vector2d second = context.getVertex(1);
@@ -60,9 +55,6 @@ public class SelectingVertexForAngle extends PickingVertex {
 		valDB.setAngle(deg_angle);
 		valDB.notifyObservers();
 
-		// Globals.subLineInputMode = Constants.SubLineInputMode.NONE;
-
-		doingFirstAction = true;
 		context.clear(false);
 
 		context.setMissionCompleted(true);

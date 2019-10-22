@@ -6,14 +6,12 @@ import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
-import oripa.viewsetting.main.ScreenUpdater;
-
 public interface GraphicMouseActionInterface {
 
 	/**
 	 * True if the inherited class uses line-selected marks set by previous
 	 * action. default is false.
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract boolean needSelect();
@@ -23,7 +21,7 @@ public interface GraphicMouseActionInterface {
 	/**
 	 * define action on destroy. default does clear context selection keeping
 	 * line-selected marks.
-	 * 
+	 *
 	 * @param context
 	 */
 	public abstract void destroy(PaintContextInterface context);
@@ -31,24 +29,23 @@ public interface GraphicMouseActionInterface {
 	/**
 	 * define action for recovering the status of this object with given
 	 * context. default does nothing.
-	 * 
+	 *
 	 * @param context
 	 */
 	public abstract void recover(PaintContextInterface context);
 
 	/**
 	 * performs action.
-	 * 
+	 *
 	 * @param context
 	 * @param affine
 	 * @param differentAction
 	 * @param screenUpdater
-	 * 
-	 * @return Next mouse action. This class returns {@code this} object.
+	 *
+	 * @return Next mouse action.
 	 */
 	public GraphicMouseActionInterface onLeftClick(
-			final PaintContextInterface context, final boolean differentAction,
-			final ScreenUpdater screenUpdater);
+			final PaintContextInterface context, final boolean differentAction);
 
 	/**
 	 * @param context
@@ -57,12 +54,11 @@ public interface GraphicMouseActionInterface {
 	 * @param screenUpdater
 	 */
 	public abstract void doAction(PaintContextInterface context, Double point,
-			boolean differntAction,
-			ScreenUpdaterInterface screenUpdater);
+			boolean differntAction);
 
 	/**
 	 * undo action.
-	 * 
+	 *
 	 * @param context
 	 * @param affine
 	 * @param differentAction
@@ -75,7 +71,7 @@ public interface GraphicMouseActionInterface {
 	/**
 	 * searches a vertex and a line close enough to the mouse cursor. The result
 	 * is stored into context.pickCandidateL(and V).
-	 * 
+	 *
 	 * @param context
 	 * @param affine
 	 * @param differentAction
@@ -96,7 +92,7 @@ public interface GraphicMouseActionInterface {
 	/**
 	 * draws selected lines and selected vertices as selected state. Override
 	 * for more drawing.
-	 * 
+	 *
 	 * @param g2d
 	 * @param context
 	 */

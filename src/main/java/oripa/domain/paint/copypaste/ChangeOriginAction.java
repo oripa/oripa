@@ -10,25 +10,22 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.value.OriLine;
-import oripa.viewsetting.main.ScreenUpdater;
 
 public class ChangeOriginAction extends GraphicMouseAction {
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(final PaintContextInterface context,
-			final boolean keepDoing,
-			final ScreenUpdater screenUpdater) {
+			final boolean keepDoing) {
 
 		return this;
 	}
 
 	@Override
 	public void doAction(final PaintContextInterface context, final Double point,
-			final boolean differntAction, final ScreenUpdaterInterface screenUpdater) {
+			final boolean differntAction) {
 
 	}
 

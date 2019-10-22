@@ -55,18 +55,17 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.domain.paint.core.PaintContextInterface#getLogicalMousePoint()
+	 *
+	 * @see oripa.domain.paint.core.PaintContextInterface#getLogicalMousePoint()
 	 */
 	@Override
-	public Point2D.Double getLogicalMousePoint() {
+	public synchronized Point2D.Double getLogicalMousePoint() {
 		return mousePoint;
 	}
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#isPasting()
 	 */
 	@Override
@@ -76,7 +75,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#startPasting()
 	 */
 	@Override
@@ -86,7 +85,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#finishPasting()
 	 */
 	@Override
@@ -96,21 +95,19 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.domain.paint.core.PaintContextInterface#setLogicalMousePoint
+	 *
+	 * @see oripa.domain.paint.core.PaintContextInterface#setLogicalMousePoint
 	 * (java.awt.geom.Point2D.Double)
 	 */
 	@Override
-	public void setLogicalMousePoint(final Point2D.Double logicalPoint) {
+	public synchronized void setLogicalMousePoint(final Point2D.Double logicalPoint) {
 		this.mousePoint = logicalPoint;
 	}
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see oripa.domain.paint.core.PaintContextInterface#set(double,
-	 * boolean)
+	 *
+	 * @see oripa.domain.paint.core.PaintContextInterface#set(double, boolean)
 	 */
 	@Override
 	public void setDisplayConfig(final double scale, final boolean dispGrid) {
@@ -120,7 +117,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#updateGrids(int)
 	 */
 	@Override
@@ -143,7 +140,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#clear(boolean)
 	 */
 	@Override
@@ -166,9 +163,8 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.domain.paint.core.PaintContextInterface#isMissionCompleted()
+	 *
+	 * @see oripa.domain.paint.core.PaintContextInterface#isMissionCompleted()
 	 */
 	@Override
 	public boolean isMissionCompleted() {
@@ -177,9 +173,8 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.domain.paint.core.PaintContextInterface#setMissionCompleted
+	 *
+	 * @see oripa.domain.paint.core.PaintContextInterface#setMissionCompleted
 	 * (boolean)
 	 */
 	@Override
@@ -189,7 +184,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#getVertices()
 	 */
 	@Override
@@ -199,7 +194,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#getLines()
 	 */
 	@Override
@@ -209,7 +204,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#getLine(int)
 	 */
 	@Override
@@ -219,7 +214,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#getVertex(int)
 	 */
 	@Override
@@ -229,7 +224,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see
 	 * oripa.domain.paint.core.PaintContextInterface#pushVertex(javax.vecmath
 	 * .Vector2d)
@@ -241,9 +236,8 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.domain.paint.core.PaintContextInterface#pushLine(oripa.value
+	 *
+	 * @see oripa.domain.paint.core.PaintContextInterface#pushLine(oripa.value
 	 * .OriLine)
 	 */
 	@Override
@@ -254,7 +248,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#popVertex()
 	 */
 	@Override
@@ -268,7 +262,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#popLine()
 	 */
 	@Override
@@ -284,9 +278,8 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.domain.paint.core.PaintContextInterface#removeLine(oripa.value
+	 *
+	 * @see oripa.domain.paint.core.PaintContextInterface#removeLine(oripa.value
 	 * .OriLine)
 	 */
 	@Override
@@ -297,7 +290,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#peekVertex()
 	 */
 	@Override
@@ -307,7 +300,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#peekLine()
 	 */
 	@Override
@@ -317,7 +310,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#getLineCount()
 	 */
 	@Override
@@ -327,7 +320,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.core.PaintContextInterface#getVertexCount()
 	 */
 	@Override
@@ -405,7 +398,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/**
 	 * returns a painter for current crease pattern instance.
-	 * 
+	 *
 	 */
 	@Override
 	public Painter getPainter() {
@@ -414,7 +407,7 @@ public class PaintContext implements PaintContextInterface {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.domain.paint.PaintContextInterface#getUndoer()
 	 */
 	@Override
@@ -429,7 +422,18 @@ public class PaintContext implements PaintContextInterface {
 
 	@Override
 	public CreasePatternInterface getCreasePattern() {
-		// TODO 自動生成されたメソッド・スタブ
 		return creasePattern;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PaintContext: #line=" + pickedLines.size() +
+				", #vertex=" + pickedVertices.size() +
+				", #undoStack=" + undoer.size();
 	}
 }

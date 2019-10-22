@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -43,6 +43,7 @@ import java.util.Observer;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingWorker;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
@@ -119,7 +120,7 @@ public class PainterScreen extends JPanel
 
 	/**
 	 * for verifying algorithm
-	 * 
+	 *
 	 * @param g2d
 	 */
 	// public void drawModel(Graphics2D g2d) {
@@ -283,8 +284,7 @@ public class PainterScreen extends JPanel
 
 			drawer.drawCandidatePositionString((Graphics2D) g,
 					paintContext.getCandidateVertexToPick());
-		}
-		else {
+		} else {
 			g.drawImage(bufferImage, 0, 0, this);
 
 		}
@@ -292,24 +292,35 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
-		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
+		final GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
 		if (action == null) {
 			return;
 		}
 
-		if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
-			action.onRightClick(
-					paintContext, affineTransform,
-					MouseUtility.isControlKeyPressed(e));
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+					action.onRightClick(
+							paintContext, affineTransform,
+							MouseUtility.isControlKeyPressed(e));
 
-			return;
-		}
+					return null;
+				}
 
-		mouseActionHolder.setMouseAction(action.onLeftClick(
-				paintContext,
-				MouseUtility.isControlKeyPressed(e),
-				screenUpdater));
+				mouseActionHolder.setMouseAction(action.onLeftClick(
+						paintContext,
+						MouseUtility.isControlKeyPressed(e)));
+				return null;
+			}
+
+			@Override
+			protected void done() {
+				repaint();
+				// screenUpdater.updateScreen();
+			}
+		}.execute();
 
 	}
 
@@ -401,17 +412,24 @@ public class PainterScreen extends JPanel
 		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
 				affineTransform, e.getPoint()));
 
-		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
+		final GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 		if (action == null) {
 			return;
 		}
 
-		action.onMove(paintContext, affineTransform,
-				MouseUtility.isControlKeyPressed(e));
-		// this.mouseContext.pickCandidateV =
-		// Globals.mouseAction.onMove(mouseContext, affineTransform, e);
-		repaint();
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				action.onMove(paintContext, affineTransform,
+						MouseUtility.isControlKeyPressed(e));
+				return null;
+			}
 
+			@Override
+			protected void done() {
+				repaint();
+			}
+		}.execute();
 	}
 
 	@Override

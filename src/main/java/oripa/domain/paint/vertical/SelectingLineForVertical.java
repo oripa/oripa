@@ -23,7 +23,7 @@ public class SelectingLineForVertical extends PickingLine {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 		if (context.getLineCount() != 1 ||
 				context.getVertexCount() != 1) {
 			throw new RuntimeException();

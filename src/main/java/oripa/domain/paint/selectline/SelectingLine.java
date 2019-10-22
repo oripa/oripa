@@ -15,17 +15,11 @@ public class SelectingLine extends PickingLine {
 	}
 
 	@Override
-	protected void undoAction(final PaintContextInterface context) {
-		// TODO Auto-generated method stub
-		super.undoAction(context);
-	}
-
-	@Override
-	protected void onResult(final PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		context.creasePatternUndo().pushUndoInfo();
 
-		OriLine line = context.peekLine();
+		final OriLine line = context.peekLine();
 
 		// toggle selection
 		if (line.selected) {

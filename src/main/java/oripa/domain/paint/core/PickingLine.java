@@ -8,9 +8,9 @@ import oripa.value.OriLine;
 
 /**
  * abstract class specified for picking vertex.
- * 
+ *
  * @author koji
- * 
+ *
  */
 public abstract class PickingLine extends AbstractActionState {
 
@@ -20,7 +20,7 @@ public abstract class PickingLine extends AbstractActionState {
 
 	/**
 	 * Picks the nearest line and push it into context.
-	 * 
+	 *
 	 * @return true if the action succeed, false otherwise.
 	 */
 
@@ -31,12 +31,8 @@ public abstract class PickingLine extends AbstractActionState {
 		OriLine picked = NearestItemFinder.pickLine(
 				context);
 
-//		OriLine picked = NearestItemFinder.pickLine(
-//				context.getCreasePattern(),
-//				currentPoint, context.getScale());
-
 		if (picked == null) {
-			System.out.println("onAct() failed");
+			System.out.println("PickingLine.onAct() failed: null selection");
 			return false;
 		}
 
@@ -47,7 +43,7 @@ public abstract class PickingLine extends AbstractActionState {
 
 	/**
 	 * delete from context the latest picked line.
-	 * 
+	 *
 	 * @return Previous state
 	 */
 	@Override

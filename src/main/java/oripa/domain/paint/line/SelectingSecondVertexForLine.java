@@ -17,7 +17,7 @@ public class SelectingSecondVertexForLine extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		if (context.getVertexCount() != 2) {
 			throw new RuntimeException();

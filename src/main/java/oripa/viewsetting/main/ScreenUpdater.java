@@ -34,7 +34,7 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 
 	/*
 	 * (非 Javadoc)
-	 * 
+	 *
 	 * @see oripa.viewsetting.main.ViewScreenUpdater#updateScreen()
 	 */
 	@Override
@@ -54,8 +54,7 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 
 			if (e.isControlDown()) {
 				updateIfCopyAndPaste(true);
-			}
-			else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				updateScreen();
 
 			}
@@ -83,7 +82,7 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 
 	/*
 	 * (非 Javadoc)
-	 * 
+	 *
 	 * @see oripa.viewsetting.main.ViewScreenUpdater#getKeyListener()
 	 */
 	@Override

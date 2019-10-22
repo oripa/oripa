@@ -13,10 +13,10 @@ public class SelectingSecondVertexForSegment extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		if (context.getVertexCount() != 2) {
-			throw new RuntimeException();
+			throw new IllegalStateException("wrong state: impossible vertex selection.");
 		}
 
 		OriLine line = new OriLine(context.getVertex(0),

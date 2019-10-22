@@ -10,10 +10,9 @@ public class SelectAllLineAction extends SelectLineAction {
 	}
 
 	@Override
-	public void recover(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContextInterface context) {
 		Painter painter = context.getPainter();
 		painter.selectAllOriLines();
-		super.recover(context);
 	}
 
 }
