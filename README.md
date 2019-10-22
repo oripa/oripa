@@ -7,14 +7,6 @@ The first version of ORIPA was released in 2005. ORIPA was made open source in 2
 
 To find out more about using the software, visit the [ORIPA project's website](http://mitani.cs.tsukuba.ac.jp/oripa/).
 
-### Download
-------------
-The newest version is 0.36: https://github.com/oripa/oripa/raw/master/oripa.036.jar
-* Bugs on undo in ver.0.35 is fixed.
-* Faster access to line and vertex when selecting.
-* This is an unstable version because the code has been drastically changed. 
-* You need JRE 7 or 8. If you have not installed JRE, you can use JDK 11.
-
 
 ### Functionalities
 ------------------
@@ -26,6 +18,13 @@ The newest version is 0.36: https://github.com/oripa/oripa/raw/master/oripa.036.
 * You can select multi-lines by Dragging.
 * On delete-line mode, you can delete multi-lines by Dragging.	
 
+### Download
+------------
+The newest version is 0.36: https://github.com/oripa/oripa/raw/master/oripa.036.jar
+* Bugs on undo in ver.0.35 is fixed.
+* Faster access to line and vertex when selecting.
+* This is an unstable version because the code has been drastically changed. 
+* You need JRE 7 or 8. If you have not installed JRE, you can use JDK 11.
 
 ### Next challenge(s)
 --------
