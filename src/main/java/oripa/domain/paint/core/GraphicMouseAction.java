@@ -80,6 +80,10 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	protected void recoverImpl(final PaintContextInterface context) {
 	}
 
+	/**
+	 * calls {@link #recoverImpl(PaintContextInterface)} and then calls
+	 * {@code context.getPainter().resetSelectedOriLines()}.
+	 */
 	@Override
 	public final void recover(final PaintContextInterface context) {
 
