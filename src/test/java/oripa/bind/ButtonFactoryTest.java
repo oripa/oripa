@@ -1,13 +1,14 @@
 package oripa.bind;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.Component;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import oripa.domain.paint.PaintContextFactory;
 import oripa.persistent.doc.Doc;
@@ -30,8 +31,8 @@ public class ButtonFactoryTest {
 		assertButtonCreated(parent, StringID.VERTICAL_ID, false);
 		assertButtonCreated(parent, StringID.MIRROR_ID, false);
 		assertButtonCreated(parent, StringID.BY_VALUE_ID, false);
-//		assertButtonCreated(parent, StringID.PICK_LENGTH_ID, false); 
-//		assertButtonCreated(parent, StringID.PICK_ANGLE_ID, false); 
+//		assertButtonCreated(parent, StringID.PICK_LENGTH_ID, false);
+//		assertButtonCreated(parent, StringID.PICK_ANGLE_ID, false);
 		assertButtonCreated(parent, StringID.PERPENDICULAR_BISECTOR_ID, false);
 
 		// edit buttons
@@ -46,7 +47,8 @@ public class ButtonFactoryTest {
 		assertButtonCreated(parent, StringID.SELECT_ALL_LINE_ID, true);
 	}
 
-	private void assertButtonCreated(final Component parent, final String id, final boolean hasLabel) {
+	private void assertButtonCreated(final Component parent, final String id,
+			final boolean hasLabel) {
 		PaintContextFactory contextFactory = new PaintContextFactory();
 		ButtonFactory paintFactory = new PaintActionButtonFactory(contextFactory.createContext());
 

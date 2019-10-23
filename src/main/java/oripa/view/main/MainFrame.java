@@ -40,8 +40,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.Config;
 import oripa.ORIPA;
@@ -74,7 +74,7 @@ import oripa.viewsetting.main.ScreenUpdater;
 public class MainFrame extends JFrame implements ActionListener,
 		ComponentListener, WindowListener, Observer {
 
-	private static final Logger LOGGER = LogManager.getLogger(MainFrame.class);
+	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
 	/**
 	 *
@@ -175,6 +175,7 @@ public class MainFrame extends JFrame implements ActionListener,
 	private final Doc document = new Doc();
 
 	public MainFrame() {
+		logger.info("frame construction starts.");
 
 		document.setCreasePattern(paintContext.getCreasePattern());
 
@@ -494,6 +495,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			paintContext.creasePatternUndo().clearChanged();
 			return savedPath;
 		} catch (FileChooserCanceledException e) {
+			logger.info("File selection is canceled.");
 			return document.getDataFilePath();
 		}
 	}

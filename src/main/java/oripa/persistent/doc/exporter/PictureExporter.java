@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -27,8 +27,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
@@ -36,25 +36,25 @@ import oripa.persistent.doc.Doc;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class PictureExporter implements DocExporter {
-	private static final Logger LOGGER = LogManager
+	private static final Logger logger = LoggerFactory
 			.getLogger(PictureExporter.class);
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.persistent.doc.exporter.Exporter#export(java.lang.Object,
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean export(Doc doc, String filePath) throws IOException {
+	public boolean export(final Doc doc, final String filePath) throws IOException {
 		CreasePatternInterface creasePattern = doc.getCreasePattern();
 		double gWidth = creasePattern.getPaperSize();
 		double gHeight = creasePattern.getPaperSize();
 
-		LOGGER.info("save as image, size(w,h) = " + gWidth + ", " + gHeight);
+		logger.info("save as image, size(w,h) = " + gWidth + ", " + gHeight);
 
 		BufferedImage image = new BufferedImage((int) gWidth, (int) gHeight,
 				BufferedImage.TYPE_INT_RGB);
