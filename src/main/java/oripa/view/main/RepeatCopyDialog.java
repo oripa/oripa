@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,6 @@ import javax.swing.JTextField;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.core.PaintContext;
 
 public class RepeatCopyDialog extends JDialog {
 
@@ -54,38 +53,36 @@ public class RepeatCopyDialog extends JDialog {
 	private boolean m_bFillSheet;
 
 	private final JFrame owner;
-	private final PaintContextInterface context;
 
 	/**
 	 * @param owner
 	 */
-	public RepeatCopyDialog(final JFrame owner, final PaintContextInterface aContext) {
+	public RepeatCopyDialog(final JFrame owner, final PaintContextInterface context) {
 		super(owner);
 		this.owner = owner;
-		context = aContext;
 
-		initialize();
+		initialize(context);
 	}
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
-	private void initialize() {
+	private void initialize(final PaintContextInterface context) {
 		this.setSize(123, 249);
 		this.setLocation(owner.getLocation().x + 200,
 				owner.getLocation().y + 100);
 		this.setTitle("ArrayCopy");
-		this.setContentPane(getJContentPane());
+		this.setContentPane(getJContentPane(context));
 	}
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJContentPane() {
+	private JPanel getJContentPane(final PaintContextInterface context) {
 		if (jContentPane == null) {
 			jLabel4 = new JLabel();
 			jLabel4.setBounds(new Rectangle(5, 130, 26, 21));
@@ -116,7 +113,7 @@ public class RepeatCopyDialog extends JDialog {
 			jContentPane.add(jLabel4, null);
 			jContentPane.add(getJTextFieldIntX(), null);
 			jContentPane.add(getJTextFieldIntY(), null);
-			jContentPane.add(getJButtonOK(), null);
+			jContentPane.add(getJButtonOK(context), null);
 			jContentPane.add(getJButtonCancel(), null);
 		}
 		return jContentPane;
@@ -124,7 +121,7 @@ public class RepeatCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jTextFieldX
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextFieldX() {
@@ -139,7 +136,7 @@ public class RepeatCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jTextFieldY
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextFieldY() {
@@ -154,7 +151,7 @@ public class RepeatCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jCheckBoxFill
-	 * 
+	 *
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxFill() {
@@ -179,7 +176,7 @@ public class RepeatCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jTextFieldIntX
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextFieldIntX() {
@@ -193,7 +190,7 @@ public class RepeatCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jTextFieldIntY
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextFieldIntY() {
@@ -207,10 +204,10 @@ public class RepeatCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jButtonOK
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
-	private JButton getJButtonOK() {
+	private JButton getJButtonOK(final PaintContextInterface context) {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton();
 			jButtonOK.setBounds(new Rectangle(10, 160, 96, 21));
@@ -256,7 +253,6 @@ public class RepeatCopyDialog extends JDialog {
 
 						Painter painter = context.getPainter();
 						if (m_bFillSheet) {
-							PaintContextInterface context = PaintContext.getInstance();
 							painter.fillOut(
 									context.getPickedLines());
 						} else {
@@ -275,7 +271,7 @@ public class RepeatCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jButtonCancel
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonCancel() {
