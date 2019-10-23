@@ -55,47 +55,54 @@ public class PaintBoundStateFactory {
 		switch (id) {
 		case StringID.SELECT_ID:
 			state = stateFactory.create(
-					new SelectLineAction(), id,
+					new SelectLineAction(), context,
+					id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;
 
 		case StringID.DELETE_LINE_ID:
 			state = stateFactory.create(
-					new DeleteLineAction(), id,
+					new DeleteLineAction(), context,
+					id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.CHANGE_LINE_TYPE_ID:
 			state = stateFactory.create(
-					new ChangeLineTypeAction(), id,
+					new ChangeLineTypeAction(), context,
+					id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnAlterTypeButtonSelected()) });
 			break;
 
 		case StringID.ADD_VERTEX_ID:
-			state = stateFactory.create(new AddVertexAction(), id,
+			state = stateFactory.create(new AddVertexAction(), context,
+					id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.DELETE_VERTEX_ID:
-			state = stateFactory.create(new DeleteVertexAction(), id,
+			state = stateFactory.create(new DeleteVertexAction(), context,
+					id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.EDIT_CONTOUR_ID:
 			state = stateFactory.create(
-					new EditOutlineActionWrapper(), id,
+					new EditOutlineActionWrapper(), context,
+					id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.SELECT_ALL_LINE_ID:
 			state = stateFactory.create(
-					new SelectAllLineAction(context), id,
+					new SelectAllLineAction(context), context,
+					id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;
@@ -119,7 +126,7 @@ public class PaintBoundStateFactory {
 			break;
 
 		default:
-			state = createLineInputState(parent, id);
+			state = createLineInputState(parent, context, id);
 		}
 
 		if (state == null) {
@@ -130,7 +137,7 @@ public class PaintBoundStateFactory {
 	}
 
 	private ApplicationState<EditMode> createLineInputState(
-			final Component parent, final String id) {
+			final Component parent, final PaintContextInterface context, final String id) {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
 				new ActionListener[] { new ViewChangeListener(
@@ -141,37 +148,37 @@ public class PaintBoundStateFactory {
 		case StringID.DIRECT_V_ID:
 
 			state = stateFactory.create(new TwoPointSegmentAction(),
-					id, null);
+					context, id, null);
 			break;
 
 		case StringID.ON_V_ID:
 			state = stateFactory.create(new TwoPointLineAction(),
-					id, null);
+					context, id, null);
 			break;
 		case StringID.VERTICAL_ID:
 			state = stateFactory.create(new VerticalLineAction(),
-					id, null);
+					context, id, null);
 			break;
 
 		case StringID.BISECTOR_ID:
 			state = stateFactory.create(new AngleBisectorAction(),
-					id, null);
+					context, id, null);
 			break;
 
 		case StringID.TRIANGLE_ID:
 			state = stateFactory.create(new TriangleSplitAction(),
-					id, null);
+					context, id, null);
 
 			break;
 
 		case StringID.SYMMETRIC_ID:
 			state = stateFactory.create(new SymmetricalLineAction(),
-					id, null);
+					context, id, null);
 
 			break;
 		case StringID.MIRROR_ID:
 			state = stateFactory.create(new MirrorCopyAction(),
-					id, null);
+					context, id, null);
 
 			break;
 
@@ -181,13 +188,13 @@ public class PaintBoundStateFactory {
 							new ChangeOnByValueButtonSelected()) });
 
 			state = byValueFactory.create(new LineByValueAction(),
-					id, null);
+					context, id, null);
 
 			break;
 
 		case StringID.PERPENDICULAR_BISECTOR_ID:
 			state = stateFactory.create(new TwoPointBisectorAction(),
-					id, null);
+					context, id, null);
 
 		}
 
