@@ -9,7 +9,7 @@ public class PaintContextFactory {
 	public PaintContextInterface createContext() {
 		CreasePatternFactory patternFactory = new CreasePatternFactory();
 
-		PaintContextInterface context = PaintContext.getInstance();
+		PaintContextInterface context = new PaintContext();
 		context.setCreasePattern(
 				patternFactory.createCreasePattern(
 						Constants.DEFAULT_PAPER_SIZE));

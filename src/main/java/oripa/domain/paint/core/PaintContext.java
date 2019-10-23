@@ -18,21 +18,6 @@ import oripa.value.OriLine;
 
 public class PaintContext implements PaintContextInterface {
 
-	private static PaintContextInterface instance = null;
-
-	public static PaintContextInterface getInstance() {
-		if (instance == null) {
-			instance = new PaintContext();
-		}
-
-		return instance;
-	}
-
-	private PaintContext() {
-	}
-
-//--------------------------------------------------
-
 	private CreasePatternInterface creasePattern;
 	private final CreasePatternUndoerInterface undoer = new CreasePatternUndoer(this);
 
@@ -52,6 +37,9 @@ public class PaintContext implements PaintContextInterface {
 	private boolean missionCompleted = false;
 
 	private Point2D.Double mousePoint;
+
+	public PaintContext() {
+	}
 
 	/*
 	 * (non Javadoc)
