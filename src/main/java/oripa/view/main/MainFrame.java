@@ -48,6 +48,7 @@ import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.controller.DeleteSelectedLinesActionListener;
+import oripa.controller.UnselectAllLinesActionListener;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
@@ -248,20 +249,13 @@ public class MainFrame extends JFrame implements ActionListener,
 		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_ESCAPE, 0));
 
+		var screenUpdater = ScreenUpdater.getInstance();
 		menuItemUnSelectAll
-				.addActionListener(new java.awt.event.ActionListener() {
-					@Override
-					public void actionPerformed(final java.awt.event.ActionEvent e) {
-						paintContext.getPainter().resetSelectedOriLines();
-
-						paintContext.clear(false);
-						mainScreen.repaint();
-					}
-				});
+				.addActionListener(new UnselectAllLinesActionListener(paintContext, screenUpdater));
 
 		menuItemDeleteSelectedLines
-				.addActionListener(new DeleteSelectedLinesActionListener(paintContext, ScreenUpdater
-						.getInstance()));
+				.addActionListener(
+						new DeleteSelectedLinesActionListener(paintContext, screenUpdater));
 		menuItemDeleteSelectedLines.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_DELETE, 0));
 
