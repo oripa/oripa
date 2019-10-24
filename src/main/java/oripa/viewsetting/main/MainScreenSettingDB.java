@@ -6,6 +6,7 @@ import java.beans.PropertyChangeSupport;
 public class MainScreenSettingDB {
 
 	private boolean gridVisible = true;
+	public static final String GRID_VISIBLE = "grid visible";
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -34,7 +35,7 @@ public class MainScreenSettingDB {
 	}
 
 	public void setGridVisible(final boolean gridVisible) {
-		support.firePropertyChange("gridVisible", this.gridVisible, gridVisible);
+		support.firePropertyChange(GRID_VISIBLE, this.gridVisible, gridVisible);
 		this.gridVisible = gridVisible;
 	}
 

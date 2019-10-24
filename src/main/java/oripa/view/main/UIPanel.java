@@ -880,10 +880,9 @@ public class UIPanel extends JPanel
 
 	@Override
 	public void propertyChange(final PropertyChangeEvent e) {
-		if (e.getPropertyName().equals("gridVisible")) {
+		if (e.getPropertyName().equals(MainScreenSettingDB.GRID_VISIBLE)) {
 			dispGridCheckBox.setSelected((boolean) e.getNewValue());
 			repaint();
-			screenUpdater.updateScreen();
 		}
 
 		// if (e.getSource() == textFieldLength) {

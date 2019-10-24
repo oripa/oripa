@@ -488,12 +488,15 @@ public class PainterScreen extends JPanel
 	 */
 	@Override
 	public void propertyChange(final PropertyChangeEvent event) {
-		if (event.getPropertyName().equals("gridVisible")) {
+		switch (event.getPropertyName()) {
+		case MainScreenSettingDB.GRID_VISIBLE:
 			paintContext.setGridVisible((boolean) event.getNewValue());
-		}
-
-		if (event.getPropertyName().equals(ViewScreenUpdater.REDRAW_REQUESTED)) {
 			repaint();
+			break;
+
+		case ViewScreenUpdater.REDRAW_REQUESTED:
+			repaint();
+			break;
 		}
 	}
 
