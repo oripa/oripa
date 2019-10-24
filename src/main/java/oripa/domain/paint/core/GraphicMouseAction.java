@@ -9,6 +9,9 @@ import java.awt.geom.Rectangle2D;
 
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.PaintContextInterface;
@@ -17,6 +20,8 @@ import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
 
 public abstract class GraphicMouseAction implements GraphicMouseActionInterface {
+
+	private static Logger logger = LoggerFactory.getLogger(GraphicMouseAction.class);
 
 	private EditMode editMode = EditMode.INPUT;
 	private boolean needSelect = false;
@@ -117,12 +122,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			final AffineTransform affine,
 			final boolean doSpecial) {
 
-		System.out.println(this.getClass().getName());
-		System.out.println("before undo " + context.toString());
+		logger.info(this.getClass().getName());
+		logger.info("before undo " + context.toString());
 
 		undo(context);
 
-		System.out.println("after undo " + context.toString());
+		logger.info("after undo " + context.toString());
 
 	}
 

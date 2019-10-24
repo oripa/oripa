@@ -155,6 +155,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			ORIPA.res.getString("About"));
 	private final JMenuItem menuItemRepeatCopy = new JMenuItem("Array Copy");
 	private final JMenuItem menuItemCircleCopy = new JMenuItem("Circle Copy");
+
 	private final JMenuItem menuItemUnSelectAll = new JMenuItem("UnSelect All");
 
 	private final JMenuItem menuItemDeleteSelectedLines = new JMenuItem(
@@ -231,8 +232,18 @@ public class MainFrame extends JFrame implements ActionListener,
 		menuItemChangeOutline.addActionListener(this);
 		menuItemRepeatCopy.addActionListener(this);
 		menuItemCircleCopy.addActionListener(this);
+
 		menuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
 				ActionEvent.CTRL_MASK));
+
+		// a patch to select all lines and switch to select-line mode.
+		// bad design...
+		menuItemSelectAll.addActionListener(event -> {
+			paintContext.creasePatternUndo().pushUndoInfo();
+			paintContext.getPainter().selectAllOriLines();
+			paintContext.getCreasePattern().stream()
+					.filter(l -> l.selected).forEach(l -> paintContext.pushLine(l));
+		});
 
 		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_ESCAPE, 0));

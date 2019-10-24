@@ -20,7 +20,6 @@ import oripa.domain.paint.linetype.ChangeLineTypeAction;
 import oripa.domain.paint.mirror.MirrorCopyAction;
 import oripa.domain.paint.pbisec.TwoPointBisectorAction;
 import oripa.domain.paint.segment.TwoPointSegmentAction;
-import oripa.domain.paint.selectline.SelectAllLineAction;
 import oripa.domain.paint.selectline.SelectLineAction;
 import oripa.domain.paint.symmetric.SymmetricalLineAction;
 import oripa.domain.paint.triangle.TriangleSplitAction;
@@ -98,8 +97,9 @@ public class PaintBoundStateFactory {
 			break;
 
 		case StringID.SELECT_ALL_LINE_ID:
+			// selecting all lines should be done in other listener
 			state = stateFactory.create(
-					actionHolder, new SelectAllLineAction(context), context, id,
+					actionHolder, new SelectLineAction(), context, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;

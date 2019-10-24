@@ -19,7 +19,6 @@ class LocalPaintBoundStateFactory {
 
 	private final ActionListener[] basicActions;
 	private Component parent = null;
-	private MouseActionHolder actionHolder;
 
 	/**
 	 *
