@@ -209,7 +209,6 @@ public class UIPanel extends JPanel
 		this.screenUpdater = screenUpdater;
 
 		this.actionHolder = actionHolder;
-		ScreenUpdater.getInstance().setMouseActionHolder(actionHolder);
 
 		paintContext = aContext;
 		estimationHolder = anEstimationHolder;
@@ -223,7 +222,7 @@ public class UIPanel extends JPanel
 		setPreferredSize(new Dimension(210, 400));
 
 		settingDB.addObserver(this);
-		screenDB.addObserver(this);
+		screenDB.addPropertyChangeListener(this);
 
 		// alterLine_combo_from.setSelectedIndex(0);
 		// alterLine_combo_to.setSelectedIndex(0);
@@ -764,7 +763,6 @@ public class UIPanel extends JPanel
 		// TODO decompose this long long if-else.
 		if (ae.getSource() == dispGridCheckBox) {
 			screenDB.setGridVisible(dispGridCheckBox.isSelected());
-			screenDB.notifyObservers();
 
 			screenUpdater.updateScreen();
 
@@ -882,6 +880,12 @@ public class UIPanel extends JPanel
 
 	@Override
 	public void propertyChange(final PropertyChangeEvent e) {
+		if (e.getPropertyName().equals("gridVisible")) {
+			dispGridCheckBox.setSelected((boolean) e.getNewValue());
+			repaint();
+			screenUpdater.updateScreen();
+		}
+
 		// if (e.getSource() == textFieldLength) {
 		// textFieldLength.setValue(java.lang.Double.valueOf(textFieldLength.getText()));
 		// } else if (e.getSource() == textFieldAngle) {
@@ -928,15 +932,7 @@ public class UIPanel extends JPanel
 			lineTypeSubButton.setEnabled(setting.isAuxButtonEnabled());
 
 			repaint();
-		} else if (screenDB.hasGivenName(o.toString())) {
-			if (screenDB.isGridVisible() != dispGridCheckBox.isSelected()) {
-				dispGridCheckBox.setSelected(screenDB.isGridVisible());
-
-			}
-
-			repaint();
 		}
-
 	}
 
 	private void updateEditModeButtonSelection(final UIPanelSettingDB setting) {

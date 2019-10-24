@@ -1,17 +1,20 @@
 package oripa.viewsetting.main;
 
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.copypaste.CopyAndPasteAction;
 import oripa.viewsetting.ViewScreenUpdater;
-import oripa.viewsetting.ViewSettingDataBase;
 
-public class ScreenUpdater extends ViewSettingDataBase implements
+public class ScreenUpdater implements
 		ViewScreenUpdater {
 
 	private MouseActionHolder actionHolder;
+
+	private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
 	// -------------------------
 	// singleton
@@ -35,6 +38,10 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 
 	// -------------------------
 
+	public void addPropertyChangeListener(final PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(listener);
+	}
+
 	/*
 	 * (non Javadoc)
 	 *
@@ -42,8 +49,7 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 	 */
 	@Override
 	public void updateScreen() {
-		setChanged();
-		notifyObservers(REDRAW_REQUESTED);
+		propertyChangeSupport.firePropertyChange(REDRAW_REQUESTED, null, null);
 
 	}
 

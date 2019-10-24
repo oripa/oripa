@@ -35,10 +35,10 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -62,7 +62,7 @@ import oripa.viewsetting.main.ScreenUpdater;
 
 public class PainterScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,
-		ActionListener, ComponentListener, Observer {
+		ActionListener, ComponentListener, PropertyChangeListener {
 
 	private final MainScreenSettingDB setting = MainScreenSettingDB
 			.getInstance();
@@ -98,6 +98,7 @@ public class PainterScreen extends JPanel
 			final PaintContextInterface aContext,
 			final SheetCutOutlinesHolder aCutOutlineHolder) {
 		this.mouseActionHolder = mouseActionHolder;
+		screenUpdater.setMouseActionHolder(mouseActionHolder);
 		paintContext = aContext;
 		cutOutlinesHolder = aCutOutlineHolder;
 		addMouseListener(this);
@@ -105,8 +106,8 @@ public class PainterScreen extends JPanel
 		addMouseWheelListener(this);
 		addComponentListener(this);
 
-		screenUpdater.addObserver(this);
-		setting.addObserver(this);
+		screenUpdater.addPropertyChangeListener(this);
+		setting.addPropertyChangeListener(this);
 
 		scale = 1.5;
 		paintContext.setScale(scale);
@@ -479,19 +480,35 @@ public class PainterScreen extends JPanel
 		// TODO Auto-generated method stub
 	}
 
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
+	 * PropertyChangeEvent)
+	 */
 	@Override
-	public void update(final Observable o, final Object arg) {
-		String name = o.toString();
-		paintContext.setGridVisible(setting.isGridVisible());
-		if (name.equals(screenUpdater.getName())) {
-			if (arg != null) {
-				if (arg.equals(ViewScreenUpdater.REDRAW_REQUESTED)) {
-					repaint();
-				}
-			}
-
+	public void propertyChange(final PropertyChangeEvent event) {
+		if (event.getPropertyName().equals("gridVisible")) {
+			paintContext.setGridVisible((boolean) event.getNewValue());
 		}
 
+		if (event.getPropertyName().equals(ViewScreenUpdater.REDRAW_REQUESTED)) {
+			repaint();
+		}
 	}
+
+//	public void update(final Observable o, final Object arg) {
+//		String name = o.toString();
+//		paintContext.setGridVisible(setting.isGridVisible());
+//		if (name.equals(screenUpdater.getName())) {
+//			if (arg != null) {
+//				if (arg.equals(ViewScreenUpdater.REDRAW_REQUESTED)) {
+//					repaint();
+//				}
+//			}
+//
+//		}
+//
+//	}
 
 }

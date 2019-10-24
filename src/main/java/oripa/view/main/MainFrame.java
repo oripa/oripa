@@ -426,9 +426,7 @@ public class MainFrame extends JFrame implements ActionListener,
 			// ORIPA.renderFrame.setVisible(false);
 
 			screenSetting.setGridVisible(true);
-			screenSetting.notifyObservers();
 
-			repaint();
 			// ORIPA.mainFrame.uiPanel.dispGridCheckBox.setSelected(true);
 			updateTitleText();
 		} else if (e.getSource() == menuItemAbout) {
@@ -599,7 +597,6 @@ public class MainFrame extends JFrame implements ActionListener,
 		ChildFrameManager.getManager().closeAllRecursively(this);
 
 		screenSetting.setGridVisible(false);
-		screenSetting.notifyObservers();
 
 		DocDAO dao = new DocDAO();
 
