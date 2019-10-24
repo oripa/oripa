@@ -11,8 +11,7 @@ import oripa.viewsetting.ViewSettingDataBase;
 public class ScreenUpdater extends ViewSettingDataBase implements
 		ViewScreenUpdater {
 
-	private final MouseActionHolder actionHolder = MouseActionHolder
-			.getInstance();
+	private MouseActionHolder actionHolder;
 
 	// -------------------------
 	// singleton
@@ -29,11 +28,15 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 
 		return instance;
 	}
+	
+	public void setMouseActionHolder(MouseActionHolder actionHolder) {
+		this.actionHolder = actionHolder;
+	}
 
 	// -------------------------
 
 	/*
-	 * (非 Javadoc)
+	 * (non Javadoc)
 	 *
 	 * @see oripa.viewsetting.main.ViewScreenUpdater#updateScreen()
 	 */

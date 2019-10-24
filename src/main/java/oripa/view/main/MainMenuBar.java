@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -28,6 +28,7 @@ import oripa.Config;
 import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
+import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.resource.ResourceHolder;
@@ -35,7 +36,7 @@ import oripa.resource.StringID;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class MainMenuBar extends JMenuBar {
 
@@ -75,10 +76,14 @@ public class MainMenuBar extends JMenuBar {
 
 	private final ButtonFactory buttonFactory;
 
+	private final MouseActionHolder actionHolder;
+
 	/**
 	 * Constructor
 	 */
-	public MainMenuBar(final Component owner, final PaintContextInterface aContext) {
+	public MainMenuBar(final Component owner, final MouseActionHolder actionHolder,
+			final PaintContextInterface aContext) {
+		this.actionHolder = actionHolder;
 		buttonFactory = new PaintActionButtonFactory(aContext);
 		build(owner);
 
@@ -98,30 +103,28 @@ public class MainMenuBar extends JMenuBar {
 		 * For changing outline
 		 */
 		menuItemChangeOutline = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, StringID.EDIT_CONTOUR_ID);
+				.create(owner, JMenuItem.class, actionHolder, StringID.EDIT_CONTOUR_ID);
 
 		/**
 		 * For selecting all lines
 		 */
 		menuItemSelectAll = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, StringID.SELECT_ALL_LINE_ID);
+				.create(owner, JMenuItem.class, actionHolder, StringID.SELECT_ALL_LINE_ID);
 
 		/**
 		 * For starting copy-and-paste
 		 */
 		menuItemCopyAndPaste = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, StringID.COPY_PASTE_ID);
+				.create(owner, JMenuItem.class, actionHolder, StringID.COPY_PASTE_ID);
 
 		/**
 		 * For starting cut-and-paste
 		 */
 		menuItemCutAndPaste = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, StringID.CUT_PASTE_ID);
+				.create(owner, JMenuItem.class, actionHolder, StringID.CUT_PASTE_ID);
 
 		// -----------------------------------------------------------------------------------------------------------
 
-		ResourceHolder resourceHolder = ResourceHolder
-				.getInstance();
 		menuItemUndo = new JMenuItem(
 				ORIPA.res.getString("Undo"));
 		menuItemAbout = new JMenuItem(

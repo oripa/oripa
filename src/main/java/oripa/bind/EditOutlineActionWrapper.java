@@ -12,8 +12,11 @@ import oripa.domain.paint.outline.EditOutlineAction;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
 
-	private final MouseActionHolder actionHolder = MouseActionHolder
-			.getInstance();
+	private final MouseActionHolder actionHolder;
+
+	public EditOutlineActionWrapper(final MouseActionHolder actionHolder) {
+		this.actionHolder = actionHolder;
+	}
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(

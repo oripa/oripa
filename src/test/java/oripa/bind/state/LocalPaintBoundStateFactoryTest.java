@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import oripa.appstate.ApplicationState;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.EditMode;
+import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.resource.StringID;
@@ -33,6 +34,7 @@ public class LocalPaintBoundStateFactoryTest {
 			var factory = new LocalPaintBoundStateFactory(parent,
 					new ActionListener[] { basicAction1, basicAction2 });
 
+			var actionHolder = mock(MouseActionHolder.class);
 			var mouseAction = mock(GraphicMouseAction.class);
 			var context = mock(PaintContextInterface.class);
 			var textID = StringID.DIRECT_V_ID;
@@ -45,6 +47,7 @@ public class LocalPaintBoundStateFactoryTest {
 			when(errorListener.isError(event)).thenReturn(true);
 
 			ApplicationState<EditMode> state = factory.create(
+					actionHolder,
 					mouseAction, errorListener, context, textID,
 					new ActionListener[] { action1, action2 });
 
@@ -60,6 +63,7 @@ public class LocalPaintBoundStateFactoryTest {
 			verify(basicAction2, never()).actionPerformed(event);
 			verify(action1, never()).actionPerformed(event);
 			verify(action2, never()).actionPerformed(event);
+			verify(actionHolder, never()).setMouseAction(mouseAction);
 		}
 
 		@Test
@@ -71,10 +75,13 @@ public class LocalPaintBoundStateFactoryTest {
 			var factory = new LocalPaintBoundStateFactory(parent,
 					new ActionListener[] { basicAction1, basicAction2 });
 
-			var mouseAction = mock(GraphicMouseAction.class);
+			var actionHolder = mock(MouseActionHolder.class);
+			var currentMouseAction = mock(GraphicMouseAction.class);
+			var assignedMouseAction = mock(GraphicMouseAction.class);
 			var context = mock(PaintContextInterface.class);
 			var painter = mock(Painter.class);
 			when(context.getPainter()).thenReturn(painter);
+			when(actionHolder.getMouseAction()).thenReturn(currentMouseAction);
 
 			var textID = StringID.DIRECT_V_ID;
 			var action1 = mock(ActionListener.class);
@@ -86,7 +93,8 @@ public class LocalPaintBoundStateFactoryTest {
 			when(errorListener.isError(event)).thenReturn(false);
 
 			ApplicationState<EditMode> state = factory.create(
-					mouseAction, errorListener, context, textID,
+					actionHolder,
+					assignedMouseAction, errorListener, context, textID,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -96,14 +104,15 @@ public class LocalPaintBoundStateFactoryTest {
 			verify(errorListener).isError(event);
 			verify(errorListener, never()).onError(parent, event);
 
-			verify(mouseAction).recover(context);
+			verify(currentMouseAction).destroy(context);
+			verify(assignedMouseAction).recover(context);
+			verify(actionHolder).setMouseAction(assignedMouseAction);
 
 			// every action listener should be called.
 			verify(basicAction1).actionPerformed(event);
 			verify(basicAction2).actionPerformed(event);
 			verify(action1).actionPerformed(event);
 			verify(action2).actionPerformed(event);
-
 		}
 	}
 

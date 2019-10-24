@@ -91,11 +91,13 @@ public class PainterScreen extends JPanel
 
 	private final CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
-	private final MouseActionHolder mouseActionHolder = MouseActionHolder
-			.getInstance();
+	private final MouseActionHolder mouseActionHolder;
 
-	public PainterScreen(final PaintContextInterface aContext,
+	public PainterScreen(
+			final MouseActionHolder mouseActionHolder,
+			final PaintContextInterface aContext,
 			final SheetCutOutlinesHolder aCutOutlineHolder) {
+		this.mouseActionHolder = mouseActionHolder;
 		paintContext = aContext;
 		cutOutlinesHolder = aCutOutlineHolder;
 		addMouseListener(this);

@@ -8,6 +8,7 @@ import oripa.bind.EditOutlineActionWrapper;
 import oripa.bind.copypaste.CopyAndPasteActionWrapper;
 import oripa.bind.copypaste.CopyPasteErrorListener;
 import oripa.domain.paint.EditMode;
+import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.addvertex.AddVertexAction;
 import oripa.domain.paint.bisector.AngleBisectorAction;
@@ -45,6 +46,7 @@ public class PaintBoundStateFactory {
 	 * @return
 	 */
 	public ApplicationState<EditMode> create(final Component parent,
+			final MouseActionHolder actionHolder,
 			final PaintContextInterface context,
 			final String id) {
 
@@ -55,60 +57,56 @@ public class PaintBoundStateFactory {
 		switch (id) {
 		case StringID.SELECT_ID:
 			state = stateFactory.create(
-					new SelectLineAction(), context,
-					id,
+					actionHolder, new SelectLineAction(), context, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;
 
 		case StringID.DELETE_LINE_ID:
 			state = stateFactory.create(
-					new DeleteLineAction(), context,
-					id,
+					actionHolder, new DeleteLineAction(), context, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.CHANGE_LINE_TYPE_ID:
 			state = stateFactory.create(
-					new ChangeLineTypeAction(), context,
-					id,
+					actionHolder, new ChangeLineTypeAction(), context, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnAlterTypeButtonSelected()) });
 			break;
 
 		case StringID.ADD_VERTEX_ID:
-			state = stateFactory.create(new AddVertexAction(), context,
-					id,
+			state = stateFactory.create(
+					actionHolder, new AddVertexAction(), context, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.DELETE_VERTEX_ID:
-			state = stateFactory.create(new DeleteVertexAction(), context,
-					id,
+			state = stateFactory.create(
+					actionHolder, new DeleteVertexAction(), context, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.EDIT_CONTOUR_ID:
 			state = stateFactory.create(
-					new EditOutlineActionWrapper(), context,
-					id,
+					actionHolder, new EditOutlineActionWrapper(actionHolder), context, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.SELECT_ALL_LINE_ID:
 			state = stateFactory.create(
-					new SelectAllLineAction(context), context,
-					id,
+					actionHolder, new SelectAllLineAction(context), context, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;
 
 		case StringID.COPY_PASTE_ID:
 			state = stateFactory.create(
+					actionHolder,
 					new CopyAndPasteActionWrapper(false),
 					new CopyPasteErrorListener(context),
 					context, id,
@@ -118,6 +116,7 @@ public class PaintBoundStateFactory {
 
 		case StringID.CUT_PASTE_ID:
 			state = stateFactory.create(
+					actionHolder,
 					new CopyAndPasteActionWrapper(true),
 					new CopyPasteErrorListener(context),
 					context, id,
@@ -126,7 +125,7 @@ public class PaintBoundStateFactory {
 			break;
 
 		default:
-			state = createLineInputState(parent, context, id);
+			state = createLineInputState(parent, actionHolder, context, id);
 		}
 
 		if (state == null) {
@@ -137,7 +136,8 @@ public class PaintBoundStateFactory {
 	}
 
 	private ApplicationState<EditMode> createLineInputState(
-			final Component parent, final PaintContextInterface context, final String id) {
+			final Component parent, final MouseActionHolder actionHolder,
+			final PaintContextInterface context, final String id) {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
 				new ActionListener[] { new ViewChangeListener(
@@ -147,37 +147,44 @@ public class PaintBoundStateFactory {
 		switch (id) {
 		case StringID.DIRECT_V_ID:
 
-			state = stateFactory.create(new TwoPointSegmentAction(),
+			state = stateFactory.create(
+					actionHolder, new TwoPointSegmentAction(),
 					context, id, null);
 			break;
 
 		case StringID.ON_V_ID:
-			state = stateFactory.create(new TwoPointLineAction(),
+			state = stateFactory.create(
+					actionHolder, new TwoPointLineAction(),
 					context, id, null);
 			break;
 		case StringID.VERTICAL_ID:
-			state = stateFactory.create(new VerticalLineAction(),
+			state = stateFactory.create(
+					actionHolder, new VerticalLineAction(),
 					context, id, null);
 			break;
 
 		case StringID.BISECTOR_ID:
-			state = stateFactory.create(new AngleBisectorAction(),
+			state = stateFactory.create(
+					actionHolder, new AngleBisectorAction(),
 					context, id, null);
 			break;
 
 		case StringID.TRIANGLE_ID:
-			state = stateFactory.create(new TriangleSplitAction(),
+			state = stateFactory.create(
+					actionHolder, new TriangleSplitAction(),
 					context, id, null);
 
 			break;
 
 		case StringID.SYMMETRIC_ID:
-			state = stateFactory.create(new SymmetricalLineAction(),
+			state = stateFactory.create(
+					actionHolder, new SymmetricalLineAction(),
 					context, id, null);
 
 			break;
 		case StringID.MIRROR_ID:
-			state = stateFactory.create(new MirrorCopyAction(),
+			state = stateFactory.create(
+					actionHolder, new MirrorCopyAction(),
 					context, id, null);
 
 			break;
@@ -187,13 +194,15 @@ public class PaintBoundStateFactory {
 					parent, new ActionListener[] { new ViewChangeListener(
 							new ChangeOnByValueButtonSelected()) });
 
-			state = byValueFactory.create(new LineByValueAction(),
+			state = byValueFactory.create(
+					actionHolder, new LineByValueAction(),
 					context, id, null);
 
 			break;
 
 		case StringID.PERPENDICULAR_BISECTOR_ID:
-			state = stateFactory.create(new TwoPointBisectorAction(),
+			state = stateFactory.create(
+					actionHolder, new TwoPointBisectorAction(),
 					context, id, null);
 
 		}

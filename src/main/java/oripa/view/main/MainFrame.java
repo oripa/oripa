@@ -112,32 +112,33 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	private final PaintContextFactory contextFactory = new PaintContextFactory();
 	private final PaintContextInterface paintContext = contextFactory.createContext();
+	private final MouseActionHolder actionHolder = new MouseActionHolder();
 
-	ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext);
+	private final ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext);
 
 	/**
 	 * For changing outline
 	 */
 	private final JMenuItem menuItemChangeOutline = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, StringID.EDIT_CONTOUR_ID);
+			.create(this, JMenuItem.class, actionHolder, StringID.EDIT_CONTOUR_ID);
 
 	/**
 	 * For selecting all lines
 	 */
 	private final JMenuItem menuItemSelectAll = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, StringID.SELECT_ALL_LINE_ID);
+			.create(this, JMenuItem.class, actionHolder, StringID.SELECT_ALL_LINE_ID);
 
 	/**
 	 * For starting copy-and-paste
 	 */
 	private final JMenuItem menuItemCopyAndPaste = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, StringID.COPY_PASTE_ID);
+			.create(this, JMenuItem.class, actionHolder, StringID.COPY_PASTE_ID);
 
 	/**
 	 * For starting cut-and-paste
 	 */
 	private final JMenuItem menuItemCutAndPaste = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, StringID.CUT_PASTE_ID);
+			.create(this, JMenuItem.class, actionHolder, StringID.CUT_PASTE_ID);
 
 	// ---------------------------------------------------------------------------------------------
 
@@ -169,9 +170,6 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	private final DocFilterSelector filterDB = new DocFilterSelector();
 
-	private final MouseActionHolder actionHolder = MouseActionHolder
-			.getInstance();
-
 	private final Doc document = new Doc();
 
 	public MainFrame() {
@@ -189,9 +187,9 @@ public class MainFrame extends JFrame implements ActionListener,
 				StringID.CUT_PASTE_ID));
 		// menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 
-		mainScreen = new PainterScreen(paintContext, document);
+		mainScreen = new PainterScreen(actionHolder, paintContext, document);
 		addWindowListener(this);
-		uiPanel = new UIPanel(mainScreen, paintContext, document, document);
+		uiPanel = new UIPanel(mainScreen, actionHolder, paintContext, document, document);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(uiPanel, BorderLayout.WEST);
 		getContentPane().add(mainScreen, BorderLayout.CENTER);

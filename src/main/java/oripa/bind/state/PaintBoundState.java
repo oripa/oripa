@@ -17,19 +17,18 @@ import oripa.viewsetting.main.ChangeHint;
 /**
  * A state when user is painting. This class performs: - state management
  * actions - switching view - switching painting action
- * 
+ *
  * @author koji
- * 
+ *
  */
 public class PaintBoundState extends ApplicationState<EditMode> {
 	private Component parent;
 	private ErrorListener errorListener;
-	private final MouseActionHolder actionHolder = MouseActionHolder
-			.getInstance();
+	private final MouseActionHolder actionHolder;
 
 	/**
 	 * set paint action and hint updater without error handler.
-	 * 
+	 *
 	 * @param mouseAction
 	 *            paint action
 	 * @param textID
@@ -38,18 +37,20 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 *            additional actions.
 	 */
 	public PaintBoundState(
+			final MouseActionHolder actionHolder,
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
 			final String textID,
 			final ActionListener[] actions) {
 		super(mouseAction.getEditMode(), actions);
+		this.actionHolder = actionHolder;
 
 		addBasicListeners(mouseAction, context, textID);
 	}
 
 	/**
 	 * set paint action and hint updater.
-	 * 
+	 *
 	 * @param parent
 	 *            a parent component
 	 * @param el
@@ -64,6 +65,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	public PaintBoundState(
 			final Component parent,
 			final ErrorListener el,
+			final MouseActionHolder actionHolder,
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
 			final String textID,
@@ -71,6 +73,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 
 		super(mouseAction.getEditMode(), actions);
 
+		this.actionHolder = actionHolder;
 		addBasicListeners(mouseAction, context, textID);
 
 		// set a listener to handle an error on performActions().

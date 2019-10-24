@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -188,22 +188,27 @@ public class UIPanel extends JPanel
 			false);
 	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL,
-					StringID.UI.FULL_ESTIMATION_ID), false);
+					StringID.UI.FULL_ESTIMATION_ID),
+			false);
 	private final JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 	private final PainterScreen screen;
 
 	private final PaintContextInterface paintContext;
 
-	private final MouseActionHolder actionHolder = MouseActionHolder
-			.getInstance();
+	private final MouseActionHolder actionHolder;
 
 	private final EstimationEntityHolder estimationHolder;
 	private final SheetCutOutlinesHolder cutOutlinesHolder;
 
-	public UIPanel(final PainterScreen __screen, final PaintContextInterface aContext,
+	public UIPanel(final PainterScreen __screen,
+			final MouseActionHolder actionHolder,
+			final PaintContextInterface aContext,
 			final EstimationEntityHolder anEstimationHolder,
 			final SheetCutOutlinesHolder aCutOutlinesHolder) {
+
+		this.actionHolder = actionHolder;
+		ScreenUpdater.getInstance().setMouseActionHolder(actionHolder);
 
 		paintContext = aContext;
 		estimationHolder = anEstimationHolder;
@@ -548,56 +553,51 @@ public class UIPanel extends JPanel
 						StringID.UI.INPUT_LINE_ID);
 
 		editModePickLineButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.SELECT_ID);
+				this, JRadioButton.class, actionHolder, StringID.SELECT_ID);
 
 		editModeDeleteLineButton = (JRadioButton) buttonFactory
 				.create(
-						this, JRadioButton.class, StringID.DELETE_LINE_ID);
+						this, JRadioButton.class, actionHolder, StringID.DELETE_LINE_ID);
 
 		editModeLineTypeButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID);
+				this, JRadioButton.class, actionHolder, StringID.CHANGE_LINE_TYPE_ID);
 
 		editModeAddVertex = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.ADD_VERTEX_ID);
+				this, JRadioButton.class, actionHolder, StringID.ADD_VERTEX_ID);
 
 		editModeDeleteVertex = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.DELETE_VERTEX_ID);
+				this, JRadioButton.class, actionHolder, StringID.DELETE_VERTEX_ID);
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding how to enter the line
 
 		lineInputDirectVButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.DIRECT_V_ID);
+				this, JRadioButton.class, actionHolder, StringID.DIRECT_V_ID);
 
 		lineInputOnVButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.ON_V_ID);
+				this, JRadioButton.class, actionHolder, StringID.ON_V_ID);
 
-		lineInputVerticalLineButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class, StringID.VERTICAL_ID);
+		lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, StringID.VERTICAL_ID);
 
-		lineInputAngleBisectorButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class, StringID.BISECTOR_ID);
+		lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, StringID.BISECTOR_ID);
 
-		lineInputTriangleSplitButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class, StringID.TRIANGLE_ID);
+		lineInputTriangleSplitButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, StringID.TRIANGLE_ID);
 
 		lineInputSymmetricButton = (JRadioButton) buttonFactory
 				.create(
-						this, JRadioButton.class, StringID.SYMMETRIC_ID);
+						this, JRadioButton.class, actionHolder, StringID.SYMMETRIC_ID);
 
 		lineInputMirrorButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.MIRROR_ID);
+				this, JRadioButton.class, actionHolder, StringID.MIRROR_ID);
 
 		lineInputByValueButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.BY_VALUE_ID);
+				this, JRadioButton.class, actionHolder, StringID.BY_VALUE_ID);
 
-		lineInputPBisectorButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class,
-						StringID.PERPENDICULAR_BISECTOR_ID);
+		lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, StringID.PERPENDICULAR_BISECTOR_ID);
 
 	}
 
@@ -641,13 +641,13 @@ public class UIPanel extends JPanel
 
 		buttonLength
 				.addActionListener(
-				new PaintActionSetter(actionHolder, new LengthMeasuringAction(), context));
+						new PaintActionSetter(actionHolder, new LengthMeasuringAction(), context));
 		buttonLength.addActionListener(
 				new ViewChangeListener(new ChangeOnByValueButtonSelected()));
 
 		buttonAngle
 				.addActionListener(
-				new PaintActionSetter(actionHolder, new AngleMeasuringAction(), context));
+						new PaintActionSetter(actionHolder, new AngleMeasuringAction(), context));
 		buttonAngle.addActionListener(
 				new ViewChangeListener(new ChangeOnByValueButtonSelected()));
 
@@ -791,8 +791,7 @@ public class UIPanel extends JPanel
 								ResourceKey.WARNING,
 								StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
 						"Failed", JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE)
-				== JOptionPane.YES_OPTION) {
+						JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 
 					origamiModel = modelFactory
 							.createOrigamiModelNoDuplicateLines(
@@ -878,7 +877,7 @@ public class UIPanel extends JPanel
 	/**
 	 * observes DB for reflecting the changes to views. toString() of given DB
 	 * has to return a unique value among DB classes.
-	 * 
+	 *
 	 * @param o
 	 *            Observable class which implements toString() to return its
 	 *            class name.
@@ -896,8 +895,7 @@ public class UIPanel extends JPanel
 			ValueDB valueDB = (ValueDB) o;
 			textFieldAngle.setValue(valueDB.getAngle());
 			textFieldLength.setValue(valueDB.getLength());
-		}
-		else if (settingDB.hasGivenName(o.toString())) {
+		} else if (settingDB.hasGivenName(o.toString())) {
 			// update GUI
 			UIPanelSettingDB setting = (UIPanelSettingDB) o;
 
@@ -915,8 +913,7 @@ public class UIPanel extends JPanel
 			lineTypeSubButton.setEnabled(setting.isAuxButtonEnabled());
 
 			repaint();
-		}
-		else if (screenDB.hasGivenName(o.toString())) {
+		} else if (screenDB.hasGivenName(o.toString())) {
 			if (screenDB.isGridVisible() != dispGridCheckBox.isSelected()) {
 				dispGridCheckBox.setSelected(screenDB.isGridVisible());
 
