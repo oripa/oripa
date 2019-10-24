@@ -103,25 +103,25 @@ public class MainMenuBar extends JMenuBar {
 		 * For changing outline
 		 */
 		menuItemChangeOutline = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, actionHolder, StringID.EDIT_CONTOUR_ID);
+				.create(owner, JMenuItem.class, actionHolder, StringID.EDIT_CONTOUR_ID, null);
 
 		/**
 		 * For selecting all lines
 		 */
 		menuItemSelectAll = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, actionHolder, StringID.SELECT_ALL_LINE_ID);
+				.create(owner, JMenuItem.class, actionHolder, StringID.SELECT_ALL_LINE_ID, null);
 
 		/**
 		 * For starting copy-and-paste
 		 */
 		menuItemCopyAndPaste = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, actionHolder, StringID.COPY_PASTE_ID);
+				.create(owner, JMenuItem.class, actionHolder, StringID.COPY_PASTE_ID, null);
 
 		/**
 		 * For starting cut-and-paste
 		 */
 		menuItemCutAndPaste = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, actionHolder, StringID.CUT_PASTE_ID);
+				.create(owner, JMenuItem.class, actionHolder, StringID.CUT_PASTE_ID, null);
 
 		// -----------------------------------------------------------------------------------------------------------
 

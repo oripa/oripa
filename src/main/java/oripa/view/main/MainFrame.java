@@ -121,28 +121,29 @@ public class MainFrame extends JFrame implements ActionListener,
 	 * For changing outline
 	 */
 	private final JMenuItem menuItemChangeOutline = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, actionHolder, StringID.EDIT_CONTOUR_ID);
+			.create(this, JMenuItem.class, actionHolder, StringID.EDIT_CONTOUR_ID, null);
 
 	/**
 	 * For selecting all lines
 	 */
 	private final JMenuItem menuItemSelectAll = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, actionHolder, StringID.SELECT_ALL_LINE_ID);
+			.create(this, JMenuItem.class, actionHolder, StringID.SELECT_ALL_LINE_ID, null);
 
 	/**
 	 * For starting copy-and-paste
 	 */
 	private final JMenuItem menuItemCopyAndPaste = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, actionHolder, StringID.COPY_PASTE_ID);
+			.create(this, JMenuItem.class, actionHolder, StringID.COPY_PASTE_ID, null);
 
 	/**
 	 * For starting cut-and-paste
 	 */
 	private final JMenuItem menuItemCutAndPaste = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, actionHolder, StringID.CUT_PASTE_ID);
+			.create(this, JMenuItem.class, actionHolder, StringID.CUT_PASTE_ID, null);
 
 	// ---------------------------------------------------------------------------------------------
 
+	private final ScreenUpdater screenUpdater;
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 	private final JMenuItem menuItemProperty = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL,
@@ -181,6 +182,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		setting.addObserver(this);
 
+		screenUpdater = ScreenUpdater.getInstance();
 		// addKeyListener(this);
 
 		menuItemCopyAndPaste.setText(resourceHolder.getString(
@@ -191,7 +193,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		mainScreen = new PainterScreen(actionHolder, paintContext, document);
 		addWindowListener(this);
-		uiPanel = new UIPanel(mainScreen, actionHolder, paintContext, document, document);
+		uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(uiPanel, BorderLayout.WEST);
 		getContentPane().add(mainScreen, BorderLayout.CENTER);

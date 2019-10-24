@@ -30,7 +30,7 @@ public class ButtonBinderTest {
 		// true);
 		JRadioButton editModeInputLineButton = (JRadioButton) viewChangeBinder.createButton(
 				JRadioButton.class, new ChangeOnPaintInputButtonSelected(),
-				StringID.UI.INPUT_LINE_ID);
+				StringID.UI.INPUT_LINE_ID, null);
 
 		ResourceHolder resources = ResourceHolder.getInstance();
 

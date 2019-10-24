@@ -1,6 +1,7 @@
 package oripa.bind;
 
 import java.awt.Component;
+import java.awt.event.KeyListener;
 
 import javax.swing.AbstractButton;
 
@@ -34,7 +35,8 @@ public class PaintActionButtonFactory implements ButtonFactory {
 	@Override
 	public AbstractButton create(final Component parent,
 			final Class<? extends AbstractButton> buttonClass,
-			final MouseActionHolder actionHolder, final String id) {
+			final MouseActionHolder actionHolder, final String id,
+			final KeyListener keyListener) {
 
 		PaintBoundStateFactory stateFactory = new PaintBoundStateFactory();
 
@@ -46,7 +48,7 @@ public class PaintActionButtonFactory implements ButtonFactory {
 		}
 
 		ApplicationStateButtonBinder paintBinder = new ApplicationStateButtonBinder();
-		AbstractButton button = paintBinder.createButton(buttonClass, state, id);
+		AbstractButton button = paintBinder.createButton(buttonClass, state, id, keyListener);
 
 		return button;
 	}

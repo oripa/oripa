@@ -1,10 +1,12 @@
 package oripa.bind;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.awt.Component;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -53,8 +55,10 @@ public class ButtonFactoryTest {
 		PaintContextFactory contextFactory = new PaintContextFactory();
 		ButtonFactory paintFactory = new PaintActionButtonFactory(contextFactory.createContext());
 
+		var keyListener = mock(KeyListener.class);
 		JButton button;
-		button = (JButton) paintFactory.create(parent, JButton.class, actionHolder, id);
+		button = (JButton) paintFactory.create(parent, JButton.class, actionHolder, id,
+				keyListener);
 
 		String text = button.getText();
 		System.out.println(id + " text:" + text);
@@ -64,6 +68,7 @@ public class ButtonFactoryTest {
 			assertTrue(text.length() > 0);
 		}
 
+		assertEquals(keyListener, button.getKeyListeners()[0]);
 		// button.doClick();
 		// test hint text
 

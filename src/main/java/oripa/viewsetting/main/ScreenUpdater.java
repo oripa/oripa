@@ -28,8 +28,8 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 
 		return instance;
 	}
-	
-	public void setMouseActionHolder(MouseActionHolder actionHolder) {
+
+	public void setMouseActionHolder(final MouseActionHolder actionHolder) {
 		this.actionHolder = actionHolder;
 	}
 
@@ -54,7 +54,6 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 
 		@Override
 		public void keyPressed(final KeyEvent e) {
-
 			if (e.isControlDown()) {
 				updateIfCopyAndPaste(true);
 			} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -84,7 +83,7 @@ public class ScreenUpdater extends ViewSettingDataBase implements
 	}
 
 	/*
-	 * (非 Javadoc)
+	 * (non Javadoc)
 	 *
 	 * @see oripa.viewsetting.main.ViewScreenUpdater#getKeyListener()
 	 */
