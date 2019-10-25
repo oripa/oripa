@@ -423,8 +423,8 @@ public class UIPanel extends JPanel
 
 		textFieldLength.setColumns(4);
 		textFieldAngle.setColumns(4);
-		textFieldLength.setValue(new java.lang.Double(0.0));
-		textFieldAngle.setValue(new java.lang.Double(0.0));
+		textFieldLength.setValue(java.lang.Double.valueOf(0.0));
+		textFieldAngle.setValue(java.lang.Double.valueOf(0.0));
 
 		textFieldLength.setHorizontalAlignment(JTextField.RIGHT);
 		textFieldAngle.setHorizontalAlignment(JTextField.RIGHT);
@@ -451,7 +451,7 @@ public class UIPanel extends JPanel
 
 		textFieldGrid = new JFormattedTextField(new DecimalFormat("#"));
 		textFieldGrid.setColumns(2);
-		textFieldGrid.setValue(new Integer(Config.DEFAULT_GRID_DIV_NUM));
+		textFieldGrid.setValue(Integer.valueOf(Config.DEFAULT_GRID_DIV_NUM));
 		textFieldGrid.setHorizontalAlignment(JTextField.RIGHT);
 		gridChangeButton.addActionListener(this);
 
@@ -764,14 +764,14 @@ public class UIPanel extends JPanel
 		} else if (ae.getSource() == gridSmallButton) {
 			if (PaintConfig.gridDivNum < 65) {
 				PaintConfig.gridDivNum *= 2;
-				textFieldGrid.setValue(new Integer(PaintConfig.gridDivNum));
+				textFieldGrid.setValue(Integer.valueOf(PaintConfig.gridDivNum));
 
 				screenUpdater.updateScreen();
 			}
 		} else if (ae.getSource() == gridLargeButton) {
 			if (PaintConfig.gridDivNum > 3) {
 				PaintConfig.gridDivNum /= 2;
-				textFieldGrid.setValue(new Integer(PaintConfig.gridDivNum));
+				textFieldGrid.setValue(Integer.valueOf(PaintConfig.gridDivNum));
 
 				screenUpdater.updateScreen();
 			}

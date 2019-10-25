@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ import oripa.domain.fold.rule.Condition4;
 
 public class SubFace {
 
-
 	public OriFace outline;
 	public ArrayList<OriFace> faces;
 	public ArrayList<OriFace> sortedFaces;
@@ -39,13 +38,13 @@ public class SubFace {
 	public boolean allFaceOrderDecided = false;
 	public ArrayList<ArrayList<OriFace>> answerStacks = new ArrayList<>();
 
-	public SubFace(OriFace f) {
+	public SubFace(final OriFace f) {
 		outline = f;
 		faces = new ArrayList<>();
 		sortedFaces = new ArrayList<>();
 	}
 
-	public int sortFaceOverlapOrder(List<OriFace> modelFaces, int[][] mat) {
+	public int sortFaceOverlapOrder(final List<OriFace> modelFaces, final int[][] mat) {
 		sortedFaces.clear();
 		for (int i = 0; i < faces.size(); i++) {
 			sortedFaces.add(null);
@@ -56,7 +55,8 @@ public class SubFace {
 		int f_num = faces.size();
 		for (int i = 0; i < f_num; i++) {
 			for (int j = i + 1; j < f_num; j++) {
-				if (mat[faces.get(i).tmpInt][faces.get(j).tmpInt] == OrigamiModelFactory.UNDEFINED) {
+				if (mat[faces.get(i).tmpInt][faces
+						.get(j).tmpInt] == OrigamiModelFactory.UNDEFINED) {
 					cnt++;
 				}
 			}
@@ -86,7 +86,7 @@ public class SubFace {
 
 			for (OriFace ff : faces) {
 				if (mat[f.tmpInt][ff.tmpInt] == OrigamiModelFactory.LOWER) {
-					f.condition2s.add(new Integer(ff.tmpInt));
+					f.condition2s.add(Integer.valueOf(ff.tmpInt));
 				}
 			}
 		}
@@ -112,7 +112,7 @@ public class SubFace {
 		return c;
 	}
 
-	private void sort(List<OriFace> modelFaces, int index) {
+	private void sort(final List<OriFace> modelFaces, final int index) {
 
 		for (OriFace f : faces) {
 			if (f.alreadyStacked) {
@@ -170,7 +170,7 @@ public class SubFace {
 
 	}
 
-	private boolean checkForSortLocally3(List<OriFace> modelFaces, OriFace face) {
+	private boolean checkForSortLocally3(final List<OriFace> modelFaces, final OriFace face) {
 
 		for (Condition3 cond : face.condition3s) {
 			if (modelFaces.get(cond.lower).alreadyStacked
