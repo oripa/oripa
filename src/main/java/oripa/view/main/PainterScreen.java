@@ -360,7 +360,7 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 && // zoom
+		if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0 && // zoom
 				(e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
 
 			double moved = e.getX() - preMousePoint.getX() + e.getY()
@@ -377,7 +377,7 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
+		if ((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0) {
 			transX += (e.getX() - preMousePoint.getX()) / scale;
 			transY += (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();
