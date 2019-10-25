@@ -95,7 +95,9 @@ public class UIPanel extends JPanel
 		implements ActionListener, Observer {
 
 	private final UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
-	ResourceHolder resources = ResourceHolder.getInstance();
+	private final ValueDB valueDB = ValueDB.getInstance();
+
+	private final ResourceHolder resources = ResourceHolder.getInstance();
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Binding edit mode
@@ -520,8 +522,6 @@ public class UIPanel extends JPanel
 		lineTypeMountainButton.setMnemonic('M');
 		lineTypeValleyButton.setMnemonic('V');
 
-		ValueDB.getInstance().addObserver(this);
-
 		addPropertyChangeListenersToSetting();
 		addListenerToComponents(paintContext);
 
@@ -877,17 +877,18 @@ public class UIPanel extends JPanel
 	}
 
 	private void addPropertyChangeListenersToSetting() {
-		screenDB.addPropertyChangeListener(MainScreenSettingDB.GRID_VISIBLE,
-				(e) -> {
+		screenDB.addPropertyChangeListener(
+				MainScreenSettingDB.GRID_VISIBLE, e -> {
 					dispGridCheckBox.setSelected((boolean) e.getNewValue());
 					repaint();
 				});
 
-		// if (e.getSource() == textFieldLength) {
-		// textFieldLength.setValue(java.lang.Double.valueOf(textFieldLength.getText()));
-		// } else if (e.getSource() == textFieldAngle) {
-		// textFieldAngle.setValue(java.lang.Double.valueOf(textFieldAngle.getText()));
-		// }
+		valueDB.addPropertyChangeListener(
+				ValueDB.ANGLE, e -> textFieldAngle.setValue(e.getNewValue()));
+
+		valueDB.addPropertyChangeListener(
+				ValueDB.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
+
 	}
 
 	/**
@@ -906,12 +907,7 @@ public class UIPanel extends JPanel
 
 		// System.out.println(o.toString());
 
-		if (o.toString().equals(ValueDB.getInstance().toString())) {
-			// update text field of values
-			ValueDB valueDB = (ValueDB) o;
-			textFieldAngle.setValue(valueDB.getAngle());
-			textFieldLength.setValue(valueDB.getLength());
-		} else if (settingDB.hasGivenName(o.toString())) {
+		if (settingDB.hasGivenName(o.toString())) {
 			// update GUI
 			UIPanelSettingDB setting = (UIPanelSettingDB) o;
 

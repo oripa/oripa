@@ -53,7 +53,6 @@ public class SelectingVertexForAngle extends PickingVertex {
 		ValueDB valDB = ValueDB.getInstance();
 
 		valDB.setAngle(deg_angle);
-		valDB.notifyObservers();
 
 		context.clear(false);
 
