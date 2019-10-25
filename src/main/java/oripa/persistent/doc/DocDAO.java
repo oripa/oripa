@@ -79,7 +79,7 @@ public class DocDAO {
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		origamiModel = modelFactory.buildOrigami(creasePattern,
-				doc.getPaperSize(), true);
+				creasePattern.getPaperSize(), true);
 		doc.setOrigamiModel(origamiModel);
 
 		if (filter.getTargetType().equals(FileTypeKey.OBJ_MODEL)) {

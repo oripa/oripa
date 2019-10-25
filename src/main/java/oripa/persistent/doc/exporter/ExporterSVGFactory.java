@@ -19,25 +19,23 @@ import oripa.view.estimation.FoldedModelScreen;
 public class ExporterSVGFactory {
 
 	static final int size = 1000;
-	final static String head =
-			"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"no\"?>\n"
-					+ "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\"\n"
-					+ "\"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n"
-					+ "<svg xmlns=\"http://www.w3.org/2000/svg\"\n"
-					+ " xmlns:xlink=\"http://www.w3.org/1999/xlink\" xml:space=\"preserve\"\n"
-					+ " width=\"" + size + "px\" height=\"" + size + "px\"\n"
-					+ " viewBox=\"0 0 " + size + " " + size + "\" >\n";
+	final static String head = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"no\"?>\n"
+			+ "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\"\n"
+			+ "\"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n"
+			+ "<svg xmlns=\"http://www.w3.org/2000/svg\"\n"
+			+ " xmlns:xlink=\"http://www.w3.org/1999/xlink\" xml:space=\"preserve\"\n"
+			+ " width=\"" + size + "px\" height=\"" + size + "px\"\n"
+			+ " viewBox=\"0 0 " + size + " " + size + "\" >\n";
 	final static String end = "</svg>";
-	final static String gradient =
-			" <linearGradient id=\"Gradient1\" x1=\"20%\" y1=\"0%\" x2=\"80%\" y2=\"100%\">\n"
-					+ " <stop offset=\"5%\" stop-color=\"#DDEEFF\" />\n"
-					+ " <stop offset=\"95%\" stop-color=\"#7788FF\" />\n"
-					+ " </linearGradient>\n"
-					+
-					" <linearGradient id=\"Gradient2\" x1=\"20%\" y1=\"0%\" x2=\"80%\" y2=\"100%\">\n"
-					+ " <stop offset=\"5%\" stop-color=\"#FFFFEE\" />\n"
-					+ " <stop offset=\"95%\" stop-color=\"#DDDDDD\" />\n"
-					+ " </linearGradient>\n";
+	final static String gradient = " <linearGradient id=\"Gradient1\" x1=\"20%\" y1=\"0%\" x2=\"80%\" y2=\"100%\">\n"
+			+ " <stop offset=\"5%\" stop-color=\"#DDEEFF\" />\n"
+			+ " <stop offset=\"95%\" stop-color=\"#7788FF\" />\n"
+			+ " </linearGradient>\n"
+			+
+			" <linearGradient id=\"Gradient2\" x1=\"20%\" y1=\"0%\" x2=\"80%\" y2=\"100%\">\n"
+			+ " <stop offset=\"5%\" stop-color=\"#FFFFEE\" />\n"
+			+ " <stop offset=\"95%\" stop-color=\"#DDDDDD\" />\n"
+			+ " </linearGradient>\n";
 	final static String lineStart = " <line stroke=\"blue\" stroke-width=\"2\" ";
 	final static String polygonStart = "<path style=\"fill:url(#Gradient1);"
 			+ "stroke:#0000ff;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;"
@@ -49,9 +47,9 @@ public class ExporterSVGFactory {
 	private static class CreasePatternExporter implements DocExporter {
 
 		@Override
-		public boolean export(Doc doc, String filepath) throws Exception {
+		public boolean export(final Doc doc, final String filepath) throws Exception {
 			CreasePatternInterface creasePattern = doc.getCreasePattern();
-			double paperSize = doc.getPaperSize();
+			double paperSize = creasePattern.getPaperSize();
 
 			double scale = size / paperSize;
 			double center = size / 2;
@@ -93,7 +91,7 @@ public class ExporterSVGFactory {
 
 	private static class FoldedModelExporter implements DocExporter {
 		@Override
-		public boolean export(Doc doc, String filepath) throws Exception {
+		public boolean export(final Doc doc, final String filepath) throws Exception {
 			OrigamiModel origamiModel = doc.getOrigamiModel();
 			FoldedModelInfo foldedModelInfo = doc.getFoldedModelInfo();
 			double paperSize = origamiModel.getPaperSize();

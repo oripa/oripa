@@ -103,72 +103,6 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	}
 
 	// ===================================================================================================
-	// Persistent
-	// ===================================================================================================
-
-	private final DocFilterSelector filterDB = new DocFilterSelector();
-
-//	public String saveFileUsingGUI(
-//			final String filePath,
-//			final Component owner,
-//			@SuppressWarnings("unchecked") final FileAccessSupportFilter<Doc>... filters)
-//			throws UserCanceledException {
-//
-//		DocDAO dao = new DocDAO();
-//		try {
-//			dao.saveUsingGUI(this, filePath, owner, filters);
-//			return getDataFilePath();
-//		} catch (FileChooserCanceledException e) {
-//			throw new UserCanceledException();
-//		}
-//
-//	}
-
-//	public void saveModelFile(final FileTypeKey type, final Component owner)
-//			throws UserCanceledException {
-//		CreasePatternInterface creasePattern = getCreasePattern();
-//		OrigamiModel origamiModel = getOrigamiModel();
-//
-//		boolean hasModel = origamiModel.hasModel();
-//
-//		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-//		origamiModel = modelFactory.buildOrigami(creasePattern,
-//				getPaperSize(), true);
-//		setOrigamiModel(origamiModel);
-//
-//		if (type == FileTypeKey.OBJ_MODEL) {
-//
-//		} else if (!hasModel && !origamiModel.isProbablyFoldable()) {
-//
-//			JOptionPane.showConfirmDialog(null,
-//					"Warning: Building a set of polygons from crease pattern "
-//							+ "was failed.",
-//					"Warning", JOptionPane.OK_OPTION,
-//					JOptionPane.WARNING_MESSAGE);
-//		}
-//
-//		DocDAO dao = new DocDAO();
-//
-//		try {
-//			dao.saveUsingGUI(this, null,
-//					owner, filterDB.getFilter(type));
-//		} catch (FileChooserCanceledException e) {
-//			throw new UserCanceledException();
-//		}
-//
-//	}
-
-//	public void loadFileUsingGUI(final String path, final Component owner) throws FileVersionError {
-//		DocDAO dao = new DocDAO();
-//		DocFilterSelector selector = new DocFilterSelector();
-//
-//		set(dao.loadUsingGUI(
-//				path, selector.getLoadables(),
-//				owner));
-//
-//	}
-
-	// ===================================================================================================
 
 	/*
 	 * (non Javadoc)
@@ -267,89 +201,11 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	// ======================================================================
 	// Getter/Setter eventually unnecessary
 
-	// /**
-	// * @param crossLines crossLines is set to this instance.
-	// */
-	// public void setCrossLines(List<OriLine> sheetCutOutlines) {
-	// this.sheetCutLines = sheetCutOutlines;
-	// }
-
 //	/**
-//	 * @param size
-//	 *            size is set to this instance.
+//	 * @return size
 //	 */
-//	public void setPaperSize(final double size) {
-//		// this.paperSize = size;
-//		// origamiModel.setPaperSize(size);
-//		creasePattern.changePaperSize(size);
+//	public double getPaperSize() {
+//		return creasePattern.getPaperSize();
 //	}
 
-	/**
-	 * @return size
-	 */
-	public double getPaperSize() {
-		return creasePattern.getPaperSize();
-		// return paperSize;
-	}
-	//
-	// /**
-	// * @return title
-	// */
-	// public String getTitle() {
-	// return property.getTitle();
-	// }
-	//
-	// /**
-	// * @param title
-	// * title is set to this instance.
-	// */
-	// public void setTitle(String title) {
-	// this.property.setTitle(title);
-	// }
-	//
-	// /**
-	// * @return editorName
-	// */
-	// public String getEditorName() {
-	// return property.getEditorName();
-	// }
-	//
-	// /**
-	// * @param editorName
-	// * editorName is set to this instance.
-	// */
-	// public void setEditorName(String editorName) {
-	// this.property.setEditorName(editorName);
-	// }
-	//
-	// /**
-	// * @return originalAuthorName
-	// */
-	// public String getOriginalAuthorName() {
-	// return property.getOriginalAuthorName();
-	// }
-	//
-	// /**
-	// * @param originalAuthorName
-	// * originalAuthorName is set to this instance.
-	// */
-	// public void setOriginalAuthorName(String originalAuthorName) {
-	// this.property.setOriginalAuthorName(originalAuthorName);
-	// }
-	//
-	// /**
-	// * @return reference
-	// */
-	// public String getReference() {
-	// return property.getReference();
-	// }
-	//
-	// /**
-	// * @param reference
-	// * reference is set to this instance.
-	// */
-	// public void setReference(String reference) {
-	// this.property.setReference(reference);
-	// }
-	//
 }

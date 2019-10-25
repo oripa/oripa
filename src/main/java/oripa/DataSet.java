@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ public class DataSet {
 		for (int i = 0; i < lineNum; i++) {
 			lines[i] = new OriLineProxy(docLines[i]);
 		}
-		paperSize = doc.getPaperSize();
+		paperSize = creasePattern.getPaperSize();
 
 		title = property.getTitle();
 		editorName = property.getEditorName();
