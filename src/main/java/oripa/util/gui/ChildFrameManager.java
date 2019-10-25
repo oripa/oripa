@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -29,7 +29,7 @@ import javax.swing.JFrame;
  *
  */
 public class ChildFrameManager {
-	private static HashMap<JComponent, ChildFrameList> relationMap = new HashMap<>();
+	private final HashMap<JComponent, ChildFrameList> relationMap = new HashMap<>();
 
 	private static ChildFrameManager manager;
 
@@ -41,9 +41,10 @@ public class ChildFrameManager {
 		return manager;
 	}
 
-	private ChildFrameManager() {}
-	
-	public ChildFrameList getChildren(JComponent parent) {
+	private ChildFrameManager() {
+	}
+
+	public ChildFrameList getChildren(final JComponent parent) {
 		ChildFrameList children = relationMap.get(parent);
 		if (children == null) {
 			children = new ChildFrameList();
@@ -53,23 +54,23 @@ public class ChildFrameManager {
 		return children;
 	}
 
-	public void putChild(JComponent parent, JFrame child) {
+	public void putChild(final JComponent parent, final JFrame child) {
 		getChildren(parent).addChild(child);
 	}
 
-	public void closeAll(JComponent parent) {
+	public void closeAll(final JComponent parent) {
 		ChildFrameList children = getChildren(parent);
-		children.closeAll();
 		children.clear();
 	}
 
 	/**
 	 * Close all child frames of the given component and do the same for
 	 * descendants of the given component.
+	 *
 	 * @param frame
 	 */
-	public void closeAllRecursively(JFrame frame) {
-		for(Component component : frame.getComponents()) {
+	public void closeAllRecursively(final JFrame frame) {
+		for (Component component : frame.getComponents()) {
 			if (!(component instanceof JComponent)) {
 				continue;
 			}
@@ -81,9 +82,10 @@ public class ChildFrameManager {
 	/**
 	 * Close all child frames of the given component and do the same for
 	 * descendants of the given component.
+	 *
 	 * @param parent
 	 */
-	public void closeAllRecursively(JComponent parent) {
+	public void closeAllRecursively(final JComponent parent) {
 		getChildren(parent).closeAll();
 
 		for (JComponent key : relationMap.keySet()) {
@@ -92,6 +94,5 @@ public class ChildFrameManager {
 			}
 		}
 	}
-
 
 }

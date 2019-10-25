@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -23,8 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -50,19 +48,15 @@ import oripa.persistent.filetool.FileChooserFactory;
 import oripa.persistent.filetool.SavingActionTemplate;
 import oripa.resource.Constants;
 import oripa.util.gui.CallbackOnUpdate;
-import oripa.viewsetting.model.ModelFrameSettingDB;
 
 /**
  * A frame to show a transparent folded model.
- * 
+ *
  * @author Koji
- * 
+ *
  */
 public class ModelViewFrame extends JFrame
-		implements ActionListener, AdjustmentListener, Observer {
-
-	private final ModelFrameSettingDB setting = ModelFrameSettingDB
-			.getInstance();
+		implements ActionListener, AdjustmentListener {
 
 	ModelViewScreen screen;
 	private final JMenu menuDisp = new JMenu(ORIPA.res.getString("MENU_Disp"));
@@ -101,8 +95,6 @@ public class ModelViewFrame extends JFrame
 
 	private void initialize(final SheetCutOutlinesHolder lineHolder,
 			final CallbackOnUpdate onUpdateLine) {
-
-		setting.addObserver(this);
 
 		setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));
 		screen = new ModelViewScreen(lineHolder, onUpdateLine);
@@ -216,19 +208,16 @@ public class ModelViewFrame extends JFrame
 		FileAccessSupportFilter<OrigamiModel> filter = new FileAccessSupportFilter<OrigamiModel>(
 				type,
 				FileAccessSupportFilter.createDefaultDescription(
-						type, ORIPA.res.getString("File"))
-				);
+						type, ORIPA.res.getString("File")));
 
 		switch (type) {
 		case DXF_MODEL:
 			filter.setSavingAction(
-					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterDXF())
-					);
+					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterDXF()));
 			break;
 		case OBJ_MODEL:
 			filter.setSavingAction(
-					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterOBJ())
-					);
+					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterOBJ()));
 			break;
 		default:
 			throw new RuntimeException("Wrong implementation");
@@ -249,59 +238,6 @@ public class ModelViewFrame extends JFrame
 
 		}
 
-//		JFileChooser fileChooser = new JFileChooser();
-//		fileChooser.addChoosableFileFilter(new FileAccessSupportFilter(type,
-//				FileAccessSupportFilter.createDefaultDescription(type,
-//						ORIPA.res.getString("File"))));
-//
-//		if (JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(this)) {
-//			try {
-//				String filePath = fileChooser.getSelectedFile().getPath();
-//				File file = new File(filePath);
-//				if (file.exists()) {
-//					if (JOptionPane.showConfirmDialog(
-//							null,
-//							ORIPA.res.getString("Warning_SameNameFileExist"),
-//							ORIPA.res.getString("DialogTitle_FileSave"),
-//							JOptionPane.YES_NO_OPTION,
-//							JOptionPane.WARNING_MESSAGE)
-//					!= JOptionPane.YES_OPTION) {
-//						return;
-//					}
-//				}
-//
-//				if (!filePath.endsWith("." + type.getExtensions()[0])) {
-//					filePath += "." + type.getExtensions()[0];
-//				}
-//				switch (type) {
-//				case DXF_MODEL:
-//					ExporterDXFFactory.createModelExporter().export(ORIPA.doc,
-//							filePath);
-//					break;
-//				case OBJ_MODEL:
-//					DocExporter exporter = new ModelExporterOBJ();
-//					exporter.export(ORIPA.doc, filePath);
-//					break;
-//				}
-//
-//			} catch (Exception e) {
-//				JOptionPane.showMessageDialog(
-//						this, e.toString(),
-//						ORIPA.res.getString("Error_FileSaveFailed"),
-//						JOptionPane.ERROR_MESSAGE);
-//			}
-//		}
 	}
 
-	@Override
-	public void update(final Observable o, final Object arg) {
-
-		// if(setting.isFrameVisible()){
-		// setVisible(true);
-		// //screen.resetViewMatrix();
-		// menuItemSlideFaces.setSelected(false);
-		// repaint();
-		//
-		// }
-	}
 }
