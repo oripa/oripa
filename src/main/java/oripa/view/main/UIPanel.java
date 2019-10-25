@@ -25,11 +25,10 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -92,7 +91,7 @@ import oripa.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 public class UIPanel extends JPanel
-		implements ActionListener, Observer {
+		implements ActionListener {
 
 	private final UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
 	private final ValueDB valueDB = ValueDB.getInstance();
@@ -122,7 +121,7 @@ public class UIPanel extends JPanel
 	private JRadioButton lineInputPBisectorButton;
 	// ---------------------------------------------------------------------------------------------------------------------------
 
-	private final JRadioButton lineTypeSubButton = new JRadioButton(
+	private final JRadioButton lineTypeAuxButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
 	private final JRadioButton lineTypeMountainButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
@@ -157,8 +156,8 @@ public class UIPanel extends JPanel
 					StringID.UI.GRID_SIZE_CHANGE_ID));
 
 	private final JPanel mainPanel = new JPanel();
-	private final JPanel subPanel1 = new JPanel();
-	private final JPanel subPanel2 = new JPanel();
+	private final JPanel byValueLengthPanel = new JPanel();
+	private final JPanel byValueAnglePanel = new JPanel();
 	private final JPanel gridPanel = new JPanel();
 	private final JPanel lineTypePanel = new JPanel();
 	// AlterLineType
@@ -221,8 +220,6 @@ public class UIPanel extends JPanel
 
 		setPreferredSize(new Dimension(210, 400));
 
-		settingDB.addObserver(this);
-
 		// alterLine_combo_from.setSelectedIndex(0);
 		// alterLine_combo_to.setSelectedIndex(0);
 		// alterLine_combo_from.actionPerformed(null);
@@ -266,12 +263,12 @@ public class UIPanel extends JPanel
 		ButtonGroup lineTypeGroup = new ButtonGroup();
 		lineTypeGroup.add(lineTypeMountainButton);
 		lineTypeGroup.add(lineTypeValleyButton);
-		lineTypeGroup.add(lineTypeSubButton);
+		lineTypeGroup.add(lineTypeAuxButton);
 
 		lineTypePanel.setLayout(new GridBagLayout());
 		lineTypePanel.add(lineTypeMountainButton);
 		lineTypePanel.add(lineTypeValleyButton);
-		lineTypePanel.add(lineTypeSubButton);
+		lineTypePanel.add(lineTypeAuxButton);
 
 		lineTypeMountainButton.setSelected(true);
 
@@ -414,8 +411,8 @@ public class UIPanel extends JPanel
 
 		// subPanel1.setVisible(true);
 		// subPanel2.setVisible(true);
-		subPanel1.setVisible(false);
-		subPanel2.setVisible(false);
+		byValueLengthPanel.setVisible(false);
+		byValueAnglePanel.setVisible(false);
 
 		NumberFormat doubleValueFormat = NumberFormat
 				.getNumberInstance(Locale.US);
@@ -432,17 +429,17 @@ public class UIPanel extends JPanel
 		textFieldLength.setHorizontalAlignment(JTextField.RIGHT);
 		textFieldAngle.setHorizontalAlignment(JTextField.RIGHT);
 
-		subPanel1.setLayout(new FlowLayout());
-		subPanel2.setLayout(new FlowLayout());
-		subPanel1.add(subLabel1);
-		subPanel1.add(textFieldLength);
-		subPanel1.add(buttonLength);
-		subPanel2.add(subLabel2);
-		subPanel2.add(textFieldAngle);
-		subPanel2.add(buttonAngle);
+		byValueLengthPanel.setLayout(new FlowLayout());
+		byValueAnglePanel.setLayout(new FlowLayout());
+		byValueLengthPanel.add(subLabel1);
+		byValueLengthPanel.add(textFieldLength);
+		byValueLengthPanel.add(buttonLength);
+		byValueAnglePanel.add(subLabel2);
+		byValueAnglePanel.add(textFieldAngle);
+		byValueAnglePanel.add(buttonAngle);
 
-		add(subPanel1);
-		add(subPanel2);
+		add(byValueLengthPanel);
+		add(byValueAnglePanel);
 
 		// ------------------------------------
 		// For the grid panel
@@ -518,7 +515,7 @@ public class UIPanel extends JPanel
 		editModeDeleteLineButton.setMnemonic('D');
 		editModeLineTypeButton.setMnemonic('T');
 		editModeDeleteVertex.setMnemonic('L');
-		lineTypeSubButton.setMnemonic('A');
+		lineTypeAuxButton.setMnemonic('A');
 		lineTypeMountainButton.setMnemonic('M');
 		lineTypeValleyButton.setMnemonic('V');
 
@@ -669,7 +666,7 @@ public class UIPanel extends JPanel
 		lineTypeValleyButton.addActionListener(
 				new LineTypeSetter(OriLine.TYPE_VALLEY));
 
-		lineTypeSubButton.addActionListener(
+		lineTypeAuxButton.addActionListener(
 				new LineTypeSetter(OriLine.TYPE_NONE));
 
 		editModeInputLineButton
@@ -889,47 +886,71 @@ public class UIPanel extends JPanel
 		valueDB.addPropertyChangeListener(
 				ValueDB.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
 
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.SELECTED_MODE, this::onChangeEditModeButtonSelection);
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.BY_VALUE_PANEL_VISIBLE, e -> {
+					byValueLengthPanel.setVisible((boolean) e.getNewValue());
+					byValueAnglePanel.setVisible((boolean) e.getNewValue());
+				});
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.ALTER_LINE_TYPE_PANEL_VISIBLE,
+				e -> alterLineTypePanel.setVisible((boolean) e.getNewValue()));
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.MOUNTAIN_BUTTON_ENABLED,
+				e -> lineTypeMountainButton.setEnabled((boolean) e.getNewValue()));
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.VALLEY_BUTTON_ENABLED,
+				e -> lineTypeValleyButton.setEnabled((boolean) e.getNewValue()));
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.AUX_BUTTON_ENABLED,
+				e -> lineTypeAuxButton.setEnabled((boolean) e.getNewValue()));
 	}
 
-	/**
-	 * observes DB for reflecting the changes to views. toString() of given DB
-	 * has to return a unique value among DB classes.
-	 *
-	 * @param o
-	 *            Observable class which implements toString() to return its
-	 *            class name.
-	 * @param arg
-	 *            A parameter to specify the action for the given Observable
-	 *            object.
-	 */
-	@Override
-	public void update(final Observable o, final Object arg) {
+//	/**
+//	 * observes DB for reflecting the changes to views. toString() of given DB
+//	 * has to return a unique value among DB classes.
+//	 *
+//	 * @param o
+//	 *            Observable class which implements toString() to return its
+//	 *            class name.
+//	 * @param arg
+//	 *            A parameter to specify the action for the given Observable
+//	 *            object.
+//	 */
+//	@Override
+//	public void update(final Observable o, final Object arg) {
+//
+//		// System.out.println(o.toString());
+//
+//		if (settingDB.hasGivenName(o.toString())) {
+//			// update GUI
+//			UIPanelSettingDB setting = (UIPanelSettingDB) o;
+//
+//			onChangeEditModeButtonSelection(setting);
+//
+//			subPanel1.setVisible(setting.isByValuePanelVisible());
+//			subPanel2.setVisible(setting.isByValuePanelVisible());
+//
+//			alterLineTypePanel
+//					.setVisible(setting.isAlterLineTypePanelVisible());
+//
+//			lineTypeMountainButton
+//					.setEnabled(setting.isMountainButtonEnabled());
+//			lineTypeValleyButton.setEnabled(setting.isValleyButtonEnabled());
+//			lineTypeSubButton.setEnabled(setting.isAuxButtonEnabled());
+//
+//			repaint();
+//		}
+//	}
 
-		// System.out.println(o.toString());
-
-		if (settingDB.hasGivenName(o.toString())) {
-			// update GUI
-			UIPanelSettingDB setting = (UIPanelSettingDB) o;
-
-			updateEditModeButtonSelection(setting);
-
-			subPanel1.setVisible(setting.isValuePanelVisible());
-			subPanel2.setVisible(setting.isValuePanelVisible());
-
-			alterLineTypePanel
-					.setVisible(setting.isAlterLineTypePanelVisible());
-
-			lineTypeMountainButton
-					.setEnabled(setting.isMountainButtonEnabled());
-			lineTypeValleyButton.setEnabled(setting.isValleyButtonEnabled());
-			lineTypeSubButton.setEnabled(setting.isAuxButtonEnabled());
-
-			repaint();
-		}
-	}
-
-	private void updateEditModeButtonSelection(final UIPanelSettingDB setting) {
-		switch (setting.getSelectedMode()) {
+	private void onChangeEditModeButtonSelection(final PropertyChangeEvent e) {
+		switch (settingDB.getSelectedMode()) {
 		case INPUT:
 			selectEditModeButton(editModeInputLineButton);
 			break;
@@ -939,7 +960,6 @@ public class UIPanel extends JPanel
 		default:
 			break;
 		}
-
 	}
 
 	private void selectEditModeButton(final AbstractButton modeButton) {
