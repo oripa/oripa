@@ -1,5 +1,7 @@
 package oripa.bind.binder;
 
+import java.util.MissingResourceException;
+
 import javax.swing.AbstractButton;
 
 import org.slf4j.Logger;
@@ -40,8 +42,8 @@ public abstract class AbstractButtonBinder<ToBeBound>
 		 */
 		try {
 			button.setText(resourceHolder.getString(ResourceKey.LABEL, textID));
-		} catch (Exception e) {
-			logger.error("failed to set a label to button", e);
+		} catch (MissingResourceException e) {
+			logger.warn("the label for the button is not found");
 		}
 
 		return button;
