@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,6 @@ package oripa.view.estimation;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,7 +29,7 @@ import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
 import oripa.viewsetting.estimation.RenderFrameSettingDB;
 
-public class EstimationResultFrame extends JFrame implements ActionListener, Observer {
+public class EstimationResultFrame extends JFrame implements ActionListener {
 
 	private final RenderFrameSettingDB setting = RenderFrameSettingDB.getInstance();
 
@@ -40,7 +38,7 @@ public class EstimationResultFrame extends JFrame implements ActionListener, Obs
 	public JLabel hintLabel;
 
 	public EstimationResultFrame() {
-		setting.addObserver(this);
+		addPropertyChangeListenersToSetting();
 
 		setTitle("Folded Origami");
 		screen = new FoldedModelScreen();
@@ -69,14 +67,13 @@ public class EstimationResultFrame extends JFrame implements ActionListener, Obs
 		// TODO Auto-generated method stub
 	}
 
-	@Override
-	public void update(final Observable o, final Object arg) {
-
-		if (setting.isFrameVisible()) {
-			screen.resetViewMatrix();
-			screen.redrawOrigami();
-			ui.updateLabel();
-			setVisible(true);
-		}
+	private void addPropertyChangeListenersToSetting() {
+		setting.addPropertyChangeListener(
+				RenderFrameSettingDB.FRAME_VISIBLE, e -> {
+					screen.resetViewMatrix();
+					screen.redrawOrigami();
+					ui.updateLabel();
+					setVisible(true);
+				});
 	}
 }
