@@ -598,6 +598,9 @@ public class MainFrame extends JFrame implements ActionListener,
 		DocDAO dao = new DocDAO();
 
 		try {
+			// we can't substitute a loaded object because
+			// the document object is referred by screen and UI panel as a
+			// Holder.
 			if (filePath != null) {
 				document.set(dao.load(filePath));
 			} else {
