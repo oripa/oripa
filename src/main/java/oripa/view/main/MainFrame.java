@@ -299,7 +299,6 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	}
 
-	@SuppressWarnings("unchecked")
 	private void addSavingActions() {
 
 		// overwrite the action to update GUI after saving.
@@ -670,7 +669,6 @@ public class MainFrame extends JFrame implements ActionListener,
 
 				document.setCreasePattern(paintContext.getCreasePattern());
 
-				FileAccessSupportFilter<Doc>[] filters;
 				String path = saveFile(fileHistory.getLastDirectory(),
 						document.getDataFileName(), filterDB.getSavables());
 				if (path == null) {

@@ -22,9 +22,9 @@ import oripa.resource.StringID;
 
 /**
  * Manages available filters for file access.
- * 
+ *
  * @author OUCHI Koji
- * 
+ *
  */
 public class DocFilterSelector {
 
@@ -33,10 +33,10 @@ public class DocFilterSelector {
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	/**
-	 * 
+	 *
 	 * A constructor that puts default filters into this instance.
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("unchecked")
 	public DocFilterSelector() {
 
 		FileTypeKey key = FileTypeKey.OPX;
@@ -76,7 +76,7 @@ public class DocFilterSelector {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param key
 	 * @param desctiption
 	 * @param exporter
@@ -101,7 +101,7 @@ public class DocFilterSelector {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fileTypeKey
 	 * @param resourceKey
 	 * @return
@@ -113,7 +113,7 @@ public class DocFilterSelector {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param key
 	 *            A value that describes the file type you want.
 	 * @return A filter for given key.
@@ -134,7 +134,7 @@ public class DocFilterSelector {
 	// }
 
 	/**
-	 * 
+	 *
 	 * @param key
 	 *            A value that describes the file type you want.
 	 * @param filter
@@ -148,7 +148,7 @@ public class DocFilterSelector {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return all filters in this instance.
 	 */
 	public FileAccessSupportFilter<Doc>[] toArray() {
@@ -166,7 +166,7 @@ public class DocFilterSelector {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return filters that can load Doc from a file.
 	 */
 	public FileAccessSupportFilter<Doc>[] getLoadables() {
@@ -190,7 +190,7 @@ public class DocFilterSelector {
 
 	/**
 	 * returns null if any filter cannot load the file.
-	 * 
+	 *
 	 * @param path
 	 * @return a filter that can load the file at the path.
 	 */
@@ -211,7 +211,7 @@ public class DocFilterSelector {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return filters that can save a Doc object.
 	 */
 	@SuppressWarnings("unchecked")

@@ -34,7 +34,6 @@ public class DocDAO {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public void save(final Doc doc, final String path, final FileTypeKey type) {
 		DocFilterSelector selecter = new DocFilterSelector();
 

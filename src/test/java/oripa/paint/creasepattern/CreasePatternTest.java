@@ -21,7 +21,6 @@ public class CreasePatternTest {
 		cp.add(new OriLine(20.0, 20.0, 100.0, 100.0, OriLine.TYPE_RIDGE));
 
 		for (Iterator<OriLine> iter = cp.iterator(); iter.hasNext();) {
-			OriLine oriLine = iter.next();
 			iter.remove();
 		}
 		assertTrue(cp.isEmpty());

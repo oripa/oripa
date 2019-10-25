@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -46,32 +46,31 @@ import oripa.value.OriLine;
 
 /**
  * A screen to show whether Maekawa theorem and Kawasaki theorem holds.
+ * 
  * @author Koji
  *
  */
 public class FoldabilityScreen extends JPanel
-implements ComponentListener {
+		implements ComponentListener {
 
-	private boolean bDrawFaceID = false;
+	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
 	private Graphics2D bufferg;
-	private double scale;
+	private final double scale;
 	private double transX;
 	private double transY;
-	// Temporary information when editing
-	private ArrayList<Vector2d> tmpOutline = new ArrayList<>(); // Contour line in the edit
-	private boolean dispGrid = true;
+
 	// Affine transformation information
 	private Dimension preSize;
-	private AffineTransform affineTransform = new AffineTransform();
-	private ArrayList<Vector2d> crossPoints = new ArrayList<>();
-	private JPopupMenu popup = new JPopupMenu();
-	private JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
-	private JMenuItem popupItem_FlipFace = new JMenuItem("Face Inversion");
+	private final AffineTransform affineTransform = new AffineTransform();
+	private final ArrayList<Vector2d> crossPoints = new ArrayList<>();
+	private final JPopupMenu popup = new JPopupMenu();
+	private final JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
+	private final JMenuItem popupItem_FlipFace = new JMenuItem("Face Inversion");
 
 	private OrigamiModel origamiModel = null;
 	private Collection<OriLine> creasePattern = null;
-	//    private FoldedModelInfo foldedModelInfo = null;
+	// private FoldedModelInfo foldedModelInfo = null;
 
 	FoldabilityScreen() {
 
@@ -87,14 +86,15 @@ implements ComponentListener {
 
 	private Collection<OriVertex> violatingVertices = new ArrayList<>();
 	private Collection<OriFace> violatingFaces = new ArrayList<>();
-	
+
 	public void showModel(
-			OrigamiModel origamiModel, 
-			Collection<OriLine> creasePattern  //, FoldedModelInfo foldedModelInfo
-			) {
+			final OrigamiModel origamiModel,
+			final Collection<OriLine> creasePattern // , FoldedModelInfo
+													// foldedModelInfo
+	) {
 		this.origamiModel = origamiModel;
 		this.creasePattern = creasePattern;
-		//    	this.foldedModelInfo = foldedModelInfo;
+		// this.foldedModelInfo = foldedModelInfo;
 
 		FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 		violatingVertices = foldabilityChecker.findViolatingVertices(
@@ -106,7 +106,7 @@ implements ComponentListener {
 		this.setVisible(true);
 	}
 
-	public void drawFoldablity(Graphics2D g2d) {
+	public void drawFoldablity(final Graphics2D g2d) {
 		if (origamiModel == null) {
 			return;
 		}
@@ -121,14 +121,15 @@ implements ComponentListener {
 
 		g2d.setColor(Color.RED);
 		for (OriVertex v : violatingVertices) {
-			g2d.fill(new Rectangle2D.Double(v.preP.x - 8.0 / scale, 
+			g2d.fill(new Rectangle2D.Double(v.preP.x - 8.0 / scale,
 					v.preP.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
 		}
 
 		if (bDrawFaceID) {
 			g2d.setColor(Color.BLACK);
 			for (OriFace face : faces) {
-				g2d.drawString("" + face.tmpInt, (int) face.getCenter().x, (int) face.getCenter().y);
+				g2d.drawString("" + face.tmpInt, (int) face.getCenter().x,
+						(int) face.getCenter().y);
 			}
 		}
 
@@ -137,7 +138,8 @@ implements ComponentListener {
 		}
 	}
 
-	private void paintForStudy(Graphics2D g2d, Collection<OriFace> faces, Collection<OriVertex> vertices) {
+	private void paintForStudy(final Graphics2D g2d, final Collection<OriFace> faces,
+			final Collection<OriVertex> vertices) {
 		g2d.setColor(new Color(255, 210, 220));
 		for (OriFace face : faces) {
 			if (face.tmpInt2 == 0) {
@@ -162,22 +164,22 @@ implements ComponentListener {
 
 		g2d.setColor(Color.BLACK);
 		for (OriFace face : faces) {
-			g2d.drawString("" + face.z_order, (int) face.getCenter().x, 
+			g2d.drawString("" + face.z_order, (int) face.getCenter().x,
 					(int) face.getCenter().y);
 		}
 
 	}
-	
+
 	// To update the current AffineTransform
 	private void updateAffineTransform() {
-		affineTransform.setToIdentity(); 
-		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5); 
-		affineTransform.scale(scale, scale);    
-		affineTransform.translate(transX, transY); 
+		affineTransform.setToIdentity();
+		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
+		affineTransform.scale(scale, scale);
+		affineTransform.translate(transX, transY);
 	}
 
 	@Override
-	public void paintComponent(Graphics g) {
+	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
 		if (bufferImage == null) {
@@ -200,43 +202,42 @@ implements ComponentListener {
 		drawer.drawAllLines(g2d, creasePattern);
 		drawer.drawCreaseVertices(g2d, creasePattern, scale);
 
-
 		for (Vector2d v : crossPoints) {
 			g2d.setColor(Color.RED);
-			g2d.fill(new Rectangle2D.Double(v.x - 5.0 / scale, v.y - 5.0 / scale, 10.0 / scale, 10.0 / scale));
+			g2d.fill(new Rectangle2D.Double(v.x - 5.0 / scale, v.y - 5.0 / scale, 10.0 / scale,
+					10.0 / scale));
 		}
 
 		// Line connecting the pair of unsetled faces
-		//        if (Config.FOR_STUDY) {
-		//            List<OriFace> faces = origamiModel.getFaces();
+		// if (Config.FOR_STUDY) {
+		// List<OriFace> faces = origamiModel.getFaces();
 		//
-		//			int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+		// int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 		//
-		//            if (overlapRelation != null) {
-		//                g2d.setStroke(LineSetting.STROKE_RIDGE);
-		//                g2d.setColor(Color.MAGENTA);
-		//                int size = faces.size();
-		//                for (int i = 0; i < size; i++) {
-		//                    for (int j = i + 1; j < size; j++) {
-		//                        if (overlapRelation[i][j] == Doc.UNDEFINED) {
-		//                            Vector2d v0 = faces.get(i).getCenter();
-		//                            Vector2d v1 = faces.get(j).getCenter();
-		//                            g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));
+		// if (overlapRelation != null) {
+		// g2d.setStroke(LineSetting.STROKE_RIDGE);
+		// g2d.setColor(Color.MAGENTA);
+		// int size = faces.size();
+		// for (int i = 0; i < size; i++) {
+		// for (int j = i + 1; j < size; j++) {
+		// if (overlapRelation[i][j] == Doc.UNDEFINED) {
+		// Vector2d v0 = faces.get(i).getCenter();
+		// Vector2d v1 = faces.get(j).getCenter();
+		// g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));
 		//
-		//                        }
-		//                    }
-		//                }
-		//            }
-		//        }
+		// }
+		// }
+		// }
+		// }
+		// }
 
 		drawFoldablity(g2d);
 
 		g.drawImage(bufferImage, 0, 0, this);
 	}
 
-
 	@Override
-	public void componentResized(ComponentEvent arg0) {
+	public void componentResized(final ComponentEvent arg0) {
 		if (getWidth() <= 0 || getHeight() <= 0) {
 			return;
 		}
@@ -256,17 +257,17 @@ implements ComponentListener {
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent arg0) {
+	public void componentMoved(final ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void componentShown(ComponentEvent arg0) {
+	public void componentShown(final ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
+	public void componentHidden(final ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 	}
 }

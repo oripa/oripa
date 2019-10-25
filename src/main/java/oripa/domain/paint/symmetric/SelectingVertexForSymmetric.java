@@ -20,8 +20,6 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 
 	private boolean doingFirstAction = true;
 
-	private boolean doSpecial = false;
-
 	@Override
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
 			final boolean doSpecial) {
@@ -38,8 +36,6 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 				result = false;
 			}
 		}
-
-		this.doSpecial = doSpecial;
 
 		return result;
 	}

@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -27,34 +27,32 @@ import oripa.value.OriLine;
 
 /**
  * Kawasaki Theorem
+ *
+ * Assume there is a vertex v on a paper. When lines l_i are given for i=1...2n
+ * such that v is one of the end points for all l_i and the numbering is
+ * clockwise order, foldable origami satisfies the following condition:
+ *
+ * a_1 + a_3 + ... = a_2 + a_4 + ... = PI
  * 
- * Assume there is a vertex v on a paper.
- * When lines l_i are given for i=1...2n
- * such that v is one of the end points for all l_i
- * and the numbering is clockwise order,
- * foldable origami satisfies the following condition:
+ * where a_i is the angle in radian between l_i and l_{i+1}, especially a_n is
+ * the angle between l_1 and l_n.
  * 
- *     a_1 + a_3 + ... = a_2 + a_4 + ... = PI
- *     
- *     where a_i is the angle in radian between l_i and l_{i+1},
- *     especially a_n is the angle between l_1 and l_n.
- *     
  * @author Koji
  *
  */
 public class KawasakiTheorem extends AbstractRule<OriVertex> {
 
 	/**
-	 * 
+	 *
 	 * @param vertices
 	 * @return true if all vertices are passes the theorem test.
 	 */
-	public boolean holds(OriVertex vertex) {
+	@Override
+	public boolean holds(final OriVertex vertex) {
 
 		Vector2d p = vertex.p;
 		double oddSum = 0;
-		double evenSum = 0;
-		
+
 		for (int i = 0; i < vertex.edges.size(); i++) {
 			OriEdge e = vertex.edges.get(i);
 
@@ -64,7 +62,8 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 			}
 
 			Vector2d preP = new Vector2d(vertex.edges.get(i).oppositeVertex(vertex).p);
-			Vector2d nxtP = new Vector2d(vertex.edges.get((i + 1) % vertex.edges.size()).oppositeVertex(vertex).p);
+			Vector2d nxtP = new Vector2d(
+					vertex.edges.get((i + 1) % vertex.edges.size()).oppositeVertex(vertex).p);
 
 			nxtP.sub(p);
 			preP.sub(p);
@@ -72,22 +71,17 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 			if (i % 2 == 0) {
 				oddSum += preP.angle(nxtP);
 			} else {
-				evenSum += preP.angle(nxtP);
 			}
 		}
 
-
-		//System.out.println("oddSum = " + oddSum + "/ evenSum = " + evenSum);
 		final double oneDegreeInRad = Math.PI / 180;
 		final double eps = oneDegreeInRad / 2;
 		if (Math.abs(oddSum - Math.PI) > eps) {
 			System.out.println("edge angle sum invalid");
 			return false;
 		}
-		
+
 		return true;
 	}
-
-
 
 }

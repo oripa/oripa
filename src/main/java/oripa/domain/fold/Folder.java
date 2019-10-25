@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,6 @@ public class Folder {
 	private ArrayList<SubFace> subFaces;
 
 	// helper object
-	private final OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 	private final FolderTool folderTool = new FolderTool();
 
 	public Folder() {
@@ -924,7 +923,8 @@ public class Folder {
 	}
 
 	// Method that doesnt use sin con
-	private void flipFace2(final List<OriFace> faces, final OriFace face, final OriHalfedge baseHe) {
+	private void flipFace2(final List<OriFace> faces, final OriFace face,
+			final OriHalfedge baseHe) {
 
 		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
 		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);

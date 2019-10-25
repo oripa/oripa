@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 
 import oripa.bind.state.PaintBoundState;
-import oripa.bind.state.PaintBoundStateFactory;
 import oripa.domain.paint.EditMode;
 
 public class StateManagerTest {
@@ -15,7 +14,6 @@ public class StateManagerTest {
 	@Test
 	public void testByScenario() {
 		StateManager manager = StateManager.getInstance();
-		PaintBoundStateFactory stateFactory = new PaintBoundStateFactory();
 
 		var inputState = createMockedState(EditMode.INPUT);
 		manager.push(inputState);
