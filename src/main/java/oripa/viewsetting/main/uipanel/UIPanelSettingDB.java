@@ -180,7 +180,7 @@ public class UIPanelSettingDB {
 	public EditMode getSelectedMode() {
 		EditMode ret = selectedMode;
 
-		selectedMode = EditMode.NONE;
+		selectedMode = EditMode.NONE; // a hack to trigger an update every time.
 
 		return ret;
 	}
