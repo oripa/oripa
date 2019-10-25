@@ -27,10 +27,10 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -73,7 +73,7 @@ import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.ScreenUpdater;
 
 public class MainFrame extends JFrame implements ActionListener,
-		ComponentListener, WindowListener, Observer {
+		ComponentListener, WindowListener, PropertyChangeListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
@@ -180,7 +180,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		document.setCreasePattern(paintContext.getCreasePattern());
 
-		setting.addObserver(this);
+		setting.addPropertyChangeListener(this);
 
 		screenUpdater = ScreenUpdater.getInstance();
 		// addKeyListener(this);
@@ -726,11 +726,26 @@ public class MainFrame extends JFrame implements ActionListener,
 	//
 	// }
 
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
+	 * PropertyChangeEvent)
+	 */
 	@Override
-	public void update(final Observable o, final Object arg) {
-		if (o.toString() == setting.getName()) {
-			hintLabel.setText("    " + setting.getHint());
+	public void propertyChange(final PropertyChangeEvent event) {
+		if (event.getPropertyName().equals(MainFrameSettingDB.HINT)) {
+			hintLabel.setText("    " + (String) event.getNewValue());
 			hintLabel.repaint();
 		}
+
 	}
+
+//	@Override
+//	public void update(final Observable o, final Object arg) {
+//		if (o.toString() == setting.getName()) {
+//			hintLabel.setText("    " + setting.getHint());
+//			hintLabel.repaint();
+//		}
+//	}
 }

@@ -35,8 +35,9 @@ public class MainScreenSettingDB {
 	}
 
 	public void setGridVisible(final boolean gridVisible) {
-		support.firePropertyChange(GRID_VISIBLE, this.gridVisible, gridVisible);
+		var old = this.gridVisible;
 		this.gridVisible = gridVisible;
+		support.firePropertyChange(GRID_VISIBLE, old, gridVisible);
 	}
 
 //	@Override
