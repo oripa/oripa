@@ -38,8 +38,9 @@ public class ScreenUpdater implements
 
 	// -------------------------
 
-	public void addPropertyChangeListener(final PropertyChangeListener listener) {
-		propertyChangeSupport.addPropertyChangeListener(listener);
+	public void addPropertyChangeListener(final String propertyName,
+			final PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
 	}
 
 	/*

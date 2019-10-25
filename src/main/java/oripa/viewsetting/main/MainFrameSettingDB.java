@@ -23,8 +23,9 @@ public class MainFrameSettingDB {
 		return instance;
 	}
 
-	public void addPropertyChangeListener(final PropertyChangeListener listener) {
-		support.addPropertyChangeListener(listener);
+	public void addPropertyChangeListener(final String propertyName,
+			final PropertyChangeListener listener) {
+		support.addPropertyChangeListener(propertyName, listener);
 	}
 
 	public String getHint() {

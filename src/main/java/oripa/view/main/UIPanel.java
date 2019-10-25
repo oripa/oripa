@@ -25,8 +25,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -94,7 +92,7 @@ import oripa.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 public class UIPanel extends JPanel
-		implements ActionListener, PropertyChangeListener, Observer {
+		implements ActionListener, Observer {
 
 	private final UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
 	ResourceHolder resources = ResourceHolder.getInstance();
@@ -222,7 +220,6 @@ public class UIPanel extends JPanel
 		setPreferredSize(new Dimension(210, 400));
 
 		settingDB.addObserver(this);
-		screenDB.addPropertyChangeListener(this);
 
 		// alterLine_combo_from.setSelectedIndex(0);
 		// alterLine_combo_to.setSelectedIndex(0);
@@ -525,6 +522,7 @@ public class UIPanel extends JPanel
 
 		ValueDB.getInstance().addObserver(this);
 
+		addPropertyChangeListenersToSetting();
 		addListenerToComponents(paintContext);
 
 		// -------------------------------------------------
@@ -878,12 +876,12 @@ public class UIPanel extends JPanel
 
 	}
 
-	@Override
-	public void propertyChange(final PropertyChangeEvent e) {
-		if (e.getPropertyName().equals(MainScreenSettingDB.GRID_VISIBLE)) {
-			dispGridCheckBox.setSelected((boolean) e.getNewValue());
-			repaint();
-		}
+	private void addPropertyChangeListenersToSetting() {
+		screenDB.addPropertyChangeListener(MainScreenSettingDB.GRID_VISIBLE,
+				(e) -> {
+					dispGridCheckBox.setSelected((boolean) e.getNewValue());
+					repaint();
+				});
 
 		// if (e.getSource() == textFieldLength) {
 		// textFieldLength.setValue(java.lang.Double.valueOf(textFieldLength.getText()));

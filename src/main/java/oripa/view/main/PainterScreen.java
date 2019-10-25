@@ -35,8 +35,6 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +60,7 @@ import oripa.viewsetting.main.ScreenUpdater;
 
 public class PainterScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,
-		ActionListener, ComponentListener, PropertyChangeListener {
+		ActionListener, ComponentListener {
 
 	private final MainScreenSettingDB setting = MainScreenSettingDB
 			.getInstance();
@@ -106,8 +104,7 @@ public class PainterScreen extends JPanel
 		addMouseWheelListener(this);
 		addComponentListener(this);
 
-		screenUpdater.addPropertyChangeListener(this);
-		setting.addPropertyChangeListener(this);
+		addPropertyChangeListenersToSetting();
 
 		scale = 1.5;
 		paintContext.setScale(scale);
@@ -480,38 +477,14 @@ public class PainterScreen extends JPanel
 		// TODO Auto-generated method stub
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
-	 * PropertyChangeEvent)
-	 */
-	@Override
-	public void propertyChange(final PropertyChangeEvent event) {
-		switch (event.getPropertyName()) {
-		case MainScreenSettingDB.GRID_VISIBLE:
-			paintContext.setGridVisible((boolean) event.getNewValue());
-			repaint();
-			break;
+	private void addPropertyChangeListenersToSetting() {
+		screenUpdater.addPropertyChangeListener(
+				ViewScreenUpdater.REDRAW_REQUESTED, e -> repaint());
 
-		case ViewScreenUpdater.REDRAW_REQUESTED:
-			repaint();
-			break;
-		}
+		setting.addPropertyChangeListener(
+				MainScreenSettingDB.GRID_VISIBLE, e -> {
+					paintContext.setGridVisible((boolean) e.getNewValue());
+					repaint();
+				});
 	}
-
-//	public void update(final Observable o, final Object arg) {
-//		String name = o.toString();
-//		paintContext.setGridVisible(setting.isGridVisible());
-//		if (name.equals(screenUpdater.getName())) {
-//			if (arg != null) {
-//				if (arg.equals(ViewScreenUpdater.REDRAW_REQUESTED)) {
-//					repaint();
-//				}
-//			}
-//
-//		}
-//
-//	}
-
 }

@@ -30,8 +30,9 @@ public class MainScreenSettingDB {
 //		notifyObservers(REDRAW_REQUESTED);
 //	}
 
-	public void addPropertyChangeListener(final PropertyChangeListener listener) {
-		support.addPropertyChangeListener(listener);
+	public void addPropertyChangeListener(final String propertyName,
+			final PropertyChangeListener listener) {
+		support.addPropertyChangeListener(propertyName, listener);
 	}
 
 	public void setGridVisible(final boolean gridVisible) {

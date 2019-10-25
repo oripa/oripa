@@ -27,8 +27,6 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -73,7 +71,7 @@ import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.ScreenUpdater;
 
 public class MainFrame extends JFrame implements ActionListener,
-		ComponentListener, WindowListener, PropertyChangeListener {
+		ComponentListener, WindowListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
@@ -180,7 +178,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		document.setCreasePattern(paintContext.getCreasePattern());
 
-		setting.addPropertyChangeListener(this);
+		addPropertyChangeListenersToSetting();
 
 		screenUpdater = ScreenUpdater.getInstance();
 		// addKeyListener(this);
@@ -704,48 +702,11 @@ public class MainFrame extends JFrame implements ActionListener,
 	public void windowDeactivated(final WindowEvent arg0) {
 	}
 
-	// @Override
-	// public void keyTyped(KeyEvent e) {
-	// if(e.isControlDown()){
-	// screenUpdater.updateScreen();
-	// }
-	// }
-	//
-	// @Override
-	// public void keyPressed(KeyEvent e) {
-	// if(e.isControlDown()){
-	// screenUpdater.updateScreen();
-	// }
-	// }
-	//
-	// @Override
-	// public void keyReleased(KeyEvent e) {
-	// if(e.isControlDown()){
-	// screenUpdater.updateScreen();
-	// }
-	//
-	// }
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
-	 * PropertyChangeEvent)
-	 */
-	@Override
-	public void propertyChange(final PropertyChangeEvent event) {
-		if (event.getPropertyName().equals(MainFrameSettingDB.HINT)) {
-			hintLabel.setText("    " + (String) event.getNewValue());
+	private void addPropertyChangeListenersToSetting() {
+		setting.addPropertyChangeListener(MainFrameSettingDB.HINT, e -> {
+			hintLabel.setText("    " + (String) e.getNewValue());
 			hintLabel.repaint();
-		}
+		});
 
 	}
-
-//	@Override
-//	public void update(final Observable o, final Object arg) {
-//		if (o.toString() == setting.getName()) {
-//			hintLabel.setText("    " + setting.getHint());
-//			hintLabel.repaint();
-//		}
-//	}
 }
