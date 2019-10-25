@@ -195,6 +195,10 @@ public class DocFilterSelector {
 	 * @return a filter that can load the file at the path.
 	 */
 	public FileAccessSupportFilter<Doc> getLoadableFilterOf(final String path) {
+		if (path == null) {
+			return null;
+		}
+
 		File file = new File(path);
 		if (file.isDirectory()) {
 			return null;

@@ -23,14 +23,7 @@ public class DocDAO {
 	public Doc load(final String path) throws FileVersionError, IOException {
 		DocFilterSelector selecter = new DocFilterSelector();
 
-		Object loaded = selecter.getLoadableFilterOf(path).getLoadingAction()
-				.load();
-
-		if (loaded instanceof Doc) {
-			return (Doc) loaded;
-		}
-
-		throw new IOException("Wrong file");
+		return selecter.getLoadableFilterOf(path).getLoadingAction().load();
 
 	}
 
@@ -102,23 +95,7 @@ public class DocDAO {
 		FileChooser<Doc> fileChooser = factory.createChooser(
 				homePath, filters);
 
-		// set opx as the default filter
-		// fileChooser.setFileFilter(findDefaultFilter(filters));
-
 		return fileChooser.getActionForLoadingFile(parent).load();
 
 	}
-
-	private FileAccessSupportFilter<Doc> findDefaultFilter(
-			final FileAccessSupportFilter<Doc>[] filters) {
-
-		for (FileAccessSupportFilter<Doc> filter : filters) {
-			if (filter.getTargetType() == FileTypeKey.OPX) {
-				return filter;
-			}
-		}
-
-		return filters[0];
-	}
-
 }

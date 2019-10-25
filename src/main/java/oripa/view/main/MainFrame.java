@@ -601,9 +601,9 @@ public class MainFrame extends JFrame implements ActionListener,
 			if (filePath != null) {
 				document.set(dao.load(filePath));
 			} else {
-				DocFilterSelector selector = new DocFilterSelector();
+				// DocFilterSelector selector = new DocFilterSelector();
 				document.set(dao.loadUsingGUI(
-						fileHistory.getLastPath(), selector.getLoadables(),
+						fileHistory.getLastPath(), filterDB.getLoadables(),
 						this));
 			}
 		} catch (FileVersionError | IOException e) {
