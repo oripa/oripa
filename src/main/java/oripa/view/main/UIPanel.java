@@ -62,7 +62,6 @@ import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.byvalue.AngleMeasuringAction;
 import oripa.domain.paint.byvalue.AngleValueInputListener;
 import oripa.domain.paint.byvalue.LengthMeasuringAction;
@@ -81,7 +80,6 @@ import oripa.view.estimation.EstimationResultFrameFactory;
 import oripa.view.estimation.FoldabilityCheckFrameFactory;
 import oripa.view.model.ModelViewFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
-import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.ScreenUpdater;
 import oripa.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
@@ -652,13 +650,13 @@ public class UIPanel extends JPanel
 				.addActionListener(
 						new PaintActionSetter(actionHolder, new LengthMeasuringAction(), context));
 		buttonLength.addActionListener(
-				new ViewChangeListener(new ChangeOnByValueButtonSelected()));
+				e -> new ChangeOnByValueButtonSelected());
 
 		buttonAngle
 				.addActionListener(
 						new PaintActionSetter(actionHolder, new AngleMeasuringAction(), context));
 		buttonAngle.addActionListener(
-				new ViewChangeListener(new ChangeOnByValueButtonSelected()));
+				e -> new ChangeOnByValueButtonSelected());
 
 		lineTypeMountainButton.addActionListener(
 				new LineTypeSetter(OriLine.TYPE_RIDGE));
@@ -686,63 +684,42 @@ public class UIPanel extends JPanel
 		dispVertexCheckBox.setSelected(true);
 		PaintConfig.dispVertex = true;
 		dispMVLinesCheckBox
-				.addActionListener(new java.awt.event.ActionListener() {
-
-					@Override
-					public void actionPerformed(final java.awt.event.ActionEvent e) {
-						PaintConfig.dispMVLines = dispMVLinesCheckBox
-								.isSelected();
-						screenUpdater.updateScreen();
-					}
+				.addActionListener(e -> {
+					PaintConfig.dispMVLines = dispMVLinesCheckBox
+							.isSelected();
+					screenUpdater.updateScreen();
 				});
 		dispAuxLinesCheckBox
-				.addActionListener(new java.awt.event.ActionListener() {
-
-					@Override
-					public void actionPerformed(final java.awt.event.ActionEvent e) {
-						PaintConfig.dispAuxLines = dispAuxLinesCheckBox
-								.isSelected();
-						screenUpdater.updateScreen();
-					}
+				.addActionListener(e -> {
+					PaintConfig.dispAuxLines = dispAuxLinesCheckBox
+							.isSelected();
+					screenUpdater.updateScreen();
 				});
 
 		doFullEstimationCheckBox.setSelected(true);
 		PaintConfig.bDoFullEstimation = true;
 		doFullEstimationCheckBox
-				.addActionListener(new java.awt.event.ActionListener() {
-
-					@Override
-					public void actionPerformed(final java.awt.event.ActionEvent e) {
-						PaintConfig.bDoFullEstimation = doFullEstimationCheckBox
-								.isSelected();
-						screenUpdater.updateScreen();
-					}
+				.addActionListener(e -> {
+					PaintConfig.bDoFullEstimation = doFullEstimationCheckBox
+							.isSelected();
+					screenUpdater.updateScreen();
 				});
 
 		buttonCheckWindow
-				.addActionListener(new java.awt.event.ActionListener() {
+				.addActionListener(e -> {
+					OrigamiModel origamiModel;
+					CreasePatternInterface creasePattern = context
+							.getCreasePattern();
 
-					@Override
-					public void actionPerformed(final java.awt.event.ActionEvent e) {
-						OrigamiModel origamiModel;
-						CreasePatternInterface creasePattern = context
-								.getCreasePattern();
+					OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+					origamiModel = modelFactory.createOrigamiModel(
+							creasePattern, creasePattern.getPaperSize());
 
-						OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-						origamiModel = modelFactory.createOrigamiModel(
-								creasePattern, creasePattern.getPaperSize());
+					FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
+					JFrame checker = checkerFactory.createFrame(
+							UIPanel.this, origamiModel, creasePattern);
+					checker.setVisible(true);
 
-						// document.setOrigamiModel(origamiModel);
-						// boolean isValidPattern =
-						// folderTool.checkPatternValidity(
-						// origamiModel.getEdges(), origamiModel.getVertices(),
-						// origamiModel.getFaces() );
-
-						FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
-						JFrame checker = checkerFactory.createFrame(
-								UIPanel.this, origamiModel, creasePattern);
-						checker.setVisible(true);
-					}
 				});
 
 	}
@@ -752,8 +729,6 @@ public class UIPanel extends JPanel
 
 	@Override
 	public void actionPerformed(final ActionEvent ae) {
-
-		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
 
 		// TODO decompose this long long if-else.
 		if (ae.getSource() == dispGridCheckBox) {
@@ -848,12 +823,6 @@ public class UIPanel extends JPanel
 
 			modelView.setVisible(true);
 			modelView.repaint();
-			// ModelFrameSettingDB modelSetting =
-			// ModelFrameSettingDB.getInstance();
-			// modelSetting.setFrameVisible(true);
-			// modelSetting.notifyObservers();
-
-			// screen.modeChanged();
 
 		} else if (ae.getSource() == gridChangeButton) {
 			int value;
@@ -911,43 +880,6 @@ public class UIPanel extends JPanel
 				UIPanelSettingDB.AUX_BUTTON_ENABLED,
 				e -> lineTypeAuxButton.setEnabled((boolean) e.getNewValue()));
 	}
-
-//	/**
-//	 * observes DB for reflecting the changes to views. toString() of given DB
-//	 * has to return a unique value among DB classes.
-//	 *
-//	 * @param o
-//	 *            Observable class which implements toString() to return its
-//	 *            class name.
-//	 * @param arg
-//	 *            A parameter to specify the action for the given Observable
-//	 *            object.
-//	 */
-//	@Override
-//	public void update(final Observable o, final Object arg) {
-//
-//		// System.out.println(o.toString());
-//
-//		if (settingDB.hasGivenName(o.toString())) {
-//			// update GUI
-//			UIPanelSettingDB setting = (UIPanelSettingDB) o;
-//
-//			onChangeEditModeButtonSelection(setting);
-//
-//			subPanel1.setVisible(setting.isByValuePanelVisible());
-//			subPanel2.setVisible(setting.isByValuePanelVisible());
-//
-//			alterLineTypePanel
-//					.setVisible(setting.isAlterLineTypePanelVisible());
-//
-//			lineTypeMountainButton
-//					.setEnabled(setting.isMountainButtonEnabled());
-//			lineTypeValleyButton.setEnabled(setting.isValleyButtonEnabled());
-//			lineTypeSubButton.setEnabled(setting.isAuxButtonEnabled());
-//
-//			repaint();
-//		}
-//	}
 
 	private void onChangeEditModeButtonSelection(final PropertyChangeEvent e) {
 		switch (settingDB.getSelectedMode()) {
