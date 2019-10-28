@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.Config;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.CreasePatternUndoer;
@@ -31,10 +30,12 @@ public class PaintContext implements PaintContextInterface {
 	private OriLine candidateLineToPick = new OriLine();
 
 	private boolean gridVisible = true;
-	private int gridDivNum = Config.DEFAULT_GRID_DIV_NUM;
+	private int gridDivNum;
 	private double scale;
 
 	private ArrayList<Vector2d> gridPoints;
+
+	private boolean vertexVisible = true;
 
 	private boolean missionCompleted = false;
 
@@ -94,15 +95,25 @@ public class PaintContext implements PaintContextInterface {
 		this.mousePoint = logicalPoint;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#set(double, boolean)
-	 */
+//	/*
+//	 * (non Javadoc)
+//	 *
+//	 * @see oripa.domain.paint.core.PaintContextInterface#set(double, boolean)
+//	 */
+//	@Override
+//	public void setDisplayConfig(final double scale, final boolean dispGrid) {
+//		this.scale = scale;
+//		this.gridVisible = dispGrid;
+//	}
+
 	@Override
-	public void setDisplayConfig(final double scale, final boolean dispGrid) {
-		this.scale = scale;
-		this.gridVisible = dispGrid;
+	public boolean isVertexVisible() {
+		return vertexVisible;
+	}
+
+	@Override
+	public void setVertexVisible(final boolean visible) {
+		vertexVisible = visible;
 	}
 
 	/*

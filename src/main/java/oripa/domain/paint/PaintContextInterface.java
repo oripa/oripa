@@ -54,20 +54,13 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 */
 	public abstract void finishPasting();
 
-	/**
-	 * sets values which user inputed
-	 *
-	 * @param scale
-	 * @param dispGrid
-	 */
-	public abstract void setDisplayConfig(double scale, boolean dispGrid);
-
-	/**
-	 * gets current grids.
-	 *
-	 * @return
-	 */
-	public abstract Collection<Vector2d> getGrids();
+//	/**
+//	 * sets values which user inputed
+//	 *
+//	 * @param scale
+//	 * @param dispGrid
+//	 */
+//	public abstract void setDisplayConfig(double scale, boolean dispGrid);
 
 	/**
 	 * provides whether the input instruction finished its job.
@@ -190,13 +183,25 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	public abstract boolean isGridVisible();
 
 	/**
-	 * sets division number of grid. should update grid points.
-	 * 
+	 * sets division number of grid. should update grid points for
+	 * {@link #getGrids()}.
+	 *
 	 * @param divNum
 	 */
 	public abstract void setGridDivNum(int divNum);
 
 	public abstract int getGridDivNum();
+
+	/**
+	 * gets current grids.
+	 *
+	 * @return
+	 */
+	public abstract Collection<Vector2d> getGrids();
+
+	public abstract boolean isVertexVisible();
+
+	public abstract void setVertexVisible(boolean visible);
 
 	public abstract void setCandidateLineToPick(OriLine pickCandidateL);
 

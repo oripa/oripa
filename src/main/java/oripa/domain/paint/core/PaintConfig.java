@@ -25,7 +25,6 @@ public class PaintConfig {
 	// FIXME not to be here.
 	public static Constants.ModelDispMode modelDispMode = Constants.ModelDispMode.FILL_ALPHA;
 
-	public static boolean dispVertex = false;
 	public static boolean dispMVLines = true;
 	public static boolean dispAuxLines = true;
 	public static boolean bDispCrossLine = false;

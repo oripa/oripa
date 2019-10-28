@@ -121,7 +121,7 @@ public class PainterScreen extends JPanel
 	public ViewScreenUpdater getScreenUpdater() {
 		return screenUpdater;
 	}
-	
+
 	/**
 	 * for verifying algorithm
 	 *
@@ -241,7 +241,7 @@ public class PainterScreen extends JPanel
 				paintContext,
 				PaintConfig.dispMVLines,
 				PaintConfig.dispAuxLines,
-				PaintConfig.dispVertex
+				paintContext.isVertexVisible()
 						|| mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
 
 		for (Vector2d v : crossPoints) {

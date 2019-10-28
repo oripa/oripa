@@ -687,7 +687,7 @@ public class UIPanel extends JPanel
 		resetButton.addActionListener(this);
 		dispVertexCheckBox.addActionListener(this);
 		dispVertexCheckBox.setSelected(true);
-		PaintConfig.dispVertex = true;
+		paintContext.setVertexVisible(true);
 		dispMVLinesCheckBox
 				.addActionListener(e -> {
 					PaintConfig.dispMVLines = dispMVLinesCheckBox
@@ -753,7 +753,7 @@ public class UIPanel extends JPanel
 				screenUpdater.updateScreen();
 			}
 		} else if (ae.getSource() == dispVertexCheckBox) {
-			PaintConfig.dispVertex = dispVertexCheckBox.isSelected();
+			paintContext.setVertexVisible(dispVertexCheckBox.isSelected());
 
 			screenUpdater.updateScreen();
 		} else if (ae.getSource() == resetButton) {
