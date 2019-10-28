@@ -66,9 +66,9 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
+import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
-import oripa.viewsetting.main.ScreenUpdater;
 
 public class MainFrame extends JFrame implements ActionListener,
 		ComponentListener, WindowListener {
@@ -118,30 +118,26 @@ public class MainFrame extends JFrame implements ActionListener,
 	/**
 	 * For changing outline
 	 */
-	private final JMenuItem menuItemChangeOutline = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, actionHolder, StringID.EDIT_CONTOUR_ID, null);
+	private JMenuItem menuItemChangeOutline;
 
 	/**
 	 * For selecting all lines
 	 */
-	private final JMenuItem menuItemSelectAll = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, actionHolder, StringID.SELECT_ALL_LINE_ID, null);
+	private JMenuItem menuItemSelectAll;
 
 	/**
 	 * For starting copy-and-paste
 	 */
-	private final JMenuItem menuItemCopyAndPaste = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, actionHolder, StringID.COPY_PASTE_ID, null);
+	private JMenuItem menuItemCopyAndPaste;
 
 	/**
 	 * For starting cut-and-paste
 	 */
-	private final JMenuItem menuItemCutAndPaste = (JMenuItem) buttonFactory
-			.create(this, JMenuItem.class, actionHolder, StringID.CUT_PASTE_ID, null);
+	private JMenuItem menuItemCutAndPaste;
 
 	// ---------------------------------------------------------------------------------------------
 
-	private final ScreenUpdater screenUpdater;
+	private final ViewScreenUpdater screenUpdater;
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 	private final JMenuItem menuItemProperty = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL,
@@ -180,8 +176,9 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		addPropertyChangeListenersToSetting();
 
-		screenUpdater = ScreenUpdater.getInstance();
-		// addKeyListener(this);
+		mainScreen = new PainterScreen(actionHolder, paintContext, document);
+		screenUpdater = mainScreen.getScreenUpdater();
+		createMenuItems();
 
 		menuItemCopyAndPaste.setText(resourceHolder.getString(
 				ResourceKey.LABEL, StringID.COPY_PASTE_ID));
@@ -189,7 +186,6 @@ public class MainFrame extends JFrame implements ActionListener,
 				StringID.CUT_PASTE_ID));
 		// menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 
-		mainScreen = new PainterScreen(actionHolder, paintContext, document);
 		addWindowListener(this);
 		uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document);
 		getContentPane().setLayout(new BorderLayout());
@@ -249,7 +245,6 @@ public class MainFrame extends JFrame implements ActionListener,
 		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_ESCAPE, 0));
 
-		var screenUpdater = ScreenUpdater.getInstance();
 		menuItemUnSelectAll
 				.addActionListener(new UnselectAllLinesActionListener(paintContext, screenUpdater));
 
@@ -293,6 +288,36 @@ public class MainFrame extends JFrame implements ActionListener,
 		setJMenuBar(menuBar);
 
 		addSavingActions();
+	}
+
+	private void createMenuItems() {
+		/**
+		 * For changing outline
+		 */
+		menuItemChangeOutline = (JMenuItem) buttonFactory
+				.create(this, JMenuItem.class, actionHolder, screenUpdater,
+						StringID.EDIT_CONTOUR_ID, null);
+
+		/**
+		 * For selecting all lines
+		 */
+		menuItemSelectAll = (JMenuItem) buttonFactory
+				.create(this, JMenuItem.class, actionHolder, screenUpdater,
+						StringID.SELECT_ALL_LINE_ID, null);
+
+		/**
+		 * For starting copy-and-paste
+		 */
+		menuItemCopyAndPaste = (JMenuItem) buttonFactory
+				.create(this, JMenuItem.class, actionHolder, screenUpdater, StringID.COPY_PASTE_ID,
+						null);
+
+		/**
+		 * For starting cut-and-paste
+		 */
+		menuItemCutAndPaste = (JMenuItem) buttonFactory
+				.create(this, JMenuItem.class, actionHolder, screenUpdater, StringID.CUT_PASTE_ID,
+						null);
 	}
 
 	private void constructElements() {

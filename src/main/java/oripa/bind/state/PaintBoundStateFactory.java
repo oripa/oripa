@@ -10,6 +10,7 @@ import oripa.bind.copypaste.CopyPasteErrorListener;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.addvertex.AddVertexAction;
 import oripa.domain.paint.bisector.AngleBisectorAction;
 import oripa.domain.paint.byvalue.LineByValueAction;
@@ -47,6 +48,7 @@ public class PaintBoundStateFactory {
 	public ApplicationState<EditMode> create(final Component parent,
 			final MouseActionHolder actionHolder,
 			final PaintContextInterface context,
+			final ScreenUpdaterInterface screenUpdater,
 			final String id) {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent, null);
@@ -56,42 +58,43 @@ public class PaintBoundStateFactory {
 		switch (id) {
 		case StringID.SELECT_ID:
 			state = stateFactory.create(
-					actionHolder, new SelectLineAction(), context, id,
+					actionHolder, new SelectLineAction(), context, screenUpdater, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;
 
 		case StringID.DELETE_LINE_ID:
 			state = stateFactory.create(
-					actionHolder, new DeleteLineAction(), context, id,
+					actionHolder, new DeleteLineAction(), context, screenUpdater, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.CHANGE_LINE_TYPE_ID:
 			state = stateFactory.create(
-					actionHolder, new ChangeLineTypeAction(), context, id,
+					actionHolder, new ChangeLineTypeAction(), context, screenUpdater, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnAlterTypeButtonSelected()) });
 			break;
 
 		case StringID.ADD_VERTEX_ID:
 			state = stateFactory.create(
-					actionHolder, new AddVertexAction(), context, id,
+					actionHolder, new AddVertexAction(), context, screenUpdater, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.DELETE_VERTEX_ID:
 			state = stateFactory.create(
-					actionHolder, new DeleteVertexAction(), context, id,
+					actionHolder, new DeleteVertexAction(), context, screenUpdater, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
 
 		case StringID.EDIT_CONTOUR_ID:
 			state = stateFactory.create(
-					actionHolder, new EditOutlineActionWrapper(actionHolder), context, id,
+					actionHolder, new EditOutlineActionWrapper(actionHolder), context,
+					screenUpdater, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnOtherCommandButtonSelected()) });
 			break;
@@ -99,7 +102,7 @@ public class PaintBoundStateFactory {
 		case StringID.SELECT_ALL_LINE_ID:
 			// selecting all lines should be done in other listener
 			state = stateFactory.create(
-					actionHolder, new SelectLineAction(), context, id,
+					actionHolder, new SelectLineAction(), context, screenUpdater, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;
@@ -109,7 +112,7 @@ public class PaintBoundStateFactory {
 					actionHolder,
 					new CopyAndPasteActionWrapper(false),
 					new CopyPasteErrorListener(context),
-					context, id,
+					context, screenUpdater, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;
@@ -119,13 +122,13 @@ public class PaintBoundStateFactory {
 					actionHolder,
 					new CopyAndPasteActionWrapper(true),
 					new CopyPasteErrorListener(context),
-					context, id,
+					context, screenUpdater, id,
 					new ActionListener[] { new ViewChangeListener(
 							new ChangeOnSelectButtonSelected()) });
 			break;
 
 		default:
-			state = createLineInputState(parent, actionHolder, context, id);
+			state = createLineInputState(parent, actionHolder, context, screenUpdater, id);
 		}
 
 		if (state == null) {
@@ -137,7 +140,9 @@ public class PaintBoundStateFactory {
 
 	private ApplicationState<EditMode> createLineInputState(
 			final Component parent, final MouseActionHolder actionHolder,
-			final PaintContextInterface context, final String id) {
+			final PaintContextInterface context,
+			final ScreenUpdaterInterface screenUpdater,
+			final String id) {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
 				new ActionListener[] { new ViewChangeListener(
@@ -149,43 +154,43 @@ public class PaintBoundStateFactory {
 
 			state = stateFactory.create(
 					actionHolder, new TwoPointSegmentAction(),
-					context, id, null);
+					context, screenUpdater, id, null);
 			break;
 
 		case StringID.ON_V_ID:
 			state = stateFactory.create(
 					actionHolder, new TwoPointLineAction(),
-					context, id, null);
+					context, screenUpdater, id, null);
 			break;
 		case StringID.VERTICAL_ID:
 			state = stateFactory.create(
 					actionHolder, new VerticalLineAction(),
-					context, id, null);
+					context, screenUpdater, id, null);
 			break;
 
 		case StringID.BISECTOR_ID:
 			state = stateFactory.create(
 					actionHolder, new AngleBisectorAction(),
-					context, id, null);
+					context, screenUpdater, id, null);
 			break;
 
 		case StringID.TRIANGLE_ID:
 			state = stateFactory.create(
 					actionHolder, new TriangleSplitAction(),
-					context, id, null);
+					context, screenUpdater, id, null);
 
 			break;
 
 		case StringID.SYMMETRIC_ID:
 			state = stateFactory.create(
 					actionHolder, new SymmetricalLineAction(),
-					context, id, null);
+					context, screenUpdater, id, null);
 
 			break;
 		case StringID.MIRROR_ID:
 			state = stateFactory.create(
 					actionHolder, new MirrorCopyAction(),
-					context, id, null);
+					context, screenUpdater, id, null);
 
 			break;
 
@@ -196,14 +201,14 @@ public class PaintBoundStateFactory {
 
 			state = byValueFactory.create(
 					actionHolder, new LineByValueAction(),
-					context, id, null);
+					context, screenUpdater, id, null);
 
 			break;
 
 		case StringID.PERPENDICULAR_BISECTOR_ID:
 			state = stateFactory.create(
 					actionHolder, new TwoPointBisectorAction(),
-					context, id, null);
+					context, screenUpdater, id, null);
 
 		}
 

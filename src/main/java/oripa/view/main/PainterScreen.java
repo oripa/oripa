@@ -118,6 +118,10 @@ public class PainterScreen extends JPanel
 		preSize = getSize();
 	}
 
+	public ViewScreenUpdater getScreenUpdater() {
+		return screenUpdater;
+	}
+	
 	/**
 	 * for verifying algorithm
 	 *

@@ -11,6 +11,7 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.ChangeHint;
 
@@ -40,12 +41,13 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final MouseActionHolder actionHolder,
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
+			final ScreenUpdaterInterface screenUpdater,
 			final String textID,
 			final ActionListener[] actions) {
 		super(mouseAction.getEditMode(), actions);
 		this.actionHolder = actionHolder;
 
-		addBasicListeners(mouseAction, context, textID);
+		addBasicListeners(mouseAction, context, screenUpdater, textID);
 	}
 
 	/**
@@ -68,13 +70,14 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final MouseActionHolder actionHolder,
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
+			final ScreenUpdaterInterface screenUpdater,
 			final String textID,
 			final ActionListener[] actions) {
 
 		super(mouseAction.getEditMode(), actions);
 
 		this.actionHolder = actionHolder;
-		addBasicListeners(mouseAction, context, textID);
+		addBasicListeners(mouseAction, context, screenUpdater, textID);
 
 		// set a listener to handle an error on performActions().
 		this.parent = parent;
@@ -84,13 +87,14 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	private void addBasicListeners(
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
+			final ScreenUpdaterInterface screenUpdater,
 			final String textID) {
 
 		// add a listener to push this state to the history stack.
 		addAction(new StatePusher(this));
 
 		// add a listener to change paint action.
-		addAction(new PaintActionSetter(actionHolder, mouseAction, context));
+		addAction(new PaintActionSetter(actionHolder, mouseAction, screenUpdater, context));
 
 		if (textID != null) {
 			// add view updater

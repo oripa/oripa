@@ -22,6 +22,7 @@ import java.awt.Component;
 
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.file.FileHistory;
 
 /**
@@ -40,9 +41,10 @@ public class MainMenuBarFactory {
 			final Component owner,
 			final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
+			final ScreenUpdaterInterface screenUpdater,
 			final FileHistory history) {
 
-		MainMenuBar bar = new MainMenuBar(owner, actionHolder, aContext);
+		MainMenuBar bar = new MainMenuBar(owner, actionHolder, aContext, screenUpdater);
 
 		bar.setFileHistoryPaths(history);
 

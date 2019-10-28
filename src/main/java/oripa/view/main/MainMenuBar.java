@@ -30,6 +30,7 @@ import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.file.FileHistory;
 import oripa.resource.ResourceHolder;
 import oripa.resource.StringID;
@@ -78,12 +79,17 @@ public class MainMenuBar extends JMenuBar {
 
 	private final MouseActionHolder actionHolder;
 
+	private final ScreenUpdaterInterface screenUpdater;
+
 	/**
 	 * Constructor
 	 */
 	public MainMenuBar(final Component owner, final MouseActionHolder actionHolder,
-			final PaintContextInterface aContext) {
+			final PaintContextInterface aContext,
+			final ScreenUpdaterInterface screenUpdater) {
 		this.actionHolder = actionHolder;
+		this.screenUpdater = screenUpdater;
+
 		buttonFactory = new PaintActionButtonFactory(aContext);
 		build(owner);
 
@@ -103,25 +109,29 @@ public class MainMenuBar extends JMenuBar {
 		 * For changing outline
 		 */
 		menuItemChangeOutline = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, actionHolder, StringID.EDIT_CONTOUR_ID, null);
+				.create(owner, JMenuItem.class, actionHolder, screenUpdater,
+						StringID.EDIT_CONTOUR_ID, null);
 
 		/**
 		 * For selecting all lines
 		 */
 		menuItemSelectAll = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, actionHolder, StringID.SELECT_ALL_LINE_ID, null);
+				.create(owner, JMenuItem.class, actionHolder, screenUpdater,
+						StringID.SELECT_ALL_LINE_ID, null);
 
 		/**
 		 * For starting copy-and-paste
 		 */
 		menuItemCopyAndPaste = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, actionHolder, StringID.COPY_PASTE_ID, null);
+				.create(owner, JMenuItem.class, actionHolder, screenUpdater, StringID.COPY_PASTE_ID,
+						null);
 
 		/**
 		 * For starting cut-and-paste
 		 */
 		menuItemCutAndPaste = (JMenuItem) buttonFactory
-				.create(owner, JMenuItem.class, actionHolder, StringID.CUT_PASTE_ID, null);
+				.create(owner, JMenuItem.class, actionHolder, screenUpdater, StringID.CUT_PASTE_ID,
+						null);
 
 		// -----------------------------------------------------------------------------------------------------------
 

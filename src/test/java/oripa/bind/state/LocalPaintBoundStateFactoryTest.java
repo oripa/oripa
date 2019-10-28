@@ -18,6 +18,7 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.resource.StringID;
 
@@ -37,6 +38,7 @@ public class LocalPaintBoundStateFactoryTest {
 			var actionHolder = mock(MouseActionHolder.class);
 			var mouseAction = mock(GraphicMouseAction.class);
 			var context = mock(PaintContextInterface.class);
+			var screenUpdater = mock(ScreenUpdaterInterface.class);
 			var textID = StringID.DIRECT_V_ID;
 			var action1 = mock(ActionListener.class);
 			var action2 = mock(ActionListener.class);
@@ -48,7 +50,7 @@ public class LocalPaintBoundStateFactoryTest {
 
 			ApplicationState<EditMode> state = factory.create(
 					actionHolder,
-					mouseAction, errorListener, context, textID,
+					mouseAction, errorListener, context, screenUpdater, textID,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -79,6 +81,7 @@ public class LocalPaintBoundStateFactoryTest {
 			var currentMouseAction = mock(GraphicMouseAction.class);
 			var assignedMouseAction = mock(GraphicMouseAction.class);
 			var context = mock(PaintContextInterface.class);
+			var screenUpdater = mock(ScreenUpdaterInterface.class);
 			var painter = mock(Painter.class);
 			when(context.getPainter()).thenReturn(painter);
 			when(actionHolder.getMouseAction()).thenReturn(currentMouseAction);
@@ -94,7 +97,7 @@ public class LocalPaintBoundStateFactoryTest {
 
 			ApplicationState<EditMode> state = factory.create(
 					actionHolder,
-					assignedMouseAction, errorListener, context, textID,
+					assignedMouseAction, errorListener, context, screenUpdater, textID,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -107,6 +110,7 @@ public class LocalPaintBoundStateFactoryTest {
 			verify(currentMouseAction).destroy(context);
 			verify(assignedMouseAction).recover(context);
 			verify(actionHolder).setMouseAction(assignedMouseAction);
+			verify(screenUpdater).updateScreen();
 
 			// every action listener should be called.
 			verify(basicAction1).actionPerformed(event);

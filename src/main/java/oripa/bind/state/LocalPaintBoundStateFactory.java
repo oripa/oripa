@@ -8,6 +8,7 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 
 /**
  * Helper class
@@ -55,12 +56,13 @@ class LocalPaintBoundStateFactory {
 			final GraphicMouseActionInterface mouseAction,
 			final ErrorListener errorListener,
 			final PaintContextInterface context,
+			final ScreenUpdaterInterface screenUpdater,
 			final String textID,
 			final ActionListener[] actions) {
 
 		PaintBoundState state = new PaintBoundState(
 				parent, errorListener, actionHolder,
-				mouseAction, context, textID, basicActions);
+				mouseAction, context, screenUpdater, textID, basicActions);
 
 		state.addActions(actions);
 		state.setErrorListener(errorListener);
@@ -86,11 +88,12 @@ class LocalPaintBoundStateFactory {
 			final MouseActionHolder actionHolder,
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
+			final ScreenUpdaterInterface screenUpdater,
 			final String textID,
 			final ActionListener[] actions) {
 
 		ApplicationState<EditMode> state = new PaintBoundState(
-				actionHolder, mouseAction, context, textID, basicActions);
+				actionHolder, mouseAction, context, screenUpdater, textID, basicActions);
 
 		state.addActions(actions);
 
