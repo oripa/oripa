@@ -164,7 +164,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	@Override
 	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 		drawPickedLines(g2d, context);
-		drawPickedVertices(g2d, context);
+		drawPickedVertices(g2d, context, context.getLineTypeToDraw());
 
 	}
 
@@ -179,12 +179,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	private void drawPickedVertices(final Graphics2D g2d,
-			final PaintContextInterface context) {
+			final PaintContextInterface context, final int lineType) {
 		ElementSelector selector = new ElementSelector();
 
 		for (Vector2d vertex : context.getPickedVertices()) {
 			g2d.setColor(selector
-					.selectColorByLineType(PaintConfig.inputLineType));
+					.selectColorByLineType(lineType));
 
 			drawVertex(g2d, context, vertex.x, vertex.y);
 		}
@@ -252,7 +252,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			Vector2d picked = context.peekVertex();
 
 			Color color = selector
-					.selectColorByLineType(PaintConfig.inputLineType);
+					.selectColorByLineType(context.getLineTypeToDraw());
 			g2d.setColor(color);
 			drawLine(g2d, picked,
 					NearestItemFinder.getCandidateVertex(context, true));

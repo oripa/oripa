@@ -5,7 +5,6 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -174,19 +173,18 @@ public class Painter {
 	 * @param v0
 	 * @param v1
 	 * @param v2
-	 * @param creasePattern
 	 */
 	public void addTriangleDivideLines(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2) {
+			final Vector2d v0, final Vector2d v1, final Vector2d v2, final int lineType) {
 
 		Vector2d c = GeomUtil.getIncenter(v0, v1, v2);
 		if (c == null) {
 			System.out.print("Failed to calculate incenter of the triangle");
 		}
 		LineAdder adder = new LineAdder();
-		adder.addLine(new OriLine(c, v0, PaintConfig.inputLineType), creasePattern);
-		adder.addLine(new OriLine(c, v1, PaintConfig.inputLineType), creasePattern);
-		adder.addLine(new OriLine(c, v2, PaintConfig.inputLineType), creasePattern);
+		adder.addLine(new OriLine(c, v0, lineType), creasePattern);
+		adder.addLine(new OriLine(c, v1, lineType), creasePattern);
+		adder.addLine(new OriLine(c, v2, lineType), creasePattern);
 	}
 
 	/**
@@ -198,11 +196,11 @@ public class Painter {
 	 * @param paperSize
 	 */
 	public void addPBisector(
-			final Vector2d v0, final Vector2d v1) {
+			final Vector2d v0, final Vector2d v1, final int lineType) {
 
 		BisectorFactory factory = new BisectorFactory();
 		OriLine bisector = factory.createPerpendicularBisector(v0, v1,
-				creasePattern.getPaperSize());
+				creasePattern.getPaperSize(), lineType);
 
 		LineAdder adder = new LineAdder();
 		adder.addLine(bisector, creasePattern);
@@ -219,10 +217,10 @@ public class Painter {
 	 */
 	public void addBisectorLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
-			final OriLine l) {
+			final OriLine l, final int lineType) {
 
 		BisectorFactory factory = new BisectorFactory();
-		OriLine bisector = factory.createAngleBisectorLine(v0, v1, v2, l);
+		OriLine bisector = factory.createAngleBisectorLine(v0, v1, v2, l, lineType);
 
 		LineAdder adder = new LineAdder();
 		adder.addLine(bisector, creasePattern);
@@ -249,18 +247,19 @@ public class Painter {
 	 * @param v0
 	 * @param v1
 	 * @param v2
-	 * @param creasePattern
+	 * @param lineType
+	 *            {@link OriLine#TYPE_VALLEY} etc.
 	 *
 	 * @return true if line is added
 	 * @throws PainterCommandFailedException
 	 */
 	public boolean addSymmetricLine(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2) {
+			final Vector2d v0, final Vector2d v1, final Vector2d v2, final int lineType) {
 
 		SymmetricLineFactory factory = new SymmetricLineFactory();
 		OriLine symmetricLine;
 		try {
-			symmetricLine = factory.createSymmetricLine(v0, v1, v2, creasePattern);
+			symmetricLine = factory.createSymmetricLine(v0, v1, v2, creasePattern, lineType);
 		} catch (PainterCommandFailedException comEx) {
 			return false;
 		}
@@ -287,14 +286,15 @@ public class Painter {
 	 * @throws PainterCommandFailedException
 	 */
 	public boolean addSymmetricLineAutoWalk(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2, final Vector2d startV) {
+			final Vector2d v0, final Vector2d v1, final Vector2d v2, final Vector2d startV,
+			final int lineType) {
 
 		SymmetricLineFactory factory = new SymmetricLineFactory();
 
 		Collection<OriLine> autoWalkLines;
 		try {
 			autoWalkLines = factory.createSymmetricLineAutoWalk(
-					v0, v1, v2, startV, creasePattern);
+					v0, v1, v2, startV, creasePattern, lineType);
 
 		} catch (PainterCommandFailedException comEx) {
 			return false;

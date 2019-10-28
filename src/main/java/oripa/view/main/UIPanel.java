@@ -67,7 +67,6 @@ import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueDB;
 import oripa.domain.paint.core.PaintConfig;
-import oripa.domain.paint.util.LineTypeSetter;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.EstimationEntityHolder;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
@@ -664,13 +663,13 @@ public class UIPanel extends JPanel
 				e -> new ChangeOnByValueButtonSelected());
 
 		lineTypeMountainButton.addActionListener(
-				new LineTypeSetter(OriLine.TYPE_RIDGE));
+				e -> paintContext.setLineTypeToDraw(OriLine.TYPE_RIDGE));
 
 		lineTypeValleyButton.addActionListener(
-				new LineTypeSetter(OriLine.TYPE_VALLEY));
+				e -> paintContext.setLineTypeToDraw(OriLine.TYPE_VALLEY));
 
 		lineTypeAuxButton.addActionListener(
-				new LineTypeSetter(OriLine.TYPE_NONE));
+				e -> paintContext.setLineTypeToDraw(OriLine.TYPE_NONE));
 
 		editModeInputLineButton
 				.addActionListener(new InputCommandStatePopper());

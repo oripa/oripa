@@ -2,7 +2,6 @@ package oripa.domain.paint.vertical;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.domain.paint.core.PickingLine;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -30,7 +29,7 @@ public class SelectingLineForVertical extends PickingLine {
 		}
 
 		OriLine vl = GeomUtil.getVerticalLine(
-				context.getVertex(0), context.getLine(0), PaintConfig.inputLineType);
+				context.getVertex(0), context.getLine(0), context.getLineTypeToDraw());
 
 		context.creasePatternUndo().pushUndoInfo();
 

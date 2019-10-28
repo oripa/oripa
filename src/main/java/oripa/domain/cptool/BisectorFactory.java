@@ -2,7 +2,6 @@ package oripa.domain.cptool;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.core.PaintConfig;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.resource.Constants;
@@ -12,14 +11,17 @@ public class BisectorFactory {
 
 	/**
 	 * create perpendicular bisector line between v0 and v1
+	 *
 	 * @param v0
 	 * @param v1
 	 * @param creasePattern
 	 * @param paperSize
+	 * @param lineType
+	 *            {@link OriLine#TYPE_VALLEY} etc.
 	 */
 	public OriLine createPerpendicularBisector(
-			Vector2d v0, Vector2d v1,
-			double paperSize) {
+			final Vector2d v0, final Vector2d v1,
+			final double paperSize, final int lineType) {
 
 		Vector2d cp = new Vector2d(v0);
 		cp.add(v1);
@@ -34,31 +36,32 @@ public class BisectorFactory {
 
 		OriLine bisector = new OriLine(
 				cp.x - dir.x, cp.y - dir.y,
-				cp.x + dir.x, cp.y + dir.y, PaintConfig.inputLineType);
+				cp.x + dir.x, cp.y + dir.y, lineType);
 
 		GeomUtil.clipLine(bisector, paperSize / 2);
-		
+
 		return bisector;
 	}
 
 	/**
 	 * create a bisector line from v1 to given line.
+	 *
 	 * @param v0
 	 * @param v1
 	 * @param v2
 	 * @param l
-	 * @param creasePattern
+	 * @param lineType
 	 */
 	public OriLine createAngleBisectorLine(
-			Vector2d v0, Vector2d v1, Vector2d v2,
-			OriLine l) {
-		
+			final Vector2d v0, final Vector2d v1, final Vector2d v2,
+			final OriLine l, final int lineType) {
+
 		Vector2d dir = GeomUtil.getBisectorVec(v0, v1, v2);
 		Vector2d cp = GeomUtil.getCrossPoint(
 				new Line(l.p0, new Vector2d(l.p1.x - l.p0.x, l.p1.y - l.p0.y)),
 				new Line(v1, dir));
 
-		OriLine bisector = new OriLine(v1, cp, PaintConfig.inputLineType);
+		OriLine bisector = new OriLine(v1, cp, lineType);
 		return bisector;
 
 	}

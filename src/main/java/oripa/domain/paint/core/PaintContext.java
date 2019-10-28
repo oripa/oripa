@@ -41,6 +41,8 @@ public class PaintContext implements PaintContextInterface {
 
 	private boolean missionCompleted = false;
 
+	private int lineTypeToDraw;
+
 	private Point2D.Double mousePoint;
 
 	public PaintContext() {
@@ -441,6 +443,16 @@ public class PaintContext implements PaintContextInterface {
 	@Override
 	public void setScale(final double scale) {
 		this.scale = scale;
+	}
+
+	@Override
+	public void setLineTypeToDraw(final int lineType) {
+		lineTypeToDraw = lineType;
+	}
+
+	@Override
+	public int getLineTypeToDraw() {
+		return lineTypeToDraw;
 	}
 
 	/**

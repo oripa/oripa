@@ -47,7 +47,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 
 	/**
 	 * defines what to do for the selected lines.
-	 * 
+	 *
 	 * @param selectedLines
 	 *            lines selected by dragging
 	 * @param context

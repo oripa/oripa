@@ -53,10 +53,10 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 
 		if (doSpecial) {
 			painter.addSymmetricLineAutoWalk(
-					first, second, third, first);
+					first, second, third, first, context.getLineTypeToDraw());
 		} else {
 			painter.addSymmetricLine(
-					first, second, third);
+					first, second, third, context.getLineTypeToDraw());
 		}
 
 		doingFirstAction = true;

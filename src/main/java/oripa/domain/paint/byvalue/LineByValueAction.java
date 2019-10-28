@@ -8,7 +8,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.domain.paint.util.ElementSelector;
 
 public class LineByValueAction extends GraphicMouseAction {
@@ -57,8 +56,8 @@ public class LineByValueAction extends GraphicMouseAction {
 				angle = Math.toRadians(angle);
 
 				ElementSelector selector = new ElementSelector();
-				g2d.setColor(selector.selectColorByLineType(PaintConfig.inputLineType));
-				g2d.setStroke(selector.selectStroke(PaintConfig.inputLineType));
+				g2d.setColor(selector.selectColorByLineType(context.getLineTypeToDraw()));
+				g2d.setStroke(selector.selectStroke(context.getLineTypeToDraw()));
 
 				Vector2d dir = new Vector2d(Math.cos(angle), -Math.sin(angle));
 				dir.scale(length);

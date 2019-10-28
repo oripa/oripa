@@ -32,7 +32,7 @@ public class SelectingLineForBisector extends PickingLine {
 
 		painter.addBisectorLine(
 				context.getVertex(0), context.getVertex(1), context.getVertex(2),
-				context.getLine(0));
+				context.getLine(0), context.getLineTypeToDraw());
 
 		context.clear(false);
 	}

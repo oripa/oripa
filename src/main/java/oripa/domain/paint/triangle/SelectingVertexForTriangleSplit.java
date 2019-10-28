@@ -45,7 +45,8 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 
 		Painter painter = context.getPainter();
 		painter.addTriangleDivideLines(
-				context.getVertex(0), context.getVertex(1), context.getVertex(2));
+				context.getVertex(0), context.getVertex(1), context.getVertex(2),
+				context.getLineTypeToDraw());
 
 		doingFirstAction = true;
 		context.clear(false);

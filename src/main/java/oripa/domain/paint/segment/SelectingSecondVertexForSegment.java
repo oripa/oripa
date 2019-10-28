@@ -2,7 +2,6 @@ package oripa.domain.paint.segment;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.value.OriLine;
 
@@ -20,7 +19,7 @@ public class SelectingSecondVertexForSegment extends PickingVertex {
 		}
 
 		OriLine line = new OriLine(context.getVertex(0),
-				context.getVertex(1), PaintConfig.inputLineType);
+				context.getVertex(1), context.getLineTypeToDraw());
 
 		context.creasePatternUndo().pushUndoInfo();
 
