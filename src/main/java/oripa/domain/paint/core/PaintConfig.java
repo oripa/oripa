@@ -25,7 +25,7 @@ public class PaintConfig {
 	// FIXME not to be here.
 	public static Constants.ModelDispMode modelDispMode = Constants.ModelDispMode.FILL_ALPHA;
 
-	public static boolean dispAuxLines = true;
+	// public static boolean dispAuxLines = true;
 	public static boolean bDispCrossLine = false;
 	public static int inputLineType = oripa.value.OriLine.TYPE_RIDGE;
 

@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.domain.paint.core.RectangularSelectableAction;
 import oripa.value.OriLine;
 
@@ -63,7 +62,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 					|| line.typeVal == OriLine.TYPE_VALLEY)) {
 				continue;
 			}
-			if (!PaintConfig.dispAuxLines && line.typeVal == OriLine.TYPE_NONE) {
+			if (!context.isAuxLineVisible() && line.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
 

@@ -695,8 +695,7 @@ public class UIPanel extends JPanel
 				});
 		dispAuxLinesCheckBox
 				.addActionListener(e -> {
-					PaintConfig.dispAuxLines = dispAuxLinesCheckBox
-							.isSelected();
+					paintContext.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
 					screenUpdater.updateScreen();
 				});
 

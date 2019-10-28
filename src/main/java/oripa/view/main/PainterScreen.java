@@ -240,7 +240,7 @@ public class PainterScreen extends JPanel
 				bufferG2D,
 				paintContext,
 				paintContext.isMVLineVisible(),
-				PaintConfig.dispAuxLines,
+				paintContext.isAuxLineVisible(),
 				paintContext.isVertexVisible()
 						|| mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
 

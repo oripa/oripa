@@ -37,6 +37,7 @@ public class PaintContext implements PaintContextInterface {
 
 	private boolean vertexVisible = true;
 	private boolean mvLineVisible = true;
+	private boolean auxLineVisible = true;
 
 	private boolean missionCompleted = false;
 
@@ -125,6 +126,16 @@ public class PaintContext implements PaintContextInterface {
 	@Override
 	public void setVertexVisible(final boolean visible) {
 		vertexVisible = visible;
+	}
+
+	@Override
+	public void setAuxLineVisible(final boolean visible) {
+		auxLineVisible = visible;
+	}
+
+	@Override
+	public boolean isAuxLineVisible() {
+		return auxLineVisible;
 	}
 
 	/*
