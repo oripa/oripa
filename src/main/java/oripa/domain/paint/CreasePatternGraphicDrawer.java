@@ -48,8 +48,7 @@ public class CreasePatternGraphicDrawer {
 	 */
 	public void draw(
 			final Graphics2D g2d,
-			final PaintContextInterface context,
-			final boolean creaseVisible, final boolean auxVisible, final boolean vertexVisible) {
+			final PaintContextInterface context, final boolean forceShowingVertex) {
 
 		CreasePatternInterface creasePattern = context.getCreasePattern();
 
@@ -61,12 +60,12 @@ public class CreasePatternGraphicDrawer {
 		// g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 		// RenderingHints.VALUE_ANTIALIAS_ON);
 
-		drawLines(g2d, creasePattern, null, creaseVisible, auxVisible);
+		drawLines(g2d, creasePattern, null, context.isMVLineVisible(), context.isAuxLineVisible());
 
 		// Drawing of the vertices
-		if (vertexVisible) {
-			drawVertices(g2d, creasePattern, context.getScale(), creaseVisible,
-					auxVisible);
+		if (context.isVertexVisible() || forceShowingVertex) {
+			drawVertices(g2d, creasePattern, context.getScale(), context.isMVLineVisible(),
+					context.isAuxLineVisible());
 		}
 
 	}

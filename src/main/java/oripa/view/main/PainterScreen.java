@@ -44,7 +44,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingWorker;
 import javax.vecmath.Vector2d;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
@@ -234,15 +233,8 @@ public class PainterScreen extends JPanel
 
 		Graphics2D bufferG2D = updateBufferImage();
 
-		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
-
-		drawer.draw(
-				bufferG2D,
-				paintContext,
-				paintContext.isMVLineVisible(),
-				paintContext.isAuxLineVisible(),
-				paintContext.isVertexVisible()
-						|| mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
+		drawer.draw(bufferG2D, paintContext,
+				mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
 
 		for (Vector2d v : crossPoints) {
 			bufferG2D.setColor(Color.RED);
