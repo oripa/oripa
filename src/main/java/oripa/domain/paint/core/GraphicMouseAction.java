@@ -27,18 +27,6 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	private boolean needSelect = false;
 	private ActionState state;
 
-	protected void log(final double x, final double y) {
-		System.out.println(x + "," + y);
-
-	}
-
-	protected void log(final Vector2d p) {
-		if (p == null) {
-			return;
-		}
-		log(p.x, p.y);
-	}
-
 	protected final void setActionState(final ActionState state) {
 		this.state = state;
 	}
