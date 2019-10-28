@@ -339,7 +339,6 @@ public class EstimationResultUI extends JPanel {
 
 	@SuppressWarnings("unchecked")
 	private FileAccessSupportFilter<Doc>[] createFilters() {
-		ExporterSVGFactory factory = new ExporterSVGFactory();
 		return new FileAccessSupportFilter[] {
 
 				new FileAccessSupportFilter<Doc>(
