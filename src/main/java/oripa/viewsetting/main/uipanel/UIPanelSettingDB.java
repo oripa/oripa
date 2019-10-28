@@ -170,11 +170,11 @@ public class UIPanelSettingDB {
 	}
 
 	public void selectAddVertexMode() {
-		setSelectedMode(EditMode.ADD_VERTEX);
+		setSelectedMode(EditMode.VERTEX);
 	}
 
 	public void selectDeleteVertexMode() {
-		setSelectedMode(EditMode.DELETE_VERTEX);
+		setSelectedMode(EditMode.VERTEX);
 	}
 
 	public EditMode getSelectedMode() {

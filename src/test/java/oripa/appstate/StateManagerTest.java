@@ -18,7 +18,7 @@ public class StateManagerTest {
 		var inputState = createMockedState(EditMode.INPUT);
 		manager.push(inputState);
 
-		var addVertexState = createMockedState(EditMode.ADD_VERTEX);
+		var addVertexState = createMockedState(EditMode.VERTEX);
 		manager.push(addVertexState);
 
 		var deleteLineState = createMockedState(EditMode.DELETE_LINE);

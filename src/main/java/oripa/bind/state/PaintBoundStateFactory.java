@@ -26,7 +26,6 @@ import oripa.domain.paint.symmetric.SymmetricalLineAction;
 import oripa.domain.paint.triangle.TriangleSplitAction;
 import oripa.domain.paint.vertical.VerticalLineAction;
 import oripa.resource.StringID;
-import oripa.viewsetting.ViewChangeListener;
 import oripa.viewsetting.main.uipanel.ChangeOnAlterTypeButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnOtherCommandButtonSelected;
@@ -59,52 +58,52 @@ public class PaintBoundStateFactory {
 		case StringID.SELECT_ID:
 			state = stateFactory.create(
 					actionHolder, new SelectLineAction(), context, screenUpdater, id,
-					new ActionListener[] { new ViewChangeListener(
-							new ChangeOnSelectButtonSelected()) });
+					new ActionListener[] {
+							e -> (new ChangeOnSelectButtonSelected()).changeViewSetting() });
 			break;
 
 		case StringID.DELETE_LINE_ID:
 			state = stateFactory.create(
 					actionHolder, new DeleteLineAction(), context, screenUpdater, id,
-					new ActionListener[] { new ViewChangeListener(
-							new ChangeOnOtherCommandButtonSelected()) });
+					new ActionListener[] {
+							e -> (new ChangeOnOtherCommandButtonSelected()).changeViewSetting() });
 			break;
 
 		case StringID.CHANGE_LINE_TYPE_ID:
 			state = stateFactory.create(
 					actionHolder, new ChangeLineTypeAction(), context, screenUpdater, id,
-					new ActionListener[] { new ViewChangeListener(
-							new ChangeOnAlterTypeButtonSelected()) });
+					new ActionListener[] {
+							(e) -> (new ChangeOnAlterTypeButtonSelected()).changeViewSetting() });
 			break;
 
 		case StringID.ADD_VERTEX_ID:
 			state = stateFactory.create(
 					actionHolder, new AddVertexAction(), context, screenUpdater, id,
-					new ActionListener[] { new ViewChangeListener(
-							new ChangeOnOtherCommandButtonSelected()) });
+					new ActionListener[] {
+							e -> (new ChangeOnOtherCommandButtonSelected()).changeViewSetting() });
 			break;
 
 		case StringID.DELETE_VERTEX_ID:
 			state = stateFactory.create(
 					actionHolder, new DeleteVertexAction(), context, screenUpdater, id,
-					new ActionListener[] { new ViewChangeListener(
-							new ChangeOnOtherCommandButtonSelected()) });
+					new ActionListener[] {
+							e -> (new ChangeOnOtherCommandButtonSelected()).changeViewSetting() });
 			break;
 
 		case StringID.EDIT_CONTOUR_ID:
 			state = stateFactory.create(
 					actionHolder, new EditOutlineActionWrapper(actionHolder), context,
 					screenUpdater, id,
-					new ActionListener[] { new ViewChangeListener(
-							new ChangeOnOtherCommandButtonSelected()) });
+					new ActionListener[] {
+							e -> (new ChangeOnOtherCommandButtonSelected()).changeViewSetting() });
 			break;
 
 		case StringID.SELECT_ALL_LINE_ID:
 			// selecting all lines should be done in other listener
 			state = stateFactory.create(
 					actionHolder, new SelectLineAction(), context, screenUpdater, id,
-					new ActionListener[] { new ViewChangeListener(
-							new ChangeOnSelectButtonSelected()) });
+					new ActionListener[] {
+							e -> (new ChangeOnSelectButtonSelected()).changeViewSetting() });
 			break;
 
 		case StringID.COPY_PASTE_ID:
@@ -113,8 +112,8 @@ public class PaintBoundStateFactory {
 					new CopyAndPasteActionWrapper(false),
 					new CopyPasteErrorListener(context),
 					context, screenUpdater, id,
-					new ActionListener[] { new ViewChangeListener(
-							new ChangeOnSelectButtonSelected()) });
+					new ActionListener[] {
+							e -> (new ChangeOnSelectButtonSelected()).changeViewSetting() });
 			break;
 
 		case StringID.CUT_PASTE_ID:
@@ -123,8 +122,8 @@ public class PaintBoundStateFactory {
 					new CopyAndPasteActionWrapper(true),
 					new CopyPasteErrorListener(context),
 					context, screenUpdater, id,
-					new ActionListener[] { new ViewChangeListener(
-							new ChangeOnSelectButtonSelected()) });
+					new ActionListener[] {
+							e -> (new ChangeOnSelectButtonSelected()).changeViewSetting() });
 			break;
 
 		default:
@@ -145,8 +144,8 @@ public class PaintBoundStateFactory {
 			final String id) {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
-				new ActionListener[] { new ViewChangeListener(
-						new ChangeOnPaintInputButtonSelected()) });
+				new ActionListener[] {
+						e -> (new ChangeOnPaintInputButtonSelected()).changeViewSetting() });
 
 		ApplicationState<EditMode> state = null;
 		switch (id) {
@@ -196,8 +195,8 @@ public class PaintBoundStateFactory {
 
 		case StringID.BY_VALUE_ID:
 			LocalPaintBoundStateFactory byValueFactory = new LocalPaintBoundStateFactory(
-					parent, new ActionListener[] { new ViewChangeListener(
-							new ChangeOnByValueButtonSelected()) });
+					parent, new ActionListener[] {
+							e -> (new ChangeOnByValueButtonSelected()).changeViewSetting() });
 
 			state = byValueFactory.create(
 					actionHolder, new LineByValueAction(),
