@@ -26,7 +26,6 @@ public class PaintConfig {
 	public static Constants.ModelDispMode modelDispMode = Constants.ModelDispMode.FILL_ALPHA;
 
 	public static boolean bDispCrossLine = false;
-	public static int inputLineType = oripa.value.OriLine.TYPE_RIDGE;
 
 	// FIXME not to be here. move to oripa.domain.fold package.
 	public static boolean bDoFullEstimation = true;
