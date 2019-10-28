@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
+import oripa.Config;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.CreasePatternUndoer;
@@ -30,6 +31,7 @@ public class PaintContext implements PaintContextInterface {
 	private OriLine candidateLineToPick = new OriLine();
 
 	private boolean gridVisible = true;
+	private int gridDivNum = Config.DEFAULT_GRID_DIV_NUM;
 	private double scale;
 
 	private ArrayList<Vector2d> gridPoints;
@@ -106,15 +108,30 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#updateGrids(int)
+	 * @see oripa.domain.paint.PaintContextInterface#getGridDivNum()
 	 */
 	@Override
-	public Collection<Vector2d> updateGrids(final int gridDivNum) {
+	public int getGridDivNum() {
+		return gridDivNum;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.PaintContextInterface#setGridDivNum(int)
+	 */
+	@Override
+	public void setGridDivNum(final int divNum) {
+		gridDivNum = divNum;
+		updateGrids();
+	}
+
+	private void updateGrids() {
 		gridPoints = new ArrayList<>();
 		double paperSize = creasePattern.getPaperSize();
 
 		double step = paperSize / gridDivNum;
-		for (int ix = 0; ix < PaintConfig.gridDivNum + 1; ix++) {
+		for (int ix = 0; ix < gridDivNum + 1; ix++) {
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
 				double x = -paperSize / 2 + step * ix;
 				double y = -paperSize / 2 + step * iy;
@@ -122,6 +139,15 @@ public class PaintContext implements PaintContextInterface {
 				gridPoints.add(new Vector2d(x, y));
 			}
 		}
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.core.PaintContextInterface#updateGrids(int)
+	 */
+	@Override
+	public Collection<Vector2d> getGrids() {
 
 		return gridPoints;
 	}

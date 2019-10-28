@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -28,21 +28,20 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.core.LineSetting;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
 
 /**
  * This class provides a drawing method for crease pattern and some utilities.
- * 
+ *
  * @author Koji
- * 
+ *
  */
 public class CreasePatternGraphicDrawer {
 
 	/**
 	 * draws crease pattern according to the context of user interaction.
-	 * 
+	 *
 	 * @param g2d
 	 * @param context
 	 * @param creasePattern
@@ -56,7 +55,7 @@ public class CreasePatternGraphicDrawer {
 
 		if (context.isGridVisible()) {
 
-			drawGridLines(g2d, creasePattern.getPaperSize());
+			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize());
 		}
 
 		// g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -117,7 +116,7 @@ public class CreasePatternGraphicDrawer {
 	/**
 	 * draws given lines. {@code pickedLines} will be skipped because
 	 * {@link GraphicMouseActionInterface} should draw them.
-	 * 
+	 *
 	 * @param g2d
 	 * @param lines
 	 * @param pickedLines
@@ -157,7 +156,7 @@ public class CreasePatternGraphicDrawer {
 
 	/**
 	 * draws all vertices of mountain/valley lines.
-	 * 
+	 *
 	 * @param g2d
 	 * @param creasePattern
 	 * @param scale
@@ -203,11 +202,11 @@ public class CreasePatternGraphicDrawer {
 
 	}
 
-	public void drawGridLines(final Graphics2D g2d, final double paperSize) {
+	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize) {
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.setStroke(LineSetting.STROKE_GRID);
 
-		int lineNum = PaintConfig.gridDivNum;
+		int lineNum = gridDivNum;
 		double step = paperSize / lineNum;
 
 		// FIXME this method depends on implicit position of paper.

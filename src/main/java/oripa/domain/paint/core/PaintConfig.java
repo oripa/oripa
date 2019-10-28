@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -18,14 +18,9 @@
 
 package oripa.domain.paint.core;
 
-//TODO kill global variables
-
-import oripa.Config;
 import oripa.resource.Constants;
 
 public class PaintConfig {
-
-	public static int gridDivNum = Config.DEFAULT_GRID_DIV_NUM;
 
 	// FIXME not to be here.
 	public static Constants.ModelDispMode modelDispMode = Constants.ModelDispMode.FILL_ALPHA;

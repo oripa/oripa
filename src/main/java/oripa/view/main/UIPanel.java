@@ -739,16 +739,16 @@ public class UIPanel extends JPanel
 			screenUpdater.updateScreen();
 
 		} else if (ae.getSource() == gridSmallButton) {
-			if (PaintConfig.gridDivNum < 65) {
-				PaintConfig.gridDivNum *= 2;
-				textFieldGrid.setValue(Integer.valueOf(PaintConfig.gridDivNum));
+			if (paintContext.getGridDivNum() < 65) {
+				paintContext.setGridDivNum(paintContext.getGridDivNum() * 2);
+				textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
 
 				screenUpdater.updateScreen();
 			}
 		} else if (ae.getSource() == gridLargeButton) {
-			if (PaintConfig.gridDivNum > 3) {
-				PaintConfig.gridDivNum /= 2;
-				textFieldGrid.setValue(Integer.valueOf(PaintConfig.gridDivNum));
+			if (paintContext.getGridDivNum() > 3) {
+				paintContext.setGridDivNum(paintContext.getGridDivNum() / 2);
+				textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
 
 				screenUpdater.updateScreen();
 			}
@@ -834,7 +834,7 @@ public class UIPanel extends JPanel
 
 				if (value < 128 && value > 2) {
 					textFieldGrid.setValue(value);
-					PaintConfig.gridDivNum = value;
+					paintContext.setGridDivNum(value);
 					screenUpdater.updateScreen();
 				}
 			} catch (Exception ex) {

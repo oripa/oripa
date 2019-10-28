@@ -443,14 +443,9 @@ public class MainFrame extends JFrame implements ActionListener,
 
 			ChildFrameManager manager = ChildFrameManager.getManager();
 			manager.closeAllRecursively(this);
-			// ORIPA.modelFrame.repaint();
-			//
-			// ORIPA.modelFrame.setVisible(false);
-			// ORIPA.renderFrame.setVisible(false);
 
 			screenSetting.setGridVisible(true);
 
-			// ORIPA.mainFrame.uiPanel.dispGridCheckBox.setSelected(true);
 			updateTitleText();
 		} else if (e.getSource() == menuItemAbout) {
 			JOptionPane.showMessageDialog(this,
