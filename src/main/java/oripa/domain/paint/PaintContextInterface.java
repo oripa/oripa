@@ -199,6 +199,10 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 */
 	public abstract Collection<Vector2d> getGrids();
 
+	public abstract void setMVLineVisible(boolean visible);
+
+	public abstract boolean isMVLineVisible();
+
 	public abstract boolean isVertexVisible();
 
 	public abstract void setVertexVisible(boolean visible);

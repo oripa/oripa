@@ -36,6 +36,7 @@ public class PaintContext implements PaintContextInterface {
 	private ArrayList<Vector2d> gridPoints;
 
 	private boolean vertexVisible = true;
+	private boolean mvLineVisible = true;
 
 	private boolean missionCompleted = false;
 
@@ -105,6 +106,16 @@ public class PaintContext implements PaintContextInterface {
 //		this.scale = scale;
 //		this.gridVisible = dispGrid;
 //	}
+
+	@Override
+	public void setMVLineVisible(final boolean visible) {
+		mvLineVisible = visible;
+	}
+
+	@Override
+	public boolean isMVLineVisible() {
+		return mvLineVisible;
+	}
 
 	@Override
 	public boolean isVertexVisible() {

@@ -690,8 +690,7 @@ public class UIPanel extends JPanel
 		paintContext.setVertexVisible(true);
 		dispMVLinesCheckBox
 				.addActionListener(e -> {
-					PaintConfig.dispMVLines = dispMVLinesCheckBox
-							.isSelected();
+					paintContext.setMVLineVisible(dispMVLinesCheckBox.isSelected());
 					screenUpdater.updateScreen();
 				});
 		dispAuxLinesCheckBox

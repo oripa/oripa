@@ -239,7 +239,7 @@ public class PainterScreen extends JPanel
 		drawer.draw(
 				bufferG2D,
 				paintContext,
-				PaintConfig.dispMVLines,
+				paintContext.isMVLineVisible(),
 				PaintConfig.dispAuxLines,
 				paintContext.isVertexVisible()
 						|| mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);

@@ -59,7 +59,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 				continue;
 			}
 			// Don't select if the line is hidden
-			if (!PaintConfig.dispMVLines && (line.typeVal == OriLine.TYPE_RIDGE
+			if (!context.isMVLineVisible() && (line.typeVal == OriLine.TYPE_RIDGE
 					|| line.typeVal == OriLine.TYPE_VALLEY)) {
 				continue;
 			}
