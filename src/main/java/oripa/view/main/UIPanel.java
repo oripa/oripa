@@ -46,7 +46,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
 import oripa.Config;
-import oripa.ORIPA;
 import oripa.appstate.InputCommandStatePopper;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
@@ -93,6 +92,8 @@ public class UIPanel extends JPanel
 
 	private final UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
 	private final ValueDB valueDB = ValueDB.getInstance();
+	private final MainScreenSettingDB screenDB = MainScreenSettingDB
+			.getInstance();
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
@@ -728,9 +729,6 @@ public class UIPanel extends JPanel
 
 	}
 
-	private final MainScreenSettingDB screenDB = MainScreenSettingDB
-			.getInstance();
-
 	@Override
 	public void actionPerformed(final ActionEvent ae) {
 
@@ -774,7 +772,7 @@ public class UIPanel extends JPanel
 				buildOK = true;
 			} else {
 				if (JOptionPane.showConfirmDialog(
-						ORIPA.mainFrame, resources.getString(
+						this, resources.getString(
 								ResourceKey.WARNING,
 								StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
 						"Failed", JOptionPane.YES_NO_OPTION,
@@ -788,7 +786,7 @@ public class UIPanel extends JPanel
 					} else {
 						JOptionPane
 								.showMessageDialog(
-										ORIPA.mainFrame,
+										this,
 										resources
 												.getString(
 														ResourceKey.WARNING,

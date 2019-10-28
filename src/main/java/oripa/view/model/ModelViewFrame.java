@@ -87,17 +87,20 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			JScrollBar.VERTICAL, 0, 5, -150, 150);
 
+	private final CallbackOnUpdate onUpdateCrossLine;
+
 	public ModelViewFrame(final int width, final int height,
 			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
-		initialize(lineHolder, onUpdateLine);
+		onUpdateCrossLine = onUpdateLine;
+
+		initialize(lineHolder);
 		this.setBounds(0, 0, width, height);
 	}
 
-	private void initialize(final SheetCutOutlinesHolder lineHolder,
-			final CallbackOnUpdate onUpdateLine) {
+	private void initialize(final SheetCutOutlinesHolder lineHolder) {
 
 		setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));
-		screen = new ModelViewScreen(lineHolder, onUpdateLine);
+		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(screen, BorderLayout.CENTER);
@@ -169,7 +172,7 @@ public class ModelViewFrame extends JFrame
 				screen.recalcCrossLine();
 			} else {
 				screen.repaint();
-				ORIPA.mainFrame.repaint();
+				onUpdateCrossLine.onUpdate();
 			}
 		} else if (e.getSource() == menuItemExportDXF) {
 			exportFile(FileTypeKey.DXF_MODEL);

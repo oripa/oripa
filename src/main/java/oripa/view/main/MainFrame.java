@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -199,11 +200,11 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		menuItemOpen.addActionListener(this);
 		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				ActionEvent.CTRL_MASK));
+				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemSave.addActionListener(this);
 		menuItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				ActionEvent.CTRL_MASK));
+				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemSaveAs.addActionListener(this);
 		menuItemSaveAsImage.addActionListener(this);
@@ -214,11 +215,11 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		menuItemUndo.addActionListener(this);
 		menuItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
-				ActionEvent.CTRL_MASK));
+				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemClear.addActionListener(this);
 		menuItemClear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
-				ActionEvent.CTRL_MASK));
+				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemAbout.addActionListener(this);
 		menuItemExportDXF.addActionListener(this);
@@ -231,7 +232,7 @@ public class MainFrame extends JFrame implements ActionListener,
 		menuItemCircleCopy.addActionListener(this);
 
 		menuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				ActionEvent.CTRL_MASK));
+				InputEvent.CTRL_DOWN_MASK));
 
 		// a patch to select all lines and switch to select-line mode.
 		// bad design...
@@ -255,9 +256,9 @@ public class MainFrame extends JFrame implements ActionListener,
 				KeyEvent.VK_DELETE, 0));
 
 		menuItemCopyAndPaste.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+				KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
 		menuItemCutAndPaste.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
 
 		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
 			MRUFilesMenuItem[i] = new JMenuItem();
