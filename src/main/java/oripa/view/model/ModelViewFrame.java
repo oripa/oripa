@@ -48,6 +48,7 @@ import oripa.persistent.filetool.FileChooserFactory;
 import oripa.persistent.filetool.SavingActionTemplate;
 import oripa.resource.Constants;
 import oripa.util.gui.CallbackOnUpdate;
+import oripa.viewsetting.main.MainScreenSettingDB;
 
 /**
  * A frame to show a transparent folded model.
@@ -87,17 +88,15 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			JScrollBar.VERTICAL, 0, 5, -150, 150);
 
-	private final CallbackOnUpdate onUpdateCrossLine;
-
 	public ModelViewFrame(final int width, final int height,
-			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
-		onUpdateCrossLine = onUpdateLine;
+			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine) {
 
-		initialize(lineHolder);
+		initialize(lineHolder, onUpdateCrossLine);
 		this.setBounds(0, 0, width, height);
 	}
 
-	private void initialize(final SheetCutOutlinesHolder lineHolder) {
+	private void initialize(final SheetCutOutlinesHolder lineHolder,
+			final CallbackOnUpdate onUpdateCrossLine) {
 
 		setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));
 		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine);
@@ -140,7 +139,6 @@ public class ModelViewFrame extends JFrame
 
 		scrollBarAngle.addAdjustmentListener(this);
 		scrollBarPosition.addAdjustmentListener(this);
-
 	}
 
 	private OrigamiModel origamiModel = null;
@@ -167,13 +165,8 @@ public class ModelViewFrame extends JFrame
 					menuItemSlideFaces.isSelected());
 			screen.repaint();
 		} else if (e.getSource() == menuItemCrossLine) {
-			PaintConfig.bDispCrossLine = menuItemCrossLine.isSelected();
-			if (menuItemCrossLine.isSelected()) {
-				screen.recalcCrossLine();
-			} else {
-				screen.repaint();
-				onUpdateCrossLine.onUpdate();
-			}
+			var mainScreenSetting = MainScreenSettingDB.getInstance();
+			mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected());
 		} else if (e.getSource() == menuItemExportDXF) {
 			exportFile(FileTypeKey.DXF_MODEL);
 		} else if (e.getSource() == menuItemExportOBJ) {

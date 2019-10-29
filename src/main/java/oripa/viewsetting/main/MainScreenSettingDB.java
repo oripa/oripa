@@ -8,6 +8,9 @@ public class MainScreenSettingDB {
 	private boolean gridVisible = true;
 	public static final String GRID_VISIBLE = "grid visible";
 
+	private boolean crossLineVisible = false;
+	public static final String CROSS_LINE_VISIBLE = "cross line visible";
+
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 	// ---------
@@ -24,12 +27,6 @@ public class MainScreenSettingDB {
 		return instance;
 	}
 
-//	public static final String REDRAW_REQUESTED = "redraw requested";
-//	public void requestRedraw(){
-//		setChanged();
-//		notifyObservers(REDRAW_REQUESTED);
-//	}
-
 	public void addPropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);
@@ -41,8 +38,10 @@ public class MainScreenSettingDB {
 		support.firePropertyChange(GRID_VISIBLE, old, gridVisible);
 	}
 
-//	@Override
-//	public String getName() {
-//		return this.getClass().getName();
-//	}
+	public void setCrossLineVisible(final boolean visible) {
+		var old = crossLineVisible;
+		crossLineVisible = visible;
+		support.firePropertyChange(CROSS_LINE_VISIBLE, old, visible);
+	}
+
 }

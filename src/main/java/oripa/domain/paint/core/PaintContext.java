@@ -38,6 +38,7 @@ public class PaintContext implements PaintContextInterface {
 	private boolean vertexVisible = true;
 	private boolean mvLineVisible = true;
 	private boolean auxLineVisible = true;
+	private boolean crossLineVisible = false;
 
 	private boolean missionCompleted = false;
 
@@ -421,11 +422,21 @@ public class PaintContext implements PaintContextInterface {
 
 	/**
 	 * @param gridVisible
-	 *            Sets gridVisibleS
+	 *            Sets gridVisible
 	 */
 	@Override
 	public void setGridVisible(final boolean gridVisible) {
 		this.gridVisible = gridVisible;
+	}
+
+	@Override
+	public void setCrossLineVisible(final boolean visible) {
+		crossLineVisible = visible;
+	}
+
+	@Override
+	public boolean isCrossLineVisible() {
+		return crossLineVisible;
 	}
 
 	/**

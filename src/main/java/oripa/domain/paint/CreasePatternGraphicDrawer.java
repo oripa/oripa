@@ -44,7 +44,7 @@ public class CreasePatternGraphicDrawer {
 	 *
 	 * @param g2d
 	 * @param context
-	 * @param creasePattern
+	 * @param forceShowingVertex
 	 */
 	public void draw(
 			final Graphics2D g2d,

@@ -51,6 +51,7 @@ import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.resource.Constants;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.value.OriLine;
+import oripa.viewsetting.main.MainScreenSettingDB;
 
 public class ModelViewScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener,
@@ -70,17 +71,18 @@ public class ModelViewScreen extends JPanel
 	private final AffineTransform affineTransform = new AffineTransform();
 	public boolean dispSlideFace = false;
 	private OriLine crossLine = null;
+	private boolean crossLineVisible = false;
 	private int crossLineAngleDegree = 90;
 	private double crossLinePosition = 0;
 
 	private OrigamiModel origamiModel = null;
 	private final SheetCutOutlinesHolder lineHolder;
-	private final CallbackOnUpdate callbackOnUpdate;
+	private final CallbackOnUpdate onUpdateCrossLine;
 
 	public ModelViewScreen(final SheetCutOutlinesHolder aLineHolder, final CallbackOnUpdate c) {
 
 		lineHolder = aLineHolder;
-		callbackOnUpdate = c;
+		onUpdateCrossLine = c;
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -93,6 +95,23 @@ public class ModelViewScreen extends JPanel
 		setBackground(Color.white);
 
 		preSize = getSize();
+
+		addPropertyChangeListeners();
+	}
+
+	private void addPropertyChangeListeners() {
+		var mainScreenSetting = MainScreenSettingDB.getInstance();
+
+		mainScreenSetting.addPropertyChangeListener(
+				MainScreenSettingDB.CROSS_LINE_VISIBLE, e -> {
+					crossLineVisible = (boolean) e.getNewValue();
+					if (crossLineVisible) {
+						recalcCrossLine();
+					} else {
+						repaint();
+						onUpdateCrossLine.onUpdate();
+					}
+				});
 	}
 
 	public void setModel(final OrigamiModel origamiModel, final int boundSize) {
@@ -137,7 +156,7 @@ public class ModelViewScreen extends JPanel
 		}
 	}
 
-	public void drawModel(final Graphics2D g2d) {
+	private void drawModel(final Graphics2D g2d) {
 		if (origamiModel == null) {
 			return;
 		}
@@ -174,7 +193,7 @@ public class ModelViewScreen extends JPanel
 			}
 		}
 
-		if (PaintConfig.bDispCrossLine) {
+		if (crossLineVisible) {
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 			g2d.setStroke(LineSetting.STROKE_CUT_MODEL);
 			g2d.setColor(Color.RED);
@@ -274,7 +293,7 @@ public class ModelViewScreen extends JPanel
 
 		repaint();
 
-		callbackOnUpdate.onUpdate();
+		onUpdateCrossLine.onUpdate();
 	}
 
 	@Override

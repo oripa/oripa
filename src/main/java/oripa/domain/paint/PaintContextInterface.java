@@ -221,6 +221,10 @@ public interface PaintContextInterface extends CreasePatternHolder {
 
 	public abstract boolean isAuxLineVisible();
 
+	public abstract void setCrossLineVisible(boolean visible);
+
+	public abstract boolean isCrossLineVisible();
+
 	public abstract void setCandidateLineToPick(OriLine pickCandidateL);
 
 	public abstract OriLine getCandidateLineToPick();

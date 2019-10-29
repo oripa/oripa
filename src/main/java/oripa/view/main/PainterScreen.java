@@ -44,12 +44,14 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingWorker;
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
@@ -60,6 +62,8 @@ import oripa.viewsetting.main.ScreenUpdater;
 public class PainterScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,
 		ActionListener, ComponentListener {
+
+	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
 
 	private final MainScreenSettingDB setting = MainScreenSettingDB
 			.getInstance();
@@ -243,7 +247,7 @@ public class PainterScreen extends JPanel
 					10.0 / scale, 10.0 / scale));
 		}
 
-		if (PaintConfig.bDispCrossLine) {
+		if (paintContext.isCrossLineVisible()) {
 			List<OriLine> crossLines = cutOutlinesHolder.getSheetCutOutlines();
 			drawer.drawAllLines(bufferG2D, crossLines);
 		}
@@ -482,5 +486,14 @@ public class PainterScreen extends JPanel
 					paintContext.setGridVisible((boolean) e.getNewValue());
 					repaint();
 				});
+
+		setting.addPropertyChangeListener(
+				MainScreenSettingDB.CROSS_LINE_VISIBLE, e -> {
+					var visible = (boolean) e.getNewValue();
+					logger.info("receive crossLineVisible has become " + visible);
+					paintContext.setCrossLineVisible(visible);
+					repaint();
+				});
+
 	}
 }
