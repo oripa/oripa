@@ -66,7 +66,6 @@ import oripa.domain.paint.byvalue.AngleValueInputListener;
 import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueDB;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.EstimationEntityHolder;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
@@ -96,6 +95,7 @@ public class UIPanel extends JPanel
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
+	private boolean fullEstimation = true;
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Binding edit mode
 
@@ -699,12 +699,9 @@ public class UIPanel extends JPanel
 				});
 
 		doFullEstimationCheckBox.setSelected(true);
-		PaintConfig.bDoFullEstimation = true;
 		doFullEstimationCheckBox
 				.addActionListener(e -> {
-					PaintConfig.bDoFullEstimation = doFullEstimationCheckBox
-							.isSelected();
-					screenUpdater.updateScreen();
+					fullEstimation = doFullEstimationCheckBox.isSelected();
 				});
 
 		buttonCheckWindow
@@ -797,7 +794,7 @@ public class UIPanel extends JPanel
 			Folder folder = new Folder();
 
 			if (buildOK) {
-				folder.fold(origamiModel, foldedModelInfo);
+				folder.fold(origamiModel, foldedModelInfo, fullEstimation);
 				estimationHolder.setOrigamiModel(origamiModel);
 
 				// TODO move this block out of if(buildOK) statement.

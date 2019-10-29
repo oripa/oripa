@@ -31,7 +31,6 @@ import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.rule.Condition3;
 import oripa.domain.fold.rule.Condition4;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.value.OriLine;
@@ -49,7 +48,8 @@ public class Folder {
 	}
 
 	// TODO: this method should return FoldedModelInfo.
-	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo) {
+	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
+			final boolean fullEstimation) {
 //		OrigamiModel origamiModel = m_doc.getOrigamiModel();
 //		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 
@@ -70,7 +70,7 @@ public class Folder {
 		sortedFaces.addAll(faces);
 		folderTool.setFacesOutline(vertices, faces, false);
 
-		if (!PaintConfig.bDoFullEstimation) {
+		if (!fullEstimation) {
 			origamiModel.setFolded(true);
 			return 0;
 		}

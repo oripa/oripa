@@ -25,9 +25,4 @@ public class PaintConfig {
 	// FIXME not to be here.
 	public static Constants.ModelDispMode modelDispMode = Constants.ModelDispMode.FILL_ALPHA;
 
-	// public static boolean bDispCrossLine = false;
-
-	// FIXME not to be here. move to oripa.domain.fold package.
-	public static boolean bDoFullEstimation = true;
-
 }
