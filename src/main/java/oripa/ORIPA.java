@@ -25,7 +25,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import oripa.resource.ResourceHolder;
@@ -124,17 +123,4 @@ public class ORIPA {
 		});
 	}
 
-	public static void ERROR_END(final String message) {
-		JOptionPane.showMessageDialog(
-				null, message, "ERROR",
-				JOptionPane.ERROR_MESSAGE);
-		System.exit(0);
-	}
-
-	public static void outMessage(final String s) {
-		JOptionPane.showMessageDialog(
-				null, s, "ORIPA",
-				JOptionPane.DEFAULT_OPTION);
-
-	}
 }
