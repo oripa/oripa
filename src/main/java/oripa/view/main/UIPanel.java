@@ -23,8 +23,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -82,14 +80,12 @@ import oripa.view.model.ModelViewFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainScreenSettingDB;
-import oripa.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
-public class UIPanel extends JPanel
-		implements ActionListener {
+public class UIPanel extends JPanel {
 
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
@@ -146,7 +142,6 @@ public class UIPanel extends JPanel
 
 	private final JButton buildButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
-	private final JButton resetButton = new JButton("Reset");
 
 	private final JCheckBox dispGridCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
@@ -216,7 +211,7 @@ public class UIPanel extends JPanel
 		estimationHolder = anEstimationHolder;
 		cutOutlinesHolder = aCutOutlinesHolder;
 
-		constructButtons(paintContext);
+		constructButtons();
 
 		// setModeButtonText();
 		editModeInputLineButton.setSelected(true);
@@ -454,7 +449,6 @@ public class UIPanel extends JPanel
 		textFieldGrid.setColumns(2);
 		textFieldGrid.setValue(Integer.valueOf(Config.DEFAULT_GRID_DIV_NUM));
 		textFieldGrid.setHorizontalAlignment(JTextField.RIGHT);
-		gridChangeButton.addActionListener(this);
 
 		divideNumSpecPanel.add(gridLabel1);
 		divideNumSpecPanel.add(textFieldGrid);
@@ -521,7 +515,7 @@ public class UIPanel extends JPanel
 		lineTypeValleyButton.setMnemonic('V');
 
 		addPropertyChangeListenersToSetting();
-		addListenerToComponents(paintContext);
+		addActionListenersToComponents();
 
 		// -------------------------------------------------
 		// Initialize selection
@@ -540,9 +534,9 @@ public class UIPanel extends JPanel
 
 	}
 
-	private void constructButtons(final PaintContextInterface context) {
+	private void constructButtons() {
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
-		ButtonFactory buttonFactory = new PaintActionButtonFactory(context);
+		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext);
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
 				.createButton(
@@ -648,24 +642,18 @@ public class UIPanel extends JPanel
 
 	}
 
-	private void addListenerToComponents(final PaintContextInterface context) {
+	private void addActionListenersToComponents() {
 
 		alterLine_combo_from.addItemListener(new FromLineTypeItemListener());
 		alterLine_combo_to.addItemListener(new ToLineTypeItemListener());
 
-		buttonLength
-				.addActionListener(
-						new PaintActionSetter(actionHolder, new LengthMeasuringAction(),
-								screenUpdater, context));
 		buttonLength.addActionListener(
-				e -> new ChangeOnByValueButtonSelected());
+				new PaintActionSetter(actionHolder, new LengthMeasuringAction(),
+						screenUpdater, paintContext));
 
-		buttonAngle
-				.addActionListener(
-						new PaintActionSetter(actionHolder, new AngleMeasuringAction(),
-								screenUpdater, context));
 		buttonAngle.addActionListener(
-				e -> new ChangeOnByValueButtonSelected());
+				new PaintActionSetter(actionHolder, new AngleMeasuringAction(),
+						screenUpdater, paintContext));
 
 		lineTypeMountainButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_RIDGE));
@@ -684,14 +672,24 @@ public class UIPanel extends JPanel
 		textFieldAngle.getDocument().addDocumentListener(
 				new AngleValueInputListener());
 
-		dispGridCheckBox.addActionListener(this);
-		gridSmallButton.addActionListener(this);
-		gridLargeButton.addActionListener(this);
-		buildButton.addActionListener(this);
-		resetButton.addActionListener(this);
-		dispVertexCheckBox.addActionListener(this);
+		dispGridCheckBox.addActionListener(e -> {
+			screenDB.setGridVisible(dispGridCheckBox.isSelected());
+			screenUpdater.updateScreen();
+		});
+
+		gridSmallButton.addActionListener(e -> makeGridSizeHalf());
+
+		gridLargeButton.addActionListener(e -> makeGridSizeTwiceLarge());
+
+		gridChangeButton.addActionListener(e -> setGridDivNum());
+
+		dispVertexCheckBox.addActionListener(e -> {
+			paintContext.setVertexVisible(dispVertexCheckBox.isSelected());
+			screenUpdater.updateScreen();
+		});
 		dispVertexCheckBox.setSelected(true);
 		paintContext.setVertexVisible(true);
+
 		dispMVLinesCheckBox
 				.addActionListener(e -> {
 					paintContext.setMVLineVisible(dispMVLinesCheckBox.isSelected());
@@ -709,71 +707,59 @@ public class UIPanel extends JPanel
 					fullEstimation = doFullEstimationCheckBox.isSelected();
 				});
 
-		buttonCheckWindow
-				.addActionListener(e -> {
-					OrigamiModel origamiModel;
-					CreasePatternInterface creasePattern = context
-							.getCreasePattern();
+		buttonCheckWindow.addActionListener(e -> showCheckerWindow(paintContext));
 
-					OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-					origamiModel = modelFactory.createOrigamiModel(
-							creasePattern, creasePattern.getPaperSize());
-
-					FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
-					JFrame checker = checkerFactory.createFrame(
-							UIPanel.this, origamiModel, creasePattern);
-					checker.setVisible(true);
-
-				});
+		buildButton.addActionListener(e -> showFoldedModelWindows());
 
 	}
 
-	@Override
-	public void actionPerformed(final ActionEvent ae) {
+	private void showCheckerWindow(final PaintContextInterface context) {
+		OrigamiModel origamiModel;
+		CreasePatternInterface creasePattern = context.getCreasePattern();
 
-		// TODO decompose this long long if-else.
-		if (ae.getSource() == dispGridCheckBox) {
-			screenDB.setGridVisible(dispGridCheckBox.isSelected());
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		origamiModel = modelFactory.createOrigamiModel(
+				creasePattern, creasePattern.getPaperSize());
 
-			screenUpdater.updateScreen();
+		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
+		JFrame checker = checkerFactory.createFrame(
+				UIPanel.this, origamiModel, creasePattern);
+		checker.setVisible(true);
 
-		} else if (ae.getSource() == gridSmallButton) {
-			if (paintContext.getGridDivNum() < 65) {
-				paintContext.setGridDivNum(paintContext.getGridDivNum() * 2);
-				textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
+	}
 
-				screenUpdater.updateScreen();
-			}
-		} else if (ae.getSource() == gridLargeButton) {
-			if (paintContext.getGridDivNum() > 3) {
-				paintContext.setGridDivNum(paintContext.getGridDivNum() / 2);
-				textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
-
-				screenUpdater.updateScreen();
-			}
-		} else if (ae.getSource() == dispVertexCheckBox) {
-			paintContext.setVertexVisible(dispVertexCheckBox.isSelected());
+	private void makeGridSizeHalf() {
+		if (paintContext.getGridDivNum() < 65) {
+			paintContext.setGridDivNum(paintContext.getGridDivNum() * 2);
+			textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
 
 			screenUpdater.updateScreen();
-		} else if (ae.getSource() == resetButton) {
-		} else if (ae.getSource() == buildButton) {
-			showFoldedModelWindows();
-		} else if (ae.getSource() == gridChangeButton) {
-			int value;
-			try {
-				value = Integer.valueOf(textFieldGrid.getText());
-				System.out.println("type");
-
-				if (value < 128 && value > 2) {
-					textFieldGrid.setValue(value);
-					paintContext.setGridDivNum(value);
-					screenUpdater.updateScreen();
-				}
-			} catch (Exception ex) {
-				System.out.println(ex);
-			}
 		}
+	}
 
+	private void makeGridSizeTwiceLarge() {
+		if (paintContext.getGridDivNum() > 3) {
+			paintContext.setGridDivNum(paintContext.getGridDivNum() / 2);
+			textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
+
+			screenUpdater.updateScreen();
+		}
+	}
+
+	private void setGridDivNum() {
+		int value;
+		try {
+			value = Integer.valueOf(textFieldGrid.getText());
+			logger.debug("gird division num: " + value);
+
+			if (value < 128 && value > 2) {
+				textFieldGrid.setValue(value);
+				paintContext.setGridDivNum(value);
+				screenUpdater.updateScreen();
+			}
+		} catch (Exception ex) {
+			logger.error("failed to get grid division num.", ex);
+		}
 	}
 
 	private void showFoldedModelWindows() {
@@ -784,36 +770,32 @@ public class UIPanel extends JPanel
 
 		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
 
-		if (origamiModel == null) {
+		if (origamiModel.isProbablyFoldable()) {
+			folder.fold(origamiModel, foldedModelInfo, fullEstimation);
+			estimationHolder.setOrigamiModel(origamiModel);
 
-		} else {
-			if (origamiModel.isProbablyFoldable()) {
-				folder.fold(origamiModel, foldedModelInfo, fullEstimation);
-				estimationHolder.setOrigamiModel(origamiModel);
+			if (foldedModelInfo.getFoldablePatternCount() != 0) {
+				logger.info("foldable layer layout is found.");
 
-				// TODO move this block out of if(buildOK) statement.
-				if (foldedModelInfo.getFoldablePatternCount() != 0) {
-					logger.info("foldable layer layout is found.");
-
-					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
-					JFrame frame = resultFrameFactory.createFrame(this,
-							origamiModel, foldedModelInfo);
-					frame.setVisible(true);
-				}
-
-			} else {
-				BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
-				foldedModelInfo.setBoundBox(boundBox);
-				estimationHolder.setOrigamiModel(origamiModel);
+				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
+				JFrame frame = resultFrameFactory.createFrame(this,
+						origamiModel, foldedModelInfo);
+				frame.setVisible(true);
 			}
 
-			ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory();
-			JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
-					cutOutlinesHolder, () -> screenUpdater.updateScreen());
-
-			modelView.setVisible(true);
-			modelView.repaint();
+		} else {
+			BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
+			foldedModelInfo.setBoundBox(boundBox);
+			estimationHolder.setOrigamiModel(origamiModel);
 		}
+
+		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory();
+		JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
+				cutOutlinesHolder, () -> screenUpdater.updateScreen());
+
+		modelView.setVisible(true);
+		modelView.repaint();
+
 	}
 
 	private OrigamiModel buildOrigamiModel(final CreasePatternInterface creasePattern) {
