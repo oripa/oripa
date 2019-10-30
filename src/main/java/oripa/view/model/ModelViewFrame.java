@@ -60,7 +60,7 @@ import oripa.viewsetting.main.MainScreenSettingDB;
  */
 public class ModelViewFrame extends JFrame
 		implements ActionListener, AdjustmentListener {
-	private static Logger logger = LoggerFactory.getLogger(ModelViewFrame.class);
+	private final static Logger logger = LoggerFactory.getLogger(ModelViewFrame.class);
 
 	private ModelViewScreen screen;
 	private final JMenu menuDisp = new JMenu(ORIPA.res.getString("MENU_Disp"));

@@ -45,6 +45,9 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.Config;
 import oripa.appstate.InputCommandStatePopper;
 import oripa.bind.ButtonFactory;
@@ -87,6 +90,8 @@ import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 public class UIPanel extends JPanel
 		implements ActionListener {
+
+	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
 	private final UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
 	private final ValueDB valueDB = ValueDB.getInstance();
@@ -752,54 +757,43 @@ public class UIPanel extends JPanel
 			screenUpdater.updateScreen();
 		} else if (ae.getSource() == resetButton) {
 		} else if (ae.getSource() == buildButton) {
-			boolean buildOK = false;
-			CreasePatternInterface creasePattern = paintContext.getCreasePattern();
+			showFoldedModelWindows();
+		} else if (ae.getSource() == gridChangeButton) {
+			int value;
+			try {
+				value = Integer.valueOf(textFieldGrid.getText());
+				System.out.println("type");
 
-			// if (document.buildOrigami3(origamiModel, false)) {
-			OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-			OrigamiModel origamiModel = modelFactory.createOrigamiModel(
-					creasePattern, creasePattern.getPaperSize());
-
-			FoldedModelInfo foldedModelInfo = estimationHolder.getFoldedModelInfo();
-
-			if (origamiModel.isProbablyFoldable()) {
-				buildOK = true;
-			} else {
-				if (JOptionPane.showConfirmDialog(
-						this, resources.getString(
-								ResourceKey.WARNING,
-								StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
-						"Failed", JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-
-					origamiModel = modelFactory
-							.createOrigamiModelNoDuplicateLines(
-									creasePattern, creasePattern.getPaperSize());
-					if (origamiModel.isProbablyFoldable()) {
-						buildOK = true;
-					} else {
-						JOptionPane
-								.showMessageDialog(
-										this,
-										resources
-												.getString(
-														ResourceKey.WARNING,
-														StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID),
-										"Failed Level1",
-										JOptionPane.INFORMATION_MESSAGE);
-					}
+				if (value < 128 && value > 2) {
+					textFieldGrid.setValue(value);
+					paintContext.setGridDivNum(value);
+					screenUpdater.updateScreen();
 				}
+			} catch (Exception ex) {
+				System.out.println(ex);
 			}
+		}
 
-			Folder folder = new Folder();
+	}
 
-			if (buildOK) {
+	private void showFoldedModelWindows() {
+		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
+		FoldedModelInfo foldedModelInfo = estimationHolder.getFoldedModelInfo();
+
+		Folder folder = new Folder();
+
+		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
+
+		if (origamiModel == null) {
+
+		} else {
+			if (origamiModel.isProbablyFoldable()) {
 				folder.fold(origamiModel, foldedModelInfo, fullEstimation);
 				estimationHolder.setOrigamiModel(origamiModel);
 
 				// TODO move this block out of if(buildOK) statement.
 				if (foldedModelInfo.getFoldablePatternCount() != 0) {
-					System.out.println("RenderFrame");
+					logger.info("foldable layer layout is found.");
 
 					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
 					JFrame frame = resultFrameFactory.createFrame(this,
@@ -819,23 +813,43 @@ public class UIPanel extends JPanel
 
 			modelView.setVisible(true);
 			modelView.repaint();
+		}
+	}
 
-		} else if (ae.getSource() == gridChangeButton) {
-			int value;
-			try {
-				value = Integer.valueOf(textFieldGrid.getText());
-				System.out.println("type");
+	private OrigamiModel buildOrigamiModel(final CreasePatternInterface creasePattern) {
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		OrigamiModel origamiModel = modelFactory.createOrigamiModel(
+				creasePattern, creasePattern.getPaperSize());
 
-				if (value < 128 && value > 2) {
-					textFieldGrid.setValue(value);
-					paintContext.setGridDivNum(value);
-					screenUpdater.updateScreen();
-				}
-			} catch (Exception ex) {
-				System.out.println(ex);
-			}
+		if (origamiModel.isProbablyFoldable()) {
+			return origamiModel;
 		}
 
+		if (JOptionPane.showConfirmDialog(
+				this, resources.getString(
+						ResourceKey.WARNING,
+						StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
+				"Failed", JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
+			return origamiModel;
+		}
+
+		origamiModel = modelFactory
+				.createOrigamiModelNoDuplicateLines(
+						creasePattern, creasePattern.getPaperSize());
+		if (origamiModel.isProbablyFoldable()) {
+			return origamiModel;
+		}
+
+		JOptionPane.showMessageDialog(
+				this,
+				resources.getString(
+						ResourceKey.WARNING,
+						StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID),
+				"Failed Level1",
+				JOptionPane.INFORMATION_MESSAGE);
+
+		return origamiModel;
 	}
 
 	private void addPropertyChangeListenersToSetting() {
