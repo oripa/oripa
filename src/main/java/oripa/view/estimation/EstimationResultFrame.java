@@ -27,19 +27,14 @@ import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
-import oripa.viewsetting.estimation.RenderFrameSettingDB;
 
 public class EstimationResultFrame extends JFrame implements ActionListener {
-
-	private final RenderFrameSettingDB setting = RenderFrameSettingDB.getInstance();
 
 	FoldedModelScreen screen;
 	EstimationResultUI ui;
 	public JLabel hintLabel;
 
 	public EstimationResultFrame() {
-		addPropertyChangeListenersToSetting();
-
 		setTitle("Folded Origami");
 		screen = new FoldedModelScreen();
 		ui = new EstimationResultUI();
@@ -65,15 +60,5 @@ public class EstimationResultFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(final ActionEvent arg0) {
 		// TODO Auto-generated method stub
-	}
-
-	private void addPropertyChangeListenersToSetting() {
-		setting.addPropertyChangeListener(
-				RenderFrameSettingDB.FRAME_VISIBLE, e -> {
-					screen.resetViewMatrix();
-					screen.redrawOrigami();
-					ui.updateLabel();
-					setVisible(true);
-				});
 	}
 }
