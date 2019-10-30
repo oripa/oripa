@@ -21,8 +21,8 @@ package oripa.resource;
 public class Constants {
 
 	public static enum ModelDisplayMode {
-
-		FILL_COLOR, FILL_WHITE, FILL_ALPHA, FILL_NONE
+//		FILL_COLOR, FILL_WHITE,
+		FILL_ALPHA, FILL_NONE
 	};
 
 	final public static double EPS = 1.0e-6;

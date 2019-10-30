@@ -98,10 +98,10 @@ public class ModelViewScreen extends JPanel
 
 		preSize = getSize();
 
-		addPropertyChangeListeners();
+		addPropertyChangeListenersToSetting();
 	}
 
-	private void addPropertyChangeListeners() {
+	private void addPropertyChangeListenersToSetting() {
 		var mainScreenSetting = MainScreenSettingDB.getInstance();
 
 		mainScreenSetting.addPropertyChangeListener(
@@ -136,8 +136,7 @@ public class ModelViewScreen extends JPanel
 	// may results scale = zero if it is just after construction.
 
 	private void resetViewMatrix(final int boundSize) {
-//		Doc document = ORIPA.doc;
-//		OrigamiModel origamiModel = document.getOrigamiModel();
+
 		List<OriFace> faces = origamiModel.getFaces();
 
 		boolean hasModel = origamiModel.hasModel();
@@ -170,24 +169,10 @@ public class ModelViewScreen extends JPanel
 		if (origamiModel == null) {
 			return;
 		}
-//		Doc document = ORIPA.doc;
-//		OrigamiModel origamiModel = document.getOrigamiModel();
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
 			switch (modelDisplayMode) {
-			case FILL_COLOR:
-				if (face.faceFront) {
-					g2d.setColor(new Color(255, 200, 200));
-				} else {
-					g2d.setColor(new Color(200, 200, 255));
-				}
-				g2d.fill(face.outline);
-				break;
-			case FILL_WHITE:
-				g2d.setColor(Color.WHITE);
-				g2d.fill(face.outline);
-				break;
 			case FILL_ALPHA:
 				g2d.setColor(new Color(100, 100, 100));
 				g2d.fill(face.outline);
@@ -240,9 +225,6 @@ public class ModelViewScreen extends JPanel
 	@Override
 	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
-
-//		Doc document = ORIPA.doc;
-//		OrigamiModel orirgamiModel = document.getOrigamiModel();
 
 		if (bufferImage == null) {
 			buildBufferImage();

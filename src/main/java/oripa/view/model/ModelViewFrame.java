@@ -19,8 +19,6 @@
 package oripa.view.model;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
@@ -59,7 +57,7 @@ import oripa.viewsetting.main.MainScreenSettingDB;
  *
  */
 public class ModelViewFrame extends JFrame
-		implements ActionListener, AdjustmentListener {
+		implements AdjustmentListener {
 	private final static Logger logger = LoggerFactory.getLogger(ModelViewFrame.class);
 
 	private ModelViewScreen screen;
@@ -78,10 +76,6 @@ public class ModelViewFrame extends JFrame
 	public JLabel hintLabel = new JLabel(ORIPA.res.getString("Direction_Basic"));
 	private final JMenu dispSubMenu = new JMenu(
 			ORIPA.res.getString("MENU_DispType"));
-	private final JRadioButtonMenuItem menuItemFillColor = new JRadioButtonMenuItem(
-			ORIPA.res.getString("MENU_FillColor"));
-	private final JRadioButtonMenuItem menuItemFillWhite = new JRadioButtonMenuItem(
-			ORIPA.res.getString("MENU_FillWhite"));
 	private final JRadioButtonMenuItem menuItemFillAlpha = new JRadioButtonMenuItem(
 			ORIPA.res.getString("MENU_FillAlpha"));
 	private final JRadioButtonMenuItem menuItemFillNone = new JRadioButtonMenuItem(
@@ -124,17 +118,11 @@ public class ModelViewFrame extends JFrame
 		dispSubMenu.add(menuItemFillAlpha);
 		dispGroup.add(menuItemFillNone);
 		dispSubMenu.add(menuItemFillNone);
-		menuItemFillAlpha.setSelected(true);
-		menuItemFlip.addActionListener(this);
-		menuItemSlideFaces.addActionListener(this);
-		menuItemFillColor.addActionListener(this);
-		menuItemFillWhite.addActionListener(this);
-		menuItemFillAlpha.addActionListener(this);
-		menuItemFillNone.addActionListener(this);
-		menuItemExportDXF.addActionListener(this);
-		menuItemExportOBJ.addActionListener(this);
 
-		menuItemCrossLine.addActionListener(this);
+		menuItemFillAlpha.setSelected(true);
+
+		addActionListenersToComponents();
+
 		menuBar.add(menuFile);
 		menuBar.add(menuDisp);
 
@@ -153,44 +141,43 @@ public class ModelViewFrame extends JFrame
 		this.origamiModel = origamiModel;
 	}
 
-	@Override
-	public void actionPerformed(final ActionEvent e) {
-		// Doc document = ORIPA.doc;
-		// OrigamiModel origamiModel = document.getOrigamiModel();
+	private void addActionListenersToComponents() {
+		menuItemFlip.addActionListener(e -> flipOrigamiModel());
 
-		FolderTool folderTool = new FolderTool();
-		if (e.getSource() == menuItemFlip) {
-			folderTool.filpAll(origamiModel);
-			screen.repaint();
-		} else if (e.getSource() == menuItemSlideFaces) {
-			folderTool.setFacesOutline(
-					origamiModel.getVertices(), origamiModel.getFaces(),
-					menuItemSlideFaces.isSelected());
-			screen.repaint();
-		} else if (e.getSource() == menuItemCrossLine) {
+		menuItemSlideFaces.addActionListener(e -> slideOrigamiModel());
+
+		menuItemCrossLine.addActionListener(e -> {
 			var mainScreenSetting = MainScreenSettingDB.getInstance();
 			mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected());
-		} else if (e.getSource() == menuItemExportDXF) {
-			exportFile(FileTypeKey.DXF_MODEL);
-		} else if (e.getSource() == menuItemExportOBJ) {
-			exportFile(FileTypeKey.OBJ_MODEL);
-		} else if (e.getSource() == menuItemFillColor
-				|| e.getSource() == menuItemFillWhite
-				|| e.getSource() == menuItemFillAlpha
-				|| e.getSource() == menuItemFillNone) {
-			if (menuItemFillColor.isSelected()) {
-				screen.setModelDisplayMode(ModelDisplayMode.FILL_COLOR);
-			} else if (menuItemFillWhite.isSelected()) {
-				screen.setModelDisplayMode(ModelDisplayMode.FILL_WHITE);
-			} else if (menuItemFillAlpha.isSelected()) {
-				screen.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
-			} else if (menuItemFillNone.isSelected()) {
-				screen.setModelDisplayMode(ModelDisplayMode.FILL_NONE);
-			}
+		});
 
-			logger.info("fillMode " + screen.getModelDisplayMode());
+		menuItemExportDXF.addActionListener(e -> exportFile(FileTypeKey.DXF_MODEL));
+
+		menuItemExportOBJ.addActionListener(e -> exportFile(FileTypeKey.OBJ_MODEL));
+
+		menuItemFillAlpha.addActionListener(e -> {
+			screen.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
 			screen.repaint();
-		}
+		});
+
+		menuItemFillNone.addActionListener(e -> {
+			screen.setModelDisplayMode(ModelDisplayMode.FILL_NONE);
+			screen.repaint();
+		});
+	}
+
+	private void flipOrigamiModel() {
+		FolderTool folderTool = new FolderTool();
+		folderTool.filpAll(origamiModel);
+		screen.repaint();
+	}
+
+	private void slideOrigamiModel() {
+		FolderTool folderTool = new FolderTool();
+		folderTool.setFacesOutline(
+				origamiModel.getVertices(), origamiModel.getFaces(),
+				menuItemSlideFaces.isSelected());
+		screen.repaint();
 	}
 
 	@Override
