@@ -771,10 +771,19 @@ public class UIPanel extends JPanel {
 		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
 
 		if (origamiModel.isProbablyFoldable()) {
-			folder.fold(origamiModel, foldedModelInfo, fullEstimation);
+			final int foldableModelCount = folder.fold(
+					origamiModel, foldedModelInfo, fullEstimation);
 			estimationHolder.setOrigamiModel(origamiModel);
 
-			if (foldedModelInfo.getFoldablePatternCount() != 0) {
+			if (foldableModelCount == -1) {
+
+			} else if (foldableModelCount == 0) {
+				JOptionPane.showMessageDialog(
+						null, "No answer was found", "ORIPA",
+						JOptionPane.DEFAULT_OPTION);
+			}
+//			else if (foldedModelInfo.getFoldablePatternCount() > 0) {
+			else if (foldableModelCount > 0) {
 				logger.info("foldable layer layout is found.");
 
 				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();

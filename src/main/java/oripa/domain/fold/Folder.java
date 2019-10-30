@@ -47,7 +47,14 @@ public class Folder {
 	public Folder() {
 	}
 
-	// TODO: this method should return FoldedModelInfo.
+	/**
+	 *
+	 * @param origamiModel
+	 * @param foldedModelInfo
+	 * @param fullEstimation
+	 * @return the number of flat foldable layer layouts. -1 if
+	 *         <code>fullEstimation</code> is false;
+	 */
 	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
 			final boolean fullEstimation) {
 //		OrigamiModel origamiModel = m_doc.getOrigamiModel();
@@ -72,7 +79,7 @@ public class Folder {
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
-			return 0;
+			return -1;
 		}
 
 		// After folding construct the sbfaces
@@ -108,7 +115,6 @@ public class Folder {
 
 		foldedModelInfo.setCurrentORmatIndex(0);
 		if (foldableOverlapRelations.isEmpty()) {
-			ORIPA.outMessage("No answer was found");
 			return 0;
 		} else {
 			matrixCopy(foldableOverlapRelations.get(0), overlapRelation);
