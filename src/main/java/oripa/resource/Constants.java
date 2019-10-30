@@ -20,7 +20,7 @@ package oripa.resource;
 
 public class Constants {
 
-	public static enum ModelDispMode {
+	public static enum ModelDisplayMode {
 
 		FILL_COLOR, FILL_WHITE, FILL_ALPHA, FILL_NONE
 	};

@@ -34,10 +34,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.ORIPA;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.persistent.doc.FileTypeKey;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
@@ -46,7 +48,7 @@ import oripa.persistent.filetool.FileAccessActionProvider;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserFactory;
 import oripa.persistent.filetool.SavingActionTemplate;
-import oripa.resource.Constants;
+import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.viewsetting.main.MainScreenSettingDB;
 
@@ -58,8 +60,9 @@ import oripa.viewsetting.main.MainScreenSettingDB;
  */
 public class ModelViewFrame extends JFrame
 		implements ActionListener, AdjustmentListener {
+	private static Logger logger = LoggerFactory.getLogger(ModelViewFrame.class);
 
-	ModelViewScreen screen;
+	private ModelViewScreen screen;
 	private final JMenu menuDisp = new JMenu(ORIPA.res.getString("MENU_Disp"));
 	private final JMenu menuFile = new JMenu(ORIPA.res.getString("File"));
 	private final JMenuItem menuItemExportDXF = new JMenuItem(
@@ -176,16 +179,16 @@ public class ModelViewFrame extends JFrame
 				|| e.getSource() == menuItemFillAlpha
 				|| e.getSource() == menuItemFillNone) {
 			if (menuItemFillColor.isSelected()) {
-				PaintConfig.modelDispMode = Constants.ModelDispMode.FILL_COLOR;
+				screen.setModelDisplayMode(ModelDisplayMode.FILL_COLOR);
 			} else if (menuItemFillWhite.isSelected()) {
-				PaintConfig.modelDispMode = Constants.ModelDispMode.FILL_WHITE;
+				screen.setModelDisplayMode(ModelDisplayMode.FILL_WHITE);
 			} else if (menuItemFillAlpha.isSelected()) {
-				PaintConfig.modelDispMode = Constants.ModelDispMode.FILL_ALPHA;
+				screen.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
 			} else if (menuItemFillNone.isSelected()) {
-				PaintConfig.modelDispMode = Constants.ModelDispMode.FILL_NONE;
+				screen.setModelDisplayMode(ModelDisplayMode.FILL_NONE);
 			}
 
-			System.out.println("fillMode" + PaintConfig.modelDispMode);
+			logger.info("fillMode " + screen.getModelDisplayMode());
 			screen.repaint();
 		}
 	}

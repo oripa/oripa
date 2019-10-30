@@ -46,9 +46,9 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.paint.core.LineSetting;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.resource.Constants;
+import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.value.OriLine;
 import oripa.viewsetting.main.MainScreenSettingDB;
@@ -78,6 +78,8 @@ public class ModelViewScreen extends JPanel
 	private OrigamiModel origamiModel = null;
 	private final SheetCutOutlinesHolder lineHolder;
 	private final CallbackOnUpdate onUpdateCrossLine;
+
+	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
 	public ModelViewScreen(final SheetCutOutlinesHolder aLineHolder, final CallbackOnUpdate c) {
 
@@ -112,6 +114,14 @@ public class ModelViewScreen extends JPanel
 						onUpdateCrossLine.onUpdate();
 					}
 				});
+	}
+
+	public void setModelDisplayMode(final ModelDisplayMode mode) {
+		modelDisplayMode = mode;
+	}
+
+	public ModelDisplayMode getModelDisplayMode() {
+		return modelDisplayMode;
 	}
 
 	public void setModel(final OrigamiModel origamiModel, final int boundSize) {
@@ -165,19 +175,24 @@ public class ModelViewScreen extends JPanel
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
-			if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_COLOR) {
+			switch (modelDisplayMode) {
+			case FILL_COLOR:
 				if (face.faceFront) {
 					g2d.setColor(new Color(255, 200, 200));
 				} else {
 					g2d.setColor(new Color(200, 200, 255));
 				}
 				g2d.fill(face.outline);
-			} else if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_WHITE) {
+				break;
+			case FILL_WHITE:
 				g2d.setColor(Color.WHITE);
 				g2d.fill(face.outline);
-			} else if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
+				break;
+			case FILL_ALPHA:
 				g2d.setColor(new Color(100, 100, 100));
 				g2d.fill(face.outline);
+				break;
+			case FILL_NONE:
 			}
 
 			g2d.setColor(Color.BLACK);
@@ -251,7 +266,7 @@ public class ModelViewScreen extends JPanel
 
 		if (hasModel) {
 			g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
-			if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
+			if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 			}
 			drawModel(g2d);
