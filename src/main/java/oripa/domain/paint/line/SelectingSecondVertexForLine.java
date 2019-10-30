@@ -32,7 +32,7 @@ public class SelectingSecondVertexForLine extends PickingVertex {
 
 		// create new line
 		OriLine line = new OriLine(p0.x - dir.x, p0.y - dir.y,
-				p0.x + dir.x, p0.y + dir.y, context.getLineTypeToDraw());
+				p0.x + dir.x, p0.y + dir.y, context.getLineTypeOfNewLines());
 
 		double paperSize = context.getCreasePattern().getPaperSize();
 

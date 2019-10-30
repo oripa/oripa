@@ -1,6 +1,5 @@
 package oripa.domain.paint.core;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -164,7 +163,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	@Override
 	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 		drawPickedLines(g2d, context);
-		drawPickedVertices(g2d, context, context.getLineTypeToDraw());
+		drawPickedVertices(g2d, context, context.getLineTypeOfNewLines());
 
 	}
 
@@ -232,6 +231,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		OriLine candidate = context.getCandidateLineToPick();
 		if (candidate != null) {
 			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
+			g2d.setStroke(LineSetting.STROKE_PICKED);
+
 			drawLine(g2d, candidate);
 		}
 	}
@@ -251,9 +252,10 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		if (context.getVertexCount() > 0) {
 			Vector2d picked = context.peekVertex();
 
-			Color color = selector
-					.selectColorByLineType(context.getLineTypeToDraw());
-			g2d.setColor(color);
+			g2d.setColor(selector.selectColorByLineType(context.getLineTypeOfNewLines()));
+
+			g2d.setStroke(selector.selectStroke(context.getLineTypeOfNewLines()));
+
 			drawLine(g2d, picked,
 					NearestItemFinder.getCandidateVertex(context, true));
 		}

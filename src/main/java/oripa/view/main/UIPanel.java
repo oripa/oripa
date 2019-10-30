@@ -273,8 +273,6 @@ public class UIPanel extends JPanel
 		lineTypePanel.add(lineTypeValleyButton);
 		lineTypePanel.add(lineTypeAuxButton);
 
-		lineTypeMountainButton.setSelected(true);
-
 		mainPanel.setLayout(new GridBagLayout());
 
 		int n = 0;
@@ -538,6 +536,8 @@ public class UIPanel extends JPanel
 		settingDB.setTypeTo((TypeForChange) alterLine_combo_to
 				.getSelectedItem());
 
+		lineTypeMountainButton.doClick();
+
 	}
 
 	private void constructButtons(final PaintContextInterface context) {
@@ -668,13 +668,13 @@ public class UIPanel extends JPanel
 				e -> new ChangeOnByValueButtonSelected());
 
 		lineTypeMountainButton.addActionListener(
-				e -> paintContext.setLineTypeToDraw(OriLine.TYPE_RIDGE));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_RIDGE));
 
 		lineTypeValleyButton.addActionListener(
-				e -> paintContext.setLineTypeToDraw(OriLine.TYPE_VALLEY));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_VALLEY));
 
 		lineTypeAuxButton.addActionListener(
-				e -> paintContext.setLineTypeToDraw(OriLine.TYPE_NONE));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_NONE));
 
 		editModeInputLineButton
 				.addActionListener(new InputCommandStatePopper());

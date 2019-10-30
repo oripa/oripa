@@ -33,7 +33,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 
 			if (length > 0) {
 				OriLine vl = GeomUtil.getLineByValue(vertex, length, -angle,
-						context.getLineTypeToDraw());
+						context.getLineTypeOfNewLines());
 
 				context.creasePatternUndo().pushUndoInfo();
 

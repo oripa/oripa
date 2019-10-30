@@ -19,7 +19,7 @@ public class SelectingSecondVertexForSegment extends PickingVertex {
 		}
 
 		OriLine line = new OriLine(context.getVertex(0),
-				context.getVertex(1), context.getLineTypeToDraw());
+				context.getVertex(1), context.getLineTypeOfNewLines());
 
 		context.creasePatternUndo().pushUndoInfo();
 
