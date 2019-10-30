@@ -288,7 +288,7 @@ public class MainFrame extends JFrame implements ActionListener,
 		menuBar.add(menuHelp);
 		setJMenuBar(menuBar);
 
-		addSavingActions();
+		modifySavingActions();
 	}
 
 	private void createMenuItems() {
@@ -325,7 +325,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 	}
 
-	private void addSavingActions() {
+	private void modifySavingActions() {
 
 		// overwrite the action to update GUI after saving.
 		filterDB.getFilter(FileTypeKey.OPX).setSavingAction(
@@ -336,8 +336,7 @@ public class MainFrame extends JFrame implements ActionListener,
 						try {
 							saveOpxFile(data, getPath());
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							logger.error("Failed to save file " + getPath(), e);
 							return false;
 						}
 						return true;
