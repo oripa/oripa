@@ -21,7 +21,6 @@ package oripa.view.main;
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.InputEvent;
@@ -71,8 +70,7 @@ import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
 
-public class MainFrame extends JFrame implements ActionListener,
-		ComponentListener, WindowListener {
+public class MainFrame extends JFrame implements ComponentListener, WindowListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
@@ -179,7 +177,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		mainScreen = new PainterScreen(actionHolder, paintContext, document);
 		screenUpdater = mainScreen.getScreenUpdater();
-		createMenuItems();
+		createPaintMenuItems();
 
 		menuItemCopyAndPaste.setText(resourceHolder.getString(
 				ResourceKey.LABEL, StringID.COPY_PASTE_ID));
@@ -198,78 +196,17 @@ public class MainFrame extends JFrame implements ActionListener,
 		this.setIconImage(imgLoader.loadAsIcon("icon/oripa.gif", getClass())
 				.getImage());
 
-		menuItemOpen.addActionListener(this);
-		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				InputEvent.CTRL_DOWN_MASK));
-
-		menuItemSave.addActionListener(this);
-		menuItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				InputEvent.CTRL_DOWN_MASK));
-
-		menuItemSaveAs.addActionListener(this);
-		menuItemSaveAsImage.addActionListener(this);
-
-		menuItemExit.addActionListener(this);
-		// menuItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-		// ActionEvent.CTRL_MASK));
-
-		menuItemUndo.addActionListener(this);
-		menuItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
-				InputEvent.CTRL_DOWN_MASK));
-
-		menuItemClear.addActionListener(this);
-		menuItemClear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
-				InputEvent.CTRL_DOWN_MASK));
-
-		menuItemAbout.addActionListener(this);
-		menuItemExportDXF.addActionListener(this);
-		menuItemExportOBJ.addActionListener(this);
-		menuItemExportCP.addActionListener(this);
-		menuItemExportSVG.addActionListener(this);
-		menuItemProperty.addActionListener(this);
-		menuItemChangeOutline.addActionListener(this);
-		menuItemRepeatCopy.addActionListener(this);
-		menuItemCircleCopy.addActionListener(this);
-
-		menuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				InputEvent.CTRL_DOWN_MASK));
-
-		// a patch to select all lines and switch to select-line mode.
-		// bad design...
-		menuItemSelectAll.addActionListener(event -> {
-			paintContext.creasePatternUndo().pushUndoInfo();
-			paintContext.getPainter().selectAllOriLines();
-			paintContext.getCreasePattern().stream()
-					.filter(l -> l.selected).forEach(l -> paintContext.pushLine(l));
-		});
-
-		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_ESCAPE, 0));
-
-		menuItemUnSelectAll
-				.addActionListener(new UnselectAllLinesActionListener(paintContext, screenUpdater));
-
-		menuItemDeleteSelectedLines
-				.addActionListener(
-						new DeleteSelectedLinesActionListener(paintContext, screenUpdater));
-		menuItemDeleteSelectedLines.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_DELETE, 0));
-
-		menuItemCopyAndPaste.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
-		menuItemCutAndPaste.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
-
 		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
 			MRUFilesMenuItem[i] = new JMenuItem();
-			MRUFilesMenuItem[i].addActionListener(this);
 		}
+
+		addActionListenersToComponents();
 
 		loadIniFile();
 
 		// Building the menu bar
 		JMenuBar menuBar = new JMenuBar();
-		buildMenuFile();
+		buildFileMenu();
 
 		menuEdit.add(menuItemCopyAndPaste);
 		menuEdit.add(menuItemCutAndPaste);
@@ -291,7 +228,12 @@ public class MainFrame extends JFrame implements ActionListener,
 		modifySavingActions();
 	}
 
-	private void createMenuItems() {
+	public void initialize() {
+		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
+		circleCopyDialog = new CircleCopyDialog(this, paintContext);
+	}
+
+	private void createPaintMenuItems() {
 		/**
 		 * For changing outline
 		 */
@@ -321,7 +263,99 @@ public class MainFrame extends JFrame implements ActionListener,
 						null);
 	}
 
-	private void constructElements() {
+	private void addActionListenersToComponents() {
+		menuItemOpen.addActionListener(e -> {
+			String path = openFile(null);
+			mainScreen.repaint();
+			updateMenu(path);
+			updateTitleText();
+		});
+
+		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
+				InputEvent.CTRL_DOWN_MASK));
+
+		menuItemSave.addActionListener(e -> {
+			if (!document.getDataFilePath().equals("")) {
+				saveOpxFile(document, document.getDataFilePath());
+			} else {
+				saveAnyTypeUsingGUI();
+			}
+		});
+		menuItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+				InputEvent.CTRL_DOWN_MASK));
+
+		menuItemSaveAs.addActionListener(e -> saveAnyTypeUsingGUI());
+		menuItemSaveAsImage.addActionListener(e -> {
+			String lastDirectory = fileHistory.getLastDirectory();
+			saveFile(lastDirectory, document.getDataFileName(),
+					filterDB.getFilter(FileTypeKey.PICT));
+		});
+
+		menuItemExit.addActionListener(e -> exit());
+
+		menuItemUndo.addActionListener(e -> {
+			try {
+				actionHolder.getMouseAction().undo(paintContext);
+			} catch (NullPointerException ex) {
+				if (actionHolder.getMouseAction() == null) {
+					logger.error("mouseAction should not be null.", ex);
+				} else {
+					logger.error("Wrong implementation.", ex);
+				}
+			}
+			mainScreen.repaint();
+		});
+		menuItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+				InputEvent.CTRL_DOWN_MASK));
+
+		menuItemClear.addActionListener(e -> clear());
+		menuItemClear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
+				InputEvent.CTRL_DOWN_MASK));
+
+		menuItemAbout.addActionListener(e -> JOptionPane.showMessageDialog(this,
+				resourceHolder.getString(ResourceKey.APP_INFO, StringID.AppInfo.ABOUT_THIS_ID),
+				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
+				JOptionPane.INFORMATION_MESSAGE));
+
+		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.DXF_MODEL));
+		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
+		menuItemExportCP.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.CP));
+		menuItemExportSVG.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.SVG));
+
+		menuItemProperty.addActionListener(e -> showPropertyDialog());
+		menuItemRepeatCopy.addActionListener(e -> showArrayCopyDialog());
+		menuItemCircleCopy.addActionListener(e -> showCircleCopyDialog());
+
+		// a patch to select all lines and switch to select-line mode.
+		// bad design...
+		menuItemSelectAll.addActionListener(event -> {
+			paintContext.creasePatternUndo().pushUndoInfo();
+			paintContext.getPainter().selectAllOriLines();
+			paintContext.getCreasePattern().stream()
+					.filter(l -> l.selected).forEach(l -> paintContext.pushLine(l));
+		});
+		menuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
+				InputEvent.CTRL_DOWN_MASK));
+
+		menuItemUnSelectAll.addActionListener(
+				new UnselectAllLinesActionListener(paintContext, screenUpdater));
+		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_ESCAPE, 0));
+
+		menuItemDeleteSelectedLines
+				.addActionListener(
+						new DeleteSelectedLinesActionListener(paintContext, screenUpdater));
+		menuItemDeleteSelectedLines.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_DELETE, 0));
+
+		menuItemCopyAndPaste.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
+		menuItemCutAndPaste.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
+
+		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
+			MRUFilesMenuItem[i].addActionListener(this::openFileFromMRUFileMenuItem);
+		}
 
 	}
 
@@ -356,131 +390,79 @@ public class MainFrame extends JFrame implements ActionListener,
 		updateTitleText();
 	}
 
-	public void initialize() {
-		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
-		circleCopyDialog = new CircleCopyDialog(this, paintContext);
+	private void openFileFromMRUFileMenuItem(final ActionEvent e) {
+
+		var menuItem = (JMenuItem) (e.getSource());
+		try {
+			String filePath = menuItem.getText();
+			openFile(filePath);
+			updateTitleText();
+		} catch (Exception ex) {
+			showErrorDialog(ORIPA.res.getString("Error_FileLoadFailed"), ex);
+		}
+		mainScreen.repaint();
 	}
 
-	@Override
-	public void actionPerformed(final ActionEvent e) {
-
-		// Check the last opened files
-		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
-			if (e.getSource() == MRUFilesMenuItem[i]) {
-				try {
-					String filePath = MRUFilesMenuItem[i].getText();
-					openFile(filePath);
-					updateTitleText();
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(this, e.toString(),
-							ORIPA.res.getString("Error_FileLoadFailed"),
-							JOptionPane.ERROR_MESSAGE);
-				}
-				mainScreen.repaint();
-				return;
-			}
-		}
-
-		// TODO Refactor the long, long if-else sequences!
-
-		// String lastPath = fileHistory.getLastPath();
+	private void saveAnyTypeUsingGUI() {
 		String lastDirectory = fileHistory.getLastDirectory();
 
-		if (e.getSource() == menuItemOpen) {
-			String path = openFile(null);
-			mainScreen.repaint();
-			updateMenu(path);
-			updateTitleText();
-		} else if (e.getSource() == menuItemSave
-				&& !document.getDataFilePath().equals("")) {
-			saveOpxFile(document, document.getDataFilePath());
+		String path = saveFile(lastDirectory, document.getDataFileName(),
+				filterDB.getSavables());
 
-		} else if (e.getSource() == menuItemSave
-				|| e.getSource() == menuItemSaveAs) {
+		updateMenu(path);
+		updateTitleText();
 
-			String path = saveFile(lastDirectory, document.getDataFileName(),
-					filterDB.getSavables());
+	}
 
-			updateMenu(path);
-			updateTitleText();
+	private void exit() {
+		saveIniFile();
+		System.exit(0);
+	}
 
-		} else if (e.getSource() == menuItemSaveAsImage) {
+	private void clear() {
+		document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
+		paintContext.setCreasePattern(document.getCreasePattern());
 
-			saveFile(
-					lastDirectory,
-					document.getDataFileName(),
-					filterDB.getFilter(FileTypeKey.PICT));
+		ChildFrameManager manager = ChildFrameManager.getManager();
+		manager.closeAllRecursively(this);
 
-		} else if (e.getSource() == menuItemExportDXF) {
-			saveFileWithModelCheck(FileTypeKey.DXF_MODEL);
-		} else if (e.getSource() == menuItemExportOBJ) {
-			saveFileWithModelCheck(FileTypeKey.OBJ_MODEL);
-		} else if (e.getSource() == menuItemExportCP) {
-			saveFileWithModelCheck(FileTypeKey.CP);
-		} else if (e.getSource() == menuItemExportSVG) {
-			saveFileWithModelCheck(FileTypeKey.SVG);
-		} else if (e.getSource() == menuItemChangeOutline) {
-			// Globals.preEditMode = Globals.editMode;
-			// Globals.editMode = Constants.EditMode.EDIT_OUTLINE;
+		screenSetting.setGridVisible(true);
 
-			// Globals.setMouseAction(new EditOutlineAction());
+		updateTitleText();
+	}
 
-		} else if (e.getSource() == menuItemExit) {
-			saveIniFile();
-			System.exit(0);
-		} else if (e.getSource() == menuItemUndo) {
-			if (actionHolder.getMouseAction() != null) {
-				actionHolder.getMouseAction().undo(paintContext);
-			} else {
-				paintContext.creasePatternUndo().undo();
-			}
-			mainScreen.repaint();
-		} else if (e.getSource() == menuItemClear) {
+	private void showPropertyDialog() {
+		AbstractPropertyDialog dialog = new PropertyDialog(this, document);
 
-			document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
-			paintContext.setCreasePattern(document.getCreasePattern());
+		dialog.setValue();
+		Rectangle rec = getBounds();
+		dialog.setLocation(
+				(int) (rec.getCenterX() - dialog.getWidth() / 2),
+				(int) (rec.getCenterY() - dialog.getHeight() / 2));
+		dialog.setModal(true);
+		dialog.setVisible(true);
+	}
 
-			ChildFrameManager manager = ChildFrameManager.getManager();
-			manager.closeAllRecursively(this);
+	private void showArrayCopyDialog() {
+		Painter painter = paintContext.getPainter();
+		if (painter.countSelectedLines() == 0) {
+			JOptionPane.showMessageDialog(this, "Select target lines",
+					"ArrayCopy", JOptionPane.WARNING_MESSAGE);
 
-			screenSetting.setGridVisible(true);
-
-			updateTitleText();
-		} else if (e.getSource() == menuItemAbout) {
-			JOptionPane.showMessageDialog(this,
-					resourceHolder.getString(ResourceKey.APP_INFO, StringID.AppInfo.ABOUT_THIS_ID),
-					resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
-					JOptionPane.INFORMATION_MESSAGE);
-		} else if (e.getSource() == menuItemProperty) {
-			AbstractPropertyDialog dialog = new PropertyDialog(this, document);
-
-			dialog.setValue();
-			Rectangle rec = getBounds();
-			dialog.setLocation(
-					(int) (rec.getCenterX() - dialog.getWidth() / 2),
-					(int) (rec.getCenterY() - dialog.getHeight() / 2));
-			dialog.setModal(true);
-			dialog.setVisible(true);
-		} else if (e.getSource() == menuItemRepeatCopy) {
-			Painter painter = paintContext.getPainter();
-			if (painter.countSelectedLines() == 0) {
-				JOptionPane.showMessageDialog(this, "Select target lines",
-						"ArrayCopy", JOptionPane.WARNING_MESSAGE);
-
-			} else {
-				arrayCopyDialog.setVisible(true);
-			}
-		} else if (e.getSource() == menuItemCircleCopy) {
-			Painter painter = paintContext.getPainter();
-			if (painter.countSelectedLines() == 0) {
-				JOptionPane.showMessageDialog(this, "Select target lines",
-						"ArrayCopy", JOptionPane.WARNING_MESSAGE);
-
-			} else {
-				circleCopyDialog.setVisible(true);
-			}
+		} else {
+			arrayCopyDialog.setVisible(true);
 		}
+	}
 
+	private void showCircleCopyDialog() {
+		Painter painter = paintContext.getPainter();
+		if (painter.countSelectedLines() == 0) {
+			JOptionPane.showMessageDialog(this, "Select target lines",
+					"CircleCopy", JOptionPane.WARNING_MESSAGE);
+
+		} else {
+			circleCopyDialog.setVisible(true);
+		}
 	}
 
 	public void updateTitleText() {
@@ -503,11 +485,7 @@ public class MainFrame extends JFrame implements ActionListener,
 		}
 		File givenFile = new File(directory, fileName);
 
-		return saveFile(givenFile.getPath(), filters);
-	}
-
-	private String saveFile(final String filePath,
-			final FileAccessSupportFilter<Doc>... filters) {
+		var filePath = givenFile.getPath();
 
 		try {
 			final DocDAO dao = new DocDAO();
@@ -529,39 +507,9 @@ public class MainFrame extends JFrame implements ActionListener,
 		} catch (FileChooserCanceledException e) {
 
 		}
-		//
-		// CreasePatternInterface creasePattern = document.getCreasePattern();
-		// OrigamiModel origamiModel = document.getOrigamiModel();
-		//
-		// boolean hasModel = origamiModel.hasModel();
-		//
-		// OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		// origamiModel = modelFactory.buildOrigami(creasePattern,
-		// document.getPaperSize(), true);
-		// document.setOrigamiModel(origamiModel);
-		//
-		// if (type == FileTypeKey.OBJ_MODEL) {
-		//
-		// } else if (!hasModel && !origamiModel.isProbablyFoldable()) {
-		//
-		// JOptionPane.showConfirmDialog(null,
-		// "Warning: Building a set of polygons from crease pattern "
-		// + "was failed.", "Warning", JOptionPane.OK_OPTION,
-		// JOptionPane.WARNING_MESSAGE);
-		// }
-		//
-		// DocDAO dao = new DocDAO();
-		//
-		// try {
-		// dao.saveWithGUI(document, null,
-		// this,
-		// new FileAccessSupportFilter[] { filterDB.getFilter(type) });
-		// } catch (FileChooserCanceledException e) {
-		//
-		// }
 	}
 
-	private void buildMenuFile() {
+	private void buildFileMenu() {
 		menuFile.removeAll();
 
 		menuFile.add(menuItemClear);
@@ -601,7 +549,7 @@ public class MainFrame extends JFrame implements ActionListener,
 
 		fileHistory.useFile(filePath);
 
-		buildMenuFile();
+		buildFileMenu();
 	}
 
 	/**
