@@ -20,6 +20,9 @@ package oripa.domain.fold.rule;
 
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.fold.OriEdge;
 import oripa.domain.fold.OriVertex;
 import oripa.util.collection.AbstractRule;
@@ -33,14 +36,15 @@ import oripa.value.OriLine;
  * clockwise order, foldable origami satisfies the following condition:
  *
  * a_1 + a_3 + ... = a_2 + a_4 + ... = PI
- * 
+ *
  * where a_i is the angle in radian between l_i and l_{i+1}, especially a_n is
  * the angle between l_1 and l_n.
- * 
+ *
  * @author Koji
  *
  */
 public class KawasakiTheorem extends AbstractRule<OriVertex> {
+	private static final Logger logger = LoggerFactory.getLogger(KawasakiTheorem.class);
 
 	/**
 	 *
@@ -77,7 +81,7 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 		final double oneDegreeInRad = Math.PI / 180;
 		final double eps = oneDegreeInRad / 2;
 		if (Math.abs(oddSum - Math.PI) > eps) {
-			System.out.println("edge angle sum invalid");
+			logger.info("edge angle sum invalid");
 			return false;
 		}
 
