@@ -128,14 +128,10 @@ public class EstimationResultUI extends JPanel {
 			jButtonNextAnswer.setBounds(new Rectangle(109, 4, 87, 27));
 
 			jButtonNextAnswer
-					.addActionListener(new java.awt.event.ActionListener() {
-
-						@Override
-						public void actionPerformed(final java.awt.event.ActionEvent e) {
-							foldedModelInfo.setNextORMat();
-							screen.redrawOrigami();
-							updateLabel();
-						}
+					.addActionListener(e -> {
+						foldedModelInfo.setNextORMat();
+						screen.redrawOrigami();
+						updateLabel();
 					});
 		}
 		return jButtonNextAnswer;
@@ -153,14 +149,10 @@ public class EstimationResultUI extends JPanel {
 			jButtonPrevAnswer.setBounds(new Rectangle(15, 4, 89, 27));
 
 			jButtonPrevAnswer
-					.addActionListener(new java.awt.event.ActionListener() {
-
-						@Override
-						public void actionPerformed(final java.awt.event.ActionEvent e) {
-							foldedModelInfo.setPrevORMat();
-							screen.redrawOrigami();
-							updateLabel();
-						}
+					.addActionListener(e -> {
+						foldedModelInfo.setPrevORMat();
+						screen.redrawOrigami();
+						updateLabel();
 					});
 		}
 		return jButtonPrevAnswer;
@@ -176,15 +168,12 @@ public class EstimationResultUI extends JPanel {
 			jCheckBoxOrder = new JCheckBox();
 			jCheckBoxOrder.setBounds(new Rectangle(15, 75, 91, 31));
 			jCheckBoxOrder.setText("Flip");
-			jCheckBoxOrder.addItemListener(new java.awt.event.ItemListener() {
-
-				@Override
-				public void itemStateChanged(final java.awt.event.ItemEvent e) {
-					screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
-				}
+			jCheckBoxOrder.addItemListener(e -> {
+				screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
 			});
 		}
 		return jCheckBoxOrder;
+
 	}
 
 	/**
@@ -198,12 +187,8 @@ public class EstimationResultUI extends JPanel {
 			jCheckBoxShadow.setBounds(new Rectangle(105, 75, 80, 31));
 			jCheckBoxShadow.setText("Shade");
 
-			jCheckBoxShadow.addItemListener(new java.awt.event.ItemListener() {
-
-				@Override
-				public void itemStateChanged(final java.awt.event.ItemEvent e) {
-					screen.shadeFaces(e.getStateChange() == ItemEvent.SELECTED);
-				}
+			jCheckBoxShadow.addItemListener(e -> {
+				screen.shadeFaces(e.getStateChange() == ItemEvent.SELECTED);
 			});
 		}
 		return jCheckBoxShadow;
@@ -222,12 +207,8 @@ public class EstimationResultUI extends JPanel {
 			jCheckBoxUseColor.setText("Use Color");
 
 			jCheckBoxUseColor
-					.addItemListener(new java.awt.event.ItemListener() {
-
-						@Override
-						public void itemStateChanged(final java.awt.event.ItemEvent e) {
-							screen.setUseColor(e.getStateChange() == ItemEvent.SELECTED);
-						}
+					.addItemListener(e -> {
+						screen.setUseColor(e.getStateChange() == ItemEvent.SELECTED);
 					});
 		}
 		return jCheckBoxUseColor;
@@ -245,12 +226,8 @@ public class EstimationResultUI extends JPanel {
 			jCheckBoxEdge.setSelected(true);
 			jCheckBoxEdge.setText("Draw Edge");
 
-			jCheckBoxEdge.addItemListener(new java.awt.event.ItemListener() {
-
-				@Override
-				public void itemStateChanged(final java.awt.event.ItemEvent e) {
-					screen.drawEdge(e.getStateChange() == ItemEvent.SELECTED);
-				}
+			jCheckBoxEdge.addItemListener(e -> {
+				screen.drawEdge(e.getStateChange() == ItemEvent.SELECTED);
 			});
 		}
 		return jCheckBoxEdge;
@@ -269,12 +246,8 @@ public class EstimationResultUI extends JPanel {
 			jCheckBoxFillFace.setText("FillFace");
 
 			jCheckBoxFillFace
-					.addItemListener(new java.awt.event.ItemListener() {
-
-						@Override
-						public void itemStateChanged(final java.awt.event.ItemEvent e) {
-							screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
-						}
+					.addItemListener(e -> {
+						screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
 					});
 		}
 		return jCheckBoxFillFace;
@@ -291,46 +264,24 @@ public class EstimationResultUI extends JPanel {
 			jButtonExport.setBounds(new Rectangle(15, 206, 92, 26));
 			jButtonExport.setText("Export");
 			jButtonExport
-					.addActionListener(new java.awt.event.ActionListener() {
+					.addActionListener(e -> {
 
-						@Override
-						public void actionPerformed(final java.awt.event.ActionEvent e) {
+						Doc doc = new Doc();
+						doc.setFoldedModelInfo(foldedModelInfo);
+						doc.setOrigamiModel(origamiModel);
 
-							Doc doc = new Doc();
-							doc.setFoldedModelInfo(foldedModelInfo);
-							doc.setOrigamiModel(origamiModel);
-
-							try {
-								final DocDAO dao = new DocDAO();
-								dao.saveUsingGUI(
-										doc, null, EstimationResultUI.this, createFilters());
-							} catch (FileChooserCanceledException canceledEx) {
-							} catch (Exception ex) {
-								JOptionPane.showMessageDialog(
-										EstimationResultUI.this,
-										ex.toString(),
-										ORIPA.res
-												.getString("Error_FileSaveFaild"),
-										JOptionPane.ERROR_MESSAGE);
-							}
-//
-//							FileChooserFactory<Doc> chooserFactory = new FileChooserFactory<>();
-//							FileChooser<Doc> fileChooser = chooserFactory
-//									.createChooser(null, createFilters());
-//
-//							try {
-//								// FIXME doc is not set.
-//								fileChooser.getActionForSavingFile(
-//										EstimationResultUI.this).save(document);
-//							} catch (Exception ex) {
-//								JOptionPane.showMessageDialog(
-//										EstimationResultUI.this,
-//										ex.toString(),
-//										ORIPA.res
-//												.getString("Error_FileSaveFaild"),
-//										JOptionPane.ERROR_MESSAGE);
-//							}
-//
+						try {
+							final DocDAO dao = new DocDAO();
+							dao.saveUsingGUI(
+									doc, null, EstimationResultUI.this, createFilters());
+						} catch (FileChooserCanceledException canceledEx) {
+						} catch (Exception ex) {
+							JOptionPane.showMessageDialog(
+									EstimationResultUI.this,
+									ex.toString(),
+									ORIPA.res
+											.getString("Error_FileSaveFaild"),
+									JOptionPane.ERROR_MESSAGE);
 						}
 					});
 		}
