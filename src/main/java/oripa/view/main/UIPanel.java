@@ -530,6 +530,7 @@ public class UIPanel extends JPanel {
 		settingDB.setTypeTo((TypeForChange) alterLine_combo_to
 				.getSelectedItem());
 
+		doFullEstimationCheckBox.setSelected(true);
 		lineTypeMountainButton.doClick();
 
 	}
@@ -701,7 +702,6 @@ public class UIPanel extends JPanel {
 					screenUpdater.updateScreen();
 				});
 
-		doFullEstimationCheckBox.setSelected(true);
 		doFullEstimationCheckBox
 				.addActionListener(e -> {
 					fullEstimation = doFullEstimationCheckBox.isSelected();
