@@ -548,11 +548,10 @@ public class UIPanel extends JPanel {
 				this, JRadioButton.class, actionHolder, screenUpdater, StringID.SELECT_ID,
 				screenUpdater.getKeyListener());
 
-		editModeDeleteLineButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class, actionHolder, screenUpdater,
-						StringID.DELETE_LINE_ID,
-						screenUpdater.getKeyListener());
+		editModeDeleteLineButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, screenUpdater,
+				StringID.DELETE_LINE_ID,
+				screenUpdater.getKeyListener());
 
 		editModeLineTypeButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, actionHolder, screenUpdater, StringID.CHANGE_LINE_TYPE_ID,
@@ -611,35 +610,36 @@ public class UIPanel extends JPanel {
 
 	private void addPaintActionButtons(final int gridWidth, final int gridy_start) {
 
-		paintActionButtonCount = 0;
+		int paintActionButtonCount = 0;
 		// put operation buttons in order
-		addPaintActionButton(lineInputDirectVButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputOnVButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputPBisectorButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputAngleBisectorButton, gridWidth,
-				gridy_start);
-		addPaintActionButton(lineInputTriangleSplitButton, gridWidth,
-				gridy_start);
-		addPaintActionButton(lineInputVerticalLineButton, gridWidth,
-				gridy_start);
-		addPaintActionButton(lineInputSymmetricButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputMirrorButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputByValueButton, gridWidth, gridy_start);
+		addPaintActionButton(lineInputDirectVButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputOnVButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputPBisectorButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputAngleBisectorButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputTriangleSplitButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputVerticalLineButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputSymmetricButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputMirrorButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputByValueButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
 	}
 
-	private int paintActionButtonCount = 0;
-
 	private void addPaintActionButton(final AbstractButton button, final int gridWidth,
-			final int gridy) {
+			final int gridy, final int paintActionButtonCount) {
 
 		GridBagConstraints gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = paintActionButtonCount % gridWidth + 1;
 		gridBagConstraints.gridy = gridy + paintActionButtonCount / gridWidth;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		mainPanel.add(button, gridBagConstraints);
-
-		paintActionButtonCount++;
-
 	}
 
 	private void addActionListenersToComponents() {
