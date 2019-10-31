@@ -46,7 +46,7 @@ import oripa.value.OriLine;
 
 /**
  * A screen to show whether Maekawa theorem and Kawasaki theorem holds.
- * 
+ *
  * @author Koji
  *
  */
@@ -106,7 +106,7 @@ public class FoldabilityScreen extends JPanel
 		this.setVisible(true);
 	}
 
-	public void drawFoldablity(final Graphics2D g2d) {
+	private void drawFoldablity(final Graphics2D g2d) {
 		if (origamiModel == null) {
 			return;
 		}
