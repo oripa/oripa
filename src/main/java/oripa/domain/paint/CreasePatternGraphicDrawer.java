@@ -131,6 +131,7 @@ public class CreasePatternGraphicDrawer {
 			final boolean creaseVisible, final boolean auxVisible) {
 
 		ElementSelector selector = new ElementSelector();
+
 		for (OriLine line : lines) {
 			if (line.typeVal == OriLine.TYPE_NONE && !auxVisible) {
 				continue;
@@ -141,10 +142,10 @@ public class CreasePatternGraphicDrawer {
 				continue;
 			}
 
-			g2d.setColor(selector.selectColorByLineType(line.typeVal));
-			g2d.setStroke(selector.selectStroke(line.typeVal));
+			if (pickedLines == null || !pickedLines.contains(line)) {
+				g2d.setColor(selector.selectColorByLineType(line.typeVal));
+				g2d.setStroke(selector.selectStroke(line.typeVal));
 
-			if (pickedLines == null || pickedLines.contains(line) == false) {
 				g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
 						line.p1.y));
 			}
