@@ -18,8 +18,8 @@ public class LineAdder {
 	private class PointComparatorX implements Comparator<Vector2d> {
 
 		@Override
-		public int compare(Vector2d v1, Vector2d v2) {
-			if(v1.x == v2.x){
+		public int compare(final Vector2d v1, final Vector2d v2) {
+			if (v1.x == v2.x) {
 				return 0;
 			}
 			return v1.x > v2.x ? 1 : -1;
@@ -29,22 +29,22 @@ public class LineAdder {
 	private class PointComparatorY implements Comparator<Vector2d> {
 
 		@Override
-		public int compare(Vector2d v1, Vector2d v2) {
-			if(v1.y == v2.y){
+		public int compare(final Vector2d v1, final Vector2d v2) {
+			if (v1.y == v2.y) {
 				return 0;
 			}
-			return ((Vector2d) v1).y > ((Vector2d) v2).y ? 1 : -1;
+			return v1.y > v2.y ? 1 : -1;
 		}
 	}
 
-
 	/**
-	 * 
+	 *
 	 * @param inputLine
 	 * @param currentLines
 	 * @return true.
 	 */
-	private boolean divideCurrentLines(OriLine inputLine, Collection<OriLine> currentLines){
+	private boolean divideCurrentLines(final OriLine inputLine,
+			final Collection<OriLine> currentLines) {
 
 		LinkedList<OriLine> toBeAdded = new LinkedList<>();
 
@@ -52,10 +52,10 @@ public class LineAdder {
 		for (Iterator<OriLine> iterator = currentLines.iterator(); iterator.hasNext();) {
 			OriLine line = iterator.next();
 
-            if (inputLine.typeVal == OriLine.TYPE_NONE && line.typeVal != OriLine.TYPE_NONE) {
-                continue;
-            }
-            
+			if (inputLine.typeVal == OriLine.TYPE_NONE && line.typeVal != OriLine.TYPE_NONE) {
+				continue;
+			}
+
 			Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
 			if (crossPoint == null) {
 				continue;
@@ -71,48 +71,52 @@ public class LineAdder {
 				toBeAdded.add(new OriLine(line.p1, crossPoint, line.typeVal));
 			}
 
-			//crossingLines.add(line);
+			// crossingLines.add(line);
 		}
 
-		for(OriLine line : toBeAdded){
-			currentLines.add(line);
-		}
+		toBeAdded.forEach(line -> currentLines.add(line));
 
 		return true;
 	}
 
 	/**
-	 * Input line should be divided by other lines. This function returns end points of such new small lines.
+	 * Input line should be divided by other lines. This function returns end
+	 * points of such new small lines.
+	 *
 	 * @param inputLine
 	 * @param currentLines
 	 * @return points on input line divided by currentLines
 	 */
-	private List<Vector2d> createInputLinePoints(OriLine inputLine, Collection<OriLine> currentLines){
+	private List<Vector2d> createInputLinePoints(final OriLine inputLine,
+			final Collection<OriLine> currentLines) {
 		ArrayList<Vector2d> points = new ArrayList<Vector2d>();
 		points.add(inputLine.p0);
 		points.add(inputLine.p1);
-		
+
 		// divide input line by existing lines
 		for (OriLine line : currentLines) {
 
-			// reject (M/V input, aux lines) // It is by MITANI jun, I don't know why.
-			if (inputLine.typeVal != OriLine.TYPE_NONE && 
+			// reject (M/V input, aux lines) // It is by MITANI jun, I don't
+			// know why.
+			if (inputLine.typeVal != OriLine.TYPE_NONE &&
 					line.typeVal == OriLine.TYPE_NONE) {
 				continue;
 			}
 
 			// If the intersection is on the end of the line, skip
 			if (GeomUtil.Distance(inputLine.p0, line.p0) < CalculationResource.POINT_EPS ||
-					GeomUtil.Distance(inputLine.p0, line.p1) < CalculationResource.POINT_EPS||
-					GeomUtil.Distance(inputLine.p1, line.p0) < CalculationResource.POINT_EPS||
+					GeomUtil.Distance(inputLine.p0, line.p1) < CalculationResource.POINT_EPS ||
+					GeomUtil.Distance(inputLine.p1, line.p0) < CalculationResource.POINT_EPS ||
 					GeomUtil.Distance(inputLine.p1, line.p1) < CalculationResource.POINT_EPS) {
 				continue;
 			}
 
-			if (GeomUtil.DistancePointToSegment(line.p0, inputLine.p0, inputLine.p1) < CalculationResource.POINT_EPS) {
+			if (GeomUtil.DistancePointToSegment(line.p0, inputLine.p0,
+					inputLine.p1) < CalculationResource.POINT_EPS) {
 				points.add(line.p0);
 			}
-			if (GeomUtil.DistancePointToSegment(line.p1, inputLine.p0, inputLine.p1) < CalculationResource.POINT_EPS) {
+			if (GeomUtil.DistancePointToSegment(line.p1, inputLine.p0,
+					inputLine.p1) < CalculationResource.POINT_EPS) {
 				points.add(line.p1);
 			}
 
@@ -126,19 +130,20 @@ public class LineAdder {
 
 		return points;
 	}
-	
+
 	/**
-	 * Adds a new OriLine, also searching for intersections with others 
-	 * that would cause their mutual division
-	 * 
+	 * Adds a new OriLine, also searching for intersections with others that
+	 * would cause their mutual division
+	 *
 	 * @param inputLine
-	 * @param currentLines	current line list. it will be affected as 
-	 * 						new lines are added and unnecessary lines are removed.
+	 * @param currentLines
+	 *            current line list. it will be affected as new lines are added
+	 *            and unnecessary lines are removed.
 	 */
 
-	public void addLine(OriLine inputLine, Collection<OriLine> currentLines) {
-		//ArrayList<OriLine> crossingLines = new ArrayList<OriLine>(); // for debug? 
-
+	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines) {
+		// ArrayList<OriLine> crossingLines = new ArrayList<OriLine>(); // for
+		// debug?
 
 		// If it already exists, do nothing
 		for (OriLine line : currentLines) {
@@ -148,11 +153,12 @@ public class LineAdder {
 		}
 
 		divideCurrentLines(inputLine, currentLines);
-		
+
 		List<Vector2d> points = createInputLinePoints(inputLine, currentLines);
-		
+
 		// sort in order to make points sequential
-		boolean sortByX = Math.abs(inputLine.p0.x - inputLine.p1.x) > Math.abs(inputLine.p0.y - inputLine.p1.y);
+		boolean sortByX = Math.abs(inputLine.p0.x - inputLine.p1.x) > Math
+				.abs(inputLine.p0.y - inputLine.p1.y);
 		if (sortByX) {
 			Collections.sort(points, new PointComparatorX());
 		} else {
@@ -176,13 +182,13 @@ public class LineAdder {
 	}
 
 	/**
-	 * 
-	 * @param lines        lines to be added
-	 * @param destination  collection as a destination
+	 *
+	 * @param lines
+	 *            lines to be added
+	 * @param destination
+	 *            collection as a destination
 	 */
-	public void addAll(Collection<OriLine> lines, Collection<OriLine> destination) {
-		for (OriLine line : lines) {
-			addLine(line, destination);
-		}
+	public void addAll(final Collection<OriLine> lines, final Collection<OriLine> destination) {
+		lines.stream().forEach(line -> addLine(line, destination));
 	}
 }
