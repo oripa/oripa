@@ -23,13 +23,10 @@ public class LineMirror {
 			final OriLine baseLine, final Collection<OriLine> lines) {
 
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>(lines.size());
-		for (OriLine line : lines) {
-			if (line.equals(baseLine)) {
-				continue;
-			}
 
-			copiedLines.add(createMirroredLine(line, baseLine));
-		}
+		lines.stream()
+				.filter(line -> !line.equals(baseLine))
+				.forEach(line -> copiedLines.add(createMirroredLine(line, baseLine)));
 
 		return copiedLines;
 	}
