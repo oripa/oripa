@@ -2,6 +2,8 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
@@ -104,13 +106,11 @@ public class ElementRemover {
 	public void removeSelectedLines(
 			final Collection<OriLine> creasePattern) {
 
-		ArrayList<OriLine> selectedLines = new ArrayList<OriLine>();
-
-		creasePattern.stream()
+		List<OriLine> selectedLines = creasePattern.stream()
 				.filter(line -> line.selected)
-				.forEach(line -> selectedLines.add(line));
+				.collect(Collectors.toList());
 
-		selectedLines.forEach(line -> creasePattern.remove(line));
+		creasePattern.removeAll(selectedLines);
 	}
 
 }

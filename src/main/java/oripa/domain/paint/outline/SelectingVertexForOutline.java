@@ -29,15 +29,8 @@ public class SelectingVertexForOutline extends PickingVertex {
 
 		Vector2d v = context.popVertex();
 
-		boolean bClose = false;
-		for (Vector2d tv : context.getPickedVertices()) {
-			if (GeomUtil.Distance(v, tv) < 1) {
-				bClose = true;
-				break;
-			}
-		}
-
-		if (bClose) {
+		if (context.getPickedVertices().stream()
+				.anyMatch(tv -> GeomUtil.Distance(v, tv) < 1)) {
 			if (context.getVertexCount() > 2) {
 				// finish editing
 

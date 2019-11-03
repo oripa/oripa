@@ -55,8 +55,7 @@ public class LinePaster {
 		// -----------------------------------------------
 		// set the result to the current list
 		// -----------------------------------------------
-		crossables.forEach(line -> currentLines.add(line));
-
+		currentLines.addAll(crossables);
 	}
 
 }

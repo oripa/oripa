@@ -2,6 +2,7 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -37,22 +38,24 @@ public class RotatedLineFactory {
 
 		for (int i = 0; i < repetitionCount; i++) {
 			double angleRad = angle * (i + 1);
+			OriPoint center = new OriPoint(cx, cy);
 
-			creasePattern.stream().filter(l -> l.selected).forEach(l -> {
-				OriPoint center = new OriPoint(cx, cy);
-
-				OriPoint r0 = rotateAroundCenter(l.p0, center, angleRad);
-				OriPoint r1 = rotateAroundCenter(l.p1, center, angleRad);
-
-				OriLine rotatedLine = new OriLine(r0, r1, l.getTypeValue());
-
-				if (clipper.clip(rotatedLine)) {
-					rotatedLines.add(rotatedLine);
-				}
-			});
+			rotatedLines.addAll(creasePattern.stream()
+					.filter(l -> l.selected)
+					.map(l -> createRotatedLine(l, center, angleRad))
+					.filter(rl -> clipper.clip(rl))
+					.collect(Collectors.toList()));
 		}
 
 		return rotatedLines;
+	}
+
+	private OriLine createRotatedLine(final OriLine line, final OriPoint center,
+			final double angleRad) {
+		OriPoint r0 = rotateAroundCenter(line.p0, center, angleRad);
+		OriPoint r1 = rotateAroundCenter(line.p1, center, angleRad);
+
+		return new OriLine(r0, r1, line.getTypeValue());
 	}
 
 	private OriPoint rotateAroundCenter(final OriPoint p, final OriPoint center,

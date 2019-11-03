@@ -1,7 +1,8 @@
 package oripa.domain.paint.outline;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
@@ -35,15 +36,10 @@ public class CloseTempOutline {
 			final Collection<Vector2d> outlinevertices) {
 
 		// Delete the current outline
-		ArrayList<OriLine> outlines = new ArrayList<>();
-		for (OriLine line : creasePattern) {
-			if (line.typeVal == OriLine.TYPE_CUT) {
-				outlines.add(line);
-			}
-		}
-		for (OriLine line : outlines) {
-			creasePattern.remove(line);
-		}
+
+		List<OriLine> outlines = creasePattern.stream()
+				.filter(line -> line.typeVal == OriLine.TYPE_CUT).collect(Collectors.toList());
+		creasePattern.removeAll(outlines);
 
 		// Update the contour line
 		PairLoop.iterateAll(
@@ -68,7 +64,8 @@ public class CloseTempOutline {
 				}
 
 				if ((OnPoint0 == null && isOutsideOfTmpOutlineLoop(outlinevertices, line.p0))
-						|| (OnPoint1 == null && isOutsideOfTmpOutlineLoop(outlinevertices, line.p1))) {
+						|| (OnPoint1 == null
+								&& isOutsideOfTmpOutlineLoop(outlinevertices, line.p1))) {
 					painter.removeLine(line);
 					bDeleteLine = true;
 					break;
