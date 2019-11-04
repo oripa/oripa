@@ -29,6 +29,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -196,9 +197,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		this.setIconImage(imgLoader.loadAsIcon("icon/oripa.gif", getClass())
 				.getImage());
 
-		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
-			MRUFilesMenuItem[i] = new JMenuItem();
-		}
+		IntStream.range(0, Config.MRUFILE_NUM)
+				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
 
 		addActionListenersToComponents();
 
