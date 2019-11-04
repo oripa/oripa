@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -19,41 +19,35 @@
 package oripa.util.collection;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * @author Koji
  *
  */
 public class CollectionFilter<Variable> {
-	private Rule<Variable> rule;
+	private final Rule<Variable> rule;
 
 	/**
 	 * Constructor
 	 */
-	public CollectionFilter(Rule<Variable> rule) {
+	public CollectionFilter(final Rule<Variable> rule) {
 		this.rule = rule;
 	}
 
-	public Collection<Variable> findTargets(Collection<Variable> inputs) {
+	public Collection<Variable> findTargets(final Collection<Variable> inputs) {
 
 		return findTargets(inputs, rule);
 	}
 
-	public Collection<Variable> findViolations(Collection<Variable> inputs) {
+	public Collection<Variable> findViolations(final Collection<Variable> inputs) {
 		return findTargets(inputs, rule.asDenied());
 	}
 
-	private Collection<Variable> findTargets(Collection<Variable> inputs, Rule<Variable> r) {
+	private Collection<Variable> findTargets(final Collection<Variable> inputs,
+			final Rule<Variable> r) {
 
-		HashSet<Variable> targets = new HashSet<>();
-
-		for (Variable input : inputs) {
-			if (r.holds(input)) {
-				targets.add(input);
-			}
-		}
-		return targets;
+		return inputs.stream().filter(input -> r.holds(input)).collect(Collectors.toSet());
 	}
 
 }
