@@ -37,8 +37,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -46,13 +44,14 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingWorker;
 import javax.vecmath.Vector2d;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
@@ -62,7 +61,9 @@ import oripa.viewsetting.main.ScreenUpdater;
 
 public class PainterScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,
-		ActionListener, ComponentListener, Observer {
+		ActionListener, ComponentListener {
+
+	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
 
 	private final MainScreenSettingDB setting = MainScreenSettingDB
 			.getInstance();
@@ -91,11 +92,14 @@ public class PainterScreen extends JPanel
 
 	private final CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
-	private final MouseActionHolder mouseActionHolder = MouseActionHolder
-			.getInstance();
+	private final MouseActionHolder mouseActionHolder;
 
-	public PainterScreen(final PaintContextInterface aContext,
+	public PainterScreen(
+			final MouseActionHolder mouseActionHolder,
+			final PaintContextInterface aContext,
 			final SheetCutOutlinesHolder aCutOutlineHolder) {
+		this.mouseActionHolder = mouseActionHolder;
+		screenUpdater.setMouseActionHolder(mouseActionHolder);
 		paintContext = aContext;
 		cutOutlinesHolder = aCutOutlineHolder;
 		addMouseListener(this);
@@ -103,8 +107,7 @@ public class PainterScreen extends JPanel
 		addMouseWheelListener(this);
 		addComponentListener(this);
 
-		screenUpdater.addObserver(this);
-		setting.addObserver(this);
+		addPropertyChangeListenersToSetting();
 
 		scale = 1.5;
 		paintContext.setScale(scale);
@@ -116,6 +119,10 @@ public class PainterScreen extends JPanel
 		popupItem_FlipFace.addActionListener(this);
 		popup.add(popupItem_FlipFace);
 		preSize = getSize();
+	}
+
+	public ViewScreenUpdater getScreenUpdater() {
+		return screenUpdater;
 	}
 
 	/**
@@ -230,15 +237,8 @@ public class PainterScreen extends JPanel
 
 		Graphics2D bufferG2D = updateBufferImage();
 
-		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
-
-		drawer.draw(
-				bufferG2D,
-				paintContext,
-				PaintConfig.dispMVLines,
-				PaintConfig.dispAuxLines,
-				PaintConfig.dispVertex
-						|| mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
+		drawer.draw(bufferG2D, paintContext,
+				mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
 
 		for (Vector2d v : crossPoints) {
 			bufferG2D.setColor(Color.RED);
@@ -247,7 +247,7 @@ public class PainterScreen extends JPanel
 					10.0 / scale, 10.0 / scale));
 		}
 
-		if (PaintConfig.bDispCrossLine) {
+		if (paintContext.isCrossLineVisible()) {
 			List<OriLine> crossLines = cutOutlinesHolder.getSheetCutOutlines();
 			drawer.drawAllLines(bufferG2D, crossLines);
 		}
@@ -360,7 +360,7 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 && // zoom
+		if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0 && // zoom
 				(e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
 
 			double moved = e.getX() - preMousePoint.getX() + e.getY()
@@ -377,7 +377,7 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
+		if ((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0) {
 			transX += (e.getX() - preMousePoint.getX()) / scale;
 			transY += (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();
@@ -477,19 +477,23 @@ public class PainterScreen extends JPanel
 		// TODO Auto-generated method stub
 	}
 
-	@Override
-	public void update(final Observable o, final Object arg) {
-		String name = o.toString();
-		paintContext.setGridVisible(setting.isGridVisible());
-		if (name.equals(screenUpdater.getName())) {
-			if (arg != null) {
-				if (arg.equals(ViewScreenUpdater.REDRAW_REQUESTED)) {
-					repaint();
-				}
-			}
+	private void addPropertyChangeListenersToSetting() {
+		screenUpdater.addPropertyChangeListener(
+				ViewScreenUpdater.REDRAW_REQUESTED, e -> repaint());
 
-		}
+		setting.addPropertyChangeListener(
+				MainScreenSettingDB.GRID_VISIBLE, e -> {
+					paintContext.setGridVisible((boolean) e.getNewValue());
+					repaint();
+				});
+
+		setting.addPropertyChangeListener(
+				MainScreenSettingDB.CROSS_LINE_VISIBLE, e -> {
+					var visible = (boolean) e.getNewValue();
+					logger.info("receive crossLineVisible has become " + visible);
+					paintContext.setCrossLineVisible(visible);
+					repaint();
+				});
 
 	}
-
 }

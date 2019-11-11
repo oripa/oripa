@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -26,31 +26,23 @@ import java.util.Collection;
  */
 public class ConjunctionLoop<Variable> extends AbstractRule<Collection<Variable>> {
 
-	private Rule<Variable> term;
+	private final Rule<Variable> term;
 //	private HashSet<Variable> violations = new HashSet<>();
 
 	/**
-	 * 
+	 *
 	 * @param term
 	 */
-	public ConjunctionLoop(Rule<Variable> term) {
+	public ConjunctionLoop(final Rule<Variable> term) {
 		this.term = term;
 	}
 
-	public boolean holds(Collection<Variable> inputs) {
-
-		boolean result = true;
-
-		for (Variable input : inputs) {
-			if (!term.holds(input)) {
-				return false;
-			}
-		}
-
-		return result;
+	@Override
+	public boolean holds(final Collection<Variable> inputs) {
+		return inputs.stream().allMatch(input -> term.holds(input));
 	}
 
-	public Collection<Variable> findViolations(Collection<Variable> inputs) {
+	public Collection<Variable> findViolations(final Collection<Variable> inputs) {
 		CollectionFilter<Variable> filter = new CollectionFilter<>(term);
 
 		return filter.findViolations(inputs);
@@ -61,7 +53,5 @@ public class ConjunctionLoop<Variable> extends AbstractRule<Collection<Variable>
 //	public HashSet<Variable> getViolations() {
 //		return violations;
 //	}
-
-
 
 }

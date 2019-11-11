@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -20,55 +20,11 @@ package oripa.resource;
 
 public class Constants {
 
-    public static enum EditMode {
+	public static enum ModelDisplayMode {
+//		FILL_COLOR, FILL_WHITE,
+		FILL_ALPHA, FILL_NONE
+	};
 
-        NONE,
-        INPUT_LINE,
-        CHANGE_LINE_TYPE,
-        DELETE_LINE,
-        DIVIDE_LINE,
-        PICK_LINE,
-        ADD_VERTEX,
-        DELETE_VERTEX,
-        EDIT_OUTLINE
-    };
-
-    public static enum ModelEditMode {
-
-        NONE,
-        INPUT_CROSS_LINE
-    };
-
-    public static enum LineInputMode {
-
-        DIRECT_V,
-        ON_V,
-        OVERLAP_V,
-        OVERLAP_E,
-        TRIANGLE_SPLIT,
-        BISECTOR,
-        VERTICAL_LINE,
-        SYMMETRIC_LINE,
-        BY_VALUE,
-        MIRROR,
-        COPY_AND_PASTE,
-        PBISECTOR // perpendicular bisector
-    };
-
-    public static enum SubLineInputMode {
-
-        NONE,
-        PICK_LENGTH,
-        PICK_ANGLE
-    };
-
-    public static enum ModelDispMode {
-
-        FILL_COLOR,
-        FILL_WHITE,
-        FILL_ALPHA,
-        FILL_NONE
-    };
-    final public static double EPS = 1.0e-6;
-    final public static double DEFAULT_PAPER_SIZE = 400;
+	final public static double EPS = 1.0e-6;
+	final public static double DEFAULT_PAPER_SIZE = 400;
 }

@@ -8,12 +8,9 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class TriangleSplitAction extends GraphicMouseAction {
 
-
-	public TriangleSplitAction(){
+	public TriangleSplitAction() {
 		setActionState(new SelectingVertexForTriangleSplit());
 	}
-
-
 
 //	private OriLine closeLine = null;
 //
@@ -26,49 +23,43 @@ public class TriangleSplitAction extends GraphicMouseAction {
 //			if(closeLine != null){
 //				closeLine.selected = false;
 //			}
-//			
+//
 //			closeLine = context.pickCandidateL;
-//	
+//
 //			if(closeLine != null){
 //				closeLine.selected = true;
 //			}
-//		}		
+//		}
 //		return result;
 //	}
 
-
-
-
 	@Override
-	public void onDrag(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
+	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
-
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
-
 
 		drawPickCandidateVertex(g2d, context);
 	}
 
-
-
 	@Override
-	public void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

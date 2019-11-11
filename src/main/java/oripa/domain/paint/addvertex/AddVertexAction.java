@@ -9,15 +9,12 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class AddVertexAction extends GraphicMouseAction {
 
-
-	public AddVertexAction(){
+	public AddVertexAction() {
 		setEditMode(EditMode.VERTEX);
 
 		setActionState(new AddingVertex());
 
 	}
-
-
 
 //	@Override
 //	public Vector2d onMove(MouseContext context, AffineTransform affine,
@@ -28,27 +25,24 @@ public class AddVertexAction extends GraphicMouseAction {
 //				context, current, true);
 //
 //		context.pickCandidateV = closeVertex;
-//		
+//
 //		return closeVertex;
 //	}
 
-
-
 	@Override
-	public void onDrag(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
-
-	}
-
-
-	@Override
-	public void onRelease(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
-
+	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
+
+	}
+
+	@Override
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 
@@ -56,10 +50,8 @@ public class AddVertexAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 	}
-
-
 
 }

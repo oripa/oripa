@@ -27,7 +27,7 @@ public class SelectingSecondVertexForBisector extends PickingVertex {
 
 		Painter painter = context.getPainter();
 		painter.addPBisector(
-				p0, p1);
+				p0, p1, context.getLineTypeOfNewLines());
 
 		context.clear(false);
 	}

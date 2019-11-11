@@ -72,7 +72,6 @@ public class PastingOnVertex extends PickingVertex {
 
 		List<OriLine> shiftedLines = new LinkedList<>();
 
-		int i = 0;
 		for (OriLine l : lines) {
 			OriLine shifted = new OriLine();
 

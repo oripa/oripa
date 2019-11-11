@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -46,11 +46,12 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.paint.core.LineSetting;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.resource.Constants;
+import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.value.OriLine;
+import oripa.viewsetting.main.MainScreenSettingDB;
 
 public class ModelViewScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener,
@@ -70,17 +71,20 @@ public class ModelViewScreen extends JPanel
 	private final AffineTransform affineTransform = new AffineTransform();
 	public boolean dispSlideFace = false;
 	private OriLine crossLine = null;
+	private boolean crossLineVisible = false;
 	private int crossLineAngleDegree = 90;
 	private double crossLinePosition = 0;
 
 	private OrigamiModel origamiModel = null;
 	private final SheetCutOutlinesHolder lineHolder;
-	private final CallbackOnUpdate callbackOnUpdate;
+	private final CallbackOnUpdate onUpdateCrossLine;
+
+	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
 	public ModelViewScreen(final SheetCutOutlinesHolder aLineHolder, final CallbackOnUpdate c) {
 
 		lineHolder = aLineHolder;
-		callbackOnUpdate = c;
+		onUpdateCrossLine = c;
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -93,6 +97,31 @@ public class ModelViewScreen extends JPanel
 		setBackground(Color.white);
 
 		preSize = getSize();
+
+		addPropertyChangeListenersToSetting();
+	}
+
+	private void addPropertyChangeListenersToSetting() {
+		var mainScreenSetting = MainScreenSettingDB.getInstance();
+
+		mainScreenSetting.addPropertyChangeListener(
+				MainScreenSettingDB.CROSS_LINE_VISIBLE, e -> {
+					crossLineVisible = (boolean) e.getNewValue();
+					if (crossLineVisible) {
+						recalcCrossLine();
+					} else {
+						repaint();
+						onUpdateCrossLine.onUpdate();
+					}
+				});
+	}
+
+	public void setModelDisplayMode(final ModelDisplayMode mode) {
+		modelDisplayMode = mode;
+	}
+
+	public ModelDisplayMode getModelDisplayMode() {
+		return modelDisplayMode;
 	}
 
 	public void setModel(final OrigamiModel origamiModel, final int boundSize) {
@@ -107,8 +136,7 @@ public class ModelViewScreen extends JPanel
 	// may results scale = zero if it is just after construction.
 
 	private void resetViewMatrix(final int boundSize) {
-//		Doc document = ORIPA.doc;
-//		OrigamiModel origamiModel = document.getOrigamiModel();
+
 		List<OriFace> faces = origamiModel.getFaces();
 
 		boolean hasModel = origamiModel.hasModel();
@@ -137,28 +165,19 @@ public class ModelViewScreen extends JPanel
 		}
 	}
 
-	public void drawModel(final Graphics2D g2d) {
+	private void drawModel(final Graphics2D g2d) {
 		if (origamiModel == null) {
 			return;
 		}
-//		Doc document = ORIPA.doc;
-//		OrigamiModel origamiModel = document.getOrigamiModel();
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
-			if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_COLOR) {
-				if (face.faceFront) {
-					g2d.setColor(new Color(255, 200, 200));
-				} else {
-					g2d.setColor(new Color(200, 200, 255));
-				}
-				g2d.fill(face.outline);
-			} else if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_WHITE) {
-				g2d.setColor(Color.WHITE);
-				g2d.fill(face.outline);
-			} else if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
+			switch (modelDisplayMode) {
+			case FILL_ALPHA:
 				g2d.setColor(new Color(100, 100, 100));
 				g2d.fill(face.outline);
+				break;
+			case FILL_NONE:
 			}
 
 			g2d.setColor(Color.BLACK);
@@ -174,7 +193,7 @@ public class ModelViewScreen extends JPanel
 			}
 		}
 
-		if (PaintConfig.bDispCrossLine) {
+		if (crossLineVisible) {
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 			g2d.setStroke(LineSetting.STROKE_CUT_MODEL);
 			g2d.setColor(Color.RED);
@@ -207,9 +226,6 @@ public class ModelViewScreen extends JPanel
 	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
-//		Doc document = ORIPA.doc;
-//		OrigamiModel orirgamiModel = document.getOrigamiModel();
-
 		if (bufferImage == null) {
 			buildBufferImage();
 		}
@@ -232,7 +248,7 @@ public class ModelViewScreen extends JPanel
 
 		if (hasModel) {
 			g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
-			if (PaintConfig.modelDispMode == Constants.ModelDispMode.FILL_ALPHA) {
+			if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 			}
 			drawModel(g2d);
@@ -274,8 +290,7 @@ public class ModelViewScreen extends JPanel
 
 		repaint();
 
-		callbackOnUpdate.onUpdate();
-		// ORIPA.mainFrame.repaint();
+		onUpdateCrossLine.onUpdate();
 	}
 
 	@Override

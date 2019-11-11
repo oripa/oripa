@@ -26,33 +26,14 @@ import oripa.domain.paint.line.TwoPointLineAction;
  */
 public class MouseActionHolder {
 
-	private static MouseActionHolder instance;
-
-	/**
-	 *
-	 * @return a holder singleton
-	 */
-	public static synchronized MouseActionHolder getInstance() {
-		if (instance == null) {
-			instance = new MouseActionHolder();
-			instance.setMouseAction(new TwoPointLineAction());
-		}
-		return instance;
-	}
-
-	/**
-	 * Hidden.
-	 *
-	 * Constructor
-	 */
-	private MouseActionHolder() {
-
-	}
-
 	/**
 	 *
 	 */
 	private GraphicMouseActionInterface action;
+
+	public MouseActionHolder() {
+		setMouseAction(new TwoPointLineAction());
+	}
 
 	/**
 	 *

@@ -4,7 +4,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -34,7 +33,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 
 			if (length > 0) {
 				OriLine vl = GeomUtil.getLineByValue(vertex, length, -angle,
-						PaintConfig.inputLineType);
+						context.getLineTypeOfNewLines());
 
 				context.creasePatternUndo().pushUndoInfo();
 

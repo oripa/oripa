@@ -1,47 +1,47 @@
 package oripa.viewsetting.main;
 
-import oripa.viewsetting.ViewSettingDataBase;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
-public class MainScreenSettingDB extends ViewSettingDataBase{
+public class MainScreenSettingDB {
 
-	
 	private boolean gridVisible = true;
+	public static final String GRID_VISIBLE = "grid visible";
 
+	private boolean crossLineVisible = false;
+	public static final String CROSS_LINE_VISIBLE = "cross line visible";
+
+	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 	// ---------
 	private static MainScreenSettingDB instance = null;
 
-	private MainScreenSettingDB(){}
-	
-	public static MainScreenSettingDB getInstance(){
-		if(instance == null){
+	private MainScreenSettingDB() {
+	}
+
+	public static MainScreenSettingDB getInstance() {
+		if (instance == null) {
 			instance = new MainScreenSettingDB();
 		}
-		
+
 		return instance;
 	}
 
-//	public static final String REDRAW_REQUESTED = "redraw requested";
-//	public void requestRedraw(){
-//		setChanged();
-//		notifyObservers(REDRAW_REQUESTED);
-//	}
-	
-	
-	public boolean isGridVisible() {
-		return gridVisible;
+	public void addPropertyChangeListener(final String propertyName,
+			final PropertyChangeListener listener) {
+		support.addPropertyChangeListener(propertyName, listener);
 	}
 
-
-
-	public void setGridVisible(boolean gridVisible) {
+	public void setGridVisible(final boolean gridVisible) {
+		var old = this.gridVisible;
 		this.gridVisible = gridVisible;
-		this.setChanged();
+		support.firePropertyChange(GRID_VISIBLE, old, gridVisible);
 	}
 
+	public void setCrossLineVisible(final boolean visible) {
+		var old = crossLineVisible;
+		crossLineVisible = visible;
+		support.firePropertyChange(CROSS_LINE_VISIBLE, old, visible);
+	}
 
-//	@Override
-//	public String getName() {
-//		return this.getClass().getName();
-//	}
 }

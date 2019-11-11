@@ -4,27 +4,25 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 
 import oripa.domain.paint.core.LineSetting;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.value.OriLine;
 
 public class ElementSelector {
 
-	public Color selectColorByPickupOrder(int order, int count){
-		if(order == count - 1){
+	public Color selectColorByPickupOrder(final int order, final int count, final int lineType) {
+		if (order == count - 1) {
 			return Color.GREEN;
 		}
 
-		return selectColorByLineType(PaintConfig.inputLineType);
+		return selectColorByLineType(lineType);
 	}
 
-	public Color selectLineColor(OriLine line){
+	public Color selectLineColor(final OriLine line) {
 
 		Color color;
 
-		if(line.selected){
+		if (line.selected) {
 			color = LineSetting.LINE_COLOR_CANDIDATE;
-		}
-		else {
+		} else {
 			color = selectColorByLineType(line.typeVal);
 		}
 
@@ -32,8 +30,7 @@ public class ElementSelector {
 
 	}
 
-
-	public Color selectColorByLineType(int lineType){
+	public Color selectColorByLineType(final int lineType) {
 		Color color;
 
 		switch (lineType) {
@@ -59,7 +56,7 @@ public class ElementSelector {
 		return color;
 	}
 
-	public BasicStroke selectStroke(int lineType){
+	public BasicStroke selectStroke(final int lineType) {
 		BasicStroke stroke;
 		switch (lineType) {
 		case OriLine.TYPE_NONE:

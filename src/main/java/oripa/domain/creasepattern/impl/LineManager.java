@@ -26,7 +26,6 @@ public class LineManager implements Collection<OriLine> {
 
 	@Override
 	public boolean contains(final Object o) {
-		// TODO Auto-generated method stub
 		return lines.contains(o);
 	}
 
@@ -42,8 +41,6 @@ public class LineManager implements Collection<OriLine> {
 
 	@Override
 	public boolean remove(final Object o) {
-		OriLine l = (OriLine) o;
-
 		return lines.remove(o);
 	}
 
@@ -78,7 +75,6 @@ public class LineManager implements Collection<OriLine> {
 
 	@Override
 	public boolean containsAll(final Collection<?> c) {
-		// TODO Auto-generated method stub
 		return lines.containsAll(c);
 	}
 

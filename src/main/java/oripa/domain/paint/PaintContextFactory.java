@@ -1,5 +1,6 @@
 package oripa.domain.paint;
 
+import oripa.Config;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.paint.core.PaintContext;
 import oripa.resource.Constants;
@@ -14,6 +15,7 @@ public class PaintContextFactory {
 				patternFactory.createCreasePattern(
 						Constants.DEFAULT_PAPER_SIZE));
 
+		context.setGridDivNum(Config.DEFAULT_GRID_DIV_NUM);
 		return context;
 	}
 }

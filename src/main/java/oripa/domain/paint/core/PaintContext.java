@@ -30,11 +30,19 @@ public class PaintContext implements PaintContextInterface {
 	private OriLine candidateLineToPick = new OriLine();
 
 	private boolean gridVisible = true;
+	private int gridDivNum;
 	private double scale;
 
 	private ArrayList<Vector2d> gridPoints;
 
+	private boolean vertexVisible = true;
+	private boolean mvLineVisible = true;
+	private boolean auxLineVisible = true;
+	private boolean crossLineVisible = false;
+
 	private boolean missionCompleted = false;
+
+	private int lineTypeOfNewLines;
 
 	private Point2D.Double mousePoint;
 
@@ -92,15 +100,81 @@ public class PaintContext implements PaintContextInterface {
 		this.mousePoint = logicalPoint;
 	}
 
+//	/*
+//	 * (non Javadoc)
+//	 *
+//	 * @see oripa.domain.paint.core.PaintContextInterface#set(double, boolean)
+//	 */
+//	@Override
+//	public void setDisplayConfig(final double scale, final boolean dispGrid) {
+//		this.scale = scale;
+//		this.gridVisible = dispGrid;
+//	}
+
+	@Override
+	public void setMVLineVisible(final boolean visible) {
+		mvLineVisible = visible;
+	}
+
+	@Override
+	public boolean isMVLineVisible() {
+		return mvLineVisible;
+	}
+
+	@Override
+	public boolean isVertexVisible() {
+		return vertexVisible;
+	}
+
+	@Override
+	public void setVertexVisible(final boolean visible) {
+		vertexVisible = visible;
+	}
+
+	@Override
+	public void setAuxLineVisible(final boolean visible) {
+		auxLineVisible = visible;
+	}
+
+	@Override
+	public boolean isAuxLineVisible() {
+		return auxLineVisible;
+	}
+
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#set(double, boolean)
+	 * @see oripa.domain.paint.PaintContextInterface#getGridDivNum()
 	 */
 	@Override
-	public void setDisplayConfig(final double scale, final boolean dispGrid) {
-		this.scale = scale;
-		this.gridVisible = dispGrid;
+	public int getGridDivNum() {
+		return gridDivNum;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.PaintContextInterface#setGridDivNum(int)
+	 */
+	@Override
+	public void setGridDivNum(final int divNum) {
+		gridDivNum = divNum;
+		updateGrids();
+	}
+
+	private void updateGrids() {
+		gridPoints = new ArrayList<>();
+		double paperSize = creasePattern.getPaperSize();
+
+		double step = paperSize / gridDivNum;
+		for (int ix = 0; ix < gridDivNum + 1; ix++) {
+			for (int iy = 0; iy < gridDivNum + 1; iy++) {
+				double x = -paperSize / 2 + step * ix;
+				double y = -paperSize / 2 + step * iy;
+
+				gridPoints.add(new Vector2d(x, y));
+			}
+		}
 	}
 
 	/*
@@ -109,19 +183,7 @@ public class PaintContext implements PaintContextInterface {
 	 * @see oripa.domain.paint.core.PaintContextInterface#updateGrids(int)
 	 */
 	@Override
-	public Collection<Vector2d> updateGrids(final int gridDivNum) {
-		gridPoints = new ArrayList<>();
-		double paperSize = creasePattern.getPaperSize();
-
-		double step = paperSize / gridDivNum;
-		for (int ix = 0; ix < PaintConfig.gridDivNum + 1; ix++) {
-			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = -paperSize / 2 + step * ix;
-				double y = -paperSize / 2 + step * iy;
-
-				gridPoints.add(new Vector2d(x, y));
-			}
-		}
+	public Collection<Vector2d> getGrids() {
 
 		return gridPoints;
 	}
@@ -360,11 +422,21 @@ public class PaintContext implements PaintContextInterface {
 
 	/**
 	 * @param gridVisible
-	 *            Sets gridVisibleS
+	 *            Sets gridVisible
 	 */
 	@Override
 	public void setGridVisible(final boolean gridVisible) {
 		this.gridVisible = gridVisible;
+	}
+
+	@Override
+	public void setCrossLineVisible(final boolean visible) {
+		crossLineVisible = visible;
+	}
+
+	@Override
+	public boolean isCrossLineVisible() {
+		return crossLineVisible;
 	}
 
 	/**
@@ -382,6 +454,16 @@ public class PaintContext implements PaintContextInterface {
 	@Override
 	public void setScale(final double scale) {
 		this.scale = scale;
+	}
+
+	@Override
+	public void setLineTypeOfNewLines(final int lineType) {
+		lineTypeOfNewLines = lineType;
+	}
+
+	@Override
+	public int getLineTypeOfNewLines() {
+		return lineTypeOfNewLines;
 	}
 
 	/**

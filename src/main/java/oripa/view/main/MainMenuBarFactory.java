@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -20,27 +20,31 @@ package oripa.view.main;
 
 import java.awt.Component;
 
+import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.file.FileHistory;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class MainMenuBarFactory {
 
 	/**
-	 * 
+	 *
 	 * @param owner
 	 *            a component which will own the menu bar.
 	 * @return menu bar
 	 */
 	public MainMenuBar createBar(
 			final Component owner,
+			final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
+			final ScreenUpdaterInterface screenUpdater,
 			final FileHistory history) {
 
-		MainMenuBar bar = new MainMenuBar(owner, aContext);
+		MainMenuBar bar = new MainMenuBar(owner, actionHolder, aContext, screenUpdater);
 
 		bar.setFileHistoryPaths(history);
 

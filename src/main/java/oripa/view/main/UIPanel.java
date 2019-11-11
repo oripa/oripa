@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -23,15 +23,10 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -48,8 +43,10 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.Config;
-import oripa.ORIPA;
 import oripa.appstate.InputCommandStatePopper;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
@@ -65,14 +62,11 @@ import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.byvalue.AngleMeasuringAction;
 import oripa.domain.paint.byvalue.AngleValueInputListener;
 import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueDB;
-import oripa.domain.paint.core.PaintConfig;
-import oripa.domain.paint.util.LineTypeSetter;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.EstimationEntityHolder;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
@@ -84,22 +78,25 @@ import oripa.view.estimation.EstimationResultFrameFactory;
 import oripa.view.estimation.FoldabilityCheckFrameFactory;
 import oripa.view.model.ModelViewFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
-import oripa.viewsetting.ViewChangeListener;
+import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainScreenSettingDB;
-import oripa.viewsetting.main.ScreenUpdater;
-import oripa.viewsetting.main.ScreenUpdaterAsCallback;
-import oripa.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
-public class UIPanel extends JPanel
-		implements ActionListener, PropertyChangeListener, Observer {
+public class UIPanel extends JPanel {
+
+	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
 	private final UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
-	ResourceHolder resources = ResourceHolder.getInstance();
+	private final ValueDB valueDB = ValueDB.getInstance();
+	private final MainScreenSettingDB screenDB = MainScreenSettingDB
+			.getInstance();
 
+	private final ResourceHolder resources = ResourceHolder.getInstance();
+
+	private boolean fullEstimation = true;
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Binding edit mode
 
@@ -123,7 +120,7 @@ public class UIPanel extends JPanel
 	private JRadioButton lineInputPBisectorButton;
 	// ---------------------------------------------------------------------------------------------------------------------------
 
-	private final JRadioButton lineTypeSubButton = new JRadioButton(
+	private final JRadioButton lineTypeAuxButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
 	private final JRadioButton lineTypeMountainButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
@@ -145,7 +142,6 @@ public class UIPanel extends JPanel
 
 	private final JButton buildButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
-	private final JButton resetButton = new JButton("Reset");
 
 	private final JCheckBox dispGridCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
@@ -158,8 +154,8 @@ public class UIPanel extends JPanel
 					StringID.UI.GRID_SIZE_CHANGE_ID));
 
 	private final JPanel mainPanel = new JPanel();
-	private final JPanel subPanel1 = new JPanel();
-	private final JPanel subPanel2 = new JPanel();
+	private final JPanel byValueLengthPanel = new JPanel();
+	private final JPanel byValueAnglePanel = new JPanel();
 	private final JPanel gridPanel = new JPanel();
 	private final JPanel lineTypePanel = new JPanel();
 	// AlterLineType
@@ -188,37 +184,39 @@ public class UIPanel extends JPanel
 			false);
 	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL,
-					StringID.UI.FULL_ESTIMATION_ID), false);
+					StringID.UI.FULL_ESTIMATION_ID),
+			false);
 	private final JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
-	private final PainterScreen screen;
+	private final ViewScreenUpdater screenUpdater;
 
 	private final PaintContextInterface paintContext;
 
-	private final MouseActionHolder actionHolder = MouseActionHolder
-			.getInstance();
+	private final MouseActionHolder actionHolder;
 
 	private final EstimationEntityHolder estimationHolder;
 	private final SheetCutOutlinesHolder cutOutlinesHolder;
 
-	public UIPanel(final PainterScreen __screen, final PaintContextInterface aContext,
+	public UIPanel(final ViewScreenUpdater screenUpdater,
+			final MouseActionHolder actionHolder,
+			final PaintContextInterface aContext,
 			final EstimationEntityHolder anEstimationHolder,
 			final SheetCutOutlinesHolder aCutOutlinesHolder) {
+
+		this.screenUpdater = screenUpdater;
+
+		this.actionHolder = actionHolder;
 
 		paintContext = aContext;
 		estimationHolder = anEstimationHolder;
 		cutOutlinesHolder = aCutOutlinesHolder;
 
-		constructButtons(paintContext);
+		constructButtons();
 
 		// setModeButtonText();
 		editModeInputLineButton.setSelected(true);
 
-		this.screen = __screen;
 		setPreferredSize(new Dimension(210, 400));
-
-		settingDB.addObserver(this);
-		screenDB.addObserver(this);
 
 		// alterLine_combo_from.setSelectedIndex(0);
 		// alterLine_combo_to.setSelectedIndex(0);
@@ -263,14 +261,12 @@ public class UIPanel extends JPanel
 		ButtonGroup lineTypeGroup = new ButtonGroup();
 		lineTypeGroup.add(lineTypeMountainButton);
 		lineTypeGroup.add(lineTypeValleyButton);
-		lineTypeGroup.add(lineTypeSubButton);
+		lineTypeGroup.add(lineTypeAuxButton);
 
 		lineTypePanel.setLayout(new GridBagLayout());
 		lineTypePanel.add(lineTypeMountainButton);
 		lineTypePanel.add(lineTypeValleyButton);
-		lineTypePanel.add(lineTypeSubButton);
-
-		lineTypeMountainButton.setSelected(true);
+		lineTypePanel.add(lineTypeAuxButton);
 
 		mainPanel.setLayout(new GridBagLayout());
 
@@ -411,8 +407,8 @@ public class UIPanel extends JPanel
 
 		// subPanel1.setVisible(true);
 		// subPanel2.setVisible(true);
-		subPanel1.setVisible(false);
-		subPanel2.setVisible(false);
+		byValueLengthPanel.setVisible(false);
+		byValueAnglePanel.setVisible(false);
 
 		NumberFormat doubleValueFormat = NumberFormat
 				.getNumberInstance(Locale.US);
@@ -423,23 +419,23 @@ public class UIPanel extends JPanel
 
 		textFieldLength.setColumns(4);
 		textFieldAngle.setColumns(4);
-		textFieldLength.setValue(new java.lang.Double(0.0));
-		textFieldAngle.setValue(new java.lang.Double(0.0));
+		textFieldLength.setValue(java.lang.Double.valueOf(0.0));
+		textFieldAngle.setValue(java.lang.Double.valueOf(0.0));
 
 		textFieldLength.setHorizontalAlignment(JTextField.RIGHT);
 		textFieldAngle.setHorizontalAlignment(JTextField.RIGHT);
 
-		subPanel1.setLayout(new FlowLayout());
-		subPanel2.setLayout(new FlowLayout());
-		subPanel1.add(subLabel1);
-		subPanel1.add(textFieldLength);
-		subPanel1.add(buttonLength);
-		subPanel2.add(subLabel2);
-		subPanel2.add(textFieldAngle);
-		subPanel2.add(buttonAngle);
+		byValueLengthPanel.setLayout(new FlowLayout());
+		byValueAnglePanel.setLayout(new FlowLayout());
+		byValueLengthPanel.add(subLabel1);
+		byValueLengthPanel.add(textFieldLength);
+		byValueLengthPanel.add(buttonLength);
+		byValueAnglePanel.add(subLabel2);
+		byValueAnglePanel.add(textFieldAngle);
+		byValueAnglePanel.add(buttonAngle);
 
-		add(subPanel1);
-		add(subPanel2);
+		add(byValueLengthPanel);
+		add(byValueAnglePanel);
 
 		// ------------------------------------
 		// For the grid panel
@@ -451,9 +447,8 @@ public class UIPanel extends JPanel
 
 		textFieldGrid = new JFormattedTextField(new DecimalFormat("#"));
 		textFieldGrid.setColumns(2);
-		textFieldGrid.setValue(new Integer(Config.DEFAULT_GRID_DIV_NUM));
+		textFieldGrid.setValue(Integer.valueOf(Config.DEFAULT_GRID_DIV_NUM));
 		textFieldGrid.setHorizontalAlignment(JTextField.RIGHT);
-		gridChangeButton.addActionListener(this);
 
 		divideNumSpecPanel.add(gridLabel1);
 		divideNumSpecPanel.add(textFieldGrid);
@@ -515,13 +510,12 @@ public class UIPanel extends JPanel
 		editModeDeleteLineButton.setMnemonic('D');
 		editModeLineTypeButton.setMnemonic('T');
 		editModeDeleteVertex.setMnemonic('L');
-		lineTypeSubButton.setMnemonic('A');
+		lineTypeAuxButton.setMnemonic('A');
 		lineTypeMountainButton.setMnemonic('M');
 		lineTypeValleyButton.setMnemonic('V');
 
-		ValueDB.getInstance().addObserver(this);
-
-		addListenerToComponents(paintContext);
+		addPropertyChangeListenersToSetting();
+		addActionListenersToComponents();
 
 		// -------------------------------------------------
 		// Initialize selection
@@ -536,129 +530,140 @@ public class UIPanel extends JPanel
 		settingDB.setTypeTo((TypeForChange) alterLine_combo_to
 				.getSelectedItem());
 
+		doFullEstimationCheckBox.setSelected(true);
+		lineTypeMountainButton.doClick();
+
 	}
 
-	private void constructButtons(final PaintContextInterface context) {
+	private void constructButtons() {
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
-		ButtonFactory buttonFactory = new PaintActionButtonFactory(context);
+		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext);
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
 				.createButton(
 						JRadioButton.class, new ChangeOnPaintInputButtonSelected(),
-						StringID.UI.INPUT_LINE_ID);
+						StringID.UI.INPUT_LINE_ID,
+						screenUpdater.getKeyListener());
 
 		editModePickLineButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.SELECT_ID);
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.SELECT_ID,
+				screenUpdater.getKeyListener());
 
-		editModeDeleteLineButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class, StringID.DELETE_LINE_ID);
+		editModeDeleteLineButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, screenUpdater,
+				StringID.DELETE_LINE_ID,
+				screenUpdater.getKeyListener());
 
 		editModeLineTypeButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID);
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.CHANGE_LINE_TYPE_ID,
+				screenUpdater.getKeyListener());
 
 		editModeAddVertex = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.ADD_VERTEX_ID);
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.ADD_VERTEX_ID,
+				screenUpdater.getKeyListener());
 
 		editModeDeleteVertex = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.DELETE_VERTEX_ID);
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.DELETE_VERTEX_ID,
+				screenUpdater.getKeyListener());
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding how to enter the line
 
 		lineInputDirectVButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.DIRECT_V_ID);
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.DIRECT_V_ID,
+				screenUpdater.getKeyListener());
 
 		lineInputOnVButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.ON_V_ID);
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.ON_V_ID,
+				screenUpdater.getKeyListener());
 
-		lineInputVerticalLineButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class, StringID.VERTICAL_ID);
+		lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.VERTICAL_ID,
+				screenUpdater.getKeyListener());
 
-		lineInputAngleBisectorButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class, StringID.BISECTOR_ID);
+		lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.BISECTOR_ID,
+				screenUpdater.getKeyListener());
 
-		lineInputTriangleSplitButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class, StringID.TRIANGLE_ID);
+		lineInputTriangleSplitButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.TRIANGLE_ID,
+				screenUpdater.getKeyListener());
 
-		lineInputSymmetricButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class, StringID.SYMMETRIC_ID);
+		lineInputSymmetricButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, screenUpdater,
+				StringID.SYMMETRIC_ID,
+				screenUpdater.getKeyListener());
 
 		lineInputMirrorButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.MIRROR_ID);
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.MIRROR_ID,
+				screenUpdater.getKeyListener());
 
 		lineInputByValueButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, StringID.BY_VALUE_ID);
+				this, JRadioButton.class, actionHolder, screenUpdater, StringID.BY_VALUE_ID,
+				screenUpdater.getKeyListener());
 
-		lineInputPBisectorButton = (JRadioButton) buttonFactory
-				.create(
-						this, JRadioButton.class,
-						StringID.PERPENDICULAR_BISECTOR_ID);
+		lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, screenUpdater,
+				StringID.PERPENDICULAR_BISECTOR_ID,
+				screenUpdater.getKeyListener());
 
 	}
 
 	private void addPaintActionButtons(final int gridWidth, final int gridy_start) {
 
-		paintActionButtonCount = 0;
+		int paintActionButtonCount = 0;
 		// put operation buttons in order
-		addPaintActionButton(lineInputDirectVButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputOnVButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputPBisectorButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputAngleBisectorButton, gridWidth,
-				gridy_start);
-		addPaintActionButton(lineInputTriangleSplitButton, gridWidth,
-				gridy_start);
-		addPaintActionButton(lineInputVerticalLineButton, gridWidth,
-				gridy_start);
-		addPaintActionButton(lineInputSymmetricButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputMirrorButton, gridWidth, gridy_start);
-		addPaintActionButton(lineInputByValueButton, gridWidth, gridy_start);
+		addPaintActionButton(lineInputDirectVButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputOnVButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputPBisectorButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputAngleBisectorButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputTriangleSplitButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputVerticalLineButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputSymmetricButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputMirrorButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputByValueButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
 	}
 
-	private int paintActionButtonCount = 0;
-
 	private void addPaintActionButton(final AbstractButton button, final int gridWidth,
-			final int gridy) {
+			final int gridy, final int paintActionButtonCount) {
 
 		GridBagConstraints gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.gridx = paintActionButtonCount % gridWidth + 1;
 		gridBagConstraints.gridy = gridy + paintActionButtonCount / gridWidth;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		mainPanel.add(button, gridBagConstraints);
-
-		paintActionButtonCount++;
-
 	}
 
-	private void addListenerToComponents(final PaintContextInterface context) {
+	private void addActionListenersToComponents() {
 
 		alterLine_combo_from.addItemListener(new FromLineTypeItemListener());
 		alterLine_combo_to.addItemListener(new ToLineTypeItemListener());
 
-		buttonLength
-				.addActionListener(
-				new PaintActionSetter(actionHolder, new LengthMeasuringAction(), context));
 		buttonLength.addActionListener(
-				new ViewChangeListener(new ChangeOnByValueButtonSelected()));
+				new PaintActionSetter(actionHolder, new LengthMeasuringAction(),
+						screenUpdater, paintContext));
 
-		buttonAngle
-				.addActionListener(
-				new PaintActionSetter(actionHolder, new AngleMeasuringAction(), context));
 		buttonAngle.addActionListener(
-				new ViewChangeListener(new ChangeOnByValueButtonSelected()));
+				new PaintActionSetter(actionHolder, new AngleMeasuringAction(),
+						screenUpdater, paintContext));
 
 		lineTypeMountainButton.addActionListener(
-				new LineTypeSetter(OriLine.TYPE_RIDGE));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_RIDGE));
 
 		lineTypeValleyButton.addActionListener(
-				new LineTypeSetter(OriLine.TYPE_VALLEY));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_VALLEY));
 
-		lineTypeSubButton.addActionListener(
-				new LineTypeSetter(OriLine.TYPE_NONE));
+		lineTypeAuxButton.addActionListener(
+				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_NONE));
 
 		editModeInputLineButton
 				.addActionListener(new InputCommandStatePopper());
@@ -668,267 +673,217 @@ public class UIPanel extends JPanel
 		textFieldAngle.getDocument().addDocumentListener(
 				new AngleValueInputListener());
 
-		dispGridCheckBox.addActionListener(this);
-		gridSmallButton.addActionListener(this);
-		gridLargeButton.addActionListener(this);
-		buildButton.addActionListener(this);
-		resetButton.addActionListener(this);
-		dispVertexCheckBox.addActionListener(this);
-		dispVertexCheckBox.setSelected(true);
-		PaintConfig.dispVertex = true;
-		dispMVLinesCheckBox
-				.addActionListener(new java.awt.event.ActionListener() {
+		dispGridCheckBox.addActionListener(e -> {
+			screenDB.setGridVisible(dispGridCheckBox.isSelected());
+			screenUpdater.updateScreen();
+		});
 
-					@Override
-					public void actionPerformed(final java.awt.event.ActionEvent e) {
-						PaintConfig.dispMVLines = dispMVLinesCheckBox
-								.isSelected();
-						screen.repaint();
-					}
+		gridSmallButton.addActionListener(e -> makeGridSizeHalf());
+
+		gridLargeButton.addActionListener(e -> makeGridSizeTwiceLarge());
+
+		gridChangeButton.addActionListener(e -> setGridDivNum());
+
+		dispVertexCheckBox.addActionListener(e -> {
+			paintContext.setVertexVisible(dispVertexCheckBox.isSelected());
+			screenUpdater.updateScreen();
+		});
+		dispVertexCheckBox.setSelected(true);
+		paintContext.setVertexVisible(true);
+
+		dispMVLinesCheckBox
+				.addActionListener(e -> {
+					paintContext.setMVLineVisible(dispMVLinesCheckBox.isSelected());
+					screenUpdater.updateScreen();
 				});
 		dispAuxLinesCheckBox
-				.addActionListener(new java.awt.event.ActionListener() {
-
-					@Override
-					public void actionPerformed(final java.awt.event.ActionEvent e) {
-						PaintConfig.dispAuxLines = dispAuxLinesCheckBox
-								.isSelected();
-						screen.repaint();
-					}
-				});
-
-		doFullEstimationCheckBox.setSelected(true);
-		PaintConfig.bDoFullEstimation = true;
-		doFullEstimationCheckBox
-				.addActionListener(new java.awt.event.ActionListener() {
-
-					@Override
-					public void actionPerformed(final java.awt.event.ActionEvent e) {
-						PaintConfig.bDoFullEstimation = doFullEstimationCheckBox
-								.isSelected();
-						screen.repaint();
-					}
-				});
-
-		buttonCheckWindow
-				.addActionListener(new java.awt.event.ActionListener() {
-
-					@Override
-					public void actionPerformed(final java.awt.event.ActionEvent e) {
-						OrigamiModel origamiModel;
-						CreasePatternInterface creasePattern = context
-								.getCreasePattern();
-
-						OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-						origamiModel = modelFactory.createOrigamiModel(
-								creasePattern, creasePattern.getPaperSize());
-
-						// document.setOrigamiModel(origamiModel);
-						// boolean isValidPattern =
-						// folderTool.checkPatternValidity(
-						// origamiModel.getEdges(), origamiModel.getVertices(),
-						// origamiModel.getFaces() );
-
-						FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
-						JFrame checker = checkerFactory.createFrame(
-								UIPanel.this, origamiModel, creasePattern);
-						checker.setVisible(true);
-					}
-				});
-
-	}
-
-	private final MainScreenSettingDB screenDB = MainScreenSettingDB
-			.getInstance();
-
-	@Override
-	public void actionPerformed(final ActionEvent ae) {
-
-		ScreenUpdaterInterface screenUpdater = ScreenUpdater.getInstance();
-
-		// TODO decompose this long long if-else.
-		if (ae.getSource() == dispGridCheckBox) {
-			screenDB.setGridVisible(dispGridCheckBox.isSelected());
-			screenDB.notifyObservers();
-
-			screenUpdater.updateScreen();
-
-		} else if (ae.getSource() == gridSmallButton) {
-			if (PaintConfig.gridDivNum < 65) {
-				PaintConfig.gridDivNum *= 2;
-				textFieldGrid.setValue(new Integer(PaintConfig.gridDivNum));
-
-				screenUpdater.updateScreen();
-			}
-		} else if (ae.getSource() == gridLargeButton) {
-			if (PaintConfig.gridDivNum > 3) {
-				PaintConfig.gridDivNum /= 2;
-				textFieldGrid.setValue(new Integer(PaintConfig.gridDivNum));
-
-				screenUpdater.updateScreen();
-			}
-		} else if (ae.getSource() == dispVertexCheckBox) {
-			PaintConfig.dispVertex = dispVertexCheckBox.isSelected();
-
-			screenUpdater.updateScreen();
-		} else if (ae.getSource() == resetButton) {
-		} else if (ae.getSource() == buildButton) {
-			boolean buildOK = false;
-			CreasePatternInterface creasePattern = paintContext.getCreasePattern();
-
-			// if (document.buildOrigami3(origamiModel, false)) {
-			OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-			OrigamiModel origamiModel = modelFactory.createOrigamiModel(
-					creasePattern, creasePattern.getPaperSize());
-
-			FoldedModelInfo foldedModelInfo = estimationHolder.getFoldedModelInfo();
-
-			if (origamiModel.isProbablyFoldable()) {
-				buildOK = true;
-			} else {
-				if (JOptionPane.showConfirmDialog(
-						ORIPA.mainFrame, resources.getString(
-								ResourceKey.WARNING,
-								StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
-						"Failed", JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE)
-				== JOptionPane.YES_OPTION) {
-
-					origamiModel = modelFactory
-							.createOrigamiModelNoDuplicateLines(
-									creasePattern, creasePattern.getPaperSize());
-					if (origamiModel.isProbablyFoldable()) {
-						buildOK = true;
-					} else {
-						JOptionPane
-								.showMessageDialog(
-										ORIPA.mainFrame,
-										resources
-												.getString(
-														ResourceKey.WARNING,
-														StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID),
-										"Failed Level1",
-										JOptionPane.INFORMATION_MESSAGE);
-					}
-				}
-			}
-
-			Folder folder = new Folder();
-
-			if (buildOK) {
-				folder.fold(origamiModel, foldedModelInfo);
-				estimationHolder.setOrigamiModel(origamiModel);
-
-				// TODO move this block out of if(buildOK) statement.
-				if (foldedModelInfo.getFoldablePatternCount() != 0) {
-					System.out.println("RenderFrame");
-
-					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
-					JFrame frame = resultFrameFactory.createFrame(this,
-							origamiModel, foldedModelInfo);
-					frame.setVisible(true);
-				}
-
-			} else {
-				BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
-				foldedModelInfo.setBoundBox(boundBox);
-				estimationHolder.setOrigamiModel(origamiModel);
-			}
-
-			ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory();
-			JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
-					cutOutlinesHolder, new ScreenUpdaterAsCallback(screenUpdater));
-
-			modelView.setVisible(true);
-			modelView.repaint();
-			// ModelFrameSettingDB modelSetting =
-			// ModelFrameSettingDB.getInstance();
-			// modelSetting.setFrameVisible(true);
-			// modelSetting.notifyObservers();
-
-			// screen.modeChanged();
-
-		} else if (ae.getSource() == gridChangeButton) {
-			int value;
-			try {
-				value = Integer.valueOf(textFieldGrid.getText());
-				System.out.println("type");
-
-				if (value < 128 && value > 2) {
-					textFieldGrid.setValue(value);
-					PaintConfig.gridDivNum = value;
+				.addActionListener(e -> {
+					paintContext.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
 					screenUpdater.updateScreen();
-				}
-			} catch (Exception ex) {
-				System.out.println(ex);
+				});
+
+		doFullEstimationCheckBox
+				.addActionListener(e -> {
+					fullEstimation = doFullEstimationCheckBox.isSelected();
+				});
+
+		buttonCheckWindow.addActionListener(e -> showCheckerWindow(paintContext));
+
+		buildButton.addActionListener(e -> showFoldedModelWindows());
+
+	}
+
+	private void showCheckerWindow(final PaintContextInterface context) {
+		OrigamiModel origamiModel;
+		CreasePatternInterface creasePattern = context.getCreasePattern();
+
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		origamiModel = modelFactory.createOrigamiModel(
+				creasePattern, creasePattern.getPaperSize());
+
+		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
+		JFrame checker = checkerFactory.createFrame(
+				UIPanel.this, origamiModel, creasePattern);
+		checker.setVisible(true);
+
+	}
+
+	private void makeGridSizeHalf() {
+		if (paintContext.getGridDivNum() < 65) {
+			paintContext.setGridDivNum(paintContext.getGridDivNum() * 2);
+			textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
+
+			screenUpdater.updateScreen();
+		}
+	}
+
+	private void makeGridSizeTwiceLarge() {
+		if (paintContext.getGridDivNum() > 3) {
+			paintContext.setGridDivNum(paintContext.getGridDivNum() / 2);
+			textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
+
+			screenUpdater.updateScreen();
+		}
+	}
+
+	private void setGridDivNum() {
+		int value;
+		try {
+			value = Integer.valueOf(textFieldGrid.getText());
+			logger.debug("gird division num: " + value);
+
+			if (value < 128 && value > 2) {
+				textFieldGrid.setValue(value);
+				paintContext.setGridDivNum(value);
+				screenUpdater.updateScreen();
 			}
+		} catch (Exception ex) {
+			logger.error("failed to get grid division num.", ex);
 		}
-
 	}
 
-	@Override
-	public void propertyChange(final PropertyChangeEvent e) {
-		// if (e.getSource() == textFieldLength) {
-		// textFieldLength.setValue(java.lang.Double.valueOf(textFieldLength.getText()));
-		// } else if (e.getSource() == textFieldAngle) {
-		// textFieldAngle.setValue(java.lang.Double.valueOf(textFieldAngle.getText()));
-		// }
-	}
+	private void showFoldedModelWindows() {
+		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
+		FoldedModelInfo foldedModelInfo = estimationHolder.getFoldedModelInfo();
 
-	/**
-	 * observes DB for reflecting the changes to views. toString() of given DB
-	 * has to return a unique value among DB classes.
-	 * 
-	 * @param o
-	 *            Observable class which implements toString() to return its
-	 *            class name.
-	 * @param arg
-	 *            A parameter to specify the action for the given Observable
-	 *            object.
-	 */
-	@Override
-	public void update(final Observable o, final Object arg) {
+		Folder folder = new Folder();
 
-		// System.out.println(o.toString());
+		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
 
-		if (o.toString().equals(ValueDB.getInstance().toString())) {
-			// update text field of values
-			ValueDB valueDB = (ValueDB) o;
-			textFieldAngle.setValue(valueDB.getAngle());
-			textFieldLength.setValue(valueDB.getLength());
-		}
-		else if (settingDB.hasGivenName(o.toString())) {
-			// update GUI
-			UIPanelSettingDB setting = (UIPanelSettingDB) o;
+		if (origamiModel.isProbablyFoldable()) {
+			final int foldableModelCount = folder.fold(
+					origamiModel, foldedModelInfo, fullEstimation);
+			estimationHolder.setOrigamiModel(origamiModel);
 
-			updateEditModeButtonSelection(setting);
+			if (foldableModelCount == -1) {
 
-			subPanel1.setVisible(setting.isValuePanelVisible());
-			subPanel2.setVisible(setting.isValuePanelVisible());
+			} else if (foldableModelCount == 0) {
+				JOptionPane.showMessageDialog(
+						null, "No answer was found", "ORIPA",
+						JOptionPane.DEFAULT_OPTION);
+			}
+//			else if (foldedModelInfo.getFoldablePatternCount() > 0) {
+			else if (foldableModelCount > 0) {
+				logger.info("foldable layer layout is found.");
 
-			alterLineTypePanel
-					.setVisible(setting.isAlterLineTypePanelVisible());
-
-			lineTypeMountainButton
-					.setEnabled(setting.isMountainButtonEnabled());
-			lineTypeValleyButton.setEnabled(setting.isValleyButtonEnabled());
-			lineTypeSubButton.setEnabled(setting.isAuxButtonEnabled());
-
-			repaint();
-		}
-		else if (screenDB.hasGivenName(o.toString())) {
-			if (screenDB.isGridVisible() != dispGridCheckBox.isSelected()) {
-				dispGridCheckBox.setSelected(screenDB.isGridVisible());
-
+				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
+				JFrame frame = resultFrameFactory.createFrame(this,
+						origamiModel, foldedModelInfo);
+				frame.setVisible(true);
 			}
 
-			repaint();
+		} else {
+			BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
+			foldedModelInfo.setBoundBox(boundBox);
+			estimationHolder.setOrigamiModel(origamiModel);
 		}
+
+		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory();
+		JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
+				cutOutlinesHolder, () -> screenUpdater.updateScreen());
+
+		modelView.setVisible(true);
+		modelView.repaint();
 
 	}
 
-	private void updateEditModeButtonSelection(final UIPanelSettingDB setting) {
-		switch (setting.getSelectedMode()) {
+	private OrigamiModel buildOrigamiModel(final CreasePatternInterface creasePattern) {
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		OrigamiModel origamiModel = modelFactory.createOrigamiModel(
+				creasePattern, creasePattern.getPaperSize());
+
+		if (origamiModel.isProbablyFoldable()) {
+			return origamiModel;
+		}
+
+		if (JOptionPane.showConfirmDialog(
+				this, resources.getString(
+						ResourceKey.WARNING,
+						StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
+				"Failed", JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
+			return origamiModel;
+		}
+
+		origamiModel = modelFactory
+				.createOrigamiModelNoDuplicateLines(
+						creasePattern, creasePattern.getPaperSize());
+		if (origamiModel.isProbablyFoldable()) {
+			return origamiModel;
+		}
+
+		JOptionPane.showMessageDialog(
+				this,
+				resources.getString(
+						ResourceKey.WARNING,
+						StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID),
+				"Failed Level1",
+				JOptionPane.INFORMATION_MESSAGE);
+
+		return origamiModel;
+	}
+
+	private void addPropertyChangeListenersToSetting() {
+		screenDB.addPropertyChangeListener(
+				MainScreenSettingDB.GRID_VISIBLE, e -> {
+					dispGridCheckBox.setSelected((boolean) e.getNewValue());
+					repaint();
+				});
+
+		valueDB.addPropertyChangeListener(
+				ValueDB.ANGLE, e -> textFieldAngle.setValue(e.getNewValue()));
+
+		valueDB.addPropertyChangeListener(
+				ValueDB.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.SELECTED_MODE, this::onChangeEditModeButtonSelection);
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.BY_VALUE_PANEL_VISIBLE, e -> {
+					byValueLengthPanel.setVisible((boolean) e.getNewValue());
+					byValueAnglePanel.setVisible((boolean) e.getNewValue());
+				});
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.ALTER_LINE_TYPE_PANEL_VISIBLE,
+				e -> alterLineTypePanel.setVisible((boolean) e.getNewValue()));
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.MOUNTAIN_BUTTON_ENABLED,
+				e -> lineTypeMountainButton.setEnabled((boolean) e.getNewValue()));
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.VALLEY_BUTTON_ENABLED,
+				e -> lineTypeValleyButton.setEnabled((boolean) e.getNewValue()));
+
+		settingDB.addPropertyChangeListener(
+				UIPanelSettingDB.AUX_BUTTON_ENABLED,
+				e -> lineTypeAuxButton.setEnabled((boolean) e.getNewValue()));
+	}
+
+	private void onChangeEditModeButtonSelection(final PropertyChangeEvent e) {
+		switch (settingDB.getSelectedMode()) {
 		case INPUT:
 			selectEditModeButton(editModeInputLineButton);
 			break;
@@ -938,7 +893,6 @@ public class UIPanel extends JPanel
 		default:
 			break;
 		}
-
 	}
 
 	private void selectEditModeButton(final AbstractButton modeButton) {

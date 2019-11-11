@@ -23,18 +23,10 @@ public class DocDAO {
 	public Doc load(final String path) throws FileVersionError, IOException {
 		DocFilterSelector selecter = new DocFilterSelector();
 
-		Object loaded = selecter.getLoadableFilterOf(path).getLoadingAction()
-				.load();
-
-		if (loaded instanceof Doc) {
-			return (Doc) loaded;
-		}
-
-		throw new IOException("Wrong file");
+		return selecter.getLoadableFilterOf(path).getLoadingAction().load();
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public void save(final Doc doc, final String path, final FileTypeKey type) {
 		DocFilterSelector selecter = new DocFilterSelector();
 
@@ -79,7 +71,7 @@ public class DocDAO {
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		origamiModel = modelFactory.buildOrigami(creasePattern,
-				doc.getPaperSize(), true);
+				creasePattern.getPaperSize(), true);
 		doc.setOrigamiModel(origamiModel);
 
 		if (filter.getTargetType().equals(FileTypeKey.OBJ_MODEL)) {
@@ -103,23 +95,7 @@ public class DocDAO {
 		FileChooser<Doc> fileChooser = factory.createChooser(
 				homePath, filters);
 
-		// set opx as the default filter
-		// fileChooser.setFileFilter(findDefaultFilter(filters));
-
 		return fileChooser.getActionForLoadingFile(parent).load();
 
 	}
-
-	private FileAccessSupportFilter<Doc> findDefaultFilter(
-			final FileAccessSupportFilter<Doc>[] filters) {
-
-		for (FileAccessSupportFilter<Doc> filter : filters) {
-			if (filter.getTargetType() == FileTypeKey.OPX) {
-				return filter;
-			}
-		}
-
-		return filters[0];
-	}
-
 }

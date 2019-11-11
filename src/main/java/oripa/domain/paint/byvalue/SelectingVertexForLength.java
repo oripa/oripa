@@ -16,8 +16,6 @@ public class SelectingVertexForLength extends PickingVertex {
 	protected void initialize() {
 	}
 
-	private final boolean doingFirstAction = true;
-
 	@Override
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
 			final boolean doSpecial) {
@@ -45,7 +43,6 @@ public class SelectingVertexForLength extends PickingVertex {
 
 		ValueDB valDB = ValueDB.getInstance();
 		valDB.setLength(length);
-		valDB.notifyObservers();
 
 		context.clear(false);
 

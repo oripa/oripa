@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,6 @@ import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.rule.Condition3;
 import oripa.domain.fold.rule.Condition4;
-import oripa.domain.paint.core.PaintConfig;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.value.OriLine;
@@ -43,14 +42,21 @@ public class Folder {
 	private ArrayList<SubFace> subFaces;
 
 	// helper object
-	private final OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 	private final FolderTool folderTool = new FolderTool();
 
 	public Folder() {
 	}
 
-	// TODO: this method should return FoldedModelInfo.
-	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo) {
+	/**
+	 *
+	 * @param origamiModel
+	 * @param foldedModelInfo
+	 * @param fullEstimation
+	 * @return the number of flat foldable layer layouts. -1 if
+	 *         <code>fullEstimation</code> is false;
+	 */
+	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
+			final boolean fullEstimation) {
 //		OrigamiModel origamiModel = m_doc.getOrigamiModel();
 //		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 
@@ -71,9 +77,9 @@ public class Folder {
 		sortedFaces.addAll(faces);
 		folderTool.setFacesOutline(vertices, faces, false);
 
-		if (!PaintConfig.bDoFullEstimation) {
+		if (!fullEstimation) {
 			origamiModel.setFolded(true);
-			return 0;
+			return -1;
 		}
 
 		// After folding construct the sbfaces
@@ -109,7 +115,6 @@ public class Folder {
 
 		foldedModelInfo.setCurrentORmatIndex(0);
 		if (foldableOverlapRelations.isEmpty()) {
-			ORIPA.outMessage("No answer was found");
 			return 0;
 		} else {
 			matrixCopy(foldableOverlapRelations.get(0), overlapRelation);
@@ -924,7 +929,8 @@ public class Folder {
 	}
 
 	// Method that doesnt use sin con
-	private void flipFace2(final List<OriFace> faces, final OriFace face, final OriHalfedge baseHe) {
+	private void flipFace2(final List<OriFace> faces, final OriFace face,
+			final OriHalfedge baseHe) {
 
 		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
 		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);

@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,6 +18,9 @@
  */
 package oripa.domain.fold.rule;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.fold.OriEdge;
 import oripa.domain.fold.OriVertex;
 import oripa.util.collection.AbstractRule;
@@ -28,10 +31,11 @@ import oripa.value.OriLine;
  *
  */
 public class MaekawaTheorem extends AbstractRule<OriVertex> {
+	private static final Logger logger = LoggerFactory.getLogger(MaekawaTheorem.class);
 
+	@Override
+	public boolean holds(final OriVertex vertex) {
 
-	public boolean holds(OriVertex vertex) {
-		
 		int ridgeCount = 0;
 		int valleyCount = 0;
 
@@ -48,7 +52,8 @@ public class MaekawaTheorem extends AbstractRule<OriVertex> {
 
 		// maekawa's claim
 		if (Math.abs(ridgeCount - valleyCount) != 2) {
-			System.out.println("edge type count invalid: "+ vertex +" "+Math.abs(ridgeCount - valleyCount));
+			logger.info("edge type count invalid: " + vertex + " "
+					+ Math.abs(ridgeCount - valleyCount));
 			return false;
 		}
 

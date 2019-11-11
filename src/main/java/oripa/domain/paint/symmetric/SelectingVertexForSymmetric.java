@@ -20,8 +20,6 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 
 	private boolean doingFirstAction = true;
 
-	private boolean doSpecial = false;
-
 	@Override
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
 			final boolean doSpecial) {
@@ -39,8 +37,6 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 			}
 		}
 
-		this.doSpecial = doSpecial;
-
 		return result;
 	}
 
@@ -57,10 +53,10 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 
 		if (doSpecial) {
 			painter.addSymmetricLineAutoWalk(
-					first, second, third, first);
+					first, second, third, first, context.getLineTypeOfNewLines());
 		} else {
 			painter.addSymmetricLine(
-					first, second, third);
+					first, second, third, context.getLineTypeOfNewLines());
 		}
 
 		doingFirstAction = true;

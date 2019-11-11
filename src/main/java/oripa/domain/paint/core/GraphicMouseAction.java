@@ -1,6 +1,5 @@
 package oripa.domain.paint.core;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -8,6 +7,9 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.vecmath.Vector2d;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
@@ -18,21 +20,11 @@ import oripa.value.OriLine;
 
 public abstract class GraphicMouseAction implements GraphicMouseActionInterface {
 
+	private static Logger logger = LoggerFactory.getLogger(GraphicMouseAction.class);
+
 	private EditMode editMode = EditMode.INPUT;
 	private boolean needSelect = false;
 	private ActionState state;
-
-	protected void log(final double x, final double y) {
-		System.out.println(x + "," + y);
-
-	}
-
-	protected void log(final Vector2d p) {
-		if (p == null) {
-			return;
-		}
-		log(p.x, p.y);
-	}
 
 	protected final void setActionState(final ActionState state) {
 		this.state = state;
@@ -80,6 +72,10 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	protected void recoverImpl(final PaintContextInterface context) {
 	}
 
+	/**
+	 * calls {@link #recoverImpl(PaintContextInterface)} and then calls
+	 * {@code context.getPainter().resetSelectedOriLines()}.
+	 */
 	@Override
 	public final void recover(final PaintContextInterface context) {
 
@@ -113,12 +109,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			final AffineTransform affine,
 			final boolean doSpecial) {
 
-		System.out.println(this.getClass().getName());
-		System.out.println("before undo " + context.toString());
+		logger.info(this.getClass().getName());
+		logger.info("before undo " + context.toString());
 
 		undo(context);
 
-		System.out.println("after undo " + context.toString());
+		logger.info("after undo " + context.toString());
 
 	}
 
@@ -167,7 +163,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	@Override
 	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 		drawPickedLines(g2d, context);
-		drawPickedVertices(g2d, context);
+		drawPickedVertices(g2d, context, context.getLineTypeOfNewLines());
 
 	}
 
@@ -182,12 +178,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	private void drawPickedVertices(final Graphics2D g2d,
-			final PaintContextInterface context) {
+			final PaintContextInterface context, final int lineType) {
 		ElementSelector selector = new ElementSelector();
 
 		for (Vector2d vertex : context.getPickedVertices()) {
 			g2d.setColor(selector
-					.selectColorByLineType(PaintConfig.inputLineType));
+					.selectColorByLineType(lineType));
 
 			drawVertex(g2d, context, vertex.x, vertex.y);
 		}
@@ -235,6 +231,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		OriLine candidate = context.getCandidateLineToPick();
 		if (candidate != null) {
 			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
+			g2d.setStroke(LineSetting.STROKE_PICKED);
+
 			drawLine(g2d, candidate);
 		}
 	}
@@ -254,9 +252,10 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		if (context.getVertexCount() > 0) {
 			Vector2d picked = context.peekVertex();
 
-			Color color = selector
-					.selectColorByLineType(PaintConfig.inputLineType);
-			g2d.setColor(color);
+			g2d.setColor(selector.selectColorByLineType(context.getLineTypeOfNewLines()));
+
+			g2d.setStroke(selector.selectStroke(context.getLineTypeOfNewLines()));
+
 			drawLine(g2d, picked,
 					NearestItemFinder.getCandidateVertex(context, true));
 		}

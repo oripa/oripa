@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
@@ -18,34 +17,29 @@ public class OrigamiModelFactory {
 	final public static int LOWER = 2;
 	final public static int UNDEFINED = 9;
 
-
 	int debugCount = 0;
 
 	// should not be in this class
-	//public boolean hasModel = false;
-
-
+	// public boolean hasModel = false;
 
 	public OrigamiModel createOrigamiModel(
-			Collection<OriLine> creasePattern, double paperSize) {
+			final Collection<OriLine> creasePattern, final double paperSize) {
 		return this.createOrigamiModelImpl3(creasePattern, paperSize, false);
 	}
 
 	public OrigamiModel createOrigamiModelNoDuplicateLines(
-			Collection<OriLine> creasePattern, double paperSize) {	
+			final Collection<OriLine> creasePattern, final double paperSize) {
 		return this.createOrigamiModelImpl3(creasePattern, paperSize, true);
 	}
 
-	
-	public OrigamiModel createOrigamiModel(double paperSize) {
+	public OrigamiModel createOrigamiModel(final double paperSize) {
 		return new OrigamiModel(paperSize);
 	}
 
-
-
-	//TODO: change as: throw error if creation failed.
+	// TODO: change as: throw error if creation failed.
 	public OrigamiModel buildOrigami(
-			Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {
+			final Collection<OriLine> creasePattern, final double paperSize,
+			final boolean needCleanUp) {
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
@@ -54,7 +48,6 @@ public class OrigamiModelFactory {
 		edges.clear();
 		vertices.clear();
 		faces.clear();
-
 
 		for (OriLine l : creasePattern) {
 			if (l.typeVal == OriLine.TYPE_NONE) {
@@ -123,14 +116,14 @@ public class OrigamiModelFactory {
 			e.type = e.left.tmpInt;
 		}
 
-
 		origamiModel.setHasModel(true);
-		
+
 		return origamiModel;
 
 	}
+
 	private OriVertex addAndGetVertexFromVVec(
-			List<OriVertex> vertices, Vector2d p) {
+			final List<OriVertex> vertices, final Vector2d p) {
 		OriVertex vtx = null;
 		for (OriVertex v : vertices) {
 			if (GeomUtil.Distance(v.p, p) < CalculationResource.POINT_EPS) {
@@ -146,17 +139,17 @@ public class OrigamiModelFactory {
 		return vtx;
 	}
 
-	
 	/**
-	 * 
+	 *
 	 * @param creasePattern
 	 * @param paperSize
 	 * @param needCleanUp
 	 * @return A model data converted from crease pattern.
 	 */
-	//TODO: change as: return OrigamiModel. throw error if creation failed.
+	// TODO: change as: return OrigamiModel. throw error if creation failed.
 	private OrigamiModel createOrigamiModelImpl3(
-			Collection<OriLine> creasePattern, double paperSize, boolean needCleanUp) {	
+			final Collection<OriLine> creasePattern, final double paperSize,
+			final boolean needCleanUp) {
 
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
@@ -177,7 +170,7 @@ public class OrigamiModelFactory {
 			FolderTool tool = new FolderTool();
 			if (tool.cleanDuplicatedLines(creasePattern)) {
 				JOptionPane.showMessageDialog(
-						ORIPA.mainFrame, "Removing multiples edges with the same position ",
+						null, "Removing multiples edges with the same position ",
 						"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
 			}
 
@@ -197,9 +190,9 @@ public class OrigamiModelFactory {
 			ev.addEdge(eg);
 		}
 
-
-		// Check if there are vertexes with just 2 collinear edges with same type
-		// merge the edges and delete the vertex for efficiency 
+		// Check if there are vertexes with just 2 collinear edges with same
+		// type
+		// merge the edges and delete the vertex for efficiency
 		ArrayList<OriEdge> eds = new ArrayList<OriEdge>();
 		ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
 		tmpVVec.addAll(vertices);
@@ -235,7 +228,7 @@ public class OrigamiModelFactory {
 				continue;
 			}
 
-			// found mergeable edge 
+			// found mergeable edge
 			edges.remove(e0);
 			edges.remove(e1);
 			vertices.remove(v);
@@ -268,7 +261,6 @@ public class OrigamiModelFactory {
 
 		// System.out.println("vnum=" + vertices.size());
 		// System.out.println("enum=" + edges.size());
-
 
 		// Construct the faces
 		for (OriVertex v : vertices) {
@@ -330,9 +322,9 @@ public class OrigamiModelFactory {
 		return origamiModel;
 	}
 
-	//boolean sortFinished = false;
+	// boolean sortFinished = false;
 
-	private void makeEdges(List<OriEdge> edges, List<OriFace> faces) {
+	private void makeEdges(final List<OriEdge> edges, final List<OriFace> faces) {
 		edges.clear();
 
 		ArrayList<OriHalfedge> tmpHalfedges = new ArrayList<OriHalfedge>();
@@ -367,7 +359,7 @@ public class OrigamiModelFactory {
 					edge.left = he0;
 					edge.right = he1;
 					edges.add(edge);
-					edge.type = OriLine.TYPE_NONE;//OriEdge.TYPE_NONE;
+					edge.type = OriLine.TYPE_NONE;// OriEdge.TYPE_NONE;
 				}
 			}
 		}
@@ -385,7 +377,6 @@ public class OrigamiModelFactory {
 			}
 		}
 	}
-
 
 //	public void setCrossLine(List<OriLine> crossLines, OriLine line, List<OriFace> sortedFaces) {
 //		crossLines.clear();
@@ -425,10 +416,5 @@ public class OrigamiModelFactory {
 //		}
 //
 //	}
-
-
-
-
-
 
 }

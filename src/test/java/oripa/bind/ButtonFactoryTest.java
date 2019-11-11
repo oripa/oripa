@@ -1,16 +1,21 @@
 package oripa.bind;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.awt.Component;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
-import oripa.persistent.doc.Doc;
+import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.resource.StringID;
 
 public class ButtonFactoryTest {
@@ -19,39 +24,48 @@ public class ButtonFactoryTest {
 
 		JPanel parent = new JPanel();
 
-		Doc doc = new Doc();
+		var actionHolder = mock(MouseActionHolder.class);
+		var screenUpdater = mock(ScreenUpdaterInterface.class);
 
 		// line input buttons
-		assertButtonCreated(parent, StringID.DIRECT_V_ID, false);
-		assertButtonCreated(parent, StringID.ON_V_ID, false);
-		assertButtonCreated(parent, StringID.SYMMETRIC_ID, false);
-		assertButtonCreated(parent, StringID.TRIANGLE_ID, false);
-		assertButtonCreated(parent, StringID.BISECTOR_ID, false);
-		assertButtonCreated(parent, StringID.VERTICAL_ID, false);
-		assertButtonCreated(parent, StringID.MIRROR_ID, false);
-		assertButtonCreated(parent, StringID.BY_VALUE_ID, false);
-//		assertButtonCreated(parent, StringID.PICK_LENGTH_ID, false); 
-//		assertButtonCreated(parent, StringID.PICK_ANGLE_ID, false); 
-		assertButtonCreated(parent, StringID.PERPENDICULAR_BISECTOR_ID, false);
+		assertButtonCreated(parent, StringID.DIRECT_V_ID, actionHolder, screenUpdater, false);
+		assertButtonCreated(parent, StringID.ON_V_ID, actionHolder, screenUpdater, false);
+		assertButtonCreated(parent, StringID.SYMMETRIC_ID, actionHolder, screenUpdater, false);
+		assertButtonCreated(parent, StringID.TRIANGLE_ID, actionHolder, screenUpdater, false);
+		assertButtonCreated(parent, StringID.BISECTOR_ID, actionHolder, screenUpdater, false);
+		assertButtonCreated(parent, StringID.VERTICAL_ID, actionHolder, screenUpdater, false);
+		assertButtonCreated(parent, StringID.MIRROR_ID, actionHolder, screenUpdater, false);
+		assertButtonCreated(parent, StringID.BY_VALUE_ID, actionHolder, screenUpdater, false);
+//		assertButtonCreated(parent, StringID.PICK_LENGTH_ID, false);
+//		assertButtonCreated(parent, StringID.PICK_ANGLE_ID, false);
+		assertButtonCreated(parent, StringID.PERPENDICULAR_BISECTOR_ID, actionHolder, screenUpdater,
+				false);
 
 		// edit buttons
-		assertButtonCreated(parent, StringID.SELECT_ID, true);
-		assertButtonCreated(parent, StringID.ADD_VERTEX_ID, true);
-		assertButtonCreated(parent, StringID.CHANGE_LINE_TYPE_ID, true);
-		assertButtonCreated(parent, StringID.DELETE_LINE_ID, true);
-		assertButtonCreated(parent, StringID.DELETE_VERTEX_ID, true);
-		assertButtonCreated(parent, StringID.COPY_PASTE_ID, true);
-		assertButtonCreated(parent, StringID.CUT_PASTE_ID, true);
-		assertButtonCreated(parent, StringID.EDIT_CONTOUR_ID, true);
-		assertButtonCreated(parent, StringID.SELECT_ALL_LINE_ID, true);
+		assertButtonCreated(parent, StringID.SELECT_ID, actionHolder, screenUpdater, true);
+		assertButtonCreated(parent, StringID.ADD_VERTEX_ID, actionHolder, screenUpdater, true);
+		assertButtonCreated(parent, StringID.CHANGE_LINE_TYPE_ID, actionHolder, screenUpdater,
+				true);
+		assertButtonCreated(parent, StringID.DELETE_LINE_ID, actionHolder, screenUpdater, true);
+		assertButtonCreated(parent, StringID.DELETE_VERTEX_ID, actionHolder, screenUpdater, true);
+		assertButtonCreated(parent, StringID.COPY_PASTE_ID, actionHolder, screenUpdater, true);
+		assertButtonCreated(parent, StringID.CUT_PASTE_ID, actionHolder, screenUpdater, true);
+		assertButtonCreated(parent, StringID.EDIT_CONTOUR_ID, actionHolder, screenUpdater, true);
+		assertButtonCreated(parent, StringID.SELECT_ALL_LINE_ID, actionHolder, screenUpdater, true);
 	}
 
-	private void assertButtonCreated(final Component parent, final String id, final boolean hasLabel) {
+	private void assertButtonCreated(final Component parent, final String id,
+			final MouseActionHolder actionHolder,
+			final ScreenUpdaterInterface screenUpdater,
+			final boolean hasLabel) {
 		PaintContextFactory contextFactory = new PaintContextFactory();
 		ButtonFactory paintFactory = new PaintActionButtonFactory(contextFactory.createContext());
 
+		var keyListener = mock(KeyListener.class);
 		JButton button;
-		button = (JButton) paintFactory.create(parent, JButton.class, id);
+		button = (JButton) paintFactory.create(parent, JButton.class, actionHolder, screenUpdater,
+				id,
+				keyListener);
 
 		String text = button.getText();
 		System.out.println(id + " text:" + text);
@@ -61,6 +75,7 @@ public class ButtonFactoryTest {
 			assertTrue(text.length() > 0);
 		}
 
+		assertEquals(keyListener, button.getKeyListeners()[0]);
 		// button.doClick();
 		// test hint text
 

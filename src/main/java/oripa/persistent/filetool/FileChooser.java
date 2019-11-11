@@ -7,6 +7,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.ORIPA;
 import oripa.exception.UserCanceledException;
 
@@ -17,6 +20,8 @@ import oripa.exception.UserCanceledException;
  */
 
 public class FileChooser<Data> extends JFileChooser implements FileAccessActionProvider<Data> {
+
+	private static Logger logger = LoggerFactory.getLogger(FileChooser.class);
 
 	/**
 	 *
@@ -49,7 +54,6 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 
 	public void addChoosableFileFilter(
 			final FileAccessSupportFilter<Data> filter) {
-		// TODO Auto-generated method stub
 		super.addChoosableFileFilter(filter);
 	}
 
@@ -143,6 +147,7 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 		} catch (UserCanceledException cancel) {
 			throw new FileChooserCanceledException();
 		} catch (Exception e) {
+			logger.error("error on saving a file", e);
 			JOptionPane.showMessageDialog(parent, e.toString(),
 					ORIPA.res.getString("Error_FileSaveFailed"),
 					JOptionPane.ERROR_MESSAGE);
@@ -178,30 +183,12 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 
 			return filter.getLoadingAction().setPath(filePath);
 		} catch (Exception e) {
+			logger.error("error on loading a file", e);
 			JOptionPane.showMessageDialog(this, e.toString(),
 					ORIPA.res.getString("Error_FileLoadFailed"),
 					JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		// } catch (FileVersionError v_err) {
-		// JOptionPane.showMessageDialog(this,
-		// "This file is compatible with a new version. "
-		// + "Please obtain the latest version of ORIPA",
-		// "Failed to load the file", JOptionPane.ERROR_MESSAGE);
-		// return null;
-
 	}
-
-	// /*
-	// * (non Javadoc)
-	// *
-	// * @see javax.swing.JFileChooser#getFileFilter()
-	// */
-	// @SuppressWarnings("unchecked")
-	// @Override
-	// public FileAccessSupportFilter<Data> getFileFilter() {
-	// // TODO 自動生成されたメソッド・スタブ
-	// return (FileAccessSupportFilter<Data>) super.getFileFilter();
-	// }
 
 }

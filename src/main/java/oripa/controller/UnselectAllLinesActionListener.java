@@ -16,38 +16,43 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.collection;
+package oripa.controller;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.ScreenUpdaterInterface;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public class CollectionFilter<Variable> {
-	private final Rule<Variable> rule;
+public class UnselectAllLinesActionListener implements ActionListener {
+	private final PaintContextInterface context;
+	private final ScreenUpdaterInterface screenUpdater;
 
 	/**
 	 * Constructor
 	 */
-	public CollectionFilter(final Rule<Variable> rule) {
-		this.rule = rule;
+	public UnselectAllLinesActionListener(final PaintContextInterface aContext,
+			final ScreenUpdaterInterface updater) {
+		context = aContext;
+		screenUpdater = updater;
 	}
 
-	public Collection<Variable> findTargets(final Collection<Variable> inputs) {
+	/*
+	 * (non Javadoc)
+	 * 
+	 * @see
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void actionPerformed(final ActionEvent e) {
+		context.getPainter().resetSelectedOriLines();
+		context.clear(false);
+		screenUpdater.updateScreen();
 
-		return findTargets(inputs, rule);
-	}
-
-	public Collection<Variable> findViolations(final Collection<Variable> inputs) {
-		return findTargets(inputs, rule.asDenied());
-	}
-
-	private Collection<Variable> findTargets(final Collection<Variable> inputs,
-			final Rule<Variable> r) {
-
-		return inputs.stream().filter(input -> r.holds(input)).collect(Collectors.toSet());
 	}
 
 }

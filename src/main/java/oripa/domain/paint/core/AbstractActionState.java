@@ -2,6 +2,9 @@ package oripa.domain.paint.core;
 
 import java.awt.geom.Point2D;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.paint.PaintContextInterface;
 
 /**
@@ -17,6 +20,8 @@ import oripa.domain.paint.PaintContextInterface;
  *
  */
 public abstract class AbstractActionState implements ActionState {
+	private static Logger logger = LoggerFactory.getLogger(AbstractActionState.class);
+
 	private Class<? extends ActionState> next, prev;
 
 	public AbstractActionState() {
@@ -134,10 +139,9 @@ public abstract class AbstractActionState implements ActionState {
 		}
 
 		try {
-			state = c.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			state = c.getConstructor().newInstance();
+		} catch (Exception e) {
+			logger.error("failed to create next/previous state", e);
 			throw new RuntimeException(e);
 		}
 

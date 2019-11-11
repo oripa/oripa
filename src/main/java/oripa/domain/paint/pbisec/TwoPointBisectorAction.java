@@ -8,55 +8,44 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class TwoPointBisectorAction extends GraphicMouseAction {
 
-
-	public TwoPointBisectorAction(){
+	public TwoPointBisectorAction() {
 		setActionState(new SelectingFirstVertexForBisector());
 	}
-	
-
-	
 
 	@Override
-	public void destroy(PaintContextInterface context) {
+	public void destroy(final PaintContextInterface context) {
 		super.destroy(context);
 		setActionState(new SelectingFirstVertexForBisector());
 	}
 
-
-
-
 	@Override
-	public void onDrag(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
+	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onRelease(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
 
 	}
-	
 
-	
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
-		
+
 		drawPickCandidateVertex(g2d, context);
 
 	}
 
-
-
-
 	@Override
-	public void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

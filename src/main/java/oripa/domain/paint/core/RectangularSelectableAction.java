@@ -8,12 +8,16 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.util.RectangleClipper;
 import oripa.value.OriLine;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
+	private static final Logger logger = LoggerFactory.getLogger(RectangularSelectableAction.class);
 
 	private Point2D.Double startPoint = null;
 	private Point2D.Double draggingPoint = null;
@@ -47,7 +51,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 
 	/**
 	 * defines what to do for the selected lines.
-	 * 
+	 *
 	 * @param selectedLines
 	 *            lines selected by dragging
 	 * @param context
@@ -68,17 +72,11 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 
 			CreasePatternInterface creasePattern = context.getCreasePattern();
 
-			for (OriLine l : creasePattern) {
-
-				if (clipper.clipTest(l)) {
-
-					selectedLines.addLast(l);
-
-				}
-			}
+			creasePattern.stream()
+					.filter(l -> clipper.clipTest(l)).forEach(l -> selectedLines.addLast(l));
 
 		} catch (Exception ex) {
-
+			logger.error("failed to select rectangularly", ex);
 		}
 
 		afterRectangularSelection(selectedLines, context);

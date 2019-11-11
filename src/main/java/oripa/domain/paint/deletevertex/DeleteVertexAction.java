@@ -9,30 +9,27 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class DeleteVertexAction extends GraphicMouseAction {
 
-
-	public DeleteVertexAction(){
+	public DeleteVertexAction() {
 		setEditMode(EditMode.VERTEX);
 
 		setActionState(new DeletingVertex());
 
 	}
 
-
 	@Override
-	public void onDrag(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
-
-	}
-
-
-	@Override
-	public void onRelease(PaintContextInterface context, AffineTransform affine, boolean differentAction) {
-
+	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 
 	}
 
 	@Override
-	public void onDraw(Graphics2D g2d, PaintContextInterface context) {
+	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
+
+	}
+
+	@Override
+	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 
 		super.onDraw(g2d, context);
 
@@ -40,10 +37,8 @@ public class DeleteVertexAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final AffineTransform affine,
+			final boolean differentAction) {
 	}
-
-
 
 }

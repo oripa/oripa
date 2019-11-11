@@ -28,7 +28,7 @@ public interface GraphicMouseActionInterface {
 
 	/**
 	 * define action for recovering the status of this object with given
-	 * context. default does nothing.
+	 * context.
 	 *
 	 * @param context
 	 */
