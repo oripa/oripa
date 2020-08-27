@@ -66,6 +66,11 @@ public class SymmetricLineFactory {
 
 		Vector2d bestPoint = pair.getBestPoint();
 
+		if (bestPoint == null) {
+			throw new PainterCommandFailedException(
+					"failed to find the terminal of symmetric line");
+		}
+
 		return new OriLine(v1, bestPoint, lineType);
 	}
 
@@ -77,11 +82,10 @@ public class SymmetricLineFactory {
 	 * @param v2
 	 * @param creasePattern
 	 * @return
-	 * @throws PainterCommandFailedException
 	 */
 	private BestPair findBestPair(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
-			final Collection<OriLine> creasePattern) throws PainterCommandFailedException {
+			final Collection<OriLine> creasePattern) {
 		BestPair bestPair = new BestPair();
 
 		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
@@ -103,11 +107,6 @@ public class SymmetricLineFactory {
 				bestPair.setBestPoint(crossPoint);
 				bestPair.setBestLine(l);
 			}
-		}
-
-		if (bestPair.getBestPoint() == null) {
-			throw new PainterCommandFailedException(
-					"failed to find the terminal of symmetric line");
 		}
 
 		return bestPair;
@@ -150,14 +149,12 @@ public class SymmetricLineFactory {
 	 * @param startV
 	 * @param creasePattern
 	 * @param autoWalkLines
-	 * @throws PainterCommandFailedException
 	 */
 	private void addSymmetricLineAutoWalk(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, int stepCount,
 			final Vector2d startV,
 			final Collection<OriLine> creasePattern, final Collection<OriLine> autoWalkLines,
-			final int lineType)
-			throws PainterCommandFailedException {
+			final int lineType) {
 
 		// FIXME this method does not detect loop path. it causes meaningless
 		// recursion.
@@ -171,6 +168,10 @@ public class SymmetricLineFactory {
 
 		Vector2d bestPoint = pair.getBestPoint();
 		OriLine bestLine = pair.getBestLine();
+
+		if (bestPoint == null) {
+			return;
+		}
 
 		OriLine autoWalk = new OriLine(
 				v1, bestPoint, lineType);
