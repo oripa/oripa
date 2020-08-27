@@ -10,7 +10,7 @@ To find out more about using the software, visit the [ORIPA project's website](h
 
 ### Functionalities
 ------------------
-* Various methods to input lines inherited from ORIPA.
+* Various methods to input lines.
 * You can save your crease pattern as a JPG or PNG image file.
 * Cut by Ctrl+x or copy by Ctrl+c, paste by clicking left mouse button.
   On pasting mode, you can select the origin vertex by pressing Ctrl key.
@@ -20,11 +20,7 @@ To find out more about using the software, visit the [ORIPA project's website](h
 
 ### Download
 ------------
-The newest version is 0.36: https://github.com/oripa/oripa/raw/master/oripa-0.36.jar
-* Bugs on undo in ver.0.35 is fixed.
-* Faster access to line and vertex when selecting.
-* This is an unstable version because the code has been drastically changed. 
-* You need JRE 7 or 8. If you have not installed JRE, you can use JDK 11.
+The newest version is 1.00: See https://github.com/oripa/oripa/releases
 
 ### Next challenge(s)
 --------
