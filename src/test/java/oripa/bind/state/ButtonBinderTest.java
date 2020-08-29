@@ -14,7 +14,7 @@ import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
-import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 public class ButtonBinderTest {
 
@@ -26,7 +26,7 @@ public class ButtonBinderTest {
 		// JRadioButton editModeInputLineButton = new JRadioButton("InputLine",
 		// true);
 		JRadioButton editModeInputLineButton = (JRadioButton) viewChangeBinder.createButton(
-				JRadioButton.class, new ChangeOnPaintInputButtonSelected(new UIPanelSettingDB()),
+				JRadioButton.class, new ChangeOnPaintInputButtonSelected(new UIPanelSetting()),
 				StringID.UI.INPUT_LINE_ID, null);
 
 		ResourceHolder resources = ResourceHolder.getInstance();

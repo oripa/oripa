@@ -25,7 +25,7 @@ import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.ChildFrameManager;
-import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.MainScreenSetting;
 
 /**
  * @author Koji
@@ -34,9 +34,9 @@ import oripa.viewsetting.main.MainScreenSettingDB;
 public class ModelViewFrameFactory {
 	private static ModelViewFrame frame = null;
 
-	private final MainScreenSettingDB mainScreenSetting;
+	private final MainScreenSetting mainScreenSetting;
 
-	public ModelViewFrameFactory(final MainScreenSettingDB mainScreenSetting) {
+	public ModelViewFrameFactory(final MainScreenSetting mainScreenSetting) {
 		this.mainScreenSetting = mainScreenSetting;
 	}
 

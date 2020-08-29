@@ -24,8 +24,8 @@ import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.file.FileHistory;
-import oripa.viewsetting.main.MainFrameSettingDB;
-import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
+import oripa.viewsetting.main.MainFrameSetting;
+import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 /**
  * @author Koji
@@ -33,14 +33,14 @@ import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
  */
 public class MainMenuBarFactory {
 
-	private final MainFrameSettingDB mainFrameSetting;
-	private final UIPanelSettingDB uiPanelSetting;
+	private final MainFrameSetting mainFrameSetting;
+	private final UIPanelSetting uiPanelSetting;
 
 	/**
 	 * Constructor
 	 */
-	public MainMenuBarFactory(final MainFrameSettingDB mainFrameSetting,
-			final UIPanelSettingDB uiPanelSetting) {
+	public MainMenuBarFactory(final MainFrameSetting mainFrameSetting,
+			final UIPanelSetting uiPanelSetting) {
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
 	}

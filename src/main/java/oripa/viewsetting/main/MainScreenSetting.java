@@ -3,7 +3,7 @@ package oripa.viewsetting.main;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class MainScreenSettingDB {
+public class MainScreenSetting {
 
 	private boolean gridVisible = true;
 	public static final String GRID_VISIBLE = "grid visible";

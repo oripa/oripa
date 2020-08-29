@@ -3,7 +3,7 @@ package oripa.viewsetting.main;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class MainFrameSettingDB {
+public class MainFrameSetting {
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 

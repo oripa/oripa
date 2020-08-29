@@ -79,20 +79,20 @@ import oripa.view.estimation.FoldabilityCheckFrameFactory;
 import oripa.view.model.ModelViewFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewScreenUpdater;
-import oripa.viewsetting.main.MainFrameSettingDB;
-import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.MainFrameSetting;
+import oripa.viewsetting.main.MainScreenSetting;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.ToLineTypeItemListener;
-import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 public class UIPanel extends JPanel {
 
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
-	private final UIPanelSettingDB setting = new UIPanelSettingDB();
+	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueDB valueDB = ValueDB.getInstance();
-	private final MainScreenSettingDB mainScreenSetting;
+	private final MainScreenSetting mainScreenSetting;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
@@ -202,8 +202,8 @@ public class UIPanel extends JPanel {
 			final PaintContextInterface aContext,
 			final EstimationEntityHolder anEstimationHolder,
 			final SheetCutOutlinesHolder aCutOutlinesHolder,
-			final MainFrameSettingDB mainFrameSetting,
-			final MainScreenSettingDB mainScreenSetting) {
+			final MainFrameSetting mainFrameSetting,
+			final MainScreenSetting mainScreenSetting) {
 
 		this.screenUpdater = screenUpdater;
 
@@ -539,7 +539,7 @@ public class UIPanel extends JPanel {
 
 	}
 
-	private void constructButtons(final MainFrameSettingDB mainFrameSetting) {
+	private void constructButtons(final MainFrameSetting mainFrameSetting) {
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
 		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext, mainFrameSetting,
 				setting);
@@ -850,7 +850,7 @@ public class UIPanel extends JPanel {
 
 	private void addPropertyChangeListenersToSetting() {
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSettingDB.GRID_VISIBLE, e -> {
+				MainScreenSetting.GRID_VISIBLE, e -> {
 					dispGridCheckBox.setSelected((boolean) e.getNewValue());
 					repaint();
 				});
@@ -862,28 +862,28 @@ public class UIPanel extends JPanel {
 				ValueDB.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
 
 		setting.addPropertyChangeListener(
-				UIPanelSettingDB.SELECTED_MODE, this::onChangeEditModeButtonSelection);
+				UIPanelSetting.SELECTED_MODE, this::onChangeEditModeButtonSelection);
 
 		setting.addPropertyChangeListener(
-				UIPanelSettingDB.BY_VALUE_PANEL_VISIBLE, e -> {
+				UIPanelSetting.BY_VALUE_PANEL_VISIBLE, e -> {
 					byValueLengthPanel.setVisible((boolean) e.getNewValue());
 					byValueAnglePanel.setVisible((boolean) e.getNewValue());
 				});
 
 		setting.addPropertyChangeListener(
-				UIPanelSettingDB.ALTER_LINE_TYPE_PANEL_VISIBLE,
+				UIPanelSetting.ALTER_LINE_TYPE_PANEL_VISIBLE,
 				e -> alterLineTypePanel.setVisible((boolean) e.getNewValue()));
 
 		setting.addPropertyChangeListener(
-				UIPanelSettingDB.MOUNTAIN_BUTTON_ENABLED,
+				UIPanelSetting.MOUNTAIN_BUTTON_ENABLED,
 				e -> lineTypeMountainButton.setEnabled((boolean) e.getNewValue()));
 
 		setting.addPropertyChangeListener(
-				UIPanelSettingDB.VALLEY_BUTTON_ENABLED,
+				UIPanelSetting.VALLEY_BUTTON_ENABLED,
 				e -> lineTypeValleyButton.setEnabled((boolean) e.getNewValue()));
 
 		setting.addPropertyChangeListener(
-				UIPanelSettingDB.AUX_BUTTON_ENABLED,
+				UIPanelSetting.AUX_BUTTON_ENABLED,
 				e -> lineTypeAuxButton.setEnabled((boolean) e.getNewValue()));
 	}
 
@@ -905,7 +905,7 @@ public class UIPanel extends JPanel {
 
 	}
 
-	public UIPanelSettingDB getUIPanelSetting() {
+	public UIPanelSetting getUIPanelSetting() {
 		return setting;
 	}
 }

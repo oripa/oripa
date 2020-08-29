@@ -33,8 +33,8 @@ import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.file.FileHistory;
 import oripa.resource.StringID;
-import oripa.viewsetting.main.MainFrameSettingDB;
-import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
+import oripa.viewsetting.main.MainFrameSetting;
+import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 /**
  * @author Koji
@@ -87,8 +87,8 @@ public class MainMenuBar extends JMenuBar {
 	public MainMenuBar(final Component owner, final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
 			final ScreenUpdaterInterface screenUpdater,
-			final MainFrameSettingDB mainFrameSetting,
-			final UIPanelSettingDB uiPanelSetting) {
+			final MainFrameSetting mainFrameSetting,
+			final UIPanelSetting uiPanelSetting) {
 		this.actionHolder = actionHolder;
 		this.screenUpdater = screenUpdater;
 

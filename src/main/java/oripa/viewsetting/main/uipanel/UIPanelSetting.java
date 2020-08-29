@@ -6,7 +6,7 @@ import java.beans.PropertyChangeSupport;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.EditMode;
 
-public class UIPanelSettingDB {
+public class UIPanelSetting {
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 	private boolean byValuePanelVisible = false;

@@ -3,12 +3,12 @@ package oripa.viewsetting.main.uipanel;
 import oripa.viewsetting.ChangeViewSetting;
 
 public class ChangeOnPaintInputButtonSelected implements ChangeViewSetting {
-	private final UIPanelSettingDB setting;
+	private final UIPanelSetting setting;
 
 	/**
 	 * Constructor
 	 */
-	public ChangeOnPaintInputButtonSelected(final UIPanelSettingDB uiPanelSetting) {
+	public ChangeOnPaintInputButtonSelected(final UIPanelSetting uiPanelSetting) {
 		setting = uiPanelSetting;
 	}
 

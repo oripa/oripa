@@ -68,8 +68,8 @@ import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
 import oripa.viewsetting.ViewScreenUpdater;
-import oripa.viewsetting.main.MainFrameSettingDB;
-import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.MainFrameSetting;
+import oripa.viewsetting.main.MainScreenSetting;
 
 public class MainFrame extends JFrame implements ComponentListener, WindowListener {
 
@@ -80,8 +80,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 */
 	private static final long serialVersionUID = 272369294032419950L;
 
-	private final MainFrameSettingDB setting = new MainFrameSettingDB();
-	private final MainScreenSettingDB screenSetting;
+	private final MainFrameSetting setting = new MainFrameSetting();
+	private final MainScreenSetting screenSetting;
 
 	private final PainterScreen mainScreen;
 	private final JMenu menuFile = new JMenu(
@@ -678,7 +678,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	private void addPropertyChangeListenersToSetting() {
-		setting.addPropertyChangeListener(MainFrameSettingDB.HINT, e -> {
+		setting.addPropertyChangeListener(MainFrameSetting.HINT, e -> {
 			hintLabel.setText("    " + (String) e.getNewValue());
 			hintLabel.repaint();
 		});

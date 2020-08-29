@@ -3,13 +3,13 @@ package oripa.domain.paint.linetype;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingLine;
-import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 public class SelectingLineForLineType extends PickingLine {
 
-	private final UIPanelSettingDB setting;
+	private final UIPanelSetting setting;
 
-	public SelectingLineForLineType(final UIPanelSettingDB setting) {
+	public SelectingLineForLineType(final UIPanelSetting setting) {
 		super();
 		this.setting = setting;
 	}

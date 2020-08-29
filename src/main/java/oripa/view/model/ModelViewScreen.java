@@ -51,7 +51,7 @@ import oripa.resource.Constants;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.value.OriLine;
-import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.MainScreenSetting;
 
 public class ModelViewScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener,
@@ -81,10 +81,10 @@ public class ModelViewScreen extends JPanel
 
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
-	private final MainScreenSettingDB mainScreenSetting;
+	private final MainScreenSetting mainScreenSetting;
 
 	public ModelViewScreen(final SheetCutOutlinesHolder aLineHolder, final CallbackOnUpdate c,
-			final MainScreenSettingDB mainScreenSetting) {
+			final MainScreenSetting mainScreenSetting) {
 
 		lineHolder = aLineHolder;
 		onUpdateCrossLine = c;
@@ -108,7 +108,7 @@ public class ModelViewScreen extends JPanel
 
 	private void addPropertyChangeListenersToSetting() {
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSettingDB.CROSS_LINE_VISIBLE, e -> {
+				MainScreenSetting.CROSS_LINE_VISIBLE, e -> {
 					crossLineVisible = (boolean) e.getNewValue();
 					if (crossLineVisible) {
 						recalcCrossLine();

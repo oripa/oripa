@@ -56,7 +56,7 @@ import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;
-import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.MainScreenSetting;
 import oripa.viewsetting.main.ScreenUpdater;
 
 public class PainterScreen extends JPanel
@@ -65,7 +65,7 @@ public class PainterScreen extends JPanel
 
 	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
 
-	private final MainScreenSettingDB setting = new MainScreenSettingDB();
+	private final MainScreenSetting setting = new MainScreenSetting();
 	private final ScreenUpdater screenUpdater = new ScreenUpdater();
 	private final PaintContextInterface paintContext;
 	private final SheetCutOutlinesHolder cutOutlinesHolder;
@@ -124,7 +124,7 @@ public class PainterScreen extends JPanel
 		return screenUpdater;
 	}
 
-	public MainScreenSettingDB getMainScreenSetting() {
+	public MainScreenSetting getMainScreenSetting() {
 		return setting;
 	}
 
@@ -485,13 +485,13 @@ public class PainterScreen extends JPanel
 				ViewScreenUpdater.REDRAW_REQUESTED, e -> repaint());
 
 		setting.addPropertyChangeListener(
-				MainScreenSettingDB.GRID_VISIBLE, e -> {
+				MainScreenSetting.GRID_VISIBLE, e -> {
 					paintContext.setGridVisible((boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
-				MainScreenSettingDB.CROSS_LINE_VISIBLE, e -> {
+				MainScreenSetting.CROSS_LINE_VISIBLE, e -> {
 					var visible = (boolean) e.getNewValue();
 					logger.info("receive crossLineVisible has become " + visible);
 					paintContext.setCrossLineVisible(visible);

@@ -27,26 +27,26 @@ import oripa.domain.paint.triangle.TriangleSplitAction;
 import oripa.domain.paint.vertical.VerticalLineAction;
 import oripa.resource.StringID;
 import oripa.viewsetting.main.ChangeHint;
-import oripa.viewsetting.main.MainFrameSettingDB;
+import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.uipanel.ChangeOnAlterTypeButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnOtherCommandButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnSelectButtonSelected;
-import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 //FIXME this ID-based approach is not smart.
 // We should implement button factories for each command.
 public class PaintBoundStateFactory {
 
-	private final MainFrameSettingDB mainFrameSetting;
-	private final UIPanelSettingDB uiPanelSetting;
+	private final MainFrameSetting mainFrameSetting;
+	private final UIPanelSetting uiPanelSetting;
 
 	/**
 	 * Constructor
 	 */
-	public PaintBoundStateFactory(final MainFrameSettingDB mainFrameSetting,
-			final UIPanelSettingDB uiPanelSetting) {
+	public PaintBoundStateFactory(final MainFrameSetting mainFrameSetting,
+			final UIPanelSetting uiPanelSetting) {
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
 	}

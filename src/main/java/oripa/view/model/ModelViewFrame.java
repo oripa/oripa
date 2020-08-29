@@ -48,7 +48,7 @@ import oripa.persistent.filetool.FileChooserFactory;
 import oripa.persistent.filetool.SavingActionTemplate;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
-import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.MainScreenSetting;
 
 /**
  * A frame to show a transparent folded model.
@@ -85,11 +85,11 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			JScrollBar.VERTICAL, 0, 5, -150, 150);
 
-	private final MainScreenSettingDB mainScreenSetting;
+	private final MainScreenSetting mainScreenSetting;
 
 	public ModelViewFrame(final int width, final int height,
 			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine,
-			final MainScreenSettingDB mainScreenSetting) {
+			final MainScreenSetting mainScreenSetting) {
 
 		this.mainScreenSetting = mainScreenSetting;
 

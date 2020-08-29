@@ -6,12 +6,12 @@ import java.awt.event.ItemListener;
 import oripa.domain.cptool.TypeForChange;
 
 public class FromLineTypeItemListener implements ItemListener {
-	private final UIPanelSettingDB setting;
+	private final UIPanelSetting setting;
 
 	/**
 	 * Constructor
 	 */
-	public FromLineTypeItemListener(final UIPanelSettingDB uiPanelSetting) {
+	public FromLineTypeItemListener(final UIPanelSetting uiPanelSetting) {
 		setting = uiPanelSetting;
 	}
 
