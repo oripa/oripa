@@ -3,11 +3,17 @@ package oripa.viewsetting.main.uipanel;
 import oripa.viewsetting.ChangeViewSetting;
 
 public class ChangeOnSelectButtonSelected implements ChangeViewSetting {
+	private final UIPanelSettingDB setting;
+
+	/**
+	 * Constructor
+	 */
+	public ChangeOnSelectButtonSelected(final UIPanelSettingDB uiPanelSetting) {
+		setting = uiPanelSetting;
+	}
 
 	@Override
 	public void changeViewSetting() {
-		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-
 		setting.selectSelectMode();
 
 		setting.setByValuePanelVisible(false);

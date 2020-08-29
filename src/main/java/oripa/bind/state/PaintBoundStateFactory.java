@@ -33,18 +33,22 @@ import oripa.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnOtherCommandButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnSelectButtonSelected;
+import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 //FIXME this ID-based approach is not smart.
 // We should implement button factories for each command.
 public class PaintBoundStateFactory {
 
 	private final MainFrameSettingDB mainFrameSetting;
+	private final UIPanelSettingDB uiPanelSetting;
 
 	/**
 	 * Constructor
 	 */
-	public PaintBoundStateFactory(final MainFrameSettingDB mainFrameSetting) {
+	public PaintBoundStateFactory(final MainFrameSettingDB mainFrameSetting,
+			final UIPanelSettingDB uiPanelSetting) {
 		this.mainFrameSetting = mainFrameSetting;
+		this.uiPanelSetting = uiPanelSetting;
 	}
 
 	/**
@@ -72,35 +76,41 @@ public class PaintBoundStateFactory {
 			state = stateFactory.create(
 					actionHolder, new SelectLineAction(), context, screenUpdater, changeHint,
 					new ActionListener[] {
-							e -> (new ChangeOnSelectButtonSelected()).changeViewSetting() });
+							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 			break;
 
 		case StringID.DELETE_LINE_ID:
 			state = stateFactory.create(
 					actionHolder, new DeleteLineAction(), context, screenUpdater, changeHint,
 					new ActionListener[] {
-							e -> (new ChangeOnOtherCommandButtonSelected()).changeViewSetting() });
+							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 			break;
 
 		case StringID.CHANGE_LINE_TYPE_ID:
 			state = stateFactory.create(
-					actionHolder, new ChangeLineTypeAction(), context, screenUpdater, changeHint,
+					actionHolder, new ChangeLineTypeAction(uiPanelSetting), context, screenUpdater,
+					changeHint,
 					new ActionListener[] {
-							(e) -> (new ChangeOnAlterTypeButtonSelected()).changeViewSetting() });
+							(e) -> (new ChangeOnAlterTypeButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 			break;
 
 		case StringID.ADD_VERTEX_ID:
 			state = stateFactory.create(
 					actionHolder, new AddVertexAction(), context, screenUpdater, changeHint,
 					new ActionListener[] {
-							e -> (new ChangeOnOtherCommandButtonSelected()).changeViewSetting() });
+							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 			break;
 
 		case StringID.DELETE_VERTEX_ID:
 			state = stateFactory.create(
 					actionHolder, new DeleteVertexAction(), context, screenUpdater, changeHint,
 					new ActionListener[] {
-							e -> (new ChangeOnOtherCommandButtonSelected()).changeViewSetting() });
+							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 			break;
 
 		case StringID.EDIT_CONTOUR_ID:
@@ -108,7 +118,8 @@ public class PaintBoundStateFactory {
 					actionHolder, new EditOutlineActionWrapper(actionHolder), context,
 					screenUpdater, changeHint,
 					new ActionListener[] {
-							e -> (new ChangeOnOtherCommandButtonSelected()).changeViewSetting() });
+							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 			break;
 
 		case StringID.SELECT_ALL_LINE_ID:
@@ -116,7 +127,8 @@ public class PaintBoundStateFactory {
 			state = stateFactory.create(
 					actionHolder, new SelectLineAction(), context, screenUpdater, changeHint,
 					new ActionListener[] {
-							e -> (new ChangeOnSelectButtonSelected()).changeViewSetting() });
+							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 			break;
 
 		case StringID.COPY_PASTE_ID:
@@ -126,7 +138,8 @@ public class PaintBoundStateFactory {
 					new CopyPasteErrorListener(context),
 					context, screenUpdater, changeHint,
 					new ActionListener[] {
-							e -> (new ChangeOnSelectButtonSelected()).changeViewSetting() });
+							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 			break;
 
 		case StringID.CUT_PASTE_ID:
@@ -136,7 +149,8 @@ public class PaintBoundStateFactory {
 					new CopyPasteErrorListener(context),
 					context, screenUpdater, changeHint,
 					new ActionListener[] {
-							e -> (new ChangeOnSelectButtonSelected()).changeViewSetting() });
+							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 			break;
 
 		default:
@@ -160,7 +174,8 @@ public class PaintBoundStateFactory {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
 				new ActionListener[] {
-						e -> (new ChangeOnPaintInputButtonSelected()).changeViewSetting() });
+						e -> (new ChangeOnPaintInputButtonSelected(uiPanelSetting))
+								.changeViewSetting() });
 
 		ApplicationState<EditMode> state = null;
 		switch (id) {
@@ -211,7 +226,8 @@ public class PaintBoundStateFactory {
 		case StringID.BY_VALUE_ID:
 			LocalPaintBoundStateFactory byValueFactory = new LocalPaintBoundStateFactory(
 					parent, new ActionListener[] {
-							e -> (new ChangeOnByValueButtonSelected()).changeViewSetting() });
+							e -> (new ChangeOnByValueButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
 
 			state = byValueFactory.create(
 					actionHolder, new LineByValueAction(),

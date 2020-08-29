@@ -7,23 +7,6 @@ import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.EditMode;
 
 public class UIPanelSettingDB {
-	// -------------------------------------------------------
-	// singleton pattern
-
-	private static UIPanelSettingDB settingDB = null;
-
-	private UIPanelSettingDB() {
-	}
-
-	public static UIPanelSettingDB getInstance() {
-		if (settingDB == null) {
-			settingDB = new UIPanelSettingDB();
-		}
-
-		return settingDB;
-	}
-	// -------------------------------------------------------
-
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 	private boolean byValuePanelVisible = false;

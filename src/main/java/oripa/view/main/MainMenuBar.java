@@ -32,9 +32,9 @@ import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.file.FileHistory;
-import oripa.resource.ResourceHolder;
 import oripa.resource.StringID;
 import oripa.viewsetting.main.MainFrameSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 /**
  * @author Koji
@@ -66,7 +66,6 @@ public class MainMenuBar extends JMenuBar {
 	private JMenuItem menuItemCutAndPaste;
 	// -----------------------------------------------------------------------------------------------------------
 
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 	private JMenuItem menuItemUndo;
 	private JMenuItem menuItemAbout;
 	private JMenuItem menuItemRepeatCopy;
@@ -87,11 +86,13 @@ public class MainMenuBar extends JMenuBar {
 	 */
 	public MainMenuBar(final Component owner, final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
-			final ScreenUpdaterInterface screenUpdater) {
+			final ScreenUpdaterInterface screenUpdater,
+			final MainFrameSettingDB mainFrameSetting,
+			final UIPanelSettingDB uiPanelSetting) {
 		this.actionHolder = actionHolder;
 		this.screenUpdater = screenUpdater;
 
-		buttonFactory = new PaintActionButtonFactory(aContext, new MainFrameSettingDB());
+		buttonFactory = new PaintActionButtonFactory(aContext, mainFrameSetting, uiPanelSetting);
 		build(owner);
 
 		addMenus();

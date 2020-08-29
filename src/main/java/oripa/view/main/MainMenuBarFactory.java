@@ -24,12 +24,26 @@ import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.file.FileHistory;
+import oripa.viewsetting.main.MainFrameSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 /**
  * @author Koji
  *
  */
 public class MainMenuBarFactory {
+
+	private final MainFrameSettingDB mainFrameSetting;
+	private final UIPanelSettingDB uiPanelSetting;
+
+	/**
+	 * Constructor
+	 */
+	public MainMenuBarFactory(final MainFrameSettingDB mainFrameSetting,
+			final UIPanelSettingDB uiPanelSetting) {
+		this.mainFrameSetting = mainFrameSetting;
+		this.uiPanelSetting = uiPanelSetting;
+	}
 
 	/**
 	 *
@@ -44,7 +58,8 @@ public class MainMenuBarFactory {
 			final ScreenUpdaterInterface screenUpdater,
 			final FileHistory history) {
 
-		MainMenuBar bar = new MainMenuBar(owner, actionHolder, aContext, screenUpdater);
+		MainMenuBar bar = new MainMenuBar(owner, actionHolder, aContext, screenUpdater,
+				mainFrameSetting, uiPanelSetting);
 
 		bar.setFileHistoryPaths(history);
 

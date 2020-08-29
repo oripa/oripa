@@ -90,7 +90,7 @@ public class UIPanel extends JPanel {
 
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
-	private final UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
+	private final UIPanelSettingDB setting = new UIPanelSettingDB();
 	private final ValueDB valueDB = ValueDB.getInstance();
 	private final MainScreenSettingDB mainScreenSetting;
 
@@ -529,9 +529,9 @@ public class UIPanel extends JPanel {
 		lineInputDirectVButton.doClick();
 
 		// of line type on DB
-		settingDB.setTypeFrom((TypeForChange) alterLine_combo_from
+		setting.setTypeFrom((TypeForChange) alterLine_combo_from
 				.getSelectedItem());
-		settingDB.setTypeTo((TypeForChange) alterLine_combo_to
+		setting.setTypeTo((TypeForChange) alterLine_combo_to
 				.getSelectedItem());
 
 		doFullEstimationCheckBox.setSelected(true);
@@ -541,11 +541,12 @@ public class UIPanel extends JPanel {
 
 	private void constructButtons(final MainFrameSettingDB mainFrameSetting) {
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
-		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext, mainFrameSetting);
+		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext, mainFrameSetting,
+				setting);
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
 				.createButton(
-						JRadioButton.class, new ChangeOnPaintInputButtonSelected(),
+						JRadioButton.class, new ChangeOnPaintInputButtonSelected(setting),
 						StringID.UI.INPUT_LINE_ID,
 						screenUpdater.getKeyListener());
 
@@ -649,8 +650,8 @@ public class UIPanel extends JPanel {
 
 	private void addActionListenersToComponents() {
 
-		alterLine_combo_from.addItemListener(new FromLineTypeItemListener());
-		alterLine_combo_to.addItemListener(new ToLineTypeItemListener());
+		alterLine_combo_from.addItemListener(new FromLineTypeItemListener(setting));
+		alterLine_combo_to.addItemListener(new ToLineTypeItemListener(setting));
 
 		buttonLength.addActionListener(
 				new PaintActionSetter(actionHolder, new LengthMeasuringAction(),
@@ -860,34 +861,34 @@ public class UIPanel extends JPanel {
 		valueDB.addPropertyChangeListener(
 				ValueDB.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
 
-		settingDB.addPropertyChangeListener(
+		setting.addPropertyChangeListener(
 				UIPanelSettingDB.SELECTED_MODE, this::onChangeEditModeButtonSelection);
 
-		settingDB.addPropertyChangeListener(
+		setting.addPropertyChangeListener(
 				UIPanelSettingDB.BY_VALUE_PANEL_VISIBLE, e -> {
 					byValueLengthPanel.setVisible((boolean) e.getNewValue());
 					byValueAnglePanel.setVisible((boolean) e.getNewValue());
 				});
 
-		settingDB.addPropertyChangeListener(
+		setting.addPropertyChangeListener(
 				UIPanelSettingDB.ALTER_LINE_TYPE_PANEL_VISIBLE,
 				e -> alterLineTypePanel.setVisible((boolean) e.getNewValue()));
 
-		settingDB.addPropertyChangeListener(
+		setting.addPropertyChangeListener(
 				UIPanelSettingDB.MOUNTAIN_BUTTON_ENABLED,
 				e -> lineTypeMountainButton.setEnabled((boolean) e.getNewValue()));
 
-		settingDB.addPropertyChangeListener(
+		setting.addPropertyChangeListener(
 				UIPanelSettingDB.VALLEY_BUTTON_ENABLED,
 				e -> lineTypeValleyButton.setEnabled((boolean) e.getNewValue()));
 
-		settingDB.addPropertyChangeListener(
+		setting.addPropertyChangeListener(
 				UIPanelSettingDB.AUX_BUTTON_ENABLED,
 				e -> lineTypeAuxButton.setEnabled((boolean) e.getNewValue()));
 	}
 
 	private void onChangeEditModeButtonSelection(final PropertyChangeEvent e) {
-		switch (settingDB.getSelectedMode()) {
+		switch (setting.getSelectedMode()) {
 		case INPUT:
 			selectEditModeButton(editModeInputLineButton);
 			break;
@@ -904,4 +905,7 @@ public class UIPanel extends JPanel {
 
 	}
 
+	public UIPanelSettingDB getUIPanelSetting() {
+		return setting;
+	}
 }

@@ -11,10 +11,12 @@ import oripa.value.OriLine;
 import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 public class ChangeLineTypeAction extends RectangularSelectableAction {
+	private final UIPanelSettingDB setting;
 
-	public ChangeLineTypeAction() {
+	public ChangeLineTypeAction(final UIPanelSettingDB setting) {
+		this.setting = setting;
 		setEditMode(EditMode.CHANGE_TYPE);
-		setActionState(new SelectingLineForLineType());
+		setActionState(new SelectingLineForLineType(setting));
 	}
 
 	@Override
@@ -26,7 +28,6 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 		}
 		context.creasePatternUndo().pushUndoInfo();
 
-		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 		for (OriLine l : selectedLines) {
 			Painter painter = context.getPainter();
 			// Change line type

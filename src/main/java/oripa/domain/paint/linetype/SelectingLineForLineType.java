@@ -7,8 +7,11 @@ import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 public class SelectingLineForLineType extends PickingLine {
 
-	public SelectingLineForLineType() {
+	private final UIPanelSettingDB setting;
+
+	public SelectingLineForLineType(final UIPanelSettingDB setting) {
 		super();
+		this.setting = setting;
 	}
 
 	@Override
@@ -25,7 +28,6 @@ public class SelectingLineForLineType extends PickingLine {
 
 		context.creasePatternUndo().pushUndoInfo();
 
-		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 		Painter painter = context.getPainter();
 		painter.alterLineType(
 				context.peekLine(), setting.getTypeFrom(), setting.getTypeTo());

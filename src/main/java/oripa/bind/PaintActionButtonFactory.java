@@ -13,6 +13,7 @@ import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.viewsetting.main.MainFrameSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 /**
  * A class for application-specific binding of state actions and buttons.
@@ -24,11 +25,13 @@ public class PaintActionButtonFactory implements ButtonFactory {
 
 	private final PaintContextInterface context;
 	private final MainFrameSettingDB mainFrameSetting;
+	private final UIPanelSettingDB uiPanelSetting;
 
 	public PaintActionButtonFactory(final PaintContextInterface aContext,
-			final MainFrameSettingDB mainFrameSetting) {
+			final MainFrameSettingDB mainFrameSetting, final UIPanelSettingDB uiPanelSetting) {
 		context = aContext;
 		this.mainFrameSetting = mainFrameSetting;
+		this.uiPanelSetting = uiPanelSetting;
 	}
 
 	/*
@@ -45,7 +48,8 @@ public class PaintActionButtonFactory implements ButtonFactory {
 			final String id,
 			final KeyListener keyListener) {
 
-		PaintBoundStateFactory stateFactory = new PaintBoundStateFactory(mainFrameSetting);
+		PaintBoundStateFactory stateFactory = new PaintBoundStateFactory(mainFrameSetting,
+				uiPanelSetting);
 
 		ApplicationState<EditMode> state = stateFactory.create(
 				parent, actionHolder, context, screenUpater, id);

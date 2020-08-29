@@ -112,8 +112,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final PaintContextInterface paintContext = contextFactory.createContext();
 	private final MouseActionHolder actionHolder = new MouseActionHolder();
 
-	private final ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext, setting);
-
+	private final ButtonFactory buttonFactory;
 	/**
 	 * For changing outline
 	 */
@@ -160,7 +159,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private RepeatCopyDialog arrayCopyDialog;
 	private CircleCopyDialog circleCopyDialog;
 	public static JLabel hintLabel = new JLabel();
-	public UIPanel uiPanel;
+	private final UIPanel uiPanel;
 
 	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 
@@ -179,6 +178,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		screenUpdater = mainScreen.getScreenUpdater();
 		screenSetting = mainScreen.getMainScreenSetting();
 
+		uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document,
+				setting, screenSetting);
+
+		buttonFactory = new PaintActionButtonFactory(paintContext, setting,
+				uiPanel.getUIPanelSetting());
+
 		createPaintMenuItems();
 
 		menuItemCopyAndPaste.setText(resourceHolder.getString(
@@ -188,8 +193,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		// menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 
 		addWindowListener(this);
-		uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document,
-				setting, screenSetting);
+
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(uiPanel, BorderLayout.WEST);
 		getContentPane().add(mainScreen, BorderLayout.CENTER);
@@ -236,28 +240,28 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	private void createPaintMenuItems() {
-		/**
+		/*
 		 * For changing outline
 		 */
 		menuItemChangeOutline = (JMenuItem) buttonFactory
 				.create(this, JMenuItem.class, actionHolder, screenUpdater,
 						StringID.EDIT_CONTOUR_ID, null);
 
-		/**
+		/*
 		 * For selecting all lines
 		 */
 		menuItemSelectAll = (JMenuItem) buttonFactory
 				.create(this, JMenuItem.class, actionHolder, screenUpdater,
 						StringID.SELECT_ALL_LINE_ID, null);
 
-		/**
+		/*
 		 * For starting copy-and-paste
 		 */
 		menuItemCopyAndPaste = (JMenuItem) buttonFactory
 				.create(this, JMenuItem.class, actionHolder, screenUpdater, StringID.COPY_PASTE_ID,
 						null);
 
-		/**
+		/*
 		 * For starting cut-and-paste
 		 */
 		menuItemCutAndPaste = (JMenuItem) buttonFactory

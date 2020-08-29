@@ -18,6 +18,7 @@ import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.resource.StringID;
 import oripa.viewsetting.main.MainFrameSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
 
 public class ButtonFactoryTest {
 	@Test
@@ -61,7 +62,7 @@ public class ButtonFactoryTest {
 			final boolean hasLabel) {
 		PaintContextFactory contextFactory = new PaintContextFactory();
 		ButtonFactory paintFactory = new PaintActionButtonFactory(contextFactory.createContext(),
-				new MainFrameSettingDB());
+				new MainFrameSettingDB(), new UIPanelSettingDB());
 
 		var keyListener = mock(KeyListener.class);
 		JButton button;
