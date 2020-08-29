@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -23,7 +23,7 @@ import oripa.persistent.filetool.FileVersionError;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class LoadingDocAction extends AbstractLoadingAction<Doc> {
 
@@ -32,13 +32,13 @@ public class LoadingDocAction extends AbstractLoadingAction<Doc> {
 	/**
 	 * Constructor
 	 */
-	public LoadingDocAction(Loader l) {
+	public LoadingDocAction(final Loader<Doc> l) {
 		loader = l;
 	}
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see
 	 * oripa.persistent.filetool.AbstractLoadingAction#load(java.lang.String)
 	 */

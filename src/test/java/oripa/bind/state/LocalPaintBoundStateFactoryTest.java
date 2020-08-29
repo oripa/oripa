@@ -20,7 +20,6 @@ import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.resource.StringID;
 import oripa.viewsetting.ChangeViewSetting;
 
 public class LocalPaintBoundStateFactoryTest {
@@ -40,7 +39,6 @@ public class LocalPaintBoundStateFactoryTest {
 			var mouseAction = mock(GraphicMouseAction.class);
 			var context = mock(PaintContextInterface.class);
 			var screenUpdater = mock(ScreenUpdaterInterface.class);
-			var textID = StringID.DIRECT_V_ID;
 			var action1 = mock(ActionListener.class);
 			var action2 = mock(ActionListener.class);
 
@@ -90,7 +88,6 @@ public class LocalPaintBoundStateFactoryTest {
 			when(context.getPainter()).thenReturn(painter);
 			when(actionHolder.getMouseAction()).thenReturn(currentMouseAction);
 
-			var textID = StringID.DIRECT_V_ID;
 			var action1 = mock(ActionListener.class);
 			var action2 = mock(ActionListener.class);
 

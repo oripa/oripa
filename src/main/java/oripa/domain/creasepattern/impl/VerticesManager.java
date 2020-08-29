@@ -45,12 +45,6 @@ public class VerticesManager implements NearVerticesGettable {
 			x = toDiv(v.x);
 			y = toDiv(v.y);
 		}
-
-		public AreaPosition(final double x, final double y) {
-			this.x = toDiv(x);
-			this.y = toDiv(y);
-		}
-
 	}
 
 	/**
@@ -76,6 +70,7 @@ public class VerticesManager implements NearVerticesGettable {
 	/**
 	 * [div_x][div_y] is a vertices in the divided area.
 	 */
+	@SuppressWarnings("unchecked")
 	private final Set<Vector2d>[][] vertices = new Set[divNum][divNum];
 	/**
 	 * count existence of same values.
