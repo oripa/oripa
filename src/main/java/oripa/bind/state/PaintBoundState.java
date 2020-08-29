@@ -12,7 +12,7 @@ import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
-import oripa.viewsetting.main.ChangeHint;
+import oripa.viewsetting.ChangeViewSetting;
 
 /**
  * A state when user is painting. This class performs: - state management
@@ -31,8 +31,8 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 *
 	 * @param mouseAction
 	 *            paint action
-	 * @param textID
-	 *            ID for hint.
+	 * @param changeHint
+	 *            event handler for hint.
 	 * @param actions
 	 *            additional actions.
 	 */
@@ -41,12 +41,12 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
 			final ScreenUpdaterInterface screenUpdater,
-			final String textID,
+			final ChangeViewSetting changeHint,
 			final ActionListener[] actions) {
 		super(mouseAction.getEditMode(), actions);
 		this.actionHolder = actionHolder;
 
-		addBasicListeners(mouseAction, context, screenUpdater, textID);
+		addBasicListeners(mouseAction, context, screenUpdater, changeHint);
 	}
 
 	/**
@@ -58,8 +58,8 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 *            for managing error on {@code performActions()}.
 	 * @param mouseAction
 	 *            paint action
-	 * @param textID
-	 *            ID for hint.
+	 * @param changeHint
+	 *            event handler for hint.
 	 * @param actions
 	 *            additional actions.
 	 */
@@ -70,13 +70,13 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
 			final ScreenUpdaterInterface screenUpdater,
-			final String textID,
+			final ChangeViewSetting changeHint,
 			final ActionListener[] actions) {
 
 		super(mouseAction.getEditMode(), actions);
 
 		this.actionHolder = actionHolder;
-		addBasicListeners(mouseAction, context, screenUpdater, textID);
+		addBasicListeners(mouseAction, context, screenUpdater, changeHint);
 
 		// set a listener to handle an error on performActions().
 		this.parent = parent;
@@ -87,7 +87,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
 			final ScreenUpdaterInterface screenUpdater,
-			final String textID) {
+			final ChangeViewSetting changeHint) {
 
 		// add a listener to push this state to the history stack.
 		addAction(new StatePusher(this));
@@ -95,9 +95,9 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 		// add a listener to change paint action.
 		addAction(new PaintActionSetter(actionHolder, mouseAction, screenUpdater, context));
 
-		if (textID != null) {
+		if (changeHint != null) {
 			// add view updater
-			addAction(e -> (new ChangeHint(textID)).changeViewSetting());
+			addAction(e -> changeHint.changeViewSetting());
 		}
 
 	}

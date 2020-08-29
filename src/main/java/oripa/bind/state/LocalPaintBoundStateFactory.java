@@ -9,6 +9,7 @@ import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
+import oripa.viewsetting.ChangeViewSetting;
 
 /**
  * Helper class
@@ -45,8 +46,8 @@ class LocalPaintBoundStateFactory {
 	 *            state.
 	 * @param context
 	 *            context of painting.
-	 * @param textID
-	 *            ID for hint of painting.
+	 * @param changeHint
+	 *            event handler to change a hint of painting.
 	 * @param actions
 	 *            Additional actions.
 	 * @return
@@ -57,12 +58,12 @@ class LocalPaintBoundStateFactory {
 			final ErrorListener errorListener,
 			final PaintContextInterface context,
 			final ScreenUpdaterInterface screenUpdater,
-			final String textID,
+			final ChangeViewSetting changeHint,
 			final ActionListener[] actions) {
 
 		PaintBoundState state = new PaintBoundState(
 				parent, errorListener, actionHolder,
-				mouseAction, context, screenUpdater, textID, basicActions);
+				mouseAction, context, screenUpdater, changeHint, basicActions);
 
 		state.addActions(actions);
 		state.setErrorListener(errorListener);
@@ -78,8 +79,8 @@ class LocalPaintBoundStateFactory {
 	 *            Action for painting
 	 * @param context
 	 *            Context of painting.
-	 * @param textID
-	 *            ID for hint of painting.
+	 * @param changeHint
+	 *            event handler to change a hint of painting.
 	 * @param actions
 	 *            Additional actions.
 	 * @return
@@ -89,11 +90,11 @@ class LocalPaintBoundStateFactory {
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
 			final ScreenUpdaterInterface screenUpdater,
-			final String textID,
+			final ChangeViewSetting changeHint,
 			final ActionListener[] actions) {
 
 		ApplicationState<EditMode> state = new PaintBoundState(
-				actionHolder, mouseAction, context, screenUpdater, textID, basicActions);
+				actionHolder, mouseAction, context, screenUpdater, changeHint, basicActions);
 
 		state.addActions(actions);
 

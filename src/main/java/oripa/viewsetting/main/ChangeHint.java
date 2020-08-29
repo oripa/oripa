@@ -8,11 +8,12 @@ import oripa.viewsetting.ChangeViewSetting;
 
 public class ChangeHint implements ChangeViewSetting {
 
-	private final MainFrameSettingDB frameSetting = MainFrameSettingDB.getInstance();
+	private final MainFrameSettingDB frameSetting;
 
 	private final String id;
 
-	public ChangeHint(final String resourceID) {
+	public ChangeHint(final MainFrameSettingDB mainFrameSetting, final String resourceID) {
+		frameSetting = mainFrameSetting;
 		this.id = resourceID;
 	}
 

@@ -79,6 +79,7 @@ import oripa.view.estimation.FoldabilityCheckFrameFactory;
 import oripa.view.model.ModelViewFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewScreenUpdater;
+import oripa.viewsetting.main.MainFrameSettingDB;
 import oripa.viewsetting.main.MainScreenSettingDB;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.viewsetting.main.uipanel.FromLineTypeItemListener;
@@ -201,6 +202,7 @@ public class UIPanel extends JPanel {
 			final PaintContextInterface aContext,
 			final EstimationEntityHolder anEstimationHolder,
 			final SheetCutOutlinesHolder aCutOutlinesHolder,
+			final MainFrameSettingDB mainFrameSetting,
 			final MainScreenSettingDB mainScreenSetting) {
 
 		this.screenUpdater = screenUpdater;
@@ -213,7 +215,7 @@ public class UIPanel extends JPanel {
 
 		this.mainScreenSetting = mainScreenSetting;
 
-		constructButtons();
+		constructButtons(mainFrameSetting);
 
 		// setModeButtonText();
 		editModeInputLineButton.setSelected(true);
@@ -537,9 +539,9 @@ public class UIPanel extends JPanel {
 
 	}
 
-	private void constructButtons() {
+	private void constructButtons(final MainFrameSettingDB mainFrameSetting) {
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
-		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext);
+		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext, mainFrameSetting);
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
 				.createButton(

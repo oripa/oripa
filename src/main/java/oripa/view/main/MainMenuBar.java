@@ -34,6 +34,7 @@ import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.file.FileHistory;
 import oripa.resource.ResourceHolder;
 import oripa.resource.StringID;
+import oripa.viewsetting.main.MainFrameSettingDB;
 
 /**
  * @author Koji
@@ -90,7 +91,7 @@ public class MainMenuBar extends JMenuBar {
 		this.actionHolder = actionHolder;
 		this.screenUpdater = screenUpdater;
 
-		buttonFactory = new PaintActionButtonFactory(aContext);
+		buttonFactory = new PaintActionButtonFactory(aContext, new MainFrameSettingDB());
 		build(owner);
 
 		addMenus();

@@ -10,19 +10,6 @@ public class MainFrameSettingDB {
 	private String hint;
 	public static String HINT = "hint";
 
-	private static MainFrameSettingDB instance = null;
-
-	private MainFrameSettingDB() {
-	}
-
-	public static MainFrameSettingDB getInstance() {
-		if (instance == null) {
-			instance = new MainFrameSettingDB();
-		}
-
-		return instance;
-	}
-
 	public void addPropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);

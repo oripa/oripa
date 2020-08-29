@@ -21,6 +21,7 @@ import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.resource.StringID;
+import oripa.viewsetting.ChangeViewSetting;
 
 public class LocalPaintBoundStateFactoryTest {
 
@@ -48,9 +49,11 @@ public class LocalPaintBoundStateFactoryTest {
 			var event = mock(ActionEvent.class);
 			when(errorListener.isError(event)).thenReturn(true);
 
+			var changeHint = mock(ChangeViewSetting.class);
+
 			ApplicationState<EditMode> state = factory.create(
 					actionHolder,
-					mouseAction, errorListener, context, screenUpdater, textID,
+					mouseAction, errorListener, context, screenUpdater, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -66,6 +69,7 @@ public class LocalPaintBoundStateFactoryTest {
 			verify(action1, never()).actionPerformed(event);
 			verify(action2, never()).actionPerformed(event);
 			verify(actionHolder, never()).setMouseAction(mouseAction);
+			verify(changeHint, never()).changeViewSetting();
 		}
 
 		@Test
@@ -95,9 +99,11 @@ public class LocalPaintBoundStateFactoryTest {
 			var event = mock(ActionEvent.class);
 			when(errorListener.isError(event)).thenReturn(false);
 
+			var changeHint = mock(ChangeViewSetting.class);
+
 			ApplicationState<EditMode> state = factory.create(
 					actionHolder,
-					assignedMouseAction, errorListener, context, screenUpdater, textID,
+					assignedMouseAction, errorListener, context, screenUpdater, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -117,6 +123,8 @@ public class LocalPaintBoundStateFactoryTest {
 			verify(basicAction2).actionPerformed(event);
 			verify(action1).actionPerformed(event);
 			verify(action2).actionPerformed(event);
+
+			verify(changeHint).changeViewSetting();
 		}
 	}
 

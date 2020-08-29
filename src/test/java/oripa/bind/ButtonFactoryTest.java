@@ -17,6 +17,7 @@ import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.resource.StringID;
+import oripa.viewsetting.main.MainFrameSettingDB;
 
 public class ButtonFactoryTest {
 	@Test
@@ -59,7 +60,8 @@ public class ButtonFactoryTest {
 			final ScreenUpdaterInterface screenUpdater,
 			final boolean hasLabel) {
 		PaintContextFactory contextFactory = new PaintContextFactory();
-		ButtonFactory paintFactory = new PaintActionButtonFactory(contextFactory.createContext());
+		ButtonFactory paintFactory = new PaintActionButtonFactory(contextFactory.createContext(),
+				new MainFrameSettingDB());
 
 		var keyListener = mock(KeyListener.class);
 		JButton button;

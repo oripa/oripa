@@ -80,7 +80,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 */
 	private static final long serialVersionUID = 272369294032419950L;
 
-	private final MainFrameSettingDB setting = MainFrameSettingDB.getInstance();
+	private final MainFrameSettingDB setting = new MainFrameSettingDB();
 	private final MainScreenSettingDB screenSetting;
 
 	private final PainterScreen mainScreen;
@@ -112,7 +112,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final PaintContextInterface paintContext = contextFactory.createContext();
 	private final MouseActionHolder actionHolder = new MouseActionHolder();
 
-	private final ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext);
+	private final ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext, setting);
 
 	/**
 	 * For changing outline
@@ -189,7 +189,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		addWindowListener(this);
 		uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document,
-				screenSetting);
+				setting, screenSetting);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(uiPanel, BorderLayout.WEST);
 		getContentPane().add(mainScreen, BorderLayout.CENTER);
