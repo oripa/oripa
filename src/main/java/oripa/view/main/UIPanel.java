@@ -91,8 +91,7 @@ public class UIPanel extends JPanel {
 
 	private final UIPanelSettingDB settingDB = UIPanelSettingDB.getInstance();
 	private final ValueDB valueDB = ValueDB.getInstance();
-	private final MainScreenSettingDB screenDB = MainScreenSettingDB
-			.getInstance();
+	private final MainScreenSettingDB mainScreenSetting;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
@@ -201,7 +200,8 @@ public class UIPanel extends JPanel {
 			final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
 			final EstimationEntityHolder anEstimationHolder,
-			final SheetCutOutlinesHolder aCutOutlinesHolder) {
+			final SheetCutOutlinesHolder aCutOutlinesHolder,
+			final MainScreenSettingDB mainScreenSetting) {
 
 		this.screenUpdater = screenUpdater;
 
@@ -210,6 +210,8 @@ public class UIPanel extends JPanel {
 		paintContext = aContext;
 		estimationHolder = anEstimationHolder;
 		cutOutlinesHolder = aCutOutlinesHolder;
+
+		this.mainScreenSetting = mainScreenSetting;
 
 		constructButtons();
 
@@ -674,7 +676,7 @@ public class UIPanel extends JPanel {
 				new AngleValueInputListener());
 
 		dispGridCheckBox.addActionListener(e -> {
-			screenDB.setGridVisible(dispGridCheckBox.isSelected());
+			mainScreenSetting.setGridVisible(dispGridCheckBox.isSelected());
 			screenUpdater.updateScreen();
 		});
 
@@ -798,7 +800,7 @@ public class UIPanel extends JPanel {
 			estimationHolder.setOrigamiModel(origamiModel);
 		}
 
-		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory();
+		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(mainScreenSetting);
 		JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
 				cutOutlinesHolder, () -> screenUpdater.updateScreen());
 
@@ -844,7 +846,7 @@ public class UIPanel extends JPanel {
 	}
 
 	private void addPropertyChangeListenersToSetting() {
-		screenDB.addPropertyChangeListener(
+		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSettingDB.GRID_VISIBLE, e -> {
 					dispGridCheckBox.setSelected((boolean) e.getNewValue());
 					repaint();

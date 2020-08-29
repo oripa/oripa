@@ -13,20 +13,6 @@ public class MainScreenSettingDB {
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-	// ---------
-	private static MainScreenSettingDB instance = null;
-
-	private MainScreenSettingDB() {
-	}
-
-	public static MainScreenSettingDB getInstance() {
-		if (instance == null) {
-			instance = new MainScreenSettingDB();
-		}
-
-		return instance;
-	}
-
 	public void addPropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);

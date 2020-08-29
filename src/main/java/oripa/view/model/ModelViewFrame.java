@@ -85,18 +85,24 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			JScrollBar.VERTICAL, 0, 5, -150, 150);
 
+	private final MainScreenSettingDB mainScreenSetting;
+
 	public ModelViewFrame(final int width, final int height,
-			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine) {
+			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine,
+			final MainScreenSettingDB mainScreenSetting) {
+
+		this.mainScreenSetting = mainScreenSetting;
 
 		initialize(lineHolder, onUpdateCrossLine);
 		this.setBounds(0, 0, width, height);
+
 	}
 
 	private void initialize(final SheetCutOutlinesHolder lineHolder,
 			final CallbackOnUpdate onUpdateCrossLine) {
 
 		setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));
-		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine);
+		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine, mainScreenSetting);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(screen, BorderLayout.CENTER);
@@ -147,7 +153,6 @@ public class ModelViewFrame extends JFrame
 		menuItemSlideFaces.addActionListener(e -> slideOrigamiModel());
 
 		menuItemCrossLine.addActionListener(e -> {
-			var mainScreenSetting = MainScreenSettingDB.getInstance();
 			mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected());
 		});
 

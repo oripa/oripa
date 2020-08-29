@@ -81,8 +81,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private static final long serialVersionUID = 272369294032419950L;
 
 	private final MainFrameSettingDB setting = MainFrameSettingDB.getInstance();
-	private final MainScreenSettingDB screenSetting = MainScreenSettingDB
-			.getInstance();
+	private final MainScreenSettingDB screenSetting;
 
 	private final PainterScreen mainScreen;
 	private final JMenu menuFile = new JMenu(
@@ -178,6 +177,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		mainScreen = new PainterScreen(actionHolder, paintContext, document);
 		screenUpdater = mainScreen.getScreenUpdater();
+		screenSetting = mainScreen.getMainScreenSetting();
+
 		createPaintMenuItems();
 
 		menuItemCopyAndPaste.setText(resourceHolder.getString(
@@ -187,7 +188,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		// menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
 
 		addWindowListener(this);
-		uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document);
+		uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document,
+				screenSetting);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(uiPanel, BorderLayout.WEST);
 		getContentPane().add(mainScreen, BorderLayout.CENTER);

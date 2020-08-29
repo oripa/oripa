@@ -65,8 +65,7 @@ public class PainterScreen extends JPanel
 
 	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
 
-	private final MainScreenSettingDB setting = MainScreenSettingDB
-			.getInstance();
+	private final MainScreenSettingDB setting = new MainScreenSettingDB();
 	private final ScreenUpdater screenUpdater = new ScreenUpdater();
 	private final PaintContextInterface paintContext;
 	private final SheetCutOutlinesHolder cutOutlinesHolder;
@@ -123,6 +122,10 @@ public class PainterScreen extends JPanel
 
 	public ViewScreenUpdater getScreenUpdater() {
 		return screenUpdater;
+	}
+
+	public MainScreenSettingDB getMainScreenSetting() {
+		return setting;
 	}
 
 	/**

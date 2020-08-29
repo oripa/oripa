@@ -81,10 +81,15 @@ public class ModelViewScreen extends JPanel
 
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
-	public ModelViewScreen(final SheetCutOutlinesHolder aLineHolder, final CallbackOnUpdate c) {
+	private final MainScreenSettingDB mainScreenSetting;
+
+	public ModelViewScreen(final SheetCutOutlinesHolder aLineHolder, final CallbackOnUpdate c,
+			final MainScreenSettingDB mainScreenSetting) {
 
 		lineHolder = aLineHolder;
 		onUpdateCrossLine = c;
+
+		this.mainScreenSetting = mainScreenSetting;
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -102,8 +107,6 @@ public class ModelViewScreen extends JPanel
 	}
 
 	private void addPropertyChangeListenersToSetting() {
-		var mainScreenSetting = MainScreenSettingDB.getInstance();
-
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSettingDB.CROSS_LINE_VISIBLE, e -> {
 					crossLineVisible = (boolean) e.getNewValue();

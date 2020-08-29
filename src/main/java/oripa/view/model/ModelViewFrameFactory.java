@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -25,22 +25,28 @@ import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.ChildFrameManager;
+import oripa.viewsetting.main.MainScreenSettingDB;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class ModelViewFrameFactory {
 	private static ModelViewFrame frame = null;
 
+	private final MainScreenSettingDB mainScreenSetting;
+
+	public ModelViewFrameFactory(final MainScreenSettingDB mainScreenSetting) {
+		this.mainScreenSetting = mainScreenSetting;
+	}
+
 	public JFrame createFrame(
 			final JComponent parent,
 			final OrigamiModel origamiModel,
-			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine
-			) {
+			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
 
 		if (frame == null) {
-			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine);
+			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine, mainScreenSetting);
 		}
 
 		frame.setModel(origamiModel);
