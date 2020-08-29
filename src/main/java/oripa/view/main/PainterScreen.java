@@ -67,7 +67,7 @@ public class PainterScreen extends JPanel
 
 	private final MainScreenSettingDB setting = MainScreenSettingDB
 			.getInstance();
-	private final ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+	private final ScreenUpdater screenUpdater = new ScreenUpdater();
 	private final PaintContextInterface paintContext;
 	private final SheetCutOutlinesHolder cutOutlinesHolder;
 
