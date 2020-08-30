@@ -61,7 +61,7 @@ public class ElementRemover {
 		OriLine l0 = sharedLines.get(0);
 		OriLine l1 = sharedLines.get(1);
 
-		if (l0.typeVal != l1.typeVal) {
+		if (l0.getType() != l1.getType()) {
 			return;
 		}
 
@@ -93,7 +93,7 @@ public class ElementRemover {
 
 		creasePattern.remove(l0);
 		creasePattern.remove(l1);
-		OriLine li = new OriLine(p0, p1, l0.typeVal);
+		OriLine li = new OriLine(p0, p1, l0.getType());
 		creasePattern.add(li);
 	}
 

@@ -16,7 +16,7 @@ public class CutModelOutlineFactory {
 
 	/**
 	 * creates outline of cut origami model
-	 * 
+	 *
 	 * @param cutLine
 	 * @param origamiModel
 	 * @return
@@ -32,7 +32,7 @@ public class CutModelOutlineFactory {
 			List<Vector2d> vv = findOutlineEdgeTerminals(cutLine, face);
 
 			if (vv.size() >= 2) {
-				cutLines.add(new OriLine(vv.get(0), vv.get(1), OriLine.TYPE_CUT_MODEL));
+				cutLines.add(new OriLine(vv.get(0), vv.get(1), OriLine.Type.CUT_MODEL));
 			}
 		}
 
@@ -44,7 +44,7 @@ public class CutModelOutlineFactory {
 
 		for (OriHalfedge he : face.halfedges) {
 			OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
-					he.next.positionForDisplay.x, he.next.positionForDisplay.y, OriLine.TYPE_NONE);
+					he.next.positionForDisplay.x, he.next.positionForDisplay.y, OriLine.Type.NONE);
 
 			double params[] = new double[2];
 			boolean res = getCrossPointParam(cutLine.p0, cutLine.p1, l.p0, l.p1, params);

@@ -31,8 +31,8 @@ public class LineDivider {
 			return null;
 		}
 
-		divided.add(new OriLine(line.p0, v, line.typeVal));
-		divided.add(new OriLine(v, line.p1, line.typeVal));
+		divided.add(new OriLine(line.p0, v, line.getType()));
+		divided.add(new OriLine(v, line.p1, line.getType()));
 
 		return divided;
 	}

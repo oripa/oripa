@@ -227,7 +227,6 @@ public class CreasePattern implements CreasePatternInterface {
 	 */
 	@Override
 	public boolean containsAll(final Collection<?> c) {
-		// TODO Auto-generated method stub
 		return lines.containsAll(c);
 	}
 
@@ -287,7 +286,6 @@ public class CreasePattern implements CreasePatternInterface {
 			if (!collection.contains(line)) {
 				vertices.remove(line.p0);
 				vertices.remove(line.p1);
-
 			}
 		}
 

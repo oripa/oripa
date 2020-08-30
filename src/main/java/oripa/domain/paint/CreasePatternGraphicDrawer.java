@@ -133,18 +133,18 @@ public class CreasePatternGraphicDrawer {
 		ElementSelector selector = new ElementSelector();
 
 		for (OriLine line : lines) {
-			if (line.typeVal == OriLine.TYPE_NONE && !auxVisible) {
+			if (line.getType() == OriLine.Type.NONE && !auxVisible) {
 				continue;
 			}
 
-			if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY)
+			if ((line.getType() == OriLine.Type.RIDGE || line.getType() == OriLine.Type.VALLEY)
 					&& !creaseVisible) {
 				continue;
 			}
 
 			if (pickedLines == null || !pickedLines.contains(line)) {
-				g2d.setColor(selector.selectColorByLineType(line.typeVal));
-				g2d.setStroke(selector.selectStroke(line.typeVal));
+				g2d.setColor(selector.selectColorByLineType(line.getType()));
+				g2d.setStroke(selector.selectStroke(line.getType()));
 
 				g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
 						line.p1.y));
@@ -173,11 +173,11 @@ public class CreasePatternGraphicDrawer {
 		g2d.setColor(Color.BLACK);
 		final double vertexDrawSize = 2.0;
 		for (OriLine line : creasePattern) {
-			if (!auxVisible && line.typeVal == OriLine.TYPE_NONE) {
+			if (!auxVisible && line.getType() == OriLine.Type.NONE) {
 				continue;
 			}
-			if (!creaseVisible && (line.typeVal == OriLine.TYPE_RIDGE
-					|| line.typeVal == OriLine.TYPE_VALLEY)) {
+			if (!creaseVisible && (line.getType() == OriLine.Type.RIDGE
+					|| line.getType() == OriLine.Type.VALLEY)) {
 				continue;
 			}
 			Vector2d v0 = line.p0;

@@ -21,7 +21,7 @@ public class BisectorFactory {
 	 */
 	public OriLine createPerpendicularBisector(
 			final Vector2d v0, final Vector2d v1,
-			final double paperSize, final int lineType) {
+			final double paperSize, final OriLine.Type lineType) {
 
 		Vector2d cp = new Vector2d(v0);
 		cp.add(v1);
@@ -54,7 +54,7 @@ public class BisectorFactory {
 	 */
 	public OriLine createAngleBisectorLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
-			final OriLine l, final int lineType) {
+			final OriLine l, final OriLine.Type lineType) {
 
 		Vector2d dir = GeomUtil.getBisectorVec(v0, v1, v2);
 		Vector2d cp = GeomUtil.getCrossPoint(

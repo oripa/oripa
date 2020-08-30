@@ -61,7 +61,7 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 			OriEdge e = vertex.edges.get(i);
 
 			// corner does not need test
-			if (e.type == OriLine.TYPE_CUT) {
+			if (e.type == OriLine.Type.CUT.toInt()) {
 				return true;
 			}
 

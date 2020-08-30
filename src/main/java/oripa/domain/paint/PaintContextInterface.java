@@ -195,12 +195,12 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	/**
 	 * @param lineType
 	 */
-	void setLineTypeOfNewLines(int lineType);
+	void setLineTypeOfNewLines(OriLine.Type lineType);
 
 	/**
 	 * @return
 	 */
-	int getLineTypeOfNewLines();
+	OriLine.Type getLineTypeOfNewLines();
 
 	/**
 	 * gets current grids.

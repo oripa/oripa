@@ -175,7 +175,7 @@ public class Painter {
 	 * @param v2
 	 */
 	public void addTriangleDivideLines(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2, final int lineType) {
+			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
 
 		Vector2d c = GeomUtil.getIncenter(v0, v1, v2);
 		if (c == null) {
@@ -196,7 +196,7 @@ public class Painter {
 	 * @param paperSize
 	 */
 	public void addPBisector(
-			final Vector2d v0, final Vector2d v1, final int lineType) {
+			final Vector2d v0, final Vector2d v1, final OriLine.Type lineType) {
 
 		BisectorFactory factory = new BisectorFactory();
 		OriLine bisector = factory.createPerpendicularBisector(v0, v1,
@@ -217,7 +217,7 @@ public class Painter {
 	 */
 	public void addBisectorLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
-			final OriLine l, final int lineType) {
+			final OriLine l, final OriLine.Type lineType) {
 
 		BisectorFactory factory = new BisectorFactory();
 		OriLine bisector = factory.createAngleBisectorLine(v0, v1, v2, l, lineType);
@@ -254,7 +254,7 @@ public class Painter {
 	 * @throws PainterCommandFailedException
 	 */
 	public boolean addSymmetricLine(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2, final int lineType) {
+			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
 
 		SymmetricLineFactory factory = new SymmetricLineFactory();
 		OriLine symmetricLine;
@@ -287,7 +287,7 @@ public class Painter {
 	 */
 	public boolean addSymmetricLineAutoWalk(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final Vector2d startV,
-			final int lineType) {
+			final OriLine.Type lineType) {
 
 		SymmetricLineFactory factory = new SymmetricLineFactory();
 

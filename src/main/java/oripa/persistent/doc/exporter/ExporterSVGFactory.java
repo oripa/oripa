@@ -59,16 +59,17 @@ public class ExporterSVGFactory {
 				for (OriLine line : creasePattern) {
 					bw.write(" <line style=\"");
 					String style = "stroke:gray;stroke-width:1;";
-					switch (line.typeVal) {
-					case OriLine.TYPE_CUT:
+					switch (line.getType()) {
+					case CUT:
 						style = "stroke:black;stroke-width:4;";
 						break;
-					case OriLine.TYPE_RIDGE:
+					case RIDGE:
 						style = "stroke:red;stroke-width:2;";
 						break;
-					case OriLine.TYPE_VALLEY:
+					case VALLEY:
 						style = "stroke:blue;stroke-width:2;stroke-opacity:1";
 						break;
+					default:
 					}
 					bw.write(style + "\" ");
 					bw.write("x1=\"");

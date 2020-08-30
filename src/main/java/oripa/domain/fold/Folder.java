@@ -626,7 +626,7 @@ public class Folder {
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				OriLine line = new OriLine(he.positionAfterFolded, he.next.positionAfterFolded,
-						OriLine.TYPE_RIDGE);
+						OriLine.Type.RIDGE);
 				painter.addLine(line);
 			}
 		}
@@ -866,8 +866,8 @@ public class Folder {
 					continue;
 				}
 
-				if ((face.faceFront && he.edge.type == OriLine.TYPE_RIDGE)
-						|| (!face.faceFront && he.edge.type == OriLine.TYPE_VALLEY)) {
+				if ((face.faceFront && he.edge.type == OriLine.Type.RIDGE.toInt())
+						|| (!face.faceFront && he.edge.type == OriLine.Type.VALLEY.toInt())) {
 					overlapRelation[face.tmpInt][pairFace.tmpInt] = FoldedModelInfo.UPPER;
 					overlapRelation[pairFace.tmpInt][face.tmpInt] = FoldedModelInfo.LOWER;
 				} else {

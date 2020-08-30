@@ -81,7 +81,7 @@ public class PastingOnVertex extends PickingVertex {
 			shifted.p1.x = l.p1.x + diffX;
 			shifted.p1.y = l.p1.y + diffY;
 
-			shifted.typeVal = l.typeVal;
+			shifted.setType(l.getType());
 
 			shiftedLines.add(shifted);
 		}

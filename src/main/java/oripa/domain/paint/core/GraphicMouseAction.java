@@ -178,7 +178,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	private void drawPickedVertices(final Graphics2D g2d,
-			final PaintContextInterface context, final int lineType) {
+			final PaintContextInterface context, final OriLine.Type lineType) {
 		ElementSelector selector = new ElementSelector();
 
 		for (Vector2d vertex : context.getPickedVertices()) {

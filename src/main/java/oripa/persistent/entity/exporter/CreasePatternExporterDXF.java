@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -27,13 +27,13 @@ import oripa.value.OriLine;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class CreasePatternExporterDXF implements Exporter<CreasePatternInterface> {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.persistent.doc.Exporter#export(java.lang.Object,
 	 * java.lang.String)
 	 */
@@ -66,15 +66,16 @@ public class CreasePatternExporterDXF implements Exporter<CreasePatternInterface
 			bw.write("LINE\n");
 			bw.write("  8\n");
 			String layerName = "noname";
-			switch (line.typeVal) {
-			case OriLine.TYPE_CUT:
+			switch (line.getType()) {
+			case CUT:
 				layerName = "CutLine";
 				break;
-			case OriLine.TYPE_RIDGE:
+			case RIDGE:
 				layerName = "MountainLine";
 				break;
-			case OriLine.TYPE_VALLEY:
+			case VALLEY:
 				layerName = "ValleyLine";
+			default:
 			}
 			bw.write(layerName + "\n"); // Layer name
 			bw.write("  6\n");
@@ -83,15 +84,17 @@ public class CreasePatternExporterDXF implements Exporter<CreasePatternInterface
 								// 6＝magenta
 								// 7＝white
 			int colorNumber = 0;
-			switch (line.typeVal) {
-			case OriLine.TYPE_CUT:
+			switch (line.getType()) {
+			case CUT:
 				colorNumber = 250; // 51,51,51
 				break;
-			case OriLine.TYPE_RIDGE:
+			case RIDGE:
 				colorNumber = 5; // blue
 				break;
-			case OriLine.TYPE_VALLEY:
+			case VALLEY:
 				colorNumber = 1; // red
+				break;
+			default:
 			}
 
 			bw.write("" + colorNumber + "\n");

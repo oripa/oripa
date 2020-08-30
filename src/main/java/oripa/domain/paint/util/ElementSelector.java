@@ -8,7 +8,8 @@ import oripa.value.OriLine;
 
 public class ElementSelector {
 
-	public Color selectColorByPickupOrder(final int order, final int count, final int lineType) {
+	public Color selectColorByPickupOrder(final int order, final int count,
+			final OriLine.Type lineType) {
 		if (order == count - 1) {
 			return Color.GREEN;
 		}
@@ -23,30 +24,30 @@ public class ElementSelector {
 		if (line.selected) {
 			color = LineSetting.LINE_COLOR_CANDIDATE;
 		} else {
-			color = selectColorByLineType(line.typeVal);
+			color = selectColorByLineType(line.getType());
 		}
 
 		return color;
 
 	}
 
-	public Color selectColorByLineType(final int lineType) {
+	public Color selectColorByLineType(final OriLine.Type lineType) {
 		Color color;
 
 		switch (lineType) {
-		case OriLine.TYPE_NONE:
+		case NONE:
 			color = LineSetting.LINE_COLOR_AUX;
 			break;
-		case OriLine.TYPE_CUT:
+		case CUT:
 			color = Color.BLACK;
 			break;
-		case OriLine.TYPE_RIDGE:
+		case RIDGE:
 			color = LineSetting.LINE_COLOR_RIDGE;
 			break;
-		case OriLine.TYPE_VALLEY:
+		case VALLEY:
 			color = LineSetting.LINE_COLOR_VALLEY;
 			break;
-		case OriLine.TYPE_CUT_MODEL:
+		case CUT_MODEL:
 			color = LineSetting.LINE_COLOR_CUT_MODEL;
 			break;
 		default:
@@ -56,22 +57,22 @@ public class ElementSelector {
 		return color;
 	}
 
-	public BasicStroke selectStroke(final int lineType) {
+	public BasicStroke selectStroke(final OriLine.Type lineType) {
 		BasicStroke stroke;
 		switch (lineType) {
-		case OriLine.TYPE_NONE:
+		case NONE:
 			stroke = LineSetting.STROKE_PAPER_EDGE;
 			break;
-		case OriLine.TYPE_CUT:
+		case CUT:
 			stroke = LineSetting.STROKE_PAPER_EDGE;
 			break;
-		case OriLine.TYPE_RIDGE:
+		case RIDGE:
 			stroke = LineSetting.STROKE_RIDGE;
 			break;
-		case OriLine.TYPE_VALLEY:
+		case VALLEY:
 			stroke = LineSetting.STROKE_VALLEY;
 			break;
-		case OriLine.TYPE_CUT_MODEL:
+		case CUT_MODEL:
 			stroke = LineSetting.STROKE_TMP_OUTLINE;
 			break;
 		default:

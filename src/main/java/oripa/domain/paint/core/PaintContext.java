@@ -42,7 +42,7 @@ public class PaintContext implements PaintContextInterface {
 
 	private boolean missionCompleted = false;
 
-	private int lineTypeOfNewLines;
+	private OriLine.Type lineTypeOfNewLines;
 
 	private Point2D.Double mousePoint;
 
@@ -457,12 +457,12 @@ public class PaintContext implements PaintContextInterface {
 	}
 
 	@Override
-	public void setLineTypeOfNewLines(final int lineType) {
+	public void setLineTypeOfNewLines(final OriLine.Type lineType) {
 		lineTypeOfNewLines = lineType;
 	}
 
 	@Override
-	public int getLineTypeOfNewLines() {
+	public OriLine.Type getLineTypeOfNewLines() {
 		return lineTypeOfNewLines;
 	}
 

@@ -662,13 +662,13 @@ public class UIPanel extends JPanel {
 						screenUpdater, paintContext));
 
 		lineTypeMountainButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_RIDGE));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.RIDGE));
 
 		lineTypeValleyButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_VALLEY));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
 
 		lineTypeAuxButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.TYPE_NONE));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.NONE));
 
 		editModeInputLineButton
 				.addActionListener(new InputCommandStatePopper());

@@ -26,7 +26,7 @@ public class CloseTempOutline {
 			OriLine line;
 			Painter painter = new Painter(creasePattern);
 
-			line = new OriLine(element, nextElement, OriLine.TYPE_CUT);
+			line = new OriLine(element, nextElement, OriLine.Type.CUT);
 			painter.addLine(line);
 			return true;
 		}
@@ -38,7 +38,7 @@ public class CloseTempOutline {
 		// Delete the current outline
 
 		List<OriLine> outlines = creasePattern.stream()
-				.filter(line -> line.typeVal == OriLine.TYPE_CUT).collect(Collectors.toList());
+				.filter(line -> line.getType() == OriLine.Type.CUT).collect(Collectors.toList());
 		creasePattern.removeAll(outlines);
 
 		// Update the contour line
@@ -49,7 +49,7 @@ public class CloseTempOutline {
 		while (true) {
 			boolean bDeleteLine = false;
 			for (OriLine line : creasePattern) {
-				if (line.typeVal == OriLine.TYPE_CUT) {
+				if (line.getType() == OriLine.Type.CUT) {
 					continue;
 				}
 				double eps = creasePattern.getPaperSize() * 0.001;

@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -77,17 +77,17 @@ public class LoaderDXF implements Loader<Doc> {
 							System.out.println("color = " + color);
 							if (color == 1 || (9 < color && color < 40)) {
 								// Reds are mountains
-								line.typeVal = OriLine.TYPE_RIDGE;
+								line.setType(OriLine.Type.RIDGE);
 							} else if (color == 2 || color == 5
 									|| (139 < color && color < 200)) {
 								// Blues are valleys
-								line.typeVal = OriLine.TYPE_VALLEY;
+								line.setType(OriLine.Type.VALLEY);
 							} else if (color == 3
 									|| (59 < color && color < 130)) {
 								// greens are cuts
-								line.typeVal = OriLine.TYPE_CUT;
+								line.setType(OriLine.Type.CUT);
 							} else {
-								line.typeVal = OriLine.TYPE_NONE;
+								line.setType(OriLine.Type.NONE);
 							}
 						} else if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("10")) {

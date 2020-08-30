@@ -52,7 +52,7 @@ public class LineAdder {
 		for (Iterator<OriLine> iterator = currentLines.iterator(); iterator.hasNext();) {
 			OriLine line = iterator.next();
 
-			if (inputLine.typeVal == OriLine.TYPE_NONE && line.typeVal != OriLine.TYPE_NONE) {
+			if (inputLine.getType() == OriLine.Type.NONE && line.getType() != OriLine.Type.NONE) {
 				continue;
 			}
 
@@ -64,11 +64,11 @@ public class LineAdder {
 			iterator.remove();
 
 			if (GeomUtil.Distance(line.p0, crossPoint) > CalculationResource.POINT_EPS) {
-				toBeAdded.add(new OriLine(line.p0, crossPoint, line.typeVal));
+				toBeAdded.add(new OriLine(line.p0, crossPoint, line.getType()));
 			}
 
 			if (GeomUtil.Distance(line.p1, crossPoint) > CalculationResource.POINT_EPS) {
-				toBeAdded.add(new OriLine(line.p1, crossPoint, line.typeVal));
+				toBeAdded.add(new OriLine(line.p1, crossPoint, line.getType()));
 			}
 
 			// crossingLines.add(line);
@@ -98,8 +98,8 @@ public class LineAdder {
 
 			// reject (M/V input, aux lines) // It is by MITANI jun, I don't
 			// know why.
-			if (inputLine.typeVal != OriLine.TYPE_NONE &&
-					line.typeVal == OriLine.TYPE_NONE) {
+			if (inputLine.getType() != OriLine.Type.NONE &&
+					line.getType() == OriLine.Type.NONE) {
 				continue;
 			}
 
@@ -175,7 +175,7 @@ public class LineAdder {
 				continue;
 			}
 
-			currentLines.add(new OriLine(prePoint, p, inputLine.typeVal));
+			currentLines.add(new OriLine(prePoint, p, inputLine.getType()));
 			prePoint = p;
 		}
 

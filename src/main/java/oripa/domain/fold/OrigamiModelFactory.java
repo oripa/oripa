@@ -50,13 +50,13 @@ public class OrigamiModelFactory {
 		faces.clear();
 
 		for (OriLine l : creasePattern) {
-			if (l.typeVal == OriLine.TYPE_NONE) {
+			if (l.getType() == OriLine.Type.NONE) {
 				continue;
 			}
 
 			OriVertex sv = addAndGetVertexFromVVec(vertices, l.p0);
 			OriVertex ev = addAndGetVertexFromVVec(vertices, l.p1);
-			OriEdge eg = new OriEdge(sv, ev, l.typeVal);
+			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
 			edges.add(eg);
 			sv.addEdge(eg);
 			ev.addEdge(eg);
@@ -66,7 +66,7 @@ public class OrigamiModelFactory {
 
 			for (OriEdge e : v.edges) {
 
-				if (e.type == OriLine.TYPE_CUT) {
+				if (e.type == OriLine.Type.CUT.toInt()) {
 					continue;
 				}
 
@@ -178,13 +178,13 @@ public class OrigamiModelFactory {
 
 		// Create the edges from the vertexes
 		for (OriLine l : creasePattern) {
-			if (l.typeVal == OriLine.TYPE_NONE) {
+			if (l.getType() == OriLine.Type.NONE) {
 				continue;
 			}
 
 			OriVertex sv = addAndGetVertexFromVVec(vertices, l.p0);
 			OriVertex ev = addAndGetVertexFromVVec(vertices, l.p1);
-			OriEdge eg = new OriEdge(sv, ev, l.typeVal);
+			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
 			edges.add(eg);
 			sv.addEdge(eg);
 			ev.addEdge(eg);
@@ -267,7 +267,7 @@ public class OrigamiModelFactory {
 
 			for (OriEdge e : v.edges) {
 
-				if (e.type == OriLine.TYPE_CUT) {
+				if (e.type == OriLine.Type.CUT.toInt()) {
 					continue;
 				}
 
@@ -359,7 +359,7 @@ public class OrigamiModelFactory {
 					edge.left = he0;
 					edge.right = he1;
 					edges.add(edge);
-					edge.type = OriLine.TYPE_NONE;// OriEdge.TYPE_NONE;
+					edge.type = OriLine.Type.NONE.toInt();// OriEdge.TYPE_NONE;
 				}
 			}
 		}
@@ -373,7 +373,7 @@ public class OrigamiModelFactory {
 				edge.ev = he.next.vertex;
 				edge.left = he;
 				edges.add(edge);
-				edge.type = OriLine.TYPE_CUT;
+				edge.type = OriLine.Type.CUT.toInt();
 			}
 		}
 	}
