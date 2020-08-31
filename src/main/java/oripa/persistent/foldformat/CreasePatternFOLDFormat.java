@@ -30,6 +30,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public class CreasePatternFOLDFormat {
 
+	@SerializedName("file_spec")
+	@Expose
+	private double fileSpec = 1.1;
+
 	@SerializedName("file_creator")
 	@Expose
 	private String fileCreator = "ORIPA";
@@ -66,6 +70,10 @@ public class CreasePatternFOLDFormat {
 		}
 	};
 
+	@SerializedName("frame_description")
+	@Expose
+	private String frameDescription;
+
 	@SerializedName("vertices_coords")
 	@Expose
 	private List<List<Double>> verticesCoords = null;
@@ -81,6 +89,14 @@ public class CreasePatternFOLDFormat {
 	@SerializedName("edges_assignment")
 	@Expose
 	private List<String> edgesAssignment = null;
+
+	public double getFileSpec() {
+		return fileSpec;
+	}
+
+	public void setFileSpec(final double fileSpec) {
+		this.fileSpec = fileSpec;
+	}
 
 	public String getFileCreator() {
 		return fileCreator;
@@ -128,6 +144,14 @@ public class CreasePatternFOLDFormat {
 
 	public void setFrameAttributes(final List<String> frameAttributes) {
 		this.frameAttributes = frameAttributes;
+	}
+
+	public String getFrameDescription() {
+		return frameDescription;
+	}
+
+	public void setFrameDescription(final String frameDescription) {
+		this.frameDescription = frameDescription;
 	}
 
 	public List<List<Double>> getVerticesCoords() {

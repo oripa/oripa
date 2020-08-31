@@ -62,6 +62,7 @@ public class ExporterFOLD implements DocExporter {
 
 		foldFormat.setFileAuthor(property.getEditorName());
 		foldFormat.setFrameTitle(property.getTitle());
+		foldFormat.setFrameDescription(property.getMemo());
 
 		foldFormat.setVerticesCoords(converter.toVerticesCoords(creasePattern));
 		logger.info("size of vertices_coords: " + foldFormat.getVerticesCoords().size());

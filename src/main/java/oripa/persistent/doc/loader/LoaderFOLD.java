@@ -83,6 +83,7 @@ public class LoaderFOLD implements Loader<Doc> {
 		var property = doc.getProperty();
 		property.setEditorName(foldFormat.getFileAuthor());
 		property.setTitle(foldFormat.getFrameTitle());
+		property.setMemo(foldFormat.getFrameDescription());
 
 		return doc;
 	}
