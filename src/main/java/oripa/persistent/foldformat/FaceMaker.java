@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 public class FaceMaker {
 	private static final Logger logger = LoggerFactory.getLogger(FaceMaker.class);
 
-	private final List<List<Integer>> edgesVertices;
 	private final List<List<Integer>> verticesVertices;
 	private final List<List<Double>> coords;
 	private final boolean[][] edgePassed;
@@ -43,7 +42,7 @@ public class FaceMaker {
 	public FaceMaker(final List<List<Integer>> edgesVertices,
 			final List<List<Integer>> verticesVertices,
 			final List<List<Double>> coords) {
-		this.edgesVertices = edgesVertices;
+
 		this.verticesVertices = verticesVertices;
 		this.coords = coords;
 
