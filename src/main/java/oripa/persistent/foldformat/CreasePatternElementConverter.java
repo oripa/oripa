@@ -134,7 +134,7 @@ public class CreasePatternElementConverter {
 		var coords = toVerticesCoords(lines);
 		var assignment = toEdgesAssignment(lines);
 
-		var faceMaker = new FaceMaker(edgesVertices, verticesVertices, coords, assignment);
+		var faceMaker = new FaceMaker(edgesVertices, verticesVertices, coords);
 
 		var facesVertices = new ArrayList<List<Integer>>();
 
@@ -158,9 +158,9 @@ public class CreasePatternElementConverter {
 				var v = face.get((i + 1) % face.size());
 
 				var edge = List.of(u, v);
-				if (!edgeExists(edge, edgesVertices)) {
-					continue;
-				}
+//				if (!edgeExists(edge, edgesVertices)) {
+//					continue;
+//				}
 				if (getAssignment(edge, edgesVertices, assignment) != "B") {
 					return true;
 				}

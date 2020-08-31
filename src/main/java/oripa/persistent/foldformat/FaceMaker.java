@@ -21,7 +21,6 @@ package oripa.persistent.foldformat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,6 @@ public class FaceMaker {
 	private final List<List<Integer>> edgesVertices;
 	private final List<List<Integer>> verticesVertices;
 	private final List<List<Double>> coords;
-	private final List<String> assignment;
 	private final boolean[][] edgePassed;
 
 	/**
@@ -44,12 +42,10 @@ public class FaceMaker {
 	 */
 	public FaceMaker(final List<List<Integer>> edgesVertices,
 			final List<List<Integer>> verticesVertices,
-			final List<List<Double>> coords,
-			final List<String> assignment) {
+			final List<List<Double>> coords) {
 		this.edgesVertices = edgesVertices;
 		this.verticesVertices = verticesVertices;
 		this.coords = coords;
-		this.assignment = assignment;
 
 		edgePassed = new boolean[coords.size()][coords.size()];
 		for (var arr : edgePassed) {
@@ -84,11 +80,7 @@ public class FaceMaker {
 		return Geometry.rotateVertices(
 				base,
 				verticesVertices.get(v),
-				coords)
-				.stream()
-				.filter(w -> w != base)
-				.collect(Collectors.toList());
-
+				coords);
 	}
 
 	/**
@@ -122,10 +114,6 @@ public class FaceMaker {
 
 		if (edgePassed[v][w]) {
 			logger.warn("failed to make a face. (The next path is already used)");
-
-//			for (int i = 1; i < face.size() - 1; i++) {
-//				edgePassed[face.get(i)][face.get(i + 1)] = false;
-//			}
 
 			return false;
 		}

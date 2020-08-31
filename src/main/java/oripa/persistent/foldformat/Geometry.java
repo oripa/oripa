@@ -96,21 +96,22 @@ public final class Geometry {
 
 		logger.debug("after rotation: " + rotated + ", base vertex is " + base);
 		return rotated;
-
-//		return sortedverticesIndicesAroundEnd.stream()
-//				.map(w -> new AngleWithIndices(baseEdge.get(1), w, coords))
-//				.sorted((a1, a2) -> (int) Math.signum(a1.angle - a2.angle))
-//				.map(a -> a.v)
-//				.collect(Collectors.toList());
 	}
 
-	public static List<Integer> sortByAngle(final int vertexIndex,
-			final List<Integer> verticesIndicesAroundAVertex,
+	/**
+	 * sort by angle in counter-clockwise direction.
+	 *
+	 * @param vertex
+	 * @param verticesAroundAVertex
+	 * @param coords
+	 * @return
+	 */
+	public static List<Integer> sortByAngle(final int vertex,
+			final List<Integer> verticesAroundAVertex,
 			final List<List<Double>> coords) {
 
-		// sort by angle in counter-clockwise direction.
-		return verticesIndicesAroundAVertex.stream()
-				.map(v -> new AngleWithIndices(vertexIndex, v, coords))
+		return verticesAroundAVertex.stream()
+				.map(v -> new AngleWithIndices(vertex, v, coords))
 				.sorted((a1, a2) -> (int) Math.signum(a1.angle - a2.angle))
 				.map(a -> a.v)
 				.collect(Collectors.toList());
