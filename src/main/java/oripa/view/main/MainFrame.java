@@ -603,6 +603,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		paintContext.creasePatternUndo().clear();
 
+		paintContext.updateGrids();
+
 		return document.getDataFilePath();
 
 	}

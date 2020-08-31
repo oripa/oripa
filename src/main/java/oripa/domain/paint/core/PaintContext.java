@@ -162,7 +162,8 @@ public class PaintContext implements PaintContextInterface {
 		updateGrids();
 	}
 
-	private void updateGrids() {
+	@Override
+	public void updateGrids() {
 		gridPoints = new ArrayList<>();
 		double paperSize = creasePattern.getPaperSize();
 

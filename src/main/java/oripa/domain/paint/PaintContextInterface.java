@@ -192,6 +192,8 @@ public interface PaintContextInterface extends CreasePatternHolder {
 
 	public abstract int getGridDivNum();
 
+	public abstract void updateGrids();
+
 	/**
 	 * @param lineType
 	 */
