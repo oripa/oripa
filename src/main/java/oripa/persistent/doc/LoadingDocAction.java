@@ -18,6 +18,8 @@
  */
 package oripa.persistent.doc;
 
+import java.io.IOException;
+
 import oripa.persistent.filetool.AbstractLoadingAction;
 import oripa.persistent.filetool.FileVersionError;
 
@@ -43,7 +45,7 @@ public class LoadingDocAction extends AbstractLoadingAction<Doc> {
 	 * oripa.persistent.filetool.AbstractLoadingAction#load(java.lang.String)
 	 */
 	@Override
-	public Doc load() throws FileVersionError {
+	public Doc load() throws FileVersionError, IOException {
 		Doc document = loader.load(getPath());
 		return document;
 	}

@@ -22,10 +22,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.persistent.doc.Doc;
@@ -38,7 +36,6 @@ import oripa.persistent.foldformat.CreasePatternFOLDFormat;
  *
  */
 public class LoaderFOLD implements Loader<Doc> {
-	private static final Logger logger = LoggerFactory.getLogger(LoaderFOLD.class);
 
 	/*
 	 * (non Javadoc)
@@ -46,21 +43,33 @@ public class LoaderFOLD implements Loader<Doc> {
 	 * @see oripa.persistent.doc.Loader#load(java.lang.String)
 	 */
 	@Override
-	public Doc load(final String filePath) {
+	public Doc load(final String filePath) throws IOException {
 
 		var gson = new Gson();
 		CreasePatternFOLDFormat foldFormat;
+
 		try {
 			foldFormat = gson.fromJson(
 					Files.readString(Paths.get(filePath)),
 					CreasePatternFOLDFormat.class);
-		} catch (IOException e) {
-			logger.error("failed to open .fold file", e);
-			return new Doc();
+		} catch (JsonSyntaxException e) {
+			throw new IOException(
+					"The file does not follow JSON style."
+							+ " Note that FOLD format is based on JSON.",
+					e);
+		}
+
+		if (foldFormat.getEdgesVertices() == null) {
+			throw new IOException("edges_vertices property is needed in the file.");
+		}
+		if (foldFormat.getEdgesAssignment() == null) {
+			throw new IOException("edges_assignment property is needed in the file.");
+		}
+		if (foldFormat.getVerticesCoords() == null) {
+			throw new IOException("vertices_coords property is needed in the file.");
 		}
 
 		var converter = new CreasePatternElementConverter();
-
 		var lines = converter.fromEdges(
 				foldFormat.getEdgesVertices(),
 				foldFormat.getEdgesAssignment(),

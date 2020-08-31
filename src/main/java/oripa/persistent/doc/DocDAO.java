@@ -90,7 +90,7 @@ public class DocDAO {
 
 	public Doc loadUsingGUI(final String homePath,
 			final FileAccessSupportFilter<Doc>[] filters, final Component parent)
-			throws FileVersionError, FileChooserCanceledException {
+			throws FileVersionError, FileChooserCanceledException, IOException {
 		FileChooserFactory<Doc> factory = new FileChooserFactory<>();
 		FileChooser<Doc> fileChooser = factory.createChooser(
 				homePath, filters);
