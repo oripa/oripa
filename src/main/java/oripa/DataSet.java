@@ -18,6 +18,8 @@
 
 package oripa;
 
+import java.util.ArrayList;
+
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.persistent.doc.Doc;
@@ -68,17 +70,18 @@ public class DataSet {
 
 	public Doc recover(final String filePath) {
 
-		CreasePatternFactory factory = new CreasePatternFactory();
-		CreasePatternInterface creasePattern = factory
-				.createEmptyCreasePattern(paperSize);
+		var oriLines = new ArrayList<OriLine>();
 
 		for (int i = 0; i < lines.length; i++) {
-			creasePattern.add(lines[i].getLine());
+			oriLines.add(lines[i].getLine());
 		}
+
+		CreasePatternFactory factory = new CreasePatternFactory();
+		CreasePatternInterface creasePattern = factory
+				.createCreasePattern(oriLines);
 
 		Doc doc = new Doc(paperSize);
 		doc.setCreasePattern(creasePattern);
-		// doc.setPaperSize(paperSize);
 
 		doc.setProperty(createProperty(filePath));
 

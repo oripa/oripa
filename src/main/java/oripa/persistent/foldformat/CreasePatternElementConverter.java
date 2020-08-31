@@ -185,4 +185,42 @@ public class CreasePatternElementConverter {
 
 		return assignment.get(edgesVertices.indexOf(reverseEdge(edge)));
 	}
+
+	public Collection<OriLine> fromEdges(
+			final List<List<Integer>> edgesVertices,
+			final List<String> edgesAssignment,
+			final List<List<Double>> verticesCoords) {
+
+		var points = verticesCoords.stream()
+				.map(coord -> new OriPoint(coord.get(0), coord.get(1)))
+				.collect(Collectors.toList());
+
+		var lines = edgesVertices.stream()
+				.map(edge -> new OriLine(
+						points.get(edge.get(0)), points.get(edge.get(1)),
+						OriLine.Type.NONE))
+				.collect(Collectors.toList());
+
+		for (int i = 0; i < lines.size(); i++) {
+			var line = lines.get(i);
+			switch (edgesAssignment.get(i)) {
+			case "B":
+				line.setType(OriLine.Type.CUT);
+				break;
+			case "F":
+				line.setType(OriLine.Type.NONE);
+				break;
+			case "M":
+				line.setType(OriLine.Type.RIDGE);
+				break;
+			case "V":
+				line.setType(OriLine.Type.VALLEY);
+				break;
+			default:
+				break;
+			}
+		}
+
+		return lines;
+	}
 }

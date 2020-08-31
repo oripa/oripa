@@ -164,7 +164,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 
-	private final DocFilterSelector filterDB = new DocFilterSelector();
+	private final DocFilterSelector filterSelector = new DocFilterSelector();
 
 	private final Doc document = new Doc();
 
@@ -296,13 +296,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuItemExportFOLD.addActionListener(e -> {
 			String lastDirectory = fileHistory.getLastDirectory();
 			saveFile(lastDirectory, document.getDataFileName(),
-					filterDB.getFilter(FileTypeKey.FOLD));
+					filterSelector.getFilter(FileTypeKey.FOLD));
 		});
 
 		menuItemSaveAsImage.addActionListener(e -> {
 			String lastDirectory = fileHistory.getLastDirectory();
 			saveFile(lastDirectory, document.getDataFileName(),
-					filterDB.getFilter(FileTypeKey.PICT));
+					filterSelector.getFilter(FileTypeKey.PICT));
 		});
 
 		menuItemExit.addActionListener(e -> exit());
@@ -376,7 +376,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void modifySavingActions() {
 
 		// overwrite the action to update GUI after saving.
-		filterDB.getFilter(FileTypeKey.OPX).setSavingAction(
+		filterSelector.getFilter(FileTypeKey.OPX).setSavingAction(
 				new AbstractSavingAction<Doc>() {
 
 					@Override
@@ -421,7 +421,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		String lastDirectory = fileHistory.getLastDirectory();
 
 		String path = saveFile(lastDirectory, document.getDataFileName(),
-				filterDB.getSavables());
+				filterSelector.getSavables());
 
 		updateMenu(path);
 		updateTitleText();
@@ -516,7 +516,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		try {
 			final DocDAO dao = new DocDAO();
-			dao.saveUsingGUIWithModelCheck(document, this, filterDB.getFilter(type));
+			dao.saveUsingGUIWithModelCheck(document, this, filterSelector.getFilter(type));
 
 		} catch (FileChooserCanceledException e) {
 
@@ -558,7 +558,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	public void updateMenu(final String filePath) {
 
-		if (filterDB.getLoadableFilterOf(filePath) == null) {
+		if (filterSelector.getLoadableFilterOf(filePath) == null) {
 			return;
 		}
 
@@ -589,7 +589,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			} else {
 				// DocFilterSelector selector = new DocFilterSelector();
 				document.set(dao.loadUsingGUI(
-						fileHistory.getLastPath(), filterDB.getLoadables(),
+						fileHistory.getLastPath(), filterSelector.getLoadables(),
 						this));
 			}
 		} catch (FileVersionError | IOException e) {
@@ -656,7 +656,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				document.setCreasePattern(paintContext.getCreasePattern());
 
 				String path = saveFile(fileHistory.getLastDirectory(),
-						document.getDataFileName(), filterDB.getSavables());
+						document.getDataFileName(), filterSelector.getSavables());
 				if (path == null) {
 
 				}

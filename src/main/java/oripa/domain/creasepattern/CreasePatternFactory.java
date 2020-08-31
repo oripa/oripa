@@ -68,6 +68,7 @@ public class CreasePatternFactory {
 
 	/**
 	 * creates crease pattern which consists of given lines and no other lines.
+	 * also moves the lines such that the center of the paper becomes (0, 0).
 	 *
 	 * @param lines
 	 * @return
@@ -79,6 +80,9 @@ public class CreasePatternFactory {
 		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
 
 		creasePattern.addAll(lines);
+
+		creasePattern.centerize(domain.getCenterX(), domain.getCenterY());
+
 		return creasePattern;
 	}
 }

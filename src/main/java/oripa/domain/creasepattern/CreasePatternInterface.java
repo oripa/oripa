@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -27,9 +27,20 @@ import oripa.value.OriLine;
  *
  */
 public interface CreasePatternInterface
-	extends Collection<OriLine>, NearVerticesGettable {
+		extends Collection<OriLine>, NearVerticesGettable {
 
-	public abstract void changePaperSize(double paperSize);
+	public abstract void changePaperSize(final double paperSize);
 
 	public abstract double getPaperSize();
+
+	/**
+	 * move all creases as the center coordinate becomes (0, 0).
+	 *
+	 * @param cx
+	 *            x coordinate of current center
+	 * @param cy
+	 *            y coordinate of current center
+	 */
+	public void centerize(final double cx, final double cy);
+
 }

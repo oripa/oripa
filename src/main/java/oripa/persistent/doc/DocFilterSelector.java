@@ -14,6 +14,7 @@ import oripa.persistent.doc.exporter.ExporterXML;
 import oripa.persistent.doc.exporter.PictureExporter;
 import oripa.persistent.doc.loader.LoaderCP;
 import oripa.persistent.doc.loader.LoaderDXF;
+import oripa.persistent.doc.loader.LoaderFOLD;
 import oripa.persistent.doc.loader.LoaderPDF;
 import oripa.persistent.doc.loader.LoaderXML;
 import oripa.persistent.filetool.FileAccessSupportFilter;
@@ -51,7 +52,7 @@ public class DocFilterSelector {
 		key = FileTypeKey.FOLD;
 		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
 				new ExporterFOLD(),
-				null);
+				new LoaderFOLD());
 
 		key = FileTypeKey.DXF;
 		putFilter(key, createDescription(key, StringID.Main.FILE_ID),

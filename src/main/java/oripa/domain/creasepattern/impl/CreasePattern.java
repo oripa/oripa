@@ -1,5 +1,6 @@
 package oripa.domain.creasepattern.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -109,7 +110,6 @@ public class CreasePattern implements CreasePatternInterface {
 	 */
 	@Override
 	public boolean contains(final Object o) {
-		// TODO Auto-generated method stub
 		return lines.contains(o);
 	}
 
@@ -176,7 +176,6 @@ public class CreasePattern implements CreasePatternInterface {
 	 */
 	@Override
 	public Object[] toArray() {
-		// TODO Auto-generated method stub
 		return lines.toArray();
 	}
 
@@ -320,6 +319,24 @@ public class CreasePattern implements CreasePatternInterface {
 	@Deprecated
 	public NearVerticesGettable getVerticesManager() {
 		return vertices;
+	}
+
+	@Override
+	public void centerize(final double cx, final double cy) {
+		var lines = new ArrayList<OriLine>();
+
+		this.stream().forEach(line -> lines.add(line));
+
+		lines.forEach(line -> {
+			line.p0.x -= cx;
+			line.p0.y -= cy;
+			line.p1.x -= cx;
+			line.p1.y -= cy;
+		});
+
+		// rebuild vertices info
+		this.clear();
+		this.addAll(lines);
 	}
 
 }
