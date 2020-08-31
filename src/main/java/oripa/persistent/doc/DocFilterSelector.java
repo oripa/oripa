@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import oripa.persistent.doc.exporter.ExporterCP;
 import oripa.persistent.doc.exporter.ExporterDXFFactory;
+import oripa.persistent.doc.exporter.ExporterFOLD;
 import oripa.persistent.doc.exporter.ExporterOBJFactory;
 import oripa.persistent.doc.exporter.ExporterSVGFactory;
 import oripa.persistent.doc.exporter.ExporterXML;
@@ -46,6 +47,11 @@ public class DocFilterSelector {
 		key = FileTypeKey.PICT;
 		putFilter(key, createDescription(key, StringID.Main.PICTURE_FILE_ID),
 				new PictureExporter(), null);
+
+		key = FileTypeKey.FOLD;
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
+				new ExporterFOLD(),
+				null);
 
 		key = FileTypeKey.DXF;
 		putFilter(key, createDescription(key, StringID.Main.FILE_ID),

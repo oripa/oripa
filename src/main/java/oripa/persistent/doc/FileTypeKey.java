@@ -23,25 +23,27 @@ import oripa.persistent.filetool.FileTypeProperty;
 public enum FileTypeKey implements FileTypeProperty {
 	OPX("opx", 1,
 			".opx", ".xml"),
-	PICT("pict", 2,
+	FOLD("fold", 2,
+			".fold"),
+	PICT("pict", 3,
 			".png", ".jpg"),
-	DXF("dxf", 3,
+	DXF("dxf", 4,
 			".dxf"),
-	CP("cp", 4,
+	CP("cp", 5,
 			".cp"),
-	SVG("svg", 5,
+	SVG("svg", 6,
 			".svg"),
-	PDF("pdf", 6,
+	PDF("pdf", 7,
 			".pdf"),
 
-	OBJ_MODEL("obj", 7,
+	OBJ_MODEL("obj", 8,
 			".obj"),
-	DXF_MODEL("dxf", 8,
+	DXF_MODEL("dxf", 9,
 			".dxf"),
 
-	SVG_FOLDED_MODEL("svg_folded_model", 9,
+	SVG_FOLDED_MODEL("svg_folded_model", 10,
 			".svg"),
-	ORMAT_FOLDED_MODEL("ormat", 10,
+	ORMAT_FOLDED_MODEL("ormat", 11,
 			".ormat");
 
 	private final String	keyText;

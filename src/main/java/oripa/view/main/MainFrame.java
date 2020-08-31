@@ -100,6 +100,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final JMenuItem menuItemSaveAsImage = new JMenuItem(
 			ORIPA.res.getString("SaveAsImage"));
 
+	private final JMenuItem menuItemExportFOLD = new JMenuItem("Export FOLD");
 	private final JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
 	private final JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
 	private final JMenuItem menuItemExportCP = new JMenuItem("Export CP");
@@ -291,6 +292,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemSaveAs.addActionListener(e -> saveAnyTypeUsingGUI());
+
+		menuItemExportFOLD.addActionListener(e -> {
+			String lastDirectory = fileHistory.getLastDirectory();
+			saveFile(lastDirectory, document.getDataFileName(),
+					filterDB.getFilter(FileTypeKey.FOLD));
+		});
+
 		menuItemSaveAsImage.addActionListener(e -> {
 			String lastDirectory = fileHistory.getLastDirectory();
 			saveFile(lastDirectory, document.getDataFileName(),
@@ -523,6 +531,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuFile.add(menuItemSave);
 		menuFile.add(menuItemSaveAs);
 		menuFile.add(menuItemSaveAsImage);
+		menuFile.add(menuItemExportFOLD);
 		menuFile.add(menuItemExportDXF);
 		menuFile.add(menuItemExportOBJ);
 		menuFile.add(menuItemExportCP);

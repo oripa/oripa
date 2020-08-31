@@ -4,7 +4,7 @@
 
 	<groupId>oripa</groupId>
 	<artifactId>oripa</artifactId>
-	<version>1.00</version>
+	<version>1.10</version>
 	<packaging>jar</packaging>
 
 
@@ -53,6 +53,12 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.12.1</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+		    <artifactId>gson</artifactId>
+		    <version>2.8.6</version>
 		</dependency>
 
 	</dependencies>
