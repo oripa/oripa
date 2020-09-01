@@ -18,7 +18,6 @@
  */
 package oripa.persistent.foldformat;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,37 +64,6 @@ public final class Geometry {
 			return "(angle, u, v): " + "(" + angle + "," + u + "," + v + ")";
 		}
 
-	}
-
-	/**
-	 *
-	 * @param base
-	 *            vertex to be put at zero index.
-	 * @param sortedverticesAroundVertex
-	 *            vertices in vertices_vertices. it should include {@code base}.
-	 * @param coords
-	 *            coordinates of the vertices.
-	 * @return rotation of sortedverticesAroundVertex.
-	 */
-	public static List<Integer> rotateVertices(final int base,
-			final List<Integer> sortedverticesAroundVertex,
-			final List<List<Double>> coords) {
-
-		logger.debug(
-				"before rotation: " + sortedverticesAroundVertex + ", base vertex is " + base);
-
-		var baseIndex = sortedverticesAroundVertex.indexOf(base);
-
-		var rotated = new ArrayList<Integer>();
-
-		var verticesSize = sortedverticesAroundVertex.size();
-		for (int i = 0; i < verticesSize; i++) {
-			rotated.add(sortedverticesAroundVertex.get(
-					(i + baseIndex) % verticesSize));
-		}
-
-		logger.debug("after rotation: " + rotated + ", base vertex is " + base);
-		return rotated;
 	}
 
 	/**

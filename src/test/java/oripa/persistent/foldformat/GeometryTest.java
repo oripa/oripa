@@ -50,36 +50,4 @@ class GeometryTest {
 		assertEquals(3, sorted.get(3));
 	}
 
-	@Test
-	void testRotateVertices() {
-		var coords = List.of(
-				List.of(0.0, 0.0),
-				List.of(1.0, 0.0),
-				List.of(1.0, 1.0),
-				List.of(0.0, 1.0),
-				List.of(2.0, 1.0));
-
-		var u = 0;
-
-		var verticesIndicesAroundEnd = List.of(0, 1, 4, 3); // around v = 2
-
-		var rotated = Geometry.rotateVertices(u, verticesIndicesAroundEnd, coords);
-
-		assertEquals(0, rotated.get(0));
-		assertEquals(1, rotated.get(1));
-		assertEquals(4, rotated.get(2));
-		assertEquals(3, rotated.get(3));
-
-		u = 4;
-
-		verticesIndicesAroundEnd = List.of(0, 1, 4, 3); // around v = 2
-
-		rotated = Geometry.rotateVertices(u, verticesIndicesAroundEnd, coords);
-
-		assertEquals(4, rotated.get(0));
-		assertEquals(3, rotated.get(1));
-		assertEquals(0, rotated.get(2));
-		assertEquals(1, rotated.get(3));
-	}
-
 }
