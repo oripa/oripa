@@ -20,6 +20,7 @@ package oripa.persistent.foldformat;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -53,7 +54,8 @@ public class CreasePatternElementConverter {
 	}
 
 	/**
-	 * generates a list of index lists for each edge.
+	 * generates a list of index lists for each edge. The order of converted
+	 * edges is the same as that of the given lines.
 	 *
 	 * @param lines
 	 * @return
@@ -69,7 +71,8 @@ public class CreasePatternElementConverter {
 	}
 
 	/**
-	 * generates a list of assignment for each edge.
+	 * generates a list of assignment for each edge. The order of the converted
+	 * list is the same as that of the given lines.
 	 *
 	 * @param lines
 	 * @return
@@ -110,7 +113,7 @@ public class CreasePatternElementConverter {
 		for (int u = 0; u < coords.size(); u++) {
 			for (int v = u + 1; v < coords.size(); v++) {
 				var edge = List.of(u, v);
-				if (edgesVertices.contains(edge) || edgesVertices.contains(reverseEdge(edge))) {
+				if (edgeExists(edge, edgesVertices)) {
 					verticesVertices.get(u).add(v);
 					verticesVertices.get(v).add(u);
 				}
@@ -169,8 +172,14 @@ public class CreasePatternElementConverter {
 		}).collect(Collectors.toList());
 	}
 
+	/**
+	 *
+	 * @param edge
+	 * @param edgesVertices
+	 * @return whether the given edge or its reversed one exists.
+	 */
 	private boolean edgeExists(final List<Integer> edge, final List<List<Integer>> edgesVertices) {
-		return edgesVertices.indexOf(edge) != -1 || edgesVertices.indexOf(reverseEdge(edge)) != -1;
+		return edgesVertices.contains(edge) || edgesVertices.contains(reverseEdge(edge));
 	}
 
 	private String getAssignment(
@@ -201,24 +210,16 @@ public class CreasePatternElementConverter {
 						OriLine.Type.NONE))
 				.collect(Collectors.toList());
 
+		var typeHash = new HashMap<String, OriLine.Type>();
+		typeHash.put("B", OriLine.Type.CUT);
+		typeHash.put("F", OriLine.Type.NONE);
+		typeHash.put("M", OriLine.Type.RIDGE);
+		typeHash.put("V", OriLine.Type.VALLEY);
+		typeHash.put("U", OriLine.Type.NONE);
+
 		for (int i = 0; i < lines.size(); i++) {
 			var line = lines.get(i);
-			switch (edgesAssignment.get(i)) {
-			case "B":
-				line.setType(OriLine.Type.CUT);
-				break;
-			case "F":
-				line.setType(OriLine.Type.NONE);
-				break;
-			case "M":
-				line.setType(OriLine.Type.RIDGE);
-				break;
-			case "V":
-				line.setType(OriLine.Type.VALLEY);
-				break;
-			default:
-				break;
-			}
+			line.setType(typeHash.get(edgesAssignment.get(i)));
 		}
 
 		return lines;

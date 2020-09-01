@@ -92,8 +92,8 @@ class CreasePatternElementConverterTest {
 
 		var edges = converter.toEdgesVertices(lines);
 
-		assertTrue(edges.get(0).equals(createEdge(0, 1)));
-		assertTrue(edges.get(4).equals(createEdge(0, 2)));
+		assertEquals(createEdge(0, 1), edges.get(0));
+		assertEquals(createEdge(0, 2), edges.get(4));
 	}
 
 	/**

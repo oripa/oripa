@@ -106,6 +106,7 @@ public class FaceMaker {
 				+ verticesAroundEnd);
 
 		if (verticesAroundEnd.isEmpty()) {
+			logger.warn("failed to make a face. (Wrong crease pattern.)");
 			return false;
 		}
 
