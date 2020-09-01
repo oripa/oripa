@@ -2,6 +2,8 @@ package oripa.persistent.filetool;
 
 import java.io.IOException;
 
+import oripa.persistent.doc.WrongDataFormatException;
+
 public abstract class AbstractLoadingAction<Data> {
 	private String path;
 
@@ -14,6 +16,6 @@ public abstract class AbstractLoadingAction<Data> {
 		return path;
 	}
 
-	public abstract Data load() throws FileVersionError, IOException;
+	public abstract Data load() throws FileVersionError, IOException, WrongDataFormatException;
 
 }

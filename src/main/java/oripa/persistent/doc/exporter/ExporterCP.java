@@ -20,6 +20,7 @@ package oripa.persistent.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import oripa.persistent.doc.Doc;
 import oripa.value.OriLine;
@@ -27,7 +28,8 @@ import oripa.value.OriLine;
 public class ExporterCP implements DocExporter {
 
 	@Override
-	public boolean export(final Doc doc, final String filepath) throws Exception {
+	public boolean export(final Doc doc, final String filepath)
+			throws IOException, IllegalArgumentException {
 		FileWriter fw = new FileWriter(filepath);
 		BufferedWriter bw = new BufferedWriter(fw);
 

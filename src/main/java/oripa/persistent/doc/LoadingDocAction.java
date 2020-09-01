@@ -45,7 +45,7 @@ public class LoadingDocAction extends AbstractLoadingAction<Doc> {
 	 * oripa.persistent.filetool.AbstractLoadingAction#load(java.lang.String)
 	 */
 	@Override
-	public Doc load() throws FileVersionError, IOException {
+	public Doc load() throws FileVersionError, IOException, WrongDataFormatException {
 		Doc document = loader.load(getPath());
 		return document;
 	}

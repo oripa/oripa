@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,8 @@
 
 package oripa.persistent.doc.exporter;
 
+import java.io.IOException;
+
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.Doc;
@@ -28,7 +30,8 @@ public class ExporterDXFFactory {
 
 	private static class ModelExporter implements DocExporter {
 		@Override
-		public boolean export(final Doc doc, final String filePath) throws Exception {
+		public boolean export(final Doc doc, final String filePath)
+				throws IOException, IllegalArgumentException {
 			OrigamiModel origamiModel = doc.getOrigamiModel();
 
 			OrigamiModelExporterDXF exporter = new OrigamiModelExporterDXF();
@@ -40,7 +43,8 @@ public class ExporterDXFFactory {
 
 	private static class CreasePatternExporter implements DocExporter {
 		@Override
-		public boolean export(final Doc doc, final String filePath) throws Exception {
+		public boolean export(final Doc doc, final String filePath)
+				throws IOException, IllegalArgumentException {
 
 			CreasePatternInterface creasePattern = doc.getCreasePattern();
 

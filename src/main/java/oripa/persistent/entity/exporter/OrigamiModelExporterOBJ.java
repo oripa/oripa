@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -20,6 +20,7 @@ package oripa.persistent.entity.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import oripa.domain.fold.OriEdge;
@@ -31,12 +32,13 @@ import oripa.persistent.doc.Exporter;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class OrigamiModelExporterOBJ implements Exporter<OrigamiModel> {
 
 	@Override
-	public boolean export(final OrigamiModel origamiModel, final String filePath) throws Exception {
+	public boolean export(final OrigamiModel origamiModel, final String filePath)
+			throws IOException, IllegalArgumentException {
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriVertex> vertices = origamiModel.getVertices();
 		List<OriEdge> edges = origamiModel.getEdges();

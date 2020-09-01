@@ -18,24 +18,17 @@
  */
 package oripa.persistent.doc;
 
-import java.io.IOException;
-
 /**
  * @author Koji
  *
  */
-public interface Exporter<Data> {
-	/**
-	 *
-	 * @param data
-	 * @param filePath
-	 * @return true if the aciton succeeds, otherwise false.
-	 * @throws IOException
-	 *             Error on file access.
-	 * @throws IllegalArgumentException
-	 *             thrown if the {@code data} connot be converted to the aimed
-	 *             data format.
-	 */
-	public abstract boolean export(Data data, String filePath)
-			throws IOException, IllegalArgumentException;
+public class WrongDataFormatException extends Exception {
+	public WrongDataFormatException(final String msg) {
+		super(msg);
+	}
+
+	public WrongDataFormatException(final String msg, final Throwable t) {
+		super(msg, t);
+	}
+
 }

@@ -19,6 +19,7 @@
 package oripa.persistent.doc.exporter;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +51,8 @@ public class ExporterFOLD implements DocExporter {
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean export(final Doc doc, final String filePath) throws Exception {
+	public boolean export(final Doc doc, final String filePath)
+			throws IOException, IllegalArgumentException {
 		logger.info("start exporting FOLD file.");
 
 		var creasePattern = cleanUp(doc.getCreasePattern());

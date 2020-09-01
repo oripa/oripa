@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ package oripa.persistent.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import oripa.domain.fold.OriFace;
@@ -31,15 +32,16 @@ import oripa.persistent.doc.EstimationEntityHolder;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 
 /**
- * 
- * 
+ *
+ *
  * @author MITANI Jun, OUCHI Koji
- * 
+ *
  */
 // export folded model
 public class ModelExporterOBJ implements DocExporter {
 
-	public static void export_bk(final EstimationEntityHolder doc, final String filepath) throws Exception {
+	public static void export_bk(final EstimationEntityHolder doc, final String filepath)
+			throws Exception {
 		OrigamiModel origamiModel = doc.getOrigamiModel();
 		double paperSize = origamiModel.getPaperSize();
 
@@ -77,7 +79,8 @@ public class ModelExporterOBJ implements DocExporter {
 	}
 
 	@Override
-	public boolean export(final Doc doc, final String filePath) throws Exception {
+	public boolean export(final Doc doc, final String filePath)
+			throws IOException, IllegalArgumentException {
 		OrigamiModelExporterOBJ exporter = new OrigamiModelExporterOBJ();
 
 		OrigamiModel origamiModel = doc.getOrigamiModel();

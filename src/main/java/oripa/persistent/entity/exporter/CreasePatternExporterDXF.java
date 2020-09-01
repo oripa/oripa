@@ -20,6 +20,7 @@ package oripa.persistent.entity.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.persistent.doc.Exporter;
@@ -39,7 +40,7 @@ public class CreasePatternExporterDXF implements Exporter<CreasePatternInterface
 	 */
 	@Override
 	public boolean export(final CreasePatternInterface creasePattern, final String filePath)
-			throws Exception {
+			throws IOException, IllegalArgumentException {
 		double paperSize = creasePattern.getPaperSize();
 		double scale = 6.0 / paperSize; // 6.0 inch width
 		double center = 4.0; // inch

@@ -33,7 +33,6 @@ import oripa.value.OriPoint;
  *
  */
 public class CreasePatternElementConverter {
-
 	/**
 	 * generates a list of coordinates of distinct vertices.
 	 *
@@ -131,10 +130,20 @@ public class CreasePatternElementConverter {
 		return List.of(edge.get(1), edge.get(0));
 	}
 
-	public List<List<Integer>> toFacesVertices(final Collection<OriLine> lines) {
+	public List<List<Integer>> toFacesVertices(final Collection<OriLine> lines)
+			throws IllegalArgumentException {
 		var edgesVertices = toEdgesVertices(lines);
 		var verticesVertices = toVerticesVertices(lines);
 		var assignment = toEdgesAssignment(lines);
+
+		verticesVertices.stream()
+				.forEach(vertices -> {
+					if (vertices.size() < 2) {
+						throw new IllegalArgumentException(
+								"Crease pattern is wrong. (A vertex with degree 1 or 0 occurs.)\n"
+										+ "Make all edges connected.");
+					}
+				});
 
 		var faceMaker = new FaceMaker(edgesVertices, verticesVertices);
 
@@ -142,6 +151,7 @@ public class CreasePatternElementConverter {
 
 		for (int u = 0; u < verticesVertices.size(); u++) {
 			var vertices = verticesVertices.get(u);
+
 			for (var v : vertices) {
 				var edge = List.of(u, v);
 				try {

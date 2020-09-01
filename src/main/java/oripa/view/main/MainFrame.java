@@ -58,6 +58,7 @@ import oripa.persistent.doc.Doc;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
 import oripa.persistent.doc.FileTypeKey;
+import oripa.persistent.doc.WrongDataFormatException;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
@@ -392,10 +393,16 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				});
 	}
 
-	void saveOpxFile(final Doc doc, final String filePath) {
+	private void saveOpxFile(final Doc doc, final String filePath) {
 		final DocDAO dao = new DocDAO();
 
-		dao.save(doc, filePath, FileTypeKey.OPX);
+		try {
+			dao.save(doc, filePath, FileTypeKey.OPX);
+		} catch (IOException | IllegalArgumentException e) {
+			logger.error("Failed to save", e);
+			showErrorDialog("Failed to save.", e);
+		}
+
 		doc.setDataFilePath(filePath);
 
 		paintContext.creasePatternUndo().clearChanged();
@@ -509,6 +516,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		} catch (FileChooserCanceledException e) {
 			logger.info("File selection is canceled.");
 			return document.getDataFilePath();
+		} catch (IOException | IllegalArgumentException e) {
+			logger.error("failed to save", e);
+			showErrorDialog("Failed to save", e);
+			return document.getDataFilePath();
 		}
 	}
 
@@ -519,7 +530,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			dao.saveUsingGUIWithModelCheck(document, this, filterSelector.getFilter(type));
 
 		} catch (FileChooserCanceledException e) {
-
+			logger.info("File selection is canceled.");
+		} catch (IOException e) {
+			logger.error("IO trouble", e);
+			showErrorDialog("Failed to save", e);
+		} catch (IllegalArgumentException e) {
+			logger.error("Maybe data is not appropriate.", e);
+			showErrorDialog("Failed to save", e);
 		}
 	}
 
@@ -587,12 +604,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			if (filePath != null) {
 				document.set(dao.load(filePath));
 			} else {
-				// DocFilterSelector selector = new DocFilterSelector();
 				document.set(dao.loadUsingGUI(
 						fileHistory.getLastPath(), filterSelector.getLoadables(),
 						this));
 			}
-		} catch (FileVersionError | IOException e) {
+		} catch (FileVersionError | WrongDataFormatException | IOException e) {
+			logger.error("failed to load", e);
 			showErrorDialog("Failed to load the file", e);
 		} catch (FileChooserCanceledException cancel) {
 			return null;

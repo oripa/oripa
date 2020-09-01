@@ -2,6 +2,7 @@ package oripa.persistent.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,8 @@ public class ExporterSVGFactory {
 	private static class CreasePatternExporter implements DocExporter {
 
 		@Override
-		public boolean export(final Doc doc, final String filepath) throws Exception {
+		public boolean export(final Doc doc, final String filepath)
+				throws IOException, IllegalArgumentException {
 			CreasePatternInterface creasePattern = doc.getCreasePattern();
 			double paperSize = creasePattern.getPaperSize();
 
@@ -92,7 +94,8 @@ public class ExporterSVGFactory {
 
 	private static class FoldedModelExporter implements DocExporter {
 		@Override
-		public boolean export(final Doc doc, final String filepath) throws Exception {
+		public boolean export(final Doc doc, final String filepath)
+				throws IOException, IllegalArgumentException {
 			OrigamiModel origamiModel = doc.getOrigamiModel();
 			FoldedModelInfo foldedModelInfo = doc.getFoldedModelInfo();
 			double paperSize = origamiModel.getPaperSize();
@@ -146,6 +149,7 @@ public class ExporterSVGFactory {
 				}
 
 				for (int i = 0; i < sortedFaces.size(); i++) {
+					// FIXME: Global method!
 					OriFace face = FoldedModelScreen.isM_bFaceOrderFlip() ? sortedFaces
 							.get(i)
 							: sortedFaces.get(sortedFaces.size() - i - 1);
@@ -153,7 +157,7 @@ public class ExporterSVGFactory {
 					for (OriHalfedge he : face.halfedges) {
 
 						if (he.vertex.p.x > maxV.x) {
-							throw new Exception(
+							throw new IllegalArgumentException(
 									"Size of vertices exceeds maximum");
 						}
 

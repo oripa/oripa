@@ -28,6 +28,7 @@ import com.google.gson.JsonSyntaxException;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.persistent.doc.Doc;
 import oripa.persistent.doc.Loader;
+import oripa.persistent.doc.WrongDataFormatException;
 import oripa.persistent.foldformat.CreasePatternElementConverter;
 import oripa.persistent.foldformat.CreasePatternFOLDFormat;
 
@@ -43,7 +44,7 @@ public class LoaderFOLD implements Loader<Doc> {
 	 * @see oripa.persistent.doc.Loader#load(java.lang.String)
 	 */
 	@Override
-	public Doc load(final String filePath) throws IOException {
+	public Doc load(final String filePath) throws IOException, WrongDataFormatException {
 
 		var gson = new Gson();
 		CreasePatternFOLDFormat foldFormat;
@@ -53,20 +54,20 @@ public class LoaderFOLD implements Loader<Doc> {
 					Files.readString(Paths.get(filePath)),
 					CreasePatternFOLDFormat.class);
 		} catch (JsonSyntaxException e) {
-			throw new IOException(
+			throw new WrongDataFormatException(
 					"The file does not follow JSON style."
 							+ " Note that FOLD format is based on JSON.",
 					e);
 		}
 
 		if (foldFormat.getEdgesVertices() == null) {
-			throw new IOException("edges_vertices property is needed in the file.");
+			throw new WrongDataFormatException("edges_vertices property is needed in the file.");
 		}
 		if (foldFormat.getEdgesAssignment() == null) {
-			throw new IOException("edges_assignment property is needed in the file.");
+			throw new WrongDataFormatException("edges_assignment property is needed in the file.");
 		}
 		if (foldFormat.getVerticesCoords() == null) {
-			throw new IOException("vertices_coords property is needed in the file.");
+			throw new WrongDataFormatException("vertices_coords property is needed in the file.");
 		}
 
 		var converter = new CreasePatternElementConverter();
