@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -50,9 +50,9 @@ import oripa.domain.fold.TriangleVertex;
 
 /**
  * A screen to show whether Maekawa theorem and Kawasaki theorem holds.
- * 
+ *
  * @author Koji
- * 
+ *
  */
 public class FoldedModelScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -177,6 +177,7 @@ public class FoldedModelScreen extends JPanel
 		return y * BUFFERW + x;
 	}
 
+	// FIXME global method!
 	public static void clear() {
 		for (int i = 0; i < BUFFERW * BUFFERH; i++) {
 			pbuf[i] = 0xffffffff;
@@ -196,7 +197,7 @@ public class FoldedModelScreen extends JPanel
 	/**
 	 * Convenience method that returns a scaled instance of the provided
 	 * {@code BufferedImage}.
-	 * 
+	 *
 	 * @param img
 	 *            the original image to be scaled
 	 * @param targetWidth
@@ -224,7 +225,8 @@ public class FoldedModelScreen extends JPanel
 			final Object hint,
 			final boolean higherQuality) {
 		int type = (img.getTransparency() == Transparency.OPAQUE)
-				? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+				? BufferedImage.TYPE_INT_RGB
+				: BufferedImage.TYPE_INT_ARGB;
 		BufferedImage ret = img;
 		int w, h;
 		if (higherQuality) {
@@ -685,10 +687,12 @@ public class FoldedModelScreen extends JPanel
 		return bufferImage;
 	}
 
+	// FIXME global method!
 	public static boolean isM_bFaceOrderFlip() {
 		return m_bFaceOrderFlip;
 	}
 
+	// FIXME global method!
 	public static void setM_bFaceOrderFlip(final boolean m_bFaceOrderFlip) {
 		FoldedModelScreen.m_bFaceOrderFlip = m_bFaceOrderFlip;
 	}
