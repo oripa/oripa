@@ -33,20 +33,17 @@ public class FaceMaker {
 	private static final Logger logger = LoggerFactory.getLogger(FaceMaker.class);
 
 	private final List<List<Integer>> verticesVertices;
-	private final List<List<Double>> coords;
 	private final boolean[][] edgePassed;
 
 	/**
 	 * Constructor
 	 */
 	public FaceMaker(final List<List<Integer>> edgesVertices,
-			final List<List<Integer>> verticesVertices,
-			final List<List<Double>> coords) {
+			final List<List<Integer>> verticesVertices) {
 
 		this.verticesVertices = verticesVertices;
-		this.coords = coords;
 
-		edgePassed = new boolean[coords.size()][coords.size()];
+		edgePassed = new boolean[verticesVertices.size()][verticesVertices.size()];
 		for (var arr : edgePassed) {
 			Arrays.fill(arr, false);
 		}
@@ -65,8 +62,7 @@ public class FaceMaker {
 		face.addAll(edge);
 		edgePassed[u][v] = true;
 
-		var verticesAround = getVerticesAround(u, v);
-		var w = verticesAround.get(verticesAround.size() - 1);
+		var w = getLeftSideNeighbor(u, v);
 
 		if (!makeFace(face, List.of(v, w))) {
 			return null;
@@ -75,11 +71,20 @@ public class FaceMaker {
 		return face;
 	}
 
-	private List<Integer> getVerticesAround(final int base, final int v) {
-		return Geometry.rotateVertices(
-				base,
-				verticesVertices.get(v),
-				coords);
+	/**
+	 * To make a counter-clockwise loop, we consider edges incident to v of
+	 * given [u, v]. The edge next to [u, v] in counter-clockwise direction
+	 * (left side of u in the vertices list) is the edge to follow.
+	 *
+	 * @param u
+	 * @param v
+	 * @return the vertex of left side neighbor of u among vertices connecting
+	 *         to v.
+	 */
+	private Integer getLeftSideNeighbor(final int u, final int v) {
+		var vertices = verticesVertices.get(v);
+		var uIndex = vertices.indexOf(u);
+		return vertices.get((uIndex - 1 + vertices.size()) % vertices.size());
 	}
 
 	/**
@@ -100,17 +105,7 @@ public class FaceMaker {
 
 		face.add(v);
 
-		var verticesAroundEnd = getVerticesAround(u, v);
-
-		logger.info("verticesAroundEnd of " + v + " is: "
-				+ verticesAroundEnd);
-
-		if (verticesAroundEnd.isEmpty()) {
-			logger.warn("failed to make a face. (Wrong crease pattern.)");
-			return false;
-		}
-
-		var w = verticesAroundEnd.get(verticesAroundEnd.size() - 1);
+		var w = getLeftSideNeighbor(u, v);
 
 		if (edgePassed[v][w]) {
 			logger.warn("failed to make a face. (The next path is already used)");

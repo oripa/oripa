@@ -134,10 +134,9 @@ public class CreasePatternElementConverter {
 	public List<List<Integer>> toFacesVertices(final Collection<OriLine> lines) {
 		var edgesVertices = toEdgesVertices(lines);
 		var verticesVertices = toVerticesVertices(lines);
-		var coords = toVerticesCoords(lines);
 		var assignment = toEdgesAssignment(lines);
 
-		var faceMaker = new FaceMaker(edgesVertices, verticesVertices, coords);
+		var faceMaker = new FaceMaker(edgesVertices, verticesVertices);
 
 		var facesVertices = new ArrayList<List<Integer>>();
 
@@ -145,11 +144,13 @@ public class CreasePatternElementConverter {
 			var vertices = verticesVertices.get(u);
 			for (var v : vertices) {
 				var edge = List.of(u, v);
-
-				var face = faceMaker.makeFace(edge);
-
-				if (face != null) {
-					facesVertices.add(face);
+				try {
+					var face = faceMaker.makeFace(edge);
+					if (face != null) {
+						facesVertices.add(face);
+					}
+				} catch (Exception e) {
+					throw new IllegalArgumentException("Crease pattern might be wrong.", e);
 				}
 			}
 		}
