@@ -91,7 +91,7 @@ public class UIPanel extends JPanel {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
 	private final UIPanelSetting setting = new UIPanelSetting();
-	private final ValueDB valueDB = ValueDB.getInstance();
+	private final ValueDB valueDB = setting.getValueSetting();
 	private final MainScreenSetting mainScreenSetting;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
@@ -654,11 +654,11 @@ public class UIPanel extends JPanel {
 		alterLine_combo_to.addItemListener(new ToLineTypeItemListener(setting));
 
 		buttonLength.addActionListener(
-				new PaintActionSetter(actionHolder, new LengthMeasuringAction(),
+				new PaintActionSetter(actionHolder, new LengthMeasuringAction(valueDB),
 						screenUpdater, paintContext));
 
 		buttonAngle.addActionListener(
-				new PaintActionSetter(actionHolder, new AngleMeasuringAction(),
+				new PaintActionSetter(actionHolder, new AngleMeasuringAction(valueDB),
 						screenUpdater, paintContext));
 
 		lineTypeMountainButton.addActionListener(
@@ -674,9 +674,9 @@ public class UIPanel extends JPanel {
 				.addActionListener(new InputCommandStatePopper());
 
 		textFieldLength.getDocument().addDocumentListener(
-				new LengthValueInputListener());
+				new LengthValueInputListener(valueDB));
 		textFieldAngle.getDocument().addDocumentListener(
-				new AngleValueInputListener());
+				new AngleValueInputListener(valueDB));
 
 		dispGridCheckBox.addActionListener(e -> {
 			mainScreenSetting.setGridVisible(dispGridCheckBox.isSelected());

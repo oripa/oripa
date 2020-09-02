@@ -230,7 +230,7 @@ public class PaintBoundStateFactory {
 									.changeViewSetting() });
 
 			state = byValueFactory.create(
-					actionHolder, new LineByValueAction(),
+					actionHolder, new LineByValueAction(uiPanelSetting.getValueSetting()),
 					context, screenUpdater, changeHint, null);
 
 			break;

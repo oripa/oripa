@@ -13,19 +13,6 @@ public class ValueDB {
 	private double angle = 0;
 	public static final String ANGLE = "angle";
 
-	private static ValueDB instance = null;
-
-	private ValueDB() {
-	}
-
-	public static ValueDB getInstance() {
-		if (instance == null) {
-			instance = new ValueDB();
-		}
-
-		return instance;
-	}
-
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);

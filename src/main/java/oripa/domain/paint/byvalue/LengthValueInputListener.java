@@ -1,6 +1,5 @@
 package oripa.domain.paint.byvalue;
 
-
 /**
  * @see AbstractValueInputListener
  * @author koji
@@ -8,11 +7,17 @@ package oripa.domain.paint.byvalue;
  */
 public class LengthValueInputListener extends AbstractValueInputListener {
 
-	@Override
-	protected void setValue(double value) {
-		ValueDB valueDB = ValueDB.getInstance();
-		valueDB.setLength(value);
-		
+	/**
+	 * Constructor
+	 */
+	public LengthValueInputListener(final ValueDB valueSetting) {
+		super(valueSetting);
 	}
-	
+
+	@Override
+	protected void setValue(final double value, final ValueDB valueSetting) {
+		valueSetting.setLength(value);
+
+	}
+
 }

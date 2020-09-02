@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.EditMode;
+import oripa.domain.paint.byvalue.ValueDB;
 
 public class UIPanelSetting {
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
@@ -38,6 +39,8 @@ public class UIPanelSetting {
 
 	private TypeForChange typeTo = TypeForChange.EMPTY;
 	public static final String TYPE_TO = "line type of 'to' box";
+
+	private final ValueDB valueSetting = new ValueDB();
 
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener) {
@@ -166,5 +169,9 @@ public class UIPanelSetting {
 		selectedMode = EditMode.NONE; // a hack to trigger an update every time.
 
 		return ret;
+	}
+
+	public ValueDB getValueSetting() {
+		return valueSetting;
 	}
 }
