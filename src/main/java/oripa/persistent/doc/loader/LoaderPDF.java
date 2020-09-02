@@ -28,16 +28,14 @@ import javax.vecmath.Vector2d;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.geom.GeomUtil;
 import oripa.persistent.doc.Doc;
-import oripa.persistent.doc.Loader;
-import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.value.OriLine;
 
-public class LoaderPDF implements Loader {
+public class LoaderPDF implements DocLoader {
 
 	public static ArrayList<OriLine> lines = new ArrayList<>();
 
 	@Override
-	public SheetCutOutlinesHolder load(final String filePath) {
+	public Doc load(final String filePath) {
 		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 

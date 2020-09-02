@@ -16,21 +16,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
+package oripa.persistent.filetool;
 
-import oripa.persistent.filetool.Loader;
-import oripa.persistent.filetool.LoadingActionTemplate;
+import java.io.IOException;
 
 /**
  * @author Koji
  *
  */
-public class LoadingDocAction extends LoadingActionTemplate<Doc> {
+public interface Exporter<Data> {
 	/**
-	 * Constructor
+	 *
+	 * @param data
+	 * @param filePath
+	 * @return true if the aciton succeeds, otherwise false.
+	 * @throws IOException
+	 *             Error on file access.
+	 * @throws IllegalArgumentException
+	 *             thrown if the {@code data} connot be converted to the aimed
+	 *             data format.
 	 */
-	public LoadingDocAction(final Loader<Doc> l) {
-		super(l);
-	}
-
+	public abstract boolean export(Data data, String filePath)
+			throws IOException, IllegalArgumentException;
 }

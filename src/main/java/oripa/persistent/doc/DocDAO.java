@@ -18,8 +18,6 @@ import oripa.persistent.filetool.FileVersionError;
 
 public class DocDAO {
 
-	// -----------------------------------------------------
-
 	public Doc load(final String path)
 			throws FileVersionError, IOException, WrongDataFormatException {
 		DocFilterSelector selecter = new DocFilterSelector();

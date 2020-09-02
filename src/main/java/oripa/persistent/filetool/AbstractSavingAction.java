@@ -14,10 +14,6 @@ public abstract class AbstractSavingAction<Data> {
 		return path;
 	}
 
-//	public boolean targetClassMatches(Data data) {
-//		return this.targetClass.isInstance(data);
-//	}
-
 	public abstract boolean save(Data data) throws IOException, IllegalArgumentException;
 
 }

@@ -39,25 +39,27 @@ import oripa.value.OriLine;
  */
 public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, EstimationEntityHolder {
 
-	// private double paperSize;
-
-	// Crease Pattern
-
+	/**
+	 * Crease Pattern
+	 */
 	private CreasePatternInterface creasePattern = null;
+
 	private List<OriLine> sheetCutLines = new ArrayList<OriLine>();
 
-	// Origami Model for Estimation
+	/**
+	 * Origami Model for Estimation
+	 */
 	private OrigamiModel origamiModel = null;
 
-	// Folded Model Information (Result of Estimation)
-
+	/**
+	 * Folded Model Information (Result of Estimation)
+	 */
 	private FoldedModelInfo foldedModelInfo = null;
 
-	// Project data
-
+	/**
+	 * Project data
+	 */
 	private Property property = new Property("");
-
-	int debugCount = 0;
 
 	public Doc() {
 		initialize(Constants.DEFAULT_PAPER_SIZE);
@@ -197,15 +199,4 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	public List<OriLine> getSheetCutOutlines() {
 		return sheetCutLines;
 	}
-
-	// ======================================================================
-	// Getter/Setter eventually unnecessary
-
-//	/**
-//	 * @return size
-//	 */
-//	public double getPaperSize() {
-//		return creasePattern.getPaperSize();
-//	}
-
 }

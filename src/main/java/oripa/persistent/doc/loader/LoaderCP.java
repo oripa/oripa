@@ -28,10 +28,9 @@ import javax.vecmath.Vector2d;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.persistent.doc.Doc;
-import oripa.persistent.doc.Loader;
 import oripa.value.OriLine;
 
-public class LoaderCP implements Loader<Doc> {
+public class LoaderCP implements DocLoader {
 
 	public ArrayList<OriLine> lines = new ArrayList<>();
 

@@ -1,8 +1,8 @@
-package oripa.persistent.doc;
+package oripa.persistent.filetool;
 
 import java.io.IOException;
 
-import oripa.persistent.filetool.FileVersionError;
+import oripa.persistent.doc.WrongDataFormatException;
 
 public interface Loader<Data> {
 	public Data load(String filePath)

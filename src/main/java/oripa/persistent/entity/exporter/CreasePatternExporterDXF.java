@@ -23,7 +23,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.persistent.doc.Exporter;
+import oripa.persistent.filetool.Exporter;
 import oripa.value.OriLine;
 
 /**

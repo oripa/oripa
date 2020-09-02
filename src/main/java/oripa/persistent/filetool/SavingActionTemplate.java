@@ -20,8 +20,6 @@ package oripa.persistent.filetool;
 
 import java.io.IOException;
 
-import oripa.persistent.doc.Exporter;
-
 /**
  * @author Koji
  *

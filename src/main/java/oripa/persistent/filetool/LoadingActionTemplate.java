@@ -16,21 +16,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
+package oripa.persistent.filetool;
 
-import oripa.persistent.filetool.Loader;
-import oripa.persistent.filetool.LoadingActionTemplate;
+import java.io.IOException;
+
+import oripa.persistent.doc.WrongDataFormatException;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public class LoadingDocAction extends LoadingActionTemplate<Doc> {
+public class LoadingActionTemplate<Data> extends AbstractLoadingAction<Data> {
+
+	private final Loader<Data> loader;
+
 	/**
 	 * Constructor
 	 */
-	public LoadingDocAction(final Loader<Doc> l) {
-		super(l);
+	public LoadingActionTemplate(final Loader<Data> l) {
+		loader = l;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.persistent.filetool.AbstractLoadingAction#load()
+	 */
+	@Override
+	public Data load() throws FileVersionError, IOException, WrongDataFormatException {
+		return loader.load(getPath());
 	}
 
 }

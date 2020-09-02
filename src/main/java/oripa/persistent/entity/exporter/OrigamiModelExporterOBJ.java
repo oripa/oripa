@@ -28,7 +28,7 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.Exporter;
+import oripa.persistent.filetool.Exporter;
 
 /**
  * @author Koji

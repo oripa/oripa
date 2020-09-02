@@ -16,26 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
+package oripa.persistent.doc.loader;
 
-import java.io.IOException;
+import oripa.persistent.doc.Doc;
+import oripa.persistent.filetool.Loader;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public interface Exporter<Data> {
-	/**
-	 *
-	 * @param data
-	 * @param filePath
-	 * @return true if the aciton succeeds, otherwise false.
-	 * @throws IOException
-	 *             Error on file access.
-	 * @throws IllegalArgumentException
-	 *             thrown if the {@code data} connot be converted to the aimed
-	 *             data format.
-	 */
-	public abstract boolean export(Data data, String filePath)
-			throws IOException, IllegalArgumentException;
+public interface DocLoader extends Loader<Doc> {
+
 }

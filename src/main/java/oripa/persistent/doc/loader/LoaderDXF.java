@@ -29,10 +29,9 @@ import javax.vecmath.Vector2d;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.geom.GeomUtil;
 import oripa.persistent.doc.Doc;
-import oripa.persistent.doc.Loader;
 import oripa.value.OriLine;
 
-public class LoaderDXF implements Loader<Doc> {
+public class LoaderDXF implements DocLoader {
 
 	@Override
 	public Doc load(final String filePath) {

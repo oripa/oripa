@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,17 +18,17 @@
  */
 package oripa.persistent.doc;
 
+import oripa.persistent.filetool.Exporter;
 import oripa.persistent.filetool.SavingActionTemplate;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class SavingDocAction extends SavingActionTemplate<Doc> {
-
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param exporter
 	 *            exporter for {@link Doc}
 	 */
