@@ -91,7 +91,7 @@ public class UIPanel extends JPanel {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
 	private final UIPanelSetting setting = new UIPanelSetting();
-	private final ValueSetting valueDB = setting.getValueSetting();
+	private final ValueSetting valueSetting = setting.getValueSetting();
 	private final MainScreenSetting mainScreenSetting;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
@@ -416,7 +416,7 @@ public class UIPanel extends JPanel {
 
 		NumberFormat doubleValueFormat = NumberFormat
 				.getNumberInstance(Locale.US);
-		doubleValueFormat.setMinimumFractionDigits(3);
+		doubleValueFormat.setMinimumFractionDigits(6);
 
 		textFieldLength = new JFormattedTextField(doubleValueFormat);
 		textFieldAngle = new JFormattedTextField(doubleValueFormat);
@@ -654,11 +654,11 @@ public class UIPanel extends JPanel {
 		alterLine_combo_to.addItemListener(new ToLineTypeItemListener(setting));
 
 		buttonLength.addActionListener(
-				new PaintActionSetter(actionHolder, new LengthMeasuringAction(valueDB),
+				new PaintActionSetter(actionHolder, new LengthMeasuringAction(valueSetting),
 						screenUpdater, paintContext));
 
 		buttonAngle.addActionListener(
-				new PaintActionSetter(actionHolder, new AngleMeasuringAction(valueDB),
+				new PaintActionSetter(actionHolder, new AngleMeasuringAction(valueSetting),
 						screenUpdater, paintContext));
 
 		lineTypeMountainButton.addActionListener(
@@ -674,9 +674,9 @@ public class UIPanel extends JPanel {
 				.addActionListener(new InputCommandStatePopper());
 
 		textFieldLength.getDocument().addDocumentListener(
-				new LengthValueInputListener(valueDB));
+				new LengthValueInputListener(valueSetting));
 		textFieldAngle.getDocument().addDocumentListener(
-				new AngleValueInputListener(valueDB));
+				new AngleValueInputListener(valueSetting));
 
 		dispGridCheckBox.addActionListener(e -> {
 			mainScreenSetting.setGridVisible(dispGridCheckBox.isSelected());
@@ -855,10 +855,10 @@ public class UIPanel extends JPanel {
 					repaint();
 				});
 
-		valueDB.addPropertyChangeListener(
+		valueSetting.addPropertyChangeListener(
 				ValueSetting.ANGLE, e -> textFieldAngle.setValue(e.getNewValue()));
 
-		valueDB.addPropertyChangeListener(
+		valueSetting.addPropertyChangeListener(
 				ValueSetting.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
 
 		setting.addPropertyChangeListener(
