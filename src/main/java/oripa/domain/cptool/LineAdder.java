@@ -48,13 +48,14 @@ public class LineAdder {
 
 		LinkedList<OriLine> toBeAdded = new LinkedList<>();
 
-		// intersection of (aux input, other type lines) are rejected
 		for (Iterator<OriLine> iterator = currentLines.iterator(); iterator.hasNext();) {
 			OriLine line = iterator.next();
 
-			if (inputLine.getType() == OriLine.Type.NONE && line.getType() != OriLine.Type.NONE) {
-				continue;
-			}
+			// intersection of (aux input, other type lines) are rejected // It
+			// is by MITANI jun.
+//			if (inputLine.getType() == OriLine.Type.NONE && line.getType() != OriLine.Type.NONE) {
+//				continue;
+//			}
 
 			Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
 			if (crossPoint == null) {
@@ -98,10 +99,10 @@ public class LineAdder {
 
 			// reject (M/V input, aux lines) // It is by MITANI jun, I don't
 			// know why.
-			if (inputLine.getType() != OriLine.Type.NONE &&
-					line.getType() == OriLine.Type.NONE) {
-				continue;
-			}
+//			if (inputLine.getType() != OriLine.Type.NONE &&
+//					line.getType() == OriLine.Type.NONE) {
+//				continue;
+//			}
 
 			// If the intersection is on the end of the line, skip
 			if (GeomUtil.Distance(inputLine.p0, line.p0) < CalculationResource.POINT_EPS ||
