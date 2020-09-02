@@ -14,12 +14,12 @@ import oripa.value.OriLine;
 public class SelectingVertexToDrawLine extends PickingVertex {
 	private static final Logger logger = LoggerFactory.getLogger(SelectingVertexToDrawLine.class);
 
-	private final ValueDB valueSetting;
+	private final ValueSetting valueSetting;
 
 	/**
 	 * Constructor
 	 */
-	public SelectingVertexToDrawLine(final ValueDB valueSetting) {
+	public SelectingVertexToDrawLine(final ValueSetting valueSetting) {
 		super();
 		this.valueSetting = valueSetting;
 	}

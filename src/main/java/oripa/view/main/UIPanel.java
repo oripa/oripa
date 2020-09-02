@@ -66,7 +66,7 @@ import oripa.domain.paint.byvalue.AngleMeasuringAction;
 import oripa.domain.paint.byvalue.AngleValueInputListener;
 import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
-import oripa.domain.paint.byvalue.ValueDB;
+import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.EstimationEntityHolder;
 import oripa.persistent.doc.SheetCutOutlinesHolder;
@@ -91,7 +91,7 @@ public class UIPanel extends JPanel {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
 	private final UIPanelSetting setting = new UIPanelSetting();
-	private final ValueDB valueDB = setting.getValueSetting();
+	private final ValueSetting valueDB = setting.getValueSetting();
 	private final MainScreenSetting mainScreenSetting;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
@@ -856,10 +856,10 @@ public class UIPanel extends JPanel {
 				});
 
 		valueDB.addPropertyChangeListener(
-				ValueDB.ANGLE, e -> textFieldAngle.setValue(e.getNewValue()));
+				ValueSetting.ANGLE, e -> textFieldAngle.setValue(e.getNewValue()));
 
 		valueDB.addPropertyChangeListener(
-				ValueDB.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
+				ValueSetting.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
 
 		setting.addPropertyChangeListener(
 				UIPanelSetting.SELECTED_MODE, this::onChangeEditModeButtonSelection);

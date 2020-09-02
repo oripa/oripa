@@ -10,12 +10,12 @@ public class LengthValueInputListener extends AbstractValueInputListener {
 	/**
 	 * Constructor
 	 */
-	public LengthValueInputListener(final ValueDB valueSetting) {
+	public LengthValueInputListener(final ValueSetting valueSetting) {
 		super(valueSetting);
 	}
 
 	@Override
-	protected void setValue(final double value, final ValueDB valueSetting) {
+	protected void setValue(final double value, final ValueSetting valueSetting) {
 		valueSetting.setLength(value);
 
 	}

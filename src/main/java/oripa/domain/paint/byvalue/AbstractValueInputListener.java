@@ -13,12 +13,12 @@ import javax.swing.text.Document;
  */
 public abstract class AbstractValueInputListener implements DocumentListener {
 
-	private final ValueDB valueSetting;
+	private final ValueSetting valueSetting;
 
 	/**
 	 * Constructor
 	 */
-	public AbstractValueInputListener(final ValueDB valueSetting) {
+	public AbstractValueInputListener(final ValueSetting valueSetting) {
 		this.valueSetting = valueSetting;
 	}
 
@@ -57,5 +57,5 @@ public abstract class AbstractValueInputListener implements DocumentListener {
 	 * @param value
 	 * @param valueSetting
 	 */
-	protected abstract void setValue(double value, ValueDB valueSetting);
+	protected abstract void setValue(double value, ValueSetting valueSetting);
 }

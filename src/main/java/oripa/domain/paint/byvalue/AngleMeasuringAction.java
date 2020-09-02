@@ -9,9 +9,9 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class AngleMeasuringAction extends GraphicMouseAction {
 
-	private final ValueDB valueSetting;
+	private final ValueSetting valueSetting;
 
-	public AngleMeasuringAction(final ValueDB valueSetting) {
+	public AngleMeasuringAction(final ValueSetting valueSetting) {
 		setActionState(new SelectingVertexForAngle(valueSetting));
 		this.valueSetting = valueSetting;
 	}

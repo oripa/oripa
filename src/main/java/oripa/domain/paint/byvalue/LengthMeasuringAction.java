@@ -9,9 +9,9 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class LengthMeasuringAction extends GraphicMouseAction {
 
-	private final ValueDB valueSetting;
+	private final ValueSetting valueSetting;
 
-	public LengthMeasuringAction(final ValueDB valueSetting) {
+	public LengthMeasuringAction(final ValueSetting valueSetting) {
 		super();
 		setActionState(new SelectingVertexForLength(valueSetting));
 		this.valueSetting = valueSetting;

@@ -8,9 +8,9 @@ import oripa.geom.GeomUtil;
 
 public class SelectingVertexForLength extends PickingVertex {
 
-	private final ValueDB valueSetting;
+	private final ValueSetting valueSetting;
 
-	public SelectingVertexForLength(final ValueDB valueSetting) {
+	public SelectingVertexForLength(final ValueSetting valueSetting) {
 		super();
 		this.valueSetting = valueSetting;
 	}

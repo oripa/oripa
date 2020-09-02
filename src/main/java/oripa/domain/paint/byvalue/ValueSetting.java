@@ -3,7 +3,7 @@ package oripa.domain.paint.byvalue;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class ValueDB {
+public class ValueSetting {
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 

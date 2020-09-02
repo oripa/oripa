@@ -10,12 +10,12 @@ public class AngleValueInputListener extends AbstractValueInputListener {
 	/**
 	 * Constructor
 	 */
-	public AngleValueInputListener(final ValueDB valueSetting) {
+	public AngleValueInputListener(final ValueSetting valueSetting) {
 		super(valueSetting);
 	}
 
 	@Override
-	protected void setValue(final double value, final ValueDB valueSetting) {
+	protected void setValue(final double value, final ValueSetting valueSetting) {
 		valueSetting.setAngle(value);
 
 	}

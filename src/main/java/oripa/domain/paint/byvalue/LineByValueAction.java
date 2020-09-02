@@ -12,9 +12,9 @@ import oripa.domain.paint.util.ElementSelector;
 
 public class LineByValueAction extends GraphicMouseAction {
 
-	private final ValueDB valueSetting;
+	private final ValueSetting valueSetting;
 
-	public LineByValueAction(final ValueDB valueSetting) {
+	public LineByValueAction(final ValueSetting valueSetting) {
 		super();
 		setActionState(new SelectingVertexToDrawLine(valueSetting));
 

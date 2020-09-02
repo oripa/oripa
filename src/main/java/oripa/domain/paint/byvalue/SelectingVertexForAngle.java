@@ -9,9 +9,9 @@ import oripa.domain.paint.core.PickingVertex;
 
 public class SelectingVertexForAngle extends PickingVertex {
 
-	private final ValueDB valueSetting;
+	private final ValueSetting valueSetting;
 
-	public SelectingVertexForAngle(final ValueDB valueSetting) {
+	public SelectingVertexForAngle(final ValueSetting valueSetting) {
 		super();
 		this.valueSetting = valueSetting;
 	}
