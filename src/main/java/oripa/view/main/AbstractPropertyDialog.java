@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import oripa.persistent.doc.Property;
+import oripa.persistent.doc.doc.Property;
 
 public abstract class AbstractPropertyDialog extends JDialog implements
 		ComponentListener {

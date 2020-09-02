@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.GsonBuilder;
 
-import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.doc.Doc;
 import oripa.persistent.foldformat.CreasePatternElementConverter;
 import oripa.persistent.foldformat.CreasePatternFOLDFormat;
 import oripa.persistent.foldformat.PointsMerger;

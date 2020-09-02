@@ -52,7 +52,7 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.persistent.doc.SheetCutOutlinesHolder;
+import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;

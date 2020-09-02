@@ -46,7 +46,7 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.paint.core.LineSetting;
-import oripa.persistent.doc.SheetCutOutlinesHolder;
+import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.resource.Constants;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;

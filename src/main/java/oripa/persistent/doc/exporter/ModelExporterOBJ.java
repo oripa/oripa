@@ -27,8 +27,8 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.Doc;
-import oripa.persistent.doc.EstimationEntityHolder;
+import oripa.persistent.doc.doc.Doc;
+import oripa.persistent.doc.doc.EstimationEntityHolder;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 
 /**

@@ -22,7 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.SheetCutOutlinesHolder;
+import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.ChildFrameManager;
 import oripa.viewsetting.main.MainScreenSetting;

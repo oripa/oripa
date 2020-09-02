@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
-import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.doc.Doc;
 
 /**
  * @author Koji

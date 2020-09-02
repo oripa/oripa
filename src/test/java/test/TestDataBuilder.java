@@ -3,7 +3,7 @@ package test;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.doc.Doc;
 import oripa.persistent.doc.exporter.DocExporter;
 import oripa.persistent.doc.exporter.ExporterXML;
 import oripa.value.OriLine;

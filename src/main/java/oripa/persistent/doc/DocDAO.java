@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
+import oripa.persistent.doc.doc.Doc;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessActionProvider;
 import oripa.persistent.filetool.FileAccessSupportFilter;
@@ -15,6 +16,7 @@ import oripa.persistent.filetool.FileChooser;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileChooserFactory;
 import oripa.persistent.filetool.FileVersionError;
+import oripa.persistent.filetool.WrongDataFormatException;
 
 public class DocDAO {
 

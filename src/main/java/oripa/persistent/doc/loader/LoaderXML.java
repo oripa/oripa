@@ -24,7 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import oripa.DataSet;
-import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.doc.Doc;
 import oripa.persistent.filetool.FileVersionError;
 import oripa.resource.Version;
 

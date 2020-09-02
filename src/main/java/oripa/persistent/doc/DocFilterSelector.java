@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import oripa.persistent.doc.doc.Doc;
 import oripa.persistent.doc.exporter.ExporterCP;
 import oripa.persistent.doc.exporter.ExporterDXFFactory;
 import oripa.persistent.doc.exporter.ExporterFOLD;

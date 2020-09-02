@@ -13,7 +13,7 @@ import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.doc.Doc;
 import oripa.value.OriLine;
 import oripa.view.estimation.FoldedModelScreen;
 

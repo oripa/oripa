@@ -39,7 +39,7 @@ import oripa.ORIPA;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.FileTypeKey;
-import oripa.persistent.doc.SheetCutOutlinesHolder;
+import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 import oripa.persistent.filetool.FileAccessActionProvider;

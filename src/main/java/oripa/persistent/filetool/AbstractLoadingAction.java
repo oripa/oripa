@@ -2,8 +2,6 @@ package oripa.persistent.filetool;
 
 import java.io.IOException;
 
-import oripa.persistent.doc.WrongDataFormatException;
-
 public abstract class AbstractLoadingAction<Data> {
 	private String path;
 

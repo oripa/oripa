@@ -18,6 +18,7 @@
  */
 package oripa.persistent.doc;
 
+import oripa.persistent.doc.doc.Doc;
 import oripa.persistent.filetool.Loader;
 import oripa.persistent.filetool.LoadingActionTemplate;
 

@@ -23,7 +23,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.persistent.doc.Doc;
+import oripa.persistent.doc.doc.Doc;
 import oripa.value.OriLine;
 
 public class ExporterEPS implements DocExporter {

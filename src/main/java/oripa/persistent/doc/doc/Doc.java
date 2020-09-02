@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.persistent.doc;
+package oripa.persistent.doc.doc;
 
 import java.io.File;
 import java.util.ArrayList;
