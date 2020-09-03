@@ -322,7 +322,7 @@ public class CreasePattern implements CreasePatternInterface {
 	}
 
 	@Override
-	public void centerize(final double cx, final double cy) {
+	public void centering(final double cx, final double cy) {
 		var lines = new ArrayList<OriLine>();
 
 		this.stream().forEach(line -> lines.add(line));

@@ -81,7 +81,7 @@ public class CreasePatternFactory {
 
 		creasePattern.addAll(lines);
 
-		creasePattern.centerize(domain.getCenterX(), domain.getCenterY());
+		creasePattern.centering(domain.getCenterX(), domain.getCenterY());
 
 		return creasePattern;
 	}

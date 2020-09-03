@@ -16,31 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.creasepattern;
+package oripa.controller;
 
-import java.util.Collection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import oripa.value.OriLine;
+import oripa.domain.paint.PaintContextInterface;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public interface CreasePatternInterface
-		extends Collection<OriLine>, NearVerticesGettable {
-
-	public abstract void changePaperSize(final double paperSize);
-
-	public abstract double getPaperSize();
+public class SelectAllLineActionListener implements ActionListener {
+	private final PaintContextInterface context;
 
 	/**
-	 * move all creases as the center coordinate becomes (0, 0).
-	 *
-	 * @param cx
-	 *            x coordinate of current center
-	 * @param cy
-	 *            y coordinate of current center
+	 * Constructor
 	 */
-	public void centering(final double cx, final double cy);
+	public SelectAllLineActionListener(final PaintContextInterface context) {
+		this.context = context;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void actionPerformed(final ActionEvent e) {
+		context.creasePatternUndo().pushUndoInfo();
+		context.getPainter().selectAllOriLines();
+		context.getCreasePattern().stream()
+				.filter(l -> l.selected).forEach(l -> context.pushLine(l));
+	}
 
 }

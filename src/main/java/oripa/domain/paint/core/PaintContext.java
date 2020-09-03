@@ -197,10 +197,8 @@ public class PaintContext implements PaintContextInterface {
 	@Override
 	public void clear(final boolean unselect) {
 
-		if (unselect && pickedLines.isEmpty() == false) {
-			for (OriLine l : pickedLines) {
-				l.selected = false;
-			}
+		if (unselect) {
+			pickedLines.stream().forEach(l -> l.selected = false);
 		}
 
 		pickedLines.clear();

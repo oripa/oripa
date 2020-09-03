@@ -47,6 +47,7 @@ import oripa.ORIPA;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.controller.DeleteSelectedLinesActionListener;
+import oripa.controller.SelectAllLineActionListener;
 import oripa.controller.UnselectAllLinesActionListener;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.MouseActionHolder;
@@ -344,14 +345,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuItemRepeatCopy.addActionListener(e -> showArrayCopyDialog());
 		menuItemCircleCopy.addActionListener(e -> showCircleCopyDialog());
 
-		// a patch to select all lines and switch to select-line mode.
-		// bad design...
-		menuItemSelectAll.addActionListener(event -> {
-			paintContext.creasePatternUndo().pushUndoInfo();
-			paintContext.getPainter().selectAllOriLines();
-			paintContext.getCreasePattern().stream()
-					.filter(l -> l.selected).forEach(l -> paintContext.pushLine(l));
-		});
+		menuItemSelectAll.addActionListener(
+				new SelectAllLineActionListener(paintContext));
 		menuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
 				InputEvent.CTRL_DOWN_MASK));
 
