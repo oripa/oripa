@@ -41,6 +41,7 @@ import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.vecmath.Vector2d;
 
@@ -304,17 +305,17 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+				if (SwingUtilities.isRightMouseButton(e)) {
 					action.onRightClick(
 							paintContext, affineTransform,
-							MouseUtility.isControlKeyPressed(e));
+							MouseUtility.isControlKeyDown(e));
 
 					return null;
 				}
 
 				mouseActionHolder.setMouseAction(action.onLeftClick(
 						paintContext,
-						MouseUtility.isControlKeyPressed(e)));
+						MouseUtility.isControlKeyDown(e)));
 				return null;
 			}
 
@@ -336,7 +337,7 @@ public class PainterScreen extends JPanel
 		}
 
 		action.onPress(paintContext, affineTransform,
-				MouseUtility.isControlKeyPressed(e));
+				MouseUtility.isControlKeyDown(e));
 
 		preMousePoint = e.getPoint();
 	}
@@ -348,7 +349,7 @@ public class PainterScreen extends JPanel
 
 		if (action != null) {
 			action.onRelease(paintContext, affineTransform,
-					MouseUtility.isControlKeyPressed(e));
+					MouseUtility.isControlKeyDown(e));
 		}
 		repaint();
 	}
@@ -363,8 +364,10 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0 && // zoom
-				(e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
+
+		// zoom
+		if (MouseUtility.isLeftButtonDown(e) &&
+				MouseUtility.isControlKeyDown(e)) {
 
 			double moved = e.getX() - preMousePoint.getX() + e.getY()
 					- preMousePoint.getY();
@@ -380,7 +383,9 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		if ((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0) {
+		// move camera
+		if (MouseUtility.isRightButtonDown(e) ||
+				(MouseUtility.isLeftButtonDown(e) && MouseUtility.isShiftKeyDown(e))) {
 			transX += (e.getX() - preMousePoint.getX()) / scale;
 			transY += (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();
@@ -396,7 +401,7 @@ public class PainterScreen extends JPanel
 		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
 				affineTransform, e.getPoint()));
 		action.onDrag(paintContext, affineTransform,
-				MouseUtility.isControlKeyPressed(e));
+				MouseUtility.isControlKeyDown(e));
 		repaint();
 	}
 
@@ -424,7 +429,7 @@ public class PainterScreen extends JPanel
 			@Override
 			protected Void doInBackground() throws Exception {
 				action.onMove(paintContext, affineTransform,
-						MouseUtility.isControlKeyPressed(e));
+						MouseUtility.isControlKeyDown(e));
 				return null;
 			}
 
