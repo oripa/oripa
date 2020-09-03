@@ -53,7 +53,6 @@ public class CreasePatternGraphicDrawer {
 		CreasePatternInterface creasePattern = context.getCreasePattern();
 
 		if (context.isGridVisible()) {
-
 			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize());
 		}
 
@@ -67,44 +66,7 @@ public class CreasePatternGraphicDrawer {
 			drawVertices(g2d, creasePattern, context.getScale(), context.isMVLineVisible(),
 					context.isAuxLineVisible());
 		}
-
 	}
-
-	// /**
-	// * draws given lines. {@code pickedLines} will be skipped because {@link
-	// GraphicMouseActionInterface}
-	// * should draw them.
-	// * @param g2d
-	// * @param lines
-	// * @param pickedLines lines that user picked. null if nothing is selected.
-	// */
-	// public void drawLines(
-	// Graphics2D g2d,
-	// Collection<OriLine> lines, Collection<OriLine> pickedLines) {
-	//
-	// ElementSelector selector = new ElementSelector();
-	// for (OriLine line : lines) {
-	// if (line.typeVal == OriLine.TYPE_NONE &&!PaintConfig.dispAuxLines) {
-	// continue;
-	// }
-	//
-	// if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal ==
-	// OriLine.TYPE_VALLEY)
-	// && !PaintConfig.dispMVLines) {
-	// continue;
-	// }
-	//
-	// g2d.setColor(selector.selectColorByLineType(line.typeVal));
-	// g2d.setStroke(selector.selectStroke(line.typeVal));
-	//
-	//
-	// if(pickedLines == null || pickedLines.contains(line) == false){
-	// g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
-	// }
-	//
-	// }
-	//
-	// }
 
 	public void drawAllLines(
 			final Graphics2D g2d, final Collection<OriLine> lines) {
