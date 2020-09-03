@@ -84,6 +84,7 @@ public class LoaderFOLD implements DocLoader {
 		property.setEditorName(foldFormat.getFileAuthor());
 		property.setTitle(foldFormat.getFrameTitle());
 		property.setMemo(foldFormat.getFrameDescription());
+		property.setDataFilePath(filePath);
 
 		return doc;
 	}

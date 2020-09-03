@@ -71,8 +71,14 @@ public class ExporterFOLD implements DocExporter {
 		foldFormat.setEdgesAssignment(converter.toEdgesAssignment(creasePattern));
 		logger.info("size of edges_assignment: " + foldFormat.getEdgesAssignment().size());
 
-		foldFormat.setFacesVertices(converter.toFacesVertices(creasePattern));
-		logger.info("size of faces_vertices: " + foldFormat.getFacesVertices().size());
+		// Information of faces will be exported only if the crease pattern is
+		// completed.
+		try {
+			foldFormat.setFacesVertices(converter.toFacesVertices(creasePattern));
+			logger.info("size of faces_vertices: " + foldFormat.getFacesVertices().size());
+		} catch (IllegalArgumentException e) {
+			logger.info("Faces are not created.", e);
+		}
 
 		try (var writer = new FileWriter(filePath)) {
 			var gson = new GsonBuilder().setPrettyPrinting().create();

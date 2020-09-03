@@ -92,14 +92,14 @@ public class FaceMaker {
 	 * = (v,w).
 	 */
 	private boolean makeFace(final List<Integer> face, final List<Integer> edge) {
-		logger.info("called with face: " + face);
+		logger.debug("called with face: " + face);
 
 		var u = edge.get(0);
 		var v = edge.get(1);
 		edgePassed[u][v] = true;
 
 		if (face.get(0) == v) {
-			logger.info("succeeded to make a face: " + face);
+			logger.debug("succeeded to make a face: " + face);
 			return true;
 		}
 

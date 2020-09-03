@@ -30,9 +30,9 @@ public class DocDAO {
 
 	public void save(final Doc doc, final String path, final FileTypeKey type)
 			throws IOException, IllegalArgumentException {
-		DocFilterSelector selecter = new DocFilterSelector();
+		DocFilterSelector selector = new DocFilterSelector();
 
-		selecter.getFilter(type).getSavingAction().setPath(path).save(doc);
+		selector.getFilter(type).getSavingAction().setPath(path).save(doc);
 	}
 
 	/**

@@ -283,8 +283,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemSave.addActionListener(e -> {
-			if (!document.getDataFilePath().equals("")) {
-				saveOpxFile(document, document.getDataFilePath());
+			var filePath = document.getDataFilePath();
+			if (FileTypeKey.OPX.extensionsMatch(filePath)) {
+				saveProjectFile(document, filePath, FileTypeKey.OPX);
+			} else if (FileTypeKey.FOLD.extensionsMatch(filePath)) {
+				saveProjectFile(document, filePath, FileTypeKey.FOLD);
 			} else {
 				saveAnyTypeUsingGUI();
 			}
@@ -377,13 +380,18 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void modifySavingActions() {
 
 		// overwrite the action to update GUI after saving.
-		filterSelector.getFilter(FileTypeKey.OPX).setSavingAction(
+		setProjectSavingAction(FileTypeKey.OPX);
+		setProjectSavingAction(FileTypeKey.FOLD);
+	}
+
+	private void setProjectSavingAction(final FileTypeKey fileType) {
+		filterSelector.getFilter(fileType).setSavingAction(
 				new AbstractSavingAction<Doc>() {
 
 					@Override
 					public boolean save(final Doc data) {
 						try {
-							saveOpxFile(data, getPath());
+							saveProjectFile(data, getPath(), fileType);
 						} catch (Exception e) {
 							logger.error("Failed to save file " + getPath(), e);
 							return false;
@@ -391,24 +399,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 						return true;
 					}
 				});
-	}
 
-	private void saveOpxFile(final Doc doc, final String filePath) {
-		final DocDAO dao = new DocDAO();
-
-		try {
-			dao.save(doc, filePath, FileTypeKey.OPX);
-		} catch (IOException | IllegalArgumentException e) {
-			logger.error("Failed to save", e);
-			showErrorDialog("Failed to save.", e);
-		}
-
-		doc.setDataFilePath(filePath);
-
-		paintContext.creasePatternUndo().clearChanged();
-
-		updateMenu(filePath);
-		updateTitleText();
 	}
 
 	private void openFileFromMRUFileMenuItem(final ActionEvent e) {
@@ -497,8 +488,25 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		setTitle(fileName + " - " + ORIPA.TITLE);
 	}
 
+	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType) {
+		final DocDAO dao = new DocDAO();
+		try {
+			dao.save(doc, filePath, fileType);
+		} catch (IOException | IllegalArgumentException e) {
+			logger.error("Failed to save", e);
+			showErrorDialog("Failed to save.", e);
+		}
+
+		doc.setDataFilePath(filePath);
+
+		paintContext.creasePatternUndo().clearChanged();
+
+		updateMenu(filePath);
+		updateTitleText();
+	}
+
 	@SafeVarargs
-	private final String saveFile(final String directory, String fileName,
+	private String saveFile(final String directory, String fileName,
 			final FileAccessSupportFilter<Doc>... filters) {
 
 		if (fileName.isEmpty()) {
@@ -523,7 +531,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 	}
 
-	public void saveFileWithModelCheck(final FileTypeKey type) {
+	private void saveFileWithModelCheck(final FileTypeKey type) {
 
 		try {
 			final DocDAO dao = new DocDAO();
