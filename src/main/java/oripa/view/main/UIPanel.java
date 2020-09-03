@@ -760,7 +760,6 @@ public class UIPanel extends JPanel {
 			logger.debug("gird division num: " + value);
 
 			if (value < 128 && value > 2) {
-				textFieldGrid.setValue(value);
 				paintContext.setGridDivNum(value);
 				screenUpdater.updateScreen();
 			}
