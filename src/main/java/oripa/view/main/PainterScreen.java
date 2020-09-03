@@ -23,8 +23,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -38,9 +36,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.vecmath.Vector2d;
@@ -62,7 +58,7 @@ import oripa.viewsetting.main.ScreenUpdater;
 
 public class PainterScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,
-		ActionListener, ComponentListener {
+		ComponentListener {
 
 	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
 
@@ -85,10 +81,6 @@ public class PainterScreen extends JPanel
 	private Dimension preSize;
 	private final AffineTransform affineTransform = new AffineTransform();
 	private final ArrayList<Vector2d> crossPoints = new ArrayList<>();
-	private final JPopupMenu popup = new JPopupMenu();
-	private final JMenuItem popupItem_DivideFace = new JMenuItem(
-			"Dividing face");
-	private final JMenuItem popupItem_FlipFace = new JMenuItem("Flipping face");
 
 	private final CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
@@ -114,10 +106,6 @@ public class PainterScreen extends JPanel
 
 		setBackground(Color.white);
 
-		popupItem_DivideFace.addActionListener(this);
-		popup.add(popupItem_DivideFace);
-		popupItem_FlipFace.addActionListener(this);
-		popup.add(popupItem_FlipFace);
 		preSize = getSize();
 	}
 
@@ -447,10 +435,6 @@ public class PainterScreen extends JPanel
 		paintContext.setScale(scale);
 		updateAffineTransform();
 		repaint();
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent ae) {
 	}
 
 	@Override
