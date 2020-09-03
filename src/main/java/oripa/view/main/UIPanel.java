@@ -689,6 +689,8 @@ public class UIPanel extends JPanel {
 
 		gridChangeButton.addActionListener(e -> setGridDivNum());
 
+		textFieldGrid.addActionListener(e -> setGridDivNum());
+
 		dispVertexCheckBox.addActionListener(e -> {
 			paintContext.setVertexVisible(dispVertexCheckBox.isSelected());
 			screenUpdater.updateScreen();
