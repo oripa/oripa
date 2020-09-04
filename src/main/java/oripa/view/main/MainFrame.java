@@ -183,13 +183,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		screenUpdater = mainScreen.getScreenUpdater();
 		screenSetting = mainScreen.getMainScreenSetting();
 
-		originHolder = mainScreen.getOriginHolder();
+		originHolder = screenSetting.getOriginHolder();
 
 		uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document,
-				setting, screenSetting, originHolder);
+				setting, screenSetting);
 
 		buttonFactory = new PaintActionButtonFactory(paintContext, setting,
-				uiPanel.getUIPanelSetting(), mainScreen.getOriginHolder());
+				uiPanel.getUIPanelSetting(), originHolder);
 
 		createPaintMenuItems();
 

@@ -3,6 +3,8 @@ package oripa.viewsetting.main;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import oripa.domain.paint.copypaste.OriginHolder;
+
 public class MainScreenSetting {
 
 	private boolean gridVisible = true;
@@ -10,6 +12,8 @@ public class MainScreenSetting {
 
 	private boolean crossLineVisible = false;
 	public static final String CROSS_LINE_VISIBLE = "cross line visible";
+
+	private final OriginHolder originHolder = new OriginHolder();
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -30,4 +34,7 @@ public class MainScreenSetting {
 		support.firePropertyChange(CROSS_LINE_VISIBLE, old, visible);
 	}
 
+	public OriginHolder getOriginHolder() {
+		return originHolder;
+	}
 }

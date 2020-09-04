@@ -205,8 +205,7 @@ public class UIPanel extends JPanel {
 			final EstimationEntityHolder anEstimationHolder,
 			final SheetCutOutlinesHolder aCutOutlinesHolder,
 			final MainFrameSetting mainFrameSetting,
-			final MainScreenSetting mainScreenSetting,
-			final OriginHolder originHolder) {
+			final MainScreenSetting mainScreenSetting) {
 
 		this.screenUpdater = screenUpdater;
 
@@ -217,7 +216,7 @@ public class UIPanel extends JPanel {
 		cutOutlinesHolder = aCutOutlinesHolder;
 
 		this.mainScreenSetting = mainScreenSetting;
-		this.originHolder = originHolder;
+		this.originHolder = mainScreenSetting.getOriginHolder();
 
 		constructButtons(mainFrameSetting);
 

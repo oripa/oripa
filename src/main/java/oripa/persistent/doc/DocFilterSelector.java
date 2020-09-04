@@ -41,7 +41,6 @@ public class DocFilterSelector {
 	 *
 	 * A constructor that puts default filters into this instance.
 	 */
-	@SuppressWarnings("unchecked")
 	public DocFilterSelector() {
 
 		FileTypeKey key = FileTypeKey.OPX;
