@@ -64,10 +64,6 @@ public class PastingOnVertex extends PickingVertex {
 			shiftedLines = shiftLines(
 					context.getPickedLines(), v.x - ox, v.y - oy);
 
-//            for(int i = 0; i < context.getLineCount(); i++){
-//            	ORIPA.doc.addLine(shiftedLines.get(i));
-//            }
-
 			Painter painter = context.getPainter();
 			painter.pasteLines(shiftedLines);
 

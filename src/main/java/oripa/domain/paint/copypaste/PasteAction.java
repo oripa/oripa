@@ -42,7 +42,6 @@ public class PasteAction extends GraphicMouseAction {
 				context.pushLine(line);
 			}
 		}
-
 	}
 
 	/**
@@ -90,12 +89,6 @@ public class PasteAction extends GraphicMouseAction {
 
 		context.setCandidateVertexToPick(closeVertex);
 
-//		if (context.getLineCount() > 0) {
-//			if(closeVertex == null) {
-//				closeVertex = new Vector2d(current.x, current.y);
-//			}
-//
-//		}
 		return closeVertex;
 	}
 
@@ -131,14 +124,7 @@ public class PasteAction extends GraphicMouseAction {
 		}
 		g2d.setColor(Color.MAGENTA);
 
-		// GeometricOperation.shiftLines(context.getLines(), shiftedLines,
-		// current.x - ox, current.y -oy);
-		//
-		// for(OriLine line : shiftedLines){
-		// this.drawLine(g2d, line);
-		// }
-
-		// a little faster
+		// shift and draw the lines to be pasted.
 		for (OriLine l : context.getPickedLines()) {
 
 			g2dLine.x1 = l.p0.x + diffX;
