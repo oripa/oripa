@@ -71,8 +71,7 @@ public class PainterScreen extends JPanel
 	private Image bufferImage;
 	private Graphics2D bufferg;
 	private Point2D preMousePoint; // Screen coordinates
-	private final Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logic
-																				// coordinates
+
 	private double scale;
 	private double transX;
 	private double transY;
@@ -395,15 +394,6 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		// Gets the value of the current logical coordinates of the mouse
-
-		try {
-			affineTransform.inverseTransform(e.getPoint(),
-					currentMousePointLogic);
-		} catch (Exception ex) {
-			return;
-		}
-
 		paintContext.setScale(scale);
 		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
 				affineTransform, e.getPoint()));

@@ -66,9 +66,7 @@ public class MouseUtility {
 		try {
 			affine.inverseTransform(p, logicalPoint);
 		} catch (NoninvertibleTransformException e) {
-			e.printStackTrace();
 		}
-
 		return logicalPoint;
 	}
 
