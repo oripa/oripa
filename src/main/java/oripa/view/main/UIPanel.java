@@ -528,7 +528,7 @@ public class UIPanel extends JPanel {
 		// of paint command
 		lineInputDirectVButton.doClick();
 
-		// of line type on DB
+		// of line type on setting
 		setting.setTypeFrom((TypeForChange) alterLine_combo_from
 				.getSelectedItem());
 		setting.setTypeTo((TypeForChange) alterLine_combo_to
