@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.ScreenUpdaterInterface;
-import oripa.domain.paint.copypaste.OriginHolder;
+import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.resource.StringID;
 import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.uipanel.UIPanelSetting;
@@ -63,7 +63,7 @@ public class ButtonFactoryTest {
 			final boolean hasLabel) {
 		PaintContextFactory contextFactory = new PaintContextFactory();
 		ButtonFactory paintFactory = new PaintActionButtonFactory(contextFactory.createContext(),
-				new MainFrameSetting(), new UIPanelSetting(), new OriginHolder());
+				new MainFrameSetting(), new UIPanelSetting(), new SelectionOriginHolder());
 
 		var keyListener = mock(KeyListener.class);
 		JButton button;

@@ -14,7 +14,7 @@ import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.addvertex.AddVertexAction;
 import oripa.domain.paint.bisector.AngleBisectorAction;
 import oripa.domain.paint.byvalue.LineByValueAction;
-import oripa.domain.paint.copypaste.OriginHolder;
+import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.domain.paint.deleteline.DeleteLineAction;
 import oripa.domain.paint.deletevertex.DeleteVertexAction;
 import oripa.domain.paint.line.TwoPointLineAction;
@@ -42,13 +42,13 @@ public class PaintBoundStateFactory {
 
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
-	private final OriginHolder originHolder;
+	private final SelectionOriginHolder originHolder;
 
 	/**
 	 * Constructor
 	 */
 	public PaintBoundStateFactory(final MainFrameSetting mainFrameSetting,
-			final UIPanelSetting uiPanelSetting, final OriginHolder originHolder) {
+			final UIPanelSetting uiPanelSetting, final SelectionOriginHolder originHolder) {
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
 		this.originHolder = originHolder;

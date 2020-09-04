@@ -4,22 +4,10 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContextInterface;
 
-public class OriginHolder {
+public class SelectionOriginHolder {
 
-//--------------------------------------------------------------
-	private static OriginHolder holder = null;
-
-	public OriginHolder() {
+	public SelectionOriginHolder() {
 	}
-
-//	public static OriginHolder getInstance() {
-//		if (holder == null) {
-//			holder = new OriginHolder();
-//		}
-//
-//		return holder;
-//	}
-//--------------------------------------------------------------
 
 	private Vector2d origin = null;
 

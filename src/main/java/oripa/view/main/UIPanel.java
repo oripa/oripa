@@ -67,7 +67,7 @@ import oripa.domain.paint.byvalue.AngleValueInputListener;
 import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueSetting;
-import oripa.domain.paint.copypaste.OriginHolder;
+import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.doc.EstimationEntityHolder;
 import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
@@ -94,7 +94,7 @@ public class UIPanel extends JPanel {
 	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueSetting valueSetting = setting.getValueSetting();
 	private final MainScreenSetting mainScreenSetting;
-	private final OriginHolder originHolder;
+	private final SelectionOriginHolder originHolder;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 

@@ -14,12 +14,12 @@ import oripa.value.OriLine;
 
 public class PastingOnVertex extends PickingVertex {
 
-	private final OriginHolder originHolder;
+	private final SelectionOriginHolder originHolder;
 
 	/**
 	 * Constructor
 	 */
-	public PastingOnVertex(final OriginHolder originHolder) {
+	public PastingOnVertex(final SelectionOriginHolder originHolder) {
 		this.originHolder = originHolder;
 	}
 

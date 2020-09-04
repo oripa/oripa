@@ -12,7 +12,7 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
-import oripa.domain.paint.copypaste.OriginHolder;
+import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
@@ -27,11 +27,11 @@ public class PaintActionButtonFactory implements ButtonFactory {
 	private final PaintContextInterface context;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
-	private final OriginHolder originHolder;
+	private final SelectionOriginHolder originHolder;
 
 	public PaintActionButtonFactory(final PaintContextInterface aContext,
 			final MainFrameSetting mainFrameSetting, final UIPanelSetting uiPanelSetting,
-			final OriginHolder originHolder) {
+			final SelectionOriginHolder originHolder) {
 		context = aContext;
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;

@@ -13,13 +13,13 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class CopyAndPasteAction extends GraphicMouseAction {
 
-	private final OriginHolder originHolder;
+	private final SelectionOriginHolder originHolder;
 	private final ChangeOriginAction originAction;
 	private final PasteAction pasteAction;
 
 	private GraphicMouseActionInterface action;
 
-	public CopyAndPasteAction(final OriginHolder originHolder) {
+	public CopyAndPasteAction(final SelectionOriginHolder originHolder) {
 		this.originHolder = originHolder;
 
 		originAction = new ChangeOriginAction(originHolder);

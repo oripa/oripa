@@ -3,7 +3,7 @@ package oripa.viewsetting.main;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import oripa.domain.paint.copypaste.OriginHolder;
+import oripa.domain.paint.copypaste.SelectionOriginHolder;
 
 public class MainScreenSetting {
 
@@ -13,7 +13,7 @@ public class MainScreenSetting {
 	private boolean crossLineVisible = false;
 	public static final String CROSS_LINE_VISIBLE = "cross line visible";
 
-	private final OriginHolder originHolder = new OriginHolder();
+	private final SelectionOriginHolder originHolder = new SelectionOriginHolder();
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -34,7 +34,7 @@ public class MainScreenSetting {
 		support.firePropertyChange(CROSS_LINE_VISIBLE, old, visible);
 	}
 
-	public OriginHolder getOriginHolder() {
+	public SelectionOriginHolder getOriginHolder() {
 		return originHolder;
 	}
 }

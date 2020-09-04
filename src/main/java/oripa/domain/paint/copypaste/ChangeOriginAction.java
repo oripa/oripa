@@ -16,12 +16,12 @@ import oripa.value.OriLine;
 
 public class ChangeOriginAction extends GraphicMouseAction {
 
-	private final OriginHolder holder;
+	private final SelectionOriginHolder holder;
 
 	/**
 	 * Constructor
 	 */
-	public ChangeOriginAction(final OriginHolder holder) {
+	public ChangeOriginAction(final SelectionOriginHolder holder) {
 		this.holder = holder;
 	}
 

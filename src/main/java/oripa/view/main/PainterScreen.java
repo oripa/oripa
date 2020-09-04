@@ -49,7 +49,7 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.copypaste.OriginHolder;
+import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
@@ -67,7 +67,7 @@ public class PainterScreen extends JPanel
 	private final ScreenUpdater screenUpdater = new ScreenUpdater();
 	private final PaintContextInterface paintContext;
 	private final SheetCutOutlinesHolder cutOutlinesHolder;
-	private final OriginHolder originHolder = setting.getOriginHolder();
+	private final SelectionOriginHolder originHolder = setting.getOriginHolder();
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
