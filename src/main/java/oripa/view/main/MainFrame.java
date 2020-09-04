@@ -53,7 +53,6 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.DocDAO;
@@ -85,7 +84,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
-	private final SelectionOriginHolder originHolder;
 
 	private final JMenu menuFile = new JMenu(
 			ORIPA.res.getString(StringID.Main.FILE_ID));
@@ -181,7 +179,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		screenUpdater = mainScreen.getScreenUpdater();
 		screenSetting = mainScreen.getMainScreenSetting();
 
-		originHolder = screenSetting.getSelectionOriginHolder();
+		var originHolder = screenSetting.getSelectionOriginHolder();
 
 		var uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document,
 				setting, screenSetting);

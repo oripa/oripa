@@ -67,7 +67,6 @@ import oripa.domain.paint.byvalue.AngleValueInputListener;
 import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueSetting;
-import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.doc.EstimationEntityHolder;
 import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
@@ -94,7 +93,6 @@ public class UIPanel extends JPanel {
 	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueSetting valueSetting = setting.getValueSetting();
 	private final MainScreenSetting mainScreenSetting;
-	private final SelectionOriginHolder originHolder;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
@@ -216,7 +214,6 @@ public class UIPanel extends JPanel {
 		cutOutlinesHolder = aCutOutlinesHolder;
 
 		this.mainScreenSetting = mainScreenSetting;
-		this.originHolder = mainScreenSetting.getSelectionOriginHolder();
 
 		constructButtons(mainFrameSetting);
 
@@ -545,7 +542,7 @@ public class UIPanel extends JPanel {
 	private void constructButtons(final MainFrameSetting mainFrameSetting) {
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
 		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext, mainFrameSetting,
-				setting, originHolder);
+				setting, mainScreenSetting.getSelectionOriginHolder());
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
 				.createButton(
