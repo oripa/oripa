@@ -14,6 +14,7 @@ import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.addvertex.AddVertexAction;
 import oripa.domain.paint.bisector.AngleBisectorAction;
 import oripa.domain.paint.byvalue.LineByValueAction;
+import oripa.domain.paint.copypaste.OriginHolder;
 import oripa.domain.paint.deleteline.DeleteLineAction;
 import oripa.domain.paint.deletevertex.DeleteVertexAction;
 import oripa.domain.paint.line.TwoPointLineAction;
@@ -41,14 +42,16 @@ public class PaintBoundStateFactory {
 
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
+	private final OriginHolder originHolder;
 
 	/**
 	 * Constructor
 	 */
 	public PaintBoundStateFactory(final MainFrameSetting mainFrameSetting,
-			final UIPanelSetting uiPanelSetting) {
+			final UIPanelSetting uiPanelSetting, final OriginHolder originHolder) {
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
+		this.originHolder = originHolder;
 	}
 
 	/**
@@ -134,7 +137,7 @@ public class PaintBoundStateFactory {
 		case StringID.COPY_PASTE_ID:
 			state = stateFactory.create(
 					actionHolder,
-					new CopyAndPasteActionWrapper(false),
+					new CopyAndPasteActionWrapper(false, originHolder),
 					new CopyPasteErrorListener(context),
 					context, screenUpdater, changeHint,
 					new ActionListener[] {
@@ -145,7 +148,7 @@ public class PaintBoundStateFactory {
 		case StringID.CUT_PASTE_ID:
 			state = stateFactory.create(
 					actionHolder,
-					new CopyAndPasteActionWrapper(true),
+					new CopyAndPasteActionWrapper(true, originHolder),
 					new CopyPasteErrorListener(context),
 					context, screenUpdater, changeHint,
 					new ActionListener[] {

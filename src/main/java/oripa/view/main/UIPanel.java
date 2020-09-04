@@ -67,6 +67,7 @@ import oripa.domain.paint.byvalue.AngleValueInputListener;
 import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.copypaste.OriginHolder;
 import oripa.file.ImageResourceLoader;
 import oripa.persistent.doc.doc.EstimationEntityHolder;
 import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
@@ -93,6 +94,7 @@ public class UIPanel extends JPanel {
 	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueSetting valueSetting = setting.getValueSetting();
 	private final MainScreenSetting mainScreenSetting;
+	private final OriginHolder originHolder;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
@@ -203,7 +205,8 @@ public class UIPanel extends JPanel {
 			final EstimationEntityHolder anEstimationHolder,
 			final SheetCutOutlinesHolder aCutOutlinesHolder,
 			final MainFrameSetting mainFrameSetting,
-			final MainScreenSetting mainScreenSetting) {
+			final MainScreenSetting mainScreenSetting,
+			final OriginHolder originHolder) {
 
 		this.screenUpdater = screenUpdater;
 
@@ -214,6 +217,7 @@ public class UIPanel extends JPanel {
 		cutOutlinesHolder = aCutOutlinesHolder;
 
 		this.mainScreenSetting = mainScreenSetting;
+		this.originHolder = originHolder;
 
 		constructButtons(mainFrameSetting);
 
@@ -542,7 +546,7 @@ public class UIPanel extends JPanel {
 	private void constructButtons(final MainFrameSetting mainFrameSetting) {
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
 		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext, mainFrameSetting,
-				setting);
+				setting, originHolder);
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
 				.createButton(

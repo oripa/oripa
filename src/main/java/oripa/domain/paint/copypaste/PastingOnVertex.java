@@ -14,6 +14,15 @@ import oripa.value.OriLine;
 
 public class PastingOnVertex extends PickingVertex {
 
+	private final OriginHolder originHolder;
+
+	/**
+	 * Constructor
+	 */
+	public PastingOnVertex(final OriginHolder originHolder) {
+		this.originHolder = originHolder;
+	}
+
 	@Override
 	protected void initialize() {
 	}
@@ -46,7 +55,7 @@ public class PastingOnVertex extends PickingVertex {
 		if (context.getLineCount() > 0) {
 			context.creasePatternUndo().pushUndoInfo();
 
-			Vector2d origin = OriginHolder.getInstance().getOrigin(context);
+			Vector2d origin = originHolder.getOrigin(context);
 
 			double ox = origin.x;
 			double oy = origin.y;

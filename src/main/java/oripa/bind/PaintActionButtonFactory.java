@@ -12,6 +12,7 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
+import oripa.domain.paint.copypaste.OriginHolder;
 import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
@@ -26,12 +27,15 @@ public class PaintActionButtonFactory implements ButtonFactory {
 	private final PaintContextInterface context;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
+	private final OriginHolder originHolder;
 
 	public PaintActionButtonFactory(final PaintContextInterface aContext,
-			final MainFrameSetting mainFrameSetting, final UIPanelSetting uiPanelSetting) {
+			final MainFrameSetting mainFrameSetting, final UIPanelSetting uiPanelSetting,
+			final OriginHolder originHolder) {
 		context = aContext;
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
+		this.originHolder = originHolder;
 	}
 
 	/*
@@ -49,7 +53,7 @@ public class PaintActionButtonFactory implements ButtonFactory {
 			final KeyListener keyListener) {
 
 		PaintBoundStateFactory stateFactory = new PaintBoundStateFactory(mainFrameSetting,
-				uiPanelSetting);
+				uiPanelSetting, originHolder);
 
 		ApplicationState<EditMode> state = stateFactory.create(
 				parent, actionHolder, context, screenUpater, id);

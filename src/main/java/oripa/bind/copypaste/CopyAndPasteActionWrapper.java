@@ -8,13 +8,14 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.copypaste.CopyAndPasteAction;
+import oripa.domain.paint.copypaste.OriginHolder;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 
 	private final boolean isCut;
 
-	public CopyAndPasteActionWrapper(final boolean isCut) {
-		super();
+	public CopyAndPasteActionWrapper(final boolean isCut, final OriginHolder originHolder) {
+		super(originHolder);
 		this.isCut = isCut;
 		if (isCut) {
 			super.setEditMode(EditMode.CUT);

@@ -16,6 +16,15 @@ import oripa.value.OriLine;
 
 public class ChangeOriginAction extends GraphicMouseAction {
 
+	private final OriginHolder holder;
+
+	/**
+	 * Constructor
+	 */
+	public ChangeOriginAction(final OriginHolder holder) {
+		this.holder = holder;
+	}
+
 	@Override
 	public GraphicMouseActionInterface onLeftClick(final PaintContextInterface context,
 			final boolean keepDoing) {
@@ -58,7 +67,6 @@ public class ChangeOriginAction extends GraphicMouseAction {
 		context.setCandidateVertexToPick(closeVertex);
 
 		if (closeVertex != null) {
-			OriginHolder holder = OriginHolder.getInstance();
 			holder.setOrigin(closeVertex);
 		}
 

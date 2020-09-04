@@ -18,14 +18,15 @@ import oripa.value.OriLine;
 
 public class PasteAction extends GraphicMouseAction {
 
-	private final OriginHolder originHolder = OriginHolder.getInstance();
+	private final OriginHolder originHolder;
 
-	public PasteAction() {
+	public PasteAction(final OriginHolder originHolder) {
+		this.originHolder = originHolder;
+
 		setEditMode(EditMode.INPUT);
 		setNeedSelect(true);
 
-		setActionState(new PastingOnVertex());
-
+		setActionState(new PastingOnVertex(originHolder));
 	}
 
 	@Override
