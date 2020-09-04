@@ -309,7 +309,6 @@ public class PainterScreen extends JPanel
 			@Override
 			protected void done() {
 				repaint();
-				// screenUpdater.updateScreen();
 			}
 		}.execute();
 
@@ -420,8 +419,8 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseWheelMoved(final MouseWheelEvent e) {
-		double scale_ = (100.0 - e.getWheelRotation() * 5) / 100.0;
-		scale *= scale_;
+		double rate = (100.0 - e.getWheelRotation() * 5) / 100.0;
+		scale *= rate;
 		paintContext.setScale(scale);
 		updateAffineTransform();
 		repaint();
@@ -434,7 +433,7 @@ public class PainterScreen extends JPanel
 		}
 		preSize = getSize();
 
-		// Update of the logical coordinates of the center of the screen
+		// Update the logical coordinates of the center of the screen
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
 		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
 
