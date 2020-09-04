@@ -67,7 +67,7 @@ public class PainterScreen extends JPanel
 	private final ScreenUpdater screenUpdater = new ScreenUpdater();
 	private final PaintContextInterface paintContext;
 	private final SheetCutOutlinesHolder cutOutlinesHolder;
-	private final SelectionOriginHolder originHolder = setting.getOriginHolder();
+	private final SelectionOriginHolder originHolder = setting.getSelectionOriginHolder();
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;

@@ -216,7 +216,7 @@ public class UIPanel extends JPanel {
 		cutOutlinesHolder = aCutOutlinesHolder;
 
 		this.mainScreenSetting = mainScreenSetting;
-		this.originHolder = mainScreenSetting.getOriginHolder();
+		this.originHolder = mainScreenSetting.getSelectionOriginHolder();
 
 		constructButtons(mainFrameSetting);
 

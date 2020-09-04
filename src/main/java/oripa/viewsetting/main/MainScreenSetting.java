@@ -34,7 +34,7 @@ public class MainScreenSetting {
 		support.firePropertyChange(CROSS_LINE_VISIBLE, old, visible);
 	}
 
-	public SelectionOriginHolder getOriginHolder() {
+	public SelectionOriginHolder getSelectionOriginHolder() {
 		return originHolder;
 	}
 }
