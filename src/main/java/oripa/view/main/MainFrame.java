@@ -87,7 +87,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final MainScreenSetting screenSetting;
 	private final SelectionOriginHolder originHolder;
 
-	private final PainterScreen mainScreen;
 	private final JMenu menuFile = new JMenu(
 			ORIPA.res.getString(StringID.Main.FILE_ID));
 	private final JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
@@ -178,7 +177,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		addPropertyChangeListenersToSetting();
 
-		mainScreen = new PainterScreen(actionHolder, paintContext, document);
+		var mainScreen = new PainterScreen(actionHolder, paintContext, document);
 		screenUpdater = mainScreen.getScreenUpdater();
 		screenSetting = mainScreen.getMainScreenSetting();
 
@@ -278,7 +277,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void addActionListenersToComponents() {
 		menuItemOpen.addActionListener(e -> {
 			String path = openFile(null);
-			mainScreen.repaint();
+			screenUpdater.updateScreen();
 			updateMenu(path);
 			updateTitleText();
 		});
@@ -325,7 +324,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 					logger.error("Wrong implementation.", ex);
 				}
 			}
-			mainScreen.repaint();
+			screenUpdater.updateScreen();
 		});
 		menuItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
 				InputEvent.CTRL_DOWN_MASK));
@@ -410,7 +409,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		} catch (Exception ex) {
 			showErrorDialog(ORIPA.res.getString("Error_FileLoadFailed"), ex);
 		}
-		mainScreen.repaint();
+		screenUpdater.updateScreen();
 	}
 
 	private void saveAnyTypeUsingGUI() {
