@@ -117,7 +117,7 @@ public class PainterScreen extends JPanel
 		return setting;
 	}
 
-	/**
+	/*
 	 * for verifying algorithm
 	 *
 	 * @param g2d

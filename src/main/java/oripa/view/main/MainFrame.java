@@ -164,7 +164,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private RepeatCopyDialog arrayCopyDialog;
 	private CircleCopyDialog circleCopyDialog;
 	public static JLabel hintLabel = new JLabel();
-	private final UIPanel uiPanel;
 
 	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 
@@ -185,7 +184,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		originHolder = screenSetting.getSelectionOriginHolder();
 
-		uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document,
+		var uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document,
 				setting, screenSetting);
 
 		buttonFactory = new PaintActionButtonFactory(paintContext, setting,

@@ -100,17 +100,6 @@ public class PaintContext implements PaintContextInterface {
 		this.mousePoint = logicalPoint;
 	}
 
-//	/*
-//	 * (non Javadoc)
-//	 *
-//	 * @see oripa.domain.paint.core.PaintContextInterface#set(double, boolean)
-//	 */
-//	@Override
-//	public void setDisplayConfig(final double scale, final boolean dispGrid) {
-//		this.scale = scale;
-//		this.gridVisible = dispGrid;
-//	}
-
 	@Override
 	public void setMVLineVisible(final boolean visible) {
 		mvLineVisible = visible;
