@@ -81,7 +81,8 @@ public class CreasePatternFactory {
 
 		creasePattern.addAll(lines);
 
-		creasePattern.centering(domain.getCenterX(), domain.getCenterY());
+		// FIXME: changing given coordinates is not preferable.
+		creasePattern.move(-domain.getCenterX(), -domain.getCenterY());
 
 		return creasePattern;
 	}

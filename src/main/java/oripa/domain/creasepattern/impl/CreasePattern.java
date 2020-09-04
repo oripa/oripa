@@ -322,16 +322,16 @@ public class CreasePattern implements CreasePatternInterface {
 	}
 
 	@Override
-	public void centering(final double cx, final double cy) {
+	public void move(final double dx, final double dy) {
 		var lines = new ArrayList<OriLine>();
 
 		this.stream().forEach(line -> lines.add(line));
 
 		lines.forEach(line -> {
-			line.p0.x -= cx;
-			line.p0.y -= cy;
-			line.p1.x -= cx;
-			line.p1.y -= cy;
+			line.p0.x += dx;
+			line.p0.y += dy;
+			line.p1.x += dx;
+			line.p1.y += dy;
 		});
 
 		// rebuild vertices info

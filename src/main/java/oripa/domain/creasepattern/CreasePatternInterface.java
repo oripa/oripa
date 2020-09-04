@@ -34,13 +34,13 @@ public interface CreasePatternInterface
 	public abstract double getPaperSize();
 
 	/**
-	 * move all creases as the center coordinate becomes (0, 0).
+	 * move all creases as the coordinate (x, y) becomes (x + dx, y + dx).
 	 *
-	 * @param cx
-	 *            x coordinate of current center
-	 * @param cy
-	 *            y coordinate of current center
+	 * @param dx
+	 *            amount of movement on x coordinate
+	 * @param dy
+	 *            amount of movement on y coordinate
 	 */
-	public void centering(final double cx, final double cy);
+	public void move(final double dx, final double dy);
 
 }
