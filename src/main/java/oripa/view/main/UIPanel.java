@@ -53,6 +53,7 @@ import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
+import oripa.bind.state.PaintBoundStateFactory;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePatternInterface;
@@ -541,10 +542,13 @@ public class UIPanel extends JPanel {
 	private void constructButtons(final StateManager stateManager,
 			final MouseActionHolder actionHolder,
 			final MainFrameSetting mainFrameSetting) {
+
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
-		ButtonFactory buttonFactory = new PaintActionButtonFactory(stateManager, paintContext,
-				mainFrameSetting,
-				setting, mainScreenSetting.getSelectionOriginHolder());
+
+		var stateFactory = new PaintBoundStateFactory(stateManager, mainFrameSetting, setting,
+				mainScreenSetting.getSelectionOriginHolder());
+
+		ButtonFactory buttonFactory = new PaintActionButtonFactory(stateFactory, paintContext);
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
 				.createButton(

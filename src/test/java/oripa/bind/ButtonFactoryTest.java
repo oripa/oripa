@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.awt.Component;
 import java.awt.event.KeyListener;
@@ -13,14 +14,12 @@ import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.appstate.StateManager;
+import oripa.bind.state.PaintBoundState;
+import oripa.bind.state.PaintBoundStateFactory;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.ScreenUpdaterInterface;
-import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.resource.StringID;
-import oripa.viewsetting.main.MainFrameSetting;
-import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 public class ButtonFactoryTest {
 	@Test
@@ -63,13 +62,14 @@ public class ButtonFactoryTest {
 			final ScreenUpdaterInterface screenUpdater,
 			final boolean hasLabel) {
 		PaintContextFactory contextFactory = new PaintContextFactory();
+		var stateFactory = mock(PaintBoundStateFactory.class);
+		var context = contextFactory.createContext();
 		ButtonFactory paintFactory = new PaintActionButtonFactory(
-				new StateManager(),
-				contextFactory.createContext(),
-				new MainFrameSetting(),
-				new UIPanelSetting(),
-				new SelectionOriginHolder());
+				stateFactory, context);
 
+		var state = mock(PaintBoundState.class);
+		when(stateFactory.create(parent, actionHolder, context, screenUpdater, id))
+				.thenReturn(state);
 		var keyListener = mock(KeyListener.class);
 		JButton button;
 		button = (JButton) paintFactory.create(parent, JButton.class, actionHolder, screenUpdater,

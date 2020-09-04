@@ -47,6 +47,7 @@ import oripa.ORIPA;
 import oripa.appstate.StateManager;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
+import oripa.bind.state.PaintBoundStateFactory;
 import oripa.controller.DeleteSelectedLinesActionListener;
 import oripa.controller.SelectAllLineActionListener;
 import oripa.controller.UnselectAllLinesActionListener;
@@ -195,8 +196,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 		logger.info("end constructing UI panel.");
 
-		buttonFactory = new PaintActionButtonFactory(stateManager, paintContext, setting,
-				uiPanel.getUIPanelSetting(), originHolder);
+		var stateFactory = new PaintBoundStateFactory(
+				stateManager, setting,
+				uiPanel.getUIPanelSetting(),
+				originHolder);
+		buttonFactory = new PaintActionButtonFactory(stateFactory, paintContext);
 
 		createPaintMenuItems();
 
