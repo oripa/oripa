@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
+import oripa.appstate.StateManager;
 import oripa.appstate.StatePusher;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.domain.paint.EditMode;
@@ -22,6 +23,7 @@ import oripa.viewsetting.ChangeViewSetting;
  *
  */
 public class PaintBoundState extends ApplicationState<EditMode> {
+	private final StateManager stateManager;
 	private Component parent;
 	private ErrorListener errorListener;
 	private final MouseActionHolder actionHolder;
@@ -37,6 +39,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 *            additional actions.
 	 */
 	public PaintBoundState(
+			final StateManager stateManager,
 			final MouseActionHolder actionHolder,
 			final GraphicMouseActionInterface mouseAction,
 			final PaintContextInterface context,
@@ -44,6 +47,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final ChangeViewSetting changeHint,
 			final ActionListener[] actions) {
 		super(mouseAction.getEditMode(), actions);
+		this.stateManager = stateManager;
 		this.actionHolder = actionHolder;
 
 		addBasicListeners(mouseAction, context, screenUpdater, changeHint);
@@ -65,6 +69,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 */
 	public PaintBoundState(
 			final Component parent,
+			final StateManager stateManager,
 			final ErrorListener el,
 			final MouseActionHolder actionHolder,
 			final GraphicMouseActionInterface mouseAction,
@@ -75,6 +80,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 
 		super(mouseAction.getEditMode(), actions);
 
+		this.stateManager = stateManager;
 		this.actionHolder = actionHolder;
 		addBasicListeners(mouseAction, context, screenUpdater, changeHint);
 
@@ -90,7 +96,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final ChangeViewSetting changeHint) {
 
 		// add a listener to push this state to the history stack.
-		addAction(new StatePusher(this));
+		addAction(new StatePusher(this, stateManager));
 
 		// add a listener to change paint action.
 		addAction(new PaintActionSetter(actionHolder, mouseAction, screenUpdater, context));

@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.Config;
 import oripa.ORIPA;
+import oripa.appstate.StateManager;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.controller.DeleteSelectedLinesActionListener;
@@ -181,10 +182,20 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		var originHolder = screenSetting.getSelectionOriginHolder();
 
-		var uiPanel = new UIPanel(screenUpdater, actionHolder, paintContext, document, document,
-				setting, screenSetting);
+		var stateManager = new StateManager();
 
-		buttonFactory = new PaintActionButtonFactory(paintContext, setting,
+		UIPanel uiPanel = null;
+		logger.info("start constructing UI panel.");
+		try {
+			uiPanel = new UIPanel(
+					stateManager, screenUpdater, actionHolder, paintContext, document,
+					document, setting, screenSetting);
+		} catch (RuntimeException ex) {
+			logger.error("UI panel construction failed", ex);
+		}
+		logger.info("end constructing UI panel.");
+
+		buttonFactory = new PaintActionButtonFactory(stateManager, paintContext, setting,
 				uiPanel.getUIPanelSetting(), originHolder);
 
 		createPaintMenuItems();

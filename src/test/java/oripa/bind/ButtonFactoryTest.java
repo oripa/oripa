@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
 
+import oripa.appstate.StateManager;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.ScreenUpdaterInterface;
@@ -62,8 +63,12 @@ public class ButtonFactoryTest {
 			final ScreenUpdaterInterface screenUpdater,
 			final boolean hasLabel) {
 		PaintContextFactory contextFactory = new PaintContextFactory();
-		ButtonFactory paintFactory = new PaintActionButtonFactory(contextFactory.createContext(),
-				new MainFrameSetting(), new UIPanelSetting(), new SelectionOriginHolder());
+		ButtonFactory paintFactory = new PaintActionButtonFactory(
+				new StateManager(),
+				contextFactory.createContext(),
+				new MainFrameSetting(),
+				new UIPanelSetting(),
+				new SelectionOriginHolder());
 
 		var keyListener = mock(KeyListener.class);
 		JButton button;

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import oripa.appstate.ApplicationState;
+import oripa.appstate.StateManager;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.MouseActionHolder;
@@ -31,8 +32,10 @@ public class LocalPaintBoundStateFactoryTest {
 			var parent = mock(JFrame.class);
 			var basicAction1 = mock(ActionListener.class);
 			var basicAction2 = mock(ActionListener.class);
+			var stateManager = mock(StateManager.class);
 
 			var factory = new LocalPaintBoundStateFactory(parent,
+					stateManager,
 					new ActionListener[] { basicAction1, basicAction2 });
 
 			var actionHolder = mock(MouseActionHolder.class);
@@ -73,10 +76,12 @@ public class LocalPaintBoundStateFactoryTest {
 		@Test
 		void noErrors() {
 			var parent = mock(JFrame.class);
+			var stateManager = mock(StateManager.class);
 			var basicAction1 = mock(ActionListener.class);
 			var basicAction2 = mock(ActionListener.class);
 
 			var factory = new LocalPaintBoundStateFactory(parent,
+					stateManager,
 					new ActionListener[] { basicAction1, basicAction2 });
 
 			var actionHolder = mock(MouseActionHolder.class);

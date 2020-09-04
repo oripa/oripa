@@ -12,10 +12,17 @@ import oripa.domain.paint.copypaste.SelectionOriginHolder;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 
+	private final StateManager stateManager;
 	private final boolean isCut;
 
-	public CopyAndPasteActionWrapper(final boolean isCut, final SelectionOriginHolder originHolder) {
+	public CopyAndPasteActionWrapper(
+			final StateManager stateManager,
+			final boolean isCut, final SelectionOriginHolder originHolder) {
+
 		super(originHolder);
+
+		this.stateManager = stateManager;
+
 		this.isCut = isCut;
 		if (isCut) {
 			super.setEditMode(EditMode.CUT);
@@ -35,7 +42,6 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	public void onRightClick(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
 
-		StateManager stateManager = StateManager.getInstance();
 		ApplicationState<EditMode> prev = stateManager.pop();
 
 		if (prev == null) {

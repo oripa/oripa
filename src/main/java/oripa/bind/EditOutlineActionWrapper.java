@@ -12,9 +12,12 @@ import oripa.domain.paint.outline.EditOutlineAction;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
 
+	private final StateManager stateManager;
 	private final MouseActionHolder actionHolder;
 
-	public EditOutlineActionWrapper(final MouseActionHolder actionHolder) {
+	public EditOutlineActionWrapper(final StateManager stateManager,
+			final MouseActionHolder actionHolder) {
+		this.stateManager = stateManager;
 		this.actionHolder = actionHolder;
 	}
 
@@ -42,7 +45,6 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	}
 
 	private void popPreviousState() {
-		StateManager stateManager = StateManager.getInstance();
 		ApplicationState<EditMode> prev = stateManager.pop();
 
 		prev.performActions(null);

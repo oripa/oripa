@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import javax.swing.AbstractButton;
 
 import oripa.appstate.ApplicationState;
+import oripa.appstate.StateManager;
 import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.domain.paint.EditMode;
@@ -24,14 +25,19 @@ import oripa.viewsetting.main.uipanel.UIPanelSetting;
  */
 public class PaintActionButtonFactory implements ButtonFactory {
 
+	private final StateManager stateManager;
 	private final PaintContextInterface context;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
 	private final SelectionOriginHolder originHolder;
 
-	public PaintActionButtonFactory(final PaintContextInterface aContext,
-			final MainFrameSetting mainFrameSetting, final UIPanelSetting uiPanelSetting,
+	public PaintActionButtonFactory(
+			final StateManager stateManager,
+			final PaintContextInterface aContext,
+			final MainFrameSetting mainFrameSetting,
+			final UIPanelSetting uiPanelSetting,
 			final SelectionOriginHolder originHolder) {
+		this.stateManager = stateManager;
 		context = aContext;
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
@@ -52,8 +58,11 @@ public class PaintActionButtonFactory implements ButtonFactory {
 			final String id,
 			final KeyListener keyListener) {
 
-		PaintBoundStateFactory stateFactory = new PaintBoundStateFactory(mainFrameSetting,
-				uiPanelSetting, originHolder);
+		PaintBoundStateFactory stateFactory = new PaintBoundStateFactory(
+				stateManager,
+				mainFrameSetting,
+				uiPanelSetting,
+				originHolder);
 
 		ApplicationState<EditMode> state = stateFactory.create(
 				parent, actionHolder, context, screenUpater, id);

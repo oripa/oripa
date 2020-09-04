@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
+import oripa.appstate.StateManager;
 import oripa.bind.EditOutlineActionWrapper;
 import oripa.bind.copypaste.CopyAndPasteActionWrapper;
 import oripa.bind.copypaste.CopyPasteErrorListener;
@@ -40,6 +41,7 @@ import oripa.viewsetting.main.uipanel.UIPanelSetting;
 // We should implement button factories for each command.
 public class PaintBoundStateFactory {
 
+	private final StateManager stateManager;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
 	private final SelectionOriginHolder originHolder;
@@ -47,8 +49,12 @@ public class PaintBoundStateFactory {
 	/**
 	 * Constructor
 	 */
-	public PaintBoundStateFactory(final MainFrameSetting mainFrameSetting,
-			final UIPanelSetting uiPanelSetting, final SelectionOriginHolder originHolder) {
+	public PaintBoundStateFactory(
+			final StateManager stateManager,
+			final MainFrameSetting mainFrameSetting,
+			final UIPanelSetting uiPanelSetting,
+			final SelectionOriginHolder originHolder) {
+		this.stateManager = stateManager;
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
 		this.originHolder = originHolder;
@@ -68,7 +74,8 @@ public class PaintBoundStateFactory {
 			final ScreenUpdaterInterface screenUpdater,
 			final String id) {
 
-		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent, null);
+		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
+				stateManager, null);
 
 		ApplicationState<EditMode> state = null;
 
@@ -118,7 +125,7 @@ public class PaintBoundStateFactory {
 
 		case StringID.EDIT_CONTOUR_ID:
 			state = stateFactory.create(
-					actionHolder, new EditOutlineActionWrapper(actionHolder), context,
+					actionHolder, new EditOutlineActionWrapper(stateManager, actionHolder), context,
 					screenUpdater, changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
@@ -137,7 +144,7 @@ public class PaintBoundStateFactory {
 		case StringID.COPY_PASTE_ID:
 			state = stateFactory.create(
 					actionHolder,
-					new CopyAndPasteActionWrapper(false, originHolder),
+					new CopyAndPasteActionWrapper(stateManager, false, originHolder),
 					new CopyPasteErrorListener(context),
 					context, screenUpdater, changeHint,
 					new ActionListener[] {
@@ -148,7 +155,7 @@ public class PaintBoundStateFactory {
 		case StringID.CUT_PASTE_ID:
 			state = stateFactory.create(
 					actionHolder,
-					new CopyAndPasteActionWrapper(true, originHolder),
+					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
 					new CopyPasteErrorListener(context),
 					context, screenUpdater, changeHint,
 					new ActionListener[] {
@@ -176,6 +183,7 @@ public class PaintBoundStateFactory {
 		var changeHint = new ChangeHint(mainFrameSetting, id);
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
+				stateManager,
 				new ActionListener[] {
 						e -> (new ChangeOnPaintInputButtonSelected(uiPanelSetting))
 								.changeViewSetting() });
@@ -228,7 +236,7 @@ public class PaintBoundStateFactory {
 
 		case StringID.BY_VALUE_ID:
 			LocalPaintBoundStateFactory byValueFactory = new LocalPaintBoundStateFactory(
-					parent, new ActionListener[] {
+					parent, stateManager, new ActionListener[] {
 							e -> (new ChangeOnByValueButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 

@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
+import oripa.appstate.StateManager;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
@@ -19,6 +20,7 @@ import oripa.viewsetting.ChangeViewSetting;
  */
 class LocalPaintBoundStateFactory {
 
+	private final StateManager stateManager;
 	private final ActionListener[] basicActions;
 	private Component parent = null;
 
@@ -31,7 +33,9 @@ class LocalPaintBoundStateFactory {
 	 *            Actions for all created states.
 	 */
 	public LocalPaintBoundStateFactory(final Component parent,
+			final StateManager stateManager,
 			final ActionListener[] basicActions) {
+		this.stateManager = stateManager;
 		this.basicActions = basicActions;
 		this.parent = parent;
 	}
@@ -62,7 +66,7 @@ class LocalPaintBoundStateFactory {
 			final ActionListener[] actions) {
 
 		PaintBoundState state = new PaintBoundState(
-				parent, errorListener, actionHolder,
+				parent, stateManager, errorListener, actionHolder,
 				mouseAction, context, screenUpdater, changeHint, basicActions);
 
 		state.addActions(actions);
@@ -94,7 +98,8 @@ class LocalPaintBoundStateFactory {
 			final ActionListener[] actions) {
 
 		ApplicationState<EditMode> state = new PaintBoundState(
-				actionHolder, mouseAction, context, screenUpdater, changeHint, basicActions);
+				stateManager, actionHolder, mouseAction, context, screenUpdater, changeHint,
+				basicActions);
 
 		state.addActions(actions);
 

@@ -11,21 +11,6 @@ import oripa.domain.paint.EditMode;
  */
 public class StateManager implements StateManagerInterface<EditMode> {
 
-	// -----------------------------------------------------------------
-	// singleton implementation
-	private static StateManager instance = null;
-
-	public static StateManager getInstance() {
-		if (instance == null) {
-			instance = new StateManager();
-		}
-
-		return instance;
-	}
-
-	// -----------------------------------------------------------------
-	// Instance implementation
-
 	private ApplicationState<EditMode> current, lastInputCommand, previous;
 
 	@Override
@@ -36,7 +21,7 @@ public class StateManager implements StateManagerInterface<EditMode> {
 	/**
 	 * push {@code s} as a new state to be held. the current state will be
 	 * dropped to previous state.
-	 * 
+	 *
 	 * @param s
 	 *            new state
 	 */
@@ -60,7 +45,7 @@ public class StateManager implements StateManagerInterface<EditMode> {
 
 	/**
 	 * pop previous state. It will be set to current state.
-	 * 
+	 *
 	 * @return previous state. null if empty.
 	 */
 	@Override
@@ -76,7 +61,7 @@ public class StateManager implements StateManagerInterface<EditMode> {
 	/**
 	 * This method accepts INPUT only. the current state will be dropped to
 	 * previous state.
-	 * 
+	 *
 	 * @param group
 	 *            ID.
 	 * @return last state of the group. {@code null} if {@code group} is not
@@ -95,7 +80,7 @@ public class StateManager implements StateManagerInterface<EditMode> {
 	/**
 	 * for the action of "input" radio button. the current state will be dropped
 	 * to previous state.
-	 * 
+	 *
 	 * @return state of the last input command
 	 */
 	public ApplicationState<EditMode> popLastInputCommand() {

@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.Config;
 import oripa.appstate.InputCommandStatePopper;
+import oripa.appstate.StateManager;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.binder.BinderInterface;
@@ -192,12 +193,12 @@ public class UIPanel extends JPanel {
 
 	private final PaintContextInterface paintContext;
 
-	private final MouseActionHolder actionHolder;
-
 	private final EstimationEntityHolder estimationHolder;
 	private final SheetCutOutlinesHolder cutOutlinesHolder;
 
-	public UIPanel(final ViewScreenUpdater screenUpdater,
+	public UIPanel(
+			final StateManager stateManager,
+			final ViewScreenUpdater screenUpdater,
 			final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
 			final EstimationEntityHolder anEstimationHolder,
@@ -207,15 +208,13 @@ public class UIPanel extends JPanel {
 
 		this.screenUpdater = screenUpdater;
 
-		this.actionHolder = actionHolder;
-
 		paintContext = aContext;
 		estimationHolder = anEstimationHolder;
 		cutOutlinesHolder = aCutOutlinesHolder;
 
 		this.mainScreenSetting = mainScreenSetting;
 
-		constructButtons(mainFrameSetting);
+		constructButtons(stateManager, actionHolder, mainFrameSetting);
 
 		// setModeButtonText();
 		editModeInputLineButton.setSelected(true);
@@ -519,7 +518,7 @@ public class UIPanel extends JPanel {
 		lineTypeValleyButton.setMnemonic('V');
 
 		addPropertyChangeListenersToSetting();
-		addActionListenersToComponents();
+		addActionListenersToComponents(stateManager, actionHolder);
 
 		// -------------------------------------------------
 		// Initialize selection
@@ -539,9 +538,12 @@ public class UIPanel extends JPanel {
 
 	}
 
-	private void constructButtons(final MainFrameSetting mainFrameSetting) {
+	private void constructButtons(final StateManager stateManager,
+			final MouseActionHolder actionHolder,
+			final MainFrameSetting mainFrameSetting) {
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
-		ButtonFactory buttonFactory = new PaintActionButtonFactory(paintContext, mainFrameSetting,
+		ButtonFactory buttonFactory = new PaintActionButtonFactory(stateManager, paintContext,
+				mainFrameSetting,
 				setting, mainScreenSetting.getSelectionOriginHolder());
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
@@ -648,7 +650,8 @@ public class UIPanel extends JPanel {
 		mainPanel.add(button, gridBagConstraints);
 	}
 
-	private void addActionListenersToComponents() {
+	private void addActionListenersToComponents(final StateManager stateManager,
+			final MouseActionHolder actionHolder) {
 
 		alterLine_combo_from.addItemListener(new FromLineTypeItemListener(setting));
 		alterLine_combo_to.addItemListener(new ToLineTypeItemListener(setting));
@@ -671,7 +674,7 @@ public class UIPanel extends JPanel {
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.NONE));
 
 		editModeInputLineButton
-				.addActionListener(new InputCommandStatePopper());
+				.addActionListener(new InputCommandStatePopper(stateManager));
 
 		textFieldLength.getDocument().addDocumentListener(
 				new LengthValueInputListener(valueSetting));
