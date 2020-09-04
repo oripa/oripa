@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.awt.Component;
@@ -75,6 +76,8 @@ public class ButtonFactoryTest {
 		button = (JButton) paintFactory.create(parent, JButton.class, actionHolder, screenUpdater,
 				id,
 				keyListener);
+
+		verify(stateFactory).create(parent, actionHolder, context, screenUpdater, id);
 
 		String text = button.getText();
 		System.out.println(id + " text:" + text);
