@@ -680,7 +680,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void windowClosing(final WindowEvent arg0) {
 
 		if (paintContext.creasePatternUndo().changeExists()) {
-			// TODO: confirm saving edited opx
+			// confirm saving edited opx
 			int selected = JOptionPane
 					.showConfirmDialog(
 							this,
