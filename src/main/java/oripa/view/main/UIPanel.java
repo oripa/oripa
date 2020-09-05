@@ -278,78 +278,39 @@ public class UIPanel extends JPanel {
 		mainPanel.setLayout(new GridBagLayout());
 
 		int n = 0;
-		GridBagConstraints gridBagConstraints0 = new GridBagConstraints();
-		gridBagConstraints0.gridx = 1;
-		gridBagConstraints0.gridy = 0;
-		gridBagConstraints0.gridwidth = 4;
-		gridBagConstraints0.anchor = java.awt.GridBagConstraints.WEST;
+		final var gridX = 1;
+		var gridY = 0;
+		final var gridWidth = 4;
+		mainPanel.add(editModeInputLineButton, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
 
-		mainPanel.add(editModeInputLineButton, gridBagConstraints0);
-		n++;
+		mainPanel.add(lineTypePanel, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
 
-		GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-		gridBagConstraints1.gridx = 1;
-		gridBagConstraints1.gridy = 1;
-		gridBagConstraints1.gridwidth = 4;
-		gridBagConstraints1.anchor = java.awt.GridBagConstraints.WEST;
+		mainPanel.add(editModePickLineButton, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
 
-		mainPanel.add(lineTypePanel, gridBagConstraints1);
-		n++;
+		mainPanel.add(editModeDeleteLineButton, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
 
-		GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
-		gridBagConstraints2.gridx = 1;
-		gridBagConstraints2.gridy = 2;
-		gridBagConstraints2.gridwidth = 4;
-		gridBagConstraints2.anchor = java.awt.GridBagConstraints.WEST;
-		mainPanel.add(editModePickLineButton, gridBagConstraints2);
-		n++;
-		GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
-		gridBagConstraints3.gridx = 1;
-		gridBagConstraints3.gridy = 3;
-		gridBagConstraints3.gridwidth = 4;
-		gridBagConstraints3.anchor = java.awt.GridBagConstraints.WEST;
-		mainPanel.add(editModeDeleteLineButton, gridBagConstraints3);
-		n++;
-		GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
-		gridBagConstraints4.gridx = 1;
-		gridBagConstraints4.gridy = 4;
-		gridBagConstraints4.gridwidth = 4;
-		gridBagConstraints4.anchor = java.awt.GridBagConstraints.WEST;
-		mainPanel.add(editModeLineTypeButton, gridBagConstraints4);
-		n++;
-		GridBagConstraints gridBagConstraints5 = new GridBagConstraints();
-		gridBagConstraints5.gridx = 1;
-		gridBagConstraints5.gridy = 5;
-		gridBagConstraints5.gridwidth = 4;
-		gridBagConstraints5.anchor = java.awt.GridBagConstraints.WEST;
-		mainPanel.add(alterLineTypePanel, gridBagConstraints5);
-		n++;
-		GridBagConstraints gridBagConstraints6 = new GridBagConstraints();
-		gridBagConstraints6.gridx = 1;
-		gridBagConstraints6.gridy = 6;
-		gridBagConstraints6.gridwidth = 4;
-		gridBagConstraints6.anchor = java.awt.GridBagConstraints.WEST;
-		mainPanel.add(editModeAddVertex, gridBagConstraints6);
-		n++;
-		GridBagConstraints gridBagConstraints7 = new GridBagConstraints();
-		gridBagConstraints7.gridx = 1;
-		gridBagConstraints7.gridy = 7;
-		gridBagConstraints7.gridwidth = 4;
-		gridBagConstraints7.anchor = java.awt.GridBagConstraints.WEST;
-		mainPanel.add(editModeDeleteVertex, gridBagConstraints7);
-		n++;
-		GridBagConstraints gridBagConstraints8 = new GridBagConstraints();
-		gridBagConstraints8.gridx = 1;
-		gridBagConstraints8.gridy = 8;
-		gridBagConstraints8.gridwidth = 4;
-		gridBagConstraints8.anchor = java.awt.GridBagConstraints.WEST;
+		mainPanel.add(editModeLineTypeButton, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
+
+		mainPanel.add(alterLineTypePanel, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
+
+		mainPanel.add(editModeAddVertex, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
+
+		mainPanel.add(editModeDeleteVertex, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
 
 		JLabel label1 = new JLabel("Command (1...9)");
 		label1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-		mainPanel.add(label1, gridBagConstraints8);
-		n++;
+		mainPanel.add(label1, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
 
-		addPaintActionButtons(4, 9);
+		addPaintActionButtons(gridWidth, gridY++);
 
 		lineInputDirectVButton.setSelected(true);
 
@@ -657,6 +618,17 @@ public class UIPanel extends JPanel {
 		gridBagConstraints.gridy = gridy + paintActionButtonCount / gridWidth;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		mainPanel.add(button, gridBagConstraints);
+	}
+
+	private GridBagConstraints createMainPanelGridBagConstraints(final int gridX, final int gridY,
+			final int gridWidth) {
+		var gridBagConstraints = new GridBagConstraints();
+		gridBagConstraints.gridx = gridX;
+		gridBagConstraints.gridy = gridY;
+		gridBagConstraints.gridwidth = gridWidth;
+		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+
+		return gridBagConstraints;
 	}
 
 	private void addActionListenersToComponents(final StateManager stateManager,
