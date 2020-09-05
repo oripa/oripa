@@ -73,7 +73,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	/**
-	 * calls {@link #recoverImpl(PaintContextInterface)} and then calls
+	 * calls {@link #recoverImpl(PaintContextInterface)}, and if
+	 * {@link #needSelect()} returns false, then calls
 	 * {@code context.getPainter().resetSelectedOriLines()}.
 	 */
 	@Override
