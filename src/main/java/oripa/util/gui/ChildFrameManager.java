@@ -19,8 +19,9 @@
 package oripa.util.gui;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class ChildFrameManager {
 	private static final Logger logger = LoggerFactory.getLogger(ChildFrameManager.class);
 
-	private final HashMap<JComponent, HashSet<JFrame>> relationMap = new HashMap<>();
+	private final HashMap<JComponent, Collection<JFrame>> relationMap = new HashMap<>();
 
 	private static ChildFrameManager manager;
 
@@ -50,10 +51,10 @@ public class ChildFrameManager {
 	private ChildFrameManager() {
 	}
 
-	public HashSet<JFrame> getChildren(final JComponent parent) {
+	public Collection<JFrame> getChildren(final JComponent parent) {
 		var children = relationMap.get(parent);
 		if (children == null) {
-			children = new HashSet<>();
+			children = new ArrayList<>();
 			relationMap.put(parent, children);
 		}
 
