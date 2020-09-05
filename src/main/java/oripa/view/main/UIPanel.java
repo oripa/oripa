@@ -307,8 +307,6 @@ public class UIPanel extends JPanel {
 
 		addPaintActionButtons(gridWidth, gridY++);
 
-		lineInputDirectVButton.setSelected(true);
-
 		setButtonIcons();
 
 		setLayout(new FlowLayout());
