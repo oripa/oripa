@@ -34,7 +34,6 @@ import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.vecmath.Vector2d;
 
 import oripa.Config;
 import oripa.domain.fold.OriFace;
@@ -63,14 +62,12 @@ public class FoldabilityScreen extends JPanel
 	// Affine transformation information
 	private Dimension preSize;
 	private final AffineTransform affineTransform = new AffineTransform();
-	private final ArrayList<Vector2d> crossPoints = new ArrayList<>();
 	private final JPopupMenu popup = new JPopupMenu();
 	private final JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
 	private final JMenuItem popupItem_FlipFace = new JMenuItem("Face Inversion");
 
 	private OrigamiModel origamiModel = null;
 	private Collection<OriLine> creasePattern = null;
-	// private FoldedModelInfo foldedModelInfo = null;
 
 	FoldabilityScreen() {
 
@@ -89,12 +86,9 @@ public class FoldabilityScreen extends JPanel
 
 	public void showModel(
 			final OrigamiModel origamiModel,
-			final Collection<OriLine> creasePattern // , FoldedModelInfo
-													// foldedModelInfo
-	) {
+			final Collection<OriLine> creasePattern) {
 		this.origamiModel = origamiModel;
 		this.creasePattern = creasePattern;
-		// this.foldedModelInfo = foldedModelInfo;
 
 		FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 		violatingVertices = foldabilityChecker.findViolatingVertices(
@@ -106,7 +100,7 @@ public class FoldabilityScreen extends JPanel
 		this.setVisible(true);
 	}
 
-	private void drawFoldablity(final Graphics2D g2d) {
+	private void drawFoldability(final Graphics2D g2d) {
 		if (origamiModel == null) {
 			return;
 		}
@@ -202,36 +196,7 @@ public class FoldabilityScreen extends JPanel
 		drawer.drawAllLines(g2d, creasePattern);
 		drawer.drawCreaseVertices(g2d, creasePattern, scale);
 
-		for (Vector2d v : crossPoints) {
-			g2d.setColor(Color.RED);
-			g2d.fill(new Rectangle2D.Double(v.x - 5.0 / scale, v.y - 5.0 / scale, 10.0 / scale,
-					10.0 / scale));
-		}
-
-		// Line connecting the pair of unsetled faces
-		// if (Config.FOR_STUDY) {
-		// List<OriFace> faces = origamiModel.getFaces();
-		//
-		// int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
-		//
-		// if (overlapRelation != null) {
-		// g2d.setStroke(LineSetting.STROKE_RIDGE);
-		// g2d.setColor(Color.MAGENTA);
-		// int size = faces.size();
-		// for (int i = 0; i < size; i++) {
-		// for (int j = i + 1; j < size; j++) {
-		// if (overlapRelation[i][j] == Doc.UNDEFINED) {
-		// Vector2d v0 = faces.get(i).getCenter();
-		// Vector2d v1 = faces.get(j).getCenter();
-		// g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));
-		//
-		// }
-		// }
-		// }
-		// }
-		// }
-
-		drawFoldablity(g2d);
+		drawFoldability(g2d);
 
 		g.drawImage(bufferImage, 0, 0, this);
 	}

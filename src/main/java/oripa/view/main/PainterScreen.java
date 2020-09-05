@@ -32,14 +32,11 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +76,6 @@ public class PainterScreen extends JPanel
 	// Affine transformation information
 	private Dimension preSize;
 	private final AffineTransform affineTransform = new AffineTransform();
-	private final ArrayList<Vector2d> crossPoints = new ArrayList<>();
 
 	private final CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
@@ -230,13 +226,6 @@ public class PainterScreen extends JPanel
 
 		drawer.draw(bufferG2D, paintContext,
 				mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
-
-		for (Vector2d v : crossPoints) {
-			bufferG2D.setColor(Color.RED);
-			bufferG2D.fill(new Rectangle2D.Double(v.x - 5.0 / scale, v.y - 5.0
-					/ scale,
-					10.0 / scale, 10.0 / scale));
-		}
 
 		if (paintContext.isCrossLineVisible()) {
 			List<OriLine> crossLines = cutOutlinesHolder.getSheetCutOutlines();

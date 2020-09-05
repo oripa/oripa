@@ -10,17 +10,26 @@ import oripa.util.gui.ChildFrameManager;
 import oripa.value.OriLine;
 
 public class FoldabilityCheckFrameFactory {
-	private static FoldabilityCheckFrame frame = null;
+	private final ChildFrameManager childFrameManager;
+
+	/**
+	 * Constructor
+	 */
+	public FoldabilityCheckFrameFactory(final ChildFrameManager childFrameManager) {
+		this.childFrameManager = childFrameManager;
+	}
 
 	public JFrame createFrame(final JComponent parent, final OrigamiModel origamiModel,
 			final Collection<OriLine> creasePattern) {
 
+		FoldabilityCheckFrame frame = (FoldabilityCheckFrame) childFrameManager.find(parent,
+				FoldabilityCheckFrame.class);
 		if (frame == null) {
 			frame = new FoldabilityCheckFrame();
 		}
 
 		frame.setModel(origamiModel, creasePattern);
-		ChildFrameManager.getManager().putChild(parent, frame);
+		childFrameManager.putChild(parent, frame);
 
 		return frame;
 	}

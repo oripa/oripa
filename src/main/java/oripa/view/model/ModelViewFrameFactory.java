@@ -32,12 +32,14 @@ import oripa.viewsetting.main.MainScreenSetting;
  *
  */
 public class ModelViewFrameFactory {
-	private static ModelViewFrame frame = null;
 
 	private final MainScreenSetting mainScreenSetting;
+	private final ChildFrameManager childFrameManager;
 
-	public ModelViewFrameFactory(final MainScreenSetting mainScreenSetting) {
+	public ModelViewFrameFactory(final MainScreenSetting mainScreenSetting,
+			final ChildFrameManager childFrameManager) {
 		this.mainScreenSetting = mainScreenSetting;
+		this.childFrameManager = childFrameManager;
 	}
 
 	public JFrame createFrame(
@@ -45,13 +47,16 @@ public class ModelViewFrameFactory {
 			final OrigamiModel origamiModel,
 			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
 
+		ModelViewFrame frame = (ModelViewFrame) childFrameManager.find(parent,
+				ModelViewFrame.class);
+
 		if (frame == null) {
 			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine, mainScreenSetting);
 		}
 
 		frame.setModel(origamiModel);
 
-		ChildFrameManager.getManager().putChild(parent, frame);
+		childFrameManager.putChild(parent, frame);
 
 		return frame;
 	}

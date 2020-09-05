@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -30,31 +30,28 @@ import oripa.value.OriLine;
 
 public class FoldabilityCheckFrame extends JFrame implements ActionListener {
 
-    FoldabilityScreen screen;
+	FoldabilityScreen screen;
 
-    public FoldabilityCheckFrame() {
-        // Called when the "Check window" button is pressed.
-        setTitle("Check Inputed data");
-        screen = new FoldabilityScreen();
-        setBounds(0, 0, 800, 800);
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(screen, BorderLayout.CENTER);
+	public FoldabilityCheckFrame() {
+		// Called when the "Check window" button is pressed.
+		setTitle("Check Inputed data");
+		screen = new FoldabilityScreen();
+		setBounds(0, 0, 800, 800);
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(screen, BorderLayout.CENTER);
 
-    }
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent arg0) {
-        // TODO Auto-generated method stub
-    }
+	@Override
+	public void actionPerformed(final ActionEvent arg0) {
+		// TODO Auto-generated method stub
+	}
 
-    public void setModel(
-    		OrigamiModel origamiModel, 
-    		Collection<OriLine> creasePattern  //, FoldedModelInfo foldedModelInfo
-    		) {
-    	screen.showModel(
-    			origamiModel, creasePattern //, foldedModelInfo
-    			);
-    	//sthis.setVisible(true);
-    }
+	public void setModel(
+			final OrigamiModel origamiModel,
+			final Collection<OriLine> creasePattern) {
+		screen.showModel(
+				origamiModel, creasePattern);
+	}
 
 }

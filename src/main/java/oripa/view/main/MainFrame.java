@@ -87,6 +87,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
 
+	private final ChildFrameManager childFrameManager = ChildFrameManager.getManager();
+
 	private final JMenu menuFile = new JMenu(
 			ORIPA.res.getString(StringID.Main.FILE_ID));
 	private final JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
@@ -191,6 +193,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			uiPanel = new UIPanel(
 					stateManager, screenUpdater, actionHolder, paintContext, document,
 					document, setting, screenSetting);
+			uiPanel.setChildFrameManager(childFrameManager);
 		} catch (RuntimeException ex) {
 			logger.error("UI panel construction failed", ex);
 		}
@@ -446,8 +449,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		paintContext.setCreasePattern(document.getCreasePattern());
 		paintContext.creasePatternUndo().clear();
 
-		ChildFrameManager manager = ChildFrameManager.getManager();
-		manager.closeAllChildrenRecursively(this);
+		childFrameManager.closeAllChildrenRecursively(this);
 
 		screenSetting.setGridVisible(true);
 
@@ -611,7 +613,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 * @param filePath
 	 */
 	private String openFile(final String filePath) {
-		ChildFrameManager.getManager().closeAllChildrenRecursively(this);
+		childFrameManager.closeAllChildrenRecursively(this);
 
 		screenSetting.setGridVisible(false);
 

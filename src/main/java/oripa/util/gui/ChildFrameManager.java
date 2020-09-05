@@ -20,16 +20,22 @@ package oripa.util.gui;
 
 import java.awt.Component;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Koji
  *
  */
 public class ChildFrameManager {
-	private final HashMap<JComponent, ChildFrameList> relationMap = new HashMap<>();
+	private static final Logger logger = LoggerFactory.getLogger(ChildFrameManager.class);
+
+	private final HashMap<JComponent, HashSet<JFrame>> relationMap = new HashMap<>();
 
 	private static ChildFrameManager manager;
 
@@ -44,10 +50,10 @@ public class ChildFrameManager {
 	private ChildFrameManager() {
 	}
 
-	public ChildFrameList getChildren(final JComponent parent) {
-		ChildFrameList children = relationMap.get(parent);
+	public HashSet<JFrame> getChildren(final JComponent parent) {
+		var children = relationMap.get(parent);
 		if (children == null) {
-			children = new ChildFrameList();
+			children = new HashSet<>();
 			relationMap.put(parent, children);
 		}
 
@@ -55,12 +61,30 @@ public class ChildFrameManager {
 	}
 
 	public void putChild(final JComponent parent, final JFrame child) {
-		getChildren(parent).addChild(child);
+		getChildren(parent).add(child);
+	}
+
+	public JFrame find(final JComponent parent, final Class<? extends JFrame> clazz) {
+		var children = getChildren(parent);
+		logger.info("children of " + parent + ": " + children);
+		for (var child : children) {
+			if (clazz.isInstance(child)) {
+				logger.info("child(class = " + clazz.getName() + ") is found.");
+				return child;
+			}
+		}
+
+		return null;
 	}
 
 	public void closeAll(final JComponent parent) {
-		ChildFrameList children = getChildren(parent);
-		children.clear();
+		var children = getChildren(parent);
+		for (JFrame frame : children) {
+			// TODO make all frames short-life object
+			// then change the following to dispose()
+			frame.setVisible(false);
+		}
+		// children.clear(); // enable this if dispose() is used.
 	}
 
 	/**

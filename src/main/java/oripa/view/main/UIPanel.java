@@ -75,6 +75,7 @@ import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.util.gui.ChildFrameManager;
 import oripa.value.OriLine;
 import oripa.view.estimation.EstimationResultFrameFactory;
 import oripa.view.estimation.FoldabilityCheckFrameFactory;
@@ -95,6 +96,8 @@ public class UIPanel extends JPanel {
 	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueSetting valueSetting = setting.getValueSetting();
 	private final MainScreenSetting mainScreenSetting;
+
+	private ChildFrameManager childFrameManager;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
@@ -538,6 +541,10 @@ public class UIPanel extends JPanel {
 		lineTypeMountainButton.doClick();
 	}
 
+	public void setChildFrameManager(final ChildFrameManager childFrameManager) {
+		this.childFrameManager = childFrameManager;
+	}
+
 	private void constructButtons(final StateManager stateManager,
 			final MouseActionHolder actionHolder,
 			final MainFrameSetting mainFrameSetting) {
@@ -732,7 +739,8 @@ public class UIPanel extends JPanel {
 		origamiModel = modelFactory.createOrigamiModel(
 				creasePattern, creasePattern.getPaperSize());
 
-		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
+		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory(
+				childFrameManager);
 		JFrame checker = checkerFactory.createFrame(
 				UIPanel.this, origamiModel, creasePattern);
 		checker.repaint();
@@ -794,7 +802,8 @@ public class UIPanel extends JPanel {
 			} else if (foldableModelCount > 0) {
 				logger.info("foldable layer layout is found.");
 
-				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
+				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
+						childFrameManager);
 				JFrame frame = resultFrameFactory.createFrame(this,
 						origamiModel, foldedModelInfo);
 				frame.repaint();
@@ -806,7 +815,9 @@ public class UIPanel extends JPanel {
 			estimationHolder.setOrigamiModel(origamiModel);
 		}
 
-		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(mainScreenSetting);
+		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
+				mainScreenSetting,
+				childFrameManager);
 		JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
 				cutOutlinesHolder, () -> screenUpdater.updateScreen());
 
