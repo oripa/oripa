@@ -207,12 +207,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		createPaintMenuItems();
 
-		menuItemCopyAndPaste.setText(resourceHolder.getString(
-				ResourceKey.LABEL, StringID.COPY_PASTE_ID));
-		menuItemCutAndPaste.setText(resourceHolder.getString(ResourceKey.LABEL,
-				StringID.CUT_PASTE_ID));
-		// menuItemChangeOutline.setText(ORIPA.res.getString(StringID.Menu.CONTOUR_ID));
-
 		addWindowListener(this);
 
 		getContentPane().setLayout(new BorderLayout());
