@@ -220,15 +220,9 @@ public class UIPanel extends JPanel {
 
 		constructButtons(stateManager, actionHolder, mainFrameSetting);
 
-		// setModeButtonText();
 		editModeInputLineButton.setSelected(true);
 
 		setPreferredSize(new Dimension(210, 400));
-
-		// alterLine_combo_from.setSelectedIndex(0);
-		// alterLine_combo_to.setSelectedIndex(0);
-		// alterLine_combo_from.actionPerformed(null);
-		// alterLine_combo_to.actionPerformed(null);
 
 		// Edit mode
 		editModeGroup = new ButtonGroup();
@@ -281,6 +275,7 @@ public class UIPanel extends JPanel {
 		final var gridX = 1;
 		var gridY = 0;
 		final var gridWidth = 4;
+
 		mainPanel.add(editModeInputLineButton, createMainPanelGridBagConstraints(
 				gridX, gridY++, gridWidth));
 
@@ -314,52 +309,7 @@ public class UIPanel extends JPanel {
 
 		lineInputDirectVButton.setSelected(true);
 
-		// lineInputDirectVButton.setIcon(new
-		// ImageIcon(getClass().getResource("/icon/segment.gif")));
-
-		ImageResourceLoader imgLoader = new ImageResourceLoader();
-		lineInputDirectVButton
-				.setIcon(imgLoader.loadAsIcon("icon/segment.gif"));
-		lineInputDirectVButton.setSelectedIcon(imgLoader
-				.loadAsIcon("icon/segment_p.gif"));
-
-		lineInputOnVButton.setIcon(imgLoader.loadAsIcon("icon/line.gif"));
-		lineInputOnVButton.setSelectedIcon(imgLoader
-				.loadAsIcon("icon/line_p.gif"));
-
-		lineInputPBisectorButton.setIcon(imgLoader
-				.loadAsIcon("icon/pbisector.gif"));
-		lineInputPBisectorButton.setSelectedIcon(imgLoader
-				.loadAsIcon("icon/pbisector_p.gif"));
-
-		lineInputAngleBisectorButton.setIcon(imgLoader
-				.loadAsIcon("icon/bisector.gif"));
-		lineInputAngleBisectorButton.setSelectedIcon(imgLoader
-				.loadAsIcon("icon/bisector_p.gif"));
-
-		lineInputTriangleSplitButton.setIcon(imgLoader
-				.loadAsIcon("icon/incenter.gif"));
-		lineInputTriangleSplitButton.setSelectedIcon(imgLoader
-				.loadAsIcon("icon/incenter_p.gif"));
-
-		lineInputVerticalLineButton.setIcon(imgLoader
-				.loadAsIcon("icon/vertical.gif"));
-		lineInputVerticalLineButton.setSelectedIcon(imgLoader
-				.loadAsIcon("icon/vertical_p.gif"));
-
-		lineInputSymmetricButton.setIcon(imgLoader
-				.loadAsIcon("icon/symmetry.gif"));
-		lineInputSymmetricButton.setSelectedIcon(imgLoader
-				.loadAsIcon("icon/symmetry_p.gif"));
-
-		lineInputMirrorButton.setIcon(imgLoader.loadAsIcon("icon/mirror.gif"));
-		lineInputMirrorButton.setSelectedIcon(imgLoader
-				.loadAsIcon("icon/mirror_p.gif"));
-
-		lineInputByValueButton.setIcon(imgLoader
-				.loadAsIcon("icon/by_value.gif"));
-		lineInputByValueButton.setSelectedIcon(imgLoader
-				.loadAsIcon("icon/by_value_p.gif"));
+		setButtonIcons();
 
 		setLayout(new FlowLayout());
 		add(mainPanel);
@@ -629,6 +579,33 @@ public class UIPanel extends JPanel {
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 
 		return gridBagConstraints;
+	}
+
+	private void setButtonIcons() {
+		setButtonIcon(lineInputDirectVButton, "icon/segment.gif", "icon/segment_p.gif");
+
+		setButtonIcon(lineInputOnVButton, "icon/line.gif", "icon/line_p.gif");
+
+		setButtonIcon(lineInputPBisectorButton, "icon/pbisector.gif", "icon/pbisector_p.gif");
+
+		setButtonIcon(lineInputAngleBisectorButton, "icon/bisector.gif", "icon/bisector_p.gif");
+
+		setButtonIcon(lineInputTriangleSplitButton, "icon/incenter.gif", "icon/incenter_p.gif");
+
+		setButtonIcon(lineInputVerticalLineButton, "icon/vertical.gif", "icon/vertical_p.gif");
+
+		setButtonIcon(lineInputSymmetricButton, "icon/symmetry.gif", "icon/symmetry_p.gif");
+
+		setButtonIcon(lineInputMirrorButton, "icon/mirror.gif", "icon/mirror_p.gif");
+
+		setButtonIcon(lineInputByValueButton, "icon/by_value.gif", "icon/by_value_p.gif");
+	}
+
+	private void setButtonIcon(final AbstractButton button, final String iconPath,
+			final String selectedIconPath) {
+		ImageResourceLoader imgLoader = new ImageResourceLoader();
+		button.setIcon(imgLoader.loadAsIcon(iconPath));
+		button.setSelectedIcon(imgLoader.loadAsIcon(selectedIconPath));
 	}
 
 	private void addActionListenersToComponents(final StateManager stateManager,
