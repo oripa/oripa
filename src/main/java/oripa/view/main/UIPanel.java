@@ -23,6 +23,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -300,7 +301,7 @@ public class UIPanel extends JPanel {
 		mainPanel.add(editModeDeleteVertex, createMainPanelGridBagConstraints(
 				gridX, gridY++, gridWidth));
 
-		JLabel label1 = new JLabel("Command (1...9)");
+		JLabel label1 = new JLabel("Command (Alt + 1...9)");
 		label1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 		mainPanel.add(label1, createMainPanelGridBagConstraints(
 				gridX, gridY++, gridWidth));
@@ -411,24 +412,24 @@ public class UIPanel extends JPanel {
 
 		// Shortcut
 		// How to enter the line
-		lineInputDirectVButton.setMnemonic('1');
-		lineInputOnVButton.setMnemonic('2');
-		lineInputPBisectorButton.setMnemonic('3');
-		lineInputAngleBisectorButton.setMnemonic('4');
-		lineInputTriangleSplitButton.setMnemonic('5');
-		lineInputVerticalLineButton.setMnemonic('6');
-		lineInputSymmetricButton.setMnemonic('7');
-		lineInputMirrorButton.setMnemonic('8');
-		lineInputByValueButton.setMnemonic('9');
+		lineInputDirectVButton.setMnemonic(KeyEvent.VK_1);
+		lineInputOnVButton.setMnemonic(KeyEvent.VK_2);
+		lineInputPBisectorButton.setMnemonic(KeyEvent.VK_3);
+		lineInputAngleBisectorButton.setMnemonic(KeyEvent.VK_4);
+		lineInputTriangleSplitButton.setMnemonic(KeyEvent.VK_5);
+		lineInputVerticalLineButton.setMnemonic(KeyEvent.VK_6);
+		lineInputSymmetricButton.setMnemonic(KeyEvent.VK_7);
+		lineInputMirrorButton.setMnemonic(KeyEvent.VK_8);
+		lineInputByValueButton.setMnemonic(KeyEvent.VK_9);
 
-		editModeInputLineButton.setMnemonic('I');
-		editModePickLineButton.setMnemonic('S');
-		editModeDeleteLineButton.setMnemonic('D');
-		editModeLineTypeButton.setMnemonic('T');
-		editModeDeleteVertex.setMnemonic('L');
-		lineTypeAuxButton.setMnemonic('A');
-		lineTypeMountainButton.setMnemonic('M');
-		lineTypeValleyButton.setMnemonic('V');
+		editModeInputLineButton.setMnemonic(KeyEvent.VK_I);
+		editModePickLineButton.setMnemonic(KeyEvent.VK_S);
+		editModeDeleteLineButton.setMnemonic(KeyEvent.VK_D);
+		editModeLineTypeButton.setMnemonic(KeyEvent.VK_T);
+		editModeDeleteVertex.setMnemonic(KeyEvent.VK_L);
+		lineTypeAuxButton.setMnemonic(KeyEvent.VK_A);
+		lineTypeMountainButton.setMnemonic(KeyEvent.VK_M);
+		lineTypeValleyButton.setMnemonic(KeyEvent.VK_V);
 
 		addPropertyChangeListenersToSetting();
 		addActionListenersToComponents(stateManager, actionHolder);
