@@ -87,7 +87,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
 
-	private final ChildFrameManager childFrameManager = ChildFrameManager.getManager();
+	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
 	private final JMenu menuFile = new JMenu(
 			ORIPA.res.getString(StringID.Main.FILE_ID));

@@ -38,17 +38,7 @@ public class ChildFrameManager {
 
 	private final HashMap<JComponent, Collection<JFrame>> relationMap = new HashMap<>();
 
-	private static ChildFrameManager manager;
-
-	public static ChildFrameManager getManager() {
-		if (manager == null) {
-			manager = new ChildFrameManager();
-		}
-
-		return manager;
-	}
-
-	private ChildFrameManager() {
+	public ChildFrameManager() {
 	}
 
 	public Collection<JFrame> getChildren(final JComponent parent) {
