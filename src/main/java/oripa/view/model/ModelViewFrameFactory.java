@@ -50,7 +50,6 @@ public class ModelViewFrameFactory {
 		}
 
 		frame.setModel(origamiModel);
-		frame.setVisible(false);
 
 		ChildFrameManager.getManager().putChild(parent, frame);
 

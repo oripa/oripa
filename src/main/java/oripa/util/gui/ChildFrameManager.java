@@ -69,7 +69,7 @@ public class ChildFrameManager {
 	 *
 	 * @param frame
 	 */
-	public void closeAllRecursively(final JFrame frame) {
+	public void closeAllChildrenRecursively(final JFrame frame) {
 		for (Component component : frame.getComponents()) {
 			if (!(component instanceof JComponent)) {
 				continue;
@@ -85,8 +85,8 @@ public class ChildFrameManager {
 	 *
 	 * @param parent
 	 */
-	public void closeAllRecursively(final JComponent parent) {
-		getChildren(parent).closeAll();
+	private void closeAllRecursively(final JComponent parent) {
+		closeAll(parent);
 
 		for (JComponent key : relationMap.keySet()) {
 			if (parent.isAncestorOf(key)) {

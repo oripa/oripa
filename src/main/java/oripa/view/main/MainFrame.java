@@ -444,12 +444,14 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void clear() {
 		document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
 		paintContext.setCreasePattern(document.getCreasePattern());
+		paintContext.creasePatternUndo().clear();
 
 		ChildFrameManager manager = ChildFrameManager.getManager();
-		manager.closeAllRecursively(this);
+		manager.closeAllChildrenRecursively(this);
 
 		screenSetting.setGridVisible(true);
 
+		screenUpdater.updateScreen();
 		updateTitleText();
 	}
 
@@ -609,7 +611,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 * @param filePath
 	 */
 	private String openFile(final String filePath) {
-		ChildFrameManager.getManager().closeAllRecursively(this);
+		ChildFrameManager.getManager().closeAllChildrenRecursively(this);
 
 		screenSetting.setGridVisible(false);
 

@@ -11,18 +11,15 @@ public class EstimationResultFrameFactory {
 	private static EstimationResultFrame frame = null;
 
 	public JFrame createFrame(
-			JComponent parent,
-			OrigamiModel origamiModel, 
-    		FoldedModelInfo foldedModelInfo
-    		) {
+			final JComponent parent,
+			final OrigamiModel origamiModel,
+			final FoldedModelInfo foldedModelInfo) {
 
 		if (frame == null) {
 			frame = new EstimationResultFrame();
 		}
 
-		frame.setModel(origamiModel, foldedModelInfo
-				);
-
+		frame.setModel(origamiModel, foldedModelInfo);
 		ChildFrameManager.getManager().putChild(parent, frame);
 
 		return frame;

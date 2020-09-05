@@ -735,6 +735,7 @@ public class UIPanel extends JPanel {
 		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory();
 		JFrame checker = checkerFactory.createFrame(
 				UIPanel.this, origamiModel, creasePattern);
+		checker.repaint();
 		checker.setVisible(true);
 	}
 
@@ -796,6 +797,7 @@ public class UIPanel extends JPanel {
 				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
 				JFrame frame = resultFrameFactory.createFrame(this,
 						origamiModel, foldedModelInfo);
+				frame.repaint();
 				frame.setVisible(true);
 			}
 		} else {
@@ -808,8 +810,8 @@ public class UIPanel extends JPanel {
 		JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
 				cutOutlinesHolder, () -> screenUpdater.updateScreen());
 
-		modelView.setVisible(true);
 		modelView.repaint();
+		modelView.setVisible(true);
 	}
 
 	private OrigamiModel buildOrigamiModel(final CreasePatternInterface creasePattern) {

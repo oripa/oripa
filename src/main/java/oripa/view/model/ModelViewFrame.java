@@ -87,7 +87,8 @@ public class ModelViewFrame extends JFrame
 
 	private final MainScreenSetting mainScreenSetting;
 
-	public ModelViewFrame(final int width, final int height,
+	public ModelViewFrame(
+			final int width, final int height,
 			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine,
 			final MainScreenSetting mainScreenSetting) {
 
