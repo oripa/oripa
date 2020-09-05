@@ -536,7 +536,6 @@ public class UIPanel extends JPanel {
 
 		doFullEstimationCheckBox.setSelected(true);
 		lineTypeMountainButton.doClick();
-
 	}
 
 	private void constructButtons(final StateManager stateManager,
@@ -617,7 +616,6 @@ public class UIPanel extends JPanel {
 				this, JRadioButton.class, actionHolder, screenUpdater,
 				StringID.PERPENDICULAR_BISECTOR_ID,
 				screenUpdater.getKeyListener());
-
 	}
 
 	private void addPaintActionButtons(final int gridWidth, final int gridy_start) {
@@ -724,7 +722,6 @@ public class UIPanel extends JPanel {
 		buttonCheckWindow.addActionListener(e -> showCheckerWindow(paintContext));
 
 		buildButton.addActionListener(e -> showFoldedModelWindows());
-
 	}
 
 	private void showCheckerWindow(final PaintContextInterface context) {
@@ -739,7 +736,6 @@ public class UIPanel extends JPanel {
 		JFrame checker = checkerFactory.createFrame(
 				UIPanel.this, origamiModel, creasePattern);
 		checker.setVisible(true);
-
 	}
 
 	private void makeGridSizeHalf() {
@@ -794,9 +790,7 @@ public class UIPanel extends JPanel {
 				JOptionPane.showMessageDialog(
 						null, "No answer was found", "ORIPA",
 						JOptionPane.DEFAULT_OPTION);
-			}
-//			else if (foldedModelInfo.getFoldablePatternCount() > 0) {
-			else if (foldableModelCount > 0) {
+			} else if (foldableModelCount > 0) {
 				logger.info("foldable layer layout is found.");
 
 				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory();
@@ -804,7 +798,6 @@ public class UIPanel extends JPanel {
 						origamiModel, foldedModelInfo);
 				frame.setVisible(true);
 			}
-
 		} else {
 			BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
 			foldedModelInfo.setBoundBox(boundBox);
@@ -817,7 +810,6 @@ public class UIPanel extends JPanel {
 
 		modelView.setVisible(true);
 		modelView.repaint();
-
 	}
 
 	private OrigamiModel buildOrigamiModel(final CreasePatternInterface creasePattern) {
@@ -910,7 +902,6 @@ public class UIPanel extends JPanel {
 
 	private void selectEditModeButton(final AbstractButton modeButton) {
 		editModeGroup.setSelected(modeButton.getModel(), true);
-
 	}
 
 	public UIPanelSetting getUIPanelSetting() {
