@@ -30,9 +30,6 @@ public class VerticalLineAction extends GraphicMouseAction {
 		Vector2d result = super.onMove(context, affine, differentAction);
 
 		if (context.getVertexCount() == 1) {
-//			if (closeLine != null) {
-//				closeLine.selected = false;
-//			}
 			closeLine = context.getCandidateLineToPick();
 		}
 		return result;
