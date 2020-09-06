@@ -7,28 +7,6 @@ import oripa.value.OriLine;
 
 public class ElementSelector {
 
-//	public Color selectColorByPickupOrder(final int order, final int count,
-//			final OriLine.Type lineType) {
-//		if (order == count - 1) {
-//			return Color.GREEN;
-//		}
-//
-//		return selectColorByLineType(lineType);
-//	}
-
-//	public Color selectLineColor(final OriLine line) {
-//
-//		Color color;
-//
-//		if (line.selected) {
-//			color = getSelectedItemColor();
-//		} else {
-//			color = selectColorByLineType(line.getType());
-//		}
-//
-//		return color;
-//	}
-
 	public Color selectColorByLineType(final OriLine.Type lineType) {
 		Color color;
 
