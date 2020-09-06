@@ -33,12 +33,7 @@ public class VerticalLineAction extends GraphicMouseAction {
 			if (closeLine != null) {
 				closeLine.selected = false;
 			}
-
 			closeLine = context.getCandidateLineToPick();
-
-			if (closeLine != null) {
-				closeLine.selected = true;
-			}
 		}
 		return result;
 	}
@@ -66,7 +61,6 @@ public class VerticalLineAction extends GraphicMouseAction {
 			drawPickCandidateVertex(g2d, context);
 		} else if (context.getVertexCount() == 1) {
 			drawPickCandidateLine(g2d, context);
-
 		}
 	}
 

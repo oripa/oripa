@@ -12,13 +12,11 @@ public class SelectingLineForVertical extends PickingLine {
 	protected void initialize() {
 		setPreviousClass(SelectingVertexForVertical.class);
 		setNextClass(SelectingVertexForVertical.class);
-
 	}
 
 	@Override
 	protected void undoAction(final PaintContextInterface context) {
 		context.clear(false);
-
 	}
 
 	@Override
