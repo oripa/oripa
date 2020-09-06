@@ -72,6 +72,7 @@ public class PasteAction extends GraphicMouseAction {
 		setCandidateVertexOnMove(context, differentAction);
 		Vector2d closeVertex = context.getCandidateVertexToPick();
 
+		// to get the vertex which disappeared by cutting.
 		Vector2d closeVertexOfLines = NearestItemFinder.pickVertexFromPickedLines(context);
 
 		if (closeVertex == null) {
