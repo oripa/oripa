@@ -3,11 +3,8 @@ package oripa.domain.paint.vertical;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.value.OriLine;
 
 public class VerticalLineAction extends GraphicMouseAction {
 
@@ -19,20 +16,6 @@ public class VerticalLineAction extends GraphicMouseAction {
 	public void destroy(final PaintContextInterface context) {
 		super.destroy(context);
 		setActionState(new SelectingVertexForVertical());
-
-	}
-
-	private OriLine closeLine = null;
-
-	@Override
-	public Vector2d onMove(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
-		Vector2d result = super.onMove(context, affine, differentAction);
-
-		if (context.getVertexCount() == 1) {
-			closeLine = context.getCandidateLineToPick();
-		}
-		return result;
 	}
 
 	@Override
