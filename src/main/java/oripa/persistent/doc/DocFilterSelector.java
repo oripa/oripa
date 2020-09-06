@@ -131,17 +131,6 @@ public class DocFilterSelector {
 		return filters.get(key);
 	}
 
-	// /**
-	// *
-	// * @param key
-	// * A value that describes the file type you want.
-	// * @return A filter for given key.
-	// */
-	// @Deprecated
-	// public FileAccessSupportFilter<Doc> getFilter(String key) {
-	// return filters.get(key);
-	// }
-
 	/**
 	 *
 	 * @param key
