@@ -79,7 +79,7 @@ import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
 import oripa.value.OriLine;
 import oripa.view.estimation.EstimationResultFrameFactory;
-import oripa.view.estimation.FoldabilityCheckFrameFactory;
+import oripa.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.view.model.ModelViewFrameFactory;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewScreenUpdater;

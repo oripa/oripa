@@ -1,4 +1,4 @@
-package oripa.view.estimation;
+package oripa.view.foldability;
 
 import java.util.Collection;
 

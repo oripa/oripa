@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.view.estimation;
+package oripa.view.foldability;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
