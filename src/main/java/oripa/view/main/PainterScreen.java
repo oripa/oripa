@@ -33,7 +33,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -42,14 +41,13 @@ import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.MouseUtility;
-import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainScreenSetting;
 import oripa.viewsetting.main.ScreenUpdater;
@@ -63,7 +61,7 @@ public class PainterScreen extends JPanel
 	private final MainScreenSetting setting = new MainScreenSetting();
 	private final ScreenUpdater screenUpdater = new ScreenUpdater();
 	private final PaintContextInterface paintContext;
-	private final SheetCutOutlinesHolder cutOutlinesHolder;
+	private final CutModelOutlinesHolder cutOutlinesHolder;
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
@@ -85,7 +83,7 @@ public class PainterScreen extends JPanel
 	public PainterScreen(
 			final MouseActionHolder mouseActionHolder,
 			final PaintContextInterface aContext,
-			final SheetCutOutlinesHolder aCutOutlineHolder) {
+			final CutModelOutlinesHolder aCutOutlineHolder) {
 		this.mouseActionHolder = mouseActionHolder;
 		screenUpdater.setMouseActionHolder(mouseActionHolder);
 		paintContext = aContext;
@@ -231,7 +229,7 @@ public class PainterScreen extends JPanel
 				mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
 
 		if (paintContext.isCrossLineVisible()) {
-			List<OriLine> crossLines = cutOutlinesHolder.getSheetCutOutlines();
+			var crossLines = cutOutlinesHolder.getOutlines();
 			drawer.drawAllLines(bufferG2D, crossLines, (float) scale);
 		}
 

@@ -17,19 +17,19 @@ public class CutModelOutlineFactory {
 	/**
 	 * creates outline of cut origami model
 	 *
-	 * @param cutLine
+	 * @param scissorLine
 	 * @param origamiModel
 	 * @return
 	 */
 	public Collection<OriLine> createLines(
-			final OriLine cutLine, final OrigamiModel origamiModel) {
+			final OriLine scissorLine, final OrigamiModel origamiModel) {
 
 		Collection<OriLine> cutLines = new ArrayList<>();
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
-			List<Vector2d> vv = findOutlineEdgeTerminals(cutLine, face);
+			List<Vector2d> vv = findOutlineEdgeTerminals(scissorLine, face);
 
 			if (vv.size() >= 2) {
 				cutLines.add(new OriLine(vv.get(0), vv.get(1), OriLine.Type.CUT_MODEL));

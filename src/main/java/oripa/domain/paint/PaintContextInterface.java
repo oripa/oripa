@@ -54,14 +54,6 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 */
 	public abstract void finishPasting();
 
-//	/**
-//	 * sets values which user inputed
-//	 *
-//	 * @param scale
-//	 * @param dispGrid
-//	 */
-//	public abstract void setDisplayConfig(double scale, boolean dispGrid);
-
 	/**
 	 * provides whether the input instruction finished its job.
 	 *

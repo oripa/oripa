@@ -16,29 +16,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc.doc;
-
-import java.util.List;
-
-import oripa.value.OriLine;
+package oripa.domain.fold;
 
 /**
  * @author Koji
  *
  */
-public interface SheetCutOutlinesHolder {
+public interface EstimationEntityHolder {
 
 	/**
-	 * make lines that composes the outline of a shape obtained by cutting the
-	 * folded model.
-	 * 
-	 * @param scissorLine
+	 * @return origamiModel
 	 */
-	public abstract void updateSheetCutOutlines(OriLine scissorLine);
+	public abstract OrigamiModel getOrigamiModel();
 
 	/**
-	 * @return crossLines
+	 * @param origamiModel
+	 *            origamiModel is set to this instance.
 	 */
-	public abstract List<OriLine> getSheetCutOutlines();
+	public abstract void setOrigamiModel(OrigamiModel origamiModel);
+
+	/**
+	 * @return foldedModelInfo
+	 */
+	public abstract FoldedModelInfo getFoldedModelInfo();
+
+	/**
+	 * @param foldedModelInfo
+	 *            foldedModelInfo is set to this instance.
+	 */
+	public abstract void setFoldedModelInfo(FoldedModelInfo foldedModelInfo);
 
 }

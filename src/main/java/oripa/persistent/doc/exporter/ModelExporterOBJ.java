@@ -23,12 +23,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import oripa.doc.Doc;
+import oripa.domain.fold.EstimationEntityHolder;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.doc.Doc;
-import oripa.persistent.doc.doc.EstimationEntityHolder;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 
 /**

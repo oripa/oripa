@@ -38,11 +38,8 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 	FileChooser(final String path) {
 		super(path);
 
-		// File file = new File(trimmedPath);
 		File file = new File(path);
 		this.setSelectedFile(file);
-
-		// System.out.println(path);
 	}
 
 	/**

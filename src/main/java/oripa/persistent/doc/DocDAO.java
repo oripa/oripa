@@ -5,10 +5,10 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
-import oripa.persistent.doc.doc.Doc;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessActionProvider;
 import oripa.persistent.filetool.FileAccessSupportFilter;
@@ -22,10 +22,9 @@ public class DocDAO {
 
 	public Doc load(final String path)
 			throws FileVersionError, IOException, WrongDataFormatException {
-		DocFilterSelector selecter = new DocFilterSelector();
+		DocFilterSelector selector = new DocFilterSelector();
 
-		return selecter.getLoadableFilterOf(path).getLoadingAction().load();
-
+		return selector.getLoadableFilterOf(path).getLoadingAction().load();
 	}
 
 	public void save(final Doc doc, final String path, final FileTypeKey type)

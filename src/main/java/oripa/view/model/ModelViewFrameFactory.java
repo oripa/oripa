@@ -21,8 +21,8 @@ package oripa.view.model;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.ChildFrameManager;
 import oripa.viewsetting.main.MainScreenSetting;
@@ -45,7 +45,7 @@ public class ModelViewFrameFactory {
 	public JFrame createFrame(
 			final JComponent parent,
 			final OrigamiModel origamiModel,
-			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
+			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
 
 		ModelViewFrame frame = (ModelViewFrame) childFrameManager.find(parent,
 				ModelViewFrame.class);

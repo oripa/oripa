@@ -16,15 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.persistent.doc.doc;
+package oripa.doc;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.cutmodel.CutModelOutlineFactory;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.fold.EstimationEntityHolder;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.paint.CreasePatternHolder;
@@ -37,14 +38,12 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, EstimationEntityHolder {
+public class Doc implements CutModelOutlinesHolder, CreasePatternHolder, EstimationEntityHolder {
 
 	/**
 	 * Crease Pattern
 	 */
 	private CreasePatternInterface creasePattern = null;
-
-	private List<OriLine> sheetCutLines = new ArrayList<OriLine>();
 
 	/**
 	 * Origami Model for Estimation
@@ -55,6 +54,8 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	 * Folded Model Information (Result of Estimation)
 	 */
 	private FoldedModelInfo foldedModelInfo = null;
+
+	private Collection<OriLine> outlines = new ArrayList<OriLine>();
 
 	/**
 	 * Project data
@@ -75,9 +76,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 		setFoldedModelInfo(doc.getFoldedModelInfo());
 		setProperty(doc.getProperty());
 
-		sheetCutLines = doc.getSheetCutOutlines();
-		// setPaperSize(doc.getPaperSize());
-
+		outlines = doc.getOutlines();
 	}
 
 	private void initialize(final double size) {
@@ -110,15 +109,23 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	 * (non Javadoc)
 	 *
 	 * @see
-	 * oripa.persistent.doc.SheetCutOutlinesHolder#updateSheetCutOutlines(oripa
+	 * oripa.domain.cutmodel.SheetCutOutlinesHolder#updateSheetCutOutlines(oripa
 	 * .value.OriLine)
 	 */
 	@Override
-	public void updateSheetCutOutlines(final OriLine scissorLine) {
-		CutModelOutlineFactory factory = new CutModelOutlineFactory();
+	public void setOutlines(final Collection<OriLine> outlines) {
+		this.outlines = outlines;
+	}
 
-		sheetCutLines.clear();
-		sheetCutLines.addAll(factory.createLines(scissorLine, origamiModel));
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.cutmodel.doc.SheetCutOutlinesHolder#getSheetCutOutlines()
+	 */
+	@Override
+	public Collection<OriLine> getOutlines() {
+		return outlines;
 	}
 
 	@Override
@@ -134,7 +141,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.persistent.doc.EstimationEntityHolder#getOrigamiModel()
+	 * @see oripa.domain.fold.EstimationEntityHolder#getOrigamiModel()
 	 */
 	@Override
 	public OrigamiModel getOrigamiModel() {
@@ -145,7 +152,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	 * (non Javadoc)
 	 *
 	 * @see
-	 * oripa.persistent.doc.EstimationEntityHolder#setOrigamiModel(oripa.domain.
+	 * oripa.domain.fold.EstimationEntityHolder#setOrigamiModel(oripa.domain.
 	 * fold.OrigamiModel)
 	 */
 	@Override
@@ -156,7 +163,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.persistent.doc.EstimationEntityHolder#getFoldedModelInfo()
+	 * @see oripa.domain.fold.EstimationEntityHolder#getFoldedModelInfo()
 	 */
 	@Override
 	public FoldedModelInfo getFoldedModelInfo() {
@@ -166,8 +173,7 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see
-	 * oripa.persistent.doc.EstimationEntityHolder#setFoldedModelInfo(oripa.
+	 * @see oripa.domain.fold.EstimationEntityHolder#setFoldedModelInfo(oripa.
 	 * domain.fold.FoldedModelInfo)
 	 */
 	@Override
@@ -190,13 +196,4 @@ public class Doc implements SheetCutOutlinesHolder, CreasePatternHolder, Estimat
 		this.property = property;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.doc.SheetCutOutlinesHolder#getSheetCutOutlines()
-	 */
-	@Override
-	public List<OriLine> getSheetCutOutlines() {
-		return sheetCutLines;
-	}
 }

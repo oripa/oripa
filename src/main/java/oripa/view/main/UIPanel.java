@@ -58,7 +58,9 @@ import oripa.bind.state.PaintBoundStateFactory;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.BoundBox;
+import oripa.domain.fold.EstimationEntityHolder;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.OrigamiModel;
@@ -71,8 +73,6 @@ import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.file.ImageResourceLoader;
-import oripa.persistent.doc.doc.EstimationEntityHolder;
-import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -199,7 +199,7 @@ public class UIPanel extends JPanel {
 	private final PaintContextInterface paintContext;
 
 	private final EstimationEntityHolder estimationHolder;
-	private final SheetCutOutlinesHolder cutOutlinesHolder;
+	private final CutModelOutlinesHolder cutOutlinesHolder;
 
 	public UIPanel(
 			final StateManager stateManager,
@@ -207,7 +207,7 @@ public class UIPanel extends JPanel {
 			final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
 			final EstimationEntityHolder anEstimationHolder,
-			final SheetCutOutlinesHolder aCutOutlinesHolder,
+			final CutModelOutlinesHolder aCutOutlinesHolder,
 			final MainFrameSetting mainFrameSetting,
 			final MainScreenSetting mainScreenSetting) {
 

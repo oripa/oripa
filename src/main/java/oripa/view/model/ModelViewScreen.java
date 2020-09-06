@@ -42,11 +42,12 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
+import oripa.domain.cutmodel.CutModelOutlineFactory;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.paint.util.ElementSelector;
-import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.resource.Constants;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
@@ -76,14 +77,14 @@ public class ModelViewScreen extends JPanel
 	private double crossLinePosition = 0;
 
 	private OrigamiModel origamiModel = null;
-	private final SheetCutOutlinesHolder lineHolder;
+	private final CutModelOutlinesHolder lineHolder;
 	private final CallbackOnUpdate onUpdateCrossLine;
 
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
 	private final MainScreenSetting mainScreenSetting;
 
-	public ModelViewScreen(final SheetCutOutlinesHolder aLineHolder, final CallbackOnUpdate c,
+	public ModelViewScreen(final CutModelOutlinesHolder aLineHolder, final CallbackOnUpdate c,
 			final MainScreenSetting mainScreenSetting) {
 
 		lineHolder = aLineHolder;
@@ -292,7 +293,8 @@ public class ModelViewScreen extends JPanel
 		crossLine.p0.add(moveVec);
 		crossLine.p1.add(moveVec);
 
-		lineHolder.updateSheetCutOutlines(crossLine);
+		var factory = new CutModelOutlineFactory();
+		lineHolder.setOutlines(factory.createLines(crossLine, origamiModel));
 
 		repaint();
 

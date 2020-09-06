@@ -8,12 +8,12 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
+import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.doc.Doc;
 import oripa.value.OriLine;
 import oripa.view.estimation.FoldedModelScreen;
 

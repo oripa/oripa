@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,37 +16,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc.doc;
+package oripa.domain.cutmodel;
 
-import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OrigamiModel;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import oripa.value.OriLine;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public interface EstimationEntityHolder {
+public class DefaultCutModelOutlinesHolder implements CutModelOutlinesHolder {
 
-	/**
-	 * @return origamiModel
-	 */
-	public abstract OrigamiModel getOrigamiModel();
+	private Collection<OriLine> outlines = new ArrayList<OriLine>();
 
-	/**
-	 * @param origamiModel
-	 *            origamiModel is set to this instance.
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.cutmodel.SheetCutOutlinesHolder#setSheetCutOutlines(oripa.
+	 * value.OriLine)
 	 */
-	public abstract void setOrigamiModel(OrigamiModel origamiModel);
+	@Override
+	public void setOutlines(final Collection<OriLine> outlines) {
+		this.outlines = outlines;
+	}
 
-	/**
-	 * @return foldedModelInfo
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.cutmodel.SheetCutOutlinesHolder#getSheetCutOutlines()
 	 */
-	public abstract FoldedModelInfo getFoldedModelInfo();
-
-	/**
-	 * @param foldedModelInfo
-	 *            foldedModelInfo is set to this instance.
-	 */
-	public abstract void setFoldedModelInfo(FoldedModelInfo foldedModelInfo);
+	@Override
+	public Collection<OriLine> getOutlines() {
+		return outlines;
+	}
 
 }

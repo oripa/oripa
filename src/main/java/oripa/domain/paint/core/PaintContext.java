@@ -401,7 +401,7 @@ public class PaintContext implements PaintContextInterface {
 	}
 
 	/**
-	 * @return dispGrid
+	 * @return whether grid is visible or not.
 	 */
 	@Override
 	public boolean isGridVisible() {

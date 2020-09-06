@@ -18,7 +18,7 @@
  */
 package oripa.persistent.doc;
 
-import oripa.persistent.doc.doc.Doc;
+import oripa.doc.Doc;
 import oripa.persistent.filetool.Exporter;
 import oripa.persistent.filetool.SavingActionTemplate;
 

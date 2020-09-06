@@ -16,22 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
+package oripa.domain.cutmodel;
 
-import oripa.doc.Doc;
-import oripa.persistent.filetool.Loader;
-import oripa.persistent.filetool.LoadingActionTemplate;
+import java.util.Collection;
+
+import oripa.value.OriLine;
 
 /**
  * @author Koji
  *
  */
-public class LoadingDocAction extends LoadingActionTemplate<Doc> {
+public interface CutModelOutlinesHolder {
+
 	/**
-	 * Constructor
+	 * make lines that composes the outline of a shape obtained by cutting the
+	 * folded model.
+	 *
+	 * @param scissorLine
 	 */
-	public LoadingDocAction(final Loader<Doc> l) {
-		super(l);
-	}
+	public abstract void setOutlines(Collection<OriLine> outlines);
+
+	/**
+	 * @return crossLines
+	 */
+	public abstract Collection<OriLine> getOutlines();
 
 }

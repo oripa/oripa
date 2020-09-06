@@ -36,10 +36,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.ORIPA;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.FileTypeKey;
-import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 import oripa.persistent.filetool.FileAccessActionProvider;
@@ -89,7 +89,7 @@ public class ModelViewFrame extends JFrame
 
 	public ModelViewFrame(
 			final int width, final int height,
-			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine,
+			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine,
 			final MainScreenSetting mainScreenSetting) {
 
 		this.mainScreenSetting = mainScreenSetting;
@@ -99,7 +99,7 @@ public class ModelViewFrame extends JFrame
 
 	}
 
-	private void initialize(final SheetCutOutlinesHolder lineHolder,
+	private void initialize(final CutModelOutlinesHolder lineHolder,
 			final CallbackOnUpdate onUpdateCrossLine) {
 
 		setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));

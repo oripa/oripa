@@ -30,9 +30,9 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
-import oripa.persistent.doc.doc.Doc;
 
 /**
  * @author Koji

@@ -25,8 +25,8 @@ import java.nio.file.Paths;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.persistent.doc.doc.Doc;
 import oripa.persistent.filetool.WrongDataFormatException;
 import oripa.persistent.foldformat.CreasePatternElementConverter;
 import oripa.persistent.foldformat.CreasePatternFOLDFormat;
