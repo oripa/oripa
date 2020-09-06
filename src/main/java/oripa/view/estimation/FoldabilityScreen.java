@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.AffineTransform;
@@ -191,9 +192,10 @@ public class FoldabilityScreen extends JPanel
 		bufferg.setTransform(affineTransform);
 
 		Graphics2D g2d = bufferg;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawAllLines(g2d, creasePattern);
+		drawer.drawAllLines(g2d, creasePattern, (float) scale);
 		drawer.drawCreaseVertices(g2d, creasePattern, scale);
 
 		drawFoldability(g2d);

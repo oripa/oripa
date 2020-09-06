@@ -45,7 +45,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
-import oripa.domain.paint.core.LineSetting;
+import oripa.domain.paint.util.ElementSelector;
 import oripa.persistent.doc.doc.SheetCutOutlinesHolder;
 import oripa.resource.Constants;
 import oripa.resource.Constants.ModelDisplayMode;
@@ -185,10 +185,11 @@ public class ModelViewScreen extends JPanel
 
 			g2d.setColor(Color.BLACK);
 			for (OriHalfedge he : face.halfedges) {
+				var selector = new ElementSelector();
 				if (he.pair == null) {
-					g2d.setStroke(LineSetting.STROKE_CUT_MODEL);
+					g2d.setStroke(selector.createStroke(OriLine.Type.CUT_MODEL, scale));
 				} else {
-					g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
+					g2d.setStroke(selector.createStroke(OriLine.Type.CUT, scale));
 				}
 				g2d.draw(new Line2D.Double(he.positionForDisplay.x,
 						he.positionForDisplay.y, he.next.positionForDisplay.x,
@@ -197,9 +198,10 @@ public class ModelViewScreen extends JPanel
 		}
 
 		if (crossLineVisible) {
+			var selector = new ElementSelector();
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-			g2d.setStroke(LineSetting.STROKE_CUT_MODEL);
-			g2d.setColor(Color.RED);
+			g2d.setStroke(selector.createCutModelLineStrokeForModelView(scale));
+			g2d.setColor(selector.getCutModelColorForModelView());
 
 			g2d.draw(new Line2D.Double(crossLine.p0.x, crossLine.p0.y, crossLine.p1.x,
 					crossLine.p1.y));
@@ -250,7 +252,8 @@ public class ModelViewScreen extends JPanel
 		boolean hasModel = origamiModel.hasModel();
 
 		if (hasModel) {
-			g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
+			var selector = new ElementSelector();
+			g2d.setStroke(selector.createStroke(OriLine.Type.CUT, scale));
 			if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 			}

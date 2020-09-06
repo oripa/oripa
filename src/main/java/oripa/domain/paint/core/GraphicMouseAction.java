@@ -170,8 +170,9 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	private void drawPickedLines(final Graphics2D g2d, final PaintContextInterface context) {
 		for (OriLine line : context.getPickedLines()) {
-			g2d.setColor(LineSetting.LINE_COLOR_PICKED);
-			g2d.setStroke(LineSetting.STROKE_PICKED);
+			var selector = new ElementSelector();
+			g2d.setColor(selector.getSelectedItemColor());
+			g2d.setStroke(selector.createSelectedLineStroke(context.getScale()));
 
 			drawLine(g2d, line);
 		}
@@ -210,7 +211,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			final PaintContextInterface context) {
 		Vector2d candidate = context.getCandidateVertexToPick();
 		if (candidate != null) {
-			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
+			var selector = new ElementSelector();
+			g2d.setColor(selector.getCandidateItemColor());
 			drawVertex(g2d, context, candidate.x, candidate.y);
 		}
 	}
@@ -231,8 +233,9 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			final PaintContextInterface context) {
 		OriLine candidate = context.getCandidateLineToPick();
 		if (candidate != null) {
-			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
-			g2d.setStroke(LineSetting.STROKE_PICKED);
+			var selector = new ElementSelector();
+			g2d.setColor(selector.getCandidateItemColor());
+			g2d.setStroke(selector.createCandidateLineStroke(context.getScale()));
 
 			drawLine(g2d, candidate);
 		}
@@ -255,7 +258,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 			g2d.setColor(selector.selectColorByLineType(context.getLineTypeOfNewLines()));
 
-			g2d.setStroke(selector.selectStroke(context.getLineTypeOfNewLines()));
+			g2d.setStroke(selector.createStroke(context.getLineTypeOfNewLines(),
+					context.getScale()));
 
 			drawLine(g2d, picked,
 					NearestItemFinder.getCandidateVertex(context, true));

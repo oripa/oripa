@@ -62,7 +62,9 @@ public class LineByValueAction extends GraphicMouseAction {
 
 				ElementSelector selector = new ElementSelector();
 				g2d.setColor(selector.selectColorByLineType(context.getLineTypeOfNewLines()));
-				g2d.setStroke(selector.selectStroke(context.getLineTypeOfNewLines()));
+				g2d.setStroke(
+						selector.createStroke(context.getLineTypeOfNewLines(),
+								context.getScale()));
 
 				Vector2d dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle));
 				dir.scale(length);

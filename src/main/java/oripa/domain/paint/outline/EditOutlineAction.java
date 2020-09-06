@@ -1,6 +1,5 @@
 package oripa.domain.paint.outline;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -12,7 +11,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.domain.paint.core.LineSetting;
+import oripa.domain.paint.util.ElementSelector;
 import oripa.domain.paint.util.PairLoop;
 
 public class EditOutlineAction extends GraphicMouseAction {
@@ -26,11 +25,12 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 		private Graphics2D g2d;
 
-		public void execute(final Graphics2D g2d, final Collection<Vector2d> outlineVertices) {
+		public void execute(final Graphics2D g2d, final Collection<Vector2d> outlineVertices,
+				final double scale) {
 			this.g2d = g2d;
-
-			g2d.setColor(Color.GREEN);
-			g2d.setStroke(LineSetting.STROKE_TMP_OUTLINE);
+			var selector = new ElementSelector();
+			g2d.setColor(selector.getEditingOutlineColor());
+			g2d.setStroke(selector.createEditingOutlineStroke(scale));
 
 			if (outlineVertices.size() > 1) {
 				PairLoop.iterateWithCount(
@@ -51,7 +51,6 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
-		// TODO Auto-generated method stub
 		super.onDraw(g2d, context);
 
 		this.drawPickCandidateVertex(g2d, context);
@@ -63,7 +62,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 		if (outlineVnum != 0) {
 
-			(new DrawTempOutlines()).execute(g2d, outlinevertices);
+			(new DrawTempOutlines()).execute(g2d, outlinevertices, context.getScale());
 
 			Vector2d cv = (context.getCandidateVertexToPick() == null)
 					? new Vector2d(context.getLogicalMousePoint().getX(),

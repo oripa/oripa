@@ -3,52 +3,50 @@ package oripa.domain.paint.util;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
-import oripa.domain.paint.core.LineSetting;
 import oripa.value.OriLine;
 
 public class ElementSelector {
 
-	public Color selectColorByPickupOrder(final int order, final int count,
-			final OriLine.Type lineType) {
-		if (order == count - 1) {
-			return Color.GREEN;
-		}
+//	public Color selectColorByPickupOrder(final int order, final int count,
+//			final OriLine.Type lineType) {
+//		if (order == count - 1) {
+//			return Color.GREEN;
+//		}
+//
+//		return selectColorByLineType(lineType);
+//	}
 
-		return selectColorByLineType(lineType);
-	}
-
-	public Color selectLineColor(final OriLine line) {
-
-		Color color;
-
-		if (line.selected) {
-			color = LineSetting.LINE_COLOR_CANDIDATE;
-		} else {
-			color = selectColorByLineType(line.getType());
-		}
-
-		return color;
-
-	}
+//	public Color selectLineColor(final OriLine line) {
+//
+//		Color color;
+//
+//		if (line.selected) {
+//			color = getSelectedItemColor();
+//		} else {
+//			color = selectColorByLineType(line.getType());
+//		}
+//
+//		return color;
+//	}
 
 	public Color selectColorByLineType(final OriLine.Type lineType) {
 		Color color;
 
 		switch (lineType) {
 		case NONE:
-			color = LineSetting.LINE_COLOR_AUX;
+			color = Color.LIGHT_GRAY;
 			break;
 		case CUT:
 			color = Color.BLACK;
 			break;
 		case RIDGE:
-			color = LineSetting.LINE_COLOR_RIDGE;
+			color = Color.RED;
 			break;
 		case VALLEY:
-			color = LineSetting.LINE_COLOR_VALLEY;
+			color = Color.BLUE;
 			break;
 		case CUT_MODEL:
-			color = LineSetting.LINE_COLOR_CUT_MODEL;
+			color = Color.MAGENTA;
 			break;
 		default:
 			color = Color.BLACK;
@@ -57,29 +55,69 @@ public class ElementSelector {
 		return color;
 	}
 
-	public BasicStroke selectStroke(final OriLine.Type lineType) {
+	public BasicStroke createStroke(final OriLine.Type lineType, final double scale) {
 		BasicStroke stroke;
 		switch (lineType) {
 		case NONE:
-			stroke = LineSetting.STROKE_PAPER_EDGE;
-			break;
 		case CUT:
-			stroke = LineSetting.STROKE_PAPER_EDGE;
-			break;
 		case RIDGE:
-			stroke = LineSetting.STROKE_RIDGE;
-			break;
 		case VALLEY:
-			stroke = LineSetting.STROKE_VALLEY;
+			stroke = new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT,
+					BasicStroke.JOIN_MITER);
 			break;
 		case CUT_MODEL:
-			stroke = LineSetting.STROKE_TMP_OUTLINE;
+			stroke = new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT,
+					BasicStroke.JOIN_MITER);
 			break;
 		default:
-			stroke = LineSetting.STROKE_PAPER_EDGE;
+			stroke = new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT,
+					BasicStroke.JOIN_MITER);
 		}
 
 		return stroke;
 	}
 
+	public Color getSelectedItemColor() {
+		return Color.GREEN;
+	}
+
+	public BasicStroke createSelectedLineStroke(final double scale) {
+		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	public Color getCandidateItemColor() {
+		return Color.GREEN;
+	}
+
+	public BasicStroke createCandidateLineStroke(final double scale) {
+		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	// FIXME: not to be in this class.
+	public Color getCutModelColorForModelView() {
+		return Color.RED;
+	}
+
+	// FIXME: not to be in this class.
+	public BasicStroke createCutModelLineStrokeForModelView(final double scale) {
+		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	public Color getEditingOutlineColor() {
+		return Color.GREEN;
+	}
+
+	public BasicStroke createEditingOutlineStroke(final double scale) {
+		return new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	public Color getAreaSelectionColor() {
+		return Color.BLACK;
+	}
+
+	public BasicStroke createAreaSelectionStroke(final double scale) {
+		final float[] dash = { 3.0f };
+		return new BasicStroke(1.5f / (float) scale,
+				BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
+	}
 }

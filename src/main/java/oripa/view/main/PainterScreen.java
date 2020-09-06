@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -223,13 +224,15 @@ public class PainterScreen extends JPanel
 		super.paintComponent(g);
 
 		Graphics2D bufferG2D = updateBufferImage();
+		bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
 
 		drawer.draw(bufferG2D, paintContext,
 				mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
 
 		if (paintContext.isCrossLineVisible()) {
 			List<OriLine> crossLines = cutOutlinesHolder.getSheetCutOutlines();
-			drawer.drawAllLines(bufferG2D, crossLines);
+			drawer.drawAllLines(bufferG2D, crossLines, (float) scale);
 		}
 
 		// Line that links the pair of unsetled faces

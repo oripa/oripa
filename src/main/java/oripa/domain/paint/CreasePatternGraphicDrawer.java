@@ -27,7 +27,6 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.core.LineSetting;
 import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
 
@@ -53,13 +52,15 @@ public class CreasePatternGraphicDrawer {
 		CreasePatternInterface creasePattern = context.getCreasePattern();
 
 		if (context.isGridVisible()) {
-			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize());
+			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize(),
+					context.getScale());
 		}
 
 		// g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 		// RenderingHints.VALUE_ANTIALIAS_ON);
 
-		drawLines(g2d, creasePattern, null, context.isMVLineVisible(), context.isAuxLineVisible());
+		drawLines(g2d, creasePattern, null, context.getScale(), context.isMVLineVisible(),
+				context.isAuxLineVisible());
 
 		// Drawing of the vertices
 		if (context.isVertexVisible() || forceShowingVertex) {
@@ -69,9 +70,9 @@ public class CreasePatternGraphicDrawer {
 	}
 
 	public void drawAllLines(
-			final Graphics2D g2d, final Collection<OriLine> lines) {
+			final Graphics2D g2d, final Collection<OriLine> lines, final double scale) {
 
-		drawLines(g2d, lines, null, true, true);
+		drawLines(g2d, lines, null, scale, true, true);
 	}
 
 	/**
@@ -90,6 +91,7 @@ public class CreasePatternGraphicDrawer {
 	private void drawLines(
 			final Graphics2D g2d,
 			final Collection<OriLine> lines, final Collection<OriLine> pickedLines,
+			final double scale,
 			final boolean creaseVisible, final boolean auxVisible) {
 
 		ElementSelector selector = new ElementSelector();
@@ -106,7 +108,7 @@ public class CreasePatternGraphicDrawer {
 
 			if (pickedLines == null || !pickedLines.contains(line)) {
 				g2d.setColor(selector.selectColorByLineType(line.getType()));
-				g2d.setStroke(selector.selectStroke(line.getType()));
+				g2d.setStroke(selector.createStroke(line.getType(), scale));
 
 				g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
 						line.p1.y));
@@ -133,7 +135,7 @@ public class CreasePatternGraphicDrawer {
 			final boolean creaseVisible, final boolean auxVisible) {
 
 		g2d.setColor(Color.BLACK);
-		final double vertexDrawSize = 2.0;
+		final double vertexDrawSize = 3.0;
 		for (OriLine line : creasePattern) {
 			if (!auxVisible && line.getType() == OriLine.Type.NONE) {
 				continue;
@@ -164,9 +166,12 @@ public class CreasePatternGraphicDrawer {
 
 	}
 
-	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize) {
-		g2d.setColor(Color.LIGHT_GRAY);
-		g2d.setStroke(LineSetting.STROKE_GRID);
+	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize,
+			final double scale) {
+		var selector = new ElementSelector();
+
+		g2d.setColor(selector.selectColorByLineType(OriLine.Type.NONE));
+		g2d.setStroke(selector.createStroke(OriLine.Type.NONE, scale));
 
 		int lineNum = gridDivNum;
 		double step = paperSize / lineNum;

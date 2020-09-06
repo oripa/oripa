@@ -1,6 +1,5 @@
 package oripa.domain.paint.core;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.util.ElementSelector;
 import oripa.domain.paint.util.RectangleClipper;
 import oripa.value.OriLine;
 
@@ -88,9 +88,9 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 		super.onDraw(g2d, context);
 
 		if (startPoint != null && draggingPoint != null) {
-
-			g2d.setStroke(LineSetting.STROKE_SELECT_BY_AREA);
-			g2d.setColor(Color.BLACK);
+			var selector = new ElementSelector();
+			g2d.setStroke(selector.createAreaSelectionStroke(context.getScale()));
+			g2d.setColor(selector.getAreaSelectionColor());
 			double sx = Math.min(startPoint.x, draggingPoint.x);
 			double sy = Math.min(startPoint.y, draggingPoint.y);
 			double w = Math.abs(startPoint.x - draggingPoint.x);

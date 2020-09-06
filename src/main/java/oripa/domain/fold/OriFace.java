@@ -32,8 +32,16 @@ import oripa.value.OriLine;
 public class OriFace {
 
 	public ArrayList<OriHalfedge> halfedges = new ArrayList<>();
+
+	// FIXME: GeneralPath is legacy.
 	public GeneralPath outline = new GeneralPath();
+
+	/**
+	 * For drawing foldability-check face
+	 */
+	// FIXME: GeneralPath is legacy.
 	public GeneralPath preOutline = new GeneralPath();
+
 	public boolean selected = false;
 	public boolean faceFront = true;
 	public Color color;
