@@ -85,6 +85,7 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			JScrollBar.VERTICAL, 0, 5, -150, 150);
 
+	private OrigamiModel origamiModel = null;
 	private final MainScreenSetting mainScreenSetting;
 
 	public ModelViewFrame(
@@ -139,8 +140,6 @@ public class ModelViewFrame extends JFrame
 		scrollBarPosition.addAdjustmentListener(this);
 	}
 
-	private OrigamiModel origamiModel = null;
-
 	public void setModel(final OrigamiModel origamiModel) {
 		int boundSize = Math.min(getWidth(), getHeight()
 				- getJMenuBar().getHeight() - 50);
@@ -189,9 +188,9 @@ public class ModelViewFrame extends JFrame
 	@Override
 	public void adjustmentValueChanged(final AdjustmentEvent e) {
 		if (e.getSource() == scrollBarAngle) {
-			screen.setCrossLineAngle(e.getValue());
+			screen.setScissorsLineAngle(e.getValue());
 		} else if (e.getSource() == scrollBarPosition) {
-			screen.setCrossLinePosition(e.getValue());
+			screen.setScissorsLinePosition(e.getValue());
 		}
 
 	}

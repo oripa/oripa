@@ -94,6 +94,9 @@ public class FoldedModelScreen extends JPanel
 	private BufferedImage textureImage = null;
 	private final boolean bUseTexture = false;
 
+	private OrigamiModel origamiModel = null;
+	private FoldedModelInfo foldedModelInfo = null;
+
 	public FoldedModelScreen() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -274,9 +277,6 @@ public class FoldedModelScreen extends JPanel
 
 		return ret;
 	}
-
-	private OrigamiModel origamiModel = null;
-	private FoldedModelInfo foldedModelInfo = null;
 
 	public void setModel(
 			final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo) {

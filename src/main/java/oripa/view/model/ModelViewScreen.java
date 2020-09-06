@@ -71,24 +71,22 @@ public class ModelViewScreen extends JPanel
 	private double rotateAngle = 0;
 	private final AffineTransform affineTransform = new AffineTransform();
 	public boolean dispSlideFace = false;
-	private OriLine crossLine = null;
-	private boolean crossLineVisible = false;
-	private int crossLineAngleDegree = 90;
-	private double crossLinePosition = 0;
+	private OriLine scissorsLine = null;
+	private boolean scissorsLineVisible = false;
+	private int scissorsLineAngleDegree = 90;
+	private double scissorsLinePosition = 0;
+	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
 	private OrigamiModel origamiModel = null;
 	private final CutModelOutlinesHolder lineHolder;
-	private final CallbackOnUpdate onUpdateCrossLine;
-
-	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
-
+	private final CallbackOnUpdate onUpdateScissorsLine;
 	private final MainScreenSetting mainScreenSetting;
 
 	public ModelViewScreen(final CutModelOutlinesHolder aLineHolder, final CallbackOnUpdate c,
 			final MainScreenSetting mainScreenSetting) {
 
 		lineHolder = aLineHolder;
-		onUpdateCrossLine = c;
+		onUpdateScissorsLine = c;
 
 		this.mainScreenSetting = mainScreenSetting;
 
@@ -97,7 +95,7 @@ public class ModelViewScreen extends JPanel
 		addMouseWheelListener(this);
 		addComponentListener(this);
 
-		crossLine = new OriLine();
+		scissorsLine = new OriLine();
 		scale = 1.0;
 		rotateAngle = 0;
 		setBackground(Color.white);
@@ -110,12 +108,12 @@ public class ModelViewScreen extends JPanel
 	private void addPropertyChangeListenersToSetting() {
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.CROSS_LINE_VISIBLE, e -> {
-					crossLineVisible = (boolean) e.getNewValue();
-					if (crossLineVisible) {
-						recalcCrossLine();
+					scissorsLineVisible = (boolean) e.getNewValue();
+					if (scissorsLineVisible) {
+						recalcScissorsLine();
 					} else {
 						repaint();
-						onUpdateCrossLine.onUpdate();
+						onUpdateScissorsLine.onUpdate();
 					}
 				});
 	}
@@ -165,7 +163,7 @@ public class ModelViewScreen extends JPanel
 
 			scale = 0.8 * Math.min(boundSize / (maxV.x - minV.x), boundSize / (maxV.y - minV.y));
 			updateAffineTransform();
-			recalcCrossLine();
+			recalcScissorsLine();
 		}
 	}
 
@@ -198,14 +196,14 @@ public class ModelViewScreen extends JPanel
 			}
 		}
 
-		if (crossLineVisible) {
+		if (scissorsLineVisible) {
 			var selector = new ElementSelector();
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 			g2d.setStroke(selector.createScissorsLineStrokeForModelView(scale));
-			g2d.setColor(selector.getCutModelColorForModelView());
+			g2d.setColor(selector.getScissorsLineColorForModelView());
 
-			g2d.draw(new Line2D.Double(crossLine.p0.x, crossLine.p0.y, crossLine.p1.x,
-					crossLine.p1.y));
+			g2d.draw(new Line2D.Double(scissorsLine.p0.x, scissorsLine.p0.y, scissorsLine.p1.x,
+					scissorsLine.p1.y));
 		}
 	}
 
@@ -272,33 +270,33 @@ public class ModelViewScreen extends JPanel
 		}
 	}
 
-	public void setCrossLineAngle(final int angleDegree) {
-		crossLineAngleDegree = angleDegree;
-		recalcCrossLine();
+	public void setScissorsLineAngle(final int angleDegree) {
+		scissorsLineAngleDegree = angleDegree;
+		recalcScissorsLine();
 	}
 
-	public void setCrossLinePosition(final int positionValue) {
-		crossLinePosition = positionValue;
-		recalcCrossLine();
+	public void setScissorsLinePosition(final int positionValue) {
+		scissorsLinePosition = positionValue;
+		recalcScissorsLine();
 	}
 
-	public void recalcCrossLine() {
-		Vector2d dir = new Vector2d(Math.cos(Math.PI * crossLineAngleDegree / 180.0),
-				Math.sin(Math.PI * crossLineAngleDegree / 180.0));
-		crossLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);
-		crossLine.p1.set(modelCenter.x + dir.x * 300, modelCenter.y + dir.y * 300);
+	public void recalcScissorsLine() {
+		Vector2d dir = new Vector2d(Math.cos(Math.PI * scissorsLineAngleDegree / 180.0),
+				Math.sin(Math.PI * scissorsLineAngleDegree / 180.0));
+		scissorsLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);
+		scissorsLine.p1.set(modelCenter.x + dir.x * 300, modelCenter.y + dir.y * 300);
 		Vector2d moveVec = new Vector2d(-dir.y, dir.x);
 		moveVec.normalize();
-		moveVec.scale(crossLinePosition);
-		crossLine.p0.add(moveVec);
-		crossLine.p1.add(moveVec);
+		moveVec.scale(scissorsLinePosition);
+		scissorsLine.p0.add(moveVec);
+		scissorsLine.p1.add(moveVec);
 
 		var factory = new CutModelOutlinesFactory();
-		lineHolder.setOutlines(factory.createOutlines(crossLine, origamiModel));
+		lineHolder.setOutlines(factory.createOutlines(scissorsLine, origamiModel));
 
 		repaint();
 
-		onUpdateCrossLine.onUpdate();
+		onUpdateScissorsLine.onUpdate();
 	}
 
 	@Override

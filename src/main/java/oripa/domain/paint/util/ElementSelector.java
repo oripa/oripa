@@ -72,7 +72,7 @@ public class ElementSelector {
 	}
 
 	// FIXME: not to be in this class.
-	public Color getCutModelColorForModelView() {
+	public Color getScissorsLineColorForModelView() {
 		return Color.RED;
 	}
 
