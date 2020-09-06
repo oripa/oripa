@@ -63,7 +63,6 @@ public class VerticalLineAction extends GraphicMouseAction {
 		super.onDraw(g2d, context);
 
 		if (context.getVertexCount() == 0) {
-
 			drawPickCandidateVertex(g2d, context);
 		} else if (context.getVertexCount() == 1) {
 			drawPickCandidateLine(g2d, context);

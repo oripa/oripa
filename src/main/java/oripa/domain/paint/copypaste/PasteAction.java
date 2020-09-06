@@ -1,6 +1,5 @@
 package oripa.domain.paint.copypaste;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -14,6 +13,7 @@ import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.domain.paint.geometry.NearestVertexFinderHelper;
+import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
 
 public class PasteAction extends GraphicMouseAction {
@@ -69,7 +69,6 @@ public class PasteAction extends GraphicMouseAction {
 	public Vector2d onMove(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
 
-		// vertex-only super's action
 		setCandidateVertexOnMove(context, differentAction);
 		Vector2d closeVertex = context.getCandidateVertexToPick();
 
@@ -92,9 +91,6 @@ public class PasteAction extends GraphicMouseAction {
 		return closeVertex;
 	}
 
-	Line2D.Double g2dLine = new Line2D.Double();
-	double diffX, diffY;
-
 	@Override
 	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
 
@@ -111,10 +107,12 @@ public class PasteAction extends GraphicMouseAction {
 		double ox = origin.x;
 		double oy = origin.y;
 
-		g2d.setColor(Color.GREEN);
+		var selector = new ElementSelector();
+		g2d.setColor(selector.getSelectedItemColor());
 		drawVertex(g2d, context, ox, oy);
 
-		Vector2d candidateVertex = context.getCandidateVertexToPick();
+		var candidateVertex = context.getCandidateVertexToPick();
+		double diffX, diffY;
 		if (candidateVertex != null) {
 			diffX = candidateVertex.x - ox;
 			diffY = candidateVertex.y - oy;
@@ -122,9 +120,11 @@ public class PasteAction extends GraphicMouseAction {
 			diffX = context.getLogicalMousePoint().x - ox;
 			diffY = context.getLogicalMousePoint().y - oy;
 		}
-		g2d.setColor(Color.MAGENTA);
+
+		g2d.setColor(selector.getAssistLineColor());
 
 		// shift and draw the lines to be pasted.
+		Line2D.Double g2dLine = new Line2D.Double();
 		for (OriLine l : context.getPickedLines()) {
 
 			g2dLine.x1 = l.p0.x + diffX;

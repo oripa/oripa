@@ -85,6 +85,10 @@ public class ElementSelector {
 		return Color.GREEN;
 	}
 
+	public Color getAssistLineColor() {
+		return Color.MAGENTA;
+	}
+
 	public BasicStroke createEditingOutlineStroke(final double scale) {
 		return new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 	}
