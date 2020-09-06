@@ -98,18 +98,4 @@ public enum FileTypeKey implements FileTypeProperty {
 	public Integer getOrder() {
 		return order;
 	}
-
-//	public static Comparator<FileTypeKey> getOrderComparator() {
-//
-//		return new Comparator<FileTypeKey>() {
-//			@Override
-//			public int compare(final FileTypeKey o1, final FileTypeKey o2) {
-//				if (o1.order == o2.order) {
-//					return o1.compareTo(o2);
-//				}
-//
-//				return o1.order.compareTo(o2.order);
-//			}
-//		};
-//	}
 }
