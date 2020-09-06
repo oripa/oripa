@@ -19,16 +19,17 @@ public interface GraphicMouseActionInterface {
 	public abstract EditMode getEditMode();
 
 	/**
-	 * define action on destroy. default does clear context selection keeping
-	 * line-selected marks.
+	 * define action on destroy. This method is expected to be called when the
+	 * action is switched, before recover() of new action.
 	 *
 	 * @param context
 	 */
 	public abstract void destroy(PaintContextInterface context);
 
 	/**
-	 * define action for recovering the status of this object with given
-	 * context.
+	 * Defines action for recovering the status of this object with given
+	 * context. This method should be called when the action is switched, after
+	 * destroy() of old action.
 	 *
 	 * @param context
 	 */

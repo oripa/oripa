@@ -56,6 +56,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		return editMode;
 	}
 
+	/**
+	 * define action on destroy. default does clear context selection keeping
+	 * line-selected marks.
+	 *
+	 * @param context
+	 */
 	@Override
 	public void destroy(final PaintContextInterface context) {
 		context.clear(false);
