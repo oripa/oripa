@@ -7,7 +7,7 @@ import oripa.value.OriLine;
 
 public class ElementSelector {
 
-	public Color selectColorByLineType(final OriLine.Type lineType) {
+	public Color getColor(final OriLine.Type lineType) {
 		Color color;
 
 		switch (lineType) {

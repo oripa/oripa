@@ -185,7 +185,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 		for (Vector2d vertex : context.getPickedVertices()) {
 			g2d.setColor(selector
-					.selectColorByLineType(lineType));
+					.getColor(lineType));
 
 			drawVertex(g2d, context, vertex.x, vertex.y);
 		}
@@ -256,7 +256,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		if (context.getVertexCount() > 0) {
 			Vector2d picked = context.peekVertex();
 
-			g2d.setColor(selector.selectColorByLineType(context.getLineTypeOfNewLines()));
+			g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
 
 			g2d.setStroke(selector.createStroke(context.getLineTypeOfNewLines(),
 					context.getScale()));

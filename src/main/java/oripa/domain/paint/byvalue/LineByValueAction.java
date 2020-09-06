@@ -61,7 +61,7 @@ public class LineByValueAction extends GraphicMouseAction {
 				var radianAngle = Math.toRadians(angle);
 
 				ElementSelector selector = new ElementSelector();
-				g2d.setColor(selector.selectColorByLineType(context.getLineTypeOfNewLines()));
+				g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
 				g2d.setStroke(
 						selector.createStroke(context.getLineTypeOfNewLines(),
 								context.getScale()));

@@ -107,7 +107,7 @@ public class CreasePatternGraphicDrawer {
 			}
 
 			if (pickedLines == null || !pickedLines.contains(line)) {
-				g2d.setColor(selector.selectColorByLineType(line.getType()));
+				g2d.setColor(selector.getColor(line.getType()));
 				g2d.setStroke(selector.createStroke(line.getType(), scale));
 
 				g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
@@ -170,7 +170,7 @@ public class CreasePatternGraphicDrawer {
 			final double scale) {
 		var selector = new ElementSelector();
 
-		g2d.setColor(selector.selectColorByLineType(OriLine.Type.NONE));
+		g2d.setColor(selector.getColor(OriLine.Type.NONE));
 		g2d.setStroke(selector.createStroke(OriLine.Type.NONE, scale));
 
 		int lineNum = gridDivNum;
