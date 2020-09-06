@@ -12,24 +12,24 @@ import oripa.domain.fold.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
-public class CutModelOutlineFactory {
+public class CutModelOutlinesFactory {
 
 	/**
 	 * creates outline of cut origami model
 	 *
-	 * @param scissorLine
+	 * @param scissorsLine
 	 * @param origamiModel
 	 * @return
 	 */
-	public Collection<OriLine> createLines(
-			final OriLine scissorLine, final OrigamiModel origamiModel) {
+	public Collection<OriLine> createOutlines(
+			final OriLine scissorsLine, final OrigamiModel origamiModel) {
 
 		Collection<OriLine> cutLines = new ArrayList<>();
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		for (OriFace face : sortedFaces) {
-			List<Vector2d> vv = findOutlineEdgeTerminals(scissorLine, face);
+			List<Vector2d> vv = findOutlineEdgeTerminals(scissorsLine, face);
 
 			if (vv.size() >= 2) {
 				cutLines.add(new OriLine(vv.get(0), vv.get(1), OriLine.Type.CUT_MODEL));

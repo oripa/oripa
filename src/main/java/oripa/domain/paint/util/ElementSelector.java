@@ -77,7 +77,17 @@ public class ElementSelector {
 	}
 
 	// FIXME: not to be in this class.
-	public BasicStroke createCutModelLineStrokeForModelView(final double scale) {
+	public BasicStroke createScissorsLineStrokeForModelView(final double scale) {
+		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	// FIXME: not to be in this class.
+	public BasicStroke createPaperBoundaryStrokeForModelView(final double scale) {
+		return new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	// FIXME: not to be in this class.
+	public BasicStroke createFaceEdgeStrokeForModelView(final double scale) {
 		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 	}
 

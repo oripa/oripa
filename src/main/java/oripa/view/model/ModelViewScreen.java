@@ -42,7 +42,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
-import oripa.domain.cutmodel.CutModelOutlineFactory;
+import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
@@ -188,9 +188,9 @@ public class ModelViewScreen extends JPanel
 			for (OriHalfedge he : face.halfedges) {
 				var selector = new ElementSelector();
 				if (he.pair == null) {
-					g2d.setStroke(selector.createStroke(OriLine.Type.CUT_MODEL, scale));
+					g2d.setStroke(selector.createPaperBoundaryStrokeForModelView(scale));
 				} else {
-					g2d.setStroke(selector.createStroke(OriLine.Type.CUT, scale));
+					g2d.setStroke(selector.createFaceEdgeStrokeForModelView(scale));
 				}
 				g2d.draw(new Line2D.Double(he.positionForDisplay.x,
 						he.positionForDisplay.y, he.next.positionForDisplay.x,
@@ -201,7 +201,7 @@ public class ModelViewScreen extends JPanel
 		if (crossLineVisible) {
 			var selector = new ElementSelector();
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-			g2d.setStroke(selector.createCutModelLineStrokeForModelView(scale));
+			g2d.setStroke(selector.createScissorsLineStrokeForModelView(scale));
 			g2d.setColor(selector.getCutModelColorForModelView());
 
 			g2d.draw(new Line2D.Double(crossLine.p0.x, crossLine.p0.y, crossLine.p1.x,
@@ -293,8 +293,8 @@ public class ModelViewScreen extends JPanel
 		crossLine.p0.add(moveVec);
 		crossLine.p1.add(moveVec);
 
-		var factory = new CutModelOutlineFactory();
-		lineHolder.setOutlines(factory.createLines(crossLine, origamiModel));
+		var factory = new CutModelOutlinesFactory();
+		lineHolder.setOutlines(factory.createOutlines(crossLine, origamiModel));
 
 		repaint();
 
