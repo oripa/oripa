@@ -56,9 +56,6 @@ public class CreasePatternGraphicDrawer {
 					context.getScale());
 		}
 
-		// g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-		// RenderingHints.VALUE_ANTIALIAS_ON);
-
 		drawLines(g2d, creasePattern, null, context.getScale(), context.isMVLineVisible(),
 				context.isAuxLineVisible());
 
