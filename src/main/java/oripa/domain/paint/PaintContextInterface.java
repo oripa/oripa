@@ -135,7 +135,7 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	public abstract Vector2d popVertex();
 
 	/**
-	 * performs the same as {@code Vector.remove(Object o)}.
+	 * performs the same as {@link List#remove(Object o)}.
 	 *
 	 * @param line
 	 * @return

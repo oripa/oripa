@@ -33,7 +33,6 @@ public class Painter {
 	/**
 	 * reset selection mark of all lines in given collection.
 	 *
-	 * @param creasePattern
 	 */
 	public void resetSelectedOriLines() {
 		LineSelectionModifier modifier = new LineSelectionModifier();
@@ -61,7 +60,6 @@ public class Painter {
 
 	/**
 	 *
-	 * @param creasePattern
 	 */
 	public void removeSelectedLines() {
 
@@ -75,8 +73,6 @@ public class Painter {
 	 *
 	 * @param inputLine
 	 *            a line to be added
-	 * @param creasePattern
-	 *            destination of inputLine
 	 */
 	public void addLine(
 			final OriLine inputLine) {
@@ -99,8 +95,6 @@ public class Painter {
 	 *            a line to be the axis of symmetry
 	 * @param lines
 	 *            lines to be mirrored
-	 * @param creasePattern
-	 *            destination of mirrored lines
 	 */
 	public void mirrorCopyBy(final OriLine baseLine,
 			final Collection<OriLine> lines) {
@@ -116,7 +110,6 @@ public class Painter {
 	 * remove given line from the collection.
 	 *
 	 * @param l
-	 * @param creasePattern
 	 */
 	public void removeLine(
 			final OriLine l) {
@@ -129,7 +122,6 @@ public class Painter {
 	 * remove given vertex from the collection.
 	 *
 	 * @param v
-	 * @param creasePattern
 	 */
 	public void removeVertex(
 			final Vector2d v) {
@@ -143,8 +135,6 @@ public class Painter {
 	 *
 	 * @param line
 	 * @param v
-	 * @param creasePattern
-	 * @param paperSize
 	 * @return true if the vertex is added.
 	 */
 	public boolean addVertexOnLine(
@@ -173,6 +163,7 @@ public class Painter {
 	 * @param v0
 	 * @param v1
 	 * @param v2
+	 * @param lineType
 	 */
 	public void addTriangleDivideLines(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
@@ -192,8 +183,7 @@ public class Painter {
 	 *
 	 * @param v0
 	 * @param v1
-	 * @param creasePattern
-	 * @param paperSize
+	 * @param lineType
 	 */
 	public void addPBisector(
 			final Vector2d v0, final Vector2d v1, final OriLine.Type lineType) {
@@ -213,7 +203,7 @@ public class Painter {
 	 * @param v1
 	 * @param v2
 	 * @param l
-	 * @param creasePattern
+	 * @param lineType
 	 */
 	public void addBisectorLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
@@ -317,12 +307,10 @@ public class Painter {
 	 * @param angleDeg
 	 *            amount of rotation in degrees
 	 * @param repetitionCount
-	 * @param creasePattern
-	 * @param paperSize
 	 *
 	 * @return rotated lines
 	 */
-	// TODO a collection of selected line should be a parameter as like mirror
+	// TODO a collection of selected line should be a parameter like a mirror
 	// copy.
 	public void copyWithRotation(
 			final double cx, final double cy, final double angleDeg, final int repetitionCount) {
@@ -347,8 +335,6 @@ public class Painter {
 	 * @param col
 	 * @param interX
 	 * @param interY
-	 * @param creasePattern
-	 * @param paperSize
 	 */
 	public void copyWithTiling(
 			final int row, final int col, final double interX, final double interY) {
@@ -367,8 +353,6 @@ public class Painter {
 	 * add copy of selected lines as the paper is filled out.
 	 *
 	 * @param lines
-	 * @param creasePattern
-	 * @param paperSize
 	 */
 	public void fillOut(
 			final Collection<OriLine> lines) {

@@ -26,7 +26,7 @@ public class SelectingLine extends PickingLine {
 			// in this case, the context has two reference to the selected line:
 			// at the last position and other somewhere.
 
-			// clear the selection by onAct().
+			// clear the selection done by onAct().
 			context.popLine();
 			// remove the line which has been already stored.
 			context.removeLine(line);

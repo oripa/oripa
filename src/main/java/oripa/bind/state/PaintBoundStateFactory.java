@@ -64,6 +64,9 @@ public class PaintBoundStateFactory {
 	 * Create a state specified by ID
 	 *
 	 * @param parent
+	 * @param actionHolder
+	 * @param context
+	 * @param screenUpdater
 	 * @param id
 	 *            A member of StringID
 	 * @return

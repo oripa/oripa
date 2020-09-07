@@ -98,7 +98,7 @@ public class ElementRemover {
 	}
 
 	/**
-	 * remove lines which is marked "selected" from given collection.
+	 * remove lines which are marked "selected" from given collection.
 	 *
 	 * @param creasePattern
 	 *            collection of lines
