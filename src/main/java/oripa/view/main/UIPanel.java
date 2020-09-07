@@ -95,7 +95,6 @@ public class UIPanel extends JPanel {
 
 	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueSetting valueSetting = setting.getValueSetting();
-	private final MainScreenSetting mainScreenSetting;
 
 	private ChildFrameManager childFrameManager;
 
@@ -216,9 +215,7 @@ public class UIPanel extends JPanel {
 		estimationHolder = anEstimationHolder;
 		cutOutlinesHolder = aCutOutlinesHolder;
 
-		this.mainScreenSetting = mainScreenSetting;
-
-		constructButtons(stateManager, actionHolder, mainFrameSetting);
+		constructButtons(stateManager, actionHolder, mainFrameSetting, mainScreenSetting);
 
 		editModeInputLineButton.setSelected(true);
 
@@ -430,8 +427,8 @@ public class UIPanel extends JPanel {
 		lineTypeMountainButton.setMnemonic(KeyEvent.VK_M);
 		lineTypeValleyButton.setMnemonic(KeyEvent.VK_V);
 
-		addPropertyChangeListenersToSetting();
-		addActionListenersToComponents(stateManager, actionHolder);
+		addPropertyChangeListenersToSetting(mainScreenSetting);
+		addActionListenersToComponents(stateManager, actionHolder, mainScreenSetting);
 
 		// -------------------------------------------------
 		// Initialize selection
@@ -456,7 +453,8 @@ public class UIPanel extends JPanel {
 
 	private void constructButtons(final StateManager stateManager,
 			final MouseActionHolder actionHolder,
-			final MainFrameSetting mainFrameSetting) {
+			final MainFrameSetting mainFrameSetting,
+			final MainScreenSetting mainScreenSetting) {
 
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
 
@@ -607,7 +605,8 @@ public class UIPanel extends JPanel {
 	}
 
 	private void addActionListenersToComponents(final StateManager stateManager,
-			final MouseActionHolder actionHolder) {
+			final MouseActionHolder actionHolder,
+			final MainScreenSetting mainScreenSetting) {
 
 		alterLine_combo_from.addItemListener(new FromLineTypeItemListener(setting));
 		alterLine_combo_to.addItemListener(new ToLineTypeItemListener(setting));
@@ -675,7 +674,7 @@ public class UIPanel extends JPanel {
 
 		buttonCheckWindow.addActionListener(e -> showCheckerWindow(paintContext));
 
-		buildButton.addActionListener(e -> showFoldedModelWindows());
+		buildButton.addActionListener(e -> showFoldedModelWindows(mainScreenSetting));
 	}
 
 	private void showCheckerWindow(final PaintContextInterface context) {
@@ -727,7 +726,7 @@ public class UIPanel extends JPanel {
 		}
 	}
 
-	private void showFoldedModelWindows() {
+	private void showFoldedModelWindows(final MainScreenSetting mainScreenSetting) {
 		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
 		FoldedModelInfo foldedModelInfo = estimationHolder.getFoldedModelInfo();
 
@@ -808,7 +807,7 @@ public class UIPanel extends JPanel {
 		return origamiModel;
 	}
 
-	private void addPropertyChangeListenersToSetting() {
+	private void addPropertyChangeListenersToSetting(final MainScreenSetting mainScreenSetting) {
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.GRID_VISIBLE, e -> {
 					dispGridCheckBox.setSelected((boolean) e.getNewValue());
