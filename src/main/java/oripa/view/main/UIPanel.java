@@ -72,7 +72,6 @@ import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.file.ImageResourceLoader;
-import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -364,7 +363,7 @@ public class UIPanel extends JPanel {
 
 		textFieldGrid = new JFormattedTextField(new DecimalFormat("#"));
 		textFieldGrid.setColumns(2);
-		textFieldGrid.setValue(Integer.valueOf(Constants.DEFAULT_GRID_DIV_NUM));
+		textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
 		textFieldGrid.setHorizontalAlignment(JTextField.RIGHT);
 
 		divideNumSpecPanel.add(gridLabel1);
