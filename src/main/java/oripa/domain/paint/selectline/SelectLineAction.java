@@ -36,11 +36,9 @@ public class SelectLineAction extends RectangularSelectableAction {
 			return;
 		}
 
-		for (OriLine line : creasePattern) {
-			if (line.selected) {
-				context.pushLine(line);
-			}
-		}
+		creasePattern.stream()
+				.filter(line -> line.selected)
+				.forEach(line -> context.pushLine(line));
 	}
 
 	@Override
