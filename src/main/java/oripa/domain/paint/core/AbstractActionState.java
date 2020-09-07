@@ -29,9 +29,9 @@ public abstract class AbstractActionState implements ActionState {
 	}
 
 	/**
-	 * Set next state class and previous state class here. If you do not
-	 * anything, {@link #getNextState()} and {@link #getPreviousState()} will
-	 * return {@code this} object.
+	 * Set next state class and previous state class here. If you do nothing,
+	 * {@link #getNextState()} and {@link #getPreviousState()} will return
+	 * {@code this} object.
 	 */
 	protected abstract void initialize();
 
