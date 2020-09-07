@@ -18,8 +18,6 @@
  */
 package oripa.domain.paint;
 
-import oripa.domain.paint.line.TwoPointLineAction;
-
 /**
  * @author Koji
  *
@@ -32,7 +30,7 @@ public class MouseActionHolder {
 	private GraphicMouseActionInterface action;
 
 	public MouseActionHolder() {
-		setMouseAction(new TwoPointLineAction());
+		// setMouseAction(new TwoPointLineAction());
 	}
 
 	/**
