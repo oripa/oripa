@@ -9,7 +9,6 @@ import oripa.doc.Doc;
 import oripa.persistent.doc.exporter.ExporterCP;
 import oripa.persistent.doc.exporter.ExporterDXFFactory;
 import oripa.persistent.doc.exporter.ExporterFOLD;
-import oripa.persistent.doc.exporter.ExporterOBJFactory;
 import oripa.persistent.doc.exporter.ExporterSVGFactory;
 import oripa.persistent.doc.exporter.ExporterXML;
 import oripa.persistent.doc.exporter.PictureExporter;
@@ -61,11 +60,11 @@ public class DocFilterSelector {
 				ExporterDXFFactory.createCreasePatternExporter(),
 				new LoaderDXF());
 
-		key = FileTypeKey.OBJ_MODEL;
-		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
-				ExporterOBJFactory.createFoldedModelExporter(),
-				// new ModelExporterOBJ(),
-				null);
+//		key = FileTypeKey.OBJ_MODEL;
+//		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
+//				ExporterOBJFactory.createFoldedModelExporter(),
+//				// new ModelExporterOBJ(),
+//				null);
 
 		key = FileTypeKey.CP;
 		putFilter(key, createDescription(key, StringID.Main.FILE_ID),

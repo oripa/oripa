@@ -107,7 +107,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final JMenuItem menuItemExportFOLD = new JMenuItem("Export FOLD");
 	private final JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
-	private final JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
+//	private final JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
 	private final JMenuItem menuItemExportCP = new JMenuItem("Export CP");
 	private final JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
 
@@ -192,7 +192,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		try {
 			uiPanel = new UIPanel(
 					stateManager, screenUpdater, actionHolder, paintContext, document,
-					document, setting, screenSetting);
+					setting, screenSetting);
 			uiPanel.setChildFrameManager(childFrameManager);
 		} catch (RuntimeException ex) {
 			logger.error("UI panel construction failed", ex);
@@ -349,7 +349,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				JOptionPane.INFORMATION_MESSAGE));
 
 		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.DXF_MODEL));
-		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
+//		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
 		menuItemExportCP.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.CP));
 		menuItemExportSVG.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.SVG));
 
@@ -566,7 +566,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuFile.add(menuItemSaveAsImage);
 		menuFile.add(menuItemExportFOLD);
 		menuFile.add(menuItemExportDXF);
-		menuFile.add(menuItemExportOBJ);
+//		menuFile.add(menuItemExportOBJ);
 		menuFile.add(menuItemExportCP);
 		menuFile.add(menuItemExportSVG);
 		menuFile.addSeparator();

@@ -59,7 +59,6 @@ import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.BoundBox;
-import oripa.domain.fold.EstimationEntityHolder;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.OrigamiModel;
@@ -196,24 +195,18 @@ public class UIPanel extends JPanel {
 
 	private final PaintContextInterface paintContext;
 
-	private final EstimationEntityHolder estimationHolder;
-	private final CutModelOutlinesHolder cutOutlinesHolder;
-
 	public UIPanel(
 			final StateManager stateManager,
 			final ViewScreenUpdater screenUpdater,
 			final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
-			final EstimationEntityHolder anEstimationHolder,
-			final CutModelOutlinesHolder aCutOutlinesHolder,
+			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainFrameSetting mainFrameSetting,
 			final MainScreenSetting mainScreenSetting) {
 
 		this.screenUpdater = screenUpdater;
 
 		paintContext = aContext;
-		estimationHolder = anEstimationHolder;
-		cutOutlinesHolder = aCutOutlinesHolder;
 
 		constructButtons(stateManager, actionHolder, mainFrameSetting, mainScreenSetting);
 
@@ -428,7 +421,8 @@ public class UIPanel extends JPanel {
 		lineTypeValleyButton.setMnemonic(KeyEvent.VK_V);
 
 		addPropertyChangeListenersToSetting(mainScreenSetting);
-		addActionListenersToComponents(stateManager, actionHolder, mainScreenSetting);
+		addActionListenersToComponents(stateManager, actionHolder, cutOutlinesHolder,
+				mainScreenSetting);
 
 		// -------------------------------------------------
 		// Initialize selection
@@ -606,6 +600,7 @@ public class UIPanel extends JPanel {
 
 	private void addActionListenersToComponents(final StateManager stateManager,
 			final MouseActionHolder actionHolder,
+			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {
 
 		alterLine_combo_from.addItemListener(new FromLineTypeItemListener(setting));
@@ -674,7 +669,8 @@ public class UIPanel extends JPanel {
 
 		buttonCheckWindow.addActionListener(e -> showCheckerWindow(paintContext));
 
-		buildButton.addActionListener(e -> showFoldedModelWindows(mainScreenSetting));
+		buildButton.addActionListener(
+				e -> showFoldedModelWindows(cutOutlinesHolder, mainScreenSetting));
 	}
 
 	private void showCheckerWindow(final PaintContextInterface context) {
@@ -726,9 +722,11 @@ public class UIPanel extends JPanel {
 		}
 	}
 
-	private void showFoldedModelWindows(final MainScreenSetting mainScreenSetting) {
+	private void showFoldedModelWindows(
+			final CutModelOutlinesHolder cutOutlinesHolder,
+			final MainScreenSetting mainScreenSetting) {
 		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
-		FoldedModelInfo foldedModelInfo = estimationHolder.getFoldedModelInfo();
+		FoldedModelInfo foldedModelInfo = new FoldedModelInfo();
 
 		Folder folder = new Folder();
 
@@ -737,7 +735,6 @@ public class UIPanel extends JPanel {
 		if (origamiModel.isProbablyFoldable()) {
 			final int foldableModelCount = folder.fold(
 					origamiModel, foldedModelInfo, fullEstimation);
-			estimationHolder.setOrigamiModel(origamiModel);
 
 			if (foldableModelCount == -1) {
 
@@ -758,7 +755,6 @@ public class UIPanel extends JPanel {
 		} else {
 			BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
 			foldedModelInfo.setBoundBox(boundBox);
-			estimationHolder.setOrigamiModel(origamiModel);
 		}
 
 		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(

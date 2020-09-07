@@ -9,13 +9,12 @@ public class FoldedModelInfo {
 	private int currentORmatIndex = 0;
 
 	BoundBox boundBox = new BoundBox(null, null);
-	
+
 	final public static int NO_OVERLAP = 0;
 	final public static int UPPER = 1;
 	final public static int LOWER = 2;
 	final public static int UNDEFINED = 9;
 
-	
 	public void setNextORMat() {
 		if (currentORmatIndex < overlapRelations.size() - 1) {
 			currentORmatIndex++;
@@ -35,7 +34,7 @@ public class FoldedModelInfo {
 		return overlapRelation;
 	}
 
-	public void setOverlapRelation(int[][] overlapRelation) {
+	public void setOverlapRelation(final int[][] overlapRelation) {
 		this.overlapRelation = overlapRelation;
 	}
 
@@ -43,16 +42,15 @@ public class FoldedModelInfo {
 		return overlapRelations;
 	}
 
-	public void setFoldableOverlapRelations(List<int[][]> foldableOverlapRelations) {
+	public void setFoldableOverlapRelations(final List<int[][]> foldableOverlapRelations) {
 		this.overlapRelations = foldableOverlapRelations;
 	}
-	
 
 	public int getCurrentORmatIndex() {
 		return currentORmatIndex;
 	}
 
-	public void setCurrentORmatIndex(int currentORmatIndex) {
+	public void setCurrentORmatIndex(final int currentORmatIndex) {
 		this.currentORmatIndex = currentORmatIndex;
 	}
 
@@ -64,15 +62,14 @@ public class FoldedModelInfo {
 	}
 
 	/**
-	 * @param boundBox boundBoxを登録する
+	 * @param boundBox
 	 */
-	public void setBoundBox(BoundBox boundBox) {
+	public void setBoundBox(final BoundBox boundBox) {
 		this.boundBox = boundBox;
 	}
 
 	public int getFoldablePatternCount() {
 		return overlapRelations.size();
 	}
-	
-	
+
 }
