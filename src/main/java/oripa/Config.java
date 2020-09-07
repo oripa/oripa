@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,8 @@
 
 package oripa;
 
-
 public class Config {
 
-    
-    final public static boolean FOR_STUDY = false;
-    final public static int DEFAULT_GRID_DIV_NUM = 4;
-    final public static int MRUFILE_NUM = 10;
+	final public static boolean FOR_STUDY = false;
+	final public static int MRUFILE_NUM = 10;
 }

@@ -27,4 +27,5 @@ public class Constants {
 
 	final public static double EPS = 1.0e-6;
 	final public static double DEFAULT_PAPER_SIZE = 400;
+	final public static int DEFAULT_GRID_DIV_NUM = 4;
 }

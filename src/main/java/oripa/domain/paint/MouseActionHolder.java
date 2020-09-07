@@ -29,10 +29,6 @@ public class MouseActionHolder {
 	 */
 	private GraphicMouseActionInterface action;
 
-	public MouseActionHolder() {
-		// setMouseAction(new TwoPointLineAction());
-	}
-
 	/**
 	 *
 	 * @param a
