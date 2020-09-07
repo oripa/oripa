@@ -99,6 +99,10 @@ public class UIPanel extends JPanel {
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
+	private final ViewScreenUpdater screenUpdater;
+
+	private final PaintContextInterface paintContext;
+
 	private boolean fullEstimation = true;
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Binding edit mode
@@ -191,9 +195,6 @@ public class UIPanel extends JPanel {
 			false);
 	private final JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
-	private final ViewScreenUpdater screenUpdater;
-
-	private final PaintContextInterface paintContext;
 
 	public UIPanel(
 			final StateManager stateManager,
