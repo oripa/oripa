@@ -1,4 +1,4 @@
-package oripa.domain.paint.core;
+package oripa.domain.paint;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -11,12 +11,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.CreasePatternUndoer;
-import oripa.domain.paint.CreasePatternUndoerInterface;
-import oripa.domain.paint.PaintContextInterface;
 import oripa.value.OriLine;
 
-public class PaintContext implements PaintContextInterface {
+class PaintContext implements PaintContextInterface {
 
 	private CreasePatternInterface creasePattern;
 	private final CreasePatternUndoerInterface undoer = new CreasePatternUndoer(this);
@@ -52,7 +49,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#getLogicalMousePoint()
+	 * @see oripa.domain.paint.PaintContextInterface#getLogicalMousePoint()
 	 */
 	@Override
 	public synchronized Point2D.Double getLogicalMousePoint() {
@@ -62,7 +59,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#isPasting()
+	 * @see oripa.domain.paint.PaintContextInterface#isPasting()
 	 */
 	@Override
 	public boolean isPasting() {
@@ -72,7 +69,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#startPasting()
+	 * @see oripa.domain.paint.PaintContextInterface#startPasting()
 	 */
 	@Override
 	public void startPasting() {
@@ -82,7 +79,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#finishPasting()
+	 * @see oripa.domain.paint.PaintContextInterface#finishPasting()
 	 */
 	@Override
 	public void finishPasting() {
@@ -92,7 +89,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#setLogicalMousePoint
+	 * @see oripa.domain.paint.PaintContextInterface#setLogicalMousePoint
 	 * (java.awt.geom.Point2D.Double)
 	 */
 	@Override
@@ -170,7 +167,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#updateGrids(int)
+	 * @see oripa.domain.paint.PaintContextInterface#updateGrids(int)
 	 */
 	@Override
 	public Collection<Vector2d> getGrids() {
@@ -181,7 +178,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#clear(boolean)
+	 * @see oripa.domain.paint.PaintContextInterface#clear(boolean)
 	 */
 	@Override
 	public void clear(final boolean unselect) {
@@ -202,7 +199,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#isMissionCompleted()
+	 * @see oripa.domain.paint.PaintContextInterface#isMissionCompleted()
 	 */
 	@Override
 	public boolean isMissionCompleted() {
@@ -212,7 +209,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#setMissionCompleted
+	 * @see oripa.domain.paint.PaintContextInterface#setMissionCompleted
 	 * (boolean)
 	 */
 	@Override
@@ -223,7 +220,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#getVertices()
+	 * @see oripa.domain.paint.PaintContextInterface#getVertices()
 	 */
 	@Override
 	public List<Vector2d> getPickedVertices() {
@@ -233,7 +230,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#getLines()
+	 * @see oripa.domain.paint.PaintContextInterface#getLines()
 	 */
 	@Override
 	public List<OriLine> getPickedLines() {
@@ -243,7 +240,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#getLine(int)
+	 * @see oripa.domain.paint.PaintContextInterface#getLine(int)
 	 */
 	@Override
 	public OriLine getLine(final int index) {
@@ -253,7 +250,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#getVertex(int)
+	 * @see oripa.domain.paint.PaintContextInterface#getVertex(int)
 	 */
 	@Override
 	public Vector2d getVertex(final int index) {
@@ -263,8 +260,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see
-	 * oripa.domain.paint.core.PaintContextInterface#pushVertex(javax.vecmath
+	 * @see oripa.domain.paint.PaintContextInterface#pushVertex(javax.vecmath
 	 * .Vector2d)
 	 */
 	@Override
@@ -275,7 +271,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#pushLine(oripa.value
+	 * @see oripa.domain.paint.PaintContextInterface#pushLine(oripa.value
 	 * .OriLine)
 	 */
 	@Override
@@ -287,7 +283,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#popVertex()
+	 * @see oripa.domain.paint.PaintContextInterface#popVertex()
 	 */
 	@Override
 	public Vector2d popVertex() {
@@ -301,7 +297,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#popLine()
+	 * @see oripa.domain.paint.PaintContextInterface#popLine()
 	 */
 	@Override
 	public OriLine popLine() {
@@ -317,7 +313,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#removeLine(oripa.value
+	 * @see oripa.domain.paint.PaintContextInterface#removeLine(oripa.value
 	 * .OriLine)
 	 */
 	@Override
@@ -329,7 +325,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#peekVertex()
+	 * @see oripa.domain.paint.PaintContextInterface#peekVertex()
 	 */
 	@Override
 	public Vector2d peekVertex() {
@@ -339,7 +335,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#peekLine()
+	 * @see oripa.domain.paint.PaintContextInterface#peekLine()
 	 */
 	@Override
 	public OriLine peekLine() {
@@ -349,7 +345,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#getLineCount()
+	 * @see oripa.domain.paint.PaintContextInterface#getLineCount()
 	 */
 	@Override
 	public int getLineCount() {
@@ -359,7 +355,7 @@ public class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see oripa.domain.paint.core.PaintContextInterface#getVertexCount()
+	 * @see oripa.domain.paint.PaintContextInterface#getVertexCount()
 	 */
 	@Override
 	public int getVertexCount() {
