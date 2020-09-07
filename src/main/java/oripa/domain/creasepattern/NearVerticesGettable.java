@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -30,14 +30,18 @@ public interface NearVerticesGettable {
 
 	/**
 	 * returns vertices in the area which the given vertex belongs to.
-	 * @param v		vertex
+	 *
+	 * @param v
+	 *            vertex
 	 * @return
 	 */
 	public abstract Collection<Vector2d> getVerticesAround(Vector2d v);
 
 	/**
-	 * similar to #getAround(). this method returns some areas in a large rectangle
-	 * (x-distanse, y-distance, x+distance, y+distance).
+	 * similar to {@link #getVerticesAround(Vector2d v)}. this method returns
+	 * some areas in a large rectangle (x-distanse, y-distance, x+distance,
+	 * y+distance).
+	 *
 	 * @param x
 	 * @param y
 	 * @param distance
