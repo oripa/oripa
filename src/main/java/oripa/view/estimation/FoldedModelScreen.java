@@ -81,9 +81,9 @@ public class FoldedModelScreen extends JPanel
 	private boolean m_bFillFaces = true;
 	private boolean m_bAmbientOcclusion = false;
 	private boolean m_bFaceOrderFlip = false;
-	static private double m_rotAngle = 0;
-	static private double m_scale = 0.8;
-	static private boolean m_bDrawEdges = true;
+	private final double m_rotAngle = 0;
+	private final double m_scale = 0.8;
+	private boolean m_bDrawEdges = true;
 	private Image renderImage;
 	double rotateAngle;
 	double scale;
