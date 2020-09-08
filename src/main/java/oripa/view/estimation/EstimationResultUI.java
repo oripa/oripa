@@ -303,7 +303,8 @@ public class EstimationResultUI extends JPanel {
 						".svg file",
 						// ORIPA.res.getString("File"),
 						new SavingDocAction(
-								ExporterSVGFactory.createFoldedModelExporter()))
+								ExporterSVGFactory
+										.createFoldedModelExporter(screen.isFaceOrderFlipped())))
 		};
 
 	}

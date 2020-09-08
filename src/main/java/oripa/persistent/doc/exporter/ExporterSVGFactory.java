@@ -15,7 +15,6 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
 import oripa.value.OriLine;
-import oripa.view.estimation.FoldedModelScreen;
 
 public class ExporterSVGFactory {
 
@@ -93,6 +92,15 @@ public class ExporterSVGFactory {
 	}
 
 	private static class FoldedModelExporter implements DocExporter {
+		private final boolean faceOrderFlip;
+
+		/**
+		 * Constructor
+		 */
+		public FoldedModelExporter(final boolean faceOrderFlip) {
+			this.faceOrderFlip = faceOrderFlip;
+		}
+
 		@Override
 		public boolean export(final Doc doc, final String filepath)
 				throws IOException, IllegalArgumentException {
@@ -150,8 +158,7 @@ public class ExporterSVGFactory {
 
 				for (int i = 0; i < sortedFaces.size(); i++) {
 					// FIXME: Global method!
-					OriFace face = FoldedModelScreen.isM_bFaceOrderFlip() ? sortedFaces
-							.get(i)
+					OriFace face = faceOrderFlip ? sortedFaces.get(i)
 							: sortedFaces.get(sortedFaces.size() - i - 1);
 					java.util.ArrayList<Vector2d> points = new java.util.ArrayList<>();
 					for (OriHalfedge he : face.halfedges) {
@@ -178,10 +185,8 @@ public class ExporterSVGFactory {
 							points.add(new Vector2d(x2, y2));
 						}
 					}
-					if ((!face.faceFront && FoldedModelScreen
-							.isM_bFaceOrderFlip())
-							|| (face.faceFront && !FoldedModelScreen
-									.isM_bFaceOrderFlip())) {
+					if ((!face.faceFront && faceOrderFlip)
+							|| (face.faceFront && !faceOrderFlip)) {
 						bw.write(polygonStart);
 					} else {
 						bw.write(polygonStart2);
@@ -203,7 +208,7 @@ public class ExporterSVGFactory {
 		return new CreasePatternExporter();
 	}
 
-	public static DocExporter createFoldedModelExporter() {
-		return new FoldedModelExporter();
+	public static DocExporter createFoldedModelExporter(final boolean faceOrderFlip) {
+		return new FoldedModelExporter(faceOrderFlip);
 	}
 }

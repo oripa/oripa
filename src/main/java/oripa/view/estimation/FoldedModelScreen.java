@@ -80,7 +80,7 @@ public class FoldedModelScreen extends JPanel
 	private boolean m_bUseColor = true;
 	private boolean m_bFillFaces = true;
 	private boolean m_bAmbientOcclusion = false;
-	private static boolean m_bFaceOrderFlip = false;
+	private boolean m_bFaceOrderFlip = false;
 	static private double m_rotAngle = 0;
 	static private double m_scale = 0.8;
 	static private boolean m_bDrawEdges = true;
@@ -343,7 +343,7 @@ public class FoldedModelScreen extends JPanel
 
 		for (OriFace face : faces) {
 
-			face.trianglateAndSetColor(m_bUseColor, isM_bFaceOrderFlip(),
+			face.trianglateAndSetColor(m_bUseColor, isFaceOrderFlipped(),
 					origamiModel.getPaperSize());
 
 			for (TriangleFace tri : face.triangles) {
@@ -384,7 +384,7 @@ public class FoldedModelScreen extends JPanel
 		}
 
 		if (m_bAmbientOcclusion) {
-			int renderFace = isM_bFaceOrderFlip() ? FoldedModelInfo.UPPER : FoldedModelInfo.LOWER;
+			int renderFace = isFaceOrderFlipped() ? FoldedModelInfo.UPPER : FoldedModelInfo.LOWER;
 			int r = 10;
 			int s = (int) (r * r * Math.PI);
 			// For every pixel
@@ -519,7 +519,7 @@ public class FoldedModelScreen extends JPanel
 
 				int p = offset + x;
 
-				int renderFace = isM_bFaceOrderFlip() ? FoldedModelInfo.UPPER
+				int renderFace = isFaceOrderFlipped() ? FoldedModelInfo.UPPER
 						: FoldedModelInfo.LOWER;
 
 				int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
@@ -542,14 +542,14 @@ public class FoldedModelScreen extends JPanel
 							ty = ty % textureImage.getHeight();
 							int textureColor = textureImage.getRGB(tx, ty);
 
-							if (m_bFillFaces && (tri.face.faceFront ^ isM_bFaceOrderFlip())) {
+							if (m_bFillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
 								pbuf[p] = textureColor;
 							} else {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
 
 							}
 						} else {
-							if (m_bFillFaces && (tri.face.faceFront ^ isM_bFaceOrderFlip())) {
+							if (m_bFillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
 							} else {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
@@ -687,14 +687,11 @@ public class FoldedModelScreen extends JPanel
 		return bufferImage;
 	}
 
-	// FIXME global method!
-	public static boolean isM_bFaceOrderFlip() {
+	public boolean isFaceOrderFlipped() {
 		return m_bFaceOrderFlip;
 	}
 
-	// FIXME global method!
-	public static void setM_bFaceOrderFlip(final boolean m_bFaceOrderFlip) {
-		FoldedModelScreen.m_bFaceOrderFlip = m_bFaceOrderFlip;
+	public void setM_bFaceOrderFlip(final boolean m_bFaceOrderFlip) {
+		this.m_bFaceOrderFlip = m_bFaceOrderFlip;
 	}
-
 }
