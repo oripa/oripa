@@ -47,6 +47,7 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.TriangleFace;
 import oripa.domain.fold.TriangleVertex;
+import oripa.util.gui.MouseUtility;
 
 /**
  * A screen to show whether Maekawa theorem and Kawasaki theorem holds.
@@ -652,12 +653,12 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if (javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+		if (MouseUtility.isLeftButtonDown(e)) {
 			rotateAngle -= (e.getX() - preMousePoint.getX()) / 100.0;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
-		} else if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+		} else if (MouseUtility.isRightButtonDown(e)) {
 			transX += (e.getX() - preMousePoint.getX()) / scale;
 			transY += (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();

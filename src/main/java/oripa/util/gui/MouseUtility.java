@@ -6,6 +6,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
+import javax.swing.SwingUtilities;
+
 /**
  * Utility Module for mouse
  *
@@ -42,7 +44,7 @@ public class MouseUtility {
 	 * @return true if left button of the mouse is pressed, otherwise false.
 	 */
 	public static boolean isLeftButtonDown(final MouseEvent event) {
-		return (event.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0;
+		return SwingUtilities.isLeftMouseButton(event);
 	}
 
 	/**
@@ -51,7 +53,7 @@ public class MouseUtility {
 	 * @return true if right button of the mouse is pressed, otherwise false.
 	 */
 	public static boolean isRightButtonDown(final MouseEvent event) {
-		return (event.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0;
+		return SwingUtilities.isRightMouseButton(event);
 	}
 
 	/**

@@ -51,6 +51,7 @@ import oripa.domain.paint.util.ElementSelector;
 import oripa.resource.Constants;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
+import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
 import oripa.viewsetting.main.MainScreenSetting;
 
@@ -321,14 +322,14 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+		if (MouseUtility.isRightButtonDown(e)) {
 			transX += (e.getX() - preMousePoint.getX()) / scale;
 			transY += (e.getY() - preMousePoint.getY()) / scale;
 
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
-		} else if (javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+		} else if (MouseUtility.isLeftButtonDown(e)) {
 			rotateAngle += (e.getX() - preMousePoint.getX()) / 100.0;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
