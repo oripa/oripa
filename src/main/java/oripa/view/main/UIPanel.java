@@ -54,7 +54,7 @@ import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.PaintBoundStateFactory;
-import oripa.bind.state.action.PaintActionSetter;
+import oripa.bind.state.action.PaintActionSetterFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
@@ -607,13 +607,14 @@ public class UIPanel extends JPanel {
 		alterLine_combo_from.addItemListener(new FromLineTypeItemListener(setting));
 		alterLine_combo_to.addItemListener(new ToLineTypeItemListener(setting));
 
+		PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
+				actionHolder, screenUpdater, paintContext);
+
 		buttonLength.addActionListener(
-				new PaintActionSetter(actionHolder, new LengthMeasuringAction(valueSetting),
-						screenUpdater, paintContext));
+				setterFactory.create(new LengthMeasuringAction(valueSetting)));
 
 		buttonAngle.addActionListener(
-				new PaintActionSetter(actionHolder, new AngleMeasuringAction(valueSetting),
-						screenUpdater, paintContext));
+				setterFactory.create(new AngleMeasuringAction(valueSetting)));
 
 		lineTypeMountainButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.RIDGE));
