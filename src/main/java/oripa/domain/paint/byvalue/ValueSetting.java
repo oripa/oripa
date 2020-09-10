@@ -18,11 +18,6 @@ public class ValueSetting {
 		support.addPropertyChangeListener(propertyName, listener);
 	}
 
-	public void set(final double length, final double angle) {
-		setLength(length);
-		setAngle(angle);
-	}
-
 	public double getLength() {
 		return length;
 	}
