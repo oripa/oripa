@@ -79,11 +79,11 @@ public class PaintBoundStateFactory {
 			final ScreenUpdaterInterface screenUpdater,
 			final String id) {
 
-		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
-				stateManager, null);
+		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
+				parent, stateManager, null);
 
-		final PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(actionHolder,
-				screenUpdater, context);
+		final PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
+				actionHolder, screenUpdater, context);
 
 		ApplicationState<EditMode> state = null;
 
