@@ -35,7 +35,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import org.slf4j.Logger;
@@ -282,7 +281,7 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				if (SwingUtilities.isRightMouseButton(e)) {
+				if (MouseUtility.isRightButtonDown(e)) {
 					action.onRightClick(
 							paintContext, affineTransform,
 							MouseUtility.isControlKeyDown(e));
