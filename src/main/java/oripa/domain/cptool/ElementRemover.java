@@ -110,7 +110,7 @@ public class ElementRemover {
 				.filter(line -> line.selected)
 				.collect(Collectors.toList());
 
-		creasePattern.removeAll(selectedLines);
+		selectedLines.forEach(line -> removeLine(line, creasePattern));
 	}
 
 }
