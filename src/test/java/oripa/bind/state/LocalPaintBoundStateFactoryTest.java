@@ -15,11 +15,9 @@ import org.junit.jupiter.api.Test;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.domain.cptool.Painter;
+import oripa.bind.state.action.PaintActionSetter;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.MouseActionHolder;
-import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.viewsetting.ChangeViewSetting;
 
@@ -40,8 +38,6 @@ public class LocalPaintBoundStateFactoryTest {
 
 			var actionHolder = mock(MouseActionHolder.class);
 			var mouseAction = mock(GraphicMouseAction.class);
-			var context = mock(PaintContextInterface.class);
-			var screenUpdater = mock(ScreenUpdaterInterface.class);
 			var action1 = mock(ActionListener.class);
 			var action2 = mock(ActionListener.class);
 
@@ -52,9 +48,9 @@ public class LocalPaintBoundStateFactoryTest {
 
 			var changeHint = mock(ChangeViewSetting.class);
 
+			var actionSetter = mock(PaintActionSetter.class);
 			ApplicationState<EditMode> state = factory.create(
-					actionHolder,
-					mouseAction, errorListener, context, screenUpdater, changeHint,
+					EditMode.INPUT, actionSetter, errorListener, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -84,15 +80,6 @@ public class LocalPaintBoundStateFactoryTest {
 					stateManager,
 					new ActionListener[] { basicAction1, basicAction2 });
 
-			var actionHolder = mock(MouseActionHolder.class);
-			var currentMouseAction = mock(GraphicMouseAction.class);
-			var assignedMouseAction = mock(GraphicMouseAction.class);
-			var context = mock(PaintContextInterface.class);
-			var screenUpdater = mock(ScreenUpdaterInterface.class);
-			var painter = mock(Painter.class);
-			when(context.getPainter()).thenReturn(painter);
-			when(actionHolder.getMouseAction()).thenReturn(currentMouseAction);
-
 			var action1 = mock(ActionListener.class);
 			var action2 = mock(ActionListener.class);
 
@@ -103,9 +90,10 @@ public class LocalPaintBoundStateFactoryTest {
 
 			var changeHint = mock(ChangeViewSetting.class);
 
+			var paintActionSetter = mock(PaintActionSetter.class);
+
 			ApplicationState<EditMode> state = factory.create(
-					actionHolder,
-					assignedMouseAction, errorListener, context, screenUpdater, changeHint,
+					EditMode.INPUT, paintActionSetter, errorListener, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -115,14 +103,8 @@ public class LocalPaintBoundStateFactoryTest {
 			verify(errorListener).isError(event);
 			verify(errorListener, never()).onError(parent, event);
 
-			verify(currentMouseAction).destroy(context);
-			verify(assignedMouseAction).recover(context);
-			verify(actionHolder).setMouseAction(assignedMouseAction);
-			verify(screenUpdater).updateScreen();
+			verify(paintActionSetter).actionPerformed(event);
 
-			// every action listener should be called.
-			verify(basicAction1).actionPerformed(event);
-			verify(basicAction2).actionPerformed(event);
 			verify(action1).actionPerformed(event);
 			verify(action2).actionPerformed(event);
 

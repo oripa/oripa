@@ -8,7 +8,9 @@ import oripa.appstate.StateManager;
 import oripa.bind.EditOutlineActionWrapper;
 import oripa.bind.copypaste.CopyAndPasteActionWrapper;
 import oripa.bind.copypaste.CopyPasteErrorListener;
+import oripa.bind.state.action.PaintActionSetterFactory;
 import oripa.domain.paint.EditMode;
+import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
@@ -80,94 +82,103 @@ public class PaintBoundStateFactory {
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
 				stateManager, null);
 
+		final PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(actionHolder,
+				screenUpdater, context);
+
 		ApplicationState<EditMode> state = null;
 
 		var changeHint = new ChangeHint(mainFrameSetting, id);
 
+		GraphicMouseActionInterface mouseAction;
 		switch (id) {
 		case StringID.SELECT_ID:
+			mouseAction = new SelectLineAction();
 			state = stateFactory.create(
-					actionHolder, new SelectLineAction(), context, screenUpdater, changeHint,
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.DELETE_LINE_ID:
+			mouseAction = new DeleteLineAction();
 			state = stateFactory.create(
-					actionHolder, new DeleteLineAction(), context, screenUpdater, changeHint,
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.CHANGE_LINE_TYPE_ID:
+			mouseAction = new ChangeLineTypeAction(uiPanelSetting);
 			state = stateFactory.create(
-					actionHolder, new ChangeLineTypeAction(uiPanelSetting), context, screenUpdater,
-					changeHint,
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,
 					new ActionListener[] {
 							(e) -> (new ChangeOnAlterTypeButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.ADD_VERTEX_ID:
+			mouseAction = new AddVertexAction();
 			state = stateFactory.create(
-					actionHolder, new AddVertexAction(), context, screenUpdater, changeHint,
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.DELETE_VERTEX_ID:
+			mouseAction = new DeleteVertexAction();
 			state = stateFactory.create(
-					actionHolder, new DeleteVertexAction(), context, screenUpdater, changeHint,
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.EDIT_CONTOUR_ID:
+			mouseAction = new EditOutlineActionWrapper(stateManager, actionHolder);
 			state = stateFactory.create(
-					actionHolder, new EditOutlineActionWrapper(stateManager, actionHolder), context,
-					screenUpdater, changeHint,
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.SELECT_ALL_LINE_ID:
+			mouseAction = new SelectLineAction();
 			// selecting all lines should be done in other listener
 			state = stateFactory.create(
-					actionHolder, new SelectLineAction(), context, screenUpdater, changeHint,
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.COPY_PASTE_ID:
+			mouseAction = new CopyAndPasteActionWrapper(stateManager, false, originHolder);
 			state = stateFactory.create(
-					actionHolder,
-					new CopyAndPasteActionWrapper(stateManager, false, originHolder),
+					mouseAction.getEditMode(), setterFactory.create(mouseAction),
 					new CopyPasteErrorListener(context),
-					context, screenUpdater, changeHint,
+					changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.CUT_PASTE_ID:
+			mouseAction = new CopyAndPasteActionWrapper(stateManager, true, originHolder);
 			state = stateFactory.create(
-					actionHolder,
-					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
+					mouseAction.getEditMode(), setterFactory.create(mouseAction),
 					new CopyPasteErrorListener(context),
-					context, screenUpdater, changeHint,
+					changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		default:
-			state = createLineInputState(parent, actionHolder, context, screenUpdater, id);
+			state = createLineInputState(parent, actionHolder, setterFactory, id);
 		}
 
 		if (state == null) {
@@ -179,8 +190,7 @@ public class PaintBoundStateFactory {
 
 	private ApplicationState<EditMode> createLineInputState(
 			final Component parent, final MouseActionHolder actionHolder,
-			final PaintContextInterface context,
-			final ScreenUpdaterInterface screenUpdater,
+			final PaintActionSetterFactory setterFactory,
 			final String id) {
 
 		var changeHint = new ChangeHint(mainFrameSetting, id);
@@ -192,48 +202,47 @@ public class PaintBoundStateFactory {
 								.changeViewSetting() });
 
 		ApplicationState<EditMode> state = null;
+		GraphicMouseActionInterface mouseAction;
 		switch (id) {
 		case StringID.DIRECT_V_ID:
-
+			mouseAction = new TwoPointSegmentAction();
 			state = stateFactory.create(
-					actionHolder, new TwoPointSegmentAction(),
-					context, screenUpdater, changeHint, null);
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 			break;
 
 		case StringID.ON_V_ID:
+			mouseAction = new TwoPointLineAction();
 			state = stateFactory.create(
-					actionHolder, new TwoPointLineAction(),
-					context, screenUpdater, changeHint, null);
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 			break;
 		case StringID.VERTICAL_ID:
+			mouseAction = new VerticalLineAction();
 			state = stateFactory.create(
-					actionHolder, new VerticalLineAction(),
-					context, screenUpdater, changeHint, null);
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 			break;
 
 		case StringID.BISECTOR_ID:
+			mouseAction = new AngleBisectorAction();
 			state = stateFactory.create(
-					actionHolder, new AngleBisectorAction(),
-					context, screenUpdater, changeHint, null);
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 			break;
 
 		case StringID.TRIANGLE_ID:
+			mouseAction = new TriangleSplitAction();
 			state = stateFactory.create(
-					actionHolder, new TriangleSplitAction(),
-					context, screenUpdater, changeHint, null);
-
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 			break;
 
 		case StringID.SYMMETRIC_ID:
+			mouseAction = new SymmetricalLineAction();
 			state = stateFactory.create(
-					actionHolder, new SymmetricalLineAction(),
-					context, screenUpdater, changeHint, null);
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 
 			break;
 		case StringID.MIRROR_ID:
+			mouseAction = new MirrorCopyAction();
 			state = stateFactory.create(
-					actionHolder, new MirrorCopyAction(),
-					context, screenUpdater, changeHint, null);
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 
 			break;
 
@@ -242,17 +251,15 @@ public class PaintBoundStateFactory {
 					parent, stateManager, new ActionListener[] {
 							e -> (new ChangeOnByValueButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
-
+			mouseAction = new LineByValueAction(uiPanelSetting.getValueSetting());
 			state = byValueFactory.create(
-					actionHolder, new LineByValueAction(uiPanelSetting.getValueSetting()),
-					context, screenUpdater, changeHint, null);
-
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 			break;
 
 		case StringID.PERPENDICULAR_BISECTOR_ID:
+			mouseAction = new TwoPointBisectorAction();
 			state = stateFactory.create(
-					actionHolder, new TwoPointBisectorAction(),
-					context, screenUpdater, changeHint, null);
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 
 		}
 
