@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.bind.EditOutlineActionWrapper;
 import oripa.bind.copypaste.CopyAndPasteActionWrapper;
 import oripa.bind.copypaste.CopyPasteErrorListener;
+import oripa.bind.outline.EditOutlineActionWrapper;
 import oripa.bind.state.action.PaintActionSetterFactory;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;

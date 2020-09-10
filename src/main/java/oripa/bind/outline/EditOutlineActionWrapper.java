@@ -1,4 +1,4 @@
-package oripa.bind;
+package oripa.bind.outline;
 
 import java.awt.geom.AffineTransform;
 
