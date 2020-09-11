@@ -1,4 +1,4 @@
-package oripa.paint.creasepattern;
+package oripa.domain.creasepattern;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.domain.creasepattern.impl.CreasePattern;
 import oripa.value.OriLine;
 
 public class CreasePatternTest {

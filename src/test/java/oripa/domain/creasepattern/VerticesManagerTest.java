@@ -1,4 +1,4 @@
-package oripa.paint.creasepattern;
+package oripa.domain.creasepattern;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,8 +9,6 @@ import javax.vecmath.Vector2d;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.domain.creasepattern.NearVerticesGettable;
-import oripa.domain.creasepattern.impl.VerticesManager;
 import oripa.value.OriPoint;
 
 public class VerticesManagerTest {

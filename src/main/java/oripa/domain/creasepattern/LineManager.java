@@ -1,4 +1,4 @@
-package oripa.domain.creasepattern.impl;
+package oripa.domain.creasepattern;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +14,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class LineManager implements Collection<OriLine> {
+class LineManager implements Collection<OriLine> {
 
 	// The order of lines affects the position of drawn estimated model.
 	// HashSet is fast to access but does not guarantee that the order is always

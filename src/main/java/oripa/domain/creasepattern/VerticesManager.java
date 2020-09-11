@@ -1,4 +1,4 @@
-package oripa.domain.creasepattern.impl;
+package oripa.domain.creasepattern;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.creasepattern.NearVerticesGettable;
 import oripa.value.OriLine;
 
 /**
@@ -18,7 +17,7 @@ import oripa.value.OriLine;
  * @author koji
  *
  */
-public class VerticesManager implements NearVerticesGettable {
+class VerticesManager implements NearVerticesGettable {
 
 	/*
 	 * divides paper equally in order to localize access to vertices
