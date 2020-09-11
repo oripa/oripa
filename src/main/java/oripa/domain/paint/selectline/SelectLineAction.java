@@ -36,11 +36,9 @@ public class SelectLineAction extends RectangularSelectableAction {
 			return;
 		}
 
-		for (OriLine line : creasePattern) {
-			if (line.selected) {
-				context.pushLine(line);
-			}
-		}
+		creasePattern.stream()
+				.filter(line -> line.selected)
+				.forEach(line -> context.pushLine(line));
 	}
 
 	@Override
@@ -54,15 +52,15 @@ public class SelectLineAction extends RectangularSelectableAction {
 		context.creasePatternUndo().pushUndoInfo();
 
 		for (OriLine line : selectedLines) {
-			if (line.typeVal == OriLine.TYPE_CUT) {
+			if (line.getType() == OriLine.Type.CUT) {
 				continue;
 			}
 			// Don't select if the line is hidden
-			if (!context.isMVLineVisible() && (line.typeVal == OriLine.TYPE_RIDGE
-					|| line.typeVal == OriLine.TYPE_VALLEY)) {
+			if (!context.isMVLineVisible() && (line.getType() == OriLine.Type.RIDGE
+					|| line.getType() == OriLine.Type.VALLEY)) {
 				continue;
 			}
-			if (!context.isAuxLineVisible() && line.typeVal == OriLine.TYPE_NONE) {
+			if (!context.isAuxLineVisible() && line.getType() == OriLine.Type.NONE) {
 				continue;
 			}
 

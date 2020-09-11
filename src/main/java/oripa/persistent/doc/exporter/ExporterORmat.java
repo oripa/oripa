@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -20,69 +20,72 @@ package oripa.persistent.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
+import oripa.doc.Doc;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.Doc;
 
 // export folded model
-public class ExporterORmat implements DocExporter{
+public class ExporterORmat implements DocExporter {
 
-    public boolean export(Doc doc, String filepath) throws Exception {
-    	OrigamiModel origamiModel = doc.getOrigamiModel();
-    	FoldedModelInfo foldedModelInfo = doc.getFoldedModelInfo();
+	@Override
+	public boolean export(final Doc doc, final String filepath)
+			throws IOException, IllegalArgumentException {
+		OrigamiModel origamiModel = doc.getOrigamiModel();
+		FoldedModelInfo foldedModelInfo = doc.getFoldedModelInfo();
 
-    	FileWriter fw = new FileWriter(filepath);
-        BufferedWriter bw = new BufferedWriter(fw);
+		FileWriter fw = new FileWriter(filepath);
+		BufferedWriter bw = new BufferedWriter(fw);
 
-        // Align the center of the model, combine scale
-        bw.write("# Created by ORIPA\n");
-        bw.write("#\n");
-        bw.write("# v (x) (y) (x: folded) (y: folded)\n");
-        bw.write("# f (index list of contour vertices. Index number starts from 1.)\n");
-        bw.write("\n");
+		// Align the center of the model, combine scale
+		bw.write("# Created by ORIPA\n");
+		bw.write("#\n");
+		bw.write("# v (x) (y) (x: folded) (y: folded)\n");
+		bw.write("# f (index list of contour vertices. Index number starts from 1.)\n");
+		bw.write("\n");
 
-        List<OriVertex> vertices = origamiModel.getVertices();
-        List<OriFace> faces = origamiModel.getFaces();
+		List<OriVertex> vertices = origamiModel.getVertices();
+		List<OriFace> faces = origamiModel.getFaces();
 
-        int id = 1;
-        for (OriVertex vertex : vertices) {
-            bw.write("v " + vertex.preP.x + " " + vertex.preP.y + " " + vertex.p.x + " " + vertex.p.y + "\n");
-            vertex.tmpInt = id;
-            id++;
-        }
+		int id = 1;
+		for (OriVertex vertex : vertices) {
+			bw.write("v " + vertex.preP.x + " " + vertex.preP.y + " " + vertex.p.x + " "
+					+ vertex.p.y + "\n");
+			vertex.tmpInt = id;
+			id++;
+		}
 
+		for (OriFace face : faces) {
+			bw.write("f");
+			for (OriHalfedge he : face.halfedges) {
+				bw.write(" " + he.vertex.tmpInt);
+			}
+			bw.write("\n");
+		}
 
-        for (OriFace face : faces) {
-            bw.write("f");
-            for (OriHalfedge he : face.halfedges) {
-                bw.write(" " + he.vertex.tmpInt);
-            }
-            bw.write("\n");
-        }
+		int faceNum = faces.size();
+		bw.write("# overlap relation matrix\n");
+		bw.write("# 0: NO_OVERLAP\n");
+		bw.write("# 1: face[row_index] located LOWER than face[col_index]\n");
+		bw.write("# 2: face[row_index] located UPPER than face[col_index]\n");
+		bw.write("# 9: UNDEFINED (not used)\n");
+		bw.write("# matrix size (face num) =" + faceNum + "\n");
 
-        int faceNum = faces.size();
-        bw.write("# overlap relation matrix\n");
-        bw.write("# 0: NO_OVERLAP\n");
-        bw.write("# 1: face[row_index] located LOWER than face[col_index]\n");
-        bw.write("# 2: face[row_index] located UPPER than face[col_index]\n");
-        bw.write("# 9: UNDEFINED (not used)\n");
-        bw.write("# matrix size (face num) =" + faceNum + "\n");
+		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+		for (int f0 = 0; f0 < faceNum; f0++) {
+			for (int f1 = 0; f1 < faceNum; f1++) {
+				bw.write("" + overlapRelation[f0][f1] + " ");
+			}
+			bw.write("\n");
+		}
 
-        int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
-        for (int f0 = 0; f0 < faceNum; f0++) {
-            for (int f1 = 0; f1 < faceNum; f1++) {
-                bw.write("" + overlapRelation[f0][f1] + " ");
-            }
-            bw.write("\n");
-        }
+		bw.close();
 
-        bw.close();
-        
-        return true;
-    }
+		return true;
+	}
 }

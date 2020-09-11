@@ -23,8 +23,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -34,49 +33,40 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.SwingWorker;
-import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.MouseUtility;
-import oripa.value.OriLine;
 import oripa.viewsetting.ViewScreenUpdater;
-import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.MainScreenSetting;
 import oripa.viewsetting.main.ScreenUpdater;
 
 public class PainterScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,
-		ActionListener, ComponentListener {
+		ComponentListener {
 
 	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
 
-	private final MainScreenSettingDB setting = MainScreenSettingDB
-			.getInstance();
-	private final ScreenUpdater screenUpdater = ScreenUpdater.getInstance();
+	private final MainScreenSetting setting = new MainScreenSetting();
+	private final ScreenUpdater screenUpdater = new ScreenUpdater();
 	private final PaintContextInterface paintContext;
-	private final SheetCutOutlinesHolder cutOutlinesHolder;
+	private final CutModelOutlinesHolder cutOutlinesHolder;
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
 	private Graphics2D bufferg;
 	private Point2D preMousePoint; // Screen coordinates
-	private final Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logic
-																				// coordinates
+
 	private double scale;
 	private double transX;
 	private double transY;
@@ -84,11 +74,6 @@ public class PainterScreen extends JPanel
 	// Affine transformation information
 	private Dimension preSize;
 	private final AffineTransform affineTransform = new AffineTransform();
-	private final ArrayList<Vector2d> crossPoints = new ArrayList<>();
-	private final JPopupMenu popup = new JPopupMenu();
-	private final JMenuItem popupItem_DivideFace = new JMenuItem(
-			"Dividing face");
-	private final JMenuItem popupItem_FlipFace = new JMenuItem("Flipping face");
 
 	private final CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
@@ -97,7 +82,7 @@ public class PainterScreen extends JPanel
 	public PainterScreen(
 			final MouseActionHolder mouseActionHolder,
 			final PaintContextInterface aContext,
-			final SheetCutOutlinesHolder aCutOutlineHolder) {
+			final CutModelOutlinesHolder aCutOutlineHolder) {
 		this.mouseActionHolder = mouseActionHolder;
 		screenUpdater.setMouseActionHolder(mouseActionHolder);
 		paintContext = aContext;
@@ -114,10 +99,6 @@ public class PainterScreen extends JPanel
 
 		setBackground(Color.white);
 
-		popupItem_DivideFace.addActionListener(this);
-		popup.add(popupItem_DivideFace);
-		popupItem_FlipFace.addActionListener(this);
-		popup.add(popupItem_FlipFace);
 		preSize = getSize();
 	}
 
@@ -125,7 +106,11 @@ public class PainterScreen extends JPanel
 		return screenUpdater;
 	}
 
-	/**
+	public MainScreenSetting getMainScreenSetting() {
+		return setting;
+	}
+
+	/*
 	 * for verifying algorithm
 	 *
 	 * @param g2d
@@ -236,20 +221,15 @@ public class PainterScreen extends JPanel
 		super.paintComponent(g);
 
 		Graphics2D bufferG2D = updateBufferImage();
+		bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
 
 		drawer.draw(bufferG2D, paintContext,
 				mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
 
-		for (Vector2d v : crossPoints) {
-			bufferG2D.setColor(Color.RED);
-			bufferG2D.fill(new Rectangle2D.Double(v.x - 5.0 / scale, v.y - 5.0
-					/ scale,
-					10.0 / scale, 10.0 / scale));
-		}
-
 		if (paintContext.isCrossLineVisible()) {
-			List<OriLine> crossLines = cutOutlinesHolder.getSheetCutOutlines();
-			drawer.drawAllLines(bufferG2D, crossLines);
+			var crossLines = cutOutlinesHolder.getOutlines();
+			drawer.drawAllLines(bufferG2D, crossLines, (float) scale);
 		}
 
 		// Line that links the pair of unsetled faces
@@ -301,24 +281,23 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+				if (MouseUtility.isRightButtonDown(e)) {
 					action.onRightClick(
 							paintContext, affineTransform,
-							MouseUtility.isControlKeyPressed(e));
+							MouseUtility.isControlKeyDown(e));
 
 					return null;
 				}
 
 				mouseActionHolder.setMouseAction(action.onLeftClick(
 						paintContext,
-						MouseUtility.isControlKeyPressed(e)));
+						MouseUtility.isControlKeyDown(e)));
 				return null;
 			}
 
 			@Override
 			protected void done() {
 				repaint();
-				// screenUpdater.updateScreen();
 			}
 		}.execute();
 
@@ -333,7 +312,7 @@ public class PainterScreen extends JPanel
 		}
 
 		action.onPress(paintContext, affineTransform,
-				MouseUtility.isControlKeyPressed(e));
+				MouseUtility.isControlKeyDown(e));
 
 		preMousePoint = e.getPoint();
 	}
@@ -345,7 +324,7 @@ public class PainterScreen extends JPanel
 
 		if (action != null) {
 			action.onRelease(paintContext, affineTransform,
-					MouseUtility.isControlKeyPressed(e));
+					MouseUtility.isControlKeyDown(e));
 		}
 		repaint();
 	}
@@ -360,8 +339,10 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0 && // zoom
-				(e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK) {
+
+		// zoom
+		if (MouseUtility.isLeftButtonDown(e) &&
+				MouseUtility.isControlKeyDown(e)) {
 
 			double moved = e.getX() - preMousePoint.getX() + e.getY()
 					- preMousePoint.getY();
@@ -377,7 +358,9 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		if ((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0) {
+		// move camera
+		if (MouseUtility.isRightButtonDown(e) ||
+				(MouseUtility.isLeftButtonDown(e) && MouseUtility.isShiftKeyDown(e))) {
 			transX += (e.getX() - preMousePoint.getX()) / scale;
 			transY += (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();
@@ -393,21 +376,12 @@ public class PainterScreen extends JPanel
 		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
 				affineTransform, e.getPoint()));
 		action.onDrag(paintContext, affineTransform,
-				MouseUtility.isControlKeyPressed(e));
+				MouseUtility.isControlKeyDown(e));
 		repaint();
 	}
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		// Gets the value of the current logical coordinates of the mouse
-
-		try {
-			affineTransform.inverseTransform(e.getPoint(),
-					currentMousePointLogic);
-		} catch (Exception ex) {
-			return;
-		}
-
 		paintContext.setScale(scale);
 		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
 				affineTransform, e.getPoint()));
@@ -421,7 +395,7 @@ public class PainterScreen extends JPanel
 			@Override
 			protected Void doInBackground() throws Exception {
 				action.onMove(paintContext, affineTransform,
-						MouseUtility.isControlKeyPressed(e));
+						MouseUtility.isControlKeyDown(e));
 				return null;
 			}
 
@@ -434,15 +408,11 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseWheelMoved(final MouseWheelEvent e) {
-		double scale_ = (100.0 - e.getWheelRotation() * 5) / 100.0;
-		scale *= scale_;
+		double rate = (100.0 - e.getWheelRotation() * 5) / 100.0;
+		scale *= rate;
 		paintContext.setScale(scale);
 		updateAffineTransform();
 		repaint();
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent ae) {
 	}
 
 	@Override
@@ -452,7 +422,7 @@ public class PainterScreen extends JPanel
 		}
 		preSize = getSize();
 
-		// Update of the logical coordinates of the center of the screen
+		// Update the logical coordinates of the center of the screen
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
 		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
 
@@ -482,13 +452,13 @@ public class PainterScreen extends JPanel
 				ViewScreenUpdater.REDRAW_REQUESTED, e -> repaint());
 
 		setting.addPropertyChangeListener(
-				MainScreenSettingDB.GRID_VISIBLE, e -> {
+				MainScreenSetting.GRID_VISIBLE, e -> {
 					paintContext.setGridVisible((boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
-				MainScreenSettingDB.CROSS_LINE_VISIBLE, e -> {
+				MainScreenSetting.CROSS_LINE_VISIBLE, e -> {
 					var visible = (boolean) e.getNewValue();
 					logger.info("receive crossLineVisible has become " + visible);
 					paintContext.setCrossLineVisible(visible);

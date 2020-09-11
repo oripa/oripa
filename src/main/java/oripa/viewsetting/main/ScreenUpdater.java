@@ -16,22 +16,6 @@ public class ScreenUpdater implements
 
 	private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-	// -------------------------
-	// singleton
-	// -------------------------
-	private static ScreenUpdater instance = null;
-
-	private ScreenUpdater() {
-	}
-
-	public static ScreenUpdater getInstance() {
-		if (instance == null) {
-			instance = new ScreenUpdater();
-		}
-
-		return instance;
-	}
-
 	public void setMouseActionHolder(final MouseActionHolder actionHolder) {
 		this.actionHolder = actionHolder;
 	}

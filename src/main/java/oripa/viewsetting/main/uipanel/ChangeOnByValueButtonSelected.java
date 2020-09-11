@@ -3,11 +3,17 @@ package oripa.viewsetting.main.uipanel;
 import oripa.viewsetting.ChangeViewSetting;
 
 public class ChangeOnByValueButtonSelected implements ChangeViewSetting {
+	private final UIPanelSetting setting;
+
+	/**
+	 * Constructor
+	 */
+	public ChangeOnByValueButtonSelected(final UIPanelSetting uiPanelSetting) {
+		setting = uiPanelSetting;
+	}
 
 	@Override
 	public void changeViewSetting() {
-		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
-
 		setting.selectInputMode();
 
 		setting.setByValuePanelVisible(true);
@@ -15,7 +21,6 @@ public class ChangeOnByValueButtonSelected implements ChangeViewSetting {
 		setting.setMountainButtonEnabled(true);
 		setting.setValleyButtonEnabled(true);
 		setting.setAuxButtonEnabled(true);
-
 	}
 
 }

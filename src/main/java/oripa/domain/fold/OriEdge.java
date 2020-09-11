@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -18,25 +18,24 @@
 
 package oripa.domain.fold;
 
-
 public class OriEdge {
 
-    public OriVertex sv = null;
-    public OriVertex ev = null;
-    public OriHalfedge left = null;
-    public OriHalfedge right = null;
-    public int type = 0;
+	public OriVertex sv = null;
+	public OriVertex ev = null;
+	public OriHalfedge left = null;
+	public OriHalfedge right = null;
+	public int type = 0;
 
-    public OriEdge() {
-    }
+	public OriEdge() {
+	}
 
-    public OriEdge(OriVertex sv, OriVertex ev, int type) {
-        this.type = type;
-        this.sv = sv;
-        this.ev = ev;
-    }
+	public OriEdge(final OriVertex sv, final OriVertex ev, final int type) {
+		this.type = type;
+		this.sv = sv;
+		this.ev = ev;
+	}
 
-    public OriVertex oppositeVertex(OriVertex v) {
-        return v == sv ? ev : sv;
-    }
+	public OriVertex oppositeVertex(final OriVertex v) {
+		return v == sv ? ev : sv;
+	}
 }

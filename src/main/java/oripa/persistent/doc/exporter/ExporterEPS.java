@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -20,31 +20,34 @@ package oripa.persistent.doc.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 
+import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.persistent.doc.Doc;
 import oripa.value.OriLine;
 
-public class ExporterEPS implements DocExporter{
+public class ExporterEPS implements DocExporter {
 
-    public boolean export(Doc doc, String filepath) throws Exception {
-        FileWriter fw = new FileWriter(filepath);
-        BufferedWriter bw = new BufferedWriter(fw);
+	@Override
+	public boolean export(final Doc doc, final String filepath)
+			throws IOException, IllegalArgumentException {
+		FileWriter fw = new FileWriter(filepath);
+		BufferedWriter bw = new BufferedWriter(fw);
 
-        // Align the center of the model, combine scales
-        bw.write("%!PS-Adobe EPSF-3\n");
-        bw.write("%%BoundingBox:-200 -200 400 400\n");
-        bw.write("\n");
+		// Align the center of the model, combine scales
+		bw.write("%!PS-Adobe EPSF-3\n");
+		bw.write("%%BoundingBox:-200 -200 400 400\n");
+		bw.write("\n");
 
-        CreasePatternInterface creasePattern = doc.getCreasePattern();
-        for (OriLine line : creasePattern) {
-            bw.write("[] 0 setdash\n");
-            bw.write("" + line.p0.x + " " + line.p0.y + " moveto\n");
-            bw.write("" + line.p1.x + " " + line.p1.y + " lineto\n");
-            bw.write("stroke\n");
-        }
-        bw.close();
-        
-        return true;
-    }
+		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		for (OriLine line : creasePattern) {
+			bw.write("[] 0 setdash\n");
+			bw.write("" + line.p0.x + " " + line.p0.y + " moveto\n");
+			bw.write("" + line.p1.x + " " + line.p1.y + " lineto\n");
+			bw.write("stroke\n");
+		}
+		bw.close();
+
+		return true;
+	}
 }

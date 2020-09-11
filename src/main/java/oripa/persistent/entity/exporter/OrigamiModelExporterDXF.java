@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -20,6 +20,7 @@ package oripa.persistent.entity.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
@@ -27,22 +28,23 @@ import javax.vecmath.Vector2d;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.Exporter;
+import oripa.persistent.filetool.Exporter;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.persistent.doc.Exporter#export(java.lang.Object,
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean export(final OrigamiModel origamiModel, final String filePath) throws Exception {
+	public boolean export(final OrigamiModel origamiModel, final String filePath)
+			throws IOException, IllegalArgumentException {
 		double paperSize = origamiModel.getPaperSize();
 
 		double scale = 6.0 / paperSize; // 6.0 inch width
@@ -102,19 +104,23 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 				bw.write(" 10\n");
 				bw.write(""
 						+ ((he.positionForDisplay.x - modelCenter.x)
-								* scale + center) + "\n");
+								* scale + center)
+						+ "\n");
 				bw.write(" 20\n");
 				bw.write(""
 						+ (-(he.positionForDisplay.y - modelCenter.y)
-								* scale + center) + "\n");
+								* scale + center)
+						+ "\n");
 				bw.write(" 11\n");
 				bw.write(""
 						+ ((he.next.positionForDisplay.x - modelCenter.x)
-								* scale + center) + "\n");
+								* scale + center)
+						+ "\n");
 				bw.write(" 21\n");
 				bw.write(""
 						+ (-(he.next.positionForDisplay.y - modelCenter.y)
-								* scale + center) + "\n");
+								* scale + center)
+						+ "\n");
 			}
 		}
 

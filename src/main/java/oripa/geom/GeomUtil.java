@@ -288,7 +288,8 @@ public class GeomUtil {
 		return true;
 	}
 
-	public static OriLine getVerticalLine(final Vector2d v, final OriLine line, final int type) {
+	public static OriLine getVerticalLine(final Vector2d v, final OriLine line,
+			final OriLine.Type type) {
 		double x0 = line.p0.x;
 		double y0 = line.p0.y;
 		double x1 = line.p1.x;
@@ -394,7 +395,7 @@ public class GeomUtil {
 	}
 
 	public static OriLine getLineByValue(final Vector2d sv, final double length,
-			final double deg_angle, final int type) {
+			final double deg_angle, final OriLine.Type type) {
 		Vector2d ev = new Vector2d(sv);
 		double rad_angle = Math.toRadians(deg_angle);
 		Vector2d dir = new Vector2d(length * Math.cos(rad_angle), length * Math.sin(rad_angle));

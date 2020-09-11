@@ -14,6 +14,15 @@ import oripa.value.OriLine;
 
 public class PastingOnVertex extends PickingVertex {
 
+	private final SelectionOriginHolder originHolder;
+
+	/**
+	 * Constructor
+	 */
+	public PastingOnVertex(final SelectionOriginHolder originHolder) {
+		this.originHolder = originHolder;
+	}
+
 	@Override
 	protected void initialize() {
 	}
@@ -46,7 +55,7 @@ public class PastingOnVertex extends PickingVertex {
 		if (context.getLineCount() > 0) {
 			context.creasePatternUndo().pushUndoInfo();
 
-			Vector2d origin = OriginHolder.getInstance().getOrigin(context);
+			Vector2d origin = originHolder.getOrigin(context);
 
 			double ox = origin.x;
 			double oy = origin.y;
@@ -54,10 +63,6 @@ public class PastingOnVertex extends PickingVertex {
 			List<OriLine> shiftedLines;
 			shiftedLines = shiftLines(
 					context.getPickedLines(), v.x - ox, v.y - oy);
-
-//            for(int i = 0; i < context.getLineCount(); i++){
-//            	ORIPA.doc.addLine(shiftedLines.get(i));
-//            }
 
 			Painter painter = context.getPainter();
 			painter.pasteLines(shiftedLines);
@@ -81,7 +86,7 @@ public class PastingOnVertex extends PickingVertex {
 			shifted.p1.x = l.p1.x + diffX;
 			shifted.p1.y = l.p1.y + diffY;
 
-			shifted.typeVal = l.typeVal;
+			shifted.setType(l.getType());
 
 			shiftedLines.add(shifted);
 		}

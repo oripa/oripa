@@ -9,8 +9,11 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class AngleMeasuringAction extends GraphicMouseAction {
 
-	public AngleMeasuringAction() {
-		setActionState(new SelectingVertexForAngle());
+	private final ValueSetting valueSetting;
+
+	public AngleMeasuringAction(final ValueSetting valueSetting) {
+		setActionState(new SelectingVertexForAngle(valueSetting));
+		this.valueSetting = valueSetting;
 	}
 
 	@Override
@@ -21,7 +24,7 @@ public class AngleMeasuringAction extends GraphicMouseAction {
 		action = super.onLeftClick(context, differentAction);
 
 		if (context.isMissionCompleted()) {
-			action = new LineByValueAction();
+			action = new LineByValueAction(valueSetting);
 		}
 
 		return action;

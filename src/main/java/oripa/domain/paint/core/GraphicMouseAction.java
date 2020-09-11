@@ -56,6 +56,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		return editMode;
 	}
 
+	/**
+	 * define action on destroy. default does clear context selection keeping
+	 * line-selected marks.
+	 *
+	 * @param context
+	 */
 	@Override
 	public void destroy(final PaintContextInterface context) {
 		context.clear(false);
@@ -73,7 +79,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	/**
-	 * calls {@link #recoverImpl(PaintContextInterface)} and then calls
+	 * calls {@link #recoverImpl(PaintContextInterface)}, and if
+	 * {@link #needSelect()} returns false, then calls
 	 * {@code context.getPainter().resetSelectedOriLines()}.
 	 */
 	@Override
@@ -169,8 +176,9 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	private void drawPickedLines(final Graphics2D g2d, final PaintContextInterface context) {
 		for (OriLine line : context.getPickedLines()) {
-			g2d.setColor(LineSetting.LINE_COLOR_PICKED);
-			g2d.setStroke(LineSetting.STROKE_PICKED);
+			var selector = new ElementSelector();
+			g2d.setColor(selector.getSelectedItemColor());
+			g2d.setStroke(selector.createSelectedLineStroke(context.getScale()));
 
 			drawLine(g2d, line);
 		}
@@ -178,12 +186,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	private void drawPickedVertices(final Graphics2D g2d,
-			final PaintContextInterface context, final int lineType) {
+			final PaintContextInterface context, final OriLine.Type lineType) {
 		ElementSelector selector = new ElementSelector();
 
 		for (Vector2d vertex : context.getPickedVertices()) {
 			g2d.setColor(selector
-					.selectColorByLineType(lineType));
+					.getColor(lineType));
 
 			drawVertex(g2d, context, vertex.x, vertex.y);
 		}
@@ -209,7 +217,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			final PaintContextInterface context) {
 		Vector2d candidate = context.getCandidateVertexToPick();
 		if (candidate != null) {
-			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
+			var selector = new ElementSelector();
+			g2d.setColor(selector.getCandidateItemColor());
 			drawVertex(g2d, context, candidate.x, candidate.y);
 		}
 	}
@@ -230,8 +239,9 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			final PaintContextInterface context) {
 		OriLine candidate = context.getCandidateLineToPick();
 		if (candidate != null) {
-			g2d.setColor(LineSetting.LINE_COLOR_CANDIDATE);
-			g2d.setStroke(LineSetting.STROKE_PICKED);
+			var selector = new ElementSelector();
+			g2d.setColor(selector.getCandidateItemColor());
+			g2d.setStroke(selector.createCandidateLineStroke(context.getScale()));
 
 			drawLine(g2d, candidate);
 		}
@@ -252,9 +262,10 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		if (context.getVertexCount() > 0) {
 			Vector2d picked = context.peekVertex();
 
-			g2d.setColor(selector.selectColorByLineType(context.getLineTypeOfNewLines()));
+			g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
 
-			g2d.setStroke(selector.selectStroke(context.getLineTypeOfNewLines()));
+			g2d.setStroke(selector.createStroke(context.getLineTypeOfNewLines(),
+					context.getScale()));
 
 			drawLine(g2d, picked,
 					NearestItemFinder.getCandidateVertex(context, true));

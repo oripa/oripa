@@ -9,8 +9,11 @@ import oripa.domain.paint.core.PickingVertex;
 
 public class SelectingVertexForAngle extends PickingVertex {
 
-	public SelectingVertexForAngle() {
+	private final ValueSetting valueSetting;
+
+	public SelectingVertexForAngle(final ValueSetting valueSetting) {
 		super();
+		this.valueSetting = valueSetting;
 	}
 
 	@Override
@@ -50,9 +53,7 @@ public class SelectingVertexForAngle extends PickingVertex {
 
 		double deg_angle = Math.toDegrees(dir1.angle(dir2));
 
-		ValueDB valDB = ValueDB.getInstance();
-
-		valDB.setAngle(deg_angle);
+		valueSetting.setAngle(deg_angle);
 
 		context.clear(false);
 

@@ -7,16 +7,14 @@ import javax.swing.JRadioButton;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.appstate.ApplicationState;
-import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
-import oripa.domain.paint.EditMode;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
+import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 public class ButtonBinderTest {
 
@@ -24,12 +22,11 @@ public class ButtonBinderTest {
 	public void testCreate() {
 
 		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
-		BinderInterface<ApplicationState<EditMode>> paintBinder = new ApplicationStateButtonBinder();
 
 		// JRadioButton editModeInputLineButton = new JRadioButton("InputLine",
 		// true);
 		JRadioButton editModeInputLineButton = (JRadioButton) viewChangeBinder.createButton(
-				JRadioButton.class, new ChangeOnPaintInputButtonSelected(),
+				JRadioButton.class, new ChangeOnPaintInputButtonSelected(new UIPanelSetting()),
 				StringID.UI.INPUT_LINE_ID, null);
 
 		ResourceHolder resources = ResourceHolder.getInstance();

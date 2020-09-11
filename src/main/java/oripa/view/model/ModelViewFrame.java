@@ -36,10 +36,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.ORIPA;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.FileTypeKey;
-import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 import oripa.persistent.filetool.FileAccessActionProvider;
@@ -48,7 +48,7 @@ import oripa.persistent.filetool.FileChooserFactory;
 import oripa.persistent.filetool.SavingActionTemplate;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
-import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.MainScreenSetting;
 
 /**
  * A frame to show a transparent folded model.
@@ -85,18 +85,26 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			JScrollBar.VERTICAL, 0, 5, -150, 150);
 
-	public ModelViewFrame(final int width, final int height,
-			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine) {
+	private OrigamiModel origamiModel = null;
+	private final MainScreenSetting mainScreenSetting;
+
+	public ModelViewFrame(
+			final int width, final int height,
+			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine,
+			final MainScreenSetting mainScreenSetting) {
+
+		this.mainScreenSetting = mainScreenSetting;
 
 		initialize(lineHolder, onUpdateCrossLine);
 		this.setBounds(0, 0, width, height);
+
 	}
 
-	private void initialize(final SheetCutOutlinesHolder lineHolder,
+	private void initialize(final CutModelOutlinesHolder lineHolder,
 			final CallbackOnUpdate onUpdateCrossLine) {
 
 		setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));
-		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine);
+		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine, mainScreenSetting);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(screen, BorderLayout.CENTER);
@@ -132,8 +140,6 @@ public class ModelViewFrame extends JFrame
 		scrollBarPosition.addAdjustmentListener(this);
 	}
 
-	private OrigamiModel origamiModel = null;
-
 	public void setModel(final OrigamiModel origamiModel) {
 		int boundSize = Math.min(getWidth(), getHeight()
 				- getJMenuBar().getHeight() - 50);
@@ -147,7 +153,6 @@ public class ModelViewFrame extends JFrame
 		menuItemSlideFaces.addActionListener(e -> slideOrigamiModel());
 
 		menuItemCrossLine.addActionListener(e -> {
-			var mainScreenSetting = MainScreenSettingDB.getInstance();
 			mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected());
 		});
 
@@ -183,9 +188,9 @@ public class ModelViewFrame extends JFrame
 	@Override
 	public void adjustmentValueChanged(final AdjustmentEvent e) {
 		if (e.getSource() == scrollBarAngle) {
-			screen.setCrossLineAngle(e.getValue());
+			screen.setScissorsLineAngle(e.getValue());
 		} else if (e.getSource() == scrollBarPosition) {
-			screen.setCrossLinePosition(e.getValue());
+			screen.setScissorsLinePosition(e.getValue());
 		}
 
 	}

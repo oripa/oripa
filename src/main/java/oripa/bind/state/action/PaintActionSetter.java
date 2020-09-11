@@ -36,7 +36,9 @@ public class PaintActionSetter implements ActionListener {
 
 		GraphicMouseActionInterface currentAction = actionHolder
 				.getMouseAction();
-		currentAction.destroy(context);
+		if (currentAction != null) {
+			currentAction.destroy(context);
+		}
 		mouseAction.recover(context);
 
 		actionHolder.setMouseAction(mouseAction);

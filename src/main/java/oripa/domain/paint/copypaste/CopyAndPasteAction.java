@@ -13,17 +13,23 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class CopyAndPasteAction extends GraphicMouseAction {
 
-	private final ChangeOriginAction originAction = new ChangeOriginAction();
-	private final PasteAction pasteAction = new PasteAction();
+	private final SelectionOriginHolder originHolder;
+	private final ChangeOriginAction originAction;
+	private final PasteAction pasteAction;
 
-	private GraphicMouseActionInterface action = pasteAction;
+	private GraphicMouseActionInterface action;
 
-	public CopyAndPasteAction() {
+	public CopyAndPasteAction(final SelectionOriginHolder originHolder) {
+		this.originHolder = originHolder;
+
+		originAction = new ChangeOriginAction(originHolder);
+		pasteAction = new PasteAction(originHolder);
+
+		action = pasteAction;
+
 		setEditMode(EditMode.COPY);
 		setNeedSelect(true);
 	}
-
-	private final OriginHolder originHolder = OriginHolder.getInstance();
 
 	@Override
 	protected void recoverImpl(final PaintContextInterface context) {
@@ -53,8 +59,8 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 
 	@Override
 	public void doAction(final PaintContextInterface context, final Double point,
-			final boolean differntAction) {
-		action.doAction(context, point, differntAction);
+			final boolean differentAction) {
+		action.doAction(context, point, differentAction);
 	}
 
 	@Override

@@ -67,14 +67,6 @@ public class FileAccessSupportFilter<Data>
 		this.loadingAction = action;
 	}
 
-	// public Loader getLoader() {
-	// return loader;
-	// }
-	//
-	// public void setLoader(Loader loader) {
-	// this.loader = loader;
-	// }
-
 	/**
 	 *
 	 * @param action
@@ -94,14 +86,6 @@ public class FileAccessSupportFilter<Data>
 		}
 		return savingAction;
 	}
-
-	// public Exporter getExporter() {
-	// return exporter;
-	// }
-	//
-	// public void setExporter(Exporter exporter) {
-	// this.exporter = exporter;
-	// }
 
 	/**
 	 *

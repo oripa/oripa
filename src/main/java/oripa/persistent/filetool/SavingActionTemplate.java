@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,11 +18,11 @@
  */
 package oripa.persistent.filetool;
 
-import oripa.persistent.doc.Exporter;
+import java.io.IOException;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class SavingActionTemplate<Data> extends AbstractSavingAction<Data> {
 	private final Exporter<Data> exporter;
@@ -33,19 +33,12 @@ public class SavingActionTemplate<Data> extends AbstractSavingAction<Data> {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.persistent.filetool.SavingAction#save(java.lang.String)
 	 */
 	@Override
-	public boolean save(final Data data) {
-		boolean success = false;
-		try {
-			success = exporter.export(data, getPath());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return success;
+	public boolean save(final Data data) throws IOException, IllegalArgumentException {
+		return exporter.export(data, getPath());
 	}
 
 }

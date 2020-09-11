@@ -4,11 +4,10 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
+import oripa.appstate.StateManager;
+import oripa.bind.state.action.PaintActionSetter;
 import oripa.domain.paint.EditMode;
-import oripa.domain.paint.GraphicMouseActionInterface;
-import oripa.domain.paint.MouseActionHolder;
-import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
+import oripa.viewsetting.ChangeViewSetting;
 
 /**
  * Helper class
@@ -18,19 +17,23 @@ import oripa.domain.paint.ScreenUpdaterInterface;
  */
 class LocalPaintBoundStateFactory {
 
+	private final StateManager stateManager;
 	private final ActionListener[] basicActions;
 	private Component parent = null;
 
 	/**
 	 *
 	 * @param parent
-	 *            A parent component. {@code null} indicates to avoid error on
-	 *            performActions() of created state.
+	 *            A parent component. This object can be used as the parent of
+	 *            an error dialog by {@link ErrorListener}.
+	 * @param stateManager
 	 * @param basicActions
 	 *            Actions for all created states.
 	 */
 	public LocalPaintBoundStateFactory(final Component parent,
+			final StateManager stateManager,
 			final ActionListener[] basicActions) {
+		this.stateManager = stateManager;
 		this.basicActions = basicActions;
 		this.parent = parent;
 	}
@@ -45,24 +48,22 @@ class LocalPaintBoundStateFactory {
 	 *            state.
 	 * @param context
 	 *            context of painting.
-	 * @param textID
-	 *            ID for hint of painting.
+	 * @param changeHint
+	 *            event handler to change a hint of painting.
 	 * @param actions
 	 *            Additional actions.
 	 * @return
 	 */
 	public ApplicationState<EditMode> create(
-			final MouseActionHolder actionHolder,
-			final GraphicMouseActionInterface mouseAction,
+			final EditMode editMode,
+			final PaintActionSetter actionSetter,
 			final ErrorListener errorListener,
-			final PaintContextInterface context,
-			final ScreenUpdaterInterface screenUpdater,
-			final String textID,
+			final ChangeViewSetting changeHint,
 			final ActionListener[] actions) {
 
 		PaintBoundState state = new PaintBoundState(
-				parent, errorListener, actionHolder,
-				mouseAction, context, screenUpdater, textID, basicActions);
+				parent, stateManager, errorListener,
+				editMode, actionSetter, changeHint, basicActions);
 
 		state.addActions(actions);
 		state.setErrorListener(errorListener);
@@ -78,22 +79,21 @@ class LocalPaintBoundStateFactory {
 	 *            Action for painting
 	 * @param context
 	 *            Context of painting.
-	 * @param textID
-	 *            ID for hint of painting.
+	 * @param changeHint
+	 *            event handler to change a hint of painting.
 	 * @param actions
 	 *            Additional actions.
 	 * @return
 	 */
 	public ApplicationState<EditMode> create(
-			final MouseActionHolder actionHolder,
-			final GraphicMouseActionInterface mouseAction,
-			final PaintContextInterface context,
-			final ScreenUpdaterInterface screenUpdater,
-			final String textID,
+			final EditMode editMode,
+			final PaintActionSetter actionSetter,
+			final ChangeViewSetting changeHint,
 			final ActionListener[] actions) {
 
 		ApplicationState<EditMode> state = new PaintBoundState(
-				actionHolder, mouseAction, context, screenUpdater, textID, basicActions);
+				stateManager, editMode, actionSetter, changeHint,
+				basicActions);
 
 		state.addActions(actions);
 

@@ -5,17 +5,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import oripa.doc.Doc;
 import oripa.persistent.doc.exporter.ExporterCP;
 import oripa.persistent.doc.exporter.ExporterDXFFactory;
-import oripa.persistent.doc.exporter.ExporterOBJFactory;
+import oripa.persistent.doc.exporter.ExporterFOLD;
 import oripa.persistent.doc.exporter.ExporterSVGFactory;
 import oripa.persistent.doc.exporter.ExporterXML;
 import oripa.persistent.doc.exporter.PictureExporter;
 import oripa.persistent.doc.loader.LoaderCP;
 import oripa.persistent.doc.loader.LoaderDXF;
+import oripa.persistent.doc.loader.LoaderFOLD;
 import oripa.persistent.doc.loader.LoaderPDF;
 import oripa.persistent.doc.loader.LoaderXML;
+import oripa.persistent.filetool.Exporter;
 import oripa.persistent.filetool.FileAccessSupportFilter;
+import oripa.persistent.filetool.Loader;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -36,7 +40,6 @@ public class DocFilterSelector {
 	 *
 	 * A constructor that puts default filters into this instance.
 	 */
-	@SuppressWarnings("unchecked")
 	public DocFilterSelector() {
 
 		FileTypeKey key = FileTypeKey.OPX;
@@ -47,16 +50,21 @@ public class DocFilterSelector {
 		putFilter(key, createDescription(key, StringID.Main.PICTURE_FILE_ID),
 				new PictureExporter(), null);
 
+		key = FileTypeKey.FOLD;
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
+				new ExporterFOLD(),
+				new LoaderFOLD());
+
 		key = FileTypeKey.DXF;
 		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
 				ExporterDXFFactory.createCreasePatternExporter(),
 				new LoaderDXF());
 
-		key = FileTypeKey.OBJ_MODEL;
-		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
-				ExporterOBJFactory.createFoldedModelExporter(),
-				// new ModelExporterOBJ(),
-				null);
+//		key = FileTypeKey.OBJ_MODEL;
+//		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
+//				ExporterOBJFactory.createFoldedModelExporter(),
+//				// new ModelExporterOBJ(),
+//				null);
 
 		key = FileTypeKey.CP;
 		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
@@ -121,17 +129,6 @@ public class DocFilterSelector {
 	public FileAccessSupportFilter<Doc> getFilter(final FileTypeKey key) {
 		return filters.get(key);
 	}
-
-	// /**
-	// *
-	// * @param key
-	// * A value that describes the file type you want.
-	// * @return A filter for given key.
-	// */
-	// @Deprecated
-	// public FileAccessSupportFilter<Doc> getFilter(String key) {
-	// return filters.get(key);
-	// }
 
 	/**
 	 *

@@ -1,5 +1,7 @@
 package oripa.persistent.filetool;
 
+import java.io.IOException;
+
 public abstract class AbstractSavingAction<Data> {
 	private String path;
 
@@ -12,10 +14,6 @@ public abstract class AbstractSavingAction<Data> {
 		return path;
 	}
 
-//	public boolean targetClassMatches(Data data) {
-//		return this.targetClass.isInstance(data);
-//	}
-
-	public abstract boolean save(Data data);
+	public abstract boolean save(Data data) throws IOException, IllegalArgumentException;
 
 }

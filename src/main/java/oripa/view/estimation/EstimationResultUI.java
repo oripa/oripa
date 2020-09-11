@@ -28,9 +28,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import oripa.ORIPA;
+import oripa.doc.Doc;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.Doc;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.FileTypeKey;
 import oripa.persistent.doc.SavingDocAction;
@@ -303,7 +303,8 @@ public class EstimationResultUI extends JPanel {
 						".svg file",
 						// ORIPA.res.getString("File"),
 						new SavingDocAction(
-								ExporterSVGFactory.createFoldedModelExporter()))
+								ExporterSVGFactory
+										.createFoldedModelExporter(screen.isFaceOrderFlipped())))
 		};
 
 	}

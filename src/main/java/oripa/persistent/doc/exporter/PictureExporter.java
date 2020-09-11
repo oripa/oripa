@@ -30,9 +30,9 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
-import oripa.persistent.doc.Doc;
 
 /**
  * @author Koji
@@ -64,12 +64,13 @@ public class PictureExporter implements DocExporter {
 		g2d.setBackground(Color.WHITE);
 		g2d.clearRect(0, 0, image.getWidth(), image.getHeight());
 
+		var scale = 0.9;
 		g2d.setTransform(new AffineTransform());
 		g2d.translate(gWidth / 2, gHeight / 2);
-		g2d.scale(0.9, 0.9);
+		g2d.scale(scale, scale);
 
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawAllLines(g2d, creasePattern);
+		drawer.drawAllLines(g2d, creasePattern, (float) scale);
 
 		File file = new File(filePath);
 		ImageIO.write(image, filePath.substring(filePath.lastIndexOf(".") + 1),

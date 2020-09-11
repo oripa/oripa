@@ -8,13 +8,15 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.RectangularSelectableAction;
 import oripa.value.OriLine;
-import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 public class ChangeLineTypeAction extends RectangularSelectableAction {
+	private final UIPanelSetting setting;
 
-	public ChangeLineTypeAction() {
+	public ChangeLineTypeAction(final UIPanelSetting setting) {
+		this.setting = setting;
 		setEditMode(EditMode.CHANGE_TYPE);
-		setActionState(new SelectingLineForLineType());
+		setActionState(new SelectingLineForLineType(setting));
 	}
 
 	@Override
@@ -26,7 +28,6 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 		}
 		context.creasePatternUndo().pushUndoInfo();
 
-		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 		for (OriLine l : selectedLines) {
 			Painter painter = context.getPainter();
 			// Change line type

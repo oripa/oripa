@@ -27,7 +27,6 @@ import java.util.Collection;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.core.LineSetting;
 import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
 
@@ -53,63 +52,24 @@ public class CreasePatternGraphicDrawer {
 		CreasePatternInterface creasePattern = context.getCreasePattern();
 
 		if (context.isGridVisible()) {
-
-			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize());
+			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize(),
+					context.getScale());
 		}
 
-		// g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-		// RenderingHints.VALUE_ANTIALIAS_ON);
-
-		drawLines(g2d, creasePattern, null, context.isMVLineVisible(), context.isAuxLineVisible());
+		drawLines(g2d, creasePattern, null, context.getScale(), context.isMVLineVisible(),
+				context.isAuxLineVisible());
 
 		// Drawing of the vertices
 		if (context.isVertexVisible() || forceShowingVertex) {
 			drawVertices(g2d, creasePattern, context.getScale(), context.isMVLineVisible(),
 					context.isAuxLineVisible());
 		}
-
 	}
 
-	// /**
-	// * draws given lines. {@code pickedLines} will be skipped because {@link
-	// GraphicMouseActionInterface}
-	// * should draw them.
-	// * @param g2d
-	// * @param lines
-	// * @param pickedLines lines that user picked. null if nothing is selected.
-	// */
-	// public void drawLines(
-	// Graphics2D g2d,
-	// Collection<OriLine> lines, Collection<OriLine> pickedLines) {
-	//
-	// ElementSelector selector = new ElementSelector();
-	// for (OriLine line : lines) {
-	// if (line.typeVal == OriLine.TYPE_NONE &&!PaintConfig.dispAuxLines) {
-	// continue;
-	// }
-	//
-	// if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal ==
-	// OriLine.TYPE_VALLEY)
-	// && !PaintConfig.dispMVLines) {
-	// continue;
-	// }
-	//
-	// g2d.setColor(selector.selectColorByLineType(line.typeVal));
-	// g2d.setStroke(selector.selectStroke(line.typeVal));
-	//
-	//
-	// if(pickedLines == null || pickedLines.contains(line) == false){
-	// g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
-	// }
-	//
-	// }
-	//
-	// }
-
 	public void drawAllLines(
-			final Graphics2D g2d, final Collection<OriLine> lines) {
+			final Graphics2D g2d, final Collection<OriLine> lines, final double scale) {
 
-		drawLines(g2d, lines, null, true, true);
+		drawLines(g2d, lines, null, scale, true, true);
 	}
 
 	/**
@@ -128,23 +88,24 @@ public class CreasePatternGraphicDrawer {
 	private void drawLines(
 			final Graphics2D g2d,
 			final Collection<OriLine> lines, final Collection<OriLine> pickedLines,
+			final double scale,
 			final boolean creaseVisible, final boolean auxVisible) {
 
 		ElementSelector selector = new ElementSelector();
 
 		for (OriLine line : lines) {
-			if (line.typeVal == OriLine.TYPE_NONE && !auxVisible) {
+			if (line.getType() == OriLine.Type.NONE && !auxVisible) {
 				continue;
 			}
 
-			if ((line.typeVal == OriLine.TYPE_RIDGE || line.typeVal == OriLine.TYPE_VALLEY)
+			if ((line.getType() == OriLine.Type.RIDGE || line.getType() == OriLine.Type.VALLEY)
 					&& !creaseVisible) {
 				continue;
 			}
 
 			if (pickedLines == null || !pickedLines.contains(line)) {
-				g2d.setColor(selector.selectColorByLineType(line.typeVal));
-				g2d.setStroke(selector.selectStroke(line.typeVal));
+				g2d.setColor(selector.getColor(line.getType()));
+				g2d.setStroke(selector.createStroke(line.getType(), scale));
 
 				g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
 						line.p1.y));
@@ -171,13 +132,13 @@ public class CreasePatternGraphicDrawer {
 			final boolean creaseVisible, final boolean auxVisible) {
 
 		g2d.setColor(Color.BLACK);
-		final double vertexDrawSize = 2.0;
+		final double vertexDrawSize = 3.0;
 		for (OriLine line : creasePattern) {
-			if (!auxVisible && line.typeVal == OriLine.TYPE_NONE) {
+			if (!auxVisible && line.getType() == OriLine.Type.NONE) {
 				continue;
 			}
-			if (!creaseVisible && (line.typeVal == OriLine.TYPE_RIDGE
-					|| line.typeVal == OriLine.TYPE_VALLEY)) {
+			if (!creaseVisible && (line.getType() == OriLine.Type.RIDGE
+					|| line.getType() == OriLine.Type.VALLEY)) {
 				continue;
 			}
 			Vector2d v0 = line.p0;
@@ -202,9 +163,12 @@ public class CreasePatternGraphicDrawer {
 
 	}
 
-	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize) {
-		g2d.setColor(Color.LIGHT_GRAY);
-		g2d.setStroke(LineSetting.STROKE_GRID);
+	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize,
+			final double scale) {
+		var selector = new ElementSelector();
+
+		g2d.setColor(selector.getColor(OriLine.Type.NONE));
+		g2d.setStroke(selector.createStroke(OriLine.Type.NONE, scale));
 
 		int lineNum = gridDivNum;
 		double step = paperSize / lineNum;

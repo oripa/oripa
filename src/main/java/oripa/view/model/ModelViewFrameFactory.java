@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -21,32 +21,42 @@ package oripa.view.model;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.SheetCutOutlinesHolder;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.ChildFrameManager;
+import oripa.viewsetting.main.MainScreenSetting;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class ModelViewFrameFactory {
-	private static ModelViewFrame frame = null;
+
+	private final MainScreenSetting mainScreenSetting;
+	private final ChildFrameManager childFrameManager;
+
+	public ModelViewFrameFactory(final MainScreenSetting mainScreenSetting,
+			final ChildFrameManager childFrameManager) {
+		this.mainScreenSetting = mainScreenSetting;
+		this.childFrameManager = childFrameManager;
+	}
 
 	public JFrame createFrame(
 			final JComponent parent,
 			final OrigamiModel origamiModel,
-			final SheetCutOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine
-			) {
+			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
+
+		ModelViewFrame frame = (ModelViewFrame) childFrameManager.find(parent,
+				ModelViewFrame.class);
 
 		if (frame == null) {
-			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine);
+			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine, mainScreenSetting);
 		}
 
 		frame.setModel(origamiModel);
-		frame.setVisible(false);
 
-		ChildFrameManager.getManager().putChild(parent, frame);
+		childFrameManager.putChild(parent, frame);
 
 		return frame;
 	}

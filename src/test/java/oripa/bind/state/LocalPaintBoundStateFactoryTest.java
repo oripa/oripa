@@ -14,13 +14,12 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import oripa.appstate.ApplicationState;
-import oripa.domain.cptool.Painter;
+import oripa.appstate.StateManager;
+import oripa.bind.state.action.PaintActionSetter;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.MouseActionHolder;
-import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.resource.StringID;
+import oripa.viewsetting.ChangeViewSetting;
 
 public class LocalPaintBoundStateFactoryTest {
 
@@ -31,15 +30,14 @@ public class LocalPaintBoundStateFactoryTest {
 			var parent = mock(JFrame.class);
 			var basicAction1 = mock(ActionListener.class);
 			var basicAction2 = mock(ActionListener.class);
+			var stateManager = mock(StateManager.class);
 
 			var factory = new LocalPaintBoundStateFactory(parent,
+					stateManager,
 					new ActionListener[] { basicAction1, basicAction2 });
 
 			var actionHolder = mock(MouseActionHolder.class);
 			var mouseAction = mock(GraphicMouseAction.class);
-			var context = mock(PaintContextInterface.class);
-			var screenUpdater = mock(ScreenUpdaterInterface.class);
-			var textID = StringID.DIRECT_V_ID;
 			var action1 = mock(ActionListener.class);
 			var action2 = mock(ActionListener.class);
 
@@ -48,9 +46,11 @@ public class LocalPaintBoundStateFactoryTest {
 			var event = mock(ActionEvent.class);
 			when(errorListener.isError(event)).thenReturn(true);
 
+			var changeHint = mock(ChangeViewSetting.class);
+
+			var actionSetter = mock(PaintActionSetter.class);
 			ApplicationState<EditMode> state = factory.create(
-					actionHolder,
-					mouseAction, errorListener, context, screenUpdater, textID,
+					EditMode.INPUT, actionSetter, errorListener, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -66,27 +66,20 @@ public class LocalPaintBoundStateFactoryTest {
 			verify(action1, never()).actionPerformed(event);
 			verify(action2, never()).actionPerformed(event);
 			verify(actionHolder, never()).setMouseAction(mouseAction);
+			verify(changeHint, never()).changeViewSetting();
 		}
 
 		@Test
 		void noErrors() {
 			var parent = mock(JFrame.class);
+			var stateManager = mock(StateManager.class);
 			var basicAction1 = mock(ActionListener.class);
 			var basicAction2 = mock(ActionListener.class);
 
 			var factory = new LocalPaintBoundStateFactory(parent,
+					stateManager,
 					new ActionListener[] { basicAction1, basicAction2 });
 
-			var actionHolder = mock(MouseActionHolder.class);
-			var currentMouseAction = mock(GraphicMouseAction.class);
-			var assignedMouseAction = mock(GraphicMouseAction.class);
-			var context = mock(PaintContextInterface.class);
-			var screenUpdater = mock(ScreenUpdaterInterface.class);
-			var painter = mock(Painter.class);
-			when(context.getPainter()).thenReturn(painter);
-			when(actionHolder.getMouseAction()).thenReturn(currentMouseAction);
-
-			var textID = StringID.DIRECT_V_ID;
 			var action1 = mock(ActionListener.class);
 			var action2 = mock(ActionListener.class);
 
@@ -95,9 +88,12 @@ public class LocalPaintBoundStateFactoryTest {
 			var event = mock(ActionEvent.class);
 			when(errorListener.isError(event)).thenReturn(false);
 
+			var changeHint = mock(ChangeViewSetting.class);
+
+			var paintActionSetter = mock(PaintActionSetter.class);
+
 			ApplicationState<EditMode> state = factory.create(
-					actionHolder,
-					assignedMouseAction, errorListener, context, screenUpdater, textID,
+					EditMode.INPUT, paintActionSetter, errorListener, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -107,16 +103,12 @@ public class LocalPaintBoundStateFactoryTest {
 			verify(errorListener).isError(event);
 			verify(errorListener, never()).onError(parent, event);
 
-			verify(currentMouseAction).destroy(context);
-			verify(assignedMouseAction).recover(context);
-			verify(actionHolder).setMouseAction(assignedMouseAction);
-			verify(screenUpdater).updateScreen();
+			verify(paintActionSetter).actionPerformed(event);
 
-			// every action listener should be called.
-			verify(basicAction1).actionPerformed(event);
-			verify(basicAction2).actionPerformed(event);
 			verify(action1).actionPerformed(event);
 			verify(action2).actionPerformed(event);
+
+			verify(changeHint).changeViewSetting();
 		}
 	}
 

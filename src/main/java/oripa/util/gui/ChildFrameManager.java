@@ -19,35 +19,32 @@
 package oripa.util.gui;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Koji
  *
  */
 public class ChildFrameManager {
-	private final HashMap<JComponent, ChildFrameList> relationMap = new HashMap<>();
+	private static final Logger logger = LoggerFactory.getLogger(ChildFrameManager.class);
 
-	private static ChildFrameManager manager;
+	private final HashMap<JComponent, Collection<JFrame>> relationMap = new HashMap<>();
 
-	public static ChildFrameManager getManager() {
-		if (manager == null) {
-			manager = new ChildFrameManager();
-		}
-
-		return manager;
+	public ChildFrameManager() {
 	}
 
-	private ChildFrameManager() {
-	}
-
-	public ChildFrameList getChildren(final JComponent parent) {
-		ChildFrameList children = relationMap.get(parent);
+	public Collection<JFrame> getChildren(final JComponent parent) {
+		var children = relationMap.get(parent);
 		if (children == null) {
-			children = new ChildFrameList();
+			children = new ArrayList<>();
 			relationMap.put(parent, children);
 		}
 
@@ -55,12 +52,30 @@ public class ChildFrameManager {
 	}
 
 	public void putChild(final JComponent parent, final JFrame child) {
-		getChildren(parent).addChild(child);
+		getChildren(parent).add(child);
+	}
+
+	public JFrame find(final JComponent parent, final Class<? extends JFrame> clazz) {
+		var children = getChildren(parent);
+		logger.info("children of " + parent + ": " + children);
+		for (var child : children) {
+			if (clazz.isInstance(child)) {
+				logger.info("child(class = " + clazz.getName() + ") is found.");
+				return child;
+			}
+		}
+
+		return null;
 	}
 
 	public void closeAll(final JComponent parent) {
-		ChildFrameList children = getChildren(parent);
-		children.clear();
+		var children = getChildren(parent);
+		for (JFrame frame : children) {
+			// TODO make all frames short-life object
+			// then change the following to dispose()
+			frame.setVisible(false);
+		}
+		// children.clear(); // enable this if dispose() is used.
 	}
 
 	/**
@@ -69,7 +84,7 @@ public class ChildFrameManager {
 	 *
 	 * @param frame
 	 */
-	public void closeAllRecursively(final JFrame frame) {
+	public void closeAllChildrenRecursively(final JFrame frame) {
 		for (Component component : frame.getComponents()) {
 			if (!(component instanceof JComponent)) {
 				continue;
@@ -85,8 +100,8 @@ public class ChildFrameManager {
 	 *
 	 * @param parent
 	 */
-	public void closeAllRecursively(final JComponent parent) {
-		getChildren(parent).closeAll();
+	private void closeAllRecursively(final JComponent parent) {
+		closeAll(parent);
 
 		for (JComponent key : relationMap.keySet()) {
 			if (parent.isAncestorOf(key)) {

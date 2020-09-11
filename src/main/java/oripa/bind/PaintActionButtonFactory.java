@@ -21,9 +21,13 @@ import oripa.domain.paint.ScreenUpdaterInterface;
  */
 public class PaintActionButtonFactory implements ButtonFactory {
 
+	private final PaintBoundStateFactory stateFactory;
 	private final PaintContextInterface context;
 
-	public PaintActionButtonFactory(final PaintContextInterface aContext) {
+	public PaintActionButtonFactory(
+			final PaintBoundStateFactory stateFactory,
+			final PaintContextInterface aContext) {
+		this.stateFactory = stateFactory;
 		context = aContext;
 	}
 
@@ -40,8 +44,6 @@ public class PaintActionButtonFactory implements ButtonFactory {
 			final ScreenUpdaterInterface screenUpater,
 			final String id,
 			final KeyListener keyListener) {
-
-		PaintBoundStateFactory stateFactory = new PaintBoundStateFactory();
 
 		ApplicationState<EditMode> state = stateFactory.create(
 				parent, actionHolder, context, screenUpater, id);

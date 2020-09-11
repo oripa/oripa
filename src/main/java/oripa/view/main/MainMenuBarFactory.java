@@ -18,38 +18,44 @@
  */
 package oripa.view.main;
 
-import java.awt.Component;
-
-import oripa.domain.paint.MouseActionHolder;
-import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
-import oripa.file.FileHistory;
-
 /**
  * @author Koji
  *
  */
 public class MainMenuBarFactory {
-
-	/**
-	 *
-	 * @param owner
-	 *            a component which will own the menu bar.
-	 * @return menu bar
-	 */
-	public MainMenuBar createBar(
-			final Component owner,
-			final MouseActionHolder actionHolder,
-			final PaintContextInterface aContext,
-			final ScreenUpdaterInterface screenUpdater,
-			final FileHistory history) {
-
-		MainMenuBar bar = new MainMenuBar(owner, actionHolder, aContext, screenUpdater);
-
-		bar.setFileHistoryPaths(history);
-
-		return bar;
-
-	}
-
+//
+//	private final MainFrameSetting mainFrameSetting;
+//	private final UIPanelSetting uiPanelSetting;
+//
+//	/**
+//	 * Constructor
+//	 */
+//	public MainMenuBarFactory(final MainFrameSetting mainFrameSetting,
+//			final UIPanelSetting uiPanelSetting) {
+//		this.mainFrameSetting = mainFrameSetting;
+//		this.uiPanelSetting = uiPanelSetting;
+//	}
+//
+//	/**
+//	 *
+//	 * @param owner
+//	 *            a component which will own the menu bar.
+//	 * @return menu bar
+//	 */
+//	public MainMenuBar createBar(
+//			final Component owner,
+//			final MouseActionHolder actionHolder,
+//			final PaintContextInterface aContext,
+//			final ScreenUpdaterInterface screenUpdater,
+//			final FileHistory history) {
+//
+//		MainMenuBar bar = new MainMenuBar(owner, actionHolder, aContext, screenUpdater,
+//				mainFrameSetting, uiPanelSetting);
+//
+//		bar.setFileHistoryPaths(history);
+//
+//		return bar;
+//
+//	}
+//
 }

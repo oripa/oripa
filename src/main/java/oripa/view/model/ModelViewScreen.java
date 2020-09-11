@@ -42,16 +42,18 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
+import oripa.domain.cutmodel.CutModelOutlinesFactory;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
-import oripa.domain.paint.core.LineSetting;
-import oripa.persistent.doc.SheetCutOutlinesHolder;
+import oripa.domain.paint.util.ElementSelector;
 import oripa.resource.Constants;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
+import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
-import oripa.viewsetting.main.MainScreenSettingDB;
+import oripa.viewsetting.main.MainScreenSetting;
 
 public class ModelViewScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener,
@@ -70,28 +72,31 @@ public class ModelViewScreen extends JPanel
 	private double rotateAngle = 0;
 	private final AffineTransform affineTransform = new AffineTransform();
 	public boolean dispSlideFace = false;
-	private OriLine crossLine = null;
-	private boolean crossLineVisible = false;
-	private int crossLineAngleDegree = 90;
-	private double crossLinePosition = 0;
-
-	private OrigamiModel origamiModel = null;
-	private final SheetCutOutlinesHolder lineHolder;
-	private final CallbackOnUpdate onUpdateCrossLine;
-
+	private OriLine scissorsLine = null;
+	private boolean scissorsLineVisible = false;
+	private int scissorsLineAngleDegree = 90;
+	private double scissorsLinePosition = 0;
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
-	public ModelViewScreen(final SheetCutOutlinesHolder aLineHolder, final CallbackOnUpdate c) {
+	private OrigamiModel origamiModel = null;
+	private final CutModelOutlinesHolder lineHolder;
+	private final CallbackOnUpdate onUpdateScissorsLine;
+	private final MainScreenSetting mainScreenSetting;
+
+	public ModelViewScreen(final CutModelOutlinesHolder aLineHolder, final CallbackOnUpdate c,
+			final MainScreenSetting mainScreenSetting) {
 
 		lineHolder = aLineHolder;
-		onUpdateCrossLine = c;
+		onUpdateScissorsLine = c;
+
+		this.mainScreenSetting = mainScreenSetting;
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
 		addComponentListener(this);
 
-		crossLine = new OriLine();
+		scissorsLine = new OriLine();
 		scale = 1.0;
 		rotateAngle = 0;
 		setBackground(Color.white);
@@ -102,16 +107,14 @@ public class ModelViewScreen extends JPanel
 	}
 
 	private void addPropertyChangeListenersToSetting() {
-		var mainScreenSetting = MainScreenSettingDB.getInstance();
-
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSettingDB.CROSS_LINE_VISIBLE, e -> {
-					crossLineVisible = (boolean) e.getNewValue();
-					if (crossLineVisible) {
-						recalcCrossLine();
+				MainScreenSetting.CROSS_LINE_VISIBLE, e -> {
+					scissorsLineVisible = (boolean) e.getNewValue();
+					if (scissorsLineVisible) {
+						recalcScissorsLine();
 					} else {
 						repaint();
-						onUpdateCrossLine.onUpdate();
+						onUpdateScissorsLine.onUpdate();
 					}
 				});
 	}
@@ -161,7 +164,7 @@ public class ModelViewScreen extends JPanel
 
 			scale = 0.8 * Math.min(boundSize / (maxV.x - minV.x), boundSize / (maxV.y - minV.y));
 			updateAffineTransform();
-			recalcCrossLine();
+			recalcScissorsLine();
 		}
 	}
 
@@ -182,10 +185,11 @@ public class ModelViewScreen extends JPanel
 
 			g2d.setColor(Color.BLACK);
 			for (OriHalfedge he : face.halfedges) {
+				var selector = new ElementSelector();
 				if (he.pair == null) {
-					g2d.setStroke(LineSetting.STROKE_CUT_MODEL);
+					g2d.setStroke(selector.createPaperBoundaryStrokeForModelView(scale));
 				} else {
-					g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
+					g2d.setStroke(selector.createFaceEdgeStrokeForModelView(scale));
 				}
 				g2d.draw(new Line2D.Double(he.positionForDisplay.x,
 						he.positionForDisplay.y, he.next.positionForDisplay.x,
@@ -193,13 +197,14 @@ public class ModelViewScreen extends JPanel
 			}
 		}
 
-		if (crossLineVisible) {
+		if (scissorsLineVisible) {
+			var selector = new ElementSelector();
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-			g2d.setStroke(LineSetting.STROKE_CUT_MODEL);
-			g2d.setColor(Color.RED);
+			g2d.setStroke(selector.createScissorsLineStrokeForModelView(scale));
+			g2d.setColor(selector.getScissorsLineColorForModelView());
 
-			g2d.draw(new Line2D.Double(crossLine.p0.x, crossLine.p0.y, crossLine.p1.x,
-					crossLine.p1.y));
+			g2d.draw(new Line2D.Double(scissorsLine.p0.x, scissorsLine.p0.y, scissorsLine.p1.x,
+					scissorsLine.p1.y));
 		}
 	}
 
@@ -247,7 +252,8 @@ public class ModelViewScreen extends JPanel
 		boolean hasModel = origamiModel.hasModel();
 
 		if (hasModel) {
-			g2d.setStroke(LineSetting.STROKE_PAPER_EDGE);
+			var selector = new ElementSelector();
+			g2d.setStroke(selector.createStroke(OriLine.Type.CUT, scale));
 			if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 			}
@@ -265,32 +271,33 @@ public class ModelViewScreen extends JPanel
 		}
 	}
 
-	public void setCrossLineAngle(final int angleDegree) {
-		crossLineAngleDegree = angleDegree;
-		recalcCrossLine();
+	public void setScissorsLineAngle(final int angleDegree) {
+		scissorsLineAngleDegree = angleDegree;
+		recalcScissorsLine();
 	}
 
-	public void setCrossLinePosition(final int positionValue) {
-		crossLinePosition = positionValue;
-		recalcCrossLine();
+	public void setScissorsLinePosition(final int positionValue) {
+		scissorsLinePosition = positionValue;
+		recalcScissorsLine();
 	}
 
-	public void recalcCrossLine() {
-		Vector2d dir = new Vector2d(Math.cos(Math.PI * crossLineAngleDegree / 180.0),
-				Math.sin(Math.PI * crossLineAngleDegree / 180.0));
-		crossLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);
-		crossLine.p1.set(modelCenter.x + dir.x * 300, modelCenter.y + dir.y * 300);
+	public void recalcScissorsLine() {
+		Vector2d dir = new Vector2d(Math.cos(Math.PI * scissorsLineAngleDegree / 180.0),
+				Math.sin(Math.PI * scissorsLineAngleDegree / 180.0));
+		scissorsLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);
+		scissorsLine.p1.set(modelCenter.x + dir.x * 300, modelCenter.y + dir.y * 300);
 		Vector2d moveVec = new Vector2d(-dir.y, dir.x);
 		moveVec.normalize();
-		moveVec.scale(crossLinePosition);
-		crossLine.p0.add(moveVec);
-		crossLine.p1.add(moveVec);
+		moveVec.scale(scissorsLinePosition);
+		scissorsLine.p0.add(moveVec);
+		scissorsLine.p1.add(moveVec);
 
-		lineHolder.updateSheetCutOutlines(crossLine);
+		var factory = new CutModelOutlinesFactory();
+		lineHolder.setOutlines(factory.createOutlines(scissorsLine, origamiModel));
 
 		repaint();
 
-		onUpdateCrossLine.onUpdate();
+		onUpdateScissorsLine.onUpdate();
 	}
 
 	@Override
@@ -315,14 +322,14 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+		if (MouseUtility.isRightButtonDown(e)) {
 			transX += (e.getX() - preMousePoint.getX()) / scale;
 			transY += (e.getY() - preMousePoint.getY()) / scale;
 
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
-		} else if (javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+		} else if (MouseUtility.isLeftButtonDown(e)) {
 			rotateAngle += (e.getX() - preMousePoint.getX()) / 100.0;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();

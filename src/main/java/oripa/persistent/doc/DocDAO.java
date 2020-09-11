@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
@@ -15,22 +16,22 @@ import oripa.persistent.filetool.FileChooser;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileChooserFactory;
 import oripa.persistent.filetool.FileVersionError;
+import oripa.persistent.filetool.WrongDataFormatException;
 
 public class DocDAO {
 
-	// -----------------------------------------------------
+	public Doc load(final String path)
+			throws FileVersionError, IOException, WrongDataFormatException {
+		DocFilterSelector selector = new DocFilterSelector();
 
-	public Doc load(final String path) throws FileVersionError, IOException {
-		DocFilterSelector selecter = new DocFilterSelector();
-
-		return selecter.getLoadableFilterOf(path).getLoadingAction().load();
-
+		return selector.getLoadableFilterOf(path).getLoadingAction().load();
 	}
 
-	public void save(final Doc doc, final String path, final FileTypeKey type) {
-		DocFilterSelector selecter = new DocFilterSelector();
+	public void save(final Doc doc, final String path, final FileTypeKey type)
+			throws IOException, IllegalArgumentException {
+		DocFilterSelector selector = new DocFilterSelector();
 
-		selecter.getFilter(type).getSavingAction().setPath(path).save(doc);
+		selector.getFilter(type).getSavingAction().setPath(path).save(doc);
 	}
 
 	/**
@@ -44,7 +45,7 @@ public class DocDAO {
 	public String saveUsingGUI(final Doc doc, final String homePath,
 			final Component parent,
 			final FileAccessSupportFilter<Doc>... filters)
-			throws FileChooserCanceledException {
+			throws FileChooserCanceledException, IOException, IllegalArgumentException {
 		FileChooserFactory<Doc> chooserFactory = new FileChooserFactory<>();
 		FileAccessActionProvider<Doc> chooser = chooserFactory.createChooser(homePath,
 				filters);
@@ -63,7 +64,7 @@ public class DocDAO {
 
 	public void saveUsingGUIWithModelCheck(final Doc doc, final Component owner,
 			final FileAccessSupportFilter<Doc> filter)
-			throws FileChooserCanceledException {
+			throws FileChooserCanceledException, IOException, IllegalArgumentException {
 		CreasePatternInterface creasePattern = doc.getCreasePattern();
 		OrigamiModel origamiModel = doc.getOrigamiModel();
 
@@ -90,7 +91,8 @@ public class DocDAO {
 
 	public Doc loadUsingGUI(final String homePath,
 			final FileAccessSupportFilter<Doc>[] filters, final Component parent)
-			throws FileVersionError, FileChooserCanceledException {
+			throws FileVersionError, FileChooserCanceledException, IOException,
+			WrongDataFormatException {
 		FileChooserFactory<Doc> factory = new FileChooserFactory<>();
 		FileChooser<Doc> fileChooser = factory.createChooser(
 				homePath, filters);

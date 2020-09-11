@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -20,13 +20,12 @@ package oripa.domain.creasepattern;
 
 import java.util.Collection;
 
-import oripa.domain.creasepattern.impl.CreasePattern;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class CreasePatternFactory {
 
@@ -34,7 +33,7 @@ public class CreasePatternFactory {
 	 * creates non-folded crease pattern. Returned collection has only 4 lines
 	 * which describe the edges of a square paper. The center of the paper is
 	 * set to (0, 0).
-	 * 
+	 *
 	 * @param paperSize
 	 * @return crease pattern of non-folded case.
 	 */
@@ -42,13 +41,13 @@ public class CreasePatternFactory {
 		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
 
 		OriLine l0 = new OriLine(-paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0,
-				-paperSize / 2.0, OriLine.TYPE_CUT);
+				-paperSize / 2.0, OriLine.Type.CUT);
 		OriLine l1 = new OriLine(paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0,
-				paperSize / 2.0, OriLine.TYPE_CUT);
+				paperSize / 2.0, OriLine.Type.CUT);
 		OriLine l2 = new OriLine(paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0,
-				paperSize / 2.0, OriLine.TYPE_CUT);
+				paperSize / 2.0, OriLine.Type.CUT);
 		OriLine l3 = new OriLine(-paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0,
-				-paperSize / 2.0, OriLine.TYPE_CUT);
+				-paperSize / 2.0, OriLine.Type.CUT);
 		creasePattern.add(l0);
 		creasePattern.add(l1);
 		creasePattern.add(l2);
@@ -58,7 +57,7 @@ public class CreasePatternFactory {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param paperSize
 	 * @return crease pattern entity with no lines.
 	 */
@@ -68,7 +67,8 @@ public class CreasePatternFactory {
 
 	/**
 	 * creates crease pattern which consists of given lines and no other lines.
-	 * 
+	 * also moves the lines such that the center of the paper becomes (0, 0).
+	 *
 	 * @param lines
 	 * @return
 	 */
@@ -79,6 +79,10 @@ public class CreasePatternFactory {
 		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
 
 		creasePattern.addAll(lines);
+
+		// FIXME: changing given coordinates is not preferable.
+		creasePattern.move(-domain.getCenterX(), -domain.getCenterY());
+
 		return creasePattern;
 	}
 }

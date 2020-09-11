@@ -59,7 +59,7 @@ public class SymmetricLineFactory {
 	 */
 	public OriLine createSymmetricLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
-			final Collection<OriLine> creasePattern, final int lineType)
+			final Collection<OriLine> creasePattern, final OriLine.Type lineType)
 			throws PainterCommandFailedException {
 
 		BestPair pair = findBestPair(v0, v1, v2, creasePattern);
@@ -129,7 +129,7 @@ public class SymmetricLineFactory {
 	 */
 	public Collection<OriLine> createSymmetricLineAutoWalk(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final Vector2d startV,
-			final Collection<OriLine> creasePattern, final int lineType)
+			final Collection<OriLine> creasePattern, final OriLine.Type lineType)
 			throws PainterCommandFailedException {
 
 		LinkedList<OriLine> autoWalkLines = new LinkedList<>();
@@ -154,7 +154,7 @@ public class SymmetricLineFactory {
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, int stepCount,
 			final Vector2d startV,
 			final Collection<OriLine> creasePattern, final Collection<OriLine> autoWalkLines,
-			final int lineType) {
+			final OriLine.Type lineType) {
 
 		// FIXME this method does not detect loop path. it causes meaningless
 		// recursion.

@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -32,8 +32,16 @@ import oripa.value.OriLine;
 public class OriFace {
 
 	public ArrayList<OriHalfedge> halfedges = new ArrayList<>();
+
+	// FIXME: GeneralPath is legacy.
 	public GeneralPath outline = new GeneralPath();
+
+	/**
+	 * For drawing foldability-check face
+	 */
+	// FIXME: GeneralPath is legacy.
 	public GeneralPath preOutline = new GeneralPath();
+
 	public boolean selected = false;
 	public boolean faceFront = true;
 	public Color color;
@@ -78,15 +86,15 @@ public class OriFace {
 
 		for (OriHalfedge he : halfedges) {
 			double val = 0;
-			if (he.edge.type == OriLine.TYPE_RIDGE) {
+			if (he.edge.type == OriLine.Type.RIDGE.toInt()) {
 				val += 1;
-			} else if (he.edge.type == OriLine.TYPE_VALLEY) {
+			} else if (he.edge.type == OriLine.Type.VALLEY.toInt()) {
 				val -= 1;
 			}
 
-			if (he.prev.edge.type == OriLine.TYPE_RIDGE) {
+			if (he.prev.edge.type == OriLine.Type.RIDGE.toInt()) {
 				val += 1;
-			} else if (he.prev.edge.type == OriLine.TYPE_VALLEY) {
+			} else if (he.prev.edge.type == OriLine.Type.VALLEY.toInt()) {
 				val -= 1;
 			}
 
@@ -94,8 +102,10 @@ public class OriFace {
 			double v = (0.75 + vv * 0.25);
 
 			v *= 0.9 + 0.15 * (Math.sqrt((he.vertex.p.x - min_x)
-					* (he.vertex.p.x - min_x) + (he.vertex.p.y - min_y)
-					* (he.vertex.p.y - min_y)) / faceWidth);
+					* (he.vertex.p.x - min_x)
+					+ (he.vertex.p.y - min_y)
+							* (he.vertex.p.y - min_y))
+					/ faceWidth);
 
 			v = Math.min(1, v);
 
@@ -134,11 +144,13 @@ public class OriFace {
 			tri.v[0].uv = new Vector2d(startHe.vertex.preP.x / paperSize
 					+ 0.5, startHe.vertex.preP.y / paperSize + 0.5);
 			tri.v[1].uv = new Vector2d(halfedges.get(i).vertex.preP.x
-					/ paperSize + 0.5, halfedges.get(i).vertex.preP.y
-					/ paperSize + 0.5);
+					/ paperSize + 0.5,
+					halfedges.get(i).vertex.preP.y
+							/ paperSize + 0.5);
 			tri.v[2].uv = new Vector2d(halfedges.get(i + 1).vertex.preP.x
-					/ paperSize + 0.5, halfedges.get(i + 1).vertex.preP.y
-					/ paperSize + 0.5);
+					/ paperSize + 0.5,
+					halfedges.get(i + 1).vertex.preP.y
+							/ paperSize + 0.5);
 			triangles.add(tri);
 		}
 	}

@@ -12,8 +12,13 @@ import oripa.domain.paint.util.ElementSelector;
 
 public class LineByValueAction extends GraphicMouseAction {
 
-	public LineByValueAction() {
-		setActionState(new SelectingVertexToDrawLine());
+	private final ValueSetting valueSetting;
+
+	public LineByValueAction(final ValueSetting valueSetting) {
+		super();
+		setActionState(new SelectingVertexToDrawLine(valueSetting));
+
+		this.valueSetting = valueSetting;
 	}
 
 	@Override
@@ -50,16 +55,18 @@ public class LineByValueAction extends GraphicMouseAction {
 		Vector2d v = context.getCandidateVertexToPick();
 		if (v != null) {
 			try {
-				double length = ValueDB.getInstance().getLength();
-				double angle = ValueDB.getInstance().getAngle();
+				var angle = valueSetting.getAngle();
+				var length = valueSetting.getLength();
 
-				angle = Math.toRadians(angle);
+				var radianAngle = Math.toRadians(angle);
 
 				ElementSelector selector = new ElementSelector();
-				g2d.setColor(selector.selectColorByLineType(context.getLineTypeOfNewLines()));
-				g2d.setStroke(selector.selectStroke(context.getLineTypeOfNewLines()));
+				g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
+				g2d.setStroke(
+						selector.createStroke(context.getLineTypeOfNewLines(),
+								context.getScale()));
 
-				Vector2d dir = new Vector2d(Math.cos(angle), -Math.sin(angle));
+				Vector2d dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle));
 				dir.scale(length);
 				g2d.draw(new Line2D.Double(v.x, v.y, v.x + dir.x, v.y + dir.y));
 			} catch (Exception e) {

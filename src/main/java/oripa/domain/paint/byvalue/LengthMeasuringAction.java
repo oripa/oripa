@@ -9,8 +9,12 @@ import oripa.domain.paint.core.GraphicMouseAction;
 
 public class LengthMeasuringAction extends GraphicMouseAction {
 
-	public LengthMeasuringAction() {
-		setActionState(new SelectingVertexForLength());
+	private final ValueSetting valueSetting;
+
+	public LengthMeasuringAction(final ValueSetting valueSetting) {
+		super();
+		setActionState(new SelectingVertexForLength(valueSetting));
+		this.valueSetting = valueSetting;
 	}
 
 	@Override
@@ -21,7 +25,7 @@ public class LengthMeasuringAction extends GraphicMouseAction {
 		action = super.onLeftClick(context, differentAction);
 
 		if (context.isMissionCompleted()) {
-			action = new LineByValueAction();
+			action = new LineByValueAction(valueSetting);
 		}
 
 		return action;

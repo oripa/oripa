@@ -20,8 +20,8 @@ package oripa.view.main;
 
 import javax.swing.JFrame;
 
-import oripa.persistent.doc.Doc;
-import oripa.persistent.doc.Property;
+import oripa.doc.Doc;
+import oripa.doc.Property;
 
 /**
  * @author Koji

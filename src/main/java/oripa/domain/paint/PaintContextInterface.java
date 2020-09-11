@@ -54,14 +54,6 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 */
 	public abstract void finishPasting();
 
-//	/**
-//	 * sets values which user inputed
-//	 *
-//	 * @param scale
-//	 * @param dispGrid
-//	 */
-//	public abstract void setDisplayConfig(double scale, boolean dispGrid);
-
 	/**
 	 * provides whether the input instruction finished its job.
 	 *
@@ -143,7 +135,7 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	public abstract Vector2d popVertex();
 
 	/**
-	 * performs the same as {@code Vector.remove(Object o)}.
+	 * performs the same as {@link List#remove(Object o)}.
 	 *
 	 * @param line
 	 * @return
@@ -192,15 +184,17 @@ public interface PaintContextInterface extends CreasePatternHolder {
 
 	public abstract int getGridDivNum();
 
+	public abstract void updateGrids();
+
 	/**
 	 * @param lineType
 	 */
-	void setLineTypeOfNewLines(int lineType);
+	void setLineTypeOfNewLines(OriLine.Type lineType);
 
 	/**
 	 * @return
 	 */
-	int getLineTypeOfNewLines();
+	OriLine.Type getLineTypeOfNewLines();
 
 	/**
 	 * gets current grids.

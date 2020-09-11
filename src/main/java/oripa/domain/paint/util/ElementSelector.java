@@ -3,51 +3,28 @@ package oripa.domain.paint.util;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
-import oripa.domain.paint.core.LineSetting;
 import oripa.value.OriLine;
 
 public class ElementSelector {
 
-	public Color selectColorByPickupOrder(final int order, final int count, final int lineType) {
-		if (order == count - 1) {
-			return Color.GREEN;
-		}
-
-		return selectColorByLineType(lineType);
-	}
-
-	public Color selectLineColor(final OriLine line) {
-
-		Color color;
-
-		if (line.selected) {
-			color = LineSetting.LINE_COLOR_CANDIDATE;
-		} else {
-			color = selectColorByLineType(line.typeVal);
-		}
-
-		return color;
-
-	}
-
-	public Color selectColorByLineType(final int lineType) {
+	public Color getColor(final OriLine.Type lineType) {
 		Color color;
 
 		switch (lineType) {
-		case OriLine.TYPE_NONE:
-			color = LineSetting.LINE_COLOR_AUX;
+		case NONE:
+			color = Color.LIGHT_GRAY;
 			break;
-		case OriLine.TYPE_CUT:
+		case CUT:
 			color = Color.BLACK;
 			break;
-		case OriLine.TYPE_RIDGE:
-			color = LineSetting.LINE_COLOR_RIDGE;
+		case RIDGE:
+			color = Color.RED;
 			break;
-		case OriLine.TYPE_VALLEY:
-			color = LineSetting.LINE_COLOR_VALLEY;
+		case VALLEY:
+			color = Color.BLUE;
 			break;
-		case OriLine.TYPE_CUT_MODEL:
-			color = LineSetting.LINE_COLOR_CUT_MODEL;
+		case CUT_MODEL:
+			color = Color.MAGENTA;
 			break;
 		default:
 			color = Color.BLACK;
@@ -56,29 +33,83 @@ public class ElementSelector {
 		return color;
 	}
 
-	public BasicStroke selectStroke(final int lineType) {
+	public BasicStroke createStroke(final OriLine.Type lineType, final double scale) {
 		BasicStroke stroke;
 		switch (lineType) {
-		case OriLine.TYPE_NONE:
-			stroke = LineSetting.STROKE_PAPER_EDGE;
+		case NONE:
+		case CUT:
+		case RIDGE:
+		case VALLEY:
+			stroke = new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT,
+					BasicStroke.JOIN_MITER);
 			break;
-		case OriLine.TYPE_CUT:
-			stroke = LineSetting.STROKE_PAPER_EDGE;
-			break;
-		case OriLine.TYPE_RIDGE:
-			stroke = LineSetting.STROKE_RIDGE;
-			break;
-		case OriLine.TYPE_VALLEY:
-			stroke = LineSetting.STROKE_VALLEY;
-			break;
-		case OriLine.TYPE_CUT_MODEL:
-			stroke = LineSetting.STROKE_TMP_OUTLINE;
+		case CUT_MODEL:
+			stroke = new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT,
+					BasicStroke.JOIN_MITER);
 			break;
 		default:
-			stroke = LineSetting.STROKE_PAPER_EDGE;
+			stroke = new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT,
+					BasicStroke.JOIN_MITER);
 		}
 
 		return stroke;
 	}
 
+	public Color getSelectedItemColor() {
+		return Color.GREEN;
+	}
+
+	public BasicStroke createSelectedLineStroke(final double scale) {
+		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	public Color getCandidateItemColor() {
+		return Color.GREEN;
+	}
+
+	public BasicStroke createCandidateLineStroke(final double scale) {
+		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	// FIXME: not to be in this class.
+	public Color getScissorsLineColorForModelView() {
+		return Color.RED;
+	}
+
+	// FIXME: not to be in this class.
+	public BasicStroke createScissorsLineStrokeForModelView(final double scale) {
+		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	// FIXME: not to be in this class.
+	public BasicStroke createPaperBoundaryStrokeForModelView(final double scale) {
+		return new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	// FIXME: not to be in this class.
+	public BasicStroke createFaceEdgeStrokeForModelView(final double scale) {
+		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	public Color getEditingOutlineColor() {
+		return Color.GREEN;
+	}
+
+	public Color getAssistLineColor() {
+		return Color.MAGENTA;
+	}
+
+	public BasicStroke createEditingOutlineStroke(final double scale) {
+		return new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	}
+
+	public Color getAreaSelectionColor() {
+		return Color.BLACK;
+	}
+
+	public BasicStroke createAreaSelectionStroke(final double scale) {
+		final float[] dash = { 3.0f };
+		return new BasicStroke(1.5f / (float) scale,
+				BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
+	}
 }

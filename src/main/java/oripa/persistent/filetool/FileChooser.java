@@ -2,6 +2,8 @@ package oripa.persistent.filetool;
 
 import java.awt.Component;
 import java.io.File;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -36,11 +38,8 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 	FileChooser(final String path) {
 		super(path);
 
-		// File file = new File(trimmedPath);
 		File file = new File(path);
 		this.setSelectedFile(file);
-
-		// System.out.println(path);
 	}
 
 	/**
@@ -79,15 +78,11 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 
 		String path_new = new String(path);
 
-		boolean isCorrect = false;
-		for (int i = 0; i < extensions.length; i++) {
-			if (path.endsWith(extensions[i])) {
-				isCorrect = true;
-				break;
-			}
-		}
+		var filtered = Arrays.asList(extensions).stream()
+				.filter(ext -> path.endsWith(ext))
+				.collect(Collectors.toList());
 
-		if (isCorrect == false) {
+		if (filtered.isEmpty()) {
 			path_new = replaceExtension(path_new, extensions[0]);
 		}
 

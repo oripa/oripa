@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,40 +18,33 @@
  */
 package oripa.persistent.doc;
 
+import java.util.Arrays;
+
 import oripa.persistent.filetool.FileTypeProperty;
 
 public enum FileTypeKey implements FileTypeProperty {
-	OPX("opx", 1,
-			".opx", ".xml"),
-	PICT("pict", 2,
-			".png", ".jpg"),
-	DXF("dxf", 3,
-			".dxf"),
-	CP("cp", 4,
-			".cp"),
-	SVG("svg", 5,
-			".svg"),
-	PDF("pdf", 6,
-			".pdf"),
+	OPX("opx", 1, ".opx", ".xml"),
+	FOLD("fold", 2,	".fold"),
+	PICT("pict", 3,	".png", ".jpg"),
+	DXF("dxf", 4, ".dxf"),
+	CP("cp", 5,	".cp"),
+	SVG("svg", 6, ".svg"),
+	PDF("pdf", 7, ".pdf"),
 
-	OBJ_MODEL("obj", 7,
-			".obj"),
-	DXF_MODEL("dxf", 8,
-			".dxf"),
+	OBJ_MODEL("obj", 8,	".obj"),
+	DXF_MODEL("dxf", 9,	".dxf"),
 
-	SVG_FOLDED_MODEL("svg_folded_model", 9,
-			".svg"),
-	ORMAT_FOLDED_MODEL("ormat", 10,
-			".ormat");
+	SVG_FOLDED_MODEL("svg_folded_model", 10, ".svg"),
+	ORMAT_FOLDED_MODEL("ormat", 11,	".ormat");
 
-	private final String	keyText;
-	private final Integer	order;
-	private final String[]	extensions;
+	private final String keyText;
+	private final Integer order;
+	private final String[] extensions;
 
 	/**
-	 * 
+	 *
 	 * Constructor
-	 * 
+	 *
 	 * @param key
 	 *            key string
 	 * @param order
@@ -72,7 +65,7 @@ public enum FileTypeKey implements FileTypeProperty {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see oripa.persistent.doc.FileTypeProperty#getExtensions()
 	 */
 	@Override
@@ -82,25 +75,27 @@ public enum FileTypeKey implements FileTypeProperty {
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
+	 * @see
+	 * oripa.persistent.filetool.FileTypeProperty#extensionsMatch(java.lang.
+	 * String)
+	 */
+	@Override
+	public boolean extensionsMatch(final String filePath) {
+		if (filePath == null) {
+			return false;
+		}
+		return Arrays.asList(extensions).stream()
+				.anyMatch(extention -> filePath.endsWith(extention));
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
 	 * @see oripa.persistent.filetool.FileTypeProperty#getOrder()
 	 */
 	@Override
 	public Integer getOrder() {
 		return order;
 	}
-
-//	public static Comparator<FileTypeKey> getOrderComparator() {
-//
-//		return new Comparator<FileTypeKey>() {
-//			@Override
-//			public int compare(final FileTypeKey o1, final FileTypeKey o2) {
-//				if (o1.order == o2.order) {
-//					return o1.compareTo(o2);
-//				}
-//
-//				return o1.order.compareTo(o2.order);
-//			}
-//		};
-//	}
 }

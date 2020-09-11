@@ -7,7 +7,6 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.domain.paint.core.PaintContext;
 import oripa.domain.paint.core.RectangularSelectableAction;
 import oripa.value.OriLine;
 
@@ -32,7 +31,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	/**
 	 * Reset selection mark to avoid undesired deletion.
 	 *
-	 * @see GraphicMouseAction#recover(PaintContext)
+	 * @see GraphicMouseAction#recover(PaintContextInterface)
 	 * @param context
 	 */
 	@Override

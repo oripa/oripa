@@ -46,7 +46,7 @@ public class LineMirror {
 		OriPoint q0 = createMirroredVertex(line.p0, baseOriLine);
 		OriPoint q1 = createMirroredVertex(line.p1, baseOriLine);
 
-		OriLine mirroredLine = new OriLine(q0, q1, line.typeVal);
+		OriLine mirroredLine = new OriLine(q0, q1, line.getType());
 
 		return mirroredLine;
 	}

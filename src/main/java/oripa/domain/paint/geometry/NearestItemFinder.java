@@ -1,10 +1,10 @@
 package oripa.domain.paint.geometry;
 
 import java.awt.geom.Point2D;
+import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
@@ -12,9 +12,9 @@ import oripa.value.OriLine;
 
 /**
  * Logics using ORIPA data and mouse point in geometric form.
- * 
+ *
  * @author koji
- * 
+ *
  */
 public class NearestItemFinder {
 
@@ -23,12 +23,12 @@ public class NearestItemFinder {
 	}
 
 	// returns the OriLine sufficiently closer to point p
-	public static OriLine pickLine(final CreasePatternInterface creasePattern,
+	public static OriLine pickLine(final Collection<OriLine> lines,
 			final Point2D.Double p, final double scale) {
 		double minDistance = Double.MAX_VALUE;
 		OriLine bestLine = null;
 
-		for (OriLine line : creasePattern) {
+		for (OriLine line : lines) {
 			double dist = GeomUtil.DistancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
 			if (dist < minDistance) {
 				minDistance = dist;

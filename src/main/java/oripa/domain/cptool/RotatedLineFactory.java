@@ -55,7 +55,7 @@ public class RotatedLineFactory {
 		OriPoint r0 = rotateAroundCenter(line.p0, center, angleRad);
 		OriPoint r1 = rotateAroundCenter(line.p1, center, angleRad);
 
-		return new OriLine(r0, r1, line.getTypeValue());
+		return new OriLine(r0, r1, line.getType());
 	}
 
 	private OriPoint rotateAroundCenter(final OriPoint p, final OriPoint center,

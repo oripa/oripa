@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,34 +18,20 @@
  */
 package oripa.persistent.doc;
 
-import oripa.persistent.filetool.AbstractLoadingAction;
-import oripa.persistent.filetool.FileVersionError;
+import oripa.doc.Doc;
+import oripa.persistent.filetool.Loader;
+import oripa.persistent.filetool.LoadingActionTemplate;
 
 /**
  * @author Koji
- * 
+ *
  */
-public class LoadingDocAction extends AbstractLoadingAction<Doc> {
-
-	private final Loader<Doc> loader;
-
+public class LoadingDocAction extends LoadingActionTemplate<Doc> {
 	/**
 	 * Constructor
 	 */
-	public LoadingDocAction(Loader l) {
-		loader = l;
-	}
-
-	/*
-	 * (non Javadoc)
-	 * 
-	 * @see
-	 * oripa.persistent.filetool.AbstractLoadingAction#load(java.lang.String)
-	 */
-	@Override
-	public Doc load() throws FileVersionError {
-		Doc document = loader.load(getPath());
-		return document;
+	public LoadingDocAction(final Loader<Doc> l) {
+		super(l);
 	}
 
 }

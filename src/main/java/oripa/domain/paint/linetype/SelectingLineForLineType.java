@@ -3,12 +3,15 @@ package oripa.domain.paint.linetype;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingLine;
-import oripa.viewsetting.main.uipanel.UIPanelSettingDB;
+import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 public class SelectingLineForLineType extends PickingLine {
 
-	public SelectingLineForLineType() {
+	private final UIPanelSetting setting;
+
+	public SelectingLineForLineType(final UIPanelSetting setting) {
 		super();
+		this.setting = setting;
 	}
 
 	@Override
@@ -25,7 +28,6 @@ public class SelectingLineForLineType extends PickingLine {
 
 		context.creasePatternUndo().pushUndoInfo();
 
-		UIPanelSettingDB setting = UIPanelSettingDB.getInstance();
 		Painter painter = context.getPainter();
 		painter.alterLineType(
 				context.peekLine(), setting.getTypeFrom(), setting.getTypeTo());

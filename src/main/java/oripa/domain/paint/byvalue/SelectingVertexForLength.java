@@ -8,8 +8,11 @@ import oripa.geom.GeomUtil;
 
 public class SelectingVertexForLength extends PickingVertex {
 
-	public SelectingVertexForLength() {
+	private final ValueSetting valueSetting;
+
+	public SelectingVertexForLength(final ValueSetting valueSetting) {
 		super();
+		this.valueSetting = valueSetting;
 	}
 
 	@Override
@@ -41,8 +44,7 @@ public class SelectingVertexForLength extends PickingVertex {
 		double length = GeomUtil.Distance(
 				context.getVertex(0), context.getVertex(1));
 
-		ValueDB valDB = ValueDB.getInstance();
-		valDB.setLength(length);
+		valueSetting.setLength(length);
 
 		context.clear(false);
 

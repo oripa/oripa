@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -25,18 +25,17 @@ import java.util.ArrayList;
 
 import javax.vecmath.Vector2d;
 
+import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.persistent.doc.Doc;
-import oripa.persistent.doc.Loader;
 import oripa.value.OriLine;
 
-public class LoaderCP implements Loader<Doc> {
+public class LoaderCP implements DocLoader {
 
 	public ArrayList<OriLine> lines = new ArrayList<>();
 
 	@Override
-	public Doc load(String filePath) {
+	public Doc load(final String filePath) {
 		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 
@@ -60,11 +59,13 @@ public class LoaderCP implements Loader<Doc> {
 				line = new OriLine();
 				lines.add(line);
 
-				line.typeVal = Integer.parseInt(st.sval);// == 1 ?
-															// OriLine.TYPE_RIDGE
-															// :
-															// OriLine.TYPE_VALLEY;
-				System.out.println("line type " + line.typeVal);
+				line.setType(OriLine.Type.fromInt(Integer.parseInt(st.sval)));// ==
+																				// 1
+																				// ?
+				// OriLine.TYPE_RIDGE
+				// :
+				// OriLine.TYPE_VALLEY;
+				System.out.println("line type " + line.getType());
 
 				token = st.nextToken();
 				line.p0.x = Double.parseDouble(st.sval);

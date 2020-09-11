@@ -2,6 +2,9 @@ package oripa.domain.paint.byvalue;
 
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingVertex;
@@ -9,6 +12,17 @@ import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
 public class SelectingVertexToDrawLine extends PickingVertex {
+	private static final Logger logger = LoggerFactory.getLogger(SelectingVertexToDrawLine.class);
+
+	private final ValueSetting valueSetting;
+
+	/**
+	 * Constructor
+	 */
+	public SelectingVertexToDrawLine(final ValueSetting valueSetting) {
+		super();
+		this.valueSetting = valueSetting;
+	}
 
 	@Override
 	protected void initialize() {
@@ -17,6 +31,8 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
+		logger.debug("start onResult()");
+
 		if (context.getVertexCount() != 1 || context.getLineCount() > 0) {
 			throw new IllegalStateException(
 					"wrong state: impossible selection of vertex and lines.");
@@ -24,12 +40,11 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 
 		Vector2d vertex = context.popVertex();
 
-		double length;
-		double angle;
 		try {
-			ValueDB valDB = ValueDB.getInstance();
-			length = valDB.getLength();
-			angle = valDB.getAngle();
+			var length = valueSetting.getLength();
+			var angle = valueSetting.getAngle();
+
+			logger.debug("length = " + length);
 
 			if (length > 0) {
 				OriLine vl = GeomUtil.getLineByValue(vertex, length, -angle,
@@ -43,6 +58,9 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+
+		logger.debug("end onResult()");
+
 	}
 
 }

@@ -36,7 +36,7 @@ public class CreasePatternUndoManagerTest {
 	Collection<OriLine> createOriLines(final double x0, final double y0, final double x1,
 			final double y1) {
 		Collection<OriLine> lines = new ArrayList<>();
-		lines.add(new OriLine(x0, y0, x1, y1, OriLine.TYPE_RIDGE));
+		lines.add(new OriLine(x0, y0, x1, y1, OriLine.Type.RIDGE));
 		return lines;
 	}
 

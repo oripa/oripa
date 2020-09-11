@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -24,14 +24,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import oripa.DataSet;
-import oripa.persistent.doc.Doc;
-import oripa.persistent.doc.Loader;
+import oripa.doc.Doc;
 import oripa.persistent.filetool.FileVersionError;
 import oripa.resource.Version;
 
-public class LoaderXML implements Loader<Doc> {
+public class LoaderXML implements DocLoader {
 
-	public DataSet loadAsDataSet(String filePath) {
+	public DataSet loadAsDataSet(final String filePath) {
 		DataSet dataset;
 		try {
 			XMLDecoder dec = new XMLDecoder(new BufferedInputStream(
@@ -47,7 +46,7 @@ public class LoaderXML implements Loader<Doc> {
 	}
 
 	@Override
-	public Doc load(String filePath) throws FileVersionError {
+	public Doc load(final String filePath) throws FileVersionError {
 
 		DataSet data = loadAsDataSet(filePath);
 

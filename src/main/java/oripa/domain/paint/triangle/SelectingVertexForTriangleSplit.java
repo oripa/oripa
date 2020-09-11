@@ -16,26 +16,25 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 	protected void initialize() {
 	}
 
-	private boolean doingFirstAction = true;
-
 	@Override
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
 			final boolean doSpecial) {
 
-		if (doingFirstAction) {
+		if (context.getVertexCount() == 0) {
 			context.creasePatternUndo().cacheUndoInfo();
-			doingFirstAction = false;
 		}
 
-		boolean result = super.onAct(context, currentPoint, doSpecial);
+		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
 
-		if (result == true) {
-			if (context.getVertexCount() < 3) {
-				result = false;
-			}
+		if (!vertexIsSelected) {
+			return false;
 		}
 
-		return result;
+		if (context.getVertexCount() < 3) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -48,8 +47,6 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 				context.getVertex(0), context.getVertex(1), context.getVertex(2),
 				context.getLineTypeOfNewLines());
 
-		doingFirstAction = true;
 		context.clear(false);
 	}
-
 }

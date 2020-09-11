@@ -1,6 +1,5 @@
 package oripa.domain.paint.copypaste;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D.Double;
@@ -12,9 +11,19 @@ import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
+import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
 
 public class ChangeOriginAction extends GraphicMouseAction {
+
+	private final SelectionOriginHolder holder;
+
+	/**
+	 * Constructor
+	 */
+	public ChangeOriginAction(final SelectionOriginHolder holder) {
+		this.holder = holder;
+	}
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(final PaintContextInterface context,
@@ -58,7 +67,6 @@ public class ChangeOriginAction extends GraphicMouseAction {
 		context.setCandidateVertexToPick(closeVertex);
 
 		if (closeVertex != null) {
-			OriginHolder holder = OriginHolder.getInstance();
 			holder.setOrigin(closeVertex);
 		}
 
@@ -71,7 +79,9 @@ public class ChangeOriginAction extends GraphicMouseAction {
 
 		Collection<OriLine> lines = context.getPickedLines();
 
-		g2d.setColor(Color.MAGENTA);
+		var selector = new ElementSelector();
+
+		g2d.setColor(selector.getAssistLineColor());
 
 		for (OriLine line : lines) {
 			this.drawVertex(g2d, context, line.p0.x, line.p0.y);

@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.Transparency;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -47,43 +46,42 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.TriangleFace;
 import oripa.domain.fold.TriangleVertex;
+import oripa.util.gui.MouseUtility;
 
 /**
  * A screen to show whether Maekawa theorem and Kawasaki theorem holds.
- * 
+ *
  * @author Koji
- * 
+ *
  */
 public class FoldedModelScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener {
 
-	// FIXME WHY static!
-
 	private BufferedImage bufferImage;
 	private Graphics2D bufferg;
-	static private int pbuf[]; // 32bit pixel buffer
-	static private int zbuf[]; // 32bit z buffer
-	static private int BUFFERW; // width
-	static private int BUFFERH; // height
-	static private int min[];
-	static private int max[];
-	static private int minr[];
-	static private int maxr[];
-	static private int ming[];
-	static private int maxg[];
-	static private int minb[];
-	static private int maxb[];
-	static private double minu[];
-	static private double maxu[];
-	static private double minv[];
-	static private double maxv[];
+	private final int pbuf[]; // 32bit pixel buffer
+	private final int zbuf[]; // 32bit z buffer
+	private final int BUFFERW; // width
+	private final int BUFFERH; // height
+	private final int min[];
+	private final int max[];
+	private final int minr[];
+	private final int maxr[];
+	private final int ming[];
+	private final int maxg[];
+	private final int minb[];
+	private final int maxb[];
+	private final double minu[];
+	private final double maxu[];
+	private final double minv[];
+	private final double maxv[];
 	private boolean m_bUseColor = true;
 	private boolean m_bFillFaces = true;
 	private boolean m_bAmbientOcclusion = false;
-	private static boolean m_bFaceOrderFlip = false;
-	static private double m_rotAngle = 0;
-	static private double m_scale = 0.8;
-	static private boolean m_bDrawEdges = true;
+	private boolean m_bFaceOrderFlip = false;
+	private final double m_rotAngle = 0;
+	private final double m_scale = 0.8;
+	private boolean m_bDrawEdges = true;
 	private Image renderImage;
 	double rotateAngle;
 	double scale;
@@ -93,6 +91,9 @@ public class FoldedModelScreen extends JPanel
 	private final AffineTransform affineTransform;
 	private BufferedImage textureImage = null;
 	private final boolean bUseTexture = false;
+
+	private OrigamiModel origamiModel = null;
+	private FoldedModelInfo foldedModelInfo = null;
 
 	public FoldedModelScreen() {
 		addMouseListener(this);
@@ -173,11 +174,11 @@ public class FoldedModelScreen extends JPanel
 		redrawOrigami();
 	}
 
-	private static int getIndex(final int x, final int y) {
+	private int getIndex(final int x, final int y) {
 		return y * BUFFERW + x;
 	}
 
-	public static void clear() {
+	public void clear() {
 		for (int i = 0; i < BUFFERW * BUFFERH; i++) {
 			pbuf[i] = 0xffffffff;
 			zbuf[i] = -1;
@@ -193,88 +194,85 @@ public class FoldedModelScreen extends JPanel
 		affineTransform.translate(-getWidth() * 0.5, -getHeight() * 0.5);
 	}
 
-	/**
-	 * Convenience method that returns a scaled instance of the provided
-	 * {@code BufferedImage}.
-	 * 
-	 * @param img
-	 *            the original image to be scaled
-	 * @param targetWidth
-	 *            the desired width of the scaled instance, in pixels
-	 * @param targetHeight
-	 *            the desired height of the scaled instance, in pixels
-	 * @param hint
-	 *            one of the rendering hints that corresponds to
-	 *            {@code RenderingHints.KEY_INTERPOLATION} (e.g.
-	 *            {@code RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR},
-	 *            {@code RenderingHints.VALUE_INTERPOLATION_BILINEAR},
-	 *            {@code RenderingHints.VALUE_INTERPOLATION_BICUBIC})
-	 * @param higherQuality
-	 *            if true, this method will use a multi-step scaling technique
-	 *            that provides higher quality than the usual one-step technique
-	 *            (only useful in downscaling cases, where {@code targetWidth}
-	 *            or {@code targetHeight} is smaller than the original
-	 *            dimensions, and generally only when the {@code BILINEAR} hint
-	 *            is specified)
+	/*
+	 * Convenience method that returns a scaled instance of the provided {@code
+	 * BufferedImage}.
+	 *
+	 * @param img the original image to be scaled
+	 *
+	 * @param targetWidth the desired width of the scaled instance, in pixels
+	 *
+	 * @param targetHeight the desired height of the scaled instance, in pixels
+	 *
+	 * @param hint one of the rendering hints that corresponds to {@code
+	 * RenderingHints.KEY_INTERPOLATION} (e.g. {@code
+	 * RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR}, {@code
+	 * RenderingHints.VALUE_INTERPOLATION_BILINEAR}, {@code
+	 * RenderingHints.VALUE_INTERPOLATION_BICUBIC})
+	 *
+	 * @param higherQuality if true, this method will use a multi-step scaling
+	 * technique that provides higher quality than the usual one-step technique
+	 * (only useful in downscaling cases, where {@code targetWidth} or {@code
+	 * targetHeight} is smaller than the original dimensions, and generally only
+	 * when the {@code BILINEAR} hint is specified)
+	 *
 	 * @return a scaled version of the original {@code BufferedImage}
 	 */
-	public BufferedImage getScaledInstance(final BufferedImage img,
-			final int targetWidth,
-			final int targetHeight,
-			final Object hint,
-			final boolean higherQuality) {
-		int type = (img.getTransparency() == Transparency.OPAQUE)
-				? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
-		BufferedImage ret = img;
-		int w, h;
-		if (higherQuality) {
-			// Use multi-step technique: start with original size, then
-			// scale down in multiple passes with drawImage()
-			// until the target size is reached
-			w = img.getWidth();
-			h = img.getHeight();
-			if (w < targetWidth) {
-				w = targetWidth;
-			}
-			if (h < targetHeight) {
-				h = targetHeight;
-			}
-		} else {
-			// Use one-step technique: scale directly from original
-			// size to target size with a single drawImage() call
-			w = targetWidth;
-			h = targetHeight;
-		}
-
-		do {
-			if (higherQuality && w > targetWidth) {
-				w /= 2;
-				if (w < targetWidth) {
-					w = targetWidth;
-				}
-			}
-
-			if (higherQuality && h > targetHeight) {
-				h /= 2;
-				if (h < targetHeight) {
-					h = targetHeight;
-				}
-			}
-
-			BufferedImage tmp = new BufferedImage(w, h, type);
-			Graphics2D g2 = tmp.createGraphics();
-			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
-			g2.drawImage(ret, 0, 0, w, h, null);
-			g2.dispose();
-
-			ret = tmp;
-		} while (w != targetWidth || h != targetHeight);
-
-		return ret;
-	}
-
-	private OrigamiModel origamiModel = null;
-	private FoldedModelInfo foldedModelInfo = null;
+//	public BufferedImage getScaledInstance(final BufferedImage img,
+//			final int targetWidth,
+//			final int targetHeight,
+//			final Object hint,
+//			final boolean higherQuality) {
+//		int type = (img.getTransparency() == Transparency.OPAQUE)
+//				? BufferedImage.TYPE_INT_RGB
+//				: BufferedImage.TYPE_INT_ARGB;
+//		BufferedImage ret = img;
+//		int w, h;
+//		if (higherQuality) {
+//			// Use multi-step technique: start with original size, then
+//			// scale down in multiple passes with drawImage()
+//			// until the target size is reached
+//			w = img.getWidth();
+//			h = img.getHeight();
+//			if (w < targetWidth) {
+//				w = targetWidth;
+//			}
+//			if (h < targetHeight) {
+//				h = targetHeight;
+//			}
+//		} else {
+//			// Use one-step technique: scale directly from original
+//			// size to target size with a single drawImage() call
+//			w = targetWidth;
+//			h = targetHeight;
+//		}
+//
+//		do {
+//			if (higherQuality && w > targetWidth) {
+//				w /= 2;
+//				if (w < targetWidth) {
+//					w = targetWidth;
+//				}
+//			}
+//
+//			if (higherQuality && h > targetHeight) {
+//				h /= 2;
+//				if (h < targetHeight) {
+//					h = targetHeight;
+//				}
+//			}
+//
+//			BufferedImage tmp = new BufferedImage(w, h, type);
+//			Graphics2D g2 = tmp.createGraphics();
+//			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
+//			g2.drawImage(ret, 0, 0, w, h, null);
+//			g2.dispose();
+//
+//			ret = tmp;
+//		} while (w != targetWidth || h != targetHeight);
+//
+//		return ret;
+//	}
 
 	public void setModel(
 			final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo) {
@@ -341,7 +339,7 @@ public class FoldedModelScreen extends JPanel
 
 		for (OriFace face : faces) {
 
-			face.trianglateAndSetColor(m_bUseColor, isM_bFaceOrderFlip(),
+			face.trianglateAndSetColor(m_bUseColor, isFaceOrderFlipped(),
 					origamiModel.getPaperSize());
 
 			for (TriangleFace tri : face.triangles) {
@@ -382,7 +380,7 @@ public class FoldedModelScreen extends JPanel
 		}
 
 		if (m_bAmbientOcclusion) {
-			int renderFace = isM_bFaceOrderFlip() ? FoldedModelInfo.UPPER : FoldedModelInfo.LOWER;
+			int renderFace = isFaceOrderFlipped() ? FoldedModelInfo.UPPER : FoldedModelInfo.LOWER;
 			int r = 10;
 			int s = (int) (r * r * Math.PI);
 			// For every pixel
@@ -517,7 +515,7 @@ public class FoldedModelScreen extends JPanel
 
 				int p = offset + x;
 
-				int renderFace = isM_bFaceOrderFlip() ? FoldedModelInfo.UPPER
+				int renderFace = isFaceOrderFlipped() ? FoldedModelInfo.UPPER
 						: FoldedModelInfo.LOWER;
 
 				int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
@@ -540,14 +538,14 @@ public class FoldedModelScreen extends JPanel
 							ty = ty % textureImage.getHeight();
 							int textureColor = textureImage.getRGB(tx, ty);
 
-							if (m_bFillFaces && (tri.face.faceFront ^ isM_bFaceOrderFlip())) {
+							if (m_bFillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
 								pbuf[p] = textureColor;
 							} else {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
 
 							}
 						} else {
-							if (m_bFillFaces && (tri.face.faceFront ^ isM_bFaceOrderFlip())) {
+							if (m_bFillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
 							} else {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
@@ -650,12 +648,12 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if (javax.swing.SwingUtilities.isLeftMouseButton(e)) {
+		if (MouseUtility.isLeftButtonDown(e)) {
 			rotateAngle -= (e.getX() - preMousePoint.getX()) / 100.0;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
-		} else if (javax.swing.SwingUtilities.isRightMouseButton(e)) {
+		} else if (MouseUtility.isRightButtonDown(e)) {
 			transX += (e.getX() - preMousePoint.getX()) / scale;
 			transY += (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();
@@ -685,12 +683,11 @@ public class FoldedModelScreen extends JPanel
 		return bufferImage;
 	}
 
-	public static boolean isM_bFaceOrderFlip() {
+	public boolean isFaceOrderFlipped() {
 		return m_bFaceOrderFlip;
 	}
 
-	public static void setM_bFaceOrderFlip(final boolean m_bFaceOrderFlip) {
-		FoldedModelScreen.m_bFaceOrderFlip = m_bFaceOrderFlip;
+	public void setM_bFaceOrderFlip(final boolean m_bFaceOrderFlip) {
+		this.m_bFaceOrderFlip = m_bFaceOrderFlip;
 	}
-
 }
