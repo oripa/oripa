@@ -24,8 +24,8 @@ class LocalPaintBoundStateFactory {
 	/**
 	 *
 	 * @param parent
-	 *            A parent component. {@code null} indicates to avoid error on
-	 *            performActions() of created state.
+	 *            A parent component. This object can be used as the parent of
+	 *            an error dialog by {@link ErrorListener}.
 	 * @param stateManager
 	 * @param basicActions
 	 *            Actions for all created states.
