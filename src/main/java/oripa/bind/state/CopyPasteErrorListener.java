@@ -1,4 +1,4 @@
-package oripa.bind.copypaste;
+package oripa.bind.state;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -7,7 +7,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import oripa.bind.state.ErrorListener;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 
