@@ -20,7 +20,7 @@ To find out more about using the software, visit the [ORIPA project's website](h
 
 ### Download
 ------------
-The newest version is 1.00: See https://github.com/oripa/oripa/releases
+The newest version is 1.10: See https://github.com/oripa/oripa/releases
 
 ### Next challenge(s)
 --------
