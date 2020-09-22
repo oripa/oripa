@@ -185,7 +185,9 @@ public class ExporterSVGFactory {
 							points.add(new Vector2d(x2, y2));
 						}
 					}
-					bw.write("<g>");
+					if (!face.precreases.isEmpty()) {
+						bw.write("<g>");
+					}
 					if ((!face.faceFront && faceOrderFlip)
 							|| (face.faceFront && !faceOrderFlip)) {
 						bw.write(polygonStart);
@@ -213,7 +215,9 @@ public class ExporterSVGFactory {
 						bw.write("\" y2=\"" + y2);
 						bw.write("\" style=\"stroke:black;stroke-width:2px;\"/>\n");
 					}
-					bw.write("</g>");
+					if (!face.precreases.isEmpty()) {
+						bw.write("</g>");
+					}
 				}
 				bw.write(end);
 			}
