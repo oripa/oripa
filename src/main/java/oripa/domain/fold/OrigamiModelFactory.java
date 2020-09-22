@@ -1,8 +1,6 @@
 package oripa.domain.fold;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
@@ -48,9 +46,11 @@ public class OrigamiModelFactory {
 		edges.clear();
 		vertices.clear();
 		faces.clear();
+		List<OriLine> precreases = new ArrayList<>();
 
 		for (OriLine l : creasePattern) {
 			if (l.getType() == OriLine.Type.NONE) {
+				precreases.add(l);
 				continue;
 			}
 
@@ -177,8 +177,12 @@ public class OrigamiModelFactory {
 		}
 
 		// Create the edges from the vertexes
+		List<OriLine> precreases = new ArrayList<>();
 		for (OriLine l : creasePattern) {
 			if (l.getType() == OriLine.Type.NONE) {
+				Vector2d p0 = new Vector2d(l.p0);
+				Vector2d p1 = new Vector2d(l.p1);
+				precreases.add(new OriLine(p0, p1, l.getType()));
 				continue;
 			}
 
@@ -316,9 +320,17 @@ public class OrigamiModelFactory {
 		for (OriEdge e : edges) {
 			e.type = e.left.tmpInt;
 		}
-
+		for (OriFace face : faces) {
+			ListIterator<OriLine> iterator = precreases.listIterator();
+			while (iterator.hasNext()) {
+				OriLine precrease = iterator.next();
+				if (GeomUtil.isOriLineCrossFace(face, precrease)) {
+					face.precreases.add(precrease);
+					iterator.remove();
+				}
+			}
+		}
 		origamiModel.setHasModel(true);
-
 		return origamiModel;
 	}
 
@@ -377,44 +389,4 @@ public class OrigamiModelFactory {
 			}
 		}
 	}
-
-//	public void setCrossLine(List<OriLine> crossLines, OriLine line, List<OriFace> sortedFaces) {
-//		crossLines.clear();
-//		for (OriFace face : sortedFaces) {
-//			ArrayList<Vector2d> vv = new ArrayList<Vector2d>();
-//			int crossCount = 0;
-//			for (OriHalfedge he : face.halfedges) {
-//				OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
-//						he.next.positionForDisplay.x, he.next.positionForDisplay.y, PaintConfig.inputLineType);
-//
-//				double params[] = new double[2];
-//				boolean res = GeomUtil.getCrossPointParam(line.p0, line.p1, l.p0, l.p1, params);
-//				if (res == true && params[0] > -0.001 && params[1] > -0.001 && params[0] < 1.001 && params[1] < 1.001) {
-//					double param = params[1];
-//					crossCount++;
-//
-//					Vector2d crossV = new Vector2d();
-//					crossV.x = (1.0 - param) * he.vertex.preP.x + param * he.next.vertex.preP.x;
-//					crossV.y = (1.0 - param) * he.vertex.preP.y + param * he.next.vertex.preP.y;
-//
-//					boolean isNewPoint = true;
-//					for (Vector2d v2d : vv) {
-//						if (GeomUtil.Distance(v2d, crossV) < 1) {
-//							isNewPoint = false;
-//							break;
-//						}
-//					}
-//					if (isNewPoint) {
-//						vv.add(crossV);
-//					}
-//				}
-//			}
-//
-//			if (vv.size() >= 2) {
-//				crossLines.add(new OriLine(vv.get(0), vv.get(1), PaintConfig.inputLineType));
-//			}
-//		}
-//
-//	}
-
 }
