@@ -763,7 +763,7 @@ public class Folder {
 		}
 	}
 
-	void transformVertex(Vector2d vertex, Line preLine, Vector2d afterOrigin, Vector2d afterDir) {
+	private void transformVertex(Vector2d vertex, Line preLine, Vector2d afterOrigin, Vector2d afterDir) {
 
 		double param[] = new double[1];
 		double d0 = GeomUtil.Distance(vertex, preLine, param);
@@ -1001,7 +1001,7 @@ public class Folder {
 		faces.add(face);
 	}
 
-	void flipVertex(Vector2d vertex, Vector2d sp, Vector2d b) {
+	private void flipVertex(Vector2d vertex, Vector2d sp, Vector2d b) {
 		if (GeomUtil.Distance(vertex, new Line(sp, b)) < GeomUtil.EPS) {
 			return;
 		}

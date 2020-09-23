@@ -751,19 +751,19 @@ public class GeomUtil {
 		for (int i = 0; i < heNum; i++) {
 			OriHalfedge he = face.halfedges.get(i);
 			if (GeomUtil.DistancePointToSegment(v, he.vertex.p,
-												he.next.vertex.p) < EPS) {
+					he.next.vertex.p) < EPS) {
 				return true;
 			}
 		}
 
 		OriHalfedge baseHe = face.halfedges.get(0);
 		boolean baseFlg = GeomUtil.CCWcheck(baseHe.vertex.p,
-											baseHe.next.vertex.p, v);
+				baseHe.next.vertex.p, v);
 
 		for (int i = 1; i < heNum; i++) {
 			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.vertex.p, he.next.vertex.p,
-								  v) != baseFlg) {
+			if (GeomUtil.CCWcheck(he.vertex.p,
+					he.next.vertex.p, v) != baseFlg) {
 				return false;
 			}
 		}
