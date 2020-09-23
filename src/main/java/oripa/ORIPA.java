@@ -36,7 +36,7 @@ import oripa.view.model.ModelViewFrame3D;
 public class ORIPA {
 
 	public static String TITLE;
-//    public static ModelViewFrame modelFrame;
+
 	public static String infoString = "ORIPA: (c) 2013- ORIPA OSS Project\n" +
 			"http://github.com/oripa\n" +
 			"ORIPA: (c) 2005-2009 Jun Mitani\nhttp://mitani.cs.tsukuba.ac.jp/\n\n" +
@@ -46,8 +46,7 @@ public class ORIPA {
 
 	public static ResourceBundle res;
 	public static ModelViewFrame3D modelFrame3D;
-	public static int tmpInt;;
-//    public static FoldabilityCheckFrame checkFrame;
+	public static int tmpInt;
 
 	public static String iniFilePath = System.getProperty("user.home") + File.separator
 			+ "oripa.ini";
@@ -75,9 +74,8 @@ public class ORIPA {
 			ResourceHolder resources = ResourceHolder.getInstance();
 
 			TITLE = resources.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID);
-//        TITLE = ORIPA.res.getString("Title") + "  v" + Version.ORIPA_VERSION;
 
-			int uiPanelWidth = 0;// 150;
+			int uiPanelWidth = 0;
 			int modelFrameWidth = 400;
 			int modelFrameHeight = 400;
 			int mainFrameWidth = 1000;
@@ -99,20 +97,6 @@ public class ORIPA {
 			mainFrame.updateTitleText();
 			mainFrame.initialize();
 			mainFrame.setVisible(true);
-
-			// Expected folded origami frame (x-ray)
-//        modelFrame = new ModelViewFrame();
-//        modelFrame.setBounds(originX + (appTotalWidth - modelFrameWidth) / 2, originY + (appTotalHeight - modelFrameHeight) / 2,
-//                modelFrameWidth, modelFrameHeight);
-//        modelFrame.setVisible(false);
-
-			// "Folded origami" frame. Estimation of the folded form.
-//        renderFrame = new EstimationResultFrame();
-//        renderFrame.setVisible(false);
-
-			// "Check Window". Check inputed data.
-//        checkFrame = new FoldabilityCheckFrame();
-//        checkFrame.setVisible(false);
 
 			if (Config.FOR_STUDY) {
 				modelFrame3D = new ModelViewFrame3D();
