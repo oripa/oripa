@@ -267,11 +267,13 @@ public class OrigamiModelFactory {
 		// System.out.println("enum=" + edges.size());
 
 		// Construct the faces
+		List<OriEdge> outlineEdges = new ArrayList<>();
 		for (OriVertex v : vertices) {
 
 			for (OriEdge e : v.edges) {
 
 				if (e.type == OriLine.Type.CUT.toInt()) {
+					outlineEdges.add(e);
 					continue;
 				}
 
@@ -285,35 +287,22 @@ public class OrigamiModelFactory {
 					}
 				}
 
-				OriFace face = new OriFace();
-				faces.add(face);
-				OriVertex walkV = v;
-				OriEdge walkE = e;
-				debugCount = 0;
-				while (true) {
-					if (debugCount++ > 100) {
-						System.out.println("ERROR");
-//						throw new UnfoldableModelException("algorithmic error");
-						return origamiModel;
-					}
-					OriHalfedge he = new OriHalfedge(walkV, face);
-					face.halfedges.add(he);
-					he.tmpInt = walkE.type;
-					if (walkE.sv == walkV) {
-						walkE.left = he;
-					} else {
-						walkE.right = he;
-					}
-					walkV = walkE.oppositeVertex(walkV);
-					walkE = walkV.getPrevEdge(walkE);
-					if (walkV == v) {
-						break;
-					}
+				OriFace face = makeFace(v, e);
+				if (face == null) {
+					return origamiModel;
 				}
-				face.makeHalfedgeLoop();
-				face.setOutline();
-				face.setPreOutline();
+				faces.add(face);
 			}
+		}
+		if (faces.isEmpty()) { // happens when there is no crease
+			OriEdge outlineEdge = outlineEdges.get(0);
+			OriVertex v = outlineEdge.sv;
+
+			OriFace face = makeFace(v, outlineEdge);
+			if (face == null) {
+				return origamiModel;
+			}
+			faces.add(face);
 		}
 
 		makeEdges(edges, faces);
@@ -332,6 +321,34 @@ public class OrigamiModelFactory {
 		}
 		origamiModel.setHasModel(true);
 		return origamiModel;
+	}
+
+	private OriFace makeFace(OriVertex startingVertex, OriEdge startingEdge) {
+		OriFace face = new OriFace();
+		OriVertex walkV = startingVertex;
+		OriEdge walkE = startingEdge;
+		debugCount = 0;
+		do {
+			if (debugCount++ > 100) {
+				System.out.println("ERROR");
+//						throw new UnfoldableModelException("algorithmic error");
+				return null;
+			}
+			OriHalfedge he = new OriHalfedge(walkV, face);
+			face.halfedges.add(he);
+			he.tmpInt = walkE.type;
+			if (walkE.sv == walkV) {
+				walkE.left = he;
+			} else {
+				walkE.right = he;
+			}
+			walkV = walkE.oppositeVertex(walkV);
+			walkE = walkV.getPrevEdge(walkE);
+		} while (walkV != startingVertex);
+		face.makeHalfedgeLoop();
+		face.setOutline();
+		face.setPreOutline();
+		return face;
 	}
 
 	// boolean sortFinished = false;
