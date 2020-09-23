@@ -6,15 +6,15 @@ import java.util.ResourceBundle;
 
 /**
  * A singleton for resources. All resources are loaded at the beginning.
- * 
+ *
  * @author koji
- * 
+ *
  */
 public class ResourceHolder {
 
 	private final HashMap<ResourceKey, ResourceBundle> resources = new HashMap<>();
 
-//----------------------------------------------------------	
+//----------------------------------------------------------
 	private static ResourceHolder instance = null;
 
 	private ResourceHolder() {
@@ -29,7 +29,7 @@ public class ResourceHolder {
 		return instance;
 	}
 
-//----------------------------------------------------------	
+//----------------------------------------------------------
 
 	private static final String resourcePackage = "oripa.resource";
 
@@ -46,7 +46,7 @@ public class ResourceHolder {
 
 	}
 
-	public static ResourceBundle createResource(final String classPath) {
+	private static ResourceBundle createResource(final String classPath) {
 		ResourceBundle bundle;
 
 		// get a resource for the location
