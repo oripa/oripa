@@ -17,6 +17,7 @@ public class StringID {
 		public static final String SAVE_ID = "Save";
 		public static final String SAVE_AS_ID = "SaveAs";
 		public static final String SAVE_AS_IMAGE_ID = "SaveAsImage";
+		public static final String EXPORT_FOLD_ID = "ExportFOLD";
 		public static final String EXPORT_DXF_ID = "ExportDXF";
 		public static final String EXPORT_CP_ID = "ExportCP";
 		public static final String EXPORT_SVG_ID = "ExportSVG";
@@ -25,10 +26,15 @@ public class StringID {
 		public static final String EXIT_ID = "Exit";
 		public static final String UNDO_ID = "Undo";
 		public static final String ABOUT_ID = "About";
+		public static final String REPEAT_COPY_ID = "RepeatCopy";
+		public static final String CIRCLE_COPY_ID = "CircleCopy";
+
 		// public static final String COPY_PASTE_ID = "Copy_and_Paste";
 		// public static final String CUT_PASTE_ID = "Cut_and_Paste";
 		// public static final String EDIT_CONTOUR_ID = "EditContour";
 		public static final String SELECT_ALL_ID = "selectAll";
+		public static final String UNSELECT_ALL_ID = "unSelectAll";
+		public static final String DELETE_SELECTED_LINES_ID = "deleteSelectedLines";
 
 		public static final String DIALOG_TITLE_SAVE_ID = "DialogTitle_FileSave";
 		public static final String ORIPA_FILE_ID = "ORIPA_File";

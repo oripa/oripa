@@ -79,92 +79,16 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 272369294032419950L;
 
+	// shared objects
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
 
-	private final ChildFrameManager childFrameManager = new ChildFrameManager();
-
-	private final JMenu menuFile = new JMenu(
-			ORIPA.res.getString(StringID.Main.FILE_ID));
-	private final JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
-	private final JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
-	private final JMenuItem menuItemClear = new JMenuItem(
-			ORIPA.res.getString("New"));
-	private final JMenuItem menuItemOpen = new JMenuItem(
-			ORIPA.res.getString("Open"));
-
-	private final JMenuItem menuItemSave = new JMenuItem(
-			ORIPA.res.getString("Save"));
-	private final JMenuItem menuItemSaveAs = new JMenuItem(
-			ORIPA.res.getString("SaveAs"));
-	private final JMenuItem menuItemSaveAsImage = new JMenuItem(
-			ORIPA.res.getString("SaveAsImage"));
-
-	private final JMenuItem menuItemExportFOLD = new JMenuItem("Export FOLD");
-	private final JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
-//	private final JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
-	private final JMenuItem menuItemExportCP = new JMenuItem("Export CP");
-	private final JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
-
-	// -----------------------------------------------------------------------------------------------------------
-	// Create paint button
-
-	private final PaintContextFactory contextFactory = new PaintContextFactory();
-	private final PaintContextInterface paintContext = contextFactory.createContext();
-	private final MouseActionHolder actionHolder = new MouseActionHolder();
-
-	private final ButtonFactory buttonFactory;
-	/**
-	 * For changing outline
-	 */
-	private JMenuItem menuItemChangeOutline;
-
-	/**
-	 * For selecting all lines
-	 */
-	private JMenuItem menuItemSelectAll;
-
-	/**
-	 * For starting copy-and-paste
-	 */
-	private JMenuItem menuItemCopyAndPaste;
-
-	/**
-	 * For starting cut-and-paste
-	 */
-	private JMenuItem menuItemCutAndPaste;
-
-	// ---------------------------------------------------------------------------------------------
-
 	private final ViewScreenUpdater screenUpdater;
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
-	private final JMenuItem menuItemProperty = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL,
-					StringID.Main.PROPERTY_ID));
 
-	private final JMenuItem menuItemExit = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
-	private final JMenuItem menuItemUndo = new JMenuItem(
-			ORIPA.res.getString("Undo"));
-	private final JMenuItem menuItemAbout = new JMenuItem(
-			ORIPA.res.getString("About"));
-	private final JMenuItem menuItemRepeatCopy = new JMenuItem("Array Copy");
-	private final JMenuItem menuItemCircleCopy = new JMenuItem("Circle Copy");
-
-	private final JMenuItem menuItemUnSelectAll = new JMenuItem("UnSelect All");
-
-	private final JMenuItem menuItemDeleteSelectedLines = new JMenuItem(
-			"Delete Selected Lines");
-	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
-
-	private RepeatCopyDialog arrayCopyDialog;
-	private CircleCopyDialog circleCopyDialog;
-	public static JLabel hintLabel = new JLabel();
+	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
 	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 
@@ -172,12 +96,81 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final Doc document = new Doc();
 
+	// Create UI Factories
+	private final PaintContextFactory contextFactory = new PaintContextFactory();
+	private final PaintContextInterface paintContext = contextFactory.createContext();
+	private final MouseActionHolder actionHolder = new MouseActionHolder();
+
+	private final ButtonFactory buttonFactory;
+
+	private final RepeatCopyDialog arrayCopyDialog;
+	private final CircleCopyDialog circleCopyDialog;
+	public static JLabel hintLabel = new JLabel();
+
+	// setup Menu Bars
+	private final JMenu menuFile = new JMenu(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.FILE_ID));
+	private final JMenu menuEdit = new JMenu(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EDIT_ID));
+	private final JMenu menuHelp = new JMenu(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.HELP_ID));
+
+	// setup Menu Items
+	private final JMenuItem menuItemClear = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.NEW_ID));
+	private final JMenuItem menuItemOpen = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.OPEN_ID));
+
+	private final JMenuItem menuItemSave = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_ID));
+	private final JMenuItem menuItemSaveAs = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_AS_ID));
+	private final JMenuItem menuItemSaveAsImage = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_AS_IMAGE_ID));
+
+	private final JMenuItem menuItemExportFOLD = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_FOLD_ID));
+	private final JMenuItem menuItemExportDXF = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_DXF_ID));
+//	private final JMenuItem menuItemExportOBJ = new JMenuItem(
+//	resourceHolder.getString(ResourceKey.LABEL,StringID.Main.EXPORT_OBJ_ID));
+	private final JMenuItem menuItemExportCP = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_CP_ID));
+	private final JMenuItem menuItemExportSVG = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_SVG_ID));
+	private final JMenuItem menuItemExit = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
+
+	private JMenuItem menuItemChangeOutline;
+	private JMenuItem menuItemSelectAll;
+	private JMenuItem menuItemCopyAndPaste;
+	private JMenuItem menuItemCutAndPaste;
+
+	private final JMenuItem menuItemProperty = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL,
+					StringID.Main.PROPERTY_ID));
+
+	private final JMenuItem menuItemUndo = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.UNDO_ID));
+	private final JMenuItem menuItemAbout = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
+	private final JMenuItem menuItemRepeatCopy = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.REPEAT_COPY_ID));
+	private final JMenuItem menuItemCircleCopy = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.CIRCLE_COPY_ID));
+
+	private final JMenuItem menuItemUnSelectAll = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.UNSELECT_ALL_ID));
+	private final JMenuItem menuItemDeleteSelectedLines = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.DELETE_SELECTED_LINES_ID));
+
+	// Most recently used files list
+	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
+
 	public MainFrame() {
 		logger.info("frame construction starts.");
 
 		document.setCreasePattern(paintContext.getCreasePattern());
-
-		addPropertyChangeListenersToSetting();
 
 		var mainScreen = new PainterScreen(actionHolder, paintContext, document);
 		screenUpdater = mainScreen.getScreenUpdater();
@@ -205,9 +198,9 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				originHolder);
 		buttonFactory = new PaintActionButtonFactory(stateFactory, paintContext);
 
-		createPaintMenuItems();
-
-		addWindowListener(this);
+		// Setup Dialog Windows
+		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
+		circleCopyDialog = new CircleCopyDialog(this, paintContext);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(uiPanel, BorderLayout.WEST);
@@ -218,12 +211,15 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		this.setIconImage(imgLoader.loadAsIcon("icon/oripa.gif", getClass())
 				.getImage());
 
-		IntStream.range(0, Config.MRUFILE_NUM)
-				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
-
-		addActionListenersToComponents();
+		addWindowListener(this);
+		addHintPropertyChangeListenersToSetting();
 
 		loadIniFile();
+
+		createPaintMenuItems();
+		IntStream.range(0, Config.MRUFILE_NUM)
+				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
+		addActionListenersToComponents();
 
 		// Building the menu bar
 		JMenuBar menuBar = new JMenuBar();
@@ -249,36 +245,19 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		modifySavingActions();
 	}
 
-	public void initialize() {
-		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
-		circleCopyDialog = new CircleCopyDialog(this, paintContext);
-	}
-
 	private void createPaintMenuItems() {
-		/*
-		 * For changing outline
-		 */
 		menuItemChangeOutline = (JMenuItem) buttonFactory
 				.create(this, JMenuItem.class, actionHolder, screenUpdater,
 						StringID.EDIT_CONTOUR_ID, null);
 
-		/*
-		 * For selecting all lines
-		 */
 		menuItemSelectAll = (JMenuItem) buttonFactory
 				.create(this, JMenuItem.class, actionHolder, screenUpdater,
 						StringID.SELECT_ALL_LINE_ID, null);
 
-		/*
-		 * For starting copy-and-paste
-		 */
 		menuItemCopyAndPaste = (JMenuItem) buttonFactory
 				.create(this, JMenuItem.class, actionHolder, screenUpdater, StringID.COPY_PASTE_ID,
 						null);
 
-		/*
-		 * For starting cut-and-paste
-		 */
 		menuItemCutAndPaste = (JMenuItem) buttonFactory
 				.create(this, JMenuItem.class, actionHolder, screenUpdater, StringID.CUT_PASTE_ID,
 						null);
@@ -384,8 +363,18 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	}
 
-	private void modifySavingActions() {
+	/**
+	 * for changing Tooltips
+	 */
+	private void addHintPropertyChangeListenersToSetting() {
+		setting.addPropertyChangeListener(MainFrameSetting.HINT, e -> {
+			hintLabel.setText("    " + (String) e.getNewValue());
+			hintLabel.repaint();
+		});
 
+	}
+
+	private void modifySavingActions() {
 		// overwrite the action to update GUI after saving.
 		setProjectSavingAction(FileTypeKey.OPX);
 		setProjectSavingAction(FileTypeKey.FOLD);
@@ -417,7 +406,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			openFile(filePath);
 			updateTitleText();
 		} catch (Exception ex) {
-			showErrorDialog(ORIPA.res.getString("Error_FileLoadFailed"), ex);
+			showErrorDialog(resourceHolder.getString(ResourceKey.LABEL, "Error_FileLoadFailed"),
+					ex);
 		}
 		screenUpdater.updateScreen();
 	}
@@ -488,7 +478,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void updateTitleText() {
 		String fileName;
 		if ((document.getDataFilePath()).equals("")) {
-			fileName = ORIPA.res.getString("DefaultFileName");
+			fileName = resourceHolder.getString(ResourceKey.LABEL, "DefaultFileName");
 		} else {
 			fileName = document.getDataFileName();
 		}
@@ -589,6 +579,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuFile.add(menuItemExit);
 	}
 
+	/**
+	 * changes in MRU list
+	 *
+	 * @param filePath
+	 *            for fileHistory
+	 */
 	public void updateMenu(final String filePath) {
 
 		if (filterSelector.getLoadableFilterOf(filePath) == null) {
@@ -648,11 +644,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	}
 
-	void saveIniFile() {
+	private void saveIniFile() {
 		fileHistory.saveToFile(ORIPA.iniFilePath);
 	}
 
-	void loadIniFile() {
+	private void loadIniFile() {
 		fileHistory.loadFromFile(ORIPA.iniFilePath);
 	}
 
@@ -719,13 +715,5 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	@Override
 	public void windowDeactivated(final WindowEvent arg0) {
-	}
-
-	private void addPropertyChangeListenersToSetting() {
-		setting.addPropertyChangeListener(MainFrameSetting.HINT, e -> {
-			hintLabel.setText("    " + (String) e.getNewValue());
-			hintLabel.repaint();
-		});
-
 	}
 }
