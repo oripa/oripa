@@ -763,6 +763,24 @@ public class Folder {
 		}
 	}
 
+	private void transformVertex(Vector2d vertex, Line preLine, Vector2d afterOrigin, Vector2d afterDir) {
+
+		double param[] = new double[1];
+		double d0 = GeomUtil.Distance(vertex, preLine, param);
+		double d1 = param[0];
+
+		Vector2d footV = new Vector2d(afterOrigin);
+		footV.x += d1 * afterDir.x;
+		footV.y += d1 * afterDir.y;
+
+		Vector2d afterDirFromFoot = new Vector2d();
+		afterDirFromFoot.x = afterDir.y;
+		afterDirFromFoot.y = -afterDir.x;
+
+		vertex.x = footV.x + d0 * afterDirFromFoot.x;
+		vertex.y = footV.y + d0 * afterDirFromFoot.y;
+	}
+
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
 		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
 		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
@@ -779,20 +797,12 @@ public class Folder {
 		Line preLine = new Line(preOrigin, baseDir);
 
 		for (OriHalfedge he : face.halfedges) {
-			double param[] = new double[1];
-			double d0 = GeomUtil.Distance(he.tmpVec, preLine, param);
-			double d1 = param[0];
+			transformVertex(he.tmpVec, preLine, afterOrigin, afterDir);
+		}
 
-			Vector2d footV = new Vector2d(afterOrigin);
-			footV.x += d1 * afterDir.x;
-			footV.y += d1 * afterDir.y;
-
-			Vector2d afterDirFromFoot = new Vector2d();
-			afterDirFromFoot.x = afterDir.y;
-			afterDirFromFoot.y = -afterDir.x;
-
-			he.tmpVec.x = footV.x + d0 * afterDirFromFoot.x;
-			he.tmpVec.y = footV.y + d0 * afterDirFromFoot.y;
+		for (OriLine precrease : face.precreases) {
+			transformVertex(precrease.p0, preLine, afterOrigin, afterDir);
+			transformVertex(precrease.p1, preLine, afterOrigin, afterDir);
 		}
 
 		// Ivertion
@@ -821,6 +831,10 @@ public class Folder {
 					he.tmpVec.x += sp.x;
 					he.tmpVec.y += sp.y;
 				}
+			}
+			for (OriLine precrease : face.precreases) {
+				flipVertex(precrease.p0, sp, b);
+				flipVertex(precrease.p1, sp, b);
 			}
 			face.faceFront = !face.faceFront;
 		}
@@ -972,30 +986,39 @@ public class Folder {
 			Vector2d b = new Vector2d();
 			b.sub(ep, sp);
 			for (OriHalfedge he : face.halfedges) {
-
-				if (GeomUtil.Distance(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
-					continue;
-				}
-				if (Math.abs(b.y) < GeomUtil.EPS) {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					a.y = -a.y;
-					he.tmpVec.y = a.y + sp.y;
-				} else {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					he.tmpVec.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x)
-							/ b.lengthSquared();
-					he.tmpVec.x = b.x / b.y * a.y - a.x + b.x / b.y * he.tmpVec.y;
-					he.tmpVec.x += sp.x;
-					he.tmpVec.y += sp.y;
-				}
+				flipVertex(he.tmpVec, sp, b);
 			}
+
+			for (OriLine precrease : face.precreases) {
+				flipVertex(precrease.p0, sp, b);
+				flipVertex(precrease.p1, sp, b);
+			}
+
 			face.faceFront = !face.faceFront;
 		}
 
 		faces.remove(face);
 		faces.add(face);
+	}
+
+	private void flipVertex(Vector2d vertex, Vector2d sp, Vector2d b) {
+		if (GeomUtil.Distance(vertex, new Line(sp, b)) < GeomUtil.EPS) {
+			return;
+		}
+		if (Math.abs(b.y) < GeomUtil.EPS) {
+			Vector2d a = new Vector2d();
+			a.sub(vertex, sp);
+			a.y = -a.y;
+			vertex.y = a.y + sp.y;
+		} else {
+			Vector2d a = new Vector2d();
+			a.sub(vertex, sp);
+			vertex.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x)
+					/ b.lengthSquared();
+			vertex.x = b.x / b.y * a.y - a.x + b.x / b.y * vertex.y;
+			vertex.x += sp.x;
+			vertex.y += sp.y;
+		}
 	}
 
 }

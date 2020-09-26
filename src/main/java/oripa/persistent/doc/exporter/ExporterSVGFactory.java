@@ -185,6 +185,9 @@ public class ExporterSVGFactory {
 							points.add(new Vector2d(x2, y2));
 						}
 					}
+					if (!face.precreases.isEmpty()) {
+						bw.write("<g>");
+					}
 					if ((!face.faceFront && faceOrderFlip)
 							|| (face.faceFront && !faceOrderFlip)) {
 						bw.write(polygonStart);
@@ -195,6 +198,26 @@ public class ExporterSVGFactory {
 						bw.write(p.x + "," + p.y + " ");
 					}
 					bw.write(" z\" />\n");
+					for (OriLine oriLine : face.precreases) {
+						double x1 = (oriLine.p0.x - modelCenter.x) * scale
+							+ center;
+						double y1 = -(oriLine.p0.y - modelCenter.y) * scale
+								+ center;
+						double x2 = (oriLine.p1.x - modelCenter.x)
+								* scale
+								+ center;
+						double y2 = -(oriLine.p1.y - modelCenter.y)
+								* scale
+								+ center;
+						bw.write("<line x1=\"" + x1);
+						bw.write("\" y1=\"" + y1);
+						bw.write("\" x2=\"" + x2);
+						bw.write("\" y2=\"" + y2);
+						bw.write("\" style=\"stroke:black;stroke-width:2px;\"/>\n");
+					}
+					if (!face.precreases.isEmpty()) {
+						bw.write("</g>");
+					}
 				}
 				bw.write(end);
 			}
