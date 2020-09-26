@@ -40,19 +40,31 @@ public class ElementSelector {
 		case CUT:
 		case RIDGE:
 		case VALLEY:
-			stroke = new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT,
+			stroke = new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
 			break;
 		case CUT_MODEL:
-			stroke = new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT,
+			stroke = new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
 			break;
 		default:
-			stroke = new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT,
+			stroke = new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
 		}
 
 		return stroke;
+	}
+
+	public float createVeryThickLineWidth(final double scale) {
+		return 10.0f / (float) scale;
+	}
+
+	public float createThickLineWidth(final double scale) {
+		return 4.0f / (float) scale;
+	}
+
+	public float createThinLineWidth(final double scale) {
+		return 1.5f / (float) scale;
 	}
 
 	public Color getSelectedItemColor() {
@@ -60,7 +72,8 @@ public class ElementSelector {
 	}
 
 	public BasicStroke createSelectedLineStroke(final double scale) {
-		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
 	}
 
 	public Color getCandidateItemColor() {
@@ -68,7 +81,8 @@ public class ElementSelector {
 	}
 
 	public BasicStroke createCandidateLineStroke(final double scale) {
-		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
 	}
 
 	// FIXME: not to be in this class.
@@ -78,17 +92,20 @@ public class ElementSelector {
 
 	// FIXME: not to be in this class.
 	public BasicStroke createScissorsLineStrokeForModelView(final double scale) {
-		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
 	}
 
 	// FIXME: not to be in this class.
 	public BasicStroke createPaperBoundaryStrokeForModelView(final double scale) {
-		return new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+		return new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
 	}
 
 	// FIXME: not to be in this class.
 	public BasicStroke createFaceEdgeStrokeForModelView(final double scale) {
-		return new BasicStroke(1.5f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
 	}
 
 	public Color getEditingOutlineColor() {
@@ -100,7 +117,8 @@ public class ElementSelector {
 	}
 
 	public BasicStroke createEditingOutlineStroke(final double scale) {
-		return new BasicStroke(4.0f / (float) scale, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+		return new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
 	}
 
 	public Color getAreaSelectionColor() {
@@ -109,7 +127,16 @@ public class ElementSelector {
 
 	public BasicStroke createAreaSelectionStroke(final double scale) {
 		final float[] dash = { 3.0f };
-		return new BasicStroke(1.5f / (float) scale,
+		return new BasicStroke(createThinLineWidth(scale),
 				BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
+	}
+
+	public Color getOverlappingLineHighlightColor() {
+		return new Color(255, 0, 255, 30);
+	}
+
+	public BasicStroke createOverlappingLineHighlightStroke(final double scale) {
+		return new BasicStroke(createVeryThickLineWidth(scale), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
 	}
 }

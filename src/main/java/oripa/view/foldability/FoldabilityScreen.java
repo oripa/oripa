@@ -27,6 +27,7 @@ import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,11 +38,13 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import oripa.Config;
+import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.rule.FoldabilityChecker;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
+import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
 
 /**
@@ -84,6 +87,7 @@ public class FoldabilityScreen extends JPanel
 
 	private Collection<OriVertex> violatingVertices = new ArrayList<>();
 	private Collection<OriFace> violatingFaces = new ArrayList<>();
+	private Collection<OriLine> overlappingLines = new ArrayList<>();
 
 	public void showModel(
 			final OrigamiModel origamiModel,
@@ -97,6 +101,9 @@ public class FoldabilityScreen extends JPanel
 
 		violatingFaces = foldabilityChecker.findViolatingFaces(
 				origamiModel.getFaces());
+
+		var overlappingLineExtractor = new OverlappingLineExtractor();
+		overlappingLines = overlappingLineExtractor.extract(creasePattern);
 
 		this.setVisible(true);
 	}
@@ -194,6 +201,8 @@ public class FoldabilityScreen extends JPanel
 		Graphics2D g2d = bufferg;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+		highlightOverlappingLines(g2d);
+
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 		drawer.drawAllLines(g2d, creasePattern, scale);
 		drawer.drawCreaseVertices(g2d, creasePattern, scale);
@@ -201,6 +210,16 @@ public class FoldabilityScreen extends JPanel
 		drawFoldability(g2d);
 
 		g.drawImage(bufferImage, 0, 0, this);
+	}
+
+	private void highlightOverlappingLines(final Graphics2D g2d) {
+		for (var line : overlappingLines) {
+			var selector = new ElementSelector();
+			g2d.setColor(selector.getOverlappingLineHighlightColor());
+			g2d.setStroke(selector.createOverlappingLineHighlightStroke(scale));
+
+			g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
+		}
 	}
 
 	@Override
