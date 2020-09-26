@@ -63,6 +63,7 @@ import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
+import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.byvalue.AngleMeasuringAction;
@@ -125,6 +126,7 @@ public class UIPanel extends JPanel {
 	private JRadioButton lineInputMirrorButton;
 	private JRadioButton lineInputByValueButton;
 	private JRadioButton lineInputPBisectorButton;
+	private JRadioButton lineInputAngleSnapButton;
 	// ---------------------------------------------------------------------------------------------------------------------------
 
 	private final JRadioButton lineTypeAuxButton = new JRadioButton(
@@ -196,6 +198,9 @@ public class UIPanel extends JPanel {
 	private final JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
+	private final JComboBox<AngleStep> angleStepCombo = new JComboBox<>(
+			AngleStep.values());
+
 	public UIPanel(
 			final StateManager stateManager,
 			final ViewScreenUpdater screenUpdater,
@@ -249,6 +254,7 @@ public class UIPanel extends JPanel {
 		lineInputGroup.add(lineInputMirrorButton);
 		lineInputGroup.add(lineInputByValueButton);
 		lineInputGroup.add(lineInputPBisectorButton);
+		lineInputGroup.add(lineInputAngleSnapButton);
 
 		ButtonGroup lineTypeGroup = new ButtonGroup();
 		lineTypeGroup.add(lineTypeMountainButton);
@@ -312,8 +318,6 @@ public class UIPanel extends JPanel {
 		JLabel subLabel2 = new JLabel(
 				resources.getString(ResourceKey.LABEL, StringID.UI.ANGLE_ID));
 
-		// subPanel1.setVisible(true);
-		// subPanel2.setVisible(true);
 		byValueLengthPanel.setVisible(false);
 		byValueAnglePanel.setVisible(false);
 
@@ -343,6 +347,9 @@ public class UIPanel extends JPanel {
 
 		add(byValueLengthPanel);
 		add(byValueAnglePanel);
+
+		angleStepCombo.setVisible(false);
+		add(angleStepCombo);
 
 		// ------------------------------------
 		// For the grid panel
@@ -411,6 +418,7 @@ public class UIPanel extends JPanel {
 		lineInputSymmetricButton.setMnemonic(KeyEvent.VK_7);
 		lineInputMirrorButton.setMnemonic(KeyEvent.VK_8);
 		lineInputByValueButton.setMnemonic(KeyEvent.VK_9);
+		lineInputAngleSnapButton.setMnemonic(KeyEvent.VK_0);
 
 		editModeInputLineButton.setMnemonic(KeyEvent.VK_I);
 		editModePickLineButton.setMnemonic(KeyEvent.VK_S);
@@ -428,6 +436,7 @@ public class UIPanel extends JPanel {
 		// -------------------------------------------------
 		// Initialize selection
 		// -------------------------------------------------
+		angleStepCombo.setSelectedItem(AngleStep.PI_OVER_8);
 
 		// of paint command
 		lineInputDirectVButton.doClick();
@@ -525,6 +534,12 @@ public class UIPanel extends JPanel {
 				this, JRadioButton.class, actionHolder, screenUpdater,
 				StringID.PERPENDICULAR_BISECTOR_ID,
 				screenUpdater.getKeyListener());
+
+		lineInputAngleSnapButton = (JRadioButton) buttonFactory.create(
+				this, JRadioButton.class, actionHolder, screenUpdater,
+				StringID.ANGLE_SNAP_ID,
+				screenUpdater.getKeyListener());
+
 	}
 
 	private void addPaintActionButtons(final int gridWidth, final int gridy_start) {
@@ -548,6 +563,8 @@ public class UIPanel extends JPanel {
 		addPaintActionButton(lineInputMirrorButton, gridWidth, gridy_start,
 				paintActionButtonCount++);
 		addPaintActionButton(lineInputByValueButton, gridWidth, gridy_start,
+				paintActionButtonCount++);
+		addPaintActionButton(lineInputAngleSnapButton, gridWidth, gridy_start,
 				paintActionButtonCount++);
 	}
 
@@ -590,6 +607,8 @@ public class UIPanel extends JPanel {
 		setButtonIcon(lineInputMirrorButton, "icon/mirror.gif", "icon/mirror_p.gif");
 
 		setButtonIcon(lineInputByValueButton, "icon/by_value.gif", "icon/by_value_p.gif");
+
+		setButtonIcon(lineInputAngleSnapButton, "icon/angle.gif", "icon/angle_p.gif");
 	}
 
 	private void setButtonIcon(final AbstractButton button, final String iconPath,
@@ -615,6 +634,8 @@ public class UIPanel extends JPanel {
 
 		buttonAngle.addActionListener(
 				setterFactory.create(new AngleMeasuringAction(valueSetting)));
+
+		angleStepCombo.addItemListener(e -> paintContext.setAngleStep((AngleStep) e.getItem()));
 
 		lineTypeMountainButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.RIDGE));
@@ -842,6 +863,10 @@ public class UIPanel extends JPanel {
 		setting.addPropertyChangeListener(
 				UIPanelSetting.AUX_BUTTON_ENABLED,
 				e -> lineTypeAuxButton.setEnabled((boolean) e.getNewValue()));
+
+		setting.addPropertyChangeListener(
+				UIPanelSetting.ANGLE_STEP_VISIBLE,
+				e -> angleStepCombo.setVisible((boolean) e.getNewValue()));
 	}
 
 	private void onChangeEditModeButtonSelection(final PropertyChangeEvent e) {

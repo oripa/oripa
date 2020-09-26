@@ -102,4 +102,10 @@ public class NearestItemFinder {
 		return candidate;
 	}
 
+	public static Vector2d getNearestInAngleSnapCrossPoints(final PaintContextInterface context) {
+		return NearestVertexFinderHelper.findNearestVertex(
+				context.getLogicalMousePoint(),
+				context.getAngleSnapCrossPoints()).point;
+	}
+
 }

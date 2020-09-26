@@ -2,13 +2,13 @@ package oripa.viewsetting.main.uipanel;
 
 import oripa.viewsetting.ChangeViewSetting;
 
-public class ChangeOnByValueButtonSelected implements ChangeViewSetting {
+public class ChangeOnAngleSnapButtonSelected implements ChangeViewSetting {
 	private final UIPanelSetting setting;
 
 	/**
 	 * Constructor
 	 */
-	public ChangeOnByValueButtonSelected(final UIPanelSetting uiPanelSetting) {
+	public ChangeOnAngleSnapButtonSelected(final UIPanelSetting uiPanelSetting) {
 		setting = uiPanelSetting;
 	}
 
@@ -16,13 +16,15 @@ public class ChangeOnByValueButtonSelected implements ChangeViewSetting {
 	public void changeViewSetting() {
 		setting.selectInputMode();
 
-		setting.setByValuePanelVisible(true);
-		setting.setAngleStepVisible(false);
+		setting.setByValuePanelVisible(false);
+		setting.setAngleStepVisible(true);
 
 		setting.setAlterLineTypePanelVisible(false);
+
 		setting.setMountainButtonEnabled(true);
 		setting.setValleyButtonEnabled(true);
 		setting.setAuxButtonEnabled(true);
+
 	}
 
 }

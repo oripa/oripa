@@ -15,6 +15,7 @@ public class ChangeOnOtherCommandButtonSelected implements ChangeViewSetting {
 	@Override
 	public void changeViewSetting() {
 		setting.setByValuePanelVisible(false);
+		setting.setAngleStepVisible(false);
 
 		setting.setAlterLineTypePanelVisible(false);
 
