@@ -195,7 +195,7 @@ public class FoldabilityScreen extends JPanel
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawAllLines(g2d, creasePattern, (float) scale);
+		drawer.drawAllLines(g2d, creasePattern, scale);
 		drawer.drawCreaseVertices(g2d, creasePattern, scale);
 
 		drawFoldability(g2d);
