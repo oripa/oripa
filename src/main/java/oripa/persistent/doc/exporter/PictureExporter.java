@@ -20,6 +20,7 @@ package oripa.persistent.doc.exporter;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -61,6 +62,8 @@ public class PictureExporter implements DocExporter {
 
 		Graphics2D g2d = (Graphics2D) image.getGraphics();
 
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
 		g2d.setBackground(Color.WHITE);
 		g2d.clearRect(0, 0, image.getWidth(), image.getHeight());
 
@@ -70,7 +73,7 @@ public class PictureExporter implements DocExporter {
 		g2d.scale(scale, scale);
 
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawAllLines(g2d, creasePattern, (float) scale);
+		drawer.drawAllLines(g2d, creasePattern, scale);
 
 		File file = new File(filePath);
 		ImageIO.write(image, filePath.substring(filePath.lastIndexOf(".") + 1),
