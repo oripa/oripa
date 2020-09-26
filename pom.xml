@@ -95,9 +95,6 @@
 					</execution>
 				</executions>
 				<configuration>
-					<manifestEntries>
-						<Multi-Release>true</Multi-Release>
-					</manifestEntries>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
@@ -107,6 +104,7 @@
 							<mainClass>oripa.ORIPA</mainClass>
 						</manifest>
 					</archive>
+					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 			</plugin>
 
