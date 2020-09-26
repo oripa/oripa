@@ -297,7 +297,7 @@ public class UIPanel extends JPanel {
 		mainPanel.add(editModeDeleteVertex, createMainPanelGridBagConstraints(
 				gridX, gridY++, gridWidth));
 
-		JLabel label1 = new JLabel("Command (Alt + 1...9)");
+		JLabel label1 = new JLabel("Command (Alt + 1...9,0)");
 		label1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 		mainPanel.add(label1, createMainPanelGridBagConstraints(
 				gridX, gridY++, gridWidth));
