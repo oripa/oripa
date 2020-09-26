@@ -236,12 +236,13 @@ public class CreasePattern implements CreasePatternInterface {
 	@Override
 	public boolean addAll(final Collection<? extends OriLine> c) {
 
-		for (OriLine line : c) {
-			vertices.add(line.p0);
-			vertices.add(line.p1);
+		boolean added = false;
+
+		for (var line : c) {
+			added |= add(line);
 		}
 
-		return lines.addAll(c);
+		return added;
 	}
 
 	/*
