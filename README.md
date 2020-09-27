@@ -17,10 +17,11 @@ To find out more about using the software, visit the [ORIPA project's website](h
 * Undo by pressing Ctrl + z or clicking right mouse button.
 * You can select multi-lines by Dragging.
 * On delete-line mode, you can delete multi-lines by Dragging.	
+* The folded shape can be saved as SVG. In the output, each face keeps the pre-creases (Auxiliary lines) on it.
 
 ### Download
 ------------
-The newest version is 1.10: See https://github.com/oripa/oripa/releases
+The newest version is 1.20: See https://github.com/oripa/oripa/releases
 
 ### Next challenge(s)
 --------
