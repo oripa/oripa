@@ -740,6 +740,37 @@ public class GeomUtil {
 		return false;
 	}
 
+	public static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
+		return isContainsPointFace(line.p0, face) && isContainsPointFace(line.p1, face);
+	}
+
+	private static boolean isContainsPointFace(Vector2d v, OriFace face) {
+		int heNum = face.halfedges.size();
+
+		// If its on the faces edge, return true
+		for (int i = 0; i < heNum; i++) {
+			OriHalfedge he = face.halfedges.get(i);
+			if (GeomUtil.DistancePointToSegment(v, he.vertex.p,
+					he.next.vertex.p) < EPS) {
+				return true;
+			}
+		}
+
+		OriHalfedge baseHe = face.halfedges.get(0);
+		boolean baseFlg = GeomUtil.CCWcheck(baseHe.vertex.p,
+				baseHe.next.vertex.p, v);
+
+		for (int i = 1; i < heNum; i++) {
+			OriHalfedge he = face.halfedges.get(i);
+			if (GeomUtil.CCWcheck(he.vertex.p,
+					he.next.vertex.p, v) != baseFlg) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
 		Vector2d p1 = heg.positionAfterFolded;

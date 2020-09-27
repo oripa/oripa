@@ -42,6 +42,8 @@ public class OriFace {
 	// FIXME: GeneralPath is legacy.
 	public GeneralPath preOutline = new GeneralPath();
 
+	public ArrayList<OriLine> precreases = new ArrayList<>();
+
 	public boolean selected = false;
 	public boolean faceFront = true;
 	public Color color;
