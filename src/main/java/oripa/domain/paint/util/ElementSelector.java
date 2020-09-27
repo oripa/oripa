@@ -85,29 +85,6 @@ public class ElementSelector {
 				BasicStroke.JOIN_MITER);
 	}
 
-	// FIXME: not to be in this class.
-	public Color getScissorsLineColorForModelView() {
-		return Color.RED;
-	}
-
-	// FIXME: not to be in this class.
-	public BasicStroke createScissorsLineStrokeForModelView(final double scale) {
-		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER);
-	}
-
-	// FIXME: not to be in this class.
-	public BasicStroke createPaperBoundaryStrokeForModelView(final double scale) {
-		return new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER);
-	}
-
-	// FIXME: not to be in this class.
-	public BasicStroke createFaceEdgeStrokeForModelView(final double scale) {
-		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER);
-	}
-
 	public Color getEditingOutlineColor() {
 		return Color.GREEN;
 	}

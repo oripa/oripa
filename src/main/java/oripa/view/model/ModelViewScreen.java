@@ -47,7 +47,6 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
-import oripa.domain.paint.util.ElementSelector;
 import oripa.resource.Constants;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
@@ -77,6 +76,8 @@ public class ModelViewScreen extends JPanel
 	private int scissorsLineAngleDegree = 90;
 	private double scissorsLinePosition = 0;
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
+
+	private final ElementSelector selector = new ElementSelector();
 
 	private OrigamiModel origamiModel = null;
 	private final CutModelOutlinesHolder lineHolder;
@@ -185,7 +186,6 @@ public class ModelViewScreen extends JPanel
 
 			g2d.setColor(Color.BLACK);
 			for (OriHalfedge he : face.halfedges) {
-				var selector = new ElementSelector();
 				if (he.pair == null) {
 					g2d.setStroke(selector.createPaperBoundaryStrokeForModelView(scale));
 				} else {
@@ -198,7 +198,6 @@ public class ModelViewScreen extends JPanel
 		}
 
 		if (scissorsLineVisible) {
-			var selector = new ElementSelector();
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 			g2d.setStroke(selector.createScissorsLineStrokeForModelView(scale));
 			g2d.setColor(selector.getScissorsLineColorForModelView());
@@ -252,8 +251,7 @@ public class ModelViewScreen extends JPanel
 		boolean hasModel = origamiModel.hasModel();
 
 		if (hasModel) {
-			var selector = new ElementSelector();
-			g2d.setStroke(selector.createStroke(OriLine.Type.CUT, scale));
+			g2d.setStroke(selector.createDefaultStroke(scale));
 			if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 			}
