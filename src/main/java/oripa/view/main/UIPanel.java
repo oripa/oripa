@@ -104,8 +104,15 @@ public class UIPanel extends JPanel {
 	private final PaintContextInterface paintContext;
 
 	private boolean fullEstimation = true;
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Panels to be used
+	private final JPanel mainPanel = new JPanel();
+
 	// ---------------------------------------------------------------------------------------------------------------------------
 	// Binding edit mode
+
+	private final ButtonGroup editModeGroup;
 
 	private JRadioButton editModeInputLineButton;
 	private JRadioButton editModePickLineButton;
@@ -125,60 +132,16 @@ public class UIPanel extends JPanel {
 	private JRadioButton lineInputMirrorButton;
 	private JRadioButton lineInputByValueButton;
 	private JRadioButton lineInputPBisectorButton;
-	// ---------------------------------------------------------------------------------------------------------------------------
-
-	private final JRadioButton lineTypeAuxButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
-	private final JRadioButton lineTypeMountainButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
-	private final JRadioButton lineTypeValleyButton = new JRadioButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
 
 	// ---------------------------------------------------------------------------------------------------------------------------
-
-	private final ButtonGroup editModeGroup;
-	// Text box
-	private final JFormattedTextField textFieldLength;
-	private final JFormattedTextField textFieldAngle;
-	private final JFormattedTextField textFieldGrid;
-
-	private final JButton buttonLength = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
-	private final JButton buttonAngle = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
-
+	// ActionButtons
 	private final JButton buildButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
+	private final JButton buttonCheckWindow = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
-	private final JCheckBox dispGridCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
-			true);
-
-	private final JButton gridSmallButton = new JButton("x2");
-	private final JButton gridLargeButton = new JButton("x1/2");
-	private final JButton gridChangeButton = new JButton(
-			resources.getString(ResourceKey.LABEL,
-					StringID.UI.GRID_SIZE_CHANGE_ID));
-
-	private final JPanel mainPanel = new JPanel();
-	private final JPanel byValueLengthPanel = new JPanel();
-	private final JPanel byValueAnglePanel = new JPanel();
-	private final JPanel gridPanel = new JPanel();
-	private final JPanel lineTypePanel = new JPanel();
-	// AlterLineType
-	private final JPanel alterLineTypePanel = new JPanel();
-
-	private final TypeForChange[] alterLine_comboData_from = {
-			TypeForChange.EMPTY, TypeForChange.RIDGE, TypeForChange.VALLEY };
-	private final TypeForChange[] alterLine_comboData_to = {
-			TypeForChange.RIDGE, TypeForChange.VALLEY, TypeForChange.AUX,
-			TypeForChange.CUT, TypeForChange.DELETE, TypeForChange.FLIP };
-
-	private final JComboBox<TypeForChange> alterLine_combo_from = new JComboBox<>(
-			alterLine_comboData_from);
-	private final JComboBox<TypeForChange> alterLine_combo_to = new JComboBox<>(
-			alterLine_comboData_to);
-
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// viewCheckboxes
 	private final JCheckBox dispMVLinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MV_ID),
 			true);
@@ -193,8 +156,56 @@ public class UIPanel extends JPanel {
 			resources.getString(ResourceKey.LABEL,
 					StringID.UI.FULL_ESTIMATION_ID),
 			false);
-	private final JButton buttonCheckWindow = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
+
+	// ---------------------------------------------------------------------------------------------------------------------------
+	// Panel Components
+
+	// lineTypePanel
+	private final JPanel lineTypePanel = new JPanel();
+
+	private final JRadioButton lineTypeAuxButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
+	private final JRadioButton lineTypeMountainButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
+	private final JRadioButton lineTypeValleyButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
+
+	// byValueLengthPanel
+	private final JPanel byValueLengthPanel = new JPanel();
+	private final JFormattedTextField textFieldLength;
+	private final JButton buttonLength = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
+
+	// byValueAnglePanel
+	private final JPanel byValueAnglePanel = new JPanel();
+	private final JFormattedTextField textFieldAngle;
+	private final JButton buttonAngle = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
+
+	// gridPanel
+	private final JPanel gridPanel = new JPanel();
+	private final JCheckBox dispGridCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
+			true);
+	private final JFormattedTextField textFieldGrid;
+	private final JButton gridSmallButton = new JButton("x2");
+	private final JButton gridLargeButton = new JButton("x1/2");
+	private final JButton gridChangeButton = new JButton(
+			resources.getString(ResourceKey.LABEL,
+					StringID.UI.GRID_SIZE_CHANGE_ID));
+
+	// AlterLineTypePanel
+	private final JPanel alterLineTypePanel = new JPanel();
+	private final TypeForChange[] alterLine_comboData_from = {
+			TypeForChange.EMPTY, TypeForChange.RIDGE, TypeForChange.VALLEY };
+	private final TypeForChange[] alterLine_comboData_to = {
+			TypeForChange.RIDGE, TypeForChange.VALLEY, TypeForChange.AUX,
+			TypeForChange.CUT, TypeForChange.DELETE, TypeForChange.FLIP };
+
+	private final JComboBox<TypeForChange> alterLine_combo_from = new JComboBox<>(
+			alterLine_comboData_from);
+	private final JComboBox<TypeForChange> alterLine_combo_to = new JComboBox<>(
+			alterLine_comboData_to);
 
 	public UIPanel(
 			final StateManager stateManager,
@@ -224,6 +235,7 @@ public class UIPanel extends JPanel {
 		editModeGroup.add(editModeAddVertex);
 		editModeGroup.add(editModeDeleteVertex);
 
+		// alter line type panel setup
 		JLabel l1 = new JLabel(
 				resources.getString(ResourceKey.LABEL,
 						StringID.UI.CHANGE_LINE_TYPE_FROM_ID));
