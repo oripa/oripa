@@ -23,8 +23,6 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
-
 public class SubFace {
 
 	public OriFace outline;
@@ -161,7 +159,6 @@ public class SubFace {
 			return;
 		}
 
-		ORIPA.tmpInt++;
 		sortedFaces.get(index - 1).alreadyStacked = false;
 		sortedFaces.get(index - 1).tmpInt2 = -1;
 		sortedFaces.set(index - 1, null);

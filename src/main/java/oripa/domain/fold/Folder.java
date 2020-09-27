@@ -25,7 +25,6 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
@@ -102,8 +101,6 @@ public class Folder {
 		for (int i = 0; i < size; i++) {
 			System.arraycopy(overlapRelation[i], 0, workORmat[i], 0, size);
 		}
-
-		ORIPA.tmpInt = 0;
 
 		for (SubFace sub : subFaces) {
 			sub.sortFaceOverlapOrder(faces, workORmat);
