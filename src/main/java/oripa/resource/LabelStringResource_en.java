@@ -14,12 +14,19 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.Main.SAVE_ID, "Save" },
 			{ StringID.Main.SAVE_AS_ID, "Save As ..." },
 			{ StringID.Main.SAVE_AS_IMAGE_ID, "Save As Image ..." },
+			{ StringID.Main.EXPORT_FOLD_ID, "Export (FOLD)" },
 			{ StringID.Main.EXPORT_DXF_ID, "Export (DXF)" },
+			{ StringID.Main.EXPORT_CP_ID, "Export (CP)" },
+			{ StringID.Main.EXPORT_SVG_ID, "Export (SVG)" },
 			{ StringID.Main.PROPERTY_ID, "Property" },
 			{ StringID.Main.EXIT_ID, "Exit" },
 			{ StringID.Main.ABOUT_ID, "About" },
+			{ StringID.Main.REPEAT_COPY_ID, "Repeat Copy" },
+			{ StringID.Main.CIRCLE_COPY_ID, "Circular Copy" },
 			{ StringID.Main.UNDO_ID, "Undo" },
 			{ StringID.Main.SELECT_ALL_ID, "Select all" },
+			{ StringID.Main.UNSELECT_ALL_ID, "Unselect all" },
+			{ StringID.Main.DELETE_SELECTED_LINES_ID, "Delete selected lines" },
 
 			{ StringID.UI.AUX_ID, "Aux" },
 			{ StringID.UI.VALLEY_ID, "Valley" },
@@ -62,7 +69,12 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.UI.LINE_INPUT_MODE_ID, "Line Input Mode" },
 			{ StringID.UI.LENGTH_ID, "Length" },
 			{ StringID.UI.ANGLE_ID, "Angle" },
-			{ StringID.UI.GRID_DIVIDE_NUM_ID, "Div Num" }
+			{ StringID.UI.GRID_DIVIDE_NUM_ID, "Div Num" },
+
+			// ---------------------------------------------------------
+			// Default IDs
+
+			{ StringID.Default.FILE_NAME_ID, "NoTitle" }
 
 	};
 

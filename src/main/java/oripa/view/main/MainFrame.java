@@ -478,7 +478,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void updateTitleText() {
 		String fileName;
 		if ((document.getDataFilePath()).equals("")) {
-			fileName = resourceHolder.getString(ResourceKey.LABEL, "DefaultFileName");
+			fileName = resourceHolder.getString(ResourceKey.LABEL, StringID.Default.FILE_NAME_ID);
 		} else {
 			fileName = document.getDataFileName();
 		}
