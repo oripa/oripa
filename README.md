@@ -21,7 +21,9 @@ To find out more about using the software, visit the [ORIPA project's website](h
 
 ### Download
 ------------
-The newest version is 1.20: See https://github.com/oripa/oripa/releases
+The latest version is 1.20: See https://github.com/oripa/oripa/releases
+
+To run ORIPA, **you need install JDK 11 or above.**
 
 ### Next challenge(s)
 --------
