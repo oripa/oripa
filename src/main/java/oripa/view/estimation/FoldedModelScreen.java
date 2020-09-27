@@ -44,6 +44,7 @@ import oripa.domain.fold.BoundBox;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.OverlapRelationValues;
 import oripa.domain.fold.TriangleFace;
 import oripa.domain.fold.TriangleVertex;
 import oripa.util.gui.MouseUtility;
@@ -380,7 +381,8 @@ public class FoldedModelScreen extends JPanel
 		}
 
 		if (m_bAmbientOcclusion) {
-			int renderFace = isFaceOrderFlipped() ? FoldedModelInfo.UPPER : FoldedModelInfo.LOWER;
+			int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
+					: OverlapRelationValues.LOWER;
 			int r = 10;
 			int s = (int) (r * r * Math.PI);
 			// For every pixel
@@ -515,8 +517,8 @@ public class FoldedModelScreen extends JPanel
 
 				int p = offset + x;
 
-				int renderFace = isFaceOrderFlipped() ? FoldedModelInfo.UPPER
-						: FoldedModelInfo.LOWER;
+				int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
+						: OverlapRelationValues.LOWER;
 
 				int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 
