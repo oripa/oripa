@@ -29,8 +29,6 @@ import oripa.ORIPA;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.fold.rule.Condition3;
-import oripa.domain.fold.rule.Condition4;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.value.OriLine;

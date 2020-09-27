@@ -39,10 +39,10 @@ import javax.swing.JPopupMenu;
 
 import oripa.Config;
 import oripa.domain.cptool.OverlappingLineExtractor;
+import oripa.domain.fold.FoldabilityChecker;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
-import oripa.domain.fold.rule.FoldabilityChecker;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;

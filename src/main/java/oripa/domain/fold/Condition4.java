@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.fold.rule;
+package oripa.domain.fold;
 
-public class Condition4 {
+class Condition4 {
 
-    public int upper1;
-    public int lower1;
-    public int upper2;
-    public int lower2;
+	public int upper1;
+	public int lower1;
+	public int upper2;
+	public int lower2;
 }
