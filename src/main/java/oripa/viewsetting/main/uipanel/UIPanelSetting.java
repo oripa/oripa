@@ -40,6 +40,9 @@ public class UIPanelSetting {
 	private TypeForChange typeTo = TypeForChange.EMPTY;
 	public static final String TYPE_TO = "line type of 'to' box";
 
+	private boolean angleStepVisible = false;
+	public static final String ANGLE_STEP_VISIBLE = "angle step visible";
+
 	private final ValueSetting valueSetting = new ValueSetting();
 
 	public void addPropertyChangeListener(
@@ -169,6 +172,12 @@ public class UIPanelSetting {
 		selectedMode = EditMode.NONE; // a hack to trigger an update every time.
 
 		return ret;
+	}
+
+	public void setAngleStepVisible(final boolean visible) {
+		var old = angleStepVisible;
+		angleStepVisible = visible;
+		support.firePropertyChange(ANGLE_STEP_VISIBLE, old, visible);
 	}
 
 	public ValueSetting getValueSetting() {

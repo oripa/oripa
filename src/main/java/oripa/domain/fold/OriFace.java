@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-import oripa.domain.fold.rule.Condition3;
-import oripa.domain.fold.rule.Condition4;
 import oripa.value.OriLine;
 
 public class OriFace {

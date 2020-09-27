@@ -1,6 +1,9 @@
 package oripa.domain.fold;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
@@ -10,10 +13,6 @@ import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 public class OrigamiModelFactory {
-	final public static int NO_OVERLAP = 0;
-	final public static int UPPER = 1;
-	final public static int LOWER = 2;
-	final public static int UNDEFINED = 9;
 
 	int debugCount = 0;
 
@@ -323,7 +322,7 @@ public class OrigamiModelFactory {
 		return origamiModel;
 	}
 
-	private OriFace makeFace(OriVertex startingVertex, OriEdge startingEdge) {
+	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge) {
 		OriFace face = new OriFace();
 		OriVertex walkV = startingVertex;
 		OriEdge walkE = startingEdge;

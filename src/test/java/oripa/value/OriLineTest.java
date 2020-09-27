@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,38 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold.rule;
+package oripa.value;
 
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.geom.GeomUtil;
-import oripa.util.collection.AbstractRule;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public class FaceIsConvex extends AbstractRule<OriFace> {
+class OriLineTest {
 
+	@Test
+	void testHashCode() {
+		var line1 = new OriLine(0, 1, 2, 3, OriLine.Type.VALLEY);
+		var line2 = new OriLine(0, 1, 2, 3, OriLine.Type.RIDGE);
 
-	public boolean holds(OriFace face) {
+		assertTrue(line1.equals(line2));
+		assertTrue(line1.hashCode() == line2.hashCode());
 
-		if (face.halfedges.size() == 3) {
-			return true;
-		}
+		// test reversed direction
+		line2.p0.set(2, 3);
+		line2.p1.set(0, 1);
 
-		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.prev.vertex.p, 
-				baseHe.vertex.p, baseHe.next.vertex.p);
+		assertTrue(line1.equals(line2));
+		assertTrue(line1.hashCode() == line2.hashCode());
 
-		for (int i = 1; i < face.halfedges.size(); i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.prev.vertex.p, he.vertex.p, he.next.vertex.p) != baseFlg) {
-				return false;
-			}
-
-		}
-		
-		return true;
 	}
+
 }

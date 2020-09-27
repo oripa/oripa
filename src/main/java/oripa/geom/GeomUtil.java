@@ -96,7 +96,20 @@ public class GeomUtil {
 		return true;
 	}
 
-	public static boolean isLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
+	/**
+	 *
+	 * @param s0
+	 * @param e0
+	 * @param s1
+	 * @param e1
+	 * @return Count of end points on other segment for each segment. If the
+	 *         count is 0 then they are not overlapping. If the count is 1, they
+	 *         are not overlapping. If the count is 2, then the two segments
+	 *         partially overlaps. If the count is 3, then one segment overlaps
+	 *         entirely and an end point is shared with the other segment. If
+	 *         the count is 4, then the two segments are equal.
+	 */
+	public static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1) {
 		// Whether or not is parallel
 		Vector2d dir0 = new Vector2d(e0);
@@ -105,7 +118,7 @@ public class GeomUtil {
 		dir1.sub(s1);
 
 		if (!isParallel(dir0, dir1)) {
-			return false;
+			return 0;
 		}
 
 		int cnt = 0;
@@ -121,7 +134,12 @@ public class GeomUtil {
 		if (DistancePointToSegment(e1, s0, e0) < EPS) {
 			cnt++;
 		}
+		return cnt;
+	}
 
+	public static boolean isLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
+			final Vector2d s1, final Vector2d e1) {
+		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1);
 		if (cnt >= 2) {
 			return true;
 		}
@@ -744,7 +762,7 @@ public class GeomUtil {
 		return isContainsPointFace(line.p0, face) && isContainsPointFace(line.p1, face);
 	}
 
-	private static boolean isContainsPointFace(Vector2d v, OriFace face) {
+	private static boolean isContainsPointFace(final Vector2d v, final OriFace face) {
 		int heNum = face.halfedges.size();
 
 		// If its on the faces edge, return true

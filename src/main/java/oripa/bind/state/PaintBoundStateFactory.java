@@ -12,6 +12,7 @@ import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
 import oripa.domain.paint.addvertex.AddVertexAction;
+import oripa.domain.paint.angle.AngleSnapAction;
 import oripa.domain.paint.bisector.AngleBisectorAction;
 import oripa.domain.paint.byvalue.LineByValueAction;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
@@ -30,6 +31,7 @@ import oripa.resource.StringID;
 import oripa.viewsetting.main.ChangeHint;
 import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.uipanel.ChangeOnAlterTypeButtonSelected;
+import oripa.viewsetting.main.uipanel.ChangeOnAngleSnapButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnOtherCommandButtonSelected;
 import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
@@ -256,6 +258,16 @@ public class PaintBoundStateFactory {
 		case StringID.PERPENDICULAR_BISECTOR_ID:
 			mouseAction = new TwoPointBisectorAction();
 			state = stateFactory.create(
+					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
+			break;
+
+		case StringID.ANGLE_SNAP_ID:
+			LocalPaintBoundStateFactory angleSnapFactory = new LocalPaintBoundStateFactory(
+					parent, stateManager, new ActionListener[] {
+							e -> (new ChangeOnAngleSnapButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
+			mouseAction = new AngleSnapAction();
+			state = angleSnapFactory.create(
 					mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, null);
 
 		}

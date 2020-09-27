@@ -43,6 +43,9 @@ class PaintContext implements PaintContextInterface {
 
 	private Point2D.Double mousePoint;
 
+	private AngleStep angleStep;
+	private Collection<Vector2d> angleSnapCrossPoints = new ArrayList<Vector2d>();
+
 	public PaintContext() {
 	}
 
@@ -477,6 +480,50 @@ class PaintContext implements PaintContextInterface {
 	@Override
 	public CreasePatternInterface getCreasePattern() {
 		return creasePattern;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.paint.PaintContextInterface#setAngleStep(oripa.domain.paint.
+	 * AngleStep)
+	 */
+	@Override
+	public void setAngleStep(final AngleStep step) {
+		angleStep = step;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.PaintContextInterface#getAngleStep()
+	 */
+	@Override
+	public AngleStep getAngleStep() {
+		return angleStep;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.paint.PaintContextInterface#setAngleSnapCrossPoints(java.
+	 * util.Collection)
+	 */
+	@Override
+	public void setAngleSnapCrossPoints(final Collection<Vector2d> points) {
+		angleSnapCrossPoints = points;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.PaintContextInterface#getAngleSnapCrossPoints()
+	 */
+	@Override
+	public Collection<Vector2d> getAngleSnapCrossPoints() {
+		return angleSnapCrossPoints;
 	}
 
 	/*

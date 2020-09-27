@@ -3,8 +3,6 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.List;
 
-import oripa.domain.fold.rule.FoldabilityChecker;
-
 
 /**
  * Entity for folding-estimation

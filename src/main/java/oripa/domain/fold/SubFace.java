@@ -24,8 +24,6 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.ORIPA;
-import oripa.domain.fold.rule.Condition3;
-import oripa.domain.fold.rule.Condition4;
 
 public class SubFace {
 
@@ -56,7 +54,7 @@ public class SubFace {
 		for (int i = 0; i < f_num; i++) {
 			for (int j = i + 1; j < f_num; j++) {
 				if (mat[faces.get(i).tmpInt][faces
-						.get(j).tmpInt] == OrigamiModelFactory.UNDEFINED) {
+						.get(j).tmpInt] == OverlapRelationValues.UNDEFINED) {
 					cnt++;
 				}
 			}
@@ -85,7 +83,7 @@ public class SubFace {
 			}
 
 			for (OriFace ff : faces) {
-				if (mat[f.tmpInt][ff.tmpInt] == OrigamiModelFactory.LOWER) {
+				if (mat[f.tmpInt][ff.tmpInt] == OverlapRelationValues.LOWER) {
 					f.condition2s.add(Integer.valueOf(ff.tmpInt));
 				}
 			}

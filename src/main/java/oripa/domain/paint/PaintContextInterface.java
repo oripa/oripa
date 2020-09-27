@@ -231,4 +231,12 @@ public interface PaintContextInterface extends CreasePatternHolder {
 
 	public abstract CreasePatternUndoerInterface creasePatternUndo();
 
+	public abstract void setAngleStep(AngleStep step);
+
+	public abstract AngleStep getAngleStep();
+
+	public abstract void setAngleSnapCrossPoints(Collection<Vector2d> points);
+
+	public abstract Collection<Vector2d> getAngleSnapCrossPoints();
+
 }
