@@ -84,7 +84,6 @@ import oripa.viewsetting.ChangeViewSetting;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.MainScreenSetting;
-import oripa.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.UIPanelSetting;
@@ -469,7 +468,7 @@ public class UIPanel extends JPanel {
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
 				.createButton(
-						JRadioButton.class, new ChangeOnPaintInputButtonSelected(setting),
+						JRadioButton.class, null,
 						StringID.UI.INPUT_LINE_ID,
 						screenUpdater.getKeyListener());
 

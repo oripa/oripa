@@ -3,11 +3,16 @@ package oripa.viewsetting.main.uipanel;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.byvalue.ValueSetting;
 
 public class UIPanelSetting {
+	private static final Logger logger = LoggerFactory.getLogger(UIPanelSetting.class);
+
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 	private boolean byValuePanelVisible = false;
@@ -107,6 +112,7 @@ public class UIPanelSetting {
 	}
 
 	public void setByValuePanelVisible(final boolean byValuePanelVisible) {
+		logger.info("set by-value panel visible: " + byValuePanelVisible);
 		var old = this.byValuePanelVisible;
 		this.byValuePanelVisible = byValuePanelVisible;
 		support.firePropertyChange(BY_VALUE_PANEL_VISIBLE, old, byValuePanelVisible);
