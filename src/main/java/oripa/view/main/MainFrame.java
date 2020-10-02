@@ -53,6 +53,7 @@ import oripa.controller.SelectAllLineActionListener;
 import oripa.controller.UnselectAllLinesActionListener;
 import oripa.doc.Doc;
 import oripa.domain.cptool.Painter;
+import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintContextInterface;
@@ -440,12 +441,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private void clear() {
 		document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
-		paintContext.setCreasePattern(document.getCreasePattern());
-		paintContext.creasePatternUndo().clear();
 
-		childFrameManager.closeAllChildrenRecursively(this);
+		setCreasePatternToPaintContext(document.getCreasePattern());
 
 		screenSetting.setGridVisible(true);
+
+		childFrameManager.closeAllChildrenRecursively(this);
 
 		screenUpdater.updateScreen();
 		updateTitleText();
@@ -631,15 +632,17 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			return null;
 		}
 
-		paintContext.clear(true);
-		paintContext.setCreasePattern(document.getCreasePattern());
-
-		paintContext.creasePatternUndo().clear();
-
-		paintContext.updateGrids();
+		setCreasePatternToPaintContext(document.getCreasePattern());
 
 		return document.getDataFilePath();
 
+	}
+
+	private void setCreasePatternToPaintContext(final CreasePatternInterface creasePattern) {
+		paintContext.clear(true);
+		paintContext.setCreasePattern(creasePattern);
+		paintContext.creasePatternUndo().clear();
+		paintContext.updateGrids();
 	}
 
 	private void showErrorDialog(final String title, final Exception ex) {
