@@ -29,8 +29,6 @@ import oripa.value.OriLine;
 public interface CreasePatternInterface
 		extends Collection<OriLine>, NearVerticesGettable {
 
-	public abstract void changePaperSize(final double paperSize);
-
 	public abstract double getPaperSize();
 
 	/**

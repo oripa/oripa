@@ -80,18 +80,6 @@ public class CreasePattern implements CreasePatternInterface {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see
-	 * oripa.domain.creasepattern.CreasePatternInterface#changePaperSize(double)
-	 */
-	@Override
-	public void changePaperSize(final double paperSize) {
-		this.paperSize = paperSize;
-		vertices.changePaperSize(paperSize);
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
 	 * @see oripa.domain.creasepattern.CreasePatternInterface#getPaperSize()
 	 */
 	@Override

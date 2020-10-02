@@ -95,7 +95,7 @@ class VerticesManager implements NearVerticesGettable {
 
 	}
 
-	public void changePaperSize(final double paperSize) {
+	private void changePaperSize(final double paperSize) {
 		interval = paperSize / divNum;
 		paperCenter = paperSize / 2;
 
