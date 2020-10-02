@@ -22,7 +22,6 @@ class LineManager implements Collection<OriLine> {
 
 	private final Set<OriLine> lines = Collections.newSetFromMap(
 			new ConcurrentHashMap<OriLine, Boolean>());
-	// private Set<OriLine> lines = new TreeSet<>();
 
 	@Override
 	public boolean contains(final Object o) {
@@ -51,19 +50,16 @@ class LineManager implements Collection<OriLine> {
 
 	@Override
 	public Object[] toArray() {
-		// TODO Auto-generated method stub
 		return lines.toArray();
 	}
 
 	@Override
 	public <T> T[] toArray(final T[] a) {
-		// TODO Auto-generated method stub
 		return lines.toArray(a);
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return lines.isEmpty();
 	}
 
