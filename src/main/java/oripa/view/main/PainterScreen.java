@@ -32,6 +32,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.function.BiFunction;
 
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
@@ -337,35 +338,12 @@ public class PainterScreen extends JPanel
 	@Override
 	public void mouseDragged(final MouseEvent e) {
 
-		// zoom
-		if (MouseUtility.isLeftButtonDown(e) &&
-				MouseUtility.isControlKeyDown(e)) {
-
-			double moved = e.getX() - preMousePoint.getX() + e.getY()
-					- preMousePoint.getY();
-			double scale = camera.getScale() + moved / 150.0;
-			if (scale < 0.01) {
-				scale = 0.01;
-			}
-			affineTransform = camera.updateScale(scale);
-			paintContext.setScale(scale);
-			preMousePoint = e.getPoint();
-			repaint();
-
+		if (doDragAction(e, (ev, p) -> camera.updateScaleByMouseDragged(ev, p))) {
+			paintContext.setScale(camera.getScale());
 			return;
 		}
 
-		// move camera
-		if (MouseUtility.isRightButtonDown(e) ||
-				(MouseUtility.isLeftButtonDown(e) && MouseUtility.isShiftKeyDown(e))) {
-			double transX = camera.getTranslateXOfPaper()
-					+ (e.getX() - preMousePoint.getX()) / camera.getScale();
-			double transY = camera.getTranslateYOfPaper()
-					+ (e.getY() - preMousePoint.getY()) / camera.getScale();
-			preMousePoint = e.getPoint();
-			affineTransform = camera.updateTranslateOfPaper(transX, transY);
-			repaint();
-
+		if (doDragAction(e, (ev, p) -> camera.updateTranslateByMouseDragged(ev, p))) {
 			return;
 		}
 
@@ -377,6 +355,18 @@ public class PainterScreen extends JPanel
 		action.onDrag(paintContext, affineTransform,
 				MouseUtility.isControlKeyDown(e));
 		repaint();
+	}
+
+	private boolean doDragAction(final MouseEvent e,
+			final BiFunction<MouseEvent, Point2D, AffineTransform> onDrag) {
+		var affine = onDrag.apply(e, preMousePoint);
+		if (affine != null) {
+			preMousePoint = e.getPoint();
+			affineTransform = affine;
+			repaint();
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -407,8 +397,7 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseWheelMoved(final MouseWheelEvent e) {
-		double rate = (100.0 - e.getWheelRotation() * 5) / 100.0;
-		affineTransform = camera.updateScale(camera.getScale() * rate);
+		affineTransform = camera.updateScaleByMouseWheel(e);
 		paintContext.setScale(camera.getScale());
 		repaint();
 	}

@@ -18,7 +18,10 @@
  */
 package oripa.util.gui;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 /**
  * @author OUCHI Koji
@@ -86,4 +89,45 @@ public class AffineCamera {
 
 		return updateAffineTransform();
 	}
+
+	public AffineTransform updateTranslateByMouseDragged(
+			final MouseEvent e, final Point2D preMousePoint) {
+
+		// move camera
+		if (MouseUtility.isRightButtonDown(e) ||
+				(MouseUtility.isLeftButtonDown(e) && MouseUtility.isShiftKeyDown(e))) {
+			double transX = getTranslateXOfPaper()
+					+ (e.getX() - preMousePoint.getX()) / getScale();
+			double transY = getTranslateYOfPaper()
+					+ (e.getY() - preMousePoint.getY()) / getScale();
+			return updateTranslateOfPaper(transX, transY);
+		}
+
+		return null;
+	}
+
+	public AffineTransform updateScaleByMouseDragged(
+			final MouseEvent e, final Point2D preMousePoint) {
+
+		// zoom
+		if (MouseUtility.isLeftButtonDown(e) &&
+				MouseUtility.isControlKeyDown(e)) {
+
+			double moved = e.getX() - preMousePoint.getX() + e.getY()
+					- preMousePoint.getY();
+			double scale = getScale() + moved / 150.0;
+			if (scale < 0.01) {
+				scale = 0.01;
+			}
+			return updateScale(scale);
+		}
+
+		return null;
+	}
+
+	public AffineTransform updateScaleByMouseWheel(final MouseWheelEvent e) {
+		double rate = (100.0 - e.getWheelRotation() * 5) / 100.0;
+		return updateScale(getScale() * rate);
+	}
+
 }
