@@ -19,7 +19,6 @@
 package oripa.view.main;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -70,9 +69,6 @@ public class PainterScreen extends JPanel
 	private double scale;
 	private double transX;
 	private double transY;
-	// Temporary information when editing
-	// Affine transformation information
-	private Dimension preSize;
 	private final AffineTransform affineTransform = new AffineTransform();
 
 	private final CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
@@ -98,8 +94,6 @@ public class PainterScreen extends JPanel
 		paintContext.setScale(scale);
 
 		setBackground(Color.white);
-
-		preSize = getSize();
 	}
 
 	public ViewScreenUpdater getScreenUpdater() {
@@ -193,8 +187,6 @@ public class PainterScreen extends JPanel
 		bufferImage = createImage(getWidth(), getHeight());
 		bufferg = (Graphics2D) bufferImage.getGraphics();
 		updateAffineTransform();
-		preSize = getSize();
-
 	}
 
 	private Graphics2D updateBufferImage() {
@@ -420,7 +412,7 @@ public class PainterScreen extends JPanel
 		if (getWidth() <= 0 || getHeight() <= 0) {
 			return;
 		}
-		preSize = getSize();
+		var preSize = getSize();
 
 		// Update the logical coordinates of the center of the screen
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;

@@ -19,7 +19,6 @@
 package oripa.view.foldability;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -64,7 +63,6 @@ public class FoldabilityScreen extends JPanel
 	private double transY;
 
 	// Affine transformation information
-	private Dimension preSize;
 	private final AffineTransform affineTransform = new AffineTransform();
 	private final JPopupMenu popup = new JPopupMenu();
 	private final JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
@@ -82,7 +80,6 @@ public class FoldabilityScreen extends JPanel
 
 		popup.add(popupItem_DivideFace);
 		popup.add(popupItem_FlipFace);
-		preSize = getSize();
 	}
 
 	private Collection<OriVertex> violatingVertices = new ArrayList<>();
@@ -180,15 +177,18 @@ public class FoldabilityScreen extends JPanel
 		affineTransform.translate(transX, transY);
 	}
 
+	private void buildBufferImage() {
+		bufferImage = createImage(getWidth(), getHeight());
+		bufferg = (Graphics2D) bufferImage.getGraphics();
+		updateAffineTransform();
+	}
+
 	@Override
 	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
 		if (bufferImage == null) {
-			bufferImage = createImage(getWidth(), getHeight());
-			bufferg = (Graphics2D) bufferImage.getGraphics();
-			updateAffineTransform();
-			preSize = getSize();
+			buildBufferImage();
 		}
 
 		bufferg.setTransform(new AffineTransform());
@@ -227,19 +227,15 @@ public class FoldabilityScreen extends JPanel
 		if (getWidth() <= 0 || getHeight() <= 0) {
 			return;
 		}
-		preSize = getSize();
+		var preSize = getSize();
 
 		// Update of the logical coordinates of the center of the screen
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
 		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
 
 		// Updating the image buffer
-		bufferImage = createImage(getWidth(), getHeight());
-		bufferg = (Graphics2D) bufferImage.getGraphics();
-
-		updateAffineTransform();
+		buildBufferImage();
 		repaint();
-
 	}
 
 	@Override
