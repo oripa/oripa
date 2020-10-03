@@ -70,9 +70,9 @@ public class CreasePattern implements CreasePatternInterface {
 	private CreasePattern() {
 	}
 
-	public CreasePattern(final double paperSize) {
+	public CreasePattern(final double paperSize, final double paperLeft, final double paperTop) {
 		lines = new LineManager();
-		vertices = new VerticesManager(paperSize);
+		vertices = new VerticesManager(paperSize, paperLeft, paperTop);
 
 		this.paperSize = paperSize;
 	}
@@ -324,17 +324,5 @@ public class CreasePattern implements CreasePatternInterface {
 		// rebuild vertices info
 		this.clear();
 		this.addAll(lines);
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.creasepattern.NearVerticesGettable#setPaperLeftTop(double,
-	 * double)
-	 */
-	@Override
-	public void setPaperLeftTop(final double paperLeft, final double paperTop) {
-		vertices.setPaperLeftTop(paperLeft, paperTop);
 	}
 }

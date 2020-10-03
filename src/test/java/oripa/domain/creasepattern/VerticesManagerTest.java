@@ -65,7 +65,7 @@ public class VerticesManagerTest {
 	public void testAddVertex() {
 		final double paperSize = 400;
 
-		VerticesManager manager = new VerticesManager(paperSize);
+		VerticesManager manager = new VerticesManager(paperSize, -paperSize / 2, -paperSize / 2);
 
 		double interval = manager.interval;
 		addAndCheckContains(manager, new Vector2d(0, 0));
@@ -100,7 +100,7 @@ public class VerticesManagerTest {
 	public void testDuplicationManagement() {
 		final double paperSize = 400;
 
-		VerticesManager manager = new VerticesManager(paperSize);
+		VerticesManager manager = new VerticesManager(paperSize, -paperSize / 2, -paperSize / 2);
 
 		OriPoint p = new OriPoint(10, 10);
 

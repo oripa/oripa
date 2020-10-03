@@ -26,7 +26,7 @@ class VerticesManager implements NearVerticesGettable {
 
 	double interval;
 //	private double paperCenter;
-	private double paperLeft, paperTop;
+	private final double paperLeft, paperTop;
 
 	/**
 	 * the index of divided paper area. A given point is converted to the index
@@ -83,8 +83,10 @@ class VerticesManager implements NearVerticesGettable {
 	 * @param paperSize
 	 *            paper size in double.
 	 */
-	public VerticesManager(final double paperSize) {
+	public VerticesManager(final double paperSize, final double paperLeft, final double paperTop) {
 		changePaperSize(paperSize);
+		this.paperLeft = paperLeft;
+		this.paperTop = paperTop;
 
 		// allocate memory for each area
 		for (int x = 0; x < divNum; x++) {
@@ -98,16 +100,6 @@ class VerticesManager implements NearVerticesGettable {
 
 	private void changePaperSize(final double paperSize) {
 		interval = paperSize / divNum;
-
-		// assuming the center is (0, 0)
-		paperLeft = -paperSize / 2;
-		paperTop = -paperSize / 2;
-	}
-
-	@Override
-	public void setPaperLeftTop(final double paperLeft, final double paperTop) {
-		this.paperLeft = paperLeft;
-		this.paperTop = paperTop;
 	}
 
 	/**
