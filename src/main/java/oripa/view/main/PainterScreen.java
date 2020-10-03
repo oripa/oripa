@@ -412,16 +412,10 @@ public class PainterScreen extends JPanel
 		if (getWidth() <= 0 || getHeight() <= 0) {
 			return;
 		}
-		var preSize = getSize();
-
-		// Update the logical coordinates of the center of the screen
-		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
-		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
 
 		// Updating the image buffer
 		buildBufferImage();
 		repaint();
-
 	}
 
 	@Override
