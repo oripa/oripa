@@ -28,6 +28,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.util.ElementSelector;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -53,6 +54,7 @@ public class CreasePatternGraphicDrawer {
 
 		if (context.isGridVisible()) {
 			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize(),
+					context.getCreasePatternDomain(),
 					context.getScale());
 		}
 
@@ -164,6 +166,7 @@ public class CreasePatternGraphicDrawer {
 	}
 
 	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize,
+			final RectangleDomain domain,
 			final double scale) {
 		var selector = new ElementSelector();
 
@@ -173,15 +176,14 @@ public class CreasePatternGraphicDrawer {
 		int lineNum = gridDivNum;
 		double step = paperSize / lineNum;
 
-		// FIXME this method depends on implicit position of paper.
 		for (int i = 1; i < lineNum; i++) {
 			g2d.draw(new Line2D.Double(
-					step * i - paperSize / 2.0, -paperSize / 2.0,
-					step * i - paperSize / 2.0, paperSize / 2.0));
+					step * i + domain.getLeft(), domain.getTop(),
+					step * i + domain.getLeft(), domain.getBottom()));
 
 			g2d.draw(new Line2D.Double(
-					-paperSize / 2.0, step * i - paperSize / 2.0,
-					paperSize / 2.0, step * i - paperSize / 2.0));
+					domain.getLeft(), step * i + domain.getTop(),
+					domain.getRight(), step * i + domain.getTop()));
 		}
 	}
 

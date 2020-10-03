@@ -45,6 +45,7 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.util.gui.AffineCamera;
 import oripa.util.gui.MouseUtility;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainScreenSetting;
@@ -66,10 +67,8 @@ public class PainterScreen extends JPanel
 	private Graphics2D bufferg;
 	private Point2D preMousePoint; // Screen coordinates
 
-	private double scale;
-	private double transX;
-	private double transY;
-	private final AffineTransform affineTransform = new AffineTransform();
+	private final AffineCamera camera = new AffineCamera();
+	private AffineTransform affineTransform = new AffineTransform();
 
 	private final CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
@@ -90,10 +89,13 @@ public class PainterScreen extends JPanel
 
 		addPropertyChangeListenersToSetting();
 
-		scale = 1.5;
-		paintContext.setScale(scale);
+		camera.updateScale(1.5);
+		var domain = paintContext.getCreasePatternDomain();
+		camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
 
-		setBackground(Color.white);
+		paintContext.setScale(camera.getScale());
+
+		setBackground(Color.WHITE);
 	}
 
 	public ViewScreenUpdater getScreenUpdater() {
@@ -169,14 +171,14 @@ public class PainterScreen extends JPanel
 	// }
 	// }
 
-	// update actual AffineTransform
-	private void updateAffineTransform() {
-		affineTransform.setToIdentity();
-		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
-		affineTransform.scale(scale, scale);
-		affineTransform.translate(transX, transY);
-
-	}
+//	// update actual AffineTransform
+//	private void updateAffineTransform() {
+//		affineTransform.setToIdentity();
+//		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
+//		affineTransform.scale(scale, scale);
+//		affineTransform.translate(transX, transY);
+//
+//	}
 
 	public Image getCreasePatternImage() {
 
@@ -186,7 +188,7 @@ public class PainterScreen extends JPanel
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
 		bufferg = (Graphics2D) bufferImage.getGraphics();
-		updateAffineTransform();
+		affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
 	}
 
 	private Graphics2D updateBufferImage() {
@@ -200,6 +202,9 @@ public class PainterScreen extends JPanel
 		// Clears the image buffer
 		bufferg.setColor(Color.WHITE);
 		bufferg.fillRect(0, 0, getWidth(), getHeight());
+
+		var domain = paintContext.getCreasePatternDomain();
+		affineTransform = camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
 
 		// set the AffineTransform of buffer
 		bufferg.setTransform(affineTransform);
@@ -221,7 +226,7 @@ public class PainterScreen extends JPanel
 
 		if (paintContext.isCrossLineVisible()) {
 			var crossLines = cutOutlinesHolder.getOutlines();
-			drawer.drawAllLines(bufferG2D, crossLines, (float) scale);
+			drawer.drawAllLines(bufferG2D, crossLines, camera.getScale());
 		}
 
 		// Line that links the pair of unsetled faces
@@ -338,13 +343,13 @@ public class PainterScreen extends JPanel
 
 			double moved = e.getX() - preMousePoint.getX() + e.getY()
 					- preMousePoint.getY();
-			scale += moved / 150.0;
+			double scale = camera.getScale() + moved / 150.0;
 			if (scale < 0.01) {
 				scale = 0.01;
 			}
+			affineTransform = camera.updateScale(scale);
 			paintContext.setScale(scale);
 			preMousePoint = e.getPoint();
-			updateAffineTransform();
 			repaint();
 
 			return;
@@ -353,10 +358,12 @@ public class PainterScreen extends JPanel
 		// move camera
 		if (MouseUtility.isRightButtonDown(e) ||
 				(MouseUtility.isLeftButtonDown(e) && MouseUtility.isShiftKeyDown(e))) {
-			transX += (e.getX() - preMousePoint.getX()) / scale;
-			transY += (e.getY() - preMousePoint.getY()) / scale;
+			double transX = camera.getTranslateXOfPaper()
+					+ (e.getX() - preMousePoint.getX()) / camera.getScale();
+			double transY = camera.getTranslateYOfPaper()
+					+ (e.getY() - preMousePoint.getY()) / camera.getScale();
 			preMousePoint = e.getPoint();
-			updateAffineTransform();
+			affineTransform = camera.updateTranslateOfPaper(transX, transY);
 			repaint();
 
 			return;
@@ -374,7 +381,7 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		paintContext.setScale(scale);
+		paintContext.setScale(camera.getScale());
 		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
 				affineTransform, e.getPoint()));
 
@@ -401,9 +408,8 @@ public class PainterScreen extends JPanel
 	@Override
 	public void mouseWheelMoved(final MouseWheelEvent e) {
 		double rate = (100.0 - e.getWheelRotation() * 5) / 100.0;
-		scale *= rate;
-		paintContext.setScale(scale);
-		updateAffineTransform();
+		affineTransform = camera.updateScale(camera.getScale() * rate);
+		paintContext.setScale(camera.getScale());
 		repaint();
 	}
 

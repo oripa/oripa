@@ -50,4 +50,6 @@ public interface NearVerticesGettable {
 	public abstract Collection<Collection<Vector2d>> getVerticesInArea(double x,
 			double y, double distance);
 
+	public abstract void setPaperLeftTop(final double paperLeft, final double paperTop);
+
 }

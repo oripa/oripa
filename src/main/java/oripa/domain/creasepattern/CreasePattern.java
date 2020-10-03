@@ -326,4 +326,15 @@ public class CreasePattern implements CreasePatternInterface {
 		this.addAll(lines);
 	}
 
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.creasepattern.NearVerticesGettable#setPaperLeftTop(double,
+	 * double)
+	 */
+	@Override
+	public void setPaperLeftTop(final double paperLeft, final double paperTop) {
+		vertices.setPaperLeftTop(paperLeft, paperTop);
+	}
 }

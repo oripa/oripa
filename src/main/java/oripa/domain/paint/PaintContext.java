@@ -11,6 +11,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 class PaintContext implements PaintContextInterface {
@@ -45,6 +46,8 @@ class PaintContext implements PaintContextInterface {
 
 	private AngleStep angleStep;
 	private Collection<Vector2d> angleSnapCrossPoints = new ArrayList<Vector2d>();
+
+	private RectangleDomain domain;
 
 	public PaintContext() {
 	}
@@ -159,8 +162,8 @@ class PaintContext implements PaintContextInterface {
 		double step = paperSize / gridDivNum;
 		for (int ix = 0; ix < gridDivNum + 1; ix++) {
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = -paperSize / 2 + step * ix;
-				double y = -paperSize / 2 + step * iy;
+				double x = domain.getLeft() + step * ix;
+				double y = domain.getTop() + step * iy;
 
 				gridPoints.add(new Vector2d(x, y));
 			}
@@ -475,11 +478,22 @@ class PaintContext implements PaintContextInterface {
 	@Override
 	public void setCreasePattern(final CreasePatternInterface aCreasePattern) {
 		creasePattern = aCreasePattern;
+		domain = new RectangleDomain(creasePattern);
 	}
 
 	@Override
 	public CreasePatternInterface getCreasePattern() {
 		return creasePattern;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.PaintContextInterface#getCreasePatternDomain()
+	 */
+	@Override
+	public RectangleDomain getCreasePatternDomain() {
+		return domain;
 	}
 
 	/*

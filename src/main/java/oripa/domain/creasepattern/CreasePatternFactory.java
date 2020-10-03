@@ -19,6 +19,7 @@
 package oripa.domain.creasepattern;
 
 import java.util.Collection;
+import java.util.List;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -38,7 +39,6 @@ public class CreasePatternFactory {
 	 * @return crease pattern of non-folded case.
 	 */
 	public CreasePatternInterface createCreasePattern(final double paperSize) {
-		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
 
 		OriLine l0 = new OriLine(-paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0,
 				-paperSize / 2.0, OriLine.Type.CUT);
@@ -48,10 +48,14 @@ public class CreasePatternFactory {
 				paperSize / 2.0, OriLine.Type.CUT);
 		OriLine l3 = new OriLine(-paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0,
 				-paperSize / 2.0, OriLine.Type.CUT);
-		creasePattern.add(l0);
-		creasePattern.add(l1);
-		creasePattern.add(l2);
-		creasePattern.add(l3);
+
+		var lines = List.of(l0, l1, l2, l3);
+		var domain = new RectangleDomain(lines);
+
+		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
+		creasePattern.setPaperLeftTop(domain.getLeft(), domain.getTop());
+
+		creasePattern.addAll(lines);
 
 		return creasePattern;
 	}
@@ -73,15 +77,12 @@ public class CreasePatternFactory {
 	 * @return
 	 */
 	public CreasePatternInterface createCreasePattern(final Collection<OriLine> lines) {
-		RectangleDomain domain = new RectangleDomain(lines);
+		var domain = new RectangleDomain(lines);
 		double paperSize = Math.max(domain.getWidth(), domain.getHeight());
 
 		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
-
+		creasePattern.setPaperLeftTop(domain.getLeft(), domain.getTop());
 		creasePattern.addAll(lines);
-
-		// FIXME: changing given coordinates is not preferable.
-		creasePattern.move(-domain.getCenterX(), -domain.getCenterY());
 
 		return creasePattern;
 	}
