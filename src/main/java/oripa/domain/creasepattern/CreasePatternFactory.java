@@ -20,6 +20,7 @@ package oripa.domain.creasepattern;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -71,15 +72,19 @@ public class CreasePatternFactory {
 
 	/**
 	 * creates crease pattern which consists of given lines and no other lines.
-	 * also moves the lines such that the center of the paper becomes (0, 0).
 	 *
 	 * @param lines
 	 * @return
 	 */
 	public CreasePatternInterface createCreasePattern(final Collection<OriLine> lines) {
-		var domain = new RectangleDomain(lines);
+		// To get paper size, consider boundary only
+		var domain = new RectangleDomain(
+				lines.stream()
+						.filter(line -> line.getType() == OriLine.Type.CUT)
+						.collect(Collectors.toList()));
 		double paperSize = Math.max(domain.getWidth(), domain.getHeight());
 
+		// Construct CP
 		CreasePatternInterface creasePattern = new CreasePattern(
 				paperSize, domain.getLeft(), domain.getTop());
 		creasePattern.addAll(lines);
