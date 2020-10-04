@@ -338,12 +338,12 @@ public class PainterScreen extends JPanel
 	@Override
 	public void mouseDragged(final MouseEvent e) {
 
-		if (doDragAction(e, (ev, p) -> camera.updateScaleByMouseDragged(ev, p))) {
+		if (doCameraDragAction(e, (ev, p) -> camera.updateScaleByMouseDragged(ev, p))) {
 			paintContext.setScale(camera.getScale());
 			return;
 		}
 
-		if (doDragAction(e, (ev, p) -> camera.updateTranslateByMouseDragged(ev, p))) {
+		if (doCameraDragAction(e, (ev, p) -> camera.updateTranslateByMouseDragged(ev, p))) {
 			return;
 		}
 
@@ -357,7 +357,7 @@ public class PainterScreen extends JPanel
 		repaint();
 	}
 
-	private boolean doDragAction(final MouseEvent e,
+	private boolean doCameraDragAction(final MouseEvent e,
 			final BiFunction<MouseEvent, Point2D, AffineTransform> onDrag) {
 		var affine = onDrag.apply(e, preMousePoint);
 		if (affine != null) {

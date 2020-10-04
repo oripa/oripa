@@ -306,16 +306,16 @@ public class FoldabilityScreen extends JPanel
 	@Override
 	public void mouseDragged(final MouseEvent e) {
 
-		if (doDragAction(e, (ev, p) -> camera.updateScaleByMouseDragged(ev, p))) {
+		if (doCameraDragAction(e, (ev, p) -> camera.updateScaleByMouseDragged(ev, p))) {
 			return;
 		}
 
-		if (doDragAction(e, (ev, p) -> camera.updateTranslateByMouseDragged(ev, p))) {
+		if (doCameraDragAction(e, (ev, p) -> camera.updateTranslateByMouseDragged(ev, p))) {
 			return;
 		}
 	}
 
-	private boolean doDragAction(final MouseEvent e,
+	private boolean doCameraDragAction(final MouseEvent e,
 			final BiFunction<MouseEvent, Point2D, AffineTransform> onDrag) {
 		var affine = onDrag.apply(e, preMousePoint);
 		if (affine != null) {
