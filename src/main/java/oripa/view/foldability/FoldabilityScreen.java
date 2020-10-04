@@ -141,7 +141,7 @@ public class FoldabilityScreen extends JPanel
 		g2d.setColor(selector.getViolatingVertexColor());
 		for (OriVertex v : violatingVertices) {
 			double scale = camera.getScale();
-			double vertexSize = selector.getViolatingVertexSize(scale);
+			double vertexSize = selector.createViolatingVertexSize(scale);
 			double vertexHalfSize = vertexSize / 2;
 			g2d.fill(new Rectangle2D.Double(
 					v.preP.x - vertexHalfSize, v.preP.y - vertexHalfSize,

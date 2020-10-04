@@ -212,7 +212,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	protected void drawVertex(final Graphics2D g2d, final PaintContextInterface context,
 			final double x, final double y) {
 		double scale = context.getScale();
-		double vertexSize = selector.getMouseActionVertexSize(scale);
+		double vertexSize = selector.createMouseActionVertexSize(scale);
 		double vertexHalfSize = vertexSize / 2;
 
 		g2d.fill(new Rectangle2D.Double(

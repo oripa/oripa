@@ -121,7 +121,7 @@ public class ElementSelector {
 		return Color.BLACK;
 	}
 
-	public double getNormalVertexSize(final double scale) {
+	public double createNormalVertexSize(final double scale) {
 		return 6.0 / scale;
 	}
 
@@ -129,11 +129,11 @@ public class ElementSelector {
 		return Color.RED;
 	}
 
-	public double getViolatingVertexSize(final double scale) {
+	public double createViolatingVertexSize(final double scale) {
 		return 16.0 / scale;
 	}
 
-	public double getMouseActionVertexSize(final double scale) {
+	public double createMouseActionVertexSize(final double scale) {
 		return 10.0 / scale;
 	}
 }

@@ -134,7 +134,7 @@ public class CreasePatternGraphicDrawer {
 			final boolean creaseVisible, final boolean auxVisible) {
 
 		g2d.setColor(selector.getNormalVertexColor());
-		final double vertexSize = selector.getNormalVertexSize(scale);
+		final double vertexSize = selector.createNormalVertexSize(scale);
 		final double vertexHalfSize = vertexSize / 2;
 		for (OriLine line : creasePattern) {
 			if (!auxVisible && line.getType() == OriLine.Type.NONE) {
