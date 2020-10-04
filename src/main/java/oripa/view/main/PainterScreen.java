@@ -172,15 +172,6 @@ public class PainterScreen extends JPanel
 	// }
 	// }
 
-//	// update actual AffineTransform
-//	private void updateAffineTransform() {
-//		affineTransform.setToIdentity();
-//		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
-//		affineTransform.scale(scale, scale);
-//		affineTransform.translate(transX, transY);
-//
-//	}
-
 	public Image getCreasePatternImage() {
 
 		return bufferImage;

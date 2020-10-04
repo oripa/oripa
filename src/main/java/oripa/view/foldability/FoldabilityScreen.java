@@ -83,6 +83,8 @@ public class FoldabilityScreen extends JPanel
 
 	private Point2D preMousePoint; // Screen coordinates
 
+	private final ElementSelector selector = new ElementSelector();
+
 	FoldabilityScreen() {
 
 		addMouseListener(this);
@@ -136,11 +138,14 @@ public class FoldabilityScreen extends JPanel
 			g2d.fill(face.preOutline);
 		}
 
-		g2d.setColor(Color.RED);
+		g2d.setColor(selector.getViolatingVertexColor());
 		for (OriVertex v : violatingVertices) {
-			var scale = camera.getScale();
-			g2d.fill(new Rectangle2D.Double(v.preP.x - 8.0 / scale,
-					v.preP.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
+			double scale = camera.getScale();
+			double vertexSize = selector.getViolatingVertexSize(scale);
+			double vertexHalfSize = vertexSize / 2;
+			g2d.fill(new Rectangle2D.Double(
+					v.preP.x - vertexHalfSize, v.preP.y - vertexHalfSize,
+					vertexSize, vertexSize));
 		}
 
 		if (bDrawFaceID) {
@@ -227,7 +232,6 @@ public class FoldabilityScreen extends JPanel
 
 	private void highlightOverlappingLines(final Graphics2D g2d) {
 		for (var line : overlappingLines) {
-			var selector = new ElementSelector();
 			g2d.setColor(selector.getOverlappingLineHighlightColor());
 			g2d.setStroke(selector.createOverlappingLineHighlightStroke(camera.getScale()));
 

@@ -39,6 +39,8 @@ import oripa.value.OriLine;
  */
 public class CreasePatternGraphicDrawer {
 
+	private final ElementSelector selector = new ElementSelector();
+
 	/**
 	 * draws crease pattern according to the context of user interaction.
 	 *
@@ -93,8 +95,6 @@ public class CreasePatternGraphicDrawer {
 			final double scale,
 			final boolean creaseVisible, final boolean auxVisible) {
 
-		ElementSelector selector = new ElementSelector();
-
 		for (OriLine line : lines) {
 			if (line.getType() == OriLine.Type.NONE && !auxVisible) {
 				continue;
@@ -133,8 +133,9 @@ public class CreasePatternGraphicDrawer {
 			final Graphics2D g2d, final Collection<OriLine> creasePattern, final double scale,
 			final boolean creaseVisible, final boolean auxVisible) {
 
-		g2d.setColor(Color.BLACK);
-		final double vertexDrawSize = 3.0;
+		g2d.setColor(selector.getNormalVertexColor());
+		final double vertexSize = selector.getNormalVertexSize(scale);
+		final double vertexHalfSize = vertexSize / 2;
 		for (OriLine line : creasePattern) {
 			if (!auxVisible && line.getType() == OriLine.Type.NONE) {
 				continue;
@@ -146,12 +147,12 @@ public class CreasePatternGraphicDrawer {
 			Vector2d v0 = line.p0;
 			Vector2d v1 = line.p1;
 
-			g2d.fill(new Rectangle2D.Double(v0.x - vertexDrawSize / scale,
-					v0.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
-					vertexDrawSize * 2 / scale));
-			g2d.fill(new Rectangle2D.Double(v1.x - vertexDrawSize / scale,
-					v1.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
-					vertexDrawSize * 2 / scale));
+			g2d.fill(new Rectangle2D.Double(
+					v0.x - vertexHalfSize, v0.y - vertexHalfSize,
+					vertexSize, vertexSize));
+			g2d.fill(new Rectangle2D.Double(
+					v1.x - vertexHalfSize, v1.y - vertexHalfSize,
+					vertexSize, vertexSize));
 		}
 
 	}
@@ -168,7 +169,6 @@ public class CreasePatternGraphicDrawer {
 	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize,
 			final RectangleDomain domain,
 			final double scale) {
-		var selector = new ElementSelector();
 
 		g2d.setColor(selector.getColor(OriLine.Type.NONE));
 		g2d.setStroke(selector.createStroke(OriLine.Type.NONE, scale));

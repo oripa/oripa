@@ -13,7 +13,6 @@ import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.domain.paint.geometry.NearestVertexFinderHelper;
-import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
 
 public class PasteAction extends GraphicMouseAction {
@@ -108,7 +107,7 @@ public class PasteAction extends GraphicMouseAction {
 		double ox = origin.x;
 		double oy = origin.y;
 
-		var selector = new ElementSelector();
+		var selector = getElementSelector();
 		g2d.setColor(selector.getSelectedItemColor());
 		drawVertex(g2d, context, ox, oy);
 

@@ -116,4 +116,24 @@ public class ElementSelector {
 		return new BasicStroke(createVeryThickLineWidth(scale), BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_MITER);
 	}
+
+	public Color getNormalVertexColor() {
+		return Color.BLACK;
+	}
+
+	public double getNormalVertexSize(final double scale) {
+		return 6.0 / scale;
+	}
+
+	public Color getViolatingVertexColor() {
+		return Color.RED;
+	}
+
+	public double getViolatingVertexSize(final double scale) {
+		return 16.0 / scale;
+	}
+
+	public double getMouseActionVertexSize(final double scale) {
+		return 10.0 / scale;
+	}
 }
