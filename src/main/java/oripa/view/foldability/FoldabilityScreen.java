@@ -322,13 +322,13 @@ public class FoldabilityScreen extends JPanel
 	private boolean doCameraDragAction(final MouseEvent e,
 			final BiFunction<MouseEvent, Point2D, AffineTransform> onDrag) {
 		var affine = onDrag.apply(e, preMousePoint);
-		if (affine != null) {
-			preMousePoint = e.getPoint();
-			affineTransform = affine;
-			repaint();
-			return true;
+		if (affine == null) {
+			return false;
 		}
-		return false;
+		preMousePoint = e.getPoint();
+		affineTransform = affine;
+		repaint();
+		return true;
 	}
 
 	/*
