@@ -125,7 +125,7 @@ public class OrigamiModelFactory {
 			final List<OriVertex> vertices, final Vector2d p) {
 		OriVertex vtx = null;
 		for (OriVertex v : vertices) {
-			if (GeomUtil.Distance(v.p, p) < CalculationResource.POINT_EPS) {
+			if (GeomUtil.distance(v.p, p) < CalculationResource.POINT_EPS) {
 				vtx = v;
 			}
 		}
@@ -226,8 +226,8 @@ public class OrigamiModelFactory {
 			dir0.normalize();
 			dir1.normalize();
 
-			if (GeomUtil.Distance(dir0, dir1) > 0.001
-					&& Math.abs(GeomUtil.Distance(dir0, dir1) - 2.0) > 0.001) {
+			if (GeomUtil.distance(dir0, dir1) > 0.001
+					&& Math.abs(GeomUtil.distance(dir0, dir1) - 2.0) > 0.001) {
 				continue;
 			}
 

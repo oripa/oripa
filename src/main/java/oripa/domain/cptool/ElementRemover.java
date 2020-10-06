@@ -50,8 +50,8 @@ public class ElementRemover {
 		ArrayList<OriLine> sharedLines = new ArrayList<OriLine>();
 
 		creasePattern.stream()
-				.filter(line -> GeomUtil.Distance(line.p0, p) < 0.001
-						|| GeomUtil.Distance(line.p1, p) < 0.001)
+				.filter(line -> GeomUtil.distance(line.p0, p) < 0.001
+						|| GeomUtil.distance(line.p1, p) < 0.001)
 				.forEach(line -> sharedLines.add(line));
 
 		if (sharedLines.size() != 2) {
@@ -80,12 +80,12 @@ public class ElementRemover {
 		Vector2d p0 = new Vector2d();
 		Vector2d p1 = new Vector2d();
 
-		if (GeomUtil.Distance(l0.p0, p) < 0.001) {
+		if (GeomUtil.distance(l0.p0, p) < 0.001) {
 			p0.set(l0.p1);
 		} else {
 			p0.set(l0.p0);
 		}
-		if (GeomUtil.Distance(l1.p0, p) < 0.001) {
+		if (GeomUtil.distance(l1.p0, p) < 0.001) {
 			p1.set(l1.p1);
 		} else {
 			p1.set(l1.p0);

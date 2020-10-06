@@ -59,7 +59,7 @@ public class CutModelOutlinesFactory {
 
 				boolean isNewPoint = true;
 				for (Vector2d v2d : vv) {
-					if (GeomUtil.Distance(v2d, crossV) < 1) {
+					if (GeomUtil.distance(v2d, crossV) < 1) {
 						isNewPoint = false;
 						break;
 					}

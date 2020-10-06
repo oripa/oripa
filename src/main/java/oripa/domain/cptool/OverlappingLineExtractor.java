@@ -37,13 +37,13 @@ public class OverlappingLineExtractor {
 		}
 		if (GeomUtil.distinguishLineSegmentsOverlap(
 				line0.p0, line0.p1, line1.p0, line1.p1) == 2) {
-			if (GeomUtil.Distance(line0.p0, line1.p0) < GeomUtil.EPS) {
+			if (GeomUtil.distance(line0.p0, line1.p0) < GeomUtil.EPS) {
 				return false;
-			} else if (GeomUtil.Distance(line0.p0, line1.p1) < GeomUtil.EPS) {
+			} else if (GeomUtil.distance(line0.p0, line1.p1) < GeomUtil.EPS) {
 				return false;
-			} else if (GeomUtil.Distance(line0.p1, line1.p0) < GeomUtil.EPS) {
+			} else if (GeomUtil.distance(line0.p1, line1.p0) < GeomUtil.EPS) {
 				return false;
-			} else if (GeomUtil.Distance(line0.p1, line1.p1) < GeomUtil.EPS) {
+			} else if (GeomUtil.distance(line0.p1, line1.p1) < GeomUtil.EPS) {
 				return false;
 			} else {
 				return true;

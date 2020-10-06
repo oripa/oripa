@@ -762,7 +762,7 @@ public class Folder {
 			final Vector2d afterOrigin, final Vector2d afterDir) {
 
 		double param[] = new double[1];
-		double d0 = GeomUtil.Distance(vertex, preLine, param);
+		double d0 = GeomUtil.distance(vertex, preLine, param);
 		double d1 = param[0];
 
 		Vector2d footV = new Vector2d(afterOrigin);
@@ -810,7 +810,7 @@ public class Folder {
 			b.sub(ep, sp);
 			for (OriHalfedge he : face.halfedges) {
 
-				if (GeomUtil.Distance(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
+				if (GeomUtil.distance(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
 					continue;
 				}
 				if (Math.abs(b.y) < GeomUtil.EPS) {
@@ -958,7 +958,7 @@ public class Folder {
 
 		for (OriHalfedge he : face.halfedges) {
 			double param[] = new double[1];
-			double d0 = GeomUtil.Distance(he.tmpVec, preLine, param);
+			double d0 = GeomUtil.distance(he.tmpVec, preLine, param);
 			double d1 = param[0];
 
 			Vector2d footV = new Vector2d(afterOrigin);
@@ -998,7 +998,7 @@ public class Folder {
 	}
 
 	private void flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d b) {
-		if (GeomUtil.Distance(vertex, new Line(sp, b)) < GeomUtil.EPS) {
+		if (GeomUtil.distance(vertex, new Line(sp, b)) < GeomUtil.EPS) {
 			return;
 		}
 		if (Math.abs(b.y) < GeomUtil.EPS) {

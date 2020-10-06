@@ -145,10 +145,10 @@ public class LoaderPDF implements DocLoader {
 				OriLine l0 = lines[i];
 				OriLine l1 = lines[j];
 
-				if ((GeomUtil.Distance(l0.p0, l1.p0) < 0.01
-						&& GeomUtil.Distance(l0.p1, l1.p1) < 0.01)
-						|| (GeomUtil.Distance(l0.p1, l1.p0) < 0.01
-								&& GeomUtil.Distance(l0.p0, l1.p1) < 0.01)) {
+				if ((GeomUtil.distance(l0.p0, l1.p0) < 0.01
+						&& GeomUtil.distance(l0.p1, l1.p1) < 0.01)
+						|| (GeomUtil.distance(l0.p1, l1.p0) < 0.01
+								&& GeomUtil.distance(l0.p0, l1.p1) < 0.01)) {
 
 					delLines.add(l0);
 				}

@@ -86,8 +86,8 @@ public class FolderTool {
 			// About the relation of contours (?)
 
 			// Check if the line is on the countour of the face
-			if (GeomUtil.DistancePointToLine(he.positionAfterFolded, heLine) < 1
-					&& GeomUtil.DistancePointToLine(he.next.positionAfterFolded, heLine) < 1) {
+			if (GeomUtil.distancePointToLine(he.positionAfterFolded, heLine) < 1
+					&& GeomUtil.distancePointToLine(he.next.positionAfterFolded, heLine) < 1) {
 				return false;
 			}
 		}
@@ -105,7 +105,7 @@ public class FolderTool {
 			if (preCrossPoint == null) {
 				preCrossPoint = cp;
 			} else {
-				if (GeomUtil.Distance(cp, preCrossPoint) > size * 0.001) {
+				if (GeomUtil.distance(cp, preCrossPoint) > size * 0.001) {
 					return true;
 				}
 			}
@@ -129,7 +129,7 @@ public class FolderTool {
 		// Return false if the vector is on the contour of the face
 		for (int i = 0; i < heNum; i++) {
 			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.DistancePointToSegment(v, he.positionAfterFolded,
+			if (GeomUtil.distancePointToSegment(v, he.positionAfterFolded,
 					he.next.positionAfterFolded) < size * 0.001) {
 				return false;
 			}

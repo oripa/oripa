@@ -97,7 +97,7 @@ public class SymmetricLineFactory {
 			if (crossPoint == null) {
 				continue;
 			}
-			double distance = GeomUtil.Distance(crossPoint, v1);
+			double distance = GeomUtil.distance(crossPoint, v1);
 			if (distance < CalculationResource.POINT_EPS) {
 				continue;
 			}
@@ -178,7 +178,7 @@ public class SymmetricLineFactory {
 
 		autoWalkLines.add(autoWalk);
 
-		if (GeomUtil.Distance(bestPoint, startV) < CalculationResource.POINT_EPS) {
+		if (GeomUtil.distance(bestPoint, startV) < CalculationResource.POINT_EPS) {
 			return;
 		}
 
