@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -17,6 +17,9 @@
  */
 
 package oripa.view.model;
+
+//This 3D modeling functionality is killed.
+//Eventually this file will be deleted to remove java3D dependency.
 
 import java.awt.Color;
 import java.awt.GraphicsConfiguration;
@@ -52,11 +55,6 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 
-import oripa.domain.fold.EstimationEntityHolder;
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.domain.fold.OrigamiModel;
-
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
@@ -64,6 +62,11 @@ import com.sun.j3d.utils.picking.PickCanvas;
 import com.sun.j3d.utils.picking.PickResult;
 import com.sun.j3d.utils.picking.behaviors.PickMouseBehavior;
 import com.sun.j3d.utils.universe.SimpleUniverse;
+
+import oripa.domain.fold.EstimationEntityHolder;
+import oripa.domain.fold.OriFace;
+import oripa.domain.fold.OriHalfedge;
+import oripa.domain.fold.OrigamiModel;
 
 class J3DFace {
 
@@ -83,7 +86,7 @@ public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseM
 		ComponentListener {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1452443482810135133L;
 	ArrayList<J3DFace> faces = new ArrayList<>();
@@ -139,15 +142,15 @@ public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseM
 		centerP.set((maxPoint.x + minPoint.x) * 0.5, (maxPoint.y + minPoint.y) * 0.5, 0);
 		double size = maxPoint.distance(minPoint);
 
-		LineAttributes lineAttributes =
-				new LineAttributes(1.0f, // Line thickness
-						LineAttributes.PATTERN_SOLID, // Line type
-						false); // Whether to handle anti-aliasing
+		LineAttributes lineAttributes = new LineAttributes(1.0f, // Line
+																	// thickness
+				LineAttributes.PATTERN_SOLID, // Line type
+				false); // Whether to handle anti-aliasing
 
-		LineAttributes lineAttributesBold =
-				new LineAttributes(3.0f, // Line thickness
-						LineAttributes.PATTERN_SOLID, // Line type
-						false); // Whether to handle anti-aliasing
+		LineAttributes lineAttributesBold = new LineAttributes(3.0f, // Line
+																		// thickness
+				LineAttributes.PATTERN_SOLID, // Line type
+				false); // Whether to handle anti-aliasing
 
 		for (OriFace face : sortedFaces) {
 			J3DFace j3dFace = new J3DFace(face);
@@ -230,10 +233,9 @@ public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseM
 		}
 
 		BoundingSphere bounds = new BoundingSphere(new Point3d(), 100.0);
-		SimplePicking picker =
-				new SimplePicking(faceBG/*
-										 * objRoot
-										 */, this, bounds);
+		SimplePicking picker = new SimplePicking(faceBG/*
+														 * objRoot
+														 */, this, bounds);
 
 		picker.setupCallback(new SimplePickingCallback() {
 
@@ -297,9 +299,8 @@ public class ModelViewScreen3D extends Canvas3D implements MouseListener, MouseM
 
 		{
 			BoundingSphere bounds = new BoundingSphere(new Point3d(), 100.0);
-			DirectionalLight dlight =
-					new DirectionalLight(new Color3f(1.0f, 0.0f, 0.0f),
-							new Vector3f(0.87f, 0.0f, -0.5f));
+			DirectionalLight dlight = new DirectionalLight(new Color3f(1.0f, 0.0f, 0.0f),
+					new Vector3f(0.87f, 0.0f, -0.5f));
 			dlight.setInfluencingBounds(bounds);
 			objRoot.addChild(dlight);
 

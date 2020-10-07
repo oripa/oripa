@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,9 @@
 
 package oripa.view.model;
 
+//This 3D modeling functionality is killed.
+//Eventually this file will be deleted to remove java3D dependency.
+
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import java.awt.event.ActionEvent;
@@ -29,23 +32,24 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 
 /**
  * A frame for verifying algorithm.
+ *
  * @author Koji
  *
  */
 public class ModelViewFrame3D extends JFrame implements ActionListener {
-    ModelViewScreen3D screen;
+	ModelViewScreen3D screen;
 
-    public ModelViewFrame3D() {
-        setTitle("3D Origami Model Rendering");
-        GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
-        screen = new ModelViewScreen3D(config);
-        
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(screen, BorderLayout.CENTER);
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent arg0) {
-        // TODO Auto-generated method stub
-    }
+	public ModelViewFrame3D() {
+		setTitle("3D Origami Model Rendering");
+		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
+		screen = new ModelViewScreen3D(config);
+
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(screen, BorderLayout.CENTER);
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent arg0) {
+		// TODO Auto-generated method stub
+	}
 }
