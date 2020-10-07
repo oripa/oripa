@@ -53,8 +53,6 @@ public class Folder {
 	 */
 	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
 			final boolean fullEstimation) {
-//		OrigamiModel origamiModel = m_doc.getOrigamiModel();
-//		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
