@@ -18,7 +18,6 @@
 
 package oripa.domain.fold;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -116,31 +115,6 @@ public class Folder {
 		}
 
 		folderTool.setFacesOutline(vertices, faces, false);
-
-		// Color the faces
-		SecureRandom srand = new SecureRandom();
-		for (OriFace face : faces) {
-
-			int r = srand.nextInt(256); // (int) (rand.nextDouble() * 255);
-			int g = srand.nextInt(256); // (int) (rand.nextDouble() * 255);
-			int b = srand.nextInt(256); // (int) (rand.nextDouble() * 255);
-//			if (r < 0) {
-//				r = 0;
-//			} else if (r > 255) {
-//				r = 255;
-//			}
-//			if (g < 0) {
-//				g = 0;
-//			} else if (g > 255) {
-//				g = 255;
-//			}
-//			if (b < 0) {
-//				b = 0;
-//			} else if (b > 255) {
-//				b = 255;
-//			}
-			face.intColor = (r << 16) | (g << 8) | b | 0xff000000;
-		}
 
 		origamiModel.setFolded(true);
 		return foldableOverlapRelations.size();

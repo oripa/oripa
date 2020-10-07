@@ -62,7 +62,7 @@ public class OriFace {
 										// bucket approach using ConjunctionLoop
 	public boolean alreadyStacked = false;
 	public ArrayList<TriangleFace> triangles = new ArrayList<>();
-	public int intColor;
+
 	public ArrayList<Condition4> condition4s = new ArrayList<>();
 	public ArrayList<Condition3> condition3s = new ArrayList<>();
 	public ArrayList<Integer> condition2s = new ArrayList<>();

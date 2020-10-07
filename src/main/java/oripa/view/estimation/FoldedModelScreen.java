@@ -353,7 +353,7 @@ public class FoldedModelScreen extends JPanel
 					tri.v[i].p.y = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
 
 				}
-				drawTriangle(tri, face.tmpInt, face.intColor);
+				drawTriangle(tri, face.tmpInt);
 			}
 		}
 
@@ -446,7 +446,7 @@ public class FoldedModelScreen extends JPanel
 	// Polygon drawing
 	//
 	// --------------------------------------------------------------------
-	private void drawTriangle(final TriangleFace tri, final int id, final int color) {
+	private void drawTriangle(final TriangleFace tri, final int id) {
 
 		// (For speed) set the range of use of the buffer
 		int top = Integer.MAX_VALUE; // Integer.MAX_VALUE;

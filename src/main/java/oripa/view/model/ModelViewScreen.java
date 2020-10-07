@@ -70,7 +70,7 @@ public class ModelViewScreen extends JPanel
 	private Dimension preSize;
 	private double rotateAngle = 0;
 	private final AffineTransform affineTransform = new AffineTransform();
-	public boolean dispSlideFace = false;
+
 	private OriLine scissorsLine = null;
 	private boolean scissorsLineVisible = false;
 	private int scissorsLineAngleDegree = 90;
