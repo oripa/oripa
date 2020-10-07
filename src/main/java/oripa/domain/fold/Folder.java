@@ -122,7 +122,6 @@ public class Folder {
 
 	private void findAnswer(
 			final FoldedModelInfo foldedModelInfo, final int subFaceIndex, final int[][] orMat) {
-		// FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 		SubFace sub = subFaces.get(subFaceIndex);
 		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 
@@ -216,10 +215,6 @@ public class Folder {
 	// then OR[i][k] = OR[j][k]
 	private void holdCondition3s(
 			final List<OriFace> faces, final double paperSize, final int[][] overlapRelation) {
-		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
-		// FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
-
-		;
 
 		for (OriFace f_i : faces) {
 			for (OriHalfedge he : f_i.halfedges) {
@@ -263,8 +258,6 @@ public class Folder {
 
 	private void holdCondition4s(
 			final List<OriEdge> edges, final int[][] overlapRelation) {
-		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
-		// FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 
 		int edgeNum = edges.size();
 		System.out.println("edgeNum = " + edgeNum);
@@ -480,7 +473,7 @@ public class Folder {
 				for (int i = 0; i < sub.faces.size(); i++) {
 					for (int j = i + 1; j < sub.faces.size(); j++) {
 
-						// seach for undertermined relations
+						// search for undetermined relations
 						int index_i = sub.faces.get(i).tmpInt;
 						int index_j = sub.faces.get(j).tmpInt;
 
@@ -687,9 +680,6 @@ public class Folder {
 
 	private void simpleFoldWithoutZorder(
 			final List<OriFace> faces, final List<OriEdge> edges) {
-		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
-//		List<OriFace>   faces    = origamiModel.getFaces();
-//        List<OriEdge>   edges    = origamiModel.getEdges();
 
 		int id = 0;
 		for (OriFace face : faces) {
@@ -785,7 +775,7 @@ public class Folder {
 			transformVertex(precrease.p1, preLine, afterOrigin, afterDir);
 		}
 
-		// Ivertion
+		// Inversion
 		if (face.faceFront == baseHe.face.faceFront) {
 			Vector2d ep = baseHe.next.tmpVec;
 			Vector2d sp = baseHe.tmpVec;
@@ -922,7 +912,7 @@ public class Folder {
 		}
 	}
 
-	// Method that doesnt use sin con
+	// Method that doesn't use sin con
 	private void flipFace2(final List<OriFace> faces, final OriFace face,
 			final OriHalfedge baseHe) {
 
@@ -958,7 +948,7 @@ public class Folder {
 
 		}
 
-		// Ivertion
+		// Inversion
 		if (face.faceFront == baseHe.face.faceFront) {
 			Vector2d ep = baseHe.next.tmpVec;
 			Vector2d sp = baseHe.tmpVec;
