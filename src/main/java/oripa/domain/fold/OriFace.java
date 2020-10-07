@@ -40,7 +40,6 @@ public class OriFace {
 
 	public ArrayList<OriLine> precreases = new ArrayList<>();
 
-	public boolean selected = false;
 	public boolean faceFront = true;
 	public Color color;
 	public boolean tmpFlg = false;
