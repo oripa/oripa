@@ -33,6 +33,15 @@ public class OrigamiModelFactory {
 		return new OrigamiModel(paperSize);
 	}
 
+	/**
+	 * Constructs the half-edge based data structure which describes relation
+	 * among faces and edges and store it into {@code OrigamiModel}.
+	 *
+	 * @param creasePattern
+	 * @param paperSize
+	 * @param needCleanUp
+	 * @return
+	 */
 	// TODO: change as: throw error if creation failed.
 	public OrigamiModel buildOrigami(
 			final Collection<OriLine> creasePattern, final double paperSize,

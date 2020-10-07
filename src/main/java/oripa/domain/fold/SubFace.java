@@ -28,7 +28,7 @@ public class SubFace {
 	public OriFace outline;
 	public ArrayList<OriFace> faces;
 	public ArrayList<OriFace> sortedFaces;
-	public int tmpInt;
+//	public int tmpInt;
 	public ArrayList<Condition4> condition4s = new ArrayList<>();
 	public ArrayList<Condition3> condition3s = new ArrayList<>();
 	public boolean allFaceOrderDecided = false;
@@ -99,6 +99,10 @@ public class SubFace {
 		return answerStacks.size();
 	}
 
+	/**
+	 *
+	 * @return center of gravity?
+	 */
 	public Vector2d getInnerPoint() {
 		Vector2d c = new Vector2d();
 		for (OriHalfedge he : outline.halfedges) {

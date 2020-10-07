@@ -47,8 +47,17 @@ public class OriFace {
 	public Color color;
 	public boolean tmpFlg = false;
 	public int z_order = 0;
+
+	/**
+	 * ???
+	 */
 	public int tmpInt2 = 0;
+
+	/**
+	 * ID of this face??? (I'm not sure...)
+	 */
 	public int tmpInt = 0;
+
 	public boolean hasProblem = false; // TODO delete this variable and use
 										// bucket approach using ConjunctionLoop
 	public boolean alreadyStacked = false;

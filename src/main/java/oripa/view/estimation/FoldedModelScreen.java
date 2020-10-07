@@ -358,6 +358,7 @@ public class FoldedModelScreen extends JPanel
 		}
 
 		if (m_bDrawEdges) {
+			// apply Sobel filter
 			for (int y = 1; y < BUFFERH - 1; y++) {
 				for (int x = 1; x < BUFFERW - 1; x++) {
 					int val_h = -1 * zbuf[getIndex(x - 1, y - 1)]

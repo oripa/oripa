@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -23,22 +23,25 @@ import javax.vecmath.Vector3d;
 
 public class OriHalfedge {
 
-    public OriHalfedge next = null;
-    public OriHalfedge prev = null;
-    public OriHalfedge pair = null;
-    public OriEdge edge = null;
-    public OriVertex vertex = null;
-    public OriFace face = null;
-    public int tmpInt = 0;
-    public Vector2d tmpVec = new Vector2d();
-    public Vector2d p = new Vector2d();
-    public Vector2d positionForDisplay = new Vector2d();
-    public Vector2d positionAfterFolded = new Vector2d();
-    public Vector3d vertexColor = new Vector3d();
+	public OriHalfedge next = null;
+	public OriHalfedge prev = null;
+	public OriHalfedge pair = null;
+	public OriEdge edge = null;
+	public OriVertex vertex = null;
+	public OriFace face = null;
+	/**
+	 * mountain/valley value???
+	 */
+	public int tmpInt = 0;
+	public Vector2d tmpVec = new Vector2d();
+	public Vector2d p = new Vector2d();
+	public Vector2d positionForDisplay = new Vector2d();
+	public Vector2d positionAfterFolded = new Vector2d();
+	public Vector3d vertexColor = new Vector3d();
 
-    public OriHalfedge(OriVertex v, OriFace f) {
-        vertex = v;
-        face = f;
-        tmpVec.set(v.p);
-    }
+	public OriHalfedge(final OriVertex v, final OriFace f) {
+		vertex = v;
+		face = f;
+		tmpVec.set(v.p);
+	}
 }

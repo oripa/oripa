@@ -606,16 +606,23 @@ public class Folder {
 		return bChanged;
 	}
 
+	/**
+	 *
+	 * @param faces
+	 *            extracted from the drawn crease pattern
+	 * @param paperSize
+	 * @return
+	 */
 	private ArrayList<SubFace> makeSubFaces(
 			final List<OriFace> faces, final double paperSize) {
-		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
-
 		CreasePatternFactory cpFactory = new CreasePatternFactory();
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 
 		CreasePatternInterface temp_creasePattern = cpFactory.createCreasePattern(paperSize);
 		OrigamiModel temp_origamiModel = modelFactory.createOrigamiModel(paperSize);
 
+		// construct edge structure after folding and store it as a
+		// crease pattern for easy calculation
 		temp_creasePattern.clear();
 		Painter painter = new Painter(temp_creasePattern);
 		for (OriFace face : faces) {
@@ -625,7 +632,6 @@ public class Folder {
 				painter.addLine(line);
 			}
 		}
-
 		folderTool.cleanDuplicatedLines(temp_creasePattern);
 
 //		if (Config.FOR_STUDY) {
@@ -645,8 +651,10 @@ public class Folder {
 		int crossNum = GeomUtil.getCrossPoint(dummy1, dummy2, sp1, ep1, sp2, ep2);
 		System.out.println("getCrossPoint results " + crossNum + "::::" + dummy1 + ", " + dummy2);
 
+		// By this construction, we get faces that are composed of the edges
+		// after folding (layering is not considered)
+		// We call such face a subface hereafter.
 		temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize, false);
-		// temp_doc.setOrigamiModel(temp_origamiModel);
 
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();
 
@@ -655,6 +663,8 @@ public class Folder {
 			localSubFaces.add(new SubFace(face));
 		}
 
+		// Stores the face reference of given crease pattern into the subface
+		// that is contained in the face.
 		for (SubFace sub : localSubFaces) {
 			Vector2d innerPoint = sub.getInnerPoint();
 			for (OriFace face : faces) {
