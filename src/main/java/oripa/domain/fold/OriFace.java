@@ -19,7 +19,7 @@
 package oripa.domain.fold;
 
 import java.awt.Color;
-import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
 import javax.vecmath.Vector2d;
@@ -31,14 +31,12 @@ public class OriFace {
 
 	public ArrayList<OriHalfedge> halfedges = new ArrayList<>();
 
-	// FIXME: GeneralPath is legacy.
-	public GeneralPath outline = new GeneralPath();
+	public Path2D.Double outline = new Path2D.Double();
 
 	/**
 	 * For drawing foldability-check face
 	 */
-	// FIXME: GeneralPath is legacy.
-	public GeneralPath preOutline = new GeneralPath();
+	public Path2D.Double preOutline = new Path2D.Double();
 
 	public ArrayList<OriLine> precreases = new ArrayList<>();
 
