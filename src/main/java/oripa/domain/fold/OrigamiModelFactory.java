@@ -16,9 +16,6 @@ public class OrigamiModelFactory {
 
 	int debugCount = 0;
 
-	// should not be in this class
-	// public boolean hasModel = false;
-
 	public OrigamiModel createOrigamiModel(
 			final Collection<OriLine> creasePattern, final double paperSize) {
 		return this.createOrigamiModelImpl3(creasePattern, paperSize, false);
@@ -359,8 +356,6 @@ public class OrigamiModelFactory {
 		return face;
 	}
 
-	// boolean sortFinished = false;
-
 	private void makeEdges(final List<OriEdge> edges, final List<OriFace> faces) {
 		edges.clear();
 
@@ -401,7 +396,7 @@ public class OrigamiModelFactory {
 			}
 		}
 
-		// If the pair wasnt found it should be an edge
+		// If the pair wasn't found it should be boundary of paper
 		for (OriHalfedge he : tmpHalfedges) {
 			if (he.pair == null) {
 				OriEdge edge = new OriEdge();

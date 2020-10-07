@@ -101,7 +101,7 @@ public class SubFace {
 
 	/**
 	 *
-	 * @return center of gravity?
+	 * @return geometric center of this subface (maybe)
 	 */
 	public Vector2d getInnerPoint() {
 		Vector2d c = new Vector2d();

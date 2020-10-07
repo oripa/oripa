@@ -516,6 +516,7 @@ public class FoldedModelScreen extends JPanel
 					continue;
 				}
 
+				// flattened pixel index
 				int p = offset + x;
 
 				int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
@@ -548,11 +549,7 @@ public class FoldedModelScreen extends JPanel
 
 							}
 						} else {
-							if (m_bFillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
-								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
-							} else {
-								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
-							}
+							pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
 						}
 					}
 					zbuf[p] = id;
