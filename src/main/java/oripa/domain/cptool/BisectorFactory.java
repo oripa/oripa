@@ -4,7 +4,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
-import oripa.resource.Constants;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 public class BisectorFactory {
@@ -21,24 +21,26 @@ public class BisectorFactory {
 	 */
 	public OriLine createPerpendicularBisector(
 			final Vector2d v0, final Vector2d v1,
-			final double paperSize, final OriLine.Type lineType) {
+			final RectangleDomain domain, final OriLine.Type lineType) {
 
 		Vector2d cp = new Vector2d(v0);
 		cp.add(v1);
 		cp.scale(0.5);
+
+		double paperSize = Math.max(domain.getWidth(), domain.getHeight());
 
 		Vector2d dir = new Vector2d();
 		dir.sub(v0, v1);
 		double tmp = dir.y;
 		dir.y = -dir.x;
 		dir.x = tmp;
-		dir.scale(Constants.DEFAULT_PAPER_SIZE * 8);
+		dir.scale(paperSize * 8);
 
 		OriLine bisector = new OriLine(
 				cp.x - dir.x, cp.y - dir.y,
 				cp.x + dir.x, cp.y + dir.y, lineType);
 
-		GeomUtil.clipLine(bisector, paperSize / 2);
+		GeomUtil.clipLine(bisector, domain);
 
 		return bisector;
 	}

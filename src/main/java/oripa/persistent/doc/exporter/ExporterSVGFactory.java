@@ -157,7 +157,6 @@ public class ExporterSVGFactory {
 				}
 
 				for (int i = 0; i < sortedFaces.size(); i++) {
-					// FIXME: Global method!
 					OriFace face = faceOrderFlip ? sortedFaces.get(i)
 							: sortedFaces.get(sortedFaces.size() - i - 1);
 					java.util.ArrayList<Vector2d> points = new java.util.ArrayList<>();
@@ -200,7 +199,7 @@ public class ExporterSVGFactory {
 					bw.write(" z\" />\n");
 					for (OriLine oriLine : face.precreases) {
 						double x1 = (oriLine.p0.x - modelCenter.x) * scale
-							+ center;
+								+ center;
 						double y1 = -(oriLine.p0.y - modelCenter.y) * scale
 								+ center;
 						double x2 = (oriLine.p1.x - modelCenter.x)

@@ -6,6 +6,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.geom.GeomUtil;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -190,7 +191,7 @@ public class Painter {
 
 		BisectorFactory factory = new BisectorFactory();
 		OriLine bisector = factory.createPerpendicularBisector(v0, v1,
-				creasePattern.getPaperSize(), lineType);
+				new RectangleDomain(creasePattern), lineType);
 
 		LineAdder adder = new LineAdder();
 		adder.addLine(bisector, creasePattern);

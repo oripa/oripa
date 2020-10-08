@@ -18,6 +18,10 @@
 
 package oripa.geom;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
@@ -26,6 +30,8 @@ import oripa.domain.fold.OriHalfedge;
 import oripa.value.OriLine;
 
 public class GeomUtil {
+	// private static final Logger logger =
+	// LoggerFactory.getLogger(GeomUtil.class);
 
 	public final static double EPS = 1.0e-6;
 
@@ -226,81 +232,75 @@ public class GeomUtil {
 		return false;
 	}
 
-	// Returns false if nothing is in the clip area
-	public static boolean clipLine(final OriLine l, final double halfWidth) {
+	/**
+	 *
+	 * @param l
+	 *            is assumed to be long enough.
+	 * @param domain
+	 *            defines clip area.
+	 * @return
+	 */
+	public static boolean clipLine(final OriLine l, final RectangleDomain domain) {
+
+		double left = domain.getLeft();
+		double right = domain.getRight();
+
+		double top = domain.getTop();
+		double bottom = domain.getBottom();
+
 		Vector2d p = new Vector2d(l.p0);
 		Vector2d dir = new Vector2d();
 		dir.sub(l.p1, l.p0);
-		// FIXME this method depends on implicit paper position
 
 		// If horizontal
 		if (Math.abs(dir.y) < EPS) {
-			if (p.y < -halfWidth || p.y > halfWidth) {
+
+			// out of y range
+			if (p.y < top || p.y > bottom) {
 				return false;
 			}
 
-			l.p0.set(-halfWidth, p.y);
-			l.p1.set(halfWidth, p.y);
+			l.p0.set(left, p.y);
+			l.p1.set(right, p.y);
 			return true;
 		}
 		// If vertical
 		if (Math.abs(dir.x) < EPS) {
-			if (p.x < -halfWidth || p.x > halfWidth) {
+
+			// out of x range
+			if (p.x < left || p.x > right) {
 				return false;
 			}
 
-			l.p0.set(p.x, -halfWidth);
-			l.p1.set(p.x, halfWidth);
+			l.p0.set(p.x, top);
+			l.p1.set(p.x, bottom);
 			return true;
 		}
 
-		// If you do not have any horizontal vertical
-		// Cut down
-		{
-			double up_t = (halfWidth - p.y) / dir.y;
-			double up_x = p.x + up_t * dir.x;
+		var leftSegment = new OriLine(left, top, left, bottom, OriLine.Type.NONE);
+		var rightSegment = new OriLine(right, top, right, bottom, OriLine.Type.NONE);
 
-			if (up_x < -halfWidth) {
-				double left_t = (-halfWidth - p.x) / dir.x;
-				double left_y = p.y + left_t * dir.y;
-				if (left_y < -halfWidth) {
-					return false;
-				}
-				l.p0.set(-halfWidth, left_y);
-			} else if (up_x > halfWidth) {
-				double right_t = (halfWidth - p.x) / dir.x;
-				double right_y = p.y + right_t * dir.y;
-				if (right_y < -halfWidth) {
-					return false;
-				}
-				l.p0.set(halfWidth, right_y);
-			} else {
-				l.p0.set(up_x, halfWidth);
-			}
-		}
-		{
-			double down_t = (-halfWidth - p.y) / dir.y;
-			double down_x = p.x + down_t * dir.x;
-			if (down_x < -halfWidth) {
-				double left_t = (-halfWidth - p.x) / dir.x;
-				double left_y = p.y + left_t * dir.y;
-				if (left_y < -halfWidth) {
-					return false;
-				}
-				l.p1.set(-halfWidth, left_y);
-			} else if (down_x > halfWidth) {
-				double right_t = (halfWidth - p.x) / dir.x;
-				double right_y = p.y + right_t * dir.y;
-				if (right_y < -halfWidth) {
-					return false;
-				}
-				l.p1.set(halfWidth, right_y);
-			} else {
-				l.p1.set(down_x, -halfWidth);
-			}
+		var topSegment = new OriLine(left, top, right, top, OriLine.Type.NONE);
+		var bottomSegment = new OriLine(left, bottom, right, bottom, OriLine.Type.NONE);
+
+		List<Vector2d> crossPoints = new ArrayList<>();
+		crossPoints.add(getCrossPoint(l, leftSegment));
+		crossPoints.add(getCrossPoint(l, rightSegment));
+		crossPoints.add(getCrossPoint(l, topSegment));
+		crossPoints.add(getCrossPoint(l, bottomSegment));
+
+		crossPoints = crossPoints.stream()
+				.filter(v -> v != null)
+				.collect(Collectors.toList());
+
+		if (crossPoints.size() >= 2) {
+			l.p0.set(crossPoints.get(0));
+			l.p1.set(crossPoints.get(1));
+
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	public static OriLine getVerticalLine(final Vector2d v, final OriLine line,
