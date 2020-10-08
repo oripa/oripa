@@ -56,45 +56,45 @@ public class GeomUtil {
 		return dir0.angle(dir1) < Math.PI / 180 || dir0.angle(dir1) > Math.PI * 179.0 / 180;
 	}
 
-	public static boolean isSegmentsCross(final Vector2d p0, final Vector2d p1, final Vector2d q0,
-			final Vector2d q1) {
-
-		// Rough check
-		// Check by coordinates x
-		if (p0.x >= p1.x) {
-			if ((p0.x < q0.x && p0.x < q1.x) || (p1.x > q0.x && p1.x > q1.x)) {
-				return false;
-			}
-		} else {
-			if ((p1.x < q0.x && p1.x < q1.x) || (p0.x > q0.x && p0.x > q1.x)) {
-				return false;
-			}
-		}
-
-		// checked by the coordinate y
-		if (p0.y >= p1.y) {
-			if ((p0.y < q0.y && p0.y < q1.y) || (p1.y > q0.y && p1.y > q1.y)) {
-				return false;
-			}
-		} else {
-			if ((p1.y < q0.y && p1.y < q1.y) || (p0.y > q0.y && p0.y > q1.y)) {
-				return false;
-			}
-		}
-
-		// >= 0.0 means that when p0 == q0, for example, returns false
-		if (((p0.x - p1.x) * (q0.y - p0.y) + (p0.y - p1.y) * (p0.x - q0.x))
-				* ((p0.x - p1.x) * (q1.y - p0.y) + (p0.y - p1.y) * (p0.x - q1.x)) >= 0.0) {
-			return false;
-		}
-
-		if (((q0.x - q1.x) * (p0.y - q0.y) + (q0.y - q1.y) * (q0.x - p0.x))
-				* ((q0.x - q1.x) * (p1.y - q0.y) + (q0.y - q1.y) * (q0.x - p1.x)) >= 0.0) {
-			return false;
-		}
-
-		return true;
-	}
+//	public static boolean isSegmentsCross(final Vector2d p0, final Vector2d p1, final Vector2d q0,
+//			final Vector2d q1) {
+//
+//		// Rough check
+//		// Check by coordinates x
+//		if (p0.x >= p1.x) {
+//			if ((p0.x < q0.x && p0.x < q1.x) || (p1.x > q0.x && p1.x > q1.x)) {
+//				return false;
+//			}
+//		} else {
+//			if ((p1.x < q0.x && p1.x < q1.x) || (p0.x > q0.x && p0.x > q1.x)) {
+//				return false;
+//			}
+//		}
+//
+//		// checked by the coordinate y
+//		if (p0.y >= p1.y) {
+//			if ((p0.y < q0.y && p0.y < q1.y) || (p1.y > q0.y && p1.y > q1.y)) {
+//				return false;
+//			}
+//		} else {
+//			if ((p1.y < q0.y && p1.y < q1.y) || (p0.y > q0.y && p0.y > q1.y)) {
+//				return false;
+//			}
+//		}
+//
+//		// >= 0.0 means that when p0 == q0, for example, returns false
+//		if (((p0.x - p1.x) * (q0.y - p0.y) + (p0.y - p1.y) * (p0.x - q0.x))
+//				* ((p0.x - p1.x) * (q1.y - p0.y) + (p0.y - p1.y) * (p0.x - q1.x)) >= 0.0) {
+//			return false;
+//		}
+//
+//		if (((q0.x - q1.x) * (p0.y - q0.y) + (q0.y - q1.y) * (q0.x - p0.x))
+//				* ((q0.x - q1.x) * (p1.y - q0.y) + (q0.y - q1.y) * (q0.x - p1.x)) >= 0.0) {
+//			return false;
+//		}
+//
+//		return true;
+//	}
 
 	/**
 	 *
@@ -140,10 +140,7 @@ public class GeomUtil {
 	public static boolean isLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1) {
 		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1);
-		if (cnt >= 2) {
-			return true;
-		}
-		return false;
+		return cnt >= 2;
 
 	}
 
@@ -652,6 +649,7 @@ public class GeomUtil {
 		return Math.sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
 	}
 
+	// FIXME: Circular package dependency
 	public static boolean isContainsPointFoldedFace(final OriFace face, final Vector2d v,
 			final double eps) {
 
@@ -710,6 +708,7 @@ public class GeomUtil {
 //        return (iZero == 0 ? (iPositive > 0 ? 1 : -1) : 0);
 //    }
 
+	// FIXME: Circular package dependency
 	public static boolean isFaceOverlap(final OriFace face0, final OriFace face1,
 			final double eps) {
 		Vector2d center0 = new Vector2d();
@@ -758,10 +757,12 @@ public class GeomUtil {
 		return false;
 	}
 
+	// FIXME: Circular package dependency
 	public static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
 		return isContainsPointFace(line.p0, face) && isContainsPointFace(line.p1, face);
 	}
 
+	// FIXME: Circular package dependency
 	private static boolean isContainsPointFace(final Vector2d v, final OriFace face) {
 		int heNum = face.halfedges.size();
 
@@ -789,6 +790,7 @@ public class GeomUtil {
 		return true;
 	}
 
+	// FIXME: Circular package dependency
 	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
 		Vector2d p1 = heg.positionAfterFolded;
