@@ -14,10 +14,9 @@ public class BisectorFactory {
 	 *
 	 * @param v0
 	 * @param v1
-	 * @param creasePattern
-	 * @param paperSize
+	 * @param domain
 	 * @param lineType
-	 *            {@link OriLine#TYPE_VALLEY} etc.
+	 * @return
 	 */
 	public OriLine createPerpendicularBisector(
 			final Vector2d v0, final Vector2d v1,
@@ -53,6 +52,7 @@ public class BisectorFactory {
 	 * @param v2
 	 * @param l
 	 * @param lineType
+	 * @return
 	 */
 	public OriLine createAngleBisectorLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,

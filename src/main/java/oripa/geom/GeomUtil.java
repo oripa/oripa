@@ -20,7 +20,7 @@ package oripa.geom;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
@@ -252,48 +252,29 @@ public class GeomUtil {
 		Vector2d dir = new Vector2d();
 		dir.sub(l.p1, l.p0);
 
-		// If horizontal
-		if (Math.abs(dir.y) < EPS) {
-
-			// out of y range
-			if (p.y < top || p.y > bottom) {
-				return false;
-			}
-
-			l.p0.set(left, p.y);
-			l.p1.set(right, p.y);
-			return true;
-		}
-		// If vertical
-		if (Math.abs(dir.x) < EPS) {
-
-			// out of x range
-			if (p.x < left || p.x > right) {
-				return false;
-			}
-
-			l.p0.set(p.x, top);
-			l.p1.set(p.x, bottom);
-			return true;
-		}
-
 		var leftSegment = new OriLine(left, top, left, bottom, OriLine.Type.NONE);
 		var rightSegment = new OriLine(right, top, right, bottom, OriLine.Type.NONE);
 
 		var topSegment = new OriLine(left, top, right, top, OriLine.Type.NONE);
 		var bottomSegment = new OriLine(left, bottom, right, bottom, OriLine.Type.NONE);
 
-		List<Vector2d> crossPoints = new ArrayList<>();
-		crossPoints.add(getCrossPoint(l, leftSegment));
-		crossPoints.add(getCrossPoint(l, rightSegment));
-		crossPoints.add(getCrossPoint(l, topSegment));
-		crossPoints.add(getCrossPoint(l, bottomSegment));
+		final List<Vector2d> crossPoints = new ArrayList<>();
 
-		crossPoints = crossPoints.stream()
-				.filter(v -> v != null)
-				.collect(Collectors.toList());
+		Consumer<Vector2d> addIfDistinct = cp -> {
+			if (cp == null) {
+				return;
+			}
+			if (crossPoints.stream().allMatch(v -> distance(v, cp) > EPS)) {
+				crossPoints.add(cp);
+			}
+		};
 
-		if (crossPoints.size() >= 2) {
+		addIfDistinct.accept(getCrossPoint(l, leftSegment));
+		addIfDistinct.accept(getCrossPoint(l, rightSegment));
+		addIfDistinct.accept(getCrossPoint(l, topSegment));
+		addIfDistinct.accept(getCrossPoint(l, bottomSegment));
+
+		if (crossPoints.size() == 2) {
 			l.p0.set(crossPoints.get(0));
 			l.p1.set(crossPoints.get(1));
 

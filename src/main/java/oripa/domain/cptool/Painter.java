@@ -187,11 +187,12 @@ public class Painter {
 	 * @param lineType
 	 */
 	public void addPBisector(
-			final Vector2d v0, final Vector2d v1, final OriLine.Type lineType) {
+			final Vector2d v0, final Vector2d v1, final RectangleDomain domain,
+			final OriLine.Type lineType) {
 
 		BisectorFactory factory = new BisectorFactory();
 		OriLine bisector = factory.createPerpendicularBisector(v0, v1,
-				new RectangleDomain(creasePattern), lineType);
+				domain, lineType);
 
 		LineAdder adder = new LineAdder();
 		adder.addLine(bisector, creasePattern);

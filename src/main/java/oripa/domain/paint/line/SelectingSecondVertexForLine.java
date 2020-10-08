@@ -6,7 +6,6 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
-import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 public class SelectingSecondVertexForLine extends PickingVertex {
@@ -37,7 +36,7 @@ public class SelectingSecondVertexForLine extends PickingVertex {
 				p0.x + dir.x, p0.y + dir.y, context.getLineTypeOfNewLines());
 
 		// add new line to crease pattern
-		if (GeomUtil.clipLine(line, new RectangleDomain(context.getCreasePattern()))) {
+		if (GeomUtil.clipLine(line, context.getCreasePatternDomain())) {
 			context.creasePatternUndo().pushUndoInfo();
 
 			Painter painter = context.getPainter();
