@@ -238,7 +238,7 @@ public class GeomUtil {
 	 *            is assumed to be long enough.
 	 * @param domain
 	 *            defines clip area.
-	 * @return
+	 * @return true if clip was done.
 	 */
 	public static boolean clipLine(final OriLine l, final RectangleDomain domain) {
 
@@ -247,10 +247,6 @@ public class GeomUtil {
 
 		double top = domain.getTop();
 		double bottom = domain.getBottom();
-
-		Vector2d p = new Vector2d(l.p0);
-		Vector2d dir = new Vector2d();
-		dir.sub(l.p1, l.p0);
 
 		var leftSegment = new OriLine(left, top, left, bottom, OriLine.Type.NONE);
 		var rightSegment = new OriLine(right, top, right, bottom, OriLine.Type.NONE);
