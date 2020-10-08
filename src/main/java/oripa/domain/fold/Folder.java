@@ -599,23 +599,6 @@ public class Folder {
 		}
 		folderTool.cleanDuplicatedLines(temp_creasePattern);
 
-//		if (Config.FOR_STUDY) {
-//			try {
-//				Exporter exporter = new ExporterEPS();
-//				exporter.export(temp_doc, "c:\\_jun\\tmp\\te.eps");
-//			} catch (Exception e) {
-//			}
-//		}
-		System.out.println("debugging");
-		Vector2d sp1 = new Vector2d(0.0, 0.0);
-		Vector2d ep1 = new Vector2d(0.0, 10.0);
-		Vector2d sp2 = new Vector2d(0.0, 0.0);
-		Vector2d ep2 = new Vector2d(0.0, 5.0);
-		Vector2d dummy1 = new Vector2d();
-		Vector2d dummy2 = new Vector2d();
-		int crossNum = GeomUtil.getCrossPoint(dummy1, dummy2, sp1, ep1, sp2, ep2);
-		System.out.println("getCrossPoint results " + crossNum + "::::" + dummy1 + ", " + dummy2);
-
 		// By this construction, we get faces that are composed of the edges
 		// after folding (layering is not considered)
 		// We call such face a subface hereafter.
