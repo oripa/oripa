@@ -31,7 +31,6 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.view.main.MainFrame;
-import oripa.view.model.ModelViewFrame3D;
 
 public class ORIPA {
 
@@ -44,7 +43,6 @@ public class ORIPA {
 			"under certain conditions; For details check:\nhttp://www.gnu.org/licenses/gpl.html";
 
 	public static ResourceBundle res;
-	public static ModelViewFrame3D modelFrame3D;
 
 	public static String iniFilePath = System.getProperty("user.home") + File.separator
 			+ "oripa.ini";
@@ -74,8 +72,7 @@ public class ORIPA {
 			TITLE = resources.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID);
 
 			int uiPanelWidth = 0;// 150;
-			int modelFrameWidth = 400;
-			int modelFrameHeight = 400;
+
 			int mainFrameWidth = 1000;
 			int mainFrameHeight = 800;
 
@@ -96,12 +93,14 @@ public class ORIPA {
 			mainFrame.initialize();
 			mainFrame.setVisible(true);
 
-			if (Config.FOR_STUDY) {
-				modelFrame3D = new ModelViewFrame3D();
-				modelFrame3D.setBounds(0, 0,
-						modelFrameWidth * 2, modelFrameHeight * 2);
-				modelFrame3D.setVisible(true);
-			}
+//			if (Config.FOR_STUDY) {
+//				int modelFrameWidth = 400;
+//				int modelFrameHeight = 400;
+//				modelFrame3D = new ModelViewFrame3D();
+//				modelFrame3D.setBounds(0, 0,
+//						modelFrameWidth * 2, modelFrameHeight * 2);
+//				modelFrame3D.setVisible(true);
+//			}
 		});
 	}
 
