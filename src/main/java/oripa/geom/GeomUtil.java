@@ -251,6 +251,16 @@ public class GeomUtil {
 		return new Vector2d(v0_v1.x + v2_v1.x, v0_v1.y + v2_v1.y);
 	}
 
+	/**
+	 *
+	 * @param p
+	 *            point to be projected.
+	 * @param sp
+	 *            start point of symmetry base line.
+	 * @param ep
+	 *            end point of symmetry base line.
+	 * @return
+	 */
 	public static Vector2d getSymmetricPoint(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
 		Vector2d cp = getNearestPointToLine(p, sp, ep);

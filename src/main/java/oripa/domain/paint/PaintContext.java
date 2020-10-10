@@ -271,7 +271,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public void pushVertex(final Vector2d picked) {
-		pickedVertices.push(picked);
+		pickedVertices.addLast(picked);
 	}
 
 	/*
@@ -283,7 +283,7 @@ class PaintContext implements PaintContextInterface {
 	@Override
 	public void pushLine(final OriLine picked) {
 		// picked.selected = true;
-		pickedLines.push(picked);
+		pickedLines.addLast(picked);
 	}
 
 	/*
@@ -297,7 +297,7 @@ class PaintContext implements PaintContextInterface {
 			return null;
 		}
 
-		return pickedVertices.pop();
+		return pickedVertices.removeLast();
 	}
 
 	/*
@@ -311,7 +311,7 @@ class PaintContext implements PaintContextInterface {
 			return null;
 		}
 
-		OriLine line = pickedLines.pop();
+		OriLine line = pickedLines.removeLast();
 		line.selected = false;
 		return line;
 	}
@@ -335,7 +335,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public Vector2d peekVertex() {
-		return pickedVertices.peek();
+		return pickedVertices.peekLast();
 	}
 
 	/*
@@ -345,7 +345,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public OriLine peekLine() {
-		return pickedLines.peek();
+		return pickedLines.peekLast();
 	}
 
 	/*

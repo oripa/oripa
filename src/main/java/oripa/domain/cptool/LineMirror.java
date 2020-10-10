@@ -18,8 +18,7 @@ public class LineMirror {
 	 *            a line to be the axis of symmetry
 	 * @param lines
 	 *            lines to be mirrored. the .selected field will be ignored.
-	 * @param creasePattern
-	 *            destination of mirrored lines
+	 * @return mirrored lines
 	 */
 	public Collection<OriLine> createMirroredLines(
 			final OriLine baseLine, final Collection<OriLine> lines) {

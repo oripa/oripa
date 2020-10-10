@@ -25,7 +25,7 @@ public class SymmetricLineFactory {
 
 		/**
 		 * @param bestLine
-		 *            bestLineを登録する
+		 *            sets bestLine
 		 */
 		public void setBestLine(final OriLine bestLine) {
 			this.bestLine = bestLine;
@@ -40,7 +40,7 @@ public class SymmetricLineFactory {
 
 		/**
 		 * @param bestPoint
-		 *            bestPointを登録する
+		 *            sets bestPoint
 		 */
 		public void setBestPoint(final Vector2d bestPoint) {
 			this.bestPoint = bestPoint;
@@ -81,7 +81,8 @@ public class SymmetricLineFactory {
 	 * @param v1
 	 * @param v2
 	 * @param creasePattern
-	 * @return
+	 * @return a line to be the next base line of symmetry and the cross point
+	 *         of new symmetric line and the base.
 	 */
 	private BestPair findBestPair(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
