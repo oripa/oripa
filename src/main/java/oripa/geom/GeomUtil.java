@@ -395,101 +395,91 @@ public class GeomUtil {
 		return new OriLine(sv, ev, type);
 	}
 
-	private static Vector2d getNearestPointToLine(final Vector2d p, final Vector2d sp,
-			final Vector2d ep) {
+	/**
+	 *
+	 * @param p
+	 *            point
+	 * @param sp
+	 *            start point of line vector
+	 * @param ep
+	 *            end point of line vector
+	 * @return t = |p - sp| * cos(\theta) / |ep - sp| where theta is the angle
+	 *         between p - sp and ep - sp
+	 */
+	private static double computeParameterForNearestPointToLine(
+			final Vector2d p, final Vector2d sp, final Vector2d ep) {
 		double x0 = sp.x;
 		double y0 = sp.y;
 		double x1 = ep.x;
 		double y1 = ep.y;
 		double px = p.x;
 		double py = p.y;
-		Vector2d sub0, sub, sub0b;
+		Vector2d dir, sub0;
 
-		sub0 = new Vector2d(x0 - px, y0 - py);
-		sub0b = new Vector2d(-sub0.x, -sub0.y);
-		sub = new Vector2d(x1 - x0, y1 - y0);
+		sub0 = new Vector2d(px - x0, py - y0);
 
-		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
-				/ ((sub.x * sub.x) + (sub.y * sub.y));
+		// direction of the line
+		dir = new Vector2d(x1 - x0, y1 - y0);
 
-		return new Vector2d(x0 + t * sub.x, y0 + t * sub.y);
+		// t = |sub0| * cos(\theta) / |dir|
+		return dir.dot(sub0) / dir.lengthSquared();
+	}
+
+	private static Vector2d getNearestPointToLine(
+			final Vector2d p, final Vector2d sp, final Vector2d ep) {
+
+		// direction of the line
+		Vector2d dir = new Vector2d(ep);
+		dir.sub(sp);
+
+		double t = computeParameterForNearestPointToLine(p, sp, ep);
+
+		return new Vector2d(sp.x + t * dir.x, sp.y + t * dir.y);
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
-		double x0 = sp.x;
-		double y0 = sp.y;
-		double x1 = ep.x;
-		double y1 = ep.y;
-		double px = p.x;
-		double py = p.y;
-		Vector2d sub0, sub, sub0b;
+		// direction of the line
+		Vector2d dir = new Vector2d(ep);
+		dir.sub(sp);
 
-		sub0 = new Vector2d(x0 - px, y0 - py);
-		sub0b = new Vector2d(-sub0.x, -sub0.y);
-		sub = new Vector2d(x1 - x0, y1 - y0);
-
-		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
-				/ ((sub.x * sub.x) + (sub.y * sub.y));
+		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
 		if (t < 0.0) {
-			return distance(px, py, x0, y0);
+			return distance(p, sp);
 		} else if (t > 1.0) {
-			return distance(px, py, x1, y1);
+			return distance(p, ep);
 		} else {
-			return distance(x0 + t * sub.x, y0 + t * sub.y, px, py);
+			return distance(sp.x + t * dir.x, sp.y + t * dir.y, p.x, p.y);
 		}
-
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
 			final Vector2d ep, final Vector2d nearestPoint) {
-		double x0 = sp.x;
-		double y0 = sp.y;
-		double x1 = ep.x;
-		double y1 = ep.y;
-		double px = p.x;
-		double py = p.y;
-		Vector2d sub0, sub, sub0b;
+		// direction of the line
+		Vector2d dir = new Vector2d(ep);
+		dir.sub(sp);
 
-		sub0 = new Vector2d(x0 - px, y0 - py);
-		sub0b = new Vector2d(-sub0.x, -sub0.y);
-		sub = new Vector2d(x1 - x0, y1 - y0);
-
-		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
-				/ ((sub.x * sub.x) + (sub.y * sub.y));
+		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
 		if (t < 0.0) {
 			nearestPoint.set(sp);
-			return distance(px, py, x0, y0);
+			return distance(p, sp);
 		} else if (t > 1.0) {
 			nearestPoint.set(ep);
-			return distance(px, py, x1, y1);
+			return distance(p, ep);
 		} else {
-			nearestPoint.set(x0 + t * sub.x, y0 + t * sub.y);
-			return distance(x0 + t * sub.x, y0 + t * sub.y, px, py);
+			nearestPoint.set(sp.x + t * dir.x, sp.y + t * dir.y);
+			return distance(sp.x + t * dir.x, sp.y + t * dir.y, p.x, p.y);
 		}
-
 	}
 
 	public static double distancePointToLine(final Vector2d p, final Line line) {
-		double x0 = line.p.x;
-		double y0 = line.p.y;
-		double x1 = line.p.x + line.dir.x;
-		double y1 = line.p.y + line.dir.y;
-		double px = p.x;
-		double py = p.y;
-		Vector2d sub0, sub, sub0b;
+		Vector2d sp = line.p;
+		Vector2d ep = new Vector2d(sp);
+		ep.add(line.dir);
 
-		sub0 = new Vector2d(x0 - px, y0 - py);
-		sub0b = new Vector2d(-sub0.x, -sub0.y);
-		sub = new Vector2d(x1 - x0, y1 - y0);
-
-		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
-				/ ((sub.x * sub.x) + (sub.y * sub.y));
-
-		return distance(x0 + t * sub.x, y0 + t * sub.y, px, py);
-
+		return distance(getNearestPointToLine(p, sp, ep), p);
 	}
 
 	// (Including endpoints) intersection between two line segments
