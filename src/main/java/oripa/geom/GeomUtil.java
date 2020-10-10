@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
 
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
@@ -549,13 +548,13 @@ public class GeomUtil {
 		return null;
 	}
 
-	public static boolean isRightSide(final Vector2d p, final Line line) {
-		Vector3d lineDir = new Vector3d(line.dir.x, line.dir.y, 0);
-		Vector3d pointDir = new Vector3d(p.x - line.p.x, p.y - line.p.y, 0);
-		Vector3d crossVec = new Vector3d();
-		crossVec.cross(pointDir, lineDir);
-		return crossVec.z > 0;
-	}
+//	public static boolean isRightSide(final Vector2d p, final Line line) {
+//		Vector3d lineDir = new Vector3d(line.dir.x, line.dir.y, 0);
+//		Vector3d pointDir = new Vector3d(p.x - line.p.x, p.y - line.p.y, 0);
+//		Vector3d crossVec = new Vector3d();
+//		crossVec.cross(pointDir, lineDir);
+//		return crossVec.z > 0;
+//	}
 
 	public static double distance(final Vector2d p, final Line line, final double[] param) {
 
