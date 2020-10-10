@@ -439,9 +439,6 @@ public class GeomUtil {
 
 	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
-		// direction of the line
-		Vector2d dir = new Vector2d(ep);
-		dir.sub(sp);
 
 		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
@@ -450,15 +447,15 @@ public class GeomUtil {
 		} else if (t > 1.0) {
 			return distance(p, ep);
 		} else {
+			// direction of the line
+			Vector2d dir = new Vector2d(ep);
+			dir.sub(sp);
 			return distance(sp.x + t * dir.x, sp.y + t * dir.y, p.x, p.y);
 		}
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
 			final Vector2d ep, final Vector2d nearestPoint) {
-		// direction of the line
-		Vector2d dir = new Vector2d(ep);
-		dir.sub(sp);
 
 		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
@@ -469,6 +466,9 @@ public class GeomUtil {
 			nearestPoint.set(ep);
 			return distance(p, ep);
 		} else {
+			// direction of the line
+			Vector2d dir = new Vector2d(ep);
+			dir.sub(sp);
 			nearestPoint.set(sp.x + t * dir.x, sp.y + t * dir.y);
 			return distance(sp.x + t * dir.x, sp.y + t * dir.y, p.x, p.y);
 		}
