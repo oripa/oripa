@@ -263,17 +263,19 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	protected void drawTemporaryLine(final Graphics2D g2d,
 			final PaintContextInterface context) {
 
-		if (context.getVertexCount() > 0) {
-			Vector2d picked = context.peekVertex();
-
-			g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
-
-			g2d.setStroke(selector.createStroke(context.getLineTypeOfNewLines(),
-					context.getScale()));
-
-			drawLine(g2d, picked,
-					NearestItemFinder.getCandidateVertex(context, true));
+		if (context.getVertexCount() == 0) {
+			return;
 		}
+
+		Vector2d picked = context.peekVertex();
+
+		g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
+
+		g2d.setStroke(selector.createStroke(context.getLineTypeOfNewLines(),
+				context.getScale()));
+
+		drawLine(g2d, picked,
+				NearestItemFinder.getCandidateVertex(context, true));
 
 	}
 

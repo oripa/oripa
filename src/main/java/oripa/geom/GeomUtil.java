@@ -278,25 +278,25 @@ public class GeomUtil {
 		double det = d1.x * d0.y - d1.y * d0.x;
 
 		double epsilon = 1.0e-6;
-		if (det * det > epsilon * d0.lengthSquared() * d1.lengthSquared()) {
-			// Lines intersect in a single point. Return both s and t values for
-			// use by calling functions.
-			double invDet = 1.0 / det;
-			double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
-			double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
-
-			if (t < 0.0 - epsilon || t > 1.0 + epsilon) {
-				return null;
-			} else if (s < 0.0 - epsilon) {
-				return null;
-			} else {
-				Vector2d cp = new Vector2d();
-				cp.x = (1.0 - t) * seg.p0.x + t * seg.p1.x;
-				cp.y = (1.0 - t) * seg.p0.y + t * seg.p1.y;
-				return cp;
-			}
+		if (det * det <= epsilon * d0.lengthSquared() * d1.lengthSquared()) {
+			return null;
 		}
-		return null;
+
+		// Lines intersect in a single point. Return both s and t values for
+		// use by calling functions.
+		double invDet = 1.0 / det;
+		double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
+		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
+
+		if (t < 0.0 - epsilon || t > 1.0 + epsilon) {
+			return null;
+		} else if (s < 0.0 - epsilon) {
+			return null;
+		}
+		Vector2d cp = new Vector2d();
+		cp.x = (1.0 - t) * seg.p0.x + t * seg.p1.x;
+		cp.y = (1.0 - t) * seg.p0.y + t * seg.p1.y;
+		return cp;
 	}
 
 	// Compute the intersection of straight lines
@@ -311,17 +311,19 @@ public class GeomUtil {
 		double det = d1.x * d0.y - d1.y * d0.x;
 
 		double epsilon = 1.0e-6;
-		if (det * det > epsilon * d0.lengthSquared() * d1.lengthSquared()) {
-			// Lines intersect in a single point.
-			double invDet = 1.0 / det;
-			double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
 
-			Vector2d cp = new Vector2d();
-			cp.x = (1.0 - t) * l1.p.x + t * (l1.p.x + l1.dir.x);
-			cp.y = (1.0 - t) * l1.p.y + t * (l1.p.y + l1.dir.y);
-			return cp;
+		if (det * det <= epsilon * d0.lengthSquared() * d1.lengthSquared()) {
+			return null;
 		}
-		return null;
+
+		// Lines intersect in a single point.
+		double invDet = 1.0 / det;
+		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
+
+		Vector2d cp = new Vector2d();
+		cp.x = (1.0 - t) * l1.p.x + t * (l1.p.x + l1.dir.x);
+		cp.y = (1.0 - t) * l1.p.y + t * (l1.p.y + l1.dir.y);
+		return cp;
 	}
 
 	public static OriLine getLineByValue(final Vector2d sv, final double length,
@@ -443,26 +445,26 @@ public class GeomUtil {
 		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
-		if (det * det > epsilon * d0.lengthSquared() * d1.lengthSquared()) {
-			// Lines intersect in a single point.
-			double invDet = 1.0 / det;
-			double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
-			double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
-
-			if (t < 0.0 - epsilon || t > 1.0 + epsilon) {
-				return null;
-			} else if (s < 0.0 - epsilon || s > 1.0 + epsilon) {
-				return null;
-			} else {
-				// cp = (1 - t) * q0 + t * q0
-				Vector2d cp = new Vector2d();
-				cp.x = (1.0 - t) * q0.x + t * q1.x;
-				cp.y = (1.0 - t) * q0.y + t * q1.y;
-				return cp;
-			}
-
+		if (det * det <= epsilon * d0.lengthSquared() * d1.lengthSquared()) {
+			return null;
 		}
-		return null;
+
+		// Lines intersect in a single point.
+		double invDet = 1.0 / det;
+		double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
+		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
+
+		if (t < 0.0 - epsilon || t > 1.0 + epsilon) {
+			return null;
+		} else if (s < 0.0 - epsilon || s > 1.0 + epsilon) {
+			return null;
+		}
+
+		// cp = (1 - t) * q0 + t * q0
+		Vector2d cp = new Vector2d();
+		cp.x = (1.0 - t) * q0.x + t * q1.x;
+		cp.y = (1.0 - t) * q0.y + t * q1.y;
+		return cp;
 	}
 
 	public static Vector2d getCrossPoint(final OriLine l0, final OriLine l1) {
