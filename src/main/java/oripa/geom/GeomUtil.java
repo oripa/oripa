@@ -482,17 +482,30 @@ public class GeomUtil {
 	}
 
 	// (Including endpoints) intersection between two line segments
-	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1, final Vector2d q0,
-			final Vector2d q1) {
+	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
+			final Vector2d q0, final Vector2d q1) {
+		return getCrossPoint(p0, p1, q0, q1, EPS);
+	}
+
+	/**
+	 * solve: cross point = p0 + s * d0 = q0 + t * d1
+	 *
+	 * @param p0
+	 * @param p1
+	 * @param q0
+	 * @param q1
+	 * @param epsilon
+	 * @return cross point
+	 */
+	private static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
+			final Vector2d q0, final Vector2d q1, final double epsilon) {
 		Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
 		Vector2d d1 = new Vector2d(q1.x - q0.x, q1.y - q0.y);
 		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
-		double epsilon = 1.0e-6;
 		if (det * det > epsilon * d0.lengthSquared() * d1.lengthSquared()) {
-			// Lines intersect in a single point. Return both s and t values for
-			// use by calling functions.
+			// Lines intersect in a single point.
 			double invDet = 1.0 / det;
 			double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
 			double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
@@ -502,6 +515,7 @@ public class GeomUtil {
 			} else if (s < 0.0 - epsilon || s > 1.0 + epsilon) {
 				return null;
 			} else {
+				// cp = (1 - t) * q0 + t * q0
 				Vector2d cp = new Vector2d();
 				cp.x = (1.0 - t) * q0.x + t * q1.x;
 				cp.y = (1.0 - t) * q0.y + t * q1.y;
@@ -513,39 +527,7 @@ public class GeomUtil {
 	}
 
 	public static Vector2d getCrossPoint(final OriLine l0, final OriLine l1) {
-		return getCrossPoint(l0, l1, 1.0e-6);
-	}
-
-	private static Vector2d getCrossPoint(final OriLine l0, final OriLine l1,
-			final double epsilon) {
-		Vector2d p0 = new Vector2d(l0.p0);
-		Vector2d p1 = new Vector2d(l0.p1);
-
-		Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
-		Vector2d d1 = new Vector2d(l1.p1.x - l1.p0.x, l1.p1.y - l1.p0.y);
-		Vector2d diff = new Vector2d(l1.p0.x - p0.x, l1.p0.y - p0.y);
-		double det = d1.x * d0.y - d1.y * d0.x;
-
-		if (det * det > epsilon * d0.lengthSquared() * d1.lengthSquared()) {
-			// Lines intersect in a single point. Return both s and t values for
-			// use by calling functions.
-			double invDet = 1.0 / det;
-			double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
-			double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
-
-			if (t < 0.0 - epsilon || t > 1.0 + epsilon) {
-				return null;
-			} else if (s < 0.0 - epsilon || s > 1.0 + epsilon) {
-				return null;
-			} else {
-				Vector2d cp = new Vector2d();
-				cp.x = (1.0 - t) * l1.p0.x + t * l1.p1.x;
-				cp.y = (1.0 - t) * l1.p0.y + t * l1.p1.y;
-				return cp;
-			}
-
-		}
-		return null;
+		return getCrossPoint(l0.p0, l0.p1, l1.p0, l1.p1, EPS);
 	}
 
 //	public static boolean isRightSide(final Vector2d p, final Line line) {
