@@ -765,7 +765,7 @@ public class Folder {
 			b.sub(ep, sp);
 			for (OriHalfedge he : face.halfedges) {
 
-				if (GeomUtil.distance(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
+				if (GeomUtil.distancePointToLine(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
 					continue;
 				}
 				if (Math.abs(b.y) < GeomUtil.EPS) {
@@ -953,7 +953,7 @@ public class Folder {
 	}
 
 	private void flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d b) {
-		if (GeomUtil.distance(vertex, new Line(sp, b)) < GeomUtil.EPS) {
+		if (GeomUtil.distancePointToLine(vertex, new Line(sp, b)) < GeomUtil.EPS) {
 			return;
 		}
 		if (Math.abs(b.y) < GeomUtil.EPS) {

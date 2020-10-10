@@ -558,23 +558,12 @@ public class GeomUtil {
 	}
 
 	public static double distance(final Vector2d p, final Line line, final double[] param) {
-		Vector2d sub0, sub, sub0b;
-		double x0 = line.p.x;
-		double y0 = line.p.y;
-		double x1 = line.p.x + line.dir.x;
-		double y1 = line.p.y + line.dir.y;
-		double px = p.x;
-		double py = p.y;
 
-		sub0 = new Vector2d(x0 - px, y0 - py);
-		sub0b = new Vector2d(-sub0.x, -sub0.y);
-		sub = new Vector2d(x1 - x0, y1 - y0);
-
-		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
-				/ ((sub.x * sub.x) + (sub.y * sub.y));
-
-		param[0] = t;
-		return distance(x0 + t * sub.x, y0 + t * sub.y, px, py);
+		Vector2d sp = line.p;
+		Vector2d ep = new Vector2d(sp);
+		ep.add(line.dir);
+		param[0] = computeParameterForNearestPointToLine(p, sp, ep);
+		return distancePointToLine(p, line);
 	}
 
 //  Investigate the relationship between the point q with the segment p0, p1
@@ -590,25 +579,6 @@ public class GeomUtil {
 			return true;
 		}
 		return false;
-	}
-
-	public static double distance(final Vector2d p, final Line line) {
-		Vector2d sub0, sub, sub0b;
-		double x0 = line.p.x;
-		double y0 = line.p.y;
-		double x1 = line.p.x + line.dir.x;
-		double y1 = line.p.y + line.dir.y;
-		double px = p.x;
-		double py = p.y;
-
-		sub0 = new Vector2d(x0 - px, y0 - py);
-		sub0b = new Vector2d(-sub0.x, -sub0.y);
-		sub = new Vector2d(x1 - x0, y1 - y0);
-
-		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
-				/ ((sub.x * sub.x) + (sub.y * sub.y));
-
-		return distance(x0 + t * sub.x, y0 + t * sub.y, px, py);
 	}
 
 	private static double distance(final double x0, final double y0, final double x1,

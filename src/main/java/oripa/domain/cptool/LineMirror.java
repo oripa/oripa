@@ -4,8 +4,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.vecmath.Vector2d;
+
 import oripa.geom.GeomUtil;
-import oripa.geom.Line;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -63,20 +64,7 @@ public class LineMirror {
 	private OriPoint createMirroredVertex(
 			final OriPoint vertex, final OriLine baseOriLine) {
 
-		Line baseLine = baseOriLine.getLine();
-		double dist0 = GeomUtil.distance(vertex, baseLine);
-
-		OriPoint dir0 = new OriPoint();
-		if (GeomUtil.isRightSide(vertex, baseLine)) {
-			dir0.set(-baseLine.dir.y, baseLine.dir.x);
-		} else {
-			dir0.set(baseLine.dir.y, -baseLine.dir.x);
-		}
-		dir0.normalize();
-		OriPoint q0 = new OriPoint(
-				vertex.x + dir0.x * dist0 * 2,
-				vertex.y + dir0.y * dist0 * 2);
-
-		return q0;
+		Vector2d mirrored = GeomUtil.getSymmetricPoint(vertex, baseOriLine.p0, baseOriLine.p1);
+		return new OriPoint(mirrored.x, mirrored.y);
 	}
 }
