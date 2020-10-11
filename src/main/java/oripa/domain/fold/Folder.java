@@ -551,7 +551,7 @@ public class Folder {
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
-					if (GeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
+					if (OriGeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
 						if (orMat[f_i.tmpInt][f_k.tmpInt] != OverlapRelationValues.UNDEFINED
 								&& orMat[f_j.tmpInt][f_k.tmpInt] == OverlapRelationValues.UNDEFINED) {
 							setOR(orMat, f_j.tmpInt, f_k.tmpInt, orMat[f_i.tmpInt][f_k.tmpInt],
@@ -616,7 +616,7 @@ public class Folder {
 		for (SubFace sub : localSubFaces) {
 			Vector2d innerPoint = sub.getInnerPoint();
 			for (OriFace face : faces) {
-				if (GeomUtil.isContainsPointFoldedFace(face, innerPoint, paperSize / 1000)) {
+				if (OriGeomUtil.isContainsPointFoldedFace(face, innerPoint, paperSize / 1000)) {
 					sub.faces.add(face);
 				}
 			}
@@ -801,7 +801,7 @@ public class Folder {
 		for (int i = 0; i < size; i++) {
 			overlapRelation[i][i] = OverlapRelationValues.NO_OVERLAP;
 			for (int j = i + 1; j < size; j++) {
-				if (GeomUtil.isFaceOverlap(faces.get(i), faces.get(j), size * 0.00001)) {
+				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), size * 0.00001)) {
 					overlapRelation[i][j] = OverlapRelationValues.UNDEFINED;
 					overlapRelation[j][i] = OverlapRelationValues.UNDEFINED;
 				} else {

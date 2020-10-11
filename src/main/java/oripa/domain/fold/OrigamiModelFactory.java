@@ -323,7 +323,7 @@ public class OrigamiModelFactory {
 			ListIterator<OriLine> iterator = precreases.listIterator();
 			while (iterator.hasNext()) {
 				OriLine precrease = iterator.next();
-				if (GeomUtil.isOriLineCrossFace(face, precrease)) {
+				if (OriGeomUtil.isOriLineCrossFace(face, precrease)) {
 					face.precreases.add(precrease);
 					iterator.remove();
 				}
