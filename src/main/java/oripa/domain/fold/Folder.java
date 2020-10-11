@@ -49,7 +49,7 @@ public class Folder {
 	 * @param foldedModelInfo
 	 * @param fullEstimation
 	 * @return the number of flat foldable layer layouts. -1 if
-	 *         <code>fullEstimation</code> is false;
+	 *         <code>fullEstimation</code> is false.
 	 */
 	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
 			final boolean fullEstimation) {
@@ -76,7 +76,7 @@ public class Folder {
 			return -1;
 		}
 
-		// After folding construct the sbfaces
+		// After folding construct the subfaces
 		double paperSize = origamiModel.getPaperSize();
 		subFaces = makeSubFaces(faces, paperSize);
 		System.out.println("subFaces.size() = " + subFaces.size());
@@ -602,7 +602,7 @@ public class Folder {
 		// By this construction, we get faces that are composed of the edges
 		// after folding (layering is not considered)
 		// We call such face a subface hereafter.
-		temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize, false);
+		temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize);
 
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();
 

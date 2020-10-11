@@ -32,17 +32,19 @@ public class OrigamiModelFactory {
 
 	/**
 	 * Constructs the half-edge based data structure which describes relation
-	 * among faces and edges and store it into {@code OrigamiModel}.
+	 * among faces and edges and store it into {@code OrigamiModel}. This method
+	 * simply constructs the data structure and does not execute other
+	 * operations like cleaning up given crease pattern. So there may be some
+	 * error in the returned data.
 	 *
 	 * @param creasePattern
 	 * @param paperSize
 	 * @param needCleanUp
-	 * @return
+	 * @return A model data converted from crease pattern.
 	 */
 	// TODO: change as: throw error if creation failed.
 	public OrigamiModel buildOrigami(
-			final Collection<OriLine> creasePattern, final double paperSize,
-			final boolean needCleanUp) {
+			final Collection<OriLine> creasePattern, final double paperSize) {
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
@@ -145,10 +147,16 @@ public class OrigamiModelFactory {
 	}
 
 	/**
+	 * Constructs the half-edge based data structure which describes relation
+	 * among faces and edges and store it into {@code OrigamiModel}. This is a
+	 * preparation for estimating folded shape with layers.
 	 *
 	 * @param creasePattern
 	 * @param paperSize
 	 * @param needCleanUp
+	 *            true if line duplications in the given crease pattern should
+	 *            be removed while computation. This makes a side effect to
+	 *            {@code creasePattern}.
 	 * @return A model data converted from crease pattern.
 	 */
 	// TODO: change as: return OrigamiModel. throw error if creation failed.
@@ -160,10 +168,6 @@ public class OrigamiModelFactory {
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriVertex> vertices = origamiModel.getVertices();
-
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-
-		sortedFaces.clear();
 
 		edges.clear();
 		vertices.clear();
@@ -314,6 +318,7 @@ public class OrigamiModelFactory {
 		for (OriEdge e : edges) {
 			e.type = e.left.tmpInt;
 		}
+		// attach precrease lines to faces
 		for (OriFace face : faces) {
 			ListIterator<OriLine> iterator = precreases.listIterator();
 			while (iterator.hasNext()) {
