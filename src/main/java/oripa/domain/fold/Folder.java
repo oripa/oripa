@@ -574,7 +574,9 @@ public class Folder {
 	/**
 	 *
 	 * @param faces
-	 *            extracted from the drawn crease pattern
+	 *            extracted from the drawn crease pattern. This method assumes
+	 *            that the faces hold the coordinates after folding.
+	 *
 	 * @param paperSize
 	 * @return
 	 */
@@ -764,24 +766,7 @@ public class Folder {
 			Vector2d b = new Vector2d();
 			b.sub(ep, sp);
 			for (OriHalfedge he : face.halfedges) {
-
-				if (GeomUtil.distancePointToLine(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
-					continue;
-				}
-				if (Math.abs(b.y) < GeomUtil.EPS) {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					a.y = -a.y;
-					he.tmpVec.y = a.y + sp.y;
-				} else {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					he.tmpVec.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x)
-							/ b.lengthSquared();
-					he.tmpVec.x = b.x / b.y * a.y - a.x + b.x / b.y * he.tmpVec.y;
-					he.tmpVec.x += sp.x;
-					he.tmpVec.y += sp.y;
-				}
+				flipVertex(he.tmpVec, sp, b);
 			}
 			for (OriLine precrease : face.precreases) {
 				flipVertex(precrease.p0, sp, b);
@@ -911,6 +896,8 @@ public class Folder {
 
 		Line preLine = new Line(preOrigin, baseDir);
 
+		// seems it can be alternated with GeomUtil.getSymmetricPoint().
+		// any problem if we do that???
 		for (OriHalfedge he : face.halfedges) {
 			double param[] = new double[1];
 			double d0 = GeomUtil.distance(he.tmpVec, preLine, param);
@@ -962,6 +949,8 @@ public class Folder {
 			a.y = -a.y;
 			vertex.y = a.y + sp.y;
 		} else {
+			// seems it can be alternated with GeomUtil.getSymmetricPoint().
+			// any problem if we do that???
 			Vector2d a = new Vector2d();
 			a.sub(vertex, sp);
 			vertex.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x)
