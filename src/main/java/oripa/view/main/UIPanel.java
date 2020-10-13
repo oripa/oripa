@@ -58,7 +58,6 @@ import oripa.bind.state.action.PaintActionSetterFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.BoundBox;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.OrigamiModel;
@@ -775,8 +774,7 @@ public class UIPanel extends JPanel {
 				frame.setVisible(true);
 			}
 		} else {
-			BoundBox boundBox = folder.foldWithoutLineType(origamiModel);
-			foldedModelInfo.setBoundBox(boundBox);
+			folder.foldWithoutLineType(origamiModel);
 		}
 
 		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
