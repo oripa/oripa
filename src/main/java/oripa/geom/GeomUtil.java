@@ -254,9 +254,9 @@ public class GeomUtil {
 	 * @param p
 	 *            point to be projected.
 	 * @param sp
-	 *            start point of symmetry base line.
+	 *            start point of symmetry base line vector.
 	 * @param ep
-	 *            end point of symmetry base line.
+	 *            end point of symmetry base line vector.
 	 * @return
 	 */
 	public static Vector2d getSymmetricPoint(final Vector2d p, final Vector2d sp,
