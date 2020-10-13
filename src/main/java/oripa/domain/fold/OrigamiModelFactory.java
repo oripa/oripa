@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
@@ -18,12 +17,7 @@ public class OrigamiModelFactory {
 
 	public OrigamiModel createOrigamiModel(
 			final Collection<OriLine> creasePattern, final double paperSize) {
-		return this.createOrigamiModelImpl3(creasePattern, paperSize, false);
-	}
-
-	public OrigamiModel createOrigamiModelNoDuplicateLines(
-			final Collection<OriLine> creasePattern, final double paperSize) {
-		return this.createOrigamiModelImpl3(creasePattern, paperSize, true);
+		return this.createOrigamiModelImpl3(creasePattern, paperSize);
 	}
 
 	public OrigamiModel createOrigamiModel(final double paperSize) {
@@ -161,8 +155,7 @@ public class OrigamiModelFactory {
 	 */
 	// TODO: change as: return OrigamiModel. throw error if creation failed.
 	private OrigamiModel createOrigamiModelImpl3(
-			final Collection<OriLine> creasePattern, final double paperSize,
-			final boolean needCleanUp) {
+			final Collection<OriLine> creasePattern, final double paperSize) {
 
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
@@ -173,17 +166,7 @@ public class OrigamiModelFactory {
 		vertices.clear();
 		faces.clear();
 
-		// Remove lines with the same position
 		debugCount = 0;
-		if (needCleanUp) {
-			FolderTool tool = new FolderTool();
-			if (tool.cleanDuplicatedLines(creasePattern)) {
-				JOptionPane.showMessageDialog(
-						null, "Removing multiples edges with the same position ",
-						"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
-			}
-
-		}
 
 		// Create the edges from the vertexes
 		List<OriLine> precreases = new ArrayList<>();

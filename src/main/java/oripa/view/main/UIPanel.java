@@ -60,6 +60,7 @@ import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
+import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
 import oripa.domain.paint.AngleStep;
@@ -796,18 +797,29 @@ public class UIPanel extends JPanel {
 			return origamiModel;
 		}
 
+		// ask if ORIPA should try to remove duplication.
 		if (JOptionPane.showConfirmDialog(
 				this, resources.getString(
 						ResourceKey.WARNING,
 						StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
 				"Failed", JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
+			// the answer is "no."
 			return origamiModel;
 		}
 
+		// clean up the crease pattern
+		FolderTool tool = new FolderTool();
+		if (tool.cleanDuplicatedLines(creasePattern)) {
+			JOptionPane.showMessageDialog(
+					null, "Removing multiples edges with the same position ",
+					"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
+		}
+		// re-create the model data for simplified crease pattern
 		origamiModel = modelFactory
-				.createOrigamiModelNoDuplicateLines(
+				.createOrigamiModel(
 						creasePattern, creasePattern.getPaperSize());
+
 		if (origamiModel.isProbablyFoldable()) {
 			return origamiModel;
 		}
