@@ -718,6 +718,9 @@ public class Folder {
 	private void transformVertex(final Vector2d vertex, final Line preLine,
 			final Vector2d afterOrigin, final Vector2d afterDir) {
 
+		// seems it can be alternated with GeomUtil.getSymmetricPoint().
+		// any problem if we do that???
+
 		double param[] = new double[1];
 		double d0 = GeomUtil.distance(vertex, preLine, param);
 		double d1 = param[0];
@@ -896,24 +899,8 @@ public class Folder {
 
 		Line preLine = new Line(preOrigin, baseDir);
 
-		// seems it can be alternated with GeomUtil.getSymmetricPoint().
-		// any problem if we do that???
 		for (OriHalfedge he : face.halfedges) {
-			double param[] = new double[1];
-			double d0 = GeomUtil.distance(he.tmpVec, preLine, param);
-			double d1 = param[0];
-
-			Vector2d footV = new Vector2d(afterOrigin);
-			footV.x += d1 * afterDir.x;
-			footV.y += d1 * afterDir.y;
-
-			Vector2d afterDirFromFoot = new Vector2d();
-			afterDirFromFoot.x = afterDir.y;
-			afterDirFromFoot.y = -afterDir.x;
-
-			he.tmpVec.x = footV.x + d0 * afterDirFromFoot.x;
-			he.tmpVec.y = footV.y + d0 * afterDirFromFoot.y;
-
+			transformVertex(he.tmpVec, preLine, afterOrigin, afterDir);
 		}
 
 		// Inversion
