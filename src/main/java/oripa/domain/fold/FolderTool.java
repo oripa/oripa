@@ -197,12 +197,10 @@ public class FolderTool {
 		System.out.println("pre cleanDuplicatedLines " + creasePattern.size());
 		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(creasePattern.size());
 		for (OriLine l : creasePattern) {
-			OriLine ll = l;
-
 			boolean bSame = false;
-			// Test if the line is already in tmpLines to prevent duplicity
+			// Test if the line is already in tmpLines to prevent duplication
 			for (OriLine line : tmpLines) {
-				if (GeomUtil.isSameLineSegment(line, ll)) {
+				if (GeomUtil.isSameLineSegment(line, l)) {
 					bSame = true;
 					break;
 				}
@@ -210,7 +208,7 @@ public class FolderTool {
 			if (bSame) {
 				continue;
 			}
-			tmpLines.add(ll);
+			tmpLines.add(l);
 		}
 
 		if (creasePattern.size() == tmpLines.size()) {
