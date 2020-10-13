@@ -143,14 +143,11 @@ public class OrigamiModelFactory {
 	/**
 	 * Constructs the half-edge based data structure which describes relation
 	 * among faces and edges and store it into {@code OrigamiModel}. This is a
-	 * preparation for estimating folded shape with layers.
+	 * preparation for estimating folded shape with layers: this method removes
+	 * meaningless vertices.
 	 *
 	 * @param creasePattern
 	 * @param paperSize
-	 * @param needCleanUp
-	 *            true if line duplications in the given crease pattern should
-	 *            be removed while computation. This makes a side effect to
-	 *            {@code creasePattern}.
 	 * @return A model data converted from crease pattern.
 	 */
 	// TODO: change as: return OrigamiModel. throw error if creation failed.
