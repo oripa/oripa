@@ -583,10 +583,7 @@ public class Folder {
 	private ArrayList<SubFace> makeSubFaces(
 			final List<OriFace> faces, final double paperSize) {
 		CreasePatternFactory cpFactory = new CreasePatternFactory();
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-
 		CreasePatternInterface temp_creasePattern = cpFactory.createCreasePattern(paperSize);
-		OrigamiModel temp_origamiModel = modelFactory.createOrigamiModel(paperSize);
 
 		// construct edge structure after folding and store it as a
 		// crease pattern for easy calculation
@@ -604,7 +601,8 @@ public class Folder {
 		// By this construction, we get faces that are composed of the edges
 		// after folding (layering is not considered)
 		// We call such face a subface hereafter.
-		temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize);
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		OrigamiModel temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize);
 
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();
 

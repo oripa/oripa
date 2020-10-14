@@ -15,13 +15,19 @@ public class OrigamiModelFactory {
 
 	int debugCount = 0;
 
+	/**
+	 * Constructs the half-edge based data structure which describes relation
+	 * among faces and edges and store it into {@code OrigamiModel}. This is a
+	 * preparation for estimating folded shape with layers: this method removes
+	 * meaningless vertices.
+	 *
+	 * @param creasePattern
+	 * @param paperSize
+	 * @return A model data converted from crease pattern.
+	 */
 	public OrigamiModel createOrigamiModel(
 			final Collection<OriLine> creasePattern, final double paperSize) {
 		return this.createOrigamiModelImpl3(creasePattern, paperSize);
-	}
-
-	public OrigamiModel createOrigamiModel(final double paperSize) {
-		return new OrigamiModel(paperSize);
 	}
 
 	/**
@@ -33,7 +39,6 @@ public class OrigamiModelFactory {
 	 *
 	 * @param creasePattern
 	 * @param paperSize
-	 * @param needCleanUp
 	 * @return A model data converted from crease pattern.
 	 */
 	// TODO: change as: throw error if creation failed.
