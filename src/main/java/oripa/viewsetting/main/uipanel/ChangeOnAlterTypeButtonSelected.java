@@ -16,6 +16,7 @@ public class ChangeOnAlterTypeButtonSelected implements ChangeViewSetting {
 	public void changeViewSetting() {
 
 		setting.setByValuePanelVisible(false);
+		setting.setLineInputPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(true);
 

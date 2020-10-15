@@ -110,6 +110,7 @@ public class StringID {
 	public static final String CUT_PASTE_ID = "Cut_and_Paste";
 	public static final String EDIT_CONTOUR_ID = "EditContour";
 	public static final String SELECT_ALL_LINE_ID = "selectAll";
+	public static final String EDIT_BGIMAGE_ID = "Edit_BGImage";
 
 	public static class ModelMenu {
 		public static final String DISPLAY_ID = "MENU_Disp";

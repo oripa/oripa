@@ -18,6 +18,7 @@ public class ChangeOnSelectButtonSelected implements ChangeViewSetting {
 
 		setting.setByValuePanelVisible(false);
 
+		setting.setLineInputPanelVisible(false);
 		setting.setAlterLineTypePanelVisible(false);
 
 		setting.setMountainButtonEnabled(false);

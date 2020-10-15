@@ -19,6 +19,7 @@
 package oripa.view.main;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
@@ -37,6 +38,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import org.slf4j.Logger;
@@ -192,6 +195,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 		logger.info("end constructing UI panel.");
 
+		JScrollPane uiScroll = new JScrollPane(uiPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		uiScroll.setPreferredSize(new Dimension(uiPanel.getPreferredSize().width + 25,
+				uiPanel.getPreferredSize().height));
+		uiScroll.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+
 		var stateFactory = new PaintBoundStateFactory(
 				stateManager, setting,
 				uiPanel.getUIPanelSetting(),
@@ -203,7 +212,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		circleCopyDialog = new CircleCopyDialog(this, paintContext);
 
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(uiPanel, BorderLayout.WEST);
+		getContentPane().add(uiScroll, BorderLayout.WEST);
 		getContentPane().add(mainScreen, BorderLayout.CENTER);
 		getContentPane().add(hintLabel, BorderLayout.SOUTH);
 
@@ -270,9 +279,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			updateMenu(path);
 			updateTitleText();
 		});
-
-		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemSave.addActionListener(e -> {
 			var filePath = document.getDataFilePath();
