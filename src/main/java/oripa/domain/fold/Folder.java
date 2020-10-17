@@ -718,6 +718,8 @@ public class Folder {
 
 		// seems it can be alternated with GeomUtil.getSymmetricPoint().
 		// any problem if we do that???
+		// -> it does matter. The result of this method is different from
+		// symmetry.
 
 		double param[] = new double[1];
 		double d0 = GeomUtil.distance(vertex, preLine, param);
@@ -764,14 +766,12 @@ public class Folder {
 			Vector2d ep = baseHe.next.tmpVec;
 			Vector2d sp = baseHe.tmpVec;
 
-			Vector2d b = new Vector2d();
-			b.sub(ep, sp);
 			for (OriHalfedge he : face.halfedges) {
-				flipVertex(he.tmpVec, sp, b);
+				flipVertex(he.tmpVec, sp, ep);
 			}
 			for (OriLine precrease : face.precreases) {
-				flipVertex(precrease.p0, sp, b);
-				flipVertex(precrease.p1, sp, b);
+				flipVertex(precrease.p0, sp, ep);
+				flipVertex(precrease.p1, sp, ep);
 			}
 			face.faceFront = !face.faceFront;
 		}
@@ -906,15 +906,13 @@ public class Folder {
 			Vector2d ep = baseHe.next.tmpVec;
 			Vector2d sp = baseHe.tmpVec;
 
-			Vector2d b = new Vector2d();
-			b.sub(ep, sp);
 			for (OriHalfedge he : face.halfedges) {
-				flipVertex(he.tmpVec, sp, b);
+				flipVertex(he.tmpVec, sp, ep);
 			}
 
 			for (OriLine precrease : face.precreases) {
-				flipVertex(precrease.p0, sp, b);
-				flipVertex(precrease.p1, sp, b);
+				flipVertex(precrease.p0, sp, ep);
+				flipVertex(precrease.p1, sp, ep);
 			}
 
 			face.faceFront = !face.faceFront;
@@ -924,26 +922,10 @@ public class Folder {
 		faces.add(face);
 	}
 
-	private void flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d b) {
-		if (GeomUtil.distancePointToLine(vertex, new Line(sp, b)) < GeomUtil.EPS) {
-			return;
-		}
-		if (Math.abs(b.y) < GeomUtil.EPS) {
-			Vector2d a = new Vector2d();
-			a.sub(vertex, sp);
-			a.y = -a.y;
-			vertex.y = a.y + sp.y;
-		} else {
-			// seems it can be alternated with GeomUtil.getSymmetricPoint().
-			// any problem if we do that???
-			Vector2d a = new Vector2d();
-			a.sub(vertex, sp);
-			vertex.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x)
-					/ b.lengthSquared();
-			vertex.x = b.x / b.y * a.y - a.x + b.x / b.y * vertex.y;
-			vertex.x += sp.x;
-			vertex.y += sp.y;
-		}
-	}
+	private void flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d ep) {
+		var v = GeomUtil.getSymmetricPoint(vertex, sp, ep);
 
+		vertex.x = v.x;
+		vertex.y = v.y;
+	}
 }
