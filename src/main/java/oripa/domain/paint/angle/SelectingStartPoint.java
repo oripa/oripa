@@ -65,11 +65,21 @@ public class SelectingStartPoint extends PickingVertex {
 			var line = new OriLine(sp.x, sp.y,
 					sp.x + dx, sp.y + dy, OriLine.Type.NONE);
 
+			// snap on cross points of angle line and creases.
 			crossPoints.addAll(
 					context.getCreasePattern().stream()
-							.map(c -> GeomUtil.getCrossPoint(line, c))
+							.map(crease -> GeomUtil.getCrossPoint(line, crease))
 							.filter(point -> point != null)
 							.collect(Collectors.toList()));
+
+			// snap on end points of overlapping creases.
+			context.getCreasePattern().stream()
+					.filter(crease -> GeomUtil.isLineSegmentsOverlap(
+							line.p0, line.p1, crease.p0, crease.p1))
+					.forEach(crease -> {
+						crossPoints.add(crease.p0);
+						crossPoints.add(crease.p1);
+					});
 		}
 
 		context.setAngleSnapCrossPoints(crossPoints);
