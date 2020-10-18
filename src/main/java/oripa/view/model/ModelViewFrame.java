@@ -173,7 +173,7 @@ public class ModelViewFrame extends JFrame
 
 	private void flipOrigamiModel() {
 		FolderTool folderTool = new FolderTool();
-		folderTool.filpAll(origamiModel);
+		folderTool.flipAll(origamiModel);
 		screen.repaint();
 	}
 
