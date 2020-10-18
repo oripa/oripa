@@ -715,12 +715,6 @@ public class Folder {
 
 	private void transformVertex(final Vector2d vertex, final Line preLine,
 			final Vector2d afterOrigin, final Vector2d afterDir) {
-
-		// seems it can be alternated with GeomUtil.getSymmetricPoint().
-		// any problem if we do that???
-		// -> it does matter. The result of this method is different from
-		// symmetry.
-
 		double param[] = new double[1];
 		double d0 = GeomUtil.distance(vertex, preLine, param);
 		double d1 = param[0];
@@ -738,7 +732,9 @@ public class Folder {
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
+		// (Maybe) baseHe.pair keeps the position before folding.
 		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
+		// baseHe.tmpVec is the temporary position after folding along creases.
 		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
 
 		// Creates the base unit vector for before the rotation
@@ -752,6 +748,8 @@ public class Folder {
 
 		Line preLine = new Line(preOrigin, baseDir);
 
+		// move the vertices of the face to keep the face connection
+		// on baseHe
 		for (OriHalfedge he : face.halfedges) {
 			transformVertex(he.tmpVec, preLine, afterOrigin, afterDir);
 		}
