@@ -2,7 +2,6 @@ package oripa.domain.fold;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
@@ -104,40 +103,6 @@ public class FolderTool {
 		return true;
 	}
 
-	// Turn the model over
-	public void flipAll(final OrigamiModel origamiModel) {
-		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-
-		List<OriFace> faces = origamiModel.getFaces();
-		for (OriFace face : faces) {
-			face.z_order = -face.z_order;
-			for (OriHalfedge he : face.halfedges) {
-				maxV.x = Math.max(maxV.x, he.vertex.p.x);
-				maxV.y = Math.max(maxV.y, he.vertex.p.y);
-				minV.x = Math.min(minV.x, he.vertex.p.x);
-				minV.y = Math.min(minV.y, he.vertex.p.y);
-			}
-		}
-
-		double centerX = (maxV.x + minV.x) / 2;
-
-		faces.stream().flatMap(f -> f.halfedges.stream()).forEach(he -> {
-			he.positionForDisplay.x = 2 * centerX - he.positionForDisplay.x;
-		});
-
-		faces.forEach(face -> {
-			face.faceFront = !face.faceFront;
-			face.setOutline();
-		});
-
-		Collections.sort(faces, new FaceOrderComparator());
-
-		Collections.reverse(origamiModel.getSortedFaces());
-
-	}
-
-	//
 	public void setFacesOutline(
 			final List<OriVertex> vertices, final List<OriFace> faces,
 			final boolean isSlide) {
