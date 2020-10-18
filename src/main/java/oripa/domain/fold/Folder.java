@@ -734,7 +734,7 @@ public class Folder {
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
 		// (Maybe) baseHe.pair keeps the position before folding.
 		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
-		// baseHe.tmpVec is the temporary position after folding along creases.
+		// baseHe.tmpVec is the temporary position while folding along creases.
 		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
 
 		// Creates the base unit vector for before the rotation
