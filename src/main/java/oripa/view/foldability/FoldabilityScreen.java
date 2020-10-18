@@ -151,8 +151,8 @@ public class FoldabilityScreen extends JPanel
 		if (bDrawFaceID) {
 			g2d.setColor(Color.BLACK);
 			for (OriFace face : faces) {
-				g2d.drawString("" + face.tmpInt, (int) face.getCenter().x,
-						(int) face.getCenter().y);
+				g2d.drawString("" + face.tmpInt, (int) face.getCentroidBeforeFolding().x,
+						(int) face.getCentroidBeforeFolding().y);
 			}
 		}
 
@@ -187,8 +187,8 @@ public class FoldabilityScreen extends JPanel
 
 		g2d.setColor(Color.BLACK);
 		for (OriFace face : faces) {
-			g2d.drawString("" + face.z_order, (int) face.getCenter().x,
-					(int) face.getCenter().y);
+			g2d.drawString("" + face.z_order, (int) face.getCentroidBeforeFolding().x,
+					(int) face.getCentroidBeforeFolding().y);
 		}
 
 	}

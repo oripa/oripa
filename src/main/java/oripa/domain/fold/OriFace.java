@@ -193,11 +193,7 @@ public class OriFace {
 
 	public void setPreOutline() {
 		preOutline.reset();
-		Vector2d centerP = new Vector2d();
-		for (OriHalfedge he : halfedges) {
-			centerP.add(he.vertex.preP);
-		}
-		centerP.scale(1.0 / halfedges.size());
+		Vector2d centerP = getCentroidBeforeFolding();
 		double rate = 0.5;
 
 		preOutline.moveTo(
@@ -215,7 +211,11 @@ public class OriFace {
 		preOutline.closePath();
 	}
 
-	public Vector2d getCenter() {
+	/**
+	 *
+	 * @return centroid of this face before folding
+	 */
+	public Vector2d getCentroidBeforeFolding() {
 		Vector2d centerVec = new Vector2d();
 		for (OriHalfedge he : halfedges) {
 			centerVec.add(he.vertex.preP);
