@@ -19,6 +19,7 @@
 package oripa.geom;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -535,4 +536,11 @@ public class GeomUtil {
 //        return (iZero == 0 ? (iPositive > 0 ? 1 : -1) : 0);
 //    }
 
+	public static Vector2d computeCentroid(final Collection<Vector2d> points) {
+		var centroid = new Vector2d();
+		points.forEach(p -> centroid.add(p));
+		centroid.scale(1.0 / points.size());
+
+		return centroid;
+	}
 }

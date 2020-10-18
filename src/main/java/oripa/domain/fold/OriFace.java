@@ -21,10 +21,12 @@ package oripa.domain.fold;
 import java.awt.Color;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
 public class OriFace {
@@ -216,11 +218,8 @@ public class OriFace {
 	 * @return centroid of this face before folding
 	 */
 	public Vector2d getCentroidBeforeFolding() {
-		Vector2d centerVec = new Vector2d();
-		for (OriHalfedge he : halfedges) {
-			centerVec.add(he.vertex.preP);
-		}
-		centerVec.scale(1.0 / halfedges.size());
-		return centerVec;
+		return GeomUtil.computeCentroid(halfedges.stream()
+				.map(he -> he.vertex.preP)
+				.collect(Collectors.toList()));
 	}
 }

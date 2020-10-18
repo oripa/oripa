@@ -20,8 +20,11 @@ package oripa.domain.fold;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
+
+import oripa.geom.GeomUtil;
 
 public class SubFace {
 
@@ -101,15 +104,12 @@ public class SubFace {
 
 	/**
 	 *
-	 * @return geometric center of this subface (maybe)
+	 * @return geometric center of this subface
 	 */
 	public Vector2d getInnerPoint() {
-		Vector2d c = new Vector2d();
-		for (OriHalfedge he : outline.halfedges) {
-			c.add(he.tmpVec);
-		}
-		c.scale(1.0 / outline.halfedges.size());
-		return c;
+		return GeomUtil.computeCentroid(outline.halfedges.stream()
+				.map(he -> he.tmpVec)
+				.collect(Collectors.toList()));
 	}
 
 	private void sort(final List<OriFace> modelFaces, final int index) {
