@@ -57,8 +57,6 @@ public class OriFace {
 	 */
 	public int tmpInt = 0;
 
-	public boolean hasProblem = false; // TODO delete this variable and use
-										// bucket approach using ConjunctionLoop
 	public boolean alreadyStacked = false;
 	public ArrayList<TriangleFace> triangles = new ArrayList<>();
 

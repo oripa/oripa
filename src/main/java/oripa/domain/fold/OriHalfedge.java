@@ -29,12 +29,17 @@ public class OriHalfedge {
 	public OriEdge edge = null;
 	public OriVertex vertex = null;
 	public OriFace face = null;
+
 	/**
 	 * mountain/valley value???
 	 */
 	public int tmpInt = 0;
+
+	/**
+	 * temporary position while folding
+	 */
 	public Vector2d tmpVec = new Vector2d();
-	public Vector2d p = new Vector2d();
+
 	public Vector2d positionForDisplay = new Vector2d();
 	public Vector2d positionAfterFolded = new Vector2d();
 	public Vector3d vertexColor = new Vector3d();
