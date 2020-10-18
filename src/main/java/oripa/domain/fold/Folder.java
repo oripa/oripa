@@ -877,45 +877,9 @@ public class Folder {
 		}
 	}
 
-	// Method that doesn't use sin con
 	private void flipFace2(final List<OriFace> faces, final OriFace face,
 			final OriHalfedge baseHe) {
-
-		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
-		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
-
-		// Creates the base unit vector for before the rotation
-		Vector2d baseDir = new Vector2d();
-		baseDir.sub(baseHe.pair.tmpVec, baseHe.pair.next.tmpVec);
-
-		// Creates the base unit vector for after the rotation
-		Vector2d afterDir = new Vector2d();
-		afterDir.sub(baseHe.next.tmpVec, baseHe.tmpVec);
-		afterDir.normalize();
-
-		Line preLine = new Line(preOrigin, baseDir);
-
-		for (OriHalfedge he : face.halfedges) {
-			transformVertex(he.tmpVec, preLine, afterOrigin, afterDir);
-		}
-
-		// Inversion
-		if (face.faceFront == baseHe.face.faceFront) {
-			Vector2d ep = baseHe.next.tmpVec;
-			Vector2d sp = baseHe.tmpVec;
-
-			for (OriHalfedge he : face.halfedges) {
-				flipVertex(he.tmpVec, sp, ep);
-			}
-
-			for (OriLine precrease : face.precreases) {
-				flipVertex(precrease.p0, sp, ep);
-				flipVertex(precrease.p1, sp, ep);
-			}
-
-			face.faceFront = !face.faceFront;
-		}
-
+		flipFace(face, baseHe);
 		faces.remove(face);
 		faces.add(face);
 	}
