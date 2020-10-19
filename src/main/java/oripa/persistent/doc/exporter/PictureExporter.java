@@ -53,8 +53,9 @@ public class PictureExporter implements DocExporter {
 	@Override
 	public boolean export(final Doc doc, final String filePath) throws IOException {
 		CreasePatternInterface creasePattern = doc.getCreasePattern();
-		double gWidth = creasePattern.getPaperSize() * 2;
-		double gHeight = creasePattern.getPaperSize() * 2;
+		var domain = new RectangleDomain(creasePattern);
+		double gWidth = domain.getWidth() * 2;
+		double gHeight = domain.getHeight() * 2;
 
 		logger.info("save as image, size(w,h) = " + gWidth + ", " + gHeight);
 
@@ -69,7 +70,6 @@ public class PictureExporter implements DocExporter {
 		g2d.clearRect(0, 0, image.getWidth(), image.getHeight());
 
 		var camera = new AffineCamera();
-		var domain = new RectangleDomain(creasePattern);
 		var scale = Math.min(
 				gWidth / (domain.getWidth() + 20),
 				gHeight / (domain.getHeight() + 20));
