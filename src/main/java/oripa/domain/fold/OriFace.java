@@ -33,6 +33,9 @@ public class OriFace {
 
 	public ArrayList<OriHalfedge> halfedges = new ArrayList<>();
 
+	/**
+	 * For drawing the shape after fold
+	 */
 	public Path2D.Double outline = new Path2D.Double();
 
 	/**
@@ -182,11 +185,11 @@ public class OriFace {
 
 	public void setOutline() {
 		outline.reset();
-		outline.moveTo((float) (halfedges.get(0).positionForDisplay.x),
-				(float) (halfedges.get(0).positionForDisplay.y));
+		outline.moveTo(halfedges.get(0).positionForDisplay.x,
+				halfedges.get(0).positionForDisplay.y);
 		for (int i = 1; i < halfedges.size(); i++) {
-			outline.lineTo((float) (halfedges.get(i).positionForDisplay.x),
-					(float) (halfedges.get(i).positionForDisplay.y));
+			outline.lineTo(halfedges.get(i).positionForDisplay.x,
+					halfedges.get(i).positionForDisplay.y);
 		}
 		outline.closePath();
 	}
@@ -197,16 +200,16 @@ public class OriFace {
 		double rate = 0.5;
 
 		preOutline.moveTo(
-				(float) (halfedges.get(0).vertex.preP.x * rate + centerP.x
-						* (1.0 - rate)),
-				(float) (halfedges.get(0).vertex.preP.y * rate + centerP.y
-						* (1.0 - rate)));
+				halfedges.get(0).vertex.preP.x * rate + centerP.x
+						* (1.0 - rate),
+				halfedges.get(0).vertex.preP.y * rate + centerP.y
+						* (1.0 - rate));
 		for (int i = 1; i < halfedges.size(); i++) {
 			preOutline.lineTo(
-					(float) (halfedges.get(i).vertex.preP.x * rate + centerP.x
-							* (1.0 - rate)),
-					(float) (halfedges.get(i).vertex.preP.y * rate + centerP.y
-							* (1.0 - rate)));
+					halfedges.get(i).vertex.preP.x * rate + centerP.x
+							* (1.0 - rate),
+					halfedges.get(i).vertex.preP.y * rate + centerP.y
+							* (1.0 - rate));
 		}
 		preOutline.closePath();
 	}
