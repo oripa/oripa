@@ -60,7 +60,6 @@ import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
-import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
 import oripa.domain.paint.AngleStep;
@@ -809,8 +808,7 @@ public class UIPanel extends JPanel {
 		}
 
 		// clean up the crease pattern
-		FolderTool tool = new FolderTool();
-		if (tool.cleanDuplicatedLines(creasePattern)) {
+		if (creasePattern.cleanDuplicatedLines()) {
 			JOptionPane.showMessageDialog(
 					null, "Removing multiples edges with the same position ",
 					"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);

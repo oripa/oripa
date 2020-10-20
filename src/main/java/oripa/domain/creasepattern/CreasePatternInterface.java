@@ -41,4 +41,5 @@ public interface CreasePatternInterface
 	 */
 	public void move(final double dx, final double dy);
 
+	public abstract boolean cleanDuplicatedLines();
 }

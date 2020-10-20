@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import javax.vecmath.Vector2d;
 
+import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
 /**
@@ -324,5 +325,39 @@ class CreasePattern implements CreasePatternInterface {
 		// rebuild vertices info
 		this.clear();
 		this.addAll(lines);
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.creasepattern.CreasePatternInterface#removeDuplicatedLines()
+	 */
+	@Override
+	public boolean cleanDuplicatedLines() {
+		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(size());
+		for (OriLine l : this) {
+			boolean bSame = false;
+			// Test if the line is already in tmpLines to prevent duplication
+			for (OriLine line : tmpLines) {
+				if (GeomUtil.isSameLineSegment(line, l)) {
+					bSame = true;
+					break;
+				}
+			}
+			if (bSame) {
+				continue;
+			}
+			tmpLines.add(l);
+		}
+
+		if (size() == tmpLines.size()) {
+			return false;
+		}
+
+		clear();
+		addAll(tmpLines);
+
+		return true;
 	}
 }

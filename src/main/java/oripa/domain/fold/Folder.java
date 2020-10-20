@@ -596,7 +596,7 @@ public class Folder {
 				painter.addLine(line);
 			}
 		}
-		folderTool.cleanDuplicatedLines(temp_creasePattern);
+		temp_creasePattern.cleanDuplicatedLines();
 
 		// By this construction, we get faces that are composed of the edges
 		// after folding (layering is not considered)
