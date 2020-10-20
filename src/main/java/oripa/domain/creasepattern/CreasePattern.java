@@ -3,6 +3,7 @@ package oripa.domain.creasepattern;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
@@ -337,18 +338,13 @@ class CreasePattern implements CreasePatternInterface {
 	public boolean cleanDuplicatedLines() {
 		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(size());
 		for (OriLine l : this) {
-			boolean bSame = false;
-			// Test if the line is already in tmpLines to prevent duplication
-			for (OriLine line : tmpLines) {
-				if (GeomUtil.isSameLineSegment(line, l)) {
-					bSame = true;
-					break;
-				}
+			var sameLines = tmpLines.stream()
+					.filter(line -> GeomUtil.isSameLineSegment(line, l))
+					.collect(Collectors.toList());
+
+			if (sameLines.isEmpty()) {
+				tmpLines.add(l);
 			}
-			if (bSame) {
-				continue;
-			}
-			tmpLines.add(l);
 		}
 
 		if (size() == tmpLines.size()) {
