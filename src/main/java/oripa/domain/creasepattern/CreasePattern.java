@@ -17,7 +17,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class CreasePattern implements CreasePatternInterface {
+class CreasePattern implements CreasePatternInterface {
 
 	/**
 	 * Wrapper to treat vertices and line at the same time
