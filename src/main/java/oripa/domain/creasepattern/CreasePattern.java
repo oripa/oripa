@@ -66,10 +66,11 @@ class CreasePattern implements CreasePatternInterface {
 
 	private LineManager lines;
 	private VerticesManager vertices;
-	private double paperSize = 400;
+	private final double paperSize;
 
 	@SuppressWarnings("unused")
 	private CreasePattern() {
+		paperSize = 0;
 	}
 
 	/**
