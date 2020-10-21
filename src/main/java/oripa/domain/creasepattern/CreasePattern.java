@@ -314,7 +314,7 @@ class CreasePattern implements CreasePatternInterface {
 	public void move(final double dx, final double dy) {
 		var lines = new ArrayList<OriLine>();
 
-		this.stream().forEach(line -> lines.add(line));
+		lines.addAll(this);
 
 		lines.forEach(line -> {
 			line.p0.x += dx;
