@@ -22,7 +22,7 @@ class VerticesManager implements NearVerticesGettable {
 	/*
 	 * divides paper equally in order to localize access to vertices
 	 */
-	static public final int divNum = 32;
+	public static final int divNum = 32;
 
 	private final double interval;
 //	private double paperCenter;
