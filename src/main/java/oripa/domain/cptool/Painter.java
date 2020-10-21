@@ -20,6 +20,11 @@ public class Painter {
 
 	private final CreasePatternInterface creasePattern;
 
+	@SuppressWarnings("unused")
+	private Painter() {
+		creasePattern = null;
+	}
+
 	public Painter(final CreasePatternInterface aCreasePattern) {
 		creasePattern = aCreasePattern;
 	}
@@ -32,7 +37,7 @@ public class Painter {
 	}
 
 	/**
-	 * reset selection mark of all lines in given collection.
+	 * reset selection mark of all lines.
 	 *
 	 */
 	public void resetSelectedOriLines() {
@@ -41,7 +46,8 @@ public class Painter {
 	}
 
 	/**
-	 * set {@code true} to selection mark of all lines in given collection.
+	 * set {@code true} to selection mark of all lines except the lines of paper
+	 * boundary.
 	 *
 	 */
 	public void selectAllOriLines() {
@@ -240,7 +246,7 @@ public class Painter {
 	 * @param v1
 	 * @param v2
 	 * @param lineType
-	 *            {@link OriLine#TYPE_VALLEY} etc.
+	 *            {@link OriLine.Type#VALLEY} etc.
 	 *
 	 * @return true if line is added
 	 * @throws PainterCommandFailedException
