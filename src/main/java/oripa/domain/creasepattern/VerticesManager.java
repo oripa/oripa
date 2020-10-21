@@ -9,8 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.vecmath.Vector2d;
 
-import oripa.value.OriLine;
-
 /**
  * For a fast access to vertex
  *
@@ -215,20 +213,6 @@ class VerticesManager implements NearVerticesGettable {
 		}
 
 		return result;
-	}
-
-	/**
-	 * set all vertices of given lines
-	 *
-	 * @param lines
-	 */
-	public void load(final Collection<OriLine> lines) {
-		this.clear();
-		for (OriLine line : lines) {
-			add(line.p0);
-			add(line.p1);
-		}
-
 	}
 
 	public boolean isEmpty() {
