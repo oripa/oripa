@@ -24,7 +24,7 @@ class VerticesManager implements NearVerticesGettable {
 	 */
 	static public final int divNum = 32;
 
-	double interval;
+	private final double interval;
 //	private double paperCenter;
 	private final double paperLeft, paperTop;
 
@@ -82,9 +82,15 @@ class VerticesManager implements NearVerticesGettable {
 	 *
 	 * @param paperSize
 	 *            paper size in double.
+	 * @param paperLeft
+	 *            the smaller x coordinate of the corners of a rectangle
+	 *            including the sheet of paper
+	 * @param paperTop
+	 *            the smaller y coordinate of the corners of a rectangle
+	 *            including the sheet of paper
 	 */
 	public VerticesManager(final double paperSize, final double paperLeft, final double paperTop) {
-		changePaperSize(paperSize);
+		interval = paperSize / divNum;
 		this.paperLeft = paperLeft;
 		this.paperTop = paperTop;
 
@@ -98,8 +104,8 @@ class VerticesManager implements NearVerticesGettable {
 
 	}
 
-	private void changePaperSize(final double paperSize) {
-		interval = paperSize / divNum;
+	double getInterval() {
+		return interval;
 	}
 
 	/**

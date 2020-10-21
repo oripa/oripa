@@ -13,65 +13,19 @@ import oripa.value.OriPoint;
 
 public class VerticesManagerTest {
 
-	// not to be here
-
-//	Doc doc = new Doc(paperSize);
-//	double interval = doc.getCreasePattern().getVerticesManager().interval;
-//
-//	@Test
-//	protected void setUp() throws Exception {
-//		/**
-//		 * 0__________
-//		 *  _|_|______
-//		 *  _|_|______
-//		 *   | |
-//		 *   | |
-//		 *
-//		 */
-//		// horizontal line
-//		doc.addLine(new OriLine(0, 0, paperSize, 0, OriLine.TYPE_RIDGE));
-//		doc.addLine(new OriLine(0, interval, paperSize, interval, OriLine.TYPE_RIDGE));
-//		doc.addLine(new OriLine(0, interval * 2, paperSize, interval * 2, OriLine.TYPE_RIDGE));
-//
-//		// vertical
-//		doc.addLine(new OriLine(interval, 0, interval, paperSize, OriLine.TYPE_RIDGE));
-//		doc.addLine(new OriLine(interval * 2, 0, interval * 2, paperSize, OriLine.TYPE_RIDGE));
-//
-//
-//		ORIPA.doc = doc;
-//
-//	}
-//
-//	@Test
-//	public void testNearest(){
-//		PaintContext context =  PaintContext.getInstance();
-//
-//		Point.Double mousePoint = new Point.Double(0, 0);
-//		context.setLogicalMousePoint(mousePoint);
-//
-//		VerticesManager manager = doc.getCreasePattern().getVerticesManager();
-//
-//		final double distance = 10;
-//		Collection<Collection<Vector2d>> area = manager.getArea(
-//				mousePoint.x, mousePoint.y, distance);
-//
-//
-//		Vector2d mouseVector = new Vector2d(mousePoint.x, mousePoint.y);
-//		assertEquals(mouseVector,
-//				NearestItemFinder.findAround(context, distance).point);
-//	}
-//
 	@Test
 	public void testAddVertex() {
 		final double paperSize = 400;
 
 		VerticesManager manager = new VerticesManager(paperSize, -paperSize / 2, -paperSize / 2);
 
-		double interval = manager.interval;
+		double interval = manager.getInterval();
 		addAndCheckContains(manager, new Vector2d(0, 0));
 		addAndCheckContains(manager, new Vector2d(interval, 0));
 		addAndCheckContains(manager, new Vector2d(interval, interval));
 
+		addAndCheckContains(manager, new Vector2d(-paperSize / 2 - 0.1, -paperSize / 2 - 0.1));
+		addAndCheckContains(manager, new Vector2d(paperSize / 2 + 0.1, paperSize / 2 + 0.1));
 	}
 
 	private boolean managerContains(final NearVerticesGettable manager, final Vector2d vertex) {
