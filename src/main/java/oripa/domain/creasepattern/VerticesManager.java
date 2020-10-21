@@ -83,11 +83,11 @@ class VerticesManager implements NearVerticesGettable {
 	 * @param paperSize
 	 *            paper size in double.
 	 * @param paperLeft
-	 *            the smaller x coordinate of the corners of a rectangle
-	 *            including the sheet of paper
+	 *            the smaller x coordinate of the corners of the rectangle sheet
+	 *            of paper
 	 * @param paperTop
-	 *            the smaller y coordinate of the corners of a rectangle
-	 *            including the sheet of paper
+	 *            the smaller y coordinate of the corners of the rectangle sheet
+	 *            of paper
 	 */
 	public VerticesManager(final double paperSize, final double paperLeft, final double paperTop) {
 		interval = paperSize / divNum;

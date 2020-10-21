@@ -77,11 +77,11 @@ class CreasePattern implements CreasePatternInterface {
 	 * @param paperSize
 	 *            paper size in double.
 	 * @param paperLeft
-	 *            the smaller x coordinate of the corners of a rectangle
-	 *            including the sheet of paper
+	 *            the smaller x coordinate of the corners of the rectangle sheet
+	 *            of paper
 	 * @param paperTop
-	 *            the smaller y coordinate of the corners of a rectangle
-	 *            including the sheet of paper
+	 *            the smaller y coordinate of the corners of the rectangle sheet
+	 *            of paper
 	 */
 	public CreasePattern(final double paperSize, final double paperLeft, final double paperTop) {
 		lines = new LineManager();
