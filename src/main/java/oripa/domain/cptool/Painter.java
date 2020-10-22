@@ -344,13 +344,14 @@ public class Painter {
 	 * @param interY
 	 */
 	public void copyWithTiling(
-			final int row, final int col, final double interX, final double interY) {
+			final int row, final int col, final double interX, final double interY,
+			final Collection<OriLine> selectedLines) {
 
 		TiledLineFactory factory = new TiledLineFactory();
 
 		Collection<OriLine> copiedLines = factory.createTiledLines(
 				row, col, interX, interY,
-				creasePattern, creasePattern.getPaperSize());
+				selectedLines, creasePattern, creasePattern.getPaperSize());
 
 		LineAdder adder = new LineAdder();
 		adder.addAll(copiedLines, creasePattern);
