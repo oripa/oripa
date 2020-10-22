@@ -47,7 +47,7 @@ public abstract class AbstractValueInputListener implements DocumentListener {
 
 			setValue(length, valueSetting);
 		} catch (Exception ex) {
-			// TODO: handle exception
+
 		}
 	}
 

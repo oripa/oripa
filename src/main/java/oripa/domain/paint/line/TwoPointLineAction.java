@@ -11,7 +11,6 @@ public class TwoPointLineAction extends TwoPointSegmentAction {
 
 	@Override
 	public void destroy(final PaintContextInterface context) {
-		// TODO Auto-generated method stub
 		super.destroy(context);
 	}
 

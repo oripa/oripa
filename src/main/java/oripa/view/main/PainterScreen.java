@@ -406,17 +406,17 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void componentMoved(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentShown(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	private void addPropertyChangeListenersToSetting() {

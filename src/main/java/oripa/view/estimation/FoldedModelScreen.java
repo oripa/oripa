@@ -623,17 +623,17 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void mouseEntered(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void mouseExited(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -643,7 +643,7 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -664,7 +664,7 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override

@@ -305,17 +305,17 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void mouseReleased(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void mouseEntered(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void mouseExited(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -359,7 +359,7 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void actionPerformed(final ActionEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -375,16 +375,16 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void componentMoved(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentShown(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 }

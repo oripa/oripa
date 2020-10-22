@@ -12,38 +12,15 @@ public class TriangleSplitAction extends GraphicMouseAction {
 		setActionState(new SelectingVertexForTriangleSplit());
 	}
 
-//	private OriLine closeLine = null;
-//
-//	@Override
-//	public Vector2d onMove(MouseContext context, AffineTransform affine,
-//			MouseEvent event) {
-//		Vector2d result = super.onMove(context, affine, event);
-//
-//		if(context.getVertexCount() == 3){
-//			if(closeLine != null){
-//				closeLine.selected = false;
-//			}
-//
-//			closeLine = context.pickCandidateL;
-//
-//			if(closeLine != null){
-//				closeLine.selected = true;
-//			}
-//		}
-//		return result;
-//	}
-
 	@Override
 	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -58,7 +35,6 @@ public class TriangleSplitAction extends GraphicMouseAction {
 	@Override
 	public void onPress(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 

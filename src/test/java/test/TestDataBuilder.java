@@ -14,7 +14,6 @@ public class TestDataBuilder {
 	 * @param args
 	 */
 	public static void main(final String[] args) {
-		// TODO Auto-generated method stub
 
 		final int SIZE = 400;
 		final int TOP = -SIZE / 2;
@@ -58,7 +57,7 @@ public class TestDataBuilder {
 			doc.setCreasePattern(creasePattern);
 			exporter.export(doc, "heavy_test.opx");
 		} catch (Exception e) {
-			// TODO: handle exception
+
 		}
 
 		System.out.println("done!");

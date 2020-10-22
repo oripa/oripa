@@ -79,21 +79,18 @@ public class EditOutlineAction extends GraphicMouseAction {
 	@Override
 	public void onPress(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 
