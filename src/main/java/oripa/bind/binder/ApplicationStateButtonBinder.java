@@ -17,8 +17,7 @@ public class ApplicationStateButtonBinder
 		extends AbstractButtonBinder<ApplicationState<EditMode>> {
 
 	/**
-	 * This method binds a MouseListener to push the state and an ActionListener
-	 * to perform the actions of the state.
+	 * This method binds an ActionListener to perform the actions of the state.
 	 *
 	 * @param buttonClass
 	 * @param state
