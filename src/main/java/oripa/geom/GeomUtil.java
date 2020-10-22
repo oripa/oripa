@@ -459,7 +459,7 @@ public class GeomUtil {
 			return null;
 		}
 
-		// cp = (1 - t) * q0 + t * q0
+		// cp = (1 - t) * q0 + t * q1
 		Vector2d cp = new Vector2d();
 		cp.x = (1.0 - t) * q0.x + t * q1.x;
 		cp.y = (1.0 - t) * q0.y + t * q1.y;
