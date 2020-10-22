@@ -170,7 +170,7 @@ public class OrigamiModelFactory {
 
 		debugCount = 0;
 
-		// Create the edges from the vertexes
+		// Create the edges and precreases from the vertexes
 		List<OriLine> precreases = new ArrayList<>();
 		for (OriLine l : creasePattern) {
 			if (l.getType() == OriLine.Type.NONE) {
@@ -188,9 +188,75 @@ public class OrigamiModelFactory {
 			ev.addEdge(eg);
 		}
 
-		// Check if there are vertexes with just 2 collinear edges with same
-		// type
-		// merge the edges and delete the vertex for efficiency
+		removeMeaninglessVertices(vertices, edges);
+
+		// Construct the faces
+		List<OriEdge> outlineEdges = new ArrayList<>();
+		for (OriVertex v : vertices) {
+
+			for (OriEdge e : v.edges) {
+
+				if (e.type == OriLine.Type.CUT.toInt()) {
+					outlineEdges.add(e);
+					continue;
+				}
+
+				if (v == e.sv) {
+					if (e.left != null) {
+						continue;
+					}
+				} else {
+					if (e.right != null) {
+						continue;
+					}
+				}
+
+				OriFace face = makeFace(v, e);
+				if (face == null) {
+					return origamiModel;
+				}
+				faces.add(face);
+			}
+		}
+		if (faces.isEmpty()) { // happens when there is no crease
+			OriEdge outlineEdge = outlineEdges.get(0);
+			OriVertex v = outlineEdge.sv;
+
+			OriFace face = makeFace(v, outlineEdge);
+			if (face == null) {
+				return origamiModel;
+			}
+			faces.add(face);
+		}
+
+		makeEdges(edges, faces);
+		for (OriEdge e : edges) {
+			e.type = e.left.tmpInt;
+		}
+		// attach precrease lines to faces
+		for (OriFace face : faces) {
+			ListIterator<OriLine> iterator = precreases.listIterator();
+			while (iterator.hasNext()) {
+				OriLine precrease = iterator.next();
+				if (OriGeomUtil.isOriLineCrossFace(face, precrease)) {
+					face.precreases.add(precrease);
+					iterator.remove();
+				}
+			}
+		}
+		origamiModel.setHasModel(true);
+		return origamiModel;
+	}
+
+	/**
+	 * Searches vertices with 2 colinear edges with the same type. Then merges
+	 * the edges split by the vertex and delete the vertex for efficiency.
+	 *
+	 * @param vertices
+	 * @param edges
+	 */
+	private void removeMeaninglessVertices(
+			final Collection<OriVertex> vertices, final Collection<OriEdge> edges) {
 		ArrayList<OriEdge> eds = new ArrayList<OriEdge>();
 		ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
 		tmpVVec.addAll(vertices);
@@ -256,66 +322,6 @@ public class OrigamiModelFactory {
 				ne.ev.addEdge(ne);
 			}
 		}
-
-		// System.out.println("vnum=" + vertices.size());
-		// System.out.println("enum=" + edges.size());
-
-		// Construct the faces
-		List<OriEdge> outlineEdges = new ArrayList<>();
-		for (OriVertex v : vertices) {
-
-			for (OriEdge e : v.edges) {
-
-				if (e.type == OriLine.Type.CUT.toInt()) {
-					outlineEdges.add(e);
-					continue;
-				}
-
-				if (v == e.sv) {
-					if (e.left != null) {
-						continue;
-					}
-				} else {
-					if (e.right != null) {
-						continue;
-					}
-				}
-
-				OriFace face = makeFace(v, e);
-				if (face == null) {
-					return origamiModel;
-				}
-				faces.add(face);
-			}
-		}
-		if (faces.isEmpty()) { // happens when there is no crease
-			OriEdge outlineEdge = outlineEdges.get(0);
-			OriVertex v = outlineEdge.sv;
-
-			OriFace face = makeFace(v, outlineEdge);
-			if (face == null) {
-				return origamiModel;
-			}
-			faces.add(face);
-		}
-
-		makeEdges(edges, faces);
-		for (OriEdge e : edges) {
-			e.type = e.left.tmpInt;
-		}
-		// attach precrease lines to faces
-		for (OriFace face : faces) {
-			ListIterator<OriLine> iterator = precreases.listIterator();
-			while (iterator.hasNext()) {
-				OriLine precrease = iterator.next();
-				if (OriGeomUtil.isOriLineCrossFace(face, precrease)) {
-					face.precreases.add(precrease);
-					iterator.remove();
-				}
-			}
-		}
-		origamiModel.setHasModel(true);
-		return origamiModel;
 	}
 
 	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge) {
