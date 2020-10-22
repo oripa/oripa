@@ -223,4 +223,10 @@ public class OriFace {
 				.map(he -> he.vertex.preP)
 				.collect(Collectors.toList()));
 	}
+
+	public Vector2d getCentroidAfterFolding() {
+		return GeomUtil.computeCentroid(halfedges.stream()
+				.map(he -> he.vertex.p)
+				.collect(Collectors.toList()));
+	}
 }

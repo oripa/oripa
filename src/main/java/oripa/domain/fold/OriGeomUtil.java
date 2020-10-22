@@ -183,4 +183,78 @@ class OriGeomUtil {
 				&& OriGeomUtil.isContainsPointFace(line.p1, face);
 	}
 
+	static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg, final double size) {
+		Vector2d p1 = heg.positionAfterFolded;
+		Vector2d p2 = heg.next.positionAfterFolded;
+		Vector2d dir = new Vector2d();
+		dir.sub(p2, p1);
+		Line heLine = new Line(p1, dir);
+
+		for (OriHalfedge he : face.halfedges) {
+			// About the relation of contours (?)
+
+			// Check if the line is on the contour of the face
+			if (GeomUtil.distancePointToLine(he.positionAfterFolded, heLine) < 1
+					&& GeomUtil.distancePointToLine(he.next.positionAfterFolded, heLine) < 1) {
+				return false;
+			}
+		}
+
+		Vector2d preCrossPoint = null;
+		for (OriHalfedge he : face.halfedges) {
+			// Checks if the line crosses any of the edges of the face
+			Vector2d cp = GeomUtil.getCrossPoint(he.positionAfterFolded,
+					he.next.positionAfterFolded, heg.positionAfterFolded,
+					heg.next.positionAfterFolded);
+			if (cp == null) {
+				continue;
+			}
+
+			if (preCrossPoint == null) {
+				preCrossPoint = cp;
+			} else {
+				if (GeomUtil.distance(cp, preCrossPoint) > size * 0.001) {
+					return true;
+				}
+			}
+		}
+
+		// Checkes if the line is in the interior of the face
+		if (isOnFace(face, heg.positionAfterFolded, size)) {
+			return true;
+		}
+		if (isOnFace(face, heg.next.positionAfterFolded, size)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private static boolean isOnFace(final OriFace face, final Vector2d v, final double size) {
+
+		int heNum = face.halfedges.size();
+
+		// Return false if the vector is on the contour of the face
+		for (int i = 0; i < heNum; i++) {
+			OriHalfedge he = face.halfedges.get(i);
+			if (GeomUtil.distancePointToSegment(v, he.positionAfterFolded,
+					he.next.positionAfterFolded) < size * 0.001) {
+				return false;
+			}
+		}
+
+		OriHalfedge baseHe = face.halfedges.get(0);
+		boolean baseFlg = GeomUtil.CCWcheck(baseHe.positionAfterFolded,
+				baseHe.next.positionAfterFolded, v);
+
+		for (int i = 1; i < heNum; i++) {
+			OriHalfedge he = face.halfedges.get(i);
+			if (GeomUtil.CCWcheck(he.positionAfterFolded, he.next.positionAfterFolded,
+					v) != baseFlg) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

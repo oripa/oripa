@@ -228,7 +228,7 @@ public class Folder {
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
-					if (folderTool.isLineCrossFace4(f_k, he, paperSize)) {
+					if (OriGeomUtil.isLineCrossFace4(f_k, he, paperSize)) {
 						Condition3 cond = new Condition3();
 						cond.upper = f_i.tmpInt;
 						cond.lower = f_j.tmpInt;
