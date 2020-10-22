@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -66,7 +66,7 @@ public class CircleCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -80,7 +80,7 @@ public class CircleCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -116,7 +116,7 @@ public class CircleCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jButtonOK
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonOK() {
@@ -157,8 +157,7 @@ public class CircleCopyDialog extends JDialog {
 						JOptionPane.showMessageDialog(
 								owner, "Specify positive integer to Number.",
 								"ArrayCopy",
-								JOptionPane.INFORMATION_MESSAGE
-								);
+								JOptionPane.INFORMATION_MESSAGE);
 
 					} else {
 						context.creasePatternUndo().pushUndoInfo();
@@ -179,7 +178,7 @@ public class CircleCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jButtonCancel
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonCancel() {
@@ -200,7 +199,7 @@ public class CircleCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jTextFieldCX
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextFieldCX() {
@@ -215,7 +214,7 @@ public class CircleCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jTextFieldCY
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextFieldCY() {
@@ -230,7 +229,7 @@ public class CircleCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jTextFieldAngle
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextFieldAngle() {
@@ -245,7 +244,7 @@ public class CircleCopyDialog extends JDialog {
 
 	/**
 	 * This method initializes jTextFieldNum
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTextFieldNum() {
@@ -257,4 +256,4 @@ public class CircleCopyDialog extends JDialog {
 		}
 		return jTextFieldNum;
 	}
-} // @jve:decl-index=0:visual-constraint="10,10"
+}

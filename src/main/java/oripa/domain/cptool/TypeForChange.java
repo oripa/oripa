@@ -1,7 +1,5 @@
 package oripa.domain.cptool;
 
-// TODO move to view layer, or integrate with LineTypes
-
 public enum TypeForChange {
 	EMPTY("-"),
 	RIDGE("M"), VALLEY("V"), AUX("Aux"), CUT("Cut"), 

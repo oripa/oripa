@@ -316,7 +316,6 @@ public class Painter {
 	 *            amount of rotation in degrees
 	 * @param repetitionCount
 	 *
-	 * @return rotated lines
 	 */
 	// TODO a collection of selected line should be a parameter like a mirror
 	// copy.
