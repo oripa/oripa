@@ -42,6 +42,7 @@ public class ORIPA {
 			"This is free software, and you are welcome to redistribute it\n" +
 			"under certain conditions; For details check:\nhttp://www.gnu.org/licenses/gpl.html";
 
+	// TODO: Change to use ResourceHolder.
 	public static ResourceBundle res;
 
 	public static String iniFilePath = System.getProperty("user.home") + File.separator
