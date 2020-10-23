@@ -28,8 +28,7 @@ public class RotatedLineFactory {
 	 */
 	public Collection<OriLine> createRotatedLines(
 			final double cx, final double cy, final double angleDeg, final int repetitionCount,
-			final Collection<OriLine> selectedLines, final Collection<OriLine> creasePattern,
-			final double paperSize) {
+			final Collection<OriLine> selectedLines, final Collection<OriLine> creasePattern) {
 
 		ArrayList<OriLine> rotatedLines = new ArrayList<OriLine>();
 

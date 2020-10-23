@@ -327,7 +327,7 @@ public class Painter {
 
 		Collection<OriLine> copiedLines = factory.createRotatedLines(
 				cx, cy, angleDeg, repetitionCount,
-				selectedLines, creasePattern, creasePattern.getPaperSize());
+				selectedLines, creasePattern);
 
 		LineAdder adder = new LineAdder();
 		adder.addAll(copiedLines, creasePattern);
