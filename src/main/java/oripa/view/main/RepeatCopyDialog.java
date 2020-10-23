@@ -289,4 +289,4 @@ public class RepeatCopyDialog extends JDialog {
 		}
 		return jButtonCancel;
 	}
-} // @jve:decl-index=0:visual-constraint="10,10"
+}
