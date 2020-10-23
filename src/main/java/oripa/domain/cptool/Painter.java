@@ -315,24 +315,22 @@ public class Painter {
 	 * @param angleDeg
 	 *            amount of rotation in degrees
 	 * @param repetitionCount
+	 * @param selectedLines
+	 *            lines to be copied
 	 *
 	 */
-	// TODO a collection of selected line should be a parameter like a mirror
-	// copy.
 	public void copyWithRotation(
-			final double cx, final double cy, final double angleDeg, final int repetitionCount) {
+			final double cx, final double cy, final double angleDeg, final int repetitionCount,
+			final Collection<OriLine> selectedLines) {
 
 		RotatedLineFactory factory = new RotatedLineFactory();
 
 		Collection<OriLine> copiedLines = factory.createRotatedLines(
-				cx, cy, angleDeg, repetitionCount, creasePattern, creasePattern.getPaperSize());
-
-		LineSelectionModifier selectionModifier = new LineSelectionModifier();
-		selectionModifier.resetSelectedOriLines(creasePattern);
+				cx, cy, angleDeg, repetitionCount,
+				selectedLines, creasePattern, creasePattern.getPaperSize());
 
 		LineAdder adder = new LineAdder();
 		adder.addAll(copiedLines, creasePattern);
-
 	}
 
 	/**

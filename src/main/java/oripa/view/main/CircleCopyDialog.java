@@ -164,7 +164,8 @@ public class CircleCopyDialog extends JDialog {
 
 						Painter painter = context.getPainter();
 						painter.copyWithRotation(
-								m_cx, m_cy, m_angleDeg, m_num);
+								m_cx, m_cy, m_angleDeg, m_num,
+								context.getPickedLines());
 
 						// TODO make it local access
 						owner.repaint();
