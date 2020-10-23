@@ -340,6 +340,8 @@ public class Painter {
 	 * @param col
 	 * @param interX
 	 * @param interY
+	 * @param selectedLines
+	 *            lines to be copied
 	 */
 	public void copyWithTiling(
 			final int row, final int col, final double interX, final double interY,
@@ -358,14 +360,15 @@ public class Painter {
 	/**
 	 * add copy of selected lines as the paper is filled out.
 	 *
-	 * @param lines
+	 * @param selectedLines
 	 */
 	public void fillOut(
-			final Collection<OriLine> lines) {
+			final Collection<OriLine> selectedLines) {
 
 		TiledLineFactory factory = new TiledLineFactory();
 
-		Collection<OriLine> copiedLines = factory.createFullyTiledLines(lines, creasePattern,
+		Collection<OriLine> copiedLines = factory.createFullyTiledLines(
+				selectedLines, creasePattern,
 				creasePattern.getPaperSize());
 
 		LineAdder adder = new LineAdder();
