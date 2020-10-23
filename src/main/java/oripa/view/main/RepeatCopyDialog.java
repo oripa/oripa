@@ -257,7 +257,7 @@ public class RepeatCopyDialog extends JDialog {
 									context.getPickedLines());
 						} else {
 							painter.copyWithTiling(
-									m_row, m_col, m_interX, m_interX, context.getPickedLines());
+									m_row, m_col, m_interX, m_interY, context.getPickedLines());
 						}
 						// TODO make it local access
 						owner.repaint();
