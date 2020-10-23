@@ -45,6 +45,11 @@ class PaintContext implements PaintContextInterface {
 	private Point2D.Double mousePoint;
 
 	private AngleStep angleStep;
+
+	/*
+	 * TODO: Rename for more general usage. snapPoints? assistPoints? something
+	 * like that.
+	 */
 	private Collection<Vector2d> angleSnapCrossPoints = new ArrayList<Vector2d>();
 
 	private RectangleDomain domain;
@@ -200,6 +205,7 @@ class PaintContext implements PaintContextInterface {
 		candidateVertexToPick = null;
 
 		missionCompleted = false;
+		angleSnapCrossPoints.clear();
 	}
 
 	/*

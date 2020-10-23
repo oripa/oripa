@@ -54,7 +54,6 @@ public class AngleSnapAction extends GraphicMouseAction {
 	@Override
 	public void destroy(final PaintContextInterface context) {
 		super.destroy(context);
-		context.getAngleSnapCrossPoints().clear();
 	}
 
 	/*
