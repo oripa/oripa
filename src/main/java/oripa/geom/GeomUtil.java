@@ -60,46 +60,6 @@ public class GeomUtil {
 		return dir0.angle(dir1) < Math.PI / 180 || dir0.angle(dir1) > Math.PI * 179.0 / 180;
 	}
 
-//	public static boolean isSegmentsCross(final Vector2d p0, final Vector2d p1, final Vector2d q0,
-//			final Vector2d q1) {
-//
-//		// Rough check
-//		// Check by coordinates x
-//		if (p0.x >= p1.x) {
-//			if ((p0.x < q0.x && p0.x < q1.x) || (p1.x > q0.x && p1.x > q1.x)) {
-//				return false;
-//			}
-//		} else {
-//			if ((p1.x < q0.x && p1.x < q1.x) || (p0.x > q0.x && p0.x > q1.x)) {
-//				return false;
-//			}
-//		}
-//
-//		// checked by the coordinate y
-//		if (p0.y >= p1.y) {
-//			if ((p0.y < q0.y && p0.y < q1.y) || (p1.y > q0.y && p1.y > q1.y)) {
-//				return false;
-//			}
-//		} else {
-//			if ((p1.y < q0.y && p1.y < q1.y) || (p0.y > q0.y && p0.y > q1.y)) {
-//				return false;
-//			}
-//		}
-//
-//		// >= 0.0 means that when p0 == q0, for example, returns false
-//		if (((p0.x - p1.x) * (q0.y - p0.y) + (p0.y - p1.y) * (p0.x - q0.x))
-//				* ((p0.x - p1.x) * (q1.y - p0.y) + (p0.y - p1.y) * (p0.x - q1.x)) >= 0.0) {
-//			return false;
-//		}
-//
-//		if (((q0.x - q1.x) * (p0.y - q0.y) + (q0.y - q1.y) * (q0.x - p0.x))
-//				* ((q0.x - q1.x) * (p1.y - q0.y) + (q0.y - q1.y) * (q0.x - p1.x)) >= 0.0) {
-//			return false;
-//		}
-//
-//		return true;
-//	}
-
 	/**
 	 *
 	 * @param s0
@@ -470,14 +430,6 @@ public class GeomUtil {
 		return getCrossPoint(l0.p0, l0.p1, l1.p0, l1.p1, EPS);
 	}
 
-//	public static boolean isRightSide(final Vector2d p, final Line line) {
-//		Vector3d lineDir = new Vector3d(line.dir.x, line.dir.y, 0);
-//		Vector3d pointDir = new Vector3d(p.x - line.p.x, p.y - line.p.y, 0);
-//		Vector3d crossVec = new Vector3d();
-//		crossVec.cross(pointDir, lineDir);
-//		return crossVec.z > 0;
-//	}
-
 	public static double distance(final Vector2d p, final Line line, final double[] param) {
 
 		Vector2d sp = line.p;
@@ -506,35 +458,6 @@ public class GeomUtil {
 			final double y1) {
 		return Math.sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
 	}
-
-//    private static int whichSide(Triangle tri, Vector2d P, Vector2d D) {
-//
-//        // Vertices are projected to the form P+t*D.  Return value is +1 if all
-//        // t > 0, -1 if all t < 0, 0 otherwise, in which case the line splits the
-//        // triangle.
-//
-//        int iPositive = 0, iNegative = 0, iZero = 0;
-//
-//        for (int i = 0; i < 3; i++) {
-//            Vector2d vi_p = new Vector2d();
-//            vi_p.set(tri.p[i].x - P.x, tri.p[i].y - P.y);
-//            double fT = D.dot(vi_p);
-//
-//            if (fT > 0.0f) {
-//                iPositive++;
-//            } else if (fT < 0.0f) {
-//                iNegative++;
-//            } else {
-//                iZero++;
-//            }
-//
-//            if (iPositive > 0 && iNegative > 0) {
-//                return 0;
-//            }
-//        }
-//
-//        return (iZero == 0 ? (iPositive > 0 ? 1 : -1) : 0);
-//    }
 
 	public static Vector2d computeCentroid(final Collection<Vector2d> points) {
 		var centroid = new Vector2d();
