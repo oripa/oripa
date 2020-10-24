@@ -348,7 +348,7 @@ public class Painter {
 
 		Collection<OriLine> copiedLines = factory.createTiledLines(
 				row, col, interX, interY,
-				selectedLines, creasePattern, creasePattern.getPaperSize());
+				selectedLines, creasePattern);
 
 		LineAdder adder = new LineAdder();
 		adder.addAll(copiedLines, creasePattern);

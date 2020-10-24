@@ -30,7 +30,7 @@ public class TiledLineFactory {
 		return createTiledLinesImpl(
 				startRow, startCol, endRow, endCol,
 				selectionDomain.getWidth(), selectionDomain.getHeight(),
-				selecetdLines, creasePattern, paperSize);
+				selecetdLines, creasePattern);
 	}
 
 	/**
@@ -40,14 +40,14 @@ public class TiledLineFactory {
 	 * @param col
 	 * @param interX
 	 * @param interY
+	 * @param selectedLines
 	 * @param creasePattern
-	 * @param paperSize
 	 * @return
 	 */
 	public Collection<OriLine> createTiledLines(
 			final int row, final int col, final double interX, final double interY,
 			final Collection<OriLine> selectedLines,
-			final Collection<OriLine> creasePattern, final double paperSize) {
+			final Collection<OriLine> creasePattern) {
 
 		int startRow = 0;
 		int startCol = 0;
@@ -57,14 +57,14 @@ public class TiledLineFactory {
 		return createTiledLinesImpl(
 				startRow, startCol, endRow, endCol,
 				interX, interY,
-				selectedLines, creasePattern, paperSize);
+				selectedLines, creasePattern);
 	}
 
 	private Collection<OriLine> createTiledLinesImpl(
 			final int startRow, final int startCol, final int endRow, final int endCol,
 			final double interX, final double interY,
 			final Collection<OriLine> selectedLines,
-			final Collection<OriLine> creasePattern, final double paperSize) {
+			final Collection<OriLine> creasePattern) {
 
 		System.out.println("startRow=" + startRow + " startCol=" + startCol + " endRow=" + endRow
 				+ " endCol=" + endCol);
