@@ -63,6 +63,7 @@ class CreasePattern implements CreasePatternInterface {
 	/**
 	 *
 	 */
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -6919017534440930379L;
 
 	private LineManager lines;
