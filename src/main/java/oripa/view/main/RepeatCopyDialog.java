@@ -37,13 +37,13 @@ public class RepeatCopyDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JTextField jTextFieldX = null;
-	private JLabel jLabel = null;
-	private JLabel jLabel1 = null;
+	private JLabel jLabelRow = null;
+	private JLabel jLabelCol = null;
 	private JTextField jTextFieldY = null;
 	private JCheckBox jCheckBoxFill = null;
-	private JLabel jLabel2 = null;
-	private JLabel jLabel3 = null;
-	private JLabel jLabel4 = null;
+	private JLabel jLabelInterval = null;
+	private JLabel jLabelIntX = null;
+	private JLabel jLabelIntY = null;
 	private JTextField jTextFieldIntX = null;
 	private JTextField jTextFieldIntY = null;
 	private JButton jButtonOK = null;
@@ -84,33 +84,40 @@ public class RepeatCopyDialog extends JDialog {
 	 */
 	private JPanel getJContentPane(final PaintContextInterface context) {
 		if (jContentPane == null) {
-			jLabel4 = new JLabel();
-			jLabel4.setBounds(new Rectangle(5, 130, 26, 21));
-			jLabel4.setText("Y");
-			jLabel3 = new JLabel();
-			jLabel3.setBounds(new Rectangle(5, 105, 26, 21));
-			jLabel3.setText("X");
-			jLabel2 = new JLabel();
-			jLabel2.setBounds(new Rectangle(5, 80, 59, 21));
-			jLabel2.setText("Interval");
-			jLabel1 = new JLabel();
-			jLabel1.setBounds(new Rectangle(5, 55, 51, 21));
-			jLabel1.setText("Col");
-			jLabel1.setEnabled(false);
-			jLabel = new JLabel();
-			jLabel.setBounds(new Rectangle(5, 30, 51, 21));
-			jLabel.setText("Row");
-			jLabel.setEnabled(false);
+			jLabelIntY = new JLabel();
+			jLabelIntY.setBounds(new Rectangle(5, 130, 26, 21));
+			jLabelIntY.setText("Y");
+			jLabelIntY.setEnabled(false);
+
+			jLabelIntX = new JLabel();
+			jLabelIntX.setBounds(new Rectangle(5, 105, 26, 21));
+			jLabelIntX.setText("X");
+			jLabelIntX.setEnabled(false);
+
+			jLabelInterval = new JLabel();
+			jLabelInterval.setBounds(new Rectangle(5, 80, 59, 21));
+			jLabelInterval.setText("Interval");
+
+			jLabelCol = new JLabel();
+			jLabelCol.setBounds(new Rectangle(5, 55, 51, 21));
+			jLabelCol.setText("Col");
+			jLabelCol.setEnabled(false);
+
+			jLabelRow = new JLabel();
+			jLabelRow.setBounds(new Rectangle(5, 30, 51, 21));
+			jLabelRow.setText("Row");
+			jLabelRow.setEnabled(false);
+
 			jContentPane = new JPanel();
 			jContentPane.setLayout(null);
 			jContentPane.add(getJTextFieldX(), null);
-			jContentPane.add(jLabel, null);
-			jContentPane.add(jLabel1, null);
+			jContentPane.add(jLabelRow, null);
+			jContentPane.add(jLabelCol, null);
 			jContentPane.add(getJTextFieldY(), null);
 			jContentPane.add(getJCheckBoxFill(), null);
-			jContentPane.add(jLabel2, null);
-			jContentPane.add(jLabel3, null);
-			jContentPane.add(jLabel4, null);
+			jContentPane.add(jLabelInterval, null);
+			jContentPane.add(jLabelIntX, null);
+			jContentPane.add(jLabelIntY, null);
 			jContentPane.add(getJTextFieldIntX(), null);
 			jContentPane.add(getJTextFieldIntY(), null);
 			jContentPane.add(getJButtonOK(context), null);
@@ -166,8 +173,13 @@ public class RepeatCopyDialog extends JDialog {
 				public void itemStateChanged(final java.awt.event.ItemEvent e) {
 					jTextFieldX.setEnabled(!jCheckBoxFill.isSelected());
 					jTextFieldY.setEnabled(!jCheckBoxFill.isSelected());
-					jLabel.setEnabled(!jCheckBoxFill.isSelected());
-					jLabel1.setEnabled(!jCheckBoxFill.isSelected());
+					jLabelRow.setEnabled(!jCheckBoxFill.isSelected());
+					jLabelCol.setEnabled(!jCheckBoxFill.isSelected());
+
+					jTextFieldIntX.setEnabled(!jCheckBoxFill.isSelected());
+					jTextFieldIntY.setEnabled(!jCheckBoxFill.isSelected());
+					jLabelIntX.setEnabled(!jCheckBoxFill.isSelected());
+					jLabelIntY.setEnabled(!jCheckBoxFill.isSelected());
 				}
 			});
 		}
@@ -184,6 +196,7 @@ public class RepeatCopyDialog extends JDialog {
 			jTextFieldIntX = new JTextField();
 			jTextFieldIntX.setBounds(new Rectangle(35, 105, 66, 21));
 			jTextFieldIntX.setHorizontalAlignment(JTextField.RIGHT);
+			jTextFieldIntX.setEnabled(false);
 		}
 		return jTextFieldIntX;
 	}
@@ -198,6 +211,7 @@ public class RepeatCopyDialog extends JDialog {
 			jTextFieldIntY = new JTextField();
 			jTextFieldIntY.setBounds(new Rectangle(35, 130, 66, 21));
 			jTextFieldIntY.setHorizontalAlignment(JTextField.RIGHT);
+			jTextFieldIntY.setEnabled(false);
 		}
 		return jTextFieldIntY;
 	}
