@@ -52,8 +52,6 @@ class PaintContext implements PaintContextInterface {
 	 */
 	private Collection<Vector2d> angleSnapCrossPoints = new ArrayList<Vector2d>();
 
-	private RectangleDomain domain;
-
 	public PaintContext() {
 	}
 
@@ -167,8 +165,8 @@ class PaintContext implements PaintContextInterface {
 		double step = paperSize / gridDivNum;
 		for (int ix = 0; ix < gridDivNum + 1; ix++) {
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = domain.getLeft() + step * ix;
-				double y = domain.getTop() + step * iy;
+				double x = getCreasePatternDomain().getLeft() + step * ix;
+				double y = getCreasePatternDomain().getTop() + step * iy;
 
 				gridPoints.add(new Vector2d(x, y));
 			}
@@ -484,7 +482,6 @@ class PaintContext implements PaintContextInterface {
 	@Override
 	public void setCreasePattern(final CreasePatternInterface aCreasePattern) {
 		creasePattern = aCreasePattern;
-		domain = new RectangleDomain(creasePattern);
 	}
 
 	@Override
@@ -499,7 +496,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public RectangleDomain getCreasePatternDomain() {
-		return domain;
+		return creasePattern.getPaperDomain();
 	}
 
 	/*

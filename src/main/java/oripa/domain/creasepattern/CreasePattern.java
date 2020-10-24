@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -66,29 +67,29 @@ class CreasePattern implements CreasePatternInterface {
 
 	private LineManager lines;
 	private VerticesManager vertices;
+	private final RectangleDomain paperDomain;
 	private final double paperSize;
 
 	@SuppressWarnings("unused")
 	private CreasePattern() {
 		paperSize = 0;
+		paperDomain = null;
 	}
 
 	/**
 	 *
 	 * @param paperSize
 	 *            paper size in double.
-	 * @param paperLeft
-	 *            the smaller x coordinate of the corners of the rectangle sheet
-	 *            of paper
-	 * @param paperTop
-	 *            the smaller y coordinate of the corners of the rectangle sheet
-	 *            of paper
+	 * @param paperDomain
+	 *            rectangle domain of paper.
 	 */
-	public CreasePattern(final double paperSize, final double paperLeft, final double paperTop) {
-		lines = new LineManager();
-		vertices = new VerticesManager(paperSize, paperLeft, paperTop);
+	public CreasePattern(final RectangleDomain paperDomain) {
+		this.paperDomain = paperDomain;
+		paperSize = paperDomain.maxWidthHeight();
 
-		this.paperSize = paperSize;
+		lines = new LineManager();
+		vertices = new VerticesManager(
+				paperSize, paperDomain.getLeft(), paperDomain.getTop());
 	}
 
 	/*
@@ -99,6 +100,16 @@ class CreasePattern implements CreasePatternInterface {
 	@Override
 	public double getPaperSize() {
 		return paperSize;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.creasepattern.CreasePatternInterface#getPaperDomain()
+	 */
+	@Override
+	public RectangleDomain getPaperDomain() {
+		return paperDomain;
 	}
 
 	/*

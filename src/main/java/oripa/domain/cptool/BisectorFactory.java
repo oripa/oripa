@@ -26,7 +26,7 @@ public class BisectorFactory {
 		cp.add(v1);
 		cp.scale(0.5);
 
-		double paperSize = Math.max(domain.getWidth(), domain.getHeight());
+		double paperSize = domain.maxWidthHeight();
 
 		Vector2d dir = new Vector2d();
 		dir.sub(v0, v1);

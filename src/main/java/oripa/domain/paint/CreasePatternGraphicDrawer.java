@@ -179,11 +179,11 @@ public class CreasePatternGraphicDrawer {
 		for (int i = 1; i < lineNum; i++) {
 			g2d.draw(new Line2D.Double(
 					step * i + domain.getLeft(), domain.getTop(),
-					step * i + domain.getLeft(), domain.getBottom()));
+					step * i + domain.getLeft(), domain.getTop() + paperSize));
 
 			g2d.draw(new Line2D.Double(
 					domain.getLeft(), step * i + domain.getTop(),
-					domain.getRight(), step * i + domain.getTop()));
+					domain.getLeft() + paperSize, step * i + domain.getTop()));
 		}
 	}
 

@@ -94,6 +94,10 @@ public class RectangleDomain {
 		return computeGap(top, bottom);
 	}
 
+	public double maxWidthHeight() {
+		return Math.max(getWidth(), getHeight());
+	}
+
 	public double getCenterX() {
 		return (left + right) / 2;
 	}

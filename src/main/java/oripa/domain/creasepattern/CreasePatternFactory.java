@@ -53,21 +53,11 @@ public class CreasePatternFactory {
 		var lines = List.of(l0, l1, l2, l3);
 		var domain = new RectangleDomain(lines);
 
-		CreasePatternInterface creasePattern = new CreasePattern(
-				paperSize, domain.getLeft(), domain.getTop());
+		CreasePatternInterface creasePattern = new CreasePattern(domain);
 
 		creasePattern.addAll(lines);
 
 		return creasePattern;
-	}
-
-	/**
-	 *
-	 * @param paperSize
-	 * @return crease pattern entity with no lines.
-	 */
-	public CreasePatternInterface createEmptyCreasePattern(final double paperSize) {
-		return new CreasePattern(paperSize, -paperSize / 2, -paperSize / 2);
 	}
 
 	/**
@@ -82,11 +72,9 @@ public class CreasePatternFactory {
 				lines.stream()
 						.filter(line -> line.getType() == OriLine.Type.CUT)
 						.collect(Collectors.toList()));
-		double paperSize = Math.max(domain.getWidth(), domain.getHeight());
 
 		// Construct CP
-		CreasePatternInterface creasePattern = new CreasePattern(
-				paperSize, domain.getLeft(), domain.getTop());
+		CreasePatternInterface creasePattern = new CreasePattern(domain);
 		creasePattern.addAll(lines);
 
 		return creasePattern;
