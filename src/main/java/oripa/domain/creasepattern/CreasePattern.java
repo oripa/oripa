@@ -78,9 +78,6 @@ class CreasePattern implements CreasePatternInterface {
 	}
 
 	/**
-	 *
-	 * @param paperSize
-	 *            paper size in double.
 	 * @param paperDomain
 	 *            rectangle domain of paper.
 	 */
