@@ -246,17 +246,17 @@ public class PainterScreen extends JPanel
 
 		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
-		if (action != null) {
-			action.onDraw(bufferG2D, paintContext);
-
+		if (action == null) {
 			g.drawImage(bufferImage, 0, 0, this);
-
-			drawer.drawCandidatePositionString((Graphics2D) g,
-					paintContext.getCandidateVertexToPick());
-		} else {
-			g.drawImage(bufferImage, 0, 0, this);
-
+			return;
 		}
+
+		action.onDraw(bufferG2D, paintContext);
+
+		g.drawImage(bufferImage, 0, 0, this);
+
+		drawer.drawCandidatePositionString((Graphics2D) g,
+				paintContext.getCandidateVertexToPick());
 	}
 
 	@Override
