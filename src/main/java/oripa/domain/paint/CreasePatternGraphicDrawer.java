@@ -56,7 +56,7 @@ public class CreasePatternGraphicDrawer {
 
 		if (context.isGridVisible()) {
 			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize(),
-					context.getCreasePatternDomain(),
+					context.getPaperDomain(),
 					context.getScale());
 		}
 

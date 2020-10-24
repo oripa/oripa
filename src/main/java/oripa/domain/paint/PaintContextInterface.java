@@ -249,5 +249,5 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 * @return rectangle domain of crease pattern, whose values are those when
 	 *         crease pattern is set to this context.
 	 */
-	public abstract RectangleDomain getCreasePatternDomain();
+	public abstract RectangleDomain getPaperDomain();
 }

@@ -165,8 +165,8 @@ class PaintContext implements PaintContextInterface {
 		double step = paperSize / gridDivNum;
 		for (int ix = 0; ix < gridDivNum + 1; ix++) {
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = getCreasePatternDomain().getLeft() + step * ix;
-				double y = getCreasePatternDomain().getTop() + step * iy;
+				double x = getPaperDomain().getLeft() + step * ix;
+				double y = getPaperDomain().getTop() + step * iy;
 
 				gridPoints.add(new Vector2d(x, y));
 			}
@@ -495,7 +495,7 @@ class PaintContext implements PaintContextInterface {
 	 * @see oripa.domain.paint.PaintContextInterface#getCreasePatternDomain()
 	 */
 	@Override
-	public RectangleDomain getCreasePatternDomain() {
+	public RectangleDomain getPaperDomain() {
 		return creasePattern.getPaperDomain();
 	}
 

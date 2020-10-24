@@ -91,7 +91,7 @@ public class PainterScreen extends JPanel
 		addPropertyChangeListenersToSetting();
 
 		camera.updateScale(1.5);
-		var domain = paintContext.getCreasePatternDomain();
+		var domain = paintContext.getPaperDomain();
 		camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
 
 		paintContext.setScale(camera.getScale());
@@ -195,7 +195,7 @@ public class PainterScreen extends JPanel
 		bufferg.setColor(Color.WHITE);
 		bufferg.fillRect(0, 0, getWidth(), getHeight());
 
-		var domain = paintContext.getCreasePatternDomain();
+		var domain = paintContext.getPaperDomain();
 		affineTransform = camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
 
 		// set the AffineTransform of buffer

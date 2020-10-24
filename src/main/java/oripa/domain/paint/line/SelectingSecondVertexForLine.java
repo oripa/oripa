@@ -36,7 +36,7 @@ public class SelectingSecondVertexForLine extends PickingVertex {
 				p0.x + dir.x, p0.y + dir.y, context.getLineTypeOfNewLines());
 
 		// add new line to crease pattern
-		if (GeomUtil.clipLine(line, context.getCreasePatternDomain())) {
+		if (GeomUtil.clipLine(line, context.getPaperDomain())) {
 			context.creasePatternUndo().pushUndoInfo();
 
 			Painter painter = context.getPainter();
