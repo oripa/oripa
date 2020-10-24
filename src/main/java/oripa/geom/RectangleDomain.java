@@ -50,7 +50,7 @@ public class RectangleDomain {
 	 *
 	 * @param v
 	 */
-	public void enlarge(final Vector2d v) {
+	private void enlarge(final Vector2d v) {
 		left = Math.min(left, v.x);
 		right = Math.max(right, v.x);
 		top = Math.min(top, v.y);
