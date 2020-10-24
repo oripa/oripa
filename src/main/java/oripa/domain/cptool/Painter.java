@@ -176,9 +176,6 @@ public class Painter {
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
 
 		Vector2d c = GeomUtil.getIncenter(v0, v1, v2);
-		if (c == null) {
-			System.out.print("Failed to calculate incenter of the triangle");
-		}
 		LineAdder adder = new LineAdder();
 		adder.addLine(new OriLine(c, v0, lineType), creasePattern);
 		adder.addLine(new OriLine(c, v1, lineType), creasePattern);
