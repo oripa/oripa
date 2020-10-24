@@ -11,16 +11,16 @@ public class TiledLineFactory {
 	/**
 	 * create lines that fill out the paper.
 	 *
-	 * @param selecetdLines
+	 * @param selectedLines
 	 * @param creasePattern
 	 * @param paperSize
 	 * @return
 	 */
 	public Collection<OriLine> createFullyTiledLines(
-			final Collection<OriLine> selecetdLines,
+			final Collection<OriLine> selectedLines,
 			final Collection<OriLine> creasePattern, final double paperSize) {
 
-		var selectionDomain = new RectangleDomain(selecetdLines);
+		var selectionDomain = new RectangleDomain(selectedLines);
 
 		int startRow = (int) (-paperSize / selectionDomain.getHeight());
 		int startCol = (int) (-paperSize / selectionDomain.getWidth());
@@ -30,7 +30,7 @@ public class TiledLineFactory {
 		return createTiledLinesImpl(
 				startRow, startCol, endRow, endCol,
 				selectionDomain.getWidth(), selectionDomain.getHeight(),
-				selecetdLines, creasePattern);
+				selectedLines, creasePattern);
 	}
 
 	/**
