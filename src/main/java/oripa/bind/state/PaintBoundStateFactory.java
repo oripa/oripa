@@ -167,7 +167,7 @@ public class PaintBoundStateFactory {
 			break;
 
 		default:
-			state = createLineInputState(parent, actionHolder, setterFactory, id);
+			state = createLineInputState(parent, setterFactory, id);
 		}
 
 		if (state == null) {
@@ -178,8 +178,7 @@ public class PaintBoundStateFactory {
 	}
 
 	private ApplicationState<EditMode> createLineInputState(
-			final Component parent, final MouseActionHolder actionHolder,
-			final PaintActionSetterFactory setterFactory,
+			final Component parent, final PaintActionSetterFactory setterFactory,
 			final String id) {
 
 		var changeHint = new ChangeHint(mainFrameSetting, id);
