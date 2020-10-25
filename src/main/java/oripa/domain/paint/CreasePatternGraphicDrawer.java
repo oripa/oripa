@@ -84,6 +84,7 @@ public class CreasePatternGraphicDrawer {
 	 * @param lines
 	 * @param pickedLines
 	 *            lines that user picked. null if nothing is selected.
+	 * @param scale
 	 * @param creaseVisible
 	 *            true if mountain/valley lines should be shown.
 	 * @param auxVisible
@@ -158,12 +159,12 @@ public class CreasePatternGraphicDrawer {
 	}
 
 	public void drawCandidatePositionString(final Graphics2D g, final Vector2d candidate) {
-		if (candidate != null) {
-			g.setColor(Color.BLACK);
-			g.drawString("(" + candidate.x +
-					"," + candidate.y + ")", 0, 10);
+		if (candidate == null) {
+			return;
 		}
-
+		g.setColor(Color.BLACK);
+		g.drawString("(" + candidate.x +
+				"," + candidate.y + ")", 0, 10);
 	}
 
 	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize,

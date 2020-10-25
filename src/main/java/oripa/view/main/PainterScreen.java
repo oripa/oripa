@@ -65,7 +65,6 @@ public class PainterScreen extends JPanel
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
-	private Graphics2D bufferg;
 	private Point2D preMousePoint; // Screen coordinates
 
 	private final AffineCamera camera = new AffineCamera();
@@ -172,14 +171,8 @@ public class PainterScreen extends JPanel
 	// }
 	// }
 
-	public Image getCreasePatternImage() {
-
-		return bufferImage;
-	}
-
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
-		bufferg = (Graphics2D) bufferImage.getGraphics();
 		affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
 	}
 
@@ -187,6 +180,8 @@ public class PainterScreen extends JPanel
 		if (bufferImage == null) {
 			buildBufferImage();
 		}
+
+		var bufferg = (Graphics2D) bufferImage.getGraphics();
 
 		// initialize the AffineTransform of bufferg
 		bufferg.setTransform(new AffineTransform());
@@ -213,8 +208,10 @@ public class PainterScreen extends JPanel
 		bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 
+		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
+
 		drawer.draw(bufferG2D, paintContext,
-				mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
+				action == null ? false : action.getEditMode() == EditMode.VERTEX);
 
 		if (paintContext.isCrossLineVisible()) {
 			var crossLines = cutOutlinesHolder.getOutlines();
@@ -243,8 +240,6 @@ public class PainterScreen extends JPanel
 		// }
 		// }
 		// }
-
-		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
 		if (action == null) {
 			g.drawImage(bufferImage, 0, 0, this);
