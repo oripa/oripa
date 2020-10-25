@@ -18,24 +18,19 @@
  */
 package oripa.domain.paint;
 
-import java.util.Collection;
-
-import oripa.util.history.UndoInfo;
-import oripa.value.OriLine;
-
 /**
  * @author Koji
  *
  */
 public interface CreasePatternUndoerInterface {
 
-	public abstract void cacheUndoInfo();
+//	public abstract void cacheUndoInfo();
 
-	public abstract void pushCachedUndoInfo();
+//	public abstract void pushCachedUndoInfo();
 
 	public abstract void pushUndoInfo();
 
-	public abstract void pushUndoInfo(UndoInfo<Collection<OriLine>> uinfo);
+//	public abstract void pushUndoInfo(UndoInfo<Collection<OriLine>> uinfo);
 
 	public abstract void undo();
 

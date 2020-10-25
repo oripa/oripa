@@ -22,10 +22,6 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
 			final boolean doSpecial) {
 
-		if (context.getVertexCount() == 0) {
-			context.creasePatternUndo().cacheUndoInfo();
-		}
-
 		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
 
 		if (!vertexIsSelected) {
@@ -41,12 +37,13 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 
 	@Override
 	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
-
-		context.creasePatternUndo().pushCachedUndoInfo();
-
 		Vector2d first = context.getVertex(0);
 		Vector2d second = context.getVertex(1);
 		Vector2d third = context.getVertex(2);
+
+		context.clear(false);
+
+		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
 
@@ -58,7 +55,6 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 					first, second, third, context.getLineTypeOfNewLines());
 		}
 
-		context.clear(false);
 	}
 
 }

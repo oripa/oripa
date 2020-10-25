@@ -26,15 +26,22 @@ public class SelectingLineForBisector extends PickingLine {
 			throw new IllegalStateException("wrong state: impossible line and vertex selection.");
 		}
 
-		context.creasePatternUndo().pushCachedUndoInfo();
+		var first = context.getVertex(0);
+		var second = context.getVertex(1);
+		var third = context.getVertex(2);
+
+		var line = context.getLine(0);
+
+		context.clear(false);
+
+		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
 
 		painter.addBisectorLine(
-				context.getVertex(0), context.getVertex(1), context.getVertex(2),
-				context.getLine(0), context.getLineTypeOfNewLines());
+				first, second, third,
+				line, context.getLineTypeOfNewLines());
 
-		context.clear(false);
 	}
 
 }
