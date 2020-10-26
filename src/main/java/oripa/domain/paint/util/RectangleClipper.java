@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -24,155 +24,170 @@ import oripa.value.OriLine;
 
 public class RectangleClipper {
 
-    final static int LEFT = 1;
-    final static int RIGHT = 2;
-    final static int TOP = 4;
-    final static int BOTTOM = 8;
-    private double m_minX;
-    private double m_minY;
-    private double m_maxX;
-    private double m_maxY;
+	private final static int LEFT = 1;
+	private final static int RIGHT = 2;
+	private final static int TOP = 4;
+	private final static int BOTTOM = 8;
 
-    public RectangleClipper(double x0, double y0, double x1, double y1) {
-        m_minX = x0;
-        m_minY = y0;
-        m_maxX = x1;
-        m_maxY = y1;
-    }
+	private final static double EPS = 1.0e-6;
 
-    private int calcCode(double x, double y) {
-        int code = 0;
-        if (x < m_minX) {
-            code += LEFT;
-        }
-        if (x > m_maxX) {
-            code += RIGHT;
-        }
-        if (y < m_minY) {
-            code += TOP;
-        }
-        if (y > m_maxY) {
-            code += BOTTOM;
-        }
+	private final double m_minX;
+	private final double m_minY;
+	private final double m_maxX;
+	private final double m_maxY;
 
-        return code;
-    }
+	public RectangleClipper(final double x0, final double y0, final double x1, final double y1) {
+		m_minX = x0;
+		m_minY = y0;
+		m_maxX = x1;
+		m_maxY = y1;
+	}
 
-    /*
-     * finding the coordinates after clipping
-     */
-    private int calcClippedPoint(int code, OriLine l, Vector2d p) {
-        double cx, cy;
+	private int calcCode(final double x, final double y) {
+		int code = 0;
+		if (x < m_minX) {
+			code += LEFT;
+		}
+		if (x > m_maxX) {
+			code += RIGHT;
+		}
+		if (y < m_minY) {
+			code += TOP;
+		}
+		if (y > m_maxY) {
+			code += BOTTOM;
+		}
 
-        // Outside from the left edge of the window
-        if ((code & LEFT) != 0) {
-            cy = (l.p1.y - l.p0.y) * (m_minX - l.p0.x) / (l.p1.x - l.p0.x) + l.p0.y; 
-            if ((cy >= m_minY) && (cy <= m_maxY)) {
-                p.x = m_minX;
-                p.y = cy;
-                return 1;
-            }
-        }
+		return code;
+	}
 
-        //Outside the right edge of the window
-        if ((code & RIGHT) != 0) {
-            cy = (l.p1.y - l.p0.y) * (m_maxX - l.p0.x) / (l.p1.x - l.p0.x) + l.p0.y;
-            if ((cy >= m_minY) && (cy <= m_maxY)) {
-                p.x = m_maxX;
-                p.y = cy;
-                return 1;
-            }
-        }
+	/**
+	 * finds the coordinates after clipping.
+	 *
+	 * @param code
+	 * @param l
+	 * @param p
+	 *            will be substituted with the cross point of {@code l} and the
+	 *            edge of clipping rectangle.
+	 * @return 1 if {@code l} crosses the edge of the rectangle, -1 otherwise.
+	 */
+	private int calcClippedPoint(final int code, final OriLine l, final Vector2d p) {
+		double cx, cy;
 
-        // Outside from the top of the window
-        if ((code & TOP) != 0) {
-            cx = (l.p1.x - l.p0.x) * (m_minY - l.p0.y) / (l.p1.y - l.p0.y) + l.p0.x;
-            if ((cx >= m_minX) && (cx <= m_maxX)) {
-                p.x = cx;
-                p.y = m_minY;
-                return 1;
-            }
-        }
+		// Outside from the left edge of the window
+		if ((code & LEFT) != 0) {
+			cy = (l.p1.y - l.p0.y) * (m_minX - l.p0.x) / (l.p1.x - l.p0.x) + l.p0.y;
+			if ((cy >= m_minY) && (cy <= m_maxY)) {
+				p.x = m_minX;
+				p.y = cy;
+				return 1;
+			}
+		}
 
-        // Outside from the bottom of the window
-        if ((code & BOTTOM) != 0) {
-            cx = (l.p1.x - l.p0.x) * (m_maxY - l.p0.y) / (l.p1.y - l.p0.y) + l.p0.x;
-            if ((cx >= m_minX) && (cx <= m_maxX)) {
-                p.x = cx;
-                p.y = m_maxY;
-                return 1;
-            }
-        }
+		// Outside the right edge of the window
+		if ((code & RIGHT) != 0) {
+			cy = (l.p1.y - l.p0.y) * (m_maxX - l.p0.x) / (l.p1.x - l.p0.x) + l.p0.y;
+			if ((cy >= m_minY) && (cy <= m_maxY)) {
+				p.x = m_maxX;
+				p.y = cy;
+				return 1;
+			}
+		}
 
-        return -1;  // If it is not clipping, line segment is completely invisible
-    }
+		// Outside from the top of the window
+		if ((code & TOP) != 0) {
+			cx = (l.p1.x - l.p0.x) * (m_minY - l.p0.y) / (l.p1.y - l.p0.y) + l.p0.x;
+			if ((cx >= m_minX) && (cx <= m_maxX)) {
+				p.x = cx;
+				p.y = m_minY;
+				return 1;
+			}
+		}
 
-    // Returns false if not included in the area
-    public boolean clip(OriLine l) {
-        if (Math.abs(l.p0.x - m_minX) < oripa.resource.Constants.EPS && Math.abs(l.p1.x - m_minX) < oripa.resource.Constants.EPS) {
-            return false;
-        }
-        if (Math.abs(l.p0.x - m_maxX) < oripa.resource.Constants.EPS && Math.abs(l.p1.x - m_maxX) < oripa.resource.Constants.EPS) {
-            return false;
-        }
-        if (Math.abs(l.p0.y - m_minY) < oripa.resource.Constants.EPS && Math.abs(l.p1.y - m_minY) < oripa.resource.Constants.EPS) {
-            return false;
-        }
-        if (Math.abs(l.p0.y - m_maxY) < oripa.resource.Constants.EPS && Math.abs(l.p1.y - m_maxY) < oripa.resource.Constants.EPS) {
-            return false;
-        }
+		// Outside from the bottom of the window
+		if ((code & BOTTOM) != 0) {
+			cx = (l.p1.x - l.p0.x) * (m_maxY - l.p0.y) / (l.p1.y - l.p0.y) + l.p0.x;
+			if ((cx >= m_minX) && (cx <= m_maxX)) {
+				p.x = cx;
+				p.y = m_maxY;
+				return 1;
+			}
+		}
 
-        int s_code = calcCode(l.p0.x, l.p0.y);
-        int e_code = calcCode(l.p1.x, l.p1.y);
+		return -1; // If it is not clipping, line segment is completely
+					// invisible
+	}
 
-        if ((s_code == 0) && (e_code == 0)) {
-            return true;
-        }
+	// Returns false if not included in the area
+	public boolean clip(final OriLine l) {
+		if (Math.abs(l.p0.x - m_minX) < EPS
+				&& Math.abs(l.p1.x - m_minX) < EPS) {
+			return false;
+		}
+		if (Math.abs(l.p0.x - m_maxX) < EPS
+				&& Math.abs(l.p1.x - m_maxX) < EPS) {
+			return false;
+		}
+		if (Math.abs(l.p0.y - m_minY) < EPS
+				&& Math.abs(l.p1.y - m_minY) < EPS) {
+			return false;
+		}
+		if (Math.abs(l.p0.y - m_maxY) < EPS
+				&& Math.abs(l.p1.y - m_maxY) < EPS) {
+			return false;
+		}
 
-        if ((s_code & e_code) != 0) {
-            return false;
-        }
+		int s_code = calcCode(l.p0.x, l.p0.y);
+		int e_code = calcCode(l.p1.x, l.p1.y);
 
-        if (s_code != 0) {
-            if (calcClippedPoint(s_code, l, l.p0) < 0) {
-                return false;
-            }
-        }
+		if ((s_code == 0) && (e_code == 0)) {
+			return true;
+		}
 
-        if (e_code != 0) {
-            if (calcClippedPoint(e_code, l, l.p1) < 0) {
-                return false;
-            }
-        }
+		if ((s_code & e_code) != 0) {
+			return false;
+		}
 
-        return true;
-    }
+		if (s_code != 0) {
+			if (calcClippedPoint(s_code, l, l.p0) < 0) {
+				return false;
+			}
+		}
 
-    public boolean clipTest(OriLine l) {
-        int s_code = calcCode(l.p0.x, l.p0.y);  
-        int e_code = calcCode(l.p1.x, l.p1.y); 
-        if ((s_code == 0) && (e_code == 0)) {
-            return true;
-        }
+		if (e_code != 0) {
+			if (calcClippedPoint(e_code, l, l.p1) < 0) {
+				return false;
+			}
+		}
 
-        if ((s_code & e_code) != 0) {
-            return false;
-        }
+		return true;
+	}
 
-        OriLine lcopy = new OriLine(l);
-        if (s_code != 0) {
-            if (calcClippedPoint(s_code, lcopy, lcopy.p0) < 0) {
-                return false;
-            }
-        }
+	public boolean clipTest(final OriLine l) {
+		int s_code = calcCode(l.p0.x, l.p0.y);
+		int e_code = calcCode(l.p1.x, l.p1.y);
+		if ((s_code == 0) && (e_code == 0)) {
+			return true;
+		}
 
-        if (e_code != 0) {
-            if (calcClippedPoint(e_code, lcopy, lcopy.p1) < 0) {
-                return false;
-            }
-        }
+		if ((s_code & e_code) != 0) {
+			return false;
+		}
 
-        return true;
+		OriLine lcopy = new OriLine(l);
+		if (s_code != 0) {
+			if (calcClippedPoint(s_code, lcopy, lcopy.p0) < 0) {
+				return false;
+			}
+		}
 
-    }
+		if (e_code != 0) {
+			if (calcClippedPoint(e_code, lcopy, lcopy.p1) < 0) {
+				return false;
+			}
+		}
+
+		return true;
+
+	}
 }
