@@ -810,7 +810,7 @@ public class UIPanel extends JPanel {
 		// clean up the crease pattern
 		if (creasePattern.cleanDuplicatedLines()) {
 			JOptionPane.showMessageDialog(
-					null, "Removing multiples edges with the same position ",
+					this, "Removing multiples edges with the same position ",
 					"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
 		}
 		// re-create the model data for simplified crease pattern
