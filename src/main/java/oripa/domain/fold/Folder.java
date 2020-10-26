@@ -827,7 +827,7 @@ public class Folder {
 		}
 	}
 
-	public BoundBox foldWithoutLineType(
+	public void foldWithoutLineType(
 			final OrigamiModel model) {
 		List<OriVertex> vertices = model.getVertices();
 		List<OriEdge> edges = model.getEdges();
@@ -851,9 +851,6 @@ public class Folder {
 		}
 
 		folderTool.setFacesOutline(vertices, faces, false);
-
-		return folderTool.calcFoldedBoundingBox(faces);
-
 	}
 
 	// Make the folds by flipping the faces

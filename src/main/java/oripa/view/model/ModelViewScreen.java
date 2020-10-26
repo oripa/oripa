@@ -44,6 +44,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
@@ -150,20 +151,14 @@ public class ModelViewScreen extends JPanel
 			scale = 1.0;
 		} else {
 			// Align the center of the model, combined scale
-			Vector2d maxV = new Vector2d(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
-			Vector2d minV = new Vector2d(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-			for (OriFace face : faces) {
-				for (OriHalfedge he : face.halfedges) {
-					maxV.x = Math.max(maxV.x, he.vertex.p.x);
-					maxV.y = Math.max(maxV.y, he.vertex.p.y);
-					minV.x = Math.min(minV.x, he.vertex.p.x);
-					minV.y = Math.min(minV.y, he.vertex.p.y);
-				}
-			}
-			modelCenter.x = (maxV.x + minV.x) / 2;
-			modelCenter.y = (maxV.y + minV.y) / 2;
+			var folderTool = new FolderTool();
+			var boundBox = folderTool.calcFoldedBoundingBox(faces);
+			modelCenter.x = boundBox.getCenterX();
+			modelCenter.y = boundBox.getCenterY();
 
-			scale = 0.8 * Math.min(boundSize / (maxV.x - minV.x), boundSize / (maxV.y - minV.y));
+			scale = 0.8 * Math.min(
+					boundSize / boundBox.getWidth(), boundSize / boundBox.getHeight());
+
 			updateAffineTransform();
 			recalcScissorsLine();
 		}
@@ -248,16 +243,18 @@ public class ModelViewScreen extends JPanel
 		if (origamiModel == null) {
 			return;
 		}
-		boolean hasModel = origamiModel.hasModel();
 
-		if (hasModel) {
-			g2d.setStroke(selector.createDefaultStroke(scale));
-			if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
-				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-			}
-			drawModel(g2d);
-			g.drawImage(bufferImage, 0, 0, this);
+		if (!origamiModel.hasModel()) {
+			return;
 		}
+
+		g2d.setStroke(selector.createDefaultStroke(scale));
+		if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+		}
+		drawModel(g2d);
+		g.drawImage(bufferImage, 0, 0, this);
+
 	}
 
 	@Override

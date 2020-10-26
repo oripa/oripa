@@ -6,7 +6,7 @@ import javax.vecmath.Vector2d;
 
 public class FolderTool {
 
-	BoundBox calcFoldedBoundingBox(final List<OriFace> faces) {
+	public BoundBox calcFoldedBoundingBox(final List<OriFace> faces) {
 		Vector2d foldedBBoxLT = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 		Vector2d foldedBBoxRB = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 
