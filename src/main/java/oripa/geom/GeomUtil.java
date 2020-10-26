@@ -46,15 +46,6 @@ public class GeomUtil {
 		return (x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1);
 	}
 
-	// Determine if p3 is in p1~p2 range
-	public static boolean isRange(final double p1, final double p2, final double p3) {
-		return Math.min(p1, p2) <= p3 && p3 <= Math.max(p1, p2);
-	}
-
-	public static boolean isRange(final Vector2d p1, final Vector2d p2, final Vector2d p3) {
-		return isRange(p1.x, p2.x, p3.x) && isRange(p1.y, p2.y, p3.y);
-	}
-
 	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
 		// tolerance of 1 degree
 		return dir0.angle(dir1) < Math.PI / 180 || dir0.angle(dir1) > Math.PI * 179.0 / 180;
