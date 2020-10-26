@@ -174,15 +174,15 @@ public class RectangleClipper {
 			return false;
 		}
 
-		OriLine lcopy = new OriLine(l);
+		var dummy = new Vector2d();
 		if (s_code != 0) {
-			if (calcClippedPoint(s_code, lcopy, lcopy.p0) < 0) {
+			if (calcClippedPoint(s_code, l, dummy) < 0) {
 				return false;
 			}
 		}
 
 		if (e_code != 0) {
-			if (calcClippedPoint(e_code, lcopy, lcopy.p1) < 0) {
+			if (calcClippedPoint(e_code, l, dummy) < 0) {
 				return false;
 			}
 		}
