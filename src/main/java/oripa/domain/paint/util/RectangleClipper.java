@@ -118,8 +118,17 @@ public class RectangleClipper {
 					// invisible
 	}
 
-	// Returns false if not included in the area
+	/**
+	 *
+	 * @param l
+	 *            an end point of {@code l} will be substituted with the cross
+	 *            point of {@code l} and the edge of clipping rectangle.
+	 *
+	 * @return {@code true} if {@code l} is included in or crosses the clipping
+	 *         rectangle.
+	 */
 	public boolean clip(final OriLine l) {
+		// ignore very short line
 		if (Math.abs(l.p0.x - m_minX) < EPS
 				&& Math.abs(l.p1.x - m_minX) < EPS) {
 			return false;
@@ -140,20 +149,28 @@ public class RectangleClipper {
 		int s_code = calcCode(l.p0.x, l.p0.y);
 		int e_code = calcCode(l.p1.x, l.p1.y);
 
+		// the line is in the rectangle
 		if ((s_code == 0) && (e_code == 0)) {
 			return true;
 		}
 
+		// the line is in the {left, right, top, bottom} area.
 		if ((s_code & e_code) != 0) {
 			return false;
 		}
 
+		// p0 is in the outside of the rectangle and
+		// the line may cross the {left, right, top, bottom} edge of the
+		// rectangle.
 		if (s_code != 0) {
 			if (calcClippedPoint(s_code, l, l.p0) < 0) {
 				return false;
 			}
 		}
 
+		// p1 is in the outside of the rectangle and
+		// the line may cross the {left, right, top, bottom} edge of the
+		// rectangle.
 		if (e_code != 0) {
 			if (calcClippedPoint(e_code, l, l.p1) < 0) {
 				return false;
