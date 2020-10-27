@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold;
 
+import java.util.stream.Collectors;
+
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
@@ -32,15 +34,12 @@ class OriGeomUtil {
 
 	static boolean isFaceOverlap(final OriFace face0, final OriFace face1,
 			final double eps) {
-		Vector2d center0 = new Vector2d();
-		Vector2d center1 = new Vector2d();
 
 		// If the vertices of face0 are on face1, true
 		for (OriHalfedge he : face0.halfedges) {
 			if (OriGeomUtil.isContainsPointFoldedFace(face1, he.positionAfterFolded, eps)) {
 				return true;
 			}
-			center0.add(he.positionAfterFolded);
 		}
 
 		// If the vertices of face1 are on face0, true
@@ -48,16 +47,18 @@ class OriGeomUtil {
 			if (OriGeomUtil.isContainsPointFoldedFace(face0, he.positionAfterFolded, eps)) {
 				return true;
 			}
-			center1.add(he.positionAfterFolded);
 		}
 
-		center0.scale(1.0 / face0.halfedges.size());
+		Vector2d center0 = GeomUtil.computeCentroid(face0.halfedges.stream()
+				.map(he -> he.positionAfterFolded).collect(Collectors.toList()));
+		Vector2d center1 = GeomUtil.computeCentroid(face1.halfedges.stream()
+				.map(he -> he.positionAfterFolded).collect(Collectors.toList()));
+
 		// If the gravity center of face0 is on face1, true
 		if (OriGeomUtil.isContainsPointFoldedFace(face1, center0, eps)) {
 			return true;
 		}
 
-		center1.scale(1.0 / face1.halfedges.size());
 		// If the gravity center of face1 is on face0, true
 		if (OriGeomUtil.isContainsPointFoldedFace(face0, center1, eps)) {
 			return true;
