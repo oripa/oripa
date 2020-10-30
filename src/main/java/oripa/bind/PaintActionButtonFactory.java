@@ -48,13 +48,13 @@ public class PaintActionButtonFactory implements ButtonFactory {
 	public AbstractButton create(final Component parent,
 			final Class<? extends AbstractButton> buttonClass,
 			final String id,
-			final KeyListener keyListener) {
+			final KeyListener keyListener) throws IllegalArgumentException {
 
 		ApplicationState<EditMode> state = stateFactory.create(
 				parent, actionHolder, context, screenUpater, id);
 
 		if (state == null) {
-			throw new NullPointerException("Wrong ID for creating state");
+			throw new IllegalArgumentException("Wrong ID for creating state");
 		}
 
 		ApplicationStateButtonBinder paintBinder = new ApplicationStateButtonBinder();
