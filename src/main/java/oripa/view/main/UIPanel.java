@@ -463,7 +463,8 @@ public class UIPanel extends JPanel {
 		var stateFactory = new PaintBoundStateFactory(stateManager, mainFrameSetting, setting,
 				mainScreenSetting.getSelectionOriginHolder());
 
-		ButtonFactory buttonFactory = new PaintActionButtonFactory(stateFactory, paintContext);
+		ButtonFactory buttonFactory = new PaintActionButtonFactory(
+				stateFactory, paintContext, actionHolder, screenUpdater);
 
 		editModeInputLineButton = (JRadioButton) viewChangeBinder
 				.createButton(
@@ -472,70 +473,66 @@ public class UIPanel extends JPanel {
 						screenUpdater.getKeyListener());
 
 		editModePickLineButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.SELECT_ID,
+				this, JRadioButton.class, StringID.SELECT_ID,
 				screenUpdater.getKeyListener());
 
 		editModeDeleteLineButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater,
-				StringID.DELETE_LINE_ID,
+				this, JRadioButton.class, StringID.DELETE_LINE_ID,
 				screenUpdater.getKeyListener());
 
 		editModeLineTypeButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.CHANGE_LINE_TYPE_ID,
+				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID,
 				screenUpdater.getKeyListener());
 
 		editModeAddVertex = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.ADD_VERTEX_ID,
+				this, JRadioButton.class, StringID.ADD_VERTEX_ID,
 				screenUpdater.getKeyListener());
 
 		editModeDeleteVertex = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.DELETE_VERTEX_ID,
+				this, JRadioButton.class, StringID.DELETE_VERTEX_ID,
 				screenUpdater.getKeyListener());
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding how to enter the line
 
 		lineInputDirectVButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.DIRECT_V_ID,
+				this, JRadioButton.class, StringID.DIRECT_V_ID,
 				screenUpdater.getKeyListener());
 
 		lineInputOnVButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.ON_V_ID,
+				this, JRadioButton.class, StringID.ON_V_ID,
 				screenUpdater.getKeyListener());
 
 		lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.VERTICAL_ID,
+				this, JRadioButton.class, StringID.VERTICAL_ID,
 				screenUpdater.getKeyListener());
 
 		lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.BISECTOR_ID,
+				this, JRadioButton.class, StringID.BISECTOR_ID,
 				screenUpdater.getKeyListener());
 
 		lineInputTriangleSplitButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.TRIANGLE_ID,
+				this, JRadioButton.class, StringID.TRIANGLE_ID,
 				screenUpdater.getKeyListener());
 
 		lineInputSymmetricButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater,
-				StringID.SYMMETRIC_ID,
+				this, JRadioButton.class, StringID.SYMMETRIC_ID,
 				screenUpdater.getKeyListener());
 
 		lineInputMirrorButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.MIRROR_ID,
+				this, JRadioButton.class, StringID.MIRROR_ID,
 				screenUpdater.getKeyListener());
 
 		lineInputByValueButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater, StringID.BY_VALUE_ID,
+				this, JRadioButton.class, StringID.BY_VALUE_ID,
 				screenUpdater.getKeyListener());
 
 		lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater,
-				StringID.PERPENDICULAR_BISECTOR_ID,
+				this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID,
 				screenUpdater.getKeyListener());
 
 		lineInputAngleSnapButton = (JRadioButton) buttonFactory.create(
-				this, JRadioButton.class, actionHolder, screenUpdater,
-				StringID.ANGLE_SNAP_ID,
+				this, JRadioButton.class, StringID.ANGLE_SNAP_ID,
 				screenUpdater.getKeyListener());
 
 	}

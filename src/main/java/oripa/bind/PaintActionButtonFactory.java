@@ -23,12 +23,19 @@ public class PaintActionButtonFactory implements ButtonFactory {
 
 	private final PaintBoundStateFactory stateFactory;
 	private final PaintContextInterface context;
+	private final MouseActionHolder actionHolder;
+	private final ScreenUpdaterInterface screenUpater;
 
 	public PaintActionButtonFactory(
 			final PaintBoundStateFactory stateFactory,
-			final PaintContextInterface aContext) {
+			final PaintContextInterface aContext,
+			final MouseActionHolder actionHolder,
+			final ScreenUpdaterInterface screenUpater) {
 		this.stateFactory = stateFactory;
 		context = aContext;
+		this.actionHolder = actionHolder;
+		this.screenUpater = screenUpater;
+
 	}
 
 	/*
@@ -40,8 +47,6 @@ public class PaintActionButtonFactory implements ButtonFactory {
 	@Override
 	public AbstractButton create(final Component parent,
 			final Class<? extends AbstractButton> buttonClass,
-			final MouseActionHolder actionHolder,
-			final ScreenUpdaterInterface screenUpater,
 			final String id,
 			final KeyListener keyListener) {
 

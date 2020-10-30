@@ -5,8 +5,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.AbstractButton;
 
-import oripa.domain.paint.MouseActionHolder;
-import oripa.domain.paint.ScreenUpdaterInterface;
+import oripa.resource.StringID;
 
 /**
  * A factory which creates some clickable GUI object with a state to be after
@@ -17,10 +16,18 @@ import oripa.domain.paint.ScreenUpdaterInterface;
  */
 public interface ButtonFactory {
 
+	/**
+	 *
+	 * @param parent
+	 * @param buttonClass
+	 * @param id
+	 *            a member of {@link StringID} for the button's action and
+	 *            label.
+	 * @param keyListener
+	 * @return an object of {@code buttonClass}
+	 */
 	public abstract AbstractButton create(Component parent,
 			Class<? extends AbstractButton> buttonClass,
-			final MouseActionHolder actionHolder,
-			final ScreenUpdaterInterface screenUpater,
 			String id,
 			KeyListener keyListener);
 
