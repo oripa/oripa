@@ -165,7 +165,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private RepeatCopyDialog arrayCopyDialog;
 	private CircleCopyDialog circleCopyDialog;
-	public static JLabel hintLabel = new JLabel();
+	private final JLabel hintLabel = new JLabel();
 
 	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 
