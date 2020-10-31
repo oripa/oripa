@@ -33,6 +33,7 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	protected void recoverImpl(final PaintContextInterface context) {
 		super.recoverImpl(context);
 		if (isCut) {
+			context.creasePatternUndo().pushUndoInfo();
 			Painter painter = context.getPainter();
 			painter.removeSelectedLines();
 		}
