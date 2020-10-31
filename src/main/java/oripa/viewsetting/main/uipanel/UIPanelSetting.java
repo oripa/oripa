@@ -68,26 +68,6 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		this.typeTo = typeTo;
 	}
 
-	public boolean isByValuePanelVisible() {
-		return byValuePanelVisible;
-	}
-
-	public boolean isAlterLineTypePanelVisible() {
-		return alterLineTypePanelVisible;
-	}
-
-	public boolean isMountainButtonEnabled() {
-		return mountainButtonEnabled;
-	}
-
-	public boolean isValleyButtonEnabled() {
-		return valleyButtonEnabled;
-	}
-
-	public boolean isAuxButtonEnabled() {
-		return auxButtonEnabled;
-	}
-
 	public void setByValuePanelVisible(final boolean byValuePanelVisible) {
 		logger.info("set by-value panel visible: " + byValuePanelVisible);
 		var old = this.byValuePanelVisible;
@@ -129,24 +109,8 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		setSelectedMode(EditMode.INPUT);
 	}
 
-	public void selectChangeLineTypeMode() {
-		setSelectedMode(EditMode.CHANGE_TYPE);
-	}
-
 	public void selectSelectMode() {
 		setSelectedMode(EditMode.SELECT);
-	}
-
-	public void selectDeleteLineMode() {
-		setSelectedMode(EditMode.DELETE_LINE);
-	}
-
-	public void selectAddVertexMode() {
-		setSelectedMode(EditMode.VERTEX);
-	}
-
-	public void selectDeleteVertexMode() {
-		setSelectedMode(EditMode.VERTEX);
 	}
 
 	public EditMode getSelectedMode() {
