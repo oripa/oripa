@@ -29,7 +29,7 @@ public class PastingOnVertex extends PickingVertex {
 
 	@Override
 	protected void undoAction(final PaintContextInterface context) {
-		context.setMissionCompleted(false);
+		// context.setMissionCompleted(false);
 		context.creasePatternUndo().undo();
 	}
 
@@ -70,7 +70,7 @@ public class PastingOnVertex extends PickingVertex {
 		Painter painter = context.getPainter();
 		painter.pasteLines(shiftedLines);
 
-		context.setMissionCompleted(true);
+		// context.setMissionCompleted(true);
 
 	}
 
