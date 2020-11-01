@@ -353,11 +353,12 @@ public class FoldedModelScreen extends JPanel
 					tri.v[i].p.y = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
 
 				}
-				drawTriangle(tri, face.tmpInt, face.intColor);
+				drawTriangle(tri, face.tmpInt);
 			}
 		}
 
 		if (m_bDrawEdges) {
+			// apply Sobel filter
 			for (int y = 1; y < BUFFERH - 1; y++) {
 				for (int x = 1; x < BUFFERW - 1; x++) {
 					int val_h = -1 * zbuf[getIndex(x - 1, y - 1)]
@@ -445,7 +446,7 @@ public class FoldedModelScreen extends JPanel
 	// Polygon drawing
 	//
 	// --------------------------------------------------------------------
-	private void drawTriangle(final TriangleFace tri, final int id, final int color) {
+	private void drawTriangle(final TriangleFace tri, final int id) {
 
 		// (For speed) set the range of use of the buffer
 		int top = Integer.MAX_VALUE; // Integer.MAX_VALUE;
@@ -515,6 +516,7 @@ public class FoldedModelScreen extends JPanel
 					continue;
 				}
 
+				// flattened pixel index
 				int p = offset + x;
 
 				int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
@@ -547,11 +549,7 @@ public class FoldedModelScreen extends JPanel
 
 							}
 						} else {
-							if (m_bFillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
-								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
-							} else {
-								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
-							}
+							pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
 						}
 					}
 					zbuf[p] = id;
@@ -625,17 +623,17 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void mouseEntered(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void mouseExited(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -645,7 +643,7 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -666,7 +664,7 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override

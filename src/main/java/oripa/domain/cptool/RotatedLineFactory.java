@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -27,12 +28,13 @@ public class RotatedLineFactory {
 	 */
 	public Collection<OriLine> createRotatedLines(
 			final double cx, final double cy, final double angleDeg, final int repetitionCount,
-			final Collection<OriLine> creasePattern, final double paperSize) {
+			final Collection<OriLine> selectedLines, final Collection<OriLine> creasePattern) {
 
 		ArrayList<OriLine> rotatedLines = new ArrayList<OriLine>();
 
-		oripa.domain.paint.util.RectangleClipper clipper = new oripa.domain.paint.util.RectangleClipper(
-				-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2);
+		var domain = new RectangleDomain(creasePattern);
+		var clipper = new oripa.domain.paint.util.RectangleClipper(
+				domain.getLeft(), domain.getTop(), domain.getRight(), domain.getBottom());
 
 		double angle = angleDeg * Math.PI / 180.0;
 
@@ -40,8 +42,7 @@ public class RotatedLineFactory {
 			double angleRad = angle * (i + 1);
 			OriPoint center = new OriPoint(cx, cy);
 
-			rotatedLines.addAll(creasePattern.stream()
-					.filter(l -> l.selected)
+			rotatedLines.addAll(selectedLines.stream()
 					.map(l -> createRotatedLine(l, center, angleRad))
 					.filter(rl -> clipper.clip(rl))
 					.collect(Collectors.toList()));

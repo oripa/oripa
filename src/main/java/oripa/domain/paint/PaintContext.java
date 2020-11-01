@@ -11,6 +11,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 class PaintContext implements PaintContextInterface {
@@ -44,6 +45,11 @@ class PaintContext implements PaintContextInterface {
 	private Point2D.Double mousePoint;
 
 	private AngleStep angleStep;
+
+	/*
+	 * TODO: Rename for more general usage. snapPoints? assistPoints? something
+	 * like that.
+	 */
 	private Collection<Vector2d> angleSnapCrossPoints = new ArrayList<Vector2d>();
 
 	public PaintContext() {
@@ -159,8 +165,8 @@ class PaintContext implements PaintContextInterface {
 		double step = paperSize / gridDivNum;
 		for (int ix = 0; ix < gridDivNum + 1; ix++) {
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = -paperSize / 2 + step * ix;
-				double y = -paperSize / 2 + step * iy;
+				double x = getPaperDomain().getLeft() + step * ix;
+				double y = getPaperDomain().getTop() + step * iy;
 
 				gridPoints.add(new Vector2d(x, y));
 			}
@@ -197,6 +203,7 @@ class PaintContext implements PaintContextInterface {
 		candidateVertexToPick = null;
 
 		missionCompleted = false;
+		angleSnapCrossPoints.clear();
 	}
 
 	/*
@@ -268,7 +275,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public void pushVertex(final Vector2d picked) {
-		pickedVertices.push(picked);
+		pickedVertices.addLast(picked);
 	}
 
 	/*
@@ -280,7 +287,7 @@ class PaintContext implements PaintContextInterface {
 	@Override
 	public void pushLine(final OriLine picked) {
 		// picked.selected = true;
-		pickedLines.push(picked);
+		pickedLines.addLast(picked);
 	}
 
 	/*
@@ -294,7 +301,7 @@ class PaintContext implements PaintContextInterface {
 			return null;
 		}
 
-		return pickedVertices.pop();
+		return pickedVertices.removeLast();
 	}
 
 	/*
@@ -308,7 +315,7 @@ class PaintContext implements PaintContextInterface {
 			return null;
 		}
 
-		OriLine line = pickedLines.pop();
+		OriLine line = pickedLines.removeLast();
 		line.selected = false;
 		return line;
 	}
@@ -332,7 +339,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public Vector2d peekVertex() {
-		return pickedVertices.peek();
+		return pickedVertices.peekLast();
 	}
 
 	/*
@@ -342,7 +349,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public OriLine peekLine() {
-		return pickedLines.peek();
+		return pickedLines.peekLast();
 	}
 
 	/*
@@ -480,6 +487,16 @@ class PaintContext implements PaintContextInterface {
 	@Override
 	public CreasePatternInterface getCreasePattern() {
 		return creasePattern;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.PaintContextInterface#getCreasePatternDomain()
+	 */
+	@Override
+	public RectangleDomain getPaperDomain() {
+		return creasePattern.getPaperDomain();
 	}
 
 	/*

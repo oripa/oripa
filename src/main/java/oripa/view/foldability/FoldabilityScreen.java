@@ -25,12 +25,19 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -44,6 +51,8 @@ import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.util.ElementSelector;
+import oripa.geom.RectangleDomain;
+import oripa.util.gui.AffineCamera;
 import oripa.value.OriLine;
 
 /**
@@ -53,17 +62,18 @@ import oripa.value.OriLine;
  *
  */
 public class FoldabilityScreen extends JPanel
-		implements ComponentListener {
+		implements MouseListener, MouseMotionListener, MouseWheelListener,
+		ComponentListener {
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
 	private Graphics2D bufferg;
-	private final double scale;
-	private double transX;
-	private double transY;
+
+	private final AffineCamera camera = new AffineCamera();
 
 	// Affine transformation information
-	private final AffineTransform affineTransform = new AffineTransform();
+	private AffineTransform affineTransform = new AffineTransform();
+
 	private final JPopupMenu popup = new JPopupMenu();
 	private final JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
 	private final JMenuItem popupItem_FlipFace = new JMenuItem("Face Inversion");
@@ -71,12 +81,19 @@ public class FoldabilityScreen extends JPanel
 	private OrigamiModel origamiModel = null;
 	private Collection<OriLine> creasePattern = null;
 
+	private Point2D preMousePoint; // Screen coordinates
+
+	private final ElementSelector selector = new ElementSelector();
+
 	FoldabilityScreen() {
 
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		addMouseWheelListener(this);
 		addComponentListener(this);
 
-		scale = 1.5;
-		setBackground(Color.white);
+		camera.updateScale(1.5);
+		setBackground(Color.WHITE);
 
 		popup.add(popupItem_DivideFace);
 		popup.add(popupItem_FlipFace);
@@ -102,6 +119,9 @@ public class FoldabilityScreen extends JPanel
 		var overlappingLineExtractor = new OverlappingLineExtractor();
 		overlappingLines = overlappingLineExtractor.extract(creasePattern);
 
+		var domain = new RectangleDomain(creasePattern);
+		camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
+
 		this.setVisible(true);
 	}
 
@@ -118,17 +138,21 @@ public class FoldabilityScreen extends JPanel
 			g2d.fill(face.preOutline);
 		}
 
-		g2d.setColor(Color.RED);
+		g2d.setColor(selector.getViolatingVertexColor());
 		for (OriVertex v : violatingVertices) {
-			g2d.fill(new Rectangle2D.Double(v.preP.x - 8.0 / scale,
-					v.preP.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
+			double scale = camera.getScale();
+			double vertexSize = selector.createViolatingVertexSize(scale);
+			double vertexHalfSize = vertexSize / 2;
+			g2d.fill(new Rectangle2D.Double(
+					v.preP.x - vertexHalfSize, v.preP.y - vertexHalfSize,
+					vertexSize, vertexSize));
 		}
 
 		if (bDrawFaceID) {
 			g2d.setColor(Color.BLACK);
 			for (OriFace face : faces) {
-				g2d.drawString("" + face.tmpInt, (int) face.getCenter().x,
-						(int) face.getCenter().y);
+				g2d.drawString("" + face.tmpInt, (int) face.getCentroidBeforeFolding().x,
+						(int) face.getCentroidBeforeFolding().y);
 			}
 		}
 
@@ -163,24 +187,17 @@ public class FoldabilityScreen extends JPanel
 
 		g2d.setColor(Color.BLACK);
 		for (OriFace face : faces) {
-			g2d.drawString("" + face.z_order, (int) face.getCenter().x,
-					(int) face.getCenter().y);
+			g2d.drawString("" + face.z_order, (int) face.getCentroidBeforeFolding().x,
+					(int) face.getCentroidBeforeFolding().y);
 		}
 
-	}
-
-	// To update the current AffineTransform
-	private void updateAffineTransform() {
-		affineTransform.setToIdentity();
-		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
-		affineTransform.scale(scale, scale);
-		affineTransform.translate(transX, transY);
 	}
 
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
 		bufferg = (Graphics2D) bufferImage.getGraphics();
-		updateAffineTransform();
+
+		affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
 	}
 
 	@Override
@@ -203,6 +220,7 @@ public class FoldabilityScreen extends JPanel
 
 		highlightOverlappingLines(g2d);
 
+		var scale = camera.getScale();
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 		drawer.drawAllLines(g2d, creasePattern, scale);
 		drawer.drawCreaseVertices(g2d, creasePattern, scale);
@@ -214,9 +232,8 @@ public class FoldabilityScreen extends JPanel
 
 	private void highlightOverlappingLines(final Graphics2D g2d) {
 		for (var line : overlappingLines) {
-			var selector = new ElementSelector();
 			g2d.setColor(selector.getOverlappingLineHighlightColor());
-			g2d.setStroke(selector.createOverlappingLineHighlightStroke(scale));
+			g2d.setStroke(selector.createOverlappingLineHighlightStroke(camera.getScale()));
 
 			g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
 		}
@@ -233,18 +250,116 @@ public class FoldabilityScreen extends JPanel
 		repaint();
 	}
 
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+	 */
+	@Override
+	public void mouseClicked(final MouseEvent e) {
+
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	 */
+	@Override
+	public void mouseEntered(final MouseEvent e) {
+
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+	 */
+	@Override
+	public void mouseExited(final MouseEvent e) {
+
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 */
+	@Override
+	public void mousePressed(final MouseEvent e) {
+		preMousePoint = e.getPoint();
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 */
+	@Override
+	public void mouseReleased(final MouseEvent e) {
+
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.
+	 * MouseEvent)
+	 */
+	@Override
+	public void mouseDragged(final MouseEvent e) {
+
+		if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
+			return;
+		}
+
+		if (doCameraDragAction(e, camera::updateTranslateByMouseDragged)) {
+			return;
+		}
+	}
+
+	private boolean doCameraDragAction(final MouseEvent e,
+			final BiFunction<MouseEvent, Point2D, AffineTransform> onDrag) {
+		var affine = onDrag.apply(e, preMousePoint);
+		if (affine == null) {
+			return false;
+		}
+		preMousePoint = e.getPoint();
+		affineTransform = affine;
+		repaint();
+		return true;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
+	 */
+	@Override
+	public void mouseMoved(final MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseWheelMoved(final MouseWheelEvent e) {
+		affineTransform = camera.updateScaleByMouseWheel(e);
+		repaint();
+	}
+
 	@Override
 	public void componentMoved(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentShown(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 }

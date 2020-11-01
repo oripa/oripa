@@ -29,7 +29,7 @@ public class PastingOnVertex extends PickingVertex {
 
 	@Override
 	protected void undoAction(final PaintContextInterface context) {
-		context.setMissionCompleted(false);
+		// context.setMissionCompleted(false);
 		context.creasePatternUndo().undo();
 	}
 
@@ -52,23 +52,25 @@ public class PastingOnVertex extends PickingVertex {
 
 		Vector2d v = context.popVertex();
 
-		if (context.getLineCount() > 0) {
-			context.creasePatternUndo().pushUndoInfo();
-
-			Vector2d origin = originHolder.getOrigin(context);
-
-			double ox = origin.x;
-			double oy = origin.y;
-
-			List<OriLine> shiftedLines;
-			shiftedLines = shiftLines(
-					context.getPickedLines(), v.x - ox, v.y - oy);
-
-			Painter painter = context.getPainter();
-			painter.pasteLines(shiftedLines);
-
-			context.setMissionCompleted(true);
+		if (context.getLineCount() == 0) {
+			return;
 		}
+
+		context.creasePatternUndo().pushUndoInfo();
+
+		Vector2d origin = originHolder.getOrigin(context);
+
+		double ox = origin.x;
+		double oy = origin.y;
+
+		List<OriLine> shiftedLines;
+		shiftedLines = shiftLines(
+				context.getPickedLines(), v.x - ox, v.y - oy);
+
+		Painter painter = context.getPainter();
+		painter.pasteLines(shiftedLines);
+
+		// context.setMissionCompleted(true);
 
 	}
 

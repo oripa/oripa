@@ -87,7 +87,6 @@ public class SelectingEndPoint extends AbstractActionState {
 				new OriLine(p0, p1, context.getLineTypeOfNewLines()));
 
 		context.clear(false);
-		context.getAngleSnapCrossPoints().clear();
 	}
 
 	/*

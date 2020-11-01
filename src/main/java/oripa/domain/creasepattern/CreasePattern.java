@@ -3,9 +3,12 @@ package oripa.domain.creasepattern;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
+import oripa.geom.GeomUtil;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -17,7 +20,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class CreasePattern implements CreasePatternInterface {
+class CreasePattern implements CreasePatternInterface {
 
 	/**
 	 * Wrapper to treat vertices and line at the same time
@@ -60,21 +63,31 @@ public class CreasePattern implements CreasePatternInterface {
 	/**
 	 *
 	 */
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -6919017534440930379L;
 
 	private LineManager lines;
 	private VerticesManager vertices;
-	private double paperSize = 400;
+	private final RectangleDomain paperDomain;
+	private final double paperSize;
 
 	@SuppressWarnings("unused")
 	private CreasePattern() {
+		paperSize = 0;
+		paperDomain = null;
 	}
 
-	public CreasePattern(final double paperSize) {
-		lines = new LineManager();
-		vertices = new VerticesManager(paperSize);
+	/**
+	 * @param paperDomain
+	 *            rectangle domain of paper.
+	 */
+	public CreasePattern(final RectangleDomain paperDomain) {
+		this.paperDomain = paperDomain;
+		paperSize = paperDomain.maxWidthHeight();
 
-		this.paperSize = paperSize;
+		lines = new LineManager();
+		vertices = new VerticesManager(
+				paperSize, paperDomain.getLeft(), paperDomain.getTop());
 	}
 
 	/*
@@ -85,6 +98,16 @@ public class CreasePattern implements CreasePatternInterface {
 	@Override
 	public double getPaperSize() {
 		return paperSize;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.creasepattern.CreasePatternInterface#getPaperDomain()
+	 */
+	@Override
+	public RectangleDomain getPaperDomain() {
+		return paperDomain;
 	}
 
 	/*
@@ -312,7 +335,7 @@ public class CreasePattern implements CreasePatternInterface {
 	public void move(final double dx, final double dy) {
 		var lines = new ArrayList<OriLine>();
 
-		this.stream().forEach(line -> lines.add(line));
+		lines.addAll(this);
 
 		lines.forEach(line -> {
 			line.p0.x += dx;
@@ -326,4 +349,32 @@ public class CreasePattern implements CreasePatternInterface {
 		this.addAll(lines);
 	}
 
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.creasepattern.CreasePatternInterface#removeDuplicatedLines()
+	 */
+	@Override
+	public boolean cleanDuplicatedLines() {
+		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(size());
+		for (OriLine l : this) {
+			var sameLines = tmpLines.stream()
+					.filter(line -> GeomUtil.isSameLineSegment(line, l))
+					.collect(Collectors.toList());
+
+			if (sameLines.isEmpty()) {
+				tmpLines.add(l);
+			}
+		}
+
+		if (size() == tmpLines.size()) {
+			return false;
+		}
+
+		clear();
+		addAll(tmpLines);
+
+		return true;
+	}
 }

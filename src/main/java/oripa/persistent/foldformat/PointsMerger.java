@@ -42,7 +42,7 @@ public class PointsMerger {
 	 */
 	public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines) {
 		var cleaned = lines.stream()
-				.filter(line -> GeomUtil.Distance(line.p0, line.p1) > EPS)
+				.filter(line -> GeomUtil.distance(line.p0, line.p1) > EPS)
 				.collect(Collectors.toList());
 
 		final var merged = new ArrayList<OriLine>();
@@ -68,7 +68,7 @@ public class PointsMerger {
 	}
 
 	private void substituteToP1IfClose(final OriPoint p0, final OriPoint p1) {
-		if (GeomUtil.Distance(p0, p1) <= EPS) {
+		if (GeomUtil.distance(p0, p1) <= EPS) {
 			p1.x = p0.x;
 			p1.y = p0.y;
 		}

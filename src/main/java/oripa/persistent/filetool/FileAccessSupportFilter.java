@@ -147,12 +147,13 @@ public class FileAccessSupportFilter<Data>
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("(");
-		builder.append(extensions[0]);
-		for (int i = 1; i < extensions.length; i++) {
-			builder.append(", *");
+		for (int i = 0; i < extensions.length; i++) {
+			if (i > 0) {
+				builder.append(",");
+			}
+			builder.append("*");
 			builder.append(extensions[i]);
 		}
-		// builder.append(") " + type.getKeyText());
 		builder.append(") ");
 		builder.append(explanation);
 

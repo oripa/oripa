@@ -8,51 +8,38 @@ import oripa.value.OriLine;
 public class ElementSelector {
 
 	public Color getColor(final OriLine.Type lineType) {
-		Color color;
 
 		switch (lineType) {
 		case NONE:
-			color = Color.LIGHT_GRAY;
-			break;
+			return Color.LIGHT_GRAY;
 		case CUT:
-			color = Color.BLACK;
-			break;
+			return Color.BLACK;
 		case RIDGE:
-			color = Color.RED;
-			break;
+			return Color.RED;
 		case VALLEY:
-			color = Color.BLUE;
-			break;
+			return Color.BLUE;
 		case CUT_MODEL:
-			color = Color.MAGENTA;
-			break;
+			return Color.MAGENTA;
 		default:
-			color = Color.BLACK;
+			return Color.BLACK;
 		}
-
-		return color;
 	}
 
 	public BasicStroke createStroke(final OriLine.Type lineType, final double scale) {
-		BasicStroke stroke;
 		switch (lineType) {
 		case NONE:
 		case CUT:
 		case RIDGE:
 		case VALLEY:
-			stroke = new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+			return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
-			break;
 		case CUT_MODEL:
-			stroke = new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
+			return new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
-			break;
 		default:
-			stroke = new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+			return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
 		}
-
-		return stroke;
 	}
 
 	public float createVeryThickLineWidth(final double scale) {
@@ -115,5 +102,25 @@ public class ElementSelector {
 	public BasicStroke createOverlappingLineHighlightStroke(final double scale) {
 		return new BasicStroke(createVeryThickLineWidth(scale), BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_MITER);
+	}
+
+	public Color getNormalVertexColor() {
+		return Color.BLACK;
+	}
+
+	public double createNormalVertexSize(final double scale) {
+		return 6.0 / scale;
+	}
+
+	public Color getViolatingVertexColor() {
+		return Color.RED;
+	}
+
+	public double createViolatingVertexSize(final double scale) {
+		return 16.0 / scale;
+	}
+
+	public double createMouseActionVertexSize(final double scale) {
+		return 10.0 / scale;
 	}
 }

@@ -1,6 +1,7 @@
 /**
- * ORIPA - Origami Pattern Editor 
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
+ * ORIPA - Origami Pattern Editor
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,12 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package oripa.domain.paint.linetype;
 
-package oripa.geom;
+import oripa.domain.cptool.TypeForChange;
 
-import javax.vecmath.Vector2d;
+/**
+ * @author OUCHI Koji
+ *
+ */
+public interface TypeForChangeGettable {
+	public abstract TypeForChange getTypeFrom();
 
-public class Triangle {
-
-    public Vector2d[] p = new Vector2d[3];
+	public abstract TypeForChange getTypeTo();
 }

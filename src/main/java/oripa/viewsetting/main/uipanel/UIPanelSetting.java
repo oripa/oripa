@@ -9,8 +9,9 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.linetype.TypeForChangeGettable;
 
-public class UIPanelSetting {
+public class UIPanelSetting implements TypeForChangeGettable {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanelSetting.class);
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
@@ -33,12 +34,6 @@ public class UIPanelSetting {
 	private EditMode selectedMode = EditMode.NONE;
 	public static final String SELECTED_MODE = "selected mode";
 
-	private int lineTypeFromIndex;
-	public static final String LINE_TYPE_FROM_INDEX = "line type index of 'from' box";
-
-	private int lineTypeToIndex;
-	public static final String LINE_TYPE_TO_INDEX = "line type index of 'to' box";
-
 	private TypeForChange typeFrom = TypeForChange.EMPTY;
 	public static final String TYPE_FROM = "line type of 'from' box";
 
@@ -55,6 +50,7 @@ public class UIPanelSetting {
 		support.addPropertyChangeListener(propertyName, listener);
 	}
 
+	@Override
 	public TypeForChange getTypeFrom() {
 		return typeFrom;
 	}
@@ -63,52 +59,13 @@ public class UIPanelSetting {
 		this.typeFrom = typeFrom;
 	}
 
+	@Override
 	public TypeForChange getTypeTo() {
 		return typeTo;
 	}
 
 	public void setTypeTo(final TypeForChange typeTo) {
 		this.typeTo = typeTo;
-	}
-
-	public int getLineTypeFromIndex() {
-		return lineTypeFromIndex;
-	}
-
-	public void setLineTypeFromIndex(final int lineTypeFromIndex) {
-		var old = this.lineTypeFromIndex;
-		this.lineTypeFromIndex = lineTypeFromIndex;
-		support.firePropertyChange(LINE_TYPE_FROM_INDEX, old, lineTypeFromIndex);
-	}
-
-	public int getLineTypeToIndex() {
-		return lineTypeToIndex;
-	}
-
-	public void setLineTypeToIndex(final int lineTypeToIndex) {
-		var old = this.lineTypeToIndex;
-		this.lineTypeToIndex = lineTypeToIndex;
-		support.firePropertyChange(LINE_TYPE_TO_INDEX, old, lineTypeToIndex);
-	}
-
-	public boolean isByValuePanelVisible() {
-		return byValuePanelVisible;
-	}
-
-	public boolean isAlterLineTypePanelVisible() {
-		return alterLineTypePanelVisible;
-	}
-
-	public boolean isMountainButtonEnabled() {
-		return mountainButtonEnabled;
-	}
-
-	public boolean isValleyButtonEnabled() {
-		return valleyButtonEnabled;
-	}
-
-	public boolean isAuxButtonEnabled() {
-		return auxButtonEnabled;
 	}
 
 	public void setByValuePanelVisible(final boolean byValuePanelVisible) {
@@ -152,24 +109,8 @@ public class UIPanelSetting {
 		setSelectedMode(EditMode.INPUT);
 	}
 
-	public void selectChangeLineTypeMode() {
-		setSelectedMode(EditMode.CHANGE_TYPE);
-	}
-
 	public void selectSelectMode() {
 		setSelectedMode(EditMode.SELECT);
-	}
-
-	public void selectDeleteLineMode() {
-		setSelectedMode(EditMode.DELETE_LINE);
-	}
-
-	public void selectAddVertexMode() {
-		setSelectedMode(EditMode.VERTEX);
-	}
-
-	public void selectDeleteVertexMode() {
-		setSelectedMode(EditMode.VERTEX);
 	}
 
 	public EditMode getSelectedMode() {

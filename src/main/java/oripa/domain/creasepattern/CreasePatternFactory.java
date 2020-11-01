@@ -19,6 +19,8 @@
 package oripa.domain.creasepattern;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -38,7 +40,6 @@ public class CreasePatternFactory {
 	 * @return crease pattern of non-folded case.
 	 */
 	public CreasePatternInterface createCreasePattern(final double paperSize) {
-		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
 
 		OriLine l0 = new OriLine(-paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0,
 				-paperSize / 2.0, OriLine.Type.CUT);
@@ -48,40 +49,33 @@ public class CreasePatternFactory {
 				paperSize / 2.0, OriLine.Type.CUT);
 		OriLine l3 = new OriLine(-paperSize / 2.0, paperSize / 2.0, -paperSize / 2.0,
 				-paperSize / 2.0, OriLine.Type.CUT);
-		creasePattern.add(l0);
-		creasePattern.add(l1);
-		creasePattern.add(l2);
-		creasePattern.add(l3);
+
+		var lines = List.of(l0, l1, l2, l3);
+		var domain = new RectangleDomain(lines);
+
+		CreasePatternInterface creasePattern = new CreasePattern(domain);
+
+		creasePattern.addAll(lines);
 
 		return creasePattern;
 	}
 
 	/**
-	 *
-	 * @param paperSize
-	 * @return crease pattern entity with no lines.
-	 */
-	public CreasePatternInterface createEmptyCreasePattern(final double paperSize) {
-		return new CreasePattern(paperSize);
-	}
-
-	/**
 	 * creates crease pattern which consists of given lines and no other lines.
-	 * also moves the lines such that the center of the paper becomes (0, 0).
 	 *
 	 * @param lines
 	 * @return
 	 */
 	public CreasePatternInterface createCreasePattern(final Collection<OriLine> lines) {
-		RectangleDomain domain = new RectangleDomain(lines);
-		double paperSize = Math.max(domain.getWidth(), domain.getHeight());
+		// To get paper size, consider boundary only
+		var domain = new RectangleDomain(
+				lines.stream()
+						.filter(line -> line.getType() == OriLine.Type.CUT)
+						.collect(Collectors.toList()));
 
-		CreasePatternInterface creasePattern = new CreasePattern(paperSize);
-
+		// Construct CP
+		CreasePatternInterface creasePattern = new CreasePattern(domain);
 		creasePattern.addAll(lines);
-
-		// FIXME: changing given coordinates is not preferable.
-		creasePattern.move(-domain.getCenterX(), -domain.getCenterY());
 
 		return creasePattern;
 	}

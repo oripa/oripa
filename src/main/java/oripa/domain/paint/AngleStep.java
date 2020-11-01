@@ -31,6 +31,10 @@ public enum AngleStep {
 		this.divNum = divNum;
 	}
 
+	/**
+	 *
+	 * @return the n for PI/n.
+	 */
 	public int getDivNum() {
 		return divNum;
 	}

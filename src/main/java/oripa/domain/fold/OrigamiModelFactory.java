@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.swing.JOptionPane;
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
@@ -16,27 +15,35 @@ public class OrigamiModelFactory {
 
 	int debugCount = 0;
 
-	// should not be in this class
-	// public boolean hasModel = false;
-
+	/**
+	 * Constructs the half-edge based data structure which describes relation
+	 * among faces and edges and store it into {@code OrigamiModel}. This is a
+	 * preparation for estimating folded shape with layers: this method removes
+	 * meaningless vertices.
+	 *
+	 * @param creasePattern
+	 * @param paperSize
+	 * @return A model data converted from crease pattern.
+	 */
 	public OrigamiModel createOrigamiModel(
 			final Collection<OriLine> creasePattern, final double paperSize) {
-		return this.createOrigamiModelImpl3(creasePattern, paperSize, false);
+		return this.createOrigamiModelImpl3(creasePattern, paperSize);
 	}
 
-	public OrigamiModel createOrigamiModelNoDuplicateLines(
-			final Collection<OriLine> creasePattern, final double paperSize) {
-		return this.createOrigamiModelImpl3(creasePattern, paperSize, true);
-	}
-
-	public OrigamiModel createOrigamiModel(final double paperSize) {
-		return new OrigamiModel(paperSize);
-	}
-
+	/**
+	 * Constructs the half-edge based data structure which describes relation
+	 * among faces and edges and store it into {@code OrigamiModel}. This method
+	 * simply constructs the data structure and does not execute other
+	 * operations like cleaning up given crease pattern. So there may be some
+	 * error in the returned data.
+	 *
+	 * @param creasePattern
+	 * @param paperSize
+	 * @return A model data converted from crease pattern.
+	 */
 	// TODO: change as: throw error if creation failed.
 	public OrigamiModel buildOrigami(
-			final Collection<OriLine> creasePattern, final double paperSize,
-			final boolean needCleanUp) {
+			final Collection<OriLine> creasePattern, final double paperSize) {
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
@@ -125,7 +132,7 @@ public class OrigamiModelFactory {
 			final List<OriVertex> vertices, final Vector2d p) {
 		OriVertex vtx = null;
 		for (OriVertex v : vertices) {
-			if (GeomUtil.Distance(v.p, p) < CalculationResource.POINT_EPS) {
+			if (GeomUtil.distance(v.p, p) < CalculationResource.POINT_EPS) {
 				vtx = v;
 			}
 		}
@@ -139,43 +146,31 @@ public class OrigamiModelFactory {
 	}
 
 	/**
+	 * Constructs the half-edge based data structure which describes relation
+	 * among faces and edges and store it into {@code OrigamiModel}. This is a
+	 * preparation for estimating folded shape with layers: this method removes
+	 * meaningless vertices.
 	 *
 	 * @param creasePattern
 	 * @param paperSize
-	 * @param needCleanUp
 	 * @return A model data converted from crease pattern.
 	 */
 	// TODO: change as: return OrigamiModel. throw error if creation failed.
 	private OrigamiModel createOrigamiModelImpl3(
-			final Collection<OriLine> creasePattern, final double paperSize,
-			final boolean needCleanUp) {
+			final Collection<OriLine> creasePattern, final double paperSize) {
 
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriVertex> vertices = origamiModel.getVertices();
 
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-
-		sortedFaces.clear();
-
 		edges.clear();
 		vertices.clear();
 		faces.clear();
 
-		// Remove lines with the same position
 		debugCount = 0;
-		if (needCleanUp) {
-			FolderTool tool = new FolderTool();
-			if (tool.cleanDuplicatedLines(creasePattern)) {
-				JOptionPane.showMessageDialog(
-						null, "Removing multiples edges with the same position ",
-						"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
-			}
 
-		}
-
-		// Create the edges from the vertexes
+		// Create the edges and precreases from the vertexes
 		List<OriLine> precreases = new ArrayList<>();
 		for (OriLine l : creasePattern) {
 			if (l.getType() == OriLine.Type.NONE) {
@@ -193,77 +188,7 @@ public class OrigamiModelFactory {
 			ev.addEdge(eg);
 		}
 
-		// Check if there are vertexes with just 2 collinear edges with same
-		// type
-		// merge the edges and delete the vertex for efficiency
-		ArrayList<OriEdge> eds = new ArrayList<OriEdge>();
-		ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
-		tmpVVec.addAll(vertices);
-		for (OriVertex v : tmpVVec) {
-			eds.clear();
-			for (OriEdge e : edges) {
-				if (e.sv == v || e.ev == v) {
-					eds.add(e);
-				}
-			}
-
-			if (eds.size() != 2) {
-				continue;
-			}
-
-			// If the types of the edges are different, do nothing
-			if (eds.get(0).type != eds.get(1).type) {
-				continue;
-			}
-
-			OriEdge e0 = eds.get(0);
-			OriEdge e1 = eds.get(1);
-
-			// Check if they are collinear
-			Vector2d dir0 = new Vector2d(e0.ev.p.x - e0.sv.p.x, e0.ev.p.y - e0.sv.p.y);
-			Vector2d dir1 = new Vector2d(e1.ev.p.x - e1.sv.p.x, e1.ev.p.y - e1.sv.p.y);
-
-			dir0.normalize();
-			dir1.normalize();
-
-			if (GeomUtil.Distance(dir0, dir1) > 0.001
-					&& Math.abs(GeomUtil.Distance(dir0, dir1) - 2.0) > 0.001) {
-				continue;
-			}
-
-			// found mergeable edge
-			edges.remove(e0);
-			edges.remove(e1);
-			vertices.remove(v);
-			e0.sv.edges.remove(e0);
-			e0.ev.edges.remove(e0);
-			e1.sv.edges.remove(e1);
-			e1.ev.edges.remove(e1);
-			if (e0.sv == v && e1.sv == v) {
-				OriEdge ne = new OriEdge(e0.ev, e1.ev, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			} else if (e0.sv == v && e1.ev == v) {
-				OriEdge ne = new OriEdge(e0.ev, e1.sv, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			} else if (e0.ev == v && e1.sv == v) {
-				OriEdge ne = new OriEdge(e0.sv, e1.ev, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			} else {
-				OriEdge ne = new OriEdge(e0.sv, e1.sv, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			}
-		}
-
-		// System.out.println("vnum=" + vertices.size());
-		// System.out.println("enum=" + edges.size());
+		removeMeaninglessVertices(vertices, edges);
 
 		// Construct the faces
 		List<OriEdge> outlineEdges = new ArrayList<>();
@@ -308,11 +233,12 @@ public class OrigamiModelFactory {
 		for (OriEdge e : edges) {
 			e.type = e.left.tmpInt;
 		}
+		// attach precrease lines to faces
 		for (OriFace face : faces) {
 			ListIterator<OriLine> iterator = precreases.listIterator();
 			while (iterator.hasNext()) {
 				OriLine precrease = iterator.next();
-				if (GeomUtil.isOriLineCrossFace(face, precrease)) {
+				if (OriGeomUtil.isOriLineCrossFace(face, precrease)) {
 					face.precreases.add(precrease);
 					iterator.remove();
 				}
@@ -320,6 +246,82 @@ public class OrigamiModelFactory {
 		}
 		origamiModel.setHasModel(true);
 		return origamiModel;
+	}
+
+	/**
+	 * Searches vertices with 2 colinear edges with the same type. Then merges
+	 * the edges split by the vertex and delete the vertex for efficiency.
+	 *
+	 * @param vertices
+	 * @param edges
+	 */
+	private void removeMeaninglessVertices(
+			final Collection<OriVertex> vertices, final Collection<OriEdge> edges) {
+		ArrayList<OriEdge> eds = new ArrayList<OriEdge>();
+		ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
+		tmpVVec.addAll(vertices);
+		for (OriVertex v : tmpVVec) {
+			eds.clear();
+			for (OriEdge e : edges) {
+				if (e.sv == v || e.ev == v) {
+					eds.add(e);
+				}
+			}
+
+			if (eds.size() != 2) {
+				continue;
+			}
+
+			// If the types of the edges are different, do nothing
+			if (eds.get(0).type != eds.get(1).type) {
+				continue;
+			}
+
+			OriEdge e0 = eds.get(0);
+			OriEdge e1 = eds.get(1);
+
+			// Check if they are collinear
+			Vector2d dir0 = new Vector2d(e0.ev.p.x - e0.sv.p.x, e0.ev.p.y - e0.sv.p.y);
+			Vector2d dir1 = new Vector2d(e1.ev.p.x - e1.sv.p.x, e1.ev.p.y - e1.sv.p.y);
+
+			dir0.normalize();
+			dir1.normalize();
+
+			if (GeomUtil.distance(dir0, dir1) > 0.001
+					&& Math.abs(GeomUtil.distance(dir0, dir1) - 2.0) > 0.001) {
+				continue;
+			}
+
+			// found mergeable edge
+			edges.remove(e0);
+			edges.remove(e1);
+			vertices.remove(v);
+			e0.sv.edges.remove(e0);
+			e0.ev.edges.remove(e0);
+			e1.sv.edges.remove(e1);
+			e1.ev.edges.remove(e1);
+			if (e0.sv == v && e1.sv == v) {
+				OriEdge ne = new OriEdge(e0.ev, e1.ev, e0.type);
+				edges.add(ne);
+				ne.sv.addEdge(ne);
+				ne.ev.addEdge(ne);
+			} else if (e0.sv == v && e1.ev == v) {
+				OriEdge ne = new OriEdge(e0.ev, e1.sv, e0.type);
+				edges.add(ne);
+				ne.sv.addEdge(ne);
+				ne.ev.addEdge(ne);
+			} else if (e0.ev == v && e1.sv == v) {
+				OriEdge ne = new OriEdge(e0.sv, e1.ev, e0.type);
+				edges.add(ne);
+				ne.sv.addEdge(ne);
+				ne.ev.addEdge(ne);
+			} else {
+				OriEdge ne = new OriEdge(e0.sv, e1.sv, e0.type);
+				edges.add(ne);
+				ne.sv.addEdge(ne);
+				ne.ev.addEdge(ne);
+			}
+		}
 	}
 
 	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge) {
@@ -349,8 +351,6 @@ public class OrigamiModelFactory {
 		face.setPreOutline();
 		return face;
 	}
-
-	// boolean sortFinished = false;
 
 	private void makeEdges(final List<OriEdge> edges, final List<OriFace> faces) {
 		edges.clear();
@@ -392,7 +392,7 @@ public class OrigamiModelFactory {
 			}
 		}
 
-		// If the pair wasnt found it should be an edge
+		// If the pair wasn't found it should be boundary of paper
 		for (OriHalfedge he : tmpHalfedges) {
 			if (he.pair == null) {
 				OriEdge edge = new OriEdge();

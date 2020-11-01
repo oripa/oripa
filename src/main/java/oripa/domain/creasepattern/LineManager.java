@@ -65,7 +65,6 @@ class LineManager implements Collection<OriLine> {
 
 	@Override
 	public Iterator<OriLine> iterator() {
-		// TODO Auto-generated method stub
 		return lines.iterator();
 	}
 

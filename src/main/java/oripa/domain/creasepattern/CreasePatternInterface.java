@@ -20,6 +20,7 @@ package oripa.domain.creasepattern;
 
 import java.util.Collection;
 
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -31,6 +32,8 @@ public interface CreasePatternInterface
 
 	public abstract double getPaperSize();
 
+	public abstract RectangleDomain getPaperDomain();
+
 	/**
 	 * move all creases as the coordinate (x, y) becomes (x + dx, y + dx).
 	 *
@@ -41,4 +44,5 @@ public interface CreasePatternInterface
 	 */
 	public void move(final double dx, final double dy);
 
+	public abstract boolean cleanDuplicatedLines();
 }

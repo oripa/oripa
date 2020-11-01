@@ -6,6 +6,7 @@ import javax.swing.AbstractButton;
 
 import oripa.appstate.ApplicationState;
 import oripa.domain.paint.EditMode;
+import oripa.resource.StringID;
 
 /**
  * A class to bind a state which holds paint action.
@@ -17,13 +18,12 @@ public class ApplicationStateButtonBinder
 		extends AbstractButtonBinder<ApplicationState<EditMode>> {
 
 	/**
-	 * This method binds a MouseListener to push the state and an ActionListener
-	 * to perform the actions of the state.
+	 * This method binds an ActionListener to perform the actions of the state.
 	 *
 	 * @param buttonClass
 	 * @param state
 	 * @param textID
-	 *            A member of StringID for label
+	 *            A member of {@link StringID} for label
 	 * @param keyListener
 	 *            For catching key actions which requires immediate
 	 *            drawing(e.g., for catching Ctrl pressed) It's weird to

@@ -6,6 +6,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.geom.GeomUtil;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -19,6 +20,11 @@ public class Painter {
 
 	private final CreasePatternInterface creasePattern;
 
+	@SuppressWarnings("unused")
+	private Painter() {
+		creasePattern = null;
+	}
+
 	public Painter(final CreasePatternInterface aCreasePattern) {
 		creasePattern = aCreasePattern;
 	}
@@ -31,7 +37,7 @@ public class Painter {
 	}
 
 	/**
-	 * reset selection mark of all lines in given collection.
+	 * reset selection mark of all lines.
 	 *
 	 */
 	public void resetSelectedOriLines() {
@@ -40,7 +46,8 @@ public class Painter {
 	}
 
 	/**
-	 * set {@code true} to selection mark of all lines in given collection.
+	 * set {@code true} to selection mark of all lines except the lines of paper
+	 * boundary.
 	 *
 	 */
 	public void selectAllOriLines() {
@@ -169,9 +176,6 @@ public class Painter {
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
 
 		Vector2d c = GeomUtil.getIncenter(v0, v1, v2);
-		if (c == null) {
-			System.out.print("Failed to calculate incenter of the triangle");
-		}
 		LineAdder adder = new LineAdder();
 		adder.addLine(new OriLine(c, v0, lineType), creasePattern);
 		adder.addLine(new OriLine(c, v1, lineType), creasePattern);
@@ -186,11 +190,12 @@ public class Painter {
 	 * @param lineType
 	 */
 	public void addPBisector(
-			final Vector2d v0, final Vector2d v1, final OriLine.Type lineType) {
+			final Vector2d v0, final Vector2d v1, final RectangleDomain domain,
+			final OriLine.Type lineType) {
 
 		BisectorFactory factory = new BisectorFactory();
 		OriLine bisector = factory.createPerpendicularBisector(v0, v1,
-				creasePattern.getPaperSize(), lineType);
+				domain, lineType);
 
 		LineAdder adder = new LineAdder();
 		adder.addLine(bisector, creasePattern);
@@ -238,7 +243,7 @@ public class Painter {
 	 * @param v1
 	 * @param v2
 	 * @param lineType
-	 *            {@link OriLine#TYPE_VALLEY} etc.
+	 *            {@link OriLine.Type#VALLEY} etc.
 	 *
 	 * @return true if line is added
 	 * @throws PainterCommandFailedException
@@ -307,25 +312,22 @@ public class Painter {
 	 * @param angleDeg
 	 *            amount of rotation in degrees
 	 * @param repetitionCount
+	 * @param selectedLines
+	 *            lines to be copied
 	 *
-	 * @return rotated lines
 	 */
-	// TODO a collection of selected line should be a parameter like a mirror
-	// copy.
 	public void copyWithRotation(
-			final double cx, final double cy, final double angleDeg, final int repetitionCount) {
+			final double cx, final double cy, final double angleDeg, final int repetitionCount,
+			final Collection<OriLine> selectedLines) {
 
 		RotatedLineFactory factory = new RotatedLineFactory();
 
 		Collection<OriLine> copiedLines = factory.createRotatedLines(
-				cx, cy, angleDeg, repetitionCount, creasePattern, creasePattern.getPaperSize());
-
-		LineSelectionModifier selectionModifier = new LineSelectionModifier();
-		selectionModifier.resetSelectedOriLines(creasePattern);
+				cx, cy, angleDeg, repetitionCount,
+				selectedLines, creasePattern);
 
 		LineAdder adder = new LineAdder();
 		adder.addAll(copiedLines, creasePattern);
-
 	}
 
 	/**
@@ -335,15 +337,18 @@ public class Painter {
 	 * @param col
 	 * @param interX
 	 * @param interY
+	 * @param selectedLines
+	 *            lines to be copied
 	 */
 	public void copyWithTiling(
-			final int row, final int col, final double interX, final double interY) {
+			final int row, final int col, final double interX, final double interY,
+			final Collection<OriLine> selectedLines) {
 
 		TiledLineFactory factory = new TiledLineFactory();
 
 		Collection<OriLine> copiedLines = factory.createTiledLines(
 				row, col, interX, interY,
-				creasePattern, creasePattern.getPaperSize());
+				selectedLines, creasePattern);
 
 		LineAdder adder = new LineAdder();
 		adder.addAll(copiedLines, creasePattern);
@@ -352,14 +357,15 @@ public class Painter {
 	/**
 	 * add copy of selected lines as the paper is filled out.
 	 *
-	 * @param lines
+	 * @param selectedLines
 	 */
 	public void fillOut(
-			final Collection<OriLine> lines) {
+			final Collection<OriLine> selectedLines) {
 
 		TiledLineFactory factory = new TiledLineFactory();
 
-		Collection<OriLine> copiedLines = factory.createFullyTiledLines(lines, creasePattern,
+		Collection<OriLine> copiedLines = factory.createFullyTiledLines(
+				selectedLines, creasePattern,
 				creasePattern.getPaperSize());
 
 		LineAdder adder = new LineAdder();

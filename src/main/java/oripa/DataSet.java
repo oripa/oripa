@@ -32,7 +32,10 @@ public class DataSet {
 	private int mainVersion;
 	private int subVersion;
 	public OriLineProxy[] lines;
+
+	// meaningless since ORIPA ver. 1.25 but kept for compatibility
 	private double paperSize;
+
 	public String title;
 	public String editorName;
 	public String originalAuthorName;
@@ -46,7 +49,11 @@ public class DataSet {
 		mainVersion = Version.FILE_MAJOR_VERSION;
 		subVersion = Version.FILE_MINOR_VERSION;
 
-		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		// reconstruct CP to refresh the paper size
+		var factory = new CreasePatternFactory();
+		CreasePatternInterface creasePattern = factory
+				.createCreasePattern(doc.getCreasePattern());
+
 		Property property = doc.getProperty();
 
 		int lineNum = creasePattern.size();
@@ -59,6 +66,7 @@ public class DataSet {
 		for (int i = 0; i < lineNum; i++) {
 			lines[i] = new OriLineProxy(docLines[i]);
 		}
+
 		paperSize = creasePattern.getPaperSize();
 
 		title = property.getTitle();
@@ -80,13 +88,12 @@ public class DataSet {
 		CreasePatternInterface creasePattern = factory
 				.createCreasePattern(oriLines);
 
-		Doc doc = new Doc(paperSize);
+		Doc doc = new Doc(creasePattern.getPaperSize());
 		doc.setCreasePattern(creasePattern);
 
 		doc.setProperty(createProperty(filePath));
 
 		return doc;
-
 	}
 
 	private Property createProperty(final String filePath) {

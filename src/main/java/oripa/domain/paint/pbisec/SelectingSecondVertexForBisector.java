@@ -16,7 +16,7 @@ public class SelectingSecondVertexForBisector extends PickingVertex {
 	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		if (context.getVertexCount() != 2) {
-			throw new RuntimeException();
+			throw new IllegalStateException();
 		}
 
 		Vector2d p0, p1;
@@ -27,7 +27,7 @@ public class SelectingSecondVertexForBisector extends PickingVertex {
 
 		Painter painter = context.getPainter();
 		painter.addPBisector(
-				p0, p1, context.getLineTypeOfNewLines());
+				p0, p1, context.getPaperDomain(), context.getLineTypeOfNewLines());
 
 		context.clear(false);
 	}

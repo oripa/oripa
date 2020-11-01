@@ -26,7 +26,6 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
-import oripa.domain.paint.util.ElementSelector;
 
 /**
  * @author OUCHI Koji
@@ -55,7 +54,6 @@ public class AngleSnapAction extends GraphicMouseAction {
 	@Override
 	public void destroy(final PaintContextInterface context) {
 		super.destroy(context);
-		context.getAngleSnapCrossPoints().clear();
 	}
 
 	/*
@@ -147,7 +145,7 @@ public class AngleSnapAction extends GraphicMouseAction {
 	}
 
 	private void drawSnapPoints(final Graphics2D g2d, final PaintContextInterface context) {
-		var selector = new ElementSelector();
+		var selector = getElementSelector();
 		g2d.setColor(selector.getAssistLineColor());
 
 		context.getAngleSnapCrossPoints()

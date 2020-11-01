@@ -20,14 +20,14 @@ public interface BinderInterface<ToBeBound> {
 	 *            Class object of a button to be created
 	 * @param target
 	 *            An object to be bound to button.doClick()
-	 * @param textID
+	 * @param id
 	 *            {@code StringID} member for label
 	 * @param keyListener
 	 *            For catching key actions which requires immediate
 	 *            drawing(e.g., for catching Ctrl pressed) It's weird to
 	 *            handling by button object but needed because the focus stays
 	 *            on the selected button.
-	 * 
+	 *
 	 * @return
 	 */
 	public AbstractButton createButton(

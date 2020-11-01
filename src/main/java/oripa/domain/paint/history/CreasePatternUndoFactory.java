@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -31,12 +31,13 @@ import oripa.value.OriLine;
 public class CreasePatternUndoFactory implements
 		UndoInfoFactory<Collection<OriLine>> {
 
-	/* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 *
 	 * @see oripa.util.history.UndoInfoFactory#create(java.lang.Object)
 	 */
 	@Override
-	public UndoInfo<Collection<OriLine>> create(Collection<OriLine> info) {
-		// TODO 自動生成されたメソッド・スタブ
+	public UndoInfo<Collection<OriLine>> create(final Collection<OriLine> info) {
 		return new CreasePatternUndoInfoImpl(info);
 	}
 

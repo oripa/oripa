@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		ComponentListener {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5864700666603644379L;
 	private JPanel jContentPane = null;
@@ -57,7 +57,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 	/**
 	 * This is the default constructor
 	 */
-	public AbstractPropertyDialog(JFrame parent, Property prop) {
+	public AbstractPropertyDialog(final JFrame parent, final Property prop) {
 		super(parent);
 		initialize();
 
@@ -85,7 +85,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 * @return void
 	 */
 	private void initialize() {
@@ -97,7 +97,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -173,7 +173,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	/**
 	 * This method initializes TitleTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTitleTextField() {
@@ -185,7 +185,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	/**
 	 * This method initializes EditorNameTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getEditorNameTextField() {
@@ -197,7 +197,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	/**
 	 * This method initializes OriginalAuthorTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getOriginalAuthorTextField() {
@@ -209,7 +209,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	/**
 	 * This method initializes OriginTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getOriginTextField() {
@@ -221,7 +221,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	/**
 	 * This method initializes MemoTextArea
-	 * 
+	 *
 	 * @return javax.swing.JTextArea
 	 */
 	private JTextArea getMemoTextArea() {
@@ -233,7 +233,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	/**
 	 * This method initializes OKButton
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getOKButton() {
@@ -243,7 +243,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 			OKButton.addActionListener(new java.awt.event.ActionListener() {
 
 				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+				public void actionPerformed(final java.awt.event.ActionEvent e) {
 					onClickOKButton(getEditedProperty());
 					dispose();
 				}
@@ -255,24 +255,22 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 	protected abstract void onClickOKButton(Property newProperty);
 
 	@Override
-	public void componentResized(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
-		System.out.println(arg0);
+	public void componentResized(final ComponentEvent arg0) {
 
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+	public void componentMoved(final ComponentEvent arg0) {
+
 	}
 
 	@Override
-	public void componentShown(ComponentEvent arg0) {
+	public void componentShown(final ComponentEvent arg0) {
 		OKButton.requestFocusInWindow();
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+	public void componentHidden(final ComponentEvent arg0) {
+
 	}
-} // @jve:decl-index=0:visual-constraint="10,10"
+}

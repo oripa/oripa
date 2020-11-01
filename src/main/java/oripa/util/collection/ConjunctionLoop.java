@@ -27,7 +27,6 @@ import java.util.Collection;
 public class ConjunctionLoop<Variable> extends AbstractRule<Collection<Variable>> {
 
 	private final Rule<Variable> term;
-//	private HashSet<Variable> violations = new HashSet<>();
 
 	/**
 	 *
@@ -47,11 +46,4 @@ public class ConjunctionLoop<Variable> extends AbstractRule<Collection<Variable>
 
 		return filter.findViolations(inputs);
 	}
-//	/**
-//	 * @return violations
-//	 */
-//	public HashSet<Variable> getViolations() {
-//		return violations;
-//	}
-
 }

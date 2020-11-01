@@ -14,27 +14,6 @@ public class SymmetricalLineAction extends GraphicMouseAction {
 		setActionState(new SelectingVertexForSymmetric());
 	}
 
-//	private OriLine closeLine = null;
-//
-//	@Override
-//	public Vector2d onMove(MouseContext context, AffineTransform affine,
-//			MouseEvent event) {
-//		Vector2d result = super.onMove(context, affine, event);
-//
-//		if(context.getVertexCount() == 3){
-//			if(closeLine != null){
-//				closeLine.selected = false;
-//			}
-//
-//			closeLine = context.pickCandidateL;
-//
-//			if(closeLine != null){
-//				closeLine.selected = true;
-//			}
-//		}
-//		return result;
-//	}
-
 	@Override
 	public Vector2d onMove(
 			final PaintContextInterface context, final AffineTransform affine,

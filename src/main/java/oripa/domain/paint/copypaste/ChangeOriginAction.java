@@ -11,7 +11,6 @@ import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
-import oripa.domain.paint.util.ElementSelector;
 import oripa.value.OriLine;
 
 public class ChangeOriginAction extends GraphicMouseAction {
@@ -79,7 +78,7 @@ public class ChangeOriginAction extends GraphicMouseAction {
 
 		Collection<OriLine> lines = context.getPickedLines();
 
-		var selector = new ElementSelector();
+		var selector = getElementSelector();
 
 		g2d.setColor(selector.getAssistLineColor());
 

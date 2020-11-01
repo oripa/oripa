@@ -31,19 +31,19 @@ import oripa.value.OriLine;
 public class OverlappingLineExtractor {
 
 	private boolean isOverlap(final OriLine line0, final OriLine line1) {
-		if (GeomUtil.distinguishLineSegmentsOverlap(
-				line0.p0, line0.p1, line1.p0, line1.p1) >= 3) {
+		var overlapCount = GeomUtil.distinguishLineSegmentsOverlap(
+				line0.p0, line0.p1, line1.p0, line1.p1);
+		if (overlapCount >= 3) {
 			return true;
 		}
-		if (GeomUtil.distinguishLineSegmentsOverlap(
-				line0.p0, line0.p1, line1.p0, line1.p1) == 2) {
-			if (GeomUtil.Distance(line0.p0, line1.p0) < GeomUtil.EPS) {
+		if (overlapCount == 2) {
+			if (GeomUtil.distance(line0.p0, line1.p0) < GeomUtil.EPS) {
 				return false;
-			} else if (GeomUtil.Distance(line0.p0, line1.p1) < GeomUtil.EPS) {
+			} else if (GeomUtil.distance(line0.p0, line1.p1) < GeomUtil.EPS) {
 				return false;
-			} else if (GeomUtil.Distance(line0.p1, line1.p0) < GeomUtil.EPS) {
+			} else if (GeomUtil.distance(line0.p1, line1.p0) < GeomUtil.EPS) {
 				return false;
-			} else if (GeomUtil.Distance(line0.p1, line1.p1) < GeomUtil.EPS) {
+			} else if (GeomUtil.distance(line0.p1, line1.p1) < GeomUtil.EPS) {
 				return false;
 			} else {
 				return true;

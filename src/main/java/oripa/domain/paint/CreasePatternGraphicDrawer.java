@@ -28,6 +28,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.util.ElementSelector;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -37,6 +38,8 @@ import oripa.value.OriLine;
  *
  */
 public class CreasePatternGraphicDrawer {
+
+	private final ElementSelector selector = new ElementSelector();
 
 	/**
 	 * draws crease pattern according to the context of user interaction.
@@ -53,6 +56,7 @@ public class CreasePatternGraphicDrawer {
 
 		if (context.isGridVisible()) {
 			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize(),
+					context.getPaperDomain(),
 					context.getScale());
 		}
 
@@ -80,6 +84,7 @@ public class CreasePatternGraphicDrawer {
 	 * @param lines
 	 * @param pickedLines
 	 *            lines that user picked. null if nothing is selected.
+	 * @param scale
 	 * @param creaseVisible
 	 *            true if mountain/valley lines should be shown.
 	 * @param auxVisible
@@ -90,8 +95,6 @@ public class CreasePatternGraphicDrawer {
 			final Collection<OriLine> lines, final Collection<OriLine> pickedLines,
 			final double scale,
 			final boolean creaseVisible, final boolean auxVisible) {
-
-		ElementSelector selector = new ElementSelector();
 
 		for (OriLine line : lines) {
 			if (line.getType() == OriLine.Type.NONE && !auxVisible) {
@@ -131,8 +134,9 @@ public class CreasePatternGraphicDrawer {
 			final Graphics2D g2d, final Collection<OriLine> creasePattern, final double scale,
 			final boolean creaseVisible, final boolean auxVisible) {
 
-		g2d.setColor(Color.BLACK);
-		final double vertexDrawSize = 3.0;
+		g2d.setColor(selector.getNormalVertexColor());
+		final double vertexSize = selector.createNormalVertexSize(scale);
+		final double vertexHalfSize = vertexSize / 2;
 		for (OriLine line : creasePattern) {
 			if (!auxVisible && line.getType() == OriLine.Type.NONE) {
 				continue;
@@ -144,28 +148,28 @@ public class CreasePatternGraphicDrawer {
 			Vector2d v0 = line.p0;
 			Vector2d v1 = line.p1;
 
-			g2d.fill(new Rectangle2D.Double(v0.x - vertexDrawSize / scale,
-					v0.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
-					vertexDrawSize * 2 / scale));
-			g2d.fill(new Rectangle2D.Double(v1.x - vertexDrawSize / scale,
-					v1.y - vertexDrawSize / scale, vertexDrawSize * 2 / scale,
-					vertexDrawSize * 2 / scale));
+			g2d.fill(new Rectangle2D.Double(
+					v0.x - vertexHalfSize, v0.y - vertexHalfSize,
+					vertexSize, vertexSize));
+			g2d.fill(new Rectangle2D.Double(
+					v1.x - vertexHalfSize, v1.y - vertexHalfSize,
+					vertexSize, vertexSize));
 		}
 
 	}
 
 	public void drawCandidatePositionString(final Graphics2D g, final Vector2d candidate) {
-		if (candidate != null) {
-			g.setColor(Color.BLACK);
-			g.drawString("(" + candidate.x +
-					"," + candidate.y + ")", 0, 10);
+		if (candidate == null) {
+			return;
 		}
-
+		g.setColor(Color.BLACK);
+		g.drawString("(" + candidate.x +
+				"," + candidate.y + ")", 0, 10);
 	}
 
 	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize,
+			final RectangleDomain domain,
 			final double scale) {
-		var selector = new ElementSelector();
 
 		g2d.setColor(selector.getColor(OriLine.Type.NONE));
 		g2d.setStroke(selector.createStroke(OriLine.Type.NONE, scale));
@@ -173,15 +177,14 @@ public class CreasePatternGraphicDrawer {
 		int lineNum = gridDivNum;
 		double step = paperSize / lineNum;
 
-		// FIXME this method depends on implicit position of paper.
 		for (int i = 1; i < lineNum; i++) {
 			g2d.draw(new Line2D.Double(
-					step * i - paperSize / 2.0, -paperSize / 2.0,
-					step * i - paperSize / 2.0, paperSize / 2.0));
+					step * i + domain.getLeft(), domain.getTop(),
+					step * i + domain.getLeft(), domain.getTop() + paperSize));
 
 			g2d.draw(new Line2D.Double(
-					-paperSize / 2.0, step * i - paperSize / 2.0,
-					paperSize / 2.0, step * i - paperSize / 2.0));
+					domain.getLeft(), step * i + domain.getTop(),
+					domain.getLeft() + paperSize, step * i + domain.getTop()));
 		}
 	}
 

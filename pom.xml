@@ -4,7 +4,7 @@
 
 	<groupId>oripa</groupId>
 	<artifactId>oripa</artifactId>
-	<version>1.20</version>
+	<version>1.25</version>
 	<packaging>jar</packaging>
 
 
@@ -17,12 +17,22 @@
 
 	<dependencies>
 
+		<!-- Temporary dependency. Re-implementing Vector2d/Vector3d is preferred
+		because the development of this artifact is inactive. -->
+		<dependency>
+			<groupId>javax.vecmath</groupId>
+			<artifactId>vecmath</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+
+<!-- removed since codes using java3d has been killed and seems no longer to be activated. -->
+<!--
 		<dependency>
 			<groupId>java3d</groupId>
 			<artifactId>j3d-core-utils</artifactId>
 			<version>1.3.1</version>
 		</dependency>
-
+-->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>

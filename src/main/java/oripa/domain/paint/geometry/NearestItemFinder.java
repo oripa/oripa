@@ -29,7 +29,7 @@ public class NearestItemFinder {
 		OriLine bestLine = null;
 
 		for (OriLine line : lines) {
-			double dist = GeomUtil.DistancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
+			double dist = GeomUtil.distancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
 			if (dist < minDistance) {
 				minDistance = dist;
 				bestLine = line;
@@ -64,7 +64,7 @@ public class NearestItemFinder {
 				picked = new Vector2d();
 				Vector2d cp = new Vector2d(currentPoint.x, currentPoint.y);
 
-				GeomUtil.DistancePointToSegment(cp, l.p0, l.p1, picked);
+				GeomUtil.distancePointToSegment(cp, l.p0, l.p1, picked);
 			}
 		}
 

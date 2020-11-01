@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.util.ElementSelector;
 import oripa.domain.paint.util.RectangleClipper;
 import oripa.value.OriLine;
 
@@ -88,7 +87,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 		super.onDraw(g2d, context);
 
 		if (startPoint != null && draggingPoint != null) {
-			var selector = new ElementSelector();
+			var selector = getElementSelector();
 			g2d.setStroke(selector.createAreaSelectionStroke(context.getScale()));
 			g2d.setColor(selector.getAreaSelectionColor());
 			double sx = Math.min(startPoint.x, draggingPoint.x);

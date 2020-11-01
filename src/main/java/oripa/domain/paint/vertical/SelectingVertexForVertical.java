@@ -16,7 +16,6 @@ public class SelectingVertexForVertical extends PickingVertex {
 
 	@Override
 	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
-		// TODO Auto-generated method stub
 
 	}
 
