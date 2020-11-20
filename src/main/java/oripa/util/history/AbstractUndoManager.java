@@ -119,6 +119,6 @@ public abstract class AbstractUndoManager<Backup> {
 	}
 
 	public boolean canRedo() {
-		return index + 1 < endIndex;
+		return index < endIndex;
 	}
 }

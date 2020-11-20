@@ -20,6 +20,7 @@ package oripa.domain.paint;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,7 +76,7 @@ public class CreasePatternUndoManagerTest {
 			lines = manager.undo(lines).getInfo();
 		}
 
-		for (int i = 0; i < count - 1; i++) {
+		for (int i = 0; i < count; i++) {
 			var l = manager.redo().getInfo();
 			assertEquals(i + 1, ((OriLine) l.toArray()[0]).p0.x);
 		}
@@ -92,8 +93,9 @@ public class CreasePatternUndoManagerTest {
 		}
 
 		var lines = createOriLines(5, 5, 5, 5);
-		for (int i = 2; i < 0; i--) {
+		for (int i = 2; i >= 0; i--) {
 			lines = manager.undo(lines).getInfo();
+			assertTrue(manager.canRedo());
 		}
 
 		manager.push(createOriLines(9, 9, 9, 9));
