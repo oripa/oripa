@@ -132,6 +132,20 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		state = BasicUndo.undo(state, context);
 	}
 
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.paint.GraphicMouseActionInterface#redo(oripa.domain.paint.
+	 * PaintContextInterface)
+	 */
+	@Override
+	public void redo(final PaintContextInterface context) {
+		destroy(context);
+		recover(context);
+		context.creasePatternUndo().redo();
+	}
+
 	@Override
 	public Vector2d onMove(
 			final PaintContextInterface context, final AffineTransform affine,

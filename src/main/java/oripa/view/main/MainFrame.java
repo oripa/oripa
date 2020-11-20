@@ -152,6 +152,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
 	private final JMenuItem menuItemUndo = new JMenuItem(
 			ORIPA.res.getString("Undo"));
+	private final JMenuItem menuItemRedo = new JMenuItem("Redo");
 	private final JMenuItem menuItemAbout = new JMenuItem(
 			ORIPA.res.getString("About"));
 	private final JMenuItem menuItemRepeatCopy = new JMenuItem("Array Copy");
@@ -239,6 +240,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuEdit.add(menuItemUnSelectAll);
 		menuEdit.add(menuItemDeleteSelectedLines);
 		menuEdit.add(menuItemUndo);
+		menuEdit.add(menuItemRedo);
 		menuEdit.add(menuItemChangeOutline);
 
 		menuHelp.add(menuItemAbout);
@@ -339,6 +341,21 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			screenUpdater.updateScreen();
 		});
 		menuItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+				InputEvent.CTRL_DOWN_MASK));
+
+		menuItemRedo.addActionListener(e -> {
+			try {
+				actionHolder.getMouseAction().redo(paintContext);
+			} catch (NullPointerException ex) {
+				if (actionHolder.getMouseAction() == null) {
+					logger.error("mouseAction should not be null.", ex);
+				} else {
+					logger.error("Wrong implementation.", ex);
+				}
+			}
+			screenUpdater.updateScreen();
+		});
+		menuItemRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
 				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemClear.addActionListener(e -> clear());

@@ -551,7 +551,7 @@ class PaintContext implements PaintContextInterface {
 	@Override
 	public String toString() {
 		return "PaintContext: #line=" + pickedLines.size() +
-				", #vertex=" + pickedVertices.size() +
-				", #undoStack=" + undoer.size();
+				", #vertex=" + pickedVertices.size();
 	}
+
 }

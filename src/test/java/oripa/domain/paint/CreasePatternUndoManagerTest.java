@@ -19,6 +19,7 @@
 package oripa.domain.paint;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,35 +41,64 @@ public class CreasePatternUndoManagerTest {
 		return lines;
 	}
 
-	OriLine popLastLine(final CreasePatternUndoManager manager) {
-		Collection<OriLine> lines = manager.pop().getInfo();
+	@Test
+	public void testUndo() {
+		var manager = new CreasePatternUndoManager();
 
-		return (OriLine) (lines.toArray()[0]);
+		final int count = 3;
+
+		for (int i = 0; i < count; i++) {
+			manager.push(createOriLines(i, i, i, i));
+		}
+
+		var lines = createOriLines(count, count, count, count);
+		for (int i = count - 1; i >= 0; i--) {
+			lines = manager.undo(lines).getInfo();
+			assertEquals(i, ((OriLine) lines.toArray()[0]).p0.x);
+		}
+
+		assertFalse(manager.canUndo());
 	}
 
 	@Test
-	public void testExceedingDataShouldBeShifted() {
-		CreasePatternUndoManager manager = new CreasePatternUndoManager(5);
+	public void testRedo() {
+		var manager = new CreasePatternUndoManager();
+
+		final int count = 3;
+
+		for (int i = 0; i < count; i++) {
+			manager.push(createOriLines(i, i, i, i));
+		}
+
+		var lines = createOriLines(count, count, count, count);
+		for (int i = count - 1; i >= 0; i--) {
+			lines = manager.undo(lines).getInfo();
+		}
+
+		for (int i = 0; i < count - 1; i++) {
+			var l = manager.redo().getInfo();
+			assertEquals(i + 1, ((OriLine) l.toArray()[0]).p0.x);
+		}
+
+		assertFalse(manager.canRedo());
+	}
+
+	@Test
+	public void testDiscardingOldRedo() {
+		var manager = new CreasePatternUndoManager();
 
 		for (int i = 0; i < 5; i++) {
 			manager.push(createOriLines(i, i, i, i));
 		}
-		assertEquals(5, manager.size());
-		assertEquals(4, popLastLine(manager).p0.x, 1e-8);
-		assertEquals(4, manager.size());
 
-		for (int i = 4; i < 7; i++) {
-			manager.push(createOriLines(i, i, i, i));
+		var lines = createOriLines(5, 5, 5, 5);
+		for (int i = 2; i < 0; i--) {
+			lines = manager.undo(lines).getInfo();
 		}
-		assertEquals(5, manager.size());
-		assertEquals(6, popLastLine(manager).p0.x, 1e-8);
-		assertEquals(4, manager.size());
 
-		for (int i = 5; i >= 2; i--) {
-			assertEquals(i, popLastLine(manager).p0.x, 1e-8);
-		}
-		assertEquals(0, manager.size());
+		manager.push(createOriLines(9, 9, 9, 9));
 
+		assertFalse(manager.canRedo());
+		assertEquals(null, manager.redo());
 	}
-
 }
