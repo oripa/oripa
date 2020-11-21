@@ -34,7 +34,6 @@ public abstract class AbstractUndoManager<Backup> {
 	private int index = 0;
 	private int endIndex = 0;
 	private boolean changed = false;
-	// protected int max = 1000;
 
 	/**
 	 * Constructor
@@ -87,10 +86,6 @@ public abstract class AbstractUndoManager<Backup> {
 
 	public UndoInfo<Backup> redo() {
 		if (index == endIndex) {
-			return null;
-		}
-
-		if (index >= undoList.size()) {
 			return null;
 		}
 
