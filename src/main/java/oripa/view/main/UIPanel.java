@@ -200,7 +200,7 @@ public class UIPanel extends JPanel {
 			AngleStep.values());
 
 	private final JCheckBox zeroLineWidthCheckBox = new JCheckBox(
-			"Zero line witdh");
+			resources.getString(ResourceKey.LABEL, StringID.UI.ZERO_LINE_WIDTH_ID));
 
 	public UIPanel(
 			final StateManager stateManager,

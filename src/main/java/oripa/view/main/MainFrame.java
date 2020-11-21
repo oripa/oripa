@@ -150,9 +150,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final JMenuItem menuItemExit = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
+
 	private final JMenuItem menuItemUndo = new JMenuItem(
-			ORIPA.res.getString("Undo"));
-	private final JMenuItem menuItemRedo = new JMenuItem("Redo");
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.UNDO_ID));
+	private final JMenuItem menuItemRedo = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.REDO_ID));
+
 	private final JMenuItem menuItemAbout = new JMenuItem(
 			ORIPA.res.getString("About"));
 	private final JMenuItem menuItemRepeatCopy = new JMenuItem("Array Copy");

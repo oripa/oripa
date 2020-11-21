@@ -24,10 +24,8 @@ public class StringID {
 		public static final String PROPERTY_ID = "Property";
 		public static final String EXIT_ID = "Exit";
 		public static final String UNDO_ID = "Undo";
+		public static final String REDO_ID = "Redo";
 		public static final String ABOUT_ID = "About";
-		// public static final String COPY_PASTE_ID = "Copy_and_Paste";
-		// public static final String CUT_PASTE_ID = "Cut_and_Paste";
-		// public static final String EDIT_CONTOUR_ID = "EditContour";
 		public static final String SELECT_ALL_ID = "selectAll";
 
 		public static final String DIALOG_TITLE_SAVE_ID = "DialogTitle_FileSave";
@@ -55,6 +53,8 @@ public class StringID {
 		public static final String INPUT_LINE_ID = "UI_InputLine";
 		public static final String SELECT_ID = "UI_Select";
 		public static final String DELETE_LINE_ID = "UI_DeleteLine";
+
+		public static final String ZERO_LINE_WIDTH_ID = "UI_ZeroLineWidth";
 
 		public static final String SHOW_GRID_ID = "UI_ShowGrid";
 		public static final String SHOW_MV_ID = "UI_ShowMountainValley";
