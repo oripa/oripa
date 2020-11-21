@@ -25,19 +25,20 @@ public class ElementSelector {
 		}
 	}
 
-	public BasicStroke createStroke(final OriLine.Type lineType, final double scale) {
+	public BasicStroke createStroke(final OriLine.Type lineType, final double scale,
+			final boolean zeroWidth) {
 		switch (lineType) {
 		case NONE:
 		case CUT:
 		case RIDGE:
 		case VALLEY:
-			return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+			return new BasicStroke(createThinLineWidth(scale, zeroWidth), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
 		case CUT_MODEL:
 			return new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
 		default:
-			return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+			return new BasicStroke(createThinLineWidth(scale, zeroWidth), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
 		}
 	}
@@ -50,7 +51,10 @@ public class ElementSelector {
 		return 4.0f / (float) scale;
 	}
 
-	public float createThinLineWidth(final double scale) {
+	public float createThinLineWidth(final double scale, final boolean zeroWidth) {
+		if (zeroWidth) {
+			return 0;
+		}
 		return 1.5f / (float) scale;
 	}
 
@@ -58,8 +62,8 @@ public class ElementSelector {
 		return Color.GREEN;
 	}
 
-	public BasicStroke createSelectedLineStroke(final double scale) {
-		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+	public BasicStroke createSelectedLineStroke(final double scale, final boolean zeroWidth) {
+		return new BasicStroke(createThinLineWidth(scale, zeroWidth), BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_MITER);
 	}
 
@@ -67,8 +71,8 @@ public class ElementSelector {
 		return Color.GREEN;
 	}
 
-	public BasicStroke createCandidateLineStroke(final double scale) {
-		return new BasicStroke(createThinLineWidth(scale), BasicStroke.CAP_BUTT,
+	public BasicStroke createCandidateLineStroke(final double scale, final boolean zeroWidth) {
+		return new BasicStroke(createThinLineWidth(scale, zeroWidth), BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_MITER);
 	}
 
@@ -91,7 +95,7 @@ public class ElementSelector {
 
 	public BasicStroke createAreaSelectionStroke(final double scale) {
 		final float[] dash = { 3.0f };
-		return new BasicStroke(createThinLineWidth(scale),
+		return new BasicStroke(createThinLineWidth(scale, false),
 				BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
 	}
 

@@ -199,6 +199,9 @@ public class UIPanel extends JPanel {
 	private final JComboBox<AngleStep> angleStepCombo = new JComboBox<>(
 			AngleStep.values());
 
+	private final JCheckBox zeroLineWidthCheckBox = new JCheckBox(
+			"Zero line witdh");
+
 	public UIPanel(
 			final StateManager stateManager,
 			final ViewScreenUpdater screenUpdater,
@@ -270,6 +273,9 @@ public class UIPanel extends JPanel {
 		final var gridX = 1;
 		var gridY = 0;
 		final var gridWidth = 4;
+
+		mainPanel.add(zeroLineWidthCheckBox, createMainPanelGridBagConstraints(
+				gridX, gridY++, gridWidth));
 
 		mainPanel.add(editModeInputLineButton, createMainPanelGridBagConstraints(
 				gridX, gridY++, gridWidth));
@@ -649,6 +655,11 @@ public class UIPanel extends JPanel {
 		textFieldAngle.getDocument().addDocumentListener(
 				new AngleValueInputListener(valueSetting));
 
+		zeroLineWidthCheckBox.addActionListener(e -> {
+			mainScreenSetting.setZeroLineWidth(zeroLineWidthCheckBox.isSelected());
+			screenUpdater.updateScreen();
+		});
+
 		dispGridCheckBox.addActionListener(e -> {
 			mainScreenSetting.setGridVisible(dispGridCheckBox.isSelected());
 			screenUpdater.updateScreen();
@@ -702,7 +713,7 @@ public class UIPanel extends JPanel {
 		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory(
 				childFrameManager);
 		JFrame checker = checkerFactory.createFrame(
-				UIPanel.this, origamiModel, creasePattern);
+				UIPanel.this, origamiModel, creasePattern, context.isZeroLineWidth());
 		checker.repaint();
 		checker.setVisible(true);
 	}
@@ -831,6 +842,11 @@ public class UIPanel extends JPanel {
 	}
 
 	private void addPropertyChangeListenersToSetting(final MainScreenSetting mainScreenSetting) {
+		mainScreenSetting.addPropertyChangeListener(
+				MainScreenSetting.ZERO_LINE_WIDTH, e -> {
+					zeroLineWidthCheckBox.setSelected((boolean) e.getNewValue());
+				});
+
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.GRID_VISIBLE, e -> {
 					dispGridCheckBox.setSelected((boolean) e.getNewValue());

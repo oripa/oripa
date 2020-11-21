@@ -205,8 +205,11 @@ public class PainterScreen extends JPanel
 		super.paintComponent(g);
 
 		Graphics2D bufferG2D = updateBufferImage();
-		bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+
+		if (!paintContext.isZeroLineWidth()) {
+			bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+		}
 
 		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
@@ -215,7 +218,8 @@ public class PainterScreen extends JPanel
 
 		if (paintContext.isCrossLineVisible()) {
 			var crossLines = cutOutlinesHolder.getOutlines();
-			drawer.drawAllLines(bufferG2D, crossLines, camera.getScale());
+			drawer.drawAllLines(bufferG2D, crossLines, camera.getScale(),
+					paintContext.isZeroLineWidth());
 		}
 
 		// Line that links the pair of unsetled faces
@@ -417,6 +421,12 @@ public class PainterScreen extends JPanel
 	private void addPropertyChangeListenersToSetting() {
 		screenUpdater.addPropertyChangeListener(
 				ViewScreenUpdater.REDRAW_REQUESTED, e -> repaint());
+
+		setting.addPropertyChangeListener(
+				MainScreenSetting.ZERO_LINE_WIDTH, e -> {
+					paintContext.setZeroLineWidth((boolean) e.getNewValue());
+					repaint();
+				});
 
 		setting.addPropertyChangeListener(
 				MainScreenSetting.GRID_VISIBLE, e -> {

@@ -250,4 +250,8 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 *         crease pattern is set to this context.
 	 */
 	public abstract RectangleDomain getPaperDomain();
+
+	public abstract boolean isZeroLineWidth();
+
+	public abstract void setZeroLineWidth(final boolean zeroLineWidth);
 }

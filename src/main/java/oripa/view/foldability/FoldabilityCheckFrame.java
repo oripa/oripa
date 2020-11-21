@@ -49,9 +49,10 @@ public class FoldabilityCheckFrame extends JFrame implements ActionListener {
 
 	public void setModel(
 			final OrigamiModel origamiModel,
-			final Collection<OriLine> creasePattern) {
+			final Collection<OriLine> creasePattern,
+			final boolean zeroLineWidth) {
 		screen.showModel(
-				origamiModel, creasePattern);
+				origamiModel, creasePattern, zeroLineWidth);
 	}
 
 }
