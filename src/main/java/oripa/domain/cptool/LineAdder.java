@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
@@ -64,15 +65,17 @@ public class LineAdder {
 
 			iterator.remove();
 
-			if (GeomUtil.distance(line.p0, crossPoint) > CalculationResource.POINT_EPS) {
-				toBeAdded.add(new OriLine(line.p0, crossPoint, line.getType()));
-			}
+			Consumer<Vector2d> addIfLineCanBeSplit = v -> {
+				if (GeomUtil.distance(v, crossPoint) > CalculationResource.POINT_EPS) {
+					var l = new OriLine(v, crossPoint, line.getType());
+					// keep selection not to change the target of copy.
+					l.selected = line.selected;
+					toBeAdded.add(l);
+				}
+			};
 
-			if (GeomUtil.distance(line.p1, crossPoint) > CalculationResource.POINT_EPS) {
-				toBeAdded.add(new OriLine(line.p1, crossPoint, line.getType()));
-			}
-
-			// crossingLines.add(line);
+			addIfLineCanBeSplit.accept(line.p0);
+			addIfLineCanBeSplit.accept(line.p1);
 		}
 
 		toBeAdded.forEach(line -> currentLines.add(line));
