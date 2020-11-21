@@ -22,12 +22,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Koji
  *
  * @param <Backup>
  */
 public abstract class AbstractUndoManager<Backup> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractUndoManager.class);
 
 	private final List<UndoInfo<Backup>> undoList = Collections
 			.synchronizedList(new ArrayList<UndoInfo<Backup>>());
@@ -55,7 +59,7 @@ public abstract class AbstractUndoManager<Backup> {
 		}
 	}
 
-	public void push(final UndoInfo<Backup> info) {
+	private synchronized void push(final UndoInfo<Backup> info) {
 		set(index, info);
 		index++;
 		endIndex = index;
@@ -70,26 +74,34 @@ public abstract class AbstractUndoManager<Backup> {
 	 *            sequence.
 	 * @return
 	 */
-	public UndoInfo<Backup> undo(final Backup info) {
-		if (index == 0) {
+	public synchronized UndoInfo<Backup> undo(final Backup info) {
+		if (!canUndo()) {
+			LOGGER.debug("can't undo: " + indexLog());
 			return null;
 		}
 
+		changed = true;
+
 		if (index == endIndex) {
+			LOGGER.debug("set the start of undo sequence: " + indexLog());
 			set(index, createUndoInfo(info));
+
 		}
 
-		changed = true;
+		LOGGER.debug("before undo: " + indexLog());
 
 		return undoList.get(--index);
 	}
 
-	public UndoInfo<Backup> redo() {
-		if (index == endIndex) {
+	public synchronized UndoInfo<Backup> redo() {
+		if (!canRedo()) {
+			LOGGER.debug("can't redo: " + indexLog());
 			return null;
 		}
 
 		changed = true;
+
+		LOGGER.debug("before redo: " + indexLog());
 
 		return undoList.get(++index);
 	}
@@ -107,6 +119,10 @@ public abstract class AbstractUndoManager<Backup> {
 		undoList.clear();
 		index = 0;
 		endIndex = 0;
+	}
+
+	private String indexLog() {
+		return "index = " + index + ", endIndex = " + endIndex;
 	}
 
 	public boolean canUndo() {

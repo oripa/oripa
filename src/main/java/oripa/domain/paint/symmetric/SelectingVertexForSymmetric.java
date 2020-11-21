@@ -36,7 +36,7 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 		Vector2d first = context.getVertex(0);
 		Vector2d second = context.getVertex(1);
 		Vector2d third = context.getVertex(2);

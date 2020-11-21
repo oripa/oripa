@@ -82,7 +82,7 @@ public class CreasePatternUndoer implements CreasePatternUndoerInterface {
 	 * @see oripa.domain.paint.CreasePatternUndoerInterface#redo()
 	 */
 	@Override
-	public void redo() {
+	public synchronized void redo() {
 		UndoInfo<Collection<OriLine>> info = undoManager.redo();
 
 		if (info == null) {

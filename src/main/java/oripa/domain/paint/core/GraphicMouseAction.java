@@ -141,6 +141,9 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 */
 	@Override
 	public void redo(final PaintContextInterface context) {
+		if (!context.creasePatternUndo().canRedo()) {
+			return;
+		}
 		destroy(context);
 		recover(context);
 		context.creasePatternUndo().redo();
