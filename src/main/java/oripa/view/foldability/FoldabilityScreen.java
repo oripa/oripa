@@ -102,12 +102,15 @@ public class FoldabilityScreen extends JPanel
 	private Collection<OriVertex> violatingVertices = new ArrayList<>();
 	private Collection<OriFace> violatingFaces = new ArrayList<>();
 	private Collection<OriLine> overlappingLines = new ArrayList<>();
+	private boolean zeroLineWidth = false;
 
 	public void showModel(
 			final OrigamiModel origamiModel,
-			final Collection<OriLine> creasePattern) {
+			final Collection<OriLine> creasePattern,
+			final boolean zeroLineWidth) {
 		this.origamiModel = origamiModel;
 		this.creasePattern = creasePattern;
+		this.zeroLineWidth = zeroLineWidth;
 
 		FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 		violatingVertices = foldabilityChecker.findViolatingVertices(
@@ -216,13 +219,17 @@ public class FoldabilityScreen extends JPanel
 		bufferg.setTransform(affineTransform);
 
 		Graphics2D g2d = bufferg;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		if (!zeroLineWidth) {
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+		}
 
 		highlightOverlappingLines(g2d);
 
 		var scale = camera.getScale();
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawAllLines(g2d, creasePattern, scale);
+		drawer.drawAllLines(g2d, creasePattern, scale, zeroLineWidth);
 		drawer.drawCreaseVertices(g2d, creasePattern, scale);
 
 		drawFoldability(g2d);

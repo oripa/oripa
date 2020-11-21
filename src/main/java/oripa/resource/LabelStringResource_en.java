@@ -19,8 +19,10 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.Main.EXIT_ID, "Exit" },
 			{ StringID.Main.ABOUT_ID, "About" },
 			{ StringID.Main.UNDO_ID, "Undo" },
+			{ StringID.Main.REDO_ID, "Redo" },
 			{ StringID.Main.SELECT_ALL_ID, "Select all" },
 
+			{ StringID.UI.ZERO_LINE_WIDTH_ID, "Zero line width" },
 			{ StringID.UI.AUX_ID, "Aux" },
 			{ StringID.UI.VALLEY_ID, "Valley" },
 			{ StringID.UI.MOUNTAIN_ID, "Mountain" },

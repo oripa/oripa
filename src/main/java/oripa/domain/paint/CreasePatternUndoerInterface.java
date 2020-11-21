@@ -24,24 +24,19 @@ package oripa.domain.paint;
  */
 public interface CreasePatternUndoerInterface {
 
-//	public abstract void cacheUndoInfo();
-
-//	public abstract void pushCachedUndoInfo();
-
 	public abstract void pushUndoInfo();
-
-//	public abstract void pushUndoInfo(UndoInfo<Collection<OriLine>> uinfo);
 
 	public abstract void undo();
 
 	public abstract boolean canUndo();
+
+	public abstract void redo();
+
+	public abstract boolean canRedo();
 
 	public abstract boolean changeExists();
 
 	public abstract void clearChanged();
 
 	public abstract void clear();
-
-	public abstract int size();
-
 }

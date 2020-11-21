@@ -46,6 +46,8 @@ class PaintContext implements PaintContextInterface {
 
 	private AngleStep angleStep;
 
+	private boolean zeroLineWidth;
+
 	/*
 	 * TODO: Rename for more general usage. snapPoints? assistPoints? something
 	 * like that.
@@ -543,6 +545,16 @@ class PaintContext implements PaintContextInterface {
 		return angleSnapCrossPoints;
 	}
 
+	@Override
+	public boolean isZeroLineWidth() {
+		return zeroLineWidth;
+	}
+
+	@Override
+	public void setZeroLineWidth(final boolean zeroLineWidth) {
+		this.zeroLineWidth = zeroLineWidth;
+	}
+
 	/*
 	 * (non Javadoc)
 	 *
@@ -551,7 +563,7 @@ class PaintContext implements PaintContextInterface {
 	@Override
 	public String toString() {
 		return "PaintContext: #line=" + pickedLines.size() +
-				", #vertex=" + pickedVertices.size() +
-				", #undoStack=" + undoer.size();
+				", #vertex=" + pickedVertices.size();
 	}
+
 }

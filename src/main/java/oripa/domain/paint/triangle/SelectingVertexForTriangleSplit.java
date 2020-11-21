@@ -33,7 +33,7 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 		var first = context.getVertex(0);
 		var second = context.getVertex(1);
 		var third = context.getVertex(2);

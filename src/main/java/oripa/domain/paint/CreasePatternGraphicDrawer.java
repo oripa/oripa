@@ -57,10 +57,11 @@ public class CreasePatternGraphicDrawer {
 		if (context.isGridVisible()) {
 			drawGridLines(g2d, context.getGridDivNum(), creasePattern.getPaperSize(),
 					context.getPaperDomain(),
-					context.getScale());
+					context.getScale(), context.isZeroLineWidth());
 		}
 
-		drawLines(g2d, creasePattern, null, context.getScale(), context.isMVLineVisible(),
+		drawLines(g2d, creasePattern, null, context.getScale(), context.isZeroLineWidth(),
+				context.isMVLineVisible(),
 				context.isAuxLineVisible());
 
 		// Drawing of the vertices
@@ -71,9 +72,10 @@ public class CreasePatternGraphicDrawer {
 	}
 
 	public void drawAllLines(
-			final Graphics2D g2d, final Collection<OriLine> lines, final double scale) {
+			final Graphics2D g2d, final Collection<OriLine> lines,
+			final double scale, final boolean zeroLineWidth) {
 
-		drawLines(g2d, lines, null, scale, true, true);
+		drawLines(g2d, lines, null, scale, zeroLineWidth, true, true);
 	}
 
 	/**
@@ -93,7 +95,7 @@ public class CreasePatternGraphicDrawer {
 	private void drawLines(
 			final Graphics2D g2d,
 			final Collection<OriLine> lines, final Collection<OriLine> pickedLines,
-			final double scale,
+			final double scale, final boolean zeroLineWidth,
 			final boolean creaseVisible, final boolean auxVisible) {
 
 		for (OriLine line : lines) {
@@ -108,7 +110,8 @@ public class CreasePatternGraphicDrawer {
 
 			if (pickedLines == null || !pickedLines.contains(line)) {
 				g2d.setColor(selector.getColor(line.getType()));
-				g2d.setStroke(selector.createStroke(line.getType(), scale));
+				g2d.setStroke(selector.createStroke(
+						line.getType(), scale, zeroLineWidth));
 
 				g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
 						line.p1.y));
@@ -167,12 +170,13 @@ public class CreasePatternGraphicDrawer {
 				"," + candidate.y + ")", 0, 10);
 	}
 
-	private void drawGridLines(final Graphics2D g2d, final int gridDivNum, final double paperSize,
+	private void drawGridLines(final Graphics2D g2d,
+			final int gridDivNum, final double paperSize,
 			final RectangleDomain domain,
-			final double scale) {
+			final double scale, final boolean zeroLineWidth) {
 
 		g2d.setColor(selector.getColor(OriLine.Type.NONE));
-		g2d.setStroke(selector.createStroke(OriLine.Type.NONE, scale));
+		g2d.setStroke(selector.createStroke(OriLine.Type.NONE, scale, zeroLineWidth));
 
 		int lineNum = gridDivNum;
 		double step = paperSize / lineNum;

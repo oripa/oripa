@@ -82,7 +82,9 @@ public class PictureExporter implements DocExporter {
 		g2d.setTransform(camera.getAffineTransform());
 
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawAllLines(g2d, creasePattern, scale);
+
+		// TODO: make zeroLineWidth configurable
+		drawer.drawAllLines(g2d, creasePattern, scale, false);
 
 		File file = new File(filePath);
 		ImageIO.write(image, filePath.substring(filePath.lastIndexOf(".") + 1),

@@ -132,6 +132,23 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		state = BasicUndo.undo(state, context);
 	}
 
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.paint.GraphicMouseActionInterface#redo(oripa.domain.paint.
+	 * PaintContextInterface)
+	 */
+	@Override
+	public void redo(final PaintContextInterface context) {
+		if (!context.creasePatternUndo().canRedo()) {
+			return;
+		}
+		destroy(context);
+		recover(context);
+		context.creasePatternUndo().redo();
+	}
+
 	@Override
 	public Vector2d onMove(
 			final PaintContextInterface context, final AffineTransform affine,
@@ -183,7 +200,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	private void drawPickedLines(final Graphics2D g2d, final PaintContextInterface context) {
 		for (OriLine line : context.getPickedLines()) {
 			g2d.setColor(selector.getSelectedItemColor());
-			g2d.setStroke(selector.createSelectedLineStroke(context.getScale()));
+			g2d.setStroke(selector.createSelectedLineStroke(
+					context.getScale(), context.isZeroLineWidth()));
 
 			drawLine(g2d, line);
 		}
@@ -246,7 +264,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		OriLine candidate = context.getCandidateLineToPick();
 		if (candidate != null) {
 			g2d.setColor(selector.getCandidateItemColor());
-			g2d.setStroke(selector.createCandidateLineStroke(context.getScale()));
+			g2d.setStroke(selector.createCandidateLineStroke(
+					context.getScale(), context.isZeroLineWidth()));
 
 			drawLine(g2d, candidate);
 		}
@@ -272,7 +291,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
 
 		g2d.setStroke(selector.createStroke(context.getLineTypeOfNewLines(),
-				context.getScale()));
+				context.getScale(), context.isZeroLineWidth()));
 
 		drawLine(g2d, picked,
 				NearestItemFinder.getCandidateVertex(context, true));

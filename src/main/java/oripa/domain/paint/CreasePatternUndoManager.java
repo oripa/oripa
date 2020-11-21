@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -33,7 +33,7 @@ public class CreasePatternUndoManager extends BasicUndoManager<Collection<OriLin
 	/**
 	 * Constructor
 	 */
-	public CreasePatternUndoManager(int maxHistory) {
-		super(new CreasePatternUndoFactory(), maxHistory);
+	public CreasePatternUndoManager() {
+		super(new CreasePatternUndoFactory());
 	}
 }

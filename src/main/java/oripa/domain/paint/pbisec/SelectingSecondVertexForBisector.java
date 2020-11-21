@@ -13,7 +13,7 @@ public class SelectingSecondVertexForBisector extends PickingVertex {
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
 		if (context.getVertexCount() != 2) {
 			throw new IllegalStateException();

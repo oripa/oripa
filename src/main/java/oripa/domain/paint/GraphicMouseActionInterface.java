@@ -69,6 +69,8 @@ public interface GraphicMouseActionInterface {
 
 	public abstract void undo(PaintContextInterface context);
 
+	public abstract void redo(PaintContextInterface context);
+
 	/**
 	 * searches a vertex and a line close enough to the mouse cursor. The result
 	 * is stored into context.pickCandidateL(and V).
