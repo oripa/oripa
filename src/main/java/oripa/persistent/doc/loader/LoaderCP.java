@@ -32,10 +32,10 @@ import oripa.value.OriLine;
 
 public class LoaderCP implements DocLoader {
 
-	public ArrayList<OriLine> lines = new ArrayList<>();
-
 	@Override
 	public Doc load(final String filePath) {
+		var lines = new ArrayList<OriLine>();
+
 		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 
@@ -118,7 +118,7 @@ public class LoaderCP implements DocLoader {
 		CreasePatternFactory factory = new CreasePatternFactory();
 		CreasePatternInterface creasePattern = factory
 				.createCreasePattern(lines);
-		Doc doc = new Doc(400);
+		Doc doc = new Doc();
 		doc.setCreasePattern(creasePattern);
 		return doc;
 
