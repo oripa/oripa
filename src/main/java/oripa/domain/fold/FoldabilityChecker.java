@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -28,49 +28,59 @@ import oripa.util.collection.ConjunctionLoop;
  */
 public class FoldabilityChecker {
 
-	public boolean modelIsProbablyFoldable(Collection<OriVertex> vertices, Collection<OriFace> faces) {
+	public boolean modelIsProbablyFoldable(final Collection<OriVertex> vertices,
+			final Collection<OriFace> faces) {
 
 		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
 				new MaekawaTheorem());
 		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
 				new KawasakiTheorem());
-		
+		ConjunctionLoop<OriVertex> bigLittleBigConjunction = new ConjunctionLoop<>(
+				new BigLittleBigLemma());
+
 		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
 				new FaceIsConvex());
 
 		return maekawaConjunction.holds(vertices) &&
 				kawasakiConjunction.holds(vertices) &&
+				bigLittleBigConjunction.holds(vertices) &&
 				convexRuleConjunction.holds(faces);
 	}
 
-	public Collection<OriVertex> findViolatingVertices(Collection<OriVertex> vertices) {
-		//--------
+	public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
+		// --------
 		// test Maekawa's theorem
 
 		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
 				new MaekawaTheorem());
 
-		//--------
+		// --------
 		// test Kawasaki's theorem
 
 		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
 				new KawasakiTheorem());
 
-		Collection<OriVertex> violatingVertices =
-				maekawaConjunction.findViolations(vertices);
+		// --------
+		// test big-little-big lemma
+
+		ConjunctionLoop<OriVertex> bigLittleBigConjunction = new ConjunctionLoop<>(
+				new BigLittleBigLemma());
+
+		Collection<OriVertex> violatingVertices = maekawaConjunction.findViolations(vertices);
 
 		violatingVertices.addAll(
 				kawasakiConjunction.findViolations(vertices));
-		
+
+		violatingVertices.addAll(
+				bigLittleBigConjunction.findViolations(vertices));
 
 		return violatingVertices;
 	}
 
-
-	public Collection<OriFace> findViolatingFaces(Collection<OriFace> faces) {
-		//--------
+	public Collection<OriFace> findViolatingFaces(final Collection<OriFace> faces) {
+		// --------
 		// test convex-face condition
-		
+
 		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
 				new FaceIsConvex());
 

@@ -47,7 +47,7 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 	/**
 	 *
 	 * @param vertices
-	 * @return true if all vertices are passes the theorem test.
+	 * @return true if all vertices pass the theorem test.
 	 */
 	@Override
 	public boolean holds(final OriVertex vertex) {
