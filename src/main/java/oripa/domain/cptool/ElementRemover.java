@@ -98,6 +98,24 @@ public class ElementRemover {
 	}
 
 	/**
+	 *
+	 * @param linesToBeRemoved
+	 * @param creasePattern
+	 */
+	public void removeLines(final Collection<OriLine> linesToBeRemoved,
+			final Collection<OriLine> creasePattern) {
+
+		linesToBeRemoved.forEach(line -> creasePattern.remove(line));
+
+		// merge lines after removing all lines to be removed.
+		// merging while removing makes some lines not to be removed.
+		linesToBeRemoved.forEach(line -> {
+			merge2LinesAt(line.p0, creasePattern);
+			merge2LinesAt(line.p1, creasePattern);
+		});
+	}
+
+	/**
 	 * remove lines which are marked "selected" from given collection.
 	 *
 	 * @param creasePattern
@@ -110,7 +128,7 @@ public class ElementRemover {
 				.filter(line -> line.selected)
 				.collect(Collectors.toList());
 
-		selectedLines.forEach(line -> removeLine(line, creasePattern));
+		removeLines(selectedLines, creasePattern);
 	}
 
 }
