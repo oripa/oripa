@@ -99,17 +99,17 @@ public class LoaderCP implements DocLoader {
 			maxV.y = Math.max(maxV.y, line.p1.y);
 		}
 
-		// size normalization
-		double size = 400;
-		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0,
-				(minV.y + maxV.y) / 2.0);
-		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
-		for (OriLine line : lines) {
-			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
-			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
-			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
-			line.p1.y = (line.p1.y - center.y) / bboxSize * size;
-		}
+//		// size normalization
+//		double size = 400;
+//		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0,
+//				(minV.y + maxV.y) / 2.0);
+//		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
+//		for (OriLine line : lines) {
+//			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
+//			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
+//			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
+//			line.p1.y = (line.p1.y - center.y) / bboxSize * size;
+//		}
 
 		// for (OriLine l : lines) {
 		// doc.addLine(l);
