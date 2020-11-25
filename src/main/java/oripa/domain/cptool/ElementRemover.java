@@ -98,6 +98,7 @@ public class ElementRemover {
 	}
 
 	/**
+	 * remove all lines in {@code linesToBeRemoved} from {@code creasePattern}.
 	 *
 	 * @param linesToBeRemoved
 	 * @param creasePattern
