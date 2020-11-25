@@ -59,13 +59,22 @@ public class LoaderCP implements DocLoader {
 				line = new OriLine();
 				lines.add(line);
 
-				line.setType(OriLine.Type.fromInt(Integer.parseInt(st.sval)));// ==
-																				// 1
-																				// ?
-				// OriLine.TYPE_RIDGE
-				// :
-				// OriLine.TYPE_VALLEY;
-				System.out.println("line type " + line.getType());
+				try {
+					var lineType = OriLine.Type.fromInt(Integer.parseInt(st.sval));
+					switch (lineType) {
+					case CUT:
+					case RIDGE:
+					case VALLEY:
+						line.setType(lineType);
+						break;
+					default:
+						line.setType(OriLine.Type.NONE);
+						break;
+					}
+				} catch (IllegalArgumentException e) {
+					line.setType(OriLine.Type.NONE);
+				}
+//				System.out.println("line type " + line.getType());
 
 				token = st.nextToken();
 				line.p0.x = Double.parseDouble(st.sval);

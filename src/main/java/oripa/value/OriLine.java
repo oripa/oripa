@@ -48,7 +48,7 @@ public class OriLine implements Comparable<OriLine> {
 			return val;
 		}
 
-		public static Type fromInt(final int val) {
+		public static Type fromInt(final int val) throws IllegalArgumentException {
 			Type type;
 			switch (val) {
 
