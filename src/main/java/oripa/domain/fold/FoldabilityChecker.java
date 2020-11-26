@@ -33,8 +33,9 @@ import oripa.util.collection.Rule;
 public class FoldabilityChecker {
 
 	private enum VertexRule {
-		MAEKAWA(new MaekawaTheorem(), "Maekawa"), KAWASAKI(new KawasakiTheorem(),
-				"Kawasaki"), BIG_LITTLE_BIG(new BigLittleBigLemma(), "Big-little-big");
+		MAEKAWA(new MaekawaTheorem(), "Maekawa"),
+		KAWASAKI(new KawasakiTheorem(),	"Kawasaki"),
+		BIG_LITTLE_BIG(new BigLittleBigLemma(), "Big-little-big");
 
 		private final Rule<OriVertex> rule;
 		private final String name;
@@ -43,8 +44,7 @@ public class FoldabilityChecker {
 		private VertexRule(final Rule<OriVertex> rule, final String name) {
 			this.rule = rule;
 			this.name = name;
-			conjunction = new ConjunctionLoop<>(
-					rule);
+			conjunction = new ConjunctionLoop<>(rule);
 		}
 
 		public Rule<OriVertex> getRule() {
