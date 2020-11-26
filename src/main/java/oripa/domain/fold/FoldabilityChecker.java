@@ -27,19 +27,18 @@ import oripa.util.collection.ConjunctionLoop;
  *
  */
 public class FoldabilityChecker {
+	private final ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
+			new MaekawaTheorem());
+	private final ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
+			new KawasakiTheorem());
+	private final ConjunctionLoop<OriVertex> bigLittleBigConjunction = new ConjunctionLoop<>(
+			new BigLittleBigLemma());
+
+	private final ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
+			new FaceIsConvex());
 
 	public boolean modelIsProbablyFoldable(final Collection<OriVertex> vertices,
 			final Collection<OriFace> faces) {
-
-		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
-				new MaekawaTheorem());
-		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
-				new KawasakiTheorem());
-		ConjunctionLoop<OriVertex> bigLittleBigConjunction = new ConjunctionLoop<>(
-				new BigLittleBigLemma());
-
-		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
-				new FaceIsConvex());
 
 		return maekawaConjunction.holds(vertices) &&
 				kawasakiConjunction.holds(vertices) &&
@@ -48,24 +47,6 @@ public class FoldabilityChecker {
 	}
 
 	public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
-		// --------
-		// test Maekawa's theorem
-
-		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
-				new MaekawaTheorem());
-
-		// --------
-		// test Kawasaki's theorem
-
-		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
-				new KawasakiTheorem());
-
-		// --------
-		// test big-little-big lemma
-
-		ConjunctionLoop<OriVertex> bigLittleBigConjunction = new ConjunctionLoop<>(
-				new BigLittleBigLemma());
-
 		Collection<OriVertex> violatingVertices = maekawaConjunction.findViolations(vertices);
 
 		violatingVertices.addAll(
