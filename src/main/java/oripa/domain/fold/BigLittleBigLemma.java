@@ -34,6 +34,8 @@ import oripa.value.OriLine;
  *
  */
 public class BigLittleBigLemma extends AbstractRule<OriVertex> {
+	private static final double EPS = 1e-5;
+
 	/*
 	 * (non Javadoc)
 	 *
@@ -64,7 +66,7 @@ public class BigLittleBigLemma extends AbstractRule<OriVertex> {
 			var a2 = getAngle(e2.oppositeVertex(vertex), vertex, e3.oppositeVertex(vertex));
 			var a3 = getAngle(e3.oppositeVertex(vertex), vertex, e4.oppositeVertex(vertex));
 
-			if (a1 > a2 && a3 > a2) {
+			if (a1 - a2 > EPS && a3 - a2 > EPS) {
 				lemmaHolds &= e2.type != e3.type;
 			}
 		}
