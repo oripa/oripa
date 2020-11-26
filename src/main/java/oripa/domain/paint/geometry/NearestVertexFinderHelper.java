@@ -43,7 +43,7 @@ public class NearestVertexFinderHelper {
 		NearestVertexFinderHelper.findNearestOf(
 				p, nearestPoint, other);
 
-		return nearest;
+		return nearestPoint.point;
 	}
 
 	private static NearestPoint findNearestVertexFromLines(
