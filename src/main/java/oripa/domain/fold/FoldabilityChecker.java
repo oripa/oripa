@@ -18,21 +18,47 @@
  */
 package oripa.domain.fold;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import oripa.util.collection.ConjunctionLoop;
+import oripa.util.collection.Rule;
 
 /**
  * @author Koji
  *
  */
 public class FoldabilityChecker {
-	private final ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
-			new MaekawaTheorem());
-	private final ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
-			new KawasakiTheorem());
-	private final ConjunctionLoop<OriVertex> bigLittleBigConjunction = new ConjunctionLoop<>(
-			new BigLittleBigLemma());
+
+	private enum VertexRule {
+		MAEKAWA(new MaekawaTheorem(), "Maekawa"), KAWASAKI(new KawasakiTheorem(),
+				"Kawasaki"), BIG_LITTLE_BIG(new BigLittleBigLemma(), "Big-little-big");
+
+		private final Rule<OriVertex> rule;
+		private final String name;
+		private final ConjunctionLoop<OriVertex> conjunction;
+
+		private VertexRule(final Rule<OriVertex> rule, final String name) {
+			this.rule = rule;
+			this.name = name;
+			conjunction = new ConjunctionLoop<>(
+					rule);
+		}
+
+		public Rule<OriVertex> getRule() {
+			return rule;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public ConjunctionLoop<OriVertex> getConjunction() {
+			return conjunction;
+		}
+	}
 
 	private final ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
 			new FaceIsConvex());
@@ -40,22 +66,26 @@ public class FoldabilityChecker {
 	public boolean modelIsProbablyFoldable(final Collection<OriVertex> vertices,
 			final Collection<OriFace> faces) {
 
-		return maekawaConjunction.holds(vertices) &&
-				kawasakiConjunction.holds(vertices) &&
-				bigLittleBigConjunction.holds(vertices) &&
+		return Arrays.asList(VertexRule.values()).stream()
+				.allMatch(rule -> rule.getConjunction().holds(vertices)) &&
 				convexRuleConjunction.holds(faces);
 	}
 
 	public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
-		Collection<OriVertex> violatingVertices = maekawaConjunction.findViolations(vertices);
+		var violatingVertices = new HashSet<OriVertex>();
 
-		violatingVertices.addAll(
-				kawasakiConjunction.findViolations(vertices));
-
-		violatingVertices.addAll(
-				bigLittleBigConjunction.findViolations(vertices));
+		Arrays.asList(VertexRule.values())
+				.forEach(rule -> violatingVertices
+						.addAll(rule.getConjunction().findViolations(vertices)));
 
 		return violatingVertices;
+	}
+
+	public Collection<String> getVertexViolationNames(final OriVertex vertex) {
+		return Arrays.asList(VertexRule.values()).stream()
+				.filter(rule -> rule.getRule().violates(vertex))
+				.map(rule -> rule.getName())
+				.collect(Collectors.toList());
 	}
 
 	public Collection<OriFace> findViolatingFaces(final Collection<OriFace> faces) {
