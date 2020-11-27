@@ -110,9 +110,9 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 
 		final List<Double> angles = IntStream.range(0, edgeNum)
 				.mapToObj(i -> OriGeomUtil.getAngleDifference(
-						vertex.getOppisiteVertex(i),
+						vertex.getOppositeVertex(i),
 						vertex,
-						vertex.getOppisiteVertex(i + 1)))
+						vertex.getOppositeVertex(i + 1)))
 				.collect(Collectors.toList());
 
 		LOGGER.debug("angles = "

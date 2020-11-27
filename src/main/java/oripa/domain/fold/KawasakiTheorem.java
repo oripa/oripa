@@ -64,7 +64,7 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 			}
 
 			double angle = OriGeomUtil.getAngleDifference(
-					vertex.getOppisiteVertex(i), vertex, vertex.getOppisiteVertex(i + 1));
+					vertex.getOppositeVertex(i), vertex, vertex.getOppositeVertex(i + 1));
 
 			if (i % 2 == 0) {
 				oddSum += angle;

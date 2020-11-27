@@ -84,14 +84,14 @@ public class OriVertex {
 	}
 
 	public OriEdge getPrevEdge(final OriEdge e) {
-		return CollectionUtil.getCircular(edges, edges.lastIndexOf(e) - 1);
+		return getEdge(edges.lastIndexOf(e) - 1);
 	}
 
 	public OriEdge getEdge(final int index) {
 		return CollectionUtil.getCircular(edges, index);
 	}
 
-	public OriVertex getOppisiteVertex(final int index) {
+	public OriVertex getOppositeVertex(final int index) {
 		return getEdge(index).oppositeVertex(this);
 	}
 
