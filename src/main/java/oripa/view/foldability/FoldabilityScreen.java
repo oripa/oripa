@@ -88,8 +88,7 @@ public class FoldabilityScreen extends JPanel
 	private Point2D preMousePoint; // Screen coordinates
 
 	private final ElementSelector selector = new ElementSelector();
-
-	private OriVertex pickedViolatingVertex;
+	private boolean zeroLineWidth = false;
 
 	FoldabilityScreen() {
 
@@ -108,8 +107,9 @@ public class FoldabilityScreen extends JPanel
 	private final FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 	private Collection<OriVertex> violatingVertices = new ArrayList<>();
 	private Collection<OriFace> violatingFaces = new ArrayList<>();
+	private OriVertex pickedViolatingVertex;
+
 	private Collection<OriLine> overlappingLines = new ArrayList<>();
-	private boolean zeroLineWidth = false;
 
 	public void showModel(
 			final OrigamiModel origamiModel,
