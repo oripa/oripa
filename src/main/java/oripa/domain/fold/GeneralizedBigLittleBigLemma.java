@@ -103,12 +103,9 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 
 	private Collection<Range> findMinimalAngleSequences(final OriVertex vertex) {
 		var ranges = new ArrayList<Range>();
+		var edgeNum = vertex.edges.size();
 
-		final List<OriVertex> vertices = vertex.edges.stream()
-				.map(e -> e.oppositeVertex(vertex))
-				.collect(Collectors.toList());
-
-		final List<Double> angles = IntStream.range(0, vertices.size())
+		final List<Double> angles = IntStream.range(0, edgeNum)
 				.mapToObj(i -> OriGeomUtil.getAngleDifference(
 						vertex.getOppisiteVertex(i),
 						vertex,
@@ -124,7 +121,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 				.get((i + angles.size()) % angles.size());
 
 		int i_0 = 0;
-		for (int i = 0; i < vertex.edges.size(); i++) {
+		for (int i = 0; i < edgeNum; i++) {
 			if (getAngle.apply(i + 1) - getAngle.apply(i) > EPS) {
 				i_0 = i;
 				break;
@@ -132,7 +129,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 		}
 
 		int maxBound = 0;
-		for (int i = 0; i < vertex.edges.size(); i++) {
+		for (int i = 0; i < edgeNum; i++) {
 			if (getAngle.apply(i_0 + i + 1) - getAngle.apply(i_0 + i) > EPS) {
 				maxBound = i_0 + i + 1;
 				int minBound = maxBound - 1;
@@ -141,7 +138,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 					minBound--;
 					count++;
 					// stop if all angles are equal.
-					if (count > vertex.edges.size()) {
+					if (count > edgeNum) {
 						return ranges;
 					}
 				}
