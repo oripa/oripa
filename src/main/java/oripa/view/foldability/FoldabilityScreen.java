@@ -260,19 +260,9 @@ public class FoldabilityScreen extends JPanel
 		}
 
 		g2d.setColor(Color.BLACK);
-		var builder = new StringBuilder();
-		builder.append("error(s): ");
 		var violationNames = foldabilityChecker.getVertexViolationNames(pickedViolatingVertex);
-		var first = true;
-		for (var name : violationNames) {
-			if (first) {
-				first = false;
-			} else {
-				builder.append(", ");
-			}
-			builder.append(name);
-		}
-		g2d.drawString(builder.toString(), 0, 10);
+
+		g2d.drawString("error(s): " + String.join(", ", violationNames), 0, 10);
 	}
 
 	@Override
