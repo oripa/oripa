@@ -132,21 +132,22 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 
 		int maxBound = 0;
 		for (int i = 0; i < edgeNum; i++) {
-			if (getAngle.apply(i_0 + i + 1) - getAngle.apply(i_0 + i) > EPS) {
-				maxBound = i_0 + i + 1;
-				int minBound = maxBound - 1;
-				int count = 0;
-				while (Math.abs(getAngle.apply(minBound) - getAngle.apply(maxBound - 1)) <= EPS) {
-					minBound--;
-					count++;
-					// stop if all angles are equal.
-					if (count > edgeNum) {
-						return ranges;
-					}
+			if (getAngle.apply(i_0 + i + 1) - getAngle.apply(i_0 + i) <= EPS) {
+				continue;
+			}
+			maxBound = i_0 + i + 1;
+			int minBound = maxBound - 1;
+			int count = 0;
+			while (Math.abs(getAngle.apply(minBound) - getAngle.apply(maxBound - 1)) <= EPS) {
+				minBound--;
+				count++;
+				// stop if all angles are equal.
+				if (count > edgeNum) {
+					return ranges;
 				}
-				if (getAngle.apply(minBound) - getAngle.apply(maxBound - 1) > EPS) {
-					ranges.add(new Range(minBound + 1, maxBound));
-				}
+			}
+			if (getAngle.apply(minBound) - getAngle.apply(maxBound - 1) > EPS) {
+				ranges.add(new Range(minBound + 1, maxBound));
 			}
 		}
 
