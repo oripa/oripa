@@ -21,6 +21,7 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.util.collection.AbstractRule;
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
 /**
@@ -71,14 +73,15 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 		for (var range : ranges) {
 			LOGGER.debug("range =[" + range.begin + ", " + range.end + ")");
 			int valleyCount = 0;
+
+			BiFunction<OriEdge, Integer, Integer> incrementIfValley = (edge, count) -> {
+				return (edge.type == OriLine.Type.VALLEY.toInt()) ? count + 1 : count;
+			};
+
 			for (int i = range.begin; i != range.end; i++) {
-				if (vertex.getEdge(i).type == OriLine.Type.VALLEY.toInt()) {
-					valleyCount++;
-				}
+				valleyCount = incrementIfValley.apply(vertex.getEdge(i), valleyCount);
 			}
-			if (vertex.getEdge(range.end).type == OriLine.Type.VALLEY.toInt()) {
-				valleyCount++;
-			}
+			valleyCount = incrementIfValley.apply(vertex.getEdge(range.end), valleyCount);
 
 			int edgeCount = range.end - range.begin + 1;
 			int mountainCount = edgeCount - valleyCount;
@@ -117,8 +120,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 						.map(a -> Double.toString(Math.toDegrees(a)))
 						.collect(Collectors.toList())));
 
-		Function<Integer, Double> getAngle = i -> angles
-				.get((i + angles.size()) % angles.size());
+		Function<Integer, Double> getAngle = i -> CollectionUtil.getCircular(angles, i);
 
 		int i_0 = 0;
 		for (int i = 0; i < edgeNum; i++) {
