@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor
+ * ORIPA - Origami Pattern Editor 
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,38 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.collection;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
+package oripa.util.rule;
 
 /**
  * @author Koji
  *
  */
-public class CollectionFilter<Variable> {
-	private final Rule<Variable> rule;
-
-	/**
-	 * Constructor
-	 */
-	public CollectionFilter(final Rule<Variable> rule) {
-		this.rule = rule;
-	}
-
-	public Collection<Variable> findTargets(final Collection<Variable> inputs) {
-
-		return findTargets(inputs, rule);
-	}
-
-	public Collection<Variable> findViolations(final Collection<Variable> inputs) {
-		return findTargets(inputs, rule.asDenied());
-	}
-
-	private Collection<Variable> findTargets(final Collection<Variable> inputs,
-			final Rule<Variable> r) {
-
-		return inputs.stream().filter(input -> r.holds(input)).collect(Collectors.toSet());
-	}
-
+public interface Rule<Variable> {
+	boolean holds(Variable var);
+	boolean violates(Variable var);
+	Rule<Variable> asDenied();
 }

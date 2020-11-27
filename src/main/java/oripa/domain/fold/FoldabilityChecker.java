@@ -23,8 +23,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
-import oripa.util.collection.ConjunctionLoop;
-import oripa.util.collection.Rule;
+import oripa.util.rule.SingleRuleConjunction;
+import oripa.util.rule.Rule;
 
 /**
  * @author Koji
@@ -40,12 +40,12 @@ public class FoldabilityChecker {
 
 		private final Rule<OriVertex> rule;
 		private final String name;
-		private final ConjunctionLoop<OriVertex> conjunction;
+		private final SingleRuleConjunction<OriVertex> conjunction;
 
 		private VertexRule(final Rule<OriVertex> rule, final String name) {
 			this.rule = rule;
 			this.name = name;
-			conjunction = new ConjunctionLoop<>(rule);
+			conjunction = new SingleRuleConjunction<>(rule);
 		}
 
 		public Rule<OriVertex> getRule() {
@@ -56,12 +56,12 @@ public class FoldabilityChecker {
 			return name;
 		}
 
-		public ConjunctionLoop<OriVertex> getConjunction() {
+		public SingleRuleConjunction<OriVertex> getConjunction() {
 			return conjunction;
 		}
 	}
 
-	private final ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
+	private final SingleRuleConjunction<OriFace> convexRuleConjunction = new SingleRuleConjunction<>(
 			new FaceIsConvex());
 
 	public boolean modelIsProbablyFoldable(final Collection<OriVertex> vertices,
@@ -93,7 +93,7 @@ public class FoldabilityChecker {
 		// --------
 		// test convex-face condition
 
-		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
+		SingleRuleConjunction<OriFace> convexRuleConjunction = new SingleRuleConjunction<>(
 				new FaceIsConvex());
 
 		Collection<OriFace> violatingFaces = convexRuleConjunction.findViolations(faces);

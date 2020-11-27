@@ -21,7 +21,7 @@ package oripa.domain.fold;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.util.collection.AbstractRule;
+import oripa.util.rule.AbstractRule;
 import oripa.value.OriLine;
 
 /**

@@ -29,8 +29,8 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.util.collection.AbstractRule;
 import oripa.util.collection.CollectionUtil;
+import oripa.util.rule.AbstractRule;
 import oripa.value.OriLine;
 
 /**

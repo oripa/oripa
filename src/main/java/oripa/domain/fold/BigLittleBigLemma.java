@@ -20,7 +20,7 @@ package oripa.domain.fold;
 
 import javax.vecmath.Vector2d;
 
-import oripa.util.collection.AbstractRule;
+import oripa.util.rule.AbstractRule;
 
 /**
  * For consecutive edges e1, e2, e3, e4 incident to a vertex v, we have angles
