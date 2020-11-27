@@ -23,8 +23,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
-import oripa.util.rule.SingleRuleConjunction;
 import oripa.util.rule.Rule;
+import oripa.util.rule.SingleRuleConjunction;
 
 /**
  * @author Koji
@@ -33,10 +33,10 @@ import oripa.util.rule.Rule;
 public class FoldabilityChecker {
 
 	private enum VertexRule {
-		MAEKAWA(new MaekawaTheorem(), "Maekawa"),
-		KAWASAKI(new KawasakiTheorem(),	"Kawasaki"),
-		BIG_LITTLE_BIG(new BigLittleBigLemma(), "Big-little-big"),
-		GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma(), "gen. Big-little-big");
+		MAEKAWA(new MaekawaTheorem(), "Maekawa"), KAWASAKI(new KawasakiTheorem(),
+				"Kawasaki"), BIG_LITTLE_BIG(new BigLittleBigLemma(),
+						"Big-little-big"), GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma(),
+								"gen. Big-little-big");
 
 		private final Rule<OriVertex> rule;
 		private final String name;
@@ -90,14 +90,6 @@ public class FoldabilityChecker {
 	}
 
 	public Collection<OriFace> findViolatingFaces(final Collection<OriFace> faces) {
-		// --------
-		// test convex-face condition
-
-		SingleRuleConjunction<OriFace> convexRuleConjunction = new SingleRuleConjunction<>(
-				new FaceIsConvex());
-
-		Collection<OriFace> violatingFaces = convexRuleConjunction.findViolations(faces);
-
-		return violatingFaces;
+		return convexRuleConjunction.findViolations(faces);
 	}
 }

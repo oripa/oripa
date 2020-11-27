@@ -143,7 +143,11 @@ public class FoldabilityScreen extends JPanel
 		List<OriVertex> vertices = origamiModel.getVertices();
 
 		for (OriFace face : faces) {
-			g2d.setColor(new Color(255, 210, 210));
+			if (violatingFaces.contains(face)) {
+				g2d.setColor(Color.MAGENTA);
+			} else {
+				g2d.setColor(new Color(255, 210, 210));
+			}
 			g2d.fill(face.preOutline);
 		}
 
