@@ -259,4 +259,23 @@ class OriGeomUtil {
 
 		return true;
 	}
+
+	/**
+	 *
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 * @return 0 to pi between edges v1-v2 and v2-v3
+	 */
+	public static double getAngleDifference(
+			final OriVertex v1, final OriVertex v2, final OriVertex v3) {
+		var preP = new Vector2d(v1.p);
+		var p = new Vector2d(v2.p);
+		var nxtP = new Vector2d(v3.p);
+
+		nxtP.sub(p);
+		preP.sub(p);
+
+		return preP.angle(nxtP);
+	}
 }

@@ -63,16 +63,11 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 				return true;
 			}
 
-			Vector2d preP = new Vector2d(vertex.edges.get(i).oppositeVertex(vertex).p);
-			Vector2d nxtP = new Vector2d(
-					vertex.edges.get((i + 1) % vertex.edges.size()).oppositeVertex(vertex).p);
-
-			nxtP.sub(p);
-			preP.sub(p);
+			double angle = OriGeomUtil.getAngleDifference(
+					vertex.getOppisiteVertex(i), vertex, vertex.getOppisiteVertex(i + 1));
 
 			if (i % 2 == 0) {
-				oddSum += preP.angle(nxtP);
-			} else {
+				oddSum += angle;
 			}
 		}
 

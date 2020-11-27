@@ -86,4 +86,13 @@ public class OriVertex {
 		int eNum = edges.size();
 		return edges.get((index - 1 + eNum) % eNum);
 	}
+
+	public OriEdge getEdge(final int index) {
+		return edges.get((index + edges.size()) % edges.size());
+	}
+
+	public OriVertex getOppisiteVertex(final int index) {
+		return getEdge(index).oppositeVertex(this);
+	}
+
 }
