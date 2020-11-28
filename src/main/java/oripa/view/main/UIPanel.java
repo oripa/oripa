@@ -800,7 +800,10 @@ public class UIPanel extends JPanel {
 		OrigamiModel origamiModel = modelFactory.createOrigamiModel(
 				creasePattern, creasePattern.getPaperSize());
 
+		logger.debug("Building origami model.");
+
 		if (origamiModel.isProbablyFoldable()) {
+			logger.debug("No modification is needed.");
 			return origamiModel;
 		}
 
