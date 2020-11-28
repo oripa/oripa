@@ -99,15 +99,10 @@ public class FileHistory {
 			initData = (InitData) dec.readObject();
 			dec.close();
 
-			var fileNames = Arrays.asList(initData.MRUFiles)
-					.subList(0, Math.min(maxSize, initData.MRUFiles.length));
-
-			for (var fileName : fileNames) {
-				if (fileName != null && !fileName.isEmpty()) {
-					mostRecentlyUsedHistory.add(fileName);
-				}
-			}
-
+			Arrays.asList(initData.getMRUFiles())
+					.subList(0, Math.min(maxSize, initData.getMRUFiles().length)).stream()
+					.filter(fileName -> fileName != null && !fileName.isEmpty())
+					.forEach(fileName -> mostRecentlyUsedHistory.add(fileName));
 		} catch (Exception e) {
 		}
 

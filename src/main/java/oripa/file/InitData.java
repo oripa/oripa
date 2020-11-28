@@ -19,7 +19,7 @@
 package oripa.file;
 
 public class InitData {
-	public String lastUsedFile = "";
+	public String lastUsedFile = ""; // dead property
 	public String[] MRUFiles;
 
 	public InitData() {
@@ -38,16 +38,18 @@ public class InitData {
 	}
 
 	public String getLastUsedFile() {
-		if (MRUFiles != null) {
-			if (MRUFiles.length > 0) {
-				if (lastUsedFile == null) {
-					lastUsedFile = MRUFiles[0];
-				} else if (lastUsedFile.isEmpty()) {
-					lastUsedFile = MRUFiles[0];
-
-				}
-			}
+		if (MRUFiles == null) {
+			return lastUsedFile;
 		}
+
+		if (MRUFiles.length == 0) {
+			return lastUsedFile;
+		}
+
+		if (lastUsedFile == null || lastUsedFile.isEmpty()) {
+			lastUsedFile = MRUFiles[0];
+		}
+
 		return lastUsedFile;
 	}
 }
