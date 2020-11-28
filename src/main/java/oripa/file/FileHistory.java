@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -98,11 +99,10 @@ public class FileHistory {
 			initData = (InitData) dec.readObject();
 			dec.close();
 
-			int initMRUlength = initData.MRUFiles.length;
-			int length = (maxSize < initMRUlength) ? maxSize : initMRUlength;
+			var fileNames = Arrays.asList(initData.MRUFiles)
+					.subList(0, Math.min(maxSize, initData.MRUFiles.length));
 
-			for (int i = 0; i < length; i++) {
-				var fileName = initData.MRUFiles[i];
+			for (var fileName : fileNames) {
 				if (fileName != null && !fileName.isEmpty()) {
 					mostRecentlyUsedHistory.add(fileName);
 				}
