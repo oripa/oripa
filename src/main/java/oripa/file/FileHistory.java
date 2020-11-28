@@ -11,64 +11,61 @@ import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 
-
-
 public class FileHistory {
-	private LinkedList<String> mostRecentlyUsedHistory = new LinkedList<>();
-	private int maxSize;
-	
-	public FileHistory(int maxSize){
+	private final LinkedList<String> mostRecentlyUsedHistory = new LinkedList<>();
+	private final int maxSize;
+
+	public FileHistory(final int maxSize) {
 		this.maxSize = maxSize;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param filePath
 	 * @return true if the given path is appended to history
 	 */
-	public boolean useFile(String filePath){
+	public boolean useFile(final String filePath) {
 
 		boolean appended = false;
 		int index = mostRecentlyUsedHistory.indexOf(filePath);
-		
-		if(index < 0){
-			if(mostRecentlyUsedHistory.size() >= maxSize){
+
+		if (index < 0) {
+			if (mostRecentlyUsedHistory.size() >= maxSize) {
 				mostRecentlyUsedHistory.removeLast();
 			}
-			
+
 			mostRecentlyUsedHistory.addFirst(filePath);
 			appended = true;
-		}
-		else {
+		} else {
 			String item = mostRecentlyUsedHistory.remove(index);
 			mostRecentlyUsedHistory.addFirst(item);
 		}
-		
+
 		return appended;
 	}
 
-	public Collection<String> getHistory(){
+	public Collection<String> getHistory() {
 		return mostRecentlyUsedHistory;
 	}
-	
-	public String getLastPath(){
-		if(mostRecentlyUsedHistory.isEmpty()){
+
+	public String getLastPath() {
+		if (mostRecentlyUsedHistory.isEmpty()) {
 			return System.getProperty("user.home");
 		}
-		
+
 		return mostRecentlyUsedHistory.getFirst();
 	}
-	
-	public String getLastDirectory(){
-		if(mostRecentlyUsedHistory.isEmpty()){
+
+	public String getLastDirectory() {
+		if (mostRecentlyUsedHistory.isEmpty()) {
 			return System.getProperty("user.home");
 		}
-		
+
 		File file = new File(mostRecentlyUsedHistory.getFirst());
 		return file.getParent();
 	}
-	
-	public void saveToFile(String path) {
+
+	public void saveToFile(final String path) {
 		String fileNames[] = new String[maxSize];
 		int i = 0;
 		for (String history : mostRecentlyUsedHistory) {
@@ -84,29 +81,30 @@ public class FileHistory {
 		try {
 			XMLEncoder enc = new XMLEncoder(
 					new BufferedOutputStream(
-							new FileOutputStream(path)) );
+							new FileOutputStream(path)));
 			enc.writeObject(initData);
 			enc.close();
-			
+
 		} catch (FileNotFoundException e) {
 		}
 	}
 
-	public void loadFromFile(String path) {
+	public void loadFromFile(final String path) {
 		InitData initData;
 		try {
 			XMLDecoder dec = new XMLDecoder(
 					new BufferedInputStream(
-							new FileInputStream(path)) );
+							new FileInputStream(path)));
 			initData = (InitData) dec.readObject();
 			dec.close();
 
 			int initMRUlength = initData.MRUFiles.length;
-			int length = (maxSize < initMRUlength)? maxSize : initMRUlength;
-			
+			int length = (maxSize < initMRUlength) ? maxSize : initMRUlength;
+
 			for (int i = 0; i < length; i++) {
-				if (initData.MRUFiles[i] != null && !initData.MRUFiles[i].equals("")) {
-					mostRecentlyUsedHistory.add(initData.MRUFiles[i]);
+				var fileName = initData.MRUFiles[i];
+				if (fileName != null && !fileName.isEmpty()) {
+					mostRecentlyUsedHistory.add(fileName);
 				}
 			}
 

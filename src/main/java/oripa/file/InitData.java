@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ public class InitData {
 	public InitData() {
 	}
 
-	public void setMRUFiles(String[] s) {
+	public void setMRUFiles(final String[] s) {
 		MRUFiles = s;
 	}
 
@@ -33,7 +33,7 @@ public class InitData {
 		return MRUFiles;
 	}
 
-	public void setLastUsedFile(String s) {
+	public void setLastUsedFile(final String s) {
 		lastUsedFile = s;
 	}
 
@@ -42,8 +42,7 @@ public class InitData {
 			if (MRUFiles.length > 0) {
 				if (lastUsedFile == null) {
 					lastUsedFile = MRUFiles[0];
-				}
-				else if (lastUsedFile == "") {
+				} else if (lastUsedFile.isEmpty()) {
 					lastUsedFile = MRUFiles[0];
 
 				}
