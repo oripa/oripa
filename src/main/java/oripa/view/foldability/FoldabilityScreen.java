@@ -71,7 +71,6 @@ public class FoldabilityScreen extends JPanel
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
-	private Graphics2D bufferg;
 
 	private final AffineCamera camera = new AffineCamera();
 
@@ -208,8 +207,6 @@ public class FoldabilityScreen extends JPanel
 
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
-		bufferg = (Graphics2D) bufferImage.getGraphics();
-
 		affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
 	}
 
@@ -220,6 +217,7 @@ public class FoldabilityScreen extends JPanel
 		if (bufferImage == null) {
 			buildBufferImage();
 		}
+		var bufferg = (Graphics2D) bufferImage.getGraphics();
 
 		bufferg.setTransform(new AffineTransform());
 
