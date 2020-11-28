@@ -18,8 +18,6 @@
  */
 package oripa.domain.fold;
 
-import javax.vecmath.Vector2d;
-
 import oripa.util.rule.AbstractRule;
 
 /**
@@ -40,8 +38,6 @@ public class BigLittleBigLemma extends AbstractRule<OriVertex> {
 	 */
 	@Override
 	public boolean holds(final OriVertex vertex) {
-
-		Vector2d p = vertex.p;
 
 		if (vertex.edges.size() < 4) {
 			return true;

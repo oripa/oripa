@@ -23,8 +23,6 @@ import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
-import javax.vecmath.Vector2d;
-
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
@@ -35,9 +33,6 @@ public class LoaderCP implements DocLoader {
 	@Override
 	public Doc load(final String filePath) {
 		var lines = new ArrayList<OriLine>();
-
-		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 
 		try {
 			Reader r = new FileReader(filePath);
@@ -96,18 +91,21 @@ public class LoaderCP implements DocLoader {
 			e.printStackTrace();
 		}
 
-		for (OriLine line : lines) {
-			minV.x = Math.min(minV.x, line.p0.x);
-			minV.x = Math.min(minV.x, line.p1.x);
-			minV.y = Math.min(minV.y, line.p0.y);
-			minV.y = Math.min(minV.y, line.p1.y);
+//		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
+//		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 
-			maxV.x = Math.max(maxV.x, line.p0.x);
-			maxV.x = Math.max(maxV.x, line.p1.x);
-			maxV.y = Math.max(maxV.y, line.p0.y);
-			maxV.y = Math.max(maxV.y, line.p1.y);
-		}
-
+//		for (OriLine line : lines) {
+//			minV.x = Math.min(minV.x, line.p0.x);
+//			minV.x = Math.min(minV.x, line.p1.x);
+//			minV.y = Math.min(minV.y, line.p0.y);
+//			minV.y = Math.min(minV.y, line.p1.y);
+//
+//			maxV.x = Math.max(maxV.x, line.p0.x);
+//			maxV.x = Math.max(maxV.x, line.p1.x);
+//			maxV.y = Math.max(maxV.y, line.p0.y);
+//			maxV.y = Math.max(maxV.y, line.p1.y);
+//		}
+//
 //		// size normalization
 //		double size = 400;
 //		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0,

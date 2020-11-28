@@ -1,10 +1,22 @@
 package oripa.domain.fold;
 
+import java.util.Collection;
+
 import javax.vecmath.Vector2d;
+
+import oripa.geom.RectangleDomain;
 
 public class BoundBox {
 	private Vector2d leftAndTop;
 	private Vector2d rightAndBottom;
+
+	public BoundBox(final Collection<Vector2d> points) {
+		var d = new RectangleDomain();
+		d.enlarge(points);
+
+		leftAndTop = new Vector2d(d.getLeft(), d.getTop());
+		rightAndBottom = new Vector2d(d.getRight(), d.getBottom());
+	}
 
 	public BoundBox(final Vector2d lt, final Vector2d rb) {
 		leftAndTop = lt;

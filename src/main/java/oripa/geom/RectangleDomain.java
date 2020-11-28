@@ -30,11 +30,8 @@ public class RectangleDomain {
 
 	}
 
-	/**
-	 * Hide from others since this is meaningless.
-	 */
-	@SuppressWarnings("unused")
-	private RectangleDomain() {
+	public RectangleDomain() {
+		initialize();
 	}
 
 	private void initialize() {
@@ -42,20 +39,27 @@ public class RectangleDomain {
 		right = Double.NEGATIVE_INFINITY;
 		top = Double.POSITIVE_INFINITY;
 		bottom = Double.NEGATIVE_INFINITY;
-
 	}
 
 	/**
-	 * Enlarge this domain as including given point.
+	 * Enlarge this domain as it includes given point.
 	 *
 	 * @param v
 	 */
-	private void enlarge(final Vector2d v) {
+	public void enlarge(final Vector2d v) {
 		left = Math.min(left, v.x);
 		right = Math.max(right, v.x);
 		top = Math.min(top, v.y);
 		bottom = Math.max(bottom, v.y);
+	}
 
+	/**
+	 * Enlarge this domain as it includes all given points.
+	 *
+	 * @param points
+	 */
+	public void enlarge(final Collection<Vector2d> points) {
+		points.forEach(p -> enlarge(p));
 	}
 
 	/**

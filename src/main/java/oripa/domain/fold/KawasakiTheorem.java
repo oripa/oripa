@@ -18,8 +18,6 @@
  */
 package oripa.domain.fold;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +50,6 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 	@Override
 	public boolean holds(final OriVertex vertex) {
 
-		Vector2d p = vertex.p;
 		double oddSum = 0;
 
 		for (int i = 0; i < vertex.edges.size(); i++) {
