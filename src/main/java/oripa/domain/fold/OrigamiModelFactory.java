@@ -42,7 +42,7 @@ public class OrigamiModelFactory {
 	 * @return A model data converted from crease pattern.
 	 */
 	// TODO: change as: throw error if creation failed.
-	public OrigamiModel buildOrigami(
+	OrigamiModel buildOrigami(
 			final Collection<OriLine> creasePattern, final double paperSize) {
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
@@ -86,34 +86,11 @@ public class OrigamiModelFactory {
 					}
 				}
 
-				OriFace face = new OriFace();
-				faces.add(face);
-				OriVertex walkV = v;
-				OriEdge walkE = e;
-				debugCount = 0;
-				while (true) {
-					if (debugCount++ > 200) {
-						System.out.println("ERROR");
-						return origamiModel;
-					}
-					OriHalfedge he = new OriHalfedge(walkV, face);
-					face.halfedges.add(he);
-					he.tmpInt = walkE.type;
-					if (walkE.sv == walkV) {
-						walkE.left = he;
-					} else {
-						walkE.right = he;
-					}
-					walkV = walkE.oppositeVertex(walkV);
-					walkE = walkV.getPrevEdge(walkE);
-
-					if (walkV == v) {
-						break;
-					}
+				OriFace face = makeFace(v, e);
+				if (face == null) {
+					return origamiModel;
 				}
-				face.makeHalfedgeLoop();
-				face.setOutline();
-				face.setPreOutline();
+				faces.add(face);
 			}
 		}
 
