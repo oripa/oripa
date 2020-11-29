@@ -79,12 +79,11 @@ public class FileHistory {
 		initData.setMRUFiles(fileNames);
 		initData.setLastUsedFile(getLastPath());
 
-		try {
-			XMLEncoder enc = new XMLEncoder(
-					new BufferedOutputStream(
-							new FileOutputStream(path)));
+		try (var enc = new XMLEncoder(
+				new BufferedOutputStream(
+						new FileOutputStream(path)))) {
+
 			enc.writeObject(initData);
-			enc.close();
 
 		} catch (FileNotFoundException e) {
 		}
@@ -92,12 +91,11 @@ public class FileHistory {
 
 	public void loadFromFile(final String path) {
 		InitData initData;
-		try {
-			XMLDecoder dec = new XMLDecoder(
-					new BufferedInputStream(
-							new FileInputStream(path)));
+		try (var dec = new XMLDecoder(
+				new BufferedInputStream(
+						new FileInputStream(path)))) {
+
 			initData = (InitData) dec.readObject();
-			dec.close();
 
 			Arrays.asList(initData.getMRUFiles())
 					.subList(0, Math.min(maxSize, initData.getMRUFiles().length)).stream()
