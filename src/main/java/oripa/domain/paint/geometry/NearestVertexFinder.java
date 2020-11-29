@@ -8,7 +8,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.value.OriLine;
 
-public class NearestVertexFinderHelper {
+public class NearestVertexFinder {
 	/**
 	 *
 	 * Note that {@code nearest} will be affected.
@@ -40,7 +40,7 @@ public class NearestVertexFinderHelper {
 		nearestPoint.point = nearest;
 		nearestPoint.distance = p.distance(nearest.x, nearest.y);
 
-		NearestVertexFinderHelper.findNearestOf(
+		NearestVertexFinder.findNearestOf(
 				p, nearestPoint, other);
 
 		return nearestPoint.point;

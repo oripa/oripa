@@ -51,7 +51,7 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
-import oripa.domain.paint.geometry.NearestVertexFinderHelper;
+import oripa.domain.paint.geometry.NearestVertexFinder;
 import oripa.domain.paint.util.ElementSelector;
 import oripa.geom.RectangleDomain;
 import oripa.util.gui.AffineCamera;
@@ -369,7 +369,7 @@ public class FoldabilityScreen extends JPanel
 	public void mouseMoved(final MouseEvent e) {
 		var logicalPoint = MouseUtility.getLogicalPoint(affineTransform, e.getPoint());
 
-		var nearest = NearestVertexFinderHelper.findNearestVertex(
+		var nearest = NearestVertexFinder.findNearestVertex(
 				logicalPoint,
 				violatingVertices.stream().map(v -> v.preP).collect(Collectors.toList()));
 

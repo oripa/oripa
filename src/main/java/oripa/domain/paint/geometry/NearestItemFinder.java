@@ -48,7 +48,7 @@ public class NearestItemFinder {
 
 		NearestPoint nearestPosition;
 
-		nearestPosition = NearestVertexFinderHelper.findAround(context, scaleThreshold(context));
+		nearestPosition = NearestVertexFinder.findAround(context, scaleThreshold(context));
 
 		Vector2d picked = null;
 
@@ -74,7 +74,7 @@ public class NearestItemFinder {
 	public static Vector2d pickVertexFromPickedLines(final PaintContextInterface context) {
 
 		NearestPoint nearestPosition;
-		nearestPosition = NearestVertexFinderHelper.findFromPickedLine(context);
+		nearestPosition = NearestVertexFinder.findFromPickedLine(context);
 
 		Vector2d picked = null;
 		if (nearestPosition.distance < scaleThreshold(context)) {
@@ -103,7 +103,7 @@ public class NearestItemFinder {
 	}
 
 	public static Vector2d getNearestInAngleSnapCrossPoints(final PaintContextInterface context) {
-		return NearestVertexFinderHelper.findNearestVertex(
+		return NearestVertexFinder.findNearestVertex(
 				context.getLogicalMousePoint(),
 				context.getAngleSnapCrossPoints()).point;
 	}
