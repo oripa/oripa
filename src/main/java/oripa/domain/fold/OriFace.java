@@ -28,6 +28,7 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 import oripa.geom.GeomUtil;
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
 public class OriFace {
@@ -166,11 +167,10 @@ public class OriFace {
 	}
 
 	public void makeHalfedgeLoop() {
-		int heNum = halfedges.size();
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge pre_he = halfedges.get((i - 1 + heNum) % heNum);
+		for (int i = 0; i < halfedges.size(); i++) {
+			OriHalfedge pre_he = CollectionUtil.getCircular(halfedges, i - 1);
 			OriHalfedge he = halfedges.get(i);
-			OriHalfedge nxt_he = halfedges.get((i + 1) % heNum);
+			OriHalfedge nxt_he = CollectionUtil.getCircular(halfedges, i + 1);
 
 			he.next = nxt_he;
 			he.prev = pre_he;
