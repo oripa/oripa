@@ -1,23 +1,21 @@
 package oripa.file;
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 public class FileHistory {
-	private final LinkedList<String> mostRecentlyUsedHistory = new LinkedList<>();
+	private LinkedList<String> mostRecentlyUsedHistory = new LinkedList<>();
 	private final int maxSize;
 
 	public FileHistory(final int maxSize) {
 		this.maxSize = maxSize;
+	}
+
+	public int getMaxSize() {
+		return maxSize;
 	}
 
 	/**
@@ -49,6 +47,10 @@ public class FileHistory {
 		return mostRecentlyUsedHistory;
 	}
 
+	public void setHistory(final Collection<String> history) {
+		mostRecentlyUsedHistory = new LinkedList<>(history);
+	}
+
 	public String getLastPath() {
 		if (mostRecentlyUsedHistory.isEmpty()) {
 			return System.getProperty("user.home");
@@ -66,44 +68,13 @@ public class FileHistory {
 		return file.getParent();
 	}
 
-	public void saveToFile(final String path) {
-		String fileNames[] = new String[maxSize];
-		int i = 0;
-		for (String history : mostRecentlyUsedHistory) {
-			fileNames[i] = history;
-			i++;
-		}
+	public void loadFromInitData(final InitData ini) {
+		var mruList = Arrays.asList(ini.getMRUFiles())
+				.subList(0, Math.min(maxSize, ini.getMRUFiles().length)).stream()
+				.filter(fileName -> fileName != null && !fileName.isEmpty())
+				.collect(Collectors.toList());
 
-		InitData initData = new InitData();
-
-		initData.setMRUFiles(fileNames);
-		initData.setLastUsedFile(getLastPath());
-
-		try (var enc = new XMLEncoder(
-				new BufferedOutputStream(
-						new FileOutputStream(path)))) {
-
-			enc.writeObject(initData);
-
-		} catch (FileNotFoundException e) {
-		}
-	}
-
-	public void loadFromFile(final String path) {
-		InitData initData;
-		try (var dec = new XMLDecoder(
-				new BufferedInputStream(
-						new FileInputStream(path)))) {
-
-			initData = (InitData) dec.readObject();
-
-			Arrays.asList(initData.getMRUFiles())
-					.subList(0, Math.min(maxSize, initData.getMRUFiles().length)).stream()
-					.filter(fileName -> fileName != null && !fileName.isEmpty())
-					.forEach(fileName -> mostRecentlyUsedHistory.add(fileName));
-		} catch (Exception e) {
-		}
-
+		setHistory(mruList);
 	}
 
 }

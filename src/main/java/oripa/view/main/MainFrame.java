@@ -59,6 +59,9 @@ import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
+import oripa.file.InitDataBuilder;
+import oripa.file.InitDataFileReader;
+import oripa.file.InitDataFileWriter;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
 import oripa.persistent.doc.FileTypeKey;
@@ -673,11 +676,20 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	void saveIniFile() {
-		fileHistory.saveToFile(ORIPA.iniFilePath);
+		var writer = new InitDataFileWriter();
+		var builder = new InitDataBuilder();
+
+		builder.setLastUsedFile(fileHistory.getLastPath())
+				.setMRUFiles(fileHistory.getHistory());
+
+		writer.write(builder.get(), ORIPA.iniFilePath);
 	}
 
 	void loadIniFile() {
-		fileHistory.loadFromFile(ORIPA.iniFilePath);
+		var reader = new InitDataFileReader();
+		var ini = reader.read(ORIPA.iniFilePath);
+
+		fileHistory.loadFromInitData(ini);
 	}
 
 	@Override
