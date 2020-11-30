@@ -45,6 +45,11 @@ public class InitDataBuilder {
 		return this;
 	}
 
+	public InitDataBuilder setZeroLineWidth(final boolean zeroLineWidth) {
+		initData.setZeroLineWidth(zeroLineWidth);
+		return this;
+	}
+
 	public InitData get() {
 		return initData;
 	}

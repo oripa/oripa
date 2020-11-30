@@ -680,7 +680,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		var builder = new InitDataBuilder();
 
 		builder.setLastUsedFile(fileHistory.getLastPath())
-				.setMRUFiles(fileHistory.getHistory());
+				.setMRUFiles(fileHistory.getHistory())
+				.setZeroLineWidth(paintContext.isZeroLineWidth());
 
 		writer.write(builder.get(), ORIPA.iniFilePath);
 	}
@@ -690,6 +691,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		var ini = reader.read(ORIPA.iniFilePath);
 
 		fileHistory.loadFromInitData(ini);
+		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
 	}
 
 	@Override

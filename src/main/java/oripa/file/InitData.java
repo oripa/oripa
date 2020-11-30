@@ -22,6 +22,8 @@ public class InitData {
 	public String lastUsedFile = ""; // dead property
 	public String[] MRUFiles;
 
+	private boolean zeroLineWidth;
+
 	public InitData() {
 	}
 
@@ -38,18 +40,14 @@ public class InitData {
 	}
 
 	public String getLastUsedFile() {
-		if (MRUFiles == null) {
-			return lastUsedFile;
-		}
-
-		if (MRUFiles.length == 0) {
-			return lastUsedFile;
-		}
-
-		if (lastUsedFile == null || lastUsedFile.isEmpty()) {
-			lastUsedFile = MRUFiles[0];
-		}
-
 		return lastUsedFile;
+	}
+
+	public void setZeroLineWidth(final boolean zeroLineWidth) {
+		this.zeroLineWidth = zeroLineWidth;
+	}
+
+	public boolean isZeroLineWidth() {
+		return zeroLineWidth;
 	}
 }
