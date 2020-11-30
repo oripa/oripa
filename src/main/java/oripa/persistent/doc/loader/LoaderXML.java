@@ -21,7 +21,7 @@ package oripa.persistent.doc.loader;
 import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import oripa.DataSet;
 import oripa.doc.Doc;
@@ -32,12 +32,11 @@ public class LoaderXML implements DocLoader {
 
 	public DataSet loadAsDataSet(final String filePath) {
 		DataSet dataset;
-		try {
-			XMLDecoder dec = new XMLDecoder(new BufferedInputStream(
-					new FileInputStream(filePath)));
+		try (var fis = new FileInputStream(filePath);
+				var bis = new BufferedInputStream(fis);
+				var dec = new XMLDecoder(bis)) {
 			dataset = (DataSet) dec.readObject();
-			dec.close();
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}

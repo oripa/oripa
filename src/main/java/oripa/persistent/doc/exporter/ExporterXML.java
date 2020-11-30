@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -20,28 +20,27 @@ package oripa.persistent.doc.exporter;
 
 import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import oripa.DataSet;
 import oripa.doc.Doc;
 
-public class ExporterXML implements DocExporter{
+public class ExporterXML implements DocExporter {
 
-    public boolean export(Doc doc, String filePath) {
-    	DataSet dataset = new DataSet(doc);
-    	
-        try {
-            XMLEncoder enc = new XMLEncoder(
-                    new BufferedOutputStream(
-                    new FileOutputStream(filePath)));
-            enc.writeObject(dataset);
-            enc.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
+	@Override
+	public boolean export(final Doc doc, final String filePath) {
+		DataSet dataset = new DataSet(doc);
 
-        return true;
-    }
+		try (var fos = new FileOutputStream(filePath);
+				var bos = new BufferedOutputStream(fos);
+				var enc = new XMLEncoder(bos);) {
+			enc.writeObject(dataset);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
 }

@@ -19,7 +19,6 @@
 package oripa.persistent.doc.loader;
 
 import java.io.FileReader;
-import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
@@ -34,8 +33,8 @@ public class LoaderCP implements DocLoader {
 	public Doc load(final String filePath) {
 		var lines = new ArrayList<OriLine>();
 
-		try {
-			Reader r = new FileReader(filePath);
+		try (var r = new FileReader(filePath)) {
+
 			StreamTokenizer st = new StreamTokenizer(r);
 			st.resetSyntax();
 			st.wordChars('0', '9');

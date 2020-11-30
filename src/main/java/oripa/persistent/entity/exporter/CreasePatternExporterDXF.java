@@ -44,79 +44,80 @@ public class CreasePatternExporterDXF implements Exporter<CreasePatternInterface
 		double paperSize = creasePattern.getPaperSize();
 		double scale = 6.0 / paperSize; // 6.0 inch width
 		double center = 4.0; // inch
-		FileWriter fw = new FileWriter(filePath);
-		BufferedWriter bw = new BufferedWriter(fw);
 
-		bw.write("  0\n");
-		bw.write("SECTION\n");
-		bw.write("  2\n");
-		bw.write("HEADER\n");
-		bw.write("  9\n");
-		bw.write("$ACADVER\n");
-		bw.write("  1\n");
-		bw.write("AC1009\n");
-		bw.write("  0\n");
-		bw.write("ENDSEC\n");
-		bw.write("  0\n");
-		bw.write("SECTION\n");
-		bw.write("  2\n");
-		bw.write("ENTITIES\n");
+		try (var fw = new FileWriter(filePath);
+				var bw = new BufferedWriter(fw);) {
 
-		for (OriLine line : creasePattern) {
 			bw.write("  0\n");
-			bw.write("LINE\n");
-			bw.write("  8\n");
-			String layerName = "noname";
-			switch (line.getType()) {
-			case CUT:
-				layerName = "CutLine";
-				break;
-			case RIDGE:
-				layerName = "MountainLine";
-				break;
-			case VALLEY:
-				layerName = "ValleyLine";
-			default:
-			}
-			bw.write(layerName + "\n"); // Layer name
-			bw.write("  6\n");
-			bw.write("CONTINUOUS\n"); // Line type
-			bw.write(" 62\n"); // 1＝red 2＝yellow 3＝green 4＝cyan 5＝blue
-								// 6＝magenta
-								// 7＝white
-			int colorNumber = 0;
-			switch (line.getType()) {
-			case CUT:
-				colorNumber = 250; // 51,51,51
-				break;
-			case RIDGE:
-				colorNumber = 5; // blue
-				break;
-			case VALLEY:
-				colorNumber = 1; // red
-				break;
-			default:
+			bw.write("SECTION\n");
+			bw.write("  2\n");
+			bw.write("HEADER\n");
+			bw.write("  9\n");
+			bw.write("$ACADVER\n");
+			bw.write("  1\n");
+			bw.write("AC1009\n");
+			bw.write("  0\n");
+			bw.write("ENDSEC\n");
+			bw.write("  0\n");
+			bw.write("SECTION\n");
+			bw.write("  2\n");
+			bw.write("ENTITIES\n");
+
+			for (OriLine line : creasePattern) {
+				bw.write("  0\n");
+				bw.write("LINE\n");
+				bw.write("  8\n");
+				String layerName = "noname";
+				switch (line.getType()) {
+				case CUT:
+					layerName = "CutLine";
+					break;
+				case RIDGE:
+					layerName = "MountainLine";
+					break;
+				case VALLEY:
+					layerName = "ValleyLine";
+				default:
+				}
+				bw.write(layerName + "\n"); // Layer name
+				bw.write("  6\n");
+				bw.write("CONTINUOUS\n"); // Line type
+				bw.write(" 62\n"); // 1＝red 2＝yellow 3＝green 4＝cyan 5＝blue
+									// 6＝magenta
+									// 7＝white
+				int colorNumber = 0;
+				switch (line.getType()) {
+				case CUT:
+					colorNumber = 250; // 51,51,51
+					break;
+				case RIDGE:
+					colorNumber = 5; // blue
+					break;
+				case VALLEY:
+					colorNumber = 1; // red
+					break;
+				default:
+				}
+
+				bw.write("" + colorNumber + "\n");
+				bw.write(" 10\n");
+				bw.write("" + (line.p0.x * scale + center) + "\n");
+				bw.write(" 20\n");
+				bw.write("" + ((paperSize / 2 - line.p0.y) * scale + center)
+						+ "\n");
+				bw.write(" 11\n");
+				bw.write("" + (line.p1.x * scale + center) + "\n");
+				bw.write(" 21\n");
+				bw.write("" + ((paperSize / 2 - line.p1.y) * scale + center)
+						+ "\n");
 			}
 
-			bw.write("" + colorNumber + "\n");
-			bw.write(" 10\n");
-			bw.write("" + (line.p0.x * scale + center) + "\n");
-			bw.write(" 20\n");
-			bw.write("" + ((paperSize / 2 - line.p0.y) * scale + center)
-					+ "\n");
-			bw.write(" 11\n");
-			bw.write("" + (line.p1.x * scale + center) + "\n");
-			bw.write(" 21\n");
-			bw.write("" + ((paperSize / 2 - line.p1.y) * scale + center)
-					+ "\n");
+			bw.write("  0\n");
+			bw.write("ENDSEC\n");
+			bw.write("  0\n");
+			bw.write("EOF\n");
+
 		}
-
-		bw.write("  0\n");
-		bw.write("ENDSEC\n");
-		bw.write("  0\n");
-		bw.write("EOF\n");
-
-		bw.close();
 
 		return true;
 	}
