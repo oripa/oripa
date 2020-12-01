@@ -33,9 +33,9 @@ class PaintContext implements PaintContextInterface {
 
 	private ArrayList<Vector2d> gridPoints;
 
-	private boolean vertexVisible = true;
-	private boolean mvLineVisible = true;
-	private boolean auxLineVisible = true;
+	private boolean vertexVisible;
+	private boolean mvLineVisible;
+	private boolean auxLineVisible;
 	private boolean crossLineVisible = false;
 
 	private boolean missionCompleted = false;

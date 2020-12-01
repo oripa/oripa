@@ -429,6 +429,24 @@ public class PainterScreen extends JPanel
 				});
 
 		setting.addPropertyChangeListener(
+				MainScreenSetting.VERTEX_VISIBLE, e -> {
+					paintContext.setVertexVisible((boolean) e.getNewValue());
+					repaint();
+				});
+
+		setting.addPropertyChangeListener(
+				MainScreenSetting.MV_LINE_VISIBLE, e -> {
+					paintContext.setMVLineVisible((boolean) e.getNewValue());
+					repaint();
+				});
+
+		setting.addPropertyChangeListener(
+				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
+					paintContext.setAuxLineVisible((boolean) e.getNewValue());
+					repaint();
+				});
+
+		setting.addPropertyChangeListener(
 				MainScreenSetting.GRID_VISIBLE, e -> {
 					paintContext.setGridVisible((boolean) e.getNewValue());
 					repaint();

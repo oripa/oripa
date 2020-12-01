@@ -681,7 +681,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		builder.setLastUsedFile(fileHistory.getLastPath())
 				.setMRUFiles(fileHistory.getHistory())
-				.setZeroLineWidth(paintContext.isZeroLineWidth());
+				.setZeroLineWidth(paintContext.isZeroLineWidth())
+				.setMVLineVisible(paintContext.isMVLineVisible())
+				.setAuxLineVisible(paintContext.isAuxLineVisible())
+				.setVertexVisible(paintContext.isVertexVisible());
 
 		writer.write(builder.get(), ORIPA.iniFilePath);
 	}
@@ -692,6 +695,15 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		fileHistory.loadFromInitData(ini);
 		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
+
+		logger.debug("loaded ini.mvLineVisible: " + ini.isMvLineVisible());
+		screenSetting.setMVLineVisible(ini.isMvLineVisible());
+
+		logger.debug("loaded ini.auxLineVisible: " + ini.isAuxLineVisible());
+		screenSetting.setAuxLineVisible(ini.isAuxLineVisible());
+
+		logger.debug("loaded ini.vertexVisible: " + ini.isVertexVisible());
+		screenSetting.setVertexVisible(ini.isVertexVisible());
 	}
 
 	@Override

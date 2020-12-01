@@ -181,18 +181,13 @@ public class UIPanel extends JPanel {
 
 	private final JCheckBox dispMVLinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MV_ID),
-			true);
+			false);
 	private final JCheckBox dispAuxLinesCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
-			true);
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID));
 	private final JCheckBox dispVertexCheckBox = new JCheckBox(
-			resources
-					.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
-			false);
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID));
 	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL,
-					StringID.UI.FULL_ESTIMATION_ID),
-			false);
+			resources.getString(ResourceKey.LABEL, StringID.UI.FULL_ESTIMATION_ID));
 	private final JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
@@ -657,12 +652,10 @@ public class UIPanel extends JPanel {
 
 		zeroLineWidthCheckBox.addActionListener(e -> {
 			mainScreenSetting.setZeroLineWidth(zeroLineWidthCheckBox.isSelected());
-			screenUpdater.updateScreen();
 		});
 
 		dispGridCheckBox.addActionListener(e -> {
 			mainScreenSetting.setGridVisible(dispGridCheckBox.isSelected());
-			screenUpdater.updateScreen();
 		});
 
 		gridSmallButton.addActionListener(e -> makeGridSizeHalf());
@@ -674,27 +667,23 @@ public class UIPanel extends JPanel {
 		textFieldGrid.addActionListener(e -> setGridDivNum());
 
 		dispVertexCheckBox.addActionListener(e -> {
-			paintContext.setVertexVisible(dispVertexCheckBox.isSelected());
-			screenUpdater.updateScreen();
+			logger.debug("vertexVisible at listener: " + dispVertexCheckBox.isSelected());
+			mainScreenSetting.setVertexVisible(dispVertexCheckBox.isSelected());
 		});
-		dispVertexCheckBox.setSelected(true);
-		paintContext.setVertexVisible(true);
 
-		dispMVLinesCheckBox
-				.addActionListener(e -> {
-					paintContext.setMVLineVisible(dispMVLinesCheckBox.isSelected());
-					screenUpdater.updateScreen();
-				});
-		dispAuxLinesCheckBox
-				.addActionListener(e -> {
-					paintContext.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
-					screenUpdater.updateScreen();
-				});
+		dispMVLinesCheckBox.addActionListener(e -> {
+			logger.debug("mvLineVisible at change listener: " + dispMVLinesCheckBox.isSelected());
+			mainScreenSetting.setMVLineVisible(dispMVLinesCheckBox.isSelected());
+		});
 
-		doFullEstimationCheckBox
-				.addActionListener(e -> {
-					fullEstimation = doFullEstimationCheckBox.isSelected();
-				});
+		dispAuxLinesCheckBox.addActionListener(e -> {
+			logger.debug("auxLineVisible at change listener: " + dispAuxLinesCheckBox.isSelected());
+			mainScreenSetting.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
+		});
+
+		doFullEstimationCheckBox.addActionListener(e -> {
+			fullEstimation = doFullEstimationCheckBox.isSelected();
+		});
 
 		buttonCheckWindow.addActionListener(e -> showCheckerWindow(paintContext));
 
@@ -854,6 +843,22 @@ public class UIPanel extends JPanel {
 				MainScreenSetting.GRID_VISIBLE, e -> {
 					dispGridCheckBox.setSelected((boolean) e.getNewValue());
 					repaint();
+				});
+
+		mainScreenSetting.addPropertyChangeListener(
+				MainScreenSetting.VERTEX_VISIBLE, e -> {
+					logger.debug("vertexVisible property change" + e.getNewValue());
+					dispVertexCheckBox.setSelected((boolean) e.getNewValue());
+				});
+
+		mainScreenSetting.addPropertyChangeListener(
+				MainScreenSetting.MV_LINE_VISIBLE, e -> {
+					dispMVLinesCheckBox.setSelected((boolean) e.getNewValue());
+				});
+
+		mainScreenSetting.addPropertyChangeListener(
+				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
+					dispAuxLinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
 		valueSetting.addPropertyChangeListener(

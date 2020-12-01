@@ -50,6 +50,21 @@ public class InitDataBuilder {
 		return this;
 	}
 
+	public InitDataBuilder setMVLineVisible(final boolean mvLineVisible) {
+		initData.setMvLineVisible(mvLineVisible);
+		return this;
+	}
+
+	public InitDataBuilder setAuxLineVisible(final boolean auxLineVisible) {
+		initData.setAuxLineVisible(auxLineVisible);
+		return this;
+	}
+
+	public InitDataBuilder setVertexVisible(final boolean vertexVisible) {
+		initData.setVertexVisible(vertexVisible);
+		return this;
+	}
+
 	public InitData get() {
 		return initData;
 	}
