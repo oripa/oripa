@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
@@ -64,15 +65,17 @@ public class LineAdder {
 
 			iterator.remove();
 
-			if (GeomUtil.Distance(line.p0, crossPoint) > CalculationResource.POINT_EPS) {
-				toBeAdded.add(new OriLine(line.p0, crossPoint, line.getType()));
-			}
+			Consumer<Vector2d> addIfLineCanBeSplit = v -> {
+				if (GeomUtil.distance(v, crossPoint) > CalculationResource.POINT_EPS) {
+					var l = new OriLine(v, crossPoint, line.getType());
+					// keep selection not to change the target of copy.
+					l.selected = line.selected;
+					toBeAdded.add(l);
+				}
+			};
 
-			if (GeomUtil.Distance(line.p1, crossPoint) > CalculationResource.POINT_EPS) {
-				toBeAdded.add(new OriLine(line.p1, crossPoint, line.getType()));
-			}
-
-			// crossingLines.add(line);
+			addIfLineCanBeSplit.accept(line.p0);
+			addIfLineCanBeSplit.accept(line.p1);
 		}
 
 		toBeAdded.forEach(line -> currentLines.add(line));
@@ -105,18 +108,18 @@ public class LineAdder {
 //			}
 
 			// If the intersection is on the end of the line, skip
-			if (GeomUtil.Distance(inputLine.p0, line.p0) < CalculationResource.POINT_EPS ||
-					GeomUtil.Distance(inputLine.p0, line.p1) < CalculationResource.POINT_EPS ||
-					GeomUtil.Distance(inputLine.p1, line.p0) < CalculationResource.POINT_EPS ||
-					GeomUtil.Distance(inputLine.p1, line.p1) < CalculationResource.POINT_EPS) {
+			if (GeomUtil.distance(inputLine.p0, line.p0) < CalculationResource.POINT_EPS ||
+					GeomUtil.distance(inputLine.p0, line.p1) < CalculationResource.POINT_EPS ||
+					GeomUtil.distance(inputLine.p1, line.p0) < CalculationResource.POINT_EPS ||
+					GeomUtil.distance(inputLine.p1, line.p1) < CalculationResource.POINT_EPS) {
 				continue;
 			}
 
-			if (GeomUtil.DistancePointToSegment(line.p0, inputLine.p0,
+			if (GeomUtil.distancePointToSegment(line.p0, inputLine.p0,
 					inputLine.p1) < CalculationResource.POINT_EPS) {
 				points.add(line.p0);
 			}
-			if (GeomUtil.DistancePointToSegment(line.p1, inputLine.p0,
+			if (GeomUtil.distancePointToSegment(line.p1, inputLine.p0,
 					inputLine.p1) < CalculationResource.POINT_EPS) {
 				points.add(line.p1);
 			}
@@ -172,7 +175,7 @@ public class LineAdder {
 		for (int i = 1; i < points.size(); i++) {
 			Vector2d p = points.get(i);
 			// remove very short line
-			if (GeomUtil.Distance(prePoint, p) < CalculationResource.POINT_EPS) {
+			if (GeomUtil.distance(prePoint, p) < CalculationResource.POINT_EPS) {
 				continue;
 			}
 

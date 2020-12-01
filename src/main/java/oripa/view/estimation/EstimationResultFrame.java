@@ -59,6 +59,6 @@ public class EstimationResultFrame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(final ActionEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 }

@@ -13,6 +13,9 @@ public class MainScreenSetting {
 	private boolean crossLineVisible = false;
 	public static final String CROSS_LINE_VISIBLE = "cross line visible";
 
+	private boolean zeroLineWidth = false;
+	public static final String ZERO_LINE_WIDTH = "zero line width";
+
 	private final SelectionOriginHolder originHolder = new SelectionOriginHolder();
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
@@ -32,6 +35,12 @@ public class MainScreenSetting {
 		var old = crossLineVisible;
 		crossLineVisible = visible;
 		support.firePropertyChange(CROSS_LINE_VISIBLE, old, visible);
+	}
+
+	public void setZeroLineWidth(final boolean zeroLineWidth) {
+		var old = this.zeroLineWidth;
+		this.zeroLineWidth = zeroLineWidth;
+		support.firePropertyChange(ZERO_LINE_WIDTH, old, zeroLineWidth);
 	}
 
 	public SelectionOriginHolder getSelectionOriginHolder() {

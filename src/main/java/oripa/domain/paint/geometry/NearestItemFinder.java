@@ -29,7 +29,7 @@ public class NearestItemFinder {
 		OriLine bestLine = null;
 
 		for (OriLine line : lines) {
-			double dist = GeomUtil.DistancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
+			double dist = GeomUtil.distancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
 			if (dist < minDistance) {
 				minDistance = dist;
 				bestLine = line;
@@ -48,7 +48,7 @@ public class NearestItemFinder {
 
 		NearestPoint nearestPosition;
 
-		nearestPosition = NearestVertexFinderHelper.findAround(context, scaleThreshold(context));
+		nearestPosition = NearestVertexFinder.findAround(context, scaleThreshold(context));
 
 		Vector2d picked = null;
 
@@ -64,7 +64,7 @@ public class NearestItemFinder {
 				picked = new Vector2d();
 				Vector2d cp = new Vector2d(currentPoint.x, currentPoint.y);
 
-				GeomUtil.DistancePointToSegment(cp, l.p0, l.p1, picked);
+				GeomUtil.distancePointToSegment(cp, l.p0, l.p1, picked);
 			}
 		}
 
@@ -74,7 +74,7 @@ public class NearestItemFinder {
 	public static Vector2d pickVertexFromPickedLines(final PaintContextInterface context) {
 
 		NearestPoint nearestPosition;
-		nearestPosition = NearestVertexFinderHelper.findFromPickedLine(context);
+		nearestPosition = NearestVertexFinder.findFromPickedLine(context);
 
 		Vector2d picked = null;
 		if (nearestPosition.distance < scaleThreshold(context)) {
@@ -100,6 +100,12 @@ public class NearestItemFinder {
 		}
 
 		return candidate;
+	}
+
+	public static Vector2d getNearestInAngleSnapCrossPoints(final PaintContextInterface context) {
+		return NearestVertexFinder.findNearestVertex(
+				context.getLogicalMousePoint(),
+				context.getAngleSnapCrossPoints()).point;
 	}
 
 }

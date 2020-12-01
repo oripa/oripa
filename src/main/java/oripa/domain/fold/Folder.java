@@ -18,19 +18,15 @@
 
 package oripa.domain.fold;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.ORIPA;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.fold.rule.Condition3;
-import oripa.domain.fold.rule.Condition4;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.value.OriLine;
@@ -53,12 +49,10 @@ public class Folder {
 	 * @param foldedModelInfo
 	 * @param fullEstimation
 	 * @return the number of flat foldable layer layouts. -1 if
-	 *         <code>fullEstimation</code> is false;
+	 *         <code>fullEstimation</code> is false.
 	 */
 	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
 			final boolean fullEstimation) {
-//		OrigamiModel origamiModel = m_doc.getOrigamiModel();
-//		FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
@@ -82,7 +76,7 @@ public class Folder {
 			return -1;
 		}
 
-		// After folding construct the sbfaces
+		// After folding construct the subfaces
 		double paperSize = origamiModel.getPaperSize();
 		subFaces = makeSubFaces(faces, paperSize);
 		System.out.println("subFaces.size() = " + subFaces.size());
@@ -105,8 +99,6 @@ public class Folder {
 			System.arraycopy(overlapRelation[i], 0, workORmat[i], 0, size);
 		}
 
-		ORIPA.tmpInt = 0;
-
 		for (SubFace sub : subFaces) {
 			sub.sortFaceOverlapOrder(faces, workORmat);
 		}
@@ -122,38 +114,12 @@ public class Folder {
 
 		folderTool.setFacesOutline(vertices, faces, false);
 
-		// Color the faces
-		SecureRandom srand = new SecureRandom();
-		for (OriFace face : faces) {
-
-			int r = srand.nextInt(256); // (int) (rand.nextDouble() * 255);
-			int g = srand.nextInt(256); // (int) (rand.nextDouble() * 255);
-			int b = srand.nextInt(256); // (int) (rand.nextDouble() * 255);
-//			if (r < 0) {
-//				r = 0;
-//			} else if (r > 255) {
-//				r = 255;
-//			}
-//			if (g < 0) {
-//				g = 0;
-//			} else if (g > 255) {
-//				g = 255;
-//			}
-//			if (b < 0) {
-//				b = 0;
-//			} else if (b > 255) {
-//				b = 255;
-//			}
-			face.intColor = (r << 16) | (g << 8) | b | 0xff000000;
-		}
-
 		origamiModel.setFolded(true);
 		return foldableOverlapRelations.size();
 	}
 
 	private void findAnswer(
 			final FoldedModelInfo foldedModelInfo, final int subFaceIndex, final int[][] orMat) {
-		// FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 		SubFace sub = subFaces.get(subFaceIndex);
 		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 
@@ -184,7 +150,7 @@ public class Folder {
 					int index0 = vec.get(i).tmpInt;
 					for (int j = i + 1; j < size; j++) {
 						int index1 = vec.get(j).tmpInt;
-						if (orMat[index0][index1] == FoldedModelInfo.LOWER) {
+						if (orMat[index0][index1] == OverlapRelationValues.LOWER) {
 							bOK = false;
 							break;
 						}
@@ -206,8 +172,8 @@ public class Folder {
 					int index0 = vec.get(i).tmpInt;
 					for (int j = i + 1; j < size; j++) {
 						int index1 = vec.get(j).tmpInt;
-						passMat[index0][index1] = FoldedModelInfo.UPPER;
-						passMat[index1][index0] = FoldedModelInfo.LOWER;
+						passMat[index0][index1] = OverlapRelationValues.UPPER;
+						passMat[index1][index0] = OverlapRelationValues.LOWER;
 					}
 				}
 
@@ -247,10 +213,6 @@ public class Folder {
 	// then OR[i][k] = OR[j][k]
 	private void holdCondition3s(
 			final List<OriFace> faces, final double paperSize, final int[][] overlapRelation) {
-		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
-		// FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
-
-		;
 
 		for (OriFace f_i : faces) {
 			for (OriHalfedge he : f_i.halfedges) {
@@ -259,14 +221,14 @@ public class Folder {
 				}
 
 				OriFace f_j = he.pair.face;
-				if (overlapRelation[f_i.tmpInt][f_j.tmpInt] != FoldedModelInfo.LOWER) {
+				if (overlapRelation[f_i.tmpInt][f_j.tmpInt] != OverlapRelationValues.LOWER) {
 					continue;
 				}
 				for (OriFace f_k : faces) {
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
-					if (folderTool.isLineCrossFace4(f_k, he, paperSize)) {
+					if (OriGeomUtil.isLineCrossFace4(f_k, he, paperSize)) {
 						Condition3 cond = new Condition3();
 						cond.upper = f_i.tmpInt;
 						cond.lower = f_j.tmpInt;
@@ -294,8 +256,6 @@ public class Folder {
 
 	private void holdCondition4s(
 			final List<OriEdge> edges, final int[][] overlapRelation) {
-		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
-		// FoldedModelInfo foldedModelInfo = m_doc.getFoldedModelInfo();
 
 		int edgeNum = edges.size();
 		System.out.println("edgeNum = " + edgeNum);
@@ -315,8 +275,8 @@ public class Folder {
 						e0.left.next.positionAfterFolded,
 						e1.left.positionAfterFolded, e1.left.next.positionAfterFolded)) {
 					Condition4 cond_f;
-					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == FoldedModelInfo.UPPER) {
-						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == FoldedModelInfo.UPPER) {
+					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == OverlapRelationValues.UPPER) {
+						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
 							cond_f = new Condition4();
 							cond_f.upper1 = e0.right.face.tmpInt;
 							cond_f.lower1 = e0.left.face.tmpInt;
@@ -346,7 +306,7 @@ public class Folder {
 							e1.left.face.condition4s.add(cond_f);
 						}
 					} else {
-						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == FoldedModelInfo.UPPER) {
+						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
 							cond_f = new Condition4();
 							cond_f.upper1 = e0.left.face.tmpInt;
 							cond_f.lower1 = e0.right.face.tmpInt;
@@ -386,14 +346,14 @@ public class Folder {
 						}
 					}
 
-					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == FoldedModelInfo.UPPER) {
+					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == OverlapRelationValues.UPPER) {
 						cond.upper1 = e0.right.face.tmpInt;
 						cond.lower1 = e0.left.face.tmpInt;
 					} else {
 						cond.upper1 = e0.left.face.tmpInt;
 						cond.lower1 = e0.right.face.tmpInt;
 					}
-					if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == FoldedModelInfo.UPPER) {
+					if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
 						cond.upper2 = e1.right.face.tmpInt;
 						cond.lower2 = e1.left.face.tmpInt;
 					} else {
@@ -421,19 +381,19 @@ public class Folder {
 			final boolean bSetPairAtSameTime) {
 		orMat[i][j] = value;
 		if (bSetPairAtSameTime) {
-			if (value == FoldedModelInfo.LOWER) {
-				orMat[j][i] = FoldedModelInfo.UPPER;
+			if (value == OverlapRelationValues.LOWER) {
+				orMat[j][i] = OverlapRelationValues.UPPER;
 			} else {
-				orMat[j][i] = FoldedModelInfo.LOWER;
+				orMat[j][i] = OverlapRelationValues.LOWER;
 			}
 		}
 	}
 
 	private void setLowerValueIfUndefined(final int[][] orMat, final int i, final int j,
 			final boolean[] changed) {
-		if (orMat[i][j] == FoldedModelInfo.UNDEFINED) {
-			orMat[i][j] = FoldedModelInfo.LOWER;
-			orMat[j][i] = FoldedModelInfo.UPPER;
+		if (orMat[i][j] == OverlapRelationValues.UNDEFINED) {
+			orMat[i][j] = OverlapRelationValues.LOWER;
+			orMat[j][i] = OverlapRelationValues.UPPER;
 			changed[0] = true;
 		}
 	}
@@ -447,7 +407,7 @@ public class Folder {
 
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2
-			if (orMat[cond.lower1][cond.upper2] == FoldedModelInfo.LOWER) {
+			if (orMat[cond.lower1][cond.upper2] == OverlapRelationValues.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2, changed);
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
 				setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2, changed);
@@ -455,7 +415,7 @@ public class Folder {
 
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
 			// lower2 > lower1
-			if (orMat[cond.lower2][cond.upper1] == FoldedModelInfo.LOWER) {
+			if (orMat[cond.lower2][cond.upper1] == OverlapRelationValues.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1, changed);
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
 				setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1, changed);
@@ -463,32 +423,32 @@ public class Folder {
 
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
 			// lower1
-			if (orMat[cond.upper1][cond.upper2] == FoldedModelInfo.LOWER
-					&& orMat[cond.upper2][cond.lower1] == FoldedModelInfo.LOWER) {
+			if (orMat[cond.upper1][cond.upper2] == OverlapRelationValues.LOWER
+					&& orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
 				setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1, changed);
 			}
 
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
 			// lower1
-			if (orMat[cond.upper1][cond.lower2] == FoldedModelInfo.LOWER
-					&& orMat[cond.lower2][cond.lower1] == FoldedModelInfo.LOWER) {
+			if (orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER
+					&& orMat[cond.lower2][cond.lower1] == OverlapRelationValues.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2, changed);
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
 			}
 
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
 			// lower2
-			if (orMat[cond.upper2][cond.upper1] == FoldedModelInfo.LOWER
-					&& orMat[cond.upper1][cond.lower2] == FoldedModelInfo.LOWER) {
+			if (orMat[cond.upper2][cond.upper1] == OverlapRelationValues.LOWER
+					&& orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
 				setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2, changed);
 			}
 
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
 			// lower2
-			if (orMat[cond.upper2][cond.lower1] == FoldedModelInfo.LOWER
-					&& orMat[cond.lower1][cond.lower2] == FoldedModelInfo.LOWER) {
+			if (orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER
+					&& orMat[cond.lower1][cond.lower2] == OverlapRelationValues.LOWER) {
 				setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1, changed);
 				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
 			}
@@ -511,14 +471,14 @@ public class Folder {
 				for (int i = 0; i < sub.faces.size(); i++) {
 					for (int j = i + 1; j < sub.faces.size(); j++) {
 
-						// seach for undertermined relations
+						// search for undetermined relations
 						int index_i = sub.faces.get(i).tmpInt;
 						int index_j = sub.faces.get(j).tmpInt;
 
-						if (orMat[index_i][index_j] == FoldedModelInfo.NO_OVERLAP) {
+						if (orMat[index_i][index_j] == OverlapRelationValues.NO_OVERLAP) {
 							continue;
 						}
-						if (orMat[index_i][index_j] != FoldedModelInfo.UNDEFINED) {
+						if (orMat[index_i][index_j] != OverlapRelationValues.UNDEFINED) {
 							continue;
 						}
 						// Find the intermediary face
@@ -532,19 +492,19 @@ public class Folder {
 
 							int index_k = sub.faces.get(k).tmpInt;
 
-							if (orMat[index_i][index_k] == FoldedModelInfo.UPPER
-									&& orMat[index_k][index_j] == FoldedModelInfo.UPPER) {
-								orMat[index_i][index_j] = FoldedModelInfo.UPPER;
-								orMat[index_j][index_i] = FoldedModelInfo.LOWER;
+							if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
+									&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {
+								orMat[index_i][index_j] = OverlapRelationValues.UPPER;
+								orMat[index_j][index_i] = OverlapRelationValues.LOWER;
 								bFound = true;
 								changed = true;
 								bChanged = true;
 								break;
 							}
-							if (orMat[index_i][index_k] == FoldedModelInfo.LOWER
-									&& orMat[index_k][index_j] == FoldedModelInfo.LOWER) {
-								orMat[index_i][index_j] = FoldedModelInfo.LOWER;
-								orMat[index_j][index_i] = FoldedModelInfo.UPPER;
+							if (orMat[index_i][index_k] == OverlapRelationValues.LOWER
+									&& orMat[index_k][index_j] == OverlapRelationValues.LOWER) {
+								orMat[index_i][index_j] = OverlapRelationValues.LOWER;
+								orMat[index_j][index_i] = OverlapRelationValues.UPPER;
 								bFound = true;
 								changed = true;
 								bChanged = true;
@@ -591,14 +551,14 @@ public class Folder {
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
-					if (GeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
-						if (orMat[f_i.tmpInt][f_k.tmpInt] != FoldedModelInfo.UNDEFINED
-								&& orMat[f_j.tmpInt][f_k.tmpInt] == FoldedModelInfo.UNDEFINED) {
+					if (OriGeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
+						if (orMat[f_i.tmpInt][f_k.tmpInt] != OverlapRelationValues.UNDEFINED
+								&& orMat[f_j.tmpInt][f_k.tmpInt] == OverlapRelationValues.UNDEFINED) {
 							setOR(orMat, f_j.tmpInt, f_k.tmpInt, orMat[f_i.tmpInt][f_k.tmpInt],
 									true);
 							bChanged = true;
-						} else if (orMat[f_j.tmpInt][f_k.tmpInt] != FoldedModelInfo.UNDEFINED
-								&& orMat[f_i.tmpInt][f_k.tmpInt] == FoldedModelInfo.UNDEFINED) {
+						} else if (orMat[f_j.tmpInt][f_k.tmpInt] != OverlapRelationValues.UNDEFINED
+								&& orMat[f_i.tmpInt][f_k.tmpInt] == OverlapRelationValues.UNDEFINED) {
 							setOR(orMat, f_i.tmpInt, f_k.tmpInt, orMat[f_j.tmpInt][f_k.tmpInt],
 									true);
 							bChanged = true;
@@ -611,16 +571,22 @@ public class Folder {
 		return bChanged;
 	}
 
+	/**
+	 *
+	 * @param faces
+	 *            extracted from the drawn crease pattern. This method assumes
+	 *            that the faces hold the coordinates after folding.
+	 *
+	 * @param paperSize
+	 * @return
+	 */
 	private ArrayList<SubFace> makeSubFaces(
 			final List<OriFace> faces, final double paperSize) {
-		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
-
 		CreasePatternFactory cpFactory = new CreasePatternFactory();
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-
 		CreasePatternInterface temp_creasePattern = cpFactory.createCreasePattern(paperSize);
-		OrigamiModel temp_origamiModel = modelFactory.createOrigamiModel(paperSize);
 
+		// construct edge structure after folding and store it as a
+		// crease pattern for easy calculation
 		temp_creasePattern.clear();
 		Painter painter = new Painter(temp_creasePattern);
 		for (OriFace face : faces) {
@@ -630,28 +596,13 @@ public class Folder {
 				painter.addLine(line);
 			}
 		}
+		temp_creasePattern.cleanDuplicatedLines();
 
-		folderTool.cleanDuplicatedLines(temp_creasePattern);
-
-//		if (Config.FOR_STUDY) {
-//			try {
-//				Exporter exporter = new ExporterEPS();
-//				exporter.export(temp_doc, "c:\\_jun\\tmp\\te.eps");
-//			} catch (Exception e) {
-//			}
-//		}
-		System.out.println("debugging");
-		Vector2d sp1 = new Vector2d(0.0, 0.0);
-		Vector2d ep1 = new Vector2d(0.0, 10.0);
-		Vector2d sp2 = new Vector2d(0.0, 0.0);
-		Vector2d ep2 = new Vector2d(0.0, 5.0);
-		Vector2d dummy1 = new Vector2d();
-		Vector2d dummy2 = new Vector2d();
-		int crossNum = GeomUtil.getCrossPoint(dummy1, dummy2, sp1, ep1, sp2, ep2);
-		System.out.println("getCrossPoint results " + crossNum + "::::" + dummy1 + ", " + dummy2);
-
-		temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize, false);
-		// temp_doc.setOrigamiModel(temp_origamiModel);
+		// By this construction, we get faces that are composed of the edges
+		// after folding (layering is not considered)
+		// We call such face a subface hereafter.
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		OrigamiModel temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize);
 
 		ArrayList<SubFace> localSubFaces = new ArrayList<>();
 
@@ -660,10 +611,12 @@ public class Folder {
 			localSubFaces.add(new SubFace(face));
 		}
 
+		// Stores the face reference of given crease pattern into the subface
+		// that is contained in the face.
 		for (SubFace sub : localSubFaces) {
 			Vector2d innerPoint = sub.getInnerPoint();
 			for (OriFace face : faces) {
-				if (GeomUtil.isContainsPointFoldedFace(face, innerPoint, paperSize / 1000)) {
+				if (OriGeomUtil.isContainsPointFoldedFace(face, innerPoint, paperSize / 1000)) {
 					sub.faces.add(face);
 				}
 			}
@@ -708,9 +661,6 @@ public class Folder {
 
 	private void simpleFoldWithoutZorder(
 			final List<OriFace> faces, final List<OriEdge> edges) {
-		// OrigamiModel origamiModel = m_doc.getOrigamiModel();
-//		List<OriFace>   faces    = origamiModel.getFaces();
-//        List<OriEdge>   edges    = origamiModel.getEdges();
 
 		int id = 0;
 		for (OriFace face : faces) {
@@ -763,10 +713,10 @@ public class Folder {
 		}
 	}
 
-	private void transformVertex(Vector2d vertex, Line preLine, Vector2d afterOrigin, Vector2d afterDir) {
-
+	private void transformVertex(final Vector2d vertex, final Line preLine,
+			final Vector2d afterOrigin, final Vector2d afterDir) {
 		double param[] = new double[1];
-		double d0 = GeomUtil.Distance(vertex, preLine, param);
+		double d0 = GeomUtil.distance(vertex, preLine, param);
 		double d1 = param[0];
 
 		Vector2d footV = new Vector2d(afterOrigin);
@@ -782,7 +732,9 @@ public class Folder {
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
+		// (Maybe) baseHe.pair keeps the position before folding.
 		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
+		// baseHe.tmpVec is the temporary position while folding along creases.
 		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
 
 		// Creates the base unit vector for before the rotation
@@ -796,6 +748,8 @@ public class Folder {
 
 		Line preLine = new Line(preOrigin, baseDir);
 
+		// move the vertices of the face to keep the face connection
+		// on baseHe
 		for (OriHalfedge he : face.halfedges) {
 			transformVertex(he.tmpVec, preLine, afterOrigin, afterDir);
 		}
@@ -805,36 +759,17 @@ public class Folder {
 			transformVertex(precrease.p1, preLine, afterOrigin, afterDir);
 		}
 
-		// Ivertion
+		// Inversion
 		if (face.faceFront == baseHe.face.faceFront) {
 			Vector2d ep = baseHe.next.tmpVec;
 			Vector2d sp = baseHe.tmpVec;
 
-			Vector2d b = new Vector2d();
-			b.sub(ep, sp);
 			for (OriHalfedge he : face.halfedges) {
-
-				if (GeomUtil.Distance(he.tmpVec, new Line(sp, b)) < GeomUtil.EPS) {
-					continue;
-				}
-				if (Math.abs(b.y) < GeomUtil.EPS) {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					a.y = -a.y;
-					he.tmpVec.y = a.y + sp.y;
-				} else {
-					Vector2d a = new Vector2d();
-					a.sub(he.tmpVec, sp);
-					he.tmpVec.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x)
-							/ b.lengthSquared();
-					he.tmpVec.x = b.x / b.y * a.y - a.x + b.x / b.y * he.tmpVec.y;
-					he.tmpVec.x += sp.x;
-					he.tmpVec.y += sp.y;
-				}
+				flipVertex(he.tmpVec, sp, ep);
 			}
 			for (OriLine precrease : face.precreases) {
-				flipVertex(precrease.p0, sp, b);
-				flipVertex(precrease.p1, sp, b);
+				flipVertex(precrease.p0, sp, ep);
+				flipVertex(precrease.p1, sp, ep);
 			}
 			face.faceFront = !face.faceFront;
 		}
@@ -848,14 +783,14 @@ public class Folder {
 		int[][] overlapRelation = new int[size][size];
 
 		for (int i = 0; i < size; i++) {
-			overlapRelation[i][i] = FoldedModelInfo.NO_OVERLAP;
+			overlapRelation[i][i] = OverlapRelationValues.NO_OVERLAP;
 			for (int j = i + 1; j < size; j++) {
-				if (GeomUtil.isFaceOverlap(faces.get(i), faces.get(j), size * 0.00001)) {
-					overlapRelation[i][j] = FoldedModelInfo.UNDEFINED;
-					overlapRelation[j][i] = FoldedModelInfo.UNDEFINED;
+				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), size * 0.00001)) {
+					overlapRelation[i][j] = OverlapRelationValues.UNDEFINED;
+					overlapRelation[j][i] = OverlapRelationValues.UNDEFINED;
 				} else {
-					overlapRelation[i][j] = FoldedModelInfo.NO_OVERLAP;
-					overlapRelation[j][i] = FoldedModelInfo.NO_OVERLAP;
+					overlapRelation[i][j] = OverlapRelationValues.NO_OVERLAP;
+					overlapRelation[j][i] = OverlapRelationValues.NO_OVERLAP;
 				}
 			}
 		}
@@ -875,24 +810,24 @@ public class Folder {
 				OriFace pairFace = he.pair.face;
 
 				// If the relation is already decided, skip
-				if (overlapRelation[face.tmpInt][pairFace.tmpInt] == FoldedModelInfo.UPPER
-						|| overlapRelation[face.tmpInt][pairFace.tmpInt] == FoldedModelInfo.LOWER) {
+				if (overlapRelation[face.tmpInt][pairFace.tmpInt] == OverlapRelationValues.UPPER
+						|| overlapRelation[face.tmpInt][pairFace.tmpInt] == OverlapRelationValues.LOWER) {
 					continue;
 				}
 
 				if ((face.faceFront && he.edge.type == OriLine.Type.RIDGE.toInt())
 						|| (!face.faceFront && he.edge.type == OriLine.Type.VALLEY.toInt())) {
-					overlapRelation[face.tmpInt][pairFace.tmpInt] = FoldedModelInfo.UPPER;
-					overlapRelation[pairFace.tmpInt][face.tmpInt] = FoldedModelInfo.LOWER;
+					overlapRelation[face.tmpInt][pairFace.tmpInt] = OverlapRelationValues.UPPER;
+					overlapRelation[pairFace.tmpInt][face.tmpInt] = OverlapRelationValues.LOWER;
 				} else {
-					overlapRelation[face.tmpInt][pairFace.tmpInt] = FoldedModelInfo.LOWER;
-					overlapRelation[pairFace.tmpInt][face.tmpInt] = FoldedModelInfo.UPPER;
+					overlapRelation[face.tmpInt][pairFace.tmpInt] = OverlapRelationValues.LOWER;
+					overlapRelation[pairFace.tmpInt][face.tmpInt] = OverlapRelationValues.UPPER;
 				}
 			}
 		}
 	}
 
-	public BoundBox foldWithoutLineType(
+	public void foldWithoutLineType(
 			final OrigamiModel model) {
 		List<OriVertex> vertices = model.getVertices();
 		List<OriEdge> edges = model.getEdges();
@@ -916,9 +851,6 @@ public class Folder {
 		}
 
 		folderTool.setFacesOutline(vertices, faces, false);
-
-		return folderTool.calcFoldedBoundingBox(faces);
-
 	}
 
 	// Make the folds by flipping the faces
@@ -942,83 +874,17 @@ public class Folder {
 		}
 	}
 
-	// Method that doesnt use sin con
 	private void flipFace2(final List<OriFace> faces, final OriFace face,
 			final OriHalfedge baseHe) {
-
-		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
-		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
-
-		// Creates the base unit vector for before the rotation
-		Vector2d baseDir = new Vector2d();
-		baseDir.sub(baseHe.pair.tmpVec, baseHe.pair.next.tmpVec);
-
-		// Creates the base unit vector for after the rotation
-		Vector2d afterDir = new Vector2d();
-		afterDir.sub(baseHe.next.tmpVec, baseHe.tmpVec);
-		afterDir.normalize();
-
-		Line preLine = new Line(preOrigin, baseDir);
-
-		for (OriHalfedge he : face.halfedges) {
-			double param[] = new double[1];
-			double d0 = GeomUtil.Distance(he.tmpVec, preLine, param);
-			double d1 = param[0];
-
-			Vector2d footV = new Vector2d(afterOrigin);
-			footV.x += d1 * afterDir.x;
-			footV.y += d1 * afterDir.y;
-
-			Vector2d afterDirFromFoot = new Vector2d();
-			afterDirFromFoot.x = afterDir.y;
-			afterDirFromFoot.y = -afterDir.x;
-
-			he.tmpVec.x = footV.x + d0 * afterDirFromFoot.x;
-			he.tmpVec.y = footV.y + d0 * afterDirFromFoot.y;
-
-		}
-
-		// Ivertion
-		if (face.faceFront == baseHe.face.faceFront) {
-			Vector2d ep = baseHe.next.tmpVec;
-			Vector2d sp = baseHe.tmpVec;
-
-			Vector2d b = new Vector2d();
-			b.sub(ep, sp);
-			for (OriHalfedge he : face.halfedges) {
-				flipVertex(he.tmpVec, sp, b);
-			}
-
-			for (OriLine precrease : face.precreases) {
-				flipVertex(precrease.p0, sp, b);
-				flipVertex(precrease.p1, sp, b);
-			}
-
-			face.faceFront = !face.faceFront;
-		}
-
+		flipFace(face, baseHe);
 		faces.remove(face);
 		faces.add(face);
 	}
 
-	private void flipVertex(Vector2d vertex, Vector2d sp, Vector2d b) {
-		if (GeomUtil.Distance(vertex, new Line(sp, b)) < GeomUtil.EPS) {
-			return;
-		}
-		if (Math.abs(b.y) < GeomUtil.EPS) {
-			Vector2d a = new Vector2d();
-			a.sub(vertex, sp);
-			a.y = -a.y;
-			vertex.y = a.y + sp.y;
-		} else {
-			Vector2d a = new Vector2d();
-			a.sub(vertex, sp);
-			vertex.y = ((b.y * b.y - b.x * b.x) * a.y + 2 * b.x * b.y * a.x)
-					/ b.lengthSquared();
-			vertex.x = b.x / b.y * a.y - a.x + b.x / b.y * vertex.y;
-			vertex.x += sp.x;
-			vertex.y += sp.y;
-		}
-	}
+	private void flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d ep) {
+		var v = GeomUtil.getSymmetricPoint(vertex, sp, ep);
 
+		vertex.x = v.x;
+		vertex.y = v.y;
+	}
 }

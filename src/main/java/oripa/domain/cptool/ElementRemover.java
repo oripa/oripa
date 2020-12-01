@@ -50,8 +50,8 @@ public class ElementRemover {
 		ArrayList<OriLine> sharedLines = new ArrayList<OriLine>();
 
 		creasePattern.stream()
-				.filter(line -> GeomUtil.Distance(line.p0, p) < 0.001
-						|| GeomUtil.Distance(line.p1, p) < 0.001)
+				.filter(line -> GeomUtil.distance(line.p0, p) < 0.001
+						|| GeomUtil.distance(line.p1, p) < 0.001)
 				.forEach(line -> sharedLines.add(line));
 
 		if (sharedLines.size() != 2) {
@@ -80,12 +80,12 @@ public class ElementRemover {
 		Vector2d p0 = new Vector2d();
 		Vector2d p1 = new Vector2d();
 
-		if (GeomUtil.Distance(l0.p0, p) < 0.001) {
+		if (GeomUtil.distance(l0.p0, p) < 0.001) {
 			p0.set(l0.p1);
 		} else {
 			p0.set(l0.p0);
 		}
-		if (GeomUtil.Distance(l1.p0, p) < 0.001) {
+		if (GeomUtil.distance(l1.p0, p) < 0.001) {
 			p1.set(l1.p1);
 		} else {
 			p1.set(l1.p0);
@@ -95,6 +95,25 @@ public class ElementRemover {
 		creasePattern.remove(l1);
 		OriLine li = new OriLine(p0, p1, l0.getType());
 		creasePattern.add(li);
+	}
+
+	/**
+	 * remove all lines in {@code linesToBeRemoved} from {@code creasePattern}.
+	 *
+	 * @param linesToBeRemoved
+	 * @param creasePattern
+	 */
+	public void removeLines(final Collection<OriLine> linesToBeRemoved,
+			final Collection<OriLine> creasePattern) {
+
+		linesToBeRemoved.forEach(line -> creasePattern.remove(line));
+
+		// merge lines after removing all lines to be removed.
+		// merging while removing makes some lines not to be removed.
+		linesToBeRemoved.forEach(line -> {
+			merge2LinesAt(line.p0, creasePattern);
+			merge2LinesAt(line.p1, creasePattern);
+		});
 	}
 
 	/**
@@ -110,7 +129,7 @@ public class ElementRemover {
 				.filter(line -> line.selected)
 				.collect(Collectors.toList());
 
-		selectedLines.forEach(line -> removeLine(line, creasePattern));
+		removeLines(selectedLines, creasePattern);
 	}
 
 }

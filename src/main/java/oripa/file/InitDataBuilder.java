@@ -16,42 +16,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.collection;
+package oripa.file;
 
 import java.util.Collection;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public class ConjunctionLoop<Variable> extends AbstractRule<Collection<Variable>> {
+public class InitDataBuilder {
+	private InitData initData;
 
-	private final Rule<Variable> term;
-//	private HashSet<Variable> violations = new HashSet<>();
-
-	/**
-	 *
-	 * @param term
-	 */
-	public ConjunctionLoop(final Rule<Variable> term) {
-		this.term = term;
+	public InitDataBuilder() {
+		initData = new InitData();
 	}
 
-	@Override
-	public boolean holds(final Collection<Variable> inputs) {
-		return inputs.stream().allMatch(input -> term.holds(input));
+	public void clear() {
+		initData = new InitData();
 	}
 
-	public Collection<Variable> findViolations(final Collection<Variable> inputs) {
-		CollectionFilter<Variable> filter = new CollectionFilter<>(term);
-
-		return filter.findViolations(inputs);
+	public InitDataBuilder setLastUsedFile(final String filePath) {
+		initData.setLastUsedFile(filePath);
+		return this;
 	}
-//	/**
-//	 * @return violations
-//	 */
-//	public HashSet<Variable> getViolations() {
-//		return violations;
-//	}
 
+	public InitDataBuilder setMRUFiles(final Collection<String> mru) {
+		initData.setMRUFiles(mru.toArray(new String[mru.size()]));
+		return this;
+	}
+
+	public InitDataBuilder setZeroLineWidth(final boolean zeroLineWidth) {
+		initData.setZeroLineWidth(zeroLineWidth);
+		return this;
+	}
+
+	public InitData get() {
+		return initData;
+	}
 }

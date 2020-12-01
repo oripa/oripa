@@ -30,7 +30,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 		Vector2d v = context.popVertex();
 
 		if (context.getPickedVertices().stream()
-				.anyMatch(tv -> GeomUtil.Distance(v, tv) < 1)) {
+				.anyMatch(tv -> GeomUtil.distance(v, tv) < 1)) {
 			if (context.getVertexCount() > 2) {
 				// finish editing
 

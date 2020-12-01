@@ -15,10 +15,6 @@ public class MainFrameSetting {
 		support.addPropertyChangeListener(propertyName, listener);
 	}
 
-	public String getHint() {
-		return hint;
-	}
-
 	public void setHint(final String hint) {
 		var old = this.hint;
 		this.hint = hint;

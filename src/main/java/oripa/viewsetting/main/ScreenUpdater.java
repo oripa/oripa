@@ -38,7 +38,7 @@ public class ScreenUpdater implements
 
 	}
 
-	public class KeyListener implements java.awt.event.KeyListener {
+	private class KeyListener implements java.awt.event.KeyListener {
 		@Override
 		public void keyTyped(final KeyEvent e) {
 		}

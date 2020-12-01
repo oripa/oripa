@@ -20,7 +20,6 @@ package oripa.view.model;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -44,10 +43,10 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriHalfedge;
 import oripa.domain.fold.OrigamiModel;
-import oripa.domain.paint.util.ElementSelector;
 import oripa.resource.Constants;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
@@ -62,21 +61,20 @@ public class ModelViewScreen extends JPanel
 	private Image bufferImage = null;
 	private Graphics2D bufferg = null;
 	private Point2D preMousePoint; // Screen coordinates
-	private final Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logical
-																				// coordinates
 	private double scale = 1;
 	private double transX = 0;
 	private double transY = 0;
 	private final Vector2d modelCenter = new Vector2d();
-	private Dimension preSize;
 	private double rotateAngle = 0;
 	private final AffineTransform affineTransform = new AffineTransform();
-	public boolean dispSlideFace = false;
+
 	private OriLine scissorsLine = null;
 	private boolean scissorsLineVisible = false;
 	private int scissorsLineAngleDegree = 90;
 	private double scissorsLinePosition = 0;
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
+
+	private final ElementSelector selector = new ElementSelector();
 
 	private OrigamiModel origamiModel = null;
 	private final CutModelOutlinesHolder lineHolder;
@@ -100,8 +98,6 @@ public class ModelViewScreen extends JPanel
 		scale = 1.0;
 		rotateAngle = 0;
 		setBackground(Color.white);
-
-		preSize = getSize();
 
 		addPropertyChangeListenersToSetting();
 	}
@@ -149,20 +145,14 @@ public class ModelViewScreen extends JPanel
 			scale = 1.0;
 		} else {
 			// Align the center of the model, combined scale
-			Vector2d maxV = new Vector2d(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
-			Vector2d minV = new Vector2d(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-			for (OriFace face : faces) {
-				for (OriHalfedge he : face.halfedges) {
-					maxV.x = Math.max(maxV.x, he.vertex.p.x);
-					maxV.y = Math.max(maxV.y, he.vertex.p.y);
-					minV.x = Math.min(minV.x, he.vertex.p.x);
-					minV.y = Math.min(minV.y, he.vertex.p.y);
-				}
-			}
-			modelCenter.x = (maxV.x + minV.x) / 2;
-			modelCenter.y = (maxV.y + minV.y) / 2;
+			var folderTool = new FolderTool();
+			var boundBox = folderTool.calcFoldedBoundingBox(faces);
+			modelCenter.x = boundBox.getCenterX();
+			modelCenter.y = boundBox.getCenterY();
 
-			scale = 0.8 * Math.min(boundSize / (maxV.x - minV.x), boundSize / (maxV.y - minV.y));
+			scale = 0.8 * Math.min(
+					boundSize / boundBox.getWidth(), boundSize / boundBox.getHeight());
+
 			updateAffineTransform();
 			recalcScissorsLine();
 		}
@@ -185,7 +175,6 @@ public class ModelViewScreen extends JPanel
 
 			g2d.setColor(Color.BLACK);
 			for (OriHalfedge he : face.halfedges) {
-				var selector = new ElementSelector();
 				if (he.pair == null) {
 					g2d.setStroke(selector.createPaperBoundaryStrokeForModelView(scale));
 				} else {
@@ -198,7 +187,6 @@ public class ModelViewScreen extends JPanel
 		}
 
 		if (scissorsLineVisible) {
-			var selector = new ElementSelector();
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 			g2d.setStroke(selector.createScissorsLineStrokeForModelView(scale));
 			g2d.setColor(selector.getScissorsLineColorForModelView());
@@ -249,17 +237,18 @@ public class ModelViewScreen extends JPanel
 		if (origamiModel == null) {
 			return;
 		}
-		boolean hasModel = origamiModel.hasModel();
 
-		if (hasModel) {
-			var selector = new ElementSelector();
-			g2d.setStroke(selector.createStroke(OriLine.Type.CUT, scale));
-			if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
-				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-			}
-			drawModel(g2d);
-			g.drawImage(bufferImage, 0, 0, this);
+		if (!origamiModel.hasModel()) {
+			return;
 		}
+
+		g2d.setStroke(selector.createDefaultStroke(scale));
+		if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+		}
+		drawModel(g2d);
+		g.drawImage(bufferImage, 0, 0, this);
+
 	}
 
 	@Override
@@ -307,17 +296,17 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void mouseReleased(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void mouseEntered(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void mouseExited(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -335,20 +324,10 @@ public class ModelViewScreen extends JPanel
 			updateAffineTransform();
 			repaint();
 		}
-
-		// Gets the value of the current logical coordinates of the mouse
-		try {
-			affineTransform.inverseTransform(e.getPoint(), currentMousePointLogic);
-		} catch (Exception ex) {
-		}
 	}
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		try {
-			affineTransform.inverseTransform(e.getPoint(), currentMousePointLogic);
-		} catch (Exception ex) {
-		}
 	}
 
 	@Override
@@ -361,12 +340,12 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void actionPerformed(final ActionEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentResized(final ComponentEvent arg0) {
-		preSize = getSize();
+		var preSize = getSize();
 
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
 		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
@@ -377,16 +356,16 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void componentMoved(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentShown(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 }

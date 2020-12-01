@@ -20,7 +20,7 @@ package oripa.persistent.doc.exporter;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
+import oripa.geom.RectangleDomain;
+import oripa.util.gui.AffineCamera;
 
 /**
  * @author Koji
@@ -51,8 +53,9 @@ public class PictureExporter implements DocExporter {
 	@Override
 	public boolean export(final Doc doc, final String filePath) throws IOException {
 		CreasePatternInterface creasePattern = doc.getCreasePattern();
-		double gWidth = creasePattern.getPaperSize();
-		double gHeight = creasePattern.getPaperSize();
+		var domain = new RectangleDomain(creasePattern);
+		double gWidth = domain.getWidth() * 2;
+		double gHeight = domain.getHeight() * 2;
 
 		logger.info("save as image, size(w,h) = " + gWidth + ", " + gHeight);
 
@@ -61,16 +64,27 @@ public class PictureExporter implements DocExporter {
 
 		Graphics2D g2d = (Graphics2D) image.getGraphics();
 
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
 		g2d.setBackground(Color.WHITE);
 		g2d.clearRect(0, 0, image.getWidth(), image.getHeight());
 
-		var scale = 0.9;
-		g2d.setTransform(new AffineTransform());
-		g2d.translate(gWidth / 2, gHeight / 2);
-		g2d.scale(scale, scale);
+		var camera = new AffineCamera();
+		var scale = Math.min(
+				gWidth / (domain.getWidth() + 20),
+				gHeight / (domain.getHeight() + 20));
+
+		camera.updateCameraPosition(gWidth / 2, gHeight / 2);
+		camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
+		camera.updateTranslateOfPaper(0, 0);
+		camera.updateScale(scale);
+
+		g2d.setTransform(camera.getAffineTransform());
 
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawAllLines(g2d, creasePattern, (float) scale);
+
+		// TODO: make zeroLineWidth configurable
+		drawer.drawAllLines(g2d, creasePattern, scale, false);
 
 		File file = new File(filePath);
 		ImageIO.write(image, filePath.substring(filePath.lastIndexOf(".") + 1),

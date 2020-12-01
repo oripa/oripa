@@ -24,10 +24,12 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.Main.REPEAT_COPY_ID, "Repeat Copy" },
 			{ StringID.Main.CIRCLE_COPY_ID, "Circular Copy" },
 			{ StringID.Main.UNDO_ID, "Undo" },
+			{ StringID.Main.REDO_ID, "Redo" },
 			{ StringID.Main.SELECT_ALL_ID, "Select all" },
 			{ StringID.Main.UNSELECT_ALL_ID, "Unselect all" },
 			{ StringID.Main.DELETE_SELECTED_LINES_ID, "Delete selected lines" },
 
+			{ StringID.UI.ZERO_LINE_WIDTH_ID, "Zero line width" },
 			{ StringID.UI.AUX_ID, "Aux" },
 			{ StringID.UI.VALLEY_ID, "Valley" },
 			{ StringID.UI.MOUNTAIN_ID, "Mountain" },

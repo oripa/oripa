@@ -8,12 +8,7 @@ public class FoldedModelInfo {
 	private List<int[][]> overlapRelations = new ArrayList<int[][]>();
 	private int currentORmatIndex = 0;
 
-	BoundBox boundBox = new BoundBox(null, null);
-
-	final public static int NO_OVERLAP = 0;
-	final public static int UPPER = 1;
-	final public static int LOWER = 2;
-	final public static int UNDEFINED = 9;
+	private BoundBox boundBox = new BoundBox(null, null);
 
 	public void setNextORMat() {
 		if (currentORmatIndex < overlapRelations.size() - 1) {

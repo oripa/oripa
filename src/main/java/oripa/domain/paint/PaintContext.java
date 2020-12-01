@@ -11,6 +11,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 class PaintContext implements PaintContextInterface {
@@ -42,6 +43,16 @@ class PaintContext implements PaintContextInterface {
 	private OriLine.Type lineTypeOfNewLines;
 
 	private Point2D.Double mousePoint;
+
+	private AngleStep angleStep;
+
+	private boolean zeroLineWidth;
+
+	/*
+	 * TODO: Rename for more general usage. snapPoints? assistPoints? something
+	 * like that.
+	 */
+	private Collection<Vector2d> angleSnapCrossPoints = new ArrayList<Vector2d>();
 
 	public PaintContext() {
 	}
@@ -156,8 +167,8 @@ class PaintContext implements PaintContextInterface {
 		double step = paperSize / gridDivNum;
 		for (int ix = 0; ix < gridDivNum + 1; ix++) {
 			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = -paperSize / 2 + step * ix;
-				double y = -paperSize / 2 + step * iy;
+				double x = getPaperDomain().getLeft() + step * ix;
+				double y = getPaperDomain().getTop() + step * iy;
 
 				gridPoints.add(new Vector2d(x, y));
 			}
@@ -194,6 +205,7 @@ class PaintContext implements PaintContextInterface {
 		candidateVertexToPick = null;
 
 		missionCompleted = false;
+		angleSnapCrossPoints.clear();
 	}
 
 	/*
@@ -265,7 +277,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public void pushVertex(final Vector2d picked) {
-		pickedVertices.push(picked);
+		pickedVertices.addLast(picked);
 	}
 
 	/*
@@ -277,7 +289,7 @@ class PaintContext implements PaintContextInterface {
 	@Override
 	public void pushLine(final OriLine picked) {
 		// picked.selected = true;
-		pickedLines.push(picked);
+		pickedLines.addLast(picked);
 	}
 
 	/*
@@ -291,7 +303,7 @@ class PaintContext implements PaintContextInterface {
 			return null;
 		}
 
-		return pickedVertices.pop();
+		return pickedVertices.removeLast();
 	}
 
 	/*
@@ -305,7 +317,7 @@ class PaintContext implements PaintContextInterface {
 			return null;
 		}
 
-		OriLine line = pickedLines.pop();
+		OriLine line = pickedLines.removeLast();
 		line.selected = false;
 		return line;
 	}
@@ -329,7 +341,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public Vector2d peekVertex() {
-		return pickedVertices.peek();
+		return pickedVertices.peekLast();
 	}
 
 	/*
@@ -339,7 +351,7 @@ class PaintContext implements PaintContextInterface {
 	 */
 	@Override
 	public OriLine peekLine() {
-		return pickedLines.peek();
+		return pickedLines.peekLast();
 	}
 
 	/*
@@ -482,12 +494,76 @@ class PaintContext implements PaintContextInterface {
 	/*
 	 * (non Javadoc)
 	 *
+	 * @see oripa.domain.paint.PaintContextInterface#getCreasePatternDomain()
+	 */
+	@Override
+	public RectangleDomain getPaperDomain() {
+		return creasePattern.getPaperDomain();
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.paint.PaintContextInterface#setAngleStep(oripa.domain.paint.
+	 * AngleStep)
+	 */
+	@Override
+	public void setAngleStep(final AngleStep step) {
+		angleStep = step;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.PaintContextInterface#getAngleStep()
+	 */
+	@Override
+	public AngleStep getAngleStep() {
+		return angleStep;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.paint.PaintContextInterface#setAngleSnapCrossPoints(java.
+	 * util.Collection)
+	 */
+	@Override
+	public void setAngleSnapCrossPoints(final Collection<Vector2d> points) {
+		angleSnapCrossPoints = points;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.domain.paint.PaintContextInterface#getAngleSnapCrossPoints()
+	 */
+	@Override
+	public Collection<Vector2d> getAngleSnapCrossPoints() {
+		return angleSnapCrossPoints;
+	}
+
+	@Override
+	public boolean isZeroLineWidth() {
+		return zeroLineWidth;
+	}
+
+	@Override
+	public void setZeroLineWidth(final boolean zeroLineWidth) {
+		this.zeroLineWidth = zeroLineWidth;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "PaintContext: #line=" + pickedLines.size() +
-				", #vertex=" + pickedVertices.size() +
-				", #undoStack=" + undoer.size();
+				", #vertex=" + pickedVertices.size();
 	}
+
 }

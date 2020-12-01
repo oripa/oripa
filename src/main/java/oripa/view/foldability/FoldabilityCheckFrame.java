@@ -44,14 +44,15 @@ public class FoldabilityCheckFrame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(final ActionEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	public void setModel(
 			final OrigamiModel origamiModel,
-			final Collection<OriLine> creasePattern) {
+			final Collection<OriLine> creasePattern,
+			final boolean zeroLineWidth) {
 		screen.showModel(
-				origamiModel, creasePattern);
+				origamiModel, creasePattern, zeroLineWidth);
 	}
 
 }

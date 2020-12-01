@@ -9,8 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.vecmath.Vector2d;
 
-import oripa.value.OriLine;
-
 /**
  * For a fast access to vertex
  *
@@ -22,10 +20,11 @@ class VerticesManager implements NearVerticesGettable {
 	/*
 	 * divides paper equally in order to localize access to vertices
 	 */
-	static public final int divNum = 32;
+	public static final int divNum = 32;
 
-	public double interval;
-	public double paperCenter;
+	private final double interval;
+//	private double paperCenter;
+	private final double paperLeft, paperTop;
 
 	/**
 	 * the index of divided paper area. A given point is converted to the index
@@ -41,8 +40,8 @@ class VerticesManager implements NearVerticesGettable {
 		 * doubles point to index
 		 */
 		public AreaPosition(final Vector2d v) {
-			x = toDiv(v.x);
-			y = toDiv(v.y);
+			x = toDiv(v.x, paperLeft);
+			y = toDiv(v.y, paperTop);
 		}
 	}
 
@@ -52,8 +51,8 @@ class VerticesManager implements NearVerticesGettable {
 	 * @param p
 	 * @return
 	 */
-	private int toDiv(final double p) {
-		int div = (int) ((p + paperCenter) / interval);
+	private int toDiv(final double p, final double p0) {
+		int div = (int) ((p - p0) / interval);
 
 		if (div < 0) {
 			return 0;
@@ -81,9 +80,17 @@ class VerticesManager implements NearVerticesGettable {
 	 *
 	 * @param paperSize
 	 *            paper size in double.
+	 * @param paperLeft
+	 *            the smaller x coordinate of the corners of the rectangle sheet
+	 *            of paper
+	 * @param paperTop
+	 *            the smaller y coordinate of the corners of the rectangle sheet
+	 *            of paper
 	 */
-	public VerticesManager(final double paperSize) {
-		changePaperSize(paperSize);
+	public VerticesManager(final double paperSize, final double paperLeft, final double paperTop) {
+		interval = paperSize / divNum;
+		this.paperLeft = paperLeft;
+		this.paperTop = paperTop;
 
 		// allocate memory for each area
 		for (int x = 0; x < divNum; x++) {
@@ -95,10 +102,8 @@ class VerticesManager implements NearVerticesGettable {
 
 	}
 
-	public void changePaperSize(final double paperSize) {
-		interval = paperSize / divNum;
-		paperCenter = paperSize / 2;
-
+	double getInterval() {
+		return interval;
 	}
 
 	/**
@@ -196,10 +201,10 @@ class VerticesManager implements NearVerticesGettable {
 
 		Collection<Collection<Vector2d>> result = new LinkedList<>();
 
-		int leftDiv = toDiv(x - distance);
-		int rightDiv = toDiv(x + distance);
-		int topDiv = toDiv(y - distance);
-		int bottomDiv = toDiv(y + distance);
+		int leftDiv = toDiv(x - distance, paperLeft);
+		int rightDiv = toDiv(x + distance, paperLeft);
+		int topDiv = toDiv(y - distance, paperTop);
+		int bottomDiv = toDiv(y + distance, paperTop);
 
 		for (int xDiv = leftDiv; xDiv <= rightDiv; xDiv++) {
 			for (int yDiv = topDiv; yDiv <= bottomDiv; yDiv++) {
@@ -208,20 +213,6 @@ class VerticesManager implements NearVerticesGettable {
 		}
 
 		return result;
-	}
-
-	/**
-	 * set all vertices of given lines
-	 *
-	 * @param lines
-	 */
-	public void load(final Collection<OriLine> lines) {
-		this.clear();
-		for (OriLine line : lines) {
-			add(line.p0);
-			add(line.p1);
-		}
-
 	}
 
 	public boolean isEmpty() {

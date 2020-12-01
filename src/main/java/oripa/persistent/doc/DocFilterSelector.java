@@ -136,7 +136,7 @@ public class DocFilterSelector {
 	 *            A value that describes the file type you want.
 	 * @param filter
 	 *            A filter to be set.
-	 * @return A filter for given key.
+	 * @return The previous filter for given key.
 	 */
 
 	public FileAccessSupportFilter<Doc> putFilter(final FileTypeKey key,

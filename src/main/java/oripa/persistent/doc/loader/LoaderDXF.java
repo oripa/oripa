@@ -20,7 +20,6 @@ package oripa.persistent.doc.loader;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
@@ -43,8 +42,7 @@ public class LoaderDXF implements DocLoader {
 
 		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-		try {
-			Reader r = new FileReader(filePath);
+		try (var r = new FileReader(filePath)) {
 			StreamTokenizer st = new StreamTokenizer(r);
 			st.resetSyntax();
 			st.wordChars('0', '9');
@@ -116,7 +114,7 @@ public class LoaderDXF implements DocLoader {
 							System.out.println("line " + line.p0 + ", "
 									+ line.p1);
 
-							if (GeomUtil.Distance(line.p0, line.p1) < 0.001) {
+							if (GeomUtil.distance(line.p0, line.p1) < 0.001) {
 								System.out.println("########### NULL EDGE");
 								creasePattern.remove(line);
 							}
@@ -162,10 +160,10 @@ public class LoaderDXF implements DocLoader {
 				OriLine l0 = lines[i];
 				OriLine l1 = lines[j];
 
-				if ((GeomUtil.Distance(l0.p0, l1.p0) < 0.01 && GeomUtil
-						.Distance(l0.p1, l1.p1) < 0.01)
-						|| (GeomUtil.Distance(l0.p1, l1.p0) < 0.01 && GeomUtil
-								.Distance(l0.p0, l1.p1) < 0.01)) {
+				if ((GeomUtil.distance(l0.p0, l1.p0) < 0.01 && GeomUtil
+						.distance(l0.p1, l1.p1) < 0.01)
+						|| (GeomUtil.distance(l0.p1, l1.p0) < 0.01 && GeomUtil
+								.distance(l0.p0, l1.p1) < 0.01)) {
 
 					delLines.add(l0);
 				}

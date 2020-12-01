@@ -19,11 +19,6 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 	@Override
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
 			final boolean doSpecial) {
-
-		if (context.getVertexCount() == 0) {
-			context.creasePatternUndo().cacheUndoInfo();
-		}
-
 		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
 
 		if (!vertexIsSelected) {
@@ -38,15 +33,17 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
+		var first = context.getVertex(0);
+		var second = context.getVertex(1);
+		var third = context.getVertex(2);
 
-		context.creasePatternUndo().pushCachedUndoInfo();
+		context.clear(false);
+
+		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
 		painter.addTriangleDivideLines(
-				context.getVertex(0), context.getVertex(1), context.getVertex(2),
-				context.getLineTypeOfNewLines());
-
-		context.clear(false);
+				first, second, third, context.getLineTypeOfNewLines());
 	}
 }

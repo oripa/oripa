@@ -19,7 +19,6 @@
 package oripa.view.main;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -33,6 +32,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.function.BiFunction;
 
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
@@ -46,6 +46,7 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.util.gui.AffineCamera;
 import oripa.util.gui.MouseUtility;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainScreenSetting;
@@ -64,16 +65,10 @@ public class PainterScreen extends JPanel
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
-	private Graphics2D bufferg;
 	private Point2D preMousePoint; // Screen coordinates
 
-	private double scale;
-	private double transX;
-	private double transY;
-	// Temporary information when editing
-	// Affine transformation information
-	private Dimension preSize;
-	private final AffineTransform affineTransform = new AffineTransform();
+	private final AffineCamera camera = new AffineCamera();
+	private AffineTransform affineTransform = new AffineTransform();
 
 	private final CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
@@ -94,12 +89,13 @@ public class PainterScreen extends JPanel
 
 		addPropertyChangeListenersToSetting();
 
-		scale = 1.5;
-		paintContext.setScale(scale);
+		camera.updateScale(1.5);
+		var domain = paintContext.getPaperDomain();
+		camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
 
-		setBackground(Color.white);
+		paintContext.setScale(camera.getScale());
 
-		preSize = getSize();
+		setBackground(Color.WHITE);
 	}
 
 	public ViewScreenUpdater getScreenUpdater() {
@@ -175,26 +171,9 @@ public class PainterScreen extends JPanel
 	// }
 	// }
 
-	// update actual AffineTransform
-	private void updateAffineTransform() {
-		affineTransform.setToIdentity();
-		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
-		affineTransform.scale(scale, scale);
-		affineTransform.translate(transX, transY);
-
-	}
-
-	public Image getCreasePatternImage() {
-
-		return bufferImage;
-	}
-
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
-		bufferg = (Graphics2D) bufferImage.getGraphics();
-		updateAffineTransform();
-		preSize = getSize();
-
+		affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
 	}
 
 	private Graphics2D updateBufferImage() {
@@ -202,12 +181,17 @@ public class PainterScreen extends JPanel
 			buildBufferImage();
 		}
 
+		var bufferg = (Graphics2D) bufferImage.getGraphics();
+
 		// initialize the AffineTransform of bufferg
 		bufferg.setTransform(new AffineTransform());
 
 		// Clears the image buffer
 		bufferg.setColor(Color.WHITE);
 		bufferg.fillRect(0, 0, getWidth(), getHeight());
+
+		var domain = paintContext.getPaperDomain();
+		affineTransform = camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
 
 		// set the AffineTransform of buffer
 		bufferg.setTransform(affineTransform);
@@ -221,15 +205,21 @@ public class PainterScreen extends JPanel
 		super.paintComponent(g);
 
 		Graphics2D bufferG2D = updateBufferImage();
-		bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+
+		if (!paintContext.isZeroLineWidth()) {
+			bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+		}
+
+		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
 		drawer.draw(bufferG2D, paintContext,
-				mouseActionHolder.getMouseAction().getEditMode() == EditMode.VERTEX);
+				action == null ? false : action.getEditMode() == EditMode.VERTEX);
 
 		if (paintContext.isCrossLineVisible()) {
 			var crossLines = cutOutlinesHolder.getOutlines();
-			drawer.drawAllLines(bufferG2D, crossLines, (float) scale);
+			drawer.drawAllLines(bufferG2D, crossLines, camera.getScale(),
+					paintContext.isZeroLineWidth());
 		}
 
 		// Line that links the pair of unsetled faces
@@ -255,19 +245,17 @@ public class PainterScreen extends JPanel
 		// }
 		// }
 
-		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
-
-		if (action != null) {
-			action.onDraw(bufferG2D, paintContext);
-
+		if (action == null) {
 			g.drawImage(bufferImage, 0, 0, this);
-
-			drawer.drawCandidatePositionString((Graphics2D) g,
-					paintContext.getCandidateVertexToPick());
-		} else {
-			g.drawImage(bufferImage, 0, 0, this);
-
+			return;
 		}
+
+		action.onDraw(bufferG2D, paintContext);
+
+		g.drawImage(bufferImage, 0, 0, this);
+
+		drawer.drawCandidatePositionString((Graphics2D) g,
+				paintContext.getCandidateVertexToPick());
 	}
 
 	@Override
@@ -340,33 +328,12 @@ public class PainterScreen extends JPanel
 	@Override
 	public void mouseDragged(final MouseEvent e) {
 
-		// zoom
-		if (MouseUtility.isLeftButtonDown(e) &&
-				MouseUtility.isControlKeyDown(e)) {
-
-			double moved = e.getX() - preMousePoint.getX() + e.getY()
-					- preMousePoint.getY();
-			scale += moved / 150.0;
-			if (scale < 0.01) {
-				scale = 0.01;
-			}
-			paintContext.setScale(scale);
-			preMousePoint = e.getPoint();
-			updateAffineTransform();
-			repaint();
-
+		if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
+			paintContext.setScale(camera.getScale());
 			return;
 		}
 
-		// move camera
-		if (MouseUtility.isRightButtonDown(e) ||
-				(MouseUtility.isLeftButtonDown(e) && MouseUtility.isShiftKeyDown(e))) {
-			transX += (e.getX() - preMousePoint.getX()) / scale;
-			transY += (e.getY() - preMousePoint.getY()) / scale;
-			preMousePoint = e.getPoint();
-			updateAffineTransform();
-			repaint();
-
+		if (doCameraDragAction(e, camera::updateTranslateByMouseDragged)) {
 			return;
 		}
 
@@ -380,9 +347,21 @@ public class PainterScreen extends JPanel
 		repaint();
 	}
 
+	private boolean doCameraDragAction(final MouseEvent e,
+			final BiFunction<MouseEvent, Point2D, AffineTransform> onDrag) {
+		var affine = onDrag.apply(e, preMousePoint);
+		if (affine == null) {
+			return false;
+		}
+		preMousePoint = e.getPoint();
+		affineTransform = affine;
+		repaint();
+		return true;
+	}
+
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		paintContext.setScale(scale);
+		paintContext.setScale(camera.getScale());
 		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
 				affineTransform, e.getPoint()));
 
@@ -408,10 +387,8 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseWheelMoved(final MouseWheelEvent e) {
-		double rate = (100.0 - e.getWheelRotation() * 5) / 100.0;
-		scale *= rate;
-		paintContext.setScale(scale);
-		updateAffineTransform();
+		affineTransform = camera.updateScaleByMouseWheel(e);
+		paintContext.setScale(camera.getScale());
 		repaint();
 	}
 
@@ -420,36 +397,36 @@ public class PainterScreen extends JPanel
 		if (getWidth() <= 0 || getHeight() <= 0) {
 			return;
 		}
-		preSize = getSize();
-
-		// Update the logical coordinates of the center of the screen
-		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
-		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;
 
 		// Updating the image buffer
 		buildBufferImage();
 		repaint();
-
 	}
 
 	@Override
 	public void componentMoved(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentShown(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
-		// TODO Auto-generated method stub
+
 	}
 
 	private void addPropertyChangeListenersToSetting() {
 		screenUpdater.addPropertyChangeListener(
 				ViewScreenUpdater.REDRAW_REQUESTED, e -> repaint());
+
+		setting.addPropertyChangeListener(
+				MainScreenSetting.ZERO_LINE_WIDTH, e -> {
+					paintContext.setZeroLineWidth((boolean) e.getNewValue());
+					repaint();
+				});
 
 		setting.addPropertyChangeListener(
 				MainScreenSetting.GRID_VISIBLE, e -> {

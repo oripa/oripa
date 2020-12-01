@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.geom;
+package oripa.domain.fold;
 
-import javax.vecmath.Vector2d;
+class Condition3 {
+	// If face[i] and face[j] touching edge is covered by face[k]
+	// then OR[i][k] = OR[j][k]
 
-public class Triangle {
-
-    public Vector2d[] p = new Vector2d[3];
+	public int lower;
+	public int upper;
+	public int other;
 }

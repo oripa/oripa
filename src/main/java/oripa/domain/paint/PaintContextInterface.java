@@ -7,6 +7,7 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -166,6 +167,10 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 */
 	public abstract int getVertexCount();
 
+	// =================================================================================
+	// misc
+	// =================================================================================
+
 	public abstract void setScale(double scale);
 
 	public abstract double getScale();
@@ -231,4 +236,22 @@ public interface PaintContextInterface extends CreasePatternHolder {
 
 	public abstract CreasePatternUndoerInterface creasePatternUndo();
 
+	public abstract void setAngleStep(AngleStep step);
+
+	public abstract AngleStep getAngleStep();
+
+	public abstract void setAngleSnapCrossPoints(Collection<Vector2d> points);
+
+	public abstract Collection<Vector2d> getAngleSnapCrossPoints();
+
+	/**
+	 *
+	 * @return rectangle domain of crease pattern, whose values are those when
+	 *         crease pattern is set to this context.
+	 */
+	public abstract RectangleDomain getPaperDomain();
+
+	public abstract boolean isZeroLineWidth();
+
+	public abstract void setZeroLineWidth(final boolean zeroLineWidth);
 }

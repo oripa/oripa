@@ -16,16 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold.rule;
-
-import javax.vecmath.Vector2d;
+package oripa.domain.fold;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.fold.OriEdge;
-import oripa.domain.fold.OriVertex;
-import oripa.util.collection.AbstractRule;
+import oripa.util.rule.AbstractRule;
 import oripa.value.OriLine;
 
 /**
@@ -49,12 +45,11 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 	/**
 	 *
 	 * @param vertices
-	 * @return true if all vertices are passes the theorem test.
+	 * @return true if all vertices pass the theorem test.
 	 */
 	@Override
 	public boolean holds(final OriVertex vertex) {
 
-		Vector2d p = vertex.p;
 		double oddSum = 0;
 
 		for (int i = 0; i < vertex.edges.size(); i++) {
@@ -65,16 +60,11 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 				return true;
 			}
 
-			Vector2d preP = new Vector2d(vertex.edges.get(i).oppositeVertex(vertex).p);
-			Vector2d nxtP = new Vector2d(
-					vertex.edges.get((i + 1) % vertex.edges.size()).oppositeVertex(vertex).p);
-
-			nxtP.sub(p);
-			preP.sub(p);
+			double angle = OriGeomUtil.getAngleDifference(
+					vertex.getOppositeVertex(i), vertex, vertex.getOppositeVertex(i + 1));
 
 			if (i % 2 == 0) {
-				oddSum += preP.angle(nxtP);
-			} else {
+				oddSum += angle;
 			}
 		}
 

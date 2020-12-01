@@ -26,6 +26,8 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	private boolean needSelect = false;
 	private ActionState state;
 
+	private final ElementSelector selector = new ElementSelector();
+
 	protected final void setActionState(final ActionState state) {
 		this.state = state;
 	}
@@ -130,6 +132,23 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		state = BasicUndo.undo(state, context);
 	}
 
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see
+	 * oripa.domain.paint.GraphicMouseActionInterface#redo(oripa.domain.paint.
+	 * PaintContextInterface)
+	 */
+	@Override
+	public void redo(final PaintContextInterface context) {
+		if (!context.creasePatternUndo().canRedo()) {
+			return;
+		}
+		destroy(context);
+		recover(context);
+		context.creasePatternUndo().redo();
+	}
+
 	@Override
 	public Vector2d onMove(
 			final PaintContextInterface context, final AffineTransform affine,
@@ -174,11 +193,15 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	}
 
+	protected ElementSelector getElementSelector() {
+		return selector;
+	}
+
 	private void drawPickedLines(final Graphics2D g2d, final PaintContextInterface context) {
 		for (OriLine line : context.getPickedLines()) {
-			var selector = new ElementSelector();
 			g2d.setColor(selector.getSelectedItemColor());
-			g2d.setStroke(selector.createSelectedLineStroke(context.getScale()));
+			g2d.setStroke(selector.createSelectedLineStroke(
+					context.getScale(), context.isZeroLineWidth()));
 
 			drawLine(g2d, line);
 		}
@@ -187,7 +210,6 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	private void drawPickedVertices(final Graphics2D g2d,
 			final PaintContextInterface context, final OriLine.Type lineType) {
-		ElementSelector selector = new ElementSelector();
 
 		for (Vector2d vertex : context.getPickedVertices()) {
 			g2d.setColor(selector
@@ -208,16 +230,18 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	protected void drawVertex(final Graphics2D g2d, final PaintContextInterface context,
 			final double x, final double y) {
 		double scale = context.getScale();
-		g2d.fill(new Rectangle2D.Double(x - 5.0 / scale,
-				y - 5.0 / scale, 10.0 / scale, 10.0 / scale));
+		double vertexSize = selector.createMouseActionVertexSize(scale);
+		double vertexHalfSize = vertexSize / 2;
 
+		g2d.fill(new Rectangle2D.Double(
+				x - vertexHalfSize, y - vertexHalfSize,
+				vertexSize, vertexSize));
 	}
 
 	protected void drawPickCandidateVertex(final Graphics2D g2d,
 			final PaintContextInterface context) {
 		Vector2d candidate = context.getCandidateVertexToPick();
 		if (candidate != null) {
-			var selector = new ElementSelector();
 			g2d.setColor(selector.getCandidateItemColor());
 			drawVertex(g2d, context, candidate.x, candidate.y);
 		}
@@ -239,9 +263,9 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			final PaintContextInterface context) {
 		OriLine candidate = context.getCandidateLineToPick();
 		if (candidate != null) {
-			var selector = new ElementSelector();
 			g2d.setColor(selector.getCandidateItemColor());
-			g2d.setStroke(selector.createCandidateLineStroke(context.getScale()));
+			g2d.setStroke(selector.createCandidateLineStroke(
+					context.getScale(), context.isZeroLineWidth()));
 
 			drawLine(g2d, candidate);
 		}
@@ -257,19 +281,20 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 */
 	protected void drawTemporaryLine(final Graphics2D g2d,
 			final PaintContextInterface context) {
-		ElementSelector selector = new ElementSelector();
 
-		if (context.getVertexCount() > 0) {
-			Vector2d picked = context.peekVertex();
-
-			g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
-
-			g2d.setStroke(selector.createStroke(context.getLineTypeOfNewLines(),
-					context.getScale()));
-
-			drawLine(g2d, picked,
-					NearestItemFinder.getCandidateVertex(context, true));
+		if (context.getVertexCount() == 0) {
+			return;
 		}
+
+		Vector2d picked = context.peekVertex();
+
+		g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
+
+		g2d.setStroke(selector.createStroke(context.getLineTypeOfNewLines(),
+				context.getScale(), context.isZeroLineWidth()));
+
+		drawLine(g2d, picked,
+				NearestItemFinder.getCandidateVertex(context, true));
 
 	}
 

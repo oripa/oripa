@@ -24,14 +24,12 @@ public class LineByValueAction extends GraphicMouseAction {
 	@Override
 	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -60,11 +58,11 @@ public class LineByValueAction extends GraphicMouseAction {
 
 				var radianAngle = Math.toRadians(angle);
 
-				ElementSelector selector = new ElementSelector();
+				ElementSelector selector = getElementSelector();
 				g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
 				g2d.setStroke(
 						selector.createStroke(context.getLineTypeOfNewLines(),
-								context.getScale()));
+								context.getScale(), context.isZeroLineWidth()));
 
 				Vector2d dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle));
 				dir.scale(length);
@@ -78,7 +76,6 @@ public class LineByValueAction extends GraphicMouseAction {
 	@Override
 	public void onPress(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-		// TODO Auto-generated method stub
 
 	}
 

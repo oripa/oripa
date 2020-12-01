@@ -19,43 +19,52 @@
 package oripa.domain.fold;
 
 import java.awt.Color;
-import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-import oripa.domain.fold.rule.Condition3;
-import oripa.domain.fold.rule.Condition4;
+import oripa.geom.GeomUtil;
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
 public class OriFace {
 
 	public ArrayList<OriHalfedge> halfedges = new ArrayList<>();
 
-	// FIXME: GeneralPath is legacy.
-	public GeneralPath outline = new GeneralPath();
+	/**
+	 * For drawing the shape after fold
+	 */
+	public Path2D.Double outline = new Path2D.Double();
 
 	/**
 	 * For drawing foldability-check face
 	 */
-	// FIXME: GeneralPath is legacy.
-	public GeneralPath preOutline = new GeneralPath();
+	public Path2D.Double preOutline = new Path2D.Double();
 
 	public ArrayList<OriLine> precreases = new ArrayList<>();
 
-	public boolean selected = false;
 	public boolean faceFront = true;
 	public Color color;
 	public boolean tmpFlg = false;
 	public int z_order = 0;
+
+	/**
+	 * ???
+	 */
 	public int tmpInt2 = 0;
+
+	/**
+	 * ID of this face??? (I'm not sure...)
+	 */
 	public int tmpInt = 0;
-	public boolean hasProblem = false; // TODO delete this variable and use
-										// bucket approach using ConjunctionLoop
+
 	public boolean alreadyStacked = false;
 	public ArrayList<TriangleFace> triangles = new ArrayList<>();
-	public int intColor;
+
 	public ArrayList<Condition4> condition4s = new ArrayList<>();
 	public ArrayList<Condition3> condition3s = new ArrayList<>();
 	public ArrayList<Integer> condition2s = new ArrayList<>();
@@ -158,11 +167,10 @@ public class OriFace {
 	}
 
 	public void makeHalfedgeLoop() {
-		int heNum = halfedges.size();
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge pre_he = halfedges.get((i - 1 + heNum) % heNum);
+		for (int i = 0; i < halfedges.size(); i++) {
+			OriHalfedge pre_he = CollectionUtil.getCircular(halfedges, i - 1);
 			OriHalfedge he = halfedges.get(i);
-			OriHalfedge nxt_he = halfedges.get((i + 1) % heNum);
+			OriHalfedge nxt_he = CollectionUtil.getCircular(halfedges, i + 1);
 
 			he.next = nxt_he;
 			he.prev = pre_he;
@@ -177,46 +185,44 @@ public class OriFace {
 	}
 
 	public void setOutline() {
-		outline.reset();
-		outline.moveTo((float) (halfedges.get(0).positionForDisplay.x),
-				(float) (halfedges.get(0).positionForDisplay.y));
-		for (int i = 1; i < halfedges.size(); i++) {
-			outline.lineTo((float) (halfedges.get(i).positionForDisplay.x),
-					(float) (halfedges.get(i).positionForDisplay.y));
-		}
-		outline.closePath();
+		outline = createPath(halfedges.stream()
+				.map(he -> he.positionForDisplay)
+				.collect(Collectors.toList()));
 	}
 
 	public void setPreOutline() {
-		preOutline.reset();
-		Vector2d centerP = new Vector2d();
-		for (OriHalfedge he : halfedges) {
-			centerP.add(he.vertex.preP);
-		}
-		centerP.scale(1.0 / halfedges.size());
+		Vector2d centerP = getCentroidBeforeFolding();
 		double rate = 0.5;
-
-		preOutline.moveTo(
-				(float) (halfedges.get(0).vertex.preP.x * rate + centerP.x
-						* (1.0 - rate)),
-				(float) (halfedges.get(0).vertex.preP.y * rate + centerP.y
-						* (1.0 - rate)));
-		for (int i = 1; i < halfedges.size(); i++) {
-			preOutline.lineTo(
-					(float) (halfedges.get(i).vertex.preP.x * rate + centerP.x
-							* (1.0 - rate)),
-					(float) (halfedges.get(i).vertex.preP.y * rate + centerP.y
-							* (1.0 - rate)));
-		}
-		preOutline.closePath();
+		preOutline = createPath(halfedges.stream()
+				.map(he -> new Vector2d(
+						he.vertex.preP.x * rate + centerP.x * (1.0 - rate),
+						he.vertex.preP.y * rate + centerP.y * (1.0 - rate)))
+				.collect(Collectors.toList()));
 	}
 
-	public Vector2d getCenter() {
-		Vector2d centerVec = new Vector2d();
-		for (OriHalfedge he : halfedges) {
-			centerVec.add(he.vertex.preP);
+	private Path2D.Double createPath(final List<Vector2d> vertices) {
+		var path = new Path2D.Double();
+		path.moveTo(vertices.get(0).x, vertices.get(0).y);
+		for (int i = 1; i < halfedges.size(); i++) {
+			path.lineTo(vertices.get(i).x, vertices.get(i).y);
 		}
-		centerVec.scale(1.0 / halfedges.size());
-		return centerVec;
+		path.closePath();
+		return path;
+	}
+
+	/**
+	 *
+	 * @return centroid of this face before folding
+	 */
+	public Vector2d getCentroidBeforeFolding() {
+		return GeomUtil.computeCentroid(halfedges.stream()
+				.map(he -> he.vertex.preP)
+				.collect(Collectors.toList()));
+	}
+
+	public Vector2d getCentroidAfterFolding() {
+		return GeomUtil.computeCentroid(halfedges.stream()
+				.map(he -> he.vertex.p)
+				.collect(Collectors.toList()));
 	}
 }

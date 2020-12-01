@@ -7,7 +7,6 @@ import javax.swing.JOptionPane;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessActionProvider;
@@ -66,24 +65,25 @@ public class DocDAO {
 			final FileAccessSupportFilter<Doc> filter)
 			throws FileChooserCanceledException, IOException, IllegalArgumentException {
 		CreasePatternInterface creasePattern = doc.getCreasePattern();
-		OrigamiModel origamiModel = doc.getOrigamiModel();
-
-		boolean hasModel = origamiModel.hasModel();
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		origamiModel = modelFactory.buildOrigami(creasePattern,
-				creasePattern.getPaperSize(), true);
+		var origamiModel = modelFactory.createOrigamiModel(
+				creasePattern, creasePattern.getPaperSize());
 		doc.setOrigamiModel(origamiModel);
 
 		if (filter.getTargetType().equals(FileTypeKey.OBJ_MODEL)) {
 
-		} else if (!hasModel && !origamiModel.isProbablyFoldable()) {
+		} else if (!origamiModel.isProbablyFoldable()) {
 
-			JOptionPane.showConfirmDialog(null,
+			var selection = JOptionPane.showConfirmDialog(null,
 					"Warning: Building a set of polygons from crease pattern "
 							+ "was failed.",
-					"Warning", JOptionPane.OK_OPTION,
+					"Warning", JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.WARNING_MESSAGE);
+
+			if (selection == JOptionPane.CANCEL_OPTION) {
+				return;
+			}
 		}
 
 		saveUsingGUI(doc, null, owner, filter);

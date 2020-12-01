@@ -1,6 +1,7 @@
 /**
- * ORIPA - Origami Pattern Editor 
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
+ * ORIPA - Origami Pattern Editor
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,13 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package oripa.domain.fold;
 
-package oripa.domain.fold.rule;
+/**
+ * @author OUCHI Koji
+ *
+ */
+public final class OverlapRelationValues {
+	public final static int NO_OVERLAP = 0;
+	public final static int UPPER = 1;
+	public final static int LOWER = 2;
+	public final static int UNDEFINED = 9;
 
-public class Condition4 {
-
-    public int upper1;
-    public int lower1;
-    public int upper2;
-    public int lower2;
 }

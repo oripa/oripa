@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,15 @@
 package oripa.file;
 
 public class InitData {
-	public String lastUsedFile = "";
+	public String lastUsedFile = ""; // dead property
 	public String[] MRUFiles;
+
+	private boolean zeroLineWidth;
 
 	public InitData() {
 	}
 
-	public void setMRUFiles(String[] s) {
+	public void setMRUFiles(final String[] s) {
 		MRUFiles = s;
 	}
 
@@ -33,22 +35,19 @@ public class InitData {
 		return MRUFiles;
 	}
 
-	public void setLastUsedFile(String s) {
+	public void setLastUsedFile(final String s) {
 		lastUsedFile = s;
 	}
 
 	public String getLastUsedFile() {
-		if (MRUFiles != null) {
-			if (MRUFiles.length > 0) {
-				if (lastUsedFile == null) {
-					lastUsedFile = MRUFiles[0];
-				}
-				else if (lastUsedFile == "") {
-					lastUsedFile = MRUFiles[0];
-
-				}
-			}
-		}
 		return lastUsedFile;
+	}
+
+	public void setZeroLineWidth(final boolean zeroLineWidth) {
+		this.zeroLineWidth = zeroLineWidth;
+	}
+
+	public boolean isZeroLineWidth() {
+		return zeroLineWidth;
 	}
 }

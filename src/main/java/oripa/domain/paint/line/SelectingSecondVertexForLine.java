@@ -6,7 +6,6 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
-import oripa.resource.Constants;
 import oripa.value.OriLine;
 
 public class SelectingSecondVertexForLine extends PickingVertex {
@@ -26,18 +25,18 @@ public class SelectingSecondVertexForLine extends PickingVertex {
 		p0 = context.getVertex(0);
 		p1 = context.getVertex(1);
 
+		double paperSize = context.getCreasePattern().getPaperSize();
+
 		Vector2d dir = new Vector2d(p0.x - p1.x, p0.y - p1.y);
 		dir.normalize();
-		dir.scale(Constants.DEFAULT_PAPER_SIZE * 8);
+		dir.scale(paperSize * 8);
 
 		// create new line
 		OriLine line = new OriLine(p0.x - dir.x, p0.y - dir.y,
 				p0.x + dir.x, p0.y + dir.y, context.getLineTypeOfNewLines());
 
-		double paperSize = context.getCreasePattern().getPaperSize();
-
 		// add new line to crease pattern
-		if (GeomUtil.clipLine(line, paperSize / 2)) {
+		if (GeomUtil.clipLine(line, context.getPaperDomain())) {
 			context.creasePatternUndo().pushUndoInfo();
 
 			Painter painter = context.getPainter();

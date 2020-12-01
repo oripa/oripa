@@ -17,6 +17,8 @@ public class ChangeOnByValueButtonSelected implements ChangeViewSetting {
 		setting.selectInputMode();
 
 		setting.setByValuePanelVisible(true);
+		setting.setAngleStepVisible(false);
+
 		setting.setAlterLineTypePanelVisible(false);
 		setting.setMountainButtonEnabled(true);
 		setting.setValleyButtonEnabled(true);

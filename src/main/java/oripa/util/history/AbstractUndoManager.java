@@ -18,8 +18,12 @@
  */
 package oripa.util.history;
 
-import java.util.Deque;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Koji
@@ -27,55 +31,79 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * @param <Backup>
  */
 public abstract class AbstractUndoManager<Backup> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractUndoManager.class);
 
-	private final Deque<UndoInfo<Backup>> undoStack = new ConcurrentLinkedDeque<UndoInfo<Backup>>();
-	private UndoInfo<Backup> cache;
+	private final List<UndoInfo<Backup>> undoList = Collections
+			.synchronizedList(new ArrayList<UndoInfo<Backup>>());
+	private int index = 0;
+	private int endIndex = 0;
 	private boolean changed = false;
-	protected int max = 1000;
 
 	/**
 	 * Constructor
 	 */
 	public AbstractUndoManager() {
-		super();
 	}
 
 	protected abstract UndoInfo<Backup> createUndoInfo(Backup info);
 
 	public void push(final Backup info) {
-
 		push(createUndoInfo(info));
-
 	}
 
-	public void push(final UndoInfo<Backup> info) {
-
-		undoStack.addLast(info);
-
-		if (undoStack.size() > max) {
-			// forget the oldest data
-			undoStack.removeFirst();
+	private void set(final int i, final UndoInfo<Backup> info) {
+		if (i == undoList.size()) {
+			undoList.add(info);
+		} else {
+			undoList.set(i, info);
 		}
+	}
+
+	private synchronized void push(final UndoInfo<Backup> info) {
+		set(index, info);
+		index++;
+		endIndex = index;
 
 		changed = true;
 	}
 
-	public UndoInfo<Backup> pop() {
-		if (undoStack.isEmpty()) {
+	/**
+	 *
+	 * @param info
+	 *            current data which may be stored as the start of undo
+	 *            sequence.
+	 * @return
+	 */
+	public synchronized UndoInfo<Backup> undo(final Backup info) {
+		if (!canUndo()) {
+			LOGGER.debug("can't undo: " + indexLog());
 			return null;
 		}
 
 		changed = true;
 
-		return undoStack.removeLast();
+		if (index == endIndex) {
+			LOGGER.debug("set the start of undo sequence: " + indexLog());
+			set(index, createUndoInfo(info));
+
+		}
+
+		LOGGER.debug("before undo: " + indexLog());
+
+		return undoList.get(--index);
 	}
 
-	public UndoInfo<Backup> peek() {
-		if (undoStack.isEmpty()) {
+	public synchronized UndoInfo<Backup> redo() {
+		if (!canRedo()) {
+			LOGGER.debug("can't redo: " + indexLog());
 			return null;
 		}
 
-		return undoStack.peekLast();
+		changed = true;
+
+		LOGGER.debug("before redo: " + indexLog());
+
+		return undoList.get(++index);
 	}
 
 	public boolean isChanged() {
@@ -88,27 +116,20 @@ public abstract class AbstractUndoManager<Backup> {
 
 	public void clear() {
 		clearChanged();
-		undoStack.clear();
+		undoList.clear();
+		index = 0;
+		endIndex = 0;
+	}
+
+	private String indexLog() {
+		return "index = " + index + ", endIndex = " + endIndex;
 	}
 
 	public boolean canUndo() {
-		return !undoStack.isEmpty();
+		return index > 0;
 	}
 
-	public void setCache(final Backup info) {
-		cache = createUndoInfo(info);
+	public boolean canRedo() {
+		return index < endIndex;
 	}
-
-	public UndoInfo<Backup> getCache() {
-		return cache;
-	}
-
-	public void pushCachedInfo() {
-		this.push(cache);
-	}
-
-	public int size() {
-		return undoStack.size();
-	}
-
 }

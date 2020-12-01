@@ -15,18 +15,11 @@ public class SelectingVertexForBisector extends PickingVertex {
 	protected void initialize() {
 		setPreviousClass(this.getClass());
 		setNextClass(SelectingLineForBisector.class);
-
-//		System.out.println("SelectingFirstVertex.initialize() is called");
 	}
 
 	@Override
 	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
 			final boolean doSpecial) {
-
-		if (context.getVertexCount() == 0) {
-			context.creasePatternUndo().cacheUndoInfo();
-		}
-
 		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
 
 		if (!vertexIsSelected) {

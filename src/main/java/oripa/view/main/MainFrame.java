@@ -56,11 +56,15 @@ import oripa.controller.SelectAllLineActionListener;
 import oripa.controller.UnselectAllLinesActionListener;
 import oripa.doc.Doc;
 import oripa.domain.cptool.Painter;
+import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
+import oripa.file.InitDataBuilder;
+import oripa.file.InitDataFileReader;
+import oripa.file.InitDataFileWriter;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
 import oripa.persistent.doc.FileTypeKey;
@@ -155,6 +159,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final JMenuItem menuItemUndo = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.UNDO_ID));
+	private final JMenuItem menuItemRedo = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.REDO_ID));
 	private final JMenuItem menuItemAbout = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
 	private final JMenuItem menuItemRepeatCopy = new JMenuItem(
@@ -205,7 +211,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				stateManager, setting,
 				uiPanel.getUIPanelSetting(),
 				originHolder);
-		buttonFactory = new PaintActionButtonFactory(stateFactory, paintContext);
+		buttonFactory = new PaintActionButtonFactory(
+				stateFactory, paintContext, actionHolder, screenUpdater);
 
 		// Setup Dialog Windows
 		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
@@ -242,6 +249,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuEdit.add(menuItemUnSelectAll);
 		menuEdit.add(menuItemDeleteSelectedLines);
 		menuEdit.add(menuItemUndo);
+		menuEdit.add(menuItemRedo);
 		menuEdit.add(menuItemChangeOutline);
 
 		menuHelp.add(menuItemAbout);
@@ -256,20 +264,20 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private void createPaintMenuItems() {
 		menuItemChangeOutline = (JMenuItem) buttonFactory
-				.create(this, JMenuItem.class, actionHolder, screenUpdater,
+				.create(this, JMenuItem.class,
 						StringID.EDIT_CONTOUR_ID, null);
 
 		menuItemSelectAll = (JMenuItem) buttonFactory
-				.create(this, JMenuItem.class, actionHolder, screenUpdater,
+				.create(this, JMenuItem.class,
 						StringID.SELECT_ALL_LINE_ID, null);
 
 		menuItemCopyAndPaste = (JMenuItem) buttonFactory
-				.create(this, JMenuItem.class, actionHolder, screenUpdater, StringID.COPY_PASTE_ID,
-						null);
+				.create(this, JMenuItem.class,
+						StringID.COPY_PASTE_ID, null);
 
 		menuItemCutAndPaste = (JMenuItem) buttonFactory
-				.create(this, JMenuItem.class, actionHolder, screenUpdater, StringID.CUT_PASTE_ID,
-						null);
+				.create(this, JMenuItem.class,
+						StringID.CUT_PASTE_ID, null);
 	}
 
 	private void addActionListenersToComponents() {
@@ -322,6 +330,21 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			screenUpdater.updateScreen();
 		});
 		menuItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+				InputEvent.CTRL_DOWN_MASK));
+
+		menuItemRedo.addActionListener(e -> {
+			try {
+				actionHolder.getMouseAction().redo(paintContext);
+			} catch (NullPointerException ex) {
+				if (actionHolder.getMouseAction() == null) {
+					logger.error("mouseAction should not be null.", ex);
+				} else {
+					logger.error("Wrong implementation.", ex);
+				}
+			}
+			screenUpdater.updateScreen();
+		});
+		menuItemRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
 				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemClear.addActionListener(e -> clear());
@@ -436,12 +459,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private void clear() {
 		document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
-		paintContext.setCreasePattern(document.getCreasePattern());
-		paintContext.creasePatternUndo().clear();
 
-		childFrameManager.closeAllChildrenRecursively(this);
+		setCreasePatternToPaintContext(document.getCreasePattern());
 
 		screenSetting.setGridVisible(true);
+
+		childFrameManager.closeAllChildrenRecursively(this);
 
 		screenUpdater.updateScreen();
 		updateTitleText();
@@ -633,15 +656,17 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			return null;
 		}
 
-		paintContext.clear(true);
-		paintContext.setCreasePattern(document.getCreasePattern());
-
-		paintContext.creasePatternUndo().clear();
-
-		paintContext.updateGrids();
+		setCreasePatternToPaintContext(document.getCreasePattern());
 
 		return document.getDataFilePath();
 
+	}
+
+	private void setCreasePatternToPaintContext(final CreasePatternInterface creasePattern) {
+		paintContext.clear(true);
+		paintContext.setCreasePattern(creasePattern);
+		paintContext.creasePatternUndo().clear();
+		paintContext.updateGrids();
 	}
 
 	private void showErrorDialog(final String title, final Exception ex) {
@@ -650,12 +675,23 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	}
 
-	private void saveIniFile() {
-		fileHistory.saveToFile(ORIPA.iniFilePath);
+	void saveIniFile() {
+		var writer = new InitDataFileWriter();
+		var builder = new InitDataBuilder();
+
+		builder.setLastUsedFile(fileHistory.getLastPath())
+				.setMRUFiles(fileHistory.getHistory())
+				.setZeroLineWidth(paintContext.isZeroLineWidth());
+
+		writer.write(builder.get(), ORIPA.iniFilePath);
 	}
 
-	private void loadIniFile() {
-		fileHistory.loadFromFile(ORIPA.iniFilePath);
+	void loadIniFile() {
+		var reader = new InitDataFileReader();
+		var ini = reader.read(ORIPA.iniFilePath);
+
+		fileHistory.loadFromInitData(ini);
+		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
 	}
 
 	@Override

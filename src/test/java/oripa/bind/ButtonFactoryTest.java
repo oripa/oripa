@@ -66,14 +66,14 @@ public class ButtonFactoryTest {
 		var stateFactory = mock(PaintBoundStateFactory.class);
 		var context = contextFactory.createContext();
 		ButtonFactory paintFactory = new PaintActionButtonFactory(
-				stateFactory, context);
+				stateFactory, context, actionHolder, screenUpdater);
 
 		var state = mock(PaintBoundState.class);
 		when(stateFactory.create(parent, actionHolder, context, screenUpdater, id))
 				.thenReturn(state);
 		var keyListener = mock(KeyListener.class);
 		JButton button;
-		button = (JButton) paintFactory.create(parent, JButton.class, actionHolder, screenUpdater,
+		button = (JButton) paintFactory.create(parent, JButton.class,
 				id,
 				keyListener);
 

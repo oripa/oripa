@@ -19,7 +19,6 @@
 package oripa.persistent.doc.loader;
 
 import java.io.FileReader;
-import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
@@ -32,15 +31,14 @@ import oripa.value.OriLine;
 
 public class LoaderPDF implements DocLoader {
 
-	public static ArrayList<OriLine> lines = new ArrayList<>();
-
 	@Override
 	public Doc load(final String filePath) {
+		var lines = new ArrayList<OriLine>();
+
 		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 
-		try {
-			Reader r = new FileReader(filePath);
+		try (var r = new FileReader(filePath)) {
 			StreamTokenizer st = new StreamTokenizer(r);
 			st.resetSyntax();
 			st.wordChars('0', '9');
@@ -137,18 +135,18 @@ public class LoaderPDF implements DocLoader {
 		ArrayList<OriLine> delLines = new ArrayList<>();
 		int lineNum = creasePattern.size();
 
-		OriLine[] lines = new OriLine[lineNum];
-		creasePattern.toArray(lines);
+		OriLine[] linesArray = new OriLine[lineNum];
+		creasePattern.toArray(linesArray);
 
 		for (int i = 0; i < lineNum; i++) {
 			for (int j = i + 1; j < lineNum; j++) {
-				OriLine l0 = lines[i];
-				OriLine l1 = lines[j];
+				OriLine l0 = linesArray[i];
+				OriLine l1 = linesArray[j];
 
-				if ((GeomUtil.Distance(l0.p0, l1.p0) < 0.01
-						&& GeomUtil.Distance(l0.p1, l1.p1) < 0.01)
-						|| (GeomUtil.Distance(l0.p1, l1.p0) < 0.01
-								&& GeomUtil.Distance(l0.p0, l1.p1) < 0.01)) {
+				if ((GeomUtil.distance(l0.p0, l1.p0) < 0.01
+						&& GeomUtil.distance(l0.p1, l1.p1) < 0.01)
+						|| (GeomUtil.distance(l0.p1, l1.p0) < 0.01
+								&& GeomUtil.distance(l0.p0, l1.p1) < 0.01)) {
 
 					delLines.add(l0);
 				}

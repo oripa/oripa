@@ -18,6 +18,8 @@
 
 package oripa.domain.fold;
 
+import oripa.value.OriLine;
+
 public class OriEdge {
 
 	public OriVertex sv = null;
@@ -38,4 +40,9 @@ public class OriEdge {
 	public OriVertex oppositeVertex(final OriVertex v) {
 		return v == sv ? ev : sv;
 	}
+
+	public boolean isFoldLine() {
+		return type == OriLine.Type.RIDGE.toInt() || type == OriLine.Type.VALLEY.toInt();
+	}
+
 }

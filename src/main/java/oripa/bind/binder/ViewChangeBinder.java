@@ -21,7 +21,10 @@ public class ViewChangeBinder extends AbstractButtonBinder<ChangeViewSetting> {
 		if (keyListener != null) {
 			button.addKeyListener(keyListener);
 		}
-		button.addActionListener(event -> target.changeViewSetting());
+
+		if (target != null) {
+			button.addActionListener(event -> target.changeViewSetting());
+		}
 
 		return button;
 	}

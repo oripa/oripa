@@ -18,6 +18,8 @@
 
 package oripa.value;
 
+import java.util.Objects;
+
 import javax.vecmath.Vector2d;
 
 import oripa.geom.Line;
@@ -46,7 +48,7 @@ public class OriLine implements Comparable<OriLine> {
 			return val;
 		}
 
-		public static Type fromInt(final int val) {
+		public static Type fromInt(final int val) throws IllegalArgumentException {
 			Type type;
 			switch (val) {
 
@@ -201,4 +203,16 @@ public class OriLine implements Comparable<OriLine> {
 		return false;
 	}
 
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		if (p0.compareTo(p1) < 0) {
+			return Objects.hash(p0, p1);
+		}
+		return Objects.hash(p1, p0);
+	}
 }

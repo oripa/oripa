@@ -20,7 +20,7 @@ public class FoldabilityCheckFrameFactory {
 	}
 
 	public JFrame createFrame(final JComponent parent, final OrigamiModel origamiModel,
-			final Collection<OriLine> creasePattern) {
+			final Collection<OriLine> creasePattern, final boolean zeroLineWidth) {
 
 		FoldabilityCheckFrame frame = (FoldabilityCheckFrame) childFrameManager.find(parent,
 				FoldabilityCheckFrame.class);
@@ -28,7 +28,7 @@ public class FoldabilityCheckFrameFactory {
 			frame = new FoldabilityCheckFrame();
 		}
 
-		frame.setModel(origamiModel, creasePattern);
+		frame.setModel(origamiModel, creasePattern, zeroLineWidth);
 		childFrameManager.putChild(parent, frame);
 
 		return frame;

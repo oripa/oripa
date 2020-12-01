@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,14 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.collection;
+package oripa.value;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public interface Rule<Variable> {
-	boolean holds(Variable var);
-	boolean violates(Variable var);
-	Rule<Variable> asDenied();
+class OriLineTest {
+
+	@Test
+	void testHashCode() {
+		var line1 = new OriLine(0, 1, 2, 3, OriLine.Type.VALLEY);
+		var line2 = new OriLine(0, 1, 2, 3, OriLine.Type.RIDGE);
+
+		assertTrue(line1.equals(line2));
+		assertTrue(line1.hashCode() == line2.hashCode());
+
+		// test reversed direction
+		line2.p0.set(2, 3);
+		line2.p1.set(0, 1);
+
+		assertTrue(line1.equals(line2));
+		assertTrue(line1.hashCode() == line2.hashCode());
+
+	}
+
 }

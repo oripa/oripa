@@ -28,6 +28,13 @@ public class SelectLineAction extends RectangularSelectableAction {
 	}
 
 	@Override
+	public void redo(final PaintContextInterface context) {
+		context.creasePatternUndo().redo();
+
+		recover(context);
+	}
+
+	@Override
 	protected void recoverImpl(final PaintContextInterface context) {
 		context.clear(false);
 

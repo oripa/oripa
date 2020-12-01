@@ -45,8 +45,8 @@ public class ResourceHolder {
 				createResource(resourcePackage + ".AppInfoResource"));
 
 	}
-
-	private static ResourceBundle createResource(final String classPath) {
+	
+	private ResourceBundle createResource(final String classPath) {
 		ResourceBundle bundle;
 
 		// get a resource for the location

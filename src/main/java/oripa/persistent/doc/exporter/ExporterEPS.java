@@ -31,23 +31,22 @@ public class ExporterEPS implements DocExporter {
 	@Override
 	public boolean export(final Doc doc, final String filepath)
 			throws IOException, IllegalArgumentException {
-		FileWriter fw = new FileWriter(filepath);
-		BufferedWriter bw = new BufferedWriter(fw);
+		try (var fw = new FileWriter(filepath);
+				var bw = new BufferedWriter(fw);) {
 
-		// Align the center of the model, combine scales
-		bw.write("%!PS-Adobe EPSF-3\n");
-		bw.write("%%BoundingBox:-200 -200 400 400\n");
-		bw.write("\n");
+			// Align the center of the model, combine scales
+			bw.write("%!PS-Adobe EPSF-3\n");
+			bw.write("%%BoundingBox:-200 -200 400 400\n");
+			bw.write("\n");
 
-		CreasePatternInterface creasePattern = doc.getCreasePattern();
-		for (OriLine line : creasePattern) {
-			bw.write("[] 0 setdash\n");
-			bw.write("" + line.p0.x + " " + line.p0.y + " moveto\n");
-			bw.write("" + line.p1.x + " " + line.p1.y + " lineto\n");
-			bw.write("stroke\n");
+			CreasePatternInterface creasePattern = doc.getCreasePattern();
+			for (OriLine line : creasePattern) {
+				bw.write("[] 0 setdash\n");
+				bw.write("" + line.p0.x + " " + line.p0.y + " moveto\n");
+				bw.write("" + line.p1.x + " " + line.p1.y + " lineto\n");
+				bw.write("stroke\n");
+			}
 		}
-		bw.close();
-
 		return true;
 	}
 }

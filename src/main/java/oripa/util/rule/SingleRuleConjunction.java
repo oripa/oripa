@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,38 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold.rule;
+package oripa.util.rule;
 
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.geom.GeomUtil;
-import oripa.util.collection.AbstractRule;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Koji
  *
  */
-public class FaceIsConvex extends AbstractRule<OriFace> {
+public class SingleRuleConjunction<Variable> extends AbstractRule<Collection<Variable>> {
 
+	private final Rule<Variable> rule;
 
-	public boolean holds(OriFace face) {
+	/**
+	 *
+	 * @param rule
+	 */
+	public SingleRuleConjunction(final Rule<Variable> rule) {
+		this.rule = rule;
+	}
 
-		if (face.halfedges.size() == 3) {
-			return true;
-		}
+	@Override
+	public boolean holds(final Collection<Variable> inputs) {
+		return inputs.stream().allMatch(input -> rule.holds(input));
+	}
 
-		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.prev.vertex.p, 
-				baseHe.vertex.p, baseHe.next.vertex.p);
-
-		for (int i = 1; i < face.halfedges.size(); i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.prev.vertex.p, he.vertex.p, he.next.vertex.p) != baseFlg) {
-				return false;
-			}
-
-		}
-		
-		return true;
+	public Set<Variable> findViolations(final Collection<Variable> inputs) {
+		return inputs.stream()
+				.filter(input -> rule.violates(input))
+				.collect(Collectors.toSet());
 	}
 }

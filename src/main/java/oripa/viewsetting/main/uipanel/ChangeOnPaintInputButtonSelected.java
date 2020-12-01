@@ -18,6 +18,7 @@ public class ChangeOnPaintInputButtonSelected implements ChangeViewSetting {
 
 		setting.setByValuePanelVisible(false);
 		setting.setLineInputPanelVisible(true);
+		setting.setAngleStepVisible(false);
 
 		setting.setAlterLineTypePanelVisible(false);
 
