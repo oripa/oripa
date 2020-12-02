@@ -672,12 +672,12 @@ public class UIPanel extends JPanel {
 		});
 
 		dispMVLinesCheckBox.addActionListener(e -> {
-			logger.debug("mvLineVisible at change listener: " + dispMVLinesCheckBox.isSelected());
+			logger.debug("mvLineVisible at listener: " + dispMVLinesCheckBox.isSelected());
 			mainScreenSetting.setMVLineVisible(dispMVLinesCheckBox.isSelected());
 		});
 
 		dispAuxLinesCheckBox.addActionListener(e -> {
-			logger.debug("auxLineVisible at change listener: " + dispAuxLinesCheckBox.isSelected());
+			logger.debug("auxLineVisible at listener: " + dispAuxLinesCheckBox.isSelected());
 			mainScreenSetting.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
 		});
 
@@ -847,17 +847,19 @@ public class UIPanel extends JPanel {
 
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.VERTEX_VISIBLE, e -> {
-					logger.debug("vertexVisible property change" + e.getNewValue());
+					logger.debug("vertexVisible property change: " + e.getNewValue());
 					dispVertexCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.MV_LINE_VISIBLE, e -> {
+					logger.debug("mvLineVisible property change: " + e.getNewValue());
 					dispMVLinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
+					logger.debug("auxLineVisible property change: " + e.getNewValue());
 					dispAuxLinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
 

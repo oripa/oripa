@@ -66,6 +66,7 @@ public class MainScreenSetting {
 	public void setMVLineVisible(final boolean mvLineVisible) {
 		var old = this.mvLineVisible;
 		this.mvLineVisible = mvLineVisible;
+		LOGGER.debug("firing change of mvLineVisible: " + old + " -> " + mvLineVisible);
 		support.firePropertyChange(MV_LINE_VISIBLE, old, mvLineVisible);
 	}
 

@@ -71,7 +71,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 		var ranges = findMinimalAngleSequences(vertex);
 
 		for (var range : ranges) {
-			LOGGER.debug("range =[" + range.begin + ", " + range.end + ")");
+			LOGGER.trace("range =[" + range.begin + ", " + range.end + ")");
 			int valleyCount = 0;
 
 			BiFunction<OriEdge, Integer, Integer> incrementIfValley = (edge, count) -> {
@@ -86,17 +86,17 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 			int edgeCount = range.end - range.begin + 1;
 			int mountainCount = edgeCount - valleyCount;
 
-			LOGGER.debug("#edge in the range = " + edgeCount);
-			LOGGER.debug("#V in the range = " + valleyCount);
-			LOGGER.debug("#M in the range = " + mountainCount);
+			LOGGER.trace("#edge in the range = " + edgeCount);
+			LOGGER.trace("#V in the range = " + valleyCount);
+			LOGGER.trace("#M in the range = " + mountainCount);
 
 			if (edgeCount % 2 == 0) {
 				if (valleyCount != mountainCount) {
-					LOGGER.debug("failed (even #edge)");
+					LOGGER.trace("failed (even #edge)");
 					return false;
 				}
 			} else if (Math.abs(valleyCount - mountainCount) != 1) {
-				LOGGER.debug("failed (odd #edge)");
+				LOGGER.trace("failed (odd #edge)");
 				return false;
 			}
 		}
@@ -115,7 +115,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 						vertex.getOppositeVertex(i + 1)))
 				.collect(Collectors.toList());
 
-		LOGGER.debug("angles = "
+		LOGGER.trace("angles = "
 				+ String.join(",", angles.stream()
 						.map(a -> Double.toString(Math.toDegrees(a)))
 						.collect(Collectors.toList())));
