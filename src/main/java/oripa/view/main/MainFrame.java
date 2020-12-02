@@ -676,17 +676,24 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	void saveIniFile() {
-		var writer = new InitDataFileWriter();
 		var builder = new InitDataBuilder();
 
-		builder.setLastUsedFile(fileHistory.getLastPath())
-				.setMRUFiles(fileHistory.getHistory())
-				.setZeroLineWidth(paintContext.isZeroLineWidth())
-				.setMVLineVisible(paintContext.isMVLineVisible())
-				.setAuxLineVisible(paintContext.isAuxLineVisible())
-				.setVertexVisible(paintContext.isVertexVisible());
+		try {
+			var ini = builder.setLastUsedFile(fileHistory.getLastPath())
+					.setMRUFiles(fileHistory.getHistory())
+					.setZeroLineWidth(paintContext.isZeroLineWidth())
+					.setMVLineVisible(paintContext.isMVLineVisible())
+					.setAuxLineVisible(paintContext.isAuxLineVisible())
+					.setVertexVisible(paintContext.isVertexVisible())
+					.get();
 
-		writer.write(builder.get(), ORIPA.iniFilePath);
+			var writer = new InitDataFileWriter();
+			writer.write(ini, ORIPA.iniFilePath);
+		} catch (IllegalStateException e) {
+			JOptionPane.showMessageDialog(
+					this, e, "Error when saving configurations",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	void loadIniFile() {
