@@ -24,8 +24,6 @@ public class FileHistory {
 	 * @return true if the given path is appended to history
 	 */
 	public boolean useFile(final String filePath) {
-
-		boolean appended = false;
 		int index = mostRecentlyUsedHistory.indexOf(filePath);
 
 		if (index < 0) {
@@ -34,13 +32,13 @@ public class FileHistory {
 			}
 
 			mostRecentlyUsedHistory.addFirst(filePath);
-			appended = true;
-		} else {
-			String item = mostRecentlyUsedHistory.remove(index);
-			mostRecentlyUsedHistory.addFirst(item);
+			return true;
 		}
 
-		return appended;
+		String item = mostRecentlyUsedHistory.remove(index);
+		mostRecentlyUsedHistory.addFirst(item);
+
+		return false;
 	}
 
 	public Collection<String> getHistory() {
