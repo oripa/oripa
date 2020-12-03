@@ -82,14 +82,12 @@ public class DataFileAccess {
 	 */
 	@SafeVarargs
 	public final Optional<String> saveFile(final Doc document,
-			final String directory, String fileName, final Component owner,
+			final String directory, final String fileName, final Component owner,
 			final FileAccessSupportFilter<Doc>... filters)
 			throws IOException, IllegalArgumentException {
 
-		if (fileName.isEmpty()) {
-			fileName = "newFile.opx";
-		}
-		File givenFile = new File(directory, fileName);
+		File givenFile = new File(directory,
+				(fileName.isEmpty()) ? "newFile.opx" : fileName);
 
 		var filePath = givenFile.getPath();
 
