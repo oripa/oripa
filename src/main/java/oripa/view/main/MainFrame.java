@@ -27,7 +27,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
@@ -44,6 +43,9 @@ import org.slf4j.LoggerFactory;
 
 import oripa.Config;
 import oripa.ORIPA;
+import oripa.application.main.DataFileAccess;
+import oripa.application.main.IniFileAccess;
+import oripa.application.main.PaintContextModification;
 import oripa.appstate.StateManager;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
@@ -53,16 +55,11 @@ import oripa.controller.SelectAllLineActionListener;
 import oripa.controller.UnselectAllLinesActionListener;
 import oripa.doc.Doc;
 import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
-import oripa.file.InitDataBuilder;
-import oripa.file.InitDataFileReader;
-import oripa.file.InitDataFileWriter;
-import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
 import oripa.persistent.doc.FileTypeKey;
 import oripa.persistent.filetool.AbstractSavingAction;
@@ -179,6 +176,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final DocFilterSelector filterSelector = new DocFilterSelector();
 
 	private final Doc document = new Doc();
+
+	private final IniFileAccess iniFileAccess = IniFileAccess.get();
+	private final DataFileAccess dataFileAccess = DataFileAccess.get();
+	private final PaintContextModification paintContextModification = PaintContextModification
+			.get();
 
 	public MainFrame() {
 		logger.info("frame construction starts.");
@@ -410,7 +412,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	private void modifySavingActions() {
-
 		// overwrite the action to update GUI after saving.
 		setProjectSavingAction(FileTypeKey.OPX);
 		setProjectSavingAction(FileTypeKey.FOLD);
@@ -455,7 +456,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		updateMenu(path);
 		updateTitleText();
-
 	}
 
 	private void exit() {
@@ -466,7 +466,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void clear() {
 		document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
 
-		setCreasePatternToPaintContext(document.getCreasePattern());
+		paintContextModification
+				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext);
 
 		screenSetting.setGridVisible(true);
 
@@ -522,15 +523,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType) {
-		final DocDAO dao = new DocDAO();
 		try {
-			dao.save(doc, filePath, fileType);
+			dataFileAccess.saveProjectFile(doc, filePath, fileType);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
 			showErrorDialog("Failed to save.", e);
 		}
-
-		doc.setDataFilePath(filePath);
 
 		paintContext.creasePatternUndo().clearChanged();
 
@@ -539,24 +537,19 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	@SafeVarargs
-	private String saveFile(final String directory, String fileName,
+	private String saveFile(final String directory, final String fileName,
 			final FileAccessSupportFilter<Doc>... filters) {
 
-		if (fileName.isEmpty()) {
-			fileName = "newFile.opx";
-		}
-		File givenFile = new File(directory, fileName);
-
-		var filePath = givenFile.getPath();
-
 		try {
-			final DocDAO dao = new DocDAO();
-			String savedPath = dao.saveUsingGUI(document, filePath, this, filters);
+			var savedPathOpt = dataFileAccess.saveFile(
+					document, directory, fileName, this, filters);
+
+			if (savedPathOpt.isEmpty()) {
+				return document.getDataFilePath();
+			}
+
 			paintContext.creasePatternUndo().clearChanged();
-			return savedPath;
-		} catch (FileChooserCanceledException e) {
-			logger.info("File selection is canceled.");
-			return document.getDataFilePath();
+			return savedPathOpt.get();
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("failed to save", e);
 			showErrorDialog("Failed to save", e);
@@ -567,9 +560,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void saveFileWithModelCheck(final FileTypeKey type) {
 
 		try {
-			final DocDAO dao = new DocDAO();
-			dao.saveUsingGUIWithModelCheck(document, this, filterSelector.getFilter(type));
-
+			dataFileAccess.saveFileWithModelCheck(document, filterSelector.getFilter(type), this);
 		} catch (FileChooserCanceledException e) {
 			logger.info("File selection is canceled.");
 		} catch (IOException e) {
@@ -636,37 +627,25 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		screenSetting.setGridVisible(false);
 
-		DocDAO dao = new DocDAO();
-
 		try {
+			var docOpt = dataFileAccess.loadFile(
+					filePath, filterSelector, fileHistory.getLastPath(), this);
+			if (docOpt.isEmpty()) {
+				return null;
+			}
 			// we can't substitute a loaded object because
 			// the document object is referred by screen and UI panel as a
 			// Holder.
-			if (filePath != null) {
-				document.set(dao.load(filePath));
-			} else {
-				document.set(dao.loadUsingGUI(
-						fileHistory.getLastPath(), filterSelector.getLoadables(),
-						this));
-			}
+			document.set(docOpt.get());
 		} catch (FileVersionError | WrongDataFormatException | IOException e) {
 			logger.error("failed to load", e);
 			showErrorDialog("Failed to load the file", e);
-		} catch (FileChooserCanceledException cancel) {
-			return null;
 		}
-
-		setCreasePatternToPaintContext(document.getCreasePattern());
+		paintContextModification
+				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext);
 
 		return document.getDataFilePath();
 
-	}
-
-	private void setCreasePatternToPaintContext(final CreasePatternInterface creasePattern) {
-		paintContext.clear(true);
-		paintContext.setCreasePattern(creasePattern);
-		paintContext.creasePatternUndo().clear();
-		paintContext.updateGrids();
 	}
 
 	private void showErrorDialog(final String title, final Exception ex) {
@@ -676,19 +655,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	void saveIniFile() {
-		var builder = new InitDataBuilder();
-
 		try {
-			var ini = builder.setLastUsedFile(fileHistory.getLastPath())
-					.setMRUFiles(fileHistory.getHistory())
-					.setZeroLineWidth(paintContext.isZeroLineWidth())
-					.setMVLineVisible(paintContext.isMVLineVisible())
-					.setAuxLineVisible(paintContext.isAuxLineVisible())
-					.setVertexVisible(paintContext.isVertexVisible())
-					.get();
-
-			var writer = new InitDataFileWriter();
-			writer.write(ini, ORIPA.iniFilePath);
+			iniFileAccess.save(fileHistory, paintContext);
 		} catch (IllegalStateException e) {
 			logger.error("error when building ini file data", e);
 			showErrorDialog("Error when saving configurations", e);
@@ -696,8 +664,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	void loadIniFile() {
-		var reader = new InitDataFileReader();
-		var ini = reader.read(ORIPA.iniFilePath);
+		var ini = iniFileAccess.load();
 
 		fileHistory.loadFromInitData(ini);
 		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
