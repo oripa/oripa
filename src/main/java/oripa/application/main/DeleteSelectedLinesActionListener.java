@@ -1,4 +1,4 @@
-package oripa.controller;
+package oripa.application.main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
