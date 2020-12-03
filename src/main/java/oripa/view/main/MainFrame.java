@@ -605,7 +605,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuFile.add(menuItemExit);
 	}
 
-	public void updateMenu(final String filePath) {
+	private void updateMenu(final String filePath) {
 
 		if (filterSelector.getLoadableFilterOf(filePath) == null) {
 			return;
