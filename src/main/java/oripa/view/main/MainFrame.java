@@ -690,6 +690,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			var writer = new InitDataFileWriter();
 			writer.write(ini, ORIPA.iniFilePath);
 		} catch (IllegalStateException e) {
+			logger.error("error when building ini file data", e);
 			JOptionPane.showMessageDialog(
 					this, e, "Error when saving configurations",
 					JOptionPane.ERROR_MESSAGE);
