@@ -31,18 +31,17 @@ import oripa.file.InitDataFileWriter;
  *
  */
 public class IniFileAccess {
-	private static IniFileAccess instance = null;
+	private InitDataFileReader reader;
+	private InitDataFileWriter writer;
 
+	@SuppressWarnings("unused")
 	private IniFileAccess() {
 
 	}
 
-	public static IniFileAccess get() {
-		if (instance == null) {
-			instance = new IniFileAccess();
-		}
-
-		return instance;
+	public IniFileAccess(final InitDataFileReader r, final InitDataFileWriter w) {
+		reader = r;
+		writer = w;
 	}
 
 	public void save(final FileHistory fileHistory, final PaintContextInterface paintContext)
@@ -57,14 +56,11 @@ public class IniFileAccess {
 				.setVertexVisible(paintContext.isVertexVisible())
 				.get();
 
-		var writer = new InitDataFileWriter();
 		writer.write(ini, ORIPA.iniFilePath);
 	}
 
 	public InitData load() {
-		var reader = new InitDataFileReader();
 		var ini = reader.read(ORIPA.iniFilePath);
-
 		return ini;
 	}
 }

@@ -60,6 +60,9 @@ import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
+import oripa.file.InitDataFileReader;
+import oripa.file.InitDataFileWriter;
+import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
 import oripa.persistent.doc.FileTypeKey;
 import oripa.persistent.filetool.AbstractSavingAction;
@@ -177,8 +180,9 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final Doc document = new Doc();
 
-	private final IniFileAccess iniFileAccess = IniFileAccess.get();
-	private final DataFileAccess dataFileAccess = DataFileAccess.get();
+	private final IniFileAccess iniFileAccess = new IniFileAccess(
+			new InitDataFileReader(), new InitDataFileWriter());
+	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO());
 	private final PaintContextModification paintContextModification = PaintContextModification
 			.get();
 

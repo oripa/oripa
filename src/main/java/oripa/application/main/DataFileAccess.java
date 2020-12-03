@@ -37,18 +37,15 @@ import oripa.persistent.filetool.WrongDataFormatException;
  *
  */
 public class DataFileAccess {
-	private static DataFileAccess instance = null;
+	private DocDAO dao;
 
+	@SuppressWarnings("unused")
 	private DataFileAccess() {
 
 	}
 
-	public static DataFileAccess get() {
-		if (instance == null) {
-			instance = new DataFileAccess();
-		}
-
-		return instance;
+	public DataFileAccess(final DocDAO dao) {
+		this.dao = dao;
 	}
 
 	/**
@@ -63,7 +60,6 @@ public class DataFileAccess {
 	public void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType)
 			throws IOException, IllegalArgumentException {
 
-		final DocDAO dao = new DocDAO();
 		dao.save(doc, filePath, fileType);
 
 		doc.setDataFilePath(filePath);
@@ -92,7 +88,6 @@ public class DataFileAccess {
 		var filePath = givenFile.getPath();
 
 		try {
-			final DocDAO dao = new DocDAO();
 			String savedPath = dao.saveUsingGUI(document, filePath, owner, filters);
 			return Optional.of(savedPath);
 		} catch (FileChooserCanceledException e) {
@@ -103,7 +98,6 @@ public class DataFileAccess {
 	public void saveFileWithModelCheck(final Doc document,
 			final FileAccessSupportFilter<Doc> filter, final Component owner)
 			throws FileChooserCanceledException, IOException, IllegalArgumentException {
-		final DocDAO dao = new DocDAO();
 		dao.saveUsingGUIWithModelCheck(document, owner, filter);
 	}
 
@@ -117,7 +111,6 @@ public class DataFileAccess {
 	public Optional<Doc> loadFile(final String filePath, final DocFilterSelector filterSelector,
 			final String lastFilePath, final Component owner)
 			throws FileVersionError, WrongDataFormatException, IOException {
-		DocDAO dao = new DocDAO();
 
 		try {
 			if (filePath != null) {
