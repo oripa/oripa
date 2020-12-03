@@ -51,6 +51,15 @@ public class DataFileAccess {
 		return instance;
 	}
 
+	/**
+	 * save the doc to given path and set the path to the doc.
+	 *
+	 * @param doc
+	 * @param filePath
+	 * @param fileType
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 */
 	public void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType)
 			throws IOException, IllegalArgumentException {
 
@@ -60,10 +69,20 @@ public class DataFileAccess {
 		doc.setDataFilePath(filePath);
 	}
 
+	/**
+	 *
+	 * @param document
+	 * @param directory
+	 * @param fileName
+	 * @param owner
+	 * @param filters
+	 * @return the path of saved file. Empty if the file choosing is canceled.
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 */
 	@SafeVarargs
-	public final Optional<String> saveFile(final Doc document, final String directory,
-			String fileName,
-			final Component owner,
+	public final Optional<String> saveFile(final Doc document,
+			final String directory, String fileName, final Component owner,
 			final FileAccessSupportFilter<Doc>... filters)
 			throws IOException, IllegalArgumentException {
 
@@ -95,6 +114,7 @@ public class DataFileAccess {
 	 * otherwise, it tries to read data from the path.
 	 *
 	 * @param filePath
+	 * @return the path of loaded file. Empty if the file choosing is canceled.
 	 */
 	public Optional<Doc> loadFile(final String filePath, final DocFilterSelector filterSelector,
 			final String lastFilePath, final Component owner)

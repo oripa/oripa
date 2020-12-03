@@ -40,6 +40,13 @@ public class PaintContextModification {
 		return instance;
 	}
 
+	/**
+	 * clear the context, set the given crease pattern, clear the undo history,
+	 * and update grids.
+	 *
+	 * @param creasePattern
+	 * @param paintContext
+	 */
 	public void setCreasePatternToPaintContext(final CreasePatternInterface creasePattern,
 			final PaintContextInterface paintContext) {
 		paintContext.clear(true);
