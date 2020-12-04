@@ -20,7 +20,10 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.Main.ABOUT_ID, "About" },
 			{ StringID.Main.UNDO_ID, "Undo" },
 			{ StringID.Main.REDO_ID, "Redo" },
-			{ StringID.Main.SELECT_ALL_ID, "Select all" },
+			{ StringID.Main.ARRAY_COPY_ID, "Array Copy" },
+			{ StringID.Main.CIRCLE_COPY_ID, "Circle Copy" },
+			{ StringID.Main.UNSELECT_ALL_ID, "Unselect All" },
+			{ StringID.Main.DELETE_SELECTED_ID, "Delete Selected Lines" },
 
 			{ StringID.UI.ZERO_LINE_WIDTH_ID, "Zero line width" },
 			{ StringID.UI.AUX_ID, "Aux" },

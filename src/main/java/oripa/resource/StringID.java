@@ -26,7 +26,10 @@ public class StringID {
 		public static final String UNDO_ID = "Undo";
 		public static final String REDO_ID = "Redo";
 		public static final String ABOUT_ID = "About";
-		public static final String SELECT_ALL_ID = "selectAll";
+		public static final String ARRAY_COPY_ID = "ArrayCopy";
+		public static final String CIRCLE_COPY_ID = "CircleCopy";
+		public static final String UNSELECT_ALL_ID = "UnselectAll";
+		public static final String DELETE_SELECTED_ID = "DeleteSelected";
 
 		public static final String DIALOG_TITLE_SAVE_ID = "DialogTitle_FileSave";
 		public static final String ORIPA_FILE_ID = "ORIPA_File";

@@ -163,14 +163,19 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.REDO_ID));
 
 	private final JMenuItem menuItemAbout = new JMenuItem(
-			ORIPA.res.getString("About"));
-	private final JMenuItem menuItemRepeatCopy = new JMenuItem("Array Copy");
-	private final JMenuItem menuItemCircleCopy = new JMenuItem("Circle Copy");
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
 
-	private final JMenuItem menuItemUnSelectAll = new JMenuItem("UnSelect All");
+	private final JMenuItem menuItemRepeatCopy = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ARRAY_COPY_ID));
+	private final JMenuItem menuItemCircleCopy = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.CIRCLE_COPY_ID));
+
+	private final JMenuItem menuItemUnSelectAll = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.UNSELECT_ALL_ID));
 
 	private final JMenuItem menuItemDeleteSelectedLines = new JMenuItem(
-			"Delete Selected Lines");
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.DELETE_SELECTED_ID));
+
 	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
 
 	private RepeatCopyDialog arrayCopyDialog;
