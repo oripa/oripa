@@ -173,8 +173,8 @@ public class CreasePatternGraphicDrawer {
 			final RectangleDomain domain,
 			final double scale, final boolean zeroLineWidth) {
 
-		g2d.setColor(selector.getColor(OriLine.Type.NONE));
-		g2d.setStroke(selector.createStroke(OriLine.Type.NONE, scale, zeroLineWidth));
+		g2d.setColor(selector.getColor(OriLine.Type.AUX));
+		g2d.setStroke(selector.createStroke(OriLine.Type.AUX, scale, zeroLineWidth));
 
 		int lineNum = gridDivNum;
 		double step = paperSize / lineNum;

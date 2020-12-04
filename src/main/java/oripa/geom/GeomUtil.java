@@ -126,11 +126,11 @@ public class GeomUtil {
 		double top = domain.getTop();
 		double bottom = domain.getBottom();
 
-		var leftSegment = new OriLine(left, top, left, bottom, OriLine.Type.NONE);
-		var rightSegment = new OriLine(right, top, right, bottom, OriLine.Type.NONE);
+		var leftSegment = new OriLine(left, top, left, bottom, OriLine.Type.AUX);
+		var rightSegment = new OriLine(right, top, right, bottom, OriLine.Type.AUX);
 
-		var topSegment = new OriLine(left, top, right, top, OriLine.Type.NONE);
-		var bottomSegment = new OriLine(left, bottom, right, bottom, OriLine.Type.NONE);
+		var topSegment = new OriLine(left, top, right, top, OriLine.Type.AUX);
+		var bottomSegment = new OriLine(left, bottom, right, bottom, OriLine.Type.AUX);
 
 		final List<Vector2d> crossPoints = new ArrayList<>();
 

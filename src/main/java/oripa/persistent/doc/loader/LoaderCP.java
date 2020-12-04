@@ -57,16 +57,16 @@ public class LoaderCP implements DocLoader {
 					var lineType = OriLine.Type.fromInt(Integer.parseInt(st.sval));
 					switch (lineType) {
 					case CUT:
-					case RIDGE:
+					case MOUNTAIN:
 					case VALLEY:
 						line.setType(lineType);
 						break;
 					default:
-						line.setType(OriLine.Type.NONE);
+						line.setType(OriLine.Type.AUX);
 						break;
 					}
 				} catch (IllegalArgumentException e) {
-					line.setType(OriLine.Type.NONE);
+					line.setType(OriLine.Type.AUX);
 				}
 //				System.out.println("line type " + line.getType());
 

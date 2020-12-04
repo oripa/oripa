@@ -72,7 +72,7 @@ public class CreasePatternExporterDXF implements Exporter<CreasePatternInterface
 				case CUT:
 					layerName = "CutLine";
 					break;
-				case RIDGE:
+				case MOUNTAIN:
 					layerName = "MountainLine";
 					break;
 				case VALLEY:
@@ -90,7 +90,7 @@ public class CreasePatternExporterDXF implements Exporter<CreasePatternInterface
 				case CUT:
 					colorNumber = 250; // 51,51,51
 					break;
-				case RIDGE:
+				case MOUNTAIN:
 					colorNumber = 5; // blue
 					break;
 				case VALLEY:

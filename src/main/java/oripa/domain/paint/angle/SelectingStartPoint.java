@@ -63,7 +63,7 @@ public class SelectingStartPoint extends PickingVertex {
 			double dx = paperSize * 4 * Math.cos(angle);
 			double dy = paperSize * 4 * Math.sin(angle);
 			var line = new OriLine(sp.x, sp.y,
-					sp.x + dx, sp.y + dy, OriLine.Type.NONE);
+					sp.x + dx, sp.y + dy, OriLine.Type.AUX);
 
 			// snap on cross points of angle line and creases.
 			crossPoints.addAll(

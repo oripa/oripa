@@ -15,7 +15,7 @@ public class LineTypeChanger {
 	 */
 	public void alterLineType(final OriLine l, final Collection<OriLine> lines,
 			final TypeForChange from, final TypeForChange to) {
-		if (from == TypeForChange.RIDGE && l.getType() != OriLine.Type.RIDGE) {
+		if (from == TypeForChange.MOUNTAIN && l.getType() != OriLine.Type.MOUNTAIN) {
 			return;
 		}
 		if (from == TypeForChange.VALLEY && l.getType() != OriLine.Type.VALLEY) {
@@ -23,14 +23,14 @@ public class LineTypeChanger {
 		}
 
 		switch (to) {
-		case RIDGE:
-			l.setType(OriLine.Type.RIDGE);
+		case MOUNTAIN:
+			l.setType(OriLine.Type.MOUNTAIN);
 			break;
 		case VALLEY:
 			l.setType(OriLine.Type.VALLEY);
 			break;
 		case AUX:
-			l.setType(OriLine.Type.NONE);
+			l.setType(OriLine.Type.AUX);
 			break;
 		case CUT:
 			l.setType(OriLine.Type.CUT);
@@ -40,10 +40,10 @@ public class LineTypeChanger {
 			remover.removeLine(l, lines);
 			break;
 		case FLIP:
-			if (l.getType() == OriLine.Type.RIDGE) {
+			if (l.getType() == OriLine.Type.MOUNTAIN) {
 				l.setType(OriLine.Type.VALLEY);
 			} else if (l.getType() == OriLine.Type.VALLEY) {
-				l.setType(OriLine.Type.RIDGE);
+				l.setType(OriLine.Type.MOUNTAIN);
 			}
 			break;
 		default:

@@ -364,7 +364,7 @@ public class OrigamiModelFactory {
 					edge.left = he0;
 					edge.right = he1;
 					edges.add(edge);
-					edge.type = OriLine.Type.NONE.toInt();// OriEdge.TYPE_NONE;
+					edge.type = OriLine.Type.AUX.toInt();// OriEdge.TYPE_NONE;
 				}
 			}
 		}

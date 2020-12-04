@@ -30,22 +30,22 @@ public class TestCreasePatternFactory {
 		OriLine slashLeftTop = new OriLine(
 				new OriPoint(center.x - partSize, center.y - partSize),
 				center,
-				OriLine.Type.RIDGE);
+				OriLine.Type.MOUNTAIN);
 
 		OriLine slashRightTop = new OriLine(
 				new OriPoint(center.x + partSize, center.y - partSize),
 				center,
-				OriLine.Type.RIDGE);
+				OriLine.Type.MOUNTAIN);
 
 		OriLine slashRightBottom = new OriLine(
 				new OriPoint(center.x + partSize, center.y + partSize),
 				center,
-				OriLine.Type.RIDGE);
+				OriLine.Type.MOUNTAIN);
 
 		OriLine slashLeftBottom = new OriLine(
 				new OriPoint(center.x - partSize, center.y + partSize),
 				center,
-				OriLine.Type.RIDGE);
+				OriLine.Type.MOUNTAIN);
 
 		LineAdder adder = new LineAdder();
 

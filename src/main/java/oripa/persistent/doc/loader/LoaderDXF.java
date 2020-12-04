@@ -74,7 +74,7 @@ public class LoaderDXF implements DocLoader {
 							System.out.println("color = " + color);
 							if (color == 1 || (9 < color && color < 40)) {
 								// Reds are mountains
-								line.setType(OriLine.Type.RIDGE);
+								line.setType(OriLine.Type.MOUNTAIN);
 							} else if (color == 2 || color == 5
 									|| (139 < color && color < 200)) {
 								// Blues are valleys
@@ -84,7 +84,7 @@ public class LoaderDXF implements DocLoader {
 								// greens are cuts
 								line.setType(OriLine.Type.CUT);
 							} else {
-								line.setType(OriLine.Type.NONE);
+								line.setType(OriLine.Type.AUX);
 							}
 						} else if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("10")) {

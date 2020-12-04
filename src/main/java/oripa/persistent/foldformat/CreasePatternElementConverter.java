@@ -80,11 +80,11 @@ public class CreasePatternElementConverter {
 		return lines.stream()
 				.map(line -> {
 					switch (line.getType()) {
-					case NONE:
+					case AUX:
 						return "F";
 					case CUT:
 						return "B";
-					case RIDGE:
+					case MOUNTAIN:
 						return "M";
 					case VALLEY:
 						return "V";
@@ -218,15 +218,15 @@ public class CreasePatternElementConverter {
 		var lines = edgesVertices.stream()
 				.map(edge -> new OriLine(
 						points.get(edge.get(0)), points.get(edge.get(1)),
-						OriLine.Type.NONE))
+						OriLine.Type.AUX))
 				.collect(Collectors.toList());
 
 		var typeHash = new HashMap<String, OriLine.Type>();
 		typeHash.put("B", OriLine.Type.CUT);
-		typeHash.put("F", OriLine.Type.NONE);
-		typeHash.put("M", OriLine.Type.RIDGE);
+		typeHash.put("F", OriLine.Type.AUX);
+		typeHash.put("M", OriLine.Type.MOUNTAIN);
 		typeHash.put("V", OriLine.Type.VALLEY);
-		typeHash.put("U", OriLine.Type.NONE);
+		typeHash.put("U", OriLine.Type.AUX);
 
 		for (int i = 0; i < lines.size(); i++) {
 			var line = lines.get(i);

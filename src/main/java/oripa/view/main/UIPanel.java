@@ -169,9 +169,9 @@ public class UIPanel extends JPanel {
 	private final JPanel alterLineTypePanel = new JPanel();
 
 	private final TypeForChange[] alterLine_comboData_from = {
-			TypeForChange.EMPTY, TypeForChange.RIDGE, TypeForChange.VALLEY };
+			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY };
 	private final TypeForChange[] alterLine_comboData_to = {
-			TypeForChange.RIDGE, TypeForChange.VALLEY, TypeForChange.AUX,
+			TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
 			TypeForChange.CUT, TypeForChange.DELETE, TypeForChange.FLIP };
 
 	private final JComboBox<TypeForChange> alterLine_combo_from = new JComboBox<>(
@@ -634,13 +634,13 @@ public class UIPanel extends JPanel {
 		angleStepCombo.addItemListener(e -> paintContext.setAngleStep((AngleStep) e.getItem()));
 
 		lineTypeMountainButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.RIDGE));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
 
 		lineTypeValleyButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
 
 		lineTypeAuxButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.NONE));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
 
 		editModeInputLineButton
 				.addActionListener(new InputCommandStatePopper(stateManager));

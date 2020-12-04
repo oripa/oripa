@@ -592,7 +592,7 @@ public class Folder {
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				OriLine line = new OriLine(he.positionAfterFolded, he.next.positionAfterFolded,
-						OriLine.Type.RIDGE);
+						OriLine.Type.MOUNTAIN);
 				painter.addLine(line);
 			}
 		}
@@ -815,7 +815,7 @@ public class Folder {
 					continue;
 				}
 
-				if ((face.faceFront && he.edge.type == OriLine.Type.RIDGE.toInt())
+				if ((face.faceFront && he.edge.type == OriLine.Type.MOUNTAIN.toInt())
 						|| (!face.faceFront && he.edge.type == OriLine.Type.VALLEY.toInt())) {
 					overlapRelation[face.tmpInt][pairFace.tmpInt] = OverlapRelationValues.UPPER;
 					overlapRelation[pairFace.tmpInt][face.tmpInt] = OverlapRelationValues.LOWER;

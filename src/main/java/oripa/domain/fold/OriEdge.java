@@ -42,7 +42,7 @@ public class OriEdge {
 	}
 
 	public boolean isFoldLine() {
-		return type == OriLine.Type.RIDGE.toInt() || type == OriLine.Type.VALLEY.toInt();
+		return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt();
 	}
 
 }

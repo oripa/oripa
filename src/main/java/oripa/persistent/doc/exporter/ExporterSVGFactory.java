@@ -65,7 +65,7 @@ public class ExporterSVGFactory {
 					case CUT:
 						style = "stroke:black;stroke-width:4;";
 						break;
-					case RIDGE:
+					case MOUNTAIN:
 						style = "stroke:red;stroke-width:2;";
 						break;
 					case VALLEY:
