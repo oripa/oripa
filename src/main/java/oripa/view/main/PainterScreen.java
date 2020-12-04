@@ -269,17 +269,22 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				if (MouseUtility.isRightButtonDown(e)) {
-					action.onRightClick(
-							paintContext, affineTransform,
-							MouseUtility.isControlKeyDown(e));
+				try {
+					if (MouseUtility.isRightButtonDown(e)) {
+						action.onRightClick(
+								paintContext, affineTransform,
+								MouseUtility.isControlKeyDown(e));
 
+						return null;
+					}
+
+					mouseActionHolder.setMouseAction(action.onLeftClick(
+							paintContext,
+							MouseUtility.isControlKeyDown(e)));
 					return null;
+				} catch (Exception e) {
+					logger.error("error on mouse click", e);
 				}
-
-				mouseActionHolder.setMouseAction(action.onLeftClick(
-						paintContext,
-						MouseUtility.isControlKeyDown(e)));
 				return null;
 			}
 
