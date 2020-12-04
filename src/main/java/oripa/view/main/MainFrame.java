@@ -97,19 +97,21 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final JMenu menuFile = new JMenu(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.FILE_ID));
-	private final JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
-	private final JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
+	private final JMenu menuEdit = new JMenu(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EDIT_ID));
+	private final JMenu menuHelp = new JMenu(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.HELP_ID));
 	private final JMenuItem menuItemClear = new JMenuItem(
-			ORIPA.res.getString("New"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.NEW_ID));
 	private final JMenuItem menuItemOpen = new JMenuItem(
-			ORIPA.res.getString("Open"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.OPEN_ID));
 
 	private final JMenuItem menuItemSave = new JMenuItem(
-			ORIPA.res.getString("Save"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_ID));
 	private final JMenuItem menuItemSaveAs = new JMenuItem(
-			ORIPA.res.getString("SaveAs"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_AS_ID));
 	private final JMenuItem menuItemSaveAsImage = new JMenuItem(
-			ORIPA.res.getString("SaveAsImage"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_AS_IMAGE_ID));
 
 	private final JMenuItem menuItemExportFOLD = new JMenuItem("Export FOLD");
 	private final JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
