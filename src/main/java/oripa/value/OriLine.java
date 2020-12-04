@@ -117,28 +117,22 @@ public class OriLine implements Comparable<OriLine> {
 		return type;
 	}
 
+	public boolean isBoundary() {
+		return type == Type.CUT;
+	}
+
+	public boolean isMV() {
+		return type == Type.RIDGE || type == Type.VALLEY;
+	}
+
+	public boolean isAux() {
+		return type == Type.NONE;
+	}
+
 	@Override
 	public String toString() {
 		return "" + p0 + "" + p1;
 	}
-
-//	public void changeToNextType() {
-//		switch (type) {
-//		case VALLEY:
-//			type = Type.NONE;
-//			break;
-//		case RIDGE:
-//			type = Type.VALLEY;
-//			break;
-//		case CUT:
-//			type = Type.RIDGE;
-//			break;
-//		case NONE:
-//			type = Type.RIDGE;
-//			break;
-//		default:
-//		}
-//	}
 
 	public Segment getSegment() {
 		return new Segment(p0, p1);

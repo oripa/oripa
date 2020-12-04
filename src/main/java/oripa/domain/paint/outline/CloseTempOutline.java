@@ -41,7 +41,7 @@ public class CloseTempOutline {
 		// Delete the current outline
 
 		List<OriLine> outlines = creasePattern.stream()
-				.filter(line -> line.getType() == OriLine.Type.CUT).collect(Collectors.toList());
+				.filter(line -> line.isBoundary()).collect(Collectors.toList());
 		creasePattern.removeAll(outlines);
 
 		// Update the contour line
@@ -52,7 +52,7 @@ public class CloseTempOutline {
 		while (true) {
 			boolean bDeleteLine = false;
 			for (OriLine line : creasePattern) {
-				if (line.getType() == OriLine.Type.CUT) {
+				if (line.isBoundary()) {
 					continue;
 				}
 				double eps = creasePattern.getPaperSize() * 0.001;

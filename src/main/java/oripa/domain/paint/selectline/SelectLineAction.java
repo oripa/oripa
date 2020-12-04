@@ -59,15 +59,14 @@ public class SelectLineAction extends RectangularSelectableAction {
 		context.creasePatternUndo().pushUndoInfo();
 
 		for (OriLine line : selectedLines) {
-			if (line.getType() == OriLine.Type.CUT) {
+			if (line.isBoundary()) {
 				continue;
 			}
 			// Don't select if the line is hidden
-			if (!context.isMVLineVisible() && (line.getType() == OriLine.Type.RIDGE
-					|| line.getType() == OriLine.Type.VALLEY)) {
+			if (!context.isMVLineVisible() && line.isMV()) {
 				continue;
 			}
-			if (!context.isAuxLineVisible() && line.getType() == OriLine.Type.NONE) {
+			if (!context.isAuxLineVisible() && line.isAux()) {
 				continue;
 			}
 
