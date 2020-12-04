@@ -110,6 +110,7 @@ public class StringID {
 	public static final String ANGLE_SNAP_ID = "angleSnap";
 
 	public static class ModelMenu {
+		public static final String FILE_ID = "File";
 		public static final String DISPLAY_ID = "MENU_Disp";
 		public static final String EXPORT_DXF_ID = "MENU_ExportModelLine_DXF";
 		public static final String INVERT_ID = "MENU_Invert";
