@@ -302,7 +302,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private void addActionListenersToComponents() {
 		menuItemOpen.addActionListener(e -> {
-			String path = openFile(null);
+			String path = loadFile(null);
 			screenUpdater.updateScreen();
 			updateMenu(path);
 			updateTitleText();
@@ -410,7 +410,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
 
 		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
-			MRUFilesMenuItem[i].addActionListener(this::openFileFromMRUFileMenuItem);
+			MRUFilesMenuItem[i].addActionListener(this::loadFileFromMRUFileMenuItem);
 		}
 
 	}
@@ -439,12 +439,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	}
 
-	private void openFileFromMRUFileMenuItem(final ActionEvent e) {
+	private void loadFileFromMRUFileMenuItem(final ActionEvent e) {
 
 		var menuItem = (JMenuItem) (e.getSource());
 		try {
 			String filePath = menuItem.getText();
-			openFile(filePath);
+			loadFile(filePath);
 			updateTitleText();
 		} catch (Exception ex) {
 			showErrorDialog(ORIPA.res.getString("Error_FileLoadFailed"), ex);
@@ -626,7 +626,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 *
 	 * @param filePath
 	 */
-	private String openFile(final String filePath) {
+	private String loadFile(final String filePath) {
 		childFrameManager.closeAllChildrenRecursively(this);
 
 		screenSetting.setGridVisible(false);
