@@ -27,14 +27,10 @@ import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import oripa.resource.ResourceHolder;
-import oripa.resource.ResourceKey;
-import oripa.resource.StringID;
 import oripa.view.main.MainFrame;
 
 public class ORIPA {
 
-	public static String TITLE;
 	public static String infoString = "ORIPA: (c) 2013- ORIPA OSS Project\n" +
 			"http://github.com/oripa\n" +
 			"ORIPA: (c) 2005-2009 Jun Mitani\nhttp://mitani.cs.tsukuba.ac.jp/\n\n" +
@@ -68,10 +64,6 @@ public class ORIPA {
 		SwingUtilities.invokeLater(() -> {
 			res = createResource(resourcePackage + ".StringResource");
 
-			ResourceHolder resources = ResourceHolder.getInstance();
-
-			TITLE = resources.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID);
-
 			int uiPanelWidth = 0;// 150;
 
 			int mainFrameWidth = 1000;
@@ -90,7 +82,6 @@ public class ORIPA {
 
 			mainFrame.setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			mainFrame.updateTitleText();
 			mainFrame.initialize();
 			mainFrame.setVisible(true);
 

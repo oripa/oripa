@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ public class StringResource_en extends ListResourceBundle {
 			{ StringID.Main.ABOUT_ID, "About" },
 			{ StringID.COPY_PASTE_ID, "Copy and Paste" },
 
-			{ StringID.Default.FILE_NAME_ID, "NoTitle" },
+//			{ StringID.Default.FILE_NAME_ID, "NoTitle" },
 			{ StringID.Main.DIALOG_TITLE_SAVE_ID, "Save" },
 			{ StringID.Error.SAVE_FAILED_ID, "Failed to save." },
 			{ StringID.Error.LOAD_FAIELD_ID, "Failed to load." },

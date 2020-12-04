@@ -88,13 +88,15 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 */
 	private static final long serialVersionUID = 272369294032419950L;
 
+	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
+
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
 
 	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
 	private final JMenu menuFile = new JMenu(
-			ORIPA.res.getString(StringID.Main.FILE_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.FILE_ID));
 	private final JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
 	private final JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
 	private final JMenuItem menuItemClear = new JMenuItem(
@@ -146,7 +148,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	// ---------------------------------------------------------------------------------------------
 
 	private final ViewScreenUpdater screenUpdater;
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 	private final JMenuItem menuItemProperty = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL,
 					StringID.Main.PROPERTY_ID));
@@ -268,6 +269,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void initialize() {
 		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
 		circleCopyDialog = new CircleCopyDialog(this, paintContext);
+		updateTitleText();
 	}
 
 	private void createPaintMenuItems() {
@@ -515,15 +517,16 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 	}
 
-	public void updateTitleText() {
+	private void updateTitleText() {
 		String fileName;
-		if ((document.getDataFilePath()).equals("")) {
-			fileName = ORIPA.res.getString("DefaultFileName");
+		if (document.getDataFilePath().isEmpty()) {
+			fileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
 		} else {
 			fileName = document.getDataFileName();
 		}
 
-		setTitle(fileName + " - " + ORIPA.TITLE);
+		setTitle(fileName + " - "
+				+ resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID));
 	}
 
 	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType) {
