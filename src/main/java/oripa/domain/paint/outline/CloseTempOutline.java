@@ -53,18 +53,18 @@ public class CloseTempOutline {
 					continue;
 				}
 				double eps = creasePattern.getPaperSize() * 0.001;
-				Vector2d OnPoint0 = isOnTmpOutlineLoop(outlinevertices, line.p0, eps);
-				Vector2d OnPoint1 = isOnTmpOutlineLoop(outlinevertices, line.p1, eps);
+				Vector2d onPoint0 = isOnTmpOutlineLoop(outlinevertices, line.p0, eps);
+				Vector2d onPoint1 = isOnTmpOutlineLoop(outlinevertices, line.p1, eps);
 
 				Painter painter = new Painter(creasePattern);
-				if (OnPoint0 != null && OnPoint0 == OnPoint1) {
+				if (onPoint0 != null && onPoint0 == onPoint1) {
 					painter.removeLine(line);
 					bDeleteLine = true;
 					break;
 				}
 
-				if ((OnPoint0 == null && isOutsideOfTmpOutlineLoop(outlinevertices, line.p0))
-						|| (OnPoint1 == null
+				if ((onPoint0 == null && isOutsideOfTmpOutlineLoop(outlinevertices, line.p0))
+						|| (onPoint1 == null
 								&& isOutsideOfTmpOutlineLoop(outlinevertices, line.p1))) {
 					painter.removeLine(line);
 					bDeleteLine = true;
@@ -75,10 +75,6 @@ public class CloseTempOutline {
 				break;
 			}
 		}
-
-		outlinevertices.clear();
-		// ORIPA.mainFrame.uiPanel.modeChanged();
-
 	}
 
 	private Vector2d isOnTmpOutlineLoop(
