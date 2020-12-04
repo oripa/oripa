@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.util.PairLoop;
@@ -23,17 +24,19 @@ public class CloseTempOutline {
 
 		@Override
 		public boolean yield(final Vector2d element, final Vector2d nextElement) {
-			OriLine line;
-			Painter painter = new Painter(creasePattern);
+			var painter = new Painter(creasePattern);
 
-			line = new OriLine(element, nextElement, OriLine.Type.CUT);
+			var overlappingExtractor = new OverlappingLineExtractor();
+			var line = new OriLine(element, nextElement, OriLine.Type.CUT);
+			painter.removeLines(overlappingExtractor.extract(creasePattern, line));
 			painter.addLine(line);
+
 			return true;
 		}
 	}
 
 	public void execute(final CreasePatternInterface creasePattern,
-			final Collection<Vector2d> outlinevertices) {
+			final Collection<Vector2d> outlineVertices) {
 
 		// Delete the current outline
 
@@ -43,7 +46,7 @@ public class CloseTempOutline {
 
 		// Update the contour line
 		PairLoop.iterateAll(
-				outlinevertices, new ContourLineAdder(creasePattern));
+				outlineVertices, new ContourLineAdder(creasePattern));
 
 		// To delete a segment out of the contour
 		while (true) {
@@ -53,8 +56,8 @@ public class CloseTempOutline {
 					continue;
 				}
 				double eps = creasePattern.getPaperSize() * 0.001;
-				Vector2d onPoint0 = isOnTmpOutlineLoop(outlinevertices, line.p0, eps);
-				Vector2d onPoint1 = isOnTmpOutlineLoop(outlinevertices, line.p1, eps);
+				Vector2d onPoint0 = isOnTmpOutlineLoop(outlineVertices, line.p0, eps);
+				Vector2d onPoint1 = isOnTmpOutlineLoop(outlineVertices, line.p1, eps);
 
 				Painter painter = new Painter(creasePattern);
 				if (onPoint0 != null && onPoint0 == onPoint1) {
@@ -63,9 +66,9 @@ public class CloseTempOutline {
 					break;
 				}
 
-				if ((onPoint0 == null && isOutsideOfTmpOutlineLoop(outlinevertices, line.p0))
+				if ((onPoint0 == null && isOutsideOfTmpOutlineLoop(outlineVertices, line.p0))
 						|| (onPoint1 == null
-								&& isOutsideOfTmpOutlineLoop(outlinevertices, line.p1))) {
+								&& isOutsideOfTmpOutlineLoop(outlineVertices, line.p1))) {
 					painter.removeLine(line);
 					bDeleteLine = true;
 					break;
