@@ -14,7 +14,7 @@ import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
 
 public class SelectingVertexForOutline extends PickingVertex {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelectingVertexForOutline.class);
+	private static final Logger logger = LoggerFactory.getLogger(SelectingVertexForOutline.class);
 
 	@Override
 	protected void initialize() {
@@ -31,7 +31,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 	@Override
 	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 
-		LOGGER.debug("# of picked vertices (before): " + context.getPickedVertices().size());
+		logger.debug("# of picked vertices (before): " + context.getPickedVertices().size());
 
 		Vector2d v = context.popVertex();
 
@@ -51,7 +51,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 			context.pushVertex(v);
 		}
 
-		LOGGER.debug("# of picked vertices (after): " + context.getPickedVertices().size());
+		logger.debug("# of picked vertices (after): " + context.getPickedVertices().size());
 	}
 
 	private void closeTmpOutline(final Collection<Vector2d> outlineVertices,

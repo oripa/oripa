@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 
 public class MainScreenSetting {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MainScreenSetting.class);
+	private static final Logger logger = LoggerFactory.getLogger(MainScreenSetting.class);
 
 	private boolean gridVisible = true;
 	public static final String GRID_VISIBLE = "grid visible";
@@ -59,21 +59,21 @@ public class MainScreenSetting {
 	public void setVertexVisible(final boolean vertexVisible) {
 		var old = this.vertexVisible;
 		this.vertexVisible = vertexVisible;
-		LOGGER.debug("firing change of vertexVisible: " + old + " -> " + vertexVisible);
+		logger.debug("firing change of vertexVisible: " + old + " -> " + vertexVisible);
 		support.firePropertyChange(VERTEX_VISIBLE, old, vertexVisible);
 	}
 
 	public void setMVLineVisible(final boolean mvLineVisible) {
 		var old = this.mvLineVisible;
 		this.mvLineVisible = mvLineVisible;
-		LOGGER.debug("firing change of mvLineVisible: " + old + " -> " + mvLineVisible);
+		logger.debug("firing change of mvLineVisible: " + old + " -> " + mvLineVisible);
 		support.firePropertyChange(MV_LINE_VISIBLE, old, mvLineVisible);
 	}
 
 	public void setAuxLineVisible(final boolean auxLineVisible) {
 		var old = this.auxLineVisible;
 		this.auxLineVisible = auxLineVisible;
-		LOGGER.debug("firing change of auxLineVisible: " + old + " -> " + auxLineVisible);
+		logger.debug("firing change of auxLineVisible: " + old + " -> " + auxLineVisible);
 		support.firePropertyChange(AUX_LINE_VISIBLE, old, auxLineVisible);
 	}
 

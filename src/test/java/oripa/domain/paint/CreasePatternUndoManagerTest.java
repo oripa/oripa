@@ -35,7 +35,7 @@ import oripa.value.OriLine;
  *
  */
 public class CreasePatternUndoManagerTest {
-	private static final Logger LOGGER = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(CreasePatternUndoManagerTest.class);
 
 	Collection<OriLine> createOriLines(final double x0, final double y0, final double x1,
@@ -78,14 +78,14 @@ public class CreasePatternUndoManagerTest {
 		for (int i = count - 1; i >= 0; i--) {
 			lines = manager.undo(lines).getInfo();
 			var p0x = ((OriLine) lines.toArray()[0]).p0.x;
-			LOGGER.debug("undo result: " + p0x);
+			logger.debug("undo result: " + p0x);
 		}
 
 		for (int i = 0; i < count; i++) {
 			var l = manager.redo().getInfo();
 			var p0x = ((OriLine) l.toArray()[0]).p0.x;
 			assertEquals(i + 1, p0x);
-			LOGGER.debug("redo result: " + p0x);
+			logger.debug("redo result: " + p0x);
 		}
 
 		assertFalse(manager.canRedo());

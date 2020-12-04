@@ -42,7 +42,7 @@ import oripa.value.OriLine;
  *
  */
 public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
-	private static final Logger LOGGER = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(GeneralizedBigLittleBigLemma.class);
 
 	private static final double EPS = 1e-5;
@@ -71,7 +71,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 		var ranges = findMinimalAngleSequences(vertex);
 
 		for (var range : ranges) {
-			LOGGER.trace("range =[" + range.begin + ", " + range.end + ")");
+			logger.trace("range =[" + range.begin + ", " + range.end + ")");
 			int valleyCount = 0;
 
 			BiFunction<OriEdge, Integer, Integer> incrementIfValley = (edge, count) -> {
@@ -86,17 +86,17 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 			int edgeCount = range.end - range.begin + 1;
 			int mountainCount = edgeCount - valleyCount;
 
-			LOGGER.trace("#edge in the range = " + edgeCount);
-			LOGGER.trace("#V in the range = " + valleyCount);
-			LOGGER.trace("#M in the range = " + mountainCount);
+			logger.trace("#edge in the range = " + edgeCount);
+			logger.trace("#V in the range = " + valleyCount);
+			logger.trace("#M in the range = " + mountainCount);
 
 			if (edgeCount % 2 == 0) {
 				if (valleyCount != mountainCount) {
-					LOGGER.trace("failed (even #edge)");
+					logger.trace("failed (even #edge)");
 					return false;
 				}
 			} else if (Math.abs(valleyCount - mountainCount) != 1) {
-				LOGGER.trace("failed (odd #edge)");
+				logger.trace("failed (odd #edge)");
 				return false;
 			}
 		}
@@ -115,7 +115,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 						vertex.getOppositeVertex(i + 1)))
 				.collect(Collectors.toList());
 
-		LOGGER.trace("angles = "
+		logger.trace("angles = "
 				+ String.join(",", angles.stream()
 						.map(a -> Double.toString(Math.toDegrees(a)))
 						.collect(Collectors.toList())));
