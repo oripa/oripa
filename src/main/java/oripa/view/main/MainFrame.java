@@ -186,8 +186,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final IniFileAccess iniFileAccess = new IniFileAccess(
 			new InitDataFileReader(), new InitDataFileWriter());
 	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO());
-	private final PaintContextModification paintContextModification = PaintContextModification
-			.get();
+	private final PaintContextModification paintContextModification = new PaintContextModification();
 
 	public MainFrame() {
 		logger.info("frame construction starts.");

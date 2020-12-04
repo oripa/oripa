@@ -26,20 +26,6 @@ import oripa.domain.paint.PaintContextInterface;
  *
  */
 public class PaintContextModification {
-	private static PaintContextModification instance = null;
-
-	private PaintContextModification() {
-
-	}
-
-	public static PaintContextModification get() {
-		if (instance == null) {
-			instance = new PaintContextModification();
-		}
-
-		return instance;
-	}
-
 	/**
 	 * clear the context, set the given crease pattern, clear the undo history,
 	 * and update grids.
