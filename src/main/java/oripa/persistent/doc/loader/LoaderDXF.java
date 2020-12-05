@@ -20,13 +20,13 @@ package oripa.persistent.doc.loader;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
+import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -35,16 +35,11 @@ public class LoaderDXF implements DocLoader {
 
 	@Override
 	public Doc load(final String filePath) {
-		final double size = 400;
-		Doc doc = new Doc(size);
-		CreasePatternInterface creasePattern = doc.getCreasePattern();
-
-		creasePattern.clear();
+		var lines = new ArrayList<OriLine>();
 
 		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-		try {
-			Reader r = new FileReader(filePath);
+		try (var r = new FileReader(filePath)) {
 			StreamTokenizer st = new StreamTokenizer(r);
 			st.resetSyntax();
 			st.wordChars('0', '9');
@@ -67,7 +62,7 @@ public class LoaderDXF implements DocLoader {
 					while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
 						if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("0")) {
-							creasePattern.add(line);
+							lines.add(line);
 							break;
 						} else if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("62")) {
@@ -76,7 +71,7 @@ public class LoaderDXF implements DocLoader {
 							System.out.println("color = " + color);
 							if (color == 1 || (9 < color && color < 40)) {
 								// Reds are mountains
-								line.setType(OriLine.Type.RIDGE);
+								line.setType(OriLine.Type.MOUNTAIN);
 							} else if (color == 2 || color == 5
 									|| (139 < color && color < 200)) {
 								// Blues are valleys
@@ -86,7 +81,7 @@ public class LoaderDXF implements DocLoader {
 								// greens are cuts
 								line.setType(OriLine.Type.CUT);
 							} else {
-								line.setType(OriLine.Type.NONE);
+								line.setType(OriLine.Type.AUX);
 							}
 						} else if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("10")) {
@@ -118,7 +113,7 @@ public class LoaderDXF implements DocLoader {
 
 							if (GeomUtil.distance(line.p0, line.p1) < 0.001) {
 								System.out.println("########### NULL EDGE");
-								creasePattern.remove(line);
+								lines.remove(line);
 							}
 
 						} else {
@@ -134,17 +129,16 @@ public class LoaderDXF implements DocLoader {
 			return null;
 		}
 
-		if (creasePattern.isEmpty()) {
+		if (lines.isEmpty()) {
 			return null;
 		}
 
-//		doc.setPaperSize(size);
-
+		final double size = 400;
 		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0,
 				(minV.y + maxV.y) / 2.0);
 		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
 		// size normalization
-		for (OriLine line : creasePattern) {
+		for (OriLine line : lines) {
 			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
 			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
 			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
@@ -152,15 +146,12 @@ public class LoaderDXF implements DocLoader {
 		}
 
 		ArrayList<OriLine> delLines = new ArrayList<>();
-		int lineNum = creasePattern.size();
-
-		OriLine[] lines = new OriLine[lineNum];
-		creasePattern.toArray(lines);
+		int lineNum = lines.size();
 
 		for (int i = 0; i < lineNum; i++) {
 			for (int j = i + 1; j < lineNum; j++) {
-				OriLine l0 = lines[i];
-				OriLine l1 = lines[j];
+				OriLine l0 = lines.get(i);
+				OriLine l1 = lines.get(j);
 
 				if ((GeomUtil.distance(l0.p0, l1.p0) < 0.01 && GeomUtil
 						.distance(l0.p1, l1.p1) < 0.01)
@@ -173,8 +164,14 @@ public class LoaderDXF implements DocLoader {
 		}
 
 		for (OriLine delLine : delLines) {
-			creasePattern.remove(delLine);
+			lines.remove(delLine);
 		}
+
+		CreasePatternFactory factory = new CreasePatternFactory();
+		CreasePatternInterface creasePattern = factory
+				.createCreasePattern(lines);
+		Doc doc = new Doc();
+		doc.setCreasePattern(creasePattern);
 
 		return doc;
 	}

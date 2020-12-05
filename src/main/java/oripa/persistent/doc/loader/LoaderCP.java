@@ -19,11 +19,8 @@
 package oripa.persistent.doc.loader;
 
 import java.io.FileReader;
-import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
-
-import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternFactory;
@@ -36,11 +33,8 @@ public class LoaderCP implements DocLoader {
 	public Doc load(final String filePath) {
 		var lines = new ArrayList<OriLine>();
 
-		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
+		try (var r = new FileReader(filePath)) {
 
-		try {
-			Reader r = new FileReader(filePath);
 			StreamTokenizer st = new StreamTokenizer(r);
 			st.resetSyntax();
 			st.wordChars('0', '9');
@@ -59,13 +53,22 @@ public class LoaderCP implements DocLoader {
 				line = new OriLine();
 				lines.add(line);
 
-				line.setType(OriLine.Type.fromInt(Integer.parseInt(st.sval)));// ==
-																				// 1
-																				// ?
-				// OriLine.TYPE_RIDGE
-				// :
-				// OriLine.TYPE_VALLEY;
-				System.out.println("line type " + line.getType());
+				try {
+					var lineType = OriLine.Type.fromInt(Integer.parseInt(st.sval));
+					switch (lineType) {
+					case CUT:
+					case MOUNTAIN:
+					case VALLEY:
+						line.setType(lineType);
+						break;
+					default:
+						line.setType(OriLine.Type.AUX);
+						break;
+					}
+				} catch (IllegalArgumentException e) {
+					line.setType(OriLine.Type.AUX);
+				}
+//				System.out.println("line type " + line.getType());
 
 				token = st.nextToken();
 				line.p0.x = Double.parseDouble(st.sval);
@@ -87,29 +90,32 @@ public class LoaderCP implements DocLoader {
 			e.printStackTrace();
 		}
 
-		for (OriLine line : lines) {
-			minV.x = Math.min(minV.x, line.p0.x);
-			minV.x = Math.min(minV.x, line.p1.x);
-			minV.y = Math.min(minV.y, line.p0.y);
-			minV.y = Math.min(minV.y, line.p1.y);
+//		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
+//		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 
-			maxV.x = Math.max(maxV.x, line.p0.x);
-			maxV.x = Math.max(maxV.x, line.p1.x);
-			maxV.y = Math.max(maxV.y, line.p0.y);
-			maxV.y = Math.max(maxV.y, line.p1.y);
-		}
-
-		// size normalization
-		double size = 400;
-		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0,
-				(minV.y + maxV.y) / 2.0);
-		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
-		for (OriLine line : lines) {
-			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
-			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
-			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
-			line.p1.y = (line.p1.y - center.y) / bboxSize * size;
-		}
+//		for (OriLine line : lines) {
+//			minV.x = Math.min(minV.x, line.p0.x);
+//			minV.x = Math.min(minV.x, line.p1.x);
+//			minV.y = Math.min(minV.y, line.p0.y);
+//			minV.y = Math.min(minV.y, line.p1.y);
+//
+//			maxV.x = Math.max(maxV.x, line.p0.x);
+//			maxV.x = Math.max(maxV.x, line.p1.x);
+//			maxV.y = Math.max(maxV.y, line.p0.y);
+//			maxV.y = Math.max(maxV.y, line.p1.y);
+//		}
+//
+//		// size normalization
+//		double size = 400;
+//		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0,
+//				(minV.y + maxV.y) / 2.0);
+//		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
+//		for (OriLine line : lines) {
+//			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
+//			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
+//			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
+//			line.p1.y = (line.p1.y - center.y) / bboxSize * size;
+//		}
 
 		// for (OriLine l : lines) {
 		// doc.addLine(l);

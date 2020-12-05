@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * @param <Backup>
  */
 public abstract class AbstractUndoManager<Backup> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractUndoManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractUndoManager.class);
 
 	private final List<UndoInfo<Backup>> undoList = Collections
 			.synchronizedList(new ArrayList<UndoInfo<Backup>>());
@@ -76,32 +76,32 @@ public abstract class AbstractUndoManager<Backup> {
 	 */
 	public synchronized UndoInfo<Backup> undo(final Backup info) {
 		if (!canUndo()) {
-			LOGGER.debug("can't undo: " + indexLog());
+			logger.debug("can't undo: " + indexLog());
 			return null;
 		}
 
 		changed = true;
 
 		if (index == endIndex) {
-			LOGGER.debug("set the start of undo sequence: " + indexLog());
+			logger.debug("set the start of undo sequence: " + indexLog());
 			set(index, createUndoInfo(info));
 
 		}
 
-		LOGGER.debug("before undo: " + indexLog());
+		logger.debug("before undo: " + indexLog());
 
 		return undoList.get(--index);
 	}
 
 	public synchronized UndoInfo<Backup> redo() {
 		if (!canRedo()) {
-			LOGGER.debug("can't redo: " + indexLog());
+			logger.debug("can't redo: " + indexLog());
 			return null;
 		}
 
 		changed = true;
 
-		LOGGER.debug("before redo: " + indexLog());
+		logger.debug("before redo: " + indexLog());
 
 		return undoList.get(++index);
 	}

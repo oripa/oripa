@@ -27,7 +27,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
@@ -43,22 +42,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.Config;
-import oripa.ORIPA;
+import oripa.application.main.DataFileAccess;
+import oripa.application.main.DeleteSelectedLinesActionListener;
+import oripa.application.main.IniFileAccess;
+import oripa.application.main.PaintContextModification;
+import oripa.application.main.SelectAllLineActionListener;
+import oripa.application.main.UnselectAllLinesActionListener;
 import oripa.appstate.StateManager;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.state.PaintBoundStateFactory;
-import oripa.controller.DeleteSelectedLinesActionListener;
-import oripa.controller.SelectAllLineActionListener;
-import oripa.controller.UnselectAllLinesActionListener;
 import oripa.doc.Doc;
 import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
+import oripa.file.InitDataFileReader;
+import oripa.file.InitDataFileWriter;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
 import oripa.persistent.doc.FileTypeKey;
@@ -72,6 +74,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
+import oripa.util.gui.Dialogs;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.MainScreenSetting;
@@ -85,32 +88,40 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 */
 	private static final long serialVersionUID = 272369294032419950L;
 
+	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
+
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
 
 	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
 	private final JMenu menuFile = new JMenu(
-			ORIPA.res.getString(StringID.Main.FILE_ID));
-	private final JMenu menuEdit = new JMenu(ORIPA.res.getString("Edit"));
-	private final JMenu menuHelp = new JMenu(ORIPA.res.getString("Help"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.FILE_ID));
+	private final JMenu menuEdit = new JMenu(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EDIT_ID));
+	private final JMenu menuHelp = new JMenu(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.HELP_ID));
 	private final JMenuItem menuItemClear = new JMenuItem(
-			ORIPA.res.getString("New"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.NEW_ID));
 	private final JMenuItem menuItemOpen = new JMenuItem(
-			ORIPA.res.getString("Open"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.OPEN_ID));
 
 	private final JMenuItem menuItemSave = new JMenuItem(
-			ORIPA.res.getString("Save"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_ID));
 	private final JMenuItem menuItemSaveAs = new JMenuItem(
-			ORIPA.res.getString("SaveAs"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_AS_ID));
 	private final JMenuItem menuItemSaveAsImage = new JMenuItem(
-			ORIPA.res.getString("SaveAsImage"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_AS_IMAGE_ID));
 
-	private final JMenuItem menuItemExportFOLD = new JMenuItem("Export FOLD");
-	private final JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
+	private final JMenuItem menuItemExportFOLD = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_FOLD_ID));
+	private final JMenuItem menuItemExportDXF = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_DXF_ID));
 //	private final JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
-	private final JMenuItem menuItemExportCP = new JMenuItem("Export CP");
-	private final JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
+	private final JMenuItem menuItemExportCP = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_CP_ID));
+	private final JMenuItem menuItemExportSVG = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_SVG_ID));
 
 	// -----------------------------------------------------------------------------------------------------------
 	// Create paint button
@@ -143,7 +154,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	// ---------------------------------------------------------------------------------------------
 
 	private final ViewScreenUpdater screenUpdater;
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 	private final JMenuItem menuItemProperty = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL,
 					StringID.Main.PROPERTY_ID));
@@ -157,14 +167,19 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.REDO_ID));
 
 	private final JMenuItem menuItemAbout = new JMenuItem(
-			ORIPA.res.getString("About"));
-	private final JMenuItem menuItemRepeatCopy = new JMenuItem("Array Copy");
-	private final JMenuItem menuItemCircleCopy = new JMenuItem("Circle Copy");
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
 
-	private final JMenuItem menuItemUnSelectAll = new JMenuItem("UnSelect All");
+	private final JMenuItem menuItemRepeatCopy = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ARRAY_COPY_ID));
+	private final JMenuItem menuItemCircleCopy = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.CIRCLE_COPY_ID));
+
+	private final JMenuItem menuItemUnSelectAll = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.UNSELECT_ALL_ID));
 
 	private final JMenuItem menuItemDeleteSelectedLines = new JMenuItem(
-			"Delete Selected Lines");
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.DELETE_SELECTED_ID));
+
 	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
 
 	private RepeatCopyDialog arrayCopyDialog;
@@ -176,6 +191,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final DocFilterSelector filterSelector = new DocFilterSelector();
 
 	private final Doc document = new Doc();
+
+	private final IniFileAccess iniFileAccess = new IniFileAccess(
+			new InitDataFileReader(), new InitDataFileWriter());
+	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO());
+	private final PaintContextModification paintContextModification = new PaintContextModification();
 
 	public MainFrame() {
 		logger.info("frame construction starts.");
@@ -259,6 +279,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void initialize() {
 		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
 		circleCopyDialog = new CircleCopyDialog(this, paintContext);
+		updateTitleText();
 	}
 
 	private void createPaintMenuItems() {
@@ -293,7 +314,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private void addActionListenersToComponents() {
 		menuItemOpen.addActionListener(e -> {
-			String path = openFile(null);
+			String path = loadFile(null);
 			screenUpdater.updateScreen();
 			updateMenu(path);
 			updateTitleText();
@@ -370,7 +391,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
 				JOptionPane.INFORMATION_MESSAGE));
 
-		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.DXF_MODEL));
+		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.DXF));
 //		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
 		menuItemExportCP.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.CP));
 		menuItemExportSVG.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.SVG));
@@ -401,13 +422,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
 
 		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
-			MRUFilesMenuItem[i].addActionListener(this::openFileFromMRUFileMenuItem);
+			MRUFilesMenuItem[i].addActionListener(this::loadFileFromMRUFileMenuItem);
 		}
 
 	}
 
 	private void modifySavingActions() {
-
 		// overwrite the action to update GUI after saving.
 		setProjectSavingAction(FileTypeKey.OPX);
 		setProjectSavingAction(FileTypeKey.FOLD);
@@ -431,15 +451,16 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	}
 
-	private void openFileFromMRUFileMenuItem(final ActionEvent e) {
+	private void loadFileFromMRUFileMenuItem(final ActionEvent e) {
 
 		var menuItem = (JMenuItem) (e.getSource());
 		try {
 			String filePath = menuItem.getText();
-			openFile(filePath);
+			loadFile(filePath);
 			updateTitleText();
 		} catch (Exception ex) {
-			showErrorDialog(ORIPA.res.getString("Error_FileLoadFailed"), ex);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), ex);
 		}
 		screenUpdater.updateScreen();
 	}
@@ -452,7 +473,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		updateMenu(path);
 		updateTitleText();
-
 	}
 
 	private void exit() {
@@ -463,7 +483,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void clear() {
 		document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
 
-		setCreasePatternToPaintContext(document.getCreasePattern());
+		paintContextModification
+				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext);
 
 		screenSetting.setGridVisible(true);
 
@@ -488,8 +509,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void showArrayCopyDialog() {
 		Painter painter = paintContext.getPainter();
 		if (painter.countSelectedLines() == 0) {
-			JOptionPane.showMessageDialog(this, "Select target lines",
-					"ArrayCopy", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this,
+					resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.NO_SELECTION_ID),
+					resourceHolder.getString(ResourceKey.WARNING,
+							StringID.Warning.ARRAY_COPY_TITLE_ID),
+					JOptionPane.WARNING_MESSAGE);
 
 		} else {
 			arrayCopyDialog.setVisible(true);
@@ -499,35 +523,37 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void showCircleCopyDialog() {
 		Painter painter = paintContext.getPainter();
 		if (painter.countSelectedLines() == 0) {
-			JOptionPane.showMessageDialog(this, "Select target lines",
-					"CircleCopy", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this,
+					resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.NO_SELECTION_ID),
+					resourceHolder.getString(ResourceKey.WARNING,
+							StringID.Warning.CIRCLE_COPY_TITLE_ID),
+					JOptionPane.WARNING_MESSAGE);
 
 		} else {
 			circleCopyDialog.setVisible(true);
 		}
 	}
 
-	public void updateTitleText() {
+	private void updateTitleText() {
 		String fileName;
-		if ((document.getDataFilePath()).equals("")) {
-			fileName = ORIPA.res.getString("DefaultFileName");
+		if (document.getDataFilePath().isEmpty()) {
+			fileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
 		} else {
 			fileName = document.getDataFileName();
 		}
 
-		setTitle(fileName + " - " + ORIPA.TITLE);
+		setTitle(fileName + " - "
+				+ resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID));
 	}
 
 	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType) {
-		final DocDAO dao = new DocDAO();
 		try {
-			dao.save(doc, filePath, fileType);
+			dataFileAccess.saveProjectFile(doc, filePath, fileType);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
-			showErrorDialog("Failed to save.", e);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		}
-
-		doc.setDataFilePath(filePath);
 
 		paintContext.creasePatternUndo().clearChanged();
 
@@ -536,27 +562,23 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	@SafeVarargs
-	private String saveFile(final String directory, String fileName,
+	private String saveFile(final String directory, final String fileName,
 			final FileAccessSupportFilter<Doc>... filters) {
 
-		if (fileName.isEmpty()) {
-			fileName = "newFile.opx";
-		}
-		File givenFile = new File(directory, fileName);
-
-		var filePath = givenFile.getPath();
-
 		try {
-			final DocDAO dao = new DocDAO();
-			String savedPath = dao.saveUsingGUI(document, filePath, this, filters);
+			var savedPathOpt = dataFileAccess.saveFile(
+					document, directory, fileName, this, filters);
+
+			if (savedPathOpt.isEmpty()) {
+				return document.getDataFilePath();
+			}
+
 			paintContext.creasePatternUndo().clearChanged();
-			return savedPath;
-		} catch (FileChooserCanceledException e) {
-			logger.info("File selection is canceled.");
-			return document.getDataFilePath();
+			return savedPathOpt.get();
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("failed to save", e);
-			showErrorDialog("Failed to save", e);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 			return document.getDataFilePath();
 		}
 	}
@@ -564,17 +586,17 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void saveFileWithModelCheck(final FileTypeKey type) {
 
 		try {
-			final DocDAO dao = new DocDAO();
-			dao.saveUsingGUIWithModelCheck(document, this, filterSelector.getFilter(type));
-
+			dataFileAccess.saveFileWithModelCheck(document, filterSelector.getFilter(type), this);
 		} catch (FileChooserCanceledException e) {
 			logger.info("File selection is canceled.");
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
-			showErrorDialog("Failed to save", e);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		} catch (IllegalArgumentException e) {
 			logger.error("Maybe data is not appropriate.", e);
-			showErrorDialog("Failed to save", e);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		}
 	}
 
@@ -611,7 +633,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuFile.add(menuItemExit);
 	}
 
-	public void updateMenu(final String filePath) {
+	private void updateMenu(final String filePath) {
 
 		if (filterSelector.getLoadableFilterOf(filePath) == null) {
 			return;
@@ -628,56 +650,57 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 *
 	 * @param filePath
 	 */
-	private String openFile(final String filePath) {
+	private String loadFile(final String filePath) {
 		childFrameManager.closeAllChildrenRecursively(this);
 
 		screenSetting.setGridVisible(false);
 
-		DocDAO dao = new DocDAO();
-
 		try {
+			var docOpt = dataFileAccess.loadFile(
+					filePath, filterSelector, fileHistory.getLastPath(), this);
+			if (docOpt.isEmpty()) {
+				return null;
+			}
 			// we can't substitute a loaded object because
 			// the document object is referred by screen and UI panel as a
 			// Holder.
-			if (filePath != null) {
-				document.set(dao.load(filePath));
-			} else {
-				document.set(dao.loadUsingGUI(
-						fileHistory.getLastPath(), filterSelector.getLoadables(),
-						this));
-			}
+			document.set(docOpt.get());
 		} catch (FileVersionError | WrongDataFormatException | IOException e) {
 			logger.error("failed to load", e);
-			showErrorDialog("Failed to load the file", e);
-		} catch (FileChooserCanceledException cancel) {
-			return null;
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
 		}
-
-		setCreasePatternToPaintContext(document.getCreasePattern());
+		paintContextModification
+				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext);
 
 		return document.getDataFilePath();
 
 	}
 
-	private void setCreasePatternToPaintContext(final CreasePatternInterface creasePattern) {
-		paintContext.clear(true);
-		paintContext.setCreasePattern(creasePattern);
-		paintContext.creasePatternUndo().clear();
-		paintContext.updateGrids();
-	}
-
-	private void showErrorDialog(final String title, final Exception ex) {
-		JOptionPane.showMessageDialog(this,
-				ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
-
-	}
-
 	void saveIniFile() {
-		fileHistory.saveToFile(ORIPA.iniFilePath);
+		try {
+			iniFileAccess.save(fileHistory, paintContext);
+		} catch (IllegalStateException e) {
+			logger.error("error when building ini file data", e);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_INI_FAILED_ID), e);
+		}
 	}
 
 	void loadIniFile() {
-		fileHistory.loadFromFile(ORIPA.iniFilePath);
+		var ini = iniFileAccess.load();
+
+		fileHistory.loadFromInitData(ini);
+		screenSetting.setZeroLineWidth(ini.isZeroLineWidth());
+
+		logger.debug("loaded ini.mvLineVisible: " + ini.isMvLineVisible());
+		screenSetting.setMVLineVisible(ini.isMvLineVisible());
+
+		logger.debug("loaded ini.auxLineVisible: " + ini.isAuxLineVisible());
+		screenSetting.setAuxLineVisible(ini.isAuxLineVisible());
+
+		logger.debug("loaded ini.vertexVisible: " + ini.isVertexVisible());
+		screenSetting.setVertexVisible(ini.isVertexVisible());
 	}
 
 	@Override

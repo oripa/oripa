@@ -19,7 +19,7 @@
 package oripa.domain.fold;
 
 import oripa.geom.GeomUtil;
-import oripa.util.collection.AbstractRule;
+import oripa.util.rule.AbstractRule;
 
 /**
  * @author Koji

@@ -16,39 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.controller;
+package oripa.file;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import oripa.domain.paint.PaintContextInterface;
+import java.beans.XMLEncoder;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SelectAllLineActionListener implements ActionListener {
-	private final PaintContextInterface context;
+public class InitDataFileWriter {
+	public void write(final InitData initData, final String filePath) {
+		try (var fos = new FileOutputStream(filePath);
+				var bos = new BufferedOutputStream(fos);
+				var enc = new XMLEncoder(bos);) {
+			enc.writeObject(initData);
 
-	/**
-	 * Constructor
-	 */
-	public SelectAllLineActionListener(final PaintContextInterface context) {
-		this.context = context;
+		} catch (IOException e) {
+		}
 	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void actionPerformed(final ActionEvent e) {
-		context.creasePatternUndo().pushUndoInfo();
-		context.getPainter().selectAllOriLines();
-		context.getCreasePattern().stream()
-				.filter(l -> l.selected).forEach(l -> context.pushLine(l));
-	}
-
 }

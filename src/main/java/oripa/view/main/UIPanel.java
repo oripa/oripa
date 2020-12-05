@@ -169,9 +169,9 @@ public class UIPanel extends JPanel {
 	private final JPanel alterLineTypePanel = new JPanel();
 
 	private final TypeForChange[] alterLine_comboData_from = {
-			TypeForChange.EMPTY, TypeForChange.RIDGE, TypeForChange.VALLEY };
+			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY };
 	private final TypeForChange[] alterLine_comboData_to = {
-			TypeForChange.RIDGE, TypeForChange.VALLEY, TypeForChange.AUX,
+			TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
 			TypeForChange.CUT, TypeForChange.DELETE, TypeForChange.FLIP };
 
 	private final JComboBox<TypeForChange> alterLine_combo_from = new JComboBox<>(
@@ -181,18 +181,13 @@ public class UIPanel extends JPanel {
 
 	private final JCheckBox dispMVLinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MV_ID),
-			true);
+			false);
 	private final JCheckBox dispAuxLinesCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
-			true);
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID));
 	private final JCheckBox dispVertexCheckBox = new JCheckBox(
-			resources
-					.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
-			false);
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID));
 	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL,
-					StringID.UI.FULL_ESTIMATION_ID),
-			false);
+			resources.getString(ResourceKey.LABEL, StringID.UI.FULL_ESTIMATION_ID));
 	private final JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
@@ -639,13 +634,13 @@ public class UIPanel extends JPanel {
 		angleStepCombo.addItemListener(e -> paintContext.setAngleStep((AngleStep) e.getItem()));
 
 		lineTypeMountainButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.RIDGE));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
 
 		lineTypeValleyButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
 
 		lineTypeAuxButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.NONE));
+				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
 
 		editModeInputLineButton
 				.addActionListener(new InputCommandStatePopper(stateManager));
@@ -657,12 +652,10 @@ public class UIPanel extends JPanel {
 
 		zeroLineWidthCheckBox.addActionListener(e -> {
 			mainScreenSetting.setZeroLineWidth(zeroLineWidthCheckBox.isSelected());
-			screenUpdater.updateScreen();
 		});
 
 		dispGridCheckBox.addActionListener(e -> {
 			mainScreenSetting.setGridVisible(dispGridCheckBox.isSelected());
-			screenUpdater.updateScreen();
 		});
 
 		gridSmallButton.addActionListener(e -> makeGridSizeHalf());
@@ -674,27 +667,23 @@ public class UIPanel extends JPanel {
 		textFieldGrid.addActionListener(e -> setGridDivNum());
 
 		dispVertexCheckBox.addActionListener(e -> {
-			paintContext.setVertexVisible(dispVertexCheckBox.isSelected());
-			screenUpdater.updateScreen();
+			logger.debug("vertexVisible at listener: " + dispVertexCheckBox.isSelected());
+			mainScreenSetting.setVertexVisible(dispVertexCheckBox.isSelected());
 		});
-		dispVertexCheckBox.setSelected(true);
-		paintContext.setVertexVisible(true);
 
-		dispMVLinesCheckBox
-				.addActionListener(e -> {
-					paintContext.setMVLineVisible(dispMVLinesCheckBox.isSelected());
-					screenUpdater.updateScreen();
-				});
-		dispAuxLinesCheckBox
-				.addActionListener(e -> {
-					paintContext.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
-					screenUpdater.updateScreen();
-				});
+		dispMVLinesCheckBox.addActionListener(e -> {
+			logger.debug("mvLineVisible at listener: " + dispMVLinesCheckBox.isSelected());
+			mainScreenSetting.setMVLineVisible(dispMVLinesCheckBox.isSelected());
+		});
 
-		doFullEstimationCheckBox
-				.addActionListener(e -> {
-					fullEstimation = doFullEstimationCheckBox.isSelected();
-				});
+		dispAuxLinesCheckBox.addActionListener(e -> {
+			logger.debug("auxLineVisible at listener: " + dispAuxLinesCheckBox.isSelected());
+			mainScreenSetting.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
+		});
+
+		doFullEstimationCheckBox.addActionListener(e -> {
+			fullEstimation = doFullEstimationCheckBox.isSelected();
+		});
 
 		buttonCheckWindow.addActionListener(e -> showCheckerWindow(paintContext));
 
@@ -769,8 +758,11 @@ public class UIPanel extends JPanel {
 
 			} else if (foldableModelCount == 0) {
 				JOptionPane.showMessageDialog(
-						null, "No answer was found", "ORIPA",
-						JOptionPane.DEFAULT_OPTION);
+						this,
+						resources.getString(ResourceKey.INFO, StringID.Information.NO_ANSWER_ID),
+						resources.getString(ResourceKey.INFO,
+								StringID.Information.FOLD_ALGORITHM_TITLE_ID),
+						JOptionPane.INFORMATION_MESSAGE);
 			} else if (foldableModelCount > 0) {
 				logger.info("foldable layer layout is found.");
 
@@ -800,16 +792,23 @@ public class UIPanel extends JPanel {
 		OrigamiModel origamiModel = modelFactory.createOrigamiModel(
 				creasePattern, creasePattern.getPaperSize());
 
+		logger.debug("Building origami model.");
+
 		if (origamiModel.isProbablyFoldable()) {
+			logger.debug("No modification is needed.");
 			return origamiModel;
 		}
 
 		// ask if ORIPA should try to remove duplication.
 		if (JOptionPane.showConfirmDialog(
-				this, resources.getString(
+				this,
+				resources.getString(
 						ResourceKey.WARNING,
 						StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
-				"Failed", JOptionPane.YES_NO_OPTION,
+				resources.getString(
+						ResourceKey.WARNING,
+						StringID.Warning.FAILED_TITLE_ID),
+				JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
 			// the answer is "no."
 			return origamiModel;
@@ -818,8 +817,11 @@ public class UIPanel extends JPanel {
 		// clean up the crease pattern
 		if (creasePattern.cleanDuplicatedLines()) {
 			JOptionPane.showMessageDialog(
-					this, "Removing multiples edges with the same position ",
-					"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
+					this,
+					resources.getString(ResourceKey.INFO, StringID.Information.SIMPLIFYING_CP_ID),
+					resources.getString(ResourceKey.INFO,
+							StringID.Information.SIMPLIFYING_CP_TITLE_ID),
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 		// re-create the model data for simplified crease pattern
 		origamiModel = modelFactory
@@ -835,8 +837,10 @@ public class UIPanel extends JPanel {
 				resources.getString(
 						ResourceKey.WARNING,
 						StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID),
-				"Failed Level1",
-				JOptionPane.INFORMATION_MESSAGE);
+				resources.getString(
+						ResourceKey.WARNING,
+						StringID.Warning.FAILED_TITLE_ID),
+				JOptionPane.WARNING_MESSAGE);
 
 		return origamiModel;
 	}
@@ -851,6 +855,24 @@ public class UIPanel extends JPanel {
 				MainScreenSetting.GRID_VISIBLE, e -> {
 					dispGridCheckBox.setSelected((boolean) e.getNewValue());
 					repaint();
+				});
+
+		mainScreenSetting.addPropertyChangeListener(
+				MainScreenSetting.VERTEX_VISIBLE, e -> {
+					logger.debug("vertexVisible property change: " + e.getNewValue());
+					dispVertexCheckBox.setSelected((boolean) e.getNewValue());
+				});
+
+		mainScreenSetting.addPropertyChangeListener(
+				MainScreenSetting.MV_LINE_VISIBLE, e -> {
+					logger.debug("mvLineVisible property change: " + e.getNewValue());
+					dispMVLinesCheckBox.setSelected((boolean) e.getNewValue());
+				});
+
+		mainScreenSetting.addPropertyChangeListener(
+				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
+					logger.debug("auxLineVisible property change: " + e.getNewValue());
+					dispAuxLinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
 		valueSetting.addPropertyChangeListener(

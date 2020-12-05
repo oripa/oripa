@@ -16,34 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.collection;
+package oripa.resource;
 
-import java.util.Collection;
+import java.util.ListResourceBundle;
 
 /**
- * @author Koji
+ * default values
+ *
+ * @author OUCHI Koji
  *
  */
-public class ConjunctionLoop<Variable> extends AbstractRule<Collection<Variable>> {
+public class DefaultStringResource_en extends ListResourceBundle {
 
-	private final Rule<Variable> term;
-
-	/**
-	 *
-	 * @param term
-	 */
-	public ConjunctionLoop(final Rule<Variable> term) {
-		this.term = term;
-	}
+	static final Object[][] strings = {
+			{ StringID.Default.FILE_NAME_ID, "NoTitle" },
+	};
 
 	@Override
-	public boolean holds(final Collection<Variable> inputs) {
-		return inputs.stream().allMatch(input -> term.holds(input));
-	}
-
-	public Collection<Variable> findViolations(final Collection<Variable> inputs) {
-		CollectionFilter<Variable> filter = new CollectionFilter<>(term);
-
-		return filter.findViolations(inputs);
+	protected Object[][] getContents() {
+		return strings;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,9 +18,13 @@
  */
 package oripa.domain.fold;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
-import oripa.util.collection.ConjunctionLoop;
+import oripa.util.rule.Rule;
+import oripa.util.rule.SingleRuleConjunction;
 
 /**
  * @author Koji
@@ -28,54 +32,64 @@ import oripa.util.collection.ConjunctionLoop;
  */
 public class FoldabilityChecker {
 
-	public boolean modelIsProbablyFoldable(Collection<OriVertex> vertices, Collection<OriFace> faces) {
+	private enum VertexRule {
+		MAEKAWA(new MaekawaTheorem(), "Maekawa"), KAWASAKI(new KawasakiTheorem(),
+				"Kawasaki"), BIG_LITTLE_BIG(new BigLittleBigLemma(),
+						"Big-little-big"), GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma(),
+								"gen. Big-little-big");
 
-		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
-				new MaekawaTheorem());
-		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
-				new KawasakiTheorem());
-		
-		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
-				new FaceIsConvex());
+		private final Rule<OriVertex> rule;
+		private final String name;
+		private final SingleRuleConjunction<OriVertex> conjunction;
 
-		return maekawaConjunction.holds(vertices) &&
-				kawasakiConjunction.holds(vertices) &&
+		private VertexRule(final Rule<OriVertex> rule, final String name) {
+			this.rule = rule;
+			this.name = name;
+			conjunction = new SingleRuleConjunction<>(rule);
+		}
+
+		public Rule<OriVertex> getRule() {
+			return rule;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public SingleRuleConjunction<OriVertex> getConjunction() {
+			return conjunction;
+		}
+	}
+
+	private final SingleRuleConjunction<OriFace> convexRuleConjunction = new SingleRuleConjunction<>(
+			new FaceIsConvex());
+
+	public boolean modelIsProbablyFoldable(final Collection<OriVertex> vertices,
+			final Collection<OriFace> faces) {
+
+		return Arrays.asList(VertexRule.values()).stream()
+				.allMatch(rule -> rule.getConjunction().holds(vertices)) &&
 				convexRuleConjunction.holds(faces);
 	}
 
-	public Collection<OriVertex> findViolatingVertices(Collection<OriVertex> vertices) {
-		//--------
-		// test Maekawa's theorem
+	public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
+		var violatingVertices = new HashSet<OriVertex>();
 
-		ConjunctionLoop<OriVertex> maekawaConjunction = new ConjunctionLoop<>(
-				new MaekawaTheorem());
-
-		//--------
-		// test Kawasaki's theorem
-
-		ConjunctionLoop<OriVertex> kawasakiConjunction = new ConjunctionLoop<>(
-				new KawasakiTheorem());
-
-		Collection<OriVertex> violatingVertices =
-				maekawaConjunction.findViolations(vertices);
-
-		violatingVertices.addAll(
-				kawasakiConjunction.findViolations(vertices));
-		
+		Arrays.asList(VertexRule.values())
+				.forEach(rule -> violatingVertices
+						.addAll(rule.getConjunction().findViolations(vertices)));
 
 		return violatingVertices;
 	}
 
+	public Collection<String> getVertexViolationNames(final OriVertex vertex) {
+		return Arrays.asList(VertexRule.values()).stream()
+				.filter(rule -> rule.getRule().violates(vertex))
+				.map(rule -> rule.getName())
+				.collect(Collectors.toList());
+	}
 
-	public Collection<OriFace> findViolatingFaces(Collection<OriFace> faces) {
-		//--------
-		// test convex-face condition
-		
-		ConjunctionLoop<OriFace> convexRuleConjunction = new ConjunctionLoop<>(
-				new FaceIsConvex());
-
-		Collection<OriFace> violatingFaces = convexRuleConjunction.findViolations(faces);
-
-		return violatingFaces;
+	public Collection<OriFace> findViolatingFaces(final Collection<OriFace> faces) {
+		return convexRuleConjunction.findViolations(faces);
 	}
 }

@@ -30,17 +30,18 @@ public class ExporterCP implements DocExporter {
 	@Override
 	public boolean export(final Doc doc, final String filepath)
 			throws IOException, IllegalArgumentException {
-		FileWriter fw = new FileWriter(filepath);
-		BufferedWriter bw = new BufferedWriter(fw);
+		try (var fw = new FileWriter(filepath);
+				var bw = new BufferedWriter(fw);) {
 
-		for (OriLine line : doc.getCreasePattern()) {
-			if (line.getType() == OriLine.Type.NONE) {
-				continue;
+			for (OriLine line : doc.getCreasePattern()) {
+				if (line.isAux()) {
+					continue;
+				}
+				bw.write(
+						line.getType().toInt() + " " + line.p0.x + " " + line.p0.y + " " + line.p1.x
+								+ " " + line.p1.y + "\n");
 			}
-			bw.write(line.getType().toInt() + " " + line.p0.x + " " + line.p0.y + " " + line.p1.x
-					+ " " + line.p1.y + "\n");
 		}
-		bw.close();
 
 		return true;
 	}

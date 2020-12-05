@@ -269,17 +269,22 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				if (MouseUtility.isRightButtonDown(e)) {
-					action.onRightClick(
-							paintContext, affineTransform,
-							MouseUtility.isControlKeyDown(e));
+				try {
+					if (MouseUtility.isRightButtonDown(e)) {
+						action.onRightClick(
+								paintContext, affineTransform,
+								MouseUtility.isControlKeyDown(e));
 
+						return null;
+					}
+
+					mouseActionHolder.setMouseAction(action.onLeftClick(
+							paintContext,
+							MouseUtility.isControlKeyDown(e)));
 					return null;
+				} catch (Exception e) {
+					logger.error("error on mouse click", e);
 				}
-
-				mouseActionHolder.setMouseAction(action.onLeftClick(
-						paintContext,
-						MouseUtility.isControlKeyDown(e)));
 				return null;
 			}
 
@@ -425,6 +430,24 @@ public class PainterScreen extends JPanel
 		setting.addPropertyChangeListener(
 				MainScreenSetting.ZERO_LINE_WIDTH, e -> {
 					paintContext.setZeroLineWidth((boolean) e.getNewValue());
+					repaint();
+				});
+
+		setting.addPropertyChangeListener(
+				MainScreenSetting.VERTEX_VISIBLE, e -> {
+					paintContext.setVertexVisible((boolean) e.getNewValue());
+					repaint();
+				});
+
+		setting.addPropertyChangeListener(
+				MainScreenSetting.MV_LINE_VISIBLE, e -> {
+					paintContext.setMVLineVisible((boolean) e.getNewValue());
+					repaint();
+				});
+
+		setting.addPropertyChangeListener(
+				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
+					paintContext.setAuxLineVisible((boolean) e.getNewValue());
 					repaint();
 				});
 

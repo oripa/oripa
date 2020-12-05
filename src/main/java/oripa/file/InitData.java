@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,18 @@
 package oripa.file;
 
 public class InitData {
-	public String lastUsedFile = "";
+	public String lastUsedFile = ""; // dead property
 	public String[] MRUFiles;
+
+	private boolean zeroLineWidth = false;
+	private boolean mvLineVisible = true;
+	private boolean auxLineVisible = true;
+	private boolean vertexVisible = true;
 
 	public InitData() {
 	}
 
-	public void setMRUFiles(String[] s) {
+	public void setMRUFiles(final String[] s) {
 		MRUFiles = s;
 	}
 
@@ -33,22 +38,65 @@ public class InitData {
 		return MRUFiles;
 	}
 
-	public void setLastUsedFile(String s) {
+	public void setLastUsedFile(final String s) {
 		lastUsedFile = s;
 	}
 
 	public String getLastUsedFile() {
-		if (MRUFiles != null) {
-			if (MRUFiles.length > 0) {
-				if (lastUsedFile == null) {
-					lastUsedFile = MRUFiles[0];
-				}
-				else if (lastUsedFile == "") {
-					lastUsedFile = MRUFiles[0];
-
-				}
-			}
-		}
 		return lastUsedFile;
 	}
+
+	public void setZeroLineWidth(final boolean zeroLineWidth) {
+		this.zeroLineWidth = zeroLineWidth;
+	}
+
+	public boolean isZeroLineWidth() {
+		return zeroLineWidth;
+	}
+
+	/**
+	 * @return mvLineVisible
+	 */
+	public boolean isMvLineVisible() {
+		return mvLineVisible;
+	}
+
+	/**
+	 * @param mvLineVisible
+	 *            Sets mvLineVisible
+	 */
+	public void setMvLineVisible(final boolean mvLineVisible) {
+		this.mvLineVisible = mvLineVisible;
+	}
+
+	/**
+	 * @return auxLineVisible
+	 */
+	public boolean isAuxLineVisible() {
+		return auxLineVisible;
+	}
+
+	/**
+	 * @param auxLineVisible
+	 *            Sets auxLineVisible
+	 */
+	public void setAuxLineVisible(final boolean auxLineVisible) {
+		this.auxLineVisible = auxLineVisible;
+	}
+
+	/**
+	 * @return vertexVisible
+	 */
+	public boolean isVertexVisible() {
+		return vertexVisible;
+	}
+
+	/**
+	 * @param vertexVisible
+	 *            Sets vertexVisible
+	 */
+	public void setVertexVisible(final boolean vertexVisible) {
+		this.vertexVisible = vertexVisible;
+	}
+
 }

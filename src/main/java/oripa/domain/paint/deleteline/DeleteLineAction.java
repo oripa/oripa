@@ -43,13 +43,12 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
 			final PaintContextInterface context) {
 
-		if (selectedLines.isEmpty() == false) {
-			context.creasePatternUndo().pushUndoInfo();
-			Painter painter = context.getPainter();
-			for (OriLine l : selectedLines) {
-				painter.removeLine(l);
-			}
+		if (selectedLines.isEmpty()) {
+			return;
 		}
+		context.creasePatternUndo().pushUndoInfo();
+		Painter painter = context.getPainter();
+		painter.removeLines(selectedLines);
 	}
 
 }

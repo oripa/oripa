@@ -22,6 +22,8 @@ import java.util.ArrayList;
 
 import javax.vecmath.Vector2d;
 
+import oripa.util.collection.CollectionUtil;
+
 public class OriVertex {
 
 	/**
@@ -82,8 +84,15 @@ public class OriVertex {
 	}
 
 	public OriEdge getPrevEdge(final OriEdge e) {
-		int index = edges.lastIndexOf(e);
-		int eNum = edges.size();
-		return edges.get((index - 1 + eNum) % eNum);
+		return getEdge(edges.lastIndexOf(e) - 1);
 	}
+
+	public OriEdge getEdge(final int index) {
+		return CollectionUtil.getCircular(edges, index);
+	}
+
+	public OriVertex getOppositeVertex(final int index) {
+		return getEdge(index).oppositeVertex(this);
+	}
+
 }

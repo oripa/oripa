@@ -4,7 +4,7 @@ import java.util.ListResourceBundle;
 
 public class LabelStringResource_en extends ListResourceBundle {
 
-	static final Object[][] strings = {
+	private static final Object[][] strings = {
 			{ StringID.Main.TITLE_ID, "ORIPA " + Version.ORIPA_VERSION },
 			{ StringID.Main.FILE_ID, "File" },
 			{ StringID.Main.EDIT_ID, "Edit" },
@@ -14,13 +14,21 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.Main.SAVE_ID, "Save" },
 			{ StringID.Main.SAVE_AS_ID, "Save As ..." },
 			{ StringID.Main.SAVE_AS_IMAGE_ID, "Save As Image ..." },
-			{ StringID.Main.EXPORT_DXF_ID, "Export (DXF)" },
+
+			{ StringID.Main.EXPORT_FOLD_ID, "Export FOLD" },
+			{ StringID.Main.EXPORT_CP_ID, "Export CP" },
+			{ StringID.Main.EXPORT_DXF_ID, "Export DXF" },
+			{ StringID.Main.EXPORT_SVG_ID, "Export SVG" },
+
 			{ StringID.Main.PROPERTY_ID, "Property" },
 			{ StringID.Main.EXIT_ID, "Exit" },
 			{ StringID.Main.ABOUT_ID, "About" },
 			{ StringID.Main.UNDO_ID, "Undo" },
 			{ StringID.Main.REDO_ID, "Redo" },
-			{ StringID.Main.SELECT_ALL_ID, "Select all" },
+			{ StringID.Main.ARRAY_COPY_ID, "Array Copy" },
+			{ StringID.Main.CIRCLE_COPY_ID, "Circle Copy" },
+			{ StringID.Main.UNSELECT_ALL_ID, "Unselect All" },
+			{ StringID.Main.DELETE_SELECTED_ID, "Delete Selected Lines" },
 
 			{ StringID.UI.ZERO_LINE_WIDTH_ID, "Zero line width" },
 			{ StringID.UI.AUX_ID, "Aux" },

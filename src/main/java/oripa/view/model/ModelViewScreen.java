@@ -20,7 +20,6 @@ package oripa.view.model;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -62,13 +61,10 @@ public class ModelViewScreen extends JPanel
 	private Image bufferImage = null;
 	private Graphics2D bufferg = null;
 	private Point2D preMousePoint; // Screen coordinates
-	private final Point2D.Double currentMousePointLogic = new Point2D.Double(); // Logical
-																				// coordinates
 	private double scale = 1;
 	private double transX = 0;
 	private double transY = 0;
 	private final Vector2d modelCenter = new Vector2d();
-	private Dimension preSize;
 	private double rotateAngle = 0;
 	private final AffineTransform affineTransform = new AffineTransform();
 
@@ -102,8 +98,6 @@ public class ModelViewScreen extends JPanel
 		scale = 1.0;
 		rotateAngle = 0;
 		setBackground(Color.white);
-
-		preSize = getSize();
 
 		addPropertyChangeListenersToSetting();
 	}
@@ -330,20 +324,10 @@ public class ModelViewScreen extends JPanel
 			updateAffineTransform();
 			repaint();
 		}
-
-		// Gets the value of the current logical coordinates of the mouse
-		try {
-			affineTransform.inverseTransform(e.getPoint(), currentMousePointLogic);
-		} catch (Exception ex) {
-		}
 	}
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		try {
-			affineTransform.inverseTransform(e.getPoint(), currentMousePointLogic);
-		} catch (Exception ex) {
-		}
 	}
 
 	@Override
@@ -361,7 +345,7 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void componentResized(final ComponentEvent arg0) {
-		preSize = getSize();
+		var preSize = getSize();
 
 		transX = transX - preSize.width * 0.5 + getWidth() * 0.5;
 		transY = transY - preSize.height * 0.5 + getHeight() * 0.5;

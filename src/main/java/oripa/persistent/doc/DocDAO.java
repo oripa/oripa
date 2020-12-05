@@ -67,19 +67,23 @@ public class DocDAO {
 		CreasePatternInterface creasePattern = doc.getCreasePattern();
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		var origamiModel = modelFactory.buildOrigami(creasePattern,
-				creasePattern.getPaperSize());
+		var origamiModel = modelFactory.createOrigamiModel(
+				creasePattern, creasePattern.getPaperSize());
 		doc.setOrigamiModel(origamiModel);
 
 		if (filter.getTargetType().equals(FileTypeKey.OBJ_MODEL)) {
 
 		} else if (!origamiModel.isProbablyFoldable()) {
 
-			JOptionPane.showConfirmDialog(null,
+			var selection = JOptionPane.showConfirmDialog(null,
 					"Warning: Building a set of polygons from crease pattern "
 							+ "was failed.",
-					"Warning", JOptionPane.OK_OPTION,
+					"Warning", JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.WARNING_MESSAGE);
+
+			if (selection == JOptionPane.CANCEL_OPTION) {
+				return;
+			}
 		}
 
 		saveUsingGUI(doc, null, owner, filter);

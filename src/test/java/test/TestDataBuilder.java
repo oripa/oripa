@@ -28,24 +28,24 @@ public class TestDataBuilder {
 		final int DIV_NUM = 100;
 		for (int i = 0; i < DIV_NUM; i++) {
 			double x = (SIZE / DIV_NUM) * i + LEFT;
-			OriLine line = new OriLine(x, TOP, x, BOTTOM, OriLine.Type.RIDGE);
+			OriLine line = new OriLine(x, TOP, x, BOTTOM, OriLine.Type.MOUNTAIN);
 			painter.addLine(line);
 		}
 
 		for (int i = 0; i < DIV_NUM; i++) {
 			double y = (SIZE / DIV_NUM) * i + TOP;
-			OriLine line = new OriLine(LEFT, y, RIGHT, y, OriLine.Type.RIDGE);
+			OriLine line = new OriLine(LEFT, y, RIGHT, y, OriLine.Type.MOUNTAIN);
 			painter.addLine(line);
 		}
 
 		for (int i = 0; i < DIV_NUM; i++) {
 			double p = (SIZE / DIV_NUM) * i;
 			OriLine line = new OriLine(LEFT + p, TOP,
-					RIGHT, BOTTOM - p, OriLine.Type.RIDGE);
+					RIGHT, BOTTOM - p, OriLine.Type.MOUNTAIN);
 			painter.addLine(line);
 
 			line = new OriLine(LEFT, TOP + p,
-					RIGHT - p, BOTTOM, OriLine.Type.RIDGE);
+					RIGHT - p, BOTTOM, OriLine.Type.MOUNTAIN);
 			painter.addLine(line);
 
 		}

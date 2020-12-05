@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -50,9 +51,12 @@ import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OriVertex;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
+import oripa.domain.paint.geometry.NearestVertexFinder;
 import oripa.domain.paint.util.ElementSelector;
 import oripa.geom.RectangleDomain;
 import oripa.util.gui.AffineCamera;
+import oripa.util.gui.MouseUtility;
+import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 /**
@@ -67,7 +71,6 @@ public class FoldabilityScreen extends JPanel
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
-	private Graphics2D bufferg;
 
 	private final AffineCamera camera = new AffineCamera();
 
@@ -84,6 +87,7 @@ public class FoldabilityScreen extends JPanel
 	private Point2D preMousePoint; // Screen coordinates
 
 	private final ElementSelector selector = new ElementSelector();
+	private boolean zeroLineWidth = false;
 
 	FoldabilityScreen() {
 
@@ -99,10 +103,12 @@ public class FoldabilityScreen extends JPanel
 		popup.add(popupItem_FlipFace);
 	}
 
+	private final FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 	private Collection<OriVertex> violatingVertices = new ArrayList<>();
 	private Collection<OriFace> violatingFaces = new ArrayList<>();
+	private OriVertex pickedViolatingVertex;
+
 	private Collection<OriLine> overlappingLines = new ArrayList<>();
-	private boolean zeroLineWidth = false;
 
 	public void showModel(
 			final OrigamiModel origamiModel,
@@ -112,7 +118,6 @@ public class FoldabilityScreen extends JPanel
 		this.creasePattern = creasePattern;
 		this.zeroLineWidth = zeroLineWidth;
 
-		FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 		violatingVertices = foldabilityChecker.findViolatingVertices(
 				origamiModel.getVertices());
 
@@ -137,7 +142,11 @@ public class FoldabilityScreen extends JPanel
 		List<OriVertex> vertices = origamiModel.getVertices();
 
 		for (OriFace face : faces) {
-			g2d.setColor(new Color(255, 210, 210));
+			if (violatingFaces.contains(face)) {
+				g2d.setColor(Color.MAGENTA);
+			} else {
+				g2d.setColor(new Color(255, 210, 210));
+			}
 			g2d.fill(face.preOutline);
 		}
 
@@ -198,8 +207,6 @@ public class FoldabilityScreen extends JPanel
 
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
-		bufferg = (Graphics2D) bufferImage.getGraphics();
-
 		affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
 	}
 
@@ -210,6 +217,7 @@ public class FoldabilityScreen extends JPanel
 		if (bufferImage == null) {
 			buildBufferImage();
 		}
+		var bufferg = (Graphics2D) bufferImage.getGraphics();
 
 		bufferg.setTransform(new AffineTransform());
 
@@ -235,6 +243,8 @@ public class FoldabilityScreen extends JPanel
 		drawFoldability(g2d);
 
 		g.drawImage(bufferImage, 0, 0, this);
+
+		drawVertexViolationNames((Graphics2D) g);
 	}
 
 	private void highlightOverlappingLines(final Graphics2D g2d) {
@@ -244,6 +254,17 @@ public class FoldabilityScreen extends JPanel
 
 			g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
 		}
+	}
+
+	private void drawVertexViolationNames(final Graphics2D g2d) {
+		if (pickedViolatingVertex == null) {
+			return;
+		}
+
+		g2d.setColor(Color.BLACK);
+		var violationNames = foldabilityChecker.getVertexViolationNames(pickedViolatingVertex);
+
+		g2d.drawString("error(s): " + String.join(", ", violationNames), 0, 10);
 	}
 
 	@Override
@@ -346,7 +367,27 @@ public class FoldabilityScreen extends JPanel
 	 */
 	@Override
 	public void mouseMoved(final MouseEvent e) {
+		var logicalPoint = MouseUtility.getLogicalPoint(affineTransform, e.getPoint());
 
+		var nearest = NearestVertexFinder.findNearestVertex(
+				logicalPoint,
+				violatingVertices.stream().map(v -> v.preP).collect(Collectors.toList()));
+
+		if (nearest.distance >= scaleDistanceThreshold()) {
+			pickedViolatingVertex = null;
+			repaint();
+			return;
+		}
+
+		pickedViolatingVertex = violatingVertices.stream()
+				.filter(vertex -> vertex.preP.equals(nearest.point))
+				.findFirst().get();
+
+		repaint();
+	}
+
+	private double scaleDistanceThreshold() {
+		return CalculationResource.CLOSE_THRESHOLD / camera.getScale();
 	}
 
 	@Override

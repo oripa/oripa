@@ -43,34 +43,33 @@ public class OrigamiModelExporterOBJ implements Exporter<OrigamiModel> {
 		List<OriVertex> vertices = origamiModel.getVertices();
 		List<OriEdge> edges = origamiModel.getEdges();
 
-		FileWriter fw = new FileWriter(filePath);
-		BufferedWriter bw = new BufferedWriter(fw);
+		try (var fw = new FileWriter(filePath);
+				var bw = new BufferedWriter(fw);) {
 
-		// Align the center of the model, combine scales
-		bw.write("# Created by ORIPA\n");
-		bw.write("\n");
-
-		int id = 1;
-		for (OriVertex vertex : vertices) {
-			bw.write("v " + vertex.p.x + " " + vertex.p.y + " 0.0\n");
-			vertex.tmpInt = id;
-			id++;
-		}
-
-		for (OriFace face : faces) {
-			bw.write("f");
-			for (OriHalfedge he : face.halfedges) {
-				bw.write(" " + he.vertex.tmpInt);
-			}
+			// Align the center of the model, combine scales
+			bw.write("# Created by ORIPA\n");
 			bw.write("\n");
-		}
 
-		for (OriEdge edge : edges) {
-			bw.write("e " + edge.sv.tmpInt + " " + edge.ev.tmpInt + " "
-					+ edge.type + " 180\n");
-		}
+			int id = 1;
+			for (OriVertex vertex : vertices) {
+				bw.write("v " + vertex.p.x + " " + vertex.p.y + " 0.0\n");
+				vertex.tmpInt = id;
+				id++;
+			}
 
-		bw.close();
+			for (OriFace face : faces) {
+				bw.write("f");
+				for (OriHalfedge he : face.halfedges) {
+					bw.write(" " + he.vertex.tmpInt);
+				}
+				bw.write("\n");
+			}
+
+			for (OriEdge edge : edges) {
+				bw.write("e " + edge.sv.tmpInt + " " + edge.ev.tmpInt + " "
+						+ edge.type + " 180\n");
+			}
+		}
 
 		return true;
 

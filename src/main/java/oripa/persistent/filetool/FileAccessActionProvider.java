@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -22,7 +22,7 @@ import java.awt.Component;
 
 /**
  * @author Koji
- * 
+ *
  * @param <Data>
  */
 public interface FileAccessActionProvider<Data> {
@@ -31,12 +31,12 @@ public interface FileAccessActionProvider<Data> {
 	 * Opens chooser dialog and return saver object for the chosen file. throws
 	 * {@link IllegalArgumentException} if user selected a file which has a
 	 * extension not supported by the selected filter.
-	 * 
+	 *
 	 * @param parent
 	 *            parent GUI component
-	 * 
+	 *
 	 * @throws FileChooserCanceledException
-	 *             when user canceled save.
+	 *             when user canceled saving.
 	 * @return saver object.
 	 */
 	public abstract AbstractSavingAction<Data> getActionForSavingFile(
@@ -45,13 +45,13 @@ public interface FileAccessActionProvider<Data> {
 
 	/**
 	 * Opens chooser dialog and returns loader object for the chosen file.
-	 * 
+	 *
 	 * @param parent
 	 *            parent GUI component
-	 * 
+	 *
 	 * @return loader object.
 	 * @throws FileChooserCanceledException
-	 *             when user canceled save.
+	 *             when user canceled loading.
 	 */
 	public abstract AbstractLoadingAction<Data> getActionForLoadingFile(
 			Component parent) throws FileChooserCanceledException;

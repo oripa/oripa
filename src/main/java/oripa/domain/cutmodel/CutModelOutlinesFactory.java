@@ -44,7 +44,7 @@ public class CutModelOutlinesFactory {
 
 		for (OriHalfedge he : face.halfedges) {
 			OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
-					he.next.positionForDisplay.x, he.next.positionForDisplay.y, OriLine.Type.NONE);
+					he.next.positionForDisplay.x, he.next.positionForDisplay.y, OriLine.Type.AUX);
 
 			double params[] = new double[2];
 			boolean res = getCrossPointParam(cutLine.p0, cutLine.p1, l.p0, l.p1, params);

@@ -16,43 +16,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.controller;
+package oripa.resource;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
+import java.util.ListResourceBundle;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class UnselectAllLinesActionListener implements ActionListener {
-	private final PaintContextInterface context;
-	private final ScreenUpdaterInterface screenUpdater;
+public class InformationStringResource_en extends ListResourceBundle {
 
-	/**
-	 * Constructor
-	 */
-	public UnselectAllLinesActionListener(final PaintContextInterface aContext,
-			final ScreenUpdaterInterface updater) {
-		context = aContext;
-		screenUpdater = updater;
-	}
+	private static final Object[][] strings = {
+			{ StringID.Information.SIMPLIFYING_CP_ID,
+					"edge duplications with the same position are removed." },
+			{ StringID.Information.NO_ANSWER_ID,
+					"No answer was found." },
 
-	/*
-	 * (non Javadoc)
-	 * 
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
+			{ StringID.Information.SIMPLIFYING_CP_TITLE_ID,
+					"Simplifying CP" },
+			{ StringID.Information.FOLD_ALGORITHM_TITLE_ID,
+					"Fold algorithm" },
+	};
+
 	@Override
-	public void actionPerformed(final ActionEvent e) {
-		context.getPainter().resetSelectedOriLines();
-		context.clear(false);
-		screenUpdater.updateScreen();
-
+	protected Object[][] getContents() {
+		return strings;
 	}
-
 }

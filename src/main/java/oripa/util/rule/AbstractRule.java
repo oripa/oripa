@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,9 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.collection;
-
-
+package oripa.util.rule;
 
 /**
  * @author Koji
@@ -28,48 +26,55 @@ public abstract class AbstractRule<Variable> implements Rule<Variable> {
 
 	private class Denied implements Rule<Variable> {
 		Rule<Variable> rule;
-		
+
 		/**
 		 * Constructor
 		 */
-		public Denied(Rule<Variable> rule) {
+		public Denied(final Rule<Variable> rule) {
 			this.rule = rule;
 		}
 
-		/* (non Javadoc)
+		/*
+		 * (non Javadoc)
+		 *
 		 * @see oripa.domain.fold.rule.Rule#asDenied()
 		 */
 		@Override
 		public Rule<Variable> asDenied() {
 			return rule;
 		}
-	
-		/* (non Javadoc)
+
+		/*
+		 * (non Javadoc)
+		 *
 		 * @see oripa.domain.fold.rule.Rule#holds(java.lang.Object)
 		 */
 		@Override
-		public boolean holds(Variable var) {
+		public boolean holds(final Variable var) {
 			return rule.violates(var);
 		}
 
-		/* (non Javadoc)
+		/*
+		 * (non Javadoc)
+		 *
 		 * @see oripa.domain.fold.rule.Rule#violates(java.lang.Object)
 		 */
 		@Override
-		public boolean violates(Variable var) {
+		public boolean violates(final Variable var) {
 			return rule.holds(var);
 		}
 	}
 
-	private Denied deniedRule = new Denied(this);
+	private final Denied deniedRule = new Denied(this);
 
 	@Override
-	public boolean violates(Variable var) {
+	public boolean violates(final Variable var) {
 		return holds(var) == false;
 	}
 
-
-	/* (non Javadoc)
+	/*
+	 * (non Javadoc)
+	 *
 	 * @see oripa.domain.fold.rule.Rule#asDenied()
 	 */
 	@Override

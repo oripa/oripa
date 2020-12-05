@@ -1,25 +1,16 @@
 package oripa.domain.fold;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
 public class FolderTool {
 
 	public BoundBox calcFoldedBoundingBox(final List<OriFace> faces) {
-		Vector2d foldedBBoxLT = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-		Vector2d foldedBBoxRB = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-
-		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
-				foldedBBoxLT.x = Math.min(foldedBBoxLT.x, he.tmpVec.x);
-				foldedBBoxLT.y = Math.min(foldedBBoxLT.y, he.tmpVec.y);
-				foldedBBoxRB.x = Math.max(foldedBBoxRB.x, he.tmpVec.x);
-				foldedBBoxRB.y = Math.max(foldedBBoxRB.y, he.tmpVec.y);
-			}
-		}
-
-		return new BoundBox(foldedBBoxLT, foldedBBoxRB);
+		return new BoundBox(faces.stream()
+				.flatMap(face -> face.halfedges.stream().map(he -> he.tmpVec))
+				.collect(Collectors.toList()));
 	}
 
 	public void setFacesOutline(

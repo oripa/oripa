@@ -54,8 +54,9 @@ public class ExporterSVGFactory {
 
 			double scale = size / paperSize;
 			double center = size / 2;
-			FileWriter fw = new FileWriter(filepath);
-			try (BufferedWriter bw = new BufferedWriter(fw)) {
+
+			try (var fw = new FileWriter(filepath);
+					var bw = new BufferedWriter(fw);) {
 				bw.write(head);
 				for (OriLine line : creasePattern) {
 					bw.write(" <line style=\"");
@@ -64,7 +65,7 @@ public class ExporterSVGFactory {
 					case CUT:
 						style = "stroke:black;stroke-width:4;";
 						break;
-					case RIDGE:
+					case MOUNTAIN:
 						style = "stroke:red;stroke-width:2;";
 						break;
 					case VALLEY:
@@ -110,8 +111,9 @@ public class ExporterSVGFactory {
 
 			double scale = (size - 5) / paperSize;
 			double center = size / 2;
-			FileWriter fw = new FileWriter(filepath);
-			try (BufferedWriter bw = new BufferedWriter(fw)) {
+
+			try (var fw = new FileWriter(filepath);
+					var bw = new BufferedWriter(fw);) {
 				Vector2d maxV = new Vector2d(-Double.MAX_VALUE,
 						-Double.MAX_VALUE);
 				Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);

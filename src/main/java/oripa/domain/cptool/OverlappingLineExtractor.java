@@ -20,6 +20,7 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -71,5 +72,18 @@ public class OverlappingLineExtractor {
 		}
 
 		return overlappingLines;
+	}
+
+	/**
+	 *
+	 * @param lines
+	 * @param target
+	 * @return overlapping lines of {@code target}. {@code target} is not
+	 *         contained.
+	 */
+	public Collection<OriLine> extract(final Collection<OriLine> lines, final OriLine target) {
+		return lines.stream()
+				.filter(l -> isOverlap(l, target) && !l.equals(target))
+				.collect(Collectors.toList());
 	}
 }

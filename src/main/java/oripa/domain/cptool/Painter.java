@@ -114,7 +114,7 @@ public class Painter {
 	}
 
 	/**
-	 * remove given line from the collection.
+	 * remove given line from the crease pattern.
 	 *
 	 * @param l
 	 */
@@ -126,7 +126,19 @@ public class Painter {
 	}
 
 	/**
-	 * remove given vertex from the collection.
+	 * remove all given lines from the crease pattern.
+	 *
+	 * @param lines
+	 */
+	public void removeLines(
+			final Collection<OriLine> lines) {
+
+		ElementRemover remover = new ElementRemover();
+		remover.removeLines(lines, creasePattern);
+	}
+
+	/**
+	 * remove given vertex from the crease pattern.
 	 *
 	 * @param v
 	 */

@@ -42,7 +42,7 @@ public class OrigamiModelFactory {
 	 * @return A model data converted from crease pattern.
 	 */
 	// TODO: change as: throw error if creation failed.
-	public OrigamiModel buildOrigami(
+	OrigamiModel buildOrigami(
 			final Collection<OriLine> creasePattern, final double paperSize) {
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
@@ -55,7 +55,7 @@ public class OrigamiModelFactory {
 		List<OriLine> precreases = new ArrayList<>();
 
 		for (OriLine l : creasePattern) {
-			if (l.getType() == OriLine.Type.NONE) {
+			if (l.isAux()) {
 				precreases.add(l);
 				continue;
 			}
@@ -86,34 +86,11 @@ public class OrigamiModelFactory {
 					}
 				}
 
-				OriFace face = new OriFace();
-				faces.add(face);
-				OriVertex walkV = v;
-				OriEdge walkE = e;
-				debugCount = 0;
-				while (true) {
-					if (debugCount++ > 200) {
-						System.out.println("ERROR");
-						return origamiModel;
-					}
-					OriHalfedge he = new OriHalfedge(walkV, face);
-					face.halfedges.add(he);
-					he.tmpInt = walkE.type;
-					if (walkE.sv == walkV) {
-						walkE.left = he;
-					} else {
-						walkE.right = he;
-					}
-					walkV = walkE.oppositeVertex(walkV);
-					walkE = walkV.getPrevEdge(walkE);
-
-					if (walkV == v) {
-						break;
-					}
+				OriFace face = makeFace(v, e);
+				if (face == null) {
+					return origamiModel;
 				}
-				face.makeHalfedgeLoop();
-				face.setOutline();
-				face.setPreOutline();
+				faces.add(face);
 			}
 		}
 
@@ -173,7 +150,7 @@ public class OrigamiModelFactory {
 		// Create the edges and precreases from the vertexes
 		List<OriLine> precreases = new ArrayList<>();
 		for (OriLine l : creasePattern) {
-			if (l.getType() == OriLine.Type.NONE) {
+			if (l.isAux()) {
 				Vector2d p0 = new Vector2d(l.p0);
 				Vector2d p1 = new Vector2d(l.p1);
 				precreases.add(new OriLine(p0, p1, l.getType()));
@@ -387,7 +364,7 @@ public class OrigamiModelFactory {
 					edge.left = he0;
 					edge.right = he1;
 					edges.add(edge);
-					edge.type = OriLine.Type.NONE.toInt();// OriEdge.TYPE_NONE;
+					edge.type = OriLine.Type.AUX.toInt();// OriEdge.TYPE_NONE;
 				}
 			}
 		}
