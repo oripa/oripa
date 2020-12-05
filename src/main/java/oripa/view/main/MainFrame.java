@@ -113,11 +113,15 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final JMenuItem menuItemSaveAsImage = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.SAVE_AS_IMAGE_ID));
 
-	private final JMenuItem menuItemExportFOLD = new JMenuItem("Export FOLD");
-	private final JMenuItem menuItemExportDXF = new JMenuItem("Export DXF");
+	private final JMenuItem menuItemExportFOLD = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_FOLD_ID));
+	private final JMenuItem menuItemExportDXF = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_DXF_ID));
 //	private final JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
-	private final JMenuItem menuItemExportCP = new JMenuItem("Export CP");
-	private final JMenuItem menuItemExportSVG = new JMenuItem("Export SVG");
+	private final JMenuItem menuItemExportCP = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_CP_ID));
+	private final JMenuItem menuItemExportSVG = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_SVG_ID));
 
 	// -----------------------------------------------------------------------------------------------------------
 	// Create paint button

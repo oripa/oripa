@@ -17,6 +17,7 @@ public class StringID {
 		public static final String SAVE_ID = "Save";
 		public static final String SAVE_AS_ID = "SaveAs";
 		public static final String SAVE_AS_IMAGE_ID = "SaveAsImage";
+		public static final String EXPORT_FOLD_ID = "ExportFOLD";
 		public static final String EXPORT_DXF_ID = "ExportDXF";
 		public static final String EXPORT_CP_ID = "ExportCP";
 		public static final String EXPORT_SVG_ID = "ExportSVG";
