@@ -12,8 +12,11 @@ import javax.swing.filechooser.FileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.ORIPA;
 import oripa.exception.UserCanceledException;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
+import oripa.util.gui.Dialogs;
 
 /**
  *
@@ -24,6 +27,8 @@ import oripa.exception.UserCanceledException;
 public class FileChooser<Data> extends JFileChooser implements FileAccessActionProvider<Data> {
 
 	private static Logger logger = LoggerFactory.getLogger(FileChooser.class);
+
+	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	/**
 	 *
@@ -129,8 +134,10 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 			File file = new File(filePath);
 			if (file.exists()) {
 				if (JOptionPane.showConfirmDialog(null,
-						ORIPA.res.getString("Warning_SameNameFileExist"),
-						ORIPA.res.getString("DialogTitle_FileSave"),
+						resourceHolder.getString(ResourceKey.WARNING,
+								StringID.Warning.SAME_FILE_EXISTS_ID),
+						resourceHolder.getString(ResourceKey.WARNING,
+								StringID.Warning.SAVE_TITLE_ID),
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
 					throw new UserCanceledException();
@@ -143,9 +150,8 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 			throw new FileChooserCanceledException();
 		} catch (Exception e) {
 			logger.error("error on saving a file", e);
-			JOptionPane.showMessageDialog(parent, e.toString(),
-					ORIPA.res.getString("Error_FileSaveFailed"),
-					JOptionPane.ERROR_MESSAGE);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		}
 
 		return null;
@@ -179,11 +185,9 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 			return filter.getLoadingAction().setPath(filePath);
 		} catch (Exception e) {
 			logger.error("error on loading a file", e);
-			JOptionPane.showMessageDialog(this, e.toString(),
-					ORIPA.res.getString("Error_FileLoadFailed"),
-					JOptionPane.ERROR_MESSAGE);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
 			return null;
 		}
 	}
-
 }

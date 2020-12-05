@@ -16,24 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.resource;
+package oripa.util.gui;
 
-import java.util.ListResourceBundle;
+import java.awt.Component;
+
+import javax.swing.JOptionPane;
 
 /**
- * @author origa
+ * @author OUCHI Koji
  *
  */
-public class ErrorStringResource_en extends ListResourceBundle {
-
-	static final Object[][] strings = {
-			{ StringID.Error.SAVE_FAILED_ID, "Failed to save." },
-			{ StringID.Error.LOAD_FAILED_ID, "Failed to load." },
-			{ StringID.Error.SAVE_INI_FAILED_ID, "Error when saving configurations." },
-	};
-
-	@Override
-	protected Object[][] getContents() {
-		return strings;
+public class Dialogs {
+	public static void showErrorDialog(final Component parent, final String title,
+			final Exception ex) {
+		JOptionPane.showMessageDialog(parent,
+				ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
 	}
+
 }

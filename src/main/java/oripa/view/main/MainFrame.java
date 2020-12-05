@@ -74,6 +74,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
+import oripa.util.gui.Dialogs;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.MainScreenSetting;
@@ -454,7 +455,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			loadFile(filePath);
 			updateTitleText();
 		} catch (Exception ex) {
-			showErrorDialog(resourceHolder.getString(
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), ex);
 		}
 		screenUpdater.updateScreen();
@@ -546,7 +547,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			dataFileAccess.saveProjectFile(doc, filePath, fileType);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
-			showErrorDialog(resourceHolder.getString(
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		}
 
@@ -572,7 +573,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			return savedPathOpt.get();
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("failed to save", e);
-			showErrorDialog(resourceHolder.getString(
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 			return document.getDataFilePath();
 		}
@@ -586,11 +587,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			logger.info("File selection is canceled.");
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
-			showErrorDialog(resourceHolder.getString(
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		} catch (IllegalArgumentException e) {
 			logger.error("Maybe data is not appropriate.", e);
-			showErrorDialog(resourceHolder.getString(
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		}
 	}
@@ -662,7 +663,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			document.set(docOpt.get());
 		} catch (FileVersionError | WrongDataFormatException | IOException e) {
 			logger.error("failed to load", e);
-			showErrorDialog(resourceHolder.getString(
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
 		}
 		paintContextModification
@@ -672,18 +673,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	}
 
-	private void showErrorDialog(final String title, final Exception ex) {
-		JOptionPane.showMessageDialog(this,
-				ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
-
-	}
-
 	void saveIniFile() {
 		try {
 			iniFileAccess.save(fileHistory, paintContext);
 		} catch (IllegalStateException e) {
 			logger.error("error when building ini file data", e);
-			showErrorDialog("Error when saving configurations", e);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_INI_FAILED_ID), e);
 		}
 	}
 

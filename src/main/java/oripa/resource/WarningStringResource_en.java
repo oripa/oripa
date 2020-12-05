@@ -16,7 +16,8 @@ public class WarningStringResource_en extends ListResourceBundle {
 					"Array Copy" },
 			{ StringID.Warning.CIRCLE_COPY_TITLE_ID,
 					"Circle Copy" },
-
+			{ StringID.Warning.SAVE_TITLE_ID,
+					"Save" },
 	};
 
 	@Override

@@ -40,6 +40,7 @@ public class StringID {
 	public static class Error {
 		public static final String SAVE_FAILED_ID = "Error_FileSaveFailed";
 		public static final String LOAD_FAILED_ID = "Error_FileLoadFailed";
+		public static final String SAVE_INI_FAILED_ID = "Error_SaveIniFailed";
 	}
 
 	public static class Warning {
@@ -49,6 +50,7 @@ public class StringID {
 		public static final String NO_SELECTION_ID = "Warning_NoSelection";
 		public static final String ARRAY_COPY_TITLE_ID = "Warning_ACTitle";
 		public static final String CIRCLE_COPY_TITLE_ID = "Warning_CCTitle";
+		public static final String SAVE_TITLE_ID = "Warning_SaveTitle";
 	}
 
 	public static class Default {
