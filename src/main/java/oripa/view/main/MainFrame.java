@@ -391,7 +391,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
 				JOptionPane.INFORMATION_MESSAGE));
 
-		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.DXF_MODEL));
+		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.DXF));
 //		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
 		menuItemExportCP.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.CP));
 		menuItemExportSVG.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.SVG));
