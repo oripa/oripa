@@ -21,15 +21,21 @@ package oripa.resource;
 import java.util.ListResourceBundle;
 
 /**
- * @author origa
+ * @author OUCHI Koji
  *
  */
-public class ErrorStringResource_en extends ListResourceBundle {
+public class InformationStringResource_en extends ListResourceBundle {
 
 	private static final Object[][] strings = {
-			{ StringID.Error.SAVE_FAILED_ID, "Failed to save." },
-			{ StringID.Error.LOAD_FAILED_ID, "Failed to load." },
-			{ StringID.Error.SAVE_INI_FAILED_ID, "Error when saving configurations." },
+			{ StringID.Information.SIMPLIFYING_CP_ID,
+					"edge duplications with the same position are removed." },
+			{ StringID.Information.NO_ANSWER_ID,
+					"No answer was found." },
+
+			{ StringID.Information.SIMPLIFYING_CP_TITLE_ID,
+					"Simplifying CP" },
+			{ StringID.Information.FOLD_ALGORITHM_TITLE_ID,
+					"Fold algorithm" },
 	};
 
 	@Override

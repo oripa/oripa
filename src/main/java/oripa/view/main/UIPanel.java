@@ -758,8 +758,11 @@ public class UIPanel extends JPanel {
 
 			} else if (foldableModelCount == 0) {
 				JOptionPane.showMessageDialog(
-						null, "No answer was found", "ORIPA",
-						JOptionPane.DEFAULT_OPTION);
+						this,
+						resources.getString(ResourceKey.INFO, StringID.Information.NO_ANSWER_ID),
+						resources.getString(ResourceKey.INFO,
+								StringID.Information.FOLD_ALGORITHM_TITLE_ID),
+						JOptionPane.INFORMATION_MESSAGE);
 			} else if (foldableModelCount > 0) {
 				logger.info("foldable layer layout is found.");
 
@@ -798,10 +801,14 @@ public class UIPanel extends JPanel {
 
 		// ask if ORIPA should try to remove duplication.
 		if (JOptionPane.showConfirmDialog(
-				this, resources.getString(
+				this,
+				resources.getString(
 						ResourceKey.WARNING,
 						StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
-				"Failed", JOptionPane.YES_NO_OPTION,
+				resources.getString(
+						ResourceKey.WARNING,
+						StringID.Warning.FAILED_TITLE_ID),
+				JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
 			// the answer is "no."
 			return origamiModel;
@@ -810,8 +817,11 @@ public class UIPanel extends JPanel {
 		// clean up the crease pattern
 		if (creasePattern.cleanDuplicatedLines()) {
 			JOptionPane.showMessageDialog(
-					this, "Removing multiples edges with the same position ",
-					"Simplifying CP", JOptionPane.INFORMATION_MESSAGE);
+					this,
+					resources.getString(ResourceKey.INFO, StringID.Information.SIMPLIFYING_CP_ID),
+					resources.getString(ResourceKey.INFO,
+							StringID.Information.SIMPLIFYING_CP_TITLE_ID),
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 		// re-create the model data for simplified crease pattern
 		origamiModel = modelFactory
@@ -827,8 +837,10 @@ public class UIPanel extends JPanel {
 				resources.getString(
 						ResourceKey.WARNING,
 						StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID),
-				"Failed Level1",
-				JOptionPane.INFORMATION_MESSAGE);
+				resources.getString(
+						ResourceKey.WARNING,
+						StringID.Warning.FAILED_TITLE_ID),
+				JOptionPane.WARNING_MESSAGE);
 
 		return origamiModel;
 	}

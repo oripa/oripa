@@ -48,9 +48,19 @@ public class StringID {
 		public static final String FOLD_FAILED_DUPLICATION_ID = "Warning_foldFail1";
 		public static final String FOLD_FAILED_WRONG_STRUCTURE_ID = "Warning_foldFail2";
 		public static final String NO_SELECTION_ID = "Warning_NoSelection";
+
 		public static final String ARRAY_COPY_TITLE_ID = "Warning_ACTitle";
 		public static final String CIRCLE_COPY_TITLE_ID = "Warning_CCTitle";
 		public static final String SAVE_TITLE_ID = "Warning_SaveTitle";
+		public static final String FAILED_TITLE_ID = "UI_FailedTitle";
+	}
+
+	public static class Information {
+		public static final String SIMPLIFYING_CP_ID = "Info_SimplifyingCP";
+		public static final String NO_ANSWER_ID = "Info_NoAnswer";
+
+		public static final String SIMPLIFYING_CP_TITLE_ID = "Info_SimplifyingCPTitle";
+		public static final String FOLD_ALGORITHM_TITLE_ID = "Info_FoldAlgorithmTitle";
 	}
 
 	public static class Default {
@@ -86,7 +96,6 @@ public class StringID {
 		public static final String AUX_ID = "UI_Aux";
 		public static final String VALLEY_ID = "UI_Valley";
 		public static final String MOUNTAIN_ID = "UI_Mountain";
-
 	}
 
 	// ------------------------------------------------------------------------
