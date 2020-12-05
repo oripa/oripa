@@ -39,7 +39,7 @@ public class StringID {
 
 	public static class Error {
 		public static final String SAVE_FAILED_ID = "Error_FileSaveFailed";
-		public static final String LOAD_FAIELD_ID = "Error_FileLoadFailed";
+		public static final String LOAD_FAILED_ID = "Error_FileLoadFailed";
 	}
 
 	public static class Warning {

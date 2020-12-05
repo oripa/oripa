@@ -43,6 +43,8 @@ public class ResourceHolder {
 				createResource(resourcePackage + ".DefaultStringResource_en"));
 		holder.addResource(ResourceKey.WARNING,
 				createResource(resourcePackage + ".WarningStringResource_en"));
+		holder.addResource(ResourceKey.ERROR,
+				createResource(resourcePackage + ".ErrorStringResource_en"));
 		holder.addResource(ResourceKey.APP_INFO,
 				createResource(resourcePackage + ".AppInfoResource"));
 

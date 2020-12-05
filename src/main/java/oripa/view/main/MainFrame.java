@@ -42,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.Config;
-import oripa.ORIPA;
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.DeleteSelectedLinesActionListener;
 import oripa.application.main.IniFileAccess;
@@ -455,7 +454,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			loadFile(filePath);
 			updateTitleText();
 		} catch (Exception ex) {
-			showErrorDialog(ORIPA.res.getString("Error_FileLoadFailed"), ex);
+			showErrorDialog(resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), ex);
 		}
 		screenUpdater.updateScreen();
 	}
@@ -540,7 +540,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			dataFileAccess.saveProjectFile(doc, filePath, fileType);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
-			showErrorDialog("Failed to save.", e);
+			showErrorDialog(resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		}
 
 		paintContext.creasePatternUndo().clearChanged();
@@ -565,7 +566,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			return savedPathOpt.get();
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("failed to save", e);
-			showErrorDialog("Failed to save", e);
+			showErrorDialog(resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 			return document.getDataFilePath();
 		}
 	}
@@ -578,10 +580,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			logger.info("File selection is canceled.");
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
-			showErrorDialog("Failed to save", e);
+			showErrorDialog(resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		} catch (IllegalArgumentException e) {
 			logger.error("Maybe data is not appropriate.", e);
-			showErrorDialog("Failed to save", e);
+			showErrorDialog(resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		}
 	}
 
@@ -652,7 +656,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			document.set(docOpt.get());
 		} catch (FileVersionError | WrongDataFormatException | IOException e) {
 			logger.error("failed to load", e);
-			showErrorDialog("Failed to load the file", e);
+			showErrorDialog(resourceHolder.getString(
+					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
 		}
 		paintContextModification
 				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext);
