@@ -46,6 +46,9 @@ public class StringID {
 		public static final String SAME_FILE_EXISTS_ID = "Warning_SameNameFileExist";
 		public static final String FOLD_FAILED_DUPLICATION_ID = "Warning_foldFail1";
 		public static final String FOLD_FAILED_WRONG_STRUCTURE_ID = "Warning_foldFail2";
+		public static final String NO_SELECTION_ID = "Warning_NoSelection";
+		public static final String ARRAY_COPY_TITLE_ID = "Warning_ACTitle";
+		public static final String CIRCLE_COPY_TITLE_ID = "Warning_CCTitle";
 	}
 
 	public static class Default {

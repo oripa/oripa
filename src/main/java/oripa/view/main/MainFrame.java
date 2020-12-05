@@ -504,8 +504,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void showArrayCopyDialog() {
 		Painter painter = paintContext.getPainter();
 		if (painter.countSelectedLines() == 0) {
-			JOptionPane.showMessageDialog(this, "Select target lines",
-					"ArrayCopy", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this,
+					resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.NO_SELECTION_ID),
+					resourceHolder.getString(ResourceKey.WARNING,
+							StringID.Warning.ARRAY_COPY_TITLE_ID),
+					JOptionPane.WARNING_MESSAGE);
 
 		} else {
 			arrayCopyDialog.setVisible(true);
@@ -515,8 +518,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void showCircleCopyDialog() {
 		Painter painter = paintContext.getPainter();
 		if (painter.countSelectedLines() == 0) {
-			JOptionPane.showMessageDialog(this, "Select target lines",
-					"CircleCopy", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this,
+					resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.NO_SELECTION_ID),
+					resourceHolder.getString(ResourceKey.WARNING,
+							StringID.Warning.CIRCLE_COPY_TITLE_ID),
+					JOptionPane.WARNING_MESSAGE);
 
 		} else {
 			circleCopyDialog.setVisible(true);
