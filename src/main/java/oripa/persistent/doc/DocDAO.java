@@ -23,14 +23,18 @@ public class DocDAO {
 			throws FileVersionError, IOException, WrongDataFormatException {
 		DocFilterSelector selector = new DocFilterSelector();
 
-		return selector.getLoadableFilterOf(path).getLoadingAction().load();
+		var loadingAction = selector.getLoadableFilterOf(path).getLoadingAction();
+
+		return loadingAction.setPath(path).load();
 	}
 
-	public void save(final Doc doc, final String path, final FileTypeKey type)
+	public void save(final Doc doc, final String path, final CreasePatternFileTypeKey type)
 			throws IOException, IllegalArgumentException {
 		DocFilterSelector selector = new DocFilterSelector();
 
-		selector.getFilter(type).getSavingAction().setPath(path).save(doc);
+		var savingAction = selector.getFilter(type).getSavingAction();
+
+		savingAction.setPath(path).save(doc);
 	}
 
 	/**
@@ -71,9 +75,7 @@ public class DocDAO {
 				creasePattern, creasePattern.getPaperSize());
 		doc.setOrigamiModel(origamiModel);
 
-		if (filter.getTargetType().equals(FileTypeKey.OBJ_MODEL)) {
-
-		} else if (!origamiModel.isProbablyFoldable()) {
+		if (!origamiModel.isProbablyFoldable()) {
 
 			var selection = JOptionPane.showConfirmDialog(null,
 					"Warning: Building a set of polygons from crease pattern "

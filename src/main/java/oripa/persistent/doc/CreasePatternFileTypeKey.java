@@ -18,28 +18,28 @@
  */
 package oripa.persistent.doc;
 
-import java.util.Arrays;
-
+import oripa.doc.Doc;
+import oripa.persistent.filetool.Exporter;
 import oripa.persistent.filetool.FileTypeProperty;
+import oripa.persistent.filetool.Loader;
+import oripa.persistent.doc.loader.*;
+import oripa.persistent.doc.exporter.*;
 
-public enum FileTypeKey implements FileTypeProperty {
-	OPX("opx", 1, ".opx", ".xml"),
-	FOLD("fold", 2,	".fold"),
-	PICT("pict", 3,	".png", ".jpg"),
-	DXF("dxf", 4, ".dxf"),
-	CP("cp", 5,	".cp"),
-	SVG("svg", 6, ".svg"),
-	PDF("pdf", 7, ".pdf"),
-
-	OBJ_MODEL("obj", 8,	".obj"),
-	DXF_MODEL("dxf", 9,	".dxf"),
-
-	SVG_FOLDED_MODEL("svg_folded_model", 10, ".svg"),
-	ORMAT_FOLDED_MODEL("ormat", 11,	".ormat");
+public enum CreasePatternFileTypeKey implements FileTypeProperty<Doc> {
+	// ANY("*", 0, ".*"),
+	OPX("opx", 1, new LoaderXML(), new ExporterXML(), ".opx", ".xml"),
+	FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(),".fold"),
+	PICT("pict", 3, null, new PictureExporter(),".png", ".jpg"),
+	DXF("dxf", 4, new LoaderDXF(), ExporterDXFFactory.createCreasePatternExporter(),".dxf"),
+	CP("cp", 5,  new LoaderCP(), new ExporterCP(),".cp"),
+	SVG("svg", 6,  null, ExporterSVGFactory.createCreasePatternExporter(),".svg"),
+	PDF("pdf", 7, new LoaderPDF(), null, ".pdf");
 
 	private final String keyText;
 	private final Integer order;
 	private final String[] extensions;
+	private final Loader<Doc> loader;
+	private final Exporter<Doc> exporter;
 
 	/**
 	 *
@@ -51,10 +51,17 @@ public enum FileTypeKey implements FileTypeProperty {
 	 *            defines the order of members.
 	 * @param extensions
 	 *            which should be managed as that file type.
+	 * @param loader
+	 * @param exporter
 	 */
-	private FileTypeKey(final String key, final Integer order, final String... extensions) {
+	private CreasePatternFileTypeKey(final String key, final Integer order,
+			Loader<Doc> loader,
+			Exporter<Doc> exporter,
+			final String... extensions) {
 		this.keyText = key;
 		this.order = order;
+		this.loader = loader;
+		this.exporter = exporter;
 		this.extensions = extensions;
 	}
 
@@ -76,26 +83,20 @@ public enum FileTypeKey implements FileTypeProperty {
 	/*
 	 * (non Javadoc)
 	 *
-	 * @see
-	 * oripa.persistent.filetool.FileTypeProperty#extensionsMatch(java.lang.
-	 * String)
-	 */
-	@Override
-	public boolean extensionsMatch(final String filePath) {
-		if (filePath == null) {
-			return false;
-		}
-		return Arrays.asList(extensions).stream()
-				.anyMatch(extention -> filePath.endsWith(extention));
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
 	 * @see oripa.persistent.filetool.FileTypeProperty#getOrder()
 	 */
 	@Override
 	public Integer getOrder() {
 		return order;
+	}
+	
+	@Override
+	public Loader<Doc> getLoader() {
+		return loader;
+	}
+	
+	@Override
+	public Exporter<Doc> getExporter() {
+		return exporter;
 	}
 }

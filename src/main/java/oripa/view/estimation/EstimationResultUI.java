@@ -32,10 +32,7 @@ import oripa.doc.Doc;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.doc.DocDAO;
-import oripa.persistent.doc.FileTypeKey;
-import oripa.persistent.doc.SavingDocAction;
-import oripa.persistent.doc.exporter.ExporterORmat;
-import oripa.persistent.doc.exporter.ExporterSVGFactory;
+import oripa.persistent.doc.FoldedModelFileTypeKey;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
 
@@ -293,20 +290,16 @@ public class EstimationResultUI extends JPanel {
 		return new FileAccessSupportFilter[] {
 
 				new FileAccessSupportFilter<Doc>(
-						FileTypeKey.ORMAT_FOLDED_MODEL,
-						".ormat file",
-						// ORIPA.res.getString("File"),
-						new SavingDocAction(new ExporterORmat())),
+						FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL,
+						".ormat file"),
 
-				new FileAccessSupportFilter<Doc>(
-						FileTypeKey.SVG_FOLDED_MODEL,
-						".svg file",
-						// ORIPA.res.getString("File"),
-						new SavingDocAction(
-								ExporterSVGFactory
-										.createFoldedModelExporter(screen.isFaceOrderFlipped())))
+				screen.isFaceOrderFlipped() ? new FileAccessSupportFilter<Doc>(
+						FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP,
+						".svg file")
+						: new FileAccessSupportFilter<Doc>(
+								FoldedModelFileTypeKey.SVG_FOLDED_MODEL,
+								".svg file")
 		};
-
 	}
 
-} // @jve:decl-index=0:visual-constraint="8,8"
+}

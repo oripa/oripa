@@ -55,5 +55,4 @@ public interface FileAccessActionProvider<Data> {
 	 */
 	public abstract AbstractLoadingAction<Data> getActionForLoadingFile(
 			Component parent) throws FileChooserCanceledException;
-
 }

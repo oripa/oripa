@@ -19,35 +19,45 @@
 package oripa.persistent.filetool;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public interface FileTypeProperty<Data> {
+public class MultiTypeProperty<Data> implements FileTypeProperty<Data> {
 
-	/**
-	 *
-	 * @return extensions for this file type.
-	 */
-	public abstract String[] getExtensions();
+	private final Collection<FileTypeProperty<Data>> properties;
 
-	public default boolean extensionsMatch(final String filePath) {
-		if (filePath == null) {
-			return false;
-		}
-		return Arrays.asList(getExtensions()).stream()
-				.anyMatch(extention -> filePath.endsWith(extention));
+	public MultiTypeProperty(final Collection<FileTypeProperty<Data>> properties) {
+		this.properties = properties;
 	}
 
-	/**
-	 * @return a text for identifying file type.
-	 */
-	public abstract String getKeyText();
+	@Override
+	public Integer getOrder() {
+		return -1;
+	}
 
-	public abstract Integer getOrder();
+	@Override
+	public String getKeyText() {
+		return String.join("+", getExtensions());
+	}
 
-	public abstract Loader<Data> getLoader();
+	@Override
+	public String[] getExtensions() {
+		return properties.stream()
+				.flatMap(p -> Arrays.asList(p.getExtensions()).stream())
+				.collect(Collectors.toList()).toArray(new String[0]);
+	}
 
-	public abstract Exporter<Data> getExporter();
+	@Override
+	public Loader<Data> getLoader() {
+		return null;
+	}
+
+	@Override
+	public Exporter<Data> getExporter() {
+		return null;
+	}
 }

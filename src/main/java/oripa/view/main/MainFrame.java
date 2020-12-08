@@ -63,7 +63,7 @@ import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
-import oripa.persistent.doc.FileTypeKey;
+import oripa.persistent.doc.CreasePatternFileTypeKey;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
@@ -325,10 +325,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		menuItemSave.addActionListener(e -> {
 			var filePath = document.getDataFilePath();
-			if (FileTypeKey.OPX.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, FileTypeKey.OPX);
-			} else if (FileTypeKey.FOLD.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, FileTypeKey.FOLD);
+			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
+				saveProjectFile(document, filePath, CreasePatternFileTypeKey.OPX);
+			} else if (CreasePatternFileTypeKey.FOLD.extensionsMatch(filePath)) {
+				saveProjectFile(document, filePath, CreasePatternFileTypeKey.FOLD);
 			} else {
 				saveAnyTypeUsingGUI();
 			}
@@ -341,13 +341,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuItemExportFOLD.addActionListener(e -> {
 			String lastDirectory = fileHistory.getLastDirectory();
 			saveFile(lastDirectory, document.getDataFileName(),
-					filterSelector.getFilter(FileTypeKey.FOLD));
+					filterSelector.getFilter(CreasePatternFileTypeKey.FOLD));
 		});
 
 		menuItemSaveAsImage.addActionListener(e -> {
 			String lastDirectory = fileHistory.getLastDirectory();
 			saveFile(lastDirectory, document.getDataFileName(),
-					filterSelector.getFilter(FileTypeKey.PICT));
+					filterSelector.getFilter(CreasePatternFileTypeKey.PICT));
 		});
 
 		menuItemExit.addActionListener(e -> exit());
@@ -391,10 +391,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
 				JOptionPane.INFORMATION_MESSAGE));
 
-		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.DXF));
+		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
 //		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
-		menuItemExportCP.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.CP));
-		menuItemExportSVG.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.SVG));
+		menuItemExportCP.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
+		menuItemExportSVG.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.SVG));
 
 		menuItemProperty.addActionListener(e -> showPropertyDialog());
 		menuItemRepeatCopy.addActionListener(e -> showArrayCopyDialog());
@@ -429,11 +429,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private void modifySavingActions() {
 		// overwrite the action to update GUI after saving.
-		setProjectSavingAction(FileTypeKey.OPX);
-		setProjectSavingAction(FileTypeKey.FOLD);
+		setProjectSavingAction(CreasePatternFileTypeKey.OPX);
+		setProjectSavingAction(CreasePatternFileTypeKey.FOLD);
 	}
 
-	private void setProjectSavingAction(final FileTypeKey fileType) {
+	private void setProjectSavingAction(final CreasePatternFileTypeKey fileType) {
 		filterSelector.getFilter(fileType).setSavingAction(
 				new AbstractSavingAction<Doc>() {
 
@@ -546,7 +546,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				+ resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID));
 	}
 
-	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType) {
+	private void saveProjectFile(final Doc doc, final String filePath, final CreasePatternFileTypeKey fileType) {
 		try {
 			dataFileAccess.saveProjectFile(doc, filePath, fileType);
 		} catch (IOException | IllegalArgumentException e) {
@@ -583,7 +583,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 	}
 
-	private void saveFileWithModelCheck(final FileTypeKey type) {
+	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 
 		try {
 			dataFileAccess.saveFileWithModelCheck(document, filterSelector.getFilter(type), this);

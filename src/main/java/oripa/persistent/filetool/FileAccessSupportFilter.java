@@ -1,8 +1,14 @@
 package oripa.persistent.filetool;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FileAccessSupportFilter<Data>
 		extends javax.swing.filechooser.FileFilter
 		implements Comparable<FileAccessSupportFilter<Data>> {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(FileAccessSupportFilter.class);
 
 	/**
 	 *
@@ -10,12 +16,10 @@ public class FileAccessSupportFilter<Data>
 	 *
 	 */
 
-	private final FileTypeProperty fileType;
+	private final FileTypeProperty<Data> fileType;
 	private final String msg;
-
-	private AbstractSavingAction<Data> savingAction = null;
-
-	private AbstractLoadingAction<Data> loadingAction = null;
+	private AbstractLoadingAction<Data> loadingAction;
+	private AbstractSavingAction<Data> savingAction;
 
 	/**
 	 *
@@ -26,65 +30,19 @@ public class FileAccessSupportFilter<Data>
 	 * @param msg
 	 *            message in filter box
 	 */
-	public FileAccessSupportFilter(final FileTypeProperty fileType, final String msg) {
+	public FileAccessSupportFilter(final FileTypeProperty<Data> fileType, final String msg) {
 		this.fileType = fileType;
 		this.msg = msg;
-	}
 
-	/**
-	 *
-	 * Constructor.
-	 *
-	 * @param fileType
-	 *            specifies what to filter
-	 * @param msg
-	 *            message in filter box
-	 * @param savingAction
-	 *            default action of saving
-	 */
-	public FileAccessSupportFilter(final FileTypeProperty fileType, final String msg,
-			final AbstractSavingAction<Data> savingAction) {
-		this.fileType = fileType;
-		this.msg = msg;
-		this.savingAction = savingAction;
-	}
-
-	private String acceptedPath = null;
-
-	public AbstractLoadingAction<Data> getLoadingAction() {
-		if (loadingAction != null) {
-			return loadingAction.setPath(acceptedPath);
+		var exporter = fileType.getExporter();
+		if (exporter != null) {
+			savingAction = new SavingActionTemplate<>(exporter);
 		}
-		return loadingAction;
-	}
 
-	/**
-	 *
-	 * @param action
-	 *            how to load
-	 */
-	public void setLoadingAction(final AbstractLoadingAction<Data> action) {
-		this.loadingAction = action;
-	}
-
-	/**
-	 *
-	 * @param action
-	 *            how to save
-	 */
-	public void setSavingAction(final AbstractSavingAction<Data> action) {
-		savingAction = action;
-	}
-
-	/**
-	 *
-	 * @return object which can save the data
-	 */
-	public AbstractSavingAction<Data> getSavingAction() {
-		if (savingAction != null) {
-			return savingAction.setPath(acceptedPath);
+		var loader = fileType.getLoader();
+		if (loader != null) {
+			loadingAction = new LoadingActionTemplate<>(fileType.getLoader());
 		}
-		return savingAction;
 	}
 
 	/**
@@ -101,10 +59,10 @@ public class FileAccessSupportFilter<Data>
 			return true;
 		}
 
-		for (String extension : fileType.getExtensions()) {
+		for (String extension : getExtensions()) {
 
 			if (f.getName().endsWith(extension)) {
-				acceptedPath = f.getAbsolutePath();
+				logger.debug("accepted file: " + f);
 				return true;
 			}
 		}
@@ -116,7 +74,7 @@ public class FileAccessSupportFilter<Data>
 		return msg;
 	}
 
-	public FileTypeProperty getTargetType() {
+	public FileTypeProperty<Data> getTargetType() {
 		return fileType;
 	}
 
@@ -139,9 +97,9 @@ public class FileAccessSupportFilter<Data>
 	 *            file type
 	 * @param explanation
 	 * @return in the style of "(*.extension1, *.extension2, ...)
-	 *         ${type.getKeytext()} ${explanation}"
+	 *         ${explanation}"
 	 */
-	public static String createDefaultDescription(final FileTypeProperty type,
+	public static String createDefaultDescription(final FileTypeProperty<?> type,
 			final String explanation) {
 		String[] extensions = type.getExtensions();
 
@@ -159,4 +117,35 @@ public class FileAccessSupportFilter<Data>
 
 		return builder.toString();
 	}
+
+	/**
+	 * @return loadingAction
+	 */
+	public AbstractLoadingAction<Data> getLoadingAction() {
+		return loadingAction;
+	}
+
+	/**
+	 * @param loadingAction
+	 *            Sets loadingAction
+	 */
+	public void setLoadingAction(final AbstractLoadingAction<Data> loadingAction) {
+		this.loadingAction = loadingAction;
+	}
+
+	/**
+	 * @return savingAction
+	 */
+	public AbstractSavingAction<Data> getSavingAction() {
+		return savingAction;
+	}
+
+	/**
+	 * @param savingAction
+	 *            Sets savingAction
+	 */
+	public void setSavingAction(final AbstractSavingAction<Data> savingAction) {
+		this.savingAction = savingAction;
+	}
+
 }

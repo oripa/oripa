@@ -26,7 +26,7 @@ import java.util.Optional;
 import oripa.doc.Doc;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
-import oripa.persistent.doc.FileTypeKey;
+import oripa.persistent.doc.CreasePatternFileTypeKey;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileVersionError;
@@ -57,7 +57,7 @@ public class DataFileAccess {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType)
+	public void saveProjectFile(final Doc doc, final String filePath, final CreasePatternFileTypeKey fileType)
 			throws IOException, IllegalArgumentException {
 
 		dao.save(doc, filePath, fileType);

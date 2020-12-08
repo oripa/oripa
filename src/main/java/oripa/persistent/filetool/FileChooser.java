@@ -144,7 +144,9 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 				}
 			}
 
-			return filter.getSavingAction().setPath(filePath);
+			var savingAction = filter.getSavingAction();
+
+			return savingAction.setPath(filePath);
 
 		} catch (UserCanceledException cancel) {
 			throw new FileChooserCanceledException();
@@ -167,7 +169,7 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 	public AbstractLoadingAction<Data> getActionForLoadingFile(
 			final Component parent) throws FileChooserCanceledException {
 
-		if (JFileChooser.APPROVE_OPTION != this.showOpenDialog(parent)) {
+		if (this.showOpenDialog(parent) != JFileChooser.APPROVE_OPTION) {
 			throw new FileChooserCanceledException();
 		}
 
@@ -179,10 +181,18 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 		try {
 			String filePath = this.getSelectedFile().getPath();
 			@SuppressWarnings("unchecked")
-			FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) (this
-					.getFileFilter());
+			FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) rawFilter;
+			logger.debug("preparing loadingAction for: " + filePath);
+			AbstractLoadingAction<Data> loadingAction;
 
-			return filter.getLoadingAction().setPath(filePath);
+			if (filter instanceof MultiTypeAcceptableFileLoadingFilter<?>) {
+				MultiTypeAcceptableFileLoadingFilter<Data> multiFilter = (MultiTypeAcceptableFileLoadingFilter<Data>) filter;
+				loadingAction = multiFilter.getLoadingAction(filePath);
+			} else {
+				loadingAction = filter.getLoadingAction();
+			}
+
+			return loadingAction.setPath(filePath);
 		} catch (Exception e) {
 			logger.error("error on loading a file", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
