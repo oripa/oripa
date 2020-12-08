@@ -1,10 +1,12 @@
 package oripa.persistent.doc;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import oripa.doc.Doc;
 import oripa.persistent.filetool.FileAccessSupportFilter;
@@ -42,12 +44,6 @@ public class DocFilterSelector {
 
 		key = CreasePatternFileTypeKey.DXF;
 		putFilter(key, createDescription(key, StringID.Main.FILE_ID));
-
-//		key = FileTypeKey.OBJ_MODEL;
-//		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
-//				ExporterOBJFactory.createFoldedModelExporter(),
-//				// new ModelExporterOBJ(),
-//				null);
 
 		key = CreasePatternFileTypeKey.CP;
 		putFilter(key, createDescription(key, StringID.Main.FILE_ID));
@@ -121,13 +117,7 @@ public class DocFilterSelector {
 		FileAccessSupportFilter<Doc>[] array = new FileAccessSupportFilter[filters
 				.size()];
 
-		int i = 0;
-		for (CreasePatternFileTypeKey key : filters.keySet()) {
-			array[i] = filters.get(key);
-			i++;
-		}
-
-		return array;
+		return filters.values().toArray(array);
 	}
 
 	/**
@@ -135,14 +125,9 @@ public class DocFilterSelector {
 	 * @return filters that can load Doc from a file.
 	 */
 	public FileAccessSupportFilter<Doc>[] getLoadables() {
-		ArrayList<FileAccessSupportFilter<Doc>> loadables = new ArrayList<>();
-
-		for (CreasePatternFileTypeKey key : filters.keySet()) {
-			FileAccessSupportFilter<Doc> filter = filters.get(key);
-			if (filter.getLoadingAction() != null) {
-				loadables.add(filter);
-			}
-		}
+		var loadables = filters.values().stream()
+				.filter(f -> f.getLoadingAction() != null)
+				.collect(Collectors.toList());
 
 		var multi = new MultiTypeAcceptableFileLoadingFilter<Doc>(filters.values(), "Any type");
 		loadables.add(multi);
@@ -162,23 +147,19 @@ public class DocFilterSelector {
 	 * @param path
 	 * @return a filter that can load the file at the path.
 	 */
-	public FileAccessSupportFilter<Doc> getLoadableFilterOf(final String path) {
+	public Optional<FileAccessSupportFilter<Doc>> getLoadableFilterOf(final String path) {
 		if (path == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		File file = new File(path);
 		if (file.isDirectory()) {
-			return null;
+			return Optional.empty();
 		}
 
-		for (FileAccessSupportFilter<Doc> filter : this.toArray()) {
-			if (filter.accept(file)) {
-				return filter;
-			}
-		}
-
-		return null;
+		return Stream.of(toArray())
+				.filter(f -> f.accept(file))
+				.findFirst();
 	}
 
 	/**
@@ -187,14 +168,9 @@ public class DocFilterSelector {
 	 */
 	@SuppressWarnings("unchecked")
 	public FileAccessSupportFilter<Doc>[] getSavables() {
-		ArrayList<FileAccessSupportFilter<Doc>> savables = new ArrayList<>();
-
-		for (CreasePatternFileTypeKey key : filters.keySet()) {
-			FileAccessSupportFilter<Doc> filter = filters.get(key);
-			if (filter.getSavingAction() != null) {
-				savables.add(filter);
-			}
-		}
+		var savables = filters.values().stream()
+				.filter(f -> f.getSavingAction() != null)
+				.collect(Collectors.toList());
 
 		Collections.sort(savables);
 

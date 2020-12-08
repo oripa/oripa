@@ -23,7 +23,8 @@ public class DocDAO {
 			throws FileVersionError, IOException, WrongDataFormatException {
 		DocFilterSelector selector = new DocFilterSelector();
 
-		var loadingAction = selector.getLoadableFilterOf(path).getLoadingAction();
+		var loadingAction = selector.getLoadableFilterOf(path).get()
+				.getLoadingAction();
 
 		return loadingAction.setPath(path).load();
 	}
