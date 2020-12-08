@@ -3,7 +3,6 @@ package oripa.domain.paint.linetype;
 import java.awt.Graphics2D;
 import java.util.Collection;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.RectangularSelectableAction;
@@ -27,12 +26,15 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 		}
 		context.creasePatternUndo().pushUndoInfo();
 
-		for (OriLine l : selectedLines) {
-			Painter painter = context.getPainter();
-			// Change line type
-			painter.alterLineType(
-					l, setting.getTypeFrom(), setting.getTypeTo());
-		}
+		var painter = context.getPainter();
+		painter.alterLineTypes(selectedLines, setting.getTypeFrom(), setting.getTypeTo());
+
+//		for (OriLine l : selectedLines) {
+//			Painter painter = context.getPainter();
+//			// Change line type
+//			painter.alterLineType(
+//					l, setting.getTypeFrom(), setting.getTypeTo());
+//		}
 	}
 
 	@Override

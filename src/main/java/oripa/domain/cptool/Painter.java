@@ -248,6 +248,12 @@ public class Painter {
 		changer.alterLineType(l, creasePattern, from, to);
 	}
 
+	public void alterLineTypes(
+			final Collection<OriLine> lines, final TypeForChange from, final TypeForChange to) {
+		LineTypeChanger changer = new LineTypeChanger();
+		changer.alterLineTypes(lines, creasePattern, from, to);
+	}
+
 	/**
 	 * v1-v2 is the symmetry line, v0-v1 is the subject to be copied.
 	 *
