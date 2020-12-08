@@ -61,9 +61,9 @@ import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.persistent.doc.CreasePatternFileTypeKey;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
-import oripa.persistent.doc.CreasePatternFileTypeKey;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
@@ -391,10 +391,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
 				JOptionPane.INFORMATION_MESSAGE));
 
-		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
+		menuItemExportDXF
+				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
 //		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
-		menuItemExportCP.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
-		menuItemExportSVG.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.SVG));
+		menuItemExportCP
+				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
+		menuItemExportSVG
+				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.SVG));
 
 		menuItemProperty.addActionListener(e -> showPropertyDialog());
 		menuItemRepeatCopy.addActionListener(e -> showArrayCopyDialog());
@@ -546,7 +549,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				+ resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID));
 	}
 
-	private void saveProjectFile(final Doc doc, final String filePath, final CreasePatternFileTypeKey fileType) {
+	private void saveProjectFile(final Doc doc, final String filePath,
+			final CreasePatternFileTypeKey fileType) {
 		try {
 			dataFileAccess.saveProjectFile(doc, filePath, fileType);
 		} catch (IOException | IllegalArgumentException e) {
@@ -657,7 +661,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		try {
 			var docOpt = dataFileAccess.loadFile(
-					filePath, filterSelector, fileHistory.getLastPath(), this);
+					filePath, fileHistory.getLastPath(), this, filterSelector.getLoadables());
 			if (docOpt.isEmpty()) {
 				return null;
 			}

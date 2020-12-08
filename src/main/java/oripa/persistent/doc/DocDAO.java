@@ -18,10 +18,10 @@ import oripa.persistent.filetool.FileVersionError;
 import oripa.persistent.filetool.WrongDataFormatException;
 
 public class DocDAO {
+	private final DocFilterSelector selector = new DocFilterSelector();
 
 	public Doc load(final String path)
 			throws FileVersionError, IOException, WrongDataFormatException {
-		DocFilterSelector selector = new DocFilterSelector();
 
 		var loadingAction = selector.getLoadableFilterOf(path).get()
 				.getLoadingAction();
@@ -31,7 +31,6 @@ public class DocDAO {
 
 	public void save(final Doc doc, final String path, final CreasePatternFileTypeKey type)
 			throws IOException, IllegalArgumentException {
-		DocFilterSelector selector = new DocFilterSelector();
 
 		var savingAction = selector.getFilter(type).getSavingAction();
 
@@ -51,8 +50,8 @@ public class DocDAO {
 			final FileAccessSupportFilter<Doc>... filters)
 			throws FileChooserCanceledException, IOException, IllegalArgumentException {
 		FileChooserFactory<Doc> chooserFactory = new FileChooserFactory<>();
-		FileAccessActionProvider<Doc> chooser = chooserFactory.createChooser(homePath,
-				filters);
+		FileAccessActionProvider<Doc> chooser = chooserFactory.createChooser(
+				homePath, filters);
 
 		AbstractSavingAction<Doc> saver = chooser
 				.getActionForSavingFile(parent);

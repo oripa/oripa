@@ -24,9 +24,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 import oripa.doc.Doc;
-import oripa.persistent.doc.DocDAO;
-import oripa.persistent.doc.DocFilterSelector;
 import oripa.persistent.doc.CreasePatternFileTypeKey;
+import oripa.persistent.doc.DocDAO;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileVersionError;
@@ -57,7 +56,8 @@ public class DataFileAccess {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void saveProjectFile(final Doc doc, final String filePath, final CreasePatternFileTypeKey fileType)
+	public void saveProjectFile(final Doc doc, final String filePath,
+			final CreasePatternFileTypeKey fileType)
 			throws IOException, IllegalArgumentException {
 
 		dao.save(doc, filePath, fileType);
@@ -111,8 +111,8 @@ public class DataFileAccess {
 	 * @param owner
 	 * @return the path of loaded file. Empty if the file choosing is canceled.
 	 */
-	public Optional<Doc> loadFile(final String filePath, final DocFilterSelector filterSelector,
-			final String lastFilePath, final Component owner)
+	public Optional<Doc> loadFile(final String filePath, final String lastFilePath,
+			final Component owner, final FileAccessSupportFilter<Doc>... filters)
 			throws FileVersionError, WrongDataFormatException, IOException {
 
 		try {
@@ -120,8 +120,7 @@ public class DataFileAccess {
 				return Optional.of(dao.load(filePath));
 			} else {
 				return Optional.of(dao.loadUsingGUI(
-						lastFilePath, filterSelector.getLoadables(),
-						owner));
+						lastFilePath, filters, owner));
 			}
 		} catch (FileChooserCanceledException cancel) {
 			return Optional.empty();
