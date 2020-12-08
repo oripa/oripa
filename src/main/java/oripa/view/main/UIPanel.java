@@ -169,7 +169,8 @@ public class UIPanel extends JPanel {
 	private final JPanel alterLineTypePanel = new JPanel();
 
 	private final TypeForChange[] alterLine_comboData_from = {
-			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY };
+			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY,
+			TypeForChange.AUX, TypeForChange.CUT };
 	private final TypeForChange[] alterLine_comboData_to = {
 			TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
 			TypeForChange.CUT, TypeForChange.DELETE, TypeForChange.FLIP };

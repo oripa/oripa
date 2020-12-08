@@ -28,13 +28,6 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 		var painter = context.getPainter();
 		painter.alterLineTypes(selectedLines, setting.getTypeFrom(), setting.getTypeTo());
-
-//		for (OriLine l : selectedLines) {
-//			Painter painter = context.getPainter();
-//			// Change line type
-//			painter.alterLineType(
-//					l, setting.getTypeFrom(), setting.getTypeTo());
-//		}
 	}
 
 	@Override

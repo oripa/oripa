@@ -1,7 +1,7 @@
 package oripa.domain.cptool;
 
 public enum TypeForChange {
-	EMPTY("-"),
+	EMPTY("Any"),
 	MOUNTAIN("M"), VALLEY("V"), AUX("Aux"), CUT("Cut"), 
 	DELETE("Del"), FLIP("Flip");
 	

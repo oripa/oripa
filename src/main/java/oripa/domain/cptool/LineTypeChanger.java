@@ -14,6 +14,13 @@ public class LineTypeChanger {
 		if (from == TypeForChange.VALLEY && l.getType() != OriLine.Type.VALLEY) {
 			return false;
 		}
+		if (from == TypeForChange.AUX && l.getType() != OriLine.Type.AUX) {
+			return false;
+		}
+		if (from == TypeForChange.CUT && l.getType() != OriLine.Type.CUT) {
+			return false;
+		}
+
 		return true;
 	}
 
