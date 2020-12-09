@@ -20,14 +20,17 @@ package oripa.view.estimation;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import oripa.ORIPA;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.doc.Doc;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OrigamiModel;
@@ -35,8 +38,13 @@ import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.FoldedModelFileTypeKey;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
+import oripa.util.gui.Dialogs;
 
 public class EstimationResultUI extends JPanel {
+	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUI.class);
 
 	private static final long serialVersionUID = 1L;
 	private JButton jButtonNextAnswer = null;
@@ -49,6 +57,8 @@ public class EstimationResultUI extends JPanel {
 	private JCheckBox jCheckBoxEdge = null;
 	private JCheckBox jCheckBoxFillFace = null;
 	private JButton jButtonExport = null;
+
+	private final ResourceHolder resources = ResourceHolder.getInstance();
 
 	/**
 	 * This is the default constructor
@@ -273,12 +283,9 @@ public class EstimationResultUI extends JPanel {
 									doc, null, EstimationResultUI.this, createFilters());
 						} catch (FileChooserCanceledException canceledEx) {
 						} catch (Exception ex) {
-							JOptionPane.showMessageDialog(
-									EstimationResultUI.this,
-									ex.toString(),
-									ORIPA.res
-											.getString("Error_FileSaveFaild"),
-									JOptionPane.ERROR_MESSAGE);
+							logger.error("error: ", ex);
+							Dialogs.showErrorDialog(EstimationResultUI.this, resources.getString(
+									ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), ex);
 						}
 					});
 		}
@@ -287,8 +294,7 @@ public class EstimationResultUI extends JPanel {
 
 	@SuppressWarnings("unchecked")
 	private FileAccessSupportFilter<Doc>[] createFilters() {
-		return new FileAccessSupportFilter[] {
-
+		var filters = Stream.of(
 				new FileAccessSupportFilter<Doc>(
 						FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL,
 						".ormat file"),
@@ -298,8 +304,13 @@ public class EstimationResultUI extends JPanel {
 						".svg file")
 						: new FileAccessSupportFilter<Doc>(
 								FoldedModelFileTypeKey.SVG_FOLDED_MODEL,
-								".svg file")
-		};
+								".svg file"))
+				.sorted()
+				.collect(Collectors.toList());
+
+		var array = filters.toArray(new FileAccessSupportFilter<?>[filters.size()]);
+
+		return (FileAccessSupportFilter<Doc>[]) array;
 	}
 
 }
