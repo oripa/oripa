@@ -81,11 +81,12 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 				.collect(Collectors.toList()).toArray(new String[0]);
 	}
 
-	public AbstractLoadingAction<Data> getLoadingAction(final String filePath) {
+	public AbstractLoadingAction<Data> getLoadingAction(final String filePath)
+			throws IllegalArgumentException {
 		return filters.stream()
 				.filter(f -> f.getTargetType().extensionsMatch(filePath))
 				.findFirst()
-				.get()
+				.orElseThrow(() -> new IllegalArgumentException("No filter for the given path."))
 				.getLoadingAction();
 	}
 }

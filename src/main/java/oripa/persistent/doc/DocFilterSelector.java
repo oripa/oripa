@@ -143,6 +143,9 @@ public class DocFilterSelector {
 	/**
 	 * @param path
 	 * @return a filter that can load the file at the path.
+	 * @throws IllegalArgumentException
+	 *             No filter is available for the given path. Or, the path is
+	 *             null or is for a directory.
 	 */
 	public FileAccessSupportFilter<Doc> getLoadableFilterOf(final String path)
 			throws IllegalArgumentException {

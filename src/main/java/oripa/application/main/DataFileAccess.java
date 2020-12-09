@@ -20,6 +20,7 @@ package oripa.application.main;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -114,7 +115,7 @@ public class DataFileAccess {
 	public Optional<Doc> loadFile(final String filePath, final String lastFilePath,
 			final Component owner, final FileAccessSupportFilter<Doc>... filters)
 			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
-			IOException {
+			IOException, FileNotFoundException {
 
 		try {
 			if (filePath != null) {

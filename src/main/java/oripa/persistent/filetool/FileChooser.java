@@ -2,6 +2,7 @@ package oripa.persistent.filetool;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,6 @@ import javax.swing.filechooser.FileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.exception.UserCanceledException;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -61,11 +61,14 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 		super.addChoosableFileFilter(filter);
 	}
 
-	public String replaceExtension(final String path, final String ext) {
+	private String replaceExtension(final String path, final String ext) {
 
 		String path_new;
 
+		// drop the old extension
 		path_new = path.replaceAll("\\.\\w+$", "");
+
+		// append the new extension
 		path_new += ext;
 
 		return path_new;
@@ -79,7 +82,7 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 	 *            ex) ".png"
 	 * @return path string with new extension
 	 */
-	public String correctExtension(final String path, final String[] extensions) {
+	private String correctExtension(final String path, final String[] extensions) {
 
 		String path_new = new String(path);
 
@@ -87,6 +90,7 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 				.filter(ext -> path.endsWith(ext))
 				.collect(Collectors.toList());
 
+		// the path's extension is not in the targets.
 		if (filtered.isEmpty()) {
 			path_new = replaceExtension(path_new, extensions[0]);
 		}
@@ -104,59 +108,44 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 	@Override
 	public AbstractSavingAction<Data> getActionForSavingFile(
 			final Component parent)
-			throws FileChooserCanceledException {
+			throws FileChooserCanceledException, IllegalStateException {
 
-		if (JFileChooser.APPROVE_OPTION != this.showSaveDialog(parent)) {
+		if (this.showSaveDialog(parent) != JFileChooser.APPROVE_OPTION) {
 			throw new FileChooserCanceledException();
 		}
-
-		String filePath = null;
 
 		FileFilter rawFilter = this.getFileFilter();
 		if (!(rawFilter instanceof FileAccessSupportFilter<?>)) {
 			throw new RuntimeException("Wrong Implementation!");
 		}
-		try {
 
-			@SuppressWarnings("unchecked")
-			FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) (rawFilter);
+		@SuppressWarnings("unchecked")
+		FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) rawFilter;
 
-			String[] extensions = filter.getExtensions();
+		String[] extensions = filter.getExtensions();
 
-			filePath = correctExtension(this.getSelectedFile().getPath(),
-					extensions);
+		File file = this.getSelectedFile();
+		String filePath = correctExtension(file.getPath(), extensions);
 
-			if (filePath == null) {
-				throw new IllegalArgumentException(
-						"wrong extension of selected name");
+		if (file.exists()) {
+			if (JOptionPane.showConfirmDialog(null,
+					resourceHolder.getString(ResourceKey.WARNING,
+							StringID.Warning.SAME_FILE_EXISTS_ID),
+					resourceHolder.getString(ResourceKey.WARNING,
+							StringID.Warning.SAVE_TITLE_ID),
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+				throw new FileChooserCanceledException();
 			}
-
-			File file = new File(filePath);
-			if (file.exists()) {
-				if (JOptionPane.showConfirmDialog(null,
-						resourceHolder.getString(ResourceKey.WARNING,
-								StringID.Warning.SAME_FILE_EXISTS_ID),
-						resourceHolder.getString(ResourceKey.WARNING,
-								StringID.Warning.SAVE_TITLE_ID),
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-					throw new UserCanceledException();
-				}
-			}
-
-			var savingAction = filter.getSavingAction();
-
-			return savingAction.setPath(filePath);
-
-		} catch (UserCanceledException cancel) {
-			throw new FileChooserCanceledException();
-		} catch (Exception e) {
-			logger.error("error on saving a file", e);
-			Dialogs.showErrorDialog(this, resourceHolder.getString(
-					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 		}
 
-		return null;
+		var savingAction = filter.getSavingAction();
+
+		if (savingAction == null) {
+			throw new IllegalStateException("The filter is not for saving the file.");
+		}
+
+		return savingAction.setPath(filePath);
 	}
 
 	/*
@@ -167,7 +156,8 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 	 */
 	@Override
 	public AbstractLoadingAction<Data> getActionForLoadingFile(
-			final Component parent) throws FileChooserCanceledException {
+			final Component parent)
+			throws FileChooserCanceledException, FileNotFoundException, IllegalStateException {
 
 		if (this.showOpenDialog(parent) != JFileChooser.APPROVE_OPTION) {
 			throw new FileChooserCanceledException();
@@ -178,26 +168,37 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 			throw new RuntimeException("Wrong Implementation!");
 		}
 
-		try {
-			String filePath = this.getSelectedFile().getPath();
-			@SuppressWarnings("unchecked")
-			FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) rawFilter;
-			logger.debug("preparing loadingAction for: " + filePath);
-			AbstractLoadingAction<Data> loadingAction;
+		@SuppressWarnings("unchecked")
+		FileAccessSupportFilter<Data> filter = (FileAccessSupportFilter<Data>) rawFilter;
 
+		File file = this.getSelectedFile();
+		if (!file.exists()) {
+			throw new FileNotFoundException("Selected file doesn't exist.");
+		}
+
+		String filePath = file.getPath();
+
+		logger.debug("preparing loadingAction for: " + filePath);
+
+		AbstractLoadingAction<Data> loadingAction = null;
+
+		try {
 			if (filter instanceof MultiTypeAcceptableFileLoadingFilter<?>) {
 				MultiTypeAcceptableFileLoadingFilter<Data> multiFilter = (MultiTypeAcceptableFileLoadingFilter<Data>) filter;
 				loadingAction = multiFilter.getLoadingAction(filePath);
 			} else {
 				loadingAction = filter.getLoadingAction();
 			}
-
-			return loadingAction.setPath(filePath);
-		} catch (Exception e) {
-			logger.error("error on loading a file", e);
+		} catch (IllegalArgumentException e) {
+			logger.error("error on getting a loadingAction: ", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
-			return null;
 		}
+
+		if (loadingAction == null) {
+			throw new IllegalStateException("The filter is not for loading the file.");
+		}
+
+		return loadingAction.setPath(filePath);
 	}
 }

@@ -1,6 +1,7 @@
 package oripa.persistent.doc;
 
 import java.awt.Component;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -53,16 +54,13 @@ public class DocDAO {
 		FileAccessActionProvider<Doc> chooser = chooserFactory.createChooser(
 				homePath, filters);
 
-		AbstractSavingAction<Doc> saver = chooser
-				.getActionForSavingFile(parent);
-
-		if (saver.getPath() == null) {
-			saver.setPath(homePath);
+		try {
+			AbstractSavingAction<Doc> saver = chooser.getActionForSavingFile(parent);
+			saver.save(doc);
+			return saver.getPath();
+		} catch (IllegalStateException e) {
+			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
 		}
-
-		saver.save(doc);
-
-		return saver.getPath();
 	}
 
 	public void saveUsingGUIWithModelCheck(final Doc doc, final Component owner,
@@ -93,13 +91,17 @@ public class DocDAO {
 
 	public Doc loadUsingGUI(final String homePath,
 			final FileAccessSupportFilter<Doc>[] filters, final Component parent)
-			throws FileVersionError, FileChooserCanceledException, IOException,
-			WrongDataFormatException {
+			throws FileVersionError, FileChooserCanceledException, IllegalArgumentException,
+			IOException, FileNotFoundException, WrongDataFormatException {
 		FileChooserFactory<Doc> factory = new FileChooserFactory<>();
 		FileChooser<Doc> fileChooser = factory.createChooser(
 				homePath, filters);
 
-		return fileChooser.getActionForLoadingFile(parent).load();
+		try {
+			return fileChooser.getActionForLoadingFile(parent).load();
+		} catch (IllegalStateException e) {
+			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
+		}
 
 	}
 }
