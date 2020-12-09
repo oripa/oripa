@@ -36,7 +36,6 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 			.getLogger(MultiTypeAcceptableFileLoadingFilter.class);
 
 	private final Collection<FileAccessSupportFilter<Data>> filters;
-	private final String msg;
 
 	/**
 	 *
@@ -56,7 +55,6 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 						.collect(Collectors.toList())),
 				msg);
 		this.filters = filters;
-		this.msg = msg;
 	}
 
 	@Deprecated
