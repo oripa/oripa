@@ -462,6 +462,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			loadFile(filePath);
 			updateTitleText();
 		} catch (Exception ex) {
+			logger.error("error when loading: ", ex);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), ex);
 		}

@@ -158,7 +158,7 @@ public class DocFilterSelector {
 		}
 
 		return Stream.of(toArray())
-				.filter(f -> f.accept(file))
+				.filter(f -> f.accept(file) && f.getLoadingAction() != null)
 				.findFirst();
 	}
 
