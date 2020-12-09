@@ -571,15 +571,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			final FileAccessSupportFilter<Doc>... filters) {
 
 		try {
-			var savedPathOpt = dataFileAccess.saveFile(
-					document, directory, fileName, this, filters);
-
-			if (savedPathOpt.isEmpty()) {
-				return document.getDataFilePath();
-			}
-
-			paintContext.creasePatternUndo().clearChanged();
-			return savedPathOpt.get();
+			return dataFileAccess.saveFile(
+					document, directory, fileName, this, filters)
+					.map(path -> {
+						paintContext.creasePatternUndo().clearChanged();
+						return path;
+					})
+					.orElse(document.getDataFilePath());
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("failed to save", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
