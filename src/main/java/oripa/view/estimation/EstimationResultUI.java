@@ -60,6 +60,8 @@ public class EstimationResultUI extends JPanel {
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
+	private String lastFilePath = null;
+
 	/**
 	 * This is the default constructor
 	 */
@@ -279,8 +281,8 @@ public class EstimationResultUI extends JPanel {
 
 						try {
 							final DocDAO dao = new DocDAO();
-							dao.saveUsingGUI(
-									doc, null, EstimationResultUI.this, createFilters());
+							lastFilePath = dao.saveUsingGUI(
+									doc, lastFilePath, EstimationResultUI.this, createFilters());
 						} catch (FileChooserCanceledException canceledEx) {
 						} catch (Exception ex) {
 							logger.error("error: ", ex);
