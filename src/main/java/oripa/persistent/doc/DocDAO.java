@@ -21,10 +21,10 @@ public class DocDAO {
 	private final DocFilterSelector selector = new DocFilterSelector();
 
 	public Doc load(final String path)
-			throws FileVersionError, IOException, WrongDataFormatException {
+			throws FileVersionError, IOException, IllegalArgumentException,
+			WrongDataFormatException {
 
-		var loadingAction = selector.getLoadableFilterOf(path).get()
-				.getLoadingAction();
+		var loadingAction = selector.getLoadableFilterOf(path).getLoadingAction();
 
 		return loadingAction.setPath(path).load();
 	}

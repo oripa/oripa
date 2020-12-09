@@ -670,7 +670,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			// the document object is referred by screen and UI panel as a
 			// Holder.
 			document.set(docOpt.get());
-		} catch (FileVersionError | WrongDataFormatException | IOException e) {
+		} catch (FileVersionError | IllegalArgumentException | WrongDataFormatException
+				| IOException e) {
 			logger.error("failed to load", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);

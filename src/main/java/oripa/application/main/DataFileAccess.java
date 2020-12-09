@@ -113,7 +113,8 @@ public class DataFileAccess {
 	 */
 	public Optional<Doc> loadFile(final String filePath, final String lastFilePath,
 			final Component owner, final FileAccessSupportFilter<Doc>... filters)
-			throws FileVersionError, WrongDataFormatException, IOException {
+			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
+			IOException {
 
 		try {
 			if (filePath != null) {

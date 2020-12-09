@@ -2,7 +2,6 @@ package oripa.persistent.doc;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -142,24 +141,25 @@ public class DocFilterSelector {
 	}
 
 	/**
-	 * returns null if any filter cannot load the file.
-	 *
 	 * @param path
 	 * @return a filter that can load the file at the path.
 	 */
-	public Optional<FileAccessSupportFilter<Doc>> getLoadableFilterOf(final String path) {
+	public FileAccessSupportFilter<Doc> getLoadableFilterOf(final String path)
+			throws IllegalArgumentException {
 		if (path == null) {
-			return Optional.empty();
+			throw new IllegalArgumentException("Wrong path (null)");
 		}
 
 		File file = new File(path);
 		if (file.isDirectory()) {
-			return Optional.empty();
+			throw new IllegalArgumentException("The path is for directory.");
 		}
 
 		return Stream.of(toArray())
 				.filter(f -> f.accept(file) && f.getLoadingAction() != null)
-				.findFirst();
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException(
+						"cannot load the file with the extension."));
 	}
 
 	/**
