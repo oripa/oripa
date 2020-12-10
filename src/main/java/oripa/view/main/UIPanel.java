@@ -812,7 +812,7 @@ public class UIPanel extends JPanel {
 						resources.getString(ResourceKey.INFO,
 								StringID.Information.SIMPLIFYING_CP_TITLE_ID),
 						JOptionPane.INFORMATION_MESSAGE),
-				// re-create the model data for simplified crease pattern
+				// folding faled.
 				() -> JOptionPane.showMessageDialog(
 						this,
 						resources.getString(
