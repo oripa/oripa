@@ -33,7 +33,7 @@ import oripa.value.OriLine;
 
 public class Folder {
 
-	private final ArrayList<Condition4> condition4s = new ArrayList<>();
+	private ArrayList<Condition4> condition4s;
 	private int workORmat[][];
 	private ArrayList<SubFace> subFaces;
 
@@ -89,6 +89,8 @@ public class Folder {
 		step1(faces, overlapRelation);
 
 		holdCondition3s(faces, paperSize, overlapRelation);
+
+		condition4s = new ArrayList<>();
 		holdCondition4s(edges, overlapRelation);
 
 		estimation(faces, overlapRelation);
