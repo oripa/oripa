@@ -22,6 +22,19 @@ import oripa.persistent.filetool.WrongDataFormatException;
 public class DocDAO {
 	private final DocFilterSelector selector = new DocFilterSelector();
 
+	/**
+	 *
+	 * @param path
+	 *            for the file to be loaded.
+	 * @return loaded doc.
+	 * @throws FileVersionError
+	 * @throws IOException
+	 *             file IO trouble.
+	 * @throws FileNotFoundException
+	 * @throws IllegalArgumentException
+	 *             {@code path} is not correct.
+	 * @throws WrongDataFormatException
+	 */
 	public Doc load(final String path)
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException {
@@ -37,6 +50,19 @@ public class DocDAO {
 		return loadingAction.setPath(path).load();
 	}
 
+	/**
+	 *
+	 * @param doc
+	 *            to be saved.
+	 * @param path
+	 *            for the place to save the {@code doc}.
+	 * @param type
+	 *            file type.
+	 * @throws IOException
+	 *             file IO trouble.
+	 * @throws IllegalArgumentException
+	 *             {@code doc} can't be saved as the suggested file type.
+	 */
 	public void save(final Doc doc, final String path, final CreasePatternFileTypeKey type)
 			throws IOException, IllegalArgumentException {
 
@@ -52,6 +78,12 @@ public class DocDAO {
 	 * @param parent
 	 * @param filters
 	 * @return chosen path
+	 * @throws FileChooserCanceledException
+	 * @throws IOException
+	 *             file IO trouble.
+	 * @throws IllegalArgumentException
+	 *             the filter chosen from {@code filters} by user accepts the
+	 *             selected file but is not for saving the file.
 	 */
 	public String saveUsingGUI(final Doc doc, final String homePath,
 			final Component parent,
@@ -96,6 +128,24 @@ public class DocDAO {
 		saveUsingGUI(doc, null, owner, filter);
 	}
 
+	/**
+	 *
+	 * @param homePath
+	 * @param filters
+	 * @param parent
+	 * @return loaded doc.
+	 * @throws FileVersionError
+	 * @throws FileChooserCanceledException
+	 * @throws IllegalArgumentException
+	 *             the filter chosen from {@code filters} by user accepts the
+	 *             selected file but is not for loading the file.
+	 * @throws IOException
+	 *             file IO trouble.
+	 * @throws FileNotFoundException
+	 *             selected file doesn't exist.
+	 * @throws WrongDataFormatException
+	 *             loading failed because of data format problem.
+	 */
 	public Doc loadUsingGUI(final String homePath,
 			final FileAccessSupportFilter<Doc>[] filters, final Component parent)
 			throws FileVersionError, FileChooserCanceledException, IllegalArgumentException,
