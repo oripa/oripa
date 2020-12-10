@@ -38,7 +38,7 @@ public class OrigamiModelInteractiveBuilder {
 	/**
 	 *
 	 * @param creasePattern
-	 * @param cleaningUpDuplicationNeeded
+	 * @param needCleaningUpDuplication
 	 *            a function that returns {@code true} if cleaning up line
 	 *            duplication is needed.
 	 * @param showCleaningUpMessage
@@ -48,7 +48,7 @@ public class OrigamiModelInteractiveBuilder {
 	 * @return origami model data.
 	 */
 	public OrigamiModel build(final CreasePatternInterface creasePattern,
-			final Supplier<Boolean> cleaningUpDuplicationNeeded,
+			final Supplier<Boolean> needCleaningUpDuplication,
 			final Runnable showCleaningUpMessage,
 			final Runnable showFailureMessage) {
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
@@ -63,7 +63,7 @@ public class OrigamiModelInteractiveBuilder {
 		}
 
 		// ask if ORIPA should try to remove duplication.
-		if (!cleaningUpDuplicationNeeded.get()) {
+		if (!needCleaningUpDuplication.get()) {
 			// the answer is "no."
 			return origamiModel;
 		}

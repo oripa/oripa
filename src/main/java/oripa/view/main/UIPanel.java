@@ -812,7 +812,7 @@ public class UIPanel extends JPanel {
 						resources.getString(ResourceKey.INFO,
 								StringID.Information.SIMPLIFYING_CP_TITLE_ID),
 						JOptionPane.INFORMATION_MESSAGE),
-				// folding faled.
+				// folding failed.
 				() -> JOptionPane.showMessageDialog(
 						this,
 						resources.getString(
