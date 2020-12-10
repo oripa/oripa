@@ -636,12 +636,22 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuFile.add(menuItemExit);
 	}
 
+	/**
+	 * Update file menu. Do nothing if the given {@code filePath} is null or
+	 * wrong.
+	 *
+	 * @param filePath
+	 */
 	private void updateMenu(final String filePath) {
-
-		if (filterSelector.getLoadableFilterOf(filePath) == null) {
+		if (filePath == null) {
 			return;
 		}
-
+		try {
+			filterSelector.getLoadableFilterOf(filePath);
+		} catch (IllegalArgumentException e) {
+			logger.debug("updating menu is canceled.", e);
+			return;
+		}
 		fileHistory.useFile(filePath);
 
 		buildFileMenu();
@@ -652,6 +662,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 * otherwise, it tries to read data from the path.
 	 *
 	 * @param filePath
+	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
 	private String loadFile(final String filePath) {
 		childFrameManager.closeAllChildrenRecursively(this);

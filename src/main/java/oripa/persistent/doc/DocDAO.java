@@ -1,6 +1,7 @@
 package oripa.persistent.doc;
 
 import java.awt.Component;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -22,8 +23,14 @@ public class DocDAO {
 	private final DocFilterSelector selector = new DocFilterSelector();
 
 	public Doc load(final String path)
-			throws FileVersionError, IOException, IllegalArgumentException,
+			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException {
+
+		var file = new File(path);
+
+		if (!file.exists()) {
+			throw new FileNotFoundException(path + " doesn't exist.");
+		}
 
 		var loadingAction = selector.getLoadableFilterOf(path).getLoadingAction();
 
