@@ -47,6 +47,7 @@ import javax.swing.border.EtchedBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.application.main.OrigamiModelInteractiveBuilder;
 import oripa.appstate.InputCommandStatePopper;
 import oripa.appstate.StateManager;
 import oripa.bind.ButtonFactory;
@@ -789,61 +790,38 @@ public class UIPanel extends JPanel {
 	}
 
 	private OrigamiModel buildOrigamiModel(final CreasePatternInterface creasePattern) {
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		OrigamiModel origamiModel = modelFactory.createOrigamiModel(
-				creasePattern, creasePattern.getPaperSize());
+		var builder = new OrigamiModelInteractiveBuilder();
 
-		logger.debug("Building origami model.");
-
-		if (origamiModel.isProbablyFoldable()) {
-			logger.debug("No modification is needed.");
-			return origamiModel;
-		}
-
-		// ask if ORIPA should try to remove duplication.
-		if (JOptionPane.showConfirmDialog(
-				this,
-				resources.getString(
-						ResourceKey.WARNING,
-						StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
-				resources.getString(
-						ResourceKey.WARNING,
-						StringID.Warning.FAILED_TITLE_ID),
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION) {
-			// the answer is "no."
-			return origamiModel;
-		}
-
-		// clean up the crease pattern
-		if (creasePattern.cleanDuplicatedLines()) {
-			JOptionPane.showMessageDialog(
-					this,
-					resources.getString(ResourceKey.INFO, StringID.Information.SIMPLIFYING_CP_ID),
-					resources.getString(ResourceKey.INFO,
-							StringID.Information.SIMPLIFYING_CP_TITLE_ID),
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-		// re-create the model data for simplified crease pattern
-		origamiModel = modelFactory
-				.createOrigamiModel(
-						creasePattern, creasePattern.getPaperSize());
-
-		if (origamiModel.isProbablyFoldable()) {
-			return origamiModel;
-		}
-
-		JOptionPane.showMessageDialog(
-				this,
-				resources.getString(
-						ResourceKey.WARNING,
-						StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID),
-				resources.getString(
-						ResourceKey.WARNING,
-						StringID.Warning.FAILED_TITLE_ID),
-				JOptionPane.WARNING_MESSAGE);
-
-		return origamiModel;
+		return builder.build(creasePattern,
+				// ask if ORIPA should try to remove duplication.
+				() -> JOptionPane.showConfirmDialog(
+						this,
+						resources.getString(
+								ResourceKey.WARNING,
+								StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
+						resources.getString(
+								ResourceKey.WARNING,
+								StringID.Warning.FAILED_TITLE_ID),
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION,
+				// clean up the crease pattern
+				() -> JOptionPane.showMessageDialog(
+						this,
+						resources.getString(ResourceKey.INFO,
+								StringID.Information.SIMPLIFYING_CP_ID),
+						resources.getString(ResourceKey.INFO,
+								StringID.Information.SIMPLIFYING_CP_TITLE_ID),
+						JOptionPane.INFORMATION_MESSAGE),
+				// re-create the model data for simplified crease pattern
+				() -> JOptionPane.showMessageDialog(
+						this,
+						resources.getString(
+								ResourceKey.WARNING,
+								StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID),
+						resources.getString(
+								ResourceKey.WARNING,
+								StringID.Warning.FAILED_TITLE_ID),
+						JOptionPane.WARNING_MESSAGE));
 	}
 
 	private void addPropertyChangeListenersToSetting(final MainScreenSetting mainScreenSetting) {
