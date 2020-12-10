@@ -29,7 +29,7 @@ public interface Exporter<Data> {
 	 *
 	 * @param data
 	 * @param filePath
-	 * @return true if the aciton succeeds, otherwise false.
+	 * @return true if the action succeeds, otherwise false.
 	 * @throws IOException
 	 *             Error on file access.
 	 * @throws IllegalArgumentException
