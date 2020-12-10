@@ -35,6 +35,18 @@ public class OrigamiModelInteractiveBuilder {
 	private static final Logger logger = LoggerFactory
 			.getLogger(OrigamiModelInteractiveBuilder.class);
 
+	/**
+	 *
+	 * @param creasePattern
+	 * @param cleaningUpDuplicationNeeded
+	 *            a function that returns {@code true} if cleaning up line
+	 *            duplication is needed.
+	 * @param showCleaningUpMessage
+	 *            an action that tells cleaning is done.
+	 * @param showFailureMessage
+	 *            an action that tells folding failed.
+	 * @return origami model data.
+	 */
 	public OrigamiModel build(final CreasePatternInterface creasePattern,
 			final Supplier<Boolean> cleaningUpDuplicationNeeded,
 			final Runnable showCleaningUpMessage,
