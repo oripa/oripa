@@ -1,14 +1,11 @@
 package oripa.persistent.filetool;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class FileAccessSupportFilter<Data>
 		extends javax.swing.filechooser.FileFilter
 		implements Comparable<FileAccessSupportFilter<Data>> {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(FileAccessSupportFilter.class);
+//	private static final Logger logger = LoggerFactory
+//			.getLogger(FileAccessSupportFilter.class);
 
 	/**
 	 *
@@ -59,14 +56,7 @@ public class FileAccessSupportFilter<Data>
 			return true;
 		}
 
-		for (String extension : getExtensions()) {
-
-			if (f.getName().endsWith(extension)) {
-				logger.debug("accepted file: " + f);
-				return true;
-			}
-		}
-		return false;
+		return fileType.extensionsMatch(f.getName());
 	}
 
 	@Override

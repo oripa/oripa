@@ -37,7 +37,7 @@ public interface FileTypeProperty<Data> {
 			return false;
 		}
 		return Arrays.asList(getExtensions()).stream()
-				.anyMatch(extention -> filePath.endsWith(extention));
+				.anyMatch(extension -> filePath.endsWith(extension));
 	}
 
 	/**
