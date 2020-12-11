@@ -86,7 +86,6 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 	@Override
 	public String[] getExtensions() {
 		return filters.stream()
-				.filter(f -> f.getTargetType().getLoader() != null)
 				.flatMap(filter -> Arrays.asList(filter.getExtensions()).stream())
 				.collect(Collectors.toList()).toArray(new String[0]);
 	}
