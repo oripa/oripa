@@ -20,6 +20,7 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -97,7 +98,7 @@ public class OverlappingLineExtractor {
 				.map(pair -> pair.getAngle() <= 0
 						? new AngleLinePair(pair.getAngle() + Math.PI, pair.getLine())
 						: pair)
-				.sorted((a, b) -> Double.compare(a.getAngle(), b.getAngle()))
+				.sorted(Comparator.comparing(AngleLinePair::getAngle))
 				.collect(Collectors.toCollection(() -> new ArrayList<>()));
 	}
 
@@ -137,6 +138,12 @@ public class OverlappingLineExtractor {
 		return pairsSplitByAngle;
 	}
 
+	/**
+	 * extracts all possible overlapping lines.
+	 *
+	 * @param lines
+	 * @return all overlapping lines.
+	 */
 	public Collection<OriLine> extract(final Collection<OriLine> lines) {
 		var startTime = System.currentTimeMillis();
 
