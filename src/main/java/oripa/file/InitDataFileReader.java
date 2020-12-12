@@ -36,7 +36,7 @@ public class InitDataFileReader {
 	 * @return init data in filePath or default init data otherwise
 	 */
 	public InitData read(final String filePath) {
-		InitData initData = null;
+		InitData initData = new InitData();
 		try (var fis = new FileInputStream(filePath);
 				var bis = new BufferedInputStream(fis);
 				var dec = new XMLDecoder(bis);) {
