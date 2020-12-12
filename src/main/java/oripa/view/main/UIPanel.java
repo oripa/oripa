@@ -18,6 +18,7 @@
 
 package oripa.view.main;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -237,7 +238,7 @@ public class UIPanel extends JPanel {
 
 		constructButtons(stateManager, actionHolder, mainFrameSetting, mainScreenSetting);
 
-		// setPreferredSize(new Dimension(210, 400));
+		setPreferredSize(new Dimension(230, 400));
 
 		// create all the Components
 		createEditActionPanel();
@@ -269,20 +270,16 @@ public class UIPanel extends JPanel {
 		generalSettingsPanel.add(buttonsPanel);
 
 		setLayout(new GridBagLayout());
-		GridBagConstraints c = createGridBagConstraints(0, 0, 1);
-		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		c.fill = GridBagConstraints.NONE;
-		c.weighty = 0;
-		add(mainToolPanel, c);
 
-		c.gridy++;
-		c.weighty = 1.0;
-		c.fill = GridBagConstraints.BOTH;
-		add(editModeSettingsPanel, c);
+		var gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.FIRST_LINE_START)
+				.setFill(GridBagConstraints.NONE).setWeight(0.5, 0);
+		add(mainToolPanel, gbFactory.getLineField());
 
-		c.gridy++;
-		c.weighty = 0;
-		add(generalSettingsPanel, c);
+		gbFactory.setWeight(0.5, 1.0).setFill(GridBagConstraints.BOTH);
+		add(editModeSettingsPanel, gbFactory.getLineField());
+
+		gbFactory.setWeight(0.5, 0);
+		add(generalSettingsPanel, gbFactory.getLineField());
 
 		addPropertyChangeListenersToSetting(mainScreenSetting);
 		addActionListenersToComponents(stateManager, actionHolder, cutOutlinesHolder,
@@ -384,7 +381,7 @@ public class UIPanel extends JPanel {
 		lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.VERTICAL_ID,
 				screenUpdater.getKeyListener());
-		lineInputPBisectorButton.setMnemonic(KeyEvent.VK_3);
+		lineInputVerticalLineButton.setMnemonic(KeyEvent.VK_3);
 
 		lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BISECTOR_ID,
@@ -399,22 +396,22 @@ public class UIPanel extends JPanel {
 		lineInputSymmetricButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.SYMMETRIC_ID,
 				screenUpdater.getKeyListener());
-		lineInputVerticalLineButton.setMnemonic(KeyEvent.VK_6);
+		lineInputSymmetricButton.setMnemonic(KeyEvent.VK_6);
 
 		lineInputMirrorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.MIRROR_ID,
 				screenUpdater.getKeyListener());
-		lineInputSymmetricButton.setMnemonic(KeyEvent.VK_7);
+		lineInputMirrorButton.setMnemonic(KeyEvent.VK_7);
 
 		lineInputByValueButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BY_VALUE_ID,
 				screenUpdater.getKeyListener());
-		lineInputMirrorButton.setMnemonic(KeyEvent.VK_8);
+		lineInputByValueButton.setMnemonic(KeyEvent.VK_8);
 
 		lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID,
 				screenUpdater.getKeyListener());
-		lineInputByValueButton.setMnemonic(KeyEvent.VK_9);
+		lineInputPBisectorButton.setMnemonic(KeyEvent.VK_9);
 
 		lineInputAngleSnapButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ANGLE_SNAP_ID,
@@ -487,59 +484,46 @@ public class UIPanel extends JPanel {
 		lineInputPanel.setLayout(new GridBagLayout());
 		lineInputPanel.setBorder(createTitledBorder("Line Input"));
 
-		int gridX = 0;
-		int gridY = 0;
-		int gridWidth = 4;
+		var gbFactory = new GridBagFactory(4).setAnchor(GridBagConstraints.CENTER);
 
 		JLabel label0 = new JLabel("Line Type");
 		label0.setHorizontalAlignment(JLabel.CENTER);
+
 		GridBagConstraints c = createGridBagConstraints(
-				0, gridY++, gridWidth);
+				0, 0, 4);
 		c.anchor = GridBagConstraints.CENTER;
 		c.weighty = 1.0;
-		lineInputPanel.add(label0, c);
+		lineInputPanel.add(label0, gbFactory.getLineField());
 
 		c.gridy++;
 		c.weighty = 0;
-		lineInputPanel.add(lineTypePanel, c);
+		lineInputPanel.add(lineTypePanel, gbFactory.getLineField());
 
 		JLabel label1 = new JLabel("Command (Alt + 1...9)");
 		label1.setHorizontalAlignment(JLabel.CENTER);
 		c.weighty = 1.0;
 		c.gridy++;
-		lineInputPanel.add(label1, c);
+		lineInputPanel.add(label1, gbFactory.getLineField());
 
 		// needs to move into seperate Panel later
 		c.weighty = 1.0;
 		c.gridy++;
-		lineInputPanel.add(angleStepCombo, c);
+		lineInputPanel.add(angleStepCombo, gbFactory.getLineField());
 
-		gridY = c.gridy + 1;
 		c.weighty = 0;
 		// put operation buttons in order
-		lineInputPanel.add(lineInputDirectVButton, createGridBagConstraints(
-				0, gridY, 1));
-		lineInputPanel.add(lineInputOnVButton, createGridBagConstraints(
-				1, gridY, 1));
-		lineInputPanel.add(lineInputPBisectorButton, createGridBagConstraints(
-				2, gridY, 1));
-		lineInputPanel.add(lineInputAngleBisectorButton, createGridBagConstraints(
-				3, gridY++, 1));
-		lineInputPanel.add(lineInputTriangleSplitButton, createGridBagConstraints(
-				0, gridY, 1));
-		lineInputPanel.add(lineInputVerticalLineButton, createGridBagConstraints(
-				1, gridY, 1));
-		lineInputPanel.add(lineInputSymmetricButton, createGridBagConstraints(
-				2, gridY, 1));
-		lineInputPanel.add(lineInputMirrorButton, createGridBagConstraints(
-				3, gridY++, 1));
-		lineInputPanel.add(lineInputByValueButton, createGridBagConstraints(
-				0, gridY, 1));
-		lineInputPanel.add(lineInputAngleSnapButton, createGridBagConstraints(
-				1, gridY, 1));
+		lineInputPanel.add(lineInputDirectVButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputOnVButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputPBisectorButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputAngleBisectorButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputTriangleSplitButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputVerticalLineButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputSymmetricButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputMirrorButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputByValueButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputAngleSnapButton, gbFactory.getNextField());
 
 		setButtonIcons();
-
 	}
 
 	private void createSetAngleStepPanel() {
@@ -563,10 +547,12 @@ public class UIPanel extends JPanel {
 		alterLineTypePanel.setLayout(new GridBagLayout());
 		alterLineTypePanel.setBorder(createTitledBorder("Alter Line Type"));
 
-		alterLineTypePanel.add(l1, createGridBagConstraints(0, 0, 1));
-		alterLineTypePanel.add(alterLine_combo_from, createGridBagConstraints(1, 0, 1));
-		alterLineTypePanel.add(l2, createGridBagConstraints(0, 1, 1));
-		alterLineTypePanel.add(alterLine_combo_to, createGridBagConstraints(1, 1, 1));
+		var gbFactory = new GridBagFactory(2);
+
+		alterLineTypePanel.add(l1, gbFactory.getNextField());
+		alterLineTypePanel.add(alterLine_combo_from, gbFactory.getNextField());
+		alterLineTypePanel.add(l2, gbFactory.getNextField());
+		alterLineTypePanel.add(alterLine_combo_to, gbFactory.getNextField());
 		alterLineTypePanel.setVisible(false);
 	}
 
@@ -596,12 +582,14 @@ public class UIPanel extends JPanel {
 		byValuePanel.setBorder(createTitledBorder("By Value"));
 		byValuePanel.setVisible(false);
 
-		byValuePanel.add(subLabel1, createGridBagConstraints(0, 0, 1));
-		byValuePanel.add(textFieldLength, createGridBagConstraints(1, 0, 1));
-		byValuePanel.add(buttonLength, createGridBagConstraints(2, 0, 1));
-		byValuePanel.add(subLabel2, createGridBagConstraints(0, 1, 1));
-		byValuePanel.add(textFieldAngle, createGridBagConstraints(1, 1, 1));
-		byValuePanel.add(buttonAngle, createGridBagConstraints(2, 1, 1));
+		GridBagFactory gbFactory = new GridBagFactory(3);
+
+		byValuePanel.add(subLabel1, gbFactory.getNextField());
+		byValuePanel.add(textFieldLength, gbFactory.getNextField());
+		byValuePanel.add(buttonLength, gbFactory.getNextField());
+		byValuePanel.add(subLabel2, gbFactory.getNextField());
+		byValuePanel.add(textFieldAngle, gbFactory.getNextField());
+		byValuePanel.add(buttonAngle, gbFactory.getNextField());
 	}
 
 	private void createGridPanel() {
@@ -617,14 +605,16 @@ public class UIPanel extends JPanel {
 		gridPanel.setLayout(new GridBagLayout());
 		gridPanel.setBorder(createTitledBorder("Grid"));
 
-		gridPanel.add(dispGridCheckBox, createGridBagConstraints(0, 0, 3));
+		GridBagFactory gbFactory = new GridBagFactory(3);
 
-		gridPanel.add(gridLabel1, createGridBagConstraints(0, 1, 1));
-		gridPanel.add(textFieldGrid, createGridBagConstraints(1, 1, 1));
-		gridPanel.add(gridChangeButton, createGridBagConstraints(2, 1, 1));
+		gridPanel.add(dispGridCheckBox, gbFactory.getLineField());
 
-		gridPanel.add(gridSmallButton, createGridBagConstraints(0, 2, 1));
-		gridPanel.add(gridLargeButton, createGridBagConstraints(1, 2, 1));
+		gridPanel.add(gridLabel1, gbFactory.getNextField());
+		gridPanel.add(textFieldGrid, gbFactory.getNextField());
+		gridPanel.add(gridChangeButton, gbFactory.getNextField());
+
+		gridPanel.add(gridSmallButton, gbFactory.getNextField());
+		gridPanel.add(gridLargeButton, gbFactory.getNextField());
 
 	}
 
@@ -658,7 +648,7 @@ public class UIPanel extends JPanel {
 		buttonsPanel.setLayout(new GridLayout(n, 1, 10, 2));
 	}
 
-	private class GridBagConstraintsFactory {
+	private class GridBagFactory {
 		private int gridX, gridY;
 		private final int gridWidth;
 		private int anchor;
@@ -666,28 +656,28 @@ public class UIPanel extends JPanel {
 		private double weightX, weightY;
 		private int fill;
 
-		public GridBagConstraintsFactory(final int gridWidth) {
+		public GridBagFactory(final int gridWidth) {
 			gridX = 0;
 			gridY = 0;
-			anchor = GridBagConstraints.WEST;
+			anchor = GridBagConstraints.LINE_START;
 			weightX = 0.5;
 			weightY = 1;
 			fill = GridBagConstraints.HORIZONTAL;
 			this.gridWidth = gridWidth;
 		}
 
-		public GridBagConstraintsFactory setFill(final int fill) {
+		public GridBagFactory setFill(final int fill) {
 			this.fill = fill;
 			return this;
 		}
 
-		public GridBagConstraintsFactory setWeight(final double weightX, final double weightY) {
+		public GridBagFactory setWeight(final double weightX, final double weightY) {
 			this.weightX = weightX;
 			this.weightY = weightY;
 			return this;
 		}
 
-		public GridBagConstraintsFactory setAnchor(final int anchor) {
+		public GridBagFactory setAnchor(final int anchor) {
 			this.anchor = anchor;
 			return this;
 		}
@@ -702,11 +692,11 @@ public class UIPanel extends JPanel {
 				gridX = 0;
 				gridY++;
 			}
-			return getField(gridX, gridY, 1);
+			return getField(gridX++, gridY, 1);
 		}
 
 		public GridBagConstraints fillLineField() {
-			var f = getField(gridX, gridY++, gridWidth - gridX + 1);
+			var f = getField(gridX, gridY++, gridWidth - gridX);
 			gridX = 0;
 			return f;
 		}
