@@ -41,19 +41,29 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 	 *
 	 * Constructor.
 	 *
-	 * @param fileType
-	 *            specifies what to filter
+	 * @param filters
+	 *            filters whose loading action objects are not null.
 	 * @param msg
 	 *            message in filter box
+	 * @throws IllegalArgumentException
+	 *             if a loading action of a filter is null.
 	 */
 	public MultiTypeAcceptableFileLoadingFilter(
 			final Collection<FileAccessSupportFilter<Data>> filters,
-			final String msg) {
+			final String msg) throws IllegalArgumentException {
+
 		super(new MultiTypeProperty<Data>(
 				filters.stream()
 						.map(f -> f.getTargetType())
 						.collect(Collectors.toList())),
 				msg);
+
+		filters.forEach(filter -> {
+			if (filter.getLoadingAction() == null) {
+				throw new IllegalArgumentException("filter should have a loadingAction.");
+			}
+		});
+
 		this.filters = filters;
 	}
 
@@ -76,11 +86,17 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 	@Override
 	public String[] getExtensions() {
 		return filters.stream()
-				.filter(f -> f.getTargetType().getLoader() != null)
 				.flatMap(filter -> Arrays.asList(filter.getExtensions()).stream())
 				.collect(Collectors.toList()).toArray(new String[0]);
 	}
 
+	/**
+	 *
+	 * @param filePath
+	 * @return loading action for the given {@code filePath}.
+	 * @throws IllegalArgumentException
+	 *             if no loading action is for the given {@code filePath}.
+	 */
 	public AbstractLoadingAction<Data> getLoadingAction(final String filePath)
 			throws IllegalArgumentException {
 		return filters.stream()

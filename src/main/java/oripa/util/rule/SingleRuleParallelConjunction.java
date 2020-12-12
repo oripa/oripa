@@ -16,38 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.filetool;
+package oripa.util.rule;
 
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Koji
  *
  */
-public interface FileTypeProperty<Data> {
+public class SingleRuleParallelConjunction<Variable> extends AbstractRule<Collection<Variable>> {
+
+	private final Rule<Variable> rule;
 
 	/**
 	 *
-	 * @return extensions for this file type.
+	 * @param rule
 	 */
-	public abstract String[] getExtensions();
-
-	public default boolean extensionsMatch(final String filePath) {
-		if (filePath == null) {
-			return false;
-		}
-		return Arrays.asList(getExtensions()).stream()
-				.anyMatch(extension -> filePath.endsWith(extension));
+	public SingleRuleParallelConjunction(final Rule<Variable> rule) {
+		this.rule = rule;
 	}
 
-	/**
-	 * @return a text for identifying file type.
-	 */
-	public abstract String getKeyText();
+	@Override
+	public boolean holds(final Collection<Variable> inputs) {
+		return inputs.parallelStream().allMatch(input -> rule.holds(input));
+	}
 
-	public abstract Integer getOrder();
-
-	public abstract Loader<Data> getLoader();
-
-	public abstract Exporter<Data> getExporter();
+	public Set<Variable> findViolations(final Collection<Variable> inputs) {
+		return inputs.parallelStream()
+				.filter(input -> rule.violates(input))
+				.collect(Collectors.toSet());
+	}
 }

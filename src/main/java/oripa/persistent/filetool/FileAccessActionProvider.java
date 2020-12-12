@@ -30,7 +30,8 @@ import java.io.IOException;
 public interface FileAccessActionProvider<Data> {
 
 	/**
-	 * Opens chooser dialog and return saver object for the chosen file.
+	 * Opens chooser dialog and returns saving action object for the chosen
+	 * file.
 	 *
 	 * @param parent
 	 *            parent GUI component
@@ -39,7 +40,8 @@ public interface FileAccessActionProvider<Data> {
 	 *             when user canceled saving.
 	 * @throws IllegalStateException
 	 *             this object doesn't have a saving action for the chosen file.
-	 * @return saver object.
+	 * @return {@link AbstractSavingAction} object whose {@code path} is set to
+	 *         the selected file.
 	 */
 	public abstract AbstractSavingAction<Data> getActionForSavingFile(
 			Component parent)
@@ -51,7 +53,8 @@ public interface FileAccessActionProvider<Data> {
 	 * @param parent
 	 *            parent GUI component
 	 *
-	 * @return loader object.
+	 * @return {@link AbstractLoadingAction} object whose {@code path} is set to
+	 *         the selected file.
 	 * @throws FileChooserCanceledException
 	 *             when user canceled loading.
 	 * @throws IOException
