@@ -23,10 +23,18 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 
 /**
+ * reads filePath into {@link oripa.file.InitData} object.
+ *
  * @author OUCHI Koji
  *
  */
 public class InitDataFileReader {
+	/**
+	 *
+	 * @param filePath
+	 *            init file location
+	 * @return init data in filePath or default init data otherwise
+	 */
 	public InitData read(final String filePath) {
 		InitData initData = null;
 		try (var fis = new FileInputStream(filePath);

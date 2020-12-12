@@ -18,9 +18,15 @@
 
 package oripa.file;
 
+/**
+ * data class for persistent init data
+ *
+ */
 public class InitData {
-	public String lastUsedFile = ""; // dead property
-	public String[] MRUFiles = new String[0];
+	private String lastUsedFile = ""; // dead property, remaining for
+										// compatibility reasons with older init
+										// files
+	private String[] MRUFiles = new String[0];
 
 	private boolean zeroLineWidth = false;
 	private boolean mvLineVisible = true;
@@ -30,26 +36,53 @@ public class InitData {
 	public InitData() {
 	}
 
+	/**
+	 *
+	 * @param s
+	 *            set array of most recently used file paths
+	 */
 	public void setMRUFiles(final String[] s) {
 		MRUFiles = s;
 	}
 
+	/**
+	 *
+	 * @return array of most recently used file paths
+	 */
 	public String[] getMRUFiles() {
 		return MRUFiles;
 	}
 
+	/**
+	 *
+	 * @param s
+	 *            path string to file
+	 */
 	public void setLastUsedFile(final String s) {
 		lastUsedFile = s;
 	}
 
+	/**
+	 *
+	 * @return last used file
+	 */
 	public String getLastUsedFile() {
 		return lastUsedFile;
 	}
 
+	/**
+	 *
+	 * @param zeroLineWidth
+	 *            sets zeroLineWidth
+	 */
 	public void setZeroLineWidth(final boolean zeroLineWidth) {
 		this.zeroLineWidth = zeroLineWidth;
 	}
 
+	/**
+	 *
+	 * @return zeroLineWidth
+	 */
 	public boolean isZeroLineWidth() {
 		return zeroLineWidth;
 	}
