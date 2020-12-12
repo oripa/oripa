@@ -232,8 +232,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		JScrollPane uiScroll = new JScrollPane(uiPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		uiScroll.setPreferredSize(new Dimension(uiPanel.getPreferredSize().width + 25,
-				uiPanel.getPreferredSize().height));
+		uiScroll.setPreferredSize(new Dimension(255, 800));// setPreferredSize(new
+															// Dimension(uiPanel.getPreferredSize().width
+															// + 25,
+		// uiPanel.getPreferredSize().height));
 		uiScroll.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 
 		var stateFactory = new PaintBoundStateFactory(

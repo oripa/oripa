@@ -18,7 +18,6 @@
 
 package oripa.view.main;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -236,7 +235,7 @@ public class UIPanel extends JPanel {
 
 		constructButtons(stateManager, actionHolder, mainFrameSetting, mainScreenSetting);
 
-		setPreferredSize(new Dimension(230, 600));
+		// setPreferredSize(new Dimension(230, 800));
 
 		// create all the Components
 		createEditActionPanel();
@@ -251,32 +250,43 @@ public class UIPanel extends JPanel {
 		createButtonsPanel();
 
 		// editMode Tool settings panel
-		editModeSettingsPanel.setLayout(new BoxLayout(editModeSettingsPanel, BoxLayout.PAGE_AXIS));
+		// editModeSettingsPanel.setLayout(new BoxLayout(editModeSettingsPanel,
+		// BoxLayout.PAGE_AXIS));
+		editModeSettingsPanel.setLayout(new GridBagLayout());
 		editModeSettingsPanel.setBorder(createTitledBorderFrame("Tool Settings"));
 
-		editModeSettingsPanel.add(lineInputPanel);
-		editModeSettingsPanel.add(alterLineTypePanel);
-		editModeSettingsPanel.add(byValuePanel);
-		editModeSettingsPanel.add(angleStepComboPanel);
+		var gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.PAGE_START)
+				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 1);
+
+		editModeSettingsPanel.add(lineInputPanel, gbFactory.getLineField());
+		editModeSettingsPanel.add(alterLineTypePanel, gbFactory.getLineField());
+		editModeSettingsPanel.add(byValuePanel, gbFactory.getLineField());
+		editModeSettingsPanel.add(angleStepComboPanel, gbFactory.getLineField());
 
 		// general settings panel
-		generalSettingsPanel.setLayout(new BoxLayout(generalSettingsPanel, BoxLayout.PAGE_AXIS));
+		// generalSettingsPanel.setLayout(new BoxLayout(generalSettingsPanel,
+		// BoxLayout.PAGE_AXIS));
+		generalSettingsPanel.setLayout(new GridBagLayout());
 		generalSettingsPanel.setBorder(createTitledBorderFrame("General Settings"));
 
-		generalSettingsPanel.add(gridPanel);
-		generalSettingsPanel.add(viewPanel);
-		generalSettingsPanel.add(buttonsPanel);
+		gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.PAGE_START)
+				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0.5);
+
+		generalSettingsPanel.add(gridPanel, gbFactory.getLineField());
+		generalSettingsPanel.add(viewPanel, gbFactory.getLineField());
+		generalSettingsPanel.add(buttonsPanel, gbFactory.getLineField());
 
 		setLayout(new GridBagLayout());
 
-		var gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.FIRST_LINE_START)
-				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0);
+		gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.FIRST_LINE_START)
+				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0.0);
 		add(mainToolPanel, gbFactory.getLineField());
 
-		gbFactory.setWeight(1, 1.0).setFill(GridBagConstraints.BOTH);
+		gbFactory.setWeight(1, 1).setFill(GridBagConstraints.BOTH);
 		add(editModeSettingsPanel, gbFactory.getLineField());
 
-		gbFactory.setWeight(1, 0).setFill(GridBagConstraints.HORIZONTAL);
+		gbFactory.setWeight(1, 0.0).setFill(GridBagConstraints.HORIZONTAL)
+				.setAnchor(GridBagConstraints.FIRST_LINE_START);
 		add(generalSettingsPanel, gbFactory.getLineField());
 
 		addPropertyChangeListenersToSetting(mainScreenSetting);
@@ -427,19 +437,6 @@ public class UIPanel extends JPanel {
 		editModeGroup.add(editModeAddVertex);
 		editModeGroup.add(editModeDeleteVertex);
 
-		// How to enter the line
-		ButtonGroup lineInputGroup = new ButtonGroup();
-		lineInputGroup.add(lineInputDirectVButton);
-		lineInputGroup.add(lineInputOnVButton);
-		lineInputGroup.add(lineInputTriangleSplitButton);
-		lineInputGroup.add(lineInputAngleBisectorButton);
-		lineInputGroup.add(lineInputVerticalLineButton);
-		lineInputGroup.add(lineInputSymmetricButton);
-		lineInputGroup.add(lineInputMirrorButton);
-		lineInputGroup.add(lineInputByValueButton);
-		lineInputGroup.add(lineInputPBisectorButton);
-		lineInputGroup.add(lineInputAngleSnapButton);
-
 		mainToolPanel.setBorder(createTitledBorderFrame("Tools"));
 		mainToolPanel.setLayout(new GridBagLayout());
 
@@ -464,6 +461,19 @@ public class UIPanel extends JPanel {
 		lineTypePanel.add(lineTypeMountainButton);
 		lineTypePanel.add(lineTypeValleyButton);
 		lineTypePanel.add(lineTypeAuxButton);
+
+		// How to enter the line
+		ButtonGroup lineInputGroup = new ButtonGroup();
+		lineInputGroup.add(lineInputDirectVButton);
+		lineInputGroup.add(lineInputOnVButton);
+		lineInputGroup.add(lineInputTriangleSplitButton);
+		lineInputGroup.add(lineInputAngleBisectorButton);
+		lineInputGroup.add(lineInputVerticalLineButton);
+		lineInputGroup.add(lineInputSymmetricButton);
+		lineInputGroup.add(lineInputMirrorButton);
+		lineInputGroup.add(lineInputByValueButton);
+		lineInputGroup.add(lineInputPBisectorButton);
+		lineInputGroup.add(lineInputAngleSnapButton);
 
 		lineInputPanel.setLayout(new GridBagLayout());
 		lineInputPanel.setBorder(createTitledBorder("Line Input"));
