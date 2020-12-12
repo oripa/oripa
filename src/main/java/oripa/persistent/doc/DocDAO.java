@@ -19,10 +19,19 @@ import oripa.persistent.filetool.FileChooserFactory;
 import oripa.persistent.filetool.FileVersionError;
 import oripa.persistent.filetool.WrongDataFormatException;
 
+/**
+ *
+ * load and save {@link oripa.doc.Doc} to/from file
+ *
+ * @author OUCHI Koji
+ *
+ *
+ */
 public class DocDAO {
 	private final DocFilterSelector selector = new DocFilterSelector();
 
 	/**
+	 * try loading file {@code path}
 	 *
 	 * @param path
 	 *            for the file to be loaded.
@@ -51,6 +60,7 @@ public class DocDAO {
 	}
 
 	/**
+	 * save without dialog
 	 *
 	 * @param doc
 	 *            to be saved.
@@ -72,9 +82,12 @@ public class DocDAO {
 	}
 
 	/**
+	 * open save dialog for file types in {@code filters}
 	 *
 	 * @param doc
+	 *            to be saved
 	 * @param homePath
+	 *            starting path to display
 	 * @param parent
 	 * @param filters
 	 * @return chosen path
@@ -102,6 +115,17 @@ public class DocDAO {
 		}
 	}
 
+	/**
+	 * open save dialog and perform foldability check of the model
+	 *
+	 * @param doc
+	 *            to be saved
+	 * @param owner
+	 * @param filter
+	 * @throws FileChooserCanceledException
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 */
 	public void saveUsingGUIWithModelCheck(final Doc doc, final Component owner,
 			final FileAccessSupportFilter<Doc> filter)
 			throws FileChooserCanceledException, IOException, IllegalArgumentException {
@@ -129,9 +153,12 @@ public class DocDAO {
 	}
 
 	/**
+	 * open dialog to load file
 	 *
 	 * @param homePath
+	 *            starting path
 	 * @param filters
+	 *            supported file types
 	 * @param parent
 	 * @return loaded doc.
 	 * @throws FileVersionError

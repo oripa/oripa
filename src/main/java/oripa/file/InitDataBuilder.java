@@ -21,6 +21,8 @@ package oripa.file;
 import java.util.Collection;
 
 /**
+ * create {@link oripa.file.InitData} if all parameters are set
+ *
  * @author OUCHI Koji
  *
  */
@@ -73,6 +75,13 @@ public class InitDataBuilder {
 		}
 	}
 
+	/**
+	 * build object
+	 *
+	 * @return constructed InitData Object
+	 * @throws IllegalStateException
+	 *             if some the data fields is not set
+	 */
 	public InitData get() throws IllegalStateException {
 		assertValueIsSet(MRUFiles, "MRUFiles");
 
