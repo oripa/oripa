@@ -5,12 +5,16 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
 
 public class SelectingVertexForOutline extends PickingVertex {
+	private static final Logger logger = LoggerFactory.getLogger(SelectingVertexForOutline.class);
 
 	@Override
 	protected void initialize() {
@@ -26,6 +30,8 @@ public class SelectingVertexForOutline extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
+
+		logger.debug("# of picked vertices (before): " + context.getPickedVertices().size());
 
 		Vector2d v = context.popVertex();
 
@@ -45,6 +51,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 			context.pushVertex(v);
 		}
 
+		logger.debug("# of picked vertices (after): " + context.getPickedVertices().size());
 	}
 
 	private void closeTmpOutline(final Collection<Vector2d> outlineVertices,

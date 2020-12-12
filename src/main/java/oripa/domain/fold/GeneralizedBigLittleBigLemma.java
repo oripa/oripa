@@ -42,7 +42,7 @@ import oripa.value.OriLine;
  *
  */
 public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
-	private static final Logger LOGGER = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(GeneralizedBigLittleBigLemma.class);
 
 	private static final double EPS = 1e-5;
@@ -71,7 +71,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 		var ranges = findMinimalAngleSequences(vertex);
 
 		for (var range : ranges) {
-			LOGGER.debug("range =[" + range.begin + ", " + range.end + ")");
+			logger.trace("range =[" + range.begin + ", " + range.end + ")");
 			int valleyCount = 0;
 
 			BiFunction<OriEdge, Integer, Integer> incrementIfValley = (edge, count) -> {
@@ -86,17 +86,17 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 			int edgeCount = range.end - range.begin + 1;
 			int mountainCount = edgeCount - valleyCount;
 
-			LOGGER.debug("#edge in the range = " + edgeCount);
-			LOGGER.debug("#V in the range = " + valleyCount);
-			LOGGER.debug("#M in the range = " + mountainCount);
+			logger.trace("#edge in the range = " + edgeCount);
+			logger.trace("#V in the range = " + valleyCount);
+			logger.trace("#M in the range = " + mountainCount);
 
 			if (edgeCount % 2 == 0) {
 				if (valleyCount != mountainCount) {
-					LOGGER.debug("failed (even #edge)");
+					logger.trace("failed (even #edge)");
 					return false;
 				}
 			} else if (Math.abs(valleyCount - mountainCount) != 1) {
-				LOGGER.debug("failed (odd #edge)");
+				logger.trace("failed (odd #edge)");
 				return false;
 			}
 		}
@@ -115,37 +115,32 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 						vertex.getOppositeVertex(i + 1)))
 				.collect(Collectors.toList());
 
-		LOGGER.debug("angles = "
+		logger.trace("angles = "
 				+ String.join(",", angles.stream()
 						.map(a -> Double.toString(Math.toDegrees(a)))
 						.collect(Collectors.toList())));
 
 		Function<Integer, Double> getAngle = i -> CollectionUtil.getCircular(angles, i);
 
-		int i_0 = 0;
+		var maxBounds = new ArrayList<Integer>();
 		for (int i = 0; i < edgeNum; i++) {
 			if (getAngle.apply(i + 1) - getAngle.apply(i) > EPS) {
-				i_0 = i;
-				break;
+				maxBounds.add(i + 1);
 			}
 		}
 
-		int maxBound = 0;
-		for (int i = 0; i < edgeNum; i++) {
-			if (getAngle.apply(i_0 + i + 1) - getAngle.apply(i_0 + i) <= EPS) {
-				continue;
-			}
-			maxBound = i_0 + i + 1;
+		for (int i = 0; i < maxBounds.size(); i++) {
+			int maxBound = maxBounds.get(i);
 			int minBound = maxBound - 1;
-			int count = 0;
+
 			while (Math.abs(getAngle.apply(minBound) - getAngle.apply(maxBound - 1)) <= EPS) {
-				minBound--;
-				count++;
-				// stop if all angles are equal.
-				if (count > edgeNum) {
-					return ranges;
+				// minBound should not exceeds the previous maxBound
+				if (minBound == CollectionUtil.getCircular(maxBounds, i - 1)) {
+					break;
 				}
+				minBound--;
 			}
+			// minBound angle is larger than the sequential equal angles.
 			if (getAngle.apply(minBound) - getAngle.apply(maxBound - 1) > EPS) {
 				ranges.add(new Range(minBound + 1, maxBound));
 			}

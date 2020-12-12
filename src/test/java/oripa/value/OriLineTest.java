@@ -31,7 +31,7 @@ class OriLineTest {
 	@Test
 	void testHashCode() {
 		var line1 = new OriLine(0, 1, 2, 3, OriLine.Type.VALLEY);
-		var line2 = new OriLine(0, 1, 2, 3, OriLine.Type.RIDGE);
+		var line2 = new OriLine(0, 1, 2, 3, OriLine.Type.MOUNTAIN);
 
 		assertTrue(line1.equals(line2));
 		assertTrue(line1.hashCode() == line2.hashCode());

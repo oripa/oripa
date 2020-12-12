@@ -16,39 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.controller;
+package oripa.resource;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import oripa.domain.paint.PaintContextInterface;
+import java.util.ListResourceBundle;
 
 /**
+ * default values
+ *
  * @author OUCHI Koji
  *
  */
-public class SelectAllLineActionListener implements ActionListener {
-	private final PaintContextInterface context;
+public class DefaultStringResource_en extends ListResourceBundle {
 
-	/**
-	 * Constructor
-	 */
-	public SelectAllLineActionListener(final PaintContextInterface context) {
-		this.context = context;
-	}
+	static final Object[][] strings = {
+			{ StringID.Default.FILE_NAME_ID, "NoTitle" },
+	};
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	@Override
-	public void actionPerformed(final ActionEvent e) {
-		context.creasePatternUndo().pushUndoInfo();
-		context.getPainter().selectAllOriLines();
-		context.getCreasePattern().stream()
-				.filter(l -> l.selected).forEach(l -> context.pushLine(l));
+	protected Object[][] getContents() {
+		return strings;
 	}
-
 }

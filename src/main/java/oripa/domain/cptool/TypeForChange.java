@@ -1,8 +1,8 @@
 package oripa.domain.cptool;
 
 public enum TypeForChange {
-	EMPTY("-"),
-	RIDGE("M"), VALLEY("V"), AUX("Aux"), CUT("Cut"), 
+	EMPTY("Any"),
+	MOUNTAIN("M"), VALLEY("V"), AUX("Aux"), CUT("Cut"), 
 	DELETE("Del"), FLIP("Flip");
 	
 	private String shortName;

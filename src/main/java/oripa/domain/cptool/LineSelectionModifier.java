@@ -21,7 +21,7 @@ public class LineSelectionModifier {
 	 */
 	public void selectAllOriLines(final Collection<OriLine> creasePattern) {
 		creasePattern.stream()
-				.filter(l -> l.getType() != OriLine.Type.CUT)
+				.filter(l -> !l.isBoundary())
 				.forEach(l -> l.selected = true);
 	}
 

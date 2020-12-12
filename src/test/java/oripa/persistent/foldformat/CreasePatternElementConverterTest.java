@@ -42,7 +42,7 @@ class CreasePatternElementConverterTest {
 			add(new OriLine(1.0, 1.0, 0.0, 1.0, OriLine.Type.CUT));
 			add(new OriLine(0.0, 1.0, 0.0, 0.0, OriLine.Type.CUT));
 
-			add(new OriLine(0.0, 0.0, 1.0, 1.0, OriLine.Type.RIDGE));
+			add(new OriLine(0.0, 0.0, 1.0, 1.0, OriLine.Type.MOUNTAIN));
 		}
 	};
 

@@ -27,12 +27,10 @@ public class StringID {
 		public static final String UNDO_ID = "Undo";
 		public static final String REDO_ID = "Redo";
 		public static final String ABOUT_ID = "About";
-		public static final String REPEAT_COPY_ID = "RepeatCopy";
+		public static final String ARRAY_COPY_ID = "ArrayCopy";
 		public static final String CIRCLE_COPY_ID = "CircleCopy";
-
-		public static final String SELECT_ALL_ID = "selectAll";
-		public static final String UNSELECT_ALL_ID = "unSelectAll";
-		public static final String DELETE_SELECTED_LINES_ID = "deleteSelectedLines";
+		public static final String UNSELECT_ALL_ID = "UnselectAll";
+		public static final String DELETE_SELECTED_ID = "DeleteSelected";
 
 		public static final String DIALOG_TITLE_SAVE_ID = "DialogTitle_FileSave";
 		public static final String ORIPA_FILE_ID = "ORIPA_File";
@@ -42,13 +40,28 @@ public class StringID {
 
 	public static class Error {
 		public static final String SAVE_FAILED_ID = "Error_FileSaveFailed";
-		public static final String LOAD_FAIELD_ID = "Error_FileLoadFailed";
+		public static final String LOAD_FAILED_ID = "Error_FileLoadFailed";
+		public static final String SAVE_INI_FAILED_ID = "Error_SaveIniFailed";
 	}
 
 	public static class Warning {
 		public static final String SAME_FILE_EXISTS_ID = "Warning_SameNameFileExist";
 		public static final String FOLD_FAILED_DUPLICATION_ID = "Warning_foldFail1";
 		public static final String FOLD_FAILED_WRONG_STRUCTURE_ID = "Warning_foldFail2";
+		public static final String NO_SELECTION_ID = "Warning_NoSelection";
+
+		public static final String ARRAY_COPY_TITLE_ID = "Warning_ACTitle";
+		public static final String CIRCLE_COPY_TITLE_ID = "Warning_CCTitle";
+		public static final String SAVE_TITLE_ID = "Warning_SaveTitle";
+		public static final String FAILED_TITLE_ID = "UI_FailedTitle";
+	}
+
+	public static class Information {
+		public static final String SIMPLIFYING_CP_ID = "Info_SimplifyingCP";
+		public static final String NO_ANSWER_ID = "Info_NoAnswer";
+
+		public static final String SIMPLIFYING_CP_TITLE_ID = "Info_SimplifyingCPTitle";
+		public static final String FOLD_ALGORITHM_TITLE_ID = "Info_FoldAlgorithmTitle";
 	}
 
 	public static class Default {
@@ -84,7 +97,6 @@ public class StringID {
 		public static final String AUX_ID = "UI_Aux";
 		public static final String VALLEY_ID = "UI_Valley";
 		public static final String MOUNTAIN_ID = "UI_Mountain";
-
 	}
 
 	// ------------------------------------------------------------------------
@@ -113,6 +125,7 @@ public class StringID {
 	public static final String ANGLE_SNAP_ID = "angleSnap";
 
 	public static class ModelMenu {
+		public static final String FILE_ID = "File";
 		public static final String DISPLAY_ID = "MENU_Disp";
 		public static final String EXPORT_DXF_ID = "MENU_ExportModelLine_DXF";
 		public static final String INVERT_ID = "MENU_Invert";

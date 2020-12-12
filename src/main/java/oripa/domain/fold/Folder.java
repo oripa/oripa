@@ -33,7 +33,7 @@ import oripa.value.OriLine;
 
 public class Folder {
 
-	private final ArrayList<Condition4> condition4s = new ArrayList<>();
+	private ArrayList<Condition4> condition4s;
 	private int workORmat[][];
 	private ArrayList<SubFace> subFaces;
 
@@ -89,6 +89,8 @@ public class Folder {
 		step1(faces, overlapRelation);
 
 		holdCondition3s(faces, paperSize, overlapRelation);
+
+		condition4s = new ArrayList<>();
 		holdCondition4s(edges, overlapRelation);
 
 		estimation(faces, overlapRelation);
@@ -592,7 +594,7 @@ public class Folder {
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				OriLine line = new OriLine(he.positionAfterFolded, he.next.positionAfterFolded,
-						OriLine.Type.RIDGE);
+						OriLine.Type.MOUNTAIN);
 				painter.addLine(line);
 			}
 		}
@@ -815,7 +817,7 @@ public class Folder {
 					continue;
 				}
 
-				if ((face.faceFront && he.edge.type == OriLine.Type.RIDGE.toInt())
+				if ((face.faceFront && he.edge.type == OriLine.Type.MOUNTAIN.toInt())
 						|| (!face.faceFront && he.edge.type == OriLine.Type.VALLEY.toInt())) {
 					overlapRelation[face.tmpInt][pairFace.tmpInt] = OverlapRelationValues.UPPER;
 					overlapRelation[pairFace.tmpInt][face.tmpInt] = OverlapRelationValues.LOWER;

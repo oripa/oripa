@@ -70,7 +70,7 @@ public class CreasePatternFactory {
 		// To get paper size, consider boundary only
 		var domain = new RectangleDomain(
 				lines.stream()
-						.filter(line -> line.getType() == OriLine.Type.CUT)
+						.filter(line -> line.isBoundary())
 						.collect(Collectors.toList()));
 
 		// Construct CP

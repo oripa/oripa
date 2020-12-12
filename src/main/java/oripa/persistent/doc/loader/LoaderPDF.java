@@ -67,7 +67,7 @@ public class LoaderPDF implements DocLoader {
 					line = new OriLine();
 					lines.add(line);
 					System.out.println("new Line " + st.sval);
-					line.setType(Integer.parseInt(st.sval) == 1 ? OriLine.Type.RIDGE
+					line.setType(Integer.parseInt(st.sval) == 1 ? OriLine.Type.MOUNTAIN
 							: OriLine.Type.VALLEY);
 
 					System.out.println("line type " + line.getType().toInt());

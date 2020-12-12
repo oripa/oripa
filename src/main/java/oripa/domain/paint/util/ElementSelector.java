@@ -10,11 +10,11 @@ public class ElementSelector {
 	public Color getColor(final OriLine.Type lineType) {
 
 		switch (lineType) {
-		case NONE:
+		case AUX:
 			return Color.LIGHT_GRAY;
 		case CUT:
 			return Color.BLACK;
-		case RIDGE:
+		case MOUNTAIN:
 			return Color.RED;
 		case VALLEY:
 			return Color.BLUE;
@@ -28,9 +28,9 @@ public class ElementSelector {
 	public BasicStroke createStroke(final OriLine.Type lineType, final double scale,
 			final boolean zeroWidth) {
 		switch (lineType) {
-		case NONE:
+		case AUX:
 		case CUT:
-		case RIDGE:
+		case MOUNTAIN:
 		case VALLEY:
 			return new BasicStroke(createThinLineWidth(scale, zeroWidth), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);

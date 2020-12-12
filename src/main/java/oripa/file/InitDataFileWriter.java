@@ -24,10 +24,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * writes {@link oripa.file.InitData} to file
+ *
  * @author OUCHI Koji
  *
  */
 public class InitDataFileWriter {
+	/**
+	 *
+	 * @param initData
+	 *            to be written
+	 * @param filePath
+	 */
 	public void write(final InitData initData, final String filePath) {
 		try (var fos = new FileOutputStream(filePath);
 				var bos = new BufferedOutputStream(fos);

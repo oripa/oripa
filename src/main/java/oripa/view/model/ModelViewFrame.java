@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
@@ -36,16 +37,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.ORIPA;
+import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.FileTypeKey;
-import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
-import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
-import oripa.persistent.filetool.FileAccessActionProvider;
-import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.FileChooserFactory;
-import oripa.persistent.filetool.SavingActionTemplate;
+import oripa.persistent.doc.OrigamiModelFileTypeKey;
+import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.viewsetting.main.MainScreenSetting;
@@ -87,6 +84,8 @@ public class ModelViewFrame extends JFrame
 
 	private OrigamiModel origamiModel = null;
 	private final MainScreenSetting mainScreenSetting;
+
+	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess();
 
 	public ModelViewFrame(
 			final int width, final int height,
@@ -156,9 +155,9 @@ public class ModelViewFrame extends JFrame
 			mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected());
 		});
 
-		menuItemExportDXF.addActionListener(e -> exportFile(FileTypeKey.DXF_MODEL));
+		menuItemExportDXF.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.DXF_MODEL));
 
-		menuItemExportOBJ.addActionListener(e -> exportFile(FileTypeKey.OBJ_MODEL));
+		menuItemExportOBJ.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.OBJ_MODEL));
 
 		menuItemFillAlpha.addActionListener(e -> {
 			screen.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
@@ -194,40 +193,15 @@ public class ModelViewFrame extends JFrame
 
 	}
 
-	private FileAccessSupportFilter<OrigamiModel> createFilter(final FileTypeKey type) {
-		FileAccessSupportFilter<OrigamiModel> filter = new FileAccessSupportFilter<OrigamiModel>(
-				type,
-				FileAccessSupportFilter.createDefaultDescription(
-						type, ORIPA.res.getString("File")));
-
-		switch (type) {
-		case DXF_MODEL:
-			filter.setSavingAction(
-					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterDXF()));
-			break;
-		case OBJ_MODEL:
-			filter.setSavingAction(
-					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterOBJ()));
-			break;
-		default:
-			throw new RuntimeException("Wrong implementation");
-		}
-
-		return filter;
-	}
-
-	private void exportFile(final FileTypeKey type) {
-
-		FileChooserFactory<OrigamiModel> chooserFactory = new FileChooserFactory<>();
-		FileAccessActionProvider<OrigamiModel> chooser = chooserFactory.createChooser(null,
-				createFilter(type));
+	private void exportFile(final OrigamiModelFileTypeKey type) {
 
 		try {
-			chooser.getActionForSavingFile(this).save(origamiModel);
+			fileAccess.save(type, origamiModel, this);
+		} catch (FileChooserCanceledException e) {
+
 		} catch (Exception e) {
-
+			JOptionPane.showMessageDialog(this, e, "Error", JOptionPane.ERROR_MESSAGE);
 		}
-
 	}
 
 }

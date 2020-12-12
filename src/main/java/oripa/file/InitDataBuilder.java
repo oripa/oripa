@@ -21,36 +21,87 @@ package oripa.file;
 import java.util.Collection;
 
 /**
+ * create {@link oripa.file.InitData} if all parameters are set
+ *
  * @author OUCHI Koji
  *
  */
 public class InitDataBuilder {
-	private InitData initData;
+
+	public String lastUsedFile = ""; // dead property
+	public String[] MRUFiles = null;
+
+	private Boolean zeroLineWidth = null;
+	private Boolean mvLineVisible = null;
+	private Boolean auxLineVisible = null;
+	private Boolean vertexVisible = null;
 
 	public InitDataBuilder() {
-		initData = new InitData();
-	}
-
-	public void clear() {
-		initData = new InitData();
 	}
 
 	public InitDataBuilder setLastUsedFile(final String filePath) {
-		initData.setLastUsedFile(filePath);
+		lastUsedFile = filePath;
 		return this;
 	}
 
 	public InitDataBuilder setMRUFiles(final Collection<String> mru) {
-		initData.setMRUFiles(mru.toArray(new String[mru.size()]));
+		MRUFiles = mru.toArray(new String[mru.size()]);
 		return this;
 	}
 
 	public InitDataBuilder setZeroLineWidth(final boolean zeroLineWidth) {
-		initData.setZeroLineWidth(zeroLineWidth);
+		this.zeroLineWidth = Boolean.valueOf(zeroLineWidth);
 		return this;
 	}
 
-	public InitData get() {
+	public InitDataBuilder setMVLineVisible(final boolean mvLineVisible) {
+		this.mvLineVisible = Boolean.valueOf(mvLineVisible);
+		return this;
+	}
+
+	public InitDataBuilder setAuxLineVisible(final boolean auxLineVisible) {
+		this.auxLineVisible = Boolean.valueOf(auxLineVisible);
+		return this;
+	}
+
+	public InitDataBuilder setVertexVisible(final boolean vertexVisible) {
+		this.vertexVisible = Boolean.valueOf(vertexVisible);
+		return this;
+	}
+
+	private void assertValueIsSet(final Object obj, final String displayName) {
+		if (obj == null) {
+			throw new IllegalStateException(displayName + " should have some value.");
+		}
+	}
+
+	/**
+	 * build object
+	 *
+	 * @return constructed InitData Object
+	 * @throws IllegalStateException
+	 *             if some the data fields is not set
+	 */
+	public InitData get() throws IllegalStateException {
+		assertValueIsSet(MRUFiles, "MRUFiles");
+
+		assertValueIsSet(zeroLineWidth, "zeroLineWidth");
+
+		assertValueIsSet(mvLineVisible, "mvLineVisible");
+		assertValueIsSet(auxLineVisible, "auxLineVisible");
+		assertValueIsSet(vertexVisible, "vertexVisible");
+
+		var initData = new InitData();
+
+		initData.setLastUsedFile(lastUsedFile);
+		initData.setMRUFiles(MRUFiles);
+
+		initData.setZeroLineWidth(zeroLineWidth);
+
+		initData.setMvLineVisible(mvLineVisible);
+		initData.setAuxLineVisible(auxLineVisible);
+		initData.setVertexVisible(vertexVisible);
+
 		return initData;
 	}
 }

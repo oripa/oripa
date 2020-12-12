@@ -34,7 +34,7 @@ public class ExporterCP implements DocExporter {
 				var bw = new BufferedWriter(fw);) {
 
 			for (OriLine line : doc.getCreasePattern()) {
-				if (line.getType() == OriLine.Type.NONE) {
+				if (line.isAux()) {
 					continue;
 				}
 				bw.write(

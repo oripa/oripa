@@ -99,12 +99,11 @@ public class CreasePatternGraphicDrawer {
 			final boolean creaseVisible, final boolean auxVisible) {
 
 		for (OriLine line : lines) {
-			if (line.getType() == OriLine.Type.NONE && !auxVisible) {
+			if (line.isAux() && !auxVisible) {
 				continue;
 			}
 
-			if ((line.getType() == OriLine.Type.RIDGE || line.getType() == OriLine.Type.VALLEY)
-					&& !creaseVisible) {
+			if ((line.isMV()) && !creaseVisible) {
 				continue;
 			}
 
@@ -141,11 +140,10 @@ public class CreasePatternGraphicDrawer {
 		final double vertexSize = selector.createNormalVertexSize(scale);
 		final double vertexHalfSize = vertexSize / 2;
 		for (OriLine line : creasePattern) {
-			if (!auxVisible && line.getType() == OriLine.Type.NONE) {
+			if (!auxVisible && line.isAux()) {
 				continue;
 			}
-			if (!creaseVisible && (line.getType() == OriLine.Type.RIDGE
-					|| line.getType() == OriLine.Type.VALLEY)) {
+			if (!creaseVisible && line.isMV()) {
 				continue;
 			}
 			Vector2d v0 = line.p0;
@@ -175,8 +173,8 @@ public class CreasePatternGraphicDrawer {
 			final RectangleDomain domain,
 			final double scale, final boolean zeroLineWidth) {
 
-		g2d.setColor(selector.getColor(OriLine.Type.NONE));
-		g2d.setStroke(selector.createStroke(OriLine.Type.NONE, scale, zeroLineWidth));
+		g2d.setColor(selector.getColor(OriLine.Type.AUX));
+		g2d.setStroke(selector.createStroke(OriLine.Type.AUX, scale, zeroLineWidth));
 
 		int lineNum = gridDivNum;
 		double step = paperSize / lineNum;

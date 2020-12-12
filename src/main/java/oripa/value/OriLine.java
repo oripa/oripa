@@ -27,16 +27,16 @@ import oripa.geom.Segment;
 
 public class OriLine implements Comparable<OriLine> {
 
-	private static final int TYPE_NONE = 0;
+	private static final int TYPE_AUX = 0;
 	private static final int TYPE_CUT = 1;
-	private static final int TYPE_RIDGE = 2;
+	private static final int TYPE_MOUNTAIN = 2;
 	private static final int TYPE_VALLEY = 3;
 	private static final int TYPE_CUT_MODEL = 4;
 
 	public enum Type {
 
-		NONE(TYPE_NONE), CUT(TYPE_CUT), RIDGE(TYPE_RIDGE), VALLEY(TYPE_VALLEY), CUT_MODEL(
-				TYPE_CUT_MODEL);
+		AUX(TYPE_AUX), CUT(TYPE_CUT), MOUNTAIN(TYPE_MOUNTAIN), VALLEY(
+				TYPE_VALLEY), CUT_MODEL(TYPE_CUT_MODEL);
 
 		private int val;
 
@@ -56,8 +56,8 @@ public class OriLine implements Comparable<OriLine> {
 				type = CUT;
 				break;
 
-			case TYPE_RIDGE:
-				type = RIDGE;
+			case TYPE_MOUNTAIN:
+				type = MOUNTAIN;
 				break;
 
 			case TYPE_VALLEY:
@@ -68,8 +68,8 @@ public class OriLine implements Comparable<OriLine> {
 				type = CUT_MODEL;
 				break;
 
-			case TYPE_NONE:
-				type = NONE;
+			case TYPE_AUX:
+				type = AUX;
 				break;
 
 			default:
@@ -80,7 +80,7 @@ public class OriLine implements Comparable<OriLine> {
 		}
 	};
 
-	private Type type = Type.NONE;
+	private Type type = Type.AUX;
 
 	public boolean selected;
 	public OriPoint p0 = new OriPoint();
@@ -117,28 +117,22 @@ public class OriLine implements Comparable<OriLine> {
 		return type;
 	}
 
+	public boolean isBoundary() {
+		return type == Type.CUT;
+	}
+
+	public boolean isMV() {
+		return type == Type.MOUNTAIN || type == Type.VALLEY;
+	}
+
+	public boolean isAux() {
+		return type == Type.AUX;
+	}
+
 	@Override
 	public String toString() {
 		return "" + p0 + "" + p1;
 	}
-
-//	public void changeToNextType() {
-//		switch (type) {
-//		case VALLEY:
-//			type = Type.NONE;
-//			break;
-//		case RIDGE:
-//			type = Type.VALLEY;
-//			break;
-//		case CUT:
-//			type = Type.RIDGE;
-//			break;
-//		case NONE:
-//			type = Type.RIDGE;
-//			break;
-//		default:
-//		}
-//	}
 
 	public Segment getSegment() {
 		return new Segment(p0, p1);

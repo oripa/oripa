@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -19,41 +19,51 @@
 package oripa.persistent.filetool;
 
 import java.awt.Component;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * @author Koji
- * 
+ *
  * @param <Data>
  */
 public interface FileAccessActionProvider<Data> {
 
 	/**
-	 * Opens chooser dialog and return saver object for the chosen file. throws
-	 * {@link IllegalArgumentException} if user selected a file which has a
-	 * extension not supported by the selected filter.
-	 * 
+	 * Opens chooser dialog and returns saving action object for the chosen
+	 * file.
+	 *
 	 * @param parent
 	 *            parent GUI component
-	 * 
+	 *
 	 * @throws FileChooserCanceledException
-	 *             when user canceled save.
-	 * @return saver object.
+	 *             when user canceled saving.
+	 * @throws IllegalStateException
+	 *             this object doesn't have a saving action for the chosen file.
+	 * @return {@link AbstractSavingAction} object whose {@code path} is set to
+	 *         the selected file.
 	 */
 	public abstract AbstractSavingAction<Data> getActionForSavingFile(
 			Component parent)
-			throws FileChooserCanceledException;
+			throws FileChooserCanceledException, IllegalStateException;
 
 	/**
 	 * Opens chooser dialog and returns loader object for the chosen file.
-	 * 
+	 *
 	 * @param parent
 	 *            parent GUI component
-	 * 
-	 * @return loader object.
+	 *
+	 * @return {@link AbstractLoadingAction} object whose {@code path} is set to
+	 *         the selected file.
 	 * @throws FileChooserCanceledException
-	 *             when user canceled save.
+	 *             when user canceled loading.
+	 * @throws IOException
+	 *             selected file doesn't exist.
+	 * @throws IllegalStateException
+	 *             this object doesn't have a loading action for the chosen
+	 *             file.
 	 */
 	public abstract AbstractLoadingAction<Data> getActionForLoadingFile(
-			Component parent) throws FileChooserCanceledException;
-
+			Component parent)
+			throws FileChooserCanceledException, FileNotFoundException, IllegalStateException;
 }
