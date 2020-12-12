@@ -16,36 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
+package oripa.util.rule;
 
-import oripa.geom.GeomUtil;
-import oripa.util.rule.AbstractRule;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Koji
  *
  */
-public class FaceIsConvex extends AbstractRule<OriFace> {
+public class SingleRuleParallelConjunction<Variable> extends AbstractRule<Collection<Variable>> {
+
+	private final Rule<Variable> rule;
+
+	/**
+	 *
+	 * @param rule
+	 */
+	public SingleRuleParallelConjunction(final Rule<Variable> rule) {
+		this.rule = rule;
+	}
 
 	@Override
-	public boolean holds(final OriFace face) {
+	public boolean holds(final Collection<Variable> inputs) {
+		return inputs.parallelStream().allMatch(input -> rule.holds(input));
+	}
 
-		if (face.halfedges.size() == 3) {
-			return true;
-		}
-
-		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.prev.vertex.p,
-				baseHe.vertex.p, baseHe.next.vertex.p);
-
-		for (int i = 1; i < face.halfedges.size(); i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.prev.vertex.p, he.vertex.p, he.next.vertex.p) != baseFlg) {
-				return false;
-			}
-
-		}
-
-		return true;
+	public Set<Variable> findViolations(final Collection<Variable> inputs) {
+		return inputs.parallelStream()
+				.filter(input -> rule.violates(input))
+				.collect(Collectors.toSet());
 	}
 }

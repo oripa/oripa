@@ -20,7 +20,12 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -30,6 +35,7 @@ import oripa.value.OriLine;
  *
  */
 public class OverlappingLineExtractor {
+	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
 
 	private boolean isOverlap(final OriLine line0, final OriLine line1) {
 		var overlapCount = GeomUtil.distinguishLineSegmentsOverlap(
@@ -55,21 +61,25 @@ public class OverlappingLineExtractor {
 	}
 
 	public Collection<OriLine> extract(final Collection<OriLine> lines) {
-		var lineArray = new OriLine[lines.size()];
-		lineArray = lines.toArray(lineArray);
+		var startTime = System.currentTimeMillis();
 
-		var overlappingLines = new ArrayList<OriLine>();
+		var lineArray = new ArrayList<OriLine>(lines);
 
-		for (int i = 0; i < lineArray.length; i++) {
-			var line0 = lineArray[i];
-			for (int j = i + 1; j < lineArray.length; j++) {
-				var line1 = lineArray[j];
+		var overlappingLines = new ConcurrentLinkedDeque<OriLine>();
+
+		IntStream.range(0, lineArray.size()).parallel().forEach(i -> {
+			var line0 = lineArray.get(i);
+			IntStream.range(i + 1, lineArray.size()).parallel().forEach(j -> {
+				var line1 = lineArray.get(j);
 				if (isOverlap(line0, line1)) {
 					overlappingLines.add(line0);
 					overlappingLines.add(line1);
 				}
-			}
-		}
+			});
+		});
+
+		var endTime = System.currentTimeMillis();
+		logger.debug("extract(): " + (endTime - startTime) + "[ms]");
 
 		return overlappingLines;
 	}
@@ -82,7 +92,7 @@ public class OverlappingLineExtractor {
 	 *         contained.
 	 */
 	public Collection<OriLine> extract(final Collection<OriLine> lines, final OriLine target) {
-		return lines.stream()
+		return lines.parallelStream()
 				.filter(l -> isOverlap(l, target) && !l.equals(target))
 				.collect(Collectors.toList());
 	}
