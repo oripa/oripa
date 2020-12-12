@@ -20,7 +20,7 @@ package oripa.file;
 
 public class InitData {
 	public String lastUsedFile = ""; // dead property
-	public String[] MRUFiles;
+	public String[] MRUFiles = new String[0];
 
 	private boolean zeroLineWidth = false;
 	private boolean mvLineVisible = true;
