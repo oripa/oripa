@@ -150,11 +150,11 @@ public class OverlappingLineExtractor {
 		// convert collection to ensure fast access to lines.
 		var lineArray = new ArrayList<OriLine>(lines);
 
-		var overlappingLines = new ConcurrentLinkedDeque<OriLine>();
-
 		// make a data structure for fast computation.
 		var angleLinePairs = createPairs(lineArray);
 		var pairsSplitByAngle = createHash(angleLinePairs);
+
+		var overlappingLines = new ConcurrentLinkedDeque<OriLine>();
 
 		// for each angle, try all pairs of lines and find overlaps.
 		IntStream.range(0, pairsSplitByAngle.size()).parallel().forEach(k -> {
