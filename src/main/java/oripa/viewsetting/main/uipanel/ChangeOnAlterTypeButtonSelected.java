@@ -6,7 +6,7 @@ public class ChangeOnAlterTypeButtonSelected implements ChangeViewSetting {
 	private final UIPanelSetting setting;
 
 	/**
-	 * Constructor
+	 * UIPanel settings for Alter Line Type Tool
 	 */
 	public ChangeOnAlterTypeButtonSelected(final UIPanelSetting uiPanelSetting) {
 		this.setting = uiPanelSetting;
@@ -17,7 +17,7 @@ public class ChangeOnAlterTypeButtonSelected implements ChangeViewSetting {
 
 		setting.setByValuePanelVisible(false);
 		setting.setLineInputPanelVisible(false);
-		setting.setAngleStepVisible(false);
+		setting.setAngleStepPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(true);
 

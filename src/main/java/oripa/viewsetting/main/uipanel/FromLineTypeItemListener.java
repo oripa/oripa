@@ -9,7 +9,7 @@ public class FromLineTypeItemListener implements ItemListener {
 	private final UIPanelSetting setting;
 
 	/**
-	 * Constructor
+	 * listen for changes in the fromLineType drop down
 	 */
 	public FromLineTypeItemListener(final UIPanelSetting uiPanelSetting) {
 		setting = uiPanelSetting;

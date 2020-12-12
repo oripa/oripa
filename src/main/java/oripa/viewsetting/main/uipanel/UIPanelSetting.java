@@ -44,7 +44,7 @@ public class UIPanelSetting implements TypeForChangeGettable {
 	public static final String TYPE_TO = "line type of 'to' box";
 
 	private boolean angleStepVisible = false;
-	public static final String ANGLE_STEP_VISIBLE = "angle step visible";
+	public static final String ANGLE_STEP_PANEL_VISIBLE = "angle step visible";
 
 	private final ValueSetting valueSetting = new ValueSetting();
 
@@ -103,36 +103,49 @@ public class UIPanelSetting implements TypeForChangeGettable {
 	}
 
 	public void setAlterLineTypePanelVisible(final boolean alterLineTypePanelVisible) {
+		logger.info("set alter line type panel visible: " + alterLineTypePanelVisible);
 		var old = this.alterLineTypePanelVisible;
 		this.alterLineTypePanelVisible = alterLineTypePanelVisible;
 		support.firePropertyChange(ALTER_LINE_TYPE_PANEL_VISIBLE, old, alterLineTypePanelVisible);
 	}
 
 	public void setLineInputPanelVisible(final boolean lineInputPanelVisible) {
+		logger.info("set line input panel visible: " + lineInputPanelVisible);
 		var old = this.lineInputPanelVisible;
 		this.lineInputPanelVisible = lineInputPanelVisible;
 		support.firePropertyChange(LINE_INPUT_PANEL_VISIBLE, old, lineInputPanelVisible);
 	}
 
+	public void setAngleStepPanelVisible(final boolean angleStepVisible) {
+		logger.info("set line input panel visible: " + angleStepVisible);
+		var old = this.angleStepVisible;
+		this.angleStepVisible = angleStepVisible;
+		support.firePropertyChange(ANGLE_STEP_PANEL_VISIBLE, old, angleStepVisible);
+	}
+
 	public void setMountainButtonEnabled(final boolean mountainButtonEnabled) {
+		logger.info("mountain radio button visible: " + mountainButtonEnabled);
 		var old = this.mountainButtonEnabled;
 		this.mountainButtonEnabled = mountainButtonEnabled;
 		support.firePropertyChange(MOUNTAIN_BUTTON_ENABLED, old, mountainButtonEnabled);
 	}
 
 	public void setValleyButtonEnabled(final boolean valleyButtonEnabled) {
+		logger.info("valley radio button visible: " + valleyButtonEnabled);
 		var old = this.valleyButtonEnabled;
 		this.valleyButtonEnabled = valleyButtonEnabled;
 		support.firePropertyChange(VALLEY_BUTTON_ENABLED, old, valleyButtonEnabled);
 	}
 
 	public void setAuxButtonEnabled(final boolean auxButtonEnabled) {
+		logger.info("aux radio button visible: " + auxButtonEnabled);
 		var old = this.auxButtonEnabled;
 		this.auxButtonEnabled = auxButtonEnabled;
 		support.firePropertyChange(AUX_BUTTON_ENABLED, old, auxButtonEnabled);
 	}
 
 	private void setSelectedMode(final EditMode mode) {
+		logger.info("set selectd mode to: " + mode.name());
 		var old = selectedMode;
 		selectedMode = mode;
 		support.firePropertyChange(SELECTED_MODE, old, mode);
@@ -152,12 +165,6 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		selectedMode = EditMode.NONE; // a hack to trigger an update every time.
 
 		return ret;
-	}
-
-	public void setAngleStepVisible(final boolean visible) {
-		var old = angleStepVisible;
-		angleStepVisible = visible;
-		support.firePropertyChange(ANGLE_STEP_VISIBLE, old, visible);
 	}
 
 	public ValueSetting getValueSetting() {
