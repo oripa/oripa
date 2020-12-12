@@ -566,6 +566,14 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		updateTitleText();
 	}
 
+	/**
+	 * Run save file procedure without file type specific model check.
+	 *
+	 * @param directory
+	 * @param fileName
+	 * @param filters
+	 * @return
+	 */
 	@SafeVarargs
 	private String saveFile(final String directory, final String fileName,
 			final FileAccessSupportFilter<Doc>... filters) {
@@ -586,6 +594,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 	}
 
+	/**
+	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
+	 * model check before saving.
+	 *
+	 * @param type
+	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 
 		try {
@@ -690,7 +704,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 	}
 
-	void saveIniFile() {
+	private void saveIniFile() {
 		try {
 			iniFileAccess.save(fileHistory, paintContext);
 		} catch (IllegalStateException e) {
@@ -700,7 +714,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 	}
 
-	void loadIniFile() {
+	private void loadIniFile() {
 		var ini = iniFileAccess.load();
 
 		fileHistory.loadFromInitData(ini);
