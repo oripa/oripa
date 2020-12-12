@@ -72,7 +72,11 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.UI.LINE_INPUT_MODE_ID, "Line Input Mode" },
 			{ StringID.UI.LENGTH_ID, "Length" },
 			{ StringID.UI.ANGLE_ID, "Angle" },
-			{ StringID.UI.GRID_DIVIDE_NUM_ID, "Div Num" }
+			{ StringID.UI.GRID_DIVIDE_NUM_ID, "Div Num" },
+
+			{ StringID.UI.GENERAL_SETTINGS_ID, "General Settings" },
+			{ StringID.UI.LINE_INPUT_PANEL_ID, "Draw Lines" },
+			{ StringID.UI.ANGLE_STEP_ID, "Stepping Angle" }
 
 	};
 

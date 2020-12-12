@@ -276,7 +276,8 @@ public class UIPanel extends JPanel {
 		createButtonsPanel();
 
 		generalSettingsPanel.setLayout(new GridBagLayout());
-		generalSettingsPanel.setBorder(createTitledBorderFrame("General Settings"));
+		generalSettingsPanel.setBorder(createTitledBorderFrame(
+				resources.getString(ResourceKey.LABEL, StringID.UI.GENERAL_SETTINGS_ID)));
 
 		gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.PAGE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0.5);
@@ -353,7 +354,8 @@ public class UIPanel extends JPanel {
 
 		// put layout together
 		lineInputPanel.setLayout(new GridBagLayout());
-		lineInputPanel.setBorder(createTitledBorder("Line Input"));
+		lineInputPanel.setBorder(createTitledBorder(
+				resources.getString(ResourceKey.LABEL, StringID.UI.LINE_INPUT_PANEL_ID)));
 
 		var gbFactory = new GridBagFactory(4) // 4 columns used
 				.setAnchor(GridBagConstraints.CENTER) // anchor items in the
@@ -396,7 +398,8 @@ public class UIPanel extends JPanel {
 	 */
 	private void createSetAngleStepPanel() {
 		angleStepComboPanel.setLayout(new GridBagLayout());
-		angleStepComboPanel.setBorder(createTitledBorder("By Value"));
+		angleStepComboPanel.setBorder(createTitledBorder(
+				resources.getString(ResourceKey.LABEL, StringID.UI.ANGLE_STEP_ID)));
 
 		angleStepComboPanel.add(angleStepCombo, new GridBagFactory(1)
 				.setAnchor(GridBagConstraints.CENTER)
