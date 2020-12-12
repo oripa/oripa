@@ -35,6 +35,7 @@ import oripa.persistent.filetool.WrongDataFormatException;
 /**
  * @author OUCHI Koji
  *
+ *         interface between the {@code DocDOA} and the {@code Doc} classes
  */
 public class DataFileAccess {
 	private DocDAO dao;
@@ -67,10 +68,12 @@ public class DataFileAccess {
 	}
 
 	/**
+	 * opens dialog for saving file with given parameters.
 	 *
 	 * @param document
 	 * @param directory
 	 * @param fileName
+	 *            if empty "newFile.opx" is used
 	 * @param owner
 	 * @param filters
 	 * @return the path of saved file. Empty if the file choosing is canceled.
