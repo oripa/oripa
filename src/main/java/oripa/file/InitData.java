@@ -26,7 +26,7 @@ public class InitData {
 	private String lastUsedFile = ""; // dead property, remaining for
 										// compatibility reasons with older init
 										// files
-	private String[] MRUFiles;
+	private String[] MRUFiles = new String[0];
 
 	private boolean zeroLineWidth = false;
 	private boolean mvLineVisible = true;
