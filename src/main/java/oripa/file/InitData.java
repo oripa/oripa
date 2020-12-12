@@ -23,8 +23,10 @@ package oripa.file;
  *
  */
 public class InitData {
-	public String lastUsedFile = ""; // dead property
-	public String[] MRUFiles;
+	private String lastUsedFile = ""; // dead property, remaining for
+										// compatibility reasons with older init
+										// files
+	private String[] MRUFiles;
 
 	private boolean zeroLineWidth = false;
 	private boolean mvLineVisible = true;
