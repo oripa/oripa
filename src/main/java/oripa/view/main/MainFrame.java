@@ -550,6 +550,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				+ resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID));
 	}
 
+	/**
+	 * saves project without opening a dialog
+	 *
+	 * @param doc
+	 * @param filePath
+	 * @param fileType
+	 */
 	private void saveProjectFile(final Doc doc, final String filePath,
 			final CreasePatternFileTypeKey fileType) {
 		try {
@@ -567,7 +574,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	/**
-	 * Run save file procedure without file type specific model check.
+	 * save file without origami model check
 	 *
 	 * @param directory
 	 * @param fileName

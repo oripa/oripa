@@ -27,6 +27,8 @@ import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
 
 /**
+ * handle {@link oripa.file.IniFile} save and load
+ *
  * @author OUCHI Koji
  *
  */
@@ -39,11 +41,30 @@ public class IniFileAccess {
 
 	}
 
+	/**
+	 *
+	 * Constructor
+	 *
+	 * @param r
+	 *            reader instance
+	 * @param w
+	 *            writer instance
+	 */
 	public IniFileAccess(final InitDataFileReader r, final InitDataFileWriter w) {
 		reader = r;
 		writer = w;
 	}
 
+	/**
+	 * builds IniFile Object and saves it with writer instance
+	 *
+	 * @param fileHistory
+	 *            to be used
+	 * @param paintContext
+	 *            to read UI Settings
+	 * @throws IllegalStateException
+	 *             in case some of the fields are not set
+	 */
 	public void save(final FileHistory fileHistory, final PaintContextInterface paintContext)
 			throws IllegalStateException {
 		var builder = new InitDataBuilder();
