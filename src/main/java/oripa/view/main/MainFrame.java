@@ -83,9 +83,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 272369294032419950L;
 
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
@@ -95,12 +92,18 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
+	private final ViewScreenUpdater screenUpdater;
+
+	// -----------------------------------------------------------------------------------------------------------
+	// menu bar items
 	private final JMenu menuFile = new JMenu(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.FILE_ID));
 	private final JMenu menuEdit = new JMenu(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EDIT_ID));
 	private final JMenu menuHelp = new JMenu(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.HELP_ID));
+
+	// file menu items
 	private final JMenuItem menuItemClear = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.NEW_ID));
 	private final JMenuItem menuItemOpen = new JMenuItem(
@@ -123,14 +126,16 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final JMenuItem menuItemExportSVG = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_SVG_ID));
 
-	// -----------------------------------------------------------------------------------------------------------
-	// Create paint button
+	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
 
-	private final PaintContextFactory contextFactory = new PaintContextFactory();
-	private final PaintContextInterface paintContext = contextFactory.createContext();
-	private final MouseActionHolder actionHolder = new MouseActionHolder();
+	private final JMenuItem menuItemProperty = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL,
+					StringID.Main.PROPERTY_ID));
 
-	private final ButtonFactory buttonFactory;
+	private final JMenuItem menuItemExit = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
+
+	// edit menu items
 	/**
 	 * For changing outline
 	 */
@@ -151,23 +156,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 */
 	private JMenuItem menuItemCutAndPaste;
 
-	// ---------------------------------------------------------------------------------------------
-
-	private final ViewScreenUpdater screenUpdater;
-	private final JMenuItem menuItemProperty = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL,
-					StringID.Main.PROPERTY_ID));
-
-	private final JMenuItem menuItemExit = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
-
 	private final JMenuItem menuItemUndo = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.UNDO_ID));
 	private final JMenuItem menuItemRedo = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.REDO_ID));
-
-	private final JMenuItem menuItemAbout = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
 
 	private final JMenuItem menuItemRepeatCopy = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ARRAY_COPY_ID));
@@ -180,11 +172,27 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final JMenuItem menuItemDeleteSelectedLines = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.DELETE_SELECTED_ID));
 
-	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
+	// help menu items
+
+	private final JMenuItem menuItemAbout = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
+
+	// -----------------------------------------------------------------------------------------------------------
+	// Create paint button
+
+	private final PaintContextFactory contextFactory = new PaintContextFactory();
+	private final PaintContextInterface paintContext = contextFactory.createContext();
+	private final MouseActionHolder actionHolder = new MouseActionHolder();
+
+	private final ButtonFactory buttonFactory;
 
 	private RepeatCopyDialog arrayCopyDialog;
 	private CircleCopyDialog circleCopyDialog;
+
 	private final JLabel hintLabel = new JLabel();
+
+	// ---------------------------------------------------------------------------------------------
+	// Data classes
 
 	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 
