@@ -28,7 +28,7 @@ import java.io.FileInputStream;
  */
 public class InitDataFileReader {
 	public InitData read(final String filePath) {
-		InitData initData = null;
+		InitData initData = new InitData();
 		try (var fis = new FileInputStream(filePath);
 				var bis = new BufferedInputStream(fis);
 				var dec = new XMLDecoder(bis);) {
