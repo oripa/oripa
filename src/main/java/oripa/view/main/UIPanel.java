@@ -21,6 +21,7 @@ package oripa.view.main;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
@@ -138,12 +139,10 @@ public class UIPanel extends JPanel {
 	private JRadioButton lineInputMirrorButton;
 	private JRadioButton lineInputByValueButton;
 	private JRadioButton lineInputPBisectorButton;
+	private JRadioButton lineInputAngleSnapButton;
 
 	// lineTypePanel
 	private final JPanel lineTypePanel = new JPanel();
-
-	private JRadioButton lineInputAngleSnapButton;
-	// ---------------------------------------------------------------------------------------------------------------------------
 
 	private final JRadioButton lineTypeAuxButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.AUX_ID));
@@ -152,54 +151,15 @@ public class UIPanel extends JPanel {
 	private final JRadioButton lineTypeValleyButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
 
-	// ActionButtons Panel
-	private final JPanel buttonsPanel = new JPanel();
-
-	private final JButton buildButton = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
-	private final JButton buttonCheckWindow = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
-
-	private final JCheckBox dispMVLinesCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MV_ID),
-			true);
-	private final JCheckBox dispAuxLinesCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
-			true);
-	private final JCheckBox dispVertexCheckBox = new JCheckBox(
-			resources
-					.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
-			false);
-	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL,
-					StringID.UI.FULL_ESTIMATION_ID),
-			false);
-
 	// byValuePanel for length and angle
 	private final JPanel byValuePanel = new JPanel();
+
 	private JFormattedTextField textFieldLength;
 	private final JButton buttonLength = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
 	private JFormattedTextField textFieldAngle;
 	private final JButton buttonAngle = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.MEASURE_ID));
-
-	// gridPanel
-	private final JPanel gridPanel = new JPanel();
-	private final JCheckBox dispGridCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
-			true);
-	private JFormattedTextField textFieldGrid;
-	private final JButton gridSmallButton = new JButton("x2");
-	private final JButton gridLargeButton = new JButton("x1/2");
-	private final JButton gridChangeButton = new JButton(
-			resources.getString(ResourceKey.LABEL,
-					StringID.UI.GRID_SIZE_CHANGE_ID));
-
-	// view Panel
-	private final JPanel viewPanel = new JPanel();
-	private final JCheckBox zeroLineWidthCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.ZERO_LINE_WIDTH_ID));
 
 	// AlterLineTypePanel
 	private final JPanel alterLineTypePanel = new JPanel();
@@ -217,8 +177,50 @@ public class UIPanel extends JPanel {
 
 	// Angle Step Panel
 	private final JPanel angleStepComboPanel = new JPanel();
+
 	private final JComboBox<AngleStep> angleStepCombo = new JComboBox<>(
 			AngleStep.values());
+
+	// gridPanel
+	private final JPanel gridPanel = new JPanel();
+
+	private final JCheckBox dispGridCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
+			true);
+	private JFormattedTextField textFieldGrid;
+	private final JButton gridSmallButton = new JButton("x2");
+	private final JButton gridLargeButton = new JButton("x1/2");
+	private final JButton gridChangeButton = new JButton(
+			resources.getString(ResourceKey.LABEL,
+					StringID.UI.GRID_SIZE_CHANGE_ID));
+
+	// view Panel
+	private final JPanel viewPanel = new JPanel();
+
+	private final JCheckBox dispMVLinesCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MV_ID),
+			true);
+	private final JCheckBox dispAuxLinesCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
+			true);
+	private final JCheckBox dispVertexCheckBox = new JCheckBox(
+			resources
+					.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
+			false);
+	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL,
+					StringID.UI.FULL_ESTIMATION_ID),
+			false);
+	private final JCheckBox zeroLineWidthCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.UI.ZERO_LINE_WIDTH_ID));
+
+	// ActionButtons Panel
+	private final JPanel buttonsPanel = new JPanel();
+
+	private final JButton buildButton = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
+	private final JButton buttonCheckWindow = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
 	public UIPanel(
 			final StateManager stateManager,
@@ -239,19 +241,19 @@ public class UIPanel extends JPanel {
 
 		// create all the Components
 		createEditActionPanel();
+
 		createLineInputPanel();
 		createAlterLineTypePanel();
 		createSetAngleStepPanel();
 		createEditByValuePanel();
+
 		createGridPanel();
 		createViewPanel();
 		createButtonsPanel();
 
-		// editMode settings panel
+		// editMode Tool settings panel
 		editModeSettingsPanel.setLayout(new BoxLayout(editModeSettingsPanel, BoxLayout.PAGE_AXIS));
-		TitledBorder settingsBorder = new TitledBorder("Tool Settings");
-		settingsBorder.setBorder(new LineBorder(getBackground().darker().darker()));
-		editModeSettingsPanel.setBorder(settingsBorder);
+		editModeSettingsPanel.setBorder(createTitledBorderFrame("Tool Settings"));
 
 		editModeSettingsPanel.add(lineInputPanel);
 		editModeSettingsPanel.add(alterLineTypePanel);
@@ -260,9 +262,7 @@ public class UIPanel extends JPanel {
 
 		// general settings panel
 		generalSettingsPanel.setLayout(new BoxLayout(generalSettingsPanel, BoxLayout.PAGE_AXIS));
-		TitledBorder generalSettingsBorder = new TitledBorder("General Settings");
-		generalSettingsBorder.setBorder(new LineBorder(getBackground().darker().darker()));
-		generalSettingsPanel.setBorder(generalSettingsBorder);
+		generalSettingsPanel.setBorder(createTitledBorderFrame("General Settings"));
 
 		generalSettingsPanel.add(gridPanel);
 		generalSettingsPanel.add(viewPanel);
@@ -283,28 +283,6 @@ public class UIPanel extends JPanel {
 		c.gridy++;
 		c.weighty = 0;
 		add(generalSettingsPanel, c);
-
-		// Shortcut
-		// How to enter the line
-		lineInputDirectVButton.setMnemonic(KeyEvent.VK_1);
-		lineInputOnVButton.setMnemonic(KeyEvent.VK_2);
-		lineInputPBisectorButton.setMnemonic(KeyEvent.VK_3);
-		lineInputAngleBisectorButton.setMnemonic(KeyEvent.VK_4);
-		lineInputTriangleSplitButton.setMnemonic(KeyEvent.VK_5);
-		lineInputVerticalLineButton.setMnemonic(KeyEvent.VK_6);
-		lineInputSymmetricButton.setMnemonic(KeyEvent.VK_7);
-		lineInputMirrorButton.setMnemonic(KeyEvent.VK_8);
-		lineInputByValueButton.setMnemonic(KeyEvent.VK_9);
-		lineInputAngleSnapButton.setMnemonic(KeyEvent.VK_0);
-
-		editModeInputLineButton.setMnemonic(KeyEvent.VK_I);
-		editModePickLineButton.setMnemonic(KeyEvent.VK_S);
-		editModeDeleteLineButton.setMnemonic(KeyEvent.VK_D);
-		editModeLineTypeButton.setMnemonic(KeyEvent.VK_T);
-		editModeDeleteVertex.setMnemonic(KeyEvent.VK_L);
-		lineTypeAuxButton.setMnemonic(KeyEvent.VK_A);
-		lineTypeMountainButton.setMnemonic(KeyEvent.VK_M);
-		lineTypeValleyButton.setMnemonic(KeyEvent.VK_V);
 
 		addPropertyChangeListenersToSetting(mainScreenSetting);
 		addActionListenersToComponents(stateManager, actionHolder, cutOutlinesHolder,
@@ -341,6 +319,12 @@ public class UIPanel extends JPanel {
 		return border;
 	}
 
+	private TitledBorder createTitledBorderFrame(final String text) {
+		TitledBorder border = new TitledBorder(text);
+		border.setBorder(new LineBorder(getBackground().darker().darker()));
+		return border;
+	}
+
 	private void constructButtons(final StateManager stateManager,
 			final MouseActionHolder actionHolder,
 			final MainFrameSetting mainFrameSetting,
@@ -359,18 +343,22 @@ public class UIPanel extends JPanel {
 						JRadioButton.class, null,
 						StringID.UI.INPUT_LINE_ID,
 						screenUpdater.getKeyListener());
+		editModeInputLineButton.setMnemonic(KeyEvent.VK_I);
 
 		editModePickLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.SELECT_ID,
 				screenUpdater.getKeyListener());
+		editModePickLineButton.setMnemonic(KeyEvent.VK_S);
 
 		editModeDeleteLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DELETE_LINE_ID,
 				screenUpdater.getKeyListener());
+		editModeDeleteLineButton.setMnemonic(KeyEvent.VK_D);
 
 		editModeLineTypeButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID,
 				screenUpdater.getKeyListener());
+		editModeLineTypeButton.setMnemonic(KeyEvent.VK_T);
 
 		editModeAddVertex = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ADD_VERTEX_ID,
@@ -379,50 +367,59 @@ public class UIPanel extends JPanel {
 		editModeDeleteVertex = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DELETE_VERTEX_ID,
 				screenUpdater.getKeyListener());
+		editModeDeleteVertex.setMnemonic(KeyEvent.VK_L);
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding how to enter the line
-
 		lineInputDirectVButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DIRECT_V_ID,
 				screenUpdater.getKeyListener());
+		lineInputDirectVButton.setMnemonic(KeyEvent.VK_1);
 
 		lineInputOnVButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ON_V_ID,
 				screenUpdater.getKeyListener());
+		lineInputOnVButton.setMnemonic(KeyEvent.VK_2);
 
 		lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.VERTICAL_ID,
 				screenUpdater.getKeyListener());
+		lineInputPBisectorButton.setMnemonic(KeyEvent.VK_3);
 
 		lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BISECTOR_ID,
 				screenUpdater.getKeyListener());
+		lineInputAngleBisectorButton.setMnemonic(KeyEvent.VK_4);
 
 		lineInputTriangleSplitButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.TRIANGLE_ID,
 				screenUpdater.getKeyListener());
+		lineInputTriangleSplitButton.setMnemonic(KeyEvent.VK_5);
 
 		lineInputSymmetricButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.SYMMETRIC_ID,
 				screenUpdater.getKeyListener());
+		lineInputVerticalLineButton.setMnemonic(KeyEvent.VK_6);
 
 		lineInputMirrorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.MIRROR_ID,
 				screenUpdater.getKeyListener());
+		lineInputSymmetricButton.setMnemonic(KeyEvent.VK_7);
 
 		lineInputByValueButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BY_VALUE_ID,
 				screenUpdater.getKeyListener());
+		lineInputMirrorButton.setMnemonic(KeyEvent.VK_8);
 
 		lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID,
 				screenUpdater.getKeyListener());
+		lineInputByValueButton.setMnemonic(KeyEvent.VK_9);
 
 		lineInputAngleSnapButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ANGLE_SNAP_ID,
 				screenUpdater.getKeyListener());
-
+		lineInputAngleSnapButton.setMnemonic(KeyEvent.VK_0);
 	}
 
 	private void createEditActionPanel() {
@@ -546,7 +543,6 @@ public class UIPanel extends JPanel {
 	}
 
 	private void createSetAngleStepPanel() {
-
 		angleStepComboPanel.setLayout(new BoxLayout(angleStepComboPanel, BoxLayout.PAGE_AXIS));
 
 		angleStepComboPanel.add(angleStepCombo);
@@ -633,22 +629,23 @@ public class UIPanel extends JPanel {
 	}
 
 	private void createViewPanel() {
-		// viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.PAGE_AXIS));
 		viewPanel.setLayout(new GridBagLayout());
 
 		viewPanel.setBorder(createTitledBorder("View"));
 
 		viewPanel.add(zeroLineWidthCheckBox, createGridBagConstraints(0, 0, 3));
+
+		viewPanel.add(dispMVLinesCheckBox);
+		viewPanel.add(dispAuxLinesCheckBox);
+		viewPanel.add(dispVertexCheckBox);
+
+		lineTypeAuxButton.setMnemonic(KeyEvent.VK_A);
+		lineTypeMountainButton.setMnemonic(KeyEvent.VK_M);
+		lineTypeValleyButton.setMnemonic(KeyEvent.VK_V);
 	}
 
 	private void createButtonsPanel() {
 		int n = 0;
-		buttonsPanel.add(dispMVLinesCheckBox);
-		n++;
-		buttonsPanel.add(dispAuxLinesCheckBox);
-		n++;
-		buttonsPanel.add(dispVertexCheckBox);
-		n++;
 		buttonsPanel.add(buttonCheckWindow);
 		n++;
 		buttonsPanel.add(buildButton);
@@ -659,6 +656,78 @@ public class UIPanel extends JPanel {
 		buttonsPanel.setBorder(new MatteBorder(1, 0, 0, 0,
 				getBackground().darker().darker()));
 		buttonsPanel.setLayout(new GridLayout(n, 1, 10, 2));
+	}
+
+	private class GridBagConstraintsFactory {
+		private int gridX, gridY;
+		private final int gridWidth;
+		private int anchor;
+
+		private double weightX, weightY;
+		private int fill;
+
+		public GridBagConstraintsFactory(final int gridWidth) {
+			gridX = 0;
+			gridY = 0;
+			anchor = GridBagConstraints.WEST;
+			weightX = 0.5;
+			weightY = 1;
+			fill = GridBagConstraints.HORIZONTAL;
+			this.gridWidth = gridWidth;
+		}
+
+		public GridBagConstraintsFactory setFill(final int fill) {
+			this.fill = fill;
+			return this;
+		}
+
+		public GridBagConstraintsFactory setWeight(final double weightX, final double weightY) {
+			this.weightX = weightX;
+			this.weightY = weightY;
+			return this;
+		}
+
+		public GridBagConstraintsFactory setAnchor(final int anchor) {
+			this.anchor = anchor;
+			return this;
+		}
+
+		public GridBagConstraints getLineField() {
+			gridX = 0;
+			return getField(gridX, gridY++, gridWidth);
+		}
+
+		public GridBagConstraints getNextField() {
+			if (gridX == gridWidth) {
+				gridX = 0;
+				gridY++;
+			}
+			return getField(gridX, gridY, 1);
+		}
+
+		public GridBagConstraints fillLineField() {
+			var f = getField(gridX, gridY++, gridWidth - gridX + 1);
+			gridX = 0;
+			return f;
+		}
+
+		private GridBagConstraints getField(final int gridX, final int gridY,
+				final int gridWidth) {
+			var gridBagConstraints = new GridBagConstraints();
+
+			gridBagConstraints.gridx = gridX;
+			gridBagConstraints.gridy = gridY;
+			gridBagConstraints.gridwidth = gridWidth;
+
+			gridBagConstraints.insets = new Insets(1, 1, 1, 1);
+
+			gridBagConstraints.weightx = weightX;
+			gridBagConstraints.weighty = weightY;
+			gridBagConstraints.fill = fill;
+			gridBagConstraints.anchor = anchor;
+
+			return gridBagConstraints;
+		}
 	}
 
 	private GridBagConstraints createMainPanelGridBagConstraints(final int gridX, final int gridY,
