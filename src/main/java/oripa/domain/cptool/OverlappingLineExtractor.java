@@ -125,7 +125,8 @@ public class OverlappingLineExtractor {
 			var pair0 = pairsSplitByAngle.get(split_i).get(0);
 			if (pair1.getAngle() - pair0.getAngle() > EPS) {
 				// a line with angle PI is the same as one with angle 0.
-				if (Math.PI - pair1.getAngle() < EPS) {
+				if (Math.PI - pair1.getAngle() < EPS
+						&& pairsSplitByAngle.get(0).get(0).getAngle() < EPS) {
 					split_i = 0;
 				} else {
 					split_i++;
