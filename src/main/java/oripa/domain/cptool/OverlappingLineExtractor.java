@@ -71,7 +71,10 @@ public class OverlappingLineExtractor {
 		public AnalyticLine(final OriLine line) {
 			this.line = line;
 
-			var angle = Math.atan2(line.p1.y - line.p0.y, line.p1.x - line.p0.x);
+			var p0 = line.p0;
+			var p1 = line.p1;
+
+			var angle = Math.atan2(p1.y - p0.y, p1.x - p0.x);
 			// limit the angle 0 to PI.
 			if (angle < 0) {
 				angle += Math.PI;
@@ -86,8 +89,7 @@ public class OverlappingLineExtractor {
 			if (Math.abs(Math.PI / 2 - angle) < EPS) {
 				intercept = Double.MAX_VALUE;
 			} else {
-				intercept = line.p0.y
-						- (line.p1.y - line.p0.y) / (line.p1.x - line.p0.x) * line.p0.x;
+				intercept = p0.y - (p1.y - p0.y) / (p1.x - p0.x) * p0.x;
 			}
 		}
 
@@ -149,12 +151,12 @@ public class OverlappingLineExtractor {
 	}
 
 	/**
-	 * make a hash table whose keys are integers for angles of lines. if angles
-	 * are equal, then lines can overlap.
+	 * make a hash table whose keys are index of lines ordered by angle. if
+	 * angles are equal, then lines can overlap.
 	 *
 	 * @param sortedLines
 	 *            should be sorted by angle.
-	 * @return
+	 * @return a hash table whose keys are index of lines ordered by angle.
 	 */
 	private ArrayList<ArrayList<AnalyticLine>> createAngleHash(
 			final ArrayList<AnalyticLine> sortedLines) {
@@ -162,6 +164,13 @@ public class OverlappingLineExtractor {
 		return createHash(sortedLines, AnalyticLine::getAngle);
 	}
 
+	/**
+	 * create hash tables by intercept for each angle.
+	 *
+	 * @param angleHash
+	 *            a hash table created by {@link #createAngleHash(ArrayList)}.
+	 * @return 3D hash table, e.g., hash[angle][intercept][lineIndex].
+	 */
 	private ArrayList<ArrayList<ArrayList<AnalyticLine>>> createInterceptHash(
 			final ArrayList<ArrayList<AnalyticLine>> angleHash) {
 
@@ -201,12 +210,14 @@ public class OverlappingLineExtractor {
 
 		// for each angle and intercept, try all pairs of lines and find
 		// overlaps.
-		IntStream.range(0, hash.size()).parallel().forEach(k -> {
-			var byAngle = hash.get(k);
-			IntStream.range(0, byAngle.size()).parallel().forEach(l -> {
-				var byIntercept = byAngle.get(l);
+		IntStream.range(0, hash.size()).parallel().forEach(angle_i -> {
+			var byAngle = hash.get(angle_i);
+			IntStream.range(0, byAngle.size()).parallel().forEach(intercept_i -> {
+				var byIntercept = byAngle.get(intercept_i);
+				// for each line
 				IntStream.range(0, byIntercept.size()).parallel().forEach(i -> {
 					var line0 = byIntercept.get(i).getLine();
+					// search another line of overlapping
 					IntStream.range(i + 1, byIntercept.size()).parallel().forEach(j -> {
 						var line1 = byIntercept.get(j).getLine();
 						if (isOverlap(line0, line1)) {
