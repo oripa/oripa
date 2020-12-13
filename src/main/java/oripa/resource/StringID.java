@@ -101,6 +101,7 @@ public class StringID {
 		public static final String GENERAL_SETTINGS_ID = "General_Settings_Panel";
 		public static final String LINE_INPUT_PANEL_ID = "Line_Input_Panel";
 		public static final String ANGLE_STEP_ID = "Angle_Step";
+		public static final String TOOL_PANEL_ID = "Tool_Panel";
 	}
 
 	// ------------------------------------------------------------------------

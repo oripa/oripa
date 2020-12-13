@@ -76,7 +76,8 @@ public class LabelStringResource_en extends ListResourceBundle {
 
 			{ StringID.UI.GENERAL_SETTINGS_ID, "General Settings" },
 			{ StringID.UI.LINE_INPUT_PANEL_ID, "Draw Lines" },
-			{ StringID.UI.ANGLE_STEP_ID, "Stepping Angle" }
+			{ StringID.UI.ANGLE_STEP_ID, "Stepping Angle" },
+			{ StringID.UI.TOOL_PANEL_ID, "Tools Lines" },
 
 	};
 

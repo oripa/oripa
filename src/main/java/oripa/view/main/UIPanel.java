@@ -239,7 +239,8 @@ public class UIPanel extends JPanel {
 		editModeGroup.add(editModeAddVertex);
 		editModeGroup.add(editModeDeleteVertex);
 
-		editModePanel.setBorder(createTitledBorderFrame("Tools"));
+		editModePanel.setBorder(createTitledBorderFrame(
+				resources.getString(ResourceKey.LABEL, StringID.UI.TOOL_PANEL_ID)));
 		editModePanel.setLayout(new GridBagLayout());
 
 		var gbFactory = new GridBagFactory(1)
