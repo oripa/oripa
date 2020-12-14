@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.vecmath.Vector2d;
 
@@ -47,10 +48,10 @@ public class LineAdder {
 	private boolean divideCurrentLines(final OriLine inputLine,
 			final Collection<OriLine> currentLines) {
 
-		LinkedList<OriLine> toBeAdded = new LinkedList<>();
+		var toBeAdded = Collections.synchronizedList(new LinkedList<OriLine>());
+		var toBeRemoved = Collections.synchronizedList(new LinkedList<OriLine>());
 
-		for (Iterator<OriLine> iterator = currentLines.iterator(); iterator.hasNext();) {
-			OriLine line = iterator.next();
+		currentLines.parallelStream().forEach(line -> {
 
 			// intersection of (aux input, other type lines) are rejected // It
 			// is by MITANI jun.
@@ -60,10 +61,10 @@ public class LineAdder {
 
 			Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
 			if (crossPoint == null) {
-				continue;
+				return;
 			}
 
-			iterator.remove();
+			toBeRemoved.add(line);
 
 			Consumer<Vector2d> addIfLineCanBeSplit = v -> {
 				if (GeomUtil.distance(v, crossPoint) > CalculationResource.POINT_EPS) {
@@ -76,8 +77,9 @@ public class LineAdder {
 
 			addIfLineCanBeSplit.accept(line.p0);
 			addIfLineCanBeSplit.accept(line.p1);
-		}
+		});
 
+		toBeRemoved.forEach(line -> currentLines.remove(line));
 		toBeAdded.forEach(line -> currentLines.add(line));
 
 		return true;
@@ -93,26 +95,18 @@ public class LineAdder {
 	 */
 	private List<Vector2d> createInputLinePoints(final OriLine inputLine,
 			final Collection<OriLine> currentLines) {
-		ArrayList<Vector2d> points = new ArrayList<Vector2d>();
+		var points = Collections.synchronizedList(new ArrayList<Vector2d>());
 		points.add(inputLine.p0);
 		points.add(inputLine.p1);
 
 		// divide input line by existing lines
-		for (OriLine line : currentLines) {
-
-			// reject (M/V input, aux lines) // It is by MITANI jun, I don't
-			// know why.
-//			if (inputLine.getType() != OriLine.Type.NONE &&
-//					line.getType() == OriLine.Type.NONE) {
-//				continue;
-//			}
-
+		currentLines.parallelStream().forEach(line -> {
 			// If the intersection is on the end of the line, skip
 			if (GeomUtil.distance(inputLine.p0, line.p0) < CalculationResource.POINT_EPS ||
 					GeomUtil.distance(inputLine.p0, line.p1) < CalculationResource.POINT_EPS ||
 					GeomUtil.distance(inputLine.p1, line.p0) < CalculationResource.POINT_EPS ||
 					GeomUtil.distance(inputLine.p1, line.p1) < CalculationResource.POINT_EPS) {
-				continue;
+				return;
 			}
 
 			if (GeomUtil.distancePointToSegment(line.p0, inputLine.p0,
@@ -129,8 +123,7 @@ public class LineAdder {
 			if (crossPoint != null) {
 				points.add(crossPoint);
 			}
-
-		}
+		});
 
 		return points;
 	}
@@ -146,53 +139,63 @@ public class LineAdder {
 	 */
 
 	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines) {
-		// ArrayList<OriLine> crossingLines = new ArrayList<OriLine>(); // for
-		// debug?
-
-		// If it already exists, do nothing
-		for (OriLine line : currentLines) {
-			if (GeomUtil.isSameLineSegment(line, inputLine)) {
-				return;
-			}
-		}
-
-		divideCurrentLines(inputLine, currentLines);
-
-		List<Vector2d> points = createInputLinePoints(inputLine, currentLines);
-
-		// sort in order to make points sequential
-		boolean sortByX = Math.abs(inputLine.p0.x - inputLine.p1.x) > Math
-				.abs(inputLine.p0.y - inputLine.p1.y);
-		if (sortByX) {
-			Collections.sort(points, new PointComparatorX());
-		} else {
-			Collections.sort(points, new PointComparatorY());
-		}
-
-		Vector2d prePoint = points.get(0);
-
-		// add new lines sequentially
-		for (int i = 1; i < points.size(); i++) {
-			Vector2d p = points.get(i);
-			// remove very short line
-			if (GeomUtil.distance(prePoint, p) < CalculationResource.POINT_EPS) {
-				continue;
-			}
-
-			currentLines.add(new OriLine(prePoint, p, inputLine.getType()));
-			prePoint = p;
-		}
-
+		addAll(List.of(inputLine), currentLines);
 	}
 
 	/**
 	 *
-	 * @param lines
+	 * @param inputLines
 	 *            lines to be added
-	 * @param destination
-	 *            collection as a destination
+	 * @param currentLines
+	 *            collection as a destination. This is assumed to be adapted to
+	 *            concurrency.
 	 */
-	public void addAll(final Collection<OriLine> lines, final Collection<OriLine> destination) {
-		lines.stream().forEach(line -> addLine(line, destination));
+	public void addAll(final Collection<OriLine> inputLines,
+			final Collection<OriLine> currentLines) {
+		var linesToBeAdded = inputLines.parallelStream()
+				.filter(inputLine -> !currentLines.parallelStream()
+						.anyMatch(line -> GeomUtil.isSameLineSegment(line, inputLine)))
+				.collect(Collectors.toList());
+
+		var pointLists = new ArrayList<List<Vector2d>>();
+
+		for (var inputLine : linesToBeAdded) {
+			divideCurrentLines(inputLine, currentLines);
+
+			List<Vector2d> points = createInputLinePoints(inputLine, currentLines);
+			pointLists.add(points);
+		}
+
+		// parallel() seems to cause a null pointer exception in some cases and
+		// the effect of parallelization is small.
+		IntStream.range(0, linesToBeAdded.size())// .parallel()
+				.forEach(j -> {
+					var inputLine = linesToBeAdded.get(j);
+					var points = pointLists.get(j);
+
+					// sort in order to make points sequential
+					boolean sortByX = Math.abs(inputLine.p0.x - inputLine.p1.x) > Math
+							.abs(inputLine.p0.y - inputLine.p1.y);
+					if (sortByX) {
+						Collections.sort(points, new PointComparatorX());
+					} else {
+						Collections.sort(points, new PointComparatorY());
+					}
+
+					Vector2d prePoint = points.get(0);
+
+					// add new lines sequentially
+					for (int i = 1; i < points.size(); i++) {
+						Vector2d p = points.get(i);
+						// remove very short line
+						if (GeomUtil.distance(prePoint, p) < CalculationResource.POINT_EPS) {
+							continue;
+						}
+
+						currentLines.add(new OriLine(prePoint, p, inputLine.getType()));
+						prePoint = p;
+					}
+
+				});
 	}
 }
