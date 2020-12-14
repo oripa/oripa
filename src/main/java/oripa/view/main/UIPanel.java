@@ -261,7 +261,8 @@ public class UIPanel extends JPanel {
 		createEditByValuePanel();
 
 		toolSettingsPanel.setLayout(new GridBagLayout());
-		toolSettingsPanel.setBorder(createTitledBorderFrame("Tool Settings"));
+		toolSettingsPanel.setBorder(createTitledBorderFrame(
+				resources.getString(ResourceKey.LABEL, StringID.UI.TOOL_SETTINGS_PANEL_ID)));
 
 		gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.PAGE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 1);
@@ -423,7 +424,8 @@ public class UIPanel extends JPanel {
 						StringID.UI.CHANGE_LINE_TYPE_TO_ID));
 
 		alterLineTypePanel.setLayout(new GridBagLayout());
-		alterLineTypePanel.setBorder(createTitledBorder("Alter Line Type"));
+		alterLineTypePanel.setBorder(createTitledBorder(
+				resources.getString(ResourceKey.LABEL, StringID.UI.ALTER_LINE_TYPE_PANEL_ID)));
 
 		var gbFactory = new GridBagFactory(2);
 
@@ -461,7 +463,8 @@ public class UIPanel extends JPanel {
 		textFieldAngle.setHorizontalAlignment(JTextField.RIGHT);
 
 		byValuePanel.setLayout(new GridBagLayout());
-		byValuePanel.setBorder(createTitledBorder("By Value"));
+		byValuePanel.setBorder(createTitledBorder(
+				resources.getString(ResourceKey.LABEL, StringID.UI.INSERT_BY_VALUE_PANEL_ID)));
 
 		GridBagFactory gbFactory = new GridBagFactory(3)
 				.setAnchor(GridBagConstraints.CENTER)
@@ -493,7 +496,8 @@ public class UIPanel extends JPanel {
 		textFieldGrid.setHorizontalAlignment(JTextField.RIGHT);
 
 		gridPanel.setLayout(new GridBagLayout());
-		gridPanel.setBorder(createTitledBorder("Grid"));
+		gridPanel.setBorder(createTitledBorder(
+				resources.getString(ResourceKey.LABEL, StringID.UI.GRID_SETTINGS_PANEL_ID)));
 
 		GridBagFactory gbFactory = new GridBagFactory(3);
 
@@ -515,7 +519,8 @@ public class UIPanel extends JPanel {
 	private void createViewPanel() {
 		viewPanel.setLayout(new GridBagLayout());
 
-		viewPanel.setBorder(createTitledBorder("View"));
+		viewPanel.setBorder(createTitledBorder(
+				resources.getString(ResourceKey.LABEL, StringID.UI.VIEW_SETTINGS_PANEL_ID)));
 
 		var gbFactory = new GridBagFactory(3);
 

@@ -102,6 +102,11 @@ public class StringID {
 		public static final String LINE_INPUT_PANEL_ID = "Line_Input_Panel";
 		public static final String ANGLE_STEP_ID = "Angle_Step";
 		public static final String TOOL_PANEL_ID = "Tool_Panel";
+		public static final String TOOL_SETTINGS_PANEL_ID = "Tool_Settings_Panel";
+		public static final String ALTER_LINE_TYPE_PANEL_ID = "Alter_Line_Type_Panel";
+		public static final String INSERT_BY_VALUE_PANEL_ID = "Insert_Line_By_Value_Panel";
+		public static final String GRID_SETTINGS_PANEL_ID = "Grid_Settings_Panel";
+		public static final String VIEW_SETTINGS_PANEL_ID = "View_Settings_Panel";
 	}
 
 	// ------------------------------------------------------------------------
