@@ -25,7 +25,7 @@ import java.util.function.Function;
  * @author OUCHI Koji
  *
  */
-public class HashFactory {
+class HashFactory {
 
 	/**
 	 * creates a hash table whose key is the value obtained by keyExtractor. the
