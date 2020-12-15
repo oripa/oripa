@@ -75,7 +75,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
-import oripa.util.gui.GridBagFactory;
+import oripa.util.gui.GridBagConstraintsBuilder;
 import oripa.value.OriLine;
 import oripa.view.estimation.EstimationResultFrameFactory;
 import oripa.view.foldability.FoldabilityCheckFrameFactory;
@@ -243,7 +243,7 @@ public class UIPanel extends JPanel {
 				resources.getString(ResourceKey.LABEL, StringID.UI.TOOL_PANEL_ID)));
 		editModePanel.setLayout(new GridBagLayout());
 
-		var gbFactory = new GridBagFactory(1)
+		var gbFactory = new GridBagConstraintsBuilder(1)
 				.setAnchor(GridBagConstraints.LINE_START)
 				.setInsets(0, 5, 0, 0);
 
@@ -264,7 +264,7 @@ public class UIPanel extends JPanel {
 		toolSettingsPanel.setBorder(createTitledBorderFrame(
 				resources.getString(ResourceKey.LABEL, StringID.UI.TOOL_SETTINGS_PANEL_ID)));
 
-		gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.PAGE_START)
+		gbFactory = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.PAGE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 1);
 
 		toolSettingsPanel.add(lineInputPanel, gbFactory.getLineField());
@@ -281,7 +281,7 @@ public class UIPanel extends JPanel {
 		generalSettingsPanel.setBorder(createTitledBorderFrame(
 				resources.getString(ResourceKey.LABEL, StringID.UI.GENERAL_SETTINGS_ID)));
 
-		gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.PAGE_START)
+		gbFactory = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.PAGE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0.5);
 
 		generalSettingsPanel.add(gridPanel, gbFactory.getLineField());
@@ -291,7 +291,7 @@ public class UIPanel extends JPanel {
 		// the main UIPanel
 		setLayout(new GridBagLayout());
 
-		gbFactory = new GridBagFactory(1).setAnchor(GridBagConstraints.FIRST_LINE_START)
+		gbFactory = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.FIRST_LINE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0.0);
 		add(editModePanel, gbFactory.getLineField());
 
@@ -359,7 +359,7 @@ public class UIPanel extends JPanel {
 		lineInputPanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.LINE_INPUT_PANEL_ID)));
 
-		var gbFactory = new GridBagFactory(4) // 4 columns used
+		var gbFactory = new GridBagConstraintsBuilder(4) // 4 columns used
 				.setAnchor(GridBagConstraints.CENTER) // anchor items in the
 														// center of their Box
 				.setWeight(0.5, 1.0); // distribute evenly accross both axis,
@@ -403,7 +403,7 @@ public class UIPanel extends JPanel {
 		angleStepComboPanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.ANGLE_STEP_ID)));
 
-		angleStepComboPanel.add(angleStepCombo, new GridBagFactory(1)
+		angleStepComboPanel.add(angleStepCombo, new GridBagConstraintsBuilder(1)
 				.setAnchor(GridBagConstraints.CENTER)
 				.setFill(GridBagConstraints.BOTH)
 				.getLineField());
@@ -427,7 +427,7 @@ public class UIPanel extends JPanel {
 		alterLineTypePanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.ALTER_LINE_TYPE_PANEL_ID)));
 
-		var gbFactory = new GridBagFactory(2);
+		var gbFactory = new GridBagConstraintsBuilder(2);
 
 		alterLineTypePanel.add(fromLabel, gbFactory.getNextField());
 		alterLineTypePanel.add(alterLine_combo_from, gbFactory.getNextField());
@@ -466,7 +466,7 @@ public class UIPanel extends JPanel {
 		byValuePanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.INSERT_BY_VALUE_PANEL_ID)));
 
-		GridBagFactory gbFactory = new GridBagFactory(3)
+		GridBagConstraintsBuilder gbFactory = new GridBagConstraintsBuilder(3)
 				.setAnchor(GridBagConstraints.CENTER)
 				.setFill(GridBagConstraints.NONE)
 				.setWeight(0, 1);
@@ -499,7 +499,7 @@ public class UIPanel extends JPanel {
 		gridPanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.GRID_SETTINGS_PANEL_ID)));
 
-		GridBagFactory gbFactory = new GridBagFactory(3);
+		GridBagConstraintsBuilder gbFactory = new GridBagConstraintsBuilder(3);
 
 		gridPanel.add(dispGridCheckBox, gbFactory.getLineField());
 
@@ -522,7 +522,7 @@ public class UIPanel extends JPanel {
 		viewPanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.VIEW_SETTINGS_PANEL_ID)));
 
-		var gbFactory = new GridBagFactory(3);
+		var gbFactory = new GridBagConstraintsBuilder(3);
 
 		viewPanel.add(zeroLineWidthCheckBox, gbFactory.getLineField());
 
@@ -537,7 +537,7 @@ public class UIPanel extends JPanel {
 		buttonsPanel.setBorder(new MatteBorder(1, 0, 0, 0,
 				getBackground().darker().darker()));
 
-		var gbFactory = new GridBagFactory(3);
+		var gbFactory = new GridBagConstraintsBuilder(3);
 
 		buttonsPanel.add(doFullEstimationCheckBox, gbFactory.getLineField());
 
