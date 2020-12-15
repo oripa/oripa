@@ -26,6 +26,12 @@ public class ElementRemover {
 	private static final Logger logger = LoggerFactory.getLogger(ElementRemover.class);
 	private static final double EPS = 1e-4;
 
+	/**
+	 * For efficient computation
+	 *
+	 * @author OUCHI Koji
+	 *
+	 */
 	private static class PointAndLine {
 		private final Vector2d point;
 		private Vector2d keyPoint0;
@@ -275,7 +281,7 @@ public class ElementRemover {
 	}
 
 	private ArrayList<PointAndLine> createXOrderPoints(final ArrayList<OriLine> lines) {
-		var points = new ArrayList<PointAndLine>();
+		var points = new ArrayList<PointAndLine>(lines.size() * 2);
 
 		for (int i = 0; i < lines.size(); i++) {
 			var line = lines.get(i);
@@ -350,6 +356,7 @@ public class ElementRemover {
 			}
 		}
 
+		// try merge for each line group connected at the key of the map
 		for (var shared : sharedPointsMap.keySet()) {
 			var sharedPoints = sharedPointsMap.get(shared);
 			logDebug("shareLines@" + shared + ": " + "#=" + sharedPoints.size(),
@@ -373,9 +380,11 @@ public class ElementRemover {
 
 				var floor0 = sharedPointsMap.floorKey(mergedLine.p0);
 				var floor1 = sharedPointsMap.floorKey(mergedLine.p1);
+
 				var merged0 = new PointAndLine(floor0, mergedLine);
 				merged0.setKeyPoint0(floor0);
 				merged0.setKeyPoint1(floor1);
+
 				var merged1 = new PointAndLine(floor1, mergedLine);
 				merged1.setKeyPoint0(floor1);
 				merged1.setKeyPoint1(floor0);
