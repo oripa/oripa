@@ -25,6 +25,9 @@ public class UIPanelSetting implements TypeForChangeGettable {
 	private boolean alterLineTypePanelVisible = true;
 	public static final String ALTER_LINE_TYPE_PANEL_VISIBLE = "alter-line-type panel visible";
 
+	private boolean angleStepPanelVisible = false;
+	public static final String ANGLE_STEP_PANEL_VISIBLE = "angle step panel visible";
+
 	private boolean mountainButtonEnabled = true;
 	public static final String MOUNTAIN_BUTTON_ENABLED = "mountain button enabled";
 
@@ -42,9 +45,6 @@ public class UIPanelSetting implements TypeForChangeGettable {
 
 	private TypeForChange typeTo = TypeForChange.EMPTY;
 	public static final String TYPE_TO = "line type of 'to' box";
-
-	private boolean angleStepVisible = false;
-	public static final String ANGLE_STEP_PANEL_VISIBLE = "angle step visible";
 
 	private final ValueSetting valueSetting = new ValueSetting();
 
@@ -83,6 +83,10 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		return lineInputPanelVisible;
 	}
 
+	public boolean isAngleStepPanelVisible() {
+		return angleStepPanelVisible;
+	}
+
 	public boolean isMountainButtonEnabled() {
 		return mountainButtonEnabled;
 	}
@@ -118,8 +122,8 @@ public class UIPanelSetting implements TypeForChangeGettable {
 
 	public void setAngleStepPanelVisible(final boolean angleStepVisible) {
 		logger.info("set line input panel visible: " + angleStepVisible);
-		var old = this.angleStepVisible;
-		this.angleStepVisible = angleStepVisible;
+		var old = this.angleStepPanelVisible;
+		this.angleStepPanelVisible = angleStepVisible;
 		support.firePropertyChange(ANGLE_STEP_PANEL_VISIBLE, old, angleStepVisible);
 	}
 
