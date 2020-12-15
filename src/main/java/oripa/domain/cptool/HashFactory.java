@@ -38,8 +38,11 @@ class HashFactory {
 	 *
 	 * @param <T>
 	 * @param sortedItems
+	 *            must be sorted by {@code keyExtractor} in advance.
 	 * @param keyExtractor
+	 *            is a function that returns the key for hashing.
 	 * @param eps
+	 *            is an acceptable max error value of keys.
 	 * @return a 2D table of items.
 	 */
 	public <T> ArrayList<ArrayList<T>> create(
