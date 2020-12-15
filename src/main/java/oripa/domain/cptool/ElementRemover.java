@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.vecmath.Vector2d;
 
@@ -366,31 +367,36 @@ public class ElementRemover {
 
 			var mergedLine = merge2LinesAt(shared, sharedPoints, creasePattern);
 
-			// if the lines are merged, the consumed lines has to be deleted
+			// if the lines are merged, the consumed old lines has to be deleted
 			// from the map and the new merged line has to be added
 			// to the map.
 			if (mergedLine != null) {
-				var point0 = sharedPoints.get(0);
-				var point1 = sharedPoints.get(1);
+				var points = List.of(sharedPoints.get(0), sharedPoints.get(1));
 
-				sharedPointsMap.get(point0.getKeyPoint0()).remove(point0);
-				sharedPointsMap.get(point1.getKeyPoint0()).remove(point1);
-				sharedPointsMap.get(point0.getKeyPoint1()).remove(point0);
-				sharedPointsMap.get(point1.getKeyPoint1()).remove(point1);
+				// remove old lines
+				points.forEach(point -> {
+					sharedPointsMap.get(point.getKeyPoint0()).remove(point);
+					sharedPointsMap.get(point.getKeyPoint1()).remove(point);
 
-				var floor0 = sharedPointsMap.floorKey(mergedLine.p0);
-				var floor1 = sharedPointsMap.floorKey(mergedLine.p1);
+				});
 
-				var merged0 = new PointAndLine(floor0, mergedLine);
-				merged0.setKeyPoint0(floor0);
-				merged0.setKeyPoint1(floor1);
+				// extract floor point as key points
+				var keyPoints = List.of(
+						sharedPointsMap.floorKey(mergedLine.p0),
+						sharedPointsMap.floorKey(mergedLine.p1));
 
-				var merged1 = new PointAndLine(floor1, mergedLine);
-				merged1.setKeyPoint0(floor1);
-				merged1.setKeyPoint1(floor0);
+				var merged = keyPoints.stream()
+						.map(keyPoint -> new PointAndLine(keyPoint, mergedLine))
+						.collect(Collectors.toList());
 
-				sharedPointsMap.get(floor0).add(merged0);
-				sharedPointsMap.get(floor1).add(merged1);
+				merged.get(0).setKeyPoint0(keyPoints.get(0));
+				merged.get(0).setKeyPoint1(keyPoints.get(1));
+				merged.get(1).setKeyPoint0(keyPoints.get(1));
+				merged.get(1).setKeyPoint1(keyPoints.get(0));
+
+				IntStream.range(0, merged.size()).forEach(i -> {
+					sharedPointsMap.get(keyPoints.get(i)).add(merged.get(i));
+				});
 			}
 		}
 	}
