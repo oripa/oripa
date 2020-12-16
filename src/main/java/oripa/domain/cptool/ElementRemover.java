@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
+import oripa.value.OriPoint;
 
 /**
  * This class defines how to remove line/vertex from crease pattern.
@@ -34,12 +35,12 @@ public class ElementRemover {
 	 *
 	 */
 	private static class PointAndLine {
-		private final Vector2d point;
-		private Vector2d keyPoint0;
-		private Vector2d keyPoint1;
+		private final OriPoint point;
+		private OriPoint keyPoint0;
+		private OriPoint keyPoint1;
 		private final OriLine line;
 
-		public PointAndLine(final Vector2d point, final OriLine line) {
+		public PointAndLine(final OriPoint point, final OriLine line) {
 			this.point = point;
 			this.line = line;
 		}
@@ -47,7 +48,7 @@ public class ElementRemover {
 		/**
 		 * @return point
 		 */
-		public Vector2d getPoint() {
+		public OriPoint getPoint() {
 			return point;
 		}
 
@@ -69,7 +70,7 @@ public class ElementRemover {
 		/**
 		 * @return keyPoint0
 		 */
-		public Vector2d getKeyPoint0() {
+		public OriPoint getKeyPoint0() {
 			return keyPoint0;
 		}
 
@@ -77,14 +78,14 @@ public class ElementRemover {
 		 * @param keyPoint
 		 *            Sets keyPoint
 		 */
-		public void setKeyPoint0(final Vector2d keyPoint) {
+		public void setKeyPoint0(final OriPoint keyPoint) {
 			this.keyPoint0 = keyPoint;
 		}
 
 		/**
 		 * @return keyPoint
 		 */
-		public Vector2d getKeyPoint1() {
+		public OriPoint getKeyPoint1() {
 			return keyPoint1;
 		}
 
@@ -92,7 +93,7 @@ public class ElementRemover {
 		 * @param keyPoint
 		 *            Sets keyPoint
 		 */
-		public void setKeyPoint1(final Vector2d keyPoint) {
+		public void setKeyPoint1(final OriPoint keyPoint) {
 			this.keyPoint1 = keyPoint;
 		}
 
@@ -334,7 +335,7 @@ public class ElementRemover {
 
 		// this map keeps the both side of each line as an object holding the
 		// end point and the line object.
-		var sharedPointsMap = new TreeMap<Vector2d, ArrayList<PointAndLine>>();
+		var sharedPointsMap = new TreeMap<OriPoint, ArrayList<PointAndLine>>();
 
 		// build a map and set keyPoint0
 		for (var byX : xOrderHash) {
