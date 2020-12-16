@@ -275,8 +275,8 @@ public class ElementRemover {
 		return (new OriLine(p0, p1, l0.getType())).createCanonical();
 	}
 
-	private void logDebug(final String msg, final Collection<OriLine> lines) {
-		logger.debug(msg + String.join("|",
+	private void trace(final String msg, final Collection<OriLine> lines) {
+		logger.trace(msg + String.join("|",
 				lines.stream()
 						.map(l -> l.toString())
 						.collect(Collectors.toList())));
@@ -360,7 +360,7 @@ public class ElementRemover {
 
 		// try merge for each line group connected at the key of the map
 		sharedPointsMap.forEach((shared, sharedPoints) -> {
-			logDebug("sharedLines@" + shared + ": " + "#=" + sharedPoints.size(),
+			trace("sharedLines@" + shared + ": " + "#=" + sharedPoints.size(),
 					sharedPoints.stream()
 							.map(s -> s.getLine())
 							.collect(Collectors.toList()));
