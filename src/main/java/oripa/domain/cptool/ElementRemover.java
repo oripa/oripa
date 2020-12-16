@@ -272,7 +272,7 @@ public class ElementRemover {
 			p1.set(l1.p0);
 		}
 
-		return makeCanonical(new OriLine(p0, p1, l0.getType()));
+		return (new OriLine(p0, p1, l0.getType())).createCanonical();
 	}
 
 	private void logDebug(final String msg, final Collection<OriLine> lines) {
@@ -321,7 +321,7 @@ public class ElementRemover {
 		// (sweep along x axis)
 
 		var sortedLines = creasePattern.stream()
-				.map(line -> makeCanonical(line))
+				.map(line -> line.createCanonical())
 				.sorted()
 				.collect(Collectors.toCollection(() -> new ArrayList<>()));
 

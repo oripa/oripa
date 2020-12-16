@@ -12,11 +12,16 @@ import java.util.stream.IntStream;
 
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 public class LineAdder {
+	private static final Logger logger = LoggerFactory.getLogger(LineAdder.class);
+
 	private class PointComparatorX implements Comparator<Vector2d> {
 
 		@Override
@@ -152,6 +157,9 @@ public class LineAdder {
 	 */
 	public void addAll(final Collection<OriLine> inputLines,
 			final Collection<OriLine> currentLines) {
+
+		var startTime = System.currentTimeMillis();
+
 		var linesToBeAdded = inputLines.parallelStream()
 				.filter(inputLine -> !currentLines.parallelStream()
 						.anyMatch(line -> GeomUtil.isSameLineSegment(line, inputLine)))
@@ -159,16 +167,19 @@ public class LineAdder {
 
 		var pointLists = new ArrayList<List<Vector2d>>();
 
-		for (var inputLine : linesToBeAdded) {
+		logger.debug("addAll() divideCurrentLines() start: "
+				+ (System.currentTimeMillis() - startTime) + "[ms]");
+
+		linesToBeAdded.forEach(inputLine -> {
 			divideCurrentLines(inputLine, currentLines);
+			pointLists.add(createInputLinePoints(inputLine, currentLines));
+		});
 
-			List<Vector2d> points = createInputLinePoints(inputLine, currentLines);
-			pointLists.add(points);
-		}
+		logger.debug("addAll() divideCurrentLines() finished: "
+				+ (System.currentTimeMillis() - startTime) + "[ms]");
 
-		// parallel() seems to cause a null pointer exception in some cases and
-		// the effect of parallelization is small.
-		IntStream.range(0, linesToBeAdded.size())// .parallel()
+		var newLines = Collections.synchronizedList(new ArrayList<OriLine>());
+		IntStream.range(0, linesToBeAdded.size()).parallel()
 				.forEach(j -> {
 					var inputLine = linesToBeAdded.get(j);
 					var points = pointLists.get(j);
@@ -192,10 +203,16 @@ public class LineAdder {
 							continue;
 						}
 
-						currentLines.add(new OriLine(prePoint, p, inputLine.getType()));
+						newLines.add(new OriLine(prePoint, p, inputLine.getType()));
+
 						prePoint = p;
 					}
-
 				});
+
+		newLines.forEach(line -> currentLines.add(line));
+
+		var endTime = System.currentTimeMillis();
+
+		logger.debug("addAll(): " + (endTime - startTime) + "[ms]");
 	}
 }
