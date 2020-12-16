@@ -348,15 +348,15 @@ public class ElementRemover {
 		}
 
 		// set keyPoint1(opposite end point for map's key)
-		for (var keyPoint : sharedPointsMap.keySet()) {
-			for (var point : sharedPointsMap.get(keyPoint)) {
+		sharedPointsMap.forEach((keyPoint, points) -> {
+			for (var point : points) {
 				var line = point.getLine();
 				var keyPoint1 = GeomUtil.distance(line.p0, keyPoint) < EPS
 						? sharedPointsMap.floorKey(line.p1)
 						: sharedPointsMap.floorKey(line.p0);
 				point.setKeyPoint1(keyPoint1);
 			}
-		}
+		});
 
 		// try merge for each line group connected at the key of the map
 		sharedPointsMap.forEach((shared, sharedPoints) -> {
