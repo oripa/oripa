@@ -358,47 +358,50 @@ public class ElementRemover {
 		}
 
 		// try merge for each line group connected at the key of the map
-		for (var shared : sharedPointsMap.keySet()) {
-			var sharedPoints = sharedPointsMap.get(shared);
-			logDebug("shareLines@" + shared + ": " + "#=" + sharedPoints.size(),
+		sharedPointsMap.forEach((shared, sharedPoints) -> {
+			logDebug("sharedLines@" + shared + ": " + "#=" + sharedPoints.size(),
 					sharedPoints.stream()
 							.map(s -> s.getLine())
 							.collect(Collectors.toList()));
 
 			var mergedLine = merge2LinesAt(shared, sharedPoints, creasePattern);
 
-			// if the lines are merged, the consumed old lines has to be deleted
-			// from the map and the new merged line has to be added
-			// to the map.
-			if (mergedLine != null) {
-				var points = List.of(sharedPoints.get(0), sharedPoints.get(1));
-
-				// remove old lines
-				points.forEach(point -> {
-					sharedPointsMap.get(point.getKeyPoint0()).remove(point);
-					sharedPointsMap.get(point.getKeyPoint1()).remove(point);
-
-				});
-
-				// extract floor point as key points
-				var keyPoints = List.of(
-						sharedPointsMap.floorKey(mergedLine.p0),
-						sharedPointsMap.floorKey(mergedLine.p1));
-
-				var merged = keyPoints.stream()
-						.map(keyPoint -> new PointAndLine(keyPoint, mergedLine))
-						.collect(Collectors.toList());
-
-				merged.get(0).setKeyPoint0(keyPoints.get(0));
-				merged.get(0).setKeyPoint1(keyPoints.get(1));
-				merged.get(1).setKeyPoint0(keyPoints.get(1));
-				merged.get(1).setKeyPoint1(keyPoints.get(0));
-
-				IntStream.range(0, merged.size()).forEach(i -> {
-					sharedPointsMap.get(keyPoints.get(i)).add(merged.get(i));
-				});
+			if (mergedLine == null) {
+				return;
 			}
-		}
+
+			// if the lines are merged, the consumed old lines have to be
+			// deleted from the map and the new merged line has to be added
+			// to the map.
+
+			var points = List.of(sharedPoints.get(0), sharedPoints.get(1));
+
+			// remove old lines
+			points.forEach(point -> {
+				sharedPointsMap.get(point.getKeyPoint0()).remove(point);
+				sharedPointsMap.get(point.getKeyPoint1()).remove(point);
+
+			});
+
+			// extract floor point as key points
+			var keyPoints = List.of(
+					sharedPointsMap.floorKey(mergedLine.p0),
+					sharedPointsMap.floorKey(mergedLine.p1));
+
+			var merged = keyPoints.stream()
+					.map(keyPoint -> new PointAndLine(keyPoint, mergedLine))
+					.collect(Collectors.toList());
+
+			merged.get(0).setKeyPoint0(keyPoints.get(0));
+			merged.get(0).setKeyPoint1(keyPoints.get(1));
+			merged.get(1).setKeyPoint0(keyPoints.get(1));
+			merged.get(1).setKeyPoint1(keyPoints.get(0));
+
+			IntStream.range(0, merged.size()).forEach(i -> {
+				sharedPointsMap.get(keyPoints.get(i)).add(merged.get(i));
+			});
+		});
+
 	}
 
 	/**
