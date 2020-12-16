@@ -339,7 +339,7 @@ public class ElementRemover {
 
 		// build a map and set keyPoint0
 		for (var byX : xOrderHash) {
-			var yHash = hashFactory.create(byX, PointAndLine::getY, 1e-5);
+			var yHash = hashFactory.create(byX, PointAndLine::getY, EPS);
 			for (var xyPoints : yHash) {
 				var point0 = xyPoints.get(0);
 				sharedPointsMap.put(point0.getPoint(), xyPoints);
