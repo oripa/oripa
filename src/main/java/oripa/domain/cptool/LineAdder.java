@@ -165,17 +165,23 @@ public class LineAdder {
 						.anyMatch(line -> GeomUtil.isSameLineSegment(line, inputLine)))
 				.collect(Collectors.toList());
 
-		var pointLists = new ArrayList<List<Vector2d>>();
+		var pointLists = Collections.synchronizedList(new ArrayList<List<Vector2d>>());
 
 		logger.debug("addAll() divideCurrentLines() start: "
 				+ (System.currentTimeMillis() - startTime) + "[ms]");
 
 		linesToBeAdded.forEach(inputLine -> {
 			divideCurrentLines(inputLine, currentLines);
+		});
+
+		logger.debug("addAll() createInputLinePoints() start: "
+				+ (System.currentTimeMillis() - startTime) + "[ms]");
+
+		linesToBeAdded.parallelStream().forEach(inputLine -> {
 			pointLists.add(createInputLinePoints(inputLine, currentLines));
 		});
 
-		logger.debug("addAll() divideCurrentLines() finished: "
+		logger.debug("addAll() adding new lines start: "
 				+ (System.currentTimeMillis() - startTime) + "[ms]");
 
 		var newLines = Collections.synchronizedList(new ArrayList<OriLine>());
