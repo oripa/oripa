@@ -33,12 +33,12 @@ import oripa.value.OriPoint;
  * @author OUCHI Koji
  *
  */
-public class SharedPointsMapFactory<T extends PointAndLine> {
+public class SharedPointsMapFactory<P extends PointAndLine> {
 
-	private ArrayList<T> createXOrderPoints(
+	private ArrayList<P> createXOrderPoints(
 			final ArrayList<OriLine> lines,
-			final BiFunction<OriPoint, OriLine, T> factory) {
-		var points = new ArrayList<T>(lines.size() * 2);
+			final BiFunction<OriPoint, OriLine, P> factory) {
+		var points = new ArrayList<P>(lines.size() * 2);
 
 		for (var line : lines) {
 			points.add(factory.apply(line.p0, line));
@@ -52,9 +52,10 @@ public class SharedPointsMapFactory<T extends PointAndLine> {
 
 	/**
 	 * the returned map keeps the both side of each line as an object holding
-	 * the end point and the line. The map is ordered by x-coordinate and then
-	 * y-coordinate. The lines in returned map values and given to the factory
-	 * are canonicalized, i.e., line.p0 is smaller than line.p1.
+	 * the end point and the line. The map key is ordered by x-coordinate and
+	 * the values are ordered by y-coordinate. The lines in returned map values
+	 * and the one given to the factory are canonicalized, i.e., line.p0 is
+	 * smaller than line.p1.
 	 *
 	 * @param creasePattern
 	 * @param factory
@@ -62,9 +63,9 @@ public class SharedPointsMapFactory<T extends PointAndLine> {
 	 * @return
 	 */
 
-	public TreeMap<OriPoint, ArrayList<T>> create(
+	public TreeMap<OriPoint, ArrayList<P>> create(
 			final Collection<OriLine> creasePattern,
-			final BiFunction<OriPoint, OriLine, T> factory,
+			final BiFunction<OriPoint, OriLine, P> factory,
 			final double eps) {
 		// Sweep-line approach
 		// (sweep along x axis)
@@ -75,34 +76,34 @@ public class SharedPointsMapFactory<T extends PointAndLine> {
 
 		var xOrderPoints = createXOrderPoints(canonicalLines, factory);
 		var hashFactory = new HashFactory();
-		var xOrderHash = hashFactory.create(xOrderPoints, T::getX, eps);
+		var xOrderHash = hashFactory.create(xOrderPoints, P::getX, eps);
 
 		for (var byX : xOrderHash) {
-			byX.sort(Comparator.comparing(T::getY));
+			byX.sort(Comparator.comparing(P::getY));
 		}
 
 		// this map keeps the both side of each line as an object holding the
 		// end point and the line object.
-		var sharedPointsMap = new TreeMap<OriPoint, ArrayList<T>>();
+		var sharedPointsMap = new TreeMap<OriPoint, ArrayList<P>>();
 
-		// build a map and set keyPoint0
+		// build a map and set keyPoint
 		for (var byX : xOrderHash) {
-			var yHash = hashFactory.create(byX, T::getY, eps);
+			var yHash = hashFactory.create(byX, P::getY, eps);
 			for (var xyPoints : yHash) {
-				var point0 = xyPoints.get(0);
+				P point0 = xyPoints.get(0);
 				sharedPointsMap.put(point0.getPoint(), xyPoints);
-				xyPoints.forEach(p -> p.setKeyPoint0(point0.getPoint()));
+				xyPoints.forEach(p -> p.setKeyPoint(point0.getPoint()));
 			}
 		}
 
-		// set keyPoint1(opposite end point for map's key)
+		// set oppositeKeyPoint
 		sharedPointsMap.forEach((keyPoint, points) -> {
-			for (var point : points) {
+			for (P point : points) {
 				var line = point.getLine();
 				var keyPoint1 = GeomUtil.distance(line.p0, keyPoint) < eps
 						? sharedPointsMap.floorKey(line.p1)
 						: sharedPointsMap.floorKey(line.p0);
-				point.setKeyPoint1(keyPoint1);
+				point.setOppositeKeyPoint(keyPoint1);
 			}
 		});
 

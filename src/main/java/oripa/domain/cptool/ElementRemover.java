@@ -160,8 +160,8 @@ public class ElementRemover {
 
 	private void removeBothSidesFromMap(final PointAndLine point,
 			final TreeMap<OriPoint, ArrayList<PointAndLine>> sharedPointsMap) {
-		sharedPointsMap.get(point.getKeyPoint0()).remove(point);
-		sharedPointsMap.get(point.getKeyPoint1()).remove(point);
+		sharedPointsMap.get(point.getKeyPoint()).remove(point);
+		sharedPointsMap.get(point.getOppositeKeyPoint()).remove(point);
 	}
 
 	private void addBothSidesOfLineToMap(
@@ -175,10 +175,10 @@ public class ElementRemover {
 				.map(keyPoint -> new PointAndLine(keyPoint, line))
 				.collect(Collectors.toList());
 
-		endPoints.get(0).setKeyPoint0(keyPoints.get(0));
-		endPoints.get(0).setKeyPoint1(keyPoints.get(1));
-		endPoints.get(1).setKeyPoint0(keyPoints.get(1));
-		endPoints.get(1).setKeyPoint1(keyPoints.get(0));
+		endPoints.get(0).setKeyPoint(keyPoints.get(0));
+		endPoints.get(0).setOppositeKeyPoint(keyPoints.get(1));
+		endPoints.get(1).setKeyPoint(keyPoints.get(1));
+		endPoints.get(1).setOppositeKeyPoint(keyPoints.get(0));
 
 		IntStream.range(0, endPoints.size()).forEach(i -> {
 			sharedPointsMap.get(keyPoints.get(i)).add(endPoints.get(i));

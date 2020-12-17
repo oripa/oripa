@@ -30,8 +30,8 @@ import oripa.value.OriPoint;
  */
 public class PointAndLine {
 	private final OriPoint point;
-	private OriPoint keyPoint0;
-	private OriPoint keyPoint1;
+	private OriPoint keyPoint;
+	private OriPoint oppositKeyPoint;
 	private final OriLine line;
 
 	public PointAndLine(final OriPoint point, final OriLine line) {
@@ -62,33 +62,33 @@ public class PointAndLine {
 	}
 
 	/**
-	 * @return keyPoint0
+	 * @return keyPoint
 	 */
-	public OriPoint getKeyPoint0() {
-		return keyPoint0;
+	public OriPoint getKeyPoint() {
+		return keyPoint;
 	}
 
 	/**
 	 * @param keyPoint
 	 *            Sets keyPoint
 	 */
-	public void setKeyPoint0(final OriPoint keyPoint) {
-		this.keyPoint0 = keyPoint;
+	public void setKeyPoint(final OriPoint keyPoint) {
+		this.keyPoint = keyPoint;
 	}
 
 	/**
 	 * @return keyPoint
 	 */
-	public OriPoint getKeyPoint1() {
-		return keyPoint1;
+	public OriPoint getOppositeKeyPoint() {
+		return oppositKeyPoint;
 	}
 
 	/**
 	 * @param keyPoint
 	 *            Sets keyPoint
 	 */
-	public void setKeyPoint1(final OriPoint keyPoint) {
-		this.keyPoint1 = keyPoint;
+	public void setOppositeKeyPoint(final OriPoint keyPoint) {
+		this.oppositKeyPoint = keyPoint;
 	}
 
 	/*
