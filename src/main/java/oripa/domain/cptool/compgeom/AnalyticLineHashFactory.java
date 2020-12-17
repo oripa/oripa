@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.cptool;
+package oripa.domain.cptool.compgeom;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +30,7 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-class AnalyticLineHashFactory {
+public class AnalyticLineHashFactory {
 	private static final double EPS = 1e-5;
 	private final HashFactory hashFactory = new HashFactory();
 
@@ -40,7 +40,7 @@ class AnalyticLineHashFactory {
 	 * @param lineArray
 	 * @return
 	 */
-	ArrayList<AnalyticLine> createAnalyticLines(final ArrayList<OriLine> lineArray) {
+	private ArrayList<AnalyticLine> createAnalyticLines(final ArrayList<OriLine> lineArray) {
 		return lineArray.parallelStream()
 				.map(line -> new AnalyticLine(line))
 				.sorted(Comparator.comparing(AnalyticLine::getAngle))
@@ -113,7 +113,7 @@ class AnalyticLineHashFactory {
 	 * @param lines
 	 * @return 3D hash table, e.g., hash[angle][intercept][lineIndex].
 	 */
-	ArrayList<ArrayList<ArrayList<AnalyticLine>>> create(
+	public ArrayList<ArrayList<ArrayList<AnalyticLine>>> create(
 			final Collection<OriLine> lines) {
 		// convert collection to ensure fast access to lines.
 		var lineArray = new ArrayList<OriLine>(lines);

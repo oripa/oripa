@@ -27,6 +27,7 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.cptool.compgeom.AnalyticLineHashFactory;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 

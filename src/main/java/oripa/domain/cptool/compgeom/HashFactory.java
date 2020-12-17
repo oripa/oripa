@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.cptool;
+package oripa.domain.cptool.compgeom;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -25,7 +25,7 @@ import java.util.function.Function;
  * @author OUCHI Koji
  *
  */
-class HashFactory {
+public class HashFactory {
 
 	/**
 	 * creates a hash table whose key is the value obtained by keyExtractor. The

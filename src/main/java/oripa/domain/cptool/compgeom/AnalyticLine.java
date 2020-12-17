@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.cptool;
+package oripa.domain.cptool.compgeom;
 
 import oripa.value.OriLine;
 
@@ -25,7 +25,7 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-class AnalyticLine {
+public class AnalyticLine {
 	private static final double EPS = 1e-5;
 	private final OriLine line;
 	private final double angle;

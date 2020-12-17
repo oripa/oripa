@@ -3,7 +3,6 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -14,6 +13,8 @@ import javax.vecmath.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.cptool.compgeom.PointAndLine;
+import oripa.domain.cptool.compgeom.SharedPointsMapFactory;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -27,125 +28,6 @@ import oripa.value.OriPoint;
 public class ElementRemover {
 	private static final Logger logger = LoggerFactory.getLogger(ElementRemover.class);
 	private static final double EPS = 1e-4;
-
-	/**
-	 * For efficient computation
-	 *
-	 * @author OUCHI Koji
-	 *
-	 */
-	private static class PointAndLine {
-		private final OriPoint point;
-		private OriPoint keyPoint0;
-		private OriPoint keyPoint1;
-		private final OriLine line;
-
-		public PointAndLine(final OriPoint point, final OriLine line) {
-			this.point = point;
-			this.line = line;
-		}
-
-		/**
-		 * @return point
-		 */
-		public OriPoint getPoint() {
-			return point;
-		}
-
-		/**
-		 * @return line
-		 */
-		public OriLine getLine() {
-			return line;
-		}
-
-		public double getX() {
-			return point.x;
-		}
-
-		public double getY() {
-			return point.y;
-		}
-
-		/**
-		 * @return keyPoint0
-		 */
-		public OriPoint getKeyPoint0() {
-			return keyPoint0;
-		}
-
-		/**
-		 * @param keyPoint
-		 *            Sets keyPoint
-		 */
-		public void setKeyPoint0(final OriPoint keyPoint) {
-			this.keyPoint0 = keyPoint;
-		}
-
-		/**
-		 * @return keyPoint
-		 */
-		public OriPoint getKeyPoint1() {
-			return keyPoint1;
-		}
-
-		/**
-		 * @param keyPoint
-		 *            Sets keyPoint
-		 */
-		public void setKeyPoint1(final OriPoint keyPoint) {
-			this.keyPoint1 = keyPoint;
-		}
-
-		/*
-		 * (non Javadoc)
-		 *
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((line == null) ? 0 : line.hashCode());
-			result = prime * result + ((point == null) ? 0 : point.hashCode());
-			return result;
-		}
-
-		/*
-		 * (non Javadoc)
-		 *
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(final Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			PointAndLine other = (PointAndLine) obj;
-			if (line == null) {
-				if (other.line != null) {
-					return false;
-				}
-			} else if (!line.equals(other.line)) {
-				return false;
-			}
-//			if (point == null) {
-//				if (other.point != null) {
-//					return false;
-//				}
-//			} else if (!point.equals(other.point)) {
-//				return false;
-//			}
-			return true;
-		}
-
-	}
 
 	/**
 	 * remove line from crease pattern
@@ -228,12 +110,6 @@ public class ElementRemover {
 				creasePattern);
 	}
 
-	private OriLine makeCanonical(final OriLine line) {
-		return line.p0.compareTo(line.p1) > 0
-				? new OriLine(line.p1, line.p0, line.getType())
-				: line;
-	}
-
 	private boolean isConnectionPoint(final Vector2d p, final Vector2d q) {
 		return GeomUtil.distance(p, q) < EPS;
 	}
@@ -282,18 +158,32 @@ public class ElementRemover {
 						.collect(Collectors.toList())));
 	}
 
-	private ArrayList<PointAndLine> createXOrderPoints(final ArrayList<OriLine> lines) {
-		var points = new ArrayList<PointAndLine>(lines.size() * 2);
+	private void removeBothSidesFromMap(final PointAndLine point,
+			final TreeMap<OriPoint, ArrayList<PointAndLine>> sharedPointsMap) {
+		sharedPointsMap.get(point.getKeyPoint0()).remove(point);
+		sharedPointsMap.get(point.getKeyPoint1()).remove(point);
+	}
 
-		for (int i = 0; i < lines.size(); i++) {
-			var line = lines.get(i);
-			points.add(new PointAndLine(line.p0, line));
-			points.add(new PointAndLine(line.p1, line));
-		}
+	private void addBothSidesOfLineToMap(
+			final OriLine line,
+			final TreeMap<OriPoint, ArrayList<PointAndLine>> sharedPointsMap) {
+		var keyPoints = List.of(
+				sharedPointsMap.floorKey(line.p0),
+				sharedPointsMap.floorKey(line.p1));
 
-		points.sort(Comparator.comparing(PointAndLine::getX));
+		var endPoints = keyPoints.stream()
+				.map(keyPoint -> new PointAndLine(keyPoint, line))
+				.collect(Collectors.toList());
 
-		return points;
+		endPoints.get(0).setKeyPoint0(keyPoints.get(0));
+		endPoints.get(0).setKeyPoint1(keyPoints.get(1));
+		endPoints.get(1).setKeyPoint0(keyPoints.get(1));
+		endPoints.get(1).setKeyPoint1(keyPoints.get(0));
+
+		IntStream.range(0, endPoints.size()).forEach(i -> {
+			sharedPointsMap.get(keyPoints.get(i)).add(endPoints.get(i));
+		});
+
 	}
 
 	/**
@@ -306,57 +196,17 @@ public class ElementRemover {
 			final Collection<OriLine> creasePattern) {
 
 		linesToBeRemoved.forEach(line -> creasePattern.remove(line));
-		// logDebug("creasePattern after removing: ", creasePattern);
 
 		// merge lines after removing all lines to be removed.
 		// merging while removing makes some lines not to be removed.
 
-		// naive implementation
-//		creasePattern.forEach(line -> {
-//			merge2LinesAt(line.p0, creasePattern);
-//			merge2LinesAt(line.p1, creasePattern);
-//		});
-
 		// Sweep-line approach
 		// (sweep along x axis)
 
-		var sortedLines = creasePattern.stream()
-				.map(line -> line.createCanonical())
-				.sorted()
-				.collect(Collectors.toCollection(() -> new ArrayList<>()));
-
-		var xOrderPoints = createXOrderPoints(sortedLines);
-		var hashFactory = new HashFactory();
-		var xOrderHash = hashFactory.create(xOrderPoints, PointAndLine::getX, EPS);
-
-		for (var byX : xOrderHash) {
-			byX.sort(Comparator.comparing(PointAndLine::getY));
-		}
-
 		// this map keeps the both side of each line as an object holding the
 		// end point and the line object.
-		var sharedPointsMap = new TreeMap<OriPoint, ArrayList<PointAndLine>>();
-
-		// build a map and set keyPoint0
-		for (var byX : xOrderHash) {
-			var yHash = hashFactory.create(byX, PointAndLine::getY, EPS);
-			for (var xyPoints : yHash) {
-				var point0 = xyPoints.get(0);
-				sharedPointsMap.put(point0.getPoint(), xyPoints);
-				xyPoints.forEach(p -> p.setKeyPoint0(point0.getPoint()));
-			}
-		}
-
-		// set keyPoint1(opposite end point for map's key)
-		sharedPointsMap.forEach((keyPoint, points) -> {
-			for (var point : points) {
-				var line = point.getLine();
-				var keyPoint1 = GeomUtil.distance(line.p0, keyPoint) < EPS
-						? sharedPointsMap.floorKey(line.p1)
-						: sharedPointsMap.floorKey(line.p0);
-				point.setKeyPoint1(keyPoint1);
-			}
-		});
+		var mapFactory = new SharedPointsMapFactory();
+		var sharedPointsMap = mapFactory.create(creasePattern, EPS);
 
 		// try merge for each line group connected at the key of the map
 		sharedPointsMap.forEach((shared, sharedPoints) -> {
@@ -379,28 +229,11 @@ public class ElementRemover {
 
 			// remove old lines
 			points.forEach(point -> {
-				sharedPointsMap.get(point.getKeyPoint0()).remove(point);
-				sharedPointsMap.get(point.getKeyPoint1()).remove(point);
-
+				removeBothSidesFromMap(point, sharedPointsMap);
 			});
 
-			// extract floor point as key points
-			var keyPoints = List.of(
-					sharedPointsMap.floorKey(mergedLine.p0),
-					sharedPointsMap.floorKey(mergedLine.p1));
-
-			var merged = keyPoints.stream()
-					.map(keyPoint -> new PointAndLine(keyPoint, mergedLine))
-					.collect(Collectors.toList());
-
-			merged.get(0).setKeyPoint0(keyPoints.get(0));
-			merged.get(0).setKeyPoint1(keyPoints.get(1));
-			merged.get(1).setKeyPoint0(keyPoints.get(1));
-			merged.get(1).setKeyPoint1(keyPoints.get(0));
-
-			IntStream.range(0, merged.size()).forEach(i -> {
-				sharedPointsMap.get(keyPoints.get(i)).add(merged.get(i));
-			});
+			// add merged line
+			addBothSidesOfLineToMap(mergedLine, sharedPointsMap);
 		});
 
 	}
