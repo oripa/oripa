@@ -205,8 +205,9 @@ public class ElementRemover {
 
 		// this map keeps the both side of each line as an object holding the
 		// end point and the line object.
-		var mapFactory = new SharedPointsMapFactory();
-		var sharedPointsMap = mapFactory.create(creasePattern, EPS);
+		var mapFactory = new SharedPointsMapFactory<PointAndLine>();
+		var sharedPointsMap = mapFactory.create(creasePattern,
+				(point, line) -> new PointAndLine(point, line), EPS);
 
 		// try merge for each line group connected at the key of the map
 		sharedPointsMap.forEach((shared, sharedPoints) -> {

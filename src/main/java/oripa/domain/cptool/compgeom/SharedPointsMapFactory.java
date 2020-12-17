@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.TreeMap;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import oripa.geom.GeomUtil;
@@ -32,14 +33,16 @@ import oripa.value.OriPoint;
  * @author OUCHI Koji
  *
  */
-public class SharedPointsMapFactory {
+public class SharedPointsMapFactory<T extends PointAndLine> {
 
-	private ArrayList<PointAndLine> createXOrderPoints(final ArrayList<OriLine> lines) {
-		var points = new ArrayList<PointAndLine>(lines.size() * 2);
+	private ArrayList<T> createXOrderPoints(
+			final ArrayList<OriLine> lines,
+			final BiFunction<OriPoint, OriLine, T> factory) {
+		var points = new ArrayList<T>(lines.size() * 2);
 
 		for (var line : lines) {
-			points.add(new PointAndLine(line.p0, line));
-			points.add(new PointAndLine(line.p1, line));
+			points.add(factory.apply(line.p0, line));
+			points.add(factory.apply(line.p1, line));
 		}
 
 		points.sort(Comparator.comparing(PointAndLine::getX));
@@ -50,15 +53,19 @@ public class SharedPointsMapFactory {
 	/**
 	 * the returned map keeps the both side of each line as an object holding
 	 * the end point and the line. The map is ordered by x-coordinate and then
-	 * y-coordinate.
+	 * y-coordinate. The lines in returned map values and given to the factory
+	 * are canonicalized, i.e., line.p0 is smaller than line.p1.
 	 *
 	 * @param creasePattern
+	 * @param factory
 	 * @param eps
 	 * @return
 	 */
 
-	public TreeMap<OriPoint, ArrayList<PointAndLine>> create(
-			final Collection<OriLine> creasePattern, final double eps) {
+	public TreeMap<OriPoint, ArrayList<T>> create(
+			final Collection<OriLine> creasePattern,
+			final BiFunction<OriPoint, OriLine, T> factory,
+			final double eps) {
 		// Sweep-line approach
 		// (sweep along x axis)
 
@@ -66,21 +73,21 @@ public class SharedPointsMapFactory {
 				.map(line -> line.createCanonical())
 				.collect(Collectors.toCollection(() -> new ArrayList<>()));
 
-		var xOrderPoints = createXOrderPoints(canonicalLines);
+		var xOrderPoints = createXOrderPoints(canonicalLines, factory);
 		var hashFactory = new HashFactory();
-		var xOrderHash = hashFactory.create(xOrderPoints, PointAndLine::getX, eps);
+		var xOrderHash = hashFactory.create(xOrderPoints, T::getX, eps);
 
 		for (var byX : xOrderHash) {
-			byX.sort(Comparator.comparing(PointAndLine::getY));
+			byX.sort(Comparator.comparing(T::getY));
 		}
 
 		// this map keeps the both side of each line as an object holding the
 		// end point and the line object.
-		var sharedPointsMap = new TreeMap<OriPoint, ArrayList<PointAndLine>>();
+		var sharedPointsMap = new TreeMap<OriPoint, ArrayList<T>>();
 
 		// build a map and set keyPoint0
 		for (var byX : xOrderHash) {
-			var yHash = hashFactory.create(byX, PointAndLine::getY, eps);
+			var yHash = hashFactory.create(byX, T::getY, eps);
 			for (var xyPoints : yHash) {
 				var point0 = xyPoints.get(0);
 				sharedPointsMap.put(point0.getPoint(), xyPoints);
