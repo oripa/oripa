@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -180,7 +181,10 @@ public class LineAdder {
 		// input domain can limit the current lines to be divided.
 		var inputDomainClipper = new RectangleClipper(
 				new RectangleDomain(linesToBeAdded));
-		var crossingCurrentLines = inputDomainClipper.selectByArea(currentLines);
+		// use a hash set for avoiding worst case of computation time. (list
+		// takes O(n) time for deletion while hash set takes O(1) time.)
+		var crossingCurrentLines = new HashSet<OriLine>(
+				inputDomainClipper.selectByArea(currentLines));
 		currentLines.removeAll(crossingCurrentLines);
 
 		logger.debug("addAll() divideCurrentLines() start: "
