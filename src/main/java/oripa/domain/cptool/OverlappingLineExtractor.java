@@ -18,7 +18,6 @@
  */
 package oripa.domain.cptool;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
@@ -71,11 +70,8 @@ public class OverlappingLineExtractor {
 	public Collection<OriLine> extract(final Collection<OriLine> lines) {
 		var startTime = System.currentTimeMillis();
 
-		// convert collection to ensure fast access to lines.
-		var lineArray = new ArrayList<OriLine>(lines);
-
 		// make a data structure for fast computation.
-		var hashFactory = new AnalyticLineHashFactory();
+		var hashFactory = new AnalyticLineHashFactory(EPS);
 		var hash = hashFactory.create(lines);
 
 		var overlappingLines = new ConcurrentLinkedDeque<OriLine>();

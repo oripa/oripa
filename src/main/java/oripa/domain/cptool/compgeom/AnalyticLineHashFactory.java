@@ -31,8 +31,12 @@ import oripa.value.OriLine;
  *
  */
 public class AnalyticLineHashFactory {
-	private static final double EPS = 1e-5;
+	private final double eps;
 	private final HashFactory hashFactory = new HashFactory();
+
+	public AnalyticLineHashFactory(final double eps) {
+		this.eps = eps;
+	}
 
 	/**
 	 * sort lines by angle for creating hash easily.
@@ -50,23 +54,7 @@ public class AnalyticLineHashFactory {
 	private ArrayList<ArrayList<AnalyticLine>> createHash(
 			final ArrayList<AnalyticLine> sortedLines,
 			final Function<AnalyticLine, Double> keyExtractor) {
-		return hashFactory.create(sortedLines, keyExtractor, EPS);
-//		var hash = new ArrayList<ArrayList<AnalyticLine>>();
-//
-//		int split_i = 0;
-//		hash.add(new ArrayList<AnalyticLine>());
-//		hash.get(split_i).add(sortedLines.get(0));
-//		for (int i = 1; i < sortedLines.size(); i++) {
-//			var line1 = sortedLines.get(i);
-//			var line0 = hash.get(split_i).get(0);
-//			if (keyExtractor.apply(line1) - keyExtractor.apply(line0) > EPS) {
-//				split_i++;
-//				hash.add(new ArrayList<AnalyticLine>());
-//			}
-//			hash.get(split_i).add(line1);
-//		}
-//
-//		return hash;
+		return hashFactory.create(sortedLines, keyExtractor, eps);
 	}
 
 	/**
