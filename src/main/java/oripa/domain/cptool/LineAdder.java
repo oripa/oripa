@@ -49,10 +49,13 @@ public class LineAdder {
 	}
 
 	/**
+	 * divides the current lines by the input line and returns a map of the
+	 * cross point information.
 	 *
 	 * @param inputLine
 	 * @param currentLines
-	 * @return true.
+	 * @return a map from a cross point to the crossing current line at the
+	 *         point.
 	 */
 	private Map<OriPoint, OriLine> divideCurrentLines(final OriLine inputLine,
 			final Collection<OriLine> currentLines) {
