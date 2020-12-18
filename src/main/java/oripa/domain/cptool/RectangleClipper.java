@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 public class RectangleClipper {
@@ -44,6 +45,13 @@ public class RectangleClipper {
 		m_minY = y0;
 		m_maxX = x1;
 		m_maxY = y1;
+	}
+
+	public RectangleClipper(final RectangleDomain domain) {
+		m_minX = domain.getLeft();
+		m_minY = domain.getTop();
+		m_maxX = domain.getRight();
+		m_maxY = domain.getBottom();
 	}
 
 	private int calcCode(final double x, final double y) {
@@ -183,6 +191,12 @@ public class RectangleClipper {
 		return true;
 	}
 
+	/**
+	 * tells us whether the given line {@code l} intersects the rectangle.
+	 *
+	 * @param l
+	 * @return whether {@code l} intersects the rectangle.
+	 */
 	public boolean clipTest(final OriLine l) {
 		int s_code = calcCode(l.p0.x, l.p0.y);
 		int e_code = calcCode(l.p1.x, l.p1.y);

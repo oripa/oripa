@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.geom.GeomUtil;
+import oripa.geom.RectangleDomain;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -174,6 +175,12 @@ public class LineAdder {
 
 		var pointLists = Collections.synchronizedList(new ArrayList<List<Vector2d>>());
 
+		// input domain can limit the current lines to be divided.
+		var inputDomainClipper = new RectangleClipper(
+				new RectangleDomain(linesToBeAdded));
+		var crossingCurrentLines = inputDomainClipper.selectByArea(currentLines);
+		currentLines.removeAll(crossingCurrentLines);
+
 		logger.debug("addAll() divideCurrentLines() start: "
 				+ (System.currentTimeMillis() - startTime) + "[ms]");
 
@@ -182,8 +189,11 @@ public class LineAdder {
 		var crossMaps = Collections.synchronizedMap(new HashMap<OriLine, Map<OriPoint, OriLine>>());
 
 		linesToBeAdded.forEach(inputLine -> {
-			crossMaps.put(inputLine, divideCurrentLines(inputLine, currentLines));
+			crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines));
 		});
+
+		// feed back the result of line divisions
+		currentLines.addAll(crossingCurrentLines);
 
 		logger.debug("addAll() createInputLinePoints() start: "
 				+ (System.currentTimeMillis() - startTime) + "[ms]");
