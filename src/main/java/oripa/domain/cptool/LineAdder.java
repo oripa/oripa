@@ -113,7 +113,7 @@ public class LineAdder {
 		points.add(inputLine.p0);
 		points.add(inputLine.p1);
 
-		// divide input line by already known lines
+		// divide input line by already known points and lines
 		crossMap.forEach((crossPoint, line) -> {
 			if (line == null) {
 				return;
@@ -177,6 +177,8 @@ public class LineAdder {
 		logger.debug("addAll() divideCurrentLines() start: "
 				+ (System.currentTimeMillis() - startTime) + "[ms]");
 
+		// a map from a input line to a map from a cross point to a line
+		// crossing with the input line.
 		var crossMaps = Collections.synchronizedMap(new HashMap<OriLine, Map<OriPoint, OriLine>>());
 
 		linesToBeAdded.forEach(inputLine -> {

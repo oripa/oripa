@@ -16,7 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.paint.util;
+package oripa.domain.cptool;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
@@ -206,5 +209,17 @@ public class RectangleClipper {
 
 		return true;
 
+	}
+
+	/**
+	 * extracts lines which intersects this rectangle from given lines.
+	 *
+	 * @param lines
+	 * @return
+	 */
+	public Collection<OriLine> selectByArea(final Collection<OriLine> lines) {
+		return lines.stream()
+				.filter(l -> clipTest(l))
+				.collect(Collectors.toList());
 	}
 }

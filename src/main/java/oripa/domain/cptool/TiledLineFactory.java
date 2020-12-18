@@ -72,7 +72,7 @@ public class TiledLineFactory {
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
 		var domain = new RectangleDomain(creasePattern);
-		var clipper = new oripa.domain.paint.util.RectangleClipper(
+		var clipper = new oripa.domain.cptool.RectangleClipper(
 				domain.getLeft(), domain.getTop(), domain.getRight(), domain.getBottom());
 
 		for (int x = startCol; x < endCol; x++) {

@@ -4,15 +4,15 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.cptool.RectangleClipper;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.util.RectangleClipper;
 import oripa.value.OriLine;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
@@ -59,10 +59,9 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 			Collection<OriLine> selectedLines, PaintContextInterface context);
 
 	protected final void selectByRectangularArea(final PaintContextInterface context) {
-		LinkedList<OriLine> selectedLines = new LinkedList<>();
+		Collection<OriLine> selectedLines = new ArrayList<>();
 
 		try {
-
 			RectangleClipper clipper = new RectangleClipper(
 					Math.min(startPoint.x, draggingPoint.x),
 					Math.min(startPoint.y, draggingPoint.y),
@@ -70,10 +69,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 					Math.max(startPoint.y, draggingPoint.y));
 
 			CreasePatternInterface creasePattern = context.getCreasePattern();
-
-			creasePattern.stream()
-					.filter(l -> clipper.clipTest(l)).forEach(l -> selectedLines.addLast(l));
-
+			selectedLines = clipper.selectByArea(creasePattern);
 		} catch (Exception ex) {
 			logger.error("failed to select rectangularly", ex);
 		}
