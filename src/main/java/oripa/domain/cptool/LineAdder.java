@@ -107,6 +107,8 @@ public class LineAdder {
 	 * points of such new small lines.
 	 *
 	 * @param inputLine
+	 * @param crossMap
+	 *            what {@link #divideCurrentLines(OriLine, Collection)} returns.
 	 * @param currentLines
 	 * @return points on input line divided by currentLines
 	 */
@@ -146,8 +148,8 @@ public class LineAdder {
 	}
 
 	/**
-	 * Adds a new OriLine, also searching for intersections with others that
-	 * would cause their mutual division
+	 * Adds {@code inputLine} to {@code currentLines}. The lines will be split
+	 * at the intersections of the lines.
 	 *
 	 * @param inputLine
 	 * @param currentLines
@@ -160,6 +162,8 @@ public class LineAdder {
 	}
 
 	/**
+	 * Adds all of {@code inputLines} to {@code currentLines}. The lines will be
+	 * split at the intersections of the lines.
 	 *
 	 * @param inputLines
 	 *            lines to be added
