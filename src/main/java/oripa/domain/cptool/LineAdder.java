@@ -163,8 +163,7 @@ public class LineAdder {
 	 * @param inputLines
 	 *            lines to be added
 	 * @param currentLines
-	 *            collection as a destination. This is assumed to be adapted to
-	 *            concurrency.
+	 *            collection as a destination.
 	 */
 	public void addAll(final Collection<OriLine> inputLines,
 			final Collection<OriLine> currentLines) {
@@ -187,7 +186,7 @@ public class LineAdder {
 		logger.debug("addAll() divideCurrentLines() start: "
 				+ (System.currentTimeMillis() - startTime) + "[ms]");
 
-		// a map from a input line to a map from a cross point to a line
+		// a map from an input line to a map from a cross point to a line
 		// crossing with the input line.
 		var crossMaps = Collections.synchronizedMap(new HashMap<OriLine, Map<OriPoint, OriLine>>());
 
