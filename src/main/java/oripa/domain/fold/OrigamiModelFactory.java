@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 public class OrigamiModelFactory {
-
+	private static final Logger logger = LoggerFactory.getLogger(OrigamiModelFactory.class);
 	int debugCount = 0;
 
 	/**
@@ -107,19 +111,14 @@ public class OrigamiModelFactory {
 
 	private OriVertex addAndGetVertexFromVVec(
 			final List<OriVertex> vertices, final Vector2d p) {
-		OriVertex vtx = null;
-		for (OriVertex v : vertices) {
-			if (GeomUtil.distance(v.p, p) < CalculationResource.POINT_EPS) {
-				vtx = v;
-			}
-		}
-
-		if (vtx == null) {
-			vtx = new OriVertex(p);
-			vertices.add(vtx);
-		}
-
-		return vtx;
+		return vertices.parallelStream()
+				.filter(v -> GeomUtil.distance(v.p, p) < CalculationResource.POINT_EPS)
+				.findFirst()
+				.orElseGet(() -> {
+					var vtx = new OriVertex(p);
+					vertices.add(vtx);
+					return vtx;
+				});
 	}
 
 	/**
@@ -135,6 +134,8 @@ public class OrigamiModelFactory {
 	// TODO: change as: return OrigamiModel. throw error if creation failed.
 	private OrigamiModel createOrigamiModelImpl3(
 			final Collection<OriLine> creasePattern, final double paperSize) {
+
+		var startTime = System.currentTimeMillis();
 
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
@@ -222,6 +223,9 @@ public class OrigamiModelFactory {
 			}
 		}
 		origamiModel.setHasModel(true);
+
+		logger.debug(
+				"createOrigamiModelImpl3(): " + (System.currentTimeMillis() - startTime) + "[ms]");
 		return origamiModel;
 	}
 
@@ -234,16 +238,13 @@ public class OrigamiModelFactory {
 	 */
 	private void removeMeaninglessVertices(
 			final Collection<OriVertex> vertices, final Collection<OriEdge> edges) {
-		ArrayList<OriEdge> eds = new ArrayList<OriEdge>();
 		ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
 		tmpVVec.addAll(vertices);
-		for (OriVertex v : tmpVVec) {
-			eds.clear();
-			for (OriEdge e : edges) {
-				if (e.sv == v || e.ev == v) {
-					eds.add(e);
-				}
-			}
+
+		for (var v : tmpVVec) {
+			var eds = edges.parallelStream()
+					.filter(e -> e.sv == v || e.ev == v)
+					.collect(Collectors.toCollection(() -> new ArrayList<>()));
 
 			if (eds.size() != 2) {
 				continue;
@@ -299,6 +300,7 @@ public class OrigamiModelFactory {
 				ne.ev.addEdge(ne);
 			}
 		}
+
 	}
 
 	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge) {
