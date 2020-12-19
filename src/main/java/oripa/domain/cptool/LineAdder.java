@@ -111,6 +111,7 @@ public class LineAdder {
 				return;
 			}
 
+			// use end points on inputLine
 			if (GeomUtil.distancePointToSegment(line.p0, inputLine.p0,
 					inputLine.p1) < CalculationResource.POINT_EPS) {
 				points.add(line.p0);
