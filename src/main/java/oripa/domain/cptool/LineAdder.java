@@ -27,28 +27,6 @@ import oripa.value.OriPoint;
 public class LineAdder {
 	private static final Logger logger = LoggerFactory.getLogger(LineAdder.class);
 
-	private class PointComparatorX implements Comparator<Vector2d> {
-
-		@Override
-		public int compare(final Vector2d v1, final Vector2d v2) {
-			if (v1.x == v2.x) {
-				return 0;
-			}
-			return v1.x > v2.x ? 1 : -1;
-		}
-	}
-
-	private class PointComparatorY implements Comparator<Vector2d> {
-
-		@Override
-		public int compare(final Vector2d v1, final Vector2d v2) {
-			if (v1.y == v2.y) {
-				return 0;
-			}
-			return v1.y > v2.y ? 1 : -1;
-		}
-	}
-
 	/**
 	 * divides the current lines by the input line and returns a map of the
 	 * cross point information.
@@ -110,7 +88,7 @@ public class LineAdder {
 	 * @param crossMap
 	 *            what {@link #divideCurrentLines(OriLine, Collection)} returns.
 	 * @param currentLines
-	 * @return points on input line divided by currentLines
+	 * @return sorted points on input line divided by currentLines.
 	 */
 	private List<Vector2d> createInputLinePoints(
 			final OriLine inputLine,
@@ -144,7 +122,44 @@ public class LineAdder {
 			points.add(crossPoint);
 		});
 
+		// sort in order to make points sequential
+		boolean sortByX = Math.abs(inputLine.p0.x - inputLine.p1.x) > Math
+				.abs(inputLine.p0.y - inputLine.p1.y);
+		if (sortByX) {
+			points.sort(Comparator.comparing(Vector2d::getX));
+		} else {
+			points.sort(Comparator.comparing(Vector2d::getY));
+		}
+
 		return points;
+	}
+
+	/**
+	 * Returns result of input line divisions by given points.
+	 *
+	 * @param inputLine
+	 * @param points
+	 * @return
+	 */
+	private List<OriLine> divideInputLine(final OriLine inputLine, final List<Vector2d> points) {
+		var newLines = new ArrayList<OriLine>(points.size());
+
+		Vector2d prePoint = points.get(0);
+
+		// add new lines sequentially
+		for (int i = 1; i < points.size(); i++) {
+			Vector2d p = points.get(i);
+			// remove very short line
+			if (GeomUtil.distance(prePoint, p) < CalculationResource.POINT_EPS) {
+				continue;
+			}
+
+			newLines.add(new OriLine(prePoint, p, inputLine.getType()));
+
+			prePoint = p;
+		}
+
+		return newLines;
 	}
 
 	/**
@@ -216,36 +231,10 @@ public class LineAdder {
 		logger.debug("addAll() adding new lines start: "
 				+ (System.currentTimeMillis() - startTime) + "[ms]");
 
-		var newLines = Collections.synchronizedList(new ArrayList<OriLine>());
-		IntStream.range(0, linesToBeAdded.size()).parallel()
-				.forEach(j -> {
-					var inputLine = linesToBeAdded.get(j);
-					var points = pointLists.get(j);
-
-					// sort in order to make points sequential
-					boolean sortByX = Math.abs(inputLine.p0.x - inputLine.p1.x) > Math
-							.abs(inputLine.p0.y - inputLine.p1.y);
-					if (sortByX) {
-						Collections.sort(points, new PointComparatorX());
-					} else {
-						Collections.sort(points, new PointComparatorY());
-					}
-
-					Vector2d prePoint = points.get(0);
-
-					// add new lines sequentially
-					for (int i = 1; i < points.size(); i++) {
-						Vector2d p = points.get(i);
-						// remove very short line
-						if (GeomUtil.distance(prePoint, p) < CalculationResource.POINT_EPS) {
-							continue;
-						}
-
-						newLines.add(new OriLine(prePoint, p, inputLine.getType()));
-
-						prePoint = p;
-					}
-				});
+		var newLines = IntStream.range(0, linesToBeAdded.size()).parallel()
+				.mapToObj(j -> divideInputLine(linesToBeAdded.get(j), pointLists.get(j)))
+				.flatMap(lines -> lines.stream())
+				.collect(Collectors.toList());
 
 		newLines.forEach(line -> currentLines.add(line));
 
