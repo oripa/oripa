@@ -138,11 +138,13 @@ public class LineAdder {
 	 * Returns result of input line divisions by given points.
 	 *
 	 * @param inputLine
+	 *            to be divided.
 	 * @param points
-	 * @return
+	 *            on {@code inputLine} sequentially.
+	 * @return lines created by connecting points in {@code points} one by one.
 	 */
 	private List<OriLine> divideInputLine(final OriLine inputLine, final List<Vector2d> points) {
-		var newLines = new ArrayList<OriLine>(points.size());
+		var newLines = new ArrayList<OriLine>();
 
 		Vector2d prePoint = points.get(0);
 
