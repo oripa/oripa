@@ -331,31 +331,36 @@ public class OrigamiModelFactory {
 		return face;
 	}
 
+	private boolean isOppositeDirection(final OriHalfedge he0, final OriHalfedge he1) {
+		return he0.vertex == he1.next.vertex && he0.next.vertex == he1.vertex;
+	}
+
 	private void makeEdges(final List<OriEdge> edges, final List<OriFace> faces) {
 		edges.clear();
 
-		ArrayList<OriHalfedge> tmpHalfedges = new ArrayList<OriHalfedge>();
+		ArrayList<OriHalfedge> halfedges = new ArrayList<OriHalfedge>();
 
 		// Clear all the Halfedges
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				he.pair = null;
 				he.edge = null;
-				tmpHalfedges.add(he);
+				halfedges.add(he);
 			}
 		}
 
-		// Search the halfedge pair
-		int heNum = tmpHalfedges.size();
+		// from all combinations of two half-edges, find half-edge pairs whose
+		// directions are opposite (that's the definition of edge).
+		int heNum = halfedges.size();
 		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he0 = tmpHalfedges.get(i);
+			OriHalfedge he0 = halfedges.get(i);
 			if (he0.pair != null) {
 				continue;
 			}
 
 			for (int j = i + 1; j < heNum; j++) {
-				OriHalfedge he1 = tmpHalfedges.get(j);
-				if (he0.vertex == he1.next.vertex && he0.next.vertex == he1.vertex) {
+				OriHalfedge he1 = halfedges.get(j);
+				if (isOppositeDirection(he0, he1)) {
 					OriEdge edge = new OriEdge();
 					he0.pair = he1;
 					he1.pair = he0;
@@ -366,13 +371,17 @@ public class OrigamiModelFactory {
 					edge.left = he0;
 					edge.right = he1;
 					edges.add(edge);
-					edge.type = OriLine.Type.AUX.toInt();// OriEdge.TYPE_NONE;
+					edge.type = OriLine.Type.AUX.toInt();
+					// Pair is found. We can break here because something is
+					// wrong if there are 2 or more opposite half-edges for he0.
+					// We assume that everything is correct :)
+					break;
 				}
 			}
 		}
 
 		// If the pair wasn't found it should be boundary of paper
-		for (OriHalfedge he : tmpHalfedges) {
+		for (OriHalfedge he : halfedges) {
 			if (he.pair == null) {
 				OriEdge edge = new OriEdge();
 				he.edge = edge;
