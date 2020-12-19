@@ -71,7 +71,7 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 		final double oneDegreeInRad = Math.PI / 180;
 		final double eps = oneDegreeInRad / 2;
 		if (Math.abs(oddSum - Math.PI) > eps) {
-			logger.info("edge angle sum invalid");
+			logger.trace("edge angle sum invalid");
 			return false;
 		}
 
