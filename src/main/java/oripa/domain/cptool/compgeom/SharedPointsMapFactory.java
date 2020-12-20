@@ -21,11 +21,12 @@ package oripa.domain.cptool.compgeom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.TreeMap;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-import oripa.geom.GeomUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -34,6 +35,7 @@ import oripa.value.OriPoint;
  *
  */
 public class SharedPointsMapFactory<P extends PointAndLine> {
+	private static final Logger logger = LoggerFactory.getLogger(SharedPointsMapFactory.class);
 
 	private ArrayList<P> createXOrderPoints(
 			final ArrayList<OriLine> lines,
@@ -52,18 +54,17 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 
 	/**
 	 * the returned map keeps the both side of each line as an object holding
-	 * the end point and the line. The map key is ordered by x-coordinate and
-	 * the values are ordered by y-coordinate. The lines in returned map values
-	 * and the one given to the factory are canonicalized, i.e., line.p0 is
-	 * smaller than line.p1.
+	 * the end point and the line. The map key is ordered by x-coordinate first
+	 * and then by y-coordinate. In the values of each key are ordered by
+	 * y-coordinate. The lines in returned map values and the one given to the
+	 * factory are canonicalized, i.e., line.p0 is smaller than line.p1.
 	 *
 	 * @param creasePattern
 	 * @param factory
 	 * @param eps
 	 * @return
 	 */
-
-	public TreeMap<OriPoint, ArrayList<P>> create(
+	public SharedPointsMap<P> create(
 			final Collection<OriLine> creasePattern,
 			final BiFunction<OriPoint, OriLine, P> factory,
 			final double eps) {
@@ -84,7 +85,7 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 
 		// this map keeps the both side of each line as an object holding the
 		// end point and the line object.
-		var sharedPointsMap = new TreeMap<OriPoint, ArrayList<P>>();
+		var sharedPointsMap = new SharedPointsMap<P>();
 
 		// build a map and set keyPoint
 		for (var byX : xOrderHash) {
@@ -99,11 +100,12 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 		// set oppositeKeyPoint
 		sharedPointsMap.forEach((keyPoint, points) -> {
 			for (P point : points) {
-				var line = point.getLine();
-				var keyPoint1 = GeomUtil.distance(line.p0, keyPoint) < eps
-						? sharedPointsMap.floorKey(line.p1)
-						: sharedPointsMap.floorKey(line.p0);
-				point.setOppositeKeyPoint(keyPoint1);
+				sharedPointsMap.findOppositeKeyPoint(point, keyPoint, eps)
+						.ifPresentOrElse(
+								opposite -> point.setOppositeKeyPoint(opposite),
+								() -> logger.error(
+										"failed to get opposite key point: line: "
+												+ point.getLine()));
 			}
 		});
 

@@ -5,8 +5,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.compgeom.PointAndLine;
+import oripa.domain.cptool.compgeom.SharedPointsMap;
 import oripa.domain.cptool.compgeom.SharedPointsMapFactory;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -166,10 +169,10 @@ public class ElementRemover {
 
 	private void addBothSidesOfLineToMap(
 			final OriLine line,
-			final TreeMap<OriPoint, ArrayList<PointAndLine>> sharedPointsMap) {
+			final SharedPointsMap<PointAndLine> sharedPointsMap) {
 		var keyPoints = List.of(
-				sharedPointsMap.floorKey(line.p0),
-				sharedPointsMap.floorKey(line.p1));
+				sharedPointsMap.findKeyPoint(line.p0, EPS),
+				sharedPointsMap.findKeyPoint(line.p1, EPS));
 
 		var endPoints = keyPoints.stream()
 				.map(keyPoint -> new PointAndLine(keyPoint, line))
@@ -194,8 +197,12 @@ public class ElementRemover {
 	 */
 	public void removeLines(final Collection<OriLine> linesToBeRemoved,
 			final Collection<OriLine> creasePattern) {
+		var startTime = System.currentTimeMillis();
 
 		linesToBeRemoved.forEach(line -> creasePattern.remove(line));
+		var removedPoints = linesToBeRemoved.stream()
+				.flatMap(line -> Stream.of(line.p0, line.p1))
+				.collect(Collectors.toCollection(() -> new TreeSet<>()));
 
 		// merge lines after removing all lines to be removed.
 		// merging while removing makes some lines not to be removed.
@@ -215,6 +222,19 @@ public class ElementRemover {
 					sharedPoints.stream()
 							.map(s -> s.getLine())
 							.collect(Collectors.toList()));
+
+			var boundedRemovedPoints = removedPoints
+					.headSet(new OriPoint(shared.getX() + 2 * EPS, shared.getY() + 2 * EPS), true)
+					.tailSet(new OriPoint(shared.getX() - 2 * EPS, shared.getY() - 2 * EPS));
+			if (boundedRemovedPoints.contains(shared)) {
+				logger.trace("exists in boundedRemovedPoints: " + shared);
+			} else if (!boundedRemovedPoints.stream()
+					.anyMatch(p -> GeomUtil.distance(p, shared) < EPS)) {
+				logger.trace("not to be merged: " + shared);
+				return;
+			}
+
+			logger.trace("can merge at: " + shared);
 
 			var mergedLine = merge2LinesAt(shared, sharedPoints, creasePattern);
 
@@ -237,6 +257,7 @@ public class ElementRemover {
 			addBothSidesOfLineToMap(mergedLine, sharedPointsMap);
 		});
 
+		logger.debug("removeLines(): " + (System.currentTimeMillis() - startTime) + "[ms]");
 	}
 
 	/**
