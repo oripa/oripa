@@ -133,7 +133,6 @@ public class OrigamiModelFactory {
 	 * @param paperSize
 	 * @return A model data converted from crease pattern.
 	 */
-	// TODO: change as: return OrigamiModel. throw error if creation failed.
 	private OrigamiModel createOrigamiModelImpl3(
 			final Collection<OriLine> creasePattern, final double paperSize) {
 
@@ -168,7 +167,13 @@ public class OrigamiModelFactory {
 			ev.addEdge(eg);
 		}
 
+		logger.debug(
+				"removeMeaninglessVertices() start: " + (System.currentTimeMillis() - startTime)
+						+ "[ms]");
 		removeMeaninglessVertices(vertices, edges);
+		logger.debug(
+				"removeMeaninglessVertices() end: " + (System.currentTimeMillis() - startTime)
+						+ "[ms]");
 
 		// Construct the faces
 		List<OriEdge> outlineEdges = new ArrayList<>();
@@ -209,7 +214,12 @@ public class OrigamiModelFactory {
 			faces.add(face);
 		}
 
+		logger.debug(
+				"makeEdges() start: " + (System.currentTimeMillis() - startTime) + "[ms]");
 		makeEdges(edges, faces);
+		logger.debug(
+				"makeEdges() end: " + (System.currentTimeMillis() - startTime) + "[ms]");
+
 		for (OriEdge e : edges) {
 			e.type = e.left.tmpInt;
 		}
