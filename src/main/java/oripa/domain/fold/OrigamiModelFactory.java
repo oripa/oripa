@@ -2,8 +2,10 @@ package oripa.domain.fold;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
@@ -335,7 +337,15 @@ public class OrigamiModelFactory {
 		return he0.vertex == he1.next.vertex && he0.next.vertex == he1.vertex;
 	}
 
-	private OriEdge createPairedEdge(final OriHalfedge he0, final OriHalfedge he1) {
+	/**
+	 *
+	 * @param he0
+	 *            .pair and .edge will be affected.
+	 * @param he1
+	 *            .pair and .edge will be affected.
+	 * @return an edge with AUX type for he0 and he1.
+	 */
+	private OriEdge makePair(final OriHalfedge he0, final OriHalfedge he1) {
 		OriEdge edge = new OriEdge();
 		he0.pair = he1;
 		he1.pair = he0;
@@ -349,7 +359,13 @@ public class OrigamiModelFactory {
 		return edge;
 	}
 
-	private OriEdge createBoundaryEdge(final OriHalfedge he) {
+	/**
+	 *
+	 * @param he
+	 *            .edge will be affected.
+	 * @return an edge with CUT type for he0 and he1.
+	 */
+	private OriEdge makeBoundary(final OriHalfedge he) {
 		OriEdge edge = new OriEdge();
 		he.edge = edge;
 		edge.sv = he.vertex;
@@ -360,57 +376,54 @@ public class OrigamiModelFactory {
 		return edge;
 	}
 
+	private void allocateAndPut(final OriVertex vertex, final OriHalfedge he,
+			final Map<OriVertex, List<OriHalfedge>> halfedges) {
+		if (halfedges.get(vertex) == null) {
+			halfedges.put(vertex, new ArrayList<>());
+		}
+		halfedges.get(vertex).add(he);
+	}
+
 	private void makeEdges(final List<OriEdge> edges, final List<OriFace> faces) {
 		edges.clear();
 
-		ArrayList<OriHalfedge> halfedges = new ArrayList<OriHalfedge>();
+		var halfedges = new HashMap<OriVertex, List<OriHalfedge>>();
 
 		// Clear all the Halfedges
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				he.pair = null;
 				he.edge = null;
-				halfedges.add(he);
+
+				allocateAndPut(he.vertex, he, halfedges);
 			}
 		}
 
-		// from all combinations of two half-edges, find half-edge pairs whose
+		// find half-edge pairs whose
 		// directions are opposite (that's the definition of edge).
-		int heNum = halfedges.size();
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he0 = halfedges.get(i);
-			if (he0.pair != null) {
-				continue;
-			}
-			// slow?
-//			IntStream.range(i + 1, heNum).parallel()
-//					.filter(j -> {
-//						OriHalfedge he1 = halfedges.get(j);
-//						return isOppositeDirection(he0, he1);
-//					})
-//					.findFirst()
-//					.ifPresent(j -> {
-//						OriHalfedge he1 = halfedges.get(j);
-//						edgesSync.add(createEdge(he0, he1));
-//					});
+		halfedges.values().forEach(hes -> {
+			for (var he0 : hes) {
+				if (he0.pair != null) {
+					continue;
+				}
 
-			for (int j = i + 1; j < heNum; j++) {
-				OriHalfedge he1 = halfedges.get(j);
-				if (isOppositeDirection(he0, he1)) {
-					// Pair is found. We can break here because something is
-					// wrong if there are 2 or more opposite half-edges for he0.
-					// We assume that everything is correct :)
-					edges.add(createPairedEdge(he0, he1));
-					break;
+				var oppositeHes = halfedges.get(he0.next.vertex);
+				for (var he1 : oppositeHes) {
+					if (isOppositeDirection(he0, he1)) {
+						edges.add(makePair(he0, he1));
+						break;
+					}
 				}
 			}
-		}
+		});
 
 		// If the pair wasn't found it should be boundary of paper
-		for (OriHalfedge he : halfedges) {
-			if (he.pair == null) {
-				edges.add(createBoundaryEdge(he));
+		halfedges.values().forEach(hes -> {
+			for (var he : hes) {
+				if (he.pair == null) {
+					edges.add(makeBoundary(he));
+				}
 			}
-		}
+		});
 	}
 }
