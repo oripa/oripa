@@ -310,7 +310,7 @@ public class OrigamiModelFactory {
 		debugCount = 0;
 		do {
 			if (debugCount++ > 100) {
-				System.out.println("ERROR");
+				logger.error("invalid input for making faces.");
 //						throw new UnfoldableModelException("algorithmic error");
 				return null;
 			}
@@ -335,6 +335,31 @@ public class OrigamiModelFactory {
 		return he0.vertex == he1.next.vertex && he0.next.vertex == he1.vertex;
 	}
 
+	private OriEdge createPairedEdge(final OriHalfedge he0, final OriHalfedge he1) {
+		OriEdge edge = new OriEdge();
+		he0.pair = he1;
+		he1.pair = he0;
+		he0.edge = edge;
+		he1.edge = edge;
+		edge.sv = he0.vertex;
+		edge.ev = he1.vertex;
+		edge.left = he0;
+		edge.right = he1;
+		edge.type = OriLine.Type.AUX.toInt();
+		return edge;
+	}
+
+	private OriEdge createBoundaryEdge(final OriHalfedge he) {
+		OriEdge edge = new OriEdge();
+		he.edge = edge;
+		edge.sv = he.vertex;
+		edge.ev = he.next.vertex;
+		edge.left = he;
+		edge.type = OriLine.Type.CUT.toInt();
+
+		return edge;
+	}
+
 	private void makeEdges(final List<OriEdge> edges, final List<OriFace> faces) {
 		edges.clear();
 
@@ -357,24 +382,25 @@ public class OrigamiModelFactory {
 			if (he0.pair != null) {
 				continue;
 			}
+			// slow?
+//			IntStream.range(i + 1, heNum).parallel()
+//					.filter(j -> {
+//						OriHalfedge he1 = halfedges.get(j);
+//						return isOppositeDirection(he0, he1);
+//					})
+//					.findFirst()
+//					.ifPresent(j -> {
+//						OriHalfedge he1 = halfedges.get(j);
+//						edgesSync.add(createEdge(he0, he1));
+//					});
 
 			for (int j = i + 1; j < heNum; j++) {
 				OriHalfedge he1 = halfedges.get(j);
 				if (isOppositeDirection(he0, he1)) {
-					OriEdge edge = new OriEdge();
-					he0.pair = he1;
-					he1.pair = he0;
-					he0.edge = edge;
-					he1.edge = edge;
-					edge.sv = he0.vertex;
-					edge.ev = he1.vertex;
-					edge.left = he0;
-					edge.right = he1;
-					edges.add(edge);
-					edge.type = OriLine.Type.AUX.toInt();
 					// Pair is found. We can break here because something is
 					// wrong if there are 2 or more opposite half-edges for he0.
 					// We assume that everything is correct :)
+					edges.add(createPairedEdge(he0, he1));
 					break;
 				}
 			}
@@ -383,13 +409,7 @@ public class OrigamiModelFactory {
 		// If the pair wasn't found it should be boundary of paper
 		for (OriHalfedge he : halfedges) {
 			if (he.pair == null) {
-				OriEdge edge = new OriEdge();
-				he.edge = edge;
-				edge.sv = he.vertex;
-				edge.ev = he.next.vertex;
-				edge.left = he;
-				edges.add(edge);
-				edge.type = OriLine.Type.CUT.toInt();
+				edges.add(createBoundaryEdge(he));
 			}
 		}
 	}
