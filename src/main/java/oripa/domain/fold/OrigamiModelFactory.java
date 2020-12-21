@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
+import oripa.value.OriPoint;
 
 public class OrigamiModelFactory {
 	private static final Logger logger = LoggerFactory.getLogger(OrigamiModelFactory.class);
@@ -58,21 +60,10 @@ public class OrigamiModelFactory {
 		edges.clear();
 		vertices.clear();
 		faces.clear();
+
+		// Create the edges and precreases from the vertexes
 		List<OriLine> precreases = new ArrayList<>();
-
-		for (OriLine l : creasePattern) {
-			if (l.isAux()) {
-				precreases.add(l);
-				continue;
-			}
-
-			OriVertex sv = addAndGetVertexFromVVec(vertices, l.p0);
-			OriVertex ev = addAndGetVertexFromVVec(vertices, l.p1);
-			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
-			edges.add(eg);
-			sv.addEdge(eg);
-			ev.addEdge(eg);
-		}
+		buildPrecreasesAndVerticesAndEdges(creasePattern, vertices, edges, precreases);
 
 		for (OriVertex v : vertices) {
 
@@ -112,15 +103,60 @@ public class OrigamiModelFactory {
 	}
 
 	private OriVertex addAndGetVertexFromVVec(
-			final List<OriVertex> vertices, final Vector2d p) {
-		return vertices.parallelStream()
-				.filter(v -> GeomUtil.distance(v.p, p) < CalculationResource.POINT_EPS)
-				.findFirst()
-				.orElseGet(() -> {
-					var vtx = new OriVertex(p);
-					vertices.add(vtx);
-					return vtx;
-				});
+			final TreeMap<OriPoint, OriVertex> verticesMap, final OriPoint p) {
+		final double EPS = CalculationResource.POINT_EPS;
+		var boundMap = verticesMap
+				.headMap(new OriPoint(p.getX() + EPS, p.getY() + EPS), true)
+				.tailMap(new OriPoint(p.getX() - EPS, p.getY() - EPS));
+
+		var neighbors = boundMap.keySet().stream()
+				.filter(point -> GeomUtil.distance(point, p) < EPS)
+				.collect(Collectors.toList());
+
+		if (neighbors.isEmpty()) {
+			var vtx = new OriVertex(p);
+			verticesMap.put(p, vtx);
+			return vtx;
+		}
+
+		return boundMap.get(neighbors.get(0));
+	}
+
+//	private OriVertex addAndGetVertexFromVVec(
+//			final List<OriVertex> vertices, final Vector2d p) {
+//		return vertices.parallelStream()
+//				.filter(v -> GeomUtil.distance(v.p, p) < CalculationResource.POINT_EPS)
+//				.findAny()
+//				.orElseGet(() -> {
+//					var vtx = new OriVertex(p);
+//					vertices.add(vtx);
+//					return vtx;
+//				});
+//	}
+
+	private void buildPrecreasesAndVerticesAndEdges(final Collection<OriLine> creasePattern,
+			final Collection<OriVertex> vertices, final List<OriEdge> edges,
+			final Collection<OriLine> precreases) {
+		var verticesMap = new TreeMap<OriPoint, OriVertex>();
+		for (OriLine l : creasePattern) {
+			if (l.isAux()) {
+				Vector2d p0 = new Vector2d(l.p0);
+				Vector2d p1 = new Vector2d(l.p1);
+				precreases.add(new OriLine(p0, p1, l.getType()));
+				continue;
+			}
+
+			OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.p0);
+			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.p1);
+			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
+			edges.add(eg);
+			sv.addEdge(eg);
+			ev.addEdge(eg);
+		}
+		vertices.addAll(verticesMap.values());
+
+		logger.debug("#vertex = " + vertices.size());
+		logger.debug("#edge = " + edges.size());
 	}
 
 	/**
@@ -151,21 +187,7 @@ public class OrigamiModelFactory {
 
 		// Create the edges and precreases from the vertexes
 		List<OriLine> precreases = new ArrayList<>();
-		for (OriLine l : creasePattern) {
-			if (l.isAux()) {
-				Vector2d p0 = new Vector2d(l.p0);
-				Vector2d p1 = new Vector2d(l.p1);
-				precreases.add(new OriLine(p0, p1, l.getType()));
-				continue;
-			}
-
-			OriVertex sv = addAndGetVertexFromVVec(vertices, l.p0);
-			OriVertex ev = addAndGetVertexFromVVec(vertices, l.p1);
-			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
-			edges.add(eg);
-			sv.addEdge(eg);
-			ev.addEdge(eg);
-		}
+		buildPrecreasesAndVerticesAndEdges(creasePattern, vertices, edges, precreases);
 
 		logger.debug(
 				"removeMeaninglessVertices() start: " + (System.currentTimeMillis() - startTime)
