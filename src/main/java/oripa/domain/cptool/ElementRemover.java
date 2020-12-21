@@ -2,7 +2,6 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -52,14 +51,10 @@ public class ElementRemover {
 
 	private List<OriLine> createSharedLines(final Vector2d p,
 			final Collection<OriLine> creasePattern) {
-		List<OriLine> sharedLines = Collections.synchronizedList(new ArrayList<OriLine>());
-
-		creasePattern.parallelStream()
+		return creasePattern.parallelStream()
 				.filter(line -> isConnectionPoint(line.p0, p)
 						|| isConnectionPoint(line.p1, p))
-				.forEach(line -> sharedLines.add(line));
-
-		return sharedLines;
+				.collect(Collectors.toList());
 	}
 
 	/**
