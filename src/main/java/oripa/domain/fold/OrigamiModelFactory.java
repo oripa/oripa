@@ -61,34 +61,12 @@ public class OrigamiModelFactory {
 		vertices.clear();
 		faces.clear();
 
-		// Create the edges and precreases from the vertexes
+		// Create the edges and precreases from the vertices
 		List<OriLine> precreases = new ArrayList<>();
-		buildPrecreasesAndVerticesAndEdges(creasePattern, vertices, edges, precreases);
+		buildPrecreasesAndVerticesAndEdges(creasePattern, precreases, vertices, edges);
 
-		for (OriVertex v : vertices) {
-
-			for (OriEdge e : v.edges) {
-
-				if (e.type == OriLine.Type.CUT.toInt()) {
-					continue;
-				}
-
-				if (v == e.sv) {
-					if (e.left != null) {
-						continue;
-					}
-				} else {
-					if (e.right != null) {
-						continue;
-					}
-				}
-
-				OriFace face = makeFace(v, e);
-				if (face == null) {
-					return origamiModel;
-				}
-				faces.add(face);
-			}
+		if (!buildFaces(vertices, faces)) {
+			return origamiModel;
 		}
 
 		makeEdges(edges, faces);
@@ -99,7 +77,6 @@ public class OrigamiModelFactory {
 		origamiModel.setHasModel(true);
 
 		return origamiModel;
-
 	}
 
 	private OriVertex addAndGetVertexFromVVec(
@@ -135,8 +112,8 @@ public class OrigamiModelFactory {
 //	}
 
 	private void buildPrecreasesAndVerticesAndEdges(final Collection<OriLine> creasePattern,
-			final Collection<OriVertex> vertices, final List<OriEdge> edges,
-			final Collection<OriLine> precreases) {
+			final Collection<OriLine> precreases, final Collection<OriVertex> vertices,
+			final List<OriEdge> edges) {
 		var verticesMap = new TreeMap<OriPoint, OriVertex>();
 		for (OriLine l : creasePattern) {
 			if (l.isAux()) {
@@ -157,6 +134,51 @@ public class OrigamiModelFactory {
 
 		logger.debug("#vertex = " + vertices.size());
 		logger.debug("#edge = " + edges.size());
+	}
+
+	private boolean buildFaces(final Collection<OriVertex> vertices,
+			final Collection<OriFace> faces) {
+		List<OriEdge> outlineEdges = new ArrayList<>();
+
+		// Construct the faces
+		for (OriVertex v : vertices) {
+
+			for (OriEdge e : v.edges) {
+
+				if (e.type == OriLine.Type.CUT.toInt()) {
+					outlineEdges.add(e);
+					continue;
+				}
+
+				if (v == e.sv) {
+					if (e.left != null) {
+						continue;
+					}
+				} else {
+					if (e.right != null) {
+						continue;
+					}
+				}
+
+				OriFace face = makeFace(v, e);
+				if (face == null) {
+					return false;
+				}
+				faces.add(face);
+			}
+		}
+		if (faces.isEmpty()) { // happens when there is no crease
+			OriEdge outlineEdge = outlineEdges.get(0);
+			OriVertex v = outlineEdge.sv;
+
+			OriFace face = makeFace(v, outlineEdge);
+			if (face == null) {
+				return false;
+			}
+			faces.add(face);
+		}
+
+		return true;
 	}
 
 	/**
@@ -187,7 +209,7 @@ public class OrigamiModelFactory {
 
 		// Create the edges and precreases from the vertexes
 		List<OriLine> precreases = new ArrayList<>();
-		buildPrecreasesAndVerticesAndEdges(creasePattern, vertices, edges, precreases);
+		buildPrecreasesAndVerticesAndEdges(creasePattern, precreases, vertices, edges);
 
 		logger.debug(
 				"removeMeaninglessVertices() start: " + (System.currentTimeMillis() - startTime)
@@ -198,42 +220,8 @@ public class OrigamiModelFactory {
 						+ "[ms]");
 
 		// Construct the faces
-		List<OriEdge> outlineEdges = new ArrayList<>();
-		for (OriVertex v : vertices) {
-
-			for (OriEdge e : v.edges) {
-
-				if (e.type == OriLine.Type.CUT.toInt()) {
-					outlineEdges.add(e);
-					continue;
-				}
-
-				if (v == e.sv) {
-					if (e.left != null) {
-						continue;
-					}
-				} else {
-					if (e.right != null) {
-						continue;
-					}
-				}
-
-				OriFace face = makeFace(v, e);
-				if (face == null) {
-					return origamiModel;
-				}
-				faces.add(face);
-			}
-		}
-		if (faces.isEmpty()) { // happens when there is no crease
-			OriEdge outlineEdge = outlineEdges.get(0);
-			OriVertex v = outlineEdge.sv;
-
-			OriFace face = makeFace(v, outlineEdge);
-			if (face == null) {
-				return origamiModel;
-			}
-			faces.add(face);
+		if (!buildFaces(vertices, faces)) {
+			return origamiModel;
 		}
 
 		logger.debug(
