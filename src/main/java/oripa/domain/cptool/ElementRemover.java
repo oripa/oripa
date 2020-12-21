@@ -43,7 +43,7 @@ public class ElementRemover {
 
 		creasePattern.remove(l);
 
-		// merge the lines if possible, to prevent unnecessary vertexes
+		// merge the lines if possible, to prevent unnecessary vertices
 		var sharedLines = createSharedLines(l.p0, creasePattern);
 		merge2LinesAt(l.p0, sharedLines, creasePattern);
 		sharedLines = createSharedLines(l.p1, creasePattern);
@@ -189,29 +189,13 @@ public class ElementRemover {
 
 	}
 
-	/**
-	 * remove all lines in {@code linesToBeRemoved} from {@code creasePattern}.
-	 *
-	 * @param linesToBeRemoved
-	 * @param creasePattern
-	 */
-	public void removeLines(final Collection<OriLine> linesToBeRemoved,
-			final Collection<OriLine> creasePattern) {
-		var startTime = System.currentTimeMillis();
-
-		linesToBeRemoved.forEach(line -> creasePattern.remove(line));
-		var removedPoints = linesToBeRemoved.stream()
-				.flatMap(line -> Stream.of(line.p0, line.p1))
-				.collect(Collectors.toCollection(() -> new TreeSet<>()));
-
-		// merge lines after removing all lines to be removed.
-		// merging while removing makes some lines not to be removed.
-
+	private void removeMeaninglessVertices(final Collection<OriLine> creasePattern,
+			final TreeSet<OriPoint> removedLinePoints) {
 		// Sweep-line approach
 		// (sweep along x axis)
 
-		// this map keeps the both side of each line as an object holding the
-		// end point and the line object.
+		// this map keeps the both sides of each line as an object holding the
+		// end point and the line.
 		var mapFactory = new SharedPointsMapFactory<PointAndLine>();
 		var sharedPointsMap = mapFactory.create(creasePattern,
 				(point, line) -> new PointAndLine(point, line), EPS);
@@ -223,19 +207,20 @@ public class ElementRemover {
 							.map(s -> s.getLine())
 							.collect(Collectors.toList()));
 
-			var boundedRemovedPoints = removedPoints
-					.headSet(new OriPoint(shared.getX() + 2 * EPS, shared.getY() + 2 * EPS), true)
-					.tailSet(new OriPoint(shared.getX() - 2 * EPS, shared.getY() - 2 * EPS));
-			if (boundedRemovedPoints.contains(shared)) {
-				logger.trace("exists in boundedRemovedPoints: " + shared);
-			} else if (!boundedRemovedPoints.stream()
-					.anyMatch(p -> GeomUtil.distance(p, shared) < EPS)) {
-				logger.trace("not to be merged: " + shared);
-				return;
+			if (removedLinePoints != null) {
+				var boundRemovedPoints = removedLinePoints
+						.headSet(new OriPoint(shared.getX() + EPS, shared.getY() + EPS), true)
+						.tailSet(new OriPoint(shared.getX() - EPS, shared.getY() - EPS));
+				if (boundRemovedPoints.contains(shared)) {
+					logger.trace("exists in boundRemovedPoints: " + shared);
+				} else if (!boundRemovedPoints.stream()
+						.anyMatch(p -> GeomUtil.distance(p, shared) < EPS)) {
+					logger.trace("not to be merged: " + shared);
+					return;
+				}
+
+				logger.trace("can merge at: " + shared);
 			}
-
-			logger.trace("can merge at: " + shared);
-
 			var mergedLine = merge2LinesAt(shared, sharedPoints, creasePattern);
 
 			if (mergedLine == null) {
@@ -256,6 +241,32 @@ public class ElementRemover {
 			// add merged line
 			addBothSidesOfLineToMap(mergedLine, sharedPointsMap);
 		});
+
+	}
+
+	public void removeMeaninglessVertices(final Collection<OriLine> creasePattern) {
+		removeMeaninglessVertices(creasePattern, null);
+	}
+
+	/**
+	 * remove all lines in {@code linesToBeRemoved} from {@code creasePattern}.
+	 *
+	 * @param linesToBeRemoved
+	 * @param creasePattern
+	 */
+	public void removeLines(final Collection<OriLine> linesToBeRemoved,
+			final Collection<OriLine> creasePattern) {
+		var startTime = System.currentTimeMillis();
+
+		linesToBeRemoved.forEach(line -> creasePattern.remove(line));
+		var removedPoints = linesToBeRemoved.stream()
+				.flatMap(line -> Stream.of(line.p0, line.p1))
+				.collect(Collectors.toCollection(() -> new TreeSet<>()));
+
+		// merge lines after removing all lines to be removed.
+		// merging while removing makes some lines not to be removed.
+
+		removeMeaninglessVertices(creasePattern, removedPoints);
 
 		logger.debug("removeLines(): " + (System.currentTimeMillis() - startTime) + "[ms]");
 	}

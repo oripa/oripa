@@ -9,11 +9,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.cptool.ElementRemover;
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
@@ -62,8 +61,7 @@ public class OrigamiModelFactory {
 		faces.clear();
 
 		// Create the edges and precreases from the vertices
-		List<OriLine> precreases = new ArrayList<>();
-		buildPrecreasesAndVerticesAndEdges(creasePattern, precreases, vertices, edges);
+		buildVerticesAndEdges(creasePattern, vertices, edges);
 
 		if (!buildFaces(vertices, faces)) {
 			return origamiModel;
@@ -111,18 +109,17 @@ public class OrigamiModelFactory {
 //				});
 //	}
 
-	private void buildPrecreasesAndVerticesAndEdges(final Collection<OriLine> creasePattern,
-			final Collection<OriLine> precreases, final Collection<OriVertex> vertices,
+	private List<OriLine> createPrecreases(final Collection<OriLine> creasePattern) {
+		return creasePattern.stream()
+				.filter(line -> line.isAux())
+				.collect(Collectors.toList());
+	}
+
+	private void buildVerticesAndEdges(final Collection<OriLine> creasePatternWithoutAux,
+			final Collection<OriVertex> vertices,
 			final List<OriEdge> edges) {
 		var verticesMap = new TreeMap<OriPoint, OriVertex>();
-		for (OriLine l : creasePattern) {
-			if (l.isAux()) {
-				Vector2d p0 = new Vector2d(l.p0);
-				Vector2d p1 = new Vector2d(l.p1);
-				precreases.add(new OriLine(p0, p1, l.getType()));
-				continue;
-			}
-
+		for (OriLine l : creasePatternWithoutAux) {
 			OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.p0);
 			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.p1);
 			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
@@ -196,6 +193,20 @@ public class OrigamiModelFactory {
 
 		var startTime = System.currentTimeMillis();
 
+		var simplifiedCreasePattern = creasePattern.stream()
+				.filter(line -> !line.isAux())
+				.collect(Collectors.toSet());
+
+		var remover = new ElementRemover();
+
+		logger.debug(
+				"removeMeaninglessVertices() start: " + (System.currentTimeMillis() - startTime)
+						+ "[ms]");
+		remover.removeMeaninglessVertices(simplifiedCreasePattern);
+		logger.debug(
+				"removeMeaninglessVertices() end: " + (System.currentTimeMillis() - startTime)
+						+ "[ms]");
+
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
@@ -208,16 +219,16 @@ public class OrigamiModelFactory {
 		debugCount = 0;
 
 		// Create the edges and precreases from the vertexes
-		List<OriLine> precreases = new ArrayList<>();
-		buildPrecreasesAndVerticesAndEdges(creasePattern, precreases, vertices, edges);
+		List<OriLine> precreases = createPrecreases(creasePattern);
+		buildVerticesAndEdges(simplifiedCreasePattern, vertices, edges);
 
-		logger.debug(
-				"removeMeaninglessVertices() start: " + (System.currentTimeMillis() - startTime)
-						+ "[ms]");
-		removeMeaninglessVertices(vertices, edges);
-		logger.debug(
-				"removeMeaninglessVertices() end: " + (System.currentTimeMillis() - startTime)
-						+ "[ms]");
+//		logger.debug(
+//				"removeMeaninglessVertices() start: " + (System.currentTimeMillis() - startTime)
+//						+ "[ms]");
+//		removeMeaninglessVertices(vertices, edges);
+//		logger.debug(
+//				"removeMeaninglessVertices() end: " + (System.currentTimeMillis() - startTime)
+//						+ "[ms]");
 
 		// Construct the faces
 		if (!buildFaces(vertices, faces)) {
@@ -251,79 +262,79 @@ public class OrigamiModelFactory {
 		return origamiModel;
 	}
 
-	/**
-	 * Searches vertices with 2 colinear edges with the same type. Then merges
-	 * the edges split by the vertex and delete the vertex for efficiency.
-	 *
-	 * @param vertices
-	 * @param edges
-	 */
-	private void removeMeaninglessVertices(
-			final Collection<OriVertex> vertices, final Collection<OriEdge> edges) {
-		ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
-		tmpVVec.addAll(vertices);
-
-		for (var v : tmpVVec) {
-			var eds = edges.parallelStream()
-					.filter(e -> e.sv == v || e.ev == v)
-					.collect(Collectors.toCollection(() -> new ArrayList<>()));
-
-			if (eds.size() != 2) {
-				continue;
-			}
-
-			// If the types of the edges are different, do nothing
-			if (eds.get(0).type != eds.get(1).type) {
-				continue;
-			}
-
-			OriEdge e0 = eds.get(0);
-			OriEdge e1 = eds.get(1);
-
-			// Check if they are collinear
-			Vector2d dir0 = new Vector2d(e0.ev.p.x - e0.sv.p.x, e0.ev.p.y - e0.sv.p.y);
-			Vector2d dir1 = new Vector2d(e1.ev.p.x - e1.sv.p.x, e1.ev.p.y - e1.sv.p.y);
-
-			dir0.normalize();
-			dir1.normalize();
-
-			if (GeomUtil.distance(dir0, dir1) > 0.001
-					&& Math.abs(GeomUtil.distance(dir0, dir1) - 2.0) > 0.001) {
-				continue;
-			}
-
-			// found mergeable edge
-			edges.remove(e0);
-			edges.remove(e1);
-			vertices.remove(v);
-			e0.sv.edges.remove(e0);
-			e0.ev.edges.remove(e0);
-			e1.sv.edges.remove(e1);
-			e1.ev.edges.remove(e1);
-			if (e0.sv == v && e1.sv == v) {
-				OriEdge ne = new OriEdge(e0.ev, e1.ev, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			} else if (e0.sv == v && e1.ev == v) {
-				OriEdge ne = new OriEdge(e0.ev, e1.sv, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			} else if (e0.ev == v && e1.sv == v) {
-				OriEdge ne = new OriEdge(e0.sv, e1.ev, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			} else {
-				OriEdge ne = new OriEdge(e0.sv, e1.sv, e0.type);
-				edges.add(ne);
-				ne.sv.addEdge(ne);
-				ne.ev.addEdge(ne);
-			}
-		}
-
-	}
+//	/**
+//	 * Searches vertices with 2 colinear edges with the same type. Then merges
+//	 * the edges split by the vertex and delete the vertex for efficiency.
+//	 *
+//	 * @param vertices
+//	 * @param edges
+//	 */
+//	private void removeMeaninglessVertices(
+//			final Collection<OriVertex> vertices, final Collection<OriEdge> edges) {
+//		ArrayList<OriVertex> tmpVVec = new ArrayList<OriVertex>();
+//		tmpVVec.addAll(vertices);
+//
+//		for (var v : tmpVVec) {
+//			var eds = edges.parallelStream()
+//					.filter(e -> e.sv == v || e.ev == v)
+//					.collect(Collectors.toCollection(() -> new ArrayList<>()));
+//
+//			if (eds.size() != 2) {
+//				continue;
+//			}
+//
+//			// If the types of the edges are different, do nothing
+//			if (eds.get(0).type != eds.get(1).type) {
+//				continue;
+//			}
+//
+//			OriEdge e0 = eds.get(0);
+//			OriEdge e1 = eds.get(1);
+//
+//			// Check if they are collinear
+//			Vector2d dir0 = new Vector2d(e0.ev.p.x - e0.sv.p.x, e0.ev.p.y - e0.sv.p.y);
+//			Vector2d dir1 = new Vector2d(e1.ev.p.x - e1.sv.p.x, e1.ev.p.y - e1.sv.p.y);
+//
+//			dir0.normalize();
+//			dir1.normalize();
+//
+//			if (GeomUtil.distance(dir0, dir1) > 0.001
+//					&& Math.abs(GeomUtil.distance(dir0, dir1) - 2.0) > 0.001) {
+//				continue;
+//			}
+//
+//			// found mergeable edge
+//			edges.remove(e0);
+//			edges.remove(e1);
+//			vertices.remove(v);
+//			e0.sv.edges.remove(e0);
+//			e0.ev.edges.remove(e0);
+//			e1.sv.edges.remove(e1);
+//			e1.ev.edges.remove(e1);
+//			if (e0.sv == v && e1.sv == v) {
+//				OriEdge ne = new OriEdge(e0.ev, e1.ev, e0.type);
+//				edges.add(ne);
+//				ne.sv.addEdge(ne);
+//				ne.ev.addEdge(ne);
+//			} else if (e0.sv == v && e1.ev == v) {
+//				OriEdge ne = new OriEdge(e0.ev, e1.sv, e0.type);
+//				edges.add(ne);
+//				ne.sv.addEdge(ne);
+//				ne.ev.addEdge(ne);
+//			} else if (e0.ev == v && e1.sv == v) {
+//				OriEdge ne = new OriEdge(e0.sv, e1.ev, e0.type);
+//				edges.add(ne);
+//				ne.sv.addEdge(ne);
+//				ne.ev.addEdge(ne);
+//			} else {
+//				OriEdge ne = new OriEdge(e0.sv, e1.sv, e0.type);
+//				edges.add(ne);
+//				ne.sv.addEdge(ne);
+//				ne.ev.addEdge(ne);
+//			}
+//		}
+//
+//	}
 
 	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge) {
 		OriFace face = new OriFace();

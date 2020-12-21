@@ -83,8 +83,8 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 			byX.sort(Comparator.comparing(P::getY));
 		}
 
-		// this map keeps the both side of each line as an object holding the
-		// end point and the line object.
+		// this map keeps the both sides of each line as an object holding the
+		// end point and the line.
 		var sharedPointsMap = new SharedPointsMap<P>();
 
 		// build a map and set keyPoint

@@ -40,7 +40,7 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 		super();
 	}
 
-	public boolean validateKeyPoints(final OriPoint keyPoint,
+	private boolean validateKeyPoints(final OriPoint keyPoint,
 			final OriPoint oppositeKeyPoint, final OriLine line,
 			final double eps) {
 		if (GeomUtil.distance(line.p0, keyPoint) < eps
