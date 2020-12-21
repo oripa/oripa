@@ -73,12 +73,12 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 	}
 
 	public OriPoint findKeyPoint(final OriPoint p, final double eps) {
-		var boundedMap = this.headMap(new OriPoint(p.getX() + 2 * eps, p.getY() + 2 * eps))
-				.tailMap(new OriPoint(p.getX() - 2 * eps, p.getY() - 2 * eps));
-		if (boundedMap.containsKey(p)) {
+		var boundMap = this.headMap(new OriPoint(p.getX() + eps, p.getY() + eps))
+				.tailMap(new OriPoint(p.getX() - eps, p.getY() - eps));
+		if (boundMap.containsKey(p)) {
 			return p;
 		}
-		return boundedMap.keySet().stream()
+		return boundMap.keySet().stream()
 				.filter(key -> GeomUtil.distance(key, p) < eps)
 				.findFirst().get();
 	}
