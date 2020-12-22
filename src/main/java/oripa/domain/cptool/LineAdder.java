@@ -166,6 +166,14 @@ public class LineAdder {
 		return newLines;
 	}
 
+	private List<OriLine> removeDuplicationsFromInputLines(final Collection<OriLine> inputLines,
+			final Collection<OriLine> currentLines) {
+		return inputLines.parallelStream()
+				.filter(inputLine -> !currentLines.parallelStream()
+						.anyMatch(line -> GeomUtil.isSameLineSegment(line, inputLine)))
+				.collect(Collectors.toList());
+	}
+
 	/**
 	 * Adds {@code inputLine} to {@code currentLines}. The lines will be split
 	 * at the intersections of the lines.
@@ -175,7 +183,6 @@ public class LineAdder {
 	 *            current line list. it will be affected as new lines are added
 	 *            and unnecessary lines are removed.
 	 */
-
 	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines) {
 		addAll(List.of(inputLine), currentLines);
 	}
@@ -195,16 +202,9 @@ public class LineAdder {
 		var watch = new StopWatch(true);
 
 		// ensure fast access
-		var currentLineList = new ArrayList<OriLine>();
-		currentLineList.addAll(currentLines);
+		var currentLineList = new ArrayList<OriLine>(currentLines);
 
-		// remove duplications
-		var linesToBeAdded = inputLines.parallelStream()
-				.filter(inputLine -> !currentLineList.parallelStream()
-						.anyMatch(line -> GeomUtil.isSameLineSegment(line, inputLine)))
-				.collect(Collectors.toList());
-
-		var pointLists = Collections.synchronizedList(new ArrayList<List<Vector2d>>());
+		var linesToBeAdded = removeDuplicationsFromInputLines(inputLines, currentLineList);
 
 		// input domain can limit the current lines to be divided.
 		var inputDomainClipper = new RectangleClipper(
@@ -231,6 +231,8 @@ public class LineAdder {
 
 		logger.debug("addAll() createInputLinePoints() start: "
 				+ watch.getMilliSec() + "[ms]");
+
+		var pointLists = Collections.synchronizedList(new ArrayList<List<Vector2d>>());
 
 		linesToBeAdded.parallelStream().forEach(inputLine -> {
 			pointLists.add(
