@@ -194,8 +194,13 @@ public class LineAdder {
 
 		var watch = new StopWatch(true);
 
+		// ensure fast access
+		var currentLineList = new ArrayList<OriLine>();
+		currentLineList.addAll(currentLines);
+
+		// remove duplications
 		var linesToBeAdded = inputLines.parallelStream()
-				.filter(inputLine -> !currentLines.parallelStream()
+				.filter(inputLine -> !currentLineList.parallelStream()
 						.anyMatch(line -> GeomUtil.isSameLineSegment(line, inputLine)))
 				.collect(Collectors.toList());
 
