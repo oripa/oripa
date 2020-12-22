@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.util.StopWatch;
 import oripa.util.rule.Rule;
 import oripa.util.rule.SingleRuleParallelConjunction;
 
@@ -37,8 +38,8 @@ public class FoldabilityChecker {
 
 	private enum VertexRule {
 		MAEKAWA(new MaekawaTheorem(), "Maekawa"),
-		KAWASAKI(new KawasakiTheorem(),	"Kawasaki"),
-		BIG_LITTLE_BIG(new BigLittleBigLemma(),	"Big-little-big"),
+		KAWASAKI(new KawasakiTheorem(), "Kawasaki"),
+		BIG_LITTLE_BIG(new BigLittleBigLemma(), "Big-little-big"),
 		GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma(), "gen. Big-little-big");
 
 		private final Rule<OriVertex> rule;
@@ -76,14 +77,13 @@ public class FoldabilityChecker {
 	}
 
 	public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
-		var startTime = System.currentTimeMillis();
+		var watch = new StopWatch(true);
 
 		var result = Arrays.asList(VertexRule.values()).parallelStream()
 				.flatMap(rule -> rule.getConjunction().findViolations(vertices).parallelStream())
 				.collect(Collectors.toList());
 
-		var endTime = System.currentTimeMillis();
-		logger.debug("findViolatingVertices: " + (endTime - startTime) + "[ms]");
+		logger.debug("findViolatingVertices: " + watch.getMilliSec() + "[ms]");
 
 		return result;
 	}
@@ -96,12 +96,11 @@ public class FoldabilityChecker {
 	}
 
 	public Collection<OriFace> findViolatingFaces(final Collection<OriFace> faces) {
-		var startTime = System.currentTimeMillis();
+		var watch = new StopWatch(true);
 
 		var result = convexRuleConjunction.findViolations(faces);
 
-		var endTime = System.currentTimeMillis();
-		logger.debug("findViolatingFaces: " + (endTime - startTime) + "[ms]");
+		logger.debug("findViolatingFaces: " + watch.getMilliSec() + "[ms]");
 
 		return result;
 	}

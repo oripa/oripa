@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.compgeom.AnalyticLineHashFactory;
 import oripa.geom.GeomUtil;
+import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
 /**
@@ -68,7 +69,7 @@ public class OverlappingLineExtractor {
 	 * @return all overlapping lines.
 	 */
 	public Collection<OriLine> extract(final Collection<OriLine> lines) {
-		var startTime = System.currentTimeMillis();
+		var watch = new StopWatch(true);
 
 		// make a data structure for fast computation.
 		var hashFactory = new AnalyticLineHashFactory(EPS);
@@ -97,8 +98,7 @@ public class OverlappingLineExtractor {
 			});
 		});
 
-		var endTime = System.currentTimeMillis();
-		logger.debug("extract(): " + (endTime - startTime) + "[ms]");
+		logger.debug("extract(): " + watch.getMilliSec() + "[ms]");
 
 		return overlappingLines;
 	}

@@ -18,6 +18,7 @@ import oripa.domain.cptool.compgeom.PointAndLine;
 import oripa.domain.cptool.compgeom.SharedPointsMap;
 import oripa.domain.cptool.compgeom.SharedPointsMapFactory;
 import oripa.geom.GeomUtil;
+import oripa.util.StopWatch;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -251,7 +252,7 @@ public class ElementRemover {
 	 */
 	public void removeLines(final Collection<OriLine> linesToBeRemoved,
 			final Collection<OriLine> creasePattern) {
-		var startTime = System.currentTimeMillis();
+		var watch = new StopWatch(true);
 
 		linesToBeRemoved.forEach(line -> creasePattern.remove(line));
 		var removedPoints = linesToBeRemoved.stream()
@@ -263,7 +264,7 @@ public class ElementRemover {
 
 		removeMeaninglessVertices(creasePattern, removedPoints);
 
-		logger.debug("removeLines(): " + (System.currentTimeMillis() - startTime) + "[ms]");
+		logger.debug("removeLines(): " + watch.getMilliSec() + "[ms]");
 	}
 
 	/**

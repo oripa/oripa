@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
+import oripa.util.StopWatch;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -191,7 +192,7 @@ public class LineAdder {
 	public void addAll(final Collection<OriLine> inputLines,
 			final Collection<OriLine> currentLines) {
 
-		var startTime = System.currentTimeMillis();
+		var watch = new StopWatch(true);
 
 		var linesToBeAdded = inputLines.parallelStream()
 				.filter(inputLine -> !currentLines.parallelStream()
@@ -210,7 +211,7 @@ public class LineAdder {
 		currentLines.removeAll(crossingCurrentLines);
 
 		logger.debug("addAll() divideCurrentLines() start: "
-				+ (System.currentTimeMillis() - startTime) + "[ms]");
+				+ watch.getMilliSec() + "[ms]");
 
 		// a map from an input line to a map from a cross point to a line
 		// crossing with the input line.
@@ -224,7 +225,7 @@ public class LineAdder {
 		currentLines.addAll(crossingCurrentLines);
 
 		logger.debug("addAll() createInputLinePoints() start: "
-				+ (System.currentTimeMillis() - startTime) + "[ms]");
+				+ watch.getMilliSec() + "[ms]");
 
 		linesToBeAdded.parallelStream().forEach(inputLine -> {
 			pointLists.add(
@@ -232,7 +233,7 @@ public class LineAdder {
 		});
 
 		logger.debug("addAll() adding new lines start: "
-				+ (System.currentTimeMillis() - startTime) + "[ms]");
+				+ watch.getMilliSec() + "[ms]");
 
 		var newLines = IntStream.range(0, linesToBeAdded.size()).parallel()
 				.mapToObj(j -> divideInputLine(linesToBeAdded.get(j), pointLists.get(j)))
@@ -241,8 +242,6 @@ public class LineAdder {
 
 		newLines.forEach(line -> currentLines.add(line));
 
-		var endTime = System.currentTimeMillis();
-
-		logger.debug("addAll(): " + (endTime - startTime) + "[ms]");
+		logger.debug("addAll(): " + watch.getMilliSec() + "[ms]");
 	}
 }

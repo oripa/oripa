@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.ElementRemover;
 import oripa.geom.GeomUtil;
+import oripa.util.StopWatch;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -55,10 +56,6 @@ public class OrigamiModelFactory {
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriVertex> vertices = origamiModel.getVertices();
-
-		edges.clear();
-		vertices.clear();
-		faces.clear();
 
 		// Create the edges and precreases from the vertices
 		buildVerticesAndEdges(creasePattern, vertices, edges);
@@ -191,7 +188,7 @@ public class OrigamiModelFactory {
 	private OrigamiModel createOrigamiModelImpl3(
 			final Collection<OriLine> creasePattern, final double paperSize) {
 
-		var startTime = System.currentTimeMillis();
+		var watch = new StopWatch(true);
 
 		var simplifiedCreasePattern = creasePattern.stream()
 				.filter(line -> !line.isAux())
@@ -200,21 +197,15 @@ public class OrigamiModelFactory {
 		var remover = new ElementRemover();
 
 		logger.debug(
-				"removeMeaninglessVertices() start: " + (System.currentTimeMillis() - startTime)
-						+ "[ms]");
+				"removeMeaninglessVertices() start: " + watch.getMilliSec() + "[ms]");
 		remover.removeMeaninglessVertices(simplifiedCreasePattern);
 		logger.debug(
-				"removeMeaninglessVertices() end: " + (System.currentTimeMillis() - startTime)
-						+ "[ms]");
+				"removeMeaninglessVertices() end: " + watch.getMilliSec() + "[ms]");
 
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriVertex> vertices = origamiModel.getVertices();
-
-		edges.clear();
-		vertices.clear();
-		faces.clear();
 
 		debugCount = 0;
 
@@ -223,11 +214,11 @@ public class OrigamiModelFactory {
 		buildVerticesAndEdges(simplifiedCreasePattern, vertices, edges);
 
 //		logger.debug(
-//				"removeMeaninglessVertices() start: " + (System.currentTimeMillis() - startTime)
+//				"removeMeaninglessVertices() start: " + watch.getMilliSec()
 //						+ "[ms]");
 //		removeMeaninglessVertices(vertices, edges);
 //		logger.debug(
-//				"removeMeaninglessVertices() end: " + (System.currentTimeMillis() - startTime)
+//				"removeMeaninglessVertices() end: " + watch.getMilliSec()
 //						+ "[ms]");
 
 		// Construct the faces
@@ -236,10 +227,10 @@ public class OrigamiModelFactory {
 		}
 
 		logger.debug(
-				"makeEdges() start: " + (System.currentTimeMillis() - startTime) + "[ms]");
+				"makeEdges() start: " + watch.getMilliSec() + "[ms]");
 		makeEdges(edges, faces);
 		logger.debug(
-				"makeEdges() end: " + (System.currentTimeMillis() - startTime) + "[ms]");
+				"makeEdges() end: " + watch.getMilliSec() + "[ms]");
 
 		for (OriEdge e : edges) {
 			e.type = e.left.tmpInt;
@@ -258,7 +249,7 @@ public class OrigamiModelFactory {
 		origamiModel.setHasModel(true);
 
 		logger.debug(
-				"createOrigamiModelImpl3(): " + (System.currentTimeMillis() - startTime) + "[ms]");
+				"createOrigamiModelImpl3(): " + watch.getMilliSec() + "[ms]");
 		return origamiModel;
 	}
 
