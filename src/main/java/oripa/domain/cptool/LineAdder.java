@@ -139,13 +139,15 @@ public class LineAdder {
 	/**
 	 * Returns result of input line divisions by given points.
 	 *
-	 * @param inputLine
-	 *            to be divided.
 	 * @param points
-	 *            on {@code inputLine} sequentially.
+	 *            on input line sequentially.
+	 * @param lineType
+	 *            of new lines.
+	 *
 	 * @return lines created by connecting points in {@code points} one by one.
 	 */
-	private List<OriLine> divideInputLine(final OriLine inputLine, final List<Vector2d> points) {
+	private List<OriLine> createSequentialLines(final List<Vector2d> points,
+			final OriLine.Type lineType) {
 		var newLines = new ArrayList<OriLine>();
 
 		Vector2d prePoint = points.get(0);
@@ -158,7 +160,7 @@ public class LineAdder {
 				continue;
 			}
 
-			newLines.add(new OriLine(prePoint, p, inputLine.getType()));
+			newLines.add(new OriLine(prePoint, p, lineType));
 
 			prePoint = p;
 		}
@@ -243,7 +245,9 @@ public class LineAdder {
 				+ watch.getMilliSec() + "[ms]");
 
 		var newLines = IntStream.range(0, linesToBeAdded.size()).parallel()
-				.mapToObj(j -> divideInputLine(linesToBeAdded.get(j), pointLists.get(j)))
+				.mapToObj(j -> createSequentialLines(
+						pointLists.get(j),
+						linesToBeAdded.get(j).getType()))
 				.flatMap(lines -> lines.stream())
 				.collect(Collectors.toList());
 
