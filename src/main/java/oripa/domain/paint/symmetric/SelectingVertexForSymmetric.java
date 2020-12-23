@@ -49,7 +49,7 @@ public class SelectingVertexForSymmetric extends PickingVertex {
 
 		if (doSpecial) {
 			painter.addSymmetricLineAutoWalk(
-					first, second, third, first, context.getLineTypeOfNewLines());
+					first, second, third, context.getLineTypeOfNewLines());
 		} else {
 			painter.addSymmetricLine(
 					first, second, third, context.getLineTypeOfNewLines());

@@ -336,10 +336,9 @@ public class Painter {
 	 * @param lineType
 	 *            the type of the symmetric lines
 	 * @return true if lines are added
-	 * @throws PainterCommandFailedException
 	 */
 	public boolean addSymmetricLineAutoWalk(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2, final Vector2d startV,
+			final Vector2d v0, final Vector2d v1, final Vector2d v2,
 			final OriLine.Type lineType) {
 
 		SymmetricLineFactory factory = new SymmetricLineFactory();
@@ -347,7 +346,7 @@ public class Painter {
 		Collection<OriLine> autoWalkLines;
 		try {
 			autoWalkLines = factory.createSymmetricLineAutoWalk(
-					v0, v1, v2, startV, creasePattern, lineType);
+					v0, v1, v2, v0, creasePattern, lineType);
 
 		} catch (PainterCommandFailedException comEx) {
 			return false;
