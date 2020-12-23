@@ -117,6 +117,7 @@ public class Painter {
 	 * remove given line from the crease pattern.
 	 *
 	 * @param l
+	 *            the line to be removed
 	 */
 	public void removeLine(
 			final OriLine l) {
@@ -129,6 +130,7 @@ public class Painter {
 	 * remove all given lines from the crease pattern.
 	 *
 	 * @param lines
+	 *            to be removed
 	 */
 	public void removeLines(
 			final Collection<OriLine> lines) {
@@ -141,6 +143,7 @@ public class Painter {
 	 * remove given vertex from the crease pattern.
 	 *
 	 * @param v
+	 *            the vertex to be removed
 	 */
 	public void removeVertex(
 			final Vector2d v) {
@@ -153,7 +156,9 @@ public class Painter {
 	 * add vertex on a line
 	 *
 	 * @param line
+	 *            the line on which the new vertex will be added
 	 * @param v
+	 *            the vertex to be added
 	 * @return true if the vertex is added.
 	 */
 	public boolean addVertexOnLine(
@@ -180,9 +185,13 @@ public class Painter {
 	 * add three inner lines of rabbit-ear molecule for given triangle
 	 *
 	 * @param v0
+	 *            the vertex of the triangle
 	 * @param v1
+	 *            the vertex of the triangle
 	 * @param v2
+	 *            the vertex of the triangle
 	 * @param lineType
+	 *            the type of the new lines
 	 */
 	public void addTriangleDivideLines(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
@@ -198,8 +207,13 @@ public class Painter {
 	 * add perpendicular bisector line between v0 and v1
 	 *
 	 * @param v0
+	 *            an end point of split line
 	 * @param v1
+	 *            an end point of split line
+	 * @param domain
+	 *            including the paper
 	 * @param lineType
+	 *            the type of the bisector line
 	 */
 	public void addPBisector(
 			final Vector2d v0, final Vector2d v1, final RectangleDomain domain,
@@ -217,10 +231,16 @@ public class Painter {
 	 * add a bisector line from v1 to given line.
 	 *
 	 * @param v0
+	 *            the end point of a line incident to the angle point
 	 * @param v1
+	 *            the vertex of the angle
 	 * @param v2
+	 *            the end point of a line incident to the angle point
 	 * @param l
+	 *            a line which will cross the bisector line. the cross point
+	 *            will be the end point of the bisector line.
 	 * @param lineType
+	 *            the type of the bisector line
 	 */
 	public void addBisectorLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
@@ -238,8 +258,11 @@ public class Painter {
 	 * change type of given line.
 	 *
 	 * @param l
+	 *            the line to be changed
 	 * @param from
+	 *            the type before change.
 	 * @param to
+	 *            the type after change.
 	 */
 	public void alterLineType(
 			final OriLine l, final TypeForChange from, final TypeForChange to) {
@@ -248,6 +271,16 @@ public class Painter {
 		changer.alterLineType(l, creasePattern, from, to);
 	}
 
+	/**
+	 * change type of given lines.
+	 *
+	 * @param lines
+	 *            the lines to be changed
+	 * @param from
+	 *            the type before change.
+	 * @param to
+	 *            the type after change.
+	 */
 	public void alterLineTypes(
 			final Collection<OriLine> lines, final TypeForChange from, final TypeForChange to) {
 		LineTypeChanger changer = new LineTypeChanger();
@@ -258,13 +291,18 @@ public class Painter {
 	 * v1-v2 is the symmetry line, v0-v1 is the subject to be copied.
 	 *
 	 * @param v0
+	 *            the end point of subject line not connected to the symmetry
+	 *            line
 	 * @param v1
+	 *            the connecting point of the subject line and the symmetry line
 	 * @param v2
+	 *            the end point of symmetry line not connected to the subject
+	 *            line
 	 * @param lineType
-	 *            {@link OriLine.Type#VALLEY} etc.
+	 *            the type of the symmetric line ({@link OriLine.Type#VALLEY}
+	 *            etc.)
 	 *
 	 * @return true if line is added
-	 * @throws PainterCommandFailedException
 	 */
 	public boolean addSymmetricLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
@@ -287,15 +325,17 @@ public class Painter {
 	 * add possible rebouncing of the fold.
 	 *
 	 * @param v0
-	 *            terminal point of the line to be copied
+	 *            the end point of subject line not connected to the symmetry
+	 *            line
 	 * @param v1
-	 *            connecting point of symmetry line and the line to be copied.
+	 *            the connecting point of the subject line and the symmetry line
 	 * @param v2
-	 *            terminal point of symmetry line
+	 *            the end point of symmetry line not connected to the subject
+	 *            line
 	 * @param startV
-	 * @param creasePattern
-	 *
-	 * @return true if line is added
+	 * @param lineType
+	 *            the type of the symmetric lines
+	 * @return true if lines are added
 	 * @throws PainterCommandFailedException
 	 */
 	public boolean addSymmetricLineAutoWalk(
@@ -352,9 +392,13 @@ public class Painter {
 	 * add copy of selected lines with tiling.
 	 *
 	 * @param row
+	 *            the count of tiles on x coordinate
 	 * @param col
+	 *            the count of tiles on y coordinate
 	 * @param interX
+	 *            interval length of x coordinate
 	 * @param interY
+	 *            interval length of y coordinate
 	 * @param selectedLines
 	 *            lines to be copied
 	 */
