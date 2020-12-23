@@ -37,7 +37,8 @@ public class TiledLineFactory {
 	}
 
 	/**
-	 * create lines that fill out given area.
+	 * create lines that fill out given area. the tiling count starts from
+	 * selectedLines domain.
 	 *
 	 * @param row
 	 *            the count of tiles on x coordinate
@@ -81,8 +82,7 @@ public class TiledLineFactory {
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
 		var domain = new RectangleDomain(creasePattern);
-		var clipper = new oripa.domain.cptool.RectangleClipper(
-				domain.getLeft(), domain.getTop(), domain.getRight(), domain.getBottom());
+		var clipper = new RectangleClipper(domain);
 
 		for (int x = startCol; x < endCol; x++) {
 			for (int y = startRow; y < endRow; y++) {
