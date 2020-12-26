@@ -243,16 +243,16 @@ public class UIPanel extends JPanel {
 				resources.getString(ResourceKey.LABEL, StringID.UI.TOOL_PANEL_ID)));
 		editModePanel.setLayout(new GridBagLayout());
 
-		var gbFactory = new GridBagConstraintsBuilder(1)
+		var gbBuilder = new GridBagConstraintsBuilder(1)
 				.setAnchor(GridBagConstraints.LINE_START)
 				.setInsets(0, 5, 0, 0);
 
-		editModePanel.add(editModeInputLineButton, gbFactory.getLineField());
-		editModePanel.add(editModePickLineButton, gbFactory.getLineField());
-		editModePanel.add(editModeDeleteLineButton, gbFactory.getLineField());
-		editModePanel.add(editModeLineTypeButton, gbFactory.getLineField());
-		editModePanel.add(editModeAddVertex, gbFactory.getLineField());
-		editModePanel.add(editModeDeleteVertex, gbFactory.getLineField());
+		editModePanel.add(editModeInputLineButton, gbBuilder.getLineField());
+		editModePanel.add(editModePickLineButton, gbBuilder.getLineField());
+		editModePanel.add(editModeDeleteLineButton, gbBuilder.getLineField());
+		editModePanel.add(editModeLineTypeButton, gbBuilder.getLineField());
+		editModePanel.add(editModeAddVertex, gbBuilder.getLineField());
+		editModePanel.add(editModeDeleteVertex, gbBuilder.getLineField());
 
 		// Tool settings panel
 		createLineInputPanel();
@@ -264,13 +264,13 @@ public class UIPanel extends JPanel {
 		toolSettingsPanel.setBorder(createTitledBorderFrame(
 				resources.getString(ResourceKey.LABEL, StringID.UI.TOOL_SETTINGS_PANEL_ID)));
 
-		gbFactory = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.PAGE_START)
+		gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.PAGE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 1);
 
-		toolSettingsPanel.add(lineInputPanel, gbFactory.getLineField());
-		toolSettingsPanel.add(alterLineTypePanel, gbFactory.getLineField());
-		toolSettingsPanel.add(byValuePanel, gbFactory.getLineField());
-		toolSettingsPanel.add(angleStepComboPanel, gbFactory.getLineField());
+		toolSettingsPanel.add(lineInputPanel, gbBuilder.getLineField());
+		toolSettingsPanel.add(alterLineTypePanel, gbBuilder.getLineField());
+		toolSettingsPanel.add(byValuePanel, gbBuilder.getLineField());
+		toolSettingsPanel.add(angleStepComboPanel, gbBuilder.getLineField());
 
 		// general settings panel
 		createGridPanel();
@@ -281,26 +281,26 @@ public class UIPanel extends JPanel {
 		generalSettingsPanel.setBorder(createTitledBorderFrame(
 				resources.getString(ResourceKey.LABEL, StringID.UI.GENERAL_SETTINGS_ID)));
 
-		gbFactory = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.PAGE_START)
+		gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.PAGE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0.5);
 
-		generalSettingsPanel.add(gridPanel, gbFactory.getLineField());
-		generalSettingsPanel.add(viewPanel, gbFactory.getLineField());
-		generalSettingsPanel.add(buttonsPanel, gbFactory.getLineField());
+		generalSettingsPanel.add(gridPanel, gbBuilder.getLineField());
+		generalSettingsPanel.add(viewPanel, gbBuilder.getLineField());
+		generalSettingsPanel.add(buttonsPanel, gbBuilder.getLineField());
 
 		// the main UIPanel
 		setLayout(new GridBagLayout());
 
-		gbFactory = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.FIRST_LINE_START)
+		gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.FIRST_LINE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0.0);
-		add(editModePanel, gbFactory.getLineField());
+		add(editModePanel, gbBuilder.getLineField());
 
-		gbFactory.setWeight(1, 1).setFill(GridBagConstraints.BOTH);
-		add(toolSettingsPanel, gbFactory.getLineField());
+		gbBuilder.setWeight(1, 1).setFill(GridBagConstraints.BOTH);
+		add(toolSettingsPanel, gbBuilder.getLineField());
 
-		gbFactory.setWeight(1, 0.0).setFill(GridBagConstraints.HORIZONTAL)
+		gbBuilder.setWeight(1, 0.0).setFill(GridBagConstraints.HORIZONTAL)
 				.setAnchor(GridBagConstraints.FIRST_LINE_START);
-		add(generalSettingsPanel, gbFactory.getLineField());
+		add(generalSettingsPanel, gbBuilder.getLineField());
 
 		// add listeners
 		addPropertyChangeListenersToSetting(mainScreenSetting);
@@ -359,7 +359,7 @@ public class UIPanel extends JPanel {
 		lineInputPanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.LINE_INPUT_PANEL_ID)));
 
-		var gbFactory = new GridBagConstraintsBuilder(4) // 4 columns used
+		var gbBuilder = new GridBagConstraintsBuilder(4) // 4 columns used
 				.setAnchor(GridBagConstraints.CENTER) // anchor items in the
 														// center of their Box
 				.setWeight(0.5, 1.0); // distribute evenly accross both axis,
@@ -368,29 +368,29 @@ public class UIPanel extends JPanel {
 
 		var lineTypeLabel = new JLabel("Line Type");
 		lineTypeLabel.setHorizontalAlignment(JLabel.CENTER);
-		lineInputPanel.add(lineTypeLabel, gbFactory.getLineField());
+		lineInputPanel.add(lineTypeLabel, gbBuilder.getLineField());
 
-		lineInputPanel.add(lineTypePanel, gbFactory.getLineField());
+		lineInputPanel.add(lineTypePanel, gbBuilder.getLineField());
 
 		var commandsLabel = new JLabel("Command (Alt + 1...9)");
 		commandsLabel.setHorizontalAlignment(JLabel.CENTER);
-		lineInputPanel.add(commandsLabel, gbFactory.getLineField());
+		lineInputPanel.add(commandsLabel, gbBuilder.getLineField());
 
 		// needs to move into seperate Panel later
-		lineInputPanel.add(angleStepCombo, gbFactory.getLineField());
+		lineInputPanel.add(angleStepCombo, gbBuilder.getLineField());
 
-		gbFactory.setWeight(0.5, 0.5);
+		gbBuilder.setWeight(0.5, 0.5);
 		// put operation buttons in order
-		lineInputPanel.add(lineInputDirectVButton, gbFactory.getNextField());
-		lineInputPanel.add(lineInputOnVButton, gbFactory.getNextField());
-		lineInputPanel.add(lineInputPBisectorButton, gbFactory.getNextField());
-		lineInputPanel.add(lineInputAngleBisectorButton, gbFactory.getNextField());
-		lineInputPanel.add(lineInputTriangleSplitButton, gbFactory.getNextField());
-		lineInputPanel.add(lineInputVerticalLineButton, gbFactory.getNextField());
-		lineInputPanel.add(lineInputSymmetricButton, gbFactory.getNextField());
-		lineInputPanel.add(lineInputMirrorButton, gbFactory.getNextField());
-		lineInputPanel.add(lineInputByValueButton, gbFactory.getNextField());
-		lineInputPanel.add(lineInputAngleSnapButton, gbFactory.getNextField());
+		lineInputPanel.add(lineInputDirectVButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputOnVButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputPBisectorButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputAngleBisectorButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputTriangleSplitButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputVerticalLineButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputSymmetricButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputMirrorButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputByValueButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputAngleSnapButton, gbBuilder.getNextField());
 
 		setButtonIcons();
 	}
@@ -427,12 +427,12 @@ public class UIPanel extends JPanel {
 		alterLineTypePanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.ALTER_LINE_TYPE_PANEL_ID)));
 
-		var gbFactory = new GridBagConstraintsBuilder(2);
+		var gbBuilder = new GridBagConstraintsBuilder(2);
 
-		alterLineTypePanel.add(fromLabel, gbFactory.getNextField());
-		alterLineTypePanel.add(alterLine_combo_from, gbFactory.getNextField());
-		alterLineTypePanel.add(toLabel, gbFactory.getNextField());
-		alterLineTypePanel.add(alterLine_combo_to, gbFactory.getNextField());
+		alterLineTypePanel.add(fromLabel, gbBuilder.getNextField());
+		alterLineTypePanel.add(alterLine_combo_from, gbBuilder.getNextField());
+		alterLineTypePanel.add(toLabel, gbBuilder.getNextField());
+		alterLineTypePanel.add(alterLine_combo_to, gbBuilder.getNextField());
 
 		alterLineTypePanel.setVisible(false);
 	}
@@ -466,18 +466,18 @@ public class UIPanel extends JPanel {
 		byValuePanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.INSERT_BY_VALUE_PANEL_ID)));
 
-		GridBagConstraintsBuilder gbFactory = new GridBagConstraintsBuilder(3)
+		var gbBuilder = new GridBagConstraintsBuilder(3)
 				.setAnchor(GridBagConstraints.CENTER)
 				.setFill(GridBagConstraints.NONE)
 				.setWeight(0, 1);
 
-		byValuePanel.add(lengthLabel, gbFactory.getNextField());
-		byValuePanel.add(textFieldLength, gbFactory.getNextField());
-		byValuePanel.add(buttonLength, gbFactory.getNextField());
+		byValuePanel.add(lengthLabel, gbBuilder.getNextField());
+		byValuePanel.add(textFieldLength, gbBuilder.getNextField());
+		byValuePanel.add(buttonLength, gbBuilder.getNextField());
 
-		byValuePanel.add(angleLabel, gbFactory.getNextField());
-		byValuePanel.add(textFieldAngle, gbFactory.getNextField());
-		byValuePanel.add(buttonAngle, gbFactory.getNextField());
+		byValuePanel.add(angleLabel, gbBuilder.getNextField());
+		byValuePanel.add(textFieldAngle, gbBuilder.getNextField());
+		byValuePanel.add(buttonAngle, gbBuilder.getNextField());
 
 		byValuePanel.setVisible(false);
 	}
@@ -499,17 +499,17 @@ public class UIPanel extends JPanel {
 		gridPanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.GRID_SETTINGS_PANEL_ID)));
 
-		GridBagConstraintsBuilder gbFactory = new GridBagConstraintsBuilder(3);
+		var gbBuilder = new GridBagConstraintsBuilder(3);
 
-		gridPanel.add(dispGridCheckBox, gbFactory.getLineField());
+		gridPanel.add(dispGridCheckBox, gbBuilder.getLineField());
 
-		gridPanel.add(gridDivideLabel, gbFactory.getNextField());
-		gridPanel.add(textFieldGrid, gbFactory.setWeight(1, 0.5).getNextField());
-		gridPanel.add(gridChangeButton, gbFactory.setWeight(0.5, 0.5).getNextField());
+		gridPanel.add(gridDivideLabel, gbBuilder.getNextField());
+		gridPanel.add(textFieldGrid, gbBuilder.setWeight(1, 0.5).getNextField());
+		gridPanel.add(gridChangeButton, gbBuilder.setWeight(0.5, 0.5).getNextField());
 
-		gridPanel.add(gridSmallButton, gbFactory.getNextField());
-		gbFactory.getNextField();
-		gridPanel.add(gridLargeButton, gbFactory.getNextField());
+		gridPanel.add(gridSmallButton, gbBuilder.getNextField());
+		gbBuilder.getNextField(); // empty field
+		gridPanel.add(gridLargeButton, gbBuilder.getNextField());
 
 	}
 
@@ -522,13 +522,13 @@ public class UIPanel extends JPanel {
 		viewPanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.VIEW_SETTINGS_PANEL_ID)));
 
-		var gbFactory = new GridBagConstraintsBuilder(3);
+		var gbBuilder = new GridBagConstraintsBuilder(3);
 
-		viewPanel.add(zeroLineWidthCheckBox, gbFactory.getLineField());
+		viewPanel.add(zeroLineWidthCheckBox, gbBuilder.getLineField());
 
-		viewPanel.add(dispMVLinesCheckBox, gbFactory.getLineField());
-		viewPanel.add(dispAuxLinesCheckBox, gbFactory.getLineField());
-		viewPanel.add(dispVertexCheckBox, gbFactory.getLineField());
+		viewPanel.add(dispMVLinesCheckBox, gbBuilder.getLineField());
+		viewPanel.add(dispAuxLinesCheckBox, gbBuilder.getLineField());
+		viewPanel.add(dispVertexCheckBox, gbBuilder.getLineField());
 	}
 
 	private void createButtonsPanel() {
@@ -537,12 +537,12 @@ public class UIPanel extends JPanel {
 		buttonsPanel.setBorder(new MatteBorder(1, 0, 0, 0,
 				getBackground().darker().darker()));
 
-		var gbFactory = new GridBagConstraintsBuilder(3);
+		var gbBuilder = new GridBagConstraintsBuilder(3);
 
-		buttonsPanel.add(doFullEstimationCheckBox, gbFactory.getLineField());
+		buttonsPanel.add(doFullEstimationCheckBox, gbBuilder.getLineField());
 
-		buttonsPanel.add(buttonCheckWindow, gbFactory.getLineField());
-		buttonsPanel.add(buildButton, gbFactory.getLineField());
+		buttonsPanel.add(buttonCheckWindow, gbBuilder.getLineField());
+		buttonsPanel.add(buildButton, gbBuilder.getLineField());
 	}
 
 	public void setChildFrameManager(final ChildFrameManager childFrameManager) {
