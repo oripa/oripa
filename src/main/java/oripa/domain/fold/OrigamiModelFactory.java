@@ -109,6 +109,7 @@ public class OrigamiModelFactory {
 	private List<OriLine> createPrecreases(final Collection<OriLine> creasePattern) {
 		return creasePattern.stream()
 				.filter(line -> line.isAux())
+				.map(line -> new OriLine(line))
 				.collect(Collectors.toList());
 	}
 
