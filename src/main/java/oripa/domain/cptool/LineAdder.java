@@ -236,7 +236,7 @@ public class LineAdder {
 
 		var pointLists = Collections.synchronizedList(new ArrayList<List<Vector2d>>());
 
-		linesToBeAdded.parallelStream().forEach(inputLine -> {
+		linesToBeAdded.forEach(inputLine -> {
 			pointLists.add(
 					createInputLinePoints(inputLine, crossMaps.get(inputLine), currentLines));
 		});
