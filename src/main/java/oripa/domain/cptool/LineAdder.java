@@ -237,7 +237,7 @@ public class LineAdder {
 		logger.debug("addAll() createInputLinePoints() start: "
 				+ watch.getMilliSec() + "[ms]");
 
-		var pointLists = Collections.synchronizedList(new ArrayList<List<Vector2d>>());
+		var pointLists = new ArrayList<List<Vector2d>>();
 
 		linesToBeAdded.forEach(inputLine -> {
 			pointLists.add(
