@@ -54,6 +54,21 @@ public class RectangleClipper {
 		m_maxY = domain.getBottom();
 	}
 
+	/**
+	 *
+	 * Relaxed version. The domain for clipping is slightly larger than given
+	 * domain. The margin of the relaxation is determined by eps.
+	 *
+	 * @param domain
+	 * @param eps
+	 */
+	public RectangleClipper(final RectangleDomain domain, final double eps) {
+		m_minX = domain.getLeft() - eps;
+		m_minY = domain.getTop() - eps;
+		m_maxX = domain.getRight() + eps;
+		m_maxY = domain.getBottom() + eps;
+	}
+
 	private int calcCode(final double x, final double y) {
 		int code = 0;
 		if (x < m_minX) {

@@ -52,11 +52,14 @@ public class LineAdder {
 //			if (inputLine.getType() == OriLine.Type.NONE && line.getType() != OriLine.Type.NONE) {
 //				continue;
 //			}
+			logger.trace("current line: " + line);
 
 			Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
 			if (crossPoint == null) {
 				return;
 			}
+
+			logger.trace("cross point: " + crossPoint);
 
 			crossMap.put(new OriPoint(crossPoint), line);
 
@@ -210,7 +213,7 @@ public class LineAdder {
 
 		// input domain can limit the current lines to be divided.
 		var inputDomainClipper = new RectangleClipper(
-				new RectangleDomain(linesToBeAdded));
+				new RectangleDomain(linesToBeAdded), CalculationResource.POINT_EPS);
 		// use a hash set for avoiding worst case of computation time. (list
 		// takes O(n) time for deletion while hash set takes O(1) time.)
 		var crossingCurrentLines = new HashSet<OriLine>(
