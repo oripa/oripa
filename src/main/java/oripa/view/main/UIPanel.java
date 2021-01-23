@@ -294,8 +294,6 @@ public class UIPanel extends JPanel {
 
 		gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.FIRST_LINE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0.0);
-		System.out.printf(String.format("weightX %,.2f : weightY %,.2f \n\n", gbBuilder.weightX,
-				gbBuilder.weightY));
 		add(editModePanel, gbBuilder.getLineField());
 
 		gbBuilder.setWeight(1, 1).setFill(GridBagConstraints.BOTH);
