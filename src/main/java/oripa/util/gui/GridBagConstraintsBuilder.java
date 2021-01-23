@@ -20,7 +20,7 @@ public class GridBagConstraintsBuilder {
 	private final int gridWidth;
 	private int anchor;
 
-	public double weightX, weightY;
+	private double weightX, weightY;
 	private int fill;
 	private Insets insets;
 
