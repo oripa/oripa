@@ -64,6 +64,6 @@ public class LineMirror {
 			final OriPoint vertex, final OriLine baseOriLine) {
 
 		Vector2d mirrored = GeomUtil.getSymmetricPoint(vertex, baseOriLine.p0, baseOriLine.p1);
-		return new OriPoint(mirrored.x, mirrored.y);
+		return new OriPoint(mirrored);
 	}
 }

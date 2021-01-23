@@ -18,7 +18,6 @@
  */
 package oripa.domain.cptool;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
@@ -27,7 +26,9 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.cptool.compgeom.AnalyticLineHashFactory;
 import oripa.geom.GeomUtil;
+import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
 /**
@@ -36,6 +37,7 @@ import oripa.value.OriLine;
  */
 public class OverlappingLineExtractor {
 	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
+	private static final double EPS = 1e-5;
 
 	private boolean isOverlap(final OriLine line0, final OriLine line1) {
 		var overlapCount = GeomUtil.distinguishLineSegmentsOverlap(
@@ -60,112 +62,43 @@ public class OverlappingLineExtractor {
 		return false;
 	}
 
-	private static class AngleLinePair {
-		private final double angle;
-		private final OriLine line;
-
-		public AngleLinePair(final double angle, final OriLine line) {
-			this.angle = angle;
-			this.line = line;
-		}
-
-		/**
-		 * @return angle
-		 */
-		public double getAngle() {
-			return angle;
-		}
-
-		/**
-		 * @return line
-		 */
-		public OriLine getLine() {
-			return line;
-		}
-	}
-
 	/**
-	 * sort lines by angle for creating hash easily.
+	 * extracts all possible overlapping lines.
 	 *
-	 * @param lineArray
-	 * @return
+	 * @param lines
+	 * @return all overlapping lines.
 	 */
-	private ArrayList<AngleLinePair> createPairs(final ArrayList<OriLine> lineArray) {
-		return lineArray.parallelStream()
-				.map(line -> new AngleLinePair(
-						Math.atan2(line.p1.y - line.p0.y, line.p1.x - line.p0.x), line))
-				.map(pair -> pair.getAngle() <= 0
-						? new AngleLinePair(pair.getAngle() + Math.PI, pair.getLine())
-						: pair)
-				.sorted((a, b) -> Double.compare(a.getAngle(), b.getAngle()))
-				.collect(Collectors.toCollection(() -> new ArrayList<>()));
-	}
-
-	/**
-	 * make a hash table whose keys are integers for angles of lines. if angles
-	 * are equal, then lines can overlap.
-	 *
-	 * @param angleLinePairs
-	 *            should be sorted by angle and the angle should be between 0 to
-	 *            PI.
-	 * @return
-	 */
-	private ArrayList<ArrayList<AngleLinePair>> createHash(
-			final ArrayList<AngleLinePair> angleLinePairs) {
-
-		final double EPS = 1e-5;
-
-		var pairsSplitByAngle = new ArrayList<ArrayList<AngleLinePair>>();
-		int split_i = 0;
-		pairsSplitByAngle.add(new ArrayList<AngleLinePair>());
-		pairsSplitByAngle.get(split_i).add(angleLinePairs.get(0));
-		for (int i = 1; i < angleLinePairs.size(); i++) {
-			var pair1 = angleLinePairs.get(i);
-			var pair0 = pairsSplitByAngle.get(split_i).get(0);
-			if (pair1.getAngle() - pair0.getAngle() > EPS) {
-				// a line with angle PI is the same as one with angle 0.
-				if (Math.PI - pair1.getAngle() < EPS) {
-					split_i = 0;
-				} else {
-					split_i++;
-					pairsSplitByAngle.add(new ArrayList<AngleLinePair>());
-				}
-			}
-			pairsSplitByAngle.get(split_i).add(pair1);
-		}
-
-		return pairsSplitByAngle;
-	}
-
 	public Collection<OriLine> extract(final Collection<OriLine> lines) {
-		var startTime = System.currentTimeMillis();
+		var watch = new StopWatch(true);
 
-		// convert collection to ensure fast access to lines.
-		var lineArray = new ArrayList<OriLine>(lines);
+		// make a data structure for fast computation.
+		var hashFactory = new AnalyticLineHashFactory(EPS);
+		var hash = hashFactory.create(lines);
 
 		var overlappingLines = new ConcurrentLinkedDeque<OriLine>();
 
-		// make a data structure for fast computation.
-		var angleLinePairs = createPairs(lineArray);
-		var pairsSplitByAngle = createHash(angleLinePairs);
-
-		// for each angle, try all pairs of lines and find overlaps.
-		IntStream.range(0, pairsSplitByAngle.size()).parallel().forEach(k -> {
-			var pairs = pairsSplitByAngle.get(k);
-			IntStream.range(0, pairs.size()).parallel().forEach(i -> {
-				var line0 = pairs.get(i).getLine();
-				IntStream.range(i + 1, pairs.size()).parallel().forEach(j -> {
-					var line1 = pairs.get(j).getLine();
-					if (isOverlap(line0, line1)) {
-						overlappingLines.add(line0);
-						overlappingLines.add(line1);
-					}
+		// for each angle and intercept, try all pairs of lines and find
+		// overlaps.
+		IntStream.range(0, hash.size()).parallel().forEach(angle_i -> {
+			var byAngle = hash.get(angle_i);
+			IntStream.range(0, byAngle.size()).parallel().forEach(intercept_i -> {
+				var byIntercept = byAngle.get(intercept_i);
+				// for each line
+				IntStream.range(0, byIntercept.size()).parallel().forEach(i -> {
+					var line0 = byIntercept.get(i).getLine();
+					// search another line of overlapping
+					IntStream.range(i + 1, byIntercept.size()).parallel().forEach(j -> {
+						var line1 = byIntercept.get(j).getLine();
+						if (isOverlap(line0, line1)) {
+							overlappingLines.add(line0);
+							overlappingLines.add(line1);
+						}
+					});
 				});
 			});
 		});
 
-		var endTime = System.currentTimeMillis();
-		logger.debug("extract(): " + (endTime - startTime) + "[ms]");
+		logger.debug("extract(): " + watch.getMilliSec() + "[ms]");
 
 		return overlappingLines;
 	}

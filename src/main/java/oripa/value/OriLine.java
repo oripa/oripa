@@ -143,6 +143,17 @@ public class OriLine implements Comparable<OriLine> {
 	}
 
 	/**
+	 * creates a line such that p0 < p1.
+	 *
+	 * @return a canonical line.
+	 */
+	public OriLine createCanonical() {
+		return p0.compareTo(p1) > 0
+				? new OriLine(p1, p0, type)
+				: new OriLine(p0, p1, type);
+	}
+
+	/**
 	 * gives order to this class's object.
 	 *
 	 * line type is not in comparison because there is only one line in the real

@@ -50,7 +50,7 @@ public class MaekawaTheorem extends AbstractRule<OriVertex> {
 
 		// maekawa's claim
 		if (Math.abs(ridgeCount - valleyCount) != 2) {
-			logger.info("edge type count invalid: " + vertex + " "
+			logger.trace("edge type count invalid: " + vertex + " "
 					+ Math.abs(ridgeCount - valleyCount));
 			return false;
 		}

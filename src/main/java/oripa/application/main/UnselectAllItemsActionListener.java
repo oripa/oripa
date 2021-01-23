@@ -21,6 +21,7 @@ package oripa.application.main;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.ScreenUpdaterInterface;
 
@@ -28,22 +29,26 @@ import oripa.domain.paint.ScreenUpdaterInterface;
  * @author OUCHI Koji
  *
  */
-public class UnselectAllLinesActionListener implements ActionListener {
+public class UnselectAllItemsActionListener implements ActionListener {
+	private final MouseActionHolder actionHolder;
 	private final PaintContextInterface context;
 	private final ScreenUpdaterInterface screenUpdater;
 
 	/**
 	 * Constructor
 	 */
-	public UnselectAllLinesActionListener(final PaintContextInterface aContext,
+	public UnselectAllItemsActionListener(
+			final MouseActionHolder actionHolder,
+			final PaintContextInterface aContext,
 			final ScreenUpdaterInterface updater) {
+		this.actionHolder = actionHolder;
 		context = aContext;
 		screenUpdater = updater;
 	}
 
 	/*
 	 * (non Javadoc)
-	 * 
+	 *
 	 * @see
 	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
@@ -51,8 +56,16 @@ public class UnselectAllLinesActionListener implements ActionListener {
 	public void actionPerformed(final ActionEvent e) {
 		context.getPainter().resetSelectedOriLines();
 		context.clear(false);
-		screenUpdater.updateScreen();
 
+		var currentAction = actionHolder.getMouseAction();
+		if (currentAction == null) {
+			return;
+		}
+
+		currentAction.destroy(context);
+		currentAction.recover(context);
+
+		screenUpdater.updateScreen();
 	}
 
 }

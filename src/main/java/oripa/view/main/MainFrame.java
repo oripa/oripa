@@ -50,7 +50,7 @@ import oripa.application.main.DeleteSelectedLinesActionListener;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.application.main.SelectAllLineActionListener;
-import oripa.application.main.UnselectAllLinesActionListener;
+import oripa.application.main.UnselectAllItemsActionListener;
 import oripa.appstate.StateManager;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
@@ -426,7 +426,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemUnSelectAll.addActionListener(
-				new UnselectAllLinesActionListener(paintContext, screenUpdater));
+				new UnselectAllItemsActionListener(actionHolder, paintContext, screenUpdater));
 		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_ESCAPE, 0));
 

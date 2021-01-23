@@ -16,10 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.paint.util;
+package oripa.domain.cptool;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 public class RectangleClipper {
@@ -41,6 +45,28 @@ public class RectangleClipper {
 		m_minY = y0;
 		m_maxX = x1;
 		m_maxY = y1;
+	}
+
+	public RectangleClipper(final RectangleDomain domain) {
+		m_minX = domain.getLeft();
+		m_minY = domain.getTop();
+		m_maxX = domain.getRight();
+		m_maxY = domain.getBottom();
+	}
+
+	/**
+	 *
+	 * Relaxed version. The domain for clipping is slightly larger than given
+	 * domain. The margin of the relaxation is determined by eps.
+	 *
+	 * @param domain
+	 * @param eps
+	 */
+	public RectangleClipper(final RectangleDomain domain, final double eps) {
+		m_minX = domain.getLeft() - eps;
+		m_minY = domain.getTop() - eps;
+		m_maxX = domain.getRight() + eps;
+		m_maxY = domain.getBottom() + eps;
 	}
 
 	private int calcCode(final double x, final double y) {
@@ -180,6 +206,12 @@ public class RectangleClipper {
 		return true;
 	}
 
+	/**
+	 * tells us whether the given line {@code l} intersects the rectangle.
+	 *
+	 * @param l
+	 * @return whether {@code l} intersects the rectangle.
+	 */
 	public boolean clipTest(final OriLine l) {
 		int s_code = calcCode(l.p0.x, l.p0.y);
 		int e_code = calcCode(l.p1.x, l.p1.y);
@@ -206,5 +238,17 @@ public class RectangleClipper {
 
 		return true;
 
+	}
+
+	/**
+	 * extracts lines which intersects this rectangle from given lines.
+	 *
+	 * @param lines
+	 * @return
+	 */
+	public Collection<OriLine> selectByArea(final Collection<OriLine> lines) {
+		return lines.stream()
+				.filter(l -> clipTest(l))
+				.collect(Collectors.toList());
 	}
 }

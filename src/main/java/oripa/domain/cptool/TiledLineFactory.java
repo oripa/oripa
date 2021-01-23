@@ -12,8 +12,11 @@ public class TiledLineFactory {
 	 * create lines that fill out the paper.
 	 *
 	 * @param selectedLines
+	 *            lines to be copied
 	 * @param creasePattern
+	 *
 	 * @param paperSize
+	 *            paper size
 	 * @return
 	 */
 	public Collection<OriLine> createFullyTiledLines(
@@ -34,15 +37,22 @@ public class TiledLineFactory {
 	}
 
 	/**
-	 * create lines that fill out given area.
+	 * create lines that fill out given area. the tiling count starts from
+	 * selectedLines domain.
 	 *
 	 * @param row
+	 *            the count of tiles on x coordinate
 	 * @param col
+	 *            the count of tiles on y coordinate
 	 * @param interX
+	 *            interval length of x coordinate
 	 * @param interY
+	 *            interval length of y coordinate
 	 * @param selectedLines
+	 *            lines to be copied
 	 * @param creasePattern
-	 * @return
+	 *
+	 * @return copies of selectedLines
 	 */
 	public Collection<OriLine> createTiledLines(
 			final int row, final int col, final double interX, final double interY,
@@ -72,8 +82,7 @@ public class TiledLineFactory {
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
 		var domain = new RectangleDomain(creasePattern);
-		var clipper = new oripa.domain.paint.util.RectangleClipper(
-				domain.getLeft(), domain.getTop(), domain.getRight(), domain.getBottom());
+		var clipper = new RectangleClipper(domain);
 
 		for (int x = startCol; x < endCol; x++) {
 			for (int y = startRow; y < endRow; y++) {
