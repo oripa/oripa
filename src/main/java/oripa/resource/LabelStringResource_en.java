@@ -4,7 +4,7 @@ import java.util.ListResourceBundle;
 
 public class LabelStringResource_en extends ListResourceBundle {
 
-	static final Object[][] strings = {
+	private static final Object[][] strings = {
 			{ StringID.Main.TITLE_ID, "ORIPA " + Version.ORIPA_VERSION },
 			{ StringID.Main.FILE_ID, "File" },
 			{ StringID.Main.EDIT_ID, "Edit" },
