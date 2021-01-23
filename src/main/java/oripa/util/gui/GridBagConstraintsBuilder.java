@@ -24,7 +24,7 @@ public class GridBagConstraintsBuilder {
 	private int fill;
 	private Insets insets;
 
-	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
+	private Logger logger;
 
 	/**
 	 *
@@ -32,8 +32,11 @@ public class GridBagConstraintsBuilder {
 	 *
 	 * @param gridWidth
 	 *            the maximum width of the grid
+	 * @param parent
+	 *            the class using the GridBagConstraintsBuilder
 	 */
-	public GridBagConstraintsBuilder(final int gridWidth) {
+	public GridBagConstraintsBuilder(final int gridWidth, final Class<?> parent) {
+		logger = LoggerFactory.getLogger(parent);
 		gridX = 0;
 		gridY = 0;
 
@@ -44,6 +47,17 @@ public class GridBagConstraintsBuilder {
 		fill = GridBagConstraints.HORIZONTAL;
 
 		this.gridWidth = gridWidth;
+	}
+	
+	/**
+	 *
+	 * Constructor in case a generic parent class would not benefit logging
+	 *
+	 * @param gridWidth
+	 *            the maximum width of the grid
+	 */
+	public GridBagConstraintsBuilder(final int gridWidth) {
+		this(gridWidth, GridBagConstraintsBuilder.class);
 	}
 
 	/**
