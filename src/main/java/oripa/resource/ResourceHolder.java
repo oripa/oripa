@@ -49,7 +49,6 @@ public class ResourceHolder {
 				createResource(resourcePackage + ".ErrorStringResource_en"));
 		holder.addResource(ResourceKey.APP_INFO,
 				createResource(resourcePackage + ".AppInfoResource"));
-
 	}
 	
 	private ResourceBundle createResource(final String classPath) {
