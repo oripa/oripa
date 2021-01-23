@@ -20,7 +20,7 @@ public class GridBagConstraintsBuilder {
 	private final int gridWidth;
 	private int anchor;
 
-	private double weightX, weightY;
+	public double weightX, weightY;
 	private int fill;
 	private Insets insets;
 
@@ -84,8 +84,8 @@ public class GridBagConstraintsBuilder {
 	 * @return changed instance of the Builder
 	 */
 	public GridBagConstraintsBuilder setWeight(final double weightX, final double weightY) {
-		this.weightX = Double.min(Double.max(weightX, 0.0), 1.0);
-		this.weightY = Double.min(Double.max(weightX, 0.0), 1.0);
+		this.weightX = weightX;
+		this.weightY = weightY;
 		return this;
 	}
 
