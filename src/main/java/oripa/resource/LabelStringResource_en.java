@@ -43,7 +43,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.UI.SHOW_MV_ID, "Show M/V Lines" },
 			{ StringID.UI.SHOW_AUX_ID, "Show Aux Lines" },
 
-			{ StringID.UI.CHANGE_LINE_TYPE_FROM_ID, "  from" },
+			{ StringID.UI.CHANGE_LINE_TYPE_FROM_ID, "from" },
 			{ StringID.UI.CHANGE_LINE_TYPE_TO_ID, "to" },
 
 			{ StringID.Main.ORIPA_FILE_ID, "ORIPA file" },
