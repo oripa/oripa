@@ -373,7 +373,7 @@ public class UIPanel extends JPanel {
 
 		lineInputPanel.add(lineTypePanel, gbBuilder.getLineField());
 
-		var commandsLabel = new JLabel("Command (Alt + 1...9)");
+		var commandsLabel = new JLabel("Command (Alt + 1...9,0)");
 		commandsLabel.setHorizontalAlignment(JLabel.CENTER);
 		lineInputPanel.add(commandsLabel, gbBuilder.getLineField());
 
