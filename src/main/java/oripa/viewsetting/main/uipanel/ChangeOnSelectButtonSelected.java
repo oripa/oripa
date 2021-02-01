@@ -6,7 +6,7 @@ public class ChangeOnSelectButtonSelected implements ChangeViewSetting {
 	private final UIPanelSetting setting;
 
 	/**
-	 * Constructor
+	 * UIPanel Settings for select lines mode
 	 */
 	public ChangeOnSelectButtonSelected(final UIPanelSetting uiPanelSetting) {
 		setting = uiPanelSetting;
@@ -17,8 +17,9 @@ public class ChangeOnSelectButtonSelected implements ChangeViewSetting {
 		setting.selectSelectMode();
 
 		setting.setByValuePanelVisible(false);
-		setting.setAngleStepVisible(false);
+		setting.setAngleStepPanelVisible(false);
 
+		setting.setLineInputPanelVisible(false);
 		setting.setAlterLineTypePanelVisible(false);
 
 		setting.setMountainButtonEnabled(false);

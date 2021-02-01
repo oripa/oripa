@@ -6,7 +6,7 @@ public class ChangeOnAngleSnapButtonSelected implements ChangeViewSetting {
 	private final UIPanelSetting setting;
 
 	/**
-	 * Constructor
+	 * change UIPanel view settings for Angle Snap Line Input Tool
 	 */
 	public ChangeOnAngleSnapButtonSelected(final UIPanelSetting uiPanelSetting) {
 		setting = uiPanelSetting;
@@ -17,7 +17,8 @@ public class ChangeOnAngleSnapButtonSelected implements ChangeViewSetting {
 		setting.selectInputMode();
 
 		setting.setByValuePanelVisible(false);
-		setting.setAngleStepVisible(true);
+		setting.setLineInputPanelVisible(true);
+		setting.setAngleStepPanelVisible(true);
 
 		setting.setAlterLineTypePanelVisible(false);
 
