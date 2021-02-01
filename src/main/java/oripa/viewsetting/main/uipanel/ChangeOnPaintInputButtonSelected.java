@@ -6,7 +6,7 @@ public class ChangeOnPaintInputButtonSelected implements ChangeViewSetting {
 	private final UIPanelSetting setting;
 
 	/**
-	 * Constructor
+	 * UIPanel view settings for lineInput edit mode selected
 	 */
 	public ChangeOnPaintInputButtonSelected(final UIPanelSetting uiPanelSetting) {
 		setting = uiPanelSetting;
@@ -17,7 +17,8 @@ public class ChangeOnPaintInputButtonSelected implements ChangeViewSetting {
 		setting.selectInputMode();
 
 		setting.setByValuePanelVisible(false);
-		setting.setAngleStepVisible(false);
+		setting.setLineInputPanelVisible(true);
+		setting.setAngleStepPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(false);
 

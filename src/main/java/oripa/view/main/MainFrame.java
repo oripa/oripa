@@ -19,6 +19,7 @@
 package oripa.view.main;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
@@ -36,6 +37,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import org.slf4j.Logger;
@@ -85,17 +88,34 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private static final long serialVersionUID = 272369294032419950L;
 
+	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
 
-	private final ChildFrameManager childFrameManager = new ChildFrameManager();
-
 	private final ViewScreenUpdater screenUpdater;
 
-	// -----------------------------------------------------------------------------------------------------------
-	// menu bar items
+	private final ChildFrameManager childFrameManager = new ChildFrameManager();
+
+	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
+
+	private final DocFilterSelector filterSelector = new DocFilterSelector();
+
+	private final Doc document = new Doc();
+
+	// Create UI Factories
+	private final PaintContextFactory contextFactory = new PaintContextFactory();
+	private final PaintContextInterface paintContext = contextFactory.createContext();
+	private final MouseActionHolder actionHolder = new MouseActionHolder();
+
+	private final ButtonFactory buttonFactory;
+
+	private RepeatCopyDialog arrayCopyDialog;
+	private CircleCopyDialog circleCopyDialog;
+	public static JLabel hintLabel = new JLabel();
+
+	// setup Menu Bars
 	private final JMenu menuFile = new JMenu(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.FILE_ID));
 	private final JMenu menuEdit = new JMenu(
@@ -120,20 +140,20 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_FOLD_ID));
 	private final JMenuItem menuItemExportDXF = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_DXF_ID));
-//	private final JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
+//	private final JMenuItem menuItemExportOBJ = new JMenuItem(
+//	resourceHolder.getString(ResourceKey.LABEL,StringID.Main.EXPORT_OBJ_ID));
 	private final JMenuItem menuItemExportCP = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_CP_ID));
 	private final JMenuItem menuItemExportSVG = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_SVG_ID));
+	private final JMenuItem menuItemExit = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
 
 	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
 
 	private final JMenuItem menuItemProperty = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL,
 					StringID.Main.PROPERTY_ID));
-
-	private final JMenuItem menuItemExit = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
 
 	// edit menu items
 	/**
@@ -180,26 +200,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	// -----------------------------------------------------------------------------------------------------------
 	// Create paint button
 
-	private final PaintContextFactory contextFactory = new PaintContextFactory();
-	private final PaintContextInterface paintContext = contextFactory.createContext();
-	private final MouseActionHolder actionHolder = new MouseActionHolder();
-
-	private final ButtonFactory buttonFactory;
-
-	private RepeatCopyDialog arrayCopyDialog;
-	private CircleCopyDialog circleCopyDialog;
-
-	private final JLabel hintLabel = new JLabel();
-
-	// ---------------------------------------------------------------------------------------------
-	// Data classes
-
-	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
-
-	private final DocFilterSelector filterSelector = new DocFilterSelector();
-
-	private final Doc document = new Doc();
-
 	private final IniFileAccess iniFileAccess = new IniFileAccess(
 			new InitDataFileReader(), new InitDataFileWriter());
 	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO());
@@ -209,8 +209,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		logger.info("frame construction starts.");
 
 		document.setCreasePattern(paintContext.getCreasePattern());
-
-		addPropertyChangeListenersToSetting();
 
 		var mainScreen = new PainterScreen(actionHolder, paintContext, document);
 		screenUpdater = mainScreen.getScreenUpdater();
@@ -232,6 +230,14 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 		logger.info("end constructing UI panel.");
 
+		JScrollPane uiScroll = new JScrollPane(uiPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		uiScroll.setPreferredSize(new Dimension(255, 800));// setPreferredSize(new
+															// Dimension(uiPanel.getPreferredSize().width
+															// + 25,
+		// uiPanel.getPreferredSize().height));
+		uiScroll.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+
 		var stateFactory = new PaintBoundStateFactory(
 				stateManager, setting,
 				uiPanel.getUIPanelSetting(),
@@ -239,12 +245,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		buttonFactory = new PaintActionButtonFactory(
 				stateFactory, paintContext, actionHolder, screenUpdater);
 
-		createPaintMenuItems();
-
-		addWindowListener(this);
+		// Setup Dialog Windows
+		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
+		circleCopyDialog = new CircleCopyDialog(this, paintContext);
 
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(uiPanel, BorderLayout.WEST);
+		getContentPane().add(uiScroll, BorderLayout.WEST);
 		getContentPane().add(mainScreen, BorderLayout.CENTER);
 		getContentPane().add(hintLabel, BorderLayout.SOUTH);
 
@@ -252,12 +258,15 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		this.setIconImage(imgLoader.loadAsIcon("icon/oripa.gif", getClass())
 				.getImage());
 
-		IntStream.range(0, Config.MRUFILE_NUM)
-				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
-
-		addActionListenersToComponents();
+		addWindowListener(this);
+		addHintPropertyChangeListenersToSetting();
 
 		loadIniFile();
+
+		createPaintMenuItems();
+		IntStream.range(0, Config.MRUFILE_NUM)
+				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
+		addActionListenersToComponents();
 
 		// Building the menu bar
 		JMenuBar menuBar = new JMenuBar();
@@ -810,7 +819,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void windowDeactivated(final WindowEvent arg0) {
 	}
 
-	private void addPropertyChangeListenersToSetting() {
+	private void addHintPropertyChangeListenersToSetting() {
 		setting.addPropertyChangeListener(MainFrameSetting.HINT, e -> {
 			hintLabel.setText("    " + (String) e.getNewValue());
 			hintLabel.repaint();
