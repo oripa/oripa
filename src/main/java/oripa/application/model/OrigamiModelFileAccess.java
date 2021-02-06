@@ -22,7 +22,7 @@ import java.awt.Component;
 import java.io.IOException;
 
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.FileTypeKey;
+import oripa.persistent.doc.OrigamiModelFileTypeKey;
 import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 import oripa.persistent.filetool.FileAccessActionProvider;
@@ -41,7 +41,7 @@ import oripa.resource.StringID;
 public class OrigamiModelFileAccess {
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
-	private FileAccessSupportFilter<OrigamiModel> createFilter(final FileTypeKey type) {
+	private FileAccessSupportFilter<OrigamiModel> createFilter(final OrigamiModelFileTypeKey type) {
 		FileAccessSupportFilter<OrigamiModel> filter = new FileAccessSupportFilter<OrigamiModel>(
 				type,
 				FileAccessSupportFilter.createDefaultDescription(
@@ -64,7 +64,7 @@ public class OrigamiModelFileAccess {
 		return filter;
 	}
 
-	public void save(final FileTypeKey type, final OrigamiModel origamiModel,
+	public void save(final OrigamiModelFileTypeKey type, final OrigamiModel origamiModel,
 			final Component owner)
 			throws IllegalArgumentException, IOException, FileChooserCanceledException {
 

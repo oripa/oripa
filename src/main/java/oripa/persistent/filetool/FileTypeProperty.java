@@ -18,11 +18,13 @@
  */
 package oripa.persistent.filetool;
 
+import java.util.Arrays;
+
 /**
  * @author Koji
  *
  */
-public interface FileTypeProperty {
+public interface FileTypeProperty<Data> {
 
 	/**
 	 *
@@ -30,7 +32,13 @@ public interface FileTypeProperty {
 	 */
 	public abstract String[] getExtensions();
 
-	public abstract boolean extensionsMatch(String filePath);
+	public default boolean extensionsMatch(final String filePath) {
+		if (filePath == null) {
+			return false;
+		}
+		return Arrays.asList(getExtensions()).stream()
+				.anyMatch(extension -> filePath.endsWith(extension));
+	}
 
 	/**
 	 * @return a text for identifying file type.
@@ -39,4 +47,7 @@ public interface FileTypeProperty {
 
 	public abstract Integer getOrder();
 
+	public abstract Loader<Data> getLoader();
+
+	public abstract Exporter<Data> getExporter();
 }

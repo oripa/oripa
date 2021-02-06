@@ -1,25 +1,15 @@
 package oripa.persistent.doc;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import oripa.doc.Doc;
-import oripa.persistent.doc.exporter.ExporterCP;
-import oripa.persistent.doc.exporter.ExporterDXFFactory;
-import oripa.persistent.doc.exporter.ExporterFOLD;
-import oripa.persistent.doc.exporter.ExporterSVGFactory;
-import oripa.persistent.doc.exporter.ExporterXML;
-import oripa.persistent.doc.exporter.PictureExporter;
-import oripa.persistent.doc.loader.LoaderCP;
-import oripa.persistent.doc.loader.LoaderDXF;
-import oripa.persistent.doc.loader.LoaderFOLD;
-import oripa.persistent.doc.loader.LoaderPDF;
-import oripa.persistent.doc.loader.LoaderXML;
-import oripa.persistent.filetool.Exporter;
 import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.Loader;
+import oripa.persistent.filetool.MultiTypeAcceptableFileLoadingFilter;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -32,7 +22,7 @@ import oripa.resource.StringID;
  */
 public class DocFilterSelector {
 
-	private final HashMap<FileTypeKey, FileAccessSupportFilter<Doc>> filters = new HashMap<>();
+	private final SortedMap<CreasePatternFileTypeKey, FileAccessSupportFilter<Doc>> filters = new TreeMap<>();
 
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
@@ -42,44 +32,26 @@ public class DocFilterSelector {
 	 */
 	public DocFilterSelector() {
 
-		FileTypeKey key = FileTypeKey.OPX;
-		putFilter(key, createDescription(key, StringID.Main.ORIPA_FILE_ID),
-				new ExporterXML(), new LoaderXML());
+		CreasePatternFileTypeKey key = CreasePatternFileTypeKey.OPX;
+		putFilter(key, createDescription(key, StringID.Main.ORIPA_FILE_ID));
 
-		key = FileTypeKey.PICT;
-		putFilter(key, createDescription(key, StringID.Main.PICTURE_FILE_ID),
-				new PictureExporter(), null);
+		key = CreasePatternFileTypeKey.PICT;
+		putFilter(key, createDescription(key, StringID.Main.PICTURE_FILE_ID));
 
-		key = FileTypeKey.FOLD;
-		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
-				new ExporterFOLD(),
-				new LoaderFOLD());
+		key = CreasePatternFileTypeKey.FOLD;
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID));
 
-		key = FileTypeKey.DXF;
-		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
-				ExporterDXFFactory.createCreasePatternExporter(),
-				new LoaderDXF());
+		key = CreasePatternFileTypeKey.DXF;
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID));
 
-//		key = FileTypeKey.OBJ_MODEL;
-//		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
-//				ExporterOBJFactory.createFoldedModelExporter(),
-//				// new ModelExporterOBJ(),
-//				null);
+		key = CreasePatternFileTypeKey.CP;
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID));
 
-		key = FileTypeKey.CP;
-		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
-				new ExporterCP(),
-				new LoaderCP());
+		key = CreasePatternFileTypeKey.SVG;
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID));
 
-		key = FileTypeKey.SVG;
-		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
-				ExporterSVGFactory.createCreasePatternExporter(),
-				null);
-
-		key = FileTypeKey.PDF;
-		putFilter(key, createDescription(key, StringID.Main.FILE_ID),
-				null,
-				new LoaderPDF());
+		key = CreasePatternFileTypeKey.PDF;
+		putFilter(key, createDescription(key, StringID.Main.FILE_ID));
 
 	}
 
@@ -90,22 +62,12 @@ public class DocFilterSelector {
 	 * @param exporter
 	 * @param loader
 	 */
-	private void putFilter(final FileTypeKey key, final String desctiption,
-			final Exporter<Doc> exporter, final Loader<Doc> loader) {
+	private void putFilter(final CreasePatternFileTypeKey key, final String desctiption) {
 		FileAccessSupportFilter<Doc> filter;
 
-		filter = new FileAccessSupportFilter<>(key,
-				desctiption);
+		filter = new FileAccessSupportFilter<>(key, desctiption);
 
-		if (exporter != null) {
-			filter.setSavingAction(new SavingDocAction(exporter));
-		}
-
-		if (loader != null) {
-			filter.setLoadingAction(new LoadingDocAction(loader));
-		}
 		this.putFilter(key, filter);
-
 	}
 
 	/**
@@ -114,7 +76,8 @@ public class DocFilterSelector {
 	 * @param resourceKey
 	 * @return
 	 */
-	private String createDescription(final FileTypeKey fileTypeKey, final String resourceKey) {
+	private String createDescription(final CreasePatternFileTypeKey fileTypeKey,
+			final String resourceKey) {
 		return FileAccessSupportFilter.createDefaultDescription(fileTypeKey,
 				resourceHolder.getString(ResourceKey.LABEL, resourceKey));
 
@@ -126,7 +89,7 @@ public class DocFilterSelector {
 	 *            A value that describes the file type you want.
 	 * @return A filter for given key.
 	 */
-	public FileAccessSupportFilter<Doc> getFilter(final FileTypeKey key) {
+	public FileAccessSupportFilter<Doc> getFilter(final CreasePatternFileTypeKey key) {
 		return filters.get(key);
 	}
 
@@ -139,7 +102,7 @@ public class DocFilterSelector {
 	 * @return The previous filter for given key.
 	 */
 
-	public FileAccessSupportFilter<Doc> putFilter(final FileTypeKey key,
+	public FileAccessSupportFilter<Doc> putFilter(final CreasePatternFileTypeKey key,
 			final FileAccessSupportFilter<Doc> filter) {
 		return filters.put(key, filter);
 	}
@@ -153,13 +116,7 @@ public class DocFilterSelector {
 		FileAccessSupportFilter<Doc>[] array = new FileAccessSupportFilter[filters
 				.size()];
 
-		int i = 0;
-		for (FileTypeKey key : filters.keySet()) {
-			array[i] = filters.get(key);
-			i++;
-		}
-
-		return array;
+		return filters.values().toArray(array);
 	}
 
 	/**
@@ -167,14 +124,16 @@ public class DocFilterSelector {
 	 * @return filters that can load Doc from a file.
 	 */
 	public FileAccessSupportFilter<Doc>[] getLoadables() {
-		ArrayList<FileAccessSupportFilter<Doc>> loadables = new ArrayList<>();
+		var loadables = filters.values().stream()
+				.filter(f -> f.getLoadingAction() != null)
+				.collect(Collectors.toList());
 
-		for (FileTypeKey key : filters.keySet()) {
-			FileAccessSupportFilter<Doc> filter = filters.get(key);
-			if (filter.getLoadingAction() != null) {
-				loadables.add(filter);
-			}
-		}
+		var multi = new MultiTypeAcceptableFileLoadingFilter<Doc>(
+				filters.values().stream()
+						.filter(f -> f.getLoadingAction() != null)
+						.collect(Collectors.toList()),
+				"Any type");
+		loadables.add(multi);
 
 		Collections.sort(loadables);
 
@@ -186,29 +145,28 @@ public class DocFilterSelector {
 	}
 
 	/**
-	 * returns null if any filter cannot load the file.
-	 *
 	 * @param path
 	 * @return a filter that can load the file at the path.
+	 * @throws IllegalArgumentException
+	 *             No filter is available for the given path. Or, the path is
+	 *             null or is for a directory.
 	 */
-	public FileAccessSupportFilter<Doc> getLoadableFilterOf(final String path) {
+	public FileAccessSupportFilter<Doc> getLoadableFilterOf(final String path)
+			throws IllegalArgumentException {
 		if (path == null) {
-			return null;
+			throw new IllegalArgumentException("Wrong path (null)");
 		}
 
 		File file = new File(path);
 		if (file.isDirectory()) {
-			return null;
+			throw new IllegalArgumentException("The path is for directory.");
 		}
 
-		for (FileAccessSupportFilter<Doc> filter : this.toArray()) {
-			if (filter.accept(file)) {
-				filter.getLoadingAction().setPath(path);
-				return filter;
-			}
-		}
-
-		return null;
+		return Stream.of(toArray())
+				.filter(f -> f.accept(file) && f.getLoadingAction() != null)
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException(
+						"cannot load the file with the extension."));
 	}
 
 	/**
@@ -217,14 +175,9 @@ public class DocFilterSelector {
 	 */
 	@SuppressWarnings("unchecked")
 	public FileAccessSupportFilter<Doc>[] getSavables() {
-		ArrayList<FileAccessSupportFilter<Doc>> savables = new ArrayList<>();
-
-		for (FileTypeKey key : filters.keySet()) {
-			FileAccessSupportFilter<Doc> filter = filters.get(key);
-			if (filter.getSavingAction() != null) {
-				savables.add(filter);
-			}
-		}
+		var savables = filters.values().stream()
+				.filter(f -> f.getSavingAction() != null)
+				.collect(Collectors.toList());
 
 		Collections.sort(savables);
 

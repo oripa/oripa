@@ -41,7 +41,7 @@ import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.FileTypeKey;
+import oripa.persistent.doc.OrigamiModelFileTypeKey;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
@@ -155,9 +155,9 @@ public class ModelViewFrame extends JFrame
 			mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected());
 		});
 
-		menuItemExportDXF.addActionListener(e -> exportFile(FileTypeKey.DXF_MODEL));
+		menuItemExportDXF.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.DXF_MODEL));
 
-		menuItemExportOBJ.addActionListener(e -> exportFile(FileTypeKey.OBJ_MODEL));
+		menuItemExportOBJ.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.OBJ_MODEL));
 
 		menuItemFillAlpha.addActionListener(e -> {
 			screen.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
@@ -193,7 +193,7 @@ public class ModelViewFrame extends JFrame
 
 	}
 
-	private void exportFile(final FileTypeKey type) {
+	private void exportFile(final OrigamiModelFileTypeKey type) {
 
 		try {
 			fileAccess.save(type, origamiModel, this);

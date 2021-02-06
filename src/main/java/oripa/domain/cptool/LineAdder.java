@@ -4,66 +4,66 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.geom.GeomUtil;
+import oripa.geom.RectangleDomain;
+import oripa.util.StopWatch;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
+import oripa.value.OriPoint;
 
 public class LineAdder {
-	private class PointComparatorX implements Comparator<Vector2d> {
-
-		@Override
-		public int compare(final Vector2d v1, final Vector2d v2) {
-			if (v1.x == v2.x) {
-				return 0;
-			}
-			return v1.x > v2.x ? 1 : -1;
-		}
-	}
-
-	private class PointComparatorY implements Comparator<Vector2d> {
-
-		@Override
-		public int compare(final Vector2d v1, final Vector2d v2) {
-			if (v1.y == v2.y) {
-				return 0;
-			}
-			return v1.y > v2.y ? 1 : -1;
-		}
-	}
+	private static final Logger logger = LoggerFactory.getLogger(LineAdder.class);
 
 	/**
+	 * divides the current lines by the input line and returns a map of the
+	 * cross point information.
 	 *
 	 * @param inputLine
 	 * @param currentLines
-	 * @return true.
+	 * @return a map from a cross point to the crossing current line at the
+	 *         point.
 	 */
-	private boolean divideCurrentLines(final OriLine inputLine,
+	private Map<OriPoint, OriLine> divideCurrentLines(final OriLine inputLine,
 			final Collection<OriLine> currentLines) {
 
-		LinkedList<OriLine> toBeAdded = new LinkedList<>();
+		var toBeAdded = Collections.synchronizedList(new LinkedList<OriLine>());
+		var toBeRemoved = Collections.synchronizedList(new LinkedList<OriLine>());
 
-		for (Iterator<OriLine> iterator = currentLines.iterator(); iterator.hasNext();) {
-			OriLine line = iterator.next();
+		var crossMap = Collections.synchronizedMap(new HashMap<OriPoint, OriLine>());
+
+		currentLines.parallelStream().forEach(line -> {
 
 			// intersection of (aux input, other type lines) are rejected // It
 			// is by MITANI jun.
 //			if (inputLine.getType() == OriLine.Type.NONE && line.getType() != OriLine.Type.NONE) {
 //				continue;
 //			}
+			logger.trace("current line: " + line);
 
 			Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
 			if (crossPoint == null) {
-				continue;
+				return;
 			}
 
-			iterator.remove();
+			logger.trace("cross point: " + crossPoint);
+
+			crossMap.put(new OriPoint(crossPoint), line);
+
+			toBeRemoved.add(line);
 
 			Consumer<Vector2d> addIfLineCanBeSplit = v -> {
 				if (GeomUtil.distance(v, crossPoint) > CalculationResource.POINT_EPS) {
@@ -76,11 +76,12 @@ public class LineAdder {
 
 			addIfLineCanBeSplit.accept(line.p0);
 			addIfLineCanBeSplit.accept(line.p1);
-		}
+		});
 
+		toBeRemoved.forEach(line -> currentLines.remove(line));
 		toBeAdded.forEach(line -> currentLines.add(line));
 
-		return true;
+		return crossMap;
 	}
 
 	/**
@@ -88,33 +89,33 @@ public class LineAdder {
 	 * points of such new small lines.
 	 *
 	 * @param inputLine
+	 * @param crossMap
+	 *            what {@link #divideCurrentLines(OriLine, Collection)} returns.
 	 * @param currentLines
-	 * @return points on input line divided by currentLines
+	 * @return sorted points on input line divided by currentLines.
 	 */
-	private List<Vector2d> createInputLinePoints(final OriLine inputLine,
+	private List<Vector2d> createInputLinePoints(
+			final OriLine inputLine,
+			final Map<OriPoint, OriLine> crossMap,
 			final Collection<OriLine> currentLines) {
-		ArrayList<Vector2d> points = new ArrayList<Vector2d>();
+		var points = new ArrayList<Vector2d>();
 		points.add(inputLine.p0);
 		points.add(inputLine.p1);
 
-		// divide input line by existing lines
-		for (OriLine line : currentLines) {
-
-			// reject (M/V input, aux lines) // It is by MITANI jun, I don't
-			// know why.
-//			if (inputLine.getType() != OriLine.Type.NONE &&
-//					line.getType() == OriLine.Type.NONE) {
-//				continue;
-//			}
-
+		// divide input line by already known points and lines
+		crossMap.forEach((crossPoint, line) -> {
+			if (line == null) {
+				return;
+			}
 			// If the intersection is on the end of the line, skip
 			if (GeomUtil.distance(inputLine.p0, line.p0) < CalculationResource.POINT_EPS ||
 					GeomUtil.distance(inputLine.p0, line.p1) < CalculationResource.POINT_EPS ||
 					GeomUtil.distance(inputLine.p1, line.p0) < CalculationResource.POINT_EPS ||
 					GeomUtil.distance(inputLine.p1, line.p1) < CalculationResource.POINT_EPS) {
-				continue;
+				return;
 			}
 
+			// use end points on inputLine
 			if (GeomUtil.distancePointToSegment(line.p0, inputLine.p0,
 					inputLine.p1) < CalculationResource.POINT_EPS) {
 				points.add(line.p0);
@@ -123,51 +124,34 @@ public class LineAdder {
 					inputLine.p1) < CalculationResource.POINT_EPS) {
 				points.add(line.p1);
 			}
+			points.add(crossPoint);
+		});
 
-			// Calculates the intersection
-			Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
-			if (crossPoint != null) {
-				points.add(crossPoint);
-			}
-
+		// sort in order to make points sequential
+		boolean sortByX = Math.abs(inputLine.p0.x - inputLine.p1.x) > Math
+				.abs(inputLine.p0.y - inputLine.p1.y);
+		if (sortByX) {
+			points.sort(Comparator.comparing(Vector2d::getX));
+		} else {
+			points.sort(Comparator.comparing(Vector2d::getY));
 		}
 
 		return points;
 	}
 
 	/**
-	 * Adds a new OriLine, also searching for intersections with others that
-	 * would cause their mutual division
+	 * Returns result of input line divisions by given points.
 	 *
-	 * @param inputLine
-	 * @param currentLines
-	 *            current line list. it will be affected as new lines are added
-	 *            and unnecessary lines are removed.
+	 * @param points
+	 *            on input line sequentially.
+	 * @param lineType
+	 *            of new lines.
+	 *
+	 * @return lines created by connecting points in {@code points} one by one.
 	 */
-
-	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines) {
-		// ArrayList<OriLine> crossingLines = new ArrayList<OriLine>(); // for
-		// debug?
-
-		// If it already exists, do nothing
-		for (OriLine line : currentLines) {
-			if (GeomUtil.isSameLineSegment(line, inputLine)) {
-				return;
-			}
-		}
-
-		divideCurrentLines(inputLine, currentLines);
-
-		List<Vector2d> points = createInputLinePoints(inputLine, currentLines);
-
-		// sort in order to make points sequential
-		boolean sortByX = Math.abs(inputLine.p0.x - inputLine.p1.x) > Math
-				.abs(inputLine.p0.y - inputLine.p1.y);
-		if (sortByX) {
-			Collections.sort(points, new PointComparatorX());
-		} else {
-			Collections.sort(points, new PointComparatorY());
-		}
+	private List<OriLine> createSequentialLines(final List<Vector2d> points,
+			final OriLine.Type lineType) {
+		var newLines = new ArrayList<OriLine>();
 
 		Vector2d prePoint = points.get(0);
 
@@ -179,20 +163,99 @@ public class LineAdder {
 				continue;
 			}
 
-			currentLines.add(new OriLine(prePoint, p, inputLine.getType()));
+			newLines.add(new OriLine(prePoint, p, lineType));
+
 			prePoint = p;
 		}
 
+		return newLines;
+	}
+
+	private List<OriLine> removeDuplicationsFromInputLines(final Collection<OriLine> inputLines,
+			final Collection<OriLine> currentLines) {
+		return inputLines.parallelStream()
+				.filter(inputLine -> !currentLines.parallelStream()
+						.anyMatch(line -> GeomUtil.isSameLineSegment(line, inputLine)))
+				.collect(Collectors.toList());
 	}
 
 	/**
+	 * Adds {@code inputLine} to {@code currentLines}. The lines will be split
+	 * at the intersections of the lines.
 	 *
-	 * @param lines
-	 *            lines to be added
-	 * @param destination
-	 *            collection as a destination
+	 * @param inputLine
+	 * @param currentLines
+	 *            current line list. it will be affected as new lines are added
+	 *            and unnecessary lines are removed.
 	 */
-	public void addAll(final Collection<OriLine> lines, final Collection<OriLine> destination) {
-		lines.stream().forEach(line -> addLine(line, destination));
+	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines) {
+		addAll(List.of(inputLine), currentLines);
+	}
+
+	/**
+	 * Adds all of {@code inputLines} to {@code currentLines}. The lines will be
+	 * split at the intersections of the lines.
+	 *
+	 * @param inputLines
+	 *            lines to be added
+	 * @param currentLines
+	 *            collection as a destination.
+	 */
+	public void addAll(final Collection<OriLine> inputLines,
+			final Collection<OriLine> currentLines) {
+
+		var watch = new StopWatch(true);
+
+		// ensure fast access
+		var currentLineList = new ArrayList<OriLine>(currentLines);
+
+		var linesToBeAdded = removeDuplicationsFromInputLines(inputLines, currentLineList);
+
+		// input domain can limit the current lines to be divided.
+		var inputDomainClipper = new RectangleClipper(
+				new RectangleDomain(linesToBeAdded), CalculationResource.POINT_EPS);
+		// use a hash set for avoiding worst case of computation time. (list
+		// takes O(n) time for deletion while hash set takes O(1) time.)
+		var crossingCurrentLines = new HashSet<OriLine>(
+				inputDomainClipper.selectByArea(currentLines));
+		currentLines.removeAll(crossingCurrentLines);
+
+		logger.debug("addAll() divideCurrentLines() start: "
+				+ watch.getMilliSec() + "[ms]");
+
+		// a map from an input line to a map from a cross point to a line
+		// crossing with the input line.
+		var crossMaps = Collections.synchronizedMap(new HashMap<OriLine, Map<OriPoint, OriLine>>());
+
+		linesToBeAdded.forEach(inputLine -> {
+			crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines));
+		});
+
+		// feed back the result of line divisions
+		currentLines.addAll(crossingCurrentLines);
+
+		logger.debug("addAll() createInputLinePoints() start: "
+				+ watch.getMilliSec() + "[ms]");
+
+		var pointLists = new ArrayList<List<Vector2d>>();
+
+		linesToBeAdded.forEach(inputLine -> {
+			pointLists.add(
+					createInputLinePoints(inputLine, crossMaps.get(inputLine), currentLines));
+		});
+
+		logger.debug("addAll() adding new lines start: "
+				+ watch.getMilliSec() + "[ms]");
+
+		var newLines = IntStream.range(0, linesToBeAdded.size()).parallel()
+				.mapToObj(j -> createSequentialLines(
+						pointLists.get(j),
+						linesToBeAdded.get(j).getType()))
+				.flatMap(lines -> lines.stream())
+				.collect(Collectors.toList());
+
+		newLines.forEach(line -> currentLines.add(line));
+
+		logger.debug("addAll(): " + watch.getMilliSec() + "[ms]");
 	}
 }

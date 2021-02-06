@@ -20,32 +20,36 @@ package oripa.domain.fold;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import oripa.util.StopWatch;
 import oripa.util.rule.Rule;
-import oripa.util.rule.SingleRuleConjunction;
+import oripa.util.rule.SingleRuleParallelConjunction;
 
 /**
  * @author Koji
  *
  */
 public class FoldabilityChecker {
+	private static final Logger logger = LoggerFactory.getLogger(FoldabilityChecker.class);
 
 	private enum VertexRule {
-		MAEKAWA(new MaekawaTheorem(), "Maekawa"), KAWASAKI(new KawasakiTheorem(),
-				"Kawasaki"), BIG_LITTLE_BIG(new BigLittleBigLemma(),
-						"Big-little-big"), GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma(),
-								"gen. Big-little-big");
+		MAEKAWA(new MaekawaTheorem(), "Maekawa"),
+		KAWASAKI(new KawasakiTheorem(), "Kawasaki"),
+		BIG_LITTLE_BIG(new BigLittleBigLemma(), "Big-little-big"),
+		GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma(), "gen. Big-little-big");
 
 		private final Rule<OriVertex> rule;
 		private final String name;
-		private final SingleRuleConjunction<OriVertex> conjunction;
+		private final SingleRuleParallelConjunction<OriVertex> conjunction;
 
 		private VertexRule(final Rule<OriVertex> rule, final String name) {
 			this.rule = rule;
 			this.name = name;
-			conjunction = new SingleRuleConjunction<>(rule);
+			conjunction = new SingleRuleParallelConjunction<>(rule);
 		}
 
 		public Rule<OriVertex> getRule() {
@@ -56,30 +60,32 @@ public class FoldabilityChecker {
 			return name;
 		}
 
-		public SingleRuleConjunction<OriVertex> getConjunction() {
+		public SingleRuleParallelConjunction<OriVertex> getConjunction() {
 			return conjunction;
 		}
 	}
 
-	private final SingleRuleConjunction<OriFace> convexRuleConjunction = new SingleRuleConjunction<>(
+	private final SingleRuleParallelConjunction<OriFace> convexRuleConjunction = new SingleRuleParallelConjunction<>(
 			new FaceIsConvex());
 
 	public boolean modelIsProbablyFoldable(final Collection<OriVertex> vertices,
 			final Collection<OriFace> faces) {
 
-		return Arrays.asList(VertexRule.values()).stream()
+		return Arrays.asList(VertexRule.values()).parallelStream()
 				.allMatch(rule -> rule.getConjunction().holds(vertices)) &&
 				convexRuleConjunction.holds(faces);
 	}
 
 	public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
-		var violatingVertices = new HashSet<OriVertex>();
+		var watch = new StopWatch(true);
 
-		Arrays.asList(VertexRule.values())
-				.forEach(rule -> violatingVertices
-						.addAll(rule.getConjunction().findViolations(vertices)));
+		var result = Arrays.asList(VertexRule.values()).parallelStream()
+				.flatMap(rule -> rule.getConjunction().findViolations(vertices).parallelStream())
+				.collect(Collectors.toList());
 
-		return violatingVertices;
+		logger.debug("findViolatingVertices: " + watch.getMilliSec() + "[ms]");
+
+		return result;
 	}
 
 	public Collection<String> getVertexViolationNames(final OriVertex vertex) {
@@ -90,6 +96,12 @@ public class FoldabilityChecker {
 	}
 
 	public Collection<OriFace> findViolatingFaces(final Collection<OriFace> faces) {
-		return convexRuleConjunction.findViolations(faces);
+		var watch = new StopWatch(true);
+
+		var result = convexRuleConjunction.findViolations(faces);
+
+		logger.debug("findViolatingFaces: " + watch.getMilliSec() + "[ms]");
+
+		return result;
 	}
 }

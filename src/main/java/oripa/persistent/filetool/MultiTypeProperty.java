@@ -18,24 +18,46 @@
  */
 package oripa.persistent.filetool;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public interface Exporter<Data> {
-	/**
-	 *
-	 * @param data
-	 * @param filePath
-	 * @return true if the action succeeds, otherwise false.
-	 * @throws IOException
-	 *             Error on file access.
-	 * @throws IllegalArgumentException
-	 *             thrown if the {@code data} cannot be converted to the aimed
-	 *             data format.
-	 */
-	public abstract boolean export(Data data, String filePath)
-			throws IOException, IllegalArgumentException;
+public class MultiTypeProperty<Data> implements FileTypeProperty<Data> {
+
+	private final Collection<FileTypeProperty<Data>> properties;
+
+	public MultiTypeProperty(final Collection<FileTypeProperty<Data>> properties) {
+		this.properties = properties;
+	}
+
+	@Override
+	public Integer getOrder() {
+		return -1;
+	}
+
+	@Override
+	public String getKeyText() {
+		return String.join("+", getExtensions());
+	}
+
+	@Override
+	public String[] getExtensions() {
+		return properties.stream()
+				.flatMap(p -> Arrays.asList(p.getExtensions()).stream())
+				.collect(Collectors.toList()).toArray(new String[0]);
+	}
+
+	@Override
+	public Loader<Data> getLoader() {
+		return null;
+	}
+
+	@Override
+	public Exporter<Data> getExporter() {
+		return null;
+	}
 }

@@ -6,7 +6,7 @@ public class ChangeOnOtherCommandButtonSelected implements ChangeViewSetting {
 	private final UIPanelSetting setting;
 
 	/**
-	 * Constructor
+	 * UIPanel settings for buttons without any tool settings
 	 */
 	public ChangeOnOtherCommandButtonSelected(final UIPanelSetting uiPanelSetting) {
 		setting = uiPanelSetting;
@@ -15,7 +15,8 @@ public class ChangeOnOtherCommandButtonSelected implements ChangeViewSetting {
 	@Override
 	public void changeViewSetting() {
 		setting.setByValuePanelVisible(false);
-		setting.setAngleStepVisible(false);
+		setting.setLineInputPanelVisible(false);
+		setting.setAngleStepPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(false);
 

@@ -24,6 +24,9 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
@@ -32,8 +35,9 @@ import oripa.geom.Line;
 import oripa.value.OriLine;
 
 public class Folder {
+	private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
-	private final ArrayList<Condition4> condition4s = new ArrayList<>();
+	private ArrayList<Condition4> condition4s;
 	private int workORmat[][];
 	private ArrayList<SubFace> subFaces;
 
@@ -89,6 +93,8 @@ public class Folder {
 		step1(faces, overlapRelation);
 
 		holdCondition3s(faces, paperSize, overlapRelation);
+
+		condition4s = new ArrayList<>();
 		holdCondition4s(edges, overlapRelation);
 
 		estimation(faces, overlapRelation);
@@ -582,11 +588,14 @@ public class Folder {
 	 */
 	private ArrayList<SubFace> makeSubFaces(
 			final List<OriFace> faces, final double paperSize) {
+		logger.debug("makeSubFaces() start");
+
 		CreasePatternFactory cpFactory = new CreasePatternFactory();
 		CreasePatternInterface temp_creasePattern = cpFactory.createCreasePattern(paperSize);
 
 		// construct edge structure after folding and store it as a
 		// crease pattern for easy calculation
+		logger.debug("makeSubFaces(): construct edge structure after folding");
 		temp_creasePattern.clear();
 		Painter painter = new Painter(temp_creasePattern);
 		for (OriFace face : faces) {
@@ -621,7 +630,6 @@ public class Folder {
 				}
 			}
 		}
-		System.out.println("=---------------------=");
 
 		// Check if the SubFace exactly equal to the Face
 		ArrayList<SubFace> tmpFaces = new ArrayList<>();
@@ -655,6 +663,8 @@ public class Folder {
 
 		localSubFaces.clear();
 		localSubFaces.addAll(tmpFaces);
+
+		logger.debug("makeSubFaces() end");
 
 		return localSubFaces;
 	}

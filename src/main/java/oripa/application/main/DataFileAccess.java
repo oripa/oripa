@@ -20,13 +20,13 @@ package oripa.application.main;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
 import oripa.doc.Doc;
+import oripa.persistent.doc.CreasePatternFileTypeKey;
 import oripa.persistent.doc.DocDAO;
-import oripa.persistent.doc.DocFilterSelector;
-import oripa.persistent.doc.FileTypeKey;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileVersionError;
@@ -35,6 +35,7 @@ import oripa.persistent.filetool.WrongDataFormatException;
 /**
  * @author OUCHI Koji
  *
+ *         interface between the {@code DocDOA} and the {@code Doc} classes
  */
 public class DataFileAccess {
 	private DocDAO dao;
@@ -57,7 +58,8 @@ public class DataFileAccess {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType)
+	public void saveProjectFile(final Doc doc, final String filePath,
+			final CreasePatternFileTypeKey fileType)
 			throws IOException, IllegalArgumentException {
 
 		dao.save(doc, filePath, fileType);
@@ -66,10 +68,12 @@ public class DataFileAccess {
 	}
 
 	/**
+	 * opens dialog for saving file with given parameters.
 	 *
 	 * @param document
 	 * @param directory
 	 * @param fileName
+	 *            if empty "newFile.opx" is used
 	 * @param owner
 	 * @param filters
 	 * @return the path of saved file. Empty if the file choosing is canceled.
@@ -106,22 +110,22 @@ public class DataFileAccess {
 	 * otherwise, it tries to read data from the path.
 	 *
 	 * @param filePath
-	 * @param filterSelector
 	 * @param lastFilePath
 	 * @param owner
+	 * @param filters
 	 * @return the path of loaded file. Empty if the file choosing is canceled.
 	 */
-	public Optional<Doc> loadFile(final String filePath, final DocFilterSelector filterSelector,
-			final String lastFilePath, final Component owner)
-			throws FileVersionError, WrongDataFormatException, IOException {
+	public Optional<Doc> loadFile(final String filePath, final String lastFilePath,
+			final Component owner, final FileAccessSupportFilter<Doc>... filters)
+			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
+			IOException, FileNotFoundException {
 
 		try {
 			if (filePath != null) {
 				return Optional.of(dao.load(filePath));
 			} else {
 				return Optional.of(dao.loadUsingGUI(
-						lastFilePath, filterSelector.getLoadables(),
-						owner));
+						lastFilePath, filters, owner));
 			}
 		} catch (FileChooserCanceledException cancel) {
 			return Optional.empty();

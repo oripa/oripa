@@ -19,6 +19,7 @@
 package oripa.view.main;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
@@ -36,6 +37,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import org.slf4j.Logger;
@@ -47,7 +50,7 @@ import oripa.application.main.DeleteSelectedLinesActionListener;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.application.main.SelectAllLineActionListener;
-import oripa.application.main.UnselectAllLinesActionListener;
+import oripa.application.main.UnselectAllItemsActionListener;
 import oripa.appstate.StateManager;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
@@ -61,9 +64,9 @@ import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.persistent.doc.CreasePatternFileTypeKey;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
-import oripa.persistent.doc.FileTypeKey;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
@@ -83,24 +86,44 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 272369294032419950L;
 
+	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
 
+	private final ViewScreenUpdater screenUpdater;
+
 	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
+	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
+
+	private final DocFilterSelector filterSelector = new DocFilterSelector();
+
+	private final Doc document = new Doc();
+
+	// Create UI Factories
+	private final PaintContextFactory contextFactory = new PaintContextFactory();
+	private final PaintContextInterface paintContext = contextFactory.createContext();
+	private final MouseActionHolder actionHolder = new MouseActionHolder();
+
+	private final ButtonFactory buttonFactory;
+
+	private RepeatCopyDialog arrayCopyDialog;
+	private CircleCopyDialog circleCopyDialog;
+	public static JLabel hintLabel = new JLabel();
+
+	// setup Menu Bars
 	private final JMenu menuFile = new JMenu(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.FILE_ID));
 	private final JMenu menuEdit = new JMenu(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EDIT_ID));
 	private final JMenu menuHelp = new JMenu(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.HELP_ID));
+
+	// file menu items
 	private final JMenuItem menuItemClear = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.NEW_ID));
 	private final JMenuItem menuItemOpen = new JMenuItem(
@@ -117,20 +140,22 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_FOLD_ID));
 	private final JMenuItem menuItemExportDXF = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_DXF_ID));
-//	private final JMenuItem menuItemExportOBJ = new JMenuItem("Export OBJ");
+//	private final JMenuItem menuItemExportOBJ = new JMenuItem(
+//	resourceHolder.getString(ResourceKey.LABEL,StringID.Main.EXPORT_OBJ_ID));
 	private final JMenuItem menuItemExportCP = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_CP_ID));
 	private final JMenuItem menuItemExportSVG = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_SVG_ID));
+	private final JMenuItem menuItemExit = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
 
-	// -----------------------------------------------------------------------------------------------------------
-	// Create paint button
+	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
 
-	private final PaintContextFactory contextFactory = new PaintContextFactory();
-	private final PaintContextInterface paintContext = contextFactory.createContext();
-	private final MouseActionHolder actionHolder = new MouseActionHolder();
+	private final JMenuItem menuItemProperty = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL,
+					StringID.Main.PROPERTY_ID));
 
-	private final ButtonFactory buttonFactory;
+	// edit menu items
 	/**
 	 * For changing outline
 	 */
@@ -151,23 +176,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 */
 	private JMenuItem menuItemCutAndPaste;
 
-	// ---------------------------------------------------------------------------------------------
-
-	private final ViewScreenUpdater screenUpdater;
-	private final JMenuItem menuItemProperty = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL,
-					StringID.Main.PROPERTY_ID));
-
-	private final JMenuItem menuItemExit = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
-
 	private final JMenuItem menuItemUndo = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.UNDO_ID));
 	private final JMenuItem menuItemRedo = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.REDO_ID));
-
-	private final JMenuItem menuItemAbout = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
 
 	private final JMenuItem menuItemRepeatCopy = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ARRAY_COPY_ID));
@@ -180,17 +192,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final JMenuItem menuItemDeleteSelectedLines = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.DELETE_SELECTED_ID));
 
-	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
+	// help menu items
 
-	private RepeatCopyDialog arrayCopyDialog;
-	private CircleCopyDialog circleCopyDialog;
-	private final JLabel hintLabel = new JLabel();
+	private final JMenuItem menuItemAbout = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
 
-	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
-
-	private final DocFilterSelector filterSelector = new DocFilterSelector();
-
-	private final Doc document = new Doc();
+	// -----------------------------------------------------------------------------------------------------------
+	// Create paint button
 
 	private final IniFileAccess iniFileAccess = new IniFileAccess(
 			new InitDataFileReader(), new InitDataFileWriter());
@@ -201,8 +209,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		logger.info("frame construction starts.");
 
 		document.setCreasePattern(paintContext.getCreasePattern());
-
-		addPropertyChangeListenersToSetting();
 
 		var mainScreen = new PainterScreen(actionHolder, paintContext, document);
 		screenUpdater = mainScreen.getScreenUpdater();
@@ -224,6 +230,14 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 		logger.info("end constructing UI panel.");
 
+		JScrollPane uiScroll = new JScrollPane(uiPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		uiScroll.setPreferredSize(new Dimension(255, 800));// setPreferredSize(new
+															// Dimension(uiPanel.getPreferredSize().width
+															// + 25,
+		// uiPanel.getPreferredSize().height));
+		uiScroll.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+
 		var stateFactory = new PaintBoundStateFactory(
 				stateManager, setting,
 				uiPanel.getUIPanelSetting(),
@@ -231,12 +245,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		buttonFactory = new PaintActionButtonFactory(
 				stateFactory, paintContext, actionHolder, screenUpdater);
 
-		createPaintMenuItems();
-
-		addWindowListener(this);
+		// Setup Dialog Windows
+		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
+		circleCopyDialog = new CircleCopyDialog(this, paintContext);
 
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(uiPanel, BorderLayout.WEST);
+		getContentPane().add(uiScroll, BorderLayout.WEST);
 		getContentPane().add(mainScreen, BorderLayout.CENTER);
 		getContentPane().add(hintLabel, BorderLayout.SOUTH);
 
@@ -244,12 +258,15 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		this.setIconImage(imgLoader.loadAsIcon("icon/oripa.gif", getClass())
 				.getImage());
 
-		IntStream.range(0, Config.MRUFILE_NUM)
-				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
-
-		addActionListenersToComponents();
+		addWindowListener(this);
+		addHintPropertyChangeListenersToSetting();
 
 		loadIniFile();
+
+		createPaintMenuItems();
+		IntStream.range(0, Config.MRUFILE_NUM)
+				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
+		addActionListenersToComponents();
 
 		// Building the menu bar
 		JMenuBar menuBar = new JMenuBar();
@@ -325,10 +342,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		menuItemSave.addActionListener(e -> {
 			var filePath = document.getDataFilePath();
-			if (FileTypeKey.OPX.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, FileTypeKey.OPX);
-			} else if (FileTypeKey.FOLD.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, FileTypeKey.FOLD);
+			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
+				saveProjectFile(document, filePath, CreasePatternFileTypeKey.OPX);
+			} else if (CreasePatternFileTypeKey.FOLD.extensionsMatch(filePath)) {
+				saveProjectFile(document, filePath, CreasePatternFileTypeKey.FOLD);
 			} else {
 				saveAnyTypeUsingGUI();
 			}
@@ -341,13 +358,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuItemExportFOLD.addActionListener(e -> {
 			String lastDirectory = fileHistory.getLastDirectory();
 			saveFile(lastDirectory, document.getDataFileName(),
-					filterSelector.getFilter(FileTypeKey.FOLD));
+					filterSelector.getFilter(CreasePatternFileTypeKey.FOLD));
 		});
 
 		menuItemSaveAsImage.addActionListener(e -> {
 			String lastDirectory = fileHistory.getLastDirectory();
 			saveFile(lastDirectory, document.getDataFileName(),
-					filterSelector.getFilter(FileTypeKey.PICT));
+					filterSelector.getFilter(CreasePatternFileTypeKey.PICT));
 		});
 
 		menuItemExit.addActionListener(e -> exit());
@@ -391,10 +408,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
 				JOptionPane.INFORMATION_MESSAGE));
 
-		menuItemExportDXF.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.DXF));
+		menuItemExportDXF
+				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
 //		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
-		menuItemExportCP.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.CP));
-		menuItemExportSVG.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.SVG));
+		menuItemExportCP
+				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
+		menuItemExportSVG
+				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.SVG));
 
 		menuItemProperty.addActionListener(e -> showPropertyDialog());
 		menuItemRepeatCopy.addActionListener(e -> showArrayCopyDialog());
@@ -406,7 +426,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				InputEvent.CTRL_DOWN_MASK));
 
 		menuItemUnSelectAll.addActionListener(
-				new UnselectAllLinesActionListener(paintContext, screenUpdater));
+				new UnselectAllItemsActionListener(actionHolder, paintContext, screenUpdater));
 		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_ESCAPE, 0));
 
@@ -429,11 +449,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private void modifySavingActions() {
 		// overwrite the action to update GUI after saving.
-		setProjectSavingAction(FileTypeKey.OPX);
-		setProjectSavingAction(FileTypeKey.FOLD);
+		setProjectSavingAction(CreasePatternFileTypeKey.OPX);
+		setProjectSavingAction(CreasePatternFileTypeKey.FOLD);
 	}
 
-	private void setProjectSavingAction(final FileTypeKey fileType) {
+	private void setProjectSavingAction(final CreasePatternFileTypeKey fileType) {
 		filterSelector.getFilter(fileType).setSavingAction(
 				new AbstractSavingAction<Doc>() {
 
@@ -459,6 +479,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			loadFile(filePath);
 			updateTitleText();
 		} catch (Exception ex) {
+			logger.error("error when loading: ", ex);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), ex);
 		}
@@ -546,7 +567,15 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				+ resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID));
 	}
 
-	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeKey fileType) {
+	/**
+	 * saves project without opening a dialog
+	 *
+	 * @param doc
+	 * @param filePath
+	 * @param fileType
+	 */
+	private void saveProjectFile(final Doc doc, final String filePath,
+			final CreasePatternFileTypeKey fileType) {
 		try {
 			dataFileAccess.saveProjectFile(doc, filePath, fileType);
 		} catch (IOException | IllegalArgumentException e) {
@@ -561,20 +590,26 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		updateTitleText();
 	}
 
+	/**
+	 * save file without origami model check
+	 *
+	 * @param directory
+	 * @param fileName
+	 * @param filters
+	 * @return
+	 */
 	@SafeVarargs
 	private String saveFile(final String directory, final String fileName,
 			final FileAccessSupportFilter<Doc>... filters) {
 
 		try {
-			var savedPathOpt = dataFileAccess.saveFile(
-					document, directory, fileName, this, filters);
-
-			if (savedPathOpt.isEmpty()) {
-				return document.getDataFilePath();
-			}
-
-			paintContext.creasePatternUndo().clearChanged();
-			return savedPathOpt.get();
+			return dataFileAccess.saveFile(
+					document, directory, fileName, this, filters)
+					.map(path -> {
+						paintContext.creasePatternUndo().clearChanged();
+						return path;
+					})
+					.orElse(document.getDataFilePath());
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("failed to save", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
@@ -583,7 +618,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 	}
 
-	private void saveFileWithModelCheck(final FileTypeKey type) {
+	/**
+	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
+	 * model check before saving.
+	 *
+	 * @param type
+	 */
+	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 
 		try {
 			dataFileAccess.saveFileWithModelCheck(document, filterSelector.getFilter(type), this);
@@ -633,12 +674,22 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuFile.add(menuItemExit);
 	}
 
+	/**
+	 * Update file menu. Do nothing if the given {@code filePath} is null or
+	 * wrong.
+	 *
+	 * @param filePath
+	 */
 	private void updateMenu(final String filePath) {
-
-		if (filterSelector.getLoadableFilterOf(filePath) == null) {
+		if (filePath == null) {
 			return;
 		}
-
+		try {
+			filterSelector.getLoadableFilterOf(filePath);
+		} catch (IllegalArgumentException e) {
+			logger.debug("updating menu is canceled.", e);
+			return;
+		}
 		fileHistory.useFile(filePath);
 
 		buildFileMenu();
@@ -649,35 +700,35 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	 * otherwise, it tries to read data from the path.
 	 *
 	 * @param filePath
+	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
 	private String loadFile(final String filePath) {
 		childFrameManager.closeAllChildrenRecursively(this);
 
-		screenSetting.setGridVisible(false);
-
 		try {
-			var docOpt = dataFileAccess.loadFile(
-					filePath, filterSelector, fileHistory.getLastPath(), this);
-			if (docOpt.isEmpty()) {
-				return null;
-			}
-			// we can't substitute a loaded object because
-			// the document object is referred by screen and UI panel as a
-			// Holder.
-			document.set(docOpt.get());
-		} catch (FileVersionError | WrongDataFormatException | IOException e) {
+			return dataFileAccess.loadFile(
+					filePath, fileHistory.getLastPath(), this, filterSelector.getLoadables())
+					.map(doc -> {
+						// we can't substitute a loaded object because
+						// the document object is referred by screen and UI
+						// panel as a Holder.
+						document.set(doc);
+						screenSetting.setGridVisible(false);
+						paintContextModification
+								.setCreasePatternToPaintContext(
+										document.getCreasePattern(), paintContext);
+						return document.getDataFilePath();
+					}).orElse(null);
+		} catch (FileVersionError | IllegalArgumentException | WrongDataFormatException
+				| IOException e) {
 			logger.error("failed to load", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
+			return document.getDataFilePath();
 		}
-		paintContextModification
-				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext);
-
-		return document.getDataFilePath();
-
 	}
 
-	void saveIniFile() {
+	private void saveIniFile() {
 		try {
 			iniFileAccess.save(fileHistory, paintContext);
 		} catch (IllegalStateException e) {
@@ -687,7 +738,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 	}
 
-	void loadIniFile() {
+	private void loadIniFile() {
 		var ini = iniFileAccess.load();
 
 		fileHistory.loadFromInitData(ini);
@@ -768,7 +819,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void windowDeactivated(final WindowEvent arg0) {
 	}
 
-	private void addPropertyChangeListenersToSetting() {
+	private void addHintPropertyChangeListenersToSetting() {
 		setting.addPropertyChangeListener(MainFrameSetting.HINT, e -> {
 			hintLabel.setText("    " + (String) e.getNewValue());
 			hintLabel.repaint();

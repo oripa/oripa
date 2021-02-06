@@ -6,7 +6,7 @@ public class ChangeOnByValueButtonSelected implements ChangeViewSetting {
 	private final UIPanelSetting setting;
 
 	/**
-	 * Constructor
+	 * UIPanel view settings for draw line by value tool
 	 */
 	public ChangeOnByValueButtonSelected(final UIPanelSetting uiPanelSetting) {
 		setting = uiPanelSetting;
@@ -17,7 +17,8 @@ public class ChangeOnByValueButtonSelected implements ChangeViewSetting {
 		setting.selectInputMode();
 
 		setting.setByValuePanelVisible(true);
-		setting.setAngleStepVisible(false);
+		setting.setLineInputPanelVisible(true);
+		setting.setAngleStepPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(false);
 		setting.setMountainButtonEnabled(true);

@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,12 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.view.main;
+package oripa.util;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public class MainContents {
+public class StopWatch {
+	private long startTime = Long.MAX_VALUE;
 
+	public StopWatch(final boolean startImmediately) {
+		if (startImmediately) {
+			start();
+		}
+	}
+
+	public void start() {
+		startTime = System.currentTimeMillis();
+	}
+
+	public long getMilliSec() {
+		if (startTime == Long.MAX_VALUE) {
+			throw new IllegalStateException("do start()!");
+		}
+		return System.currentTimeMillis() - startTime;
+	}
 }

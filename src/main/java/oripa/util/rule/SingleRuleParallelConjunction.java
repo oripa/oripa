@@ -16,26 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.filetool;
+package oripa.util.rule;
 
-import java.io.IOException;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Koji
  *
  */
-public interface Exporter<Data> {
+public class SingleRuleParallelConjunction<Variable> extends AbstractRule<Collection<Variable>> {
+
+	private final Rule<Variable> rule;
+
 	/**
 	 *
-	 * @param data
-	 * @param filePath
-	 * @return true if the action succeeds, otherwise false.
-	 * @throws IOException
-	 *             Error on file access.
-	 * @throws IllegalArgumentException
-	 *             thrown if the {@code data} cannot be converted to the aimed
-	 *             data format.
+	 * @param rule
 	 */
-	public abstract boolean export(Data data, String filePath)
-			throws IOException, IllegalArgumentException;
+	public SingleRuleParallelConjunction(final Rule<Variable> rule) {
+		this.rule = rule;
+	}
+
+	@Override
+	public boolean holds(final Collection<Variable> inputs) {
+		return inputs.parallelStream().allMatch(input -> rule.holds(input));
+	}
+
+	public Set<Variable> findViolations(final Collection<Variable> inputs) {
+		return inputs.parallelStream()
+				.filter(input -> rule.violates(input))
+				.collect(Collectors.toSet());
+	}
 }
