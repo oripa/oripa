@@ -22,7 +22,7 @@ To find out more about using the software, visit the [ORIPA project's website](h
 
 ### Download
 ------------
-The latest version is 1.35: See https://github.com/oripa/oripa/releases
+You can download the executable jar file at the [release page](https://github.com/oripa/oripa/releases)
 
 To run ORIPA, **you need install JDK 11 or above.**
 
