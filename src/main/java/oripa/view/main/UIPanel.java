@@ -160,8 +160,8 @@ public class UIPanel extends JPanel {
 			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
 			TypeForChange.CUT };
 	private final TypeForChange[] alterLine_comboData_to = {
-			TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
-			TypeForChange.CUT, TypeForChange.DELETE, TypeForChange.FLIP };
+			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
+			TypeForChange.CUT, TypeForChange.DELETE, };
 
 	private final JComboBox<TypeForChange> alterLine_combo_from = new JComboBox<>(
 			alterLine_comboData_from);
