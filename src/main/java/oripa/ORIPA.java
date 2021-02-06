@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import oripa.resource.Constants;
 import oripa.view.main.MainFrame;
 
 public class ORIPA {
@@ -41,7 +42,7 @@ public class ORIPA {
 	// TODO: Change to use ResourceHolder.
 	public static ResourceBundle res;
 
-	public static String iniFilePath = System.getProperty("user.home") + File.separator
+	public static String iniFilePath = Constants.UER_HOME_DIR_PATH + File.separator
 			+ "oripa.ini";
 
 	private static final String resourcePackage = "oripa.resource";

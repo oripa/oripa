@@ -89,7 +89,7 @@ public class DataFileAccess {
 		File givenFile = new File(directory,
 				(fileName.isEmpty()) ? "newFile.opx" : fileName);
 
-		var filePath = givenFile.getPath();
+		var filePath = givenFile.getCanonicalPath();
 
 		try {
 			String savedPath = dao.saveUsingGUI(document, filePath, owner, filters);
