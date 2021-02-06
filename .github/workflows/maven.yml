@@ -16,13 +16,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: ORIPA
-        path: target/*.jar
     - name: Cache local Maven repository
       uses: actions/cache@v2
       with:
@@ -30,3 +23,10 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ORIPA
+        path: target/*.jar
