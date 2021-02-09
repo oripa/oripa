@@ -84,6 +84,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.UI.GRID_SETTINGS_PANEL_ID, "Grid" },
 			{ StringID.UI.VIEW_SETTINGS_PANEL_ID, "View" },
 
+			{ StringID.UI.SHORTCUT_ID, "Shortcut:" },
 	};
 
 	@Override
