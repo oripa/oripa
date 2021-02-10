@@ -115,7 +115,8 @@ public class FoldabilityScreen extends JPanel
 			final Collection<OriLine> creasePattern,
 			final boolean zeroLineWidth) {
 		this.origamiModel = origamiModel;
-		this.creasePattern = creasePattern;
+		this.creasePattern = creasePattern.stream()
+				.map(line -> new OriLine(line)).collect(Collectors.toList());
 		this.zeroLineWidth = zeroLineWidth;
 
 		violatingVertices = foldabilityChecker.findViolatingVertices(
