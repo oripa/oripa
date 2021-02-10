@@ -146,7 +146,6 @@ public class CreasePatternGraphicDrawer {
 
 		g2d.setColor(selector.getNormalVertexColor());
 		final double vertexSize = selector.createNormalVertexSize(scale);
-		final double vertexHalfSize = vertexSize / 2;
 		for (OriLine line : creasePattern) {
 			if (!auxVisible && line.isAux()) {
 				continue;
@@ -154,17 +153,17 @@ public class CreasePatternGraphicDrawer {
 			if (!creaseVisible && line.isMV()) {
 				continue;
 			}
-			Vector2d v0 = line.p0;
-			Vector2d v1 = line.p1;
 
-			g2d.fill(new Rectangle2D.Double(
-					v0.x - vertexHalfSize, v0.y - vertexHalfSize,
-					vertexSize, vertexSize));
-			g2d.fill(new Rectangle2D.Double(
-					v1.x - vertexHalfSize, v1.y - vertexHalfSize,
-					vertexSize, vertexSize));
+			drawVertex(g2d, line.p0, vertexSize);
+			drawVertex(g2d, line.p1, vertexSize);
 		}
+	}
 
+	private void drawVertex(final Graphics2D g2d, final Vector2d vertex, final double vertexSize) {
+		final double vertexHalfSize = vertexSize / 2;
+		g2d.fill(new Rectangle2D.Double(
+				vertex.x - vertexHalfSize, vertex.y - vertexHalfSize,
+				vertexSize, vertexSize));
 	}
 
 	public void drawCandidatePositionString(final Graphics2D g, final Vector2d candidate) {
