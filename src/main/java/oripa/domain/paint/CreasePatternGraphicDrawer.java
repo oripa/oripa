@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
+import java.util.Comparator;
 
 import javax.vecmath.Vector2d;
 
@@ -60,7 +61,7 @@ public class CreasePatternGraphicDrawer {
 					context.getScale(), context.isZeroLineWidth());
 		}
 
-		drawLines(g2d, creasePattern, null, context.getScale(), context.isZeroLineWidth(),
+		drawLines(g2d, creasePattern, context.getScale(), context.isZeroLineWidth(),
 				context.isMVLineVisible(),
 				context.isAuxLineVisible());
 
@@ -75,7 +76,7 @@ public class CreasePatternGraphicDrawer {
 			final Graphics2D g2d, final Collection<OriLine> lines,
 			final double scale, final boolean zeroLineWidth) {
 
-		drawLines(g2d, lines, null, scale, zeroLineWidth, true, true);
+		drawLines(g2d, lines, scale, zeroLineWidth, true, true);
 	}
 
 	/**
@@ -94,30 +95,37 @@ public class CreasePatternGraphicDrawer {
 	 */
 	private void drawLines(
 			final Graphics2D g2d,
-			final Collection<OriLine> lines, final Collection<OriLine> pickedLines,
+			final Collection<OriLine> lines,
+			// final Collection<OriLine> pickedLines,
 			final double scale, final boolean zeroLineWidth,
 			final boolean creaseVisible, final boolean auxVisible) {
+		// draw lines ordered by line type.
+		// this is aimed to make aux lines lower.
+		lines.stream()
+				.sorted(Comparator.comparing(line -> line.getType().toInt()))
+				.forEach(line -> {
+					if (line.isAux() && !auxVisible) {
+						return;
+					}
+					if (line.isMV() && !creaseVisible) {
+						return;
+					}
+//					if (pickedLines != null && pickedLines.contains(line)) {
+//						return;
+//					}
+					drawLine(g2d, line, scale, zeroLineWidth);
+				});
+	}
 
-		for (OriLine line : lines) {
-			if (line.isAux() && !auxVisible) {
-				continue;
-			}
+	private void drawLine(final Graphics2D g2d, final OriLine line,
+			final double scale, final boolean zeroLineWidth) {
 
-			if ((line.isMV()) && !creaseVisible) {
-				continue;
-			}
+		g2d.setColor(selector.getColor(line.getType()));
+		g2d.setStroke(selector.createStroke(
+				line.getType(), scale, zeroLineWidth));
 
-			if (pickedLines == null || !pickedLines.contains(line)) {
-				g2d.setColor(selector.getColor(line.getType()));
-				g2d.setStroke(selector.createStroke(
-						line.getType(), scale, zeroLineWidth));
-
-				g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
-						line.p1.y));
-			}
-
-		}
-
+		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
+				line.p1.y));
 	}
 
 	/**
