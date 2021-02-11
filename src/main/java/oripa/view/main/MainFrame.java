@@ -24,7 +24,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -39,7 +38,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +77,7 @@ import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
 import oripa.util.gui.Dialogs;
+import oripa.util.gui.KeyStrokes;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.MainScreenSetting;
@@ -338,8 +337,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			updateTitleText();
 		});
 
-		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemOpen.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_O));
 
 		menuItemSave.addActionListener(e -> {
 			var filePath = document.getDataFilePath();
@@ -351,8 +349,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				saveAnyTypeUsingGUI();
 			}
 		});
-		menuItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemSave.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_S));
 
 		menuItemSaveAs.addActionListener(e -> saveAnyTypeUsingGUI());
 
@@ -382,8 +379,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			}
 			screenUpdater.updateScreen();
 		});
-		menuItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemUndo.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_Z));
 
 		menuItemRedo.addActionListener(e -> {
 			try {
@@ -397,12 +393,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			}
 			screenUpdater.updateScreen();
 		});
-		menuItemRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemRedo.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_Y));
 
 		menuItemClear.addActionListener(e -> clear());
-		menuItemClear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemClear.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_N));
 
 		menuItemAbout.addActionListener(e -> JOptionPane.showMessageDialog(this,
 				resourceHolder.getString(ResourceKey.APP_INFO, StringID.AppInfo.ABOUT_THIS_ID),
@@ -423,26 +417,21 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		menuItemSelectAll.addActionListener(
 				new SelectAllLineActionListener(paintContext));
-		menuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemSelectAll.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_A));
 
 		var statePopper = new StatePopper(stateManager);
 		menuItemUnSelectAll.addActionListener(
 				new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
 						screenUpdater));
-		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_ESCAPE, 0));
+		menuItemUnSelectAll.setAccelerator(KeyStrokes.get(KeyEvent.VK_ESCAPE));
 
 		menuItemDeleteSelectedLines
 				.addActionListener(
 						new DeleteSelectedLinesActionListener(paintContext, screenUpdater));
-		menuItemDeleteSelectedLines.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_DELETE, 0));
+		menuItemDeleteSelectedLines.setAccelerator(KeyStrokes.get(KeyEvent.VK_DELETE));
 
-		menuItemCopyAndPaste.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
-		menuItemCutAndPaste.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
+		menuItemCopyAndPaste.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_C));
+		menuItemCutAndPaste.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_X));
 
 		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
 			MRUFilesMenuItem[i].addActionListener(this::loadFileFromMRUFileMenuItem);

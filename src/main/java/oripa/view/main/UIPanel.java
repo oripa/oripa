@@ -80,6 +80,7 @@ import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
 import oripa.util.gui.GridBagConstraintsBuilder;
+import oripa.util.gui.KeyStrokes;
 import oripa.value.OriLine;
 import oripa.view.estimation.EstimationResultFrameFactory;
 import oripa.view.foldability.FoldabilityCheckFrameFactory;
@@ -586,37 +587,37 @@ public class UIPanel extends JPanel {
 						JRadioButton.class, null,
 						StringID.UI.INPUT_LINE_ID,
 						screenUpdater.getKeyListener());
-		setShortcut(editModeInputLineButton, getSingleKeyStroke(KeyEvent.VK_I),
+		setShortcut(editModeInputLineButton, KeyStrokes.get(KeyEvent.VK_I),
 				StringID.UI.INPUT_LINE_ID);
 
 		editModePickLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.SELECT_ID,
 				screenUpdater.getKeyListener());
-		setShortcut(editModePickLineButton, getSingleKeyStroke(KeyEvent.VK_S),
+		setShortcut(editModePickLineButton, KeyStrokes.get(KeyEvent.VK_S),
 				StringID.SELECT_ID);
 
 		editModeDeleteLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DELETE_LINE_ID,
 				screenUpdater.getKeyListener());
-		setShortcut(editModeDeleteLineButton, getSingleKeyStroke(KeyEvent.VK_D),
+		setShortcut(editModeDeleteLineButton, KeyStrokes.get(KeyEvent.VK_D),
 				StringID.DELETE_LINE_ID);
 
 		editModeLineTypeButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID,
 				screenUpdater.getKeyListener());
-		setShortcut(editModeLineTypeButton, getSingleKeyStroke(KeyEvent.VK_T),
+		setShortcut(editModeLineTypeButton, KeyStrokes.get(KeyEvent.VK_T),
 				StringID.CHANGE_LINE_TYPE_ID);
 
 		editModeAddVertex = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ADD_VERTEX_ID,
 				screenUpdater.getKeyListener());
-		setShortcut(editModeAddVertex, getSingleKeyStroke(KeyEvent.VK_X),
+		setShortcut(editModeAddVertex, KeyStrokes.get(KeyEvent.VK_X),
 				StringID.ADD_VERTEX_ID);
 
 		editModeDeleteVertex = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DELETE_VERTEX_ID,
 				screenUpdater.getKeyListener());
-		setShortcut(editModeDeleteVertex, getSingleKeyStroke(KeyEvent.VK_Y),
+		setShortcut(editModeDeleteVertex, KeyStrokes.get(KeyEvent.VK_Y),
 				StringID.DELETE_VERTEX_ID);
 
 		// ---------------------------------------------------------------------------------------------------------------------------
@@ -624,61 +625,61 @@ public class UIPanel extends JPanel {
 		lineInputDirectVButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DIRECT_V_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputDirectVButton, getSingleKeyStroke(KeyEvent.VK_E),
+		setLineInputGlobalShortcut(lineInputDirectVButton, KeyStrokes.get(KeyEvent.VK_E),
 				StringID.DIRECT_V_ID);
 
 		lineInputOnVButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ON_V_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputOnVButton, getSingleKeyStroke(KeyEvent.VK_O),
+		setLineInputGlobalShortcut(lineInputOnVButton, KeyStrokes.get(KeyEvent.VK_O),
 				StringID.ON_V_ID);
 
 		lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.VERTICAL_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputVerticalLineButton, getSingleKeyStroke(KeyEvent.VK_V),
+		setLineInputGlobalShortcut(lineInputVerticalLineButton, KeyStrokes.get(KeyEvent.VK_V),
 				StringID.VERTICAL_ID);
 
 		lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BISECTOR_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputAngleBisectorButton, getSingleKeyStroke(KeyEvent.VK_B),
+		setLineInputGlobalShortcut(lineInputAngleBisectorButton, KeyStrokes.get(KeyEvent.VK_B),
 				StringID.BISECTOR_ID);
 
 		lineInputTriangleSplitButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.TRIANGLE_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputTriangleSplitButton, getSingleKeyStroke(KeyEvent.VK_R),
+		setLineInputGlobalShortcut(lineInputTriangleSplitButton, KeyStrokes.get(KeyEvent.VK_R),
 				StringID.TRIANGLE_ID);
 
 		lineInputSymmetricButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.SYMMETRIC_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputSymmetricButton, getSingleKeyStroke(KeyEvent.VK_W),
+		setLineInputGlobalShortcut(lineInputSymmetricButton, KeyStrokes.get(KeyEvent.VK_W),
 				StringID.SYMMETRIC_ID);
 
 		lineInputMirrorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.MIRROR_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputMirrorButton, getSingleKeyStroke(KeyEvent.VK_M),
+		setLineInputGlobalShortcut(lineInputMirrorButton, KeyStrokes.get(KeyEvent.VK_M),
 				StringID.MIRROR_ID);
 
 		lineInputByValueButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BY_VALUE_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputByValueButton, getSingleKeyStroke(KeyEvent.VK_L),
+		setLineInputGlobalShortcut(lineInputByValueButton, KeyStrokes.get(KeyEvent.VK_L),
 				StringID.BY_VALUE_ID);
 
 		lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputPBisectorButton, getSingleKeyStroke(KeyEvent.VK_P),
+		setLineInputGlobalShortcut(lineInputPBisectorButton, KeyStrokes.get(KeyEvent.VK_P),
 				StringID.PERPENDICULAR_BISECTOR_ID);
 
 		lineInputAngleSnapButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ANGLE_SNAP_ID,
 				screenUpdater.getKeyListener());
-		setLineInputGlobalShortcut(lineInputAngleSnapButton, getSingleKeyStroke(KeyEvent.VK_A),
+		setLineInputGlobalShortcut(lineInputAngleSnapButton, KeyStrokes.get(KeyEvent.VK_A),
 				StringID.ANGLE_SNAP_ID);
 	}
 
@@ -755,14 +756,6 @@ public class UIPanel extends JPanel {
 				+ keyStroke.toString().split(" ")[1]);
 	}
 
-	private KeyStroke getSingleKeyStroke(final int keyEventVk) {
-		return KeyStroke.getKeyStroke(keyEventVk, 0);
-	}
-
-	private KeyStroke getShiftedKeyStroke(final int keyEventVk) {
-		return KeyStroke.getKeyStroke(keyEventVk, KeyEvent.SHIFT_DOWN_MASK);
-	}
-
 	private void setButtonIcons() {
 		setButtonIcon(lineInputDirectVButton, "icon/segment.gif", "icon/segment_p.gif");
 		setButtonIcon(lineInputOnVButton, "icon/line.gif", "icon/line_p.gif");
@@ -815,17 +808,17 @@ public class UIPanel extends JPanel {
 		// line type radio buttons
 		lineTypeMountainButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
-		setShortcut(lineTypeMountainButton, getShiftedKeyStroke(KeyEvent.VK_M),
+		setShortcut(lineTypeMountainButton, KeyStrokes.get(KeyEvent.VK_M),
 				StringID.UI.MOUNTAIN_ID);
 
 		lineTypeValleyButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
-		setShortcut(lineTypeValleyButton, getShiftedKeyStroke(KeyEvent.VK_V),
+		setShortcut(lineTypeValleyButton, KeyStrokes.get(KeyEvent.VK_V),
 				StringID.UI.VALLEY_ID);
 
 		lineTypeAuxButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
-		setShortcut(lineTypeAuxButton, getShiftedKeyStroke(KeyEvent.VK_A),
+		setShortcut(lineTypeAuxButton, KeyStrokes.get(KeyEvent.VK_A),
 				StringID.UI.AUX_ID);
 
 		// grid settings
