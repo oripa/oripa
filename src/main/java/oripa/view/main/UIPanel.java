@@ -624,71 +624,74 @@ public class UIPanel extends JPanel {
 		lineInputDirectVButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DIRECT_V_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputDirectVButton, getSingleKeyStroke(KeyEvent.VK_E),
+		setLineInputGlobalShortcut(lineInputDirectVButton, getSingleKeyStroke(KeyEvent.VK_E),
 				StringID.DIRECT_V_ID);
 
 		lineInputOnVButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ON_V_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputOnVButton, getSingleKeyStroke(KeyEvent.VK_O),
+		setLineInputGlobalShortcut(lineInputOnVButton, getSingleKeyStroke(KeyEvent.VK_O),
 				StringID.ON_V_ID);
 
 		lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.VERTICAL_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputVerticalLineButton, getSingleKeyStroke(KeyEvent.VK_V),
+		setLineInputGlobalShortcut(lineInputVerticalLineButton, getSingleKeyStroke(KeyEvent.VK_V),
 				StringID.VERTICAL_ID);
 
 		lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BISECTOR_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputAngleBisectorButton, getSingleKeyStroke(KeyEvent.VK_B),
+		setLineInputGlobalShortcut(lineInputAngleBisectorButton, getSingleKeyStroke(KeyEvent.VK_B),
 				StringID.BISECTOR_ID);
 
 		lineInputTriangleSplitButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.TRIANGLE_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputTriangleSplitButton, getSingleKeyStroke(KeyEvent.VK_R),
+		setLineInputGlobalShortcut(lineInputTriangleSplitButton, getSingleKeyStroke(KeyEvent.VK_R),
 				StringID.TRIANGLE_ID);
 
 		lineInputSymmetricButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.SYMMETRIC_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputSymmetricButton, getSingleKeyStroke(KeyEvent.VK_W),
+		setLineInputGlobalShortcut(lineInputSymmetricButton, getSingleKeyStroke(KeyEvent.VK_W),
 				StringID.SYMMETRIC_ID);
 
 		lineInputMirrorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.MIRROR_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputMirrorButton, getSingleKeyStroke(KeyEvent.VK_M),
+		setLineInputGlobalShortcut(lineInputMirrorButton, getSingleKeyStroke(KeyEvent.VK_M),
 				StringID.MIRROR_ID);
 
 		lineInputByValueButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BY_VALUE_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputByValueButton, getSingleKeyStroke(KeyEvent.VK_L),
+		setLineInputGlobalShortcut(lineInputByValueButton, getSingleKeyStroke(KeyEvent.VK_L),
 				StringID.BY_VALUE_ID);
 
 		lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputPBisectorButton, getSingleKeyStroke(KeyEvent.VK_P),
+		setLineInputGlobalShortcut(lineInputPBisectorButton, getSingleKeyStroke(KeyEvent.VK_P),
 				StringID.PERPENDICULAR_BISECTOR_ID);
 
 		lineInputAngleSnapButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ANGLE_SNAP_ID,
 				screenUpdater.getKeyListener());
-		setLineInputShortcut(lineInputAngleSnapButton, getSingleKeyStroke(KeyEvent.VK_A),
+		setLineInputGlobalShortcut(lineInputAngleSnapButton, getSingleKeyStroke(KeyEvent.VK_A),
 				StringID.ANGLE_SNAP_ID);
 	}
 
 	/**
 	 * Assigns given key stroke to the button as the stroke invokes the click
-	 * event of the button.
+	 * event of the button. The shortcut works only if the button is visible.
 	 *
 	 * @param button
+	 *            is to be assigned a shortcut.
 	 * @param keyStroke
+	 *            a {@code KeyStroke} instance.
 	 * @param id
+	 *            is an ID string to distinguish shortcut action.
 	 */
 	@SuppressWarnings("serial")
 	private void setShortcut(final AbstractButton button, final KeyStroke keyStroke,
@@ -710,22 +713,45 @@ public class UIPanel extends JPanel {
 	 * @param button
 	 *            is assumed to be a line input button.
 	 * @param keyStroke
+	 *            a {@code KeyStroke} instance.
 	 * @param id
+	 *            is an ID string to distinguish shortcut action.
 	 */
 	@SuppressWarnings("serial")
-	private void setLineInputShortcut(final AbstractButton button, final KeyStroke keyStroke,
+	private void setLineInputGlobalShortcut(final AbstractButton button, final KeyStroke keyStroke,
+			final String id) {
+		setToolSettingGlobalShortcut(editModeInputLineButton, button, keyStroke, id);
+	}
+
+	/**
+	 * Assigns given key stroke to this panel as the stroke invokes the click
+	 * event of given tool-setting button even if the button is hidden.
+	 *
+	 * @param toolButton
+	 *            is a radio button controlling visibility of the tool-setting
+	 *            panel.
+	 * @param settingButton
+	 *            is assumed to be a tool-setting button.
+	 * @param keyStroke
+	 *            a {@code KeyStroke} instance.
+	 * @param id
+	 *            is an ID string to distinguish shortcut action.
+	 */
+	@SuppressWarnings("serial")
+	private void setToolSettingGlobalShortcut(final JRadioButton toolButton,
+			final AbstractButton settingButton, final KeyStroke keyStroke,
 			final String id) {
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
 		this.getActionMap().put(id, new AbstractAction() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				if (!editModeInputLineButton.isSelected()) {
-					editModeInputLineButton.doClick();
+				if (!toolButton.isSelected()) {
+					toolButton.doClick();
 				}
-				button.doClick();
+				settingButton.doClick();
 			}
 		});
-		button.setToolTipText(resources.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID)
+		settingButton.setToolTipText(resources.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID)
 				+ keyStroke.toString().split(" ")[1]);
 	}
 
