@@ -52,6 +52,7 @@ import oripa.application.main.PaintContextModification;
 import oripa.application.main.SelectAllLineActionListener;
 import oripa.application.main.UnselectAllItemsActionListener;
 import oripa.appstate.StateManager;
+import oripa.appstate.StatePopper;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.state.PaintBoundStateFactory;
@@ -90,6 +91,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
+
+	private final StateManager stateManager = new StateManager();
 
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
@@ -215,8 +218,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		screenSetting = mainScreen.getMainScreenSetting();
 
 		var originHolder = screenSetting.getSelectionOriginHolder();
-
-		var stateManager = new StateManager();
 
 		UIPanel uiPanel = null;
 		logger.info("start constructing UI panel.");
@@ -425,8 +426,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
 				InputEvent.CTRL_DOWN_MASK));
 
+		var statePopper = new StatePopper(stateManager);
 		menuItemUnSelectAll.addActionListener(
-				new UnselectAllItemsActionListener(actionHolder, paintContext, screenUpdater));
+				new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
+						screenUpdater));
 		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_ESCAPE, 0));
 
