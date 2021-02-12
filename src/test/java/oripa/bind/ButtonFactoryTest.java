@@ -44,6 +44,8 @@ public class ButtonFactoryTest {
 //		assertButtonCreated(parent, StringID.PICK_ANGLE_ID, false);
 		assertButtonCreated(parent, StringID.PERPENDICULAR_BISECTOR_ID, actionHolder, screenUpdater,
 				false);
+		assertButtonCreated(parent, StringID.ANGLE_SNAP_ID, actionHolder, screenUpdater,
+				false);
 
 		// edit buttons
 		assertButtonCreated(parent, StringID.SELECT_ID, actionHolder, screenUpdater, true);
