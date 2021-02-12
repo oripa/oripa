@@ -80,10 +80,15 @@ class GeneralizedBLBLemmaTest {
 
 	@Test
 	void testHolds_twoSequences() {
-		var oriVertex = createEqualAngles();
+		var oriVertex = createTwoSequences();
 		var blb = new GeneralizedBigLittleBigLemma();
 
 		assertTrue(blb.holds(oriVertex));
+
+		oriVertex.getEdge(0).type = OriLine.Type.VALLEY.toInt();
+		oriVertex.getEdge(3).type = OriLine.Type.MOUNTAIN.toInt();
+
+		assertFalse(blb.holds(oriVertex));
 	}
 
 	private OriVertex createTwoSequences() {
