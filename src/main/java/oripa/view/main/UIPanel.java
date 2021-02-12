@@ -808,17 +808,17 @@ public class UIPanel extends JPanel {
 		// line type radio buttons
 		lineTypeMountainButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
-		setShortcut(lineTypeMountainButton, KeyStrokes.get(KeyEvent.VK_M),
+		setShortcut(lineTypeMountainButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_M),
 				StringID.UI.MOUNTAIN_ID);
 
 		lineTypeValleyButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
-		setShortcut(lineTypeValleyButton, KeyStrokes.get(KeyEvent.VK_V),
+		setShortcut(lineTypeValleyButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_V),
 				StringID.UI.VALLEY_ID);
 
 		lineTypeAuxButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
-		setShortcut(lineTypeAuxButton, KeyStrokes.get(KeyEvent.VK_A),
+		setShortcut(lineTypeAuxButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_A),
 				StringID.UI.AUX_ID);
 
 		// grid settings
