@@ -34,13 +34,13 @@ public class MaekawaTheorem extends AbstractRule<OriVertex> {
 	@Override
 	public boolean holds(final OriVertex vertex) {
 
-		int ridgeCount = 0;
+		int mountainCount = 0;
 		int valleyCount = 0;
 
 		// counts lines which ends on given vertex
 		for (OriEdge e : vertex.edges) {
 			if (e.type == OriLine.Type.MOUNTAIN.toInt()) {
-				ridgeCount++;
+				mountainCount++;
 			} else if (e.type == OriLine.Type.VALLEY.toInt()) {
 				valleyCount++;
 			} else if (e.type == OriLine.Type.CUT.toInt()) {
@@ -49,9 +49,9 @@ public class MaekawaTheorem extends AbstractRule<OriVertex> {
 		}
 
 		// maekawa's claim
-		if (Math.abs(ridgeCount - valleyCount) != 2) {
+		if (Math.abs(mountainCount - valleyCount) != 2) {
 			logger.trace("edge type count invalid: " + vertex + " "
-					+ Math.abs(ridgeCount - valleyCount));
+					+ Math.abs(mountainCount - valleyCount));
 			return false;
 		}
 
