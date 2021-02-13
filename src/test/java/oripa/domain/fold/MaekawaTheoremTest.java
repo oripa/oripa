@@ -18,7 +18,7 @@
  */
 package oripa.domain.fold;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -29,18 +29,22 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-class KawasakiTheoremTest {
+class MaekawaTheoremTest {
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.fold.KawasakiTheorem#holds(oripa.domain.fold.OriVertex)}.
+	 * {@link oripa.domain.fold.MaekawaTheorem#holds(oripa.domain.fold.OriVertex)}.
 	 */
 	@Test
 	void testHolds_birdFoot() {
 		var vertex = createBirdFoot();
-		var kawasaki = new KawasakiTheorem();
+		var maekawa = new MaekawaTheorem();
 
-		assertTrue(kawasaki.holds(vertex));
+		assertTrue(maekawa.holds(vertex));
+
+		vertex.getEdge(0).type = OriLine.Type.VALLEY.toInt();
+
+		assertFalse(maekawa.holds(vertex));
 	}
 
 	private OriVertex createBirdFoot() {
@@ -54,22 +58,4 @@ class KawasakiTheoremTest {
 		return oriVertex;
 	}
 
-	@Test
-	void testHolds_wrongShape() {
-		var vertex = createWrongShape();
-		var kawasaki = new KawasakiTheorem();
-
-		assertFalse(kawasaki.holds(vertex));
-	}
-
-	private OriVertex createWrongShape() {
-		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(OriEdgeFactory.createEdge(0.5, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactory.createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
-
-		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
-
-		return oriVertex;
-	}
 }

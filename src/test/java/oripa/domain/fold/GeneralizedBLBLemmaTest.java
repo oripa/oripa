@@ -50,11 +50,11 @@ class GeneralizedBLBLemmaTest {
 
 	private OriVertex createBirdFoot() {
 		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(createEdge(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
 
-		oriVertex.addEdge(createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
 
 		return oriVertex;
 	}
@@ -70,10 +70,10 @@ class GeneralizedBLBLemmaTest {
 
 	private OriVertex createEqualAngles() {
 		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(createEdge(0, 1, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(createEdge(2, 1, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(0, 1, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(2, 1, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
 
 		return oriVertex;
 	}
@@ -93,13 +93,13 @@ class GeneralizedBLBLemmaTest {
 
 	private OriVertex createTwoSequences() {
 		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(createEdge(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
 
-		oriVertex.addEdge(createEdge(2, 2, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(createEdge(0, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(2, 2, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactory.createEdge(0, 2, 1, 1, OriLine.Type.MOUNTAIN));
 
 		return oriVertex;
 	}
@@ -116,25 +116,22 @@ class GeneralizedBLBLemmaTest {
 		var oriVertex = new OriVertex(0, 0);
 		var angle = Math.PI / 8 * 3;
 		oriVertex.addEdge(
-				createEdge(0, 0, Math.cos(angle), Math.signum(angle), OriLine.Type.MOUNTAIN));
+				OriEdgeFactory.createEdge(0, 0, Math.cos(angle), Math.signum(angle),
+						OriLine.Type.MOUNTAIN));
 		angle = Math.PI / 8 * 5;
 		oriVertex.addEdge(
-				createEdge(0, 0, Math.cos(angle), Math.signum(angle), OriLine.Type.VALLEY));
+				OriEdgeFactory.createEdge(0, 0, Math.cos(angle), Math.signum(angle),
+						OriLine.Type.VALLEY));
 
 		angle = Math.PI / 8 * 9;
 		oriVertex.addEdge(
-				createEdge(0, 0, Math.cos(angle), Math.signum(angle), OriLine.Type.MOUNTAIN));
+				OriEdgeFactory.createEdge(0, 0, Math.cos(angle), Math.signum(angle),
+						OriLine.Type.MOUNTAIN));
 		angle = Math.PI / 8 * (-1);
 		oriVertex.addEdge(
-				createEdge(0, 0, Math.cos(angle), Math.signum(angle), OriLine.Type.MOUNTAIN));
+				OriEdgeFactory.createEdge(0, 0, Math.cos(angle), Math.signum(angle),
+						OriLine.Type.MOUNTAIN));
 
 		return oriVertex;
-
 	}
-
-	private OriEdge createEdge(final double x0, final double y0, final double x1, final double y1,
-			final OriLine.Type type) {
-		return new OriEdge(new OriVertex(x0, y0), new OriVertex(x1, y1), type.toInt());
-	}
-
 }
