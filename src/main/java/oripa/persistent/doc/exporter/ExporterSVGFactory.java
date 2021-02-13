@@ -55,6 +55,9 @@ public class ExporterSVGFactory {
 			double scale = size / paperSize;
 			double center = size / 2;
 
+			double cpCenterX = creasePattern.getPaperDomain().getCenterX();
+			double cpCenterY = creasePattern.getPaperDomain().getCenterY();
+
 			try (var fw = new FileWriter(filepath);
 					var bw = new BufferedWriter(fw);) {
 				bw.write(head);
@@ -75,13 +78,13 @@ public class ExporterSVGFactory {
 					}
 					bw.write(style + "\" ");
 					bw.write("x1=\"");
-					bw.write("" + (line.p0.x * scale + center) + "\"");
+					bw.write("" + ((line.p0.x - cpCenterX) * scale + center) + "\"");
 					bw.write(" y1=\"");
-					bw.write("" + ((paperSize / 2 - line.p0.y) * scale) + "\"");
+					bw.write("" + ((paperSize / 2 - (line.p0.y - cpCenterY)) * scale) + "\"");
 					bw.write(" x2=\"");
-					bw.write("" + (line.p1.x * scale + center) + "\"");
+					bw.write("" + ((line.p1.x - cpCenterX) * scale + center) + "\"");
 					bw.write(" y2=\"");
-					bw.write("" + ((paperSize / 2 - line.p1.y) * scale)
+					bw.write("" + ((paperSize / 2 - (line.p1.y - cpCenterY)) * scale)
 							+ "\" />\n");
 				}
 				bw.write(end);
