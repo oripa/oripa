@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import oripa.value.OriLine;
 
 /**
- * @author origa
+ * @author OUCHI Koji
  *
  */
 class KawasakiTheoremTest {
