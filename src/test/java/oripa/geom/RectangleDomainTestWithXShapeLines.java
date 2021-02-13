@@ -1,12 +1,11 @@
-package oripa.paint.creasepattern.tool;
+package oripa.geom;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 

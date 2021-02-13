@@ -1,4 +1,4 @@
-package oripa.paint.creasepattern.tool;
+package oripa.geom;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -13,7 +13,7 @@ import oripa.value.OriPoint;
  * @author Koji
  *
  */
-public class TestCreasePatternFactory {
+class TestCreasePatternFactory {
 
 	/**
 	 * creates a X shape composed by four lines.
