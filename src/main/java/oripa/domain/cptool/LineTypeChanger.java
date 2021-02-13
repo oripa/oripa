@@ -6,22 +6,10 @@ import java.util.stream.Collectors;
 import oripa.value.OriLine;
 
 public class LineTypeChanger {
+	private final ElementRemover remover = new ElementRemover();
 
 	private boolean isTarget(final OriLine l, final TypeForChange from) {
-		if (from == TypeForChange.MOUNTAIN && l.getType() != OriLine.Type.MOUNTAIN) {
-			return false;
-		}
-		if (from == TypeForChange.VALLEY && l.getType() != OriLine.Type.VALLEY) {
-			return false;
-		}
-		if (from == TypeForChange.AUX && l.getType() != OriLine.Type.AUX) {
-			return false;
-		}
-		if (from == TypeForChange.CUT && l.getType() != OriLine.Type.CUT) {
-			return false;
-		}
-
-		return true;
+		return from == TypeForChange.EMPTY || from.getOriLineType() == l.getType();
 	}
 
 	/**
@@ -37,33 +25,25 @@ public class LineTypeChanger {
 			return;
 		}
 
-		switch (to) {
-		case MOUNTAIN:
-			l.setType(OriLine.Type.MOUNTAIN);
-			break;
-		case VALLEY:
-			l.setType(OriLine.Type.VALLEY);
-			break;
-		case AUX:
-			l.setType(OriLine.Type.AUX);
-			break;
-		case CUT:
-			l.setType(OriLine.Type.CUT);
-			break;
-		case DELETE:
-			ElementRemover remover = new ElementRemover();
-			remover.removeLine(l, lines);
-			break;
-		case FLIP:
-			if (l.getType() == OriLine.Type.MOUNTAIN) {
-				l.setType(OriLine.Type.VALLEY);
-			} else if (l.getType() == OriLine.Type.VALLEY) {
-				l.setType(OriLine.Type.MOUNTAIN);
+		if (to.getOriLineType() == null) {
+			switch (to) {
+			case DELETE:
+				remover.removeLine(l, lines);
+				break;
+			case FLIP:
+				if (l.getType() == OriLine.Type.MOUNTAIN) {
+					l.setType(OriLine.Type.VALLEY);
+				} else if (l.getType() == OriLine.Type.VALLEY) {
+					l.setType(OriLine.Type.MOUNTAIN);
+				}
+				break;
+			default:
+				break;
 			}
-			break;
-		default:
-			break;
+			return;
 		}
+
+		l.setType(to.getOriLineType());
 	}
 
 	public void alterLineTypes(final Collection<OriLine> toBeChanged,
@@ -74,7 +54,6 @@ public class LineTypeChanger {
 				.collect(Collectors.toList());
 
 		if (to == TypeForChange.DELETE) {
-			var remover = new ElementRemover();
 			remover.removeLines(filtered, lines);
 			return;
 		}
