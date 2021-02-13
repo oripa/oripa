@@ -1,14 +1,11 @@
-package oripa.bind.state;
+package oripa.bind.binder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import javax.swing.JRadioButton;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.bind.binder.BinderInterface;
-import oripa.bind.binder.ViewChangeBinder;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
