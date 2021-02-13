@@ -14,14 +14,13 @@ public class LineDivider {
 	 *
 	 * @param line
 	 * @param v
-	 * @param creasePattern
 	 * @param paperSize
 	 * @return collection containing 2 lines that are the result of division.
 	 *         null if not need to divides
 	 */
-	public Collection<OriLine> divideLineInCollection(
+	public Collection<OriLine> divideLine(
 			final OriLine line, final Vector2d v,
-			final Collection<OriLine> creasePattern, final double paperSize) {
+			final double paperSize) {
 		ArrayList<OriLine> divided = new ArrayList<>(2);
 
 		// Normally you don't want to add a vertex too close to the end of the
