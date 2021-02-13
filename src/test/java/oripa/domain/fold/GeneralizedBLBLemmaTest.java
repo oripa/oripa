@@ -60,7 +60,7 @@ class GeneralizedBLBLemmaTest {
 	}
 
 	@Test
-	void testHolds_equqlAngles() {
+	void testHolds_equalAngles() {
 		var oriVertex = createEqualAngles();
 		var blb = new GeneralizedBigLittleBigLemma();
 
