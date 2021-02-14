@@ -32,6 +32,7 @@ import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
+import oripa.util.Matrices;
 import oripa.value.OriLine;
 
 public class Folder {
@@ -115,7 +116,7 @@ public class Folder {
 		if (foldableOverlapRelations.isEmpty()) {
 			return 0;
 		} else {
-			matrixCopy(foldableOverlapRelations.get(0), overlapRelation);
+			Matrices.copy(foldableOverlapRelations.get(0), overlapRelation);
 		}
 
 		folderTool.setFacesOutline(vertices, faces, false);
@@ -130,18 +131,10 @@ public class Folder {
 		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 
 		if (sub.allFaceOrderDecided) {
-			int s = orMat.length;
-			int[][] passMat = new int[s][s];
-			for (int i = 0; i < s; i++) {
-				System.arraycopy(orMat[i], 0, passMat[i], 0, s);
-			}
+			var passMat = Matrices.clone(orMat);
 
 			if (subFaceIndex == subFaces.size() - 1) {
-				s = orMat.length;
-				int[][] ansMat = new int[s][s];
-				for (int i = 0; i < s; i++) {
-					System.arraycopy(passMat[i], 0, ansMat[i], 0, s);
-				}
+				var ansMat = Matrices.clone(passMat);
 				foldableOverlapRelations.add(ansMat);
 			} else {
 				findAnswer(foldedModelInfo, subFaceIndex + 1, passMat);
@@ -168,11 +161,7 @@ public class Folder {
 				if (!bOK) {
 					continue;
 				}
-				int s = orMat.length;
-				int[][] passMat = new int[s][s];
-				for (int i = 0; i < s; i++) {
-					System.arraycopy(orMat[i], 0, passMat[i], 0, s);
-				}
+				var passMat = Matrices.clone(orMat);
 
 				for (int i = 0; i < size; i++) {
 					int index0 = vec.get(i).tmpInt;
@@ -184,11 +173,7 @@ public class Folder {
 				}
 
 				if (subFaceIndex == subFaces.size() - 1) {
-					s = orMat.length;
-					int[][] ansMat = new int[s][s];
-					for (int i = 0; i < s; i++) {
-						System.arraycopy(passMat[i], 0, ansMat[i], 0, s);
-					}
+					var ansMat = Matrices.clone(passMat);
 					foldableOverlapRelations.add(ansMat);
 				} else {
 					findAnswer(foldedModelInfo, subFaceIndex + 1, passMat);
@@ -373,13 +358,6 @@ public class Folder {
 				}
 
 			}
-		}
-	}
-
-	public static void matrixCopy(final int[][] from, final int[][] to) {
-		int size = from.length;
-		for (int i = 0; i < size; i++) {
-			System.arraycopy(from[i], 0, to[i], 0, size);
 		}
 	}
 

@@ -3,6 +3,8 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.List;
 
+import oripa.util.Matrices;
+
 public class FoldedModelInfo {
 	private int overlapRelation[][] = null;
 	private List<int[][]> overlapRelations = new ArrayList<int[][]>();
@@ -13,14 +15,14 @@ public class FoldedModelInfo {
 	public void setNextORMat() {
 		if (currentORmatIndex < overlapRelations.size() - 1) {
 			currentORmatIndex++;
-			Folder.matrixCopy(overlapRelations.get(currentORmatIndex), overlapRelation);
+			Matrices.copy(overlapRelations.get(currentORmatIndex), overlapRelation);
 		}
 	}
 
 	public void setPrevORMat() {
 		if (currentORmatIndex > 0) {
 			currentORmatIndex--;
-			Folder.matrixCopy(overlapRelations.get(currentORmatIndex), overlapRelation);
+			Matrices.copy(overlapRelations.get(currentORmatIndex), overlapRelation);
 		}
 
 	}
