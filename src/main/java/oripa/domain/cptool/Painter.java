@@ -23,7 +23,6 @@ public class Painter {
 	private final LineSelectionModifier selectionModifier = new LineSelectionModifier();
 	private final ElementRemover elementRemover = new ElementRemover();
 	private final LineAdder lineAdder = new LineAdder();
-	private final LinePaster linePaster = new LinePaster();
 	private final LineMirror lineMirror = new LineMirror();
 	private final LineDivider lineDivider = new LineDivider();
 	private final LineTypeChanger typeChanger = new LineTypeChanger();
@@ -92,8 +91,16 @@ public class Painter {
 		lineAdder.addLine(inputLine, creasePattern);
 	}
 
-	public void pasteLines(final Collection<OriLine> lines) {
-		linePaster.paste(lines, creasePattern);
+	/**
+	 * Add all given lines to crease pattern. Each line in {@code lines} and
+	 * crease pattern is divided at the cross points. However, if the crossing
+	 * lines are both in the same {@code lines} or crease pattern, such a
+	 * division won't be done.
+	 *
+	 * @param lines
+	 */
+	public void addLines(final Collection<OriLine> lines) {
+		lineAdder.addAll(lines, creasePattern);
 	}
 
 	/**
