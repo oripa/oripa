@@ -31,13 +31,16 @@ import oripa.value.OriLine;
  */
 public class OriEdgesFactory {
 	/**
-	 * Creates new OriEdges and sets the relation between half-edges of faces.
+	 * Creates new OriEdges and sets the relation to half-edges of faces.
 	 * Half-edge data structure in strict way should share reference of edges
 	 * among vertices and half-edges but ORIPA doesn't use the relation.
 	 * Therefore we can 'create' new edges and set the references to half-edges
 	 * of faces.
 	 *
 	 * @param faces
+	 *            are assumed to have correct half-edges, i.e., each half-edge
+	 *            should be assigned at least a start vertex, next half-edge and
+	 *            the line type value.
 	 * @return a list of edges
 	 */
 	public List<OriEdge> createOriEdges(final List<OriFace> faces) {
@@ -97,13 +100,13 @@ public class OriEdgesFactory {
 	}
 
 	/**
-	 * creates new OriEdge which consist of given halfedges.
+	 * creates new OriEdge which consist of given half-edges.
 	 *
 	 * @param he0
 	 *            .pair and .edge will be affected.
 	 * @param he1
 	 *            .pair and .edge will be affected.
-	 * @return an edge with AUX type for he0 and he1.
+	 * @return an edge for he0 and he1.
 	 */
 	private OriEdge makePair(final OriHalfedge he0, final OriHalfedge he1) {
 		OriEdge edge = new OriEdge();
@@ -115,12 +118,12 @@ public class OriEdgesFactory {
 		edge.ev = he1.vertex;
 		edge.left = he0;
 		edge.right = he1;
-		edge.type = OriLine.Type.AUX.toInt();
+		edge.type = he0.tmpInt;
 		return edge;
 	}
 
 	/**
-	 * creates new OriEdge which consist of given halfedge.
+	 * creates new OriEdge which consist of given half-edge.
 	 *
 	 * @param he
 	 *            .edge will be affected.

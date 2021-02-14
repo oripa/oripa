@@ -60,9 +60,6 @@ public class OrigamiModelFactory {
 		}
 
 		buildEdges(edges, faces);
-		for (OriEdge e : edges) {
-			e.type = e.left.tmpInt;
-		}
 
 		origamiModel.setHasModel(true);
 
@@ -132,9 +129,6 @@ public class OrigamiModelFactory {
 		logger.debug(
 				"makeEdges() end: " + watch.getMilliSec() + "[ms]");
 
-		for (OriEdge e : edges) {
-			e.type = e.left.tmpInt;
-		}
 		// attach precrease lines to faces
 		for (OriFace face : faces) {
 			ListIterator<OriLine> iterator = precreases.listIterator();
