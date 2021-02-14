@@ -86,7 +86,7 @@ public class Folder {
 		System.out.println("subFaces.size() = " + subFaces.size());
 
 		foldedModelInfo.setOverlapRelation(
-				createOverlapRelation(faces));
+				createOverlapRelation(faces, paperSize));
 
 		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 		// Set overlap relations based on valley/mountain folds information
@@ -762,7 +762,7 @@ public class Folder {
 
 	// creates the matrix overlapRelation and fills it with "no overlap" or
 	// "undifined"
-	private int[][] createOverlapRelation(final List<OriFace> faces) {
+	private int[][] createOverlapRelation(final List<OriFace> faces, final double paperSize) {
 
 		int size = faces.size();
 		int[][] overlapRelation = new int[size][size];
@@ -770,7 +770,7 @@ public class Folder {
 		for (int i = 0; i < size; i++) {
 			overlapRelation[i][i] = OverlapRelationValues.NO_OVERLAP;
 			for (int j = i + 1; j < size; j++) {
-				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), size * 0.00001)) {
+				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), paperSize * 0.00001)) {
 					overlapRelation[i][j] = OverlapRelationValues.UNDEFINED;
 					overlapRelation[j][i] = OverlapRelationValues.UNDEFINED;
 				} else {
