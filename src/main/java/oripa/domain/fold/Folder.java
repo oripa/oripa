@@ -39,7 +39,6 @@ public class Folder {
 	private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
 	private ArrayList<Condition4> condition4s;
-	private int workORmat[][];
 	private ArrayList<SubFace> subFaces;
 
 	// helper object
@@ -100,11 +99,7 @@ public class Folder {
 
 		estimation(faces, overlapRelation);
 
-		int size = faces.size();
-		workORmat = new int[size][size];
-		for (int i = 0; i < size; i++) {
-			System.arraycopy(overlapRelation[i], 0, workORmat[i], 0, size);
-		}
+		var workORmat = Matrices.clone(overlapRelation);
 
 		for (SubFace sub : subFaces) {
 			sub.sortFaceOverlapOrder(faces, workORmat);
