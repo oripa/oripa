@@ -19,6 +19,7 @@
 package oripa.domain.fold;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class OriEdgesFactory {
 	 *            the line type value.
 	 * @return a list of edges
 	 */
-	public List<OriEdge> createOriEdges(final List<OriFace> faces) {
+	public List<OriEdge> createOriEdges(final Collection<OriFace> faces) {
 		var edges = new ArrayList<OriEdge>();
 		var halfedges = new HashMap<OriVertex, List<OriHalfedge>>();
 
