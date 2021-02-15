@@ -29,8 +29,14 @@ import oripa.geom.GeomUtil;
 public class SubFace {
 
 	public OriFace outline;
+	/**
+	 * faces containing this subface.
+	 */
 	public ArrayList<OriFace> faces;
-	public ArrayList<OriFace> sortedFaces;
+	/**
+	 * working stack
+	 */
+	private final ArrayList<OriFace> sortedFaces;
 //	public int tmpInt;
 	public ArrayList<Condition4> condition4s = new ArrayList<>();
 	public ArrayList<Condition3> condition3s = new ArrayList<>();

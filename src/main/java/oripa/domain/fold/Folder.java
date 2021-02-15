@@ -237,12 +237,13 @@ public class Folder {
 						cond.upper = f_i.tmpInt;
 						cond.lower = f_j.tmpInt;
 						cond.other = f_k.tmpInt;
-
-						Condition3 cond3_f = new Condition3();
-						cond3_f.lower = cond.lower;
-						cond3_f.upper = cond.upper;
-						cond3_f.other = cond.other;
-						f_k.condition3s.add(cond3_f);
+						// face.condtion3s will be cleared when subface's stack
+						// sorting starts. This initialization is meaningless.
+//						Condition3 cond3_f = new Condition3();
+//						cond3_f.lower = cond.lower;
+//						cond3_f.upper = cond.upper;
+//						cond3_f.other = cond.other;
+//						f_k.condition3s.add(cond3_f);
 
 						// Add condition to all subfaces of the 3 faces
 						for (SubFace sub : subFaces) {
@@ -285,66 +286,68 @@ public class Folder {
 				if (GeomUtil.isLineSegmentsOverlap(e0.left.positionAfterFolded,
 						e0.left.next.positionAfterFolded,
 						e1.left.positionAfterFolded, e1.left.next.positionAfterFolded)) {
-					Condition4 cond_f;
-					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-							cond_f = new Condition4();
-							cond_f.upper1 = e0.right.face.tmpInt;
-							cond_f.lower1 = e0.left.face.tmpInt;
-							cond_f.upper2 = e1.right.face.tmpInt;
-							cond_f.lower2 = e1.left.face.tmpInt;
-							e0.right.face.condition4s.add(cond_f);
-
-							cond_f = new Condition4();
-							cond_f.upper2 = e0.right.face.tmpInt;
-							cond_f.lower2 = e0.left.face.tmpInt;
-							cond_f.upper1 = e1.right.face.tmpInt;
-							cond_f.lower1 = e1.left.face.tmpInt;
-							e1.right.face.condition4s.add(cond_f);
-						} else {
-							cond_f = new Condition4();
-							cond_f.upper1 = e0.right.face.tmpInt;
-							cond_f.lower1 = e0.left.face.tmpInt;
-							cond_f.upper2 = e1.left.face.tmpInt;
-							cond_f.lower2 = e1.right.face.tmpInt;
-							e0.right.face.condition4s.add(cond_f);
-
-							cond_f = new Condition4();
-							cond_f.upper2 = e0.right.face.tmpInt;
-							cond_f.lower2 = e0.left.face.tmpInt;
-							cond_f.upper1 = e1.left.face.tmpInt;
-							cond_f.lower1 = e1.right.face.tmpInt;
-							e1.left.face.condition4s.add(cond_f);
-						}
-					} else {
-						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-							cond_f = new Condition4();
-							cond_f.upper1 = e0.left.face.tmpInt;
-							cond_f.lower1 = e0.right.face.tmpInt;
-							cond_f.upper2 = e1.right.face.tmpInt;
-							cond_f.lower2 = e1.left.face.tmpInt;
-							e0.left.face.condition4s.add(cond_f);
-
-							cond_f.upper2 = e0.left.face.tmpInt;
-							cond_f.lower2 = e0.right.face.tmpInt;
-							cond_f.upper1 = e1.right.face.tmpInt;
-							cond_f.lower1 = e1.left.face.tmpInt;
-							e1.right.face.condition4s.add(cond_f);
-						} else {
-							cond_f = new Condition4();
-							cond_f.upper1 = e0.left.face.tmpInt;
-							cond_f.lower1 = e0.right.face.tmpInt;
-							cond_f.upper2 = e1.left.face.tmpInt;
-							cond_f.lower2 = e1.right.face.tmpInt;
-							e0.left.face.condition4s.add(cond_f);
-
-							cond_f.upper2 = e0.left.face.tmpInt;
-							cond_f.lower2 = e0.right.face.tmpInt;
-							cond_f.upper1 = e1.left.face.tmpInt;
-							cond_f.lower1 = e1.right.face.tmpInt;
-							e1.left.face.condition4s.add(cond_f);
-						}
-					}
+					// face.condtion4s will be cleared when subface's stack
+					// sorting starts. This initialization is meaningless.
+//					Condition4 cond_f;
+//					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == OverlapRelationValues.UPPER) {
+//						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
+//							cond_f = new Condition4();
+//							cond_f.upper1 = e0.right.face.tmpInt;
+//							cond_f.lower1 = e0.left.face.tmpInt;
+//							cond_f.upper2 = e1.right.face.tmpInt;
+//							cond_f.lower2 = e1.left.face.tmpInt;
+//							e0.right.face.condition4s.add(cond_f);
+//
+//							cond_f = new Condition4();
+//							cond_f.upper2 = e0.right.face.tmpInt;
+//							cond_f.lower2 = e0.left.face.tmpInt;
+//							cond_f.upper1 = e1.right.face.tmpInt;
+//							cond_f.lower1 = e1.left.face.tmpInt;
+//							e1.right.face.condition4s.add(cond_f);
+//						} else {
+//							cond_f = new Condition4();
+//							cond_f.upper1 = e0.right.face.tmpInt;
+//							cond_f.lower1 = e0.left.face.tmpInt;
+//							cond_f.upper2 = e1.left.face.tmpInt;
+//							cond_f.lower2 = e1.right.face.tmpInt;
+//							e0.right.face.condition4s.add(cond_f);
+//
+//							cond_f = new Condition4();
+//							cond_f.upper2 = e0.right.face.tmpInt;
+//							cond_f.lower2 = e0.left.face.tmpInt;
+//							cond_f.upper1 = e1.left.face.tmpInt;
+//							cond_f.lower1 = e1.right.face.tmpInt;
+//							e1.left.face.condition4s.add(cond_f);
+//						}
+//					} else {
+//						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
+//							cond_f = new Condition4();
+//							cond_f.upper1 = e0.left.face.tmpInt;
+//							cond_f.lower1 = e0.right.face.tmpInt;
+//							cond_f.upper2 = e1.right.face.tmpInt;
+//							cond_f.lower2 = e1.left.face.tmpInt;
+//							e0.left.face.condition4s.add(cond_f);
+//
+//							cond_f.upper2 = e0.left.face.tmpInt;
+//							cond_f.lower2 = e0.right.face.tmpInt;
+//							cond_f.upper1 = e1.right.face.tmpInt;
+//							cond_f.lower1 = e1.left.face.tmpInt;
+//							e1.right.face.condition4s.add(cond_f);
+//						} else {
+//							cond_f = new Condition4();
+//							cond_f.upper1 = e0.left.face.tmpInt;
+//							cond_f.lower1 = e0.right.face.tmpInt;
+//							cond_f.upper2 = e1.left.face.tmpInt;
+//							cond_f.lower2 = e1.right.face.tmpInt;
+//							e0.left.face.condition4s.add(cond_f);
+//
+//							cond_f.upper2 = e0.left.face.tmpInt;
+//							cond_f.lower2 = e0.right.face.tmpInt;
+//							cond_f.upper1 = e1.left.face.tmpInt;
+//							cond_f.lower1 = e1.right.face.tmpInt;
+//							e1.left.face.condition4s.add(cond_f);
+//						}
+//					}
 					Condition4 cond = new Condition4();
 					// Add condition to all subfaces of the 4 faces
 					boolean bOverlap = false;
