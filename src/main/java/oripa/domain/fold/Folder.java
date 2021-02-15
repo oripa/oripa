@@ -120,6 +120,14 @@ public class Folder {
 		return foldableOverlapRelations.size();
 	}
 
+	/**
+	 * Determines overlap relations which are left uncertain after using
+	 * necessary conditions.
+	 *
+	 * @param foldedModelInfo
+	 * @param subFaceIndex
+	 * @param orMat
+	 */
 	private void findAnswer(
 			final FoldedModelInfo foldedModelInfo, final int subFaceIndex, final int[][] orMat) {
 		SubFace sub = subFaces.get(subFaceIndex);
@@ -144,6 +152,10 @@ public class Folder {
 					int index0 = vec.get(i).tmpInt;
 					for (int j = i + 1; j < size; j++) {
 						int index1 = vec.get(j).tmpInt;
+						// stack_index = 0 means the top of stack (looking down
+						// the folded model).
+						// therefore a face with smaller stack_index i should be
+						// UPPER than stack_index j.
 						if (orMat[index0][index1] == OverlapRelationValues.LOWER) {
 							bOK = false;
 							break;
@@ -195,8 +207,14 @@ public class Folder {
 
 	}
 
-	// If face[i] and face[j] touching edge is covered by face[k]
-	// then OR[i][k] = OR[j][k]
+	/**
+	 * Creates 3-face condition and sets to faces and subfaces: If face[i] and
+	 * face[j] touching edge is covered by face[k] then OR[i][k] = OR[j][k]
+	 *
+	 * @param faces
+	 * @param paperSize
+	 * @param overlapRelation
+	 */
 	private void holdCondition3s(
 			final List<OriFace> faces, final double paperSize, final int[][] overlapRelation) {
 
@@ -240,6 +258,13 @@ public class Folder {
 		}
 	}
 
+	/**
+	 * Creates 4-face condition and sets to faces and subfaces.
+	 *
+	 * @param faces
+	 * @param paperSize
+	 * @param overlapRelation
+	 */
 	private void holdCondition4s(
 			final List<OriEdge> edges, final int[][] overlapRelation) {
 
@@ -377,6 +402,12 @@ public class Folder {
 		}
 	}
 
+	/**
+	 * Determines overlap relation using 4-face condition.
+	 *
+	 * @param orMat
+	 * @return
+	 */
 	private boolean estimate_by4faces(final int[][] orMat) {
 
 		boolean[] changed = new boolean[1];
@@ -436,7 +467,13 @@ public class Folder {
 		return changed[0];
 	}
 
-	// If the subface a>b and b>c then a>c
+	/**
+	 * If the subface a>b and b>c then a>c
+	 *
+	 * @param orMat
+	 *            overlap-relation matrix
+	 * @return whether orMat is changed or not.
+	 */
 	private boolean estimate_by3faces2(final int[][] orMat) {
 		boolean bChanged = false;
 		for (SubFace sub : subFaces) {
@@ -512,8 +549,14 @@ public class Folder {
 		return bChanged;
 	}
 
-	// If face[i] and face[j] touching edge is covered by face[k]
-	// then OR[i][k] = OR[j][k]
+	/**
+	 * If face[i] and face[j] touching edge is covered by face[k] then OR[i][k]
+	 * = OR[j][k]
+	 *
+	 * @param faces
+	 * @param orMat
+	 * @return whether orMat is changed or not.
+	 */
 	private boolean estimate_by3faces(
 			final List<OriFace> faces,
 			final int[][] orMat) {
@@ -557,7 +600,7 @@ public class Folder {
 	 *            that the faces hold the coordinates after folding.
 	 *
 	 * @param paperSize
-	 * @return
+	 * @return subfaces.
 	 */
 	private ArrayList<SubFace> makeSubFaces(
 			final List<OriFace> faces, final double paperSize) {
@@ -760,8 +803,14 @@ public class Folder {
 		}
 	}
 
-	// creates the matrix overlapRelation and fills it with "no overlap" or
-	// "undifined"
+	/**
+	 * creates the matrix overlapRelation and fills it with "no overlap" or
+	 * "undefined"
+	 *
+	 * @param faces
+	 * @param paperSize
+	 * @return
+	 */
 	private int[][] createOverlapRelation(final List<OriFace> faces, final double paperSize) {
 
 		int size = faces.size();
@@ -783,7 +832,12 @@ public class Folder {
 		return overlapRelation;
 	}
 
-	// Determines the overlap relations
+	/**
+	 * Determines the overlap relations by mountain/valley.
+	 *
+	 * @param faces
+	 * @param overlapRelation
+	 */
 	private void step1(
 			final List<OriFace> faces, final int[][] overlapRelation) {
 
@@ -838,11 +892,17 @@ public class Folder {
 		folderTool.setFacesOutline(vertices, faces, false);
 	}
 
-	// Make the folds by flipping the faces
+	/**
+	 * Make the folds by flipping the faces
+	 *
+	 * @param faces
+	 * @param face
+	 * @param walkFaceCount
+	 */
 	private void walkFace(final List<OriFace> faces, final OriFace face, final int walkFaceCount) {
 		face.tmpFlg = true;
 		if (walkFaceCount > 1000) {
-			System.out.println("walkFace too deap");
+			System.out.println("walkFace too deep");
 			return;
 		}
 		for (OriHalfedge he : face.halfedges) {
