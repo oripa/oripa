@@ -53,7 +53,8 @@ public class OriFace {
 	public int z_order = 0;
 
 	/**
-	 * ???
+	 * index of stack order for subface??? It seems to be used only while making
+	 * correct stack order.
 	 */
 	public int tmpInt2 = 0;
 

@@ -18,11 +18,21 @@
 
 package oripa.domain.fold;
 
+/**
+ * If face[i] and face[j] touching edge is covered by face[k] then OR[i][k] =
+ * OR[j][k]
+ */
 class Condition3 {
-	// If face[i] and face[j] touching edge is covered by face[k]
-	// then OR[i][k] = OR[j][k]
-
+	/**
+	 * ID of lower face.
+	 */
 	public int lower;
+	/**
+	 * ID of upper face.
+	 */
 	public int upper;
+	/**
+	 * ID of a face covering both upper and lower.
+	 */
 	public int other;
 }
