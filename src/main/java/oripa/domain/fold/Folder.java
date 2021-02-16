@@ -241,8 +241,14 @@ public class Folder {
 		return false;
 	}
 
-	private void estimation(
-			final List<OriFace> faces, final int[][] orMat) {
+	/**
+	 * Determines overlap relations by necessary conditions.
+	 *
+	 * @param faces
+	 * @param orMat
+	 *            overlap relation matrix
+	 */
+	private void estimation(final List<OriFace> faces, final int[][] orMat) {
 		boolean changed;
 		do {
 			changed = false;
@@ -250,7 +256,6 @@ public class Folder {
 			changed |= estimate_by3faces2(orMat);
 			changed |= estimate_by4faces(orMat);
 		} while (changed);
-
 	}
 
 	/**
