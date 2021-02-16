@@ -560,26 +560,27 @@ public class Folder {
 
 		boolean bChanged = false;
 		for (OriFace f_i : faces) {
+			int index_i = f_i.tmpInt;
 			for (OriHalfedge he : f_i.halfedges) {
 				if (he.pair == null) {
 					continue;
 				}
 				OriFace f_j = he.pair.face;
+				int index_j = f_j.tmpInt;
 
 				for (OriFace f_k : faces) {
+					int index_k = f_k.tmpInt;
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
 					if (OriGeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
-						if (orMat[f_i.tmpInt][f_k.tmpInt] != OverlapRelationValues.UNDEFINED
-								&& orMat[f_j.tmpInt][f_k.tmpInt] == OverlapRelationValues.UNDEFINED) {
-							setOR(orMat, f_j.tmpInt, f_k.tmpInt, orMat[f_i.tmpInt][f_k.tmpInt],
-									true);
+						if (orMat[index_i][index_k] != OverlapRelationValues.UNDEFINED
+								&& orMat[index_j][index_k] == OverlapRelationValues.UNDEFINED) {
+							setOR(orMat, index_j, index_k, orMat[index_i][index_k], true);
 							bChanged = true;
-						} else if (orMat[f_j.tmpInt][f_k.tmpInt] != OverlapRelationValues.UNDEFINED
-								&& orMat[f_i.tmpInt][f_k.tmpInt] == OverlapRelationValues.UNDEFINED) {
-							setOR(orMat, f_i.tmpInt, f_k.tmpInt, orMat[f_j.tmpInt][f_k.tmpInt],
-									true);
+						} else if (orMat[index_j][index_k] != OverlapRelationValues.UNDEFINED
+								&& orMat[index_i][index_k] == OverlapRelationValues.UNDEFINED) {
+							setOR(orMat, index_i, index_k, orMat[index_j][index_k], true);
 							bChanged = true;
 						}
 					}
