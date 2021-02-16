@@ -87,12 +87,8 @@ class OriGeomUtil {
 		int heNum = face.halfedges.size();
 
 		// If its on the faces edge, return false
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.distancePointToSegment(v, he.positionAfterFolded,
-					he.next.positionAfterFolded) < eps) {
-				return false;
-			}
+		if (isOnEdgeOfFace(face, v, eps, he -> he.positionAfterFolded)) {
+			return false;
 		}
 
 		return isInsideFace(face, v, eps, he -> he.positionAfterFolded);
@@ -146,12 +142,8 @@ class OriGeomUtil {
 		int heNum = face.halfedges.size();
 
 		// If its on the faces edge, return true
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.distancePointToSegment(v, he.vertex.p,
-					he.next.vertex.p) < GeomUtil.EPS) {
-				return true;
-			}
+		if (isOnEdgeOfFace(face, v, GeomUtil.EPS, he -> he.vertex.p)) {
+			return true;
 		}
 
 		return isInsideFace(face, v, GeomUtil.EPS, he -> he.vertex.p);
@@ -214,15 +206,35 @@ class OriGeomUtil {
 		final int heNum = face.halfedges.size();
 
 		// Return false if the vector is on the contour of the face
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.distancePointToSegment(v, he.positionAfterFolded,
-					he.next.positionAfterFolded) < eps) {
-				return false;
-			}
+		if (isOnEdgeOfFace(face, v, eps, he -> he.positionAfterFolded)) {
+			return false;
 		}
 
 		return isInsideFace(face, v, eps, he -> he.positionAfterFolded);
+	}
+
+	/**
+	 * Whether v is inside of face. Don't care whether v is on edge of face.
+	 *
+	 * @param face
+	 * @param v
+	 * @param eps
+	 * @param getPosition
+	 * @return
+	 */
+	private static boolean isOnEdgeOfFace(final OriFace face, final Vector2d v, final double eps,
+			final Function<OriHalfedge, Vector2d> getPosition) {
+		int heNum = face.halfedges.size();
+
+		// If its on the face's edge, return true
+		for (int i = 0; i < heNum; i++) {
+			OriHalfedge he = face.halfedges.get(i);
+			if (GeomUtil.distancePointToSegment(v, getPosition.apply(he),
+					getPosition.apply(he.next)) < eps) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
