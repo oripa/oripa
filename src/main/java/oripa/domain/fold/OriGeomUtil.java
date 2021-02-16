@@ -86,7 +86,7 @@ class OriGeomUtil {
 	 * @param face
 	 * @param heg
 	 * @param eps
-	 * @return true if a line along {@code heg} crosses {@code face}.
+	 * @return true if {@code heg} crosses {@code face}.
 	 */
 	static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
@@ -137,6 +137,13 @@ class OriGeomUtil {
 				&& isOnFaceInclusive(line.p1, face);
 	}
 
+	/**
+	 *
+	 * @param face
+	 * @param heg
+	 * @param eps
+	 * @return true if {@code heg} crosses {@code face}.
+	 */
 	static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg, final double size) {
 		Vector2d p1 = heg.positionAfterFolded;
 		Vector2d p2 = heg.next.positionAfterFolded;
@@ -196,8 +203,8 @@ class OriGeomUtil {
 	}
 
 	/**
-	 * Whether v is inside of face or is on edge of face where the positions are
-	 * ones after folding.
+	 * Whether v is strictly inside of face where the positions are ones after
+	 * folding.
 	 *
 	 * @param face
 	 * @param v
@@ -240,7 +247,6 @@ class OriGeomUtil {
 
 	/**
 	 * Whether v is inside of face. Don't care whether v is on edge of face.
-	 * Don't care whether v is on edges of face.
 	 *
 	 * @param face
 	 * @param v
