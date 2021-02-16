@@ -3,6 +3,7 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.List;
 
+import oripa.geom.RectangleDomain;
 import oripa.util.Matrices;
 
 public class FoldedModelInfo {
@@ -11,6 +12,7 @@ public class FoldedModelInfo {
 	private int currentORmatIndex = 0;
 
 	private BoundBox boundBox = new BoundBox(null, null);
+	private RectangleDomain rectangleDomain;
 
 	public void setNextORMat() {
 		if (currentORmatIndex < overlapRelations.size() - 1) {
@@ -54,6 +56,7 @@ public class FoldedModelInfo {
 	/**
 	 * @return boundBox
 	 */
+	@Deprecated
 	public BoundBox getBoundBox() {
 		return boundBox;
 	}
@@ -61,8 +64,17 @@ public class FoldedModelInfo {
 	/**
 	 * @param boundBox
 	 */
+	@Deprecated
 	public void setBoundBox(final BoundBox boundBox) {
 		this.boundBox = boundBox;
+	}
+
+	public RectangleDomain getRectangleDomain() {
+		return rectangleDomain;
+	}
+
+	public void setRectangleDomain(final RectangleDomain rectangleDomain) {
+		this.rectangleDomain = rectangleDomain;
 	}
 
 	public int getFoldablePatternCount() {

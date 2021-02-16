@@ -40,7 +40,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
-import oripa.domain.fold.BoundBox;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.OriFace;
 import oripa.domain.fold.OrigamiModel;
@@ -326,15 +325,12 @@ public class FoldedModelScreen extends JPanel
 		}
 		long time0 = System.currentTimeMillis();
 
-		BoundBox boundBox = foldedModelInfo.getBoundBox();
-		Vector2d leftAndTop = boundBox.getLeftAndTop();
-		Vector2d rightAndBottom = boundBox.getRightAndBottom();
+		var domain = foldedModelInfo.getRectangleDomain();
 
-		Vector2d center = new Vector2d((leftAndTop.x + rightAndBottom.x) / 2,
-				(leftAndTop.y + rightAndBottom.y) / 2);
+		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
 		double localScale = Math.min(
-				BUFFERW / (rightAndBottom.x - leftAndTop.x),
-				BUFFERH / (rightAndBottom.y - leftAndTop.y)) * 0.95;
+				BUFFERW / (domain.getWidth()),
+				BUFFERH / (domain.getHeight())) * 0.95;
 		double angle = m_rotAngle * Math.PI / 180;
 		localScale *= m_scale;
 

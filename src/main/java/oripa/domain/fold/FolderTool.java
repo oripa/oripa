@@ -5,12 +5,30 @@ import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
-public class FolderTool {
+import oripa.geom.RectangleDomain;
 
+public class FolderTool {
+	/**
+	 *
+	 * @param faces
+	 *            each half-edge of faces should be set
+	 *            {@code positionAfterFolded}.
+	 * @return
+	 */
+	@Deprecated
 	public BoundBox calcFoldedBoundingBox(final List<OriFace> faces) {
 		return new BoundBox(faces.stream()
-				.flatMap(face -> face.halfedges.stream().map(he -> he.tmpVec))
+				.flatMap(face -> face.halfedges.stream().map(he -> he.positionAfterFolded))
 				.collect(Collectors.toList()));
+	}
+
+	public RectangleDomain createDomainOfFoldedModel(final List<OriFace> faces) {
+		var domain = new RectangleDomain();
+		domain.enlarge(faces.stream()
+				.flatMap(face -> face.halfedges.stream().map(he -> he.positionAfterFolded))
+				.collect(Collectors.toList()));
+
+		return domain;
 	}
 
 	public void setFacesOutline(

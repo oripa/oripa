@@ -146,12 +146,12 @@ public class ModelViewScreen extends JPanel
 		} else {
 			// Align the center of the model, combined scale
 			var folderTool = new FolderTool();
-			var boundBox = folderTool.calcFoldedBoundingBox(faces);
-			modelCenter.x = boundBox.getCenterX();
-			modelCenter.y = boundBox.getCenterY();
+			var domain = folderTool.createDomainOfFoldedModel(faces);
+			modelCenter.x = domain.getCenterX();
+			modelCenter.y = domain.getCenterY();
 
 			scale = 0.8 * Math.min(
-					boundSize / boundBox.getWidth(), boundSize / boundBox.getHeight());
+					boundSize / domain.getWidth(), boundSize / domain.getHeight());
 
 			updateAffineTransform();
 			recalcScissorsLine();
