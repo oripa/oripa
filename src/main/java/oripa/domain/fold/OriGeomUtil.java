@@ -81,6 +81,13 @@ class OriGeomUtil {
 		return false;
 	}
 
+	/**
+	 *
+	 * @param face
+	 * @param heg
+	 * @param eps
+	 * @return true if a line along {@code heg} crosses {@code face}.
+	 */
 	static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
 		Vector2d p1 = heg.positionAfterFolded;
@@ -123,15 +130,6 @@ class OriGeomUtil {
 			return true;
 		}
 		return false;
-	}
-
-	private static boolean isOnFaceInclusive(final Vector2d v, final OriFace face) {
-		// If its on the faces edge, return true
-		if (isOnEdgeOfFace(face, v, GeomUtil.EPS, he -> he.vertex.p)) {
-			return true;
-		}
-
-		return isInsideFace(face, v, GeomUtil.EPS, he -> he.vertex.p);
 	}
 
 	static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
@@ -188,6 +186,24 @@ class OriGeomUtil {
 		return false;
 	}
 
+	private static boolean isOnFaceInclusive(final Vector2d v, final OriFace face) {
+		// If its on the faces edge, return true
+		if (isOnEdgeOfFace(face, v, GeomUtil.EPS, he -> he.vertex.p)) {
+			return true;
+		}
+
+		return isInsideFace(face, v, GeomUtil.EPS, he -> he.vertex.p);
+	}
+
+	/**
+	 * Whether v is inside of face or is on edge of face where the positions are
+	 * ones after folding.
+	 *
+	 * @param face
+	 * @param v
+	 * @param eps
+	 * @return
+	 */
 	static boolean isOnFoldedFace(final OriFace face, final Vector2d v,
 			final double eps) {
 		// If its on the faces edge, return false
