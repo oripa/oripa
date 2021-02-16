@@ -201,34 +201,33 @@ public class Folder {
 
 		for (int i = 0; i < faces.size(); i++) {
 			for (var he : faces.get(i).halfedges) {
-				var face = he.face;
 				if (he.pair == null) {
 					continue;
 				}
-				var face_pair = he.pair.face;
 
-				var index_i = face.tmpInt;
-				var index_j = face_pair.tmpInt;
+				var index_i = he.face.tmpInt;
+				var index_j = he.pair.face.tmpInt;
 
 				if (checked[index_i][index_j]) {
 					continue;
 				}
 
 				for (int k = 0; k < faces.size(); k++) {
-					var index_k = faces.get(k).tmpInt;
+					var face_k = faces.get(k);
+					var index_k = face_k.tmpInt;
 					if (index_i == index_k || index_j == index_k) {
 						continue;
 					}
 					if (orMat[index_i][index_j] == OverlapRelationValues.LOWER &&
 							orMat[index_i][index_k] == OverlapRelationValues.LOWER &&
 							orMat[index_j][index_k] == OverlapRelationValues.UPPER) {
-						if (OriGeomUtil.isLineCrossFace4(faces.get(k), he, paperSize)) {
+						if (OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
 							return true;
 						}
 					} else if (orMat[index_i][index_j] == OverlapRelationValues.UPPER &&
 							orMat[index_i][index_k] == OverlapRelationValues.UPPER &&
 							orMat[index_j][index_k] == OverlapRelationValues.LOWER) {
-						if (OriGeomUtil.isLineCrossFace4(faces.get(k), he, paperSize)) {
+						if (OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
 							return true;
 						}
 					}
