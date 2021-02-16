@@ -38,14 +38,14 @@ class OriGeomUtil {
 
 		// If the vertices of face0 are on face1, true
 		for (OriHalfedge he : face0.halfedges) {
-			if (OriGeomUtil.isContainsPointFoldedFace(face1, he.positionAfterFolded, eps)) {
+			if (OriGeomUtil.isOnFoldedFace(face1, he.positionAfterFolded, eps)) {
 				return true;
 			}
 		}
 
 		// If the vertices of face1 are on face0, true
 		for (OriHalfedge he : face1.halfedges) {
-			if (OriGeomUtil.isContainsPointFoldedFace(face0, he.positionAfterFolded, eps)) {
+			if (OriGeomUtil.isOnFoldedFace(face0, he.positionAfterFolded, eps)) {
 				return true;
 			}
 		}
@@ -57,12 +57,12 @@ class OriGeomUtil {
 				.map(he -> he.positionAfterFolded).collect(Collectors.toList()));
 
 		// If the gravity center of face0 is on face1, true
-		if (OriGeomUtil.isContainsPointFoldedFace(face1, center0, eps)) {
+		if (OriGeomUtil.isOnFoldedFace(face1, center0, eps)) {
 			return true;
 		}
 
 		// If the gravity center of face1 is on face0, true
-		if (OriGeomUtil.isContainsPointFoldedFace(face0, center1, eps)) {
+		if (OriGeomUtil.isOnFoldedFace(face0, center1, eps)) {
 			return true;
 		}
 
@@ -79,19 +79,6 @@ class OriGeomUtil {
 			}
 		}
 		return false;
-	}
-
-	static boolean isContainsPointFoldedFace(final OriFace face, final Vector2d v,
-			final double eps) {
-
-		int heNum = face.halfedges.size();
-
-		// If its on the faces edge, return false
-		if (isOnEdgeOfFace(face, v, eps, he -> he.positionAfterFolded)) {
-			return false;
-		}
-
-		return isInsideFace(face, v, eps, he -> he.positionAfterFolded);
 	}
 
 	static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
@@ -129,16 +116,16 @@ class OriGeomUtil {
 			}
 		}
 		// If at least one of the endpoints is fully contained
-		if (OriGeomUtil.isContainsPointFoldedFace(face, heg.positionAfterFolded, eps)) {
+		if (OriGeomUtil.isOnFoldedFace(face, heg.positionAfterFolded, eps)) {
 			return true;
 		}
-		if (OriGeomUtil.isContainsPointFoldedFace(face, heg.next.positionAfterFolded, eps)) {
+		if (OriGeomUtil.isOnFoldedFace(face, heg.next.positionAfterFolded, eps)) {
 			return true;
 		}
 		return false;
 	}
 
-	private static boolean isContainsPointFace(final Vector2d v, final OriFace face) {
+	private static boolean isOnFaceInclusive(final Vector2d v, final OriFace face) {
 		// If its on the faces edge, return true
 		if (isOnEdgeOfFace(face, v, GeomUtil.EPS, he -> he.vertex.p)) {
 			return true;
@@ -148,8 +135,8 @@ class OriGeomUtil {
 	}
 
 	static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
-		return OriGeomUtil.isContainsPointFace(line.p0, face)
-				&& OriGeomUtil.isContainsPointFace(line.p1, face);
+		return OriGeomUtil.isOnFaceInclusive(line.p0, face)
+				&& OriGeomUtil.isOnFaceInclusive(line.p1, face);
 	}
 
 	static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg, final double size) {
@@ -158,6 +145,8 @@ class OriGeomUtil {
 		Vector2d dir = new Vector2d();
 		dir.sub(p2, p1);
 		Line heLine = new Line(p1, dir);
+
+		final double eps = size * 0.001;
 
 		for (OriHalfedge he : face.halfedges) {
 			// About the relation of contours (?)
@@ -182,27 +171,26 @@ class OriGeomUtil {
 			if (preCrossPoint == null) {
 				preCrossPoint = cp;
 			} else {
-				if (GeomUtil.distance(cp, preCrossPoint) > size * 0.001) {
+				if (GeomUtil.distance(cp, preCrossPoint) > eps) {
 					return true;
 				}
 			}
 		}
 
-		// Checkes if the line is in the interior of the face
-		if (isOnFace(face, heg.positionAfterFolded, size)) {
+		// Checks if the line is in the interior of the face
+		if (isOnFoldedFace(face, heg.positionAfterFolded, eps)) {
 			return true;
 		}
-		if (isOnFace(face, heg.next.positionAfterFolded, size)) {
+		if (isOnFoldedFace(face, heg.next.positionAfterFolded, eps)) {
 			return true;
 		}
 
 		return false;
 	}
 
-	private static boolean isOnFace(final OriFace face, final Vector2d v, final double size) {
-		final double eps = size * 0.001;
-
-		// Return false if the vector is on the contour of the face
+	static boolean isOnFoldedFace(final OriFace face, final Vector2d v,
+			final double eps) {
+		// If its on the faces edge, return false
 		if (isOnEdgeOfFace(face, v, eps, he -> he.positionAfterFolded)) {
 			return false;
 		}

@@ -641,7 +641,7 @@ public class Folder {
 		for (SubFace sub : localSubFaces) {
 			Vector2d innerPoint = sub.getInnerPoint();
 			for (OriFace face : faces) {
-				if (OriGeomUtil.isContainsPointFoldedFace(face, innerPoint, paperSize / 1000)) {
+				if (OriGeomUtil.isOnFoldedFace(face, innerPoint, paperSize / 1000)) {
 					sub.faces.add(face);
 				}
 			}
