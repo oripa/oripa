@@ -191,19 +191,13 @@ public class Folder {
 
 	private void estimation(
 			final List<OriFace> faces, final int[][] orMat) {
-		boolean bChanged;
+		boolean changed;
 		do {
-			bChanged = false;
-			if (estimate_by3faces(faces, orMat)) {
-				bChanged = true;
-			}
-			if (estimate_by3faces2(orMat)) {
-				bChanged = true;
-			}
-			if (estimate_by4faces(orMat)) {
-				bChanged = true;
-			}
-		} while (bChanged);
+			changed = false;
+			changed |= estimate_by3faces(faces, orMat);
+			changed |= estimate_by3faces2(orMat);
+			changed |= estimate_by4faces(orMat);
+		} while (changed);
 
 	}
 
