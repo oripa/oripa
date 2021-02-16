@@ -139,8 +139,6 @@ class OriGeomUtil {
 	}
 
 	private static boolean isContainsPointFace(final Vector2d v, final OriFace face) {
-		int heNum = face.halfedges.size();
-
 		// If its on the faces edge, return true
 		if (isOnEdgeOfFace(face, v, GeomUtil.EPS, he -> he.vertex.p)) {
 			return true;
@@ -203,7 +201,6 @@ class OriGeomUtil {
 
 	private static boolean isOnFace(final OriFace face, final Vector2d v, final double size) {
 		final double eps = size * 0.001;
-		final int heNum = face.halfedges.size();
 
 		// Return false if the vector is on the contour of the face
 		if (isOnEdgeOfFace(face, v, eps, he -> he.positionAfterFolded)) {
@@ -214,7 +211,7 @@ class OriGeomUtil {
 	}
 
 	/**
-	 * Whether v is inside of face. Don't care whether v is on edge of face.
+	 * Whether v is on edge of face.
 	 *
 	 * @param face
 	 * @param v
