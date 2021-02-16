@@ -24,7 +24,7 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-public class OriEdgeFactoryForTest {
+class OriEdgeFactoryForTest {
 	public static OriEdge createEdge(final double x0, final double y0,
 			final double x1, final double y1,
 			final OriLine.Type type) {
