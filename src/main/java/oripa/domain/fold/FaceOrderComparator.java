@@ -1,3 +1,21 @@
+/**
+ * ORIPA - Origami Pattern Editor
+ * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package oripa.domain.fold;
 
 import java.util.Comparator;
@@ -5,7 +23,7 @@ import java.util.Comparator;
 public class FaceOrderComparator implements Comparator<OriFace> {
 
 	@Override
-	public int compare(OriFace f1, OriFace f2) {
+	public int compare(final OriFace f1, final OriFace f2) {
 		return f1.z_order > f2.z_order ? 1 : -1;
 	}
 }
