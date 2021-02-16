@@ -11,7 +11,6 @@ public class FoldedModelInfo {
 	private List<int[][]> overlapRelations = new ArrayList<int[][]>();
 	private int currentORmatIndex = 0;
 
-	private BoundBox boundBox = new BoundBox(null, null);
 	private RectangleDomain rectangleDomain;
 
 	public void setNextORMat() {
@@ -51,22 +50,6 @@ public class FoldedModelInfo {
 
 	public void setCurrentORmatIndex(final int currentORmatIndex) {
 		this.currentORmatIndex = currentORmatIndex;
-	}
-
-	/**
-	 * @return boundBox
-	 */
-	@Deprecated
-	public BoundBox getBoundBox() {
-		return boundBox;
-	}
-
-	/**
-	 * @param boundBox
-	 */
-	@Deprecated
-	public void setBoundBox(final BoundBox boundBox) {
-		this.boundBox = boundBox;
 	}
 
 	public RectangleDomain getRectangleDomain() {
