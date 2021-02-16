@@ -49,11 +49,11 @@ class MaekawaTheoremTest {
 
 	private OriVertex createBirdFoot() {
 		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(OriEdgeFactory.createEdge(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactory.createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
 
-		oriVertex.addEdge(OriEdgeFactory.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
 
 		return oriVertex;
 	}
