@@ -38,14 +38,14 @@ class OriGeomUtil {
 
 		// If the vertices of face0 are on face1, true
 		for (OriHalfedge he : face0.halfedges) {
-			if (OriGeomUtil.isOnFoldedFace(face1, he.positionAfterFolded, eps)) {
+			if (isOnFoldedFace(face1, he.positionAfterFolded, eps)) {
 				return true;
 			}
 		}
 
 		// If the vertices of face1 are on face0, true
 		for (OriHalfedge he : face1.halfedges) {
-			if (OriGeomUtil.isOnFoldedFace(face0, he.positionAfterFolded, eps)) {
+			if (isOnFoldedFace(face0, he.positionAfterFolded, eps)) {
 				return true;
 			}
 		}
@@ -57,24 +57,24 @@ class OriGeomUtil {
 				.map(he -> he.positionAfterFolded).collect(Collectors.toList()));
 
 		// If the gravity center of face0 is on face1, true
-		if (OriGeomUtil.isOnFoldedFace(face1, center0, eps)) {
+		if (isOnFoldedFace(face1, center0, eps)) {
 			return true;
 		}
 
 		// If the gravity center of face1 is on face0, true
-		if (OriGeomUtil.isOnFoldedFace(face0, center1, eps)) {
+		if (isOnFoldedFace(face0, center1, eps)) {
 			return true;
 		}
 
 		// If the outline of face0 intersects face1`s, true
 		for (OriHalfedge he0 : face0.halfedges) {
-			if (OriGeomUtil.isLineCrossFace(face1, he0, eps)) {
+			if (isLineCrossFace(face1, he0, eps)) {
 				return true;
 			}
 		}
 
 		for (OriHalfedge he1 : face1.halfedges) {
-			if (OriGeomUtil.isLineCrossFace(face0, he1, eps)) {
+			if (isLineCrossFace(face0, he1, eps)) {
 				return true;
 			}
 		}
@@ -123,18 +123,18 @@ class OriGeomUtil {
 			}
 		}
 		// If at least one of the endpoints is fully contained
-		if (OriGeomUtil.isOnFoldedFace(face, heg.positionAfterFolded, eps)) {
+		if (isOnFoldedFace(face, heg.positionAfterFolded, eps)) {
 			return true;
 		}
-		if (OriGeomUtil.isOnFoldedFace(face, heg.next.positionAfterFolded, eps)) {
+		if (isOnFoldedFace(face, heg.next.positionAfterFolded, eps)) {
 			return true;
 		}
 		return false;
 	}
 
 	static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
-		return OriGeomUtil.isOnFaceInclusive(line.p0, face)
-				&& OriGeomUtil.isOnFaceInclusive(line.p1, face);
+		return isOnFaceInclusive(line.p0, face)
+				&& isOnFaceInclusive(line.p1, face);
 	}
 
 	static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg, final double size) {
