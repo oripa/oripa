@@ -18,6 +18,7 @@
  */
 package oripa.domain.fold;
 
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
@@ -94,19 +95,7 @@ class OriGeomUtil {
 			}
 		}
 
-		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.positionAfterFolded,
-				baseHe.next.positionAfterFolded, v);
-
-		for (int i = 1; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.positionAfterFolded, he.next.positionAfterFolded,
-					v) != baseFlg) {
-				return false;
-			}
-		}
-
-		return true;
+		return isInsideFace(face, v, eps, he -> he.positionAfterFolded);
 	}
 
 	static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
@@ -165,19 +154,7 @@ class OriGeomUtil {
 			}
 		}
 
-		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.vertex.p,
-				baseHe.next.vertex.p, v);
-
-		for (int i = 1; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.vertex.p,
-					he.next.vertex.p, v) != baseFlg) {
-				return false;
-			}
-		}
-
-		return true;
+		return isInsideFace(face, v, GeomUtil.EPS, he -> he.vertex.p);
 	}
 
 	static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
@@ -233,25 +210,42 @@ class OriGeomUtil {
 	}
 
 	private static boolean isOnFace(final OriFace face, final Vector2d v, final double size) {
-
-		int heNum = face.halfedges.size();
+		final double eps = size * 0.001;
+		final int heNum = face.halfedges.size();
 
 		// Return false if the vector is on the contour of the face
 		for (int i = 0; i < heNum; i++) {
 			OriHalfedge he = face.halfedges.get(i);
 			if (GeomUtil.distancePointToSegment(v, he.positionAfterFolded,
-					he.next.positionAfterFolded) < size * 0.001) {
+					he.next.positionAfterFolded) < eps) {
 				return false;
 			}
 		}
 
+		return isInsideFace(face, v, eps, he -> he.positionAfterFolded);
+	}
+
+	/**
+	 * Whether v is inside of face. Don't care whether v is on edge of face.
+	 * Don't care whether v is on edges of face.
+	 *
+	 * @param face
+	 * @param v
+	 * @param eps
+	 * @param getPosition
+	 * @return
+	 */
+	private static boolean isInsideFace(final OriFace face, final Vector2d v, final double eps,
+			final Function<OriHalfedge, Vector2d> getPosition) {
+		int heNum = face.halfedges.size();
+
 		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.positionAfterFolded,
-				baseHe.next.positionAfterFolded, v);
+		boolean baseFlg = GeomUtil.CCWcheck(getPosition.apply(baseHe),
+				getPosition.apply(baseHe.next), v);
 
 		for (int i = 1; i < heNum; i++) {
 			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.positionAfterFolded, he.next.positionAfterFolded,
+			if (GeomUtil.CCWcheck(getPosition.apply(he), getPosition.apply(he.next),
 					v) != baseFlg) {
 				return false;
 			}
