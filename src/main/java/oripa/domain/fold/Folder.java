@@ -105,7 +105,7 @@ public class Folder {
 			sub.sortFaceOverlapOrder(faces, workORmat);
 		}
 
-		findAnswer(foldedModelInfo, 0, overlapRelation);
+		findAnswer(faces, foldedModelInfo, 0, overlapRelation, paperSize);
 
 		foldedModelInfo.setCurrentORmatIndex(0);
 		if (foldableOverlapRelations.isEmpty()) {
@@ -129,9 +129,15 @@ public class Folder {
 	 * @param orMat
 	 */
 	private void findAnswer(
-			final FoldedModelInfo foldedModelInfo, final int subFaceIndex, final int[][] orMat) {
+			final List<OriFace> faces,
+			final FoldedModelInfo foldedModelInfo, final int subFaceIndex, final int[][] orMat,
+			final double paperSize) {
 		SubFace sub = subFaces.get(subFaceIndex);
 		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
+
+		if (detectPenetration(faces, orMat, paperSize)) {
+			return;
+		}
 
 		if (sub.allFaceOrderDecided) {
 			var passMat = Matrices.clone(orMat);
@@ -140,7 +146,7 @@ public class Folder {
 				var ansMat = Matrices.clone(passMat);
 				foldableOverlapRelations.add(ansMat);
 			} else {
-				findAnswer(foldedModelInfo, subFaceIndex + 1, passMat);
+				findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, paperSize);
 			}
 
 		} else {
@@ -183,10 +189,56 @@ public class Folder {
 					var ansMat = Matrices.clone(passMat);
 					foldableOverlapRelations.add(ansMat);
 				} else {
-					findAnswer(foldedModelInfo, subFaceIndex + 1, passMat);
+					findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, paperSize);
 				}
 			}
 		}
+	}
+
+	private boolean detectPenetration(final List<OriFace> faces, final int[][] orMat,
+			final double paperSize) {
+		var checked = new boolean[faces.size()][faces.size()];
+
+		for (int i = 0; i < faces.size(); i++) {
+			for (var he : faces.get(i).halfedges) {
+				var face = he.face;
+				if (he.pair == null) {
+					continue;
+				}
+				var face_pair = he.pair.face;
+
+				var index_i = face.tmpInt;
+				var index_j = face_pair.tmpInt;
+
+				if (checked[index_i][index_j]) {
+					continue;
+				}
+
+				for (int k = 0; k < faces.size(); k++) {
+					var index_k = faces.get(k).tmpInt;
+					if (index_i == index_k || index_j == index_k) {
+						continue;
+					}
+					if (orMat[index_i][index_j] == OverlapRelationValues.LOWER &&
+							orMat[index_i][index_k] == OverlapRelationValues.LOWER &&
+							orMat[index_j][index_k] == OverlapRelationValues.UPPER) {
+						if (OriGeomUtil.isLineCrossFace4(faces.get(k), he, paperSize)) {
+							return true;
+						}
+					} else if (orMat[index_i][index_j] == OverlapRelationValues.UPPER &&
+							orMat[index_i][index_k] == OverlapRelationValues.UPPER &&
+							orMat[index_j][index_k] == OverlapRelationValues.LOWER) {
+						if (OriGeomUtil.isLineCrossFace4(faces.get(k), he, paperSize)) {
+							return true;
+						}
+					}
+				}
+				checked[index_i][index_j] = true;
+				checked[index_j][index_i] = true;
+			}
+		}
+
+		return false;
 	}
 
 	private void estimation(
