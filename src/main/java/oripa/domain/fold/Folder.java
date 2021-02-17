@@ -437,14 +437,20 @@ public class Folder {
 		}
 	}
 
-	private void setLowerValueIfUndefined(final int[][] orMat, final int i, final int j,
-			final boolean[] changed) {
+	/**
+	 *
+	 * @param orMat
+	 * @param i
+	 * @param j
+	 * @return true if LOWER and UPPER is set.
+	 */
+	private boolean setLowerValueIfUndefined(final int[][] orMat, final int i, final int j) {
 		if (orMat[i][j] != OverlapRelationValues.UNDEFINED) {
-			return;
+			return false;
 		}
 		orMat[i][j] = OverlapRelationValues.LOWER;
 		orMat[j][i] = OverlapRelationValues.UPPER;
-		changed[0] = true;
+		return true;
 	}
 
 	/**
@@ -455,61 +461,60 @@ public class Folder {
 	 */
 	private boolean estimate_by4faces(final int[][] orMat) {
 
-		boolean[] changed = new boolean[1];
-		changed[0] = false;
+		boolean changed = false;
 
 		for (Condition4 cond : condition4s) {
 
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2
 			if (orMat[cond.lower1][cond.upper2] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2, changed);
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
-				setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2);
+				changed |= setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2);
 			}
 
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
 			// lower2 > lower1
 			if (orMat[cond.lower2][cond.upper1] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1, changed);
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
-				setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1);
+				changed |= setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1);
 			}
 
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
 			// lower1
 			if (orMat[cond.upper1][cond.upper2] == OverlapRelationValues.LOWER
 					&& orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
-				setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2);
+				changed |= setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1);
 			}
 
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
 			// lower1
 			if (orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER
 					&& orMat[cond.lower2][cond.lower1] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2, changed);
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1);
 			}
 
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
 			// lower2
 			if (orMat[cond.upper2][cond.upper1] == OverlapRelationValues.LOWER
 					&& orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
-				setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1);
+				changed |= setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2);
 			}
 
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
 			// lower2
 			if (orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER
 					&& orMat[cond.lower1][cond.lower2] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1, changed);
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2);
 			}
 		}
 
-		return changed[0];
+		return changed;
 	}
 
 	/**
