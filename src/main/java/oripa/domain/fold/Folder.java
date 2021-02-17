@@ -140,57 +140,38 @@ public class Folder {
 		}
 
 		if (sub.allFaceOrderDecided) {
+			if (subFaceIndex == subFaces.size() - 1) {
+				var ansMat = Matrices.clone(orMat);
+				foldableOverlapRelations.add(ansMat);
+			} else {
+				var passMat = Matrices.clone(orMat);
+				findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, paperSize);
+			}
+			return;
+		}
+
+		for (ArrayList<OriFace> answerStack : sub.answerStacks) {
+			int size = answerStack.size();
+			if (!isCorrectStackOrder(answerStack, orMat)) {
+				continue;
+			}
 			var passMat = Matrices.clone(orMat);
+
+			// determine overlap relations according to stack
+			for (int i = 0; i < size; i++) {
+				int index_i = answerStack.get(i).tmpInt;
+				for (int j = i + 1; j < size; j++) {
+					int index_j = answerStack.get(j).tmpInt;
+					passMat[index_i][index_j] = OverlapRelationValues.UPPER;
+					passMat[index_j][index_i] = OverlapRelationValues.LOWER;
+				}
+			}
 
 			if (subFaceIndex == subFaces.size() - 1) {
 				var ansMat = Matrices.clone(passMat);
 				foldableOverlapRelations.add(ansMat);
 			} else {
 				findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, paperSize);
-			}
-
-		} else {
-			for (ArrayList<OriFace> vec : sub.answerStacks) {
-				int size = vec.size();
-
-				boolean bOK = true;
-				for (int i = 0; i < size; i++) {
-					int index0 = vec.get(i).tmpInt;
-					for (int j = i + 1; j < size; j++) {
-						int index1 = vec.get(j).tmpInt;
-						// stack_index = 0 means the top of stack (looking down
-						// the folded model).
-						// therefore a face with smaller stack_index i should be
-						// UPPER than stack_index j.
-						if (orMat[index0][index1] == OverlapRelationValues.LOWER) {
-							bOK = false;
-							break;
-						}
-					}
-					if (!bOK) {
-						break;
-					}
-				}
-				if (!bOK) {
-					continue;
-				}
-				var passMat = Matrices.clone(orMat);
-
-				for (int i = 0; i < size; i++) {
-					int index0 = vec.get(i).tmpInt;
-					for (int j = i + 1; j < size; j++) {
-						int index1 = vec.get(j).tmpInt;
-						passMat[index0][index1] = OverlapRelationValues.UPPER;
-						passMat[index1][index0] = OverlapRelationValues.LOWER;
-					}
-				}
-
-				if (subFaceIndex == subFaces.size() - 1) {
-					var ansMat = Matrices.clone(passMat);
-					foldableOverlapRelations.add(ansMat);
-				} else {
-					findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, paperSize);
-				}
 			}
 		}
 	}
@@ -238,6 +219,26 @@ public class Folder {
 		}
 
 		return false;
+	}
+
+	private boolean isCorrectStackOrder(final List<OriFace> answerStack, final int[][] orMat) {
+		int size = answerStack.size();
+
+		for (int i = 0; i < size; i++) {
+			int index_i = answerStack.get(i).tmpInt;
+			for (int j = i + 1; j < size; j++) {
+				int index_j = answerStack.get(j).tmpInt;
+				// stack_index = 0 means the top of stack (looking down
+				// the folded model).
+				// therefore a face with smaller stack_index i should be
+				// UPPER than stack_index j.
+				if (orMat[index_i][index_j] == OverlapRelationValues.LOWER) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**
