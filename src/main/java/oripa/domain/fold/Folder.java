@@ -105,7 +105,7 @@ public class Folder {
 			sub.sortFaceOverlapOrder(faces, workORmat);
 		}
 
-		findAnswer(faces, foldedModelInfo, 0, overlapRelation, paperSize);
+		findAnswer(faces, foldedModelInfo, 0, overlapRelation, true, paperSize);
 
 		foldedModelInfo.setCurrentORmatIndex(0);
 		if (foldableOverlapRelations.isEmpty()) {
@@ -131,22 +131,26 @@ public class Folder {
 	private void findAnswer(
 			final List<OriFace> faces,
 			final FoldedModelInfo foldedModelInfo, final int subFaceIndex, final int[][] orMat,
-			final double paperSize) {
-		SubFace sub = subFaces.get(subFaceIndex);
+			final boolean orMatModified, final double paperSize) {
 		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 
-		if (detectPenetration(faces, orMat, paperSize)) {
+		if (orMatModified) {
+			if (detectPenetration(faces, orMat, paperSize)) {
+				return;
+			}
+		}
+
+		if (subFaceIndex == subFaces.size()) {
+			var ansMat = Matrices.clone(orMat);
+			foldableOverlapRelations.add(ansMat);
 			return;
 		}
 
+		SubFace sub = subFaces.get(subFaceIndex);
+
 		if (sub.allFaceOrderDecided) {
-			if (subFaceIndex == subFaces.size() - 1) {
-				var ansMat = Matrices.clone(orMat);
-				foldableOverlapRelations.add(ansMat);
-			} else {
-				var passMat = Matrices.clone(orMat);
-				findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, paperSize);
-			}
+			var passMat = Matrices.clone(orMat);
+			findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, false, paperSize);
 			return;
 		}
 
@@ -167,12 +171,7 @@ public class Folder {
 				}
 			}
 
-			if (subFaceIndex == subFaces.size() - 1) {
-				var ansMat = Matrices.clone(passMat);
-				foldableOverlapRelations.add(ansMat);
-			} else {
-				findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, paperSize);
-			}
+			findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, true, paperSize);
 		}
 	}
 
