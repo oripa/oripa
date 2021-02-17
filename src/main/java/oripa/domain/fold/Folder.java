@@ -560,14 +560,12 @@ public class Folder {
 
 					if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
 							&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {
-						orMat[index_i][index_j] = OverlapRelationValues.UPPER;
-						orMat[index_j][index_i] = OverlapRelationValues.LOWER;
+						setOR(orMat, index_i, index_j, OverlapRelationValues.UPPER, true);
 						return true;
 					}
 					if (orMat[index_i][index_k] == OverlapRelationValues.LOWER
 							&& orMat[index_k][index_j] == OverlapRelationValues.LOWER) {
-						orMat[index_i][index_j] = OverlapRelationValues.LOWER;
-						orMat[index_j][index_i] = OverlapRelationValues.UPPER;
+						setOR(orMat, index_i, index_j, OverlapRelationValues.LOWER, true);
 						return true;
 					}
 				}
