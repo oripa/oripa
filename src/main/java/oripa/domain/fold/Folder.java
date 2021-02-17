@@ -526,74 +526,54 @@ public class Folder {
 	 */
 	private boolean estimate_by3faces2(final int[][] orMat) {
 		boolean bChanged = false;
+
 		for (SubFace sub : subFaces) {
-
-			boolean changed;
-
-			while (true) {
-				changed = false;
-
-				boolean bFound = false;
-				for (int i = 0; i < sub.faces.size(); i++) {
-					for (int j = i + 1; j < sub.faces.size(); j++) {
-
-						// search for undetermined relations
-						int index_i = sub.faces.get(i).tmpInt;
-						int index_j = sub.faces.get(j).tmpInt;
-
-						if (orMat[index_i][index_j] == OverlapRelationValues.NO_OVERLAP) {
-							continue;
-						}
-						if (orMat[index_i][index_j] != OverlapRelationValues.UNDEFINED) {
-							continue;
-						}
-						// Find the intermediary face
-						for (int k = 0; k < sub.faces.size(); k++) {
-							if (k == i || k == j) {
-								continue;
-							}
-
-							int index_k = sub.faces.get(k).tmpInt;
-
-							if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
-									&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {
-								orMat[index_i][index_j] = OverlapRelationValues.UPPER;
-								orMat[index_j][index_i] = OverlapRelationValues.LOWER;
-								bFound = true;
-								changed = true;
-								bChanged = true;
-								break;
-							}
-							if (orMat[index_i][index_k] == OverlapRelationValues.LOWER
-									&& orMat[index_k][index_j] == OverlapRelationValues.LOWER) {
-								orMat[index_i][index_j] = OverlapRelationValues.LOWER;
-								orMat[index_j][index_i] = OverlapRelationValues.UPPER;
-								bFound = true;
-								changed = true;
-								bChanged = true;
-								break;
-							}
-							if (bFound) {
-								break;
-							}
-						}
-						if (bFound) {
-							break;
-						}
-
-					}
-
-					if (bFound) {
-						break;
-					}
-				}
-
-				if (!changed) {
-					break;
-				}
+			while (updateOverlapRelationBy3FaceStack(sub, orMat)) {
+				bChanged = true;
 			}
 		}
 		return bChanged;
+	}
+
+	private boolean updateOverlapRelationBy3FaceStack(final SubFace sub, final int[][] orMat) {
+
+		for (int i = 0; i < sub.faces.size(); i++) {
+			for (int j = i + 1; j < sub.faces.size(); j++) {
+
+				// search for undetermined relations
+				int index_i = sub.faces.get(i).tmpInt;
+				int index_j = sub.faces.get(j).tmpInt;
+
+				if (orMat[index_i][index_j] == OverlapRelationValues.NO_OVERLAP) {
+					continue;
+				}
+				if (orMat[index_i][index_j] != OverlapRelationValues.UNDEFINED) {
+					continue;
+				}
+				// Find the intermediary face
+				for (int k = 0; k < sub.faces.size(); k++) {
+					if (k == i || k == j) {
+						continue;
+					}
+
+					int index_k = sub.faces.get(k).tmpInt;
+
+					if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
+							&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {
+						orMat[index_i][index_j] = OverlapRelationValues.UPPER;
+						orMat[index_j][index_i] = OverlapRelationValues.LOWER;
+						return true;
+					}
+					if (orMat[index_i][index_k] == OverlapRelationValues.LOWER
+							&& orMat[index_k][index_j] == OverlapRelationValues.LOWER) {
+						orMat[index_i][index_j] = OverlapRelationValues.LOWER;
+						orMat[index_j][index_i] = OverlapRelationValues.UPPER;
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
