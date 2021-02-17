@@ -24,11 +24,17 @@ package oripa.domain.fold;
  */
 class Condition3 {
 	/**
-	 * ID of lower face.
+	 * ID of lower face. "lower" means "smaller index in the face stack of
+	 * subface", which is reversed order of overlap relation matrix values.
+	 * Therefore, if face_i is UPPER than face_j in overlap relation matrix,
+	 * then Condition3.lower = i.
 	 */
 	public int lower;
 	/**
-	 * ID of upper face.
+	 * ID of upper face. "upper" means "larger index in the face stack of
+	 * subface", which is reversed order of overlap relation matrix values.
+	 * Therefore, if face_i is LOWER than face_j in overlap relation matrix,
+	 * then Condition3.upper = i.
 	 */
 	public int upper;
 	/**
