@@ -20,26 +20,39 @@ package oripa.domain.fold;
 
 /**
  * Possible stack order of 4 faces connecting at e0 or e1 where e0 and e1 are
- * overlapping.
+ * overlapping. Consider that upper1 and lower1 is connected at e0 and upper2
+ * and lower2 is connected at e1.
  *
  * @author OUCHI Koji
  *
  */
 class Condition4 {
 	/**
-	 * ID of face of upper side sharing 1st edge
+	 * ID of face of upper side sharing 1st edge. "upper" means "larger index in
+	 * the face stack of subface", which is reversed order of overlap matrix
+	 * values. Therefore, if face_i is LOWER than face_j in overlap relation
+	 * matrix, then Condition4.upper1 = i.
 	 */
 	public int upper1;
 	/**
-	 * ID of face of lower side sharing 1st edge
+	 * ID of face of lower side sharing 1st edge. "lower" means "smaller index
+	 * in the face stack of subface", which is reversed order of overlap matrix
+	 * values. Therefore, if face_i is UPPER than face_j in overlap relation
+	 * matrix, then Condition4.lower1 = i.
 	 */
 	public int lower1;
 	/**
-	 * ID of face of upper side sharing 2nd edge
+	 * ID of face of upper side sharing 2nd edge. "upper" means "larger index in
+	 * the face stack of subface", which is reversed order of overlap matrix
+	 * values. Therefore, if face_i is LOWER than face_j in overlap relation
+	 * matrix, then Condition4.upper2 = i.
 	 */
 	public int upper2;
 	/**
-	 * ID of face of lower side sharing 2nd edge
+	 * ID of face of lower side sharing 2nd edge. "lower" means "smaller index
+	 * in the face stack of subface", which is reversed order of overlap matrix
+	 * values. Therefore, if face_i is UPPER than face_j in overlap relation
+	 * relation matrix, then Condition4.lower2 = i.
 	 */
 	public int lower2;
 }
