@@ -238,18 +238,17 @@ public class Folder {
 							if (index_i == index_k || index_j == index_k) {
 								return false;
 							}
+							if (!OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
+								return false;
+							}
 							if (orMat[index_i][index_j] == OverlapRelationValues.LOWER &&
 									orMat[index_i][index_k] == OverlapRelationValues.LOWER &&
 									orMat[index_j][index_k] == OverlapRelationValues.UPPER) {
-								if (OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
-									return true;
-								}
+								return true;
 							} else if (orMat[index_i][index_j] == OverlapRelationValues.UPPER &&
 									orMat[index_i][index_k] == OverlapRelationValues.UPPER &&
 									orMat[index_j][index_k] == OverlapRelationValues.LOWER) {
-								if (OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
-									return true;
-								}
+								return true;
 							}
 
 							return false;
@@ -339,21 +338,22 @@ public class Folder {
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
-					if (OriGeomUtil.isLineCrossFace4(f_k, he, paperSize)) {
-						Condition3 cond = new Condition3();
-						cond.upper = f_i.tmpInt;
-						cond.lower = f_j.tmpInt;
-						cond.other = f_k.tmpInt;
-
-						// Add condition to all subfaces of the 3 faces
-						for (SubFace sub : subFaces) {
-							if (sub.faces.contains(f_i) && sub.faces.contains(f_j)
-									&& sub.faces.contains(f_k)) {
-								sub.condition3s.add(cond);
-							}
-						}
-
+					if (!OriGeomUtil.isLineCrossFace4(f_k, he, paperSize)) {
+						continue;
 					}
+					Condition3 cond = new Condition3();
+					cond.upper = f_i.tmpInt;
+					cond.lower = f_j.tmpInt;
+					cond.other = f_k.tmpInt;
+
+					// Add condition to all subfaces of the 3 faces
+					for (SubFace sub : subFaces) {
+						if (sub.faces.contains(f_i) && sub.faces.contains(f_j)
+								&& sub.faces.contains(f_k)) {
+							sub.condition3s.add(cond);
+						}
+					}
+
 				}
 			}
 		}
@@ -383,41 +383,42 @@ public class Folder {
 					continue;
 				}
 
-				if (GeomUtil.isLineSegmentsOverlap(e0.left.positionAfterFolded,
+				if (!GeomUtil.isLineSegmentsOverlap(e0.left.positionAfterFolded,
 						e0.left.next.positionAfterFolded,
 						e1.left.positionAfterFolded, e1.left.next.positionAfterFolded)) {
-					Condition4 cond = new Condition4();
-					// Add condition to all subfaces of the 4 faces
-					boolean bOverlap = false;
-					for (SubFace sub : subFaces) {
-						if (sub.faces.contains(e0.left.face) && sub.faces.contains(e0.right.face)
-								&& sub.faces.contains(e1.left.face)
-								&& sub.faces.contains(e1.right.face)) {
-							sub.condition4s.add(cond);
-							bOverlap = true;
-						}
-					}
+					continue;
+				}
 
-					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-						cond.upper1 = e0.right.face.tmpInt;
-						cond.lower1 = e0.left.face.tmpInt;
-					} else {
-						cond.upper1 = e0.left.face.tmpInt;
-						cond.lower1 = e0.right.face.tmpInt;
-					}
-					if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-						cond.upper2 = e1.right.face.tmpInt;
-						cond.lower2 = e1.left.face.tmpInt;
-					} else {
-						cond.upper2 = e1.left.face.tmpInt;
-						cond.lower2 = e1.right.face.tmpInt;
-					}
-
-					if (bOverlap) {
-						condition4s.add(cond);
+				Condition4 cond = new Condition4();
+				// Add condition to all subfaces of the 4 faces
+				boolean bOverlap = false;
+				for (SubFace sub : subFaces) {
+					if (sub.faces.contains(e0.left.face) && sub.faces.contains(e0.right.face)
+							&& sub.faces.contains(e1.left.face)
+							&& sub.faces.contains(e1.right.face)) {
+						sub.condition4s.add(cond);
+						bOverlap = true;
 					}
 				}
 
+				if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == OverlapRelationValues.UPPER) {
+					cond.upper1 = e0.right.face.tmpInt;
+					cond.lower1 = e0.left.face.tmpInt;
+				} else {
+					cond.upper1 = e0.left.face.tmpInt;
+					cond.lower1 = e0.right.face.tmpInt;
+				}
+				if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
+					cond.upper2 = e1.right.face.tmpInt;
+					cond.lower2 = e1.left.face.tmpInt;
+				} else {
+					cond.upper2 = e1.left.face.tmpInt;
+					cond.lower2 = e1.right.face.tmpInt;
+				}
+
+				if (bOverlap) {
+					condition4s.add(cond);
+				}
 			}
 		}
 	}
@@ -425,22 +426,25 @@ public class Folder {
 	private void setOR(final int[][] orMat, final int i, final int j, final int value,
 			final boolean bSetPairAtSameTime) {
 		orMat[i][j] = value;
-		if (bSetPairAtSameTime) {
-			if (value == OverlapRelationValues.LOWER) {
-				orMat[j][i] = OverlapRelationValues.UPPER;
-			} else {
-				orMat[j][i] = OverlapRelationValues.LOWER;
-			}
+		if (!bSetPairAtSameTime) {
+			return;
+		}
+
+		if (value == OverlapRelationValues.LOWER) {
+			orMat[j][i] = OverlapRelationValues.UPPER;
+		} else {
+			orMat[j][i] = OverlapRelationValues.LOWER;
 		}
 	}
 
 	private void setLowerValueIfUndefined(final int[][] orMat, final int i, final int j,
 			final boolean[] changed) {
-		if (orMat[i][j] == OverlapRelationValues.UNDEFINED) {
-			orMat[i][j] = OverlapRelationValues.LOWER;
-			orMat[j][i] = OverlapRelationValues.UPPER;
-			changed[0] = true;
+		if (orMat[i][j] != OverlapRelationValues.UNDEFINED) {
+			return;
 		}
+		orMat[i][j] = OverlapRelationValues.LOWER;
+		orMat[j][i] = OverlapRelationValues.UPPER;
+		changed[0] = true;
 	}
 
 	/**
@@ -540,10 +544,7 @@ public class Folder {
 						}
 						// Find the intermediary face
 						for (int k = 0; k < sub.faces.size(); k++) {
-							if (k == i) {
-								continue;
-							}
-							if (k == j) {
+							if (k == i || k == j) {
 								continue;
 							}
 
@@ -617,16 +618,17 @@ public class Folder {
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
-					if (OriGeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
-						if (orMat[index_i][index_k] != OverlapRelationValues.UNDEFINED
-								&& orMat[index_j][index_k] == OverlapRelationValues.UNDEFINED) {
-							setOR(orMat, index_j, index_k, orMat[index_i][index_k], true);
-							bChanged = true;
-						} else if (orMat[index_j][index_k] != OverlapRelationValues.UNDEFINED
-								&& orMat[index_i][index_k] == OverlapRelationValues.UNDEFINED) {
-							setOR(orMat, index_i, index_k, orMat[index_j][index_k], true);
-							bChanged = true;
-						}
+					if (!OriGeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
+						continue;
+					}
+					if (orMat[index_i][index_k] != OverlapRelationValues.UNDEFINED
+							&& orMat[index_j][index_k] == OverlapRelationValues.UNDEFINED) {
+						setOR(orMat, index_j, index_k, orMat[index_i][index_k], true);
+						bChanged = true;
+					} else if (orMat[index_j][index_k] != OverlapRelationValues.UNDEFINED
+							&& orMat[index_i][index_k] == OverlapRelationValues.UNDEFINED) {
+						setOR(orMat, index_i, index_k, orMat[index_j][index_k], true);
+						bChanged = true;
 					}
 				}
 			}
