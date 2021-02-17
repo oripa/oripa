@@ -66,8 +66,8 @@ public class OriFace {
 	public boolean alreadyStacked = false;
 	public ArrayList<TriangleFace> triangles = new ArrayList<>();
 
-	public ArrayList<Condition4> condition4s = new ArrayList<>();
-	public ArrayList<Condition3> condition3s = new ArrayList<>();
+	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
+	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
 	public ArrayList<Integer> condition2s = new ArrayList<>();
 
 	public OriFace() {

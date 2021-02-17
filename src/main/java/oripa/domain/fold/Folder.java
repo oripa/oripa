@@ -39,7 +39,7 @@ import oripa.value.OriLine;
 public class Folder {
 	private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
-	private ArrayList<Condition4> condition4s;
+	private ArrayList<StackConditionOf4Faces> condition4s;
 	private ArrayList<SubFace> subFaces;
 
 	// helper object
@@ -341,7 +341,7 @@ public class Folder {
 					if (!OriGeomUtil.isLineCrossFace4(f_k, he, paperSize)) {
 						continue;
 					}
-					Condition3 cond = new Condition3();
+					StackConditionOf3Faces cond = new StackConditionOf3Faces();
 					cond.upper = f_i.tmpInt;
 					cond.lower = f_j.tmpInt;
 					cond.other = f_k.tmpInt;
@@ -389,7 +389,7 @@ public class Folder {
 					continue;
 				}
 
-				Condition4 cond = new Condition4();
+				StackConditionOf4Faces cond = new StackConditionOf4Faces();
 				// Add condition to all subfaces of the 4 faces
 				boolean bOverlap = false;
 				for (SubFace sub : subFaces) {
@@ -463,7 +463,7 @@ public class Folder {
 
 		boolean changed = false;
 
-		for (Condition4 cond : condition4s) {
+		for (StackConditionOf4Faces cond : condition4s) {
 
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2

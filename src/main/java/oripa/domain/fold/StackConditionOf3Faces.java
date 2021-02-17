@@ -22,7 +22,7 @@ package oripa.domain.fold;
  * If face[i] and face[j] touching edge is covered by face[k] then OR[i][k] =
  * OR[j][k]
  */
-class Condition3 {
+class StackConditionOf3Faces {
 	/**
 	 * ID of lower face. "lower" means "smaller index in the face stack of
 	 * subface", which is reversed order of overlap relation matrix values.

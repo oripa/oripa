@@ -38,8 +38,8 @@ public class SubFace {
 	 */
 	private final ArrayList<OriFace> sortedFaces;
 //	public int tmpInt;
-	public ArrayList<Condition4> condition4s = new ArrayList<>();
-	public ArrayList<Condition3> condition3s = new ArrayList<>();
+	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
+	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
 	public boolean allFaceOrderDecided = false;
 	public ArrayList<ArrayList<OriFace>> answerStacks = new ArrayList<>();
 
@@ -78,12 +78,12 @@ public class SubFace {
 			f.condition4s.clear();
 			f.condition2s.clear();
 
-			for (Condition3 cond : condition3s) {
+			for (StackConditionOf3Faces cond : condition3s) {
 				if (f.tmpInt == cond.other) {
 					f.condition3s.add(cond);
 				}
 			}
-			for (Condition4 cond : condition4s) {
+			for (StackConditionOf4Faces cond : condition4s) {
 				if (f.tmpInt == cond.upper1 || f.tmpInt == cond.upper2) {
 					f.condition4s.add(cond);
 				}
@@ -177,7 +177,7 @@ public class SubFace {
 
 	private boolean checkForSortLocally3(final List<OriFace> modelFaces, final OriFace face) {
 
-		for (Condition3 cond : face.condition3s) {
+		for (StackConditionOf3Faces cond : face.condition3s) {
 			if (modelFaces.get(cond.lower).alreadyStacked
 					&& !modelFaces.get(cond.upper).alreadyStacked) {
 				return false;
@@ -192,7 +192,7 @@ public class SubFace {
 		// stack lower1 < lower2, without upper2 being stacked, dont stack
 		// upper1
 
-		for (Condition4 cond : face.condition4s) {
+		for (StackConditionOf4Faces cond : face.condition4s) {
 
 			if (face.tmpInt == cond.upper2
 					&& modelFaces.get(cond.lower2).alreadyStacked
