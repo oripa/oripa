@@ -124,9 +124,19 @@ public class Folder {
 	 * Determines overlap relations which are left uncertain after using
 	 * necessary conditions.
 	 *
+	 * @param faces
+	 *            all faces of the origami model.
 	 * @param foldedModelInfo
+	 *            an object to store the result
 	 * @param subFaceIndex
+	 *            the index of subface to be updated
 	 * @param orMat
+	 *            overlap relation matrix
+	 * @param orMatModified
+	 *            whether {@code orMat} has been changed by the previous call.
+	 *            {@code true} for the first call.
+	 * @param paperSize
+	 *            paper size
 	 */
 	private void findAnswer(
 			final List<OriFace> faces,
@@ -175,6 +185,20 @@ public class Folder {
 		}
 	}
 
+	/**
+	 * Detects penetration. For face_i and its neighbor face_j, face_k
+	 * penetrates the sheet of paper if face_k is between face_i and face_j in
+	 * the folded state and if the connection edge of face_i and face_j is on
+	 * face_k.
+	 *
+	 * @param faces
+	 *            all faces.
+	 * @param orMat
+	 *            overlap relation matrix.
+	 * @param paperSize
+	 *            paper size.
+	 * @return true if there is a face which penetrates the sheet of paper.
+	 */
 	private boolean detectPenetration(final List<OriFace> faces, final int[][] orMat,
 			final double paperSize) {
 		var checked = new boolean[faces.size()][faces.size()];
@@ -220,6 +244,16 @@ public class Folder {
 		return false;
 	}
 
+	/**
+	 * Whether the order of faces in {@code answerStack} is correct or not
+	 * according to {@code orMat}.
+	 *
+	 * @param answerStack
+	 *            stack of faces including the same subface.
+	 * @param orMat
+	 *            overlap relation matrix.
+	 * @return true if the order is correct.
+	 */
 	private boolean isCorrectStackOrder(final List<OriFace> answerStack, final int[][] orMat) {
 		int size = answerStack.size();
 
@@ -244,6 +278,7 @@ public class Folder {
 	 * Determines overlap relations by necessary conditions.
 	 *
 	 * @param faces
+	 *            all faces.
 	 * @param orMat
 	 *            overlap relation matrix
 	 */

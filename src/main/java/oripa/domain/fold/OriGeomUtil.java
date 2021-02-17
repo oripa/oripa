@@ -86,7 +86,7 @@ class OriGeomUtil {
 	 * @param face
 	 * @param heg
 	 * @param eps
-	 * @return true if {@code heg} crosses {@code face}.
+	 * @return true if {@code heg} crosses {@code face} after folding.
 	 */
 	static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
@@ -141,8 +141,8 @@ class OriGeomUtil {
 	 *
 	 * @param face
 	 * @param heg
-	 * @param eps
-	 * @return true if {@code heg} crosses {@code face}.
+	 * @param size
+	 * @return true if {@code heg} crosses {@code face} after folding.
 	 */
 	static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg, final double size) {
 		Vector2d p1 = heg.positionAfterFolded;
