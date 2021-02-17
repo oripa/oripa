@@ -20,8 +20,8 @@ package oripa.domain.fold;
 
 /**
  * Possible stack order of 4 faces connecting at e0 or e1 where e0 and e1 are
- * overlapping. Consider that upper1 and lower1 is connected at e0 and upper2
- * and lower2 is connected at e1.
+ * overlapping. Consider that upper1 and lower1 are connected at e0 and upper2
+ * and lower2 are connected at e1.
  *
  * @author OUCHI Koji
  *
