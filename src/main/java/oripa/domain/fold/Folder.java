@@ -21,6 +21,7 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import javax.vecmath.Vector2d;
 
@@ -223,26 +224,40 @@ public class Folder {
 					continue;
 				}
 
-				for (int k = 0; k < faces.size(); k++) {
-					var face_k = faces.get(k);
-					var index_k = face_k.tmpInt;
-					if (index_i == index_k || index_j == index_k) {
-						continue;
-					}
-					if (orMat[index_i][index_j] == OverlapRelationValues.LOWER &&
-							orMat[index_i][index_k] == OverlapRelationValues.LOWER &&
-							orMat[index_j][index_k] == OverlapRelationValues.UPPER) {
-						if (OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
-							return true;
-						}
-					} else if (orMat[index_i][index_j] == OverlapRelationValues.UPPER &&
-							orMat[index_i][index_k] == OverlapRelationValues.UPPER &&
-							orMat[index_j][index_k] == OverlapRelationValues.LOWER) {
-						if (OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
-							return true;
-						}
-					}
+				if (orMat[index_i][index_j] != OverlapRelationValues.LOWER &&
+						orMat[index_i][index_j] != OverlapRelationValues.UPPER) {
+					checked[index_i][index_j] = true;
+					checked[index_j][index_i] = true;
+					continue;
 				}
+
+				var penetrates = IntStream.range(0, faces.size()).parallel()
+						.anyMatch(k -> {
+							var face_k = faces.get(k);
+							var index_k = face_k.tmpInt;
+							if (index_i == index_k || index_j == index_k) {
+								return false;
+							}
+							if (orMat[index_i][index_j] == OverlapRelationValues.LOWER &&
+									orMat[index_i][index_k] == OverlapRelationValues.LOWER &&
+									orMat[index_j][index_k] == OverlapRelationValues.UPPER) {
+								if (OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
+									return true;
+								}
+							} else if (orMat[index_i][index_j] == OverlapRelationValues.UPPER &&
+									orMat[index_i][index_k] == OverlapRelationValues.UPPER &&
+									orMat[index_j][index_k] == OverlapRelationValues.LOWER) {
+								if (OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
+									return true;
+								}
+							}
+
+							return false;
+						});
+				if (penetrates) {
+					return true;
+				}
+
 				checked[index_i][index_j] = true;
 				checked[index_j][index_i] = true;
 			}
