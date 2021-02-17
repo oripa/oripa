@@ -314,8 +314,8 @@ public class Folder {
 	}
 
 	/**
-	 * Creates 3-face condition and sets to faces and subfaces: If face[i] and
-	 * face[j] touching edge is covered by face[k] then OR[i][k] = OR[j][k]
+	 * Creates 3-face condition and sets to subfaces: If face[i] and face[j]
+	 * touching edge is covered by face[k] then OR[i][k] = OR[j][k]
 	 *
 	 * @param faces
 	 * @param paperSize
@@ -360,7 +360,7 @@ public class Folder {
 	}
 
 	/**
-	 * Creates 4-face condition and sets to faces and subfaces.
+	 * Creates 4-face condition and sets to subfaces.
 	 *
 	 * @param faces
 	 * @param paperSize
