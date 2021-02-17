@@ -48,12 +48,19 @@ public class Folder {
 	}
 
 	/**
+	 * Computes folded states.
 	 *
 	 * @param origamiModel
+	 *            half-edge based data structure. It will be affected by this
+	 *            method.
 	 * @param foldedModelInfo
+	 *            an object to store information of face layer ordering. It will
+	 *            be affected by this method.
 	 * @param fullEstimation
+	 *            whether the algorithm should compute all possible folded
+	 *            states or not.
 	 * @return the number of flat foldable layer layouts. -1 if
-	 *         <code>fullEstimation</code> is false.
+	 *         {@code fullEstimation} is false.
 	 */
 	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
 			final boolean fullEstimation) {
@@ -955,6 +962,13 @@ public class Folder {
 		}
 	}
 
+	/**
+	 * Computes position of each face after fold.
+	 *
+	 * @param model
+	 *            half-edge based data structure. It will be affected by this
+	 *            method.
+	 */
 	public void foldWithoutLineType(
 			final OrigamiModel model) {
 		List<OriVertex> vertices = model.getVertices();
