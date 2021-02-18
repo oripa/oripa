@@ -64,10 +64,13 @@ import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.fold.FacesToCreasePatternConverter;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
+import oripa.domain.fold.ParentFacesCollector;
+import oripa.domain.fold.SplitFacesToSubFacesConverter;
 import oripa.domain.fold.SubFacesFactory;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.MouseActionHolder;
@@ -939,9 +942,12 @@ public class UIPanel extends JPanel {
 
 		Folder folder = new Folder(
 				new SubFacesFactory(
-						new CreasePatternFactory(),
 						new OrigamiModelFactory(),
-						new LineAdder()));
+						new FacesToCreasePatternConverter(
+								new CreasePatternFactory(),
+								new LineAdder()),
+						new SplitFacesToSubFacesConverter(),
+						new ParentFacesCollector()));
 
 		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
 

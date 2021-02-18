@@ -20,17 +20,9 @@ package oripa.domain.fold;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import oripa.domain.cptool.LineAdder;
-import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -39,15 +31,20 @@ import oripa.value.OriLine;
 public class SubFacesFactory {
 	private static final Logger logger = LoggerFactory.getLogger(SubFacesFactory.class);
 
-	private final CreasePatternFactory cpFactory;
 	private final OrigamiModelFactory modelFactory;
-	private final LineAdder lineAdder;
+	private final FacesToCreasePatternConverter facesToCPConverter;
+	private final SplitFacesToSubFacesConverter facesToSubFacesConverter;
+	private final ParentFacesCollector parentCollector;
 
-	public SubFacesFactory(final CreasePatternFactory cpFactory,
-			final OrigamiModelFactory modelFactory, final LineAdder lineAdder) {
-		this.cpFactory = cpFactory;
+	public SubFacesFactory(
+			final OrigamiModelFactory modelFactory,
+			final FacesToCreasePatternConverter facesTOCPConverter,
+			final SplitFacesToSubFacesConverter facesToSubFacesConverter,
+			final ParentFacesCollector parentCollector) {
 		this.modelFactory = modelFactory;
-		this.lineAdder = lineAdder;
+		this.facesToCPConverter = facesTOCPConverter;
+		this.facesToSubFacesConverter = facesToSubFacesConverter;
+		this.parentCollector = parentCollector;
 	}
 
 	/**
@@ -63,27 +60,20 @@ public class SubFacesFactory {
 			final List<OriFace> faces, final double paperSize) {
 		logger.debug("createSubFaces() start");
 
-		var creasePattern = createFoldedEdgesAsCreasePattern(faces, paperSize);
+		var creasePattern = facesToCPConverter.toCreasePattern(faces, paperSize);
 
 		// By this construction, we get faces that are composed of the edges
 		// after folding where the edges are split at cross points in the crease
 		// pattern. (layering is not considered)
 		// We call such face a subface hereafter.
-		var foldedEdgesOrigamiModel = modelFactory.buildOrigami(creasePattern, paperSize);
+		var splitFaceOrigamiModel = modelFactory.buildOrigami(creasePattern, paperSize);
 
-		var subFaces = new ArrayList<SubFace>(
-				foldedEdgesOrigamiModel.getFaces().stream()
-						.map(face -> new SubFace(face))
-						.collect(Collectors.toList()));
+		var subFaces = facesToSubFacesConverter.toSubFaces(splitFaceOrigamiModel.getFaces());
 
 		// Stores the face reference of given crease pattern into the subface
 		// that is contained in the face.
 		for (SubFace sub : subFaces) {
-			Vector2d innerPoint = sub.getInnerPoint();
-
-			sub.faces.addAll(faces.stream()
-					.filter(face -> OriGeomUtil.isOnFoldedFace(face, innerPoint, paperSize / 1000))
-					.collect(Collectors.toList()));
+			sub.faces.addAll(parentCollector.collect(faces, sub, paperSize));
 		}
 
 		// extract distinct subfaces by comparing face list's items.
@@ -98,33 +88,6 @@ public class SubFacesFactory {
 		logger.debug("createSubFaces() end");
 
 		return distinctSubFaces;
-	}
-
-	/**
-	 * construct edge structure after folding as a crease pattern for easy
-	 * calculation.
-	 *
-	 * @param faces
-	 * @param paperSize
-	 * @return
-	 */
-	private CreasePatternInterface createFoldedEdgesAsCreasePattern(final List<OriFace> faces,
-			final double paperSize) {
-		CreasePatternInterface creasePattern = cpFactory.createCreasePattern(paperSize);
-		logger.debug("createSubFaces(): construct edge structure after folding");
-		creasePattern.clear();
-		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
-				OriLine line = new OriLine(he.positionAfterFolded, he.next.positionAfterFolded,
-						OriLine.Type.MOUNTAIN);
-				// make cross every time to divide the faces.
-				// addLines() cannot make cross among given lines.
-				lineAdder.addLine(line, creasePattern);
-			}
-		}
-		creasePattern.cleanDuplicatedLines();
-
-		return creasePattern;
 	}
 
 	private boolean isSame(final SubFace sub0, final SubFace sub1) {

@@ -1,0 +1,115 @@
+/**
+ * ORIPA - Origami Pattern Editor
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package oripa.domain.fold;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import oripa.domain.creasepattern.CreasePatternInterface;
+
+/**
+ * @author OUCHI Koji
+ *
+ */
+@ExtendWith(MockitoExtension.class)
+class SubFacesFactoryTest {
+	@InjectMocks
+	private SubFacesFactory subFacesFactory;
+	@Mock
+	private FacesToCreasePatternConverter facesToCPConverter;
+	@Mock
+	private OrigamiModelFactory modelFactory;
+	@Mock
+	private SplitFacesToSubFacesConverter facesToSubFacesConverter;
+	@Mock
+	private ParentFacesCollector parentCollector;
+
+	@Mock
+	private CreasePatternInterface cp;
+
+	@Mock
+	private OrigamiModel model;
+
+	/**
+	 * Test method for
+	 * {@link oripa.domain.fold.SubFacesFactory#createSubFaces(java.util.List, double)}.
+	 */
+	@Test
+	void testCreateSubFaces() {
+		final double PAPER_SIZE = 400;
+
+		var face1 = mock(OriFace.class);
+		var face2 = mock(OriFace.class);
+		var face3 = mock(OriFace.class);
+		var inputFaces = new ArrayList<OriFace>(List.of(face1, face2, face3));
+
+		when(facesToCPConverter.toCreasePattern(inputFaces, PAPER_SIZE)).thenReturn(cp);
+		when(modelFactory.buildOrigami(cp, PAPER_SIZE)).thenReturn(model);
+
+		var splitFaces = new ArrayList<OriFace>();
+		when(model.getFaces()).thenReturn(splitFaces);
+
+		var sub1 = createSubFaceMock();
+		var sub2 = createSubFaceMock();
+		var sub3 = createSubFaceMock();
+
+		var subFacesWithDuplication = new ArrayList<SubFace>(List.of(sub1, sub2, sub3));
+		when(facesToSubFacesConverter.toSubFaces(splitFaces)).thenReturn(subFacesWithDuplication);
+
+		whenCollectParentThenReturn(inputFaces, sub1, PAPER_SIZE, List.of(face1, face2));
+		whenCollectParentThenReturn(inputFaces, sub2, PAPER_SIZE, List.of(face2, face1));
+		whenCollectParentThenReturn(inputFaces, sub3, PAPER_SIZE, List.of(face1, face2, face3));
+
+		var subFaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE);
+
+		verify(facesToCPConverter).toCreasePattern(inputFaces, PAPER_SIZE);
+		verify(modelFactory).buildOrigami(cp, PAPER_SIZE);
+		verify(facesToSubFacesConverter).toSubFaces(splitFaces);
+		verify(parentCollector).collect(inputFaces, sub1, PAPER_SIZE);
+		verify(parentCollector).collect(inputFaces, sub2, PAPER_SIZE);
+		verify(parentCollector).collect(inputFaces, sub3, PAPER_SIZE);
+
+		assertEquals(2, subFaces.size());
+
+		// subface should have distinct list of parent faces.
+		assertTrue(subFaces.contains(sub1));
+		assertTrue(subFaces.contains(sub3));
+	}
+
+	private SubFace createSubFaceMock() {
+		var sub = mock(SubFace.class);
+		sub.faces = new ArrayList<OriFace>();
+
+		return sub;
+	}
+
+	private void whenCollectParentThenReturn(final List<OriFace> inputFaces, final SubFace sub,
+			final double paperSize, final List<OriFace> parentFaces) {
+		when(parentCollector.collect(inputFaces, sub, paperSize)).thenReturn(parentFaces);
+	}
+}
