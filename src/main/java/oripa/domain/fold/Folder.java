@@ -28,9 +28,6 @@ import javax.vecmath.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.util.Matrices;
@@ -40,7 +37,7 @@ public class Folder {
 	private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
 	private ArrayList<StackConditionOf4Faces> condition4s;
-	private ArrayList<SubFace> subFaces;
+	private List<SubFace> subFaces;
 
 	// helper object
 	private final FolderTool folderTool = new FolderTool();
@@ -90,7 +87,8 @@ public class Folder {
 
 		// After folding construct the subfaces
 		double paperSize = origamiModel.getPaperSize();
-		subFaces = makeSubFaces(faces, paperSize);
+		var subfacesFactory = new SubFacesFactory();
+		subFaces = subfacesFactory.createSubFaces(faces, paperSize);
 		System.out.println("subFaces.size() = " + subFaces.size());
 
 		foldedModelInfo.setOverlapRelation(
@@ -618,100 +616,6 @@ public class Folder {
 		}
 
 		return bChanged;
-	}
-
-	/**
-	 *
-	 * @param faces
-	 *            extracted from the drawn crease pattern. This method assumes
-	 *            that the faces hold the coordinates after folding.
-	 *
-	 * @param paperSize
-	 * @return subfaces.
-	 */
-	private ArrayList<SubFace> makeSubFaces(
-			final List<OriFace> faces, final double paperSize) {
-		logger.debug("makeSubFaces() start");
-
-		CreasePatternFactory cpFactory = new CreasePatternFactory();
-		CreasePatternInterface temp_creasePattern = cpFactory.createCreasePattern(paperSize);
-
-		// construct edge structure after folding and store it as a
-		// crease pattern for easy calculation
-		logger.debug("makeSubFaces(): construct edge structure after folding");
-		temp_creasePattern.clear();
-		Painter painter = new Painter(temp_creasePattern);
-		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
-				OriLine line = new OriLine(he.positionAfterFolded, he.next.positionAfterFolded,
-						OriLine.Type.MOUNTAIN);
-				// make cross every time to divide the faces.
-				// addLines() cannot make cross among given lines.
-				painter.addLine(line);
-			}
-		}
-		temp_creasePattern.cleanDuplicatedLines();
-
-		// By this construction, we get faces that are composed of the edges
-		// after folding (layering is not considered)
-		// We call such face a subface hereafter.
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		OrigamiModel temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize);
-
-		ArrayList<SubFace> localSubFaces = new ArrayList<>();
-
-		List<OriFace> subFaceSources = temp_origamiModel.getFaces();
-		for (OriFace face : subFaceSources) {
-			localSubFaces.add(new SubFace(face));
-		}
-
-		// Stores the face reference of given crease pattern into the subface
-		// that is contained in the face.
-		for (SubFace sub : localSubFaces) {
-			Vector2d innerPoint = sub.getInnerPoint();
-			for (OriFace face : faces) {
-				if (OriGeomUtil.isOnFoldedFace(face, innerPoint, paperSize / 1000)) {
-					sub.faces.add(face);
-				}
-			}
-		}
-
-		// Check if the SubFace exactly equal to the Face
-		ArrayList<SubFace> tmpFaces = new ArrayList<>();
-		for (SubFace sub : localSubFaces) {
-			boolean sameCase = false;
-			for (SubFace s : tmpFaces) {
-				boolean sameCk = true;
-				if (sub.faces.size() != s.faces.size()) {
-					sameCk = false;
-				} else {
-
-					for (OriFace face : sub.faces) {
-						if (!s.faces.contains(face)) {
-							sameCk = false;
-							break;
-						}
-					}
-				}
-
-				if (sameCk) {
-					sameCase = true;
-					break;
-				}
-			}
-
-			if (!sameCase) {
-				tmpFaces.add(sub);
-			} else {
-			}
-		}
-
-		localSubFaces.clear();
-		localSubFaces.addAll(tmpFaces);
-
-		logger.debug("makeSubFaces() end");
-
-		return localSubFaces;
 	}
 
 	private void simpleFoldWithoutZorder(
