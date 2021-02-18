@@ -96,7 +96,7 @@ public class Folder {
 
 		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 		// Set overlap relations based on valley/mountain folds information
-		step1(faces, overlapRelation);
+		determineOverlapRelationByLineType(faces, overlapRelation);
 
 		holdCondition3s(faces, paperSize, overlapRelation);
 
@@ -769,7 +769,7 @@ public class Folder {
 	 * @param faces
 	 * @param overlapRelation
 	 */
-	private void step1(
+	private void determineOverlapRelationByLineType(
 			final List<OriFace> faces, final int[][] overlapRelation) {
 
 		for (OriFace face : faces) {
