@@ -39,9 +39,16 @@ import oripa.value.OriLine;
 public class SubFacesFactory {
 	private static final Logger logger = LoggerFactory.getLogger(SubFacesFactory.class);
 
-	private final CreasePatternFactory cpFactory = new CreasePatternFactory();
-	private final OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-	private final LineAdder lineAdder = new LineAdder();
+	private final CreasePatternFactory cpFactory;
+	private final OrigamiModelFactory modelFactory;
+	private final LineAdder lineAdder;
+
+	public SubFacesFactory(final CreasePatternFactory cpFactory,
+			final OrigamiModelFactory modelFactory, final LineAdder lineAdder) {
+		this.cpFactory = cpFactory;
+		this.modelFactory = modelFactory;
+		this.lineAdder = lineAdder;
+	}
 
 	/**
 	 *

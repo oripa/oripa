@@ -39,10 +39,13 @@ public class Folder {
 	private ArrayList<StackConditionOf4Faces> condition4s;
 	private List<SubFace> subFaces;
 
+	private final SubFacesFactory subFacesFactory;
+
 	// helper object
 	private final FolderTool folderTool = new FolderTool();
 
-	public Folder() {
+	public Folder(final SubFacesFactory subFacesFactory) {
+		this.subFacesFactory = subFacesFactory;
 	}
 
 	/**
@@ -87,8 +90,7 @@ public class Folder {
 
 		// After folding construct the subfaces
 		double paperSize = origamiModel.getPaperSize();
-		var subfacesFactory = new SubFacesFactory();
-		subFaces = subfacesFactory.createSubFaces(faces, paperSize);
+		subFaces = subFacesFactory.createSubFaces(faces, paperSize);
 		System.out.println("subFaces.size() = " + subFaces.size());
 
 		foldedModelInfo.setOverlapRelation(

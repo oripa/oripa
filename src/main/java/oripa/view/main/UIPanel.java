@@ -59,13 +59,16 @@ import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.bind.state.action.PaintActionSetterFactory;
+import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.TypeForChange;
+import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.OrigamiModel;
 import oripa.domain.fold.OrigamiModelFactory;
+import oripa.domain.fold.SubFacesFactory;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
@@ -934,7 +937,11 @@ public class UIPanel extends JPanel {
 		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
 		FoldedModelInfo foldedModelInfo = new FoldedModelInfo();
 
-		Folder folder = new Folder();
+		Folder folder = new Folder(
+				new SubFacesFactory(
+						new CreasePatternFactory(),
+						new OrigamiModelFactory(),
+						new LineAdder()));
 
 		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
 
