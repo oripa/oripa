@@ -115,8 +115,6 @@ public class EstimationResultUI extends JPanel {
 		if (foldedModelInfo == null) {
 			return;
 		}
-		// List<int[][]> foldableOverlapRelations =
-		// foldedModelInfo.getFoldableOverlapRelations();
 
 		jLabel.setText("Folded model ["
 				+ (foldedModelInfo.getCurrentORmatIndex() + 1) + "/"

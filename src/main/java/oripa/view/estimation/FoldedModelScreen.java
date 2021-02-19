@@ -75,13 +75,13 @@ public class FoldedModelScreen extends JPanel
 	private final double maxu[];
 	private final double minv[];
 	private final double maxv[];
-	private boolean m_bUseColor = true;
-	private boolean m_bFillFaces = true;
-	private boolean m_bAmbientOcclusion = false;
-	private boolean m_bFaceOrderFlip = false;
-	private final double m_rotAngle = 0;
-	private final double m_scale = 0.8;
-	private boolean m_bDrawEdges = true;
+	private boolean useColor = true;
+	private boolean fillFaces = true;
+	private boolean ambientOcclusion = false;
+	private boolean faceOrderFlip = false;
+	private final double rotAngle = 0;
+	private final double scaleRate = 0.8;
+	private boolean drawEdges = true;
 	private Image renderImage;
 	double rotateAngle;
 	double scale;
@@ -150,27 +150,27 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public void setUseColor(final boolean b) {
-		m_bUseColor = b;
+		useColor = b;
 		redrawOrigami();
 	}
 
 	public void setFillFace(final boolean bFillFace) {
-		m_bFillFaces = bFillFace;
+		fillFaces = bFillFace;
 		redrawOrigami();
 	}
 
 	public void drawEdge(final boolean bEdge) {
-		m_bDrawEdges = bEdge;
+		drawEdges = bEdge;
 		redrawOrigami();
 	}
 
 	public void flipFaces(final boolean bFlip) {
-		setM_bFaceOrderFlip(bFlip);
+		this.faceOrderFlip = bFlip;
 		redrawOrigami();
 	}
 
 	public void shadeFaces(final boolean bShade) {
-		m_bAmbientOcclusion = bShade;
+		ambientOcclusion = bShade;
 		redrawOrigami();
 	}
 
@@ -331,12 +331,12 @@ public class FoldedModelScreen extends JPanel
 		double localScale = Math.min(
 				BUFFERW / (domain.getWidth()),
 				BUFFERH / (domain.getHeight())) * 0.95;
-		double angle = m_rotAngle * Math.PI / 180;
-		localScale *= m_scale;
+		double angle = rotAngle * Math.PI / 180;
+		localScale *= scaleRate;
 
 		for (OriFace face : faces) {
 
-			face.trianglateAndSetColor(m_bUseColor, isFaceOrderFlipped(),
+			face.trianglateAndSetColor(useColor, isFaceOrderFlipped(),
 					origamiModel.getPaperSize());
 
 			for (TriangleFace tri : face.triangles) {
@@ -353,7 +353,7 @@ public class FoldedModelScreen extends JPanel
 			}
 		}
 
-		if (m_bDrawEdges) {
+		if (drawEdges) {
 			// apply Sobel filter
 			for (int y = 1; y < BUFFERH - 1; y++) {
 				for (int x = 1; x < BUFFERW - 1; x++) {
@@ -377,7 +377,7 @@ public class FoldedModelScreen extends JPanel
 			}
 		}
 
-		if (m_bAmbientOcclusion) {
+		if (ambientOcclusion) {
 			int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
 					: OverlapRelationValues.LOWER;
 			int r = 10;
@@ -526,7 +526,7 @@ public class FoldedModelScreen extends JPanel
 					int tg = g >> 16;
 					int tb = b >> 16;
 
-					if (!m_bFillFaces) {
+					if (!fillFaces) {
 						pbuf[p] = 0xffffffff;
 
 					} else {
@@ -538,7 +538,7 @@ public class FoldedModelScreen extends JPanel
 							ty = ty % textureImage.getHeight();
 							int textureColor = textureImage.getRGB(tx, ty);
 
-							if (m_bFillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
+							if (fillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
 								pbuf[p] = textureColor;
 							} else {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
@@ -680,10 +680,6 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public boolean isFaceOrderFlipped() {
-		return m_bFaceOrderFlip;
-	}
-
-	public void setM_bFaceOrderFlip(final boolean m_bFaceOrderFlip) {
-		this.m_bFaceOrderFlip = m_bFaceOrderFlip;
+		return faceOrderFlip;
 	}
 }
