@@ -49,7 +49,7 @@ import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.util.gui.MouseUtility;
 
 /**
- * A screen to show whether Maekawa theorem and Kawasaki theorem holds.
+ * A screen to show the folded state of origami.
  *
  * @author Koji
  *

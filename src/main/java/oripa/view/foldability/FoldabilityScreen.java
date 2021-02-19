@@ -60,7 +60,8 @@ import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 /**
- * A screen to show whether Maekawa theorem and Kawasaki theorem holds.
+ * A screen to show whether Maekawa theorem and Kawasaki theorem (and others)
+ * holds.
  *
  * @author Koji
  *
