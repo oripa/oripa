@@ -18,12 +18,10 @@
  */
 package oripa.domain.fold.foldability;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.domain.fold.foldability.MaekawaTheorem;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
 
