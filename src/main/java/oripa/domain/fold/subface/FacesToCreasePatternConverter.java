@@ -62,7 +62,8 @@ public class FacesToCreasePatternConverter {
 	 */
 	public CreasePatternInterface toCreasePattern(final List<OriFace> faces,
 			final double paperSize) {
-		logger.debug("createSubFaces(): construct edge structure after folding");
+		logger.debug("toCreasePattern(): construct edge structure after folding");
+
 		var lines = new ArrayList<OriLine>();
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
@@ -75,6 +76,8 @@ public class FacesToCreasePatternConverter {
 		}
 		CreasePatternInterface creasePattern = cpFactory.createCreasePattern(lines);
 		creasePattern.cleanDuplicatedLines();
+
+		logger.debug("toCreasePattern(): end");
 
 		return creasePattern;
 	}
