@@ -36,10 +36,6 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		return state;
 	}
 
-	protected final boolean currentStateIs(final Class<? extends ActionState> s) {
-		return state.equals(s);
-	}
-
 	@Override
 	public final boolean needSelect() {
 		return needSelect;
