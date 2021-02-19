@@ -54,6 +54,13 @@ import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
 import oripa.viewsetting.main.MainScreenSetting;
 
+/**
+ * Screen to show the silhouette of origami which is the result of face
+ * transform according to the creases.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public class ModelViewScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener,
 		ComponentListener {
