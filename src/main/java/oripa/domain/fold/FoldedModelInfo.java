@@ -22,36 +22,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oripa.geom.RectangleDomain;
-import oripa.util.Matrices;
 
 public class FoldedModelInfo {
-	private int overlapRelation[][] = null;
 	private List<int[][]> overlapRelations = new ArrayList<int[][]>();
 	private int currentORmatIndex = 0;
 
 	private RectangleDomain rectangleDomain;
 
-	public void setNextORMat() {
+	public void setNextIndex() {
 		if (currentORmatIndex < overlapRelations.size() - 1) {
 			currentORmatIndex++;
-			Matrices.copy(overlapRelations.get(currentORmatIndex), overlapRelation);
 		}
 	}
 
-	public void setPrevORMat() {
+	public void setPrevIndex() {
 		if (currentORmatIndex > 0) {
 			currentORmatIndex--;
-			Matrices.copy(overlapRelations.get(currentORmatIndex), overlapRelation);
 		}
 
 	}
 
 	public int[][] getOverlapRelation() {
-		return overlapRelation;
-	}
-
-	public void setOverlapRelation(final int[][] overlapRelation) {
-		this.overlapRelation = overlapRelation;
+		return overlapRelations.get(currentORmatIndex);
 	}
 
 	public List<int[][]> getFoldableOverlapRelations() {

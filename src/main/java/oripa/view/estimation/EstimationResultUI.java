@@ -138,7 +138,7 @@ public class EstimationResultUI extends JPanel {
 
 			jButtonNextAnswer
 					.addActionListener(e -> {
-						foldedModelInfo.setNextORMat();
+						foldedModelInfo.setNextIndex();
 						screen.redrawOrigami();
 						updateLabel();
 					});
@@ -159,7 +159,7 @@ public class EstimationResultUI extends JPanel {
 
 			jButtonPrevAnswer
 					.addActionListener(e -> {
-						foldedModelInfo.setPrevORMat();
+						foldedModelInfo.setPrevIndex();
 						screen.redrawOrigami();
 						updateLabel();
 					});

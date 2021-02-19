@@ -105,10 +105,8 @@ public class Folder {
 		subFaces = subFacesFactory.createSubFaces(faces, paperSize);
 		System.out.println("subFaces.size() = " + subFaces.size());
 
-		foldedModelInfo.setOverlapRelation(
-				createOverlapRelation(faces, paperSize));
+		int[][] overlapRelation = createOverlapRelation(faces, paperSize);
 
-		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 		// Set overlap relations based on valley/mountain folds information
 		determineOverlapRelationByLineType(faces, overlapRelation);
 
@@ -119,10 +117,8 @@ public class Folder {
 
 		estimation(faces, overlapRelation);
 
-		var workORmat = Matrices.clone(overlapRelation);
-
 		for (SubFace sub : subFaces) {
-			sub.sortFaceOverlapOrder(faces, workORmat);
+			sub.sortFaceOverlapOrder(faces, overlapRelation);
 		}
 
 		findAnswer(faces, foldedModelInfo, 0, overlapRelation, true, paperSize);
@@ -130,8 +126,6 @@ public class Folder {
 		foldedModelInfo.setCurrentORmatIndex(0);
 		if (foldableOverlapRelations.isEmpty()) {
 			return 0;
-		} else {
-			Matrices.copy(foldableOverlapRelations.get(0), overlapRelation);
 		}
 
 		folderTool.setFacesOutline(vertices, faces, false);
