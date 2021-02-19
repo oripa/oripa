@@ -34,11 +34,6 @@ import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.domain.fold.subface.FacesToCreasePatternConverter;
-import oripa.domain.fold.subface.ParentFacesCollector;
-import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
-import oripa.domain.fold.subface.SubFace;
-import oripa.domain.fold.subface.SubFacesFactory;
 
 /**
  * @author OUCHI Koji
@@ -76,7 +71,7 @@ class SubFacesFactoryTest {
 		var face3 = mock(OriFace.class);
 		var inputFaces = List.of(face1, face2, face3);
 
-		when(facesToCPConverter.toCreasePattern(inputFaces, PAPER_SIZE)).thenReturn(cp);
+		when(facesToCPConverter.toCreasePattern(inputFaces)).thenReturn(cp);
 		when(modelFactory.buildOrigami(cp, PAPER_SIZE)).thenReturn(model);
 
 		var splitFaces = new ArrayList<OriFace>();
@@ -98,7 +93,7 @@ class SubFacesFactoryTest {
 
 		var subFaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE);
 
-		verify(facesToCPConverter).toCreasePattern(inputFaces, PAPER_SIZE);
+		verify(facesToCPConverter).toCreasePattern(inputFaces);
 		verify(modelFactory).buildOrigami(cp, PAPER_SIZE);
 		verify(facesToSubFacesConverter).toSubFaces(splitFaces);
 		verify(parentCollector).collect(inputFaces, sub1, PAPER_SIZE);

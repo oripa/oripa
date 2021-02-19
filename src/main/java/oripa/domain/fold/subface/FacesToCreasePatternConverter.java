@@ -53,15 +53,13 @@ public class FacesToCreasePatternConverter {
 
 	/**
 	 * construct edge structure after folding as a crease pattern for easy
-	 * calculation.
+	 * calculation to obtain subfaces.
 	 *
 	 * @param faces
 	 *            faces after fold without layer ordering.
-	 * @param paperSize
 	 * @return
 	 */
-	public CreasePatternInterface toCreasePattern(final List<OriFace> faces,
-			final double paperSize) {
+	public CreasePatternInterface toCreasePattern(final List<OriFace> faces) {
 		logger.debug("toCreasePattern(): construct edge structure after folding");
 
 		var lines = new ArrayList<OriLine>();
