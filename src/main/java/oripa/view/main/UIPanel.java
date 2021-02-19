@@ -942,10 +942,10 @@ public class UIPanel extends JPanel {
 
 		Folder folder = new Folder(
 				new SubFacesFactory(
-						new OrigamiModelFactory(),
 						new FacesToCreasePatternConverter(
 								new CreasePatternFactory(),
 								new LineAdder()),
+						new OrigamiModelFactory(),
 						new SplitFacesToSubFacesConverter(),
 						new ParentFacesCollector()));
 

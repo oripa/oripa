@@ -28,6 +28,8 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 
 /**
+ * A factory of subfaces.
+ *
  * @author OUCHI Koji
  *
  */
@@ -39,25 +41,39 @@ public class SubFacesFactory {
 	private final SplitFacesToSubFacesConverter facesToSubFacesConverter;
 	private final ParentFacesCollector parentCollector;
 
+	/**
+	 * Constructs this object with injections.
+	 *
+	 * @param facesToCPConverter
+	 *            is used to convert the faces after fold to lines.
+	 * @param modelFactory
+	 *            is used to create subfaces' outlines as faces.
+	 * @param facesToSubFacesConverter
+	 *            is used to convert the outline faces to subfaces.
+	 * @param parentCollector
+	 *            is used to collect parent faces of each subface.
+	 */
 	public SubFacesFactory(
+			final FacesToCreasePatternConverter facesToCPConverter,
 			final OrigamiModelFactory modelFactory,
-			final FacesToCreasePatternConverter facesTOCPConverter,
 			final SplitFacesToSubFacesConverter facesToSubFacesConverter,
 			final ParentFacesCollector parentCollector) {
 		this.modelFactory = modelFactory;
-		this.facesToCPConverter = facesTOCPConverter;
+		this.facesToCPConverter = facesToCPConverter;
 		this.facesToSubFacesConverter = facesToSubFacesConverter;
 		this.parentCollector = parentCollector;
 	}
 
 	/**
+	 * Creates subfaces from the faces after fold.
 	 *
 	 * @param faces
 	 *            extracted from the drawn crease pattern. This method assumes
 	 *            that the faces hold the coordinates after folding.
 	 *
 	 * @param paperSize
-	 * @return subfaces.
+	 *            size of the sheet of paper.
+	 * @return subfaces prepared for layer ordering estimation.
 	 */
 	public List<SubFace> createSubFaces(
 			final List<OriFace> faces, final double paperSize) {
