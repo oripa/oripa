@@ -41,11 +41,11 @@ import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OrigamiModel;
-import oripa.domain.fold.OverlapRelationValues;
-import oripa.domain.fold.TriangleFace;
-import oripa.domain.fold.TriangleVertex;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.halfedge.TriangleFace;
+import oripa.domain.fold.halfedge.TriangleVertex;
+import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.util.gui.MouseUtility;
 
 /**

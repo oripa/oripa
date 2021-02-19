@@ -25,7 +25,7 @@ import java.util.Collection;
 
 import javax.swing.JFrame;
 
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.value.OriLine;
 
 public class FoldabilityCheckFrame extends JFrame implements ActionListener {

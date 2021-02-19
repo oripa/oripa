@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold;
 
+import oripa.domain.fold.halfedge.OriEdge;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
 
 /**

@@ -31,6 +31,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.domain.fold.subface.FacesToCreasePatternConverter;
+import oripa.domain.fold.subface.ParentFacesCollector;
+import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
+import oripa.domain.fold.subface.SubFace;
+import oripa.domain.fold.subface.SubFacesFactory;
 
 /**
  * @author OUCHI Koji
@@ -57,7 +65,7 @@ class SubFacesFactoryTest {
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.fold.SubFacesFactory#createSubFaces(java.util.List, double)}.
+	 * {@link oripa.domain.fold.subface.SubFacesFactory#createSubFaces(java.util.List, double)}.
 	 */
 	@Test
 	void testCreateSubFaces() {

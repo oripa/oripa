@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 

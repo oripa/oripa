@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold;
 
+import oripa.domain.fold.halfedge.OrigamiModel;
+
 /**
  * @author OUCHI Koji
  *

@@ -28,6 +28,18 @@ import javax.vecmath.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.fold.halfedge.FaceOrderComparator;
+import oripa.domain.fold.halfedge.OriEdge;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OriVertex;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.domain.fold.origeom.OverlapRelationValues;
+import oripa.domain.fold.stackcond.StackConditionOf3Faces;
+import oripa.domain.fold.stackcond.StackConditionOf4Faces;
+import oripa.domain.fold.subface.SubFace;
+import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.util.Matrices;

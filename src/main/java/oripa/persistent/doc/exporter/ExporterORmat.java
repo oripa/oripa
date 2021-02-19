@@ -25,10 +25,10 @@ import java.util.List;
 
 import oripa.doc.Doc;
 import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.domain.fold.OriVertex;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OriVertex;
+import oripa.domain.fold.halfedge.OrigamiModel;
 
 // export folded model
 public class ExporterORmat implements DocExporter {

@@ -23,11 +23,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import oripa.domain.fold.OriEdge;
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.domain.fold.OriVertex;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OriEdge;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OriVertex;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.filetool.Exporter;
 
 /**

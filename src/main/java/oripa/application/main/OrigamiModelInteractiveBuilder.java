@@ -24,8 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.fold.OrigamiModel;
-import oripa.domain.fold.OrigamiModelFactory;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
 
 /**
  * @author OUCHI Koji

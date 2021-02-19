@@ -27,7 +27,7 @@ import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.EstimationEntityHolder;
 import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.CreasePatternHolder;
 import oripa.resource.Constants;
 import oripa.value.OriLine;

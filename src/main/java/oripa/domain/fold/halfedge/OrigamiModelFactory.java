@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
+package oripa.domain.fold.halfedge;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.ElementRemover;
+import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
@@ -63,7 +64,7 @@ public class OrigamiModelFactory {
 	 * @return A model data converted from crease pattern.
 	 */
 	// TODO: change as: throw error if creation failed.
-	OrigamiModel buildOrigami(
+	public OrigamiModel buildOrigami(
 			final Collection<OriLine> creasePattern, final double paperSize) {
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();

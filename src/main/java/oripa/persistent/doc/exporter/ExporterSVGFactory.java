@@ -11,9 +11,9 @@ import javax.vecmath.Vector2d;
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.value.OriLine;
 
 public class ExporterSVGFactory {

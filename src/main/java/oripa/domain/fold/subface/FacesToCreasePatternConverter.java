@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
+package oripa.domain.fold.subface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cptool.LineAdder;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.value.OriLine;
 
 /**

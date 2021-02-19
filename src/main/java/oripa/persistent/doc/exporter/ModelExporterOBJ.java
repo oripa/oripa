@@ -21,7 +21,7 @@ package oripa.persistent.doc.exporter;
 import java.io.IOException;
 
 import oripa.doc.Doc;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
 
 /**

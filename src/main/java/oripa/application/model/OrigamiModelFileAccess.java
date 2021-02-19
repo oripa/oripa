@@ -21,7 +21,7 @@ package oripa.application.model;
 import java.awt.Component;
 import java.io.IOException;
 
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.doc.OrigamiModelFileTypeKey;
 import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
 import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;

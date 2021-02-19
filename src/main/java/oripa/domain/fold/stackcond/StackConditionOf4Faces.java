@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.fold;
+package oripa.domain.fold.stackcond;
 
 /**
  * Possible stack order of 4 faces connecting at e0 or e1 where e0 and e1 are
@@ -26,7 +26,7 @@ package oripa.domain.fold;
  * @author OUCHI Koji
  *
  */
-class StackConditionOf4Faces {
+public class StackConditionOf4Faces {
 	/**
 	 * ID of face of upper side sharing 1st overlapping edge. "upper" means
 	 * "larger index in the face stack of subface", which is reversed order of

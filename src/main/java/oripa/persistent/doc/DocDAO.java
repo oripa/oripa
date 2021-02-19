@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.fold.OrigamiModelFactory;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessActionProvider;
 import oripa.persistent.filetool.FileAccessSupportFilter;

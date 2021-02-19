@@ -16,29 +16,37 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.fold;
+package oripa.domain.fold.halfedge;
 
-/**
- * If face[i] and face[j] touching edge is covered by face[k] then OR[i][k] =
- * OR[j][k]
- */
-class StackConditionOf3Faces {
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector3d;
+
+public class OriHalfedge {
+
+	public OriHalfedge next = null;
+	public OriHalfedge prev = null;
+	public OriHalfedge pair = null;
+	public OriEdge edge = null;
+	public OriVertex vertex = null;
+	public OriFace face = null;
+
 	/**
-	 * ID of lower face. "lower" means "smaller index in the face stack of
-	 * subface", which is reversed order of overlap relation matrix values.
-	 * Therefore, if face_i is UPPER than face_j in overlap relation matrix,
-	 * then Condition3.lower = i.
+	 * mountain/valley value???
 	 */
-	public int lower;
+	public int tmpInt = 0;
+
 	/**
-	 * ID of upper face. "upper" means "larger index in the face stack of
-	 * subface", which is reversed order of overlap relation matrix values.
-	 * Therefore, if face_i is LOWER than face_j in overlap relation matrix,
-	 * then Condition3.upper = i.
+	 * temporary position while folding
 	 */
-	public int upper;
-	/**
-	 * ID of a face covering both upper and lower.
-	 */
-	public int other;
+	public Vector2d tmpVec = new Vector2d();
+
+	public Vector2d positionForDisplay = new Vector2d();
+	public Vector2d positionAfterFolded = new Vector2d();
+	public Vector3d vertexColor = new Vector3d();
+
+	public OriHalfedge(final OriVertex v, final OriFace f) {
+		vertex = v;
+		face = f;
+		tmpVec.set(v.p);
+	}
 }

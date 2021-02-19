@@ -16,13 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
+package oripa.domain.fold.origeom;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.value.OriLine;
@@ -31,9 +34,9 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-class OriGeomUtil {
+public class OriGeomUtil {
 
-	static boolean isFaceOverlap(final OriFace face0, final OriFace face1,
+	public static boolean isFaceOverlap(final OriFace face0, final OriFace face1,
 			final double eps) {
 
 		// If the vertices of face0 are on face1, true
@@ -88,7 +91,7 @@ class OriGeomUtil {
 	 * @param eps
 	 * @return true if {@code heg} crosses {@code face} after folding.
 	 */
-	static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
+	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
 		Vector2d p1 = heg.positionAfterFolded;
 		Vector2d p2 = heg.next.positionAfterFolded;
@@ -132,7 +135,7 @@ class OriGeomUtil {
 		return false;
 	}
 
-	static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
+	public static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
 		return isOnFaceInclusive(line.p0, face)
 				&& isOnFaceInclusive(line.p1, face);
 	}
@@ -144,7 +147,8 @@ class OriGeomUtil {
 	 * @param size
 	 * @return true if {@code heg} crosses {@code face} after folding.
 	 */
-	static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg, final double size) {
+	public static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg,
+			final double size) {
 		Vector2d p1 = heg.positionAfterFolded;
 		Vector2d p2 = heg.next.positionAfterFolded;
 		Vector2d dir = new Vector2d();
@@ -211,7 +215,7 @@ class OriGeomUtil {
 	 * @param eps
 	 * @return
 	 */
-	static boolean isOnFoldedFace(final OriFace face, final Vector2d v,
+	public static boolean isOnFoldedFace(final OriFace face, final Vector2d v,
 			final double eps) {
 		// If its on the faces edge, return false
 		if (isOnEdgeOfFace(face, v, eps, he -> he.positionAfterFolded)) {

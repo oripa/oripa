@@ -16,36 +16,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
-
-import oripa.geom.GeomUtil;
-import oripa.util.rule.AbstractRule;
+package oripa.domain.fold.origeom;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public class FaceIsConvex extends AbstractRule<OriFace> {
+public final class OverlapRelationValues {
+	/**
+	 * If overlapRelation[i][j] == NO_OVERLAP, then face_i does not have overlap
+	 * with face_j.
+	 */
+	public final static int NO_OVERLAP = 0;
+	/**
+	 * If overlapRelation[i][j] == UPPER, then face_i is above face_j.
+	 */
+	public final static int UPPER = 1;
+	/**
+	 * If overlapRelation[i][j] == LOWER, then face_i is under face_j.
+	 */
+	public final static int LOWER = 2;
+	/**
+	 * If overlapRelation[i][j] == UNDEFINED, then face_i is above or under
+	 * face_j but not determined yet.
+	 */
+	public final static int UNDEFINED = 9;
 
-	@Override
-	public boolean holds(final OriFace face) {
-
-		if (face.halfedges.size() == 3) {
-			return true;
-		}
-
-		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.prev.vertex.p,
-				baseHe.vertex.p, baseHe.next.vertex.p);
-
-		for (int i = 1; i < face.halfedges.size(); i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(he.prev.vertex.p, he.vertex.p, he.next.vertex.p) != baseFlg) {
-				return false;
-			}
-
-		}
-
-		return true;
-	}
 }

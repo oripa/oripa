@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -16,19 +16,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.fold;
+package oripa.domain.fold.halfedge;
 
+import oripa.value.OriLine;
 
-public class TriangleFace {
+public class OriEdge {
 
-    public TriangleVertex[] v;
-    public OriFace face;
+	public OriVertex sv = null;
+	public OriVertex ev = null;
+	public OriHalfedge left = null;
+	public OriHalfedge right = null;
+	public int type = 0;
 
-    public TriangleFace(OriFace f) {
-        face = f;
-        v = new TriangleVertex[3];
-        for (int i = 0; i < 3; i++) {
-            v[i] = new TriangleVertex();
-        }
-    }
+	public OriEdge() {
+	}
+
+	public OriEdge(final OriVertex sv, final OriVertex ev, final int type) {
+		this.type = type;
+		this.sv = sv;
+		this.ev = ev;
+	}
+
+	public OriVertex oppositeVertex(final OriVertex v) {
+		return v == sv ? ev : sv;
+	}
+
+	public boolean isFoldLine() {
+		return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt();
+	}
+
 }

@@ -1,6 +1,7 @@
 /**
  * ORIPA - Origami Pattern Editor
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,34 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package oripa.domain.fold.subface;
 
-package oripa.domain.fold;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import oripa.value.OriLine;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.origeom.OriGeomUtil;
 
-public class OriEdge {
+/**
+ * @author OUCHI Koji
+ *
+ */
+public class ParentFacesCollector {
+	public List<OriFace> collect(final List<OriFace> faces, final SubFace sub,
+			final double paperSize) {
+		var innerPoint = sub.getInnerPoint();
 
-	public OriVertex sv = null;
-	public OriVertex ev = null;
-	public OriHalfedge left = null;
-	public OriHalfedge right = null;
-	public int type = 0;
-
-	public OriEdge() {
+		return faces.stream()
+				.filter(face -> OriGeomUtil.isOnFoldedFace(face, innerPoint, paperSize / 1000))
+				.collect(Collectors.toList());
 	}
-
-	public OriEdge(final OriVertex sv, final OriVertex ev, final int type) {
-		this.type = type;
-		this.sv = sv;
-		this.ev = ev;
-	}
-
-	public OriVertex oppositeVertex(final OriVertex v) {
-		return v == sv ? ev : sv;
-	}
-
-	public boolean isFoldLine() {
-		return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt();
-	}
-
 }

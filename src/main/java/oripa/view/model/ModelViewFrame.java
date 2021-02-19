@@ -40,7 +40,7 @@ import oripa.ORIPA;
 import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.doc.OrigamiModelFileTypeKey;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.Constants.ModelDisplayMode;

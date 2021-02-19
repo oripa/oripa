@@ -4,7 +4,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.util.gui.ChildFrameManager;
 
 public class EstimationResultFrameFactory {

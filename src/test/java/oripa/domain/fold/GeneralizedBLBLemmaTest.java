@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import oripa.domain.fold.foldability.GeneralizedBigLittleBigLemma;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
 
 /**
@@ -33,7 +35,7 @@ class GeneralizedBLBLemmaTest {
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.fold.GeneralizedBigLittleBigLemma#holds(oripa.domain.fold.OriVertex)}.
+	 * {@link oripa.domain.fold.foldability.GeneralizedBigLittleBigLemma#holds(oripa.domain.fold.halfedge.OriVertex)}.
 	 */
 	@Test
 	void testHolds_birdFoot() {

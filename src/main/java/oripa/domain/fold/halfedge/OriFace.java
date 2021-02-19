@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.fold;
+package oripa.domain.fold.halfedge;
 
 import java.awt.Color;
 import java.awt.geom.Path2D;
@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import oripa.domain.fold.stackcond.StackConditionOf3Faces;
+import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.geom.GeomUtil;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;

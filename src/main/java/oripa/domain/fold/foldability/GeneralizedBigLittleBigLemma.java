@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
+package oripa.domain.fold.foldability;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +29,9 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.fold.halfedge.OriEdge;
+import oripa.domain.fold.halfedge.OriVertex;
+import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.collection.CollectionUtil;
 import oripa.util.rule.AbstractRule;
 import oripa.value.OriLine;

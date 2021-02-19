@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.fold;
+package oripa.domain.fold.subface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,10 @@ import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.origeom.OverlapRelationValues;
+import oripa.domain.fold.stackcond.StackConditionOf3Faces;
+import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.geom.GeomUtil;
 
 public class SubFace {

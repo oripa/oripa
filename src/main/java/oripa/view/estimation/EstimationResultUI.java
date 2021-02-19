@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.doc.Doc;
 import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.FoldedModelFileTypeKey;
 import oripa.persistent.filetool.FileAccessSupportFilter;

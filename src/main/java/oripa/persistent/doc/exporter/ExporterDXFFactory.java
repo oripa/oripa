@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.entity.exporter.CreasePatternExporterDXF;
 import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
 

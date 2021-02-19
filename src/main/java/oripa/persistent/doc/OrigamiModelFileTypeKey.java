@@ -18,10 +18,10 @@
  */
 package oripa.persistent.doc;
 
-import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.filetool.Exporter;
 import oripa.persistent.filetool.FileTypeProperty;
 import oripa.persistent.filetool.Loader;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.entity.exporter.*;
 
 /**

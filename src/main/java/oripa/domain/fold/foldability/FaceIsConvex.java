@@ -16,22 +16,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
+package oripa.domain.fold.foldability;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.geom.GeomUtil;
+import oripa.util.rule.AbstractRule;
 
 /**
- * @author OUCHI Koji
+ * @author Koji
  *
  */
-public class ParentFacesCollector {
-	public List<OriFace> collect(final List<OriFace> faces, final SubFace sub,
-			final double paperSize) {
-		var innerPoint = sub.getInnerPoint();
+public class FaceIsConvex extends AbstractRule<OriFace> {
 
-		return faces.stream()
-				.filter(face -> OriGeomUtil.isOnFoldedFace(face, innerPoint, paperSize / 1000))
-				.collect(Collectors.toList());
+	@Override
+	public boolean holds(final OriFace face) {
+
+		if (face.halfedges.size() == 3) {
+			return true;
+		}
+
+		OriHalfedge baseHe = face.halfedges.get(0);
+		boolean baseFlg = GeomUtil.CCWcheck(baseHe.prev.vertex.p,
+				baseHe.vertex.p, baseHe.next.vertex.p);
+
+		for (int i = 1; i < face.halfedges.size(); i++) {
+			OriHalfedge he = face.halfedges.get(i);
+			if (GeomUtil.CCWcheck(he.prev.vertex.p, he.vertex.p, he.next.vertex.p) != baseFlg) {
+				return false;
+			}
+
+		}
+
+		return true;
 	}
 }

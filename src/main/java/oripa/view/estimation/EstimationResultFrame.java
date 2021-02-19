@@ -26,7 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 
 public class EstimationResultFrame extends JFrame implements ActionListener {
 

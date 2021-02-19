@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor
+ * ORIPA - Origami Pattern Editor 
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.fold;
+package oripa.domain.fold.halfedge;
 
-import java.util.Comparator;
+public class TriangleFace {
 
-public class FaceOrderComparator implements Comparator<OriFace> {
+    public TriangleVertex[] v;
+    public OriFace face;
 
-	@Override
-	public int compare(final OriFace f1, final OriFace f2) {
-		return f1.z_order > f2.z_order ? 1 : -1;
-	}
+    public TriangleFace(OriFace f) {
+        face = f;
+        v = new TriangleVertex[3];
+        for (int i = 0; i < 3; i++) {
+            v[i] = new TriangleVertex();
+        }
+    }
 }
