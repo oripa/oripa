@@ -52,17 +52,17 @@ class FacesToCreasePatternConverterTest {
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.fold.subface.FacesToCreasePatternConverter#toCreasePattern(java.util.List)}.
+	 * {@link oripa.domain.fold.subface.FacesToCreasePatternConverter#convertToCreasePattern(java.util.List)}.
 	 */
 	@Test
-	void testToCreasePattern() {
+	void testConvertToCreasePattern() {
 		var face1 = OriFaceFactoryForTest.create10PxSquareFace(0, 0);
 		var face2 = OriFaceFactoryForTest.create10PxSquareFace(10, 0);
 		var faces = List.of(face1, face2);
 
 		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
 
-		var converted = converter.toCreasePattern(faces);
+		var converted = converter.convertToCreasePattern(faces);
 		assertSame(creasePattern, converted);
 
 		// tried to convert all half-edges?

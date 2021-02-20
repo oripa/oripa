@@ -38,7 +38,7 @@ public class SplitFacesToSubFacesConverter {
 	 *            where the parameter collection contains edges after fold.
 	 * @return
 	 */
-	public List<SubFace> toSubFaces(final List<OriFace> splitFaces) {
+	public List<SubFace> convertToSubFaces(final List<OriFace> splitFaces) {
 		return new ArrayList<SubFace>(
 				splitFaces.stream()
 						.map(face -> new SubFace(face))

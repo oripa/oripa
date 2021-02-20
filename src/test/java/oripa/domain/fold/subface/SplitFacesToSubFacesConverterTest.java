@@ -38,16 +38,16 @@ class SplitFacesToSubFacesConverterTest {
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.fold.subface.SplitFacesToSubFacesConverter#toSubFaces(java.util.List)}.
+	 * {@link oripa.domain.fold.subface.SplitFacesToSubFacesConverter#convertToSubFaces(java.util.List)}.
 	 */
 	@Test
-	void testToSubFaces() {
+	void testConvertToSubFaces() {
 		var splitFace1 = OriFaceFactoryForTest.create10PxSquareFace(0, 0);
 		var splitFace2 = OriFaceFactoryForTest.create10PxSquareFace(10, 0);
 
 		var splitFaces = List.of(splitFace1, splitFace2);
 
-		var subFaces = converter.toSubFaces(splitFaces);
+		var subFaces = converter.convertToSubFaces(splitFaces);
 
 		for (int i = 0; i < subFaces.size(); i++) {
 			assertSame(splitFaces.get(i), subFaces.get(i).outline);

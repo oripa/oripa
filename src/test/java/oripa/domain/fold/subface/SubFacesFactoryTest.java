@@ -71,7 +71,7 @@ class SubFacesFactoryTest {
 		var face3 = mock(OriFace.class);
 		var inputFaces = List.of(face1, face2, face3);
 
-		when(facesToCPConverter.toCreasePattern(inputFaces)).thenReturn(cp);
+		when(facesToCPConverter.convertToCreasePattern(inputFaces)).thenReturn(cp);
 		when(modelFactory.buildOrigami(cp, PAPER_SIZE)).thenReturn(model);
 
 		var splitFaces = new ArrayList<OriFace>();
@@ -82,7 +82,7 @@ class SubFacesFactoryTest {
 		var sub3 = createSubFaceMock();
 
 		var subFacesWithDuplication = List.of(sub1, sub2, sub3);
-		when(facesToSubFacesConverter.toSubFaces(splitFaces)).thenReturn(subFacesWithDuplication);
+		when(facesToSubFacesConverter.convertToSubFaces(splitFaces)).thenReturn(subFacesWithDuplication);
 
 		when(parentCollector.collect(inputFaces, sub1, PAPER_SIZE))
 				.thenReturn(List.of(face1, face2));
@@ -93,9 +93,9 @@ class SubFacesFactoryTest {
 
 		var subFaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE);
 
-		verify(facesToCPConverter).toCreasePattern(inputFaces);
+		verify(facesToCPConverter).convertToCreasePattern(inputFaces);
 		verify(modelFactory).buildOrigami(cp, PAPER_SIZE);
-		verify(facesToSubFacesConverter).toSubFaces(splitFaces);
+		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces);
 		verify(parentCollector).collect(inputFaces, sub1, PAPER_SIZE);
 		verify(parentCollector).collect(inputFaces, sub2, PAPER_SIZE);
 		verify(parentCollector).collect(inputFaces, sub3, PAPER_SIZE);

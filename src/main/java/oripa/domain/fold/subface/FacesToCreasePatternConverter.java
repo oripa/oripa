@@ -59,7 +59,7 @@ public class FacesToCreasePatternConverter {
 	 *            faces after fold without layer ordering.
 	 * @return
 	 */
-	public CreasePatternInterface toCreasePattern(final List<OriFace> faces) {
+	public CreasePatternInterface convertToCreasePattern(final List<OriFace> faces) {
 		logger.debug("toCreasePattern(): construct edge structure after folding");
 
 		var lines = new ArrayList<OriLine>();

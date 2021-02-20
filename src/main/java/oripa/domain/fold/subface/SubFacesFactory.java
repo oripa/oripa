@@ -79,7 +79,7 @@ public class SubFacesFactory {
 			final List<OriFace> faces, final double paperSize) {
 		logger.debug("createSubFaces() start");
 
-		var creasePattern = facesToCPConverter.toCreasePattern(faces);
+		var creasePattern = facesToCPConverter.convertToCreasePattern(faces);
 
 		// By this construction, we get faces that are composed of the edges
 		// after folding where the edges are split at cross points in the crease
@@ -87,7 +87,7 @@ public class SubFacesFactory {
 		// We call such face a subface hereafter.
 		var splitFaceOrigamiModel = modelFactory.buildOrigami(creasePattern, paperSize);
 
-		var subFaces = facesToSubFacesConverter.toSubFaces(splitFaceOrigamiModel.getFaces());
+		var subFaces = facesToSubFacesConverter.convertToSubFaces(splitFaceOrigamiModel.getFaces());
 
 		// Stores the face reference of given crease pattern into the subface
 		// that is contained in the face.
