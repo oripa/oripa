@@ -18,7 +18,6 @@
  */
 package oripa.domain.fold.origeom;
 
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
@@ -41,14 +40,14 @@ public class OriGeomUtil {
 
 		// If the vertices of face0 are on face1, true
 		for (OriHalfedge he : face0.halfedges) {
-			if (isOnFoldedFace(face1, he.positionAfterFolded, eps)) {
+			if (face1.isOnFoldedFace(he.positionAfterFolded, eps)) {
 				return true;
 			}
 		}
 
 		// If the vertices of face1 are on face0, true
 		for (OriHalfedge he : face1.halfedges) {
-			if (isOnFoldedFace(face0, he.positionAfterFolded, eps)) {
+			if (face0.isOnFoldedFace(he.positionAfterFolded, eps)) {
 				return true;
 			}
 		}
@@ -60,12 +59,12 @@ public class OriGeomUtil {
 				.map(he -> he.positionAfterFolded).collect(Collectors.toList()));
 
 		// If the gravity center of face0 is on face1, true
-		if (isOnFoldedFace(face1, center0, eps)) {
+		if (face1.isOnFoldedFace(center0, eps)) {
 			return true;
 		}
 
 		// If the gravity center of face1 is on face0, true
-		if (isOnFoldedFace(face0, center1, eps)) {
+		if (face0.isOnFoldedFace(center1, eps)) {
 			return true;
 		}
 
@@ -126,18 +125,18 @@ public class OriGeomUtil {
 			}
 		}
 		// If at least one of the endpoints is fully contained
-		if (isOnFoldedFace(face, heg.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFace(heg.positionAfterFolded, eps)) {
 			return true;
 		}
-		if (isOnFoldedFace(face, heg.next.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFace(heg.next.positionAfterFolded, eps)) {
 			return true;
 		}
 		return false;
 	}
 
 	public static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
-		return isOnFaceInclusive(line.p0, face)
-				&& isOnFaceInclusive(line.p1, face);
+		return face.isOnFaceInclusive(line.p0)
+				&& face.isOnFaceInclusive(line.p1);
 	}
 
 	/**
@@ -187,94 +186,14 @@ public class OriGeomUtil {
 		}
 
 		// Checks if the line is in the interior of the face
-		if (isOnFoldedFace(face, heg.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFace(heg.positionAfterFolded, eps)) {
 			return true;
 		}
-		if (isOnFoldedFace(face, heg.next.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFace(heg.next.positionAfterFolded, eps)) {
 			return true;
 		}
 
 		return false;
-	}
-
-	private static boolean isOnFaceInclusive(final Vector2d v, final OriFace face) {
-		// If its on the faces edge, return true
-		if (isOnEdgeOfFace(face, v, GeomUtil.EPS, he -> he.vertex.p)) {
-			return true;
-		}
-
-		return isInsideFace(face, v, GeomUtil.EPS, he -> he.vertex.p);
-	}
-
-	/**
-	 * Whether v is strictly inside of face where the positions are ones after
-	 * folding.
-	 *
-	 * @param face
-	 * @param v
-	 * @param eps
-	 * @return
-	 */
-	public static boolean isOnFoldedFace(final OriFace face, final Vector2d v,
-			final double eps) {
-		// If its on the faces edge, return false
-		if (isOnEdgeOfFace(face, v, eps, he -> he.positionAfterFolded)) {
-			return false;
-		}
-
-		return isInsideFace(face, v, eps, he -> he.positionAfterFolded);
-	}
-
-	/**
-	 * Whether v is on edge of face.
-	 *
-	 * @param face
-	 * @param v
-	 * @param eps
-	 * @param getPosition
-	 * @return
-	 */
-	private static boolean isOnEdgeOfFace(final OriFace face, final Vector2d v, final double eps,
-			final Function<OriHalfedge, Vector2d> getPosition) {
-		int heNum = face.halfedges.size();
-
-		// If its on the face's edge, return true
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.distancePointToSegment(v, getPosition.apply(he),
-					getPosition.apply(he.next)) < eps) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Whether v is inside of face. Don't care whether v is on edge of face.
-	 *
-	 * @param face
-	 * @param v
-	 * @param eps
-	 * @param getPosition
-	 * @return
-	 */
-	private static boolean isInsideFace(final OriFace face, final Vector2d v, final double eps,
-			final Function<OriHalfedge, Vector2d> getPosition) {
-		int heNum = face.halfedges.size();
-
-		OriHalfedge baseHe = face.halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(getPosition.apply(baseHe),
-				getPosition.apply(baseHe.next), v);
-
-		for (int i = 1; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
-			if (GeomUtil.CCWcheck(getPosition.apply(he), getPosition.apply(he.next),
-					v) != baseFlg) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	/**

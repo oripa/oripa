@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.origeom.OriGeomUtil;
 
 /**
  * @author OUCHI Koji
@@ -34,7 +33,7 @@ public class ParentFacesCollector {
 		var innerPoint = sub.getInnerPoint();
 
 		return faces.stream()
-				.filter(face -> OriGeomUtil.isOnFoldedFace(face, innerPoint, paperSize / 1000))
+				.filter(face -> face.isOnFoldedFace(innerPoint, paperSize / 1000))
 				.collect(Collectors.toList());
 	}
 }
