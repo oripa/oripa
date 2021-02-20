@@ -116,9 +116,9 @@ public class SubFace {
 	 *
 	 * @return geometric center of this subface
 	 */
-	public Vector2d getInnerPoint() {
+	public Vector2d getInnerPointAfterFold() {
 		return GeomUtil.computeCentroid(outline.halfedges.stream()
-				.map(he -> he.tmpVec)
+				.map(he -> he.positionAfterFolded)
 				.collect(Collectors.toList()));
 	}
 
