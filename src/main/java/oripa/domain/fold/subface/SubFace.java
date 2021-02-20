@@ -126,7 +126,7 @@ public class SubFace {
 	 */
 	public Vector2d getInnerPoint() {
 		return GeomUtil.computeCentroid(outline.halfedges.stream()
-				.map(he -> he.tmpVec)
+				.map(he -> he.vertex.p)
 				.collect(Collectors.toList()));
 	}
 

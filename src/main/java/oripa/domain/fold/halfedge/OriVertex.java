@@ -27,7 +27,9 @@ import oripa.util.collection.CollectionUtil;
 public class OriVertex {
 
 	/**
-	 * position after fold
+	 * position. The constructor sets the given position to this field where the
+	 * given position is assumed to be for before fold. This field is assumed to
+	 * follow the change by folding. Hence this will be the position after fold.
 	 */
 	public Vector2d p = new Vector2d();
 
