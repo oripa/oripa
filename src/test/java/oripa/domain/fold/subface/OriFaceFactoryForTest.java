@@ -69,6 +69,8 @@ class OriFaceFactoryForTest {
 		face.halfedges.forEach(
 				he -> he.positionAfterFolded = he.vertex.p);
 
+		face.halfedges.forEach(
+				he -> he.tmpVec = he.vertex.p);
 		return face;
 	}
 

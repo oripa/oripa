@@ -31,7 +31,7 @@ import oripa.domain.fold.origeom.OriGeomUtil;
 public class ParentFacesCollector {
 	public List<OriFace> collect(final List<OriFace> faces, final SubFace sub,
 			final double paperSize) {
-		var innerPoint = sub.getInnerPointAfterFold();
+		var innerPoint = sub.getInnerPoint();
 
 		return faces.stream()
 				.filter(face -> OriGeomUtil.isOnFoldedFace(face, innerPoint, paperSize / 1000))
