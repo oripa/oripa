@@ -51,7 +51,11 @@ public class OriFace {
 
 	public boolean faceFront = true;
 	public Color color;
-	public boolean tmpFlg = false;
+
+	/**
+	 * working variable for computing position after fold by the algorithm.
+	 */
+	public boolean movedByFold = false;
 	public int z_order = 0;
 
 	/**
