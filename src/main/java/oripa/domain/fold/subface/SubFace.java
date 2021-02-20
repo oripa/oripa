@@ -72,8 +72,8 @@ public class SubFace {
 		int f_num = parentFaces.size();
 		for (int i = 0; i < f_num; i++) {
 			for (int j = i + 1; j < f_num; j++) {
-				if (orMat[parentFaces.get(i).tmpInt][parentFaces
-						.get(j).tmpInt] == OverlapRelationValues.UNDEFINED) {
+				if (orMat[parentFaces.get(i).faceID][parentFaces
+						.get(j).faceID] == OverlapRelationValues.UNDEFINED) {
 					cnt++;
 				}
 			}
@@ -91,19 +91,19 @@ public class SubFace {
 			f.condition2s.clear();
 
 			for (StackConditionOf3Faces cond : condition3s) {
-				if (f.tmpInt == cond.other) {
+				if (f.faceID == cond.other) {
 					f.condition3s.add(cond);
 				}
 			}
 			for (StackConditionOf4Faces cond : condition4s) {
-				if (f.tmpInt == cond.upper1 || f.tmpInt == cond.upper2) {
+				if (f.faceID == cond.upper1 || f.faceID == cond.upper2) {
 					f.condition4s.add(cond);
 				}
 			}
 
 			for (OriFace ff : parentFaces) {
-				if (orMat[f.tmpInt][ff.tmpInt] == OverlapRelationValues.LOWER) {
-					f.condition2s.add(Integer.valueOf(ff.tmpInt));
+				if (orMat[f.faceID][ff.faceID] == OverlapRelationValues.LOWER) {
+					f.condition2s.add(Integer.valueOf(ff.faceID));
 				}
 			}
 		}
@@ -191,7 +191,7 @@ public class SubFace {
 
 		for (StackConditionOf4Faces cond : face.condition4s) {
 
-			if (face.tmpInt == cond.upper2
+			if (face.faceID == cond.upper2
 					&& modelFaces.get(cond.lower2).alreadyStacked
 					&& modelFaces.get(cond.lower1).alreadyStacked
 					&& !modelFaces.get(cond.upper1).alreadyStacked
@@ -199,7 +199,7 @@ public class SubFace {
 							.get(cond.lower1).tmpInt2) {
 				return false;
 			}
-			if (face.tmpInt == cond.upper1
+			if (face.faceID == cond.upper1
 					&& modelFaces.get(cond.lower2).alreadyStacked
 					&& modelFaces.get(cond.lower1).alreadyStacked
 					&& !modelFaces.get(cond.upper2).alreadyStacked

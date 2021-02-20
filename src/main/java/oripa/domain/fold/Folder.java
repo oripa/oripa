@@ -187,9 +187,9 @@ public class Folder {
 
 			// determine overlap relations according to stack
 			for (int i = 0; i < size; i++) {
-				int index_i = answerStack.get(i).tmpInt;
+				int index_i = answerStack.get(i).faceID;
 				for (int j = i + 1; j < size; j++) {
-					int index_j = answerStack.get(j).tmpInt;
+					int index_j = answerStack.get(j).faceID;
 					passMat[index_i][index_j] = OverlapRelationValues.UPPER;
 					passMat[index_j][index_i] = OverlapRelationValues.LOWER;
 				}
@@ -223,8 +223,8 @@ public class Folder {
 					continue;
 				}
 
-				var index_i = he.face.tmpInt;
-				var index_j = he.pair.face.tmpInt;
+				var index_i = he.face.faceID;
+				var index_j = he.pair.face.faceID;
 
 				if (checked[index_i][index_j]) {
 					continue;
@@ -240,7 +240,7 @@ public class Folder {
 				var penetrates = IntStream.range(0, faces.size()).parallel()
 						.anyMatch(k -> {
 							var face_k = faces.get(k);
-							var index_k = face_k.tmpInt;
+							var index_k = face_k.faceID;
 							if (index_i == index_k || index_j == index_k) {
 								return false;
 							}
@@ -285,9 +285,9 @@ public class Folder {
 		int size = answerStack.size();
 
 		for (int i = 0; i < size; i++) {
-			int index_i = answerStack.get(i).tmpInt;
+			int index_i = answerStack.get(i).faceID;
 			for (int j = i + 1; j < size; j++) {
-				int index_j = answerStack.get(j).tmpInt;
+				int index_j = answerStack.get(j).faceID;
 				// stack_index = 0 means the top of stack (looking down
 				// the folded model).
 				// therefore a face with smaller stack_index i should be
@@ -337,7 +337,7 @@ public class Folder {
 				}
 
 				OriFace f_j = he.pair.face;
-				if (overlapRelation[f_i.tmpInt][f_j.tmpInt] != OverlapRelationValues.LOWER) {
+				if (overlapRelation[f_i.faceID][f_j.faceID] != OverlapRelationValues.LOWER) {
 					continue;
 				}
 				for (OriFace f_k : faces) {
@@ -348,9 +348,9 @@ public class Folder {
 						continue;
 					}
 					StackConditionOf3Faces cond = new StackConditionOf3Faces();
-					cond.upper = f_i.tmpInt;
-					cond.lower = f_j.tmpInt;
-					cond.other = f_k.tmpInt;
+					cond.upper = f_i.faceID;
+					cond.lower = f_j.faceID;
+					cond.other = f_k.faceID;
 
 					// Add condition to all subfaces of the 3 faces
 					for (SubFace sub : subFaces) {
@@ -407,19 +407,19 @@ public class Folder {
 					}
 				}
 
-				if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-					cond.upper1 = e0.right.face.tmpInt;
-					cond.lower1 = e0.left.face.tmpInt;
+				if (overlapRelation[e0.left.face.faceID][e0.right.face.faceID] == OverlapRelationValues.UPPER) {
+					cond.upper1 = e0.right.face.faceID;
+					cond.lower1 = e0.left.face.faceID;
 				} else {
-					cond.upper1 = e0.left.face.tmpInt;
-					cond.lower1 = e0.right.face.tmpInt;
+					cond.upper1 = e0.left.face.faceID;
+					cond.lower1 = e0.right.face.faceID;
 				}
-				if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-					cond.upper2 = e1.right.face.tmpInt;
-					cond.lower2 = e1.left.face.tmpInt;
+				if (overlapRelation[e1.left.face.faceID][e1.right.face.faceID] == OverlapRelationValues.UPPER) {
+					cond.upper2 = e1.right.face.faceID;
+					cond.lower2 = e1.left.face.faceID;
 				} else {
-					cond.upper2 = e1.left.face.tmpInt;
-					cond.lower2 = e1.right.face.tmpInt;
+					cond.upper2 = e1.left.face.faceID;
+					cond.lower2 = e1.right.face.faceID;
 				}
 
 				if (bOverlap) {
@@ -547,8 +547,8 @@ public class Folder {
 			for (int j = i + 1; j < sub.parentFaces.size(); j++) {
 
 				// search for undetermined relations
-				int index_i = sub.parentFaces.get(i).tmpInt;
-				int index_j = sub.parentFaces.get(j).tmpInt;
+				int index_i = sub.parentFaces.get(i).faceID;
+				int index_j = sub.parentFaces.get(j).faceID;
 
 				if (orMat[index_i][index_j] == OverlapRelationValues.NO_OVERLAP) {
 					continue;
@@ -562,7 +562,7 @@ public class Folder {
 						continue;
 					}
 
-					int index_k = sub.parentFaces.get(k).tmpInt;
+					int index_k = sub.parentFaces.get(k).faceID;
 
 					if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
 							&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {
@@ -594,16 +594,16 @@ public class Folder {
 
 		boolean bChanged = false;
 		for (OriFace f_i : faces) {
-			int index_i = f_i.tmpInt;
+			int index_i = f_i.faceID;
 			for (OriHalfedge he : f_i.halfedges) {
 				if (he.pair == null) {
 					continue;
 				}
 				OriFace f_j = he.pair.face;
-				int index_j = f_j.tmpInt;
+				int index_j = f_j.faceID;
 
 				for (OriFace f_k : faces) {
-					int index_k = f_k.tmpInt;
+					int index_k = f_k.faceID;
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
@@ -634,7 +634,7 @@ public class Folder {
 			face.faceFront = true;
 			face.movedByFold = false;
 			face.z_order = 0;
-			face.tmpInt = id;
+			face.faceID = id;
 			id++;
 
 			for (OriHalfedge he : face.halfedges) {
@@ -788,18 +788,18 @@ public class Folder {
 				OriFace pairFace = he.pair.face;
 
 				// If the relation is already decided, skip
-				if (overlapRelation[face.tmpInt][pairFace.tmpInt] == OverlapRelationValues.UPPER
-						|| overlapRelation[face.tmpInt][pairFace.tmpInt] == OverlapRelationValues.LOWER) {
+				if (overlapRelation[face.faceID][pairFace.faceID] == OverlapRelationValues.UPPER
+						|| overlapRelation[face.faceID][pairFace.faceID] == OverlapRelationValues.LOWER) {
 					continue;
 				}
 
 				if ((face.faceFront && he.edge.type == OriLine.Type.MOUNTAIN.toInt())
 						|| (!face.faceFront && he.edge.type == OriLine.Type.VALLEY.toInt())) {
-					overlapRelation[face.tmpInt][pairFace.tmpInt] = OverlapRelationValues.UPPER;
-					overlapRelation[pairFace.tmpInt][face.tmpInt] = OverlapRelationValues.LOWER;
+					overlapRelation[face.faceID][pairFace.faceID] = OverlapRelationValues.UPPER;
+					overlapRelation[pairFace.faceID][face.faceID] = OverlapRelationValues.LOWER;
 				} else {
-					overlapRelation[face.tmpInt][pairFace.tmpInt] = OverlapRelationValues.LOWER;
-					overlapRelation[pairFace.tmpInt][face.tmpInt] = OverlapRelationValues.UPPER;
+					overlapRelation[face.faceID][pairFace.faceID] = OverlapRelationValues.LOWER;
+					overlapRelation[pairFace.faceID][face.faceID] = OverlapRelationValues.UPPER;
 				}
 			}
 		}

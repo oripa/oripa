@@ -67,7 +67,7 @@ public class OriFace {
 	/**
 	 * ID of this face??? (I'm not sure...)
 	 */
-	public int tmpInt = 0;
+	public int faceID = 0;
 
 	public boolean alreadyStacked = false;
 	public ArrayList<TriangleFace> triangles = new ArrayList<>();
