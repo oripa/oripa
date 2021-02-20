@@ -354,8 +354,8 @@ public class Folder {
 
 					// Add condition to all subfaces of the 3 faces
 					for (SubFace sub : subFaces) {
-						if (sub.faces.contains(f_i) && sub.faces.contains(f_j)
-								&& sub.faces.contains(f_k)) {
+						if (sub.parentFaces.contains(f_i) && sub.parentFaces.contains(f_j)
+								&& sub.parentFaces.contains(f_k)) {
 							sub.condition3s.add(cond);
 						}
 					}
@@ -368,7 +368,7 @@ public class Folder {
 	/**
 	 * Creates 4-face condition and sets to subfaces.
 	 *
-	 * @param faces
+	 * @param parentFaces
 	 * @param paperSize
 	 * @param overlapRelation
 	 */
@@ -399,9 +399,9 @@ public class Folder {
 				// Add condition to all subfaces of the 4 faces
 				boolean bOverlap = false;
 				for (SubFace sub : subFaces) {
-					if (sub.faces.contains(e0.left.face) && sub.faces.contains(e0.right.face)
-							&& sub.faces.contains(e1.left.face)
-							&& sub.faces.contains(e1.right.face)) {
+					if (sub.parentFaces.contains(e0.left.face) && sub.parentFaces.contains(e0.right.face)
+							&& sub.parentFaces.contains(e1.left.face)
+							&& sub.parentFaces.contains(e1.right.face)) {
 						sub.condition4s.add(cond);
 						bOverlap = true;
 					}
@@ -543,12 +543,12 @@ public class Folder {
 
 	private boolean updateOverlapRelationBy3FaceStack(final SubFace sub, final int[][] orMat) {
 
-		for (int i = 0; i < sub.faces.size(); i++) {
-			for (int j = i + 1; j < sub.faces.size(); j++) {
+		for (int i = 0; i < sub.parentFaces.size(); i++) {
+			for (int j = i + 1; j < sub.parentFaces.size(); j++) {
 
 				// search for undetermined relations
-				int index_i = sub.faces.get(i).tmpInt;
-				int index_j = sub.faces.get(j).tmpInt;
+				int index_i = sub.parentFaces.get(i).tmpInt;
+				int index_j = sub.parentFaces.get(j).tmpInt;
 
 				if (orMat[index_i][index_j] == OverlapRelationValues.NO_OVERLAP) {
 					continue;
@@ -557,12 +557,12 @@ public class Folder {
 					continue;
 				}
 				// Find the intermediary face
-				for (int k = 0; k < sub.faces.size(); k++) {
+				for (int k = 0; k < sub.parentFaces.size(); k++) {
 					if (k == i || k == j) {
 						continue;
 					}
 
-					int index_k = sub.faces.get(k).tmpInt;
+					int index_k = sub.parentFaces.get(k).tmpInt;
 
 					if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
 							&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {

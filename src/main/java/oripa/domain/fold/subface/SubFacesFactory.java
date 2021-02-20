@@ -92,7 +92,7 @@ public class SubFacesFactory {
 		// Stores the face reference of given crease pattern into the subface
 		// that is contained in the face.
 		for (SubFace sub : subFaces) {
-			sub.faces.addAll(parentCollector.collect(faces, sub, paperSize));
+			sub.parentFaces.addAll(parentCollector.collect(faces, sub, paperSize));
 		}
 
 		// extract distinct subfaces by comparing face list's items.
@@ -110,11 +110,11 @@ public class SubFacesFactory {
 	}
 
 	private boolean isSame(final SubFace sub0, final SubFace sub1) {
-		if (sub0.faces.size() != sub1.faces.size()) {
+		if (sub0.parentFaces.size() != sub1.parentFaces.size()) {
 			return false;
 		}
 
-		return sub0.faces.stream()
-				.allMatch(face -> sub1.faces.contains(face));
+		return sub0.parentFaces.stream()
+				.allMatch(face -> sub1.parentFaces.contains(face));
 	}
 }

@@ -36,11 +36,11 @@ public class SubFace {
 	/**
 	 * faces containing this subface.
 	 */
-	public ArrayList<OriFace> faces;
+	public ArrayList<OriFace> parentFaces;
 	/**
 	 * working stack
 	 */
-	private final ArrayList<OriFace> sortedFaces;
+	private final ArrayList<OriFace> sortedParentFaces;
 //	public int tmpInt;
 	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
@@ -49,8 +49,8 @@ public class SubFace {
 
 	public SubFace(final OriFace f) {
 		outline = f;
-		faces = new ArrayList<>();
-		sortedFaces = new ArrayList<>();
+		parentFaces = new ArrayList<>();
+		sortedParentFaces = new ArrayList<>();
 	}
 
 	/**
@@ -62,17 +62,17 @@ public class SubFace {
 	 * @return the number of possible stacks.
 	 */
 	public int sortFaceOverlapOrder(final List<OriFace> modelFaces, final int[][] orMat) {
-		sortedFaces.clear();
-		for (int i = 0; i < faces.size(); i++) {
-			sortedFaces.add(null);
+		sortedParentFaces.clear();
+		for (int i = 0; i < parentFaces.size(); i++) {
+			sortedParentFaces.add(null);
 		}
 
 		// Count the number of pending surfaces
 		int cnt = 0;
-		int f_num = faces.size();
+		int f_num = parentFaces.size();
 		for (int i = 0; i < f_num; i++) {
 			for (int j = i + 1; j < f_num; j++) {
-				if (orMat[faces.get(i).tmpInt][faces
+				if (orMat[parentFaces.get(i).tmpInt][parentFaces
 						.get(j).tmpInt] == OverlapRelationValues.UNDEFINED) {
 					cnt++;
 				}
@@ -85,7 +85,7 @@ public class SubFace {
 			return 0;
 		}
 
-		for (OriFace f : faces) {
+		for (OriFace f : parentFaces) {
 			f.condition3s.clear();
 			f.condition4s.clear();
 			f.condition2s.clear();
@@ -101,14 +101,14 @@ public class SubFace {
 				}
 			}
 
-			for (OriFace ff : faces) {
+			for (OriFace ff : parentFaces) {
 				if (orMat[f.tmpInt][ff.tmpInt] == OverlapRelationValues.LOWER) {
 					f.condition2s.add(Integer.valueOf(ff.tmpInt));
 				}
 			}
 		}
 
-		for (OriFace f : faces) {
+		for (OriFace f : parentFaces) {
 			f.alreadyStacked = false;
 			f.tmpInt2 = -1;
 		}
@@ -132,13 +132,13 @@ public class SubFace {
 
 	private void sort(final List<OriFace> modelFaces, final int index) {
 
-		if (index == faces.size()) {
-			ArrayList<OriFace> ans = new ArrayList<>(sortedFaces);
+		if (index == parentFaces.size()) {
+			ArrayList<OriFace> ans = new ArrayList<>(sortedParentFaces);
 			answerStacks.add(ans);
 			return;
 		}
 
-		for (OriFace f : faces) {
+		for (OriFace f : parentFaces) {
 			if (f.alreadyStacked) {
 				continue;
 			}
@@ -151,15 +151,15 @@ public class SubFace {
 				continue;
 			}
 
-			sortedFaces.set(index, f);
+			sortedParentFaces.set(index, f);
 			f.alreadyStacked = true;
 			f.tmpInt2 = index;
 
 			sort(modelFaces, index + 1);
 
-			sortedFaces.get(index).alreadyStacked = false;
-			sortedFaces.get(index).tmpInt2 = -1;
-			sortedFaces.set(index, null);
+			sortedParentFaces.get(index).alreadyStacked = false;
+			sortedParentFaces.get(index).tmpInt2 = -1;
+			sortedParentFaces.set(index, null);
 		}
 	}
 
