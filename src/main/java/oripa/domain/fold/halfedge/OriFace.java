@@ -254,7 +254,7 @@ public class OriFace {
 	 * @return centroid of this face with current position {@link OriVertex#p}
 	 *         of half-edges.
 	 */
-	public Vector2d getCentroidAfterFolding() {
+	public Vector2d getCentroid() {
 		return GeomUtil.computeCentroid(halfedges.stream()
 				.map(he -> he.vertex.p)
 				.collect(Collectors.toList()));

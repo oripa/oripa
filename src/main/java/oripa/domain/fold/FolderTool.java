@@ -64,7 +64,7 @@ public class FolderTool {
 			}
 
 			for (OriFace f : faces) {
-				Vector2d faceCenter = f.getCentroidAfterFolding();
+				Vector2d faceCenter = f.getCentroid();
 				for (OriHalfedge he : f.halfedges) {
 					if (he.vertex.tmpFlg) {
 						continue;
