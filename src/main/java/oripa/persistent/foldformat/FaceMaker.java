@@ -98,7 +98,7 @@ public class FaceMaker {
 		var v = edge.get(1);
 		edgePassed[u][v] = true;
 
-		if (face.get(0) == v) {
+		if (face.get(0).intValue() == v) {
 			logger.debug("succeeded to make a face: " + face);
 			return true;
 		}
