@@ -19,59 +19,39 @@
 package oripa.domain.fold.subface;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import oripa.domain.cptool.LineAdder;
-import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
 
 /**
  * @author OUCHI Koji
  *
  */
 @ExtendWith(MockitoExtension.class)
-class FacesToCreasePatternConverterTest {
+class SplitFacesToSubFacesConverterTest {
 	@InjectMocks
-	private FacesToCreasePatternConverter converter;
-	@Mock
-	private CreasePatternFactory cpFactory;
-	@Mock
-	private LineAdder adder;
-
-	@Mock
-	private CreasePatternInterface creasePattern;
+	private SplitFacesToSubFacesConverter converter;
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.fold.subface.FacesToCreasePatternConverter#toCreasePattern(java.util.List)}.
+	 * {@link oripa.domain.fold.subface.SplitFacesToSubFacesConverter#toSubFaces(java.util.List)}.
 	 */
 	@Test
-	void testToCreasePattern() {
-		var face1 = OriFaceFactoryForTest.create10PxSquareFace(0, 0);
-		var face2 = OriFaceFactoryForTest.create10PxSquareFace(10, 0);
-		var faces = List.of(face1, face2);
+	void testToSubFaces() {
+		var splitFace1 = OriFaceFactoryForTest.create10PxSquareFace(0, 0);
+		var splitFace2 = OriFaceFactoryForTest.create10PxSquareFace(10, 0);
 
-		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
+		var splitFaces = List.of(splitFace1, splitFace2);
 
-		var converted = converter.toCreasePattern(faces);
-		assertSame(creasePattern, converted);
+		var subFaces = converter.toSubFaces(splitFaces);
 
-		// tried to convert all half-edges?
-		verify(adder, times(
-				faces.stream()
-						.mapToInt(f -> f.halfedges.size())
-						.sum()))
-								.addLine(any(), anyCollection());
-
-		verify(creasePattern).cleanDuplicatedLines();
+		for (int i = 0; i < subFaces.size(); i++) {
+			assertSame(splitFaces.get(i), subFaces.get(i).outline);
+		}
 	}
+
 }
