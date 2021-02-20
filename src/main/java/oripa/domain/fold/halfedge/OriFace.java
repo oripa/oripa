@@ -59,13 +59,13 @@ public class OriFace {
 	public int z_order = 0;
 
 	/**
-	 * index of stack order for subface??? It seems to be used only while making
-	 * correct stack order.
+	 * index of stack order for subface (probably). It seems to be used only
+	 * while making correct stack order.
 	 */
-	public int tmpInt2 = 0;
+	public int indexForStack = 0;
 
 	/**
-	 * ID of this face??? (I'm not sure...)
+	 * ID of this face (Probably)
 	 */
 	public int faceID = 0;
 
