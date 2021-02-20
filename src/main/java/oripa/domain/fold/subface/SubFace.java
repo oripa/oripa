@@ -124,38 +124,6 @@ public class SubFace {
 
 	private void sort(final List<OriFace> modelFaces, final int index) {
 
-//		if (index == modelFaces.size()) {
-//			ArrayList<OriFace> ans = new ArrayList<>();
-//
-//			ans.addAll(sortedFaces);
-//			answerStacks.add(ans);
-//			return;
-//		}
-//
-//		for (OriFace f : faces) {
-//			if (f.alreadyStacked) {
-//				continue;
-//			}
-//
-//			if (!checkConditionOf2Faces(modelFaces, f)) {
-//				continue;
-//			}
-//
-//			if (!checkForSortLocally3(modelFaces, f)) {
-//				continue;
-//			}
-//
-//			sortedFaces.set(index, f);
-//			f.alreadyStacked = true;
-//			f.tmpInt2 = index;
-//
-//			sort(modelFaces, index + 1);
-//
-//			sortedFaces.get(index).alreadyStacked = false;
-//			sortedFaces.get(index).tmpInt2 = -1;
-//			sortedFaces.set(index, null);
-//		}
-
 		for (OriFace f : faces) {
 			if (f.alreadyStacked) {
 				continue;
@@ -163,19 +131,11 @@ public class SubFace {
 
 			boolean isOK = true;
 
-			for (Integer ii : f.condition2s) {
-				if (!modelFaces.get(ii.intValue()).alreadyStacked) {
-					isOK = false;
-					break;
-				}
-			}
-
-			if (!isOK) {
+			if (!checkConditionOf2Faces(modelFaces, f)) {
 				continue;
 			}
 
-			isOK = checkForSortLocally3(modelFaces, f);
-			if (!isOK) {
+			if (!checkForSortLocally3(modelFaces, f)) {
 				continue;
 			}
 
