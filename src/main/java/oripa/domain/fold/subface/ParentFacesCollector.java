@@ -33,7 +33,7 @@ public class ParentFacesCollector {
 		var innerPoint = sub.getInnerPoint();
 
 		return faces.stream()
-				.filter(face -> face.isOnFoldedFace(innerPoint, paperSize / 1000))
+				.filter(face -> face.isOnFoldedFaceExclusively(innerPoint, paperSize / 1000))
 				.collect(Collectors.toList());
 	}
 }

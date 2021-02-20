@@ -40,14 +40,14 @@ public class OriGeomUtil {
 
 		// If the vertices of face0 are on face1, true
 		for (OriHalfedge he : face0.halfedges) {
-			if (face1.isOnFoldedFace(he.positionAfterFolded, eps)) {
+			if (face1.isOnFoldedFaceExclusively(he.positionAfterFolded, eps)) {
 				return true;
 			}
 		}
 
 		// If the vertices of face1 are on face0, true
 		for (OriHalfedge he : face1.halfedges) {
-			if (face0.isOnFoldedFace(he.positionAfterFolded, eps)) {
+			if (face0.isOnFoldedFaceExclusively(he.positionAfterFolded, eps)) {
 				return true;
 			}
 		}
@@ -59,12 +59,12 @@ public class OriGeomUtil {
 				.map(he -> he.positionAfterFolded).collect(Collectors.toList()));
 
 		// If the gravity center of face0 is on face1, true
-		if (face1.isOnFoldedFace(center0, eps)) {
+		if (face1.isOnFoldedFaceExclusively(center0, eps)) {
 			return true;
 		}
 
 		// If the gravity center of face1 is on face0, true
-		if (face0.isOnFoldedFace(center1, eps)) {
+		if (face0.isOnFoldedFaceExclusively(center1, eps)) {
 			return true;
 		}
 
@@ -125,10 +125,10 @@ public class OriGeomUtil {
 			}
 		}
 		// If at least one of the endpoints is fully contained
-		if (face.isOnFoldedFace(heg.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFaceExclusively(heg.positionAfterFolded, eps)) {
 			return true;
 		}
-		if (face.isOnFoldedFace(heg.next.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFaceExclusively(heg.next.positionAfterFolded, eps)) {
 			return true;
 		}
 		return false;
@@ -186,10 +186,10 @@ public class OriGeomUtil {
 		}
 
 		// Checks if the line is in the interior of the face
-		if (face.isOnFoldedFace(heg.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFaceExclusively(heg.positionAfterFolded, eps)) {
 			return true;
 		}
-		if (face.isOnFoldedFace(heg.next.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFaceExclusively(heg.next.positionAfterFolded, eps)) {
 			return true;
 		}
 

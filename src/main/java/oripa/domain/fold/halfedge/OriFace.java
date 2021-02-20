@@ -36,6 +36,13 @@ import oripa.value.OriLine;
 
 public class OriFace {
 
+	/**
+	 * Assumed to contain half-edges in connection order circularly. The
+	 * half-edge at index 0 should refer the half-edge at index 1, and for index
+	 * k, the half-edge at index k should refer the half-edge at k + 1 by
+	 * {@link OriHalfedge#next} field. The last half-edge should refer the
+	 * half-edge at index 0.
+	 */
 	public ArrayList<OriHalfedge> halfedges = new ArrayList<>();
 
 	/**
@@ -174,6 +181,10 @@ public class OriFace {
 		}
 	}
 
+	/**
+	 * Link each half-edge to previous one and next one in the
+	 * {@link #halfedges}.
+	 */
 	public void makeHalfedgeLoop() {
 		for (int i = 0; i < halfedges.size(); i++) {
 			OriHalfedge pre_he = CollectionUtil.getCircular(halfedges, i - 1);
@@ -192,12 +203,20 @@ public class OriFace {
 		}
 	}
 
+	/**
+	 * Constructs {@code outline} field, which is for showing this face after
+	 * fold in graphic.
+	 */
 	public void setOutline() {
 		outline = createPath(halfedges.stream()
 				.map(he -> he.positionForDisplay)
 				.collect(Collectors.toList()));
 	}
 
+	/**
+	 * Constructs {@code preOutline} field, which is for showing this face
+	 * before fold in graphic.
+	 */
 	public void setPreOutline() {
 		Vector2d centerP = getCentroidBeforeFolding();
 		double rate = 0.5;
@@ -219,6 +238,7 @@ public class OriFace {
 	}
 
 	/**
+	 * Computes centroid.
 	 *
 	 * @return centroid of this face before folding
 	 */
@@ -228,6 +248,12 @@ public class OriFace {
 				.collect(Collectors.toList()));
 	}
 
+	/**
+	 * Computes centroid.
+	 *
+	 * @return centroid of this face with current position {@link OriVertex#p}
+	 *         of half-edges.
+	 */
 	public Vector2d getCentroidAfterFolding() {
 		return GeomUtil.computeCentroid(halfedges.stream()
 				.map(he -> he.vertex.p)
@@ -260,7 +286,7 @@ public class OriFace {
 	 * @param eps
 	 * @return
 	 */
-	public boolean isOnFoldedFace(final Vector2d v, final double eps) {
+	public boolean isOnFoldedFaceExclusively(final Vector2d v, final double eps) {
 		// If its on the faces edge, return false
 		if (isOnEdge(v, eps, he -> he.positionAfterFolded)) {
 			return false;
@@ -297,8 +323,8 @@ public class OriFace {
 	}
 
 	/**
-	 * Whether v is inside of this face. Don't care whether v is on edge of this
-	 * face.
+	 * Whether v is inside of this face. This method is very sensitive to the
+	 * case that v is very close to the edge of this face.
 	 *
 	 * @param v
 	 *            point to be tested.
