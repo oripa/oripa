@@ -31,9 +31,9 @@ public class OriHalfedge {
 	public OriFace face = null;
 
 	/**
-	 * mountain/valley value???
+	 * mountain/valley value
 	 */
-	public int tmpInt = 0;
+	public int type = 0;
 
 	/**
 	 * temporary position while folding

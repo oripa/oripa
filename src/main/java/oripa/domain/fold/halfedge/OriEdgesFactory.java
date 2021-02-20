@@ -119,7 +119,7 @@ public class OriEdgesFactory {
 		edge.ev = he1.vertex;
 		edge.left = he0;
 		edge.right = he1;
-		edge.type = he0.tmpInt;
+		edge.type = he0.type;
 		return edge;
 	}
 
