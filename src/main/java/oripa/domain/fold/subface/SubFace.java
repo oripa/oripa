@@ -53,7 +53,15 @@ public class SubFace {
 		sortedFaces = new ArrayList<>();
 	}
 
-	public int sortFaceOverlapOrder(final List<OriFace> modelFaces, final int[][] mat) {
+	/**
+	 *
+	 * @param modelFaces
+	 *            all faces of inputted model.
+	 * @param orMat
+	 *            overlap relation matrix.
+	 * @return the number of possible stacks.
+	 */
+	public int sortFaceOverlapOrder(final List<OriFace> modelFaces, final int[][] orMat) {
 		sortedFaces.clear();
 		for (int i = 0; i < faces.size(); i++) {
 			sortedFaces.add(null);
@@ -64,7 +72,7 @@ public class SubFace {
 		int f_num = faces.size();
 		for (int i = 0; i < f_num; i++) {
 			for (int j = i + 1; j < f_num; j++) {
-				if (mat[faces.get(i).tmpInt][faces
+				if (orMat[faces.get(i).tmpInt][faces
 						.get(j).tmpInt] == OverlapRelationValues.UNDEFINED) {
 					cnt++;
 				}
@@ -94,7 +102,7 @@ public class SubFace {
 			}
 
 			for (OriFace ff : faces) {
-				if (mat[f.tmpInt][ff.tmpInt] == OverlapRelationValues.LOWER) {
+				if (orMat[f.tmpInt][ff.tmpInt] == OverlapRelationValues.LOWER) {
 					f.condition2s.add(Integer.valueOf(ff.tmpInt));
 				}
 			}
@@ -124,12 +132,16 @@ public class SubFace {
 
 	private void sort(final List<OriFace> modelFaces, final int index) {
 
+		if (index == faces.size()) {
+			ArrayList<OriFace> ans = new ArrayList<>(sortedFaces);
+			answerStacks.add(ans);
+			return;
+		}
+
 		for (OriFace f : faces) {
 			if (f.alreadyStacked) {
 				continue;
 			}
-
-			boolean isOK = true;
 
 			if (!checkConditionOf2Faces(modelFaces, f)) {
 				continue;
@@ -143,32 +155,12 @@ public class SubFace {
 			f.alreadyStacked = true;
 			f.tmpInt2 = index;
 
-			if (index == faces.size() - 1) {
+			sort(modelFaces, index + 1);
 
-				ArrayList<OriFace> ans = new ArrayList<>();
-
-				ans.addAll(sortedFaces);
-				answerStacks.add(ans);
-
-				// Further continue the search for solutions
-				sortedFaces.set(index, null);
-				f.alreadyStacked = false;
-				f.tmpInt2 = -1;
-				continue;
-			} else {
-				sort(modelFaces, index + 1);
-			}
+			sortedFaces.get(index).alreadyStacked = false;
+			sortedFaces.get(index).tmpInt2 = -1;
+			sortedFaces.set(index, null);
 		}
-
-		if (index == 0) {
-			// Examined until the end
-			return;
-		}
-
-		sortedFaces.get(index - 1).alreadyStacked = false;
-		sortedFaces.get(index - 1).tmpInt2 = -1;
-		sortedFaces.set(index - 1, null);
-
 	}
 
 	private boolean checkConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
