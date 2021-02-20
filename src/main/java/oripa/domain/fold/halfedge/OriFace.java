@@ -240,7 +240,7 @@ public class OriFace {
 	 *
 	 * @param v
 	 *            point to be tested.
-	 * @return true if v is
+	 * @return true if v is inside or on the edges of this face.
 	 */
 	public boolean isOnFaceInclusive(final Vector2d v) {
 		// If it's on the faces edge, return true
@@ -256,6 +256,7 @@ public class OriFace {
 	 * folding.
 	 *
 	 * @param v
+	 *            point to be tested.
 	 * @param eps
 	 * @return
 	 */
@@ -272,18 +273,21 @@ public class OriFace {
 	 * Whether v is on edge of face.
 	 *
 	 * @param v
+	 *            point to be tested.
 	 * @param eps
 	 * @param getPosition
+	 *            a function to get the position of face's vertex from
+	 *            half-edge. That is, you can designate using position before
+	 *            fold or the one after fold.
 	 * @return
 	 */
 	private boolean isOnEdge(final Vector2d v, final double eps,
 			final Function<OriHalfedge, Vector2d> getPosition) {
-		var face = this;
-		int heNum = face.halfedges.size();
+		int heNum = halfedges.size();
 
 		// If its on the face's edge, return true
 		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
+			OriHalfedge he = halfedges.get(i);
 			if (GeomUtil.distancePointToSegment(v, getPosition.apply(he),
 					getPosition.apply(he.next)) < eps) {
 				return true;
@@ -293,24 +297,28 @@ public class OriFace {
 	}
 
 	/**
-	 * Whether v is inside of face. Don't care whether v is on edge of face.
+	 * Whether v is inside of this face. Don't care whether v is on edge of this
+	 * face.
 	 *
 	 * @param v
+	 *            point to be tested.
 	 * @param eps
 	 * @param getPosition
-	 * @return
+	 *            a function to get the position of face's vertex from
+	 *            half-edge. That is, you can designate using position before
+	 *            fold or the one after fold.
+	 * @return true if v inside of this face.
 	 */
 	private boolean isInside(final Vector2d v, final double eps,
 			final Function<OriHalfedge, Vector2d> getPosition) {
-		var face = this;
-		int heNum = face.halfedges.size();
+		int heNum = halfedges.size();
 
-		OriHalfedge baseHe = face.halfedges.get(0);
+		OriHalfedge baseHe = halfedges.get(0);
 		boolean baseFlg = GeomUtil.CCWcheck(getPosition.apply(baseHe),
 				getPosition.apply(baseHe.next), v);
 
 		for (int i = 1; i < heNum; i++) {
-			OriHalfedge he = face.halfedges.get(i);
+			OriHalfedge he = halfedges.get(i);
 			if (GeomUtil.CCWcheck(getPosition.apply(he), getPosition.apply(he.next),
 					v) != baseFlg) {
 				return false;
