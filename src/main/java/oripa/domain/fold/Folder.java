@@ -103,7 +103,7 @@ public class Folder {
 		// After folding construct the subfaces
 		double paperSize = origamiModel.getPaperSize();
 		subFaces = subFacesFactory.createSubFaces(faces, paperSize);
-		System.out.println("subFaces.size() = " + subFaces.size());
+		logger.debug("subFaces.size() = " + subFaces.size());
 
 		int[][] overlapRelation = createOverlapRelation(faces, paperSize);
 
@@ -376,7 +376,7 @@ public class Folder {
 			final List<OriEdge> edges, final int[][] overlapRelation) {
 
 		int edgeNum = edges.size();
-		System.out.println("edgeNum = " + edgeNum);
+		logger.debug("edgeNum = " + edgeNum);
 
 		for (int i = 0; i < edgeNum; i++) {
 			OriEdge e0 = edges.get(i);
@@ -399,7 +399,8 @@ public class Folder {
 				// Add condition to all subfaces of the 4 faces
 				boolean bOverlap = false;
 				for (SubFace sub : subFaces) {
-					if (sub.parentFaces.contains(e0.left.face) && sub.parentFaces.contains(e0.right.face)
+					if (sub.parentFaces.contains(e0.left.face)
+							&& sub.parentFaces.contains(e0.right.face)
 							&& sub.parentFaces.contains(e1.left.face)
 							&& sub.parentFaces.contains(e1.right.face)) {
 						sub.condition4s.add(cond);
@@ -848,7 +849,7 @@ public class Folder {
 	private void walkFace(final List<OriFace> faces, final OriFace face, final int walkFaceCount) {
 		face.movedByFold = true;
 		if (walkFaceCount > 1000) {
-			System.out.println("walkFace too deep");
+			logger.error("walkFace too deep");
 			return;
 		}
 		for (OriHalfedge he : face.halfedges) {

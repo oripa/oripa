@@ -49,6 +49,7 @@ public class FolderTool {
 			f.setOutline();
 		}
 
+		// not used.
 		if (isSlide) {
 			int minDepth = Integer.MAX_VALUE;
 			int maxDepth = -Integer.MAX_VALUE;
