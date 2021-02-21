@@ -72,6 +72,7 @@ class OriFaceTest {
 
 		final double EPS = 1e-6;
 		assertTrue(face.isOnFoldedFaceExclusively(new Vector2d(5, 5), EPS));
+		assertTrue(face.isOnFoldedFaceExclusively(new Vector2d(5, 9.9999), EPS));
 		assertFalse(face.isOnFoldedFaceExclusively(new Vector2d(5, 10 + 1e-8), EPS));
 		assertFalse(face.isOnFoldedFaceExclusively(new Vector2d(5, 10), EPS));
 	}

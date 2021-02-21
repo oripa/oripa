@@ -278,13 +278,13 @@ public class OriFace {
 	}
 
 	/**
-	 * Whether v is strictly inside of face where the positions are ones after
-	 * folding.
+	 * Whether v is strictly inside of this face where the positions are ones
+	 * after folding.
 	 *
 	 * @param v
 	 *            point to be tested.
 	 * @param eps
-	 * @return
+	 * @return true if v is strictly inside of this face.
 	 */
 	public boolean isOnFoldedFaceExclusively(final Vector2d v, final double eps) {
 		// If it's on the face's edge, return false
