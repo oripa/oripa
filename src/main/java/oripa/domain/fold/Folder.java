@@ -639,7 +639,7 @@ public class Folder {
 			id++;
 
 			for (OriHalfedge he : face.halfedges) {
-				he.tmpVec.set(he.vertex.p);
+				he.tmpVec.set(he.getPosition());
 			}
 		}
 

@@ -54,8 +54,10 @@ public class CutModelOutlinesFactory {
 				double param = params[1];
 
 				Vector2d crossV = new Vector2d();
-				crossV.x = (1.0 - param) * he.vertex.preP.x + param * he.next.vertex.preP.x;
-				crossV.y = (1.0 - param) * he.vertex.preP.y + param * he.next.vertex.preP.y;
+				var position = he.getPositionBeforeFolding();
+				var nextPosition = he.next.getPositionBeforeFolding();
+				crossV.x = (1.0 - param) * position.x + param * nextPosition.x;
+				crossV.y = (1.0 - param) * position.y + param * nextPosition.y;
 
 				boolean isNewPoint = true;
 				for (Vector2d v2d : vv) {

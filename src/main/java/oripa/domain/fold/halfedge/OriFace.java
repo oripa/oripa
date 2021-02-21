@@ -31,6 +31,7 @@ import javax.vecmath.Vector3d;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.geom.GeomUtil;
+import oripa.geom.RectangleDomain;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
@@ -96,19 +97,17 @@ public class OriFace {
 		triangles.clear();
 
 		double min_x = Double.MAX_VALUE;
-		double max_x = -Double.MAX_VALUE;
 		double min_y = Double.MAX_VALUE;
-		double max_y = -Double.MAX_VALUE;
 
+		var domain = new RectangleDomain();
 		for (OriHalfedge he : halfedges) {
-			min_x = Math.min(min_x, he.vertex.p.x);
-			max_x = Math.max(max_x, he.vertex.p.x);
-			min_y = Math.min(min_y, he.vertex.p.y);
-			max_y = Math.max(max_y, he.vertex.p.y);
+			domain.enlarge(he.getPosition());
 		}
+		min_x = domain.getLeft();
+		min_y = domain.getTop();
 
-		double faceWidth = Math.sqrt((max_x - min_x) * (max_x - min_x)
-				+ (max_y - min_y) * (max_y - min_y));
+		double faceWidth = Math.sqrt(domain.getWidth() * domain.getWidth()
+				+ domain.getHeight() * domain.getHeight());
 
 		for (OriHalfedge he : halfedges) {
 			double val = 0;
@@ -127,10 +126,11 @@ public class OriFace {
 			double vv = (val + 2) / 4.0;
 			double v = (0.75 + vv * 0.25);
 
-			v *= 0.9 + 0.15 * (Math.sqrt((he.vertex.p.x - min_x)
-					* (he.vertex.p.x - min_x)
-					+ (he.vertex.p.y - min_y)
-							* (he.vertex.p.y - min_y))
+			var position = he.getPosition();
+			v *= 0.9 + 0.15 * (Math.sqrt((position.x - min_x)
+					* (position.x - min_x)
+					+ (position.y - min_y)
+							* (position.y - min_y))
 					/ faceWidth);
 
 			v = Math.min(1, v);
@@ -159,23 +159,23 @@ public class OriFace {
 		OriHalfedge startHe = halfedges.get(0);
 		for (int i = 1; i < heNum - 1; i++) {
 			TriangleFace tri = new TriangleFace(this);
-			tri.v[0].p = new Vector2d(startHe.vertex.p);
-			tri.v[1].p = new Vector2d(halfedges.get(i).vertex.p);
-			tri.v[2].p = new Vector2d(halfedges.get(i + 1).vertex.p);
+			tri.v[0].p = new Vector2d(startHe.getPosition());
+			tri.v[1].p = new Vector2d(halfedges.get(i).getPosition());
+			tri.v[2].p = new Vector2d(halfedges.get(i + 1).getPosition());
 
 			tri.v[0].color = new Vector3d(startHe.vertexColor);
 			tri.v[1].color = new Vector3d(halfedges.get(i).vertexColor);
 			tri.v[2].color = new Vector3d(halfedges.get(i + 1).vertexColor);
 
-			tri.v[0].uv = new Vector2d(startHe.vertex.preP.x / paperSize
-					+ 0.5, startHe.vertex.preP.y / paperSize + 0.5);
-			tri.v[1].uv = new Vector2d(halfedges.get(i).vertex.preP.x
+			tri.v[0].uv = new Vector2d(startHe.getPositionBeforeFolding().x / paperSize
+					+ 0.5, startHe.getPositionBeforeFolding().y / paperSize + 0.5);
+			tri.v[1].uv = new Vector2d(halfedges.get(i).getPositionBeforeFolding().x
 					/ paperSize + 0.5,
-					halfedges.get(i).vertex.preP.y
+					halfedges.get(i).getPositionBeforeFolding().y
 							/ paperSize + 0.5);
-			tri.v[2].uv = new Vector2d(halfedges.get(i + 1).vertex.preP.x
+			tri.v[2].uv = new Vector2d(halfedges.get(i + 1).getPositionBeforeFolding().x
 					/ paperSize + 0.5,
-					halfedges.get(i + 1).vertex.preP.y
+					halfedges.get(i + 1).getPositionBeforeFolding().y
 							/ paperSize + 0.5);
 			triangles.add(tri);
 		}
@@ -244,7 +244,7 @@ public class OriFace {
 	 */
 	public Vector2d getCentroidBeforeFolding() {
 		return GeomUtil.computeCentroid(halfedges.stream()
-				.map(he -> he.vertex.preP)
+				.map(he -> he.getPositionBeforeFolding())
 				.collect(Collectors.toList()));
 	}
 
@@ -256,7 +256,7 @@ public class OriFace {
 	 */
 	public Vector2d getCentroid() {
 		return GeomUtil.computeCentroid(halfedges.stream()
-				.map(he -> he.vertex.p)
+				.map(he -> he.getPosition())
 				.collect(Collectors.toList()));
 	}
 
@@ -270,11 +270,11 @@ public class OriFace {
 	 */
 	public boolean isOnFaceInclusively(final Vector2d v) {
 		// If it's on the face's edge, return true
-		if (isOnEdge(v, GeomUtil.EPS, he -> he.vertex.p)) {
+		if (isOnEdge(v, GeomUtil.EPS, he -> he.getPosition())) {
 			return true;
 		}
 
-		return isInside(v, GeomUtil.EPS, he -> he.vertex.p);
+		return isInside(v, GeomUtil.EPS, he -> he.getPosition());
 	}
 
 	/**

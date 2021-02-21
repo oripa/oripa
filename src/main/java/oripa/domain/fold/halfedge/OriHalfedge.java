@@ -49,4 +49,12 @@ public class OriHalfedge {
 		face = f;
 		tmpVec.set(v.p);
 	}
+
+	public Vector2d getPosition() {
+		return vertex.p;
+	}
+
+	public Vector2d getPositionBeforeFolding() {
+		return vertex.preP;
+	}
 }

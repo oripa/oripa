@@ -14,6 +14,7 @@ import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 public class ExporterSVGFactory {
@@ -119,21 +120,21 @@ public class ExporterSVGFactory {
 					var bw = new BufferedWriter(fw);) {
 				Vector2d maxV = new Vector2d(-Double.MAX_VALUE,
 						-Double.MAX_VALUE);
-				Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 				Vector2d modelCenter = new Vector2d();
 
 				List<OriFace> faces = origamiModel.getFaces();
 
+				var domain = new RectangleDomain();
 				for (OriFace face : faces) {
 					for (OriHalfedge he : face.halfedges) {
-						maxV.x = Math.max(maxV.x, he.vertex.p.x);
-						maxV.y = Math.max(maxV.y, he.vertex.p.y);
-						minV.x = Math.min(minV.x, he.vertex.p.x);
-						minV.y = Math.min(minV.y, he.vertex.p.y);
+						domain.enlarge(he.getPosition());
 					}
 				}
-				modelCenter.x = (maxV.x + minV.x) / 2;
-				modelCenter.y = (maxV.y + minV.y) / 2;
+				maxV.x = domain.getRight();
+				maxV.y = domain.getBottom();
+
+				modelCenter.x = domain.getCenterX();
+				modelCenter.y = domain.getCenterY();
 				bw.write(head);
 				bw.write(gradient);
 
@@ -166,20 +167,21 @@ public class ExporterSVGFactory {
 							: sortedFaces.get(sortedFaces.size() - i - 1);
 					java.util.ArrayList<Vector2d> points = new java.util.ArrayList<>();
 					for (OriHalfedge he : face.halfedges) {
-
-						if (he.vertex.p.x > maxV.x) {
+						var position = he.getPosition();
+						var nextPosition = he.next.getPosition();
+						if (position.x > maxV.x) {
 							throw new IllegalArgumentException(
 									"Size of vertices exceeds maximum");
 						}
 
-						double x1 = (he.vertex.p.x - modelCenter.x) * scale
+						double x1 = (position.x - modelCenter.x) * scale
 								+ center;
-						double y1 = -(he.vertex.p.y - modelCenter.y) * scale
+						double y1 = -(position.y - modelCenter.y) * scale
 								+ center;
-						double x2 = (he.next.vertex.p.x - modelCenter.x)
+						double x2 = (nextPosition.x - modelCenter.x)
 								* scale
 								+ center;
-						double y2 = -(he.next.vertex.p.y - modelCenter.y)
+						double y2 = -(nextPosition.y - modelCenter.y)
 								* scale
 								+ center;
 						if (!points.contains(new Vector2d(x1, y1))) {

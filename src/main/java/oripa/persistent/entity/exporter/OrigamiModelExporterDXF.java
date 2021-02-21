@@ -28,6 +28,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.geom.RectangleDomain;
 import oripa.persistent.filetool.Exporter;
 
 /**
@@ -54,24 +55,20 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 				var bw = new BufferedWriter(fw);) {
 
 			// Align the center of the model, combine scales
-			Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-			Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 			Vector2d modelCenter = new Vector2d();
 
 			List<OriFace> faces = origamiModel.getFaces();
 			List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
+			var domain = new RectangleDomain();
 			for (OriFace face : faces) {
 				for (OriHalfedge he : face.halfedges) {
-					maxV.x = Math.max(maxV.x, he.vertex.p.x);
-					maxV.y = Math.max(maxV.y, he.vertex.p.y);
-					minV.x = Math.min(minV.x, he.vertex.p.x);
-					minV.y = Math.min(minV.y, he.vertex.p.y);
+					domain.enlarge(he.getPosition());
 				}
 			}
 
-			modelCenter.x = (maxV.x + minV.x) / 2;
-			modelCenter.y = (maxV.y + minV.y) / 2;
+			modelCenter.x = domain.getCenterX();
+			modelCenter.y = domain.getCenterY();
 
 			bw.write("  0\n");
 			bw.write("SECTION\n");

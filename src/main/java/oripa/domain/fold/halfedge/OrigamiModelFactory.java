@@ -152,7 +152,7 @@ public class OrigamiModelFactory {
 			ListIterator<OriLine> iterator = precreases.listIterator();
 			while (iterator.hasNext()) {
 				OriLine precrease = iterator.next();
-				if (OriGeomUtil.isOriLineCrossFace(face, precrease)) {
+				if (OriGeomUtil.isOriLineIncludedInFace(face, precrease)) {
 					face.precreases.add(precrease);
 					iterator.remove();
 				}

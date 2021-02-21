@@ -21,9 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.foldability.FoldabilityChecker;
+import oripa.geom.RectangleDomain;
 
 /**
  * Entity for folding-estimation
@@ -145,20 +144,16 @@ public class OrigamiModel {
 	 * Flips x coordinates and reverse the order of layers.
 	 */
 	public void flipXCoordinates() {
-		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
+		var domain = new RectangleDomain();
 
 		for (OriFace face : faces) {
 			face.z_order = -face.z_order;
 			for (OriHalfedge he : face.halfedges) {
-				maxV.x = Math.max(maxV.x, he.vertex.p.x);
-				maxV.y = Math.max(maxV.y, he.vertex.p.y);
-				minV.x = Math.min(minV.x, he.vertex.p.x);
-				minV.y = Math.min(minV.y, he.vertex.p.y);
+				domain.enlarge(he.getPosition());
 			}
 		}
 
-		double centerX = (maxV.x + minV.x) / 2;
+		double centerX = domain.getCenterX();
 
 		faces.stream().flatMap(f -> f.halfedges.stream()).forEach(he -> {
 			he.positionForDisplay.x = 2 * centerX - he.positionForDisplay.x;

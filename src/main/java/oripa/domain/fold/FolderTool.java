@@ -44,7 +44,7 @@ public class FolderTool {
 
 		for (OriFace f : faces) {
 			for (OriHalfedge he : f.halfedges) {
-				he.positionForDisplay.set(he.vertex.p);
+				he.positionForDisplay.set(he.getPosition());
 			}
 			f.setOutline();
 		}
