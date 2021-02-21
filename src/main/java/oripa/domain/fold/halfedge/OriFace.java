@@ -268,7 +268,7 @@ public class OriFace {
 	 *            point to be tested.
 	 * @return true if v is inside or on the edges of this face.
 	 */
-	public boolean isOnFaceInclusive(final Vector2d v) {
+	public boolean isOnFaceInclusively(final Vector2d v) {
 		// If it's on the faces edge, return true
 		if (isOnEdge(v, GeomUtil.EPS, he -> he.vertex.p)) {
 			return true;

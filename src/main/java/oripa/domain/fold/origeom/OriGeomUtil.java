@@ -135,8 +135,8 @@ public class OriGeomUtil {
 	}
 
 	public static boolean isOriLineCrossFace(final OriFace face, final OriLine line) {
-		return face.isOnFaceInclusive(line.p0)
-				&& face.isOnFaceInclusive(line.p1);
+		return face.isOnFaceInclusively(line.p0)
+				&& face.isOnFaceInclusively(line.p1);
 	}
 
 	/**

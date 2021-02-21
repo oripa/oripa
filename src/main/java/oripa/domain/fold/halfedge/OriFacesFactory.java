@@ -40,6 +40,7 @@ public class OriFacesFactory {
 	 * @param vertices
 	 *            {@link OriEdge#left} and {@link OriEdge#right} of each edge in
 	 *            {@link OriVertex#edges} will be updated.
+	 *            {@link OriVertex#edges} is assumed to have been set.
 	 * @param faces
 	 *            new faces will be set.
 	 * @return {@code true} if the face construction succeeds.
