@@ -52,7 +52,7 @@ public class OriGeomUtil {
 			}
 		}
 
-		// TODO: Can these be replaced with OriFace.getCentroidAfterFolding()?
+		// TODO: Can these be replaced with OriFace.getCentroid()?
 		Vector2d center0 = GeomUtil.computeCentroid(face0.halfedges.stream()
 				.map(he -> he.positionAfterFolded).collect(Collectors.toList()));
 		Vector2d center1 = GeomUtil.computeCentroid(face1.halfedges.stream()

@@ -269,7 +269,7 @@ public class OriFace {
 	 * @return true if v is inside or on the edges of this face.
 	 */
 	public boolean isOnFaceInclusively(final Vector2d v) {
-		// If it's on the faces edge, return true
+		// If it's on the face's edge, return true
 		if (isOnEdge(v, GeomUtil.EPS, he -> he.vertex.p)) {
 			return true;
 		}
@@ -287,7 +287,7 @@ public class OriFace {
 	 * @return
 	 */
 	public boolean isOnFoldedFaceExclusively(final Vector2d v, final double eps) {
-		// If its on the faces edge, return false
+		// If it's on the face's edge, return false
 		if (isOnEdge(v, eps, he -> he.positionAfterFolded)) {
 			return false;
 		}
@@ -311,7 +311,7 @@ public class OriFace {
 			final Function<OriHalfedge, Vector2d> getPosition) {
 		int heNum = halfedges.size();
 
-		// If its on the face's edge, return true
+		// If it's on the face's edge, return true
 		for (int i = 0; i < heNum; i++) {
 			OriHalfedge he = halfedges.get(i);
 			if (GeomUtil.distancePointToSegment(v, getPosition.apply(he),
