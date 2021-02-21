@@ -53,24 +53,28 @@ public class OriVertex {
 		preP.set(p);
 	}
 
-	// To store and sort in a clockwise direction
+	/**
+	 * Stores and sorts edges in clockwise direction.
+	 *
+	 * @param edge
+	 *            an edge whose end point is this vertex.
+	 */
 	public void addEdge(final OriEdge edge) {
+		if (!insertEdge(edge)) {
+			edges.add(edge);
+		}
+	}
+
+	private boolean insertEdge(final OriEdge edge) {
 		double angle = getAngle(edge);
-		int egNum = edges.size();
-		boolean added = false;
-		for (int i = 0; i < egNum; i++) {
+		for (int i = 0; i < edges.size(); i++) {
 			double tmpAngle = getAngle(edges.get(i));
 			if (tmpAngle > angle) {
 				edges.add(i, edge);
-				added = true;
-				break;
+				return true;
 			}
 		}
-
-		if (!added) {
-			edges.add(edge);
-		}
-
+		return false;
 	}
 
 	private double getAngle(final OriEdge edge) {
