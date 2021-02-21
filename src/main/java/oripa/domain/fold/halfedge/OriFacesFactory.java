@@ -38,8 +38,11 @@ public class OriFacesFactory {
 	 * tries to output failure model data, we can't make create() method.
 	 *
 	 * @param vertices
+	 *            {@link OriEdge#left} and {@link OriEdge#right} of each edge in
+	 *            {@link OriVertex#edges} will be updated.
 	 * @param faces
-	 * @return
+	 *            new faces will be set.
+	 * @return {@code true} if the face construction succeeds.
 	 */
 	public boolean buildFaces(final Collection<OriVertex> vertices,
 			final Collection<OriFace> faces) {
