@@ -20,6 +20,13 @@ package oripa.domain.fold.halfedge;
 
 import oripa.value.OriLine;
 
+/**
+ * Undirected edge of crease pattern (or graph, more abstractly) with reference
+ * to half-edges on it.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public class OriEdge {
 
 	public OriVertex sv = null;

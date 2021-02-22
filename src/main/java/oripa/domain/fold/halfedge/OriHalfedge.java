@@ -26,7 +26,7 @@ import javax.vecmath.Vector3d;
  * which is a half-edge with reversed direction of the half-edge. Each face is
  * surrounded by half-edges in clockwise or counterclockwise direction (it
  * depends on the implementation. ORIPA uses counterclockwise direction on the
- * screen). Each of surrounding half-edge has a reference to such a face.
+ * screen). Each of surrounding half-edges has a reference to such a face.
  *
  * @author OUCHI Koji
  *
@@ -51,6 +51,7 @@ public class OriHalfedge {
 	public Vector2d tmpVec = new Vector2d();
 
 	public Vector2d positionForDisplay = new Vector2d();
+	// TODO: should be replaced with getPosition()?
 	public Vector2d positionAfterFolded = new Vector2d();
 	public Vector3d vertexColor = new Vector3d();
 

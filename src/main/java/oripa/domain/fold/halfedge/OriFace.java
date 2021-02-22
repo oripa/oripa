@@ -35,6 +35,13 @@ import oripa.geom.RectangleDomain;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
+/**
+ * Face of crease pattern (or graph, more abstractly) with reference to
+ * half-edges surrounding it.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public class OriFace {
 
 	/**

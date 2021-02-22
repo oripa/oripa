@@ -24,6 +24,13 @@ import javax.vecmath.Vector2d;
 
 import oripa.util.collection.CollectionUtil;
 
+/**
+ * Vertex of crease pattern (or graph, more abstractly) with reference to edges
+ * incident to it.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public class OriVertex {
 
 	/**
