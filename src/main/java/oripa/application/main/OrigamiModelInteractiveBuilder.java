@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 
@@ -54,10 +55,11 @@ public class OrigamiModelInteractiveBuilder {
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		OrigamiModel origamiModel = modelFactory.createOrigamiModel(
 				creasePattern, creasePattern.getPaperSize());
+		var checker = new FoldabilityChecker();
 
 		logger.debug("Building origami model.");
 
-		if (origamiModel.isProbablyFoldable()) {
+		if (checker.testLocalFlatFoldability(origamiModel)) {
 			logger.debug("No modification is needed.");
 			return origamiModel;
 		}
@@ -77,7 +79,7 @@ public class OrigamiModelInteractiveBuilder {
 				.createOrigamiModel(
 						creasePattern, creasePattern.getPaperSize());
 
-		if (origamiModel.isProbablyFoldable()) {
+		if (checker.testLocalFlatFoldability(origamiModel)) {
 			return origamiModel;
 		}
 

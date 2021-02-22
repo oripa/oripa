@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.geom.RectangleDomain;
 
 /**
@@ -41,6 +40,8 @@ public class OrigamiModel {
 	private boolean folded = false;
 
 	private boolean hasModel = false;
+
+	private final boolean probablyFoldable = false;
 
 	private double paperSize = -1;
 
@@ -68,15 +69,6 @@ public class OrigamiModel {
 		this.folded = folded;
 	}
 
-	/**
-	 * @return probablyFoldable
-	 */
-	public boolean isProbablyFoldable() {
-		FoldabilityChecker checker = new FoldabilityChecker();
-
-		return checker.modelIsProbablyFoldable(vertices, faces);
-	}
-
 	public List<OriFace> getFaces() {
 		return faces;
 	}
@@ -102,24 +94,21 @@ public class OrigamiModel {
 	}
 
 	/**
-	 * @param faces
-	 *            faces
+	 * @param faces faces
 	 */
 	public void setFaces(final List<OriFace> faces) {
 		this.faces = faces;
 	}
 
 	/**
-	 * @param vertices
-	 *            vertices
+	 * @param vertices vertices
 	 */
 	public void setVertices(final List<OriVertex> vertices) {
 		this.vertices = vertices;
 	}
 
 	/**
-	 * @param edges
-	 *            edges
+	 * @param edges edges
 	 */
 	public void setEdges(final List<OriEdge> edges) {
 		this.edges = edges;
@@ -133,8 +122,7 @@ public class OrigamiModel {
 	}
 
 	/**
-	 * @param hasModel
-	 *            hasModel
+	 * @param hasModel hasModel
 	 */
 	public void setHasModel(final boolean hasModel) {
 		this.hasModel = hasModel;

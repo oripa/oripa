@@ -66,6 +66,7 @@ import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
+import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.domain.fold.subface.FacesToCreasePatternConverter;
@@ -950,8 +951,9 @@ public class UIPanel extends JPanel {
 						new ParentFacesCollector()));
 
 		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
+		var checker = new FoldabilityChecker();
 
-		if (origamiModel.isProbablyFoldable()) {
+		if (checker.testLocalFlatFoldability(origamiModel)) {
 			final int foldableModelCount = folder.fold(
 					origamiModel, foldedModelInfo, fullEstimation);
 

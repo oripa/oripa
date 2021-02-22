@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessActionProvider;
@@ -135,8 +136,9 @@ public class DocDAO {
 		var origamiModel = modelFactory.createOrigamiModel(
 				creasePattern, creasePattern.getPaperSize());
 		doc.setOrigamiModel(origamiModel);
+		var checker = new FoldabilityChecker();
 
-		if (!origamiModel.isProbablyFoldable()) {
+		if (!checker.testLocalFlatFoldability(origamiModel)) {
 
 			var selection = JOptionPane.showConfirmDialog(null,
 					"Warning: Building a set of polygons from crease pattern "
