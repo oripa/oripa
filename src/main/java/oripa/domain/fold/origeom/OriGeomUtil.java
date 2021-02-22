@@ -30,11 +30,22 @@ import oripa.geom.Line;
 import oripa.value.OriLine;
 
 /**
+ * Mathematical operations related to half-edge data structure elements.
+ *
  * @author OUCHI Koji
  *
  */
 public class OriGeomUtil {
 
+	/**
+	 * Whether {@code face0} and {@code face1} overlaps partially or entirely.
+	 *
+	 * @param face0
+	 * @param face1
+	 * @param eps
+	 * @return {@code true} if {@code face0} and {@code face1} overlaps
+	 *         partially or entirely.
+	 */
 	public static boolean isFaceOverlap(final OriFace face0, final OriFace face1,
 			final double eps) {
 
@@ -84,11 +95,15 @@ public class OriGeomUtil {
 	}
 
 	/**
+	 * Whether {@code heg} crosses {@code face} after folding. The inclusion
+	 * test is exclusive.
 	 *
 	 * @param face
 	 * @param heg
 	 * @param eps
-	 * @return true if {@code heg} crosses {@code face} after folding.
+	 * @return {@code true} if {@code heg} crosses {@code face} after folding.
+	 *         {@code false} if {@code heg} doesn't cross {@code face} or both
+	 *         end points of {@code heg} are on an edge of {@code face}.
 	 */
 	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
@@ -134,17 +149,29 @@ public class OriGeomUtil {
 		return false;
 	}
 
+	/**
+	 * Whether {@code face} includes {@code line} entirely. The inclusion test
+	 * is inclusive.
+	 *
+	 * @param face
+	 * @param line
+	 * @return {@code true} if {@code face} includes {@code line} entirely.
+	 */
 	public static boolean isOriLineIncludedInFace(final OriFace face, final OriLine line) {
 		return face.isOnFaceInclusively(line.p0)
 				&& face.isOnFaceInclusively(line.p1);
 	}
 
 	/**
+	 * Whether {@code heg} crosses {@code face} after folding. The inclusion
+	 * test is exclusive.
 	 *
 	 * @param face
 	 * @param heg
 	 * @param size
-	 * @return true if {@code heg} crosses {@code face} after folding.
+	 * @return {@code true} if {@code heg} crosses {@code face} after folding.
+	 *         {@code false} if {@code heg} doesn't cross {@code face} or both
+	 *         end points of {@code heg} are on an edge of {@code face}.
 	 */
 	public static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg,
 			final double size) {
@@ -197,6 +224,7 @@ public class OriGeomUtil {
 	}
 
 	/**
+	 * The angle between edges v1-v2 and v2-v3.
 	 *
 	 * @param v1
 	 * @param v2
