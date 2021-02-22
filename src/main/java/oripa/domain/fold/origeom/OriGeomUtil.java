@@ -38,13 +38,14 @@ import oripa.value.OriLine;
 public class OriGeomUtil {
 
 	/**
-	 * Whether {@code face0} and {@code face1} overlaps partially or entirely.
+	 * Whether {@code face0} and {@code face1} overlap partially or entirely
+	 * after fold.
 	 *
 	 * @param face0
 	 * @param face1
 	 * @param eps
-	 * @return {@code true} if {@code face0} and {@code face1} overlaps
-	 *         partially or entirely.
+	 * @return {@code true} if {@code face0} and {@code face1} overlap partially
+	 *         or entirely after fold.
 	 */
 	public static boolean isFaceOverlap(final OriFace face0, final OriFace face1,
 			final double eps) {
