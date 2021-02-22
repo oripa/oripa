@@ -222,8 +222,8 @@ public class OriFace {
 		double rate = 0.5;
 		preOutline = createPath(halfedges.stream()
 				.map(he -> new Vector2d(
-						he.vertex.preP.x * rate + centerP.x * (1.0 - rate),
-						he.vertex.preP.y * rate + centerP.y * (1.0 - rate)))
+						he.getPositionBeforeFolding().x * rate + centerP.x * (1.0 - rate),
+						he.getPositionBeforeFolding().y * rate + centerP.y * (1.0 - rate)))
 				.collect(Collectors.toList()));
 	}
 

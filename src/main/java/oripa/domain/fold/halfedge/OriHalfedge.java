@@ -21,6 +21,16 @@ package oripa.domain.fold.halfedge;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+/**
+ * A half-edge is a directed edge on an undirected edge. Half-edge has a pair,
+ * which is a half-edge with reversed direction of the half-edge. Each face is
+ * surrounded by half-edges in clockwise or counterclockwise direction (it
+ * depends on the implementation. ORIPA uses counterclockwise direction on the
+ * screen). Each of surrounding half-edge has a reference to such a face.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public class OriHalfedge {
 
 	public OriHalfedge next = null;
@@ -50,10 +60,20 @@ public class OriHalfedge {
 		tmpVec.set(v.p);
 	}
 
+	/**
+	 * gets current position of the start point of this half-edge.
+	 *
+	 * @return current position (the same as {@code vertex.p}).
+	 */
 	public Vector2d getPosition() {
 		return vertex.p;
 	}
 
+	/**
+	 * gets position of the start point of this half-edge before fold.
+	 *
+	 * @return position before fold (the same as {@code vertex.preP})
+	 */
 	public Vector2d getPositionBeforeFolding() {
 		return vertex.preP;
 	}

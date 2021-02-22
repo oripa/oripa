@@ -31,11 +31,13 @@ public class OriVertex {
 	 * given position is assumed to be for before fold. This field is assumed to
 	 * follow the change by folding. Hence this will be the position after fold.
 	 */
+	// TODO: hide this field and add getter.
 	public Vector2d p = new Vector2d();
 
 	/**
 	 * position before fold
 	 */
+	// TODO: hide this field and add getter.
 	public Vector2d preP = new Vector2d();
 
 	public Vector2d tmpVec = new Vector2d();
