@@ -21,6 +21,7 @@ package oripa.domain.fold.foldability;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,12 +72,6 @@ public class FoldabilityChecker {
 	private final SingleRuleParallelConjunction<OriFace> convexRuleConjunction = new SingleRuleParallelConjunction<>(
 			new FaceIsConvex());
 
-	private boolean testLocalFlatFoldability(final Collection<OriVertex> vertices, final Collection<OriFace> faces) {
-
-		return Arrays.asList(VertexRule.values()).parallelStream()
-				.allMatch(rule -> rule.getConjunction().holds(vertices)) && convexRuleConjunction.holds(faces);
-	}
-
 	/**
 	 * Tests local flat foldability of each vertex and face.
 	 *
@@ -84,7 +79,9 @@ public class FoldabilityChecker {
 	 * @return true if the given {@code origamiModel} is locally flat foldable.
 	 */
 	public boolean testLocalFlatFoldability(final OrigamiModel origamiModel) {
-		return testLocalFlatFoldability(origamiModel.getVertices(), origamiModel.getFaces());
+		return Stream.of(VertexRule.values()).parallel()
+				.allMatch(rule -> rule.getConjunction().holds(origamiModel.getVertices()))
+				&& convexRuleConjunction.holds(origamiModel.getFaces());
 	}
 
 	public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
