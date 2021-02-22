@@ -18,7 +18,10 @@
  */
 package oripa.domain.fold.subface;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.mockito.Mockito;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -37,8 +40,8 @@ class OriFaceFactoryForTest {
 	 *            smaller y coordinate of the square
 	 * @return
 	 */
-	static OriFace create10PxSquareFace(final double left, final double top) {
-		return createRectangle(left, top, left + 10, top + 10);
+	static OriFace create10PxSquareMock(final double left, final double top) {
+		return createRectangleMock(left, top, left + 10, top + 10);
 	}
 
 	/**
@@ -53,9 +56,10 @@ class OriFaceFactoryForTest {
 	 *            larger y coordinate of the square
 	 * @return
 	 */
-	static OriFace createRectangle(final double left, final double top,
+	static OriFace createRectangleMock(final double left, final double top,
 			final double right, final double bottom) {
-		var face = new OriFace();
+		var face = Mockito.mock(OriFace.class);
+		face.halfedges = new ArrayList<OriHalfedge>();
 		var he1 = new OriHalfedge(new OriVertex(left, bottom), face);
 		var he2 = new OriHalfedge(new OriVertex(right, bottom), face);
 		var he3 = new OriHalfedge(new OriVertex(right, top), face);

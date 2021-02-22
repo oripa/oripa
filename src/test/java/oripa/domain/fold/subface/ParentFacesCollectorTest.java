@@ -19,8 +19,12 @@
 package oripa.domain.fold.subface;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
+
+import javax.vecmath.Vector2d;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,16 +46,24 @@ class ParentFacesCollectorTest {
 	 */
 	@Test
 	void testCollect() {
-		var face1 = OriFaceFactoryForTest.create10PxSquareFace(0, 0);
-		var face2 = OriFaceFactoryForTest.create10PxSquareFace(10, 0);
-		var face3 = OriFaceFactoryForTest.create10PxSquareFace(0, 10);
-		var face4 = OriFaceFactoryForTest.create10PxSquareFace(5, 5); // overlap
+		var face1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
+		var face2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
+		var face3 = OriFaceFactoryForTest.create10PxSquareMock(0, 10);
+		var face4 = OriFaceFactoryForTest.create10PxSquareMock(5, 5); // overlap
 
 		var faces = List.of(face1, face2, face3, face4);
 
-		var splitFace = OriFaceFactoryForTest.createRectangle(6, 6, 10, 10);
+		var splitFace = OriFaceFactoryForTest.createRectangleMock(6, 6, 10, 10);
 
-		var subface = new SubFace(splitFace);
+		var subface = mock(SubFace.class);
+		subface.outline = splitFace;
+		var innerPoint = new Vector2d(8, 8);
+		when(subface.getInnerPoint()).thenReturn(innerPoint);
+
+		when(face1.isOnFoldedFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
+		when(face2.isOnFoldedFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
+		when(face3.isOnFoldedFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
+		when(face4.isOnFoldedFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
 
 		var parents = collector.collect(faces, subface, 20);
 

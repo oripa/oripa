@@ -42,8 +42,8 @@ class SplitFacesToSubFacesConverterTest {
 	 */
 	@Test
 	void testConvertToSubFaces() {
-		var splitFace1 = OriFaceFactoryForTest.create10PxSquareFace(0, 0);
-		var splitFace2 = OriFaceFactoryForTest.create10PxSquareFace(10, 0);
+		var splitFace1 = OriFaceFactoryForTest.create10PxSquareMock(0, 0);
+		var splitFace2 = OriFaceFactoryForTest.create10PxSquareMock(10, 0);
 
 		var splitFaces = List.of(splitFace1, splitFace2);
 
