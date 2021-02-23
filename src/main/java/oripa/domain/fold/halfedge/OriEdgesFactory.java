@@ -54,7 +54,7 @@ public class OriEdgesFactory {
 				he.pair = null;
 				he.edge = null;
 
-				allocateAndPut(he.vertex, he, halfedges);
+				allocateAndPut(he.getVertex(), he, halfedges);
 			}
 		}
 
@@ -97,7 +97,7 @@ public class OriEdgesFactory {
 	}
 
 	private boolean isOppositeDirection(final OriHalfedge he0, final OriHalfedge he1) {
-		return he0.vertex == he1.next.vertex && he0.next.vertex == he1.vertex;
+		return he0.getVertex() == he1.next.getVertex() && he0.next.getVertex() == he1.getVertex();
 	}
 
 	/**
@@ -115,8 +115,8 @@ public class OriEdgesFactory {
 		he1.pair = he0;
 		he0.edge = edge;
 		he1.edge = edge;
-		edge.sv = he0.vertex;
-		edge.ev = he1.vertex;
+		edge.sv = he0.getVertex();
+		edge.ev = he1.getVertex();
 		edge.left = he0;
 		edge.right = he1;
 		edge.type = he0.type;
@@ -133,8 +133,8 @@ public class OriEdgesFactory {
 	private OriEdge makeBoundary(final OriHalfedge he) {
 		OriEdge edge = new OriEdge();
 		he.edge = edge;
-		edge.sv = he.vertex;
-		edge.ev = he.next.vertex;
+		edge.sv = he.getVertex();
+		edge.ev = he.next.getVertex();
 		edge.left = he;
 		edge.type = OriLine.Type.CUT.toInt();
 

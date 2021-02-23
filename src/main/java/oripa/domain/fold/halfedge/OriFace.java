@@ -203,13 +203,6 @@ public class OriFace {
 		}
 	}
 
-	public void printInfo() {
-		System.out.println("OriFace");
-		for (OriHalfedge he : halfedges) {
-			System.out.println(he.vertex.p);
-		}
-	}
-
 	/**
 	 * Constructs {@code outline} field, which is for showing this face after
 	 * fold in graphic.

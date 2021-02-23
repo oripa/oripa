@@ -67,25 +67,26 @@ public class FolderTool {
 			for (OriFace f : faces) {
 				Vector2d faceCenter = f.getCentroid();
 				for (OriHalfedge he : f.halfedges) {
-					if (he.vertex.tmpFlg) {
+					var vertex = he.getVertex();
+					if (vertex.tmpFlg) {
 						continue;
 					}
-					he.vertex.tmpFlg = true;
+					vertex.tmpFlg = true;
 
-					he.vertex.tmpVec.x += slideUnit * f.z_order;
-					he.vertex.tmpVec.y += slideUnit * f.z_order;
+					vertex.tmpVec.x += slideUnit * f.z_order;
+					vertex.tmpVec.y += slideUnit * f.z_order;
 
 					Vector2d dirToCenter = new Vector2d(faceCenter);
-					dirToCenter.sub(he.vertex.tmpVec);
+					dirToCenter.sub(vertex.tmpVec);
 					dirToCenter.normalize();
 					dirToCenter.scale(6.0);
-					he.vertex.tmpVec.add(dirToCenter);
+					vertex.tmpVec.add(dirToCenter);
 				}
 			}
 
 			for (OriFace f : faces) {
 				for (OriHalfedge he : f.halfedges) {
-					he.positionForDisplay.set(he.vertex.tmpVec);
+					he.positionForDisplay.set(he.getVertex().tmpVec);
 				}
 				f.setOutline();
 			}

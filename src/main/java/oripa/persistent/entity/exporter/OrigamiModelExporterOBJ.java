@@ -60,7 +60,7 @@ public class OrigamiModelExporterOBJ implements Exporter<OrigamiModel> {
 			for (OriFace face : faces) {
 				bw.write("f");
 				for (OriHalfedge he : face.halfedges) {
-					bw.write(" " + he.vertex.tmpInt);
+					bw.write(" " + he.getVertex().tmpInt);
 				}
 				bw.write("\n");
 			}

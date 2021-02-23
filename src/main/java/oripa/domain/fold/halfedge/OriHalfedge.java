@@ -37,7 +37,7 @@ public class OriHalfedge {
 	public OriHalfedge prev = null;
 	public OriHalfedge pair = null;
 	public OriEdge edge = null;
-	public OriVertex vertex = null;
+	private OriVertex vertex = null;
 	public OriFace face = null;
 
 	/**
