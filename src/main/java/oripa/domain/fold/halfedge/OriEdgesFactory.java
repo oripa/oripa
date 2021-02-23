@@ -66,7 +66,7 @@ public class OriEdgesFactory {
 					continue;
 				}
 
-				var oppositeHes = halfedges.get(he0.next.vertex);
+				var oppositeHes = halfedges.get(he0.next.getVertex());
 				for (var he1 : oppositeHes) {
 					if (isOppositeDirection(he0, he1)) {
 						edges.add(makePair(he0, he1));

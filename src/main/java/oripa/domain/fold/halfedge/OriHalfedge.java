@@ -61,6 +61,10 @@ public class OriHalfedge {
 		tmpVec.set(v.p);
 	}
 
+	public OriVertex getVertex() {
+		return vertex;
+	}
+
 	/**
 	 * gets current position of the start point of this half-edge.
 	 *

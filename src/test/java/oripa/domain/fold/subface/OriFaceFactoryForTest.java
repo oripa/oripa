@@ -71,10 +71,10 @@ class OriFaceFactoryForTest {
 		face.halfedges.addAll(List.of(he1, he2, he3, he4));
 
 		face.halfedges.forEach(
-				he -> he.positionAfterFolded = he.vertex.p);
+				he -> he.positionAfterFolded = he.getPosition());
 
 		face.halfedges.forEach(
-				he -> he.tmpVec = he.vertex.p);
+				he -> he.tmpVec = he.getPosition());
 		return face;
 	}
 

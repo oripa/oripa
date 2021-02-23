@@ -68,7 +68,7 @@ class OriFaceTest {
 	 */
 	@Test
 	void testIsOnFoldedFaceExclusively() {
-		face.halfedges.forEach(he -> he.positionAfterFolded = he.vertex.p);
+		face.halfedges.forEach(he -> he.positionAfterFolded = he.getPosition());
 
 		final double EPS = 1e-6;
 		assertTrue(face.isOnFoldedFaceExclusively(new Vector2d(5, 5), EPS));
