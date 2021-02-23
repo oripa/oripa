@@ -35,9 +35,6 @@ public class OriEdge {
 	private OriHalfedge right = null;
 	private int type = 0;
 
-	public OriEdge() {
-	}
-
 	public OriEdge(final OriVertex startVertex, final OriVertex endVertex, final int type) {
 		this.type = type;
 		this.startVertex = startVertex;
@@ -52,26 +49,10 @@ public class OriEdge {
 	}
 
 	/**
-	 * @param sv
-	 *            Sets sv
-	 */
-	void setStartVertex(final OriVertex sv) {
-		this.startVertex = sv;
-	}
-
-	/**
 	 * @return ev
 	 */
 	public OriVertex getEndVertex() {
 		return endVertex;
-	}
-
-	/**
-	 * @param ev
-	 *            Sets ev
-	 */
-	void setEndVertex(final OriVertex ev) {
-		this.endVertex = ev;
 	}
 
 	/**

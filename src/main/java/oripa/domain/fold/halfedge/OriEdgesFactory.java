@@ -110,16 +110,14 @@ public class OriEdgesFactory {
 	 * @return an edge for he0 and he1.
 	 */
 	private OriEdge makePair(final OriHalfedge he0, final OriHalfedge he1) {
-		OriEdge edge = new OriEdge();
 		he0.setPair(he1);
 		he1.setPair(he0);
+
+		OriEdge edge = new OriEdge(he0.getVertex(), he1.getVertex(), he0.getTemporaryType());
 		he0.setEdge(edge);
 		he1.setEdge(edge);
-		edge.setStartVertex(he0.getVertex());
-		edge.setEndVertex(he1.getVertex());
 		edge.setLeft(he0);
 		edge.setRight(he1);
-		edge.setType(he0.getTemporaryType());
 		return edge;
 	}
 
@@ -131,12 +129,9 @@ public class OriEdgesFactory {
 	 * @return an edge with CUT type for he0 and he1.
 	 */
 	private OriEdge makeBoundary(final OriHalfedge he) {
-		OriEdge edge = new OriEdge();
+		OriEdge edge = new OriEdge(he.getVertex(), he.next.getVertex(), OriLine.Type.CUT.toInt());
 		he.setEdge(edge);
-		edge.setStartVertex(he.getVertex());
-		edge.setEndVertex(he.next.getVertex());
 		edge.setLeft(he);
-		edge.setType(OriLine.Type.CUT.toInt());
 
 		return edge;
 	}
