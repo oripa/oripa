@@ -60,7 +60,7 @@ public class OriFacesFactory {
 				}
 
 				if (v == e.sv) {
-					if (e.left != null) {
+					if (e.getLeft() != null) {
 						continue;
 					}
 				} else {
@@ -105,7 +105,7 @@ public class OriFacesFactory {
 			face.halfedges.add(he);
 			he.setTemporaryType(walkE.getType());
 			if (walkE.sv == walkV) {
-				walkE.left = he;
+				walkE.setLeft(he);
 			} else {
 				walkE.setRight(he);
 			}

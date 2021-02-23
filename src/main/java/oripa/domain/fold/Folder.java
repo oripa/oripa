@@ -379,7 +379,7 @@ public class Folder {
 
 		for (int i = 0; i < edgeNum; i++) {
 			OriEdge e0 = edges.get(i);
-			var e0Left = e0.left;
+			var e0Left = e0.getLeft();
 			var e0Right = e0.getRight();
 
 			if (e0Left == null || e0Right == null) {
@@ -388,7 +388,7 @@ public class Folder {
 
 			for (int j = i + 1; j < edgeNum; j++) {
 				OriEdge e1 = edges.get(j);
-				var e1Left = e1.left;
+				var e1Left = e1.getLeft();
 				var e1Right = e1.getRight();
 				if (e1Left == null || e1Right == null) {
 					continue;
@@ -688,8 +688,8 @@ public class Folder {
 		walkFace(faces.get(0));
 
 		for (OriEdge e : edges) {
+			e.sv.p.set(e.getLeft().tmpVec);
 			var right = e.getRight();
-			e.sv.p.set(e.left.tmpVec);
 			if (right != null) {
 				e.ev.p.set(right.tmpVec);
 			}
@@ -880,7 +880,7 @@ public class Folder {
 		model.getSortedFaces().addAll(faces);
 
 		for (OriEdge e : edges) {
-			e.sv.p.set(e.left.tmpVec);
+			e.sv.p.set(e.getLeft().tmpVec);
 			e.sv.tmpFlg = false;
 		}
 
