@@ -118,15 +118,15 @@ public class OriFace {
 
 		for (OriHalfedge he : halfedges) {
 			double val = 0;
-			if (he.edge.type == OriLine.Type.MOUNTAIN.toInt()) {
+			if (he.getType() == OriLine.Type.MOUNTAIN.toInt()) {
 				val += 1;
-			} else if (he.edge.type == OriLine.Type.VALLEY.toInt()) {
+			} else if (he.getType() == OriLine.Type.VALLEY.toInt()) {
 				val -= 1;
 			}
 
-			if (he.prev.edge.type == OriLine.Type.MOUNTAIN.toInt()) {
+			if (he.prev.getType() == OriLine.Type.MOUNTAIN.toInt()) {
 				val += 1;
-			} else if (he.prev.edge.type == OriLine.Type.VALLEY.toInt()) {
+			} else if (he.prev.getType() == OriLine.Type.VALLEY.toInt()) {
 				val -= 1;
 			}
 

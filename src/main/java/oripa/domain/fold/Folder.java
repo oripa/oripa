@@ -831,8 +831,8 @@ public class Folder {
 					continue;
 				}
 
-				if ((face.faceFront && he.edge.type == OriLine.Type.MOUNTAIN.toInt())
-						|| (!face.faceFront && he.edge.type == OriLine.Type.VALLEY.toInt())) {
+				if ((face.faceFront && he.getType() == OriLine.Type.MOUNTAIN.toInt())
+						|| (!face.faceFront && he.getType() == OriLine.Type.VALLEY.toInt())) {
 					overlapRelation[face.faceID][pairFace.faceID] = OverlapRelationValues.UPPER;
 					overlapRelation[pairFace.faceID][face.faceID] = OverlapRelationValues.LOWER;
 				} else {

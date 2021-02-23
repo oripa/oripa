@@ -52,7 +52,7 @@ public class OriEdgesFactory {
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
 				he.pair = null;
-				he.edge = null;
+				he.setEdge(null);
 
 				allocateAndPut(he.getVertex(), he, halfedges);
 			}
@@ -113,8 +113,8 @@ public class OriEdgesFactory {
 		OriEdge edge = new OriEdge();
 		he0.pair = he1;
 		he1.pair = he0;
-		he0.edge = edge;
-		he1.edge = edge;
+		he0.setEdge(edge);
+		he1.setEdge(edge);
 		edge.sv = he0.getVertex();
 		edge.ev = he1.getVertex();
 		edge.left = he0;
@@ -132,7 +132,7 @@ public class OriEdgesFactory {
 	 */
 	private OriEdge makeBoundary(final OriHalfedge he) {
 		OriEdge edge = new OriEdge();
-		he.edge = edge;
+		he.setEdge(edge);
 		edge.sv = he.getVertex();
 		edge.ev = he.next.getVertex();
 		edge.left = he;

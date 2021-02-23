@@ -36,7 +36,7 @@ public class OriHalfedge {
 	public OriHalfedge next = null;
 	public OriHalfedge prev = null;
 	public OriHalfedge pair = null;
-	public OriEdge edge = null;
+	private OriEdge edge = null;
 	private OriVertex vertex = null;
 	private OriFace face = null;
 
@@ -59,6 +59,25 @@ public class OriHalfedge {
 		vertex = v;
 		face = f;
 		tmpVec.set(v.p);
+	}
+
+	/**
+	 * @return edge
+	 */
+	public OriEdge getEdge() {
+		return edge;
+	}
+
+	/**
+	 * @param edge
+	 *            Sets edge
+	 */
+	void setEdge(final OriEdge edge) {
+		this.edge = edge;
+	}
+
+	public int getType() {
+		return edge.type;
 	}
 
 	/**
