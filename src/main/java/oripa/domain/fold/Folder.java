@@ -430,10 +430,27 @@ public class Folder {
 		}
 	}
 
+	/**
+	 * Sets {@code value} to {@code orMat[i][j]}. If {@code setsPairAtSameTime}
+	 * is {@code true}, This method sets inversion of {@code value} to
+	 * {@code orMat[j][i]}.
+	 *
+	 * @param orMat
+	 *            overlap relation matrix
+	 * @param i
+	 *            row index
+	 * @param j
+	 *            column index
+	 * @param value
+	 *            a value of {@link OverlapRelationValues}
+	 * @param setsPairAtSameTime
+	 *            {@code true} if {@code orMat[j][i]} should be set to inversion
+	 *            of {@code value} as well.
+	 */
 	private void setOR(final int[][] orMat, final int i, final int j, final int value,
-			final boolean bSetPairAtSameTime) {
+			final boolean setsPairAtSameTime) {
 		orMat[i][j] = value;
-		if (!bSetPairAtSameTime) {
+		if (!setsPairAtSameTime) {
 			return;
 		}
 
@@ -542,6 +559,15 @@ public class Folder {
 		return bChanged;
 	}
 
+	/**
+	 * Updates {@code orMat} by 3-face stack condition.
+	 *
+	 * @param sub
+	 *            subface.
+	 * @param orMat
+	 *            overlap relation matrix.
+	 * @return true if an update happens.
+	 */
 	private boolean updateOverlapRelationBy3FaceStack(final SubFace sub, final int[][] orMat) {
 
 		for (int i = 0; i < sub.parentFaces.size(); i++) {
