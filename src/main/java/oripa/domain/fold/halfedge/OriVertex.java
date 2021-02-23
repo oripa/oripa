@@ -89,7 +89,8 @@ public class OriVertex {
 	private double getAngle(final OriEdge edge) {
 		Vector2d dir = new Vector2d();
 		if (edge.sv == this) {
-			dir.set(edge.ev.p.x - this.p.x, edge.ev.p.y - this.p.y);
+			var ev = edge.getEndVertex();
+			dir.set(ev.p.x - this.p.x, ev.p.y - this.p.y);
 		} else {
 			dir.set(edge.sv.p.x - this.p.x, edge.sv.p.y - this.p.y);
 		}

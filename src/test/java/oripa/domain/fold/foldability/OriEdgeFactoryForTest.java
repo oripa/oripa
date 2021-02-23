@@ -32,9 +32,11 @@ class OriEdgeFactoryForTest {
 	public static OriEdge createEdgeSpy(final double x0, final double y0,
 			final double x1, final double y1,
 			final OriLine.Type type) {
-		var spy = spy(OriEdge.class);
-		spy.sv = new OriVertex(x0, y0);
-		spy.ev = new OriVertex(x1, y1);
+
+		var sv = new OriVertex(x0, y0);
+		var ev = new OriVertex(x1, y1);
+
+		var spy = spy(new OriEdge(sv, ev, type.toInt()));
 		when(spy.getType()).thenReturn(type.toInt());
 
 		return spy;

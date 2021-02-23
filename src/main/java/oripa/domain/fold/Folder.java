@@ -688,13 +688,17 @@ public class Folder {
 		walkFace(faces.get(0));
 
 		for (OriEdge e : edges) {
-			e.sv.p.set(e.getLeft().tmpVec);
+			var sv = e.sv;
+			var ev = e.getEndVertex();
+
+			sv.p.set(e.getLeft().tmpVec);
+
 			var right = e.getRight();
 			if (right != null) {
-				e.ev.p.set(right.tmpVec);
+				ev.p.set(right.tmpVec);
 			}
-			e.sv.tmpFlg = false;
-			e.ev.tmpFlg = false;
+			sv.tmpFlg = false;
+			ev.tmpFlg = false;
 		}
 
 		for (OriFace face : faces) {

@@ -30,7 +30,7 @@ import oripa.value.OriLine;
 public class OriEdge {
 
 	public OriVertex sv = null;
-	public OriVertex ev = null;
+	private OriVertex ev = null;
 	private OriHalfedge left = null;
 	private OriHalfedge right = null;
 	private int type = 0;
@@ -41,6 +41,21 @@ public class OriEdge {
 	public OriEdge(final OriVertex sv, final OriVertex ev, final int type) {
 		this.type = type;
 		this.sv = sv;
+		this.ev = ev;
+	}
+
+	/**
+	 * @return ev
+	 */
+	public OriVertex getEndVertex() {
+		return ev;
+	}
+
+	/**
+	 * @param ev
+	 *            Sets ev
+	 */
+	void setEndVertex(final OriVertex ev) {
 		this.ev = ev;
 	}
 
