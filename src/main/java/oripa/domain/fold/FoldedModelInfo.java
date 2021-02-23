@@ -21,13 +21,9 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.List;
 
-import oripa.geom.RectangleDomain;
-
 public class FoldedModelInfo {
 	private List<int[][]> overlapRelations = new ArrayList<int[][]>();
 	private int currentORmatIndex = 0;
-
-	private RectangleDomain rectangleDomain;
 
 	public void setNextIndex() {
 		if (currentORmatIndex < overlapRelations.size() - 1) {
@@ -60,14 +56,6 @@ public class FoldedModelInfo {
 
 	public void setCurrentORmatIndex(final int currentORmatIndex) {
 		this.currentORmatIndex = currentORmatIndex;
-	}
-
-	public RectangleDomain getRectangleDomain() {
-		return rectangleDomain;
-	}
-
-	public void setRectangleDomain(final RectangleDomain rectangleDomain) {
-		this.rectangleDomain = rectangleDomain;
 	}
 
 	public int getFoldablePatternCount() {

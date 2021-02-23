@@ -89,9 +89,6 @@ public class Folder {
 
 		simpleFoldWithoutZorder(faces, edges);
 
-		foldedModelInfo.setRectangleDomain(
-				folderTool.createDomainOfFoldedModel(faces));
-
 		sortedFaces.addAll(faces);
 		folderTool.setFacesOutline(vertices, faces, false);
 

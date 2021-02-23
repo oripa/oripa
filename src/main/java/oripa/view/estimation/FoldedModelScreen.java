@@ -41,11 +41,13 @@ import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.TriangleFace;
 import oripa.domain.fold.halfedge.TriangleVertex;
 import oripa.domain.fold.origeom.OverlapRelationValues;
+import oripa.geom.RectangleDomain;
 import oripa.util.gui.MouseUtility;
 
 /**
@@ -94,6 +96,7 @@ public class FoldedModelScreen extends JPanel
 
 	private OrigamiModel origamiModel = null;
 	private FoldedModelInfo foldedModelInfo = null;
+	private RectangleDomain domain;
 
 	public FoldedModelScreen() {
 		addMouseListener(this);
@@ -136,9 +139,13 @@ public class FoldedModelScreen extends JPanel
 
 	}
 
-	public void resetViewMatrix() {
+	private void resetViewMatrix() {
 		rotateAngle = 0;
 		scale = 1;
+
+		var folderTool = new FolderTool();
+		domain = folderTool.createDomainOfFoldedModel(origamiModel.getFaces());
+
 		updateAffineTransform();
 		redrawOrigami();
 	}
@@ -318,14 +325,11 @@ public class FoldedModelScreen extends JPanel
 			return;
 		}
 
-		List<OriFace> faces = origamiModel.getFaces();
 		boolean folded = origamiModel.isFolded();
 		if (!folded) {
 			return;
 		}
 		long time0 = System.currentTimeMillis();
-
-		var domain = foldedModelInfo.getRectangleDomain();
 
 		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
 		double localScale = Math.min(
@@ -334,6 +338,7 @@ public class FoldedModelScreen extends JPanel
 		double angle = rotAngle * Math.PI / 180;
 		localScale *= scaleRate;
 
+		List<OriFace> faces = origamiModel.getFaces();
 		for (OriFace face : faces) {
 
 			face.trianglateAndSetColor(useColor, isFaceOrderFlipped(),
