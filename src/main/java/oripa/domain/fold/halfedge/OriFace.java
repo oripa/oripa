@@ -61,7 +61,7 @@ public class OriFace {
 	/**
 	 * For drawing foldability-check face
 	 */
-	public Path2D.Double preOutline = new Path2D.Double();
+	private Path2D.Double preOutline = new Path2D.Double();
 
 	public ArrayList<OriLine> precreases = new ArrayList<>();
 
@@ -224,7 +224,7 @@ public class OriFace {
 	 * Constructs {@code preOutline} field, which is for showing this face
 	 * before fold in graphic.
 	 */
-	public void setPreOutline() {
+	void buildOutlineBeforeFolding() {
 		Vector2d centerP = getCentroidBeforeFolding();
 		double rate = 0.5;
 		preOutline = createPath(halfedges.stream()
@@ -232,6 +232,13 @@ public class OriFace {
 						he.getPositionBeforeFolding().x * rate + centerP.x * (1.0 - rate),
 						he.getPositionBeforeFolding().y * rate + centerP.y * (1.0 - rate)))
 				.collect(Collectors.toList()));
+	}
+
+	/**
+	 * @return preOutline
+	 */
+	public Path2D.Double getOutlineBeforeFolding() {
+		return preOutline;
 	}
 
 	private Path2D.Double createPath(final List<Vector2d> vertices) {

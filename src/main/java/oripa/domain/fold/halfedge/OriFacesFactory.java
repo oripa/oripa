@@ -114,7 +114,7 @@ public class OriFacesFactory {
 		} while (walkV != startingVertex);
 		face.makeHalfedgeLoop();
 		face.buildOutline();
-		face.setPreOutline();
+		face.buildOutlineBeforeFolding();
 		return face;
 	}
 

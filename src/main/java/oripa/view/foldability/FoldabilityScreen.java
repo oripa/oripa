@@ -149,7 +149,7 @@ public class FoldabilityScreen extends JPanel
 			} else {
 				g2d.setColor(new Color(255, 210, 210));
 			}
-			g2d.fill(face.preOutline);
+			g2d.fill(face.getOutlineBeforeFolding());
 		}
 
 		g2d.setColor(selector.getViolatingVertexColor());
@@ -181,7 +181,7 @@ public class FoldabilityScreen extends JPanel
 		for (OriFace face : faces) {
 			if (face.indexForStack == 0) {
 				g2d.setColor(Color.RED);
-				g2d.fill(face.preOutline);
+				g2d.fill(face.getOutlineBeforeFolding());
 			} else {
 				g2d.setColor(face.color);
 			}
@@ -196,7 +196,7 @@ public class FoldabilityScreen extends JPanel
 				}
 			}
 
-			g2d.fill(face.preOutline);
+			g2d.fill(face.getOutlineBeforeFolding());
 		}
 
 		g2d.setColor(Color.BLACK);
