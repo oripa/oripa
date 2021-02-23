@@ -33,7 +33,7 @@ public class OriEdge {
 	public OriVertex ev = null;
 	public OriHalfedge left = null;
 	public OriHalfedge right = null;
-	public int type = 0;
+	private int type = 0;
 
 	public OriEdge() {
 	}
@@ -42,6 +42,21 @@ public class OriEdge {
 		this.type = type;
 		this.sv = sv;
 		this.ev = ev;
+	}
+
+	/**
+	 * @return type
+	 */
+	public int getType() {
+		return type;
+	}
+
+	/**
+	 * @param type
+	 *            Sets type
+	 */
+	void setType(final int type) {
+		this.type = type;
 	}
 
 	public OriVertex oppositeVertex(final OriVertex v) {

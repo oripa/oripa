@@ -19,8 +19,12 @@
 package oripa.domain.fold.foldability;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
@@ -29,7 +33,10 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
+@ExtendWith(MockitoExtension.class)
 class GeneralizedBLBLemmaTest {
+	@InjectMocks
+	private GeneralizedBigLittleBigLemma blb;
 
 	/**
 	 * Test method for
@@ -38,23 +45,22 @@ class GeneralizedBLBLemmaTest {
 	@Test
 	void testHolds_birdFoot() {
 		var oriVertex = createBirdFoot();
-		var blb = new GeneralizedBigLittleBigLemma();
 
 		assertTrue(blb.holds(oriVertex));
 
-		oriVertex.edges.get(1).type = OriLine.Type.MOUNTAIN.toInt();
-		oriVertex.edges.get(3).type = OriLine.Type.VALLEY.toInt();
+		when(oriVertex.edges.get(1).getType()).thenReturn(OriLine.Type.MOUNTAIN.toInt());
+		when(oriVertex.edges.get(3).getType()).thenReturn(OriLine.Type.VALLEY.toInt());
 
 		assertFalse(blb.holds(oriVertex));
 	}
 
 	private OriVertex createBirdFoot() {
 		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 0, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
 
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
 
 		return oriVertex;
 	}
@@ -62,7 +68,6 @@ class GeneralizedBLBLemmaTest {
 	@Test
 	void testHolds_equalAngles() {
 		var oriVertex = createEqualAngles();
-		var blb = new GeneralizedBigLittleBigLemma();
 
 		assertTrue(blb.holds(oriVertex));
 
@@ -70,10 +75,10 @@ class GeneralizedBLBLemmaTest {
 
 	private OriVertex createEqualAngles() {
 		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(0, 1, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(2, 1, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(0, 1, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 0, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(2, 1, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
 
 		return oriVertex;
 	}
@@ -81,25 +86,24 @@ class GeneralizedBLBLemmaTest {
 	@Test
 	void testHolds_twoSequences() {
 		var oriVertex = createTwoSequences();
-		var blb = new GeneralizedBigLittleBigLemma();
 
 		assertTrue(blb.holds(oriVertex));
 
-		oriVertex.getEdge(0).type = OriLine.Type.VALLEY.toInt();
-		oriVertex.getEdge(3).type = OriLine.Type.MOUNTAIN.toInt();
+		when(oriVertex.getEdge(0).getType()).thenReturn(OriLine.Type.VALLEY.toInt());
+		when(oriVertex.getEdge(3).getType()).thenReturn(OriLine.Type.MOUNTAIN.toInt());
 
 		assertFalse(blb.holds(oriVertex));
 	}
 
 	private OriVertex createTwoSequences() {
 		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 0, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
 
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(2, 2, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(0, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(2, 2, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(0, 2, 1, 1, OriLine.Type.MOUNTAIN));
 
 		return oriVertex;
 	}
@@ -107,7 +111,6 @@ class GeneralizedBLBLemmaTest {
 	@Test
 	void testHolds_45deg_135deg() {
 		var oriVertex = create45deg135deg();
-		var blb = new GeneralizedBigLittleBigLemma();
 
 		assertTrue(blb.holds(oriVertex));
 	}
@@ -116,20 +119,20 @@ class GeneralizedBLBLemmaTest {
 		var oriVertex = new OriVertex(0, 0);
 		var angle = Math.PI / 8 * 3;
 		oriVertex.addEdge(
-				OriEdgeFactoryForTest.createEdge(0, 0, Math.cos(angle), Math.signum(angle),
+				OriEdgeFactoryForTest.createEdgeSpy(0, 0, Math.cos(angle), Math.signum(angle),
 						OriLine.Type.MOUNTAIN));
 		angle = Math.PI / 8 * 5;
 		oriVertex.addEdge(
-				OriEdgeFactoryForTest.createEdge(0, 0, Math.cos(angle), Math.signum(angle),
+				OriEdgeFactoryForTest.createEdgeSpy(0, 0, Math.cos(angle), Math.signum(angle),
 						OriLine.Type.VALLEY));
 
 		angle = Math.PI / 8 * 9;
 		oriVertex.addEdge(
-				OriEdgeFactoryForTest.createEdge(0, 0, Math.cos(angle), Math.signum(angle),
+				OriEdgeFactoryForTest.createEdgeSpy(0, 0, Math.cos(angle), Math.signum(angle),
 						OriLine.Type.MOUNTAIN));
 		angle = Math.PI / 8 * (-1);
 		oriVertex.addEdge(
-				OriEdgeFactoryForTest.createEdge(0, 0, Math.cos(angle), Math.signum(angle),
+				OriEdgeFactoryForTest.createEdgeSpy(0, 0, Math.cos(angle), Math.signum(angle),
 						OriLine.Type.MOUNTAIN));
 
 		return oriVertex;

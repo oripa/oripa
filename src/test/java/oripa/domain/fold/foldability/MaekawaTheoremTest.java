@@ -19,6 +19,7 @@
 package oripa.domain.fold.foldability;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,18 +43,18 @@ class MaekawaTheoremTest {
 
 		assertTrue(maekawa.holds(vertex));
 
-		vertex.getEdge(0).type = OriLine.Type.VALLEY.toInt();
+		when(vertex.getEdge(0).getType()).thenReturn(OriLine.Type.VALLEY.toInt());
 
 		assertFalse(maekawa.holds(vertex));
 	}
 
 	private OriVertex createBirdFoot() {
 		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 0, 1, 1, OriLine.Type.VALLEY));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
 
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdge(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
+		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
 
 		return oriVertex;
 	}

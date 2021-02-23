@@ -41,10 +41,9 @@ public class OriHalfedge {
 	private OriFace face = null;
 
 	/**
-	 * mountain/valley value
+	 * mountain/valley value for constructing edges.
 	 */
-	// TODO: meaningless? seems to be able to replace with edge.type.
-	public int type = 0;
+	int type = 0;
 
 	/**
 	 * temporary position while folding
@@ -99,7 +98,7 @@ public class OriHalfedge {
 	 * @return the line type of the underlying edge.
 	 */
 	public int getType() {
-		return edge.type;
+		return edge.getType();
 	}
 
 	/**

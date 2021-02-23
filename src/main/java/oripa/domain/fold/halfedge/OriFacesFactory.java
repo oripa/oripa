@@ -54,7 +54,7 @@ public class OriFacesFactory {
 
 			for (OriEdge e : v.edges) {
 
-				if (e.type == OriLine.Type.CUT.toInt()) {
+				if (e.getType() == OriLine.Type.CUT.toInt()) {
 					outlineEdges.add(e);
 					continue;
 				}
@@ -103,7 +103,7 @@ public class OriFacesFactory {
 			}
 			OriHalfedge he = new OriHalfedge(walkV, face);
 			face.halfedges.add(he);
-			he.type = walkE.type;
+			he.type = walkE.getType();
 			if (walkE.sv == walkV) {
 				walkE.left = he;
 			} else {

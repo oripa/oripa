@@ -67,7 +67,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 	 */
 	@Override
 	public boolean holds(final OriVertex vertex) {
-		if (vertex.edges.stream().anyMatch(e -> e.type == OriLine.Type.CUT.toInt())) {
+		if (vertex.edges.stream().anyMatch(e -> e.getType() == OriLine.Type.CUT.toInt())) {
 			return true;
 		}
 
@@ -78,7 +78,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 			int valleyCount = 0;
 
 			BiFunction<OriEdge, Integer, Integer> incrementIfValley = (edge, count) -> {
-				return (edge.type == OriLine.Type.VALLEY.toInt()) ? count + 1 : count;
+				return (edge.getType() == OriLine.Type.VALLEY.toInt()) ? count + 1 : count;
 			};
 
 			for (int i = range.begin; i != range.end; i++) {

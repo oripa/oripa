@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold.foldability;
 
+import static org.mockito.Mockito.*;
+
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
@@ -27,9 +29,14 @@ import oripa.value.OriLine;
  *
  */
 class OriEdgeFactoryForTest {
-	public static OriEdge createEdge(final double x0, final double y0,
+	public static OriEdge createEdgeSpy(final double x0, final double y0,
 			final double x1, final double y1,
 			final OriLine.Type type) {
-		return new OriEdge(new OriVertex(x0, y0), new OriVertex(x1, y1), type.toInt());
+		var spy = spy(OriEdge.class);
+		spy.sv = new OriVertex(x0, y0);
+		spy.ev = new OriVertex(x1, y1);
+		when(spy.getType()).thenReturn(type.toInt());
+
+		return spy;
 	}
 }

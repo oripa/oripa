@@ -65,7 +65,7 @@ public class BigLittleBigLemma extends AbstractRule<OriVertex> {
 					e3.oppositeVertex(vertex), vertex, e4.oppositeVertex(vertex));
 
 			if (a1 - a2 > EPS && a3 - a2 > EPS) {
-				lemmaHolds &= e2.type != e3.type;
+				lemmaHolds &= e2.getType() != e3.getType();
 			}
 		}
 

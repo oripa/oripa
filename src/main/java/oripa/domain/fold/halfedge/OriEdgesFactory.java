@@ -119,7 +119,7 @@ public class OriEdgesFactory {
 		edge.ev = he1.getVertex();
 		edge.left = he0;
 		edge.right = he1;
-		edge.type = he0.type;
+		edge.setType(he0.type);
 		return edge;
 	}
 
@@ -136,7 +136,7 @@ public class OriEdgesFactory {
 		edge.sv = he.getVertex();
 		edge.ev = he.next.getVertex();
 		edge.left = he;
-		edge.type = OriLine.Type.CUT.toInt();
+		edge.setType(OriLine.Type.CUT.toInt());
 
 		return edge;
 	}

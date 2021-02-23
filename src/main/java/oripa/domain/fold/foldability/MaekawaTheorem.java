@@ -41,11 +41,11 @@ public class MaekawaTheorem extends AbstractRule<OriVertex> {
 
 		// counts lines which ends on given vertex
 		for (OriEdge e : vertex.edges) {
-			if (e.type == OriLine.Type.MOUNTAIN.toInt()) {
+			if (e.getType() == OriLine.Type.MOUNTAIN.toInt()) {
 				mountainCount++;
-			} else if (e.type == OriLine.Type.VALLEY.toInt()) {
+			} else if (e.getType() == OriLine.Type.VALLEY.toInt()) {
 				valleyCount++;
-			} else if (e.type == OriLine.Type.CUT.toInt()) {
+			} else if (e.getType() == OriLine.Type.CUT.toInt()) {
 				return true;
 			}
 		}
