@@ -149,13 +149,13 @@ public class OriFace {
 					} else {
 						he.vertexColor.set(v, v * 0.8, v * 0.7);
 					}
-//				} else {
-//					if (faceFront ^ bFlip) {
-//						he.vertexColor.set(v, v * 0.6, v * 0.6);
-//					} else {
-//						he.vertexColor.set(v, v, v * 0.95);
-//					}
-//
+					//				} else {
+					//					if (faceFront ^ bFlip) {
+					//						he.vertexColor.set(v, v * 0.6, v * 0.6);
+					//					} else {
+					//						he.vertexColor.set(v, v, v * 0.95);
+					//					}
+					//
 				}
 			} else {
 				he.vertexColor.set(v, v, v * 0.95);
@@ -361,4 +361,15 @@ public class OriFace {
 		return true;
 	}
 
+	/* (non Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		var str = "OriFace:";
+		str += String.join(",", halfedges.stream().map(
+				he -> he.getPosition().toString()).collect(Collectors.toList()));
+
+		return str;
+	}
 }

@@ -32,7 +32,7 @@ public class FolderTool {
 	public RectangleDomain createDomainOfFoldedModel(final List<OriFace> faces) {
 		var domain = new RectangleDomain();
 		domain.enlarge(faces.stream()
-				.flatMap(face -> face.halfedges.stream().map(he -> he.positionAfterFolded))
+				.flatMap(face -> face.halfedges.stream().map(he -> he.getPosition()))
 				.collect(Collectors.toList()));
 
 		return domain;

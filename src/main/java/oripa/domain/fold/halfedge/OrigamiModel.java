@@ -41,8 +41,6 @@ public class OrigamiModel {
 
 	private boolean hasModel = false;
 
-	private final boolean probablyFoldable = false;
-
 	private double paperSize = -1;
 
 	// =============================================================

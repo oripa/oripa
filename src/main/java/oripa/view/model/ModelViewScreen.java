@@ -41,6 +41,9 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
@@ -64,6 +67,7 @@ import oripa.viewsetting.main.MainScreenSetting;
 public class ModelViewScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener,
 		ComponentListener {
+	private static final Logger logger = LoggerFactory.getLogger(ModelViewScreen.class);
 
 	private Image bufferImage = null;
 	private Graphics2D bufferg = null;
@@ -149,6 +153,7 @@ public class ModelViewScreen extends JPanel
 
 		rotateAngle = 0;
 		if (!hasModel) {
+			logger.info("reset view matrix: origamiModel does not have a model data.");
 			scale = 1.0;
 		} else {
 			// Align the center of the model, combined scale
@@ -167,11 +172,15 @@ public class ModelViewScreen extends JPanel
 
 	private void drawModel(final Graphics2D g2d) {
 		if (origamiModel == null) {
+			logger.info("null origamiModel.");
 			return;
 		}
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
+		logger.debug("sortedFaces.size() = " + sortedFaces.size());
+
 		for (OriFace face : sortedFaces) {
+			logger.trace("face: " + face);
 			switch (modelDisplayMode) {
 			case FILL_ALPHA:
 				g2d.setColor(new Color(100, 100, 100));
@@ -242,10 +251,12 @@ public class ModelViewScreen extends JPanel
 		Graphics2D g2d = bufferg;
 
 		if (origamiModel == null) {
+			logger.info("null origamiModel.");
 			return;
 		}
 
 		if (!origamiModel.hasModel()) {
+			logger.info("origamiModel does not have a model data.");
 			return;
 		}
 

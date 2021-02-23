@@ -821,6 +821,7 @@ public class Folder {
 
 		for (OriFace face : faces) {
 			face.faceFront = true;
+			face.movedByFold = false;
 		}
 
 		faces.get(0).z_order = 0;
