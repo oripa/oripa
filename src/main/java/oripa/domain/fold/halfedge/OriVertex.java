@@ -19,6 +19,8 @@
 package oripa.domain.fold.halfedge;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
 
@@ -48,7 +50,7 @@ public class OriVertex {
 	public Vector2d preP = new Vector2d();
 
 	public Vector2d tmpVec = new Vector2d();
-	public ArrayList<OriEdge> edges = new ArrayList<>();
+	private final ArrayList<OriEdge> edges = new ArrayList<>();
 	public boolean tmpFlg = false;
 	public int tmpInt = 0;
 
@@ -60,6 +62,14 @@ public class OriVertex {
 	public OriVertex(final double x, final double y) {
 		p.set(x, y);
 		preP.set(p);
+	}
+
+	/**
+	 * @return unmodifiable list of edges incident to this vertex in clockwise
+	 *         direction on screen.
+	 */
+	public List<OriEdge> getEdges() {
+		return Collections.unmodifiableList(edges);
 	}
 
 	/**

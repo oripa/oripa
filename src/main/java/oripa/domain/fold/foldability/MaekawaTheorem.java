@@ -40,7 +40,7 @@ public class MaekawaTheorem extends AbstractRule<OriVertex> {
 		int valleyCount = 0;
 
 		// counts lines which ends on given vertex
-		for (OriEdge e : vertex.edges) {
+		for (OriEdge e : vertex.getEdges()) {
 			if (e.getType() == OriLine.Type.MOUNTAIN.toInt()) {
 				mountainCount++;
 			} else if (e.getType() == OriLine.Type.VALLEY.toInt()) {

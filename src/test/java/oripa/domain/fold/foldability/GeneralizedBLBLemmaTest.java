@@ -48,8 +48,8 @@ class GeneralizedBLBLemmaTest {
 
 		assertTrue(blb.holds(oriVertex));
 
-		when(oriVertex.edges.get(1).getType()).thenReturn(OriLine.Type.MOUNTAIN.toInt());
-		when(oriVertex.edges.get(3).getType()).thenReturn(OriLine.Type.VALLEY.toInt());
+		when(oriVertex.getEdges().get(1).getType()).thenReturn(OriLine.Type.MOUNTAIN.toInt());
+		when(oriVertex.getEdges().get(3).getType()).thenReturn(OriLine.Type.VALLEY.toInt());
 
 		assertFalse(blb.holds(oriVertex));
 	}

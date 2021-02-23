@@ -41,7 +41,8 @@ public class OriEdgesFactory {
 	 * @param faces
 	 *            are assumed to have correct half-edges, i.e., each half-edge
 	 *            should be assigned at least a start vertex, next half-edge and
-	 *            the line type value.
+	 *            the line type value. every half-edge of the faces will be
+	 *            affected.
 	 * @return a list of edges
 	 */
 	public List<OriEdge> createOriEdges(final Collection<OriFace> faces) {

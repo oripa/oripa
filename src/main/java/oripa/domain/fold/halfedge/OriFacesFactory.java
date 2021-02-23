@@ -52,7 +52,7 @@ public class OriFacesFactory {
 		// Construct the faces
 		for (OriVertex v : vertices) {
 
-			for (OriEdge e : v.edges) {
+			for (OriEdge e : v.getEdges()) {
 
 				if (e.getType() == OriLine.Type.CUT.toInt()) {
 					outlineEdges.add(e);
