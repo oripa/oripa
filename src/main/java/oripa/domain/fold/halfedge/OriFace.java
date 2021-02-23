@@ -56,7 +56,7 @@ public class OriFace {
 	/**
 	 * For drawing the shape after fold
 	 */
-	public Path2D.Double outline = new Path2D.Double();
+	private Path2D.Double outline = new Path2D.Double();
 
 	/**
 	 * For drawing foldability-check face
@@ -207,10 +207,17 @@ public class OriFace {
 	 * Constructs {@code outline} field, which is for showing this face after
 	 * fold in graphic.
 	 */
-	public void setOutline() {
+	public void buildOutline() {
 		outline = createPath(halfedges.stream()
 				.map(he -> he.positionForDisplay)
 				.collect(Collectors.toList()));
+	}
+
+	/**
+	 * @return outline
+	 */
+	public Path2D.Double getOutline() {
+		return outline;
 	}
 
 	/**

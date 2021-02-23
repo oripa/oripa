@@ -113,7 +113,7 @@ public class OriFacesFactory {
 			walkE = walkV.getPrevEdge(walkE);
 		} while (walkV != startingVertex);
 		face.makeHalfedgeLoop();
-		face.setOutline();
+		face.buildOutline();
 		face.setPreOutline();
 		return face;
 	}

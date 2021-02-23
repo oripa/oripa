@@ -46,7 +46,7 @@ public class FolderTool {
 			for (OriHalfedge he : f.halfedges) {
 				he.positionForDisplay.set(he.getPosition());
 			}
-			f.setOutline();
+			f.buildOutline();
 		}
 
 		// not used.
@@ -88,7 +88,7 @@ public class FolderTool {
 				for (OriHalfedge he : f.halfedges) {
 					he.positionForDisplay.set(he.getVertex().tmpVec);
 				}
-				f.setOutline();
+				f.buildOutline();
 			}
 		}
 	}

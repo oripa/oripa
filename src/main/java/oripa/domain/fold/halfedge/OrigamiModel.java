@@ -147,7 +147,7 @@ public class OrigamiModel {
 
 		faces.forEach(face -> {
 			face.faceFront = !face.faceFront;
-			face.setOutline();
+			face.buildOutline();
 		});
 
 		Collections.sort(faces, new FaceOrderComparator());

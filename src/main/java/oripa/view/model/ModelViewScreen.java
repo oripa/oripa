@@ -184,7 +184,7 @@ public class ModelViewScreen extends JPanel
 			switch (modelDisplayMode) {
 			case FILL_ALPHA:
 				g2d.setColor(new Color(100, 100, 100));
-				g2d.fill(face.outline);
+				g2d.fill(face.getOutline());
 				break;
 			case FILL_NONE:
 			}
