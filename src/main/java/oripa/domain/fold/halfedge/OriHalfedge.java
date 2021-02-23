@@ -43,7 +43,7 @@ public class OriHalfedge {
 	/**
 	 * mountain/valley value for constructing edges.
 	 */
-	int type = 0;
+	private int temporaryType = 0;
 
 	/**
 	 * temporary position while folding
@@ -117,6 +117,21 @@ public class OriHalfedge {
 	 */
 	public OriFace getFace() {
 		return face;
+	}
+
+	/**
+	 * @return temporaryType
+	 */
+	int getTemporaryType() {
+		return temporaryType;
+	}
+
+	/**
+	 * @param temporaryType
+	 *            Sets temporaryType
+	 */
+	void setTemporaryType(final int temporaryType) {
+		this.temporaryType = temporaryType;
 	}
 
 	/**

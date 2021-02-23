@@ -103,7 +103,7 @@ public class OriFacesFactory {
 			}
 			OriHalfedge he = new OriHalfedge(walkV, face);
 			face.halfedges.add(he);
-			he.type = walkE.getType();
+			he.setTemporaryType(walkE.getType());
 			if (walkE.sv == walkV) {
 				walkE.left = he;
 			} else {
