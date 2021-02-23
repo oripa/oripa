@@ -223,8 +223,8 @@ public class Folder {
 					continue;
 				}
 
-				var index_i = he.face.faceID;
-				var index_j = he.pair.face.faceID;
+				var index_i = he.getFace().faceID;
+				var index_j = he.pair.getFace().faceID;
 
 				if (checked[index_i][index_j]) {
 					continue;
@@ -336,7 +336,7 @@ public class Folder {
 					continue;
 				}
 
-				OriFace f_j = he.pair.face;
+				OriFace f_j = he.pair.getFace();
 				if (overlapRelation[f_i.faceID][f_j.faceID] != OverlapRelationValues.LOWER) {
 					continue;
 				}
@@ -395,32 +395,42 @@ public class Folder {
 					continue;
 				}
 
+				var e0LeftFace = e0.left.getFace();
+				var e0RightFace = e0.right.getFace();
+				var e1LeftFace = e1.left.getFace();
+				var e1RightFace = e1.right.getFace();
+
 				StackConditionOf4Faces cond = new StackConditionOf4Faces();
 				// Add condition to all subfaces of the 4 faces
 				boolean bOverlap = false;
 				for (SubFace sub : subFaces) {
-					if (sub.parentFaces.contains(e0.left.face)
-							&& sub.parentFaces.contains(e0.right.face)
-							&& sub.parentFaces.contains(e1.left.face)
-							&& sub.parentFaces.contains(e1.right.face)) {
+					if (sub.parentFaces.contains(e0LeftFace)
+							&& sub.parentFaces.contains(e0RightFace)
+							&& sub.parentFaces.contains(e1LeftFace)
+							&& sub.parentFaces.contains(e1RightFace)) {
 						sub.condition4s.add(cond);
 						bOverlap = true;
 					}
 				}
 
-				if (overlapRelation[e0.left.face.faceID][e0.right.face.faceID] == OverlapRelationValues.UPPER) {
-					cond.upper1 = e0.right.face.faceID;
-					cond.lower1 = e0.left.face.faceID;
+				var e0LeftFaceID = e0LeftFace.faceID;
+				var e0RightFaceID = e0RightFace.faceID;
+				var e1LeftFaceID = e1LeftFace.faceID;
+				var e1RightFaceID = e1RightFace.faceID;
+
+				if (overlapRelation[e0LeftFaceID][e0RightFaceID] == OverlapRelationValues.UPPER) {
+					cond.upper1 = e0RightFaceID;
+					cond.lower1 = e0LeftFaceID;
 				} else {
-					cond.upper1 = e0.left.face.faceID;
-					cond.lower1 = e0.right.face.faceID;
+					cond.upper1 = e0LeftFaceID;
+					cond.lower1 = e0RightFaceID;
 				}
-				if (overlapRelation[e1.left.face.faceID][e1.right.face.faceID] == OverlapRelationValues.UPPER) {
-					cond.upper2 = e1.right.face.faceID;
-					cond.lower2 = e1.left.face.faceID;
+				if (overlapRelation[e1LeftFaceID][e1RightFaceID] == OverlapRelationValues.UPPER) {
+					cond.upper2 = e1RightFaceID;
+					cond.lower2 = e1LeftFaceID;
 				} else {
-					cond.upper2 = e1.left.face.faceID;
-					cond.lower2 = e1.right.face.faceID;
+					cond.upper2 = e1LeftFaceID;
+					cond.lower2 = e1RightFaceID;
 				}
 
 				if (bOverlap) {
@@ -626,7 +636,7 @@ public class Folder {
 				if (he.pair == null) {
 					continue;
 				}
-				OriFace f_j = he.pair.face;
+				OriFace f_j = he.pair.getFace();
 				int index_j = f_j.faceID;
 
 				for (OriFace f_k : faces) {
@@ -697,13 +707,14 @@ public class Folder {
 			if (he.pair == null) {
 				continue;
 			}
-			if (he.pair.face.movedByFold) {
+			var pairFace = he.pair.getFace();
+			if (pairFace.movedByFold) {
 				continue;
 			}
 
-			flipFace(he.pair.face, he);
-			he.pair.face.movedByFold = true;
-			walkFace(he.pair.face);
+			flipFace(pairFace, he);
+			pairFace.movedByFold = true;
+			walkFace(pairFace);
 		}
 	}
 
@@ -754,7 +765,7 @@ public class Folder {
 		}
 
 		// Inversion
-		if (face.faceFront == baseHe.face.faceFront) {
+		if (face.faceFront == baseHe.getFace().faceFront) {
 			Vector2d ep = baseHe.next.tmpVec;
 			Vector2d sp = baseHe.tmpVec;
 
@@ -812,7 +823,7 @@ public class Folder {
 				if (he.pair == null) {
 					continue;
 				}
-				OriFace pairFace = he.pair.face;
+				OriFace pairFace = he.pair.getFace();
 
 				// If the relation is already decided, skip
 				if (overlapRelation[face.faceID][pairFace.faceID] == OverlapRelationValues.UPPER
@@ -883,13 +894,14 @@ public class Folder {
 			if (he.pair == null) {
 				continue;
 			}
-			if (he.pair.face.movedByFold) {
+			var pairFace = he.pair.getFace();
+			if (pairFace.movedByFold) {
 				continue;
 			}
 
-			flipFace2(faces, he.pair.face, he);
-			he.pair.face.movedByFold = true;
-			walkFace(faces, he.pair.face, walkFaceCount + 1);
+			flipFace2(faces, pairFace, he);
+			pairFace.movedByFold = true;
+			walkFace(faces, pairFace, walkFaceCount + 1);
 		}
 	}
 

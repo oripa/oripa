@@ -38,7 +38,7 @@ public class OriHalfedge {
 	public OriHalfedge pair = null;
 	public OriEdge edge = null;
 	private OriVertex vertex = null;
-	public OriFace face = null;
+	private OriFace face = null;
 
 	/**
 	 * mountain/valley value
@@ -68,6 +68,15 @@ public class OriHalfedge {
 	 */
 	public OriVertex getVertex() {
 		return vertex;
+	}
+
+	/**
+	 * Gets the face containing this half-edge.
+	 *
+	 * @return face
+	 */
+	public OriFace getFace() {
+		return face;
 	}
 
 	/**
