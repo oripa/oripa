@@ -61,23 +61,28 @@ public class OriHalfedge {
 		tmpVec.set(v.p);
 	}
 
+	/**
+	 * Gets vertex of the start point of this half-edge.
+	 *
+	 * @return vertex
+	 */
 	public OriVertex getVertex() {
 		return vertex;
 	}
 
 	/**
-	 * gets current position of the start point of this half-edge.
+	 * Gets current position of the start point of this half-edge.
 	 *
-	 * @return current position (the same as {@code vertex.p}).
+	 * @return current position (the same as {@code getVertex().p}).
 	 */
 	public Vector2d getPosition() {
 		return vertex.p;
 	}
 
 	/**
-	 * gets position of the start point of this half-edge before fold.
+	 * Gets position of the start point of this half-edge before fold.
 	 *
-	 * @return position before fold (the same as {@code vertex.preP})
+	 * @return position before fold (the same as {@code getVertex().preP})
 	 */
 	public Vector2d getPositionBeforeFolding() {
 		return vertex.preP;
