@@ -149,13 +149,13 @@ public class OriFace {
 					} else {
 						he.vertexColor.set(v, v * 0.8, v * 0.7);
 					}
-					//				} else {
-					//					if (faceFront ^ bFlip) {
-					//						he.vertexColor.set(v, v * 0.6, v * 0.6);
-					//					} else {
-					//						he.vertexColor.set(v, v, v * 0.95);
-					//					}
-					//
+//					} else {
+//						if (faceFront ^ bFlip) {
+//							he.vertexColor.set(v, v * 0.6, v * 0.6);
+//						} else {
+//							he.vertexColor.set(v, v, v * 0.95);
+//						}
+//
 				}
 			} else {
 				he.vertexColor.set(v, v, v * 0.95);
