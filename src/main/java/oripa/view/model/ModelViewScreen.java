@@ -191,7 +191,7 @@ public class ModelViewScreen extends JPanel
 
 			g2d.setColor(Color.BLACK);
 			for (OriHalfedge he : face.halfedges) {
-				if (he.pair == null) {
+				if (he.getPair() == null) {
 					g2d.setStroke(selector.createPaperBoundaryStrokeForModelView(scale));
 				} else {
 					g2d.setStroke(selector.createFaceEdgeStrokeForModelView(scale));

@@ -219,12 +219,13 @@ public class Folder {
 
 		for (int i = 0; i < faces.size(); i++) {
 			for (var he : faces.get(i).halfedges) {
-				if (he.pair == null) {
+				var pair = he.getPair();
+				if (pair == null) {
 					continue;
 				}
 
 				var index_i = he.getFace().faceID;
-				var index_j = he.pair.getFace().faceID;
+				var index_j = pair.getFace().faceID;
 
 				if (checked[index_i][index_j]) {
 					continue;
@@ -332,11 +333,12 @@ public class Folder {
 
 		for (OriFace f_i : faces) {
 			for (OriHalfedge he : f_i.halfedges) {
-				if (he.pair == null) {
+				var pair = he.getPair();
+				if (pair == null) {
 					continue;
 				}
 
-				OriFace f_j = he.pair.getFace();
+				OriFace f_j = pair.getFace();
 				if (overlapRelation[f_i.faceID][f_j.faceID] != OverlapRelationValues.LOWER) {
 					continue;
 				}
@@ -633,10 +635,11 @@ public class Folder {
 		for (OriFace f_i : faces) {
 			int index_i = f_i.faceID;
 			for (OriHalfedge he : f_i.halfedges) {
-				if (he.pair == null) {
+				var pair = he.getPair();
+				if (pair == null) {
 					continue;
 				}
-				OriFace f_j = he.pair.getFace();
+				OriFace f_j = pair.getFace();
 				int index_j = f_j.faceID;
 
 				for (OriFace f_k : faces) {
@@ -704,10 +707,11 @@ public class Folder {
 		face.movedByFold = true;
 
 		for (OriHalfedge he : face.halfedges) {
-			if (he.pair == null) {
+			var pair = he.getPair();
+			if (pair == null) {
 				continue;
 			}
-			var pairFace = he.pair.getFace();
+			var pairFace = pair.getFace();
 			if (pairFace.movedByFold) {
 				continue;
 			}
@@ -737,14 +741,15 @@ public class Folder {
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
+		var basePair = baseHe.getPair();
 		// (Maybe) baseHe.pair keeps the position before folding.
-		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
+		Vector2d preOrigin = new Vector2d(basePair.next.tmpVec);
 		// baseHe.tmpVec is the temporary position while folding along creases.
 		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
 
 		// Creates the base unit vector for before the rotation
 		Vector2d baseDir = new Vector2d();
-		baseDir.sub(baseHe.pair.tmpVec, baseHe.pair.next.tmpVec);
+		baseDir.sub(basePair.tmpVec, basePair.next.tmpVec);
 
 		// Creates the base unit vector for after the rotation
 		Vector2d afterDir = new Vector2d();
@@ -820,10 +825,11 @@ public class Folder {
 
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
-				if (he.pair == null) {
+				var pair = he.getPair();
+				if (pair == null) {
 					continue;
 				}
-				OriFace pairFace = he.pair.getFace();
+				OriFace pairFace = pair.getFace();
 
 				// If the relation is already decided, skip
 				if (overlapRelation[face.faceID][pairFace.faceID] == OverlapRelationValues.UPPER
@@ -891,10 +897,11 @@ public class Folder {
 			return;
 		}
 		for (OriHalfedge he : face.halfedges) {
-			if (he.pair == null) {
+			var pair = he.getPair();
+			if (pair == null) {
 				continue;
 			}
-			var pairFace = he.pair.getFace();
+			var pairFace = pair.getFace();
 			if (pairFace.movedByFold) {
 				continue;
 			}

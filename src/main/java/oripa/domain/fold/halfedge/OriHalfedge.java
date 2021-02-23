@@ -35,7 +35,7 @@ public class OriHalfedge {
 
 	public OriHalfedge next = null;
 	public OriHalfedge prev = null;
-	public OriHalfedge pair = null;
+	private OriHalfedge pair = null;
 	private OriEdge edge = null;
 	private OriVertex vertex = null;
 	private OriFace face = null;
@@ -43,6 +43,7 @@ public class OriHalfedge {
 	/**
 	 * mountain/valley value
 	 */
+	// TODO: meaningless? seems to be able to replace with edge.type.
 	public int type = 0;
 
 	/**
@@ -59,6 +60,21 @@ public class OriHalfedge {
 		vertex = v;
 		face = f;
 		tmpVec.set(v.p);
+	}
+
+	/**
+	 * @return pair of this half-edge.
+	 */
+	public OriHalfedge getPair() {
+		return pair;
+	}
+
+	/**
+	 * @param pair
+	 *            Sets pair of this half-edge.
+	 */
+	void setPair(final OriHalfedge pair) {
+		this.pair = pair;
 	}
 
 	/**

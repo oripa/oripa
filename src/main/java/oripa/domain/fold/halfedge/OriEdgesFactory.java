@@ -51,7 +51,7 @@ public class OriEdgesFactory {
 		// Clear all the Halfedges
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedges) {
-				he.pair = null;
+				he.setPair(null);
 				he.setEdge(null);
 
 				allocateAndPut(he.getVertex(), he, halfedges);
@@ -62,7 +62,7 @@ public class OriEdgesFactory {
 		// directions are opposite (that's the definition of edge).
 		halfedges.values().forEach(hes -> {
 			for (var he0 : hes) {
-				if (he0.pair != null) {
+				if (he0.getPair() != null) {
 					continue;
 				}
 
@@ -79,7 +79,7 @@ public class OriEdgesFactory {
 		// If the pair wasn't found it should be boundary of paper
 		halfedges.values().forEach(hes -> {
 			for (var he : hes) {
-				if (he.pair == null) {
+				if (he.getPair() == null) {
 					edges.add(makeBoundary(he));
 				}
 			}
@@ -111,8 +111,8 @@ public class OriEdgesFactory {
 	 */
 	private OriEdge makePair(final OriHalfedge he0, final OriHalfedge he1) {
 		OriEdge edge = new OriEdge();
-		he0.pair = he1;
-		he1.pair = he0;
+		he0.setPair(he1);
+		he1.setPair(he0);
 		he0.setEdge(edge);
 		he1.setEdge(edge);
 		edge.sv = he0.getVertex();
