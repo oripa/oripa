@@ -115,7 +115,7 @@ public class OriEdgesFactory {
 		he1.setPair(he0);
 		he0.setEdge(edge);
 		he1.setEdge(edge);
-		edge.sv = he0.getVertex();
+		edge.setStartVertex(he0.getVertex());
 		edge.setEndVertex(he1.getVertex());
 		edge.setLeft(he0);
 		edge.setRight(he1);
@@ -133,7 +133,7 @@ public class OriEdgesFactory {
 	private OriEdge makeBoundary(final OriHalfedge he) {
 		OriEdge edge = new OriEdge();
 		he.setEdge(edge);
-		edge.sv = he.getVertex();
+		edge.setStartVertex(he.getVertex());
 		edge.setEndVertex(he.next.getVertex());
 		edge.setLeft(he);
 		edge.setType(OriLine.Type.CUT.toInt());

@@ -59,7 +59,7 @@ public class OriFacesFactory {
 					continue;
 				}
 
-				if (v == e.sv) {
+				if (v == e.getStartVertex()) {
 					if (e.getLeft() != null) {
 						continue;
 					}
@@ -78,7 +78,7 @@ public class OriFacesFactory {
 		}
 		if (faces.isEmpty()) { // happens when there is no crease
 			OriEdge outlineEdge = outlineEdges.get(0);
-			OriVertex v = outlineEdge.sv;
+			OriVertex v = outlineEdge.getStartVertex();
 
 			OriFace face = makeFace(v, outlineEdge);
 			if (face == null) {
@@ -104,7 +104,7 @@ public class OriFacesFactory {
 			OriHalfedge he = new OriHalfedge(walkV, face);
 			face.halfedges.add(he);
 			he.setTemporaryType(walkE.getType());
-			if (walkE.sv == walkV) {
+			if (walkE.getStartVertex() == walkV) {
 				walkE.setLeft(he);
 			} else {
 				walkE.setRight(he);

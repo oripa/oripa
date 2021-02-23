@@ -688,7 +688,7 @@ public class Folder {
 		walkFace(faces.get(0));
 
 		for (OriEdge e : edges) {
-			var sv = e.sv;
+			var sv = e.getStartVertex();
 			var ev = e.getEndVertex();
 
 			sv.p.set(e.getLeft().tmpVec);
@@ -884,8 +884,9 @@ public class Folder {
 		model.getSortedFaces().addAll(faces);
 
 		for (OriEdge e : edges) {
-			e.sv.p.set(e.getLeft().tmpVec);
-			e.sv.tmpFlg = false;
+			var sv = e.getStartVertex();
+			sv.p.set(e.getLeft().tmpVec);
+			sv.tmpFlg = false;
 		}
 
 		folderTool.setFacesOutline(vertices, faces, false);

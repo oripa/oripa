@@ -88,11 +88,12 @@ public class OriVertex {
 
 	private double getAngle(final OriEdge edge) {
 		Vector2d dir = new Vector2d();
-		if (edge.sv == this) {
+		var sv = edge.getStartVertex();
+		if (sv == this) {
 			var ev = edge.getEndVertex();
 			dir.set(ev.p.x - this.p.x, ev.p.y - this.p.y);
 		} else {
-			dir.set(edge.sv.p.x - this.p.x, edge.sv.p.y - this.p.y);
+			dir.set(sv.p.x - this.p.x, sv.p.y - this.p.y);
 		}
 
 		return Math.atan2(dir.y, dir.x);

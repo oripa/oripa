@@ -29,8 +29,8 @@ import oripa.value.OriLine;
  */
 public class OriEdge {
 
-	public OriVertex sv = null;
-	private OriVertex ev = null;
+	private OriVertex startVertex = null;
+	private OriVertex endVertex = null;
 	private OriHalfedge left = null;
 	private OriHalfedge right = null;
 	private int type = 0;
@@ -38,17 +38,32 @@ public class OriEdge {
 	public OriEdge() {
 	}
 
-	public OriEdge(final OriVertex sv, final OriVertex ev, final int type) {
+	public OriEdge(final OriVertex startVertex, final OriVertex endVertex, final int type) {
 		this.type = type;
-		this.sv = sv;
-		this.ev = ev;
+		this.startVertex = startVertex;
+		this.endVertex = endVertex;
+	}
+
+	/**
+	 * @return sv
+	 */
+	public OriVertex getStartVertex() {
+		return startVertex;
+	}
+
+	/**
+	 * @param sv
+	 *            Sets sv
+	 */
+	void setStartVertex(final OriVertex sv) {
+		this.startVertex = sv;
 	}
 
 	/**
 	 * @return ev
 	 */
 	public OriVertex getEndVertex() {
-		return ev;
+		return endVertex;
 	}
 
 	/**
@@ -56,7 +71,7 @@ public class OriEdge {
 	 *            Sets ev
 	 */
 	void setEndVertex(final OriVertex ev) {
-		this.ev = ev;
+		this.endVertex = ev;
 	}
 
 	/**
@@ -105,7 +120,7 @@ public class OriEdge {
 	}
 
 	public OriVertex oppositeVertex(final OriVertex v) {
-		return v == sv ? ev : sv;
+		return v == startVertex ? endVertex : startVertex;
 	}
 
 	public boolean isFoldLine() {
