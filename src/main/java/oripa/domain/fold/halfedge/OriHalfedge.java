@@ -62,6 +62,8 @@ public class OriHalfedge {
 	}
 
 	/**
+	 * Gets the underlying edge.
+	 *
 	 * @return edge
 	 */
 	public OriEdge getEdge() {
@@ -70,12 +72,16 @@ public class OriHalfedge {
 
 	/**
 	 * @param edge
-	 *            Sets edge
+	 *            Sets the underlying edge
 	 */
 	void setEdge(final OriEdge edge) {
 		this.edge = edge;
 	}
 
+	/**
+	 *
+	 * @return the line type of the underlying edge.
+	 */
 	public int getType() {
 		return edge.type;
 	}
