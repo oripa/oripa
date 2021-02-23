@@ -64,7 +64,7 @@ public class OriFacesFactory {
 						continue;
 					}
 				} else {
-					if (e.right != null) {
+					if (e.getRight() != null) {
 						continue;
 					}
 				}
@@ -107,7 +107,7 @@ public class OriFacesFactory {
 			if (walkE.sv == walkV) {
 				walkE.left = he;
 			} else {
-				walkE.right = he;
+				walkE.setRight(he);
 			}
 			walkV = walkE.oppositeVertex(walkV);
 			walkE = walkV.getPrevEdge(walkE);

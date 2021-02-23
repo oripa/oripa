@@ -379,25 +379,31 @@ public class Folder {
 
 		for (int i = 0; i < edgeNum; i++) {
 			OriEdge e0 = edges.get(i);
-			if (e0.left == null || e0.right == null) {
+			var e0Left = e0.left;
+			var e0Right = e0.getRight();
+
+			if (e0Left == null || e0Right == null) {
 				continue;
 			}
+
 			for (int j = i + 1; j < edgeNum; j++) {
 				OriEdge e1 = edges.get(j);
-				if (e1.left == null || e1.right == null) {
+				var e1Left = e1.left;
+				var e1Right = e1.getRight();
+				if (e1Left == null || e1Right == null) {
 					continue;
 				}
 
-				if (!GeomUtil.isLineSegmentsOverlap(e0.left.positionAfterFolded,
-						e0.left.next.positionAfterFolded,
-						e1.left.positionAfterFolded, e1.left.next.positionAfterFolded)) {
+				if (!GeomUtil.isLineSegmentsOverlap(e0Left.positionAfterFolded,
+						e0Left.next.positionAfterFolded,
+						e1Left.positionAfterFolded, e1Left.next.positionAfterFolded)) {
 					continue;
 				}
 
-				var e0LeftFace = e0.left.getFace();
-				var e0RightFace = e0.right.getFace();
-				var e1LeftFace = e1.left.getFace();
-				var e1RightFace = e1.right.getFace();
+				var e0LeftFace = e0Left.getFace();
+				var e0RightFace = e0Right.getFace();
+				var e1LeftFace = e1Left.getFace();
+				var e1RightFace = e1Right.getFace();
 
 				StackConditionOf4Faces cond = new StackConditionOf4Faces();
 				// Add condition to all subfaces of the 4 faces
@@ -682,9 +688,10 @@ public class Folder {
 		walkFace(faces.get(0));
 
 		for (OriEdge e : edges) {
+			var right = e.getRight();
 			e.sv.p.set(e.left.tmpVec);
-			if (e.right != null) {
-				e.ev.p.set(e.right.tmpVec);
+			if (right != null) {
+				e.ev.p.set(right.tmpVec);
 			}
 			e.sv.tmpFlg = false;
 			e.ev.tmpFlg = false;

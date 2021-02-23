@@ -118,7 +118,7 @@ public class OriEdgesFactory {
 		edge.sv = he0.getVertex();
 		edge.ev = he1.getVertex();
 		edge.left = he0;
-		edge.right = he1;
+		edge.setRight(he1);
 		edge.setType(he0.getTemporaryType());
 		return edge;
 	}
