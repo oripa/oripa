@@ -53,7 +53,7 @@ public class OriVertex {
 	/**
 	 * For outputting file.
 	 */
-	public int vertexID = 0;
+	private int vertexID = 0;
 
 	public OriVertex(final Vector2d p) {
 		this.p.set(p);
@@ -125,5 +125,20 @@ public class OriVertex {
 
 	public int edgeCount() {
 		return edges.size();
+	}
+
+	/**
+	 * @return vertexID
+	 */
+	public int getVertexID() {
+		return vertexID;
+	}
+
+	/**
+	 * @param vertexID
+	 *            Sets vertexID
+	 */
+	public void setVertexID(final int vertexID) {
+		this.vertexID = vertexID;
 	}
 }

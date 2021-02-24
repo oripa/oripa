@@ -56,14 +56,14 @@ public class ExporterORmat implements DocExporter {
 			for (OriVertex vertex : vertices) {
 				bw.write("v " + vertex.preP.x + " " + vertex.preP.y + " " + vertex.p.x + " "
 						+ vertex.p.y + "\n");
-				vertex.vertexID = id;
+				vertex.setVertexID(id);
 				id++;
 			}
 
 			for (OriFace face : faces) {
 				bw.write("f");
 				for (OriHalfedge he : face.halfedges) {
-					bw.write(" " + he.getVertex().vertexID);
+					bw.write(" " + he.getVertex().getVertexID());
 				}
 				bw.write("\n");
 			}
