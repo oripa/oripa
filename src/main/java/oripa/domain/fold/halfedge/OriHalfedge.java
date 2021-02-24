@@ -48,7 +48,7 @@ public class OriHalfedge {
 	/**
 	 * temporary position while folding
 	 */
-	public Vector2d tmpVec = new Vector2d();
+	public Vector2d positionWhileFolding = new Vector2d();
 
 	public Vector2d positionForDisplay = new Vector2d();
 	// TODO: should be replaced with getPosition()?
@@ -58,7 +58,7 @@ public class OriHalfedge {
 	public OriHalfedge(final OriVertex v, final OriFace f) {
 		vertex = v;
 		face = f;
-		tmpVec.set(v.getPosition());
+		positionWhileFolding.set(v.getPosition());
 	}
 
 	/**

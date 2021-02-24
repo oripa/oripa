@@ -74,7 +74,7 @@ class OriFaceFactoryForTest {
 				he -> he.positionAfterFolded = he.getPosition());
 
 		face.halfedges.forEach(
-				he -> he.tmpVec = he.getPosition());
+				he -> he.positionWhileFolding = he.getPosition());
 		return face;
 	}
 
