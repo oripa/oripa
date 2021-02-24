@@ -48,10 +48,12 @@ public class OriVertex {
 	// TODO: hide this field and add getter.
 	public Vector2d preP = new Vector2d();
 
-	public Vector2d tmpVec = new Vector2d();
 	private final ArrayList<OriEdge> edges = new ArrayList<>();
-	public boolean tmpFlg = false;
-	public int tmpInt = 0;
+
+	/**
+	 * For outputting file.
+	 */
+	public int vertexID = 0;
 
 	public OriVertex(final Vector2d p) {
 		this.p.set(p);

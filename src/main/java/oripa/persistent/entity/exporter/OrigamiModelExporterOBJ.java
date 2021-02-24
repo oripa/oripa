@@ -53,20 +53,20 @@ public class OrigamiModelExporterOBJ implements Exporter<OrigamiModel> {
 			int id = 1;
 			for (OriVertex vertex : vertices) {
 				bw.write("v " + vertex.p.x + " " + vertex.p.y + " 0.0\n");
-				vertex.tmpInt = id;
+				vertex.vertexID = id;
 				id++;
 			}
 
 			for (OriFace face : faces) {
 				bw.write("f");
 				for (OriHalfedge he : face.halfedges) {
-					bw.write(" " + he.getVertex().tmpInt);
+					bw.write(" " + he.getVertex().vertexID);
 				}
 				bw.write("\n");
 			}
 
 			for (OriEdge edge : edges) {
-				bw.write("e " + edge.getStartVertex().tmpInt + " " + edge.getEndVertex().tmpInt + " "
+				bw.write("e " + edge.getStartVertex().vertexID + " " + edge.getEndVertex().vertexID + " "
 						+ edge.getType() + " 180\n");
 			}
 		}
