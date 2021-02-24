@@ -198,7 +198,7 @@ public class OriFace {
 			OriHalfedge he = halfedges.get(i);
 			OriHalfedge nxt_he = CollectionUtil.getCircular(halfedges, i + 1);
 
-			he.next = nxt_he;
+			he.setNext(nxt_he);
 			he.setPrevious(pre_he);
 		}
 	}
@@ -329,7 +329,7 @@ public class OriFace {
 		for (int i = 0; i < heNum; i++) {
 			OriHalfedge he = halfedges.get(i);
 			if (GeomUtil.distancePointToSegment(v, getPosition.apply(he),
-					getPosition.apply(he.next)) < eps) {
+					getPosition.apply(he.getNext())) < eps) {
 				return true;
 			}
 		}
@@ -355,11 +355,11 @@ public class OriFace {
 
 		OriHalfedge baseHe = halfedges.get(0);
 		boolean baseFlg = GeomUtil.CCWcheck(getPosition.apply(baseHe),
-				getPosition.apply(baseHe.next), v);
+				getPosition.apply(baseHe.getNext()), v);
 
 		for (int i = 1; i < heNum; i++) {
 			OriHalfedge he = halfedges.get(i);
-			if (GeomUtil.CCWcheck(getPosition.apply(he), getPosition.apply(he.next),
+			if (GeomUtil.CCWcheck(getPosition.apply(he), getPosition.apply(he.getNext()),
 					v) != baseFlg) {
 				return false;
 			}

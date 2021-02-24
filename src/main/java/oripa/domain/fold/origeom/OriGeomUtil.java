@@ -109,24 +109,26 @@ public class OriGeomUtil {
 	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
 		Vector2d p1 = heg.positionAfterFolded;
-		Vector2d p2 = heg.next.positionAfterFolded;
+		Vector2d p2 = heg.getNext().positionAfterFolded;
 		Vector2d dir = new Vector2d();
 		dir.sub(p2, p1);
 		Line heLine = new Line(p1, dir);
+
+		var hegNext = heg.getNext();
 
 		for (OriHalfedge he : face.halfedges) {
 			// About the relationship of each outline`s segment
 
 			if (GeomUtil.distancePointToLine(he.positionAfterFolded, heLine) < eps
-					&& GeomUtil.distancePointToLine(he.next.positionAfterFolded, heLine) < eps) {
+					&& GeomUtil.distancePointToLine(he.getNext().positionAfterFolded, heLine) < eps) {
 				return false;
 			}
 		}
 		Vector2d preCrossPoint = null;
 		for (OriHalfedge he : face.halfedges) {
 			Vector2d cp = GeomUtil.getCrossPoint(he.positionAfterFolded,
-					he.next.positionAfterFolded, heg.positionAfterFolded,
-					heg.next.positionAfterFolded);
+					he.getNext().positionAfterFolded, heg.positionAfterFolded,
+					hegNext.positionAfterFolded);
 			if (cp == null) {
 				continue;
 			}
@@ -144,7 +146,7 @@ public class OriGeomUtil {
 		if (face.isOnFoldedFaceExclusively(heg.positionAfterFolded, eps)) {
 			return true;
 		}
-		if (face.isOnFoldedFaceExclusively(heg.next.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFaceExclusively(hegNext.positionAfterFolded, eps)) {
 			return true;
 		}
 		return false;
@@ -177,19 +179,21 @@ public class OriGeomUtil {
 	public static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg,
 			final double size) {
 		Vector2d p1 = heg.positionAfterFolded;
-		Vector2d p2 = heg.next.positionAfterFolded;
+		Vector2d p2 = heg.getNext().positionAfterFolded;
 		Vector2d dir = new Vector2d();
 		dir.sub(p2, p1);
 		Line heLine = new Line(p1, dir);
 
 		final double eps = size * 0.001;
 
+		var hegNext = heg.getNext();
+
 		for (OriHalfedge he : face.halfedges) {
 			// About the relation of contours (?)
 
 			// Check if the line is on the contour of the face
 			if (GeomUtil.distancePointToLine(he.positionAfterFolded, heLine) < 1
-					&& GeomUtil.distancePointToLine(he.next.positionAfterFolded, heLine) < 1) {
+					&& GeomUtil.distancePointToLine(he.getNext().positionAfterFolded, heLine) < 1) {
 				return false;
 			}
 		}
@@ -198,8 +202,8 @@ public class OriGeomUtil {
 		for (OriHalfedge he : face.halfedges) {
 			// Checks if the line crosses any of the edges of the face
 			Vector2d cp = GeomUtil.getCrossPoint(he.positionAfterFolded,
-					he.next.positionAfterFolded, heg.positionAfterFolded,
-					heg.next.positionAfterFolded);
+					he.getNext().positionAfterFolded, heg.positionAfterFolded,
+					hegNext.positionAfterFolded);
 			if (cp == null) {
 				continue;
 			}
@@ -217,7 +221,7 @@ public class OriGeomUtil {
 		if (face.isOnFoldedFaceExclusively(heg.positionAfterFolded, eps)) {
 			return true;
 		}
-		if (face.isOnFoldedFaceExclusively(heg.next.positionAfterFolded, eps)) {
+		if (face.isOnFoldedFaceExclusively(hegNext.positionAfterFolded, eps)) {
 			return true;
 		}
 

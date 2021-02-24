@@ -67,7 +67,7 @@ public class OriEdgesFactory {
 					continue;
 				}
 
-				var oppositeHes = halfedges.get(he0.next.getVertex());
+				var oppositeHes = halfedges.get(he0.getNext().getVertex());
 				for (var he1 : oppositeHes) {
 					if (isOppositeDirection(he0, he1)) {
 						edges.add(makePair(he0, he1));
@@ -98,7 +98,7 @@ public class OriEdgesFactory {
 	}
 
 	private boolean isOppositeDirection(final OriHalfedge he0, final OriHalfedge he1) {
-		return he0.getVertex() == he1.next.getVertex() && he0.next.getVertex() == he1.getVertex();
+		return he0.getVertex() == he1.getNext().getVertex() && he0.getNext().getVertex() == he1.getVertex();
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class OriEdgesFactory {
 	 * @return an edge with CUT type for he0 and he1.
 	 */
 	private OriEdge makeBoundary(final OriHalfedge he) {
-		OriEdge edge = new OriEdge(he.getVertex(), he.next.getVertex(), OriLine.Type.CUT.toInt());
+		OriEdge edge = new OriEdge(he.getVertex(), he.getNext().getVertex(), OriLine.Type.CUT.toInt());
 		he.setEdge(edge);
 		edge.setLeft(he);
 

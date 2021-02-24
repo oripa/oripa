@@ -392,8 +392,8 @@ public class Folder {
 				}
 
 				if (!GeomUtil.isLineSegmentsOverlap(e0Left.positionAfterFolded,
-						e0Left.next.positionAfterFolded,
-						e1Left.positionAfterFolded, e1Left.next.positionAfterFolded)) {
+						e0Left.getNext().positionAfterFolded,
+						e1Left.positionAfterFolded, e1Left.getNext().positionAfterFolded)) {
 					continue;
 				}
 
@@ -744,18 +744,21 @@ public class Folder {
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
 		var basePair = baseHe.getPair();
+		var basePairNext = basePair.getNext();
+
 		// (Maybe) baseHe.pair keeps the position before folding.
-		Vector2d preOrigin = new Vector2d(basePair.next.tmpVec);
+		Vector2d preOrigin = new Vector2d(basePairNext.tmpVec);
 		// baseHe.tmpVec is the temporary position while folding along creases.
 		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
 
 		// Creates the base unit vector for before the rotation
 		Vector2d baseDir = new Vector2d();
-		baseDir.sub(basePair.tmpVec, basePair.next.tmpVec);
+		baseDir.sub(basePair.tmpVec, basePairNext.tmpVec);
 
 		// Creates the base unit vector for after the rotation
+		var baseHeNext = baseHe.getNext();
 		Vector2d afterDir = new Vector2d();
-		afterDir.sub(baseHe.next.tmpVec, baseHe.tmpVec);
+		afterDir.sub(baseHeNext.tmpVec, baseHe.tmpVec);
 		afterDir.normalize();
 
 		Line preLine = new Line(preOrigin, baseDir);
@@ -773,7 +776,7 @@ public class Folder {
 
 		// Inversion
 		if (face.faceFront == baseHe.getFace().faceFront) {
-			Vector2d ep = baseHe.next.tmpVec;
+			Vector2d ep = baseHeNext.tmpVec;
 			Vector2d sp = baseHe.tmpVec;
 
 			for (OriHalfedge he : face.halfedges) {

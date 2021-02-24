@@ -168,7 +168,7 @@ public class ExporterSVGFactory {
 					java.util.ArrayList<Vector2d> points = new java.util.ArrayList<>();
 					for (OriHalfedge he : face.halfedges) {
 						var position = he.getPosition();
-						var nextPosition = he.next.getPosition();
+						var nextPosition = he.getNext().getPosition();
 						if (position.x > maxV.x) {
 							throw new IllegalArgumentException(
 									"Size of vertices exceeds maximum");

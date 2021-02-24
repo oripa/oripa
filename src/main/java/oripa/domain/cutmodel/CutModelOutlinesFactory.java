@@ -43,8 +43,10 @@ public class CutModelOutlinesFactory {
 		List<Vector2d> vv = new ArrayList<>(2);
 
 		for (OriHalfedge he : face.halfedges) {
-			OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
-					he.next.positionForDisplay.x, he.next.positionForDisplay.y, OriLine.Type.AUX);
+			var position = he.positionForDisplay;
+			var nextPosition = he.getNext().positionForDisplay;
+			OriLine l = new OriLine(position.x, position.y,
+					nextPosition.x, nextPosition.y, OriLine.Type.AUX);
 
 			double params[] = new double[2];
 			boolean res = getCrossPointParam(cutLine.p0, cutLine.p1, l.p0, l.p1, params);
@@ -54,10 +56,10 @@ public class CutModelOutlinesFactory {
 				double param = params[1];
 
 				Vector2d crossV = new Vector2d();
-				var position = he.getPositionBeforeFolding();
-				var nextPosition = he.next.getPositionBeforeFolding();
-				crossV.x = (1.0 - param) * position.x + param * nextPosition.x;
-				crossV.y = (1.0 - param) * position.y + param * nextPosition.y;
+				var positionBefore = he.getPositionBeforeFolding();
+				var nextPositionBefore = he.getNext().getPositionBeforeFolding();
+				crossV.x = (1.0 - param) * positionBefore.x + param * nextPositionBefore.x;
+				crossV.y = (1.0 - param) * positionBefore.y + param * nextPositionBefore.y;
 
 				boolean isNewPoint = true;
 				for (Vector2d v2d : vv) {

@@ -111,12 +111,12 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 							+ "\n");
 					bw.write(" 11\n");
 					bw.write(""
-							+ ((he.next.positionForDisplay.x - modelCenter.x)
+							+ ((he.getNext().positionForDisplay.x - modelCenter.x)
 									* scale + center)
 							+ "\n");
 					bw.write(" 21\n");
 					bw.write(""
-							+ (-(he.next.positionForDisplay.y - modelCenter.y)
+							+ (-(he.getNext().positionForDisplay.y - modelCenter.y)
 									* scale + center)
 							+ "\n");
 				}

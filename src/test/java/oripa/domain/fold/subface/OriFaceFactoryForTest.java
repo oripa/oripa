@@ -18,10 +18,10 @@
  */
 package oripa.domain.fold.subface;
 
+import static org.mockito.Mockito.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.mockito.Mockito;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -58,16 +58,16 @@ class OriFaceFactoryForTest {
 	 */
 	static OriFace createRectangleMock(final double left, final double top,
 			final double right, final double bottom) {
-		var face = Mockito.mock(OriFace.class);
+		var face = mock(OriFace.class);
 		face.halfedges = new ArrayList<OriHalfedge>();
-		var he1 = new OriHalfedge(new OriVertex(left, bottom), face);
-		var he2 = new OriHalfedge(new OriVertex(right, bottom), face);
-		var he3 = new OriHalfedge(new OriVertex(right, top), face);
-		var he4 = new OriHalfedge(new OriVertex(left, top), face);
-		he1.next = he2;
-		he2.next = he3;
-		he3.next = he4;
-		he4.next = he1;
+		var he1 = spy(new OriHalfedge(new OriVertex(left, bottom), face));
+		var he2 = spy(new OriHalfedge(new OriVertex(right, bottom), face));
+		var he3 = spy(new OriHalfedge(new OriVertex(right, top), face));
+		var he4 = spy(new OriHalfedge(new OriVertex(left, top), face));
+		lenient().when(he1.getNext()).thenReturn(he2);
+		lenient().when(he2.getNext()).thenReturn(he3);
+		lenient().when(he3.getNext()).thenReturn(he4);
+		lenient().when(he4.getNext()).thenReturn(he1);
 		face.halfedges.addAll(List.of(he1, he2, he3, he4));
 
 		face.halfedges.forEach(

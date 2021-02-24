@@ -33,7 +33,7 @@ import javax.vecmath.Vector3d;
  */
 public class OriHalfedge {
 
-	public OriHalfedge next = null;
+	private OriHalfedge next = null;
 	private OriHalfedge previous = null;
 	private OriHalfedge pair = null;
 	private OriEdge edge = null;
@@ -59,6 +59,21 @@ public class OriHalfedge {
 		vertex = v;
 		face = f;
 		tmpVec.set(v.getPosition());
+	}
+
+	/**
+	 * @return next
+	 */
+	public OriHalfedge getNext() {
+		return next;
+	}
+
+	/**
+	 * @param next
+	 *            Sets next
+	 */
+	void setNext(final OriHalfedge next) {
+		this.next = next;
 	}
 
 	/**

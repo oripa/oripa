@@ -42,9 +42,9 @@ class OriFaceTest {
 		var he2 = new OriHalfedge(new OriVertex(10, 0), face);
 		var he3 = new OriHalfedge(new OriVertex(5, 10), face);
 
-		he1.next = he2;
-		he2.next = he3;
-		he3.next = he1;
+		he1.setNext(he2);
+		he2.setNext(he3);
+		he3.setNext(he1);
 
 		face.halfedges.add(he1);
 		face.halfedges.add(he2);
