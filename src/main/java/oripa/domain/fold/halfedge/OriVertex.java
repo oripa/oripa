@@ -39,7 +39,7 @@ public class OriVertex {
 	 * given position is assumed to be for before fold. This field is assumed to
 	 * follow the change by folding. Hence this will be the position after fold.
 	 */
-	private final Vector2d p = new Vector2d();
+	private final Vector2d position = new Vector2d();
 
 	/**
 	 * position before fold
@@ -53,21 +53,21 @@ public class OriVertex {
 	 */
 	private int vertexID = 0;
 
-	public OriVertex(final Vector2d p) {
-		this.p.set(p);
-		positionBeforeFolding.set(p);
+	public OriVertex(final Vector2d position) {
+		this.position.set(position);
+		positionBeforeFolding.set(position);
 	}
 
 	public OriVertex(final double x, final double y) {
-		p.set(x, y);
-		positionBeforeFolding.set(p);
+		position.set(x, y);
+		positionBeforeFolding.set(position);
 	}
 
 	/**
-	 * @return p
+	 * @return position
 	 */
 	public Vector2d getPosition() {
-		return p;
+		return position;
 	}
 
 	/**
@@ -115,9 +115,9 @@ public class OriVertex {
 		var sv = edge.getStartVertex();
 		if (sv == this) {
 			var ev = edge.getEndVertex();
-			dir.set(ev.p.x - this.p.x, ev.p.y - this.p.y);
+			dir.set(ev.position.x - this.position.x, ev.position.y - this.position.y);
 		} else {
-			dir.set(sv.p.x - this.p.x, sv.p.y - this.p.y);
+			dir.set(sv.position.x - this.position.x, sv.position.y - this.position.y);
 		}
 
 		return Math.atan2(dir.y, dir.x);
