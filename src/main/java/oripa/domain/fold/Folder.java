@@ -687,11 +687,11 @@ public class Folder {
 			var sv = e.getStartVertex();
 			var ev = e.getEndVertex();
 
-			sv.p.set(e.getLeft().tmpVec);
+			sv.getPosition().set(e.getLeft().tmpVec);
 
 			var right = e.getRight();
 			if (right != null) {
-				ev.p.set(right.tmpVec);
+				ev.getPosition().set(right.tmpVec);
 			}
 		}
 
@@ -877,7 +877,7 @@ public class Folder {
 
 		for (OriEdge e : edges) {
 			var sv = e.getStartVertex();
-			sv.p.set(e.getLeft().tmpVec);
+			sv.getPosition().set(e.getLeft().tmpVec);
 		}
 
 		folderTool.setFacesOutline(faces);

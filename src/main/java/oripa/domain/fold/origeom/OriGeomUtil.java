@@ -234,9 +234,9 @@ public class OriGeomUtil {
 	 */
 	public static double getAngleDifference(
 			final OriVertex v1, final OriVertex v2, final OriVertex v3) {
-		var preP = new Vector2d(v1.p);
-		var p = new Vector2d(v2.p);
-		var nxtP = new Vector2d(v3.p);
+		var preP = new Vector2d(v1.getPosition());
+		var p = new Vector2d(v2.getPosition());
+		var nxtP = new Vector2d(v3.getPosition());
 
 		nxtP.sub(p);
 		preP.sub(p);

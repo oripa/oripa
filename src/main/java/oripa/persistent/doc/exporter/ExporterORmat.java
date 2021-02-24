@@ -55,8 +55,9 @@ public class ExporterORmat implements DocExporter {
 			int id = 1;
 			for (OriVertex vertex : vertices) {
 				var positionBefore = vertex.getPositionBeforeFolding();
-				bw.write("v " + positionBefore.x + " " + positionBefore.y + " " + vertex.p.x + " "
-						+ vertex.p.y + "\n");
+				var positionAfter = vertex.getPosition();
+				bw.write("v " + positionBefore.x + " " + positionBefore.y + " "
+						+ positionAfter.x + " " + positionAfter.y + "\n");
 				vertex.setVertexID(id);
 				id++;
 			}

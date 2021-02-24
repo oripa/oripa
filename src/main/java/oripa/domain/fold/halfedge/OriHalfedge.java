@@ -58,7 +58,7 @@ public class OriHalfedge {
 	public OriHalfedge(final OriVertex v, final OriFace f) {
 		vertex = v;
 		face = f;
-		tmpVec.set(v.p);
+		tmpVec.set(v.getPosition());
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class OriHalfedge {
 	 * @return current position (the same as {@code getVertex().p}).
 	 */
 	public Vector2d getPosition() {
-		return vertex.p;
+		return vertex.getPosition();
 	}
 
 	/**
