@@ -697,8 +697,6 @@ public class Folder {
 			if (right != null) {
 				ev.p.set(right.tmpVec);
 			}
-			sv.tmpFlg = false;
-			ev.tmpFlg = false;
 		}
 
 		for (OriFace face : faces) {
@@ -886,7 +884,6 @@ public class Folder {
 		for (OriEdge e : edges) {
 			var sv = e.getStartVertex();
 			sv.p.set(e.getLeft().tmpVec);
-			sv.tmpFlg = false;
 		}
 
 		folderTool.setFacesOutline(vertices, faces, false);
