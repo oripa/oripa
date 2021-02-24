@@ -21,7 +21,6 @@ package oripa.domain.fold.foldability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.util.rule.AbstractRule;
 import oripa.value.OriLine;
@@ -35,20 +34,19 @@ public class MaekawaTheorem extends AbstractRule<OriVertex> {
 
 	@Override
 	public boolean holds(final OriVertex vertex) {
-
-		int mountainCount = 0;
-		int valleyCount = 0;
+		boolean includesCut = vertex.edgeStream()
+				.anyMatch(e -> e.getType() == OriLine.Type.CUT.toInt());
+		if (includesCut) {
+			return true;
+		}
 
 		// counts lines which ends on given vertex
-		for (OriEdge e : vertex.getEdges()) {
-			if (e.getType() == OriLine.Type.MOUNTAIN.toInt()) {
-				mountainCount++;
-			} else if (e.getType() == OriLine.Type.VALLEY.toInt()) {
-				valleyCount++;
-			} else if (e.getType() == OriLine.Type.CUT.toInt()) {
-				return true;
-			}
-		}
+		long mountainCount = vertex.edgeStream()
+				.filter(e -> e.getType() == OriLine.Type.MOUNTAIN.toInt())
+				.count();
+		long valleyCount = vertex.edgeStream()
+				.filter(e -> e.getType() == OriLine.Type.VALLEY.toInt())
+				.count();
 
 		// maekawa's claim
 		if (Math.abs(mountainCount - valleyCount) != 2) {

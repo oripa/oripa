@@ -18,32 +18,26 @@
  */
 package oripa.domain.fold.foldability;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import oripa.domain.fold.halfedge.OriEdge;
+import javax.vecmath.Vector2d;
+
 import oripa.domain.fold.halfedge.OriVertex;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-class OriEdgeFactoryForTest {
-	public static OriEdge createEdgeSpy(final double x0, final double y0,
-			final double x1, final double y1,
-			final OriLine.Type type) {
+class OriVertexFactoryForTest {
 
-		var sv = new OriVertex(x0, y0);
-		var ev = new OriVertex(x1, y1);
+	static OriVertex createVertexSpy(final OriVertex centralVertex, final Vector2d p, final int index,
+			final int edgeCount) {
+		var vertex = spy(new OriVertex(p));
+		lenient().doReturn(vertex).when(centralVertex).getOppositeVertex(index);
+		lenient().doReturn(vertex).when(centralVertex).getOppositeVertex(index + edgeCount);
+		lenient().doReturn(centralVertex).when(vertex).getOppositeVertex(anyInt());
 
-		return createEdgeSpy(sv, ev, type);
-	}
-
-	public static OriEdge createEdgeSpy(final OriVertex sv, final OriVertex ev,
-			final OriLine.Type type) {
-
-		var spy = spy(new OriEdge(sv, ev, type.toInt()));
-
-		return spy;
+		return vertex;
 	}
 }

@@ -40,7 +40,7 @@ public class BigLittleBigLemma extends AbstractRule<OriVertex> {
 	 */
 	@Override
 	public boolean holds(final OriVertex vertex) {
-		var edgeNum = vertex.getEdges().size();
+		var edgeNum = vertex.edgeCount();
 		if (edgeNum < 4) {
 			return true;
 		}

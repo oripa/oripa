@@ -67,7 +67,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 	 */
 	@Override
 	public boolean holds(final OriVertex vertex) {
-		if (vertex.getEdges().stream().anyMatch(e -> e.getType() == OriLine.Type.CUT.toInt())) {
+		if (vertex.edgeStream().anyMatch(e -> e.getType() == OriLine.Type.CUT.toInt())) {
 			return true;
 		}
 
@@ -109,7 +109,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 
 	private Collection<Range> findMinimalAngleSequences(final OriVertex vertex) {
 		var ranges = new ArrayList<Range>();
-		var edgeNum = vertex.getEdges().size();
+		var edgeNum = vertex.edgeCount();
 
 		final List<Double> angles = IntStream.range(0, edgeNum)
 				.mapToObj(i -> OriGeomUtil.getAngleDifference(

@@ -19,8 +19,7 @@
 package oripa.domain.fold.halfedge;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 
@@ -65,11 +64,12 @@ public class OriVertex {
 	}
 
 	/**
-	 * @return unmodifiable list of edges incident to this vertex in clockwise
-	 *         direction on screen.
+	 *
+	 * @return stream of edges incident to this vertex in clockwise direction on
+	 *         screen.
 	 */
-	public List<OriEdge> getEdges() {
-		return Collections.unmodifiableList(edges);
+	public Stream<OriEdge> edgeStream() {
+		return edges.stream();
 	}
 
 	/**
@@ -107,7 +107,6 @@ public class OriVertex {
 		}
 
 		return Math.atan2(dir.y, dir.x);
-
 	}
 
 	public OriEdge getPrevEdge(final OriEdge e) {
@@ -122,4 +121,7 @@ public class OriVertex {
 		return getEdge(index).oppositeVertex(this);
 	}
 
+	public int edgeCount() {
+		return edges.size();
+	}
 }

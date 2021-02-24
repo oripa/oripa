@@ -20,6 +20,9 @@ package oripa.domain.fold.halfedge;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,36 +50,33 @@ public class OriFacesFactory {
 	 */
 	public boolean buildFaces(final Collection<OriVertex> vertices,
 			final Collection<OriFace> faces) {
-		var outlineEdges = new ArrayList<OriEdge>();
 
 		// Construct the faces
 		for (OriVertex v : vertices) {
+			var createdFaces = v.edgeStream()
+					.filter(e -> isTarget(v, e))
+					.map(e -> makeFace(v, e))
+					.collect(Collectors.toList());
 
-			for (OriEdge e : v.getEdges()) {
-
-				if (e.getType() == OriLine.Type.CUT.toInt()) {
-					outlineEdges.add(e);
-					continue;
-				}
-
-				if (v == e.getStartVertex()) {
-					if (e.getLeft() != null) {
-						continue;
-					}
-				} else {
-					if (e.getRight() != null) {
-						continue;
-					}
-				}
-
-				OriFace face = makeFace(v, e);
-				if (face == null) {
-					return false;
-				}
-				faces.add(face);
+			if (createdFaces.stream().anyMatch(Objects::isNull)) {
+				faces.addAll(createdFaces.stream()
+						.filter(f -> !Objects.isNull(f))
+						.collect(Collectors.toList()));
+				return false;
 			}
+
+			faces.addAll(createdFaces);
 		}
-		if (faces.isEmpty()) { // happens when there is no crease
+
+		if (faces.isEmpty()) {
+			// happens when there is no crease
+			List<OriEdge> outlineEdges = new ArrayList<OriEdge>();
+			for (OriVertex v : vertices) {
+				outlineEdges.addAll(v.edgeStream()
+						.filter(e -> e.getType() == OriLine.Type.CUT.toInt())
+						.collect(Collectors.toList()));
+			}
+			outlineEdges = outlineEdges.stream().distinct().collect(Collectors.toList());
 			OriEdge outlineEdge = outlineEdges.get(0);
 			OriVertex v = outlineEdge.getStartVertex();
 
@@ -87,6 +87,25 @@ public class OriFacesFactory {
 			faces.add(face);
 		}
 
+		return true;
+
+	}
+
+	private boolean isTarget(final OriVertex v, final OriEdge e) {
+		if (e.getType() == OriLine.Type.CUT.toInt()) {
+			return false;
+		}
+
+		// whether the half-edge for loop has been used.
+		if (v == e.getStartVertex()) {
+			if (e.getLeft() != null) {
+				return false;
+			}
+		} else {
+			if (e.getRight() != null) {
+				return false;
+			}
+		}
 		return true;
 	}
 

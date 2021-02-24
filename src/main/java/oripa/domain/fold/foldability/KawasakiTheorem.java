@@ -55,7 +55,7 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 
 		double oddSum = 0;
 
-		for (int i = 0; i < vertex.getEdges().size(); i++) {
+		for (int i = 0; i < vertex.edgeCount(); i++) {
 			OriEdge e = vertex.getEdge(i);
 
 			// corner does not need test
