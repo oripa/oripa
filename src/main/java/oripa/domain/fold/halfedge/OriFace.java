@@ -123,9 +123,10 @@ public class OriFace {
 				val -= 1;
 			}
 
-			if (he.prev.getType() == OriLine.Type.MOUNTAIN.toInt()) {
+			var prevHe = he.getPrevious();
+			if (prevHe.getType() == OriLine.Type.MOUNTAIN.toInt()) {
 				val += 1;
-			} else if (he.prev.getType() == OriLine.Type.VALLEY.toInt()) {
+			} else if (prevHe.getType() == OriLine.Type.VALLEY.toInt()) {
 				val -= 1;
 			}
 
@@ -198,7 +199,7 @@ public class OriFace {
 			OriHalfedge nxt_he = CollectionUtil.getCircular(halfedges, i + 1);
 
 			he.next = nxt_he;
-			he.prev = pre_he;
+			he.setPrevious(pre_he);
 		}
 	}
 
