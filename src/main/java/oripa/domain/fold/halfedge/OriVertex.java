@@ -46,7 +46,7 @@ public class OriVertex {
 	 * position before fold
 	 */
 	// TODO: hide this field and add getter.
-	public Vector2d preP = new Vector2d();
+	private final Vector2d preP = new Vector2d();
 
 	private final ArrayList<OriEdge> edges = new ArrayList<>();
 
@@ -63,6 +63,13 @@ public class OriVertex {
 	public OriVertex(final double x, final double y) {
 		p.set(x, y);
 		preP.set(p);
+	}
+
+	/**
+	 * @return preP
+	 */
+	public Vector2d getPositionBeforeFolding() {
+		return preP;
 	}
 
 	/**

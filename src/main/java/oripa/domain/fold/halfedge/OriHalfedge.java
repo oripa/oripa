@@ -149,6 +149,6 @@ public class OriHalfedge {
 	 * @return position before fold (the same as {@code getVertex().preP})
 	 */
 	public Vector2d getPositionBeforeFolding() {
-		return vertex.preP;
+		return vertex.getPositionBeforeFolding();
 	}
 }

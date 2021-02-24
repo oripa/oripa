@@ -157,8 +157,9 @@ public class FoldabilityScreen extends JPanel
 			double scale = camera.getScale();
 			double vertexSize = selector.createViolatingVertexSize(scale);
 			double vertexHalfSize = vertexSize / 2;
+			var position = v.getPositionBeforeFolding();
 			g2d.fill(new Rectangle2D.Double(
-					v.preP.x - vertexHalfSize, v.preP.y - vertexHalfSize,
+					position.x - vertexHalfSize, position.y - vertexHalfSize,
 					vertexSize, vertexSize));
 		}
 
@@ -366,7 +367,9 @@ public class FoldabilityScreen extends JPanel
 
 		var nearest = NearestVertexFinder.findNearestVertex(
 				logicalPoint,
-				violatingVertices.stream().map(v -> v.preP).collect(Collectors.toList()));
+				violatingVertices.stream()
+						.map(v -> v.getPositionBeforeFolding())
+						.collect(Collectors.toList()));
 
 		if (nearest.distance >= scaleDistanceThreshold()) {
 			pickedViolatingVertex = null;
@@ -375,7 +378,7 @@ public class FoldabilityScreen extends JPanel
 		}
 
 		pickedViolatingVertex = violatingVertices.stream()
-				.filter(vertex -> vertex.preP.equals(nearest.point))
+				.filter(vertex -> vertex.getPositionBeforeFolding().equals(nearest.point))
 				.findFirst().get();
 
 		repaint();
