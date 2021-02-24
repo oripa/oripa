@@ -23,7 +23,6 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
 
 /**
@@ -38,7 +37,7 @@ class MaekawaTheoremTest {
 	 */
 	@Test
 	void testHolds_birdFoot() {
-		var vertex = createBirdFoot();
+		var vertex = OriVertexFactoryForTest.createBirdFootSpy();
 		var maekawa = new MaekawaTheorem();
 
 		assertTrue(maekawa.holds(vertex));
@@ -47,16 +46,4 @@ class MaekawaTheoremTest {
 
 		assertFalse(maekawa.holds(vertex));
 	}
-
-	private OriVertex createBirdFoot() {
-		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
-
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
-
-		return oriVertex;
-	}
-
 }

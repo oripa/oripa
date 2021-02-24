@@ -22,9 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.domain.fold.halfedge.OriVertex;
-import oripa.value.OriLine;
-
 /**
  * @author OUCHI Koji
  *
@@ -37,39 +34,18 @@ class KawasakiTheoremTest {
 	 */
 	@Test
 	void testHolds_birdFoot() {
-		var vertex = createBirdFoot();
+		var vertex = OriVertexFactoryForTest.createBirdFootSpy();
 		var kawasaki = new KawasakiTheorem();
 
 		assertTrue(kawasaki.holds(vertex));
 	}
 
-	private OriVertex createBirdFoot() {
-		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(0, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
-
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
-
-		return oriVertex;
-	}
-
 	@Test
 	void testHolds_wrongShape() {
-		var vertex = createWrongShape();
+		var vertex = OriVertexFactoryForTest.createWrongAngleShapeSpy();
 		var kawasaki = new KawasakiTheorem();
 
 		assertFalse(kawasaki.holds(vertex));
 	}
 
-	private OriVertex createWrongShape() {
-		var oriVertex = new OriVertex(1, 1);
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(0.5, 0, 1, 1, OriLine.Type.MOUNTAIN));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 0, 1, 1, OriLine.Type.VALLEY));
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(2, 0, 1, 1, OriLine.Type.MOUNTAIN));
-
-		oriVertex.addEdge(OriEdgeFactoryForTest.createEdgeSpy(1, 2, 1, 1, OriLine.Type.MOUNTAIN));
-
-		return oriVertex;
-	}
 }
