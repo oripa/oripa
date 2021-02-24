@@ -72,7 +72,6 @@ public class OriFace {
 	 * working variable for computing position after fold by the algorithm.
 	 */
 	public boolean movedByFold = false;
-	public int z_order = 0;
 
 	/**
 	 * index of stack order for subface (probably). It seems to be used only

@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import oripa.ORIPA;
 import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.doc.OrigamiModelFileTypeKey;
 import oripa.persistent.filetool.FileChooserCanceledException;
@@ -68,9 +67,7 @@ public class ModelViewFrame extends JFrame
 			ORIPA.res.getString("MENU_Invert"));
 	private final JCheckBoxMenuItem menuItemCrossLine = new JCheckBoxMenuItem(
 			"Show Cross-Line", false);
-	public JCheckBoxMenuItem menuItemSlideFaces = new JCheckBoxMenuItem(
-			ORIPA.res.getString("MENU_SlideFaces"), false);
-	public JLabel hintLabel = new JLabel(ORIPA.res.getString("Direction_Basic"));
+	private final JLabel hintLabel = new JLabel(ORIPA.res.getString("Direction_Basic"));
 	private final JMenu dispSubMenu = new JMenu(
 			ORIPA.res.getString("MENU_DispType"));
 	private final JRadioButtonMenuItem menuItemFillAlpha = new JRadioButtonMenuItem(
@@ -149,8 +146,6 @@ public class ModelViewFrame extends JFrame
 	private void addActionListenersToComponents() {
 		menuItemFlip.addActionListener(e -> flipOrigamiModel());
 
-		menuItemSlideFaces.addActionListener(e -> slideOrigamiModel());
-
 		menuItemCrossLine.addActionListener(e -> {
 			mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected());
 		});
@@ -172,14 +167,6 @@ public class ModelViewFrame extends JFrame
 
 	private void flipOrigamiModel() {
 		origamiModel.flipXCoordinates();
-		screen.repaint();
-	}
-
-	private void slideOrigamiModel() {
-		FolderTool folderTool = new FolderTool();
-		folderTool.setFacesOutline(
-				origamiModel.getVertices(), origamiModel.getFaces(),
-				menuItemSlideFaces.isSelected());
 		screen.repaint();
 	}
 

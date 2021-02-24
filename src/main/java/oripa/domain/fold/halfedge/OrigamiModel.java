@@ -92,21 +92,24 @@ public class OrigamiModel {
 	}
 
 	/**
-	 * @param faces faces
+	 * @param faces
+	 *            faces
 	 */
 	public void setFaces(final List<OriFace> faces) {
 		this.faces = faces;
 	}
 
 	/**
-	 * @param vertices vertices
+	 * @param vertices
+	 *            vertices
 	 */
 	public void setVertices(final List<OriVertex> vertices) {
 		this.vertices = vertices;
 	}
 
 	/**
-	 * @param edges edges
+	 * @param edges
+	 *            edges
 	 */
 	public void setEdges(final List<OriEdge> edges) {
 		this.edges = edges;
@@ -120,7 +123,8 @@ public class OrigamiModel {
 	}
 
 	/**
-	 * @param hasModel hasModel
+	 * @param hasModel
+	 *            hasModel
 	 */
 	public void setHasModel(final boolean hasModel) {
 		this.hasModel = hasModel;
@@ -133,7 +137,6 @@ public class OrigamiModel {
 		var domain = new RectangleDomain();
 
 		for (OriFace face : faces) {
-			face.z_order = -face.z_order;
 			for (OriHalfedge he : face.halfedges) {
 				domain.enlarge(he.getPosition());
 			}
@@ -150,7 +153,7 @@ public class OrigamiModel {
 			face.buildOutline();
 		});
 
-		Collections.sort(faces, new FaceOrderComparator());
+//		Collections.sort(faces, new FaceOrderComparator());
 
 		Collections.reverse(sortedFaces);
 	}

@@ -19,7 +19,6 @@
 package oripa.domain.fold;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -28,7 +27,6 @@ import javax.vecmath.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.fold.halfedge.FaceOrderComparator;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -90,7 +88,6 @@ public class Folder {
 		simpleFoldWithoutZorder(faces, edges);
 
 		sortedFaces.addAll(faces);
-		folderTool.setFacesOutline(vertices, faces, false);
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
@@ -125,7 +122,7 @@ public class Folder {
 			return 0;
 		}
 
-		folderTool.setFacesOutline(vertices, faces, false);
+		folderTool.setFacesOutline(faces);
 
 		origamiModel.setFolded(true);
 		return foldableOverlapRelations.size();
@@ -676,7 +673,6 @@ public class Folder {
 		for (OriFace face : faces) {
 			face.faceFront = true;
 			face.movedByFold = false;
-			face.z_order = 0;
 			face.faceID = id;
 			id++;
 
@@ -873,11 +869,9 @@ public class Folder {
 			face.movedByFold = false;
 		}
 
-		faces.get(0).z_order = 0;
-
 		walkFace(faces, faces.get(0), 0);
 
-		Collections.sort(faces, new FaceOrderComparator());
+//		Collections.sort(faces, new FaceOrderComparator());
 		model.getSortedFaces().clear();
 		model.getSortedFaces().addAll(faces);
 
@@ -886,7 +880,7 @@ public class Folder {
 			sv.p.set(e.getLeft().tmpVec);
 		}
 
-		folderTool.setFacesOutline(vertices, faces, false);
+		folderTool.setFacesOutline(faces);
 	}
 
 	/**

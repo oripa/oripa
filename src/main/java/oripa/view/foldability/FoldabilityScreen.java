@@ -198,13 +198,6 @@ public class FoldabilityScreen extends JPanel
 
 			g2d.fill(face.getOutlineBeforeFolding());
 		}
-
-		g2d.setColor(Color.BLACK);
-		for (OriFace face : faces) {
-			g2d.drawString("" + face.z_order, (int) face.getCentroidBeforeFolding().x,
-					(int) face.getCentroidBeforeFolding().y);
-		}
-
 	}
 
 	private void buildBufferImage() {

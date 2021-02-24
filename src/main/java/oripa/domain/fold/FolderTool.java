@@ -21,11 +21,8 @@ package oripa.domain.fold;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
-import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.RectangleDomain;
 
 public class FolderTool {
@@ -38,9 +35,7 @@ public class FolderTool {
 		return domain;
 	}
 
-	public void setFacesOutline(
-			final List<OriVertex> vertices, final List<OriFace> faces,
-			final boolean isSlide) {
+	public void setFacesOutline(final List<OriFace> faces) {
 
 		for (OriFace f : faces) {
 			for (OriHalfedge he : f.halfedges) {
@@ -50,46 +45,46 @@ public class FolderTool {
 		}
 
 		// not used.
-		if (isSlide) {
-			int minDepth = Integer.MAX_VALUE;
-			int maxDepth = -Integer.MAX_VALUE;
-			for (var f : faces) {
-				minDepth = Math.min(minDepth, f.z_order);
-				maxDepth = Math.max(minDepth, f.z_order);
-			}
-
-			double slideUnit = 10.0 / (maxDepth - minDepth);
-			for (OriVertex v : vertices) {
-				v.tmpFlg = false;
-				v.tmpVec.set(v.p);
-			}
-
-			for (OriFace f : faces) {
-				Vector2d faceCenter = f.getCentroid();
-				for (OriHalfedge he : f.halfedges) {
-					var vertex = he.getVertex();
-					if (vertex.tmpFlg) {
-						continue;
-					}
-					vertex.tmpFlg = true;
-
-					vertex.tmpVec.x += slideUnit * f.z_order;
-					vertex.tmpVec.y += slideUnit * f.z_order;
-
-					Vector2d dirToCenter = new Vector2d(faceCenter);
-					dirToCenter.sub(vertex.tmpVec);
-					dirToCenter.normalize();
-					dirToCenter.scale(6.0);
-					vertex.tmpVec.add(dirToCenter);
-				}
-			}
-
-			for (OriFace f : faces) {
-				for (OriHalfedge he : f.halfedges) {
-					he.positionForDisplay.set(he.getVertex().tmpVec);
-				}
-				f.buildOutline();
-			}
-		}
+//		if (isSlide) {
+//			int minDepth = Integer.MAX_VALUE;
+//			int maxDepth = -Integer.MAX_VALUE;
+//			for (var f : faces) {
+//				minDepth = Math.min(minDepth, f.z_order);
+//				maxDepth = Math.max(minDepth, f.z_order);
+//			}
+//
+//			double slideUnit = 10.0 / (maxDepth - minDepth);
+//			for (OriVertex v : vertices) {
+//				v.tmpFlg = false;
+//				v.tmpVec.set(v.p);
+//			}
+//
+//			for (OriFace f : faces) {
+//				Vector2d faceCenter = f.getCentroid();
+//				for (OriHalfedge he : f.halfedges) {
+//					var vertex = he.getVertex();
+//					if (vertex.tmpFlg) {
+//						continue;
+//					}
+//					vertex.tmpFlg = true;
+//
+//					vertex.tmpVec.x += slideUnit * f.z_order;
+//					vertex.tmpVec.y += slideUnit * f.z_order;
+//
+//					Vector2d dirToCenter = new Vector2d(faceCenter);
+//					dirToCenter.sub(vertex.tmpVec);
+//					dirToCenter.normalize();
+//					dirToCenter.scale(6.0);
+//					vertex.tmpVec.add(dirToCenter);
+//				}
+//			}
+//
+//			for (OriFace f : faces) {
+//				for (OriHalfedge he : f.halfedges) {
+//					he.positionForDisplay.set(he.getVertex().tmpVec);
+//				}
+//				f.buildOutline();
+//			}
+//		}
 	}
 }
