@@ -196,8 +196,8 @@ public class ModelViewScreen extends JPanel
 				} else {
 					g2d.setStroke(selector.createFaceEdgeStrokeForModelView(scale));
 				}
-				var position = he.positionForDisplay;
-				var nextPosition = he.getNext().positionForDisplay;
+				var position = he.getPositionForDisplay();
+				var nextPosition = he.getNext().getPositionForDisplay();
 				g2d.draw(new Line2D.Double(position.x, position.y,
 						nextPosition.x, nextPosition.y));
 			}

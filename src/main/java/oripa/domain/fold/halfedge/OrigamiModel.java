@@ -145,7 +145,7 @@ public class OrigamiModel {
 		double centerX = domain.getCenterX();
 
 		faces.stream().flatMap(f -> f.halfedges.stream()).forEach(he -> {
-			he.positionForDisplay.x = 2 * centerX - he.positionForDisplay.x;
+			he.getPositionForDisplay().x = 2 * centerX - he.getPositionForDisplay().x;
 		});
 
 		faces.forEach(face -> {

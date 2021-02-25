@@ -97,26 +97,28 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 					bw.write(" 62\n"); // 1＝red 2＝yellow 3＝green 4＝cyan 5＝blue
 										// 6＝magenta 7＝white
 					int colorNumber = 250;
+					var position = he.getPositionForDisplay();
+					var nextPosition = he.getNext().getPositionForDisplay();
 
 					bw.write("" + colorNumber + "\n");
 					bw.write(" 10\n");
 					bw.write(""
-							+ ((he.positionForDisplay.x - modelCenter.x)
+							+ ((position.x - modelCenter.x)
 									* scale + center)
 							+ "\n");
 					bw.write(" 20\n");
 					bw.write(""
-							+ (-(he.positionForDisplay.y - modelCenter.y)
+							+ (-(position.y - modelCenter.y)
 									* scale + center)
 							+ "\n");
 					bw.write(" 11\n");
 					bw.write(""
-							+ ((he.getNext().positionForDisplay.x - modelCenter.x)
+							+ ((nextPosition.x - modelCenter.x)
 									* scale + center)
 							+ "\n");
 					bw.write(" 21\n");
 					bw.write(""
-							+ (-(he.getNext().positionForDisplay.y - modelCenter.y)
+							+ (-(nextPosition.y - modelCenter.y)
 									* scale + center)
 							+ "\n");
 				}

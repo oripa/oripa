@@ -50,7 +50,10 @@ public class OriHalfedge {
 	 */
 	private final Vector2d positionWhileFolding = new Vector2d();
 
-	public Vector2d positionForDisplay = new Vector2d();
+	/**
+	 * position for display after fold.
+	 */
+	private final Vector2d positionForDisplay = new Vector2d();
 	// TODO: should be replaced with getPosition()?
 	public Vector2d positionAfterFolded = new Vector2d();
 	public Vector3d vertexColor = new Vector3d();
@@ -157,18 +160,18 @@ public class OriHalfedge {
 	}
 
 	/**
-	 * @return positionWhileFolding
-	 */
-	public Vector2d getPositionWhileFolding() {
-		return positionWhileFolding;
-	}
-
-	/**
 	 * @param temporaryType
 	 *            Sets temporaryType
 	 */
 	void setTemporaryType(final int temporaryType) {
 		this.temporaryType = temporaryType;
+	}
+
+	/**
+	 * @return positionWhileFolding
+	 */
+	public Vector2d getPositionWhileFolding() {
+		return positionWhileFolding;
 	}
 
 	/**
@@ -178,6 +181,13 @@ public class OriHalfedge {
 	 */
 	public Vector2d getPosition() {
 		return vertex.getPosition();
+	}
+
+	/**
+	 * @return positionForDisplay
+	 */
+	public Vector2d getPositionForDisplay() {
+		return positionForDisplay;
 	}
 
 	/**

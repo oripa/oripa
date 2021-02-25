@@ -43,8 +43,8 @@ public class CutModelOutlinesFactory {
 		List<Vector2d> vv = new ArrayList<>(2);
 
 		for (OriHalfedge he : face.halfedges) {
-			var position = he.positionForDisplay;
-			var nextPosition = he.getNext().positionForDisplay;
+			var position = he.getPositionForDisplay();
+			var nextPosition = he.getNext().getPositionForDisplay();
 			OriLine l = new OriLine(position.x, position.y,
 					nextPosition.x, nextPosition.y, OriLine.Type.AUX);
 

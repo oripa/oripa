@@ -209,7 +209,7 @@ public class OriFace {
 	 */
 	public void buildOutline() {
 		outline = createPath(halfedges.stream()
-				.map(he -> he.positionForDisplay)
+				.map(he -> he.getPositionForDisplay())
 				.collect(Collectors.toList()));
 	}
 
