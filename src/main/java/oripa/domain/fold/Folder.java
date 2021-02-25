@@ -675,24 +675,14 @@ public class Folder {
 			face.movedByFold = false;
 			face.faceID = id;
 			id++;
-
-			for (OriHalfedge he : face.halfedges) {
-				he.getPositionWhileFolding().set(he.getPosition());
-			}
 		}
 
 		walkFace(faces.get(0));
 
 		for (OriEdge e : edges) {
 			var sv = e.getStartVertex();
-			var ev = e.getEndVertex();
 
 			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
-
-			var right = e.getRight();
-			if (right != null) {
-				ev.getPosition().set(right.getPositionWhileFolding());
-			}
 		}
 	}
 
@@ -735,16 +725,16 @@ public class Folder {
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
-		var basePair = baseHe.getPair();
-		var basePairNext = basePair.getNext();
+		var baseHePair = baseHe.getPair();
+		var baseHePairNext = baseHePair.getNext();
 
 		// (Maybe) baseHe.pair keeps the position before folding.
-		Vector2d preOrigin = new Vector2d(basePairNext.getPositionWhileFolding());
+		Vector2d preOrigin = new Vector2d(baseHePairNext.getPositionWhileFolding());
 		Vector2d afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
 
 		// Creates the base unit vector for before the rotation
 		Vector2d baseDir = new Vector2d();
-		baseDir.sub(basePair.getPositionWhileFolding(), basePairNext.getPositionWhileFolding());
+		baseDir.sub(baseHePair.getPositionWhileFolding(), baseHePairNext.getPositionWhileFolding());
 
 		// Creates the base unit vector for after the rotation
 		var baseHeNext = baseHe.getNext();
