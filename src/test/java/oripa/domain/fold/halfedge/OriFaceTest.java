@@ -19,6 +19,7 @@
 package oripa.domain.fold.halfedge;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import javax.vecmath.Vector2d;
 
@@ -38,9 +39,9 @@ class OriFaceTest {
 	@BeforeEach
 	void setupFace() {
 		face = new OriFace();
-		var he1 = new OriHalfedge(new OriVertex(0, 0), face);
-		var he2 = new OriHalfedge(new OriVertex(10, 0), face);
-		var he3 = new OriHalfedge(new OriVertex(5, 10), face);
+		var he1 = createHalfEdgeSpy(0, 0, face);
+		var he2 = createHalfEdgeSpy(10, 0, face);
+		var he3 = createHalfEdgeSpy(5, 10, face);
 
 		he1.setNext(he2);
 		he2.setNext(he3);
@@ -49,6 +50,16 @@ class OriFaceTest {
 		face.halfedges.add(he1);
 		face.halfedges.add(he2);
 		face.halfedges.add(he3);
+	}
+
+	private OriHalfedge createHalfEdgeSpy(final double x, final double y, final OriFace face) {
+		var position = new Vector2d(x, y);
+		var he = spy(new OriHalfedge(new OriVertex(position), face));
+
+		lenient().doReturn(position).when(he).getPosition();
+		lenient().doReturn(position).when(he).getPositionAfterFolded();
+
+		return he;
 	}
 
 	/**
@@ -68,13 +79,15 @@ class OriFaceTest {
 	 */
 	@Test
 	void testIsOnFoldedFaceExclusively() {
-		face.halfedges.forEach(he -> he.positionAfterFolded = he.getPosition());
-
 		final double EPS = 1e-6;
 		assertTrue(face.isOnFoldedFaceExclusively(new Vector2d(5, 5), EPS));
 		assertTrue(face.isOnFoldedFaceExclusively(new Vector2d(5, 9.9999), EPS));
 		assertFalse(face.isOnFoldedFaceExclusively(new Vector2d(5, 10 + 1e-8), EPS));
 		assertFalse(face.isOnFoldedFaceExclusively(new Vector2d(5, 10), EPS));
+
+		verify(face.halfedges.get(0), atLeastOnce()).getPositionAfterFolded();
+		verify(face.halfedges.get(1), atLeastOnce()).getPositionAfterFolded();
+		verify(face.halfedges.get(2), atLeastOnce()).getPositionAfterFolded();
 	}
 
 }

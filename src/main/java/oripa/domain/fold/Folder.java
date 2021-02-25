@@ -391,9 +391,9 @@ public class Folder {
 					continue;
 				}
 
-				if (!GeomUtil.isLineSegmentsOverlap(e0Left.positionAfterFolded,
-						e0Left.getNext().positionAfterFolded,
-						e1Left.positionAfterFolded, e1Left.getNext().positionAfterFolded)) {
+				if (!GeomUtil.isLineSegmentsOverlap(e0Left.getPositionAfterFolded(),
+						e0Left.getNext().getPositionAfterFolded(),
+						e1Left.getPositionAfterFolded(), e1Left.getNext().getPositionAfterFolded())) {
 					continue;
 				}
 
@@ -698,7 +698,7 @@ public class Folder {
 		for (OriFace face : faces) {
 			face.movedByFold = false;
 			for (OriHalfedge he : face.halfedges) {
-				he.positionAfterFolded.set(he.getPositionWhileFolding());
+				he.getPositionAfterFolded().set(he.getPositionWhileFolding());
 			}
 		}
 

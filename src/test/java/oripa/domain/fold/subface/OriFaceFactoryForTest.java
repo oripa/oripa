@@ -70,10 +70,8 @@ class OriFaceFactoryForTest {
 		lenient().when(he2.getNext()).thenReturn(he3);
 		lenient().when(he3.getNext()).thenReturn(he4);
 		lenient().when(he4.getNext()).thenReturn(he1);
-		face.halfedges.addAll(List.of(he1, he2, he3, he4));
 
-		face.halfedges.forEach(
-				he -> he.positionAfterFolded = he.getPosition());
+		face.halfedges.addAll(List.of(he1, he2, he3, he4));
 
 		return face;
 	}
@@ -82,6 +80,7 @@ class OriFaceFactoryForTest {
 		var position = new Vector2d(x, y);
 		var halfEdge = spy(new OriHalfedge(new OriVertex(position), face));
 
+		lenient().when(halfEdge.getPositionAfterFolded()).thenReturn(position);
 		lenient().when(halfEdge.getPositionWhileFolding()).thenReturn(position);
 
 		return halfEdge;

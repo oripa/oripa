@@ -302,11 +302,11 @@ public class OriFace {
 	 */
 	public boolean isOnFoldedFaceExclusively(final Vector2d v, final double eps) {
 		// If it's on the face's edge, return false
-		if (isOnEdge(v, eps, he -> he.positionAfterFolded)) {
+		if (isOnEdge(v, eps, he -> he.getPositionAfterFolded())) {
 			return false;
 		}
 
-		return isInside(v, eps, he -> he.positionAfterFolded);
+		return isInside(v, eps, he -> he.getPositionAfterFolded());
 	}
 
 	/**

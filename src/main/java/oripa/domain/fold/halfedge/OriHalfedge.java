@@ -54,8 +54,10 @@ public class OriHalfedge {
 	 * position for display after fold.
 	 */
 	private final Vector2d positionForDisplay = new Vector2d();
+
 	// TODO: should be replaced with getPosition()?
 	public Vector2d positionAfterFolded = new Vector2d();
+
 	public Vector3d vertexColor = new Vector3d();
 
 	public OriHalfedge(final OriVertex v, final OriFace f) {
@@ -177,7 +179,7 @@ public class OriHalfedge {
 	/**
 	 * Gets current position of the start point of this half-edge.
 	 *
-	 * @return current position (the same as {@code getVertex().p}).
+	 * @return current position (the same as {@code getVertex().getPosition()}).
 	 */
 	public Vector2d getPosition() {
 		return vertex.getPosition();
@@ -191,9 +193,17 @@ public class OriHalfedge {
 	}
 
 	/**
+	 * @return positionAfterFolded
+	 */
+	public Vector2d getPositionAfterFolded() {
+		return positionAfterFolded;
+	}
+
+	/**
 	 * Gets position of the start point of this half-edge before fold.
 	 *
-	 * @return position before fold (the same as {@code getVertex().preP})
+	 * @return position before fold (the same as
+	 *         {@code getVertex().getPositionBeforeFolding()})
 	 */
 	public Vector2d getPositionBeforeFolding() {
 		return vertex.getPositionBeforeFolding();
