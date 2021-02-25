@@ -80,7 +80,7 @@ class OriFaceFactoryForTest {
 		var position = new Vector2d(x, y);
 		var halfEdge = spy(new OriHalfedge(new OriVertex(position), face));
 
-		lenient().when(halfEdge.getPositionAfterFolded()).thenReturn(position);
+		lenient().when(halfEdge.getPosition()).thenReturn(position);
 		lenient().when(halfEdge.getPositionWhileFolding()).thenReturn(position);
 
 		return halfEdge;

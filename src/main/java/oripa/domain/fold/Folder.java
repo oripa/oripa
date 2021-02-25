@@ -391,9 +391,9 @@ public class Folder {
 					continue;
 				}
 
-				if (!GeomUtil.isLineSegmentsOverlap(e0Left.getPositionAfterFolded(),
-						e0Left.getNext().getPositionAfterFolded(),
-						e1Left.getPositionAfterFolded(), e1Left.getNext().getPositionAfterFolded())) {
+				if (!GeomUtil.isLineSegmentsOverlap(e0Left.getPosition(),
+						e0Left.getNext().getPosition(),
+						e1Left.getPosition(), e1Left.getNext().getPosition())) {
 					continue;
 				}
 
@@ -694,14 +694,6 @@ public class Folder {
 				ev.getPosition().set(right.getPositionWhileFolding());
 			}
 		}
-
-		for (OriFace face : faces) {
-			face.movedByFold = false;
-			for (OriHalfedge he : face.halfedges) {
-				he.getPositionAfterFolded().set(he.getPositionWhileFolding());
-			}
-		}
-
 	}
 
 	// Recursive method that flips the faces, making the folds

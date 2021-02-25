@@ -300,13 +300,13 @@ public class OriFace {
 	 * @param eps
 	 * @return true if v is strictly inside of this face.
 	 */
-	public boolean isOnFoldedFaceExclusively(final Vector2d v, final double eps) {
+	public boolean isOnFaceExclusively(final Vector2d v, final double eps) {
 		// If it's on the face's edge, return false
-		if (isOnEdge(v, eps, he -> he.getPositionAfterFolded())) {
+		if (isOnEdge(v, eps, he -> he.getPosition())) {
 			return false;
 		}
 
-		return isInside(v, eps, he -> he.getPositionAfterFolded());
+		return isInside(v, eps, he -> he.getPosition());
 	}
 
 	/**

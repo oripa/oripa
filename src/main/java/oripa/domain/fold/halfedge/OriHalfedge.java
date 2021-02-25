@@ -55,9 +55,6 @@ public class OriHalfedge {
 	 */
 	private final Vector2d positionForDisplay = new Vector2d();
 
-	// TODO: should be replaced with getPosition()?
-	public Vector2d positionAfterFolded = new Vector2d();
-
 	public Vector3d vertexColor = new Vector3d();
 
 	public OriHalfedge(final OriVertex v, final OriFace f) {
@@ -190,13 +187,6 @@ public class OriHalfedge {
 	 */
 	public Vector2d getPositionForDisplay() {
 		return positionForDisplay;
-	}
-
-	/**
-	 * @return positionAfterFolded
-	 */
-	public Vector2d getPositionAfterFolded() {
-		return positionAfterFolded;
 	}
 
 	/**

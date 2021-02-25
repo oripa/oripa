@@ -57,7 +57,7 @@ class OriFaceTest {
 		var he = spy(new OriHalfedge(new OriVertex(position), face));
 
 		lenient().doReturn(position).when(he).getPosition();
-		lenient().doReturn(position).when(he).getPositionAfterFolded();
+		lenient().doReturn(position).when(he).getPosition();
 
 		return he;
 	}
@@ -75,19 +75,19 @@ class OriFaceTest {
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.fold.halfedge.OriFace#isOnFoldedFaceExclusively(javax.vecmath.Vector2d, double)}.
+	 * {@link oripa.domain.fold.halfedge.OriFace#isOnFaceExclusively(javax.vecmath.Vector2d, double)}.
 	 */
 	@Test
 	void testIsOnFoldedFaceExclusively() {
 		final double EPS = 1e-6;
-		assertTrue(face.isOnFoldedFaceExclusively(new Vector2d(5, 5), EPS));
-		assertTrue(face.isOnFoldedFaceExclusively(new Vector2d(5, 9.9999), EPS));
-		assertFalse(face.isOnFoldedFaceExclusively(new Vector2d(5, 10 + 1e-8), EPS));
-		assertFalse(face.isOnFoldedFaceExclusively(new Vector2d(5, 10), EPS));
+		assertTrue(face.isOnFaceExclusively(new Vector2d(5, 5), EPS));
+		assertTrue(face.isOnFaceExclusively(new Vector2d(5, 9.9999), EPS));
+		assertFalse(face.isOnFaceExclusively(new Vector2d(5, 10 + 1e-8), EPS));
+		assertFalse(face.isOnFaceExclusively(new Vector2d(5, 10), EPS));
 
-		verify(face.halfedges.get(0), atLeastOnce()).getPositionAfterFolded();
-		verify(face.halfedges.get(1), atLeastOnce()).getPositionAfterFolded();
-		verify(face.halfedges.get(2), atLeastOnce()).getPositionAfterFolded();
+		verify(face.halfedges.get(0), atLeastOnce()).getPosition();
+		verify(face.halfedges.get(1), atLeastOnce()).getPosition();
+		verify(face.halfedges.get(2), atLeastOnce()).getPosition();
 	}
 
 }

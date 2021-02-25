@@ -18,8 +18,6 @@
  */
 package oripa.domain.fold.origeom;
 
-import java.util.stream.Collectors;
-
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.halfedge.OriFace;
@@ -52,31 +50,29 @@ public class OriGeomUtil {
 
 		// If the vertices of face0 are on face1, true
 		for (OriHalfedge he : face0.halfedges) {
-			if (face1.isOnFoldedFaceExclusively(he.getPositionAfterFolded(), eps)) {
+			if (face1.isOnFaceExclusively(he.getPosition(), eps)) {
 				return true;
 			}
 		}
 
 		// If the vertices of face1 are on face0, true
 		for (OriHalfedge he : face1.halfedges) {
-			if (face0.isOnFoldedFaceExclusively(he.getPositionAfterFolded(), eps)) {
+			if (face0.isOnFaceExclusively(he.getPosition(), eps)) {
 				return true;
 			}
 		}
 
 		// TODO: Can these be replaced with OriFace.getCentroid()?
-		Vector2d center0 = GeomUtil.computeCentroid(face0.halfedges.stream()
-				.map(he -> he.getPositionAfterFolded()).collect(Collectors.toList()));
-		Vector2d center1 = GeomUtil.computeCentroid(face1.halfedges.stream()
-				.map(he -> he.getPositionAfterFolded()).collect(Collectors.toList()));
+		Vector2d center0 = face0.getCentroid();
+		Vector2d center1 = face1.getCentroid();
 
 		// If the gravity center of face0 is on face1, true
-		if (face1.isOnFoldedFaceExclusively(center0, eps)) {
+		if (face1.isOnFaceExclusively(center0, eps)) {
 			return true;
 		}
 
 		// If the gravity center of face1 is on face0, true
-		if (face0.isOnFoldedFaceExclusively(center1, eps)) {
+		if (face0.isOnFaceExclusively(center1, eps)) {
 			return true;
 		}
 
@@ -96,8 +92,8 @@ public class OriGeomUtil {
 	}
 
 	/**
-	 * Whether {@code heg} crosses {@code face} after folding. The inclusion
-	 * test is exclusive.
+	 * Whether {@code heg} crosses {@code face}. The inclusion test is
+	 * exclusive.
 	 *
 	 * @param face
 	 * @param heg
@@ -108,8 +104,8 @@ public class OriGeomUtil {
 	 */
 	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
-		Vector2d p1 = heg.getPositionAfterFolded();
-		Vector2d p2 = heg.getNext().getPositionAfterFolded();
+		Vector2d p1 = heg.getPosition();
+		Vector2d p2 = heg.getNext().getPosition();
 		Vector2d dir = new Vector2d();
 		dir.sub(p2, p1);
 		Line heLine = new Line(p1, dir);
@@ -119,16 +115,16 @@ public class OriGeomUtil {
 		for (OriHalfedge he : face.halfedges) {
 			// About the relationship of each outline`s segment
 
-			if (GeomUtil.distancePointToLine(he.getPositionAfterFolded(), heLine) < eps
-					&& GeomUtil.distancePointToLine(he.getNext().getPositionAfterFolded(), heLine) < eps) {
+			if (GeomUtil.distancePointToLine(he.getPosition(), heLine) < eps
+					&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < eps) {
 				return false;
 			}
 		}
 		Vector2d preCrossPoint = null;
 		for (OriHalfedge he : face.halfedges) {
-			Vector2d cp = GeomUtil.getCrossPoint(he.getPositionAfterFolded(),
-					he.getNext().getPositionAfterFolded(), heg.getPositionAfterFolded(),
-					hegNext.getPositionAfterFolded());
+			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
+					he.getNext().getPosition(), heg.getPosition(),
+					hegNext.getPosition());
 			if (cp == null) {
 				continue;
 			}
@@ -143,10 +139,10 @@ public class OriGeomUtil {
 			}
 		}
 		// If at least one of the endpoints is fully contained
-		if (face.isOnFoldedFaceExclusively(heg.positionAfterFolded, eps)) {
+		if (face.isOnFaceExclusively(heg.getPosition(), eps)) {
 			return true;
 		}
-		if (face.isOnFoldedFaceExclusively(hegNext.positionAfterFolded, eps)) {
+		if (face.isOnFaceExclusively(hegNext.getPosition(), eps)) {
 			return true;
 		}
 		return false;
@@ -166,8 +162,8 @@ public class OriGeomUtil {
 	}
 
 	/**
-	 * Whether {@code heg} crosses {@code face} after folding. The inclusion
-	 * test is exclusive.
+	 * Whether {@code heg} crosses {@code face}. The inclusion test is
+	 * exclusive.
 	 *
 	 * @param face
 	 * @param heg
@@ -178,8 +174,8 @@ public class OriGeomUtil {
 	 */
 	public static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg,
 			final double size) {
-		Vector2d p1 = heg.getPositionAfterFolded();
-		Vector2d p2 = heg.getNext().getPositionAfterFolded();
+		Vector2d p1 = heg.getPosition();
+		Vector2d p2 = heg.getNext().getPosition();
 		Vector2d dir = new Vector2d();
 		dir.sub(p2, p1);
 		Line heLine = new Line(p1, dir);
@@ -192,8 +188,8 @@ public class OriGeomUtil {
 			// About the relation of contours (?)
 
 			// Check if the line is on the contour of the face
-			if (GeomUtil.distancePointToLine(he.getPositionAfterFolded(), heLine) < 1
-					&& GeomUtil.distancePointToLine(he.getNext().getPositionAfterFolded(), heLine) < 1) {
+			if (GeomUtil.distancePointToLine(he.getPosition(), heLine) < 1
+					&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < 1) {
 				return false;
 			}
 		}
@@ -201,9 +197,9 @@ public class OriGeomUtil {
 		Vector2d preCrossPoint = null;
 		for (OriHalfedge he : face.halfedges) {
 			// Checks if the line crosses any of the edges of the face
-			Vector2d cp = GeomUtil.getCrossPoint(he.getPositionAfterFolded(),
-					he.getNext().getPositionAfterFolded(), heg.getPositionAfterFolded(),
-					hegNext.getPositionAfterFolded());
+			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
+					he.getNext().getPosition(), heg.getPosition(),
+					hegNext.getPosition());
 			if (cp == null) {
 				continue;
 			}
@@ -218,10 +214,10 @@ public class OriGeomUtil {
 		}
 
 		// Checks if the line is in the interior of the face
-		if (face.isOnFoldedFaceExclusively(heg.getPositionAfterFolded(), eps)) {
+		if (face.isOnFaceExclusively(heg.getPosition(), eps)) {
 			return true;
 		}
-		if (face.isOnFoldedFaceExclusively(hegNext.getPositionAfterFolded(), eps)) {
+		if (face.isOnFaceExclusively(hegNext.getPosition(), eps)) {
 			return true;
 		}
 
