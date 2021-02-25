@@ -86,7 +86,7 @@ public class Folder {
 		foldableOverlapRelations.clear();
 
 		simpleFoldWithoutZorder(faces, edges);
-
+		folderTool.setFacesOutline(faces);
 		sortedFaces.addAll(faces);
 
 		if (!fullEstimation) {
@@ -122,7 +122,7 @@ public class Folder {
 			return 0;
 		}
 
-		folderTool.setFacesOutline(faces);
+//		folderTool.setFacesOutline(faces);
 
 		origamiModel.setFolded(true);
 		return foldableOverlapRelations.size();
