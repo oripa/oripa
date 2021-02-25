@@ -37,8 +37,8 @@ public class OriHalfedge {
 	private OriHalfedge previous = null;
 	private OriHalfedge pair = null;
 	private OriEdge edge = null;
-	private OriVertex vertex = null;
-	private OriFace face = null;
+	private final OriVertex vertex;
+	private final OriFace face;
 
 	/**
 	 * mountain/valley value for constructing edges.
@@ -55,7 +55,7 @@ public class OriHalfedge {
 	 */
 	private final Vector2d positionForDisplay = new Vector2d();
 
-	public Vector3d vertexColor = new Vector3d();
+	private final Vector3d vertexColor = new Vector3d();
 
 	public OriHalfedge(final OriVertex v, final OriFace f) {
 		vertex = v;
@@ -183,7 +183,7 @@ public class OriHalfedge {
 	}
 
 	/**
-	 * @return positionForDisplay
+	 * @return position for display after fold.
 	 */
 	public Vector2d getPositionForDisplay() {
 		return positionForDisplay;
@@ -197,5 +197,12 @@ public class OriHalfedge {
 	 */
 	public Vector2d getPositionBeforeFolding() {
 		return vertex.getPositionBeforeFolding();
+	}
+
+	/**
+	 * @return vertexColor
+	 */
+	public Vector3d getVertexColor() {
+		return vertexColor;
 	}
 }

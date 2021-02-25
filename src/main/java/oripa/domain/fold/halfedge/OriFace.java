@@ -145,9 +145,9 @@ public class OriFace {
 			if (bUseColor) {
 				if (true) {
 					if (faceFront ^ bFlip) {
-						he.vertexColor.set(v * 0.7, v * 0.7, v);
+						he.getVertexColor().set(v * 0.7, v * 0.7, v);
 					} else {
-						he.vertexColor.set(v, v * 0.8, v * 0.7);
+						he.getVertexColor().set(v, v * 0.8, v * 0.7);
 					}
 //					} else {
 //						if (faceFront ^ bFlip) {
@@ -158,7 +158,7 @@ public class OriFace {
 //
 				}
 			} else {
-				he.vertexColor.set(v, v, v * 0.95);
+				he.getVertexColor().set(v, v, v * 0.95);
 			}
 		}
 
@@ -170,9 +170,9 @@ public class OriFace {
 			tri.v[1].p = new Vector2d(halfedges.get(i).getPosition());
 			tri.v[2].p = new Vector2d(halfedges.get(i + 1).getPosition());
 
-			tri.v[0].color = new Vector3d(startHe.vertexColor);
-			tri.v[1].color = new Vector3d(halfedges.get(i).vertexColor);
-			tri.v[2].color = new Vector3d(halfedges.get(i + 1).vertexColor);
+			tri.v[0].color = new Vector3d(startHe.getVertexColor());
+			tri.v[1].color = new Vector3d(halfedges.get(i).getVertexColor());
+			tri.v[2].color = new Vector3d(halfedges.get(i + 1).getVertexColor());
 
 			tri.v[0].uv = new Vector2d(startHe.getPositionBeforeFolding().x / paperSize
 					+ 0.5, startHe.getPositionBeforeFolding().y / paperSize + 0.5);
