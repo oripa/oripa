@@ -265,8 +265,8 @@ public class OriFace {
 	/**
 	 * Computes centroid.
 	 *
-	 * @return centroid of this face with current position {@link OriVertex#p}
-	 *         of half-edges.
+	 * @return centroid of this face with current position
+	 *         {@link OriVertex#getPosition()} of half-edges.
 	 */
 	public Vector2d getCentroid() {
 		return GeomUtil.computeCentroid(halfedges.stream()
@@ -276,7 +276,8 @@ public class OriFace {
 
 	/**
 	 * Whether v is inclusively on this face (inside or on the edges). The test
-	 * is done with current position {@link OriVertex#p} of half-edges.
+	 * is done with current position {@link OriVertex#getPosition()} of
+	 * half-edges.
 	 *
 	 * @param v
 	 *            point to be tested.

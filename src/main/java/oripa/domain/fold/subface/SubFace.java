@@ -20,7 +20,6 @@ package oripa.domain.fold.subface;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
@@ -28,7 +27,6 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
-import oripa.geom.GeomUtil;
 
 public class SubFace {
 
@@ -125,9 +123,7 @@ public class SubFace {
 	 * @return geometric center of this subface
 	 */
 	public Vector2d getInnerPoint() {
-		return GeomUtil.computeCentroid(outline.halfedges.stream()
-				.map(he -> he.getPosition())
-				.collect(Collectors.toList()));
+		return outline.getCentroid();
 	}
 
 	private void sort(final List<OriFace> modelFaces, final int index) {
