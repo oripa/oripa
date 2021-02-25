@@ -23,6 +23,8 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Vector2d;
+
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
@@ -60,10 +62,10 @@ class OriFaceFactoryForTest {
 			final double right, final double bottom) {
 		var face = mock(OriFace.class);
 		face.halfedges = new ArrayList<OriHalfedge>();
-		var he1 = spy(new OriHalfedge(new OriVertex(left, bottom), face));
-		var he2 = spy(new OriHalfedge(new OriVertex(right, bottom), face));
-		var he3 = spy(new OriHalfedge(new OriVertex(right, top), face));
-		var he4 = spy(new OriHalfedge(new OriVertex(left, top), face));
+		var he1 = createHalfEdgeSpy(left, bottom, face);
+		var he2 = createHalfEdgeSpy(right, bottom, face);
+		var he3 = createHalfEdgeSpy(right, top, face);
+		var he4 = createHalfEdgeSpy(left, top, face);
 		lenient().when(he1.getNext()).thenReturn(he2);
 		lenient().when(he2.getNext()).thenReturn(he3);
 		lenient().when(he3.getNext()).thenReturn(he4);
@@ -73,9 +75,16 @@ class OriFaceFactoryForTest {
 		face.halfedges.forEach(
 				he -> he.positionAfterFolded = he.getPosition());
 
-		face.halfedges.forEach(
-				he -> he.positionWhileFolding = he.getPosition());
 		return face;
+	}
+
+	private static OriHalfedge createHalfEdgeSpy(final double x, final double y, final OriFace face) {
+		var position = new Vector2d(x, y);
+		var halfEdge = spy(new OriHalfedge(new OriVertex(position), face));
+
+		lenient().when(halfEdge.getPositionWhileFolding()).thenReturn(position);
+
+		return halfEdge;
 	}
 
 }

@@ -48,7 +48,7 @@ public class OriHalfedge {
 	/**
 	 * temporary position while folding
 	 */
-	public Vector2d positionWhileFolding = new Vector2d();
+	private final Vector2d positionWhileFolding = new Vector2d();
 
 	public Vector2d positionForDisplay = new Vector2d();
 	// TODO: should be replaced with getPosition()?
@@ -154,6 +154,13 @@ public class OriHalfedge {
 	 */
 	int getTemporaryType() {
 		return temporaryType;
+	}
+
+	/**
+	 * @return positionWhileFolding
+	 */
+	public Vector2d getPositionWhileFolding() {
+		return positionWhileFolding;
 	}
 
 	/**

@@ -677,7 +677,7 @@ public class Folder {
 			id++;
 
 			for (OriHalfedge he : face.halfedges) {
-				he.positionWhileFolding.set(he.getPosition());
+				he.getPositionWhileFolding().set(he.getPosition());
 			}
 		}
 
@@ -687,18 +687,18 @@ public class Folder {
 			var sv = e.getStartVertex();
 			var ev = e.getEndVertex();
 
-			sv.getPosition().set(e.getLeft().positionWhileFolding);
+			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
 
 			var right = e.getRight();
 			if (right != null) {
-				ev.getPosition().set(right.positionWhileFolding);
+				ev.getPosition().set(right.getPositionWhileFolding());
 			}
 		}
 
 		for (OriFace face : faces) {
 			face.movedByFold = false;
 			for (OriHalfedge he : face.halfedges) {
-				he.positionAfterFolded.set(he.positionWhileFolding);
+				he.positionAfterFolded.set(he.getPositionWhileFolding());
 			}
 		}
 
@@ -747,18 +747,17 @@ public class Folder {
 		var basePairNext = basePair.getNext();
 
 		// (Maybe) baseHe.pair keeps the position before folding.
-		Vector2d preOrigin = new Vector2d(basePairNext.positionWhileFolding);
-		// baseHe.tmpVec is the temporary position while folding along creases.
-		Vector2d afterOrigin = new Vector2d(baseHe.positionWhileFolding);
+		Vector2d preOrigin = new Vector2d(basePairNext.getPositionWhileFolding());
+		Vector2d afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
 
 		// Creates the base unit vector for before the rotation
 		Vector2d baseDir = new Vector2d();
-		baseDir.sub(basePair.positionWhileFolding, basePairNext.positionWhileFolding);
+		baseDir.sub(basePair.getPositionWhileFolding(), basePairNext.getPositionWhileFolding());
 
 		// Creates the base unit vector for after the rotation
 		var baseHeNext = baseHe.getNext();
 		Vector2d afterDir = new Vector2d();
-		afterDir.sub(baseHeNext.positionWhileFolding, baseHe.positionWhileFolding);
+		afterDir.sub(baseHeNext.getPositionWhileFolding(), baseHe.getPositionWhileFolding());
 		afterDir.normalize();
 
 		Line preLine = new Line(preOrigin, baseDir);
@@ -766,7 +765,7 @@ public class Folder {
 		// move the vertices of the face to keep the face connection
 		// on baseHe
 		for (OriHalfedge he : face.halfedges) {
-			transformVertex(he.positionWhileFolding, preLine, afterOrigin, afterDir);
+			transformVertex(he.getPositionWhileFolding(), preLine, afterOrigin, afterDir);
 		}
 
 		for (OriLine precrease : face.precreases) {
@@ -776,11 +775,11 @@ public class Folder {
 
 		// Inversion
 		if (face.faceFront == baseHe.getFace().faceFront) {
-			Vector2d ep = baseHeNext.positionWhileFolding;
-			Vector2d sp = baseHe.positionWhileFolding;
+			Vector2d ep = baseHeNext.getPositionWhileFolding();
+			Vector2d sp = baseHe.getPositionWhileFolding();
 
 			for (OriHalfedge he : face.halfedges) {
-				flipVertex(he.positionWhileFolding, sp, ep);
+				flipVertex(he.getPositionWhileFolding(), sp, ep);
 			}
 			for (OriLine precrease : face.precreases) {
 				flipVertex(precrease.p0, sp, ep);
@@ -880,7 +879,7 @@ public class Folder {
 
 		for (OriEdge e : edges) {
 			var sv = e.getStartVertex();
-			sv.getPosition().set(e.getLeft().positionWhileFolding);
+			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
 		}
 
 		folderTool.setFacesOutline(faces);
