@@ -110,7 +110,7 @@ public class SubFace {
 
 		for (OriFace f : parentFaces) {
 			f.setAlreadyStacked(false);
-			f.indexForStack = -1;
+			f.clearIndexForStack();
 		}
 
 		// From the bottom
@@ -151,12 +151,12 @@ public class SubFace {
 
 			sortedParentFaces.set(index, f);
 			f.setAlreadyStacked(true);
-			f.indexForStack = index;
+			f.setIndexForStack(index);
 
 			sort(modelFaces, index + 1);
 
 			sortedParentFaces.get(index).setAlreadyStacked(false);
-			sortedParentFaces.get(index).indexForStack = -1;
+			sortedParentFaces.get(index).clearIndexForStack();
 			sortedParentFaces.set(index, null);
 		}
 	}
@@ -183,8 +183,8 @@ public class SubFace {
 				&& modelFaces.get(cond.lower2).isAlreadyStacked()
 				&& modelFaces.get(cond.lower1).isAlreadyStacked()
 				&& !modelFaces.get(cond.upper1).isAlreadyStacked()
-				&& modelFaces.get(cond.lower2).indexForStack < modelFaces
-						.get(cond.lower1).indexForStack)) {
+				&& modelFaces.get(cond.lower2).getIndexForStack() < modelFaces
+						.get(cond.lower1).getIndexForStack())) {
 			return false;
 		}
 
@@ -192,8 +192,8 @@ public class SubFace {
 				&& modelFaces.get(cond.lower2).isAlreadyStacked()
 				&& modelFaces.get(cond.lower1).isAlreadyStacked()
 				&& !modelFaces.get(cond.upper2).isAlreadyStacked()
-				&& modelFaces.get(cond.lower1).indexForStack < modelFaces
-						.get(cond.lower2).indexForStack)) {
+				&& modelFaces.get(cond.lower1).getIndexForStack() < modelFaces
+						.get(cond.lower2).getIndexForStack())) {
 			return false;
 		}
 

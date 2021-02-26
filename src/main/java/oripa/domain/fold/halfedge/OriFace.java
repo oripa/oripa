@@ -75,10 +75,10 @@ public class OriFace {
 	public boolean movedByFold = false;
 
 	/**
-	 * index of stack order for subface (probably). It seems to be used only
-	 * while making correct stack order.
+	 * index of stack order for subface. It seems to be used only while making
+	 * correct stack order.
 	 */
-	public int indexForStack = 0;
+	private int indexForStack = 0;
 
 	/**
 	 * ID of this face.
@@ -97,6 +97,28 @@ public class OriFace {
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
 		color = new Color(r, g, b);
+	}
+
+	/**
+	 * @return indexForStack
+	 */
+	public int getIndexForStack() {
+		return indexForStack;
+	}
+
+	/**
+	 * @param indexForStack
+	 *            Sets indexForStack
+	 */
+	public void setIndexForStack(final int indexForStack) {
+		this.indexForStack = indexForStack;
+	}
+
+	/**
+	 * Sets -1 to indexForStack.
+	 */
+	public void clearIndexForStack() {
+		this.indexForStack = -1;
 	}
 
 	/**
