@@ -332,11 +332,10 @@ public class FoldedModelScreen extends JPanel
 		long time0 = System.currentTimeMillis();
 
 		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
-		double localScale = Math.min(
+		final double localScale = scaleRate * Math.min(
 				BUFFERW / (domain.getWidth()),
 				BUFFERH / (domain.getHeight())) * 0.95;
-		double angle = rotAngle * Math.PI / 180;
-		localScale *= scaleRate;
+		final double angle = rotAngle * Math.PI / 180;
 
 		List<OriFace> faces = origamiModel.getFaces();
 		for (OriFace face : faces) {
@@ -344,7 +343,7 @@ public class FoldedModelScreen extends JPanel
 			face.trianglateAndSetColor(useColor, isFaceOrderFlipped(),
 					origamiModel.getPaperSize());
 
-			for (TriangleFace tri : face.triangles) {
+			face.triangleStream().forEach(tri -> {
 				for (int i = 0; i < 3; i++) {
 
 					double x = (tri.v[i].p.x - center.x) * localScale;
@@ -355,7 +354,7 @@ public class FoldedModelScreen extends JPanel
 
 				}
 				drawTriangle(tri, face.faceID);
-			}
+			});
 		}
 
 		if (drawEdges) {
