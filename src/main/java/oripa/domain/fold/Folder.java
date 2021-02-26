@@ -681,8 +681,14 @@ public class Folder {
 
 		for (OriEdge e : edges) {
 			var sv = e.getStartVertex();
+			var ev = e.getEndVertex();
 
 			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
+
+			var right = e.getRight();
+			if (right != null) {
+				ev.getPosition().set(right.getPositionWhileFolding());
+			}
 		}
 	}
 
