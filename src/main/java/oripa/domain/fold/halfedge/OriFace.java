@@ -99,11 +99,16 @@ public class OriFace {
 		color = new Color(r, g, b);
 	}
 
-	/**
-	 * @return condition3s
-	 */
-	public List<StackConditionOf3Faces> getCondition3s() {
-		return condition3s;
+	public void addCondition3(final StackConditionOf3Faces condition3) {
+		condition3s.add(condition3);
+	}
+
+	public void clearCondition3s() {
+		condition3s.clear();
+	}
+
+	public Stream<StackConditionOf3Faces> condition3Stream() {
+		return condition3s.stream();
 	}
 
 	public void addCondition2(final Integer upperFaceORMatIndex) {
