@@ -99,11 +99,16 @@ public class OriFace {
 		color = new Color(r, g, b);
 	}
 
-	/**
-	 * @return condition4s
-	 */
-	public List<StackConditionOf4Faces> getCondition4s() {
-		return condition4s;
+	public void addCondition4(final StackConditionOf4Faces condition4) {
+		condition4s.add(condition4);
+	}
+
+	public void clearCondition4s() {
+		condition4s.clear();
+	}
+
+	public Stream<StackConditionOf4Faces> condition4Stream() {
+		return condition4s.stream();
 	}
 
 	public void addCondition3(final StackConditionOf3Faces condition3) {

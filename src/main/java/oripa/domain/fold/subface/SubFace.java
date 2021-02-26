@@ -85,7 +85,7 @@ public class SubFace {
 
 		for (OriFace f : parentFaces) {
 			f.clearCondition3s();
-			f.getCondition4s().clear();
+			f.clearCondition4s();
 			f.clearCondition2s();
 
 			for (StackConditionOf3Faces cond : condition3s) {
@@ -95,7 +95,7 @@ public class SubFace {
 			}
 			for (StackConditionOf4Faces cond : condition4s) {
 				if (f.faceID == cond.upper1 || f.faceID == cond.upper2) {
-					f.getCondition4s().add(cond);
+					f.addCondition4(cond);
 				}
 			}
 
@@ -177,25 +177,24 @@ public class SubFace {
 		// stack lower1 < lower2, without upper2 being stacked, dont stack
 		// upper1
 
-		for (StackConditionOf4Faces cond : face.getCondition4s()) {
-
-			if (face.faceID == cond.upper2
-					&& modelFaces.get(cond.lower2).alreadyStacked
-					&& modelFaces.get(cond.lower1).alreadyStacked
-					&& !modelFaces.get(cond.upper1).alreadyStacked
-					&& modelFaces.get(cond.lower2).indexForStack < modelFaces
-							.get(cond.lower1).indexForStack) {
-				return false;
-			}
-			if (face.faceID == cond.upper1
-					&& modelFaces.get(cond.lower2).alreadyStacked
-					&& modelFaces.get(cond.lower1).alreadyStacked
-					&& !modelFaces.get(cond.upper2).alreadyStacked
-					&& modelFaces.get(cond.lower1).indexForStack < modelFaces
-							.get(cond.lower2).indexForStack) {
-				return false;
-			}
+		if (face.condition4Stream().anyMatch(cond -> face.faceID == cond.upper2
+				&& modelFaces.get(cond.lower2).alreadyStacked
+				&& modelFaces.get(cond.lower1).alreadyStacked
+				&& !modelFaces.get(cond.upper1).alreadyStacked
+				&& modelFaces.get(cond.lower2).indexForStack < modelFaces
+						.get(cond.lower1).indexForStack)) {
+			return false;
 		}
+
+		if (face.condition4Stream().anyMatch(cond -> face.faceID == cond.upper1
+				&& modelFaces.get(cond.lower2).alreadyStacked
+				&& modelFaces.get(cond.lower1).alreadyStacked
+				&& !modelFaces.get(cond.upper2).alreadyStacked
+				&& modelFaces.get(cond.lower1).indexForStack < modelFaces
+						.get(cond.lower2).indexForStack)) {
+			return false;
+		}
+
 		return true;
 	}
 }
