@@ -85,7 +85,7 @@ public class SubFace {
 
 		for (OriFace f : parentFaces) {
 			f.clearCondition3s();
-			f.condition4s.clear();
+			f.getCondition4s().clear();
 			f.clearCondition2s();
 
 			for (StackConditionOf3Faces cond : condition3s) {
@@ -95,7 +95,7 @@ public class SubFace {
 			}
 			for (StackConditionOf4Faces cond : condition4s) {
 				if (f.faceID == cond.upper1 || f.faceID == cond.upper2) {
-					f.condition4s.add(cond);
+					f.getCondition4s().add(cond);
 				}
 			}
 
@@ -177,7 +177,7 @@ public class SubFace {
 		// stack lower1 < lower2, without upper2 being stacked, dont stack
 		// upper1
 
-		for (StackConditionOf4Faces cond : face.condition4s) {
+		for (StackConditionOf4Faces cond : face.getCondition4s()) {
 
 			if (face.faceID == cond.upper2
 					&& modelFaces.get(cond.lower2).alreadyStacked

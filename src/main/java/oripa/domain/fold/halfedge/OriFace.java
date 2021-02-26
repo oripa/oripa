@@ -88,7 +88,7 @@ public class OriFace {
 	public boolean alreadyStacked = false;
 	public ArrayList<TriangleFace> triangles = new ArrayList<>();
 
-	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
+	private final ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	private final ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
 	private final ArrayList<Integer> condition2s = new ArrayList<>();
 
@@ -97,6 +97,13 @@ public class OriFace {
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
 		color = new Color(r, g, b);
+	}
+
+	/**
+	 * @return condition4s
+	 */
+	public List<StackConditionOf4Faces> getCondition4s() {
+		return condition4s;
 	}
 
 	public void addCondition3(final StackConditionOf3Faces condition3) {
