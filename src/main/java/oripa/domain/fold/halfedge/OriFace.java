@@ -106,11 +106,11 @@ public class OriFace {
 		return condition2s;
 	}
 
-	public void addCondition2(final Integer upperFaceIndexOnStack) {
-		condition2s.add(upperFaceIndexOnStack);
+	public void addCondition2(final Integer upperFaceORMatIndex) {
+		condition2s.add(upperFaceORMatIndex);
 	}
 
-	public void clearConditioin2s() {
+	public void clearCondition2s() {
 		condition2s.clear();
 	}
 
