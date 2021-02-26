@@ -67,7 +67,8 @@ public class OriFace {
 	public ArrayList<OriLine> precreases = new ArrayList<>();
 
 	public boolean faceFront = true;
-	public Color color;
+
+	public Color colorForDebug;
 
 	/**
 	 * working variable for computing position after fold by the algorithm.
@@ -96,7 +97,7 @@ public class OriFace {
 		int r = (int) (Math.random() * 255);
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
-		color = new Color(r, g, b);
+		colorForDebug = new Color(r, g, b);
 	}
 
 	/**

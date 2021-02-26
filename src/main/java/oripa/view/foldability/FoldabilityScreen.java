@@ -180,11 +180,12 @@ public class FoldabilityScreen extends JPanel
 			final Collection<OriVertex> vertices) {
 		g2d.setColor(new Color(255, 210, 220));
 		for (OriFace face : faces) {
+			// switch the if statement by comment out?
 			if (face.getIndexForStack() == 0) {
 				g2d.setColor(Color.RED);
 				g2d.fill(face.getOutlineBeforeFolding());
 			} else {
-				g2d.setColor(face.color);
+				g2d.setColor(face.colorForDebug);
 			}
 
 			if (violatingFaces.contains(face)) {
