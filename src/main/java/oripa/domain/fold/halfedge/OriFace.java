@@ -81,9 +81,9 @@ public class OriFace {
 	public int indexForStack = 0;
 
 	/**
-	 * ID of this face (Probably)
+	 * ID of this face.
 	 */
-	public int faceID = 0;
+	private int faceID = 0;
 
 	private boolean alreadyStacked = false;
 	private final List<TriangleFace> triangles = new ArrayList<>();
@@ -97,6 +97,21 @@ public class OriFace {
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
 		color = new Color(r, g, b);
+	}
+
+	/**
+	 * @return faceID
+	 */
+	public int getFaceID() {
+		return faceID;
+	}
+
+	/**
+	 * @param faceID
+	 *            Sets faceID
+	 */
+	public void setFaceID(final int faceID) {
+		this.faceID = faceID;
 	}
 
 	/**

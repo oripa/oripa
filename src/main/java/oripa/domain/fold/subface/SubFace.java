@@ -70,8 +70,8 @@ public class SubFace {
 		int f_num = parentFaces.size();
 		for (int i = 0; i < f_num; i++) {
 			for (int j = i + 1; j < f_num; j++) {
-				if (orMat[parentFaces.get(i).faceID][parentFaces
-						.get(j).faceID] == OverlapRelationValues.UNDEFINED) {
+				if (orMat[parentFaces.get(i).getFaceID()][parentFaces
+						.get(j).getFaceID()] == OverlapRelationValues.UNDEFINED) {
 					cnt++;
 				}
 			}
@@ -88,20 +88,22 @@ public class SubFace {
 			f.clearCondition4s();
 			f.clearCondition2s();
 
+			var faceID = f.getFaceID();
 			for (StackConditionOf3Faces cond : condition3s) {
-				if (f.faceID == cond.other) {
+				if (faceID == cond.other) {
 					f.addCondition3(cond);
 				}
 			}
 			for (StackConditionOf4Faces cond : condition4s) {
-				if (f.faceID == cond.upper1 || f.faceID == cond.upper2) {
+				if (faceID == cond.upper1 || faceID == cond.upper2) {
 					f.addCondition4(cond);
 				}
 			}
 
 			for (OriFace ff : parentFaces) {
-				if (orMat[f.faceID][ff.faceID] == OverlapRelationValues.LOWER) {
-					f.addCondition2(Integer.valueOf(ff.faceID));
+				var anotherFaceID = ff.getFaceID();
+				if (orMat[faceID][anotherFaceID] == OverlapRelationValues.LOWER) {
+					f.addCondition2(Integer.valueOf(anotherFaceID));
 				}
 			}
 		}
@@ -177,7 +179,7 @@ public class SubFace {
 		// stack lower1 < lower2, without upper2 being stacked, dont stack
 		// upper1
 
-		if (face.condition4Stream().anyMatch(cond -> face.faceID == cond.upper2
+		if (face.condition4Stream().anyMatch(cond -> face.getFaceID() == cond.upper2
 				&& modelFaces.get(cond.lower2).isAlreadyStacked()
 				&& modelFaces.get(cond.lower1).isAlreadyStacked()
 				&& !modelFaces.get(cond.upper1).isAlreadyStacked()
@@ -186,7 +188,7 @@ public class SubFace {
 			return false;
 		}
 
-		if (face.condition4Stream().anyMatch(cond -> face.faceID == cond.upper1
+		if (face.condition4Stream().anyMatch(cond -> face.getFaceID() == cond.upper1
 				&& modelFaces.get(cond.lower2).isAlreadyStacked()
 				&& modelFaces.get(cond.lower1).isAlreadyStacked()
 				&& !modelFaces.get(cond.upper2).isAlreadyStacked()

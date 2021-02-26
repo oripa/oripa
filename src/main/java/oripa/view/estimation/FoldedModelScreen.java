@@ -353,7 +353,7 @@ public class FoldedModelScreen extends JPanel
 					tri.v[i].p.y = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
 
 				}
-				drawTriangle(tri, face.faceID);
+				drawTriangle(tri, face.getFaceID());
 			});
 		}
 
