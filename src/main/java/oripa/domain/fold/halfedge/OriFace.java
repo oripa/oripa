@@ -89,7 +89,7 @@ public class OriFace {
 	public ArrayList<TriangleFace> triangles = new ArrayList<>();
 
 	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
-	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
+	private final ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
 	private final ArrayList<Integer> condition2s = new ArrayList<>();
 
 	public OriFace() {
@@ -100,10 +100,10 @@ public class OriFace {
 	}
 
 	/**
-	 * @return condition2s
+	 * @return condition3s
 	 */
-	public List<Integer> getCondition2s() {
-		return condition2s;
+	public List<StackConditionOf3Faces> getCondition3s() {
+		return condition3s;
 	}
 
 	public void addCondition2(final Integer upperFaceORMatIndex) {

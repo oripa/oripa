@@ -84,13 +84,13 @@ public class SubFace {
 		}
 
 		for (OriFace f : parentFaces) {
-			f.condition3s.clear();
+			f.getCondition3s().clear();
 			f.condition4s.clear();
 			f.clearCondition2s();
 
 			for (StackConditionOf3Faces cond : condition3s) {
 				if (f.faceID == cond.other) {
-					f.condition3s.add(cond);
+					f.getCondition3s().add(cond);
 				}
 			}
 			for (StackConditionOf4Faces cond : condition4s) {
@@ -165,7 +165,7 @@ public class SubFace {
 
 	private boolean checkForSortLocally3(final List<OriFace> modelFaces, final OriFace face) {
 
-		for (StackConditionOf3Faces cond : face.condition3s) {
+		for (StackConditionOf3Faces cond : face.getCondition3s()) {
 			if (modelFaces.get(cond.lower).alreadyStacked
 					&& !modelFaces.get(cond.upper).alreadyStacked) {
 				return false;
