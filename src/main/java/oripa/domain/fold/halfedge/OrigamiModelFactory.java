@@ -19,7 +19,6 @@ package oripa.domain.fold.halfedge;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -149,14 +148,9 @@ public class OrigamiModelFactory {
 
 		// attach precrease lines to faces
 		for (OriFace face : faces) {
-			ListIterator<OriLine> iterator = precreases.listIterator();
-			while (iterator.hasNext()) {
-				OriLine precrease = iterator.next();
-				if (OriGeomUtil.isOriLineIncludedInFace(face, precrease)) {
-					face.precreases.add(precrease);
-					iterator.remove();
-				}
-			}
+			face.addAllPrecreases(precreases.stream()
+					.filter(precrease -> OriGeomUtil.isOriLineIncludedInFace(face, precrease))
+					.collect(Collectors.toList()));
 		}
 		origamiModel.setHasModel(true);
 

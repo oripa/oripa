@@ -191,7 +191,7 @@ public class ExporterSVGFactory {
 							points.add(new Vector2d(x2, y2));
 						}
 					}
-					if (!face.precreases.isEmpty()) {
+					if (!face.isEmptyPrecreases()) {
 						bw.write("<g>");
 					}
 					if ((!face.isFaceFront() && faceOrderFlip)
@@ -204,7 +204,8 @@ public class ExporterSVGFactory {
 						bw.write(p.x + "," + p.y + " ");
 					}
 					bw.write(" z\" />\n");
-					for (OriLine oriLine : face.precreases) {
+
+					for (var oriLine : (Iterable<OriLine>) face.precreaseStream()::iterator) {
 						double x1 = (oriLine.p0.x - modelCenter.x) * scale
 								+ center;
 						double y1 = -(oriLine.p0.y - modelCenter.y) * scale
@@ -220,8 +221,9 @@ public class ExporterSVGFactory {
 						bw.write("\" x2=\"" + x2);
 						bw.write("\" y2=\"" + y2);
 						bw.write("\" style=\"stroke:black;stroke-width:2px;\"/>\n");
+
 					}
-					if (!face.precreases.isEmpty()) {
+					if (!face.isEmptyPrecreases()) {
 						bw.write("</g>");
 					}
 				}

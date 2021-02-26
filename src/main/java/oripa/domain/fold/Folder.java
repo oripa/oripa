@@ -756,10 +756,10 @@ public class Folder {
 			transformVertex(he.getPositionWhileFolding(), preLine, afterOrigin, afterDir);
 		}
 
-		for (OriLine precrease : face.precreases) {
+		face.precreaseStream().forEach(precrease -> {
 			transformVertex(precrease.p0, preLine, afterOrigin, afterDir);
 			transformVertex(precrease.p1, preLine, afterOrigin, afterDir);
-		}
+		});
 
 		// Inversion
 		if (face.isFaceFront() == baseHe.getFace().isFaceFront()) {
@@ -769,10 +769,11 @@ public class Folder {
 			for (OriHalfedge he : face.halfedges) {
 				flipVertex(he.getPositionWhileFolding(), sp, ep);
 			}
-			for (OriLine precrease : face.precreases) {
+			face.precreaseStream().forEach(precrease -> {
 				flipVertex(precrease.p0, sp, ep);
 				flipVertex(precrease.p1, sp, ep);
-			}
+
+			});
 			face.invertFaceFront();
 		}
 	}

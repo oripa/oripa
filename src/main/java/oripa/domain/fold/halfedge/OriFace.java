@@ -21,6 +21,7 @@ package oripa.domain.fold.halfedge;
 import java.awt.Color;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -64,7 +65,7 @@ public class OriFace {
 	 */
 	private Path2D.Double preOutline = new Path2D.Double();
 
-	public ArrayList<OriLine> precreases = new ArrayList<>();
+	private final List<OriLine> precreases = new ArrayList<>();
 
 	private boolean faceFront = true;
 
@@ -98,6 +99,18 @@ public class OriFace {
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
 		colorForDebug = new Color(r, g, b);
+	}
+
+	public void addAllPrecreases(final Collection<OriLine> precreases) {
+		this.precreases.addAll(precreases);
+	}
+
+	public Stream<OriLine> precreaseStream() {
+		return precreases.stream();
+	}
+
+	public boolean isEmptyPrecreases() {
+		return precreases.isEmpty();
 	}
 
 	/**
