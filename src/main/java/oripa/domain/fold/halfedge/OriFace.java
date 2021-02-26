@@ -73,7 +73,7 @@ public class OriFace {
 	/**
 	 * working variable for computing position after fold by the algorithm.
 	 */
-	public boolean movedByFold = false;
+	private boolean movedByFold = false;
 
 	/**
 	 * index of stack order for subface. It seems to be used only while making
@@ -98,6 +98,21 @@ public class OriFace {
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
 		colorForDebug = new Color(r, g, b);
+	}
+
+	/**
+	 * @return movedByFold. Initialized by {@code false}.
+	 */
+	public boolean isMovedByFold() {
+		return movedByFold;
+	}
+
+	/**
+	 * @param movedByFold
+	 *            Sets movedByFold
+	 */
+	public void setMovedByFold(final boolean movedByFold) {
+		this.movedByFold = movedByFold;
 	}
 
 	/**

@@ -671,8 +671,8 @@ public class Folder {
 
 		int id = 0;
 		for (OriFace face : faces) {
-			face.faceFront = true;
-			face.movedByFold = false;
+//			face.faceFront = true;
+//			face.movedByFold = false;
 			face.setFaceID(id);
 			id++;
 		}
@@ -694,7 +694,7 @@ public class Folder {
 
 	// Recursive method that flips the faces, making the folds
 	private void walkFace(final OriFace face) {
-		face.movedByFold = true;
+		face.setMovedByFold(true);
 
 		for (OriHalfedge he : face.halfedges) {
 			var pair = he.getPair();
@@ -702,12 +702,12 @@ public class Folder {
 				continue;
 			}
 			var pairFace = pair.getFace();
-			if (pairFace.movedByFold) {
+			if (pairFace.isMovedByFold()) {
 				continue;
 			}
 
 			flipFace(pairFace, he);
-			pairFace.movedByFold = true;
+			pairFace.setMovedByFold(true);
 			walkFace(pairFace);
 		}
 	}
@@ -856,10 +856,10 @@ public class Folder {
 		List<OriEdge> edges = model.getEdges();
 		List<OriFace> faces = model.getFaces();
 
-		for (OriFace face : faces) {
-			face.faceFront = true;
-			face.movedByFold = false;
-		}
+//		for (OriFace face : faces) {
+//			face.faceFront = true;
+//			face.movedByFold = false;
+//		}
 
 		walkFace(faces, faces.get(0), 0);
 
@@ -883,7 +883,7 @@ public class Folder {
 	 * @param walkFaceCount
 	 */
 	private void walkFace(final List<OriFace> faces, final OriFace face, final int walkFaceCount) {
-		face.movedByFold = true;
+		face.setMovedByFold(true);
 		if (walkFaceCount > 1000) {
 			logger.error("walkFace too deep");
 			return;
@@ -894,12 +894,12 @@ public class Folder {
 				continue;
 			}
 			var pairFace = pair.getFace();
-			if (pairFace.movedByFold) {
+			if (pairFace.isMovedByFold()) {
 				continue;
 			}
 
 			flipFace2(faces, pairFace, he);
-			pairFace.movedByFold = true;
+			pairFace.setMovedByFold(true);
 			walkFace(faces, pairFace, walkFaceCount + 1);
 		}
 	}
