@@ -107,7 +107,7 @@ public class SubFace {
 		}
 
 		for (OriFace f : parentFaces) {
-			f.alreadyStacked = false;
+			f.setAlreadyStacked(false);
 			f.indexForStack = -1;
 		}
 
@@ -135,7 +135,7 @@ public class SubFace {
 		}
 
 		for (OriFace f : parentFaces) {
-			if (f.alreadyStacked) {
+			if (f.isAlreadyStacked()) {
 				continue;
 			}
 
@@ -148,24 +148,24 @@ public class SubFace {
 			}
 
 			sortedParentFaces.set(index, f);
-			f.alreadyStacked = true;
+			f.setAlreadyStacked(true);
 			f.indexForStack = index;
 
 			sort(modelFaces, index + 1);
 
-			sortedParentFaces.get(index).alreadyStacked = false;
+			sortedParentFaces.get(index).setAlreadyStacked(false);
 			sortedParentFaces.get(index).indexForStack = -1;
 			sortedParentFaces.set(index, null);
 		}
 	}
 
 	private boolean checkConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
-		return f.condition2Stream().allMatch(ii -> modelFaces.get(ii.intValue()).alreadyStacked);
+		return f.condition2Stream().allMatch(ii -> modelFaces.get(ii.intValue()).isAlreadyStacked());
 	}
 
 	private boolean checkForSortLocally3(final List<OriFace> modelFaces, final OriFace face) {
-		if (face.condition3Stream().anyMatch(cond -> modelFaces.get(cond.lower).alreadyStacked
-				&& !modelFaces.get(cond.upper).alreadyStacked)) {
+		if (face.condition3Stream().anyMatch(cond -> modelFaces.get(cond.lower).isAlreadyStacked()
+				&& !modelFaces.get(cond.upper).isAlreadyStacked())) {
 			return false;
 		}
 
@@ -178,18 +178,18 @@ public class SubFace {
 		// upper1
 
 		if (face.condition4Stream().anyMatch(cond -> face.faceID == cond.upper2
-				&& modelFaces.get(cond.lower2).alreadyStacked
-				&& modelFaces.get(cond.lower1).alreadyStacked
-				&& !modelFaces.get(cond.upper1).alreadyStacked
+				&& modelFaces.get(cond.lower2).isAlreadyStacked()
+				&& modelFaces.get(cond.lower1).isAlreadyStacked()
+				&& !modelFaces.get(cond.upper1).isAlreadyStacked()
 				&& modelFaces.get(cond.lower2).indexForStack < modelFaces
 						.get(cond.lower1).indexForStack)) {
 			return false;
 		}
 
 		if (face.condition4Stream().anyMatch(cond -> face.faceID == cond.upper1
-				&& modelFaces.get(cond.lower2).alreadyStacked
-				&& modelFaces.get(cond.lower1).alreadyStacked
-				&& !modelFaces.get(cond.upper2).alreadyStacked
+				&& modelFaces.get(cond.lower2).isAlreadyStacked()
+				&& modelFaces.get(cond.lower1).isAlreadyStacked()
+				&& !modelFaces.get(cond.upper2).isAlreadyStacked()
 				&& modelFaces.get(cond.lower1).indexForStack < modelFaces
 						.get(cond.lower2).indexForStack)) {
 			return false;

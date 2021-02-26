@@ -85,7 +85,7 @@ public class OriFace {
 	 */
 	public int faceID = 0;
 
-	public boolean alreadyStacked = false;
+	private boolean alreadyStacked = false;
 	private final List<TriangleFace> triangles = new ArrayList<>();
 
 	private final List<StackConditionOf4Faces> condition4s = new ArrayList<>();
@@ -97,6 +97,21 @@ public class OriFace {
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
 		color = new Color(r, g, b);
+	}
+
+	/**
+	 * @return alreadyStacked
+	 */
+	public boolean isAlreadyStacked() {
+		return alreadyStacked;
+	}
+
+	/**
+	 * @param alreadyStacked
+	 *            Sets alreadyStacked
+	 */
+	public void setAlreadyStacked(final boolean alreadyStacked) {
+		this.alreadyStacked = alreadyStacked;
 	}
 
 	/**
