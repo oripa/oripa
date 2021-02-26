@@ -762,7 +762,7 @@ public class Folder {
 		}
 
 		// Inversion
-		if (face.faceFront == baseHe.getFace().faceFront) {
+		if (face.isFaceFront() == baseHe.getFace().isFaceFront()) {
 			Vector2d ep = baseHeNext.getPositionWhileFolding();
 			Vector2d sp = baseHe.getPositionWhileFolding();
 
@@ -773,7 +773,7 @@ public class Folder {
 				flipVertex(precrease.p0, sp, ep);
 				flipVertex(precrease.p1, sp, ep);
 			}
-			face.faceFront = !face.faceFront;
+			face.invertFaceFront();
 		}
 	}
 
@@ -831,8 +831,8 @@ public class Folder {
 					continue;
 				}
 
-				if ((face.faceFront && he.getType() == OriLine.Type.MOUNTAIN.toInt())
-						|| (!face.faceFront && he.getType() == OriLine.Type.VALLEY.toInt())) {
+				if ((face.isFaceFront() && he.getType() == OriLine.Type.MOUNTAIN.toInt())
+						|| (!face.isFaceFront() && he.getType() == OriLine.Type.VALLEY.toInt())) {
 					overlapRelation[faceID][pairFaceID] = OverlapRelationValues.UPPER;
 					overlapRelation[pairFaceID][faceID] = OverlapRelationValues.LOWER;
 				} else {

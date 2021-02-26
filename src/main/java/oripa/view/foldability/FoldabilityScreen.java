@@ -191,7 +191,7 @@ public class FoldabilityScreen extends JPanel
 			if (violatingFaces.contains(face)) {
 				g2d.setColor(Color.RED);
 			} else {
-				if (face.faceFront) {
+				if (face.isFaceFront()) {
 					g2d.setColor(new Color(255, 200, 200));
 				} else {
 					g2d.setColor(new Color(200, 200, 255));

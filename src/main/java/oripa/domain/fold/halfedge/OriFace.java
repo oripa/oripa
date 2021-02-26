@@ -66,7 +66,7 @@ public class OriFace {
 
 	public ArrayList<OriLine> precreases = new ArrayList<>();
 
-	public boolean faceFront = true;
+	private boolean faceFront = true;
 
 	public Color colorForDebug;
 
@@ -98,6 +98,17 @@ public class OriFace {
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
 		colorForDebug = new Color(r, g, b);
+	}
+
+	/**
+	 * @return faceFront. Initialized by {@code true}.
+	 */
+	public boolean isFaceFront() {
+		return faceFront;
+	}
+
+	public void invertFaceFront() {
+		faceFront = !faceFront;
 	}
 
 	/**

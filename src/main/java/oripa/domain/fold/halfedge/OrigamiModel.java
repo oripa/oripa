@@ -149,7 +149,7 @@ public class OrigamiModel {
 		});
 
 		faces.forEach(face -> {
-			face.faceFront = !face.faceFront;
+			face.invertFaceFront();
 			face.buildOutline();
 		});
 

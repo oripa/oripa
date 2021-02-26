@@ -194,8 +194,8 @@ public class ExporterSVGFactory {
 					if (!face.precreases.isEmpty()) {
 						bw.write("<g>");
 					}
-					if ((!face.faceFront && faceOrderFlip)
-							|| (face.faceFront && !faceOrderFlip)) {
+					if ((!face.isFaceFront() && faceOrderFlip)
+							|| (face.isFaceFront() && !faceOrderFlip)) {
 						bw.write(polygonStart);
 					} else {
 						bw.write(polygonStart2);

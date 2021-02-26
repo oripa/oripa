@@ -542,7 +542,7 @@ public class FoldedModelScreen extends JPanel
 							ty = ty % textureImage.getHeight();
 							int textureColor = textureImage.getRGB(tx, ty);
 
-							if (fillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
+							if (fillFaces && (tri.face.isFaceFront() ^ isFaceOrderFlipped())) {
 								pbuf[p] = textureColor;
 							} else {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
