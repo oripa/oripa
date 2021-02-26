@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
@@ -89,13 +90,32 @@ public class OriFace {
 
 	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
-	public ArrayList<Integer> condition2s = new ArrayList<>();
+	private final ArrayList<Integer> condition2s = new ArrayList<>();
 
 	public OriFace() {
 		int r = (int) (Math.random() * 255);
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
 		color = new Color(r, g, b);
+	}
+
+	/**
+	 * @return condition2s
+	 */
+	public List<Integer> getCondition2s() {
+		return condition2s;
+	}
+
+	public void addCondition2(final Integer upperFaceIndexOnStack) {
+		condition2s.add(upperFaceIndexOnStack);
+	}
+
+	public void clearConditioin2s() {
+		condition2s.clear();
+	}
+
+	public Stream<Integer> condition2Stream() {
+		return condition2s.stream();
 	}
 
 	public void trianglateAndSetColor(final boolean bUseColor, final boolean bFlip,

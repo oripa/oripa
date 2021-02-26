@@ -86,7 +86,7 @@ public class SubFace {
 		for (OriFace f : parentFaces) {
 			f.condition3s.clear();
 			f.condition4s.clear();
-			f.condition2s.clear();
+			f.getCondition2s().clear();
 
 			for (StackConditionOf3Faces cond : condition3s) {
 				if (f.faceID == cond.other) {
@@ -101,7 +101,7 @@ public class SubFace {
 
 			for (OriFace ff : parentFaces) {
 				if (orMat[f.faceID][ff.faceID] == OverlapRelationValues.LOWER) {
-					f.condition2s.add(Integer.valueOf(ff.faceID));
+					f.getCondition2s().add(Integer.valueOf(ff.faceID));
 				}
 			}
 		}
@@ -160,7 +160,7 @@ public class SubFace {
 	}
 
 	private boolean checkConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
-		for (Integer ii : f.condition2s) {
+		for (Integer ii : f.getCondition2s()) {
 			if (!modelFaces.get(ii.intValue()).alreadyStacked) {
 				return false;
 			}
