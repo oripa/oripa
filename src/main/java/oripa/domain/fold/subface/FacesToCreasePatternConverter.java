@@ -28,7 +28,6 @@ import oripa.domain.cptool.LineAdder;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.value.OriLine;
 
 /**
@@ -64,13 +63,14 @@ public class FacesToCreasePatternConverter {
 
 		var lines = new ArrayList<OriLine>();
 		for (OriFace face : faces) {
-			for (OriHalfedge he : face.getHalfedges()) {
+			face.halfedgeStream().forEach(he -> {
 				OriLine line = new OriLine(he.getPosition(), he.getNext().getPosition(),
 						OriLine.Type.MOUNTAIN);
 				// make cross every time to divide the faces.
 				// addLines() cannot make cross among given lines.
 				lineAdder.addLine(line, lines);
-			}
+
+			});
 		}
 		CreasePatternInterface creasePattern = cpFactory.createCreasePattern(lines);
 		creasePattern.cleanDuplicatedLines();

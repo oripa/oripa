@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
 
 public class FolderTool {
@@ -38,9 +37,9 @@ public class FolderTool {
 	public void setFacesOutline(final List<OriFace> faces) {
 
 		for (OriFace f : faces) {
-			for (OriHalfedge he : f.getHalfedges()) {
+			f.halfedgeStream().forEach(he -> {
 				he.getPositionForDisplay().set(he.getPosition());
-			}
+			});
 			f.buildOutline();
 		}
 

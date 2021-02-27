@@ -71,8 +71,9 @@ class OriFaceFactoryForTest {
 
 		lenient().when(face.halfedgeCount()).thenReturn(4);
 
-		lenient().when(face.getHalfedges()).thenReturn(List.of(he1, he2, he3, he4));
-
+		var list = List.of(he1, he2, he3, he4);
+		lenient().when(face.getHalfedges()).thenReturn(list);
+		lenient().when(face.halfedgeStream()).thenAnswer(invocation -> list.stream());
 		return face;
 	}
 

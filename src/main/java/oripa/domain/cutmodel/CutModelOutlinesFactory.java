@@ -7,7 +7,6 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -42,7 +41,7 @@ public class CutModelOutlinesFactory {
 	private List<Vector2d> findOutlineEdgeTerminals(final OriLine cutLine, final OriFace face) {
 		List<Vector2d> vv = new ArrayList<>(2);
 
-		for (OriHalfedge he : face.getHalfedges()) {
+		face.halfedgeStream().forEach(he -> {
 			var position = he.getPositionForDisplay();
 			var nextPosition = he.getNext().getPositionForDisplay();
 			OriLine l = new OriLine(position.x, position.y,
@@ -72,7 +71,7 @@ public class CutModelOutlinesFactory {
 					vv.add(crossV);
 				}
 			}
-		}
+		});
 
 		return vv;
 	}

@@ -116,6 +116,10 @@ public class OriFace {
 		halfedges.add(halfedge);
 	}
 
+	public OriHalfedge getHalfedge(final int index) {
+		return halfedges.get(index);
+	}
+
 	public int halfedgeCount() {
 		return halfedges.size();
 	}

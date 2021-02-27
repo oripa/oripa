@@ -696,20 +696,20 @@ public class Folder {
 	private void walkFace(final OriFace face) {
 		face.setMovedByFold(true);
 
-		for (OriHalfedge he : face.getHalfedges()) {
+		face.halfedgeStream().forEach(he -> {
 			var pair = he.getPair();
 			if (pair == null) {
-				continue;
+				return;
 			}
 			var pairFace = pair.getFace();
 			if (pairFace.isMovedByFold()) {
-				continue;
+				return;
 			}
 
 			flipFace(pairFace, he);
 			pairFace.setMovedByFold(true);
 			walkFace(pairFace);
-		}
+		});
 	}
 
 	private void transformVertex(final Vector2d vertex, final Line preLine,
@@ -752,9 +752,9 @@ public class Folder {
 
 		// move the vertices of the face to keep the face connection
 		// on baseHe
-		for (OriHalfedge he : face.getHalfedges()) {
+		face.halfedgeStream().forEach(he -> {
 			transformVertex(he.getPositionWhileFolding(), preLine, afterOrigin, afterDir);
-		}
+		});
 
 		face.precreaseStream().forEach(precrease -> {
 			transformVertex(precrease.p0, preLine, afterOrigin, afterDir);
@@ -766,9 +766,9 @@ public class Folder {
 			Vector2d ep = baseHeNext.getPositionWhileFolding();
 			Vector2d sp = baseHe.getPositionWhileFolding();
 
-			for (OriHalfedge he : face.getHalfedges()) {
+			face.halfedgeStream().forEach(he -> {
 				flipVertex(he.getPositionWhileFolding(), sp, ep);
-			}
+			});
 			face.precreaseStream().forEach(precrease -> {
 				flipVertex(precrease.p0, sp, ep);
 				flipVertex(precrease.p1, sp, ep);
@@ -889,20 +889,20 @@ public class Folder {
 			logger.error("walkFace too deep");
 			return;
 		}
-		for (OriHalfedge he : face.getHalfedges()) {
+		face.halfedgeStream().forEach(he -> {
 			var pair = he.getPair();
 			if (pair == null) {
-				continue;
+				return;
 			}
 			var pairFace = pair.getFace();
 			if (pairFace.isMovedByFold()) {
-				continue;
+				return;
 			}
 
 			flipFace2(faces, pairFace, he);
 			pairFace.setMovedByFold(true);
 			walkFace(faces, pairFace, walkFaceCount + 1);
-		}
+		});
 	}
 
 	private void flipFace2(final List<OriFace> faces, final OriFace face,

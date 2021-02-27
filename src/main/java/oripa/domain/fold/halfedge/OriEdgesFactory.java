@@ -51,12 +51,12 @@ public class OriEdgesFactory {
 
 		// Clear all the Halfedges
 		for (OriFace face : faces) {
-			for (OriHalfedge he : face.getHalfedges()) {
+			face.halfedgeStream().forEach(he -> {
 				he.setPair(null);
 				he.setEdge(null);
 
 				allocateAndPut(he.getVertex(), he, halfedges);
-			}
+			});
 		}
 
 		// find half-edge pairs whose

@@ -48,7 +48,6 @@ import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.resource.Constants;
 import oripa.resource.Constants.ModelDisplayMode;
@@ -190,7 +189,7 @@ public class ModelViewScreen extends JPanel
 			}
 
 			g2d.setColor(Color.BLACK);
-			for (OriHalfedge he : face.getHalfedges()) {
+			face.halfedgeStream().forEach(he -> {
 				if (he.getPair() == null) {
 					g2d.setStroke(selector.createPaperBoundaryStrokeForModelView(scale));
 				} else {
@@ -200,7 +199,7 @@ public class ModelViewScreen extends JPanel
 				var nextPosition = he.getNext().getPositionForDisplay();
 				g2d.draw(new Line2D.Double(position.x, position.y,
 						nextPosition.x, nextPosition.y));
-			}
+			});
 		}
 
 		if (scissorsLineVisible) {

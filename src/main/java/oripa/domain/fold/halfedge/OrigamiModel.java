@@ -137,9 +137,9 @@ public class OrigamiModel {
 		var domain = new RectangleDomain();
 
 		for (OriFace face : faces) {
-			for (OriHalfedge he : face.getHalfedges()) {
+			face.halfedgeStream().forEach(he -> {
 				domain.enlarge(he.getPosition());
-			}
+			});
 		}
 
 		double centerX = domain.getCenterX();
