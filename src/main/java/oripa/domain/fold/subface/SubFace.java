@@ -84,26 +84,26 @@ public class SubFace {
 		}
 
 		for (OriFace f : parentFaces) {
-			f.clearCondition3s();
-			f.clearCondition4s();
-			f.clearCondition2s();
+			f.clearStackConditionsOf3Faces();
+			f.clearStackConditionsOf4Faces();
+			f.clearStackConditionsOf2Faces();
 
 			var faceID = f.getFaceID();
 			for (StackConditionOf3Faces cond : condition3s) {
 				if (faceID == cond.other) {
-					f.addCondition3(cond);
+					f.addStackConditionOf3Faces(cond);
 				}
 			}
 			for (StackConditionOf4Faces cond : condition4s) {
 				if (faceID == cond.upper1 || faceID == cond.upper2) {
-					f.addCondition4(cond);
+					f.addStackConditionOf4Faces(cond);
 				}
 			}
 
 			for (OriFace ff : parentFaces) {
 				var anotherFaceID = ff.getFaceID();
 				if (orMat[faceID][anotherFaceID] == OverlapRelationValues.LOWER) {
-					f.addCondition2(Integer.valueOf(anotherFaceID));
+					f.addStackConditionOf2Faces(Integer.valueOf(anotherFaceID));
 				}
 			}
 		}
@@ -162,11 +162,11 @@ public class SubFace {
 	}
 
 	private boolean checkConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
-		return f.condition2Stream().allMatch(ii -> modelFaces.get(ii.intValue()).isAlreadyStacked());
+		return f.stackConditionsOf2FacesStream().allMatch(ii -> modelFaces.get(ii.intValue()).isAlreadyStacked());
 	}
 
 	private boolean checkForSortLocally3(final List<OriFace> modelFaces, final OriFace face) {
-		if (face.condition3Stream().anyMatch(cond -> modelFaces.get(cond.lower).isAlreadyStacked()
+		if (face.stackConditionOf3FacesStream().anyMatch(cond -> modelFaces.get(cond.lower).isAlreadyStacked()
 				&& !modelFaces.get(cond.upper).isAlreadyStacked())) {
 			return false;
 		}
@@ -179,7 +179,7 @@ public class SubFace {
 		// stack lower1 < lower2, without upper2 being stacked, dont stack
 		// upper1
 
-		if (face.condition4Stream().anyMatch(cond -> face.getFaceID() == cond.upper2
+		if (face.stackConditionOf4FacesStream().anyMatch(cond -> face.getFaceID() == cond.upper2
 				&& modelFaces.get(cond.lower2).isAlreadyStacked()
 				&& modelFaces.get(cond.lower1).isAlreadyStacked()
 				&& !modelFaces.get(cond.upper1).isAlreadyStacked()
@@ -188,7 +188,7 @@ public class SubFace {
 			return false;
 		}
 
-		if (face.condition4Stream().anyMatch(cond -> face.getFaceID() == cond.upper1
+		if (face.stackConditionOf4FacesStream().anyMatch(cond -> face.getFaceID() == cond.upper1
 				&& modelFaces.get(cond.lower2).isAlreadyStacked()
 				&& modelFaces.get(cond.lower1).isAlreadyStacked()
 				&& !modelFaces.get(cond.upper2).isAlreadyStacked()

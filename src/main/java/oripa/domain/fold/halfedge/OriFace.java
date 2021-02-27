@@ -55,14 +55,8 @@ public class OriFace {
 	 */
 	private final List<OriHalfedge> halfedges = new ArrayList<>();
 
-	/**
-	 * For drawing the shape after fold
-	 */
 	private Path2D.Double outline = new Path2D.Double();
 
-	/**
-	 * For drawing foldability-check face
-	 */
 	private Path2D.Double preOutline = new Path2D.Double();
 
 	private final List<OriLine> precreases = new ArrayList<>();
@@ -90,9 +84,9 @@ public class OriFace {
 	private boolean alreadyStacked = false;
 	private final List<TriangleFace> triangles = new ArrayList<>();
 
-	private final List<StackConditionOf4Faces> condition4s = new ArrayList<>();
-	private final List<StackConditionOf3Faces> condition3s = new ArrayList<>();
-	private final List<Integer> condition2s = new ArrayList<>();
+	private final List<StackConditionOf4Faces> stackConditionsOf4Faces = new ArrayList<>();
+	private final List<StackConditionOf3Faces> stackConditionsOf3Faces = new ArrayList<>();
+	private final List<Integer> stackConditionsOf2Faces = new ArrayList<>();
 
 	public OriFace() {
 		int r = (int) (Math.random() * 255);
@@ -102,32 +96,66 @@ public class OriFace {
 	}
 
 	/**
-	 * @return halfedges
+	 * @return half-edges as {link Iterable}.
 	 */
 	public Iterable<OriHalfedge> halfedgeIterable() {
 		return halfedges;
 	}
 
+	/**
+	 *
+	 * @return half-edges as {link Stream}.
+	 */
 	public Stream<OriHalfedge> halfedgeStream() {
 		return halfedges.stream();
 	}
 
+	/**
+	 * half-edge list is assumed to contain half-edges in connection order
+	 * circularly. The half-edge at index 0 should refer the half-edge at index
+	 * 1, and for index k, the half-edge at index k should refer the half-edge
+	 * at k + 1 by {@link OriHalfedge#next} field. The last half-edge should
+	 * refer the half-edge at index 0.
+	 *
+	 * @param halfedge
+	 *            to be added to the last of half-edge list.
+	 */
 	public void addHalfedge(final OriHalfedge halfedge) {
 		halfedges.add(halfedge);
 	}
 
+	/**
+	 * Returns the element at the specified position in the half-edge list.
+	 *
+	 * @param index
+	 *            index of the element to return.
+	 * @return the element at the specified position in the half-edge list.
+	 */
 	public OriHalfedge getHalfedge(final int index) {
 		return halfedges.get(index);
 	}
 
+	/**
+	 * Returns the number of half-edges surrounding this face.
+	 *
+	 * @return the number of half-edges surrounding this face.
+	 */
 	public int halfedgeCount() {
 		return halfedges.size();
 	}
 
+	/**
+	 *
+	 * @return precreases as {@link Iterable}.
+	 */
 	public Iterable<OriLine> precreaseIterable() {
 		return precreases;
 	}
 
+	/**
+	 *
+	 * @return precreases as {@link Stream}.
+	 */
 	public Stream<OriLine> precreaseStream() {
 		return precreases.stream();
 	}
@@ -189,7 +217,7 @@ public class OriFace {
 	}
 
 	/**
-	 * @return faceID
+	 * @return ID of this face.
 	 */
 	public int getFaceID() {
 		return faceID;
@@ -197,14 +225,14 @@ public class OriFace {
 
 	/**
 	 * @param faceID
-	 *            Sets faceID
+	 *            Sets ID of this face.
 	 */
 	public void setFaceID(final int faceID) {
 		this.faceID = faceID;
 	}
 
 	/**
-	 * @return alreadyStacked
+	 * @return whether this face is already put in a subface's stack.
 	 */
 	public boolean isAlreadyStacked() {
 		return alreadyStacked;
@@ -225,40 +253,76 @@ public class OriFace {
 		return triangles.stream();
 	}
 
-	public void addCondition4(final StackConditionOf4Faces condition4) {
-		condition4s.add(condition4);
+	/**
+	 *
+	 * @param condition
+	 *            for a correct stack of subface.
+	 */
+	public void addStackConditionOf4Faces(final StackConditionOf4Faces condition) {
+		stackConditionsOf4Faces.add(condition);
 	}
 
-	public void clearCondition4s() {
-		condition4s.clear();
+	/**
+	 * Removes all elements from {@link #stackConditionsOf4Faces}.
+	 */
+	public void clearStackConditionsOf4Faces() {
+		stackConditionsOf4Faces.clear();
 	}
 
-	public Stream<StackConditionOf4Faces> condition4Stream() {
-		return condition4s.stream();
+	/**
+	 *
+	 * @return stack conditions of 4 faces as {@link Stream}.
+	 */
+	public Stream<StackConditionOf4Faces> stackConditionOf4FacesStream() {
+		return stackConditionsOf4Faces.stream();
 	}
 
-	public void addCondition3(final StackConditionOf3Faces condition3) {
-		condition3s.add(condition3);
+	/**
+	 *
+	 * @param condition
+	 *            for a correct stack of subface.
+	 */
+	public void addStackConditionOf3Faces(final StackConditionOf3Faces condition) {
+		stackConditionsOf3Faces.add(condition);
 	}
 
-	public void clearCondition3s() {
-		condition3s.clear();
+	/**
+	 * Removes all elements from {@link #stackConditionsOf3Faces}.
+	 */
+	public void clearStackConditionsOf3Faces() {
+		stackConditionsOf3Faces.clear();
 	}
 
-	public Stream<StackConditionOf3Faces> condition3Stream() {
-		return condition3s.stream();
+	/**
+	 *
+	 * @return stack conditions of 3 faces as {@link Stream}.
+	 */
+	public Stream<StackConditionOf3Faces> stackConditionOf3FacesStream() {
+		return stackConditionsOf3Faces.stream();
 	}
 
-	public void addCondition2(final Integer upperFaceORMatIndex) {
-		condition2s.add(upperFaceORMatIndex);
+	/**
+	 *
+	 * @param condition
+	 *            for a correct stack of subface.
+	 */
+	public void addStackConditionOf2Faces(final Integer upperFaceORMatIndex) {
+		stackConditionsOf2Faces.add(upperFaceORMatIndex);
 	}
 
-	public void clearCondition2s() {
-		condition2s.clear();
+	/**
+	 * Removes all elements from {@link #stackConditionsOf2Faces}.
+	 */
+	public void clearStackConditionsOf2Faces() {
+		stackConditionsOf2Faces.clear();
 	}
 
-	public Stream<Integer> condition2Stream() {
-		return condition2s.stream();
+	/**
+	 *
+	 * @return stack conditions of 2 faces as {@link Stream}.
+	 */
+	public Stream<Integer> stackConditionsOf2FacesStream() {
+		return stackConditionsOf2Faces.stream();
 	}
 
 	public void trianglateAndSetColor(final boolean bUseColor, final boolean bFlip,
@@ -377,7 +441,7 @@ public class OriFace {
 	}
 
 	/**
-	 * @return outline
+	 * @return outline for drawing the shape after fold
 	 */
 	public Path2D.Double getOutline() {
 		return outline;
@@ -398,7 +462,7 @@ public class OriFace {
 	}
 
 	/**
-	 * @return preOutline
+	 * @return outline for drawing foldability-check face
 	 */
 	public Path2D.Double getOutlineBeforeFolding() {
 		return preOutline;
