@@ -26,7 +26,6 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
 import oripa.persistent.filetool.Exporter;
@@ -86,7 +85,7 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 			bw.write("ENTITIES\n");
 
 			for (OriFace face : sortedFaces) {
-				for (var he : (Iterable<OriHalfedge>) () -> face.halfedgeStream().iterator()) {
+				for (var he : face.halfedgeIterable()) {
 
 					bw.write("  0\n");
 					bw.write("LINE\n");

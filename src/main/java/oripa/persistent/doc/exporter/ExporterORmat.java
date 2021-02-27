@@ -26,7 +26,6 @@ import java.util.List;
 import oripa.doc.Doc;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 
@@ -64,7 +63,7 @@ public class ExporterORmat implements DocExporter {
 
 			for (OriFace face : faces) {
 				bw.write("f");
-				for (var he : (Iterable<OriHalfedge>) () -> face.halfedgeStream().iterator()) {
+				for (var he : face.halfedgeIterable()) {
 					bw.write(" " + he.getVertex().getVertexID());
 				}
 				bw.write("\n");

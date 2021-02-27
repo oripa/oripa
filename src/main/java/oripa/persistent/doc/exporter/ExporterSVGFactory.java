@@ -12,7 +12,6 @@ import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -166,7 +165,7 @@ public class ExporterSVGFactory {
 					OriFace face = faceOrderFlip ? sortedFaces.get(i)
 							: sortedFaces.get(sortedFaces.size() - i - 1);
 					java.util.ArrayList<Vector2d> points = new java.util.ArrayList<>();
-					for (var he : (Iterable<OriHalfedge>) () -> face.halfedgeStream().iterator()) {
+					for (var he : face.halfedgeIterable()) {
 						var position = he.getPosition();
 						var nextPosition = he.getNext().getPosition();
 						if (position.x > maxV.x) {

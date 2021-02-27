@@ -212,7 +212,7 @@ public class Folder {
 		var checked = new boolean[faces.size()][faces.size()];
 
 		for (int i = 0; i < faces.size(); i++) {
-			for (var he : faces.get(i).getHalfedges()) {
+			for (var he : faces.get(i).halfedgeIterable()) {
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;
@@ -326,7 +326,7 @@ public class Folder {
 			final List<OriFace> faces, final double paperSize, final int[][] overlapRelation) {
 
 		for (OriFace f_i : faces) {
-			for (OriHalfedge he : f_i.getHalfedges()) {
+			for (OriHalfedge he : f_i.halfedgeIterable()) {
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;
@@ -634,7 +634,7 @@ public class Folder {
 		boolean bChanged = false;
 		for (OriFace f_i : faces) {
 			int index_i = f_i.getFaceID();
-			for (OriHalfedge he : f_i.getHalfedges()) {
+			for (OriHalfedge he : f_i.halfedgeIterable()) {
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;
@@ -817,7 +817,7 @@ public class Folder {
 			final List<OriFace> faces, final int[][] overlapRelation) {
 
 		for (OriFace face : faces) {
-			for (OriHalfedge he : face.getHalfedges()) {
+			for (OriHalfedge he : face.halfedgeIterable()) {
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;

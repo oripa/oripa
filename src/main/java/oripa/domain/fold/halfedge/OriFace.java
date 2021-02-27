@@ -104,7 +104,7 @@ public class OriFace {
 	/**
 	 * @return halfedges
 	 */
-	public List<OriHalfedge> getHalfedges() {
+	public Iterable<OriHalfedge> halfedgeIterable() {
 		return halfedges;
 	}
 

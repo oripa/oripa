@@ -72,13 +72,13 @@ public class OriGeomUtil {
 		}
 
 		// If the outline of face0 intersects face1`s, true
-		for (OriHalfedge he0 : face0.getHalfedges()) {
+		for (OriHalfedge he0 : face0.halfedgeIterable()) {
 			if (isLineCrossFace(face1, he0, eps)) {
 				return true;
 			}
 		}
 
-		for (OriHalfedge he1 : face1.getHalfedges()) {
+		for (OriHalfedge he1 : face1.halfedgeIterable()) {
 			if (isLineCrossFace(face0, he1, eps)) {
 				return true;
 			}
@@ -113,7 +113,7 @@ public class OriGeomUtil {
 		}
 
 		Vector2d preCrossPoint = null;
-		for (OriHalfedge he : face.getHalfedges()) {
+		for (OriHalfedge he : face.halfedgeIterable()) {
 			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
 					he.getNext().getPosition(), heg.getPosition(),
 					hegNext.getPosition());
@@ -182,7 +182,7 @@ public class OriGeomUtil {
 		}
 
 		Vector2d preCrossPoint = null;
-		for (OriHalfedge he : face.getHalfedges()) {
+		for (OriHalfedge he : face.halfedgeIterable()) {
 			// Checks if the line crosses any of the edges of the face
 			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
 					he.getNext().getPosition(), heg.getPosition(),
