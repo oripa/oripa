@@ -71,18 +71,16 @@ public class OriGeomUtil {
 			return true;
 		}
 
-		// If the outline of face0 intersects face1`s, true
-		for (OriHalfedge he0 : face0.halfedgeIterable()) {
-			if (isLineCrossFace(face1, he0, eps)) {
-				return true;
-			}
+		// If the outline of face0 intersects face1's, true
+		if (face0.halfedgeStream().anyMatch(he0 -> isLineCrossFace(face1, he0, eps))) {
+			return true;
 		}
 
-		for (OriHalfedge he1 : face1.halfedgeIterable()) {
-			if (isLineCrossFace(face0, he1, eps)) {
-				return true;
-			}
+		// If the outline of face1 intersects face0's, true
+		if (face1.halfedgeStream().anyMatch(he1 -> isLineCrossFace(face0, he1, eps))) {
+			return true;
 		}
+
 		return false;
 	}
 

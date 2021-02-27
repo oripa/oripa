@@ -124,12 +124,16 @@ public class OriFace {
 		return halfedges.size();
 	}
 
-	public void addAllPrecreases(final Collection<OriLine> precreases) {
-		this.precreases.addAll(precreases);
+	public Iterable<OriLine> precreaseIterable() {
+		return precreases;
 	}
 
 	public Stream<OriLine> precreaseStream() {
 		return precreases.stream();
+	}
+
+	public void addAllPrecreases(final Collection<OriLine> precreases) {
+		this.precreases.addAll(precreases);
 	}
 
 	public boolean isEmptyPrecreases() {

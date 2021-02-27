@@ -204,7 +204,7 @@ public class ExporterSVGFactory {
 					}
 					bw.write(" z\" />\n");
 
-					for (var oriLine : (Iterable<OriLine>) face.precreaseStream()::iterator) {
+					for (var oriLine : face.precreaseIterable()) {
 						double x1 = (oriLine.p0.x - modelCenter.x) * scale
 								+ center;
 						double y1 = -(oriLine.p0.y - modelCenter.y) * scale
