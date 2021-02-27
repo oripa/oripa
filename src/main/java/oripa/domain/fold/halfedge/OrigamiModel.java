@@ -137,14 +137,14 @@ public class OrigamiModel {
 		var domain = new RectangleDomain();
 
 		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
+			for (OriHalfedge he : face.getHalfedges()) {
 				domain.enlarge(he.getPosition());
 			}
 		}
 
 		double centerX = domain.getCenterX();
 
-		faces.stream().flatMap(f -> f.halfedges.stream()).forEach(he -> {
+		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
 			he.getPositionForDisplay().x = 2 * centerX - he.getPositionForDisplay().x;
 		});
 

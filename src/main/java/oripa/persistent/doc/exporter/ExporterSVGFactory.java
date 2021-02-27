@@ -126,7 +126,7 @@ public class ExporterSVGFactory {
 
 				var domain = new RectangleDomain();
 				for (OriFace face : faces) {
-					for (OriHalfedge he : face.halfedges) {
+					for (OriHalfedge he : face.getHalfedges()) {
 						domain.enlarge(he.getPosition());
 					}
 				}
@@ -166,7 +166,7 @@ public class ExporterSVGFactory {
 					OriFace face = faceOrderFlip ? sortedFaces.get(i)
 							: sortedFaces.get(sortedFaces.size() - i - 1);
 					java.util.ArrayList<Vector2d> points = new java.util.ArrayList<>();
-					for (OriHalfedge he : face.halfedges) {
+					for (OriHalfedge he : face.getHalfedges()) {
 						var position = he.getPosition();
 						var nextPosition = he.getNext().getPosition();
 						if (position.x > maxV.x) {

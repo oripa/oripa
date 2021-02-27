@@ -29,7 +29,7 @@ public class FolderTool {
 	public RectangleDomain createDomainOfFoldedModel(final List<OriFace> faces) {
 		var domain = new RectangleDomain();
 		domain.enlarge(faces.stream()
-				.flatMap(face -> face.halfedges.stream().map(he -> he.getPosition()))
+				.flatMap(face -> face.halfedgeStream().map(he -> he.getPosition()))
 				.collect(Collectors.toList()));
 
 		return domain;
@@ -38,7 +38,7 @@ public class FolderTool {
 	public void setFacesOutline(final List<OriFace> faces) {
 
 		for (OriFace f : faces) {
-			for (OriHalfedge he : f.halfedges) {
+			for (OriHalfedge he : f.getHalfedges()) {
 				he.getPositionForDisplay().set(he.getPosition());
 			}
 			f.buildOutline();

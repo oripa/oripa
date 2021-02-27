@@ -121,7 +121,7 @@ public class OriFacesFactory {
 				return null;
 			}
 			OriHalfedge he = new OriHalfedge(walkV, face);
-			face.halfedges.add(he);
+			face.addHalfedge(he);
 			he.setTemporaryType(walkE.getType());
 			if (walkE.getStartVertex() == walkV) {
 				walkE.setLeft(he);

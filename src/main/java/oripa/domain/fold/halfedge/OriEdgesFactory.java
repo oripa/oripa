@@ -51,7 +51,7 @@ public class OriEdgesFactory {
 
 		// Clear all the Halfedges
 		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
+			for (OriHalfedge he : face.getHalfedges()) {
 				he.setPair(null);
 				he.setEdge(null);
 

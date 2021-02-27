@@ -42,7 +42,7 @@ public class CutModelOutlinesFactory {
 	private List<Vector2d> findOutlineEdgeTerminals(final OriLine cutLine, final OriFace face) {
 		List<Vector2d> vv = new ArrayList<>(2);
 
-		for (OriHalfedge he : face.halfedges) {
+		for (OriHalfedge he : face.getHalfedges()) {
 			var position = he.getPositionForDisplay();
 			var nextPosition = he.getNext().getPositionForDisplay();
 			OriLine l = new OriLine(position.x, position.y,

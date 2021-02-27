@@ -20,7 +20,6 @@ package oripa.domain.fold.subface;
 
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
@@ -61,7 +60,6 @@ class OriFaceFactoryForTest {
 	static OriFace createRectangleMock(final double left, final double top,
 			final double right, final double bottom) {
 		var face = mock(OriFace.class);
-		face.halfedges = new ArrayList<OriHalfedge>();
 		var he1 = createHalfEdgeSpy(left, bottom, face);
 		var he2 = createHalfEdgeSpy(right, bottom, face);
 		var he3 = createHalfEdgeSpy(right, top, face);
@@ -71,7 +69,9 @@ class OriFaceFactoryForTest {
 		lenient().when(he3.getNext()).thenReturn(he4);
 		lenient().when(he4.getNext()).thenReturn(he1);
 
-		face.halfedges.addAll(List.of(he1, he2, he3, he4));
+		lenient().when(face.halfedgeCount()).thenReturn(4);
+
+		lenient().when(face.getHalfedges()).thenReturn(List.of(he1, he2, he3, he4));
 
 		return face;
 	}

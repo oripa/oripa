@@ -49,14 +49,14 @@ public class OriGeomUtil {
 			final double eps) {
 
 		// If the vertices of face0 are on face1, true
-		for (OriHalfedge he : face0.halfedges) {
+		for (OriHalfedge he : face0.getHalfedges()) {
 			if (face1.isOnFaceExclusively(he.getPosition(), eps)) {
 				return true;
 			}
 		}
 
 		// If the vertices of face1 are on face0, true
-		for (OriHalfedge he : face1.halfedges) {
+		for (OriHalfedge he : face1.getHalfedges()) {
 			if (face0.isOnFaceExclusively(he.getPosition(), eps)) {
 				return true;
 			}
@@ -77,13 +77,13 @@ public class OriGeomUtil {
 		}
 
 		// If the outline of face0 intersects face1`s, true
-		for (OriHalfedge he0 : face0.halfedges) {
+		for (OriHalfedge he0 : face0.getHalfedges()) {
 			if (isLineCrossFace(face1, he0, eps)) {
 				return true;
 			}
 		}
 
-		for (OriHalfedge he1 : face1.halfedges) {
+		for (OriHalfedge he1 : face1.getHalfedges()) {
 			if (isLineCrossFace(face0, he1, eps)) {
 				return true;
 			}
@@ -112,7 +112,7 @@ public class OriGeomUtil {
 
 		var hegNext = heg.getNext();
 
-		for (OriHalfedge he : face.halfedges) {
+		for (OriHalfedge he : face.getHalfedges()) {
 			// About the relationship of each outline`s segment
 
 			if (GeomUtil.distancePointToLine(he.getPosition(), heLine) < eps
@@ -121,7 +121,7 @@ public class OriGeomUtil {
 			}
 		}
 		Vector2d preCrossPoint = null;
-		for (OriHalfedge he : face.halfedges) {
+		for (OriHalfedge he : face.getHalfedges()) {
 			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
 					he.getNext().getPosition(), heg.getPosition(),
 					hegNext.getPosition());
@@ -184,7 +184,7 @@ public class OriGeomUtil {
 
 		var hegNext = heg.getNext();
 
-		for (OriHalfedge he : face.halfedges) {
+		for (OriHalfedge he : face.getHalfedges()) {
 			// About the relation of contours (?)
 
 			// Check if the line is on the contour of the face
@@ -195,7 +195,7 @@ public class OriGeomUtil {
 		}
 
 		Vector2d preCrossPoint = null;
-		for (OriHalfedge he : face.halfedges) {
+		for (OriHalfedge he : face.getHalfedges()) {
 			// Checks if the line crosses any of the edges of the face
 			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
 					he.getNext().getPosition(), heg.getPosition(),

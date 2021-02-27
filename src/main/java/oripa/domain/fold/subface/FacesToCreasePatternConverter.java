@@ -64,7 +64,7 @@ public class FacesToCreasePatternConverter {
 
 		var lines = new ArrayList<OriLine>();
 		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
+			for (OriHalfedge he : face.getHalfedges()) {
 				OriLine line = new OriLine(he.getPosition(), he.getNext().getPosition(),
 						OriLine.Type.MOUNTAIN);
 				// make cross every time to divide the faces.

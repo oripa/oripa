@@ -68,7 +68,7 @@ class FacesToCreasePatternConverterTest {
 		// tried to convert all half-edges?
 		verify(adder, times(
 				faces.stream()
-						.mapToInt(f -> f.halfedges.size())
+						.mapToInt(f -> f.halfedgeCount())
 						.sum()))
 								.addLine(any(), anyCollection());
 

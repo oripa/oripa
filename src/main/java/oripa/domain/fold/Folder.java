@@ -212,7 +212,7 @@ public class Folder {
 		var checked = new boolean[faces.size()][faces.size()];
 
 		for (int i = 0; i < faces.size(); i++) {
-			for (var he : faces.get(i).halfedges) {
+			for (var he : faces.get(i).getHalfedges()) {
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;
@@ -326,7 +326,7 @@ public class Folder {
 			final List<OriFace> faces, final double paperSize, final int[][] overlapRelation) {
 
 		for (OriFace f_i : faces) {
-			for (OriHalfedge he : f_i.halfedges) {
+			for (OriHalfedge he : f_i.getHalfedges()) {
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;
@@ -634,7 +634,7 @@ public class Folder {
 		boolean bChanged = false;
 		for (OriFace f_i : faces) {
 			int index_i = f_i.getFaceID();
-			for (OriHalfedge he : f_i.halfedges) {
+			for (OriHalfedge he : f_i.getHalfedges()) {
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;
@@ -696,7 +696,7 @@ public class Folder {
 	private void walkFace(final OriFace face) {
 		face.setMovedByFold(true);
 
-		for (OriHalfedge he : face.halfedges) {
+		for (OriHalfedge he : face.getHalfedges()) {
 			var pair = he.getPair();
 			if (pair == null) {
 				continue;
@@ -752,7 +752,7 @@ public class Folder {
 
 		// move the vertices of the face to keep the face connection
 		// on baseHe
-		for (OriHalfedge he : face.halfedges) {
+		for (OriHalfedge he : face.getHalfedges()) {
 			transformVertex(he.getPositionWhileFolding(), preLine, afterOrigin, afterDir);
 		}
 
@@ -766,7 +766,7 @@ public class Folder {
 			Vector2d ep = baseHeNext.getPositionWhileFolding();
 			Vector2d sp = baseHe.getPositionWhileFolding();
 
-			for (OriHalfedge he : face.halfedges) {
+			for (OriHalfedge he : face.getHalfedges()) {
 				flipVertex(he.getPositionWhileFolding(), sp, ep);
 			}
 			face.precreaseStream().forEach(precrease -> {
@@ -817,7 +817,7 @@ public class Folder {
 			final List<OriFace> faces, final int[][] overlapRelation) {
 
 		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
+			for (OriHalfedge he : face.getHalfedges()) {
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;
@@ -889,7 +889,7 @@ public class Folder {
 			logger.error("walkFace too deep");
 			return;
 		}
-		for (OriHalfedge he : face.halfedges) {
+		for (OriHalfedge he : face.getHalfedges()) {
 			var pair = he.getPair();
 			if (pair == null) {
 				continue;

@@ -62,7 +62,7 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 
 			var domain = new RectangleDomain();
 			for (OriFace face : faces) {
-				for (OriHalfedge he : face.halfedges) {
+				for (OriHalfedge he : face.getHalfedges()) {
 					domain.enlarge(he.getPosition());
 				}
 			}
@@ -86,7 +86,7 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 			bw.write("ENTITIES\n");
 
 			for (OriFace face : sortedFaces) {
-				for (OriHalfedge he : face.halfedges) {
+				for (OriHalfedge he : face.getHalfedges()) {
 
 					bw.write("  0\n");
 					bw.write("LINE\n");

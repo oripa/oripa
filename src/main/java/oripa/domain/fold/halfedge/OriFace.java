@@ -53,7 +53,7 @@ public class OriFace {
 	 * {@link OriHalfedge#next} field. The last half-edge should refer the
 	 * half-edge at index 0.
 	 */
-	public ArrayList<OriHalfedge> halfedges = new ArrayList<>();
+	private final List<OriHalfedge> halfedges = new ArrayList<>();
 
 	/**
 	 * For drawing the shape after fold
@@ -99,6 +99,25 @@ public class OriFace {
 		int g = (int) (Math.random() * 255);
 		int b = (int) (Math.random() * 255);
 		colorForDebug = new Color(r, g, b);
+	}
+
+	/**
+	 * @return halfedges
+	 */
+	public List<OriHalfedge> getHalfedges() {
+		return halfedges;
+	}
+
+	public Stream<OriHalfedge> halfedgeStream() {
+		return halfedges.stream();
+	}
+
+	public void addHalfedge(final OriHalfedge halfedge) {
+		halfedges.add(halfedge);
+	}
+
+	public int halfedgeCount() {
+		return halfedges.size();
 	}
 
 	public void addAllPrecreases(final Collection<OriLine> precreases) {

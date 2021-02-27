@@ -64,7 +64,7 @@ public class ExporterORmat implements DocExporter {
 
 			for (OriFace face : faces) {
 				bw.write("f");
-				for (OriHalfedge he : face.halfedges) {
+				for (OriHalfedge he : face.getHalfedges()) {
 					bw.write(" " + he.getVertex().getVertexID());
 				}
 				bw.write("\n");
