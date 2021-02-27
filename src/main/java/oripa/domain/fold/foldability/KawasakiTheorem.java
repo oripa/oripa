@@ -25,7 +25,6 @@ import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.rule.AbstractRule;
-import oripa.value.OriLine;
 
 /**
  * Kawasaki Theorem
@@ -59,7 +58,7 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 			OriEdge e = vertex.getEdge(i);
 
 			// corner does not need test
-			if (e.getType() == OriLine.Type.CUT.toInt()) {
+			if (e.isBoundary()) {
 				return true;
 			}
 

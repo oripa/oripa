@@ -96,6 +96,18 @@ public class OriEdge {
 		return v == startVertex ? endVertex : startVertex;
 	}
 
+	public boolean isBoundary() {
+		return type == OriLine.Type.CUT.toInt();
+	}
+
+	public boolean isMountain() {
+		return type == OriLine.Type.MOUNTAIN.toInt();
+	}
+
+	public boolean isValley() {
+		return type == OriLine.Type.VALLEY.toInt();
+	}
+
 	public boolean isFoldLine() {
 		return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt();
 	}

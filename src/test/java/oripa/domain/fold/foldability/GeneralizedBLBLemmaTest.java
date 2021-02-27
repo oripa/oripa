@@ -26,8 +26,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.value.OriLine;
-
 /**
  * @author OUCHI Koji
  *
@@ -47,8 +45,11 @@ class GeneralizedBLBLemmaTest {
 
 		assertTrue(blb.holds(oriVertex));
 
-		when(oriVertex.getEdge(1).getType()).thenReturn(OriLine.Type.MOUNTAIN.toInt());
-		when(oriVertex.getEdge(3).getType()).thenReturn(OriLine.Type.VALLEY.toInt());
+		lenient().when(oriVertex.getEdge(1).isMountain()).thenReturn(true);
+		lenient().when(oriVertex.getEdge(1).isValley()).thenReturn(false);
+
+		lenient().when(oriVertex.getEdge(3).isValley()).thenReturn(true);
+		lenient().when(oriVertex.getEdge(3).isMountain()).thenReturn(false);
 
 		assertFalse(blb.holds(oriVertex));
 	}
@@ -67,8 +68,11 @@ class GeneralizedBLBLemmaTest {
 
 		assertTrue(blb.holds(oriVertex));
 
-		when(oriVertex.getEdge(0).getType()).thenReturn(OriLine.Type.VALLEY.toInt());
-		when(oriVertex.getEdge(3).getType()).thenReturn(OriLine.Type.MOUNTAIN.toInt());
+		lenient().when(oriVertex.getEdge(0).isValley()).thenReturn(true);
+		lenient().when(oriVertex.getEdge(0).isMountain()).thenReturn(false);
+
+		lenient().when(oriVertex.getEdge(3).isMountain()).thenReturn(true);
+		lenient().when(oriVertex.getEdge(3).isValley()).thenReturn(false);
 
 		assertFalse(blb.holds(oriVertex));
 	}

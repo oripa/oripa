@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.value.OriLine;
-
 /**
  * @author OUCHI Koji
  *
@@ -73,7 +71,7 @@ public class OriFacesFactory {
 			List<OriEdge> outlineEdges = new ArrayList<OriEdge>();
 			for (OriVertex v : vertices) {
 				outlineEdges.addAll(v.edgeStream()
-						.filter(e -> e.getType() == OriLine.Type.CUT.toInt())
+						.filter(e -> e.isBoundary())
 						.collect(Collectors.toList()));
 			}
 			outlineEdges = outlineEdges.stream().distinct().collect(Collectors.toList());
@@ -92,7 +90,7 @@ public class OriFacesFactory {
 	}
 
 	private boolean isTarget(final OriVertex v, final OriEdge e) {
-		if (e.getType() == OriLine.Type.CUT.toInt()) {
+		if (e.isBoundary()) {
 			return false;
 		}
 

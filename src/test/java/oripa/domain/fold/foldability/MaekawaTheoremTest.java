@@ -23,8 +23,6 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.value.OriLine;
-
 /**
  * @author OUCHI Koji
  *
@@ -42,7 +40,8 @@ class MaekawaTheoremTest {
 
 		assertTrue(maekawa.holds(vertex));
 
-		when(vertex.getEdge(0).getType()).thenReturn(OriLine.Type.VALLEY.toInt());
+		lenient().when(vertex.getEdge(0).isValley()).thenReturn(true);
+		lenient().when(vertex.getEdge(0).isMountain()).thenReturn(false);
 
 		assertFalse(maekawa.holds(vertex));
 	}

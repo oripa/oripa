@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.util.rule.AbstractRule;
-import oripa.value.OriLine;
 
 /**
  * @author Koji
@@ -35,17 +34,17 @@ public class MaekawaTheorem extends AbstractRule<OriVertex> {
 	@Override
 	public boolean holds(final OriVertex vertex) {
 		boolean includesCut = vertex.edgeStream()
-				.anyMatch(e -> e.getType() == OriLine.Type.CUT.toInt());
+				.anyMatch(e -> e.isBoundary());
 		if (includesCut) {
 			return true;
 		}
 
 		// counts lines which ends on given vertex
 		long mountainCount = vertex.edgeStream()
-				.filter(e -> e.getType() == OriLine.Type.MOUNTAIN.toInt())
+				.filter(e -> e.isMountain())
 				.count();
 		long valleyCount = vertex.edgeStream()
-				.filter(e -> e.getType() == OriLine.Type.VALLEY.toInt())
+				.filter(e -> e.isValley())
 				.count();
 
 		// maekawa's claim
