@@ -49,20 +49,15 @@ public class OriGeomUtil {
 			final double eps) {
 
 		// If the vertices of face0 are on face1, true
-		for (OriHalfedge he : face0.getHalfedges()) {
-			if (face1.isOnFaceExclusively(he.getPosition(), eps)) {
-				return true;
-			}
+		if (face0.halfedgeStream().anyMatch(he -> face1.isOnFaceExclusively(he.getPosition(), eps))) {
+			return true;
 		}
 
 		// If the vertices of face1 are on face0, true
-		for (OriHalfedge he : face1.getHalfedges()) {
-			if (face0.isOnFaceExclusively(he.getPosition(), eps)) {
-				return true;
-			}
+		if (face1.halfedgeStream().anyMatch(he -> face0.isOnFaceExclusively(he.getPosition(), eps))) {
+			return true;
 		}
 
-		// TODO: Can these be replaced with OriFace.getCentroid()?
 		Vector2d center0 = face0.getCentroid();
 		Vector2d center1 = face1.getCentroid();
 
