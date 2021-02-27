@@ -107,14 +107,11 @@ public class OriGeomUtil {
 
 		var hegNext = heg.getNext();
 
-		for (OriHalfedge he : face.getHalfedges()) {
-			// About the relationship of each outline`s segment
-
-			if (GeomUtil.distancePointToLine(he.getPosition(), heLine) < eps
-					&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < eps) {
-				return false;
-			}
+		if (face.halfedgeStream().anyMatch(he -> GeomUtil.distancePointToLine(he.getPosition(), heLine) < eps
+				&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < eps)) {
+			return false;
 		}
+
 		Vector2d preCrossPoint = null;
 		for (OriHalfedge he : face.getHalfedges()) {
 			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
@@ -179,14 +176,9 @@ public class OriGeomUtil {
 
 		var hegNext = heg.getNext();
 
-		for (OriHalfedge he : face.getHalfedges()) {
-			// About the relation of contours (?)
-
-			// Check if the line is on the contour of the face
-			if (GeomUtil.distancePointToLine(he.getPosition(), heLine) < 1
-					&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < 1) {
-				return false;
-			}
+		if (face.halfedgeStream().anyMatch(he -> GeomUtil.distancePointToLine(he.getPosition(), heLine) < 1
+				&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < 1)) {
+			return false;
 		}
 
 		Vector2d preCrossPoint = null;
