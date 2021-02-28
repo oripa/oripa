@@ -56,14 +56,13 @@ public class OriFacesFactory {
 					.map(e -> makeFace(v, e))
 					.collect(Collectors.toList());
 
+			faces.addAll(createdFaces.stream()
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList()));
+
 			if (createdFaces.stream().anyMatch(Objects::isNull)) {
-				faces.addAll(createdFaces.stream()
-						.filter(f -> !Objects.isNull(f))
-						.collect(Collectors.toList()));
 				return false;
 			}
-
-			faces.addAll(createdFaces);
 		}
 
 		if (faces.isEmpty()) {
