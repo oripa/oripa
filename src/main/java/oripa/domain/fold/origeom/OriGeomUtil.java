@@ -97,44 +97,18 @@ public class OriGeomUtil {
 	 */
 	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
-		Vector2d p1 = heg.getPosition();
-		Vector2d p2 = heg.getNext().getPosition();
-		Vector2d dir = new Vector2d();
-		dir.sub(p2, p1);
-		Line heLine = new Line(p1, dir);
-
-		var hegNext = heg.getNext();
-
-		if (face.halfedgeStream().anyMatch(he -> GeomUtil.distancePointToLine(he.getPosition(), heLine) < eps
-				&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < eps)) {
+		if (isLineOnEdgeOfFace(face, heg, eps)) {
 			return false;
 		}
 
-		Vector2d preCrossPoint = null;
-		for (OriHalfedge he : face.halfedgeIterable()) {
-			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
-					he.getNext().getPosition(), heg.getPosition(),
-					hegNext.getPosition());
-			if (cp == null) {
-				continue;
-			}
+		if (isHalfedgeCrossTwoEdgesOfFace(face, heg, eps)) {
+			return true;
+		}
 
-			if (preCrossPoint == null) {
-				preCrossPoint = cp;
-			} else {
-				if (GeomUtil.distance(cp, preCrossPoint) > eps) {
-					// Intersects at least in two places
-					return true;
-				}
-			}
-		}
-		// If at least one of the endpoints is fully contained
-		if (face.isOnFaceExclusively(heg.getPosition(), eps)) {
+		if (isHalfedgeCrossEdgeOfFace(face, heg, eps)) {
 			return true;
 		}
-		if (face.isOnFaceExclusively(hegNext.getPosition(), eps)) {
-			return true;
-		}
+
 		return false;
 	}
 
@@ -164,27 +138,41 @@ public class OriGeomUtil {
 	 */
 	public static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg,
 			final double size) {
+		final double eps = size * 0.001;
+
+		if (isLineOnEdgeOfFace(face, heg, 1)) {
+			return false;
+		}
+
+		if (isHalfedgeCrossTwoEdgesOfFace(face, heg, eps)) {
+			return true;
+		}
+
+		if (isHalfedgeCrossEdgeOfFace(face, heg, eps)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private static boolean isLineOnEdgeOfFace(final OriFace face, final OriHalfedge heg, final double eps) {
 		Vector2d p1 = heg.getPosition();
 		Vector2d p2 = heg.getNext().getPosition();
 		Vector2d dir = new Vector2d();
 		dir.sub(p2, p1);
 		Line heLine = new Line(p1, dir);
 
-		final double eps = size * 0.001;
+		return face.halfedgeStream().anyMatch(he -> GeomUtil.distancePointToLine(he.getPosition(), heLine) < eps
+				&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < eps);
+	}
 
-		var hegNext = heg.getNext();
-
-		if (face.halfedgeStream().anyMatch(he -> GeomUtil.distancePointToLine(he.getPosition(), heLine) < 1
-				&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < 1)) {
-			return false;
-		}
-
+	private static boolean isHalfedgeCrossTwoEdgesOfFace(final OriFace face, final OriHalfedge heg, final double eps) {
 		Vector2d preCrossPoint = null;
 		for (OriHalfedge he : face.halfedgeIterable()) {
 			// Checks if the line crosses any of the edges of the face
 			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
 					he.getNext().getPosition(), heg.getPosition(),
-					hegNext.getPosition());
+					heg.getNext().getPosition());
 			if (cp == null) {
 				continue;
 			}
@@ -197,16 +185,14 @@ public class OriGeomUtil {
 				}
 			}
 		}
-
-		// Checks if the line is in the interior of the face
-		if (face.isOnFaceExclusively(heg.getPosition(), eps)) {
-			return true;
-		}
-		if (face.isOnFaceExclusively(hegNext.getPosition(), eps)) {
-			return true;
-		}
-
 		return false;
+	}
+
+	private static boolean isHalfedgeCrossEdgeOfFace(final OriFace face, final OriHalfedge heg, final double eps) {
+		// If at least one of the endpoints is fully contained
+
+		return face.isOnFaceExclusively(heg.getPosition(), eps)
+				|| face.isOnFaceExclusively(heg.getNext().getPosition(), eps);
 	}
 
 	/**
