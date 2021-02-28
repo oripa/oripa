@@ -90,47 +90,6 @@ public class OriGeomUtil {
 	 *
 	 * @param face
 	 * @param heg
-	 * @param eps
-	 * @return {@code true} if {@code heg} crosses {@code face} after folding.
-	 *         {@code false} if {@code heg} doesn't cross {@code face} or both
-	 *         end points of {@code heg} are on an edge of {@code face}.
-	 */
-	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
-			final double eps) {
-		if (isLineOnEdgeOfFace(face, heg, eps)) {
-			return false;
-		}
-
-		if (isHalfedgeCrossTwoEdgesOfFace(face, heg, eps)) {
-			return true;
-		}
-
-		if (isHalfedgeCrossEdgeOfFace(face, heg, eps)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Whether {@code face} includes {@code line} entirely. The inclusion test
-	 * is inclusive.
-	 *
-	 * @param face
-	 * @param line
-	 * @return {@code true} if {@code face} includes {@code line} entirely.
-	 */
-	public static boolean isOriLineIncludedInFace(final OriFace face, final OriLine line) {
-		return face.isOnFaceInclusively(line.p0)
-				&& face.isOnFaceInclusively(line.p1);
-	}
-
-	/**
-	 * Whether {@code heg} crosses {@code face}. The inclusion test is
-	 * exclusive.
-	 *
-	 * @param face
-	 * @param heg
 	 * @param size
 	 * @return {@code true} if {@code heg} crosses {@code face} after folding.
 	 *         {@code false} if {@code heg} doesn't cross {@code face} or both
@@ -140,7 +99,36 @@ public class OriGeomUtil {
 			final double size) {
 		final double eps = size * 0.001;
 
-		if (isLineOnEdgeOfFace(face, heg, 1)) {
+		return isLineCrossFace(face, heg, eps);
+//		if (isLineOnEdgeOfFace(face, heg, 1)) {
+//			return false;
+//		}
+//
+//		if (isHalfedgeCrossTwoEdgesOfFace(face, heg, eps)) {
+//			return true;
+//		}
+//
+//		if (isHalfedgeCrossEdgeOfFace(face, heg, eps)) {
+//			return true;
+//		}
+//
+//		return false;
+	}
+
+	/**
+	 * Whether {@code heg} crosses {@code face}. The inclusion test is
+	 * exclusive.
+	 *
+	 * @param face
+	 * @param heg
+	 * @param eps
+	 * @return {@code true} if {@code heg} crosses {@code face} after folding.
+	 *         {@code false} if {@code heg} doesn't cross {@code face} or both
+	 *         end points of {@code heg} are on an edge of {@code face}.
+	 */
+	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
+			final double eps) {
+		if (isLineOnEdgeOfFace(face, heg, eps)) {
 			return false;
 		}
 
@@ -193,6 +181,19 @@ public class OriGeomUtil {
 
 		return face.isOnFaceExclusively(heg.getPosition(), eps)
 				|| face.isOnFaceExclusively(heg.getNext().getPosition(), eps);
+	}
+
+	/**
+	 * Whether {@code face} includes {@code line} entirely. The inclusion test
+	 * is inclusive.
+	 *
+	 * @param face
+	 * @param line
+	 * @return {@code true} if {@code face} includes {@code line} entirely.
+	 */
+	public static boolean isOriLineIncludedInFace(final OriFace face, final OriLine line) {
+		return face.isOnFaceInclusively(line.p0)
+				&& face.isOnFaceInclusively(line.p1);
 	}
 
 	/**
