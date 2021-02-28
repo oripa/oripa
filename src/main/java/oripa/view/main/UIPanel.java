@@ -725,7 +725,6 @@ public class UIPanel extends JPanel {
 	 * @param id
 	 *            is an ID string to distinguish shortcut action.
 	 */
-	@SuppressWarnings("serial")
 	private void setLineInputGlobalShortcut(final AbstractButton button, final KeyStroke keyStroke,
 			final String id) {
 		setToolSettingGlobalShortcut(editModeInputLineButton, button, keyStroke, id);
