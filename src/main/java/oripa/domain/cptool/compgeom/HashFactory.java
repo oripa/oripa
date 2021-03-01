@@ -53,6 +53,11 @@ public class HashFactory {
 
 		int split_i = 0;
 		hash.add(new ArrayList<T>());
+
+		if (sortedItems.isEmpty()) {
+			return hash;
+		}
+
 		hash.get(split_i).add(sortedItems.get(0));
 		for (int i = 1; i < sortedItems.size(); i++) {
 			var item1 = sortedItems.get(i);
