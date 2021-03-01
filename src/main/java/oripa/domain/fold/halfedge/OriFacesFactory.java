@@ -18,9 +18,7 @@
  */
 package oripa.domain.fold.halfedge;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -67,14 +65,14 @@ public class OriFacesFactory {
 
 		if (faces.isEmpty()) {
 			// happens when there is no crease
-			List<OriEdge> outlineEdges = new ArrayList<OriEdge>();
-			for (OriVertex v : vertices) {
-				outlineEdges.addAll(v.edgeStream()
-						.filter(e -> e.isBoundary())
-						.collect(Collectors.toList()));
+			var outlineEdgeOpt = vertices.stream()
+					.flatMap(v -> v.edgeStream().filter(e -> e.isBoundary()))
+					.findAny();
+			if (outlineEdgeOpt.isEmpty()) {
+				return false;
 			}
-			outlineEdges = outlineEdges.stream().distinct().collect(Collectors.toList());
-			OriEdge outlineEdge = outlineEdges.get(0);
+
+			var outlineEdge = outlineEdgeOpt.get();
 			OriVertex v = outlineEdge.getStartVertex();
 
 			OriFace face = makeFace(v, outlineEdge);
