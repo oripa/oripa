@@ -82,9 +82,13 @@ class OverlappingLineExtractorTest {
 		var extractor = new OverlappingLineExtractor();
 		var overlaps = extractor.extract(lines, overlap1);
 
-		assertEquals(1, overlaps.size());
+		assertEquals(2, overlaps.size());
 
+		assertTrue(overlaps.contains(overlap1));
 		assertTrue(overlaps.contains(overlap2));
+//		assertEquals(1, overlaps.size());
+//
+//		assertTrue(overlaps.contains(overlap2));
 	}
 
 }
