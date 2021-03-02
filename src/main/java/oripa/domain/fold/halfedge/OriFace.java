@@ -96,7 +96,7 @@ public class OriFace {
 	}
 
 	/**
-	 * @return half-edges as {link Iterable}.
+	 * @return half-edges as {@link Iterable}.
 	 */
 	public Iterable<OriHalfedge> halfedgeIterable() {
 		return halfedges;
@@ -104,7 +104,7 @@ public class OriFace {
 
 	/**
 	 *
-	 * @return half-edges as {link Stream}.
+	 * @return half-edges as {@link Stream}.
 	 */
 	public Stream<OriHalfedge> halfedgeStream() {
 		return halfedges.stream();

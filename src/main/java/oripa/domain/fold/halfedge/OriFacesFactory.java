@@ -63,24 +63,26 @@ public class OriFacesFactory {
 			}
 		}
 
-		if (faces.isEmpty()) {
-			// happens when there is no crease
-			var outlineEdgeOpt = vertices.stream()
-					.flatMap(v -> v.edgeStream().filter(e -> e.isBoundary()))
-					.findAny();
-			if (outlineEdgeOpt.isEmpty()) {
-				return false;
-			}
-
-			var outlineEdge = outlineEdgeOpt.get();
-			OriVertex v = outlineEdge.getStartVertex();
-
-			OriFace face = makeFace(v, outlineEdge);
-			if (face == null) {
-				return false;
-			}
-			faces.add(face);
+		if (!faces.isEmpty()) {
+			return true;
 		}
+
+		// happens when there is no crease
+		var outlineEdgeOpt = vertices.stream()
+				.flatMap(v -> v.edgeStream().filter(e -> e.isBoundary()))
+				.findAny();
+		if (outlineEdgeOpt.isEmpty()) {
+			return false;
+		}
+
+		var outlineEdge = outlineEdgeOpt.get();
+		OriVertex v = outlineEdge.getStartVertex();
+
+		OriFace face = makeFace(v, outlineEdge);
+		if (face == null) {
+			return false;
+		}
+		faces.add(face);
 
 		return true;
 
@@ -124,7 +126,7 @@ public class OriFacesFactory {
 				walkE.setRight(he);
 			}
 			walkV = walkE.oppositeVertex(walkV);
-			walkE = walkV.getPrevEdge(walkE);
+			walkE = walkV.getPrevEdge(walkE); // to make a loop in clockwise
 		} while (walkV != startingVertex);
 		face.makeHalfedgeLoop();
 		face.buildOutline();

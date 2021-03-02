@@ -25,8 +25,8 @@ import javax.vecmath.Vector3d;
  * A half-edge is a directed edge on an undirected edge. Half-edge has a pair,
  * which is a half-edge with reversed direction of the half-edge. Each face is
  * surrounded by half-edges in clockwise or counterclockwise direction (it
- * depends on the implementation. ORIPA uses counterclockwise direction on the
- * screen). Each of surrounding half-edges has a reference to such a face.
+ * depends on the implementation. ORIPA uses clockwise direction on the screen).
+ * Each of surrounding half-edges has a reference to such a face.
  *
  * @author OUCHI Koji
  *
