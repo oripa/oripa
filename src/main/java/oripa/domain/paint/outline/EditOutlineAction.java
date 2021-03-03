@@ -20,7 +20,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 		setEditMode(EditMode.OTHER);
 	}
 
-	private class DrawTempOutlines implements PairLoop.Block<Vector2d> {
+	private class DrawTempOutlines {
 
 		private Graphics2D g2d;
 
@@ -33,19 +33,12 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 			if (outlineVertices.size() > 1) {
 				PairLoop.iterateWithCount(
-						outlineVertices, outlineVertices.size() - 1, this);
+						outlineVertices, outlineVertices.size() - 1, (p0, p1) -> {
+							g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
+							return true;
+						});
 			}
 		}
-
-		@Override
-		public boolean yield(final Vector2d p0,
-				final Vector2d p1) {
-
-			g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
-
-			return true;
-		}
-
 	}
 
 	@Override

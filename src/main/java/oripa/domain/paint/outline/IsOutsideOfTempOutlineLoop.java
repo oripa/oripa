@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.paint.util.PairLoop;
 import oripa.geom.GeomUtil;
 
-public class IsOutsideOfTempOutlineLoop implements PairLoop.Block<Vector2d> {
+public class IsOutsideOfTempOutlineLoop {
 	private static final Logger logger = LoggerFactory.getLogger(IsOutsideOfTempOutlineLoop.class);
 	private static final double EPS = 1e-4;
 	private Vector2d target;
@@ -32,17 +32,11 @@ public class IsOutsideOfTempOutlineLoop implements PairLoop.Block<Vector2d> {
 		// recreate to start the loop from p1
 		iterator = outLineVertices.iterator();
 		iterator.next();
-		return PairLoop.iterateFrom(iterator, outLineVertices, this) != null;
+		return PairLoop.iterateFrom(iterator, outLineVertices, (p, q) -> {
+			var ccwValue = GeomUtil.CCWcheck(p, q, target, EPS);
+			logger.trace(p + "," + q + "," + target + " -> " + ccwValue);
+			return CCWFlg == ccwValue;
+		}) != null;
 
 	}
-
-	@Override
-	public boolean yield(final Vector2d p0, final Vector2d p1) {
-		var ccwValue = GeomUtil.CCWcheck(p0, p1, target, EPS);
-
-		logger.trace(p0 + "," + p1 + "," + target + " -> " + ccwValue);
-
-		return CCWFlg == ccwValue;
-	}
-
 }

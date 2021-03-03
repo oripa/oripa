@@ -19,27 +19,6 @@ import oripa.value.OriLine;
 public class CloseTempOutline {
 	private static final Logger logger = LoggerFactory.getLogger(CloseTempOutline.class);
 
-	private class ContourLineAdder implements PairLoop.Block<Vector2d> {
-
-		private final CreasePatternInterface creasePattern;
-
-		public ContourLineAdder(final CreasePatternInterface creasePattern) {
-			this.creasePattern = creasePattern;
-		}
-
-		@Override
-		public boolean yield(final Vector2d element, final Vector2d nextElement) {
-			var painter = new Painter(creasePattern);
-
-			var overlappingExtractor = new OverlappingLineExtractor();
-			var line = new OriLine(element, nextElement, OriLine.Type.CUT);
-			painter.removeLines(overlappingExtractor.extract(creasePattern, line));
-			painter.addLine(line);
-
-			return true;
-		}
-	}
-
 	public void execute(final CreasePatternInterface creasePattern,
 			final Collection<Vector2d> outlineVertices) {
 
@@ -49,8 +28,16 @@ public class CloseTempOutline {
 		creasePattern.removeAll(outlines);
 
 		// Update the contour line
-		PairLoop.iterateAll(
-				outlineVertices, new ContourLineAdder(creasePattern));
+		PairLoop.iterateAll(outlineVertices, (element, nextElement) -> {
+			var painter = new Painter(creasePattern);
+
+			var overlappingExtractor = new OverlappingLineExtractor();
+			var line = new OriLine(element, nextElement, OriLine.Type.CUT);
+			painter.removeLines(overlappingExtractor.extract(creasePattern, line));
+			painter.addLine(line);
+
+			return true;
+		});
 
 		// Delete segments outside of the contour
 		removeLinesOutsideOfOutline(creasePattern, outlineVertices);
