@@ -1,5 +1,6 @@
 package oripa.domain.paint.outline;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +44,6 @@ public class CloseTempOutline {
 			final Collection<Vector2d> outlineVertices) {
 
 		// Delete the current outline
-
 		List<OriLine> outlines = creasePattern.stream()
 				.filter(line -> line.isBoundary()).collect(Collectors.toList());
 		creasePattern.removeAll(outlines);
@@ -52,13 +52,14 @@ public class CloseTempOutline {
 		PairLoop.iterateAll(
 				outlineVertices, new ContourLineAdder(creasePattern));
 
-		// To delete a segment out of the contour
-		while (removeLinesOutsideOfOutline(creasePattern, outlineVertices)) {
-		}
+		// Delete segments outside of the contour
+		removeLinesOutsideOfOutline(creasePattern, outlineVertices);
 	}
 
-	private boolean removeLinesOutsideOfOutline(final CreasePatternInterface creasePattern,
+	private void removeLinesOutsideOfOutline(final CreasePatternInterface creasePattern,
 			final Collection<Vector2d> outlineVertices) {
+		var toBeRemoved = new ArrayList<OriLine>();
+
 		for (OriLine line : creasePattern) {
 			if (line.isBoundary()) {
 				continue;
@@ -70,13 +71,11 @@ public class CloseTempOutline {
 			logger.debug("line = " + line);
 			logger.debug("onPoint0 = " + onPoint0);
 			logger.debug("onPoint1 = " + onPoint1);
-
-			Painter painter = new Painter(creasePattern);
-			if (onPoint0 != null && onPoint0 == onPoint1) {
-				painter.removeLine(line);
-				logger.debug("line is removed: it's on contour.");
-				return true;
-			}
+			// meaningless?
+//			if (onPoint0 != null && onPoint0 == onPoint1) {
+//				toBeRemoved.add(line);
+//				logger.debug("line is removed: it's on contour.");
+//			}
 
 			var isOutsideP0 = isOutsideOfTmpOutlineLoop(outlineVertices, line.p0);
 			var isOutsideP1 = isOutsideOfTmpOutlineLoop(outlineVertices, line.p1);
@@ -87,12 +86,12 @@ public class CloseTempOutline {
 			logger.debug("isOutsideP1 = " + isOutsideP1);
 
 			if ((onPoint0 == null && isOutsideP0) || (onPoint1 == null && isOutsideP1)) {
-				painter.removeLine(line);
+				toBeRemoved.add(line);
 				logger.debug("line is removed: it's outside of contour.");
-				return true;
 			}
 		}
-		return false;
+		var painter = new Painter(creasePattern);
+		painter.removeLines(toBeRemoved);
 	}
 
 	private Vector2d isOnTmpOutlineLoop(

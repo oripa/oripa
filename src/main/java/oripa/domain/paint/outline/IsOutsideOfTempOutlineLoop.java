@@ -27,7 +27,7 @@ public class IsOutsideOfTempOutlineLoop implements PairLoop.Block<Vector2d> {
 		Vector2d p1 = iterator.next();
 
 		CCWFlg = GeomUtil.CCWcheck(p0, p1, target, EPS);
-		logger.debug(p0 + "," + p1 + "," + target + " -> " + CCWFlg);
+		logger.trace(p0 + "," + p1 + "," + target + " -> " + CCWFlg);
 
 		// recreate to start the loop from p1
 		iterator = outLineVertices.iterator();
@@ -40,7 +40,7 @@ public class IsOutsideOfTempOutlineLoop implements PairLoop.Block<Vector2d> {
 	public boolean yield(final Vector2d p0, final Vector2d p1) {
 		var ccwValue = GeomUtil.CCWcheck(p0, p1, target, EPS);
 
-		logger.debug(p0 + "," + p1 + "," + target + " -> " + ccwValue);
+		logger.trace(p0 + "," + p1 + "," + target + " -> " + ccwValue);
 
 		return CCWFlg == ccwValue;
 	}
