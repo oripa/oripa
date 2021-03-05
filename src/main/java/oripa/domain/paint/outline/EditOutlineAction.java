@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
@@ -16,7 +17,7 @@ import oripa.domain.paint.util.PairLoop;
 public class EditOutlineAction extends GraphicMouseAction {
 
 	public EditOutlineAction() {
-		setActionState(new SelectingVertexForOutline());
+		setActionState(new SelectingVertexForOutline(new OverlappingLineExtractor()));
 		setEditMode(EditMode.OTHER);
 	}
 

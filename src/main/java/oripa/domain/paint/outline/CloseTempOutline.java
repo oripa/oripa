@@ -19,28 +19,45 @@ import oripa.value.OriLine;
 public class CloseTempOutline {
 	private static final Logger logger = LoggerFactory.getLogger(CloseTempOutline.class);
 
-	public void execute(final CreasePatternInterface creasePattern,
-			final Collection<Vector2d> outlineVertices) {
+	private final Painter painter;
+	private final OverlappingLineExtractor overlappingExtractor;
+
+	/**
+	 * Constructor
+	 */
+	public CloseTempOutline(final Painter painter, final OverlappingLineExtractor overlappingExtractor) {
+		this.painter = painter;
+		this.overlappingExtractor = overlappingExtractor;
+	}
+
+	public void execute(final Collection<Vector2d> outlineVertices) {
+		var creasePattern = painter.getCreasePattern();
 
 		// Delete the current outline
 		List<OriLine> outlines = creasePattern.stream()
 				.filter(line -> line.isBoundary()).collect(Collectors.toList());
 		creasePattern.removeAll(outlines);
 
-		// Update the contour line
-		PairLoop.iterateAll(outlineVertices, (element, nextElement) -> {
-			var painter = new Painter(creasePattern);
+		addNewOutline(creasePattern, outlineVertices);
 
-			var overlappingExtractor = new OverlappingLineExtractor();
+		removeLinesOutsideOfOutline(creasePattern, outlineVertices);
+	}
+
+	private void addNewOutline(final CreasePatternInterface creasePattern,
+			final Collection<Vector2d> outlineVertices) {
+		var overlappings = new ArrayList<OriLine>();
+		var lines = new ArrayList<OriLine>();
+
+		PairLoop.iterateAll(outlineVertices, (element, nextElement) -> {
 			var line = new OriLine(element, nextElement, OriLine.Type.CUT);
-			painter.removeLines(overlappingExtractor.extract(creasePattern, line));
-			painter.addLine(line);
+			lines.add(line);
+			overlappings.addAll(overlappingExtractor.extract(creasePattern, line));
 
 			return true;
 		});
 
-		// Delete segments outside of the contour
-		removeLinesOutsideOfOutline(creasePattern, outlineVertices);
+		painter.removeLines(overlappings);
+		painter.addLines(lines);
 	}
 
 	private void removeLinesOutsideOfOutline(final CreasePatternInterface creasePattern,
@@ -77,7 +94,7 @@ public class CloseTempOutline {
 				logger.debug("line is removed: it's outside of contour.");
 			}
 		}
-		var painter = new Painter(creasePattern);
+
 		painter.removeLines(toBeRemoved);
 	}
 

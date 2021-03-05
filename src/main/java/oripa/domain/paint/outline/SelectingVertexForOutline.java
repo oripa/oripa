@@ -8,13 +8,23 @@ import javax.vecmath.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.cptool.OverlappingLineExtractor;
+import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
 
 public class SelectingVertexForOutline extends PickingVertex {
 	private static final Logger logger = LoggerFactory.getLogger(SelectingVertexForOutline.class);
+
+	private final OverlappingLineExtractor overlappingExtractor;
+
+	/**
+	 * Constructor
+	 */
+	public SelectingVertexForOutline(final OverlappingLineExtractor overlappingExtractor) {
+		this.overlappingExtractor = overlappingExtractor;
+	}
 
 	@Override
 	protected void initialize() {
@@ -41,7 +51,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 				// finish editing
 
 				context.creasePatternUndo().pushUndoInfo();
-				closeTmpOutline(context.getPickedVertices(), context.getCreasePattern());
+				closeTmpOutline(context.getPickedVertices(), context.getPainter());
 
 				context.clear(false);
 				context.setMissionCompleted(true);
@@ -54,10 +64,9 @@ public class SelectingVertexForOutline extends PickingVertex {
 		logger.debug("# of picked vertices (after): " + context.getPickedVertices().size());
 	}
 
-	private void closeTmpOutline(final Collection<Vector2d> outlineVertices,
-			final CreasePatternInterface creasePattern) {
+	private void closeTmpOutline(final Collection<Vector2d> outlineVertices, final Painter painter) {
 
-		(new CloseTempOutline()).execute(creasePattern, outlineVertices);
+		(new CloseTempOutline(painter, overlappingExtractor)).execute(outlineVertices);
 
 	}
 
