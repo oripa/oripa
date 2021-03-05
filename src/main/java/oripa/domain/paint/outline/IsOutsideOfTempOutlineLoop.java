@@ -14,7 +14,6 @@ import oripa.geom.GeomUtil;
 public class IsOutsideOfTempOutlineLoop {
 	private static final Logger logger = LoggerFactory.getLogger(IsOutsideOfTempOutlineLoop.class);
 	private static final double EPS = 1e-4;
-	private int CCWFlg;
 
 	public boolean execute(
 			final Collection<Vector2d> outLineVertices, final Vector2d target) {
@@ -22,16 +21,16 @@ public class IsOutsideOfTempOutlineLoop {
 		Vector2d p0 = iterator.next();
 		Vector2d p1 = iterator.next();
 
-		CCWFlg = GeomUtil.CCWcheck(p0, p1, target, EPS);
-		logger.trace(p0 + "," + p1 + "," + target + " -> " + CCWFlg);
+		int ccwFlag = GeomUtil.CCWcheck(p0, p1, target, EPS);
+		logger.trace(p0 + "," + p1 + "," + target + " -> " + ccwFlag);
 
 		// recreate to start the loop from p1
 		iterator = outLineVertices.iterator();
-		iterator.next();
+		iterator.next(); // waste p0
 		return PairLoop.iterateFrom(iterator, outLineVertices, (p, q) -> {
 			var ccwValue = GeomUtil.CCWcheck(p, q, target, EPS);
 			logger.trace(p + "," + q + "," + target + " -> " + ccwValue);
-			return CCWFlg == ccwValue;
+			return ccwFlag == ccwValue;
 		}) != null;
 
 	}
