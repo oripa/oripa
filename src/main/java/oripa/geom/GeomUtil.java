@@ -448,9 +448,9 @@ public class GeomUtil {
 	 * @param p1
 	 * @param q
 	 * @param eps
-	 * @return 1 if vector p0 -> q ends on the left side of p1 -> p0 (q is at
-	 *         counterclockwise position), 0 if p0-p1 and p0-q is collinear,
-	 *         otherwise -1;
+	 * @return 1 if vector p0 -> q ends on the left side of p0 -> p1 (q is at
+	 *         counterclockwise position in right-handed coordinate system), 0
+	 *         if p0-p1 and p0-q is collinear, otherwise -1;
 	 */
 	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q, final double eps) {
 		var value = computeCCW(p0, p1, q);

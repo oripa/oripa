@@ -14,14 +14,10 @@ import oripa.geom.GeomUtil;
 public class IsOutsideOfTempOutlineLoop {
 	private static final Logger logger = LoggerFactory.getLogger(IsOutsideOfTempOutlineLoop.class);
 	private static final double EPS = 1e-4;
-	private Vector2d target;
 	private int CCWFlg;
 
 	public boolean execute(
-			final Collection<Vector2d> outLineVertices, final Vector2d v) {
-
-		target = v;
-
+			final Collection<Vector2d> outLineVertices, final Vector2d target) {
 		Iterator<Vector2d> iterator = outLineVertices.iterator();
 		Vector2d p0 = iterator.next();
 		Vector2d p1 = iterator.next();
