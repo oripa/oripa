@@ -27,5 +27,5 @@ public class Constants {
 
 	public final static double DEFAULT_PAPER_SIZE = 400;
 	public final static int DEFAULT_GRID_DIV_NUM = 4;
-	public final static String UER_HOME_DIR_PATH = System.getProperty("user.home");
+	public final static String USER_HOME_DIR_PATH = System.getProperty("user.home");
 }

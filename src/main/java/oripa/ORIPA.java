@@ -42,7 +42,7 @@ public class ORIPA {
 	// TODO: Change to use ResourceHolder.
 	public static ResourceBundle res;
 
-	public static String iniFilePath = Constants.UER_HOME_DIR_PATH + File.separator
+	public static String iniFilePath = Constants.USER_HOME_DIR_PATH + File.separator
 			+ "oripa.ini";
 
 	private static final String resourcePackage = "oripa.resource";

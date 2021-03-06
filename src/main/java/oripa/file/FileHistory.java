@@ -82,7 +82,7 @@ public class FileHistory {
 	 */
 	public String getLastPath() {
 		if (mostRecentlyUsedHistory.isEmpty()) {
-			return Constants.UER_HOME_DIR_PATH;
+			return Constants.USER_HOME_DIR_PATH;
 		}
 
 		return mostRecentlyUsedHistory.getFirst();
@@ -94,14 +94,14 @@ public class FileHistory {
 	 */
 	public String getLastDirectory() {
 		if (mostRecentlyUsedHistory.isEmpty()) {
-			return Constants.UER_HOME_DIR_PATH;
+			return Constants.USER_HOME_DIR_PATH;
 		}
 
 		File file = new File(mostRecentlyUsedHistory.getFirst());
 		try {
 			return file.getParentFile().getCanonicalPath();
 		} catch (IOException e) {
-			return Constants.UER_HOME_DIR_PATH;
+			return Constants.USER_HOME_DIR_PATH;
 		}
 	}
 
