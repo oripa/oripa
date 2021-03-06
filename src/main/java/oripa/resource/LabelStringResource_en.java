@@ -85,6 +85,18 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.UI.VIEW_SETTINGS_PANEL_ID, "View" },
 
 			{ StringID.UI.SHORTCUT_ID, "Shortcut:" },
+
+			{ StringID.ModelMenu.FILE_ID, "File" },
+			{ StringID.ModelMenu.DISPLAY_ID, "Display" },
+			{ StringID.ModelMenu.EXPORT_DXF_ID, "Export model lines (DXF)" },
+			{ StringID.ModelMenu.EXPORT_OBJ_ID, "Export to OBJ file" },
+			{ StringID.ModelMenu.INVERT_ID, "Invert" },
+			{ StringID.ModelMenu.DIRECTION_BASIC_ID, "L: Rot R:Move Wheel:Zoom" },
+			{ StringID.ModelMenu.DISPLAY_TYPE_ID, "Drawing type" },
+			{ StringID.ModelMenu.FILL_ALPHA_ID, "Fill transmission" },
+			{ StringID.ModelMenu.DRAW_LINES_ID, "Draw lines" },
+			{ StringID.ModelMenu.TITLE_ID, "Expected Folded Origami" },
+			{ StringID.ModelMenu.SHOW_CROSS_LINE_ID, "Show cross-line" },
 	};
 
 	@Override

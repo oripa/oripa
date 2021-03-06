@@ -58,6 +58,7 @@ public class EstimationResultUI extends JPanel {
 	private JCheckBox jCheckBoxFillFace = null;
 	private JButton jButtonExport = null;
 
+	// TODO: create label resource and apply it.
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
 	private String lastFilePath = null;

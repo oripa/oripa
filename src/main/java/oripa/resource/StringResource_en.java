@@ -20,6 +20,7 @@ package oripa.resource;
 
 import java.util.ListResourceBundle;
 
+//Old data. Not in use.
 public class StringResource_en extends ListResourceBundle {
 
 	static final Object[][] strings = {
@@ -85,8 +86,6 @@ public class StringResource_en extends ListResourceBundle {
 			{ StringID.ModelMenu.DIRECTION_BASIC_ID,
 					"    L: Rot R:Move Wheel:Zoom " },
 			{ StringID.ModelMenu.DISPLAY_TYPE_ID, "Drawing type" },
-			{ StringID.ModelMenu.FILL_COLOR_ID, "Fill Color: may be wrong" },
-			{ StringID.ModelMenu.FILL_WHITE_ID, "Fill White: may be wrong" },
 			{ StringID.ModelMenu.FILL_ALPHA_ID, "Fill Transmission" },
 			{ StringID.ModelMenu.DRAW_LINES_ID, "Draw Lines" },
 			{ StringID.ModelMenu.TITLE_ID, "Expected Folded Origami" }

@@ -29,21 +29,23 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.ORIPA;
 import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.doc.OrigamiModelFileTypeKey;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.Constants.ModelDisplayMode;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
 import oripa.util.gui.CallbackOnUpdate;
+import oripa.util.gui.Dialogs;
 import oripa.viewsetting.main.MainScreenSetting;
 
 /**
@@ -55,25 +57,28 @@ import oripa.viewsetting.main.MainScreenSetting;
 public class ModelViewFrame extends JFrame
 		implements AdjustmentListener {
 	private final static Logger logger = LoggerFactory.getLogger(ModelViewFrame.class);
+	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private ModelViewScreen screen;
-	private final JMenu menuDisp = new JMenu(ORIPA.res.getString("MENU_Disp"));
-	private final JMenu menuFile = new JMenu(ORIPA.res.getString("File"));
+	private final JMenu menuDisp = new JMenu(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.DISPLAY_ID));
+	private final JMenu menuFile = new JMenu(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.FILE_ID));
 	private final JMenuItem menuItemExportDXF = new JMenuItem(
-			ORIPA.res.getString("MENU_ExportModelLine_DXF"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.EXPORT_DXF_ID));
 	private final JMenuItem menuItemExportOBJ = new JMenuItem(
-			"Export to OBJ file");
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.EXPORT_OBJ_ID));
 	private final JMenuItem menuItemFlip = new JMenuItem(
-			ORIPA.res.getString("MENU_Invert"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.INVERT_ID));
 	private final JCheckBoxMenuItem menuItemCrossLine = new JCheckBoxMenuItem(
-			"Show Cross-Line", false);
-	private final JLabel hintLabel = new JLabel(ORIPA.res.getString("Direction_Basic"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.SHOW_CROSS_LINE_ID), false);
+	private final JLabel hintLabel = new JLabel(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.DIRECTION_BASIC_ID));
 	private final JMenu dispSubMenu = new JMenu(
-			ORIPA.res.getString("MENU_DispType"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.DISPLAY_TYPE_ID));
 	private final JRadioButtonMenuItem menuItemFillAlpha = new JRadioButtonMenuItem(
-			ORIPA.res.getString("MENU_FillAlpha"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.FILL_ALPHA_ID));
 	private final JRadioButtonMenuItem menuItemFillNone = new JRadioButtonMenuItem(
-			ORIPA.res.getString("MENU_DrawLines"));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.DRAW_LINES_ID));
 	private final JScrollBar scrollBarAngle = new JScrollBar(
 			JScrollBar.HORIZONTAL, 90, 5, 0, 185);
 	private final JScrollBar scrollBarPosition = new JScrollBar(
@@ -99,7 +104,7 @@ public class ModelViewFrame extends JFrame
 	private void initialize(final CutModelOutlinesHolder lineHolder,
 			final CallbackOnUpdate onUpdateCrossLine) {
 
-		setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));
+		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.TITLE_ID));
 		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine, mainScreenSetting);
 
 		getContentPane().setLayout(new BorderLayout());
@@ -187,7 +192,8 @@ public class ModelViewFrame extends JFrame
 		} catch (FileChooserCanceledException e) {
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, e, "Error", JOptionPane.ERROR_MESSAGE);
+			Dialogs.showErrorDialog(this, resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID),
+					e);
 		}
 	}
 

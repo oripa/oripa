@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.halfedge.OrigamiModel;
 
+// TODO: create label resource and apply it.
 public class EstimationResultFrame extends JFrame implements ActionListener {
 
 	FoldedModelScreen screen;
