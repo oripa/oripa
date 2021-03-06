@@ -770,6 +770,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void windowClosing(final WindowEvent arg0) {
 
 		if (paintContext.creasePatternUndo().changeExists()) {
+			// TODO: Use label resource.
 			// confirm saving edited opx
 			int selected = JOptionPane
 					.showConfirmDialog(

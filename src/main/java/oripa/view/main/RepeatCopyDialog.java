@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 
+// TODO: Use label resource.
 public class RepeatCopyDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;

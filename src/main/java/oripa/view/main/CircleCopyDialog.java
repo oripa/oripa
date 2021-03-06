@@ -31,6 +31,7 @@ import javax.swing.JTextField;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 
+// TODO: Use label resource.
 public class CircleCopyDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
