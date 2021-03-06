@@ -23,6 +23,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 	 * Constructor
 	 */
 	public SelectingVertexForOutline(final OverlappingLineExtractor overlappingExtractor) {
+		super();
 		this.overlappingExtractor = overlappingExtractor;
 	}
 
