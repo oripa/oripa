@@ -19,61 +19,57 @@
 package oripa.domain.paint.outline;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import oripa.domain.cptool.OverlappingLineExtractor;
-import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
 @ExtendWith(MockitoExtension.class)
-class CloseTempOutlineTest {
+class IsOutsideOfTempOutlineLoopTest {
 	@InjectMocks
-	private CloseTempOutline closer;
-	@Mock
-	private Painter painter;
-	@Mock
-	private OverlappingLineExtractor overlappingExtractor;
+	private IsOutsideOfTempOutlineLoop isOutside;
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.paint.outline.CloseTempOutline#execute(java.util.Collection)}.
+	 * {@link oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop#execute(java.util.Collection, javax.vecmath.Vector2d)}.
 	 */
 	@Test
-	void testExecute() {
-//		var creasePattern = mock(CreasePatternInterface.class);
-		var creasePattern = (new CreasePatternFactory()).createCreasePattern(List.of(
-				new OriLine(0, 0, 1, 0, OriLine.Type.CUT), new OriLine(1, 0, 1, 1, OriLine.Type.CUT),
-				new OriLine(1, 1, 0, 1, OriLine.Type.CUT), new OriLine(0, 1, 0, 0, OriLine.Type.CUT),
-				new OriLine(0.5, 0.5, 0.9, 0.5, OriLine.Type.CUT)));
-
-		when(painter.getCreasePattern()).thenReturn(creasePattern);
-
+	void testExecute_outside() {
 		var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
-		closer.execute(outlineVertices);
+		var target = new Vector2d(0, 0.5);
 
-		var linesCaptor = ArgumentCaptor.forClass(Collection.class);
+		var result = isOutside.execute(outlineVertices, target);
 
-		verify(painter, times(2)).removeLines(anyCollection());
-		verify(painter).addLines(linesCaptor.capture());
-		assertEquals(outlineVertices.size(), linesCaptor.getValue().size());
+		assertTrue(result);
+	}
+
+	@Test
+	void testExecute_outside_fix_v145() {
+		var outlineVertices = List.of(new Vector2d(-200, -200), new Vector2d(-200, 200), new Vector2d(200, 200));
+		var target = new Vector2d(200, 0);
+
+		var result = isOutside.execute(outlineVertices, target);
+
+		assertTrue(result);
+	}
+
+	@Test
+	void testExecute_inside() {
+		var outlineVertices = List.of(new Vector2d(-200, -200), new Vector2d(-200, 200), new Vector2d(200, 200));
+		var target = new Vector2d(-1, 0);
+
+		var result = isOutside.execute(outlineVertices, target);
+
+		assertFalse(result);
 	}
 
 }
