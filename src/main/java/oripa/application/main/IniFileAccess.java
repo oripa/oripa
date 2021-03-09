@@ -18,13 +18,13 @@
  */
 package oripa.application.main;
 
-import oripa.ORIPA;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.file.InitData;
 import oripa.file.InitDataBuilder;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.resource.Constants;
 
 /**
  * handle {@link oripa.file.IniFile} save and load
@@ -77,11 +77,11 @@ public class IniFileAccess {
 				.setVertexVisible(paintContext.isVertexVisible())
 				.get();
 
-		writer.write(ini, ORIPA.iniFilePath);
+		writer.write(ini, Constants.INI_FILE_PATH);
 	}
 
 	public InitData load() {
-		var ini = reader.read(ORIPA.iniFilePath);
+		var ini = reader.read(Constants.INI_FILE_PATH);
 		return ini;
 	}
 }

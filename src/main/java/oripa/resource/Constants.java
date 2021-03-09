@@ -18,14 +18,17 @@
 
 package oripa.resource;
 
+import java.io.File;
+
 public class Constants {
 
 	public static enum ModelDisplayMode {
-//		FILL_COLOR, FILL_WHITE,
 		FILL_ALPHA, FILL_NONE
 	};
 
-	public final static double DEFAULT_PAPER_SIZE = 400;
-	public final static int DEFAULT_GRID_DIV_NUM = 4;
-	public final static String USER_HOME_DIR_PATH = System.getProperty("user.home");
+	public static final double DEFAULT_PAPER_SIZE = 400;
+	public static final int DEFAULT_GRID_DIV_NUM = 4;
+	public static final String USER_HOME_DIR_PATH = System.getProperty("user.home");
+	public static final String INI_FILE_PATH = USER_HOME_DIR_PATH + File.separator
+			+ "oripa.ini";
 }

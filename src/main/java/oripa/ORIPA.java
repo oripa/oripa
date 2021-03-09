@@ -20,26 +20,13 @@ package oripa;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import oripa.resource.Constants;
 import oripa.view.main.MainFrame;
 
 public class ORIPA {
-
-	public static String infoString = "ORIPA: (c) 2013- ORIPA OSS Project\n" +
-			"http://github.com/oripa\n" +
-			"ORIPA: (c) 2005-2009 Jun Mitani\nhttp://mitani.cs.tsukuba.ac.jp/\n\n" +
-			"This program comes with ABSOLUTELY NO WARRANTY;\n" +
-			"This is free software, and you are welcome to redistribute it\n" +
-			"under certain conditions; For details check:\nhttp://www.gnu.org/licenses/gpl.html";
-
-	public static String iniFilePath = Constants.USER_HOME_DIR_PATH + File.separator
-			+ "oripa.ini";
-
 	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			int uiPanelWidth = 0;// 150;
