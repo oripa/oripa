@@ -89,9 +89,8 @@ public class FaceMaker {
 			return null;
 		}
 
-		var face = new ArrayList<Integer>();
+		var face = new ArrayList<Integer>(edge);
 
-		face.addAll(edge);
 		unusedDirectedEdges.remove(edge);
 
 		var u = edge.get(0);

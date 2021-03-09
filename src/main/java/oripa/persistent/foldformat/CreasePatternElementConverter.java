@@ -34,9 +34,9 @@ import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
 /**
- * This converter stores each result of conversion methods and reuse them for
- * efficiency. So you cannot use the same instance of this converter for
- * converting different crease patterns.
+ * This converter stores each result of toXXX() conversion methods and reuse
+ * them for efficiency. So you cannot use the same instance of this converter
+ * for converting different crease patterns.
  *
  * @author Koji
  *
