@@ -18,6 +18,7 @@
 
 package oripa;
 
+// TODO: Move to resource package to remove circular dependency.
 public class Config {
 
 	final public static boolean FOR_STUDY = false;

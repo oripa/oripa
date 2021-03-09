@@ -27,6 +27,8 @@ import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
+// TODO: Move this class to the package of persistence layer in order to remove circular dependency.
+// This change disables to read old opx file since serialization target becomes different.
 public class DataSet {
 
 	private int mainVersion;

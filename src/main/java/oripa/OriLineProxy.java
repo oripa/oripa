@@ -22,6 +22,8 @@ import javax.vecmath.Vector2d;
 
 import oripa.value.OriLine;
 
+//TODO: Move this class to the package of persistence layer in order to remove circular dependency.
+//This change disables to read old opx file since serialization target becomes different.
 public class OriLineProxy {
 	private double x0;
 	private double y0;
