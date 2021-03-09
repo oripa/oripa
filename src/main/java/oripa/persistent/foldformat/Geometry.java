@@ -50,8 +50,8 @@ public final class Geometry {
 
 			angle = Math.atan2(dir.y, dir.x);
 
-			logger.debug("dir = (" + dir.x + ", " + dir.y + ")");
-			logger.debug("angle = " + angle);
+			logger.trace("dir = (" + dir.x + ", " + dir.y + ")");
+			logger.trace("angle = " + angle);
 		}
 
 		/*

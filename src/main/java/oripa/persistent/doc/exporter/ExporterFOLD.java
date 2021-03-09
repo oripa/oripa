@@ -18,8 +18,9 @@
  */
 package oripa.persistent.doc.exporter;
 
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,7 @@ public class ExporterFOLD implements DocExporter {
 			logger.info("Faces are not created.", e);
 		}
 
-		try (var writer = new FileWriter(filePath)) {
+		try (var writer = Files.newBufferedWriter(Path.of(filePath))) {
 			var gson = new GsonBuilder().setPrettyPrinting().create();
 			gson.toJson(foldFormat, writer);
 			writer.flush();

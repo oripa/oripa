@@ -29,10 +29,20 @@ import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
 /**
+ * This converter stores each result of conversion methods and reuse them for
+ * efficiency. So you cannot use the same instance of this converter for
+ * converting different crease patterns.
+ *
  * @author Koji
  *
  */
 public class CreasePatternElementConverter {
+	private List<List<Double>> verticesCoords;
+	private List<List<Integer>> edgesVertices;
+	private List<String> edgesAssignment;
+	private List<List<Integer>> verticesVertices;
+	private List<List<Integer>> facesVertices;
+
 	/**
 	 * generates a list of coordinates of distinct vertices.
 	 *
@@ -40,12 +50,16 @@ public class CreasePatternElementConverter {
 	 * @return
 	 */
 	public List<List<Double>> toVerticesCoords(final Collection<OriLine> lines) {
-		return lines.stream()
+		if (verticesCoords != null) {
+			return verticesCoords;
+		}
+		verticesCoords = lines.parallelStream()
 				.flatMap(line -> Stream.of(line.p0, line.p1))
 				.distinct()
 				.map(point -> vertexToList(point))
 				.collect(Collectors.toList());
 
+		return verticesCoords;
 	}
 
 	private List<Double> vertexToList(final OriPoint p) {
@@ -62,11 +76,16 @@ public class CreasePatternElementConverter {
 	public List<List<Integer>> toEdgesVertices(final Collection<OriLine> lines) {
 		var coords = toVerticesCoords(lines);
 
-		return lines.stream()
+		if (edgesVertices != null) {
+			return edgesVertices;
+		}
+		edgesVertices = lines.parallelStream()
 				.map(line -> List.of(
 						coords.indexOf(vertexToList(line.p0)),
 						coords.indexOf(vertexToList(line.p1))))
 				.collect(Collectors.toList());
+
+		return edgesVertices;
 	}
 
 	/**
@@ -77,7 +96,10 @@ public class CreasePatternElementConverter {
 	 * @return
 	 */
 	public List<String> toEdgesAssignment(final Collection<OriLine> lines) {
-		return lines.stream()
+		if (edgesAssignment != null) {
+			return edgesAssignment;
+		}
+		edgesAssignment = lines.parallelStream()
 				.map(line -> {
 					switch (line.getType()) {
 					case AUX:
@@ -93,6 +115,8 @@ public class CreasePatternElementConverter {
 					}
 				})
 				.collect(Collectors.toList());
+
+		return edgesAssignment;
 	}
 
 	/**
@@ -103,10 +127,14 @@ public class CreasePatternElementConverter {
 	 * @return
 	 */
 	public List<List<Integer>> toVerticesVertices(final Collection<OriLine> lines) {
+		if (verticesVertices != null) {
+			return verticesVertices;
+		}
+
 		var coords = toVerticesCoords(lines);
 		var edgesVertices = toEdgesVertices(lines);
 
-		var verticesVertices = new ArrayList<List<Integer>>();
+		verticesVertices = new ArrayList<List<Integer>>();
 		coords.forEach(p -> verticesVertices.add(new ArrayList<Integer>()));
 
 		for (int u = 0; u < coords.size(); u++) {
@@ -132,6 +160,11 @@ public class CreasePatternElementConverter {
 
 	public List<List<Integer>> toFacesVertices(final Collection<OriLine> lines)
 			throws IllegalArgumentException {
+
+		if (facesVertices != null) {
+			return facesVertices;
+		}
+
 		var edgesVertices = toEdgesVertices(lines);
 		var verticesVertices = toVerticesVertices(lines);
 		var assignment = toEdgesAssignment(lines);

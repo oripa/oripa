@@ -53,7 +53,7 @@ public class FaceMaker {
 		var u = edge.get(0);
 		var v = edge.get(1);
 
-		if (edgePassed[edge.get(0)][edge.get(1)]) {
+		if (edgePassed[u][v]) {
 			return null;
 		}
 
@@ -92,7 +92,7 @@ public class FaceMaker {
 	 * = (v,w).
 	 */
 	private boolean makeFace(final List<Integer> face, final List<Integer> edge) {
-		logger.debug("called with face: " + face);
+		logger.trace("called with face: " + face);
 
 		var u = edge.get(0);
 		var v = edge.get(1);
