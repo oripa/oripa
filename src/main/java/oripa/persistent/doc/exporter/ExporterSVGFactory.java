@@ -13,6 +13,7 @@ import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
@@ -137,34 +138,12 @@ public class ExporterSVGFactory {
 				bw.write(head);
 				bw.write(gradient);
 
-				ArrayList<OriFace> sortedFaces = new ArrayList<>();
-				boolean[] isSorted = new boolean[faces.size()];
-				for (int i = 0; i < faces.size(); i++) {
-					int[][] overlapRelation = foldedModelInfo
-							.getOverlapRelation();
-
-					for (int j = 0; j < overlapRelation.length; j++) {
-						int numberOf2 = 0;
-						if (!isSorted[j]) {
-							for (int k = 0; k < isSorted.length; k++) {
-								if ((!isSorted[k])
-										&& overlapRelation[j][k] == 2) {
-									numberOf2++;
-								}
-							}
-							if (numberOf2 == 0) {
-								isSorted[j] = true;
-								sortedFaces.add(faces.get(j));
-								break;
-							}
-						}
-					}
-				}
+				var sortedFaces = sortFaces(faces, foldedModelInfo.getOverlapRelation());
 
 				for (int i = 0; i < sortedFaces.size(); i++) {
 					OriFace face = faceOrderFlip ? sortedFaces.get(i)
 							: sortedFaces.get(sortedFaces.size() - i - 1);
-					java.util.ArrayList<Vector2d> points = new java.util.ArrayList<>();
+					var points = new ArrayList<Vector2d>();
 					for (var he : face.halfedgeIterable()) {
 						var position = he.getPosition();
 						var nextPosition = he.getNext().getPosition();
@@ -230,6 +209,32 @@ public class ExporterSVGFactory {
 			}
 			return true;
 
+		}
+
+		private List<OriFace> sortFaces(final List<OriFace> faces, final int[][] overlapRelation) {
+			ArrayList<OriFace> sortedFaces = new ArrayList<>();
+			boolean[] isSorted = new boolean[faces.size()];
+			for (int i = 0; i < faces.size(); i++) {
+
+				for (int j = 0; j < overlapRelation.length; j++) {
+					int countOfLower = 0;
+					if (!isSorted[j]) {
+						for (int k = 0; k < isSorted.length; k++) {
+							if ((!isSorted[k])
+									&& overlapRelation[j][k] == OverlapRelationValues.LOWER) {
+								countOfLower++;
+							}
+						}
+						if (countOfLower == 0) {
+							isSorted[j] = true;
+							sortedFaces.add(faces.get(j));
+							break;
+						}
+					}
+				}
+			}
+
+			return sortedFaces;
 		}
 
 	}
