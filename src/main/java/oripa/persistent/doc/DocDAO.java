@@ -127,7 +127,7 @@ public class DocDAO {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void saveUsingGUIWithModelCheck(final Doc doc, final Component owner,
+	public void saveUsingGUIWithModelCheck(final Doc doc, final String homePath, final Component owner,
 			final FileAccessSupportFilter<Doc> filter)
 			throws FileChooserCanceledException, IOException, IllegalArgumentException {
 		CreasePatternInterface creasePattern = doc.getCreasePattern();
@@ -151,7 +151,7 @@ public class DocDAO {
 			}
 		}
 
-		saveUsingGUI(doc, null, owner, filter);
+		saveUsingGUI(doc, homePath, owner, filter);
 	}
 
 	/**

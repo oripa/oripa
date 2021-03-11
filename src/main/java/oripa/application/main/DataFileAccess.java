@@ -99,10 +99,27 @@ public class DataFileAccess {
 		}
 	}
 
+	/**
+	 * Opens dialog for saving given data to a file. Conducts foldability check
+	 * before saving. The default file name is "export.xxx" where ".xxx" is the
+	 * extension designated by the {@code filter}.
+	 *
+	 * @param document
+	 * @param directory
+	 * @param filter
+	 * @param owner
+	 * @throws FileChooserCanceledException
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 */
 	public void saveFileWithModelCheck(final Doc document,
+			final String directory,
 			final FileAccessSupportFilter<Doc> filter, final Component owner)
 			throws FileChooserCanceledException, IOException, IllegalArgumentException {
-		dao.saveUsingGUIWithModelCheck(document, owner, filter);
+		File givenFile = new File(directory, "export" + filter.getExtensions()[0]);
+		var filePath = givenFile.getCanonicalPath();
+
+		dao.saveUsingGUIWithModelCheck(document, filePath, owner, filter);
 	}
 
 	/**

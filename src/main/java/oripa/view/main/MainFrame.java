@@ -619,7 +619,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 
 		try {
-			dataFileAccess.saveFileWithModelCheck(document, filterSelector.getFilter(type), this);
+			dataFileAccess.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
+					filterSelector.getFilter(type), this);
 		} catch (FileChooserCanceledException e) {
 			logger.info("File selection is canceled.");
 		} catch (IOException e) {
