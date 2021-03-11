@@ -215,17 +215,9 @@ public class ExporterSVGFactory {
 			ArrayList<OriFace> sortedFaces = new ArrayList<>();
 			boolean[] isSorted = new boolean[faces.size()];
 			for (int i = 0; i < faces.size(); i++) {
-
 				for (int j = 0; j < overlapRelation.length; j++) {
-					int countOfLower = 0;
 					if (!isSorted[j]) {
-						for (int k = 0; k < isSorted.length; k++) {
-							if ((!isSorted[k])
-									&& overlapRelation[j][k] == OverlapRelationValues.LOWER) {
-								countOfLower++;
-							}
-						}
-						if (countOfLower == 0) {
+						if (canAddFace(isSorted, overlapRelation[j])) {
 							isSorted[j] = true;
 							sortedFaces.add(faces.get(j));
 							break;
@@ -235,6 +227,16 @@ public class ExporterSVGFactory {
 			}
 
 			return sortedFaces;
+		}
+
+		private boolean canAddFace(final boolean[] isSorted, final int[] overlapRelationOfJ) {
+			for (int k = 0; k < isSorted.length; k++) {
+				if ((!isSorted[k])
+						&& overlapRelationOfJ[k] == OverlapRelationValues.LOWER) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 	}
