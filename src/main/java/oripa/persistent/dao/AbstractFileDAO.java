@@ -1,0 +1,124 @@
+/**
+ * ORIPA - Origami Pattern Editor
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package oripa.persistent.dao;
+
+import java.awt.Component;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import oripa.persistent.filetool.AbstractSavingAction;
+import oripa.persistent.filetool.FileAccessActionProvider;
+import oripa.persistent.filetool.FileAccessSupportFilter;
+import oripa.persistent.filetool.FileChooser;
+import oripa.persistent.filetool.FileChooserCanceledException;
+import oripa.persistent.filetool.FileChooserFactory;
+import oripa.persistent.filetool.FileTypeProperty;
+import oripa.persistent.filetool.FileVersionError;
+import oripa.persistent.filetool.WrongDataFormatException;
+
+/**
+ * @author OUCHI Koji
+ *
+ */
+public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
+
+	protected abstract AbstractFilterSelector<Data> getFilterSelector();
+
+	/* (non Javadoc)
+	 * @see oripa.persistent.doc.DataAccessObject#load(java.lang.String)
+	 */
+	@Override
+	public Data load(final String path)
+			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
+			WrongDataFormatException {
+		var canonicalPath = nullableCanonicalPath(path);
+		var file = new File(canonicalPath);
+
+		if (!file.exists()) {
+			throw new FileNotFoundException(canonicalPath + " doesn't exist.");
+		}
+
+		var loadingAction = getFilterSelector().getLoadableFilterOf(canonicalPath).getLoadingAction();
+
+		return loadingAction.setPath(canonicalPath).load();
+	}
+
+	/* (non Javadoc)
+	 * @see oripa.persistent.doc.DataAccessObject#save(oripa.doc.Doc, java.lang.String, oripa.persistent.filetool.FileTypeProperty)
+	 */
+	@Override
+	public void save(final Data data, final String path, final FileTypeProperty<Data> type)
+			throws IOException, IllegalArgumentException {
+
+		var savingAction = getFilterSelector().getFilter(type).getSavingAction();
+
+		savingAction.setPath(nullableCanonicalPath(path)).save(data);
+	}
+
+	private String nullableCanonicalPath(final String path) throws IOException {
+		return path == null ? null : (new File(path)).getCanonicalPath();
+	}
+
+	/* (non Javadoc)
+	 * @see oripa.persistent.doc.DataAccessObject#saveUsingGUI(oripa.doc.Doc, java.lang.String, java.awt.Component, oripa.persistent.filetool.FileAccessSupportFilter)
+	 */
+	@Override
+	public String saveUsingGUI(final Data data, final String homePath,
+			final Component parent,
+			final FileAccessSupportFilter<Data>... filters)
+			throws FileChooserCanceledException, IOException, IllegalArgumentException {
+		FileChooserFactory<Data> chooserFactory = new FileChooserFactory<>();
+
+		var canonicalPath = nullableCanonicalPath(homePath);
+		FileAccessActionProvider<Data> chooser = chooserFactory.createChooser(
+				canonicalPath, filters);
+
+		try {
+			AbstractSavingAction<Data> saver = chooser.getActionForSavingFile(parent);
+			saver.save(data);
+			return saver.getPath();
+		} catch (IllegalStateException e) {
+			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
+		}
+	}
+
+	/* (non Javadoc)
+	 * @see oripa.persistent.doc.DataAccessObject#loadUsingGUI(java.lang.String, oripa.persistent.filetool.FileAccessSupportFilter, java.awt.Component)
+	 */
+	@Override
+	public Data loadUsingGUI(final String homePath,
+			final FileAccessSupportFilter<Data>[] filters, final Component parent)
+			throws FileVersionError, FileChooserCanceledException, IllegalArgumentException,
+			IOException, FileNotFoundException, WrongDataFormatException {
+		FileChooserFactory<Data> factory = new FileChooserFactory<>();
+
+		var canonicalPath = nullableCanonicalPath(homePath);
+		FileChooser<Data> fileChooser = factory.createChooser(
+				canonicalPath, filters);
+
+		try {
+			return fileChooser.getActionForLoadingFile(parent).load();
+		} catch (IllegalStateException e) {
+			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
+		}
+
+	}
+
+}

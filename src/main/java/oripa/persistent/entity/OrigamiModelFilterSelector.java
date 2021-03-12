@@ -16,35 +16,44 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.model;
+package oripa.persistent.entity;
 
-import java.awt.Component;
-import java.io.IOException;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistent.dao.DataAccessObject;
+import oripa.persistent.dao.AbstractFilterSelector;
 import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.FileChooserCanceledException;
+import oripa.persistent.filetool.FileTypeProperty;
+import oripa.resource.StringID;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class OrigamiModelFileAccess {
-	private final DataAccessObject<OrigamiModel> dao;
+public class OrigamiModelFilterSelector extends AbstractFilterSelector<OrigamiModel> {
+	private final SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupportFilter<OrigamiModel>> filters;
 
 	/**
 	 * Constructor
 	 */
-	public OrigamiModelFileAccess(final DataAccessObject<OrigamiModel> dao) {
-		this.dao = dao;
+	public OrigamiModelFilterSelector() {
+		filters = new TreeMap<>();
+
+		OrigamiModelFileTypeKey key = OrigamiModelFileTypeKey.DXF_MODEL;
+		putFilter(key, createDescription(key, StringID.ModelMenu.FILE_ID));
+
+		key = OrigamiModelFileTypeKey.OBJ_MODEL;
+		putFilter(key, createDescription(key, StringID.ModelMenu.FILE_ID));
+
 	}
 
-	public void save(final OrigamiModel origamiModel, final Component owner,
-			final FileAccessSupportFilter<OrigamiModel>... filters)
-			throws IllegalArgumentException, IOException, FileChooserCanceledException {
-
-		dao.saveUsingGUI(origamiModel, null, owner, filters);
+	/* (non Javadoc)
+	 * @see oripa.persistent.dao.AbstractFilterSelector#getFilters()
+	 */
+	@Override
+	protected SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupportFilter<OrigamiModel>> getFilters() {
+		return filters;
 	}
 
 }

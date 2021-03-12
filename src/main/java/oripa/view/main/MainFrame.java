@@ -63,6 +63,7 @@ import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.persistent.dao.AbstractFilterSelector;
 import oripa.persistent.doc.CreasePatternFileTypeKey;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
@@ -102,7 +103,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
 
-	private final DocFilterSelector filterSelector = new DocFilterSelector();
+	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
 
 	private final Doc document = new Doc();
 
@@ -204,7 +205,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final IniFileAccess iniFileAccess = new IniFileAccess(
 			new InitDataFileReader(), new InitDataFileWriter());
-	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO());
+	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO(new DocFilterSelector()));
 	private final PaintContextModification paintContextModification = new PaintContextModification();
 
 	public MainFrame() {

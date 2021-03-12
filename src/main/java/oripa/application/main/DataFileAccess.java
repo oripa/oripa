@@ -24,9 +24,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.swing.JOptionPane;
+
 import oripa.doc.Doc;
+import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.fold.foldability.FoldabilityChecker;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.persistent.dao.DataAccessObject;
 import oripa.persistent.doc.CreasePatternFileTypeKey;
-import oripa.persistent.doc.DocDAO;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileVersionError;
@@ -38,14 +43,14 @@ import oripa.persistent.filetool.WrongDataFormatException;
  *         interface between the {@code DocDOA} and the {@code Doc} classes
  */
 public class DataFileAccess {
-	private DocDAO dao;
+	private DataAccessObject<Doc> dao;
 
 	@SuppressWarnings("unused")
 	private DataFileAccess() {
 
 	}
 
-	public DataFileAccess(final DocDAO dao) {
+	public DataFileAccess(final DataAccessObject<Doc> dao) {
 		this.dao = dao;
 	}
 
@@ -112,14 +117,35 @@ public class DataFileAccess {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void saveFileWithModelCheck(final Doc document,
+	public void saveFileWithModelCheck(final Doc doc,
 			final String directory,
 			final FileAccessSupportFilter<Doc> filter, final Component owner)
 			throws FileChooserCanceledException, IOException, IllegalArgumentException {
 		File givenFile = new File(directory, "export" + filter.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
-		dao.saveUsingGUIWithModelCheck(document, filePath, owner, filter);
+		CreasePatternInterface creasePattern = doc.getCreasePattern();
+
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		var origamiModel = modelFactory.createOrigamiModel(
+				creasePattern, creasePattern.getPaperSize());
+		doc.setOrigamiModel(origamiModel);
+		var checker = new FoldabilityChecker();
+
+		if (!checker.testLocalFlatFoldability(origamiModel)) {
+
+			var selection = JOptionPane.showConfirmDialog(null,
+					"Warning: Building a set of polygons from crease pattern "
+							+ "was failed.",
+					"Warning", JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.WARNING_MESSAGE);
+
+			if (selection == JOptionPane.CANCEL_OPTION) {
+				return;
+			}
+		}
+
+		dao.saveUsingGUI(doc, filePath, owner, filter);
 	}
 
 	/**

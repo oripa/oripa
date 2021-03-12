@@ -279,7 +279,7 @@ public class EstimationResultUI extends JPanel {
 						doc.setOrigamiModel(origamiModel);
 
 						try {
-							final DocDAO dao = new DocDAO();
+							final DocDAO dao = new DocDAO(null);
 							lastFilePath = dao.saveUsingGUI(
 									doc, lastFilePath, EstimationResultUI.this, createFilters());
 						} catch (FileChooserCanceledException canceledEx) {

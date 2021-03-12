@@ -16,35 +16,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.model;
-
-import java.awt.Component;
-import java.io.IOException;
+package oripa.persistent.entity;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistent.dao.DataAccessObject;
-import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.FileChooserCanceledException;
+import oripa.persistent.dao.AbstractFileDAO;
+import oripa.persistent.dao.AbstractFilterSelector;
+import oripa.persistent.filetool.FileTypeProperty;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class OrigamiModelFileAccess {
-	private final DataAccessObject<OrigamiModel> dao;
+public class OrigamiModelDAO extends AbstractFileDAO<OrigamiModel> {
+	private final AbstractFilterSelector<OrigamiModel> selector;
 
 	/**
 	 * Constructor
+	 *
+	 * @param selector
+	 *            If you don't use {@link #load(String)} and
+	 *            {@link AbstractFileDAO#save(OrigamiModel, String, FileTypeProperty)},
+	 *            {@code selector} can be null.
 	 */
-	public OrigamiModelFileAccess(final DataAccessObject<OrigamiModel> dao) {
-		this.dao = dao;
+	public OrigamiModelDAO(final AbstractFilterSelector<OrigamiModel> selector) {
+		this.selector = selector;
 	}
 
-	public void save(final OrigamiModel origamiModel, final Component owner,
-			final FileAccessSupportFilter<OrigamiModel>... filters)
-			throws IllegalArgumentException, IOException, FileChooserCanceledException {
-
-		dao.saveUsingGUI(origamiModel, null, owner, filters);
+	/* (non Javadoc)
+	 * @see oripa.persistent.dao.AbstractDAO#getFilterSelector()
+	 */
+	@Override
+	protected AbstractFilterSelector<OrigamiModel> getFilterSelector() {
+		return selector;
 	}
 
 }
