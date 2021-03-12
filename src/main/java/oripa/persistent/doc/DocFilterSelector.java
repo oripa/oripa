@@ -129,10 +129,7 @@ public class DocFilterSelector {
 				.collect(Collectors.toList());
 
 		var multi = new MultiTypeAcceptableFileLoadingFilter<Doc>(
-				filters.values().stream()
-						.filter(f -> f.getLoadingAction() != null)
-						.collect(Collectors.toList()),
-				"Any type");
+				loadables, "Any type");
 		loadables.add(multi);
 
 		Collections.sort(loadables);

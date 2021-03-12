@@ -18,6 +18,7 @@
  */
 package oripa.persistent.filetool;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -42,7 +43,8 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 	 * Constructor.
 	 *
 	 * @param filters
-	 *            filters whose loading action objects are not null.
+	 *            filters whose loading action objects are not null. Filters
+	 *            will be copied to this object.
 	 * @param msg
 	 *            message in filter box
 	 * @throws IllegalArgumentException
@@ -64,7 +66,7 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 			}
 		});
 
-		this.filters = filters;
+		this.filters = new ArrayList<>(filters);
 	}
 
 	@Deprecated
