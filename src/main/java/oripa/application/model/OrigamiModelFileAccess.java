@@ -22,14 +22,11 @@ import java.awt.Component;
 import java.io.IOException;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistent.doc.OrigamiModelFileTypeKey;
-import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
-import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
+import oripa.persistent.entity.OrigamiModelFileTypeKey;
 import oripa.persistent.filetool.FileAccessActionProvider;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileChooserFactory;
-import oripa.persistent.filetool.SavingActionTemplate;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -48,16 +45,7 @@ public class OrigamiModelFileAccess {
 						type, resourceHolder.getString(
 								ResourceKey.LABEL, StringID.ModelMenu.FILE_ID)));
 
-		switch (type) {
-		case DXF_MODEL:
-			filter.setSavingAction(
-					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterDXF()));
-			break;
-		case OBJ_MODEL:
-			filter.setSavingAction(
-					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterOBJ()));
-			break;
-		default:
+		if (filter.getSavingAction() == null) {
 			throw new RuntimeException("Wrong implementation");
 		}
 

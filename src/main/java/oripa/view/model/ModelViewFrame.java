@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistent.doc.OrigamiModelFileTypeKey;
+import oripa.persistent.entity.OrigamiModelFileTypeKey;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.Constants.ModelDisplayMode;
 import oripa.resource.ResourceHolder;
