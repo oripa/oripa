@@ -38,7 +38,7 @@ public class FileAccessSupportFilter<Data>
 
 		var loader = fileType.getLoader();
 		if (loader != null) {
-			loadingAction = new LoadingActionTemplate<>(fileType.getLoader());
+			loadingAction = new LoadingActionTemplate<>(loader);
 		}
 	}
 
