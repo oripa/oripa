@@ -48,16 +48,16 @@ public class DocDAO {
 	public Doc load(final String path)
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException {
-
-		var file = new File(path);
+		var canonicalPath = nullableCanonicalPath(path);
+		var file = new File(canonicalPath);
 
 		if (!file.exists()) {
-			throw new FileNotFoundException(path + " doesn't exist.");
+			throw new FileNotFoundException(canonicalPath + " doesn't exist.");
 		}
 
-		var loadingAction = selector.getLoadableFilterOf(path).getLoadingAction();
+		var loadingAction = selector.getLoadableFilterOf(canonicalPath).getLoadingAction();
 
-		return loadingAction.setPath(path).load();
+		return loadingAction.setPath(canonicalPath).load();
 	}
 
 	/**
@@ -79,7 +79,11 @@ public class DocDAO {
 
 		var savingAction = selector.getFilter(type).getSavingAction();
 
-		savingAction.setPath(path).save(doc);
+		savingAction.setPath(nullableCanonicalPath(path)).save(doc);
+	}
+
+	private String nullableCanonicalPath(final String path) throws IOException {
+		return path == null ? null : (new File(path)).getCanonicalPath();
 	}
 
 	/**
@@ -104,8 +108,10 @@ public class DocDAO {
 			final FileAccessSupportFilter<Doc>... filters)
 			throws FileChooserCanceledException, IOException, IllegalArgumentException {
 		FileChooserFactory<Doc> chooserFactory = new FileChooserFactory<>();
+
+		var canonicalPath = nullableCanonicalPath(homePath);
 		FileAccessActionProvider<Doc> chooser = chooserFactory.createChooser(
-				homePath, filters);
+				canonicalPath, filters);
 
 		try {
 			AbstractSavingAction<Doc> saver = chooser.getActionForSavingFile(parent);
@@ -180,8 +186,10 @@ public class DocDAO {
 			throws FileVersionError, FileChooserCanceledException, IllegalArgumentException,
 			IOException, FileNotFoundException, WrongDataFormatException {
 		FileChooserFactory<Doc> factory = new FileChooserFactory<>();
+
+		var canonicalPath = nullableCanonicalPath(homePath);
 		FileChooser<Doc> fileChooser = factory.createChooser(
-				homePath, filters);
+				canonicalPath, filters);
 
 		try {
 			return fileChooser.getActionForLoadingFile(parent).load();
