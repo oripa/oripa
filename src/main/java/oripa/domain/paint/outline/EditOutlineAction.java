@@ -22,12 +22,8 @@ public class EditOutlineAction extends GraphicMouseAction {
 	}
 
 	private class DrawTempOutlines {
-
-		private Graphics2D g2d;
-
 		public void execute(final Graphics2D g2d, final Collection<Vector2d> outlineVertices,
 				final double scale) {
-			this.g2d = g2d;
 			var selector = getElementSelector();
 			g2d.setColor(selector.getEditingOutlineColor());
 			g2d.setStroke(selector.createEditingOutlineStroke(scale));
