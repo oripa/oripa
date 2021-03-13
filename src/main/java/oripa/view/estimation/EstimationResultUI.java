@@ -135,12 +135,11 @@ public class EstimationResultUI extends JPanel {
 		jButtonNextAnswer.setText("Next");
 		jButtonNextAnswer.setBounds(new Rectangle(109, 4, 87, 27));
 
-		jButtonNextAnswer
-				.addActionListener(e -> {
-					foldedModelInfo.setNextIndex();
-					screen.redrawOrigami();
-					updateIndexLabel();
-				});
+		jButtonNextAnswer.addActionListener(e -> {
+			foldedModelInfo.setNextIndex();
+			screen.redrawOrigami();
+			updateIndexLabel();
+		});
 
 		return jButtonNextAnswer;
 	}
@@ -159,12 +158,11 @@ public class EstimationResultUI extends JPanel {
 		jButtonPrevAnswer.setText("Prev");
 		jButtonPrevAnswer.setBounds(new Rectangle(15, 4, 89, 27));
 
-		jButtonPrevAnswer
-				.addActionListener(e -> {
-					foldedModelInfo.setPrevIndex();
-					screen.redrawOrigami();
-					updateIndexLabel();
-				});
+		jButtonPrevAnswer.addActionListener(e -> {
+			foldedModelInfo.setPrevIndex();
+			screen.redrawOrigami();
+			updateIndexLabel();
+		});
 
 		return jButtonPrevAnswer;
 	}
@@ -226,10 +224,9 @@ public class EstimationResultUI extends JPanel {
 		jCheckBoxUseColor.setSelected(true);
 		jCheckBoxUseColor.setText("Use Color");
 
-		jCheckBoxUseColor
-				.addItemListener(e -> {
-					screen.setUseColor(e.getStateChange() == ItemEvent.SELECTED);
-				});
+		jCheckBoxUseColor.addItemListener(e -> {
+			screen.setUseColor(e.getStateChange() == ItemEvent.SELECTED);
+		});
 
 		return jCheckBoxUseColor;
 	}
@@ -272,10 +269,9 @@ public class EstimationResultUI extends JPanel {
 		jCheckBoxFillFace.setSelected(true);
 		jCheckBoxFillFace.setText("FillFace");
 
-		jCheckBoxFillFace
-				.addItemListener(e -> {
-					screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
-				});
+		jCheckBoxFillFace.addItemListener(e -> {
+			screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
+		});
 
 		return jCheckBoxFillFace;
 	}
