@@ -19,19 +19,34 @@
 package oripa.persistent.doc;
 
 import oripa.doc.Doc;
+import oripa.persistent.doc.exporter.ExporterCP;
+import oripa.persistent.doc.exporter.ExporterDXFFactory;
+import oripa.persistent.doc.exporter.ExporterFOLD;
+import oripa.persistent.doc.exporter.ExporterSVGFactory;
+import oripa.persistent.doc.exporter.ExporterXML;
+import oripa.persistent.doc.exporter.PictureExporter;
+import oripa.persistent.doc.loader.LoaderCP;
+import oripa.persistent.doc.loader.LoaderDXF;
+import oripa.persistent.doc.loader.LoaderFOLD;
+import oripa.persistent.doc.loader.LoaderPDF;
+import oripa.persistent.doc.loader.LoaderXML;
 import oripa.persistent.filetool.Exporter;
 import oripa.persistent.filetool.FileTypeProperty;
 import oripa.persistent.filetool.Loader;
-import oripa.persistent.doc.loader.*;
-import oripa.persistent.doc.exporter.*;
 
+/**
+ * File type for crease pattern input/output.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public enum CreasePatternFileTypeKey implements FileTypeProperty<Doc> {
 	OPX("opx", 1, new LoaderXML(), new ExporterXML(), ".opx", ".xml"),
-	FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(),".fold"),
-	PICT("pict", 3, null, new PictureExporter(),".png", ".jpg"),
-	DXF("dxf", 4, new LoaderDXF(), ExporterDXFFactory.createCreasePatternExporter(),".dxf"),
-	CP("cp", 5,  new LoaderCP(), new ExporterCP(),".cp"),
-	SVG("svg", 6,  null, ExporterSVGFactory.createCreasePatternExporter(),".svg"),
+	FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(), ".fold"),
+	PICT("pict", 3, null, new PictureExporter(), ".png", ".jpg"),
+	DXF("dxf", 4, new LoaderDXF(), ExporterDXFFactory.createCreasePatternExporter(), ".dxf"),
+	CP("cp", 5, new LoaderCP(), new ExporterCP(), ".cp"),
+	SVG("svg", 6, null, ExporterSVGFactory.createCreasePatternExporter(), ".svg"),
 	PDF("pdf", 7, new LoaderPDF(), null, ".pdf");
 
 	private final String keyText;
@@ -48,14 +63,14 @@ public enum CreasePatternFileTypeKey implements FileTypeProperty<Doc> {
 	 *            key string
 	 * @param order
 	 *            defines the order of members.
-	 * @param extensions
-	 *            which should be managed as that file type.
 	 * @param loader
 	 * @param exporter
+	 * @param extensions
+	 *            which should be managed as that file type.
 	 */
 	private CreasePatternFileTypeKey(final String key, final Integer order,
-			Loader<Doc> loader,
-			Exporter<Doc> exporter,
+			final Loader<Doc> loader,
+			final Exporter<Doc> exporter,
 			final String... extensions) {
 		this.keyText = key;
 		this.order = order;
@@ -69,31 +84,21 @@ public enum CreasePatternFileTypeKey implements FileTypeProperty<Doc> {
 		return keyText;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.doc.FileTypeProperty#getExtensions()
-	 */
 	@Override
 	public String[] getExtensions() {
 		return extensions;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.filetool.FileTypeProperty#getOrder()
-	 */
 	@Override
 	public Integer getOrder() {
 		return order;
 	}
-	
+
 	@Override
 	public Loader<Doc> getLoader() {
 		return loader;
 	}
-	
+
 	@Override
 	public Exporter<Doc> getExporter() {
 		return exporter;

@@ -34,16 +34,21 @@ import oripa.persistent.filetool.FileVersionError;
 import oripa.persistent.filetool.WrongDataFormatException;
 
 /**
+ * A template for data file access.
+ *
  * @author OUCHI Koji
  *
  */
 public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 
+	/**
+	 *
+	 * @return filter selector managing available file type. {@code null} is
+	 *         acceptable if you don't use {@link #load(String)} and
+	 *         {@link #save(Data, String, FileTypeProperty)}.
+	 */
 	protected abstract AbstractFilterSelector<Data> getFilterSelector();
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.doc.DataAccessObject#load(java.lang.String)
-	 */
 	@Override
 	public Data load(final String path)
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
@@ -60,9 +65,6 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		return loadingAction.setPath(canonicalPath).load();
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.doc.DataAccessObject#save(oripa.doc.Doc, java.lang.String, oripa.persistent.filetool.FileTypeProperty)
-	 */
 	@Override
 	public void save(final Data data, final String path, final FileTypeProperty<Data> type)
 			throws IOException, IllegalArgumentException {
@@ -76,9 +78,6 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		return path == null ? null : (new File(path)).getCanonicalPath();
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.doc.DataAccessObject#saveUsingGUI(oripa.doc.Doc, java.lang.String, java.awt.Component, oripa.persistent.filetool.FileAccessSupportFilter)
-	 */
 	@Override
 	public String saveUsingGUI(final Data data, final String homePath,
 			final Component parent,
@@ -99,9 +98,6 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		}
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.doc.DataAccessObject#loadUsingGUI(java.lang.String, oripa.persistent.filetool.FileAccessSupportFilter, java.awt.Component)
-	 */
 	@Override
 	public Data loadUsingGUI(final String homePath,
 			final FileAccessSupportFilter<Data>[] filters, final Component parent)

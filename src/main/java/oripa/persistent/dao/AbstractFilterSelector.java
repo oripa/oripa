@@ -31,19 +31,28 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
 /**
+ * A template for managing available filters for file access. Typical usage is:
+ * 1) create filters in constructor, and 2) return the filters in getFilters().
+ *
  * @author OUCHI Koji
  *
  */
 public abstract class AbstractFilterSelector<Data> {
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
+	/**
+	 *
+	 * @return available filters.
+	 */
 	protected abstract SortedMap<FileTypeProperty<Data>, FileAccessSupportFilter<Data>> getFilters();
 
 	/**
+	 * A utility method for creating filter. This method provides an explanation
+	 * text for dialog.
 	 *
 	 * @param fileTypeKey
 	 * @param resourceKey
-	 * @return
+	 * @return explanation text for dialog.
 	 */
 	protected String createDescription(final FileTypeProperty<Data> fileTypeKey,
 			final String resourceKey) {
@@ -53,18 +62,14 @@ public abstract class AbstractFilterSelector<Data> {
 	}
 
 	/**
+	 * Creates and puts a filter for given file type key with given description
+	 * to filter map obtained by {@link #getFilters()}.
 	 *
 	 * @param key
 	 * @param desctiption
-	 * @param exporter
-	 * @param loader
 	 */
 	protected void putFilter(final FileTypeProperty<Data> key, final String desctiption) {
-		FileAccessSupportFilter<Data> filter;
-
-		filter = new FileAccessSupportFilter<>(key, desctiption);
-
-		this.putFilter(key, filter);
+		this.putFilter(key, new FileAccessSupportFilter<Data>(key, desctiption));
 	}
 
 	/**
@@ -105,7 +110,7 @@ public abstract class AbstractFilterSelector<Data> {
 
 	/**
 	 *
-	 * @return filters that can load Doc from a file.
+	 * @return filters that can load data from a file.
 	 */
 	public FileAccessSupportFilter<Data>[] getLoadables() {
 		var loadables = getFilters().values().stream()
@@ -152,7 +157,7 @@ public abstract class AbstractFilterSelector<Data> {
 
 	/**
 	 *
-	 * @return filters that can save a Doc object.
+	 * @return filters that can save a data object.
 	 */
 	@SuppressWarnings("unchecked")
 	public FileAccessSupportFilter<Data>[] getSavables() {

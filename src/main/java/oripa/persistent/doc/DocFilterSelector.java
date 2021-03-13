@@ -10,7 +10,8 @@ import oripa.persistent.filetool.FileTypeProperty;
 import oripa.resource.StringID;
 
 /**
- * Manages available filters for file access.
+ * Manages available filters for {@link Doc} file access. Limited to crease
+ * pattern input/output.
  *
  * @author OUCHI Koji
  *
@@ -20,7 +21,6 @@ public class DocFilterSelector extends AbstractFilterSelector<Doc> {
 	private final SortedMap<FileTypeProperty<Doc>, FileAccessSupportFilter<Doc>> filters = new TreeMap<>();
 
 	/**
-	 *
 	 * A constructor that puts default filters into this instance.
 	 */
 	public DocFilterSelector() {
@@ -48,9 +48,6 @@ public class DocFilterSelector extends AbstractFilterSelector<Doc> {
 
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.dao.FilterSelector#getFilters()
-	 */
 	@Override
 	protected SortedMap<FileTypeProperty<Doc>, FileAccessSupportFilter<Doc>> getFilters() {
 		return filters;
