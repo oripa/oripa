@@ -20,8 +20,6 @@ package oripa.view.estimation;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -35,8 +33,7 @@ import oripa.doc.Doc;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.doc.DocDAO;
-import oripa.persistent.doc.FoldedModelFileTypeKey;
-import oripa.persistent.filetool.FileAccessSupportFilter;
+import oripa.persistent.doc.FoldedModelFilterSelector;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -279,9 +276,10 @@ public class EstimationResultUI extends JPanel {
 						doc.setOrigamiModel(origamiModel);
 
 						try {
-							final DocDAO dao = new DocDAO(null);
+							var filterSelector = new FoldedModelFilterSelector(screen.isFaceOrderFlipped());
+							final DocDAO dao = new DocDAO(filterSelector);
 							lastFilePath = dao.saveUsingGUI(
-									doc, lastFilePath, EstimationResultUI.this, createFilters());
+									doc, lastFilePath, EstimationResultUI.this, filterSelector.getSavables());
 						} catch (FileChooserCanceledException canceledEx) {
 						} catch (Exception ex) {
 							logger.error("error: ", ex);
@@ -292,26 +290,4 @@ public class EstimationResultUI extends JPanel {
 		}
 		return jButtonExport;
 	}
-
-	@SuppressWarnings("unchecked")
-	private FileAccessSupportFilter<Doc>[] createFilters() {
-		var filters = Stream.of(
-				new FileAccessSupportFilter<Doc>(
-						FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL,
-						".ormat file"),
-
-				screen.isFaceOrderFlipped() ? new FileAccessSupportFilter<Doc>(
-						FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP,
-						".svg file")
-						: new FileAccessSupportFilter<Doc>(
-								FoldedModelFileTypeKey.SVG_FOLDED_MODEL,
-								".svg file"))
-				.sorted()
-				.collect(Collectors.toList());
-
-		var array = filters.toArray(new FileAccessSupportFilter<?>[filters.size()]);
-
-		return (FileAccessSupportFilter<Doc>[]) array;
-	}
-
 }
