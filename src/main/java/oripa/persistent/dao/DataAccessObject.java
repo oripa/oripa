@@ -29,17 +29,19 @@ import oripa.persistent.filetool.FileVersionError;
 import oripa.persistent.filetool.WrongDataFormatException;
 
 /**
+ * Provides data access methods supporting file I/O.
+ *
  * @author OUCHI Koji
  *
  */
 public interface DataAccessObject<Data> {
 
 	/**
-	 * try loading file {@code path}
+	 * try loading data from {@code path}
 	 *
 	 * @param path
-	 *            for the file to be loaded.
-	 * @return loaded doc.
+	 *            for the data to be loaded.
+	 * @return loaded data.
 	 * @throws FileVersionError
 	 * @throws IOException
 	 *             file IO trouble.
@@ -55,16 +57,16 @@ public interface DataAccessObject<Data> {
 	/**
 	 * save without dialog
 	 *
-	 * @param doc
+	 * @param data
 	 *            to be saved.
 	 * @param path
-	 *            for the place to save the {@code doc}.
+	 *            for the place to save the {@code data}.
 	 * @param type
 	 *            file type.
 	 * @throws IOException
 	 *             file IO trouble.
 	 * @throws IllegalArgumentException
-	 *             {@code doc} can't be saved as the suggested file type.
+	 *             {@code data} can't be saved as the suggested file type.
 	 */
 	void save(Data data, String path, FileTypeProperty<Data> type)
 			throws IOException, IllegalArgumentException;
@@ -72,7 +74,7 @@ public interface DataAccessObject<Data> {
 	/**
 	 * open save dialog for file types in {@code filters}
 	 *
-	 * @param doc
+	 * @param data
 	 *            to be saved
 	 * @param homePath
 	 *            starting path to display
@@ -99,7 +101,7 @@ public interface DataAccessObject<Data> {
 	 * @param filters
 	 *            supported file types
 	 * @param parent
-	 * @return loaded doc.
+	 * @return loaded data.
 	 * @throws FileVersionError
 	 * @throws FileChooserCanceledException
 	 * @throws IllegalArgumentException
