@@ -54,7 +54,7 @@ public class EstimationResultFrame extends JFrame implements ActionListener {
 
 		screen.setModel(origamiModel, foldedModelInfo);
 		ui.setModel(origamiModel, foldedModelInfo);
-		ui.updateLabel();
+		ui.updateIndexLabel();
 		// setVisible(true);
 	}
 

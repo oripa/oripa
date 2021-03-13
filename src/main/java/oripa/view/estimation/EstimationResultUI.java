@@ -48,7 +48,7 @@ public class EstimationResultUI extends JPanel {
 	private JButton jButtonPrevAnswer = null;
 	private JCheckBox jCheckBoxOrder = null;
 	private JCheckBox jCheckBoxShadow = null;
-	private JLabel jLabel = null;
+	private JLabel indexLabel = null;
 	private FoldedModelScreen screen;
 	private JCheckBox jCheckBoxUseColor = null;
 	private JCheckBox jCheckBoxEdge = null;
@@ -78,8 +78,8 @@ public class EstimationResultUI extends JPanel {
 	 * @return void
 	 */
 	private void initialize() {
-		jLabel = new JLabel();
-		jLabel.setBounds(new Rectangle(15, 45, 181, 16));
+		indexLabel = new JLabel();
+		indexLabel.setBounds(new Rectangle(15, 45, 181, 16));
 		this.setLayout(null);
 		this.setSize(216, 256);
 		this.setPreferredSize(new Dimension(216, 200));
@@ -87,12 +87,12 @@ public class EstimationResultUI extends JPanel {
 		this.add(getJCheckBoxOrder(), null);
 		this.add(getJButtonNextAnswer(), null);
 		this.add(getJCheckBoxShadow(), null);
-		this.add(jLabel, null);
+		this.add(indexLabel, null);
 		this.add(getJCheckBoxUseColor(), null);
 		this.add(getJCheckBoxEdge(), null);
 		this.add(getJCheckBoxFillFace(), null);
 		this.add(getJButtonExport(), null);
-		updateLabel();
+		updateIndexLabel();
 	}
 
 	private FoldedModelInfo foldedModelInfo = null;
@@ -108,13 +108,13 @@ public class EstimationResultUI extends JPanel {
 		origamiModel = aOrigamiModel;
 	}
 
-	public void updateLabel() {
+	public void updateIndexLabel() {
 
 		if (foldedModelInfo == null) {
 			return;
 		}
 
-		jLabel.setText("Folded model ["
+		indexLabel.setText("Folded model ["
 				+ (foldedModelInfo.getCurrentORmatIndex() + 1) + "/"
 				+ foldedModelInfo.getFoldablePatternCount() + "]");
 
@@ -127,18 +127,21 @@ public class EstimationResultUI extends JPanel {
 	 */
 	private JButton getJButtonNextAnswer() {
 
-		if (jButtonNextAnswer == null) {
-			jButtonNextAnswer = new JButton();
-			jButtonNextAnswer.setText("Next");
-			jButtonNextAnswer.setBounds(new Rectangle(109, 4, 87, 27));
-
-			jButtonNextAnswer
-					.addActionListener(e -> {
-						foldedModelInfo.setNextIndex();
-						screen.redrawOrigami();
-						updateLabel();
-					});
+		if (jButtonNextAnswer != null) {
+			return jButtonNextAnswer;
 		}
+
+		jButtonNextAnswer = new JButton();
+		jButtonNextAnswer.setText("Next");
+		jButtonNextAnswer.setBounds(new Rectangle(109, 4, 87, 27));
+
+		jButtonNextAnswer
+				.addActionListener(e -> {
+					foldedModelInfo.setNextIndex();
+					screen.redrawOrigami();
+					updateIndexLabel();
+				});
+
 		return jButtonNextAnswer;
 	}
 
@@ -148,18 +151,21 @@ public class EstimationResultUI extends JPanel {
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonPrevAnswer() {
-		if (jButtonPrevAnswer == null) {
-			jButtonPrevAnswer = new JButton();
-			jButtonPrevAnswer.setText("Prev");
-			jButtonPrevAnswer.setBounds(new Rectangle(15, 4, 89, 27));
-
-			jButtonPrevAnswer
-					.addActionListener(e -> {
-						foldedModelInfo.setPrevIndex();
-						screen.redrawOrigami();
-						updateLabel();
-					});
+		if (jButtonPrevAnswer != null) {
+			return jButtonPrevAnswer;
 		}
+
+		jButtonPrevAnswer = new JButton();
+		jButtonPrevAnswer.setText("Prev");
+		jButtonPrevAnswer.setBounds(new Rectangle(15, 4, 89, 27));
+
+		jButtonPrevAnswer
+				.addActionListener(e -> {
+					foldedModelInfo.setPrevIndex();
+					screen.redrawOrigami();
+					updateIndexLabel();
+				});
+
 		return jButtonPrevAnswer;
 	}
 
@@ -169,14 +175,17 @@ public class EstimationResultUI extends JPanel {
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxOrder() {
-		if (jCheckBoxOrder == null) {
-			jCheckBoxOrder = new JCheckBox();
-			jCheckBoxOrder.setBounds(new Rectangle(15, 75, 91, 31));
-			jCheckBoxOrder.setText("Flip");
-			jCheckBoxOrder.addItemListener(e -> {
-				screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
-			});
+		if (jCheckBoxOrder != null) {
+			return jCheckBoxOrder;
 		}
+
+		jCheckBoxOrder = new JCheckBox();
+		jCheckBoxOrder.setBounds(new Rectangle(15, 75, 91, 31));
+		jCheckBoxOrder.setText("Flip");
+		jCheckBoxOrder.addItemListener(e -> {
+			screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
+		});
+
 		return jCheckBoxOrder;
 
 	}
@@ -187,15 +196,18 @@ public class EstimationResultUI extends JPanel {
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxShadow() {
-		if (jCheckBoxShadow == null) {
-			jCheckBoxShadow = new JCheckBox();
-			jCheckBoxShadow.setBounds(new Rectangle(105, 75, 80, 31));
-			jCheckBoxShadow.setText("Shade");
-
-			jCheckBoxShadow.addItemListener(e -> {
-				screen.shadeFaces(e.getStateChange() == ItemEvent.SELECTED);
-			});
+		if (jCheckBoxShadow != null) {
+			return jCheckBoxShadow;
 		}
+
+		jCheckBoxShadow = new JCheckBox();
+		jCheckBoxShadow.setBounds(new Rectangle(105, 75, 80, 31));
+		jCheckBoxShadow.setText("Shade");
+
+		jCheckBoxShadow.addItemListener(e -> {
+			screen.shadeFaces(e.getStateChange() == ItemEvent.SELECTED);
+		});
+
 		return jCheckBoxShadow;
 	}
 
@@ -205,17 +217,20 @@ public class EstimationResultUI extends JPanel {
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxUseColor() {
-		if (jCheckBoxUseColor == null) {
-			jCheckBoxUseColor = new JCheckBox();
-			jCheckBoxUseColor.setBounds(new Rectangle(15, 120, 80, 31));
-			jCheckBoxUseColor.setSelected(true);
-			jCheckBoxUseColor.setText("Use Color");
-
-			jCheckBoxUseColor
-					.addItemListener(e -> {
-						screen.setUseColor(e.getStateChange() == ItemEvent.SELECTED);
-					});
+		if (jCheckBoxUseColor != null) {
+			return jCheckBoxUseColor;
 		}
+
+		jCheckBoxUseColor = new JCheckBox();
+		jCheckBoxUseColor.setBounds(new Rectangle(15, 120, 80, 31));
+		jCheckBoxUseColor.setSelected(true);
+		jCheckBoxUseColor.setText("Use Color");
+
+		jCheckBoxUseColor
+				.addItemListener(e -> {
+					screen.setUseColor(e.getStateChange() == ItemEvent.SELECTED);
+				});
+
 		return jCheckBoxUseColor;
 	}
 
@@ -225,17 +240,21 @@ public class EstimationResultUI extends JPanel {
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxEdge() {
-		if (jCheckBoxEdge == null) {
-			jCheckBoxEdge = new JCheckBox();
-			jCheckBoxEdge.setBounds(new Rectangle(105, 120, 93, 31));
-			jCheckBoxEdge.setSelected(true);
-			jCheckBoxEdge.setText("Draw Edge");
-
-			jCheckBoxEdge.addItemListener(e -> {
-				screen.drawEdge(e.getStateChange() == ItemEvent.SELECTED);
-			});
+		if (jCheckBoxEdge != null) {
+			return jCheckBoxEdge;
 		}
+
+		jCheckBoxEdge = new JCheckBox();
+		jCheckBoxEdge.setBounds(new Rectangle(105, 120, 93, 31));
+		jCheckBoxEdge.setSelected(true);
+		jCheckBoxEdge.setText("Draw Edge");
+
+		jCheckBoxEdge.addItemListener(e -> {
+			screen.drawEdge(e.getStateChange() == ItemEvent.SELECTED);
+		});
+
 		return jCheckBoxEdge;
+
 	}
 
 	/**
@@ -244,17 +263,20 @@ public class EstimationResultUI extends JPanel {
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getJCheckBoxFillFace() {
-		if (jCheckBoxFillFace == null) {
-			jCheckBoxFillFace = new JCheckBox();
-			jCheckBoxFillFace.setBounds(new Rectangle(15, 165, 93, 21));
-			jCheckBoxFillFace.setSelected(true);
-			jCheckBoxFillFace.setText("FillFace");
-
-			jCheckBoxFillFace
-					.addItemListener(e -> {
-						screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
-					});
+		if (jCheckBoxFillFace != null) {
+			return jCheckBoxFillFace;
 		}
+
+		jCheckBoxFillFace = new JCheckBox();
+		jCheckBoxFillFace.setBounds(new Rectangle(15, 165, 93, 21));
+		jCheckBoxFillFace.setSelected(true);
+		jCheckBoxFillFace.setText("FillFace");
+
+		jCheckBoxFillFace
+				.addItemListener(e -> {
+					screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
+				});
+
 		return jCheckBoxFillFace;
 	}
 
@@ -264,30 +286,31 @@ public class EstimationResultUI extends JPanel {
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJButtonExport() {
-		if (jButtonExport == null) {
-			jButtonExport = new JButton();
-			jButtonExport.setBounds(new Rectangle(15, 206, 92, 26));
-			jButtonExport.setText("Export");
-			jButtonExport
-					.addActionListener(e -> {
-
-						Doc doc = new Doc();
-						doc.setFoldedModelInfo(foldedModelInfo);
-						doc.setOrigamiModel(origamiModel);
-
-						try {
-							var filterSelector = new FoldedModelFilterSelector(screen.isFaceOrderFlipped());
-							final DocDAO dao = new DocDAO(filterSelector);
-							lastFilePath = dao.saveUsingGUI(
-									doc, lastFilePath, EstimationResultUI.this, filterSelector.getSavables());
-						} catch (FileChooserCanceledException canceledEx) {
-						} catch (Exception ex) {
-							logger.error("error: ", ex);
-							Dialogs.showErrorDialog(EstimationResultUI.this, resources.getString(
-									ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), ex);
-						}
-					});
+		if (jButtonExport != null) {
+			return jButtonExport;
 		}
+
+		jButtonExport = new JButton();
+		jButtonExport.setBounds(new Rectangle(15, 206, 92, 26));
+		jButtonExport.setText("Export");
+		jButtonExport.addActionListener(e -> {
+			Doc doc = new Doc();
+			doc.setFoldedModelInfo(foldedModelInfo);
+			doc.setOrigamiModel(origamiModel);
+
+			try {
+				var filterSelector = new FoldedModelFilterSelector(screen.isFaceOrderFlipped());
+				final DocDAO dao = new DocDAO(filterSelector);
+				lastFilePath = dao.saveUsingGUI(
+						doc, lastFilePath, EstimationResultUI.this, filterSelector.getSavables());
+			} catch (FileChooserCanceledException canceledEx) {
+			} catch (Exception ex) {
+				logger.error("error: ", ex);
+				Dialogs.showErrorDialog(EstimationResultUI.this, resources.getString(
+						ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), ex);
+			}
+		});
+
 		return jButtonExport;
 	}
 }
