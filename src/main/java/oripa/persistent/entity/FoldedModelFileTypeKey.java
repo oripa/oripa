@@ -18,7 +18,7 @@
  */
 package oripa.persistent.entity;
 
-import oripa.domain.fold.EstimationResult;
+import oripa.domain.fold.FoldedModel;
 import oripa.persistent.entity.exporter.ExporterORmat;
 import oripa.persistent.entity.exporter.FoldedModelExporterSVG;
 import oripa.persistent.filetool.Exporter;
@@ -29,7 +29,7 @@ import oripa.persistent.filetool.Loader;
  * @author OUCHI Koji
  *
  */
-public enum FoldedModelFileTypeKey implements FileTypeProperty<EstimationResult> {
+public enum FoldedModelFileTypeKey implements FileTypeProperty<FoldedModel> {
 	SVG_FOLDED_MODEL("svg_folded_model", 1, null, new FoldedModelExporterSVG(false), ".svg"),
 	SVG_FOLDED_MODEL_FLIP("svg_folded_model_flip", 1, null, new FoldedModelExporterSVG(true), ".svg"),
 	ORMAT_FOLDED_MODEL("ormat", 2, null, new ExporterORmat(), ".ormat");
@@ -38,8 +38,8 @@ public enum FoldedModelFileTypeKey implements FileTypeProperty<EstimationResult>
 	private final Integer order;
 	private final String[] extensions;
 
-	private final Loader<EstimationResult> loader;
-	private final Exporter<EstimationResult> exporter;
+	private final Loader<FoldedModel> loader;
+	private final Exporter<FoldedModel> exporter;
 
 	/**
 	 *
@@ -55,8 +55,8 @@ public enum FoldedModelFileTypeKey implements FileTypeProperty<EstimationResult>
 	 * @param savingAction
 	 */
 	private FoldedModelFileTypeKey(final String key, final Integer order,
-			final Loader<EstimationResult> loader,
-			final Exporter<EstimationResult> exporter,
+			final Loader<FoldedModel> loader,
+			final Exporter<FoldedModel> exporter,
 			final String... extensions) {
 		this.keyText = key;
 		this.order = order;
@@ -91,12 +91,12 @@ public enum FoldedModelFileTypeKey implements FileTypeProperty<EstimationResult>
 	}
 
 	@Override
-	public Loader<EstimationResult> getLoader() {
+	public Loader<FoldedModel> getLoader() {
 		return loader;
 	}
 
 	@Override
-	public Exporter<EstimationResult> getExporter() {
+	public Exporter<FoldedModel> getExporter() {
 		return exporter;
 	}
 }

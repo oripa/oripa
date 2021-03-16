@@ -21,7 +21,7 @@ package oripa.persistent.entity;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import oripa.domain.fold.EstimationResult;
+import oripa.domain.fold.FoldedModel;
 import oripa.persistent.dao.AbstractFilterSelector;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileTypeProperty;
@@ -31,8 +31,8 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFilterSelector extends AbstractFilterSelector<EstimationResult> {
-	private final SortedMap<FileTypeProperty<EstimationResult>, FileAccessSupportFilter<EstimationResult>> filters = new TreeMap<>();
+public class FoldedModelFilterSelector extends AbstractFilterSelector<FoldedModel> {
+	private final SortedMap<FileTypeProperty<FoldedModel>, FileAccessSupportFilter<FoldedModel>> filters = new TreeMap<>();
 
 	/**
 	 * Constructor
@@ -53,7 +53,7 @@ public class FoldedModelFilterSelector extends AbstractFilterSelector<Estimation
 	}
 
 	@Override
-	protected SortedMap<FileTypeProperty<EstimationResult>, FileAccessSupportFilter<EstimationResult>> getFilters() {
+	protected SortedMap<FileTypeProperty<FoldedModel>, FileAccessSupportFilter<FoldedModel>> getFilters() {
 		return filters;
 	}
 }

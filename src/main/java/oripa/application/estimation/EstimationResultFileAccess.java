@@ -21,7 +21,7 @@ package oripa.application.estimation;
 import java.awt.Component;
 import java.io.IOException;
 
-import oripa.domain.fold.EstimationResult;
+import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.dao.DataAccessObject;
@@ -33,23 +33,23 @@ import oripa.persistent.filetool.FileChooserCanceledException;
  *
  */
 public class EstimationResultFileAccess {
-	private final DataAccessObject<EstimationResult> dao;
+	private final DataAccessObject<FoldedModel> dao;
 
 	/**
 	 * Constructor
 	 */
-	public EstimationResultFileAccess(final DataAccessObject<EstimationResult> dao) {
+	public EstimationResultFileAccess(final DataAccessObject<FoldedModel> dao) {
 		this.dao = dao;
 	}
 
 	public String saveFile(final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo,
 			final String lastFilePath,
 			final Component owner,
-			final FileAccessSupportFilter<EstimationResult>... filters)
+			final FileAccessSupportFilter<FoldedModel>... filters)
 			throws IllegalArgumentException, IOException, FileChooserCanceledException {
 
 		try {
-			return dao.saveUsingGUI(new EstimationResult(origamiModel, foldedModelInfo), lastFilePath, owner, filters);
+			return dao.saveUsingGUI(new FoldedModel(origamiModel, foldedModelInfo), lastFilePath, owner, filters);
 		} catch (FileChooserCanceledException e) {
 			return lastFilePath;
 		}

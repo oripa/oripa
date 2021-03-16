@@ -18,7 +18,7 @@
  */
 package oripa.persistent.entity;
 
-import oripa.domain.fold.EstimationResult;
+import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.dao.AbstractFileDAO;
 import oripa.persistent.dao.AbstractFilterSelector;
@@ -28,8 +28,8 @@ import oripa.persistent.filetool.FileTypeProperty;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelDAO extends AbstractFileDAO<EstimationResult> {
-	private final AbstractFilterSelector<EstimationResult> selector;
+public class FoldedModelDAO extends AbstractFileDAO<FoldedModel> {
+	private final AbstractFilterSelector<FoldedModel> selector;
 
 	/**
 	 * Constructor
@@ -39,7 +39,7 @@ public class FoldedModelDAO extends AbstractFileDAO<EstimationResult> {
 	 *            {@link AbstractFileDAO#save(OrigamiModel, String, FileTypeProperty)},
 	 *            {@code selector} can be null.
 	 */
-	public FoldedModelDAO(final AbstractFilterSelector<EstimationResult> selector) {
+	public FoldedModelDAO(final AbstractFilterSelector<FoldedModel> selector) {
 		this.selector = selector;
 	}
 
@@ -47,7 +47,7 @@ public class FoldedModelDAO extends AbstractFileDAO<EstimationResult> {
 	 * @see oripa.persistent.dao.AbstractDAO#getFilterSelector()
 	 */
 	@Override
-	protected AbstractFilterSelector<EstimationResult> getFilterSelector() {
+	protected AbstractFilterSelector<FoldedModel> getFilterSelector() {
 		return selector;
 	}
 

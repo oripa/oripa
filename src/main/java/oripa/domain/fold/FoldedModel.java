@@ -26,14 +26,14 @@ import oripa.domain.fold.halfedge.OrigamiModel;
  * @author OUCHI Koji
  *
  */
-public class EstimationResult {
+public class FoldedModel {
 	private OrigamiModel origamiModel;
 	private OverlapRelationList foldedModelInfo;
 
 	/**
 	 * Constructor
 	 */
-	public EstimationResult(final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo) {
+	public FoldedModel(final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo) {
 		this.origamiModel = origamiModel;
 		this.foldedModelInfo = foldedModelInfo;
 	}

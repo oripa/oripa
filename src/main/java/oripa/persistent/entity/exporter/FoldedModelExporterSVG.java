@@ -26,7 +26,7 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.fold.EstimationResult;
+import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -39,7 +39,7 @@ import oripa.persistent.svg.SVGConstants;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelExporterSVG implements Exporter<EstimationResult> {
+public class FoldedModelExporterSVG implements Exporter<FoldedModel> {
 	private final boolean faceOrderFlip;
 
 	/**
@@ -50,7 +50,7 @@ public class FoldedModelExporterSVG implements Exporter<EstimationResult> {
 	}
 
 	@Override
-	public boolean export(final EstimationResult doc, final String filepath)
+	public boolean export(final FoldedModel doc, final String filepath)
 			throws IOException, IllegalArgumentException {
 		OrigamiModel origamiModel = doc.getOrigamiModel();
 		OverlapRelationList foldedModelInfo = doc.getFoldedModelInfo();
