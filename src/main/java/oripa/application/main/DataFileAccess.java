@@ -26,6 +26,9 @@ import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.fold.foldability.FoldabilityChecker;
@@ -43,6 +46,8 @@ import oripa.persistent.filetool.WrongDataFormatException;
  *         interface between the {@code DocDOA} and the {@code Doc} classes
  */
 public class DataFileAccess {
+	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
+
 	private DataAccessObject<Doc> dao;
 
 	@SuppressWarnings("unused")
@@ -100,6 +105,7 @@ public class DataFileAccess {
 			String savedPath = dao.saveUsingGUI(document, filePath, owner, filters);
 			return Optional.of(savedPath);
 		} catch (FileChooserCanceledException e) {
+			logger.info("File selection is canceled.");
 			return Optional.empty();
 		}
 	}
@@ -120,7 +126,7 @@ public class DataFileAccess {
 	public void saveFileWithModelCheck(final Doc doc,
 			final String directory,
 			final FileAccessSupportFilter<Doc> filter, final Component owner)
-			throws FileChooserCanceledException, IOException, IllegalArgumentException {
+			throws IOException, IllegalArgumentException {
 		File givenFile = new File(directory, "export" + filter.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
@@ -144,7 +150,11 @@ public class DataFileAccess {
 			}
 		}
 
-		dao.saveUsingGUI(doc, filePath, owner, filter);
+		try {
+			dao.saveUsingGUI(doc, filePath, owner, filter);
+		} catch (FileChooserCanceledException e) {
+			logger.info("File selection is canceled.");
+		}
 	}
 
 	/**

@@ -47,6 +47,11 @@ public class EstimationResultFileAccess {
 			final Component owner,
 			final FileAccessSupportFilter<EstimationResult>... filters)
 			throws IllegalArgumentException, IOException, FileChooserCanceledException {
-		return dao.saveUsingGUI(new EstimationResult(origamiModel, foldedModelInfo), lastFilePath, owner, filters);
+
+		try {
+			return dao.saveUsingGUI(new EstimationResult(origamiModel, foldedModelInfo), lastFilePath, owner, filters);
+		} catch (FileChooserCanceledException e) {
+			return lastFilePath;
+		}
 	}
 }

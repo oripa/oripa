@@ -34,7 +34,6 @@ import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.entity.FoldedModelDAO;
 import oripa.persistent.entity.FoldedModelFilterSelector;
-import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -302,7 +301,6 @@ public class EstimationResultUI extends JPanel {
 			lastFilePath = fileAccess.saveFile(
 					origamiModel, foldedModelInfo, lastFilePath, this,
 					filterSelector.getSavables());
-		} catch (FileChooserCanceledException canceledEx) {
 		} catch (Exception ex) {
 			logger.error("error: ", ex);
 			Dialogs.showErrorDialog(EstimationResultUI.this, resources.getString(

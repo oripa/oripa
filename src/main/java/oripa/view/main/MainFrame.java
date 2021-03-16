@@ -69,7 +69,6 @@ import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileVersionError;
 import oripa.persistent.filetool.WrongDataFormatException;
 import oripa.resource.Constants;
@@ -622,8 +621,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		try {
 			dataFileAccess.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
 					filterSelector.getFilter(type), this);
-		} catch (FileChooserCanceledException e) {
-			logger.info("File selection is canceled.");
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
