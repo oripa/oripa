@@ -50,10 +50,10 @@ public class EstimationResultFrame extends JFrame implements ActionListener {
 	}
 
 	public void setModel(
-			final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo) {
+			final OrigamiModel origamiModel, final OverlapRelationList overlapRelationList) {
 
-		screen.setModel(origamiModel, foldedModelInfo);
-		ui.setModel(origamiModel, foldedModelInfo);
+		screen.setModel(origamiModel, overlapRelationList);
+		ui.setModel(origamiModel, overlapRelationList);
 		ui.updateIndexLabel();
 		// setVisible(true);
 	}

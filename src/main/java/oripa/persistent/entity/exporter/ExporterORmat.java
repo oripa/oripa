@@ -34,10 +34,10 @@ import oripa.persistent.filetool.Exporter;
 public class ExporterORmat implements Exporter<FoldedModel> {
 
 	@Override
-	public boolean export(final FoldedModel doc, final String filepath)
+	public boolean export(final FoldedModel foldedModel, final String filepath)
 			throws IOException, IllegalArgumentException {
-		OrigamiModel origamiModel = doc.getOrigamiModel();
-		OverlapRelationList foldedModelInfo = doc.getFoldedModelInfo();
+		OrigamiModel origamiModel = foldedModel.getOrigamiModel();
+		OverlapRelationList overlapRelationList = foldedModel.getOverlapRelationList();
 
 		try (var fw = new FileWriter(filepath);
 				var bw = new BufferedWriter(fw);) {
@@ -78,7 +78,7 @@ public class ExporterORmat implements Exporter<FoldedModel> {
 			bw.write("# 9: UNDEFINED (not used)\n");
 			bw.write("# matrix size (face num) =" + faceNum + "\n");
 
-			int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+			int[][] overlapRelation = overlapRelationList.getOverlapRelation();
 			for (int f0 = 0; f0 < faceNum; f0++) {
 				for (int f1 = 0; f1 < faceNum; f1++) {
 					bw.write("" + overlapRelation[f0][f1] + " ");

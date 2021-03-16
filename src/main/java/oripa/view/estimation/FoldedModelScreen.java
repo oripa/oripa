@@ -95,7 +95,7 @@ public class FoldedModelScreen extends JPanel
 	private final boolean bUseTexture = false;
 
 	private OrigamiModel origamiModel = null;
-	private OverlapRelationList foldedModelInfo = null;
+	private OverlapRelationList overlapRelationList = null;
 	private RectangleDomain domain;
 
 	public FoldedModelScreen() {
@@ -282,9 +282,9 @@ public class FoldedModelScreen extends JPanel
 //	}
 
 	public void setModel(
-			final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo) {
+			final OrigamiModel origamiModel, final OverlapRelationList overlapRelationList) {
 		this.origamiModel = origamiModel;
-		this.foldedModelInfo = foldedModelInfo;
+		this.overlapRelationList = overlapRelationList;
 
 		resetViewMatrix();
 		redrawOrigami();
@@ -321,7 +321,7 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public void drawOrigami() {
-		if (origamiModel == null || foldedModelInfo == null) {
+		if (origamiModel == null || overlapRelationList == null) {
 			return;
 		}
 
@@ -411,7 +411,7 @@ public class FoldedModelScreen extends JPanel
 							if (f_id == -1 && f_id2 != -1) {
 								cnt++;
 							} else {
-								int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+								int[][] overlapRelation = overlapRelationList.getOverlapRelation();
 
 								if (f_id2 != -1 && overlapRelation[f_id][f_id2] == renderFace) {
 									cnt++;
@@ -522,7 +522,7 @@ public class FoldedModelScreen extends JPanel
 				int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
 						: OverlapRelationValues.LOWER;
 
-				int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+				int[][] overlapRelation = overlapRelationList.getOverlapRelation();
 
 				if (zbuf[p] == -1 || overlapRelation[zbuf[p]][id] == renderFace) {
 

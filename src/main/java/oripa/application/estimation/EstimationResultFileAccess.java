@@ -42,14 +42,14 @@ public class EstimationResultFileAccess {
 		this.dao = dao;
 	}
 
-	public String saveFile(final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo,
+	public String saveFile(final OrigamiModel origamiModel, final OverlapRelationList overlapRelationList,
 			final String lastFilePath,
 			final Component owner,
 			final FileAccessSupportFilter<FoldedModel>... filters)
 			throws IllegalArgumentException, IOException, FileChooserCanceledException {
 
 		try {
-			return dao.saveUsingGUI(new FoldedModel(origamiModel, foldedModelInfo), lastFilePath, owner, filters);
+			return dao.saveUsingGUI(new FoldedModel(origamiModel, overlapRelationList), lastFilePath, owner, filters);
 		} catch (FileChooserCanceledException e) {
 			return lastFilePath;
 		}

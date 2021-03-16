@@ -21,7 +21,7 @@ public class EstimationResultFrameFactory {
 	public JFrame createFrame(
 			final JComponent parent,
 			final OrigamiModel origamiModel,
-			final OverlapRelationList foldedModelInfo) {
+			final OverlapRelationList overlapRelationList) {
 
 		EstimationResultFrame frame = (EstimationResultFrame) childFrameManager.find(parent,
 				EstimationResultFrame.class);
@@ -29,7 +29,7 @@ public class EstimationResultFrameFactory {
 			frame = new EstimationResultFrame();
 		}
 
-		frame.setModel(origamiModel, foldedModelInfo);
+		frame.setModel(origamiModel, overlapRelationList);
 		childFrameManager.putChild(parent, frame);
 
 		return frame;

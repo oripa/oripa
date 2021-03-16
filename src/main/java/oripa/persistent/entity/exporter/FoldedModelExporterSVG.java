@@ -50,10 +50,10 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModel> {
 	}
 
 	@Override
-	public boolean export(final FoldedModel doc, final String filepath)
+	public boolean export(final FoldedModel foldedModel, final String filepath)
 			throws IOException, IllegalArgumentException {
-		OrigamiModel origamiModel = doc.getOrigamiModel();
-		OverlapRelationList foldedModelInfo = doc.getFoldedModelInfo();
+		OrigamiModel origamiModel = foldedModel.getOrigamiModel();
+		OverlapRelationList overlapRelationList = foldedModel.getOverlapRelationList();
 		double paperSize = origamiModel.getPaperSize();
 
 		double scale = (SVGConstants.size - 5) / paperSize;
@@ -81,7 +81,7 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModel> {
 			bw.write(SVGConstants.head);
 			bw.write(SVGConstants.gradient);
 
-			var sortedFaces = sortFaces(faces, foldedModelInfo.getOverlapRelation());
+			var sortedFaces = sortFaces(faces, overlapRelationList.getOverlapRelation());
 
 			for (int i = 0; i < sortedFaces.size(); i++) {
 				OriFace face = faceOrderFlip ? sortedFaces.get(i)

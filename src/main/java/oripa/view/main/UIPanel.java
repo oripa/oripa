@@ -938,7 +938,7 @@ public class UIPanel extends JPanel {
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {
 		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
-		OverlapRelationList foldedModelInfo = new OverlapRelationList();
+		OverlapRelationList overlapRelationList = new OverlapRelationList();
 
 		Folder folder = new Folder(
 				new SubFacesFactory(
@@ -954,7 +954,7 @@ public class UIPanel extends JPanel {
 
 		if (checker.testLocalFlatFoldability(origamiModel)) {
 			final int foldableModelCount = folder.fold(
-					origamiModel, foldedModelInfo, fullEstimation);
+					origamiModel, overlapRelationList, fullEstimation);
 
 			if (foldableModelCount == -1) {
 
@@ -971,7 +971,7 @@ public class UIPanel extends JPanel {
 				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 						childFrameManager);
 				JFrame frame = resultFrameFactory.createFrame(this,
-						origamiModel, foldedModelInfo);
+						origamiModel, overlapRelationList);
 				frame.repaint();
 				frame.setVisible(true);
 			}

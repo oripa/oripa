@@ -94,28 +94,27 @@ public class EstimationResultUI extends JPanel {
 		updateIndexLabel();
 	}
 
-	private OverlapRelationList foldedModelInfo = null;
+	private OverlapRelationList overlapRelationList = null;
 	private OrigamiModel origamiModel = null;
 
 	/**
-	 * @param foldedModelInfo
-	 *            Sets foldedModelInfo
+	 * @param overlapRelationList
 	 */
-	public void setModel(final OrigamiModel aOrigamiModel,
-			final OverlapRelationList aFoldedModelInfo) {
-		foldedModelInfo = aFoldedModelInfo;
-		origamiModel = aOrigamiModel;
+	public void setModel(final OrigamiModel origamiModel,
+			final OverlapRelationList overlapRelationList) {
+		this.overlapRelationList = overlapRelationList;
+		this.origamiModel = origamiModel;
 	}
 
 	public void updateIndexLabel() {
 
-		if (foldedModelInfo == null) {
+		if (overlapRelationList == null) {
 			return;
 		}
 
 		indexLabel.setText("Folded model ["
-				+ (foldedModelInfo.getCurrentORmatIndex() + 1) + "/"
-				+ foldedModelInfo.getFoldablePatternCount() + "]");
+				+ (overlapRelationList.getCurrentORmatIndex() + 1) + "/"
+				+ overlapRelationList.getFoldablePatternCount() + "]");
 
 	}
 
@@ -135,7 +134,7 @@ public class EstimationResultUI extends JPanel {
 		jButtonNextAnswer.setBounds(new Rectangle(109, 4, 87, 27));
 
 		jButtonNextAnswer.addActionListener(e -> {
-			foldedModelInfo.setNextIndex();
+			overlapRelationList.setNextIndex();
 			screen.redrawOrigami();
 			updateIndexLabel();
 		});
@@ -158,7 +157,7 @@ public class EstimationResultUI extends JPanel {
 		jButtonPrevAnswer.setBounds(new Rectangle(15, 4, 89, 27));
 
 		jButtonPrevAnswer.addActionListener(e -> {
-			foldedModelInfo.setPrevIndex();
+			overlapRelationList.setPrevIndex();
 			screen.redrawOrigami();
 			updateIndexLabel();
 		});
@@ -299,7 +298,7 @@ public class EstimationResultUI extends JPanel {
 			final FoldedModelDAO dao = new FoldedModelDAO(filterSelector);
 			EstimationResultFileAccess fileAccess = new EstimationResultFileAccess(dao);
 			lastFilePath = fileAccess.saveFile(
-					origamiModel, foldedModelInfo, lastFilePath, this,
+					origamiModel, overlapRelationList, lastFilePath, this,
 					filterSelector.getSavables());
 		} catch (Exception ex) {
 			logger.error("error: ", ex);

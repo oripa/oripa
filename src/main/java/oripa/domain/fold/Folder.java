@@ -63,7 +63,7 @@ public class Folder {
 	 * @param origamiModel
 	 *            half-edge based data structure. It will be affected by this
 	 *            method.
-	 * @param foldedModelInfo
+	 * @param overlapRelationList
 	 *            an object to store information of face layer ordering. It will
 	 *            be affected by this method.
 	 * @param fullEstimation
@@ -72,7 +72,7 @@ public class Folder {
 	 * @return the number of flat foldable layer layouts. -1 if
 	 *         {@code fullEstimation} is false.
 	 */
-	public int fold(final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo,
+	public int fold(final OrigamiModel origamiModel, final OverlapRelationList overlapRelationList,
 			final boolean fullEstimation) {
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
@@ -80,7 +80,7 @@ public class Folder {
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 
-		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
+		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
 		foldableOverlapRelations.clear();
 
 		simpleFoldWithoutZorder(faces, edges);
@@ -113,9 +113,9 @@ public class Folder {
 			sub.sortFaceOverlapOrder(faces, overlapRelation);
 		}
 
-		findAnswer(faces, foldedModelInfo, 0, overlapRelation, true, paperSize);
+		findAnswer(faces, overlapRelationList, 0, overlapRelation, true, paperSize);
 
-		foldedModelInfo.setCurrentORmatIndex(0);
+		overlapRelationList.setCurrentORmatIndex(0);
 		if (foldableOverlapRelations.isEmpty()) {
 			return 0;
 		}
@@ -132,7 +132,7 @@ public class Folder {
 	 *
 	 * @param faces
 	 *            all faces of the origami model.
-	 * @param foldedModelInfo
+	 * @param overlapRelationList
 	 *            an object to store the result
 	 * @param subFaceIndex
 	 *            the index of subface to be updated
@@ -146,9 +146,9 @@ public class Folder {
 	 */
 	private void findAnswer(
 			final List<OriFace> faces,
-			final OverlapRelationList foldedModelInfo, final int subFaceIndex, final int[][] orMat,
+			final OverlapRelationList overlapRelationList, final int subFaceIndex, final int[][] orMat,
 			final boolean orMatModified, final double paperSize) {
-		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
+		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
 
 		if (orMatModified) {
 			if (detectPenetration(faces, orMat, paperSize)) {
@@ -166,7 +166,7 @@ public class Folder {
 
 		if (sub.allFaceOrderDecided) {
 			var passMat = Matrices.clone(orMat);
-			findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, false, paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, false, paperSize);
 			return;
 		}
 
@@ -187,7 +187,7 @@ public class Folder {
 				}
 			}
 
-			findAnswer(faces, foldedModelInfo, subFaceIndex + 1, passMat, true, paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, true, paperSize);
 		}
 	}
 
