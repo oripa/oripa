@@ -53,7 +53,7 @@ public class FoldedModel {
 	}
 
 	/**
-	 * @return foldedModelInfo
+	 * @return overlapRelationList
 	 */
 	public OverlapRelationList getOverlapRelationList() {
 		return overlapRelationList;
@@ -62,7 +62,7 @@ public class FoldedModel {
 	/**
 	 * @param overlapRelationList
 	 */
-	public void setFoldedModelInfo(final OverlapRelationList overlapRelationList) {
+	public void setOverlapRelationList(final OverlapRelationList overlapRelationList) {
 		this.overlapRelationList = overlapRelationList;
 	}
 }
