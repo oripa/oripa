@@ -64,7 +64,7 @@ import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -938,7 +938,7 @@ public class UIPanel extends JPanel {
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {
 		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
-		FoldedModelInfo foldedModelInfo = new FoldedModelInfo();
+		OverlapRelationList foldedModelInfo = new OverlapRelationList();
 
 		Folder folder = new Folder(
 				new SubFacesFactory(

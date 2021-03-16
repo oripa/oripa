@@ -40,7 +40,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
-import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -95,7 +95,7 @@ public class FoldedModelScreen extends JPanel
 	private final boolean bUseTexture = false;
 
 	private OrigamiModel origamiModel = null;
-	private FoldedModelInfo foldedModelInfo = null;
+	private OverlapRelationList foldedModelInfo = null;
 	private RectangleDomain domain;
 
 	public FoldedModelScreen() {
@@ -282,7 +282,7 @@ public class FoldedModelScreen extends JPanel
 //	}
 
 	public void setModel(
-			final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo) {
+			final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo) {
 		this.origamiModel = origamiModel;
 		this.foldedModelInfo = foldedModelInfo;
 

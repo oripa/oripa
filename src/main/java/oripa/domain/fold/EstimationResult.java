@@ -28,12 +28,12 @@ import oripa.domain.fold.halfedge.OrigamiModel;
  */
 public class EstimationResult {
 	private OrigamiModel origamiModel;
-	private FoldedModelInfo foldedModelInfo;
+	private OverlapRelationList foldedModelInfo;
 
 	/**
 	 * Constructor
 	 */
-	public EstimationResult(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo) {
+	public EstimationResult(final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo) {
 		this.origamiModel = origamiModel;
 		this.foldedModelInfo = foldedModelInfo;
 	}
@@ -56,7 +56,7 @@ public class EstimationResult {
 	/**
 	 * @return foldedModelinfo
 	 */
-	public FoldedModelInfo getFoldedModelInfo() {
+	public OverlapRelationList getFoldedModelInfo() {
 		return foldedModelInfo;
 	}
 
@@ -64,7 +64,7 @@ public class EstimationResult {
 	 * @param foldedModelInfo
 	 *            Sets foldedModelinfo
 	 */
-	public void setFoldedModelInfo(final FoldedModelInfo foldedModelInfo) {
+	public void setFoldedModelInfo(final OverlapRelationList foldedModelInfo) {
 		this.foldedModelInfo = foldedModelInfo;
 	}
 }

@@ -21,7 +21,7 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoldedModelInfo {
+public class OverlapRelationList {
 	private List<int[][]> overlapRelations = new ArrayList<int[][]>();
 	private int currentORmatIndex = 0;
 

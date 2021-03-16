@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 import oripa.domain.fold.EstimationResult;
-import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -37,7 +37,7 @@ public class ExporterORmat implements Exporter<EstimationResult> {
 	public boolean export(final EstimationResult doc, final String filepath)
 			throws IOException, IllegalArgumentException {
 		OrigamiModel origamiModel = doc.getOrigamiModel();
-		FoldedModelInfo foldedModelInfo = doc.getFoldedModelInfo();
+		OverlapRelationList foldedModelInfo = doc.getFoldedModelInfo();
 
 		try (var fw = new FileWriter(filepath);
 				var bw = new BufferedWriter(fw);) {

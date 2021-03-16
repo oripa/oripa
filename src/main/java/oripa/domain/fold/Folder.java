@@ -72,7 +72,7 @@ public class Folder {
 	 * @return the number of flat foldable layer layouts. -1 if
 	 *         {@code fullEstimation} is false.
 	 */
-	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
+	public int fold(final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo,
 			final boolean fullEstimation) {
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
@@ -146,7 +146,7 @@ public class Folder {
 	 */
 	private void findAnswer(
 			final List<OriFace> faces,
-			final FoldedModelInfo foldedModelInfo, final int subFaceIndex, final int[][] orMat,
+			final OverlapRelationList foldedModelInfo, final int subFaceIndex, final int[][] orMat,
 			final boolean orMatModified, final double paperSize) {
 		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 

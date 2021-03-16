@@ -22,7 +22,7 @@ import java.awt.Component;
 import java.io.IOException;
 
 import oripa.domain.fold.EstimationResult;
-import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.dao.DataAccessObject;
 import oripa.persistent.filetool.FileAccessSupportFilter;
@@ -42,7 +42,7 @@ public class EstimationResultFileAccess {
 		this.dao = dao;
 	}
 
-	public String saveFile(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
+	public String saveFile(final OrigamiModel origamiModel, final OverlapRelationList foldedModelInfo,
 			final String lastFilePath,
 			final Component owner,
 			final FileAccessSupportFilter<EstimationResult>... filters)

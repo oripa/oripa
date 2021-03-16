@@ -27,7 +27,7 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.EstimationResult;
-import oripa.domain.fold.FoldedModelInfo;
+import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelationValues;
@@ -53,7 +53,7 @@ public class FoldedModelExporterSVG implements Exporter<EstimationResult> {
 	public boolean export(final EstimationResult doc, final String filepath)
 			throws IOException, IllegalArgumentException {
 		OrigamiModel origamiModel = doc.getOrigamiModel();
-		FoldedModelInfo foldedModelInfo = doc.getFoldedModelInfo();
+		OverlapRelationList foldedModelInfo = doc.getFoldedModelInfo();
 		double paperSize = origamiModel.getPaperSize();
 
 		double scale = (SVGConstants.size - 5) / paperSize;
