@@ -21,7 +21,6 @@ public class StringID {
 		public static final String EXPORT_DXF_ID = "ExportDXF";
 		public static final String EXPORT_CP_ID = "ExportCP";
 		public static final String EXPORT_SVG_ID = "ExportSVG";
-		public static final String EXPORT_OBJ_ID = "ExportOBJ";
 		public static final String PROPERTY_ID = "Property";
 		public static final String EXIT_ID = "Exit";
 		public static final String UNDO_ID = "Undo";

@@ -142,8 +142,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_FOLD_ID));
 	private final JMenuItem menuItemExportDXF = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_DXF_ID));
-//	private final JMenuItem menuItemExportOBJ = new JMenuItem(
-//	resourceHolder.getString(ResourceKey.LABEL,StringID.Main.EXPORT_OBJ_ID));
 	private final JMenuItem menuItemExportCP = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_CP_ID));
 	private final JMenuItem menuItemExportSVG = new JMenuItem(
@@ -405,7 +403,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		menuItemExportDXF
 				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
-//		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
 		menuItemExportCP
 				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
 		menuItemExportSVG
@@ -642,7 +639,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuFile.add(menuItemSaveAsImage);
 		menuFile.add(menuItemExportFOLD);
 		menuFile.add(menuItemExportDXF);
-//		menuFile.add(menuItemExportOBJ);
 		menuFile.add(menuItemExportCP);
 		menuFile.add(menuItemExportSVG);
 		menuFile.addSeparator();
