@@ -40,7 +40,7 @@ public class OrigamiModelFileAccess {
 		this.dao = dao;
 	}
 
-	public void save(final OrigamiModel origamiModel, final Component owner,
+	public void saveFile(final OrigamiModel origamiModel, final Component owner,
 			final FileAccessSupportFilter<OrigamiModel>... filters)
 			throws IllegalArgumentException, IOException, FileChooserCanceledException {
 

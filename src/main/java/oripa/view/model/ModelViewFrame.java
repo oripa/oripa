@@ -191,7 +191,7 @@ public class ModelViewFrame extends JFrame
 	private void exportFile(final OrigamiModelFileTypeKey type) {
 
 		try {
-			fileAccess.save(origamiModel, this, filterSelector.getFilter(type));
+			fileAccess.saveFile(origamiModel, this, filterSelector.getFilter(type));
 		} catch (FileChooserCanceledException e) {
 
 		} catch (Exception e) {
