@@ -29,11 +29,11 @@ import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.doc.Doc;
+import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistent.doc.DocDAO;
-import oripa.persistent.doc.FoldedModelFilterSelector;
+import oripa.persistent.entity.FoldedModelDAO;
+import oripa.persistent.entity.FoldedModelFilterSelector;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -289,24 +289,24 @@ public class EstimationResultUI extends JPanel {
 		jButtonExport = new JButton();
 		jButtonExport.setBounds(new Rectangle(15, 206, 92, 26));
 		jButtonExport.setText("Export");
-		jButtonExport.addActionListener(e -> {
-			Doc doc = new Doc();
-			doc.setFoldedModelInfo(foldedModelInfo);
-			doc.setOrigamiModel(origamiModel);
-
-			try {
-				var filterSelector = new FoldedModelFilterSelector(screen.isFaceOrderFlipped());
-				final DocDAO dao = new DocDAO(filterSelector);
-				lastFilePath = dao.saveUsingGUI(
-						doc, lastFilePath, EstimationResultUI.this, filterSelector.getSavables());
-			} catch (FileChooserCanceledException canceledEx) {
-			} catch (Exception ex) {
-				logger.error("error: ", ex);
-				Dialogs.showErrorDialog(EstimationResultUI.this, resources.getString(
-						ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), ex);
-			}
-		});
+		jButtonExport.addActionListener(e -> export());
 
 		return jButtonExport;
+	}
+
+	private void export() {
+		try {
+			var filterSelector = new FoldedModelFilterSelector(screen.isFaceOrderFlipped());
+			final FoldedModelDAO dao = new FoldedModelDAO(filterSelector);
+			EstimationResultFileAccess fileAccess = new EstimationResultFileAccess(dao);
+			lastFilePath = fileAccess.saveFile(
+					origamiModel, foldedModelInfo, lastFilePath, this,
+					filterSelector.getSavables());
+		} catch (FileChooserCanceledException canceledEx) {
+		} catch (Exception ex) {
+			logger.error("error: ", ex);
+			Dialogs.showErrorDialog(EstimationResultUI.this, resources.getString(
+					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), ex);
+		}
 	}
 }

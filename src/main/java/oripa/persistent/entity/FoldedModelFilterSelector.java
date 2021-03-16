@@ -16,12 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
+package oripa.persistent.entity;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import oripa.doc.Doc;
+import oripa.domain.fold.EstimationResult;
 import oripa.persistent.dao.AbstractFilterSelector;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileTypeProperty;
@@ -31,8 +31,8 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFilterSelector extends AbstractFilterSelector<Doc> {
-	private final SortedMap<FileTypeProperty<Doc>, FileAccessSupportFilter<Doc>> filters = new TreeMap<>();
+public class FoldedModelFilterSelector extends AbstractFilterSelector<EstimationResult> {
+	private final SortedMap<FileTypeProperty<EstimationResult>, FileAccessSupportFilter<EstimationResult>> filters = new TreeMap<>();
 
 	/**
 	 * Constructor
@@ -53,7 +53,7 @@ public class FoldedModelFilterSelector extends AbstractFilterSelector<Doc> {
 	}
 
 	@Override
-	protected SortedMap<FileTypeProperty<Doc>, FileAccessSupportFilter<Doc>> getFilters() {
+	protected SortedMap<FileTypeProperty<EstimationResult>, FileAccessSupportFilter<EstimationResult>> getFilters() {
 		return filters;
 	}
 }

@@ -129,7 +129,6 @@ public class DataFileAccess {
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		var origamiModel = modelFactory.createOrigamiModel(
 				creasePattern, creasePattern.getPaperSize());
-		doc.setOrigamiModel(origamiModel);
 		var checker = new FoldabilityChecker();
 
 		if (!checker.testLocalFlatFoldability(origamiModel)) {

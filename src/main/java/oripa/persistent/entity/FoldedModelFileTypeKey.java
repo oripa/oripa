@@ -16,30 +16,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistent.doc;
+package oripa.persistent.entity;
 
-import oripa.doc.Doc;
+import oripa.domain.fold.EstimationResult;
+import oripa.persistent.entity.exporter.ExporterORmat;
+import oripa.persistent.entity.exporter.FoldedModelExporterSVG;
 import oripa.persistent.filetool.Exporter;
 import oripa.persistent.filetool.FileTypeProperty;
 import oripa.persistent.filetool.Loader;
-import oripa.persistent.doc.exporter.*;
 
 /**
  * @author OUCHI Koji
  *
  */
-public enum FoldedModelFileTypeKey implements FileTypeProperty<Doc> {
-	SVG_FOLDED_MODEL("svg_folded_model", 1, null, ExporterSVGFactory.createFoldedModelExporter(false), ".svg"),
-	SVG_FOLDED_MODEL_FLIP("svg_folded_model_flip", 1, null, ExporterSVGFactory.createFoldedModelExporter(true), ".svg"),
+public enum FoldedModelFileTypeKey implements FileTypeProperty<EstimationResult> {
+	SVG_FOLDED_MODEL("svg_folded_model", 1, null, new FoldedModelExporterSVG(false), ".svg"),
+	SVG_FOLDED_MODEL_FLIP("svg_folded_model_flip", 1, null, new FoldedModelExporterSVG(true), ".svg"),
 	ORMAT_FOLDED_MODEL("ormat", 2, null, new ExporterORmat(), ".ormat");
 
 	private final String keyText;
 	private final Integer order;
 	private final String[] extensions;
-	
-	private final Loader<Doc> loader;
-	private final Exporter<Doc> exporter;
 
+	private final Loader<EstimationResult> loader;
+	private final Exporter<EstimationResult> exporter;
 
 	/**
 	 *
@@ -55,8 +55,8 @@ public enum FoldedModelFileTypeKey implements FileTypeProperty<Doc> {
 	 * @param savingAction
 	 */
 	private FoldedModelFileTypeKey(final String key, final Integer order,
-			Loader<Doc> loader,
-			Exporter<Doc> exporter,			
+			final Loader<EstimationResult> loader,
+			final Exporter<EstimationResult> exporter,
 			final String... extensions) {
 		this.keyText = key;
 		this.order = order;
@@ -89,14 +89,14 @@ public enum FoldedModelFileTypeKey implements FileTypeProperty<Doc> {
 	public Integer getOrder() {
 		return order;
 	}
-	
+
 	@Override
-	public Loader<Doc> getLoader() {
+	public Loader<EstimationResult> getLoader() {
 		return loader;
 	}
-	
+
 	@Override
-	public Exporter<Doc> getExporter() {
+	public Exporter<EstimationResult> getExporter() {
 		return exporter;
 	}
 }

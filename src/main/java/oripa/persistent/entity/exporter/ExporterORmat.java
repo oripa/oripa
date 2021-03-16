@@ -16,24 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.persistent.doc.exporter;
+package oripa.persistent.entity.exporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import oripa.doc.Doc;
+import oripa.domain.fold.EstimationResult;
 import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.persistent.filetool.Exporter;
 
 // export folded model
-public class ExporterORmat implements DocExporter {
+public class ExporterORmat implements Exporter<EstimationResult> {
 
 	@Override
-	public boolean export(final Doc doc, final String filepath)
+	public boolean export(final EstimationResult doc, final String filepath)
 			throws IOException, IllegalArgumentException {
 		OrigamiModel origamiModel = doc.getOrigamiModel();
 		FoldedModelInfo foldedModelInfo = doc.getFoldedModelInfo();

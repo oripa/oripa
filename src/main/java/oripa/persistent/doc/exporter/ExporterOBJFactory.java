@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -20,12 +20,12 @@ package oripa.persistent.doc.exporter;
 
 /**
  * @author Koji
- * 
+ *
  */
 public class ExporterOBJFactory {
 
-	public static DocExporter createFoldedModelExporter() {
-		return new ModelExporterOBJ();
-	}
+//	public static DocExporter createFoldedModelExporter() {
+//		return new ModelExporterOBJ();
+//	}
 
 }
