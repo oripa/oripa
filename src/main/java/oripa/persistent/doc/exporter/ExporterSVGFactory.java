@@ -20,15 +20,15 @@ import oripa.value.OriLine;
 public class ExporterSVGFactory {
 
 	static final int size = 1000;
-	final static String head = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"no\"?>\n"
+	private static final String head = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"no\"?>\n"
 			+ "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\"\n"
 			+ "\"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n"
 			+ "<svg xmlns=\"http://www.w3.org/2000/svg\"\n"
 			+ " xmlns:xlink=\"http://www.w3.org/1999/xlink\" xml:space=\"preserve\"\n"
 			+ " width=\"" + size + "px\" height=\"" + size + "px\"\n"
 			+ " viewBox=\"0 0 " + size + " " + size + "\" >\n";
-	final static String end = "</svg>";
-	final static String gradient = " <linearGradient id=\"Gradient1\" x1=\"20%\" y1=\"0%\" x2=\"80%\" y2=\"100%\">\n"
+	private static final String end = "</svg>";
+	private static final String gradient = " <linearGradient id=\"Gradient1\" x1=\"20%\" y1=\"0%\" x2=\"80%\" y2=\"100%\">\n"
 			+ " <stop offset=\"5%\" stop-color=\"#DDEEFF\" />\n"
 			+ " <stop offset=\"95%\" stop-color=\"#7788FF\" />\n"
 			+ " </linearGradient>\n"
@@ -37,11 +37,10 @@ public class ExporterSVGFactory {
 			+ " <stop offset=\"5%\" stop-color=\"#FFFFEE\" />\n"
 			+ " <stop offset=\"95%\" stop-color=\"#DDDDDD\" />\n"
 			+ " </linearGradient>\n";
-	final static String lineStart = " <line stroke=\"blue\" stroke-width=\"2\" ";
-	final static String polygonStart = "<path style=\"fill:url(#Gradient1);"
+	private static final String polygonStart = "<path style=\"fill:url(#Gradient1);"
 			+ "stroke:#0000ff;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;"
 			+ "stroke-opacity:1;fill-opacity:1.0\" d=\"M ";
-	final static String polygonStart2 = "<path style=\"fill:url(#Gradient2);"
+	private static final String polygonStart2 = "<path style=\"fill:url(#Gradient2);"
 			+ "stroke:#0000ff;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;"
 			+ "stroke-opacity:1;fill-opacity:1.0\" d=\"M ";
 
