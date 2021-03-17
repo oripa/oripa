@@ -66,10 +66,18 @@ public class FoldedModel {
 		this.overlapRelationList = overlapRelationList;
 	}
 
+	/**
+	 *
+	 * @return the number of foldable patterns.
+	 */
 	public int getFoldablePatternCount() {
 		return overlapRelationList.getFoldablePatternCount();
 	}
 
+	/**
+	 *
+	 * @return whether the model is after fold or not.
+	 */
 	public boolean isFolded() {
 		return origamiModel.isFolded();
 	}
