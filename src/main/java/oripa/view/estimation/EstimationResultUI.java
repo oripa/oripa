@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.estimation.EstimationResultFileAccess;
+import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.entity.FoldedModelDAO;
@@ -100,10 +101,9 @@ public class EstimationResultUI extends JPanel {
 	/**
 	 * @param overlapRelationList
 	 */
-	public void setModel(final OrigamiModel origamiModel,
-			final OverlapRelationList overlapRelationList) {
-		this.overlapRelationList = overlapRelationList;
-		this.origamiModel = origamiModel;
+	public void setModel(final FoldedModel foldedModel) {
+		this.overlapRelationList = foldedModel.getOverlapRelationList();
+		this.origamiModel = foldedModel.getOrigamiModel();
 	}
 
 	public void updateIndexLabel() {

@@ -969,8 +969,7 @@ public class UIPanel extends JPanel {
 
 				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 						childFrameManager);
-				JFrame frame = resultFrameFactory.createFrame(this,
-						foldedModel.getOrigamiModel(), foldedModel.getOverlapRelationList());
+				JFrame frame = resultFrameFactory.createFrame(this, foldedModel);
 				frame.repaint();
 				frame.setVisible(true);
 			}

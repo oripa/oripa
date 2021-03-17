@@ -25,8 +25,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import oripa.domain.fold.OverlapRelationList;
-import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.FoldedModel;
 
 // TODO: create label resource and apply it.
 public class EstimationResultFrame extends JFrame implements ActionListener {
@@ -50,10 +49,10 @@ public class EstimationResultFrame extends JFrame implements ActionListener {
 	}
 
 	public void setModel(
-			final OrigamiModel origamiModel, final OverlapRelationList overlapRelationList) {
+			final FoldedModel foldedModel) {
 
-		screen.setModel(origamiModel, overlapRelationList);
-		ui.setModel(origamiModel, overlapRelationList);
+		screen.setModel(foldedModel);
+		ui.setModel(foldedModel);
 		ui.updateIndexLabel();
 		// setVisible(true);
 	}
