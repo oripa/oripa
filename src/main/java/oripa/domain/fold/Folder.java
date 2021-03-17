@@ -63,9 +63,6 @@ public class Folder {
 	 * @param origamiModel
 	 *            half-edge based data structure. It will be affected by this
 	 *            method.
-	 * @param overlapRelationList
-	 *            an object to store information of face layer ordering. It will
-	 *            be affected by this method.
 	 * @param fullEstimation
 	 *            whether the algorithm should compute all possible folded
 	 *            states or not.
