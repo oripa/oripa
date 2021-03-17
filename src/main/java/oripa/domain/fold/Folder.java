@@ -69,19 +69,19 @@ public class Folder {
 	 * @param fullEstimation
 	 *            whether the algorithm should compute all possible folded
 	 *            states or not.
-	 * @return the number of flat foldable layer layouts. -1 if
-	 *         {@code fullEstimation} is false.
+	 * @return folded model whose {@link FoldedModel#getOrigamiModel()} returns
+	 *         the given {@code origamiModel}.
 	 */
-	public int fold(final OrigamiModel origamiModel, final OverlapRelationList overlapRelationList,
-			final boolean fullEstimation) {
+	public FoldedModel fold(final OrigamiModel origamiModel, final boolean fullEstimation) {
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 
-		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
-		foldableOverlapRelations.clear();
+		var overlapRelationList = new OverlapRelationList();
+
+		var foldedModel = new FoldedModel(origamiModel, overlapRelationList);
 
 		simpleFoldWithoutZorder(faces, edges);
 		folderTool.setFacesOutline(faces);
@@ -89,7 +89,7 @@ public class Folder {
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
-			return -1;
+			return foldedModel;
 		}
 
 		// After folding construct the subfaces
@@ -116,14 +116,14 @@ public class Folder {
 		findAnswer(faces, overlapRelationList, 0, overlapRelation, true, paperSize);
 
 		overlapRelationList.setCurrentORmatIndex(0);
-		if (foldableOverlapRelations.isEmpty()) {
-			return 0;
+		if (overlapRelationList.isEmpty()) {
+			return foldedModel;
 		}
 
 //		folderTool.setFacesOutline(faces);
 
 		origamiModel.setFolded(true);
-		return foldableOverlapRelations.size();
+		return foldedModel;
 	}
 
 	/**

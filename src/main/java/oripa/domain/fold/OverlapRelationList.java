@@ -62,4 +62,7 @@ public class OverlapRelationList {
 		return overlapRelations.size();
 	}
 
+	public boolean isEmpty() {
+		return overlapRelations.isEmpty();
+	}
 }

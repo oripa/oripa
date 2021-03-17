@@ -64,7 +64,6 @@ import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -938,7 +937,6 @@ public class UIPanel extends JPanel {
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {
 		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
-		OverlapRelationList overlapRelationList = new OverlapRelationList();
 
 		Folder folder = new Folder(
 				new SubFacesFactory(
@@ -953,10 +951,11 @@ public class UIPanel extends JPanel {
 		var checker = new FoldabilityChecker();
 
 		if (checker.testLocalFlatFoldability(origamiModel)) {
-			final int foldableModelCount = folder.fold(
-					origamiModel, overlapRelationList, fullEstimation);
+			var foldedModel = folder.fold(
+					origamiModel, fullEstimation);
+			final int foldableModelCount = foldedModel.getFoldablePatternCount();
 
-			if (foldableModelCount == -1) {
+			if (!fullEstimation) {
 
 			} else if (foldableModelCount == 0) {
 				JOptionPane.showMessageDialog(
@@ -971,7 +970,7 @@ public class UIPanel extends JPanel {
 				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 						childFrameManager);
 				JFrame frame = resultFrameFactory.createFrame(this,
-						origamiModel, overlapRelationList);
+						foldedModel.getOrigamiModel(), foldedModel.getOverlapRelationList());
 				frame.repaint();
 				frame.setVisible(true);
 			}

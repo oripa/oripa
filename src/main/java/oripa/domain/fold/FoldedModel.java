@@ -65,4 +65,12 @@ public class FoldedModel {
 	public void setOverlapRelationList(final OverlapRelationList overlapRelationList) {
 		this.overlapRelationList = overlapRelationList;
 	}
+
+	public int getFoldablePatternCount() {
+		return overlapRelationList.getFoldablePatternCount();
+	}
+
+	public boolean isFolded() {
+		return origamiModel.isFolded();
+	}
 }
