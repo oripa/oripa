@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
-import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.entity.FoldedModelDAO;
 import oripa.persistent.entity.FoldedModelFilterSelector;
 import oripa.resource.ResourceHolder;
@@ -95,15 +94,15 @@ public class EstimationResultUI extends JPanel {
 		updateIndexLabel();
 	}
 
+	private FoldedModel foldedModel;
 	private OverlapRelationList overlapRelationList = null;
-	private OrigamiModel origamiModel = null;
 
 	/**
 	 * @param overlapRelationList
 	 */
 	public void setModel(final FoldedModel foldedModel) {
+		this.foldedModel = foldedModel;
 		this.overlapRelationList = foldedModel.getOverlapRelationList();
-		this.origamiModel = foldedModel.getOrigamiModel();
 	}
 
 	public void updateIndexLabel() {
@@ -297,8 +296,7 @@ public class EstimationResultUI extends JPanel {
 			var filterSelector = new FoldedModelFilterSelector(screen.isFaceOrderFlipped());
 			final FoldedModelDAO dao = new FoldedModelDAO(filterSelector);
 			EstimationResultFileAccess fileAccess = new EstimationResultFileAccess(dao);
-			lastFilePath = fileAccess.saveFile(
-					origamiModel, overlapRelationList, lastFilePath, this,
+			lastFilePath = fileAccess.saveFile(foldedModel, lastFilePath, this,
 					filterSelector.getSavables());
 		} catch (Exception ex) {
 			logger.error("error: ", ex);
