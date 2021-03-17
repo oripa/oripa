@@ -27,8 +27,8 @@ import oripa.domain.fold.halfedge.OrigamiModel;
  *
  */
 public class FoldedModel {
-	private OrigamiModel origamiModel;
-	private OverlapRelationList overlapRelationList;
+	private final OrigamiModel origamiModel;
+	private final OverlapRelationList overlapRelationList;
 
 	/**
 	 * Constructor
@@ -46,24 +46,10 @@ public class FoldedModel {
 	}
 
 	/**
-	 * @param origamiModel
-	 */
-	public void setOrigamiModel(final OrigamiModel origamiModel) {
-		this.origamiModel = origamiModel;
-	}
-
-	/**
 	 * @return overlapRelationList
 	 */
 	public OverlapRelationList getOverlapRelationList() {
 		return overlapRelationList;
-	}
-
-	/**
-	 * @param overlapRelationList
-	 */
-	public void setOverlapRelationList(final OverlapRelationList overlapRelationList) {
-		this.overlapRelationList = overlapRelationList;
 	}
 
 	/**
