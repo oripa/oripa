@@ -302,7 +302,7 @@ public class EstimationResultUI extends JPanel {
 					filterSelector.getSavables());
 		} catch (Exception ex) {
 			logger.error("error: ", ex);
-			Dialogs.showErrorDialog(EstimationResultUI.this, resources.getString(
+			Dialogs.showErrorDialog(this, resources.getString(
 					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), ex);
 		}
 	}
