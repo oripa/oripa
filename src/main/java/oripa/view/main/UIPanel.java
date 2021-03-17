@@ -950,7 +950,9 @@ public class UIPanel extends JPanel {
 		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
 		var checker = new FoldabilityChecker();
 
-		if (checker.testLocalFlatFoldability(origamiModel)) {
+		if (!checker.testLocalFlatFoldability(origamiModel)) {
+			folder.foldWithoutLineType(origamiModel);
+		} else {
 			var foldedModel = folder.fold(
 					origamiModel, fullEstimation);
 			final int foldableModelCount = foldedModel.getFoldablePatternCount();
@@ -973,8 +975,6 @@ public class UIPanel extends JPanel {
 				frame.repaint();
 				frame.setVisible(true);
 			}
-		} else {
-			folder.foldWithoutLineType(origamiModel);
 		}
 
 		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
