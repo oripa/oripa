@@ -325,8 +325,7 @@ public class FoldedModelScreen extends JPanel
 			return;
 		}
 
-		boolean folded = origamiModel.isFolded();
-		if (!folded) {
+		if (!origamiModel.isFolded()) {
 			return;
 		}
 		long time0 = System.currentTimeMillis();
