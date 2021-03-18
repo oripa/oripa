@@ -1,6 +1,7 @@
 /**
- * ORIPA - Origami Pattern Editor
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
+ * ORIPA - Origami Pattern Editor 
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,18 +16,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package oripa.view.model;
 
-package oripa.resource;
-
-import java.io.File;
-
-public class Constants {
-
-	public static final double DEFAULT_PAPER_SIZE = 400;
-	public static final int DEFAULT_GRID_DIV_NUM = 4;
-	public static final String USER_HOME_DIR_PATH = System.getProperty("user.home");
-	public static final String INI_FILE_PATH = USER_HOME_DIR_PATH + File.separator
-			+ "oripa.ini";
-	public static final boolean FOR_STUDY = false;
-	public static final int MRUFILE_NUM = 10;
+public enum ModelDisplayMode {
+	FILL_ALPHA, FILL_NONE
 }

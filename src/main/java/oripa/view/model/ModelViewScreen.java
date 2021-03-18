@@ -49,8 +49,6 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.resource.Constants;
-import oripa.resource.Constants.ModelDisplayMode;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
@@ -261,7 +259,7 @@ public class ModelViewScreen extends JPanel
 		}
 
 		g2d.setStroke(selector.createDefaultStroke(scale));
-		if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
+		if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 		}
 		drawModel(g2d);

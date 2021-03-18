@@ -42,7 +42,6 @@ import oripa.persistent.entity.OrigamiModelDAO;
 import oripa.persistent.entity.OrigamiModelFileTypeKey;
 import oripa.persistent.entity.OrigamiModelFilterSelector;
 import oripa.persistent.filetool.FileChooserCanceledException;
-import oripa.resource.Constants.ModelDisplayMode;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
