@@ -42,7 +42,6 @@ import javax.swing.JScrollPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.Config;
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.DeleteSelectedLinesActionListener;
 import oripa.application.main.IniFileAccess;
@@ -100,7 +99,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
-	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
+	private final FileHistory fileHistory = new FileHistory(Constants.MRUFILE_NUM);
 
 	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
 
@@ -149,7 +148,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final JMenuItem menuItemExit = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
 
-	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
+	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Constants.MRUFILE_NUM];
 
 	private final JMenuItem menuItemProperty = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL,
@@ -262,7 +261,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		loadIniFile();
 
 		createPaintMenuItems();
-		IntStream.range(0, Config.MRUFILE_NUM)
+		IntStream.range(0, Constants.MRUFILE_NUM)
 				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
 		addActionListenersToComponents();
 
@@ -430,7 +429,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuItemCopyAndPaste.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_C));
 		menuItemCutAndPaste.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_X));
 
-		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
+		for (int i = 0; i < Constants.MRUFILE_NUM; i++) {
 			MRUFilesMenuItem[i].addActionListener(this::loadFileFromMRUFileMenuItem);
 		}
 

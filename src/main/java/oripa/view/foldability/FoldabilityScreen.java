@@ -44,7 +44,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-import oripa.Config;
 import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OriFace;
@@ -54,6 +53,7 @@ import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.geometry.NearestVertexFinder;
 import oripa.domain.paint.util.ElementSelector;
 import oripa.geom.RectangleDomain;
+import oripa.resource.Constants;
 import oripa.util.gui.AffineCamera;
 import oripa.util.gui.MouseUtility;
 import oripa.value.CalculationResource;
@@ -171,7 +171,7 @@ public class FoldabilityScreen extends JPanel
 			}
 		}
 
-		if (Config.FOR_STUDY) {
+		if (Constants.FOR_STUDY) {
 			paintForStudy(g2d, faces, vertices);
 		}
 	}

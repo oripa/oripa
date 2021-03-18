@@ -31,4 +31,6 @@ public class Constants {
 	public static final String USER_HOME_DIR_PATH = System.getProperty("user.home");
 	public static final String INI_FILE_PATH = USER_HOME_DIR_PATH + File.separator
 			+ "oripa.ini";
+	public static final boolean FOR_STUDY = false;
+	public static final int MRUFILE_NUM = 10;
 }
