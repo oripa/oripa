@@ -24,8 +24,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -62,7 +60,7 @@ import oripa.viewsetting.main.MainScreenSetting;
  *
  */
 public class ModelViewScreen extends JPanel
-		implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener,
+		implements MouseListener, MouseMotionListener, MouseWheelListener,
 		ComponentListener {
 	private static final Logger logger = LoggerFactory.getLogger(ModelViewScreen.class);
 
@@ -352,11 +350,6 @@ public class ModelViewScreen extends JPanel
 		scale *= scale_;
 		updateAffineTransform();
 		repaint();
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent arg0) {
-
 	}
 
 	@Override
