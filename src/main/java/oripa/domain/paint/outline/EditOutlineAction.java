@@ -21,20 +21,18 @@ public class EditOutlineAction extends GraphicMouseAction {
 		setEditMode(EditMode.OTHER);
 	}
 
-	private class DrawTempOutlines {
-		public void execute(final Graphics2D g2d, final Collection<Vector2d> outlineVertices,
-				final double scale) {
-			var selector = getElementSelector();
-			g2d.setColor(selector.getEditingOutlineColor());
-			g2d.setStroke(selector.createEditingOutlineStroke(scale));
+	private void drawTempOutlines(final Graphics2D g2d, final Collection<Vector2d> outlineVertices,
+			final double scale) {
+		var selector = getElementSelector();
+		g2d.setColor(selector.getEditingOutlineColor());
+		g2d.setStroke(selector.createEditingOutlineStroke(scale));
 
-			if (outlineVertices.size() > 1) {
-				PairLoop.iterateWithCount(
-						outlineVertices, outlineVertices.size() - 1, (p0, p1) -> {
-							g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
-							return true;
-						});
-			}
+		if (outlineVertices.size() > 1) {
+			PairLoop.iterateWithCount(
+					outlineVertices, outlineVertices.size() - 1, (p0, p1) -> {
+						g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
+						return true;
+					});
 		}
 	}
 
@@ -51,7 +49,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 		if (outlineVnum != 0) {
 
-			(new DrawTempOutlines()).execute(g2d, outlinevertices, context.getScale());
+			drawTempOutlines(g2d, outlinevertices, context.getScale());
 
 			Vector2d cv = (context.getCandidateVertexToPick() == null)
 					? new Vector2d(context.getLogicalMousePoint().getX(),

@@ -93,6 +93,14 @@ public class PairLoop {
 
 	}
 
+	/**
+	 * This interface is to describe what to do with pair-element loop. The
+	 * function yield() must return true to go next loop.
+	 *
+	 * @author OUCHI Koji
+	 *
+	 * @param <Element>
+	 */
 	@FunctionalInterface
 	public interface Block<Element> {
 		/**
