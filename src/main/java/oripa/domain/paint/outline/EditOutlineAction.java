@@ -17,7 +17,8 @@ import oripa.domain.paint.util.PairLoop;
 public class EditOutlineAction extends GraphicMouseAction {
 
 	public EditOutlineAction() {
-		setActionState(new SelectingVertexForOutline(new OverlappingLineExtractor()));
+		setActionState(new SelectingVertexForOutline(new CloseTempOutlineFactory(new IsOnTempOutlineLoop(),
+				new IsOutsideOfTempOutlineLoop(), new OverlappingLineExtractor())));
 		setEditMode(EditMode.OTHER);
 	}
 

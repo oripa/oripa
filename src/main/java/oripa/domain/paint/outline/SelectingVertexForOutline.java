@@ -8,7 +8,6 @@ import javax.vecmath.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingVertex;
@@ -17,14 +16,14 @@ import oripa.geom.GeomUtil;
 public class SelectingVertexForOutline extends PickingVertex {
 	private static final Logger logger = LoggerFactory.getLogger(SelectingVertexForOutline.class);
 
-	private final OverlappingLineExtractor overlappingExtractor;
+	private final CloseTempOutlineFactory closeTempOutlineFactory;
 
 	/**
 	 * Constructor
 	 */
-	public SelectingVertexForOutline(final OverlappingLineExtractor overlappingExtractor) {
+	public SelectingVertexForOutline(final CloseTempOutlineFactory factory) {
 		super();
-		this.overlappingExtractor = overlappingExtractor;
+		this.closeTempOutlineFactory = factory;
 	}
 
 	@Override
@@ -66,9 +65,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 	}
 
 	private void closeTmpOutline(final Collection<Vector2d> outlineVertices, final Painter painter) {
-
-		(new CloseTempOutline(painter, overlappingExtractor)).execute(outlineVertices);
-
+		closeTempOutlineFactory.create(painter).execute(outlineVertices);
 	}
 
 }

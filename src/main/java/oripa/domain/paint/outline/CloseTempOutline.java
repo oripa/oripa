@@ -19,13 +19,19 @@ import oripa.value.OriLine;
 public class CloseTempOutline {
 	private static final Logger logger = LoggerFactory.getLogger(CloseTempOutline.class);
 
+	private final IsOnTempOutlineLoop isOnTempOutlineLoop;
+	private final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
 	private final Painter painter;
 	private final OverlappingLineExtractor overlappingExtractor;
 
 	/**
 	 * Constructor
 	 */
-	public CloseTempOutline(final Painter painter, final OverlappingLineExtractor overlappingExtractor) {
+	public CloseTempOutline(final IsOnTempOutlineLoop isOnTempOutlineLoop,
+			final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop, final Painter painter,
+			final OverlappingLineExtractor overlappingExtractor) {
+		this.isOnTempOutlineLoop = isOnTempOutlineLoop;
+		this.isOutsideOfTempOutlineLoop = isOutsideOfTempOutlineLoop;
 		this.painter = painter;
 		this.overlappingExtractor = overlappingExtractor;
 	}
@@ -69,8 +75,8 @@ public class CloseTempOutline {
 				continue;
 			}
 			double eps = creasePattern.getPaperSize() * 0.001;
-			Vector2d onPoint0 = isOnTmpOutlineLoop(outlineVertices, line.p0, eps);
-			Vector2d onPoint1 = isOnTmpOutlineLoop(outlineVertices, line.p1, eps);
+			var onPoint0 = isOnTempOutlineLoop.execute(outlineVertices, line.p0, eps);
+			var onPoint1 = isOnTempOutlineLoop.execute(outlineVertices, line.p1, eps);
 
 			logger.debug("line = " + line);
 			logger.debug("onPoint0 = " + onPoint0);
@@ -81,15 +87,15 @@ public class CloseTempOutline {
 //				logger.debug("line is removed: it's on contour.");
 //			}
 
-			var isOutsideP0 = isOutsideOfTmpOutlineLoop(outlineVertices, line.p0);
-			var isOutsideP1 = isOutsideOfTmpOutlineLoop(outlineVertices, line.p1);
+			var isOutsideP0 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.p0);
+			var isOutsideP1 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.p1);
 
 			logger.debug(String.join(",", outlineVertices.stream()
 					.map(v -> v.toString()).collect(Collectors.toList())));
 			logger.debug("isOutsideP0 = " + isOutsideP0);
 			logger.debug("isOutsideP1 = " + isOutsideP1);
 
-			if ((onPoint0 == null && isOutsideP0) || (onPoint1 == null && isOutsideP1)) {
+			if ((!onPoint0 && isOutsideP0) || (!onPoint1 && isOutsideP1)) {
 				toBeRemoved.add(line);
 				logger.debug("line is removed: it's outside of contour.");
 			}
@@ -97,17 +103,4 @@ public class CloseTempOutline {
 
 		painter.removeLines(toBeRemoved);
 	}
-
-	private Vector2d isOnTmpOutlineLoop(
-			final Collection<Vector2d> outlinevertices, final Vector2d v, final double eps) {
-
-		return (new IsOnTempOutlineLoop()).execute(outlinevertices, v, eps);
-	}
-
-	private boolean isOutsideOfTmpOutlineLoop(
-			final Collection<Vector2d> outlinevertices, final Vector2d v) {
-
-		return (new IsOutsideOfTempOutlineLoop()).execute(outlinevertices, v);
-	}
-
 }

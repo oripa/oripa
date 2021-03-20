@@ -8,10 +8,10 @@ import oripa.domain.paint.util.PairLoop;
 import oripa.geom.GeomUtil;
 
 public class IsOnTempOutlineLoop {
-	public Vector2d execute(
+	public boolean execute(
 			final Collection<Vector2d> outlineVertices, final Vector2d target,
 			final double eps) {
 		return PairLoop.iterateAll(outlineVertices,
-				(p0, p1) -> GeomUtil.distancePointToSegment(target, p0, p1) >= eps);
+				(p0, p1) -> GeomUtil.distancePointToSegment(target, p0, p1) >= eps) != null;
 	}
 }

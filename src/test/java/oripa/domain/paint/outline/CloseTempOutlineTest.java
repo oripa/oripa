@@ -19,7 +19,9 @@
 package oripa.domain.paint.outline;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalMatchers.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.util.Collection;
@@ -48,6 +50,10 @@ class CloseTempOutlineTest {
 	@InjectMocks
 	private CloseTempOutline closer;
 	@Mock
+	private IsOnTempOutlineLoop isOnTempOutlineLoop;
+	@Mock
+	private IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
+	@Mock
 	private Painter painter;
 	@Mock
 	private OverlappingLineExtractor overlappingExtractor;
@@ -59,14 +65,26 @@ class CloseTempOutlineTest {
 	@Test
 	void testExecute() {
 //		var creasePattern = mock(CreasePatternInterface.class);
+		var l0 = new OriLine(0, 0, 1, 0, OriLine.Type.MOUNTAIN);
+		var l1 = new OriLine(1, 0, 1, 1, OriLine.Type.MOUNTAIN);
+		var l2 = new OriLine(1, 1, 0, 1, OriLine.Type.MOUNTAIN);
+		var l3 = new OriLine(0, 1, 0, 0, OriLine.Type.MOUNTAIN);
+		var l4 = new OriLine(0.5, 0.5, 0.9, 0.5, OriLine.Type.MOUNTAIN);
+
 		var creasePattern = (new CreasePatternFactory()).createCreasePattern(List.of(
-				new OriLine(0, 0, 1, 0, OriLine.Type.CUT), new OriLine(1, 0, 1, 1, OriLine.Type.CUT),
-				new OriLine(1, 1, 0, 1, OriLine.Type.CUT), new OriLine(0, 1, 0, 0, OriLine.Type.CUT),
-				new OriLine(0.5, 0.5, 0.9, 0.5, OriLine.Type.CUT)));
+				l0, l1, l2, l3, l4));
 
 		when(painter.getCreasePattern()).thenReturn(creasePattern);
 
 		var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
+
+		when(isOnTempOutlineLoop.execute(eq(outlineVertices), not(or(eq(l2.p1), eq(l4.p1))), anyDouble()))
+				.thenReturn(true);
+		when(isOnTempOutlineLoop.execute(eq(outlineVertices), or(eq(l2.p1), eq(l4.p1)), anyDouble())).thenReturn(false);
+
+		when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), not(eq(l2.p1)))).thenReturn(false);
+		when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), eq(l2.p1))).thenReturn(true);
+
 		closer.execute(outlineVertices);
 
 		var linesCaptor = ArgumentCaptor.forClass(Collection.class);
