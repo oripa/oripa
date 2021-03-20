@@ -65,7 +65,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 	}
 
 	private void closeTmpOutline(final Collection<Vector2d> outlineVertices, final Painter painter) {
-		closeTempOutlineFactory.create(painter).execute(outlineVertices);
+		closeTempOutlineFactory.create().execute(outlineVertices, painter);
 	}
 
 }

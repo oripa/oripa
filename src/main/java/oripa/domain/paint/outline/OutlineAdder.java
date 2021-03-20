@@ -18,31 +18,46 @@
  */
 package oripa.domain.paint.outline;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.vecmath.Vector2d;
+
 import oripa.domain.cptool.OverlappingLineExtractor;
+import oripa.domain.cptool.Painter;
+import oripa.domain.paint.util.PairLoop;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CloseTempOutlineFactory {
-	private final IsOnTempOutlineLoop isOnTempOutlineLoop;
-	private final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
+public class OutlineAdder {
 	private final OverlappingLineExtractor overlappingExtractor;
 
 	/**
 	 * Constructor
 	 */
-	public CloseTempOutlineFactory(final IsOnTempOutlineLoop isOnTempOutlineLoop,
-			final IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop,
-			final OverlappingLineExtractor overlappingExtractor) {
-		this.isOnTempOutlineLoop = isOnTempOutlineLoop;
-		this.isOutsideOfTempOutlineLoop = isOutsideOfTempOutlineLoop;
+	public OutlineAdder(final OverlappingLineExtractor overlappingExtractor) {
 		this.overlappingExtractor = overlappingExtractor;
 	}
 
-	public CloseTempOutline create() {
-		return new CloseTempOutline(
-				new OutsideLineRemover(isOnTempOutlineLoop, isOutsideOfTempOutlineLoop),
-				new OutlineAdder(overlappingExtractor));
+	public void addOutlines(final Painter painter,
+			final Collection<Vector2d> outlineVertices) {
+		var creasePattern = painter.getCreasePattern();
+		var overlappings = new ArrayList<OriLine>();
+		var lines = new ArrayList<OriLine>();
+
+		PairLoop.iterateAll(outlineVertices, (element, nextElement) -> {
+			var line = new OriLine(element, nextElement, OriLine.Type.CUT);
+			lines.add(line);
+			overlappings.addAll(overlappingExtractor.extract(creasePattern, line));
+
+			return true;
+		});
+
+		painter.removeLines(overlappings);
+		painter.addLines(lines);
 	}
+
 }
