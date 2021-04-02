@@ -44,23 +44,24 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-import oripa.Config;
 import oripa.domain.cptool.OverlappingLineExtractor;
-import oripa.domain.fold.FoldabilityChecker;
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriVertex;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.foldability.FoldabilityChecker;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriVertex;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.geometry.NearestVertexFinder;
 import oripa.domain.paint.util.ElementSelector;
 import oripa.geom.RectangleDomain;
+import oripa.resource.Constants;
 import oripa.util.gui.AffineCamera;
 import oripa.util.gui.MouseUtility;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 /**
- * A screen to show whether Maekawa theorem and Kawasaki theorem holds.
+ * A screen to show whether Maekawa theorem and Kawasaki theorem (and others)
+ * holds.
  *
  * @author Koji
  *
@@ -115,7 +116,8 @@ public class FoldabilityScreen extends JPanel
 			final Collection<OriLine> creasePattern,
 			final boolean zeroLineWidth) {
 		this.origamiModel = origamiModel;
-		this.creasePattern = creasePattern;
+		this.creasePattern = creasePattern.stream()
+				.map(line -> new OriLine(line)).collect(Collectors.toList());
 		this.zeroLineWidth = zeroLineWidth;
 
 		violatingVertices = foldabilityChecker.findViolatingVertices(
@@ -147,7 +149,7 @@ public class FoldabilityScreen extends JPanel
 			} else {
 				g2d.setColor(new Color(255, 210, 210));
 			}
-			g2d.fill(face.preOutline);
+			g2d.fill(face.getOutlineBeforeFolding());
 		}
 
 		g2d.setColor(selector.getViolatingVertexColor());
@@ -155,20 +157,21 @@ public class FoldabilityScreen extends JPanel
 			double scale = camera.getScale();
 			double vertexSize = selector.createViolatingVertexSize(scale);
 			double vertexHalfSize = vertexSize / 2;
+			var position = v.getPositionBeforeFolding();
 			g2d.fill(new Rectangle2D.Double(
-					v.preP.x - vertexHalfSize, v.preP.y - vertexHalfSize,
+					position.x - vertexHalfSize, position.y - vertexHalfSize,
 					vertexSize, vertexSize));
 		}
 
 		if (bDrawFaceID) {
 			g2d.setColor(Color.BLACK);
 			for (OriFace face : faces) {
-				g2d.drawString("" + face.tmpInt, (int) face.getCentroidBeforeFolding().x,
+				g2d.drawString("" + face.getFaceID(), (int) face.getCentroidBeforeFolding().x,
 						(int) face.getCentroidBeforeFolding().y);
 			}
 		}
 
-		if (Config.FOR_STUDY) {
+		if (Constants.FOR_STUDY) {
 			paintForStudy(g2d, faces, vertices);
 		}
 	}
@@ -177,32 +180,26 @@ public class FoldabilityScreen extends JPanel
 			final Collection<OriVertex> vertices) {
 		g2d.setColor(new Color(255, 210, 220));
 		for (OriFace face : faces) {
-			if (face.tmpInt2 == 0) {
+			// switch the if statement by comment out?
+			if (face.getIndexForStack() == 0) {
 				g2d.setColor(Color.RED);
-				g2d.fill(face.preOutline);
+				g2d.fill(face.getOutlineBeforeFolding());
 			} else {
-				g2d.setColor(face.color);
+				g2d.setColor(face.colorForDebug);
 			}
 
 			if (violatingFaces.contains(face)) {
 				g2d.setColor(Color.RED);
 			} else {
-				if (face.faceFront) {
+				if (face.isFaceFront()) {
 					g2d.setColor(new Color(255, 200, 200));
 				} else {
 					g2d.setColor(new Color(200, 200, 255));
 				}
 			}
 
-			g2d.fill(face.preOutline);
+			g2d.fill(face.getOutlineBeforeFolding());
 		}
-
-		g2d.setColor(Color.BLACK);
-		for (OriFace face : faces) {
-			g2d.drawString("" + face.z_order, (int) face.getCentroidBeforeFolding().x,
-					(int) face.getCentroidBeforeFolding().y);
-		}
-
 	}
 
 	private void buildBufferImage() {
@@ -371,7 +368,9 @@ public class FoldabilityScreen extends JPanel
 
 		var nearest = NearestVertexFinder.findNearestVertex(
 				logicalPoint,
-				violatingVertices.stream().map(v -> v.preP).collect(Collectors.toList()));
+				violatingVertices.stream()
+						.map(v -> v.getPositionBeforeFolding())
+						.collect(Collectors.toList()));
 
 		if (nearest.distance >= scaleDistanceThreshold()) {
 			pickedViolatingVertex = null;
@@ -380,7 +379,7 @@ public class FoldabilityScreen extends JPanel
 		}
 
 		pickedViolatingVertex = violatingVertices.stream()
-				.filter(vertex -> vertex.preP.equals(nearest.point))
+				.filter(vertex -> vertex.getPositionBeforeFolding().equals(nearest.point))
 				.findFirst().get();
 
 		repaint();

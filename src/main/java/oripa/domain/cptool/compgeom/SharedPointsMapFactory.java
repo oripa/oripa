@@ -91,6 +91,9 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 		for (var byX : xOrderHash) {
 			var yHash = hashFactory.create(byX, P::getY, eps);
 			for (var xyPoints : yHash) {
+				if (xyPoints.isEmpty()) {
+					continue;
+				}
 				P point0 = xyPoints.get(0);
 				sharedPointsMap.put(point0.getPoint(), xyPoints);
 				xyPoints.forEach(p -> p.setKeyPoint(point0.getPoint()));

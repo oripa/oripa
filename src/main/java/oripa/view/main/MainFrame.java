@@ -24,7 +24,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -39,12 +38,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.Config;
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.DeleteSelectedLinesActionListener;
 import oripa.application.main.IniFileAccess;
@@ -52,6 +49,7 @@ import oripa.application.main.PaintContextModification;
 import oripa.application.main.SelectAllLineActionListener;
 import oripa.application.main.UnselectAllItemsActionListener;
 import oripa.appstate.StateManager;
+import oripa.appstate.StatePopper;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.state.PaintBoundStateFactory;
@@ -64,12 +62,12 @@ import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.persistent.dao.AbstractFilterSelector;
 import oripa.persistent.doc.CreasePatternFileTypeKey;
 import oripa.persistent.doc.DocDAO;
 import oripa.persistent.doc.DocFilterSelector;
 import oripa.persistent.filetool.AbstractSavingAction;
 import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileVersionError;
 import oripa.persistent.filetool.WrongDataFormatException;
 import oripa.resource.Constants;
@@ -78,6 +76,7 @@ import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
 import oripa.util.gui.Dialogs;
+import oripa.util.gui.KeyStrokes;
 import oripa.viewsetting.ViewScreenUpdater;
 import oripa.viewsetting.main.MainFrameSetting;
 import oripa.viewsetting.main.MainScreenSetting;
@@ -91,6 +90,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
+	private final StateManager stateManager = new StateManager();
+
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
 
@@ -98,9 +99,9 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
-	private final FileHistory fileHistory = new FileHistory(Config.MRUFILE_NUM);
+	private final FileHistory fileHistory = new FileHistory(Constants.MRUFILE_NUM);
 
-	private final DocFilterSelector filterSelector = new DocFilterSelector();
+	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
 
 	private final Doc document = new Doc();
 
@@ -113,7 +114,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private RepeatCopyDialog arrayCopyDialog;
 	private CircleCopyDialog circleCopyDialog;
-	public static JLabel hintLabel = new JLabel();
+	private final JLabel hintLabel = new JLabel();
 
 	// setup Menu Bars
 	private final JMenu menuFile = new JMenu(
@@ -140,8 +141,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_FOLD_ID));
 	private final JMenuItem menuItemExportDXF = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_DXF_ID));
-//	private final JMenuItem menuItemExportOBJ = new JMenuItem(
-//	resourceHolder.getString(ResourceKey.LABEL,StringID.Main.EXPORT_OBJ_ID));
 	private final JMenuItem menuItemExportCP = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXPORT_CP_ID));
 	private final JMenuItem menuItemExportSVG = new JMenuItem(
@@ -149,7 +148,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final JMenuItem menuItemExit = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.EXIT_ID));
 
-	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Config.MRUFILE_NUM];
+	private final JMenuItem[] MRUFilesMenuItem = new JMenuItem[Constants.MRUFILE_NUM];
 
 	private final JMenuItem menuItemProperty = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL,
@@ -202,7 +201,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final IniFileAccess iniFileAccess = new IniFileAccess(
 			new InitDataFileReader(), new InitDataFileWriter());
-	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO());
+	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO(new DocFilterSelector()));
 	private final PaintContextModification paintContextModification = new PaintContextModification();
 
 	public MainFrame() {
@@ -215,8 +214,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		screenSetting = mainScreen.getMainScreenSetting();
 
 		var originHolder = screenSetting.getSelectionOriginHolder();
-
-		var stateManager = new StateManager();
 
 		UIPanel uiPanel = null;
 		logger.info("start constructing UI panel.");
@@ -264,7 +261,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		loadIniFile();
 
 		createPaintMenuItems();
-		IntStream.range(0, Config.MRUFILE_NUM)
+		IntStream.range(0, Constants.MRUFILE_NUM)
 				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
 		addActionListenersToComponents();
 
@@ -337,8 +334,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			updateTitleText();
 		});
 
-		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemOpen.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_O));
 
 		menuItemSave.addActionListener(e -> {
 			var filePath = document.getDataFilePath();
@@ -350,8 +346,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				saveAnyTypeUsingGUI();
 			}
 		});
-		menuItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemSave.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_S));
 
 		menuItemSaveAs.addActionListener(e -> saveAnyTypeUsingGUI());
 
@@ -381,8 +376,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			}
 			screenUpdater.updateScreen();
 		});
-		menuItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemUndo.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_Z));
 
 		menuItemRedo.addActionListener(e -> {
 			try {
@@ -396,12 +390,10 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			}
 			screenUpdater.updateScreen();
 		});
-		menuItemRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemRedo.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_Y));
 
 		menuItemClear.addActionListener(e -> clear());
-		menuItemClear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemClear.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_N));
 
 		menuItemAbout.addActionListener(e -> JOptionPane.showMessageDialog(this,
 				resourceHolder.getString(ResourceKey.APP_INFO, StringID.AppInfo.ABOUT_THIS_ID),
@@ -410,7 +402,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		menuItemExportDXF
 				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
-//		menuItemExportOBJ.addActionListener(e -> saveFileWithModelCheck(FileTypeKey.OBJ_MODEL));
 		menuItemExportCP
 				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
 		menuItemExportSVG
@@ -422,26 +413,23 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		menuItemSelectAll.addActionListener(
 				new SelectAllLineActionListener(paintContext));
-		menuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				InputEvent.CTRL_DOWN_MASK));
+		menuItemSelectAll.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_A));
 
+		var statePopper = new StatePopper(stateManager);
 		menuItemUnSelectAll.addActionListener(
-				new UnselectAllItemsActionListener(actionHolder, paintContext, screenUpdater));
-		menuItemUnSelectAll.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_ESCAPE, 0));
+				new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
+						screenUpdater));
+		menuItemUnSelectAll.setAccelerator(KeyStrokes.get(KeyEvent.VK_ESCAPE));
 
 		menuItemDeleteSelectedLines
 				.addActionListener(
 						new DeleteSelectedLinesActionListener(paintContext, screenUpdater));
-		menuItemDeleteSelectedLines.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_DELETE, 0));
+		menuItemDeleteSelectedLines.setAccelerator(KeyStrokes.get(KeyEvent.VK_DELETE));
 
-		menuItemCopyAndPaste.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
-		menuItemCutAndPaste.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
+		menuItemCopyAndPaste.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_C));
+		menuItemCutAndPaste.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_X));
 
-		for (int i = 0; i < Config.MRUFILE_NUM; i++) {
+		for (int i = 0; i < Constants.MRUFILE_NUM; i++) {
 			MRUFilesMenuItem[i].addActionListener(this::loadFileFromMRUFileMenuItem);
 		}
 
@@ -627,9 +615,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 
 		try {
-			dataFileAccess.saveFileWithModelCheck(document, filterSelector.getFilter(type), this);
-		} catch (FileChooserCanceledException e) {
-			logger.info("File selection is canceled.");
+			dataFileAccess.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
+					filterSelector.getFilter(type), this);
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
@@ -651,7 +638,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuFile.add(menuItemSaveAsImage);
 		menuFile.add(menuItemExportFOLD);
 		menuFile.add(menuItemExportDXF);
-//		menuFile.add(menuItemExportOBJ);
 		menuFile.add(menuItemExportCP);
 		menuFile.add(menuItemExportSVG);
 		menuFile.addSeparator();
@@ -778,6 +764,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void windowClosing(final WindowEvent arg0) {
 
 		if (paintContext.creasePatternUndo().changeExists()) {
+			// TODO: Use string resource.
 			// confirm saving edited opx
 			int selected = JOptionPane
 					.showConfirmDialog(

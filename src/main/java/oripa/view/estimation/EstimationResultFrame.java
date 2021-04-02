@@ -25,9 +25,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.FoldedModel;
 
+// TODO: create label resource and apply it.
 public class EstimationResultFrame extends JFrame implements ActionListener {
 
 	FoldedModelScreen screen;
@@ -49,11 +49,11 @@ public class EstimationResultFrame extends JFrame implements ActionListener {
 	}
 
 	public void setModel(
-			final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo) {
+			final FoldedModel foldedModel) {
 
-		screen.setModel(origamiModel, foldedModelInfo);
-		ui.setModel(origamiModel, foldedModelInfo);
-		ui.updateLabel();
+		screen.setModel(foldedModel);
+		ui.setModel(foldedModel);
+		ui.updateIndexLabel();
 		// setVisible(true);
 	}
 

@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 
 import oripa.doc.Property;
 
+// TODO: Use label resource.
 public abstract class AbstractPropertyDialog extends JDialog implements
 		ComponentListener {
 

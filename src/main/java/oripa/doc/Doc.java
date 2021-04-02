@@ -25,9 +25,6 @@ import java.util.Collection;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.EstimationEntityHolder;
-import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OrigamiModel;
 import oripa.domain.paint.CreasePatternHolder;
 import oripa.resource.Constants;
 import oripa.value.OriLine;
@@ -38,22 +35,12 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class Doc implements CutModelOutlinesHolder, CreasePatternHolder, EstimationEntityHolder {
+public class Doc implements CutModelOutlinesHolder, CreasePatternHolder {
 
 	/**
 	 * Crease Pattern
 	 */
 	private CreasePatternInterface creasePattern = null;
-
-	/**
-	 * Origami Model for Estimation
-	 */
-	private OrigamiModel origamiModel = null;
-
-	/**
-	 * Folded Model Information (Result of Estimation)
-	 */
-	private FoldedModelInfo foldedModelInfo = null;
 
 	private Collection<OriLine> outlines = new ArrayList<OriLine>();
 
@@ -72,8 +59,6 @@ public class Doc implements CutModelOutlinesHolder, CreasePatternHolder, Estimat
 
 	public void set(final Doc doc) {
 		setCreasePattern(doc.getCreasePattern());
-		setOrigamiModel(doc.getOrigamiModel());
-		setFoldedModelInfo(doc.getFoldedModelInfo());
 		setProperty(doc.getProperty());
 
 		outlines = doc.getOutlines();
@@ -82,9 +67,6 @@ public class Doc implements CutModelOutlinesHolder, CreasePatternHolder, Estimat
 	private void initialize(final double size) {
 
 		creasePattern = (new CreasePatternFactory()).createCreasePattern(size);
-
-		origamiModel = new OrigamiModel(size);
-		foldedModelInfo = new FoldedModelInfo();
 	}
 
 	public void setDataFilePath(final String path) {
@@ -136,49 +118,6 @@ public class Doc implements CutModelOutlinesHolder, CreasePatternHolder, Estimat
 	@Override
 	public void setCreasePattern(final CreasePatternInterface cp) {
 		creasePattern = cp;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.fold.EstimationEntityHolder#getOrigamiModel()
-	 */
-	@Override
-	public OrigamiModel getOrigamiModel() {
-		return origamiModel;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.fold.EstimationEntityHolder#setOrigamiModel(oripa.domain.
-	 * fold.OrigamiModel)
-	 */
-	@Override
-	public void setOrigamiModel(final OrigamiModel origamiModel) {
-		this.origamiModel = origamiModel;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.fold.EstimationEntityHolder#getFoldedModelInfo()
-	 */
-	@Override
-	public FoldedModelInfo getFoldedModelInfo() {
-		return foldedModelInfo;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.fold.EstimationEntityHolder#setFoldedModelInfo(oripa.
-	 * domain.fold.FoldedModelInfo)
-	 */
-	@Override
-	public void setFoldedModelInfo(final FoldedModelInfo foldedModelInfo) {
-		this.foldedModelInfo = foldedModelInfo;
 	}
 
 	/**

@@ -6,37 +6,12 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.util.PairLoop;
 import oripa.geom.GeomUtil;
-import oripa.geom.Line;
 
-public class IsOnTempOutlineLoop implements PairLoop.Block<Vector2d> {
-
-	private Vector2d target;
-	private double eps;
-
-	public Vector2d execute(
-			final Collection<Vector2d> outlineVertices, final Vector2d v,
+public class IsOnTempOutlineLoop {
+	public boolean execute(
+			final Collection<Vector2d> outlineVertices, final Vector2d target,
 			final double eps) {
-
-		target = v;
-		this.eps = eps;
-		return PairLoop.iterateAll(outlineVertices, this);
-
+		return PairLoop.iterateAll(outlineVertices,
+				(p0, p1) -> GeomUtil.distancePointToSegment(target, p0, p1) >= eps) != null;
 	}
-
-	@Override
-	public boolean yield(final Vector2d p0, final Vector2d p1) {
-
-		Line line = new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
-
-		double distanceToLine = GeomUtil.distancePointToLine(
-				target,
-				line);
-
-		if (distanceToLine < eps) {
-			return false;
-		}
-
-		return true;
-	}
-
 }

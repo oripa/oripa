@@ -1,33 +1,26 @@
 package oripa.persistent.doc;
 
-import java.io.File;
-import java.util.Collections;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import oripa.doc.Doc;
+import oripa.persistent.dao.AbstractFilterSelector;
 import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.MultiTypeAcceptableFileLoadingFilter;
-import oripa.resource.ResourceHolder;
-import oripa.resource.ResourceKey;
+import oripa.persistent.filetool.FileTypeProperty;
 import oripa.resource.StringID;
 
 /**
- * Manages available filters for file access.
+ * Manages available filters for {@link Doc} file access. Limited to crease
+ * pattern input/output.
  *
  * @author OUCHI Koji
  *
  */
-public class DocFilterSelector {
+public class DocFilterSelector extends AbstractFilterSelector<Doc> {
 
-	private final SortedMap<CreasePatternFileTypeKey, FileAccessSupportFilter<Doc>> filters = new TreeMap<>();
-
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
+	private final SortedMap<FileTypeProperty<Doc>, FileAccessSupportFilter<Doc>> filters = new TreeMap<>();
 
 	/**
-	 *
 	 * A constructor that puts default filters into this instance.
 	 */
 	public DocFilterSelector() {
@@ -55,134 +48,8 @@ public class DocFilterSelector {
 
 	}
 
-	/**
-	 *
-	 * @param key
-	 * @param desctiption
-	 * @param exporter
-	 * @param loader
-	 */
-	private void putFilter(final CreasePatternFileTypeKey key, final String desctiption) {
-		FileAccessSupportFilter<Doc> filter;
-
-		filter = new FileAccessSupportFilter<>(key, desctiption);
-
-		this.putFilter(key, filter);
+	@Override
+	protected SortedMap<FileTypeProperty<Doc>, FileAccessSupportFilter<Doc>> getFilters() {
+		return filters;
 	}
-
-	/**
-	 *
-	 * @param fileTypeKey
-	 * @param resourceKey
-	 * @return
-	 */
-	private String createDescription(final CreasePatternFileTypeKey fileTypeKey,
-			final String resourceKey) {
-		return FileAccessSupportFilter.createDefaultDescription(fileTypeKey,
-				resourceHolder.getString(ResourceKey.LABEL, resourceKey));
-
-	}
-
-	/**
-	 *
-	 * @param key
-	 *            A value that describes the file type you want.
-	 * @return A filter for given key.
-	 */
-	public FileAccessSupportFilter<Doc> getFilter(final CreasePatternFileTypeKey key) {
-		return filters.get(key);
-	}
-
-	/**
-	 *
-	 * @param key
-	 *            A value that describes the file type you want.
-	 * @param filter
-	 *            A filter to be set.
-	 * @return The previous filter for given key.
-	 */
-
-	public FileAccessSupportFilter<Doc> putFilter(final CreasePatternFileTypeKey key,
-			final FileAccessSupportFilter<Doc> filter) {
-		return filters.put(key, filter);
-	}
-
-	/**
-	 *
-	 * @return all filters in this instance.
-	 */
-	public FileAccessSupportFilter<Doc>[] toArray() {
-		@SuppressWarnings("unchecked")
-		FileAccessSupportFilter<Doc>[] array = new FileAccessSupportFilter[filters
-				.size()];
-
-		return filters.values().toArray(array);
-	}
-
-	/**
-	 *
-	 * @return filters that can load Doc from a file.
-	 */
-	public FileAccessSupportFilter<Doc>[] getLoadables() {
-		var loadables = filters.values().stream()
-				.filter(f -> f.getLoadingAction() != null)
-				.collect(Collectors.toList());
-
-		var multi = new MultiTypeAcceptableFileLoadingFilter<Doc>(
-				filters.values().stream()
-						.filter(f -> f.getLoadingAction() != null)
-						.collect(Collectors.toList()),
-				"Any type");
-		loadables.add(multi);
-
-		Collections.sort(loadables);
-
-		@SuppressWarnings("unchecked")
-		FileAccessSupportFilter<Doc>[] array = new FileAccessSupportFilter[loadables
-				.size()];
-
-		return loadables.toArray(array);
-	}
-
-	/**
-	 * @param path
-	 * @return a filter that can load the file at the path.
-	 * @throws IllegalArgumentException
-	 *             No filter is available for the given path. Or, the path is
-	 *             null or is for a directory.
-	 */
-	public FileAccessSupportFilter<Doc> getLoadableFilterOf(final String path)
-			throws IllegalArgumentException {
-		if (path == null) {
-			throw new IllegalArgumentException("Wrong path (null)");
-		}
-
-		File file = new File(path);
-		if (file.isDirectory()) {
-			throw new IllegalArgumentException("The path is for directory.");
-		}
-
-		return Stream.of(toArray())
-				.filter(f -> f.accept(file) && f.getLoadingAction() != null)
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(
-						"cannot load the file with the extension."));
-	}
-
-	/**
-	 *
-	 * @return filters that can save a Doc object.
-	 */
-	@SuppressWarnings("unchecked")
-	public FileAccessSupportFilter<Doc>[] getSavables() {
-		var savables = filters.values().stream()
-				.filter(f -> f.getSavingAction() != null)
-				.collect(Collectors.toList());
-
-		Collections.sort(savables);
-
-		return (FileAccessSupportFilter<Doc>[]) savables
-				.toArray(new FileAccessSupportFilter<?>[savables.size()]);
-	}
-
 }

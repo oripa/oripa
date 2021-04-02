@@ -3,8 +3,7 @@ package oripa.view.estimation;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.FoldedModel;
 import oripa.util.gui.ChildFrameManager;
 
 public class EstimationResultFrameFactory {
@@ -20,8 +19,7 @@ public class EstimationResultFrameFactory {
 
 	public JFrame createFrame(
 			final JComponent parent,
-			final OrigamiModel origamiModel,
-			final FoldedModelInfo foldedModelInfo) {
+			final FoldedModel foldedModel) {
 
 		EstimationResultFrame frame = (EstimationResultFrame) childFrameManager.find(parent,
 				EstimationResultFrame.class);
@@ -29,7 +27,7 @@ public class EstimationResultFrameFactory {
 			frame = new EstimationResultFrame();
 		}
 
-		frame.setModel(origamiModel, foldedModelInfo);
+		frame.setModel(foldedModel);
 		childFrameManager.putChild(parent, frame);
 
 		return frame;

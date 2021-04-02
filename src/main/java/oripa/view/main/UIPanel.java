@@ -20,18 +20,21 @@ package oripa.view.main;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,6 +42,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
@@ -55,13 +59,19 @@ import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.bind.state.action.PaintActionSetterFactory;
+import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.TypeForChange;
+import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.FoldedModelInfo;
 import oripa.domain.fold.Folder;
-import oripa.domain.fold.OrigamiModel;
-import oripa.domain.fold.OrigamiModelFactory;
+import oripa.domain.fold.foldability.FoldabilityChecker;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.domain.fold.subface.FacesToCreasePatternConverter;
+import oripa.domain.fold.subface.ParentFacesCollector;
+import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
+import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
@@ -76,6 +86,7 @@ import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.gui.ChildFrameManager;
 import oripa.util.gui.GridBagConstraintsBuilder;
+import oripa.util.gui.KeyStrokes;
 import oripa.value.OriLine;
 import oripa.view.estimation.EstimationResultFrameFactory;
 import oripa.view.foldability.FoldabilityCheckFrameFactory;
@@ -160,8 +171,8 @@ public class UIPanel extends JPanel {
 			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
 			TypeForChange.CUT };
 	private final TypeForChange[] alterLine_comboData_to = {
-			TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
-			TypeForChange.CUT, TypeForChange.DELETE, TypeForChange.FLIP };
+			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
+			TypeForChange.CUT, TypeForChange.DELETE, };
 
 	private final JComboBox<TypeForChange> alterLine_combo_from = new JComboBox<>(
 			alterLine_comboData_from);
@@ -373,7 +384,7 @@ public class UIPanel extends JPanel {
 
 		lineInputPanel.add(lineTypePanel, gbBuilder.getLineField());
 
-		var commandsLabel = new JLabel("Command (Alt + 1...9,0)");
+		var commandsLabel = new JLabel("Command");
 		commandsLabel.setHorizontalAlignment(JLabel.CENTER);
 		lineInputPanel.add(commandsLabel, gbBuilder.getLineField());
 
@@ -582,83 +593,172 @@ public class UIPanel extends JPanel {
 						JRadioButton.class, null,
 						StringID.UI.INPUT_LINE_ID,
 						screenUpdater.getKeyListener());
-		editModeInputLineButton.setMnemonic(KeyEvent.VK_I);
+		setShortcut(editModeInputLineButton, KeyStrokes.get(KeyEvent.VK_I),
+				StringID.UI.INPUT_LINE_ID);
 
 		editModePickLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.SELECT_ID,
 				screenUpdater.getKeyListener());
-		editModePickLineButton.setMnemonic(KeyEvent.VK_S);
+		setShortcut(editModePickLineButton, KeyStrokes.get(KeyEvent.VK_S),
+				StringID.SELECT_ID);
 
 		editModeDeleteLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DELETE_LINE_ID,
 				screenUpdater.getKeyListener());
-		editModeDeleteLineButton.setMnemonic(KeyEvent.VK_D);
+		setShortcut(editModeDeleteLineButton, KeyStrokes.get(KeyEvent.VK_D),
+				StringID.DELETE_LINE_ID);
 
 		editModeLineTypeButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID,
 				screenUpdater.getKeyListener());
-		editModeLineTypeButton.setMnemonic(KeyEvent.VK_T);
+		setShortcut(editModeLineTypeButton, KeyStrokes.get(KeyEvent.VK_T),
+				StringID.CHANGE_LINE_TYPE_ID);
 
 		editModeAddVertex = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ADD_VERTEX_ID,
 				screenUpdater.getKeyListener());
+		setShortcut(editModeAddVertex, KeyStrokes.get(KeyEvent.VK_X),
+				StringID.ADD_VERTEX_ID);
 
 		editModeDeleteVertex = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DELETE_VERTEX_ID,
 				screenUpdater.getKeyListener());
-		editModeDeleteVertex.setMnemonic(KeyEvent.VK_L);
+		setShortcut(editModeDeleteVertex, KeyStrokes.get(KeyEvent.VK_Y),
+				StringID.DELETE_VERTEX_ID);
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding how to enter the line
 		lineInputDirectVButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.DIRECT_V_ID,
 				screenUpdater.getKeyListener());
-		lineInputDirectVButton.setMnemonic(KeyEvent.VK_1);
+		setLineInputGlobalShortcut(lineInputDirectVButton, KeyStrokes.get(KeyEvent.VK_E),
+				StringID.DIRECT_V_ID);
 
 		lineInputOnVButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ON_V_ID,
 				screenUpdater.getKeyListener());
-		lineInputOnVButton.setMnemonic(KeyEvent.VK_2);
+		setLineInputGlobalShortcut(lineInputOnVButton, KeyStrokes.get(KeyEvent.VK_O),
+				StringID.ON_V_ID);
 
 		lineInputVerticalLineButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.VERTICAL_ID,
 				screenUpdater.getKeyListener());
-		lineInputVerticalLineButton.setMnemonic(KeyEvent.VK_3);
+		setLineInputGlobalShortcut(lineInputVerticalLineButton, KeyStrokes.get(KeyEvent.VK_V),
+				StringID.VERTICAL_ID);
 
 		lineInputAngleBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BISECTOR_ID,
 				screenUpdater.getKeyListener());
-		lineInputAngleBisectorButton.setMnemonic(KeyEvent.VK_4);
+		setLineInputGlobalShortcut(lineInputAngleBisectorButton, KeyStrokes.get(KeyEvent.VK_B),
+				StringID.BISECTOR_ID);
 
 		lineInputTriangleSplitButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.TRIANGLE_ID,
 				screenUpdater.getKeyListener());
-		lineInputTriangleSplitButton.setMnemonic(KeyEvent.VK_5);
+		setLineInputGlobalShortcut(lineInputTriangleSplitButton, KeyStrokes.get(KeyEvent.VK_R),
+				StringID.TRIANGLE_ID);
 
 		lineInputSymmetricButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.SYMMETRIC_ID,
 				screenUpdater.getKeyListener());
-		lineInputSymmetricButton.setMnemonic(KeyEvent.VK_6);
+		setLineInputGlobalShortcut(lineInputSymmetricButton, KeyStrokes.get(KeyEvent.VK_W),
+				StringID.SYMMETRIC_ID);
 
 		lineInputMirrorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.MIRROR_ID,
 				screenUpdater.getKeyListener());
-		lineInputMirrorButton.setMnemonic(KeyEvent.VK_7);
+		setLineInputGlobalShortcut(lineInputMirrorButton, KeyStrokes.get(KeyEvent.VK_M),
+				StringID.MIRROR_ID);
 
 		lineInputByValueButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.BY_VALUE_ID,
 				screenUpdater.getKeyListener());
-		lineInputByValueButton.setMnemonic(KeyEvent.VK_8);
+		setLineInputGlobalShortcut(lineInputByValueButton, KeyStrokes.get(KeyEvent.VK_L),
+				StringID.BY_VALUE_ID);
 
 		lineInputPBisectorButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID,
 				screenUpdater.getKeyListener());
-		lineInputPBisectorButton.setMnemonic(KeyEvent.VK_9);
+		setLineInputGlobalShortcut(lineInputPBisectorButton, KeyStrokes.get(KeyEvent.VK_P),
+				StringID.PERPENDICULAR_BISECTOR_ID);
 
 		lineInputAngleSnapButton = (JRadioButton) buttonFactory.create(
 				this, JRadioButton.class, StringID.ANGLE_SNAP_ID,
 				screenUpdater.getKeyListener());
-		lineInputAngleSnapButton.setMnemonic(KeyEvent.VK_0);
+		setLineInputGlobalShortcut(lineInputAngleSnapButton, KeyStrokes.get(KeyEvent.VK_A),
+				StringID.ANGLE_SNAP_ID);
+	}
+
+	/**
+	 * Assigns given key stroke to the button as the stroke invokes the click
+	 * event of the button. The shortcut works only if the button is visible.
+	 *
+	 * @param button
+	 *            is to be assigned a shortcut.
+	 * @param keyStroke
+	 *            a {@code KeyStroke} instance.
+	 * @param id
+	 *            is an ID string to distinguish shortcut action.
+	 */
+	@SuppressWarnings("serial")
+	private void setShortcut(final AbstractButton button, final KeyStroke keyStroke,
+			final String id) {
+		button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
+		button.getActionMap().put(id, new AbstractAction(button.getText()) {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				button.doClick();
+			}
+		});
+		button.setToolTipText(resources.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID));
+	}
+
+	/**
+	 * Assigns given key stroke to this panel as the stroke invokes the click
+	 * event of given line input button even if the button is hidden.
+	 *
+	 * @param button
+	 *            is assumed to be a line input button.
+	 * @param keyStroke
+	 *            a {@code KeyStroke} instance.
+	 * @param id
+	 *            is an ID string to distinguish shortcut action.
+	 */
+	private void setLineInputGlobalShortcut(final AbstractButton button, final KeyStroke keyStroke,
+			final String id) {
+		setToolSettingGlobalShortcut(editModeInputLineButton, button, keyStroke, id);
+	}
+
+	/**
+	 * Assigns given key stroke to this panel as the stroke invokes the click
+	 * event of given tool-setting button even if the button is hidden.
+	 *
+	 * @param toolButton
+	 *            is a radio button controlling visibility of the tool-setting
+	 *            panel.
+	 * @param settingButton
+	 *            is assumed to be a tool-setting button.
+	 * @param keyStroke
+	 *            a {@code KeyStroke} instance.
+	 * @param id
+	 *            is an ID string to distinguish shortcut action.
+	 */
+	@SuppressWarnings("serial")
+	private void setToolSettingGlobalShortcut(final JRadioButton toolButton,
+			final AbstractButton settingButton, final KeyStroke keyStroke,
+			final String id) {
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
+		this.getActionMap().put(id, new AbstractAction() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				if (!toolButton.isSelected()) {
+					toolButton.doClick();
+				}
+				settingButton.doClick();
+			}
+		});
+		settingButton.setToolTipText(resources.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID)
+				+ keyStroke.toString().split(" ")[1]);
 	}
 
 	private void setButtonIcons() {
@@ -713,15 +813,18 @@ public class UIPanel extends JPanel {
 		// line type radio buttons
 		lineTypeMountainButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
-		lineTypeMountainButton.setMnemonic(KeyEvent.VK_M);
+		setShortcut(lineTypeMountainButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_M),
+				StringID.UI.MOUNTAIN_ID);
 
 		lineTypeValleyButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
-		lineTypeValleyButton.setMnemonic(KeyEvent.VK_V);
+		setShortcut(lineTypeValleyButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_V),
+				StringID.UI.VALLEY_ID);
 
 		lineTypeAuxButton.addActionListener(
 				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
-		lineTypeAuxButton.setMnemonic(KeyEvent.VK_A);
+		setShortcut(lineTypeAuxButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_A),
+				StringID.UI.AUX_ID);
 
 		// grid settings
 		dispGridCheckBox.addActionListener(e -> {
@@ -834,17 +937,27 @@ public class UIPanel extends JPanel {
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {
 		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
-		FoldedModelInfo foldedModelInfo = new FoldedModelInfo();
 
-		Folder folder = new Folder();
+		Folder folder = new Folder(
+				new SubFacesFactory(
+						new FacesToCreasePatternConverter(
+								new CreasePatternFactory(),
+								new LineAdder()),
+						new OrigamiModelFactory(),
+						new SplitFacesToSubFacesConverter(),
+						new ParentFacesCollector()));
 
 		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
+		var checker = new FoldabilityChecker();
 
-		if (origamiModel.isProbablyFoldable()) {
-			final int foldableModelCount = folder.fold(
-					origamiModel, foldedModelInfo, fullEstimation);
+		if (!checker.testLocalFlatFoldability(origamiModel)) {
+			folder.foldWithoutLineType(origamiModel);
+		} else {
+			var foldedModel = folder.fold(
+					origamiModel, fullEstimation);
+			final int foldableModelCount = foldedModel.getFoldablePatternCount();
 
-			if (foldableModelCount == -1) {
+			if (!fullEstimation) {
 
 			} else if (foldableModelCount == 0) {
 				JOptionPane.showMessageDialog(
@@ -858,13 +971,10 @@ public class UIPanel extends JPanel {
 
 				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 						childFrameManager);
-				JFrame frame = resultFrameFactory.createFrame(this,
-						origamiModel, foldedModelInfo);
+				JFrame frame = resultFrameFactory.createFrame(this, foldedModel);
 				frame.repaint();
 				frame.setVisible(true);
 			}
-		} else {
-			folder.foldWithoutLineType(origamiModel);
 		}
 
 		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(

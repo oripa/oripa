@@ -22,24 +22,9 @@ import java.io.IOException;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.fold.OrigamiModel;
 import oripa.persistent.entity.exporter.CreasePatternExporterDXF;
-import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
 
 public class ExporterDXFFactory {
-
-	private static class ModelExporter implements DocExporter {
-		@Override
-		public boolean export(final Doc doc, final String filePath)
-				throws IOException, IllegalArgumentException {
-			OrigamiModel origamiModel = doc.getOrigamiModel();
-
-			OrigamiModelExporterDXF exporter = new OrigamiModelExporterDXF();
-
-			return exporter.export(origamiModel, filePath);
-		}
-
-	}
 
 	private static class CreasePatternExporter implements DocExporter {
 		@Override
@@ -57,9 +42,5 @@ public class ExporterDXFFactory {
 
 	public static DocExporter createCreasePatternExporter() {
 		return new CreasePatternExporter();
-	}
-
-	public static DocExporter createModelExporter() {
-		return new ModelExporter();
 	}
 }

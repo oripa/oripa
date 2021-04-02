@@ -20,9 +20,6 @@ package oripa;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.File;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -30,40 +27,8 @@ import javax.swing.SwingUtilities;
 import oripa.view.main.MainFrame;
 
 public class ORIPA {
-
-	public static String infoString = "ORIPA: (c) 2013- ORIPA OSS Project\n" +
-			"http://github.com/oripa\n" +
-			"ORIPA: (c) 2005-2009 Jun Mitani\nhttp://mitani.cs.tsukuba.ac.jp/\n\n" +
-			"This program comes with ABSOLUTELY NO WARRANTY;\n" +
-			"This is free software, and you are welcome to redistribute it\n" +
-			"under certain conditions; For details check:\nhttp://www.gnu.org/licenses/gpl.html";
-
-	// TODO: Change to use ResourceHolder.
-	public static ResourceBundle res;
-
-	public static String iniFilePath = System.getProperty("user.home") + File.separator
-			+ "oripa.ini";
-
-	private static final String resourcePackage = "oripa.resource";
-
-	private static ResourceBundle createResource(final String classPath) {
-		ResourceBundle bundle;
-		try {
-			bundle = ResourceBundle.getBundle(classPath,
-					Locale.getDefault());
-		} catch (Exception e) {
-			bundle = ResourceBundle.getBundle(classPath,
-					Locale.ENGLISH);
-		}
-		bundle = ResourceBundle.getBundle(classPath, Locale.ENGLISH);
-
-		return bundle;
-	}
-
 	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(() -> {
-			res = createResource(resourcePackage + ".StringResource");
-
 			int uiPanelWidth = 0;// 150;
 
 			int mainFrameWidth = 1000;

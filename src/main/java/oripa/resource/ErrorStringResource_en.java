@@ -27,6 +27,7 @@ import java.util.ListResourceBundle;
 public class ErrorStringResource_en extends ListResourceBundle {
 
 	private static final Object[][] strings = {
+			{ StringID.Error.DEFAULT_TITLE_ID, "Error." },
 			{ StringID.Error.SAVE_FAILED_ID, "Failed to save." },
 			{ StringID.Error.LOAD_FAILED_ID, "Failed to load." },
 			{ StringID.Error.SAVE_INI_FAILED_ID, "Error when saving configurations." },

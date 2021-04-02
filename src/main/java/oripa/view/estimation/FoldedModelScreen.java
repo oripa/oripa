@@ -40,17 +40,19 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
-import oripa.domain.fold.BoundBox;
-import oripa.domain.fold.FoldedModelInfo;
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OrigamiModel;
-import oripa.domain.fold.OverlapRelationValues;
-import oripa.domain.fold.TriangleFace;
-import oripa.domain.fold.TriangleVertex;
+import oripa.domain.fold.FoldedModel;
+import oripa.domain.fold.FolderTool;
+import oripa.domain.fold.OverlapRelationList;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.halfedge.TriangleFace;
+import oripa.domain.fold.halfedge.TriangleVertex;
+import oripa.domain.fold.origeom.OverlapRelationValues;
+import oripa.geom.RectangleDomain;
 import oripa.util.gui.MouseUtility;
 
 /**
- * A screen to show whether Maekawa theorem and Kawasaki theorem holds.
+ * A screen to show the folded state of origami.
  *
  * @author Koji
  *
@@ -76,13 +78,13 @@ public class FoldedModelScreen extends JPanel
 	private final double maxu[];
 	private final double minv[];
 	private final double maxv[];
-	private boolean m_bUseColor = true;
-	private boolean m_bFillFaces = true;
-	private boolean m_bAmbientOcclusion = false;
-	private boolean m_bFaceOrderFlip = false;
-	private final double m_rotAngle = 0;
-	private final double m_scale = 0.8;
-	private boolean m_bDrawEdges = true;
+	private boolean useColor = true;
+	private boolean fillFaces = true;
+	private boolean ambientOcclusion = false;
+	private boolean faceOrderFlip = false;
+	private final double rotAngle = 0;
+	private final double scaleRate = 0.8;
+	private boolean drawEdges = true;
 	private Image renderImage;
 	double rotateAngle;
 	double scale;
@@ -94,7 +96,8 @@ public class FoldedModelScreen extends JPanel
 	private final boolean bUseTexture = false;
 
 	private OrigamiModel origamiModel = null;
-	private FoldedModelInfo foldedModelInfo = null;
+	private OverlapRelationList overlapRelationList = null;
+	private RectangleDomain domain;
 
 	public FoldedModelScreen() {
 		addMouseListener(this);
@@ -137,9 +140,13 @@ public class FoldedModelScreen extends JPanel
 
 	}
 
-	public void resetViewMatrix() {
+	private void resetViewMatrix() {
 		rotateAngle = 0;
 		scale = 1;
+
+		var folderTool = new FolderTool();
+		domain = folderTool.createDomainOfFoldedModel(origamiModel.getFaces());
+
 		updateAffineTransform();
 		redrawOrigami();
 	}
@@ -151,27 +158,27 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public void setUseColor(final boolean b) {
-		m_bUseColor = b;
+		useColor = b;
 		redrawOrigami();
 	}
 
 	public void setFillFace(final boolean bFillFace) {
-		m_bFillFaces = bFillFace;
+		fillFaces = bFillFace;
 		redrawOrigami();
 	}
 
 	public void drawEdge(final boolean bEdge) {
-		m_bDrawEdges = bEdge;
+		drawEdges = bEdge;
 		redrawOrigami();
 	}
 
 	public void flipFaces(final boolean bFlip) {
-		setM_bFaceOrderFlip(bFlip);
+		this.faceOrderFlip = bFlip;
 		redrawOrigami();
 	}
 
 	public void shadeFaces(final boolean bShade) {
-		m_bAmbientOcclusion = bShade;
+		ambientOcclusion = bShade;
 		redrawOrigami();
 	}
 
@@ -275,10 +282,9 @@ public class FoldedModelScreen extends JPanel
 //		return ret;
 //	}
 
-	public void setModel(
-			final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo) {
-		this.origamiModel = origamiModel;
-		this.foldedModelInfo = foldedModelInfo;
+	public void setModel(final FoldedModel foldedModel) {
+		this.origamiModel = foldedModel.getOrigamiModel();
+		this.overlapRelationList = foldedModel.getOverlapRelationList();
 
 		resetViewMatrix();
 		redrawOrigami();
@@ -315,35 +321,28 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public void drawOrigami() {
-		if (origamiModel == null || foldedModelInfo == null) {
+		if (origamiModel == null || overlapRelationList == null) {
 			return;
 		}
 
-		List<OriFace> faces = origamiModel.getFaces();
-		boolean folded = origamiModel.isFolded();
-		if (!folded) {
+		if (!origamiModel.isFolded()) {
 			return;
 		}
 		long time0 = System.currentTimeMillis();
 
-		BoundBox boundBox = foldedModelInfo.getBoundBox();
-		Vector2d leftAndTop = boundBox.getLeftAndTop();
-		Vector2d rightAndBottom = boundBox.getRightAndBottom();
+		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
+		final double localScale = scaleRate * Math.min(
+				BUFFERW / (domain.getWidth()),
+				BUFFERH / (domain.getHeight())) * 0.95;
+		final double angle = rotAngle * Math.PI / 180;
 
-		Vector2d center = new Vector2d((leftAndTop.x + rightAndBottom.x) / 2,
-				(leftAndTop.y + rightAndBottom.y) / 2);
-		double localScale = Math.min(
-				BUFFERW / (rightAndBottom.x - leftAndTop.x),
-				BUFFERH / (rightAndBottom.y - leftAndTop.y)) * 0.95;
-		double angle = m_rotAngle * Math.PI / 180;
-		localScale *= m_scale;
-
+		List<OriFace> faces = origamiModel.getFaces();
 		for (OriFace face : faces) {
 
-			face.trianglateAndSetColor(m_bUseColor, isFaceOrderFlipped(),
+			face.trianglateAndSetColor(useColor, isFaceOrderFlipped(),
 					origamiModel.getPaperSize());
 
-			for (TriangleFace tri : face.triangles) {
+			face.triangleStream().forEach(tri -> {
 				for (int i = 0; i < 3; i++) {
 
 					double x = (tri.v[i].p.x - center.x) * localScale;
@@ -353,11 +352,11 @@ public class FoldedModelScreen extends JPanel
 					tri.v[i].p.y = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
 
 				}
-				drawTriangle(tri, face.tmpInt);
-			}
+				drawTriangle(tri, face.getFaceID());
+			});
 		}
 
-		if (m_bDrawEdges) {
+		if (drawEdges) {
 			// apply Sobel filter
 			for (int y = 1; y < BUFFERH - 1; y++) {
 				for (int x = 1; x < BUFFERW - 1; x++) {
@@ -381,7 +380,7 @@ public class FoldedModelScreen extends JPanel
 			}
 		}
 
-		if (m_bAmbientOcclusion) {
+		if (ambientOcclusion) {
 			int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
 					: OverlapRelationValues.LOWER;
 			int r = 10;
@@ -411,7 +410,7 @@ public class FoldedModelScreen extends JPanel
 							if (f_id == -1 && f_id2 != -1) {
 								cnt++;
 							} else {
-								int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+								int[][] overlapRelation = overlapRelationList.getOverlapRelation();
 
 								if (f_id2 != -1 && overlapRelation[f_id][f_id2] == renderFace) {
 									cnt++;
@@ -522,7 +521,7 @@ public class FoldedModelScreen extends JPanel
 				int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
 						: OverlapRelationValues.LOWER;
 
-				int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
+				int[][] overlapRelation = overlapRelationList.getOverlapRelation();
 
 				if (zbuf[p] == -1 || overlapRelation[zbuf[p]][id] == renderFace) {
 
@@ -530,7 +529,7 @@ public class FoldedModelScreen extends JPanel
 					int tg = g >> 16;
 					int tb = b >> 16;
 
-					if (!m_bFillFaces) {
+					if (!fillFaces) {
 						pbuf[p] = 0xffffffff;
 
 					} else {
@@ -542,7 +541,7 @@ public class FoldedModelScreen extends JPanel
 							ty = ty % textureImage.getHeight();
 							int textureColor = textureImage.getRGB(tx, ty);
 
-							if (m_bFillFaces && (tri.face.faceFront ^ isFaceOrderFlipped())) {
+							if (fillFaces && (tri.face.isFaceFront() ^ isFaceOrderFlipped())) {
 								pbuf[p] = textureColor;
 							} else {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
@@ -684,10 +683,6 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public boolean isFaceOrderFlipped() {
-		return m_bFaceOrderFlip;
-	}
-
-	public void setM_bFaceOrderFlip(final boolean m_bFaceOrderFlip) {
-		this.m_bFaceOrderFlip = m_bFaceOrderFlip;
+		return faceOrderFlip;
 	}
 }

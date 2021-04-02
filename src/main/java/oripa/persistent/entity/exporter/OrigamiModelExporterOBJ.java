@@ -23,11 +23,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import oripa.domain.fold.OriEdge;
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.domain.fold.OriVertex;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OriEdge;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriVertex;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.filetool.Exporter;
 
 /**
@@ -52,22 +51,23 @@ public class OrigamiModelExporterOBJ implements Exporter<OrigamiModel> {
 
 			int id = 1;
 			for (OriVertex vertex : vertices) {
-				bw.write("v " + vertex.p.x + " " + vertex.p.y + " 0.0\n");
-				vertex.tmpInt = id;
+				var position = vertex.getPosition();
+				bw.write("v " + position.x + " " + position.y + " 0.0\n");
+				vertex.setVertexID(id);
 				id++;
 			}
 
 			for (OriFace face : faces) {
 				bw.write("f");
-				for (OriHalfedge he : face.halfedges) {
-					bw.write(" " + he.vertex.tmpInt);
+				for (var he : face.halfedgeIterable()) {
+					bw.write(" " + he.getVertex().getVertexID());
 				}
 				bw.write("\n");
 			}
 
 			for (OriEdge edge : edges) {
-				bw.write("e " + edge.sv.tmpInt + " " + edge.ev.tmpInt + " "
-						+ edge.type + " 180\n");
+				bw.write("e " + edge.getStartVertex().getVertexID() + " " + edge.getEndVertex().getVertexID() + " "
+						+ edge.getType() + " 180\n");
 			}
 		}
 

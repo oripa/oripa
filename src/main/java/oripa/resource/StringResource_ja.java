@@ -20,6 +20,7 @@ package oripa.resource;
 
 import java.util.ListResourceBundle;
 
+//Old data. Not in use.
 public class StringResource_ja extends ListResourceBundle {
     static final Object[][] strings = { 
         { "Title", "折紙展開図エディタ ORIPA" }, 

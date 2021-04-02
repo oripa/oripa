@@ -5,38 +5,33 @@ import java.util.Iterator;
 
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.paint.util.PairLoop;
 import oripa.geom.GeomUtil;
 
+public class IsOutsideOfTempOutlineLoop {
+	private static final Logger logger = LoggerFactory.getLogger(IsOutsideOfTempOutlineLoop.class);
+	private static final double EPS = 1e-4;
 
-public class IsOutsideOfTempOutlineLoop implements PairLoop.Block<Vector2d> {
-
-	private Vector2d target;
-    boolean CCWFlg;
-	
 	public boolean execute(
-			Collection<Vector2d> outLineVertices, Vector2d v) {
-
-		target = v;
-		
+			final Collection<Vector2d> outLineVertices, final Vector2d target) {
 		Iterator<Vector2d> iterator = outLineVertices.iterator();
 		Vector2d p0 = iterator.next();
 		Vector2d p1 = iterator.next();
-		
-		CCWFlg = GeomUtil.CCWcheck(p0, p1, target);
-		
-    	return PairLoop.iterateFrom(iterator, outLineVertices, this) != null;
+
+		int ccwFlag = GeomUtil.CCWcheck(p0, p1, target, EPS);
+		logger.trace(p0 + "," + p1 + "," + target + " -> " + ccwFlag);
+
+		// recreate to start the loop from p1
+		iterator = outLineVertices.iterator();
+		iterator.next(); // waste p0
+		return PairLoop.iterateFrom(iterator, outLineVertices, (p, q) -> {
+			var ccwValue = GeomUtil.CCWcheck(p, q, target, EPS);
+			logger.trace(p + "," + q + "," + target + " -> " + ccwValue);
+			return ccwFlag == ccwValue;
+		}) != null;
 
 	}
-	
-	@Override
-	public boolean yield(Vector2d p0, Vector2d p1) {
-	       
-	       if (CCWFlg != GeomUtil.CCWcheck(p0, p1, target)) {
-            return false;
-        }
-
-        return true;
-	}
-
 }

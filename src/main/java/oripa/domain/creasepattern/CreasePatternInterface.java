@@ -24,6 +24,14 @@ import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
+ * A collection of lines with vertices information. In implementation of this
+ * interface, vertices information must be updated via Collection methods but
+ * not guaranteed if a line in this object is update directly like
+ * {@code line.p0 = new OriPoint(x, y);} or {@code line.p0.x = newX;} That is,
+ * if you want to change an end point vertex or its coordinate value of line(s)
+ * in this object, you have to remove the line before changing and add it after
+ * changing.
+ *
  * @author Koji
  *
  */

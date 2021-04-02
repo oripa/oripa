@@ -20,7 +20,7 @@ public class ResourceHolder {
 	private ResourceHolder() {
 	}
 
-	public static ResourceHolder getInstance() {
+	public synchronized static ResourceHolder getInstance() {
 		if (instance == null) {
 			instance = new ResourceHolder();
 			instance.load();
@@ -69,7 +69,7 @@ public class ResourceHolder {
 		return bundle;
 	}
 
-	public void addResource(final ResourceKey key, final ResourceBundle resource) {
+	private void addResource(final ResourceKey key, final ResourceBundle resource) {
 		resources.put(key, resource);
 	}
 

@@ -6,9 +6,8 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -42,9 +41,11 @@ public class CutModelOutlinesFactory {
 	private List<Vector2d> findOutlineEdgeTerminals(final OriLine cutLine, final OriFace face) {
 		List<Vector2d> vv = new ArrayList<>(2);
 
-		for (OriHalfedge he : face.halfedges) {
-			OriLine l = new OriLine(he.positionForDisplay.x, he.positionForDisplay.y,
-					he.next.positionForDisplay.x, he.next.positionForDisplay.y, OriLine.Type.AUX);
+		face.halfedgeStream().forEach(he -> {
+			var position = he.getPositionForDisplay();
+			var nextPosition = he.getNext().getPositionForDisplay();
+			OriLine l = new OriLine(position.x, position.y,
+					nextPosition.x, nextPosition.y, OriLine.Type.AUX);
 
 			double params[] = new double[2];
 			boolean res = getCrossPointParam(cutLine.p0, cutLine.p1, l.p0, l.p1, params);
@@ -54,8 +55,10 @@ public class CutModelOutlinesFactory {
 				double param = params[1];
 
 				Vector2d crossV = new Vector2d();
-				crossV.x = (1.0 - param) * he.vertex.preP.x + param * he.next.vertex.preP.x;
-				crossV.y = (1.0 - param) * he.vertex.preP.y + param * he.next.vertex.preP.y;
+				var positionBefore = he.getPositionBeforeFolding();
+				var nextPositionBefore = he.getNext().getPositionBeforeFolding();
+				crossV.x = (1.0 - param) * positionBefore.x + param * nextPositionBefore.x;
+				crossV.y = (1.0 - param) * positionBefore.y + param * nextPositionBefore.y;
 
 				boolean isNewPoint = true;
 				for (Vector2d v2d : vv) {
@@ -68,7 +71,7 @@ public class CutModelOutlinesFactory {
 					vv.add(crossV);
 				}
 			}
-		}
+		});
 
 		return vv;
 	}

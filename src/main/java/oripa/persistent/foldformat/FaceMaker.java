@@ -19,11 +19,16 @@
 package oripa.persistent.foldformat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import oripa.util.collection.CollectionUtil;
 
 /**
  * @author OUCHI Koji
@@ -33,7 +38,9 @@ public class FaceMaker {
 	private static final Logger logger = LoggerFactory.getLogger(FaceMaker.class);
 
 	private final List<List<Integer>> verticesVertices;
-	private final boolean[][] edgePassed;
+	private final List<Map<Integer, Integer>> reversedIndices;
+
+	private final Set<List<Integer>> unusedDirectedEdges;
 
 	/**
 	 * Constructor
@@ -43,24 +50,51 @@ public class FaceMaker {
 
 		this.verticesVertices = verticesVertices;
 
-		edgePassed = new boolean[verticesVertices.size()][verticesVertices.size()];
-		for (var arr : edgePassed) {
-			Arrays.fill(arr, false);
+		logger.debug("creating reversed indices.");
+		reversedIndices = createReversedIndices(verticesVertices);
+
+		logger.debug("creating unused directed edges.");
+		unusedDirectedEdges = createUnusedDirectedEdges(edgesVertices);
+		logger.debug("initialization of face maker is done.");
+	}
+
+	private List<Map<Integer, Integer>> createReversedIndices(final List<List<Integer>> verticesVertices) {
+		List<Map<Integer, Integer>> reversed = new ArrayList<>();
+
+		for (int u = 0; u < verticesVertices.size(); u++) {
+			var map = new HashMap<Integer, Integer>();
+			var vertices = verticesVertices.get(u);
+			for (int vIndex = 0; vIndex < vertices.size(); vIndex++) {
+				map.put(vertices.get(vIndex), vIndex);
+			}
+			reversed.add(map);
 		}
+
+		return reversed;
+	}
+
+	private Set<List<Integer>> createUnusedDirectedEdges(final List<List<Integer>> edgesVertices) {
+		Set<List<Integer>> unused = new HashSet<>();
+
+		for (var edge : edgesVertices) {
+			unused.add(edge);
+			unused.add(List.of(edge.get(1), edge.get(0)));
+		}
+		return unused;
 	}
 
 	public List<Integer> makeFace(final List<Integer> edge) {
-		var u = edge.get(0);
-		var v = edge.get(1);
 
-		if (edgePassed[edge.get(0)][edge.get(1)]) {
+		if (!unusedDirectedEdges.contains(edge)) {
 			return null;
 		}
 
-		var face = new ArrayList<Integer>();
+		var face = new ArrayList<Integer>(edge);
 
-		face.addAll(edge);
-		edgePassed[u][v] = true;
+		unusedDirectedEdges.remove(edge);
+
+		var u = edge.get(0);
+		var v = edge.get(1);
 
 		var w = getLeftSideNeighbor(u, v);
 
@@ -82,9 +116,10 @@ public class FaceMaker {
 	 *         to v.
 	 */
 	private Integer getLeftSideNeighbor(final int u, final int v) {
+		var uIndex = reversedIndices.get(v).get(u);
 		var vertices = verticesVertices.get(v);
-		var uIndex = vertices.indexOf(u);
-		return vertices.get((uIndex - 1 + vertices.size()) % vertices.size());
+
+		return CollectionUtil.getCircular(vertices, uIndex - 1);
 	}
 
 	/**
@@ -92,13 +127,13 @@ public class FaceMaker {
 	 * = (v,w).
 	 */
 	private boolean makeFace(final List<Integer> face, final List<Integer> edge) {
-		logger.debug("called with face: " + face);
+		logger.trace("called with face: " + face);
 
 		var u = edge.get(0);
 		var v = edge.get(1);
-		edgePassed[u][v] = true;
+		unusedDirectedEdges.remove(edge);
 
-		if (face.get(0) == v) {
+		if (face.get(0).intValue() == v) {
 			logger.debug("succeeded to make a face: " + face);
 			return true;
 		}
@@ -107,13 +142,14 @@ public class FaceMaker {
 
 		var w = getLeftSideNeighbor(u, v);
 
-		if (edgePassed[v][w]) {
+		var nextEdge = List.of(v, w);
+
+		if (!unusedDirectedEdges.contains(nextEdge)) {
 			logger.warn("failed to make a face. (The next path is already used)");
 
 			return false;
 		}
 
-		var nextEdge = List.of(v, w);
 		return makeFace(face, nextEdge);
 	}
 

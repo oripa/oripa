@@ -3,6 +3,7 @@ package oripa.persistent.filetool;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -125,8 +126,12 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 		String[] extensions = filter.getExtensions();
 
 		File file = this.getSelectedFile();
-		String filePath = correctExtension(file.getPath(), extensions);
-
+		String filePath = null;
+		try {
+			filePath = correctExtension(file.getCanonicalPath(), extensions);
+		} catch (IOException e) {
+			throw new IllegalStateException("Failed to get canonical path.");
+		}
 		if (file.exists()) {
 			if (JOptionPane.showConfirmDialog(null,
 					resourceHolder.getString(ResourceKey.WARNING,
@@ -176,7 +181,12 @@ public class FileChooser<Data> extends JFileChooser implements FileAccessActionP
 			throw new FileNotFoundException("Selected file doesn't exist.");
 		}
 
-		String filePath = file.getPath();
+		String filePath = null;
+		try {
+			filePath = file.getCanonicalPath();
+		} catch (IOException e) {
+			throw new IllegalStateException("Failed to get canonical path.");
+		}
 
 		logger.debug("preparing loadingAction for: " + filePath);
 

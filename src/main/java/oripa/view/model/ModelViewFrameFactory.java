@@ -22,7 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.ChildFrameManager;
 import oripa.viewsetting.main.MainScreenSetting;

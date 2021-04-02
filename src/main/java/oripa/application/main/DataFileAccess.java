@@ -24,9 +24,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.doc.Doc;
+import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.fold.foldability.FoldabilityChecker;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.persistent.dao.DataAccessObject;
 import oripa.persistent.doc.CreasePatternFileTypeKey;
-import oripa.persistent.doc.DocDAO;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
 import oripa.persistent.filetool.FileVersionError;
@@ -38,14 +46,16 @@ import oripa.persistent.filetool.WrongDataFormatException;
  *         interface between the {@code DocDOA} and the {@code Doc} classes
  */
 public class DataFileAccess {
-	private DocDAO dao;
+	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
+
+	private DataAccessObject<Doc> dao;
 
 	@SuppressWarnings("unused")
 	private DataFileAccess() {
 
 	}
 
-	public DataFileAccess(final DocDAO dao) {
+	public DataFileAccess(final DataAccessObject<Doc> dao) {
 		this.dao = dao;
 	}
 
@@ -89,20 +99,62 @@ public class DataFileAccess {
 		File givenFile = new File(directory,
 				(fileName.isEmpty()) ? "newFile.opx" : fileName);
 
-		var filePath = givenFile.getPath();
+		var filePath = givenFile.getCanonicalPath();
 
 		try {
 			String savedPath = dao.saveUsingGUI(document, filePath, owner, filters);
 			return Optional.of(savedPath);
 		} catch (FileChooserCanceledException e) {
+			logger.info("File selection is canceled.");
 			return Optional.empty();
 		}
 	}
 
-	public void saveFileWithModelCheck(final Doc document,
+	/**
+	 * Opens dialog for saving given data to a file. Conducts foldability check
+	 * before saving. The default file name is "export.xxx" where ".xxx" is the
+	 * extension designated by the {@code filter}.
+	 *
+	 * @param document
+	 * @param directory
+	 * @param filter
+	 * @param owner
+	 * @throws FileChooserCanceledException
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 */
+	public void saveFileWithModelCheck(final Doc doc,
+			final String directory,
 			final FileAccessSupportFilter<Doc> filter, final Component owner)
-			throws FileChooserCanceledException, IOException, IllegalArgumentException {
-		dao.saveUsingGUIWithModelCheck(document, owner, filter);
+			throws IOException, IllegalArgumentException {
+		File givenFile = new File(directory, "export" + filter.getExtensions()[0]);
+		var filePath = givenFile.getCanonicalPath();
+
+		CreasePatternInterface creasePattern = doc.getCreasePattern();
+
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		var origamiModel = modelFactory.createOrigamiModel(
+				creasePattern, creasePattern.getPaperSize());
+		var checker = new FoldabilityChecker();
+
+		if (!checker.testLocalFlatFoldability(origamiModel)) {
+
+			var selection = JOptionPane.showConfirmDialog(null,
+					"Warning: Building a set of polygons from crease pattern "
+							+ "was failed.",
+					"Warning", JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.WARNING_MESSAGE);
+
+			if (selection == JOptionPane.CANCEL_OPTION) {
+				return;
+			}
+		}
+
+		try {
+			dao.saveUsingGUI(doc, filePath, owner, filter);
+		} catch (FileChooserCanceledException e) {
+			logger.info("File selection is canceled.");
+		}
 	}
 
 	/**

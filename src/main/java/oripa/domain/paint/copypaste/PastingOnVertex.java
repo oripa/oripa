@@ -68,7 +68,7 @@ public class PastingOnVertex extends PickingVertex {
 				context.getPickedLines(), v.x - ox, v.y - oy);
 
 		Painter painter = context.getPainter();
-		painter.pasteLines(shiftedLines);
+		painter.addLines(shiftedLines);
 
 		// context.setMissionCompleted(true);
 

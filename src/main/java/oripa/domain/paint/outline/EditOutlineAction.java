@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
@@ -16,36 +17,24 @@ import oripa.domain.paint.util.PairLoop;
 public class EditOutlineAction extends GraphicMouseAction {
 
 	public EditOutlineAction() {
-		setActionState(new SelectingVertexForOutline());
+		setActionState(new SelectingVertexForOutline(new CloseTempOutlineFactory(new IsOnTempOutlineLoop(),
+				new IsOutsideOfTempOutlineLoop(), new OverlappingLineExtractor())));
 		setEditMode(EditMode.OTHER);
 	}
 
-	private class DrawTempOutlines implements PairLoop.Block<Vector2d> {
+	private void drawTempOutlines(final Graphics2D g2d, final Collection<Vector2d> outlineVertices,
+			final double scale) {
+		var selector = getElementSelector();
+		g2d.setColor(selector.getEditingOutlineColor());
+		g2d.setStroke(selector.createEditingOutlineStroke(scale));
 
-		private Graphics2D g2d;
-
-		public void execute(final Graphics2D g2d, final Collection<Vector2d> outlineVertices,
-				final double scale) {
-			this.g2d = g2d;
-			var selector = getElementSelector();
-			g2d.setColor(selector.getEditingOutlineColor());
-			g2d.setStroke(selector.createEditingOutlineStroke(scale));
-
-			if (outlineVertices.size() > 1) {
-				PairLoop.iterateWithCount(
-						outlineVertices, outlineVertices.size() - 1, this);
-			}
+		if (outlineVertices.size() > 1) {
+			PairLoop.iterateWithCount(
+					outlineVertices, outlineVertices.size() - 1, (p0, p1) -> {
+						g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
+						return true;
+					});
 		}
-
-		@Override
-		public boolean yield(final Vector2d p0,
-				final Vector2d p1) {
-
-			g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
-
-			return true;
-		}
-
 	}
 
 	@Override
@@ -61,7 +50,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 		if (outlineVnum != 0) {
 
-			(new DrawTempOutlines()).execute(g2d, outlinevertices, context.getScale());
+			drawTempOutlines(g2d, outlinevertices, context.getScale());
 
 			Vector2d cv = (context.getCandidateVertexToPick() == null)
 					? new Vector2d(context.getLogicalMousePoint().getX(),

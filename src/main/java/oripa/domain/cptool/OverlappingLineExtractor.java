@@ -107,12 +107,11 @@ public class OverlappingLineExtractor {
 	 *
 	 * @param lines
 	 * @param target
-	 * @return overlapping lines of {@code target}. {@code target} is not
-	 *         contained.
+	 * @return overlapping lines of {@code target}.
 	 */
 	public Collection<OriLine> extract(final Collection<OriLine> lines, final OriLine target) {
 		return lines.parallelStream()
-				.filter(l -> isOverlap(l, target) && !l.equals(target))
+				.filter(l -> isOverlap(l, target))
 				.collect(Collectors.toList());
 	}
 }

@@ -20,6 +20,17 @@ public class Painter {
 
 	private final CreasePatternInterface creasePattern;
 
+	private final LineSelectionModifier selectionModifier = new LineSelectionModifier();
+	private final ElementRemover elementRemover = new ElementRemover();
+	private final LineAdder lineAdder = new LineAdder();
+	private final LineMirror lineMirror = new LineMirror();
+	private final LineDivider lineDivider = new LineDivider();
+	private final LineTypeChanger typeChanger = new LineTypeChanger();
+	private final BisectorFactory bisectorFactory = new BisectorFactory();
+	private final SymmetricLineFactory symmetricFactory = new SymmetricLineFactory();
+	private final RotatedLineFactory rotationFactory = new RotatedLineFactory();
+	private final TiledLineFactory tileFactory = new TiledLineFactory();
+
 	@SuppressWarnings("unused")
 	private Painter() {
 		creasePattern = null;
@@ -41,8 +52,7 @@ public class Painter {
 	 *
 	 */
 	public void resetSelectedOriLines() {
-		LineSelectionModifier modifier = new LineSelectionModifier();
-		modifier.resetSelectedOriLines(creasePattern);
+		selectionModifier.resetSelectedOriLines(creasePattern);
 	}
 
 	/**
@@ -51,8 +61,7 @@ public class Painter {
 	 *
 	 */
 	public void selectAllOriLines() {
-		LineSelectionModifier modifier = new LineSelectionModifier();
-		modifier.selectAllOriLines(creasePattern);
+		selectionModifier.selectAllOriLines(creasePattern);
 	}
 
 	/**
@@ -61,17 +70,14 @@ public class Painter {
 	 * @return
 	 */
 	public int countSelectedLines() {
-		LineSelectionModifier modifier = new LineSelectionModifier();
-		return modifier.countSelectedLines(creasePattern);
+		return selectionModifier.countSelectedLines(creasePattern);
 	}
 
 	/**
 	 *
 	 */
 	public void removeSelectedLines() {
-
-		ElementRemover remover = new ElementRemover();
-		remover.removeSelectedLines(creasePattern);
+		elementRemover.removeSelectedLines(creasePattern);
 	}
 
 	/**
@@ -81,18 +87,20 @@ public class Painter {
 	 * @param inputLine
 	 *            a line to be added
 	 */
-	public void addLine(
-			final OriLine inputLine) {
-
-		LineAdder lineAdder = new LineAdder();
+	public void addLine(final OriLine inputLine) {
 		lineAdder.addLine(inputLine, creasePattern);
 	}
 
-	public void pasteLines(
-			final Collection<OriLine> lines) {
-
-		LinePaster paster = new LinePaster();
-		paster.paste(lines, creasePattern);
+	/**
+	 * Add all given lines to crease pattern. Each line in {@code lines} and
+	 * crease pattern is divided at the cross points. However, if the crossing
+	 * lines are both in the same {@code lines} or crease pattern, such a
+	 * division won't be done.
+	 *
+	 * @param lines
+	 */
+	public void addLines(final Collection<OriLine> lines) {
+		lineAdder.addAll(lines, creasePattern);
 	}
 
 	/**
@@ -105,12 +113,9 @@ public class Painter {
 	 */
 	public void mirrorCopyBy(final OriLine baseLine,
 			final Collection<OriLine> lines) {
+		Collection<OriLine> copiedLines = lineMirror.createMirroredLines(baseLine, lines);
 
-		LineMirror mirror = new LineMirror();
-		Collection<OriLine> copiedLines = mirror.createMirroredLines(baseLine, lines);
-
-		LineAdder adder = new LineAdder();
-		adder.addAll(copiedLines, creasePattern);
+		lineAdder.addAll(copiedLines, creasePattern);
 	}
 
 	/**
@@ -119,11 +124,8 @@ public class Painter {
 	 * @param l
 	 *            the line to be removed
 	 */
-	public void removeLine(
-			final OriLine l) {
-
-		ElementRemover remover = new ElementRemover();
-		remover.removeLine(l, creasePattern);
+	public void removeLine(final OriLine l) {
+		elementRemover.removeLine(l, creasePattern);
 	}
 
 	/**
@@ -132,11 +134,8 @@ public class Painter {
 	 * @param lines
 	 *            to be removed
 	 */
-	public void removeLines(
-			final Collection<OriLine> lines) {
-
-		ElementRemover remover = new ElementRemover();
-		remover.removeLines(lines, creasePattern);
+	public void removeLines(final Collection<OriLine> lines) {
+		elementRemover.removeLines(lines, creasePattern);
 	}
 
 	/**
@@ -147,9 +146,7 @@ public class Painter {
 	 */
 	public void removeVertex(
 			final Vector2d v) {
-
-		ElementRemover remover = new ElementRemover();
-		remover.removeVertex(v, creasePattern);
+		elementRemover.removeVertex(v, creasePattern);
 	}
 
 	/**
@@ -163,20 +160,15 @@ public class Painter {
 	 */
 	public boolean addVertexOnLine(
 			final OriLine line, final Vector2d v) {
-
-		LineDivider divider = new LineDivider();
-		Collection<OriLine> dividedLines = divider.divideLineInCollection(line, v, creasePattern,
+		Collection<OriLine> dividedLines = lineDivider.divideLine(line, v,
 				creasePattern.getPaperSize());
 
 		if (dividedLines == null) {
 			return false;
 		}
+		elementRemover.removeLine(line, creasePattern);
 
-		ElementRemover remover = new ElementRemover();
-		remover.removeLine(line, creasePattern);
-
-		LineAdder adder = new LineAdder();
-		adder.addAll(dividedLines, creasePattern);
+		lineAdder.addAll(dividedLines, creasePattern);
 
 		return true;
 	}
@@ -195,12 +187,10 @@ public class Painter {
 	 */
 	public void addTriangleDivideLines(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
-
 		Vector2d c = GeomUtil.getIncenter(v0, v1, v2);
-		LineAdder adder = new LineAdder();
-		adder.addLine(new OriLine(c, v0, lineType), creasePattern);
-		adder.addLine(new OriLine(c, v1, lineType), creasePattern);
-		adder.addLine(new OriLine(c, v2, lineType), creasePattern);
+		lineAdder.addLine(new OriLine(c, v0, lineType), creasePattern);
+		lineAdder.addLine(new OriLine(c, v1, lineType), creasePattern);
+		lineAdder.addLine(new OriLine(c, v2, lineType), creasePattern);
 	}
 
 	/**
@@ -218,13 +208,10 @@ public class Painter {
 	public void addPBisector(
 			final Vector2d v0, final Vector2d v1, final RectangleDomain domain,
 			final OriLine.Type lineType) {
-
-		BisectorFactory factory = new BisectorFactory();
-		OriLine bisector = factory.createPerpendicularBisector(v0, v1,
+		OriLine bisector = bisectorFactory.createPerpendicularBisector(v0, v1,
 				domain, lineType);
 
-		LineAdder adder = new LineAdder();
-		adder.addLine(bisector, creasePattern);
+		lineAdder.addLine(bisector, creasePattern);
 	}
 
 	/**
@@ -245,12 +232,9 @@ public class Painter {
 	public void addBisectorLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
 			final OriLine l, final OriLine.Type lineType) {
+		OriLine bisector = bisectorFactory.createAngleBisectorLine(v0, v1, v2, l, lineType);
 
-		BisectorFactory factory = new BisectorFactory();
-		OriLine bisector = factory.createAngleBisectorLine(v0, v1, v2, l, lineType);
-
-		LineAdder adder = new LineAdder();
-		adder.addLine(bisector, creasePattern);
+		lineAdder.addLine(bisector, creasePattern);
 
 	}
 
@@ -266,9 +250,7 @@ public class Painter {
 	 */
 	public void alterLineType(
 			final OriLine l, final TypeForChange from, final TypeForChange to) {
-
-		LineTypeChanger changer = new LineTypeChanger();
-		changer.alterLineType(l, creasePattern, from, to);
+		typeChanger.alterLineType(l, creasePattern, from, to);
 	}
 
 	/**
@@ -283,8 +265,7 @@ public class Painter {
 	 */
 	public void alterLineTypes(
 			final Collection<OriLine> lines, final TypeForChange from, final TypeForChange to) {
-		LineTypeChanger changer = new LineTypeChanger();
-		changer.alterLineTypes(lines, creasePattern, from, to);
+		typeChanger.alterLineTypes(lines, creasePattern, from, to);
 	}
 
 	/**
@@ -306,17 +287,15 @@ public class Painter {
 	 */
 	public boolean addSymmetricLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
-
-		SymmetricLineFactory factory = new SymmetricLineFactory();
 		OriLine symmetricLine;
 		try {
-			symmetricLine = factory.createSymmetricLine(v0, v1, v2, creasePattern, lineType);
+			symmetricLine = symmetricFactory.createSymmetricLine(v0, v1, v2, creasePattern,
+					lineType);
 		} catch (PainterCommandFailedException comEx) {
 			return false;
 		}
 
-		LineAdder adder = new LineAdder();
-		adder.addLine(symmetricLine, creasePattern);
+		lineAdder.addLine(symmetricLine, creasePattern);
 
 		return true;
 	}
@@ -340,19 +319,15 @@ public class Painter {
 	public boolean addSymmetricLineAutoWalk(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
 			final OriLine.Type lineType) {
-
-		SymmetricLineFactory factory = new SymmetricLineFactory();
-
 		Collection<OriLine> autoWalkLines;
 		try {
-			autoWalkLines = factory.createSymmetricLineAutoWalk(
+			autoWalkLines = symmetricFactory.createSymmetricLineAutoWalk(
 					v0, v1, v2, v0, creasePattern, lineType);
 
 		} catch (PainterCommandFailedException comEx) {
 			return false;
 		}
-		LineAdder adder = new LineAdder();
-		adder.addAll(autoWalkLines, creasePattern);
+		lineAdder.addAll(autoWalkLines, creasePattern);
 
 		return true;
 	}
@@ -376,15 +351,11 @@ public class Painter {
 	public void copyWithRotation(
 			final double cx, final double cy, final double angleDeg, final int repetitionCount,
 			final Collection<OriLine> selectedLines) {
-
-		RotatedLineFactory factory = new RotatedLineFactory();
-
-		Collection<OriLine> copiedLines = factory.createRotatedLines(
+		Collection<OriLine> copiedLines = rotationFactory.createRotatedLines(
 				cx, cy, angleDeg, repetitionCount,
 				selectedLines, creasePattern);
 
-		LineAdder adder = new LineAdder();
-		adder.addAll(copiedLines, creasePattern);
+		lineAdder.addAll(copiedLines, creasePattern);
 	}
 
 	/**
@@ -404,15 +375,11 @@ public class Painter {
 	public void copyWithTiling(
 			final int row, final int col, final double interX, final double interY,
 			final Collection<OriLine> selectedLines) {
-
-		TiledLineFactory factory = new TiledLineFactory();
-
-		Collection<OriLine> copiedLines = factory.createTiledLines(
+		Collection<OriLine> copiedLines = tileFactory.createTiledLines(
 				row, col, interX, interY,
 				selectedLines, creasePattern);
 
-		LineAdder adder = new LineAdder();
-		adder.addAll(copiedLines, creasePattern);
+		lineAdder.addAll(copiedLines, creasePattern);
 	}
 
 	/**
@@ -420,17 +387,12 @@ public class Painter {
 	 *
 	 * @param selectedLines
 	 */
-	public void fillOut(
-			final Collection<OriLine> selectedLines) {
-
-		TiledLineFactory factory = new TiledLineFactory();
-
-		Collection<OriLine> copiedLines = factory.createFullyTiledLines(
+	public void fillOut(final Collection<OriLine> selectedLines) {
+		Collection<OriLine> copiedLines = tileFactory.createFullyTiledLines(
 				selectedLines, creasePattern,
 				creasePattern.getPaperSize());
 
-		LineAdder adder = new LineAdder();
-		adder.addAll(copiedLines, creasePattern);
+		lineAdder.addAll(copiedLines, creasePattern);
 
 	}
 }

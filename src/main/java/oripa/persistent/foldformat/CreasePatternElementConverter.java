@@ -21,18 +21,35 @@ package oripa.persistent.foldformat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
 /**
+ * This converter stores each result of toXXX() conversion methods and reuse
+ * them for efficiency. So you cannot use the same instance of this converter
+ * for converting different crease patterns.
+ *
  * @author Koji
  *
  */
 public class CreasePatternElementConverter {
+	private static final Logger logger = LoggerFactory.getLogger(CreasePatternElementConverter.class);
+
+	private List<List<Double>> verticesCoords;
+	private List<List<Integer>> edgesVertices;
+	private List<String> edgesAssignment;
+	private List<List<Integer>> verticesVertices;
+	private List<List<Integer>> facesVertices;
+
 	/**
 	 * generates a list of coordinates of distinct vertices.
 	 *
@@ -40,12 +57,16 @@ public class CreasePatternElementConverter {
 	 * @return
 	 */
 	public List<List<Double>> toVerticesCoords(final Collection<OriLine> lines) {
-		return lines.stream()
+		if (verticesCoords != null) {
+			return verticesCoords;
+		}
+		verticesCoords = lines.parallelStream()
 				.flatMap(line -> Stream.of(line.p0, line.p1))
 				.distinct()
 				.map(point -> vertexToList(point))
 				.collect(Collectors.toList());
 
+		return verticesCoords;
 	}
 
 	private List<Double> vertexToList(final OriPoint p) {
@@ -62,11 +83,16 @@ public class CreasePatternElementConverter {
 	public List<List<Integer>> toEdgesVertices(final Collection<OriLine> lines) {
 		var coords = toVerticesCoords(lines);
 
-		return lines.stream()
+		if (edgesVertices != null) {
+			return edgesVertices;
+		}
+		edgesVertices = lines.parallelStream()
 				.map(line -> List.of(
 						coords.indexOf(vertexToList(line.p0)),
 						coords.indexOf(vertexToList(line.p1))))
 				.collect(Collectors.toList());
+
+		return edgesVertices;
 	}
 
 	/**
@@ -77,7 +103,10 @@ public class CreasePatternElementConverter {
 	 * @return
 	 */
 	public List<String> toEdgesAssignment(final Collection<OriLine> lines) {
-		return lines.stream()
+		if (edgesAssignment != null) {
+			return edgesAssignment;
+		}
+		edgesAssignment = lines.parallelStream()
 				.map(line -> {
 					switch (line.getType()) {
 					case AUX:
@@ -93,6 +122,8 @@ public class CreasePatternElementConverter {
 					}
 				})
 				.collect(Collectors.toList());
+
+		return edgesAssignment;
 	}
 
 	/**
@@ -103,16 +134,24 @@ public class CreasePatternElementConverter {
 	 * @return
 	 */
 	public List<List<Integer>> toVerticesVertices(final Collection<OriLine> lines) {
+		if (verticesVertices != null) {
+			return verticesVertices;
+		}
+
+		logger.debug("start creating vertices_vertices");
+
 		var coords = toVerticesCoords(lines);
 		var edgesVertices = toEdgesVertices(lines);
 
-		var verticesVertices = new ArrayList<List<Integer>>();
+		Set<List<Integer>> edgeSet = new HashSet<>(edgesVertices);
+
+		verticesVertices = new ArrayList<List<Integer>>();
 		coords.forEach(p -> verticesVertices.add(new ArrayList<Integer>()));
 
 		for (int u = 0; u < coords.size(); u++) {
 			for (int v = u + 1; v < coords.size(); v++) {
 				var edge = List.of(u, v);
-				if (edgeExists(edge, edgesVertices)) {
+				if (edgeExists(edge, edgeSet)) {
 					verticesVertices.get(u).add(v);
 					verticesVertices.get(v).add(u);
 				}
@@ -123,6 +162,8 @@ public class CreasePatternElementConverter {
 			verticesVertices.set(u, Geometry.sortByAngle(u, verticesVertices.get(u), coords));
 		}
 
+		logger.debug("end creating vertices_vertices");
+
 		return verticesVertices;
 	}
 
@@ -132,6 +173,11 @@ public class CreasePatternElementConverter {
 
 	public List<List<Integer>> toFacesVertices(final Collection<OriLine> lines)
 			throws IllegalArgumentException {
+
+		if (facesVertices != null) {
+			return facesVertices;
+		}
+
 		var edgesVertices = toEdgesVertices(lines);
 		var verticesVertices = toVerticesVertices(lines);
 		var assignment = toEdgesAssignment(lines);
@@ -149,19 +195,18 @@ public class CreasePatternElementConverter {
 
 		var facesVertices = new ArrayList<List<Integer>>();
 
-		for (int u = 0; u < verticesVertices.size(); u++) {
-			var vertices = verticesVertices.get(u);
-
-			for (var v : vertices) {
-				var edge = List.of(u, v);
-				try {
-					var face = faceMaker.makeFace(edge);
-					if (face != null) {
-						facesVertices.add(face);
-					}
-				} catch (Exception e) {
-					throw new IllegalArgumentException("Crease pattern might be wrong.", e);
+		for (var edge : edgesVertices) {
+			try {
+				var face = faceMaker.makeFace(edge);
+				if (face != null) {
+					facesVertices.add(face);
 				}
+				face = faceMaker.makeFace(reverseEdge(edge));
+				if (face != null) {
+					facesVertices.add(face);
+				}
+			} catch (Exception e) {
+				throw new IllegalArgumentException("Crease pattern might be wrong.", e);
 			}
 		}
 
@@ -172,9 +217,6 @@ public class CreasePatternElementConverter {
 				var v = face.get((i + 1) % face.size());
 
 				var edge = List.of(u, v);
-//				if (!edgeExists(edge, edgesVertices)) {
-//					continue;
-//				}
 				if (getAssignment(edge, edgesVertices, assignment) != "B") {
 					return true;
 				}
@@ -189,7 +231,7 @@ public class CreasePatternElementConverter {
 	 * @param edgesVertices
 	 * @return whether the given edge or its reversed one exists.
 	 */
-	private boolean edgeExists(final List<Integer> edge, final List<List<Integer>> edgesVertices) {
+	private boolean edgeExists(final List<Integer> edge, final Collection<List<Integer>> edgesVertices) {
 		return edgesVertices.contains(edge) || edgesVertices.contains(reverseEdge(edge));
 	}
 

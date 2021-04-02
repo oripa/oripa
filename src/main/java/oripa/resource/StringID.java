@@ -21,7 +21,6 @@ public class StringID {
 		public static final String EXPORT_DXF_ID = "ExportDXF";
 		public static final String EXPORT_CP_ID = "ExportCP";
 		public static final String EXPORT_SVG_ID = "ExportSVG";
-		public static final String EXPORT_OBJ_ID = "ExportOBJ";
 		public static final String PROPERTY_ID = "Property";
 		public static final String EXIT_ID = "Exit";
 		public static final String UNDO_ID = "Undo";
@@ -39,6 +38,7 @@ public class StringID {
 	}
 
 	public static class Error {
+		public static final String DEFAULT_TITLE_ID = "Error_DefaultTitle";
 		public static final String SAVE_FAILED_ID = "Error_FileSaveFailed";
 		public static final String LOAD_FAILED_ID = "Error_FileLoadFailed";
 		public static final String SAVE_INI_FAILED_ID = "Error_SaveIniFailed";
@@ -107,6 +107,8 @@ public class StringID {
 		public static final String INSERT_BY_VALUE_PANEL_ID = "Insert_Line_By_Value_Panel";
 		public static final String GRID_SETTINGS_PANEL_ID = "Grid_Settings_Panel";
 		public static final String VIEW_SETTINGS_PANEL_ID = "View_Settings_Panel";
+
+		public static final String SHORTCUT_ID = "Shortcut";
 	}
 
 	// ------------------------------------------------------------------------
@@ -135,18 +137,18 @@ public class StringID {
 	public static final String ANGLE_SNAP_ID = "angleSnap";
 
 	public static class ModelMenu {
-		public static final String FILE_ID = "File";
+		public static final String FILE_ID = "ModelFile";
 		public static final String DISPLAY_ID = "MENU_Disp";
 		public static final String EXPORT_DXF_ID = "MENU_ExportModelLine_DXF";
+		public static final String EXPORT_OBJ_ID = "MENU_ExportOBJ";
 		public static final String INVERT_ID = "MENU_Invert";
 		public static final String SLIDE_FACES_ID = "MENU_SlideFaces";
 		public static final String DIRECTION_BASIC_ID = "Basic";
 		public static final String DISPLAY_TYPE_ID = "MENU_DispType";
-		public static final String FILL_COLOR_ID = "MENU_FillColor";
-		public static final String FILL_WHITE_ID = "MENU_FillWhite";
 		public static final String FILL_ALPHA_ID = "MENU_FillAlpha";
 		public static final String DRAW_LINES_ID = "MENU_DrawLines";
 		public static final String TITLE_ID = "ExpectedFoldedOrigami";
+		public static final String SHOW_CROSS_LINE_ID = "ShowCrossLine";
 	}
 
 }

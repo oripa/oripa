@@ -6,8 +6,6 @@ import java.awt.Insets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.view.main.MainFrame;
-
 /**
  * remove gridBagConstraint management from UI Code by providing simple
  * functions to return GridBagConstraints of the same layout definitions
@@ -24,7 +22,7 @@ public class GridBagConstraintsBuilder {
 	private int fill;
 	private Insets insets;
 
-	private Logger logger;
+	private final Logger logger;
 
 	/**
 	 *
@@ -48,7 +46,7 @@ public class GridBagConstraintsBuilder {
 
 		this.gridWidth = gridWidth;
 	}
-	
+
 	/**
 	 *
 	 * Constructor in case a generic parent class would not benefit logging

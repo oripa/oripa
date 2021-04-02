@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
+import java.util.Comparator;
 
 import javax.vecmath.Vector2d;
 
@@ -45,8 +46,11 @@ public class CreasePatternGraphicDrawer {
 	 * draws crease pattern according to the context of user interaction.
 	 *
 	 * @param g2d
+	 *            a graphic object.
 	 * @param context
+	 *            a context of user interaction.
 	 * @param forceShowingVertex
+	 *            true if vertices must be drawn regardless of the context.
 	 */
 	public void draw(
 			final Graphics2D g2d,
@@ -60,7 +64,7 @@ public class CreasePatternGraphicDrawer {
 					context.getScale(), context.isZeroLineWidth());
 		}
 
-		drawLines(g2d, creasePattern, null, context.getScale(), context.isZeroLineWidth(),
+		drawLines(g2d, creasePattern, context.getScale(), context.isZeroLineWidth(),
 				context.isMVLineVisible(),
 				context.isAuxLineVisible());
 
@@ -71,22 +75,38 @@ public class CreasePatternGraphicDrawer {
 		}
 	}
 
+	/**
+	 * draws each of given lines with the color and width which are determined
+	 * by the line type.
+	 *
+	 * @param g2d
+	 *            a graphic object.
+	 * @param lines
+	 *            a collection of lines to be drawn.
+	 * @param scale
+	 *            scale of crease pattern drawing.
+	 * @param zeroLineWidth
+	 *            true if width of each line should be zero (thinnest).
+	 */
 	public void drawAllLines(
 			final Graphics2D g2d, final Collection<OriLine> lines,
 			final double scale, final boolean zeroLineWidth) {
 
-		drawLines(g2d, lines, null, scale, zeroLineWidth, true, true);
+		drawLines(g2d, lines, scale, zeroLineWidth, true, true);
 	}
 
 	/**
-	 * draws given lines. {@code pickedLines} will be skipped because
-	 * {@link GraphicMouseActionInterface} should draw them.
+	 * Draws given lines. This method first draws aux lines and then other
+	 * lines. Hence aux lines will be always overdrawn by others.
 	 *
 	 * @param g2d
+	 *            a graphic object.
 	 * @param lines
-	 * @param pickedLines
-	 *            lines that user picked. null if nothing is selected.
+	 *            a collection of lines to be drawn.
 	 * @param scale
+	 *            scale of crease pattern drawing.
+	 * @param zeroLineWidth
+	 *            true if width of each line should be zero (thinnest).
 	 * @param creaseVisible
 	 *            true if mountain/valley lines should be shown.
 	 * @param auxVisible
@@ -94,51 +114,87 @@ public class CreasePatternGraphicDrawer {
 	 */
 	private void drawLines(
 			final Graphics2D g2d,
-			final Collection<OriLine> lines, final Collection<OriLine> pickedLines,
+			final Collection<OriLine> lines,
+			// final Collection<OriLine> pickedLines,
 			final double scale, final boolean zeroLineWidth,
 			final boolean creaseVisible, final boolean auxVisible) {
+		// draw lines ordered by line type.
+		// this is aimed to make aux lines lower.
+		lines.stream()
+				.sorted(Comparator.comparing(line -> line.getType().toInt()))
+				.forEach(line -> {
+					if (line.isAux() && !auxVisible) {
+						return;
+					}
+					if (line.isMV() && !creaseVisible) {
+						return;
+					}
+//					if (pickedLines != null && pickedLines.contains(line)) {
+//						return;
+//					}
+					drawLine(g2d, line, scale, zeroLineWidth);
+				});
+	}
 
-		for (OriLine line : lines) {
-			if (line.isAux() && !auxVisible) {
-				continue;
-			}
+	/**
+	 * draws given line with the color and width which are determined by the
+	 * line type.
+	 *
+	 * @param g2d
+	 *            a graphic object.
+	 * @param line
+	 *            a line to be drawn.
+	 * @param scale
+	 *            scale of crease pattern drawing.
+	 * @param zeroLineWidth
+	 *            true if width of each line should be zero (thinnest).
+	 */
+	private void drawLine(final Graphics2D g2d, final OriLine line,
+			final double scale, final boolean zeroLineWidth) {
 
-			if ((line.isMV()) && !creaseVisible) {
-				continue;
-			}
+		g2d.setColor(selector.getColor(line.getType()));
+		g2d.setStroke(selector.createStroke(
+				line.getType(), scale, zeroLineWidth));
 
-			if (pickedLines == null || !pickedLines.contains(line)) {
-				g2d.setColor(selector.getColor(line.getType()));
-				g2d.setStroke(selector.createStroke(
-						line.getType(), scale, zeroLineWidth));
-
-				g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
-						line.p1.y));
-			}
-
-		}
-
+		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
+				line.p1.y));
 	}
 
 	/**
 	 * draws all vertices of mountain/valley lines.
 	 *
 	 * @param g2d
+	 *            a graphic object.
 	 * @param creasePattern
+	 *            a collection of lines whose end points are to be drawn.
 	 * @param scale
+	 *            scale of crease pattern drawing.
 	 */
 	public void drawCreaseVertices(
 			final Graphics2D g2d, final Collection<OriLine> creasePattern, final double scale) {
 		drawVertices(g2d, creasePattern, scale, true, false);
 	}
 
+	/**
+	 * draws the vertices of given lines.
+	 *
+	 * @param g2d
+	 *            a graphic object.
+	 * @param creasePattern
+	 *            a collection of lines whose end points are to be drawn.
+	 * @param scale
+	 *            scale of crease pattern drawing.
+	 * @param creaseVisible
+	 *            true if mountain/valley lines should be shown.
+	 * @param auxVisible
+	 *            true if aux lines should be shown.
+	 */
 	private void drawVertices(
 			final Graphics2D g2d, final Collection<OriLine> creasePattern, final double scale,
 			final boolean creaseVisible, final boolean auxVisible) {
 
 		g2d.setColor(selector.getNormalVertexColor());
 		final double vertexSize = selector.createNormalVertexSize(scale);
-		final double vertexHalfSize = vertexSize / 2;
 		for (OriLine line : creasePattern) {
 			if (!auxVisible && line.isAux()) {
 				continue;
@@ -146,19 +202,38 @@ public class CreasePatternGraphicDrawer {
 			if (!creaseVisible && line.isMV()) {
 				continue;
 			}
-			Vector2d v0 = line.p0;
-			Vector2d v1 = line.p1;
 
-			g2d.fill(new Rectangle2D.Double(
-					v0.x - vertexHalfSize, v0.y - vertexHalfSize,
-					vertexSize, vertexSize));
-			g2d.fill(new Rectangle2D.Double(
-					v1.x - vertexHalfSize, v1.y - vertexHalfSize,
-					vertexSize, vertexSize));
+			drawVertex(g2d, line.p0, vertexSize);
+			drawVertex(g2d, line.p1, vertexSize);
 		}
-
 	}
 
+	/**
+	 * draws the given vertex with given size.
+	 *
+	 * @param g2d
+	 *            a graphic object.
+	 * @param vertex
+	 *            a vertex to be drawn.
+	 * @param vertexSize
+	 *            the size of vertex.
+	 */
+	private void drawVertex(final Graphics2D g2d, final Vector2d vertex, final double vertexSize) {
+		final double vertexHalfSize = vertexSize / 2;
+		g2d.fill(new Rectangle2D.Double(
+				vertex.x - vertexHalfSize, vertex.y - vertexHalfSize,
+				vertexSize, vertexSize));
+	}
+
+	/**
+	 * draws the coordinate of given candidate vertex at the left top of the
+	 * graphic.
+	 *
+	 * @param g
+	 *            a graphic object.
+	 * @param candidate
+	 *            a vertex which is expected to be a candidate of picking.
+	 */
 	public void drawCandidatePositionString(final Graphics2D g, final Vector2d candidate) {
 		if (candidate == null) {
 			return;
@@ -168,6 +243,22 @@ public class CreasePatternGraphicDrawer {
 				"," + candidate.y + ")", 0, 10);
 	}
 
+	/**
+	 * draws grid lines.
+	 *
+	 * @param g2d
+	 *            a graphic object.
+	 * @param gridDivNum
+	 *            the number of grid division.
+	 * @param paperSize
+	 *            the paper size.
+	 * @param domain
+	 *            a ractangle domain fitting to the crease pattern.
+	 * @param scale
+	 *            scale of crease pattern drawing.
+	 * @param zeroLineWidth
+	 *            true if width of each line should be zero (thinnest).
+	 */
 	private void drawGridLines(final Graphics2D g2d,
 			final int gridDivNum, final double paperSize,
 			final RectangleDomain domain,

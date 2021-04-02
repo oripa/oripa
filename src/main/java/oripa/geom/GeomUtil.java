@@ -430,8 +430,40 @@ public class GeomUtil {
 		return distancePointToLine(p, line);
 	}
 
-//  Investigate the relationship between the point q with the segment p0, p1
+	/**
+	 *
+	 * @param p0
+	 * @param p1
+	 * @param q
+	 * @return true if vector p0 -> q ends in left side of p1 -> p0 (q is at
+	 *         counterclockwise position) otherwise false.
+	 */
 	public static boolean CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q) {
+		return CCWcheck(p0, p1, q, 0) == 1;
+	}
+
+	/**
+	 *
+	 * @param p0
+	 * @param p1
+	 * @param q
+	 * @param eps
+	 * @return 1 if vector p0 -> q ends on the left side of p0 -> p1 (q is at
+	 *         counterclockwise position in right-handed coordinate system), 0
+	 *         if p0-p1 and p0-q is collinear, otherwise -1;
+	 */
+	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q, final double eps) {
+		var value = computeCCW(p0, p1, q);
+		if (value > eps) {
+			return 1;
+		}
+		if (value < -eps) {
+			return -1;
+		}
+		return 0;
+	}
+
+	private static double computeCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		double dx1, dx2, dy1, dy2;
 
 		dx1 = p1.x - p0.x;
@@ -439,10 +471,7 @@ public class GeomUtil {
 		dx2 = q.x - p0.x;
 		dy2 = q.y - p0.y;
 
-		if (dx1 * dy2 > dy1 * dx2) {
-			return true;
-		}
-		return false;
+		return dx1 * dy2 - dy1 * dx2;
 	}
 
 	private static double distance(final double x0, final double y0, final double x1,

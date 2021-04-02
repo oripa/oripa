@@ -19,6 +19,7 @@
 package oripa.domain.paint.angle;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
@@ -69,7 +70,7 @@ public class SelectingStartPoint extends PickingVertex {
 			crossPoints.addAll(
 					context.getCreasePattern().stream()
 							.map(crease -> GeomUtil.getCrossPoint(line, crease))
-							.filter(point -> point != null)
+							.filter(Objects::nonNull)
 							.collect(Collectors.toList()));
 
 			// snap on end points of overlapping creases.

@@ -25,9 +25,9 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.domain.fold.OrigamiModel;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.geom.RectangleDomain;
 import oripa.persistent.filetool.Exporter;
 
 /**
@@ -54,24 +54,20 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 				var bw = new BufferedWriter(fw);) {
 
 			// Align the center of the model, combine scales
-			Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
-			Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
 			Vector2d modelCenter = new Vector2d();
 
 			List<OriFace> faces = origamiModel.getFaces();
 			List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
+			var domain = new RectangleDomain();
 			for (OriFace face : faces) {
-				for (OriHalfedge he : face.halfedges) {
-					maxV.x = Math.max(maxV.x, he.vertex.p.x);
-					maxV.y = Math.max(maxV.y, he.vertex.p.y);
-					minV.x = Math.min(minV.x, he.vertex.p.x);
-					minV.y = Math.min(minV.y, he.vertex.p.y);
-				}
+				face.halfedgeStream().forEach(he -> {
+					domain.enlarge(he.getPosition());
+				});
 			}
 
-			modelCenter.x = (maxV.x + minV.x) / 2;
-			modelCenter.y = (maxV.y + minV.y) / 2;
+			modelCenter.x = domain.getCenterX();
+			modelCenter.y = domain.getCenterY();
 
 			bw.write("  0\n");
 			bw.write("SECTION\n");
@@ -89,7 +85,7 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 			bw.write("ENTITIES\n");
 
 			for (OriFace face : sortedFaces) {
-				for (OriHalfedge he : face.halfedges) {
+				for (var he : face.halfedgeIterable()) {
 
 					bw.write("  0\n");
 					bw.write("LINE\n");
@@ -100,26 +96,28 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 					bw.write(" 62\n"); // 1＝red 2＝yellow 3＝green 4＝cyan 5＝blue
 										// 6＝magenta 7＝white
 					int colorNumber = 250;
+					var position = he.getPositionForDisplay();
+					var nextPosition = he.getNext().getPositionForDisplay();
 
 					bw.write("" + colorNumber + "\n");
 					bw.write(" 10\n");
 					bw.write(""
-							+ ((he.positionForDisplay.x - modelCenter.x)
+							+ ((position.x - modelCenter.x)
 									* scale + center)
 							+ "\n");
 					bw.write(" 20\n");
 					bw.write(""
-							+ (-(he.positionForDisplay.y - modelCenter.y)
+							+ (-(position.y - modelCenter.y)
 									* scale + center)
 							+ "\n");
 					bw.write(" 11\n");
 					bw.write(""
-							+ ((he.next.positionForDisplay.x - modelCenter.x)
+							+ ((nextPosition.x - modelCenter.x)
 									* scale + center)
 							+ "\n");
 					bw.write(" 21\n");
 					bw.write(""
-							+ (-(he.next.positionForDisplay.y - modelCenter.y)
+							+ (-(nextPosition.y - modelCenter.y)
 									* scale + center)
 							+ "\n");
 				}

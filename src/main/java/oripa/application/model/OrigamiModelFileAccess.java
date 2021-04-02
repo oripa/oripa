@@ -21,58 +21,30 @@ package oripa.application.model;
 import java.awt.Component;
 import java.io.IOException;
 
-import oripa.domain.fold.OrigamiModel;
-import oripa.persistent.doc.OrigamiModelFileTypeKey;
-import oripa.persistent.entity.exporter.OrigamiModelExporterDXF;
-import oripa.persistent.entity.exporter.OrigamiModelExporterOBJ;
-import oripa.persistent.filetool.FileAccessActionProvider;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.persistent.dao.DataAccessObject;
 import oripa.persistent.filetool.FileAccessSupportFilter;
 import oripa.persistent.filetool.FileChooserCanceledException;
-import oripa.persistent.filetool.FileChooserFactory;
-import oripa.persistent.filetool.SavingActionTemplate;
-import oripa.resource.ResourceHolder;
-import oripa.resource.ResourceKey;
-import oripa.resource.StringID;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class OrigamiModelFileAccess {
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
+	private final DataAccessObject<OrigamiModel> dao;
 
-	private FileAccessSupportFilter<OrigamiModel> createFilter(final OrigamiModelFileTypeKey type) {
-		FileAccessSupportFilter<OrigamiModel> filter = new FileAccessSupportFilter<OrigamiModel>(
-				type,
-				FileAccessSupportFilter.createDefaultDescription(
-						type, resourceHolder.getString(
-								ResourceKey.LABEL, StringID.ModelMenu.FILE_ID)));
-
-		switch (type) {
-		case DXF_MODEL:
-			filter.setSavingAction(
-					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterDXF()));
-			break;
-		case OBJ_MODEL:
-			filter.setSavingAction(
-					new SavingActionTemplate<OrigamiModel>(new OrigamiModelExporterOBJ()));
-			break;
-		default:
-			throw new RuntimeException("Wrong implementation");
-		}
-
-		return filter;
+	/**
+	 * Constructor
+	 */
+	public OrigamiModelFileAccess(final DataAccessObject<OrigamiModel> dao) {
+		this.dao = dao;
 	}
 
-	public void save(final OrigamiModelFileTypeKey type, final OrigamiModel origamiModel,
-			final Component owner)
+	public void saveFile(final OrigamiModel origamiModel, final Component owner,
+			final FileAccessSupportFilter<OrigamiModel>... filters)
 			throws IllegalArgumentException, IOException, FileChooserCanceledException {
 
-		FileChooserFactory<OrigamiModel> chooserFactory = new FileChooserFactory<>();
-		FileAccessActionProvider<OrigamiModel> chooser = chooserFactory.createChooser(null,
-				createFilter(type));
-
-		chooser.getActionForSavingFile(owner).save(origamiModel);
+		dao.saveUsingGUI(origamiModel, null, owner, filters);
 	}
 
 }

@@ -24,8 +24,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -41,22 +39,30 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
-import oripa.domain.fold.OriFace;
-import oripa.domain.fold.OriHalfedge;
-import oripa.domain.fold.OrigamiModel;
-import oripa.resource.Constants;
-import oripa.resource.Constants.ModelDisplayMode;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
 import oripa.viewsetting.main.MainScreenSetting;
 
+/**
+ * Screen to show the silhouette of origami which is the result of face
+ * transform according to the creases.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public class ModelViewScreen extends JPanel
-		implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener,
+		implements MouseListener, MouseMotionListener, MouseWheelListener,
 		ComponentListener {
+	private static final Logger logger = LoggerFactory.getLogger(ModelViewScreen.class);
 
 	private Image bufferImage = null;
 	private Graphics2D bufferg = null;
@@ -142,16 +148,17 @@ public class ModelViewScreen extends JPanel
 
 		rotateAngle = 0;
 		if (!hasModel) {
+			logger.info("reset view matrix: origamiModel does not have a model data.");
 			scale = 1.0;
 		} else {
 			// Align the center of the model, combined scale
 			var folderTool = new FolderTool();
-			var boundBox = folderTool.calcFoldedBoundingBox(faces);
-			modelCenter.x = boundBox.getCenterX();
-			modelCenter.y = boundBox.getCenterY();
+			var domain = folderTool.createDomainOfFoldedModel(faces);
+			modelCenter.x = domain.getCenterX();
+			modelCenter.y = domain.getCenterY();
 
 			scale = 0.8 * Math.min(
-					boundSize / boundBox.getWidth(), boundSize / boundBox.getHeight());
+					boundSize / domain.getWidth(), boundSize / domain.getHeight());
 
 			updateAffineTransform();
 			recalcScissorsLine();
@@ -160,30 +167,35 @@ public class ModelViewScreen extends JPanel
 
 	private void drawModel(final Graphics2D g2d) {
 		if (origamiModel == null) {
+			logger.info("null origamiModel.");
 			return;
 		}
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
+		logger.debug("sortedFaces.size() = " + sortedFaces.size());
+
 		for (OriFace face : sortedFaces) {
+			logger.trace("face: " + face);
 			switch (modelDisplayMode) {
 			case FILL_ALPHA:
 				g2d.setColor(new Color(100, 100, 100));
-				g2d.fill(face.outline);
+				g2d.fill(face.getOutline());
 				break;
 			case FILL_NONE:
 			}
 
 			g2d.setColor(Color.BLACK);
-			for (OriHalfedge he : face.halfedges) {
-				if (he.pair == null) {
+			face.halfedgeStream().forEach(he -> {
+				if (he.getPair() == null) {
 					g2d.setStroke(selector.createPaperBoundaryStrokeForModelView(scale));
 				} else {
 					g2d.setStroke(selector.createFaceEdgeStrokeForModelView(scale));
 				}
-				g2d.draw(new Line2D.Double(he.positionForDisplay.x,
-						he.positionForDisplay.y, he.next.positionForDisplay.x,
-						he.next.positionForDisplay.y));
-			}
+				var position = he.getPositionForDisplay();
+				var nextPosition = he.getNext().getPositionForDisplay();
+				g2d.draw(new Line2D.Double(position.x, position.y,
+						nextPosition.x, nextPosition.y));
+			});
 		}
 
 		if (scissorsLineVisible) {
@@ -235,15 +247,17 @@ public class ModelViewScreen extends JPanel
 		Graphics2D g2d = bufferg;
 
 		if (origamiModel == null) {
+			logger.info("null origamiModel.");
 			return;
 		}
 
 		if (!origamiModel.hasModel()) {
+			logger.info("origamiModel does not have a model data.");
 			return;
 		}
 
 		g2d.setStroke(selector.createDefaultStroke(scale));
-		if (modelDisplayMode == Constants.ModelDisplayMode.FILL_ALPHA) {
+		if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 		}
 		drawModel(g2d);
@@ -336,11 +350,6 @@ public class ModelViewScreen extends JPanel
 		scale *= scale_;
 		updateAffineTransform();
 		repaint();
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent arg0) {
-
 	}
 
 	@Override

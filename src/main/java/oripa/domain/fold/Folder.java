@@ -19,78 +19,85 @@
 package oripa.domain.fold;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.fold.halfedge.OriEdge;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.domain.fold.origeom.OverlapRelationValues;
+import oripa.domain.fold.stackcond.StackConditionOf3Faces;
+import oripa.domain.fold.stackcond.StackConditionOf4Faces;
+import oripa.domain.fold.subface.SubFace;
+import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
+import oripa.util.Matrices;
 import oripa.value.OriLine;
 
 public class Folder {
 	private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
-	private ArrayList<Condition4> condition4s;
-	private int workORmat[][];
-	private ArrayList<SubFace> subFaces;
+	private ArrayList<StackConditionOf4Faces> condition4s;
+	private List<SubFace> subFaces;
+
+	private final SubFacesFactory subFacesFactory;
 
 	// helper object
 	private final FolderTool folderTool = new FolderTool();
 
-	public Folder() {
+	public Folder(final SubFacesFactory subFacesFactory) {
+		this.subFacesFactory = subFacesFactory;
 	}
 
 	/**
+	 * Computes folded states.
 	 *
 	 * @param origamiModel
-	 * @param foldedModelInfo
+	 *            half-edge based data structure. It will be affected by this
+	 *            method.
 	 * @param fullEstimation
-	 * @return the number of flat foldable layer layouts. -1 if
-	 *         <code>fullEstimation</code> is false.
+	 *            whether the algorithm should compute all possible folded
+	 *            states or not.
+	 * @return folded model whose {@link FoldedModel#getOrigamiModel()} returns
+	 *         the given {@code origamiModel}.
 	 */
-	public int fold(final OrigamiModel origamiModel, final FoldedModelInfo foldedModelInfo,
-			final boolean fullEstimation) {
+	public FoldedModel fold(final OrigamiModel origamiModel, final boolean fullEstimation) {
 
 		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 		List<OriFace> faces = origamiModel.getFaces();
-		List<OriVertex> vertices = origamiModel.getVertices();
 		List<OriEdge> edges = origamiModel.getEdges();
 
-		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
-		foldableOverlapRelations.clear();
+		var overlapRelationList = new OverlapRelationList();
+
+		var foldedModel = new FoldedModel(origamiModel, overlapRelationList);
 
 		simpleFoldWithoutZorder(faces, edges);
-
-		foldedModelInfo.setBoundBox(
-				folderTool.calcFoldedBoundingBox(faces));
-
+		folderTool.setFacesOutline(faces);
 		sortedFaces.addAll(faces);
-		folderTool.setFacesOutline(vertices, faces, false);
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
-			return -1;
+			return foldedModel;
 		}
 
 		// After folding construct the subfaces
 		double paperSize = origamiModel.getPaperSize();
-		subFaces = makeSubFaces(faces, paperSize);
-		System.out.println("subFaces.size() = " + subFaces.size());
+		subFaces = subFacesFactory.createSubFaces(faces, paperSize);
+		logger.debug("subFaces.size() = " + subFaces.size());
 
-		foldedModelInfo.setOverlapRelation(
-				createOverlapRelation(faces));
+		int[][] overlapRelation = createOverlapRelation(faces, paperSize);
 
-		int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
 		// Set overlap relations based on valley/mountain folds information
-		step1(faces, overlapRelation);
+		determineOverlapRelationByLineType(faces, overlapRelation);
 
 		holdCondition3s(faces, paperSize, overlapRelation);
 
@@ -99,574 +106,559 @@ public class Folder {
 
 		estimation(faces, overlapRelation);
 
-		int size = faces.size();
-		workORmat = new int[size][size];
-		for (int i = 0; i < size; i++) {
-			System.arraycopy(overlapRelation[i], 0, workORmat[i], 0, size);
-		}
-
 		for (SubFace sub : subFaces) {
-			sub.sortFaceOverlapOrder(faces, workORmat);
+			sub.sortFaceOverlapOrder(faces, overlapRelation);
 		}
 
-		findAnswer(foldedModelInfo, 0, overlapRelation);
+		findAnswer(faces, overlapRelationList, 0, overlapRelation, true, paperSize);
 
-		foldedModelInfo.setCurrentORmatIndex(0);
-		if (foldableOverlapRelations.isEmpty()) {
-			return 0;
-		} else {
-			matrixCopy(foldableOverlapRelations.get(0), overlapRelation);
+		overlapRelationList.setCurrentORmatIndex(0);
+		if (overlapRelationList.isEmpty()) {
+			return foldedModel;
 		}
 
-		folderTool.setFacesOutline(vertices, faces, false);
+//		folderTool.setFacesOutline(faces);
 
 		origamiModel.setFolded(true);
-		return foldableOverlapRelations.size();
+		return foldedModel;
 	}
 
+	/**
+	 * Determines overlap relations which are left uncertain after using
+	 * necessary conditions.
+	 *
+	 * @param faces
+	 *            all faces of the origami model.
+	 * @param overlapRelationList
+	 *            an object to store the result
+	 * @param subFaceIndex
+	 *            the index of subface to be updated
+	 * @param orMat
+	 *            overlap relation matrix
+	 * @param orMatModified
+	 *            whether {@code orMat} has been changed by the previous call.
+	 *            {@code true} for the first call.
+	 * @param paperSize
+	 *            paper size
+	 */
 	private void findAnswer(
-			final FoldedModelInfo foldedModelInfo, final int subFaceIndex, final int[][] orMat) {
+			final List<OriFace> faces,
+			final OverlapRelationList overlapRelationList, final int subFaceIndex, final int[][] orMat,
+			final boolean orMatModified, final double paperSize) {
+		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
+
+		if (orMatModified) {
+			if (detectPenetration(faces, orMat, paperSize)) {
+				return;
+			}
+		}
+
+		if (subFaceIndex == subFaces.size()) {
+			var ansMat = Matrices.clone(orMat);
+			foldableOverlapRelations.add(ansMat);
+			return;
+		}
+
 		SubFace sub = subFaces.get(subFaceIndex);
-		List<int[][]> foldableOverlapRelations = foldedModelInfo.getFoldableOverlapRelations();
 
 		if (sub.allFaceOrderDecided) {
-			int s = orMat.length;
-			int[][] passMat = new int[s][s];
-			for (int i = 0; i < s; i++) {
-				System.arraycopy(orMat[i], 0, passMat[i], 0, s);
+			var passMat = Matrices.clone(orMat);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, false, paperSize);
+			return;
+		}
+
+		for (ArrayList<OriFace> answerStack : sub.answerStacks) {
+			int size = answerStack.size();
+			if (!isCorrectStackOrder(answerStack, orMat)) {
+				continue;
+			}
+			var passMat = Matrices.clone(orMat);
+
+			// determine overlap relations according to stack
+			for (int i = 0; i < size; i++) {
+				int index_i = answerStack.get(i).getFaceID();
+				for (int j = i + 1; j < size; j++) {
+					int index_j = answerStack.get(j).getFaceID();
+					passMat[index_i][index_j] = OverlapRelationValues.UPPER;
+					passMat[index_j][index_i] = OverlapRelationValues.LOWER;
+				}
 			}
 
-			if (subFaceIndex == subFaces.size() - 1) {
-				s = orMat.length;
-				int[][] ansMat = new int[s][s];
-				for (int i = 0; i < s; i++) {
-					System.arraycopy(passMat[i], 0, ansMat[i], 0, s);
-				}
-				foldableOverlapRelations.add(ansMat);
-			} else {
-				findAnswer(foldedModelInfo, subFaceIndex + 1, passMat);
-			}
-
-		} else {
-			for (ArrayList<OriFace> vec : sub.answerStacks) {
-				int size = vec.size();
-
-				boolean bOK = true;
-				for (int i = 0; i < size; i++) {
-					int index0 = vec.get(i).tmpInt;
-					for (int j = i + 1; j < size; j++) {
-						int index1 = vec.get(j).tmpInt;
-						if (orMat[index0][index1] == OverlapRelationValues.LOWER) {
-							bOK = false;
-							break;
-						}
-					}
-					if (!bOK) {
-						break;
-					}
-				}
-				if (!bOK) {
-					continue;
-				}
-				int s = orMat.length;
-				int[][] passMat = new int[s][s];
-				for (int i = 0; i < s; i++) {
-					System.arraycopy(orMat[i], 0, passMat[i], 0, s);
-				}
-
-				for (int i = 0; i < size; i++) {
-					int index0 = vec.get(i).tmpInt;
-					for (int j = i + 1; j < size; j++) {
-						int index1 = vec.get(j).tmpInt;
-						passMat[index0][index1] = OverlapRelationValues.UPPER;
-						passMat[index1][index0] = OverlapRelationValues.LOWER;
-					}
-				}
-
-				if (subFaceIndex == subFaces.size() - 1) {
-					s = orMat.length;
-					int[][] ansMat = new int[s][s];
-					for (int i = 0; i < s; i++) {
-						System.arraycopy(passMat[i], 0, ansMat[i], 0, s);
-					}
-					foldableOverlapRelations.add(ansMat);
-				} else {
-					findAnswer(foldedModelInfo, subFaceIndex + 1, passMat);
-				}
-			}
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, true, paperSize);
 		}
 	}
 
-	private void estimation(
-			final List<OriFace> faces, final int[][] orMat) {
-		boolean bChanged;
-		do {
-			bChanged = false;
-			if (estimate_by3faces(faces, orMat)) {
-				bChanged = true;
-			}
-			if (estimate_by3faces2(orMat)) {
-				bChanged = true;
-			}
-			if (estimate_by4faces(orMat)) {
-				bChanged = true;
-			}
-		} while (bChanged);
+	/**
+	 * Detects penetration. For face_i and its neighbor face_j, face_k
+	 * penetrates the sheet of paper if face_k is between face_i and face_j in
+	 * the folded state and if the connection edge of face_i and face_j is on
+	 * face_k.
+	 *
+	 * @param faces
+	 *            all faces.
+	 * @param orMat
+	 *            overlap relation matrix.
+	 * @param paperSize
+	 *            paper size.
+	 * @return true if there is a face which penetrates the sheet of paper.
+	 */
+	private boolean detectPenetration(final List<OriFace> faces, final int[][] orMat,
+			final double paperSize) {
+		var checked = new boolean[faces.size()][faces.size()];
 
+		for (int i = 0; i < faces.size(); i++) {
+			for (var he : faces.get(i).halfedgeIterable()) {
+				var pair = he.getPair();
+				if (pair == null) {
+					continue;
+				}
+
+				var index_i = he.getFace().getFaceID();
+				var index_j = pair.getFace().getFaceID();
+
+				if (checked[index_i][index_j]) {
+					continue;
+				}
+
+				if (orMat[index_i][index_j] != OverlapRelationValues.LOWER &&
+						orMat[index_i][index_j] != OverlapRelationValues.UPPER) {
+					checked[index_i][index_j] = true;
+					checked[index_j][index_i] = true;
+					continue;
+				}
+
+				var penetrates = IntStream.range(0, faces.size()).parallel()
+						.anyMatch(k -> {
+							var face_k = faces.get(k);
+							var index_k = face_k.getFaceID();
+							if (index_i == index_k || index_j == index_k) {
+								return false;
+							}
+							if (!OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
+								return false;
+							}
+							if (orMat[index_i][index_j] == OverlapRelationValues.LOWER &&
+									orMat[index_i][index_k] == OverlapRelationValues.LOWER &&
+									orMat[index_j][index_k] == OverlapRelationValues.UPPER) {
+								return true;
+							} else if (orMat[index_i][index_j] == OverlapRelationValues.UPPER &&
+									orMat[index_i][index_k] == OverlapRelationValues.UPPER &&
+									orMat[index_j][index_k] == OverlapRelationValues.LOWER) {
+								return true;
+							}
+
+							return false;
+						});
+				if (penetrates) {
+					return true;
+				}
+
+				checked[index_i][index_j] = true;
+				checked[index_j][index_i] = true;
+			}
+		}
+
+		return false;
 	}
 
-	// If face[i] and face[j] touching edge is covered by face[k]
-	// then OR[i][k] = OR[j][k]
+	/**
+	 * Whether the order of faces in {@code answerStack} is correct or not
+	 * according to {@code orMat}.
+	 *
+	 * @param answerStack
+	 *            stack of faces including the same subface.
+	 * @param orMat
+	 *            overlap relation matrix.
+	 * @return true if the order is correct.
+	 */
+	private boolean isCorrectStackOrder(final List<OriFace> answerStack, final int[][] orMat) {
+		int size = answerStack.size();
+
+		for (int i = 0; i < size; i++) {
+			int index_i = answerStack.get(i).getFaceID();
+			for (int j = i + 1; j < size; j++) {
+				int index_j = answerStack.get(j).getFaceID();
+				// stack_index = 0 means the top of stack (looking down
+				// the folded model).
+				// therefore a face with smaller stack_index i should be
+				// UPPER than stack_index j.
+				if (orMat[index_i][index_j] == OverlapRelationValues.LOWER) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Determines overlap relations by necessary conditions.
+	 *
+	 * @param faces
+	 *            all faces.
+	 * @param orMat
+	 *            overlap relation matrix
+	 */
+	private void estimation(final List<OriFace> faces, final int[][] orMat) {
+		boolean changed;
+		do {
+			changed = false;
+			changed |= estimate_by3faces(faces, orMat);
+			changed |= estimate_by3faces2(orMat);
+			changed |= estimate_by4faces(orMat);
+		} while (changed);
+	}
+
+	/**
+	 * Creates 3-face condition and sets to subfaces: If face[i] and face[j]
+	 * touching edge is covered by face[k] then OR[i][k] = OR[j][k]
+	 *
+	 * @param faces
+	 * @param paperSize
+	 * @param overlapRelation
+	 */
 	private void holdCondition3s(
 			final List<OriFace> faces, final double paperSize, final int[][] overlapRelation) {
 
 		for (OriFace f_i : faces) {
-			for (OriHalfedge he : f_i.halfedges) {
-				if (he.pair == null) {
+			for (OriHalfedge he : f_i.halfedgeIterable()) {
+				var pair = he.getPair();
+				if (pair == null) {
 					continue;
 				}
 
-				OriFace f_j = he.pair.face;
-				if (overlapRelation[f_i.tmpInt][f_j.tmpInt] != OverlapRelationValues.LOWER) {
+				OriFace f_j = pair.getFace();
+				if (overlapRelation[f_i.getFaceID()][f_j.getFaceID()] != OverlapRelationValues.LOWER) {
 					continue;
 				}
 				for (OriFace f_k : faces) {
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
-					if (OriGeomUtil.isLineCrossFace4(f_k, he, paperSize)) {
-						Condition3 cond = new Condition3();
-						cond.upper = f_i.tmpInt;
-						cond.lower = f_j.tmpInt;
-						cond.other = f_k.tmpInt;
-
-						Condition3 cond3_f = new Condition3();
-						cond3_f.lower = cond.lower;
-						cond3_f.upper = cond.upper;
-						cond3_f.other = cond.other;
-						f_k.condition3s.add(cond3_f);
-
-						// Add condition to all subfaces of the 3 faces
-						for (SubFace sub : subFaces) {
-							if (sub.faces.contains(f_i) && sub.faces.contains(f_j)
-									&& sub.faces.contains(f_k)) {
-								sub.condition3s.add(cond);
-							}
-						}
-
+					if (!OriGeomUtil.isLineCrossFace4(f_k, he, paperSize)) {
+						continue;
 					}
+					StackConditionOf3Faces cond = new StackConditionOf3Faces();
+					cond.upper = f_i.getFaceID();
+					cond.lower = f_j.getFaceID();
+					cond.other = f_k.getFaceID();
+
+					// Add condition to all subfaces of the 3 faces
+					for (SubFace sub : subFaces) {
+						if (sub.parentFaces.contains(f_i) && sub.parentFaces.contains(f_j)
+								&& sub.parentFaces.contains(f_k)) {
+							sub.condition3s.add(cond);
+						}
+					}
+
 				}
 			}
 		}
 	}
 
+	/**
+	 * Creates 4-face condition and sets to subfaces.
+	 *
+	 * @param parentFaces
+	 * @param paperSize
+	 * @param overlapRelation
+	 */
 	private void holdCondition4s(
 			final List<OriEdge> edges, final int[][] overlapRelation) {
 
 		int edgeNum = edges.size();
-		System.out.println("edgeNum = " + edgeNum);
+		logger.debug("edgeNum = " + edgeNum);
 
 		for (int i = 0; i < edgeNum; i++) {
 			OriEdge e0 = edges.get(i);
-			if (e0.left == null || e0.right == null) {
+			var e0Left = e0.getLeft();
+			var e0Right = e0.getRight();
+
+			if (e0Left == null || e0Right == null) {
 				continue;
 			}
+
 			for (int j = i + 1; j < edgeNum; j++) {
 				OriEdge e1 = edges.get(j);
-				if (e1.left == null || e1.right == null) {
+				var e1Left = e1.getLeft();
+				var e1Right = e1.getRight();
+				if (e1Left == null || e1Right == null) {
 					continue;
 				}
-				// TODO extract as function
-				if (GeomUtil.isLineSegmentsOverlap(e0.left.positionAfterFolded,
-						e0.left.next.positionAfterFolded,
-						e1.left.positionAfterFolded, e1.left.next.positionAfterFolded)) {
-					Condition4 cond_f;
-					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-							cond_f = new Condition4();
-							cond_f.upper1 = e0.right.face.tmpInt;
-							cond_f.lower1 = e0.left.face.tmpInt;
-							cond_f.upper2 = e1.right.face.tmpInt;
-							cond_f.lower2 = e1.left.face.tmpInt;
-							e0.right.face.condition4s.add(cond_f);
 
-							cond_f = new Condition4();
-							cond_f.upper2 = e0.right.face.tmpInt;
-							cond_f.lower2 = e0.left.face.tmpInt;
-							cond_f.upper1 = e1.right.face.tmpInt;
-							cond_f.lower1 = e1.left.face.tmpInt;
-							e1.right.face.condition4s.add(cond_f);
-						} else {
-							cond_f = new Condition4();
-							cond_f.upper1 = e0.right.face.tmpInt;
-							cond_f.lower1 = e0.left.face.tmpInt;
-							cond_f.upper2 = e1.left.face.tmpInt;
-							cond_f.lower2 = e1.right.face.tmpInt;
-							e0.right.face.condition4s.add(cond_f);
+				if (!GeomUtil.isLineSegmentsOverlap(e0Left.getPosition(),
+						e0Left.getNext().getPosition(),
+						e1Left.getPosition(), e1Left.getNext().getPosition())) {
+					continue;
+				}
 
-							cond_f = new Condition4();
-							cond_f.upper2 = e0.right.face.tmpInt;
-							cond_f.lower2 = e0.left.face.tmpInt;
-							cond_f.upper1 = e1.left.face.tmpInt;
-							cond_f.lower1 = e1.right.face.tmpInt;
-							e1.left.face.condition4s.add(cond_f);
-						}
-					} else {
-						if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-							cond_f = new Condition4();
-							cond_f.upper1 = e0.left.face.tmpInt;
-							cond_f.lower1 = e0.right.face.tmpInt;
-							cond_f.upper2 = e1.right.face.tmpInt;
-							cond_f.lower2 = e1.left.face.tmpInt;
-							e0.left.face.condition4s.add(cond_f);
+				var e0LeftFace = e0Left.getFace();
+				var e0RightFace = e0Right.getFace();
+				var e1LeftFace = e1Left.getFace();
+				var e1RightFace = e1Right.getFace();
 
-							cond_f.upper2 = e0.left.face.tmpInt;
-							cond_f.lower2 = e0.right.face.tmpInt;
-							cond_f.upper1 = e1.right.face.tmpInt;
-							cond_f.lower1 = e1.left.face.tmpInt;
-							e1.right.face.condition4s.add(cond_f);
-						} else {
-							cond_f = new Condition4();
-							cond_f.upper1 = e0.left.face.tmpInt;
-							cond_f.lower1 = e0.right.face.tmpInt;
-							cond_f.upper2 = e1.left.face.tmpInt;
-							cond_f.lower2 = e1.right.face.tmpInt;
-							e0.left.face.condition4s.add(cond_f);
-
-							cond_f.upper2 = e0.left.face.tmpInt;
-							cond_f.lower2 = e0.right.face.tmpInt;
-							cond_f.upper1 = e1.left.face.tmpInt;
-							cond_f.lower1 = e1.right.face.tmpInt;
-							e1.left.face.condition4s.add(cond_f);
-						}
-					}
-					Condition4 cond = new Condition4();
-					// Add condition to all subfaces of the 4 faces
-					boolean bOverlap = false;
-					for (SubFace sub : subFaces) {
-						if (sub.faces.contains(e0.left.face) && sub.faces.contains(e0.right.face)
-								&& sub.faces.contains(e1.left.face)
-								&& sub.faces.contains(e1.right.face)) {
-							sub.condition4s.add(cond);
-							bOverlap = true;
-						}
-					}
-
-					if (overlapRelation[e0.left.face.tmpInt][e0.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-						cond.upper1 = e0.right.face.tmpInt;
-						cond.lower1 = e0.left.face.tmpInt;
-					} else {
-						cond.upper1 = e0.left.face.tmpInt;
-						cond.lower1 = e0.right.face.tmpInt;
-					}
-					if (overlapRelation[e1.left.face.tmpInt][e1.right.face.tmpInt] == OverlapRelationValues.UPPER) {
-						cond.upper2 = e1.right.face.tmpInt;
-						cond.lower2 = e1.left.face.tmpInt;
-					} else {
-						cond.upper2 = e1.left.face.tmpInt;
-						cond.lower2 = e1.right.face.tmpInt;
-					}
-
-					if (bOverlap) {
-						condition4s.add(cond);
+				StackConditionOf4Faces cond = new StackConditionOf4Faces();
+				// Add condition to all subfaces of the 4 faces
+				boolean bOverlap = false;
+				for (SubFace sub : subFaces) {
+					if (sub.parentFaces.contains(e0LeftFace)
+							&& sub.parentFaces.contains(e0RightFace)
+							&& sub.parentFaces.contains(e1LeftFace)
+							&& sub.parentFaces.contains(e1RightFace)) {
+						sub.condition4s.add(cond);
+						bOverlap = true;
 					}
 				}
 
+				var e0LeftFaceID = e0LeftFace.getFaceID();
+				var e0RightFaceID = e0RightFace.getFaceID();
+				var e1LeftFaceID = e1LeftFace.getFaceID();
+				var e1RightFaceID = e1RightFace.getFaceID();
+
+				if (overlapRelation[e0LeftFaceID][e0RightFaceID] == OverlapRelationValues.UPPER) {
+					cond.upper1 = e0RightFaceID;
+					cond.lower1 = e0LeftFaceID;
+				} else {
+					cond.upper1 = e0LeftFaceID;
+					cond.lower1 = e0RightFaceID;
+				}
+				if (overlapRelation[e1LeftFaceID][e1RightFaceID] == OverlapRelationValues.UPPER) {
+					cond.upper2 = e1RightFaceID;
+					cond.lower2 = e1LeftFaceID;
+				} else {
+					cond.upper2 = e1LeftFaceID;
+					cond.lower2 = e1RightFaceID;
+				}
+
+				if (bOverlap) {
+					condition4s.add(cond);
+				}
 			}
 		}
 	}
 
-	public static void matrixCopy(final int[][] from, final int[][] to) {
-		int size = from.length;
-		for (int i = 0; i < size; i++) {
-			System.arraycopy(from[i], 0, to[i], 0, size);
-		}
-	}
-
+	/**
+	 * Sets {@code value} to {@code orMat[i][j]}. If {@code setsPairAtSameTime}
+	 * is {@code true}, This method sets inversion of {@code value} to
+	 * {@code orMat[j][i]}.
+	 *
+	 * @param orMat
+	 *            overlap relation matrix
+	 * @param i
+	 *            row index
+	 * @param j
+	 *            column index
+	 * @param value
+	 *            a value of {@link OverlapRelationValues}
+	 * @param setsPairAtSameTime
+	 *            {@code true} if {@code orMat[j][i]} should be set to inversion
+	 *            of {@code value} as well.
+	 */
 	private void setOR(final int[][] orMat, final int i, final int j, final int value,
-			final boolean bSetPairAtSameTime) {
+			final boolean setsPairAtSameTime) {
 		orMat[i][j] = value;
-		if (bSetPairAtSameTime) {
-			if (value == OverlapRelationValues.LOWER) {
-				orMat[j][i] = OverlapRelationValues.UPPER;
-			} else {
-				orMat[j][i] = OverlapRelationValues.LOWER;
-			}
+		if (!setsPairAtSameTime) {
+			return;
 		}
-	}
 
-	private void setLowerValueIfUndefined(final int[][] orMat, final int i, final int j,
-			final boolean[] changed) {
-		if (orMat[i][j] == OverlapRelationValues.UNDEFINED) {
-			orMat[i][j] = OverlapRelationValues.LOWER;
+		if (value == OverlapRelationValues.LOWER) {
 			orMat[j][i] = OverlapRelationValues.UPPER;
-			changed[0] = true;
+		} else {
+			orMat[j][i] = OverlapRelationValues.LOWER;
 		}
 	}
 
+	/**
+	 *
+	 * @param orMat
+	 * @param i
+	 * @param j
+	 * @return true if LOWER and UPPER is set.
+	 */
+	private boolean setLowerValueIfUndefined(final int[][] orMat, final int i, final int j) {
+		if (orMat[i][j] != OverlapRelationValues.UNDEFINED) {
+			return false;
+		}
+		orMat[i][j] = OverlapRelationValues.LOWER;
+		orMat[j][i] = OverlapRelationValues.UPPER;
+		return true;
+	}
+
+	/**
+	 * Determines overlap relation using 4-face condition.
+	 *
+	 * @param orMat
+	 * @return
+	 */
 	private boolean estimate_by4faces(final int[][] orMat) {
 
-		boolean[] changed = new boolean[1];
-		changed[0] = false;
+		boolean changed = false;
 
-		for (Condition4 cond : condition4s) {
+		for (StackConditionOf4Faces cond : condition4s) {
 
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2
 			if (orMat[cond.lower1][cond.upper2] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2, changed);
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
-				setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2);
+				changed |= setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2);
 			}
 
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
 			// lower2 > lower1
 			if (orMat[cond.lower2][cond.upper1] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1, changed);
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
-				setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1);
+				changed |= setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1);
 			}
 
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
 			// lower1
 			if (orMat[cond.upper1][cond.upper2] == OverlapRelationValues.LOWER
 					&& orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
-				setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2);
+				changed |= setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1);
 			}
 
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
 			// lower1
 			if (orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER
 					&& orMat[cond.lower2][cond.lower1] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2, changed);
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1);
 			}
 
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
 			// lower2
 			if (orMat[cond.upper2][cond.upper1] == OverlapRelationValues.LOWER
 					&& orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1, changed);
-				setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1);
+				changed |= setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2);
 			}
 
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
 			// lower2
 			if (orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER
 					&& orMat[cond.lower1][cond.lower2] == OverlapRelationValues.LOWER) {
-				setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1, changed);
-				setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2, changed);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1);
+				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2);
 			}
 		}
 
-		return changed[0];
+		return changed;
 	}
 
-	// If the subface a>b and b>c then a>c
+	/**
+	 * If the subface a>b and b>c then a>c
+	 *
+	 * @param orMat
+	 *            overlap-relation matrix
+	 * @return whether orMat is changed or not.
+	 */
 	private boolean estimate_by3faces2(final int[][] orMat) {
 		boolean bChanged = false;
+
 		for (SubFace sub : subFaces) {
-
-			boolean changed;
-
-			while (true) {
-				changed = false;
-
-				boolean bFound = false;
-				for (int i = 0; i < sub.faces.size(); i++) {
-					for (int j = i + 1; j < sub.faces.size(); j++) {
-
-						// search for undetermined relations
-						int index_i = sub.faces.get(i).tmpInt;
-						int index_j = sub.faces.get(j).tmpInt;
-
-						if (orMat[index_i][index_j] == OverlapRelationValues.NO_OVERLAP) {
-							continue;
-						}
-						if (orMat[index_i][index_j] != OverlapRelationValues.UNDEFINED) {
-							continue;
-						}
-						// Find the intermediary face
-						for (int k = 0; k < sub.faces.size(); k++) {
-							if (k == i) {
-								continue;
-							}
-							if (k == j) {
-								continue;
-							}
-
-							int index_k = sub.faces.get(k).tmpInt;
-
-							if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
-									&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {
-								orMat[index_i][index_j] = OverlapRelationValues.UPPER;
-								orMat[index_j][index_i] = OverlapRelationValues.LOWER;
-								bFound = true;
-								changed = true;
-								bChanged = true;
-								break;
-							}
-							if (orMat[index_i][index_k] == OverlapRelationValues.LOWER
-									&& orMat[index_k][index_j] == OverlapRelationValues.LOWER) {
-								orMat[index_i][index_j] = OverlapRelationValues.LOWER;
-								orMat[index_j][index_i] = OverlapRelationValues.UPPER;
-								bFound = true;
-								changed = true;
-								bChanged = true;
-								break;
-							}
-							if (bFound) {
-								break;
-							}
-						}
-						if (bFound) {
-							break;
-						}
-
-					}
-
-					if (bFound) {
-						break;
-					}
-				}
-
-				if (!changed) {
-					break;
-				}
+			while (updateOverlapRelationBy3FaceStack(sub, orMat)) {
+				bChanged = true;
 			}
 		}
 		return bChanged;
 	}
 
-	// If face[i] and face[j] touching edge is covered by face[k]
-	// then OR[i][k] = OR[j][k]
+	/**
+	 * Updates {@code orMat} by 3-face stack condition.
+	 *
+	 * @param sub
+	 *            subface.
+	 * @param orMat
+	 *            overlap relation matrix.
+	 * @return true if an update happens.
+	 */
+	private boolean updateOverlapRelationBy3FaceStack(final SubFace sub, final int[][] orMat) {
+
+		for (int i = 0; i < sub.parentFaces.size(); i++) {
+			for (int j = i + 1; j < sub.parentFaces.size(); j++) {
+
+				// search for undetermined relations
+				int index_i = sub.parentFaces.get(i).getFaceID();
+				int index_j = sub.parentFaces.get(j).getFaceID();
+
+				if (orMat[index_i][index_j] == OverlapRelationValues.NO_OVERLAP) {
+					continue;
+				}
+				if (orMat[index_i][index_j] != OverlapRelationValues.UNDEFINED) {
+					continue;
+				}
+				// Find the intermediary face
+				for (int k = 0; k < sub.parentFaces.size(); k++) {
+					if (k == i || k == j) {
+						continue;
+					}
+
+					int index_k = sub.parentFaces.get(k).getFaceID();
+
+					if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
+							&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {
+						setOR(orMat, index_i, index_j, OverlapRelationValues.UPPER, true);
+						return true;
+					}
+					if (orMat[index_i][index_k] == OverlapRelationValues.LOWER
+							&& orMat[index_k][index_j] == OverlapRelationValues.LOWER) {
+						setOR(orMat, index_i, index_j, OverlapRelationValues.LOWER, true);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * If face[i] and face[j] touching edge is covered by face[k] then OR[i][k]
+	 * = OR[j][k]
+	 *
+	 * @param faces
+	 * @param orMat
+	 * @return whether orMat is changed or not.
+	 */
 	private boolean estimate_by3faces(
 			final List<OriFace> faces,
 			final int[][] orMat) {
 
 		boolean bChanged = false;
 		for (OriFace f_i : faces) {
-			for (OriHalfedge he : f_i.halfedges) {
-				if (he.pair == null) {
+			int index_i = f_i.getFaceID();
+			for (OriHalfedge he : f_i.halfedgeIterable()) {
+				var pair = he.getPair();
+				if (pair == null) {
 					continue;
 				}
-				OriFace f_j = he.pair.face;
+				OriFace f_j = pair.getFace();
+				int index_j = f_j.getFaceID();
 
 				for (OriFace f_k : faces) {
+					int index_k = f_k.getFaceID();
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
-					if (OriGeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
-						if (orMat[f_i.tmpInt][f_k.tmpInt] != OverlapRelationValues.UNDEFINED
-								&& orMat[f_j.tmpInt][f_k.tmpInt] == OverlapRelationValues.UNDEFINED) {
-							setOR(orMat, f_j.tmpInt, f_k.tmpInt, orMat[f_i.tmpInt][f_k.tmpInt],
-									true);
-							bChanged = true;
-						} else if (orMat[f_j.tmpInt][f_k.tmpInt] != OverlapRelationValues.UNDEFINED
-								&& orMat[f_i.tmpInt][f_k.tmpInt] == OverlapRelationValues.UNDEFINED) {
-							setOR(orMat, f_i.tmpInt, f_k.tmpInt, orMat[f_j.tmpInt][f_k.tmpInt],
-									true);
-							bChanged = true;
-						}
+					if (!OriGeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
+						continue;
+					}
+					if (orMat[index_i][index_k] != OverlapRelationValues.UNDEFINED
+							&& orMat[index_j][index_k] == OverlapRelationValues.UNDEFINED) {
+						setOR(orMat, index_j, index_k, orMat[index_i][index_k], true);
+						bChanged = true;
+					} else if (orMat[index_j][index_k] != OverlapRelationValues.UNDEFINED
+							&& orMat[index_i][index_k] == OverlapRelationValues.UNDEFINED) {
+						setOR(orMat, index_i, index_k, orMat[index_j][index_k], true);
+						bChanged = true;
 					}
 				}
 			}
 		}
 
 		return bChanged;
-	}
-
-	/**
-	 *
-	 * @param faces
-	 *            extracted from the drawn crease pattern. This method assumes
-	 *            that the faces hold the coordinates after folding.
-	 *
-	 * @param paperSize
-	 * @return
-	 */
-	private ArrayList<SubFace> makeSubFaces(
-			final List<OriFace> faces, final double paperSize) {
-		logger.debug("makeSubFaces() start");
-
-		CreasePatternFactory cpFactory = new CreasePatternFactory();
-		CreasePatternInterface temp_creasePattern = cpFactory.createCreasePattern(paperSize);
-
-		// construct edge structure after folding and store it as a
-		// crease pattern for easy calculation
-		logger.debug("makeSubFaces(): construct edge structure after folding");
-		temp_creasePattern.clear();
-		Painter painter = new Painter(temp_creasePattern);
-		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
-				OriLine line = new OriLine(he.positionAfterFolded, he.next.positionAfterFolded,
-						OriLine.Type.MOUNTAIN);
-				painter.addLine(line);
-			}
-		}
-		temp_creasePattern.cleanDuplicatedLines();
-
-		// By this construction, we get faces that are composed of the edges
-		// after folding (layering is not considered)
-		// We call such face a subface hereafter.
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		OrigamiModel temp_origamiModel = modelFactory.buildOrigami(temp_creasePattern, paperSize);
-
-		ArrayList<SubFace> localSubFaces = new ArrayList<>();
-
-		List<OriFace> subFaceSources = temp_origamiModel.getFaces();
-		for (OriFace face : subFaceSources) {
-			localSubFaces.add(new SubFace(face));
-		}
-
-		// Stores the face reference of given crease pattern into the subface
-		// that is contained in the face.
-		for (SubFace sub : localSubFaces) {
-			Vector2d innerPoint = sub.getInnerPoint();
-			for (OriFace face : faces) {
-				if (OriGeomUtil.isContainsPointFoldedFace(face, innerPoint, paperSize / 1000)) {
-					sub.faces.add(face);
-				}
-			}
-		}
-
-		// Check if the SubFace exactly equal to the Face
-		ArrayList<SubFace> tmpFaces = new ArrayList<>();
-		for (SubFace sub : localSubFaces) {
-			boolean sameCase = false;
-			for (SubFace s : tmpFaces) {
-				boolean sameCk = true;
-				if (sub.faces.size() != s.faces.size()) {
-					sameCk = false;
-				} else {
-
-					for (OriFace face : sub.faces) {
-						if (!s.faces.contains(face)) {
-							sameCk = false;
-							break;
-						}
-					}
-				}
-
-				if (sameCk) {
-					sameCase = true;
-					break;
-				}
-			}
-
-			if (!sameCase) {
-				tmpFaces.add(sub);
-			} else {
-			}
-		}
-
-		localSubFaces.clear();
-		localSubFaces.addAll(tmpFaces);
-
-		logger.debug("makeSubFaces() end");
-
-		return localSubFaces;
 	}
 
 	private void simpleFoldWithoutZorder(
@@ -674,53 +666,45 @@ public class Folder {
 
 		int id = 0;
 		for (OriFace face : faces) {
-			face.faceFront = true;
-			face.tmpFlg = false;
-			face.z_order = 0;
-			face.tmpInt = id;
+//			face.faceFront = true;
+//			face.movedByFold = false;
+			face.setFaceID(id);
 			id++;
-
-			for (OriHalfedge he : face.halfedges) {
-				he.tmpVec.set(he.vertex.p);
-			}
 		}
 
 		walkFace(faces.get(0));
 
 		for (OriEdge e : edges) {
-			e.sv.p.set(e.left.tmpVec);
-			if (e.right != null) {
-				e.ev.p.set(e.right.tmpVec);
-			}
-			e.sv.tmpFlg = false;
-			e.ev.tmpFlg = false;
-		}
+			var sv = e.getStartVertex();
+			var ev = e.getEndVertex();
 
-		for (OriFace face : faces) {
-			face.tmpFlg = false;
-			for (OriHalfedge he : face.halfedges) {
-				he.positionAfterFolded.set(he.tmpVec);
+			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
+
+			var right = e.getRight();
+			if (right != null) {
+				ev.getPosition().set(right.getPositionWhileFolding());
 			}
 		}
-
 	}
 
 	// Recursive method that flips the faces, making the folds
 	private void walkFace(final OriFace face) {
-		face.tmpFlg = true;
+		face.setMovedByFold(true);
 
-		for (OriHalfedge he : face.halfedges) {
-			if (he.pair == null) {
-				continue;
+		face.halfedgeStream().forEach(he -> {
+			var pair = he.getPair();
+			if (pair == null) {
+				return;
 			}
-			if (he.pair.face.tmpFlg) {
-				continue;
+			var pairFace = pair.getFace();
+			if (pairFace.isMovedByFold()) {
+				return;
 			}
 
-			flipFace(he.pair.face, he);
-			he.pair.face.tmpFlg = true;
-			walkFace(he.pair.face);
-		}
+			flipFace(pairFace, he);
+			pairFace.setMovedByFold(true);
+			walkFace(pairFace);
+		});
 	}
 
 	private void transformVertex(final Vector2d vertex, final Line preLine,
@@ -742,52 +726,62 @@ public class Folder {
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
+		var baseHePair = baseHe.getPair();
+		var baseHePairNext = baseHePair.getNext();
+
 		// (Maybe) baseHe.pair keeps the position before folding.
-		Vector2d preOrigin = new Vector2d(baseHe.pair.next.tmpVec);
-		// baseHe.tmpVec is the temporary position while folding along creases.
-		Vector2d afterOrigin = new Vector2d(baseHe.tmpVec);
+		Vector2d preOrigin = new Vector2d(baseHePairNext.getPositionWhileFolding());
+		Vector2d afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
 
 		// Creates the base unit vector for before the rotation
 		Vector2d baseDir = new Vector2d();
-		baseDir.sub(baseHe.pair.tmpVec, baseHe.pair.next.tmpVec);
+		baseDir.sub(baseHePair.getPositionWhileFolding(), baseHePairNext.getPositionWhileFolding());
 
 		// Creates the base unit vector for after the rotation
+		var baseHeNext = baseHe.getNext();
 		Vector2d afterDir = new Vector2d();
-		afterDir.sub(baseHe.next.tmpVec, baseHe.tmpVec);
+		afterDir.sub(baseHeNext.getPositionWhileFolding(), baseHe.getPositionWhileFolding());
 		afterDir.normalize();
 
 		Line preLine = new Line(preOrigin, baseDir);
 
 		// move the vertices of the face to keep the face connection
 		// on baseHe
-		for (OriHalfedge he : face.halfedges) {
-			transformVertex(he.tmpVec, preLine, afterOrigin, afterDir);
-		}
+		face.halfedgeStream().forEach(he -> {
+			transformVertex(he.getPositionWhileFolding(), preLine, afterOrigin, afterDir);
+		});
 
-		for (OriLine precrease : face.precreases) {
+		face.precreaseStream().forEach(precrease -> {
 			transformVertex(precrease.p0, preLine, afterOrigin, afterDir);
 			transformVertex(precrease.p1, preLine, afterOrigin, afterDir);
-		}
+		});
 
 		// Inversion
-		if (face.faceFront == baseHe.face.faceFront) {
-			Vector2d ep = baseHe.next.tmpVec;
-			Vector2d sp = baseHe.tmpVec;
+		if (face.isFaceFront() == baseHe.getFace().isFaceFront()) {
+			Vector2d ep = baseHeNext.getPositionWhileFolding();
+			Vector2d sp = baseHe.getPositionWhileFolding();
 
-			for (OriHalfedge he : face.halfedges) {
-				flipVertex(he.tmpVec, sp, ep);
-			}
-			for (OriLine precrease : face.precreases) {
+			face.halfedgeStream().forEach(he -> {
+				flipVertex(he.getPositionWhileFolding(), sp, ep);
+			});
+			face.precreaseStream().forEach(precrease -> {
 				flipVertex(precrease.p0, sp, ep);
 				flipVertex(precrease.p1, sp, ep);
-			}
-			face.faceFront = !face.faceFront;
+
+			});
+			face.invertFaceFront();
 		}
 	}
 
-	// creates the matrix overlapRelation and fills it with "no overlap" or
-	// "undifined"
-	private int[][] createOverlapRelation(final List<OriFace> faces) {
+	/**
+	 * creates the matrix overlapRelation and fills it with "no overlap" or
+	 * "undefined"
+	 *
+	 * @param faces
+	 * @param paperSize
+	 * @return
+	 */
+	private int[][] createOverlapRelation(final List<OriFace> faces, final double paperSize) {
 
 		int size = faces.size();
 		int[][] overlapRelation = new int[size][size];
@@ -795,7 +789,7 @@ public class Folder {
 		for (int i = 0; i < size; i++) {
 			overlapRelation[i][i] = OverlapRelationValues.NO_OVERLAP;
 			for (int j = i + 1; j < size; j++) {
-				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), size * 0.00001)) {
+				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), paperSize * 0.00001)) {
 					overlapRelation[i][j] = OverlapRelationValues.UNDEFINED;
 					overlapRelation[j][i] = OverlapRelationValues.UNDEFINED;
 				} else {
@@ -808,80 +802,101 @@ public class Folder {
 		return overlapRelation;
 	}
 
-	// Determines the overlap relations
-	private void step1(
+	/**
+	 * Determines the overlap relations by mountain/valley.
+	 *
+	 * @param faces
+	 * @param overlapRelation
+	 */
+	private void determineOverlapRelationByLineType(
 			final List<OriFace> faces, final int[][] overlapRelation) {
 
 		for (OriFace face : faces) {
-			for (OriHalfedge he : face.halfedges) {
-				if (he.pair == null) {
+			for (OriHalfedge he : face.halfedgeIterable()) {
+				var pair = he.getPair();
+				if (pair == null) {
 					continue;
 				}
-				OriFace pairFace = he.pair.face;
+				OriFace pairFace = pair.getFace();
+				var faceID = face.getFaceID();
+				var pairFaceID = pairFace.getFaceID();
 
 				// If the relation is already decided, skip
-				if (overlapRelation[face.tmpInt][pairFace.tmpInt] == OverlapRelationValues.UPPER
-						|| overlapRelation[face.tmpInt][pairFace.tmpInt] == OverlapRelationValues.LOWER) {
+				if (overlapRelation[faceID][pairFaceID] == OverlapRelationValues.UPPER
+						|| overlapRelation[faceID][pairFaceID] == OverlapRelationValues.LOWER) {
 					continue;
 				}
 
-				if ((face.faceFront && he.edge.type == OriLine.Type.MOUNTAIN.toInt())
-						|| (!face.faceFront && he.edge.type == OriLine.Type.VALLEY.toInt())) {
-					overlapRelation[face.tmpInt][pairFace.tmpInt] = OverlapRelationValues.UPPER;
-					overlapRelation[pairFace.tmpInt][face.tmpInt] = OverlapRelationValues.LOWER;
+				if ((face.isFaceFront() && he.getType() == OriLine.Type.MOUNTAIN.toInt())
+						|| (!face.isFaceFront() && he.getType() == OriLine.Type.VALLEY.toInt())) {
+					overlapRelation[faceID][pairFaceID] = OverlapRelationValues.UPPER;
+					overlapRelation[pairFaceID][faceID] = OverlapRelationValues.LOWER;
 				} else {
-					overlapRelation[face.tmpInt][pairFace.tmpInt] = OverlapRelationValues.LOWER;
-					overlapRelation[pairFace.tmpInt][face.tmpInt] = OverlapRelationValues.UPPER;
+					overlapRelation[faceID][pairFaceID] = OverlapRelationValues.LOWER;
+					overlapRelation[pairFaceID][faceID] = OverlapRelationValues.UPPER;
 				}
 			}
 		}
 	}
 
+	/**
+	 * Computes position of each face after fold.
+	 *
+	 * @param model
+	 *            half-edge based data structure. It will be affected by this
+	 *            method.
+	 */
 	public void foldWithoutLineType(
 			final OrigamiModel model) {
-		List<OriVertex> vertices = model.getVertices();
 		List<OriEdge> edges = model.getEdges();
 		List<OriFace> faces = model.getFaces();
 
-		for (OriFace face : faces) {
-			face.faceFront = true;
-		}
-
-		faces.get(0).z_order = 0;
+//		for (OriFace face : faces) {
+//			face.faceFront = true;
+//			face.movedByFold = false;
+//		}
 
 		walkFace(faces, faces.get(0), 0);
 
-		Collections.sort(faces, new FaceOrderComparator());
+//		Collections.sort(faces, new FaceOrderComparator());
 		model.getSortedFaces().clear();
 		model.getSortedFaces().addAll(faces);
 
 		for (OriEdge e : edges) {
-			e.sv.p.set(e.left.tmpVec);
-			e.sv.tmpFlg = false;
+			var sv = e.getStartVertex();
+			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
 		}
 
-		folderTool.setFacesOutline(vertices, faces, false);
+		folderTool.setFacesOutline(faces);
 	}
 
-	// Make the folds by flipping the faces
+	/**
+	 * Make the folds by flipping the faces
+	 *
+	 * @param faces
+	 * @param face
+	 * @param walkFaceCount
+	 */
 	private void walkFace(final List<OriFace> faces, final OriFace face, final int walkFaceCount) {
-		face.tmpFlg = true;
+		face.setMovedByFold(true);
 		if (walkFaceCount > 1000) {
-			System.out.println("walkFace too deap");
+			logger.error("walkFace too deep");
 			return;
 		}
-		for (OriHalfedge he : face.halfedges) {
-			if (he.pair == null) {
-				continue;
+		face.halfedgeStream().forEach(he -> {
+			var pair = he.getPair();
+			if (pair == null) {
+				return;
 			}
-			if (he.pair.face.tmpFlg) {
-				continue;
+			var pairFace = pair.getFace();
+			if (pairFace.isMovedByFold()) {
+				return;
 			}
 
-			flipFace2(faces, he.pair.face, he);
-			he.pair.face.tmpFlg = true;
-			walkFace(faces, he.pair.face, walkFaceCount + 1);
-		}
+			flipFace2(faces, pairFace, he);
+			pairFace.setMovedByFold(true);
+			walkFace(faces, pairFace, walkFaceCount + 1);
+		});
 	}
 
 	private void flipFace2(final List<OriFace> faces, final OriFace face,
