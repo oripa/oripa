@@ -27,22 +27,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
@@ -98,6 +83,8 @@ import oripa.viewsetting.main.MainScreenSetting;
 import oripa.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.UIPanelSetting;
+
+import static javax.swing.SwingConstants.RIGHT;
 
 public class UIPanel extends JPanel {
 
@@ -167,17 +154,17 @@ public class UIPanel extends JPanel {
 	// AlterLineTypePanel
 	private final JPanel alterLineTypePanel = new JPanel();
 
-	private final TypeForChange[] alterLine_comboData_from = {
+	private final TypeForChange[] alterLineComboDataFrom = {
 			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
 			TypeForChange.CUT };
-	private final TypeForChange[] alterLine_comboData_to = {
+	private final TypeForChange[] alterLineComboDataTo = {
 			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
 			TypeForChange.CUT, TypeForChange.DELETE, };
 
-	private final JComboBox<TypeForChange> alterLine_combo_from = new JComboBox<>(
-			alterLine_comboData_from);
-	private final JComboBox<TypeForChange> alterLine_combo_to = new JComboBox<>(
-			alterLine_comboData_to);
+	private final JComboBox<TypeForChange> alterLineComboFrom = new JComboBox<>(
+			alterLineComboDataFrom);
+	private final JComboBox<TypeForChange> alterLineComboTo = new JComboBox<>(
+			alterLineComboDataTo);
 
 	// Angle Step Panel
 	private final JPanel angleStepComboPanel = new JPanel();
@@ -239,8 +226,6 @@ public class UIPanel extends JPanel {
 		this.paintContext = aContext;
 
 		constructButtons(stateManager, actionHolder, mainFrameSetting, mainScreenSetting);
-
-		// setPreferredSize(new Dimension(230, 800));
 
 		// edit mode Selection panel
 		editModeGroup = new ButtonGroup();
@@ -329,9 +314,9 @@ public class UIPanel extends JPanel {
 		lineInputDirectVButton.doClick();
 
 		// of line type on setting
-		setting.setTypeFrom((TypeForChange) alterLine_combo_from
+		setting.setTypeFrom((TypeForChange) alterLineComboFrom
 				.getSelectedItem());
-		setting.setTypeTo((TypeForChange) alterLine_combo_to
+		setting.setTypeTo((TypeForChange) alterLineComboTo
 				.getSelectedItem());
 
 		doFullEstimationCheckBox.setSelected(true);
@@ -379,13 +364,13 @@ public class UIPanel extends JPanel {
 										// (maybe?)
 
 		var lineTypeLabel = new JLabel("Line Type");
-		lineTypeLabel.setHorizontalAlignment(JLabel.CENTER);
+		lineTypeLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lineInputPanel.add(lineTypeLabel, gbBuilder.getLineField());
 
 		lineInputPanel.add(lineTypePanel, gbBuilder.getLineField());
 
 		var commandsLabel = new JLabel("Command");
-		commandsLabel.setHorizontalAlignment(JLabel.CENTER);
+		commandsLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lineInputPanel.add(commandsLabel, gbBuilder.getLineField());
 
 		// needs to move into seperate Panel later
@@ -442,9 +427,9 @@ public class UIPanel extends JPanel {
 		var gbBuilder = new GridBagConstraintsBuilder(2);
 
 		alterLineTypePanel.add(fromLabel, gbBuilder.getNextField());
-		alterLineTypePanel.add(alterLine_combo_from, gbBuilder.getNextField());
+		alterLineTypePanel.add(alterLineComboFrom, gbBuilder.getNextField());
 		alterLineTypePanel.add(toLabel, gbBuilder.getNextField());
-		alterLineTypePanel.add(alterLine_combo_to, gbBuilder.getNextField());
+		alterLineTypePanel.add(alterLineComboTo, gbBuilder.getNextField());
 
 		alterLineTypePanel.setVisible(false);
 	}
@@ -467,12 +452,12 @@ public class UIPanel extends JPanel {
 		textFieldAngle = new JFormattedTextField(doubleValueFormat);
 
 		textFieldLength.setColumns(5);
-		textFieldLength.setValue(java.lang.Double.valueOf(0.0));
-		textFieldLength.setHorizontalAlignment(JTextField.RIGHT);
+		textFieldLength.setValue(0.0);
+		textFieldLength.setHorizontalAlignment(RIGHT);
 
 		textFieldAngle.setColumns(5);
-		textFieldAngle.setValue(java.lang.Double.valueOf(0.0));
-		textFieldAngle.setHorizontalAlignment(JTextField.RIGHT);
+		textFieldAngle.setValue(0.0);
+		textFieldAngle.setHorizontalAlignment(RIGHT);
 
 		byValuePanel.setLayout(new GridBagLayout());
 		byValuePanel.setBorder(createTitledBorder(
@@ -504,8 +489,8 @@ public class UIPanel extends JPanel {
 
 		textFieldGrid = new JFormattedTextField(new DecimalFormat("#"));
 		textFieldGrid.setColumns(2);
-		textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
-		textFieldGrid.setHorizontalAlignment(JTextField.RIGHT);
+		textFieldGrid.setValue(paintContext.getGridDivNum());
+		textFieldGrid.setHorizontalAlignment(RIGHT);
 
 		gridPanel.setLayout(new GridBagLayout());
 		gridPanel.setBorder(createTitledBorder(
@@ -700,7 +685,6 @@ public class UIPanel extends JPanel {
 	 * @param id
 	 *            is an ID string to distinguish shortcut action.
 	 */
-	@SuppressWarnings("serial")
 	private void setShortcut(final AbstractButton button, final KeyStroke keyStroke,
 			final String id) {
 		button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
@@ -743,7 +727,6 @@ public class UIPanel extends JPanel {
 	 * @param id
 	 *            is an ID string to distinguish shortcut action.
 	 */
-	@SuppressWarnings("serial")
 	private void setToolSettingGlobalShortcut(final JRadioButton toolButton,
 			final AbstractButton settingButton, final KeyStroke keyStroke,
 			final String id) {
@@ -793,8 +776,8 @@ public class UIPanel extends JPanel {
 				.addActionListener(new InputCommandStatePopper(stateManager));
 
 		// change line type tool
-		alterLine_combo_from.addItemListener(new FromLineTypeItemListener(setting));
-		alterLine_combo_to.addItemListener(new ToLineTypeItemListener(setting));
+		alterLineComboFrom.addItemListener(new FromLineTypeItemListener(setting));
+		alterLineComboTo.addItemListener(new ToLineTypeItemListener(setting));
 
 		// draw line by value tool
 		buttonLength.addActionListener(
@@ -842,17 +825,17 @@ public class UIPanel extends JPanel {
 
 		// display/view settings
 		dispVertexCheckBox.addActionListener(e -> {
-			logger.debug("vertexVisible at listener: " + dispVertexCheckBox.isSelected());
+			logger.debug("vertexVisible at listener: {}", dispVertexCheckBox.isSelected());
 			mainScreenSetting.setVertexVisible(dispVertexCheckBox.isSelected());
 		});
 
 		dispMVLinesCheckBox.addActionListener(e -> {
-			logger.debug("mvLineVisible at listener: " + dispMVLinesCheckBox.isSelected());
+			logger.debug("mvLineVisible at listener: {}", dispMVLinesCheckBox.isSelected());
 			mainScreenSetting.setMVLineVisible(dispMVLinesCheckBox.isSelected());
 		});
 
 		dispAuxLinesCheckBox.addActionListener(e -> {
-			logger.debug("auxLineVisible at listener: " + dispAuxLinesCheckBox.isSelected());
+			logger.debug("auxLineVisible at listener: {}", dispAuxLinesCheckBox.isSelected());
 			mainScreenSetting.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
 		});
 
@@ -862,9 +845,7 @@ public class UIPanel extends JPanel {
 		});
 
 		// buttons panel
-		doFullEstimationCheckBox.addActionListener(e -> {
-			fullEstimation = doFullEstimationCheckBox.isSelected();
-		});
+		doFullEstimationCheckBox.addActionListener(e -> fullEstimation = doFullEstimationCheckBox.isSelected());
 
 		buttonCheckWindow.addActionListener(e -> showCheckerWindow(paintContext));
 
@@ -897,7 +878,7 @@ public class UIPanel extends JPanel {
 	private void makeGridSizeHalf() {
 		if (paintContext.getGridDivNum() < 65) {
 			paintContext.setGridDivNum(paintContext.getGridDivNum() * 2);
-			textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
+			textFieldGrid.setValue(paintContext.getGridDivNum());
 
 			screenUpdater.updateScreen();
 		}
@@ -906,7 +887,7 @@ public class UIPanel extends JPanel {
 	private void makeGridSizeTwiceLarge() {
 		if (paintContext.getGridDivNum() > 3) {
 			paintContext.setGridDivNum(paintContext.getGridDivNum() / 2);
-			textFieldGrid.setValue(Integer.valueOf(paintContext.getGridDivNum()));
+			textFieldGrid.setValue(paintContext.getGridDivNum());
 
 			screenUpdater.updateScreen();
 		}
@@ -915,8 +896,8 @@ public class UIPanel extends JPanel {
 	private void setGridDivNum() {
 		int value;
 		try {
-			value = Integer.valueOf(textFieldGrid.getText());
-			logger.debug("grid division num: " + value);
+			value = Integer.parseInt(textFieldGrid.getText());
+			logger.debug("grid division num: {}", value);
 
 			if (value < 128 && value > 2) {
 				paintContext.setGridDivNum(value);
@@ -929,9 +910,6 @@ public class UIPanel extends JPanel {
 
 	/**
 	 * open window with folded model
-	 *
-	 * @param cutOutlinesHolder
-	 * @param mainScreenSetting
 	 */
 	private void showFoldedModelWindows(
 			final CutModelOutlinesHolder cutOutlinesHolder,
@@ -957,23 +935,24 @@ public class UIPanel extends JPanel {
 					origamiModel, fullEstimation);
 			final int foldableModelCount = foldedModel.getFoldablePatternCount();
 
-			if (!fullEstimation) {
+			if (fullEstimation) {
 
-			} else if (foldableModelCount == 0) {
-				JOptionPane.showMessageDialog(
-						this,
-						resources.getString(ResourceKey.INFO, StringID.Information.NO_ANSWER_ID),
-						resources.getString(ResourceKey.INFO,
-								StringID.Information.FOLD_ALGORITHM_TITLE_ID),
-						JOptionPane.INFORMATION_MESSAGE);
-			} else if (foldableModelCount > 0) {
-				logger.info("foldable layer layout is found.");
+				if (foldableModelCount == 0) {
+					JOptionPane.showMessageDialog(
+							this,
+							resources.getString(ResourceKey.INFO, StringID.Information.NO_ANSWER_ID),
+							resources.getString(ResourceKey.INFO,
+									StringID.Information.FOLD_ALGORITHM_TITLE_ID),
+							JOptionPane.INFORMATION_MESSAGE);
+				} else if (foldableModelCount > 0) {
+					logger.info("foldable layer layout is found.");
 
-				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
-						childFrameManager);
-				JFrame frame = resultFrameFactory.createFrame(this, foldedModel);
-				frame.repaint();
-				frame.setVisible(true);
+					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
+							childFrameManager);
+					JFrame frame = resultFrameFactory.createFrame(this, foldedModel);
+					frame.repaint();
+					frame.setVisible(true);
+				}
 			}
 		}
 
@@ -981,7 +960,7 @@ public class UIPanel extends JPanel {
 				mainScreenSetting,
 				childFrameManager);
 		JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
-				cutOutlinesHolder, () -> screenUpdater.updateScreen());
+				cutOutlinesHolder, screenUpdater::updateScreen);
 
 		modelView.repaint();
 		modelView.setVisible(true);
@@ -991,7 +970,6 @@ public class UIPanel extends JPanel {
 	 * try building the creasepattern and ask for additional measures to help
 	 * clean it
 	 *
-	 * @param creasePattern
 	 * @return folded Origami model
 	 */
 	private OrigamiModel buildOrigamiModel(final CreasePatternInterface creasePattern) {
@@ -1031,9 +1009,7 @@ public class UIPanel extends JPanel {
 
 	private void addPropertyChangeListenersToSetting(final MainScreenSetting mainScreenSetting) {
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSetting.ZERO_LINE_WIDTH, e -> {
-					zeroLineWidthCheckBox.setSelected((boolean) e.getNewValue());
-				});
+				MainScreenSetting.ZERO_LINE_WIDTH, e -> zeroLineWidthCheckBox.setSelected((boolean) e.getNewValue()));
 
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.GRID_VISIBLE, e -> {
@@ -1043,19 +1019,19 @@ public class UIPanel extends JPanel {
 
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.VERTEX_VISIBLE, e -> {
-					logger.debug("vertexVisible property change: " + e.getNewValue());
+					logger.debug("vertexVisible property change: {}", e.getNewValue());
 					dispVertexCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.MV_LINE_VISIBLE, e -> {
-					logger.debug("mvLineVisible property change: " + e.getNewValue());
+					logger.debug("mvLineVisible property change: {}", e.getNewValue());
 					dispMVLinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
 		mainScreenSetting.addPropertyChangeListener(
 				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
-					logger.debug("auxLineVisible property change: " + e.getNewValue());
+					logger.debug("auxLineVisible property change: {}", e.getNewValue());
 					dispAuxLinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
 

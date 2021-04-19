@@ -30,7 +30,11 @@ import oripa.value.OriLine;
  * Position coordinate is the same as screen. (top is smaller)
  */
 public class RectangleDomain {
-	private double left, right, top, bottom;
+
+	private double left;
+	private double right;
+	private double top;
+	private double bottom;
 
 	/**
 	 * construct this instance fit to given lines

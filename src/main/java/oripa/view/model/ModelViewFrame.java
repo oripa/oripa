@@ -18,19 +18,11 @@
 
 package oripa.view.model;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollBar;
+import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +49,7 @@ import oripa.viewsetting.main.MainScreenSetting;
  */
 public class ModelViewFrame extends JFrame
 		implements AdjustmentListener {
-	private final static Logger logger = LoggerFactory.getLogger(ModelViewFrame.class);
+	private static final Logger logger = LoggerFactory.getLogger(ModelViewFrame.class);
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private ModelViewScreen screen;
@@ -68,6 +60,8 @@ public class ModelViewFrame extends JFrame
 			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.EXPORT_DXF_ID));
 	private final JMenuItem menuItemExportOBJ = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.EXPORT_OBJ_ID));
+	private final JMenuItem menuItemExportSVG = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.EXPORT_SVG_ID));
 	private final JMenuItem menuItemFlip = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.INVERT_ID));
 	private final JCheckBoxMenuItem menuItemCrossLine = new JCheckBoxMenuItem(
@@ -81,9 +75,9 @@ public class ModelViewFrame extends JFrame
 	private final JRadioButtonMenuItem menuItemFillNone = new JRadioButtonMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.DRAW_LINES_ID));
 	private final JScrollBar scrollBarAngle = new JScrollBar(
-			JScrollBar.HORIZONTAL, 90, 5, 0, 185);
+			Adjustable.HORIZONTAL, 90, 5, 0, 185);
 	private final JScrollBar scrollBarPosition = new JScrollBar(
-			JScrollBar.VERTICAL, 0, 5, -150, 150);
+			Adjustable.VERTICAL, 0, 5, -150, 150);
 
 	private OrigamiModel origamiModel = null;
 	private final MainScreenSetting mainScreenSetting;
@@ -120,6 +114,7 @@ public class ModelViewFrame extends JFrame
 
 		menuFile.add(menuItemExportDXF);
 		menuFile.add(menuItemExportOBJ);
+		menuFile.add(menuItemExportSVG);
 		menuDisp.add(menuItemFlip);
 
 		menuDisp.add(dispSubMenu);
@@ -153,13 +148,13 @@ public class ModelViewFrame extends JFrame
 	private void addActionListenersToComponents() {
 		menuItemFlip.addActionListener(e -> flipOrigamiModel());
 
-		menuItemCrossLine.addActionListener(e -> {
-			mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected());
-		});
+		menuItemCrossLine.addActionListener(e -> mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected()));
 
 		menuItemExportDXF.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.DXF_MODEL));
 
 		menuItemExportOBJ.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.OBJ_MODEL));
+
+		menuItemExportSVG.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.SVG_MODEL));
 
 		menuItemFillAlpha.addActionListener(e -> {
 			screen.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
@@ -191,8 +186,8 @@ public class ModelViewFrame extends JFrame
 
 		try {
 			fileAccess.saveFile(origamiModel, this, filterSelector.getFilter(type));
-		} catch (FileChooserCanceledException e) {
-
+		} catch (FileChooserCanceledException ignored) {
+			// ignored
 		} catch (Exception e) {
 			Dialogs.showErrorDialog(this, resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID),
 					e);

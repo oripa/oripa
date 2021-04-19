@@ -35,12 +35,15 @@ public class OriLine implements Comparable<OriLine> {
 
 	public enum Type {
 
-		AUX(TYPE_AUX), CUT(TYPE_CUT), MOUNTAIN(TYPE_MOUNTAIN), VALLEY(
-				TYPE_VALLEY), CUT_MODEL(TYPE_CUT_MODEL);
+		AUX(TYPE_AUX),
+		CUT(TYPE_CUT),
+		MOUNTAIN(TYPE_MOUNTAIN),
+		VALLEY(TYPE_VALLEY),
+		CUT_MODEL(TYPE_CUT_MODEL);
 
-		private int val;
+		private final int val;
 
-		private Type(final int val) {
+		Type(final int val) {
 			this.val = val;
 		}
 
@@ -78,7 +81,7 @@ public class OriLine implements Comparable<OriLine> {
 
 			return type;
 		}
-	};
+	}
 
 	private Type type = Type.AUX;
 

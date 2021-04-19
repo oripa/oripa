@@ -164,8 +164,8 @@ public class OriFace {
 		this.precreases.addAll(precreases);
 	}
 
-	public boolean isEmptyPrecreases() {
-		return precreases.isEmpty();
+	public boolean hasPrecreases() {
+		return !precreases.isEmpty();
 	}
 
 	/**
@@ -301,11 +301,7 @@ public class OriFace {
 		return stackConditionsOf3Faces.stream();
 	}
 
-	/**
-	 *
-	 * @param condition
-	 *            for a correct stack of subface.
-	 */
+
 	public void addStackConditionOf2Faces(final Integer upperFaceORMatIndex) {
 		stackConditionsOf2Faces.add(upperFaceORMatIndex);
 	}
@@ -325,19 +321,15 @@ public class OriFace {
 		return stackConditionsOf2Faces.stream();
 	}
 
-	public void trianglateAndSetColor(final boolean bUseColor, final boolean bFlip,
-			final double paperSize) {
+	public void triangulateAndSetColor(final boolean bUseColor, final boolean bFlip, final double paperSize) {
 		triangles.clear();
-
-		double min_x = Double.MAX_VALUE;
-		double min_y = Double.MAX_VALUE;
 
 		var domain = new RectangleDomain();
 		for (OriHalfedge he : halfedges) {
 			domain.enlarge(he.getPosition());
 		}
-		min_x = domain.getLeft();
-		min_y = domain.getTop();
+		double minX = domain.getLeft();
+		double minY = domain.getTop();
 
 		double faceWidth = Math.sqrt(domain.getWidth() * domain.getWidth()
 				+ domain.getHeight() * domain.getHeight());
@@ -361,10 +353,10 @@ public class OriFace {
 			double v = (0.75 + vv * 0.25);
 
 			var position = he.getPosition();
-			v *= 0.9 + 0.15 * (Math.sqrt((position.x - min_x)
-					* (position.x - min_x)
-					+ (position.y - min_y)
-							* (position.y - min_y))
+			v *= 0.9 + 0.15 * (Math.sqrt((position.x - minX)
+					* (position.x - minX)
+					+ (position.y - minY)
+							* (position.y - minY))
 					/ faceWidth);
 
 			v = Math.min(1, v);
@@ -436,7 +428,7 @@ public class OriFace {
 	 */
 	public void buildOutline() {
 		outline = createPath(halfedges.stream()
-				.map(he -> he.getPositionForDisplay())
+				.map(OriHalfedge::getPositionForDisplay)
 				.collect(Collectors.toList()));
 	}
 
@@ -485,7 +477,7 @@ public class OriFace {
 	 */
 	public Vector2d getCentroidBeforeFolding() {
 		return GeomUtil.computeCentroid(halfedges.stream()
-				.map(he -> he.getPositionBeforeFolding())
+				.map(OriHalfedge::getPositionBeforeFolding)
 				.collect(Collectors.toList()));
 	}
 
@@ -497,7 +489,7 @@ public class OriFace {
 	 */
 	public Vector2d getCentroid() {
 		return GeomUtil.computeCentroid(halfedges.stream()
-				.map(he -> he.getPosition())
+				.map(OriHalfedge::getPosition)
 				.collect(Collectors.toList()));
 	}
 
@@ -512,11 +504,11 @@ public class OriFace {
 	 */
 	public boolean isOnFaceInclusively(final Vector2d v) {
 		// If it's on the face's edge, return true
-		if (isOnEdge(v, GeomUtil.EPS, he -> he.getPosition())) {
+		if (isOnEdge(v, GeomUtil.EPS, OriHalfedge::getPosition)) {
 			return true;
 		}
 
-		return isInside(v, GeomUtil.EPS, he -> he.getPosition());
+		return isInside(v, OriHalfedge::getPosition);
 	}
 
 	/**
@@ -525,16 +517,15 @@ public class OriFace {
 	 *
 	 * @param v
 	 *            point to be tested.
-	 * @param eps
 	 * @return true if v is strictly inside of this face.
 	 */
 	public boolean isOnFaceExclusively(final Vector2d v, final double eps) {
 		// If it's on the face's edge, return false
-		if (isOnEdge(v, eps, he -> he.getPosition())) {
+		if (isOnEdge(v, eps, OriHalfedge::getPosition)) {
 			return false;
 		}
 
-		return isInside(v, eps, he -> he.getPosition());
+		return isInside(v, OriHalfedge::getPosition);
 	}
 
 	/**
@@ -551,11 +542,9 @@ public class OriFace {
 	 */
 	private boolean isOnEdge(final Vector2d v, final double eps,
 			final Function<OriHalfedge, Vector2d> getPosition) {
-		int heNum = halfedges.size();
 
 		// If it's on the face's edge, return true
-		for (int i = 0; i < heNum; i++) {
-			OriHalfedge he = halfedges.get(i);
+		for (OriHalfedge he : halfedges) {
 			if (GeomUtil.distancePointToSegment(v, getPosition.apply(he),
 					getPosition.apply(he.getNext())) < eps) {
 				return true;
@@ -570,15 +559,13 @@ public class OriFace {
 	 *
 	 * @param v
 	 *            point to be tested.
-	 * @param eps
 	 * @param getPosition
 	 *            a function to get the position of face's vertex from
 	 *            half-edge. That is, you can designate using position before
 	 *            fold or the one after fold.
 	 * @return true if v inside of this face.
 	 */
-	private boolean isInside(final Vector2d v, final double eps,
-			final Function<OriHalfedge, Vector2d> getPosition) {
+	private boolean isInside(final Vector2d v, final Function<OriHalfedge, Vector2d> getPosition) {
 		int heNum = halfedges.size();
 
 		OriHalfedge baseHe = halfedges.get(0);
@@ -602,8 +589,9 @@ public class OriFace {
 	@Override
 	public String toString() {
 		var str = "OriFace:";
-		str += String.join(",", halfedges.stream().map(
-				he -> he.getPosition().toString()).collect(Collectors.toList()));
+		str += halfedges.stream()
+				.map(he -> he.getPosition().toString())
+				.collect(Collectors.joining(","));
 
 		return str;
 	}
