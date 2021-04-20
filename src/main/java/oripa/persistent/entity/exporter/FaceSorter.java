@@ -22,6 +22,7 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FaceSorter {
@@ -34,7 +35,7 @@ public class FaceSorter {
         this.overlapRelation = overlapRelation;
     }
 
-    public List<OriFace> sortFaces() {
+    public List<OriFace> sortFaces(boolean faceOrderFlip) {
         ArrayList<OriFace> sortedFaces = new ArrayList<>();
 
         boolean[] isSorted = new boolean[faces.size()];
@@ -49,6 +50,8 @@ public class FaceSorter {
                 }
             }
         }
+
+        if(!faceOrderFlip) Collections.reverse(sortedFaces);
 
         return sortedFaces;
     }

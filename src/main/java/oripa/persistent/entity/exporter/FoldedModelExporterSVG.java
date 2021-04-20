@@ -31,7 +31,6 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistent.filetool.Exporter;
 import oripa.persistent.svg.FacesToSvgConverter;
-import oripa.persistent.svg.SVGUtils;
 
 import static oripa.persistent.svg.SVGUtils.*;
 
@@ -41,9 +40,11 @@ import static oripa.persistent.svg.SVGUtils.*;
 public class FoldedModelExporterSVG implements Exporter<FoldedModel> {
 
     private final FacesToSvgConverter facesToSvgConverter;
+    private final boolean faceOrderFlip;
 
     public FoldedModelExporterSVG(final boolean faceOrderFlip) {
         facesToSvgConverter = new FacesToSvgConverter();
+        this.faceOrderFlip = faceOrderFlip;
         if (faceOrderFlip) facesToSvgConverter.setFaceStyles(PATH_STYLE_BACK, PATH_STYLE_FRONT);
         else facesToSvgConverter.setFaceStyles(PATH_STYLE_FRONT, PATH_STYLE_BACK);
         facesToSvgConverter.setPrecreaseLineStyle(THICK_LINE_STYLE);
@@ -55,12 +56,11 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModel> {
         OrigamiModel origamiModel = foldedModel.getOrigamiModel();
         OverlapRelationList overlapRelationList = foldedModel.getOverlapRelationList();
 
-        List<OriFace> faces = origamiModel.getFaces();
+        FaceSorter faceSorter = new FaceSorter(origamiModel.getFaces(), overlapRelationList.getOverlapRelation());
 
-        FaceSorter faceSorter = new FaceSorter(faces, overlapRelationList.getOverlapRelation());
-        var sortedFaces = faceSorter.sortFaces();
+        List<OriFace> faces = faceSorter.sortFaces(faceOrderFlip);
 
-        facesToSvgConverter.initDomain(sortedFaces, origamiModel.getPaperSize());
+        facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
 
         try (var fw = new FileWriter(filepath);
              var bw = new BufferedWriter(fw)) {
@@ -68,7 +68,7 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModel> {
             bw.write(SVG_START);
             bw.write(GRADIENTS_DEFINITION);
             bw.write(facesToSvgConverter.getSvgFaces(faces));
-            bw.write(SVGUtils.SVG_END_TAG);
+            bw.write(SVG_END_TAG);
         }
         return true;
     }
