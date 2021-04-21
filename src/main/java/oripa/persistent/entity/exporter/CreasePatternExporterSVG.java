@@ -24,8 +24,9 @@ import java.io.IOException;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.persistent.filetool.Exporter;
-import oripa.persistent.svg.SVGConstants;
-import oripa.value.OriLine;
+import oripa.persistent.svg.CreasePatternToSvgConverter;
+
+import static oripa.persistent.svg.SVGUtils.*;
 
 /**
  * @author OUCHI Koji
@@ -35,44 +36,15 @@ public class CreasePatternExporterSVG implements Exporter<CreasePatternInterface
 	@Override
 	public boolean export(final CreasePatternInterface creasePattern, final String filepath)
 			throws IOException, IllegalArgumentException {
-		double paperSize = creasePattern.getPaperSize();
 
-		double scale = SVGConstants.size / paperSize;
-		double center = SVGConstants.size / 2;
-
-		double cpCenterX = creasePattern.getPaperDomain().getCenterX();
-		double cpCenterY = creasePattern.getPaperDomain().getCenterY();
+		double scale = SVG_SIZE / creasePattern.getPaperSize();
+		CreasePatternToSvgConverter creasePatternToSvgConverter = new CreasePatternToSvgConverter(creasePattern, scale);
 
 		try (var fw = new FileWriter(filepath);
-				var bw = new BufferedWriter(fw);) {
-			bw.write(SVGConstants.head);
-			for (OriLine line : creasePattern) {
-				bw.write(" <line style=\"");
-				String style = "stroke:gray;stroke-width:1;";
-				switch (line.getType()) {
-				case CUT:
-					style = "stroke:black;stroke-width:4;";
-					break;
-				case MOUNTAIN:
-					style = "stroke:red;stroke-width:2;";
-					break;
-				case VALLEY:
-					style = "stroke:blue;stroke-width:2;stroke-opacity:1";
-					break;
-				default:
-				}
-				bw.write(style + "\" ");
-				bw.write("x1=\"");
-				bw.write("" + ((line.p0.x - cpCenterX) * scale + center) + "\"");
-				bw.write(" y1=\"");
-				bw.write("" + ((paperSize / 2 - (line.p0.y - cpCenterY)) * scale) + "\"");
-				bw.write(" x2=\"");
-				bw.write("" + ((line.p1.x - cpCenterX) * scale + center) + "\"");
-				bw.write(" y2=\"");
-				bw.write("" + ((paperSize / 2 - (line.p1.y - cpCenterY)) * scale)
-						+ "\" />\n");
-			}
-			bw.write(SVGConstants.end);
+				var bw = new BufferedWriter(fw)) {
+			bw.write(SVG_START);
+			bw.write(creasePatternToSvgConverter.getSvgCreasePattern());
+			bw.write(SVG_END_TAG);
 		}
 
 		return true;

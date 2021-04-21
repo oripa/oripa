@@ -339,7 +339,7 @@ public class FoldedModelScreen extends JPanel
 		List<OriFace> faces = origamiModel.getFaces();
 		for (OriFace face : faces) {
 
-			face.trianglateAndSetColor(useColor, isFaceOrderFlipped(),
+			face.triangulateAndSetColor(useColor, isFaceOrderFlipped(),
 					origamiModel.getPaperSize());
 
 			face.triangleStream().forEach(tri -> {

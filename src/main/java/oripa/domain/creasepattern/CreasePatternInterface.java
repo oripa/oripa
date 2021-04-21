@@ -38,9 +38,9 @@ import oripa.value.OriLine;
 public interface CreasePatternInterface
 		extends Collection<OriLine>, NearVerticesGettable {
 
-	public abstract double getPaperSize();
+	double getPaperSize();
 
-	public abstract RectangleDomain getPaperDomain();
+	RectangleDomain getPaperDomain();
 
 	/**
 	 * move all creases as the coordinate (x, y) becomes (x + dx, y + dx).
@@ -50,7 +50,7 @@ public interface CreasePatternInterface
 	 * @param dy
 	 *            amount of movement on y coordinate
 	 */
-	public void move(final double dx, final double dy);
+	void move(final double dx, final double dy);
 
-	public abstract boolean cleanDuplicatedLines();
+	boolean cleanDuplicatedLines();
 }

@@ -32,7 +32,7 @@ public class ModelViewFrame extends JFrame implements ActionListener, Adjustment
     private JMenu menuDisp = new JMenu(ORIPA.res.getString("MENU_Disp"));
     private JMenu menuFile = new JMenu(ORIPA.res.getString("File"));
     private JMenuItem menuItemExportDXF = new JMenuItem(ORIPA.res.getString("MENU_ExportModelLine_DXF"));
-    private JMenuItem menuItemExportOBJ = new JMenuItem("Export to OBJ file");
+    private JMenuItem menuItemExportOBJ = new JMenuItem("MENU_ExportOBJ");
     private JMenuItem menuItemFlip = new JMenuItem(ORIPA.res.getString("MENU_Invert"));
     private JCheckBoxMenuItem menuItemCrossLine = new JCheckBoxMenuItem("Show Cross-Line", false);
     public JCheckBoxMenuItem menuItemSlideFaces = new JCheckBoxMenuItem(ORIPA.res.getString("MENU_SlideFaces"), false);
@@ -42,8 +42,8 @@ public class ModelViewFrame extends JFrame implements ActionListener, Adjustment
     private JRadioButtonMenuItem menuItemFillWhite = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_FillWhite"));
     private JRadioButtonMenuItem menuItemFillAlpha = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_FillAlpha"));
     private JRadioButtonMenuItem menuItemFillNone = new JRadioButtonMenuItem(ORIPA.res.getString("MENU_DrawLines"));
-    private JScrollBar scrollBarAngle = new JScrollBar(JScrollBar.HORIZONTAL, 90, 5, 0, 185);
-    private JScrollBar scrollBarPosition = new JScrollBar(JScrollBar.VERTICAL, 0, 5, -150, 150);
+    private JScrollBar scrollBarAngle = new JScrollBar(Adjustable.HORIZONTAL, 90, 5, 0, 185);
+    private JScrollBar scrollBarPosition = new JScrollBar(Adjustable.VERTICAL, 0, 5, -150, 150);
 
     public ModelViewFrame() {
         setTitle(ORIPA.res.getString("ExpectedFoldedOrigami"));
@@ -166,6 +166,8 @@ public class ModelViewFrame extends JFrame implements ActionListener, Adjustment
                         break;
                     case "obj":
                         ExporterOBJ2.export(ORIPA.doc, filePath);
+                        break;
+                    default:
                         break;
                 }
 

@@ -557,10 +557,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	/**
 	 * saves project without opening a dialog
-	 *
-	 * @param doc
-	 * @param filePath
-	 * @param fileType
 	 */
 	private void saveProjectFile(final Doc doc, final String filePath,
 			final CreasePatternFileTypeKey fileType) {
@@ -580,11 +576,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	/**
 	 * save file without origami model check
-	 *
-	 * @param directory
-	 * @param fileName
-	 * @param filters
-	 * @return
 	 */
 	@SafeVarargs
 	private String saveFile(final String directory, final String fileName,
@@ -609,8 +600,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	/**
 	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
 	 * model check before saving.
-	 *
-	 * @param type
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 

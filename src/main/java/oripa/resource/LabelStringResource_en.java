@@ -90,6 +90,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.ModelMenu.DISPLAY_ID, "Display" },
 			{ StringID.ModelMenu.EXPORT_DXF_ID, "Export model lines (DXF)" },
 			{ StringID.ModelMenu.EXPORT_OBJ_ID, "Export to OBJ file" },
+			{ StringID.ModelMenu.EXPORT_SVG_ID, "Export to SVG file" },
 			{ StringID.ModelMenu.INVERT_ID, "Invert" },
 			{ StringID.ModelMenu.DIRECTION_BASIC_ID, "L: Rot R:Move Wheel:Zoom" },
 			{ StringID.ModelMenu.DISPLAY_TYPE_ID, "Drawing type" },

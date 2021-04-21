@@ -141,6 +141,7 @@ public class StringID {
 		public static final String DISPLAY_ID = "MENU_Disp";
 		public static final String EXPORT_DXF_ID = "MENU_ExportModelLine_DXF";
 		public static final String EXPORT_OBJ_ID = "MENU_ExportOBJ";
+		public static final String EXPORT_SVG_ID = "MENU_ExportSVG";
 		public static final String INVERT_ID = "MENU_Invert";
 		public static final String SLIDE_FACES_ID = "MENU_SlideFaces";
 		public static final String DIRECTION_BASIC_ID = "Basic";

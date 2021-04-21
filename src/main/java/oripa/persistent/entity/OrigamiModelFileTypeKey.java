@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -30,7 +30,9 @@ import oripa.persistent.entity.exporter.*;
  */
 public enum OrigamiModelFileTypeKey implements FileTypeProperty<OrigamiModel> {
 	OBJ_MODEL("obj", 1, null, new OrigamiModelExporterOBJ(), ".obj"),
-	DXF_MODEL("dxf", 2,	null, new OrigamiModelExporterDXF(), ".dxf");
+	DXF_MODEL("dxf", 2,	null, new OrigamiModelExporterDXF(), ".dxf"),
+	SVG_MODEL("svg", 3, null, new OrigamiModelExporterSVG(), ".svg");
+
 
 	private final String keyText;
 	private final Integer order;
@@ -48,10 +50,8 @@ public enum OrigamiModelFileTypeKey implements FileTypeProperty<OrigamiModel> {
 	 *            defines the order of members.
 	 * @param extensions
 	 *            which should be managed as that file type.
-	 * @param loadingAction
-	 * @param savingAction
 	 */
-	private OrigamiModelFileTypeKey(final String key, final Integer order,
+	OrigamiModelFileTypeKey(final String key, final Integer order,
 			Loader<OrigamiModel> loader,
 			Exporter<OrigamiModel> exporter,			
 			final String... extensions) {
