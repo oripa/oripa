@@ -24,6 +24,9 @@ import javax.vecmath.Vector2d;
 
 import oripa.value.OriLine;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 /**
  * A rectangle domain fitting to given lines.
  *
@@ -38,8 +41,6 @@ public class RectangleDomain {
 
 	/**
 	 * construct this instance fit to given lines
-	 *
-	 * @param target
 	 */
 	public RectangleDomain(final Collection<OriLine> target) {
 
@@ -56,6 +57,13 @@ public class RectangleDomain {
 		initialize();
 	}
 
+	public RectangleDomain(double x0, double y0, double x1, double y1) {
+		left = min(x0, x1);
+		right = max(x0, x1);
+		top = min(y0, y1);
+		bottom = max(y0, y1);
+	}
+
 	private void initialize() {
 		left = Double.POSITIVE_INFINITY;
 		right = Double.NEGATIVE_INFINITY;
@@ -65,49 +73,33 @@ public class RectangleDomain {
 
 	/**
 	 * Enlarge this domain as it includes given point.
-	 *
-	 * @param v
 	 */
 	public void enlarge(final Vector2d v) {
-		left = Math.min(left, v.x);
-		right = Math.max(right, v.x);
-		top = Math.min(top, v.y);
-		bottom = Math.max(bottom, v.y);
+		left = min(left, v.x);
+		right = max(right, v.x);
+		top = min(top, v.y);
+		bottom = max(bottom, v.y);
 	}
 
 	/**
 	 * Enlarge this domain as it includes all given points.
-	 *
-	 * @param points
 	 */
 	public void enlarge(final Collection<Vector2d> points) {
-		points.forEach(p -> enlarge(p));
+		points.forEach(this::enlarge);
 	}
 
-	/**
-	 * @return left
-	 */
 	public double getLeft() {
 		return left;
 	}
 
-	/**
-	 * @return right
-	 */
 	public double getRight() {
 		return right;
 	}
 
-	/**
-	 * @return top
-	 */
 	public double getTop() {
 		return top;
 	}
 
-	/**
-	 * @return bottom
-	 */
 	public double getBottom() {
 		return bottom;
 	}
@@ -133,6 +125,6 @@ public class RectangleDomain {
 	}
 
 	private double computeGap(final double a, final double b) {
-		return Math.max(a, b) - Math.min(a, b);
+		return max(a, b) - min(a, b);
 	}
 }
