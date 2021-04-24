@@ -23,12 +23,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
 import oripa.value.OriLine;
-import oripa.value.OriPoint;
 
 import static java.lang.Math.abs;
 
