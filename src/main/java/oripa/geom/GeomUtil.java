@@ -1,19 +1,20 @@
-/**
+/*
  * ORIPA - Origami Pattern Editor
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package oripa.geom;
@@ -22,28 +23,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
 import oripa.value.OriLine;
+import oripa.value.OriPoint;
+
+import static java.lang.Math.abs;
 
 public class GeomUtil {
-	// private static final Logger logger =
-	// LoggerFactory.getLogger(GeomUtil.class);
 
 	public final static double EPS = 1.0e-6;
 
 	public static double distance(final Vector2d p0, final Vector2d p1) {
 		return distance(p0.x, p0.y, p1.x, p1.y);
-	}
-
-	public static double distanceSquared(final Vector2d p0, final Vector2d p1) {
-		return distanceSquared(p0.x, p0.y, p1.x, p1.y);
-	}
-
-	public static double distanceSquared(final double x0, final double y0, final double x1,
-			final double y1) {
-		return (x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1);
 	}
 
 	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
@@ -53,16 +47,12 @@ public class GeomUtil {
 
 	/**
 	 *
-	 * @param s0
-	 * @param e0
-	 * @param s1
-	 * @param e1
-	 * @return Count of end points on other segment for each segment. If the
-	 *         count is 0 then they are not overlapping. If the count is 1, they
-	 *         are not overlapping. If the count is 2, then the two segments
-	 *         partially overlaps. If the count is 3, then one segment overlaps
-	 *         entirely and an end point is shared with the other segment. If
-	 *         the count is 4, then the two segments are equal.
+	 * @return Count of end points on other segment for each segment.
+	 * If the count is 0 then they are not overlapping.
+	 * If the count is 1, they are not overlapping.
+	 * If the count is 2, then the two segments partially overlaps.
+	 * If the count is 3, then one segment overlaps entirely and an end point is shared with the other segment.
+	 * If the count is 4, then the two segments are equal.
 	 */
 	public static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1) {
@@ -99,15 +89,16 @@ public class GeomUtil {
 
 	}
 
+	/**
+	 * Both distances between the extremities of the lines should be less than the threshold
+	 * The lines can be reversed, so the test has to be done both ways
+	 * @param l0 First line to compare
+	 * @param l1 Second line to compare
+	 * @return true if both segments are (at least almost) equals
+	 */
 	public static boolean isSameLineSegment(final OriLine l0, final OriLine l1) {
-		if (distance(l0.p0, l1.p0) < EPS && distance(l0.p1, l1.p1) < EPS) {
-			return true;
-		}
-		if (distance(l0.p0, l1.p1) < EPS && distance(l0.p1, l1.p0) < EPS) {
-			return true;
-		}
-
-		return false;
+		return (distance(l0.p0, l1.p0) < EPS && distance(l0.p1, l1.p1) < EPS) ||
+				(distance(l0.p0, l1.p1) < EPS && distance(l0.p1, l1.p0) < EPS);
 	}
 
 	/**
@@ -209,7 +200,7 @@ public class GeomUtil {
 	 *            start point of symmetry base line vector.
 	 * @param ep
 	 *            end point of symmetry base line vector.
-	 * @return
+	 * @return symmetric of point p through the (sp, ep) axis
 	 */
 	public static Vector2d getSymmetricPoint(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
@@ -372,30 +363,18 @@ public class GeomUtil {
 		return distance(getNearestPointToLine(p, sp, ep), p);
 	}
 
-	// (Including endpoints) intersection between two line segments
-	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
-			final Vector2d q0, final Vector2d q1) {
-		return getCrossPoint(p0, p1, q0, q1, EPS);
-	}
-
 	/**
 	 * solve: cross point = p0 + s * d0 = q0 + t * d1
-	 *
-	 * @param p0
-	 * @param p1
-	 * @param q0
-	 * @param q1
-	 * @param epsilon
 	 * @return cross point
 	 */
-	private static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
-			final Vector2d q0, final Vector2d q1, final double epsilon) {
+	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
+			final Vector2d q0, final Vector2d q1) {
 		Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
 		Vector2d d1 = new Vector2d(q1.x - q0.x, q1.y - q0.y);
 		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
-		if (det * det <= epsilon * d0.lengthSquared() * d1.lengthSquared()) {
+		if (det * det <= EPS * d0.lengthSquared() * d1.lengthSquared()) {
 			return null;
 		}
 
@@ -404,9 +383,9 @@ public class GeomUtil {
 		double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
 		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
 
-		if (t < 0.0 - epsilon || t > 1.0 + epsilon) {
+		if (t < 0.0 - EPS || t > 1.0 + EPS) {
 			return null;
-		} else if (s < 0.0 - epsilon || s > 1.0 + epsilon) {
+		} else if (s < 0.0 - EPS || s > 1.0 + EPS) {
 			return null;
 		}
 
@@ -418,7 +397,7 @@ public class GeomUtil {
 	}
 
 	public static Vector2d getCrossPoint(final OriLine l0, final OriLine l1) {
-		return getCrossPoint(l0.p0, l0.p1, l1.p0, l1.p1, EPS);
+		return getCrossPoint(l0.p0, l0.p1, l1.p0, l1.p1);
 	}
 
 	public static double distance(final Vector2d p, final Line line, final double[] param) {
@@ -431,10 +410,6 @@ public class GeomUtil {
 	}
 
 	/**
-	 *
-	 * @param p0
-	 * @param p1
-	 * @param q
 	 * @return true if vector p0 -> q ends in left side of p1 -> p0 (q is at
 	 *         counterclockwise position) otherwise false.
 	 */
@@ -443,11 +418,6 @@ public class GeomUtil {
 	}
 
 	/**
-	 *
-	 * @param p0
-	 * @param p1
-	 * @param q
-	 * @param eps
 	 * @return 1 if vector p0 -> q ends on the left side of p0 -> p1 (q is at
 	 *         counterclockwise position in right-handed coordinate system), 0
 	 *         if p0-p1 and p0-q is collinear, otherwise -1;
@@ -474,16 +444,41 @@ public class GeomUtil {
 		return dx1 * dy2 - dy1 * dx2;
 	}
 
-	private static double distance(final double x0, final double y0, final double x1,
-			final double y1) {
+	private static double distance(final double x0, final double y0, final double x1, final double y1) {
 		return Math.sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
 	}
 
 	public static Vector2d computeCentroid(final Collection<Vector2d> points) {
 		var centroid = new Vector2d();
-		points.forEach(p -> centroid.add(p));
+		points.forEach(centroid::add);
 		centroid.scale(1.0 / points.size());
 
 		return centroid;
 	}
+
+
+	public static boolean detectOverlap(OriLine existingLine, OriLine newLine) {
+		return areOnSameSupportLine(existingLine, newLine) && !areDisjointSegments(existingLine, newLine);
+	}
+
+	public static boolean areDisjointSegments(OriLine l1, OriLine l2) {
+		if(l1.isVertical()) {
+			return (l1.p0.y <= l2.p0.y && l1.p0.y <= l2.p1.y && l1.p1.y <= l2.p0.y && l1.p1.y <= l2.p1.y) ||
+					(l2.p0.y <= l1.p0.y && l2.p0.y <= l1.p1.y && l2.p1.y <= l1.p0.y && l2.p1.y <= l1.p1.y);
+		}
+		else {
+			return (l1.p0.x <= l2.p0.x && l1.p0.x <= l2.p1.x && l1.p1.x <= l2.p0.x && l1.p1.x <= l2.p1.x) ||
+					(l2.p0.x <= l1.p0.x && l2.p0.x <= l1.p1.x && l2.p1.x <= l1.p0.x && l2.p1.x <= l1.p1.x);
+		}
+	}
+
+	/**
+	 * l1 and l2 share the same support line if they test the same at 2 distinct points (more or less epsilon)
+	 */
+	public static boolean areOnSameSupportLine(OriLine l1, OriLine l2) {
+		if(l1.isVertical()) return abs(l1.getAffineXValueAt(l2.p0.y) - l2.p0.x) < EPS && abs(l1.getAffineXValueAt(l2.p1.y) - l2.p1.x) < EPS;
+		return abs(l1.getAffineYValueAt(l2.p0.x) - l2.p0.y) < EPS && abs(l1.getAffineYValueAt(l2.p1.x) - l2.p1.y) < EPS;
+	}
+
+
 }

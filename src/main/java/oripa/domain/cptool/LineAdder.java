@@ -25,6 +25,9 @@ import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
+import static oripa.domain.cptool.OverlappingLineSplitter.splitOverlappingLines;
+import static oripa.geom.GeomUtil.detectOverlap;
+
 public class LineAdder {
 	private static final Logger logger = LoggerFactory.getLogger(LineAdder.class);
 
@@ -32,8 +35,6 @@ public class LineAdder {
 	 * divides the current lines by the input line and returns a map of the
 	 * cross point information.
 	 *
-	 * @param inputLine
-	 * @param currentLines
 	 * @return a map from a cross point to the crossing current line at the
 	 *         point.
 	 */
@@ -45,38 +46,33 @@ public class LineAdder {
 
 		var crossMap = Collections.synchronizedMap(new HashMap<OriPoint, OriLine>());
 
-		currentLines.parallelStream().forEach(line -> {
+		currentLines.parallelStream()
+				.forEach(line -> {
+					logger.trace("current line: " + line);
 
-			// intersection of (aux input, other type lines) are rejected // It
-			// is by MITANI jun.
-//			if (inputLine.getType() == OriLine.Type.NONE && line.getType() != OriLine.Type.NONE) {
-//				continue;
-//			}
-			logger.trace("current line: " + line);
+					Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
+					if (crossPoint == null) {
+						return;
+					}
 
-			Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
-			if (crossPoint == null) {
-				return;
-			}
+					logger.trace("cross point: " + crossPoint);
 
-			logger.trace("cross point: " + crossPoint);
+					crossMap.put(new OriPoint(crossPoint), line);
 
-			crossMap.put(new OriPoint(crossPoint), line);
+					toBeRemoved.add(line);
 
-			toBeRemoved.add(line);
+					Consumer<Vector2d> addIfLineCanBeSplit = v -> {
+						if (GeomUtil.distance(v, crossPoint) > CalculationResource.POINT_EPS) {
+							var l = new OriLine(v, crossPoint, line.getType());
+							// keep selection not to change the target of copy.
+							l.selected = line.selected;
+							toBeAdded.add(l);
+						}
+					};
 
-			Consumer<Vector2d> addIfLineCanBeSplit = v -> {
-				if (GeomUtil.distance(v, crossPoint) > CalculationResource.POINT_EPS) {
-					var l = new OriLine(v, crossPoint, line.getType());
-					// keep selection not to change the target of copy.
-					l.selected = line.selected;
-					toBeAdded.add(l);
-				}
-			};
-
-			addIfLineCanBeSplit.accept(line.p0);
-			addIfLineCanBeSplit.accept(line.p1);
-		});
+					addIfLineCanBeSplit.accept(line.p0);
+					addIfLineCanBeSplit.accept(line.p1);
+				});
 
 		toBeRemoved.forEach(currentLines::remove);
 		currentLines.addAll(toBeAdded);
@@ -88,7 +84,6 @@ public class LineAdder {
 	 * Input line should be divided by other lines. This function returns end
 	 * points of such new small lines.
 	 *
-	 * @param inputLine
 	 * @param crossMap
 	 *            what {@link #divideCurrentLines(OriLine, Collection)} returns.
 	 * @return sorted points on input line divided by currentLines.
@@ -169,14 +164,6 @@ public class LineAdder {
 		return newLines;
 	}
 
-	private List<OriLine> removeDuplicationsFromInputLines(final Collection<OriLine> inputLines,
-			final Collection<OriLine> currentLines) {
-		return inputLines.parallelStream()
-				.filter(inputLine -> currentLines.parallelStream()
-						.noneMatch(line -> GeomUtil.isSameLineSegment(line, inputLine)))
-				.collect(Collectors.toList());
-	}
-
 	/**
 	 * Adds {@code inputLine} to {@code currentLines}. The lines will be split
 	 * at the intersections of the lines.
@@ -204,51 +191,74 @@ public class LineAdder {
 
 		StopWatch watch = new StopWatch(true);
 
-		// ensure fast access
-		ArrayList<OriLine> currentLineList = new ArrayList<>(currentLines);
-
-		List<OriLine> linesToBeAdded = removeDuplicationsFromInputLines(inputLines, currentLineList);
+		List<OriLine> nonExistingNewLines = new ArrayList<>(inputLines);
 
 		// input domain can limit the current lines to be divided.
 		RectangleClipper inputDomainClipper = new RectangleClipper(
-				new RectangleDomain(linesToBeAdded), CalculationResource.POINT_EPS);
+				new RectangleDomain(nonExistingNewLines), CalculationResource.POINT_EPS);
 		// use a hash set for avoiding worst case of computation time. (list
 		// takes O(n) time for deletion while hash set takes O(1) time.)
 		HashSet<OriLine> crossingCurrentLines = new HashSet<>(
 				inputDomainClipper.selectByArea(currentLines));
 		currentLines.removeAll(crossingCurrentLines);
 
-		logger.debug("addAll() divideCurrentLines() start: "
-				+ watch.getMilliSec() + "[ms]");
+		logger.debug("addAll() divideCurrentLines() start: {}[ms]", watch.getMilliSec());
 
 		// a map from an input line to a map from a cross point to a line crossing with the input line.
 		Map<OriLine, Map<OriPoint, OriLine>> crossMaps = Collections.synchronizedMap(new HashMap<>());
 
-		linesToBeAdded.forEach(inputLine ->
+		nonExistingNewLines.forEach(inputLine ->
 				crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines)));
 
 		// feed back the result of line divisions
 		currentLines.addAll(crossingCurrentLines);
 
-		logger.debug("addAll() createInputLinePoints() start: "
-				+ watch.getMilliSec() + "[ms]");
+		logger.debug("addAll() createInputLinePoints() start: {}[ms]", watch.getMilliSec());
 
 		ArrayList<List<Vector2d>> pointLists = new ArrayList<>();
 
-		linesToBeAdded.forEach(inputLine -> pointLists.add(createInputLinePoints(inputLine, crossMaps.get(inputLine))));
+		nonExistingNewLines.forEach(inputLine ->
+				pointLists.add(createInputLinePoints(inputLine, crossMaps.get(inputLine))));
 
-		logger.debug("addAll() adding new lines start: "
-				+ watch.getMilliSec() + "[ms]");
+		logger.debug("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
-		List<OriLine> splittedNewLine = IntStream.range(0, linesToBeAdded.size()).parallel()
-				.mapToObj(j -> createSequentialLines(
-						pointLists.get(j),
-						linesToBeAdded.get(j).getType()))
+		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists);
+
+		splitNewLines.forEach(splitNewLine -> addNewLineOrSplitAndAddIfOverlapping(currentLines, splitNewLine));
+
+		logger.debug("addAll(): {}[ms]", watch.getMilliSec());
+	}
+
+	private List<OriLine> getSplitNewLines(List<OriLine> nonExistingNewLines, ArrayList<List<Vector2d>> pointLists) {
+		return IntStream.range(0, nonExistingNewLines.size()).parallel()
+				.mapToObj(j -> createSequentialLines(pointLists.get(j), nonExistingNewLines.get(j).getType()))
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList());
+	}
 
-		currentLines.addAll(splittedNewLine);
+	private void addNewLineOrSplitAndAddIfOverlapping(Collection<OriLine> currentLines, OriLine splitNewLine) {
+		List<OriLine> overlappingLines = getOverlappingLines(currentLines, splitNewLine);
 
-		logger.debug("addAll(): " + watch.getMilliSec() + "[ms]");
+		if(overlappingLines.isEmpty()) {
+			currentLines.add(splitNewLine);
+		}
+		else {
+			replaceExistingLineWithSplitOverlappingLines(currentLines, splitNewLine, overlappingLines);
+		}
+	}
+
+	private void replaceExistingLineWithSplitOverlappingLines(Collection<OriLine> currentLines, OriLine splitNewLine, List<OriLine> overlappingLines) {
+		overlappingLines.forEach(currentLine -> {
+				List<OriLine> oriLines = splitOverlappingLines(currentLine, splitNewLine);
+				currentLines.remove(currentLine);
+				currentLines.addAll(oriLines);
+			});
+	}
+
+	private List<OriLine> getOverlappingLines(Collection<OriLine> currentLines, OriLine splitNewLine) {
+		return currentLines.stream()
+				.filter(oriLine -> oriLine.getType() != OriLine.Type.CUT)
+				.filter(currentLine -> detectOverlap(currentLine, splitNewLine))
+				.collect(Collectors.toList());
 	}
 }

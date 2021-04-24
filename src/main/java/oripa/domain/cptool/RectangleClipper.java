@@ -1,19 +1,20 @@
-/**
+/*
  * ORIPA - Origami Pattern Editor
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package oripa.domain.cptool;
@@ -25,6 +26,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
+import oripa.value.OriPoint;
 
 public class RectangleClipper {
 
@@ -91,9 +93,6 @@ public class RectangleClipper {
 
 	/**
 	 * finds the coordinates after clipping.
-	 *
-	 * @param code
-	 * @param l
 	 * @param p
 	 *            will be substituted with the cross point of {@code l} and the
 	 *            edge of clipping rectangle.
@@ -104,9 +103,9 @@ public class RectangleClipper {
 
 		// Outside from the left edge of the window
 		if ((code & LEFT) != 0) {
-			cy = (l.p1.y - l.p0.y) * (domain.getLeft() - l.p0.x) / (l.p1.x - l.p0.x) + l.p0.y;
+			cy = l.getAffineYValueAt(domain.getLeft());
 			if ((cy >= m_minY) && (cy <= m_maxY)) {
-				p.x = m_minX;
+				p.x = domain.getLeft();
 				p.y = cy;
 				return 1;
 			}
@@ -114,9 +113,9 @@ public class RectangleClipper {
 
 		// Outside the right edge of the window
 		if ((code & RIGHT) != 0) {
-			cy = (l.p1.y - l.p0.y) * (domain.getRight() - l.p0.x) / (l.p1.x - l.p0.x) + l.p0.y;
+			cy = l.getAffineYValueAt(domain.getRight());
 			if ((cy >= m_minY) && (cy <= m_maxY)) {
-				p.x = m_maxX;
+				p.x = domain.getRight() ;
 				p.y = cy;
 				return 1;
 			}
@@ -124,20 +123,20 @@ public class RectangleClipper {
 
 		// Outside from the top of the window
 		if ((code & TOP) != 0) {
-			cx = (l.p1.x - l.p0.x) * (domain.getTop() - l.p0.y) / (l.p1.y - l.p0.y) + l.p0.x;
+			cx = l.getAffineXValueAt(domain.getTop());
 			if ((cx >= m_minX) && (cx <= m_maxX)) {
 				p.x = cx;
-				p.y = m_minY;
+				p.y = domain.getTop();
 				return 1;
 			}
 		}
 
 		// Outside from the bottom of the window
 		if ((code & BOTTOM) != 0) {
-			cx = (l.p1.x - l.p0.x) * (domain.getBottom() - l.p0.y) / (l.p1.y - l.p0.y) + l.p0.x;
+			cx = l.getAffineXValueAt(domain.getBottom());
 			if ((cx >= m_minX) && (cx <= m_maxX)) {
 				p.x = cx;
-				p.y = m_maxY;
+				p.y = domain.getBottom();
 				return 1;
 			}
 		}
@@ -183,9 +182,7 @@ public class RectangleClipper {
 		// the line may cross the {left, right, top, bottom} edge of the
 		// rectangle.
 		if (e_code != 0) {
-			if (calcClippedPoint(e_code, l, l.p1) < 0) {
-				return false;
-			}
+			return calcClippedPoint(e_code, l, l.p1) >= 0;
 		}
 
 		return true;
@@ -243,13 +240,10 @@ public class RectangleClipper {
 		// the line may cross the {left, right, top, bottom} edge of the
 		// rectangle.
 		if (e_code != 0) {
-			if (calcClippedPoint(e_code, line) < 0) {
-				return false;
-			}
+			return calcClippedPoint(e_code, line) >= 0;
 		}
 
 		return true;
-
 	}
 
 	/**
@@ -259,5 +253,10 @@ public class RectangleClipper {
 		return lines.stream()
 				.filter(this::lineIntersectsDomain)
 				.collect(Collectors.toList());
+	}
+
+	public boolean contains(OriPoint oriPoint) {
+		return domain.getLeft() <= oriPoint.x && oriPoint.x <= domain.getRight() &&
+				domain.getTop() <= oriPoint.y && oriPoint.y <= domain.getBottom();
 	}
 }

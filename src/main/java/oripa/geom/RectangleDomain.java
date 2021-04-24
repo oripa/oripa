@@ -1,24 +1,27 @@
-/**
+/*
  * ORIPA - Origami Pattern Editor
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package oripa.geom;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
 
@@ -50,18 +53,14 @@ public class RectangleDomain {
 			enlarge(line.p0);
 			enlarge(line.p1);
 		}
-
 	}
 
 	public RectangleDomain() {
-		initialize();
+		this(Collections.emptyList());
 	}
 
 	public RectangleDomain(double x0, double y0, double x1, double y1) {
-		left = min(x0, x1);
-		right = max(x0, x1);
-		top = min(y0, y1);
-		bottom = max(y0, y1);
+		this(List.of(new OriLine(x0, y0, x1, y1, OriLine.Type.AUX)));
 	}
 
 	private void initialize() {
