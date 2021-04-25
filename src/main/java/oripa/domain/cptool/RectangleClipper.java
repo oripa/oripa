@@ -30,12 +30,12 @@ import oripa.value.OriPoint;
 
 public class RectangleClipper {
 
-	private final static int LEFT = 1;
-	private final static int RIGHT = 2;
-	private final static int TOP = 4;
-	private final static int BOTTOM = 8;
+	private static final int LEFT = 1;
+	private static final int RIGHT = 2;
+	private static final int TOP = 4;
+	private static final int BOTTOM = 8;
 
-	private final static double EPSILON = 1.0e-6;
+	private static final double EPSILON = 1.0e-6;
 
 	private final RectangleDomain domain;
 
@@ -255,8 +255,4 @@ public class RectangleClipper {
 				.collect(Collectors.toList());
 	}
 
-	public boolean contains(OriPoint oriPoint) {
-		return domain.getLeft() <= oriPoint.x && oriPoint.x <= domain.getRight() &&
-				domain.getTop() <= oriPoint.y && oriPoint.y <= domain.getBottom();
-	}
 }

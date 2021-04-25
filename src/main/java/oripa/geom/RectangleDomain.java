@@ -26,6 +26,7 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.value.OriLine;
+import oripa.value.OriPoint;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -125,5 +126,10 @@ public class RectangleDomain {
 
 	private double computeGap(final double a, final double b) {
 		return max(a, b) - min(a, b);
+	}
+
+	public boolean contains(OriPoint oriPoint) {
+		return getLeft() <= oriPoint.x && oriPoint.x <= getRight() &&
+				getTop() <= oriPoint.y && oriPoint.y <= getBottom();
 	}
 }

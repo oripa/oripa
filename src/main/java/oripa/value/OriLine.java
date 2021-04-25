@@ -23,8 +23,8 @@ import java.util.Objects;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.cptool.RectangleClipper;
 import oripa.geom.Line;
+import oripa.geom.RectangleDomain;
 import oripa.geom.Segment;
 
 import static java.lang.Math.abs;
@@ -43,9 +43,9 @@ public class OriLine implements Comparable<OriLine> {
 	}
 
 	public boolean contains(OriPoint oriPoint) {
-		RectangleClipper rectangleClipper = new RectangleClipper(p0.x, p0.y, p1.x, p1.y);
-		if(isVertical()) return abs(getAffineXValueAt(oriPoint.y) - oriPoint.x) < EPS && rectangleClipper.contains(oriPoint);
-		return abs(getAffineYValueAt(oriPoint.x) - oriPoint.y) < EPS && rectangleClipper.contains(oriPoint);
+		var rectangleDomain = new RectangleDomain(p0.x, p0.y, p1.x, p1.y);
+		if(isVertical()) return abs(getAffineXValueAt(oriPoint.y) - oriPoint.x) < EPS && rectangleDomain.contains(oriPoint);
+		return abs(getAffineYValueAt(oriPoint.x) - oriPoint.y) < EPS && rectangleDomain.contains(oriPoint);
 	}
 
 	public OriPoint middlePoint() {
