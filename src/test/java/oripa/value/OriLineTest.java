@@ -18,9 +18,9 @@
  */
 package oripa.value;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author OUCHI Koji
@@ -33,15 +33,16 @@ class OriLineTest {
 		var line1 = new OriLine(0, 1, 2, 3, OriLine.Type.VALLEY);
 		var line2 = new OriLine(0, 1, 2, 3, OriLine.Type.MOUNTAIN);
 
-		assertTrue(line1.equals(line2));
-		assertTrue(line1.hashCode() == line2.hashCode());
+		assertNotEquals(line1, line2);
+		assertEquals(line1.hashCode(), line2.hashCode());
 
 		// test reversed direction
 		line2.p0.set(2, 3);
 		line2.p1.set(0, 1);
+		line2.setType(OriLine.Type.VALLEY);
 
-		assertTrue(line1.equals(line2));
-		assertTrue(line1.hashCode() == line2.hashCode());
+		assertEquals(line1, line2);
+		assertEquals(line1.hashCode(), line2.hashCode());
 
 	}
 

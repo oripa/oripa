@@ -48,14 +48,14 @@ public class LineAdder {
 
 		currentLines.parallelStream()
 				.forEach(line -> {
-					logger.trace("current line: " + line);
+					logger.trace("current line: {}", line);
 
 					Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
 					if (crossPoint == null) {
 						return;
 					}
 
-					logger.trace("cross point: " + crossPoint);
+					logger.trace("cross point: {}", crossPoint);
 
 					crossMap.put(new OriPoint(crossPoint), line);
 
@@ -257,7 +257,7 @@ public class LineAdder {
 
 	private List<OriLine> getOverlappingLines(Collection<OriLine> currentLines, OriLine splitNewLine) {
 		return currentLines.stream()
-				.filter(oriLine -> oriLine.getType() != OriLine.Type.CUT)
+				.filter(oriLine -> !oriLine.isBoundary())
 				.filter(currentLine -> detectOverlap(currentLine, splitNewLine))
 				.collect(Collectors.toList());
 	}
