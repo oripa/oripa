@@ -18,6 +18,8 @@
 
 package oripa.view.main;
 
+import static javax.swing.SwingConstants.*;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -58,6 +60,7 @@ import oripa.domain.fold.subface.ParentFacesCollector;
 import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.domain.paint.AngleStep;
+import oripa.domain.paint.InitialVisibilities;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.byvalue.AngleMeasuringAction;
@@ -83,8 +86,6 @@ import oripa.viewsetting.main.MainScreenSetting;
 import oripa.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.viewsetting.main.uipanel.UIPanelSetting;
-
-import static javax.swing.SwingConstants.RIGHT;
 
 public class UIPanel extends JPanel {
 
@@ -177,7 +178,7 @@ public class UIPanel extends JPanel {
 
 	private final JCheckBox dispGridCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_GRID_ID),
-			true);
+			InitialVisibilities.GRID);
 	private JFormattedTextField textFieldGrid;
 	private final JButton gridSmallButton = new JButton("x2");
 	private final JButton gridLargeButton = new JButton("x1/2");
@@ -190,20 +191,21 @@ public class UIPanel extends JPanel {
 
 	private final JCheckBox dispMVLinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MV_ID),
-			true);
+			InitialVisibilities.MV);
 	private final JCheckBox dispAuxLinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
-			true);
+			InitialVisibilities.AUX);
 	private final JCheckBox dispVertexCheckBox = new JCheckBox(
 			resources
 					.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
-			false);
+			InitialVisibilities.VERTEX);
 	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL,
 					StringID.UI.FULL_ESTIMATION_ID),
 			false);
 	private final JCheckBox zeroLineWidthCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.ZERO_LINE_WIDTH_ID));
+			resources.getString(ResourceKey.LABEL, StringID.UI.ZERO_LINE_WIDTH_ID),
+			InitialVisibilities.ZERO_LINE_WIDTH);
 
 	// ActionButtons Panel
 	private final JPanel buttonsPanel = new JPanel();

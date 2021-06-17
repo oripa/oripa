@@ -27,16 +27,17 @@ class PaintContext implements PaintContextInterface {
 	private Vector2d candidateVertexToPick = new Vector2d();
 	private OriLine candidateLineToPick = new OriLine();
 
-	private boolean gridVisible = true;
+	private boolean gridVisible = InitialVisibilities.GRID;
 	private int gridDivNum;
 	private double scale;
 
 	private ArrayList<Vector2d> gridPoints;
 
-	private boolean vertexVisible;
-	private boolean mvLineVisible;
-	private boolean auxLineVisible;
-	private boolean crossLineVisible = false;
+	private boolean vertexVisible = InitialVisibilities.VERTEX;
+	private boolean mvLineVisible = InitialVisibilities.MV;
+	private boolean auxLineVisible = InitialVisibilities.AUX;
+	private boolean crossLineVisible = InitialVisibilities.CROSS;
+	private boolean zeroLineWidth = InitialVisibilities.ZERO_LINE_WIDTH;
 
 	private boolean missionCompleted = false;
 
@@ -45,8 +46,6 @@ class PaintContext implements PaintContextInterface {
 	private Point2D.Double mousePoint;
 
 	private AngleStep angleStep;
-
-	private boolean zeroLineWidth;
 
 	/*
 	 * TODO: Rename for more general usage. snapPoints? assistPoints? something
