@@ -6,27 +6,28 @@ import java.beans.PropertyChangeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.paint.InitialVisibilities;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 
 public class MainScreenSetting {
 	private static final Logger logger = LoggerFactory.getLogger(MainScreenSetting.class);
 
-	private boolean gridVisible = true;
+	private boolean gridVisible = InitialVisibilities.GRID;
 	public static final String GRID_VISIBLE = "grid visible";
 
-	private boolean crossLineVisible = false;
+	private boolean crossLineVisible = InitialVisibilities.CROSS;
 	public static final String CROSS_LINE_VISIBLE = "cross line visible";
 
-	private boolean zeroLineWidth = false;
+	private boolean zeroLineWidth = InitialVisibilities.ZERO_LINE_WIDTH;
 	public static final String ZERO_LINE_WIDTH = "zero line width";
 
-	private boolean vertexVisible = false;
+	private boolean vertexVisible = InitialVisibilities.VERTEX;
 	public static final String VERTEX_VISIBLE = "vertex visible";
 
-	private boolean mvLineVisible = false;
+	private boolean mvLineVisible = InitialVisibilities.MV;
 	public static final String MV_LINE_VISIBLE = "mv line visible";
 
-	private boolean auxLineVisible = false;
+	private boolean auxLineVisible = InitialVisibilities.AUX;
 	public static final String AUX_LINE_VISIBLE = "aux line visible";
 
 	private final SelectionOriginHolder originHolder = new SelectionOriginHolder();
