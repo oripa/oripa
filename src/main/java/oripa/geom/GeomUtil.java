@@ -21,11 +21,10 @@ package oripa.geom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
-
-import oripa.value.OriLine;
 
 public class GeomUtil {
 	// private static final Logger logger =
@@ -99,11 +98,11 @@ public class GeomUtil {
 
 	}
 
-	public static boolean isSameLineSegment(final OriLine l0, final OriLine l1) {
-		if (distance(l0.p0, l1.p0) < EPS && distance(l0.p1, l1.p1) < EPS) {
+	public static boolean isSameLineSegment(final Segment l0, final Segment l1) {
+		if (distance(l0.getP0(), l1.getP0()) < EPS && distance(l0.getP1(), l1.getP1()) < EPS) {
 			return true;
 		}
-		if (distance(l0.p0, l1.p1) < EPS && distance(l0.p1, l1.p0) < EPS) {
+		if (distance(l0.getP0(), l1.getP1()) < EPS && distance(l0.getP1(), l1.getP0()) < EPS) {
 			return true;
 		}
 
@@ -116,9 +115,9 @@ public class GeomUtil {
 	 *            is assumed to be long enough.
 	 * @param domain
 	 *            defines clip area.
-	 * @return true if clip was done.
+	 * @return Optional of clipped segment. Empty if failed.
 	 */
-	public static boolean clipLine(final OriLine l, final RectangleDomain domain) {
+	public static Optional<Segment> clipLine(final Segment l, final RectangleDomain domain) {
 
 		double left = domain.getLeft();
 		double right = domain.getRight();
@@ -126,11 +125,11 @@ public class GeomUtil {
 		double top = domain.getTop();
 		double bottom = domain.getBottom();
 
-		var leftSegment = new OriLine(left, top, left, bottom, OriLine.Type.AUX);
-		var rightSegment = new OriLine(right, top, right, bottom, OriLine.Type.AUX);
+		var leftSegment = new Segment(left, top, left, bottom);
+		var rightSegment = new Segment(right, top, right, bottom);
 
-		var topSegment = new OriLine(left, top, right, top, OriLine.Type.AUX);
-		var bottomSegment = new OriLine(left, bottom, right, bottom, OriLine.Type.AUX);
+		var topSegment = new Segment(left, top, right, top);
+		var bottomSegment = new Segment(left, bottom, right, bottom);
 
 		final List<Vector2d> crossPoints = new ArrayList<>();
 
@@ -149,21 +148,18 @@ public class GeomUtil {
 		addIfDistinct.accept(getCrossPoint(l, bottomSegment));
 
 		if (crossPoints.size() == 2) {
-			l.p0.set(crossPoints.get(0));
-			l.p1.set(crossPoints.get(1));
 
-			return true;
+			return Optional.of(new Segment(crossPoints.get(0), crossPoints.get(1)));
 		}
 
-		return false;
+		return Optional.empty();
 	}
 
-	public static OriLine getVerticalLine(final Vector2d v, final OriLine line,
-			final OriLine.Type type) {
-		double x0 = line.p0.x;
-		double y0 = line.p0.y;
-		double x1 = line.p1.x;
-		double y1 = line.p1.y;
+	public static Segment getVerticalLine(final Vector2d v, final Segment line) {
+		double x0 = line.getP0().x;
+		double y0 = line.getP0().y;
+		double x1 = line.getP1().x;
+		double y1 = line.getP1().y;
 		double px = v.x;
 		double py = v.y;
 		Vector2d sub0, sub, sub0b;
@@ -175,7 +171,7 @@ public class GeomUtil {
 		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
 				/ ((sub.x * sub.x) + (sub.y * sub.y));
 
-		return new OriLine(x0 + t * sub.x, y0 + t * sub.y, px, py, type);
+		return new Segment(x0 + t * sub.x, y0 + t * sub.y, px, py);
 	}
 
 	public static Vector2d getIncenter(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
@@ -222,9 +218,12 @@ public class GeomUtil {
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
 		Vector2d p0 = new Vector2d(ray.p);
 
+		Vector2d segP0 = seg.getP0();
+		Vector2d segP1 = seg.getP1();
+
 		Vector2d d0 = new Vector2d(ray.dir);
-		Vector2d d1 = new Vector2d(seg.p1.x - seg.p0.x, seg.p1.y - seg.p0.y);
-		Vector2d diff = new Vector2d(seg.p0.x - p0.x, seg.p0.y - p0.y);
+		Vector2d d1 = new Vector2d(segP1.x - segP0.x, segP1.y - segP0.y);
+		Vector2d diff = new Vector2d(segP0.x - p0.x, segP0.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
 		double epsilon = 1.0e-6;
@@ -244,8 +243,8 @@ public class GeomUtil {
 			return null;
 		}
 		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * seg.p0.x + t * seg.p1.x;
-		cp.y = (1.0 - t) * seg.p0.y + t * seg.p1.y;
+		cp.x = (1.0 - t) * segP0.x + t * segP1.x;
+		cp.y = (1.0 - t) * segP0.y + t * segP1.y;
 		return cp;
 	}
 
@@ -276,13 +275,13 @@ public class GeomUtil {
 		return cp;
 	}
 
-	public static OriLine getLineByValue(final Vector2d sv, final double length,
-			final double deg_angle, final OriLine.Type type) {
+	public static Segment getLineByValue(final Vector2d sv, final double length,
+			final double deg_angle) {
 		Vector2d ev = new Vector2d(sv);
 		double rad_angle = Math.toRadians(deg_angle);
 		Vector2d dir = new Vector2d(length * Math.cos(rad_angle), length * Math.sin(rad_angle));
 		ev.add(dir);
-		return new OriLine(sv, ev, type);
+		return new Segment(sv, ev);
 	}
 
 	/**
@@ -417,8 +416,8 @@ public class GeomUtil {
 		return cp;
 	}
 
-	public static Vector2d getCrossPoint(final OriLine l0, final OriLine l1) {
-		return getCrossPoint(l0.p0, l0.p1, l1.p0, l1.p1, EPS);
+	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
+		return getCrossPoint(l0.getP0(), l0.getP1(), l1.getP0(), l1.getP1(), EPS);
 	}
 
 	public static double distance(final Vector2d p, final Line line, final double[] param) {

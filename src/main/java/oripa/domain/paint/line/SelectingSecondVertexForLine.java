@@ -1,11 +1,14 @@
 package oripa.domain.paint.line;
 
+import java.util.Optional;
+
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
+import oripa.geom.Segment;
 import oripa.value.OriLine;
 
 public class SelectingSecondVertexForLine extends PickingVertex {
@@ -32,16 +35,16 @@ public class SelectingSecondVertexForLine extends PickingVertex {
 		dir.scale(paperSize * 8);
 
 		// create new line
-		OriLine line = new OriLine(p0.x - dir.x, p0.y - dir.y,
-				p0.x + dir.x, p0.y + dir.y, context.getLineTypeOfNewLines());
+		Segment line = new Segment(p0.x - dir.x, p0.y - dir.y,
+				p0.x + dir.x, p0.y + dir.y);
 
-		// add new line to crease pattern
-		if (GeomUtil.clipLine(line, context.getPaperDomain())) {
+		Optional<Segment> clippedOpt = GeomUtil.clipLine(line, context.getPaperDomain());
+		clippedOpt.ifPresent(clippedSeg -> {
+			// add new line to crease pattern
 			context.creasePatternUndo().pushUndoInfo();
-
 			Painter painter = context.getPainter();
-			painter.addLine(line);
-		}
+			painter.addLine(new OriLine(clippedSeg, context.getLineTypeOfNewLines()));
+		});
 
 		context.clear(false);
 	}

@@ -47,7 +47,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 			logger.debug("length = " + length);
 
 			if (length > 0) {
-				OriLine vl = GeomUtil.getLineByValue(vertex, length, -angle,
+				OriLine vl = new OriLine(GeomUtil.getLineByValue(vertex, length, -angle),
 						context.getLineTypeOfNewLines());
 
 				context.creasePatternUndo().pushUndoInfo();
