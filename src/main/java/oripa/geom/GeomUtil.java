@@ -278,13 +278,13 @@ public class GeomUtil {
 		return cp;
 	}
 
-	public static OriLine getLineByValue(final Vector2d sv, final double length,
-			final double deg_angle, final OriLine.Type type) {
+	public static Segment getLineByValue(final Vector2d sv, final double length,
+			final double deg_angle) {
 		Vector2d ev = new Vector2d(sv);
 		double rad_angle = Math.toRadians(deg_angle);
 		Vector2d dir = new Vector2d(length * Math.cos(rad_angle), length * Math.sin(rad_angle));
 		ev.add(dir);
-		return new OriLine(sv, ev, type);
+		return new Segment(sv, ev);
 	}
 
 	/**
