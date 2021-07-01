@@ -99,11 +99,11 @@ public class GeomUtil {
 
 	}
 
-	public static boolean isSameLineSegment(final OriLine l0, final OriLine l1) {
-		if (distance(l0.p0, l1.p0) < EPS && distance(l0.p1, l1.p1) < EPS) {
+	public static boolean isSameLineSegment(final Segment l0, final Segment l1) {
+		if (distance(l0.getP0(), l1.getP0()) < EPS && distance(l0.getP1(), l1.getP1()) < EPS) {
 			return true;
 		}
-		if (distance(l0.p0, l1.p1) < EPS && distance(l0.p1, l1.p0) < EPS) {
+		if (distance(l0.getP0(), l1.getP1()) < EPS && distance(l0.getP1(), l1.getP0()) < EPS) {
 			return true;
 		}
 
