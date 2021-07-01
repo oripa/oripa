@@ -21,6 +21,7 @@ package oripa.geom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
@@ -118,7 +119,7 @@ public class GeomUtil {
 	 *            defines clip area.
 	 * @return true if clip was done.
 	 */
-	public static boolean clipLine(final OriLine l, final RectangleDomain domain) {
+	public static Optional<Segment> clipLine(final Segment l, final RectangleDomain domain) {
 
 		double left = domain.getLeft();
 		double right = domain.getRight();
@@ -126,11 +127,11 @@ public class GeomUtil {
 		double top = domain.getTop();
 		double bottom = domain.getBottom();
 
-		var leftSegment = new OriLine(left, top, left, bottom, OriLine.Type.AUX);
-		var rightSegment = new OriLine(right, top, right, bottom, OriLine.Type.AUX);
+		var leftSegment = new Segment(left, top, left, bottom);
+		var rightSegment = new Segment(right, top, right, bottom);
 
-		var topSegment = new OriLine(left, top, right, top, OriLine.Type.AUX);
-		var bottomSegment = new OriLine(left, bottom, right, bottom, OriLine.Type.AUX);
+		var topSegment = new Segment(left, top, right, top);
+		var bottomSegment = new Segment(left, bottom, right, bottom);
 
 		final List<Vector2d> crossPoints = new ArrayList<>();
 
@@ -149,13 +150,11 @@ public class GeomUtil {
 		addIfDistinct.accept(getCrossPoint(l, bottomSegment));
 
 		if (crossPoints.size() == 2) {
-			l.p0.set(crossPoints.get(0));
-			l.p1.set(crossPoints.get(1));
 
-			return true;
+			return Optional.of(new Segment(crossPoints.get(0), crossPoints.get(1)));
 		}
 
-		return false;
+		return Optional.empty();
 	}
 
 	public static OriLine getVerticalLine(final Vector2d v, final OriLine line,

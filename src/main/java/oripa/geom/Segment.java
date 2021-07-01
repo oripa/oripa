@@ -35,6 +35,12 @@ public class Segment {
 		this.p1 = p1;
 	}
 
+	public Segment(final double x0, final double y0, final double x1, final double y1) {
+		this();
+		this.p0.set(x0, y0);
+		this.p1.set(x1, y1);
+	}
+
 	public Vector2d getP0() {
 		return p0;
 	}
