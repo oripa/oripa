@@ -222,9 +222,12 @@ public class GeomUtil {
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
 		Vector2d p0 = new Vector2d(ray.p);
 
+		Vector2d segP0 = seg.getP0();
+		Vector2d segP1 = seg.getP1();
+
 		Vector2d d0 = new Vector2d(ray.dir);
-		Vector2d d1 = new Vector2d(seg.p1.x - seg.p0.x, seg.p1.y - seg.p0.y);
-		Vector2d diff = new Vector2d(seg.p0.x - p0.x, seg.p0.y - p0.y);
+		Vector2d d1 = new Vector2d(segP1.x - segP0.x, segP1.y - segP0.y);
+		Vector2d diff = new Vector2d(segP0.x - p0.x, segP0.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
 		double epsilon = 1.0e-6;
@@ -244,8 +247,8 @@ public class GeomUtil {
 			return null;
 		}
 		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * seg.p0.x + t * seg.p1.x;
-		cp.y = (1.0 - t) * seg.p0.y + t * seg.p1.y;
+		cp.x = (1.0 - t) * segP0.x + t * segP1.x;
+		cp.y = (1.0 - t) * segP0.y + t * segP1.y;
 		return cp;
 	}
 
@@ -417,8 +420,8 @@ public class GeomUtil {
 		return cp;
 	}
 
-	public static Vector2d getCrossPoint(final OriLine l0, final OriLine l1) {
-		return getCrossPoint(l0.p0, l0.p1, l1.p0, l1.p1, EPS);
+	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
+		return getCrossPoint(l0.getP0(), l0.getP1(), l1.getP0(), l1.getP1(), EPS);
 	}
 
 	public static double distance(final Vector2d p, final Line line, final double[] param) {

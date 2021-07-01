@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -22,11 +22,24 @@ import javax.vecmath.Vector2d;
 
 public class Segment {
 
-    public Vector2d p0;
-    public Vector2d p1;
+	private final Vector2d p0;
+	private final Vector2d p1;
 
-    public Segment(Vector2d p0, Vector2d p1) {
-        this.p0 = p0;
-        this.p1 = p1;
-    }
+	public Segment() {
+		p0 = new Vector2d();
+		p1 = new Vector2d();
+	}
+
+	public Segment(final Vector2d p0, final Vector2d p1) {
+		this.p0 = p0;
+		this.p1 = p1;
+	}
+
+	public Vector2d getP0() {
+		return p0;
+	}
+
+	public Vector2d getP1() {
+		return p1;
+	}
 }
