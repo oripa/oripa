@@ -151,10 +151,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		return "" + p0 + "" + p1;
 	}
 
-	public Segment getSegment() {
-		return new Segment(p0, p1);
-	}
-
 	public Line getLine() {
 		return new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
 	}
