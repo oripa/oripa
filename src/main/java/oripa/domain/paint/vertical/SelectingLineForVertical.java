@@ -26,8 +26,8 @@ public class SelectingLineForVertical extends PickingLine {
 			throw new RuntimeException();
 		}
 
-		OriLine vl = GeomUtil.getVerticalLine(
-				context.getVertex(0), context.getLine(0), context.getLineTypeOfNewLines());
+		OriLine vl = new OriLine(GeomUtil.getVerticalLine(
+				context.getVertex(0), context.getLine(0)), context.getLineTypeOfNewLines());
 
 		context.creasePatternUndo().pushUndoInfo();
 

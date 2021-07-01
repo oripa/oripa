@@ -26,8 +26,6 @@ import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
-import oripa.value.OriLine;
-
 public class GeomUtil {
 	// private static final Logger logger =
 	// LoggerFactory.getLogger(GeomUtil.class);
@@ -157,12 +155,11 @@ public class GeomUtil {
 		return Optional.empty();
 	}
 
-	public static OriLine getVerticalLine(final Vector2d v, final OriLine line,
-			final OriLine.Type type) {
-		double x0 = line.p0.x;
-		double y0 = line.p0.y;
-		double x1 = line.p1.x;
-		double y1 = line.p1.y;
+	public static Segment getVerticalLine(final Vector2d v, final Segment line) {
+		double x0 = line.getP0().x;
+		double y0 = line.getP0().y;
+		double x1 = line.getP1().x;
+		double y1 = line.getP1().y;
 		double px = v.x;
 		double py = v.y;
 		Vector2d sub0, sub, sub0b;
@@ -174,7 +171,7 @@ public class GeomUtil {
 		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
 				/ ((sub.x * sub.x) + (sub.y * sub.y));
 
-		return new OriLine(x0 + t * sub.x, y0 + t * sub.y, px, py, type);
+		return new Segment(x0 + t * sub.x, y0 + t * sub.y, px, py);
 	}
 
 	public static Vector2d getIncenter(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
