@@ -115,7 +115,7 @@ public class GeomUtil {
 	 *            is assumed to be long enough.
 	 * @param domain
 	 *            defines clip area.
-	 * @return true if clip was done.
+	 * @return Clipped segment. {@code null} if failed.
 	 */
 	public static Optional<Segment> clipLine(final Segment l, final RectangleDomain domain) {
 
