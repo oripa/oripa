@@ -23,7 +23,7 @@ import javax.swing.ImageIcon;
 import oripa.file.ImageResourceLoader;
 
 /**
- * Each enum value provides with two icons, whose paths are in the style of
+ * Each enum value provides two icons, whose paths are in the style of
  * "icon/filename.gif" for default icon and "icon/filename_p.gif" for selected
  * state icon. If you would like to add a button with icon, draw the icons, put
  * them at icon directory, and name them like "hoge.gif" and "hoge_p.gif".
