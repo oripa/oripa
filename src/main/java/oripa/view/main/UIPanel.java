@@ -254,10 +254,10 @@ public class UIPanel extends JPanel {
 		editModePanel.add(editModeDeleteVertex, gbBuilder.getLineField());
 
 		// Tool settings panel
-		createLineInputPanel();
-		createAlterLineTypePanel();
-		createSetAngleStepPanel();
-		createEditByValuePanel();
+		buildLineInputPanel();
+		buildAlterLineTypePanel();
+		buildAngleStepPanel();
+		buildEditByValuePanel();
 
 		toolSettingsPanel.setLayout(new GridBagLayout());
 		toolSettingsPanel.setBorder(createTitledBorderFrame(
@@ -272,9 +272,9 @@ public class UIPanel extends JPanel {
 		toolSettingsPanel.add(angleStepComboPanel, gbBuilder.getLineField());
 
 		// general settings panel
-		createGridPanel();
-		createViewPanel();
-		createButtonsPanel();
+		buildGridPanel();
+		buildViewPanel();
+		buildButtonsPanel();
 
 		generalSettingsPanel.setLayout(new GridBagLayout());
 		generalSettingsPanel.setBorder(createTitledBorderFrame(
@@ -328,7 +328,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * panel containing line input methods and line type selection
 	 */
-	private void createLineInputPanel() {
+	private void buildLineInputPanel() {
 		// extra panel just for line types
 		ButtonGroup lineTypeGroup = new ButtonGroup();
 		lineTypeGroup.add(lineTypeMountainButton);
@@ -394,7 +394,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * display combobox for angle step line drawing tool
 	 */
-	private void createSetAngleStepPanel() {
+	private void buildAngleStepPanel() {
 		angleStepComboPanel.setLayout(new GridBagLayout());
 		angleStepComboPanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.ANGLE_STEP_ID)));
@@ -410,7 +410,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * change line type tool settings panel
 	 */
-	private void createAlterLineTypePanel() {
+	private void buildAlterLineTypePanel() {
 		var fromLabel = new JLabel(
 				resources.getString(ResourceKey.LABEL,
 						StringID.UI.CHANGE_LINE_TYPE_FROM_ID));
@@ -436,7 +436,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * input line by value tool
 	 */
-	private void createEditByValuePanel() {
+	private void buildEditByValuePanel() {
 		var lengthLabel = new JLabel(
 				resources.getString(ResourceKey.LABEL, StringID.UI.LENGTH_ID));
 
@@ -481,7 +481,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * grid size settings panel
 	 */
-	private void createGridPanel() {
+	private void buildGridPanel() {
 		var gridDivideLabel = new JLabel(
 				resources.getString(ResourceKey.LABEL,
 						StringID.UI.GRID_DIVIDE_NUM_ID));
@@ -512,7 +512,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * view/display settings panel
 	 */
-	private void createViewPanel() {
+	private void buildViewPanel() {
 		viewPanel.setLayout(new GridBagLayout());
 
 		viewPanel.setBorder(createTitledBorder(
@@ -527,7 +527,7 @@ public class UIPanel extends JPanel {
 		viewPanel.add(dispVertexCheckBox, gbBuilder.getLineField());
 	}
 
-	private void createButtonsPanel() {
+	private void buildButtonsPanel() {
 		buttonsPanel.setLayout(new GridBagLayout());
 
 		buttonsPanel.setBorder(new MatteBorder(1, 0, 0, 0,
