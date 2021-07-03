@@ -68,7 +68,7 @@ import oripa.domain.paint.byvalue.AngleValueInputListener;
 import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueSetting;
-import oripa.file.ImageResourceLoader;
+import oripa.resource.ButtonIcon;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -742,23 +742,21 @@ public class UIPanel extends JPanel {
 	}
 
 	private void setButtonIcons() {
-		setButtonIcon(lineInputDirectVButton, "icon/segment.gif", "icon/segment_p.gif");
-		setButtonIcon(lineInputOnVButton, "icon/line.gif", "icon/line_p.gif");
-		setButtonIcon(lineInputPBisectorButton, "icon/pbisector.gif", "icon/pbisector_p.gif");
-		setButtonIcon(lineInputAngleBisectorButton, "icon/bisector.gif", "icon/bisector_p.gif");
-		setButtonIcon(lineInputTriangleSplitButton, "icon/incenter.gif", "icon/incenter_p.gif");
-		setButtonIcon(lineInputVerticalLineButton, "icon/vertical.gif", "icon/vertical_p.gif");
-		setButtonIcon(lineInputSymmetricButton, "icon/symmetry.gif", "icon/symmetry_p.gif");
-		setButtonIcon(lineInputMirrorButton, "icon/mirror.gif", "icon/mirror_p.gif");
-		setButtonIcon(lineInputByValueButton, "icon/by_value.gif", "icon/by_value_p.gif");
-		setButtonIcon(lineInputAngleSnapButton, "icon/angle.gif", "icon/angle_p.gif");
+		setButtonIcon(lineInputDirectVButton, ButtonIcon.DIRECT_V);
+		setButtonIcon(lineInputOnVButton, ButtonIcon.ON_V);
+		setButtonIcon(lineInputPBisectorButton, ButtonIcon.PERPENDICULAR_BISECTOR);
+		setButtonIcon(lineInputAngleBisectorButton, ButtonIcon.BISECTOR);
+		setButtonIcon(lineInputTriangleSplitButton, ButtonIcon.TRIANGLE);
+		setButtonIcon(lineInputVerticalLineButton, ButtonIcon.VERTICAL);
+		setButtonIcon(lineInputSymmetricButton, ButtonIcon.SYMMETRIC);
+		setButtonIcon(lineInputMirrorButton, ButtonIcon.MIRROR);
+		setButtonIcon(lineInputByValueButton, ButtonIcon.BY_VALUE);
+		setButtonIcon(lineInputAngleSnapButton, ButtonIcon.ANGLE_SNAP);
 	}
 
-	private void setButtonIcon(final AbstractButton button, final String iconPath,
-			final String selectedIconPath) {
-		ImageResourceLoader imgLoader = new ImageResourceLoader();
-		button.setIcon(imgLoader.loadAsIcon(iconPath));
-		button.setSelectedIcon(imgLoader.loadAsIcon(selectedIconPath));
+	private void setButtonIcon(final AbstractButton button, final ButtonIcon icon) {
+		button.setIcon(icon.loadIcon());
+		button.setSelectedIcon(icon.loadSelectedIcon());
 	}
 
 	private void addActionListenersToComponents(final StateManager stateManager,
