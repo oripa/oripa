@@ -196,8 +196,7 @@ public class UIPanel extends JPanel {
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
 			InitialVisibilities.AUX);
 	private final JCheckBox dispVertexCheckBox = new JCheckBox(
-			resources
-					.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
 			InitialVisibilities.VERTEX);
 	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL,
@@ -506,7 +505,6 @@ public class UIPanel extends JPanel {
 		gridPanel.add(gridSmallButton, gbBuilder.getNextField());
 		gbBuilder.getNextField(); // empty field
 		gridPanel.add(gridLargeButton, gbBuilder.getNextField());
-
 	}
 
 	/**
