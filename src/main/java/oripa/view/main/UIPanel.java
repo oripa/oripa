@@ -375,9 +375,6 @@ public class UIPanel extends JPanel {
 		commandsLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lineInputPanel.add(commandsLabel, gbBuilder.getLineField());
 
-		// needs to move into seperate Panel later
-		lineInputPanel.add(angleStepCombo, gbBuilder.getLineField());
-
 		gbBuilder.setWeight(0.5, 0.5);
 		// put operation buttons in order
 		lineInputPanel.add(lineInputDirectVButton, gbBuilder.getNextField());
