@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
-import oripa.appstate.StateManager;
+import oripa.appstate.StateManagerInterface;
 import oripa.bind.state.action.PaintActionSetterFactory;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
@@ -40,7 +40,7 @@ import oripa.viewsetting.main.uipanel.UIPanelSetting;
 
 public class PaintBoundStateFactory {
 
-	private final StateManager stateManager;
+	private final StateManagerInterface<EditMode> stateManager;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
 	private final SelectionOriginHolder originHolder;
@@ -49,7 +49,7 @@ public class PaintBoundStateFactory {
 	 * Constructor
 	 */
 	public PaintBoundStateFactory(
-			final StateManager stateManager,
+			final StateManagerInterface<EditMode> stateManager,
 			final MainFrameSetting mainFrameSetting,
 			final UIPanelSetting uiPanelSetting,
 			final SelectionOriginHolder originHolder) {

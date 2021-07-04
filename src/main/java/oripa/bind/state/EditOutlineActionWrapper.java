@@ -3,7 +3,7 @@ package oripa.bind.state;
 import java.awt.geom.AffineTransform;
 
 import oripa.appstate.ApplicationState;
-import oripa.appstate.StateManager;
+import oripa.appstate.StateManagerInterface;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
@@ -12,10 +12,10 @@ import oripa.domain.paint.outline.EditOutlineAction;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
 
-	private final StateManager stateManager;
+	private final StateManagerInterface<EditMode> stateManager;
 	private final MouseActionHolder actionHolder;
 
-	public EditOutlineActionWrapper(final StateManager stateManager,
+	public EditOutlineActionWrapper(final StateManagerInterface<EditMode> stateManager,
 			final MouseActionHolder actionHolder) {
 		this.stateManager = stateManager;
 		this.actionHolder = actionHolder;

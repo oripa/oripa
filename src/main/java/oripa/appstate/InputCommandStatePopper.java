@@ -11,17 +11,17 @@ import oripa.domain.paint.EditMode;
 public class InputCommandStatePopper implements ActionListener {
 	private static final Logger logger = LoggerFactory.getLogger(InputCommandStatePopper.class);
 
-	private final StateManager stateManager;
+	private final StateManagerInterface<EditMode> stateManager;
 
 	/**
 	 * Constructor
 	 */
-	public InputCommandStatePopper(final StateManager stateManager) {
+	public InputCommandStatePopper(final StateManagerInterface<EditMode> stateManager) {
 		this.stateManager = stateManager;
 	}
 
 	public ApplicationState<EditMode> pop() {
-		return stateManager.popLastInputCommand();
+		return stateManager.popLastOf(EditMode.INPUT);
 	}
 
 	@Override

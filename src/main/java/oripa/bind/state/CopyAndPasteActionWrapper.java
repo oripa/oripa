@@ -3,7 +3,7 @@ package oripa.bind.state;
 import java.awt.geom.AffineTransform;
 
 import oripa.appstate.ApplicationState;
-import oripa.appstate.StateManager;
+import oripa.appstate.StateManagerInterface;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
@@ -12,11 +12,11 @@ import oripa.domain.paint.copypaste.SelectionOriginHolder;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 
-	private final StateManager stateManager;
+	private final StateManagerInterface<EditMode> stateManager;
 	private final boolean isCut;
 
 	public CopyAndPasteActionWrapper(
-			final StateManager stateManager,
+			final StateManagerInterface<EditMode> stateManager,
 			final boolean isCut, final SelectionOriginHolder originHolder) {
 
 		super(originHolder);

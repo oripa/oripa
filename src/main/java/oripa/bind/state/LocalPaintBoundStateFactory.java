@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
-import oripa.appstate.StateManager;
+import oripa.appstate.StateManagerInterface;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.domain.paint.EditMode;
 import oripa.viewsetting.ChangeViewSetting;
@@ -17,7 +17,7 @@ import oripa.viewsetting.ChangeViewSetting;
  */
 class LocalPaintBoundStateFactory {
 
-	private final StateManager stateManager;
+	private final StateManagerInterface<EditMode> stateManager;
 	private final ActionListener[] basicActions;
 	private Component parent = null;
 
@@ -31,7 +31,7 @@ class LocalPaintBoundStateFactory {
 	 *            Actions for all created states.
 	 */
 	public LocalPaintBoundStateFactory(final Component parent,
-			final StateManager stateManager,
+			final StateManagerInterface<EditMode> stateManager,
 			final ActionListener[] basicActions) {
 		this.stateManager = stateManager;
 		this.basicActions = basicActions;

@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.application.main.OrigamiModelInteractiveBuilder;
 import oripa.appstate.InputCommandStatePopper;
-import oripa.appstate.StateManager;
+import oripa.appstate.StateManagerInterface;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.binder.BinderInterface;
@@ -60,6 +60,7 @@ import oripa.domain.fold.subface.ParentFacesCollector;
 import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.domain.paint.AngleStep;
+import oripa.domain.paint.EditMode;
 import oripa.domain.paint.InitialVisibilities;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
@@ -68,7 +69,7 @@ import oripa.domain.paint.byvalue.AngleValueInputListener;
 import oripa.domain.paint.byvalue.LengthMeasuringAction;
 import oripa.domain.paint.byvalue.LengthValueInputListener;
 import oripa.domain.paint.byvalue.ValueSetting;
-import oripa.file.ImageResourceLoader;
+import oripa.resource.ButtonIcon;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -196,8 +197,7 @@ public class UIPanel extends JPanel {
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
 			InitialVisibilities.AUX);
 	private final JCheckBox dispVertexCheckBox = new JCheckBox(
-			resources
-					.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
 			InitialVisibilities.VERTEX);
 	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL,
@@ -216,7 +216,7 @@ public class UIPanel extends JPanel {
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
 	public UIPanel(
-			final StateManager stateManager,
+			final StateManagerInterface<EditMode> stateManager,
 			final ViewScreenUpdater screenUpdater,
 			final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
@@ -254,10 +254,10 @@ public class UIPanel extends JPanel {
 		editModePanel.add(editModeDeleteVertex, gbBuilder.getLineField());
 
 		// Tool settings panel
-		createLineInputPanel();
-		createAlterLineTypePanel();
-		createSetAngleStepPanel();
-		createEditByValuePanel();
+		buildLineInputPanel();
+		buildAlterLineTypePanel();
+		buildAngleStepPanel();
+		buildEditByValuePanel();
 
 		toolSettingsPanel.setLayout(new GridBagLayout());
 		toolSettingsPanel.setBorder(createTitledBorderFrame(
@@ -272,9 +272,9 @@ public class UIPanel extends JPanel {
 		toolSettingsPanel.add(angleStepComboPanel, gbBuilder.getLineField());
 
 		// general settings panel
-		createGridPanel();
-		createViewPanel();
-		createButtonsPanel();
+		buildGridPanel();
+		buildViewPanel();
+		buildButtonsPanel();
 
 		generalSettingsPanel.setLayout(new GridBagLayout());
 		generalSettingsPanel.setBorder(createTitledBorderFrame(
@@ -328,7 +328,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * panel containing line input methods and line type selection
 	 */
-	private void createLineInputPanel() {
+	private void buildLineInputPanel() {
 		// extra panel just for line types
 		ButtonGroup lineTypeGroup = new ButtonGroup();
 		lineTypeGroup.add(lineTypeMountainButton);
@@ -375,9 +375,6 @@ public class UIPanel extends JPanel {
 		commandsLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lineInputPanel.add(commandsLabel, gbBuilder.getLineField());
 
-		// needs to move into seperate Panel later
-		lineInputPanel.add(angleStepCombo, gbBuilder.getLineField());
-
 		gbBuilder.setWeight(0.5, 0.5);
 		// put operation buttons in order
 		lineInputPanel.add(lineInputDirectVButton, gbBuilder.getNextField());
@@ -397,7 +394,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * display combobox for angle step line drawing tool
 	 */
-	private void createSetAngleStepPanel() {
+	private void buildAngleStepPanel() {
 		angleStepComboPanel.setLayout(new GridBagLayout());
 		angleStepComboPanel.setBorder(createTitledBorder(
 				resources.getString(ResourceKey.LABEL, StringID.UI.ANGLE_STEP_ID)));
@@ -413,7 +410,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * change line type tool settings panel
 	 */
-	private void createAlterLineTypePanel() {
+	private void buildAlterLineTypePanel() {
 		var fromLabel = new JLabel(
 				resources.getString(ResourceKey.LABEL,
 						StringID.UI.CHANGE_LINE_TYPE_FROM_ID));
@@ -439,7 +436,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * input line by value tool
 	 */
-	private void createEditByValuePanel() {
+	private void buildEditByValuePanel() {
 		var lengthLabel = new JLabel(
 				resources.getString(ResourceKey.LABEL, StringID.UI.LENGTH_ID));
 
@@ -484,7 +481,7 @@ public class UIPanel extends JPanel {
 	/**
 	 * grid size settings panel
 	 */
-	private void createGridPanel() {
+	private void buildGridPanel() {
 		var gridDivideLabel = new JLabel(
 				resources.getString(ResourceKey.LABEL,
 						StringID.UI.GRID_DIVIDE_NUM_ID));
@@ -509,13 +506,12 @@ public class UIPanel extends JPanel {
 		gridPanel.add(gridSmallButton, gbBuilder.getNextField());
 		gbBuilder.getNextField(); // empty field
 		gridPanel.add(gridLargeButton, gbBuilder.getNextField());
-
 	}
 
 	/**
 	 * view/display settings panel
 	 */
-	private void createViewPanel() {
+	private void buildViewPanel() {
 		viewPanel.setLayout(new GridBagLayout());
 
 		viewPanel.setBorder(createTitledBorder(
@@ -530,7 +526,7 @@ public class UIPanel extends JPanel {
 		viewPanel.add(dispVertexCheckBox, gbBuilder.getLineField());
 	}
 
-	private void createButtonsPanel() {
+	private void buildButtonsPanel() {
 		buttonsPanel.setLayout(new GridBagLayout());
 
 		buttonsPanel.setBorder(new MatteBorder(1, 0, 0, 0,
@@ -562,7 +558,7 @@ public class UIPanel extends JPanel {
 		return border;
 	}
 
-	private void constructButtons(final StateManager stateManager,
+	private void constructButtons(final StateManagerInterface<EditMode> stateManager,
 			final MouseActionHolder actionHolder,
 			final MainFrameSetting mainFrameSetting,
 			final MainScreenSetting mainScreenSetting) {
@@ -689,8 +685,7 @@ public class UIPanel extends JPanel {
 	 */
 	private void setShortcut(final AbstractButton button, final KeyStroke keyStroke,
 			final String id) {
-		button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
-		button.getActionMap().put(id, new AbstractAction(button.getText()) {
+		setShortcut(button, keyStroke, id, new AbstractAction(button.getText()) {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				button.doClick();
@@ -732,8 +727,7 @@ public class UIPanel extends JPanel {
 	private void setToolSettingGlobalShortcut(final JRadioButton toolButton,
 			final AbstractButton settingButton, final KeyStroke keyStroke,
 			final String id) {
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
-		this.getActionMap().put(id, new AbstractAction() {
+		setShortcut(this, keyStroke, id, new AbstractAction() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				if (!toolButton.isSelected()) {
@@ -746,27 +740,31 @@ public class UIPanel extends JPanel {
 				+ keyStroke.toString().split(" ")[1]);
 	}
 
+	private void setShortcut(final JComponent focusTarget, final KeyStroke keyStroke,
+			final String id, final Action action) {
+		focusTarget.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
+		focusTarget.getActionMap().put(id, action);
+	}
+
 	private void setButtonIcons() {
-		setButtonIcon(lineInputDirectVButton, "icon/segment.gif", "icon/segment_p.gif");
-		setButtonIcon(lineInputOnVButton, "icon/line.gif", "icon/line_p.gif");
-		setButtonIcon(lineInputPBisectorButton, "icon/pbisector.gif", "icon/pbisector_p.gif");
-		setButtonIcon(lineInputAngleBisectorButton, "icon/bisector.gif", "icon/bisector_p.gif");
-		setButtonIcon(lineInputTriangleSplitButton, "icon/incenter.gif", "icon/incenter_p.gif");
-		setButtonIcon(lineInputVerticalLineButton, "icon/vertical.gif", "icon/vertical_p.gif");
-		setButtonIcon(lineInputSymmetricButton, "icon/symmetry.gif", "icon/symmetry_p.gif");
-		setButtonIcon(lineInputMirrorButton, "icon/mirror.gif", "icon/mirror_p.gif");
-		setButtonIcon(lineInputByValueButton, "icon/by_value.gif", "icon/by_value_p.gif");
-		setButtonIcon(lineInputAngleSnapButton, "icon/angle.gif", "icon/angle_p.gif");
+		setButtonIcon(lineInputDirectVButton, ButtonIcon.DIRECT_V);
+		setButtonIcon(lineInputOnVButton, ButtonIcon.ON_V);
+		setButtonIcon(lineInputPBisectorButton, ButtonIcon.PERPENDICULAR_BISECTOR);
+		setButtonIcon(lineInputAngleBisectorButton, ButtonIcon.BISECTOR);
+		setButtonIcon(lineInputTriangleSplitButton, ButtonIcon.TRIANGLE);
+		setButtonIcon(lineInputVerticalLineButton, ButtonIcon.VERTICAL);
+		setButtonIcon(lineInputSymmetricButton, ButtonIcon.SYMMETRIC);
+		setButtonIcon(lineInputMirrorButton, ButtonIcon.MIRROR);
+		setButtonIcon(lineInputByValueButton, ButtonIcon.BY_VALUE);
+		setButtonIcon(lineInputAngleSnapButton, ButtonIcon.ANGLE_SNAP);
 	}
 
-	private void setButtonIcon(final AbstractButton button, final String iconPath,
-			final String selectedIconPath) {
-		ImageResourceLoader imgLoader = new ImageResourceLoader();
-		button.setIcon(imgLoader.loadAsIcon(iconPath));
-		button.setSelectedIcon(imgLoader.loadAsIcon(selectedIconPath));
+	private void setButtonIcon(final AbstractButton button, final ButtonIcon icon) {
+		button.setIcon(icon.loadIcon());
+		button.setSelectedIcon(icon.loadSelectedIcon());
 	}
 
-	private void addActionListenersToComponents(final StateManager stateManager,
+	private void addActionListenersToComponents(final StateManagerInterface<EditMode> stateManager,
 			final MouseActionHolder actionHolder,
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {
