@@ -20,7 +20,7 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 	private final ArrayList<ActionListener> actions = new ArrayList<ActionListener>();
 
 	/**
-	 * A constructor which binds a group and actions.
+	 * A constructor which binds a group and actions to this state.
 	 *
 	 * @param group
 	 *            group identifier

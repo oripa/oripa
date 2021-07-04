@@ -117,6 +117,5 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 		}
 
 		super.performActions(e);
-
 	}
 }
