@@ -1,8 +1,7 @@
 package oripa.appstate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,11 +24,11 @@ public class StateManagerTest {
 		manager.push(deleteLineState);
 
 		assertEquals(deleteLineState, manager.getCurrent());
-		assertEquals(addVertexState, manager.pop());
+		assertEquals(addVertexState, manager.pop().get());
 
 		manager.push(deleteLineState);
 
-		assertEquals(inputState, manager.popLastInputCommand());
+		assertEquals(inputState, manager.popLastOf(EditMode.INPUT).get());
 
 		// copy(cut) state won't keep as previous state
 		var selectState = createMockedState(EditMode.SELECT);
@@ -41,7 +40,7 @@ public class StateManagerTest {
 
 		manager.push(deleteLineState);
 
-		assertEquals(selectState, manager.pop());
+		assertEquals(selectState, manager.pop().get());
 	}
 
 	private PaintBoundState createMockedState(final EditMode mode) {

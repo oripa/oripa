@@ -1,9 +1,6 @@
 package oripa.bind.state;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -3,26 +3,26 @@ package oripa.appstate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A template for grouped state.
- * 
+ *
  * @author koji
- * 
+ *
  * @param <GroupEnum>
  *            Enum of group identifier
  */
 public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 	private final GroupEnum group;
 
+	// This class doesn't need ActionEvent parameter but compatibility
+	// with ActionListner is convenient in some cases.
 	private final ArrayList<ActionListener> actions = new ArrayList<ActionListener>();
 
-	// TODO: use a class different from ActionListener which performs with no
-	// parameters.
-
 	/**
-	 * A constructor which binds a group and actions.
-	 * 
+	 * A constructor which binds a group and actions to this state.
+	 *
 	 * @param group
 	 *            group identifier
 	 * @param actions
@@ -42,15 +42,12 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 			return;
 		}
 
-		for (ActionListener action : actions) {
-			addAction(action);
-		}
-
+		List.of(actions).forEach(this::addAction);
 	}
 
 	/**
 	 * performs actions of this state.
-	 * 
+	 *
 	 * @param e
 	 */
 	public void performActions(final ActionEvent e) {
@@ -58,9 +55,7 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 			return;
 		}
 
-		for (ActionListener action : actions) {
-			action.actionPerformed(e);
-		}
+		actions.forEach(action -> action.actionPerformed(e));
 	}
 
 	@Override

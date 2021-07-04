@@ -12,14 +12,17 @@ import oripa.domain.paint.EditMode;
 import oripa.viewsetting.ChangeViewSetting;
 
 /**
- * A state when user is painting. This class performs: - state management
- * actions - switching view - switching painting action
+ * A state when user is painting. This class performs:
+ * <ul>
+ * <li>state management actions</li>
+ * <li>switching view</li>
+ * <li>switching painting action</li>
+ * </ul>
  *
  * @author koji
  *
  */
 public class PaintBoundState extends ApplicationState<EditMode> {
-	private final StateManagerInterface<EditMode> stateManager;
 	private Component parent;
 	private ErrorListener errorListener;
 
@@ -40,9 +43,8 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final ChangeViewSetting changeHint,
 			final ActionListener[] actions) {
 		super(editMode, actions);
-		this.stateManager = stateManager;
 
-		addBasicListeners(actionSetter, changeHint);
+		addBasicListeners(stateManager, actionSetter, changeHint);
 	}
 
 	/**
@@ -70,8 +72,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 
 		super(editMode, actions);
 
-		this.stateManager = stateManager;
-		addBasicListeners(actionSetter, changeHint);
+		addBasicListeners(stateManager, actionSetter, changeHint);
 
 		// set a listener to handle an error on performActions().
 		this.parent = parent;
@@ -79,6 +80,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	}
 
 	private void addBasicListeners(
+			final StateManagerInterface<EditMode> stateManager,
 			final PaintActionSetter actionSetter,
 			final ChangeViewSetting changeHint) {
 
@@ -115,6 +117,5 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 		}
 
 		super.performActions(e);
-
 	}
 }

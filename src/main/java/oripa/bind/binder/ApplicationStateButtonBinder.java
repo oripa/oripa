@@ -46,7 +46,7 @@ public class ApplicationStateButtonBinder
 		/*
 		 * add listeners
 		 */
-		button.addActionListener(event -> state.performActions(event));
+		button.addActionListener(state::performActions);
 
 		return button;
 	}

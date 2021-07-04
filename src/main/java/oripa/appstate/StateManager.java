@@ -1,17 +1,23 @@
 package oripa.appstate;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import oripa.domain.paint.EditMode;
 
 /**
- * Lazy implementation. This class partially supports the responsibility of
- * {@link #popLastOf(EditMode)} method.
+ * A simple implementation of {@link StateManagerInterface}. This object ignores
+ * {@link EditMode#COPY} and {@link EditMode#CUT} to handle line selection and
+ * pasting correctly.
  *
  * @author OUCHI Koji
  *
  */
 public class StateManager implements StateManagerInterface<EditMode> {
 
-	private ApplicationState<EditMode> current, lastInputCommand, previous;
+	private ApplicationState<EditMode> current, previous;
+	private final Map<EditMode, ApplicationState<EditMode>> lastCommands = new HashMap<>();
 
 	@Override
 	public ApplicationState<EditMode> getCurrent() {
@@ -20,11 +26,7 @@ public class StateManager implements StateManagerInterface<EditMode> {
 
 	@Override
 	public void push(final ApplicationState<EditMode> s) {
-
-		if (s.getGroup() == EditMode.INPUT) {
-			// keep for popLastInputCommand()
-			lastInputCommand = s;
-		}
+		lastCommands.put(s.getGroup(), s);
 
 		if (current != null) {
 			// pushing copy or cut causes empty pasting
@@ -37,47 +39,29 @@ public class StateManager implements StateManagerInterface<EditMode> {
 	}
 
 	@Override
-	public ApplicationState<EditMode> pop() {
+	public Optional<ApplicationState<EditMode>> pop() {
 		if (current == previous) {
-			return null;
+			return Optional.empty();
 		}
 
 		current = previous;
-		return current;
+		return Optional.of(current);
 	}
 
-	/**
-	 * Currently this method accepts INPUT only. the current state will be
-	 * dropped to previous state.
-	 *
-	 * @param group
-	 *            ID.
-	 * @return last state of the group. {@code null} if {@code group} is not
-	 *         {@code oripa.domain.paint.EditMode.INPUT}.
-	 */
 	@Override
-	public ApplicationState<EditMode> popLastOf(final EditMode group) {
-		if (group != EditMode.INPUT) {
-			return null;
+	public Optional<ApplicationState<EditMode>> popLastOf(final EditMode group) {
+		if (!lastCommands.containsKey(group)) {
+			return Optional.empty();
 		}
 
-		return popLastInputCommand();
-	}
-
-	/**
-	 * for the action of "input" radio button. the current state will be dropped
-	 * to previous state.
-	 *
-	 * @return state of the last input command
-	 */
-	ApplicationState<EditMode> popLastInputCommand() {
-		if (current == lastInputCommand) {
-			return null;
+		var lastCommand = lastCommands.get(group);
+		if (current == lastCommand) {
+			return Optional.empty();
 		}
+
 		previous = current;
-		current = lastInputCommand;
+		current = lastCommand;
 
-		return current;
+		return Optional.of(current);
 	}
-
 }

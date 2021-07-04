@@ -1,5 +1,7 @@
 package oripa.appstate;
 
+import java.util.Optional;
+
 /**
  * Implementation of this interface should hold current state and (only one)
  * previous state to help getting back.
@@ -23,9 +25,9 @@ public interface StateManagerInterface<GroupEnum> {
 	/**
 	 * Pops previous state. It will be set to current state.
 	 *
-	 * @return previous state. null if empty.
+	 * @return previous state. {@code empty} if previous state does not exist.
 	 */
-	public ApplicationState<GroupEnum> pop();
+	public Optional<ApplicationState<GroupEnum>> pop();
 
 	/**
 	 * Pops the last state of the given {@code group}. The current state will be
@@ -33,8 +35,8 @@ public interface StateManagerInterface<GroupEnum> {
 	 *
 	 * @param group
 	 *            ID.
-	 * @return last state of the group. {@code null} if {@code group} does not
+	 * @return last state of the group. {@code empty} if {@code group} does not
 	 *         have such a state.
 	 */
-	public ApplicationState<GroupEnum> popLastOf(GroupEnum group);
+	public Optional<ApplicationState<GroupEnum>> popLastOf(GroupEnum group);
 }
