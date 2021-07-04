@@ -57,9 +57,7 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 			return;
 		}
 
-		for (ActionListener action : actions) {
-			action.actionPerformed(e);
-		}
+		actions.forEach(action -> action.actionPerformed(e));
 	}
 
 	@Override
