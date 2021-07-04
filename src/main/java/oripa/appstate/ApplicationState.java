@@ -6,23 +6,22 @@ import java.util.ArrayList;
 
 /**
  * A template for grouped state.
- * 
+ *
  * @author koji
- * 
+ *
  * @param <GroupEnum>
  *            Enum of group identifier
  */
 public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 	private final GroupEnum group;
 
+	// This class doesn't need ActionEvent parameter but compatibility
+	// with ActionListner is convenient in some cases.
 	private final ArrayList<ActionListener> actions = new ArrayList<ActionListener>();
-
-	// TODO: use a class different from ActionListener which performs with no
-	// parameters.
 
 	/**
 	 * A constructor which binds a group and actions.
-	 * 
+	 *
 	 * @param group
 	 *            group identifier
 	 * @param actions
@@ -50,7 +49,7 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 
 	/**
 	 * performs actions of this state.
-	 * 
+	 *
 	 * @param e
 	 */
 	public void performActions(final ActionEvent e) {
