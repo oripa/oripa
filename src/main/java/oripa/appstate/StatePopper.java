@@ -15,13 +15,9 @@ public class StatePopper implements ActionListener {
 		this.stateManager = stateManager;
 	}
 
-	public ApplicationState<EditMode> pop() {
-		return stateManager.pop();
-	}
-
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		ApplicationState<EditMode> current = pop();
+		ApplicationState<EditMode> current = stateManager.pop();
 
 		if (current == null) {
 			return;
