@@ -2,6 +2,7 @@ package oripa.appstate;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +25,11 @@ public class CommandStatePopper implements ActionListener {
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		ApplicationState<EditMode> current = stateManager.popLastOf(editMode);
+		Optional<ApplicationState<EditMode>> currentOpt = stateManager.popLastOf(editMode);
 
-		logger.debug("pop {} command state: {}", editMode, current);
-
-		if (current == null) {
-			return;
-		}
-
-		current.performActions(e);
+		currentOpt.ifPresent(current -> {
+			logger.debug("pop {} command state: {}", editMode, current);
+			current.performActions(e);
+		});
 	}
 }

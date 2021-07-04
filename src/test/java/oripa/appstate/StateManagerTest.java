@@ -24,11 +24,11 @@ public class StateManagerTest {
 		manager.push(deleteLineState);
 
 		assertEquals(deleteLineState, manager.getCurrent());
-		assertEquals(addVertexState, manager.pop());
+		assertEquals(addVertexState, manager.pop().get());
 
 		manager.push(deleteLineState);
 
-		assertEquals(inputState, manager.popLastOf(EditMode.INPUT));
+		assertEquals(inputState, manager.popLastOf(EditMode.INPUT).get());
 
 		// copy(cut) state won't keep as previous state
 		var selectState = createMockedState(EditMode.SELECT);
@@ -40,7 +40,7 @@ public class StateManagerTest {
 
 		manager.push(deleteLineState);
 
-		assertEquals(selectState, manager.pop());
+		assertEquals(selectState, manager.pop().get());
 	}
 
 	private PaintBoundState createMockedState(final EditMode mode) {

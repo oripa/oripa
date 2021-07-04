@@ -2,6 +2,7 @@ package oripa.appstate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import oripa.domain.paint.EditMode;
 
@@ -38,29 +39,29 @@ public class StateManager implements StateManagerInterface<EditMode> {
 	}
 
 	@Override
-	public ApplicationState<EditMode> pop() {
+	public Optional<ApplicationState<EditMode>> pop() {
 		if (current == previous) {
-			return null;
+			return Optional.empty();
 		}
 
 		current = previous;
-		return current;
+		return Optional.of(current);
 	}
 
 	@Override
-	public ApplicationState<EditMode> popLastOf(final EditMode group) {
+	public Optional<ApplicationState<EditMode>> popLastOf(final EditMode group) {
 		if (!lastCommands.containsKey(group)) {
-			return null;
+			return Optional.empty();
 		}
 
 		var lastCommand = lastCommands.get(group);
 		if (current == lastCommand) {
-			return null;
+			return Optional.empty();
 		}
 
 		previous = current;
 		current = lastCommand;
 
-		return current;
+		return Optional.of(current);
 	}
 }

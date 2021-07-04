@@ -1,6 +1,7 @@
 package oripa.bind.state;
 
 import java.awt.geom.AffineTransform;
+import java.util.Optional;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManagerInterface;
@@ -45,10 +46,10 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	}
 
 	private void popPreviousState() {
-		ApplicationState<EditMode> prev = stateManager.pop();
+		Optional<ApplicationState<EditMode>> prevOpt = stateManager.pop();
 
-		prev.performActions(null);
-
+		// a case having switched copy to cut.
+		prevOpt.ifPresent(prev -> prev.performActions(null));
 	}
 
 }
