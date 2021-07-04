@@ -35,6 +35,7 @@ public abstract class AbstractButtonBinder<ToBeBound>
 			button = buttonClass.getConstructor().newInstance();
 		} catch (Exception e) {
 			logger.error("failed to create a button", e);
+			throw new RuntimeException("maybe arguments are wrong.", e);
 		}
 
 		/*
