@@ -3,6 +3,7 @@ package oripa.appstate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A template for grouped state.
@@ -41,10 +42,7 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 			return;
 		}
 
-		for (ActionListener action : actions) {
-			addAction(action);
-		}
-
+		List.of(actions).forEach(this::addAction);
 	}
 
 	/**
