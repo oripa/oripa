@@ -684,8 +684,7 @@ public class UIPanel extends JPanel {
 	 */
 	private void setShortcut(final AbstractButton button, final KeyStroke keyStroke,
 			final String id) {
-		button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
-		button.getActionMap().put(id, new AbstractAction(button.getText()) {
+		setShortcut(button, keyStroke, id, new AbstractAction(button.getText()) {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				button.doClick();
@@ -727,8 +726,7 @@ public class UIPanel extends JPanel {
 	private void setToolSettingGlobalShortcut(final JRadioButton toolButton,
 			final AbstractButton settingButton, final KeyStroke keyStroke,
 			final String id) {
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
-		this.getActionMap().put(id, new AbstractAction() {
+		setShortcut(this, keyStroke, id, new AbstractAction() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				if (!toolButton.isSelected()) {
@@ -739,6 +737,12 @@ public class UIPanel extends JPanel {
 		});
 		settingButton.setToolTipText(resources.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID)
 				+ keyStroke.toString().split(" ")[1]);
+	}
+
+	private void setShortcut(final JComponent focusTarget, final KeyStroke keyStroke,
+			final String id, final Action action) {
+		focusTarget.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
+		focusTarget.getActionMap().put(id, action);
 	}
 
 	private void setButtonIcons() {
