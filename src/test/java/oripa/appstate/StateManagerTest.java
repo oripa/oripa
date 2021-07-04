@@ -1,8 +1,7 @@
 package oripa.appstate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +28,7 @@ public class StateManagerTest {
 
 		manager.push(deleteLineState);
 
-		assertEquals(inputState, manager.popLastInputCommand());
+		assertEquals(inputState, manager.popLastOf(EditMode.INPUT));
 
 		// copy(cut) state won't keep as previous state
 		var selectState = createMockedState(EditMode.SELECT);
