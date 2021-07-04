@@ -8,27 +8,25 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.EditMode;
 
-public class InputCommandStatePopper implements ActionListener {
-	private static final Logger logger = LoggerFactory.getLogger(InputCommandStatePopper.class);
+public class CommandStatePopper implements ActionListener {
+	private static final Logger logger = LoggerFactory.getLogger(CommandStatePopper.class);
 
 	private final StateManagerInterface<EditMode> stateManager;
+	private final EditMode editMode;
 
 	/**
 	 * Constructor
 	 */
-	public InputCommandStatePopper(final StateManagerInterface<EditMode> stateManager) {
+	public CommandStatePopper(final StateManagerInterface<EditMode> stateManager, final EditMode editMode) {
 		this.stateManager = stateManager;
-	}
-
-	public ApplicationState<EditMode> pop() {
-		return stateManager.popLastOf(EditMode.INPUT);
+		this.editMode = editMode;
 	}
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		ApplicationState<EditMode> current = pop();
+		ApplicationState<EditMode> current = stateManager.popLastOf(editMode);
 
-		logger.debug("pop input command state: " + current);
+		logger.debug("pop {} command state: {}", editMode, current);
 
 		if (current == null) {
 			return;

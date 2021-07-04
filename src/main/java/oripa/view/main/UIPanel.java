@@ -38,7 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.main.OrigamiModelInteractiveBuilder;
-import oripa.appstate.InputCommandStatePopper;
+import oripa.appstate.CommandStatePopper;
 import oripa.appstate.StateManagerInterface;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
@@ -773,7 +773,7 @@ public class UIPanel extends JPanel {
 
 		// edit mode line input radio button
 		editModeInputLineButton
-				.addActionListener(new InputCommandStatePopper(stateManager));
+				.addActionListener(new CommandStatePopper(stateManager, EditMode.INPUT));
 
 		// change line type tool
 		alterLineComboFrom.addItemListener(new FromLineTypeItemListener(setting));
