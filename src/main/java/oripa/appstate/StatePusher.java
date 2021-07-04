@@ -9,6 +9,12 @@ import org.slf4j.LoggerFactory;
 import oripa.bind.state.PaintBoundState;
 import oripa.domain.paint.EditMode;
 
+/**
+ * An action listener which pushes given state into a state manager.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public class StatePusher implements ActionListener {
 	private static final Logger logger = LoggerFactory.getLogger(StatePusher.class);
 

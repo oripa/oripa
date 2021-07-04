@@ -6,6 +6,12 @@ import java.util.Optional;
 
 import oripa.domain.paint.EditMode;
 
+/**
+ * An action listener which pops the last state from given state manager.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public class StatePopper implements ActionListener {
 	private final StateManager stateManager;
 

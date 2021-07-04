@@ -9,6 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.EditMode;
 
+/**
+ * An action listener which pops the last command's state of given edit mode.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public class CommandStatePopper implements ActionListener {
 	private static final Logger logger = LoggerFactory.getLogger(CommandStatePopper.class);
 
