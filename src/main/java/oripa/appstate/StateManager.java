@@ -3,10 +3,10 @@ package oripa.appstate;
 import oripa.domain.paint.EditMode;
 
 /**
- * This class holds current state and (only one) previous state to help getting
- * back.
+ * Lazy implementation. This class partially supports the responsibility of
+ * {@link #popLastOf(EditMode)} method.
  *
- * @author koji
+ * @author OUCHI Koji
  *
  */
 public class StateManager implements StateManagerInterface<EditMode> {
@@ -18,13 +18,6 @@ public class StateManager implements StateManagerInterface<EditMode> {
 		return current;
 	}
 
-	/**
-	 * push {@code s} as a new state to be held. the current state will be
-	 * dropped to previous state.
-	 *
-	 * @param s
-	 *            new state
-	 */
 	@Override
 	public void push(final ApplicationState<EditMode> s) {
 
@@ -43,11 +36,6 @@ public class StateManager implements StateManagerInterface<EditMode> {
 		current = s;
 	}
 
-	/**
-	 * pop previous state. It will be set to current state.
-	 *
-	 * @return previous state. null if empty.
-	 */
 	@Override
 	public ApplicationState<EditMode> pop() {
 		if (current == previous) {
@@ -59,8 +47,8 @@ public class StateManager implements StateManagerInterface<EditMode> {
 	}
 
 	/**
-	 * This method accepts INPUT only. the current state will be dropped to
-	 * previous state.
+	 * Currently this method accepts INPUT only. the current state will be
+	 * dropped to previous state.
 	 *
 	 * @param group
 	 *            ID.
@@ -74,7 +62,6 @@ public class StateManager implements StateManagerInterface<EditMode> {
 		}
 
 		return popLastInputCommand();
-
 	}
 
 	/**
@@ -83,7 +70,7 @@ public class StateManager implements StateManagerInterface<EditMode> {
 	 *
 	 * @return state of the last input command
 	 */
-	public ApplicationState<EditMode> popLastInputCommand() {
+	ApplicationState<EditMode> popLastInputCommand() {
 		if (current == lastInputCommand) {
 			return null;
 		}

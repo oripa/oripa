@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.application.main.OrigamiModelInteractiveBuilder;
 import oripa.appstate.InputCommandStatePopper;
-import oripa.appstate.StateManager;
+import oripa.appstate.StateManagerInterface;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.binder.BinderInterface;
@@ -60,6 +60,7 @@ import oripa.domain.fold.subface.ParentFacesCollector;
 import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.domain.paint.AngleStep;
+import oripa.domain.paint.EditMode;
 import oripa.domain.paint.InitialVisibilities;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
@@ -215,7 +216,7 @@ public class UIPanel extends JPanel {
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
 	public UIPanel(
-			final StateManager stateManager,
+			final StateManagerInterface<EditMode> stateManager,
 			final ViewScreenUpdater screenUpdater,
 			final MouseActionHolder actionHolder,
 			final PaintContextInterface aContext,
@@ -557,7 +558,7 @@ public class UIPanel extends JPanel {
 		return border;
 	}
 
-	private void constructButtons(final StateManager stateManager,
+	private void constructButtons(final StateManagerInterface<EditMode> stateManager,
 			final MouseActionHolder actionHolder,
 			final MainFrameSetting mainFrameSetting,
 			final MainScreenSetting mainScreenSetting) {
@@ -763,7 +764,7 @@ public class UIPanel extends JPanel {
 		button.setSelectedIcon(icon.loadSelectedIcon());
 	}
 
-	private void addActionListenersToComponents(final StateManager stateManager,
+	private void addActionListenersToComponents(final StateManagerInterface<EditMode> stateManager,
 			final MouseActionHolder actionHolder,
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {

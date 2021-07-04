@@ -7,14 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.bind.state.PaintBoundState;
+import oripa.domain.paint.EditMode;
 
 public class StatePusher implements ActionListener {
 	private static final Logger logger = LoggerFactory.getLogger(StatePusher.class);
 
-	private final StateManager stateManager;
+	private final StateManagerInterface<EditMode> stateManager;
 	private final PaintBoundState state;
 
-	public StatePusher(final PaintBoundState s, final StateManager stateManager) {
+	public StatePusher(final PaintBoundState s, final StateManagerInterface<EditMode> stateManager) {
 		state = s;
 		this.stateManager = stateManager;
 	}
