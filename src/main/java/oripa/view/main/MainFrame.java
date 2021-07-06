@@ -215,6 +215,9 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		var originHolder = screenSetting.getSelectionOriginHolder();
 
+		// this has to be done before instantiation of UI panel.
+		addHintPropertyChangeListenersToSetting();
+
 		UIPanel uiPanel = null;
 		logger.info("start constructing UI panel.");
 		try {
@@ -224,6 +227,9 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			uiPanel.setChildFrameManager(childFrameManager);
 		} catch (RuntimeException ex) {
 			logger.error("UI panel construction failed", ex);
+			Dialogs.showErrorDialog(
+					this, resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), ex);
+			System.exit(1);
 		}
 		logger.info("end constructing UI panel.");
 
@@ -256,7 +262,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				.getImage());
 
 		addWindowListener(this);
-		addHintPropertyChangeListenersToSetting();
 
 		loadIniFile();
 
