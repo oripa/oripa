@@ -31,7 +31,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -52,6 +51,7 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.geometry.NearestVertexFinder;
 import oripa.domain.paint.util.ElementSelector;
+import oripa.domain.paint.util.GraphicItemConverter;
 import oripa.geom.RectangleDomain;
 import oripa.resource.Constants;
 import oripa.util.gui.AffineCamera;
@@ -249,7 +249,7 @@ public class FoldabilityScreen extends JPanel
 			g2d.setColor(selector.getOverlappingLineHighlightColor());
 			g2d.setStroke(selector.createOverlappingLineHighlightStroke(camera.getScale()));
 
-			g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
+			g2d.draw(GraphicItemConverter.toLine2D(line));
 		}
 	}
 

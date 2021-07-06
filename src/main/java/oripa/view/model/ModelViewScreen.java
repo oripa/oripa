@@ -47,6 +47,7 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.paint.util.GraphicItemConverter;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
@@ -203,8 +204,7 @@ public class ModelViewScreen extends JPanel
 			g2d.setStroke(selector.createScissorsLineStrokeForModelView(scale));
 			g2d.setColor(selector.getScissorsLineColorForModelView());
 
-			g2d.draw(new Line2D.Double(scissorsLine.p0.x, scissorsLine.p0.y, scissorsLine.p1.x,
-					scissorsLine.p1.y));
+			g2d.draw(GraphicItemConverter.toLine2D(scissorsLine));
 		}
 	}
 

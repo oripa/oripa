@@ -16,6 +16,7 @@ import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.domain.paint.util.ElementSelector;
+import oripa.domain.paint.util.GraphicItemConverter;
 import oripa.value.OriLine;
 
 public abstract class GraphicMouseAction implements GraphicMouseActionInterface {
@@ -244,14 +245,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected void drawLine(final Graphics2D g2d, final OriLine line) {
-		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y,
-				line.p1.x, line.p1.y));
+		g2d.draw(GraphicItemConverter.toLine2D(line));
 
 	}
 
 	protected void drawLine(final Graphics2D g2d, final Vector2d p0, final Vector2d p1) {
-		g2d.draw(new Line2D.Double(p0.x, p0.y,
-				p1.x, p1.y));
+		g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
 
 	}
 

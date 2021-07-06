@@ -29,6 +29,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.util.ElementSelector;
+import oripa.domain.paint.util.GraphicItemConverter;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
@@ -156,8 +157,7 @@ public class CreasePatternGraphicDrawer {
 		g2d.setStroke(selector.createStroke(
 				line.getType(), scale, zeroLineWidth));
 
-		g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x,
-				line.p1.y));
+		g2d.draw(GraphicItemConverter.toLine2D(line));
 	}
 
 	/**

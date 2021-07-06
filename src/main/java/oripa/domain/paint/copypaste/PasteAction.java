@@ -2,7 +2,6 @@ package oripa.domain.paint.copypaste;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 import javax.vecmath.Vector2d;
@@ -13,6 +12,7 @@ import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.domain.paint.geometry.NearestVertexFinder;
+import oripa.domain.paint.util.GraphicItemConverter;
 import oripa.value.OriLine;
 
 public class PasteAction extends GraphicMouseAction {
@@ -120,19 +120,8 @@ public class PasteAction extends GraphicMouseAction {
 		// shift and draw the lines to be pasted.
 		for (OriLine l : context.getPickedLines()) {
 			var shifted = factory.createShiftedLine(l, offset.x, offset.y);
-			g2d.draw(toLine2D(shifted));
+			g2d.draw(GraphicItemConverter.toLine2D(shifted));
 		}
-	}
-
-	private Line2D.Double toLine2D(final OriLine line) {
-		var g2dLine = new Line2D.Double();
-		g2dLine.x1 = line.p0.x;
-		g2dLine.y1 = line.p0.y;
-
-		g2dLine.x2 = line.p1.x;
-		g2dLine.y2 = line.p1.y;
-
-		return g2dLine;
 	}
 
 	@Override
