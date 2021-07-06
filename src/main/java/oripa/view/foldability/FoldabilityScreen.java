@@ -32,7 +32,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -158,9 +157,8 @@ public class FoldabilityScreen extends JPanel
 			double vertexSize = selector.createViolatingVertexSize(scale);
 			double vertexHalfSize = vertexSize / 2;
 			var position = v.getPositionBeforeFolding();
-			g2d.fill(new Rectangle2D.Double(
-					position.x - vertexHalfSize, position.y - vertexHalfSize,
-					vertexSize, vertexSize));
+			g2d.fill(GraphicItemConverter.toRectangle2D(
+					position, vertexSize));
 		}
 
 		if (bDrawFaceID) {

@@ -21,7 +21,6 @@ package oripa.domain.paint;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -219,10 +218,8 @@ public class CreasePatternGraphicDrawer {
 	 *            the size of vertex.
 	 */
 	private void drawVertex(final Graphics2D g2d, final Vector2d vertex, final double vertexSize) {
-		final double vertexHalfSize = vertexSize / 2;
-		g2d.fill(new Rectangle2D.Double(
-				vertex.x - vertexHalfSize, vertex.y - vertexHalfSize,
-				vertexSize, vertexSize));
+		g2d.fill(GraphicItemConverter.toRectangle2D(
+				vertex, vertexSize));
 	}
 
 	/**

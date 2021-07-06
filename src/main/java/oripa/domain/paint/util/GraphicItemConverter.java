@@ -19,6 +19,7 @@
 package oripa.domain.paint.util;
 
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.vecmath.Vector2d;
 
@@ -42,5 +43,12 @@ public class GraphicItemConverter {
 
 	public static Line2D.Double toLine2D(final Vector2d p0, final Vector2d p1) {
 		return new Line2D.Double(p0.x, p0.y, p1.x, p1.y);
+	}
+
+	public static Rectangle2D.Double toRectangle2D(final Vector2d vertex, final double vertexSize) {
+		final double vertexHalfSize = vertexSize / 2;
+		return new Rectangle2D.Double(
+				vertex.x - vertexHalfSize, vertex.y - vertexHalfSize,
+				vertexSize, vertexSize);
 	}
 }

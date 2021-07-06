@@ -103,12 +103,9 @@ public class PasteAction extends GraphicMouseAction {
 			return;
 		}
 
-		double ox = origin.x;
-		double oy = origin.y;
-
 		var selector = getElementSelector();
 		g2d.setColor(selector.getSelectedItemColor());
-		drawVertex(g2d, context, ox, oy);
+		drawVertex(g2d, context, origin);
 
 		var candidateVertex = context.getCandidateVertexToPick();
 

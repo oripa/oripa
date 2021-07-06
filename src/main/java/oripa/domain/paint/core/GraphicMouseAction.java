@@ -3,7 +3,6 @@ package oripa.domain.paint.core;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 import javax.vecmath.Vector2d;
 
@@ -211,27 +210,19 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			g2d.setColor(selector
 					.getColor(lineType));
 
-			drawVertex(g2d, context, vertex.x, vertex.y);
+			drawVertex(g2d, context, vertex);
 		}
 	}
 
 	/**
-	 * draw a picked vertex as an small rectangle at (x, y)
-	 *
-	 * @param g2d
-	 * @param context
-	 * @param x
-	 * @param y
+	 * Draws the given vertex as an small rectangle.
 	 */
 	protected void drawVertex(final Graphics2D g2d, final PaintContextInterface context,
-			final double x, final double y) {
+			final Vector2d vertex) {
 		double scale = context.getScale();
 		double vertexSize = selector.createMouseActionVertexSize(scale);
-		double vertexHalfSize = vertexSize / 2;
 
-		g2d.fill(new Rectangle2D.Double(
-				x - vertexHalfSize, y - vertexHalfSize,
-				vertexSize, vertexSize));
+		g2d.fill(GraphicItemConverter.toRectangle2D(vertex, vertexSize));
 	}
 
 	protected void drawPickCandidateVertex(final Graphics2D g2d,
@@ -239,7 +230,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		Vector2d candidate = context.getCandidateVertexToPick();
 		if (candidate != null) {
 			g2d.setColor(selector.getCandidateItemColor());
-			drawVertex(g2d, context, candidate.x, candidate.y);
+			drawVertex(g2d, context, candidate);
 		}
 	}
 
