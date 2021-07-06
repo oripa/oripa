@@ -2,7 +2,6 @@ package oripa.domain.paint.core;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -250,7 +249,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected void drawLine(final Graphics2D g2d, final Vector2d p0, final Vector2d p1) {
-		g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
+		g2d.draw(GraphicItemConverter.toLine2D(p0, p1));
 
 	}
 

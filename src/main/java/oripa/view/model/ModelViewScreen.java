@@ -32,7 +32,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.List;
 
@@ -194,8 +193,7 @@ public class ModelViewScreen extends JPanel
 				}
 				var position = he.getPositionForDisplay();
 				var nextPosition = he.getNext().getPositionForDisplay();
-				g2d.draw(new Line2D.Double(position.x, position.y,
-						nextPosition.x, nextPosition.y));
+				g2d.draw(GraphicItemConverter.toLine2D(position, nextPosition));
 			});
 		}
 

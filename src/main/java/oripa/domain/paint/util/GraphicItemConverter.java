@@ -20,6 +20,8 @@ package oripa.domain.paint.util;
 
 import java.awt.geom.Line2D;
 
+import javax.vecmath.Vector2d;
+
 import oripa.value.OriLine;
 
 /**
@@ -38,4 +40,7 @@ public class GraphicItemConverter {
 		return g2dLine;
 	}
 
+	public static Line2D.Double toLine2D(final Vector2d p0, final Vector2d p1) {
+		return new Line2D.Double(p0.x, p0.y, p1.x, p1.y);
+	}
 }
