@@ -149,7 +149,7 @@ public class UIPanelSetting implements TypeForChangeGettable {
 	}
 
 	private void setSelectedMode(final EditMode mode) {
-		logger.info("set selectd mode to: " + mode.name());
+		logger.info("set selected mode to: " + mode.name());
 		var old = selectedMode;
 		selectedMode = mode;
 		support.firePropertyChange(SELECTED_MODE, old, mode);
