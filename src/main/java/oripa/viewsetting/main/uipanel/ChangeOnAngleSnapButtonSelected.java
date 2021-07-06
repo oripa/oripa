@@ -21,11 +21,6 @@ public class ChangeOnAngleSnapButtonSelected implements ChangeViewSetting {
 		setting.setAngleStepPanelVisible(true);
 
 		setting.setAlterLineTypePanelVisible(false);
-
-		setting.setMountainButtonEnabled(true);
-		setting.setValleyButtonEnabled(true);
-		setting.setAuxButtonEnabled(true);
-
 	}
 
 }

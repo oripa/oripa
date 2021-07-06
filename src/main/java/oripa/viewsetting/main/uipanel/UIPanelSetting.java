@@ -28,15 +28,6 @@ public class UIPanelSetting implements TypeForChangeGettable {
 	private boolean angleStepPanelVisible = false;
 	public static final String ANGLE_STEP_PANEL_VISIBLE = "angle step panel visible";
 
-	private boolean mountainButtonEnabled = true;
-	public static final String MOUNTAIN_BUTTON_ENABLED = "mountain button enabled";
-
-	private boolean valleyButtonEnabled = true;
-	public static final String VALLEY_BUTTON_ENABLED = "valley button enabled";
-
-	private boolean auxButtonEnabled = true;
-	public static final String AUX_BUTTON_ENABLED = "aux button enabled";
-
 	private EditMode selectedMode = EditMode.NONE;
 	public static final String SELECTED_MODE = "selected mode";
 
@@ -87,18 +78,6 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		return angleStepPanelVisible;
 	}
 
-	public boolean isMountainButtonEnabled() {
-		return mountainButtonEnabled;
-	}
-
-	public boolean isValleyButtonEnabled() {
-		return valleyButtonEnabled;
-	}
-
-	public boolean isAuxButtonEnabled() {
-		return auxButtonEnabled;
-	}
-
 	public void setByValuePanelVisible(final boolean byValuePanelVisible) {
 		logger.info("set by-value panel visible: " + byValuePanelVisible);
 		var old = this.byValuePanelVisible;
@@ -125,27 +104,6 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		var old = this.angleStepPanelVisible;
 		this.angleStepPanelVisible = angleStepVisible;
 		support.firePropertyChange(ANGLE_STEP_PANEL_VISIBLE, old, angleStepVisible);
-	}
-
-	public void setMountainButtonEnabled(final boolean mountainButtonEnabled) {
-		logger.info("set mountain radio button enabled: " + mountainButtonEnabled);
-		var old = this.mountainButtonEnabled;
-		this.mountainButtonEnabled = mountainButtonEnabled;
-		support.firePropertyChange(MOUNTAIN_BUTTON_ENABLED, old, mountainButtonEnabled);
-	}
-
-	public void setValleyButtonEnabled(final boolean valleyButtonEnabled) {
-		logger.info("set valley radio button enabled: " + valleyButtonEnabled);
-		var old = this.valleyButtonEnabled;
-		this.valleyButtonEnabled = valleyButtonEnabled;
-		support.firePropertyChange(VALLEY_BUTTON_ENABLED, old, valleyButtonEnabled);
-	}
-
-	public void setAuxButtonEnabled(final boolean auxButtonEnabled) {
-		logger.info("set aux radio button enabled: " + auxButtonEnabled);
-		var old = this.auxButtonEnabled;
-		this.auxButtonEnabled = auxButtonEnabled;
-		support.firePropertyChange(AUX_BUTTON_ENABLED, old, auxButtonEnabled);
 	}
 
 	private void setSelectedMode(final EditMode mode) {

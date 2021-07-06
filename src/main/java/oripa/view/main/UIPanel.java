@@ -1045,18 +1045,6 @@ public class UIPanel extends JPanel {
 				e -> lineInputPanel.setVisible((boolean) e.getNewValue()));
 
 		setting.addPropertyChangeListener(
-				UIPanelSetting.MOUNTAIN_BUTTON_ENABLED,
-				e -> lineTypeMountainButton.setEnabled((boolean) e.getNewValue()));
-
-		setting.addPropertyChangeListener(
-				UIPanelSetting.VALLEY_BUTTON_ENABLED,
-				e -> lineTypeValleyButton.setEnabled((boolean) e.getNewValue()));
-
-		setting.addPropertyChangeListener(
-				UIPanelSetting.AUX_BUTTON_ENABLED,
-				e -> lineTypeAuxButton.setEnabled((boolean) e.getNewValue()));
-
-		setting.addPropertyChangeListener(
 				UIPanelSetting.ANGLE_STEP_PANEL_VISIBLE,
 				e -> angleStepComboPanel.setVisible((boolean) e.getNewValue()));
 	}

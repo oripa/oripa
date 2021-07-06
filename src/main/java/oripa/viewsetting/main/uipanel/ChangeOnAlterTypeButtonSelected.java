@@ -20,11 +20,6 @@ public class ChangeOnAlterTypeButtonSelected implements ChangeViewSetting {
 		setting.setAngleStepPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(true);
-
-		setting.setMountainButtonEnabled(false);
-		setting.setValleyButtonEnabled(false);
-		setting.setAuxButtonEnabled(false);
-
 	}
 
 }
