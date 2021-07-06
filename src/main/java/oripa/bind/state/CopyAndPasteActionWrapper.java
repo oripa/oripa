@@ -43,10 +43,8 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	@Override
 	public void onRightClick(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
-
 		Optional<ApplicationState<EditMode>> prevOpt = stateManager.pop();
 
-		// a case having switched copy to cut.
 		prevOpt.ifPresent(prev -> prev.performActions(null));
 	}
 
