@@ -46,19 +46,14 @@ import oripa.bind.binder.BinderInterface;
 import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.bind.state.action.PaintActionSetterFactory;
-import oripa.domain.cptool.LineAdder;
 import oripa.domain.cptool.TypeForChange;
-import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.Folder;
+import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.domain.fold.subface.FacesToCreasePatternConverter;
-import oripa.domain.fold.subface.ParentFacesCollector;
-import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
-import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.InitialVisibilities;
@@ -916,14 +911,8 @@ public class UIPanel extends JPanel {
 			final MainScreenSetting mainScreenSetting) {
 		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
 
-		Folder folder = new Folder(
-				new SubFacesFactory(
-						new FacesToCreasePatternConverter(
-								new CreasePatternFactory(),
-								new LineAdder()),
-						new OrigamiModelFactory(),
-						new SplitFacesToSubFacesConverter(),
-						new ParentFacesCollector()));
+		var folderFactory = new FolderFactory();
+		Folder folder = folderFactory.create();
 
 		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
 		var checker = new FoldabilityChecker();
