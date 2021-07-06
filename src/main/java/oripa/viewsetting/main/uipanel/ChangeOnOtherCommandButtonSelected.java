@@ -19,10 +19,6 @@ public class ChangeOnOtherCommandButtonSelected implements ChangeViewSetting {
 		setting.setAngleStepPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(false);
-
-		setting.setMountainButtonEnabled(false);
-		setting.setValleyButtonEnabled(false);
-		setting.setAuxButtonEnabled(false);
 	}
 
 }

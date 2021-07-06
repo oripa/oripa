@@ -21,11 +21,6 @@ public class ChangeOnPaintInputButtonSelected implements ChangeViewSetting {
 		setting.setAngleStepPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(false);
-
-		setting.setMountainButtonEnabled(true);
-		setting.setValleyButtonEnabled(true);
-		setting.setAuxButtonEnabled(true);
-
 	}
 
 }
