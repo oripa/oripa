@@ -23,6 +23,10 @@ import javax.vecmath.Vector2d;
 import oripa.value.OriLine;
 
 /**
+ * An interface for drawing on view. This encapsulates the detail of view
+ * framework and implementation. Implementation of this interface is expected to
+ * be outside of domain package.
+ *
  * @author OUCHI Koji
  *
  */
