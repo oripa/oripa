@@ -41,6 +41,7 @@ import oripa.value.OriLine;
 public class CreasePatternGraphicDrawer {
 
 	private final ElementSelector selector = new ElementSelector();
+	private final GraphicItemConverter converter = new GraphicItemConverter();
 
 	/**
 	 * draws crease pattern according to the context of user interaction.
@@ -156,7 +157,7 @@ public class CreasePatternGraphicDrawer {
 		g2d.setStroke(selector.createStroke(
 				line.getType(), scale, zeroLineWidth));
 
-		g2d.draw(GraphicItemConverter.toLine2D(line));
+		g2d.draw(converter.toLine2D(line));
 	}
 
 	/**
@@ -218,7 +219,7 @@ public class CreasePatternGraphicDrawer {
 	 *            the size of vertex.
 	 */
 	private void drawVertex(final Graphics2D g2d, final Vector2d vertex, final double vertexSize) {
-		g2d.fill(GraphicItemConverter.toRectangle2D(
+		g2d.fill(converter.toRectangle2D(
 				vertex, vertexSize));
 	}
 

@@ -81,6 +81,7 @@ public class ModelViewScreen extends JPanel
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
 	private final ElementSelector selector = new ElementSelector();
+	private final GraphicItemConverter converter = new GraphicItemConverter();
 
 	private OrigamiModel origamiModel = null;
 	private final CutModelOutlinesHolder lineHolder;
@@ -193,7 +194,7 @@ public class ModelViewScreen extends JPanel
 				}
 				var position = he.getPositionForDisplay();
 				var nextPosition = he.getNext().getPositionForDisplay();
-				g2d.draw(GraphicItemConverter.toLine2D(position, nextPosition));
+				g2d.draw(converter.toLine2D(position, nextPosition));
 			});
 		}
 
@@ -202,7 +203,7 @@ public class ModelViewScreen extends JPanel
 			g2d.setStroke(selector.createScissorsLineStrokeForModelView(scale));
 			g2d.setColor(selector.getScissorsLineColorForModelView());
 
-			g2d.draw(GraphicItemConverter.toLine2D(scissorsLine));
+			g2d.draw(converter.toLine2D(scissorsLine));
 		}
 	}
 

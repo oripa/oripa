@@ -87,6 +87,7 @@ public class FoldabilityScreen extends JPanel
 	private Point2D preMousePoint; // Screen coordinates
 
 	private final ElementSelector selector = new ElementSelector();
+	private final GraphicItemConverter converter = new GraphicItemConverter();
 	private boolean zeroLineWidth = false;
 
 	FoldabilityScreen() {
@@ -155,9 +156,8 @@ public class FoldabilityScreen extends JPanel
 		for (OriVertex v : violatingVertices) {
 			double scale = camera.getScale();
 			double vertexSize = selector.createViolatingVertexSize(scale);
-			double vertexHalfSize = vertexSize / 2;
 			var position = v.getPositionBeforeFolding();
-			g2d.fill(GraphicItemConverter.toRectangle2D(
+			g2d.fill(converter.toRectangle2D(
 					position, vertexSize));
 		}
 
@@ -247,7 +247,7 @@ public class FoldabilityScreen extends JPanel
 			g2d.setColor(selector.getOverlappingLineHighlightColor());
 			g2d.setStroke(selector.createOverlappingLineHighlightStroke(camera.getScale()));
 
-			g2d.draw(GraphicItemConverter.toLine2D(line));
+			g2d.draw(converter.toLine2D(line));
 		}
 	}
 

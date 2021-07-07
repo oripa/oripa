@@ -3,7 +3,6 @@ package oripa.domain.paint.core;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -86,12 +85,8 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 			var selector = getElementSelector();
 			g2d.setStroke(selector.createAreaSelectionStroke(context.getScale()));
 			g2d.setColor(selector.getAreaSelectionColor());
-			double sx = Math.min(startPoint.x, draggingPoint.x);
-			double sy = Math.min(startPoint.y, draggingPoint.y);
-			double w = Math.abs(startPoint.x - draggingPoint.x);
-			double h = Math.abs(startPoint.y - draggingPoint.y);
-			g2d.draw(new Rectangle2D.Double(sx, sy, w, h));
 
+			g2d.draw(getGraphicItemConverter().toRectangle2D(startPoint, draggingPoint));
 		}
 
 	}

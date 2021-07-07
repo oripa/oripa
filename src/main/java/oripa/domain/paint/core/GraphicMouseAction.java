@@ -26,6 +26,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	private ActionState state;
 
 	private final ElementSelector selector = new ElementSelector();
+	private final GraphicItemConverter converter = new GraphicItemConverter();
 
 	protected final void setActionState(final ActionState state) {
 		this.state = state;
@@ -192,6 +193,10 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		return selector;
 	}
 
+	protected GraphicItemConverter getGraphicItemConverter() {
+		return converter;
+	}
+
 	private void drawPickedLines(final Graphics2D g2d, final PaintContextInterface context) {
 		for (OriLine line : context.getPickedLines()) {
 			g2d.setColor(selector.getSelectedItemColor());
@@ -207,8 +212,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			final PaintContextInterface context, final OriLine.Type lineType) {
 
 		for (Vector2d vertex : context.getPickedVertices()) {
-			g2d.setColor(selector
-					.getColor(lineType));
+			g2d.setColor(selector.getColor(lineType));
 
 			drawVertex(g2d, context, vertex);
 		}
@@ -222,7 +226,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		double scale = context.getScale();
 		double vertexSize = selector.createMouseActionVertexSize(scale);
 
-		g2d.fill(GraphicItemConverter.toRectangle2D(vertex, vertexSize));
+		g2d.fill(converter.toRectangle2D(vertex, vertexSize));
 	}
 
 	protected void drawPickCandidateVertex(final Graphics2D g2d,
@@ -235,12 +239,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected void drawLine(final Graphics2D g2d, final OriLine line) {
-		g2d.draw(GraphicItemConverter.toLine2D(line));
+		g2d.draw(converter.toLine2D(line));
 
 	}
 
 	protected void drawLine(final Graphics2D g2d, final Vector2d p0, final Vector2d p1) {
-		g2d.draw(GraphicItemConverter.toLine2D(p0, p1));
+		g2d.draw(converter.toLine2D(p0, p1));
 
 	}
 

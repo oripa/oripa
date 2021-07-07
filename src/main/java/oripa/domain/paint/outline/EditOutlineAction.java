@@ -11,7 +11,6 @@ import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.domain.paint.util.GraphicItemConverter;
 import oripa.domain.paint.util.PairLoop;
 
 public class EditOutlineAction extends GraphicMouseAction {
@@ -31,7 +30,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 		if (outlineVertices.size() > 1) {
 			PairLoop.iterateWithCount(
 					outlineVertices, outlineVertices.size() - 1, (p0, p1) -> {
-						g2d.draw(GraphicItemConverter.toLine2D(p0, p1));
+						g2d.draw(getGraphicItemConverter().toLine2D(p0, p1));
 						return true;
 					});
 		}
@@ -56,8 +55,8 @@ public class EditOutlineAction extends GraphicMouseAction {
 					? new Vector2d(context.getLogicalMousePoint().getX(),
 							context.getLogicalMousePoint().getY())
 					: context.getCandidateVertexToPick();
-			g2d.draw(GraphicItemConverter.toLine2D(outlinevertices.get(0), cv));
-			g2d.draw(GraphicItemConverter.toLine2D(outlinevertices.get(outlineVnum - 1), cv));
+			g2d.draw(getGraphicItemConverter().toLine2D(outlinevertices.get(0), cv));
+			g2d.draw(getGraphicItemConverter().toLine2D(outlinevertices.get(outlineVnum - 1), cv));
 		}
 
 	}

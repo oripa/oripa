@@ -19,6 +19,7 @@
 package oripa.domain.paint.util;
 
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.vecmath.Vector2d;
@@ -30,7 +31,7 @@ import oripa.value.OriLine;
  *
  */
 public class GraphicItemConverter {
-	public static Line2D.Double toLine2D(final OriLine line) {
+	public Line2D.Double toLine2D(final OriLine line) {
 		var g2dLine = new Line2D.Double();
 		g2dLine.x1 = line.p0.x;
 		g2dLine.y1 = line.p0.y;
@@ -41,14 +42,22 @@ public class GraphicItemConverter {
 		return g2dLine;
 	}
 
-	public static Line2D.Double toLine2D(final Vector2d p0, final Vector2d p1) {
+	public Line2D.Double toLine2D(final Vector2d p0, final Vector2d p1) {
 		return new Line2D.Double(p0.x, p0.y, p1.x, p1.y);
 	}
 
-	public static Rectangle2D.Double toRectangle2D(final Vector2d vertex, final double vertexSize) {
+	public Rectangle2D.Double toRectangle2D(final Vector2d vertex, final double vertexSize) {
 		final double vertexHalfSize = vertexSize / 2;
 		return new Rectangle2D.Double(
 				vertex.x - vertexHalfSize, vertex.y - vertexHalfSize,
 				vertexSize, vertexSize);
+	}
+
+	public Rectangle2D.Double toRectangle2D(final Point2D.Double p0, final Point2D.Double p1) {
+		double sx = Math.min(p0.x, p1.x);
+		double sy = Math.min(p0.y, p1.y);
+		double w = Math.abs(p0.x - p1.x);
+		double h = Math.abs(p0.y - p1.y);
+		return new Rectangle2D.Double(sx, sy, w, h);
 	}
 }
