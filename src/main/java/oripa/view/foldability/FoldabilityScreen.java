@@ -31,9 +31,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +50,7 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.geometry.NearestVertexFinder;
 import oripa.domain.paint.util.ElementSelector;
+import oripa.domain.paint.util.GraphicItemConverter;
 import oripa.geom.RectangleDomain;
 import oripa.resource.Constants;
 import oripa.util.gui.AffineCamera;
@@ -88,6 +87,7 @@ public class FoldabilityScreen extends JPanel
 	private Point2D preMousePoint; // Screen coordinates
 
 	private final ElementSelector selector = new ElementSelector();
+	private final GraphicItemConverter converter = new GraphicItemConverter();
 	private boolean zeroLineWidth = false;
 
 	FoldabilityScreen() {
@@ -156,11 +156,9 @@ public class FoldabilityScreen extends JPanel
 		for (OriVertex v : violatingVertices) {
 			double scale = camera.getScale();
 			double vertexSize = selector.createViolatingVertexSize(scale);
-			double vertexHalfSize = vertexSize / 2;
 			var position = v.getPositionBeforeFolding();
-			g2d.fill(new Rectangle2D.Double(
-					position.x - vertexHalfSize, position.y - vertexHalfSize,
-					vertexSize, vertexSize));
+			g2d.fill(converter.toRectangle2D(
+					position, vertexSize));
 		}
 
 		if (bDrawFaceID) {
@@ -249,7 +247,7 @@ public class FoldabilityScreen extends JPanel
 			g2d.setColor(selector.getOverlappingLineHighlightColor());
 			g2d.setStroke(selector.createOverlappingLineHighlightStroke(camera.getScale()));
 
-			g2d.draw(new Line2D.Double(line.p0.x, line.p0.y, line.p1.x, line.p1.y));
+			g2d.draw(converter.toLine2D(line));
 		}
 	}
 

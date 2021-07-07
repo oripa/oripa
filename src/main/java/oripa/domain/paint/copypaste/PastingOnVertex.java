@@ -2,8 +2,8 @@ package oripa.domain.paint.copypaste;
 
 import java.awt.geom.Point2D.Double;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
@@ -15,6 +15,7 @@ import oripa.value.OriLine;
 public class PastingOnVertex extends PickingVertex {
 
 	private final SelectionOriginHolder originHolder;
+	private final ShiftedLineFactory factory = new ShiftedLineFactory();
 
 	/**
 	 * Constructor
@@ -60,40 +61,19 @@ public class PastingOnVertex extends PickingVertex {
 
 		Vector2d origin = originHolder.getOrigin(context);
 
-		double ox = origin.x;
-		double oy = origin.y;
-
-		List<OriLine> shiftedLines;
-		shiftedLines = shiftLines(
-				context.getPickedLines(), v.x - ox, v.y - oy);
+		var offset = factory.createOffset(origin, v);
 
 		Painter painter = context.getPainter();
-		painter.addLines(shiftedLines);
-
-		// context.setMissionCompleted(true);
-
+		painter.addLines(
+				shiftLines(context.getPickedLines(), offset.x, offset.y));
 	}
 
 	private List<OriLine> shiftLines(final Collection<OriLine> lines,
 			final double diffX, final double diffY) {
 
-		List<OriLine> shiftedLines = new LinkedList<>();
-
-		for (OriLine l : lines) {
-			OriLine shifted = new OriLine();
-
-			shifted.p0.x = l.p0.x + diffX;
-			shifted.p0.y = l.p0.y + diffY;
-
-			shifted.p1.x = l.p1.x + diffX;
-			shifted.p1.y = l.p1.y + diffY;
-
-			shifted.setType(l.getType());
-
-			shiftedLines.add(shifted);
-		}
-
-		return shiftedLines;
+		return lines.stream()
+				.map(l -> factory.createShiftedLine(l, diffX, diffY))
+				.collect(Collectors.toList());
 	}
 
 }

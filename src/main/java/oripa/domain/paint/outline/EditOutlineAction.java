@@ -2,7 +2,6 @@ package oripa.domain.paint.outline;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 		if (outlineVertices.size() > 1) {
 			PairLoop.iterateWithCount(
 					outlineVertices, outlineVertices.size() - 1, (p0, p1) -> {
-						g2d.draw(new Line2D.Double(p0.x, p0.y, p1.x, p1.y));
+						g2d.draw(getGraphicItemConverter().toLine2D(p0, p1));
 						return true;
 					});
 		}
@@ -56,11 +55,8 @@ public class EditOutlineAction extends GraphicMouseAction {
 					? new Vector2d(context.getLogicalMousePoint().getX(),
 							context.getLogicalMousePoint().getY())
 					: context.getCandidateVertexToPick();
-			g2d.draw(new Line2D.Double(outlinevertices.get(0).x,
-					outlinevertices.get(0).y,
-					cv.x, cv.y));
-			g2d.draw(new Line2D.Double(outlinevertices.get(outlineVnum - 1).x,
-					outlinevertices.get(outlineVnum - 1).y, cv.x, cv.y));
+			g2d.draw(getGraphicItemConverter().toLine2D(outlinevertices.get(0), cv));
+			g2d.draw(getGraphicItemConverter().toLine2D(outlinevertices.get(outlineVnum - 1), cv));
 		}
 
 	}

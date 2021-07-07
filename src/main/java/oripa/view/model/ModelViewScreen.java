@@ -32,7 +32,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.List;
 
@@ -47,6 +46,7 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.paint.util.GraphicItemConverter;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
@@ -81,6 +81,7 @@ public class ModelViewScreen extends JPanel
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
 	private final ElementSelector selector = new ElementSelector();
+	private final GraphicItemConverter converter = new GraphicItemConverter();
 
 	private OrigamiModel origamiModel = null;
 	private final CutModelOutlinesHolder lineHolder;
@@ -193,8 +194,7 @@ public class ModelViewScreen extends JPanel
 				}
 				var position = he.getPositionForDisplay();
 				var nextPosition = he.getNext().getPositionForDisplay();
-				g2d.draw(new Line2D.Double(position.x, position.y,
-						nextPosition.x, nextPosition.y));
+				g2d.draw(converter.toLine2D(position, nextPosition));
 			});
 		}
 
@@ -203,8 +203,7 @@ public class ModelViewScreen extends JPanel
 			g2d.setStroke(selector.createScissorsLineStrokeForModelView(scale));
 			g2d.setColor(selector.getScissorsLineColorForModelView());
 
-			g2d.draw(new Line2D.Double(scissorsLine.p0.x, scissorsLine.p0.y, scissorsLine.p1.x,
-					scissorsLine.p1.y));
+			g2d.draw(converter.toLine2D(scissorsLine));
 		}
 	}
 

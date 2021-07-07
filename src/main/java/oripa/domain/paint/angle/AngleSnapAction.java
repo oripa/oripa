@@ -149,7 +149,7 @@ public class AngleSnapAction extends GraphicMouseAction {
 		g2d.setColor(selector.getAssistLineColor());
 
 		context.getAngleSnapCrossPoints()
-				.forEach(p -> drawVertex(g2d, context, p.x, p.y));
+				.forEach(p -> drawVertex(g2d, context, p));
 	}
 
 }

@@ -2,7 +2,6 @@ package oripa.domain.paint.copypaste;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 import javax.vecmath.Vector2d;
@@ -18,6 +17,7 @@ import oripa.value.OriLine;
 public class PasteAction extends GraphicMouseAction {
 
 	private final SelectionOriginHolder originHolder;
+	private final ShiftedLineFactory factory = new ShiftedLineFactory();
 
 	public PasteAction(final SelectionOriginHolder originHolder) {
 		this.originHolder = originHolder;
@@ -102,38 +102,22 @@ public class PasteAction extends GraphicMouseAction {
 			return;
 		}
 
-		double ox = origin.x;
-		double oy = origin.y;
-
 		var selector = getElementSelector();
 		g2d.setColor(selector.getSelectedItemColor());
-		drawVertex(g2d, context, ox, oy);
+		drawVertex(g2d, context, origin);
 
 		var candidateVertex = context.getCandidateVertexToPick();
-		double diffX, diffY;
-		if (candidateVertex != null) {
-			diffX = candidateVertex.x - ox;
-			diffY = candidateVertex.y - oy;
-		} else {
-			diffX = context.getLogicalMousePoint().x - ox;
-			diffY = context.getLogicalMousePoint().y - oy;
-		}
+
+		Vector2d offset = candidateVertex == null ? factory.createOffset(origin, context.getLogicalMousePoint())
+				: factory.createOffset(origin, candidateVertex);
 
 		g2d.setColor(selector.getAssistLineColor());
 
 		// shift and draw the lines to be pasted.
-		Line2D.Double g2dLine = new Line2D.Double();
 		for (OriLine l : context.getPickedLines()) {
-
-			g2dLine.x1 = l.p0.x + diffX;
-			g2dLine.y1 = l.p0.y + diffY;
-
-			g2dLine.x2 = l.p1.x + diffX;
-			g2dLine.y2 = l.p1.y + diffY;
-
-			g2d.draw(g2dLine);
+			var shifted = factory.createShiftedLine(l, offset.x, offset.y);
+			g2d.draw(getGraphicItemConverter().toLine2D(shifted));
 		}
-
 	}
 
 	@Override

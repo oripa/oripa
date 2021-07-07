@@ -83,8 +83,8 @@ public class ChangeOriginAction extends GraphicMouseAction {
 		g2d.setColor(selector.getAssistLineColor());
 
 		for (OriLine line : lines) {
-			this.drawVertex(g2d, context, line.p0.x, line.p0.y);
-			this.drawVertex(g2d, context, line.p1.x, line.p1.y);
+			this.drawVertex(g2d, context, line.p0);
+			this.drawVertex(g2d, context, line.p1);
 		}
 
 		this.drawPickCandidateVertex(g2d, context);
