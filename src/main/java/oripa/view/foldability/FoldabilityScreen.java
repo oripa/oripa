@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.fold.foldability.FoldabilityChecker;
@@ -363,9 +364,10 @@ public class FoldabilityScreen extends JPanel
 	@Override
 	public void mouseMoved(final MouseEvent e) {
 		var logicalPoint = MouseUtility.getLogicalPoint(affineTransform, e.getPoint());
+		var mousePoint = new Vector2d(logicalPoint.x, logicalPoint.y);
 
 		var nearest = NearestVertexFinder.findNearestVertex(
-				logicalPoint,
+				mousePoint,
 				violatingVertices.stream()
 						.map(v -> v.getPositionBeforeFolding())
 						.collect(Collectors.toList()));

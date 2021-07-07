@@ -2,7 +2,6 @@ package oripa.domain.paint.copypaste;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D.Double;
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
@@ -32,7 +31,7 @@ public class ChangeOriginAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void doAction(final PaintContextInterface context, final Double point,
+	public void doAction(final PaintContextInterface context, final Vector2d point,
 			final boolean differntAction) {
 
 	}

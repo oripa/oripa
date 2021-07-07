@@ -2,7 +2,6 @@ package oripa.domain.paint.core;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 
 import javax.vecmath.Vector2d;
 
@@ -94,14 +93,14 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(
 			final PaintContextInterface context, final boolean differentAction) {
-		Point2D.Double clickPoint = context.getLogicalMousePoint();
+		var clickPoint = context.getLogicalMousePoint();
 
 		doAction(context, clickPoint, differentAction);
 		return this;
 	}
 
 	@Override
-	public void doAction(final PaintContextInterface context, final Point2D.Double point,
+	public void doAction(final PaintContextInterface context, final Vector2d point,
 			final boolean differntAction) {
 
 		state = state.doAction(context,

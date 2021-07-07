@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -36,6 +37,7 @@ import java.util.function.BiFunction;
 
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
+import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -345,11 +347,16 @@ public class PainterScreen extends JPanel
 		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
 		// Drag by left button
-		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
-				affineTransform, e.getPoint()));
+		paintContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
 		action.onDrag(paintContext, affineTransform,
 				MouseUtility.isControlKeyDown(e));
 		repaint();
+	}
+
+	private Vector2d createMousePoint(final AffineTransform affineTransform, final Point point) {
+		var logicalPoint = MouseUtility.getLogicalPoint(
+				affineTransform, point);
+		return new Vector2d(logicalPoint.x, logicalPoint.y);
 	}
 
 	private boolean doCameraDragAction(final MouseEvent e,
@@ -367,8 +374,7 @@ public class PainterScreen extends JPanel
 	@Override
 	public void mouseMoved(final MouseEvent e) {
 		paintContext.setScale(camera.getScale());
-		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
-				affineTransform, e.getPoint()));
+		paintContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
 
 		final GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 		if (action == null) {

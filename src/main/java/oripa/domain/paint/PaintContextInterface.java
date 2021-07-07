@@ -1,6 +1,5 @@
 package oripa.domain.paint;
 
-import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,14 +25,14 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 *
 	 * @return the point of mouse on screen
 	 */
-	public abstract Point2D.Double getLogicalMousePoint();
+	public abstract Vector2d getLogicalMousePoint();
 
 	/**
 	 *
 	 * @param logicalPoint
 	 *            set the point of mouse on screen
 	 */
-	public abstract void setLogicalMousePoint(Point2D.Double logicalPoint);
+	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
 
 	// =================================================================================
 	// State of input instruction

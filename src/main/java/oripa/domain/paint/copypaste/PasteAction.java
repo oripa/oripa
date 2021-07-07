@@ -2,7 +2,6 @@ package oripa.domain.paint.copypaste;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 
 import javax.vecmath.Vector2d;
 
@@ -76,7 +75,7 @@ public class PasteAction extends GraphicMouseAction {
 			closeVertex = closeVertexOfLines;
 		}
 
-		Point2D.Double current = context.getLogicalMousePoint();
+		var current = context.getLogicalMousePoint();
 		if (closeVertex != null && closeVertexOfLines != null) {
 			// get the nearest to current
 			closeVertex = NearestVertexFinder.findNearestOf(

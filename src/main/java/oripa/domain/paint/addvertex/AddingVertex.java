@@ -1,6 +1,6 @@
 package oripa.domain.paint.addvertex;
 
-import java.awt.geom.Point2D;
+import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
@@ -16,7 +16,7 @@ public class AddingVertex extends PickingVertex {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Point2D.Double currentPoint,
+	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
 			final boolean freeSelection) {
 
 		boolean result = super.onAct(context, currentPoint, true);

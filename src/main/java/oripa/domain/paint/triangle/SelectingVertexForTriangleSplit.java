@@ -1,6 +1,6 @@
 package oripa.domain.paint.triangle;
 
-import java.awt.geom.Point2D.Double;
+import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
@@ -17,7 +17,7 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
+	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
 			final boolean doSpecial) {
 		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
 

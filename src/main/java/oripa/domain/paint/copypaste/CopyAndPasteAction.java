@@ -2,7 +2,6 @@ package oripa.domain.paint.copypaste;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
@@ -58,7 +57,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void doAction(final PaintContextInterface context, final Double point,
+	public void doAction(final PaintContextInterface context, final Vector2d point,
 			final boolean differentAction) {
 		action.doAction(context, point, differentAction);
 	}

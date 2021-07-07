@@ -1,6 +1,5 @@
 package oripa.domain.paint.copypaste;
 
-import java.awt.geom.Point2D.Double;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +34,7 @@ public class PastingOnVertex extends PickingVertex {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
+	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
 			final boolean freeSelection) {
 
 		Vector2d candidate = context.getCandidateVertexToPick();

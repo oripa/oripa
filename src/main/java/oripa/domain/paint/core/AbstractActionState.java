@@ -1,6 +1,6 @@
 package oripa.domain.paint.core;
 
-import java.awt.geom.Point2D;
+import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public abstract class AbstractActionState implements ActionState {
 	 */
 	@Override
 	public final ActionState doAction(final PaintContextInterface context,
-			final Point2D.Double currentPoint, final boolean doSpecial) {
+			final Vector2d currentPoint, final boolean doSpecial) {
 
 		boolean success = onAct(context, currentPoint, doSpecial);
 
@@ -86,7 +86,7 @@ public abstract class AbstractActionState implements ActionState {
 	 * @return true if the action succeeded, otherwise false.
 	 */
 	protected abstract boolean onAct(PaintContextInterface context,
-			Point2D.Double currentPoint, boolean doSpecial);
+			Vector2d currentPoint, boolean doSpecial);
 
 	/**
 	 * cancel the current actions and returns previous state.

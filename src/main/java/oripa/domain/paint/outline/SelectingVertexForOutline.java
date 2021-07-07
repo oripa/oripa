@@ -1,6 +1,5 @@
 package oripa.domain.paint.outline;
 
-import java.awt.geom.Point2D;
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
@@ -32,7 +31,7 @@ public class SelectingVertexForOutline extends PickingVertex {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Point2D.Double currentPoint,
+	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
 			final boolean freeSelection) {
 		context.setMissionCompleted(false);
 		return super.onAct(context, currentPoint, freeSelection);

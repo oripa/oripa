@@ -18,7 +18,7 @@
  */
 package oripa.domain.paint.angle;
 
-import java.awt.geom.Point2D.Double;
+import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.AbstractActionState;
@@ -42,15 +42,8 @@ public class SelectingEndPoint extends AbstractActionState {
 		setNextClass(SelectingStartPoint.class);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.AbstractActionState#onAct(oripa.domain.paint.
-	 * PaintContextInterface, java.awt.geom.Point2D.Double, boolean)
-	 */
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
+	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
 			final boolean doSpecial) {
 
 		var picked = NearestItemFinder.getNearestInAngleSnapCrossPoints(context);
@@ -64,13 +57,6 @@ public class SelectingEndPoint extends AbstractActionState {
 		return true;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.AbstractActionState#onResult(oripa.domain.paint.
-	 * PaintContextInterface, boolean)
-	 */
 	@Override
 	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 

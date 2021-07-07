@@ -2,7 +2,6 @@ package oripa.domain.paint;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D.Double;
 
 import javax.vecmath.Vector2d;
 
@@ -54,7 +53,7 @@ public interface GraphicMouseActionInterface {
 	 * @param differntAction
 	 * @param screenUpdater
 	 */
-	public abstract void doAction(PaintContextInterface context, Double point,
+	public abstract void doAction(PaintContextInterface context, Vector2d point,
 			boolean differntAction);
 
 	/**

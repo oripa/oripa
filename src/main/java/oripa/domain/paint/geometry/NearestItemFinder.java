@@ -1,6 +1,5 @@
 package oripa.domain.paint.geometry;
 
-import java.awt.geom.Point2D;
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
@@ -24,7 +23,7 @@ public class NearestItemFinder {
 
 	// returns the OriLine sufficiently closer to point p
 	public static OriLine pickLine(final Collection<OriLine> lines,
-			final Point2D.Double p, final double scale) {
+			final Vector2d p, final double scale) {
 		double minDistance = Double.MAX_VALUE;
 		OriLine bestLine = null;
 
@@ -57,7 +56,7 @@ public class NearestItemFinder {
 		}
 
 		if (picked == null && freeSelection == true) {
-			Point2D.Double currentPoint = context.getLogicalMousePoint();
+			var currentPoint = context.getLogicalMousePoint();
 
 			OriLine l = pickLine(context);
 			if (l != null) {
@@ -95,7 +94,7 @@ public class NearestItemFinder {
 		Vector2d candidate = context.getCandidateVertexToPick();
 
 		if (candidate == null && enableMousePoint) {
-			Point2D.Double mp = context.getLogicalMousePoint();
+			var mp = context.getLogicalMousePoint();
 			candidate = new Vector2d(mp.x, mp.y);
 		}
 
