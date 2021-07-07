@@ -1,6 +1,5 @@
 package oripa.domain.paint;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
@@ -98,6 +97,6 @@ public interface GraphicMouseActionInterface {
 	 * @param g2d
 	 * @param context
 	 */
-	public abstract void onDraw(Graphics2D g2d, PaintContextInterface context);
+	public abstract void onDraw(ObjectGraphicDrawer drawer, PaintContextInterface context);
 
 }

@@ -27,8 +27,8 @@ import java.util.Comparator;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.util.ElementSelector;
-import oripa.domain.paint.util.GraphicItemConverter;
+import oripa.drawer.java2d.ElementSelector;
+import oripa.drawer.java2d.GraphicItemConverter;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 

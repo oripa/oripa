@@ -18,11 +18,11 @@
  */
 package oripa.domain.paint.angle;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
@@ -134,22 +134,21 @@ public class AngleSnapAction extends GraphicMouseAction {
 	 * oripa.domain.paint.PaintContextInterface)
 	 */
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 		if (context.getVertexCount() == 1) {
-			drawSnapPoints(g2d, context);
+			drawSnapPoints(drawer, context);
 		}
 
-		super.onDraw(g2d, context);
-		drawTemporaryLine(g2d, context);
-		drawPickCandidateVertex(g2d, context);
+		super.onDraw(drawer, context);
+		drawTemporaryLine(drawer, context);
+		drawPickCandidateVertex(drawer, context);
 	}
 
-	private void drawSnapPoints(final Graphics2D g2d, final PaintContextInterface context) {
-		var selector = getElementSelector();
-		g2d.setColor(selector.getAssistLineColor());
+	private void drawSnapPoints(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+		drawer.selectAssistLineColor();
 
 		context.getAngleSnapCrossPoints()
-				.forEach(p -> drawVertex(g2d, context, p));
+				.forEach(p -> drawVertex(drawer, context, p));
 	}
 
 }

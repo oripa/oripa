@@ -1,9 +1,9 @@
 package oripa.domain.paint.linetype;
 
-import java.awt.Graphics2D;
 import java.util.Collection;
 
 import oripa.domain.paint.EditMode;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.RectangularSelectableAction;
 import oripa.value.OriLine;
@@ -31,11 +31,11 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 
-		super.onDraw(g2d, context);
+		super.onDraw(drawer, context);
 
-		drawPickCandidateLine(g2d, context);
+		drawPickCandidateLine(drawer, context);
 	}
 
 }

@@ -1,6 +1,5 @@
 package oripa.domain.paint.core;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
@@ -10,10 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.geometry.NearestItemFinder;
-import oripa.domain.paint.util.ElementSelector;
-import oripa.domain.paint.util.GraphicItemConverter;
+import oripa.drawer.java2d.ElementSelector;
+import oripa.drawer.java2d.GraphicItemConverter;
 import oripa.value.OriLine;
 
 public abstract class GraphicMouseAction implements GraphicMouseActionInterface {
@@ -182,80 +182,79 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 			AffineTransform affine, boolean differentAction);
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
-		drawPickedLines(g2d, context);
-		drawPickedVertices(g2d, context, context.getLineTypeOfNewLines());
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+		drawPickedLines(drawer, context);
+		drawPickedVertices(drawer, context, context.getLineTypeOfNewLines());
 
 	}
 
-	protected ElementSelector getElementSelector() {
-		return selector;
-	}
+//	protected ElementSelector getElementSelector() {
+//		return selector;
+//	}
+//
+//	protected GraphicItemConverter getGraphicItemConverter() {
+//		return converter;
+//	}
 
-	protected GraphicItemConverter getGraphicItemConverter() {
-		return converter;
-	}
-
-	private void drawPickedLines(final Graphics2D g2d, final PaintContextInterface context) {
+	private void drawPickedLines(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 		for (OriLine line : context.getPickedLines()) {
-			g2d.setColor(selector.getSelectedItemColor());
-			g2d.setStroke(selector.createSelectedLineStroke(
-					context.getScale(), context.isZeroLineWidth()));
+			drawer.selectSelectedItemColor();
+			drawer.selectSelectedLineStroke(
+					context.getScale(), context.isZeroLineWidth());
 
-			drawLine(g2d, line);
+			drawLine(drawer, line);
 		}
 
 	}
 
-	private void drawPickedVertices(final Graphics2D g2d,
+	private void drawPickedVertices(final ObjectGraphicDrawer drawer,
 			final PaintContextInterface context, final OriLine.Type lineType) {
 
 		for (Vector2d vertex : context.getPickedVertices()) {
-			g2d.setColor(selector.getColor(lineType));
+			drawer.selectColor(lineType);
 
-			drawVertex(g2d, context, vertex);
+			drawVertex(drawer, context, vertex);
 		}
 	}
 
 	/**
 	 * Draws the given vertex as an small rectangle.
 	 */
-	protected void drawVertex(final Graphics2D g2d, final PaintContextInterface context,
+	protected void drawVertex(final ObjectGraphicDrawer drawer, final PaintContextInterface context,
 			final Vector2d vertex) {
 		double scale = context.getScale();
-		double vertexSize = selector.createMouseActionVertexSize(scale);
+		drawer.selectMouseActionVertexSize(scale);
 
-		g2d.fill(converter.toRectangle2D(vertex, vertexSize));
+		drawer.drawVertex(vertex);
 	}
 
-	protected void drawPickCandidateVertex(final Graphics2D g2d,
+	protected void drawPickCandidateVertex(final ObjectGraphicDrawer drawer,
 			final PaintContextInterface context) {
 		Vector2d candidate = context.getCandidateVertexToPick();
 		if (candidate != null) {
-			g2d.setColor(selector.getCandidateItemColor());
-			drawVertex(g2d, context, candidate);
+			drawer.selectCandidateItemColor();
+			drawVertex(drawer, context, candidate);
 		}
 	}
 
-	protected void drawLine(final Graphics2D g2d, final OriLine line) {
-		g2d.draw(converter.toLine2D(line));
+	protected void drawLine(final ObjectGraphicDrawer drawer, final OriLine line) {
+		drawer.drawLine(line);
+	}
+
+	protected void drawLine(final ObjectGraphicDrawer drawer, final Vector2d p0, final Vector2d p1) {
+		drawer.drawLine(p0, p1);
 
 	}
 
-	protected void drawLine(final Graphics2D g2d, final Vector2d p0, final Vector2d p1) {
-		g2d.draw(converter.toLine2D(p0, p1));
-
-	}
-
-	protected void drawPickCandidateLine(final Graphics2D g2d,
+	protected void drawPickCandidateLine(final ObjectGraphicDrawer drawer,
 			final PaintContextInterface context) {
 		OriLine candidate = context.getCandidateLineToPick();
 		if (candidate != null) {
-			g2d.setColor(selector.getCandidateItemColor());
-			g2d.setStroke(selector.createCandidateLineStroke(
-					context.getScale(), context.isZeroLineWidth()));
+			drawer.selectCandidateItemColor();
+			drawer.selectCandidateLineStroke(
+					context.getScale(), context.isZeroLineWidth());
 
-			drawLine(g2d, candidate);
+			drawLine(drawer, candidate);
 		}
 	}
 
@@ -264,10 +263,10 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 * vertex sufficiently to the mouse cursor. if every vertex is far from
 	 * cursor, this method uses the cursor point instead of close vertex.
 	 *
-	 * @param g2d
+	 * @param drawer
 	 * @param context
 	 */
-	protected void drawTemporaryLine(final Graphics2D g2d,
+	protected void drawTemporaryLine(final ObjectGraphicDrawer drawer,
 			final PaintContextInterface context) {
 
 		if (context.getVertexCount() == 0) {
@@ -276,12 +275,12 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 		Vector2d picked = context.peekVertex();
 
-		g2d.setColor(selector.getColor(context.getLineTypeOfNewLines()));
+		drawer.selectColor(context.getLineTypeOfNewLines());
 
-		g2d.setStroke(selector.createStroke(context.getLineTypeOfNewLines(),
-				context.getScale(), context.isZeroLineWidth()));
+		drawer.selectStroke(context.getLineTypeOfNewLines(),
+				context.getScale(), context.isZeroLineWidth());
 
-		drawLine(g2d, picked,
+		drawLine(drawer, picked,
 				NearestItemFinder.getCandidateVertex(context, true));
 
 	}

@@ -1,10 +1,10 @@
 package oripa.domain.paint.symmetric;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 
@@ -40,11 +40,11 @@ public class SymmetricalLineAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 
-		super.onDraw(g2d, context);
+		super.onDraw(drawer, context);
 
-		drawPickCandidateVertex(g2d, context);
+		drawPickCandidateVertex(drawer, context);
 	}
 
 	@Override

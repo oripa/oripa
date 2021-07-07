@@ -1,6 +1,5 @@
 package oripa.domain.paint.core;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.RectangleClipper;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.value.OriLine;
 
@@ -78,16 +78,15 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 
-		super.onDraw(g2d, context);
+		super.onDraw(drawer, context);
 
 		if (startPoint != null && draggingPoint != null) {
-			var selector = getElementSelector();
-			g2d.setStroke(selector.createAreaSelectionStroke(context.getScale()));
-			g2d.setColor(selector.getAreaSelectionColor());
+			drawer.selectAreaSelectionStroke(context.getScale());
+			drawer.selectAreaSelectionColor();
 
-			g2d.draw(getGraphicItemConverter().toRectangle2D(startPoint, draggingPoint));
+			drawer.drawRectangle(startPoint, draggingPoint);
 		}
 
 	}

@@ -48,6 +48,7 @@ import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.util.gui.AffineCamera;
 import oripa.util.gui.MouseUtility;
 import oripa.viewsetting.ViewScreenUpdater;
@@ -252,7 +253,7 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		action.onDraw(bufferG2D, paintContext);
+		action.onDraw(new Java2DGraphicDrawer(bufferG2D), paintContext);
 
 		g.drawImage(bufferImage, 0, 0, this);
 

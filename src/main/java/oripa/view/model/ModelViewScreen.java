@@ -46,7 +46,7 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.paint.util.GraphicItemConverter;
+import oripa.drawer.java2d.GraphicItemConverter;
 import oripa.util.gui.CallbackOnUpdate;
 import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;

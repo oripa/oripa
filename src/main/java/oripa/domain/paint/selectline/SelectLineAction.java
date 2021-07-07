@@ -1,9 +1,9 @@
 package oripa.domain.paint.selectline;
 
-import java.awt.Graphics2D;
 import java.util.Collection;
 
 import oripa.domain.paint.EditMode;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.RectangularSelectableAction;
 import oripa.value.OriLine;
@@ -80,10 +80,10 @@ public class SelectLineAction extends RectangularSelectableAction {
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
-		super.onDraw(g2d, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+		super.onDraw(drawer, context);
 
-		this.drawPickCandidateLine(g2d, context);
+		this.drawPickCandidateLine(drawer, context);
 	}
 
 }

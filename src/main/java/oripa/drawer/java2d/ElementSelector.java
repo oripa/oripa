@@ -1,4 +1,4 @@
-package oripa.domain.paint.util;
+package oripa.drawer.java2d;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -43,15 +43,15 @@ public class ElementSelector {
 		}
 	}
 
-	public float createVeryThickLineWidth(final double scale) {
+	private float createVeryThickLineWidth(final double scale) {
 		return 10.0f / (float) scale;
 	}
 
-	public float createThickLineWidth(final double scale) {
+	private float createThickLineWidth(final double scale) {
 		return 4.0f / (float) scale;
 	}
 
-	public float createThinLineWidth(final double scale, final boolean zeroWidth) {
+	private float createThinLineWidth(final double scale, final boolean zeroWidth) {
 		if (zeroWidth) {
 			return 0;
 		}

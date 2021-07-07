@@ -1,12 +1,12 @@
 package oripa.domain.paint.copypaste;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.EditMode;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
@@ -89,11 +89,11 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 
-		super.onDraw(g2d, context);
+		super.onDraw(drawer, context);
 
-		drawPickCandidateVertex(g2d, context);
+		drawPickCandidateVertex(drawer, context);
 
 		Vector2d origin = originHolder.getOrigin(context);
 
@@ -101,21 +101,20 @@ public class PasteAction extends GraphicMouseAction {
 			return;
 		}
 
-		var selector = getElementSelector();
-		g2d.setColor(selector.getSelectedItemColor());
-		drawVertex(g2d, context, origin);
+		drawer.selectSelectedItemColor();
+		drawVertex(drawer, context, origin);
 
 		var candidateVertex = context.getCandidateVertexToPick();
 
 		Vector2d offset = candidateVertex == null ? factory.createOffset(origin, context.getLogicalMousePoint())
 				: factory.createOffset(origin, candidateVertex);
 
-		g2d.setColor(selector.getAssistLineColor());
+		drawer.selectAssistLineColor();
 
 		// shift and draw the lines to be pasted.
 		for (OriLine l : context.getPickedLines()) {
 			var shifted = factory.createShiftedLine(l, offset.x, offset.y);
-			g2d.draw(getGraphicItemConverter().toLine2D(shifted));
+			drawer.drawLine(shifted);
 		}
 	}
 

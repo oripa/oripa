@@ -1,8 +1,8 @@
 package oripa.domain.paint.vertical;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 
@@ -31,14 +31,14 @@ public class VerticalLineAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 
-		super.onDraw(g2d, context);
+		super.onDraw(drawer, context);
 
 		if (context.getVertexCount() == 0) {
-			drawPickCandidateVertex(g2d, context);
+			drawPickCandidateVertex(drawer, context);
 		} else if (context.getVertexCount() == 1) {
-			drawPickCandidateLine(g2d, context);
+			drawPickCandidateLine(drawer, context);
 		}
 	}
 

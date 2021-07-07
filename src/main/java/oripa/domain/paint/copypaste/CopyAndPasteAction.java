@@ -1,12 +1,12 @@
 package oripa.domain.paint.copypaste;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 
@@ -103,7 +103,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
-		action.onDraw(g2d, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+		action.onDraw(drawer, context);
 	}
 }
