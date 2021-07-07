@@ -47,6 +47,7 @@ import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.util.gui.AffineCamera;
@@ -216,12 +217,14 @@ public class PainterScreen extends JPanel
 
 		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
-		drawer.draw(bufferG2D, paintContext,
+		ObjectGraphicDrawer bufferObjDrawer = new Java2DGraphicDrawer(bufferG2D);
+
+		drawer.draw(bufferObjDrawer, paintContext,
 				action == null ? false : action.getEditMode() == EditMode.VERTEX);
 
 		if (paintContext.isCrossLineVisible()) {
 			var crossLines = cutOutlinesHolder.getOutlines();
-			drawer.drawAllLines(bufferG2D, crossLines, camera.getScale(),
+			drawer.drawAllLines(bufferObjDrawer, crossLines, camera.getScale(),
 					paintContext.isZeroLineWidth());
 		}
 
@@ -253,11 +256,12 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		action.onDraw(new Java2DGraphicDrawer(bufferG2D), paintContext);
+		action.onDraw(bufferObjDrawer, paintContext);
 
 		g.drawImage(bufferImage, 0, 0, this);
 
-		drawer.drawCandidatePositionString((Graphics2D) g,
+		ObjectGraphicDrawer objDrawer = new Java2DGraphicDrawer((Graphics2D) g);
+		drawer.drawCandidatePositionString(objDrawer,
 				paintContext.getCandidateVertexToPick());
 	}
 

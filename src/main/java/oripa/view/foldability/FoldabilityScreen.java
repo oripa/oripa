@@ -49,9 +49,11 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.geometry.NearestVertexFinder;
 import oripa.drawer.java2d.ElementSelector;
 import oripa.drawer.java2d.GraphicItemConverter;
+import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.geom.RectangleDomain;
 import oripa.resource.Constants;
 import oripa.util.gui.AffineCamera;
@@ -153,13 +155,13 @@ public class FoldabilityScreen extends JPanel
 			g2d.fill(face.getOutlineBeforeFolding());
 		}
 
-		g2d.setColor(selector.getViolatingVertexColor());
+		ObjectGraphicDrawer drawer = new Java2DGraphicDrawer(g2d);
+		drawer.selectViolatingVertexColor();
 		for (OriVertex v : violatingVertices) {
 			double scale = camera.getScale();
-			double vertexSize = selector.createViolatingVertexSize(scale);
+			drawer.selectViolatingVertexSize(scale);
 			var position = v.getPositionBeforeFolding();
-			g2d.fill(converter.toRectangle2D(
-					position, vertexSize));
+			drawer.drawVertex(position);
 		}
 
 		if (bDrawFaceID) {
@@ -222,45 +224,43 @@ public class FoldabilityScreen extends JPanel
 
 		bufferg.setTransform(affineTransform);
 
-		Graphics2D g2d = bufferg;
-
 		if (!zeroLineWidth) {
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+			bufferg.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 
-		highlightOverlappingLines(g2d);
+		ObjectGraphicDrawer bufferObjDrawer = new Java2DGraphicDrawer(bufferg);
+		highlightOverlappingLines(bufferObjDrawer);
 
 		var scale = camera.getScale();
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawAllLines(g2d, creasePattern, scale, zeroLineWidth);
-		drawer.drawCreaseVertices(g2d, creasePattern, scale);
+		drawer.drawAllLines(bufferObjDrawer, creasePattern, scale, zeroLineWidth);
+		drawer.drawCreaseVertices(bufferObjDrawer, creasePattern, scale);
 
-		drawFoldability(g2d);
+		drawFoldability(bufferg);
 
 		g.drawImage(bufferImage, 0, 0, this);
 
-		drawVertexViolationNames((Graphics2D) g);
+		drawVertexViolationNames(new Java2DGraphicDrawer((Graphics2D) g));
 	}
 
-	private void highlightOverlappingLines(final Graphics2D g2d) {
+	private void highlightOverlappingLines(final ObjectGraphicDrawer drawer) {
 		for (var line : overlappingLines) {
-			g2d.setColor(selector.getOverlappingLineHighlightColor());
-			g2d.setStroke(selector.createOverlappingLineHighlightStroke(camera.getScale()));
+			drawer.selectOverlappingLineHighlightColor();
+			drawer.selectOverlappingLineHighlightStroke(camera.getScale());
 
-			g2d.draw(converter.toLine2D(line));
+			drawer.drawLine(line);
 		}
 	}
 
-	private void drawVertexViolationNames(final Graphics2D g2d) {
+	private void drawVertexViolationNames(final ObjectGraphicDrawer drawer) {
 		if (pickedViolatingVertex == null) {
 			return;
 		}
 
-		g2d.setColor(Color.BLACK);
 		var violationNames = foldabilityChecker.getVertexViolationNames(pickedViolatingVertex);
 
-		g2d.drawString("error(s): " + String.join(", ", violationNames), 0, 10);
+		drawer.drawString("error(s): " + String.join(", ", violationNames), 0, 10);
 	}
 
 	@Override

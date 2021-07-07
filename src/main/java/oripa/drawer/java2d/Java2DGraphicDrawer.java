@@ -1,18 +1,17 @@
 package oripa.drawer.java2d;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import javax.vecmath.Vector2d;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
 
 public class Java2DGraphicDrawer implements ObjectGraphicDrawer {
-	private final static Logger logger = LoggerFactory.getLogger(Java2DGraphicDrawer.class);
+	// private final static Logger logger =
+	// LoggerFactory.getLogger(Java2DGraphicDrawer.class);
 
 	private double vertexSize;
 
@@ -131,8 +130,18 @@ public class Java2DGraphicDrawer implements ObjectGraphicDrawer {
 	}
 
 	@Override
+	public void drawLine(final double x0, final double y0, final double x1, final double y1) {
+		g2d.draw(converter.toLine2D(new Vector2d(x0, y0), new Vector2d(x1, y1)));
+	}
+
+	@Override
 	public void drawRectangle(final Vector2d p0, final Vector2d p1) {
 		g2d.draw(converter.toRectangle2D(p0, p1));
 	}
 
+	@Override
+	public void drawString(final String text, final float x, final float y) {
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(text, x, y);
+	}
 }

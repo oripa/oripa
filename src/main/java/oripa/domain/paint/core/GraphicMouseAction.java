@@ -12,8 +12,6 @@ import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.geometry.NearestItemFinder;
-import oripa.drawer.java2d.ElementSelector;
-import oripa.drawer.java2d.GraphicItemConverter;
 import oripa.value.OriLine;
 
 public abstract class GraphicMouseAction implements GraphicMouseActionInterface {
@@ -23,9 +21,6 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	private EditMode editMode = EditMode.INPUT;
 	private boolean needSelect = false;
 	private ActionState state;
-
-	private final ElementSelector selector = new ElementSelector();
-	private final GraphicItemConverter converter = new GraphicItemConverter();
 
 	protected final void setActionState(final ActionState state) {
 		this.state = state;

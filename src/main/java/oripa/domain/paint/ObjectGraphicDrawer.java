@@ -70,5 +70,9 @@ public interface ObjectGraphicDrawer {
 
 	void drawLine(Vector2d p0, Vector2d p1);
 
+	void drawLine(double x0, double y0, double x1, double y1);
+
 	void drawRectangle(final Vector2d p0, final Vector2d p1);
+
+	void drawString(String text, float x, float y);
 }
