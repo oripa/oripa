@@ -16,19 +16,6 @@ public class AddVertexAction extends GraphicMouseAction {
 
 	}
 
-//	@Override
-//	public Vector2d onMove(MouseContext context, AffineTransform affine,
-//			boolean differentAction) {
-//		Point2D.Double current = GeometricalOperation.getLogicalPoint(affine, differentAction.getPoint());
-//
-//		Vector2d closeVertex = GeometricalOperation.pickVertex(
-//				context, current, true);
-//
-//		context.pickCandidateV = closeVertex;
-//
-//		return closeVertex;
-//	}
-
 	@Override
 	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
 			final boolean differentAction) {
