@@ -62,8 +62,7 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public Vector2d onMove(final PaintContextInterface context, final boolean differentAction) {
 
 		setCandidateVertexOnMove(context, differentAction);
 		Vector2d closeVertex = context.getCandidateVertexToPick();

@@ -59,8 +59,7 @@ public class ChangeOriginAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public Vector2d onMove(final PaintContextInterface context, final boolean differentAction) {
 		Vector2d closeVertex = NearestItemFinder.pickVertexFromPickedLines(context);
 		context.setCandidateVertexToPick(closeVertex);
 

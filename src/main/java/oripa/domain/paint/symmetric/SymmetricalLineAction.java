@@ -16,15 +16,14 @@ public class SymmetricalLineAction extends GraphicMouseAction {
 
 	@Override
 	public Vector2d onMove(
-			final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+			final PaintContextInterface context, final boolean differentAction) {
 
 		if (context.getVertexCount() < 2) {
-			return super.onMove(context, affine, differentAction);
+			return super.onMove(context, differentAction);
 		}
 
 		// enable auto-walk selection only
-		return super.onMove(context, affine, false);
+		return super.onMove(context, false);
 	}
 
 	@Override

@@ -139,8 +139,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	@Override
 	public Vector2d onMove(
-			final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+			final PaintContextInterface context, final boolean differentAction) {
 
 		setCandidateVertexOnMove(context, differentAction);
 		setCandidateLineOnMove(context);

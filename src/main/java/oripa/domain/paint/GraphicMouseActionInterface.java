@@ -72,12 +72,10 @@ public interface GraphicMouseActionInterface {
 	 * is stored into context.pickCandidateL(and V).
 	 *
 	 * @param context
-	 * @param affine
 	 * @param differentAction
 	 * @return close vertex. null if not found.
 	 */
-	public abstract Vector2d onMove(PaintContextInterface context,
-			AffineTransform affine, boolean differentAction);
+	public abstract Vector2d onMove(PaintContextInterface context, boolean differentAction);
 
 	public abstract void onPress(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction);

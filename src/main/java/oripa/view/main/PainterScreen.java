@@ -389,8 +389,7 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				action.onMove(paintContext, affineTransform,
-						MouseUtility.isControlKeyDown(e));
+				action.onMove(paintContext, MouseUtility.isControlKeyDown(e));
 				return null;
 			}
 

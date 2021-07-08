@@ -94,12 +94,11 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final PaintContextInterface context, final AffineTransform affine,
-			final boolean changingOrigin) {
+	public Vector2d onMove(final PaintContextInterface context, final boolean changingOrigin) {
 
 		changeAction(changingOrigin);
 
-		return action.onMove(context, affine, changingOrigin);
+		return action.onMove(context, changingOrigin);
 	}
 
 	@Override

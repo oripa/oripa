@@ -76,10 +76,9 @@ public class AngleSnapAction extends GraphicMouseAction {
 	 * PaintContextInterface, java.awt.geom.AffineTransform, boolean)
 	 */
 	@Override
-	public Vector2d onMove(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public Vector2d onMove(final PaintContextInterface context, final boolean differentAction) {
 		if (context.getVertexCount() == 0) {
-			return super.onMove(context, affine, differentAction);
+			return super.onMove(context, differentAction);
 		}
 
 		var crossPoint = NearestItemFinder.getNearestInAngleSnapCrossPoints(context);
