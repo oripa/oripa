@@ -51,8 +51,6 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.geometry.NearestVertexFinder;
-import oripa.drawer.java2d.ElementSelector;
-import oripa.drawer.java2d.GraphicItemConverter;
 import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.geom.RectangleDomain;
 import oripa.resource.Constants;
@@ -89,8 +87,6 @@ public class FoldabilityScreen extends JPanel
 
 	private Point2D preMousePoint; // Screen coordinates
 
-	private final ElementSelector selector = new ElementSelector();
-	private final GraphicItemConverter converter = new GraphicItemConverter();
 	private boolean zeroLineWidth = false;
 
 	FoldabilityScreen() {
