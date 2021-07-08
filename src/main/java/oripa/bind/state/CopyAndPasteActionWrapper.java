@@ -1,6 +1,5 @@
 package oripa.bind.state;
 
-import java.awt.geom.AffineTransform;
 import java.util.Optional;
 
 import oripa.appstate.ApplicationState;
@@ -41,8 +40,7 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	}
 
 	@Override
-	public void onRightClick(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRightClick(final PaintContextInterface context, final boolean differentAction) {
 		Optional<ApplicationState<EditMode>> prevOpt = stateManager.pop();
 
 		prevOpt.ifPresent(prev -> prev.performActions(null));

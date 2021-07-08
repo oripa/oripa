@@ -279,7 +279,7 @@ public class PainterScreen extends JPanel
 				try {
 					if (MouseUtility.isRightButtonDown(e)) {
 						action.onRightClick(
-								paintContext, affineTransform,
+								paintContext,
 								MouseUtility.isControlKeyDown(e));
 
 						return null;

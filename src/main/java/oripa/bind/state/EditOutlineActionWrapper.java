@@ -1,6 +1,5 @@
 package oripa.bind.state;
 
-import java.awt.geom.AffineTransform;
 import java.util.Optional;
 
 import oripa.appstate.ApplicationState;
@@ -38,9 +37,7 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	}
 
 	@Override
-	public void onRightClick(final PaintContextInterface context,
-			final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRightClick(final PaintContextInterface context, final boolean differentAction) {
 
 		popPreviousState();
 	}

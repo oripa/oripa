@@ -59,11 +59,9 @@ public interface GraphicMouseActionInterface {
 	 * undo action.
 	 *
 	 * @param context
-	 * @param affine
 	 * @param differentAction
 	 */
-	public abstract void onRightClick(PaintContextInterface context,
-			AffineTransform affine, boolean differentAction);
+	public abstract void onRightClick(PaintContextInterface context, boolean differentAction);
 
 	public abstract void undo(PaintContextInterface context);
 
