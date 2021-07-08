@@ -18,8 +18,6 @@
  */
 package oripa.domain.paint.copypaste;
 
-import java.awt.geom.Point2D;
-
 import javax.vecmath.Vector2d;
 
 import oripa.value.OriLine;
@@ -44,10 +42,6 @@ public class ShiftedLineFactory {
 	}
 
 	public Vector2d createOffset(final Vector2d origin, final Vector2d point) {
-		return new Vector2d(point.x - origin.x, point.y - origin.y);
-	}
-
-	public Vector2d createOffset(final Vector2d origin, final Point2D.Double point) {
 		return new Vector2d(point.x - origin.x, point.y - origin.y);
 	}
 }
