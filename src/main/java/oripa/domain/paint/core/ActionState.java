@@ -10,10 +10,6 @@ public interface ActionState {
 
 	public ActionState undo(PaintContextInterface context);
 
-	public void setNextState(ActionState state);
-
-	public void setPreviousState(ActionState state);
-
 	public ActionState getNextState();
 
 	public ActionState getPreviousState();

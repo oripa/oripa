@@ -112,16 +112,6 @@ public abstract class AbstractActionState implements ActionState {
 	protected abstract void undoAction(PaintContextInterface context);
 
 	@Override
-	public void setNextState(final ActionState state) {
-		next = state.getClass();
-	}
-
-	@Override
-	public void setPreviousState(final ActionState state) {
-		prev = state.getClass();
-	}
-
-	@Override
 	public ActionState getNextState() {
 		return createInstance(next);
 	}
@@ -146,7 +136,6 @@ public abstract class AbstractActionState implements ActionState {
 		}
 
 		return state;
-
 	}
 
 }
