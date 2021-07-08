@@ -322,8 +322,7 @@ public class PainterScreen extends JPanel
 		// Rectangular Selection
 
 		if (action != null) {
-			action.onRelease(paintContext, affineTransform,
-					MouseUtility.isControlKeyDown(e));
+			action.onRelease(paintContext, MouseUtility.isControlKeyDown(e));
 		}
 		repaint();
 	}

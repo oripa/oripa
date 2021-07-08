@@ -1,6 +1,5 @@
 package oripa.domain.paint.copypaste;
 
-import java.awt.geom.AffineTransform;
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
@@ -51,8 +50,7 @@ public class ChangeOriginAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
 
 	}
 

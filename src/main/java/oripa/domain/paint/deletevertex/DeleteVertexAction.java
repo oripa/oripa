@@ -1,7 +1,5 @@
 package oripa.domain.paint.deletevertex;
 
-import java.awt.geom.AffineTransform;
-
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
@@ -22,8 +20,7 @@ public class DeleteVertexAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
 
 	}
 

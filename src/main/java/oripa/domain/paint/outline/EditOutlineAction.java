@@ -1,6 +1,5 @@
 package oripa.domain.paint.outline;
 
-import java.awt.geom.AffineTransform;
 import java.util.Collection;
 import java.util.List;
 
@@ -71,8 +70,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
 
 	}
 

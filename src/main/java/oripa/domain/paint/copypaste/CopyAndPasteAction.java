@@ -1,7 +1,5 @@
 package oripa.domain.paint.copypaste;
 
-import java.awt.geom.AffineTransform;
-
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.EditMode;
@@ -73,9 +71,8 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
-		action.onRelease(context, affine, differentAction);
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
+		action.onRelease(context, differentAction);
 	}
 
 	/**

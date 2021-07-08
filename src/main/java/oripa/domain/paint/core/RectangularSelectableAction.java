@@ -1,6 +1,5 @@
 package oripa.domain.paint.core;
 
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -34,8 +33,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
 
 		if (startPoint != null && draggingPoint != null) {
 			selectByRectangularArea(context);

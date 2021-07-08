@@ -1,7 +1,5 @@
 package oripa.domain.paint;
 
-import java.awt.geom.AffineTransform;
-
 import javax.vecmath.Vector2d;
 
 public interface GraphicMouseActionInterface {
@@ -81,8 +79,7 @@ public interface GraphicMouseActionInterface {
 
 	public abstract void onDrag(PaintContextInterface context, boolean differentAction);
 
-	public abstract void onRelease(PaintContextInterface context,
-			AffineTransform affine, boolean differentAction);
+	public abstract void onRelease(PaintContextInterface context, boolean differentAction);
 
 	/**
 	 * draws selected lines and selected vertices as selected state. Override

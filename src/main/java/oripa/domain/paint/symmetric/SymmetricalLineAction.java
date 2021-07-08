@@ -1,7 +1,5 @@
 package oripa.domain.paint.symmetric;
 
-import java.awt.geom.AffineTransform;
-
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.ObjectGraphicDrawer;
@@ -32,8 +30,7 @@ public class SymmetricalLineAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
 
 	}
 

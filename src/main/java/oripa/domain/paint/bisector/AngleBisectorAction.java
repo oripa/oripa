@@ -1,7 +1,5 @@
 package oripa.domain.paint.bisector;
 
-import java.awt.geom.AffineTransform;
-
 import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
@@ -24,8 +22,7 @@ public class AngleBisectorAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
 
 	}
 

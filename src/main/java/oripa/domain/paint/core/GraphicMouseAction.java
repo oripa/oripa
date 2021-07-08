@@ -1,7 +1,5 @@
 package oripa.domain.paint.core;
 
-import java.awt.geom.AffineTransform;
-
 import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
@@ -168,8 +166,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	public abstract void onDrag(PaintContextInterface context, boolean differentAction);
 
 	@Override
-	public abstract void onRelease(PaintContextInterface context,
-			AffineTransform affine, boolean differentAction);
+	public abstract void onRelease(PaintContextInterface context, boolean differentAction);
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {

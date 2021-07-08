@@ -1,7 +1,5 @@
 package oripa.domain.paint.byvalue;
 
-import java.awt.geom.AffineTransform;
-
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
@@ -37,8 +35,7 @@ public class LengthMeasuringAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
 
 	}
 
