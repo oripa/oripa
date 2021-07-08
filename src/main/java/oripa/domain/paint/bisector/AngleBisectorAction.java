@@ -19,8 +19,7 @@ public class AngleBisectorAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
 
 	}
 

@@ -352,8 +352,7 @@ public class PainterScreen extends JPanel
 
 		// Drag by left button
 		paintContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
-		action.onDrag(paintContext, affineTransform,
-				MouseUtility.isControlKeyDown(e));
+		action.onDrag(paintContext, MouseUtility.isControlKeyDown(e));
 		repaint();
 	}
 

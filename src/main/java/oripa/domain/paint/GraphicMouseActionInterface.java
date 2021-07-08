@@ -79,8 +79,7 @@ public interface GraphicMouseActionInterface {
 
 	public abstract void onPress(PaintContextInterface context, boolean differentAction);
 
-	public abstract void onDrag(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction);
+	public abstract void onDrag(PaintContextInterface context, boolean differentAction);
 
 	public abstract void onRelease(PaintContextInterface context,
 			AffineTransform affine, boolean differentAction);

@@ -99,8 +99,7 @@ public class AngleSnapAction extends GraphicMouseAction {
 	 * PaintContextInterface, java.awt.geom.AffineTransform, boolean)
 	 */
 	@Override
-	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
 
 	}
 
