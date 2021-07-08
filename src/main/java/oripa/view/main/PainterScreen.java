@@ -311,8 +311,7 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		action.onPress(paintContext, affineTransform,
-				MouseUtility.isControlKeyDown(e));
+		action.onPress(paintContext, MouseUtility.isControlKeyDown(e));
 
 		preMousePoint = e.getPoint();
 	}

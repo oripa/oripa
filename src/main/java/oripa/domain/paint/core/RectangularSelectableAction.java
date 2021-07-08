@@ -22,8 +22,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	private Vector2d draggingPoint = null;
 
 	@Override
-	public void onPress(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final boolean differentAction) {
 		startPoint = context.getLogicalMousePoint();
 	}
 

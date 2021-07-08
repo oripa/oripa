@@ -162,8 +162,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	@Override
-	public abstract void onPress(PaintContextInterface context,
-			AffineTransform affine, boolean differentAction);
+	public abstract void onPress(PaintContextInterface context, boolean differentAction);
 
 	@Override
 	public abstract void onDrag(PaintContextInterface context,

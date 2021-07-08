@@ -77,8 +77,7 @@ public interface GraphicMouseActionInterface {
 	 */
 	public abstract Vector2d onMove(PaintContextInterface context, boolean differentAction);
 
-	public abstract void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction);
+	public abstract void onPress(PaintContextInterface context, boolean differentAction);
 
 	public abstract void onDrag(PaintContextInterface context, AffineTransform affine,
 			boolean differentAction);

@@ -52,8 +52,7 @@ public class AngleMeasuringAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPress(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final boolean differentAction) {
 
 	}
 }
