@@ -128,9 +128,9 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	public abstract void pushVertex(Vector2d picked);
 
 	/**
-	 * pop the last pushed vertex and mark it unselected.
+	 * pop the last pushed vertex.
 	 *
-	 * @return popped line. null if no line is pushed.
+	 * @return popped vertex. null if no vertex is pushed.
 	 */
 	public abstract Vector2d popVertex();
 

@@ -33,19 +33,19 @@ public class PastingOnVertex extends PickingVertex {
 		context.creasePatternUndo().undo();
 	}
 
-	@Override
-	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
-			final boolean freeSelection) {
-
-		Vector2d candidate = context.getCandidateVertexToPick();
-		if (candidate == null) {
-			return false;
-		}
-
-		context.pushVertex(candidate);
-
-		return true;
-	}
+//	@Override
+//	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
+//			final boolean freeSelection) {
+//
+//		Vector2d candidate = context.getCandidateVertexToPick();
+//		if (candidate == null) {
+//			return false;
+//		}
+//
+//		context.pushVertex(candidate);
+//
+//		return true;
+//	}
 
 	@Override
 	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {

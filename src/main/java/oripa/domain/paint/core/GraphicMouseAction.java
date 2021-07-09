@@ -150,7 +150,6 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 		context.setCandidateVertexToPick(
 				NearestItemFinder.pickVertex(
 						context, differentAction));
-
 	}
 
 	protected final void setCandidateLineOnMove(final PaintContextInterface context) {

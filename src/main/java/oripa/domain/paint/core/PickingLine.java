@@ -3,7 +3,6 @@ package oripa.domain.paint.core;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 /**
@@ -28,11 +27,11 @@ public abstract class PickingLine extends AbstractActionState {
 	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
 			final boolean doSpecial) {
 
-		OriLine picked = NearestItemFinder.pickLine(
-				context);
+//		OriLine picked = NearestItemFinder.pickLine(
+//				context);
+		OriLine picked = context.getCandidateLineToPick();
 
 		if (picked == null) {
-			System.out.println("PickingLine.onAct() failed: null selection");
 			return false;
 		}
 
