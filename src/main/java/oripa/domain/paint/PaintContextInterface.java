@@ -18,25 +18,11 @@ import oripa.value.OriLine;
 public interface PaintContextInterface extends CreasePatternHolder {
 
 	// =================================================================================
-	// Mouse position
+	// Properties used by action state
 	// =================================================================================
 
-	/**
-	 *
-	 * @return the point of mouse on screen
-	 */
-	public abstract Vector2d getLogicalMousePoint();
-
-	/**
-	 *
-	 * @param logicalPoint
-	 *            set the point of mouse on screen
-	 */
-	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
-
-	// =================================================================================
+	// ---------------------------------------------------------------
 	// State of input instruction
-	// =================================================================================
 
 	/**
 	 *
@@ -68,9 +54,8 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 */
 	public abstract void setMissionCompleted(boolean missionCompleted);
 
-	// =================================================================================
+	// ---------------------------------------------------------------
 	// Values Picked by User
-	// =================================================================================
 
 	/**
 	 * remove all lines and all vertices in this context.
@@ -166,9 +151,62 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 */
 	public abstract int getVertexCount();
 
+	// ---------------------------------------------------------------
+	// Misc
+
+	public abstract Painter getPainter();
+
+	void setLineTypeOfNewLines(OriLine.Type lineType);
+
+	OriLine.Type getLineTypeOfNewLines();
+
+	public abstract void setCandidateLineToPick(OriLine pickCandidateL);
+
+	public abstract OriLine getCandidateLineToPick();
+
+	public abstract void setCandidateVertexToPick(Vector2d pickCandidateV);
+
+	public abstract Vector2d getCandidateVertexToPick();
+
+	public abstract CreasePatternUndoerInterface creasePatternUndo();
+
+	public abstract void setAngleStep(AngleStep step);
+
+	public abstract AngleStep getAngleStep();
+
+	public abstract void setAngleSnapCrossPoints(Collection<Vector2d> points);
+
+	public abstract Collection<Vector2d> getAngleSnapCrossPoints();
+
+	/**
+	 *
+	 * @return rectangle domain of crease pattern, whose values are those when
+	 *         crease pattern is set to this context.
+	 */
+	public abstract RectangleDomain getPaperDomain();
+
 	// =================================================================================
-	// misc
+	// Properties not used by action state
 	// =================================================================================
+
+	// ---------------------------------------------------------------
+	// Mouse position
+
+	/**
+	 *
+	 * @return the point of mouse on screen
+	 */
+	public abstract Vector2d getLogicalMousePoint();
+
+	/**
+	 *
+	 * @param logicalPoint
+	 *            set the point of mouse on screen
+	 */
+	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
+
+	// ---------------------------------------------------------------
+	// View-related things
 
 	public abstract void setScale(double scale);
 
@@ -191,16 +229,6 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	public abstract void updateGrids();
 
 	/**
-	 * @param lineType
-	 */
-	void setLineTypeOfNewLines(OriLine.Type lineType);
-
-	/**
-	 * @return
-	 */
-	OriLine.Type getLineTypeOfNewLines();
-
-	/**
 	 * gets current grids.
 	 *
 	 * @return
@@ -211,9 +239,9 @@ public interface PaintContextInterface extends CreasePatternHolder {
 
 	public abstract boolean isMVLineVisible();
 
-	public abstract boolean isVertexVisible();
-
 	public abstract void setVertexVisible(boolean visible);
+
+	public abstract boolean isVertexVisible();
 
 	public abstract void setAuxLineVisible(boolean visible);
 
@@ -223,34 +251,7 @@ public interface PaintContextInterface extends CreasePatternHolder {
 
 	public abstract boolean isCrossLineVisible();
 
-	public abstract void setCandidateLineToPick(OriLine pickCandidateL);
-
-	public abstract OriLine getCandidateLineToPick();
-
-	public abstract void setCandidateVertexToPick(Vector2d pickCandidateV);
-
-	public abstract Vector2d getCandidateVertexToPick();
-
-	public abstract Painter getPainter();
-
-	public abstract CreasePatternUndoerInterface creasePatternUndo();
-
-	public abstract void setAngleStep(AngleStep step);
-
-	public abstract AngleStep getAngleStep();
-
-	public abstract void setAngleSnapCrossPoints(Collection<Vector2d> points);
-
-	public abstract Collection<Vector2d> getAngleSnapCrossPoints();
-
-	/**
-	 *
-	 * @return rectangle domain of crease pattern, whose values are those when
-	 *         crease pattern is set to this context.
-	 */
-	public abstract RectangleDomain getPaperDomain();
+	public abstract void setZeroLineWidth(final boolean zeroLineWidth);
 
 	public abstract boolean isZeroLineWidth();
-
-	public abstract void setZeroLineWidth(final boolean zeroLineWidth);
 }
