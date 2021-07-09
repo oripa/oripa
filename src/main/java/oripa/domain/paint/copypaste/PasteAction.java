@@ -48,16 +48,6 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	@Override
-	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	@Override
 	public Vector2d onMove(final PaintContextInterface context, final boolean differentAction) {
 
 		setCandidateVertexOnMove(context, differentAction);
@@ -112,9 +102,4 @@ public class PasteAction extends GraphicMouseAction {
 			drawer.drawLine(shifted);
 		}
 	}
-
-	@Override
-	public void onPress(final PaintContextInterface context, final boolean differentAction) {
-	}
-
 }

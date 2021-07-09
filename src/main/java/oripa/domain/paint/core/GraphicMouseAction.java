@@ -160,13 +160,19 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	@Override
-	public abstract void onPress(PaintContextInterface context, boolean differentAction);
+	public void onPress(final PaintContextInterface context, final boolean differentAction) {
+
+	}
 
 	@Override
-	public abstract void onDrag(PaintContextInterface context, boolean differentAction);
+	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
+
+	}
 
 	@Override
-	public abstract void onRelease(PaintContextInterface context, boolean differentAction);
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
+
+	}
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {

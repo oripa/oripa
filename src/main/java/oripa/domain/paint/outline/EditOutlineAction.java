@@ -58,20 +58,4 @@ public class EditOutlineAction extends GraphicMouseAction {
 		}
 
 	}
-
-	@Override
-	public void onPress(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	@Override
-	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	@Override
-	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
 }

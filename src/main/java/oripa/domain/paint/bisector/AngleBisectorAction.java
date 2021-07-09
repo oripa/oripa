@@ -17,16 +17,6 @@ public class AngleBisectorAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	@Override
-	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 
 		super.onDraw(drawer, context);
@@ -37,10 +27,4 @@ public class AngleBisectorAction extends GraphicMouseAction {
 			drawPickCandidateLine(drawer, context);
 		}
 	}
-
-	@Override
-	public void onPress(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
 }

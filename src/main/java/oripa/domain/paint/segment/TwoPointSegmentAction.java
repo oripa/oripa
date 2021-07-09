@@ -22,16 +22,6 @@ public class TwoPointSegmentAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	@Override
-	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 
 		super.onDraw(drawer, context);
@@ -40,10 +30,4 @@ public class TwoPointSegmentAction extends GraphicMouseAction {
 		drawPickCandidateVertex(drawer, context);
 
 	}
-
-	@Override
-	public void onPress(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
 }

@@ -18,23 +18,6 @@ public class LineByValueAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	@Override
-	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.GraphicMouseAction#recover(oripa.domain.paint.
-	 * PaintContextInterface)
-	 */
-	@Override
 	protected void recoverImpl(final PaintContextInterface context) {
 		context.clear(true);
 	}
@@ -68,10 +51,4 @@ public class LineByValueAction extends GraphicMouseAction {
 			e.printStackTrace();
 		}
 	}
-
-	@Override
-	public void onPress(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
 }

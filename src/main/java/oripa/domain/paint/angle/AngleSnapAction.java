@@ -31,8 +31,6 @@ import oripa.domain.paint.geometry.NearestItemFinder;
  */
 public class AngleSnapAction extends GraphicMouseAction {
 
-//	private final AngleStepSetting setting;
-
 	/**
 	 * Constructor
 	 */
@@ -42,37 +40,16 @@ public class AngleSnapAction extends GraphicMouseAction {
 		setActionState(new SelectingStartPoint());
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.GraphicMouseAction#destroy(oripa.domain.paint.
-	 * PaintContextInterface)
-	 */
 	@Override
 	public void destroy(final PaintContextInterface context) {
 		super.destroy(context);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.GraphicMouseAction#recoverImpl(oripa.domain.paint
-	 * .PaintContextInterface)
-	 */
 	@Override
 	protected void recoverImpl(final PaintContextInterface context) {
 		setActionState(new SelectingStartPoint());
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.GraphicMouseAction#onMove(oripa.domain.paint.
-	 * PaintContextInterface, java.awt.geom.AffineTransform, boolean)
-	 */
 	@Override
 	public Vector2d onMove(final PaintContextInterface context, final boolean differentAction) {
 		if (context.getVertexCount() == 0) {
@@ -84,42 +61,6 @@ public class AngleSnapAction extends GraphicMouseAction {
 		return crossPoint;
 	}
 
-	@Override
-	public void onPress(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.GraphicMouseAction#onDrag(oripa.domain.paint.
-	 * PaintContextInterface, java.awt.geom.AffineTransform, boolean)
-	 */
-	@Override
-	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.GraphicMouseAction#onRelease(oripa.domain.paint.
-	 * PaintContextInterface, java.awt.geom.AffineTransform, boolean)
-	 */
-	@Override
-	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
-
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.GraphicMouseAction#onDraw(java.awt.Graphics2D,
-	 * oripa.domain.paint.PaintContextInterface)
-	 */
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 		if (context.getVertexCount() == 1) {
