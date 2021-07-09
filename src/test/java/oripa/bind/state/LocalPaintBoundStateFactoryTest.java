@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Test;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.bind.state.action.PaintActionSetter;
-import oripa.domain.paint.EditMode;
-import oripa.domain.paint.MouseActionHolder;
-import oripa.domain.paint.core.GraphicMouseAction;
-import oripa.viewsetting.ChangeViewSetting;
+import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.viewsetting.ChangeViewSetting;
 
 public class LocalPaintBoundStateFactoryTest {
 

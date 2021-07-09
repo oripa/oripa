@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import oripa.domain.paint.EditMode;
+import oripa.gui.presenter.creasepattern.EditMode;
 
 /**
  * A simple implementation of {@link StateManagerInterface}. This object ignores

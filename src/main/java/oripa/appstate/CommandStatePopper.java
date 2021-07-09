@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.paint.EditMode;
+import oripa.gui.presenter.creasepattern.EditMode;
 
 /**
  * An action listener which pops the last command's state of given edit mode.

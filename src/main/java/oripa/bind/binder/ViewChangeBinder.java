@@ -4,7 +4,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.AbstractButton;
 
-import oripa.viewsetting.ChangeViewSetting;
+import oripa.gui.viewsetting.ChangeViewSetting;
 
 public class ViewChangeBinder extends AbstractButtonBinder<ChangeViewSetting> {
 

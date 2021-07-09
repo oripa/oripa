@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 import javax.swing.AbstractButton;
 
 import oripa.appstate.ApplicationState;
-import oripa.domain.paint.EditMode;
+import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.resource.StringID;
 
 /**

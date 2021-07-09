@@ -5,6 +5,7 @@ import javax.vecmath.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.domain.paint.ActionState;
 import oripa.domain.paint.PaintContextInterface;
 
 /**

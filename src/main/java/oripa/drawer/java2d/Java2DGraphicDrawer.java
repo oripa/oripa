@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.ObjectGraphicDrawer;
+import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
 

@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManagerInterface;
 import oripa.bind.state.action.PaintActionSetter;
-import oripa.domain.paint.EditMode;
-import oripa.viewsetting.ChangeViewSetting;
+import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.viewsetting.ChangeViewSetting;
 
 /**
  * Helper class

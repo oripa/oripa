@@ -24,7 +24,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import oripa.view.main.MainFrame;
+import oripa.gui.view.main.MainFrame;
 
 public class ORIPA {
 	public static void main(final String[] args) {

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
+import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
 
 public class DeleteSelectedLinesActionListener implements ActionListener {
 	private static final Logger logger = LoggerFactory

@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
 
-import oripa.domain.paint.EditMode;
+import oripa.gui.presenter.creasepattern.EditMode;
 
 /**
  * An action listener which pops the last state from given state manager.

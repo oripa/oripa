@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.Test;
 
 import oripa.bind.state.PaintBoundState;
-import oripa.domain.paint.EditMode;
+import oripa.gui.presenter.creasepattern.EditMode;
 
 public class StateManagerTest {
 

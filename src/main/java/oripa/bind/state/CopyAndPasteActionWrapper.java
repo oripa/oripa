@@ -5,10 +5,10 @@ import java.util.Optional;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManagerInterface;
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.EditMode;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.copypaste.CopyAndPasteAction;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
+import oripa.gui.presenter.creasepattern.CopyAndPasteAction;
+import oripa.gui.presenter.creasepattern.EditMode;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 

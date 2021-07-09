@@ -3,10 +3,10 @@ package oripa.bind.state.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import oripa.domain.paint.GraphicMouseActionInterface;
-import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
+import oripa.gui.presenter.creasepattern.GraphicMouseActionInterface;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
 
 /**
  * Add this listener to Button object or something for selecting paint action.

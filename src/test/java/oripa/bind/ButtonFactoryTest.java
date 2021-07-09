@@ -17,9 +17,9 @@ import org.junit.jupiter.api.Test;
 
 import oripa.bind.state.PaintBoundState;
 import oripa.bind.state.PaintBoundStateFactory;
-import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextFactory;
-import oripa.domain.paint.ScreenUpdaterInterface;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
 import oripa.resource.StringID;
 
 public class ButtonFactoryTest {

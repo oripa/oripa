@@ -8,10 +8,10 @@ import javax.swing.AbstractButton;
 import oripa.appstate.ApplicationState;
 import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.state.PaintBoundStateFactory;
-import oripa.domain.paint.EditMode;
-import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.ScreenUpdaterInterface;
+import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
 
 /**
  * A class for application-specific binding of state actions and buttons.

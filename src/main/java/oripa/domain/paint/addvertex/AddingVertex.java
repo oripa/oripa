@@ -5,7 +5,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.domain.paint.geometry.NearestItemFinder;
+import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 public class AddingVertex extends PickingVertex {

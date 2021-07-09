@@ -4,11 +4,11 @@ import java.util.Optional;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManagerInterface;
-import oripa.domain.paint.EditMode;
-import oripa.domain.paint.GraphicMouseActionInterface;
-import oripa.domain.paint.MouseActionHolder;
 import oripa.domain.paint.PaintContextInterface;
-import oripa.domain.paint.outline.EditOutlineAction;
+import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.EditOutlineAction;
+import oripa.gui.presenter.creasepattern.GraphicMouseActionInterface;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
 

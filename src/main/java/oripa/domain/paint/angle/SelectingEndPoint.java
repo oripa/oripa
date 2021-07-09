@@ -22,7 +22,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.AbstractActionState;
-import oripa.domain.paint.geometry.NearestItemFinder;
+import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 /**

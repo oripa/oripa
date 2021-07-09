@@ -32,10 +32,10 @@ import org.slf4j.LoggerFactory;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.CreasePatternGraphicDrawer;
-import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.geom.RectangleDomain;
+import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
+import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.util.gui.AffineCamera;
 
 /**
