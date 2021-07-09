@@ -23,8 +23,6 @@ public class SelectingFirstVertexForSegment extends PickingVertex {
 	protected void initialize() {
 		setPreviousClass(this.getClass());
 		setNextClass(SelectingSecondVertexForSegment.class);
-
-//		System.out.println("SelectingFirstVertex.initialize() is called");
 	}
 
 }

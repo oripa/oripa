@@ -18,12 +18,12 @@
  */
 package oripa.application.main;
 
-import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.file.InitData;
 import oripa.file.InitDataBuilder;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.resource.Constants;
 
 /**
@@ -65,16 +65,16 @@ public class IniFileAccess {
 	 * @throws IllegalStateException
 	 *             in case some of the fields are not set
 	 */
-	public void save(final FileHistory fileHistory, final PaintContextInterface paintContext)
+	public void save(final FileHistory fileHistory, final CreasePatternViewContext viewContext)
 			throws IllegalStateException {
 		var builder = new InitDataBuilder();
 
 		var ini = builder.setLastUsedFile(fileHistory.getLastPath())
 				.setMRUFiles(fileHistory.getHistory())
-				.setZeroLineWidth(paintContext.isZeroLineWidth())
-				.setMVLineVisible(paintContext.isMVLineVisible())
-				.setAuxLineVisible(paintContext.isAuxLineVisible())
-				.setVertexVisible(paintContext.isVertexVisible())
+				.setZeroLineWidth(viewContext.isZeroLineWidth())
+				.setMVLineVisible(viewContext.isMVLineVisible())
+				.setAuxLineVisible(viewContext.isAuxLineVisible())
+				.setVertexVisible(viewContext.isVertexVisible())
 				.get();
 
 		writer.write(ini, Constants.INI_FILE_PATH);

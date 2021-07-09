@@ -7,8 +7,8 @@ import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.copypaste.PastingOnVertex;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.domain.paint.copypaste.ShiftedLineFactory;
-import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
-import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
+import oripa.domain.paint.geometry.NearestItemFinder;
+import oripa.domain.paint.geometry.NearestVertexFinder;
 import oripa.value.OriLine;
 
 public class PasteAction extends GraphicMouseAction {
@@ -48,19 +48,20 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final PaintContextInterface context, final boolean differentAction) {
+	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
 
-		setCandidateVertexOnMove(context, differentAction);
-		Vector2d closeVertex = context.getCandidateVertexToPick();
+		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
+		Vector2d closeVertex = paintContext.getCandidateVertexToPick();
 
 		// to get the vertex which disappeared by cutting.
-		Vector2d closeVertexOfLines = NearestItemFinder.pickVertexFromPickedLines(context);
+		Vector2d closeVertexOfLines = NearestItemFinder.pickVertexFromPickedLines(paintContext);
 
 		if (closeVertex == null) {
 			closeVertex = closeVertexOfLines;
 		}
 
-		var current = context.getLogicalMousePoint();
+		var current = paintContext.getLogicalMousePoint();
 		if (closeVertex != null && closeVertexOfLines != null) {
 			// get the nearest to current
 			closeVertex = NearestVertexFinder.findNearestOf(
@@ -68,36 +69,37 @@ public class PasteAction extends GraphicMouseAction {
 
 		}
 
-		context.setCandidateVertexToPick(closeVertex);
+		paintContext.setCandidateVertexToPick(closeVertex);
 
 		return closeVertex;
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateVertex(drawer, context);
+		drawPickCandidateVertex(drawer, viewContext, paintContext);
 
-		Vector2d origin = originHolder.getOrigin(context);
+		Vector2d origin = originHolder.getOrigin(paintContext);
 
 		if (origin == null) {
 			return;
 		}
 
 		drawer.selectSelectedItemColor();
-		drawVertex(drawer, context, origin);
+		drawVertex(drawer, viewContext, paintContext, origin);
 
-		var candidateVertex = context.getCandidateVertexToPick();
+		var candidateVertex = paintContext.getCandidateVertexToPick();
 
-		Vector2d offset = candidateVertex == null ? factory.createOffset(origin, context.getLogicalMousePoint())
+		Vector2d offset = candidateVertex == null ? factory.createOffset(origin, paintContext.getLogicalMousePoint())
 				: factory.createOffset(origin, candidateVertex);
 
 		drawer.selectAssistLineColor();
 
 		// shift and draw the lines to be pasted.
-		for (OriLine l : context.getPickedLines()) {
+		for (OriLine l : paintContext.getPickedLines()) {
 			var shifted = factory.createShiftedLine(l, offset.x, offset.y);
 			drawer.drawLine(shifted);
 		}

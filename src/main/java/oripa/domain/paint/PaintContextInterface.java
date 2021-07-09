@@ -6,7 +6,6 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
-import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -20,6 +19,22 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	// =================================================================================
 	// Properties used by action state
 	// =================================================================================
+
+	// ---------------------------------------------------------------
+	// Mouse position
+
+	/**
+	 *
+	 * @return the point of mouse on screen
+	 */
+	public abstract Vector2d getLogicalMousePoint();
+
+	/**
+	 *
+	 * @param logicalPoint
+	 *            set the point of mouse on screen
+	 */
+	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
 
 	// ---------------------------------------------------------------
 	// State of input instruction
@@ -53,6 +68,10 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 *            state of input instruction (finished or not)
 	 */
 	public abstract void setMissionCompleted(boolean missionCompleted);
+
+	public abstract void setScale(double scale);
+
+	public abstract double getScale();
 
 	// ---------------------------------------------------------------
 	// Values Picked by User
@@ -179,44 +198,6 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	public abstract Collection<Vector2d> getAngleSnapCrossPoints();
 
 	/**
-	 *
-	 * @return rectangle domain of crease pattern, whose values are those when
-	 *         crease pattern is set to this context.
-	 */
-	public abstract RectangleDomain getPaperDomain();
-
-	// =================================================================================
-	// Properties not used by action state
-	// =================================================================================
-
-	// ---------------------------------------------------------------
-	// Mouse position
-
-	/**
-	 *
-	 * @return the point of mouse on screen
-	 */
-	public abstract Vector2d getLogicalMousePoint();
-
-	/**
-	 *
-	 * @param logicalPoint
-	 *            set the point of mouse on screen
-	 */
-	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
-
-	// ---------------------------------------------------------------
-	// View-related things
-
-	public abstract void setScale(double scale);
-
-	public abstract double getScale();
-
-	public abstract void setGridVisible(boolean dispGrid);
-
-	public abstract boolean isGridVisible();
-
-	/**
 	 * sets division number of grid. should update grid points for
 	 * {@link #getGrids()}.
 	 *
@@ -235,23 +216,4 @@ public interface PaintContextInterface extends CreasePatternHolder {
 	 */
 	public abstract Collection<Vector2d> getGrids();
 
-	public abstract void setMVLineVisible(boolean visible);
-
-	public abstract boolean isMVLineVisible();
-
-	public abstract void setVertexVisible(boolean visible);
-
-	public abstract boolean isVertexVisible();
-
-	public abstract void setAuxLineVisible(boolean visible);
-
-	public abstract boolean isAuxLineVisible();
-
-	public abstract void setCrossLineVisible(boolean visible);
-
-	public abstract boolean isCrossLineVisible();
-
-	public abstract void setZeroLineWidth(final boolean zeroLineWidth);
-
-	public abstract boolean isZeroLineWidth();
 }

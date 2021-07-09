@@ -61,6 +61,8 @@ import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContextImpl;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
@@ -108,6 +110,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	// Create UI Factories
 	private final PaintContextFactory contextFactory = new PaintContextFactory();
 	private final PaintContextInterface paintContext = contextFactory.createContext();
+	private final CreasePatternViewContext viewContext = new CreasePatternViewContextImpl(paintContext);
 	private final MouseActionHolder actionHolder = new MouseActionHolder();
 
 	private final ButtonFactory buttonFactory;
@@ -209,7 +212,9 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		document.setCreasePattern(paintContext.getCreasePattern());
 
-		var mainScreen = new PainterScreen(actionHolder, paintContext, document);
+		var mainScreen = new PainterScreen(actionHolder,
+				viewContext, paintContext,
+				document);
 		screenUpdater = mainScreen.getScreenUpdater();
 		screenSetting = mainScreen.getMainScreenSetting();
 
@@ -222,7 +227,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		logger.info("start constructing UI panel.");
 		try {
 			uiPanel = new UIPanel(
-					stateManager, screenUpdater, actionHolder, paintContext, document,
+					stateManager, screenUpdater, actionHolder, viewContext, paintContext, document,
 					setting, screenSetting);
 			uiPanel.setChildFrameManager(childFrameManager);
 		} catch (RuntimeException ex) {
@@ -710,7 +715,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private void saveIniFile() {
 		try {
-			iniFileAccess.save(fileHistory, paintContext);
+			iniFileAccess.save(fileHistory, viewContext);
 		} catch (IllegalStateException e) {
 			logger.error("error when building ini file data", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(

@@ -16,8 +16,9 @@ public class TwoPointBisectorAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
-		super.onDraw(drawer, context);
-		drawPickCandidateVertex(drawer, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
+		super.onDraw(drawer, viewContext, paintContext);
+		drawPickCandidateVertex(drawer, viewContext, paintContext);
 	}
 }

@@ -5,11 +5,9 @@ import javax.vecmath.Vector2d;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 public class AddingVertex extends PickingVertex {
-
 	@Override
 	protected void initialize() {
 
@@ -22,8 +20,7 @@ public class AddingVertex extends PickingVertex {
 		boolean result = super.onAct(context, currentPoint, true);
 
 		if (result == true) {
-			OriLine line = NearestItemFinder.pickLine(
-					context);
+			OriLine line = context.getCandidateLineToPick();
 
 			if (line != null) {
 				context.pushLine(line);

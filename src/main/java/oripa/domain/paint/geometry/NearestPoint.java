@@ -1,4 +1,4 @@
-package oripa.gui.presenter.creasepattern.geometry;
+package oripa.domain.paint.geometry;
 
 import javax.vecmath.Vector2d;
 

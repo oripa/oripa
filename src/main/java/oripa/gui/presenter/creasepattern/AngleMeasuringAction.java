@@ -14,13 +14,14 @@ public class AngleMeasuringAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public GraphicMouseActionInterface onLeftClick(final PaintContextInterface context,
+	public GraphicMouseActionInterface onLeftClick(final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext,
 			final boolean differentAction) {
 
 		GraphicMouseActionInterface action;
-		action = super.onLeftClick(context, differentAction);
+		action = super.onLeftClick(viewContext, paintContext, differentAction);
 
-		if (context.isMissionCompleted()) {
+		if (paintContext.isMissionCompleted()) {
 			action = new LineByValueAction(valueSetting);
 		}
 
@@ -28,11 +29,12 @@ public class AngleMeasuringAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateVertex(drawer, context);
+		drawPickCandidateVertex(drawer, viewContext, paintContext);
 
 	}
 }

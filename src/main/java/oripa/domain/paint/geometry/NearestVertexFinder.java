@@ -1,4 +1,4 @@
-package oripa.gui.presenter.creasepattern.geometry;
+package oripa.domain.paint.geometry;
 
 import java.util.Collection;
 
@@ -89,13 +89,14 @@ public class NearestVertexFinder {
 	 * @param distance
 	 * @return nearestPoint in the limit. null if there are no such vertex.
 	 */
-	public static NearestPoint findAround(final PaintContextInterface context,
+	public static NearestPoint findAround(
+			final PaintContextInterface paintContext,
 			final double distance) {
 		NearestPoint nearestPosition = new NearestPoint();
 
-		var currentPoint = context.getLogicalMousePoint();
+		var currentPoint = paintContext.getLogicalMousePoint();
 
-		Collection<Collection<Vector2d>> vertices = context.getCreasePattern().getVerticesInArea(
+		Collection<Collection<Vector2d>> vertices = paintContext.getCreasePattern().getVerticesInArea(
 				currentPoint.x, currentPoint.y, distance);
 
 		for (Collection<Vector2d> locals : vertices) {
@@ -107,15 +108,11 @@ public class NearestVertexFinder {
 			}
 		}
 
-		if (context.isGridVisible()) {
+		NearestPoint nearestGrid = findNearestVertex(
+				currentPoint, paintContext.getGrids());
 
-			NearestPoint nearestGrid = findNearestVertex(
-					currentPoint, context.getGrids());
-
-			if (nearestGrid.distance < nearestPosition.distance) {
-				nearestPosition = nearestGrid;
-			}
-
+		if (nearestGrid.distance < nearestPosition.distance) {
+			nearestPosition = nearestGrid;
 		}
 
 		if (nearestPosition.distance >= distance) {
@@ -131,12 +128,13 @@ public class NearestVertexFinder {
 		return nearestPosition;
 	}
 
-	public static NearestPoint findFromPickedLine(final PaintContextInterface context) {
+	public static NearestPoint findFromPickedLine(
+			final PaintContextInterface paintContext) {
 		NearestPoint nearestPosition;
 
-		var currentPoint = context.getLogicalMousePoint();
+		var currentPoint = paintContext.getLogicalMousePoint();
 		nearestPosition = findNearestVertexFromLines(
-				currentPoint, context.getPickedLines());
+				currentPoint, paintContext.getPickedLines());
 
 		return nearestPosition;
 	}

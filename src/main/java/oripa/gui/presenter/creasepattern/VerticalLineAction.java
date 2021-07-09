@@ -16,14 +16,15 @@ public class VerticalLineAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		if (context.getVertexCount() == 0) {
-			drawPickCandidateVertex(drawer, context);
-		} else if (context.getVertexCount() == 1) {
-			drawPickCandidateLine(drawer, context);
+		if (paintContext.getVertexCount() == 0) {
+			drawPickCandidateVertex(drawer, viewContext, paintContext);
+		} else if (paintContext.getVertexCount() == 1) {
+			drawPickCandidateLine(drawer, viewContext, paintContext);
 		}
 	}
 }

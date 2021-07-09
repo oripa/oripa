@@ -48,29 +48,29 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final PaintContextInterface context) {
+			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
 
 		if (selectedLines.isEmpty()) {
 			return;
 		}
 
-		context.creasePatternUndo().pushUndoInfo();
+		paintContext.creasePatternUndo().pushUndoInfo();
 
 		for (OriLine line : selectedLines) {
 			if (line.isBoundary()) {
 				continue;
 			}
 			// Don't select if the line is hidden
-			if (!context.isMVLineVisible() && line.isMV()) {
+			if (!viewContext.isMVLineVisible() && line.isMV()) {
 				continue;
 			}
-			if (!context.isAuxLineVisible() && line.isAux()) {
+			if (!viewContext.isAuxLineVisible() && line.isAux()) {
 				continue;
 			}
 
-			if (context.getPickedLines().contains(line) == false) {
+			if (paintContext.getPickedLines().contains(line) == false) {
 				line.selected = true;
-				context.pushLine(line);
+				paintContext.pushLine(line);
 			}
 
 		}
@@ -78,10 +78,11 @@ public class SelectLineAction extends RectangularSelectableAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
-		super.onDraw(drawer, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
+		super.onDraw(drawer, viewContext, paintContext);
 
-		this.drawPickCandidateLine(drawer, context);
+		this.drawPickCandidateLine(drawer, viewContext, paintContext);
 	}
 
 }

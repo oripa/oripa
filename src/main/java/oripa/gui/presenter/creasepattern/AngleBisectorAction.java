@@ -16,14 +16,14 @@ public class AngleBisectorAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		if (context.getVertexCount() < 3) {
-			drawPickCandidateVertex(drawer, context);
+		if (paintContext.getVertexCount() < 3) {
+			drawPickCandidateVertex(drawer, viewContext, paintContext);
 		} else {
-			drawPickCandidateLine(drawer, context);
+			drawPickCandidateLine(drawer, viewContext, paintContext);
 		}
 	}
 }

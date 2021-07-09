@@ -5,6 +5,7 @@ import java.util.Optional;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManagerInterface;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.EditOutlineAction;
 import oripa.gui.presenter.creasepattern.GraphicMouseActionInterface;
@@ -23,12 +24,13 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(
-			final PaintContextInterface context,
+			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
 			final boolean differentAction) {
-		GraphicMouseActionInterface next = super.onLeftClick(context,
+
+		GraphicMouseActionInterface next = super.onLeftClick(viewContext, paintContext,
 				differentAction);
 
-		if (context.isMissionCompleted()) {
+		if (paintContext.isMissionCompleted()) {
 			popPreviousState();
 			next = actionHolder.getMouseAction();
 		}
@@ -37,7 +39,8 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	}
 
 	@Override
-	public void onRightClick(final PaintContextInterface context, final boolean differentAction) {
+	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
 
 		popPreviousState();
 	}

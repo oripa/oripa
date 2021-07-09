@@ -59,6 +59,7 @@ import oripa.domain.paint.InitialVisibilities;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.presenter.creasepattern.AngleMeasuringAction;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.LengthMeasuringAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
@@ -95,6 +96,7 @@ public class UIPanel extends JPanel {
 
 	private final ViewScreenUpdater screenUpdater;
 	private final PaintContextInterface paintContext;
+	private final CreasePatternViewContext viewContext;
 
 	private boolean fullEstimation = true;
 
@@ -214,12 +216,14 @@ public class UIPanel extends JPanel {
 			final StateManagerInterface<EditMode> stateManager,
 			final ViewScreenUpdater screenUpdater,
 			final MouseActionHolder actionHolder,
+			final CreasePatternViewContext viewContext,
 			final PaintContextInterface aContext,
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainFrameSetting mainFrameSetting,
 			final MainScreenSetting mainScreenSetting) {
 
 		this.screenUpdater = screenUpdater;
+		this.viewContext = viewContext;
 		this.paintContext = aContext;
 
 		constructButtons(stateManager, actionHolder, mainFrameSetting, mainScreenSetting);
@@ -842,7 +846,7 @@ public class UIPanel extends JPanel {
 		// buttons panel
 		doFullEstimationCheckBox.addActionListener(e -> fullEstimation = doFullEstimationCheckBox.isSelected());
 
-		buttonCheckWindow.addActionListener(e -> showCheckerWindow(paintContext));
+		buttonCheckWindow.addActionListener(e -> showCheckerWindow(viewContext, paintContext));
 
 		buildButton.addActionListener(
 				e -> showFoldedModelWindows(cutOutlinesHolder, mainScreenSetting));
@@ -854,7 +858,7 @@ public class UIPanel extends JPanel {
 	 * @param context
 	 *            the cp data to be used
 	 */
-	private void showCheckerWindow(final PaintContextInterface context) {
+	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContextInterface context) {
 		OrigamiModel origamiModel;
 		CreasePatternInterface creasePattern = context.getCreasePattern();
 
@@ -865,7 +869,7 @@ public class UIPanel extends JPanel {
 		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory(
 				childFrameManager);
 		JFrame checker = checkerFactory.createFrame(
-				UIPanel.this, origamiModel, creasePattern, context.isZeroLineWidth());
+				UIPanel.this, origamiModel, creasePattern, viewContext.isZeroLineWidth());
 		checker.repaint();
 		checker.setVisible(true);
 	}

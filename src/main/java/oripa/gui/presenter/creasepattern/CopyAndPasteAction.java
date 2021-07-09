@@ -44,9 +44,10 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public GraphicMouseActionInterface onLeftClick(final PaintContextInterface context,
+	public GraphicMouseActionInterface onLeftClick(final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext,
 			final boolean differentAction) {
-		action.onLeftClick(context, differentAction);
+		action.onLeftClick(viewContext, paintContext, differentAction);
 
 		return this;
 	}
@@ -58,18 +59,21 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPress(final PaintContextInterface context, final boolean differentAction) {
-		action.onPress(context, differentAction);
+	public void onPress(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
+		action.onPress(viewContext, paintContext, differentAction);
 	}
 
 	@Override
-	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
-		action.onDrag(context, differentAction);
+	public void onDrag(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
+		action.onDrag(viewContext, paintContext, differentAction);
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
-		action.onRelease(context, differentAction);
+	public void onRelease(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
+		action.onRelease(viewContext, paintContext, differentAction);
 	}
 
 	/**
@@ -86,15 +90,17 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final PaintContextInterface context, final boolean changingOrigin) {
+	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean changingOrigin) {
 
 		changeAction(changingOrigin);
 
-		return action.onMove(context, changingOrigin);
+		return action.onMove(viewContext, paintContext, changingOrigin);
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
-		action.onDraw(drawer, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
+		action.onDraw(drawer, viewContext, paintContext);
 	}
 }

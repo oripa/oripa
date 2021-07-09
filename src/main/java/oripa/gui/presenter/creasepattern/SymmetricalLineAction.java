@@ -13,21 +13,23 @@ public class SymmetricalLineAction extends GraphicMouseAction {
 
 	@Override
 	public Vector2d onMove(
-			final PaintContextInterface context, final boolean differentAction) {
+			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
 
-		if (context.getVertexCount() < 2) {
-			return super.onMove(context, differentAction);
+		if (paintContext.getVertexCount() < 2) {
+			return super.onMove(viewContext, paintContext, differentAction);
 		}
 
 		// enable auto-walk selection only
-		return super.onMove(context, false);
+		return super.onMove(viewContext, paintContext, false);
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateVertex(drawer, context);
+		drawPickCandidateVertex(drawer, viewContext, paintContext);
 	}
 }

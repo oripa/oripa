@@ -18,23 +18,24 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final PaintContextInterface context) {
+			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
 
 		if (selectedLines.isEmpty()) {
 			return;
 		}
-		context.creasePatternUndo().pushUndoInfo();
+		paintContext.creasePatternUndo().pushUndoInfo();
 
-		var painter = context.getPainter();
+		var painter = paintContext.getPainter();
 		painter.alterLineTypes(selectedLines, setting.getTypeFrom(), setting.getTypeTo());
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateLine(drawer, context);
+		drawPickCandidateLine(drawer, viewContext, paintContext);
 	}
 
 }

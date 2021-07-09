@@ -9,14 +9,14 @@ public class AddVertexAction extends GraphicMouseAction {
 		setEditMode(EditMode.VERTEX);
 
 		setActionState(new AddingVertex());
-
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateVertex(drawer, context);
+		drawPickCandidateVertex(drawer, viewContext, paintContext);
 	}
 }

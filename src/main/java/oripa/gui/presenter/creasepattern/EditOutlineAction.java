@@ -36,24 +36,25 @@ public class EditOutlineAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
-		super.onDraw(drawer, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
+		super.onDraw(drawer, viewContext, paintContext);
 
-		this.drawPickCandidateVertex(drawer, context);
+		this.drawPickCandidateVertex(drawer, viewContext, paintContext);
 
-		List<Vector2d> outlinevertices = context.getPickedVertices();
+		List<Vector2d> outlinevertices = paintContext.getPickedVertices();
 
 		// Shows the outline of the editing
 		int outlineVnum = outlinevertices.size();
 
 		if (outlineVnum != 0) {
 
-			drawTempOutlines(drawer, outlinevertices, context.getScale());
+			drawTempOutlines(drawer, outlinevertices, paintContext.getScale());
 
-			Vector2d cv = (context.getCandidateVertexToPick() == null)
-					? new Vector2d(context.getLogicalMousePoint().getX(),
-							context.getLogicalMousePoint().getY())
-					: context.getCandidateVertexToPick();
+			Vector2d cv = (paintContext.getCandidateVertexToPick() == null)
+					? new Vector2d(paintContext.getLogicalMousePoint().getX(),
+							paintContext.getLogicalMousePoint().getY())
+					: paintContext.getCandidateVertexToPick();
 			drawer.drawLine(outlinevertices.get(0), cv);
 			drawer.drawLine(outlinevertices.get(outlineVnum - 1), cv);
 		}

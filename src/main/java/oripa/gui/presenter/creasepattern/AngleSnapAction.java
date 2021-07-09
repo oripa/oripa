@@ -22,7 +22,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.angle.SelectingStartPoint;
-import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
+import oripa.domain.paint.geometry.NearestItemFinder;
 
 /**
  * @author OUCHI Koji
@@ -50,32 +50,35 @@ public class AngleSnapAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final PaintContextInterface context, final boolean differentAction) {
-		if (context.getVertexCount() == 0) {
-			return super.onMove(context, differentAction);
+	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
+		if (paintContext.getVertexCount() == 0) {
+			return super.onMove(viewContext, paintContext, differentAction);
 		}
 
-		var crossPoint = NearestItemFinder.getNearestInAngleSnapCrossPoints(context);
-		context.setCandidateVertexToPick(crossPoint);
+		var crossPoint = NearestItemFinder.getNearestInAngleSnapCrossPoints(viewContext, paintContext);
+		paintContext.setCandidateVertexToPick(crossPoint);
 		return crossPoint;
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
-		if (context.getVertexCount() == 1) {
-			drawSnapPoints(drawer, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
+		if (paintContext.getVertexCount() == 1) {
+			drawSnapPoints(drawer, viewContext, paintContext);
 		}
 
-		super.onDraw(drawer, context);
-		drawTemporaryLine(drawer, context);
-		drawPickCandidateVertex(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
+		drawTemporaryLine(drawer, viewContext, paintContext);
+		drawPickCandidateVertex(drawer, viewContext, paintContext);
 	}
 
-	private void drawSnapPoints(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	private void drawSnapPoints(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 		drawer.selectAssistLineColor();
 
-		context.getAngleSnapCrossPoints()
-				.forEach(p -> drawVertex(drawer, context, p));
+		paintContext.getAngleSnapCrossPoints()
+				.forEach(p -> drawVertex(drawer, viewContext, paintContext, p));
 	}
 
 }

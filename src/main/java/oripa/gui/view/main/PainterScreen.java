@@ -46,6 +46,7 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseActionInterface;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
@@ -65,6 +66,8 @@ public class PainterScreen extends JPanel
 	private final MainScreenSetting setting = new MainScreenSetting();
 	private final ScreenUpdater screenUpdater = new ScreenUpdater();
 	private final PaintContextInterface paintContext;
+	private final CreasePatternViewContext viewContext;
+
 	private final CutModelOutlinesHolder cutOutlinesHolder;
 
 	private final boolean bDrawFaceID = false;
@@ -80,11 +83,13 @@ public class PainterScreen extends JPanel
 
 	public PainterScreen(
 			final MouseActionHolder mouseActionHolder,
-			final PaintContextInterface aContext,
+			final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext,
 			final CutModelOutlinesHolder aCutOutlineHolder) {
 		this.mouseActionHolder = mouseActionHolder;
 		screenUpdater.setMouseActionHolder(mouseActionHolder);
-		paintContext = aContext;
+		this.paintContext = paintContext;
+		this.viewContext = viewContext;
 		cutOutlinesHolder = aCutOutlineHolder;
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -210,7 +215,7 @@ public class PainterScreen extends JPanel
 
 		Graphics2D bufferG2D = updateBufferImage();
 
-		if (!paintContext.isZeroLineWidth()) {
+		if (!viewContext.isZeroLineWidth()) {
 			bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
 		}
@@ -219,13 +224,13 @@ public class PainterScreen extends JPanel
 
 		ObjectGraphicDrawer bufferObjDrawer = new Java2DGraphicDrawer(bufferG2D);
 
-		drawer.draw(bufferObjDrawer, paintContext,
+		drawer.draw(bufferObjDrawer, viewContext, paintContext,
 				action == null ? false : action.getEditMode() == EditMode.VERTEX);
 
-		if (paintContext.isCrossLineVisible()) {
+		if (viewContext.isCrossLineVisible()) {
 			var crossLines = cutOutlinesHolder.getOutlines();
 			drawer.drawAllLines(bufferObjDrawer, crossLines, camera.getScale(),
-					paintContext.isZeroLineWidth());
+					viewContext.isZeroLineWidth());
 		}
 
 		// Line that links the pair of unsetled faces
@@ -256,7 +261,7 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		action.onDraw(bufferObjDrawer, paintContext);
+		action.onDraw(bufferObjDrawer, viewContext, paintContext);
 
 		g.drawImage(bufferImage, 0, 0, this);
 
@@ -279,14 +284,14 @@ public class PainterScreen extends JPanel
 				try {
 					if (MouseUtility.isRightButtonDown(e)) {
 						action.onRightClick(
-								paintContext,
+								viewContext, paintContext,
 								MouseUtility.isControlKeyDown(e));
 
 						return null;
 					}
 
 					mouseActionHolder.setMouseAction(action.onLeftClick(
-							paintContext,
+							viewContext, paintContext,
 							MouseUtility.isControlKeyDown(e)));
 					return null;
 				} catch (Exception e) {
@@ -311,7 +316,7 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		action.onPress(paintContext, MouseUtility.isControlKeyDown(e));
+		action.onPress(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
 
 		preMousePoint = e.getPoint();
 	}
@@ -322,7 +327,7 @@ public class PainterScreen extends JPanel
 		// Rectangular Selection
 
 		if (action != null) {
-			action.onRelease(paintContext, MouseUtility.isControlKeyDown(e));
+			action.onRelease(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
 		}
 		repaint();
 	}
@@ -351,7 +356,7 @@ public class PainterScreen extends JPanel
 
 		// Drag by left button
 		paintContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
-		action.onDrag(paintContext, MouseUtility.isControlKeyDown(e));
+		action.onDrag(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
 		repaint();
 	}
 
@@ -386,7 +391,7 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				action.onMove(paintContext, MouseUtility.isControlKeyDown(e));
+				action.onMove(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
 				return null;
 			}
 
@@ -436,31 +441,31 @@ public class PainterScreen extends JPanel
 
 		setting.addPropertyChangeListener(
 				MainScreenSetting.ZERO_LINE_WIDTH, e -> {
-					paintContext.setZeroLineWidth((boolean) e.getNewValue());
+					viewContext.setZeroLineWidth((boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
 				MainScreenSetting.VERTEX_VISIBLE, e -> {
-					paintContext.setVertexVisible((boolean) e.getNewValue());
+					viewContext.setVertexVisible((boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
 				MainScreenSetting.MV_LINE_VISIBLE, e -> {
-					paintContext.setMVLineVisible((boolean) e.getNewValue());
+					viewContext.setMVLineVisible((boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
 				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
-					paintContext.setAuxLineVisible((boolean) e.getNewValue());
+					viewContext.setAuxLineVisible((boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
 				MainScreenSetting.GRID_VISIBLE, e -> {
-					paintContext.setGridVisible((boolean) e.getNewValue());
+					viewContext.setGridVisible((boolean) e.getNewValue());
 					repaint();
 				});
 
@@ -468,7 +473,7 @@ public class PainterScreen extends JPanel
 				MainScreenSetting.CROSS_LINE_VISIBLE, e -> {
 					var visible = (boolean) e.getNewValue();
 					logger.info("receive crossLineVisible has become " + visible);
-					paintContext.setCrossLineVisible(visible);
+					viewContext.setCrossLineVisible(visible);
 					repaint();
 				});
 

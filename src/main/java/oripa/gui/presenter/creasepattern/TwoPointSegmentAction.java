@@ -21,12 +21,13 @@ public class TwoPointSegmentAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		drawTemporaryLine(drawer, context);
-		drawPickCandidateVertex(drawer, context);
+		drawTemporaryLine(drawer, viewContext, paintContext);
+		drawPickCandidateVertex(drawer, viewContext, paintContext);
 
 	}
 }

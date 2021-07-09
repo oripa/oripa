@@ -44,7 +44,8 @@ public interface GraphicMouseActionInterface {
 	 * @return Next mouse action.
 	 */
 	public GraphicMouseActionInterface onLeftClick(
-			final PaintContextInterface context, final boolean differentAction);
+			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction);
 
 	/**
 	 * @param context
@@ -61,7 +62,8 @@ public interface GraphicMouseActionInterface {
 	 * @param context
 	 * @param differentAction
 	 */
-	public abstract void onRightClick(PaintContextInterface context, boolean differentAction);
+	public abstract void onRightClick(CreasePatternViewContext viewContext, PaintContextInterface paintContext,
+			boolean differentAction);
 
 	public abstract void undo(PaintContextInterface context);
 
@@ -75,13 +77,17 @@ public interface GraphicMouseActionInterface {
 	 * @param differentAction
 	 * @return close vertex. null if not found.
 	 */
-	public abstract Vector2d onMove(PaintContextInterface context, boolean differentAction);
+	public abstract Vector2d onMove(final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext, boolean differentAction);
 
-	public abstract void onPress(PaintContextInterface context, boolean differentAction);
+	public abstract void onPress(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			boolean differentAction);
 
-	public abstract void onDrag(PaintContextInterface context, boolean differentAction);
+	public abstract void onDrag(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			boolean differentAction);
 
-	public abstract void onRelease(PaintContextInterface context, boolean differentAction);
+	public abstract void onRelease(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			boolean differentAction);
 
 	/**
 	 * draws selected lines and selected vertices as selected state. Override
@@ -90,6 +96,7 @@ public interface GraphicMouseActionInterface {
 	 * @param g2d
 	 * @param context
 	 */
-	public abstract void onDraw(ObjectGraphicDrawer drawer, PaintContextInterface context);
+	public abstract void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext);
 
 }

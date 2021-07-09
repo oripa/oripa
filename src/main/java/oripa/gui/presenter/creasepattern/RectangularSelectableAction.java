@@ -20,22 +20,25 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	private Vector2d draggingPoint = null;
 
 	@Override
-	public void onPress(final PaintContextInterface context, final boolean differentAction) {
-		startPoint = context.getLogicalMousePoint();
+	public void onPress(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
+		startPoint = paintContext.getLogicalMousePoint();
 	}
 
 	@Override
-	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
+	public void onDrag(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
 
-		draggingPoint = context.getLogicalMousePoint();
+		draggingPoint = paintContext.getLogicalMousePoint();
 
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
+	public void onRelease(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
 
 		if (startPoint != null && draggingPoint != null) {
-			selectByRectangularArea(context);
+			selectByRectangularArea(viewContext, paintContext);
 		}
 
 		startPoint = null;
@@ -51,9 +54,11 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	 * @param context
 	 */
 	protected abstract void afterRectangularSelection(
-			Collection<OriLine> selectedLines, PaintContextInterface context);
+			Collection<OriLine> selectedLines, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext);
 
-	protected final void selectByRectangularArea(final PaintContextInterface context) {
+	protected final void selectByRectangularArea(final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 		Collection<OriLine> selectedLines = new ArrayList<>();
 
 		try {
@@ -63,22 +68,23 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 					Math.max(startPoint.x, draggingPoint.x),
 					Math.max(startPoint.y, draggingPoint.y));
 
-			CreasePatternInterface creasePattern = context.getCreasePattern();
+			CreasePatternInterface creasePattern = paintContext.getCreasePattern();
 			selectedLines = clipper.selectByArea(creasePattern);
 		} catch (Exception ex) {
 			logger.error("failed to select rectangularly", ex);
 		}
 
-		afterRectangularSelection(selectedLines, context);
+		afterRectangularSelection(selectedLines, viewContext, paintContext);
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
 		if (startPoint != null && draggingPoint != null) {
-			drawer.selectAreaSelectionStroke(context.getScale());
+			drawer.selectAreaSelectionStroke(paintContext.getScale());
 			drawer.selectAreaSelectionColor();
 
 			drawer.drawRectangle(startPoint, draggingPoint);

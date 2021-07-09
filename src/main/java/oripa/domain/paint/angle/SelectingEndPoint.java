@@ -22,7 +22,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.AbstractActionState;
-import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 /**
@@ -46,7 +45,8 @@ public class SelectingEndPoint extends AbstractActionState {
 	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
 			final boolean doSpecial) {
 
-		var picked = NearestItemFinder.getNearestInAngleSnapCrossPoints(context);
+//		var picked = NearestItemFinder.getNearestInAngleSnapCrossPoints(context);
+		var picked = context.getCandidateVertexToPick();
 
 		if (picked == null) {
 			return false;

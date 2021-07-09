@@ -33,7 +33,5 @@ public class SelectingSecondVertexForSegment extends PickingVertex {
 	protected void initialize() {
 		setPreviousClass(SelectingFirstVertexForSegment.class);
 		setNextClass(SelectingFirstVertexForSegment.class);
-
-//		System.out.println("SelectingSecondVertex.initialize() is called");
 	}
 }

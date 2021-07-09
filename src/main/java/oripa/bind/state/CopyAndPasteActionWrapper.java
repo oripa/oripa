@@ -8,6 +8,7 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.presenter.creasepattern.CopyAndPasteAction;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
@@ -40,7 +41,8 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	}
 
 	@Override
-	public void onRightClick(final PaintContextInterface context, final boolean differentAction) {
+	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
 		Optional<ApplicationState<EditMode>> prevOpt = stateManager.pop();
 
 		prevOpt.ifPresent(prev -> prev.performActions(null));

@@ -6,7 +6,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
-import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
+import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 public class ChangeOriginAction extends GraphicMouseAction {
@@ -21,7 +21,8 @@ public class ChangeOriginAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public GraphicMouseActionInterface onLeftClick(final PaintContextInterface context,
+	public GraphicMouseActionInterface onLeftClick(final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext,
 			final boolean keepDoing) {
 
 		return this;
@@ -38,9 +39,10 @@ public class ChangeOriginAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final PaintContextInterface context, final boolean differentAction) {
-		Vector2d closeVertex = NearestItemFinder.pickVertexFromPickedLines(context);
-		context.setCandidateVertexToPick(closeVertex);
+	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean differentAction) {
+		Vector2d closeVertex = NearestItemFinder.pickVertexFromPickedLines(paintContext);
+		paintContext.setCandidateVertexToPick(closeVertex);
 
 		if (closeVertex != null) {
 			holder.setOrigin(closeVertex);
@@ -50,18 +52,19 @@ public class ChangeOriginAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
-		super.onDraw(drawer, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
+		super.onDraw(drawer, viewContext, paintContext);
 
-		Collection<OriLine> lines = context.getPickedLines();
+		Collection<OriLine> lines = paintContext.getPickedLines();
 
 		drawer.selectAssistLineColor();
 
 		for (OriLine line : lines) {
-			this.drawVertex(drawer, context, line.p0);
-			this.drawVertex(drawer, context, line.p1);
+			this.drawVertex(drawer, viewContext, paintContext, line.p0);
+			this.drawVertex(drawer, viewContext, paintContext, line.p1);
 		}
 
-		this.drawPickCandidateVertex(drawer, context);
+		this.drawPickCandidateVertex(drawer, viewContext, paintContext);
 	}
 }

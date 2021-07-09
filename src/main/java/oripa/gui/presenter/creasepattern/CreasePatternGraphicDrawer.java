@@ -48,24 +48,25 @@ public class CreasePatternGraphicDrawer {
 	 */
 	public void draw(
 			final ObjectGraphicDrawer drawer,
-			final PaintContextInterface context, final boolean forceShowingVertex) {
+			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final boolean forceShowingVertex) {
 
-		CreasePatternInterface creasePattern = context.getCreasePattern();
+		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
 
-		if (context.isGridVisible()) {
-			drawGridLines(drawer, context.getGridDivNum(), creasePattern.getPaperSize(),
-					context.getPaperDomain(),
-					context.getScale(), context.isZeroLineWidth());
+		if (viewContext.isGridVisible()) {
+			drawGridLines(drawer, paintContext.getGridDivNum(), creasePattern.getPaperSize(),
+					paintContext.getPaperDomain(),
+					paintContext.getScale(), viewContext.isZeroLineWidth());
 		}
 
-		drawLines(drawer, creasePattern, context.getScale(), context.isZeroLineWidth(),
-				context.isMVLineVisible(),
-				context.isAuxLineVisible());
+		drawLines(drawer, creasePattern, paintContext.getScale(), viewContext.isZeroLineWidth(),
+				viewContext.isMVLineVisible(),
+				viewContext.isAuxLineVisible());
 
 		// Drawing of the vertices
-		if (context.isVertexVisible() || forceShowingVertex) {
-			drawVertices(drawer, creasePattern, context.getScale(), context.isMVLineVisible(),
-					context.isAuxLineVisible());
+		if (viewContext.isVertexVisible() || forceShowingVertex) {
+			drawVertices(drawer, creasePattern, paintContext.getScale(), viewContext.isMVLineVisible(),
+					viewContext.isAuxLineVisible());
 		}
 	}
 

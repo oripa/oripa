@@ -17,11 +17,12 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+			final PaintContextInterface paintContext) {
 
-		super.onDraw(drawer, context);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateLine(drawer, context);
+		drawPickCandidateLine(drawer, viewContext, paintContext);
 
 	}
 
@@ -38,13 +39,13 @@ public class DeleteLineAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final PaintContextInterface context) {
+			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
 
 		if (selectedLines.isEmpty()) {
 			return;
 		}
-		context.creasePatternUndo().pushUndoInfo();
-		Painter painter = context.getPainter();
+		paintContext.creasePatternUndo().pushUndoInfo();
+		Painter painter = paintContext.getPainter();
 		painter.removeLines(selectedLines);
 	}
 
