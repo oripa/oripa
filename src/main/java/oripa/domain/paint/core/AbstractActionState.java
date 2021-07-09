@@ -1,6 +1,6 @@
 package oripa.domain.paint.core;
 
-import java.awt.geom.Point2D;
+import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,15 +8,19 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.paint.PaintContextInterface;
 
 /**
- * a frame work of State pattern with undo, which can get back to previous
- * state.
+ * a framework of (modified) State pattern with undo, which can get back to
+ * previous state.
  *
  * Call doAction() to perform the action of the state. The flow of processing
- * is: doAction(): onAct() -> quit proccessing if onAct() returns false ->
- * onResult() -> finish!; unDo(): undoAction() -> finish! both method returns
- * ActionState to be used next time.
+ * is:
+ * <ul>
+ * <li>doAction(): onAct() -> quit proccessing if onAct() returns false ->
+ * onResult() -> finish!;</li>
+ * <li>undo(): undoAction() -> finish!</li>
+ * </ul>
+ * both methods return ActionState to be used next time.
  *
- * @author koji
+ * @author OUCHI Koji
  *
  */
 public abstract class AbstractActionState implements ActionState {
@@ -48,11 +52,11 @@ public abstract class AbstractActionState implements ActionState {
 	 * true.
 	 *
 	 * @return A new instance of next state. if class of next state is not set
-	 *         (or is null), returns {@value this}.
+	 *         (or is null), returns {@code this}.
 	 */
 	@Override
 	public final ActionState doAction(final PaintContextInterface context,
-			final Point2D.Double currentPoint, final boolean doSpecial) {
+			final Vector2d currentPoint, final boolean doSpecial) {
 
 		boolean success = onAct(context, currentPoint, doSpecial);
 
@@ -86,7 +90,7 @@ public abstract class AbstractActionState implements ActionState {
 	 * @return true if the action succeeded, otherwise false.
 	 */
 	protected abstract boolean onAct(PaintContextInterface context,
-			Point2D.Double currentPoint, boolean doSpecial);
+			Vector2d currentPoint, boolean doSpecial);
 
 	/**
 	 * cancel the current actions and returns previous state.
@@ -110,16 +114,6 @@ public abstract class AbstractActionState implements ActionState {
 	 * @param context
 	 */
 	protected abstract void undoAction(PaintContextInterface context);
-
-	@Override
-	public void setNextState(final ActionState state) {
-		next = state.getClass();
-	}
-
-	@Override
-	public void setPreviousState(final ActionState state) {
-		prev = state.getClass();
-	}
 
 	@Override
 	public ActionState getNextState() {
@@ -146,7 +140,6 @@ public abstract class AbstractActionState implements ActionState {
 		}
 
 		return state;
-
 	}
 
 }

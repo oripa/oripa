@@ -34,23 +34,11 @@ import oripa.value.OriLine;
  *
  */
 public class SelectingStartPoint extends PickingVertex {
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.core.AbstractActionState#initialize()
-	 */
 	@Override
 	protected void initialize() {
 		setNextClass(SelectingEndPoint.class);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.AbstractActionState#onResult(oripa.domain.paint.
-	 * PaintContextInterface, boolean)
-	 */
 	@Override
 	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
 		var step = context.getAngleStep();

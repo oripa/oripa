@@ -1,42 +1,39 @@
 package oripa.domain.paint.core;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.RectangleClipper;
 import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.value.OriLine;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	private static final Logger logger = LoggerFactory.getLogger(RectangularSelectableAction.class);
 
-	private Point2D.Double startPoint = null;
-	private Point2D.Double draggingPoint = null;
+	private Vector2d startPoint = null;
+	private Vector2d draggingPoint = null;
 
 	@Override
-	public void onPress(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onPress(final PaintContextInterface context, final boolean differentAction) {
 		startPoint = context.getLogicalMousePoint();
 	}
 
 	@Override
-	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
 
 		draggingPoint = context.getLogicalMousePoint();
 
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
 
 		if (startPoint != null && draggingPoint != null) {
 			selectByRectangularArea(context);
@@ -77,16 +74,15 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
 
-		super.onDraw(g2d, context);
+		super.onDraw(drawer, context);
 
 		if (startPoint != null && draggingPoint != null) {
-			var selector = getElementSelector();
-			g2d.setStroke(selector.createAreaSelectionStroke(context.getScale()));
-			g2d.setColor(selector.getAreaSelectionColor());
+			drawer.selectAreaSelectionStroke(context.getScale());
+			drawer.selectAreaSelectionColor();
 
-			g2d.draw(getGraphicItemConverter().toRectangle2D(startPoint, draggingPoint));
+			drawer.drawRectangle(startPoint, draggingPoint);
 		}
 
 	}

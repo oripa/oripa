@@ -16,10 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.util;
+package oripa.drawer.java2d;
 
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.vecmath.Vector2d;
@@ -53,7 +52,7 @@ public class GraphicItemConverter {
 				vertexSize, vertexSize);
 	}
 
-	public Rectangle2D.Double toRectangle2D(final Point2D.Double p0, final Point2D.Double p1) {
+	public Rectangle2D.Double toRectangle2D(final Vector2d p0, final Vector2d p1) {
 		double sx = Math.min(p0.x, p1.x);
 		double sy = Math.min(p0.y, p1.y);
 		double w = Math.abs(p0.x - p1.x);

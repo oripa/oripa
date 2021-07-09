@@ -1,13 +1,11 @@
 package oripa.domain.paint.copypaste;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D.Double;
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.GraphicMouseActionInterface;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 import oripa.domain.paint.geometry.NearestItemFinder;
@@ -32,7 +30,7 @@ public class ChangeOriginAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void doAction(final PaintContextInterface context, final Double point,
+	public void doAction(final PaintContextInterface context, final Vector2d point,
 			final boolean differntAction) {
 
 	}
@@ -42,26 +40,7 @@ public class ChangeOriginAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onPress(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
-
-	}
-
-	@Override
-	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
-
-	}
-
-	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
-
-	}
-
-	@Override
-	public Vector2d onMove(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
+	public Vector2d onMove(final PaintContextInterface context, final boolean differentAction) {
 		Vector2d closeVertex = NearestItemFinder.pickVertexFromPickedLines(context);
 		context.setCandidateVertexToPick(closeVertex);
 
@@ -73,20 +52,18 @@ public class ChangeOriginAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
-		super.onDraw(g2d, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+		super.onDraw(drawer, context);
 
 		Collection<OriLine> lines = context.getPickedLines();
 
-		var selector = getElementSelector();
-
-		g2d.setColor(selector.getAssistLineColor());
+		drawer.selectAssistLineColor();
 
 		for (OriLine line : lines) {
-			this.drawVertex(g2d, context, line.p0);
-			this.drawVertex(g2d, context, line.p1);
+			this.drawVertex(drawer, context, line.p0);
+			this.drawVertex(drawer, context, line.p1);
 		}
 
-		this.drawPickCandidateVertex(g2d, context);
+		this.drawPickCandidateVertex(drawer, context);
 	}
 }

@@ -1,6 +1,5 @@
 package oripa.domain.paint;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,7 +42,7 @@ class PaintContext implements PaintContextInterface {
 
 	private OriLine.Type lineTypeOfNewLines;
 
-	private Point2D.Double mousePoint;
+	private Vector2d mousePoint;
 
 	private AngleStep angleStep;
 
@@ -62,7 +61,7 @@ class PaintContext implements PaintContextInterface {
 	 * @see oripa.domain.paint.PaintContextInterface#getLogicalMousePoint()
 	 */
 	@Override
-	public synchronized Point2D.Double getLogicalMousePoint() {
+	public synchronized Vector2d getLogicalMousePoint() {
 		return mousePoint;
 	}
 
@@ -96,14 +95,8 @@ class PaintContext implements PaintContextInterface {
 		this.isPasting = false;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#setLogicalMousePoint
-	 * (java.awt.geom.Point2D.Double)
-	 */
 	@Override
-	public synchronized void setLogicalMousePoint(final Point2D.Double logicalPoint) {
+	public synchronized void setLogicalMousePoint(final Vector2d logicalPoint) {
 		this.mousePoint = logicalPoint;
 	}
 

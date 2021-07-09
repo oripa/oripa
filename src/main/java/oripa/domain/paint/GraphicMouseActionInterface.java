@@ -1,9 +1,5 @@
 package oripa.domain.paint;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D.Double;
-
 import javax.vecmath.Vector2d;
 
 public interface GraphicMouseActionInterface {
@@ -54,18 +50,16 @@ public interface GraphicMouseActionInterface {
 	 * @param differntAction
 	 * @param screenUpdater
 	 */
-	public abstract void doAction(PaintContextInterface context, Double point,
+	public abstract void doAction(PaintContextInterface context, Vector2d point,
 			boolean differntAction);
 
 	/**
 	 * undo action.
 	 *
 	 * @param context
-	 * @param affine
 	 * @param differentAction
 	 */
-	public abstract void onRightClick(PaintContextInterface context,
-			AffineTransform affine, boolean differentAction);
+	public abstract void onRightClick(PaintContextInterface context, boolean differentAction);
 
 	public abstract void undo(PaintContextInterface context);
 
@@ -76,21 +70,16 @@ public interface GraphicMouseActionInterface {
 	 * is stored into context.pickCandidateL(and V).
 	 *
 	 * @param context
-	 * @param affine
 	 * @param differentAction
 	 * @return close vertex. null if not found.
 	 */
-	public abstract Vector2d onMove(PaintContextInterface context,
-			AffineTransform affine, boolean differentAction);
+	public abstract Vector2d onMove(PaintContextInterface context, boolean differentAction);
 
-	public abstract void onPress(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction);
+	public abstract void onPress(PaintContextInterface context, boolean differentAction);
 
-	public abstract void onDrag(PaintContextInterface context, AffineTransform affine,
-			boolean differentAction);
+	public abstract void onDrag(PaintContextInterface context, boolean differentAction);
 
-	public abstract void onRelease(PaintContextInterface context,
-			AffineTransform affine, boolean differentAction);
+	public abstract void onRelease(PaintContextInterface context, boolean differentAction);
 
 	/**
 	 * draws selected lines and selected vertices as selected state. Override
@@ -99,6 +88,6 @@ public interface GraphicMouseActionInterface {
 	 * @param g2d
 	 * @param context
 	 */
-	public abstract void onDraw(Graphics2D g2d, PaintContextInterface context);
+	public abstract void onDraw(ObjectGraphicDrawer drawer, PaintContextInterface context);
 
 }

@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -36,6 +37,7 @@ import java.util.function.BiFunction;
 
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
+import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +47,9 @@ import oripa.domain.paint.CreasePatternGraphicDrawer;
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
 import oripa.domain.paint.MouseActionHolder;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
+import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.util.gui.AffineCamera;
 import oripa.util.gui.MouseUtility;
 import oripa.viewsetting.ViewScreenUpdater;
@@ -213,12 +217,14 @@ public class PainterScreen extends JPanel
 
 		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
-		drawer.draw(bufferG2D, paintContext,
+		ObjectGraphicDrawer bufferObjDrawer = new Java2DGraphicDrawer(bufferG2D);
+
+		drawer.draw(bufferObjDrawer, paintContext,
 				action == null ? false : action.getEditMode() == EditMode.VERTEX);
 
 		if (paintContext.isCrossLineVisible()) {
 			var crossLines = cutOutlinesHolder.getOutlines();
-			drawer.drawAllLines(bufferG2D, crossLines, camera.getScale(),
+			drawer.drawAllLines(bufferObjDrawer, crossLines, camera.getScale(),
 					paintContext.isZeroLineWidth());
 		}
 
@@ -250,11 +256,12 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		action.onDraw(bufferG2D, paintContext);
+		action.onDraw(bufferObjDrawer, paintContext);
 
 		g.drawImage(bufferImage, 0, 0, this);
 
-		drawer.drawCandidatePositionString((Graphics2D) g,
+		ObjectGraphicDrawer objDrawer = new Java2DGraphicDrawer((Graphics2D) g);
+		drawer.drawCandidatePositionString(objDrawer,
 				paintContext.getCandidateVertexToPick());
 	}
 
@@ -272,7 +279,7 @@ public class PainterScreen extends JPanel
 				try {
 					if (MouseUtility.isRightButtonDown(e)) {
 						action.onRightClick(
-								paintContext, affineTransform,
+								paintContext,
 								MouseUtility.isControlKeyDown(e));
 
 						return null;
@@ -304,8 +311,7 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		action.onPress(paintContext, affineTransform,
-				MouseUtility.isControlKeyDown(e));
+		action.onPress(paintContext, MouseUtility.isControlKeyDown(e));
 
 		preMousePoint = e.getPoint();
 	}
@@ -316,8 +322,7 @@ public class PainterScreen extends JPanel
 		// Rectangular Selection
 
 		if (action != null) {
-			action.onRelease(paintContext, affineTransform,
-					MouseUtility.isControlKeyDown(e));
+			action.onRelease(paintContext, MouseUtility.isControlKeyDown(e));
 		}
 		repaint();
 	}
@@ -345,11 +350,15 @@ public class PainterScreen extends JPanel
 		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 
 		// Drag by left button
-		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
-				affineTransform, e.getPoint()));
-		action.onDrag(paintContext, affineTransform,
-				MouseUtility.isControlKeyDown(e));
+		paintContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
+		action.onDrag(paintContext, MouseUtility.isControlKeyDown(e));
 		repaint();
+	}
+
+	private Vector2d createMousePoint(final AffineTransform affineTransform, final Point point) {
+		var logicalPoint = MouseUtility.getLogicalPoint(
+				affineTransform, point);
+		return new Vector2d(logicalPoint.x, logicalPoint.y);
 	}
 
 	private boolean doCameraDragAction(final MouseEvent e,
@@ -367,8 +376,7 @@ public class PainterScreen extends JPanel
 	@Override
 	public void mouseMoved(final MouseEvent e) {
 		paintContext.setScale(camera.getScale());
-		paintContext.setLogicalMousePoint(MouseUtility.getLogicalPoint(
-				affineTransform, e.getPoint()));
+		paintContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
 
 		final GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
 		if (action == null) {
@@ -378,8 +386,7 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				action.onMove(paintContext, affineTransform,
-						MouseUtility.isControlKeyDown(e));
+				action.onMove(paintContext, MouseUtility.isControlKeyDown(e));
 				return null;
 			}
 

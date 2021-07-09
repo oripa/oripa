@@ -1,13 +1,10 @@
 package oripa.domain.paint.copypaste;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D.Double;
-
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.EditMode;
 import oripa.domain.paint.GraphicMouseActionInterface;
+import oripa.domain.paint.ObjectGraphicDrawer;
 import oripa.domain.paint.PaintContextInterface;
 import oripa.domain.paint.core.GraphicMouseAction;
 
@@ -58,27 +55,24 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void doAction(final PaintContextInterface context, final Double point,
+	public void doAction(final PaintContextInterface context, final Vector2d point,
 			final boolean differentAction) {
 		action.doAction(context, point, differentAction);
 	}
 
 	@Override
-	public void onPress(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
-		action.onPress(context, affine, differentAction);
+	public void onPress(final PaintContextInterface context, final boolean differentAction) {
+		action.onPress(context, differentAction);
 	}
 
 	@Override
-	public void onDrag(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
-		action.onDrag(context, affine, differentAction);
+	public void onDrag(final PaintContextInterface context, final boolean differentAction) {
+		action.onDrag(context, differentAction);
 	}
 
 	@Override
-	public void onRelease(final PaintContextInterface context, final AffineTransform affine,
-			final boolean differentAction) {
-		action.onRelease(context, affine, differentAction);
+	public void onRelease(final PaintContextInterface context, final boolean differentAction) {
+		action.onRelease(context, differentAction);
 	}
 
 	/**
@@ -95,16 +89,15 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final PaintContextInterface context, final AffineTransform affine,
-			final boolean changingOrigin) {
+	public Vector2d onMove(final PaintContextInterface context, final boolean changingOrigin) {
 
 		changeAction(changingOrigin);
 
-		return action.onMove(context, affine, changingOrigin);
+		return action.onMove(context, changingOrigin);
 	}
 
 	@Override
-	public void onDraw(final Graphics2D g2d, final PaintContextInterface context) {
-		action.onDraw(g2d, context);
+	public void onDraw(final ObjectGraphicDrawer drawer, final PaintContextInterface context) {
+		action.onDraw(drawer, context);
 	}
 }
