@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 
 import oripa.appstate.StatePopper;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.unselect.AllItemUnselecter;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
@@ -59,8 +60,9 @@ public class UnselectAllItemsActionListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		context.getPainter().resetSelectedOriLines();
-		context.clear(false);
+		var unselecter = new AllItemUnselecter();
+
+		unselecter.unselectAllItems(context);
 
 		var currentAction = actionHolder.getMouseAction();
 		if (currentAction == null) {
