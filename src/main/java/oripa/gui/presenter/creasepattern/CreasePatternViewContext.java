@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import oripa.domain.paint.PaintContext;
+
 /**
  * @author OUCHI Koji
  *
@@ -30,6 +32,13 @@ public interface CreasePatternViewContext {
 	// ---------------------------------------------------------------
 	// View-related things
 
+	/**
+	 * Should update grid by calling {@link PaintContext#updateGrids()} if
+	 * {@code dispGrid} is true, and should clear grid if {@code dispGrid} is
+	 * false.
+	 *
+	 * @param dispGrid
+	 */
 	public abstract void setGridVisible(boolean dispGrid);
 
 	public abstract boolean isGridVisible();
