@@ -21,7 +21,7 @@ package oripa.persistent.doc.exporter;
 import java.io.IOException;
 
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.persistent.entity.exporter.CreasePatternExporterDXF;
 
 public class ExporterDXFFactory {
@@ -31,7 +31,7 @@ public class ExporterDXFFactory {
 		public boolean export(final Doc doc, final String filePath)
 				throws IOException, IllegalArgumentException {
 
-			CreasePatternInterface creasePattern = doc.getCreasePattern();
+			CreasePattern creasePattern = doc.getCreasePattern();
 
 			CreasePatternExporterDXF exporter = new CreasePatternExporterDXF();
 

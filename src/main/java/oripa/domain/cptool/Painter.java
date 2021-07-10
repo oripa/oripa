@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -18,7 +18,7 @@ import oripa.value.OriLine;
 public class Painter {
 	// FIXME all methods should return success/failure
 
-	private final CreasePatternInterface creasePattern;
+	private final CreasePattern creasePattern;
 
 	private final LineSelectionModifier selectionModifier = new LineSelectionModifier();
 	private final ElementRemover elementRemover = new ElementRemover();
@@ -36,14 +36,14 @@ public class Painter {
 		creasePattern = null;
 	}
 
-	public Painter(final CreasePatternInterface aCreasePattern) {
+	public Painter(final CreasePattern aCreasePattern) {
 		creasePattern = aCreasePattern;
 	}
 
 	/**
 	 * @return creasePattern
 	 */
-	public CreasePatternInterface getCreasePattern() {
+	public CreasePattern getCreasePattern() {
 		return creasePattern;
 	}
 

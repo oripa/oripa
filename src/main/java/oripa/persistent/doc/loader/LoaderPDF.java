@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -100,7 +100,7 @@ public class LoaderPDF implements DocLoader {
 
 		double size = 400;
 		Doc doc = new Doc(size);
-		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		CreasePattern creasePattern = doc.getCreasePattern();
 		creasePattern.clear();
 
 		for (OriLine l : lines) {

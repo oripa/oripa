@@ -18,7 +18,7 @@
  */
 package oripa.application.main;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 
 /**
@@ -33,7 +33,7 @@ public class PaintContextModification {
 	 * @param creasePattern
 	 * @param paintContext
 	 */
-	public void setCreasePatternToPaintContext(final CreasePatternInterface creasePattern,
+	public void setCreasePatternToPaintContext(final CreasePattern creasePattern,
 			final PaintContext paintContext) {
 		paintContext.clear(true);
 		paintContext.setCreasePattern(creasePattern);

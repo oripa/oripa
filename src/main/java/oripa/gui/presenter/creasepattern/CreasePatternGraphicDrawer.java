@@ -23,7 +23,7 @@ import java.util.Comparator;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -51,7 +51,7 @@ public class CreasePatternGraphicDrawer {
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean forceShowingVertex) {
 
-		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
+		CreasePattern creasePattern = paintContext.getCreasePattern();
 
 		if (viewContext.isGridVisible()) {
 			drawGridLines(drawer, paintContext.getGridDivNum(), creasePattern.getPaperSize(),

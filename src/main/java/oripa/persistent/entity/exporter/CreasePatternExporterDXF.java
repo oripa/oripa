@@ -22,7 +22,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.persistent.filetool.Exporter;
 import oripa.value.OriLine;
 
@@ -30,7 +30,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class CreasePatternExporterDXF implements Exporter<CreasePatternInterface> {
+public class CreasePatternExporterDXF implements Exporter<CreasePattern> {
 
 	/*
 	 * (non Javadoc)
@@ -39,7 +39,7 @@ public class CreasePatternExporterDXF implements Exporter<CreasePatternInterface
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean export(final CreasePatternInterface creasePattern, final String filePath)
+	public boolean export(final CreasePattern creasePattern, final String filePath)
 			throws IOException, IllegalArgumentException {
 		double paperSize = creasePattern.getPaperSize();
 		double scale = 6.0 / paperSize; // 6.0 inch width

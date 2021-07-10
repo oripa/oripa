@@ -19,7 +19,7 @@
 
 package oripa.persistent.svg;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 import java.util.stream.Collectors;
@@ -32,9 +32,9 @@ import static oripa.persistent.svg.SVGUtils.getLineTag;
 public class CreasePatternToSvgConverter extends SvgConverter {
 
     public static final String SPACE = " ";
-    CreasePatternInterface creasePatternInterface;
+    CreasePattern creasePatternInterface;
 
-    public CreasePatternToSvgConverter(CreasePatternInterface creasePatternInterface, double scaleToFitDomain) {
+    public CreasePatternToSvgConverter(CreasePattern creasePatternInterface, double scaleToFitDomain) {
         this.creasePatternInterface = creasePatternInterface;
         this.domain = creasePatternInterface.getPaperDomain();
         this.scaleToFitDomain = scaleToFitDomain;

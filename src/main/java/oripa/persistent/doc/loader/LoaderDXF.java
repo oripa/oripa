@@ -27,7 +27,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -168,7 +168,7 @@ public class LoaderDXF implements DocLoader {
 		}
 
 		CreasePatternFactory factory = new CreasePatternFactory();
-		CreasePatternInterface creasePattern = factory
+		CreasePattern creasePattern = factory
 				.createCreasePattern(lines);
 		Doc doc = new Doc();
 		doc.setCreasePattern(creasePattern);

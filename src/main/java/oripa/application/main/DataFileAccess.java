@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.persistent.dao.DataAccessObject;
@@ -130,7 +130,7 @@ public class DataFileAccess {
 		File givenFile = new File(directory, "export" + filter.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
-		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		CreasePattern creasePattern = doc.getCreasePattern();
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		var origamiModel = modelFactory.createOrigamiModel(

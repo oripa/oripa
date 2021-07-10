@@ -22,7 +22,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.persistent.filetool.Exporter;
 import oripa.persistent.svg.CreasePatternToSvgConverter;
 
@@ -32,9 +32,9 @@ import static oripa.persistent.svg.SVGUtils.*;
  * @author OUCHI Koji
  *
  */
-public class CreasePatternExporterSVG implements Exporter<CreasePatternInterface> {
+public class CreasePatternExporterSVG implements Exporter<CreasePattern> {
 	@Override
-	public boolean export(final CreasePatternInterface creasePattern, final String filepath)
+	public boolean export(final CreasePattern creasePattern, final String filepath)
 			throws IOException, IllegalArgumentException {
 
 		double scale = SVG_SIZE / creasePattern.getPaperSize();

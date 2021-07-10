@@ -18,7 +18,7 @@
  */
 package oripa.domain.paint;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.RectangleDomain;
 
 /**
@@ -27,9 +27,9 @@ import oripa.geom.RectangleDomain;
  */
 public interface CreasePatternHolder {
 
-	CreasePatternInterface getCreasePattern();
+	CreasePattern getCreasePattern();
 
-	void setCreasePattern(CreasePatternInterface creasePattern);
+	void setCreasePattern(CreasePattern creasePattern);
 
 	/**
 	 *

@@ -39,7 +39,7 @@ public class CreasePatternFactory {
 	 * @param paperSize
 	 * @return crease pattern of non-folded case.
 	 */
-	public CreasePatternInterface createCreasePattern(final double paperSize) {
+	public CreasePattern createCreasePattern(final double paperSize) {
 
 		OriLine l0 = new OriLine(-paperSize / 2.0, -paperSize / 2.0, paperSize / 2.0,
 				-paperSize / 2.0, OriLine.Type.CUT);
@@ -53,7 +53,7 @@ public class CreasePatternFactory {
 		var lines = List.of(l0, l1, l2, l3);
 		var domain = new RectangleDomain(lines);
 
-		CreasePatternInterface creasePattern = new CreasePatternImpl(domain);
+		CreasePattern creasePattern = new CreasePatternImpl(domain);
 
 		creasePattern.addAll(lines);
 
@@ -66,7 +66,7 @@ public class CreasePatternFactory {
 	 * @param lines
 	 * @return
 	 */
-	public CreasePatternInterface createCreasePattern(final Collection<OriLine> lines) {
+	public CreasePattern createCreasePattern(final Collection<OriLine> lines) {
 		// To get paper size, consider boundary only
 		var domain = new RectangleDomain(
 				lines.stream()
@@ -74,7 +74,7 @@ public class CreasePatternFactory {
 						.collect(Collectors.toList()));
 
 		// Construct CP
-		CreasePatternInterface creasePattern = new CreasePatternImpl(domain);
+		CreasePattern creasePattern = new CreasePatternImpl(domain);
 		creasePattern.addAll(lines);
 
 		return creasePattern;

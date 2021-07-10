@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
@@ -54,7 +54,7 @@ public class PictureExporter implements DocExporter {
 	 */
 	@Override
 	public boolean export(final Doc doc, final String filePath) throws IOException {
-		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		CreasePattern creasePattern = doc.getCreasePattern();
 		var domain = new RectangleDomain(creasePattern);
 		double gWidth = domain.getWidth() * 2;
 		double gHeight = domain.getHeight() * 2;

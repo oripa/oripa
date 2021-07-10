@@ -35,7 +35,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public interface CreasePatternInterface
+public interface CreasePattern
 		extends Collection<OriLine>, NearVerticesGettable {
 
 	double getPaperSize();

@@ -2,7 +2,7 @@ package oripa.gui.presenter.creasepattern;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.PastingOnVertex;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
@@ -31,7 +31,7 @@ public class PasteAction extends AbstractGraphicMouseAction {
 
 		context.startPasting();
 
-		CreasePatternInterface creasePattern = context.getCreasePattern();
+		CreasePattern creasePattern = context.getCreasePattern();
 
 		creasePattern.stream()
 				.filter(line -> line.selected)

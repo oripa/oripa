@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 public class LoaderCP implements DocLoader {
@@ -122,7 +122,7 @@ public class LoaderCP implements DocLoader {
 		// System.out.println("Linenum=" + creasePattern.size());
 		// }
 		CreasePatternFactory factory = new CreasePatternFactory();
-		CreasePatternInterface creasePattern = factory
+		CreasePattern creasePattern = factory
 				.createCreasePattern(lines);
 		Doc doc = new Doc();
 		doc.setCreasePattern(creasePattern);

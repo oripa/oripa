@@ -9,13 +9,13 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 class PaintContextImpl implements PaintContext {
 
-	private CreasePatternInterface creasePattern;
+	private CreasePattern creasePattern;
 	private final CreasePatternUndoer undoer = new CreasePatternUndoerImpl(this);
 
 	private final LinkedList<Vector2d> pickedVertices = new LinkedList<>();
@@ -357,12 +357,12 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public void setCreasePattern(final CreasePatternInterface aCreasePattern) {
+	public void setCreasePattern(final CreasePattern aCreasePattern) {
 		creasePattern = aCreasePattern;
 	}
 
 	@Override
-	public CreasePatternInterface getCreasePattern() {
+	public CreasePattern getCreasePattern() {
 		return creasePattern;
 	}
 

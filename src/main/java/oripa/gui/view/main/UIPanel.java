@@ -47,7 +47,7 @@ import oripa.bind.binder.ViewChangeBinder;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.bind.state.action.PaintActionSetterFactory;
 import oripa.domain.cptool.TypeForChange;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.FolderFactory;
@@ -859,7 +859,7 @@ public class UIPanel extends JPanel {
 	 */
 	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContext context) {
 		OrigamiModel origamiModel;
-		CreasePatternInterface creasePattern = context.getCreasePattern();
+		CreasePattern creasePattern = context.getCreasePattern();
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		origamiModel = modelFactory.createOrigamiModel(
@@ -912,7 +912,7 @@ public class UIPanel extends JPanel {
 	private void showFoldedModelWindows(
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {
-		CreasePatternInterface creasePattern = paintContext.getCreasePattern();
+		CreasePattern creasePattern = paintContext.getCreasePattern();
 
 		var folderFactory = new FolderFactory();
 		Folder folder = folderFactory.create();
@@ -964,7 +964,7 @@ public class UIPanel extends JPanel {
 	 *
 	 * @return folded Origami model
 	 */
-	private OrigamiModel buildOrigamiModel(final CreasePatternInterface creasePattern) {
+	private OrigamiModel buildOrigamiModel(final CreasePattern creasePattern) {
 		var builder = new OrigamiModelInteractiveBuilder();
 
 		return builder.build(creasePattern,

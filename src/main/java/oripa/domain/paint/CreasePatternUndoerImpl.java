@@ -20,7 +20,7 @@ package oripa.domain.paint;
 
 import java.util.Collection;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.util.history.AbstractUndoManager;
 import oripa.util.history.UndoInfo;
 import oripa.value.OriLine;
@@ -61,7 +61,7 @@ public class CreasePatternUndoerImpl implements CreasePatternUndoer {
 			return;
 		}
 
-		CreasePatternInterface creasePattern = owner.getCreasePattern();
+		CreasePattern creasePattern = owner.getCreasePattern();
 		creasePattern.clear();
 		creasePattern.addAll(info.getInfo());
 	}
@@ -89,7 +89,7 @@ public class CreasePatternUndoerImpl implements CreasePatternUndoer {
 			return;
 		}
 
-		CreasePatternInterface creasePattern = owner.getCreasePattern();
+		CreasePattern creasePattern = owner.getCreasePattern();
 		creasePattern.clear();
 		creasePattern.addAll(info.getInfo());
 	}

@@ -3,7 +3,7 @@ package oripa.persistent.doc.exporter;
 import java.io.IOException;
 
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.persistent.entity.exporter.CreasePatternExporterSVG;
 
 public class ExporterSVGFactory {
@@ -13,7 +13,7 @@ public class ExporterSVGFactory {
 		@Override
 		public boolean export(final Doc doc, final String filepath)
 				throws IOException, IllegalArgumentException {
-			CreasePatternInterface creasePattern = doc.getCreasePattern();
+			CreasePattern creasePattern = doc.getCreasePattern();
 
 			var exporter = new CreasePatternExporterSVG();
 

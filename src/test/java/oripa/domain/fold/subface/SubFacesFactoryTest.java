@@ -30,7 +30,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
@@ -53,7 +53,7 @@ class SubFacesFactoryTest {
 	private ParentFacesCollector parentCollector;
 
 	@Mock
-	private CreasePatternInterface cp;
+	private CreasePattern cp;
 
 	@Mock
 	private OrigamiModel model;

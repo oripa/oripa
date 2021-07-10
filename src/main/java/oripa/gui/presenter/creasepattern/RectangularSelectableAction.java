@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.RectangleClipper;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 import oripa.value.OriLine;
 
@@ -68,7 +68,7 @@ public abstract class RectangularSelectableAction extends AbstractGraphicMouseAc
 					Math.max(startPoint.x, draggingPoint.x),
 					Math.max(startPoint.y, draggingPoint.y));
 
-			CreasePatternInterface creasePattern = paintContext.getCreasePattern();
+			CreasePattern creasePattern = paintContext.getCreasePattern();
 			selectedLines = clipper.selectByArea(creasePattern);
 		} catch (Exception ex) {
 			logger.error("failed to select rectangularly", ex);
