@@ -18,8 +18,8 @@
  */
 package oripa.gui.presenter.creasepattern;
 
-import oripa.domain.paint.InitialVisibilities;
 import oripa.domain.paint.PaintContext;
+import oripa.gui.view.main.InitialVisibilities;
 
 /**
  * @author OUCHI Koji

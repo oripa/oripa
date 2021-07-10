@@ -6,8 +6,8 @@ import java.beans.PropertyChangeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.paint.InitialVisibilities;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
+import oripa.gui.view.main.InitialVisibilities;
 
 public class MainScreenSetting {
 	private static final Logger logger = LoggerFactory.getLogger(MainScreenSetting.class);

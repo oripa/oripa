@@ -55,7 +55,6 @@ import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.domain.paint.AngleStep;
-import oripa.domain.paint.InitialVisibilities;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.presenter.creasepattern.AngleMeasuringAction;
