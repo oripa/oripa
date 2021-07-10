@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.main;
+package oripa.gui.presenter.creasepattern;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,9 +24,6 @@ import java.awt.event.ActionListener;
 import oripa.appstate.StatePopper;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.unselect.AllItemUnselecter;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
 
 /**
  * @author OUCHI Koji
