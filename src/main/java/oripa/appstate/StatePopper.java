@@ -13,12 +13,12 @@ import oripa.gui.presenter.creasepattern.EditMode;
  *
  */
 public class StatePopper implements ActionListener {
-	private final StateManager stateManager;
+	private final EditModeStateManager stateManager;
 
 	/**
 	 * Constructor
 	 */
-	public StatePopper(final StateManager stateManager) {
+	public StatePopper(final EditModeStateManager stateManager) {
 		this.stateManager = stateManager;
 	}
 

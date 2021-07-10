@@ -12,7 +12,7 @@ public class StateManagerTest {
 
 	@Test
 	public void testByScenario() {
-		StateManager manager = new StateManager();
+		EditModeStateManager manager = new EditModeStateManager();
 
 		var inputState = createMockedState(EditMode.INPUT);
 		manager.push(inputState);

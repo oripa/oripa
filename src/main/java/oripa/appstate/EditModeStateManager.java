@@ -14,7 +14,7 @@ import oripa.gui.presenter.creasepattern.EditMode;
  * @author OUCHI Koji
  *
  */
-public class StateManager implements StateManagerInterface<EditMode> {
+public class EditModeStateManager implements StateManagerInterface<EditMode> {
 
 	private ApplicationState<EditMode> current, previous;
 	private final Map<EditMode, ApplicationState<EditMode>> lastCommands = new HashMap<>();

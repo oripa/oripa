@@ -48,7 +48,7 @@ import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.application.main.SelectAllLineActionListener;
 import oripa.application.main.UnselectAllItemsActionListener;
-import oripa.appstate.StateManager;
+import oripa.appstate.EditModeStateManager;
 import oripa.appstate.StatePopper;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
@@ -92,7 +92,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
-	private final StateManager stateManager = new StateManager();
+	private final EditModeStateManager stateManager = new EditModeStateManager();
 
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
