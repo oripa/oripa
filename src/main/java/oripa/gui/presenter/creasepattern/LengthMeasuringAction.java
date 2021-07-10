@@ -4,7 +4,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.SelectingVertexForLength;
 import oripa.domain.paint.byvalue.ValueSetting;
 
-public class LengthMeasuringAction extends GraphicMouseAction {
+public class LengthMeasuringAction extends AbstractGraphicMouseAction {
 
 	private final ValueSetting valueSetting;
 

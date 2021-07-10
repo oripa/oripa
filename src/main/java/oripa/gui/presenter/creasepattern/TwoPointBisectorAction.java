@@ -3,7 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.pbisec.SelectingFirstVertexForBisector;
 
-public class TwoPointBisectorAction extends GraphicMouseAction {
+public class TwoPointBisectorAction extends AbstractGraphicMouseAction {
 
 	public TwoPointBisectorAction() {
 		setActionState(new SelectingFirstVertexForBisector());

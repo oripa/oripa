@@ -29,7 +29,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	/**
 	 * Reset selection mark to avoid undesired deletion.
 	 *
-	 * @see GraphicMouseAction#recover(PaintContext)
+	 * @see AbstractGraphicMouseAction#recover(PaintContext)
 	 * @param context
 	 */
 	@Override

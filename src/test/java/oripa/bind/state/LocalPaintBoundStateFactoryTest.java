@@ -14,7 +14,7 @@ import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
+import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.viewsetting.ChangeViewSetting;
 
@@ -34,7 +34,7 @@ public class LocalPaintBoundStateFactoryTest {
 					new ActionListener[] { basicAction1, basicAction2 });
 
 			var actionHolder = mock(MouseActionHolder.class);
-			var mouseAction = mock(GraphicMouseAction.class);
+			var mouseAction = mock(AbstractGraphicMouseAction.class);
 			var action1 = mock(ActionListener.class);
 			var action2 = mock(ActionListener.class);
 

@@ -3,7 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.addvertex.AddingVertex;
 
-public class AddVertexAction extends GraphicMouseAction {
+public class AddVertexAction extends AbstractGraphicMouseAction {
 
 	public AddVertexAction() {
 		setEditMode(EditMode.VERTEX);

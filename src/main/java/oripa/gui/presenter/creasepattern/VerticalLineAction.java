@@ -3,7 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.vertical.SelectingVertexForVertical;
 
-public class VerticalLineAction extends GraphicMouseAction {
+public class VerticalLineAction extends AbstractGraphicMouseAction {
 
 	public VerticalLineAction() {
 		setActionState(new SelectingVertexForVertical());

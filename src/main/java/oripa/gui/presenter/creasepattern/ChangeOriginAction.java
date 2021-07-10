@@ -9,7 +9,7 @@ import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
-public class ChangeOriginAction extends GraphicMouseAction {
+public class ChangeOriginAction extends AbstractGraphicMouseAction {
 
 	private final SelectionOriginHolder holder;
 

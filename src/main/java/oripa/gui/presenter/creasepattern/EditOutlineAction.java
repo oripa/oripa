@@ -13,7 +13,7 @@ import oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop;
 import oripa.domain.paint.outline.SelectingVertexForOutline;
 import oripa.domain.paint.util.PairLoop;
 
-public class EditOutlineAction extends GraphicMouseAction {
+public class EditOutlineAction extends AbstractGraphicMouseAction {
 
 	public EditOutlineAction() {
 		setActionState(new SelectingVertexForOutline(new CloseTempOutlineFactory(new IsOnTempOutlineLoop(),

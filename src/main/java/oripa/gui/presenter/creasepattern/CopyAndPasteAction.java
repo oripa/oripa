@@ -5,7 +5,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 
-public class CopyAndPasteAction extends GraphicMouseAction {
+public class CopyAndPasteAction extends AbstractGraphicMouseAction {
 
 	private final SelectionOriginHolder originHolder;
 	private final ChangeOriginAction originAction;

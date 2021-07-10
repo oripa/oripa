@@ -5,7 +5,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.symmetric.SelectingVertexForSymmetric;
 
-public class SymmetricalLineAction extends GraphicMouseAction {
+public class SymmetricalLineAction extends AbstractGraphicMouseAction {
 
 	public SymmetricalLineAction() {
 		setActionState(new SelectingVertexForSymmetric());

@@ -3,7 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.triangle.SelectingVertexForTriangleSplit;
 
-public class TriangleSplitAction extends GraphicMouseAction {
+public class TriangleSplitAction extends AbstractGraphicMouseAction {
 
 	public TriangleSplitAction() {
 		setActionState(new SelectingVertexForTriangleSplit());

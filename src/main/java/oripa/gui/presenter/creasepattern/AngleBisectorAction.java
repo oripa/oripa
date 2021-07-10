@@ -3,7 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.bisector.SelectingVertexForBisector;
 
-public class AngleBisectorAction extends GraphicMouseAction {
+public class AngleBisectorAction extends AbstractGraphicMouseAction {
 
 	public AngleBisectorAction() {
 		setActionState(new SelectingVertexForBisector());

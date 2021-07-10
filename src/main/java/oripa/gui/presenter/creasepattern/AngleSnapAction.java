@@ -28,7 +28,7 @@ import oripa.domain.paint.geometry.NearestItemFinder;
  * @author OUCHI Koji
  *
  */
-public class AngleSnapAction extends GraphicMouseAction {
+public class AngleSnapAction extends AbstractGraphicMouseAction {
 
 	/**
 	 * Constructor

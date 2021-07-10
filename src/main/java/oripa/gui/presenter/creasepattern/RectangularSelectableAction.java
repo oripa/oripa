@@ -13,7 +13,7 @@ import oripa.domain.creasepattern.CreasePatternInterface;
 import oripa.domain.paint.PaintContext;
 import oripa.value.OriLine;
 
-public abstract class RectangularSelectableAction extends GraphicMouseAction {
+public abstract class RectangularSelectableAction extends AbstractGraphicMouseAction {
 	private static final Logger logger = LoggerFactory.getLogger(RectangularSelectableAction.class);
 
 	private Vector2d startPoint = null;

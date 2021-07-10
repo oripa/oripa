@@ -4,7 +4,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.SelectingVertexForAngle;
 import oripa.domain.paint.byvalue.ValueSetting;
 
-public class AngleMeasuringAction extends GraphicMouseAction {
+public class AngleMeasuringAction extends AbstractGraphicMouseAction {
 
 	private final ValueSetting valueSetting;
 

@@ -6,7 +6,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.SelectingVertexToDrawLine;
 import oripa.domain.paint.byvalue.ValueSetting;
 
-public class LineByValueAction extends GraphicMouseAction {
+public class LineByValueAction extends AbstractGraphicMouseAction {
 
 	private final ValueSetting valueSetting;
 

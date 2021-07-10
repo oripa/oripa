@@ -3,7 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.segment.SelectingFirstVertexForSegment;
 
-public class TwoPointSegmentAction extends GraphicMouseAction {
+public class TwoPointSegmentAction extends AbstractGraphicMouseAction {
 
 	public TwoPointSegmentAction() {
 		setActionState(new SelectingFirstVertexForSegment());

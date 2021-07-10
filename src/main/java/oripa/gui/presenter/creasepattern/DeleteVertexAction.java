@@ -3,7 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.deletevertex.DeletingVertex;
 
-public class DeleteVertexAction extends GraphicMouseAction {
+public class DeleteVertexAction extends AbstractGraphicMouseAction {
 
 	public DeleteVertexAction() {
 		setEditMode(EditMode.VERTEX);

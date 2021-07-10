@@ -11,9 +11,9 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
-public abstract class GraphicMouseAction implements GraphicMouseActionInterface {
+public abstract class AbstractGraphicMouseAction implements GraphicMouseActionInterface {
 
-	private static Logger logger = LoggerFactory.getLogger(GraphicMouseAction.class);
+	private static Logger logger = LoggerFactory.getLogger(AbstractGraphicMouseAction.class);
 
 	private EditMode editMode = EditMode.INPUT;
 	private boolean needSelect = false;

@@ -11,7 +11,7 @@ import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.domain.paint.geometry.NearestVertexFinder;
 import oripa.value.OriLine;
 
-public class PasteAction extends GraphicMouseAction {
+public class PasteAction extends AbstractGraphicMouseAction {
 
 	private final SelectionOriginHolder originHolder;
 	private final ShiftedLineFactory factory = new ShiftedLineFactory();
