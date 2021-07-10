@@ -55,7 +55,7 @@ public class PaintBoundStateFactory {
 	public ApplicationState<EditMode> create(final Component parent,
 			final MouseActionHolder actionHolder,
 			final PaintContext context,
-			final ScreenUpdaterInterface screenUpdater,
+			final ScreenUpdater screenUpdater,
 			final String id) {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(

@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
+import oripa.gui.presenter.creasepattern.ScreenUpdater;
 
 /**
  * Add this listener to Button object or something for selecting paint action.
@@ -18,12 +18,12 @@ public class PaintActionSetter implements ActionListener {
 
 	private final GraphicMouseAction mouseAction;
 	private final MouseActionHolder actionHolder;
-	private final ScreenUpdaterInterface screenUpdater;
+	private final ScreenUpdater screenUpdater;
 	private final PaintContext context;
 
 	public PaintActionSetter(final MouseActionHolder anActionHolder,
 			final GraphicMouseAction thisMouseAction,
-			final ScreenUpdaterInterface screenUpdater,
+			final ScreenUpdater screenUpdater,
 			final PaintContext aContext) {
 		actionHolder = anActionHolder;
 		mouseAction = thisMouseAction;

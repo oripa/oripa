@@ -11,7 +11,7 @@ import oripa.bind.state.PaintBoundStateFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
+import oripa.gui.presenter.creasepattern.ScreenUpdater;
 
 /**
  * A class for application-specific binding of state actions and buttons.
@@ -24,13 +24,13 @@ public class PaintActionButtonFactory implements ButtonFactory {
 	private final PaintBoundStateFactory stateFactory;
 	private final PaintContext context;
 	private final MouseActionHolder actionHolder;
-	private final ScreenUpdaterInterface screenUpater;
+	private final ScreenUpdater screenUpater;
 
 	public PaintActionButtonFactory(
 			final PaintBoundStateFactory stateFactory,
 			final PaintContext aContext,
 			final MouseActionHolder actionHolder,
-			final ScreenUpdaterInterface screenUpater) {
+			final ScreenUpdater screenUpater) {
 		this.stateFactory = stateFactory;
 		context = aContext;
 		this.actionHolder = actionHolder;

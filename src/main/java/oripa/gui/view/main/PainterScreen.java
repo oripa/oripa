@@ -53,7 +53,7 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.ScreenUpdater;
+import oripa.gui.viewsetting.main.MainScreenUpdater;
 import oripa.util.gui.AffineCamera;
 import oripa.util.gui.MouseUtility;
 
@@ -64,7 +64,7 @@ public class PainterScreen extends JPanel
 	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
 
 	private final MainScreenSetting setting = new MainScreenSetting();
-	private final ScreenUpdater screenUpdater = new ScreenUpdater();
+	private final MainScreenUpdater screenUpdater = new MainScreenUpdater();
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 

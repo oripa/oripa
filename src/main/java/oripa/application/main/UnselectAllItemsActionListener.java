@@ -25,7 +25,7 @@ import oripa.appstate.StatePopper;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
+import oripa.gui.presenter.creasepattern.ScreenUpdater;
 
 /**
  * @author OUCHI Koji
@@ -35,7 +35,7 @@ public class UnselectAllItemsActionListener implements ActionListener {
 	private final MouseActionHolder actionHolder;
 	private final PaintContext context;
 	private final StatePopper statePopper;
-	private final ScreenUpdaterInterface screenUpdater;
+	private final ScreenUpdater screenUpdater;
 
 	/**
 	 * Constructor
@@ -44,7 +44,7 @@ public class UnselectAllItemsActionListener implements ActionListener {
 			final MouseActionHolder actionHolder,
 			final PaintContext aContext,
 			final StatePopper statePopper,
-			final ScreenUpdaterInterface updater) {
+			final ScreenUpdater updater) {
 		this.actionHolder = actionHolder;
 		context = aContext;
 		this.statePopper = statePopper;

@@ -1,7 +1,7 @@
 package oripa.gui.presenter.creasepattern;
 
 
-public interface ScreenUpdaterInterface {
+public interface ScreenUpdater {
 
 	/**
 	 * send a request to a screen.

@@ -19,7 +19,7 @@ import oripa.bind.state.PaintBoundState;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
+import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.resource.StringID;
 
 public class ButtonFactoryTest {
@@ -29,7 +29,7 @@ public class ButtonFactoryTest {
 		JPanel parent = new JPanel();
 
 		var actionHolder = mock(MouseActionHolder.class);
-		var screenUpdater = mock(ScreenUpdaterInterface.class);
+		var screenUpdater = mock(ScreenUpdater.class);
 
 		// line input buttons
 		assertButtonCreated(parent, StringID.DIRECT_V_ID, actionHolder, screenUpdater, false);
@@ -62,7 +62,7 @@ public class ButtonFactoryTest {
 
 	private void assertButtonCreated(final Component parent, final String id,
 			final MouseActionHolder actionHolder,
-			final ScreenUpdaterInterface screenUpdater,
+			final ScreenUpdater screenUpdater,
 			final boolean hasLabel) {
 		PaintContextFactory contextFactory = new PaintContextFactory();
 		var stateFactory = mock(PaintBoundStateFactory.class);

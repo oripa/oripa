@@ -9,7 +9,7 @@ import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 
-public class ScreenUpdater implements
+public class MainScreenUpdater implements
 		ViewScreenUpdater {
 
 	private MouseActionHolder actionHolder;
