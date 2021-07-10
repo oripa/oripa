@@ -16,10 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.main;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+package oripa.gui.presenter.creasepattern;
 
 import oripa.domain.paint.PaintContext;
 
@@ -27,28 +24,8 @@ import oripa.domain.paint.PaintContext;
  * @author OUCHI Koji
  *
  */
-public class SelectAllLineActionListener implements ActionListener {
-	private final PaintContext context;
-
-	/**
-	 * Constructor
-	 */
-	public SelectAllLineActionListener(final PaintContext context) {
-		this.context = context;
+public class CreasePatternViewContextFactory {
+	public CreasePatternViewContext create(final PaintContext paintContext) {
+		return new CreasePatternViewContextImpl(paintContext);
 	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void actionPerformed(final ActionEvent e) {
-		context.creasePatternUndo().pushUndoInfo();
-		context.getPainter().selectAllOriLines();
-		context.getCreasePattern().stream()
-				.filter(l -> l.selected).forEach(l -> context.pushLine(l));
-	}
-
 }

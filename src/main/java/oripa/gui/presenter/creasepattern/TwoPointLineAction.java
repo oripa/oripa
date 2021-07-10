@@ -1,6 +1,6 @@
 package oripa.gui.presenter.creasepattern;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.line.SelectingFirstVertexForLine;
 
 public class TwoPointLineAction extends TwoPointSegmentAction {
@@ -10,12 +10,12 @@ public class TwoPointLineAction extends TwoPointSegmentAction {
 	}
 
 	@Override
-	public void destroy(final PaintContextInterface context) {
+	public void destroy(final PaintContext context) {
 		super.destroy(context);
 	}
 
 	@Override
-	protected void recoverImpl(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContext context) {
 		context.clear(true);
 		setActionState(new SelectingFirstVertexForLine());
 

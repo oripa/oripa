@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.ActionState;
 import oripa.domain.paint.BasicUndo;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
@@ -52,28 +52,28 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 * @param context
 	 */
 	@Override
-	public void destroy(final PaintContextInterface context) {
+	public void destroy(final PaintContext context) {
 		context.clear(false);
 	}
 
 	/**
 	 * This method is called at the first step of
-	 * {@link #recover(PaintContextInterface)}. After this method is done,
+	 * {@link #recover(PaintContext)}. After this method is done,
 	 * {@code recover()} resets the {@code .selected} property of all lines in
 	 * crease pattern if {@link #needSelect()} is false.
 	 *
 	 * @param context
 	 */
-	protected void recoverImpl(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContext context) {
 	}
 
 	/**
-	 * calls {@link #recoverImpl(PaintContextInterface)}, and if
+	 * calls {@link #recoverImpl(PaintContext)}, and if
 	 * {@link #needSelect()} returns false, then calls
 	 * {@code context.getPainter().resetSelectedOriLines()}.
 	 */
 	@Override
-	public final void recover(final PaintContextInterface context) {
+	public final void recover(final PaintContext context) {
 
 		recoverImpl(context);
 
@@ -84,7 +84,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		var clickPoint = paintContext.getLogicalMousePoint();
 
@@ -93,7 +93,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	@Override
-	public void doAction(final PaintContextInterface context, final Vector2d point,
+	public void doAction(final PaintContext context, final Vector2d point,
 			final boolean differntAction) {
 
 		state = state.doAction(context,
@@ -102,7 +102,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	@Override
-	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean doSpecial) {
 
 		logger.info(this.getClass().getName());
@@ -115,7 +115,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	@Override
-	public void undo(final PaintContextInterface context) {
+	public void undo(final PaintContext context) {
 		state = BasicUndo.undo(state, context);
 	}
 
@@ -127,7 +127,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 * PaintContextInterface)
 	 */
 	@Override
-	public void redo(final PaintContextInterface context) {
+	public void redo(final PaintContext context) {
 		if (!context.creasePatternUndo().canRedo()) {
 			return;
 		}
@@ -138,7 +138,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 
 	@Override
 	public Vector2d onMove(
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
@@ -148,7 +148,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected final void setCandidateVertexOnMove(
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		paintContext.setCandidateVertexToPick(
 				NearestItemFinder.pickVertex(
@@ -156,33 +156,33 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected final void setCandidateLineOnMove(final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		paintContext.setCandidateLineToPick(
 				NearestItemFinder.pickLine(
 						paintContext));
 	}
 
 	@Override
-	public void onPress(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 	}
 
 	@Override
-	public void onDrag(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 	}
 
 	@Override
-	public void onRelease(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 	}
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		drawPickedLines(drawer, viewContext, paintContext);
 		drawPickedVertices(drawer, viewContext, paintContext, paintContext.getLineTypeOfNewLines());
 
@@ -197,7 +197,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 //	}
 
 	private void drawPickedLines(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		for (OriLine line : paintContext.getPickedLines()) {
 			drawer.selectSelectedItemColor();
 			drawer.selectSelectedLineStroke(
@@ -209,7 +209,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	private void drawPickedVertices(final ObjectGraphicDrawer drawer,
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final OriLine.Type lineType) {
 
 		for (Vector2d vertex : paintContext.getPickedVertices()) {
@@ -223,7 +223,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 * Draws the given vertex as an small rectangle.
 	 */
 	protected void drawVertex(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext,
+			final PaintContext paintContext,
 			final Vector2d vertex) {
 		double scale = paintContext.getScale();
 		drawer.selectMouseActionVertexSize(scale);
@@ -232,7 +232,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected void drawPickCandidateVertex(final ObjectGraphicDrawer drawer,
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
+			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 		Vector2d candidate = paintContext.getCandidateVertexToPick();
 		if (candidate != null) {
 			drawer.selectCandidateItemColor();
@@ -250,7 +250,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	}
 
 	protected void drawPickCandidateLine(final ObjectGraphicDrawer drawer,
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
+			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 		OriLine candidate = paintContext.getCandidateLineToPick();
 		if (candidate != null) {
 			drawer.selectCandidateItemColor();
@@ -270,7 +270,7 @@ public abstract class GraphicMouseAction implements GraphicMouseActionInterface 
 	 * @param context
 	 */
 	protected void drawTemporaryLine(final ObjectGraphicDrawer drawer,
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
+			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
 		if (paintContext.getVertexCount() == 0) {
 			return;

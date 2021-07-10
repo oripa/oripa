@@ -55,14 +55,14 @@ import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.state.PaintBoundStateFactory;
 import oripa.doc.Doc;
 import oripa.domain.cptool.Painter;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintContextFactory;
-import oripa.domain.paint.PaintContextInterface;
 import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContextImpl;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
@@ -109,8 +109,9 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	// Create UI Factories
 	private final PaintContextFactory contextFactory = new PaintContextFactory();
-	private final PaintContextInterface paintContext = contextFactory.createContext();
-	private final CreasePatternViewContext viewContext = new CreasePatternViewContextImpl(paintContext);
+	private final PaintContext paintContext = contextFactory.createContext();
+	private final CreasePatternViewContextFactory viewContextFactory = new CreasePatternViewContextFactory();
+	private final CreasePatternViewContext viewContext = viewContextFactory.create(paintContext);
 	private final MouseActionHolder actionHolder = new MouseActionHolder();
 
 	private final ButtonFactory buttonFactory;

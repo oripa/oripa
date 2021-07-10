@@ -2,7 +2,7 @@ package oripa.domain.paint.bisector;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 
 public class SelectingVertexForBisector extends PickingVertex {
@@ -18,7 +18,7 @@ public class SelectingVertexForBisector extends PickingVertex {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
+	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean doSpecial) {
 		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
 
@@ -33,7 +33,7 @@ public class SelectingVertexForBisector extends PickingVertex {
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	public void onResult(final PaintContext context, final boolean doSpecial) {
 
 	}
 

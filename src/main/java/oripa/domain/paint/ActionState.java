@@ -14,7 +14,7 @@ public interface ActionState {
 	 *
 	 * @return next state.
 	 */
-	public ActionState doAction(PaintContextInterface context,
+	public ActionState doAction(PaintContext context,
 			Vector2d currentPoint, boolean differentAction);
 
 	/**
@@ -22,7 +22,7 @@ public interface ActionState {
 	 *
 	 * @return previous state.
 	 */
-	public ActionState undo(PaintContextInterface context);
+	public ActionState undo(PaintContext context);
 
 	public ActionState getNextState();
 

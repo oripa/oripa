@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManagerInterface;
 import oripa.bind.state.action.PaintActionSetterFactory;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.presenter.creasepattern.*;
 import oripa.gui.viewsetting.main.ChangeHint;
@@ -54,7 +54,7 @@ public class PaintBoundStateFactory {
 	 */
 	public ApplicationState<EditMode> create(final Component parent,
 			final MouseActionHolder actionHolder,
-			final PaintContextInterface context,
+			final PaintContext context,
 			final ScreenUpdaterInterface screenUpdater,
 			final String id) {
 

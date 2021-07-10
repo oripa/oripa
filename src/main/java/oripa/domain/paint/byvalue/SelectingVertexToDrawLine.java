@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -30,7 +30,7 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
 		logger.debug("start onResult()");
 
 		if (context.getVertexCount() != 1 || context.getLineCount() > 0) {

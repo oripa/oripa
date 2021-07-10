@@ -2,7 +2,7 @@ package oripa.gui.presenter.creasepattern;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.SelectingVertexToDrawLine;
 import oripa.domain.paint.byvalue.ValueSetting;
 
@@ -18,13 +18,13 @@ public class LineByValueAction extends GraphicMouseAction {
 	}
 
 	@Override
-	protected void recoverImpl(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContext context) {
 		context.clear(true);
 	}
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer g2d, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		super.onDraw(g2d, viewContext, paintContext);
 
 		drawPickCandidateVertex(g2d, viewContext, paintContext);

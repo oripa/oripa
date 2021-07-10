@@ -1,6 +1,6 @@
 package oripa.gui.presenter.creasepattern;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.bisector.SelectingVertexForBisector;
 
 public class AngleBisectorAction extends GraphicMouseAction {
@@ -10,13 +10,13 @@ public class AngleBisectorAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void destroy(final PaintContextInterface context) {
+	public void destroy(final PaintContext context) {
 		super.destroy(context);
 		setActionState(new SelectingVertexForBisector());
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
 		super.onDraw(drawer, viewContext, paintContext);
 

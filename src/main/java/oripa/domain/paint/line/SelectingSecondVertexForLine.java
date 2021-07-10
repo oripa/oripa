@@ -5,7 +5,7 @@ import java.util.Optional;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
@@ -18,7 +18,7 @@ public class SelectingSecondVertexForLine extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
 
 		if (context.getVertexCount() != 2) {
 			throw new RuntimeException();

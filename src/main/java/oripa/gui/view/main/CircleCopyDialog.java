@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 
 // TODO: Use label resource.
 public class CircleCopyDialog extends JDialog {
@@ -52,12 +52,12 @@ public class CircleCopyDialog extends JDialog {
 	private int m_num = 1;
 
 	private final JFrame owner;
-	private final PaintContextInterface context;
+	private final PaintContext context;
 
 	/**
 	 * @param owner
 	 */
-	public CircleCopyDialog(final JFrame owner, final PaintContextInterface aContext) {
+	public CircleCopyDialog(final JFrame owner, final PaintContext aContext) {
 		super(owner);
 
 		this.owner = owner;

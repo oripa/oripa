@@ -3,7 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import java.util.Collection;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.deleteline.DeletingLine;
 import oripa.value.OriLine;
 
@@ -18,7 +18,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 
 		super.onDraw(drawer, viewContext, paintContext);
 
@@ -29,17 +29,17 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	/**
 	 * Reset selection mark to avoid undesired deletion.
 	 *
-	 * @see GraphicMouseAction#recover(PaintContextInterface)
+	 * @see GraphicMouseAction#recover(PaintContext)
 	 * @param context
 	 */
 	@Override
-	protected void recoverImpl(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContext context) {
 		context.clear(true);
 	}
 
 	@Override
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
+			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
 		if (selectedLines.isEmpty()) {
 			return;

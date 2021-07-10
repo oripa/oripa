@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
@@ -65,7 +65,7 @@ public class PainterScreen extends JPanel
 
 	private final MainScreenSetting setting = new MainScreenSetting();
 	private final ScreenUpdater screenUpdater = new ScreenUpdater();
-	private final PaintContextInterface paintContext;
+	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 
 	private final CutModelOutlinesHolder cutOutlinesHolder;
@@ -84,7 +84,7 @@ public class PainterScreen extends JPanel
 	public PainterScreen(
 			final MouseActionHolder mouseActionHolder,
 			final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext,
+			final PaintContext paintContext,
 			final CutModelOutlinesHolder aCutOutlineHolder) {
 		this.mouseActionHolder = mouseActionHolder;
 		screenUpdater.setMouseActionHolder(mouseActionHolder);

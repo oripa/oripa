@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.value.OriLine;
@@ -22,24 +22,24 @@ public class ChangeOriginAction extends GraphicMouseAction {
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext,
+			final PaintContext paintContext,
 			final boolean keepDoing) {
 
 		return this;
 	}
 
 	@Override
-	public void doAction(final PaintContextInterface context, final Vector2d point,
+	public void doAction(final PaintContext context, final Vector2d point,
 			final boolean differntAction) {
 
 	}
 
 	@Override
-	public void undo(final PaintContextInterface context) {
+	public void undo(final PaintContext context) {
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		Vector2d closeVertex = NearestItemFinder.pickVertexFromPickedLines(paintContext);
 		paintContext.setCandidateVertexToPick(closeVertex);
@@ -53,7 +53,7 @@ public class ChangeOriginAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		super.onDraw(drawer, viewContext, paintContext);
 
 		Collection<OriLine> lines = paintContext.getPickedLines();

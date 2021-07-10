@@ -20,7 +20,7 @@ package oripa.gui.presenter.creasepattern;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.angle.SelectingStartPoint;
 import oripa.domain.paint.geometry.NearestItemFinder;
 
@@ -40,17 +40,17 @@ public class AngleSnapAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void destroy(final PaintContextInterface context) {
+	public void destroy(final PaintContext context) {
 		super.destroy(context);
 	}
 
 	@Override
-	protected void recoverImpl(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContext context) {
 		setActionState(new SelectingStartPoint());
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		if (paintContext.getVertexCount() == 0) {
 			return super.onMove(viewContext, paintContext, differentAction);
@@ -63,7 +63,7 @@ public class AngleSnapAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		if (paintContext.getVertexCount() == 1) {
 			drawSnapPoints(drawer, viewContext, paintContext);
 		}
@@ -74,7 +74,7 @@ public class AngleSnapAction extends GraphicMouseAction {
 	}
 
 	private void drawSnapPoints(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		drawer.selectAssistLineColor();
 
 		paintContext.getAngleSnapCrossPoints()

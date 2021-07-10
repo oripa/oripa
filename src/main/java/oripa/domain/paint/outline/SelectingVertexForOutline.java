@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
 
@@ -31,14 +31,14 @@ public class SelectingVertexForOutline extends PickingVertex {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
+	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean freeSelection) {
 		context.setMissionCompleted(false);
 		return super.onAct(context, currentPoint, freeSelection);
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
 
 		logger.debug("# of picked vertices (before): " + context.getPickedVertices().size());
 

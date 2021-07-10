@@ -19,15 +19,15 @@
 package oripa.gui.presenter.creasepattern;
 
 import oripa.domain.paint.InitialVisibilities;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CreasePatternViewContextImpl implements CreasePatternViewContext {
+class CreasePatternViewContextImpl implements CreasePatternViewContext {
 
-	private final PaintContextInterface paintContext;
+	private final PaintContext paintContext;
 
 	private boolean gridVisible = InitialVisibilities.GRID;
 
@@ -37,7 +37,7 @@ public class CreasePatternViewContextImpl implements CreasePatternViewContext {
 	private boolean crossLineVisible = InitialVisibilities.CROSS;
 	private boolean zeroLineWidth = InitialVisibilities.ZERO_LINE_WIDTH;
 
-	public CreasePatternViewContextImpl(final PaintContextInterface paintContext) {
+	public CreasePatternViewContextImpl(final PaintContext paintContext) {
 		this.paintContext = paintContext;
 	}
 

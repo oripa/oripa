@@ -6,7 +6,7 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.OverlappingLineExtractor;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.outline.CloseTempOutlineFactory;
 import oripa.domain.paint.outline.IsOnTempOutlineLoop;
 import oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop;
@@ -37,7 +37,7 @@ public class EditOutlineAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		super.onDraw(drawer, viewContext, paintContext);
 
 		this.drawPickCandidateVertex(drawer, viewContext, paintContext);

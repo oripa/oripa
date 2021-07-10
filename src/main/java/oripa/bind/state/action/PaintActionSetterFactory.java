@@ -18,7 +18,7 @@
  */
 package oripa.bind.state.action;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.GraphicMouseActionInterface;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
@@ -30,7 +30,7 @@ import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
 public class PaintActionSetterFactory {
 	private final MouseActionHolder actionHolder;
 	private final ScreenUpdaterInterface screenUpdater;
-	private final PaintContextInterface context;
+	private final PaintContext context;
 
 	/**
 	 * Constructor
@@ -38,7 +38,7 @@ public class PaintActionSetterFactory {
 	public PaintActionSetterFactory(
 			final MouseActionHolder actionHolder,
 			final ScreenUpdaterInterface screenUpdater,
-			final PaintContextInterface context) {
+			final PaintContext context) {
 		this.actionHolder = actionHolder;
 		this.screenUpdater = screenUpdater;
 		this.context = context;

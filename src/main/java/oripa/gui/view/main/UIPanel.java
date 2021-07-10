@@ -56,7 +56,7 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.InitialVisibilities;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.presenter.creasepattern.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
@@ -95,7 +95,7 @@ public class UIPanel extends JPanel {
 	private ChildFrameManager childFrameManager;
 
 	private final ViewScreenUpdater screenUpdater;
-	private final PaintContextInterface paintContext;
+	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 
 	private boolean fullEstimation = true;
@@ -217,7 +217,7 @@ public class UIPanel extends JPanel {
 			final ViewScreenUpdater screenUpdater,
 			final MouseActionHolder actionHolder,
 			final CreasePatternViewContext viewContext,
-			final PaintContextInterface aContext,
+			final PaintContext aContext,
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainFrameSetting mainFrameSetting,
 			final MainScreenSetting mainScreenSetting) {
@@ -858,7 +858,7 @@ public class UIPanel extends JPanel {
 	 * @param context
 	 *            the cp data to be used
 	 */
-	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContextInterface context) {
+	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContext context) {
 		OrigamiModel origamiModel;
 		CreasePatternInterface creasePattern = context.getCreasePattern();
 

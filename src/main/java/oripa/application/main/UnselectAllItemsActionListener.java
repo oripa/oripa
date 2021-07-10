@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.StatePopper;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
@@ -33,7 +33,7 @@ import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
  */
 public class UnselectAllItemsActionListener implements ActionListener {
 	private final MouseActionHolder actionHolder;
-	private final PaintContextInterface context;
+	private final PaintContext context;
 	private final StatePopper statePopper;
 	private final ScreenUpdaterInterface screenUpdater;
 
@@ -42,7 +42,7 @@ public class UnselectAllItemsActionListener implements ActionListener {
 	 */
 	public UnselectAllItemsActionListener(
 			final MouseActionHolder actionHolder,
-			final PaintContextInterface aContext,
+			final PaintContext aContext,
 			final StatePopper statePopper,
 			final ScreenUpdaterInterface updater) {
 		this.actionHolder = actionHolder;

@@ -1,6 +1,6 @@
 package oripa.gui.presenter.creasepattern;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.deletevertex.DeletingVertex;
 
 public class DeleteVertexAction extends GraphicMouseAction {
@@ -14,7 +14,7 @@ public class DeleteVertexAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 
 		super.onDraw(drawer, viewContext, paintContext);
 

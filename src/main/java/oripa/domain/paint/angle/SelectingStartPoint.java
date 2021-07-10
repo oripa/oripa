@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -40,7 +40,7 @@ public class SelectingStartPoint extends PickingVertex {
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
 		var step = context.getAngleStep();
 		var paperSize = context.getCreasePattern().getPaperSize();
 

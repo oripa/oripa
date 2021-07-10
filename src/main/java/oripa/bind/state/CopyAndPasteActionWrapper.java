@@ -5,7 +5,7 @@ import java.util.Optional;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManagerInterface;
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.presenter.creasepattern.CopyAndPasteAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
@@ -31,7 +31,7 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	}
 
 	@Override
-	protected void recoverImpl(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContext context) {
 		super.recoverImpl(context);
 		if (isCut) {
 			context.creasePatternUndo().pushUndoInfo();
@@ -41,7 +41,7 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 	}
 
 	@Override
-	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		Optional<ApplicationState<EditMode>> prevOpt = stateManager.pop();
 

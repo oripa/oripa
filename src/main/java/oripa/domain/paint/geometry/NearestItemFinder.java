@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.geom.GeomUtil;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.value.CalculationResource;
@@ -18,7 +18,7 @@ import oripa.value.OriLine;
  */
 public class NearestItemFinder {
 
-	private static double scaleThreshold(final PaintContextInterface context) {
+	private static double scaleThreshold(final PaintContext context) {
 		return CalculationResource.CLOSE_THRESHOLD / context.getScale();
 	}
 
@@ -44,7 +44,7 @@ public class NearestItemFinder {
 	}
 
 	public static Vector2d pickVertex(
-			final PaintContextInterface paintContext, final boolean freeSelection) {
+			final PaintContext paintContext, final boolean freeSelection) {
 
 		NearestPoint nearestPosition;
 
@@ -72,7 +72,7 @@ public class NearestItemFinder {
 	}
 
 	public static Vector2d pickVertexFromPickedLines(
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 
 		NearestPoint nearestPosition;
 		nearestPosition = NearestVertexFinder.findFromPickedLine(paintContext);
@@ -86,13 +86,13 @@ public class NearestItemFinder {
 	}
 
 	public static OriLine pickLine(
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		return pickLine(paintContext.getCreasePattern(), paintContext.getLogicalMousePoint(),
 				paintContext.getScale());
 	}
 
 	public static Vector2d getCandidateVertex(
-			final PaintContextInterface paintContext,
+			final PaintContext paintContext,
 			final boolean enableMousePoint) {
 
 		Vector2d candidate = paintContext.getCandidateVertexToPick();
@@ -106,7 +106,7 @@ public class NearestItemFinder {
 	}
 
 	public static Vector2d getNearestInAngleSnapCrossPoints(final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		return NearestVertexFinder.findNearestVertex(
 				paintContext.getLogicalMousePoint(),
 				paintContext.getAngleSnapCrossPoints()).point;

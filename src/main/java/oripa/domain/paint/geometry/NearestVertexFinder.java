@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -90,7 +90,7 @@ public class NearestVertexFinder {
 	 * @return nearestPoint in the limit. null if there are no such vertex.
 	 */
 	public static NearestPoint findAround(
-			final PaintContextInterface paintContext,
+			final PaintContext paintContext,
 			final double distance) {
 		NearestPoint nearestPosition = new NearestPoint();
 
@@ -129,7 +129,7 @@ public class NearestVertexFinder {
 	}
 
 	public static NearestPoint findFromPickedLine(
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		NearestPoint nearestPosition;
 
 		var currentPoint = paintContext.getLogicalMousePoint();

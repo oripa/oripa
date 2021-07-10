@@ -24,7 +24,7 @@ import java.util.Comparator;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
@@ -48,7 +48,7 @@ public class CreasePatternGraphicDrawer {
 	 */
 	public void draw(
 			final ObjectGraphicDrawer drawer,
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean forceShowingVertex) {
 
 		CreasePatternInterface creasePattern = paintContext.getCreasePattern();

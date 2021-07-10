@@ -8,11 +8,11 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 
 public class CopyPasteErrorListener implements ErrorListener {
 
-	private final PaintContextInterface context;
+	private final PaintContext context;
 
 	/**
 	 *
@@ -21,7 +21,7 @@ public class CopyPasteErrorListener implements ErrorListener {
 	 * @param aContext
 	 *            a context
 	 */
-	public CopyPasteErrorListener(final PaintContextInterface aContext) {
+	public CopyPasteErrorListener(final PaintContext aContext) {
 		context = aContext;
 	}
 

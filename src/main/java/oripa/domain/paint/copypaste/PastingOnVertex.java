@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.value.OriLine;
 
@@ -28,7 +28,7 @@ public class PastingOnVertex extends PickingVertex {
 	}
 
 	@Override
-	protected void undoAction(final PaintContextInterface context) {
+	protected void undoAction(final PaintContext context) {
 		// context.setMissionCompleted(false);
 		context.creasePatternUndo().undo();
 	}
@@ -48,7 +48,7 @@ public class PastingOnVertex extends PickingVertex {
 //	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
 
 		Vector2d v = context.popVertex();
 

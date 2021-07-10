@@ -8,7 +8,7 @@ import javax.swing.AbstractButton;
 import oripa.appstate.ApplicationState;
 import oripa.bind.binder.ApplicationStateButtonBinder;
 import oripa.bind.state.PaintBoundStateFactory;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
@@ -22,13 +22,13 @@ import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
 public class PaintActionButtonFactory implements ButtonFactory {
 
 	private final PaintBoundStateFactory stateFactory;
-	private final PaintContextInterface context;
+	private final PaintContext context;
 	private final MouseActionHolder actionHolder;
 	private final ScreenUpdaterInterface screenUpater;
 
 	public PaintActionButtonFactory(
 			final PaintBoundStateFactory stateFactory,
-			final PaintContextInterface aContext,
+			final PaintContext aContext,
 			final MouseActionHolder actionHolder,
 			final ScreenUpdaterInterface screenUpater) {
 		this.stateFactory = stateFactory;

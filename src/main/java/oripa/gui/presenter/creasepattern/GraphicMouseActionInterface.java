@@ -2,7 +2,7 @@ package oripa.gui.presenter.creasepattern;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 
 public interface GraphicMouseActionInterface {
 
@@ -22,7 +22,7 @@ public interface GraphicMouseActionInterface {
 	 *
 	 * @param context
 	 */
-	public abstract void destroy(PaintContextInterface context);
+	public abstract void destroy(PaintContext context);
 
 	/**
 	 * Defines action for recovering the status of this object with given
@@ -31,7 +31,7 @@ public interface GraphicMouseActionInterface {
 	 *
 	 * @param context
 	 */
-	public abstract void recover(PaintContextInterface context);
+	public abstract void recover(PaintContext context);
 
 	/**
 	 * performs action.
@@ -44,7 +44,7 @@ public interface GraphicMouseActionInterface {
 	 * @return Next mouse action.
 	 */
 	public GraphicMouseActionInterface onLeftClick(
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction);
 
 	/**
@@ -53,7 +53,7 @@ public interface GraphicMouseActionInterface {
 	 * @param differntAction
 	 * @param screenUpdater
 	 */
-	public abstract void doAction(PaintContextInterface context, Vector2d point,
+	public abstract void doAction(PaintContext context, Vector2d point,
 			boolean differntAction);
 
 	/**
@@ -62,12 +62,12 @@ public interface GraphicMouseActionInterface {
 	 * @param context
 	 * @param differentAction
 	 */
-	public abstract void onRightClick(CreasePatternViewContext viewContext, PaintContextInterface paintContext,
+	public abstract void onRightClick(CreasePatternViewContext viewContext, PaintContext paintContext,
 			boolean differentAction);
 
-	public abstract void undo(PaintContextInterface context);
+	public abstract void undo(PaintContext context);
 
-	public abstract void redo(PaintContextInterface context);
+	public abstract void redo(PaintContext context);
 
 	/**
 	 * searches a vertex and a line close enough to the mouse cursor. The result
@@ -78,15 +78,15 @@ public interface GraphicMouseActionInterface {
 	 * @return close vertex. null if not found.
 	 */
 	public abstract Vector2d onMove(final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext, boolean differentAction);
+			final PaintContext paintContext, boolean differentAction);
 
-	public abstract void onPress(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public abstract void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			boolean differentAction);
 
-	public abstract void onDrag(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public abstract void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			boolean differentAction);
 
-	public abstract void onRelease(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public abstract void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			boolean differentAction);
 
 	/**
@@ -97,6 +97,6 @@ public interface GraphicMouseActionInterface {
 	 * @param context
 	 */
 	public abstract void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext);
+			final PaintContext paintContext);
 
 }

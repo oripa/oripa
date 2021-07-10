@@ -11,7 +11,7 @@ public class BasicUndo {
 	 * @param context
 	 * @return next state defined by the given state.
 	 */
-	public static ActionState undo(final ActionState state, final PaintContextInterface context) {
+	public static ActionState undo(final ActionState state, final PaintContext context) {
 
 		if (context.getLineCount() > 0 || context.getVertexCount() > 0) {
 			return state.undo(context);

@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 
 // TODO: Use label resource.
 public class RepeatCopyDialog extends JDialog {
@@ -58,7 +58,7 @@ public class RepeatCopyDialog extends JDialog {
 	/**
 	 * @param owner
 	 */
-	public RepeatCopyDialog(final JFrame owner, final PaintContextInterface context) {
+	public RepeatCopyDialog(final JFrame owner, final PaintContext context) {
 		super(owner);
 		this.owner = owner;
 
@@ -70,7 +70,7 @@ public class RepeatCopyDialog extends JDialog {
 	 *
 	 * @return void
 	 */
-	private void initialize(final PaintContextInterface context) {
+	private void initialize(final PaintContext context) {
 		this.setSize(123, 249);
 		this.setLocation(owner.getLocation().x + 200,
 				owner.getLocation().y + 100);
@@ -83,7 +83,7 @@ public class RepeatCopyDialog extends JDialog {
 	 *
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJContentPane(final PaintContextInterface context) {
+	private JPanel getJContentPane(final PaintContext context) {
 		if (jContentPane == null) {
 			jLabelIntY = new JLabel();
 			jLabelIntY.setBounds(new Rectangle(5, 130, 26, 21));
@@ -222,7 +222,7 @@ public class RepeatCopyDialog extends JDialog {
 	 *
 	 * @return javax.swing.JButton
 	 */
-	private JButton getJButtonOK(final PaintContextInterface context) {
+	private JButton getJButtonOK(final PaintContext context) {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton();
 			jButtonOK.setBounds(new Rectangle(10, 160, 96, 21));

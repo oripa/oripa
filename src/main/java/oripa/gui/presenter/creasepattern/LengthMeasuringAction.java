@@ -1,6 +1,6 @@
 package oripa.gui.presenter.creasepattern;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.SelectingVertexForLength;
 import oripa.domain.paint.byvalue.ValueSetting;
 
@@ -16,7 +16,7 @@ public class LengthMeasuringAction extends GraphicMouseAction {
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext,
+			final PaintContext paintContext,
 			final boolean differentAction) {
 
 		GraphicMouseActionInterface action;
@@ -31,7 +31,7 @@ public class LengthMeasuringAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 
 		super.onDraw(drawer, viewContext, paintContext);
 

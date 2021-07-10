@@ -7,16 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
 
 public class DeleteSelectedLinesActionListener implements ActionListener {
 	private static final Logger logger = LoggerFactory
 			.getLogger(DeleteSelectedLinesActionListener.class);
-	private final PaintContextInterface context;
+	private final PaintContext context;
 	private final ScreenUpdaterInterface screenUpdater;
 
-	public DeleteSelectedLinesActionListener(final PaintContextInterface aContext,
+	public DeleteSelectedLinesActionListener(final PaintContext aContext,
 			final ScreenUpdaterInterface updater) {
 		context = aContext;
 		screenUpdater = updater;

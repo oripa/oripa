@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.RectangleClipper;
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.value.OriLine;
 
 public abstract class RectangularSelectableAction extends GraphicMouseAction {
@@ -20,13 +20,13 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	private Vector2d draggingPoint = null;
 
 	@Override
-	public void onPress(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		startPoint = paintContext.getLogicalMousePoint();
 	}
 
 	@Override
-	public void onDrag(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 		draggingPoint = paintContext.getLogicalMousePoint();
@@ -34,7 +34,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void onRelease(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 		if (startPoint != null && draggingPoint != null) {
@@ -55,10 +55,10 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 	 */
 	protected abstract void afterRectangularSelection(
 			Collection<OriLine> selectedLines, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext);
+			final PaintContext paintContext);
 
 	protected final void selectByRectangularArea(final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		Collection<OriLine> selectedLines = new ArrayList<>();
 
 		try {
@@ -79,7 +79,7 @@ public abstract class RectangularSelectableAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 
 		super.onDraw(drawer, viewContext, paintContext);
 

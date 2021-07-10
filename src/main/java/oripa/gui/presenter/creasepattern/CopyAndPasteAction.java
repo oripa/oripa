@@ -2,7 +2,7 @@ package oripa.gui.presenter.creasepattern;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 
 public class CopyAndPasteAction extends GraphicMouseAction {
@@ -26,26 +26,26 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	protected void recoverImpl(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContext context) {
 		originHolder.resetOrigin(context);
 		action = pasteAction;
 		action.recover(context);
 	}
 
 	@Override
-	public void destroy(final PaintContextInterface context) {
+	public void destroy(final PaintContext context) {
 		originHolder.setOrigin(null);
 		action.destroy(context);
 	}
 
 	@Override
-	public void undo(final PaintContextInterface context) {
+	public void undo(final PaintContext context) {
 		context.creasePatternUndo().undo();
 	}
 
 	@Override
 	public GraphicMouseActionInterface onLeftClick(final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext,
+			final PaintContext paintContext,
 			final boolean differentAction) {
 		action.onLeftClick(viewContext, paintContext, differentAction);
 
@@ -53,25 +53,25 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public void doAction(final PaintContextInterface context, final Vector2d point,
+	public void doAction(final PaintContext context, final Vector2d point,
 			final boolean differentAction) {
 		action.doAction(context, point, differentAction);
 	}
 
 	@Override
-	public void onPress(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		action.onPress(viewContext, paintContext, differentAction);
 	}
 
 	@Override
-	public void onDrag(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		action.onDrag(viewContext, paintContext, differentAction);
 	}
 
 	@Override
-	public void onRelease(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		action.onRelease(viewContext, paintContext, differentAction);
 	}
@@ -90,7 +90,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean changingOrigin) {
 
 		changeAction(changingOrigin);
@@ -100,7 +100,7 @@ public class CopyAndPasteAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		action.onDraw(drawer, viewContext, paintContext);
 	}
 }

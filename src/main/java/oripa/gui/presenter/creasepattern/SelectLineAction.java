@@ -2,7 +2,7 @@ package oripa.gui.presenter.creasepattern;
 
 import java.util.Collection;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.selectline.SelectingLine;
 import oripa.value.OriLine;
 
@@ -19,21 +19,21 @@ public class SelectLineAction extends RectangularSelectableAction {
 	 * set old line-selected marks to current context.
 	 */
 	@Override
-	public void undo(final PaintContextInterface context) {
+	public void undo(final PaintContext context) {
 		context.creasePatternUndo().undo();
 
 		recover(context);
 	}
 
 	@Override
-	public void redo(final PaintContextInterface context) {
+	public void redo(final PaintContext context) {
 		context.creasePatternUndo().redo();
 
 		recover(context);
 	}
 
 	@Override
-	protected void recoverImpl(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContext context) {
 		context.clear(false);
 
 		Collection<OriLine> creasePattern = context.getCreasePattern();
@@ -48,7 +48,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
+			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
 		if (selectedLines.isEmpty()) {
 			return;
@@ -79,7 +79,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		super.onDraw(drawer, viewContext, paintContext);
 
 		this.drawPickCandidateLine(drawer, viewContext, paintContext);

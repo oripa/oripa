@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.ActionState;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 
 /**
  * a framework of (modified) State pattern with undo, which can get back to
@@ -56,7 +56,7 @@ public abstract class AbstractActionState implements ActionState {
 	 *         (or is null), returns {@code this}.
 	 */
 	@Override
-	public final ActionState doAction(final PaintContextInterface context,
+	public final ActionState doAction(final PaintContext context,
 			final Vector2d currentPoint, final boolean doSpecial) {
 
 		boolean success = onAct(context, currentPoint, doSpecial);
@@ -77,7 +77,7 @@ public abstract class AbstractActionState implements ActionState {
 	 *
 	 * @param context
 	 */
-	protected abstract void onResult(PaintContextInterface context, final boolean doSpecial);
+	protected abstract void onResult(PaintContext context, final boolean doSpecial);
 
 	/**
 	 * defines the job of this class.
@@ -90,7 +90,7 @@ public abstract class AbstractActionState implements ActionState {
 	 *            true if you want switch the action.
 	 * @return true if the action succeeded, otherwise false.
 	 */
-	protected abstract boolean onAct(PaintContextInterface context,
+	protected abstract boolean onAct(PaintContext context,
 			Vector2d currentPoint, boolean doSpecial);
 
 	/**
@@ -99,7 +99,7 @@ public abstract class AbstractActionState implements ActionState {
 	 * @return Previous state
 	 */
 	@Override
-	public final ActionState undo(final PaintContextInterface context) {
+	public final ActionState undo(final PaintContext context) {
 
 		undoAction(context);
 
@@ -114,7 +114,7 @@ public abstract class AbstractActionState implements ActionState {
 	 *
 	 * @param context
 	 */
-	protected abstract void undoAction(PaintContextInterface context);
+	protected abstract void undoAction(PaintContext context);
 
 	@Override
 	public ActionState getNextState() {

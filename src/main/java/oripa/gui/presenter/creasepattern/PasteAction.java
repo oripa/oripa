@@ -3,7 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.PastingOnVertex;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.domain.paint.copypaste.ShiftedLineFactory;
@@ -26,7 +26,7 @@ public class PasteAction extends GraphicMouseAction {
 	}
 
 	@Override
-	protected void recoverImpl(final PaintContextInterface context) {
+	protected void recoverImpl(final PaintContext context) {
 		context.clear(false);
 
 		context.startPasting();
@@ -42,13 +42,13 @@ public class PasteAction extends GraphicMouseAction {
 	 * Clear context and mark lines as unselected.
 	 */
 	@Override
-	public void destroy(final PaintContextInterface context) {
+	public void destroy(final PaintContext context) {
 		context.clear(true);
 		context.finishPasting();
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContextInterface paintContext,
+	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
@@ -76,7 +76,7 @@ public class PasteAction extends GraphicMouseAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 
 		super.onDraw(drawer, viewContext, paintContext);
 

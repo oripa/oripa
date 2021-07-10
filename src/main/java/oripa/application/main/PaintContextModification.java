@@ -19,7 +19,7 @@
 package oripa.application.main;
 
 import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 
 /**
  * @author OUCHI Koji
@@ -34,7 +34,7 @@ public class PaintContextModification {
 	 * @param paintContext
 	 */
 	public void setCreasePatternToPaintContext(final CreasePatternInterface creasePattern,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 		paintContext.clear(true);
 		paintContext.setCreasePattern(creasePattern);
 		paintContext.creasePatternUndo().clear();

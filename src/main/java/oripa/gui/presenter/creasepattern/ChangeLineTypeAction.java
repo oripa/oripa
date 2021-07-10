@@ -2,7 +2,7 @@ package oripa.gui.presenter.creasepattern;
 
 import java.util.Collection;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.linetype.SelectingLineForLineType;
 import oripa.domain.paint.linetype.TypeForChangeGettable;
 import oripa.value.OriLine;
@@ -18,7 +18,7 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final CreasePatternViewContext viewContext, final PaintContextInterface paintContext) {
+			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
 		if (selectedLines.isEmpty()) {
 			return;
@@ -31,7 +31,7 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContextInterface paintContext) {
+			final PaintContext paintContext) {
 
 		super.onDraw(drawer, viewContext, paintContext);
 
