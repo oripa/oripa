@@ -1,4 +1,4 @@
-package oripa.bind.state.action;
+package oripa.gui.bind.state.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

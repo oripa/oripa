@@ -1,4 +1,4 @@
-package oripa.bind.state;
+package oripa.gui.bind.state;
 
 import static org.mockito.Mockito.*;
 
@@ -12,8 +12,10 @@ import org.junit.jupiter.api.Test;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.EditModeStateManager;
-import oripa.bind.state.action.PaintActionSetter;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.bind.state.ErrorListener;
+import oripa.gui.bind.state.LocalPaintBoundStateFactory;
+import oripa.gui.bind.state.action.PaintActionSetter;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.viewsetting.ChangeViewSetting;

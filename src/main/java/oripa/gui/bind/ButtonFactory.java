@@ -1,4 +1,4 @@
-package oripa.bind;
+package oripa.gui.bind;
 
 import java.awt.Component;
 import java.awt.event.KeyListener;

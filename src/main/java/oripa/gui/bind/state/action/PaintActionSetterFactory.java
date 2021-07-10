@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.bind.state.action;
+package oripa.gui.bind.state.action;
 
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;

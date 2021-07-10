@@ -1,4 +1,4 @@
-package oripa.bind;
+package oripa.gui.bind;
 
 import java.awt.Component;
 import java.awt.event.KeyListener;
@@ -6,9 +6,9 @@ import java.awt.event.KeyListener;
 import javax.swing.AbstractButton;
 
 import oripa.appstate.ApplicationState;
-import oripa.bind.binder.ApplicationStateButtonBinder;
-import oripa.bind.state.PaintBoundStateFactory;
 import oripa.domain.paint.PaintContext;
+import oripa.gui.bind.binder.ApplicationStateButtonBinder;
+import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;

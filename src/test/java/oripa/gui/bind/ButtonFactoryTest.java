@@ -1,4 +1,4 @@
-package oripa.bind;
+package oripa.gui.bind;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,9 +15,11 @@ import javax.swing.JPanel;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.bind.state.PaintBoundState;
-import oripa.bind.state.PaintBoundStateFactory;
 import oripa.domain.paint.PaintContextFactory;
+import oripa.gui.bind.ButtonFactory;
+import oripa.gui.bind.PaintActionButtonFactory;
+import oripa.gui.bind.state.PaintBoundState;
+import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.resource.StringID;

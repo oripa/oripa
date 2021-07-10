@@ -1,4 +1,4 @@
-package oripa.bind.state;
+package oripa.gui.bind.state;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.appstate.StatePusher;
-import oripa.bind.state.action.PaintActionSetter;
+import oripa.gui.bind.state.action.PaintActionSetter;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.viewsetting.ChangeViewSetting;
 

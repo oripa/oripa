@@ -1,13 +1,13 @@
-package oripa.bind.state;
+package oripa.gui.bind.state;
 
 import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.bind.state.action.PaintActionSetterFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
+import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.*;
 import oripa.gui.viewsetting.main.ChangeHint;
 import oripa.gui.viewsetting.main.MainFrameSetting;
