@@ -34,7 +34,7 @@ import oripa.gui.presenter.creasepattern.ScreenUpdater;
 public class UnselectAllItemsActionListener implements ActionListener {
 	private final MouseActionHolder actionHolder;
 	private final PaintContext context;
-	private final StatePopper statePopper;
+	private final StatePopper<EditMode> statePopper;
 	private final ScreenUpdater screenUpdater;
 
 	/**
@@ -43,7 +43,7 @@ public class UnselectAllItemsActionListener implements ActionListener {
 	public UnselectAllItemsActionListener(
 			final MouseActionHolder actionHolder,
 			final PaintContext aContext,
-			final StatePopper statePopper,
+			final StatePopper<EditMode> statePopper,
 			final ScreenUpdater updater) {
 		this.actionHolder = actionHolder;
 		context = aContext;

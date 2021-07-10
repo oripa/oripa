@@ -61,8 +61,9 @@ import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
+import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
@@ -426,7 +427,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				new SelectAllLineActionListener(paintContext));
 		menuItemSelectAll.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_A));
 
-		var statePopper = new StatePopper(stateManager);
+		var statePopper = new StatePopper<EditMode>(stateManager);
 		menuItemUnSelectAll.addActionListener(
 				new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
 						screenUpdater));

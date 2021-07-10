@@ -4,27 +4,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
 
-import oripa.gui.presenter.creasepattern.EditMode;
-
 /**
  * An action listener which pops the last state from given state manager.
  *
  * @author OUCHI Koji
  *
  */
-public class StatePopper implements ActionListener {
-	private final EditModeStateManager stateManager;
+public class StatePopper<GroupEnum> implements ActionListener {
+	private final StateManager<GroupEnum> stateManager;
 
 	/**
 	 * Constructor
 	 */
-	public StatePopper(final EditModeStateManager stateManager) {
+	public StatePopper(final StateManager<GroupEnum> stateManager) {
 		this.stateManager = stateManager;
 	}
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		Optional<ApplicationState<EditMode>> currentOpt = stateManager.pop();
+		Optional<ApplicationState<GroupEnum>> currentOpt = stateManager.pop();
 
 		currentOpt.ifPresent(current -> current.performActions(e));
 	}
