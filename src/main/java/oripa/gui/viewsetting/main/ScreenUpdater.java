@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import oripa.gui.presenter.creasepattern.CopyAndPasteAction;
-import oripa.gui.presenter.creasepattern.GraphicMouseActionInterface;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 
@@ -62,7 +62,7 @@ public class ScreenUpdater implements
 	}
 
 	private void updateIfCopyAndPaste(final boolean changeOrigin) {
-		GraphicMouseActionInterface action = actionHolder.getMouseAction();
+		GraphicMouseAction action = actionHolder.getMouseAction();
 
 		if (action instanceof CopyAndPasteAction) {
 			CopyAndPasteAction casted = (CopyAndPasteAction) action;

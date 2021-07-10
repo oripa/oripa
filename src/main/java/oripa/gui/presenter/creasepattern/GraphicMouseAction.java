@@ -4,7 +4,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 
-public interface GraphicMouseActionInterface {
+public interface GraphicMouseAction {
 
 	/**
 	 * True if the inherited class uses line-selected marks set by previous
@@ -43,7 +43,7 @@ public interface GraphicMouseActionInterface {
 	 *
 	 * @return Next mouse action.
 	 */
-	public GraphicMouseActionInterface onLeftClick(
+	public GraphicMouseAction onLeftClick(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction);
 

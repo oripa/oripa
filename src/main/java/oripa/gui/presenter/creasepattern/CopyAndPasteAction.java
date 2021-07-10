@@ -11,7 +11,7 @@ public class CopyAndPasteAction extends AbstractGraphicMouseAction {
 	private final ChangeOriginAction originAction;
 	private final PasteAction pasteAction;
 
-	private GraphicMouseActionInterface action;
+	private GraphicMouseAction action;
 
 	public CopyAndPasteAction(final SelectionOriginHolder originHolder) {
 		this.originHolder = originHolder;
@@ -44,7 +44,7 @@ public class CopyAndPasteAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public GraphicMouseActionInterface onLeftClick(final CreasePatternViewContext viewContext,
+	public GraphicMouseAction onLeftClick(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext,
 			final boolean differentAction) {
 		action.onLeftClick(viewContext, paintContext, differentAction);

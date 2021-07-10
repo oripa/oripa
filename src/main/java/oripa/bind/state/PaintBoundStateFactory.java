@@ -228,7 +228,7 @@ public class PaintBoundStateFactory {
 	private ApplicationState<EditMode> createState(
 			final LocalPaintBoundStateFactory stateFactory,
 			final PaintActionSetterFactory setterFactory,
-			final GraphicMouseActionInterface mouseAction,
+			final GraphicMouseAction mouseAction,
 			final ChangeHint changeHint,
 			final ActionListener[] actions) {
 
@@ -240,7 +240,7 @@ public class PaintBoundStateFactory {
 	private ApplicationState<EditMode> createState(
 			final LocalPaintBoundStateFactory stateFactory,
 			final PaintActionSetterFactory setterFactory,
-			final GraphicMouseActionInterface mouseAction,
+			final GraphicMouseAction mouseAction,
 			final ErrorListener errorListener,
 			final ChangeHint changeHint,
 			final ActionListener[] actions) {

@@ -27,14 +27,14 @@ public class MouseActionHolder {
 	/**
 	 *
 	 */
-	private GraphicMouseActionInterface action;
+	private GraphicMouseAction action;
 
 	/**
 	 *
 	 * @param a
 	 *            mouse action behavior
 	 */
-	public void setMouseAction(final GraphicMouseActionInterface a) {
+	public void setMouseAction(final GraphicMouseAction a) {
 		action = a;
 	}
 
@@ -42,7 +42,7 @@ public class MouseActionHolder {
 	 *
 	 * @return current mouse action behavior
 	 */
-	public GraphicMouseActionInterface getMouseAction() {
+	public GraphicMouseAction getMouseAction() {
 		return action;
 	}
 }

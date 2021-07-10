@@ -8,7 +8,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.EditOutlineAction;
-import oripa.gui.presenter.creasepattern.GraphicMouseActionInterface;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
@@ -23,11 +23,11 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	}
 
 	@Override
-	public GraphicMouseActionInterface onLeftClick(
+	public GraphicMouseAction onLeftClick(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		GraphicMouseActionInterface next = super.onLeftClick(viewContext, paintContext,
+		GraphicMouseAction next = super.onLeftClick(viewContext, paintContext,
 				differentAction);
 
 		if (paintContext.isMissionCompleted()) {

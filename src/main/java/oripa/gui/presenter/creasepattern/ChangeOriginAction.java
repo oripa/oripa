@@ -21,7 +21,7 @@ public class ChangeOriginAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public GraphicMouseActionInterface onLeftClick(final CreasePatternViewContext viewContext,
+	public GraphicMouseAction onLeftClick(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext,
 			final boolean keepDoing) {
 

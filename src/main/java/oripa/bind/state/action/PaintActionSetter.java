@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.GraphicMouseActionInterface;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
 
@@ -16,13 +16,13 @@ import oripa.gui.presenter.creasepattern.ScreenUpdaterInterface;
  */
 public class PaintActionSetter implements ActionListener {
 
-	private final GraphicMouseActionInterface mouseAction;
+	private final GraphicMouseAction mouseAction;
 	private final MouseActionHolder actionHolder;
 	private final ScreenUpdaterInterface screenUpdater;
 	private final PaintContext context;
 
 	public PaintActionSetter(final MouseActionHolder anActionHolder,
-			final GraphicMouseActionInterface thisMouseAction,
+			final GraphicMouseAction thisMouseAction,
 			final ScreenUpdaterInterface screenUpdater,
 			final PaintContext aContext) {
 		actionHolder = anActionHolder;
@@ -34,7 +34,7 @@ public class PaintActionSetter implements ActionListener {
 	@Override
 	public void actionPerformed(final ActionEvent e) {
 
-		GraphicMouseActionInterface currentAction = actionHolder
+		GraphicMouseAction currentAction = actionHolder
 				.getMouseAction();
 		if (currentAction != null) {
 			currentAction.destroy(context);

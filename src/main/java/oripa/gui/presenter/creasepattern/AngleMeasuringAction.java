@@ -14,11 +14,11 @@ public class AngleMeasuringAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public GraphicMouseActionInterface onLeftClick(final CreasePatternViewContext viewContext,
+	public GraphicMouseAction onLeftClick(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext,
 			final boolean differentAction) {
 
-		GraphicMouseActionInterface action;
+		GraphicMouseAction action;
 		action = super.onLeftClick(viewContext, paintContext, differentAction);
 
 		if (paintContext.isMissionCompleted()) {

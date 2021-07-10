@@ -11,7 +11,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
-public abstract class AbstractGraphicMouseAction implements GraphicMouseActionInterface {
+public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 
 	private static Logger logger = LoggerFactory.getLogger(AbstractGraphicMouseAction.class);
 
@@ -83,7 +83,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseActionIn
 	}
 
 	@Override
-	public GraphicMouseActionInterface onLeftClick(
+	public GraphicMouseAction onLeftClick(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		var clickPoint = paintContext.getLogicalMousePoint();

@@ -48,7 +48,7 @@ import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseActionInterface;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.viewsetting.ViewScreenUpdater;
@@ -220,7 +220,7 @@ public class PainterScreen extends JPanel
 					RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 
-		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
+		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 
 		ObjectGraphicDrawer bufferObjDrawer = new Java2DGraphicDrawer(bufferG2D);
 
@@ -272,7 +272,7 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
-		final GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
+		final GraphicMouseAction action = mouseActionHolder.getMouseAction();
 
 		if (action == null) {
 			return;
@@ -310,7 +310,7 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
-		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
+		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 
 		if (action == null) {
 			return;
@@ -323,7 +323,7 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
-		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
+		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 		// Rectangular Selection
 
 		if (action != null) {
@@ -352,7 +352,7 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
+		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 
 		// Drag by left button
 		paintContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
@@ -383,7 +383,7 @@ public class PainterScreen extends JPanel
 		paintContext.setScale(camera.getScale());
 		paintContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
 
-		final GraphicMouseActionInterface action = mouseActionHolder.getMouseAction();
+		final GraphicMouseAction action = mouseActionHolder.getMouseAction();
 		if (action == null) {
 			return;
 		}
