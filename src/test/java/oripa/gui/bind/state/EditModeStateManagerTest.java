@@ -1,14 +1,13 @@
-package oripa.appstate;
+package oripa.gui.bind.state;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.gui.bind.state.PaintBoundState;
 import oripa.gui.presenter.creasepattern.EditMode;
 
-public class StateManagerTest {
+public class EditModeStateManagerTest {
 
 	@Test
 	public void testByScenario() {

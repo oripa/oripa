@@ -1,9 +1,11 @@
-package oripa.appstate;
+package oripa.gui.bind.state;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import oripa.appstate.ApplicationState;
+import oripa.appstate.StateManager;
 import oripa.gui.presenter.creasepattern.EditMode;
 
 /**

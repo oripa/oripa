@@ -6,8 +6,6 @@ import javax.swing.JRadioButton;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.gui.bind.binder.BinderInterface;
-import oripa.gui.bind.binder.ViewChangeBinder;
 import oripa.gui.viewsetting.ChangeViewSetting;
 import oripa.gui.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
