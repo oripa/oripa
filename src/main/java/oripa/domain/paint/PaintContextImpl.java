@@ -16,7 +16,7 @@ import oripa.value.OriLine;
 class PaintContextImpl implements PaintContext {
 
 	private CreasePatternInterface creasePattern;
-	private final CreasePatternUndoerInterface undoer = new CreasePatternUndoer(this);
+	private final CreasePatternUndoer undoer = new CreasePatternUndoerImpl(this);
 
 	private final LinkedList<Vector2d> pickedVertices = new LinkedList<>();
 
@@ -352,7 +352,7 @@ class PaintContextImpl implements PaintContext {
 	 * @see oripa.domain.paint.PaintContextInterface#getUndoer()
 	 */
 	@Override
-	public CreasePatternUndoerInterface creasePatternUndo() {
+	public CreasePatternUndoer creasePatternUndo() {
 		return undoer;
 	}
 

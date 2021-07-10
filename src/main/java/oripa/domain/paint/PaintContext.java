@@ -187,7 +187,7 @@ public interface PaintContext extends CreasePatternHolder {
 
 	public abstract Vector2d getCandidateVertexToPick();
 
-	public abstract CreasePatternUndoerInterface creasePatternUndo();
+	public abstract CreasePatternUndoer creasePatternUndo();
 
 	public abstract void setAngleStep(AngleStep step);
 
