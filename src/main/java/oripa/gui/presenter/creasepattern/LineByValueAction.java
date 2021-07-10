@@ -23,11 +23,11 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public void onDraw(final ObjectGraphicDrawer g2d, final CreasePatternViewContext viewContext,
+	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
-		super.onDraw(g2d, viewContext, paintContext);
+		super.onDraw(drawer, viewContext, paintContext);
 
-		drawPickCandidateVertex(g2d, viewContext, paintContext);
+		drawPickCandidateVertex(drawer, viewContext, paintContext);
 		Vector2d v = paintContext.getCandidateVertexToPick();
 		if (v == null) {
 			return;
@@ -38,8 +38,8 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 
 			var radianAngle = Math.toRadians(angle);
 
-			g2d.selectColor(paintContext.getLineTypeOfNewLines());
-			g2d.selectStroke(
+			drawer.selectColor(paintContext.getLineTypeOfNewLines());
+			drawer.selectStroke(
 					paintContext.getLineTypeOfNewLines(),
 					paintContext.getScale(), viewContext.isZeroLineWidth());
 
@@ -47,7 +47,7 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 			dir.scale(length);
 			var w = new Vector2d(v);
 			w.add(dir);
-			g2d.drawLine(v, w);
+			drawer.drawLine(v, w);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
