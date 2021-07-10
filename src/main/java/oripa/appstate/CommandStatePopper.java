@@ -16,13 +16,13 @@ import org.slf4j.LoggerFactory;
 public class CommandStatePopper<GroupEnum> implements ActionListener {
 	private static final Logger logger = LoggerFactory.getLogger(CommandStatePopper.class);
 
-	private final StateManagerInterface<GroupEnum> stateManager;
+	private final StateManager<GroupEnum> stateManager;
 	private final GroupEnum editMode;
 
 	/**
 	 * Constructor
 	 */
-	public CommandStatePopper(final StateManagerInterface<GroupEnum> stateManager, final GroupEnum editMode) {
+	public CommandStatePopper(final StateManager<GroupEnum> stateManager, final GroupEnum editMode) {
 		this.stateManager = stateManager;
 		this.editMode = editMode;
 	}

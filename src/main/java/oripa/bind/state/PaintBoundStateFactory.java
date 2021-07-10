@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
-import oripa.appstate.StateManagerInterface;
+import oripa.appstate.StateManager;
 import oripa.bind.state.action.PaintActionSetterFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
@@ -22,7 +22,7 @@ import oripa.resource.StringID;
 
 public class PaintBoundStateFactory {
 
-	private final StateManagerInterface<EditMode> stateManager;
+	private final StateManager<EditMode> stateManager;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
 	private final SelectionOriginHolder originHolder;
@@ -31,7 +31,7 @@ public class PaintBoundStateFactory {
 	 * Constructor
 	 */
 	public PaintBoundStateFactory(
-			final StateManagerInterface<EditMode> stateManager,
+			final StateManager<EditMode> stateManager,
 			final MainFrameSetting mainFrameSetting,
 			final UIPanelSetting uiPanelSetting,
 			final SelectionOriginHolder originHolder) {

@@ -9,7 +9,7 @@ import java.util.Optional;
  * @author koji
  *
  */
-public interface StateManagerInterface<GroupEnum> {
+public interface StateManager<GroupEnum> {
 
 	public ApplicationState<GroupEnum> getCurrent();
 

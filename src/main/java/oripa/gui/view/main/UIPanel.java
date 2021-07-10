@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.application.main.OrigamiModelInteractiveBuilder;
 import oripa.appstate.CommandStatePopper;
-import oripa.appstate.StateManagerInterface;
+import oripa.appstate.StateManager;
 import oripa.bind.ButtonFactory;
 import oripa.bind.PaintActionButtonFactory;
 import oripa.bind.binder.BinderInterface;
@@ -212,7 +212,7 @@ public class UIPanel extends JPanel {
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
 	public UIPanel(
-			final StateManagerInterface<EditMode> stateManager,
+			final StateManager<EditMode> stateManager,
 			final ViewScreenUpdater screenUpdater,
 			final MouseActionHolder actionHolder,
 			final CreasePatternViewContext viewContext,
@@ -556,7 +556,7 @@ public class UIPanel extends JPanel {
 		return border;
 	}
 
-	private void constructButtons(final StateManagerInterface<EditMode> stateManager,
+	private void constructButtons(final StateManager<EditMode> stateManager,
 			final MouseActionHolder actionHolder,
 			final MainFrameSetting mainFrameSetting,
 			final MainScreenSetting mainScreenSetting) {
@@ -762,7 +762,7 @@ public class UIPanel extends JPanel {
 		button.setSelectedIcon(icon.loadSelectedIcon());
 	}
 
-	private void addActionListenersToComponents(final StateManagerInterface<EditMode> stateManager,
+	private void addActionListenersToComponents(final StateManager<EditMode> stateManager,
 			final MouseActionHolder actionHolder,
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {

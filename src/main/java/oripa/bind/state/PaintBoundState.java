@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.appstate.ApplicationState;
-import oripa.appstate.StateManagerInterface;
+import oripa.appstate.StateManager;
 import oripa.appstate.StatePusher;
 import oripa.bind.state.action.PaintActionSetter;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -37,7 +37,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 *            additional actions.
 	 */
 	public PaintBoundState(
-			final StateManagerInterface<EditMode> stateManager,
+			final StateManager<EditMode> stateManager,
 			final EditMode editMode,
 			final PaintActionSetter actionSetter,
 			final ChangeViewSetting changeHint,
@@ -63,7 +63,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 */
 	public PaintBoundState(
 			final Component parent,
-			final StateManagerInterface<EditMode> stateManager,
+			final StateManager<EditMode> stateManager,
 			final ErrorListener el,
 			final EditMode editMode,
 			final PaintActionSetter actionSetter,
@@ -80,7 +80,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	}
 
 	private void addBasicListeners(
-			final StateManagerInterface<EditMode> stateManager,
+			final StateManager<EditMode> stateManager,
 			final PaintActionSetter actionSetter,
 			final ChangeViewSetting changeHint) {
 

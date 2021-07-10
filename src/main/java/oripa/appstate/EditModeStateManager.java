@@ -7,14 +7,14 @@ import java.util.Optional;
 import oripa.gui.presenter.creasepattern.EditMode;
 
 /**
- * A simple implementation of {@link StateManagerInterface}. This object ignores
+ * A simple implementation of {@link StateManager}. This object ignores
  * {@link EditMode#COPY} and {@link EditMode#CUT} to handle line selection and
  * pasting correctly.
  *
  * @author OUCHI Koji
  *
  */
-public class EditModeStateManager implements StateManagerInterface<EditMode> {
+public class EditModeStateManager implements StateManager<EditMode> {
 
 	private ApplicationState<EditMode> current, previous;
 	private final Map<EditMode, ApplicationState<EditMode>> lastCommands = new HashMap<>();

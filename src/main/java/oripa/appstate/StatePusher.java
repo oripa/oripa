@@ -18,10 +18,10 @@ import oripa.gui.presenter.creasepattern.EditMode;
 public class StatePusher implements ActionListener {
 	private static final Logger logger = LoggerFactory.getLogger(StatePusher.class);
 
-	private final StateManagerInterface<EditMode> stateManager;
+	private final StateManager<EditMode> stateManager;
 	private final PaintBoundState state;
 
-	public StatePusher(final PaintBoundState s, final StateManagerInterface<EditMode> stateManager) {
+	public StatePusher(final PaintBoundState s, final StateManager<EditMode> stateManager) {
 		state = s;
 		this.stateManager = stateManager;
 	}

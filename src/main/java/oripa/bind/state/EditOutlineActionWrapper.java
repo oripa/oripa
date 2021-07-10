@@ -3,7 +3,7 @@ package oripa.bind.state;
 import java.util.Optional;
 
 import oripa.appstate.ApplicationState;
-import oripa.appstate.StateManagerInterface;
+import oripa.appstate.StateManager;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -13,10 +13,10 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
 
-	private final StateManagerInterface<EditMode> stateManager;
+	private final StateManager<EditMode> stateManager;
 	private final MouseActionHolder actionHolder;
 
-	public EditOutlineActionWrapper(final StateManagerInterface<EditMode> stateManager,
+	public EditOutlineActionWrapper(final StateManager<EditMode> stateManager,
 			final MouseActionHolder actionHolder) {
 		this.stateManager = stateManager;
 		this.actionHolder = actionHolder;
