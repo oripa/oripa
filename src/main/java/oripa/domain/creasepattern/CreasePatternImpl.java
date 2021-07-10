@@ -19,7 +19,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-class CreasePattern implements CreasePatternInterface {
+class CreasePatternImpl implements CreasePatternInterface {
 
 	/**
 	 * Wrapper to treat vertices and line at the same time
@@ -71,7 +71,7 @@ class CreasePattern implements CreasePatternInterface {
 	private final double paperSize;
 
 	@SuppressWarnings("unused")
-	private CreasePattern() {
+	private CreasePatternImpl() {
 		paperSize = 0;
 		paperDomain = null;
 	}
@@ -80,7 +80,7 @@ class CreasePattern implements CreasePatternInterface {
 	 * @param paperDomain
 	 *            rectangle domain of paper.
 	 */
-	public CreasePattern(final RectangleDomain paperDomain) {
+	public CreasePatternImpl(final RectangleDomain paperDomain) {
 		this.paperDomain = paperDomain;
 		paperSize = paperDomain.maxWidthHeight();
 

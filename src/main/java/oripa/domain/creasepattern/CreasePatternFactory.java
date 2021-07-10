@@ -53,7 +53,7 @@ public class CreasePatternFactory {
 		var lines = List.of(l0, l1, l2, l3);
 		var domain = new RectangleDomain(lines);
 
-		CreasePatternInterface creasePattern = new CreasePattern(domain);
+		CreasePatternInterface creasePattern = new CreasePatternImpl(domain);
 
 		creasePattern.addAll(lines);
 
@@ -74,7 +74,7 @@ public class CreasePatternFactory {
 						.collect(Collectors.toList()));
 
 		// Construct CP
-		CreasePatternInterface creasePattern = new CreasePattern(domain);
+		CreasePatternInterface creasePattern = new CreasePatternImpl(domain);
 		creasePattern.addAll(lines);
 
 		return creasePattern;
