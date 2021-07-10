@@ -771,7 +771,7 @@ public class UIPanel extends JPanel {
 
 		// edit mode line input radio button
 		editModeInputLineButton
-				.addActionListener(new CommandStatePopper(stateManager, EditMode.INPUT));
+				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT));
 
 		// change line type tool
 		alterLineComboFrom.addItemListener(new FromLineTypeItemListener(setting));
