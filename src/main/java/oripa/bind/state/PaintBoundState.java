@@ -85,7 +85,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final ChangeViewSetting changeHint) {
 
 		// add a listener to push this state to the history stack.
-		addAction(new StatePusher(this, stateManager));
+		addAction(new StatePusher<EditMode>(this, stateManager));
 
 		// add a listener to change paint action.
 		addAction(actionSetter);
