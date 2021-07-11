@@ -3,8 +3,10 @@ package oripa.gui.presenter.creasepattern;
 import java.util.Collection;
 
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.linetype.LineTypeChangerCommand;
 import oripa.domain.paint.linetype.SelectingLineForLineType;
 import oripa.domain.paint.linetype.TypeForChangeGettable;
+import oripa.util.Command;
 import oripa.value.OriLine;
 
 public class ChangeLineTypeAction extends RectangularSelectableAction {
@@ -23,10 +25,11 @@ public class ChangeLineTypeAction extends RectangularSelectableAction {
 		if (selectedLines.isEmpty()) {
 			return;
 		}
-		paintContext.creasePatternUndo().pushUndoInfo();
 
-		var painter = paintContext.getPainter();
-		painter.alterLineTypes(selectedLines, setting.getTypeFrom(), setting.getTypeTo());
+		selectedLines.forEach(paintContext::pushLine);
+
+		Command command = new LineTypeChangerCommand(paintContext, setting);
+		command.execute();
 	}
 
 	@Override

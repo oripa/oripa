@@ -1,8 +1,8 @@
 package oripa.domain.paint.linetype;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingLine;
+import oripa.util.Command;
 
 public class SelectingLineForLineType extends PickingLine {
 
@@ -24,14 +24,12 @@ public class SelectingLineForLineType extends PickingLine {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
+		if (context.getLineCount() != 1) {
+			throw new IllegalStateException("Wrong state: impossible selection.");
+		}
 
-		context.creasePatternUndo().pushUndoInfo();
-
-		Painter painter = context.getPainter();
-		painter.alterLineType(
-				context.peekLine(), setting.getTypeFrom(), setting.getTypeTo());
-
-		context.clear(false);
+		Command command = new LineTypeChangerCommand(context, setting);
+		command.execute();
 	}
 
 }
