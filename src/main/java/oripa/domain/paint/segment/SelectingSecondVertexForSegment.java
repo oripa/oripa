@@ -17,16 +17,6 @@ public class SelectingSecondVertexForSegment extends PickingVertex {
 			throw new IllegalStateException("wrong state: impossible vertex selection.");
 		}
 
-//		OriLine line = new OriLine(context.getVertex(0),
-//				context.getVertex(1), context.getLineTypeOfNewLines());
-//
-//		context.creasePatternUndo().pushUndoInfo();
-//
-//		Painter painter = context.getPainter();
-//		painter.addLine(line);
-//
-//		context.clear(false);
-
 		var command = new PickedVerticesConnectionLineAdderCommand(context);
 		command.execute();
 	}
