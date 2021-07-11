@@ -6,7 +6,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.value.OriLine;
 
 /**
- * abstract class specified for picking vertex.
+ * abstract class specified for picking line.
  *
  * @author koji
  *
