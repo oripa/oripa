@@ -19,6 +19,7 @@
 package oripa.domain.paint.core;
 
 import oripa.domain.paint.PaintContext;
+import oripa.util.Command;
 import oripa.value.OriLine;
 
 /**
@@ -29,13 +30,14 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-public class PickedVerticesConnectionLineAdderCommand {
+public class PickedVerticesConnectionLineAdderCommand implements Command {
 	private final PaintContext context;
 
 	public PickedVerticesConnectionLineAdderCommand(final PaintContext context) {
 		this.context = context;
 	}
 
+	@Override
 	public void execute() {
 		var p0 = context.popVertex();
 		var p1 = context.popVertex();

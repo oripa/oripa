@@ -23,6 +23,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.AbstractActionState;
 import oripa.domain.paint.core.PickedVerticesConnectionLineAdderCommand;
+import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
@@ -64,7 +65,7 @@ public class SelectingEndPoint extends AbstractActionState {
 			throw new IllegalStateException("wrong state: impossible vertex selection.");
 		}
 
-		var command = new PickedVerticesConnectionLineAdderCommand(context);
+		Command command = new PickedVerticesConnectionLineAdderCommand(context);
 		command.execute();
 	}
 

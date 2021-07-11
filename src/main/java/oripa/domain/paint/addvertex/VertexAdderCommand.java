@@ -20,18 +20,20 @@ package oripa.domain.paint.addvertex;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class VertexAdderCommand {
+public class VertexAdderCommand implements Command {
 	private final PaintContext context;
 
 	public VertexAdderCommand(final PaintContext context) {
 		this.context = context;
 	}
 
+	@Override
 	public void execute() {
 		context.creasePatternUndo().pushUndoInfo();
 
