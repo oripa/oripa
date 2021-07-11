@@ -22,7 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.selectline.AllLineSelecter;
+import oripa.domain.paint.selectline.AllLineSelecterCommand;
+import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
@@ -46,9 +47,8 @@ public class SelectAllLineActionListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		var selecter = new AllLineSelecter();
-
-		selecter.selectAllLine(context);
+		Command command = new AllLineSelecterCommand(context);
+		command.execute();
 	}
 
 }

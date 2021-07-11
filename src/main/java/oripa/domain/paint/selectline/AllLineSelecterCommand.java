@@ -19,16 +19,25 @@
 package oripa.domain.paint.selectline;
 
 import oripa.domain.paint.PaintContext;
+import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AllLineSelecter {
-	public void selectAllLine(final PaintContext context) {
+public class AllLineSelecterCommand implements Command {
+	private final PaintContext context;
+
+	public AllLineSelecterCommand(final PaintContext context) {
+		this.context = context;
+	}
+
+	@Override
+	public void execute() {
 		context.creasePatternUndo().pushUndoInfo();
 		context.getPainter().selectAllOriLines();
 		context.getCreasePattern().stream()
-				.filter(l -> l.selected).forEach(l -> context.pushLine(l));
+				.filter(l -> l.selected)
+				.forEach(context::pushLine);
 	}
 }
