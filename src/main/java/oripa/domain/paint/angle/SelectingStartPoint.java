@@ -18,16 +18,8 @@
  */
 package oripa.domain.paint.angle;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.geom.GeomUtil;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -41,37 +33,9 @@ public class SelectingStartPoint extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var step = context.getAngleStep();
-		var paperSize = context.getCreasePattern().getPaperSize();
+		var snapPointfactory = new SnapPointFactory();
 
-		var crossPoints = new ArrayList<Vector2d>();
-
-		var sp = context.peekVertex();
-		for (int i = 0; i < step.getDivNum() * 2; i++) {
-			double angle = i * step.getRadianStep();
-			double dx = paperSize * 4 * Math.cos(angle);
-			double dy = paperSize * 4 * Math.sin(angle);
-			var line = new OriLine(sp.x, sp.y,
-					sp.x + dx, sp.y + dy, OriLine.Type.AUX);
-
-			// snap on cross points of angle line and creases.
-			crossPoints.addAll(
-					context.getCreasePattern().stream()
-							.map(crease -> GeomUtil.getCrossPoint(line, crease))
-							.filter(Objects::nonNull)
-							.collect(Collectors.toList()));
-
-			// snap on end points of overlapping creases.
-			context.getCreasePattern().stream()
-					.filter(crease -> GeomUtil.isLineSegmentsOverlap(
-							line.p0, line.p1, crease.p0, crease.p1))
-					.forEach(crease -> {
-						crossPoints.add(crease.p0);
-						crossPoints.add(crease.p1);
-					});
-		}
-
-		context.setAngleSnapCrossPoints(crossPoints);
+		context.setAngleSnapCrossPoints(snapPointfactory.createSnapPoints(context));
 	}
 
 }
