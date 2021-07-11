@@ -1,8 +1,8 @@
 package oripa.domain.paint.bisector;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingLine;
+import oripa.util.Command;
 
 public class SelectingLineForBisector extends PickingLine {
 
@@ -26,22 +26,8 @@ public class SelectingLineForBisector extends PickingLine {
 			throw new IllegalStateException("wrong state: impossible line and vertex selection.");
 		}
 
-		var first = context.getVertex(0);
-		var second = context.getVertex(1);
-		var third = context.getVertex(2);
-
-		var line = context.getLine(0);
-
-		context.clear(false);
-
-		context.creasePatternUndo().pushUndoInfo();
-
-		Painter painter = context.getPainter();
-
-		painter.addBisectorLine(
-				first, second, third,
-				line, context.getLineTypeOfNewLines());
-
+		Command command = new BisectorLineAdderCommand(context);
+		command.execute();
 	}
 
 }
