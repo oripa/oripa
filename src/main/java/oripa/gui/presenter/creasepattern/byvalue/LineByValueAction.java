@@ -1,10 +1,13 @@
-package oripa.gui.presenter.creasepattern;
+package oripa.gui.presenter.creasepattern.byvalue;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.SelectingVertexToDrawLine;
 import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 
 public class LineByValueAction extends AbstractGraphicMouseAction {
 

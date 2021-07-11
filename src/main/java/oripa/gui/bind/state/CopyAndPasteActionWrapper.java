@@ -7,9 +7,9 @@ import oripa.appstate.StateManager;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
-import oripa.gui.presenter.creasepattern.CopyAndPasteAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteAction;
 
 public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 

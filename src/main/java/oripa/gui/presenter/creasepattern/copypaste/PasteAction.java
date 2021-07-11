@@ -1,4 +1,4 @@
-package oripa.gui.presenter.creasepattern;
+package oripa.gui.presenter.creasepattern.copypaste;
 
 import javax.vecmath.Vector2d;
 
@@ -9,6 +9,10 @@ import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.domain.paint.copypaste.ShiftedLineFactory;
 import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.domain.paint.geometry.NearestVertexFinder;
+import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 
 public class PasteAction extends AbstractGraphicMouseAction {

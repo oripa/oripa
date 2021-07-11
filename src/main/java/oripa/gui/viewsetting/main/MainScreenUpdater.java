@@ -4,9 +4,9 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import oripa.gui.presenter.creasepattern.CopyAndPasteAction;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteAction;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 
 public class MainScreenUpdater implements

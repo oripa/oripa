@@ -21,7 +21,7 @@ package oripa.gui.view.main;
 /**
  * Define the initial values for visibilities of line, vertex and so on.
  *
- * Should be used to initialize PaintContext and view states.
+ * Should be used to initialize CreasePatternViewContext and view states.
  *
  * @author OUCHI Koji
  *
