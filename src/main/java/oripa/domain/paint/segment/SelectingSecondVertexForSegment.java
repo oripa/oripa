@@ -1,9 +1,8 @@
 package oripa.domain.paint.segment;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.core.PickedVerticesConnectionLineAdderCommand;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.value.OriLine;
 
 public class SelectingSecondVertexForSegment extends PickingVertex {
 
@@ -18,15 +17,18 @@ public class SelectingSecondVertexForSegment extends PickingVertex {
 			throw new IllegalStateException("wrong state: impossible vertex selection.");
 		}
 
-		OriLine line = new OriLine(context.getVertex(0),
-				context.getVertex(1), context.getLineTypeOfNewLines());
+//		OriLine line = new OriLine(context.getVertex(0),
+//				context.getVertex(1), context.getLineTypeOfNewLines());
+//
+//		context.creasePatternUndo().pushUndoInfo();
+//
+//		Painter painter = context.getPainter();
+//		painter.addLine(line);
+//
+//		context.clear(false);
 
-		context.creasePatternUndo().pushUndoInfo();
-
-		Painter painter = context.getPainter();
-		painter.addLine(line);
-
-		context.clear(false);
+		var command = new PickedVerticesConnectionLineAdderCommand(context);
+		command.execute();
 	}
 
 	@Override
