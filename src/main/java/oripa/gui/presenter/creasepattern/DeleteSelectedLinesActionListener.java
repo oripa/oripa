@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.deleteline.SelectedLineDeleter;
+import oripa.domain.paint.deleteline.SelectedLineDeleterCommand;
 
 public class DeleteSelectedLinesActionListener implements ActionListener {
 	private final PaintContext context;
@@ -18,9 +18,9 @@ public class DeleteSelectedLinesActionListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		var deleter = new SelectedLineDeleter();
+		var command = new SelectedLineDeleterCommand(context);
+		command.execute();
 
-		deleter.deleteSelectedLine(context);
 		screenUpdater.updateScreen();
 	}
 

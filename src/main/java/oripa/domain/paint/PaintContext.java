@@ -86,7 +86,7 @@ public interface PaintContext extends CreasePatternHolder {
 
 	/**
 	 *
-	 * @return unmodifiable list of line which user picked.
+	 * @return unmodifiable list of lines which user picked.
 	 */
 	public abstract List<OriLine> getPickedLines();
 

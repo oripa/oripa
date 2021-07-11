@@ -18,33 +18,33 @@
  */
 package oripa.domain.paint.deleteline;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.util.Command;
 
 /**
- * Removes lines marked as selected state from crease pattern.
+ * Removes all picked lines from crease pattern.
  *
  * @author OUCHI Koji
  *
  */
-public class SelectedLineDeleter {
-	private static final Logger logger = LoggerFactory.getLogger(SelectedLineDeleter.class);
+public class LineDeleterCommand implements Command {
+	private final PaintContext context;
 
-	public void deleteSelectedLine(final PaintContext context) {
+	public LineDeleterCommand(final PaintContext context) {
+		this.context = context;
+	}
+
+	@Override
+	public void execute() {
+		var lines = List.copyOf(context.getPickedLines());
+
+		context.clear(true);
+
 		context.creasePatternUndo().pushUndoInfo();
-
 		Painter painter = context.getPainter();
-
-		try {
-			painter.removeSelectedLines();
-		} catch (Exception ex) {
-			logger.error("error when deleting selected lines", ex);
-		}
-		if (!context.isPasting()) {
-			context.clear(false);
-		}
+		painter.removeLines(lines);
 	}
 }

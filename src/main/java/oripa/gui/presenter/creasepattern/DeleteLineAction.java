@@ -2,9 +2,10 @@ package oripa.gui.presenter.creasepattern;
 
 import java.util.Collection;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.deleteline.DeletingLine;
+import oripa.domain.paint.deleteline.LineDeleterCommand;
+import oripa.util.Command;
 import oripa.value.OriLine;
 
 public class DeleteLineAction extends RectangularSelectableAction {
@@ -27,7 +28,7 @@ public class DeleteLineAction extends RectangularSelectableAction {
 	}
 
 	/**
-	 * Reset selection mark to avoid undesired deletion.
+	 * Resets selection marks to avoid undesired deletion.
 	 *
 	 * @see AbstractGraphicMouseAction#recover(PaintContext)
 	 * @param context
@@ -44,9 +45,11 @@ public class DeleteLineAction extends RectangularSelectableAction {
 		if (selectedLines.isEmpty()) {
 			return;
 		}
-		paintContext.creasePatternUndo().pushUndoInfo();
-		Painter painter = paintContext.getPainter();
-		painter.removeLines(selectedLines);
+
+		selectedLines.forEach(paintContext::pushLine);
+
+		Command command = new LineDeleterCommand(paintContext);
+		command.execute();
 	}
 
 }
