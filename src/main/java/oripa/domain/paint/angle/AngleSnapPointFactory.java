@@ -27,13 +27,13 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.geom.GeomUtil;
-import oripa.value.OriLine;
+import oripa.geom.Segment;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SnapPointFactory {
+public class AngleSnapPointFactory {
 	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
 		var step = context.getAngleStep();
 		var paperSize = context.getCreasePattern().getPaperSize();
@@ -45,8 +45,8 @@ public class SnapPointFactory {
 			double angle = i * step.getRadianStep();
 			double dx = paperSize * 4 * Math.cos(angle);
 			double dy = paperSize * 4 * Math.sin(angle);
-			var line = new OriLine(sp.x, sp.y,
-					sp.x + dx, sp.y + dy, OriLine.Type.AUX);
+			var line = new Segment(sp.x, sp.y,
+					sp.x + dx, sp.y + dy);
 
 			// snap on cross points of angle line and creases.
 			crossPoints.addAll(
@@ -58,10 +58,10 @@ public class SnapPointFactory {
 			// snap on end points of overlapping creases.
 			context.getCreasePattern().stream()
 					.filter(crease -> GeomUtil.isLineSegmentsOverlap(
-							line.p0, line.p1, crease.p0, crease.p1))
+							line.getP0(), line.getP1(), crease.getP0(), crease.getP1()))
 					.forEach(crease -> {
-						crossPoints.add(crease.p0);
-						crossPoints.add(crease.p1);
+						crossPoints.add(crease.getP0());
+						crossPoints.add(crease.getP1());
 					});
 		}
 

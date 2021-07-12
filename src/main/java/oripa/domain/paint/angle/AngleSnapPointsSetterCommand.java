@@ -19,25 +19,23 @@
 package oripa.domain.paint.angle;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.PickingVertex;
 import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SelectingStartPoint extends PickingVertex {
-	@Override
-	protected void initialize() {
-		setNextClass(SelectingEndPoint.class);
+public class AngleSnapPointsSetterCommand implements Command {
+	private final PaintContext context;
+	private final AngleSnapPointFactory snapPointFactory;
+
+	public AngleSnapPointsSetterCommand(final PaintContext context, final AngleSnapPointFactory snapPointFactory) {
+		this.context = context;
+		this.snapPointFactory = snapPointFactory;
 	}
 
 	@Override
-	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var snapPointFactory = new AngleSnapPointFactory();
-
-		Command command = new AngleSnapPointsSetterCommand(context, snapPointFactory);
-		command.execute();
+	public void execute() {
+		context.setAngleSnapCrossPoints(snapPointFactory.createSnapPoints(context));
 	}
-
 }
