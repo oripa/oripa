@@ -128,7 +128,7 @@ public class NearestVertexFinder {
 		return nearestPosition;
 	}
 
-	public static NearestPoint findFromPickedLine(
+	public static NearestPoint findFromPickedLines(
 			final PaintContext paintContext) {
 		NearestPoint nearestPosition;
 

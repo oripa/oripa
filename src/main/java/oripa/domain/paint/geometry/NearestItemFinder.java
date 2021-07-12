@@ -74,7 +74,7 @@ public class NearestItemFinder {
 			final PaintContext paintContext) {
 
 		NearestPoint nearestPosition;
-		nearestPosition = NearestVertexFinder.findFromPickedLine(paintContext);
+		nearestPosition = NearestVertexFinder.findFromPickedLines(paintContext);
 
 		Vector2d picked = null;
 		if (nearestPosition.distance < scaleThreshold(paintContext)) {
