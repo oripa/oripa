@@ -37,15 +37,11 @@ import javax.swing.border.TitledBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.main.OrigamiModelInteractiveBuilder;
 import oripa.appstate.CommandStatePopper;
 import oripa.appstate.StateManager;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.Folder;
-import oripa.domain.fold.FolderFactory;
-import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.domain.paint.AngleStep;
@@ -64,9 +60,8 @@ import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.AngleValueInputListener;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
-import oripa.gui.view.estimation.EstimationResultFrameFactory;
+import oripa.gui.presenter.main.FoldedModelWindowOpener;
 import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
-import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.viewsetting.ChangeViewSetting;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
@@ -88,6 +83,8 @@ public class UIPanel extends JPanel {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
+
+	private final MainDialogService dialogService = new MainDialogService(resources);
 
 	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueSetting valueSetting = setting.getValueSetting();
@@ -914,89 +911,22 @@ public class UIPanel extends JPanel {
 			final MainScreenSetting mainScreenSetting) {
 		CreasePattern creasePattern = paintContext.getCreasePattern();
 
-		var folderFactory = new FolderFactory();
-		Folder folder = folderFactory.create();
-
-		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
-		var checker = new FoldabilityChecker();
-
-		if (!checker.testLocalFlatFoldability(origamiModel)) {
-			folder.foldWithoutLineType(origamiModel);
-		} else {
-			var foldedModel = folder.fold(
-					origamiModel, fullEstimation);
-			final int foldableModelCount = foldedModel.getFoldablePatternCount();
-
-			if (fullEstimation) {
-
-				if (foldableModelCount == 0) {
-					JOptionPane.showMessageDialog(
-							this,
-							resources.getString(ResourceKey.INFO, StringID.Information.NO_ANSWER_ID),
-							resources.getString(ResourceKey.INFO,
-									StringID.Information.FOLD_ALGORITHM_TITLE_ID),
-							JOptionPane.INFORMATION_MESSAGE);
-				} else if (foldableModelCount > 0) {
-					logger.info("foldable layer layout is found.");
-
-					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
-							childFrameManager);
-					JFrame frame = resultFrameFactory.createFrame(this, foldedModel);
-					frame.repaint();
-					frame.setVisible(true);
-				}
-			}
-		}
-
-		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
-				mainScreenSetting,
-				childFrameManager);
-		JFrame modelView = modelViewFactory.createFrame(this, origamiModel,
-				cutOutlinesHolder, screenUpdater::updateScreen);
-
-		modelView.repaint();
-		modelView.setVisible(true);
-	}
-
-	/**
-	 * try building the creasepattern and ask for additional measures to help
-	 * clean it
-	 *
-	 * @return folded Origami model
-	 */
-	private OrigamiModel buildOrigamiModel(final CreasePattern creasePattern) {
-		var builder = new OrigamiModelInteractiveBuilder();
-
-		return builder.build(creasePattern,
+		var windowOpener = new FoldedModelWindowOpener(this, childFrameManager,
 				// ask if ORIPA should try to remove duplication.
-				() -> JOptionPane.showConfirmDialog(
-						this,
-						resources.getString(
-								ResourceKey.WARNING,
-								StringID.Warning.FOLD_FAILED_DUPLICATION_ID),
-						resources.getString(
-								ResourceKey.WARNING,
-								StringID.Warning.FAILED_TITLE_ID),
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION,
+				() -> dialogService.showCleaningUpDuplicationDialog(this) == JOptionPane.YES_OPTION,
 				// clean up the crease pattern
-				() -> JOptionPane.showMessageDialog(
-						this,
-						resources.getString(ResourceKey.INFO,
-								StringID.Information.SIMPLIFYING_CP_ID),
-						resources.getString(ResourceKey.INFO,
-								StringID.Information.SIMPLIFYING_CP_TITLE_ID),
-						JOptionPane.INFORMATION_MESSAGE),
+				() -> dialogService.showCleaningUpMessage(this),
 				// folding failed.
-				() -> JOptionPane.showMessageDialog(
-						this,
-						resources.getString(
-								ResourceKey.WARNING,
-								StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID),
-						resources.getString(
-								ResourceKey.WARNING,
-								StringID.Warning.FAILED_TITLE_ID),
-						JOptionPane.WARNING_MESSAGE));
+				() -> dialogService.showFoldFailureMessage(this),
+				// no answer is found.
+				() -> dialogService.showNoAnswerMessage(this));
+
+		windowOpener.showFoldedModelWindows(
+				creasePattern,
+				cutOutlinesHolder,
+				mainScreenSetting,
+				fullEstimation,
+				screenUpdater);
 	}
 
 	private void addPropertyChangeListenersToSetting(final MainScreenSetting mainScreenSetting) {
