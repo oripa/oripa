@@ -2,9 +2,9 @@ package oripa.domain.paint.triangle;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
+import oripa.util.Command;
 
 public class SelectingVertexForTriangleSplit extends PickingVertex {
 
@@ -34,16 +34,11 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		var first = context.getVertex(0);
-		var second = context.getVertex(1);
-		var third = context.getVertex(2);
+		if (context.getVertexCount() != 3) {
+			throw new IllegalStateException("Wrong state: impossible selection.");
+		}
 
-		context.clear(false);
-
-		context.creasePatternUndo().pushUndoInfo();
-
-		Painter painter = context.getPainter();
-		painter.addTriangleDivideLines(
-				first, second, third, context.getLineTypeOfNewLines());
+		Command command = new TriangleSplitAdderCommand(context);
+		command.execute();
 	}
 }
