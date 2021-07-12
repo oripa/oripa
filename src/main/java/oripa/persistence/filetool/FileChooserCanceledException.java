@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor
+ * ORIPA - Origami Pattern Editor 
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,35 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.model;
-
-import java.awt.Component;
-import java.io.IOException;
-
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
+package oripa.persistence.filetool;
 
 /**
- * @author OUCHI Koji
- *
+ * @author Koji
+ * 
  */
-public class OrigamiModelFileAccess {
-	private final DataAccessObject<OrigamiModel> dao;
+public class FileChooserCanceledException extends Exception {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3178441866178146819L;
+
+	/**
+	 * 
 	 * Constructor
 	 */
-	public OrigamiModelFileAccess(final DataAccessObject<OrigamiModel> dao) {
-		this.dao = dao;
+	public FileChooserCanceledException() {
+
 	}
-
-	public void saveFile(final OrigamiModel origamiModel, final Component owner,
-			final FileAccessSupportFilter<OrigamiModel>... filters)
-			throws IllegalArgumentException, IOException, FileChooserCanceledException {
-
-		dao.saveUsingGUI(origamiModel, null, owner, filters);
-	}
-
 }

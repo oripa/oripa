@@ -25,7 +25,7 @@ import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
-import oripa.value.OriLine;
+import oripa.geom.Segment;
 
 /**
  * Mathematical operations related to half-edge data structure elements.
@@ -191,9 +191,9 @@ public class OriGeomUtil {
 	 * @param line
 	 * @return {@code true} if {@code face} includes {@code line} entirely.
 	 */
-	public static boolean isOriLineIncludedInFace(final OriFace face, final OriLine line) {
-		return face.isOnFaceInclusively(line.p0)
-				&& face.isOnFaceInclusively(line.p1);
+	public static boolean isOriLineIncludedInFace(final OriFace face, final Segment line) {
+		return face.isOnFaceInclusively(line.getP0())
+				&& face.isOnFaceInclusively(line.getP1());
 	}
 
 	/**

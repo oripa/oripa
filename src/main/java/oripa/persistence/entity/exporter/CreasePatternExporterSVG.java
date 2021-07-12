@@ -16,37 +16,37 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.estimation;
+package oripa.persistence.entity.exporter;
 
-import java.awt.Component;
+import static oripa.persistence.svg.SVGUtils.*;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
-import oripa.domain.fold.FoldedModel;
-import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
+import oripa.domain.creasepattern.CreasePattern;
+import oripa.persistence.filetool.Exporter;
+import oripa.persistence.svg.CreasePatternToSvgConverter;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class EstimationResultFileAccess {
-	private final DataAccessObject<FoldedModel> dao;
+public class CreasePatternExporterSVG implements Exporter<CreasePattern> {
+	@Override
+	public boolean export(final CreasePattern creasePattern, final String filepath)
+			throws IOException, IllegalArgumentException {
 
-	/**
-	 * Constructor
-	 */
-	public EstimationResultFileAccess(final DataAccessObject<FoldedModel> dao) {
-		this.dao = dao;
-	}
+		double scale = SVG_SIZE / creasePattern.getPaperSize();
+		CreasePatternToSvgConverter creasePatternToSvgConverter = new CreasePatternToSvgConverter(creasePattern, scale);
 
-	public String saveFile(final FoldedModel foldedModel, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<FoldedModel>... filters)
-			throws IllegalArgumentException, IOException {
-		try {
-			return dao.saveUsingGUI(foldedModel, lastFilePath, owner, filters);
-		} catch (FileChooserCanceledException e) {
-			return lastFilePath;
+		try (var fw = new FileWriter(filepath);
+				var bw = new BufferedWriter(fw)) {
+			bw.write(SVG_START);
+			bw.write(creasePatternToSvgConverter.getSvgCreasePattern());
+			bw.write(SVG_END_TAG);
 		}
+
+		return true;
 	}
 }

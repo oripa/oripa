@@ -16,37 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.estimation;
+package oripa.persistence.filetool;
 
-import java.awt.Component;
 import java.io.IOException;
 
-import oripa.domain.fold.FoldedModel;
-import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
-
 /**
- * @author OUCHI Koji
+ * @author Koji
  *
  */
-public class EstimationResultFileAccess {
-	private final DataAccessObject<FoldedModel> dao;
+public class SavingActionTemplate<Data> extends AbstractSavingAction<Data> {
+	private final Exporter<Data> exporter;
 
-	/**
-	 * Constructor
+	public SavingActionTemplate(final Exporter<Data> exporter) {
+		this.exporter = exporter;
+	}
+
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.persistent.filetool.SavingAction#save(java.lang.String)
 	 */
-	public EstimationResultFileAccess(final DataAccessObject<FoldedModel> dao) {
-		this.dao = dao;
+	@Override
+	public boolean save(final Data data) throws IOException, IllegalArgumentException {
+		return exporter.export(data, getPath());
 	}
 
-	public String saveFile(final FoldedModel foldedModel, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<FoldedModel>... filters)
-			throws IllegalArgumentException, IOException {
-		try {
-			return dao.saveUsingGUI(foldedModel, lastFilePath, owner, filters);
-		} catch (FileChooserCanceledException e) {
-			return lastFilePath;
-		}
-	}
 }

@@ -16,37 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.estimation;
-
-import java.awt.Component;
-import java.io.IOException;
+package oripa.persistence.entity;
 
 import oripa.domain.fold.FoldedModel;
-import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.persistence.dao.AbstractFileDAO;
+import oripa.persistence.dao.AbstractFilterSelector;
+import oripa.persistence.filetool.FileTypeProperty;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class EstimationResultFileAccess {
-	private final DataAccessObject<FoldedModel> dao;
+public class FoldedModelDAO extends AbstractFileDAO<FoldedModel> {
+	private final AbstractFilterSelector<FoldedModel> selector;
 
 	/**
 	 * Constructor
+	 *
+	 * @param selector
+	 *            If you don't use {@link #load(String)} and
+	 *            {@link AbstractFileDAO#save(OrigamiModel, String, FileTypeProperty)},
+	 *            {@code selector} can be null.
 	 */
-	public EstimationResultFileAccess(final DataAccessObject<FoldedModel> dao) {
-		this.dao = dao;
+	public FoldedModelDAO(final AbstractFilterSelector<FoldedModel> selector) {
+		this.selector = selector;
 	}
 
-	public String saveFile(final FoldedModel foldedModel, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<FoldedModel>... filters)
-			throws IllegalArgumentException, IOException {
-		try {
-			return dao.saveUsingGUI(foldedModel, lastFilePath, owner, filters);
-		} catch (FileChooserCanceledException e) {
-			return lastFilePath;
-		}
+	/* (non Javadoc)
+	 * @see oripa.persistent.dao.AbstractDAO#getFilterSelector()
+	 */
+	@Override
+	protected AbstractFilterSelector<FoldedModel> getFilterSelector() {
+		return selector;
 	}
+
 }

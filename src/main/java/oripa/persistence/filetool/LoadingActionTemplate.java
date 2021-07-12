@@ -16,37 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.estimation;
+package oripa.persistence.filetool;
 
-import java.awt.Component;
 import java.io.IOException;
-
-import oripa.domain.fold.FoldedModel;
-import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class EstimationResultFileAccess {
-	private final DataAccessObject<FoldedModel> dao;
+public class LoadingActionTemplate<Data> extends AbstractLoadingAction<Data> {
+
+	private final Loader<Data> loader;
 
 	/**
 	 * Constructor
 	 */
-	public EstimationResultFileAccess(final DataAccessObject<FoldedModel> dao) {
-		this.dao = dao;
+	public LoadingActionTemplate(final Loader<Data> l) {
+		loader = l;
 	}
 
-	public String saveFile(final FoldedModel foldedModel, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<FoldedModel>... filters)
-			throws IllegalArgumentException, IOException {
-		try {
-			return dao.saveUsingGUI(foldedModel, lastFilePath, owner, filters);
-		} catch (FileChooserCanceledException e) {
-			return lastFilePath;
-		}
+	/*
+	 * (non Javadoc)
+	 *
+	 * @see oripa.persistent.filetool.AbstractLoadingAction#load()
+	 */
+	@Override
+	public Data load() throws FileVersionError, IOException, WrongDataFormatException {
+		return loader.load(getPath());
 	}
+
 }

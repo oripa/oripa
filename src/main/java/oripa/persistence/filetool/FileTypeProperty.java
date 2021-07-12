@@ -16,35 +16,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.model;
+package oripa.persistence.filetool;
 
-import java.awt.Component;
-import java.io.IOException;
-
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
+import java.util.Arrays;
 
 /**
- * @author OUCHI Koji
+ * @author Koji
  *
  */
-public class OrigamiModelFileAccess {
-	private final DataAccessObject<OrigamiModel> dao;
+public interface FileTypeProperty<Data> {
 
 	/**
-	 * Constructor
+	 *
+	 * @return extensions for this file type.
 	 */
-	public OrigamiModelFileAccess(final DataAccessObject<OrigamiModel> dao) {
-		this.dao = dao;
+	public abstract String[] getExtensions();
+
+	public default boolean extensionsMatch(final String filePath) {
+		if (filePath == null) {
+			return false;
+		}
+		return Arrays.asList(getExtensions()).stream()
+				.anyMatch(extension -> filePath.endsWith(extension));
 	}
 
-	public void saveFile(final OrigamiModel origamiModel, final Component owner,
-			final FileAccessSupportFilter<OrigamiModel>... filters)
-			throws IllegalArgumentException, IOException, FileChooserCanceledException {
+	/**
+	 * @return a text for identifying file type.
+	 */
+	public abstract String getKeyText();
 
-		dao.saveUsingGUI(origamiModel, null, owner, filters);
-	}
+	public abstract Integer getOrder();
 
+	public abstract Loader<Data> getLoader();
+
+	public abstract Exporter<Data> getExporter();
 }

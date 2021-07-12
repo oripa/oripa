@@ -16,37 +16,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.estimation;
+package oripa.persistence.filetool;
 
-import java.awt.Component;
 import java.io.IOException;
 
-import oripa.domain.fold.FoldedModel;
-import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
-
 /**
- * @author OUCHI Koji
+ * @author Koji
  *
  */
-public class EstimationResultFileAccess {
-	private final DataAccessObject<FoldedModel> dao;
-
+public interface Exporter<Data> {
 	/**
-	 * Constructor
+	 *
+	 * @param data
+	 * @param filePath
+	 * @return true if the action succeeds, otherwise false.
+	 * @throws IOException
+	 *             Error on file access.
+	 * @throws IllegalArgumentException
+	 *             thrown if the {@code data} cannot be converted to the aimed
+	 *             data format.
 	 */
-	public EstimationResultFileAccess(final DataAccessObject<FoldedModel> dao) {
-		this.dao = dao;
-	}
-
-	public String saveFile(final FoldedModel foldedModel, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<FoldedModel>... filters)
-			throws IllegalArgumentException, IOException {
-		try {
-			return dao.saveUsingGUI(foldedModel, lastFilePath, owner, filters);
-		} catch (FileChooserCanceledException e) {
-			return lastFilePath;
-		}
-	}
+	public abstract boolean export(Data data, String filePath)
+			throws IOException, IllegalArgumentException;
 }

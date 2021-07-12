@@ -16,37 +16,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.estimation;
+package oripa.persistence.foldformat;
 
-import java.awt.Component;
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import oripa.domain.fold.FoldedModel;
-import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import oripa.persistence.foldformat.Geometry;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class EstimationResultFileAccess {
-	private final DataAccessObject<FoldedModel> dao;
+class GeometryTest {
 
-	/**
-	 * Constructor
-	 */
-	public EstimationResultFileAccess(final DataAccessObject<FoldedModel> dao) {
-		this.dao = dao;
+	@Test
+	void testSortByAngle() {
+		var coords = List.of(
+				List.of(0.0, 0.0),
+				List.of(1.0, 0.0),
+				List.of(1.0, 1.0),
+				List.of(0.0, 1.0),
+				List.of(2.0, 1.0));
+
+		var v = 2;
+		var verticesAround = List.of(0, 1, 3, 4); // around v
+
+		var sorted = Geometry.sortByAngle(v, verticesAround, coords);
+
+		assertEquals(0, sorted.get(0));
+		assertEquals(1, sorted.get(1));
+		assertEquals(4, sorted.get(2));
+		assertEquals(3, sorted.get(3));
 	}
 
-	public String saveFile(final FoldedModel foldedModel, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<FoldedModel>... filters)
-			throws IllegalArgumentException, IOException {
-		try {
-			return dao.saveUsingGUI(foldedModel, lastFilePath, owner, filters);
-		} catch (FileChooserCanceledException e) {
-			return lastFilePath;
-		}
-	}
 }

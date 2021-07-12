@@ -16,37 +16,48 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.estimation;
+package oripa.persistence.filetool;
 
-import java.awt.Component;
-import java.io.IOException;
-
-import oripa.domain.fold.FoldedModel;
-import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class EstimationResultFileAccess {
-	private final DataAccessObject<FoldedModel> dao;
+public class MultiTypeProperty<Data> implements FileTypeProperty<Data> {
 
-	/**
-	 * Constructor
-	 */
-	public EstimationResultFileAccess(final DataAccessObject<FoldedModel> dao) {
-		this.dao = dao;
+	private final Collection<FileTypeProperty<Data>> properties;
+
+	public MultiTypeProperty(final Collection<FileTypeProperty<Data>> properties) {
+		this.properties = properties;
 	}
 
-	public String saveFile(final FoldedModel foldedModel, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<FoldedModel>... filters)
-			throws IllegalArgumentException, IOException {
-		try {
-			return dao.saveUsingGUI(foldedModel, lastFilePath, owner, filters);
-		} catch (FileChooserCanceledException e) {
-			return lastFilePath;
-		}
+	@Override
+	public Integer getOrder() {
+		return -1;
+	}
+
+	@Override
+	public String getKeyText() {
+		return String.join("+", getExtensions());
+	}
+
+	@Override
+	public String[] getExtensions() {
+		return properties.stream()
+				.flatMap(p -> Arrays.asList(p.getExtensions()).stream())
+				.collect(Collectors.toList()).toArray(new String[0]);
+	}
+
+	@Override
+	public Loader<Data> getLoader() {
+		return null;
+	}
+
+	@Override
+	public Exporter<Data> getExporter() {
+		return null;
 	}
 }

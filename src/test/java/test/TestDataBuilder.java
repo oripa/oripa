@@ -3,9 +3,9 @@ package test;
 import oripa.doc.Doc;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.persistence.doc.exporter.DocExporter;
+import oripa.persistence.doc.exporter.ExporterXML;
 import oripa.domain.creasepattern.CreasePattern;
-import oripa.persistent.doc.exporter.DocExporter;
-import oripa.persistent.doc.exporter.ExporterXML;
 import oripa.value.OriLine;
 
 public class TestDataBuilder {
