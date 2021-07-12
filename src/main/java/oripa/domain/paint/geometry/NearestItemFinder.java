@@ -6,7 +6,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.geom.GeomUtil;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
@@ -105,8 +104,7 @@ public class NearestItemFinder {
 		return candidate;
 	}
 
-	public static Vector2d getNearestInAngleSnapCrossPoints(final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+	public static Vector2d getNearestInAngleSnapCrossPoints(final PaintContext paintContext) {
 		return NearestVertexFinder.findNearestVertex(
 				paintContext.getLogicalMousePoint(),
 				paintContext.getAngleSnapCrossPoints()).point;
