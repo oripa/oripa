@@ -42,8 +42,6 @@ import oripa.appstate.StateManager;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
@@ -60,8 +58,8 @@ import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.AngleValueInputListener;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
+import oripa.gui.presenter.main.CheckerWindowOpener;
 import oripa.gui.presenter.main.FoldedModelWindowOpener;
-import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.gui.viewsetting.ChangeViewSetting;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
@@ -855,19 +853,8 @@ public class UIPanel extends JPanel {
 	 *            the cp data to be used
 	 */
 	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContext context) {
-		OrigamiModel origamiModel;
-		CreasePattern creasePattern = context.getCreasePattern();
-
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		origamiModel = modelFactory.createOrigamiModel(
-				creasePattern, creasePattern.getPaperSize());
-
-		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory(
-				childFrameManager);
-		JFrame checker = checkerFactory.createFrame(
-				UIPanel.this, origamiModel, creasePattern, viewContext.isZeroLineWidth());
-		checker.repaint();
-		checker.setVisible(true);
+		var windowOpener = new CheckerWindowOpener(this, childFrameManager);
+		windowOpener.showCheckerWindow(context.getCreasePattern(), viewContext.isZeroLineWidth());
 	}
 
 	private void makeGridSizeHalf() {
