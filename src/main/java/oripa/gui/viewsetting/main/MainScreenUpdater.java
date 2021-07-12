@@ -3,21 +3,18 @@ package oripa.gui.viewsetting.main;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.function.Consumer;
 
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteAction;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 
-public class MainScreenUpdater implements
-		ViewScreenUpdater {
+public class MainScreenUpdater implements ViewScreenUpdater {
 
-	private MouseActionHolder actionHolder;
+	private Consumer<Boolean> changeActionIfCopyAndPaste;
 
 	private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-	public void setMouseActionHolder(final MouseActionHolder actionHolder) {
-		this.actionHolder = actionHolder;
+	public void setChangeActionIfCopyAndPaste(final Consumer<Boolean> changeAction) {
+		this.changeActionIfCopyAndPaste = changeAction;
 	}
 
 	// -------------------------
@@ -46,28 +43,17 @@ public class MainScreenUpdater implements
 		@Override
 		public void keyPressed(final KeyEvent e) {
 			if (e.isControlDown()) {
-				updateIfCopyAndPaste(true);
+				changeActionIfCopyAndPaste.accept(true);
+				updateScreen();
 			} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				updateScreen();
-
 			}
 
 		}
 
 		@Override
 		public void keyReleased(final KeyEvent e) {
-			updateIfCopyAndPaste(false);
-		}
-
-	}
-
-	private void updateIfCopyAndPaste(final boolean changeOrigin) {
-		GraphicMouseAction action = actionHolder.getMouseAction();
-
-		if (action instanceof CopyAndPasteAction) {
-			CopyAndPasteAction casted = (CopyAndPasteAction) action;
-			casted.changeAction(changeOrigin);
-
+			changeActionIfCopyAndPaste.accept(false);
 			updateScreen();
 		}
 

@@ -51,6 +51,7 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteAction;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
@@ -87,7 +88,15 @@ public class PainterScreen extends JPanel
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder aCutOutlineHolder) {
 		this.mouseActionHolder = mouseActionHolder;
-		screenUpdater.setMouseActionHolder(mouseActionHolder);
+
+		screenUpdater.setChangeActionIfCopyAndPaste(changeOrigin -> {
+			GraphicMouseAction action = mouseActionHolder.getMouseAction();
+			if (action instanceof CopyAndPasteAction) {
+				CopyAndPasteAction casted = (CopyAndPasteAction) action;
+				casted.changeAction(changeOrigin);
+			}
+		});
+
 		this.paintContext = paintContext;
 		this.viewContext = viewContext;
 		cutOutlinesHolder = aCutOutlineHolder;
