@@ -23,7 +23,8 @@ import java.awt.event.ActionListener;
 
 import oripa.appstate.StatePopper;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.unselect.AllItemUnselecter;
+import oripa.domain.paint.unselect.AllItemUnselecterCommand;
+import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
@@ -57,9 +58,9 @@ public class UnselectAllItemsActionListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		var unselecter = new AllItemUnselecter();
+		Command command = new AllItemUnselecterCommand(context);
 
-		unselecter.unselectAllItems(context);
+		command.execute();
 
 		var currentAction = actionHolder.getMouseAction();
 		if (currentAction == null) {

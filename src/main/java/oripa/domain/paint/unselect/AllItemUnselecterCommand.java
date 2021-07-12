@@ -19,13 +19,21 @@
 package oripa.domain.paint.unselect;
 
 import oripa.domain.paint.PaintContext;
+import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AllItemUnselecter {
-	public void unselectAllItems(final PaintContext context) {
+public class AllItemUnselecterCommand implements Command {
+	private final PaintContext context;
+
+	public AllItemUnselecterCommand(final PaintContext context) {
+		this.context = context;
+	}
+
+	@Override
+	public void execute() {
 		context.getPainter().resetSelectedOriLines();
 		context.clear(false);
 	}
