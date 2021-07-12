@@ -21,6 +21,10 @@ public class NearestItemFinder {
 		return CalculationResource.CLOSE_THRESHOLD / context.getScale();
 	}
 
+	private static double scaleThreshold(final double scale) {
+		return CalculationResource.CLOSE_THRESHOLD / scale;
+	}
+
 	// returns the OriLine sufficiently closer to point p
 	public static OriLine pickLine(final Collection<OriLine> lines,
 			final Vector2d p, final double scale) {
@@ -35,7 +39,8 @@ public class NearestItemFinder {
 			}
 		}
 
-		if (minDistance / scale < 10) {
+//		if (minDistance / scale < 10) {
+		if (minDistance < scaleThreshold(scale)) {
 			return bestLine;
 		} else {
 			return null;
