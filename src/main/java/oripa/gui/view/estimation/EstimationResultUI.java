@@ -32,12 +32,12 @@ import org.slf4j.LoggerFactory;
 import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
+import oripa.gui.view.util.Dialogs;
 import oripa.persistence.entity.FoldedModelDAO;
 import oripa.persistence.entity.FoldedModelFilterSelector;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.gui.Dialogs;
 
 public class EstimationResultUI extends JPanel {
 	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUI.class);

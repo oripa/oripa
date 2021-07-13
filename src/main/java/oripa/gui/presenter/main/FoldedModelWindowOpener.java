@@ -36,8 +36,8 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.model.ModelViewFrameFactory;
+import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.util.gui.ChildFrameManager;
 
 /**
  * @author OUCHI Koji

@@ -14,10 +14,10 @@ import javax.swing.filechooser.FileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.gui.view.util.Dialogs;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.gui.Dialogs;
 
 /**
  *

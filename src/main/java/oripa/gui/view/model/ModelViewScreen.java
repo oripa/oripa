@@ -47,9 +47,9 @@ import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.drawer.java2d.GraphicItemConverter;
+import oripa.gui.view.util.CallbackOnUpdate;
+import oripa.gui.view.util.MouseUtility;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.util.gui.CallbackOnUpdate;
-import oripa.util.gui.MouseUtility;
 import oripa.value.OriLine;
 
 /**

@@ -53,9 +53,9 @@ import oripa.drawer.java2d.Java2DGraphicDrawer;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.util.AffineCamera;
+import oripa.gui.view.util.MouseUtility;
 import oripa.resource.Constants;
-import oripa.util.gui.AffineCamera;
-import oripa.util.gui.MouseUtility;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 

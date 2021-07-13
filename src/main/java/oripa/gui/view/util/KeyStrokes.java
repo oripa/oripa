@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.gui;
+package oripa.gui.view.util;
 
 import java.awt.event.InputEvent;
 

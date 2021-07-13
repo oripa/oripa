@@ -65,6 +65,9 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
 import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
+import oripa.gui.view.util.ChildFrameManager;
+import oripa.gui.view.util.Dialogs;
+import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
@@ -80,9 +83,6 @@ import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.gui.ChildFrameManager;
-import oripa.util.gui.Dialogs;
-import oripa.util.gui.KeyStrokes;
 
 public class MainFrame extends JFrame implements ComponentListener, WindowListener {
 

@@ -23,9 +23,9 @@ import javax.swing.JFrame;
 
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.gui.view.util.CallbackOnUpdate;
+import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.util.gui.CallbackOnUpdate;
-import oripa.util.gui.ChildFrameManager;
 
 /**
  * @author Koji

@@ -52,11 +52,11 @@ import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteAction;
+import oripa.gui.view.util.AffineCamera;
+import oripa.gui.view.util.MouseUtility;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
-import oripa.util.gui.AffineCamera;
-import oripa.util.gui.MouseUtility;
 
 public class PainterScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,

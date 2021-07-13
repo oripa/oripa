@@ -49,7 +49,7 @@ import oripa.domain.fold.halfedge.TriangleFace;
 import oripa.domain.fold.halfedge.TriangleVertex;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
-import oripa.util.gui.MouseUtility;
+import oripa.gui.view.util.MouseUtility;
 
 /**
  * A screen to show the folded state of origami.

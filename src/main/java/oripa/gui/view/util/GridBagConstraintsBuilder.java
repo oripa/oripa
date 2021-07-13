@@ -1,4 +1,4 @@
-package oripa.util.gui;
+package oripa.gui.view.util;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -117,7 +117,7 @@ public class GridBagConstraintsBuilder {
 	 * fill the entire current line
 	 *
 	 * @apiNote ignores previously added cells in this line
-	 * @see {@link oripa.util.gui.GridBagConstraintsBuilder.fillLineField}
+	 * @see {@link oripa.gui.view.util.GridBagConstraintsBuilder.fillLineField}
 	 *
 	 * @return constraint filling the entire line
 	 */

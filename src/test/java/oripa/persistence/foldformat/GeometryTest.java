@@ -24,8 +24,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.persistence.foldformat.Geometry;
-
 /**
  * @author OUCHI Koji
  *

@@ -25,7 +25,7 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
-import oripa.util.gui.ChildFrameManager;
+import oripa.gui.view.util.ChildFrameManager;
 
 /**
  * @author OUCHI Koji

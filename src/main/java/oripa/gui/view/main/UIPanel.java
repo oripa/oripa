@@ -60,6 +60,9 @@ import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
 import oripa.gui.presenter.main.CheckerWindowOpener;
 import oripa.gui.presenter.main.FoldedModelWindowOpener;
+import oripa.gui.view.util.ChildFrameManager;
+import oripa.gui.view.util.GridBagConstraintsBuilder;
+import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.viewsetting.ChangeViewSetting;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
@@ -71,9 +74,6 @@ import oripa.resource.ButtonIcon;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.gui.ChildFrameManager;
-import oripa.util.gui.GridBagConstraintsBuilder;
-import oripa.util.gui.KeyStrokes;
 import oripa.value.OriLine;
 
 public class UIPanel extends JPanel {

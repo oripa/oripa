@@ -30,6 +30,8 @@ import org.slf4j.LoggerFactory;
 import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.gui.view.util.CallbackOnUpdate;
+import oripa.gui.view.util.Dialogs;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.persistence.entity.OrigamiModelDAO;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
@@ -38,8 +40,6 @@ import oripa.persistence.filetool.FileChooserCanceledException;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.gui.CallbackOnUpdate;
-import oripa.util.gui.Dialogs;
 
 /**
  * A frame to show a transparent folded model.
