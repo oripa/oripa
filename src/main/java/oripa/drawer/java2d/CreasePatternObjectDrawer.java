@@ -2,6 +2,7 @@ package oripa.drawer.java2d;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
 
@@ -100,6 +101,16 @@ public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
 	}
 
 	@Override
+	public void selectViolatingFaceColor() {
+		g2d.setColor(selector.getViolatingFaceColor());
+	}
+
+	@Override
+	public void selectNormalFaceColor() {
+		g2d.setColor(selector.getNormalFaceColor());
+	}
+
+	@Override
 	public void selectNormalVertexSize(final double scale) {
 		vertexSize = selector.createNormalVertexSize(scale);
 	}
@@ -137,6 +148,11 @@ public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
 	@Override
 	public void drawRectangle(final Vector2d p0, final Vector2d p1) {
 		g2d.draw(converter.toRectangle2D(p0, p1));
+	}
+
+	@Override
+	public void fillFace(final List<Vector2d> vertices) {
+		g2d.fill(converter.toPath2D(vertices));
 	}
 
 	@Override

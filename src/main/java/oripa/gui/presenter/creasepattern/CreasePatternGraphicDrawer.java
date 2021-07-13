@@ -255,4 +255,15 @@ public class CreasePatternGraphicDrawer {
 		}
 	}
 
+	public void highlightOverlappingLines(final ObjectGraphicDrawer drawer,
+			final Collection<OriLine> overlappingLines,
+			final double scale) {
+		for (var line : overlappingLines) {
+			drawer.selectOverlappingLineHighlightColor();
+			drawer.selectOverlappingLineHighlightStroke(scale);
+
+			drawer.drawLine(line);
+		}
+	}
+
 }

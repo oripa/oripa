@@ -120,6 +120,14 @@ public class CreasePatternElementSelector {
 		return Color.RED;
 	}
 
+	public Color getNormalFaceColor() {
+		return new Color(255, 210, 210);
+	}
+
+	public Color getViolatingFaceColor() {
+		return Color.MAGENTA;
+	}
+
 	public double createViolatingVertexSize(final double scale) {
 		return 16.0 / scale;
 	}

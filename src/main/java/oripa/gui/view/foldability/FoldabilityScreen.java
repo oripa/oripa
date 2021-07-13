@@ -34,7 +34,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -53,9 +52,9 @@ import oripa.drawer.java2d.CreasePatternObjectDrawer;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.presenter.foldability.FoldabilityGraphicDrawer;
 import oripa.gui.view.util.AffineCamera;
 import oripa.gui.view.util.MouseUtility;
-import oripa.resource.Constants;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
@@ -134,69 +133,10 @@ public class FoldabilityScreen extends JPanel
 		this.setVisible(true);
 	}
 
-	private void drawFoldability(final Graphics2D g2d) {
-		if (origamiModel == null) {
-			return;
-		}
+	private void drawFoldability(final ObjectGraphicDrawer objDrawer, final double scale) {
+		FoldabilityGraphicDrawer drawer = new FoldabilityGraphicDrawer();
 
-		List<OriFace> faces = origamiModel.getFaces();
-		List<OriVertex> vertices = origamiModel.getVertices();
-
-		for (OriFace face : faces) {
-			if (violatingFaces.contains(face)) {
-				g2d.setColor(Color.MAGENTA);
-			} else {
-				g2d.setColor(new Color(255, 210, 210));
-			}
-			g2d.fill(face.getOutlineBeforeFolding());
-		}
-
-		ObjectGraphicDrawer drawer = new CreasePatternObjectDrawer(g2d);
-		drawer.selectViolatingVertexColor();
-		for (OriVertex v : violatingVertices) {
-			double scale = camera.getScale();
-			drawer.selectViolatingVertexSize(scale);
-			var position = v.getPositionBeforeFolding();
-			drawer.drawVertex(position);
-		}
-
-		if (bDrawFaceID) {
-			g2d.setColor(Color.BLACK);
-			for (OriFace face : faces) {
-				g2d.drawString("" + face.getFaceID(), (int) face.getCentroidBeforeFolding().x,
-						(int) face.getCentroidBeforeFolding().y);
-			}
-		}
-
-		if (Constants.FOR_STUDY) {
-			paintForStudy(g2d, faces, vertices);
-		}
-	}
-
-	private void paintForStudy(final Graphics2D g2d, final Collection<OriFace> faces,
-			final Collection<OriVertex> vertices) {
-		g2d.setColor(new Color(255, 210, 220));
-		for (OriFace face : faces) {
-			// switch the if statement by comment out?
-			if (face.getIndexForStack() == 0) {
-				g2d.setColor(Color.RED);
-				g2d.fill(face.getOutlineBeforeFolding());
-			} else {
-				g2d.setColor(face.colorForDebug);
-			}
-
-			if (violatingFaces.contains(face)) {
-				g2d.setColor(Color.RED);
-			} else {
-				if (face.isFaceFront()) {
-					g2d.setColor(new Color(255, 200, 200));
-				} else {
-					g2d.setColor(new Color(200, 200, 255));
-				}
-			}
-
-			g2d.fill(face.getOutlineBeforeFolding());
-		}
+		drawer.draw(objDrawer, origamiModel, violatingFaces, violatingVertices, scale);
 	}
 
 	private void buildBufferImage() {
@@ -226,27 +166,25 @@ public class FoldabilityScreen extends JPanel
 		}
 
 		ObjectGraphicDrawer bufferObjDrawer = new CreasePatternObjectDrawer(bufferg);
-		highlightOverlappingLines(bufferObjDrawer);
 
 		var scale = camera.getScale();
-		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
-		drawer.drawAllLines(bufferObjDrawer, creasePattern, scale, zeroLineWidth);
-		drawer.drawCreaseVertices(bufferObjDrawer, creasePattern, scale);
 
-		drawFoldability(bufferg);
+		drawCreasePattern(bufferObjDrawer, scale);
+
+		drawFoldability(bufferObjDrawer, scale);
 
 		g.drawImage(bufferImage, 0, 0, this);
 
 		drawVertexViolationNames(new CreasePatternObjectDrawer((Graphics2D) g));
 	}
 
-	private void highlightOverlappingLines(final ObjectGraphicDrawer drawer) {
-		for (var line : overlappingLines) {
-			drawer.selectOverlappingLineHighlightColor();
-			drawer.selectOverlappingLineHighlightStroke(camera.getScale());
+	private void drawCreasePattern(final ObjectGraphicDrawer objDrawer, final double scale) {
+		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
-			drawer.drawLine(line);
-		}
+		drawer.highlightOverlappingLines(objDrawer, overlappingLines, scale);
+
+		drawer.drawAllLines(objDrawer, creasePattern, scale, zeroLineWidth);
+		drawer.drawCreaseVertices(objDrawer, creasePattern, scale);
 	}
 
 	private void drawVertexViolationNames(final ObjectGraphicDrawer drawer) {

@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import java.util.List;
+
 import javax.vecmath.Vector2d;
 
 import oripa.value.OriLine;
@@ -62,6 +64,10 @@ public interface ObjectGraphicDrawer {
 
 	void selectViolatingVertexColor();
 
+	void selectNormalFaceColor();
+
+	void selectViolatingFaceColor();
+
 	void selectNormalVertexSize(final double scale);
 
 	void selectViolatingVertexSize(final double scale);
@@ -77,6 +83,8 @@ public interface ObjectGraphicDrawer {
 	void drawLine(double x0, double y0, double x1, double y1);
 
 	void drawRectangle(final Vector2d p0, final Vector2d p1);
+
+	void fillFace(final List<Vector2d> vertices);
 
 	void drawString(String text, float x, float y);
 }
