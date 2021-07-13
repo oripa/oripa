@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
-import oripa.drawer.java2d.Java2DGraphicDrawer;
+import oripa.drawer.java2d.CreasePatternObjectDrawer;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
@@ -85,7 +85,7 @@ public class PictureExporter implements DocExporter {
 
 		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
 
-		ObjectGraphicDrawer objDrawer = new Java2DGraphicDrawer(g2d);
+		ObjectGraphicDrawer objDrawer = new CreasePatternObjectDrawer(g2d);
 		// TODO: make zeroLineWidth configurable
 		drawer.drawAllLines(objDrawer, creasePattern, scale, false);
 

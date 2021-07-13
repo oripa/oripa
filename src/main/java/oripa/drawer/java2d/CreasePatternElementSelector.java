@@ -5,7 +5,7 @@ import java.awt.Color;
 
 import oripa.value.OriLine;
 
-public class ElementSelector {
+public class CreasePatternElementSelector {
 
 	public Color getColor(final OriLine.Type lineType) {
 

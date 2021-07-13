@@ -32,6 +32,7 @@ import javax.vecmath.Vector3d;
 
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
+import oripa.drawer.java2d.GraphicItemConverter;
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.util.collection.CollectionUtil;
@@ -54,8 +55,6 @@ public class OriFace {
 	 * half-edge at index 0.
 	 */
 	private final List<OriHalfedge> halfedges = new ArrayList<>();
-
-	private Path2D.Double outline = new Path2D.Double();
 
 	private Path2D.Double preOutline = new Path2D.Double();
 
@@ -301,7 +300,6 @@ public class OriFace {
 		return stackConditionsOf3Faces.stream();
 	}
 
-
 	public void addStackConditionOf2Faces(final Integer upperFaceORMatIndex) {
 		stackConditionsOf2Faces.add(upperFaceORMatIndex);
 	}
@@ -422,21 +420,20 @@ public class OriFace {
 		}
 	}
 
-	/**
-	 * Constructs {@code outline} field, which is for showing this face after
-	 * fold in graphic.
-	 */
-	public void buildOutline() {
-		outline = createPath(halfedges.stream()
+	public List<Vector2d> createOutlineVerticesAfterFolding() {
+		return halfedgeStream()
 				.map(OriHalfedge::getPositionForDisplay)
-				.collect(Collectors.toList()));
+				.collect(Collectors.toList());
 	}
 
-	/**
-	 * @return outline for drawing the shape after fold
-	 */
-	public Path2D.Double getOutline() {
-		return outline;
+	public List<Vector2d> createOutlineVerticesBeforeFolding() {
+		Vector2d centerP = getCentroidBeforeFolding();
+		double rate = 0.5;
+		return halfedgeStream()
+				.map(he -> new Vector2d(
+						he.getPositionBeforeFolding().x * rate + centerP.x * (1.0 - rate),
+						he.getPositionBeforeFolding().y * rate + centerP.y * (1.0 - rate)))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -461,13 +458,15 @@ public class OriFace {
 	}
 
 	private Path2D.Double createPath(final List<Vector2d> vertices) {
-		var path = new Path2D.Double();
-		path.moveTo(vertices.get(0).x, vertices.get(0).y);
-		for (int i = 1; i < halfedges.size(); i++) {
-			path.lineTo(vertices.get(i).x, vertices.get(i).y);
-		}
-		path.closePath();
-		return path;
+		GraphicItemConverter converter = new GraphicItemConverter();
+		return converter.toPath2D(vertices);
+//		var path = new Path2D.Double();
+//		path.moveTo(vertices.get(0).x, vertices.get(0).y);
+//		for (int i = 1; i < halfedges.size(); i++) {
+//			path.lineTo(vertices.get(i).x, vertices.get(i).y);
+//		}
+//		path.closePath();
+//		return path;
 	}
 
 	/**

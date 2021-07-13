@@ -150,7 +150,6 @@ public class OrigamiModel {
 
 		faces.forEach(face -> {
 			face.invertFaceFront();
-			face.buildOutline();
 		});
 
 //		Collections.sort(faces, new FaceOrderComparator());

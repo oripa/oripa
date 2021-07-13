@@ -49,7 +49,7 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.geometry.NearestVertexFinder;
-import oripa.drawer.java2d.Java2DGraphicDrawer;
+import oripa.drawer.java2d.CreasePatternObjectDrawer;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
@@ -151,7 +151,7 @@ public class FoldabilityScreen extends JPanel
 			g2d.fill(face.getOutlineBeforeFolding());
 		}
 
-		ObjectGraphicDrawer drawer = new Java2DGraphicDrawer(g2d);
+		ObjectGraphicDrawer drawer = new CreasePatternObjectDrawer(g2d);
 		drawer.selectViolatingVertexColor();
 		for (OriVertex v : violatingVertices) {
 			double scale = camera.getScale();
@@ -225,7 +225,7 @@ public class FoldabilityScreen extends JPanel
 					RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 
-		ObjectGraphicDrawer bufferObjDrawer = new Java2DGraphicDrawer(bufferg);
+		ObjectGraphicDrawer bufferObjDrawer = new CreasePatternObjectDrawer(bufferg);
 		highlightOverlappingLines(bufferObjDrawer);
 
 		var scale = camera.getScale();
@@ -237,7 +237,7 @@ public class FoldabilityScreen extends JPanel
 
 		g.drawImage(bufferImage, 0, 0, this);
 
-		drawVertexViolationNames(new Java2DGraphicDrawer((Graphics2D) g));
+		drawVertexViolationNames(new CreasePatternObjectDrawer((Graphics2D) g));
 	}
 
 	private void highlightOverlappingLines(final ObjectGraphicDrawer drawer) {

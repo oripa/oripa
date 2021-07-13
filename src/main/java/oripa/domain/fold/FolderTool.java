@@ -40,7 +40,6 @@ public class FolderTool {
 			f.halfedgeStream().forEach(he -> {
 				he.getPositionForDisplay().set(he.getPosition());
 			});
-			f.buildOutline();
 		}
 
 		// not used.

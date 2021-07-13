@@ -9,18 +9,18 @@ import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
 
-public class Java2DGraphicDrawer implements ObjectGraphicDrawer {
+public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
 	// private final static Logger logger =
 	// LoggerFactory.getLogger(Java2DGraphicDrawer.class);
 
 	private double vertexSize;
 
-	private final ElementSelector selector = new ElementSelector();
+	private final CreasePatternElementSelector selector = new CreasePatternElementSelector();
 	private final GraphicItemConverter converter = new GraphicItemConverter();
 
 	private final Graphics2D g2d;
 
-	public Java2DGraphicDrawer(final Graphics2D g2d) {
+	public CreasePatternObjectDrawer(final Graphics2D g2d) {
 		this.g2d = g2d;
 	}
 

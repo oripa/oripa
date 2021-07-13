@@ -19,7 +19,9 @@
 package oripa.drawer.java2d;
 
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
 
@@ -58,5 +60,15 @@ public class GraphicItemConverter {
 		double w = Math.abs(p0.x - p1.x);
 		double h = Math.abs(p0.y - p1.y);
 		return new Rectangle2D.Double(sx, sy, w, h);
+	}
+
+	public Path2D.Double toPath2D(final List<Vector2d> vertices) {
+		var path = new Path2D.Double();
+		path.moveTo(vertices.get(0).x, vertices.get(0).y);
+		for (int i = 1; i < vertices.size(); i++) {
+			path.lineTo(vertices.get(i).x, vertices.get(i).y);
+		}
+		path.closePath();
+		return path;
 	}
 }

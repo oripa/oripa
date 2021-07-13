@@ -46,7 +46,9 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.drawer.java2d.FoldedModelObjectDrawer;
 import oripa.drawer.java2d.GraphicItemConverter;
+import oripa.gui.presenter.model.FoldedModelGraphicDrawer;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.MouseUtility;
 import oripa.gui.viewsetting.main.MainScreenSetting;
@@ -101,7 +103,7 @@ public class ModelViewScreen extends JPanel
 		addMouseWheelListener(this);
 		addComponentListener(this);
 
-		scissorsLine = new OriLine();
+//		scissorsLine = new OriLine();
 		scale = 1.0;
 		rotateAngle = 0;
 		setBackground(Color.white);
@@ -166,47 +168,6 @@ public class ModelViewScreen extends JPanel
 		}
 	}
 
-	private void drawModel(final Graphics2D g2d) {
-		if (origamiModel == null) {
-			logger.info("null origamiModel.");
-			return;
-		}
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-
-		logger.debug("sortedFaces.size() = " + sortedFaces.size());
-
-		for (OriFace face : sortedFaces) {
-			logger.trace("face: " + face);
-			switch (modelDisplayMode) {
-			case FILL_ALPHA:
-				g2d.setColor(new Color(100, 100, 100));
-				g2d.fill(face.getOutline());
-				break;
-			case FILL_NONE:
-			}
-
-			g2d.setColor(Color.BLACK);
-			face.halfedgeStream().forEach(he -> {
-				if (he.getPair() == null) {
-					g2d.setStroke(selector.createPaperBoundaryStrokeForModelView(scale));
-				} else {
-					g2d.setStroke(selector.createFaceEdgeStrokeForModelView(scale));
-				}
-				var position = he.getPositionForDisplay();
-				var nextPosition = he.getNext().getPositionForDisplay();
-				g2d.draw(converter.toLine2D(position, nextPosition));
-			});
-		}
-
-		if (scissorsLineVisible) {
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-			g2d.setStroke(selector.createScissorsLineStrokeForModelView(scale));
-			g2d.setColor(selector.getScissorsLineColorForModelView());
-
-			g2d.draw(converter.toLine2D(scissorsLine));
-		}
-	}
-
 	// Update the current AffineTransform
 	private void updateAffineTransform() {
 		affineTransform.setToIdentity();
@@ -254,12 +215,17 @@ public class ModelViewScreen extends JPanel
 			logger.info("origamiModel does not have a model data.");
 			return;
 		}
+		var objDrawer = new FoldedModelObjectDrawer(g2d);
 
-		g2d.setStroke(selector.createDefaultStroke(scale));
-		if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-		}
-		drawModel(g2d);
+		var drawer = new FoldedModelGraphicDrawer();
+
+		drawer.draw(objDrawer, origamiModel, scissorsLineVisible ? scissorsLine : null, modelDisplayMode, scale);
+
+//		g2d.setStroke(selector.createDefaultStroke(scale));
+//		if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
+//			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+//		}
+//		drawModel(g2d);
 		g.drawImage(bufferImage, 0, 0, this);
 
 	}
@@ -284,6 +250,8 @@ public class ModelViewScreen extends JPanel
 	}
 
 	public void recalcScissorsLine() {
+		scissorsLine = new OriLine();
+
 		Vector2d dir = new Vector2d(Math.cos(Math.PI * scissorsLineAngleDegree / 180.0),
 				Math.sin(Math.PI * scissorsLineAngleDegree / 180.0));
 		scissorsLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);

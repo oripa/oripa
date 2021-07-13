@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
-import oripa.drawer.java2d.Java2DGraphicDrawer;
+import oripa.drawer.java2d.CreasePatternObjectDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -231,7 +231,7 @@ public class PainterScreen extends JPanel
 
 		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 
-		ObjectGraphicDrawer bufferObjDrawer = new Java2DGraphicDrawer(bufferG2D);
+		ObjectGraphicDrawer bufferObjDrawer = new CreasePatternObjectDrawer(bufferG2D);
 
 		drawer.draw(bufferObjDrawer, viewContext, paintContext,
 				action == null ? false : action.getEditMode() == EditMode.VERTEX);
@@ -274,7 +274,7 @@ public class PainterScreen extends JPanel
 
 		g.drawImage(bufferImage, 0, 0, this);
 
-		ObjectGraphicDrawer objDrawer = new Java2DGraphicDrawer((Graphics2D) g);
+		ObjectGraphicDrawer objDrawer = new CreasePatternObjectDrawer((Graphics2D) g);
 		drawer.drawCandidatePositionString(objDrawer,
 				paintContext.getCandidateVertexToPick());
 	}
