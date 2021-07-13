@@ -32,13 +32,13 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelObjectDrawer implements ObjectGraphicDrawer {
+public class OrigamiModelObjectDrawer implements ObjectGraphicDrawer {
 	private final Graphics2D g2d;
 
-	private final FoldedModelElementSelector selector = new FoldedModelElementSelector();
+	private final OrigamiModelElementSelector selector = new OrigamiModelElementSelector();
 	private final GraphicItemConverter converter = new GraphicItemConverter();
 
-	public FoldedModelObjectDrawer(final Graphics2D g2d) {
+	public OrigamiModelObjectDrawer(final Graphics2D g2d) {
 		this.g2d = g2d;
 	}
 

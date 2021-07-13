@@ -32,8 +32,8 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelGraphicDrawer {
-	private static final Logger logger = LoggerFactory.getLogger(FoldedModelGraphicDrawer.class);
+public class OrigamiModelGraphicDrawer {
+	private static final Logger logger = LoggerFactory.getLogger(OrigamiModelGraphicDrawer.class);
 
 	public void draw(final ObjectGraphicDrawer drawer,
 			final OrigamiModel origamiModel,

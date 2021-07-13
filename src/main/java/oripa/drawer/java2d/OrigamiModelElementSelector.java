@@ -25,7 +25,7 @@ import java.awt.Color;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelElementSelector {
+public class OrigamiModelElementSelector {
 	public Color getScissorsLineColorForModelView() {
 		return Color.RED;
 	}

@@ -46,8 +46,8 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.drawer.java2d.FoldedModelObjectDrawer;
-import oripa.gui.presenter.model.FoldedModelGraphicDrawer;
+import oripa.drawer.java2d.OrigamiModelObjectDrawer;
+import oripa.gui.presenter.model.OrigamiModelGraphicDrawer;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.MouseUtility;
 import oripa.gui.viewsetting.main.MainScreenSetting;
@@ -211,9 +211,9 @@ public class ModelViewScreen extends JPanel
 			logger.info("origamiModel does not have a model data.");
 			return;
 		}
-		var objDrawer = new FoldedModelObjectDrawer(g2d);
+		var objDrawer = new OrigamiModelObjectDrawer(g2d);
 
-		var drawer = new FoldedModelGraphicDrawer();
+		var drawer = new OrigamiModelGraphicDrawer();
 
 		drawer.draw(objDrawer, origamiModel, scissorsLineVisible ? scissorsLine : null, modelDisplayMode, scale);
 
