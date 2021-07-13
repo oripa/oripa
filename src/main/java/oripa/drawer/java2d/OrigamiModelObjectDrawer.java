@@ -19,7 +19,6 @@
 package oripa.drawer.java2d;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
 
@@ -63,7 +62,7 @@ public class OrigamiModelObjectDrawer implements ObjectGraphicDrawer {
 
 	@Override
 	public void selectFaceColor() {
-		g2d.setColor(new Color(100, 100, 100));
+		g2d.setColor(selector.getFaceColor());
 	}
 
 	@Override

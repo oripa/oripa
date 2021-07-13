@@ -34,6 +34,10 @@ public class OrigamiModelElementSelector {
 		return Color.BLACK;
 	}
 
+	public Color getFaceColor() {
+		return new Color(100, 100, 100);
+	}
+
 	private float createThinLineWidth(final double scale) {
 		return 1.5f / (float) scale;
 	}
