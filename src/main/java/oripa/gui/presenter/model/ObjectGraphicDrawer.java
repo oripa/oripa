@@ -31,7 +31,7 @@ import oripa.value.OriLine;
 public interface ObjectGraphicDrawer {
 	public void selectScissorsLineColor();
 
-	public void setTransparent(final boolean translucent);
+	public void setTranslucent(final boolean translucent);
 
 	public void selectEdgeColor();
 

@@ -53,7 +53,7 @@ public class FoldedModelObjectDrawer implements ObjectGraphicDrawer {
 	}
 
 	@Override
-	public void setTransparent(final boolean translucent) {
+	public void setTranslucent(final boolean translucent) {
 		if (translucent) {
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
 		} else {

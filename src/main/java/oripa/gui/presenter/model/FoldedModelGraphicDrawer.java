@@ -46,7 +46,7 @@ public class FoldedModelGraphicDrawer {
 
 		drawer.selectDefaultStroke(scale);
 		if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
-			drawer.setTransparent(true);
+			drawer.setTranslucent(true);
 		}
 		for (OriFace face : sortedFaces) {
 			logger.trace("face: " + face);
@@ -72,7 +72,7 @@ public class FoldedModelGraphicDrawer {
 		}
 
 		if (scissorsLine != null) {
-			drawer.setTransparent(false);
+			drawer.setTranslucent(false);
 			drawer.selectScissorsLineStroke(scale);
 			drawer.selectScissorsLineColor();
 
