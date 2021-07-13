@@ -47,7 +47,6 @@ import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.drawer.java2d.FoldedModelObjectDrawer;
-import oripa.drawer.java2d.GraphicItemConverter;
 import oripa.gui.presenter.model.FoldedModelGraphicDrawer;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.MouseUtility;
@@ -81,9 +80,6 @@ public class ModelViewScreen extends JPanel
 	private int scissorsLineAngleDegree = 90;
 	private double scissorsLinePosition = 0;
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
-
-	private final ElementSelector selector = new ElementSelector();
-	private final GraphicItemConverter converter = new GraphicItemConverter();
 
 	private OrigamiModel origamiModel = null;
 	private final CutModelOutlinesHolder lineHolder;

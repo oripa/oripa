@@ -18,14 +18,20 @@
 
 package oripa.gui.view.model;
 
-import java.awt.*;
+import java.awt.Adjustable;
+import java.awt.BorderLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
-import javax.swing.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollBar;
 
 import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
@@ -49,7 +55,6 @@ import oripa.resource.StringID;
  */
 public class ModelViewFrame extends JFrame
 		implements AdjustmentListener {
-	private static final Logger logger = LoggerFactory.getLogger(ModelViewFrame.class);
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private ModelViewScreen screen;
