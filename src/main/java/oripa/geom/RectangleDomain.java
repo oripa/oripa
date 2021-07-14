@@ -29,6 +29,7 @@ import oripa.value.OriLine;
  *
  * Position coordinate is the same as screen. (top is smaller)
  */
+// TODO: change to use Segment, not OriLine.
 public class RectangleDomain {
 
 	private double left;
