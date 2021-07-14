@@ -47,7 +47,6 @@ import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopper;
 import oripa.doc.Doc;
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.file.FileHistory;
@@ -65,6 +64,7 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
 import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
+import oripa.gui.presenter.main.CopyDialogOpener;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.KeyStrokes;
@@ -117,8 +117,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 	private final ButtonFactory buttonFactory;
 
-	private RepeatCopyDialog arrayCopyDialog;
-	private CircleCopyDialog circleCopyDialog;
+	private final MainDialogService dialogService = new MainDialogService(resourceHolder);
+	private final CopyDialogOpener copyDialogOpener;
 	private final JLabel hintLabel = new JLabel();
 
 	// setup Menu Bars
@@ -256,8 +256,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 				stateFactory, paintContext, actionHolder, screenUpdater);
 
 		// Setup Dialog Windows
-		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
-		circleCopyDialog = new CircleCopyDialog(this, paintContext);
+		copyDialogOpener = new CopyDialogOpener(
+				new RepeatCopyDialogFactory(),
+				new CircleCopyDialogFactory(),
+				() -> dialogService.showNoSelectionMessageForArrayCopy(this),
+				() -> dialogService.showNoSelectionMessageForCircleCopy(this));
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(uiScroll, BorderLayout.WEST);
@@ -303,8 +306,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	public void initialize() {
-		arrayCopyDialog = new RepeatCopyDialog(this, paintContext);
-		circleCopyDialog = new CircleCopyDialog(this, paintContext);
 		updateTitleText();
 	}
 
@@ -528,31 +529,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	private void showArrayCopyDialog() {
-		Painter painter = paintContext.getPainter();
-		if (painter.countSelectedLines() == 0) {
-			JOptionPane.showMessageDialog(this,
-					resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.NO_SELECTION_ID),
-					resourceHolder.getString(ResourceKey.WARNING,
-							StringID.Warning.ARRAY_COPY_TITLE_ID),
-					JOptionPane.WARNING_MESSAGE);
-
-		} else {
-			arrayCopyDialog.setVisible(true);
-		}
+		copyDialogOpener.showArrayCopyDialog(this, paintContext);
 	}
 
 	private void showCircleCopyDialog() {
-		Painter painter = paintContext.getPainter();
-		if (painter.countSelectedLines() == 0) {
-			JOptionPane.showMessageDialog(this,
-					resourceHolder.getString(ResourceKey.WARNING, StringID.Warning.NO_SELECTION_ID),
-					resourceHolder.getString(ResourceKey.WARNING,
-							StringID.Warning.CIRCLE_COPY_TITLE_ID),
-					JOptionPane.WARNING_MESSAGE);
-
-		} else {
-			circleCopyDialog.setVisible(true);
-		}
+		copyDialogOpener.showCircleCopyDialog(this, paintContext);
 	}
 
 	private void updateTitleText() {

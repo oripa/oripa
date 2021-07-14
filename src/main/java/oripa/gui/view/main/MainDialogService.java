@@ -80,4 +80,20 @@ public class MainDialogService {
 						StringID.Information.FOLD_ALGORITHM_TITLE_ID),
 				JOptionPane.INFORMATION_MESSAGE);
 	}
+
+	public void showNoSelectionMessageForArrayCopy(final Component ownerView) {
+		JOptionPane.showMessageDialog(
+				ownerView,
+				resources.getString(ResourceKey.WARNING, StringID.Warning.NO_SELECTION_ID),
+				resources.getString(ResourceKey.WARNING, StringID.Warning.ARRAY_COPY_TITLE_ID),
+				JOptionPane.WARNING_MESSAGE);
+	}
+
+	public void showNoSelectionMessageForCircleCopy(final Component ownerView) {
+		JOptionPane.showMessageDialog(
+				ownerView,
+				resources.getString(ResourceKey.WARNING, StringID.Warning.NO_SELECTION_ID),
+				resources.getString(ResourceKey.WARNING, StringID.Warning.CIRCLE_COPY_TITLE_ID),
+				JOptionPane.WARNING_MESSAGE);
+	}
 }
