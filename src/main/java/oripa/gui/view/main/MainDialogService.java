@@ -18,7 +18,8 @@
  */
 package oripa.gui.view.main;
 
-import javax.swing.JComponent;
+import java.awt.Component;
+
 import javax.swing.JOptionPane;
 
 import oripa.resource.ResourceHolder;
@@ -36,7 +37,7 @@ public class MainDialogService {
 		this.resources = resources;
 	}
 
-	public int showCleaningUpDuplicationDialog(final JComponent ownerView) {
+	public int showCleaningUpDuplicationDialog(final Component ownerView) {
 		return JOptionPane.showConfirmDialog(
 				ownerView,
 				resources.getString(
@@ -49,7 +50,7 @@ public class MainDialogService {
 				JOptionPane.WARNING_MESSAGE);
 	}
 
-	public void showCleaningUpMessage(final JComponent ownerView) {
+	public void showCleaningUpMessage(final Component ownerView) {
 		JOptionPane.showMessageDialog(
 				ownerView,
 				resources.getString(ResourceKey.INFO,
@@ -59,7 +60,7 @@ public class MainDialogService {
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	public void showFoldFailureMessage(final JComponent ownerView) {
+	public void showFoldFailureMessage(final Component ownerView) {
 		JOptionPane.showMessageDialog(
 				ownerView,
 				resources.getString(
@@ -71,7 +72,7 @@ public class MainDialogService {
 				JOptionPane.WARNING_MESSAGE);
 	}
 
-	public void showNoAnswerMessage(final JComponent ownerView) {
+	public void showNoAnswerMessage(final Component ownerView) {
 		JOptionPane.showMessageDialog(
 				ownerView,
 				resources.getString(ResourceKey.INFO, StringID.Information.NO_ANSWER_ID),
