@@ -18,6 +18,7 @@
  */
 package oripa.gui.view.main;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import oripa.domain.paint.PaintContext;
@@ -26,15 +27,6 @@ import oripa.domain.paint.PaintContext;
  * @author OUCHI Koji
  *
  */
-public class CircleCopyDialogFactory implements CopyDialogFactory {
-	private CircleCopyDialog dialog;
-
-	@Override
-	public CircleCopyDialog create(final JFrame owner, final PaintContext paintContext) {
-		if (dialog == null) {
-			dialog = new CircleCopyDialog(owner, paintContext);
-		}
-
-		return dialog;
-	}
+public interface CopyDialogFactory {
+	JDialog create(JFrame owner, PaintContext paintContext);
 }

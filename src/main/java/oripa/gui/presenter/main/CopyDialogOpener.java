@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.view.main.CircleCopyDialogFactory;
+import oripa.gui.view.main.CopyDialogFactory;
 import oripa.gui.view.main.RepeatCopyDialogFactory;
 
 /**
@@ -49,25 +50,25 @@ public class CopyDialogOpener {
 	}
 
 	public void showArrayCopyDialog(final JFrame ownerView, final PaintContext paintContext) {
-		Painter painter = paintContext.getPainter();
-		if (painter.countSelectedLines() == 0) {
-			showNoSelectionMessageForArrayCopy.run();
-			return;
-		}
-
-		var arrayCopyDialog = arrayCopyDialogFactory.create(ownerView, paintContext);
-		arrayCopyDialog.setVisible(true);
+		show(ownerView, arrayCopyDialogFactory, showNoSelectionMessageForArrayCopy, paintContext);
 	}
 
 	public void showCircleCopyDialog(final JFrame ownerView, final PaintContext paintContext) {
+		show(ownerView, circleCopyDialogFactory, showNoSelectionMessageForCircleCopy, paintContext);
+	}
+
+	private void show(
+			final JFrame ownerView,
+			final CopyDialogFactory factory,
+			final Runnable showNoSelectionMessage,
+			final PaintContext paintContext) {
 		Painter painter = paintContext.getPainter();
 		if (painter.countSelectedLines() == 0) {
-			showNoSelectionMessageForCircleCopy.run();
+			showNoSelectionMessage.run();
 			return;
 		}
 
-		var circleCopyDialog = circleCopyDialogFactory.create(ownerView, paintContext);
-		circleCopyDialog.setVisible(true);
+		var copyDialog = factory.create(ownerView, paintContext);
+		copyDialog.setVisible(true);
 	}
-
 }

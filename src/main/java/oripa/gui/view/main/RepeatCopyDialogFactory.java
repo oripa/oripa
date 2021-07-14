@@ -26,9 +26,10 @@ import oripa.domain.paint.PaintContext;
  * @author OUCHI Koji
  *
  */
-public class RepeatCopyDialogFactory {
+public class RepeatCopyDialogFactory implements CopyDialogFactory {
 	private RepeatCopyDialog dialog;
 
+	@Override
 	public RepeatCopyDialog create(final JFrame owner, final PaintContext paintContext) {
 		if (dialog == null) {
 			dialog = new RepeatCopyDialog(owner, paintContext);
