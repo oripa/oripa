@@ -303,9 +303,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		setJMenuBar(menuBar);
 
 		modifySavingActions();
-	}
 
-	public void initialize() {
 		updateTitleText();
 	}
 

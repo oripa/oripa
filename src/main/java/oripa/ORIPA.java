@@ -47,7 +47,6 @@ public class ORIPA {
 
 			mainFrame.setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			mainFrame.initialize();
 			mainFrame.setVisible(true);
 
 //			if (Config.FOR_STUDY) {
