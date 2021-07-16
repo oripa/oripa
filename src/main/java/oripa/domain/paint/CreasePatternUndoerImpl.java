@@ -62,8 +62,7 @@ public class CreasePatternUndoerImpl implements CreasePatternUndoer {
 		}
 
 		CreasePattern creasePattern = owner.getCreasePattern();
-		creasePattern.clear();
-		creasePattern.addAll(info.getInfo());
+		creasePattern.replaceWith(info.getInfo());
 	}
 
 	/*
@@ -90,8 +89,7 @@ public class CreasePatternUndoerImpl implements CreasePatternUndoer {
 		}
 
 		CreasePattern creasePattern = owner.getCreasePattern();
-		creasePattern.clear();
-		creasePattern.addAll(info.getInfo());
+		creasePattern.replaceWith(info.getInfo());
 	}
 
 	/*

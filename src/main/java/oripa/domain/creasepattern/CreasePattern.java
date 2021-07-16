@@ -52,5 +52,7 @@ public interface CreasePattern
 	 */
 	void move(final double dx, final double dy);
 
+	void replaceWith(final Collection<OriLine> lines);
+
 	boolean cleanDuplicatedLines();
 }

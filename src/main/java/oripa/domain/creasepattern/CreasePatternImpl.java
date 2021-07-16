@@ -348,6 +348,12 @@ class CreasePatternImpl implements CreasePattern {
 		this.addAll(lines);
 	}
 
+	@Override
+	public void replaceWith(final Collection<OriLine> lines) {
+		clear();
+		addAll(lines);
+	}
+
 	/*
 	 * (non Javadoc)
 	 *
