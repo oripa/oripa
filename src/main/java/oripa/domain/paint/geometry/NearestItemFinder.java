@@ -1,7 +1,5 @@
 package oripa.domain.paint.geometry;
 
-import java.util.Collection;
-
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
@@ -19,32 +17,6 @@ public class NearestItemFinder {
 
 	private static double scaleThreshold(final PaintContext context) {
 		return CalculationResource.CLOSE_THRESHOLD / context.getScale();
-	}
-
-	private static double scaleThreshold(final double scale) {
-		return CalculationResource.CLOSE_THRESHOLD / scale;
-	}
-
-	// returns the OriLine sufficiently closer to point p
-	public static OriLine pickLine(final Collection<OriLine> lines,
-			final Vector2d p, final double scale) {
-		double minDistance = Double.MAX_VALUE;
-		OriLine bestLine = null;
-
-		for (OriLine line : lines) {
-			double dist = GeomUtil.distancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
-			if (dist < minDistance) {
-				minDistance = dist;
-				bestLine = line;
-			}
-		}
-
-//		if (minDistance / scale < 10) {
-		if (minDistance < scaleThreshold(scale)) {
-			return bestLine;
-		} else {
-			return null;
-		}
 	}
 
 	public static Vector2d pickVertex(
@@ -89,10 +61,30 @@ public class NearestItemFinder {
 		return picked;
 	}
 
+	/**
+	 * Returns the OriLine sufficiently close to mouse point.
+	 */
 	public static OriLine pickLine(
 			final PaintContext paintContext) {
-		return pickLine(paintContext.getCreasePattern(), paintContext.getLogicalMousePoint(),
-				paintContext.getScale());
+		var lines = paintContext.getCreasePattern();
+		var mp = paintContext.getLogicalMousePoint();
+
+		double minDistance = Double.MAX_VALUE;
+		OriLine bestLine = null;
+
+		for (OriLine line : lines) {
+			double dist = GeomUtil.distancePointToSegment(new Vector2d(mp.x, mp.y), line.p0, line.p1);
+			if (dist < minDistance) {
+				minDistance = dist;
+				bestLine = line;
+			}
+		}
+
+		if (minDistance < scaleThreshold(paintContext)) {
+			return bestLine;
+		} else {
+			return null;
+		}
 	}
 
 	public static Vector2d getCandidateVertex(
