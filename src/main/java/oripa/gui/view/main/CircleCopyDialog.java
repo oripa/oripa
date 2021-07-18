@@ -28,8 +28,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.circlecopy.CircleCopyCommand;
+import oripa.util.Command;
 
 // TODO: Use label resource.
 public class CircleCopyDialog extends JDialog {
@@ -161,12 +162,8 @@ public class CircleCopyDialog extends JDialog {
 								JOptionPane.INFORMATION_MESSAGE);
 
 					} else {
-						context.creasePatternUndo().pushUndoInfo();
-
-						Painter painter = context.getPainter();
-						painter.copyWithRotation(
-								m_cx, m_cy, m_angleDeg, m_num,
-								context.getPickedLines());
+						Command command = new CircleCopyCommand(m_cx, m_cy, m_angleDeg, m_num, context);
+						command.execute();
 
 						// TODO make it local access
 						owner.repaint();
