@@ -29,11 +29,6 @@ public class SelectingVertexToDrawLine extends PickingVertex {
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
 		logger.debug("start onResult()");
 
-		if (context.getVertexCount() != 1 || context.getLineCount() > 0) {
-			throw new IllegalStateException(
-					"wrong state: impossible selection of vertex and lines.");
-		}
-
 		Command command = new LineByValueCommand(context, valueSetting);
 		command.execute();
 
