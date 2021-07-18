@@ -19,6 +19,7 @@
 package oripa.domain.paint.outline;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
@@ -49,21 +50,21 @@ public class OutlineEditerCommand implements Command {
 	public void execute() {
 		logger.debug("# of picked vertices (before): " + context.getPickedVertices().size());
 
-		Vector2d v = context.popVertex();
+		Vector2d v = context.peekVertex();
 
-		if (context.getPickedVertices().stream()
+		var pickedVertices = context.getPickedVertices().subList(0, context.getVertexCount() - 1).stream()
+				.distinct()
+				.collect(Collectors.toList());
+
+		if (pickedVertices.stream()
 				.anyMatch(tv -> GeomUtil.distance(v, tv) < 1)) {
-			if (context.getVertexCount() > 2) {
+			if (pickedVertices.size() > 2) {
 				// finish editing
 				context.creasePatternUndo().pushUndoInfo();
-				closeTmpOutline(context.getPickedVertices(), context.getPainter());
+				closeTmpOutline(pickedVertices, context.getPainter());
 
 				context.clear(false);
-				context.setMissionCompleted(true);
 			}
-		} else {
-			// continue selecting
-			context.pushVertex(v);
 		}
 
 		logger.debug("# of picked vertices (after): " + context.getPickedVertices().size());
