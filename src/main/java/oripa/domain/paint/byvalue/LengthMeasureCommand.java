@@ -19,14 +19,14 @@
 package oripa.domain.paint.byvalue;
 
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 import oripa.geom.GeomUtil;
-import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class LengthMeasureCommand implements Command {
+public class LengthMeasureCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 	private final ValueSetting valueSetting;
 
@@ -37,6 +37,8 @@ public class LengthMeasureCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 2, 0);
+
 		double length = GeomUtil.distance(
 				context.getVertex(0), context.getVertex(1));
 
