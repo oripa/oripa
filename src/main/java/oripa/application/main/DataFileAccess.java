@@ -23,8 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
-
-import javax.swing.JOptionPane;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +124,8 @@ public class DataFileAccess {
 	 */
 	public void saveFileWithModelCheck(final Doc doc,
 			final String directory,
-			final FileAccessSupportFilter<Doc> filter, final Component owner)
+			final FileAccessSupportFilter<Doc> filter, final Component owner,
+			final Supplier<Boolean> acceptModelError)
 			throws IOException, IllegalArgumentException {
 		File givenFile = new File(directory, "export" + filter.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
@@ -138,14 +138,7 @@ public class DataFileAccess {
 		var checker = new FoldabilityChecker();
 
 		if (!checker.testLocalFlatFoldability(origamiModel)) {
-
-			var selection = JOptionPane.showConfirmDialog(null,
-					"Warning: Building a set of polygons from crease pattern "
-							+ "was failed.",
-					"Warning", JOptionPane.OK_CANCEL_OPTION,
-					JOptionPane.WARNING_MESSAGE);
-
-			if (selection == JOptionPane.CANCEL_OPTION) {
+			if (!acceptModelError.get()) {
 				return;
 			}
 		}

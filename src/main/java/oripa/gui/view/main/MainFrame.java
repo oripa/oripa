@@ -596,7 +596,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		try {
 			dataFileAccess.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
-					filterSelector.getFilter(type), this);
+					filterSelector.getFilter(type), this,
+					() -> dialogService.showModelBuildFailureDialog(this) == JOptionPane.OK_OPTION);
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
 			Dialogs.showErrorDialog(this, resourceHolder.getString(

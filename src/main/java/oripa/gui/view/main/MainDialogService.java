@@ -96,4 +96,12 @@ public class MainDialogService {
 				resources.getString(ResourceKey.WARNING, StringID.Warning.CIRCLE_COPY_TITLE_ID),
 				JOptionPane.WARNING_MESSAGE);
 	}
+
+	public int showModelBuildFailureDialog(final Component ownerView) {
+		return JOptionPane.showConfirmDialog(null,
+				"Warning: Building a set of polygons from crease pattern "
+						+ "was failed.",
+				"Warning", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.WARNING_MESSAGE);
+	}
 }
