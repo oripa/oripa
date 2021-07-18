@@ -22,13 +22,15 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 
 /**
+ * A service object to update {@link PaintContext} appropriately.
+ *
  * @author OUCHI Koji
  *
  */
 public class PaintContextModification {
 	/**
-	 * clear the context, set the given crease pattern, clear the undo history,
-	 * and update grids.
+	 * Clears the context, sets the given crease pattern, clears the undo
+	 * history, and updates grids.
 	 *
 	 * @param creasePattern
 	 * @param paintContext

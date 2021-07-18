@@ -40,9 +40,10 @@ import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
 /**
+ * A service object between the {@link DataAccessObject} and the {@link Doc}.
+ *
  * @author OUCHI Koji
  *
- *         interface between the {@code DocDOA} and the {@code Doc} classes
  */
 public class DataFileAccess {
 	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);

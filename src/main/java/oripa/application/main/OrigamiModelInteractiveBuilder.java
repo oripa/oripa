@@ -29,6 +29,8 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 
 /**
+ * Creates {@link OrigamiModel} according to the interaction with the user.
+ *
  * @author OUCHI Koji
  *
  */
@@ -37,6 +39,7 @@ public class OrigamiModelInteractiveBuilder {
 			.getLogger(OrigamiModelInteractiveBuilder.class);
 
 	/**
+	 * Creates {@link OrigamiModel} from {@code creasePattern}.
 	 *
 	 * @param creasePattern
 	 * @param needCleaningUpDuplication

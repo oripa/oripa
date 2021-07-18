@@ -27,6 +27,9 @@ import oripa.persistence.filetool.FileAccessSupportFilter;
 import oripa.persistence.filetool.FileChooserCanceledException;
 
 /**
+ * A service object between the {@link DataAccessObject} and the
+ * {@link FoldedModel}.
+ *
  * @author OUCHI Koji
  *
  */
