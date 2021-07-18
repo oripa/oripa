@@ -35,6 +35,11 @@ public class VertexAdderCommand implements Command {
 
 	@Override
 	public void execute() {
+		if (context.getVertexCount() == 0 || context.getLineCount() != 1) {
+			throw new IllegalArgumentException(
+					String.format("wrong argument. there should be %d pickedVertices and %d pickedLines", 1, 1));
+		}
+
 		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
