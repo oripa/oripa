@@ -24,7 +24,7 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.view.main.CircleCopyDialogFactory;
 import oripa.gui.view.main.CopyDialogFactory;
-import oripa.gui.view.main.RepeatCopyDialogFactory;
+import oripa.gui.view.main.ArrayCopyDialogFactory;
 
 /**
  * @author OUCHI Koji
@@ -34,11 +34,11 @@ public class CopyDialogOpener {
 	private final Runnable showNoSelectionMessageForArrayCopy;
 	private final Runnable showNoSelectionMessageForCircleCopy;
 
-	private final RepeatCopyDialogFactory arrayCopyDialogFactory;
+	private final ArrayCopyDialogFactory arrayCopyDialogFactory;
 	private final CircleCopyDialogFactory circleCopyDialogFactory;
 
 	public CopyDialogOpener(
-			final RepeatCopyDialogFactory arrayCopyDialogFactory,
+			final ArrayCopyDialogFactory arrayCopyDialogFactory,
 			final CircleCopyDialogFactory circleCopyDialogFactory,
 			final Runnable showNoSelectionMessageForArrayCopy,
 			final Runnable showNoSelectionMessageForCircleCopy) {

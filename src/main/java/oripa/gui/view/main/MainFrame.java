@@ -257,7 +257,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		// Setup Dialog Windows
 		copyDialogOpener = new CopyDialogOpener(
-				new RepeatCopyDialogFactory(),
+				new ArrayCopyDialogFactory(),
 				new CircleCopyDialogFactory(),
 				() -> dialogService.showNoSelectionMessageForArrayCopy(this),
 				() -> dialogService.showNoSelectionMessageForCircleCopy(this));

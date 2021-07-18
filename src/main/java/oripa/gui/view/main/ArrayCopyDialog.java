@@ -33,7 +33,7 @@ import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 
 // TODO: Use label resource.
-public class RepeatCopyDialog extends JDialog {
+public class ArrayCopyDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -58,7 +58,7 @@ public class RepeatCopyDialog extends JDialog {
 	/**
 	 * @param owner
 	 */
-	public RepeatCopyDialog(final JFrame owner, final PaintContext context) {
+	public ArrayCopyDialog(final JFrame owner, final PaintContext context) {
 		super(owner);
 		this.owner = owner;
 
