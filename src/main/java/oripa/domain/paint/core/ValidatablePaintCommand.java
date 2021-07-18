@@ -16,36 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.addvertex;
+package oripa.domain.paint.core;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.ValidatablePaintCommand;
+import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class VertexAdderCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-
-	public VertexAdderCommand(final PaintContext context) {
-		this.context = context;
-	}
-
-	@Override
-	public void execute() {
-		validateCounts(context, 1, 1);
-
-		context.creasePatternUndo().pushUndoInfo();
-
-		Painter painter = context.getPainter();
-
-		if (!painter.addVertexOnLine(
-				context.popLine(), context.popVertex())) {
-			context.creasePatternUndo().undo();
+public abstract class ValidatablePaintCommand implements Command {
+	protected void validateCounts(final PaintContext context, final int correctVertexCount,
+			final int correctLineCount) {
+		if (context.getVertexCount() != correctVertexCount || context.getLineCount() != correctLineCount) {
+			throw new IllegalArgumentException(
+					String.format("wrong argument. there should be %d pickedVertices and %d pickedLines",
+							correctVertexCount, correctLineCount));
 		}
-
-		context.clear(false);
 	}
 }
