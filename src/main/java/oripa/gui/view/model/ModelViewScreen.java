@@ -217,11 +217,6 @@ public class ModelViewScreen extends JPanel
 
 		drawer.draw(objDrawer, origamiModel, scissorsLineVisible ? scissorsLine : null, modelDisplayMode, scale);
 
-//		g2d.setStroke(selector.createDefaultStroke(scale));
-//		if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
-//			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-//		}
-//		drawModel(g2d);
 		g.drawImage(bufferImage, 0, 0, this);
 
 	}
