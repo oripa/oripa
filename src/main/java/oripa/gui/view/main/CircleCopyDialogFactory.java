@@ -21,6 +21,7 @@ package oripa.gui.view.main;
 import javax.swing.JFrame;
 
 import oripa.domain.paint.PaintContext;
+import oripa.gui.presenter.creasepattern.ScreenUpdater;
 
 /**
  * @author OUCHI Koji
@@ -30,9 +31,10 @@ public class CircleCopyDialogFactory implements CopyDialogFactory {
 	private CircleCopyDialog dialog;
 
 	@Override
-	public CircleCopyDialog create(final JFrame owner, final PaintContext paintContext) {
+	public CircleCopyDialog create(final JFrame owner, final PaintContext paintContext,
+			final ScreenUpdater screenUpdater) {
 		if (dialog == null) {
-			dialog = new CircleCopyDialog(owner, paintContext);
+			dialog = new CircleCopyDialog(owner, paintContext, screenUpdater);
 		}
 
 		return dialog;

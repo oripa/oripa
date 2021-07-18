@@ -527,11 +527,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	private void showArrayCopyDialog() {
-		copyDialogOpener.showArrayCopyDialog(this, paintContext);
+		copyDialogOpener.showArrayCopyDialog(this, paintContext, screenUpdater);
 	}
 
 	private void showCircleCopyDialog() {
-		copyDialogOpener.showCircleCopyDialog(this, paintContext);
+		copyDialogOpener.showCircleCopyDialog(this, paintContext, screenUpdater);
 	}
 
 	private void updateTitleText() {

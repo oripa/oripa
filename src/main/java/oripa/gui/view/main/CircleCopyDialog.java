@@ -30,6 +30,7 @@ import javax.swing.JTextField;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.circlecopy.CircleCopyCommand;
+import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.util.Command;
 
 // TODO: Use label resource.
@@ -54,15 +55,17 @@ public class CircleCopyDialog extends JDialog {
 
 	private final JFrame owner;
 	private final PaintContext context;
+	private final ScreenUpdater screenUpdater;
 
 	/**
 	 * @param owner
 	 */
-	public CircleCopyDialog(final JFrame owner, final PaintContext aContext) {
+	public CircleCopyDialog(final JFrame owner, final PaintContext aContext, final ScreenUpdater screenUpdater) {
 		super(owner);
 
 		this.owner = owner;
 		context = aContext;
+		this.screenUpdater = screenUpdater;
 		initialize();
 	}
 
@@ -165,8 +168,8 @@ public class CircleCopyDialog extends JDialog {
 						Command command = new CircleCopyCommand(m_cx, m_cy, m_angleDeg, m_num, context);
 						command.execute();
 
-						// TODO make it local access
-						owner.repaint();
+						screenUpdater.updateScreen();
+
 						setVisible(false);
 					}
 				}

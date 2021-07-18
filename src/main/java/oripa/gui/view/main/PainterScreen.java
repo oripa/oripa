@@ -51,7 +51,6 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
-import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteAction;
 import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.view.util.AffineCamera;
 import oripa.gui.view.util.MouseUtility;

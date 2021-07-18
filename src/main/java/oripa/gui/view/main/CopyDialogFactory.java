@@ -22,11 +22,12 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import oripa.domain.paint.PaintContext;
+import oripa.gui.presenter.creasepattern.ScreenUpdater;
 
 /**
  * @author OUCHI Koji
  *
  */
 public interface CopyDialogFactory {
-	JDialog create(JFrame owner, PaintContext paintContext);
+	JDialog create(JFrame owner, PaintContext paintContext, ScreenUpdater screenUpdater);
 }

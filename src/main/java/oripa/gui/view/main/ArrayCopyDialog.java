@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.arraycopy.ArrayCopyFillerCommand;
 import oripa.domain.paint.arraycopy.ArrayCopyTilerCommand;
+import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.util.Command;
 
 // TODO: Use label resource.
@@ -56,13 +57,16 @@ public class ArrayCopyDialog extends JDialog {
 	private boolean m_bFillSheet;
 
 	private final JFrame owner;
+	private final ScreenUpdater screenUpdater;
 
 	/**
 	 * @param owner
 	 */
-	public ArrayCopyDialog(final JFrame owner, final PaintContext context) {
+	public ArrayCopyDialog(final JFrame owner, final PaintContext context, final ScreenUpdater screenUpdater) {
 		super(owner);
 		this.owner = owner;
+
+		this.screenUpdater = screenUpdater;
 
 		initialize(context);
 	}
@@ -274,8 +278,8 @@ public class ArrayCopyDialog extends JDialog {
 						}
 						command.execute();
 
-						// TODO make it local access
-						owner.repaint();
+						screenUpdater.updateScreen();
+
 						setVisible(false);
 					}
 				}

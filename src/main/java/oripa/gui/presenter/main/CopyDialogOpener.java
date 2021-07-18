@@ -22,9 +22,10 @@ import javax.swing.JFrame;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.gui.view.main.ArrayCopyDialogFactory;
 import oripa.gui.view.main.CircleCopyDialogFactory;
 import oripa.gui.view.main.CopyDialogFactory;
-import oripa.gui.view.main.ArrayCopyDialogFactory;
 
 /**
  * @author OUCHI Koji
@@ -49,26 +50,29 @@ public class CopyDialogOpener {
 		this.showNoSelectionMessageForCircleCopy = showNoSelectionMessageForCircleCopy;
 	}
 
-	public void showArrayCopyDialog(final JFrame ownerView, final PaintContext paintContext) {
-		show(ownerView, arrayCopyDialogFactory, showNoSelectionMessageForArrayCopy, paintContext);
+	public void showArrayCopyDialog(final JFrame ownerView, final PaintContext paintContext,
+			final ScreenUpdater screenUpdater) {
+		show(ownerView, arrayCopyDialogFactory, showNoSelectionMessageForArrayCopy, paintContext, screenUpdater);
 	}
 
-	public void showCircleCopyDialog(final JFrame ownerView, final PaintContext paintContext) {
-		show(ownerView, circleCopyDialogFactory, showNoSelectionMessageForCircleCopy, paintContext);
+	public void showCircleCopyDialog(final JFrame ownerView, final PaintContext paintContext,
+			final ScreenUpdater screenUpdater) {
+		show(ownerView, circleCopyDialogFactory, showNoSelectionMessageForCircleCopy, paintContext, screenUpdater);
 	}
 
 	private void show(
 			final JFrame ownerView,
 			final CopyDialogFactory factory,
 			final Runnable showNoSelectionMessage,
-			final PaintContext paintContext) {
+			final PaintContext paintContext,
+			final ScreenUpdater screenUpdater) {
 		Painter painter = paintContext.getPainter();
 		if (painter.countSelectedLines() == 0) {
 			showNoSelectionMessage.run();
 			return;
 		}
 
-		var copyDialog = factory.create(ownerView, paintContext);
+		var copyDialog = factory.create(ownerView, paintContext, screenUpdater);
 		copyDialog.setVisible(true);
 	}
 }
