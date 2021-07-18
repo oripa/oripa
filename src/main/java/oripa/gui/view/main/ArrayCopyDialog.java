@@ -29,8 +29,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.arraycopy.ArrayCopyFillerCommand;
+import oripa.domain.paint.arraycopy.ArrayCopyTilerCommand;
+import oripa.util.Command;
 
 // TODO: Use label resource.
 public class ArrayCopyDialog extends JDialog {
@@ -259,21 +261,19 @@ public class ArrayCopyDialog extends JDialog {
 
 					if (!m_bFillSheet && (m_row == 0 || m_col == 0)) {
 						JOptionPane.showMessageDialog(
-								owner, "Specify non-Zero value to Low and Col.",
+								owner, "Specify non-Zero value to Row and Col.",
 								"ArrayCopy",
 								JOptionPane.INFORMATION_MESSAGE);
 
 					} else {
-						context.creasePatternUndo().pushUndoInfo();
-
-						Painter painter = context.getPainter();
+						Command command;
 						if (m_bFillSheet) {
-							painter.fillOut(
-									context.getPickedLines());
+							command = new ArrayCopyFillerCommand(context);
 						} else {
-							painter.copyWithTiling(
-									m_row, m_col, m_interX, m_interY, context.getPickedLines());
+							command = new ArrayCopyTilerCommand(m_row, m_col, m_interX, m_interY, context);
 						}
+						command.execute();
+
 						// TODO make it local access
 						owner.repaint();
 						setVisible(false);
