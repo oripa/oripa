@@ -22,11 +22,14 @@ import java.awt.Component;
 import java.io.IOException;
 
 import oripa.domain.fold.FoldedModel;
-import oripa.persistent.dao.DataAccessObject;
-import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.FileChooserCanceledException;
+import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.filetool.FileAccessSupportFilter;
+import oripa.persistence.filetool.FileChooserCanceledException;
 
 /**
+ * A service object between the {@link DataAccessObject} and the
+ * {@link FoldedModel}.
+ *
  * @author OUCHI Koji
  *
  */

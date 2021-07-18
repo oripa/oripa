@@ -23,12 +23,14 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 
 /**
+ * Creates {@link OrigamiModel} according to the interaction with the user.
+ *
  * @author OUCHI Koji
  *
  */
@@ -37,6 +39,7 @@ public class OrigamiModelInteractiveBuilder {
 			.getLogger(OrigamiModelInteractiveBuilder.class);
 
 	/**
+	 * Creates {@link OrigamiModel} from {@code creasePattern}.
 	 *
 	 * @param creasePattern
 	 * @param needCleaningUpDuplication
@@ -48,7 +51,7 @@ public class OrigamiModelInteractiveBuilder {
 	 *            an action that tells folding failed.
 	 * @return origami model data.
 	 */
-	public OrigamiModel build(final CreasePatternInterface creasePattern,
+	public OrigamiModel build(final CreasePattern creasePattern,
 			final Supplier<Boolean> needCleaningUpDuplication,
 			final Runnable showCleaningUpMessage,
 			final Runnable showFailureMessage) {

@@ -2,7 +2,7 @@ package oripa.domain.paint.copypaste;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 
 public class SelectionOriginHolder {
 
@@ -15,7 +15,7 @@ public class SelectionOriginHolder {
 		origin = p;
 	}
 
-	public void resetOrigin(final PaintContextInterface context) {
+	public void resetOrigin(final PaintContext context) {
 		if (origin == null) {
 			if (context.getLineCount() > 0) {
 				origin = context.getLine(0).p0;
@@ -23,7 +23,7 @@ public class SelectionOriginHolder {
 		}
 	}
 
-	public Vector2d getOrigin(final PaintContextInterface context) {
+	public Vector2d getOrigin(final PaintContext context) {
 		resetOrigin(context);
 
 		return origin;

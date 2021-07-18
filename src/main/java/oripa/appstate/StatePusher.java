@@ -6,22 +6,19 @@ import java.awt.event.ActionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.bind.state.PaintBoundState;
-import oripa.domain.paint.EditMode;
-
 /**
  * An action listener which pushes given state into a state manager.
  *
  * @author OUCHI Koji
  *
  */
-public class StatePusher implements ActionListener {
+public class StatePusher<GroupEnum> implements ActionListener {
 	private static final Logger logger = LoggerFactory.getLogger(StatePusher.class);
 
-	private final StateManagerInterface<EditMode> stateManager;
-	private final PaintBoundState state;
+	private final StateManager<GroupEnum> stateManager;
+	private final ApplicationState<GroupEnum> state;
 
-	public StatePusher(final PaintBoundState s, final StateManagerInterface<EditMode> stateManager) {
+	public StatePusher(final ApplicationState<GroupEnum> s, final StateManager<GroupEnum> stateManager) {
 		state = s;
 		this.stateManager = stateManager;
 	}

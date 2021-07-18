@@ -5,10 +5,10 @@ import oripa.resource.Constants;
 
 public class PaintContextFactory {
 
-	public PaintContextInterface createContext() {
+	public PaintContext createContext() {
 		CreasePatternFactory patternFactory = new CreasePatternFactory();
 
-		PaintContextInterface context = new PaintContext();
+		PaintContext context = new PaintContextImpl();
 		context.setCreasePattern(
 				patternFactory.createCreasePattern(
 						Constants.DEFAULT_PAPER_SIZE));

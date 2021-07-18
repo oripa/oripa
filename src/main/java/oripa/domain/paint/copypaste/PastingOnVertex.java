@@ -1,15 +1,8 @@
 package oripa.domain.paint.copypaste;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.vecmath.Vector2d;
-
-import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.value.OriLine;
+import oripa.util.Command;
 
 public class PastingOnVertex extends PickingVertex {
 
@@ -28,51 +21,18 @@ public class PastingOnVertex extends PickingVertex {
 	}
 
 	@Override
-	protected void undoAction(final PaintContextInterface context) {
+	protected void undoAction(final PaintContext context) {
 		// context.setMissionCompleted(false);
 		context.creasePatternUndo().undo();
 	}
 
-//	@Override
-//	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
-//			final boolean freeSelection) {
-//
-//		Vector2d candidate = context.getCandidateVertexToPick();
-//		if (candidate == null) {
-//			return false;
-//		}
-//
-//		context.pushVertex(candidate);
-//
-//		return true;
-//	}
-
 	@Override
-	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
-
-		Vector2d v = context.popVertex();
-
-		if (context.getLineCount() == 0) {
-			return;
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
+		if (context.getVertexCount() != 1) {
+			throw new IllegalStateException("Wrong state: impossible selection.");
 		}
 
-		context.creasePatternUndo().pushUndoInfo();
-
-		Vector2d origin = originHolder.getOrigin(context);
-
-		var offset = factory.createOffset(origin, v);
-
-		Painter painter = context.getPainter();
-		painter.addLines(
-				shiftLines(context.getPickedLines(), offset.x, offset.y));
+		Command command = new LinePasterCommand(context, originHolder, factory);
+		command.execute();
 	}
-
-	private List<OriLine> shiftLines(final Collection<OriLine> lines,
-			final double diffX, final double diffY) {
-
-		return lines.stream()
-				.map(l -> factory.createShiftedLine(l, diffX, diffY))
-				.collect(Collectors.toList());
-	}
-
 }

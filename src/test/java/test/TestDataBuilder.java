@@ -3,9 +3,9 @@ package test;
 import oripa.doc.Doc;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.persistent.doc.exporter.DocExporter;
-import oripa.persistent.doc.exporter.ExporterXML;
+import oripa.persistence.doc.exporter.DocExporter;
+import oripa.persistence.doc.exporter.ExporterXML;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.value.OriLine;
 
 public class TestDataBuilder {
@@ -22,7 +22,7 @@ public class TestDataBuilder {
 		final int RIGHT = -LEFT;
 
 		CreasePatternFactory factory = new CreasePatternFactory();
-		CreasePatternInterface creasePattern = factory.createCreasePattern(SIZE);
+		CreasePattern creasePattern = factory.createCreasePattern(SIZE);
 		Painter painter = new Painter(creasePattern);
 
 		final int DIV_NUM = 100;

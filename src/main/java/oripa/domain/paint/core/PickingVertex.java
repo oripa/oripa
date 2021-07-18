@@ -2,7 +2,7 @@ package oripa.domain.paint.core;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 
 /**
  * abstract class specified for picking vertex.
@@ -23,12 +23,13 @@ public abstract class PickingVertex extends AbstractActionState {
 	 */
 
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
+	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean freeSelection) {
 
 //		Vector2d picked = NearestItemFinder.pickVertex(
 //				context, freeSelection);
-		Vector2d picked = context.getCandidateVertexToPick();
+
+		var picked = context.getCandidateVertexToPick();
 
 		if (picked == null) {
 			return false;
@@ -45,7 +46,7 @@ public abstract class PickingVertex extends AbstractActionState {
 	 * @return Previous state
 	 */
 	@Override
-	protected void undoAction(final PaintContextInterface context) {
+	protected void undoAction(final PaintContext context) {
 		context.popVertex();
 	}
 

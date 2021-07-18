@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.CreasePatternHolder;
 import oripa.resource.Constants;
@@ -40,7 +40,7 @@ public class Doc implements CutModelOutlinesHolder, CreasePatternHolder {
 	/**
 	 * Crease Pattern
 	 */
-	private CreasePatternInterface creasePattern = null;
+	private CreasePattern creasePattern = null;
 
 	private Collection<OriLine> outlines = new ArrayList<OriLine>();
 
@@ -111,12 +111,12 @@ public class Doc implements CutModelOutlinesHolder, CreasePatternHolder {
 	}
 
 	@Override
-	public CreasePatternInterface getCreasePattern() {
+	public CreasePattern getCreasePattern() {
 		return creasePattern;
 	}
 
 	@Override
-	public void setCreasePattern(final CreasePatternInterface cp) {
+	public void setCreasePattern(final CreasePattern cp) {
 		creasePattern = cp;
 	}
 

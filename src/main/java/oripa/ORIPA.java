@@ -24,7 +24,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import oripa.view.main.MainFrame;
+import oripa.gui.view.main.MainFrame;
 
 public class ORIPA {
 	public static void main(final String[] args) {
@@ -47,7 +47,6 @@ public class ORIPA {
 
 			mainFrame.setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			mainFrame.initialize();
 			mainFrame.setVisible(true);
 
 //			if (Config.FOR_STUDY) {

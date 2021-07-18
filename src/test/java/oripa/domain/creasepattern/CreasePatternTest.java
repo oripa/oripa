@@ -21,7 +21,7 @@ public class CreasePatternTest {
 				new OriLine(20.0, 20.0, 100.0, 100.0, OriLine.Type.MOUNTAIN));
 
 		var domain = new RectangleDomain(lines);
-		CreasePattern cp = new CreasePattern(domain);
+		CreasePatternImpl cp = new CreasePatternImpl(domain);
 		cp.addAll(lines);
 
 		int lineCount = lines.size();

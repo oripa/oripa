@@ -1,67 +1,42 @@
 package oripa.appstate;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-import oripa.domain.paint.EditMode;
-
 /**
- * A simple implementation of {@link StateManagerInterface}. This object ignores
- * {@link EditMode#COPY} and {@link EditMode#CUT} to handle line selection and
- * pasting correctly.
+ * Implementation of this interface should hold current state and (only one)
+ * previous state to help getting back.
  *
- * @author OUCHI Koji
+ * @author koji
  *
  */
-public class StateManager implements StateManagerInterface<EditMode> {
+public interface StateManager<GroupEnum> {
 
-	private ApplicationState<EditMode> current, previous;
-	private final Map<EditMode, ApplicationState<EditMode>> lastCommands = new HashMap<>();
+	public ApplicationState<GroupEnum> getCurrent();
 
-	@Override
-	public ApplicationState<EditMode> getCurrent() {
-		return current;
-	}
+	/**
+	 * Pushes {@code s} as a new state to be held. The current state will be
+	 * dropped to previous state.
+	 *
+	 * @param s
+	 *            new state
+	 */
+	public void push(ApplicationState<GroupEnum> s);
 
-	@Override
-	public void push(final ApplicationState<EditMode> s) {
-		lastCommands.put(s.getGroup(), s);
+	/**
+	 * Pops previous state. It will be set to current state.
+	 *
+	 * @return previous state. {@code empty} if previous state does not exist.
+	 */
+	public Optional<ApplicationState<GroupEnum>> pop();
 
-		if (current != null) {
-			// pushing copy or cut causes empty pasting
-			if (current.getGroup() != EditMode.COPY &&
-					current.getGroup() != EditMode.CUT) {
-				previous = current;
-			}
-		}
-		current = s;
-	}
-
-	@Override
-	public Optional<ApplicationState<EditMode>> pop() {
-		if (current == previous) {
-			return Optional.empty();
-		}
-
-		current = previous;
-		return Optional.of(current);
-	}
-
-	@Override
-	public Optional<ApplicationState<EditMode>> popLastOf(final EditMode group) {
-		if (!lastCommands.containsKey(group)) {
-			return Optional.empty();
-		}
-
-		var lastCommand = lastCommands.get(group);
-		if (current == lastCommand) {
-			return Optional.empty();
-		}
-
-		previous = current;
-		current = lastCommand;
-
-		return Optional.of(current);
-	}
+	/**
+	 * Pops the last state of the given {@code group}. The current state will be
+	 * dropped to previous state.
+	 *
+	 * @param group
+	 *            ID.
+	 * @return last state of the group. {@code empty} if {@code group} does not
+	 *         have such a state.
+	 */
+	public Optional<ApplicationState<GroupEnum>> popLastOf(GroupEnum group);
 }

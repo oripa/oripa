@@ -19,7 +19,6 @@
 package oripa.domain.fold.halfedge;
 
 import java.awt.Color;
-import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -54,10 +53,6 @@ public class OriFace {
 	 * half-edge at index 0.
 	 */
 	private final List<OriHalfedge> halfedges = new ArrayList<>();
-
-	private Path2D.Double outline = new Path2D.Double();
-
-	private Path2D.Double preOutline = new Path2D.Double();
 
 	private final List<OriLine> precreases = new ArrayList<>();
 
@@ -301,7 +296,6 @@ public class OriFace {
 		return stackConditionsOf3Faces.stream();
 	}
 
-
 	public void addStackConditionOf2Faces(final Integer upperFaceORMatIndex) {
 		stackConditionsOf2Faces.add(upperFaceORMatIndex);
 	}
@@ -422,52 +416,20 @@ public class OriFace {
 		}
 	}
 
-	/**
-	 * Constructs {@code outline} field, which is for showing this face after
-	 * fold in graphic.
-	 */
-	public void buildOutline() {
-		outline = createPath(halfedges.stream()
+	public List<Vector2d> createOutlineVerticesAfterFolding() {
+		return halfedgeStream()
 				.map(OriHalfedge::getPositionForDisplay)
-				.collect(Collectors.toList()));
+				.collect(Collectors.toList());
 	}
 
-	/**
-	 * @return outline for drawing the shape after fold
-	 */
-	public Path2D.Double getOutline() {
-		return outline;
-	}
-
-	/**
-	 * Constructs {@code preOutline} field, which is for showing this face
-	 * before fold in graphic.
-	 */
-	void buildOutlineBeforeFolding() {
+	public List<Vector2d> createOutlineVerticesBeforeFolding() {
 		Vector2d centerP = getCentroidBeforeFolding();
 		double rate = 0.5;
-		preOutline = createPath(halfedges.stream()
+		return halfedgeStream()
 				.map(he -> new Vector2d(
 						he.getPositionBeforeFolding().x * rate + centerP.x * (1.0 - rate),
 						he.getPositionBeforeFolding().y * rate + centerP.y * (1.0 - rate)))
-				.collect(Collectors.toList()));
-	}
-
-	/**
-	 * @return outline for drawing foldability-check face
-	 */
-	public Path2D.Double getOutlineBeforeFolding() {
-		return preOutline;
-	}
-
-	private Path2D.Double createPath(final List<Vector2d> vertices) {
-		var path = new Path2D.Double();
-		path.moveTo(vertices.get(0).x, vertices.get(0).y);
-		for (int i = 1; i < halfedges.size(); i++) {
-			path.lineTo(vertices.get(i).x, vertices.get(i).y);
-		}
-		path.closePath();
-		return path;
+				.collect(Collectors.toList());
 	}
 
 	/**

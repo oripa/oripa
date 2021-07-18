@@ -7,31 +7,29 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.paint.EditMode;
-
 /**
  * An action listener which pops the last command's state of given edit mode.
  *
  * @author OUCHI Koji
  *
  */
-public class CommandStatePopper implements ActionListener {
+public class CommandStatePopper<GroupEnum> implements ActionListener {
 	private static final Logger logger = LoggerFactory.getLogger(CommandStatePopper.class);
 
-	private final StateManagerInterface<EditMode> stateManager;
-	private final EditMode editMode;
+	private final StateManager<GroupEnum> stateManager;
+	private final GroupEnum editMode;
 
 	/**
 	 * Constructor
 	 */
-	public CommandStatePopper(final StateManagerInterface<EditMode> stateManager, final EditMode editMode) {
+	public CommandStatePopper(final StateManager<GroupEnum> stateManager, final GroupEnum editMode) {
 		this.stateManager = stateManager;
 		this.editMode = editMode;
 	}
 
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		Optional<ApplicationState<EditMode>> currentOpt = stateManager.popLastOf(editMode);
+		Optional<ApplicationState<GroupEnum>> currentOpt = stateManager.popLastOf(editMode);
 
 		currentOpt.ifPresent(current -> {
 			logger.debug("pop {} command state: {}", editMode, current);

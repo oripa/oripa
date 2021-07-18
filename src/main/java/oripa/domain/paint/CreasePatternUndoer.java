@@ -18,119 +18,25 @@
  */
 package oripa.domain.paint;
 
-import java.util.Collection;
-
-import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.util.history.AbstractUndoManager;
-import oripa.util.history.UndoInfo;
-import oripa.value.OriLine;
-
 /**
  * @author Koji
  *
  */
-public class CreasePatternUndoer implements CreasePatternUndoerInterface {
-	private final AbstractUndoManager<Collection<OriLine>> undoManager = new CreasePatternUndoManager();
+public interface CreasePatternUndoer {
 
-	private final CreasePatternHolder owner;
+	public abstract void pushUndoInfo();
 
-	public CreasePatternUndoer(final CreasePatternHolder aOwner) {
-		owner = aOwner;
-	}
+	public abstract void undo();
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#pushUndoInfo()
-	 */
-	@Override
-	public synchronized void pushUndoInfo() {
-		undoManager.push(owner.getCreasePattern());
-	}
+	public abstract boolean canUndo();
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#loadUndoInfo()
-	 */
-	@Override
-	public synchronized void undo() {
-		UndoInfo<Collection<OriLine>> info = undoManager.undo(owner.getCreasePattern());
+	public abstract void redo();
 
-		if (info == null) {
-			return;
-		}
+	public abstract boolean canRedo();
 
-		CreasePatternInterface creasePattern = owner.getCreasePattern();
-		creasePattern.clear();
-		creasePattern.addAll(info.getInfo());
-	}
+	public abstract boolean changeExists();
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#canUndo()
-	 */
-	@Override
-	public boolean canUndo() {
-		return undoManager.canUndo();
-	}
+	public abstract void clearChanged();
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#redo()
-	 */
-	@Override
-	public synchronized void redo() {
-		UndoInfo<Collection<OriLine>> info = undoManager.redo();
-
-		if (info == null) {
-			return;
-		}
-
-		CreasePatternInterface creasePattern = owner.getCreasePattern();
-		creasePattern.clear();
-		creasePattern.addAll(info.getInfo());
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#canRedo()
-	 */
-	@Override
-	public boolean canRedo() {
-		return undoManager.canRedo();
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#isChanged()
-	 */
-	@Override
-	public boolean changeExists() {
-		return undoManager.isChanged();
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#clearChanged()
-	 */
-	@Override
-	public void clearChanged() {
-		undoManager.clearChanged();
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#clear()
-	 */
-	@Override
-	public void clear() {
-		undoManager.clear();
-	}
+	public abstract void clear();
 }

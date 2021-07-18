@@ -2,9 +2,9 @@ package oripa.domain.paint.byvalue;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.geom.GeomUtil;
+import oripa.util.Command;
 
 public class SelectingVertexForLength extends PickingVertex {
 
@@ -20,7 +20,7 @@ public class SelectingVertexForLength extends PickingVertex {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Vector2d currentPoint,
+	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean doSpecial) {
 
 		context.setMissionCompleted(false);
@@ -39,14 +39,14 @@ public class SelectingVertexForLength extends PickingVertex {
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	public void onResult(final PaintContext context, final boolean doSpecial) {
 
-		double length = GeomUtil.distance(
-				context.getVertex(0), context.getVertex(1));
+		if (context.getVertexCount() != 2 || context.getLineCount() != 0) {
+			throw new IllegalStateException("Wrong state: impossible selection.");
+		}
 
-		valueSetting.setLength(length);
-
-		context.clear(false);
+		Command command = new LengthMeasureCommand(context, valueSetting);
+		command.execute();
 
 		context.setMissionCompleted(true);
 	}

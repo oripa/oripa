@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import oripa.doc.Doc;
 import oripa.doc.Property;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
@@ -53,7 +53,7 @@ public class DataSet {
 
 		// reconstruct CP to refresh the paper size
 		var factory = new CreasePatternFactory();
-		CreasePatternInterface creasePattern = factory
+		CreasePattern creasePattern = factory
 				.createCreasePattern(doc.getCreasePattern());
 
 		Property property = doc.getProperty();
@@ -87,7 +87,7 @@ public class DataSet {
 		}
 
 		CreasePatternFactory factory = new CreasePatternFactory();
-		CreasePatternInterface creasePattern = factory
+		CreasePattern creasePattern = factory
 				.createCreasePattern(oriLines);
 
 		Doc doc = new Doc(creasePattern.getPaperSize());

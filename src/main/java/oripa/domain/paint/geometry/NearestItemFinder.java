@@ -1,10 +1,8 @@
 package oripa.domain.paint.geometry;
 
-import java.util.Collection;
-
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.geom.GeomUtil;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
@@ -17,37 +15,16 @@ import oripa.value.OriLine;
  */
 public class NearestItemFinder {
 
-	private static double scaleThreshold(final PaintContextInterface context) {
+	private static double scaleThreshold(final PaintContext context) {
 		return CalculationResource.CLOSE_THRESHOLD / context.getScale();
 	}
 
-	// returns the OriLine sufficiently closer to point p
-	public static OriLine pickLine(final Collection<OriLine> lines,
-			final Vector2d p, final double scale) {
-		double minDistance = Double.MAX_VALUE;
-		OriLine bestLine = null;
-
-		for (OriLine line : lines) {
-			double dist = GeomUtil.distancePointToSegment(new Vector2d(p.x, p.y), line.p0, line.p1);
-			if (dist < minDistance) {
-				minDistance = dist;
-				bestLine = line;
-			}
-		}
-
-		if (minDistance / scale < 10) {
-			return bestLine;
-		} else {
-			return null;
-		}
-	}
-
 	public static Vector2d pickVertex(
-			final PaintContextInterface context, final boolean freeSelection) {
+			final PaintContext paintContext, final boolean freeSelection) {
 
 		NearestPoint nearestPosition;
 
-		nearestPosition = NearestVertexFinder.findAround(context, scaleThreshold(context));
+		nearestPosition = NearestVertexFinder.findAround(paintContext, scaleThreshold(paintContext));
 
 		Vector2d picked = null;
 
@@ -56,9 +33,9 @@ public class NearestItemFinder {
 		}
 
 		if (picked == null && freeSelection == true) {
-			var currentPoint = context.getLogicalMousePoint();
+			var currentPoint = paintContext.getLogicalMousePoint();
 
-			OriLine l = pickLine(context);
+			OriLine l = pickLine(paintContext);
 			if (l != null) {
 				picked = new Vector2d();
 				Vector2d cp = new Vector2d(currentPoint.x, currentPoint.y);
@@ -70,41 +47,64 @@ public class NearestItemFinder {
 		return picked;
 	}
 
-	public static Vector2d pickVertexFromPickedLines(final PaintContextInterface context) {
+	public static Vector2d pickVertexFromPickedLines(
+			final PaintContext paintContext) {
 
 		NearestPoint nearestPosition;
-		nearestPosition = NearestVertexFinder.findFromPickedLine(context);
+		nearestPosition = NearestVertexFinder.findFromPickedLines(paintContext);
 
 		Vector2d picked = null;
-		if (nearestPosition.distance < scaleThreshold(context)) {
+		if (nearestPosition.distance < scaleThreshold(paintContext)) {
 			picked = nearestPosition.point;
 		}
 
 		return picked;
 	}
 
-	public static OriLine pickLine(final PaintContextInterface context) {
-		return pickLine(context.getCreasePattern(), context.getLogicalMousePoint(),
-				context.getScale());
+	/**
+	 * Returns the OriLine sufficiently close to mouse point.
+	 */
+	public static OriLine pickLine(
+			final PaintContext paintContext) {
+		var lines = paintContext.getCreasePattern();
+		var mp = paintContext.getLogicalMousePoint();
+
+		double minDistance = Double.MAX_VALUE;
+		OriLine bestLine = null;
+
+		for (OriLine line : lines) {
+			double dist = GeomUtil.distancePointToSegment(new Vector2d(mp.x, mp.y), line.p0, line.p1);
+			if (dist < minDistance) {
+				minDistance = dist;
+				bestLine = line;
+			}
+		}
+
+		if (minDistance < scaleThreshold(paintContext)) {
+			return bestLine;
+		} else {
+			return null;
+		}
 	}
 
-	public static Vector2d getCandidateVertex(final PaintContextInterface context,
+	public static Vector2d getCandidateVertex(
+			final PaintContext paintContext,
 			final boolean enableMousePoint) {
 
-		Vector2d candidate = context.getCandidateVertexToPick();
+		Vector2d candidate = paintContext.getCandidateVertexToPick();
 
 		if (candidate == null && enableMousePoint) {
-			var mp = context.getLogicalMousePoint();
+			var mp = paintContext.getLogicalMousePoint();
 			candidate = new Vector2d(mp.x, mp.y);
 		}
 
 		return candidate;
 	}
 
-	public static Vector2d getNearestInAngleSnapCrossPoints(final PaintContextInterface context) {
+	public static Vector2d getNearestInAngleSnapCrossPoints(final PaintContext paintContext) {
 		return NearestVertexFinder.findNearestVertex(
-				context.getLogicalMousePoint(),
-				context.getAngleSnapCrossPoints()).point;
+				paintContext.getLogicalMousePoint(),
+				paintContext.getAngleSnapCrossPoints()).point;
 	}
 
 }
