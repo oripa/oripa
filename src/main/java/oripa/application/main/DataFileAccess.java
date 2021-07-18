@@ -48,12 +48,7 @@ import oripa.persistence.filetool.WrongDataFormatException;
 public class DataFileAccess {
 	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
 
-	private DataAccessObject<Doc> dao;
-
-	@SuppressWarnings("unused")
-	private DataFileAccess() {
-
-	}
+	private final DataAccessObject<Doc> dao;
 
 	public DataFileAccess(final DataAccessObject<Doc> dao) {
 		this.dao = dao;

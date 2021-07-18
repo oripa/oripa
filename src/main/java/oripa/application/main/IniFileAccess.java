@@ -33,13 +33,8 @@ import oripa.resource.Constants;
  *
  */
 public class IniFileAccess {
-	private InitDataFileReader reader;
-	private InitDataFileWriter writer;
-
-	@SuppressWarnings("unused")
-	private IniFileAccess() {
-
-	}
+	private final InitDataFileReader reader;
+	private final InitDataFileWriter writer;
 
 	/**
 	 *
