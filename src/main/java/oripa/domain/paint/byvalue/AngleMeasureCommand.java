@@ -21,13 +21,13 @@ package oripa.domain.paint.byvalue;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AngleMeasureCommand implements Command {
+public class AngleMeasureCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 	private final ValueSetting valueSetting;
 
@@ -38,6 +38,8 @@ public class AngleMeasureCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 3, 0);
+
 		Vector2d first = context.getVertex(0);
 		Vector2d second = context.getVertex(1);
 		Vector2d third = context.getVertex(2);
