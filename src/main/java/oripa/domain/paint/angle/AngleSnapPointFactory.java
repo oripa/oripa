@@ -33,7 +33,7 @@ import oripa.geom.Segment;
  * @author OUCHI Koji
  *
  */
-public class AngleSnapPointFactory {
+class AngleSnapPointFactory {
 	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
 		var step = context.getAngleStep();
 		var paperSize = context.getCreasePattern().getPaperSize();
