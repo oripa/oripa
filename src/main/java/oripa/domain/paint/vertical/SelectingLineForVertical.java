@@ -19,11 +19,6 @@ public class SelectingLineForVertical extends PickingLine {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		if (context.getLineCount() != 1 ||
-				context.getVertexCount() != 1) {
-			throw new IllegalStateException("Wrong state: impossible selection.");
-		}
-
 		Command command = new VerticalLineAdderCommand(context);
 		command.execute();
 	}

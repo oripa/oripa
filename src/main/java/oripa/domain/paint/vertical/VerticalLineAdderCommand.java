@@ -20,15 +20,15 @@ package oripa.domain.paint.vertical;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 import oripa.geom.GeomUtil;
-import oripa.util.Command;
 import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class VerticalLineAdderCommand implements Command {
+public class VerticalLineAdderCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public VerticalLineAdderCommand(final PaintContext context) {
@@ -37,6 +37,8 @@ public class VerticalLineAdderCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 1, 1);
+
 		OriLine vl = new OriLine(GeomUtil.getVerticalLine(
 				context.getVertex(0), context.getLine(0)), context.getLineTypeOfNewLines());
 
