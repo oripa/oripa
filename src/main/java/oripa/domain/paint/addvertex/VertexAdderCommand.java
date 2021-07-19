@@ -35,7 +35,9 @@ public class VertexAdderCommand extends ValidatablePaintCommand {
 
 	@Override
 	public void execute() {
-		validateCounts(context, 1, 1);
+		final int correctVertexCount = 1;
+		final int correctLineCount = 1;
+		validateCounts(context, correctVertexCount, correctLineCount);
 
 		context.creasePatternUndo().pushUndoInfo();
 
