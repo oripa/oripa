@@ -161,7 +161,7 @@ public class CircleCopyDialog extends JDialog {
 					if (m_num <= 0) {
 						JOptionPane.showMessageDialog(
 								owner, "Specify positive integer to Number.",
-								"ArrayCopy",
+								"Circle Copy",
 								JOptionPane.INFORMATION_MESSAGE);
 
 					} else {

@@ -30,7 +30,7 @@ public abstract class ValidatablePaintCommand implements Command {
 			final int correctVertexCount, final int correctLineCount) {
 		if (context.getVertexCount() != correctVertexCount || context.getLineCount() != correctLineCount) {
 			throw new IllegalStateException(
-					String.format("wrong argument. there should be %d pickedVertices and %d pickedLines",
+					String.format("wrong state. there should be %d pickedVertices and %d pickedLines",
 							correctVertexCount, correctLineCount));
 		}
 	}
