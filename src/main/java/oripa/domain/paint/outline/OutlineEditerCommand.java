@@ -28,14 +28,14 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 import oripa.geom.GeomUtil;
-import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class OutlineEditerCommand implements Command {
+public class OutlineEditerCommand extends ValidatablePaintCommand {
 	private static final Logger logger = LoggerFactory.getLogger(OutlineEditerCommand.class);
 
 	private final PaintContext context;
@@ -49,6 +49,7 @@ public class OutlineEditerCommand implements Command {
 	@Override
 	public void execute() {
 		logger.debug("# of picked vertices (before): " + context.getPickedVertices().size());
+		validateThat(() -> context.getVertexCount() > 0, "Wrong state. There should be one or more pickedVertices.");
 
 		Vector2d v = context.peekVertex();
 
