@@ -42,7 +42,9 @@ public class LineAdderCommand extends ValidatablePaintCommand {
 
 	@Override
 	public void execute() {
-		validateCounts(context, 2, 0);
+		final int correctVertexCount = 2;
+		final int correctLineCount = 0;
+		validateCounts(context, correctVertexCount, correctLineCount);
 
 		Vector2d p0, p1;
 		p0 = context.getVertex(0);
