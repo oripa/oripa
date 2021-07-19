@@ -37,7 +37,9 @@ public class LengthMeasureCommand extends ValidatablePaintCommand {
 
 	@Override
 	public void execute() {
-		validateCounts(context, 2, 0);
+		final int correctVertexCount = 2;
+		final int correctLineCount = 0;
+		validateCounts(context, correctVertexCount, correctLineCount);
 
 		double length = GeomUtil.distance(
 				context.getVertex(0), context.getVertex(1));
