@@ -22,13 +22,13 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class PerpendicularBisectorAdderCommand implements Command {
+public class PerpendicularBisectorAdderCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public PerpendicularBisectorAdderCommand(final PaintContext context) {
@@ -37,6 +37,8 @@ public class PerpendicularBisectorAdderCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 2, 0);
+
 		Vector2d p0, p1;
 		p0 = context.getVertex(0);
 		p1 = context.getVertex(1);
