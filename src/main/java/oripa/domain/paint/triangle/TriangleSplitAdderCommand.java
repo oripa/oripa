@@ -20,13 +20,13 @@ package oripa.domain.paint.triangle;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class TriangleSplitAdderCommand implements Command {
+public class TriangleSplitAdderCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public TriangleSplitAdderCommand(final PaintContext context) {
@@ -35,6 +35,8 @@ public class TriangleSplitAdderCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 3, 0);
+
 		var first = context.getVertex(0);
 		var second = context.getVertex(1);
 		var third = context.getVertex(2);
