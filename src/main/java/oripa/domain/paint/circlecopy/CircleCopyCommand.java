@@ -20,13 +20,13 @@ package oripa.domain.paint.circlecopy;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CircleCopyCommand implements Command {
+public class CircleCopyCommand extends ValidatablePaintCommand {
 	private final double cx, cy;
 	private final double angleDeg;
 	private final int count;
@@ -46,6 +46,8 @@ public class CircleCopyCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+
 		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();

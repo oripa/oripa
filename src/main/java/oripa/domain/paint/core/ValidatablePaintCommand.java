@@ -16,43 +16,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.byvalue;
+package oripa.domain.paint.core;
 
-import javax.vecmath.Vector2d;
+import java.util.function.Supplier;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.ValidatablePaintCommand;
+import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AngleMeasureCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final ValueSetting valueSetting;
-
-	public AngleMeasureCommand(final PaintContext context, final ValueSetting valueSetting) {
-		this.context = context;
-		this.valueSetting = valueSetting;
+public abstract class ValidatablePaintCommand implements Command {
+	protected void validateCounts(final PaintContext context,
+			final int correctVertexCount, final int correctLineCount) {
+		if (context.getVertexCount() != correctVertexCount || context.getLineCount() != correctLineCount) {
+			throw new IllegalStateException(
+					String.format("wrong state. There should be %d pickedVertices and %d pickedLines",
+							correctVertexCount, correctLineCount));
+		}
 	}
 
-	@Override
-	public void execute() {
-		validateCounts(context, 3, 0);
-
-		Vector2d first = context.getVertex(0);
-		Vector2d second = context.getVertex(1);
-		Vector2d third = context.getVertex(2);
-
-		Vector2d dir1 = new Vector2d(third);
-		Vector2d dir2 = new Vector2d(first);
-		dir1.sub(second);
-		dir2.sub(second);
-
-		double deg_angle = Math.toDegrees(dir1.angle(dir2));
-
-		valueSetting.setAngle(deg_angle);
-
-		context.clear(false);
+	protected void validateThat(final Supplier<Boolean> isValid, final String errorMessage) {
+		if (!isValid.get()) {
+			throw new IllegalStateException(errorMessage);
+		}
 	}
 }

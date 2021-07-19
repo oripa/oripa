@@ -33,11 +33,6 @@ public class AddingVertex extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-
-		if (context.getVertexCount() == 0 || context.getLineCount() != 1) {
-			throw new IllegalStateException("wrong state: impossible selection.");
-		}
-
 		var command = new VertexAdderCommand(context);
 		command.execute();
 	}

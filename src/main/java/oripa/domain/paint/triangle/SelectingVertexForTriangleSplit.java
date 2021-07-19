@@ -34,10 +34,6 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		if (context.getVertexCount() != 3) {
-			throw new IllegalStateException("Wrong state: impossible selection.");
-		}
-
 		Command command = new TriangleSplitAdderCommand(context);
 		command.execute();
 	}

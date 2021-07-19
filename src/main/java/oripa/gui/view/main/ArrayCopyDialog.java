@@ -266,7 +266,7 @@ public class ArrayCopyDialog extends JDialog {
 					if (!m_bFillSheet && (m_row == 0 || m_col == 0)) {
 						JOptionPane.showMessageDialog(
 								owner, "Specify non-Zero value to Row and Col.",
-								"ArrayCopy",
+								"Array Copy",
 								JOptionPane.INFORMATION_MESSAGE);
 
 					} else {

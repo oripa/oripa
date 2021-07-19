@@ -40,11 +40,6 @@ public class SelectingVertexForLength extends PickingVertex {
 
 	@Override
 	public void onResult(final PaintContext context, final boolean doSpecial) {
-
-		if (context.getVertexCount() != 2 || context.getLineCount() != 0) {
-			throw new IllegalStateException("Wrong state: impossible selection.");
-		}
-
 		Command command = new LengthMeasureCommand(context, valueSetting);
 		command.execute();
 

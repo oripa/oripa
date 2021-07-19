@@ -26,14 +26,14 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class LinePasterCommand implements Command {
+public class LinePasterCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 	private final SelectionOriginHolder originHolder;
 	private final ShiftedLineFactory factory;
@@ -47,6 +47,8 @@ public class LinePasterCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateThat(() -> context.getVertexCount() == 1, "Wrong state. There should be 1 pickedVertices.");
+
 		Vector2d v = context.popVertex();
 
 		if (context.getLineCount() == 0) {

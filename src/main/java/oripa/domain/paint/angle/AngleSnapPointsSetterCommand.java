@@ -19,13 +19,13 @@
 package oripa.domain.paint.angle;
 
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AngleSnapPointsSetterCommand implements Command {
+public class AngleSnapPointsSetterCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 	private final AngleSnapPointFactory snapPointFactory;
 
@@ -36,6 +36,7 @@ public class AngleSnapPointsSetterCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 1, 0);
 		context.setAngleSnapCrossPoints(snapPointFactory.createSnapPoints(context));
 	}
 }

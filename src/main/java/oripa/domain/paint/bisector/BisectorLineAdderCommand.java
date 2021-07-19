@@ -20,13 +20,13 @@ package oripa.domain.paint.bisector;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class BisectorLineAdderCommand implements Command {
+public class BisectorLineAdderCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public BisectorLineAdderCommand(final PaintContext context) {
@@ -35,6 +35,8 @@ public class BisectorLineAdderCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 3, 1);
+
 		var first = context.getVertex(0);
 		var second = context.getVertex(1);
 		var third = context.getVertex(2);

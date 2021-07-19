@@ -20,13 +20,13 @@ package oripa.domain.paint.addvertex;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class VertexAdderCommand implements Command {
+public class VertexAdderCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public VertexAdderCommand(final PaintContext context) {
@@ -35,6 +35,8 @@ public class VertexAdderCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 1, 1);
+
 		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();

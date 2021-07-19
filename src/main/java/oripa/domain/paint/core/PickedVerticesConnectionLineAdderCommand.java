@@ -19,7 +19,6 @@
 package oripa.domain.paint.core;
 
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
 import oripa.value.OriLine;
 
 /**
@@ -30,7 +29,7 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-public class PickedVerticesConnectionLineAdderCommand implements Command {
+public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public PickedVerticesConnectionLineAdderCommand(final PaintContext context) {
@@ -39,6 +38,8 @@ public class PickedVerticesConnectionLineAdderCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 2, 0);
+
 		var p0 = context.popVertex();
 		var p1 = context.popVertex();
 

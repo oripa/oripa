@@ -22,7 +22,7 @@ import java.util.List;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * Removes all picked lines from crease pattern.
@@ -30,7 +30,7 @@ import oripa.util.Command;
  * @author OUCHI Koji
  *
  */
-public class LineDeleterCommand implements Command {
+public class LineDeleterCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public LineDeleterCommand(final PaintContext context) {
@@ -39,6 +39,8 @@ public class LineDeleterCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+
 		var lines = List.copyOf(context.getPickedLines());
 
 		context.clear(true);

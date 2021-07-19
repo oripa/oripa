@@ -25,15 +25,15 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 import oripa.geom.GeomUtil;
-import oripa.util.Command;
 import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class LineByValueCommand implements Command {
+public class LineByValueCommand extends ValidatablePaintCommand {
 	private final static Logger logger = LoggerFactory.getLogger(LineByValueCommand.class);
 
 	private final PaintContext context;
@@ -46,6 +46,8 @@ public class LineByValueCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 1, 0);
+
 		Vector2d vertex = context.popVertex();
 
 		try {

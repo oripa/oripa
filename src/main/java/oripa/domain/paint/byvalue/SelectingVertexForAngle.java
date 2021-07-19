@@ -40,11 +40,6 @@ public class SelectingVertexForAngle extends PickingVertex {
 
 	@Override
 	public void onResult(final PaintContext context, final boolean doSpecial) {
-
-		if (context.getVertexCount() != 3 || context.getLineCount() != 0) {
-			throw new IllegalStateException("Wrong state: impossible selection.");
-		}
-
 		Command command = new AngleMeasureCommand(context, valueSetting);
 		command.execute();
 

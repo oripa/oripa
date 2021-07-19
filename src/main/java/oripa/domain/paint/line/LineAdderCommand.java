@@ -24,16 +24,16 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
-import oripa.util.Command;
 import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class LineAdderCommand implements Command {
+public class LineAdderCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public LineAdderCommand(final PaintContext context) {
@@ -42,6 +42,8 @@ public class LineAdderCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 2, 0);
+
 		Vector2d p0, p1;
 		p0 = context.getVertex(0);
 		p1 = context.getVertex(1);

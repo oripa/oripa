@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * Removes lines marked as selected state from crease pattern.
@@ -31,7 +31,7 @@ import oripa.util.Command;
  * @author OUCHI Koji
  *
  */
-public class SelectedLineDeleterCommand implements Command {
+public class SelectedLineDeleterCommand extends ValidatablePaintCommand {
 	private static final Logger logger = LoggerFactory.getLogger(SelectedLineDeleterCommand.class);
 
 	private final PaintContext context;
@@ -42,9 +42,12 @@ public class SelectedLineDeleterCommand implements Command {
 
 	@Override
 	public void execute() {
-		context.creasePatternUndo().pushUndoInfo();
-
 		Painter painter = context.getPainter();
+
+		validateThat(() -> painter.countSelectedLines() > 0,
+				"Wrong state. There should be one or more selected lines.");
+
+		context.creasePatternUndo().pushUndoInfo();
 
 		try {
 			painter.removeSelectedLines();
