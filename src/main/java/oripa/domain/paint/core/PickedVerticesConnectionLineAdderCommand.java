@@ -38,7 +38,9 @@ public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCo
 
 	@Override
 	public void execute() {
-		validateCounts(context, 2, 0);
+		final int correctVertexCount = 2;
+		final int correctLineCount = 0;
+		validateCounts(context, correctVertexCount, correctLineCount);
 
 		var p0 = context.popVertex();
 		var p1 = context.popVertex();
