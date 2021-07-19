@@ -44,6 +44,10 @@ public class ArrayCopyTilerCommand implements Command {
 
 	@Override
 	public void execute() {
+		if (context.getLineCount() == 0) {
+			throw new IllegalStateException("Wrong state. There should be one or more pickedLines.");
+		}
+
 		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
