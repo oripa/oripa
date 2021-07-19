@@ -20,13 +20,13 @@ package oripa.domain.paint.arraycopy;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class ArrayCopyTilerCommand implements Command {
+public class ArrayCopyTilerCommand extends ValidatablePaintCommand {
 	private final int row, col;
 	private final double interX, interY;
 	private final PaintContext context;
@@ -44,9 +44,7 @@ public class ArrayCopyTilerCommand implements Command {
 
 	@Override
 	public void execute() {
-		if (context.getLineCount() == 0) {
-			throw new IllegalStateException("Wrong state. There should be one or more pickedLines.");
-		}
+		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
 
 		context.creasePatternUndo().pushUndoInfo();
 
