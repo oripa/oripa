@@ -36,7 +36,10 @@ public class AngleSnapPointsSetterCommand extends ValidatablePaintCommand {
 
 	@Override
 	public void execute() {
-		validateCounts(context, 1, 0);
+		final int correctVertexCount = 1;
+		final int correctLineCount = 0;
+		validateCounts(context, correctVertexCount, correctLineCount);
+
 		context.setAngleSnapCrossPoints(snapPointFactory.createSnapPoints(context));
 	}
 }
