@@ -24,10 +24,6 @@ public class SelectingLineForLineType extends PickingLine {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		if (context.getLineCount() != 1) {
-			throw new IllegalStateException("Wrong state: impossible selection.");
-		}
-
 		Command command = new LineTypeChangerCommand(context, setting);
 		command.execute();
 	}

@@ -21,13 +21,13 @@ package oripa.domain.paint.linetype;
 import java.util.List;
 
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class LineTypeChangerCommand implements Command {
+public class LineTypeChangerCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 	private final TypeForChangeGettable setting;
 
@@ -38,6 +38,8 @@ public class LineTypeChangerCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+
 		var lines = List.copyOf(context.getPickedLines());
 		context.clear(false);
 
