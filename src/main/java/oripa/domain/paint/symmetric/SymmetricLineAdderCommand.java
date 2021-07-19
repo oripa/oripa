@@ -39,7 +39,9 @@ public class SymmetricLineAdderCommand extends ValidatablePaintCommand {
 
 	@Override
 	public void execute() {
-		validateCounts(context, 3, 0);
+		final int correctVertexCount = 3;
+		final int correctLineCount = 0;
+		validateCounts(context, correctVertexCount, correctLineCount);
 
 		Vector2d first = context.getVertex(0);
 		Vector2d second = context.getVertex(1);
