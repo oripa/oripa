@@ -20,14 +20,14 @@ package oripa.domain.paint.mirror;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class LineMirrorCommand implements Command {
+public class LineMirrorCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public LineMirrorCommand(final PaintContext context) {
@@ -36,6 +36,8 @@ public class LineMirrorCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+
 		context.creasePatternUndo().pushUndoInfo();
 
 		final OriLine axis = context.popLine();
