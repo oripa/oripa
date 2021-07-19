@@ -35,7 +35,9 @@ public class BisectorLineAdderCommand extends ValidatablePaintCommand {
 
 	@Override
 	public void execute() {
-		validateCounts(context, 3, 1);
+		final int correctVertexCount = 3;
+		final int correctLineCount = 1;
+		validateCounts(context, correctVertexCount, correctLineCount);
 
 		var first = context.getVertex(0);
 		var second = context.getVertex(1);
