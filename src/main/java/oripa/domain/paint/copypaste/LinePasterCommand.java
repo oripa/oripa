@@ -47,6 +47,10 @@ public class LinePasterCommand implements Command {
 
 	@Override
 	public void execute() {
+		if (context.getVertexCount() != 1) {
+			throw new IllegalStateException("Wrong state: there should be 1 pickedVertices.");
+		}
+
 		Vector2d v = context.popVertex();
 
 		if (context.getLineCount() == 0) {
