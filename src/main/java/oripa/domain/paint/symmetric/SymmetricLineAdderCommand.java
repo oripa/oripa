@@ -22,13 +22,13 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SymmetricLineAdderCommand implements Command {
+public class SymmetricLineAdderCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 	private final boolean doWalk;
 
@@ -39,6 +39,8 @@ public class SymmetricLineAdderCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 3, 0);
+
 		Vector2d first = context.getVertex(0);
 		Vector2d second = context.getVertex(1);
 		Vector2d third = context.getVertex(2);
