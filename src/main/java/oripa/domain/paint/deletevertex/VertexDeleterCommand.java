@@ -20,13 +20,13 @@ package oripa.domain.paint.deletevertex;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.util.Command;
+import oripa.domain.paint.core.ValidatablePaintCommand;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class VertexDeleterCommand implements Command {
+public class VertexDeleterCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
 	public VertexDeleterCommand(final PaintContext context) {
@@ -35,6 +35,8 @@ public class VertexDeleterCommand implements Command {
 
 	@Override
 	public void execute() {
+		validateCounts(context, 1, 0);
+
 		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
