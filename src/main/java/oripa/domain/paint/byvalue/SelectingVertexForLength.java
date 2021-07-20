@@ -22,9 +22,6 @@ public class SelectingVertexForLength extends PickingVertex {
 	@Override
 	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean doSpecial) {
-
-		context.setMissionCompleted(false);
-
 		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
 
 		if (!vertexIsSelected) {
@@ -42,8 +39,6 @@ public class SelectingVertexForLength extends PickingVertex {
 	public void onResult(final PaintContext context, final boolean doSpecial) {
 		Command command = new LengthMeasureCommand(context, valueSetting);
 		command.execute();
-
-		context.setMissionCompleted(true);
 	}
 
 }
