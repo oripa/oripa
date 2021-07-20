@@ -30,8 +30,6 @@ class PaintContextImpl implements PaintContext {
 	private Vector2d candidateVertexToPick = new Vector2d();
 	private OriLine candidateLineToPick = new OriLine();
 
-	private boolean missionCompleted = false;
-
 	private OriLine.Type lineTypeOfNewLines;
 
 	private AngleStep angleStep;
@@ -123,29 +121,7 @@ class PaintContextImpl implements PaintContext {
 		candidateLineToPick = null;
 		candidateVertexToPick = null;
 
-		missionCompleted = false;
 		angleSnapCrossPoints.clear();
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#isMissionCompleted()
-	 */
-	@Override
-	public boolean isMissionCompleted() {
-		return missionCompleted;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#setMissionCompleted
-	 * (boolean)
-	 */
-	@Override
-	public void setMissionCompleted(final boolean missionCompleted) {
-		this.missionCompleted = missionCompleted;
 	}
 
 	/*

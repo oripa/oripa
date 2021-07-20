@@ -21,15 +21,22 @@ public class AngleMeasuringAction extends AbstractGraphicMouseAction {
 	public GraphicMouseAction onLeftClick(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext,
 			final boolean differentAction) {
+		int vertexCountBeforeAction = paintContext.getVertexCount();
 
 		GraphicMouseAction action;
 		action = super.onLeftClick(viewContext, paintContext, differentAction);
 
-		if (paintContext.isMissionCompleted()) {
+		int vertexCountAfterAction = paintContext.getVertexCount();
+
+		if (isActionPerformed(vertexCountBeforeAction, vertexCountAfterAction)) {
 			action = new LineByValueAction(valueSetting);
 		}
 
 		return action;
+	}
+
+	private boolean isActionPerformed(final int countBeforeAction, final int countAfterAction) {
+		return countBeforeAction > 0 && countAfterAction == 0;
 	}
 
 	@Override

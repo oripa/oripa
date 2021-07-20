@@ -55,26 +55,6 @@ public interface PaintContext extends CreasePatternHolder {
 	 */
 	public abstract void finishPasting();
 
-	/**
-	 * provides whether the input instruction finished its job. This is a
-	 * optional property for instructions which cannot be determined by
-	 * transition among {@link ActionState} implementations whether current
-	 * state is start or end of instruction.
-	 *
-	 * @return true if the input finishes what it should do.
-	 */
-	public abstract boolean isMissionCompleted();
-
-	/**
-	 * This is a optional property for instructions which cannot be determined
-	 * by transition among {@link ActionState} implementations whether current
-	 * state is start or end of instruction.
-	 *
-	 * @param missionCompleted
-	 *            state of input instruction (finished or not)
-	 */
-	public abstract void setMissionCompleted(boolean missionCompleted);
-
 	public abstract void setScale(double scale);
 
 	public abstract double getScale();

@@ -25,7 +25,6 @@ public class SelectingVertexForOutline extends PickingVertex {
 	@Override
 	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean freeSelection) {
-		context.setMissionCompleted(false);
 		return super.onAct(context, currentPoint, freeSelection);
 	}
 
@@ -33,10 +32,5 @@ public class SelectingVertexForOutline extends PickingVertex {
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
 		Command command = new OutlineEditerCommand(context, closeTempOutlineFactory);
 		command.execute();
-
-		if (context.getVertexCount() == 0) {
-			// command is executed and the context has been cleared.
-			context.setMissionCompleted(true);
-		}
 	}
 }
