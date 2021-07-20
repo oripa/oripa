@@ -26,16 +26,25 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	public GraphicMouseAction onLeftClick(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
+		int vertexCountBeforeAction = paintContext.getVertexCount();
 
 		GraphicMouseAction next = super.onLeftClick(viewContext, paintContext,
 				differentAction);
 
-		if (paintContext.isMissionCompleted()) {
+		int vertexCountAfterAction = paintContext.getVertexCount();
+
+		// Action is performed and the selection is cleared.
+		// It's the time to get back to previous graphic action.
+		if (isActionPerformed(vertexCountBeforeAction, vertexCountAfterAction)) {
 			popPreviousState();
 			next = actionHolder.getMouseAction();
 		}
 
 		return next;
+	}
+
+	private boolean isActionPerformed(final int countBeforeAction, final int countAfterAction) {
+		return countBeforeAction > 0 && countAfterAction == 0;
 	}
 
 	@Override
