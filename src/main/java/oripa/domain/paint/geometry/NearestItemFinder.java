@@ -19,8 +19,7 @@ public class NearestItemFinder {
 		return CalculationResource.CLOSE_THRESHOLD / context.getScale();
 	}
 
-	public static Vector2d pickVertex(
-			final PaintContext paintContext) {
+	public static Vector2d pickVertex(final PaintContext paintContext) {
 
 		NearestPoint nearestPosition = NearestVertexFinder.findAround(paintContext, scaleThreshold(paintContext));
 
@@ -50,25 +49,20 @@ public class NearestItemFinder {
 		return vertexAlongLine;
 	}
 
-	public static Vector2d pickVertexFromPickedLines(
-			final PaintContext paintContext) {
+	public static Vector2d pickVertexFromPickedLines(final PaintContext paintContext) {
+		NearestPoint nearestPosition = NearestVertexFinder.findFromPickedLines(paintContext);
 
-		NearestPoint nearestPosition;
-		nearestPosition = NearestVertexFinder.findFromPickedLines(paintContext);
-
-		Vector2d picked = null;
 		if (nearestPosition.distance < scaleThreshold(paintContext)) {
-			picked = nearestPosition.point;
+			return nearestPosition.point;
 		}
 
-		return picked;
+		return null;
 	}
 
 	/**
 	 * Returns the OriLine sufficiently close to mouse point.
 	 */
-	public static OriLine pickLine(
-			final PaintContext paintContext) {
+	public static OriLine pickLine(final PaintContext paintContext) {
 		var lines = paintContext.getCreasePattern();
 		var mp = paintContext.getLogicalMousePoint();
 
@@ -90,8 +84,7 @@ public class NearestItemFinder {
 		}
 	}
 
-	public static Vector2d getCandidateVertexOrMousePoint(
-			final PaintContext paintContext) {
+	public static Vector2d getCandidateVertexOrMousePoint(final PaintContext paintContext) {
 
 		Vector2d candidate = paintContext.getCandidateVertexToPick();
 
