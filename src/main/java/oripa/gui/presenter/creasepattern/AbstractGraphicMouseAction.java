@@ -119,13 +119,6 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		state = BasicUndo.undo(state, context);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.GraphicMouseActionInterface#redo(oripa.domain.paint.
-	 * PaintContextInterface)
-	 */
 	@Override
 	public void redo(final PaintContext context) {
 		if (!context.creasePatternUndo().canRedo()) {
@@ -191,14 +184,6 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		drawPickedVertices(drawer, viewContext, paintContext, paintContext.getLineTypeOfNewLines());
 
 	}
-
-//	protected ElementSelector getElementSelector() {
-//		return selector;
-//	}
-//
-//	protected GraphicItemConverter getGraphicItemConverter() {
-//		return converter;
-//	}
 
 	private void drawPickedLines(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
