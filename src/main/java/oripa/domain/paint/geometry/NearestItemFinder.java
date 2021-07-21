@@ -20,31 +20,34 @@ public class NearestItemFinder {
 	}
 
 	public static Vector2d pickVertex(
-			final PaintContext paintContext, final boolean freeSelection) {
+			final PaintContext paintContext) {
 
-		NearestPoint nearestPosition;
-
-		nearestPosition = NearestVertexFinder.findAround(paintContext, scaleThreshold(paintContext));
-
-		Vector2d picked = null;
+		NearestPoint nearestPosition = NearestVertexFinder.findAround(paintContext, scaleThreshold(paintContext));
 
 		if (nearestPosition != null) {
-			picked = new Vector2d(nearestPosition.point);
+			return new Vector2d(nearestPosition.point);
 		}
 
-		if (picked == null && freeSelection == true) {
-			var currentPoint = paintContext.getLogicalMousePoint();
+		return null;
+	}
 
-			OriLine l = pickLine(paintContext);
-			if (l != null) {
-				picked = new Vector2d();
-				Vector2d cp = new Vector2d(currentPoint.x, currentPoint.y);
-
-				GeomUtil.distancePointToSegment(cp, l.p0, l.p1, picked);
-			}
+	public static Vector2d pickVertexAlongLine(final PaintContext paintContext) {
+		var picked = pickVertex(paintContext);
+		if (picked != null) {
+			return picked;
 		}
 
-		return picked;
+		OriLine l = pickLine(paintContext);
+		if (l == null) {
+			return null;
+		}
+
+		var currentPoint = paintContext.getLogicalMousePoint();
+		var vertexAlongLine = new Vector2d();
+
+		GeomUtil.distancePointToSegment(currentPoint, l.p0, l.p1, vertexAlongLine);
+
+		return vertexAlongLine;
 	}
 
 	public static Vector2d pickVertexFromPickedLines(
