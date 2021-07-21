@@ -41,10 +41,9 @@ public class NearestItemFinder {
 			return null;
 		}
 
-		var currentPoint = paintContext.getLogicalMousePoint();
 		var vertexAlongLine = new Vector2d();
 
-		GeomUtil.distancePointToSegment(currentPoint, l.p0, l.p1, vertexAlongLine);
+		GeomUtil.distancePointToSegment(paintContext.getLogicalMousePoint(), l.p0, l.p1, vertexAlongLine);
 
 		return vertexAlongLine;
 	}
@@ -64,13 +63,13 @@ public class NearestItemFinder {
 	 */
 	public static OriLine pickLine(final PaintContext paintContext) {
 		var lines = paintContext.getCreasePattern();
-		var mp = paintContext.getLogicalMousePoint();
+		var mousePoint = paintContext.getLogicalMousePoint();
 
 		double minDistance = Double.MAX_VALUE;
 		OriLine bestLine = null;
 
 		for (OriLine line : lines) {
-			double dist = GeomUtil.distancePointToSegment(new Vector2d(mp.x, mp.y), line.p0, line.p1);
+			double dist = GeomUtil.distancePointToSegment(mousePoint, line.p0, line.p1);
 			if (dist < minDistance) {
 				minDistance = dist;
 				bestLine = line;
@@ -84,6 +83,11 @@ public class NearestItemFinder {
 		}
 	}
 
+	/**
+	 * If {@code paintContext} has the latest candidate vertex to pick, this
+	 * method return it. Otherwise, mouse point coordinate in the context is
+	 * returned.
+	 */
 	public static Vector2d getCandidateVertexOrMousePoint(final PaintContext paintContext) {
 
 		Vector2d candidate = paintContext.getCandidateVertexToPick();
