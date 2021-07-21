@@ -87,18 +87,12 @@ public class NearestItemFinder {
 		}
 	}
 
-	public static Vector2d getCandidateVertex(
-			final PaintContext paintContext,
-			final boolean enableMousePoint) {
+	public static Vector2d getCandidateVertexOrMousePoint(
+			final PaintContext paintContext) {
 
 		Vector2d candidate = paintContext.getCandidateVertexToPick();
 
-		if (candidate == null && enableMousePoint) {
-			var mp = paintContext.getLogicalMousePoint();
-			candidate = new Vector2d(mp.x, mp.y);
-		}
-
-		return candidate;
+		return candidate == null ? paintContext.getLogicalMousePoint() : candidate;
 	}
 
 	public static Vector2d getNearestInAngleSnapCrossPoints(final PaintContext paintContext) {

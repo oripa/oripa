@@ -68,8 +68,8 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	}
 
 	/**
-	 * calls {@link #recoverImpl(PaintContext)}, and if
-	 * {@link #needSelect()} returns false, then calls
+	 * calls {@link #recoverImpl(PaintContext)}, and if {@link #needSelect()}
+	 * returns false, then calls
 	 * {@code context.getPainter().resetSelectedOriLines()}.
 	 */
 	@Override
@@ -284,7 +284,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 				paintContext.getScale(), viewContext.isZeroLineWidth());
 
 		drawLine(drawer, picked,
-				NearestItemFinder.getCandidateVertex(paintContext, true));
+				NearestItemFinder.getCandidateVertexOrMousePoint(paintContext));
 
 	}
 
