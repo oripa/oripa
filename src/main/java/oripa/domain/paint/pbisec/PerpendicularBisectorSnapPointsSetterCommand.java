@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.angle;
+package oripa.domain.paint.pbisec;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.ValidatablePaintCommand;
@@ -25,21 +25,21 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  * @author OUCHI Koji
  *
  */
-public class AngleSnapPointsSetterCommand extends ValidatablePaintCommand {
+public class PerpendicularBisectorSnapPointsSetterCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
-	private final AngleSnapPointFactory snapPointFactory;
 
-	public AngleSnapPointsSetterCommand(final PaintContext context, final AngleSnapPointFactory snapPointFactory) {
+	public PerpendicularBisectorSnapPointsSetterCommand(final PaintContext context) {
 		this.context = context;
-		this.snapPointFactory = snapPointFactory;
 	}
 
 	@Override
 	public void execute() {
-		final int correctVertexCount = 1;
+		final int correctVertexCount = 2;
 		final int correctLineCount = 0;
 		validateCounts(context, correctVertexCount, correctLineCount);
 
+		var snapPointFactory = new PerpendicularBisectorSnapPointFactory();
 		context.setSnapPoints(snapPointFactory.createSnapPoints(context));
 	}
+
 }

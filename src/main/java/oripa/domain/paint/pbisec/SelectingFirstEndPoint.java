@@ -20,38 +20,43 @@ package oripa.domain.paint.pbisec;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.ValidatablePaintCommand;
+import oripa.domain.paint.core.AbstractActionState;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class PerpendicularBisectorAdderCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+public class SelectingFirstEndPoint extends AbstractActionState {
 
-	public PerpendicularBisectorAdderCommand(final PaintContext context) {
-		this.context = context;
+	@Override
+	protected void initialize() {
+		setPreviousClass(SelectingSecondVertexForBisector.class);
+		setNextClass(SelectingSecondEndPoint.class);
 	}
 
 	@Override
-	public void execute() {
-		final int correctVertexCount = 2;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+	protected boolean onAct(final PaintContext context, final Vector2d currentPoint, final boolean doSpecial) {
+		var picked = context.getCandidateVertexToPick();
 
-		Vector2d p0, p1;
-		p0 = context.getVertex(0);
-		p1 = context.getVertex(1);
+		if (picked == null) {
+			return false;
+		}
 
-		context.creasePatternUndo().pushUndoInfo();
+		context.pushVertex(picked);
 
-		Painter painter = context.getPainter();
-		painter.addPBisector(
-				p0, p1, context.getPaperDomain(), context.getLineTypeOfNewLines());
+		return true;
+	}
 
-		context.clear(false);
+	@Override
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
+
+	}
+
+	@Override
+	protected void undoAction(final PaintContext context) {
+		context.popVertex();
+		context.getSnapPoints().clear();
 	}
 
 }

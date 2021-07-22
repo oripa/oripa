@@ -20,13 +20,11 @@ package oripa.domain.paint.angle;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
-import oripa.geom.GeomUtil;
+import oripa.domain.paint.core.SnapPointFactory;
 import oripa.geom.Segment;
 
 /**
@@ -48,21 +46,25 @@ class AngleSnapPointFactory {
 			var line = new Segment(sp.x, sp.y,
 					sp.x + dx, sp.y + dy);
 
-			// snap on cross points of angle line and creases.
-			crossPoints.addAll(
-					context.getCreasePattern().stream()
-							.map(crease -> GeomUtil.getCrossPoint(line, crease))
-							.filter(Objects::nonNull)
-							.collect(Collectors.toList()));
+			var snapPointFactory = new SnapPointFactory();
 
-			// snap on end points of overlapping creases.
-			context.getCreasePattern().stream()
-					.filter(crease -> GeomUtil.isLineSegmentsOverlap(
-							line.getP0(), line.getP1(), crease.getP0(), crease.getP1()))
-					.forEach(crease -> {
-						crossPoints.add(crease.getP0());
-						crossPoints.add(crease.getP1());
-					});
+			crossPoints.addAll(snapPointFactory.createSnapPoints(context, line));
+
+//			// snap on cross points of angle line and creases.
+//			crossPoints.addAll(
+//					context.getCreasePattern().stream()
+//							.map(crease -> GeomUtil.getCrossPoint(line, crease))
+//							.filter(Objects::nonNull)
+//							.collect(Collectors.toList()));
+//
+//			// snap on end points of overlapping creases.
+//			context.getCreasePattern().stream()
+//					.filter(crease -> GeomUtil.isLineSegmentsOverlap(
+//							line.getP0(), line.getP1(), crease.getP0(), crease.getP1()))
+//					.forEach(crease -> {
+//						crossPoints.add(crease.getP0());
+//						crossPoints.add(crease.getP1());
+//					});
 		}
 
 		return crossPoints;
