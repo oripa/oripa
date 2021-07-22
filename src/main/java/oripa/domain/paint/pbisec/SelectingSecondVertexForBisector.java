@@ -14,7 +14,9 @@ public class SelectingSecondVertexForBisector extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		Command command = new PerpendicularBisectorSnapPointsSetterCommand(context);
+		var snapPointFactory = new PerpendicularBisectorSnapPointFactory();
+
+		Command command = new PerpendicularBisectorSnapPointsSetterCommand(context, snapPointFactory);
 		command.execute();
 	}
 

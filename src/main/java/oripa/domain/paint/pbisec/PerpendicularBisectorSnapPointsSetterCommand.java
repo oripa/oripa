@@ -27,9 +27,12 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  */
 public class PerpendicularBisectorSnapPointsSetterCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
+	private final PerpendicularBisectorSnapPointFactory snapPointFactory;
 
-	public PerpendicularBisectorSnapPointsSetterCommand(final PaintContext context) {
+	public PerpendicularBisectorSnapPointsSetterCommand(final PaintContext context,
+			final PerpendicularBisectorSnapPointFactory snapPointFactory) {
 		this.context = context;
+		this.snapPointFactory = snapPointFactory;
 	}
 
 	@Override
@@ -38,7 +41,6 @@ public class PerpendicularBisectorSnapPointsSetterCommand extends ValidatablePai
 		final int correctLineCount = 0;
 		validateCounts(context, correctVertexCount, correctLineCount);
 
-		var snapPointFactory = new PerpendicularBisectorSnapPointFactory();
 		context.setSnapPoints(snapPointFactory.createSnapPoints(context));
 	}
 
