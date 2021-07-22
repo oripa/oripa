@@ -13,8 +13,8 @@ public class PerpendicularBisectorAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public void destroy(final PaintContext context) {
-		super.destroy(context);
+	protected void recoverImpl(final PaintContext context) {
+		super.recoverImpl(context);
 		setActionState(new SelectingFirstVertexForBisector());
 	}
 
