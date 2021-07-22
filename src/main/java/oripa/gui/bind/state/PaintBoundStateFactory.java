@@ -212,7 +212,7 @@ public class PaintBoundStateFactory {
 
 		case StringID.PERPENDICULAR_BISECTOR_ID:
 			return createState(
-					stateFactory, setterFactory, new TwoPointBisectorAction(), changeHint, null);
+					stateFactory, setterFactory, new PerpendicularBisectorAction(), changeHint, null);
 
 		case StringID.ANGLE_SNAP_ID:
 			LocalPaintBoundStateFactory angleSnapFactory = new LocalPaintBoundStateFactory(

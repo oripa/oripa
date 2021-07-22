@@ -6,9 +6,9 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.pbisec.SelectingFirstVertexForBisector;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 
-public class TwoPointBisectorAction extends AbstractGraphicMouseAction {
+public class PerpendicularBisectorAction extends AbstractGraphicMouseAction {
 
-	public TwoPointBisectorAction() {
+	public PerpendicularBisectorAction() {
 		setActionState(new SelectingFirstVertexForBisector());
 	}
 
@@ -39,13 +39,5 @@ public class TwoPointBisectorAction extends AbstractGraphicMouseAction {
 
 		super.onDraw(drawer, viewContext, paintContext);
 		drawPickCandidateVertex(drawer, viewContext, paintContext);
-	}
-
-	private void drawSnapPoints(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
-		drawer.selectAssistLineColor();
-
-		paintContext.getSnapPoints()
-				.forEach(p -> drawVertex(drawer, viewContext, paintContext, p));
 	}
 }

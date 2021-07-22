@@ -72,13 +72,4 @@ public class AngleSnapAction extends AbstractGraphicMouseAction {
 		drawTemporaryLine(drawer, viewContext, paintContext);
 		drawPickCandidateVertex(drawer, viewContext, paintContext);
 	}
-
-	private void drawSnapPoints(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
-		drawer.selectAssistLineColor();
-
-		paintContext.getSnapPoints()
-				.forEach(p -> drawVertex(drawer, viewContext, paintContext, p));
-	}
-
 }
