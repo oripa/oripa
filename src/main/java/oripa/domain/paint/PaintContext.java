@@ -20,22 +20,22 @@ public interface PaintContext extends CreasePatternHolder {
 	// Properties used by action state
 	// =================================================================================
 
-	// ---------------------------------------------------------------
-	// Mouse position
-
-	/**
-	 *
-	 * @return the point of mouse on screen
-	 */
-	public abstract Vector2d getLogicalMousePoint();
-
-	/**
-	 *
-	 * @param logicalPoint
-	 *            set the point of mouse on screen
-	 */
-	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
-
+//	// ---------------------------------------------------------------
+//	// Mouse position
+//
+//	/**
+//	 *
+//	 * @return the point of mouse on screen
+//	 */
+//	public abstract Vector2d getLogicalMousePoint();
+//
+//	/**
+//	 *
+//	 * @param logicalPoint
+//	 *            set the point of mouse on screen
+//	 */
+//	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
+//
 	// ---------------------------------------------------------------
 	// State of input instruction
 

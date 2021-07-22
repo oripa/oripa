@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import javax.vecmath.Vector2d;
+
 import oripa.domain.paint.PaintContext;
 
 /**
@@ -28,6 +30,21 @@ public interface CreasePatternViewContext {
 	// =================================================================================
 	// Properties not used by action state
 	// =================================================================================
+	// ---------------------------------------------------------------
+	// Mouse position
+
+	/**
+	 *
+	 * @return the point of mouse on screen
+	 */
+	public abstract Vector2d getLogicalMousePoint();
+
+	/**
+	 *
+	 * @param logicalPoint
+	 *            set the point of mouse on screen
+	 */
+	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
 
 	// ---------------------------------------------------------------
 	// View-related things

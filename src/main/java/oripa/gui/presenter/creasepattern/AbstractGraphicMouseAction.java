@@ -86,7 +86,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	public GraphicMouseAction onLeftClick(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		var clickPoint = paintContext.getLogicalMousePoint();
+		var clickPoint = viewContext.getLogicalMousePoint();
 
 		doAction(paintContext, clickPoint, differentAction);
 		return this;
@@ -145,9 +145,9 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 			final boolean differentAction) {
 		Vector2d v;
 		if (differentAction) {
-			v = NearestItemFinder.pickVertexAlongLine(paintContext);
+			v = NearestItemFinder.pickVertexAlongLine(viewContext, paintContext);
 		} else {
-			v = NearestItemFinder.pickVertex(paintContext);
+			v = NearestItemFinder.pickVertex(viewContext, paintContext);
 		}
 		paintContext.setCandidateVertexToPick(v);
 	}
@@ -155,8 +155,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	protected final void setCandidateLineOnMove(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		paintContext.setCandidateLineToPick(
-				NearestItemFinder.pickLine(
-						paintContext));
+				NearestItemFinder.pickLine(viewContext, paintContext));
 	}
 
 	@Override
@@ -273,7 +272,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 				paintContext.getScale(), viewContext.isZeroLineWidth());
 
 		drawLine(drawer, picked,
-				NearestItemFinder.getCandidateVertexOrMousePoint(paintContext));
+				NearestItemFinder.getCandidateVertexOrMousePoint(viewContext, paintContext));
 
 	}
 

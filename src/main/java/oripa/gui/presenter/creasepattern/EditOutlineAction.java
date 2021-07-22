@@ -50,7 +50,7 @@ public class EditOutlineAction extends AbstractGraphicMouseAction {
 
 			drawTempOutlines(drawer, outlinevertices);
 
-			var cv = NearestItemFinder.getCandidateVertexOrMousePoint(paintContext);
+			var cv = NearestItemFinder.getCandidateVertexOrMousePoint(viewContext, paintContext);
 			drawer.drawLine(outlinevertices.get(0), cv);
 			drawer.drawLine(outlinevertices.get(outlineVnum - 1), cv);
 		}

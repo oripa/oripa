@@ -46,7 +46,7 @@ public class NearestVertexFinder {
 		return nearestPoint.point;
 	}
 
-	private static NearestPoint findNearestVertexFromLines(
+	public static NearestPoint findNearestVertexFromLines(
 			final Vector2d p, final Collection<OriLine> lines) {
 
 		NearestPoint minPosition = new NearestPoint();
@@ -90,11 +90,12 @@ public class NearestVertexFinder {
 	 * @return nearestPoint in the limit. null if there are no such vertex.
 	 */
 	public static NearestPoint findAround(
+			final Vector2d mousePoint,
 			final PaintContext paintContext,
 			final double distance) {
 		NearestPoint nearestPosition = new NearestPoint();
 
-		var currentPoint = paintContext.getLogicalMousePoint();
+		var currentPoint = mousePoint;
 
 		Collection<Collection<Vector2d>> vertices = paintContext.getCreasePattern().getVerticesInArea(
 				currentPoint.x, currentPoint.y, distance);
@@ -124,17 +125,6 @@ public class NearestVertexFinder {
 //					", scaled limit = " + distance);
 
 		}
-
-		return nearestPosition;
-	}
-
-	public static NearestPoint findFromPickedLines(
-			final PaintContext paintContext) {
-		NearestPoint nearestPosition;
-
-		var currentPoint = paintContext.getLogicalMousePoint();
-		nearestPosition = findNearestVertexFromLines(
-				currentPoint, paintContext.getPickedLines());
 
 		return nearestPosition;
 	}

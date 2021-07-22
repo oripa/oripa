@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import javax.vecmath.Vector2d;
+
 import oripa.domain.paint.PaintContext;
 import oripa.gui.view.main.InitialVisibilities;
 
@@ -29,6 +31,8 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 
 	private final PaintContext paintContext;
 
+	private Vector2d logicalPoint = new Vector2d();
+
 	private boolean gridVisible = InitialVisibilities.GRID;
 
 	private boolean vertexVisible = InitialVisibilities.VERTEX;
@@ -39,6 +43,16 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 
 	public CreasePatternViewContextImpl(final PaintContext paintContext) {
 		this.paintContext = paintContext;
+	}
+
+	@Override
+	public void setLogicalMousePoint(final Vector2d logicalPoint) {
+		this.logicalPoint = logicalPoint;
+	}
+
+	@Override
+	public Vector2d getLogicalMousePoint() {
+		return logicalPoint;
 	}
 
 	@Override

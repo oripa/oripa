@@ -59,13 +59,13 @@ public class PasteAction extends AbstractGraphicMouseAction {
 		Vector2d closeVertex = paintContext.getCandidateVertexToPick();
 
 		// to get the vertex which disappeared by cutting.
-		Vector2d closeVertexOfLines = NearestItemFinder.pickVertexFromPickedLines(paintContext);
+		Vector2d closeVertexOfLines = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
 
 		if (closeVertex == null) {
 			closeVertex = closeVertexOfLines;
 		}
 
-		var current = paintContext.getLogicalMousePoint();
+		var current = viewContext.getLogicalMousePoint();
 		if (closeVertex != null && closeVertexOfLines != null) {
 			// get the nearest to current
 			closeVertex = NearestVertexFinder.findNearestOf(
@@ -97,7 +97,7 @@ public class PasteAction extends AbstractGraphicMouseAction {
 
 		var candidateVertex = paintContext.getCandidateVertexToPick();
 
-		Vector2d offset = candidateVertex == null ? factory.createOffset(origin, paintContext.getLogicalMousePoint())
+		Vector2d offset = candidateVertex == null ? factory.createOffset(origin, viewContext.getLogicalMousePoint())
 				: factory.createOffset(origin, candidateVertex);
 
 		drawer.selectAssistLineColor();

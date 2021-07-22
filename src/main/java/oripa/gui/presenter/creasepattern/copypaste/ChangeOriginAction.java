@@ -45,7 +45,7 @@ public class ChangeOriginAction extends AbstractGraphicMouseAction {
 	@Override
 	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		Vector2d closeVertex = NearestItemFinder.pickVertexFromPickedLines(paintContext);
+		Vector2d closeVertex = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
 		paintContext.setCandidateVertexToPick(closeVertex);
 
 		if (closeVertex != null) {

@@ -56,7 +56,7 @@ public class AngleSnapAction extends AbstractGraphicMouseAction {
 			return super.onMove(viewContext, paintContext, differentAction);
 		}
 
-		var crossPoint = NearestItemFinder.getNearestInAngleSnapCrossPoints(paintContext);
+		var crossPoint = NearestItemFinder.getNearestInAngleSnapCrossPoints(viewContext, paintContext);
 		paintContext.setCandidateVertexToPick(crossPoint);
 		return crossPoint;
 	}
