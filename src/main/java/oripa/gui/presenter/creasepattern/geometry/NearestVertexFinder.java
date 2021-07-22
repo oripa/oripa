@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContext;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -91,13 +91,14 @@ public class NearestVertexFinder {
 	 */
 	public static NearestPoint findAround(
 			final Vector2d mousePoint,
-			final PaintContext paintContext,
+			final CreasePattern creasePattern,
+			final Collection<Vector2d> grids,
 			final double distance) {
 		NearestPoint nearestPosition = new NearestPoint();
 
 		var currentPoint = mousePoint;
 
-		Collection<Collection<Vector2d>> vertices = paintContext.getCreasePattern().getVerticesInArea(
+		Collection<Collection<Vector2d>> vertices = creasePattern.getVerticesInArea(
 				currentPoint.x, currentPoint.y, distance);
 
 		for (Collection<Vector2d> locals : vertices) {
@@ -110,7 +111,7 @@ public class NearestVertexFinder {
 		}
 
 		NearestPoint nearestGrid = findNearestVertex(
-				currentPoint, paintContext.getGrids());
+				currentPoint, grids);
 
 		if (nearestGrid.distance < nearestPosition.distance) {
 			nearestPosition = nearestGrid;

@@ -22,7 +22,8 @@ public class NearestItemFinder {
 
 	public static Vector2d pickVertex(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
-		NearestPoint nearestPosition = NearestVertexFinder.findAround(viewContext.getLogicalMousePoint(), paintContext,
+		NearestPoint nearestPosition = NearestVertexFinder.findAround(
+				viewContext.getLogicalMousePoint(), paintContext.getCreasePattern(), paintContext.getGrids(),
 				scaleThreshold(viewContext));
 
 		if (nearestPosition != null) {
