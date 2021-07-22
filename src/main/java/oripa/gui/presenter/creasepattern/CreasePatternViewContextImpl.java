@@ -33,6 +33,8 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 
 	private Vector2d logicalPoint = new Vector2d();
 
+	private double scale;
+
 	private boolean gridVisible = InitialVisibilities.GRID;
 
 	private boolean vertexVisible = InitialVisibilities.VERTEX;
@@ -53,6 +55,23 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 	@Override
 	public Vector2d getLogicalMousePoint() {
 		return logicalPoint;
+	}
+
+	/**
+	 * @return scale
+	 */
+	@Override
+	public double getScale() {
+		return scale;
+	}
+
+	/**
+	 * @param scale
+	 *            Sets scale
+	 */
+	@Override
+	public void setScale(final double scale) {
+		this.scale = scale;
 	}
 
 	@Override

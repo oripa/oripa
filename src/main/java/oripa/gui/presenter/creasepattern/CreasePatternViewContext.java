@@ -49,6 +49,10 @@ public interface CreasePatternViewContext {
 	// ---------------------------------------------------------------
 	// View-related things
 
+	public abstract void setScale(double scale);
+
+	public abstract double getScale();
+
 	/**
 	 * Should update grid by calling {@link PaintContext#updateGrids()} if
 	 * {@code dispGrid} is true, and should clear grid if {@code dispGrid} is

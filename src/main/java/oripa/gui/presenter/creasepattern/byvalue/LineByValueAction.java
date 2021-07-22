@@ -44,7 +44,7 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 			drawer.selectColor(paintContext.getLineTypeOfNewLines());
 			drawer.selectStroke(
 					paintContext.getLineTypeOfNewLines(),
-					paintContext.getScale(), viewContext.isZeroLineWidth());
+					viewContext.getScale(), viewContext.isZeroLineWidth());
 
 			Vector2d dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle));
 			dir.scale(length);

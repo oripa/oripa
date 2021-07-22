@@ -16,14 +16,14 @@ import oripa.value.OriLine;
  */
 public class NearestItemFinder {
 
-	private static double scaleThreshold(final PaintContext context) {
+	private static double scaleThreshold(final CreasePatternViewContext context) {
 		return CalculationResource.CLOSE_THRESHOLD / context.getScale();
 	}
 
 	public static Vector2d pickVertex(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
 		NearestPoint nearestPosition = NearestVertexFinder.findAround(viewContext.getLogicalMousePoint(), paintContext,
-				scaleThreshold(paintContext));
+				scaleThreshold(viewContext));
 
 		if (nearestPosition != null) {
 			return new Vector2d(nearestPosition.point);
@@ -57,7 +57,7 @@ public class NearestItemFinder {
 				viewContext.getLogicalMousePoint(),
 				paintContext.getPickedLines());
 
-		if (nearestPosition.distance < scaleThreshold(paintContext)) {
+		if (nearestPosition.distance < scaleThreshold(viewContext)) {
 			return nearestPosition.point;
 		}
 
@@ -82,7 +82,7 @@ public class NearestItemFinder {
 			}
 		}
 
-		if (minDistance < scaleThreshold(paintContext)) {
+		if (minDistance < scaleThreshold(viewContext)) {
 			return bestLine;
 		} else {
 			return null;

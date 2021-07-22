@@ -84,7 +84,7 @@ public abstract class RectangularSelectableAction extends AbstractGraphicMouseAc
 		super.onDraw(drawer, viewContext, paintContext);
 
 		if (startPoint != null && draggingPoint != null) {
-			drawer.selectAreaSelectionStroke(paintContext.getScale());
+			drawer.selectAreaSelectionStroke(viewContext.getScale());
 			drawer.selectAreaSelectionColor();
 
 			drawer.drawRectangle(startPoint, draggingPoint);

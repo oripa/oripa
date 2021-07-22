@@ -189,7 +189,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		for (OriLine line : paintContext.getPickedLines()) {
 			drawer.selectSelectedItemColor();
 			drawer.selectSelectedLineStroke(
-					paintContext.getScale(), viewContext.isZeroLineWidth());
+					viewContext.getScale(), viewContext.isZeroLineWidth());
 
 			drawLine(drawer, line);
 		}
@@ -213,7 +213,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	protected void drawVertex(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext,
 			final Vector2d vertex) {
-		double scale = paintContext.getScale();
+		double scale = viewContext.getScale();
 		drawer.selectMouseActionVertexSize(scale);
 
 		drawer.drawVertex(vertex);
@@ -243,7 +243,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		if (candidate != null) {
 			drawer.selectCandidateItemColor();
 			drawer.selectCandidateLineStroke(
-					paintContext.getScale(), viewContext.isZeroLineWidth());
+					viewContext.getScale(), viewContext.isZeroLineWidth());
 
 			drawLine(drawer, candidate);
 		}
@@ -269,7 +269,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		drawer.selectColor(paintContext.getLineTypeOfNewLines());
 
 		drawer.selectStroke(paintContext.getLineTypeOfNewLines(),
-				paintContext.getScale(), viewContext.isZeroLineWidth());
+				viewContext.getScale(), viewContext.isZeroLineWidth());
 
 		drawLine(drawer, picked,
 				NearestItemFinder.getCandidateVertexOrMousePoint(viewContext, paintContext));

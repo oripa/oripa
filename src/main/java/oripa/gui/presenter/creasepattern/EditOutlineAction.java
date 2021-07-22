@@ -46,7 +46,7 @@ public class EditOutlineAction extends AbstractGraphicMouseAction {
 
 		if (outlineVnum != 0) {
 			drawer.selectEditingOutlineColor();
-			drawer.selectEditingOutlineStroke(paintContext.getScale());
+			drawer.selectEditingOutlineStroke(viewContext.getScale());
 
 			drawTempOutlines(drawer, outlinevertices);
 

@@ -20,22 +20,6 @@ public interface PaintContext extends CreasePatternHolder {
 	// Properties used by action state
 	// =================================================================================
 
-//	// ---------------------------------------------------------------
-//	// Mouse position
-//
-//	/**
-//	 *
-//	 * @return the point of mouse on screen
-//	 */
-//	public abstract Vector2d getLogicalMousePoint();
-//
-//	/**
-//	 *
-//	 * @param logicalPoint
-//	 *            set the point of mouse on screen
-//	 */
-//	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
-//
 	// ---------------------------------------------------------------
 	// State of input instruction
 
@@ -54,10 +38,6 @@ public interface PaintContext extends CreasePatternHolder {
 	 * notify the painting algorithm that the user finished pasting.
 	 */
 	public abstract void finishPasting();
-
-	public abstract void setScale(double scale);
-
-	public abstract double getScale();
 
 	// ---------------------------------------------------------------
 	// Values Picked by User
