@@ -56,16 +56,16 @@ public class CreasePatternGraphicDrawer {
 		if (viewContext.isGridVisible()) {
 			drawGridLines(drawer, paintContext.getGridDivNum(), creasePattern.getPaperSize(),
 					paintContext.getPaperDomain(),
-					paintContext.getScale(), viewContext.isZeroLineWidth());
+					viewContext.getScale(), viewContext.isZeroLineWidth());
 		}
 
-		drawLines(drawer, creasePattern, paintContext.getScale(), viewContext.isZeroLineWidth(),
+		drawLines(drawer, creasePattern, viewContext.getScale(), viewContext.isZeroLineWidth(),
 				viewContext.isMVLineVisible(),
 				viewContext.isAuxLineVisible());
 
 		// Drawing of the vertices
 		if (viewContext.isVertexVisible() || forceShowingVertex) {
-			drawVertices(drawer, creasePattern, paintContext.getScale(), viewContext.isMVLineVisible(),
+			drawVertices(drawer, creasePattern, viewContext.getScale(), viewContext.isMVLineVisible(),
 					viewContext.isAuxLineVisible());
 		}
 	}

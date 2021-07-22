@@ -1,10 +1,10 @@
-package oripa.domain.paint.geometry;
+package oripa.gui.presenter.creasepattern.geometry;
 
 import java.util.Collection;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContext;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -46,7 +46,7 @@ public class NearestVertexFinder {
 		return nearestPoint.point;
 	}
 
-	private static NearestPoint findNearestVertexFromLines(
+	public static NearestPoint findNearestVertexFromLines(
 			final Vector2d p, final Collection<OriLine> lines) {
 
 		NearestPoint minPosition = new NearestPoint();
@@ -90,13 +90,15 @@ public class NearestVertexFinder {
 	 * @return nearestPoint in the limit. null if there are no such vertex.
 	 */
 	public static NearestPoint findAround(
-			final PaintContext paintContext,
+			final Vector2d mousePoint,
+			final CreasePattern creasePattern,
+			final Collection<Vector2d> grids,
 			final double distance) {
 		NearestPoint nearestPosition = new NearestPoint();
 
-		var currentPoint = paintContext.getLogicalMousePoint();
+		var currentPoint = mousePoint;
 
-		Collection<Collection<Vector2d>> vertices = paintContext.getCreasePattern().getVerticesInArea(
+		Collection<Collection<Vector2d>> vertices = creasePattern.getVerticesInArea(
 				currentPoint.x, currentPoint.y, distance);
 
 		for (Collection<Vector2d> locals : vertices) {
@@ -109,7 +111,7 @@ public class NearestVertexFinder {
 		}
 
 		NearestPoint nearestGrid = findNearestVertex(
-				currentPoint, paintContext.getGrids());
+				currentPoint, grids);
 
 		if (nearestGrid.distance < nearestPosition.distance) {
 			nearestPosition = nearestGrid;
@@ -124,17 +126,6 @@ public class NearestVertexFinder {
 //					", scaled limit = " + distance);
 
 		}
-
-		return nearestPosition;
-	}
-
-	public static NearestPoint findFromPickedLines(
-			final PaintContext paintContext) {
-		NearestPoint nearestPosition;
-
-		var currentPoint = paintContext.getLogicalMousePoint();
-		nearestPosition = findNearestVertexFromLines(
-				currentPoint, paintContext.getPickedLines());
 
 		return nearestPosition;
 	}

@@ -23,10 +23,6 @@ class PaintContextImpl implements PaintContext {
 	private final LinkedList<OriLine> pickedLines = new LinkedList<>();
 	private boolean isPasting = false;
 
-	private Vector2d logicalPoint = new Vector2d();
-
-	private double scale;
-
 	private Vector2d candidateVertexToPick = new Vector2d();
 	private OriLine candidateLineToPick = new OriLine();
 
@@ -44,16 +40,6 @@ class PaintContextImpl implements PaintContext {
 	private Collection<Vector2d> angleSnapCrossPoints = new ArrayList<Vector2d>();
 
 	public PaintContextImpl() {
-	}
-
-	@Override
-	public void setLogicalMousePoint(final Vector2d logicalPoint) {
-		this.logicalPoint = logicalPoint;
-	}
-
-	@Override
-	public Vector2d getLogicalMousePoint() {
-		return logicalPoint;
 	}
 
 	/*
@@ -84,23 +70,6 @@ class PaintContextImpl implements PaintContext {
 	@Override
 	public void finishPasting() {
 		this.isPasting = false;
-	}
-
-	/**
-	 * @return scale
-	 */
-	@Override
-	public double getScale() {
-		return scale;
-	}
-
-	/**
-	 * @param scale
-	 *            Sets scale
-	 */
-	@Override
-	public void setScale(final double scale) {
-		this.scale = scale;
 	}
 
 	/*

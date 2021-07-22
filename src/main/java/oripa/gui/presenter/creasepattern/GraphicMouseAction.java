@@ -36,10 +36,9 @@ public interface GraphicMouseAction {
 	/**
 	 * performs action.
 	 *
-	 * @param context
-	 * @param affine
+	 * @param viewContext
+	 * @param paintContext
 	 * @param differentAction
-	 * @param screenUpdater
 	 *
 	 * @return Next mouse action.
 	 */
@@ -51,7 +50,6 @@ public interface GraphicMouseAction {
 	 * @param context
 	 * @param point
 	 * @param differntAction
-	 * @param screenUpdater
 	 */
 	public abstract void doAction(PaintContext context, Vector2d point,
 			boolean differntAction);
@@ -59,7 +57,8 @@ public interface GraphicMouseAction {
 	/**
 	 * undo action.
 	 *
-	 * @param context
+	 * @param viewContext
+	 * @param paintContext
 	 * @param differentAction
 	 */
 	public abstract void onRightClick(CreasePatternViewContext viewContext, PaintContext paintContext,
@@ -71,9 +70,11 @@ public interface GraphicMouseAction {
 
 	/**
 	 * searches a vertex and a line close enough to the mouse cursor. The result
-	 * is stored into context.pickCandidateL(and V).
+	 * is stored into candidateVertexToPick and candidateLineToPick properties
+	 * of paintContext.
 	 *
-	 * @param context
+	 * @param viewContext
+	 * @param paintContext
 	 * @param differentAction
 	 * @return close vertex. null if not found.
 	 */
@@ -93,8 +94,9 @@ public interface GraphicMouseAction {
 	 * draws selected lines and selected vertices as selected state. Override
 	 * for more drawing.
 	 *
-	 * @param g2d
-	 * @param context
+	 * @param drawer
+	 * @param viewContext
+	 * @param paintContext
 	 */
 	public abstract void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext);

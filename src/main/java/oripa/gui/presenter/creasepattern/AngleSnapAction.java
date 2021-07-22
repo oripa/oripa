@@ -22,7 +22,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.angle.SelectingStartPoint;
-import oripa.domain.paint.geometry.NearestItemFinder;
+import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 
 /**
  * @author OUCHI Koji
@@ -56,7 +56,7 @@ public class AngleSnapAction extends AbstractGraphicMouseAction {
 			return super.onMove(viewContext, paintContext, differentAction);
 		}
 
-		var crossPoint = NearestItemFinder.getNearestInAngleSnapCrossPoints(paintContext);
+		var crossPoint = NearestItemFinder.getNearestInAngleSnapCrossPoints(viewContext, paintContext);
 		paintContext.setCandidateVertexToPick(crossPoint);
 		return crossPoint;
 	}

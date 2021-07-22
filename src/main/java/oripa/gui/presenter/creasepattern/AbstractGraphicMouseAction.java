@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.paint.ActionState;
 import oripa.domain.paint.BasicUndo;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.geometry.NearestItemFinder;
+import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
@@ -68,8 +68,8 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	}
 
 	/**
-	 * calls {@link #recoverImpl(PaintContext)}, and if
-	 * {@link #needSelect()} returns false, then calls
+	 * calls {@link #recoverImpl(PaintContext)}, and if {@link #needSelect()}
+	 * returns false, then calls
 	 * {@code context.getPainter().resetSelectedOriLines()}.
 	 */
 	@Override
@@ -86,7 +86,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	public GraphicMouseAction onLeftClick(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		var clickPoint = paintContext.getLogicalMousePoint();
+		var clickPoint = viewContext.getLogicalMousePoint();
 
 		doAction(paintContext, clickPoint, differentAction);
 		return this;
@@ -119,13 +119,6 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		state = BasicUndo.undo(state, context);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.GraphicMouseActionInterface#redo(oripa.domain.paint.
-	 * PaintContextInterface)
-	 */
 	@Override
 	public void redo(final PaintContext context) {
 		if (!context.creasePatternUndo().canRedo()) {
@@ -150,16 +143,19 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	protected final void setCandidateVertexOnMove(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		paintContext.setCandidateVertexToPick(
-				NearestItemFinder.pickVertex(
-						paintContext, differentAction));
+		Vector2d v;
+		if (differentAction) {
+			v = NearestItemFinder.pickVertexAlongLine(viewContext, paintContext);
+		} else {
+			v = NearestItemFinder.pickVertex(viewContext, paintContext);
+		}
+		paintContext.setCandidateVertexToPick(v);
 	}
 
 	protected final void setCandidateLineOnMove(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		paintContext.setCandidateLineToPick(
-				NearestItemFinder.pickLine(
-						paintContext));
+				NearestItemFinder.pickLine(viewContext, paintContext));
 	}
 
 	@Override
@@ -188,20 +184,12 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 
 	}
 
-//	protected ElementSelector getElementSelector() {
-//		return selector;
-//	}
-//
-//	protected GraphicItemConverter getGraphicItemConverter() {
-//		return converter;
-//	}
-
 	private void drawPickedLines(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		for (OriLine line : paintContext.getPickedLines()) {
 			drawer.selectSelectedItemColor();
 			drawer.selectSelectedLineStroke(
-					paintContext.getScale(), viewContext.isZeroLineWidth());
+					viewContext.getScale(), viewContext.isZeroLineWidth());
 
 			drawLine(drawer, line);
 		}
@@ -225,7 +213,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	protected void drawVertex(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext,
 			final Vector2d vertex) {
-		double scale = paintContext.getScale();
+		double scale = viewContext.getScale();
 		drawer.selectMouseActionVertexSize(scale);
 
 		drawer.drawVertex(vertex);
@@ -255,7 +243,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		if (candidate != null) {
 			drawer.selectCandidateItemColor();
 			drawer.selectCandidateLineStroke(
-					paintContext.getScale(), viewContext.isZeroLineWidth());
+					viewContext.getScale(), viewContext.isZeroLineWidth());
 
 			drawLine(drawer, candidate);
 		}
@@ -281,10 +269,10 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		drawer.selectColor(paintContext.getLineTypeOfNewLines());
 
 		drawer.selectStroke(paintContext.getLineTypeOfNewLines(),
-				paintContext.getScale(), viewContext.isZeroLineWidth());
+				viewContext.getScale(), viewContext.isZeroLineWidth());
 
 		drawLine(drawer, picked,
-				NearestItemFinder.getCandidateVertex(paintContext, true));
+				NearestItemFinder.getCandidateVertexOrMousePoint(viewContext, paintContext));
 
 	}
 

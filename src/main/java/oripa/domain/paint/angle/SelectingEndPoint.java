@@ -45,8 +45,6 @@ public class SelectingEndPoint extends AbstractActionState {
 	@Override
 	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean doSpecial) {
-
-//		var picked = NearestItemFinder.getNearestInAngleSnapCrossPoints(context);
 		var picked = context.getCandidateVertexToPick();
 
 		if (picked == null) {

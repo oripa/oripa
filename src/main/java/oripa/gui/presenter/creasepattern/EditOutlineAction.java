@@ -12,6 +12,7 @@ import oripa.domain.paint.outline.IsOnTempOutlineLoop;
 import oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop;
 import oripa.domain.paint.outline.SelectingVertexForOutline;
 import oripa.domain.paint.util.PairLoop;
+import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 
 public class EditOutlineAction extends AbstractGraphicMouseAction {
 
@@ -21,11 +22,7 @@ public class EditOutlineAction extends AbstractGraphicMouseAction {
 		setEditMode(EditMode.OTHER);
 	}
 
-	private void drawTempOutlines(final ObjectGraphicDrawer drawer, final Collection<Vector2d> outlineVertices,
-			final double scale) {
-		drawer.selectEditingOutlineColor();
-		drawer.selectEditingOutlineStroke(scale);
-
+	private void drawTempOutlines(final ObjectGraphicDrawer drawer, final Collection<Vector2d> outlineVertices) {
 		if (outlineVertices.size() > 1) {
 			PairLoop.iterateWithCount(
 					outlineVertices, outlineVertices.size() - 1, (p0, p1) -> {
@@ -48,13 +45,12 @@ public class EditOutlineAction extends AbstractGraphicMouseAction {
 		int outlineVnum = outlinevertices.size();
 
 		if (outlineVnum != 0) {
+			drawer.selectEditingOutlineColor();
+			drawer.selectEditingOutlineStroke(viewContext.getScale());
 
-			drawTempOutlines(drawer, outlinevertices, paintContext.getScale());
+			drawTempOutlines(drawer, outlinevertices);
 
-			Vector2d cv = (paintContext.getCandidateVertexToPick() == null)
-					? new Vector2d(paintContext.getLogicalMousePoint().getX(),
-							paintContext.getLogicalMousePoint().getY())
-					: paintContext.getCandidateVertexToPick();
+			var cv = NearestItemFinder.getCandidateVertexOrMousePoint(viewContext, paintContext);
 			drawer.drawLine(outlinevertices.get(0), cv);
 			drawer.drawLine(outlinevertices.get(outlineVnum - 1), cv);
 		}
