@@ -20,6 +20,10 @@ public class NearestItemFinder {
 		return CalculationResource.CLOSE_THRESHOLD / context.getScale();
 	}
 
+	/**
+	 * Returns a vertex sufficiently close to mouse point among the vertices of
+	 * crease pattern. Returns {@code null} if no such vertex exists.
+	 */
 	public static Vector2d pickVertex(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
 		NearestPoint nearestPosition = NearestVertexFinder.findAround(
@@ -33,6 +37,11 @@ public class NearestItemFinder {
 		return null;
 	}
 
+	/**
+	 * Returns a vertex sufficiently close to mouse point among the any points
+	 * on the lines of crease pattern. Returns {@code null} if no such vertex
+	 * exists.
+	 */
 	public static Vector2d pickVertexAlongLine(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		var picked = pickVertex(viewContext, paintContext);
@@ -52,6 +61,10 @@ public class NearestItemFinder {
 		return vertexAlongLine;
 	}
 
+	/**
+	 * Returns a vertex sufficiently close to mouse point among end points of
+	 * picked lines. Returns {@code null} if no such vertex exists.
+	 */
 	public static Vector2d pickVertexFromPickedLines(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		NearestPoint nearestPosition = NearestVertexFinder.findNearestVertexFromLines(
@@ -66,7 +79,8 @@ public class NearestItemFinder {
 	}
 
 	/**
-	 * Returns the OriLine sufficiently close to mouse point.
+	 * Returns a OriLine sufficiently close to mouse point. Returns {@code null}
+	 * if no such line exists.
 	 */
 	public static OriLine pickLine(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 		var lines = paintContext.getCreasePattern();
@@ -92,8 +106,8 @@ public class NearestItemFinder {
 
 	/**
 	 * If {@code paintContext} has the latest candidate vertex to pick, this
-	 * method return it. Otherwise, mouse point coordinate in the context is
-	 * returned.
+	 * method returns it. Otherwise, mouse point coordinate in
+	 * {@code viewContext} is returned.
 	 */
 	public static Vector2d getCandidateVertexOrMousePoint(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
