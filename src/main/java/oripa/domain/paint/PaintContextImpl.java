@@ -33,11 +33,7 @@ class PaintContextImpl implements PaintContext {
 	private int gridDivNum;
 	private ArrayList<Vector2d> gridPoints;
 
-	/*
-	 * TODO: Rename for more general usage. snapPoints? assistPoints? something
-	 * like that.
-	 */
-	private Collection<Vector2d> angleSnapCrossPoints = new ArrayList<Vector2d>();
+	private Collection<Vector2d> snapPoints = new ArrayList<Vector2d>();
 
 	public PaintContextImpl() {
 	}
@@ -90,7 +86,7 @@ class PaintContextImpl implements PaintContext {
 		candidateLineToPick = null;
 		candidateVertexToPick = null;
 
-		angleSnapCrossPoints.clear();
+		snapPoints.clear();
 	}
 
 	/*
@@ -351,8 +347,8 @@ class PaintContextImpl implements PaintContext {
 	 * util.Collection)
 	 */
 	@Override
-	public void setAngleSnapCrossPoints(final Collection<Vector2d> points) {
-		angleSnapCrossPoints = points;
+	public void setSnapPoints(final Collection<Vector2d> points) {
+		snapPoints = points;
 	}
 
 	/*
@@ -361,8 +357,8 @@ class PaintContextImpl implements PaintContext {
 	 * @see oripa.domain.paint.PaintContextInterface#getAngleSnapCrossPoints()
 	 */
 	@Override
-	public Collection<Vector2d> getAngleSnapCrossPoints() {
-		return angleSnapCrossPoints;
+	public Collection<Vector2d> getSnapPoints() {
+		return snapPoints;
 	}
 
 	@Override

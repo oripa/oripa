@@ -6,7 +6,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
-import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
 /**
@@ -191,27 +190,6 @@ public class Painter {
 		lineAdder.addLine(new OriLine(c, v0, lineType), creasePattern);
 		lineAdder.addLine(new OriLine(c, v1, lineType), creasePattern);
 		lineAdder.addLine(new OriLine(c, v2, lineType), creasePattern);
-	}
-
-	/**
-	 * add perpendicular bisector line between v0 and v1
-	 *
-	 * @param v0
-	 *            an end point of split line
-	 * @param v1
-	 *            an end point of split line
-	 * @param domain
-	 *            including the paper
-	 * @param lineType
-	 *            the type of the bisector line
-	 */
-	public void addPBisector(
-			final Vector2d v0, final Vector2d v1, final RectangleDomain domain,
-			final OriLine.Type lineType) {
-		OriLine bisector = bisectorFactory.createPerpendicularBisector(v0, v1,
-				domain, lineType);
-
-		lineAdder.addLine(bisector, creasePattern);
 	}
 
 	/**

@@ -18,9 +18,6 @@
  */
 package oripa.domain.paint.pbisec;
 
-import javax.vecmath.Vector2d;
-
-import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.ValidatablePaintCommand;
 
@@ -28,11 +25,14 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  * @author OUCHI Koji
  *
  */
-public class PerpendicularBisectorAdderCommand extends ValidatablePaintCommand {
+public class PerpendicularBisectorSnapPointsSetterCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
+	private final PerpendicularBisectorSnapPointFactory snapPointFactory;
 
-	public PerpendicularBisectorAdderCommand(final PaintContext context) {
+	public PerpendicularBisectorSnapPointsSetterCommand(final PaintContext context,
+			final PerpendicularBisectorSnapPointFactory snapPointFactory) {
 		this.context = context;
+		this.snapPointFactory = snapPointFactory;
 	}
 
 	@Override
@@ -41,17 +41,7 @@ public class PerpendicularBisectorAdderCommand extends ValidatablePaintCommand {
 		final int correctLineCount = 0;
 		validateCounts(context, correctVertexCount, correctLineCount);
 
-		Vector2d p0, p1;
-		p0 = context.getVertex(0);
-		p1 = context.getVertex(1);
-
-		context.creasePatternUndo().pushUndoInfo();
-
-		Painter painter = context.getPainter();
-		painter.addPBisector(
-				p0, p1, context.getPaperDomain(), context.getLineTypeOfNewLines());
-
-		context.clear(false);
+		context.setSnapPoints(snapPointFactory.createSnapPoints(context));
 	}
 
 }

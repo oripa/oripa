@@ -16,30 +16,47 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.angle;
+package oripa.domain.paint.pbisec;
+
+import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.ValidatablePaintCommand;
+import oripa.domain.paint.core.AbstractActionState;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AngleSnapPointsSetterCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final AngleSnapPointFactory snapPointFactory;
+public class SelectingFirstEndPoint extends AbstractActionState {
 
-	public AngleSnapPointsSetterCommand(final PaintContext context, final AngleSnapPointFactory snapPointFactory) {
-		this.context = context;
-		this.snapPointFactory = snapPointFactory;
+	@Override
+	protected void initialize() {
+		setPreviousClass(SelectingSecondVertexForBisector.class);
+		setNextClass(SelectingSecondEndPoint.class);
 	}
 
 	@Override
-	public void execute() {
-		final int correctVertexCount = 1;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+	protected boolean onAct(final PaintContext context, final Vector2d currentPoint, final boolean doSpecial) {
+		var picked = context.getCandidateVertexToPick();
 
-		context.setSnapPoints(snapPointFactory.createSnapPoints(context));
+		if (picked == null) {
+			return false;
+		}
+
+		context.pushVertex(picked);
+
+		return true;
 	}
+
+	@Override
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
+
+	}
+
+	@Override
+	protected void undoAction(final PaintContext context) {
+		context.popVertex();
+		context.getSnapPoints().clear();
+	}
+
 }

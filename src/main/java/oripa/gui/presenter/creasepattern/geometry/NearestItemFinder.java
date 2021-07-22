@@ -117,11 +117,11 @@ public class NearestItemFinder {
 		return candidate == null ? viewContext.getLogicalMousePoint() : candidate;
 	}
 
-	public static Vector2d getNearestInAngleSnapCrossPoints(final CreasePatternViewContext viewContext,
+	public static Vector2d getNearestInSnapPoints(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		return NearestVertexFinder.findNearestVertex(
 				viewContext.getLogicalMousePoint(),
-				paintContext.getAngleSnapCrossPoints()).point;
+				paintContext.getSnapPoints()).point;
 	}
 
 }

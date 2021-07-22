@@ -159,9 +159,9 @@ public interface PaintContext extends CreasePatternHolder {
 
 	public abstract AngleStep getAngleStep();
 
-	public abstract void setAngleSnapCrossPoints(Collection<Vector2d> points);
+	public abstract void setSnapPoints(Collection<Vector2d> points);
 
-	public abstract Collection<Vector2d> getAngleSnapCrossPoints();
+	public abstract Collection<Vector2d> getSnapPoints();
 
 	/**
 	 * sets division number of grid. should update grid points for

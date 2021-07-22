@@ -40,11 +40,6 @@ public class AngleSnapAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public void destroy(final PaintContext context) {
-		super.destroy(context);
-	}
-
-	@Override
 	protected void recoverImpl(final PaintContext context) {
 		setActionState(new SelectingStartPoint());
 	}
@@ -56,9 +51,9 @@ public class AngleSnapAction extends AbstractGraphicMouseAction {
 			return super.onMove(viewContext, paintContext, differentAction);
 		}
 
-		var crossPoint = NearestItemFinder.getNearestInAngleSnapCrossPoints(viewContext, paintContext);
-		paintContext.setCandidateVertexToPick(crossPoint);
-		return crossPoint;
+		var snapPoint = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
+		paintContext.setCandidateVertexToPick(snapPoint);
+		return snapPoint;
 	}
 
 	@Override
@@ -72,13 +67,4 @@ public class AngleSnapAction extends AbstractGraphicMouseAction {
 		drawTemporaryLine(drawer, viewContext, paintContext);
 		drawPickCandidateVertex(drawer, viewContext, paintContext);
 	}
-
-	private void drawSnapPoints(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
-		drawer.selectAssistLineColor();
-
-		paintContext.getAngleSnapCrossPoints()
-				.forEach(p -> drawVertex(drawer, viewContext, paintContext, p));
-	}
-
 }

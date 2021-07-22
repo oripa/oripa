@@ -6,20 +6,18 @@ import oripa.util.Command;
 
 public class SelectingSecondVertexForBisector extends PickingVertex {
 
-	public SelectingSecondVertexForBisector() {
-		super();
+	@Override
+	protected void initialize() {
+		setPreviousClass(SelectingFirstVertexForBisector.class);
+		setNextClass(SelectingFirstEndPoint.class);
 	}
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		Command command = new PerpendicularBisectorAdderCommand(context);
-		command.execute();
-	}
+		var snapPointFactory = new PerpendicularBisectorSnapPointFactory();
 
-	@Override
-	protected void initialize() {
-		setPreviousClass(SelectingFirstVertexForBisector.class);
-		setNextClass(SelectingFirstVertexForBisector.class);
+		Command command = new PerpendicularBisectorSnapPointsSetterCommand(context, snapPointFactory);
+		command.execute();
 	}
 
 }

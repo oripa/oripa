@@ -16,30 +16,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.angle;
+package oripa.domain.paint.pbisec;
 
+import java.util.Collection;
+
+import javax.vecmath.Vector2d;
+
+import oripa.domain.cptool.BisectorFactory;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.ValidatablePaintCommand;
+import oripa.domain.paint.core.SnapPointFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AngleSnapPointsSetterCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
-	private final AngleSnapPointFactory snapPointFactory;
+public class PerpendicularBisectorSnapPointFactory {
+	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
+		Vector2d p0, p1;
+		p0 = context.getVertex(0);
+		p1 = context.getVertex(1);
 
-	public AngleSnapPointsSetterCommand(final PaintContext context, final AngleSnapPointFactory snapPointFactory) {
-		this.context = context;
-		this.snapPointFactory = snapPointFactory;
-	}
+		var bisectorFactory = new BisectorFactory();
+		var pbisec = bisectorFactory.createPerpendicularBisector(p0, p1, context.getPaperDomain(),
+				context.getLineTypeOfNewLines());
 
-	@Override
-	public void execute() {
-		final int correctVertexCount = 1;
-		final int correctLineCount = 0;
-		validateCounts(context, correctVertexCount, correctLineCount);
+		var snapPointFactory = new SnapPointFactory();
 
-		context.setSnapPoints(snapPointFactory.createSnapPoints(context));
+		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(context, pbisec);
+
+		return snapPoints;
 	}
 }
