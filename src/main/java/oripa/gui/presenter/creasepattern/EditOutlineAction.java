@@ -7,12 +7,12 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.geometry.NearestItemFinder;
 import oripa.domain.paint.outline.CloseTempOutlineFactory;
 import oripa.domain.paint.outline.IsOnTempOutlineLoop;
 import oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop;
 import oripa.domain.paint.outline.SelectingVertexForOutline;
 import oripa.domain.paint.util.PairLoop;
+import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 
 public class EditOutlineAction extends AbstractGraphicMouseAction {
 

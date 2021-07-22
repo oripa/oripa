@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.paint.ActionState;
 import oripa.domain.paint.BasicUndo;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.geometry.NearestItemFinder;
+import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {

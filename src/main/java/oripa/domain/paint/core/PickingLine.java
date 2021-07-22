@@ -26,9 +26,6 @@ public abstract class PickingLine extends AbstractActionState {
 	@Override
 	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean doSpecial) {
-
-//		OriLine picked = NearestItemFinder.pickLine(
-//				context);
 		OriLine picked = context.getCandidateLineToPick();
 
 		if (picked == null) {

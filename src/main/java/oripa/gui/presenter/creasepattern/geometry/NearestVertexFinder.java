@@ -1,4 +1,4 @@
-package oripa.domain.paint.geometry;
+package oripa.gui.presenter.creasepattern.geometry;
 
 import java.util.Collection;
 

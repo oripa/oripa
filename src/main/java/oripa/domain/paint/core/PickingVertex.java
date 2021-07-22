@@ -25,10 +25,6 @@ public abstract class PickingVertex extends AbstractActionState {
 	@Override
 	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean freeSelection) {
-
-//		Vector2d picked = NearestItemFinder.pickVertex(
-//				context, freeSelection);
-
 		var picked = context.getCandidateVertexToPick();
 
 		if (picked == null) {
