@@ -302,9 +302,8 @@ public class Folder {
 			final double paperSize) {
 		var checked = new boolean[faces.size()][faces.size()];
 
-		for (int i = 0; i < faces.size(); i++) {
-			for (int he_i = 0; he_i < faces.get(i).halfedgeCount(); he_i++) {
-				var he = faces.get(i).getHalfedge(he_i);
+		for (var face : faces) {
+			for (var he : face.halfedgeIterable()) {
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;
