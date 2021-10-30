@@ -19,7 +19,11 @@
 package oripa.domain.fold;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.vecmath.Vector2d;
@@ -35,6 +39,7 @@ import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
+import oripa.domain.fold.subface.AnswerStack;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
@@ -49,6 +54,10 @@ public class Folder {
 	private List<SubFace> subFaces;
 
 	private final SubFacesFactory subFacesFactory;
+
+	private List<Integer>[][] faceOverlappingIndexIntersections; // of face
+																	// index
+																	// i and j
 
 	// helper object
 	private final FolderTool folderTool = new FolderTool();
@@ -110,6 +119,7 @@ public class Folder {
 			sub.sortFaceOverlapOrder(faces, overlapRelation);
 		}
 
+		faceOverlappingIndexIntersections = createfaceOverlappingIndexIntersections(faces, paperSize);
 		findAnswer(faces, overlapRelationList, 0, overlapRelation, true, paperSize);
 
 		overlapRelationList.setCurrentORmatIndex(0);
@@ -121,6 +131,52 @@ public class Folder {
 
 		origamiModel.setFolded(true);
 		return foldedModel;
+	}
+
+	private double eps(final double paperSize) {
+		return paperSize * 0.00001;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Integer>[][] createfaceOverlappingIndexIntersections(final List<OriFace> faces,
+			final double paperSize) {
+		List<Set<Integer>> indices = IntStream.range(0, faces.size())
+				.mapToObj(i -> new HashSet<Integer>())
+				.collect(Collectors.toList());
+
+		for (var face : faces) {
+			for (var other : faces) {
+				if (face.getFaceID() == other.getFaceID()) {
+					continue;
+				}
+				if (OriGeomUtil.isFaceOverlap(face, other, eps(paperSize))) {
+					indices.get(face.getFaceID()).add(Integer.valueOf(other.getFaceID()));
+				}
+			}
+		}
+
+		var indexIntersections = new List[faces.size()][faces.size()];
+		for (var face : faces) {
+			for (var other : faces) {
+				var index_i = face.getFaceID();
+				var index_j = other.getFaceID();
+
+				if (index_i == index_j) {
+					continue;
+				}
+
+				var facesOverlapping_i = indices.get(index_i);
+				var facesOverlapping_j = indices.get(index_j);
+
+				var intersection = facesOverlapping_i.stream()
+						.filter(index -> facesOverlapping_j.contains(index))
+						.collect(Collectors.toList());
+
+				indexIntersections[index_i][index_j] = intersection;
+			}
+		}
+
+		return indexIntersections;
 	}
 
 	/**
@@ -167,9 +223,15 @@ public class Folder {
 			return;
 		}
 
-		for (ArrayList<OriFace> answerStack : sub.answerStacks) {
+//		var answerStacks = sub.answerStacks;
+		var answerStacks = sub.answerStacks.stream()
+				.sorted(Comparator.comparing(AnswerStack::getFaiureCount, Comparator.reverseOrder()))
+				.collect(Collectors.toList());
+
+		for (AnswerStack<OriFace> answerStack : answerStacks) {
 			int size = answerStack.size();
 			if (!isCorrectStackOrder(answerStack, orMat)) {
+				answerStack.countFailure();
 				continue;
 			}
 			var passMat = Matrices.clone(orMat);
@@ -227,7 +289,7 @@ public class Folder {
 					continue;
 				}
 
-				var penetrates = IntStream.range(0, faces.size()).parallel()
+				var penetrates = faceOverlappingIndexIntersections[index_i][index_j].parallelStream()
 						.anyMatch(k -> {
 							var face_k = faces.get(k);
 							var index_k = face_k.getFaceID();
@@ -789,7 +851,7 @@ public class Folder {
 		for (int i = 0; i < size; i++) {
 			overlapRelation[i][i] = OverlapRelationValues.NO_OVERLAP;
 			for (int j = i + 1; j < size; j++) {
-				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), paperSize * 0.00001)) {
+				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), eps(paperSize))) {
 					overlapRelation[i][j] = OverlapRelationValues.UNDEFINED;
 					overlapRelation[j][i] = OverlapRelationValues.UNDEFINED;
 				} else {
