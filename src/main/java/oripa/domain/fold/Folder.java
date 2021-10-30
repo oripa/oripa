@@ -20,8 +20,10 @@ package oripa.domain.fold;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -55,9 +57,14 @@ public class Folder {
 
 	private final SubFacesFactory subFacesFactory;
 
-	private List<Integer>[][] faceOverlappingIndexIntersections; // of face
-																	// index
-																	// i and j
+	/**
+	 * [faceID1][faceID2]
+	 */
+	private List<Integer>[][] faceOverlappingIndexIntersections;
+
+	/**
+	 */
+	private Map<OriHalfedge, Set<Integer>> FaceIndicesOnHalfEdge;
 
 	// helper object
 	private final FolderTool folderTool = new FolderTool();
@@ -120,6 +127,7 @@ public class Folder {
 		}
 
 		faceOverlappingIndexIntersections = createfaceOverlappingIndexIntersections(faces, paperSize);
+		FaceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
 		findAnswer(faces, overlapRelationList, 0, overlapRelation, true, paperSize);
 
 		overlapRelationList.setCurrentORmatIndex(0);
@@ -144,6 +152,7 @@ public class Folder {
 				.mapToObj(i -> new HashSet<Integer>())
 				.collect(Collectors.toList());
 
+		// prepare pair indices of overlapping faces.
 		for (var face : faces) {
 			for (var other : faces) {
 				if (face.getFaceID() == other.getFaceID()) {
@@ -155,6 +164,7 @@ public class Folder {
 			}
 		}
 
+		// extract overlapping-face indices shared by face pair.
 		var indexIntersections = new List[faces.size()][faces.size()];
 		for (var face : faces) {
 			for (var other : faces) {
@@ -165,11 +175,11 @@ public class Folder {
 					continue;
 				}
 
-				var facesOverlapping_i = indices.get(index_i);
-				var facesOverlapping_j = indices.get(index_j);
+				var overlappingFaces_i = indices.get(index_i);
+				var overlappingFaces_j = indices.get(index_j);
 
-				var intersection = facesOverlapping_i.stream()
-						.filter(index -> facesOverlapping_j.contains(index))
+				var intersection = overlappingFaces_i.stream()
+						.filter(index -> overlappingFaces_j.contains(index))
 						.collect(Collectors.toList());
 
 				indexIntersections[index_i][index_j] = intersection;
@@ -177,6 +187,30 @@ public class Folder {
 		}
 
 		return indexIntersections;
+	}
+
+	private Map<OriHalfedge, Set<Integer>> createFaceIndicesOnHalfEdge(
+			final List<OriFace> faces, final double paperSize) {
+
+		Map<OriHalfedge, Set<Integer>> indices = new HashMap<>();
+
+		for (var face : faces) {
+			for (var halfedge : face.halfedgeIterable()) {
+				Set<Integer> indexSet = new HashSet<Integer>();
+				indices.put(halfedge, indexSet);
+
+				for (var other : faces) {
+					if (other == face) {
+						continue;
+					}
+					if (OriGeomUtil.isLineCrossFace4(other, halfedge, paperSize)) {
+						indexSet.add(other.getFaceID());
+					}
+				}
+			}
+		}
+
+		return indices;
 	}
 
 	/**
@@ -269,7 +303,8 @@ public class Folder {
 		var checked = new boolean[faces.size()][faces.size()];
 
 		for (int i = 0; i < faces.size(); i++) {
-			for (var he : faces.get(i).halfedgeIterable()) {
+			for (int he_i = 0; he_i < faces.get(i).halfedgeCount(); he_i++) {
+				var he = faces.get(i).getHalfedge(he_i);
 				var pair = he.getPair();
 				if (pair == null) {
 					continue;
@@ -296,7 +331,7 @@ public class Folder {
 							if (index_i == index_k || index_j == index_k) {
 								return false;
 							}
-							if (!OriGeomUtil.isLineCrossFace4(face_k, he, paperSize)) {
+							if (!FaceIndicesOnHalfEdge.get(he).contains(index_k)) {
 								return false;
 							}
 							if (orMat[index_i][index_j] == OverlapRelationValues.LOWER &&
@@ -373,7 +408,7 @@ public class Folder {
 
 	/**
 	 * Creates 3-face condition and sets to subfaces: If face[i] and face[j]
-	 * touching edge is covered by face[k] then OR[i][k] = OR[j][k]
+	 * touching edge are covered by face[k] then OR[i][k] = OR[j][k]
 	 *
 	 * @param faces
 	 * @param paperSize
