@@ -157,7 +157,7 @@ public class Folder {
 					continue;
 				}
 				if (OriGeomUtil.isFaceOverlap(face, other, eps(paperSize))) {
-					indices.get(face.getFaceID()).add(Integer.valueOf(other.getFaceID()));
+					indices.get(face.getFaceID()).add(other.getFaceID());
 				}
 			}
 		}
