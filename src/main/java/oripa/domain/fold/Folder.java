@@ -40,7 +40,6 @@ import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
-import oripa.domain.fold.subface.AnswerStack;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
@@ -258,10 +257,9 @@ public class Folder {
 			return;
 		}
 
-		for (AnswerStack<OriFace> answerStack : sub.answerStacks) {
+		for (var answerStack : sub.answerStacks) {
 			int size = answerStack.size();
 			if (!isCorrectStackOrder(answerStack, orMat)) {
-				answerStack.countFailure();
 				continue;
 			}
 			var nextORMat = Matrices.clone(orMat);
