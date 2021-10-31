@@ -19,6 +19,7 @@
 package oripa.domain.fold;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -67,6 +68,10 @@ public class Folder {
 
 	// helper object
 	private final FolderTool folderTool = new FolderTool();
+
+	private int callCount;
+	private int penetrationTestCallCount;
+	private int penetrationCount;
 
 	public Folder(final SubFacesFactory subFacesFactory) {
 		this.subFacesFactory = subFacesFactory;
@@ -123,10 +128,24 @@ public class Folder {
 			sub.sortFaceOverlapOrder(faces, overlapRelation);
 		}
 
+		// heuristic: fewer answer stacks mean the search on the subface has
+		// more possibility to be correct. Such confident search node should be
+		// consumed at early stage.
+		subFaces = subFaces.stream()
+				.sorted(Comparator.comparing(SubFace::answerStackCount))
+				.collect(Collectors.toList());
+
 		faceOverlappingIndexIntersections = createfaceOverlappingIndexIntersections(faces, paperSize);
 		faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
 		var changedFaceIDs = faces.stream().map(OriFace::getFaceID).collect(Collectors.toSet());
+		callCount = 0;
+		penetrationTestCallCount = 0;
+		penetrationCount = 0;
 		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs, paperSize);
+
+		logger.debug("#call = {}", callCount);
+		logger.debug("#penetrationTest = {}", penetrationTestCallCount);
+		logger.debug("#penetration = {}", penetrationCount);
 
 		overlapRelationList.setCurrentORmatIndex(0);
 		if (overlapRelationList.isEmpty()) {
@@ -235,10 +254,14 @@ public class Folder {
 			final List<OriFace> faces,
 			final OverlapRelationList overlapRelationList, final int subFaceIndex, final int[][] orMat,
 			final Set<Integer> changedFaceIDs, final double paperSize) {
+		callCount++;
+
 		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
 
 		if (!changedFaceIDs.isEmpty()) {
+			penetrationTestCallCount++;
 			if (detectPenetration(faces, changedFaceIDs, orMat, paperSize)) {
+				penetrationCount++;
 				return;
 			}
 		}

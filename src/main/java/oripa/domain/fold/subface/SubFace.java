@@ -199,4 +199,8 @@ public class SubFace {
 
 		return true;
 	}
+
+	public int answerStackCount() {
+		return answerStacks.size();
+	}
 }
