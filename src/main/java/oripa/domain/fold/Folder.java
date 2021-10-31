@@ -41,7 +41,6 @@ import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
-import oripa.domain.fold.subface.AnswerStack;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
@@ -63,11 +62,16 @@ public class Folder {
 	private List<Integer>[][] faceOverlappingIndexIntersections;
 
 	/**
+	 * Key: halfedge, value: set of indices which are under the halfedge.
 	 */
 	private Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge;
 
 	// helper object
 	private final FolderTool folderTool = new FolderTool();
+
+	private int callCount;
+	private int penetrationTestCallCount;
+	private int penetrationCount;
 
 	public Folder(final SubFacesFactory subFacesFactory) {
 		this.subFacesFactory = subFacesFactory;
@@ -86,9 +90,6 @@ public class Folder {
 	 *         the given {@code origamiModel}.
 	 */
 	public FoldedModel fold(final OrigamiModel origamiModel, final boolean fullEstimation) {
-
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 
@@ -98,6 +99,7 @@ public class Folder {
 
 		simpleFoldWithoutZorder(faces, edges);
 		folderTool.setFacesOutline(faces);
+		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 		sortedFaces.addAll(faces);
 
 		if (!fullEstimation) {
@@ -126,10 +128,24 @@ public class Folder {
 			sub.sortFaceOverlapOrder(faces, overlapRelation);
 		}
 
+		// heuristic: fewer answer stacks mean the search on the subface has
+		// more possibility to be correct. Such confident search node should be
+		// consumed at early stage.
+		subFaces = subFaces.stream()
+				.sorted(Comparator.comparing(SubFace::answerStackCount))
+				.collect(Collectors.toList());
+
 		faceOverlappingIndexIntersections = createfaceOverlappingIndexIntersections(faces, paperSize);
 		faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
 		var changedFaceIDs = faces.stream().map(OriFace::getFaceID).collect(Collectors.toSet());
+		callCount = 0;
+		penetrationTestCallCount = 0;
+		penetrationCount = 0;
 		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs, paperSize);
+
+		logger.debug("#call = {}", callCount);
+		logger.debug("#penetrationTest = {}", penetrationTestCallCount);
+		logger.debug("#penetration = {}", penetrationCount);
 
 		overlapRelationList.setCurrentORmatIndex(0);
 		if (overlapRelationList.isEmpty()) {
@@ -160,7 +176,7 @@ public class Folder {
 					continue;
 				}
 				if (OriGeomUtil.isFaceOverlap(face, other, eps(paperSize))) {
-					indices.get(face.getFaceID()).add(Integer.valueOf(other.getFaceID()));
+					indices.get(face.getFaceID()).add(other.getFaceID());
 				}
 			}
 		}
@@ -179,11 +195,9 @@ public class Folder {
 				var overlappingFaces_i = indices.get(index_i);
 				var overlappingFaces_j = indices.get(index_j);
 
-				var intersection = overlappingFaces_i.stream()
+				indexIntersections[index_i][index_j] = overlappingFaces_i.stream()
 						.filter(index -> overlappingFaces_j.contains(index))
 						.collect(Collectors.toList());
-
-				indexIntersections[index_i][index_j] = intersection;
 			}
 		}
 
@@ -240,10 +254,14 @@ public class Folder {
 			final List<OriFace> faces,
 			final OverlapRelationList overlapRelationList, final int subFaceIndex, final int[][] orMat,
 			final Set<Integer> changedFaceIDs, final double paperSize) {
+		callCount++;
+
 		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
 
 		if (!changedFaceIDs.isEmpty()) {
+			penetrationTestCallCount++;
 			if (detectPenetration(faces, changedFaceIDs, orMat, paperSize)) {
+				penetrationCount++;
 				return;
 			}
 		}
@@ -262,18 +280,12 @@ public class Folder {
 			return;
 		}
 
-//		var answerStacks = sub.answerStacks;
-		var answerStacks = sub.answerStacks.stream()
-				.sorted(Comparator.comparing(AnswerStack::getFaiureCount, Comparator.reverseOrder()))
-				.collect(Collectors.toList());
-
-		for (AnswerStack<OriFace> answerStack : answerStacks) {
+		for (var answerStack : sub.answerStacks) {
 			int size = answerStack.size();
 			if (!isCorrectStackOrder(answerStack, orMat)) {
-				answerStack.countFailure();
 				continue;
 			}
-			var passMat = Matrices.clone(orMat);
+			var nextORMat = Matrices.clone(orMat);
 			var nextChangedFaceIDs = new HashSet<Integer>();
 
 			// determine overlap relations according to stack
@@ -281,18 +293,18 @@ public class Folder {
 				int index_i = answerStack.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
 					int index_j = answerStack.get(j).getFaceID();
-					passMat[index_i][index_j] = OverlapRelationValues.UPPER;
-					passMat[index_j][index_i] = OverlapRelationValues.LOWER;
+					nextORMat[index_i][index_j] = OverlapRelationValues.UPPER;
+					nextORMat[index_j][index_i] = OverlapRelationValues.LOWER;
 
-					if (passMat[index_i][index_j] != orMat[index_i][index_j] ||
-							passMat[index_j][index_i] != orMat[index_j][index_i]) {
+					if (nextORMat[index_i][index_j] != orMat[index_i][index_j] ||
+							nextORMat[index_j][index_i] != orMat[index_j][index_i]) {
 						nextChangedFaceIDs.add(index_i);
 						nextChangedFaceIDs.add(index_j);
 					}
 				}
 			}
 
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, nextChangedFaceIDs, paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, nextORMat, nextChangedFaceIDs, paperSize);
 		}
 	}
 
@@ -390,7 +402,7 @@ public class Folder {
 			for (int j = i + 1; j < size; j++) {
 				int index_j = answerStack.get(j).getFaceID();
 				// stack_index = 0 means the top of stack (looking down
-				// the folded model).
+				// the folded model on a table).
 				// therefore a face with smaller stack_index i should be
 				// UPPER than stack_index j.
 				if (orMat[index_i][index_j] == OverlapRelationValues.LOWER) {
