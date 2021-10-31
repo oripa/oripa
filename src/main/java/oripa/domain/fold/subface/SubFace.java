@@ -43,7 +43,7 @@ public class SubFace {
 	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
 	public boolean allFaceOrderDecided = false;
-	public ArrayList<ArrayList<OriFace>> answerStacks = new ArrayList<>();
+	public ArrayList<AnswerStack<OriFace>> answerStacks = new ArrayList<>();
 
 	public SubFace(final OriFace f) {
 		outline = f;
@@ -131,7 +131,7 @@ public class SubFace {
 	private void sort(final List<OriFace> modelFaces, final int index) {
 
 		if (index == parentFaces.size()) {
-			ArrayList<OriFace> ans = new ArrayList<>(sortedParentFaces);
+			var ans = new AnswerStack<>(sortedParentFaces);
 			answerStacks.add(ans);
 			return;
 		}
