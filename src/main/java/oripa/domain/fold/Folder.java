@@ -64,7 +64,7 @@ public class Folder {
 
 	/**
 	 */
-	private Map<OriHalfedge, Set<Integer>> FaceIndicesOnHalfEdge;
+	private Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge;
 
 	// helper object
 	private final FolderTool folderTool = new FolderTool();
@@ -127,8 +127,9 @@ public class Folder {
 		}
 
 		faceOverlappingIndexIntersections = createfaceOverlappingIndexIntersections(faces, paperSize);
-		FaceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
-		findAnswer(faces, overlapRelationList, 0, overlapRelation, true, paperSize);
+		faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
+		var changedFaceIDs = faces.stream().map(OriFace::getFaceID).collect(Collectors.toSet());
+		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs, paperSize);
 
 		overlapRelationList.setCurrentORmatIndex(0);
 		if (overlapRelationList.isEmpty()) {
@@ -198,7 +199,11 @@ public class Folder {
 			for (var halfedge : face.halfedgeIterable()) {
 				Set<Integer> indexSet = new HashSet<Integer>();
 				indices.put(halfedge, indexSet);
-
+			}
+		}
+		for (var face : faces) {
+			for (var halfedge : face.halfedgeIterable()) {
+				var indexSet = indices.get(halfedge);
 				for (var other : faces) {
 					if (other == face) {
 						continue;
@@ -225,20 +230,20 @@ public class Folder {
 	 *            the index of subface to be updated
 	 * @param orMat
 	 *            overlap relation matrix
-	 * @param orMatModified
-	 *            whether {@code orMat} has been changed by the previous call.
-	 *            {@code true} for the first call.
+	 * @param changedFaceIDs
+	 *            IDs of faces whose overlap relation changed. should contain
+	 *            all face IDs for the first call.
 	 * @param paperSize
 	 *            paper size
 	 */
 	private void findAnswer(
 			final List<OriFace> faces,
 			final OverlapRelationList overlapRelationList, final int subFaceIndex, final int[][] orMat,
-			final boolean orMatModified, final double paperSize) {
+			final Set<Integer> changedFaceIDs, final double paperSize) {
 		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
 
-		if (orMatModified) {
-			if (detectPenetration(faces, orMat, paperSize)) {
+		if (!changedFaceIDs.isEmpty()) {
+			if (detectPenetration(faces, changedFaceIDs, orMat, paperSize)) {
 				return;
 			}
 		}
@@ -253,7 +258,7 @@ public class Folder {
 
 		if (sub.allFaceOrderDecided) {
 			var passMat = Matrices.clone(orMat);
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, false, paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, new HashSet<>(), paperSize);
 			return;
 		}
 
@@ -269,6 +274,7 @@ public class Folder {
 				continue;
 			}
 			var passMat = Matrices.clone(orMat);
+			var nextChangedFaceIDs = new HashSet<Integer>();
 
 			// determine overlap relations according to stack
 			for (int i = 0; i < size; i++) {
@@ -277,10 +283,16 @@ public class Folder {
 					int index_j = answerStack.get(j).getFaceID();
 					passMat[index_i][index_j] = OverlapRelationValues.UPPER;
 					passMat[index_j][index_i] = OverlapRelationValues.LOWER;
+
+					if (passMat[index_i][index_j] != orMat[index_i][index_j] ||
+							passMat[index_j][index_i] != orMat[index_j][index_i]) {
+						nextChangedFaceIDs.add(index_i);
+						nextChangedFaceIDs.add(index_j);
+					}
 				}
 			}
 
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, true, paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, nextChangedFaceIDs, paperSize);
 		}
 	}
 
@@ -292,17 +304,20 @@ public class Folder {
 	 *
 	 * @param faces
 	 *            all faces.
+	 * @param changedFaceIDs
+	 *            IDs of faces whose overlap relation changed.
 	 * @param orMat
 	 *            overlap relation matrix.
 	 * @param paperSize
 	 *            paper size.
 	 * @return true if there is a face which penetrates the sheet of paper.
 	 */
-	private boolean detectPenetration(final List<OriFace> faces, final int[][] orMat,
+	private boolean detectPenetration(final List<OriFace> faces, final Set<Integer> changedFaceIDs, final int[][] orMat,
 			final double paperSize) {
 		var checked = new boolean[faces.size()][faces.size()];
 
-		for (var face : faces) {
+		for (var faceID : changedFaceIDs) {
+			var face = faces.get(faceID);
 			for (var he : face.halfedgeIterable()) {
 				var pair = he.getPair();
 				if (pair == null) {
@@ -330,7 +345,7 @@ public class Folder {
 							if (index_i == index_k || index_j == index_k) {
 								return false;
 							}
-							if (!FaceIndicesOnHalfEdge.get(he).contains(index_k)) {
+							if (!faceIndicesOnHalfEdge.get(he).contains(index_k)) {
 								return false;
 							}
 							if (orMat[index_i][index_j] == OverlapRelationValues.LOWER &&
