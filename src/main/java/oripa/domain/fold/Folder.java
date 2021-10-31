@@ -19,7 +19,6 @@
 package oripa.domain.fold;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -63,6 +62,7 @@ public class Folder {
 	private List<Integer>[][] faceOverlappingIndexIntersections;
 
 	/**
+	 * Key: halfedge, value: set of indices which are under the halfedge.
 	 */
 	private Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge;
 
@@ -86,9 +86,6 @@ public class Folder {
 	 *         the given {@code origamiModel}.
 	 */
 	public FoldedModel fold(final OrigamiModel origamiModel, final boolean fullEstimation) {
-
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 
@@ -98,6 +95,7 @@ public class Folder {
 
 		simpleFoldWithoutZorder(faces, edges);
 		folderTool.setFacesOutline(faces);
+		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 		sortedFaces.addAll(faces);
 
 		if (!fullEstimation) {
@@ -179,11 +177,9 @@ public class Folder {
 				var overlappingFaces_i = indices.get(index_i);
 				var overlappingFaces_j = indices.get(index_j);
 
-				var intersection = overlappingFaces_i.stream()
+				indexIntersections[index_i][index_j] = overlappingFaces_i.stream()
 						.filter(index -> overlappingFaces_j.contains(index))
 						.collect(Collectors.toList());
-
-				indexIntersections[index_i][index_j] = intersection;
 			}
 		}
 
@@ -262,18 +258,13 @@ public class Folder {
 			return;
 		}
 
-//		var answerStacks = sub.answerStacks;
-		var answerStacks = sub.answerStacks.stream()
-				.sorted(Comparator.comparing(AnswerStack::getFaiureCount, Comparator.reverseOrder()))
-				.collect(Collectors.toList());
-
-		for (AnswerStack<OriFace> answerStack : answerStacks) {
+		for (AnswerStack<OriFace> answerStack : sub.answerStacks) {
 			int size = answerStack.size();
 			if (!isCorrectStackOrder(answerStack, orMat)) {
 				answerStack.countFailure();
 				continue;
 			}
-			var passMat = Matrices.clone(orMat);
+			var nextORMat = Matrices.clone(orMat);
 			var nextChangedFaceIDs = new HashSet<Integer>();
 
 			// determine overlap relations according to stack
@@ -281,18 +272,18 @@ public class Folder {
 				int index_i = answerStack.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
 					int index_j = answerStack.get(j).getFaceID();
-					passMat[index_i][index_j] = OverlapRelationValues.UPPER;
-					passMat[index_j][index_i] = OverlapRelationValues.LOWER;
+					nextORMat[index_i][index_j] = OverlapRelationValues.UPPER;
+					nextORMat[index_j][index_i] = OverlapRelationValues.LOWER;
 
-					if (passMat[index_i][index_j] != orMat[index_i][index_j] ||
-							passMat[index_j][index_i] != orMat[index_j][index_i]) {
+					if (nextORMat[index_i][index_j] != orMat[index_i][index_j] ||
+							nextORMat[index_j][index_i] != orMat[index_j][index_i]) {
 						nextChangedFaceIDs.add(index_i);
 						nextChangedFaceIDs.add(index_j);
 					}
 				}
 			}
 
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, nextChangedFaceIDs, paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, nextORMat, nextChangedFaceIDs, paperSize);
 		}
 	}
 
@@ -390,7 +381,7 @@ public class Folder {
 			for (int j = i + 1; j < size; j++) {
 				int index_j = answerStack.get(j).getFaceID();
 				// stack_index = 0 means the top of stack (looking down
-				// the folded model).
+				// the folded model on a table).
 				// therefore a face with smaller stack_index i should be
 				// UPPER than stack_index j.
 				if (orMat[index_i][index_j] == OverlapRelationValues.LOWER) {
