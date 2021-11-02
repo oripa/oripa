@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -46,6 +47,7 @@ import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.util.Matrices;
+import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
 public class Folder {
@@ -135,17 +137,25 @@ public class Folder {
 				.sorted(Comparator.comparing(SubFace::answerStackCount))
 				.collect(Collectors.toList());
 
+		var watch = new StopWatch(true);
+
 		faceOverlappingIndexIntersections = createfaceOverlappingIndexIntersections(faces, paperSize);
 		faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
+		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
+
+		watch.start();
+
 		var changedFaceIDs = faces.stream().map(OriFace::getFaceID).collect(Collectors.toSet());
 		callCount = 0;
 		penetrationTestCallCount = 0;
 		penetrationCount = 0;
 		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs, paperSize);
+		var time = watch.getMilliSec();
 
 		logger.debug("#call = {}", callCount);
 		logger.debug("#penetrationTest = {}", penetrationTestCallCount);
 		logger.debug("#penetration = {}", penetrationCount);
+		logger.debug("time = {}[ms]", time);
 
 		overlapRelationList.setCurrentORmatIndex(0);
 		if (overlapRelationList.isEmpty()) {
@@ -232,6 +242,30 @@ public class Folder {
 		return indices;
 	}
 
+	private class IndexPair {
+		private final int i;
+		private final int j;
+
+		public IndexPair(final int i, final int j) {
+			this.i = i;
+			this.j = j;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (!(obj instanceof IndexPair)) {
+				return false;
+			}
+			var o = (IndexPair) obj;
+			return i == o.i && j == o.j;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(i, j);
+		}
+	}
+
 	/**
 	 * Determines overlap relations which are left uncertain after using
 	 * necessary conditions.
@@ -275,8 +309,8 @@ public class Folder {
 		SubFace sub = subFaces.get(subFaceIndex);
 
 		if (sub.allFaceOrderDecided) {
-			var passMat = Matrices.clone(orMat);
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, new HashSet<>(), paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, orMat,
+					new HashSet<>(), paperSize);
 			return;
 		}
 
@@ -285,7 +319,7 @@ public class Folder {
 			if (!isCorrectStackOrder(answerStack, orMat)) {
 				continue;
 			}
-			var nextORMat = Matrices.clone(orMat);
+			var changedIndexPairs = new HashSet<IndexPair>();
 			var nextChangedFaceIDs = new HashSet<Integer>();
 
 			// determine overlap relations according to stack
@@ -293,18 +327,28 @@ public class Folder {
 				int index_i = answerStack.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
 					int index_j = answerStack.get(j).getFaceID();
-					nextORMat[index_i][index_j] = OverlapRelationValues.UPPER;
-					nextORMat[index_j][index_i] = OverlapRelationValues.LOWER;
+					if (orMat[index_i][index_j] == OverlapRelationValues.UNDEFINED) {
+						orMat[index_i][index_j] = OverlapRelationValues.UPPER;
+						orMat[index_j][index_i] = OverlapRelationValues.LOWER;
 
-					if (nextORMat[index_i][index_j] != orMat[index_i][index_j] ||
-							nextORMat[index_j][index_i] != orMat[index_j][index_i]) {
+						changedIndexPairs.add(new IndexPair(index_i, index_j));
 						nextChangedFaceIDs.add(index_i);
 						nextChangedFaceIDs.add(index_j);
 					}
 				}
 			}
 
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, nextORMat, nextChangedFaceIDs, paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1,
+					orMat, nextChangedFaceIDs, paperSize);
+
+			// get back
+			changedIndexPairs.forEach(pair -> {
+				final int index_i = pair.i;
+				final int index_j = pair.j;
+				orMat[index_i][index_j] = OverlapRelationValues.UNDEFINED;
+				orMat[index_j][index_i] = OverlapRelationValues.UNDEFINED;
+
+			});
 		}
 	}
 
@@ -397,10 +441,10 @@ public class Folder {
 	private boolean isCorrectStackOrder(final List<OriFace> answerStack, final int[][] orMat) {
 		int size = answerStack.size();
 
-		for (int i = 0; i < size; i++) {
-			int index_i = answerStack.get(i).getFaceID();
-			for (int j = i + 1; j < size; j++) {
-				int index_j = answerStack.get(j).getFaceID();
+		return IntStream.range(0, size).allMatch(i -> {
+			final int index_i = answerStack.get(i).getFaceID();
+			return IntStream.range(i + 1, size).allMatch(j -> {
+				final int index_j = answerStack.get(j).getFaceID();
 				// stack_index = 0 means the top of stack (looking down
 				// the folded model on a table).
 				// therefore a face with smaller stack_index i should be
@@ -408,10 +452,9 @@ public class Folder {
 				if (orMat[index_i][index_j] == OverlapRelationValues.LOWER) {
 					return false;
 				}
-			}
-		}
-
-		return true;
+				return true;
+			});
+		});
 	}
 
 	/**
