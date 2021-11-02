@@ -319,7 +319,7 @@ public class Folder {
 			if (!isCorrectStackOrder(answerStack, orMat)) {
 				continue;
 			}
-			var changedIndexPairs = new HashSet<IndexPair>();
+			var changedIndexPairs = new ArrayList<IndexPair>();
 			var nextChangedFaceIDs = new HashSet<Integer>();
 
 			// determine overlap relations according to stack
