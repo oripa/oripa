@@ -32,9 +32,14 @@ public class Folder {
 
 	private final SimpleFolder simpleFolder;
 
-	public Folder(final SubFacesFactory subFacesFactory, final SimpleFolder simpleFolder) {
+	private final LayerOrderEnumerator enumerator;
+
+	public Folder(final SubFacesFactory subFacesFactory,
+			final SimpleFolder simpleFolder,
+			final LayerOrderEnumerator enumerator) {
 		this.subFacesFactory = subFacesFactory;
 		this.simpleFolder = simpleFolder;
+		this.enumerator = enumerator;
 	}
 
 	/**
@@ -62,7 +67,6 @@ public class Folder {
 			return new FoldedModel(origamiModel, new OverlapRelationList());
 		}
 
-		var enumerator = new LayerOrderEnumerator();
 		var overlapRelationList = enumerator.enumerate(origamiModel, subFacesFactory);
 
 		var foldedModel = new FoldedModel(origamiModel, overlapRelationList);

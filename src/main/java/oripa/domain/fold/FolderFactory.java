@@ -40,6 +40,7 @@ public class FolderFactory {
 						new OrigamiModelFactory(),
 						new SplitFacesToSubFacesConverter(),
 						new ParentFacesCollector()),
-				new SimpleFolder());
+				new SimpleFolder(),
+				new LayerOrderEnumerator());
 	}
 }
