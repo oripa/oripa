@@ -71,7 +71,13 @@ public class LayerOrderEnumerator {
 	private int penetrationTestCallCount;
 	private int penetrationCount;
 
-	public OverlapRelationList enumerate(final OrigamiModel origamiModel, final SubFacesFactory subFacesFactory) {
+	private final SubFacesFactory subFacesFactory;
+
+	public LayerOrderEnumerator(final SubFacesFactory subFacesFactory) {
+		this.subFacesFactory = subFacesFactory;
+	}
+
+	public OverlapRelationList enumerate(final OrigamiModel origamiModel) {
 		var faces = origamiModel.getFaces();
 		var edges = origamiModel.getEdges();
 

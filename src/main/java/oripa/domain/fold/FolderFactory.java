@@ -32,15 +32,16 @@ import oripa.domain.fold.subface.SubFacesFactory;
  */
 public class FolderFactory {
 	public Folder create() {
+		var subfacesFactory = new SubFacesFactory(
+				new FacesToCreasePatternConverter(
+						new CreasePatternFactory(),
+						new LineAdder()),
+				new OrigamiModelFactory(),
+				new SplitFacesToSubFacesConverter(),
+				new ParentFacesCollector());
+
 		return new Folder(
-				new SubFacesFactory(
-						new FacesToCreasePatternConverter(
-								new CreasePatternFactory(),
-								new LineAdder()),
-						new OrigamiModelFactory(),
-						new SplitFacesToSubFacesConverter(),
-						new ParentFacesCollector()),
 				new SimpleFolder(),
-				new LayerOrderEnumerator());
+				new LayerOrderEnumerator(subfacesFactory));
 	}
 }

@@ -22,11 +22,8 @@ import java.util.List;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.subface.SubFacesFactory;
 
 public class Folder {
-	private final SubFacesFactory subFacesFactory;
-
 	// helper object
 	private final FolderTool folderTool = new FolderTool();
 
@@ -34,10 +31,8 @@ public class Folder {
 
 	private final LayerOrderEnumerator enumerator;
 
-	public Folder(final SubFacesFactory subFacesFactory,
-			final SimpleFolder simpleFolder,
+	public Folder(final SimpleFolder simpleFolder,
 			final LayerOrderEnumerator enumerator) {
-		this.subFacesFactory = subFacesFactory;
 		this.simpleFolder = simpleFolder;
 		this.enumerator = enumerator;
 	}
@@ -67,7 +62,7 @@ public class Folder {
 			return new FoldedModel(origamiModel, new OverlapRelationList());
 		}
 
-		var overlapRelationList = enumerator.enumerate(origamiModel, subFacesFactory);
+		var overlapRelationList = enumerator.enumerate(origamiModel);
 
 		var foldedModel = new FoldedModel(origamiModel, overlapRelationList);
 
