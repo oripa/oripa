@@ -87,5 +87,13 @@ public class Folder {
 	public void foldWithoutLineType(
 			final OrigamiModel model) {
 		simpleFolder.foldWithoutLineType(model);
+
+		List<OriFace> faces = model.getFaces();
+
+//		Collections.sort(faces, new FaceOrderComparator());
+		model.getSortedFaces().clear();
+		model.getSortedFaces().addAll(faces);
+
+		folderTool.setFacesOutline(faces);
 	}
 }

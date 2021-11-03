@@ -39,8 +39,6 @@ import oripa.geom.Line;
 class SimpleFolder {
 	private static final Logger logger = LoggerFactory.getLogger(SimpleFolder.class);
 
-	private final FolderTool folderTool = new FolderTool();
-
 	/**
 	 * Does a simple fold as a preparation of layer order enumeration.
 	 *
@@ -96,16 +94,11 @@ class SimpleFolder {
 
 		walkFace(faces, faces.get(0), 0);
 
-//			Collections.sort(faces, new FaceOrderComparator());
-		model.getSortedFaces().clear();
-		model.getSortedFaces().addAll(faces);
-
 		for (OriEdge e : edges) {
 			var sv = e.getStartVertex();
 			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
 		}
 
-		folderTool.setFacesOutline(faces);
 	}
 
 	/**
