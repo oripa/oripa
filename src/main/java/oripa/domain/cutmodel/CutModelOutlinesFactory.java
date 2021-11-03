@@ -25,9 +25,9 @@ public class CutModelOutlinesFactory {
 
 		Collection<OriLine> cutLines = new ArrayList<>();
 
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+		List<OriFace> faces = origamiModel.getFaces();
 
-		for (OriFace face : sortedFaces) {
+		for (OriFace face : faces) {
 			List<Vector2d> vv = findOutlineEdgeTerminals(scissorsLine, face);
 
 			if (vv.size() >= 2) {
