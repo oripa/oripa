@@ -305,9 +305,7 @@ public class LayerOrderEnumerator {
 
 			// get back
 			changedIndexPairs.forEach(pair -> {
-				final int index_i = pair.i;
-				final int index_j = pair.j;
-				setOR(orMat, index_i, index_j, OverlapRelationValues.UNDEFINED, true);
+				setOR(orMat, pair.i, pair.j, OverlapRelationValues.UNDEFINED, true);
 			});
 		}
 	}
