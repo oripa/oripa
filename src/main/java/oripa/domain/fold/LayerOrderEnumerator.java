@@ -310,7 +310,6 @@ public class LayerOrderEnumerator {
 				final int index_j = pair.j;
 				orMat[index_i][index_j] = OverlapRelationValues.UNDEFINED;
 				orMat[index_j][index_i] = OverlapRelationValues.UNDEFINED;
-
 			});
 		}
 	}
@@ -928,11 +927,9 @@ public class LayerOrderEnumerator {
 
 				if ((face.isFaceFront() && he.getType() == OriLine.Type.MOUNTAIN.toInt())
 						|| (!face.isFaceFront() && he.getType() == OriLine.Type.VALLEY.toInt())) {
-					overlapRelation[faceID][pairFaceID] = OverlapRelationValues.UPPER;
-					overlapRelation[pairFaceID][faceID] = OverlapRelationValues.LOWER;
+					setOR(overlapRelation, faceID, pairFaceID, OverlapRelationValues.UPPER, true);
 				} else {
-					overlapRelation[faceID][pairFaceID] = OverlapRelationValues.LOWER;
-					overlapRelation[pairFaceID][faceID] = OverlapRelationValues.UPPER;
+					setOR(overlapRelation, faceID, pairFaceID, OverlapRelationValues.LOWER, true);
 				}
 			}
 		}
