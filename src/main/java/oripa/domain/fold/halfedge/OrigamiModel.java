@@ -40,7 +40,7 @@ public class OrigamiModel {
 	 * Essentially equivalent to {@code faces}. This will be deleted.
 	 */
 	@Deprecated
-	private List<OriFace> sortedFaces = new ArrayList<OriFace>();
+	private final List<OriFace> sortedFaces = new ArrayList<OriFace>();
 
 	private boolean folded = false;
 
@@ -86,24 +86,6 @@ public class OrigamiModel {
 
 	public double getPaperSize() {
 		return paperSize;
-	}
-
-	/**
-	 * Maybe this is a garbage by experiments. There is no need of sorting.
-	 * Essentially equivalent to {@code faces}. This will be deleted.
-	 */
-	@Deprecated
-	public List<OriFace> getSortedFaces() {
-		return sortedFaces;
-	}
-
-	/**
-	 * Maybe this is a garbage by experiments. There is no need of sorting.
-	 * Essentially equivalent to {@code faces}. This will be deleted.
-	 */
-	@Deprecated
-	public void setSortedFaces(final List<OriFace> sortedFaces) {
-		this.sortedFaces = sortedFaces;
 	}
 
 	/**
