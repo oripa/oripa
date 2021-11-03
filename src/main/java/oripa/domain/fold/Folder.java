@@ -53,7 +53,7 @@ import oripa.value.OriLine;
 public class Folder {
 	private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
-	private ArrayList<StackConditionOf4Faces> condition4s;
+	private HashSet<StackConditionOf4Faces> condition4s;
 	private List<SubFace> subFaces;
 
 	private final SubFacesFactory subFacesFactory;
@@ -121,7 +121,7 @@ public class Folder {
 
 		holdCondition3s(faces, paperSize, overlapRelation);
 
-		condition4s = new ArrayList<>();
+		condition4s = new HashSet<>();
 		holdCondition4s(edges, overlapRelation);
 
 		estimation(faces, overlapRelation);
@@ -149,7 +149,7 @@ public class Folder {
 		callCount = 0;
 		penetrationTestCallCount = 0;
 		penetrationCount = 0;
-		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs, paperSize);
+		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs);
 		var time = watch.getMilliSec();
 
 		logger.debug("#call = {}", callCount);
@@ -281,23 +281,26 @@ public class Folder {
 	 * @param changedFaceIDs
 	 *            IDs of faces whose overlap relation changed. should contain
 	 *            all face IDs for the first call.
-	 * @param paperSize
-	 *            paper size
 	 */
 	private void findAnswer(
 			final List<OriFace> faces,
 			final OverlapRelationList overlapRelationList, final int subFaceIndex, final int[][] orMat,
-			final Set<Integer> changedFaceIDs, final double paperSize) {
+			final Set<Integer> changedFaceIDs) {
 		callCount++;
 
 		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
 
 		if (!changedFaceIDs.isEmpty()) {
 			penetrationTestCallCount++;
-			if (detectPenetration(faces, changedFaceIDs, orMat, paperSize)) {
+			if (detectPenetrationBy3faces(faces, changedFaceIDs, orMat)) {
 				penetrationCount++;
 				return;
 			}
+		}
+
+		if (detectPenetrationBy4faces(orMat)) {
+			penetrationCount++;
+			return;
 		}
 
 		if (subFaceIndex == subFaces.size()) {
@@ -310,7 +313,7 @@ public class Folder {
 
 		if (sub.allFaceOrderDecided) {
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1, orMat,
-					new HashSet<>(), paperSize);
+					new HashSet<>());
 			return;
 		}
 
@@ -339,7 +342,7 @@ public class Folder {
 			}
 
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1,
-					orMat, nextChangedFaceIDs, paperSize);
+					orMat, nextChangedFaceIDs);
 
 			// get back
 			changedIndexPairs.forEach(pair -> {
@@ -364,16 +367,15 @@ public class Folder {
 	 *            IDs of faces whose overlap relation changed.
 	 * @param orMat
 	 *            overlap relation matrix.
-	 * @param paperSize
-	 *            paper size.
 	 * @return true if there is a face which penetrates the sheet of paper.
 	 */
-	private boolean detectPenetration(final List<OriFace> faces, final Set<Integer> changedFaceIDs, final int[][] orMat,
-			final double paperSize) {
+	private boolean detectPenetrationBy3faces(final List<OriFace> faces, final Set<Integer> changedFaceIDs,
+			final int[][] orMat) {
 		var checked = new boolean[faces.size()][faces.size()];
 
 		for (var faceID : changedFaceIDs) {
 			var face = faces.get(faceID);
+//		for (var face : faces) {
 			for (var he : face.halfedgeIterable()) {
 				var pair = he.getPair();
 				if (pair == null) {
@@ -426,6 +428,89 @@ public class Folder {
 		}
 
 		return false;
+	}
+
+	/**
+	 *
+	 * @param orMat
+	 * @param i
+	 * @param j
+	 * @return {@code true} if
+	 *         {@code orMat[i][j] == OverlapRelationValues.LOWER}.
+	 */
+	private boolean isLower(final int[][] orMat, final int i, final int j) {
+		return orMat[i][j] == OverlapRelationValues.LOWER;
+	}
+
+	/**
+	 * Tests all cases of 4-face layer ordering condition.
+	 *
+	 * @param orMat
+	 * @return {@code true} if penetration occurs, i.e., 4-face layer ordering
+	 *         condition is not satisfied.
+	 */
+	private boolean detectPenetrationBy4faces(final int[][] orMat) {
+		boolean correct = true;
+		for (var cond : condition4s) {
+			if (!cond.isDetermined(orMat)) {
+				continue;
+			}
+
+			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
+			// lower1 > lower2
+			if (orMat[cond.lower1][cond.upper2] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper1, cond.upper2);
+				correct &= isLower(orMat, cond.upper1, cond.lower2);
+				correct &= isLower(orMat, cond.lower1, cond.lower2);
+			}
+
+			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
+			// lower2 > lower1
+			if (orMat[cond.lower2][cond.upper1] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper2, cond.upper1);
+				correct &= isLower(orMat, cond.upper2, cond.lower1);
+				correct &= isLower(orMat, cond.lower2, cond.lower1);
+			}
+
+			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
+			// lower1
+			if (orMat[cond.upper1][cond.upper2] == OverlapRelationValues.LOWER
+					&& orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper1, cond.lower2);
+				correct &= isLower(orMat, cond.lower2, cond.lower1);
+			}
+
+			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
+			// lower1
+			if (orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER
+					&& orMat[cond.lower2][cond.lower1] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper1, cond.upper2);
+				correct &= isLower(orMat, cond.upper2, cond.lower1);
+			}
+
+			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
+			// lower2
+			if (orMat[cond.upper2][cond.upper1] == OverlapRelationValues.LOWER
+					&& orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper2, cond.lower1);
+				correct &= isLower(orMat, cond.lower1, cond.lower2);
+			}
+
+			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
+			// lower2
+			if (orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER
+					&& orMat[cond.lower1][cond.lower2] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper2, cond.upper1);
+				correct &= isLower(orMat, cond.upper1, cond.lower2);
+			}
+
+			if (!correct) {
+				return true;
+			}
+		}
+
+		return false;
+
 	}
 
 	/**
