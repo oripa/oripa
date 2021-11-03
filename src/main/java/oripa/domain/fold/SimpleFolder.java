@@ -77,7 +77,8 @@ class SimpleFolder {
 	}
 
 	/**
-	 * Computes position of each face after fold.
+	 * Computes position of each face after folding given model which contains
+	 * some error. The number of faces to be moved is limited to avoid troubles.
 	 *
 	 * @param model
 	 *            half-edge based data structure. It will be affected by this
