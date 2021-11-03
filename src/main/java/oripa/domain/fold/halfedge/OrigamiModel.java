@@ -18,7 +18,6 @@
 package oripa.domain.fold.halfedge;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import oripa.geom.RectangleDomain;
@@ -34,13 +33,6 @@ public class OrigamiModel {
 	private List<OriFace> faces = new ArrayList<OriFace>();
 	private List<OriVertex> vertices = new ArrayList<OriVertex>();
 	private List<OriEdge> edges = new ArrayList<OriEdge>();
-
-	/**
-	 * Maybe this is a garbage by experiments. There is no need of sorting.
-	 * Essentially equivalent to {@code faces}. This will be deleted.
-	 */
-	@Deprecated
-	private final List<OriFace> sortedFaces = new ArrayList<OriFace>();
 
 	private boolean folded = false;
 
@@ -128,7 +120,10 @@ public class OrigamiModel {
 	}
 
 	/**
-	 * Flips x coordinates and reverse the order of layers.
+	 * Flips x coordinates and turns over faces. This functionality fails to
+	 * manage the view result in full estimation model window: layer order
+	 * cannot be changed by this method but this method turns over each face,
+	 * which is obviously wrong.
 	 */
 	public void flipXCoordinates() {
 		var domain = new RectangleDomain();
@@ -148,10 +143,6 @@ public class OrigamiModel {
 		faces.forEach(face -> {
 			face.invertFaceFront();
 		});
-
-//		Collections.sort(faces, new FaceOrderComparator());
-
-		Collections.reverse(sortedFaces);
 	}
 
 }
