@@ -291,8 +291,7 @@ public class LayerOrderEnumerator {
 				for (int j = i + 1; j < size; j++) {
 					int index_j = answerStack.get(j).getFaceID();
 					if (orMat[index_i][index_j] == OverlapRelationValues.UNDEFINED) {
-						orMat[index_i][index_j] = OverlapRelationValues.UPPER;
-						orMat[index_j][index_i] = OverlapRelationValues.LOWER;
+						setOR(orMat, index_i, index_j, OverlapRelationValues.UPPER, true);
 
 						changedIndexPairs.add(new IndexPair(index_i, index_j));
 						nextChangedFaceIDs.add(index_i);
@@ -308,8 +307,7 @@ public class LayerOrderEnumerator {
 			changedIndexPairs.forEach(pair -> {
 				final int index_i = pair.i;
 				final int index_j = pair.j;
-				orMat[index_i][index_j] = OverlapRelationValues.UNDEFINED;
-				orMat[index_j][index_i] = OverlapRelationValues.UNDEFINED;
+				setOR(orMat, index_i, index_j, OverlapRelationValues.UNDEFINED, true);
 			});
 		}
 	}
@@ -673,8 +671,10 @@ public class LayerOrderEnumerator {
 
 		if (value == OverlapRelationValues.LOWER) {
 			orMat[j][i] = OverlapRelationValues.UPPER;
-		} else {
+		} else if (value == OverlapRelationValues.UPPER) {
 			orMat[j][i] = OverlapRelationValues.LOWER;
+		} else {
+			orMat[j][i] = value;
 		}
 	}
 
