@@ -291,7 +291,7 @@ public class LayerOrderEnumerator {
 				for (int j = i + 1; j < size; j++) {
 					int index_j = answerStack.get(j).getFaceID();
 					if (orMat[index_i][index_j] == OverlapRelationValues.UNDEFINED) {
-						setOR(orMat, index_i, index_j, OverlapRelationValues.UPPER, true);
+						setOR(orMat, index_i, index_j, OverlapRelationValues.UPPER);
 
 						changedIndexPairs.add(new IndexPair(index_i, index_j));
 						nextChangedFaceIDs.add(index_i);
@@ -305,7 +305,7 @@ public class LayerOrderEnumerator {
 
 			// get back
 			changedIndexPairs.forEach(pair -> {
-				setOR(orMat, pair.i, pair.j, OverlapRelationValues.UNDEFINED, true);
+				setOR(orMat, pair.i, pair.j, OverlapRelationValues.UNDEFINED);
 			});
 		}
 	}
@@ -644,9 +644,8 @@ public class LayerOrderEnumerator {
 	}
 
 	/**
-	 * Sets {@code value} to {@code orMat[i][j]}. If {@code setsPairAtSameTime}
-	 * is {@code true}, This method sets inversion of {@code value} to
-	 * {@code orMat[j][i]}.
+	 * Sets {@code value} to {@code orMat[i][j]}. This method sets inversion of
+	 * {@code value} to {@code orMat[j][i]}.
 	 *
 	 * @param orMat
 	 *            overlap relation matrix
@@ -656,16 +655,9 @@ public class LayerOrderEnumerator {
 	 *            column index
 	 * @param value
 	 *            a value of {@link OverlapRelationValues}
-	 * @param setsPairAtSameTime
-	 *            {@code true} if {@code orMat[j][i]} should be set to inversion
-	 *            of {@code value} as well.
 	 */
-	private void setOR(final int[][] orMat, final int i, final int j, final int value,
-			final boolean setsPairAtSameTime) {
+	private void setOR(final int[][] orMat, final int i, final int j, final int value) {
 		orMat[i][j] = value;
-		if (!setsPairAtSameTime) {
-			return;
-		}
 
 		if (value == OverlapRelationValues.LOWER) {
 			orMat[j][i] = OverlapRelationValues.UPPER;
@@ -808,12 +800,12 @@ public class LayerOrderEnumerator {
 
 					if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
 							&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {
-						setOR(orMat, index_i, index_j, OverlapRelationValues.UPPER, true);
+						setOR(orMat, index_i, index_j, OverlapRelationValues.UPPER);
 						return true;
 					}
 					if (orMat[index_i][index_k] == OverlapRelationValues.LOWER
 							&& orMat[index_k][index_j] == OverlapRelationValues.LOWER) {
-						setOR(orMat, index_i, index_j, OverlapRelationValues.LOWER, true);
+						setOR(orMat, index_i, index_j, OverlapRelationValues.LOWER);
 						return true;
 					}
 				}
@@ -855,11 +847,11 @@ public class LayerOrderEnumerator {
 					}
 					if (orMat[index_i][index_k] != OverlapRelationValues.UNDEFINED
 							&& orMat[index_j][index_k] == OverlapRelationValues.UNDEFINED) {
-						setOR(orMat, index_j, index_k, orMat[index_i][index_k], true);
+						setOR(orMat, index_j, index_k, orMat[index_i][index_k]);
 						bChanged = true;
 					} else if (orMat[index_j][index_k] != OverlapRelationValues.UNDEFINED
 							&& orMat[index_i][index_k] == OverlapRelationValues.UNDEFINED) {
-						setOR(orMat, index_i, index_k, orMat[index_j][index_k], true);
+						setOR(orMat, index_i, index_k, orMat[index_j][index_k]);
 						bChanged = true;
 					}
 				}
@@ -886,11 +878,9 @@ public class LayerOrderEnumerator {
 			overlapRelation[i][i] = OverlapRelationValues.NO_OVERLAP;
 			for (int j = i + 1; j < size; j++) {
 				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), eps(paperSize))) {
-					overlapRelation[i][j] = OverlapRelationValues.UNDEFINED;
-					overlapRelation[j][i] = OverlapRelationValues.UNDEFINED;
+					setOR(overlapRelation, i, j, OverlapRelationValues.UNDEFINED);
 				} else {
-					overlapRelation[i][j] = OverlapRelationValues.NO_OVERLAP;
-					overlapRelation[j][i] = OverlapRelationValues.NO_OVERLAP;
+					setOR(overlapRelation, i, j, OverlapRelationValues.NO_OVERLAP);
 				}
 			}
 		}
@@ -925,9 +915,9 @@ public class LayerOrderEnumerator {
 
 				if ((face.isFaceFront() && he.getType() == OriLine.Type.MOUNTAIN.toInt())
 						|| (!face.isFaceFront() && he.getType() == OriLine.Type.VALLEY.toInt())) {
-					setOR(overlapRelation, faceID, pairFaceID, OverlapRelationValues.UPPER, true);
+					setOR(overlapRelation, faceID, pairFaceID, OverlapRelationValues.UPPER);
 				} else {
-					setOR(overlapRelation, faceID, pairFaceID, OverlapRelationValues.LOWER, true);
+					setOR(overlapRelation, faceID, pairFaceID, OverlapRelationValues.LOWER);
 				}
 			}
 		}
