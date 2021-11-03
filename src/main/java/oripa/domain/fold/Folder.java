@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -46,12 +47,13 @@ import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.util.Matrices;
+import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
 public class Folder {
 	private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
-	private ArrayList<StackConditionOf4Faces> condition4s;
+	private HashSet<StackConditionOf4Faces> condition4s;
 	private List<SubFace> subFaces;
 
 	private final SubFacesFactory subFacesFactory;
@@ -119,7 +121,7 @@ public class Folder {
 
 		holdCondition3s(faces, paperSize, overlapRelation);
 
-		condition4s = new ArrayList<>();
+		condition4s = new HashSet<>();
 		holdCondition4s(edges, overlapRelation);
 
 		estimation(faces, overlapRelation);
@@ -135,17 +137,25 @@ public class Folder {
 				.sorted(Comparator.comparing(SubFace::answerStackCount))
 				.collect(Collectors.toList());
 
+		var watch = new StopWatch(true);
+
 		faceOverlappingIndexIntersections = createfaceOverlappingIndexIntersections(faces, paperSize);
 		faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
+		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
+
+		watch.start();
+
 		var changedFaceIDs = faces.stream().map(OriFace::getFaceID).collect(Collectors.toSet());
 		callCount = 0;
 		penetrationTestCallCount = 0;
 		penetrationCount = 0;
-		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs, paperSize);
+		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs);
+		var time = watch.getMilliSec();
 
 		logger.debug("#call = {}", callCount);
 		logger.debug("#penetrationTest = {}", penetrationTestCallCount);
 		logger.debug("#penetration = {}", penetrationCount);
+		logger.debug("time = {}[ms]", time);
 
 		overlapRelationList.setCurrentORmatIndex(0);
 		if (overlapRelationList.isEmpty()) {
@@ -232,6 +242,30 @@ public class Folder {
 		return indices;
 	}
 
+	private class IndexPair {
+		private final int i;
+		private final int j;
+
+		public IndexPair(final int i, final int j) {
+			this.i = i;
+			this.j = j;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (!(obj instanceof IndexPair)) {
+				return false;
+			}
+			var o = (IndexPair) obj;
+			return i == o.i && j == o.j;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(i, j);
+		}
+	}
+
 	/**
 	 * Determines overlap relations which are left uncertain after using
 	 * necessary conditions.
@@ -247,23 +281,26 @@ public class Folder {
 	 * @param changedFaceIDs
 	 *            IDs of faces whose overlap relation changed. should contain
 	 *            all face IDs for the first call.
-	 * @param paperSize
-	 *            paper size
 	 */
 	private void findAnswer(
 			final List<OriFace> faces,
 			final OverlapRelationList overlapRelationList, final int subFaceIndex, final int[][] orMat,
-			final Set<Integer> changedFaceIDs, final double paperSize) {
+			final Set<Integer> changedFaceIDs) {
 		callCount++;
 
 		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
 
 		if (!changedFaceIDs.isEmpty()) {
 			penetrationTestCallCount++;
-			if (detectPenetration(faces, changedFaceIDs, orMat, paperSize)) {
+			if (detectPenetrationBy3faces(faces, changedFaceIDs, orMat)) {
 				penetrationCount++;
 				return;
 			}
+		}
+
+		if (detectPenetrationBy4faces(orMat)) {
+			penetrationCount++;
+			return;
 		}
 
 		if (subFaceIndex == subFaces.size()) {
@@ -275,8 +312,8 @@ public class Folder {
 		SubFace sub = subFaces.get(subFaceIndex);
 
 		if (sub.allFaceOrderDecided) {
-			var passMat = Matrices.clone(orMat);
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, passMat, new HashSet<>(), paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, orMat,
+					new HashSet<>());
 			return;
 		}
 
@@ -285,7 +322,7 @@ public class Folder {
 			if (!isCorrectStackOrder(answerStack, orMat)) {
 				continue;
 			}
-			var nextORMat = Matrices.clone(orMat);
+			var changedIndexPairs = new ArrayList<IndexPair>();
 			var nextChangedFaceIDs = new HashSet<Integer>();
 
 			// determine overlap relations according to stack
@@ -293,18 +330,28 @@ public class Folder {
 				int index_i = answerStack.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
 					int index_j = answerStack.get(j).getFaceID();
-					nextORMat[index_i][index_j] = OverlapRelationValues.UPPER;
-					nextORMat[index_j][index_i] = OverlapRelationValues.LOWER;
+					if (orMat[index_i][index_j] == OverlapRelationValues.UNDEFINED) {
+						orMat[index_i][index_j] = OverlapRelationValues.UPPER;
+						orMat[index_j][index_i] = OverlapRelationValues.LOWER;
 
-					if (nextORMat[index_i][index_j] != orMat[index_i][index_j] ||
-							nextORMat[index_j][index_i] != orMat[index_j][index_i]) {
+						changedIndexPairs.add(new IndexPair(index_i, index_j));
 						nextChangedFaceIDs.add(index_i);
 						nextChangedFaceIDs.add(index_j);
 					}
 				}
 			}
 
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, nextORMat, nextChangedFaceIDs, paperSize);
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1,
+					orMat, nextChangedFaceIDs);
+
+			// get back
+			changedIndexPairs.forEach(pair -> {
+				final int index_i = pair.i;
+				final int index_j = pair.j;
+				orMat[index_i][index_j] = OverlapRelationValues.UNDEFINED;
+				orMat[index_j][index_i] = OverlapRelationValues.UNDEFINED;
+
+			});
 		}
 	}
 
@@ -320,16 +367,15 @@ public class Folder {
 	 *            IDs of faces whose overlap relation changed.
 	 * @param orMat
 	 *            overlap relation matrix.
-	 * @param paperSize
-	 *            paper size.
 	 * @return true if there is a face which penetrates the sheet of paper.
 	 */
-	private boolean detectPenetration(final List<OriFace> faces, final Set<Integer> changedFaceIDs, final int[][] orMat,
-			final double paperSize) {
+	private boolean detectPenetrationBy3faces(final List<OriFace> faces, final Set<Integer> changedFaceIDs,
+			final int[][] orMat) {
 		var checked = new boolean[faces.size()][faces.size()];
 
 		for (var faceID : changedFaceIDs) {
 			var face = faces.get(faceID);
+//		for (var face : faces) {
 			for (var he : face.halfedgeIterable()) {
 				var pair = he.getPair();
 				if (pair == null) {
@@ -385,6 +431,89 @@ public class Folder {
 	}
 
 	/**
+	 *
+	 * @param orMat
+	 * @param i
+	 * @param j
+	 * @return {@code true} if
+	 *         {@code orMat[i][j] == OverlapRelationValues.LOWER}.
+	 */
+	private boolean isLower(final int[][] orMat, final int i, final int j) {
+		return orMat[i][j] == OverlapRelationValues.LOWER;
+	}
+
+	/**
+	 * Tests all cases of 4-face layer ordering condition.
+	 *
+	 * @param orMat
+	 * @return {@code true} if penetration occurs, i.e., 4-face layer ordering
+	 *         condition is not satisfied.
+	 */
+	private boolean detectPenetrationBy4faces(final int[][] orMat) {
+		boolean correct = true;
+		for (var cond : condition4s) {
+			if (!cond.isDetermined(orMat)) {
+				continue;
+			}
+
+			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
+			// lower1 > lower2
+			if (orMat[cond.lower1][cond.upper2] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper1, cond.upper2);
+				correct &= isLower(orMat, cond.upper1, cond.lower2);
+				correct &= isLower(orMat, cond.lower1, cond.lower2);
+			}
+
+			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
+			// lower2 > lower1
+			if (orMat[cond.lower2][cond.upper1] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper2, cond.upper1);
+				correct &= isLower(orMat, cond.upper2, cond.lower1);
+				correct &= isLower(orMat, cond.lower2, cond.lower1);
+			}
+
+			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
+			// lower1
+			if (orMat[cond.upper1][cond.upper2] == OverlapRelationValues.LOWER
+					&& orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper1, cond.lower2);
+				correct &= isLower(orMat, cond.lower2, cond.lower1);
+			}
+
+			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
+			// lower1
+			if (orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER
+					&& orMat[cond.lower2][cond.lower1] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper1, cond.upper2);
+				correct &= isLower(orMat, cond.upper2, cond.lower1);
+			}
+
+			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
+			// lower2
+			if (orMat[cond.upper2][cond.upper1] == OverlapRelationValues.LOWER
+					&& orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper2, cond.lower1);
+				correct &= isLower(orMat, cond.lower1, cond.lower2);
+			}
+
+			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
+			// lower2
+			if (orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER
+					&& orMat[cond.lower1][cond.lower2] == OverlapRelationValues.LOWER) {
+				correct &= isLower(orMat, cond.upper2, cond.upper1);
+				correct &= isLower(orMat, cond.upper1, cond.lower2);
+			}
+
+			if (!correct) {
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
+	/**
 	 * Whether the order of faces in {@code answerStack} is correct or not
 	 * according to {@code orMat}.
 	 *
@@ -397,10 +526,10 @@ public class Folder {
 	private boolean isCorrectStackOrder(final List<OriFace> answerStack, final int[][] orMat) {
 		int size = answerStack.size();
 
-		for (int i = 0; i < size; i++) {
-			int index_i = answerStack.get(i).getFaceID();
-			for (int j = i + 1; j < size; j++) {
-				int index_j = answerStack.get(j).getFaceID();
+		return IntStream.range(0, size).allMatch(i -> {
+			final int index_i = answerStack.get(i).getFaceID();
+			return IntStream.range(i + 1, size).allMatch(j -> {
+				final int index_j = answerStack.get(j).getFaceID();
 				// stack_index = 0 means the top of stack (looking down
 				// the folded model on a table).
 				// therefore a face with smaller stack_index i should be
@@ -408,10 +537,9 @@ public class Folder {
 				if (orMat[index_i][index_j] == OverlapRelationValues.LOWER) {
 					return false;
 				}
-			}
-		}
-
-		return true;
+				return true;
+			});
+		});
 	}
 
 	/**

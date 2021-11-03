@@ -18,6 +18,10 @@
  */
 package oripa.util;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author OUCHI Koji
  *
@@ -49,4 +53,11 @@ public class Matrices {
 		return to;
 	}
 
+	public static String toString(final int[][] mat) {
+		var strings = List.of(mat).stream()
+				.map(a -> String.join(",", Arrays.toString(a)))
+				.collect(Collectors.toList());
+
+		return String.join(",", strings);
+	}
 }
