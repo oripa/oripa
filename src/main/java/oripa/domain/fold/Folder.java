@@ -54,8 +54,6 @@ public class Folder {
 
 		simpleFolder.simpleFoldWithoutZorder(origamiModel);
 		folderTool.setFacesOutline(faces);
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
-		sortedFaces.addAll(faces);
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
@@ -89,10 +87,6 @@ public class Folder {
 		simpleFolder.foldWithoutLineType(model);
 
 		List<OriFace> faces = model.getFaces();
-
-//		Collections.sort(faces, new FaceOrderComparator());
-		model.getSortedFaces().clear();
-		model.getSortedFaces().addAll(faces);
 
 		folderTool.setFacesOutline(faces);
 	}
