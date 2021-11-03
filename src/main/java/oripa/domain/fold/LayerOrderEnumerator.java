@@ -256,11 +256,10 @@ public class LayerOrderEnumerator {
 				penetrationCount++;
 				return;
 			}
-		}
-
-		if (detectPenetrationBy4faces(orMat)) {
-			penetrationCount++;
-			return;
+			if (detectPenetrationBy4faces(orMat)) {
+				penetrationCount++;
+				return;
+			}
 		}
 
 		if (subFaceIndex == subFaces.size()) {
