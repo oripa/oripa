@@ -35,6 +35,11 @@ public class OrigamiModel {
 	private List<OriVertex> vertices = new ArrayList<OriVertex>();
 	private List<OriEdge> edges = new ArrayList<OriEdge>();
 
+	/**
+	 * Maybe this is a garbage by experiments. There is no need of sorting.
+	 * Essentially equivalent to {@code faces}. This will be deleted.
+	 */
+	@Deprecated
 	private List<OriFace> sortedFaces = new ArrayList<OriFace>();
 
 	private boolean folded = false;
@@ -83,10 +88,20 @@ public class OrigamiModel {
 		return paperSize;
 	}
 
+	/**
+	 * Maybe this is a garbage by experiments. There is no need of sorting.
+	 * Essentially equivalent to {@code faces}. This will be deleted.
+	 */
+	@Deprecated
 	public List<OriFace> getSortedFaces() {
 		return sortedFaces;
 	}
 
+	/**
+	 * Maybe this is a garbage by experiments. There is no need of sorting.
+	 * Essentially equivalent to {@code faces}. This will be deleted.
+	 */
+	@Deprecated
 	public void setSortedFaces(final List<OriFace> sortedFaces) {
 		this.sortedFaces = sortedFaces;
 	}
