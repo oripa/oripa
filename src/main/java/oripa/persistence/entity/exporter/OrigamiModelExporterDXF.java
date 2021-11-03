@@ -57,7 +57,6 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 			Vector2d modelCenter = new Vector2d();
 
 			List<OriFace> faces = origamiModel.getFaces();
-			List<OriFace> sortedFaces = origamiModel.getSortedFaces();
 
 			var domain = new RectangleDomain();
 			for (OriFace face : faces) {
@@ -84,7 +83,7 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 			bw.write("  2\n");
 			bw.write("ENTITIES\n");
 
-			for (OriFace face : sortedFaces) {
+			for (OriFace face : faces) {
 				for (var he : face.halfedgeIterable()) {
 
 					bw.write("  0\n");
