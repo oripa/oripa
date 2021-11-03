@@ -39,6 +39,7 @@ public class FolderFactory {
 								new LineAdder()),
 						new OrigamiModelFactory(),
 						new SplitFacesToSubFacesConverter(),
-						new ParentFacesCollector()));
+						new ParentFacesCollector()),
+				new SimpleFolder());
 	}
 }
