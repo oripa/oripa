@@ -40,15 +40,15 @@ public class OrigamiModelGraphicDrawer {
 			final OriLine scissorsLine,
 			final ModelDisplayMode modelDisplayMode,
 			final double scale) {
-		List<OriFace> sortedFaces = origamiModel.getSortedFaces();
+		List<OriFace> faces = origamiModel.getFaces();
 
-		logger.debug("sortedFaces.size() = " + sortedFaces.size());
+		logger.debug("sortedFaces.size() = " + faces.size());
 
 		drawer.selectDefaultStroke(scale);
 		if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
 			drawer.setTranslucent(true);
 		}
-		for (OriFace face : sortedFaces) {
+		for (OriFace face : faces) {
 			logger.trace("face: " + face);
 			switch (modelDisplayMode) {
 			case FILL_ALPHA:
