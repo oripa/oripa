@@ -42,8 +42,6 @@ public class OrigamiModelGraphicDrawer {
 			final double scale) {
 		List<OriFace> faces = origamiModel.getFaces();
 
-		logger.debug("sortedFaces.size() = " + faces.size());
-
 		drawer.selectDefaultStroke(scale);
 		if (modelDisplayMode == ModelDisplayMode.FILL_ALPHA) {
 			drawer.setTranslucent(true);
