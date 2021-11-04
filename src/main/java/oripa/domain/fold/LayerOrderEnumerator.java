@@ -401,7 +401,7 @@ public class LayerOrderEnumerator {
 	private boolean detectPenetrationBy4faces(final OverlapRelation overlapRelation) {
 		boolean correct = true;
 		for (var cond : condition4s) {
-			if (!cond.isDetermined(overlapRelation.get())) {
+			if (!cond.isDetermined(overlapRelation)) {
 				continue;
 			}
 
