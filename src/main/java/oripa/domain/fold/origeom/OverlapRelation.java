@@ -38,15 +38,11 @@ public class OverlapRelation {
 	}
 
 	public static OverlapRelation clone(final OverlapRelation o) {
-		return new OverlapRelation(o.get());
+		return new OverlapRelation(o.overlapRelation);
 	}
 
 	public int get(final int i, final int j) {
 		return overlapRelation[i][j];
-	}
-
-	public int[][] get() {
-		return overlapRelation;
 	}
 
 	public int getSize() {
