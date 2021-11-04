@@ -24,7 +24,7 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.origeom.OverlapRelationValues;
+import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 
@@ -55,11 +55,11 @@ public class SubFace {
 	 *
 	 * @param modelFaces
 	 *            all faces of inputted model.
-	 * @param orMat
+	 * @param overlapRelation
 	 *            overlap relation matrix.
 	 * @return the number of possible stacks.
 	 */
-	public int sortFaceOverlapOrder(final List<OriFace> modelFaces, final int[][] orMat) {
+	public int sortFaceOverlapOrder(final List<OriFace> modelFaces, final OverlapRelation overlapRelation) {
 		sortedParentFaces.clear();
 		for (int i = 0; i < parentFaces.size(); i++) {
 			sortedParentFaces.add(null);
@@ -70,8 +70,8 @@ public class SubFace {
 		int f_num = parentFaces.size();
 		for (int i = 0; i < f_num; i++) {
 			for (int j = i + 1; j < f_num; j++) {
-				if (orMat[parentFaces.get(i).getFaceID()][parentFaces
-						.get(j).getFaceID()] == OverlapRelationValues.UNDEFINED) {
+				if (overlapRelation.isUndefined(parentFaces.get(i).getFaceID(),
+						parentFaces.get(j).getFaceID())) {
 					cnt++;
 				}
 			}
@@ -102,7 +102,7 @@ public class SubFace {
 
 			for (OriFace ff : parentFaces) {
 				var anotherFaceID = ff.getFaceID();
-				if (orMat[faceID][anotherFaceID] == OverlapRelationValues.LOWER) {
+				if (overlapRelation.isLower(faceID, anotherFaceID)) {
 					f.addStackConditionOf2Faces(Integer.valueOf(anotherFaceID));
 				}
 			}

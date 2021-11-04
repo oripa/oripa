@@ -38,7 +38,6 @@ import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelation;
-import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
@@ -100,7 +99,7 @@ public class LayerOrderEnumerator {
 		estimation(faces, overlapRelation);
 
 		for (SubFace sub : subFaces) {
-			sub.sortFaceOverlapOrder(faces, overlapRelation.get());
+			sub.sortFaceOverlapOrder(faces, overlapRelation);
 		}
 
 		// heuristic: fewer answer stacks mean the search on the subface has
@@ -298,7 +297,7 @@ public class LayerOrderEnumerator {
 				for (int j = i + 1; j < size; j++) {
 					int index_j = answerStack.get(j).getFaceID();
 					if (overlapRelation.isUndefined(index_i, index_j)) {
-						overlapRelation.set(index_i, index_j, OverlapRelationValues.UPPER);
+						overlapRelation.setUpper(index_i, index_j);
 
 						changedIndexPairs.add(new IndexPair(index_i, index_j));
 						nextChangedFaceIDs.add(index_i);
@@ -312,7 +311,7 @@ public class LayerOrderEnumerator {
 
 			// get back
 			changedIndexPairs.forEach(pair -> {
-				overlapRelation.set(pair.i, pair.j, OverlapRelationValues.UNDEFINED);
+				overlapRelation.setUndefined(pair.i, pair.j);
 			});
 		}
 	}
@@ -761,12 +760,12 @@ public class LayerOrderEnumerator {
 
 					if (overlapRelation.isUpper(index_i, index_k)
 							&& overlapRelation.isUpper(index_k, index_j)) {
-						overlapRelation.set(index_i, index_j, OverlapRelationValues.UPPER);
+						overlapRelation.setUpper(index_i, index_j);
 						return true;
 					}
 					if (overlapRelation.isLower(index_i, index_k)
 							&& overlapRelation.isLower(index_k, index_j)) {
-						overlapRelation.set(index_i, index_j, OverlapRelationValues.LOWER);
+						overlapRelation.setLower(index_i, index_j);
 						return true;
 					}
 				}
@@ -853,9 +852,9 @@ public class LayerOrderEnumerator {
 
 				if ((face.isFaceFront() && he.getType() == OriLine.Type.MOUNTAIN.toInt())
 						|| (!face.isFaceFront() && he.getType() == OriLine.Type.VALLEY.toInt())) {
-					overlapRelation.set(faceID, pairFaceID, OverlapRelationValues.UPPER);
+					overlapRelation.setUpper(faceID, pairFaceID);
 				} else {
-					overlapRelation.set(faceID, pairFaceID, OverlapRelationValues.LOWER);
+					overlapRelation.setLower(faceID, pairFaceID);
 				}
 			}
 		}
@@ -877,12 +876,12 @@ public class LayerOrderEnumerator {
 		OverlapRelation overlapRelation = new OverlapRelation(size);
 
 		for (int i = 0; i < size; i++) {
-			overlapRelation.set(i, i, OverlapRelationValues.NO_OVERLAP);
+			overlapRelation.setNoOverlap(i, i);
 			for (int j = i + 1; j < size; j++) {
 				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), eps(paperSize))) {
-					overlapRelation.set(i, j, OverlapRelationValues.UNDEFINED);
+					overlapRelation.setUndefined(i, j);
 				} else {
-					overlapRelation.set(i, j, OverlapRelationValues.NO_OVERLAP);
+					overlapRelation.setNoOverlap(i, j);
 				}
 			}
 		}

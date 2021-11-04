@@ -49,17 +49,81 @@ public class OverlapRelation {
 	 *            column index
 	 * @param value
 	 *            a value of {@link OverlapRelationValues}
+	 * @throws IllegalArgumentException
+	 *             when {@code value} is not of {@link OverlapRelationValues}.
 	 */
-	public void set(final int i, final int j, final int value) {
+	public void set(final int i, final int j, final int value) throws IllegalArgumentException {
 		overlapRelation[i][j] = value;
 
-		if (value == OverlapRelationValues.LOWER) {
+		switch (value) {
+		case OverlapRelationValues.LOWER:
 			overlapRelation[j][i] = OverlapRelationValues.UPPER;
-		} else if (value == OverlapRelationValues.UPPER) {
+			break;
+		case OverlapRelationValues.UPPER:
 			overlapRelation[j][i] = OverlapRelationValues.LOWER;
-		} else {
+			break;
+		case OverlapRelationValues.UNDEFINED:
+		case OverlapRelationValues.NO_OVERLAP:
 			overlapRelation[j][i] = value;
+			break;
+
+		default:
+			throw new IllegalArgumentException("value argument is wrong.");
 		}
+	}
+
+	/**
+	 * Sets {@code OverlapRelationValues.LOWER} to
+	 * {@code overlapRelation[i][j]}. This method sets
+	 * {@code OverlapRelationValues.UPPER} to {@code overlapRelation[j][i]}.
+	 *
+	 * @param i
+	 *            row index
+	 * @param j
+	 *            column index
+	 */
+	public void setLower(final int i, final int j) {
+		set(i, j, OverlapRelationValues.LOWER);
+	}
+
+	/**
+	 * Sets {@code OverlapRelationValues.UPPER} to
+	 * {@code overlapRelation[i][j]}. This method sets
+	 * {@code OverlapRelationValues.LOWER} to {@code overlapRelation[j][i]}.
+	 *
+	 * @param i
+	 *            row index
+	 * @param j
+	 *            column index
+	 */
+	public void setUpper(final int i, final int j) {
+		set(i, j, OverlapRelationValues.UPPER);
+	}
+
+	/**
+	 * Sets {@code OverlapRelationValues.UNDEFINED} to
+	 * {@code overlapRelation[i][j]} and {@code overlapRelation[j][i]}.
+	 *
+	 * @param i
+	 *            row index
+	 * @param j
+	 *            column index
+	 */
+	public void setUndefined(final int i, final int j) {
+		set(i, j, OverlapRelationValues.UNDEFINED);
+	}
+
+	/**
+	 * Sets {@code OverlapRelationValues.NO_OVERLAP} to
+	 * {@code overlapRelation[i][j]} and {@code overlapRelation[j][i]}.
+	 *
+	 * @param i
+	 *            row index
+	 * @param j
+	 *            column index
+	 */
+	public void setNoOverlap(final int i, final int j) {
+		set(i, j, OverlapRelationValues.NO_OVERLAP);
 	}
 
 	/**
