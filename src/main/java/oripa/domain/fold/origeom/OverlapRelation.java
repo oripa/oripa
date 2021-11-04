@@ -181,8 +181,8 @@ public class OverlapRelation {
 
 	/**
 	 *
-	 * @return {@code true} if
-	 *         {@code overlapRelation[i][j] == OverlapRelationValues.LOWER}.
+	 * @return {@code true} if {@code overlapRelation[i][j]} is equal to
+	 *         {@link OverlapRelationValues#LOWER}.
 	 */
 	public boolean isLower(final int i, final int j) {
 		return overlapRelation[i][j] == OverlapRelationValues.LOWER;
@@ -190,8 +190,8 @@ public class OverlapRelation {
 
 	/**
 	 *
-	 * @return {@code true} if
-	 *         {@code overlapRelation[i][j] == OverlapRelationValues.UPPER}.
+	 * @return {@code true} if {@code overlapRelation[i][j]} is equal to
+	 *         {@link OverlapRelationValues#UPPER}.
 	 */
 	public boolean isUpper(final int i, final int j) {
 		return overlapRelation[i][j] == OverlapRelationValues.UPPER;
@@ -199,8 +199,8 @@ public class OverlapRelation {
 
 	/**
 	 *
-	 * @return {@code true} if
-	 *         {@code overlapRelation[i][j] == OverlapRelationValues.UNDEFINED}.
+	 * @return {@code true} if {@code overlapRelation[i][j]} is equal to
+	 *         {@link OverlapRelationValues#UNDEFINED}.
 	 */
 	public boolean isUndefined(final int i, final int j) {
 		return overlapRelation[i][j] == OverlapRelationValues.UNDEFINED;
@@ -208,8 +208,8 @@ public class OverlapRelation {
 
 	/**
 	 *
-	 * @return {@code true} if
-	 *         {@code overlapRelation[i][j] == OverlapRelationValues.NO_OVERLAP}.
+	 * @return {@code true} if {@code overlapRelation[i][j]} is equal to
+	 *         {@link OverlapRelationValues#NO_OVERLAP}.
 	 */
 	public boolean isNoOverlap(final int i, final int j) {
 		return overlapRelation[i][j] == OverlapRelationValues.NO_OVERLAP;
