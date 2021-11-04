@@ -406,6 +406,7 @@ public class LayerOrderEnumerator {
 	 * Tests all cases of 4-face layer ordering condition.
 	 *
 	 * @param orMat
+	 *            overlap relation matrix
 	 * @return {@code true} if penetration occurs, i.e., 4-face layer ordering
 	 *         condition is not satisfied.
 	 */
@@ -525,8 +526,11 @@ public class LayerOrderEnumerator {
 	 * touching edge are covered by face[k] then OR[i][k] = OR[j][k]
 	 *
 	 * @param faces
+	 *            all faces of the model
 	 * @param paperSize
+	 *            paper size before fold
 	 * @param overlapRelation
+	 *            overlap relation matrix
 	 */
 	private void holdCondition3s(
 			final List<OriFace> faces, final double paperSize, final int[][] overlapRelation) {
@@ -570,9 +574,12 @@ public class LayerOrderEnumerator {
 	/**
 	 * Creates 4-face condition and sets to subfaces.
 	 *
-	 * @param parentFaces
+	 * @param edges
+	 *            all eges of the model
 	 * @param paperSize
+	 *            paper size before fold
 	 * @param overlapRelation
+	 *            overlap relation matrix
 	 */
 	private void holdCondition4s(
 			final List<OriEdge> edges, final int[][] overlapRelation) {
@@ -675,9 +682,6 @@ public class LayerOrderEnumerator {
 
 	/**
 	 *
-	 * @param orMat
-	 * @param i
-	 * @param j
 	 * @return true if LOWER and UPPER is set.
 	 */
 	private boolean setLowerValueIfUndefined(final int[][] orMat, final int i, final int j) {
@@ -820,11 +824,13 @@ public class LayerOrderEnumerator {
 	}
 
 	/**
-	 * If face[i] and face[j] touching edge is covered by face[k] then OR[i][k]
-	 * = OR[j][k]
+	 * If face[i] and face[j] touching edge is covered by face[k] then
+	 * orMat[i][k] = orMat[j][k].
 	 *
 	 * @param faces
+	 *            all faces of the model
 	 * @param orMat
+	 *            overlap relation matrix
 	 * @return whether orMat is changed or not.
 	 */
 	private boolean estimate_by3faces(
@@ -871,8 +877,10 @@ public class LayerOrderEnumerator {
 	 * "undefined"
 	 *
 	 * @param faces
+	 *            all faces of the model
 	 * @param paperSize
-	 * @return
+	 *            paper size before fold
+	 * @return initialized overlap relation matrix
 	 */
 	private int[][] createOverlapRelation(final List<OriFace> faces, final double paperSize) {
 
@@ -897,7 +905,9 @@ public class LayerOrderEnumerator {
 	 * Determines the overlap relations by mountain/valley.
 	 *
 	 * @param faces
+	 *            all faces of the model
 	 * @param overlapRelation
+	 *            overlap relation matrix
 	 */
 	private void determineOverlapRelationByLineType(
 			final List<OriFace> faces, final int[][] overlapRelation) {
