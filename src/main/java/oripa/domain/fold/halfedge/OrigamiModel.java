@@ -128,20 +128,14 @@ public class OrigamiModel {
 	public void flipXCoordinates() {
 		var domain = new RectangleDomain();
 
-		for (OriFace face : faces) {
-			face.halfedgeStream().forEach(he -> {
-				domain.enlarge(he.getPosition());
-			});
-		}
+		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
+			domain.enlarge(he.getPosition());
+		});
 
 		double centerX = domain.getCenterX();
 
 		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
 			he.getPositionForDisplay().x = 2 * centerX - he.getPositionForDisplay().x;
-		});
-
-		faces.forEach(face -> {
-			face.invertFaceFront();
 		});
 	}
 
