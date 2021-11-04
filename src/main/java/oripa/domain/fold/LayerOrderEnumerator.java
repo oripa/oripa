@@ -98,14 +98,14 @@ public class LayerOrderEnumerator {
 		estimation(faces, overlapRelation);
 
 		for (SubFace sub : subFaces) {
-			sub.sortFaceOverlapOrder(faces, overlapRelation);
+			sub.buildLocalLayerOrders(faces, overlapRelation);
 		}
 
 		// heuristic: fewer answer stacks mean the search on the subface has
 		// more possibility to be correct. Such confident search node should be
 		// consumed at early stage.
 		subFaces = subFaces.stream()
-				.sorted(Comparator.comparing(SubFace::answerStackCount))
+				.sorted(Comparator.comparing(SubFace::localLayerOrderCount))
 				.collect(Collectors.toList());
 
 		var watch = new StopWatch(true);
@@ -282,9 +282,9 @@ public class LayerOrderEnumerator {
 			return;
 		}
 
-		for (var answerStack : sub.answerStacks) {
-			int size = answerStack.size();
-			if (!isCorrectStackOrder(answerStack, overlapRelation)) {
+		for (var localLayerOrder : sub.localLayerOrders) {
+			int size = localLayerOrder.size();
+			if (!isCorrectLayerOrder(localLayerOrder, overlapRelation)) {
 				continue;
 			}
 			var changedIndexPairs = new ArrayList<IndexPair>();
@@ -292,9 +292,9 @@ public class LayerOrderEnumerator {
 
 			// determine overlap relations according to stack
 			for (int i = 0; i < size; i++) {
-				int index_i = answerStack.get(i).getFaceID();
+				int index_i = localLayerOrder.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
-					int index_j = answerStack.get(j).getFaceID();
+					int index_j = localLayerOrder.get(j).getFaceID();
 					if (overlapRelation.isUndefined(index_i, index_j)) {
 						overlapRelation.setUpper(index_i, index_j);
 
@@ -463,22 +463,22 @@ public class LayerOrderEnumerator {
 	}
 
 	/**
-	 * Whether the order of faces in {@code answerStack} is correct or not
+	 * Whether the order of faces in {@code localLayerOrder} is correct or not
 	 * according to {@code overlapRelation}.
 	 *
-	 * @param answerStack
+	 * @param localLayerOrder
 	 *            stack of faces including the same subface.
 	 * @param overlapRelation
 	 *            overlap relation matrix.
 	 * @return true if the order is correct.
 	 */
-	private boolean isCorrectStackOrder(final List<OriFace> answerStack, final OverlapRelation overlapRelation) {
-		int size = answerStack.size();
+	private boolean isCorrectLayerOrder(final List<OriFace> localLayerOrder, final OverlapRelation overlapRelation) {
+		int size = localLayerOrder.size();
 
 		return IntStream.range(0, size).allMatch(i -> {
-			final int index_i = answerStack.get(i).getFaceID();
+			final int index_i = localLayerOrder.get(i).getFaceID();
 			return IntStream.range(i + 1, size).allMatch(j -> {
-				final int index_j = answerStack.get(j).getFaceID();
+				final int index_j = localLayerOrder.get(j).getFaceID();
 				// stack_index = 0 means the top of stack (looking down
 				// the folded model on a table).
 				// therefore a face with smaller stack_index i should be
