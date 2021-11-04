@@ -132,7 +132,7 @@ public class OverlapRelation {
 	 *         respectively.
 	 */
 	public boolean setLowerIfUndefined(final int i, final int j) {
-		if (overlapRelation[i][j] != OverlapRelationValues.UNDEFINED) {
+		if (!isUndefined(i, j)) {
 			return false;
 		}
 		overlapRelation[i][j] = OverlapRelationValues.LOWER;
