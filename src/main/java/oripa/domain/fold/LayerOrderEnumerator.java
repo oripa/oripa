@@ -331,7 +331,7 @@ public class LayerOrderEnumerator {
 	 */
 	private boolean detectPenetrationBy3faces(final List<OriFace> faces, final Set<Integer> changedFaceIDs,
 			final int[][] orMat) {
-		var checked = new boolean[faces.size()][faces.size()];
+		var checked = new HashSet<IndexPair>();
 
 		for (var faceID : changedFaceIDs) {
 			var face = faces.get(faceID);
@@ -345,14 +345,14 @@ public class LayerOrderEnumerator {
 				var index_i = he.getFace().getFaceID();
 				var index_j = pair.getFace().getFaceID();
 
-				if (checked[index_i][index_j]) {
+				if (checked.contains(new IndexPair(index_i, index_j))) {
 					continue;
 				}
 
 				if (orMat[index_i][index_j] != OverlapRelationValues.LOWER &&
 						orMat[index_i][index_j] != OverlapRelationValues.UPPER) {
-					checked[index_i][index_j] = true;
-					checked[index_j][index_i] = true;
+					checked.add(new IndexPair(index_i, index_j));
+					checked.add(new IndexPair(index_j, index_i));
 					continue;
 				}
 
@@ -382,8 +382,8 @@ public class LayerOrderEnumerator {
 					return true;
 				}
 
-				checked[index_i][index_j] = true;
-				checked[index_j][index_i] = true;
+				checked.add(new IndexPair(index_i, index_j));
+				checked.add(new IndexPair(index_j, index_i));
 			}
 		}
 
