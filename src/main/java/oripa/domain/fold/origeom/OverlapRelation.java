@@ -114,7 +114,7 @@ public class OverlapRelation {
 	/**
 	 * Sets {@link OverlapRelationValues#LOWER} to
 	 * {@code overlapRelation[i][j]}. This method sets
-	 * {@code OverlapRelationValues.UPPER} to {@code overlapRelation[j][i]}.
+	 * {@link OverlapRelationValues#UPPER} to {@code overlapRelation[j][i]}.
 	 *
 	 * @param i
 	 *            row index
@@ -128,7 +128,7 @@ public class OverlapRelation {
 	/**
 	 * Sets {@link OverlapRelationValues#UPPER} to
 	 * {@code overlapRelation[i][j]}. This method sets
-	 * {@code OverlapRelationValues.LOWER} to {@code overlapRelation[j][i]}.
+	 * {@link OverlapRelationValues#LOWER} to {@code overlapRelation[j][i]}.
 	 *
 	 * @param i
 	 *            row index
