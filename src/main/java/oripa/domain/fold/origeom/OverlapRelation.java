@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold.origeom;
 
+import oripa.util.Matrices;
+
 /**
  * A wrapper of integer matrix for overlap relation operations.
  *
@@ -31,12 +33,24 @@ public class OverlapRelation {
 		overlapRelation = new int[faceCount][faceCount];
 	}
 
+	private OverlapRelation(final int[][] orMat) {
+		overlapRelation = Matrices.clone(orMat);
+	}
+
+	public static OverlapRelation clone(final OverlapRelation o) {
+		return new OverlapRelation(o.get());
+	}
+
 	public int get(final int i, final int j) {
 		return overlapRelation[i][j];
 	}
 
 	public int[][] get() {
 		return overlapRelation;
+	}
+
+	public int getSize() {
+		return overlapRelation.length;
 	}
 
 	/**

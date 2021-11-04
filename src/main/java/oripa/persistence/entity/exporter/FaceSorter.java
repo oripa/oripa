@@ -18,51 +18,53 @@
 
 package oripa.persistence.entity.exporter;
 
-import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.origeom.OverlapRelationValues;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.origeom.OverlapRelation;
+
 public class FaceSorter {
 
-    private final List<OriFace> faces;
-    private final int[][] overlapRelation;
+	private final List<OriFace> faces;
+	private final OverlapRelation overlapRelation;
 
-    public FaceSorter(List<OriFace> faces, int[][] overlapRelation) {
-        this.faces = faces;
-        this.overlapRelation = overlapRelation;
-    }
+	public FaceSorter(final List<OriFace> faces, final OverlapRelation overlapRelation) {
+		this.faces = faces;
+		this.overlapRelation = overlapRelation;
+	}
 
-    public List<OriFace> sortFaces(boolean faceOrderFlip) {
-        ArrayList<OriFace> sortedFaces = new ArrayList<>();
+	public List<OriFace> sortFaces(final boolean faceOrderFlip) {
+		ArrayList<OriFace> sortedFaces = new ArrayList<>();
 
-        boolean[] isSorted = new boolean[faces.size()];
-        for (int i = 0; i < faces.size(); i++) {
-            for (int j = 0; j < overlapRelation.length; j++) {
-                if (!isSorted[j]) {
-                    if (canAddFace(isSorted, overlapRelation[j])) {
-                        isSorted[j] = true;
-                        sortedFaces.add(faces.get(j));
-                        break;
-                    }
-                }
-            }
-        }
+		boolean[] isSorted = new boolean[faces.size()];
+		for (int i = 0; i < faces.size(); i++) {
+			for (int j = 0; j < overlapRelation.getSize(); j++) {
+				if (!isSorted[j]) {
+					if (canAddFace(isSorted, overlapRelation, j)) {
+						isSorted[j] = true;
+						sortedFaces.add(faces.get(j));
+						break;
+					}
+				}
+			}
+		}
 
-        if(!faceOrderFlip) Collections.reverse(sortedFaces);
+		if (!faceOrderFlip) {
+			Collections.reverse(sortedFaces);
+		}
 
-        return sortedFaces;
-    }
+		return sortedFaces;
+	}
 
-    private boolean canAddFace(final boolean[] isSorted, final int[] overlapRelationOfJ) {
-        for (int k = 0; k < isSorted.length; k++) {
-            if ((!isSorted[k])
-                    && overlapRelationOfJ[k] == OverlapRelationValues.LOWER) {
-                return false;
-            }
-        }
-        return true;
-    }
+	private boolean canAddFace(final boolean[] isSorted, final OverlapRelation overlapRelation, final int j) {
+		for (int k = 0; k < isSorted.length; k++) {
+			if ((!isSorted[k])
+					&& overlapRelation.isLower(j, k)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

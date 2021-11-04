@@ -21,8 +21,10 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.List;
 
+import oripa.domain.fold.origeom.OverlapRelation;
+
 public class OverlapRelationList {
-	private List<int[][]> overlapRelations = new ArrayList<int[][]>();
+	private List<OverlapRelation> overlapRelations = new ArrayList<>();
 	private int currentORmatIndex = 0;
 
 	public void setNextIndex() {
@@ -38,15 +40,15 @@ public class OverlapRelationList {
 
 	}
 
-	public int[][] getOverlapRelation() {
+	public OverlapRelation getOverlapRelation() {
 		return overlapRelations.get(currentORmatIndex);
 	}
 
-	public List<int[][]> getFoldableOverlapRelations() {
+	public List<OverlapRelation> getFoldableOverlapRelations() {
 		return overlapRelations;
 	}
 
-	public void setFoldableOverlapRelations(final List<int[][]> foldableOverlapRelations) {
+	public void setFoldableOverlapRelations(final List<OverlapRelation> foldableOverlapRelations) {
 		this.overlapRelations = foldableOverlapRelations;
 	}
 

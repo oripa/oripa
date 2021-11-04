@@ -410,9 +410,9 @@ public class FoldedModelScreen extends JPanel
 							if (f_id == -1 && f_id2 != -1) {
 								cnt++;
 							} else {
-								int[][] overlapRelation = overlapRelationList.getOverlapRelation();
+								var overlapRelation = overlapRelationList.getOverlapRelation();
 
-								if (f_id2 != -1 && overlapRelation[f_id][f_id2] == renderFace) {
+								if (f_id2 != -1 && overlapRelation.get(f_id, f_id2) == renderFace) {
 									cnt++;
 								}
 							}
@@ -521,9 +521,9 @@ public class FoldedModelScreen extends JPanel
 				int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
 						: OverlapRelationValues.LOWER;
 
-				int[][] overlapRelation = overlapRelationList.getOverlapRelation();
+				var overlapRelation = overlapRelationList.getOverlapRelation();
 
-				if (zbuf[p] == -1 || overlapRelation[zbuf[p]][id] == renderFace) {
+				if (zbuf[p] == -1 || overlapRelation.get(zbuf[p], id) == renderFace) {
 
 					int tr = r >> 16;
 					int tg = g >> 16;

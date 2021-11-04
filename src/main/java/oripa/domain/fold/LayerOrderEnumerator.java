@@ -43,7 +43,6 @@ import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
-import oripa.util.Matrices;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
@@ -255,7 +254,7 @@ public class LayerOrderEnumerator {
 			final Set<Integer> changedFaceIDs) {
 		callCount++;
 
-		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
+		var foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
 
 		if (!changedFaceIDs.isEmpty()) {
 			penetrationTestCallCount++;
@@ -270,7 +269,7 @@ public class LayerOrderEnumerator {
 		}
 
 		if (subFaceIndex == subFaces.size()) {
-			var answer = Matrices.clone(overlapRelation.get());
+			var answer = OverlapRelation.clone(overlapRelation);
 			foldableOverlapRelations.add(answer);
 			return;
 		}
