@@ -29,22 +29,51 @@ import oripa.util.Matrices;
 public class OverlapRelation {
 	private final int[][] overlapRelation;
 
+	/**
+	 * Internally creates a n x n matrix where n is the given {@code faceCount}.
+	 *
+	 * @param faceCount
+	 *            the number of faces of the model.
+	 */
 	public OverlapRelation(final int faceCount) {
 		overlapRelation = new int[faceCount][faceCount];
 	}
 
+	/**
+	 * Deep copy.
+	 *
+	 * @param orMat
+	 *            a matrix to be copied.
+	 */
 	private OverlapRelation(final int[][] orMat) {
 		overlapRelation = Matrices.clone(orMat);
 	}
 
+	/**
+	 *
+	 * @param o
+	 *            an instance to be copied.
+	 * @return deep copy of given instance.
+	 */
 	public static OverlapRelation clone(final OverlapRelation o) {
 		return new OverlapRelation(o.overlapRelation);
 	}
 
+	/**
+	 *
+	 * @param i
+	 *            row index
+	 * @param j
+	 *            column index
+	 * @return [i][j] value.
+	 */
 	public int get(final int i, final int j) {
 		return overlapRelation[i][j];
 	}
 
+	/**
+	 * @return the n of n x n matrix.
+	 */
 	public int getSize() {
 		return overlapRelation.length;
 	}
@@ -152,8 +181,6 @@ public class OverlapRelation {
 
 	/**
 	 *
-	 * @param i
-	 * @param j
 	 * @return {@code true} if
 	 *         {@code overlapRelation[i][j] == OverlapRelationValues.LOWER}.
 	 */
@@ -161,14 +188,29 @@ public class OverlapRelation {
 		return overlapRelation[i][j] == OverlapRelationValues.LOWER;
 	}
 
+	/**
+	 *
+	 * @return {@code true} if
+	 *         {@code overlapRelation[i][j] == OverlapRelationValues.UPPER}.
+	 */
 	public boolean isUpper(final int i, final int j) {
 		return overlapRelation[i][j] == OverlapRelationValues.UPPER;
 	}
 
+	/**
+	 *
+	 * @return {@code true} if
+	 *         {@code overlapRelation[i][j] == OverlapRelationValues.UNDEFINED}.
+	 */
 	public boolean isUndefined(final int i, final int j) {
 		return overlapRelation[i][j] == OverlapRelationValues.UNDEFINED;
 	}
 
+	/**
+	 *
+	 * @return {@code true} if
+	 *         {@code overlapRelation[i][j] == OverlapRelationValues.NO_OVERLAP}.
+	 */
 	public boolean isNoOverlap(final int i, final int j) {
 		return overlapRelation[i][j] == OverlapRelationValues.NO_OVERLAP;
 	}
