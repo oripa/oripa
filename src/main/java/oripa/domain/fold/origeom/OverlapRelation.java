@@ -112,7 +112,7 @@ public class OverlapRelation {
 	}
 
 	/**
-	 * Sets {@code OverlapRelationValues.LOWER} to
+	 * Sets {@link OverlapRelationValues#LOWER} to
 	 * {@code overlapRelation[i][j]}. This method sets
 	 * {@code OverlapRelationValues.UPPER} to {@code overlapRelation[j][i]}.
 	 *
@@ -126,7 +126,7 @@ public class OverlapRelation {
 	}
 
 	/**
-	 * Sets {@code OverlapRelationValues.UPPER} to
+	 * Sets {@link OverlapRelationValues#UPPER} to
 	 * {@code overlapRelation[i][j]}. This method sets
 	 * {@code OverlapRelationValues.LOWER} to {@code overlapRelation[j][i]}.
 	 *
@@ -140,7 +140,7 @@ public class OverlapRelation {
 	}
 
 	/**
-	 * Sets {@code OverlapRelationValues.UNDEFINED} to
+	 * Sets {@link OverlapRelationValues#UNDEFINED} to
 	 * {@code overlapRelation[i][j]} and {@code overlapRelation[j][i]}.
 	 *
 	 * @param i
@@ -153,7 +153,7 @@ public class OverlapRelation {
 	}
 
 	/**
-	 * Sets {@code OverlapRelationValues.NO_OVERLAP} to
+	 * Sets {@link OverlapRelationValues#NO_OVERLAP} to
 	 * {@code overlapRelation[i][j]} and {@code overlapRelation[j][i]}.
 	 *
 	 * @param i
