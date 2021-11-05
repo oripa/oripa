@@ -479,10 +479,11 @@ public class LayerOrderEnumerator {
 			final int index_i = localLayerOrder.get(i).getFaceID();
 			return IntStream.range(i + 1, size).allMatch(j -> {
 				final int index_j = localLayerOrder.get(j).getFaceID();
-				// stack_index = 0 means the top of stack (looking down
+				// if index of local layer order is 0, the face is at the top of
+				// layer order (looking down
 				// the folded model on a table).
-				// therefore a face with smaller stack_index i should be
-				// UPPER than stack_index j.
+				// therefore a face with smaller index on layer order i should
+				// be UPPER than a face with index on layer order j.
 				if (overlapRelation.isLower(index_i, index_j)) {
 					return false;
 				}
