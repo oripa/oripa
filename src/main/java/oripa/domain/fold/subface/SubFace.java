@@ -60,10 +60,10 @@ public class SubFace {
 	 * @return the number of possible local layer orders.
 	 */
 	public int buildLocalLayerOrders(final List<OriFace> modelFaces, final OverlapRelation overlapRelation) {
-		List<OriFace> sortedParentFaces = new ArrayList<>();
+		List<OriFace> localLayerOrder = new ArrayList<>();
 
 		for (int i = 0; i < parentFaces.size(); i++) {
-			sortedParentFaces.add(null);
+			localLayerOrder.add(null);
 		}
 
 		// Exit if the order is already settled
@@ -103,7 +103,7 @@ public class SubFace {
 		}
 
 		// From the bottom
-		sort(modelFaces, sortedParentFaces, 0);
+		sort(modelFaces, localLayerOrder, 0);
 
 		// Returns the number of obtained solutions
 		return localLayerOrders.size();
@@ -123,10 +123,10 @@ public class SubFace {
 		return true;
 	}
 
-	private void sort(final List<OriFace> modelFaces, final List<OriFace> sortedParentFaces, final int index) {
+	private void sort(final List<OriFace> modelFaces, final List<OriFace> localLayerOrder, final int index) {
 
 		if (index == parentFaces.size()) {
-			var ans = new ArrayList<>(sortedParentFaces);
+			var ans = new ArrayList<>(localLayerOrder);
 			localLayerOrders.add(ans);
 			return;
 		}
@@ -148,15 +148,15 @@ public class SubFace {
 				continue;
 			}
 
-			sortedParentFaces.set(index, f);
+			localLayerOrder.set(index, f);
 			f.setAlreadyInLocalLayerOrder(true);
 			f.setIndexForLocalLayerOrder(index);
 
-			sort(modelFaces, sortedParentFaces, index + 1);
+			sort(modelFaces, localLayerOrder, index + 1);
 
-			sortedParentFaces.get(index).setAlreadyInLocalLayerOrder(false);
-			sortedParentFaces.get(index).clearIndexForLocalLayerOrder();
-			sortedParentFaces.set(index, null);
+			localLayerOrder.get(index).setAlreadyInLocalLayerOrder(false);
+			localLayerOrder.get(index).clearIndexForLocalLayerOrder();
+			localLayerOrder.set(index, null);
 		}
 	}
 
