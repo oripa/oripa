@@ -81,6 +81,15 @@ class SubFacesFactoryTest {
 		var sub2 = createSubFaceMock();
 		var sub3 = createSubFaceMock();
 
+		lenient().when(sub1.isSame(sub2)).thenReturn(true);
+		lenient().when(sub1.isSame(sub3)).thenReturn(false);
+
+		lenient().when(sub2.isSame(sub1)).thenReturn(true);
+		lenient().when(sub2.isSame(sub3)).thenReturn(false);
+
+		lenient().when(sub3.isSame(sub1)).thenReturn(false);
+		lenient().when(sub3.isSame(sub2)).thenReturn(false);
+
 		var subFacesWithDuplication = List.of(sub1, sub2, sub3);
 		when(facesToSubFacesConverter.convertToSubFaces(splitFaces)).thenReturn(subFacesWithDuplication);
 
@@ -109,7 +118,6 @@ class SubFacesFactoryTest {
 
 	private SubFace createSubFaceMock() {
 		var sub = mock(SubFace.class);
-		sub.parentFaces = new ArrayList<OriFace>();
 
 		return sub;
 	}

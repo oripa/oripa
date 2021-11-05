@@ -19,6 +19,7 @@
 package oripa.domain.fold.subface;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
@@ -30,33 +31,34 @@ import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 
 public class SubFace {
 
-	public OriFace outline;
+	private final OriFace outline;
 	/**
 	 * faces containing this subface.
 	 */
-	public ArrayList<OriFace> parentFaces;
-	/**
-	 * working stack
-	 */
-	private final ArrayList<OriFace> sortedParentFaces;
-//	public int tmpInt;
-	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
-	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
-	public boolean allFaceOrderDecided = false;
+	private final List<OriFace> parentFaces = new ArrayList<>();
+
+	private final List<StackConditionOf4Faces> condition4s = new ArrayList<>();
+	private final List<StackConditionOf3Faces> condition3s = new ArrayList<>();
+	private boolean localLayerOrderDeterminedByGlobal = false;
 
 	/**
 	 * A list of orders of faces where the faces include this subface. Each
-	 * order is correct on this subface but it may not so on other subfaces.
+	 * order is correct on this subface but it can be wrong on other subfaces.
 	 */
-	public ArrayList<ArrayList<OriFace>> localLayerOrders = new ArrayList<>();
+	private final List<List<OriFace>> localLayerOrders = new ArrayList<>();
 
+	/**
+	 *
+	 * @param f
+	 *            A face object describing the shape of this subface.
+	 */
 	public SubFace(final OriFace f) {
 		outline = f;
-		parentFaces = new ArrayList<>();
-		sortedParentFaces = new ArrayList<>();
 	}
 
 	/**
+	 * Builds all possible local layer orders. All parent faces should be added
+	 * to this subface before this method is called.
 	 *
 	 * @param modelFaces
 	 *            all faces of inputted model.
@@ -65,26 +67,15 @@ public class SubFace {
 	 * @return the number of possible local layer orders.
 	 */
 	public int buildLocalLayerOrders(final List<OriFace> modelFaces, final OverlapRelation overlapRelation) {
-		sortedParentFaces.clear();
-		for (int i = 0; i < parentFaces.size(); i++) {
-			sortedParentFaces.add(null);
-		}
+		List<OriFace> localLayerOrder = new ArrayList<>();
 
-		// Count the number of pending surfaces
-		int cnt = 0;
-		int f_num = parentFaces.size();
-		for (int i = 0; i < f_num; i++) {
-			for (int j = i + 1; j < f_num; j++) {
-				if (overlapRelation.isUndefined(parentFaces.get(i).getFaceID(),
-						parentFaces.get(j).getFaceID())) {
-					cnt++;
-				}
-			}
+		for (int i = 0; i < parentFaces.size(); i++) {
+			localLayerOrder.add(null);
 		}
 
 		// Exit if the order is already settled
-		if (cnt == 0) {
-			allFaceOrderDecided = true;
+		if (isLocalLayerOrderDeterminedByGlobal(overlapRelation)) {
+			localLayerOrderDeterminedByGlobal = true;
 			return 0;
 		}
 
@@ -108,7 +99,7 @@ public class SubFace {
 			for (OriFace ff : parentFaces) {
 				var anotherFaceID = ff.getFaceID();
 				if (overlapRelation.isLower(faceID, anotherFaceID)) {
-					f.addStackConditionOf2Faces(Integer.valueOf(anotherFaceID));
+					f.addStackConditionOf2Faces(anotherFaceID);
 				}
 			}
 		}
@@ -119,24 +110,30 @@ public class SubFace {
 		}
 
 		// From the bottom
-		sort(modelFaces, 0);
+		sort(modelFaces, localLayerOrder, 0);
 
-		// Returns the number of solutions obtained
+		// Returns the number of obtained solutions
 		return localLayerOrders.size();
 	}
 
-	/**
-	 *
-	 * @return geometric center of this subface
-	 */
-	public Vector2d getInnerPoint() {
-		return outline.getCentroid();
+	private boolean isLocalLayerOrderDeterminedByGlobal(final OverlapRelation overlapRelation) {
+		int parentFaceCount = parentFaces.size();
+		for (int i = 0; i < parentFaceCount; i++) {
+			for (int j = i + 1; j < parentFaceCount; j++) {
+				if (overlapRelation.isUndefined(parentFaces.get(i).getFaceID(),
+						parentFaces.get(j).getFaceID())) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
-	private void sort(final List<OriFace> modelFaces, final int index) {
+	private void sort(final List<OriFace> modelFaces, final List<OriFace> localLayerOrder, final int index) {
 
 		if (index == parentFaces.size()) {
-			var ans = new ArrayList<>(sortedParentFaces);
+			var ans = new ArrayList<>(localLayerOrder);
 			localLayerOrders.add(ans);
 			return;
 		}
@@ -146,36 +143,45 @@ public class SubFace {
 				continue;
 			}
 
-			if (!checkConditionOf2Faces(modelFaces, f)) {
+			if (!satisfiesConditionOf2Faces(modelFaces, f)) {
 				continue;
 			}
 
-			if (!checkForSortLocally3(modelFaces, f)) {
+			if (!satisfiesConditionOf3Faces(modelFaces, f)) {
 				continue;
 			}
 
-			sortedParentFaces.set(index, f);
+			if (!satisfiesConditionOf4Faces(modelFaces, f)) {
+				continue;
+			}
+
+			localLayerOrder.set(index, f);
 			f.setAlreadyInLocalLayerOrder(true);
 			f.setIndexForLocalLayerOrder(index);
 
-			sort(modelFaces, index + 1);
+			sort(modelFaces, localLayerOrder, index + 1);
 
-			sortedParentFaces.get(index).setAlreadyInLocalLayerOrder(false);
-			sortedParentFaces.get(index).clearIndexForLocalLayerOrder();
-			sortedParentFaces.set(index, null);
+			localLayerOrder.get(index).setAlreadyInLocalLayerOrder(false);
+			localLayerOrder.get(index).clearIndexForLocalLayerOrder();
+			localLayerOrder.set(index, null);
 		}
 	}
 
-	private boolean checkConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
-		return f.stackConditionsOf2FacesStream().allMatch(ii -> modelFaces.get(ii.intValue()).isAlreadyInLocalLayerOrder());
+	private boolean satisfiesConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
+		return f.stackConditionsOf2FacesStream()
+				.allMatch(i -> modelFaces.get(i).isAlreadyInLocalLayerOrder());
 	}
 
-	private boolean checkForSortLocally3(final List<OriFace> modelFaces, final OriFace face) {
+	private boolean satisfiesConditionOf3Faces(final List<OriFace> modelFaces, final OriFace face) {
 		if (face.stackConditionOf3FacesStream().anyMatch(cond -> modelFaces.get(cond.lower).isAlreadyInLocalLayerOrder()
 				&& !modelFaces.get(cond.upper).isAlreadyInLocalLayerOrder())) {
 			return false;
 		}
 
+		return true;
+	}
+
+	private boolean satisfiesConditionOf4Faces(final List<OriFace> modelFaces, final OriFace face) {
 		// check condition4
 		// aabb or abba or baab are good, but aba or bab are impossible
 
@@ -205,7 +211,61 @@ public class SubFace {
 		return true;
 	}
 
+	/**
+	 *
+	 * @return geometric center of this subface
+	 */
+	public Vector2d getInnerPoint() {
+		return outline.getCentroid();
+	}
+
+	OriFace getOutline() {
+		return outline;
+	}
+
+	public void addStackConditionOf4Faces(final StackConditionOf4Faces condition) {
+		condition4s.add(condition);
+	}
+
+	public void addStackConditionOf3Faces(final StackConditionOf3Faces condition) {
+		condition3s.add(condition);
+	}
+
+	public Iterable<List<OriFace>> localLayerOrdersIterable() {
+		return localLayerOrders;
+	}
+
+	public boolean isLocalLayerOrderDeterminedByGlobal() {
+		return localLayerOrderDeterminedByGlobal;
+	}
+
 	public int localLayerOrderCount() {
 		return localLayerOrders.size();
 	}
+
+	public boolean addParentFaces(final Collection<OriFace> faces) {
+		return parentFaces.addAll(faces);
+	}
+
+	public OriFace getParentFace(final int index) {
+		return parentFaces.get(index);
+	}
+
+	public boolean isParentFace(final OriFace face) {
+		return parentFaces.contains(face);
+	}
+
+	public int parentFaceCount() {
+		return parentFaces.size();
+	}
+
+	public boolean isSame(final SubFace sub) {
+		if (parentFaces.size() != sub.parentFaces.size()) {
+			return false;
+		}
+
+		return parentFaces.stream()
+				.allMatch(face -> sub.parentFaces.contains(face));
+	}
+
 }

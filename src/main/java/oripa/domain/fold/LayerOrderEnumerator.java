@@ -101,9 +101,9 @@ public class LayerOrderEnumerator {
 			sub.buildLocalLayerOrders(faces, overlapRelation);
 		}
 
-		// heuristic: fewer answer stacks mean the search on the subface has
-		// more possibility to be correct. Such confident search node should be
-		// consumed at early stage.
+		// heuristic: fewer local layer orders mean the search on the subface
+		// has more possibility to be correct. Such confident search node should
+		// be consumed at early stage.
 		subFaces = subFaces.stream()
 				.sorted(Comparator.comparing(SubFace::localLayerOrderCount))
 				.collect(Collectors.toList());
@@ -276,13 +276,13 @@ public class LayerOrderEnumerator {
 
 		SubFace sub = subFaces.get(subFaceIndex);
 
-		if (sub.allFaceOrderDecided) {
+		if (sub.isLocalLayerOrderDeterminedByGlobal()) {
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1, overlapRelation,
 					new HashSet<>());
 			return;
 		}
 
-		for (var localLayerOrder : sub.localLayerOrders) {
+		for (var localLayerOrder : sub.localLayerOrdersIterable()) {
 			int size = localLayerOrder.size();
 			if (!isCorrectLayerOrder(localLayerOrder, overlapRelation)) {
 				continue;
@@ -290,7 +290,7 @@ public class LayerOrderEnumerator {
 			var changedIndexPairs = new ArrayList<IndexPair>();
 			var nextChangedFaceIDs = new HashSet<Integer>();
 
-			// determine overlap relations according to stack
+			// determine overlap relations according to local layer order
 			for (int i = 0; i < size; i++) {
 				int index_i = localLayerOrder.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
@@ -480,10 +480,9 @@ public class LayerOrderEnumerator {
 			return IntStream.range(i + 1, size).allMatch(j -> {
 				final int index_j = localLayerOrder.get(j).getFaceID();
 				// if index of local layer order is 0, the face is at the top of
-				// layer order (looking down
-				// the folded model on a table).
-				// therefore a face with smaller index on layer order i should
-				// be UPPER than a face with index on layer order j.
+				// layer order (looking down the folded model on a table).
+				// therefore a face with smaller index i on layer order should
+				// be UPPER than a face with index j on layer order.
 				if (overlapRelation.isLower(index_i, index_j)) {
 					return false;
 				}
@@ -549,9 +548,9 @@ public class LayerOrderEnumerator {
 
 					// Add condition to all subfaces of the 3 faces
 					for (SubFace sub : subFaces) {
-						if (sub.parentFaces.contains(f_i) && sub.parentFaces.contains(f_j)
-								&& sub.parentFaces.contains(f_k)) {
-							sub.condition3s.add(cond);
+						if (sub.isParentFace(f_i) && sub.isParentFace(f_j)
+								&& sub.isParentFace(f_k)) {
+							sub.addStackConditionOf3Faces(cond);
 						}
 					}
 
@@ -608,11 +607,11 @@ public class LayerOrderEnumerator {
 				// Add condition to all subfaces of the 4 faces
 				boolean bOverlap = false;
 				for (SubFace sub : subFaces) {
-					if (sub.parentFaces.contains(e0LeftFace)
-							&& sub.parentFaces.contains(e0RightFace)
-							&& sub.parentFaces.contains(e1LeftFace)
-							&& sub.parentFaces.contains(e1RightFace)) {
-						sub.condition4s.add(cond);
+					if (sub.isParentFace(e0LeftFace)
+							&& sub.isParentFace(e0RightFace)
+							&& sub.isParentFace(e1LeftFace)
+							&& sub.isParentFace(e1RightFace)) {
+						sub.addStackConditionOf4Faces(cond);
 						bOverlap = true;
 					}
 				}
@@ -737,12 +736,12 @@ public class LayerOrderEnumerator {
 	 */
 	private boolean updateOverlapRelationBy3FaceStack(final SubFace sub, final OverlapRelation overlapRelation) {
 
-		for (int i = 0; i < sub.parentFaces.size(); i++) {
-			for (int j = i + 1; j < sub.parentFaces.size(); j++) {
+		for (int i = 0; i < sub.parentFaceCount(); i++) {
+			for (int j = i + 1; j < sub.parentFaceCount(); j++) {
 
 				// search for undetermined relations
-				int index_i = sub.parentFaces.get(i).getFaceID();
-				int index_j = sub.parentFaces.get(j).getFaceID();
+				int index_i = sub.getParentFace(i).getFaceID();
+				int index_j = sub.getParentFace(j).getFaceID();
 
 				if (overlapRelation.isNoOverlap(index_i, index_j)) {
 					continue;
@@ -751,12 +750,12 @@ public class LayerOrderEnumerator {
 					continue;
 				}
 				// Find the intermediary face
-				for (int k = 0; k < sub.parentFaces.size(); k++) {
+				for (int k = 0; k < sub.parentFaceCount(); k++) {
 					if (k == i || k == j) {
 						continue;
 					}
 
-					int index_k = sub.parentFaces.get(k).getFaceID();
+					int index_k = sub.getParentFace(k).getFaceID();
 
 					if (overlapRelation.isUpper(index_i, index_k)
 							&& overlapRelation.isUpper(index_k, index_j)) {
