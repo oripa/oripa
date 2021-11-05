@@ -110,9 +110,9 @@ public class SubFace {
 	}
 
 	private boolean isLocalLayerOrderDeterminedByGlobal(final OverlapRelation overlapRelation) {
-		int f_num = parentFaces.size();
-		for (int i = 0; i < f_num; i++) {
-			for (int j = i + 1; j < f_num; j++) {
+		int parentFaceCount = parentFaces.size();
+		for (int i = 0; i < parentFaceCount; i++) {
+			for (int j = i + 1; j < parentFaceCount; j++) {
 				if (overlapRelation.isUndefined(parentFaces.get(i).getFaceID(),
 						parentFaces.get(j).getFaceID())) {
 					return false;
