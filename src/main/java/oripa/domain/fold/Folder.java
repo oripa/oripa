@@ -63,8 +63,6 @@ public class Folder {
 			return foldedModel;
 		}
 
-//		folderTool.setFacesOutline(faces);
-
 		origamiModel.setFolded(true);
 		return foldedModel;
 	}
