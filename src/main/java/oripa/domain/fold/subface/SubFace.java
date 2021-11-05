@@ -92,7 +92,7 @@ public class SubFace {
 			for (OriFace ff : parentFaces) {
 				var anotherFaceID = ff.getFaceID();
 				if (overlapRelation.isLower(faceID, anotherFaceID)) {
-					f.addStackConditionOf2Faces(Integer.valueOf(anotherFaceID));
+					f.addStackConditionOf2Faces(anotherFaceID);
 				}
 			}
 		}
