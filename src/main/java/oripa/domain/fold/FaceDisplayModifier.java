@@ -22,7 +22,7 @@ import java.util.List;
 
 import oripa.domain.fold.halfedge.OriFace;
 
-public class FolderTool {
+public class FaceDisplayModifier {
 	public void setFacesOutline(final List<OriFace> faces) {
 
 		for (OriFace f : faces) {

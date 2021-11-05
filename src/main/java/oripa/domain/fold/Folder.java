@@ -25,7 +25,7 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 
 public class Folder {
 	// helper object
-	private final FolderTool folderTool = new FolderTool();
+	private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
 
 	private final SimpleFolder simpleFolder;
 
@@ -53,7 +53,7 @@ public class Folder {
 		List<OriFace> faces = origamiModel.getFaces();
 
 		simpleFolder.simpleFoldWithoutZorder(origamiModel);
-		folderTool.setFacesOutline(faces);
+		faceDisplayModifier.setFacesOutline(faces);
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
@@ -84,9 +84,6 @@ public class Folder {
 	public void foldWithoutLineType(
 			final OrigamiModel model) {
 		simpleFolder.foldWithoutLineType(model);
-
-		List<OriFace> faces = model.getFaces();
-
-		folderTool.setFacesOutline(faces);
+		faceDisplayModifier.setFacesOutline(model.getFaces());
 	}
 }
