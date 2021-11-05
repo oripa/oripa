@@ -276,7 +276,7 @@ public class LayerOrderEnumerator {
 
 		SubFace sub = subFaces.get(subFaceIndex);
 
-		if (sub.allFaceOrderDecided) {
+		if (sub.isLocalLayerOrderDeterminedByGlobal()) {
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1, overlapRelation,
 					new HashSet<>());
 			return;
@@ -480,10 +480,9 @@ public class LayerOrderEnumerator {
 			return IntStream.range(i + 1, size).allMatch(j -> {
 				final int index_j = localLayerOrder.get(j).getFaceID();
 				// if index of local layer order is 0, the face is at the top of
-				// layer order (looking down
-				// the folded model on a table).
-				// therefore a face with smaller index on layer order i should
-				// be UPPER than a face with index on layer order j.
+				// layer order (looking down the folded model on a table).
+				// therefore a face with smaller index i on layer order should
+				// be UPPER than a face with index j on layer order.
 				if (overlapRelation.isLower(index_i, index_j)) {
 					return false;
 				}

@@ -38,7 +38,7 @@ public class SubFace {
 
 	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
-	public boolean allFaceOrderDecided = false;
+	private boolean localLayerOrderDeterminedByGlobal = false;
 
 	/**
 	 * A list of orders of faces where the faces include this subface. Each
@@ -68,7 +68,7 @@ public class SubFace {
 
 		// Exit if the order is already settled
 		if (isLocalLayerOrderDeterminedByGlobal(overlapRelation)) {
-			allFaceOrderDecided = true;
+			localLayerOrderDeterminedByGlobal = true;
 			return 0;
 		}
 
@@ -202,6 +202,10 @@ public class SubFace {
 		}
 
 		return true;
+	}
+
+	public boolean isLocalLayerOrderDeterminedByGlobal() {
+		return localLayerOrderDeterminedByGlobal;
 	}
 
 	public int localLayerOrderCount() {
