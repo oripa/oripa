@@ -45,7 +45,7 @@ public class SubFace {
 	 * A list of orders of faces where the faces include this subface. Each
 	 * order is correct on this subface but it may not so on other subfaces.
 	 */
-	public List<List<OriFace>> localLayerOrders = new ArrayList<>();
+	private final List<List<OriFace>> localLayerOrders = new ArrayList<>();
 
 	public SubFace(final OriFace f) {
 		outline = f;
@@ -121,14 +121,6 @@ public class SubFace {
 		}
 
 		return true;
-	}
-
-	/**
-	 *
-	 * @return geometric center of this subface
-	 */
-	public Vector2d getInnerPoint() {
-		return outline.getCentroid();
 	}
 
 	private void sort(final List<OriFace> modelFaces, final List<OriFace> sortedParentFaces, final int index) {
@@ -213,6 +205,14 @@ public class SubFace {
 
 	}
 
+	/**
+	 *
+	 * @return geometric center of this subface
+	 */
+	public Vector2d getInnerPoint() {
+		return outline.getCentroid();
+	}
+
 	OriFace getOutline() {
 		return outline;
 	}
@@ -223,6 +223,10 @@ public class SubFace {
 
 	public void addStackConditionOf3Faces(final StackConditionOf3Faces condition) {
 		condition3s.add(condition);
+	}
+
+	public Iterable<List<OriFace>> localLayerOrdersIterable() {
+		return localLayerOrders;
 	}
 
 	public boolean isLocalLayerOrderDeterminedByGlobal() {

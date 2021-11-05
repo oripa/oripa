@@ -282,7 +282,7 @@ public class LayerOrderEnumerator {
 			return;
 		}
 
-		for (var localLayerOrder : sub.localLayerOrders) {
+		for (var localLayerOrder : sub.localLayerOrdersIterable()) {
 			int size = localLayerOrder.size();
 			if (!isCorrectLayerOrder(localLayerOrder, overlapRelation)) {
 				continue;
