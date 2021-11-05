@@ -35,7 +35,7 @@ public class SubFace {
 	/**
 	 * faces containing this subface.
 	 */
-	public ArrayList<OriFace> parentFaces = new ArrayList<>();
+	private final ArrayList<OriFace> parentFaces = new ArrayList<>();
 
 	private final ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	private final ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();

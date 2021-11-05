@@ -118,7 +118,6 @@ class SubFacesFactoryTest {
 
 	private SubFace createSubFaceMock() {
 		var sub = mock(SubFace.class);
-		sub.parentFaces = new ArrayList<OriFace>();
 
 		return sub;
 	}
