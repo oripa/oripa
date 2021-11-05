@@ -105,7 +105,7 @@ public class LayerOrderEnumerator {
 		// has more possibility to be correct. Such confident search node should
 		// be consumed at early stage.
 		subFaces = subFaces.stream()
-				.sorted(Comparator.comparing(SubFace::localLayerOrderCount))
+				.sorted(Comparator.comparing(SubFace::getLocalLayerOrderCount))
 				.collect(Collectors.toList());
 
 		var watch = new StopWatch(true);
@@ -734,8 +734,8 @@ public class LayerOrderEnumerator {
 	 */
 	private boolean updateOverlapRelationBy3FaceStack(final SubFace sub, final OverlapRelation overlapRelation) {
 
-		for (int i = 0; i < sub.parentFaceCount(); i++) {
-			for (int j = i + 1; j < sub.parentFaceCount(); j++) {
+		for (int i = 0; i < sub.getParentFaceCount(); i++) {
+			for (int j = i + 1; j < sub.getParentFaceCount(); j++) {
 
 				// search for undetermined relations
 				int index_i = sub.getParentFace(i).getFaceID();
@@ -748,7 +748,7 @@ public class LayerOrderEnumerator {
 					continue;
 				}
 				// Find the intermediary face
-				for (int k = 0; k < sub.parentFaceCount(); k++) {
+				for (int k = 0; k < sub.getParentFaceCount(); k++) {
 					if (k == i || k == j) {
 						continue;
 					}

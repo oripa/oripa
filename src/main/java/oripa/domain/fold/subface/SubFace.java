@@ -239,7 +239,7 @@ public class SubFace {
 		return localLayerOrderDeterminedByGlobal;
 	}
 
-	public int localLayerOrderCount() {
+	public int getLocalLayerOrderCount() {
 		return localLayerOrders.size();
 	}
 
@@ -255,7 +255,7 @@ public class SubFace {
 		return parentFaces.contains(face);
 	}
 
-	public int parentFaceCount() {
+	public int getParentFaceCount() {
 		return parentFaces.size();
 	}
 
