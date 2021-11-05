@@ -43,7 +43,7 @@ public class SubFace {
 
 	/**
 	 * A list of orders of faces where the faces include this subface. Each
-	 * order is correct on this subface but it may not so on other subfaces.
+	 * order is correct on this subface but it can be wrong on other subfaces.
 	 */
 	private final List<List<OriFace>> localLayerOrders = new ArrayList<>();
 
@@ -202,7 +202,6 @@ public class SubFace {
 		}
 
 		return true;
-
 	}
 
 	/**

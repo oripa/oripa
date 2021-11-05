@@ -101,9 +101,9 @@ public class LayerOrderEnumerator {
 			sub.buildLocalLayerOrders(faces, overlapRelation);
 		}
 
-		// heuristic: fewer answer stacks mean the search on the subface has
-		// more possibility to be correct. Such confident search node should be
-		// consumed at early stage.
+		// heuristic: fewer local layer orders mean the search on the subface
+		// has more possibility to be correct. Such confident search node should
+		// be consumed at early stage.
 		subFaces = subFaces.stream()
 				.sorted(Comparator.comparing(SubFace::localLayerOrderCount))
 				.collect(Collectors.toList());
