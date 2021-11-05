@@ -66,20 +66,8 @@ public class SubFace {
 			sortedParentFaces.add(null);
 		}
 
-		// Count the number of pending surfaces
-		int cnt = 0;
-		int f_num = parentFaces.size();
-		for (int i = 0; i < f_num; i++) {
-			for (int j = i + 1; j < f_num; j++) {
-				if (overlapRelation.isUndefined(parentFaces.get(i).getFaceID(),
-						parentFaces.get(j).getFaceID())) {
-					cnt++;
-				}
-			}
-		}
-
 		// Exit if the order is already settled
-		if (cnt == 0) {
+		if (isLocalLayerOrderDeterminedByGlobal(overlapRelation)) {
 			allFaceOrderDecided = true;
 			return 0;
 		}
@@ -117,8 +105,22 @@ public class SubFace {
 		// From the bottom
 		sort(modelFaces, sortedParentFaces, 0);
 
-		// Returns the number of solutions obtained
+		// Returns the number of obtained solutions
 		return localLayerOrders.size();
+	}
+
+	private boolean isLocalLayerOrderDeterminedByGlobal(final OverlapRelation overlapRelation) {
+		int f_num = parentFaces.size();
+		for (int i = 0; i < f_num; i++) {
+			for (int j = i + 1; j < f_num; j++) {
+				if (overlapRelation.isUndefined(parentFaces.get(i).getFaceID(),
+						parentFaces.get(j).getFaceID())) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**
