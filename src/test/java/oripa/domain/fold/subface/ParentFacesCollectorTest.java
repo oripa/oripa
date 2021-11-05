@@ -53,10 +53,7 @@ class ParentFacesCollectorTest {
 
 		var faces = List.of(face1, face2, face3, face4);
 
-		var splitFace = OriFaceFactoryForTest.createRectangleMock(6, 6, 10, 10);
-
 		var subface = mock(SubFace.class);
-		subface.outline = splitFace;
 		var innerPoint = new Vector2d(8, 8);
 		when(subface.getInnerPoint()).thenReturn(innerPoint);
 

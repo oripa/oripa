@@ -50,7 +50,7 @@ class SplitFacesToSubFacesConverterTest {
 		var subFaces = converter.convertToSubFaces(splitFaces);
 
 		for (int i = 0; i < subFaces.size(); i++) {
-			assertSame(splitFaces.get(i), subFaces.get(i).outline);
+			assertSame(splitFaces.get(i), subFaces.get(i).getOutline());
 		}
 	}
 

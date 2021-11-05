@@ -30,11 +30,11 @@ import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 
 public class SubFace {
 
-	public OriFace outline;
+	private final OriFace outline;
 	/**
 	 * faces containing this subface.
 	 */
-	public ArrayList<OriFace> parentFaces;
+	public ArrayList<OriFace> parentFaces = new ArrayList<>();
 
 	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
@@ -48,7 +48,6 @@ public class SubFace {
 
 	public SubFace(final OriFace f) {
 		outline = f;
-		parentFaces = new ArrayList<>();
 	}
 
 	/**
@@ -202,6 +201,10 @@ public class SubFace {
 		}
 
 		return true;
+	}
+
+	OriFace getOutline() {
+		return outline;
 	}
 
 	public boolean isLocalLayerOrderDeterminedByGlobal() {
