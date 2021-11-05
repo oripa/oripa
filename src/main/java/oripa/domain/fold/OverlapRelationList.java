@@ -52,7 +52,7 @@ public class OverlapRelationList {
 		return currentIndex;
 	}
 
-	public int getFoldablePatternCount() {
+	public int getCount() {
 		return overlapRelations.size();
 	}
 

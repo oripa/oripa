@@ -57,7 +57,7 @@ public class FoldedModel {
 	 * @return the number of foldable patterns.
 	 */
 	public int getFoldablePatternCount() {
-		return overlapRelationList.getFoldablePatternCount();
+		return overlapRelationList.getCount();
 	}
 
 	/**
