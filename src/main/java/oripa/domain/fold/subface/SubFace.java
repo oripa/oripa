@@ -223,6 +223,10 @@ public class SubFace {
 		return localLayerOrders.size();
 	}
 
+	public boolean isParentFace(final OriFace face) {
+		return parentFaces.contains(face);
+	}
+
 	public boolean isSame(final SubFace sub) {
 		if (parentFaces.size() != sub.parentFaces.size()) {
 			return false;

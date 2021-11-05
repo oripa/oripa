@@ -548,8 +548,8 @@ public class LayerOrderEnumerator {
 
 					// Add condition to all subfaces of the 3 faces
 					for (SubFace sub : subFaces) {
-						if (sub.parentFaces.contains(f_i) && sub.parentFaces.contains(f_j)
-								&& sub.parentFaces.contains(f_k)) {
+						if (sub.isParentFace(f_i) && sub.isParentFace(f_j)
+								&& sub.isParentFace(f_k)) {
 							sub.addStackConditionOf3Faces(cond);
 						}
 					}
@@ -607,10 +607,10 @@ public class LayerOrderEnumerator {
 				// Add condition to all subfaces of the 4 faces
 				boolean bOverlap = false;
 				for (SubFace sub : subFaces) {
-					if (sub.parentFaces.contains(e0LeftFace)
-							&& sub.parentFaces.contains(e0RightFace)
-							&& sub.parentFaces.contains(e1LeftFace)
-							&& sub.parentFaces.contains(e1RightFace)) {
+					if (sub.isParentFace(e0LeftFace)
+							&& sub.isParentFace(e0RightFace)
+							&& sub.isParentFace(e1LeftFace)
+							&& sub.isParentFace(e1RightFace)) {
 						sub.addStackConditionOf4Faces(cond);
 						bOverlap = true;
 					}
