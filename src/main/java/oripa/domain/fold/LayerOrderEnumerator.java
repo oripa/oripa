@@ -290,7 +290,7 @@ public class LayerOrderEnumerator {
 			var changedIndexPairs = new ArrayList<IndexPair>();
 			var nextChangedFaceIDs = new HashSet<Integer>();
 
-			// determine overlap relations according to stack
+			// determine overlap relations according to local layer order
 			for (int i = 0; i < size; i++) {
 				int index_i = localLayerOrder.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
