@@ -19,21 +19,10 @@
 package oripa.domain.fold;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.geom.RectangleDomain;
 
 public class FolderTool {
-	public RectangleDomain createDomainOfFoldedModel(final List<OriFace> faces) {
-		var domain = new RectangleDomain();
-		domain.enlarge(faces.stream()
-				.flatMap(face -> face.halfedgeStream().map(he -> he.getPosition()))
-				.collect(Collectors.toList()));
-
-		return domain;
-	}
-
 	public void setFacesOutline(final List<OriFace> faces) {
 
 		for (OriFace f : faces) {

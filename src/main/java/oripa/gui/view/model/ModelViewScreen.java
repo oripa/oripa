@@ -33,7 +33,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
@@ -43,8 +42,6 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.FolderTool;
-import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.drawer.java2d.OrigamiModelObjectDrawer;
 import oripa.gui.presenter.model.OrigamiModelGraphicDrawer;
@@ -141,8 +138,6 @@ public class ModelViewScreen extends JPanel
 
 	private void resetViewMatrix(final int boundSize) {
 
-		List<OriFace> faces = origamiModel.getFaces();
-
 		boolean hasModel = origamiModel.hasModel();
 
 		rotateAngle = 0;
@@ -151,8 +146,7 @@ public class ModelViewScreen extends JPanel
 			scale = 1.0;
 		} else {
 			// Align the center of the model, combined scale
-			var folderTool = new FolderTool();
-			var domain = folderTool.createDomainOfFoldedModel(faces);
+			var domain = origamiModel.createDomainOfFoldedModel();
 			modelCenter.x = domain.getCenterX();
 			modelCenter.y = domain.getCenterY();
 
