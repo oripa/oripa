@@ -740,8 +740,8 @@ public class LayerOrderEnumerator {
 			for (int j = i + 1; j < sub.parentFaces.size(); j++) {
 
 				// search for undetermined relations
-				int index_i = sub.parentFaces.get(i).getFaceID();
-				int index_j = sub.parentFaces.get(j).getFaceID();
+				int index_i = sub.getParentFace(i).getFaceID();
+				int index_j = sub.getParentFace(j).getFaceID();
 
 				if (overlapRelation.isNoOverlap(index_i, index_j)) {
 					continue;
@@ -755,7 +755,7 @@ public class LayerOrderEnumerator {
 						continue;
 					}
 
-					int index_k = sub.parentFaces.get(k).getFaceID();
+					int index_k = sub.getParentFace(k).getFaceID();
 
 					if (overlapRelation.isUpper(index_i, index_k)
 							&& overlapRelation.isUpper(index_k, index_j)) {

@@ -19,6 +19,7 @@
 package oripa.domain.fold.subface;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
@@ -221,6 +222,14 @@ public class SubFace {
 
 	public int localLayerOrderCount() {
 		return localLayerOrders.size();
+	}
+
+	public boolean addParentFaces(final Collection<OriFace> faces) {
+		return parentFaces.addAll(faces);
+	}
+
+	public OriFace getParentFace(final int index) {
+		return parentFaces.get(index);
 	}
 
 	public boolean isParentFace(final OriFace face) {

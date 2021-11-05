@@ -92,7 +92,7 @@ public class SubFacesFactory {
 		// Stores the face reference of given crease pattern into the subface
 		// that is contained in the face.
 		for (SubFace sub : subFaces) {
-			sub.parentFaces.addAll(parentCollector.collect(faces, sub, paperSize));
+			sub.addParentFaces(parentCollector.collect(faces, sub, paperSize));
 		}
 
 		// extract distinct subfaces by comparing face list's items.
