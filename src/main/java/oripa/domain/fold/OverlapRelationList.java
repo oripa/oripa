@@ -24,43 +24,35 @@ import java.util.List;
 import oripa.domain.fold.origeom.OverlapRelation;
 
 public class OverlapRelationList {
-	private List<OverlapRelation> overlapRelations = new ArrayList<>();
-	private int currentORmatIndex = 0;
+	private final List<OverlapRelation> overlapRelations = new ArrayList<>();
+	private int currentIndex = 0;
 
 	public void setNextIndex() {
-		if (currentORmatIndex < overlapRelations.size() - 1) {
-			currentORmatIndex++;
+		if (currentIndex < overlapRelations.size() - 1) {
+			currentIndex++;
 		}
 	}
 
 	public void setPrevIndex() {
-		if (currentORmatIndex > 0) {
-			currentORmatIndex--;
+		if (currentIndex > 0) {
+			currentIndex--;
 		}
 
 	}
 
 	public OverlapRelation getOverlapRelation() {
-		return overlapRelations.get(currentORmatIndex);
+		return overlapRelations.get(currentIndex);
 	}
 
-	public List<OverlapRelation> getFoldableOverlapRelations() {
-		return overlapRelations;
+	public void add(final OverlapRelation o) {
+		overlapRelations.add(o);
 	}
 
-	public void setFoldableOverlapRelations(final List<OverlapRelation> foldableOverlapRelations) {
-		this.overlapRelations = foldableOverlapRelations;
+	public int getCurrentIndex() {
+		return currentIndex;
 	}
 
-	public int getCurrentORmatIndex() {
-		return currentORmatIndex;
-	}
-
-	public void setCurrentORmatIndex(final int currentORmatIndex) {
-		this.currentORmatIndex = currentORmatIndex;
-	}
-
-	public int getFoldablePatternCount() {
+	public int getCount() {
 		return overlapRelations.size();
 	}
 

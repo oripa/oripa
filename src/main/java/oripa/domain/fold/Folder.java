@@ -64,7 +64,6 @@ public class Folder {
 
 		var foldedModel = new FoldedModel(origamiModel, overlapRelationList);
 
-		overlapRelationList.setCurrentORmatIndex(0);
 		if (overlapRelationList.isEmpty()) {
 			return foldedModel;
 		}
