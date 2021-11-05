@@ -222,4 +222,14 @@ public class SubFace {
 	public int localLayerOrderCount() {
 		return localLayerOrders.size();
 	}
+
+	public boolean isSame(final SubFace sub) {
+		if (parentFaces.size() != sub.parentFaces.size()) {
+			return false;
+		}
+
+		return parentFaces.stream()
+				.allMatch(face -> sub.parentFaces.contains(face));
+	}
+
 }

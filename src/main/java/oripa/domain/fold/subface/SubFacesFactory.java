@@ -99,7 +99,7 @@ public class SubFacesFactory {
 		ArrayList<SubFace> distinctSubFaces = new ArrayList<>();
 		for (SubFace sub : subFaces) {
 			if (distinctSubFaces.stream()
-					.noneMatch(s -> isSame(sub, s))) {
+					.noneMatch(s -> sub.isSame(s))) {
 				distinctSubFaces.add(sub);
 			}
 		}
@@ -107,14 +107,5 @@ public class SubFacesFactory {
 		logger.debug("createSubFaces() end");
 
 		return distinctSubFaces;
-	}
-
-	private boolean isSame(final SubFace sub0, final SubFace sub1) {
-		if (sub0.parentFaces.size() != sub1.parentFaces.size()) {
-			return false;
-		}
-
-		return sub0.parentFaces.stream()
-				.allMatch(face -> sub1.parentFaces.contains(face));
 	}
 }
