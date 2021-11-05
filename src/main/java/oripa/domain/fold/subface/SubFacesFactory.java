@@ -99,7 +99,7 @@ public class SubFacesFactory {
 		ArrayList<SubFace> distinctSubFaces = new ArrayList<>();
 		for (SubFace sub : subFaces) {
 			if (distinctSubFaces.stream()
-					.noneMatch(s -> sub.isSame(s))) {
+					.noneMatch(sub::isSame)) {
 				distinctSubFaces.add(sub);
 			}
 		}
