@@ -162,7 +162,7 @@ public class SubFace {
 
 	private boolean satisfiesConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
 		return f.stackConditionsOf2FacesStream()
-				.allMatch(ii -> modelFaces.get(ii.intValue()).isAlreadyInLocalLayerOrder());
+				.allMatch(i -> modelFaces.get(i).isAlreadyInLocalLayerOrder());
 	}
 
 	private boolean satisfiesConditionOf3Faces(final List<OriFace> modelFaces, final OriFace face) {
