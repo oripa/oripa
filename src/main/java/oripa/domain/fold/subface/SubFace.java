@@ -35,17 +35,17 @@ public class SubFace {
 	/**
 	 * faces containing this subface.
 	 */
-	private final ArrayList<OriFace> parentFaces = new ArrayList<>();
+	private final List<OriFace> parentFaces = new ArrayList<>();
 
-	private final ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
-	private final ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
+	private final List<StackConditionOf4Faces> condition4s = new ArrayList<>();
+	private final List<StackConditionOf3Faces> condition3s = new ArrayList<>();
 	private boolean localLayerOrderDeterminedByGlobal = false;
 
 	/**
 	 * A list of orders of faces where the faces include this subface. Each
 	 * order is correct on this subface but it may not so on other subfaces.
 	 */
-	public ArrayList<ArrayList<OriFace>> localLayerOrders = new ArrayList<>();
+	public List<List<OriFace>> localLayerOrders = new ArrayList<>();
 
 	public SubFace(final OriFace f) {
 		outline = f;
