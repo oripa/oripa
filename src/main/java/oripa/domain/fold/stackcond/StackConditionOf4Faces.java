@@ -20,7 +20,7 @@ package oripa.domain.fold.stackcond;
 
 import java.util.Objects;
 
-import oripa.domain.fold.origeom.OverlapRelationValues;
+import oripa.domain.fold.origeom.OverlapRelation;
 
 /**
  * Possible stack order of 4 faces connecting at e0 or e1 where e0 and e1 are
@@ -60,13 +60,13 @@ public class StackConditionOf4Faces {
 	 */
 	public int lower2;
 
-	public boolean isDetermined(final int[][] orMat) {
-		return orMat[lower1][upper1] != OverlapRelationValues.UNDEFINED &&
-				orMat[lower1][lower2] != OverlapRelationValues.UNDEFINED &&
-				orMat[lower1][upper2] != OverlapRelationValues.UNDEFINED &&
-				orMat[upper1][lower2] != OverlapRelationValues.UNDEFINED &&
-				orMat[upper1][upper2] != OverlapRelationValues.UNDEFINED &&
-				orMat[lower2][upper2] != OverlapRelationValues.UNDEFINED;
+	public boolean isDetermined(final OverlapRelation overlapRelation) {
+		return !overlapRelation.isUndefined(lower1, upper1) &&
+				!overlapRelation.isUndefined(lower1, lower2) &&
+				!overlapRelation.isUndefined(lower1, upper2) &&
+				!overlapRelation.isUndefined(upper1, lower2) &&
+				!overlapRelation.isUndefined(upper1, upper2) &&
+				!overlapRelation.isUndefined(lower2, upper2);
 	}
 
 	@Override

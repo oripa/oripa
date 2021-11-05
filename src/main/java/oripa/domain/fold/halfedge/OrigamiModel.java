@@ -120,10 +120,7 @@ public class OrigamiModel {
 	}
 
 	/**
-	 * Flips x coordinates and turns over faces. This functionality fails to
-	 * manage the view result in full estimation model window: layer order
-	 * cannot be changed by this method but this method turns over each face,
-	 * which is obviously wrong.
+	 * Flips x coordinates of the positions for display.
 	 */
 	public void flipXCoordinates() {
 		var domain = new RectangleDomain();

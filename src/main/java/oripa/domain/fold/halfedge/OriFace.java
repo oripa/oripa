@@ -66,17 +66,22 @@ public class OriFace {
 	private boolean movedByFold = false;
 
 	/**
-	 * index of stack order for subface. It seems to be used only while making
-	 * correct stack order.
+	 * index of layer order for subface. It seems to be used only while making
+	 * correct layer order.
 	 */
-	private int indexForStack = 0;
+	private int indexForLocalLayerOrder = 0;
 
 	/**
 	 * ID of this face.
 	 */
 	private int faceID = 0;
 
-	private boolean alreadyStacked = false;
+	/**
+	 * Whether this face is in a local layer order of a subface. It seems to be
+	 * used only while making correct layer order.
+	 */
+	private boolean alreadyInLocalLayerOrder = false;
+
 	private final List<TriangleFace> triangles = new ArrayList<>();
 
 	private final List<StackConditionOf4Faces> stackConditionsOf4Faces = new ArrayList<>();
@@ -190,25 +195,25 @@ public class OriFace {
 	}
 
 	/**
-	 * @return indexForStack
+	 * @return {@link #indexForLocalLayerOrder}
 	 */
-	public int getIndexForStack() {
-		return indexForStack;
+	public int getIndexForLocalLayerOrder() {
+		return indexForLocalLayerOrder;
 	}
 
 	/**
-	 * @param indexForStack
-	 *            Sets indexForStack
+	 * @param index
+	 *            Sets {@link #indexForLocalLayerOrder}
 	 */
-	public void setIndexForStack(final int indexForStack) {
-		this.indexForStack = indexForStack;
+	public void setIndexForLocalLayerOrder(final int index) {
+		this.indexForLocalLayerOrder = index;
 	}
 
 	/**
-	 * Sets -1 to indexForStack.
+	 * Sets -1 to {@link #indexForLocalLayerOrder}.
 	 */
-	public void clearIndexForStack() {
-		this.indexForStack = -1;
+	public void clearIndexForLocalLayerOrder() {
+		this.indexForLocalLayerOrder = -1;
 	}
 
 	/**
@@ -227,18 +232,19 @@ public class OriFace {
 	}
 
 	/**
-	 * @return whether this face is already put in a subface's stack.
+	 * @return whether this face is already put in a subface's local layer
+	 *         order.
 	 */
-	public boolean isAlreadyStacked() {
-		return alreadyStacked;
+	public boolean isAlreadyInLocalLayerOrder() {
+		return alreadyInLocalLayerOrder;
 	}
 
 	/**
-	 * @param alreadyStacked
-	 *            Sets alreadyStacked
+	 * @param alreadyIn
+	 *            Sets {@link #alreadyInLocalLayerOrder}
 	 */
-	public void setAlreadyStacked(final boolean alreadyStacked) {
-		this.alreadyStacked = alreadyStacked;
+	public void setAlreadyInLocalLayerOrder(final boolean alreadyIn) {
+		this.alreadyInLocalLayerOrder = alreadyIn;
 	}
 
 	/**

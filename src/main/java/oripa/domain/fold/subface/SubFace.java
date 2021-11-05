@@ -24,7 +24,7 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.origeom.OverlapRelationValues;
+import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 
@@ -43,7 +43,12 @@ public class SubFace {
 	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
 	public boolean allFaceOrderDecided = false;
-	public ArrayList<ArrayList<OriFace>> answerStacks = new ArrayList<>();
+
+	/**
+	 * A list of orders of faces where the faces include this subface. Each
+	 * order is correct on this subface but it may not so on other subfaces.
+	 */
+	public ArrayList<ArrayList<OriFace>> localLayerOrders = new ArrayList<>();
 
 	public SubFace(final OriFace f) {
 		outline = f;
@@ -55,11 +60,11 @@ public class SubFace {
 	 *
 	 * @param modelFaces
 	 *            all faces of inputted model.
-	 * @param orMat
+	 * @param overlapRelation
 	 *            overlap relation matrix.
-	 * @return the number of possible stacks.
+	 * @return the number of possible local layer orders.
 	 */
-	public int sortFaceOverlapOrder(final List<OriFace> modelFaces, final int[][] orMat) {
+	public int buildLocalLayerOrders(final List<OriFace> modelFaces, final OverlapRelation overlapRelation) {
 		sortedParentFaces.clear();
 		for (int i = 0; i < parentFaces.size(); i++) {
 			sortedParentFaces.add(null);
@@ -70,8 +75,8 @@ public class SubFace {
 		int f_num = parentFaces.size();
 		for (int i = 0; i < f_num; i++) {
 			for (int j = i + 1; j < f_num; j++) {
-				if (orMat[parentFaces.get(i).getFaceID()][parentFaces
-						.get(j).getFaceID()] == OverlapRelationValues.UNDEFINED) {
+				if (overlapRelation.isUndefined(parentFaces.get(i).getFaceID(),
+						parentFaces.get(j).getFaceID())) {
 					cnt++;
 				}
 			}
@@ -102,22 +107,22 @@ public class SubFace {
 
 			for (OriFace ff : parentFaces) {
 				var anotherFaceID = ff.getFaceID();
-				if (orMat[faceID][anotherFaceID] == OverlapRelationValues.LOWER) {
+				if (overlapRelation.isLower(faceID, anotherFaceID)) {
 					f.addStackConditionOf2Faces(Integer.valueOf(anotherFaceID));
 				}
 			}
 		}
 
 		for (OriFace f : parentFaces) {
-			f.setAlreadyStacked(false);
-			f.clearIndexForStack();
+			f.setAlreadyInLocalLayerOrder(false);
+			f.clearIndexForLocalLayerOrder();
 		}
 
 		// From the bottom
 		sort(modelFaces, 0);
 
 		// Returns the number of solutions obtained
-		return answerStacks.size();
+		return localLayerOrders.size();
 	}
 
 	/**
@@ -132,12 +137,12 @@ public class SubFace {
 
 		if (index == parentFaces.size()) {
 			var ans = new ArrayList<>(sortedParentFaces);
-			answerStacks.add(ans);
+			localLayerOrders.add(ans);
 			return;
 		}
 
 		for (OriFace f : parentFaces) {
-			if (f.isAlreadyStacked()) {
+			if (f.isAlreadyInLocalLayerOrder()) {
 				continue;
 			}
 
@@ -150,24 +155,24 @@ public class SubFace {
 			}
 
 			sortedParentFaces.set(index, f);
-			f.setAlreadyStacked(true);
-			f.setIndexForStack(index);
+			f.setAlreadyInLocalLayerOrder(true);
+			f.setIndexForLocalLayerOrder(index);
 
 			sort(modelFaces, index + 1);
 
-			sortedParentFaces.get(index).setAlreadyStacked(false);
-			sortedParentFaces.get(index).clearIndexForStack();
+			sortedParentFaces.get(index).setAlreadyInLocalLayerOrder(false);
+			sortedParentFaces.get(index).clearIndexForLocalLayerOrder();
 			sortedParentFaces.set(index, null);
 		}
 	}
 
 	private boolean checkConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
-		return f.stackConditionsOf2FacesStream().allMatch(ii -> modelFaces.get(ii.intValue()).isAlreadyStacked());
+		return f.stackConditionsOf2FacesStream().allMatch(ii -> modelFaces.get(ii.intValue()).isAlreadyInLocalLayerOrder());
 	}
 
 	private boolean checkForSortLocally3(final List<OriFace> modelFaces, final OriFace face) {
-		if (face.stackConditionOf3FacesStream().anyMatch(cond -> modelFaces.get(cond.lower).isAlreadyStacked()
-				&& !modelFaces.get(cond.upper).isAlreadyStacked())) {
+		if (face.stackConditionOf3FacesStream().anyMatch(cond -> modelFaces.get(cond.lower).isAlreadyInLocalLayerOrder()
+				&& !modelFaces.get(cond.upper).isAlreadyInLocalLayerOrder())) {
 			return false;
 		}
 
@@ -180,27 +185,27 @@ public class SubFace {
 		// upper1
 
 		if (face.stackConditionOf4FacesStream().anyMatch(cond -> face.getFaceID() == cond.upper2
-				&& modelFaces.get(cond.lower2).isAlreadyStacked()
-				&& modelFaces.get(cond.lower1).isAlreadyStacked()
-				&& !modelFaces.get(cond.upper1).isAlreadyStacked()
-				&& modelFaces.get(cond.lower2).getIndexForStack() < modelFaces
-						.get(cond.lower1).getIndexForStack())) {
+				&& modelFaces.get(cond.lower2).isAlreadyInLocalLayerOrder()
+				&& modelFaces.get(cond.lower1).isAlreadyInLocalLayerOrder()
+				&& !modelFaces.get(cond.upper1).isAlreadyInLocalLayerOrder()
+				&& modelFaces.get(cond.lower2).getIndexForLocalLayerOrder() < modelFaces
+						.get(cond.lower1).getIndexForLocalLayerOrder())) {
 			return false;
 		}
 
 		if (face.stackConditionOf4FacesStream().anyMatch(cond -> face.getFaceID() == cond.upper1
-				&& modelFaces.get(cond.lower2).isAlreadyStacked()
-				&& modelFaces.get(cond.lower1).isAlreadyStacked()
-				&& !modelFaces.get(cond.upper2).isAlreadyStacked()
-				&& modelFaces.get(cond.lower1).getIndexForStack() < modelFaces
-						.get(cond.lower2).getIndexForStack())) {
+				&& modelFaces.get(cond.lower2).isAlreadyInLocalLayerOrder()
+				&& modelFaces.get(cond.lower1).isAlreadyInLocalLayerOrder()
+				&& !modelFaces.get(cond.upper2).isAlreadyInLocalLayerOrder()
+				&& modelFaces.get(cond.lower1).getIndexForLocalLayerOrder() < modelFaces
+						.get(cond.lower2).getIndexForLocalLayerOrder())) {
 			return false;
 		}
 
 		return true;
 	}
 
-	public int answerStackCount() {
-		return answerStacks.size();
+	public int localLayerOrderCount() {
+		return localLayerOrders.size();
 	}
 }

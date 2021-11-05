@@ -37,13 +37,12 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OriGeomUtil;
-import oripa.domain.fold.origeom.OverlapRelationValues;
+import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
-import oripa.util.Matrices;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
@@ -86,7 +85,7 @@ public class LayerOrderEnumerator {
 		subFaces = subFacesFactory.createSubFaces(faces, paperSize);
 		logger.debug("subFaces.size() = " + subFaces.size());
 
-		int[][] overlapRelation = createOverlapRelation(faces, paperSize);
+		OverlapRelation overlapRelation = createOverlapRelation(faces, paperSize);
 
 		// Set overlap relations based on valley/mountain folds information
 		determineOverlapRelationByLineType(faces, overlapRelation);
@@ -99,14 +98,14 @@ public class LayerOrderEnumerator {
 		estimation(faces, overlapRelation);
 
 		for (SubFace sub : subFaces) {
-			sub.sortFaceOverlapOrder(faces, overlapRelation);
+			sub.buildLocalLayerOrders(faces, overlapRelation);
 		}
 
 		// heuristic: fewer answer stacks mean the search on the subface has
 		// more possibility to be correct. Such confident search node should be
 		// consumed at early stage.
 		subFaces = subFaces.stream()
-				.sorted(Comparator.comparing(SubFace::answerStackCount))
+				.sorted(Comparator.comparing(SubFace::localLayerOrderCount))
 				.collect(Collectors.toList());
 
 		var watch = new StopWatch(true);
@@ -241,8 +240,8 @@ public class LayerOrderEnumerator {
 	 * @param overlapRelationList
 	 *            an object to store the result
 	 * @param subFaceIndex
-	 *            the index of subface to be updated
-	 * @param orMat
+	 *            the index of subface to be used
+	 * @param overlapRelation
 	 *            overlap relation matrix
 	 * @param changedFaceIDs
 	 *            IDs of faces whose overlap relation changed. should contain
@@ -250,41 +249,42 @@ public class LayerOrderEnumerator {
 	 */
 	private void findAnswer(
 			final List<OriFace> faces,
-			final OverlapRelationList overlapRelationList, final int subFaceIndex, final int[][] orMat,
+			final OverlapRelationList overlapRelationList, final int subFaceIndex,
+			final OverlapRelation overlapRelation,
 			final Set<Integer> changedFaceIDs) {
 		callCount++;
 
-		List<int[][]> foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
+		var foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
 
 		if (!changedFaceIDs.isEmpty()) {
 			penetrationTestCallCount++;
-			if (detectPenetrationBy3faces(faces, changedFaceIDs, orMat)) {
+			if (detectPenetrationBy3faces(faces, changedFaceIDs, overlapRelation)) {
 				penetrationCount++;
 				return;
 			}
-			if (detectPenetrationBy4faces(orMat)) {
+			if (detectPenetrationBy4faces(overlapRelation)) {
 				penetrationCount++;
 				return;
 			}
 		}
 
 		if (subFaceIndex == subFaces.size()) {
-			var ansMat = Matrices.clone(orMat);
-			foldableOverlapRelations.add(ansMat);
+			var answer = OverlapRelation.clone(overlapRelation);
+			foldableOverlapRelations.add(answer);
 			return;
 		}
 
 		SubFace sub = subFaces.get(subFaceIndex);
 
 		if (sub.allFaceOrderDecided) {
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, orMat,
+			findAnswer(faces, overlapRelationList, subFaceIndex + 1, overlapRelation,
 					new HashSet<>());
 			return;
 		}
 
-		for (var answerStack : sub.answerStacks) {
-			int size = answerStack.size();
-			if (!isCorrectStackOrder(answerStack, orMat)) {
+		for (var localLayerOrder : sub.localLayerOrders) {
+			int size = localLayerOrder.size();
+			if (!isCorrectLayerOrder(localLayerOrder, overlapRelation)) {
 				continue;
 			}
 			var changedIndexPairs = new ArrayList<IndexPair>();
@@ -292,11 +292,11 @@ public class LayerOrderEnumerator {
 
 			// determine overlap relations according to stack
 			for (int i = 0; i < size; i++) {
-				int index_i = answerStack.get(i).getFaceID();
+				int index_i = localLayerOrder.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
-					int index_j = answerStack.get(j).getFaceID();
-					if (orMat[index_i][index_j] == OverlapRelationValues.UNDEFINED) {
-						setOR(orMat, index_i, index_j, OverlapRelationValues.UPPER);
+					int index_j = localLayerOrder.get(j).getFaceID();
+					if (overlapRelation.isUndefined(index_i, index_j)) {
+						overlapRelation.setUpper(index_i, index_j);
 
 						changedIndexPairs.add(new IndexPair(index_i, index_j));
 						nextChangedFaceIDs.add(index_i);
@@ -306,11 +306,11 @@ public class LayerOrderEnumerator {
 			}
 
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1,
-					orMat, nextChangedFaceIDs);
+					overlapRelation, nextChangedFaceIDs);
 
 			// get back
 			changedIndexPairs.forEach(pair -> {
-				setOR(orMat, pair.i, pair.j, OverlapRelationValues.UNDEFINED);
+				overlapRelation.setUndefined(pair.i, pair.j);
 			});
 		}
 	}
@@ -325,13 +325,13 @@ public class LayerOrderEnumerator {
 	 *            all faces.
 	 * @param changedFaceIDs
 	 *            IDs of faces whose overlap relation changed.
-	 * @param orMat
+	 * @param overlapRelation
 	 *            overlap relation matrix.
 	 * @return true if there is a face which penetrates the sheet of paper.
 	 */
 	private boolean detectPenetrationBy3faces(final List<OriFace> faces, final Set<Integer> changedFaceIDs,
-			final int[][] orMat) {
-		var checked = new boolean[faces.size()][faces.size()];
+			final OverlapRelation overlapRelation) {
+		var checked = new HashSet<IndexPair>();
 
 		for (var faceID : changedFaceIDs) {
 			var face = faces.get(faceID);
@@ -345,14 +345,14 @@ public class LayerOrderEnumerator {
 				var index_i = he.getFace().getFaceID();
 				var index_j = pair.getFace().getFaceID();
 
-				if (checked[index_i][index_j]) {
+				if (checked.contains(new IndexPair(index_i, index_j))) {
 					continue;
 				}
 
-				if (orMat[index_i][index_j] != OverlapRelationValues.LOWER &&
-						orMat[index_i][index_j] != OverlapRelationValues.UPPER) {
-					checked[index_i][index_j] = true;
-					checked[index_j][index_i] = true;
+				if (!overlapRelation.isLower(index_i, index_j) &&
+						!overlapRelation.isUpper(index_i, index_j)) {
+					checked.add(new IndexPair(index_i, index_j));
+					checked.add(new IndexPair(index_j, index_i));
 					continue;
 				}
 
@@ -366,13 +366,13 @@ public class LayerOrderEnumerator {
 							if (!faceIndicesOnHalfEdge.get(he).contains(index_k)) {
 								return false;
 							}
-							if (orMat[index_i][index_j] == OverlapRelationValues.LOWER &&
-									orMat[index_i][index_k] == OverlapRelationValues.LOWER &&
-									orMat[index_j][index_k] == OverlapRelationValues.UPPER) {
+							if (overlapRelation.isLower(index_i, index_j) &&
+									overlapRelation.isLower(index_i, index_k) &&
+									overlapRelation.isUpper(index_j, index_k)) {
 								return true;
-							} else if (orMat[index_i][index_j] == OverlapRelationValues.UPPER &&
-									orMat[index_i][index_k] == OverlapRelationValues.UPPER &&
-									orMat[index_j][index_k] == OverlapRelationValues.LOWER) {
+							} else if (overlapRelation.isUpper(index_i, index_j) &&
+									overlapRelation.isUpper(index_i, index_k) &&
+									overlapRelation.isLower(index_j, index_k)) {
 								return true;
 							}
 
@@ -382,8 +382,8 @@ public class LayerOrderEnumerator {
 					return true;
 				}
 
-				checked[index_i][index_j] = true;
-				checked[index_j][index_i] = true;
+				checked.add(new IndexPair(index_i, index_j));
+				checked.add(new IndexPair(index_j, index_i));
 			}
 		}
 
@@ -391,77 +391,66 @@ public class LayerOrderEnumerator {
 	}
 
 	/**
-	 *
-	 * @param orMat
-	 * @param i
-	 * @param j
-	 * @return {@code true} if
-	 *         {@code orMat[i][j] == OverlapRelationValues.LOWER}.
-	 */
-	private boolean isLower(final int[][] orMat, final int i, final int j) {
-		return orMat[i][j] == OverlapRelationValues.LOWER;
-	}
-
-	/**
 	 * Tests all cases of 4-face layer ordering condition.
 	 *
-	 * @param orMat
+	 * @param overlapRelation
+	 *            overlap relation matrix
 	 * @return {@code true} if penetration occurs, i.e., 4-face layer ordering
 	 *         condition is not satisfied.
 	 */
-	private boolean detectPenetrationBy4faces(final int[][] orMat) {
+	private boolean detectPenetrationBy4faces(final OverlapRelation overlapRelation) {
 		boolean correct = true;
 		for (var cond : condition4s) {
-			if (!cond.isDetermined(orMat)) {
+			if (!cond.isDetermined(overlapRelation)) {
 				continue;
 			}
 
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2
-			if (orMat[cond.lower1][cond.upper2] == OverlapRelationValues.LOWER) {
-				correct &= isLower(orMat, cond.upper1, cond.upper2);
-				correct &= isLower(orMat, cond.upper1, cond.lower2);
-				correct &= isLower(orMat, cond.lower1, cond.lower2);
+			if (overlapRelation.isLower(cond.lower1, cond.upper2)) {
+				correct &= overlapRelation.isLower(cond.upper1, cond.upper2);
+				correct &= overlapRelation.isLower(cond.upper1, cond.lower2);
+				correct &= overlapRelation.isLower(cond.lower1, cond.lower2);
 			}
 
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
 			// lower2 > lower1
-			if (orMat[cond.lower2][cond.upper1] == OverlapRelationValues.LOWER) {
-				correct &= isLower(orMat, cond.upper2, cond.upper1);
-				correct &= isLower(orMat, cond.upper2, cond.lower1);
-				correct &= isLower(orMat, cond.lower2, cond.lower1);
+			if (overlapRelation.isLower(cond.lower2, cond.upper1)) {
+				correct &= overlapRelation.isLower(cond.upper2, cond.upper1);
+				correct &= overlapRelation.isLower(cond.upper2, cond.lower1);
+				correct &= overlapRelation.isLower(cond.lower2, cond.lower1);
 			}
 
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
 			// lower1
-			if (orMat[cond.upper1][cond.upper2] == OverlapRelationValues.LOWER
-					&& orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER) {
-				correct &= isLower(orMat, cond.upper1, cond.lower2);
-				correct &= isLower(orMat, cond.lower2, cond.lower1);
+			if (overlapRelation.isLower(cond.upper1, cond.upper2)
+					&& overlapRelation.isLower(cond.upper2, cond.lower1)) {
+				correct &= overlapRelation.isLower(cond.upper1, cond.lower2);
+				correct &= overlapRelation.isLower(cond.lower2, cond.lower1);
 			}
 
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
 			// lower1
-			if (orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER
-					&& orMat[cond.lower2][cond.lower1] == OverlapRelationValues.LOWER) {
-				correct &= isLower(orMat, cond.upper1, cond.upper2);
-				correct &= isLower(orMat, cond.upper2, cond.lower1);
+			if (overlapRelation.isLower(cond.upper1, cond.lower2)
+					&& overlapRelation.isLower(cond.lower2, cond.lower1)) {
+				correct &= overlapRelation.isLower(cond.upper1, cond.upper2);
+				correct &= overlapRelation.isLower(cond.upper2, cond.lower1);
 			}
 
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
 			// lower2
-			if (orMat[cond.upper2][cond.upper1] == OverlapRelationValues.LOWER
-					&& orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER) {
-				correct &= isLower(orMat, cond.upper2, cond.lower1);
-				correct &= isLower(orMat, cond.lower1, cond.lower2);
+			if (overlapRelation.isLower(cond.upper2, cond.upper1)
+					&& overlapRelation.isLower(cond.upper1, cond.lower2)) {
+				correct &= overlapRelation.isLower(cond.upper2, cond.lower1);
+				correct &= overlapRelation.isLower(cond.lower1, cond.lower2);
 			}
 
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
 			// lower2
-			if (orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER
-					&& orMat[cond.lower1][cond.lower2] == OverlapRelationValues.LOWER) {
-				correct &= isLower(orMat, cond.upper2, cond.upper1);
-				correct &= isLower(orMat, cond.upper1, cond.lower2);
+			if (overlapRelation.isLower(cond.upper2, cond.lower1)
+					&& overlapRelation.isLower(cond.lower1, cond.lower2)) {
+				correct &= overlapRelation.isLower(cond.upper2, cond.upper1);
+				correct &= overlapRelation.isLower(cond.upper1, cond.lower2);
 			}
 
 			if (!correct) {
@@ -474,27 +463,28 @@ public class LayerOrderEnumerator {
 	}
 
 	/**
-	 * Whether the order of faces in {@code answerStack} is correct or not
-	 * according to {@code orMat}.
+	 * Whether the order of faces in {@code localLayerOrder} is correct or not
+	 * according to {@code overlapRelation}.
 	 *
-	 * @param answerStack
+	 * @param localLayerOrder
 	 *            stack of faces including the same subface.
-	 * @param orMat
+	 * @param overlapRelation
 	 *            overlap relation matrix.
 	 * @return true if the order is correct.
 	 */
-	private boolean isCorrectStackOrder(final List<OriFace> answerStack, final int[][] orMat) {
-		int size = answerStack.size();
+	private boolean isCorrectLayerOrder(final List<OriFace> localLayerOrder, final OverlapRelation overlapRelation) {
+		int size = localLayerOrder.size();
 
 		return IntStream.range(0, size).allMatch(i -> {
-			final int index_i = answerStack.get(i).getFaceID();
+			final int index_i = localLayerOrder.get(i).getFaceID();
 			return IntStream.range(i + 1, size).allMatch(j -> {
-				final int index_j = answerStack.get(j).getFaceID();
-				// stack_index = 0 means the top of stack (looking down
+				final int index_j = localLayerOrder.get(j).getFaceID();
+				// if index of local layer order is 0, the face is at the top of
+				// layer order (looking down
 				// the folded model on a table).
-				// therefore a face with smaller stack_index i should be
-				// UPPER than stack_index j.
-				if (orMat[index_i][index_j] == OverlapRelationValues.LOWER) {
+				// therefore a face with smaller index on layer order i should
+				// be UPPER than a face with index on layer order j.
+				if (overlapRelation.isLower(index_i, index_j)) {
 					return false;
 				}
 				return true;
@@ -507,16 +497,16 @@ public class LayerOrderEnumerator {
 	 *
 	 * @param faces
 	 *            all faces.
-	 * @param orMat
+	 * @param overlapRelation
 	 *            overlap relation matrix
 	 */
-	private void estimation(final List<OriFace> faces, final int[][] orMat) {
+	private void estimation(final List<OriFace> faces, final OverlapRelation overlapRelation) {
 		boolean changed;
 		do {
 			changed = false;
-			changed |= estimate_by3faces(faces, orMat);
-			changed |= estimate_by3faces2(orMat);
-			changed |= estimate_by4faces(orMat);
+			changed |= estimate_by3faces(faces, overlapRelation);
+			changed |= estimate_by3faces2(overlapRelation);
+			changed |= estimate_by4faces(overlapRelation);
 		} while (changed);
 	}
 
@@ -525,11 +515,14 @@ public class LayerOrderEnumerator {
 	 * touching edge are covered by face[k] then OR[i][k] = OR[j][k]
 	 *
 	 * @param faces
+	 *            all faces of the model
 	 * @param paperSize
+	 *            paper size before fold
 	 * @param overlapRelation
+	 *            overlap relation matrix
 	 */
 	private void holdCondition3s(
-			final List<OriFace> faces, final double paperSize, final int[][] overlapRelation) {
+			final List<OriFace> faces, final double paperSize, final OverlapRelation overlapRelation) {
 
 		for (OriFace f_i : faces) {
 			for (OriHalfedge he : f_i.halfedgeIterable()) {
@@ -539,7 +532,7 @@ public class LayerOrderEnumerator {
 				}
 
 				OriFace f_j = pair.getFace();
-				if (overlapRelation[f_i.getFaceID()][f_j.getFaceID()] != OverlapRelationValues.LOWER) {
+				if (!overlapRelation.isLower(f_i.getFaceID(), f_j.getFaceID())) {
 					continue;
 				}
 				for (OriFace f_k : faces) {
@@ -570,12 +563,15 @@ public class LayerOrderEnumerator {
 	/**
 	 * Creates 4-face condition and sets to subfaces.
 	 *
-	 * @param parentFaces
+	 * @param edges
+	 *            all eges of the model
 	 * @param paperSize
+	 *            paper size before fold
 	 * @param overlapRelation
+	 *            overlap relation matrix
 	 */
 	private void holdCondition4s(
-			final List<OriEdge> edges, final int[][] overlapRelation) {
+			final List<OriEdge> edges, final OverlapRelation overlapRelation) {
 
 		int edgeNum = edges.size();
 		logger.debug("edgeNum = " + edgeNum);
@@ -626,14 +622,14 @@ public class LayerOrderEnumerator {
 				var e1LeftFaceID = e1LeftFace.getFaceID();
 				var e1RightFaceID = e1RightFace.getFaceID();
 
-				if (overlapRelation[e0LeftFaceID][e0RightFaceID] == OverlapRelationValues.UPPER) {
+				if (overlapRelation.isUpper(e0LeftFaceID, e0RightFaceID)) {
 					cond.upper1 = e0RightFaceID;
 					cond.lower1 = e0LeftFaceID;
 				} else {
 					cond.upper1 = e0LeftFaceID;
 					cond.lower1 = e0RightFaceID;
 				}
-				if (overlapRelation[e1LeftFaceID][e1RightFaceID] == OverlapRelationValues.UPPER) {
+				if (overlapRelation.isUpper(e1LeftFaceID, e1RightFaceID)) {
 					cond.upper2 = e1RightFaceID;
 					cond.lower2 = e1LeftFaceID;
 				} else {
@@ -649,53 +645,12 @@ public class LayerOrderEnumerator {
 	}
 
 	/**
-	 * Sets {@code value} to {@code orMat[i][j]}. This method sets inversion of
-	 * {@code value} to {@code orMat[j][i]}.
-	 *
-	 * @param orMat
-	 *            overlap relation matrix
-	 * @param i
-	 *            row index
-	 * @param j
-	 *            column index
-	 * @param value
-	 *            a value of {@link OverlapRelationValues}
-	 */
-	private void setOR(final int[][] orMat, final int i, final int j, final int value) {
-		orMat[i][j] = value;
-
-		if (value == OverlapRelationValues.LOWER) {
-			orMat[j][i] = OverlapRelationValues.UPPER;
-		} else if (value == OverlapRelationValues.UPPER) {
-			orMat[j][i] = OverlapRelationValues.LOWER;
-		} else {
-			orMat[j][i] = value;
-		}
-	}
-
-	/**
-	 *
-	 * @param orMat
-	 * @param i
-	 * @param j
-	 * @return true if LOWER and UPPER is set.
-	 */
-	private boolean setLowerValueIfUndefined(final int[][] orMat, final int i, final int j) {
-		if (orMat[i][j] != OverlapRelationValues.UNDEFINED) {
-			return false;
-		}
-		orMat[i][j] = OverlapRelationValues.LOWER;
-		orMat[j][i] = OverlapRelationValues.UPPER;
-		return true;
-	}
-
-	/**
 	 * Determines overlap relation using 4-face condition.
 	 *
-	 * @param orMat
+	 * @param overlapRelation
 	 * @return
 	 */
-	private boolean estimate_by4faces(final int[][] orMat) {
+	private boolean estimate_by4faces(final OverlapRelation overlapRelation) {
 
 		boolean changed = false;
 
@@ -703,50 +658,50 @@ public class LayerOrderEnumerator {
 
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2
-			if (orMat[cond.lower1][cond.upper2] == OverlapRelationValues.LOWER) {
-				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2);
-				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2);
-				changed |= setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2);
+			if (overlapRelation.isLower(cond.lower1, cond.upper2)) {
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper1, cond.upper2);
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper1, cond.lower2);
+				changed |= overlapRelation.setLowerIfUndefined(cond.lower1, cond.lower2);
 			}
 
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
 			// lower2 > lower1
-			if (orMat[cond.lower2][cond.upper1] == OverlapRelationValues.LOWER) {
-				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1);
-				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1);
-				changed |= setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1);
+			if (overlapRelation.isLower(cond.lower2, cond.upper1)) {
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper2, cond.upper1);
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper2, cond.lower1);
+				changed |= overlapRelation.setLowerIfUndefined(cond.lower2, cond.lower1);
 			}
 
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
 			// lower1
-			if (orMat[cond.upper1][cond.upper2] == OverlapRelationValues.LOWER
-					&& orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER) {
-				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2);
-				changed |= setLowerValueIfUndefined(orMat, cond.lower2, cond.lower1);
+			if (overlapRelation.isLower(cond.upper1, cond.upper2)
+					&& overlapRelation.isLower(cond.upper2, cond.lower1)) {
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper1, cond.lower2);
+				changed |= overlapRelation.setLowerIfUndefined(cond.lower2, cond.lower1);
 			}
 
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
 			// lower1
-			if (orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER
-					&& orMat[cond.lower2][cond.lower1] == OverlapRelationValues.LOWER) {
-				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.upper2);
-				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1);
+			if (overlapRelation.isLower(cond.upper1, cond.lower2)
+					&& overlapRelation.isLower(cond.lower2, cond.lower1)) {
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper1, cond.upper2);
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper2, cond.lower1);
 			}
 
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
 			// lower2
-			if (orMat[cond.upper2][cond.upper1] == OverlapRelationValues.LOWER
-					&& orMat[cond.upper1][cond.lower2] == OverlapRelationValues.LOWER) {
-				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.lower1);
-				changed |= setLowerValueIfUndefined(orMat, cond.lower1, cond.lower2);
+			if (overlapRelation.isLower(cond.upper2, cond.upper1)
+					&& overlapRelation.isLower(cond.upper1, cond.lower2)) {
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper2, cond.lower1);
+				changed |= overlapRelation.setLowerIfUndefined(cond.lower1, cond.lower2);
 			}
 
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
 			// lower2
-			if (orMat[cond.upper2][cond.lower1] == OverlapRelationValues.LOWER
-					&& orMat[cond.lower1][cond.lower2] == OverlapRelationValues.LOWER) {
-				changed |= setLowerValueIfUndefined(orMat, cond.upper2, cond.upper1);
-				changed |= setLowerValueIfUndefined(orMat, cond.upper1, cond.lower2);
+			if (overlapRelation.isLower(cond.upper2, cond.lower1)
+					&& overlapRelation.isLower(cond.lower1, cond.lower2)) {
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper2, cond.upper1);
+				changed |= overlapRelation.setLowerIfUndefined(cond.upper1, cond.lower2);
 			}
 		}
 
@@ -756,15 +711,15 @@ public class LayerOrderEnumerator {
 	/**
 	 * If the subface a>b and b>c then a>c
 	 *
-	 * @param orMat
+	 * @param overlapRelation
 	 *            overlap-relation matrix
-	 * @return whether orMat is changed or not.
+	 * @return whether overlapRelation is changed or not.
 	 */
-	private boolean estimate_by3faces2(final int[][] orMat) {
+	private boolean estimate_by3faces2(final OverlapRelation overlapRelation) {
 		boolean bChanged = false;
 
 		for (SubFace sub : subFaces) {
-			while (updateOverlapRelationBy3FaceStack(sub, orMat)) {
+			while (updateOverlapRelationBy3FaceStack(sub, overlapRelation)) {
 				bChanged = true;
 			}
 		}
@@ -772,15 +727,15 @@ public class LayerOrderEnumerator {
 	}
 
 	/**
-	 * Updates {@code orMat} by 3-face stack condition.
+	 * Updates {@code overlapRelation} by 3-face stack condition.
 	 *
 	 * @param sub
 	 *            subface.
-	 * @param orMat
+	 * @param overlapRelation
 	 *            overlap relation matrix.
 	 * @return true if an update happens.
 	 */
-	private boolean updateOverlapRelationBy3FaceStack(final SubFace sub, final int[][] orMat) {
+	private boolean updateOverlapRelationBy3FaceStack(final SubFace sub, final OverlapRelation overlapRelation) {
 
 		for (int i = 0; i < sub.parentFaces.size(); i++) {
 			for (int j = i + 1; j < sub.parentFaces.size(); j++) {
@@ -789,10 +744,10 @@ public class LayerOrderEnumerator {
 				int index_i = sub.parentFaces.get(i).getFaceID();
 				int index_j = sub.parentFaces.get(j).getFaceID();
 
-				if (orMat[index_i][index_j] == OverlapRelationValues.NO_OVERLAP) {
+				if (overlapRelation.isNoOverlap(index_i, index_j)) {
 					continue;
 				}
-				if (orMat[index_i][index_j] != OverlapRelationValues.UNDEFINED) {
+				if (!overlapRelation.isUndefined(index_i, index_j)) {
 					continue;
 				}
 				// Find the intermediary face
@@ -803,14 +758,14 @@ public class LayerOrderEnumerator {
 
 					int index_k = sub.parentFaces.get(k).getFaceID();
 
-					if (orMat[index_i][index_k] == OverlapRelationValues.UPPER
-							&& orMat[index_k][index_j] == OverlapRelationValues.UPPER) {
-						setOR(orMat, index_i, index_j, OverlapRelationValues.UPPER);
+					if (overlapRelation.isUpper(index_i, index_k)
+							&& overlapRelation.isUpper(index_k, index_j)) {
+						overlapRelation.setUpper(index_i, index_j);
 						return true;
 					}
-					if (orMat[index_i][index_k] == OverlapRelationValues.LOWER
-							&& orMat[index_k][index_j] == OverlapRelationValues.LOWER) {
-						setOR(orMat, index_i, index_j, OverlapRelationValues.LOWER);
+					if (overlapRelation.isLower(index_i, index_k)
+							&& overlapRelation.isLower(index_k, index_j)) {
+						overlapRelation.setLower(index_i, index_j);
 						return true;
 					}
 				}
@@ -820,16 +775,18 @@ public class LayerOrderEnumerator {
 	}
 
 	/**
-	 * If face[i] and face[j] touching edge is covered by face[k] then OR[i][k]
-	 * = OR[j][k]
+	 * If face[i] and face[j] touching edge is covered by face[k] then
+	 * overlapRelation[i][k] = overlapRelation[j][k].
 	 *
 	 * @param faces
-	 * @param orMat
-	 * @return whether orMat is changed or not.
+	 *            all faces of the model
+	 * @param overlapRelation
+	 *            overlap relation matrix
+	 * @return whether overlapRelation is changed or not.
 	 */
 	private boolean estimate_by3faces(
 			final List<OriFace> faces,
-			final int[][] orMat) {
+			final OverlapRelation overlapRelation) {
 
 		boolean bChanged = false;
 		for (OriFace f_i : faces) {
@@ -850,13 +807,13 @@ public class LayerOrderEnumerator {
 					if (!OriGeomUtil.isLineCrossFace(f_k, he, 0.0001)) {
 						continue;
 					}
-					if (orMat[index_i][index_k] != OverlapRelationValues.UNDEFINED
-							&& orMat[index_j][index_k] == OverlapRelationValues.UNDEFINED) {
-						setOR(orMat, index_j, index_k, orMat[index_i][index_k]);
+					if (!overlapRelation.isUndefined(index_i, index_k)
+							&& overlapRelation.isUndefined(index_j, index_k)) {
+						overlapRelation.set(index_j, index_k, overlapRelation.get(index_i, index_k));
 						bChanged = true;
-					} else if (orMat[index_j][index_k] != OverlapRelationValues.UNDEFINED
-							&& orMat[index_i][index_k] == OverlapRelationValues.UNDEFINED) {
-						setOR(orMat, index_i, index_k, orMat[index_j][index_k]);
+					} else if (!overlapRelation.isUndefined(index_j, index_k)
+							&& overlapRelation.isUndefined(index_i, index_k)) {
+						overlapRelation.set(index_i, index_k, overlapRelation.get(index_j, index_k));
 						bChanged = true;
 					}
 				}
@@ -867,40 +824,15 @@ public class LayerOrderEnumerator {
 	}
 
 	/**
-	 * creates the matrix overlapRelation and fills it with "no overlap" or
-	 * "undefined"
-	 *
-	 * @param faces
-	 * @param paperSize
-	 * @return
-	 */
-	private int[][] createOverlapRelation(final List<OriFace> faces, final double paperSize) {
-
-		int size = faces.size();
-		int[][] overlapRelation = new int[size][size];
-
-		for (int i = 0; i < size; i++) {
-			overlapRelation[i][i] = OverlapRelationValues.NO_OVERLAP;
-			for (int j = i + 1; j < size; j++) {
-				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), eps(paperSize))) {
-					setOR(overlapRelation, i, j, OverlapRelationValues.UNDEFINED);
-				} else {
-					setOR(overlapRelation, i, j, OverlapRelationValues.NO_OVERLAP);
-				}
-			}
-		}
-
-		return overlapRelation;
-	}
-
-	/**
 	 * Determines the overlap relations by mountain/valley.
 	 *
 	 * @param faces
+	 *            all faces of the model
 	 * @param overlapRelation
+	 *            overlap relation matrix
 	 */
 	private void determineOverlapRelationByLineType(
-			final List<OriFace> faces, final int[][] overlapRelation) {
+			final List<OriFace> faces, final OverlapRelation overlapRelation) {
 
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedgeIterable()) {
@@ -913,19 +845,47 @@ public class LayerOrderEnumerator {
 				var pairFaceID = pairFace.getFaceID();
 
 				// If the relation is already decided, skip
-				if (overlapRelation[faceID][pairFaceID] == OverlapRelationValues.UPPER
-						|| overlapRelation[faceID][pairFaceID] == OverlapRelationValues.LOWER) {
+				if (overlapRelation.isUpper(faceID, pairFaceID)
+						|| overlapRelation.isLower(faceID, pairFaceID)) {
 					continue;
 				}
 
 				if ((face.isFaceFront() && he.getType() == OriLine.Type.MOUNTAIN.toInt())
 						|| (!face.isFaceFront() && he.getType() == OriLine.Type.VALLEY.toInt())) {
-					setOR(overlapRelation, faceID, pairFaceID, OverlapRelationValues.UPPER);
+					overlapRelation.setUpper(faceID, pairFaceID);
 				} else {
-					setOR(overlapRelation, faceID, pairFaceID, OverlapRelationValues.LOWER);
+					overlapRelation.setLower(faceID, pairFaceID);
 				}
 			}
 		}
 	}
 
+	/**
+	 * creates the matrix overlapRelation and fills it with "no overlap" or
+	 * "undefined"
+	 *
+	 * @param faces
+	 *            all faces of the model
+	 * @param paperSize
+	 *            paper size before fold
+	 * @return initialized overlap relation matrix
+	 */
+	private OverlapRelation createOverlapRelation(final List<OriFace> faces, final double paperSize) {
+
+		int size = faces.size();
+		OverlapRelation overlapRelation = new OverlapRelation(size);
+
+		for (int i = 0; i < size; i++) {
+			overlapRelation.setNoOverlap(i, i);
+			for (int j = i + 1; j < size; j++) {
+				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), eps(paperSize))) {
+					overlapRelation.setUndefined(i, j);
+				} else {
+					overlapRelation.setNoOverlap(i, j);
+				}
+			}
+		}
+
+		return overlapRelation;
+	}
 }
