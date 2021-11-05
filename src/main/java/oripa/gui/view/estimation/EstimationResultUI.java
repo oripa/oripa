@@ -112,7 +112,7 @@ public class EstimationResultUI extends JPanel {
 		}
 
 		indexLabel.setText("Folded model ["
-				+ (overlapRelationList.getCurrentORmatIndex() + 1) + "/"
+				+ (overlapRelationList.getCurrentIndex() + 1) + "/"
 				+ overlapRelationList.getFoldablePatternCount() + "]");
 
 	}
