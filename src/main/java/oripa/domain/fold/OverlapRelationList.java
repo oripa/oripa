@@ -24,7 +24,7 @@ import java.util.List;
 import oripa.domain.fold.origeom.OverlapRelation;
 
 public class OverlapRelationList {
-	private List<OverlapRelation> overlapRelations = new ArrayList<>();
+	private final List<OverlapRelation> overlapRelations = new ArrayList<>();
 	private int currentORmatIndex = 0;
 
 	public void setNextIndex() {
@@ -44,12 +44,8 @@ public class OverlapRelationList {
 		return overlapRelations.get(currentORmatIndex);
 	}
 
-	public List<OverlapRelation> getFoldableOverlapRelations() {
-		return overlapRelations;
-	}
-
-	public void setFoldableOverlapRelations(final List<OverlapRelation> foldableOverlapRelations) {
-		this.overlapRelations = foldableOverlapRelations;
+	public void add(final OverlapRelation o) {
+		overlapRelations.add(o);
 	}
 
 	public int getCurrentORmatIndex() {

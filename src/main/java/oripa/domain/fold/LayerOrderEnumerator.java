@@ -254,8 +254,6 @@ public class LayerOrderEnumerator {
 			final Set<Integer> changedFaceIDs) {
 		callCount++;
 
-		var foldableOverlapRelations = overlapRelationList.getFoldableOverlapRelations();
-
 		if (!changedFaceIDs.isEmpty()) {
 			penetrationTestCallCount++;
 			if (detectPenetrationBy3faces(faces, changedFaceIDs, overlapRelation)) {
@@ -270,7 +268,7 @@ public class LayerOrderEnumerator {
 
 		if (subFaceIndex == subFaces.size()) {
 			var answer = OverlapRelation.clone(overlapRelation);
-			foldableOverlapRelations.add(answer);
+			overlapRelationList.add(answer);
 			return;
 		}
 
