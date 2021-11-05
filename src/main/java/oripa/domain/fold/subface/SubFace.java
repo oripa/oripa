@@ -236,6 +236,10 @@ public class SubFace {
 		return parentFaces.contains(face);
 	}
 
+	public int parentFaceCount() {
+		return parentFaces.size();
+	}
+
 	public boolean isSame(final SubFace sub) {
 		if (parentFaces.size() != sub.parentFaces.size()) {
 			return false;

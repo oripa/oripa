@@ -736,8 +736,8 @@ public class LayerOrderEnumerator {
 	 */
 	private boolean updateOverlapRelationBy3FaceStack(final SubFace sub, final OverlapRelation overlapRelation) {
 
-		for (int i = 0; i < sub.parentFaces.size(); i++) {
-			for (int j = i + 1; j < sub.parentFaces.size(); j++) {
+		for (int i = 0; i < sub.parentFaceCount(); i++) {
+			for (int j = i + 1; j < sub.parentFaceCount(); j++) {
 
 				// search for undetermined relations
 				int index_i = sub.getParentFace(i).getFaceID();
@@ -750,7 +750,7 @@ public class LayerOrderEnumerator {
 					continue;
 				}
 				// Find the intermediary face
-				for (int k = 0; k < sub.parentFaces.size(); k++) {
+				for (int k = 0; k < sub.parentFaceCount(); k++) {
 					if (k == i || k == j) {
 						continue;
 					}
