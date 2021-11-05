@@ -144,11 +144,15 @@ public class SubFace {
 				continue;
 			}
 
-			if (!checkConditionOf2Faces(modelFaces, f)) {
+			if (!satisfiesConditionOf2Faces(modelFaces, f)) {
 				continue;
 			}
 
-			if (!checkForSortLocally3(modelFaces, f)) {
+			if (!satisfiesConditionOf3Faces(modelFaces, f)) {
+				continue;
+			}
+
+			if (!satisfiesConditionOf4Faces(modelFaces, f)) {
 				continue;
 			}
 
@@ -164,17 +168,21 @@ public class SubFace {
 		}
 	}
 
-	private boolean checkConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
+	private boolean satisfiesConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
 		return f.stackConditionsOf2FacesStream()
 				.allMatch(ii -> modelFaces.get(ii.intValue()).isAlreadyInLocalLayerOrder());
 	}
 
-	private boolean checkForSortLocally3(final List<OriFace> modelFaces, final OriFace face) {
+	private boolean satisfiesConditionOf3Faces(final List<OriFace> modelFaces, final OriFace face) {
 		if (face.stackConditionOf3FacesStream().anyMatch(cond -> modelFaces.get(cond.lower).isAlreadyInLocalLayerOrder()
 				&& !modelFaces.get(cond.upper).isAlreadyInLocalLayerOrder())) {
 			return false;
 		}
 
+		return true;
+	}
+
+	private boolean satisfiesConditionOf4Faces(final List<OriFace> modelFaces, final OriFace face) {
 		// check condition4
 		// aabb or abba or baab are good, but aba or bab are impossible
 
@@ -202,6 +210,7 @@ public class SubFace {
 		}
 
 		return true;
+
 	}
 
 	OriFace getOutline() {
