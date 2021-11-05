@@ -18,14 +18,11 @@
 
 package oripa.domain.fold;
 
-import java.util.List;
-
-import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 
 public class Folder {
 	// helper object
-	private final FolderTool folderTool = new FolderTool();
+	private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
 
 	private final SimpleFolder simpleFolder;
 
@@ -50,10 +47,8 @@ public class Folder {
 	 *         the given {@code origamiModel}.
 	 */
 	public FoldedModel fold(final OrigamiModel origamiModel, final boolean fullEstimation) {
-		List<OriFace> faces = origamiModel.getFaces();
-
 		simpleFolder.simpleFoldWithoutZorder(origamiModel);
-		folderTool.setFacesOutline(faces);
+		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
@@ -67,8 +62,6 @@ public class Folder {
 		if (overlapRelationList.isEmpty()) {
 			return foldedModel;
 		}
-
-//		folderTool.setFacesOutline(faces);
 
 		origamiModel.setFolded(true);
 		return foldedModel;
@@ -84,9 +77,6 @@ public class Folder {
 	public void foldWithoutLineType(
 			final OrigamiModel model) {
 		simpleFolder.foldWithoutLineType(model);
-
-		List<OriFace> faces = model.getFaces();
-
-		folderTool.setFacesOutline(faces);
+		faceDisplayModifier.setCurrentPositionsToDisplayPositions(model);
 	}
 }

@@ -41,7 +41,6 @@ import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.FoldedModel;
-import oripa.domain.fold.FolderTool;
 import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -144,8 +143,7 @@ public class FoldedModelScreen extends JPanel
 		rotateAngle = 0;
 		scale = 1;
 
-		var folderTool = new FolderTool();
-		domain = folderTool.createDomainOfFoldedModel(origamiModel.getFaces());
+		domain = origamiModel.createDomainOfFoldedModel();
 
 		updateAffineTransform();
 		redrawOrigami();

@@ -19,6 +19,7 @@ package oripa.domain.fold.halfedge;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import oripa.geom.RectangleDomain;
 
@@ -119,6 +120,10 @@ public class OrigamiModel {
 		this.hasModel = hasModel;
 	}
 
+	// =============================================================
+	// Utility
+	// =============================================================
+
 	/**
 	 * Flips x coordinates of the positions for display.
 	 */
@@ -134,6 +139,15 @@ public class OrigamiModel {
 		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
 			he.getPositionForDisplay().x = 2 * centerX - he.getPositionForDisplay().x;
 		});
+	}
+
+	public RectangleDomain createDomainOfFoldedModel() {
+		var domain = new RectangleDomain();
+		domain.enlarge(faces.stream()
+				.flatMap(face -> face.halfedgeStream().map(he -> he.getPosition()))
+				.collect(Collectors.toList()));
+
+		return domain;
 	}
 
 }
