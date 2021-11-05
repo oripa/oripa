@@ -36,8 +36,8 @@ public class SubFace {
 	 */
 	public ArrayList<OriFace> parentFaces = new ArrayList<>();
 
-	public ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
-	public ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
+	private final ArrayList<StackConditionOf4Faces> condition4s = new ArrayList<>();
+	private final ArrayList<StackConditionOf3Faces> condition3s = new ArrayList<>();
 	private boolean localLayerOrderDeterminedByGlobal = false;
 
 	/**
@@ -205,6 +205,14 @@ public class SubFace {
 
 	OriFace getOutline() {
 		return outline;
+	}
+
+	public void addStackConditionOf4Faces(final StackConditionOf4Faces condition) {
+		condition4s.add(condition);
+	}
+
+	public void addStackConditionOf3Faces(final StackConditionOf3Faces condition) {
+		condition3s.add(condition);
 	}
 
 	public boolean isLocalLayerOrderDeterminedByGlobal() {

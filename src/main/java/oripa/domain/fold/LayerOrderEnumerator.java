@@ -550,7 +550,7 @@ public class LayerOrderEnumerator {
 					for (SubFace sub : subFaces) {
 						if (sub.parentFaces.contains(f_i) && sub.parentFaces.contains(f_j)
 								&& sub.parentFaces.contains(f_k)) {
-							sub.condition3s.add(cond);
+							sub.addStackConditionOf3Faces(cond);
 						}
 					}
 
@@ -611,7 +611,7 @@ public class LayerOrderEnumerator {
 							&& sub.parentFaces.contains(e0RightFace)
 							&& sub.parentFaces.contains(e1LeftFace)
 							&& sub.parentFaces.contains(e1RightFace)) {
-						sub.condition4s.add(cond);
+						sub.addStackConditionOf4Faces(cond);
 						bOverlap = true;
 					}
 				}
