@@ -47,11 +47,18 @@ public class SubFace {
 	 */
 	private final List<List<OriFace>> localLayerOrders = new ArrayList<>();
 
+	/**
+	 *
+	 * @param f
+	 *            A face object describing the shape of this subface.
+	 */
 	public SubFace(final OriFace f) {
 		outline = f;
 	}
 
 	/**
+	 * Builds all possible local layer orders. All parent faces should be added
+	 * to this subface before this method is called.
 	 *
 	 * @param modelFaces
 	 *            all faces of inputted model.
