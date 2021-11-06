@@ -738,7 +738,8 @@ public class LayerOrderEnumerator {
 	 *            overlap relation matrix.
 	 * @return true if an update happens.
 	 */
-	private boolean updateOverlapRelationBy3FaceTransitiveRelation(final SubFace sub, final OverlapRelation overlapRelation) {
+	private boolean updateOverlapRelationBy3FaceTransitiveRelation(final SubFace sub,
+			final OverlapRelation overlapRelation) {
 
 		for (int i = 0; i < sub.getParentFaceCount(); i++) {
 			for (int j = i + 1; j < sub.getParentFaceCount(); j++) {
@@ -799,8 +800,7 @@ public class LayerOrderEnumerator {
 				if (pair == null) {
 					continue;
 				}
-				OriFace f_j = pair.getFace();
-				int index_j = f_j.getFaceID();
+				int index_j = pair.getFace().getFaceID();
 
 				var indices = faceOverlappingIndexIntersections[index_i][index_j];
 				for (var index_k : indices) {
