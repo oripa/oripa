@@ -211,13 +211,21 @@ public class LayerOrderEnumerator {
 		return indices;
 	}
 
-	private class IndexPair {
-		private final int i;
-		private final int j;
+	private class Pair<V1, V2> {
+		private final V1 v1;
+		private final V2 v2;
 
-		public IndexPair(final int i, final int j) {
-			this.i = i;
-			this.j = j;
+		public Pair(final V1 i, final V2 j) {
+			this.v1 = i;
+			this.v2 = j;
+		}
+
+		public V1 getV1() {
+			return v1;
+		}
+
+		public V2 getV2() {
+			return v2;
 		}
 
 		@Override
@@ -225,13 +233,19 @@ public class LayerOrderEnumerator {
 			if (!(obj instanceof IndexPair)) {
 				return false;
 			}
-			var o = (IndexPair) obj;
-			return i == o.i && j == o.j;
+			var o = (Pair) obj;
+			return v1.equals(o.v1) && v2.equals(o.v2);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(i, j);
+			return Objects.hash(v1, v2);
+		}
+	}
+
+	private class IndexPair extends Pair<Integer, Integer> {
+		public IndexPair(final int i, final int j) {
+			super(i, j);
 		}
 	}
 
@@ -312,7 +326,7 @@ public class LayerOrderEnumerator {
 
 			// get back
 			changedIndexPairs.forEach(pair -> {
-				overlapRelation.setUndefined(pair.i, pair.j);
+				overlapRelation.setUndefined(pair.getV1(), pair.getV2());
 			});
 		}
 	}
