@@ -90,37 +90,6 @@ public class OriGeomUtil {
 	 *
 	 * @param face
 	 * @param heg
-	 * @param size
-	 * @return {@code true} if {@code heg} crosses {@code face} after folding.
-	 *         {@code false} if {@code heg} doesn't cross {@code face} or both
-	 *         end points of {@code heg} are on an edge of {@code face}.
-	 */
-	public static boolean isLineCrossFace4(final OriFace face, final OriHalfedge heg,
-			final double size) {
-		final double eps = size * 0.001;
-
-		return isLineCrossFace(face, heg, eps);
-//		if (isLineOnEdgeOfFace(face, heg, 1)) {
-//			return false;
-//		}
-//
-//		if (isHalfedgeCrossTwoEdgesOfFace(face, heg, eps)) {
-//			return true;
-//		}
-//
-//		if (isHalfedgeCrossEdgeOfFace(face, heg, eps)) {
-//			return true;
-//		}
-//
-//		return false;
-	}
-
-	/**
-	 * Whether {@code heg} crosses {@code face}. The inclusion test is
-	 * exclusive.
-	 *
-	 * @param face
-	 * @param heg
 	 * @param eps
 	 * @return {@code true} if {@code heg} crosses {@code face} after folding.
 	 *         {@code false} if {@code heg} doesn't cross {@code face} or both

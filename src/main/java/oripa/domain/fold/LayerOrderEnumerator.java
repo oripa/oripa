@@ -201,7 +201,6 @@ public class LayerOrderEnumerator {
 					if (other == face) {
 						continue;
 					}
-//					if (OriGeomUtil.isLineCrossFace4(other, halfedge, paperSize)) {
 					if (OriGeomUtil.isLineCrossFace(other, halfedge, EPS)) {
 						indexSet.add(other.getFaceID());
 					}
@@ -526,6 +525,7 @@ public class LayerOrderEnumerator {
 	 */
 	private void holdCondition3s(
 			final List<OriFace> faces, final double paperSize, final OverlapRelation overlapRelation) {
+		final double EPS = eps(paperSize);
 
 		for (OriFace f_i : faces) {
 			for (OriHalfedge he : f_i.halfedgeIterable()) {
@@ -542,7 +542,7 @@ public class LayerOrderEnumerator {
 					if (f_k == f_i || f_k == f_j) {
 						continue;
 					}
-					if (!OriGeomUtil.isLineCrossFace4(f_k, he, paperSize)) {
+					if (!OriGeomUtil.isLineCrossFace(f_k, he, EPS)) {
 						continue;
 					}
 					StackConditionOf3Faces cond = new StackConditionOf3Faces();
