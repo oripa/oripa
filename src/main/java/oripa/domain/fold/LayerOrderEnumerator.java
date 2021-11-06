@@ -230,7 +230,7 @@ public class LayerOrderEnumerator {
 
 		@Override
 		public boolean equals(final Object obj) {
-			if (!(obj instanceof IndexPair)) {
+			if (!(obj instanceof Pair)) {
 				return false;
 			}
 			var o = (Pair) obj;
