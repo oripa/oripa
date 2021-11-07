@@ -614,7 +614,6 @@ public class LayerOrderEnumerator {
 				var e1LeftFace = e1Left.getFace();
 				var e1RightFace = e1Right.getFace();
 
-				StackConditionOf4Faces cond = new StackConditionOf4Faces();
 				var intersectionSubfaces = subFacesOfEachFace.get(e0LeftFace).stream()
 						.filter(s -> subFacesOfEachFace.get(e0RightFace).contains(s))
 						.filter(s -> subFacesOfEachFace.get(e1LeftFace).contains(s))
@@ -624,6 +623,8 @@ public class LayerOrderEnumerator {
 				if (intersectionSubfaces.isEmpty()) {
 					continue;
 				}
+
+				StackConditionOf4Faces cond = new StackConditionOf4Faces();
 
 				var e0LeftFaceID = e0LeftFace.getFaceID();
 				var e0RightFaceID = e0RightFace.getFaceID();
