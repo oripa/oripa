@@ -644,10 +644,8 @@ public class LayerOrderEnumerator {
 						.filter(s -> subFacesOfEachFace.get(e1RightFace).contains(s))
 						.collect(Collectors.toList());
 
-				// Add condition to all subfaces of the 4 faces
-				boolean overlapping = !intersectionSubfaces.isEmpty();
-				for (var sub : intersectionSubfaces) {
-					sub.addStackConditionOf4Faces(cond);
+				if (intersectionSubfaces.isEmpty()) {
+					continue;
 				}
 
 				var e0LeftFaceID = e0LeftFace.getFaceID();
@@ -670,12 +668,14 @@ public class LayerOrderEnumerator {
 					cond.lower2 = e1RightFaceID;
 				}
 
-				if (overlapping) {
-					condition4s.add(cond);
+				for (var sub : intersectionSubfaces) {
+					sub.addStackConditionOf4Faces(cond);
 				}
+				condition4s.add(cond);
 			}
 		}
 
+		logger.debug("#condition4 = {}", condition4s.size());
 		logger.debug("condition4s computation time {}[ms]", watch.getMilliSec());
 
 	}
