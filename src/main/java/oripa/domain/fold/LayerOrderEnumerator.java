@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -43,6 +42,7 @@ import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
+import oripa.util.Pair;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
@@ -104,9 +104,11 @@ public class LayerOrderEnumerator {
 
 		estimate(faces, overlapRelation);
 
+		watch.start();
 		for (SubFace sub : subFaces) {
 			sub.buildLocalLayerOrders(faces, overlapRelation);
 		}
+		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
 
 		// heuristic: fewer local layer orders mean the search on the subface
 		// has more possibility to be correct. Such confident search node should
@@ -209,39 +211,6 @@ public class LayerOrderEnumerator {
 		}
 
 		return indices;
-	}
-
-	private class Pair<V1, V2> {
-		private final V1 v1;
-		private final V2 v2;
-
-		public Pair(final V1 i, final V2 j) {
-			this.v1 = i;
-			this.v2 = j;
-		}
-
-		public V1 getV1() {
-			return v1;
-		}
-
-		public V2 getV2() {
-			return v2;
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (!(obj instanceof Pair)) {
-				return false;
-			}
-			@SuppressWarnings("unchecked")
-			var o = (Pair<V1, V2>) obj;
-			return v1.equals(o.v1) && v2.equals(o.v2);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(v1, v2);
-		}
 	}
 
 	private class IndexPair extends Pair<Integer, Integer> {
