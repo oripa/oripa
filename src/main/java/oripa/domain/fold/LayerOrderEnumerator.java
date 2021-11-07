@@ -59,7 +59,7 @@ public class LayerOrderEnumerator {
 	/**
 	 * [faceID1][faceID2]
 	 */
-	private List<Integer>[][] faceOverlappingIndexIntersections;
+	private List<Integer>[][] overlappingFaceIndexIntersections;
 
 	/**
 	 * Key: halfedge, value: set of indices which are under the halfedge.
@@ -92,7 +92,7 @@ public class LayerOrderEnumerator {
 
 		var watch = new StopWatch(true);
 
-		faceOverlappingIndexIntersections = createFaceOverlappingIndexIntersections(faces, paperSize);
+		overlappingFaceIndexIntersections = createOverlappingFaceIndexIntersections(faces, paperSize);
 		faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
 
 		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
@@ -139,7 +139,7 @@ public class LayerOrderEnumerator {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<Integer>[][] createFaceOverlappingIndexIntersections(final List<OriFace> faces,
+	private List<Integer>[][] createOverlappingFaceIndexIntersections(final List<OriFace> faces,
 			final double paperSize) {
 		List<Set<Integer>> indices = IntStream.range(0, faces.size())
 				.mapToObj(i -> new HashSet<Integer>())
@@ -373,7 +373,7 @@ public class LayerOrderEnumerator {
 					continue;
 				}
 
-				var penetrates = faceOverlappingIndexIntersections[index_i][index_j].parallelStream()
+				var penetrates = overlappingFaceIndexIntersections[index_i][index_j].parallelStream()
 						.anyMatch(index_k -> {
 							if (index_i == index_k || index_j == index_k) {
 								return false;
@@ -566,7 +566,7 @@ public class LayerOrderEnumerator {
 						.filter(s -> subFacesOfEachFace.get(f_j).contains(s))
 						.collect(Collectors.toList());
 
-				var indices = faceOverlappingIndexIntersections[index_i][index_j];
+				var indices = overlappingFaceIndexIntersections[index_i][index_j];
 				for (var index_k : indices) {
 					if (index_i == index_k || index_j == index_k) {
 						continue;
@@ -589,7 +589,6 @@ public class LayerOrderEnumerator {
 						sub.addStackConditionOf3Faces(cond);
 						conditionCount++;
 					}
-
 				}
 			}
 		}
@@ -858,7 +857,7 @@ public class LayerOrderEnumerator {
 				}
 				int index_j = pair.getFace().getFaceID();
 
-				var indices = faceOverlappingIndexIntersections[index_i][index_j];
+				var indices = overlappingFaceIndexIntersections[index_i][index_j];
 				for (var index_k : indices) {
 					if (index_i == index_k || index_j == index_k) {
 						continue;
