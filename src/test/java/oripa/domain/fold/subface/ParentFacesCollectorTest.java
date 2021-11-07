@@ -62,7 +62,7 @@ class ParentFacesCollectorTest {
 		when(face3.isOnFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
 		when(face4.isOnFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
 
-		var parents = collector.collect(faces, subface, 20);
+		var parents = collector.collect(faces, subface, 1e-6);
 
 		assertEquals(2, parents.size());
 		assertTrue(parents.contains(face1));

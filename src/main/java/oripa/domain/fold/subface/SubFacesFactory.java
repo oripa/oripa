@@ -76,7 +76,7 @@ public class SubFacesFactory {
 	 * @return subfaces prepared for layer ordering estimation.
 	 */
 	public List<SubFace> createSubFaces(
-			final List<OriFace> faces, final double paperSize) {
+			final List<OriFace> faces, final double paperSize, final double eps) {
 		logger.debug("createSubFaces() start");
 
 		var creasePattern = facesToCPConverter.convertToCreasePattern(faces);
@@ -92,7 +92,7 @@ public class SubFacesFactory {
 		// Stores the face reference of given crease pattern into the subface
 		// that is contained in the face.
 		for (SubFace sub : subFaces) {
-			sub.addParentFaces(parentCollector.collect(faces, sub, paperSize));
+			sub.addParentFaces(parentCollector.collect(faces, sub, eps));
 		}
 
 		// extract distinct subfaces by comparing face list's items.
