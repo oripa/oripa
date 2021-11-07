@@ -252,6 +252,10 @@ public class SubFace {
 		return parentFaces.addAll(faces);
 	}
 
+	public Iterable<OriFace> ParentFacesIterable() {
+		return parentFaces;
+	}
+
 	public OriFace getParentFace(final int index) {
 		return parentFaces.get(index);
 	}

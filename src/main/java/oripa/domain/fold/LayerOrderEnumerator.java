@@ -601,12 +601,11 @@ public class LayerOrderEnumerator {
 
 		Map<OriFace, Set<SubFace>> subFacesOfEachFace = new HashMap<>();
 
-		for (var face : faces) {
-			subFacesOfEachFace.put(face, new HashSet<>());
-			for (var subFace : subFaces) {
-				if (face.isOnFaceExclusively(subFace.getInnerPoint(), eps(paperSize))) {
-					subFacesOfEachFace.get(face).add(subFace);
-				}
+		faces.forEach(face -> subFacesOfEachFace.put(face, new HashSet<>()));
+
+		for (var subFace : subFaces) {
+			for (var face : subFace.ParentFacesIterable()) {
+				subFacesOfEachFace.get(face).add(subFace);
 			}
 		}
 
