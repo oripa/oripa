@@ -847,7 +847,7 @@ public class LayerOrderEnumerator {
 			final List<OriFace> faces,
 			final OverlapRelation overlapRelation) {
 
-		boolean bChanged = false;
+		boolean changed = false;
 		for (OriFace f_i : faces) {
 			int index_i = f_i.getFaceID();
 			for (OriHalfedge he : f_i.halfedgeIterable()) {
@@ -868,17 +868,17 @@ public class LayerOrderEnumerator {
 					if (!overlapRelation.isUndefined(index_i, index_k)
 							&& overlapRelation.isUndefined(index_j, index_k)) {
 						overlapRelation.set(index_j, index_k, overlapRelation.get(index_i, index_k));
-						bChanged = true;
+						changed = true;
 					} else if (!overlapRelation.isUndefined(index_j, index_k)
 							&& overlapRelation.isUndefined(index_i, index_k)) {
 						overlapRelation.set(index_i, index_k, overlapRelation.get(index_j, index_k));
-						bChanged = true;
+						changed = true;
 					}
 				}
 			}
 		}
 
-		return bChanged;
+		return changed;
 
 	}
 
