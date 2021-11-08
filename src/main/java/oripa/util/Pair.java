@@ -16,24 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold.subface;
+package oripa.util;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
-import oripa.domain.fold.halfedge.OriFace;
+public class Pair<V1, V2> {
+	private final V1 v1;
+	private final V2 v2;
 
-/**
- * @author OUCHI Koji
- *
- */
-public class ParentFacesCollector {
-	public List<OriFace> collect(final List<OriFace> faces, final SubFace sub,
-			final double eps) {
-		var innerPoint = sub.getInnerPoint();
+	public Pair(final V1 v1, final V2 v2) {
+		this.v1 = v1;
+		this.v2 = v2;
+	}
 
-		return faces.stream()
-				.filter(face -> face.isOnFaceExclusively(innerPoint, eps))
-				.collect(Collectors.toList());
+	public V1 getV1() {
+		return v1;
+	}
+
+	public V2 getV2() {
+		return v2;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof Pair)) {
+			return false;
+		}
+		@SuppressWarnings("unchecked")
+		var o = (Pair<V1, V2>) obj;
+		return v1.equals(o.v1) && v2.equals(o.v2);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(v1, v2);
 	}
 }

@@ -93,21 +93,22 @@ class SubFacesFactoryTest {
 		var subFacesWithDuplication = List.of(sub1, sub2, sub3);
 		when(facesToSubFacesConverter.convertToSubFaces(splitFaces)).thenReturn(subFacesWithDuplication);
 
-		when(parentCollector.collect(inputFaces, sub1, PAPER_SIZE))
+		final double EPS = 1e-6;
+		when(parentCollector.collect(inputFaces, sub1, EPS))
 				.thenReturn(List.of(face1, face2));
-		when(parentCollector.collect(inputFaces, sub2, PAPER_SIZE))
+		when(parentCollector.collect(inputFaces, sub2, EPS))
 				.thenReturn(List.of(face2, face1));
-		when(parentCollector.collect(inputFaces, sub3, PAPER_SIZE))
+		when(parentCollector.collect(inputFaces, sub3, EPS))
 				.thenReturn(List.of(face1, face2, face3));
 
-		var subFaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE);
+		var subFaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE, EPS);
 
 		verify(facesToCPConverter).convertToCreasePattern(inputFaces);
 		verify(modelFactory).buildOrigami(cp, PAPER_SIZE);
 		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces);
-		verify(parentCollector).collect(inputFaces, sub1, PAPER_SIZE);
-		verify(parentCollector).collect(inputFaces, sub2, PAPER_SIZE);
-		verify(parentCollector).collect(inputFaces, sub3, PAPER_SIZE);
+		verify(parentCollector).collect(inputFaces, sub1, EPS);
+		verify(parentCollector).collect(inputFaces, sub2, EPS);
+		verify(parentCollector).collect(inputFaces, sub3, EPS);
 
 		assertEquals(2, subFaces.size());
 

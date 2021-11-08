@@ -21,6 +21,7 @@ package oripa.domain.fold.subface;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 
@@ -235,6 +236,10 @@ public class SubFace {
 		return localLayerOrders;
 	}
 
+	public Stream<List<OriFace>> localLayerOrdersStream() {
+		return localLayerOrders.stream();
+	}
+
 	public boolean isLocalLayerOrderDeterminedByGlobal() {
 		return localLayerOrderDeterminedByGlobal;
 	}
@@ -245,6 +250,10 @@ public class SubFace {
 
 	public boolean addParentFaces(final Collection<OriFace> faces) {
 		return parentFaces.addAll(faces);
+	}
+
+	public Iterable<OriFace> ParentFacesIterable() {
+		return parentFaces;
 	}
 
 	public OriFace getParentFace(final int index) {
