@@ -18,13 +18,13 @@
  */
 package oripa.domain.fold;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -66,9 +66,9 @@ public class LayerOrderEnumerator {
 	 */
 	private Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge;
 
-	private int callCount;
-	private int penetrationTestCallCount;
-	private int penetrationCount;
+	private AtomicInteger callCount;
+	private AtomicInteger penetrationTestCallCount;
+	private AtomicInteger penetrationCount;
 
 	private final SubFacesFactory subFacesFactory;
 
@@ -122,13 +122,13 @@ public class LayerOrderEnumerator {
 		watch.start();
 
 		var changedFaceIDs = faces.stream().map(OriFace::getFaceID).collect(Collectors.toSet());
-		callCount = 0;
-		penetrationTestCallCount = 0;
-		penetrationCount = 0;
+		callCount = new AtomicInteger();
+		penetrationTestCallCount = new AtomicInteger();
+		penetrationCount = new AtomicInteger();
 		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs);
 		var time = watch.getMilliSec();
 
-		logger.debug("#call = {}", callCount);
+		logger.debug("#call = {}", callCount.get());
 		logger.debug("#penetrationTest = {}", penetrationTestCallCount);
 		logger.debug("#penetration = {}", penetrationCount);
 		logger.debug("time = {}[ms]", time);
@@ -240,16 +240,16 @@ public class LayerOrderEnumerator {
 			final OverlapRelationList overlapRelationList, final int subFaceIndex,
 			final OverlapRelation overlapRelation,
 			final Set<Integer> changedFaceIDs) {
-		callCount++;
+		callCount.incrementAndGet();
 
 		if (!changedFaceIDs.isEmpty()) {
-			penetrationTestCallCount++;
+			penetrationTestCallCount.incrementAndGet();
 			if (detectPenetrationBy3faces(faces, changedFaceIDs, overlapRelation)) {
-				penetrationCount++;
+				penetrationCount.incrementAndGet();
 				return;
 			}
 			if (detectPenetrationBy4faces(overlapRelation)) {
-				penetrationCount++;
+				penetrationCount.incrementAndGet();
 				return;
 			}
 		}
@@ -268,37 +268,42 @@ public class LayerOrderEnumerator {
 			return;
 		}
 
-		for (var localLayerOrder : sub.localLayerOrdersIterable()) {
+		var correctLocalLayerOrders = sub.localLayerOrdersStream().parallel()
+				.filter(localLayerOrder -> isCorrectLayerOrder(localLayerOrder, overlapRelation))
+				.collect(Collectors.toList());
+
+		// Parallel search. It is fast but can exceed memory for
+		// complex model because of copying overlapRelation (a large matrix).
+		correctLocalLayerOrders.parallelStream().forEach(localLayerOrder -> {
 			int size = localLayerOrder.size();
-			if (!isCorrectLayerOrder(localLayerOrder, overlapRelation)) {
-				continue;
-			}
-			var changedIndexPairs = new ArrayList<IndexPair>();
+//			var changedIndexPairs = new ArrayList<IndexPair>();
 			var nextChangedFaceIDs = new HashSet<Integer>();
+			var nextOverlapRelation = OverlapRelation.clone(overlapRelation);
 
 			// determine overlap relations according to local layer order
-			for (int i = 0; i < size; i++) {
+			IntStream.range(0, size).forEach(i -> {
 				int index_i = localLayerOrder.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
 					int index_j = localLayerOrder.get(j).getFaceID();
-					if (overlapRelation.isUndefined(index_i, index_j)) {
-						overlapRelation.setUpper(index_i, index_j);
+					if (nextOverlapRelation.isUndefined(index_i, index_j)) {
+						nextOverlapRelation.setUpper(index_i, index_j);
 
-						changedIndexPairs.add(new IndexPair(index_i, index_j));
+//						changedIndexPairs.add(new IndexPair(index_i, index_j));
 						nextChangedFaceIDs.add(index_i);
 						nextChangedFaceIDs.add(index_j);
 					}
 				}
-			}
+			});
 
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1,
-					overlapRelation, nextChangedFaceIDs);
+					nextOverlapRelation, nextChangedFaceIDs);
 
-			// get back
-			changedIndexPairs.forEach(pair -> {
-				overlapRelation.setUndefined(pair.getV1(), pair.getV2());
-			});
-		}
+//			// get back
+//			changedIndexPairs.parallelStream().forEach(pair -> {
+//				overlapRelation.setUndefined(pair.getV1(), pair.getV2());
+//			});
+		});
+
 	}
 
 	/**

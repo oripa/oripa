@@ -26,6 +26,7 @@ import oripa.util.Matrices;
  * @author OUCHI Koji
  *
  */
+//TODO should use sparse matrix structure for very complex model???
 public class OverlapRelation {
 	private final int[][] overlapRelation;
 
