@@ -18,9 +18,9 @@
  */
 package oripa.domain.fold.origeom;
 
-import oripa.util.IntDenseMatrix;
-import oripa.util.IntMatrix;
-import oripa.util.IntSparseMatrix;
+import oripa.util.ByteDenseMatrix;
+import oripa.util.ByteMatrix;
+import oripa.util.ByteSparseMatrix;
 
 /**
  * A wrapper of integer matrix for overlap relation operations.
@@ -29,7 +29,7 @@ import oripa.util.IntSparseMatrix;
  *
  */
 public class OverlapRelation {
-	private IntMatrix overlapRelation;
+	private ByteMatrix overlapRelation;
 
 	/**
 	 * Internally creates a n x n matrix where n is the given {@code faceCount}.
@@ -38,10 +38,10 @@ public class OverlapRelation {
 	 *            the number of faces of the model.
 	 */
 	public OverlapRelation(final int faceCount) {
-		overlapRelation = new IntDenseMatrix(faceCount, faceCount);
+		overlapRelation = new ByteDenseMatrix(faceCount, faceCount);
 	}
 
-	private OverlapRelation(final IntMatrix mat) {
+	private OverlapRelation(final ByteMatrix mat) {
 		overlapRelation = mat.clone();
 	}
 
@@ -54,7 +54,7 @@ public class OverlapRelation {
 	}
 
 	public void switchToSparseMatrix() {
-		var sparse = new IntSparseMatrix(overlapRelation.rowCount(), overlapRelation.columnCount());
+		var sparse = new ByteSparseMatrix(overlapRelation.rowCount(), overlapRelation.columnCount());
 		for (int i = 0; i < overlapRelation.rowCount(); i++) {
 			for (int j = 0; j < overlapRelation.columnCount(); j++) {
 				sparse.set(i, j, overlapRelation.get(i, j));
@@ -71,7 +71,7 @@ public class OverlapRelation {
 	 *            column index
 	 * @return [i][j] value.
 	 */
-	public int get(final int i, final int j) {
+	public byte get(final int i, final int j) {
 		return overlapRelation.get(i, j);
 	}
 
@@ -95,7 +95,7 @@ public class OverlapRelation {
 	 * @throws IllegalArgumentException
 	 *             when {@code value} is not of {@link OverlapRelationValues}.
 	 */
-	public void set(final int i, final int j, final int value) throws IllegalArgumentException {
+	public void set(final int i, final int j, final byte value) throws IllegalArgumentException {
 		overlapRelation.set(i, j, value);
 
 		switch (value) {

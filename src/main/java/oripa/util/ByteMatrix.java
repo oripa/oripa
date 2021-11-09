@@ -22,40 +22,16 @@ package oripa.util;
  * @author OUCHI Koji
  *
  */
-public class IntDenseMatrix implements IntMatrix {
-	private final int[][] values;
+public interface ByteMatrix {
 
-	public IntDenseMatrix(final int rowCount, final int columnCount) {
-		values = new int[rowCount][columnCount];
-	}
+	void set(int i, int j, byte value);
 
-	private IntDenseMatrix(final int[][] values) {
-		this.values = Matrices.clone(values);
-	}
+	byte get(int i, int j);
 
-	@Override
-	public void set(final int i, final int j, final int value) {
-		values[i][j] = value;
-	}
+	ByteMatrix clone();
 
-	@Override
-	public int get(final int i, final int j) {
-		return values[i][j];
-	}
+	int rowCount();
 
-	@Override
-	public IntMatrix clone() {
-		return new IntDenseMatrix(values);
-	}
-
-	@Override
-	public int rowCount() {
-		return values.length;
-	}
-
-	@Override
-	public int columnCount() {
-		return values[0].length;
-	}
+	int columnCount();
 
 }

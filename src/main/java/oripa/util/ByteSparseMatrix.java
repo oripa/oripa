@@ -26,32 +26,32 @@ import java.util.HashMap;
  * @author OUCHI Koji
  *
  */
-public class IntSparseMatrix implements IntMatrix {
-	private final HashMap<IntPair, Integer> values;
+public class ByteSparseMatrix implements ByteMatrix {
+	private final HashMap<IntPair, Byte> values;
 
 	public final int rowCount;
 	public final int columnCount;
 
-	public IntSparseMatrix(final int rowCount, final int columnCount) {
+	public ByteSparseMatrix(final int rowCount, final int columnCount) {
 		this.rowCount = rowCount;
 		this.columnCount = columnCount;
 		values = new HashMap<>();
 	}
 
 	@SuppressWarnings("unchecked")
-	private IntSparseMatrix(final IntSparseMatrix m) {
+	private ByteSparseMatrix(final ByteSparseMatrix m) {
 		this.rowCount = m.rowCount;
 		this.columnCount = m.columnCount;
-		this.values = (HashMap<IntPair, Integer>) m.values.clone();
+		this.values = (HashMap<IntPair, Byte>) m.values.clone();
 	}
 
 	@Override
-	public IntMatrix clone() {
-		return new IntSparseMatrix(this);
+	public ByteMatrix clone() {
+		return new ByteSparseMatrix(this);
 	}
 
 	@Override
-	public void set(final int i, final int j, final int value) {
+	public void set(final int i, final int j, final byte value) {
 		if (i < 0 || i >= rowCount || j < 0 || j >= columnCount) {
 			throw new IllegalArgumentException();
 		}
@@ -63,7 +63,7 @@ public class IntSparseMatrix implements IntMatrix {
 	}
 
 	@Override
-	public int get(final int i, final int j) {
+	public byte get(final int i, final int j) {
 		if (i < 0 || i >= rowCount || j < 0 || j >= columnCount) {
 			throw new IllegalArgumentException();
 		}

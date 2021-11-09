@@ -379,7 +379,7 @@ public class FoldedModelScreen extends JPanel
 		}
 
 		if (ambientOcclusion) {
-			int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
+			byte renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
 					: OverlapRelationValues.LOWER;
 			int r = 10;
 			int s = (int) (r * r * Math.PI);
@@ -516,7 +516,7 @@ public class FoldedModelScreen extends JPanel
 				// flattened pixel index
 				int p = offset + x;
 
-				int renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
+				byte renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
 						: OverlapRelationValues.LOWER;
 
 				var overlapRelation = overlapRelationList.getOverlapRelation();

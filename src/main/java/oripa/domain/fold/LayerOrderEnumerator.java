@@ -905,17 +905,22 @@ public class LayerOrderEnumerator {
 		int countOfZeros = 0;
 		for (int i = 0; i < size; i++) {
 			overlapRelation.setNoOverlap(i, i);
+			countOfZeros++;
 			for (int j = i + 1; j < size; j++) {
 				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), eps(paperSize))) {
 					overlapRelation.setUndefined(i, j);
 				} else {
 					overlapRelation.setNoOverlap(i, j);
-					countOfZeros++;
+					countOfZeros += 2;
 				}
 			}
 		}
 
-		if (((double) countOfZeros) / (size * size) > 0.75) {
+		double rate = ((double) countOfZeros) / (size * size);
+		logger.debug("sparsity of overlap relation matrix = {}", rate);
+		// One element in dictionary of keys for byte value needs at least 16
+		// bytes.
+		if (rate > 15.0 / 16) {
 			logger.debug("use sparse matrix for overlap relation.");
 			overlapRelation.switchToSparseMatrix();
 		}
