@@ -18,7 +18,9 @@
  */
 package oripa.domain.fold.origeom;
 
-import oripa.util.Matrices;
+import oripa.util.IntDenseMatrix;
+import oripa.util.IntMatrix;
+import oripa.util.IntSparseMatrix;
 
 /**
  * A wrapper of integer matrix for overlap relation operations.
@@ -26,9 +28,8 @@ import oripa.util.Matrices;
  * @author OUCHI Koji
  *
  */
-//TODO should use sparse matrix structure for very complex model???
 public class OverlapRelation {
-	private final int[][] overlapRelation;
+	private IntMatrix overlapRelation;
 
 	/**
 	 * Internally creates a n x n matrix where n is the given {@code faceCount}.
@@ -37,17 +38,11 @@ public class OverlapRelation {
 	 *            the number of faces of the model.
 	 */
 	public OverlapRelation(final int faceCount) {
-		overlapRelation = new int[faceCount][faceCount];
+		overlapRelation = new IntDenseMatrix(faceCount, faceCount);
 	}
 
-	/**
-	 * Deep copy.
-	 *
-	 * @param orMat
-	 *            a matrix to be copied.
-	 */
-	private OverlapRelation(final int[][] orMat) {
-		overlapRelation = Matrices.clone(orMat);
+	private OverlapRelation(final IntMatrix mat) {
+		overlapRelation = mat.clone();
 	}
 
 	/**
@@ -60,6 +55,16 @@ public class OverlapRelation {
 		return new OverlapRelation(o.overlapRelation);
 	}
 
+	public void switchToSparseMatrix() {
+		var sparse = new IntSparseMatrix(overlapRelation.rowSize(), overlapRelation.columnSize());
+		for (int i = 0; i < overlapRelation.rowSize(); i++) {
+			for (int j = 0; j < overlapRelation.columnSize(); j++) {
+				sparse.set(i, j, overlapRelation.get(i, j));
+			}
+		}
+		overlapRelation = sparse;
+	}
+
 	/**
 	 *
 	 * @param i
@@ -69,14 +74,14 @@ public class OverlapRelation {
 	 * @return [i][j] value.
 	 */
 	public int get(final int i, final int j) {
-		return overlapRelation[i][j];
+		return overlapRelation.get(i, j);
 	}
 
 	/**
 	 * @return the n of n x n matrix.
 	 */
 	public int getSize() {
-		return overlapRelation.length;
+		return overlapRelation.rowSize();
 	}
 
 	/**
@@ -93,18 +98,18 @@ public class OverlapRelation {
 	 *             when {@code value} is not of {@link OverlapRelationValues}.
 	 */
 	public void set(final int i, final int j, final int value) throws IllegalArgumentException {
-		overlapRelation[i][j] = value;
+		overlapRelation.set(i, j, value);
 
 		switch (value) {
 		case OverlapRelationValues.LOWER:
-			overlapRelation[j][i] = OverlapRelationValues.UPPER;
+			overlapRelation.set(j, i, OverlapRelationValues.UPPER);
 			break;
 		case OverlapRelationValues.UPPER:
-			overlapRelation[j][i] = OverlapRelationValues.LOWER;
+			overlapRelation.set(j, i, OverlapRelationValues.LOWER);
 			break;
 		case OverlapRelationValues.UNDEFINED:
 		case OverlapRelationValues.NO_OVERLAP:
-			overlapRelation[j][i] = value;
+			overlapRelation.set(j, i, value);
 			break;
 
 		default:
@@ -175,8 +180,8 @@ public class OverlapRelation {
 		if (!isUndefined(i, j)) {
 			return false;
 		}
-		overlapRelation[i][j] = OverlapRelationValues.LOWER;
-		overlapRelation[j][i] = OverlapRelationValues.UPPER;
+		overlapRelation.set(i, j, OverlapRelationValues.LOWER);
+		overlapRelation.set(j, i, OverlapRelationValues.UPPER);
 		return true;
 	}
 
@@ -186,7 +191,7 @@ public class OverlapRelation {
 	 *         {@link OverlapRelationValues#LOWER}.
 	 */
 	public boolean isLower(final int i, final int j) {
-		return overlapRelation[i][j] == OverlapRelationValues.LOWER;
+		return overlapRelation.get(i, j) == OverlapRelationValues.LOWER;
 	}
 
 	/**
@@ -195,7 +200,7 @@ public class OverlapRelation {
 	 *         {@link OverlapRelationValues#UPPER}.
 	 */
 	public boolean isUpper(final int i, final int j) {
-		return overlapRelation[i][j] == OverlapRelationValues.UPPER;
+		return overlapRelation.get(i, j) == OverlapRelationValues.UPPER;
 	}
 
 	/**
@@ -204,7 +209,7 @@ public class OverlapRelation {
 	 *         {@link OverlapRelationValues#UNDEFINED}.
 	 */
 	public boolean isUndefined(final int i, final int j) {
-		return overlapRelation[i][j] == OverlapRelationValues.UNDEFINED;
+		return overlapRelation.get(i, j) == OverlapRelationValues.UNDEFINED;
 	}
 
 	/**
@@ -213,6 +218,6 @@ public class OverlapRelation {
 	 *         {@link OverlapRelationValues#NO_OVERLAP}.
 	 */
 	public boolean isNoOverlap(final int i, final int j) {
-		return overlapRelation[i][j] == OverlapRelationValues.NO_OVERLAP;
+		return overlapRelation.get(i, j) == OverlapRelationValues.NO_OVERLAP;
 	}
 }

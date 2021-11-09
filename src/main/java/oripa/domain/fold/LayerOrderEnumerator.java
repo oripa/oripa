@@ -42,7 +42,7 @@ import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
-import oripa.util.Pair;
+import oripa.util.IntPair;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
@@ -213,7 +213,7 @@ public class LayerOrderEnumerator {
 		return indices;
 	}
 
-	private class IndexPair extends Pair<Integer, Integer> {
+	private class IndexPair extends IntPair {
 		public IndexPair(final int i, final int j) {
 			super(i, j);
 		}
@@ -276,7 +276,6 @@ public class LayerOrderEnumerator {
 		// complex model because of copying overlapRelation (a large matrix).
 		correctLocalLayerOrders.parallelStream().forEach(localLayerOrder -> {
 			int size = localLayerOrder.size();
-//			var changedIndexPairs = new ArrayList<IndexPair>();
 			var nextChangedFaceIDs = new HashSet<Integer>();
 			var nextOverlapRelation = OverlapRelation.clone(overlapRelation);
 
@@ -288,7 +287,6 @@ public class LayerOrderEnumerator {
 					if (nextOverlapRelation.isUndefined(index_i, index_j)) {
 						nextOverlapRelation.setUpper(index_i, index_j);
 
-//						changedIndexPairs.add(new IndexPair(index_i, index_j));
 						nextChangedFaceIDs.add(index_i);
 						nextChangedFaceIDs.add(index_j);
 					}
@@ -297,11 +295,6 @@ public class LayerOrderEnumerator {
 
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1,
 					nextOverlapRelation, nextChangedFaceIDs);
-
-//			// get back
-//			changedIndexPairs.parallelStream().forEach(pair -> {
-//				overlapRelation.setUndefined(pair.getV1(), pair.getV2());
-//			});
 		});
 
 	}
@@ -909,6 +902,7 @@ public class LayerOrderEnumerator {
 		int size = faces.size();
 		OverlapRelation overlapRelation = new OverlapRelation(size);
 
+		int countOfZeros = 0;
 		for (int i = 0; i < size; i++) {
 			overlapRelation.setNoOverlap(i, i);
 			for (int j = i + 1; j < size; j++) {
@@ -916,8 +910,14 @@ public class LayerOrderEnumerator {
 					overlapRelation.setUndefined(i, j);
 				} else {
 					overlapRelation.setNoOverlap(i, j);
+					countOfZeros++;
 				}
 			}
+		}
+
+		if (((double) countOfZeros) / (size * size) > 0.75) {
+			logger.debug("use sparse matrix for overlap relation.");
+			overlapRelation.switchToSparseMatrix();
 		}
 
 		return overlapRelation;
