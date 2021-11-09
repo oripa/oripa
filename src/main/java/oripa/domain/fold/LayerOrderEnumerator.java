@@ -255,7 +255,7 @@ public class LayerOrderEnumerator {
 		}
 
 		if (subFaceIndex == subFaces.size()) {
-			var answer = OverlapRelation.clone(overlapRelation);
+			var answer = overlapRelation.clone();
 			overlapRelationList.add(answer);
 			return;
 		}
@@ -277,7 +277,7 @@ public class LayerOrderEnumerator {
 		correctLocalLayerOrders.parallelStream().forEach(localLayerOrder -> {
 			int size = localLayerOrder.size();
 			var nextChangedFaceIDs = new HashSet<Integer>();
-			var nextOverlapRelation = OverlapRelation.clone(overlapRelation);
+			var nextOverlapRelation = overlapRelation.clone();
 
 			// determine overlap relations according to local layer order
 			IntStream.range(0, size).forEach(i -> {

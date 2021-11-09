@@ -51,8 +51,9 @@ public class OverlapRelation {
 	 *            an instance to be copied.
 	 * @return deep copy of given instance.
 	 */
-	public static OverlapRelation clone(final OverlapRelation o) {
-		return new OverlapRelation(o.overlapRelation);
+	@Override
+	public OverlapRelation clone() {
+		return new OverlapRelation(overlapRelation);
 	}
 
 	public void switchToSparseMatrix() {
