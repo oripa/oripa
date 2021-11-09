@@ -46,7 +46,7 @@ public class OverlapRelation {
 	}
 
 	/**
-	 * @return deep copy of given instance.
+	 * @return deep copy of this instance.
 	 */
 	@Override
 	public OverlapRelation clone() {
