@@ -46,9 +46,6 @@ public class OverlapRelation {
 	}
 
 	/**
-	 *
-	 * @param o
-	 *            an instance to be copied.
 	 * @return deep copy of given instance.
 	 */
 	@Override
