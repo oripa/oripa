@@ -19,12 +19,13 @@
 package oripa.domain.fold;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import oripa.domain.fold.origeom.OverlapRelation;
 
 public class OverlapRelationList {
-	private final List<OverlapRelation> overlapRelations = new ArrayList<>();
+	private final List<OverlapRelation> overlapRelations = Collections.synchronizedList(new ArrayList<>());
 	private int currentIndex = 0;
 
 	public void setNextIndex() {

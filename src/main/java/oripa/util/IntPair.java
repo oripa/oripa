@@ -16,30 +16,43 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold.origeom;
+package oripa.util;
+
+import java.util.Objects;
 
 /**
  * @author OUCHI Koji
  *
  */
-public final class OverlapRelationValues {
-	/**
-	 * If overlapRelation[i][j] == NO_OVERLAP, then face_i does not have overlap
-	 * with face_j.
-	 */
-	public final static byte NO_OVERLAP = 0;
-	/**
-	 * If overlapRelation[i][j] == UPPER, then face_i is above face_j.
-	 */
-	public final static byte UPPER = 1;
-	/**
-	 * If overlapRelation[i][j] == LOWER, then face_i is under face_j.
-	 */
-	public final static byte LOWER = 2;
-	/**
-	 * If overlapRelation[i][j] == UNDEFINED, then face_i is above or under
-	 * face_j but not determined yet.
-	 */
-	public final static byte UNDEFINED = 9;
+public class IntPair {
+	private final int v1;
+	private final int v2;
 
+	public IntPair(final int v1, final int v2) {
+		this.v1 = v1;
+		this.v2 = v2;
+	}
+
+	public int getV1() {
+		return v1;
+	}
+
+	public int getV2() {
+		return v2;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof IntPair)) {
+			return false;
+		}
+
+		var o = (IntPair) obj;
+		return v1 == o.v1 && v2 == o.v2;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(v1, v2);
+	}
 }

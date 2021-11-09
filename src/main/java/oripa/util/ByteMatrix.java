@@ -16,30 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold.origeom;
+package oripa.util;
 
 /**
  * @author OUCHI Koji
  *
  */
-public final class OverlapRelationValues {
-	/**
-	 * If overlapRelation[i][j] == NO_OVERLAP, then face_i does not have overlap
-	 * with face_j.
-	 */
-	public final static byte NO_OVERLAP = 0;
-	/**
-	 * If overlapRelation[i][j] == UPPER, then face_i is above face_j.
-	 */
-	public final static byte UPPER = 1;
-	/**
-	 * If overlapRelation[i][j] == LOWER, then face_i is under face_j.
-	 */
-	public final static byte LOWER = 2;
-	/**
-	 * If overlapRelation[i][j] == UNDEFINED, then face_i is above or under
-	 * face_j but not determined yet.
-	 */
-	public final static byte UNDEFINED = 9;
+public interface ByteMatrix {
+
+	void set(int i, int j, byte value);
+
+	byte get(int i, int j);
+
+	ByteMatrix clone();
+
+	int rowCount();
+
+	int columnCount();
 
 }
