@@ -30,8 +30,8 @@ public interface IntMatrix {
 
 	IntMatrix clone();
 
-	int rowSize();
+	int rowCount();
 
-	int columnSize();
+	int columnCount();
 
 }

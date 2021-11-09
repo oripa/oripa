@@ -29,19 +29,19 @@ import java.util.HashMap;
 public class IntSparseMatrix implements IntMatrix {
 	private final HashMap<IntPair, Integer> values;
 
-	public final int rowSize;
-	public final int columnSize;
+	public final int rowCount;
+	public final int columnCount;
 
-	public IntSparseMatrix(final int rowSize, final int columnSize) {
-		this.rowSize = rowSize;
-		this.columnSize = columnSize;
+	public IntSparseMatrix(final int rowCount, final int columnCount) {
+		this.rowCount = rowCount;
+		this.columnCount = columnCount;
 		values = new HashMap<>();
 	}
 
 	@SuppressWarnings("unchecked")
 	private IntSparseMatrix(final IntSparseMatrix m) {
-		this.rowSize = m.rowSize;
-		this.columnSize = m.columnSize;
+		this.rowCount = m.rowCount;
+		this.columnCount = m.columnCount;
 		this.values = (HashMap<IntPair, Integer>) m.values.clone();
 	}
 
@@ -52,7 +52,7 @@ public class IntSparseMatrix implements IntMatrix {
 
 	@Override
 	public void set(final int i, final int j, final int value) {
-		if (i < 0 || i >= rowSize || j < 0 || j >= columnSize) {
+		if (i < 0 || i >= rowCount || j < 0 || j >= columnCount) {
 			throw new IllegalArgumentException();
 		}
 		if (value == 0) {
@@ -64,7 +64,7 @@ public class IntSparseMatrix implements IntMatrix {
 
 	@Override
 	public int get(final int i, final int j) {
-		if (i < 0 || i >= rowSize || j < 0 || j >= columnSize) {
+		if (i < 0 || i >= rowCount || j < 0 || j >= columnCount) {
 			throw new IllegalArgumentException();
 		}
 		var value = values.get(new IntPair(i, j));
@@ -72,12 +72,12 @@ public class IntSparseMatrix implements IntMatrix {
 	}
 
 	@Override
-	public int rowSize() {
-		return rowSize;
+	public int rowCount() {
+		return rowCount;
 	}
 
 	@Override
-	public int columnSize() {
-		return columnSize;
+	public int columnCount() {
+		return columnCount;
 	}
 }

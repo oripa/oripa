@@ -54,9 +54,9 @@ public class OverlapRelation {
 	}
 
 	public void switchToSparseMatrix() {
-		var sparse = new IntSparseMatrix(overlapRelation.rowSize(), overlapRelation.columnSize());
-		for (int i = 0; i < overlapRelation.rowSize(); i++) {
-			for (int j = 0; j < overlapRelation.columnSize(); j++) {
+		var sparse = new IntSparseMatrix(overlapRelation.rowCount(), overlapRelation.columnCount());
+		for (int i = 0; i < overlapRelation.rowCount(); i++) {
+			for (int j = 0; j < overlapRelation.columnCount(); j++) {
 				sparse.set(i, j, overlapRelation.get(i, j));
 			}
 		}
@@ -79,7 +79,7 @@ public class OverlapRelation {
 	 * @return the n of n x n matrix.
 	 */
 	public int getSize() {
-		return overlapRelation.rowSize();
+		return overlapRelation.rowCount();
 	}
 
 	/**

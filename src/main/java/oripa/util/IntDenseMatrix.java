@@ -25,8 +25,8 @@ package oripa.util;
 public class IntDenseMatrix implements IntMatrix {
 	private final int[][] values;
 
-	public IntDenseMatrix(final int rowSize, final int columnSize) {
-		values = new int[rowSize][columnSize];
+	public IntDenseMatrix(final int rowCount, final int columnCount) {
+		values = new int[rowCount][columnCount];
 	}
 
 	private IntDenseMatrix(final int[][] values) {
@@ -49,13 +49,13 @@ public class IntDenseMatrix implements IntMatrix {
 	}
 
 	@Override
-	public int rowSize() {
-		return 0;
+	public int rowCount() {
+		return values.length;
 	}
 
 	@Override
-	public int columnSize() {
-		return 0;
+	public int columnCount() {
+		return values[0].length;
 	}
 
 }
