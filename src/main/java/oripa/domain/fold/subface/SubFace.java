@@ -76,7 +76,7 @@ public class SubFace {
 		var localLayerOrders = new ArrayList<List<OriFace>>();
 
 		var localLayerOrder = new ArrayList<OriFace>();
-		var isAlreadyInLayerOrder = new boolean[modelFaces.size()];
+		var alreadyInLocalLayerOrder = new boolean[modelFaces.size()];
 		var indexOnOrdering = new HashMap<OriFace, Integer>();
 		var stackConditionsOf2Faces = new HashMap<OriFace, List<Integer>>();
 		var stackConditionsOf3Faces = new HashMap<OriFace, List<StackConditionOf3Faces>>();
@@ -112,7 +112,7 @@ public class SubFace {
 		}
 
 		for (OriFace f : parentFaces) {
-			isAlreadyInLayerOrder[f.getFaceID()] = false;
+			alreadyInLocalLayerOrder[f.getFaceID()] = false;
 			indexOnOrdering.put(f, -1);
 		}
 
@@ -120,7 +120,7 @@ public class SubFace {
 		sort(modelFaces,
 				localLayerOrders,
 				localLayerOrder,
-				isAlreadyInLayerOrder,
+				alreadyInLocalLayerOrder,
 				indexOnOrdering,
 				stackConditionsOf2Faces,
 				stackConditionsOf3Faces,
