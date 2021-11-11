@@ -92,7 +92,7 @@ public class LayerOrderEnumerator {
 
 		var watch = new StopWatch(true);
 
-		overlappingFaceIndexIntersections = createOverlappingFaceIndexIntersections(faces, paperSize);
+		overlappingFaceIndexIntersections = createOverlappingFaceIndexIntersections(faces, overlapRelation);
 		faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
 
 		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
@@ -128,7 +128,7 @@ public class LayerOrderEnumerator {
 		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs);
 		var time = watch.getMilliSec();
 
-		logger.debug("#call = {}", callCount.get());
+		logger.debug("#call = {}", callCount);
 		logger.debug("#penetrationTest = {}", penetrationTestCallCount);
 		logger.debug("#penetration = {}", penetrationCount);
 		logger.debug("time = {}[ms]", time);
@@ -142,21 +142,18 @@ public class LayerOrderEnumerator {
 
 	@SuppressWarnings("unchecked")
 	private List<Integer>[][] createOverlappingFaceIndexIntersections(final List<OriFace> faces,
-			final double paperSize) {
+			final OverlapRelation overlapRelation) {
 		List<Set<Integer>> indices = IntStream.range(0, faces.size())
 				.mapToObj(i -> new HashSet<Integer>())
 				.collect(Collectors.toList());
 
-		final double EPS = eps(paperSize);
-
 		// prepare pair indices of overlapping faces.
 		for (var face : faces) {
 			for (var other : faces) {
-				if (face.getFaceID() == other.getFaceID()) {
-					continue;
-				}
-				if (OriGeomUtil.isFaceOverlap(face, other, EPS)) {
-					indices.get(face.getFaceID()).add(other.getFaceID());
+				var index_i = face.getFaceID();
+				var index_j = other.getFaceID();
+				if (!overlapRelation.isNoOverlap(index_i, index_j)) {
+					indices.get(index_i).add(index_j);
 				}
 			}
 		}
