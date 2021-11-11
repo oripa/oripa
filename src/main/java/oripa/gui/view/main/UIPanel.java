@@ -61,6 +61,7 @@ import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
 import oripa.gui.presenter.main.CheckerWindowOpener;
 import oripa.gui.presenter.main.FoldedModelWindowOpener;
 import oripa.gui.view.util.ChildFrameManager;
+import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.viewsetting.ChangeViewSetting;
@@ -908,12 +909,17 @@ public class UIPanel extends JPanel {
 				// no answer is found.
 				() -> dialogService.showNoAnswerMessage(this));
 
-		windowOpener.showFoldedModelWindows(
-				creasePattern,
-				cutOutlinesHolder,
-				mainScreenSetting,
-				fullEstimation,
-				screenUpdater);
+		try {
+			windowOpener.showFoldedModelWindows(
+					creasePattern,
+					cutOutlinesHolder,
+					mainScreenSetting,
+					fullEstimation,
+					screenUpdater);
+		} catch (Exception e) {
+			logger.error("error when folding", e);
+			Dialogs.showErrorDialog(this, "Unexpected error", e);
+		}
 	}
 
 	private void addPropertyChangeListenersToSetting(final MainScreenSetting mainScreenSetting) {

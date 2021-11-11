@@ -107,9 +107,12 @@ public class LayerOrderEnumerator {
 		estimate(faces, overlapRelation);
 
 		watch.start();
-		var localLayerOrderMap = new HashMap<SubFace, List<List<OriFace>>>();
+		var localLayerOrderMap = new HashMap<SubFace, Integer>();
 		for (SubFace sub : subFaces) {
-			localLayerOrderMap.put(sub, sub.createLocalLayerOrders(faces, overlapRelation));
+//			localLayerOrderMap.put(sub, sub.countUndefined(overlapRelation));
+
+			var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation);
+			localLayerOrderMap.put(sub, localLayerOrders == null ? -1 : localLayerOrders.size());
 		}
 		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
 
@@ -117,7 +120,7 @@ public class LayerOrderEnumerator {
 		// has more possibility to be correct. Such confident search node should
 		// be consumed at early stage.
 		subFaces = localLayerOrderMap.entrySet().stream()
-				.sorted(Comparator.comparing(e -> e.getValue() == null ? -1 : e.getValue().size()))
+				.sorted(Comparator.comparing(e -> e.getValue()))
 				.map(e -> e.getKey())
 				.collect(Collectors.toList());
 

@@ -65,11 +65,17 @@ public class SubFace {
 	 */
 	public List<List<OriFace>> createLocalLayerOrders(final List<OriFace> modelFaces,
 			final OverlapRelation overlapRelation) {
-		/*
-		 * A list of orders of faces where the faces include this subface. Each
-		 * order is correct on this subface but it can be wrong on other subfaces.
-		 */
+
+		// Exit if the order is already settled
+		if (isLocalLayerOrderDeterminedByGlobal(overlapRelation)) {
+			return null;
+		}
+
+		// A list of orders of faces where the faces include this subface. Each
+		// order is correct on this subface but it can be wrong on other
+		// subfaces.
 		var localLayerOrders = new ArrayList<List<OriFace>>();
+
 		var localLayerOrder = new ArrayList<OriFace>();
 		var isAlreadyInLayerOrder = new boolean[modelFaces.size()];
 		var indexOnOrdering = new HashMap<OriFace, Integer>();
@@ -79,11 +85,6 @@ public class SubFace {
 
 		for (int i = 0; i < parentFaces.size(); i++) {
 			localLayerOrder.add(null);
-		}
-
-		// Exit if the order is already settled
-		if (isLocalLayerOrderDeterminedByGlobal(overlapRelation)) {
-			return null;
 		}
 
 		for (OriFace f : parentFaces) {
@@ -143,6 +144,21 @@ public class SubFace {
 		}
 
 		return true;
+	}
+
+	public int countUndefined(final OverlapRelation overlapRelation) {
+		int count = 0;
+		int parentFaceCount = parentFaces.size();
+		for (int i = 0; i < parentFaceCount; i++) {
+			for (int j = i + 1; j < parentFaceCount; j++) {
+				if (overlapRelation.isUndefined(parentFaces.get(i).getFaceID(),
+						parentFaces.get(j).getFaceID())) {
+					count++;
+				}
+			}
+		}
+
+		return count;
 	}
 
 	private void sort(final List<OriFace> modelFaces,

@@ -18,13 +18,9 @@
 
 package oripa.domain.fold;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import oripa.domain.fold.halfedge.OrigamiModel;
 
 public class Folder {
-	private static Logger logger = LoggerFactory.getLogger(Folder.class);
 	// helper object
 	private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
 
@@ -59,12 +55,8 @@ public class Folder {
 			return new FoldedModel(origamiModel, new OverlapRelationList());
 		}
 
-		OverlapRelationList overlapRelationList = new OverlapRelationList();
-		try {
-			overlapRelationList = enumerator.enumerate(origamiModel);
-		} catch (Exception e) {
-			logger.error("error on layer ordering", e);
-		}
+		var overlapRelationList = enumerator.enumerate(origamiModel);
+
 		var foldedModel = new FoldedModel(origamiModel, overlapRelationList);
 
 		if (overlapRelationList.isEmpty()) {
