@@ -128,7 +128,7 @@ public class LayerOrderEnumerator {
 		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs);
 		var time = watch.getMilliSec();
 
-		logger.debug("#call = {}", callCount.get());
+		logger.debug("#call = {}", callCount);
 		logger.debug("#penetrationTest = {}", penetrationTestCallCount);
 		logger.debug("#penetration = {}", penetrationCount);
 		logger.debug("time = {}[ms]", time);
