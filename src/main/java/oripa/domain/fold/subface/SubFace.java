@@ -20,8 +20,9 @@ package oripa.domain.fold.subface;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Map;
 
 import javax.vecmath.Vector2d;
 
@@ -40,13 +41,7 @@ public class SubFace {
 
 	private final List<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	private final List<StackConditionOf3Faces> condition3s = new ArrayList<>();
-	private boolean localLayerOrderDeterminedByGlobal = false;
-
-	/**
-	 * A list of orders of faces where the faces include this subface. Each
-	 * order is correct on this subface but it can be wrong on other subfaces.
-	 */
-	private final List<List<OriFace>> localLayerOrders = new ArrayList<>();
+//	private boolean localLayerOrderDeterminedByGlobal = false;
 
 	/**
 	 *
@@ -65,10 +60,22 @@ public class SubFace {
 	 *            all faces of inputted model.
 	 * @param overlapRelation
 	 *            overlap relation matrix.
-	 * @return the number of possible local layer orders.
+	 * @return a list of possible local layer orders. {@code null} if order is
+	 *         uniquely determined by overlap relation.
 	 */
-	public int buildLocalLayerOrders(final List<OriFace> modelFaces, final OverlapRelation overlapRelation) {
-		List<OriFace> localLayerOrder = new ArrayList<>();
+	public List<List<OriFace>> createLocalLayerOrders(final List<OriFace> modelFaces,
+			final OverlapRelation overlapRelation) {
+		/*
+		 * A list of orders of faces where the faces include this subface. Each
+		 * order is correct on this subface but it can be wrong on other subfaces.
+		 */
+		var localLayerOrders = new ArrayList<List<OriFace>>();
+		var localLayerOrder = new ArrayList<OriFace>();
+		var isAlreadyInLayerOrder = new boolean[modelFaces.size()];
+		var indexOnOrdering = new HashMap<OriFace, Integer>();
+		var stackConditionsOf2Faces = new HashMap<OriFace, List<Integer>>();
+		var stackConditionsOf3Faces = new HashMap<OriFace, List<StackConditionOf3Faces>>();
+		var stackConditionsOf4Faces = new HashMap<OriFace, List<StackConditionOf4Faces>>();
 
 		for (int i = 0; i < parentFaces.size(); i++) {
 			localLayerOrder.add(null);
@@ -76,45 +83,52 @@ public class SubFace {
 
 		// Exit if the order is already settled
 		if (isLocalLayerOrderDeterminedByGlobal(overlapRelation)) {
-			localLayerOrderDeterminedByGlobal = true;
-			return 0;
+			return null;
 		}
 
 		for (OriFace f : parentFaces) {
-			f.clearStackConditionsOf3Faces();
-			f.clearStackConditionsOf4Faces();
-			f.clearStackConditionsOf2Faces();
+			stackConditionsOf2Faces.put(f, new ArrayList<Integer>());
+			stackConditionsOf3Faces.put(f, new ArrayList<StackConditionOf3Faces>());
+			stackConditionsOf4Faces.put(f, new ArrayList<StackConditionOf4Faces>());
 
 			var faceID = f.getFaceID();
 			for (StackConditionOf3Faces cond : condition3s) {
 				if (faceID == cond.other) {
-					f.addStackConditionOf3Faces(cond);
+					stackConditionsOf3Faces.get(f).add(cond);
 				}
 			}
 			for (StackConditionOf4Faces cond : condition4s) {
 				if (faceID == cond.upper1 || faceID == cond.upper2) {
-					f.addStackConditionOf4Faces(cond);
+					stackConditionsOf4Faces.get(f).add(cond);
 				}
 			}
 
 			for (OriFace ff : parentFaces) {
 				var anotherFaceID = ff.getFaceID();
 				if (overlapRelation.isLower(faceID, anotherFaceID)) {
-					f.addStackConditionOf2Faces(anotherFaceID);
+					stackConditionsOf2Faces.get(f).add(anotherFaceID);
 				}
 			}
 		}
 
 		for (OriFace f : parentFaces) {
-			f.setAlreadyInLocalLayerOrder(false);
-			f.clearIndexForLocalLayerOrder();
+			isAlreadyInLayerOrder[f.getFaceID()] = false;
+			indexOnOrdering.put(f, -1);
 		}
 
 		// From the bottom
-		sort(modelFaces, localLayerOrder, 0);
+		sort(modelFaces,
+				localLayerOrders,
+				localLayerOrder,
+				isAlreadyInLayerOrder,
+				indexOnOrdering,
+				stackConditionsOf2Faces,
+				stackConditionsOf3Faces,
+				stackConditionsOf4Faces,
+				0);
 
 		// Returns the number of obtained solutions
-		return localLayerOrders.size();
+		return localLayerOrders;
 	}
 
 	private boolean isLocalLayerOrderDeterminedByGlobal(final OverlapRelation overlapRelation) {
@@ -131,7 +145,15 @@ public class SubFace {
 		return true;
 	}
 
-	private void sort(final List<OriFace> modelFaces, final List<OriFace> localLayerOrder, final int index) {
+	private void sort(final List<OriFace> modelFaces,
+			final List<List<OriFace>> localLayerOrders,
+			final List<OriFace> localLayerOrder,
+			final boolean[] isAlreadyInLocalLayerOrder,
+			final Map<OriFace, Integer> indexOnOrdering,
+			final Map<OriFace, List<Integer>> stackConditionsOf2Faces,
+			final Map<OriFace, List<StackConditionOf3Faces>> stackConditionsOf3Faces,
+			final Map<OriFace, List<StackConditionOf4Faces>> stackConditionsOf4Faces,
+			final int index) {
 
 		if (index == parentFaces.size()) {
 			var ans = new ArrayList<>(localLayerOrder);
@@ -140,49 +162,68 @@ public class SubFace {
 		}
 
 		for (OriFace f : parentFaces) {
-			if (f.isAlreadyInLocalLayerOrder()) {
+			if (isAlreadyInLocalLayerOrder[f.getFaceID()]) {
 				continue;
 			}
 
-			if (!satisfiesConditionOf2Faces(modelFaces, f)) {
+			if (!satisfiesConditionOf2Faces(modelFaces, isAlreadyInLocalLayerOrder, stackConditionsOf2Faces, f)) {
 				continue;
 			}
 
-			if (!satisfiesConditionOf3Faces(modelFaces, f)) {
+			if (!satisfiesConditionOf3Faces(modelFaces, isAlreadyInLocalLayerOrder, stackConditionsOf3Faces, f)) {
 				continue;
 			}
 
-			if (!satisfiesConditionOf4Faces(modelFaces, f)) {
+			if (!satisfiesConditionOf4Faces(modelFaces, isAlreadyInLocalLayerOrder, indexOnOrdering,
+					stackConditionsOf4Faces, f)) {
 				continue;
 			}
 
 			localLayerOrder.set(index, f);
-			f.setAlreadyInLocalLayerOrder(true);
-			f.setIndexForLocalLayerOrder(index);
+			isAlreadyInLocalLayerOrder[f.getFaceID()] = true;
+			indexOnOrdering.put(f, index);
 
-			sort(modelFaces, localLayerOrder, index + 1);
+			sort(modelFaces,
+					localLayerOrders,
+					localLayerOrder,
+					isAlreadyInLocalLayerOrder,
+					indexOnOrdering,
+					stackConditionsOf2Faces,
+					stackConditionsOf3Faces,
+					stackConditionsOf4Faces,
+					index + 1);
 
-			localLayerOrder.get(index).setAlreadyInLocalLayerOrder(false);
-			localLayerOrder.get(index).clearIndexForLocalLayerOrder();
+			isAlreadyInLocalLayerOrder[localLayerOrder.get(index).getFaceID()] = false;
+			indexOnOrdering.put(localLayerOrder.get(index), -1);
 			localLayerOrder.set(index, null);
 		}
 	}
 
-	private boolean satisfiesConditionOf2Faces(final List<OriFace> modelFaces, final OriFace f) {
-		return f.stackConditionsOf2FacesStream()
-				.allMatch(i -> modelFaces.get(i).isAlreadyInLocalLayerOrder());
+	private boolean satisfiesConditionOf2Faces(final List<OriFace> modelFaces,
+			final boolean[] isAlreadyInLocalLayerOrder,
+			final Map<OriFace, List<Integer>> stackConditionsOf2Faces,
+			final OriFace f) {
+		return stackConditionsOf2Faces.get(f).stream()
+				.allMatch(i -> isAlreadyInLocalLayerOrder[i]);
 	}
 
-	private boolean satisfiesConditionOf3Faces(final List<OriFace> modelFaces, final OriFace face) {
-		if (face.stackConditionOf3FacesStream().anyMatch(cond -> modelFaces.get(cond.lower).isAlreadyInLocalLayerOrder()
-				&& !modelFaces.get(cond.upper).isAlreadyInLocalLayerOrder())) {
+	private boolean satisfiesConditionOf3Faces(final List<OriFace> modelFaces,
+			final boolean[] isAlreadyInLocalLayerOrder,
+			final Map<OriFace, List<StackConditionOf3Faces>> stackConditionsOf3Faces,
+			final OriFace face) {
+		if (stackConditionsOf3Faces.get(face).stream().anyMatch(cond -> isAlreadyInLocalLayerOrder[cond.lower]
+				&& !isAlreadyInLocalLayerOrder[cond.upper])) {
 			return false;
 		}
 
 		return true;
 	}
 
-	private boolean satisfiesConditionOf4Faces(final List<OriFace> modelFaces, final OriFace face) {
+	private boolean satisfiesConditionOf4Faces(final List<OriFace> modelFaces,
+			final boolean[] isAlreadyInLocalLayerOrder,
+			final Map<OriFace, Integer> indexOnOrdering,
+			final Map<OriFace, List<StackConditionOf4Faces>> stackConditionsOf4Faces,
+			final OriFace face) {
 		// check condition4
 		// aabb or abba or baab are good, but aba or bab are impossible
 
@@ -191,21 +232,21 @@ public class SubFace {
 		// stack lower1 < lower2, without upper2 being stacked, dont stack
 		// upper1
 
-		if (face.stackConditionOf4FacesStream().anyMatch(cond -> face.getFaceID() == cond.upper2
-				&& modelFaces.get(cond.lower2).isAlreadyInLocalLayerOrder()
-				&& modelFaces.get(cond.lower1).isAlreadyInLocalLayerOrder()
-				&& !modelFaces.get(cond.upper1).isAlreadyInLocalLayerOrder()
-				&& modelFaces.get(cond.lower2).getIndexForLocalLayerOrder() < modelFaces
-						.get(cond.lower1).getIndexForLocalLayerOrder())) {
+		if (stackConditionsOf4Faces.get(face).stream().anyMatch(cond -> face.getFaceID() == cond.upper2
+				&& isAlreadyInLocalLayerOrder[cond.lower2]
+				&& isAlreadyInLocalLayerOrder[cond.lower1]
+				&& !isAlreadyInLocalLayerOrder[cond.upper1]
+				&& indexOnOrdering.get(modelFaces.get(cond.lower2)) < indexOnOrdering
+						.get(modelFaces.get(cond.lower1)))) {
 			return false;
 		}
 
-		if (face.stackConditionOf4FacesStream().anyMatch(cond -> face.getFaceID() == cond.upper1
-				&& modelFaces.get(cond.lower2).isAlreadyInLocalLayerOrder()
-				&& modelFaces.get(cond.lower1).isAlreadyInLocalLayerOrder()
-				&& !modelFaces.get(cond.upper2).isAlreadyInLocalLayerOrder()
-				&& modelFaces.get(cond.lower1).getIndexForLocalLayerOrder() < modelFaces
-						.get(cond.lower2).getIndexForLocalLayerOrder())) {
+		if (stackConditionsOf4Faces.get(face).stream().anyMatch(cond -> face.getFaceID() == cond.upper1
+				&& isAlreadyInLocalLayerOrder[cond.lower2]
+				&& isAlreadyInLocalLayerOrder[cond.lower1]
+				&& !isAlreadyInLocalLayerOrder[cond.upper2]
+				&& indexOnOrdering.get(modelFaces.get(cond.lower1)) < indexOnOrdering.get(modelFaces
+						.get(cond.lower2)))) {
 			return false;
 		}
 
@@ -232,21 +273,21 @@ public class SubFace {
 		condition3s.add(condition);
 	}
 
-	public Iterable<List<OriFace>> localLayerOrdersIterable() {
-		return localLayerOrders;
-	}
+//	public Iterable<List<OriFace>> localLayerOrdersIterable() {
+//		return localLayerOrders;
+//	}
+//
+//	public Stream<List<OriFace>> localLayerOrdersStream() {
+//		return localLayerOrders.stream();
+//	}
 
-	public Stream<List<OriFace>> localLayerOrdersStream() {
-		return localLayerOrders.stream();
-	}
+//	public boolean isLocalLayerOrderDeterminedByGlobal() {
+//		return localLayerOrderDeterminedByGlobal;
+//	}
 
-	public boolean isLocalLayerOrderDeterminedByGlobal() {
-		return localLayerOrderDeterminedByGlobal;
-	}
-
-	public int getLocalLayerOrderCount() {
-		return localLayerOrders.size();
-	}
+//	public int getLocalLayerOrderCount() {
+//		return localLayerOrders.size();
+//	}
 
 	public boolean addParentFaces(final Collection<OriFace> faces) {
 		return parentFaces.addAll(faces);

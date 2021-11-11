@@ -72,6 +72,8 @@ public class LayerOrderEnumerator {
 
 	private final SubFacesFactory subFacesFactory;
 
+	private OverlapRelation initialOverlapRelation; // debug
+
 	public LayerOrderEnumerator(final SubFacesFactory subFacesFactory) {
 		this.subFacesFactory = subFacesFactory;
 	}
@@ -105,19 +107,24 @@ public class LayerOrderEnumerator {
 		estimate(faces, overlapRelation);
 
 		watch.start();
+		var localLayerOrderMap = new HashMap<SubFace, List<List<OriFace>>>();
 		for (SubFace sub : subFaces) {
-			sub.buildLocalLayerOrders(faces, overlapRelation);
+			localLayerOrderMap.put(sub, sub.createLocalLayerOrders(faces, overlapRelation));
 		}
 		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
 
 		// heuristic: fewer local layer orders mean the search on the subface
 		// has more possibility to be correct. Such confident search node should
 		// be consumed at early stage.
-		subFaces = subFaces.stream()
-				.sorted(Comparator.comparing(SubFace::getLocalLayerOrderCount))
+		subFaces = localLayerOrderMap.entrySet().stream()
+				.sorted(Comparator.comparing(e -> e.getValue() == null ? -1 : e.getValue().size()))
+				.map(e -> e.getKey())
 				.collect(Collectors.toList());
 
 		var overlapRelationList = new OverlapRelationList();
+
+		// for debug
+		initialOverlapRelation = overlapRelation.clone();
 
 		watch.start();
 
@@ -237,8 +244,6 @@ public class LayerOrderEnumerator {
 			final OverlapRelationList overlapRelationList, final int subFaceIndex,
 			final OverlapRelation overlapRelation,
 			final Set<Integer> changedFaceIDs) {
-		callCount.incrementAndGet();
-
 		if (!changedFaceIDs.isEmpty()) {
 			penetrationTestCallCount.incrementAndGet();
 			if (detectPenetrationBy3faces(faces, changedFaceIDs, overlapRelation)) {
@@ -259,19 +264,21 @@ public class LayerOrderEnumerator {
 
 		SubFace sub = subFaces.get(subFaceIndex);
 
-		if (sub.isLocalLayerOrderDeterminedByGlobal()) {
+		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation);
+
+		if (localLayerOrders == null) {
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1, overlapRelation,
 					new HashSet<>());
 			return;
 		}
 
-		var correctLocalLayerOrders = sub.localLayerOrdersStream().parallel()
+		var collectLocalLayerOrders = localLayerOrders.stream()
 				.filter(localLayerOrder -> isCorrectLayerOrder(localLayerOrder, overlapRelation))
 				.collect(Collectors.toList());
 
 		// Parallel search. It is fast but can exceed memory for
 		// complex model because of copying overlapRelation (a large matrix).
-		correctLocalLayerOrders.parallelStream().forEach(localLayerOrder -> {
+		collectLocalLayerOrders.parallelStream().forEach(localLayerOrder -> {
 			int size = localLayerOrder.size();
 			var nextChangedFaceIDs = new HashSet<Integer>();
 			var nextOverlapRelation = overlapRelation.clone();
@@ -290,6 +297,7 @@ public class LayerOrderEnumerator {
 				}
 			});
 
+			callCount.incrementAndGet();
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1,
 					nextOverlapRelation, nextChangedFaceIDs);
 		});
@@ -378,12 +386,13 @@ public class LayerOrderEnumerator {
 	 *         condition is not satisfied.
 	 */
 	private boolean detectPenetrationBy4faces(final OverlapRelation overlapRelation) {
-		boolean correct = true;
-		for (var cond : condition4s) {
+
+		return condition4s.parallelStream().anyMatch(cond -> {
 			if (!cond.isDetermined(overlapRelation)) {
-				continue;
+				return false;
 			}
 
+			boolean correct = true;
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2
 			if (overlapRelation.isLower(cond.lower1, cond.upper2)) {
@@ -435,10 +444,8 @@ public class LayerOrderEnumerator {
 			if (!correct) {
 				return true;
 			}
-		}
-
-		return false;
-
+			return false;
+		});
 	}
 
 	/**
