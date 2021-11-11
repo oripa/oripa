@@ -41,7 +41,6 @@ public class SubFace {
 
 	private final List<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	private final List<StackConditionOf3Faces> condition3s = new ArrayList<>();
-//	private boolean localLayerOrderDeterminedByGlobal = false;
 
 	/**
 	 *
@@ -144,21 +143,6 @@ public class SubFace {
 		}
 
 		return true;
-	}
-
-	public int countUndefined(final OverlapRelation overlapRelation) {
-		int count = 0;
-		int parentFaceCount = parentFaces.size();
-		for (int i = 0; i < parentFaceCount; i++) {
-			for (int j = i + 1; j < parentFaceCount; j++) {
-				if (overlapRelation.isUndefined(parentFaces.get(i).getFaceID(),
-						parentFaces.get(j).getFaceID())) {
-					count++;
-				}
-			}
-		}
-
-		return count;
 	}
 
 	private void sort(final List<OriFace> modelFaces,
@@ -288,22 +272,6 @@ public class SubFace {
 	public void addStackConditionOf3Faces(final StackConditionOf3Faces condition) {
 		condition3s.add(condition);
 	}
-
-//	public Iterable<List<OriFace>> localLayerOrdersIterable() {
-//		return localLayerOrders;
-//	}
-//
-//	public Stream<List<OriFace>> localLayerOrdersStream() {
-//		return localLayerOrders.stream();
-//	}
-
-//	public boolean isLocalLayerOrderDeterminedByGlobal() {
-//		return localLayerOrderDeterminedByGlobal;
-//	}
-
-//	public int getLocalLayerOrderCount() {
-//		return localLayerOrders.size();
-//	}
 
 	public boolean addParentFaces(final Collection<OriFace> faces) {
 		return parentFaces.addAll(faces);

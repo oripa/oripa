@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -72,8 +73,6 @@ public class LayerOrderEnumerator {
 
 	private final SubFacesFactory subFacesFactory;
 
-	private OverlapRelation initialOverlapRelation; // debug
-
 	public LayerOrderEnumerator(final SubFacesFactory subFacesFactory) {
 		this.subFacesFactory = subFacesFactory;
 	}
@@ -107,13 +106,11 @@ public class LayerOrderEnumerator {
 		estimate(faces, overlapRelation);
 
 		watch.start();
-		var localLayerOrderMap = new HashMap<SubFace, Integer>();
-		for (SubFace sub : subFaces) {
-//			localLayerOrderMap.put(sub, sub.countUndefined(overlapRelation));
-
+		var localLayerOrderMap = new ConcurrentHashMap<SubFace, Integer>();
+		subFaces.parallelStream().forEach(sub -> {
 			var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation);
 			localLayerOrderMap.put(sub, localLayerOrders == null ? -1 : localLayerOrders.size());
-		}
+		});
 		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
 
 		// heuristic: fewer local layer orders mean the search on the subface
@@ -125,9 +122,6 @@ public class LayerOrderEnumerator {
 				.collect(Collectors.toList());
 
 		var overlapRelationList = new OverlapRelationList();
-
-		// for debug
-		initialOverlapRelation = overlapRelation.clone();
 
 		watch.start();
 
