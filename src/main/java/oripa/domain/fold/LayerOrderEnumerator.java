@@ -285,12 +285,11 @@ public class LayerOrderEnumerator {
 					int index_j = localLayerOrder.get(j).getFaceID();
 					if (nextOverlapRelation.isUndefined(index_i, index_j)) {
 						// if index on local layer order is 0, the face is at
-						// the top of
-						// layer order (looking down the folded model on a
-						// table).
+						// the top of layer order (looking down the folded model
+						// on a table).
 						// therefore a face with smaller index i on layer order
-						// should
-						// be UPPER than a face with index j on layer order.
+						// should be UPPER than a face with index j on layer
+						// order.
 						nextOverlapRelation.setUpper(index_i, index_j);
 
 						nextChangedFaceIDs.add(index_i);
