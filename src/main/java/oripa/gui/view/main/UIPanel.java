@@ -918,7 +918,7 @@ public class UIPanel extends JPanel {
 					screenUpdater);
 		} catch (Exception e) {
 			logger.error("error when folding", e);
-			Dialogs.showErrorDialog(this, "Unexpected error", e);
+			Dialogs.showErrorDialog(this, resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
 		}
 	}
 

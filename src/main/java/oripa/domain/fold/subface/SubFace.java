@@ -52,7 +52,7 @@ public class SubFace {
 	}
 
 	/**
-	 * Builds all possible local layer orders. All parent faces should be added
+	 * Creates all possible local layer orders. All parent faces should be added
 	 * to this subface before this method is called.
 	 *
 	 * @param modelFaces
