@@ -176,28 +176,6 @@ public class OriFace {
 		this.movedByFold = movedByFold;
 	}
 
-//	/**
-//	 * @return {@link #indexForLocalLayerOrder}
-//	 */
-//	public int getIndexForLocalLayerOrder() {
-//		return indexForLocalLayerOrder;
-//	}
-//
-//	/**
-//	 * @param index
-//	 *            Sets {@link #indexForLocalLayerOrder}
-//	 */
-//	public void setIndexForLocalLayerOrder(final int index) {
-//		this.indexForLocalLayerOrder = index;
-//	}
-
-//	/**
-//	 * Sets -1 to {@link #indexForLocalLayerOrder}.
-//	 */
-//	public void clearIndexForLocalLayerOrder() {
-//		this.indexForLocalLayerOrder = -1;
-//	}
-
 	/**
 	 * @return ID of this face.
 	 */
