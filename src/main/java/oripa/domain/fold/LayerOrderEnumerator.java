@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -117,8 +118,8 @@ public class LayerOrderEnumerator {
 		// has more possibility to be correct. Such confident search node should
 		// be consumed at early stage.
 		subFaces = localLayerOrderMap.entrySet().stream()
-				.sorted(Comparator.comparing(e -> e.getValue()))
-				.map(e -> e.getKey())
+				.sorted(Comparator.comparing(Entry::getValue))
+				.map(Entry::getKey)
 				.collect(Collectors.toList());
 
 		var overlapRelationList = new OverlapRelationList();

@@ -74,7 +74,6 @@ public class SubFace {
 		// order is correct on this subface but it can be wrong on other
 		// subfaces.
 		var localLayerOrders = new ArrayList<List<OriFace>>();
-
 		var localLayerOrder = new ArrayList<OriFace>();
 		var alreadyInLocalLayerOrder = new boolean[modelFaces.size()];
 		var indexOnOrdering = new HashMap<OriFace, Integer>();
@@ -127,7 +126,6 @@ public class SubFace {
 				stackConditionsOf4Faces,
 				0);
 
-		// Returns the number of obtained solutions
 		return localLayerOrders;
 	}
 
