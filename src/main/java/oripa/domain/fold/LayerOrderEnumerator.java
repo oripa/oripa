@@ -241,6 +241,8 @@ public class LayerOrderEnumerator {
 			final OverlapRelationList overlapRelationList, final int subFaceIndex,
 			final OverlapRelation overlapRelation,
 			final Set<Integer> changedFaceIDs) {
+		callCount.incrementAndGet();
+
 		if (!changedFaceIDs.isEmpty()) {
 			penetrationTestCallCount.incrementAndGet();
 			if (detectPenetrationBy3faces(faces, changedFaceIDs, overlapRelation)) {
@@ -294,7 +296,6 @@ public class LayerOrderEnumerator {
 				}
 			});
 
-			callCount.incrementAndGet();
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1,
 					nextOverlapRelation, nextChangedFaceIDs);
 		});
