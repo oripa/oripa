@@ -271,15 +271,9 @@ public class LayerOrderEnumerator {
 			return;
 		}
 
-		var collectLocalLayerOrders = localLayerOrders;
-
-//		var collectLocalLayerOrders = localLayerOrders.stream()
-//				.filter(localLayerOrder -> isCorrectLayerOrder(localLayerOrder, overlapRelation))
-//				.collect(Collectors.toList());
-
 		// Parallel search. It is fast but can exceed memory for
 		// complex model because of copying overlapRelation (a large matrix).
-		collectLocalLayerOrders.parallelStream().forEach(localLayerOrder -> {
+		localLayerOrders.parallelStream().forEach(localLayerOrder -> {
 			int size = localLayerOrder.size();
 			var nextChangedFaceIDs = new HashSet<Integer>();
 			var nextOverlapRelation = overlapRelation.clone();
@@ -290,6 +284,13 @@ public class LayerOrderEnumerator {
 				for (int j = i + 1; j < size; j++) {
 					int index_j = localLayerOrder.get(j).getFaceID();
 					if (nextOverlapRelation.isUndefined(index_i, index_j)) {
+						// if index on local layer order is 0, the face is at
+						// the top of
+						// layer order (looking down the folded model on a
+						// table).
+						// therefore a face with smaller index i on layer order
+						// should
+						// be UPPER than a face with index j on layer order.
 						nextOverlapRelation.setUpper(index_i, index_j);
 
 						nextChangedFaceIDs.add(index_i);
@@ -445,35 +446,6 @@ public class LayerOrderEnumerator {
 				return true;
 			}
 			return false;
-		});
-	}
-
-	/**
-	 * Whether the order of faces in {@code localLayerOrder} is correct or not
-	 * according to {@code overlapRelation}.
-	 *
-	 * @param localLayerOrder
-	 *            stack of faces including the same subface.
-	 * @param overlapRelation
-	 *            overlap relation matrix.
-	 * @return true if the order is correct.
-	 */
-	private boolean isCorrectLayerOrder(final List<OriFace> localLayerOrder, final OverlapRelation overlapRelation) {
-		int size = localLayerOrder.size();
-
-		return IntStream.range(0, size).allMatch(i -> {
-			final int index_i = localLayerOrder.get(i).getFaceID();
-			return IntStream.range(i + 1, size).allMatch(j -> {
-				final int index_j = localLayerOrder.get(j).getFaceID();
-				// if index of local layer order is 0, the face is at the top of
-				// layer order (looking down the folded model on a table).
-				// therefore a face with smaller index i on layer order should
-				// be UPPER than a face with index j on layer order.
-				if (overlapRelation.isLower(index_i, index_j)) {
-					return false;
-				}
-				return true;
-			});
 		});
 	}
 
