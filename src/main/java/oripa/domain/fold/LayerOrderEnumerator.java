@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -105,16 +106,19 @@ public class LayerOrderEnumerator {
 		estimate(faces, overlapRelation);
 
 		watch.start();
-		for (SubFace sub : subFaces) {
-			sub.buildLocalLayerOrders(faces, overlapRelation);
-		}
+		var localLayerOrderMap = new ConcurrentHashMap<SubFace, Integer>();
+		subFaces.parallelStream().forEach(sub -> {
+			var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation);
+			localLayerOrderMap.put(sub, localLayerOrders == null ? -1 : localLayerOrders.size());
+		});
 		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
 
 		// heuristic: fewer local layer orders mean the search on the subface
 		// has more possibility to be correct. Such confident search node should
 		// be consumed at early stage.
-		subFaces = subFaces.stream()
-				.sorted(Comparator.comparing(SubFace::getLocalLayerOrderCount))
+		subFaces = localLayerOrderMap.entrySet().stream()
+				.sorted(Comparator.comparing(e -> e.getValue()))
+				.map(e -> e.getKey())
 				.collect(Collectors.toList());
 
 		var overlapRelationList = new OverlapRelationList();
@@ -259,19 +263,23 @@ public class LayerOrderEnumerator {
 
 		SubFace sub = subFaces.get(subFaceIndex);
 
-		if (sub.isLocalLayerOrderDeterminedByGlobal()) {
+		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation);
+
+		if (localLayerOrders == null) {
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1, overlapRelation,
 					new HashSet<>());
 			return;
 		}
 
-		var correctLocalLayerOrders = sub.localLayerOrdersStream().parallel()
-				.filter(localLayerOrder -> isCorrectLayerOrder(localLayerOrder, overlapRelation))
-				.collect(Collectors.toList());
+		var collectLocalLayerOrders = localLayerOrders;
+
+//		var collectLocalLayerOrders = localLayerOrders.stream()
+//				.filter(localLayerOrder -> isCorrectLayerOrder(localLayerOrder, overlapRelation))
+//				.collect(Collectors.toList());
 
 		// Parallel search. It is fast but can exceed memory for
 		// complex model because of copying overlapRelation (a large matrix).
-		correctLocalLayerOrders.parallelStream().forEach(localLayerOrder -> {
+		collectLocalLayerOrders.parallelStream().forEach(localLayerOrder -> {
 			int size = localLayerOrder.size();
 			var nextChangedFaceIDs = new HashSet<Integer>();
 			var nextOverlapRelation = overlapRelation.clone();
@@ -378,12 +386,13 @@ public class LayerOrderEnumerator {
 	 *         condition is not satisfied.
 	 */
 	private boolean detectPenetrationBy4faces(final OverlapRelation overlapRelation) {
-		boolean correct = true;
-		for (var cond : condition4s) {
+
+		return condition4s.parallelStream().anyMatch(cond -> {
 			if (!cond.isDetermined(overlapRelation)) {
-				continue;
+				return false;
 			}
 
+			boolean correct = true;
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2
 			if (overlapRelation.isLower(cond.lower1, cond.upper2)) {
@@ -435,10 +444,8 @@ public class LayerOrderEnumerator {
 			if (!correct) {
 				return true;
 			}
-		}
-
-		return false;
-
+			return false;
+		});
 	}
 
 	/**

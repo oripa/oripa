@@ -29,8 +29,6 @@ import java.util.stream.Stream;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-import oripa.domain.fold.stackcond.StackConditionOf3Faces;
-import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.util.collection.CollectionUtil;
@@ -66,27 +64,11 @@ public class OriFace {
 	private boolean movedByFold = false;
 
 	/**
-	 * index of layer order for subface. It seems to be used only while making
-	 * correct layer order.
-	 */
-	private int indexForLocalLayerOrder = 0;
-
-	/**
 	 * ID of this face.
 	 */
 	private int faceID = 0;
 
-	/**
-	 * Whether this face is in a local layer order of a subface. It seems to be
-	 * used only while making correct layer order.
-	 */
-	private boolean alreadyInLocalLayerOrder = false;
-
 	private final List<TriangleFace> triangles = new ArrayList<>();
-
-	private final List<StackConditionOf4Faces> stackConditionsOf4Faces = new ArrayList<>();
-	private final List<StackConditionOf3Faces> stackConditionsOf3Faces = new ArrayList<>();
-	private final List<Integer> stackConditionsOf2Faces = new ArrayList<>();
 
 	public OriFace() {
 		int r = (int) (Math.random() * 255);
@@ -195,28 +177,6 @@ public class OriFace {
 	}
 
 	/**
-	 * @return {@link #indexForLocalLayerOrder}
-	 */
-	public int getIndexForLocalLayerOrder() {
-		return indexForLocalLayerOrder;
-	}
-
-	/**
-	 * @param index
-	 *            Sets {@link #indexForLocalLayerOrder}
-	 */
-	public void setIndexForLocalLayerOrder(final int index) {
-		this.indexForLocalLayerOrder = index;
-	}
-
-	/**
-	 * Sets -1 to {@link #indexForLocalLayerOrder}.
-	 */
-	public void clearIndexForLocalLayerOrder() {
-		this.indexForLocalLayerOrder = -1;
-	}
-
-	/**
 	 * @return ID of this face.
 	 */
 	public int getFaceID() {
@@ -232,93 +192,10 @@ public class OriFace {
 	}
 
 	/**
-	 * @return whether this face is already put in a subface's local layer
-	 *         order.
-	 */
-	public boolean isAlreadyInLocalLayerOrder() {
-		return alreadyInLocalLayerOrder;
-	}
-
-	/**
-	 * @param alreadyIn
-	 *            Sets {@link #alreadyInLocalLayerOrder}
-	 */
-	public void setAlreadyInLocalLayerOrder(final boolean alreadyIn) {
-		this.alreadyInLocalLayerOrder = alreadyIn;
-	}
-
-	/**
 	 * @return triangles
 	 */
 	public Stream<TriangleFace> triangleStream() {
 		return triangles.stream();
-	}
-
-	/**
-	 *
-	 * @param condition
-	 *            for a correct stack of subface.
-	 */
-	public void addStackConditionOf4Faces(final StackConditionOf4Faces condition) {
-		stackConditionsOf4Faces.add(condition);
-	}
-
-	/**
-	 * Removes all elements from {@link #stackConditionsOf4Faces}.
-	 */
-	public void clearStackConditionsOf4Faces() {
-		stackConditionsOf4Faces.clear();
-	}
-
-	/**
-	 *
-	 * @return stack conditions of 4 faces as {@link Stream}.
-	 */
-	public Stream<StackConditionOf4Faces> stackConditionOf4FacesStream() {
-		return stackConditionsOf4Faces.stream();
-	}
-
-	/**
-	 *
-	 * @param condition
-	 *            for a correct stack of subface.
-	 */
-	public void addStackConditionOf3Faces(final StackConditionOf3Faces condition) {
-		stackConditionsOf3Faces.add(condition);
-	}
-
-	/**
-	 * Removes all elements from {@link #stackConditionsOf3Faces}.
-	 */
-	public void clearStackConditionsOf3Faces() {
-		stackConditionsOf3Faces.clear();
-	}
-
-	/**
-	 *
-	 * @return stack conditions of 3 faces as {@link Stream}.
-	 */
-	public Stream<StackConditionOf3Faces> stackConditionOf3FacesStream() {
-		return stackConditionsOf3Faces.stream();
-	}
-
-	public void addStackConditionOf2Faces(final Integer upperFaceORMatIndex) {
-		stackConditionsOf2Faces.add(upperFaceORMatIndex);
-	}
-
-	/**
-	 * Removes all elements from {@link #stackConditionsOf2Faces}.
-	 */
-	public void clearStackConditionsOf2Faces() {
-		stackConditionsOf2Faces.clear();
-	}
-
-	/**
-	 *
-	 * @return stack conditions of 2 faces as {@link Stream}.
-	 */
-	public Stream<Integer> stackConditionsOf2FacesStream() {
-		return stackConditionsOf2Faces.stream();
 	}
 
 	public void triangulateAndSetColor(final boolean bUseColor, final boolean bFlip, final double paperSize) {
