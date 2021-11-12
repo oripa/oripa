@@ -271,9 +271,11 @@ public class LayerOrderEnumerator {
 			return;
 		}
 
-		var collectLocalLayerOrders = localLayerOrders.stream()
-				.filter(localLayerOrder -> isCorrectLayerOrder(localLayerOrder, overlapRelation))
-				.collect(Collectors.toList());
+		var collectLocalLayerOrders = localLayerOrders;
+
+//		var collectLocalLayerOrders = localLayerOrders.stream()
+//				.filter(localLayerOrder -> isCorrectLayerOrder(localLayerOrder, overlapRelation))
+//				.collect(Collectors.toList());
 
 		// Parallel search. It is fast but can exceed memory for
 		// complex model because of copying overlapRelation (a large matrix).
