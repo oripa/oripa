@@ -27,7 +27,10 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -897,28 +900,67 @@ public class UIPanel extends JPanel {
 	private void showFoldedModelWindows(
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting) {
-		CreasePattern creasePattern = paintContext.getCreasePattern();
 
-		var windowOpener = new FoldedModelWindowOpener(this, childFrameManager,
-				// ask if ORIPA should try to remove duplication.
-				() -> dialogService.showCleaningUpDuplicationDialog(this) == JOptionPane.YES_OPTION,
-				// clean up the crease pattern
-				() -> dialogService.showCleaningUpMessage(this),
-				// folding failed.
-				() -> dialogService.showFoldFailureMessage(this),
-				// no answer is found.
-				() -> dialogService.showNoAnswerMessage(this));
+		var frame = (JFrame) this.getTopLevelAncestor();
+
+		// modal dialog while folding
+		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
+
+		var worker = new SwingWorker<List<JFrame>, Void>() {
+			@Override
+			protected List<JFrame> doInBackground() throws Exception {
+				CreasePattern creasePattern = paintContext.getCreasePattern();
+
+				var parent = UIPanel.this;
+
+				var windowOpener = new FoldedModelWindowOpener(parent, childFrameManager,
+						// ask if ORIPA should try to remove duplication.
+						() -> dialogService.showCleaningUpDuplicationDialog(parent) == JOptionPane.YES_OPTION,
+						// clean up the crease pattern
+						() -> dialogService.showCleaningUpMessage(parent),
+						// folding failed.
+						() -> dialogService.showFoldFailureMessage(parent),
+						// no answer is found.
+						() -> dialogService.showNoAnswerMessage(parent));
+
+				try {
+					return windowOpener.showFoldedModelWindows(
+							creasePattern,
+							cutOutlinesHolder,
+							mainScreenSetting,
+							fullEstimation,
+							screenUpdater);
+				} catch (Exception e) {
+					logger.error("error when folding", e);
+					Dialogs.showErrorDialog(parent,
+							resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+				}
+				return List.of();
+			}
+
+			@Override
+			protected void done() {
+				dialogWhileFolding.setVisible(false);
+
+				// this action moves the main window to front.
+				buildButton.setEnabled(true);
+			}
+		};
+
+		dialogWhileFolding.setWorker(worker);
+
+		worker.execute();
+
+		buildButton.setEnabled(false);
+		dialogWhileFolding.setVisible(true);
 
 		try {
-			windowOpener.showFoldedModelWindows(
-					creasePattern,
-					cutOutlinesHolder,
-					mainScreenSetting,
-					fullEstimation,
-					screenUpdater);
-		} catch (Exception e) {
-			logger.error("error when folding", e);
-			Dialogs.showErrorDialog(this, resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+			var openedWindows = worker.get();
+			// bring new windows to front.
+			openedWindows.forEach(w -> w.setVisible(true));
+
+		} catch (CancellationException | InterruptedException | ExecutionException e) {
+			logger.info("folding failed or cancelled.");
 		}
 	}
 

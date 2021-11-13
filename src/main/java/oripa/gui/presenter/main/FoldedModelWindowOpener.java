@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.main;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.swing.JComponent;
@@ -68,12 +70,14 @@ public class FoldedModelWindowOpener {
 		this.showNoAnswerMessage = showNoAnswerMessage;
 	}
 
-	public void showFoldedModelWindows(
+	public List<JFrame> showFoldedModelWindows(
 			final CreasePattern creasePattern,
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting,
 			final boolean fullEstimation,
 			final ScreenUpdater screenUpdater) {
+
+		var frames = new ArrayList<JFrame>();
 
 		var folderFactory = new FolderFactory();
 		Folder folder = folderFactory.create();
@@ -97,9 +101,11 @@ public class FoldedModelWindowOpener {
 
 					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 							childFrameManager);
-					JFrame frame = resultFrameFactory.createFrame(ownerView, foldedModel);
-					frame.repaint();
-					frame.setVisible(true);
+					var resultFrame = resultFrameFactory.createFrame(ownerView, foldedModel);
+					resultFrame.repaint();
+					resultFrame.setVisible(true);
+
+					frames.add(resultFrame);
 				}
 			}
 		}
@@ -107,11 +113,15 @@ public class FoldedModelWindowOpener {
 		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
 				mainScreenSetting,
 				childFrameManager);
-		JFrame modelView = modelViewFactory.createFrame(ownerView, origamiModel,
+		var modelViewFrame = modelViewFactory.createFrame(ownerView, origamiModel,
 				cutOutlinesHolder, screenUpdater::updateScreen);
 
-		modelView.repaint();
-		modelView.setVisible(true);
+		modelViewFrame.repaint();
+		modelViewFrame.setVisible(true);
+
+		frames.add(modelViewFrame);
+
+		return frames;
 	}
 
 	/**
