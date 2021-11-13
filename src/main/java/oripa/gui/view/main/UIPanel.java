@@ -29,6 +29,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
@@ -940,6 +941,8 @@ public class UIPanel extends JPanel {
 			@Override
 			protected void done() {
 				dialogWhileFolding.setVisible(false);
+
+				// this action moves the main window to front.
 				buildButton.setEnabled(true);
 			}
 		};
@@ -953,9 +956,10 @@ public class UIPanel extends JPanel {
 
 		try {
 			var openedWindows = worker.get();
+			// bring new windows to front.
 			openedWindows.forEach(w -> w.setVisible(true));
 
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (CancellationException | InterruptedException | ExecutionException e) {
 			logger.info("folding failed or canceled.");
 		}
 	}

@@ -39,6 +39,8 @@ import oripa.resource.StringID;
 public class DialogWhileFolding extends JDialog {
 
 	private SwingWorker<List<JFrame>, Void> worker;
+	private final int WIDTH = 200;
+	private final int HEIGHT = 100;
 
 	public DialogWhileFolding(final JFrame parent, final ResourceHolder resources) {
 		super(parent, true);
@@ -49,8 +51,6 @@ public class DialogWhileFolding extends JDialog {
 				ResourceKey.INFO,
 				StringID.Information.NOW_FOLDING_TITLE_ID)));
 
-		final int WIDTH = 200;
-		final int HEIGHT = 100;
 		setSize(WIDTH, HEIGHT);
 		setLocationRelativeTo(parent);
 
