@@ -960,7 +960,7 @@ public class UIPanel extends JPanel {
 			openedWindows.forEach(w -> w.setVisible(true));
 
 		} catch (CancellationException | InterruptedException | ExecutionException e) {
-			logger.info("folding failed or canceled.");
+			logger.info("folding failed or cancelled.");
 		}
 	}
 
