@@ -113,6 +113,12 @@ public class LayerOrderEnumerator {
 			localLayerOrderMap.put(sub, localLayerOrders == null ? -1 : localLayerOrders.size());
 		});
 		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
+		logger.debug("max #localLayerOrder {}",
+				localLayerOrderMap.values().stream().mapToInt(i -> i).max().getAsInt());
+		logger.debug("average #localLayerOrder {}",
+				localLayerOrderMap.values().stream().mapToInt(i -> i).average().getAsDouble());
+		logger.debug("max #parentFace {}",
+				subFaces.stream().mapToInt(SubFace::getParentFaceCount).max().getAsInt());
 
 		// heuristic: fewer local layer orders mean the search on the subface
 		// has more possibility to be correct. Such confident search node should
@@ -346,7 +352,7 @@ public class LayerOrderEnumerator {
 					continue;
 				}
 
-				var penetrates = overlappingFaceIndexIntersections[index_i][index_j].parallelStream()
+				var penetrates = overlappingFaceIndexIntersections[index_i][index_j].stream()
 						.anyMatch(index_k -> {
 							if (index_i == index_k || index_j == index_k) {
 								return false;
