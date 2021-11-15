@@ -108,15 +108,15 @@ public class LayerOrderEnumerator {
 
 		watch.start();
 		var localLayerOrderMap = new ConcurrentHashMap<SubFace, Integer>();
-		subFaces.parallelStream().forEach(sub -> {
-			var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation);
+		subFaces.stream().forEach(sub -> {
+			var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, true);
 			localLayerOrderMap.put(sub, localLayerOrders == null ? -1 : localLayerOrders.size());
 		});
 		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
 		logger.debug("max #localLayerOrder {}",
 				localLayerOrderMap.values().stream().mapToInt(i -> i).max().getAsInt());
 		logger.debug("average #localLayerOrder {}",
-				localLayerOrderMap.values().stream().mapToInt(i -> i).average().getAsDouble());
+				localLayerOrderMap.values().stream().mapToInt(i -> i == -1 ? 1 : i).average().getAsDouble());
 		logger.debug("max #parentFace {}",
 				subFaces.stream().mapToInt(SubFace::getParentFaceCount).max().getAsInt());
 
@@ -270,7 +270,7 @@ public class LayerOrderEnumerator {
 
 		SubFace sub = subFaces.get(subFaceIndex);
 
-		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation);
+		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, false);
 
 		if (localLayerOrders == null) {
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1, overlapRelation,
