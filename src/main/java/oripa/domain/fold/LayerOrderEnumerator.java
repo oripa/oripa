@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -107,7 +106,7 @@ public class LayerOrderEnumerator {
 		estimate(faces, overlapRelation);
 
 		watch.start();
-		var localLayerOrderMap = new ConcurrentHashMap<SubFace, Integer>();
+		var localLayerOrderMap = new HashMap<SubFace, Integer>();
 		subFaces.stream().forEach(sub -> {
 			var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, true);
 			localLayerOrderMap.put(sub, localLayerOrders == null ? -1 : localLayerOrders.size());
