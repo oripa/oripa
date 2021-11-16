@@ -63,6 +63,8 @@ public class SubFace {
 	 *            all faces of inputted model.
 	 * @param overlapRelation
 	 *            overlap relation matrix.
+	 * @param parallel
+	 *            {@code true} if the algorithm should try parallelization.
 	 * @return a list of possible local layer orders. {@code null} if order is
 	 *         uniquely determined by overlap relation.
 	 */
