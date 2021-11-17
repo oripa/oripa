@@ -75,6 +75,19 @@ public class SubFace {
 		return solveLocalLayerOrders(modelFaces, overlapRelation, parallel, count);
 	}
 
+	/**
+	 * Counts all possible local layer orders. All parent faces should be added
+	 * to this subface before this method is called.
+	 *
+	 * @param modelFaces
+	 *            all faces of inputted model.
+	 * @param overlapRelation
+	 *            overlap relation matrix.
+	 * @param parallel
+	 *            {@code true} if the algorithm should try parallelization.
+	 * @return the number of possible local layer orders. {@code -1} if the
+	 *         order is unique and globally determined.
+	 */
 	public int countLocalLayerOrders(final List<OriFace> modelFaces,
 			final OverlapRelation overlapRelation, final boolean parallel) {
 		var count = createInitialCountForCountingOrders();
