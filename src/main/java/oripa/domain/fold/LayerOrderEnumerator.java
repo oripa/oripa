@@ -108,8 +108,8 @@ public class LayerOrderEnumerator {
 		watch.start();
 		var localLayerOrderMap = new HashMap<SubFace, Integer>();
 		subFaces.stream().forEach(sub -> {
-			var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, true);
-			localLayerOrderMap.put(sub, localLayerOrders == null ? -1 : localLayerOrders.size());
+			var localLayerOrderCount = sub.countLocalLayerOrders(faces, overlapRelation, true);
+			localLayerOrderMap.put(sub, localLayerOrderCount);
 		});
 		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
 		logger.debug("max #localLayerOrder {}",
