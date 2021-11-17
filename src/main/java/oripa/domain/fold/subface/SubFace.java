@@ -20,9 +20,11 @@ package oripa.domain.fold.subface;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
@@ -42,6 +44,8 @@ public class SubFace {
 	private final List<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	private final List<StackConditionOf3Faces> condition3s = new ArrayList<>();
 
+	private List<OriFace> modelFaces;
+
 	/**
 	 *
 	 * @param f
@@ -59,11 +63,15 @@ public class SubFace {
 	 *            all faces of inputted model.
 	 * @param overlapRelation
 	 *            overlap relation matrix.
+	 * @param parallel
+	 *            {@code true} if the algorithm should try parallelization.
 	 * @return a list of possible local layer orders. {@code null} if order is
 	 *         uniquely determined by overlap relation.
 	 */
 	public List<List<OriFace>> createLocalLayerOrders(final List<OriFace> modelFaces,
-			final OverlapRelation overlapRelation) {
+			final OverlapRelation overlapRelation, final boolean parallel) {
+
+		this.modelFaces = modelFaces;
 
 		// Exit if the order is already settled
 		if (isLocalLayerOrderDeterminedByGlobal(overlapRelation)) {
@@ -73,7 +81,7 @@ public class SubFace {
 		// A list of orders of faces where the faces include this subface. Each
 		// order is correct on this subface but it can be wrong on other
 		// subfaces.
-		var localLayerOrders = new ArrayList<List<OriFace>>();
+		var localLayerOrders = Collections.synchronizedList(new ArrayList<List<OriFace>>());
 		var localLayerOrder = new ArrayList<OriFace>();
 		var alreadyInLocalLayerOrder = new boolean[modelFaces.size()];
 		var indexOnOrdering = new HashMap<OriFace, Integer>();
@@ -116,15 +124,14 @@ public class SubFace {
 		}
 
 		// From the bottom
-		sort(modelFaces,
-				localLayerOrders,
+		sort(localLayerOrders,
 				localLayerOrder,
 				alreadyInLocalLayerOrder,
 				indexOnOrdering,
 				stackConditionsOf2Faces,
 				stackConditionsOf3Faces,
 				stackConditionsOf4Faces,
-				0);
+				0, parallel);
 
 		return localLayerOrders;
 	}
@@ -143,7 +150,7 @@ public class SubFace {
 		return true;
 	}
 
-	private void sort(final List<OriFace> modelFaces,
+	private void sort(
 			final List<List<OriFace>> localLayerOrders,
 			final List<OriFace> localLayerOrder,
 			final boolean[] alreadyInLocalLayerOrder,
@@ -151,7 +158,8 @@ public class SubFace {
 			final Map<OriFace, List<Integer>> stackConditionsOf2Faces,
 			final Map<OriFace, List<StackConditionOf3Faces>> stackConditionsOf3Faces,
 			final Map<OriFace, List<StackConditionOf4Faces>> stackConditionsOf4Faces,
-			final int index) {
+			final int index,
+			final boolean parallel) {
 
 		if (index == parentFaces.size()) {
 			var ans = new ArrayList<>(localLayerOrder);
@@ -159,45 +167,74 @@ public class SubFace {
 			return;
 		}
 
-		for (OriFace f : parentFaces) {
-			if (alreadyInLocalLayerOrder[f.getFaceID()]) {
-				continue;
-			}
+		var facesToBePut = parentFaces.stream()
+				.filter(f -> !alreadyInLocalLayerOrder[f.getFaceID()])
+				.collect(Collectors.toList());
+		var facesToBePutStream = facesToBePut.stream();
 
-			if (!satisfiesConditionOf2Faces(modelFaces, alreadyInLocalLayerOrder, stackConditionsOf2Faces, f)) {
-				continue;
-			}
-
-			if (!satisfiesConditionOf3Faces(modelFaces, alreadyInLocalLayerOrder, stackConditionsOf3Faces, f)) {
-				continue;
-			}
-
-			if (!satisfiesConditionOf4Faces(modelFaces, alreadyInLocalLayerOrder, indexOnOrdering,
-					stackConditionsOf4Faces, f)) {
-				continue;
-			}
-
-			localLayerOrder.set(index, f);
-			alreadyInLocalLayerOrder[f.getFaceID()] = true;
-			indexOnOrdering.put(f, index);
-
-			sort(modelFaces,
-					localLayerOrders,
-					localLayerOrder,
-					alreadyInLocalLayerOrder,
-					indexOnOrdering,
-					stackConditionsOf2Faces,
-					stackConditionsOf3Faces,
-					stackConditionsOf4Faces,
-					index + 1);
-
-			alreadyInLocalLayerOrder[localLayerOrder.get(index).getFaceID()] = false;
-			indexOnOrdering.put(localLayerOrder.get(index), -1);
-			localLayerOrder.set(index, null);
+		// Avoids overhead of insane parallelization.
+		// At most 8! = 40320 calls for each process.
+		final int PARALLELIZATION_LOWER_BOUND = 8;
+		boolean doParallel = parallel && facesToBePut.size() > PARALLELIZATION_LOWER_BOUND;
+		if (doParallel) {
+			facesToBePutStream = facesToBePutStream.parallel();
 		}
+
+		facesToBePutStream.forEach(f -> {
+			if (!satisfiesConditionOf2Faces(alreadyInLocalLayerOrder, stackConditionsOf2Faces, f)) {
+				return;
+			}
+
+			if (!satisfiesConditionOf3Faces(alreadyInLocalLayerOrder, stackConditionsOf3Faces, f)) {
+				return;
+			}
+
+			if (!satisfiesConditionOf4Faces(alreadyInLocalLayerOrder, indexOnOrdering,
+					stackConditionsOf4Faces, f)) {
+				return;
+			}
+
+			if (doParallel) {
+				var nextLocalLayerOrder = new ArrayList<OriFace>(localLayerOrder);
+				var nextAlreadyInLocalLayerOrder = alreadyInLocalLayerOrder.clone();
+				var nextIndexOnOrdering = new HashMap<OriFace, Integer>(indexOnOrdering);
+
+				nextLocalLayerOrder.set(index, f);
+				nextAlreadyInLocalLayerOrder[f.getFaceID()] = true;
+				nextIndexOnOrdering.put(f, index);
+
+				sort(localLayerOrders,
+						nextLocalLayerOrder,
+						nextAlreadyInLocalLayerOrder,
+						nextIndexOnOrdering,
+						stackConditionsOf2Faces,
+						stackConditionsOf3Faces,
+						stackConditionsOf4Faces,
+						index + 1,
+						parallel);
+			} else {
+				localLayerOrder.set(index, f);
+				alreadyInLocalLayerOrder[f.getFaceID()] = true;
+				indexOnOrdering.put(f, index);
+
+				sort(localLayerOrders,
+						localLayerOrder,
+						alreadyInLocalLayerOrder,
+						indexOnOrdering,
+						stackConditionsOf2Faces,
+						stackConditionsOf3Faces,
+						stackConditionsOf4Faces,
+						index + 1,
+						parallel);
+
+				alreadyInLocalLayerOrder[localLayerOrder.get(index).getFaceID()] = false;
+				indexOnOrdering.put(localLayerOrder.get(index), -1);
+				localLayerOrder.set(index, null);
+			}
+		});
 	}
 
-	private boolean satisfiesConditionOf2Faces(final List<OriFace> modelFaces,
+	private boolean satisfiesConditionOf2Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final Map<OriFace, List<Integer>> stackConditionsOf2Faces,
 			final OriFace f) {
@@ -205,7 +242,7 @@ public class SubFace {
 				.allMatch(i -> alreadyInLocalLayerOrder[i]);
 	}
 
-	private boolean satisfiesConditionOf3Faces(final List<OriFace> modelFaces,
+	private boolean satisfiesConditionOf3Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final Map<OriFace, List<StackConditionOf3Faces>> stackConditionsOf3Faces,
 			final OriFace face) {
@@ -217,7 +254,7 @@ public class SubFace {
 		return true;
 	}
 
-	private boolean satisfiesConditionOf4Faces(final List<OriFace> modelFaces,
+	private boolean satisfiesConditionOf4Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final Map<OriFace, Integer> indexOnOrdering,
 			final Map<OriFace, List<StackConditionOf4Faces>> stackConditionsOf4Faces,

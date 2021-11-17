@@ -49,10 +49,12 @@ public class DialogWhileFolding extends JDialog {
 		setLayout(new GridBagLayout());
 		add(new JLabel(resources.getString(
 				ResourceKey.INFO,
-				StringID.Information.NOW_FOLDING_TITLE_ID)));
+				StringID.Information.NOW_FOLDING_ID)));
 
 		setSize(WIDTH, HEIGHT);
 		setLocationRelativeTo(parent);
+
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		addWindowListener(new WindowAdapter() {
 			@Override

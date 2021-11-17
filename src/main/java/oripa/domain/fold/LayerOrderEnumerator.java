@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -107,12 +106,18 @@ public class LayerOrderEnumerator {
 		estimate(faces, overlapRelation);
 
 		watch.start();
-		var localLayerOrderMap = new ConcurrentHashMap<SubFace, Integer>();
-		subFaces.parallelStream().forEach(sub -> {
-			var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation);
+		var localLayerOrderMap = new HashMap<SubFace, Integer>();
+		subFaces.stream().forEach(sub -> {
+			var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, true);
 			localLayerOrderMap.put(sub, localLayerOrders == null ? -1 : localLayerOrders.size());
 		});
 		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
+		logger.debug("max #localLayerOrder {}",
+				localLayerOrderMap.values().stream().mapToInt(i -> i).max().getAsInt());
+		logger.debug("average #localLayerOrder {}",
+				localLayerOrderMap.values().stream().mapToInt(i -> i == -1 ? 1 : i).average().getAsDouble());
+		logger.debug("max #parentFace {}",
+				subFaces.stream().mapToInt(SubFace::getParentFaceCount).max().getAsInt());
 
 		// heuristic: fewer local layer orders mean the search on the subface
 		// has more possibility to be correct. Such confident search node should
@@ -264,7 +269,7 @@ public class LayerOrderEnumerator {
 
 		SubFace sub = subFaces.get(subFaceIndex);
 
-		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation);
+		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, false);
 
 		if (localLayerOrders == null) {
 			findAnswer(faces, overlapRelationList, subFaceIndex + 1, overlapRelation,
@@ -346,7 +351,7 @@ public class LayerOrderEnumerator {
 					continue;
 				}
 
-				var penetrates = overlappingFaceIndexIntersections[index_i][index_j].parallelStream()
+				var penetrates = overlappingFaceIndexIntersections[index_i][index_j].stream()
 						.anyMatch(index_k -> {
 							if (index_i == index_k || index_j == index_k) {
 								return false;

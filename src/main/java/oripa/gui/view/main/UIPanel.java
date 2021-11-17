@@ -941,6 +941,7 @@ public class UIPanel extends JPanel {
 			@Override
 			protected void done() {
 				dialogWhileFolding.setVisible(false);
+				dialogWhileFolding.dispose();
 
 				// this action moves the main window to front.
 				buildButton.setEnabled(true);
@@ -960,7 +961,8 @@ public class UIPanel extends JPanel {
 			openedWindows.forEach(w -> w.setVisible(true));
 
 		} catch (CancellationException | InterruptedException | ExecutionException e) {
-			logger.info("folding failed or cancelled.");
+			logger.info("folding failed or cancelled.", e);
+			Dialogs.showErrorDialog(this, resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
 		}
 	}
 
