@@ -110,7 +110,7 @@ public class SubFace {
 		return count.getPlain() == -1;
 	}
 
-	public List<List<OriFace>> solveLocalLayerOrders(final List<OriFace> modelFaces,
+	private List<List<OriFace>> solveLocalLayerOrders(final List<OriFace> modelFaces,
 			final OverlapRelation overlapRelation,
 			final boolean parallel,
 			final AtomicInteger count) {
