@@ -86,7 +86,7 @@ public class SubFace {
 	 * @param parallel
 	 *            {@code true} if the algorithm should try parallelization.
 	 * @return the number of possible local layer orders. {@code -1} if the
-	 *         order is unique and globally determined.
+	 *         order is uniquely determined by overlap relation.
 	 */
 	public int countLocalLayerOrders(final List<OriFace> modelFaces,
 			final OverlapRelation overlapRelation, final boolean parallel) {
