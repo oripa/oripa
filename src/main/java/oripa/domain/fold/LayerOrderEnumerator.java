@@ -106,23 +106,23 @@ public class LayerOrderEnumerator {
 		estimate(faces, overlapRelation);
 
 		watch.start();
-		var localLayerOrderMap = new HashMap<SubFace, Integer>();
+		var localLayerOrderCountMap = new HashMap<SubFace, Integer>();
 		subFaces.stream().forEach(sub -> {
 			var localLayerOrderCount = sub.countLocalLayerOrders(faces, overlapRelation, true);
-			localLayerOrderMap.put(sub, localLayerOrderCount);
+			localLayerOrderCountMap.put(sub, localLayerOrderCount);
 		});
 		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
 		logger.debug("max #localLayerOrder {}",
-				localLayerOrderMap.values().stream().mapToInt(i -> i).max().getAsInt());
+				localLayerOrderCountMap.values().stream().mapToInt(i -> i).max().getAsInt());
 		logger.debug("average #localLayerOrder {}",
-				localLayerOrderMap.values().stream().mapToInt(i -> i == -1 ? 1 : i).average().getAsDouble());
+				localLayerOrderCountMap.values().stream().mapToInt(i -> i == -1 ? 1 : i).average().getAsDouble());
 		logger.debug("max #parentFace {}",
 				subFaces.stream().mapToInt(SubFace::getParentFaceCount).max().getAsInt());
 
 		// heuristic: fewer local layer orders mean the search on the subface
 		// has more possibility to be correct. Such confident search node should
 		// be consumed at early stage.
-		subFaces = localLayerOrderMap.entrySet().stream()
+		subFaces = localLayerOrderCountMap.entrySet().stream()
 				.sorted(Comparator.comparing(Entry::getValue))
 				.map(Entry::getKey)
 				.collect(Collectors.toList());
