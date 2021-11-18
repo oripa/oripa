@@ -21,6 +21,7 @@ package oripa.domain.fold.subface;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,8 +168,18 @@ public class SubFace {
 			indexOnOrdering.put(f, -1);
 		}
 
+		// Heuristic: a face with many stack conditions of 2 faces should be at
+		// some place with a large index on local layer order.
+		// Trying such face in early stage reduces failures at deep positions of
+		// the search tree.
+		// (earlier failure is better.)
+		var candidateFaces = parentFaces.stream()
+				.sorted(Comparator.comparing(f -> stackConditionsOf2Faces.get(f).size(), Comparator.reverseOrder()))
+				.collect(Collectors.toList());
+
 		// From the bottom
-		sort(localLayerOrders,
+		sort(candidateFaces,
+				localLayerOrders,
 				localLayerOrder,
 				count,
 				alreadyInLocalLayerOrder,
@@ -197,6 +208,7 @@ public class SubFace {
 	}
 
 	private void sort(
+			final List<OriFace> candidateFaces,
 			final List<List<OriFace>> localLayerOrders,
 			final List<OriFace> localLayerOrder,
 			final AtomicInteger localLayerOrderCount,
@@ -218,7 +230,7 @@ public class SubFace {
 			return;
 		}
 
-		var facesToBePut = parentFaces.stream()
+		var facesToBePut = candidateFaces.stream()
 				.filter(f -> !alreadyInLocalLayerOrder[f.getFaceID()])
 				.collect(Collectors.toList());
 		var facesToBePutStream = facesToBePut.stream();
@@ -254,7 +266,8 @@ public class SubFace {
 				nextAlreadyInLocalLayerOrder[f.getFaceID()] = true;
 				nextIndexOnOrdering.put(f, index);
 
-				sort(localLayerOrders,
+				sort(facesToBePut,
+						localLayerOrders,
 						nextLocalLayerOrder,
 						localLayerOrderCount,
 						nextAlreadyInLocalLayerOrder,
@@ -269,7 +282,8 @@ public class SubFace {
 				alreadyInLocalLayerOrder[f.getFaceID()] = true;
 				indexOnOrdering.put(f, index);
 
-				sort(localLayerOrders,
+				sort(facesToBePut,
+						localLayerOrders,
 						localLayerOrder,
 						localLayerOrderCount,
 						alreadyInLocalLayerOrder,
