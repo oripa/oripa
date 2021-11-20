@@ -123,9 +123,11 @@ class StackConditionAggregate {
 	}
 
 	/**
+	 * Test whether the given face can be put at the last position of the
+	 * ordering.
 	 *
 	 * @param alreadyInLocalLayerOrder
-	 *            a boolean array where [i] is whether a face with index i has
+	 *            a boolean array where [i] is whether a face with face ID i has
 	 *            been used in local layer order.
 	 * @param f
 	 *            a face to be tested.
@@ -139,9 +141,11 @@ class StackConditionAggregate {
 	}
 
 	/**
+	 * Test whether the given face can be put at the last position of the
+	 * ordering.
 	 *
 	 * @param alreadyInLocalLayerOrder
-	 *            a boolean array where [i] is whether a face with index i has
+	 *            a boolean array where [i] is whether a face with face ID i has
 	 *            been used in local layer order.
 	 * @param f
 	 *            a face to be tested.
@@ -159,10 +163,13 @@ class StackConditionAggregate {
 	}
 
 	/**
+	 * Test whether the given face can be put at the last position of the
+	 * ordering.
+	 *
 	 * @param modelFaces
 	 *            all faces of origami model.
 	 * @param alreadyInLocalLayerOrder
-	 *            a boolean array where [i] is whether a face with index i has
+	 *            a boolean array where [i] is whether a face with face ID i has
 	 *            been used in local layer order.
 	 * @param indexOnOrdering
 	 *            a mapping face to index on local layer order.
