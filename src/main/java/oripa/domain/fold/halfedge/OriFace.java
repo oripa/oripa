@@ -68,8 +68,6 @@ public class OriFace {
 	 */
 	private int faceID = 0;
 
-	private final List<TriangleFace> triangles = new ArrayList<>();
-
 	public OriFace() {
 		int r = (int) (Math.random() * 255);
 		int g = (int) (Math.random() * 255);
@@ -191,15 +189,9 @@ public class OriFace {
 		this.faceID = faceID;
 	}
 
-	/**
-	 * @return triangles
-	 */
-	public Stream<TriangleFace> triangleStream() {
-		return triangles.stream();
-	}
-
-	public void triangulateAndSetColor(final boolean bUseColor, final boolean bFlip, final double paperSize) {
-		triangles.clear();
+	public List<TriangleFace> triangulateAndSetColor(final boolean bUseColor, final boolean bFlip,
+			final double paperSize) {
+		var triangles = new ArrayList<TriangleFace>();
 
 		var domain = new RectangleDomain();
 		for (OriHalfedge he : halfedges) {
@@ -282,6 +274,8 @@ public class OriFace {
 							/ paperSize + 0.5);
 			triangles.add(tri);
 		}
+
+		return triangles;
 	}
 
 	/**
