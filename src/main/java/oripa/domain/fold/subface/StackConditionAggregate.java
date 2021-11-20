@@ -33,9 +33,9 @@ import oripa.domain.fold.stackcond.StackConditionOf4Faces;
  *
  */
 class StackConditionAggregate {
-	private final HashMap<OriFace, List<Integer>> stackConditionsOf2Faces = new HashMap<OriFace, List<Integer>>();
-	private final HashMap<OriFace, List<StackConditionOf3Faces>> stackConditionsOf3Faces = new HashMap<OriFace, List<StackConditionOf3Faces>>();
-	private final HashMap<OriFace, List<StackConditionOf4Faces>> stackConditionsOf4Faces = new HashMap<OriFace, List<StackConditionOf4Faces>>();
+	private final HashMap<OriFace, List<Integer>> stackConditionsOf2Faces = new HashMap<>();
+	private final HashMap<OriFace, List<StackConditionOf3Faces>> stackConditionsOf3Faces = new HashMap<>();
+	private final HashMap<OriFace, List<StackConditionOf4Faces>> stackConditionsOf4Faces = new HashMap<>();
 
 	void prepareConditionsOf2Faces(
 			final List<OriFace> parentFaces,
