@@ -44,6 +44,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
@@ -338,7 +339,7 @@ public class FoldedModelScreen extends JPanel
 		var paperDomain = new RectangleDomain();
 		paperDomain.enlarge(faces.stream()
 				.flatMap(OriFace::halfedgeStream)
-				.map(he -> he.getPositionBeforeFolding())
+				.map(OriHalfedge::getPositionBeforeFolding)
 				.collect(Collectors.toList()));
 
 		for (OriFace face : faces) {
