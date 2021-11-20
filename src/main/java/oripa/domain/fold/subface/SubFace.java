@@ -218,15 +218,15 @@ public class SubFace {
 		}
 
 		facesToBePutStream.forEach(f -> {
-			if (!stackConditionAggregate.satisfiesConditionOf2Faces(alreadyInLocalLayerOrder, f)) {
+			if (!stackConditionAggregate.satisfiesConditionsOf2Faces(alreadyInLocalLayerOrder, f)) {
 				return;
 			}
 
-			if (!stackConditionAggregate.satisfiesConditionOf3Faces(alreadyInLocalLayerOrder, f)) {
+			if (!stackConditionAggregate.satisfiesConditionsOf3Faces(alreadyInLocalLayerOrder, f)) {
 				return;
 			}
 
-			if (!stackConditionAggregate.satisfiesConditionOf4Faces(modelFaces, alreadyInLocalLayerOrder,
+			if (!stackConditionAggregate.satisfiesConditionsOf4Faces(modelFaces, alreadyInLocalLayerOrder,
 					indexOnOrdering, f)) {
 				return;
 			}

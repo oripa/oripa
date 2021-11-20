@@ -133,7 +133,7 @@ class StackConditionAggregate {
 	 *            a face to be tested.
 	 * @return {@code true} if {@code f} satisfies the condition of 2 faces.
 	 */
-	boolean satisfiesConditionOf2Faces(
+	boolean satisfiesConditionsOf2Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final OriFace f) {
 		return stackConditionsOf2Faces.get(f).stream()
@@ -151,7 +151,7 @@ class StackConditionAggregate {
 	 *            a face to be tested.
 	 * @return {@code true} if {@code f} satisfies the condition of 3 faces.
 	 */
-	boolean satisfiesConditionOf3Faces(
+	boolean satisfiesConditionsOf3Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final OriFace face) {
 		if (stackConditionsOf3Faces.get(face).stream().anyMatch(cond -> alreadyInLocalLayerOrder[cond.lower]
@@ -177,7 +177,7 @@ class StackConditionAggregate {
 	 *            a face to be tested.
 	 * @return {@code true} if {@code f} satisfies the condition of 2 faces.
 	 */
-	boolean satisfiesConditionOf4Faces(
+	boolean satisfiesConditionsOf4Faces(
 			final List<OriFace> modelFaces,
 			final boolean[] alreadyInLocalLayerOrder,
 			final Map<OriFace, Integer> indexOnOrdering,
