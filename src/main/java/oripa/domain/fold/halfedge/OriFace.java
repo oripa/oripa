@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
@@ -192,7 +191,29 @@ public class OriFace {
 	public List<TriangleFace> triangulateAndSetColor(final boolean bUseColor, final boolean bFlip,
 			final double paperSize) {
 		var triangles = new ArrayList<TriangleFace>();
+		if (bUseColor) {
+			setVertexColor(List.of(0.7, 0.7, 1.0), List.of(1.0, 0.8, 0.7), bFlip);
+		} else {
+			var white = List.of(1.0, 1.0, 0.95);
+			setVertexColor(white, white, bFlip);
+		}
 
+		int heNum = halfedges.size();
+		OriHalfedge startHe = halfedges.get(0);
+		for (int i = 1; i < heNum - 1; i++) {
+			TriangleFace tri = new TriangleFace(this, List.of(0, i, i + 1));
+			tri.v[0].p = new Vector2d(startHe.getPosition());
+			tri.v[1].p = new Vector2d(halfedges.get(i).getPosition());
+			tri.v[2].p = new Vector2d(halfedges.get(i + 1).getPosition());
+
+			triangles.add(tri);
+		}
+
+		return triangles;
+	}
+
+	public void setVertexColor(final List<Double> frontColorFactor, final List<Double> backColorFactor,
+			final boolean flip) {
 		var domain = new RectangleDomain();
 		for (OriHalfedge he : halfedges) {
 			domain.enlarge(he.getPosition());
@@ -230,52 +251,18 @@ public class OriFace {
 
 			v = Math.min(1, v);
 
-			if (bUseColor) {
-				if (true) {
-					if (faceFront ^ bFlip) {
-						he.getVertexColor().set(v * 0.7, v * 0.7, v);
-					} else {
-						he.getVertexColor().set(v, v * 0.8, v * 0.7);
-					}
-//					} else {
-//						if (faceFront ^ bFlip) {
-//							he.vertexColor.set(v, v * 0.6, v * 0.6);
-//						} else {
-//							he.vertexColor.set(v, v, v * 0.95);
-//						}
-//
-				}
+			if (faceFront ^ flip) {
+				he.getVertexColor().set(
+						v * frontColorFactor.get(0),
+						v * frontColorFactor.get(1),
+						v * frontColorFactor.get(2));
 			} else {
-				he.getVertexColor().set(v, v, v * 0.95);
+				he.getVertexColor().set(
+						v * backColorFactor.get(0),
+						v * backColorFactor.get(1),
+						v * backColorFactor.get(2));
 			}
 		}
-
-		int heNum = halfedges.size();
-		OriHalfedge startHe = halfedges.get(0);
-		for (int i = 1; i < heNum - 1; i++) {
-			TriangleFace tri = new TriangleFace(this);
-			tri.v[0].p = new Vector2d(startHe.getPosition());
-			tri.v[1].p = new Vector2d(halfedges.get(i).getPosition());
-			tri.v[2].p = new Vector2d(halfedges.get(i + 1).getPosition());
-
-			tri.v[0].color = new Vector3d(startHe.getVertexColor());
-			tri.v[1].color = new Vector3d(halfedges.get(i).getVertexColor());
-			tri.v[2].color = new Vector3d(halfedges.get(i + 1).getVertexColor());
-
-			tri.v[0].uv = new Vector2d(startHe.getPositionBeforeFolding().x / paperSize
-					+ 0.5, startHe.getPositionBeforeFolding().y / paperSize + 0.5);
-			tri.v[1].uv = new Vector2d(halfedges.get(i).getPositionBeforeFolding().x
-					/ paperSize + 0.5,
-					halfedges.get(i).getPositionBeforeFolding().y
-							/ paperSize + 0.5);
-			tri.v[2].uv = new Vector2d(halfedges.get(i + 1).getPositionBeforeFolding().x
-					/ paperSize + 0.5,
-					halfedges.get(i + 1).getPositionBeforeFolding().y
-							/ paperSize + 0.5);
-			triangles.add(tri);
-		}
-
-		return triangles;
 	}
 
 	/**

@@ -340,6 +340,8 @@ public class FoldedModelScreen extends JPanel
 			var triangles = face.triangulateAndSetColor(useColor, isFaceOrderFlipped(),
 					origamiModel.getPaperSize());
 
+			triangles.forEach(triangle -> triangle.prepareColor(origamiModel.getPaperSize()));
+
 			triangles.stream().forEach(tri -> {
 				for (int i = 0; i < 3; i++) {
 

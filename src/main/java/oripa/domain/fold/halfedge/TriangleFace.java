@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -18,16 +18,39 @@
 
 package oripa.domain.fold.halfedge;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector3d;
+
 public class TriangleFace {
 
-    public TriangleVertex[] v;
-    public OriFace face;
+	public TriangleVertex[] v;
+	public OriFace face;
 
-    public TriangleFace(OriFace f) {
-        face = f;
-        v = new TriangleVertex[3];
-        for (int i = 0; i < 3; i++) {
-            v[i] = new TriangleVertex();
-        }
-    }
+	private final List<Integer> halfEdgeIndices;
+
+	public TriangleFace(final OriFace f, final List<Integer> halfEdgeIndices) {
+		face = f;
+		v = new TriangleVertex[3];
+		for (int i = 0; i < 3; i++) {
+			v[i] = new TriangleVertex();
+		}
+
+		if (halfEdgeIndices.size() != 3) {
+			throw new IllegalArgumentException();
+		}
+
+		this.halfEdgeIndices = new ArrayList<>(halfEdgeIndices);
+	}
+
+	public void prepareColor(final double paperSize) {
+		for (int i = 0; i < halfEdgeIndices.size(); i++) {
+			var he = face.getHalfedge(halfEdgeIndices.get(i));
+			v[i].color = new Vector3d(he.getVertexColor());
+			v[i].uv = new Vector2d(he.getPositionBeforeFolding().x / paperSize
+					+ 0.5, he.getPositionBeforeFolding().y / paperSize + 0.5);
+		}
+	}
 }
