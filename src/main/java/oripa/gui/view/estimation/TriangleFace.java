@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.domain.fold.halfedge;
+package oripa.gui.view.estimation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,8 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
 
 public class TriangleFace {

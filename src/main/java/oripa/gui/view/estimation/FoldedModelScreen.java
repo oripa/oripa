@@ -45,8 +45,6 @@ import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.halfedge.TriangleFace;
-import oripa.domain.fold.halfedge.TriangleVertex;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.util.MouseUtility;
@@ -344,8 +342,8 @@ public class FoldedModelScreen extends JPanel
 						.collect(Collectors.toList())));
 
 		for (OriFace face : faces) {
-
-			var triangles = face.triangulate(useColor, isFaceOrderFlipped());
+			var triangleFactory = new TriangleFaceFactory();
+			var triangles = triangleFactory.create(face);
 			triangles.forEach(triangle -> triangle.initializePositions());
 
 			if (useColor) {

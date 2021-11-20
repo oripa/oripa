@@ -188,18 +188,6 @@ public class OriFace {
 		this.faceID = faceID;
 	}
 
-	public List<TriangleFace> triangulate(final boolean bUseColor, final boolean bFlip) {
-		var triangles = new ArrayList<TriangleFace>();
-
-		int heNum = halfedges.size();
-		for (int i = 1; i < heNum - 1; i++) {
-			TriangleFace tri = new TriangleFace(this, List.of(0, i, i + 1));
-			triangles.add(tri);
-		}
-
-		return triangles;
-	}
-
 	public void setVertexColor(final List<Double> frontColorFactor, final List<Double> backColorFactor,
 			final boolean flip) {
 		var domain = new RectangleDomain();
