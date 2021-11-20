@@ -29,7 +29,7 @@ import oripa.geom.RectangleDomain;
 public class TriangleFace {
 
 	public TriangleVertex[] v;
-	public OriFace face;
+	private final OriFace face;
 
 	private final List<Integer> halfEdgeIndices;
 
@@ -73,5 +73,9 @@ public class TriangleFace {
 
 			v[i].uv = new Vector2d(x + 0.5, y + 0.5);
 		}
+	}
+
+	public boolean isFaceFront() {
+		return face.isFaceFront();
 	}
 }
