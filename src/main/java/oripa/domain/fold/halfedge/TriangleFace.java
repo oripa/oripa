@@ -45,6 +45,22 @@ public class TriangleFace {
 		this.halfEdgeIndices = new ArrayList<>(halfEdgeIndices);
 	}
 
+	public void initializePositions() {
+		for (int i = 0; i < halfEdgeIndices.size(); i++) {
+			var he = face.getHalfedge(halfEdgeIndices.get(i));
+			v[i].p = new Vector2d(he.getPosition());
+		}
+	}
+
+	public void setPosition(final int index, final double x, final double y) {
+		v[index].p.x = x;
+		v[index].p.y = y;
+	}
+
+	public Vector2d getPosition(final int index) {
+		return v[index].p;
+	}
+
 	public void prepareColor(final double paperSize) {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
 			var he = face.getHalfedge(halfEdgeIndices.get(i));

@@ -188,15 +188,8 @@ public class OriFace {
 		this.faceID = faceID;
 	}
 
-	public List<TriangleFace> triangulateAndSetColor(final boolean bUseColor, final boolean bFlip,
-			final double paperSize) {
+	public List<TriangleFace> triangulate(final boolean bUseColor, final boolean bFlip) {
 		var triangles = new ArrayList<TriangleFace>();
-		if (bUseColor) {
-			setVertexColor(List.of(0.7, 0.7, 1.0), List.of(1.0, 0.8, 0.7), bFlip);
-		} else {
-			var white = List.of(1.0, 1.0, 0.95);
-			setVertexColor(white, white, bFlip);
-		}
 
 		int heNum = halfedges.size();
 		OriHalfedge startHe = halfedges.get(0);
