@@ -29,6 +29,10 @@ import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 
 /**
+ * Manages stack conditions for local layer ordering. The instance is to be
+ * shared among processes running in parallel for ordering with a certain
+ * overlap relation.
+ *
  * @author OUCHI Koji
  *
  */
@@ -37,6 +41,15 @@ class StackConditionAggregate {
 	private final HashMap<OriFace, List<StackConditionOf3Faces>> stackConditionsOf3Faces = new HashMap<>();
 	private final HashMap<OriFace, List<StackConditionOf4Faces>> stackConditionsOf4Faces = new HashMap<>();
 
+	/**
+	 * Creates stack conditions of 2 faces for a subface and stores in
+	 * conditions in a style for efficient computation.
+	 *
+	 * @param parentFaces
+	 *            faces containing the subface.
+	 * @param overlapRelation
+	 *            overlap relation matrix.
+	 */
 	void prepareConditionsOf2Faces(
 			final List<OriFace> parentFaces,
 			final OverlapRelation overlapRelation) {
@@ -54,6 +67,17 @@ class StackConditionAggregate {
 
 	}
 
+	/**
+	 * Stores given stack conditions of 3 faces for a subface in a style for
+	 * efficient computation.
+	 *
+	 * @param parentFaces
+	 *            faces containing the subface.
+	 * @param overlapRelation
+	 *            overlap relation matrix.
+	 * @param condition3s
+	 *            stack conditions of 3 faces.
+	 */
 	void prepareConditionsOf3Faces(
 			final List<OriFace> parentFaces,
 			final OverlapRelation overlapRelation,
@@ -71,6 +95,17 @@ class StackConditionAggregate {
 
 	}
 
+	/**
+	 * Stores given stack conditions of 4 faces for a subface in a style for
+	 * efficient computation.
+	 *
+	 * @param parentFaces
+	 *            faces containing the subface.
+	 * @param overlapRelation
+	 *            overlap relation matrix.
+	 * @param condition3s
+	 *            stack conditions of 4 faces.
+	 */
 	void prepareConditionsOf4Faces(
 			final List<OriFace> parentFaces,
 			final OverlapRelation overlapRelation,
@@ -87,6 +122,15 @@ class StackConditionAggregate {
 		}
 	}
 
+	/**
+	 *
+	 * @param alreadyInLocalLayerOrder
+	 *            a boolean array where [i] is whether a face with index i has
+	 *            been used in local layer order.
+	 * @param f
+	 *            a face to be tested.
+	 * @return {@code true} if {@code f} satisfies the condition of 2 faces.
+	 */
 	boolean satisfiesConditionOf2Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final OriFace f) {
@@ -94,6 +138,15 @@ class StackConditionAggregate {
 				.allMatch(i -> alreadyInLocalLayerOrder[i]);
 	}
 
+	/**
+	 *
+	 * @param alreadyInLocalLayerOrder
+	 *            a boolean array where [i] is whether a face with index i has
+	 *            been used in local layer order.
+	 * @param f
+	 *            a face to be tested.
+	 * @return {@code true} if {@code f} satisfies the condition of 3 faces.
+	 */
 	boolean satisfiesConditionOf3Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final OriFace face) {
@@ -105,6 +158,18 @@ class StackConditionAggregate {
 		return true;
 	}
 
+	/**
+	 * @param modelFaces
+	 *            all faces of origami model.
+	 * @param alreadyInLocalLayerOrder
+	 *            a boolean array where [i] is whether a face with index i has
+	 *            been used in local layer order.
+	 * @param indexOnOrdering
+	 *            a mapping face to index on local layer order.
+	 * @param f
+	 *            a face to be tested.
+	 * @return {@code true} if {@code f} satisfies the condition of 2 faces.
+	 */
 	boolean satisfiesConditionOf4Faces(
 			final List<OriFace> modelFaces,
 			final boolean[] alreadyInLocalLayerOrder,
@@ -139,6 +204,12 @@ class StackConditionAggregate {
 		return true;
 	}
 
+	/**
+	 *
+	 * @param face
+	 *            target face.
+	 * @return the number of conditions of 2 faces for given face.
+	 */
 	int getCountOfConditionsOf2Faces(final OriFace face) {
 		return stackConditionsOf2Faces.get(face).size();
 	}
