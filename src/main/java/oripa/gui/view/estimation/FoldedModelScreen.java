@@ -336,10 +336,10 @@ public class FoldedModelScreen extends JPanel
 		List<OriFace> faces = origamiModel.getFaces();
 
 		var paperDomain = new RectangleDomain();
-		faces.forEach(face -> paperDomain.enlarge(
-				face.halfedgeStream()
-						.map(he -> he.getPositionBeforeFolding())
-						.collect(Collectors.toList())));
+		paperDomain.enlarge(faces.stream()
+				.flatMap(OriFace::halfedgeStream)
+				.map(he -> he.getPositionBeforeFolding())
+				.collect(Collectors.toList()));
 
 		for (OriFace face : faces) {
 			var triangleFactory = new TriangleFaceFactory();
