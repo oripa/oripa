@@ -35,6 +35,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -335,9 +336,17 @@ public class FoldedModelScreen extends JPanel
 		final double angle = rotAngle * Math.PI / 180;
 
 		List<OriFace> faces = origamiModel.getFaces();
+
+		var paperDomain = new RectangleDomain();
+		faces.forEach(face -> paperDomain.enlarge(
+				face.halfedgeStream()
+						.map(he -> he.getPositionBeforeFolding())
+						.collect(Collectors.toList())));
+
 		for (OriFace face : faces) {
 
 			var triangles = face.triangulate(useColor, isFaceOrderFlipped());
+			triangles.forEach(triangle -> triangle.initializePositions());
 
 			if (useColor) {
 				var frontColorFactor = List.of(0.7, 0.7, 1.0);
@@ -348,7 +357,7 @@ public class FoldedModelScreen extends JPanel
 				face.setVertexColor(white, white, isFaceOrderFlipped());
 			}
 
-			triangles.forEach(triangle -> triangle.prepareColor(origamiModel.getPaperSize()));
+			triangles.forEach(triangle -> triangle.prepareColor(paperDomain));
 
 			triangles.stream().forEach(tri -> {
 				for (int i = 0; i < 3; i++) {

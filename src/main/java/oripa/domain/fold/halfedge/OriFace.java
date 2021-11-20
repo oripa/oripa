@@ -192,13 +192,8 @@ public class OriFace {
 		var triangles = new ArrayList<TriangleFace>();
 
 		int heNum = halfedges.size();
-		OriHalfedge startHe = halfedges.get(0);
 		for (int i = 1; i < heNum - 1; i++) {
 			TriangleFace tri = new TriangleFace(this, List.of(0, i, i + 1));
-			tri.v[0].p = new Vector2d(startHe.getPosition());
-			tri.v[1].p = new Vector2d(halfedges.get(i).getPosition());
-			tri.v[2].p = new Vector2d(halfedges.get(i + 1).getPosition());
-
 			triangles.add(tri);
 		}
 

@@ -24,6 +24,8 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import oripa.geom.RectangleDomain;
+
 public class TriangleFace {
 
 	public TriangleVertex[] v;
@@ -61,12 +63,15 @@ public class TriangleFace {
 		return v[index].p;
 	}
 
-	public void prepareColor(final double paperSize) {
+	public void prepareColor(final RectangleDomain paperDomain) {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
 			var he = face.getHalfedge(halfEdgeIndices.get(i));
 			v[i].color = new Vector3d(he.getVertexColor());
-			v[i].uv = new Vector2d(he.getPositionBeforeFolding().x / paperSize
-					+ 0.5, he.getPositionBeforeFolding().y / paperSize + 0.5);
+
+			double x = (he.getPositionBeforeFolding().x - paperDomain.getCenterX()) / paperDomain.getWidth();
+			double y = (he.getPositionBeforeFolding().y - paperDomain.getCenterY()) / paperDomain.getHeight();
+
+			v[i].uv = new Vector2d(x + 0.5, y + 0.5);
 		}
 	}
 }
