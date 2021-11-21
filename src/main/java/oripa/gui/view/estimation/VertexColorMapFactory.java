@@ -34,7 +34,23 @@ import oripa.value.OriLine;
  *
  */
 public class VertexColorMapFactory {
-	public Map<OriHalfedge, Vector3d> createVertexColors(final OriFace face, final List<Double> frontColorFactor,
+	/**
+	 *
+	 * @param face
+	 *            a face to be colored
+	 * @param frontColorFactor
+	 *            front-side color normalized as the values are 0.0 ~ 1.0 for x,
+	 *            y, z. x is for red, y is for green, and z is for blue.
+	 * @param backColorFactor
+	 *            back-side color normalized as the values are 0.0 ~ 1.0 for x,
+	 *            y, z. x is for red, y is for green, and z is for blue.
+	 * @param flip
+	 *            {@code true} if the model is flipped.
+	 * @return a mapping halfedges of the given face to normalized colors.
+	 */
+	public Map<OriHalfedge, Vector3d> createVertexColors(
+			final OriFace face,
+			final List<Double> frontColorFactor,
 			final List<Double> backColorFactor,
 			final boolean flip) {
 		var domain = new RectangleDomain();

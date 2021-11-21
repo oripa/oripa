@@ -139,7 +139,6 @@ public class FoldedModelScreen extends JPanel
 				textureImage = null;
 			}
 		}
-
 	}
 
 	private void resetViewMatrix() {
@@ -351,7 +350,6 @@ public class FoldedModelScreen extends JPanel
 		System.out.println("render time = " + (time1 - time0) + "ms");
 
 		renderImage = createImage(new MemoryImageSource(BUFFERW, BUFFERH, pbuf, 0, BUFFERW));
-
 	}
 
 	private void drawFace(final OriFace face) {
@@ -380,7 +378,7 @@ public class FoldedModelScreen extends JPanel
 				isFaceOrderFlipped());
 
 		var triangleFactory = new TriangleFaceFactory();
-		var triangles = triangleFactory.create(face);
+		var triangles = triangleFactory.createAll(face);
 		triangles.forEach(triangle -> triangle.prepareColor(colorMap, paperDomain));
 
 		triangles.stream().forEach(tri -> {
@@ -396,7 +394,6 @@ public class FoldedModelScreen extends JPanel
 			}
 			drawTriangle(tri, face.getFaceID());
 		});
-
 	}
 
 	private List<Double> createColorFactor(final Color color) {

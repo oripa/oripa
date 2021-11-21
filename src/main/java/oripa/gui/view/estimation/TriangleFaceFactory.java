@@ -28,7 +28,7 @@ import oripa.domain.fold.halfedge.OriFace;
  *
  */
 public class TriangleFaceFactory {
-	public List<TriangleFace> create(final OriFace face) {
+	public List<TriangleFace> createAll(final OriFace face) {
 		var triangles = new ArrayList<TriangleFace>();
 
 		int heNum = face.halfedgeCount();
