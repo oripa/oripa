@@ -184,14 +184,14 @@ public class EstimationResultUI extends JPanel {
 				frontColorRedSpinner,
 				frontColorGreenSpinner,
 				frontColorBlueSpinner,
-				new Color((int) (255 * 0.7), (int) (255 * 0.7), 255),
+				DefaultColors.FRONT,
 				"Front"), gbBuilder.getNextField());
 
 		colorPanel.add(createColorRGBPanel(
 				backColorRedSpinner,
 				backColorGreenSpinner,
 				backColorBlueSpinner,
-				new Color((int) (255 * 1.0), (int) (255 * 0.8), (int) (255 * 0.7)),
+				DefaultColors.BACK,
 				"Back"), gbBuilder.getNextField());
 
 		return colorPanel;
@@ -213,8 +213,16 @@ public class EstimationResultUI extends JPanel {
 		@Override
 		public void stateChanged(final ChangeEvent e) {
 			pallete.setBackground(
-					new Color((Integer) red.getValue(), (Integer) green.getValue(), (Integer) blue.getValue()));
+					createColor(red, green, blue));
+			screen.setColors(
+					createColor(frontColorRedSpinner, frontColorGreenSpinner, frontColorBlueSpinner),
+					createColor(backColorRedSpinner, backColorGreenSpinner, backColorBlueSpinner));
+			screen.redrawOrigami();
 		}
+	}
+
+	private Color createColor(final JSpinner red, final JSpinner green, final JSpinner blue) {
+		return new Color((Integer) red.getValue(), (Integer) green.getValue(), (Integer) blue.getValue());
 	}
 
 	private JPanel createColorRGBPanel(final JSpinner red, final JSpinner green, final JSpinner blue,

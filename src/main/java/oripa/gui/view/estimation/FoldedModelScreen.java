@@ -35,6 +35,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -91,6 +92,10 @@ public class FoldedModelScreen extends JPanel
 	private final AffineTransform affineTransform;
 	private BufferedImage textureImage = null;
 	private final boolean bUseTexture = false;
+
+	private Color frontColor = DefaultColors.FRONT;
+	private Color backColor = DefaultColors.BACK;
+	private final Color singleColor = DefaultColors.WHITE;
 
 	private OrigamiModel origamiModel = null;
 	private OverlapRelationList overlapRelationList = null;
@@ -286,6 +291,11 @@ public class FoldedModelScreen extends JPanel
 		redrawOrigami();
 	}
 
+	void setColors(final Color front, final Color back) {
+		frontColor = front;
+		backColor = back;
+	}
+
 	@Override
 	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
@@ -338,12 +348,12 @@ public class FoldedModelScreen extends JPanel
 
 		for (OriFace face : faces) {
 			if (useColor) {
-				var frontColorFactor = List.of(0.7, 0.7, 1.0);
-				var backColorFactor = List.of(1.0, 0.8, 0.7);
+				var frontColorFactor = createColorFactor(frontColor);
+				var backColorFactor = createColorFactor(backColor);
 				face.setVertexColor(frontColorFactor, backColorFactor, isFaceOrderFlipped());
 			} else {
-				var white = List.of(1.0, 1.0, 0.95);
-				face.setVertexColor(white, white, isFaceOrderFlipped());
+				var factor = createColorFactor(singleColor);
+				face.setVertexColor(factor, factor, isFaceOrderFlipped());
 			}
 
 			var triangleFactory = new TriangleFaceFactory();
@@ -448,6 +458,12 @@ public class FoldedModelScreen extends JPanel
 
 		renderImage = createImage(new MemoryImageSource(BUFFERW, BUFFERH, pbuf, 0, BUFFERW));
 
+	}
+
+	private List<Double> createColorFactor(final Color color) {
+		return List.of(color.getRed(), color.getGreen(), color.getBlue()).stream()
+				.map(c -> c / 255.0)
+				.collect(Collectors.toList());
 	}
 
 	// --------------------------------------------------------------------
