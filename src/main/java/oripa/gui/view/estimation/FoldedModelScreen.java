@@ -348,7 +348,6 @@ public class FoldedModelScreen extends JPanel
 
 			var triangleFactory = new TriangleFaceFactory();
 			var triangles = triangleFactory.create(face);
-			triangles.forEach(triangle -> triangle.initializePositions());
 			triangles.forEach(triangle -> triangle.prepareColor(paperDomain));
 
 			triangles.stream().forEach(tri -> {

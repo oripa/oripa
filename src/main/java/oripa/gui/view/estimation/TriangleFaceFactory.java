@@ -37,6 +37,8 @@ public class TriangleFaceFactory {
 			triangles.add(tri);
 		}
 
+		triangles.forEach(triangle -> triangle.initializePositions());
+
 		return triangles;
 	}
 }
