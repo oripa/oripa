@@ -20,6 +20,7 @@ package oripa.gui.view.estimation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
@@ -65,10 +66,10 @@ public class TriangleFace {
 		return v[index].p;
 	}
 
-	public void prepareColor(final RectangleDomain paperDomain) {
+	public void prepareColor(final Map<OriHalfedge, Vector3d> colorMap, final RectangleDomain paperDomain) {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
 			var he = face.getHalfedge(halfEdgeIndices.get(i));
-			v[i].color = new Vector3d(he.getVertexColor());
+			v[i].color = new Vector3d(colorMap.get(he));
 
 			double x = (he.getPositionBeforeFolding().x - paperDomain.getCenterX()) / paperDomain.getWidth();
 			double y = (he.getPositionBeforeFolding().y - paperDomain.getCenterY()) / paperDomain.getHeight();

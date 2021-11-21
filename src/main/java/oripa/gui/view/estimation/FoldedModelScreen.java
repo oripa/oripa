@@ -347,18 +347,25 @@ public class FoldedModelScreen extends JPanel
 		var paperDomain = origamiModel.createPaperDomain();
 
 		for (OriFace face : faces) {
+			List<Double> frontColorFactor;
+			List<Double> backColorFactor;
 			if (useColor) {
-				var frontColorFactor = createColorFactor(frontColor);
-				var backColorFactor = createColorFactor(backColor);
-				face.setVertexColor(frontColorFactor, backColorFactor, isFaceOrderFlipped());
+				frontColorFactor = createColorFactor(frontColor);
+				backColorFactor = createColorFactor(backColor);
 			} else {
-				var factor = createColorFactor(singleColor);
-				face.setVertexColor(factor, factor, isFaceOrderFlipped());
+				frontColorFactor = createColorFactor(singleColor);
+				backColorFactor = createColorFactor(singleColor);
 			}
+			var vertexColorMapFactory = new VertexColorMapFactory();
+			var colorMap = vertexColorMapFactory.createVertexColors(
+					face,
+					frontColorFactor,
+					backColorFactor,
+					isFaceOrderFlipped());
 
 			var triangleFactory = new TriangleFaceFactory();
 			var triangles = triangleFactory.create(face);
-			triangles.forEach(triangle -> triangle.prepareColor(paperDomain));
+			triangles.forEach(triangle -> triangle.prepareColor(colorMap, paperDomain));
 
 			triangles.stream().forEach(tri -> {
 				for (int i = 0; i < 3; i++) {

@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
-import oripa.geom.RectangleDomain;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
@@ -186,59 +185,6 @@ public class OriFace {
 	 */
 	public void setFaceID(final int faceID) {
 		this.faceID = faceID;
-	}
-
-	public void setVertexColor(final List<Double> frontColorFactor, final List<Double> backColorFactor,
-			final boolean flip) {
-		var domain = new RectangleDomain();
-		for (OriHalfedge he : halfedges) {
-			domain.enlarge(he.getPosition());
-		}
-		double minX = domain.getLeft();
-		double minY = domain.getTop();
-
-		double faceWidth = Math.sqrt(domain.getWidth() * domain.getWidth()
-				+ domain.getHeight() * domain.getHeight());
-
-		for (OriHalfedge he : halfedges) {
-			double val = 0;
-			if (he.getType() == OriLine.Type.MOUNTAIN.toInt()) {
-				val += 1;
-			} else if (he.getType() == OriLine.Type.VALLEY.toInt()) {
-				val -= 1;
-			}
-
-			var prevHe = he.getPrevious();
-			if (prevHe.getType() == OriLine.Type.MOUNTAIN.toInt()) {
-				val += 1;
-			} else if (prevHe.getType() == OriLine.Type.VALLEY.toInt()) {
-				val -= 1;
-			}
-
-			double vv = (val + 2) / 4.0;
-			double v = (0.75 + vv * 0.25);
-
-			var position = he.getPosition();
-			v *= 0.9 + 0.15 * (Math.sqrt((position.x - minX)
-					* (position.x - minX)
-					+ (position.y - minY)
-							* (position.y - minY))
-					/ faceWidth);
-
-			v = Math.min(1, v);
-
-			if (faceFront ^ flip) {
-				he.getVertexColor().set(
-						v * frontColorFactor.get(0),
-						v * frontColorFactor.get(1),
-						v * frontColorFactor.get(2));
-			} else {
-				he.getVertexColor().set(
-						v * backColorFactor.get(0),
-						v * backColorFactor.get(1),
-						v * backColorFactor.get(2));
-			}
-		}
 	}
 
 	/**
