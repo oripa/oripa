@@ -17,6 +17,7 @@
  */
 package oripa.gui.view.estimation;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -26,6 +27,10 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,12 +62,23 @@ public class EstimationResultUI extends JPanel {
 	private JCheckBox jCheckBoxFillFace = null;
 	private JButton jButtonExport = null;
 
+	private final JSpinner frontColorRedSpinner = new JSpinner();
+	private final JSpinner frontColorGreenSpinner = new JSpinner();
+	private final JSpinner frontColorBlueSpinner = new JSpinner();
+
+	private final JSpinner backColorRedSpinner = new JSpinner();
+	private final JSpinner backColorGreenSpinner = new JSpinner();
+	private final JSpinner backColorBlueSpinner = new JSpinner();
+
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
 
 	// TODO: create label resource and apply it.
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
 	private String lastFilePath = null;
+
+	private FoldedModel foldedModel;
+	private OverlapRelationList overlapRelationList = null;
 
 	/**
 	 * This is the default constructor
@@ -96,6 +112,8 @@ public class EstimationResultUI extends JPanel {
 
 		add(createConfigPanel(), gbBuilder.getLineField());
 
+		add(createColorPanel(), gbBuilder.getLineField());
+
 		gbBuilder.setWeight(1, 1).setFill(GridBagConstraints.BOTH);
 		add(new JPanel(), gbBuilder.getLineField());
 
@@ -103,16 +121,11 @@ public class EstimationResultUI extends JPanel {
 				.setAnchor(GridBagConstraints.LAST_LINE_START);
 		add(getJButtonExport(), gbBuilder.getLineField());
 
-//		this.setLayout(null);
-//		this.setSize(216, 256);
 		this.setPreferredSize(new Dimension(216, 200));
 
 		updateIndexLabel();
 
 	}
-
-	private FoldedModel foldedModel;
-	private OverlapRelationList overlapRelationList = null;
 
 	/**
 	 * @param overlapRelationList
@@ -156,6 +169,119 @@ public class EstimationResultUI extends JPanel {
 		configPanel.add(getJCheckBoxFillFace(), gbBuilder.getNextField());
 
 		return configPanel;
+	}
+
+	private JPanel createColorPanel() {
+		var colorPanel = new JPanel();
+
+		colorPanel.setLayout(new GridBagLayout());
+		colorPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this, "Color config"));
+
+		var gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.CENTER)
+				.setWeight(1.0, 0.0);
+
+		colorPanel.add(createColorRGBPanel(
+				frontColorRedSpinner,
+				frontColorGreenSpinner,
+				frontColorBlueSpinner,
+				new Color((int) (255 * 0.7), (int) (255 * 0.7), 255),
+				"Front"), gbBuilder.getNextField());
+
+		colorPanel.add(createColorRGBPanel(
+				backColorRedSpinner,
+				backColorGreenSpinner,
+				backColorBlueSpinner,
+				new Color((int) (255 * 1.0), (int) (255 * 0.8), (int) (255 * 0.7)),
+				"Back"), gbBuilder.getNextField());
+
+		return colorPanel;
+	}
+
+	private class ColorSpinnerChangeListener implements ChangeListener {
+		JSpinner red, green, blue;
+		JPanel pallete;
+
+		public ColorSpinnerChangeListener(final JSpinner red, final JSpinner green, final JSpinner blue,
+				final JPanel pallete) {
+			this.red = red;
+			this.green = green;
+			this.blue = blue;
+
+			this.pallete = pallete;
+		}
+
+		@Override
+		public void stateChanged(final ChangeEvent e) {
+			pallete.setBackground(
+					new Color((Integer) red.getValue(), (Integer) green.getValue(), (Integer) blue.getValue()));
+		}
+	}
+
+	private JPanel createColorRGBPanel(final JSpinner red, final JSpinner green, final JSpinner blue,
+			final Color initialColor, final String text) {
+		var colorRGBPanel = new JPanel();
+
+		colorRGBPanel.setLayout(new GridBagLayout());
+		colorRGBPanel.setBorder(titledBorderFactory.createTitledBorder(this, text));
+
+		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.EAST)
+				.setWeight(0.5, 1.0);
+
+		var colorPallete = new JPanel();
+
+		var listener = new ColorSpinnerChangeListener(red, green, blue, colorPallete);
+		red.addChangeListener(listener);
+		green.addChangeListener(listener);
+		blue.addChangeListener(listener);
+
+		colorPallete.setBackground(initialColor);
+
+		setColorSpinnerModel(red, initialColor.getRed());
+		setColorSpinnerModel(blue, initialColor.getBlue());
+		setColorSpinnerModel(green, initialColor.getGreen());
+
+		gbBuilder.setFill(GridBagConstraints.BOTH);
+		colorRGBPanel.add(colorPallete, gbBuilder.getNextField());
+
+		gbBuilder.setFill(GridBagConstraints.HORIZONTAL);
+		gbBuilder.setAnchor(GridBagConstraints.EAST);
+		colorRGBPanel.add(createRGBPanel(red, green, blue), gbBuilder.getNextField());
+
+		return colorRGBPanel;
+	}
+
+	private JPanel createRGBPanel(final JSpinner red, final JSpinner green, final JSpinner blue) {
+
+		var rgbPanel = new JPanel();
+
+		rgbPanel.setLayout(new GridBagLayout());
+
+		var gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.CENTER)
+				.setWeight(1.0, 1.0);
+
+		rgbPanel.add(createTitledColorSpinner(red, "R"), gbBuilder.getNextField());
+		rgbPanel.add(createTitledColorSpinner(green, "G"), gbBuilder.getNextField());
+		rgbPanel.add(createTitledColorSpinner(blue, "B"), gbBuilder.getNextField());
+
+		return rgbPanel;
+	}
+
+	private JPanel createTitledColorSpinner(final JSpinner spinner, final String text) {
+		var panel = new JPanel();
+
+		panel.setLayout(new GridBagLayout());
+
+		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.WEST)
+				.setWeight(0.5, 0.5);
+
+		panel.add(new JLabel(text), gbBuilder.getNextField());
+		panel.add(spinner, gbBuilder.getNextField());
+
+		return panel;
+	}
+
+	private void setColorSpinnerModel(final JSpinner spinner, final int initialValue) {
+		spinner.setModel(new SpinnerNumberModel(initialValue, 0, 255, 1));
 	}
 
 	public void updateIndexLabel() {
