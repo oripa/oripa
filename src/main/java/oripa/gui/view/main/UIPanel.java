@@ -33,7 +33,6 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
@@ -67,6 +66,7 @@ import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
+import oripa.gui.view.util.TitledBorderFactory;
 import oripa.gui.viewsetting.ChangeViewSetting;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
@@ -542,17 +542,11 @@ public class UIPanel extends JPanel {
 	}
 
 	private TitledBorder createTitledBorder(final String text) {
-		TitledBorder border = new TitledBorder(text);
-		border.setBorder(new LineBorder(getBackground().darker().darker(), 2));
-		border.setBorder(new MatteBorder(1, 0, 0, 0,
-				getBackground().darker().darker()));
-		return border;
+		return new TitledBorderFactory().createTitledBorder(this, text);
 	}
 
 	private TitledBorder createTitledBorderFrame(final String text) {
-		TitledBorder border = new TitledBorder(text);
-		border.setBorder(new LineBorder(getBackground().darker().darker()));
-		return border;
+		return new TitledBorderFactory().createTitledBorderFrame(this, text);
 	}
 
 	private void constructButtons(final StateManager<EditMode> stateManager,
