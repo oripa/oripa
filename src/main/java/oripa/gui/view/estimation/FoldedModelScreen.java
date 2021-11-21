@@ -336,134 +336,66 @@ public class FoldedModelScreen extends JPanel
 		}
 		long time0 = System.currentTimeMillis();
 
-		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
-		final double localScale = scaleRate * Math.min(
-				BUFFERW / (domain.getWidth()),
-				BUFFERH / (domain.getHeight())) * 0.95;
-		final double angle = rotAngle * Math.PI / 180;
-
 		List<OriFace> faces = origamiModel.getFaces();
-
-		var paperDomain = origamiModel.createPaperDomain();
-
-		for (OriFace face : faces) {
-			List<Double> frontColorFactor;
-			List<Double> backColorFactor;
-			if (useColor) {
-				frontColorFactor = createColorFactor(frontColor);
-				backColorFactor = createColorFactor(backColor);
-			} else {
-				frontColorFactor = createColorFactor(singleColor);
-				backColorFactor = createColorFactor(singleColor);
-			}
-			var vertexColorMapFactory = new VertexColorMapFactory();
-			var colorMap = vertexColorMapFactory.createVertexColors(
-					face,
-					frontColorFactor,
-					backColorFactor,
-					isFaceOrderFlipped());
-
-			var triangleFactory = new TriangleFaceFactory();
-			var triangles = triangleFactory.create(face);
-			triangles.forEach(triangle -> triangle.prepareColor(colorMap, paperDomain));
-
-			triangles.stream().forEach(tri -> {
-				for (int i = 0; i < 3; i++) {
-					var pos = tri.getPosition(i);
-					double x = (pos.x - center.x) * localScale;
-					double y = (pos.y - center.y) * localScale;
-
-					double rotX = x * Math.cos(angle) + y * Math.sin(angle) + BUFFERW * 0.5;
-					double rotY = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
-
-					tri.setPosition(i, rotX, rotY);
-				}
-				drawTriangle(tri, face.getFaceID());
-			});
-		}
+		faces.forEach(face -> drawFace(face));
 
 		if (drawEdges) {
-			// apply Sobel filter
-			for (int y = 1; y < BUFFERH - 1; y++) {
-				for (int x = 1; x < BUFFERW - 1; x++) {
-					int val_h = -1 * zbuf[getIndex(x - 1, y - 1)]
-							+ zbuf[getIndex(x + 1, y - 1)]
-							+ -2 * zbuf[getIndex(x - 1, y)]
-							+ 2 * zbuf[getIndex(x + 1, y)]
-							+ -1 * zbuf[getIndex(x - 1, y + 1)]
-							+ zbuf[getIndex(x + 1, y + 1)];
-					int val_v = -1 * zbuf[getIndex(x - 1, y - 1)]
-							+ zbuf[getIndex(x - 1, y + 1)]
-							+ -2 * zbuf[getIndex(x, y - 1)]
-							+ 2 * zbuf[getIndex(x, y + 1)]
-							+ -1 * zbuf[getIndex(x + 1, y - 1)]
-							+ zbuf[getIndex(x + 1, y + 1)];
-
-					if (val_h != 0 || val_v != 0) {
-						pbuf[getIndex(x, y)] = 0xff888888;
-					}
-				}
-			}
+			drawEdges();
 		}
 
 		if (ambientOcclusion) {
-			byte renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
-					: OverlapRelationValues.LOWER;
-			int r = 10;
-			int s = (int) (r * r * Math.PI);
-			// For every pixel
-			for (int y = 1; y < BUFFERH - 1; y++) {
-				for (int x = 1; x < BUFFERW - 1; x++) {
-					int f_id = zbuf[getIndex(x, y)];
-
-					// Within a circle of radius r, Count the pixels of the
-					// surface
-					// that is above their own
-					int cnt = 0;
-					for (int dy = -r; dy <= r; dy++) {
-						for (int dx = -r; dx <= r; dx++) {
-							if (dx * dx + dy * dy > r * r) {
-								continue;
-							}
-							if (y + dy < 0 || y + dy > BUFFERH - 1) {
-								continue;
-							}
-							if (x + dx < 0 || x + dx > BUFFERW - 1) {
-								continue;
-							}
-							int f_id2 = zbuf[getIndex(x + dx, y + dy)];
-
-							if (f_id == -1 && f_id2 != -1) {
-								cnt++;
-							} else {
-								var overlapRelation = overlapRelationList.getOverlapRelation();
-
-								if (f_id2 != -1 && overlapRelation.get(f_id, f_id2) == renderFace) {
-									cnt++;
-								}
-							}
-						}
-					}
-
-					if (cnt > 0) {
-						int prev = pbuf[getIndex(x, y)];
-						double ratio = 1.0 - ((double) cnt) / s;
-						int p_r = (int) Math.max(0, ((prev & 0x00ff0000) >> 16) * ratio);
-						int p_g = (int) Math.max(0, ((prev & 0x0000ff00) >> 8) * ratio);
-						int p_b = (int) Math.max(0, (prev & 0x000000ff) * ratio);
-
-						pbuf[getIndex(x, y)] = (p_r << 16) | (p_g << 8) | p_b | 0xff000000;
-					}
-
-				}
-			}
-
+			applyAmbientOcculusion();
 		}
 		long time1 = System.currentTimeMillis();
 
 		System.out.println("render time = " + (time1 - time0) + "ms");
 
 		renderImage = createImage(new MemoryImageSource(BUFFERW, BUFFERH, pbuf, 0, BUFFERW));
+
+	}
+
+	private void drawFace(final OriFace face) {
+		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
+		final double localScale = scaleRate * Math.min(
+				BUFFERW / (domain.getWidth()),
+				BUFFERH / (domain.getHeight())) * 0.95;
+		final double angle = rotAngle * Math.PI / 180;
+
+		var paperDomain = origamiModel.createPaperDomain();
+
+		List<Double> frontColorFactor;
+		List<Double> backColorFactor;
+		if (useColor) {
+			frontColorFactor = createColorFactor(frontColor);
+			backColorFactor = createColorFactor(backColor);
+		} else {
+			frontColorFactor = createColorFactor(singleColor);
+			backColorFactor = createColorFactor(singleColor);
+		}
+		var vertexColorMapFactory = new VertexColorMapFactory();
+		var colorMap = vertexColorMapFactory.createVertexColors(
+				face,
+				frontColorFactor,
+				backColorFactor,
+				isFaceOrderFlipped());
+
+		var triangleFactory = new TriangleFaceFactory();
+		var triangles = triangleFactory.create(face);
+		triangles.forEach(triangle -> triangle.prepareColor(colorMap, paperDomain));
+
+		triangles.stream().forEach(tri -> {
+			for (int i = 0; i < 3; i++) {
+				var pos = tri.getPosition(i);
+				double x = (pos.x - center.x) * localScale;
+				double y = (pos.y - center.y) * localScale;
+
+				double rotX = x * Math.cos(angle) + y * Math.sin(angle) + BUFFERW * 0.5;
+				double rotY = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
+
+				tri.setPosition(i, rotX, rotY);
+			}
+			drawTriangle(tri, face.getFaceID());
+		});
 
 	}
 
@@ -644,6 +576,82 @@ public class FoldedModelScreen extends JPanel
 				maxb[py] = b;
 				maxu[py] = u;
 				maxv[py] = v;
+			}
+		}
+	}
+
+	private void drawEdges() {
+		// apply Sobel filter
+		for (int y = 1; y < BUFFERH - 1; y++) {
+			for (int x = 1; x < BUFFERW - 1; x++) {
+				int val_h = -1 * zbuf[getIndex(x - 1, y - 1)]
+						+ zbuf[getIndex(x + 1, y - 1)]
+						+ -2 * zbuf[getIndex(x - 1, y)]
+						+ 2 * zbuf[getIndex(x + 1, y)]
+						+ -1 * zbuf[getIndex(x - 1, y + 1)]
+						+ zbuf[getIndex(x + 1, y + 1)];
+				int val_v = -1 * zbuf[getIndex(x - 1, y - 1)]
+						+ zbuf[getIndex(x - 1, y + 1)]
+						+ -2 * zbuf[getIndex(x, y - 1)]
+						+ 2 * zbuf[getIndex(x, y + 1)]
+						+ -1 * zbuf[getIndex(x + 1, y - 1)]
+						+ zbuf[getIndex(x + 1, y + 1)];
+
+				if (val_h != 0 || val_v != 0) {
+					pbuf[getIndex(x, y)] = 0xff888888;
+				}
+			}
+		}
+	}
+
+	private void applyAmbientOcculusion() {
+		byte renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
+				: OverlapRelationValues.LOWER;
+		int r = 10;
+		int s = (int) (r * r * Math.PI);
+		// For every pixel
+		for (int y = 1; y < BUFFERH - 1; y++) {
+			for (int x = 1; x < BUFFERW - 1; x++) {
+				int f_id = zbuf[getIndex(x, y)];
+
+				// Within a circle of radius r, Count the pixels of the
+				// surface
+				// that is above their own
+				int cnt = 0;
+				for (int dy = -r; dy <= r; dy++) {
+					for (int dx = -r; dx <= r; dx++) {
+						if (dx * dx + dy * dy > r * r) {
+							continue;
+						}
+						if (y + dy < 0 || y + dy > BUFFERH - 1) {
+							continue;
+						}
+						if (x + dx < 0 || x + dx > BUFFERW - 1) {
+							continue;
+						}
+						int f_id2 = zbuf[getIndex(x + dx, y + dy)];
+
+						if (f_id == -1 && f_id2 != -1) {
+							cnt++;
+						} else {
+							var overlapRelation = overlapRelationList.getOverlapRelation();
+
+							if (f_id2 != -1 && overlapRelation.get(f_id, f_id2) == renderFace) {
+								cnt++;
+							}
+						}
+					}
+				}
+
+				if (cnt > 0) {
+					int prev = pbuf[getIndex(x, y)];
+					double ratio = 1.0 - ((double) cnt) / s;
+					int p_r = (int) Math.max(0, ((prev & 0x00ff0000) >> 16) * ratio);
+					int p_g = (int) Math.max(0, ((prev & 0x0000ff00) >> 8) * ratio);
+					int p_b = (int) Math.max(0, (prev & 0x000000ff) * ratio);
+
+					pbuf[getIndex(x, y)] = (p_r << 16) | (p_g << 8) | p_b | 0xff000000;
+				}
 			}
 		}
 	}
