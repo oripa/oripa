@@ -20,6 +20,7 @@ package oripa.gui.view.estimation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
@@ -49,6 +50,10 @@ public class TriangleFace {
 		this.halfEdgeIndices = new ArrayList<>(halfEdgeIndices);
 	}
 
+	/**
+	 * Sets the current position of face vertices, which are expected to be the
+	 * ones after fold, to each vertex of this triangle face.
+	 */
 	public void initializePositions() {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
 			var he = face.getHalfedge(halfEdgeIndices.get(i));
@@ -56,19 +61,45 @@ public class TriangleFace {
 		}
 	}
 
+	/**
+	 *
+	 * @param index
+	 *            index of the vertices of this triangle. 0 <= index < 3.
+	 * @param x
+	 *            x-coordinate value to be set.
+	 * @param y
+	 *            y-coordinate value to be set.
+	 */
 	public void setPosition(final int index, final double x, final double y) {
 		v[index].p.x = x;
 		v[index].p.y = y;
 	}
 
+	/**
+	 *
+	 * @param index
+	 *            index of the vertices of this triangle. 0 <= index < 3.
+	 * @return the vertex at the given index.
+	 */
 	public Vector2d getPosition(final int index) {
 		return v[index].p;
 	}
 
-	public void prepareColor(final RectangleDomain paperDomain) {
+	/**
+	 * Sets the normalized color and parameters for rendering to the vertices of
+	 * this triangle face.
+	 *
+	 * @param colorMap
+	 *            a mapping halfedges of the original face to normalized colors.
+	 *            This parameter is expected to be created by
+	 *            {@link VertexColorMapFactory#createVertexColors(OriFace, List, List, boolean)}.
+	 * @param paperDomain
+	 *            rectangle domain of the sheet of paper before fold.
+	 */
+	public void prepareColor(final Map<OriHalfedge, Vector3d> colorMap, final RectangleDomain paperDomain) {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
 			var he = face.getHalfedge(halfEdgeIndices.get(i));
-			v[i].color = new Vector3d(he.getVertexColor());
+			v[i].color = new Vector3d(colorMap.get(he));
 
 			double x = (he.getPositionBeforeFolding().x - paperDomain.getCenterX()) / paperDomain.getWidth();
 			double y = (he.getPositionBeforeFolding().y - paperDomain.getCenterY()) / paperDomain.getHeight();
