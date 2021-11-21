@@ -44,8 +44,6 @@ import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.halfedge.TriangleFace;
-import oripa.domain.fold.halfedge.TriangleVertex;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.util.MouseUtility;
@@ -335,20 +333,33 @@ public class FoldedModelScreen extends JPanel
 		final double angle = rotAngle * Math.PI / 180;
 
 		List<OriFace> faces = origamiModel.getFaces();
+
+		var paperDomain = origamiModel.createPaperDomain();
+
 		for (OriFace face : faces) {
+			if (useColor) {
+				var frontColorFactor = List.of(0.7, 0.7, 1.0);
+				var backColorFactor = List.of(1.0, 0.8, 0.7);
+				face.setVertexColor(frontColorFactor, backColorFactor, isFaceOrderFlipped());
+			} else {
+				var white = List.of(1.0, 1.0, 0.95);
+				face.setVertexColor(white, white, isFaceOrderFlipped());
+			}
 
-			face.triangulateAndSetColor(useColor, isFaceOrderFlipped(),
-					origamiModel.getPaperSize());
+			var triangleFactory = new TriangleFaceFactory();
+			var triangles = triangleFactory.create(face);
+			triangles.forEach(triangle -> triangle.prepareColor(paperDomain));
 
-			face.triangleStream().forEach(tri -> {
+			triangles.stream().forEach(tri -> {
 				for (int i = 0; i < 3; i++) {
+					var pos = tri.getPosition(i);
+					double x = (pos.x - center.x) * localScale;
+					double y = (pos.y - center.y) * localScale;
 
-					double x = (tri.v[i].p.x - center.x) * localScale;
-					double y = (tri.v[i].p.y - center.y) * localScale;
+					double rotX = x * Math.cos(angle) + y * Math.sin(angle) + BUFFERW * 0.5;
+					double rotY = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
 
-					tri.v[i].p.x = x * Math.cos(angle) + y * Math.sin(angle) + BUFFERW * 0.5;
-					tri.v[i].p.y = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
-
+					tri.setPosition(i, rotX, rotY);
 				}
 				drawTriangle(tri, face.getFaceID());
 			});
@@ -539,7 +550,7 @@ public class FoldedModelScreen extends JPanel
 							ty = ty % textureImage.getHeight();
 							int textureColor = textureImage.getRGB(tx, ty);
 
-							if (fillFaces && (tri.face.isFaceFront() ^ isFaceOrderFlipped())) {
+							if (fillFaces && (tri.isFaceFront() ^ isFaceOrderFlipped())) {
 								pbuf[p] = textureColor;
 							} else {
 								pbuf[p] = (tr << 16) | (tg << 8) | tb | 0xff000000;
