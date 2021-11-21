@@ -35,7 +35,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -44,7 +43,6 @@ import javax.vecmath.Vector2d;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
@@ -336,17 +334,9 @@ public class FoldedModelScreen extends JPanel
 
 		List<OriFace> faces = origamiModel.getFaces();
 
-		var paperDomain = new RectangleDomain();
-		paperDomain.enlarge(faces.stream()
-				.flatMap(OriFace::halfedgeStream)
-				.map(OriHalfedge::getPositionBeforeFolding)
-				.collect(Collectors.toList()));
+		var paperDomain = origamiModel.createPaperDomain();
 
 		for (OriFace face : faces) {
-			var triangleFactory = new TriangleFaceFactory();
-			var triangles = triangleFactory.create(face);
-			triangles.forEach(triangle -> triangle.initializePositions());
-
 			if (useColor) {
 				var frontColorFactor = List.of(0.7, 0.7, 1.0);
 				var backColorFactor = List.of(1.0, 0.8, 0.7);
@@ -356,6 +346,9 @@ public class FoldedModelScreen extends JPanel
 				face.setVertexColor(white, white, isFaceOrderFlipped());
 			}
 
+			var triangleFactory = new TriangleFaceFactory();
+			var triangles = triangleFactory.create(face);
+			triangles.forEach(triangle -> triangle.initializePositions());
 			triangles.forEach(triangle -> triangle.prepareColor(paperDomain));
 
 			triangles.stream().forEach(tri -> {

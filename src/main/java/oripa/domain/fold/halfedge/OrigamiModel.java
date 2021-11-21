@@ -19,7 +19,10 @@ package oripa.domain.fold.halfedge;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.vecmath.Vector2d;
 
 import oripa.geom.RectangleDomain;
 
@@ -142,12 +145,20 @@ public class OrigamiModel {
 	}
 
 	public RectangleDomain createDomainOfFoldedModel() {
-		var domain = new RectangleDomain();
-		domain.enlarge(faces.stream()
-				.flatMap(face -> face.halfedgeStream().map(he -> he.getPosition()))
-				.collect(Collectors.toList()));
-
-		return domain;
+		return createDomain(OriHalfedge::getPosition);
 	}
 
+	public RectangleDomain createPaperDomain() {
+		return createDomain(OriHalfedge::getPositionBeforeFolding);
+	}
+
+	private RectangleDomain createDomain(final Function<OriHalfedge, Vector2d> positionExtractor) {
+		var paperDomain = new RectangleDomain();
+		paperDomain.enlarge(faces.stream()
+				.flatMap(OriFace::halfedgeStream)
+				.map(positionExtractor)
+				.collect(Collectors.toList()));
+
+		return paperDomain;
+	}
 }
