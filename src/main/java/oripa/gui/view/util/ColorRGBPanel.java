@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.estimation;
+package oripa.gui.view.util;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -32,9 +32,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import oripa.gui.view.util.GridBagConstraintsBuilder;
-import oripa.gui.view.util.TitledBorderFactory;
 
 /**
  * Simple color chooser for RGB.
@@ -65,8 +62,7 @@ public class ColorRGBPanel extends JPanel {
 
 		@Override
 		public void stateChanged(final ChangeEvent e) {
-			pallete.setBackground(
-					getColor());
+			pallete.setBackground(getColor());
 
 			listeners.forEach(l -> l.stateChanged(e));
 		}
