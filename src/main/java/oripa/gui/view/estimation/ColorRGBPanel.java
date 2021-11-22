@@ -24,6 +24,7 @@ import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -52,8 +53,8 @@ public class ColorRGBPanel extends JPanel {
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
 
-	public ColorRGBPanel(final Color initialColor, final String title) {
-		build(initialColor, title);
+	public ColorRGBPanel(final JComponent parent, final Color initialColor, final String title) {
+		build(parent, initialColor, title);
 	}
 
 	public Color getColor() {
@@ -71,10 +72,10 @@ public class ColorRGBPanel extends JPanel {
 		}
 	}
 
-	private void build(final Color initialColor, final String title) {
+	private void build(final JComponent parent, final Color initialColor, final String title) {
 
 		setLayout(new GridBagLayout());
-		setBorder(titledBorderFactory.createTitledBorder(this, title));
+		setBorder(titledBorderFactory.createTitledBorder(parent, title));
 
 		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.WEST)
 				.setFill(GridBagConstraints.HORIZONTAL)

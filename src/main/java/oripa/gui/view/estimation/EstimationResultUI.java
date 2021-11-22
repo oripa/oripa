@@ -58,8 +58,8 @@ public class EstimationResultUI extends JPanel {
 	private JCheckBox jCheckBoxFillFace = null;
 	private JButton jButtonExport = null;
 
-	private final ColorRGBPanel frontColorRGBPanel = new ColorRGBPanel(DefaultColors.FRONT, "Front");
-	private final ColorRGBPanel backColorRGBPanel = new ColorRGBPanel(DefaultColors.BACK, "Back");
+	private final ColorRGBPanel frontColorRGBPanel = new ColorRGBPanel(this, DefaultColors.FRONT, "Front");
+	private final ColorRGBPanel backColorRGBPanel = new ColorRGBPanel(this, DefaultColors.BACK, "Back");
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
 
