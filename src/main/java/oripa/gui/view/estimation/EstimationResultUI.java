@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -233,6 +234,7 @@ public class EstimationResultUI extends JPanel {
 		colorRGBPanel.setBorder(titledBorderFactory.createTitledBorder(this, text));
 
 		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.EAST)
+				.setFill(GridBagConstraints.HORIZONTAL)
 				.setWeight(0.5, 1.0);
 
 		var colorPallete = new JPanel();
@@ -245,8 +247,8 @@ public class EstimationResultUI extends JPanel {
 		colorPallete.setBackground(initialColor);
 
 		setColorSpinnerModel(red, initialColor.getRed());
-		setColorSpinnerModel(blue, initialColor.getBlue());
 		setColorSpinnerModel(green, initialColor.getGreen());
+		setColorSpinnerModel(blue, initialColor.getBlue());
 
 		gbBuilder.setFill(GridBagConstraints.BOTH);
 		colorRGBPanel.add(colorPallete, gbBuilder.getNextField());
@@ -264,7 +266,8 @@ public class EstimationResultUI extends JPanel {
 
 		rgbPanel.setLayout(new GridBagLayout());
 
-		var gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.CENTER)
+		var gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.EAST)
+				.setFill(GridBagConstraints.HORIZONTAL)
 				.setWeight(1.0, 1.0);
 
 		rgbPanel.add(createTitledColorSpinner(red, "R"), gbBuilder.getNextField());
@@ -274,15 +277,18 @@ public class EstimationResultUI extends JPanel {
 		return rgbPanel;
 	}
 
-	private JPanel createTitledColorSpinner(final JSpinner spinner, final String text) {
+	private JPanel createTitledColorSpinner(final JSpinner spinner, final String title) {
 		var panel = new JPanel();
 
 		panel.setLayout(new GridBagLayout());
 
 		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.WEST)
+				.setFill(GridBagConstraints.HORIZONTAL)
 				.setWeight(0.5, 0.5);
 
-		panel.add(new JLabel(text), gbBuilder.getNextField());
+		panel.add(new JLabel(title, SwingConstants.RIGHT), gbBuilder.getNextField());
+
+		gbBuilder.setFill(GridBagConstraints.EAST);
 		panel.add(spinner, gbBuilder.getNextField());
 
 		return panel;
