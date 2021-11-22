@@ -17,7 +17,6 @@
  */
 package oripa.gui.view.estimation;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,9 +26,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.slf4j.Logger;
@@ -62,13 +58,8 @@ public class EstimationResultUI extends JPanel {
 	private JCheckBox jCheckBoxFillFace = null;
 	private JButton jButtonExport = null;
 
-	private final JSpinner frontColorRedSpinner = new JSpinner();
-	private final JSpinner frontColorGreenSpinner = new JSpinner();
-	private final JSpinner frontColorBlueSpinner = new JSpinner();
-
-	private final JSpinner backColorRedSpinner = new JSpinner();
-	private final JSpinner backColorGreenSpinner = new JSpinner();
-	private final JSpinner backColorBlueSpinner = new JSpinner();
+	private final ColorRGBPanel frontColorRGBPanel = new ColorRGBPanel(this, DefaultColors.FRONT, "Front");
+	private final ColorRGBPanel backColorRGBPanel = new ColorRGBPanel(this, DefaultColors.BACK, "Back");
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
 
@@ -180,116 +171,20 @@ public class EstimationResultUI extends JPanel {
 		var gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.CENTER)
 				.setWeight(1.0, 0.0);
 
-		colorPanel.add(createColorRGBPanel(
-				frontColorRedSpinner,
-				frontColorGreenSpinner,
-				frontColorBlueSpinner,
-				DefaultColors.FRONT,
-				"Front"), gbBuilder.getNextField());
+		ChangeListener colorChangeListener = (e) -> {
+			screen.setColors(
+					frontColorRGBPanel.getColor(),
+					backColorRGBPanel.getColor());
+			screen.redrawOrigami();
+		};
 
-		colorPanel.add(createColorRGBPanel(
-				backColorRedSpinner,
-				backColorGreenSpinner,
-				backColorBlueSpinner,
-				DefaultColors.BACK,
-				"Back"), gbBuilder.getNextField());
+		colorPanel.add(frontColorRGBPanel, gbBuilder.getNextField());
+		frontColorRGBPanel.addChangeListener(colorChangeListener);
+
+		colorPanel.add(backColorRGBPanel, gbBuilder.getNextField());
+		backColorRGBPanel.addChangeListener(colorChangeListener);
 
 		return colorPanel;
-	}
-
-	private class ColorSpinnerChangeListener implements ChangeListener {
-		JSpinner red, green, blue;
-		JPanel pallete;
-
-		public ColorSpinnerChangeListener(final JSpinner red, final JSpinner green, final JSpinner blue,
-				final JPanel pallete) {
-			this.red = red;
-			this.green = green;
-			this.blue = blue;
-
-			this.pallete = pallete;
-		}
-
-		@Override
-		public void stateChanged(final ChangeEvent e) {
-			pallete.setBackground(
-					createColor(red, green, blue));
-			screen.setColors(
-					createColor(frontColorRedSpinner, frontColorGreenSpinner, frontColorBlueSpinner),
-					createColor(backColorRedSpinner, backColorGreenSpinner, backColorBlueSpinner));
-			screen.redrawOrigami();
-		}
-	}
-
-	private Color createColor(final JSpinner red, final JSpinner green, final JSpinner blue) {
-		return new Color((Integer) red.getValue(), (Integer) green.getValue(), (Integer) blue.getValue());
-	}
-
-	private JPanel createColorRGBPanel(final JSpinner red, final JSpinner green, final JSpinner blue,
-			final Color initialColor, final String text) {
-		var colorRGBPanel = new JPanel();
-
-		colorRGBPanel.setLayout(new GridBagLayout());
-		colorRGBPanel.setBorder(titledBorderFactory.createTitledBorder(this, text));
-
-		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.EAST)
-				.setWeight(0.5, 1.0);
-
-		var colorPallete = new JPanel();
-
-		var listener = new ColorSpinnerChangeListener(red, green, blue, colorPallete);
-		red.addChangeListener(listener);
-		green.addChangeListener(listener);
-		blue.addChangeListener(listener);
-
-		colorPallete.setBackground(initialColor);
-
-		setColorSpinnerModel(red, initialColor.getRed());
-		setColorSpinnerModel(blue, initialColor.getBlue());
-		setColorSpinnerModel(green, initialColor.getGreen());
-
-		gbBuilder.setFill(GridBagConstraints.BOTH);
-		colorRGBPanel.add(colorPallete, gbBuilder.getNextField());
-
-		gbBuilder.setFill(GridBagConstraints.HORIZONTAL);
-		gbBuilder.setAnchor(GridBagConstraints.EAST);
-		colorRGBPanel.add(createRGBPanel(red, green, blue), gbBuilder.getNextField());
-
-		return colorRGBPanel;
-	}
-
-	private JPanel createRGBPanel(final JSpinner red, final JSpinner green, final JSpinner blue) {
-
-		var rgbPanel = new JPanel();
-
-		rgbPanel.setLayout(new GridBagLayout());
-
-		var gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.CENTER)
-				.setWeight(1.0, 1.0);
-
-		rgbPanel.add(createTitledColorSpinner(red, "R"), gbBuilder.getNextField());
-		rgbPanel.add(createTitledColorSpinner(green, "G"), gbBuilder.getNextField());
-		rgbPanel.add(createTitledColorSpinner(blue, "B"), gbBuilder.getNextField());
-
-		return rgbPanel;
-	}
-
-	private JPanel createTitledColorSpinner(final JSpinner spinner, final String text) {
-		var panel = new JPanel();
-
-		panel.setLayout(new GridBagLayout());
-
-		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.WEST)
-				.setWeight(0.5, 0.5);
-
-		panel.add(new JLabel(text), gbBuilder.getNextField());
-		panel.add(spinner, gbBuilder.getNextField());
-
-		return panel;
-	}
-
-	private void setColorSpinnerModel(final JSpinner spinner, final int initialValue) {
-		spinner.setModel(new SpinnerNumberModel(initialValue, 0, 255, 1));
 	}
 
 	public void updateIndexLabel() {
