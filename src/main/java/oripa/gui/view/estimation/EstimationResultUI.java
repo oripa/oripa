@@ -47,6 +47,9 @@ public class EstimationResultUI extends JPanel {
 	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUI.class);
 
 	private static final long serialVersionUID = 1L;
+
+	private final ResourceHolder resources = ResourceHolder.getInstance();
+
 	private JButton jButtonNextAnswer = null;
 	private JButton jButtonPrevAnswer = null;
 	private JCheckBox jCheckBoxOrder = null;
@@ -58,13 +61,12 @@ public class EstimationResultUI extends JPanel {
 	private JCheckBox jCheckBoxFillFace = null;
 	private JButton jButtonExport = null;
 
-	private final ColorRGBPanel frontColorRGBPanel = new ColorRGBPanel(this, DefaultColors.FRONT, "Front");
-	private final ColorRGBPanel backColorRGBPanel = new ColorRGBPanel(this, DefaultColors.BACK, "Back");
+	private final ColorRGBPanel frontColorRGBPanel = new ColorRGBPanel(this, DefaultColors.FRONT,
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_FRONT_ID));
+	private final ColorRGBPanel backColorRGBPanel = new ColorRGBPanel(this, DefaultColors.BACK,
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_BACK_ID));
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
-
-	// TODO: create label resource and apply it.
-	private final ResourceHolder resources = ResourceHolder.getInstance();
 
 	private String lastFilePath = null;
 
@@ -130,7 +132,8 @@ public class EstimationResultUI extends JPanel {
 		var answerShiftPanel = new JPanel();
 
 		answerShiftPanel.setLayout(new GridBagLayout());
-		answerShiftPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this, "Answers"));
+		answerShiftPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
+				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ANSWERS_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
 				.setWeight(0.5, 1.0);
@@ -148,7 +151,8 @@ public class EstimationResultUI extends JPanel {
 		var configPanel = new JPanel();
 
 		configPanel.setLayout(new GridBagLayout());
-		configPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this, "Drawing config"));
+		configPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
+				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.DRAWING_CONFIG_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
 				.setWeight(0.5, 0.5);
@@ -166,7 +170,8 @@ public class EstimationResultUI extends JPanel {
 		var colorPanel = new JPanel();
 
 		colorPanel.setLayout(new GridBagLayout());
-		colorPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this, "Color config"));
+		colorPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
+				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.CENTER)
 				.setWeight(1.0, 0.0);
@@ -211,7 +216,7 @@ public class EstimationResultUI extends JPanel {
 		}
 
 		jButtonNextAnswer = new JButton();
-		jButtonNextAnswer.setText("Next");
+		jButtonNextAnswer.setText(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.NEXT_RESULT_ID));
 
 		jButtonNextAnswer.addActionListener(e -> {
 			overlapRelationList.setNextIndex();
@@ -233,7 +238,7 @@ public class EstimationResultUI extends JPanel {
 		}
 
 		jButtonPrevAnswer = new JButton();
-		jButtonPrevAnswer.setText("Prev");
+		jButtonPrevAnswer.setText(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.PREV_RESULT_ID));
 
 		jButtonPrevAnswer.addActionListener(e -> {
 			overlapRelationList.setPrevIndex();
@@ -255,7 +260,7 @@ public class EstimationResultUI extends JPanel {
 		}
 
 		jCheckBoxOrder = new JCheckBox();
-		jCheckBoxOrder.setText("Flip");
+		jCheckBoxOrder.setText(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ORDER_FLIP_ID));
 		jCheckBoxOrder.addItemListener(e -> {
 			screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
 		});
@@ -275,7 +280,7 @@ public class EstimationResultUI extends JPanel {
 		}
 
 		jCheckBoxShadow = new JCheckBox();
-		jCheckBoxShadow.setText("Shade");
+		jCheckBoxShadow.setText(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SHADOW_ID));
 
 		jCheckBoxShadow.addItemListener(e -> {
 			screen.shadeFaces(e.getStateChange() == ItemEvent.SELECTED);
@@ -296,7 +301,7 @@ public class EstimationResultUI extends JPanel {
 
 		jCheckBoxUseColor = new JCheckBox();
 		jCheckBoxUseColor.setSelected(true);
-		jCheckBoxUseColor.setText("Use Color");
+		jCheckBoxUseColor.setText(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.USE_COLOR_ID));
 
 		jCheckBoxUseColor.addItemListener(e -> {
 			screen.setUseColor(e.getStateChange() == ItemEvent.SELECTED);
@@ -317,7 +322,7 @@ public class EstimationResultUI extends JPanel {
 
 		jCheckBoxEdge = new JCheckBox();
 		jCheckBoxEdge.setSelected(true);
-		jCheckBoxEdge.setText("Draw Edge");
+		jCheckBoxEdge.setText(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EDGE_ID));
 
 		jCheckBoxEdge.addItemListener(e -> {
 			screen.drawEdge(e.getStateChange() == ItemEvent.SELECTED);
@@ -339,7 +344,7 @@ public class EstimationResultUI extends JPanel {
 
 		jCheckBoxFillFace = new JCheckBox();
 		jCheckBoxFillFace.setSelected(true);
-		jCheckBoxFillFace.setText("FillFace");
+		jCheckBoxFillFace.setText(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FILL_FACE_ID));
 
 		jCheckBoxFillFace.addItemListener(e -> {
 			screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
@@ -360,7 +365,7 @@ public class EstimationResultUI extends JPanel {
 
 		jButtonExport = new JButton();
 //		jButtonExport.setPreferredSize(new Dimension(90, 25));
-		jButtonExport.setText("Export");
+		jButtonExport.setText(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
 		jButtonExport.addActionListener(e -> export());
 
 		return jButtonExport;
