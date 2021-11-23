@@ -103,8 +103,27 @@ public class EstimationResultUI extends JPanel {
 		}
 	}
 
+	/**
+	 * set Screen displaying the folded Model Estimation
+	 *
+	 * @param s
+	 *            {@code FoldedModelScreen} to be used
+	 */
 	public void setScreen(final FoldedModelScreen s) {
 		screen = s;
+	}
+
+	/**
+	 * Set Model to be displayed and update index label
+	 *
+	 * @param foldedModel
+	 *            {@code FoldedModel} to be displayed
+	 */
+	public void setModel(final FoldedModel foldedModel) {
+		this.foldedModel = foldedModel;
+		this.overlapRelationList = foldedModel.getOverlapRelationList();
+
+		this.updateIndexLabel();
 	}
 
 	/**
@@ -185,14 +204,6 @@ public class EstimationResultUI extends JPanel {
 		fillFaceCheckBox.setSelected(true);
 	}
 
-	/**
-	 * @param overlapRelationList
-	 */
-	public void setModel(final FoldedModel foldedModel) {
-		this.foldedModel = foldedModel;
-		this.overlapRelationList = foldedModel.getOverlapRelationList();
-	}
-
 	private JPanel createAnswerShiftPanel() {
 		var answerShiftPanel = new JPanel();
 
@@ -256,7 +267,7 @@ public class EstimationResultUI extends JPanel {
 			return;
 		}
 
-		indexLabel.setText("Folded model ["
+		indexLabel.setText(indexLabelString + " ["
 				+ (overlapRelationList.getCurrentIndex() + 1) + "/"
 				+ overlapRelationList.getCount() + "]");
 
