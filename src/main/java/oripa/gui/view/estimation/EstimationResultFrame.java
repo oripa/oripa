@@ -53,8 +53,6 @@ public class EstimationResultFrame extends JFrame implements ActionListener {
 
 		screen.setModel(foldedModel);
 		ui.setModel(foldedModel);
-		ui.updateIndexLabel();
-		// setVisible(true);
 	}
 
 	@Override

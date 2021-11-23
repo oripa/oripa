@@ -250,7 +250,7 @@ public class EstimationResultUI extends JPanel {
 	/**
 	 * update the label showing which estimation is currently shown on screen
 	 */
-	public void updateIndexLabel() {
+	private void updateIndexLabel() {
 
 		if (overlapRelationList == null) {
 			return;
@@ -262,6 +262,9 @@ public class EstimationResultUI extends JPanel {
 
 	}
 
+	/**
+	 * open export dialog for current folded estimation
+	 */
 	private void export() {
 		try {
 			var filterSelector = new FoldedModelFilterSelector(screen.isFaceOrderFlipped());
