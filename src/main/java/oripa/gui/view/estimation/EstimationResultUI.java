@@ -99,7 +99,8 @@ public class EstimationResultUI extends JPanel {
 		try {
 			initialize();
 		} catch (Exception e) {
-			Dialogs.showErrorDialog(this, "initializatiton error (folded model UI)", e);
+			Dialogs.showErrorDialog(this,
+					resources.getString(ResourceKey.ERROR, StringID.Error.ER_UI_INIT_FAILED_ID), e);
 		}
 	}
 

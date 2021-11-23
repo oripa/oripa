@@ -86,6 +86,9 @@ public class LabelStringResource_en extends ListResourceBundle {
 
 			{ StringID.UI.SHORTCUT_ID, "Shortcut:" },
 
+			// Estimation Result Frame String Resources
+			{ StringID.EstimationResultUI.TITLE_ID, "Folded Origami" },
+
 			{ StringID.EstimationResultUI.ANSWERS_PANEL_ID, "Answers" },
 			{ StringID.EstimationResultUI.NEXT_RESULT_ID, "Next" },
 			{ StringID.EstimationResultUI.PREV_RESULT_ID, "Prev" },
@@ -103,6 +106,8 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.EstimationResultUI.FACE_COLOR_BACK_ID, "Choose Back Color" },
 
 			{ StringID.EstimationResultUI.EXPORT_ID, "Export" },
+
+			{ StringID.EstimationResultUI.HINT_LABEL_ID, "L: Rotate / Wheel: Zoom / R: Move" },
 
 			{ StringID.ModelMenu.FILE_ID, "File" },
 			{ StringID.ModelMenu.DISPLAY_ID, "Display" },

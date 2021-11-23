@@ -42,6 +42,8 @@ public class StringID {
 		public static final String SAVE_FAILED_ID = "Error_FileSaveFailed";
 		public static final String LOAD_FAILED_ID = "Error_FileLoadFailed";
 		public static final String SAVE_INI_FAILED_ID = "Error_SaveIniFailed";
+
+		public static final String ER_UI_INIT_FAILED_ID = "ER_UI_Init_Failed";
 	}
 
 	public static class Warning {
@@ -114,6 +116,8 @@ public class StringID {
 	}
 
 	public static class EstimationResultUI {
+		public static final String TITLE_ID = "ER_Title";
+
 		public static final String ANSWERS_PANEL_ID = "ER_Answer_Panel";
 		public static final String NEXT_RESULT_ID = "ER_Next_Result";
 		public static final String PREV_RESULT_ID = "ER_Prev_Result";
@@ -131,6 +135,8 @@ public class StringID {
 		public static final String FACE_COLOR_BACK_ID = "ER_FaceColor_Back";
 
 		public static final String EXPORT_ID = "ER_Export";
+
+		public static final String HINT_LABEL_ID = "ER_Hint_Label";
 	}
 
 	// ------------------------------------------------------------------------
