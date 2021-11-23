@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.OverlapRelationList;
+import oripa.gui.view.util.ColorRGBPanel;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.TitledBorderFactory;
