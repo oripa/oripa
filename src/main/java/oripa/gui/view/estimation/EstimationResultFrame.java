@@ -19,8 +19,6 @@
 package oripa.gui.view.estimation;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,7 +28,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 
-public class EstimationResultFrame extends JFrame implements ActionListener {
+public class EstimationResultFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -56,10 +54,5 @@ public class EstimationResultFrame extends JFrame implements ActionListener {
 	public void setModel(final FoldedModel foldedModel) {
 		screen.setModel(foldedModel);
 		ui.setModel(foldedModel);
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent arg0) {
-
 	}
 }
