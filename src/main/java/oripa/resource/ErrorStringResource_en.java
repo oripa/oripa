@@ -31,7 +31,7 @@ public class ErrorStringResource_en extends ListResourceBundle {
 			{ StringID.Error.SAVE_FAILED_ID, "Failed to save." },
 			{ StringID.Error.LOAD_FAILED_ID, "Failed to load." },
 			{ StringID.Error.SAVE_INI_FAILED_ID, "Error when saving configurations." },
-			{ StringID.Error.ER_UI_INIT_FAILED_ID, "initializatiton error (folded model UI)" },
+			{ StringID.Error.ER_UI_INIT_FAILED_ID, "Initialization error (folded model UI)" },
 	};
 
 	@Override
