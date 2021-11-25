@@ -86,6 +86,29 @@ public class LabelStringResource_en extends ListResourceBundle {
 
 			{ StringID.UI.SHORTCUT_ID, "Shortcut:" },
 
+			// Estimation Result Frame String Resources
+			{ StringID.EstimationResultUI.TITLE_ID, "Folded Origami" },
+
+			{ StringID.EstimationResultUI.ANSWERS_PANEL_ID, "Answers" },
+			{ StringID.EstimationResultUI.NEXT_RESULT_ID, "Next" },
+			{ StringID.EstimationResultUI.PREV_RESULT_ID, "Prev" },
+			{ StringID.EstimationResultUI.INDEX_ID, "Folded model" },
+
+			{ StringID.EstimationResultUI.DRAWING_CONFIG_PANEL_ID, "Drawing Config" },
+			{ StringID.EstimationResultUI.ORDER_FLIP_ID, "Flip" },
+			{ StringID.EstimationResultUI.SHADOW_ID, "Shadow" },
+			{ StringID.EstimationResultUI.USE_COLOR_ID, "Use Color" },
+			{ StringID.EstimationResultUI.EDGE_ID, "Draw Edge" },
+			{ StringID.EstimationResultUI.FILL_FACE_ID, "Fill Face" },
+
+			{ StringID.EstimationResultUI.FACE_COLOR_PANEL_ID, "Color Config" },
+			{ StringID.EstimationResultUI.FACE_COLOR_FRONT_ID, "Choose Front Color" },
+			{ StringID.EstimationResultUI.FACE_COLOR_BACK_ID, "Choose Back Color" },
+
+			{ StringID.EstimationResultUI.EXPORT_ID, "Export" },
+
+			{ StringID.EstimationResultUI.HINT_LABEL_ID, "L: Rotate / Wheel: Zoom / R: Move" },
+
 			{ StringID.ModelMenu.FILE_ID, "File" },
 			{ StringID.ModelMenu.DISPLAY_ID, "Display" },
 			{ StringID.ModelMenu.EXPORT_DXF_ID, "Export model lines (DXF)" },

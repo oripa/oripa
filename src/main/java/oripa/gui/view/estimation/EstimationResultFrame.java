@@ -19,46 +19,40 @@
 package oripa.gui.view.estimation;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModel;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
 
-// TODO: create label resource and apply it.
-public class EstimationResultFrame extends JFrame implements ActionListener {
+public class EstimationResultFrame extends JFrame {
 
-	FoldedModelScreen screen;
-	EstimationResultUI ui;
-	public JLabel hintLabel;
+	private static final long serialVersionUID = 1L;
+
+	private final ResourceHolder resources = ResourceHolder.getInstance();
+
+	private final FoldedModelScreen screen = new FoldedModelScreen();
+	private final EstimationResultUI ui = new EstimationResultUI();
+	private final JLabel hintLabel = new JLabel(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.HINT_LABEL_ID));;
 
 	public EstimationResultFrame() {
-		setTitle("Folded Origami");
-		screen = new FoldedModelScreen();
-		ui = new EstimationResultUI();
-		ui.setScreen(screen);
-		hintLabel = new JLabel("L: Rotate / Wheel: Zoom");
+		setTitle(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
 		setBounds(0, 0, 800, 600);
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(ui, BorderLayout.WEST);
-		getContentPane().add(screen, BorderLayout.CENTER);
-		getContentPane().add(hintLabel, BorderLayout.SOUTH);
+		setLayout(new BorderLayout());
 
+		ui.setScreen(screen);
+
+		add(ui, BorderLayout.WEST);
+		add(screen, BorderLayout.CENTER);
+		add(hintLabel, BorderLayout.SOUTH);
 	}
 
-	public void setModel(
-			final FoldedModel foldedModel) {
-
+	public void setModel(final FoldedModel foldedModel) {
 		screen.setModel(foldedModel);
 		ui.setModel(foldedModel);
-		ui.updateIndexLabel();
-		// setVisible(true);
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent arg0) {
-
 	}
 }
