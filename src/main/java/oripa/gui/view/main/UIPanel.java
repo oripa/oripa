@@ -20,6 +20,7 @@ package oripa.gui.view.main;
 
 import static javax.swing.SwingConstants.*;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+import java.util.function.BiConsumer;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -209,6 +211,10 @@ public class UIPanel extends JPanel {
 			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
 	private final JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
+
+	private BiConsumer<Color, Color> estimationResultColorChangeListener;
+	private Color estimationResultFrontColor;
+	private Color estimationResultBackColor;
 
 	public UIPanel(
 			final StateManager<EditMode> stateManager,
@@ -888,6 +894,15 @@ public class UIPanel extends JPanel {
 		}
 	}
 
+	public void setEstimationResultColorChangeListener(final BiConsumer<Color, Color> l) {
+		estimationResultColorChangeListener = l;
+	}
+
+	public void setEstimationResultColors(final Color frontColor, final Color backColor) {
+		estimationResultFrontColor = frontColor;
+		estimationResultBackColor = backColor;
+	}
+
 	/**
 	 * open window with folded model
 	 */
@@ -923,6 +938,9 @@ public class UIPanel extends JPanel {
 							cutOutlinesHolder,
 							mainScreenSetting,
 							fullEstimation,
+							estimationResultColorChangeListener,
+							estimationResultFrontColor,
+							estimationResultBackColor,
 							screenUpdater);
 				} catch (Exception e) {
 					logger.error("error when folding", e);

@@ -17,10 +17,12 @@
  */
 package oripa.gui.view.estimation;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
+import java.util.function.BiConsumer;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -90,6 +92,8 @@ public class EstimationResultUI extends JPanel {
 
 	private FoldedModel foldedModel;
 	private OverlapRelationList overlapRelationList = null;
+
+	private BiConsumer<Color, Color> colorChangeListener;
 
 	/**
 	 * This is the default constructor
@@ -187,14 +191,15 @@ public class EstimationResultUI extends JPanel {
 			screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
 		});
 
-		ChangeListener colorChangeListener = (e) -> {
-			screen.setColors(
-					frontColorRGBPanel.getColor(),
-					backColorRGBPanel.getColor());
+		ChangeListener colorRGBChangeListener = (e) -> {
+			var frontColor = frontColorRGBPanel.getColor();
+			var backColor = backColorRGBPanel.getColor();
+			screen.setColors(frontColor, backColor);
+			colorChangeListener.accept(frontColor, backColor);
 			screen.redrawOrigami();
 		};
-		frontColorRGBPanel.addChangeListener(colorChangeListener);
-		backColorRGBPanel.addChangeListener(colorChangeListener);
+		frontColorRGBPanel.addChangeListener(colorRGBChangeListener);
+		backColorRGBPanel.addChangeListener(colorRGBChangeListener);
 
 		exportButton.addActionListener(e -> export());
 	}
@@ -272,6 +277,17 @@ public class EstimationResultUI extends JPanel {
 				+ (overlapRelationList.getCurrentIndex() + 1) + "/"
 				+ overlapRelationList.getCount() + "]");
 
+	}
+
+	public void setColorChangeListener(final BiConsumer<Color, Color> listener) {
+		colorChangeListener = listener;
+	}
+
+	public void setColors(final Color front, final Color back) {
+		logger.debug("Front color = {}", front);
+		logger.debug("Back color = {}", back);
+		frontColorRGBPanel.setColor(front == null ? DefaultColors.FRONT : front);
+		backColorRGBPanel.setColor(back == null ? DefaultColors.BACK : back);
 	}
 
 	/**

@@ -18,8 +18,10 @@
  */
 package oripa.gui.presenter.main;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import javax.swing.JComponent;
@@ -36,6 +38,7 @@ import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.gui.view.estimation.EstimationResultFrame;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
@@ -75,6 +78,9 @@ public class FoldedModelWindowOpener {
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting,
 			final boolean fullEstimation,
+			final BiConsumer<Color, Color> colorChangeListener,
+			final Color frontColor,
+			final Color backColor,
 			final ScreenUpdater screenUpdater) {
 
 		var frames = new ArrayList<JFrame>();
@@ -101,7 +107,10 @@ public class FoldedModelWindowOpener {
 
 					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 							childFrameManager);
-					var resultFrame = resultFrameFactory.createFrame(ownerView, foldedModel);
+					var resultFrame = (EstimationResultFrame) resultFrameFactory.createFrame(ownerView, foldedModel);
+					resultFrame.setColorChangeListener(colorChangeListener);
+
+					resultFrame.setColors(frontColor, backColor);
 					resultFrame.repaint();
 					resultFrame.setVisible(true);
 
