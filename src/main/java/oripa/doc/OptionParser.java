@@ -33,16 +33,18 @@ import oripa.util.Pair;
  */
 public class OptionParser {
 	public static class Keys {
-		public static String FRONT_COLOR = "frontColor";
-		public static String BACK_COLOR = "backColor";
+		public static final String FRONT_COLOR = "frontColor";
+		public static final String BACK_COLOR = "backColor";
 	}
 
+	private static final String OPTION_START = "//";
+
 	public boolean matchOptionStart(final String line) {
-		return line.startsWith("//");
+		return line.startsWith(OPTION_START);
 	}
 
 	public Pair<String, String> parse(final String line) {
-		var trimmed = line.split("//")[1].trim();
+		var trimmed = line.split(OPTION_START)[1].trim();
 		var keyValue = trimmed.split("\\s*:\\s*");
 
 		return new Pair<String, String>(keyValue[0], keyValue[1]);
@@ -55,7 +57,7 @@ public class OptionParser {
 	}
 
 	public String createLine(final Pair<String, String> option) {
-		return "//" + option.getV1() + ":" + option.getV2();
+		return OPTION_START + option.getV1() + ":" + option.getV2();
 	}
 
 	public List<String> createLines(final List<Pair<String, String>> options) {
