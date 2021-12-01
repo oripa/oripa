@@ -224,7 +224,9 @@ public class Property {
 			options.add(new Pair<>(key, value));
 		}
 
-		memo = String.join(System.lineSeparator(), parser.createLines(options)) + System.lineSeparator()
-				+ String.join(System.lineSeparator(), textLines);
+		String lineSep = System.lineSeparator();
+
+		memo = String.join(lineSep, parser.createLines(options)) + lineSep
+				+ String.join(lineSep, textLines);
 	}
 }
