@@ -83,6 +83,9 @@ public class EstimationResultUI extends JPanel {
 	private final ColorRGBPanel backColorRGBPanel = new ColorRGBPanel(this, DefaultColors.BACK,
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_BACK_ID));
 
+	private final JButton saveColorsButton = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SAVE_COLORS_ID));
+
 	private final JButton exportButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
 
@@ -93,7 +96,7 @@ public class EstimationResultUI extends JPanel {
 	private FoldedModel foldedModel;
 	private OverlapRelationList overlapRelationList = null;
 
-	private BiConsumer<Color, Color> colorChangeListener;
+	private BiConsumer<Color, Color> saveColorsListener;
 
 	/**
 	 * This is the default constructor
@@ -195,11 +198,13 @@ public class EstimationResultUI extends JPanel {
 			var frontColor = frontColorRGBPanel.getColor();
 			var backColor = backColorRGBPanel.getColor();
 			screen.setColors(frontColor, backColor);
-			colorChangeListener.accept(frontColor, backColor);
 			screen.redrawOrigami();
 		};
 		frontColorRGBPanel.addChangeListener(colorRGBChangeListener);
 		backColorRGBPanel.addChangeListener(colorRGBChangeListener);
+
+		saveColorsButton.addActionListener(
+				e -> saveColorsListener.accept(frontColorRGBPanel.getColor(), backColorRGBPanel.getColor()));
 
 		exportButton.addActionListener(e -> export());
 	}
@@ -261,6 +266,7 @@ public class EstimationResultUI extends JPanel {
 
 		colorPanel.add(backColorRGBPanel, gbBuilder.getNextField());
 
+		colorPanel.add(saveColorsButton, gbBuilder.getNextField());
 		return colorPanel;
 	}
 
@@ -279,15 +285,15 @@ public class EstimationResultUI extends JPanel {
 
 	}
 
-	public void setColorChangeListener(final BiConsumer<Color, Color> listener) {
-		colorChangeListener = listener;
-	}
-
 	public void setColors(final Color front, final Color back) {
 		logger.debug("Front color = {}", front);
 		logger.debug("Back color = {}", back);
 		frontColorRGBPanel.setColor(front == null ? DefaultColors.FRONT : front);
 		backColorRGBPanel.setColor(back == null ? DefaultColors.BACK : back);
+	}
+
+	public void setSaveColorsListener(final BiConsumer<Color, Color> listener) {
+		saveColorsListener = listener;
 	}
 
 	/**

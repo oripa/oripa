@@ -58,11 +58,11 @@ public class EstimationResultFrame extends JFrame {
 		ui.setModel(foldedModel);
 	}
 
-	public void setColorChangeListener(final BiConsumer<Color, Color> listener) {
-		ui.setColorChangeListener(listener);
-	}
-
 	public void setColors(final Color front, final Color back) {
 		ui.setColors(front, back);
+	}
+
+	public void setSaveColorsListener(final BiConsumer<Color, Color> listener) {
+		ui.setSaveColorsListener(listener);
 	}
 }

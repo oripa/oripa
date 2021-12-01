@@ -446,10 +446,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			MRUFilesMenuItem[i].addActionListener(this::loadFileFromMRUFileMenuItem);
 		}
 
-		uiPanel.setEstimationResultColorChangeListener((front, back) -> {
+		uiPanel.setEstimationResultSaveColorsListener((front, back) -> {
 			var property = document.getProperty();
 			property.putFrontColorCode(convertColorToCode(front));
 			property.putBackColorCode(convertColorToCode(back));
+
+			menuItemSave.doClick();
 		});
 	}
 

@@ -78,9 +78,9 @@ public class FoldedModelWindowOpener {
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final MainScreenSetting mainScreenSetting,
 			final boolean fullEstimation,
-			final BiConsumer<Color, Color> colorChangeListener,
 			final Color frontColor,
 			final Color backColor,
+			final BiConsumer<Color, Color> saveColors,
 			final ScreenUpdater screenUpdater) {
 
 		var frames = new ArrayList<JFrame>();
@@ -108,9 +108,9 @@ public class FoldedModelWindowOpener {
 					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 							childFrameManager);
 					var resultFrame = (EstimationResultFrame) resultFrameFactory.createFrame(ownerView, foldedModel);
-					resultFrame.setColorChangeListener(colorChangeListener);
 
 					resultFrame.setColors(frontColor, backColor);
+					resultFrame.setSaveColorsListener(saveColors);
 					resultFrame.repaint();
 					resultFrame.setVisible(true);
 

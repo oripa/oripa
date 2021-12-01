@@ -212,9 +212,9 @@ public class UIPanel extends JPanel {
 	private final JButton buttonCheckWindow = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
-	private BiConsumer<Color, Color> estimationResultColorChangeListener;
 	private Color estimationResultFrontColor;
 	private Color estimationResultBackColor;
+	private BiConsumer<Color, Color> estimationResultSaveColorsListener;
 
 	public UIPanel(
 			final StateManager<EditMode> stateManager,
@@ -894,13 +894,13 @@ public class UIPanel extends JPanel {
 		}
 	}
 
-	public void setEstimationResultColorChangeListener(final BiConsumer<Color, Color> l) {
-		estimationResultColorChangeListener = l;
-	}
-
 	public void setEstimationResultColors(final Color frontColor, final Color backColor) {
 		estimationResultFrontColor = frontColor;
 		estimationResultBackColor = backColor;
+	}
+
+	public void setEstimationResultSaveColorsListener(final BiConsumer<Color, Color> listener) {
+		estimationResultSaveColorsListener = listener;
 	}
 
 	/**
@@ -938,9 +938,9 @@ public class UIPanel extends JPanel {
 							cutOutlinesHolder,
 							mainScreenSetting,
 							fullEstimation,
-							estimationResultColorChangeListener,
 							estimationResultFrontColor,
 							estimationResultBackColor,
+							estimationResultSaveColorsListener,
 							screenUpdater);
 				} catch (Exception e) {
 					logger.error("error when folding", e);
