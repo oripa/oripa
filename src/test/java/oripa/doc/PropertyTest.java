@@ -92,7 +92,8 @@ class PropertyTest {
 		var memo = "//" + key + ":" + OLD_VALUE + System.lineSeparator()
 				+ "memo12345";
 
-		var updatedMemo = "//" + key + ":" + VALUE + System.lineSeparator()
+		var updatedMemo = OptionParser.HEAD_COMMENT + System.lineSeparator()
+				+ "//" + key + ":" + VALUE + System.lineSeparator()
 				+ "memo12345";
 
 		property.setMemo(memo);
@@ -117,7 +118,8 @@ class PropertyTest {
 
 		var memo = "memo12345";
 
-		var updatedMemo = "//" + key + ":" + VALUE + System.lineSeparator()
+		var updatedMemo = OptionParser.HEAD_COMMENT + System.lineSeparator()
+				+ "//" + key + ":" + VALUE + System.lineSeparator()
 				+ "memo12345";
 
 		property.setMemo(memo);

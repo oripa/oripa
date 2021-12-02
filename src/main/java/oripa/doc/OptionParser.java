@@ -37,7 +37,15 @@ public class OptionParser {
 		public static final String BACK_COLOR = "backColor";
 	}
 
+	private static final String HEAD_COMMENT_START = "////";
+	public static final String HEAD_COMMENT = HEAD_COMMENT_START
+			+ "The lines starting with // are configurations for ORIPA. Do not edit manually.";
+
 	private static final String OPTION_START = "//";
+
+	public boolean matchHeadCommentStart(final String line) {
+		return line.startsWith(HEAD_COMMENT_START);
+	}
 
 	public boolean matchOptionStart(final String line) {
 		return line.startsWith(OPTION_START);

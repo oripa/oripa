@@ -175,6 +175,7 @@ public class Property {
 		var parser = new OptionParser();
 
 		var optionLines = memo.lines()
+				.filter(line -> !parser.matchHeadCommentStart(line))
 				.filter(line -> parser.matchOptionStart(line))
 				.collect(Collectors.toList());
 
@@ -200,6 +201,10 @@ public class Property {
 		}
 
 		memo.lines().forEach(line -> {
+			if (parser.matchHeadCommentStart(line)) {
+				return;
+			}
+
 			if (parser.matchOptionStart(line)) {
 				optionLines.add(line);
 			} else {
@@ -226,7 +231,8 @@ public class Property {
 
 		String lineSep = System.lineSeparator();
 
-		memo = String.join(lineSep, parser.createLines(options)) + lineSep
+		memo = OptionParser.HEAD_COMMENT + lineSep
+				+ String.join(lineSep, parser.createLines(options)) + lineSep
 				+ String.join(lineSep, textLines);
 	}
 }
