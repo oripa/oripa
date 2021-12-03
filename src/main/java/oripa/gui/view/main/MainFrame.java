@@ -720,7 +720,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		if (code == null) {
 			return null;
 		}
-		return new Color(Integer.decode(code));
+
+		try {
+			return new Color(Integer.decode(code));
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 
 	private void saveIniFile() {
