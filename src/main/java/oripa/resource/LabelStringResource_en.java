@@ -49,6 +49,14 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.Main.ORIPA_FILE_ID, "ORIPA file" },
 			{ StringID.Main.PICTURE_FILE_ID, "Picture file" },
 
+			{ StringID.Main.PROP_DIAL_TITLE_ID, "Model Information" },
+			{ StringID.Main.PROP_DIAL_MODEL_TITLE_ID, "Title" },
+			{ StringID.Main.PROP_DIAL_AUTHOR_ID, "Author data" },
+			{ StringID.Main.PROP_DIAL_CREATOR_ID, "Model creator" },
+			{ StringID.Main.PROP_DIAL_SOURCE_ID, "Source" },
+			{ StringID.Main.PROP_DIAL_MEMO_ID, "Memo" },
+			{ StringID.Main.PROP_DIAL_OK_ID, "OK" },
+
 			// ---------------------------------------------------------
 			// Integrated IDs
 			{ StringID.COPY_PASTE_ID, "Copy and Paste" },
