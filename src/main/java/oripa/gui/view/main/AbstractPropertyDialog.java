@@ -18,6 +18,7 @@
 
 package oripa.gui.view.main;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ComponentEvent;
@@ -27,6 +28,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -62,7 +64,15 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		setSize(420, 278);
 		addComponentListener(this);
 
-		// add event listeners
+		// setup ScrollPane and word wrapping in memoTextArea
+		memoTextArea.setLineWrap(true);
+		memoTextArea.setWrapStyleWord(true);
+		JScrollPane memoScrollPane = new JScrollPane(memoTextArea);
+		memoScrollPane.setVerticalScrollBarPolicy(
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		memoScrollPane.setPreferredSize(new Dimension(250, 250));
+
+		// add action listener to OK button
 		okButton.addActionListener(e -> {
 			onClickOKButton(getEditedProperty());
 			dispose();
@@ -106,7 +116,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_MEMO_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 1.0).setFill(GridBagConstraints.BOTH);
-		contentPane.add(memoTextArea, gbcBuilder.getNextField());
+		contentPane.add(memoScrollPane, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0).setFill(GridBagConstraints.NONE);
 		contentPane.add(okButton, gbcBuilder.getLineField());
