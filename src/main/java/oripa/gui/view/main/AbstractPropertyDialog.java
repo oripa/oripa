@@ -43,12 +43,13 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
-	private final JTextField TitleTextField = new JTextField();
-	private final JTextField EditorNameTextField = new JTextField();
-	private final JTextField OriginalAuthorTextField = new JTextField();
-	private final JTextField ReferenceTextField = new JTextField();
-	private final JTextArea MemoTextArea = new JTextArea();
-	private final JButton OKButton = new JButton(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_OK_ID));
+	private final JTextField titleTextField = new JTextField();
+	private final JTextField editorNameTextField = new JTextField();
+	private final JTextField originalAuthorTextField = new JTextField();
+	private final JTextField referenceTextField = new JTextField();
+	private final JTextArea memoTextArea = new JTextArea();
+
+	private final JButton okButton = new JButton(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_OK_ID));
 
 	private final Property property;
 
@@ -62,7 +63,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		addComponentListener(this);
 
 		// add event listeners
-		OKButton.addActionListener(e -> {
+		okButton.addActionListener(e -> {
 			onClickOKButton(getEditedProperty());
 			dispose();
 		});
@@ -81,51 +82,51 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_MODEL_TITLE_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
-		contentPane.add(TitleTextField, gbcBuilder.getNextField());
+		contentPane.add(titleTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
 		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_AUTHOR_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
-		contentPane.add(EditorNameTextField, gbcBuilder.getNextField());
+		contentPane.add(editorNameTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
 		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_CREATOR_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
-		contentPane.add(OriginalAuthorTextField, gbcBuilder.getNextField());
+		contentPane.add(originalAuthorTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
 		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_SOURCE_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
-		contentPane.add(ReferenceTextField, gbcBuilder.getNextField());
+		contentPane.add(referenceTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
 		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_MEMO_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 1.0).setFill(GridBagConstraints.BOTH);
-		contentPane.add(MemoTextArea, gbcBuilder.getNextField());
+		contentPane.add(memoTextArea, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0).setFill(GridBagConstraints.NONE);
-		contentPane.add(OKButton, gbcBuilder.getLineField());
+		contentPane.add(okButton, gbcBuilder.getLineField());
 	}
 
 	public void setValue() {
-		TitleTextField.setText(property.getTitle());
-		EditorNameTextField.setText(property.getEditorName());
-		OriginalAuthorTextField.setText(property.getOriginalAuthorName());
-		ReferenceTextField.setText(property.getReference());
-		MemoTextArea.setText(property.getMemo());
+		titleTextField.setText(property.getTitle());
+		editorNameTextField.setText(property.getEditorName());
+		originalAuthorTextField.setText(property.getOriginalAuthorName());
+		referenceTextField.setText(property.getReference());
+		memoTextArea.setText(property.getMemo());
 	}
 
 	private Property getEditedProperty() {
 		Property prop = new Property(property.getDataFilePath());
-		prop.setTitle(TitleTextField.getText());
-		prop.setEditorName(EditorNameTextField.getText());
-		prop.setOriginalAuthorName(OriginalAuthorTextField.getText());
-		prop.setReference(ReferenceTextField.getText());
-		prop.setMemo(MemoTextArea.getText());
+		prop.setTitle(titleTextField.getText());
+		prop.setEditorName(editorNameTextField.getText());
+		prop.setOriginalAuthorName(originalAuthorTextField.getText());
+		prop.setReference(referenceTextField.getText());
+		prop.setMemo(memoTextArea.getText());
 
 		return prop;
 	}
@@ -142,7 +143,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	@Override
 	public void componentShown(final ComponentEvent arg0) {
-		OKButton.requestFocusInWindow();
+		okButton.requestFocusInWindow();
 	}
 
 	@Override
