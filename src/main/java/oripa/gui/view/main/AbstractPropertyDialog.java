@@ -43,12 +43,12 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
-	public JTextField TitleTextField = new JTextField();
+	private final JTextField TitleTextField = new JTextField();
 	private final JTextField EditorNameTextField = new JTextField();
 	private final JTextField OriginalAuthorTextField = new JTextField();
 	private final JTextField ReferenceTextField = new JTextField();
 	private final JTextArea MemoTextArea = new JTextArea();
-	public JButton OKButton = new JButton(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_OK_ID));
+	private final JButton OKButton = new JButton(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_OK_ID));
 
 	private final Property property;
 
@@ -60,12 +60,21 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_TITLE_ID));
 		setSize(420, 278);
 		addComponentListener(this);
+
+		// add event listeners
+		OKButton.addActionListener(e -> {
+			onClickOKButton(getEditedProperty());
+			dispose();
+		});
+
+		// Add Components to contentPane
 		var contentPane = getContentPane();
 		contentPane.setLayout(new GridBagLayout());
 
+		// left column should not take more space than needed
+		// remaining space given to input fields
 		var leftWeight = 0.0;
 		var rightWeight = 1.0;
-
 		var gbcBuilder = new GridBagConstraintsBuilder(2).setInsets(2, 5, 2, 5).setWeight(leftWeight, 0.0)
 				.setAnchor(GridBagConstraints.CENTER);
 
@@ -100,11 +109,6 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 		gbcBuilder.setWeight(leftWeight, 0.0).setFill(GridBagConstraints.NONE);
 		contentPane.add(OKButton, gbcBuilder.getLineField());
-
-		OKButton.addActionListener(e -> {
-			onClickOKButton(getEditedProperty());
-			dispose();
-		});
 	}
 
 	public void setValue() {
@@ -130,12 +134,10 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	@Override
 	public void componentResized(final ComponentEvent arg0) {
-
 	}
 
 	@Override
 	public void componentMoved(final ComponentEvent arg0) {
-
 	}
 
 	@Override
@@ -145,6 +147,5 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
-
 	}
 }
