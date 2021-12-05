@@ -451,8 +451,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			property.putFrontColorCode(convertColorToCode(front));
 			property.putBackColorCode(convertColorToCode(back));
 
-			uiPanel.setEstimationResultColors(front, back);
-
 			menuItemSave.doClick();
 		});
 	}

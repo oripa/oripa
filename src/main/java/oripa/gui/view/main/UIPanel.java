@@ -900,7 +900,10 @@ public class UIPanel extends JPanel {
 	}
 
 	public void setEstimationResultSaveColorsListener(final BiConsumer<Color, Color> listener) {
-		estimationResultSaveColorsListener = listener;
+		estimationResultSaveColorsListener = (front, back) -> {
+			setEstimationResultColors(front, back);
+			listener.accept(front, back);
+		};
 	}
 
 	/**
