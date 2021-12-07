@@ -51,9 +51,9 @@ public class LabelStringResource_en extends ListResourceBundle {
 
 			{ StringID.Main.PROP_DIAL_TITLE_ID, "Model Information" },
 			{ StringID.Main.PROP_DIAL_MODEL_TITLE_ID, "Title" },
-			{ StringID.Main.PROP_DIAL_AUTHOR_ID, "Author data" },
-			{ StringID.Main.PROP_DIAL_CREATOR_ID, "Model creator" },
-			{ StringID.Main.PROP_DIAL_SOURCE_ID, "Source" },
+			{ StringID.Main.PROP_DIAL_AUTHOR_ID, "Editor data" },
+			{ StringID.Main.PROP_DIAL_CREATOR_ID, "Original Author" },
+			{ StringID.Main.PROP_DIAL_SOURCE_ID, "References" },
 			{ StringID.Main.PROP_DIAL_MEMO_ID, "Memo" },
 			{ StringID.Main.PROP_DIAL_OK_ID, "OK" },
 
