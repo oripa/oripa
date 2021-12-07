@@ -38,6 +38,10 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 
+/**
+ * Provides JDialog with input fields for {@link oripa.doc.Property} values.
+ *
+ */
 public abstract class AbstractPropertyDialog extends JDialog implements
 		ComponentListener {
 
@@ -122,6 +126,9 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		contentPane.add(okButton, gbcBuilder.getLineField());
 	}
 
+	/**
+	 * Read values of {@link oripa.doc.Property} into textFields.
+	 */
 	public void setValue() {
 		titleTextField.setText(property.getTitle());
 		editorNameTextField.setText(property.getEditorName());
@@ -130,6 +137,11 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		memoTextArea.setText(property.getMemo());
 	}
 
+	/**
+	 * Create Property from input fields
+	 *
+	 * @return updated {@link oripa.doc.Property}
+	 */
 	private Property getEditedProperty() {
 		Property prop = new Property(property.getDataFilePath());
 		prop.setTitle(titleTextField.getText());
@@ -141,6 +153,13 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		return prop;
 	}
 
+	/**
+	 * Action to be executed when okButton is clicked.
+	 *
+	 * @param newProperty
+	 *            New {@link oripa.doc.Property containing values from input
+	 *            fields.
+	 */
 	protected abstract void onClickOKButton(Property newProperty);
 
 	@Override
