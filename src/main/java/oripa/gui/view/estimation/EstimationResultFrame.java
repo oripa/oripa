@@ -19,6 +19,8 @@
 package oripa.gui.view.estimation;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.util.function.BiConsumer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -54,5 +56,13 @@ public class EstimationResultFrame extends JFrame {
 	public void setModel(final FoldedModel foldedModel) {
 		screen.setModel(foldedModel);
 		ui.setModel(foldedModel);
+	}
+
+	public void setColors(final Color front, final Color back) {
+		ui.setColors(front, back);
+	}
+
+	public void setSaveColorsListener(final BiConsumer<Color, Color> listener) {
+		ui.setSaveColorsListener(listener);
 	}
 }

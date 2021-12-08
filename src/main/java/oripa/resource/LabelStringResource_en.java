@@ -105,6 +105,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.EstimationResultUI.FACE_COLOR_FRONT_ID, "Choose Front Color" },
 			{ StringID.EstimationResultUI.FACE_COLOR_BACK_ID, "Choose Back Color" },
 
+			{ StringID.EstimationResultUI.SAVE_COLORS_ID, "Save Colors" },
 			{ StringID.EstimationResultUI.EXPORT_ID, "Export" },
 
 			{ StringID.EstimationResultUI.HINT_LABEL_ID, "L: Rotate / Wheel: Zoom / R: Move" },

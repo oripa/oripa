@@ -16,21 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.util;
+package oripa.doc;
 
-import java.awt.Component;
+import static org.junit.jupiter.api.Assertions.*;
 
-import javax.swing.JOptionPane;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class Dialogs {
-	public static void showErrorDialog(final Component parent, final String title,
-			final Exception ex) {
-		JOptionPane.showMessageDialog(parent,
-				ex.getClass().getName() + ": " + ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+class OptionParserTest {
+
+	@Test
+	void testParseLine() {
+		var parser = new OptionParser();
+		var option = parser.parse("// test : #008888");
+
+		assertEquals("test", option.getV1());
+		assertEquals("#008888", option.getV2());
 	}
 
 }
