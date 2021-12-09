@@ -55,7 +55,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 	private final JTextField referenceTextField = new JTextField();
 	private final JTextArea memoTextArea = new JTextArea();
 
-	private final JButton okButton = new JButton(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_OK_ID));
+	private final JButton okButton = new JButton(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_OK_ID));
 
 	private final Property property;
 
@@ -64,7 +64,7 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 
 		this.property = prop;
 
-		setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_TITLE_ID));
+		setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_TITLE_ID));
 		setSize(420, 278);
 		addComponentListener(this);
 
@@ -93,31 +93,31 @@ public abstract class AbstractPropertyDialog extends JDialog implements
 		var gbcBuilder = new GridBagConstraintsBuilder(2).setInsets(2, 5, 2, 5).setWeight(leftWeight, 0.0)
 				.setAnchor(GridBagConstraints.CENTER);
 
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_MODEL_TITLE_ID)),
+		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MODEL_TITLE_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
 		contentPane.add(titleTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_AUTHOR_ID)),
+		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_AUTHOR_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
 		contentPane.add(editorNameTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_CREATOR_ID)),
+		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_CREATOR_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
 		contentPane.add(originalAuthorTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_SOURCE_ID)),
+		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_SOURCE_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 0.0);
 		contentPane.add(referenceTextField, gbcBuilder.getNextField());
 
 		gbcBuilder.setWeight(leftWeight, 0.0);
-		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIAL_MEMO_ID)),
+		contentPane.add(new JLabel(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_MEMO_ID)),
 				gbcBuilder.getNextField());
 		gbcBuilder.setWeight(rightWeight, 1.0).setFill(GridBagConstraints.BOTH);
 		contentPane.add(memoScrollPane, gbcBuilder.getNextField());
