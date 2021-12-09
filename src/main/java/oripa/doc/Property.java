@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,39 +18,45 @@
  */
 package oripa.doc;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+import oripa.doc.OptionParser.Keys;
+import oripa.util.Pair;
+
 /**
- * @author  Koji
+ * @author Koji
  */
 public class Property {
 	/**
-	 * 
+	 *
 	 */
 	private String dataFilePath;
 	/**
-	 * 
+	 *
 	 */
 	private String title;
 	/**
-	 * 
+	 *
 	 */
 	private String editorName;
 	/**
-	 * 
+	 *
 	 */
 	private String originalAuthorName;
 	/**
-	 * 
+	 *
 	 */
 	private String reference;
 	/**
-	 * 
+	 *
 	 */
 	private String memo;
 
 	/**
 	 * Constructor
 	 */
-	public Property(String dataFilePath) {
+	public Property(final String dataFilePath) {
 		this.dataFilePath = dataFilePath;
 	}
 
@@ -62,9 +68,10 @@ public class Property {
 	}
 
 	/**
-	 * @param dataFilePath Sets dataFilePath
+	 * @param dataFilePath
+	 *            Sets dataFilePath
 	 */
-	public void setDataFilePath(String dataFilePath) {
+	public void setDataFilePath(final String dataFilePath) {
 		this.dataFilePath = dataFilePath;
 	}
 
@@ -76,9 +83,10 @@ public class Property {
 	}
 
 	/**
-	 * @param title Sets title
+	 * @param title
+	 *            Sets title
 	 */
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		this.title = title;
 	}
 
@@ -90,9 +98,10 @@ public class Property {
 	}
 
 	/**
-	 * @param editorName Sets editorName
+	 * @param editorName
+	 *            Sets editorName
 	 */
-	public void setEditorName(String editorName) {
+	public void setEditorName(final String editorName) {
 		this.editorName = editorName;
 	}
 
@@ -104,9 +113,10 @@ public class Property {
 	}
 
 	/**
-	 * @param originalAuthorName Sets originalAuthorName
+	 * @param originalAuthorName
+	 *            Sets originalAuthorName
 	 */
-	public void setOriginalAuthorName(String originalAuthorName) {
+	public void setOriginalAuthorName(final String originalAuthorName) {
 		this.originalAuthorName = originalAuthorName;
 	}
 
@@ -118,9 +128,10 @@ public class Property {
 	}
 
 	/**
-	 * @param reference Sets reference
+	 * @param reference
+	 *            Sets reference
 	 */
-	public void setReference(String reference) {
+	public void setReference(final String reference) {
 		this.reference = reference;
 	}
 
@@ -132,9 +143,96 @@ public class Property {
 	}
 
 	/**
-	 * @param memo Sets memo
+	 * @param memo
+	 *            Sets memo
 	 */
-	public void setMemo(String memo) {
+	public void setMemo(final String memo) {
 		this.memo = memo;
+	}
+
+	public String extractFrontColorCode() {
+		return extractOption(Keys.FRONT_COLOR);
+	}
+
+	public void putFrontColorCode(final String code) {
+		putOption(OptionParser.Keys.FRONT_COLOR, code);
+	}
+
+	public String extractBackColorCode() {
+		return extractOption(Keys.BACK_COLOR);
+	}
+
+	public void putBackColorCode(final String code) {
+		putOption(OptionParser.Keys.BACK_COLOR, code);
+	}
+
+	private String extractOption(final String key) {
+
+		if (memo == null) {
+			return null;
+		}
+
+		var parser = new OptionParser();
+
+		var optionLines = memo.lines()
+				.filter(line -> !parser.matchHeadCommentStart(line))
+				.filter(line -> parser.matchOptionStart(line))
+				.collect(Collectors.toList());
+
+		var keyValueOpt = parser.parse(optionLines).stream()
+				.filter(option -> option.getV1().equals(key))
+				.findFirst();
+
+		if (keyValueOpt.isEmpty()) {
+			return null;
+		}
+
+		return keyValueOpt.get().getV2();
+	}
+
+	private void putOption(final String key, final String value) {
+		var optionLines = new ArrayList<String>();
+		var textLines = new ArrayList<String>();
+
+		var parser = new OptionParser();
+
+		if (memo == null) {
+			memo = "";
+		}
+
+		memo.lines().forEach(line -> {
+			if (parser.matchHeadCommentStart(line)) {
+				return;
+			}
+
+			if (parser.matchOptionStart(line)) {
+				optionLines.add(line);
+			} else {
+				textLines.add(line);
+			}
+		});
+
+		// update
+		var options = parser.parse(optionLines);
+		boolean updated = false;
+		for (int i = 0; i < options.size(); i++) {
+			var option = options.get(i);
+			if (option.getV1().equals(key)) {
+				options.set(i, new Pair<>(key, value));
+				updated = true;
+				break;
+			}
+		}
+
+		// insert
+		if (!updated) {
+			options.add(new Pair<>(key, value));
+		}
+
+		String lineSep = System.lineSeparator();
+
+		memo = OptionParser.HEAD_COMMENT + lineSep
+				+ String.join(lineSep, parser.createLines(options)) + lineSep
+				+ String.join(lineSep, textLines);
 	}
 }

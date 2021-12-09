@@ -17,10 +17,12 @@
  */
 package oripa.gui.view.estimation;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
+import java.util.function.BiConsumer;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -81,6 +83,9 @@ public class EstimationResultUI extends JPanel {
 	private final ColorRGBPanel backColorRGBPanel = new ColorRGBPanel(this, DefaultColors.BACK,
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_BACK_ID));
 
+	private final JButton saveColorsButton = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SAVE_COLORS_ID));
+
 	private final JButton exportButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
 
@@ -90,6 +95,8 @@ public class EstimationResultUI extends JPanel {
 
 	private FoldedModel foldedModel;
 	private OverlapRelationList overlapRelationList = null;
+
+	private BiConsumer<Color, Color> saveColorsListener;
 
 	/**
 	 * This is the default constructor
@@ -187,14 +194,17 @@ public class EstimationResultUI extends JPanel {
 			screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
 		});
 
-		ChangeListener colorChangeListener = (e) -> {
-			screen.setColors(
-					frontColorRGBPanel.getColor(),
-					backColorRGBPanel.getColor());
+		ChangeListener colorRGBChangeListener = (e) -> {
+			var frontColor = frontColorRGBPanel.getColor();
+			var backColor = backColorRGBPanel.getColor();
+			screen.setColors(frontColor, backColor);
 			screen.redrawOrigami();
 		};
-		frontColorRGBPanel.addChangeListener(colorChangeListener);
-		backColorRGBPanel.addChangeListener(colorChangeListener);
+		frontColorRGBPanel.addChangeListener(colorRGBChangeListener);
+		backColorRGBPanel.addChangeListener(colorRGBChangeListener);
+
+		saveColorsButton.addActionListener(
+				e -> saveColorsListener.accept(frontColorRGBPanel.getColor(), backColorRGBPanel.getColor()));
 
 		exportButton.addActionListener(e -> export());
 	}
@@ -256,6 +266,7 @@ public class EstimationResultUI extends JPanel {
 
 		colorPanel.add(backColorRGBPanel, gbBuilder.getNextField());
 
+		colorPanel.add(saveColorsButton, gbBuilder.getNextField());
 		return colorPanel;
 	}
 
@@ -272,6 +283,17 @@ public class EstimationResultUI extends JPanel {
 				+ (overlapRelationList.getCurrentIndex() + 1) + "/"
 				+ overlapRelationList.getCount() + "]");
 
+	}
+
+	public void setColors(final Color front, final Color back) {
+		logger.debug("Front color = {}", front);
+		logger.debug("Back color = {}", back);
+		frontColorRGBPanel.setColor(front == null ? DefaultColors.FRONT : front);
+		backColorRGBPanel.setColor(back == null ? DefaultColors.BACK : back);
+	}
+
+	public void setSaveColorsListener(final BiConsumer<Color, Color> listener) {
+		saveColorsListener = listener;
 	}
 
 	/**

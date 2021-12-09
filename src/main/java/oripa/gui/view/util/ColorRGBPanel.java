@@ -58,6 +58,14 @@ public class ColorRGBPanel extends JPanel {
 		return new Color((Integer) red.getValue(), (Integer) green.getValue(), (Integer) blue.getValue());
 	}
 
+	public void setColor(final Color color) {
+		red.setValue(color.getRed());
+		green.setValue(color.getGreen());
+		blue.setValue(color.getBlue());
+
+		pallete.setBackground(color);
+	}
+
 	private class ColorSpinnerChangeListener implements ChangeListener {
 
 		@Override

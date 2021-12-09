@@ -19,6 +19,7 @@
 package oripa.gui.view.main;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -201,6 +202,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private final JMenuItem menuItemAbout = new JMenuItem(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
 
+	private UIPanel uiPanel;
+
 	// -----------------------------------------------------------------------------------------------------------
 	// Create paint button
 
@@ -225,7 +228,6 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		// this has to be done before instantiation of UI panel.
 		addHintPropertyChangeListenersToSetting();
 
-		UIPanel uiPanel = null;
 		logger.info("start constructing UI panel.");
 		try {
 			uiPanel = new UIPanel(
@@ -444,6 +446,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			MRUFilesMenuItem[i].addActionListener(this::loadFileFromMRUFileMenuItem);
 		}
 
+		uiPanel.setEstimationResultSaveColorsListener((front, back) -> {
+			var property = document.getProperty();
+			property.putFrontColorCode(convertColorToCode(front));
+			property.putBackColorCode(convertColorToCode(back));
+
+			menuItemSave.doClick();
+		});
 	}
 
 	private void modifySavingActions() {
@@ -679,6 +688,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 						// the document object is referred by screen and UI
 						// panel as a Holder.
 						document.set(doc);
+
+						var property = document.getProperty();
+						uiPanel.setEstimationResultColors(
+								convertCodeToColor(property.extractFrontColorCode()),
+								convertCodeToColor(property.extractBackColorCode()));
+
 						screenSetting.setGridVisible(false);
 						paintContextModification
 								.setCreasePatternToPaintContext(
@@ -691,6 +706,22 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			Dialogs.showErrorDialog(this, resourceHolder.getString(
 					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
 			return document.getDataFilePath();
+		}
+	}
+
+	private String convertColorToCode(final Color color) {
+		return String.format("#%06X", color.getRGB() & 0x00FFFFFF);
+	}
+
+	private Color convertCodeToColor(final String code) {
+		if (code == null) {
+			return null;
+		}
+
+		try {
+			return new Color(Integer.decode(code));
+		} catch (NumberFormatException e) {
+			return null;
 		}
 	}
 
