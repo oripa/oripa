@@ -35,6 +35,13 @@ public class StringID {
 		public static final String ORIPA_FILE_ID = "ORIPA_File";
 		public static final String PICTURE_FILE_ID = "Picture_File";
 
+		public static final String PROP_DIALOG_TITLE_ID = "PD_Dialog_Title";
+		public static final String PROP_DIALOG_MODEL_TITLE_ID = "PD_Model_Title";
+		public static final String PROP_DIALOG_AUTHOR_ID = "PD_Author";
+		public static final String PROP_DIALOG_CREATOR_ID = "PD_Creator";
+		public static final String PROP_DIALOG_SOURCE_ID = "PD_Source";
+		public static final String PROP_DIALOG_MEMO_ID = "PD_Memo";
+		public static final String PROP_DIALOG_OK_ID = "PD_OK_text";
 	}
 
 	public static class Error {

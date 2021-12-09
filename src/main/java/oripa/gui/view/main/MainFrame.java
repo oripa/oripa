@@ -524,9 +524,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	}
 
 	private void showPropertyDialog() {
-		AbstractPropertyDialog dialog = new PropertyDialog(this, document);
+		PropertyDialog dialog = new PropertyDialog(this, document);
 
-		dialog.setValue();
 		Rectangle rec = getBounds();
 		dialog.setLocation(
 				(int) (rec.getCenterX() - dialog.getWidth() / 2),
