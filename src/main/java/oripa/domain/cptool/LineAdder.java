@@ -1,5 +1,8 @@
 package oripa.domain.cptool;
 
+import static oripa.domain.cptool.OverlappingLineSplitter.splitOverlappingLines;
+import static oripa.geom.GeomUtil.detectOverlap;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,9 +27,6 @@ import oripa.util.StopWatch;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
-
-import static oripa.domain.cptool.OverlappingLineSplitter.splitOverlappingLines;
-import static oripa.geom.GeomUtil.detectOverlap;
 
 public class LineAdder {
 	private static final Logger logger = LoggerFactory.getLogger(LineAdder.class);
@@ -168,10 +168,12 @@ public class LineAdder {
 	 * Adds {@code inputLine} to {@code currentLines}. The lines will be split
 	 * at the intersections of the lines.
 	 *
-	 * @param inputLine Line to be added in the {@code currentLines} list
-	 * @param currentLines List of lines in which we add {@code inputLine}
-	 *            current line list. it will be affected as new lines are added
-	 *            and unnecessary lines are removed.
+	 * @param inputLine
+	 *            Line to be added in the {@code currentLines} list
+	 * @param currentLines
+	 *            List of lines in which we add {@code inputLine} current line
+	 *            list. it will be affected as new lines are added and
+	 *            unnecessary lines are removed.
 	 */
 	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines) {
 		addAll(List.of(inputLine), currentLines);
@@ -204,11 +206,12 @@ public class LineAdder {
 
 		logger.debug("addAll() divideCurrentLines() start: {}[ms]", watch.getMilliSec());
 
-		// a map from an input line to a map from a cross point to a line crossing with the input line.
+		// a map from an input line to a map from a cross point to a line
+		// crossing with the input line.
 		Map<OriLine, Map<OriPoint, OriLine>> crossMaps = Collections.synchronizedMap(new HashMap<>());
 
-		nonExistingNewLines.forEach(inputLine ->
-				crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines)));
+		nonExistingNewLines
+				.forEach(inputLine -> crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines)));
 
 		// feed back the result of line divisions
 		currentLines.addAll(crossingCurrentLines);
@@ -217,8 +220,8 @@ public class LineAdder {
 
 		ArrayList<List<Vector2d>> pointLists = new ArrayList<>();
 
-		nonExistingNewLines.forEach(inputLine ->
-				pointLists.add(createInputLinePoints(inputLine, crossMaps.get(inputLine))));
+		nonExistingNewLines
+				.forEach(inputLine -> pointLists.add(createInputLinePoints(inputLine, crossMaps.get(inputLine))));
 
 		logger.debug("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
@@ -229,33 +232,83 @@ public class LineAdder {
 		logger.debug("addAll(): {}[ms]", watch.getMilliSec());
 	}
 
-	private List<OriLine> getSplitNewLines(List<OriLine> nonExistingNewLines, ArrayList<List<Vector2d>> pointLists) {
+	/**
+	 * Splitting the {@code nonExistingNewLines} on all the points in
+	 * {@code pointLists}
+	 *
+	 * @param nonExistingNewLines
+	 * @param pointLists
+	 *            Collection of Points on {@code nonExistingNewLines} from
+	 *            crossings or line endpoints
+	 * @return collection of all new lists
+	 */
+	private List<OriLine> getSplitNewLines(final List<OriLine> nonExistingNewLines,
+			final ArrayList<List<Vector2d>> pointLists) {
 		return IntStream.range(0, nonExistingNewLines.size()).parallel()
 				.mapToObj(j -> createSequentialLines(pointLists.get(j), nonExistingNewLines.get(j).getType()))
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList());
 	}
 
-	private void addNewLineOrSplitAndAddIfOverlapping(Collection<OriLine> currentLines, OriLine splitNewLine) {
+	/**
+	 * Calculate new split lines if some {@code currentLines} are Overlapping
+	 * with {@code splitNewLine}
+	 *
+	 * @param currentLines
+	 * @param splitNewLine
+	 */
+	private void addNewLineOrSplitAndAddIfOverlapping(final Collection<OriLine> currentLines,
+			final OriLine splitNewLine) {
 		List<OriLine> overlappingLines = getOverlappingLines(currentLines, splitNewLine);
 
-		if(overlappingLines.isEmpty()) {
+		if (overlappingLines.isEmpty()) {
 			currentLines.add(splitNewLine);
-		}
-		else {
+		} else {
 			replaceExistingLineWithSplitOverlappingLines(currentLines, splitNewLine, overlappingLines);
 		}
 	}
 
-	private void replaceExistingLineWithSplitOverlappingLines(Collection<OriLine> currentLines, OriLine splitNewLine, List<OriLine> overlappingLines) {
-		overlappingLines.forEach(currentLine -> {
-				List<OriLine> oriLines = splitOverlappingLines(currentLine, splitNewLine);
-				currentLines.remove(currentLine);
-				currentLines.addAll(oriLines);
-			});
+	/**
+	 * Split {@code splitNewLine} on any {@code overlappingLines} and call until
+	 * all of them were removed
+	 *
+	 * @param currentLines
+	 *            This Collection changed after the function finished
+	 * @param splitNewLine
+	 * @param overlappingLines
+	 */
+	private void replaceExistingLineWithSplitOverlappingLines(final Collection<OriLine> currentLines,
+			final OriLine splitNewLine, final List<OriLine> overlappingLines) {
+		// recursion endpoint
+		if (overlappingLines.size() == 0) {
+			currentLines.add(splitNewLine);
+			return;
+		}
+
+		// just start with any OverlappingLine that comes first
+		var overlappingLine = overlappingLines.remove(0);
+
+		// will be split into two or three Parts by one overlappingLine
+		List<OriLine> oriLines = splitOverlappingLines(overlappingLine, splitNewLine);
+		// remove it from the current Line Set
+		currentLines.remove(overlappingLine);
+		for (var newLine : oriLines) {
+			// calculate remaining overlappingLines with new Segment
+			var newLineOverlappingLines = getOverlappingLines(overlappingLines, newLine);
+			// recursion
+			replaceExistingLineWithSplitOverlappingLines(currentLines, newLine, newLineOverlappingLines);
+		}
 	}
 
-	private List<OriLine> getOverlappingLines(Collection<OriLine> currentLines, OriLine splitNewLine) {
+	/**
+	 * Calculate Collection with lines overlapping with {@code splitNewLine}
+	 * from {@code currentLines}
+	 *
+	 * @param currentLines
+	 * @param splitNewLine
+	 * @return Collection can be empty if no overlapping lines are found
+	 */
+	private List<OriLine> getOverlappingLines(final Collection<OriLine> currentLines, final OriLine splitNewLine) {
 		return currentLines.stream()
 				.filter(oriLine -> !oriLine.isBoundary())
 				.filter(currentLine -> detectOverlap(currentLine, splitNewLine))
