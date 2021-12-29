@@ -19,7 +19,8 @@
 
 package oripa.domain.cptool;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -112,7 +113,7 @@ class LineAdderTest {
 	@Test
 	void should_replace_overlapping_parts() {
 		// Given
-		var creasePattern = new ArrayList<>(List.of( new OriLine(-200, -200, 0, 0, OriLine.Type.MOUNTAIN)));
+		var creasePattern = new ArrayList<>(List.of(new OriLine(-200, -200, 0, 0, OriLine.Type.MOUNTAIN)));
 		var line = new OriLine(-100, -100, 100, 100, OriLine.Type.VALLEY);
 
 		// When
@@ -125,6 +126,28 @@ class LineAdderTest {
 		assertTrue(creasePattern.contains(new OriLine(0, 0, 100, 100, OriLine.Type.VALLEY)));
 	}
 
+	@Test
+	void should_remove_multiple_fully_overlapping_line_with_splits() {
+		// Given
+		var creasePattern = new ArrayList<>(List.of(
+				new OriLine[] { new OriLine(-100, 0, -50, 0, OriLine.Type.VALLEY),
+						new OriLine(0, 0, 50, 0, OriLine.Type.VALLEY),
+						new OriLine(100, 0, 150, 0, OriLine.Type.VALLEY) }));
+
+		var line = new OriLine(-200, 0, 200, 0, OriLine.Type.MOUNTAIN);
+
+		// When
+		adder.addLine(line, creasePattern);
+
+		// Then
+		assertEquals(7, creasePattern.size());
+
+		var lastX = -200;
+		for (int x = -100; x <= 150; x += 50) {
+			assertTrue(creasePattern.contains(new OriLine(lastX, 0, x, 0, OriLine.Type.MOUNTAIN)));
+			lastX = x;
+		}
+	}
 
 	/**
 	 * Test method for
