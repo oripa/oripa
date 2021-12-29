@@ -19,6 +19,8 @@
 
 package oripa.geom;
 
+import static java.lang.Math.abs;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,13 +28,11 @@ import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
+import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
-import static java.lang.Math.abs;
-
 public class GeomUtil {
-
-	public final static double EPS = 1.0e-6;
+	public final static double EPS = CalculationResource.POINT_EPS;
 
 	public static double distance(final Vector2d p0, final Vector2d p1) {
 		return distance(p0.x, p0.y, p1.x, p1.y);
@@ -45,12 +45,12 @@ public class GeomUtil {
 
 	/**
 	 *
-	 * @return Count of end points on other segment for each segment.
-	 * If the count is 0 then they are not overlapping.
-	 * If the count is 1, they are not overlapping.
-	 * If the count is 2, then the two segments partially overlaps.
-	 * If the count is 3, then one segment overlaps entirely and an end point is shared with the other segment.
-	 * If the count is 4, then the two segments are equal.
+	 * @return Count of end points on other segment for each segment. If the
+	 *         count is 0 then they are not overlapping. If the count is 1, they
+	 *         are not overlapping. If the count is 2, then the two segments
+	 *         partially overlaps. If the count is 3, then one segment overlaps
+	 *         entirely and an end point is shared with the other segment. If
+	 *         the count is 4, then the two segments are equal.
 	 */
 	public static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1) {
@@ -88,10 +88,14 @@ public class GeomUtil {
 	}
 
 	/**
-	 * Both distances between the extremities of the lines should be less than the threshold
-	 * The lines can be reversed, so the test has to be done both ways
-	 * @param l0 First line to compare
-	 * @param l1 Second line to compare
+	 * Both distances between the extremities of the lines should be less than
+	 * the threshold The lines can be reversed, so the test has to be done both
+	 * ways
+	 *
+	 * @param l0
+	 *            First line to compare
+	 * @param l1
+	 *            Second line to compare
 	 * @return true if both segments are (at least almost) equals
 	 */
 	public static boolean isSameLineSegment(final OriLine l0, final OriLine l1) {
@@ -249,9 +253,7 @@ public class GeomUtil {
 		Vector2d diff = new Vector2d(l1.p.x - p0.x, l1.p.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
-		double epsilon = 1.0e-6;
-
-		if (det * det <= epsilon * d0.lengthSquared() * d1.lengthSquared()) {
+		if (det * det <= EPS * d0.lengthSquared() * d1.lengthSquared()) {
 			return null;
 		}
 
@@ -363,6 +365,7 @@ public class GeomUtil {
 
 	/**
 	 * solve: cross point = p0 + s * d0 = q0 + t * d1
+	 *
 	 * @return cross point
 	 */
 	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
@@ -454,29 +457,30 @@ public class GeomUtil {
 		return centroid;
 	}
 
-
-	public static boolean detectOverlap(OriLine existingLine, OriLine newLine) {
+	public static boolean detectOverlap(final OriLine existingLine, final OriLine newLine) {
 		return areOnSameSupportLine(existingLine, newLine) && !areDisjointSegments(existingLine, newLine);
 	}
 
-	public static boolean areDisjointSegments(OriLine l1, OriLine l2) {
-		if(l1.isVertical()) {
+	public static boolean areDisjointSegments(final OriLine l1, final OriLine l2) {
+		if (l1.isVertical()) {
 			return (l1.p0.y <= l2.p0.y && l1.p0.y <= l2.p1.y && l1.p1.y <= l2.p0.y && l1.p1.y <= l2.p1.y) ||
 					(l2.p0.y <= l1.p0.y && l2.p0.y <= l1.p1.y && l2.p1.y <= l1.p0.y && l2.p1.y <= l1.p1.y);
-		}
-		else {
+		} else {
 			return (l1.p0.x <= l2.p0.x && l1.p0.x <= l2.p1.x && l1.p1.x <= l2.p0.x && l1.p1.x <= l2.p1.x) ||
 					(l2.p0.x <= l1.p0.x && l2.p0.x <= l1.p1.x && l2.p1.x <= l1.p0.x && l2.p1.x <= l1.p1.x);
 		}
 	}
 
 	/**
-	 * l1 and l2 share the same support line if they test the same at 2 distinct points (more or less epsilon)
+	 * l1 and l2 share the same support line if they test the same at 2 distinct
+	 * points (more or less epsilon)
 	 */
-	public static boolean areOnSameSupportLine(OriLine l1, OriLine l2) {
-		if(l1.isVertical()) return abs(l1.getAffineXValueAt(l2.p0.y) - l2.p0.x) < EPS && abs(l1.getAffineXValueAt(l2.p1.y) - l2.p1.x) < EPS;
+	public static boolean areOnSameSupportLine(final OriLine l1, final OriLine l2) {
+		if (l1.isVertical()) {
+			return abs(l1.getAffineXValueAt(l2.p0.y) - l2.p0.x) < EPS
+					&& abs(l1.getAffineXValueAt(l2.p1.y) - l2.p1.x) < EPS;
+		}
 		return abs(l1.getAffineYValueAt(l2.p0.x) - l2.p0.y) < EPS && abs(l1.getAffineYValueAt(l2.p1.x) - l2.p1.y) < EPS;
 	}
-
 
 }

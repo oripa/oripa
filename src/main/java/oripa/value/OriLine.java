@@ -19,6 +19,9 @@
 
 package oripa.value;
 
+import static java.lang.Math.abs;
+import static oripa.geom.GeomUtil.EPS;
+
 import java.util.Objects;
 
 import javax.vecmath.Vector2d;
@@ -26,9 +29,6 @@ import javax.vecmath.Vector2d;
 import oripa.geom.Line;
 import oripa.geom.RectangleDomain;
 import oripa.geom.Segment;
-
-import static java.lang.Math.abs;
-import static oripa.geom.GeomUtil.EPS;
 
 public class OriLine implements Comparable<OriLine> {
 
@@ -42,9 +42,11 @@ public class OriLine implements Comparable<OriLine> {
 		return abs(p0.x - p1.x) < EPS;
 	}
 
-	public boolean contains(OriPoint oriPoint) {
+	public boolean contains(final OriPoint oriPoint) {
 		var rectangleDomain = new RectangleDomain(p0.x, p0.y, p1.x, p1.y);
-		if(isVertical()) return abs(getAffineXValueAt(oriPoint.y) - oriPoint.x) < EPS && rectangleDomain.contains(oriPoint);
+		if (isVertical()) {
+			return abs(getAffineXValueAt(oriPoint.y) - oriPoint.x) < EPS && rectangleDomain.contains(oriPoint);
+		}
 		return abs(getAffineYValueAt(oriPoint.x) - oriPoint.y) < EPS && rectangleDomain.contains(oriPoint);
 	}
 
@@ -176,16 +178,18 @@ public class OriLine implements Comparable<OriLine> {
 	}
 
 	/**
-	 * Calculates the affine value on the line, at the {@code xTested} coordinate using the y = ax + b expression
+	 * Calculates the affine value on the line, at the {@code xTested}
+	 * coordinate using the y = ax + b expression
 	 */
-	public double getAffineYValueAt(double xTested) {
+	public double getAffineYValueAt(final double xTested) {
 		return (p1.y - p0.y) * (xTested - p0.x) / (p1.x - p0.x) + p0.y;
 	}
 
 	/**
-	 * Calculates the affine value on the line, at the {@code yTested} coordinate using the x = ay + b expression
+	 * Calculates the affine value on the line, at the {@code yTested}
+	 * coordinate using the x = ay + b expression
 	 */
-	public double getAffineXValueAt(double yTested) {
+	public double getAffineXValueAt(final double yTested) {
 		return (p1.x - p0.x) * (yTested - p0.y) / (p1.y - p0.y) + p0.x;
 	}
 
@@ -210,8 +214,12 @@ public class OriLine implements Comparable<OriLine> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj == this) return true;
-		if (! (obj instanceof OriLine)) return false;
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof OriLine)) {
+			return false;
+		}
 
 		OriLine that = (OriLine) obj;
 
