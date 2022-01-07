@@ -98,7 +98,7 @@ public class GeomUtil {
 	 *            Second line to compare
 	 * @return true if both segments are (at least almost) equals
 	 */
-	public static boolean isSameLineSegment(final OriLine l0, final OriLine l1) {
+	public static boolean isSameLineSegment(final Segment l0, final Segment l1) {
 		return (distance(l0.p0, l1.p0) < EPS && distance(l0.p1, l1.p1) < EPS) ||
 				(distance(l0.p0, l1.p1) < EPS && distance(l0.p1, l1.p0) < EPS);
 	}
@@ -457,12 +457,12 @@ public class GeomUtil {
 		return centroid;
 	}
 
-	public static boolean detectOverlap(final OriLine existingLine, final OriLine newLine) {
+	public static boolean detectOverlap(final Segment existingLine, final Segment newLine) {
 		return areOnSameSupportLine(existingLine, newLine) && !areDisjointSegments(existingLine, newLine);
 	}
 
-	public static boolean areDisjointSegments(final OriLine l1, final OriLine l2) {
-		if (l1.isVertical()) {
+	public static boolean areDisjointSegments(final Segment l1, final Segment l2) {
+		if (segmentIsVertical(l1)) {
 			return (l1.p0.y <= l2.p0.y && l1.p0.y <= l2.p1.y && l1.p1.y <= l2.p0.y && l1.p1.y <= l2.p1.y) ||
 					(l2.p0.y <= l1.p0.y && l2.p0.y <= l1.p1.y && l2.p1.y <= l1.p0.y && l2.p1.y <= l1.p1.y);
 		} else {
@@ -475,12 +475,25 @@ public class GeomUtil {
 	 * l1 and l2 share the same support line if they test the same at 2 distinct
 	 * points (more or less epsilon)
 	 */
-	public static boolean areOnSameSupportLine(final OriLine l1, final OriLine l2) {
-		if (l1.isVertical()) {
-			return abs(l1.getAffineXValueAt(l2.p0.y) - l2.p0.x) < EPS
-					&& abs(l1.getAffineXValueAt(l2.p1.y) - l2.p1.x) < EPS;
+	public static boolean areOnSameSupportLine(final Segment l1, final Segment l2) {
+		if (segmentIsVertical(l1)) {
+			return abs(getAffineXValueAt(l1, l2.p0.y) - l2.p0.x) < EPS
+					&& abs(getAffineXValueAt(l1, l2.p1.y) - l2.p1.x) < EPS;
 		}
-		return abs(l1.getAffineYValueAt(l2.p0.x) - l2.p0.y) < EPS && abs(l1.getAffineYValueAt(l2.p1.x) - l2.p1.y) < EPS;
+		return abs(getAffineXValueAt(l1, l2.p0.x) - l2.p0.y) < EPS
+				&& abs(getAffineXValueAt(l1, l2.p1.x) - l2.p1.y) < EPS;
+	}
+
+	private static boolean segmentIsVertical(final Segment l) {
+		return l.p0.y - l.p1.y < EPS;
+	}
+
+	/**
+	 * Calculates the affine value on the line, at the {@code yTested}
+	 * coordinate using the x = ay + b expression
+	 */
+	private static double getAffineXValueAt(final Segment l, final double yTested) {
+		return (l.p1.x - l.p0.x) * (yTested - l.p0.y) / (l.p1.y - l.p0.y) + l.p0.x;
 	}
 
 }
