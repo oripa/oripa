@@ -249,8 +249,8 @@ public class OriLine implements Comparable<OriLine> {
 	@Override
 	public int hashCode() {
 		if (p0.compareTo(p1) < 0) {
-			return Objects.hash(p0, p1);
+			return Objects.hash(p0, p1, this.type);
 		}
-		return Objects.hash(p1, p0);
+		return Objects.hash(p1, p0, this.type);
 	}
 }
