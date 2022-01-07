@@ -35,7 +35,7 @@ class OriLineTest {
 		var line2 = new OriLine(0, 1, 2, 3, OriLine.Type.MOUNTAIN);
 
 		assertNotEquals(line1, line2);
-		assertEquals(line1.hashCode(), line2.hashCode());
+		assertNotEquals(line1.hashCode(), line2.hashCode());
 
 		// test reversed direction
 		line2.p0.set(2, 3);
