@@ -404,7 +404,7 @@ public class GeomUtil {
 	}
 
 	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
-		return getCrossPoint(l0.getP0(), l0.getP1(), l1.getP0(), l1.getP1(), EPS);
+		return getCrossPoint(l0.getP0(), l0.getP1(), l1.getP0(), l1.getP1());
 	}
 
 	public static double distance(final Vector2d p, final Line line, final double[] param) {
@@ -469,11 +469,15 @@ public class GeomUtil {
 
 	public static boolean areDisjointSegments(final Segment l1, final Segment l2) {
 		if (segmentIsVertical(l1)) {
-			return (l1.p0.y <= l2.p0.y && l1.p0.y <= l2.p1.y && l1.p1.y <= l2.p0.y && l1.p1.y <= l2.p1.y) ||
-					(l2.p0.y <= l1.p0.y && l2.p0.y <= l1.p1.y && l2.p1.y <= l1.p0.y && l2.p1.y <= l1.p1.y);
+			return (l1.getP0().y <= l2.getP0().y && l1.getP0().y <= l2.getP1().y && l1.getP1().y <= l2.getP0().y
+					&& l1.getP1().y <= l2.getP1().y) ||
+					(l2.getP0().y <= l1.getP0().y && l2.getP0().y <= l1.getP1().y && l2.getP1().y <= l1.getP0().y
+							&& l2.getP1().y <= l1.getP1().y);
 		} else {
-			return (l1.p0.x <= l2.p0.x && l1.p0.x <= l2.p1.x && l1.p1.x <= l2.p0.x && l1.p1.x <= l2.p1.x) ||
-					(l2.p0.x <= l1.p0.x && l2.p0.x <= l1.p1.x && l2.p1.x <= l1.p0.x && l2.p1.x <= l1.p1.x);
+			return (l1.getP0().x <= l2.getP0().x && l1.getP0().x <= l2.getP1().x && l1.getP1().x <= l2.getP0().x
+					&& l1.getP1().x <= l2.getP1().x) ||
+					(l2.getP0().x <= l1.getP0().x && l2.getP0().x <= l1.getP1().x && l2.getP1().x <= l1.getP0().x
+							&& l2.getP1().x <= l1.getP1().x);
 		}
 	}
 
@@ -483,15 +487,15 @@ public class GeomUtil {
 	 */
 	public static boolean areOnSameSupportLine(final Segment l1, final Segment l2) {
 		if (segmentIsVertical(l1)) {
-			return abs(getAffineXValueAt(l1, l2.p0.y) - l2.p0.x) < EPS
-					&& abs(getAffineXValueAt(l1, l2.p1.y) - l2.p1.x) < EPS;
+			return abs(getAffineXValueAt(l1, l2.getP0().y) - l2.getP0().x) < EPS
+					&& abs(getAffineXValueAt(l1, l2.getP1().y) - l2.getP1().x) < EPS;
 		}
-		return abs(getAffineXValueAt(l1, l2.p0.x) - l2.p0.y) < EPS
-				&& abs(getAffineXValueAt(l1, l2.p1.x) - l2.p1.y) < EPS;
+		return abs(getAffineXValueAt(l1, l2.getP0().x) - l2.getP0().y) < EPS
+				&& abs(getAffineXValueAt(l1, l2.getP1().x) - l2.getP1().y) < EPS;
 	}
 
 	private static boolean segmentIsVertical(final Segment l) {
-		return l.p0.y - l.p1.y < EPS;
+		return l.getP0().y - l.getP1().y < EPS;
 	}
 
 	/**
@@ -499,7 +503,7 @@ public class GeomUtil {
 	 * coordinate using the x = ay + b expression
 	 */
 	private static double getAffineXValueAt(final Segment l, final double yTested) {
-		return (l.p1.x - l.p0.x) * (yTested - l.p0.y) / (l.p1.y - l.p0.y) + l.p0.x;
+		return (l.getP1().x - l.getP0().x) * (yTested - l.getP0().y) / (l.getP1().y - l.getP0().y) + l.getP0().x;
 	}
 
 }
