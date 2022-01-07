@@ -30,7 +30,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
@@ -53,7 +53,7 @@ class SubFacesFactoryTest {
 	private ParentFacesCollector parentCollector;
 
 	@Mock
-	private CreasePatternInterface cp;
+	private CreasePattern cp;
 
 	@Mock
 	private OrigamiModel model;
@@ -81,24 +81,34 @@ class SubFacesFactoryTest {
 		var sub2 = createSubFaceMock();
 		var sub3 = createSubFaceMock();
 
+		lenient().when(sub1.isSame(sub2)).thenReturn(true);
+		lenient().when(sub1.isSame(sub3)).thenReturn(false);
+
+		lenient().when(sub2.isSame(sub1)).thenReturn(true);
+		lenient().when(sub2.isSame(sub3)).thenReturn(false);
+
+		lenient().when(sub3.isSame(sub1)).thenReturn(false);
+		lenient().when(sub3.isSame(sub2)).thenReturn(false);
+
 		var subFacesWithDuplication = List.of(sub1, sub2, sub3);
 		when(facesToSubFacesConverter.convertToSubFaces(splitFaces)).thenReturn(subFacesWithDuplication);
 
-		when(parentCollector.collect(inputFaces, sub1, PAPER_SIZE))
+		final double EPS = 1e-6;
+		when(parentCollector.collect(inputFaces, sub1, EPS))
 				.thenReturn(List.of(face1, face2));
-		when(parentCollector.collect(inputFaces, sub2, PAPER_SIZE))
+		when(parentCollector.collect(inputFaces, sub2, EPS))
 				.thenReturn(List.of(face2, face1));
-		when(parentCollector.collect(inputFaces, sub3, PAPER_SIZE))
+		when(parentCollector.collect(inputFaces, sub3, EPS))
 				.thenReturn(List.of(face1, face2, face3));
 
-		var subFaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE);
+		var subFaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE, EPS);
 
 		verify(facesToCPConverter).convertToCreasePattern(inputFaces);
 		verify(modelFactory).buildOrigami(cp, PAPER_SIZE);
 		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces);
-		verify(parentCollector).collect(inputFaces, sub1, PAPER_SIZE);
-		verify(parentCollector).collect(inputFaces, sub2, PAPER_SIZE);
-		verify(parentCollector).collect(inputFaces, sub3, PAPER_SIZE);
+		verify(parentCollector).collect(inputFaces, sub1, EPS);
+		verify(parentCollector).collect(inputFaces, sub2, EPS);
+		verify(parentCollector).collect(inputFaces, sub3, EPS);
 
 		assertEquals(2, subFaces.size());
 
@@ -109,7 +119,6 @@ class SubFacesFactoryTest {
 
 	private SubFace createSubFaceMock() {
 		var sub = mock(SubFace.class);
-		sub.parentFaces = new ArrayList<OriFace>();
 
 		return sub;
 	}

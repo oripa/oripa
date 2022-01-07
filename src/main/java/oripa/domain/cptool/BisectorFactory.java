@@ -5,6 +5,7 @@ import javax.vecmath.Vector2d;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.RectangleDomain;
+import oripa.geom.Segment;
 import oripa.value.OriLine;
 
 public class BisectorFactory {
@@ -39,13 +40,11 @@ public class BisectorFactory {
 		dir.x = tmp;
 		dir.scale(paperSize * 8);
 
-		OriLine bisector = new OriLine(
+		Segment bisector = new Segment(
 				cp.x - dir.x, cp.y - dir.y,
-				cp.x + dir.x, cp.y + dir.y, lineType);
+				cp.x + dir.x, cp.y + dir.y);
 
-		GeomUtil.clipLine(bisector, domain);
-
-		return bisector;
+		return new OriLine(GeomUtil.clipLine(bisector, domain).orElse(bisector), lineType);
 	}
 
 	/**

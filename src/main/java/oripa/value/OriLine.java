@@ -30,7 +30,7 @@ import oripa.geom.Line;
 import oripa.geom.RectangleDomain;
 import oripa.geom.Segment;
 
-public class OriLine implements Comparable<OriLine> {
+public class OriLine extends Segment implements Comparable<OriLine> {
 
 	private static final int TYPE_AUX = 0;
 	private static final int TYPE_CUT = 1;
@@ -133,6 +133,20 @@ public class OriLine implements Comparable<OriLine> {
 		this.p1.set(x1, y1);
 	}
 
+	public OriLine(final Segment segment, final Type type) {
+		this(segment.getP0(), segment.getP1(), type);
+	}
+
+	@Override
+	public Vector2d getP0() {
+		return p0;
+	}
+
+	@Override
+	public Vector2d getP1() {
+		return p1;
+	}
+
 	public void setType(final Type type) {
 		this.type = type;
 	}
@@ -156,10 +170,6 @@ public class OriLine implements Comparable<OriLine> {
 	@Override
 	public String toString() {
 		return "" + p0 + "" + p1;
-	}
-
-	public Segment getSegment() {
-		return new Segment(p0, p1);
 	}
 
 	public Line getLine() {

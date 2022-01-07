@@ -49,6 +49,14 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.Main.ORIPA_FILE_ID, "ORIPA file" },
 			{ StringID.Main.PICTURE_FILE_ID, "Picture file" },
 
+			{ StringID.Main.PROP_DIALOG_TITLE_ID, "Model Information" },
+			{ StringID.Main.PROP_DIALOG_MODEL_TITLE_ID, "Title" },
+			{ StringID.Main.PROP_DIALOG_AUTHOR_ID, "File Author" },
+			{ StringID.Main.PROP_DIALOG_CREATOR_ID, "Original Author" },
+			{ StringID.Main.PROP_DIALOG_SOURCE_ID, "References" },
+			{ StringID.Main.PROP_DIALOG_MEMO_ID, "Memo" },
+			{ StringID.Main.PROP_DIALOG_OK_ID, "OK" },
+
 			// ---------------------------------------------------------
 			// Integrated IDs
 			{ StringID.COPY_PASTE_ID, "Copy and Paste" },
@@ -85,6 +93,30 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.UI.VIEW_SETTINGS_PANEL_ID, "View" },
 
 			{ StringID.UI.SHORTCUT_ID, "Shortcut:" },
+
+			// Estimation Result Frame String Resources
+			{ StringID.EstimationResultUI.TITLE_ID, "Folded Origami" },
+
+			{ StringID.EstimationResultUI.ANSWERS_PANEL_ID, "Answers" },
+			{ StringID.EstimationResultUI.NEXT_RESULT_ID, "Next" },
+			{ StringID.EstimationResultUI.PREV_RESULT_ID, "Prev" },
+			{ StringID.EstimationResultUI.INDEX_ID, "Folded model" },
+
+			{ StringID.EstimationResultUI.DRAWING_CONFIG_PANEL_ID, "Drawing Config" },
+			{ StringID.EstimationResultUI.ORDER_FLIP_ID, "Flip" },
+			{ StringID.EstimationResultUI.SHADOW_ID, "Shadow" },
+			{ StringID.EstimationResultUI.USE_COLOR_ID, "Use Color" },
+			{ StringID.EstimationResultUI.EDGE_ID, "Draw Edge" },
+			{ StringID.EstimationResultUI.FILL_FACE_ID, "Fill Face" },
+
+			{ StringID.EstimationResultUI.FACE_COLOR_PANEL_ID, "Color Config" },
+			{ StringID.EstimationResultUI.FACE_COLOR_FRONT_ID, "Choose Front Color" },
+			{ StringID.EstimationResultUI.FACE_COLOR_BACK_ID, "Choose Back Color" },
+
+			{ StringID.EstimationResultUI.SAVE_COLORS_ID, "Save Colors" },
+			{ StringID.EstimationResultUI.EXPORT_ID, "Export" },
+
+			{ StringID.EstimationResultUI.HINT_LABEL_ID, "L: Rotate / Wheel: Zoom / R: Move" },
 
 			{ StringID.ModelMenu.FILE_ID, "File" },
 			{ StringID.ModelMenu.DISPLAY_ID, "Display" },

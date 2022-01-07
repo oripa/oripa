@@ -35,6 +35,13 @@ public class StringID {
 		public static final String ORIPA_FILE_ID = "ORIPA_File";
 		public static final String PICTURE_FILE_ID = "Picture_File";
 
+		public static final String PROP_DIALOG_TITLE_ID = "PD_Dialog_Title";
+		public static final String PROP_DIALOG_MODEL_TITLE_ID = "PD_Model_Title";
+		public static final String PROP_DIALOG_AUTHOR_ID = "PD_Author";
+		public static final String PROP_DIALOG_CREATOR_ID = "PD_Creator";
+		public static final String PROP_DIALOG_SOURCE_ID = "PD_Source";
+		public static final String PROP_DIALOG_MEMO_ID = "PD_Memo";
+		public static final String PROP_DIALOG_OK_ID = "PD_OK_text";
 	}
 
 	public static class Error {
@@ -42,6 +49,8 @@ public class StringID {
 		public static final String SAVE_FAILED_ID = "Error_FileSaveFailed";
 		public static final String LOAD_FAILED_ID = "Error_FileLoadFailed";
 		public static final String SAVE_INI_FAILED_ID = "Error_SaveIniFailed";
+
+		public static final String ER_UI_INIT_FAILED_ID = "ER_UI_Init_Failed";
 	}
 
 	public static class Warning {
@@ -62,6 +71,8 @@ public class StringID {
 
 		public static final String SIMPLIFYING_CP_TITLE_ID = "Info_SimplifyingCPTitle";
 		public static final String FOLD_ALGORITHM_TITLE_ID = "Info_FoldAlgorithmTitle";
+		public static final String NOW_FOLDING_TITLE_ID = "Info_NowFoldingTitle";
+		public static final String NOW_FOLDING_ID = "Info_NowFolding";
 	}
 
 	public static class Default {
@@ -109,6 +120,31 @@ public class StringID {
 		public static final String VIEW_SETTINGS_PANEL_ID = "View_Settings_Panel";
 
 		public static final String SHORTCUT_ID = "Shortcut";
+	}
+
+	public static class EstimationResultUI {
+		public static final String TITLE_ID = "ER_Title";
+
+		public static final String ANSWERS_PANEL_ID = "ER_Answer_Panel";
+		public static final String NEXT_RESULT_ID = "ER_Next_Result";
+		public static final String PREV_RESULT_ID = "ER_Prev_Result";
+		public static final String INDEX_ID = "ER_Index";
+
+		public static final String DRAWING_CONFIG_PANEL_ID = "ER_Drawing_Conf_Panel";
+		public static final String ORDER_FLIP_ID = "ER_Order_Flip";
+		public static final String SHADOW_ID = "ER_Shadow";
+		public static final String USE_COLOR_ID = "ER_Use_Color";
+		public static final String EDGE_ID = "ER_Edge";
+		public static final String FILL_FACE_ID = "ER_Fill_Face";
+
+		public static final String FACE_COLOR_PANEL_ID = "ER_Face_Color_Panel";
+		public static final String FACE_COLOR_FRONT_ID = "ER_FaceColor_Front";
+		public static final String FACE_COLOR_BACK_ID = "ER_FaceColor_Back";
+		public static final String SAVE_COLORS_ID = "ER_Save_Colors";
+
+		public static final String EXPORT_ID = "ER_Export";
+
+		public static final String HINT_LABEL_ID = "ER_Hint_Label";
 	}
 
 	// ------------------------------------------------------------------------

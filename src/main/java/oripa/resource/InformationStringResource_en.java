@@ -36,6 +36,10 @@ public class InformationStringResource_en extends ListResourceBundle {
 					"Simplifying CP" },
 			{ StringID.Information.FOLD_ALGORITHM_TITLE_ID,
 					"Fold algorithm" },
+			{ StringID.Information.NOW_FOLDING_TITLE_ID,
+					"Now folding..." },
+			{ StringID.Information.NOW_FOLDING_ID,
+					"Please wait." },
 	};
 
 	@Override

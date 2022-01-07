@@ -1,6 +1,6 @@
 package oripa.domain.paint.segment;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 
 public class SelectingFirstVertexForSegment extends PickingVertex {
@@ -10,12 +10,12 @@ public class SelectingFirstVertexForSegment extends PickingVertex {
 	}
 
 	@Override
-	public void undoAction(final PaintContextInterface context) {
+	public void undoAction(final PaintContext context) {
 		context.clear(false);
 	}
 
 	@Override
-	public void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	public void onResult(final PaintContext context, final boolean doSpecial) {
 
 	}
 
@@ -23,8 +23,6 @@ public class SelectingFirstVertexForSegment extends PickingVertex {
 	protected void initialize() {
 		setPreviousClass(this.getClass());
 		setNextClass(SelectingSecondVertexForSegment.class);
-
-//		System.out.println("SelectingFirstVertex.initialize() is called");
 	}
 
 }

@@ -23,37 +23,32 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
-
-import javax.swing.JOptionPane;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.persistent.dao.DataAccessObject;
-import oripa.persistent.doc.CreasePatternFileTypeKey;
-import oripa.persistent.filetool.FileAccessSupportFilter;
-import oripa.persistent.filetool.FileChooserCanceledException;
-import oripa.persistent.filetool.FileVersionError;
-import oripa.persistent.filetool.WrongDataFormatException;
+import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.doc.CreasePatternFileTypeKey;
+import oripa.persistence.filetool.FileAccessSupportFilter;
+import oripa.persistence.filetool.FileChooserCanceledException;
+import oripa.persistence.filetool.FileVersionError;
+import oripa.persistence.filetool.WrongDataFormatException;
 
 /**
+ * A service object between the {@link DataAccessObject} and the {@link Doc}.
+ *
  * @author OUCHI Koji
  *
- *         interface between the {@code DocDOA} and the {@code Doc} classes
  */
 public class DataFileAccess {
 	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
 
-	private DataAccessObject<Doc> dao;
-
-	@SuppressWarnings("unused")
-	private DataFileAccess() {
-
-	}
+	private final DataAccessObject<Doc> dao;
 
 	public DataFileAccess(final DataAccessObject<Doc> dao) {
 		this.dao = dao;
@@ -125,12 +120,13 @@ public class DataFileAccess {
 	 */
 	public void saveFileWithModelCheck(final Doc doc,
 			final String directory,
-			final FileAccessSupportFilter<Doc> filter, final Component owner)
+			final FileAccessSupportFilter<Doc> filter, final Component owner,
+			final Supplier<Boolean> acceptModelError)
 			throws IOException, IllegalArgumentException {
 		File givenFile = new File(directory, "export" + filter.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
-		CreasePatternInterface creasePattern = doc.getCreasePattern();
+		CreasePattern creasePattern = doc.getCreasePattern();
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		var origamiModel = modelFactory.createOrigamiModel(
@@ -138,14 +134,7 @@ public class DataFileAccess {
 		var checker = new FoldabilityChecker();
 
 		if (!checker.testLocalFlatFoldability(origamiModel)) {
-
-			var selection = JOptionPane.showConfirmDialog(null,
-					"Warning: Building a set of polygons from crease pattern "
-							+ "was failed.",
-					"Warning", JOptionPane.OK_CANCEL_OPTION,
-					JOptionPane.WARNING_MESSAGE);
-
-			if (selection == JOptionPane.CANCEL_OPTION) {
+			if (!acceptModelError.get()) {
 				return;
 			}
 		}

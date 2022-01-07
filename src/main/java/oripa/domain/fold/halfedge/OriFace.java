@@ -19,7 +19,6 @@
 package oripa.domain.fold.halfedge;
 
 import java.awt.Color;
-import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,12 +27,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
 
-import oripa.domain.fold.stackcond.StackConditionOf3Faces;
-import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.geom.GeomUtil;
-import oripa.geom.RectangleDomain;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
@@ -55,10 +50,6 @@ public class OriFace {
 	 */
 	private final List<OriHalfedge> halfedges = new ArrayList<>();
 
-	private Path2D.Double outline = new Path2D.Double();
-
-	private Path2D.Double preOutline = new Path2D.Double();
-
 	private final List<OriLine> precreases = new ArrayList<>();
 
 	private boolean faceFront = true;
@@ -71,22 +62,9 @@ public class OriFace {
 	private boolean movedByFold = false;
 
 	/**
-	 * index of stack order for subface. It seems to be used only while making
-	 * correct stack order.
-	 */
-	private int indexForStack = 0;
-
-	/**
 	 * ID of this face.
 	 */
 	private int faceID = 0;
-
-	private boolean alreadyStacked = false;
-	private final List<TriangleFace> triangles = new ArrayList<>();
-
-	private final List<StackConditionOf4Faces> stackConditionsOf4Faces = new ArrayList<>();
-	private final List<StackConditionOf3Faces> stackConditionsOf3Faces = new ArrayList<>();
-	private final List<Integer> stackConditionsOf2Faces = new ArrayList<>();
 
 	public OriFace() {
 		int r = (int) (Math.random() * 255);
@@ -195,28 +173,6 @@ public class OriFace {
 	}
 
 	/**
-	 * @return indexForStack
-	 */
-	public int getIndexForStack() {
-		return indexForStack;
-	}
-
-	/**
-	 * @param indexForStack
-	 *            Sets indexForStack
-	 */
-	public void setIndexForStack(final int indexForStack) {
-		this.indexForStack = indexForStack;
-	}
-
-	/**
-	 * Sets -1 to indexForStack.
-	 */
-	public void clearIndexForStack() {
-		this.indexForStack = -1;
-	}
-
-	/**
 	 * @return ID of this face.
 	 */
 	public int getFaceID() {
@@ -229,182 +185,6 @@ public class OriFace {
 	 */
 	public void setFaceID(final int faceID) {
 		this.faceID = faceID;
-	}
-
-	/**
-	 * @return whether this face is already put in a subface's stack.
-	 */
-	public boolean isAlreadyStacked() {
-		return alreadyStacked;
-	}
-
-	/**
-	 * @param alreadyStacked
-	 *            Sets alreadyStacked
-	 */
-	public void setAlreadyStacked(final boolean alreadyStacked) {
-		this.alreadyStacked = alreadyStacked;
-	}
-
-	/**
-	 * @return triangles
-	 */
-	public Stream<TriangleFace> triangleStream() {
-		return triangles.stream();
-	}
-
-	/**
-	 *
-	 * @param condition
-	 *            for a correct stack of subface.
-	 */
-	public void addStackConditionOf4Faces(final StackConditionOf4Faces condition) {
-		stackConditionsOf4Faces.add(condition);
-	}
-
-	/**
-	 * Removes all elements from {@link #stackConditionsOf4Faces}.
-	 */
-	public void clearStackConditionsOf4Faces() {
-		stackConditionsOf4Faces.clear();
-	}
-
-	/**
-	 *
-	 * @return stack conditions of 4 faces as {@link Stream}.
-	 */
-	public Stream<StackConditionOf4Faces> stackConditionOf4FacesStream() {
-		return stackConditionsOf4Faces.stream();
-	}
-
-	/**
-	 *
-	 * @param condition
-	 *            for a correct stack of subface.
-	 */
-	public void addStackConditionOf3Faces(final StackConditionOf3Faces condition) {
-		stackConditionsOf3Faces.add(condition);
-	}
-
-	/**
-	 * Removes all elements from {@link #stackConditionsOf3Faces}.
-	 */
-	public void clearStackConditionsOf3Faces() {
-		stackConditionsOf3Faces.clear();
-	}
-
-	/**
-	 *
-	 * @return stack conditions of 3 faces as {@link Stream}.
-	 */
-	public Stream<StackConditionOf3Faces> stackConditionOf3FacesStream() {
-		return stackConditionsOf3Faces.stream();
-	}
-
-
-	public void addStackConditionOf2Faces(final Integer upperFaceORMatIndex) {
-		stackConditionsOf2Faces.add(upperFaceORMatIndex);
-	}
-
-	/**
-	 * Removes all elements from {@link #stackConditionsOf2Faces}.
-	 */
-	public void clearStackConditionsOf2Faces() {
-		stackConditionsOf2Faces.clear();
-	}
-
-	/**
-	 *
-	 * @return stack conditions of 2 faces as {@link Stream}.
-	 */
-	public Stream<Integer> stackConditionsOf2FacesStream() {
-		return stackConditionsOf2Faces.stream();
-	}
-
-	public void triangulateAndSetColor(final boolean bUseColor, final boolean bFlip, final double paperSize) {
-		triangles.clear();
-
-		var domain = new RectangleDomain();
-		for (OriHalfedge he : halfedges) {
-			domain.enlarge(he.getPosition());
-		}
-		double minX = domain.getLeft();
-		double minY = domain.getTop();
-
-		double faceWidth = Math.sqrt(domain.getWidth() * domain.getWidth()
-				+ domain.getHeight() * domain.getHeight());
-
-		for (OriHalfedge he : halfedges) {
-			double val = 0;
-			if (he.getType() == OriLine.Type.MOUNTAIN.toInt()) {
-				val += 1;
-			} else if (he.getType() == OriLine.Type.VALLEY.toInt()) {
-				val -= 1;
-			}
-
-			var prevHe = he.getPrevious();
-			if (prevHe.getType() == OriLine.Type.MOUNTAIN.toInt()) {
-				val += 1;
-			} else if (prevHe.getType() == OriLine.Type.VALLEY.toInt()) {
-				val -= 1;
-			}
-
-			double vv = (val + 2) / 4.0;
-			double v = (0.75 + vv * 0.25);
-
-			var position = he.getPosition();
-			v *= 0.9 + 0.15 * (Math.sqrt((position.x - minX)
-					* (position.x - minX)
-					+ (position.y - minY)
-							* (position.y - minY))
-					/ faceWidth);
-
-			v = Math.min(1, v);
-
-			if (bUseColor) {
-				if (true) {
-					if (faceFront ^ bFlip) {
-						he.getVertexColor().set(v * 0.7, v * 0.7, v);
-					} else {
-						he.getVertexColor().set(v, v * 0.8, v * 0.7);
-					}
-//					} else {
-//						if (faceFront ^ bFlip) {
-//							he.vertexColor.set(v, v * 0.6, v * 0.6);
-//						} else {
-//							he.vertexColor.set(v, v, v * 0.95);
-//						}
-//
-				}
-			} else {
-				he.getVertexColor().set(v, v, v * 0.95);
-			}
-		}
-
-		int heNum = halfedges.size();
-		OriHalfedge startHe = halfedges.get(0);
-		for (int i = 1; i < heNum - 1; i++) {
-			TriangleFace tri = new TriangleFace(this);
-			tri.v[0].p = new Vector2d(startHe.getPosition());
-			tri.v[1].p = new Vector2d(halfedges.get(i).getPosition());
-			tri.v[2].p = new Vector2d(halfedges.get(i + 1).getPosition());
-
-			tri.v[0].color = new Vector3d(startHe.getVertexColor());
-			tri.v[1].color = new Vector3d(halfedges.get(i).getVertexColor());
-			tri.v[2].color = new Vector3d(halfedges.get(i + 1).getVertexColor());
-
-			tri.v[0].uv = new Vector2d(startHe.getPositionBeforeFolding().x / paperSize
-					+ 0.5, startHe.getPositionBeforeFolding().y / paperSize + 0.5);
-			tri.v[1].uv = new Vector2d(halfedges.get(i).getPositionBeforeFolding().x
-					/ paperSize + 0.5,
-					halfedges.get(i).getPositionBeforeFolding().y
-							/ paperSize + 0.5);
-			tri.v[2].uv = new Vector2d(halfedges.get(i + 1).getPositionBeforeFolding().x
-					/ paperSize + 0.5,
-					halfedges.get(i + 1).getPositionBeforeFolding().y
-							/ paperSize + 0.5);
-			triangles.add(tri);
-		}
 	}
 
 	/**
@@ -422,52 +202,20 @@ public class OriFace {
 		}
 	}
 
-	/**
-	 * Constructs {@code outline} field, which is for showing this face after
-	 * fold in graphic.
-	 */
-	public void buildOutline() {
-		outline = createPath(halfedges.stream()
+	public List<Vector2d> createOutlineVerticesAfterFolding() {
+		return halfedgeStream()
 				.map(OriHalfedge::getPositionForDisplay)
-				.collect(Collectors.toList()));
+				.collect(Collectors.toList());
 	}
 
-	/**
-	 * @return outline for drawing the shape after fold
-	 */
-	public Path2D.Double getOutline() {
-		return outline;
-	}
-
-	/**
-	 * Constructs {@code preOutline} field, which is for showing this face
-	 * before fold in graphic.
-	 */
-	void buildOutlineBeforeFolding() {
+	public List<Vector2d> createOutlineVerticesBeforeFolding() {
 		Vector2d centerP = getCentroidBeforeFolding();
 		double rate = 0.5;
-		preOutline = createPath(halfedges.stream()
+		return halfedgeStream()
 				.map(he -> new Vector2d(
 						he.getPositionBeforeFolding().x * rate + centerP.x * (1.0 - rate),
 						he.getPositionBeforeFolding().y * rate + centerP.y * (1.0 - rate)))
-				.collect(Collectors.toList()));
-	}
-
-	/**
-	 * @return outline for drawing foldability-check face
-	 */
-	public Path2D.Double getOutlineBeforeFolding() {
-		return preOutline;
-	}
-
-	private Path2D.Double createPath(final List<Vector2d> vertices) {
-		var path = new Path2D.Double();
-		path.moveTo(vertices.get(0).x, vertices.get(0).y);
-		for (int i = 1; i < halfedges.size(); i++) {
-			path.lineTo(vertices.get(i).x, vertices.get(i).y);
-		}
-		path.closePath();
-		return path;
+				.collect(Collectors.toList());
 	}
 
 	/**

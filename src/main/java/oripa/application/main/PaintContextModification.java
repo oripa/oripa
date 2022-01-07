@@ -18,23 +18,25 @@
  */
 package oripa.application.main;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.paint.PaintContext;
 
 /**
+ * A service object to update {@link PaintContext} appropriately.
+ *
  * @author OUCHI Koji
  *
  */
 public class PaintContextModification {
 	/**
-	 * clear the context, set the given crease pattern, clear the undo history,
-	 * and update grids.
+	 * Clears the context, sets the given crease pattern, clears the undo
+	 * history, and updates grids.
 	 *
 	 * @param creasePattern
 	 * @param paintContext
 	 */
-	public void setCreasePatternToPaintContext(final CreasePatternInterface creasePattern,
-			final PaintContextInterface paintContext) {
+	public void setCreasePatternToPaintContext(final CreasePattern creasePattern,
+			final PaintContext paintContext) {
 		paintContext.clear(true);
 		paintContext.setCreasePattern(creasePattern);
 		paintContext.creasePatternUndo().clear();

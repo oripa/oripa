@@ -36,6 +36,7 @@ import static java.lang.Math.min;
  *
  * Position coordinate is the same as screen. (top is smaller)
  */
+// TODO: change to use Segment, not OriLine.
 public class RectangleDomain {
 
 	private double left;

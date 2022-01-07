@@ -32,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.domain.cptool.LineAdder;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
 
 /**
  * @author OUCHI Koji
@@ -48,7 +48,7 @@ class FacesToCreasePatternConverterTest {
 	private LineAdder adder;
 
 	@Mock
-	private CreasePatternInterface creasePattern;
+	private CreasePattern creasePattern;
 
 	/**
 	 * Test method for

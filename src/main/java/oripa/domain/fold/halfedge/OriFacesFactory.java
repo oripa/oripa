@@ -129,8 +129,6 @@ public class OriFacesFactory {
 			walkE = walkV.getPrevEdge(walkE); // to make a loop in clockwise
 		} while (walkV != startingVertex);
 		face.makeHalfedgeLoop();
-		face.buildOutline();
-		face.buildOutlineBeforeFolding();
 		return face;
 	}
 

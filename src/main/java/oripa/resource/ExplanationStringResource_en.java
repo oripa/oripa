@@ -43,7 +43,7 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 			{ StringID.EDIT_CONTOUR_ID, "Edit contour. The contour must be convex." },
 
 			{ StringID.PERPENDICULAR_BISECTOR_ID,
-					"Input Perpendicular Bisector of two vertices. Select two vertices by left click." },
+					"Input Perpendicular Bisector of two vertices. Select two vertices by left click, then select end points." },
 
 			{ StringID.ANGLE_SNAP_ID, "Input a segment fitting to selected angle step." },
 

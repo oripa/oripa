@@ -18,6 +18,10 @@
  */
 package oripa.util;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author OUCHI Koji
  *
@@ -37,6 +41,18 @@ public class Matrices {
 	}
 
 	/**
+	 * copies {@code from} matrix to {@code to} matrix.
+	 *
+	 * @param from
+	 * @param to
+	 */
+	public static void copy(final byte[][] from, final byte[][] to) {
+		for (int i = 0; i < from.length; i++) {
+			System.arraycopy(from[i], 0, to[i], 0, from[i].length);
+		}
+	}
+
+	/**
 	 * creates a new matrix and copy the values of {@code from} to the new one.
 	 *
 	 * @param from
@@ -49,4 +65,24 @@ public class Matrices {
 		return to;
 	}
 
+	/**
+	 * creates a new matrix and copy the values of {@code from} to the new one.
+	 *
+	 * @param from
+	 *            is assume to be a m x n matrix.
+	 * @return deep copy of {@code from}.
+	 */
+	public static byte[][] clone(final byte[][] from) {
+		var to = new byte[from.length][from[0].length];
+		copy(from, to);
+		return to;
+	}
+
+	public static String toString(final int[][] mat) {
+		var strings = List.of(mat).stream()
+				.map(a -> String.join(",", Arrays.toString(a)))
+				.collect(Collectors.toList());
+
+		return String.join(",", strings);
+	}
 }

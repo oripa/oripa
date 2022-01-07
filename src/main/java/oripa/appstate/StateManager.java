@@ -1,96 +1,42 @@
 package oripa.appstate;
 
-import oripa.domain.paint.EditMode;
+import java.util.Optional;
 
 /**
- * This class holds current state and (only one) previous state to help getting
- * back.
+ * Implementation of this interface should hold current state and (only one)
+ * previous state to help getting back.
  *
  * @author koji
  *
  */
-public class StateManager implements StateManagerInterface<EditMode> {
+public interface StateManager<GroupEnum> {
 
-	private ApplicationState<EditMode> current, lastInputCommand, previous;
-
-	@Override
-	public ApplicationState<EditMode> getCurrent() {
-		return current;
-	}
+	public ApplicationState<GroupEnum> getCurrent();
 
 	/**
-	 * push {@code s} as a new state to be held. the current state will be
+	 * Pushes {@code s} as a new state to be held. The current state will be
 	 * dropped to previous state.
 	 *
 	 * @param s
 	 *            new state
 	 */
-	@Override
-	public void push(final ApplicationState<EditMode> s) {
-
-		if (s.getGroup() == EditMode.INPUT) {
-			// keep for popLastInputCommand()
-			lastInputCommand = s;
-		}
-
-		if (current != null) {
-			// pushing copy or cut causes empty pasting
-			if (current.getGroup() != EditMode.COPY &&
-					current.getGroup() != EditMode.CUT) {
-				previous = current;
-			}
-		}
-		current = s;
-	}
+	public void push(ApplicationState<GroupEnum> s);
 
 	/**
-	 * pop previous state. It will be set to current state.
+	 * Pops previous state. It will be set to current state.
 	 *
-	 * @return previous state. null if empty.
+	 * @return previous state. {@code empty} if previous state does not exist.
 	 */
-	@Override
-	public ApplicationState<EditMode> pop() {
-		if (current == previous) {
-			return null;
-		}
-
-		current = previous;
-		return current;
-	}
+	public Optional<ApplicationState<GroupEnum>> pop();
 
 	/**
-	 * This method accepts INPUT only. the current state will be dropped to
-	 * previous state.
+	 * Pops the last state of the given {@code group}. The current state will be
+	 * dropped to previous state.
 	 *
 	 * @param group
 	 *            ID.
-	 * @return last state of the group. {@code null} if {@code group} is not
-	 *         {@code oripa.domain.paint.EditMode.INPUT}.
+	 * @return last state of the group. {@code empty} if {@code group} does not
+	 *         have such a state.
 	 */
-	@Override
-	public ApplicationState<EditMode> popLastOf(final EditMode group) {
-		if (group != EditMode.INPUT) {
-			return null;
-		}
-
-		return popLastInputCommand();
-
-	}
-
-	/**
-	 * for the action of "input" radio button. the current state will be dropped
-	 * to previous state.
-	 *
-	 * @return state of the last input command
-	 */
-	public ApplicationState<EditMode> popLastInputCommand() {
-		if (current == lastInputCommand) {
-			return null;
-		}
-		previous = current;
-		current = lastInputCommand;
-
-		return current;
-	}
-
+	public Optional<ApplicationState<GroupEnum>> popLastOf(GroupEnum group);
 }

@@ -18,12 +18,12 @@
  */
 package oripa.domain.paint.angle;
 
-import java.awt.geom.Point2D.Double;
+import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.AbstractActionState;
-import oripa.domain.paint.geometry.NearestItemFinder;
-import oripa.value.OriLine;
+import oripa.domain.paint.core.PickedVerticesConnectionLineAdderCommand;
+import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
@@ -42,18 +42,10 @@ public class SelectingEndPoint extends AbstractActionState {
 		setNextClass(SelectingStartPoint.class);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.AbstractActionState#onAct(oripa.domain.paint.
-	 * PaintContextInterface, java.awt.geom.Point2D.Double, boolean)
-	 */
 	@Override
-	protected boolean onAct(final PaintContextInterface context, final Double currentPoint,
+	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean doSpecial) {
-
-		var picked = NearestItemFinder.getNearestInAngleSnapCrossPoints(context);
+		var picked = context.getCandidateVertexToPick();
 
 		if (picked == null) {
 			return false;
@@ -64,29 +56,15 @@ public class SelectingEndPoint extends AbstractActionState {
 		return true;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.paint.core.AbstractActionState#onResult(oripa.domain.paint.
-	 * PaintContextInterface, boolean)
-	 */
 	@Override
-	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
 
 		if (context.getVertexCount() != 2) {
 			throw new IllegalStateException("wrong state: impossible vertex selection.");
 		}
 
-		var p0 = context.popVertex();
-		var p1 = context.popVertex();
-
-		context.creasePatternUndo().pushUndoInfo();
-
-		context.getPainter().addLine(
-				new OriLine(p0, p1, context.getLineTypeOfNewLines()));
-
-		context.clear(false);
+		Command command = new PickedVerticesConnectionLineAdderCommand(context);
+		command.execute();
 	}
 
 	/*
@@ -97,9 +75,9 @@ public class SelectingEndPoint extends AbstractActionState {
 	 * .PaintContextInterface)
 	 */
 	@Override
-	protected void undoAction(final PaintContextInterface context) {
+	protected void undoAction(final PaintContext context) {
 		context.popVertex();
-		context.getAngleSnapCrossPoints().clear();
+		context.getSnapPoints().clear();
 	}
 
 }

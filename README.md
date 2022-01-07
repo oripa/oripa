@@ -26,6 +26,12 @@ You can download the executable jar file at the [release page](https://github.co
 
 To run ORIPA, **you need install JDK 11 or above.**
 
+Once downloaded, to run ORIPA in a terminal just run:
+
+```sh
+java -jar ./oripa-1.50.jar
+```
+
 ### Next challenge(s)
 --------
 * Dividing lines by an input circle.

@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,15 +18,26 @@
  */
 package oripa.domain.paint;
 
-import oripa.domain.creasepattern.CreasePatternInterface;
+import oripa.domain.creasepattern.CreasePattern;
+import oripa.geom.RectangleDomain;
 
 /**
  * @author Koji
- * 
+ *
  */
 public interface CreasePatternHolder {
 
-	CreasePatternInterface getCreasePattern();
+	CreasePattern getCreasePattern();
 
-	void setCreasePattern(CreasePatternInterface creasePattern);
+	void setCreasePattern(CreasePattern creasePattern);
+
+	/**
+	 *
+	 * @return rectangle domain of crease pattern, whose values are those when
+	 *         crease pattern is set to this context.
+	 */
+	public default RectangleDomain getPaperDomain() {
+		return getCreasePattern().getPaperDomain();
+	}
+
 }

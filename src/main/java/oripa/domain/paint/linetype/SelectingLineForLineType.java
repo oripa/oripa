@@ -1,8 +1,8 @@
 package oripa.domain.paint.linetype;
 
-import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContextInterface;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingLine;
+import oripa.util.Command;
 
 public class SelectingLineForLineType extends PickingLine {
 
@@ -18,20 +18,14 @@ public class SelectingLineForLineType extends PickingLine {
 	}
 
 	@Override
-	protected void undoAction(final PaintContextInterface context) {
+	protected void undoAction(final PaintContext context) {
 		super.undoAction(context);
 	}
 
 	@Override
-	protected void onResult(final PaintContextInterface context, final boolean doSpecial) {
-
-		context.creasePatternUndo().pushUndoInfo();
-
-		Painter painter = context.getPainter();
-		painter.alterLineType(
-				context.peekLine(), setting.getTypeFrom(), setting.getTypeTo());
-
-		context.clear(false);
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
+		Command command = new LineTypeChangerCommand(context, setting);
+		command.execute();
 	}
 
 }

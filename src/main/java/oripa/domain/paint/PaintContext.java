@@ -1,569 +1,185 @@
 package oripa.domain.paint;
 
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
-import oripa.domain.creasepattern.CreasePatternInterface;
-import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
-class PaintContext implements PaintContextInterface {
+/**
+ * This interface holds current state of GUI interaction for paint inputting.
+ *
+ * @author Koji
+ *
+ */
+public interface PaintContext extends CreasePatternHolder {
 
-	private CreasePatternInterface creasePattern;
-	private final CreasePatternUndoerInterface undoer = new CreasePatternUndoer(this);
+	// =================================================================================
+	// Properties used by action state
+	// =================================================================================
 
-	private final LinkedList<Vector2d> pickedVertices = new LinkedList<>();
-
-	private final LinkedList<OriLine> pickedLines = new LinkedList<>();
-	private boolean isPasting = false;
-
-	private Vector2d candidateVertexToPick = new Vector2d();
-	private OriLine candidateLineToPick = new OriLine();
-
-	private boolean gridVisible = true;
-	private int gridDivNum;
-	private double scale;
-
-	private ArrayList<Vector2d> gridPoints;
-
-	private boolean vertexVisible;
-	private boolean mvLineVisible;
-	private boolean auxLineVisible;
-	private boolean crossLineVisible = false;
-
-	private boolean missionCompleted = false;
-
-	private OriLine.Type lineTypeOfNewLines;
-
-	private Point2D.Double mousePoint;
-
-	private AngleStep angleStep;
-
-	private boolean zeroLineWidth;
-
-	/*
-	 * TODO: Rename for more general usage. snapPoints? assistPoints? something
-	 * like that.
-	 */
-	private Collection<Vector2d> angleSnapCrossPoints = new ArrayList<Vector2d>();
-
-	public PaintContext() {
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getLogicalMousePoint()
-	 */
-	@Override
-	public synchronized Point2D.Double getLogicalMousePoint() {
-		return mousePoint;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#isPasting()
-	 */
-	@Override
-	public boolean isPasting() {
-		return isPasting;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#startPasting()
-	 */
-	@Override
-	public void startPasting() {
-		this.isPasting = true;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#finishPasting()
-	 */
-	@Override
-	public void finishPasting() {
-		this.isPasting = false;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#setLogicalMousePoint
-	 * (java.awt.geom.Point2D.Double)
-	 */
-	@Override
-	public synchronized void setLogicalMousePoint(final Point2D.Double logicalPoint) {
-		this.mousePoint = logicalPoint;
-	}
-
-	@Override
-	public void setMVLineVisible(final boolean visible) {
-		mvLineVisible = visible;
-	}
-
-	@Override
-	public boolean isMVLineVisible() {
-		return mvLineVisible;
-	}
-
-	@Override
-	public boolean isVertexVisible() {
-		return vertexVisible;
-	}
-
-	@Override
-	public void setVertexVisible(final boolean visible) {
-		vertexVisible = visible;
-	}
-
-	@Override
-	public void setAuxLineVisible(final boolean visible) {
-		auxLineVisible = visible;
-	}
-
-	@Override
-	public boolean isAuxLineVisible() {
-		return auxLineVisible;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getGridDivNum()
-	 */
-	@Override
-	public int getGridDivNum() {
-		return gridDivNum;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#setGridDivNum(int)
-	 */
-	@Override
-	public void setGridDivNum(final int divNum) {
-		gridDivNum = divNum;
-		updateGrids();
-	}
-
-	@Override
-	public void updateGrids() {
-		gridPoints = new ArrayList<>();
-		double paperSize = creasePattern.getPaperSize();
-
-		double step = paperSize / gridDivNum;
-		for (int ix = 0; ix < gridDivNum + 1; ix++) {
-			for (int iy = 0; iy < gridDivNum + 1; iy++) {
-				double x = getPaperDomain().getLeft() + step * ix;
-				double y = getPaperDomain().getTop() + step * iy;
-
-				gridPoints.add(new Vector2d(x, y));
-			}
-		}
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#updateGrids(int)
-	 */
-	@Override
-	public Collection<Vector2d> getGrids() {
-
-		return gridPoints;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#clear(boolean)
-	 */
-	@Override
-	public void clear(final boolean unselect) {
-
-		if (unselect) {
-			pickedLines.stream().forEach(l -> l.selected = false);
-		}
-
-		pickedLines.clear();
-		pickedVertices.clear();
-
-		candidateLineToPick = null;
-		candidateVertexToPick = null;
-
-		missionCompleted = false;
-		angleSnapCrossPoints.clear();
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#isMissionCompleted()
-	 */
-	@Override
-	public boolean isMissionCompleted() {
-		return missionCompleted;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#setMissionCompleted
-	 * (boolean)
-	 */
-	@Override
-	public void setMissionCompleted(final boolean missionCompleted) {
-		this.missionCompleted = missionCompleted;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getVertices()
-	 */
-	@Override
-	public List<Vector2d> getPickedVertices() {
-		return Collections.unmodifiableList(pickedVertices);
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getLines()
-	 */
-	@Override
-	public List<OriLine> getPickedLines() {
-		return Collections.unmodifiableList(pickedLines);
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getLine(int)
-	 */
-	@Override
-	public OriLine getLine(final int index) {
-		return pickedLines.get(index);
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getVertex(int)
-	 */
-	@Override
-	public Vector2d getVertex(final int index) {
-		return pickedVertices.get(index);
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#pushVertex(javax.vecmath
-	 * .Vector2d)
-	 */
-	@Override
-	public void pushVertex(final Vector2d picked) {
-		pickedVertices.addLast(picked);
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#pushLine(oripa.value
-	 * .OriLine)
-	 */
-	@Override
-	public void pushLine(final OriLine picked) {
-		// picked.selected = true;
-		pickedLines.addLast(picked);
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#popVertex()
-	 */
-	@Override
-	public Vector2d popVertex() {
-		if (pickedVertices.isEmpty()) {
-			return null;
-		}
-
-		return pickedVertices.removeLast();
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#popLine()
-	 */
-	@Override
-	public OriLine popLine() {
-		if (pickedLines.isEmpty()) {
-			return null;
-		}
-
-		OriLine line = pickedLines.removeLast();
-		line.selected = false;
-		return line;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#removeLine(oripa.value
-	 * .OriLine)
-	 */
-	@Override
-	public boolean removeLine(final OriLine line) {
-
-		return pickedLines.remove(line);
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#peekVertex()
-	 */
-	@Override
-	public Vector2d peekVertex() {
-		return pickedVertices.peekLast();
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#peekLine()
-	 */
-	@Override
-	public OriLine peekLine() {
-		return pickedLines.peekLast();
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getLineCount()
-	 */
-	@Override
-	public int getLineCount() {
-		return pickedLines.size();
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getVertexCount()
-	 */
-	@Override
-	public int getVertexCount() {
-		return pickedVertices.size();
-	}
+	// ---------------------------------------------------------------
+	// State of input instruction
 
 	/**
-	 * @return a candidate vertex to pick
+	 *
+	 * @return true if user is trying to paste selected lines
 	 */
-	@Override
-	public Vector2d getCandidateVertexToPick() {
-		return candidateVertexToPick;
-	}
+	public abstract boolean isPasting();
 
 	/**
-	 * @param candidate
-	 *            Sets candidateVertexToPick
+	 * notify the painting algorithm that the user started pasting.
 	 */
-	@Override
-	public void setCandidateVertexToPick(final Vector2d candidate) {
-		this.candidateVertexToPick = candidate;
-	}
+	public abstract void startPasting();
 
 	/**
-	 * @return candidateLineToPick
+	 * notify the painting algorithm that the user finished pasting.
 	 */
-	@Override
-	public OriLine getCandidateLineToPick() {
-		return candidateLineToPick;
-	}
+	public abstract void finishPasting();
+
+	// ---------------------------------------------------------------
+	// Values Picked by User
 
 	/**
-	 * @param candidate
-	 *            Sets candidateLineToPick
+	 * remove all lines and all vertices in this context.
+	 *
+	 * @param unselect
+	 *            true if the removed lines should be marked as unselected.
 	 */
-	@Override
-	public void setCandidateLineToPick(final OriLine candidate) {
-		this.candidateLineToPick = candidate;
-	}
+	public abstract void clear(boolean unselect);
 
 	/**
-	 * @return whether grid is visible or not.
+	 *
+	 * @return unmodifiable list of lines which user picked.
 	 */
-	@Override
-	public boolean isGridVisible() {
-		return gridVisible;
-	}
+	public abstract List<OriLine> getPickedLines();
 
 	/**
-	 * @param gridVisible
-	 *            Sets gridVisible
+	 *
+	 * @return unmodifiable list of vertices which user picked.
 	 */
-	@Override
-	public void setGridVisible(final boolean gridVisible) {
-		this.gridVisible = gridVisible;
-	}
-
-	@Override
-	public void setCrossLineVisible(final boolean visible) {
-		crossLineVisible = visible;
-	}
-
-	@Override
-	public boolean isCrossLineVisible() {
-		return crossLineVisible;
-	}
+	public abstract List<Vector2d> getPickedVertices();
 
 	/**
-	 * @return scale
+	 *
+	 * @param index
+	 * @return a line at specified position in the order of user selection
 	 */
-	@Override
-	public double getScale() {
-		return scale;
-	}
+	public abstract OriLine getLine(int index);
 
 	/**
-	 * @param scale
-	 *            Sets scale
+	 *
+	 * @param index
+	 * @return a vertex at specified position in the order of user selection
 	 */
-	@Override
-	public void setScale(final double scale) {
-		this.scale = scale;
-	}
-
-	@Override
-	public void setLineTypeOfNewLines(final OriLine.Type lineType) {
-		lineTypeOfNewLines = lineType;
-	}
-
-	@Override
-	public OriLine.Type getLineTypeOfNewLines() {
-		return lineTypeOfNewLines;
-	}
+	public abstract Vector2d getVertex(int index);
 
 	/**
-	 * returns a painter for current crease pattern instance.
 	 *
+	 * @param picked
+	 *            line to be stored as the latest
 	 */
-	@Override
-	public Painter getPainter() {
-		return new Painter(creasePattern);
-	}
+	public abstract void pushLine(OriLine picked);
 
-	/*
-	 * (non Javadoc)
+	/**
+	 * pop the last pushed line and mark it unselected.
 	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getUndoer()
+	 * @return popped line. null if no line is pushed.
 	 */
-	@Override
-	public CreasePatternUndoerInterface creasePatternUndo() {
-		return undoer;
-	}
+	public abstract OriLine popLine();
 
-	@Override
-	public void setCreasePattern(final CreasePatternInterface aCreasePattern) {
-		creasePattern = aCreasePattern;
-	}
-
-	@Override
-	public CreasePatternInterface getCreasePattern() {
-		return creasePattern;
-	}
-
-	/*
-	 * (non Javadoc)
+	/**
 	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getCreasePatternDomain()
+	 * @param picked
+	 *            vertex to be stored as the latest
 	 */
-	@Override
-	public RectangleDomain getPaperDomain() {
-		return creasePattern.getPaperDomain();
-	}
+	public abstract void pushVertex(Vector2d picked);
 
-	/*
-	 * (non Javadoc)
+	/**
+	 * pop the last pushed vertex.
 	 *
-	 * @see
-	 * oripa.domain.paint.PaintContextInterface#setAngleStep(oripa.domain.paint.
-	 * AngleStep)
+	 * @return popped vertex. null if no vertex is pushed.
 	 */
-	@Override
-	public void setAngleStep(final AngleStep step) {
-		angleStep = step;
-	}
+	public abstract Vector2d popVertex();
 
-	/*
-	 * (non Javadoc)
+	/**
+	 * performs the same as {@link List#remove(Object o)}.
 	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getAngleStep()
+	 * @param line
+	 * @return
 	 */
-	@Override
-	public AngleStep getAngleStep() {
-		return angleStep;
-	}
+	public abstract boolean removeLine(OriLine line);
 
-	/*
-	 * (non Javadoc)
+	/**
 	 *
-	 * @see
-	 * oripa.domain.paint.PaintContextInterface#setAngleSnapCrossPoints(java.
-	 * util.Collection)
+	 * @return the latest vertex
 	 */
-	@Override
-	public void setAngleSnapCrossPoints(final Collection<Vector2d> points) {
-		angleSnapCrossPoints = points;
-	}
+	public abstract Vector2d peekVertex();
 
-	/*
-	 * (non Javadoc)
+	/**
 	 *
-	 * @see oripa.domain.paint.PaintContextInterface#getAngleSnapCrossPoints()
+	 * @return the latest line
 	 */
-	@Override
-	public Collection<Vector2d> getAngleSnapCrossPoints() {
-		return angleSnapCrossPoints;
-	}
+	public abstract OriLine peekLine();
 
-	@Override
-	public boolean isZeroLineWidth() {
-		return zeroLineWidth;
-	}
-
-	@Override
-	public void setZeroLineWidth(final boolean zeroLineWidth) {
-		this.zeroLineWidth = zeroLineWidth;
-	}
-
-	/*
-	 * (non Javadoc)
+	/**
 	 *
-	 * @see java.lang.Object#toString()
+	 * @return count of lines in this context
 	 */
-	@Override
-	public String toString() {
-		return "PaintContext: #line=" + pickedLines.size() +
-				", #vertex=" + pickedVertices.size();
-	}
+	public abstract int getLineCount();
+
+	/**
+	 *
+	 * @return count of vertices in this context
+	 */
+	public abstract int getVertexCount();
+
+	// ---------------------------------------------------------------
+	// Misc
+
+	public abstract Painter getPainter();
+
+	void setLineTypeOfNewLines(OriLine.Type lineType);
+
+	OriLine.Type getLineTypeOfNewLines();
+
+	public abstract void setCandidateLineToPick(OriLine pickCandidateL);
+
+	public abstract OriLine getCandidateLineToPick();
+
+	public abstract void setCandidateVertexToPick(Vector2d pickCandidateV);
+
+	public abstract Vector2d getCandidateVertexToPick();
+
+	public abstract CreasePatternUndoer creasePatternUndo();
+
+	public abstract void setAngleStep(AngleStep step);
+
+	public abstract AngleStep getAngleStep();
+
+	public abstract void setSnapPoints(Collection<Vector2d> points);
+
+	public abstract Collection<Vector2d> getSnapPoints();
+
+	/**
+	 * sets division number of grid. should update grid points for
+	 * {@link #getGrids()}.
+	 *
+	 * @param divNum
+	 */
+	public abstract void setGridDivNum(int divNum);
+
+	public abstract int getGridDivNum();
+
+	public abstract void updateGrids();
+
+	/**
+	 * gets current grids.
+	 *
+	 * @return
+	 */
+	public abstract Collection<Vector2d> getGrids();
 
 }

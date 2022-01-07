@@ -18,8 +18,11 @@
 package oripa.domain.fold.halfedge;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.vecmath.Vector2d;
 
 import oripa.geom.RectangleDomain;
 
@@ -34,8 +37,6 @@ public class OrigamiModel {
 	private List<OriFace> faces = new ArrayList<OriFace>();
 	private List<OriVertex> vertices = new ArrayList<OriVertex>();
 	private List<OriEdge> edges = new ArrayList<OriEdge>();
-
-	private List<OriFace> sortedFaces = new ArrayList<OriFace>();
 
 	private boolean folded = false;
 
@@ -83,14 +84,6 @@ public class OrigamiModel {
 		return paperSize;
 	}
 
-	public List<OriFace> getSortedFaces() {
-		return sortedFaces;
-	}
-
-	public void setSortedFaces(final List<OriFace> sortedFaces) {
-		this.sortedFaces = sortedFaces;
-	}
-
 	/**
 	 * @param faces
 	 *            faces
@@ -130,32 +123,42 @@ public class OrigamiModel {
 		this.hasModel = hasModel;
 	}
 
+	// =============================================================
+	// Utility
+	// =============================================================
+
 	/**
-	 * Flips x coordinates and reverse the order of layers.
+	 * Flips x coordinates of the positions for display.
 	 */
 	public void flipXCoordinates() {
 		var domain = new RectangleDomain();
 
-		for (OriFace face : faces) {
-			face.halfedgeStream().forEach(he -> {
-				domain.enlarge(he.getPosition());
-			});
-		}
+		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
+			domain.enlarge(he.getPosition());
+		});
 
 		double centerX = domain.getCenterX();
 
 		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
 			he.getPositionForDisplay().x = 2 * centerX - he.getPositionForDisplay().x;
 		});
-
-		faces.forEach(face -> {
-			face.invertFaceFront();
-			face.buildOutline();
-		});
-
-//		Collections.sort(faces, new FaceOrderComparator());
-
-		Collections.reverse(sortedFaces);
 	}
 
+	public RectangleDomain createDomainOfFoldedModel() {
+		return createDomain(OriHalfedge::getPosition);
+	}
+
+	public RectangleDomain createPaperDomain() {
+		return createDomain(OriHalfedge::getPositionBeforeFolding);
+	}
+
+	private RectangleDomain createDomain(final Function<OriHalfedge, Vector2d> positionExtractor) {
+		var paperDomain = new RectangleDomain();
+		paperDomain.enlarge(faces.stream()
+				.flatMap(OriFace::halfedgeStream)
+				.map(positionExtractor)
+				.collect(Collectors.toList()));
+
+		return paperDomain;
+	}
 }
