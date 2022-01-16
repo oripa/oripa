@@ -490,12 +490,20 @@ public class GeomUtil {
 			return abs(getAffineXValueAt(l1, l2.getP0().y) - l2.getP0().x) < EPS
 					&& abs(getAffineXValueAt(l1, l2.getP1().y) - l2.getP1().x) < EPS;
 		}
-		return abs(getAffineXValueAt(l1, l2.getP0().x) - l2.getP0().y) < EPS
-				&& abs(getAffineXValueAt(l1, l2.getP1().x) - l2.getP1().y) < EPS;
+		return abs(getAffineYValueAt(l1, l2.getP0().x) - l2.getP0().y) < EPS
+				&& abs(getAffineYValueAt(l1, l2.getP1().x) - l2.getP1().y) < EPS;
 	}
 
 	private static boolean segmentIsVertical(final Segment l) {
-		return l.getP0().y - l.getP1().y < EPS;
+		return abs(l.getP0().x - l.getP1().x) < EPS;
+	}
+
+	/**
+	 * Calculates the affine value on the line, at the {@code xTested}
+	 * coordinate using the y = ax + b expression
+	 */
+	private static double getAffineYValueAt(final Segment l, final double xTested) {
+		return (l.getP1().y - l.getP0().y) * (xTested - l.getP0().x) / (l.getP1().x - l.getP0().x) + l.getP0().y;
 	}
 
 	/**
