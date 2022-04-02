@@ -16,43 +16,37 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.core;
+package oripa.domain.paint.line;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.cptool.PseudoLineFactory;
 import oripa.domain.paint.PaintContext;
-import oripa.geom.GeomUtil;
-import oripa.geom.Segment;
+import oripa.domain.paint.core.SnapPointFactory;
 
 /**
- * @author OUCHI Koji
+ * @author origa
  *
  */
-public class SnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Segment line) {
-		Collection<Vector2d> snapPoints = new ArrayList<>();
+public class LineSnapPointFactory {
+	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
+		Vector2d p0, p1;
+		p0 = context.getVertex(0);
+		p1 = context.getVertex(1);
 
-		// snap on cross points of line and creases.
-		snapPoints.addAll(
-				context.getCreasePattern().stream()
-						.map(crease -> GeomUtil.getCrossPoint(line, crease))
-						.filter(Objects::nonNull)
-						.collect(Collectors.toList()));
+		var segment = new PseudoLineFactory().create(p0, p1, context.getCreasePattern().getPaperSize());
 
-		// snap on end points of overlapping creases.
-		context.getCreasePattern().stream()
-				.filter(crease -> GeomUtil.isLineSegmentsOverlap(
-						line.getP0(), line.getP1(), crease.getP0(), crease.getP1()))
-				.forEach(crease -> {
-					snapPoints.add(crease.getP0());
-					snapPoints.add(crease.getP1());
-				});
+		var snapPointFactory = new SnapPointFactory();
 
-		return snapPoints;
+		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(context, segment);
+
+		snapPoints.add(p0);
+		snapPoints.add(p1);
+
+		return snapPoints.stream().distinct().collect(Collectors.toList());
 	}
+
 }
