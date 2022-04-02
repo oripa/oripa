@@ -39,7 +39,5 @@ public class PseudoLineFactory {
 				v0.x + dir.x, v0.y + dir.y);
 
 		return line;
-//		Optional<Segment> clippedOpt = GeomUtil.clipLine(line, domain);
-//		return clippedOpt.get();
 	}
 }
