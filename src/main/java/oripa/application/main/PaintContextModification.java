@@ -40,7 +40,6 @@ public class PaintContextModification {
 		paintContext.clear(true);
 		paintContext.setCreasePattern(creasePattern);
 		paintContext.creasePatternUndo().clear();
-		paintContext.updateGrids();
 	}
 
 }
