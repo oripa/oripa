@@ -12,15 +12,15 @@ public class SelectingSecondVertexForLine extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-		Command command = new LineAdderCommand(context);
+		var snapPointFactory = new LineSnapPointFactory();
+
+		Command command = new LineSnapPointsSetterCommand(context, snapPointFactory);
 		command.execute();
 	}
 
 	@Override
 	protected void initialize() {
 		setPreviousClass(SelectingFirstVertexForLine.class);
-		setNextClass(SelectingFirstVertexForLine.class);
-
-		// System.out.println("SelectingSecondVertex.initialize() is called");
+		setNextClass(SelectingFirstEndPoint.class);
 	}
 }
