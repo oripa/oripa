@@ -28,7 +28,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.SnapPointFactory;
 
 /**
- * @author origa
+ * @author OUCHI Koji
  *
  */
 public class LineSnapPointFactory {

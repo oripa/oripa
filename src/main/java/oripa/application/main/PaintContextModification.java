@@ -29,8 +29,8 @@ import oripa.domain.paint.PaintContext;
  */
 public class PaintContextModification {
 	/**
-	 * Clears the context, sets the given crease pattern, clears the undo
-	 * history, and updates grids.
+	 * Clears the context, sets the given crease pattern, and clears the undo
+	 * history.
 	 *
 	 * @param creasePattern
 	 * @param paintContext
