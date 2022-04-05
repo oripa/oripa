@@ -49,22 +49,6 @@ class AngleSnapPointFactory {
 			var snapPointFactory = new SnapPointFactory();
 
 			crossPoints.addAll(snapPointFactory.createSnapPoints(context, line));
-
-//			// snap on cross points of angle line and creases.
-//			crossPoints.addAll(
-//					context.getCreasePattern().stream()
-//							.map(crease -> GeomUtil.getCrossPoint(line, crease))
-//							.filter(Objects::nonNull)
-//							.collect(Collectors.toList()));
-//
-//			// snap on end points of overlapping creases.
-//			context.getCreasePattern().stream()
-//					.filter(crease -> GeomUtil.isLineSegmentsOverlap(
-//							line.getP0(), line.getP1(), crease.getP0(), crease.getP1()))
-//					.forEach(crease -> {
-//						crossPoints.add(crease.getP0());
-//						crossPoints.add(crease.getP1());
-//					});
 		}
 
 		return crossPoints;
