@@ -19,14 +19,14 @@
 
 package oripa.domain.cptool;
 
-import oripa.value.OriLine;
-import oripa.value.OriPoint;
+import static oripa.geom.GeomUtil.detectOverlap;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static oripa.geom.GeomUtil.detectOverlap;
+import oripa.value.OriLine;
+import oripa.value.OriPoint;
 
 /**
  * @author OUCHI Koji
@@ -35,14 +35,19 @@ import static oripa.geom.GeomUtil.detectOverlap;
 public class OverlappingLineSplitter {
 
 	/**
-	 * Split lines if overlapping, using the type of the new line for the parts that are part of it,
-	 * and the type of the existing line for the part that are not
-	 * @param existingLine Line that already existed before the action
-	 * @param newLine line newly added by the action
-	 * @return list of the sublines to add instead of the lines that are passed to the function
+	 * Split lines if overlapping, using the type of the new line for the parts
+	 * that are part of it, and the type of the existing line for the part that
+	 * are not
+	 *
+	 * @param existingLine
+	 *            Line that already existed before the action
+	 * @param newLine
+	 *            line newly added by the action
+	 * @return list of the sub lines to add instead of the lines that are passed
+	 *         to the function
 	 */
-	public static List<OriLine> splitLinesIfOverlap(OriLine existingLine, OriLine newLine) {
-		if(detectOverlap(existingLine, newLine)) {
+	public static List<OriLine> splitLinesIfOverlap(final OriLine existingLine, final OriLine newLine) {
+		if (detectOverlap(existingLine, newLine)) {
 			return splitOverlappingLines(existingLine, newLine);
 		}
 		return List.of(existingLine, newLine);
@@ -50,21 +55,28 @@ public class OverlappingLineSplitter {
 
 	/**
 	 * Splits the lines, assuming they are overlapping
-	 * @param existingLine Line that already existed before the action
-	 * @param newLine line newly added by the action
-	 * @return list of the sublines with the right Type
+	 *
+	 * @param existingLine
+	 *            Line that already existed before the action
+	 * @param newLine
+	 *            line newly added by the action
+	 * @return list of the sub lines with the right Type
 	 */
-	public static List<OriLine> splitOverlappingLines(OriLine existingLine, OriLine newLine) {
+	public static List<OriLine> splitOverlappingLines(final OriLine existingLine, final OriLine newLine) {
 		List<OriPoint> oriPoints = List.of(existingLine.p0, existingLine.p1, newLine.p0, newLine.p1).stream()
 				.sorted()
 				.collect(Collectors.toList());
 
 		List<OriLine> subLines = new ArrayList<>();
 
-		for (int i=0; i<oriPoints.size()-1; i++) {
-			if (oriPoints.get(i).equals(oriPoints.get(i+1))) continue;
+		for (int i = 0; i < oriPoints.size() - 1; i++) {
+			if (oriPoints.get(i).equals(oriPoints.get(i + 1))) {
+				continue;
+			}
 			OriLine line = new OriLine(oriPoints.get(i), oriPoints.get(i + 1), existingLine.getType());
-			if (newLine.contains(line.middlePoint())) line.setType(newLine.getType());
+			if (newLine.contains(line.middlePoint())) {
+				line.setType(newLine.getType());
+			}
 			subLines.add(line);
 		}
 
