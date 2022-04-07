@@ -19,24 +19,20 @@
 
 package oripa.geom;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.value.OriLine;
-import oripa.value.OriPoint;
-
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-
 /**
  * A rectangle domain fitting to given lines.
  *
  * Position coordinate is the same as screen. (top is smaller)
  */
-// TODO: change to use Segment, not OriLine.
 public class RectangleDomain {
 
 	private double left;
@@ -45,24 +41,37 @@ public class RectangleDomain {
 	private double bottom;
 
 	/**
-	 * construct this instance fit to given lines
+	 * construct this instance fit to given {@code target} lines
+	 *
+	 * @param target
 	 */
-	public RectangleDomain(final Collection<OriLine> target) {
+	public RectangleDomain(final Collection<? extends Segment> target) {
 
 		initialize();
 
-		for (OriLine line : target) {
-			enlarge(line.p0);
-			enlarge(line.p1);
+		for (Segment line : target) {
+			enlarge(line.getP0());
+			enlarge(line.getP1());
 		}
 	}
 
+	/**
+	 * Create minimum sized domain
+	 */
 	public RectangleDomain() {
 		this(Collections.emptyList());
 	}
 
-	public RectangleDomain(double x0, double y0, double x1, double y1) {
-		this(List.of(new OriLine(x0, y0, x1, y1, OriLine.Type.AUX)));
+	/**
+	 * Construct domain for {@code Segment} between P1(x0, y0) and P2(x1, y1)
+	 *
+	 * @param x0
+	 * @param y0
+	 * @param x1
+	 * @param y1
+	 */
+	public RectangleDomain(final double x0, final double y0, final double x1, final double y1) {
+		this(List.of(new Segment(x0, y0, x1, y1)));
 	}
 
 	private void initialize() {
@@ -73,7 +82,9 @@ public class RectangleDomain {
 	}
 
 	/**
-	 * Enlarge this domain as it includes given point.
+	 * Enlarge this domain to include given point {@code v}
+	 *
+	 * @param v
 	 */
 	public void enlarge(final Vector2d v) {
 		left = min(left, v.x);
@@ -83,10 +94,23 @@ public class RectangleDomain {
 	}
 
 	/**
-	 * Enlarge this domain as it includes all given points.
+	 * Enlarge this domain to include all given {@code points}
+	 *
+	 * @param points
 	 */
 	public void enlarge(final Collection<Vector2d> points) {
 		points.forEach(this::enlarge);
+	}
+
+	/**
+	 * Check if this domain contains given {@code point}
+	 *
+	 * @param point
+	 * @return true if {@code point} is in domain
+	 */
+	public boolean contains(final Vector2d point) {
+		return getLeft() <= point.x && point.x <= getRight() &&
+				getTop() <= point.y && point.y <= getBottom();
 	}
 
 	public double getLeft() {
@@ -127,10 +151,5 @@ public class RectangleDomain {
 
 	private double computeGap(final double a, final double b) {
 		return max(a, b) - min(a, b);
-	}
-
-	public boolean contains(OriPoint oriPoint) {
-		return getLeft() <= oriPoint.x && oriPoint.x <= getRight() &&
-				getTop() <= oriPoint.y && oriPoint.y <= getBottom();
 	}
 }

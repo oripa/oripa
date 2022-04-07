@@ -137,41 +137,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		this(segment.getP0(), segment.getP1(), type);
 	}
 
-	@Override
-	public Vector2d getP0() {
-		return p0;
-	}
-
-	@Override
-	public Vector2d getP1() {
-		return p1;
-	}
-
-	public void setType(final Type type) {
-		this.type = type;
-	}
-
-	public Type getType() {
-		return type;
-	}
-
-	public boolean isBoundary() {
-		return type == Type.CUT;
-	}
-
-	public boolean isMV() {
-		return type == Type.MOUNTAIN || type == Type.VALLEY;
-	}
-
-	public boolean isAux() {
-		return type == Type.AUX;
-	}
-
-	@Override
-	public String toString() {
-		return "" + p0 + "" + p1;
-	}
-
 	public Line getLine() {
 		return new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
 	}
@@ -251,13 +216,47 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		return false;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
+	@Override
+	public Vector2d getP0() {
+		return p0;
+	}
+
+	@Override
+	public Vector2d getP1() {
+		return p1;
+	}
+
+	public void setType(final Type type) {
+		this.type = type;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public boolean isBoundary() {
+		return type == Type.CUT;
+	}
+
+	public boolean isMV() {
+		return type == Type.MOUNTAIN || type == Type.VALLEY;
+	}
+
+	public boolean isAux() {
+		return type == Type.AUX;
+	}
+
+	@Override
+	public String toString() {
+		return "" + p0 + "" + p1;
+	}
+
+	/* (non Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
+		// assure that the order of points is the same
 		if (p0.compareTo(p1) < 0) {
 			return Objects.hash(p0, p1, this.type);
 		}

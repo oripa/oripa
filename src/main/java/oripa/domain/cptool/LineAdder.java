@@ -193,11 +193,12 @@ public class LineAdder {
 
 		StopWatch watch = new StopWatch(true);
 
-		List<OriLine> nonExistingNewLines = new ArrayList<>(inputLines);
+		List<OriLine> nonExistingNewLines = new ArrayList<OriLine>(inputLines);
 
 		// input domain can limit the current lines to be divided.
 		RectangleClipper inputDomainClipper = new RectangleClipper(
-				new RectangleDomain(nonExistingNewLines), CalculationResource.POINT_EPS);
+				new RectangleDomain(nonExistingNewLines),
+				CalculationResource.POINT_EPS);
 		// use a hash set for avoiding worst case of computation time. (list
 		// takes O(n) time for deletion while hash set takes O(1) time.)
 		HashSet<OriLine> crossingCurrentLines = new HashSet<>(
