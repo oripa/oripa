@@ -183,6 +183,8 @@ public class LineAdder {
 	 * Adds all of {@code inputLines} to {@code currentLines}. The lines will be
 	 * split at the intersections of the lines.
 	 *
+	 * TODO: test two other algorithms (OUCHI Koji, and scan line intersections)
+	 *
 	 * @param inputLines
 	 *            lines to be added
 	 * @param currentLines
