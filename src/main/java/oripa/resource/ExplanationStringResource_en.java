@@ -11,7 +11,7 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 			{ StringID.DIRECT_V_ID,
 					"Specify two end points.[Ctrl] allows to pick any point on an edge." },
 
-			{ StringID.ON_V_ID, "Specify two points that lie on the line" },
+			{ StringID.ON_V_ID, "Specify two points for direction, then select end points." },
 
 			{ StringID.SYMMETRIC_ID,
 					"Input a symmetrical segment. 1st, 2nd are for target. 2nd, 3rd are for base.+[Ctrl] continues automatically." },

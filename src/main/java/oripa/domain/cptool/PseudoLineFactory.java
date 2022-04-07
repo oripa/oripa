@@ -16,30 +16,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.main;
+package oripa.domain.cptool;
 
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.paint.PaintContext;
+import javax.vecmath.Vector2d;
+
+import oripa.geom.Segment;
 
 /**
- * A service object to update {@link PaintContext} appropriately.
- *
  * @author OUCHI Koji
  *
  */
-public class PaintContextModification {
-	/**
-	 * Clears the context, sets the given crease pattern, and clears the undo
-	 * history.
-	 *
-	 * @param creasePattern
-	 * @param paintContext
-	 */
-	public void setCreasePatternToPaintContext(final CreasePattern creasePattern,
-			final PaintContext paintContext) {
-		paintContext.clear(true);
-		paintContext.setCreasePattern(creasePattern);
-		paintContext.creasePatternUndo().clear();
-	}
+public class PseudoLineFactory {
+	public Segment create(
+			final Vector2d v0, final Vector2d v1, final double paperSize) {
 
+		Vector2d dir = new Vector2d(v0.x - v1.x, v0.y - v1.y);
+		dir.normalize();
+		dir.scale(paperSize * 8);
+
+		// create new line
+		Segment line = new Segment(v0.x - dir.x, v0.y - dir.y,
+				v0.x + dir.x, v0.y + dir.y);
+
+		return line;
+	}
 }

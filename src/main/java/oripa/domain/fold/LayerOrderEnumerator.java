@@ -63,7 +63,8 @@ public class LayerOrderEnumerator {
 	private List<Integer>[][] overlappingFaceIndexIntersections;
 
 	/**
-	 * Key: halfedge, value: set of indices which are under the halfedge.
+	 * Key: halfedge, value: set of indices of faces which are under the
+	 * halfedge.
 	 */
 	private Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge;
 

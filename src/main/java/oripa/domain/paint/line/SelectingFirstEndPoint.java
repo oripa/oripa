@@ -16,30 +16,47 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.application.main;
+package oripa.domain.paint.line;
 
-import oripa.domain.creasepattern.CreasePattern;
+import javax.vecmath.Vector2d;
+
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.core.AbstractActionState;
 
 /**
- * A service object to update {@link PaintContext} appropriately.
- *
  * @author OUCHI Koji
  *
  */
-public class PaintContextModification {
-	/**
-	 * Clears the context, sets the given crease pattern, and clears the undo
-	 * history.
-	 *
-	 * @param creasePattern
-	 * @param paintContext
-	 */
-	public void setCreasePatternToPaintContext(final CreasePattern creasePattern,
-			final PaintContext paintContext) {
-		paintContext.clear(true);
-		paintContext.setCreasePattern(creasePattern);
-		paintContext.creasePatternUndo().clear();
+public class SelectingFirstEndPoint extends AbstractActionState {
+
+	@Override
+	protected void initialize() {
+		setPreviousClass(SelectingSecondVertexForLine.class);
+		setNextClass(SelectingSecondEndPoint.class);
+	}
+
+	@Override
+	protected boolean onAct(final PaintContext context, final Vector2d currentPoint, final boolean doSpecial) {
+		var picked = context.getCandidateVertexToPick();
+
+		if (picked == null) {
+			return false;
+		}
+
+		context.pushVertex(picked);
+
+		return true;
+	}
+
+	@Override
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
+
+	}
+
+	@Override
+	protected void undoAction(final PaintContext context) {
+		context.popVertex();
+		context.getSnapPoints().clear();
 	}
 
 }

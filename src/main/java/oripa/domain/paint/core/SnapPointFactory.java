@@ -37,7 +37,7 @@ public class SnapPointFactory {
 	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Segment line) {
 		Collection<Vector2d> snapPoints = new ArrayList<>();
 
-		// snap on cross points of angle line and creases.
+		// snap on cross points of line and creases.
 		snapPoints.addAll(
 				context.getCreasePattern().stream()
 						.map(crease -> GeomUtil.getCrossPoint(line, crease))
