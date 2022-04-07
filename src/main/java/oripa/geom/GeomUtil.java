@@ -468,7 +468,7 @@ public class GeomUtil {
 	}
 
 	public static boolean areDisjointSegments(final Segment l1, final Segment l2) {
-		if (segmentIsVertical(l1)) {
+		if (l1.isVertical(EPS)) {
 			return (l1.getP0().y <= l2.getP0().y && l1.getP0().y <= l2.getP1().y && l1.getP1().y <= l2.getP0().y
 					&& l1.getP1().y <= l2.getP1().y) ||
 					(l2.getP0().y <= l1.getP0().y && l2.getP0().y <= l1.getP1().y && l2.getP1().y <= l1.getP0().y
@@ -486,16 +486,12 @@ public class GeomUtil {
 	 * points (more or less epsilon)
 	 */
 	public static boolean areOnSameSupportLine(final Segment l1, final Segment l2) {
-		if (segmentIsVertical(l1)) {
+		if (l1.isVertical(EPS)) {
 			return abs(getAffineXValueAt(l1, l2.getP0().y) - l2.getP0().x) < EPS
 					&& abs(getAffineXValueAt(l1, l2.getP1().y) - l2.getP1().x) < EPS;
 		}
 		return abs(getAffineYValueAt(l1, l2.getP0().x) - l2.getP0().y) < EPS
 				&& abs(getAffineYValueAt(l1, l2.getP1().x) - l2.getP1().y) < EPS;
-	}
-
-	private static boolean segmentIsVertical(final Segment l) {
-		return abs(l.getP0().x - l.getP1().x) < EPS;
 	}
 
 	/**
