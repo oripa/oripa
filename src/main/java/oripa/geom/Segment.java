@@ -51,7 +51,34 @@ public class Segment {
 		return p1;
 	}
 
+	/**
+	 * Check if this is Vertical
+	 *
+	 * @param epsilon
+	 *            for floating point error
+	 * @return {@code true} if vertical
+	 */
 	public boolean isVertical(final double epsilon) {
 		return abs(p0.x - p1.x) < epsilon;
+	}
+
+	/**
+	 * Calculates the affine value on the line, at the {@code xTested}
+	 * coordinate using the y = ax + b expression
+	 *
+	 * @param xTested
+	 */
+	public double getAffineYValueAt(final double xTested) {
+		return (getP1().y - getP0().y) * (xTested - getP0().x) / (getP1().x - getP0().x) + getP0().y;
+	}
+
+	/**
+	 * Calculates the affine value on the line, at the {@code yTested}
+	 * coordinate using the x = ay + b expression
+	 *
+	 * @param yTested
+	 */
+	public double getAffineXValueAt(final double yTested) {
+		return (getP1().x - getP0().x) * (yTested - getP0().y) / (getP1().y - getP0().y) + getP0().x;
 	}
 }
