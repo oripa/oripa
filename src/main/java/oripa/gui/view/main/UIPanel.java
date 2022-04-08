@@ -739,8 +739,16 @@ public class UIPanel extends JPanel {
 
 	private void setShortcut(final JComponent focusTarget, final KeyStroke keyStroke,
 			final String id, final Action action) {
-		focusTarget.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, id);
-		focusTarget.getActionMap().put(id, action);
+		var inputMap = focusTarget.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		var actionMap = focusTarget.getActionMap();
+
+		if (inputMap.get(keyStroke) != null) {
+			throw new IllegalArgumentException(
+					"Wrong key configuration: Shortcut by " + keyStroke.toString() + " is already set.");
+		}
+
+		inputMap.put(keyStroke, id);
+		actionMap.put(id, action);
 	}
 
 	private void setButtonIcons() {
