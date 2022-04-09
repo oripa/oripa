@@ -59,7 +59,7 @@ public class Segment {
 	 * @return {@code true} if vertical
 	 */
 	public boolean isVertical(final double epsilon) {
-		return abs(p0.x - p1.x) < epsilon;
+		return abs(getP0().x - getP1().x) < epsilon;
 	}
 
 	/**
