@@ -51,7 +51,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.bind.ButtonFactory;
 import oripa.gui.bind.PaintActionButtonFactory;
-import oripa.gui.bind.binder.BinderInterface;
+import oripa.gui.bind.binder.Binder;
 import oripa.gui.bind.binder.ViewChangeBinder;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
@@ -560,7 +560,7 @@ public class UIPanel extends JPanel {
 			final MainFrameSetting mainFrameSetting,
 			final MainScreenSetting mainScreenSetting) {
 
-		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
+		Binder<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
 
 		var stateFactory = new PaintBoundStateFactory(stateManager, mainFrameSetting, setting,
 				mainScreenSetting.getSelectionOriginHolder());

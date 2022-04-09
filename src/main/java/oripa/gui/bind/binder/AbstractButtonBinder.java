@@ -11,7 +11,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
 public abstract class AbstractButtonBinder<ToBeBound>
-		implements BinderInterface<ToBeBound> {
+		implements Binder<ToBeBound> {
 
 	private static Logger logger = LoggerFactory.getLogger(AbstractButtonBinder.class);
 

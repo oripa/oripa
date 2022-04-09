@@ -12,7 +12,7 @@ import javax.swing.AbstractButton;
  *
  * @param <ToBeBound>
  */
-public interface BinderInterface<ToBeBound> {
+public interface Binder<ToBeBound> {
 
 	/**
 	 *
@@ -20,7 +20,7 @@ public interface BinderInterface<ToBeBound> {
 	 *            Class object of a button to be created
 	 * @param target
 	 *            An object to be bound to button.doClick()
-	 * @param id
+	 * @param textID
 	 *            {@code StringID} member for label
 	 * @param keyListener
 	 *            For catching key actions which requires immediate
