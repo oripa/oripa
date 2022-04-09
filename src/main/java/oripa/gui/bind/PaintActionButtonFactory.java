@@ -45,8 +45,8 @@ public class PaintActionButtonFactory implements ButtonFactory {
 	 * java.lang.String)
 	 */
 	@Override
-	public AbstractButton create(final Component parent,
-			final Class<? extends AbstractButton> buttonClass,
+	public <TButton extends AbstractButton> TButton create(final Component parent,
+			final Class<TButton> buttonClass,
 			final String id,
 			final KeyListener keyListener) throws IllegalArgumentException {
 
@@ -58,7 +58,7 @@ public class PaintActionButtonFactory implements ButtonFactory {
 		}
 
 		ApplicationStateButtonBinder paintBinder = new ApplicationStateButtonBinder();
-		AbstractButton button = paintBinder.createButton(buttonClass, state, id, keyListener);
+		TButton button = paintBinder.createButton(buttonClass, state, id, keyListener);
 
 		return button;
 	}

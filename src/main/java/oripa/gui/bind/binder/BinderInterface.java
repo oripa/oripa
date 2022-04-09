@@ -30,10 +30,10 @@ public interface BinderInterface<ToBeBound> {
 	 *
 	 * @return
 	 */
-	public AbstractButton createButton(
-			Class<? extends AbstractButton> buttonClass,
-			ToBeBound target, String id,
-			KeyListener keyListener);
+	public <TButton extends AbstractButton> TButton createButton(
+			final Class<TButton> buttonClass,
+			final ToBeBound target, final String textID,
+			final KeyListener keyListener);
 
 //	public void setOptionalActionListeners(ActionListener[] others);
 

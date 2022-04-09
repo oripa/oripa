@@ -313,28 +313,28 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		/*
 		 * For changing outline
 		 */
-		menuItemChangeOutline = (JMenuItem) buttonFactory
+		menuItemChangeOutline = buttonFactory
 				.create(this, JMenuItem.class,
 						StringID.EDIT_CONTOUR_ID, null);
 
 		/*
 		 * For selecting all lines
 		 */
-		menuItemSelectAll = (JMenuItem) buttonFactory
+		menuItemSelectAll = buttonFactory
 				.create(this, JMenuItem.class,
 						StringID.SELECT_ALL_LINE_ID, null);
 
 		/*
 		 * For starting copy-and-paste
 		 */
-		menuItemCopyAndPaste = (JMenuItem) buttonFactory
+		menuItemCopyAndPaste = buttonFactory
 				.create(this, JMenuItem.class,
 						StringID.COPY_PASTE_ID, null);
 
 		/*
 		 * For starting cut-and-paste
 		 */
-		menuItemCutAndPaste = (JMenuItem) buttonFactory
+		menuItemCutAndPaste = buttonFactory
 				.create(this, JMenuItem.class,
 						StringID.CUT_PASTE_ID, null);
 	}
