@@ -19,15 +19,11 @@
 
 package oripa.value;
 
-import static java.lang.Math.*;
-import static oripa.geom.GeomUtil.*;
-
 import java.util.Objects;
 
 import javax.vecmath.Vector2d;
 
 import oripa.geom.Line;
-import oripa.geom.RectangleDomain;
 import oripa.geom.Segment;
 
 public class OriLine extends Segment implements Comparable<OriLine> {
@@ -37,18 +33,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	private static final int TYPE_MOUNTAIN = 2;
 	private static final int TYPE_VALLEY = 3;
 	private static final int TYPE_CUT_MODEL = 4;
-
-	public boolean isVertical() {
-		return abs(p0.x - p1.x) < EPS;
-	}
-
-	public boolean contains(final OriPoint oriPoint) {
-		var rectangleDomain = new RectangleDomain(p0.x, p0.y, p1.x, p1.y);
-		if (isVertical()) {
-			return abs(getAffineXValueAt(oriPoint.y) - oriPoint.x) < EPS && rectangleDomain.contains(oriPoint);
-		}
-		return abs(getAffineYValueAt(oriPoint.x) - oriPoint.y) < EPS && rectangleDomain.contains(oriPoint);
-	}
 
 	public enum Type {
 
