@@ -18,7 +18,10 @@
  */
 package oripa.domain.cptool;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,7 +42,7 @@ public class OverlappingLineExtractor {
 	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
 	private static final double EPS = 1e-5;
 
-	private boolean isOverlap(final OriLine line0, final OriLine line1) {
+	public boolean isOverlap(final OriLine line0, final OriLine line1) {
 		var overlapCount = GeomUtil.distinguishLineSegmentsOverlap(
 				line0.p0, line0.p1, line1.p0, line1.p1);
 		if (overlapCount >= 3) {
@@ -60,6 +63,41 @@ public class OverlappingLineExtractor {
 		}
 
 		return false;
+	}
+
+	public Collection<List<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines) {
+		// make a data structure for fast computation.
+		var hashFactory = new AnalyticLineHashFactory(EPS);
+		var hash = hashFactory.create(lines);
+
+		var overlapGroups = new ConcurrentLinkedDeque<List<OriLine>>();
+
+		// for each angle and intercept, try all pairs of lines and find
+		// overlaps.
+		IntStream.range(0, hash.size()).parallel().forEach(angle_i -> {
+			var byAngle = hash.get(angle_i);
+			IntStream.range(0, byAngle.size()).parallel().forEach(intercept_i -> {
+				var byIntercept = byAngle.get(intercept_i);
+				List<OriLine> overlaps = Collections.synchronizedList(new ArrayList<OriLine>());
+				// for each line
+				IntStream.range(0, byIntercept.size()).parallel().forEach(i -> {
+					var line0 = byIntercept.get(i).getLine();
+					// search another line of overlapping
+					IntStream.range(i + 1, byIntercept.size()).parallel().forEach(j -> {
+						var line1 = byIntercept.get(j).getLine();
+						if (isOverlap(line0, line1)) {
+							overlaps.add(line0);
+							overlaps.add(line1);
+						}
+					});
+				});
+				if (!overlaps.isEmpty()) {
+					overlapGroups.add(overlaps);
+				}
+			});
+		});
+
+		return overlapGroups;
 	}
 
 	/**

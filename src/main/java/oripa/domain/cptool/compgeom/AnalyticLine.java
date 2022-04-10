@@ -48,12 +48,18 @@ public class AnalyticLine {
 		}
 		this.angle = angle;
 
-		// vertical line doesn't have intercept.
-		if (Math.abs(Math.PI / 2 - angle) < EPS) {
-			intercept = Double.MAX_VALUE;
+		if (isVertical()) {
+			// use x-intercept
+			intercept = p0.x;
 		} else {
-			intercept = p0.y - (p1.y - p0.y) / (p1.x - p0.x) * p0.x;
+			// use y-intercept
+			intercept = line.getAffineYValueAt(0);
+//			intercept = p0.y - (p1.y - p0.y) / (p1.x - p0.x) * p0.x;
 		}
+	}
+
+	public boolean isVertical() {
+		return Math.abs(Math.PI / 2 - angle) < EPS;
 	}
 
 	/**
