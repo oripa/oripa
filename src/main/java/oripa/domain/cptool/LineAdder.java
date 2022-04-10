@@ -83,6 +83,37 @@ public class LineAdder {
 		return crossMap;
 	}
 
+	private void divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines) {
+		var extractor = new OverlappingLineExtractor();
+
+		var allLines = new HashSet<OriLine>(dividerLines);
+		allLines.addAll(lines);
+
+		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines);
+		Set<OriLine> lineSet = ConcurrentHashMap.newKeySet();
+
+		lineSet.addAll(lines);
+
+		overlapGroups.parallelStream().forEach(overlaps -> {
+			var dividerOverlaps = overlaps.stream()
+					.filter(ov -> dividerLines.stream().anyMatch(l -> l == ov))
+					.collect(Collectors.toSet());
+
+			var lineOverlaps = overlaps.stream()
+					.filter(ov -> dividerOverlaps.stream().noneMatch(l -> l == ov))
+					.collect(Collectors.toSet());
+
+			lineSet.removeAll(lineOverlaps);
+
+			dividerOverlaps.forEach(divider -> divideLinesIfOverlap(divider, lineOverlaps));
+
+			lineSet.addAll(lineOverlaps);
+		});
+
+		lines.clear();
+		lines.addAll(lineSet);
+	}
+
 	private void divideLinesIfOverlap(final OriLine dividerLine, final Collection<OriLine> lines) {
 
 		Set<OriLine> targettedLines = ConcurrentHashMap.newKeySet();
@@ -241,8 +272,7 @@ public class LineAdder {
 		nonExistingNewLines
 				.forEach(inputLine -> crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines)));
 
-		nonExistingNewLines
-				.forEach(inputLine -> divideLinesIfOverlap(inputLine, crossingCurrentLines));
+		divideIfOverlap(nonExistingNewLines, crossingCurrentLines);
 
 		// feed back the result of line divisions
 		currentLines.addAll(crossingCurrentLines);
@@ -257,14 +287,12 @@ public class LineAdder {
 		logger.debug("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
 		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists);
-		crossingCurrentLines.forEach(line -> divideLinesIfOverlap(line, splitNewLines));
+		divideIfOverlap(crossingCurrentLines, splitNewLines);
 
 		currentLines.addAll(splitNewLines);
 
 		var lineTypeOverwriter = new LineTypeOverwriter();
 		lineTypeOverwriter.overwriteLineTypes(splitNewLines, currentLines);
-
-//		splitNewLines.forEach(splitNewLine -> addNewLineOrSplitAndAddIfOverlapping(currentLines, splitNewLine));
 
 		logger.debug("addAll(): {}[ms]", watch.getMilliSec());
 	}
