@@ -19,7 +19,7 @@
 
 package oripa.geom;
 
-import static java.lang.Math.abs;
+import static java.lang.Math.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -463,10 +463,12 @@ public class GeomUtil {
 		return centroid;
 	}
 
+	@Deprecated
 	public static boolean detectOverlap(final Segment existingLine, final Segment newLine) {
 		return areOnSameSupportLine(existingLine, newLine) && !areDisjointSegments(existingLine, newLine);
 	}
 
+	@Deprecated
 	public static boolean areDisjointSegments(final Segment l1, final Segment l2) {
 		if (l1.isVertical(EPS)) {
 			return (l1.getP0().y <= l2.getP0().y && l1.getP0().y <= l2.getP1().y && l1.getP1().y <= l2.getP0().y
@@ -485,6 +487,7 @@ public class GeomUtil {
 	 * l1 and l2 share the same support line if they test the same at 2 distinct
 	 * points (more or less epsilon)
 	 */
+	@Deprecated
 	public static boolean areOnSameSupportLine(final Segment l1, final Segment l2) {
 		if (l1.isVertical(EPS)) {
 			return abs(l1.getAffineXValueAt(l2.getP0().y) - l2.getP0().x) < EPS

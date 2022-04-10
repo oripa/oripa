@@ -19,7 +19,7 @@
 
 package oripa.domain.cptool;
 
-import static oripa.geom.GeomUtil.detectOverlap;
+import static oripa.geom.GeomUtil.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,7 @@ import oripa.value.OriPoint;
  * @author OUCHI Koji
  *
  */
+@Deprecated
 public class OverlappingLineSplitter {
 
 	/**

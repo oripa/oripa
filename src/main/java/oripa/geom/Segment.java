@@ -18,7 +18,7 @@
 
 package oripa.geom;
 
-import static java.lang.Math.abs;
+import static java.lang.Math.*;
 
 import javax.vecmath.Vector2d;
 
@@ -58,6 +58,7 @@ public class Segment {
 	 *            for floating point error
 	 * @return {@code true} if vertical
 	 */
+	@Deprecated
 	public boolean isVertical(final double epsilon) {
 		return abs(getP0().x - getP1().x) < epsilon;
 	}

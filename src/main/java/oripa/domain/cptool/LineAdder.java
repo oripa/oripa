@@ -1,8 +1,5 @@
 package oripa.domain.cptool;
 
-import static oripa.domain.cptool.OverlappingLineSplitter.*;
-import static oripa.geom.GeomUtil.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -288,74 +285,6 @@ public class LineAdder {
 				.mapToObj(j -> sequentialLineFactory.createSequentialLines(pointLists.get(j),
 						nonExistingNewLines.get(j).getType()))
 				.flatMap(Collection::stream)
-				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Calculate new split lines if some {@code currentLines} are Overlapping
-	 * with {@code splitNewLine}
-	 *
-	 * @param currentLines
-	 * @param splitNewLine
-	 */
-	@Deprecated
-	private void addNewLineOrSplitAndAddIfOverlapping(final Collection<OriLine> currentLines,
-			final OriLine splitNewLine) {
-		List<OriLine> overlappingLines = getOverlappingLines(currentLines, splitNewLine);
-
-		if (overlappingLines.isEmpty()) {
-			currentLines.add(splitNewLine);
-		} else {
-			replaceExistingLineWithSplitOverlappingLines(currentLines, splitNewLine, overlappingLines);
-		}
-	}
-
-	/**
-	 * Split {@code splitNewLine} on any {@code overlappingLines} and call until
-	 * all of them were removed
-	 *
-	 * @param currentLines
-	 *            This Collection changed after the function finished
-	 * @param splitNewLine
-	 * @param overlappingLines
-	 */
-	@Deprecated
-	private void replaceExistingLineWithSplitOverlappingLines(final Collection<OriLine> currentLines,
-			final OriLine splitNewLine, final List<OriLine> overlappingLines) {
-		// recursion endpoint
-		if (overlappingLines.size() == 0) {
-			currentLines.add(splitNewLine);
-			return;
-		}
-
-		// just start with any OverlappingLine that comes first
-		var overlappingLine = overlappingLines.remove(0);
-
-		// will be split into two or three Parts by one overlappingLine
-		List<OriLine> oriLines = splitOverlappingLines(overlappingLine, splitNewLine);
-		// remove it from the current Line Set
-		currentLines.remove(overlappingLine);
-		for (var newLine : oriLines) {
-			// calculate remaining overlappingLines with new Segment
-			var newLineOverlappingLines = getOverlappingLines(overlappingLines, newLine);
-			// recursion
-			replaceExistingLineWithSplitOverlappingLines(currentLines, newLine, newLineOverlappingLines);
-		}
-	}
-
-	/**
-	 * Calculate Collection with lines overlapping with {@code splitNewLine}
-	 * from {@code currentLines}
-	 *
-	 * @param currentLines
-	 * @param splitNewLine
-	 * @return Collection can be empty if no overlapping lines are found
-	 */
-	@Deprecated
-	private List<OriLine> getOverlappingLines(final Collection<OriLine> currentLines, final OriLine splitNewLine) {
-		return currentLines.stream()
-				.filter(oriLine -> !oriLine.isBoundary())
-				.filter(currentLine -> detectOverlap(currentLine, splitNewLine))
 				.collect(Collectors.toList());
 	}
 }
