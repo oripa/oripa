@@ -71,7 +71,7 @@ public class ButtonFactoryTest {
 				.thenReturn(state);
 		var keyListener = mock(KeyListener.class);
 		JButton button;
-		button = (JButton) paintFactory.create(parent, JButton.class,
+		button = paintFactory.create(parent, JButton.class,
 				id,
 				keyListener);
 

@@ -32,12 +32,12 @@ public class ApplicationStateButtonBinder
 	 * @return
 	 */
 	@Override
-	public AbstractButton createButton(
-			final Class<? extends AbstractButton> buttonClass,
+	public <TButton extends AbstractButton> TButton createButton(
+			final Class<TButton> buttonClass,
 			final ApplicationState<EditMode> state, final String textID,
 			final KeyListener keyListener) {
 
-		AbstractButton button = createEmptyButton(buttonClass, textID);
+		TButton button = createEmptyButton(buttonClass, textID);
 
 		if (keyListener != null) {
 			button.addKeyListener(keyListener);

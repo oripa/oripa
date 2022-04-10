@@ -12,11 +12,11 @@ public class ViewChangeBinder extends AbstractButtonBinder<ChangeViewSetting> {
 	}
 
 	@Override
-	public AbstractButton createButton(
-			final Class<? extends AbstractButton> buttonClass,
+	public <TButton extends AbstractButton> TButton createButton(
+			final Class<TButton> buttonClass,
 			final ChangeViewSetting target, final String textID,
 			final KeyListener keyListener) {
-		AbstractButton button = createEmptyButton(buttonClass, textID);
+		TButton button = createEmptyButton(buttonClass, textID);
 
 		if (keyListener != null) {
 			button.addKeyListener(keyListener);

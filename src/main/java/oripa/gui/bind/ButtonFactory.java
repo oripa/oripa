@@ -26,8 +26,8 @@ public interface ButtonFactory {
 	 * @param keyListener
 	 * @return an object of {@code buttonClass}
 	 */
-	public abstract AbstractButton create(Component parent,
-			Class<? extends AbstractButton> buttonClass,
+	public abstract <TButton extends AbstractButton> TButton create(Component parent,
+			Class<TButton> buttonClass,
 			String id,
 			KeyListener keyListener) throws IllegalArgumentException;
 

@@ -18,11 +18,11 @@ public class ButtonBinderTest {
 	@Test
 	public void testCreate() {
 
-		BinderInterface<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
+		Binder<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
 
 		// JRadioButton editModeInputLineButton = new JRadioButton("InputLine",
 		// true);
-		JRadioButton editModeInputLineButton = (JRadioButton) viewChangeBinder.createButton(
+		JRadioButton editModeInputLineButton = viewChangeBinder.createButton(
 				JRadioButton.class, new ChangeOnPaintInputButtonSelected(new UIPanelSetting()),
 				StringID.UI.INPUT_LINE_ID, null);
 
