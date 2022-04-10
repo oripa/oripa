@@ -88,6 +88,7 @@ public class Painter {
 	 */
 	public void addLine(final OriLine inputLine) {
 		lineAdder.addLine(inputLine, creasePattern);
+		elementRemover.removeMeaninglessVertices(creasePattern);
 	}
 
 	/**
@@ -100,6 +101,7 @@ public class Painter {
 	 */
 	public void addLines(final Collection<OriLine> lines) {
 		lineAdder.addAll(lines, creasePattern);
+		elementRemover.removeMeaninglessVertices(creasePattern);
 	}
 
 	/**
