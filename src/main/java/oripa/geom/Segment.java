@@ -18,8 +18,6 @@
 
 package oripa.geom;
 
-import static java.lang.Math.*;
-
 import javax.vecmath.Vector2d;
 
 public class Segment {
@@ -49,18 +47,6 @@ public class Segment {
 
 	public Vector2d getP1() {
 		return p1;
-	}
-
-	/**
-	 * Check if this is Vertical
-	 *
-	 * @param epsilon
-	 *            for floating point error
-	 * @return {@code true} if vertical
-	 */
-	@Deprecated
-	public boolean isVertical(final double epsilon) {
-		return abs(getP0().x - getP1().x) < epsilon;
 	}
 
 	/**

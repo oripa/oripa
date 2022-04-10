@@ -19,8 +19,8 @@
 
 package oripa.value;
 
-import static java.lang.Math.abs;
-import static oripa.geom.GeomUtil.EPS;
+import static java.lang.Math.*;
+import static oripa.geom.GeomUtil.*;
 
 import java.util.Objects;
 
@@ -48,10 +48,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 			return abs(getAffineXValueAt(oriPoint.y) - oriPoint.x) < EPS && rectangleDomain.contains(oriPoint);
 		}
 		return abs(getAffineYValueAt(oriPoint.x) - oriPoint.y) < EPS && rectangleDomain.contains(oriPoint);
-	}
-
-	public OriPoint middlePoint() {
-		return new OriPoint((p0.x + p1.x) / 2, (p0.y + p1.y) / 2);
 	}
 
 	public enum Type {
@@ -156,6 +152,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	 * Calculates the affine value on the line, at the {@code xTested}
 	 * coordinate using the y = ax + b expression
 	 */
+	@Override
 	public double getAffineYValueAt(final double xTested) {
 		return (p1.y - p0.y) * (xTested - p0.x) / (p1.x - p0.x) + p0.y;
 	}
@@ -164,6 +161,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	 * Calculates the affine value on the line, at the {@code yTested}
 	 * coordinate using the x = ay + b expression
 	 */
+	@Override
 	public double getAffineXValueAt(final double yTested) {
 		return (p1.x - p0.x) * (yTested - p0.y) / (p1.y - p0.y) + p0.x;
 	}
