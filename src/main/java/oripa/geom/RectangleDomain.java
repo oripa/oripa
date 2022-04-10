@@ -1,35 +1,38 @@
-/**
+/*
  * ORIPA - Origami Pattern Editor
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package oripa.geom;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
-
-import oripa.value.OriLine;
 
 /**
  * A rectangle domain fitting to given lines.
  *
  * Position coordinate is the same as screen. (top is smaller)
  */
-// TODO: change to use Segment, not OriLine.
 public class RectangleDomain {
 
 	private double left;
@@ -38,23 +41,37 @@ public class RectangleDomain {
 	private double bottom;
 
 	/**
-	 * construct this instance fit to given lines
+	 * construct this instance fit to given {@code target} lines
 	 *
 	 * @param target
 	 */
-	public RectangleDomain(final Collection<OriLine> target) {
+	public RectangleDomain(final Collection<? extends Segment> target) {
 
 		initialize();
 
-		for (OriLine line : target) {
-			enlarge(line.p0);
-			enlarge(line.p1);
+		for (Segment line : target) {
+			enlarge(line.getP0());
+			enlarge(line.getP1());
 		}
-
 	}
 
+	/**
+	 * Create minimum sized domain
+	 */
 	public RectangleDomain() {
-		initialize();
+		this(Collections.emptyList());
+	}
+
+	/**
+	 * Construct domain for {@code Segment} between P1(x0, y0) and P2(x1, y1)
+	 *
+	 * @param x0
+	 * @param y0
+	 * @param x1
+	 * @param y1
+	 */
+	public RectangleDomain(final double x0, final double y0, final double x1, final double y1) {
+		this(List.of(new Segment(x0, y0, x1, y1)));
 	}
 
 	private void initialize() {
@@ -65,50 +82,49 @@ public class RectangleDomain {
 	}
 
 	/**
-	 * Enlarge this domain as it includes given point.
+	 * Enlarge this domain to include given point {@code v}
 	 *
 	 * @param v
 	 */
 	public void enlarge(final Vector2d v) {
-		left = Math.min(left, v.x);
-		right = Math.max(right, v.x);
-		top = Math.min(top, v.y);
-		bottom = Math.max(bottom, v.y);
+		left = min(left, v.x);
+		right = max(right, v.x);
+		top = min(top, v.y);
+		bottom = max(bottom, v.y);
 	}
 
 	/**
-	 * Enlarge this domain as it includes all given points.
+	 * Enlarge this domain to include all given {@code points}
 	 *
 	 * @param points
 	 */
 	public void enlarge(final Collection<Vector2d> points) {
-		points.forEach(p -> enlarge(p));
+		points.forEach(this::enlarge);
 	}
 
 	/**
-	 * @return left
+	 * Check if this domain contains given {@code point}
+	 *
+	 * @param point
+	 * @return true if {@code point} is in domain
 	 */
+	public boolean contains(final Vector2d point) {
+		return getLeft() <= point.x && point.x <= getRight() &&
+				getTop() <= point.y && point.y <= getBottom();
+	}
+
 	public double getLeft() {
 		return left;
 	}
 
-	/**
-	 * @return right
-	 */
 	public double getRight() {
 		return right;
 	}
 
-	/**
-	 * @return top
-	 */
 	public double getTop() {
 		return top;
 	}
 
-	/**
-	 * @return bottom
-	 */
 	public double getBottom() {
 		return bottom;
 	}
@@ -134,6 +150,6 @@ public class RectangleDomain {
 	}
 
 	private double computeGap(final double a, final double b) {
-		return Math.max(a, b) - Math.min(a, b);
+		return max(a, b) - min(a, b);
 	}
 }
