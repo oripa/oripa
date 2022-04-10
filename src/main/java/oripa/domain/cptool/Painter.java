@@ -1,6 +1,7 @@
 package oripa.domain.cptool;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.vecmath.Vector2d;
 
@@ -116,7 +117,7 @@ public class Painter {
 			final Collection<OriLine> lines) {
 		Collection<OriLine> copiedLines = lineMirror.createMirroredLines(baseLine, lines);
 
-		lineAdder.addAll(copiedLines, creasePattern);
+		addLines(copiedLines);
 	}
 
 	/**
@@ -189,9 +190,10 @@ public class Painter {
 	public void addTriangleDivideLines(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
 		Vector2d c = GeomUtil.getIncenter(v0, v1, v2);
-		lineAdder.addLine(new OriLine(c, v0, lineType), creasePattern);
-		lineAdder.addLine(new OriLine(c, v1, lineType), creasePattern);
-		lineAdder.addLine(new OriLine(c, v2, lineType), creasePattern);
+		addLines(List.of(
+				new OriLine(c, v0, lineType),
+				new OriLine(c, v1, lineType),
+				new OriLine(c, v2, lineType)));
 	}
 
 	/**
@@ -214,8 +216,7 @@ public class Painter {
 			final OriLine l, final OriLine.Type lineType) {
 		OriLine bisector = bisectorFactory.createAngleBisectorLine(v0, v1, v2, l, lineType);
 
-		lineAdder.addLine(bisector, creasePattern);
-
+		addLine(bisector);
 	}
 
 	/**
@@ -275,7 +276,7 @@ public class Painter {
 			return false;
 		}
 
-		lineAdder.addLine(symmetricLine, creasePattern);
+		addLine(symmetricLine);
 
 		return true;
 	}
@@ -307,7 +308,7 @@ public class Painter {
 		} catch (PainterCommandFailedException comEx) {
 			return false;
 		}
-		lineAdder.addAll(autoWalkLines, creasePattern);
+		addLines(autoWalkLines);
 
 		return true;
 	}
@@ -335,7 +336,7 @@ public class Painter {
 				cx, cy, angleDeg, repetitionCount,
 				selectedLines, creasePattern);
 
-		lineAdder.addAll(copiedLines, creasePattern);
+		addLines(copiedLines);
 	}
 
 	/**
@@ -359,7 +360,7 @@ public class Painter {
 				row, col, interX, interY,
 				selectedLines, creasePattern);
 
-		lineAdder.addAll(copiedLines, creasePattern);
+		addLines(copiedLines);
 	}
 
 	/**
@@ -372,7 +373,6 @@ public class Painter {
 				selectedLines, creasePattern,
 				creasePattern.getPaperSize());
 
-		lineAdder.addAll(copiedLines, creasePattern);
-
+		addLines(copiedLines);
 	}
 }
