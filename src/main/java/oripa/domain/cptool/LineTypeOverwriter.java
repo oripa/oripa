@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -53,21 +55,26 @@ public class LineTypeOverwriter {
 		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines);
 
 		var addedLineSet = new HashSet<>(addedLines);
+		Set<OriLine> allLineSet = ConcurrentHashMap.newKeySet();
+		allLineSet.addAll(allLines);
 
-		for (var overlaps : overlapGroups) {
-			determineLineTypes(overlaps, addedLineSet, allLines);
-		}
+		overlapGroups.parallelStream().forEach(overlaps -> {
+			determineLineTypes(overlaps, addedLineSet, allLineSet);
+		});
+
+		allLines.clear();
+		allLines.addAll(allLineSet);
 	}
 
-	private void determineLineTypes(final Collection<OriLine> overlaps, final Collection<OriLine> addedLines,
-			final Collection<OriLine> allLines) {
+	private void determineLineTypes(final Collection<OriLine> overlaps, final Set<OriLine> addedLines,
+			final Set<OriLine> allLines) {
 
 		var addedOverlaps = overlaps.stream()
-				.filter(ov -> addedLines.stream().anyMatch(l -> l == ov))
+				.filter(ov -> addedLines.contains(ov))
 				.collect(Collectors.toSet());
 
 		var existingOverlaps = overlaps.stream()
-				.filter(ov -> addedOverlaps.stream().noneMatch(l -> l == ov))
+				.filter(ov -> !addedOverlaps.contains(ov))
 				.collect(Collectors.toSet());
 
 		allLines.removeAll(addedOverlaps);
@@ -86,8 +93,7 @@ public class LineTypeOverwriter {
 						.findFirst();
 
 				if (filteredOverlap.isPresent()) {
-					var filtered = filteredOverlap.get();
-					linesToBeUsed.add(filtered);
+					linesToBeUsed.add(filteredOverlap.get());
 
 					return true;
 				}

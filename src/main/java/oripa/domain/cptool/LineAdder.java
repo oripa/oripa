@@ -90,17 +90,19 @@ public class LineAdder {
 		allLines.addAll(lines);
 
 		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines);
+
+		Set<OriLine> dividerLineSet = new HashSet<>(dividerLines);
 		Set<OriLine> lineSet = ConcurrentHashMap.newKeySet();
 
 		lineSet.addAll(lines);
 
 		overlapGroups.parallelStream().forEach(overlaps -> {
 			var dividerOverlaps = overlaps.stream()
-					.filter(ov -> dividerLines.stream().anyMatch(l -> l == ov))
+					.filter(ov -> dividerLineSet.contains(ov))
 					.collect(Collectors.toSet());
 
 			var lineOverlaps = overlaps.stream()
-					.filter(ov -> dividerOverlaps.stream().noneMatch(l -> l == ov))
+					.filter(ov -> !dividerOverlaps.contains(ov))
 					.collect(Collectors.toSet());
 
 			lineSet.removeAll(lineOverlaps);
