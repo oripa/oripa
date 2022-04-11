@@ -1,6 +1,7 @@
 package oripa.domain.cptool;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import oripa.value.OriLine;
@@ -32,9 +33,9 @@ public class LineTypeChanger {
 				break;
 			case FLIP:
 				if (l.getType() == OriLine.Type.MOUNTAIN) {
-					l.setType(OriLine.Type.VALLEY);
+					setType(l, OriLine.Type.VALLEY, lines);
 				} else if (l.getType() == OriLine.Type.VALLEY) {
-					l.setType(OriLine.Type.MOUNTAIN);
+					setType(l, OriLine.Type.MOUNTAIN, lines);
 				}
 				break;
 			default:
@@ -43,7 +44,25 @@ public class LineTypeChanger {
 			return;
 		}
 
-		l.setType(to.getOriLineType());
+		setType(l, to.getOriLineType(), lines);
+	}
+
+	/**
+	 * We need to remove and add element to be updated if {@code lines} is a
+	 * hash set.
+	 *
+	 * @param l
+	 * @param type
+	 * @param lines
+	 */
+	private void setType(final OriLine l, final OriLine.Type type, final Collection<OriLine> lines) {
+		if (lines instanceof Set) {
+			lines.remove(l);
+		}
+		l.setType(type);
+		if (lines instanceof Set) {
+			lines.add(l);
+		}
 	}
 
 	public void alterLineTypes(final Collection<OriLine> toBeChanged,

@@ -254,7 +254,8 @@ public class ElementRemover {
 			final Collection<OriLine> creasePattern) {
 		var watch = new StopWatch(true);
 
-		linesToBeRemoved.forEach(line -> creasePattern.remove(line));
+		linesToBeRemoved.forEach(creasePattern::remove);
+
 		var removedPoints = linesToBeRemoved.stream()
 				.flatMap(line -> Stream.of(line.p0, line.p1))
 				.collect(Collectors.toCollection(() -> new TreeSet<>()));

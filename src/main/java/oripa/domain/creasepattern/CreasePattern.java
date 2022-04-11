@@ -19,6 +19,7 @@
 package oripa.domain.creasepattern;
 
 import java.util.Collection;
+import java.util.Set;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -36,7 +37,7 @@ import oripa.value.OriLine;
  *
  */
 public interface CreasePattern
-		extends Collection<OriLine>, NearVerticesGettable {
+		extends Set<OriLine>, NearVerticesGettable {
 
 	double getPaperSize();
 

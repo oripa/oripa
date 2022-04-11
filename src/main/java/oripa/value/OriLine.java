@@ -230,7 +230,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 
 	@Override
 	public String toString() {
-		return "" + p0 + "" + p1;
+		return "" + p0 + "" + p1 + "," + type + "," + hashCode();
 	}
 
 	/* (non Javadoc)
