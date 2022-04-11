@@ -42,6 +42,15 @@ public class OverlappingLineDivider {
 
 	private final PointSorter pointSorter = new PointSorter();
 
+	/**
+	 * Divides each element of {@code lines} at end point of
+	 * {@code dividerLines}'s element if the lines overlap.
+	 *
+	 * @param dividerLines
+	 *            lines dividing elements of {@code lines}
+	 * @param lines
+	 *            lines to be divided
+	 */
 	public void divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines) {
 		var extractor = new OverlappingLineExtractor();
 
