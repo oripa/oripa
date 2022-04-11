@@ -3,14 +3,11 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -31,6 +28,8 @@ public class LineAdder {
 	private static final Logger logger = LoggerFactory.getLogger(LineAdder.class);
 
 	private final SequentialLineFactory sequentialLineFactory = new SequentialLineFactory();
+	private final PointSorter pointSorter = new PointSorter();
+	private final OverlappingLineDivider divider = new OverlappingLineDivider();
 
 	/**
 	 * divides the current lines by the input line and returns a map of the
@@ -83,90 +82,6 @@ public class LineAdder {
 		return crossMap;
 	}
 
-	private void divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines) {
-		var extractor = new OverlappingLineExtractor();
-
-		var allLines = new HashSet<OriLine>(dividerLines);
-		allLines.addAll(lines);
-
-		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines);
-
-		Set<OriLine> dividerLineSet = new HashSet<>(dividerLines);
-		Set<OriLine> lineSet = ConcurrentHashMap.newKeySet();
-
-		lineSet.addAll(lines);
-
-		overlapGroups.parallelStream().forEach(overlaps -> {
-			var dividerOverlaps = overlaps.stream()
-					.filter(ov -> dividerLineSet.contains(ov))
-					.collect(Collectors.toSet());
-
-			var lineOverlaps = overlaps.stream()
-					.filter(ov -> !dividerOverlaps.contains(ov))
-					.collect(Collectors.toSet());
-
-			lineSet.removeAll(lineOverlaps);
-
-			dividerOverlaps.forEach(divider -> divideLinesIfOverlap(divider, lineOverlaps));
-
-			lineSet.addAll(lineOverlaps);
-		});
-
-		lines.clear();
-		lines.addAll(lineSet);
-	}
-
-	private void divideLinesIfOverlap(final OriLine dividerLine, final Collection<OriLine> lines) {
-
-		Set<OriLine> targettedLines = ConcurrentHashMap.newKeySet();
-		Set<OriLine> splitLines = ConcurrentHashMap.newKeySet();
-
-		BiFunction<OriLine, Vector2d, List<Vector2d>> createSplitPoints = (line, p) -> {
-			var points = new ArrayList<Vector2d>(List.of(line.getP0(), line.getP1()));
-
-			// is close to segment?
-			if (GeomUtil.distancePointToSegment(p, line.getP0(),
-					line.getP1()) > CalculationResource.POINT_EPS) {
-				return points;
-			}
-
-			if (GeomUtil.distance(p, line.getP0()) >= CalculationResource.POINT_EPS) {
-				points.add(p);
-			} else if (GeomUtil.distance(p, line.getP1()) >= CalculationResource.POINT_EPS) {
-				points.add(p);
-			}
-
-			return points;
-		};
-
-		lines.parallelStream()
-				.forEach(line -> {
-					var splitPoints = new ArrayList<Vector2d>();
-
-					int overlapCount = GeomUtil.distinguishLineSegmentsOverlap(dividerLine.getP0(), dividerLine.getP1(),
-							line.getP0(), line.getP1());
-
-					switch (overlapCount) {
-					case 2:
-					case 3:
-						splitPoints.addAll(createSplitPoints.apply(line, dividerLine.getP0()));
-						splitPoints.addAll(createSplitPoints.apply(line, dividerLine.getP1()));
-						break;
-					default:
-						return;
-					}
-
-					sortPointsOnLine(splitPoints, line);
-
-					targettedLines.add(line);
-					splitLines.addAll(
-							sequentialLineFactory.createSequentialLines(splitPoints, line.getType()));
-				});
-
-		lines.removeAll(targettedLines);
-		lines.addAll(splitLines);
-	}
-
 	/**
 	 * Input line should be divided by other lines. This function returns end
 	 * points of such new small lines.
@@ -208,18 +123,9 @@ public class LineAdder {
 		});
 
 		// sort in order to make points sequential
-		sortPointsOnLine(points, inputLine);
+		pointSorter.sortPointsOnLine(points, inputLine);
 
 		return points;
-	}
-
-	private void sortPointsOnLine(final ArrayList<Vector2d> points, final OriLine line) {
-		boolean sortByX = Math.abs(line.p0.x - line.p1.x) > Math.abs(line.p0.y - line.p1.y);
-		if (sortByX) {
-			points.sort(Comparator.comparing(Vector2d::getX));
-		} else {
-			points.sort(Comparator.comparing(Vector2d::getY));
-		}
 	}
 
 	/**
@@ -274,7 +180,7 @@ public class LineAdder {
 		nonExistingNewLines
 				.forEach(inputLine -> crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines)));
 
-		divideIfOverlap(nonExistingNewLines, crossingCurrentLines);
+		divider.divideIfOverlap(nonExistingNewLines, crossingCurrentLines);
 
 		// feed back the result of line divisions
 		currentLines.addAll(crossingCurrentLines);
@@ -289,7 +195,7 @@ public class LineAdder {
 		logger.debug("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
 		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists);
-		divideIfOverlap(crossingCurrentLines, splitNewLines);
+		divider.divideIfOverlap(crossingCurrentLines, splitNewLines);
 
 		currentLines.addAll(splitNewLines);
 
