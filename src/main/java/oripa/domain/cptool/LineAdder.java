@@ -76,7 +76,7 @@ public class LineAdder {
 					addIfLineCanBeSplit.accept(line.p1);
 				});
 
-		toBeRemoved.forEach(currentLines::remove);
+		currentLines.removeAll(toBeRemoved);
 		currentLines.addAll(toBeAdded);
 
 		return crossMap;
