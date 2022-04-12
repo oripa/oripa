@@ -19,8 +19,7 @@
 
 package oripa.domain.cptool;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,6 +27,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.value.OriLine;
 
@@ -36,6 +37,7 @@ import oripa.value.OriLine;
  *
  */
 class LineAdderTest {
+	private static Logger logger = LoggerFactory.getLogger(LineAdderTest.class);
 
 	public static final OriLine DIAGONAL_LINE = new OriLine(-200, -200, 200, 200, OriLine.Type.MOUNTAIN);
 	private LineAdder adder;
@@ -88,6 +90,7 @@ class LineAdderTest {
 		// When
 		adder.addLine(line, creasePattern);
 
+		logger.debug(creasePattern.toString());
 		// Then
 		assertEquals(2, creasePattern.size());
 		assertTrue(creasePattern.contains(new OriLine(0, 0, 100, 0, OriLine.Type.VALLEY)));
@@ -141,6 +144,7 @@ class LineAdderTest {
 
 		// Then
 		assertEquals(7, creasePattern.size());
+		logger.debug(creasePattern.toString());
 
 		var lastX = -200;
 		for (int x = -100; x <= 150; x += 50) {

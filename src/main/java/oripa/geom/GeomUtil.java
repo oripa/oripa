@@ -19,8 +19,6 @@
 
 package oripa.geom;
 
-import static java.lang.Math.abs;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -462,36 +460,4 @@ public class GeomUtil {
 
 		return centroid;
 	}
-
-	public static boolean detectOverlap(final Segment existingLine, final Segment newLine) {
-		return areOnSameSupportLine(existingLine, newLine) && !areDisjointSegments(existingLine, newLine);
-	}
-
-	public static boolean areDisjointSegments(final Segment l1, final Segment l2) {
-		if (l1.isVertical(EPS)) {
-			return (l1.getP0().y <= l2.getP0().y && l1.getP0().y <= l2.getP1().y && l1.getP1().y <= l2.getP0().y
-					&& l1.getP1().y <= l2.getP1().y) ||
-					(l2.getP0().y <= l1.getP0().y && l2.getP0().y <= l1.getP1().y && l2.getP1().y <= l1.getP0().y
-							&& l2.getP1().y <= l1.getP1().y);
-		} else {
-			return (l1.getP0().x <= l2.getP0().x && l1.getP0().x <= l2.getP1().x && l1.getP1().x <= l2.getP0().x
-					&& l1.getP1().x <= l2.getP1().x) ||
-					(l2.getP0().x <= l1.getP0().x && l2.getP0().x <= l1.getP1().x && l2.getP1().x <= l1.getP0().x
-							&& l2.getP1().x <= l1.getP1().x);
-		}
-	}
-
-	/**
-	 * l1 and l2 share the same support line if they test the same at 2 distinct
-	 * points (more or less epsilon)
-	 */
-	public static boolean areOnSameSupportLine(final Segment l1, final Segment l2) {
-		if (l1.isVertical(EPS)) {
-			return abs(l1.getAffineXValueAt(l2.getP0().y) - l2.getP0().x) < EPS
-					&& abs(l1.getAffineXValueAt(l2.getP1().y) - l2.getP1().x) < EPS;
-		}
-		return abs(l1.getAffineYValueAt(l2.getP0().x) - l2.getP0().y) < EPS
-				&& abs(l1.getAffineYValueAt(l2.getP1().x) - l2.getP1().y) < EPS;
-	}
-
 }

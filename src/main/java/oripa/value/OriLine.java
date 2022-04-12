@@ -19,15 +19,11 @@
 
 package oripa.value;
 
-import static java.lang.Math.abs;
-import static oripa.geom.GeomUtil.EPS;
-
 import java.util.Objects;
 
 import javax.vecmath.Vector2d;
 
 import oripa.geom.Line;
-import oripa.geom.RectangleDomain;
 import oripa.geom.Segment;
 
 public class OriLine extends Segment implements Comparable<OriLine> {
@@ -37,22 +33,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	private static final int TYPE_MOUNTAIN = 2;
 	private static final int TYPE_VALLEY = 3;
 	private static final int TYPE_CUT_MODEL = 4;
-
-	public boolean isVertical() {
-		return abs(p0.x - p1.x) < EPS;
-	}
-
-	public boolean contains(final OriPoint oriPoint) {
-		var rectangleDomain = new RectangleDomain(p0.x, p0.y, p1.x, p1.y);
-		if (isVertical()) {
-			return abs(getAffineXValueAt(oriPoint.y) - oriPoint.x) < EPS && rectangleDomain.contains(oriPoint);
-		}
-		return abs(getAffineYValueAt(oriPoint.x) - oriPoint.y) < EPS && rectangleDomain.contains(oriPoint);
-	}
-
-	public OriPoint middlePoint() {
-		return new OriPoint((p0.x + p1.x) / 2, (p0.y + p1.y) / 2);
-	}
 
 	public enum Type {
 
@@ -156,6 +136,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	 * Calculates the affine value on the line, at the {@code xTested}
 	 * coordinate using the y = ax + b expression
 	 */
+	@Override
 	public double getAffineYValueAt(final double xTested) {
 		return (p1.y - p0.y) * (xTested - p0.x) / (p1.x - p0.x) + p0.y;
 	}
@@ -164,6 +145,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	 * Calculates the affine value on the line, at the {@code yTested}
 	 * coordinate using the x = ay + b expression
 	 */
+	@Override
 	public double getAffineXValueAt(final double yTested) {
 		return (p1.x - p0.x) * (yTested - p0.y) / (p1.y - p0.y) + p0.x;
 	}
@@ -248,7 +230,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 
 	@Override
 	public String toString() {
-		return "" + p0 + "" + p1;
+		return "" + p0 + "" + p1 + "," + type + "," + hashCode();
 	}
 
 	/* (non Javadoc)

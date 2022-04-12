@@ -379,4 +379,9 @@ class CreasePatternImpl implements CreasePattern {
 
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return lines.toString();
+	}
 }

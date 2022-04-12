@@ -14,7 +14,7 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-class LineManager implements Collection<OriLine> {
+class LineManager implements Set<OriLine> {
 
 	// The order of lines affects the position of drawn estimated model.
 	// HashSet is fast to access but does not guarantee that the order is always
@@ -89,5 +89,10 @@ class LineManager implements Collection<OriLine> {
 	public boolean retainAll(final Collection<?> c) {
 
 		return lines.retainAll(c);
+	}
+
+	@Override
+	public String toString() {
+		return lines.toString();
 	}
 }

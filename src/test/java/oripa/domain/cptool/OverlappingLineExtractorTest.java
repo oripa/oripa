@@ -20,19 +20,14 @@
 package oripa.domain.cptool;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static oripa.domain.cptool.OverlappingLineSplitter.splitLinesIfOverlap;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import oripa.util.StopWatch;
+
 import oripa.value.OriLine;
 
 /**
@@ -117,6 +112,32 @@ class OverlappingLineExtractorTest {
 	}
 
 	@Test
+	void testExtractOverlapsGroupedBySupport() {
+		var overlap1_1 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
+		var overlap1_2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
+		var overlap1_3 = new OriLine(100, 0, 200, 0, OriLine.Type.MOUNTAIN);
+
+		var overlap2_1 = new OriLine(0, 0, 0, 100, OriLine.Type.MOUNTAIN);
+		var overlap2_2 = new OriLine(0, 0, 0, 100, OriLine.Type.MOUNTAIN);
+
+		var overlapGroups = extractor
+				.extractOverlapsGroupedBySupport(List.of(overlap1_1, overlap1_2, overlap1_3, overlap2_1, overlap2_2));
+
+		assertEquals(2, overlapGroups.size());
+
+		for (var overlaps : overlapGroups) {
+			if (overlaps.contains(overlap1_1)) {
+				assertEquals(2, overlaps.size());
+				assertTrue(overlaps.contains(overlap1_2));
+				assertFalse(overlaps.contains(overlap1_3));
+			}
+			if (overlaps.contains(overlap2_1)) {
+				assertTrue(overlaps.contains(overlap2_2));
+			}
+		}
+	}
+
+	@Test
 	void should_not_detect_overlap_for_two_disjoint_segments_on_the_same_line() {
 		var overlap1 = new OriLine(-200, 0, 0, 0, OriLine.Type.MOUNTAIN);
 		var overlap2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
@@ -126,41 +147,4 @@ class OverlappingLineExtractorTest {
 
 		assertEquals(0, overlaps.size());
 	}
-
-	@Disabled
-	@Test
-	void simple_overlap_detection_should_be_faster() {
-		int nbIterations = 1000;
-		List<OriLine> existingLines = generateRandomExistingLines(nbIterations);
-
-		OriLine newLine = new OriLine(20, 20, 40, 40, OriLine.Type.MOUNTAIN);
-
-		logger.info("starting new way");
-		StopWatch stopWatchDetectOverlap = new StopWatch(true);
-		existingLines.forEach(existingLine -> splitLinesIfOverlap(existingLine, newLine));
-		long stopWatchDetectOverlapMilliSec = stopWatchDetectOverlap.getMilliSec();
-
-		logger.info("starting old way");
-		StopWatch stopWatchOverlappingLineExtractor = new StopWatch(true);
-		existingLines.add(newLine);
-		extractor.extract(existingLines);
-		long stopWatchOverlappingLineExtractorMilliSec = stopWatchOverlappingLineExtractor.getMilliSec();
-
-		assertTrue(stopWatchOverlappingLineExtractorMilliSec > stopWatchDetectOverlapMilliSec);
-		logger.info("{} iterations in {}ms now vs {}ms before", nbIterations, stopWatchDetectOverlapMilliSec, stopWatchOverlappingLineExtractorMilliSec);
-	}
-
-	private List<OriLine> generateRandomExistingLines(int nbIterations) {
-		List<OriLine> existingLines = new ArrayList<>();
-		double x0 = ThreadLocalRandom.current().nextInt(-200, 200 + 1);
-		double y0 = ThreadLocalRandom.current().nextInt(-200, 200 + 1);
-		double x1 = ThreadLocalRandom.current().nextInt(-200, 200 + 1);
-		double y1 = ThreadLocalRandom.current().nextInt(-200, 200 + 1);
-
-		for(int i = 0; i< nbIterations; i++) {
-			existingLines.add(new OriLine(x0, y0, x1, y1, OriLine.Type.VALLEY));
-		}
-		return existingLines;
-	}
-
 }
