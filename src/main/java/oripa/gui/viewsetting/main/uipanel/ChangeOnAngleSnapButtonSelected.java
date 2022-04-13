@@ -17,7 +17,10 @@ public class ChangeOnAngleSnapButtonSelected implements ChangeViewSetting {
 		setting.selectInputMode();
 
 		setting.setByValuePanelVisible(false);
+
+		setting.setLineSelectionPanelVisible(false);
 		setting.setLineInputPanelVisible(true);
+
 		setting.setAngleStepPanelVisible(true);
 
 		setting.setAlterLineTypePanelVisible(false);

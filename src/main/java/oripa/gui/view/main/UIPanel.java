@@ -110,11 +110,17 @@ public class UIPanel extends JPanel {
 	private final ButtonGroup editModeGroup;
 
 	private JRadioButton editModeInputLineButton;
-	private JRadioButton editModePickLineButton;
+	private JRadioButton editModeLineSelectionButton;
 	private JRadioButton editModeDeleteLineButton;
 	private JRadioButton editModeLineTypeButton;
 	private JRadioButton editModeAddVertex;
 	private JRadioButton editModeDeleteVertex;
+
+	// Line Selection Tools panel
+	private final JPanel lineSelectionPanel = new JPanel();
+
+	private JRadioButton selectionButton;
+	private JRadioButton enlargementButton;
 
 	// Insert Line Tools Panel
 	private final JPanel lineInputPanel = new JPanel();
@@ -235,7 +241,7 @@ public class UIPanel extends JPanel {
 		// edit mode Selection panel
 		editModeGroup = new ButtonGroup();
 		editModeGroup.add(editModeInputLineButton);
-		editModeGroup.add(editModePickLineButton);
+		editModeGroup.add(editModeLineSelectionButton);
 		editModeGroup.add(editModeDeleteLineButton);
 		editModeGroup.add(editModeLineTypeButton);
 		editModeGroup.add(editModeAddVertex);
@@ -250,13 +256,14 @@ public class UIPanel extends JPanel {
 				.setInsets(0, 5, 0, 0);
 
 		editModePanel.add(editModeInputLineButton, gbBuilder.getLineField());
-		editModePanel.add(editModePickLineButton, gbBuilder.getLineField());
+		editModePanel.add(editModeLineSelectionButton, gbBuilder.getLineField());
 		editModePanel.add(editModeDeleteLineButton, gbBuilder.getLineField());
 		editModePanel.add(editModeLineTypeButton, gbBuilder.getLineField());
 		editModePanel.add(editModeAddVertex, gbBuilder.getLineField());
 		editModePanel.add(editModeDeleteVertex, gbBuilder.getLineField());
 
 		// Tool settings panel
+		buildLineSelectionPanel();
 		buildLineInputPanel();
 		buildAlterLineTypePanel();
 		buildAngleStepPanel();
@@ -269,6 +276,7 @@ public class UIPanel extends JPanel {
 		gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.PAGE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 1);
 
+		toolSettingsPanel.add(lineSelectionPanel, gbBuilder.getNextField());
 		toolSettingsPanel.add(lineInputPanel, gbBuilder.getLineField());
 		toolSettingsPanel.add(alterLineTypePanel, gbBuilder.getLineField());
 		toolSettingsPanel.add(byValuePanel, gbBuilder.getLineField());
@@ -316,6 +324,7 @@ public class UIPanel extends JPanel {
 		angleStepCombo.setSelectedItem(AngleStep.PI_OVER_8);
 
 		// of paint command
+		selectionButton.doClick();
 		lineInputDirectVButton.doClick();
 
 		// of line type on setting
@@ -326,6 +335,35 @@ public class UIPanel extends JPanel {
 
 		doFullEstimationCheckBox.setSelected(true);
 		lineTypeMountainButton.doClick();
+	}
+
+	private void buildLineSelectionPanel() {
+		ButtonGroup lineSelectionGroup = new ButtonGroup();
+
+		lineSelectionGroup.add(selectionButton);
+		lineSelectionGroup.add(enlargementButton);
+
+		lineSelectionPanel.setLayout(new GridBagLayout());
+		lineSelectionPanel.setBorder(createTitledBorder(
+				resources.getString(ResourceKey.LABEL, StringID.UI.SELECT_ID)));
+
+		var gbBuilder = new GridBagConstraintsBuilder(4) // 4 columns used
+				.setAnchor(GridBagConstraints.CENTER) // anchor items in the
+														// center of their Box
+				.setWeight(0.5, 1);
+
+		var commandsLabel = new JLabel("Command");
+		commandsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lineSelectionPanel.add(commandsLabel, gbBuilder.getLineField());
+
+		gbBuilder.setWeight(0.5, 0.5);
+
+		lineSelectionPanel.add(selectionButton, gbBuilder.getNextField());
+		lineSelectionPanel.add(enlargementButton, gbBuilder.getNextField());
+
+		setLineSelectionButtonIcons();
+
+		lineSelectionPanel.setVisible(false);
 	}
 
 	/**
@@ -391,7 +429,7 @@ public class UIPanel extends JPanel {
 		lineInputPanel.add(lineInputByValueButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputAngleSnapButton, gbBuilder.getNextField());
 
-		setButtonIcons();
+		setLineInputButtonIcons();
 	}
 
 	/**
@@ -575,10 +613,12 @@ public class UIPanel extends JPanel {
 		setShortcut(editModeInputLineButton, KeyStrokes.get(KeyEvent.VK_I),
 				StringID.UI.INPUT_LINE_ID);
 
-		editModePickLineButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.SELECT_ID,
+		editModeLineSelectionButton = viewChangeBinder.createButton(
+				JRadioButton.class, null, // new
+											// ChangeOnSelectButtonSelected(setting),
+				StringID.SELECT_ID,
 				screenUpdater.getKeyListener());
-		setShortcut(editModePickLineButton, KeyStrokes.get(KeyEvent.VK_S),
+		setShortcut(editModeLineSelectionButton, KeyStrokes.get(KeyEvent.VK_S),
 				StringID.SELECT_ID);
 
 		editModeDeleteLineButton = buttonFactory.create(
@@ -604,6 +644,16 @@ public class UIPanel extends JPanel {
 				screenUpdater.getKeyListener());
 		setShortcut(editModeDeleteVertex, KeyStrokes.get(KeyEvent.VK_Y),
 				StringID.DELETE_VERTEX_ID);
+
+		// ---------------------------------------------------------------------------------------------------------------------------
+		// Binding line selection tools
+		selectionButton = buttonFactory.create(
+				this, JRadioButton.class, StringID.SELECT_LINE_ID,
+				screenUpdater.getKeyListener());
+
+		enlargementButton = buttonFactory.create(
+				this, JRadioButton.class, StringID.ENLARGE_ID,
+				screenUpdater.getKeyListener());
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding how to enter the line
@@ -750,7 +800,12 @@ public class UIPanel extends JPanel {
 		actionMap.put(id, action);
 	}
 
-	private void setButtonIcons() {
+	private void setLineSelectionButtonIcons() {
+		setButtonIcon(selectionButton, ButtonIcon.SELECT);
+		setButtonIcon(enlargementButton, ButtonIcon.ENLARGE);
+	}
+
+	private void setLineInputButtonIcons() {
 		setButtonIcon(lineInputDirectVButton, ButtonIcon.DIRECT_V);
 		setButtonIcon(lineInputOnVButton, ButtonIcon.ON_V);
 		setButtonIcon(lineInputPBisectorButton, ButtonIcon.PERPENDICULAR_BISECTOR);
@@ -778,6 +833,10 @@ public class UIPanel extends JPanel {
 		// edit mode line input radio button
 		editModeInputLineButton
 				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT));
+
+		// edit mode line selection radio button
+		editModeLineSelectionButton
+				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.SELECT));
 
 		// change line type tool
 		alterLineComboFrom.addItemListener(new FromLineTypeItemListener(setting));
@@ -1036,6 +1095,9 @@ public class UIPanel extends JPanel {
 		setting.addPropertyChangeListener(UIPanelSetting.LINE_INPUT_PANEL_VISIBLE,
 				e -> lineInputPanel.setVisible((boolean) e.getNewValue()));
 
+		setting.addPropertyChangeListener(UIPanelSetting.LINE_SELECTION_PANEL_VISIBLE,
+				e -> lineSelectionPanel.setVisible((boolean) e.getNewValue()));
+
 		setting.addPropertyChangeListener(
 				UIPanelSetting.ANGLE_STEP_PANEL_VISIBLE,
 				e -> angleStepComboPanel.setVisible((boolean) e.getNewValue()));
@@ -1047,7 +1109,7 @@ public class UIPanel extends JPanel {
 			selectEditModeButton(editModeInputLineButton);
 			break;
 		case SELECT:
-			selectEditModeButton(editModePickLineButton);
+			selectEditModeButton(editModeLineSelectionButton);
 			break;
 		default:
 			break;
