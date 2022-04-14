@@ -181,7 +181,6 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 			final PaintContext paintContext) {
 		drawPickedLines(drawer, viewContext, paintContext);
 		drawPickedVertices(drawer, viewContext, paintContext, paintContext.getLineTypeOfNewLines());
-
 	}
 
 	private void drawPickedLines(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,

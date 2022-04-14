@@ -110,7 +110,8 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		var mousePoint = viewContext.getLogicalMousePoint();
+		var mousePoint = getMousePoint(viewContext, paintContext, differentAction);
+//		var mousePoint = viewContext.getLogicalMousePoint();
 
 		var scales = computeScales(mousePoint);
 
@@ -121,6 +122,18 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		enlargedDomain = new RectangleDomain(
 				startPoint.getX(), startPoint.getY(),
 				currentPoint.getX(), currentPoint.getY());
+	}
+
+	private Vector2d getMousePoint(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+			final boolean differentAction) {
+		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
+
+		var mousePoint = paintContext.getCandidateVertexToPick();
+		if (mousePoint == null) {
+			mousePoint = viewContext.getLogicalMousePoint();
+		}
+
+		return mousePoint;
 	}
 
 	private Vector2d computeScales(final Vector2d mousePoint) {
@@ -156,7 +169,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final boolean differentAction) {
 
 		if (startPoint != null) {
-			enlargeLines(viewContext, paintContext);
+			enlargeLines(viewContext, paintContext, differentAction);
 		}
 
 		startPoint = null;
@@ -166,11 +179,12 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		enlargedDomain = null;
 	}
 
-	private void enlargeLines(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+	private void enlargeLines(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+			final boolean differentAction) {
 		var painter = paintContext.getPainter();
 		painter.removeLines(paintContext.getPickedLines());
 
-		var scales = computeScales(viewContext.getLogicalMousePoint());
+		var scales = computeScales(getMousePoint(viewContext, paintContext, differentAction));
 
 		var scaledLines = paintContext.getPickedLines().stream()
 				.map(line -> new OriLine(
@@ -189,7 +203,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final PaintContext paintContext) {
 		super.onDraw(drawer, viewContext, paintContext);
 
-		this.drawPickCandidateLine(drawer, viewContext, paintContext);
+		this.drawPickCandidateVertex(drawer, viewContext, paintContext);
 
 		if (mouseCandidatePoint != null) {
 			drawer.selectAssistLineColor();
