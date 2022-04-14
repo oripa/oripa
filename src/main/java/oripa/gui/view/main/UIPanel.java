@@ -793,7 +793,7 @@ public class UIPanel extends JPanel {
 			}
 		});
 		settingButton.setToolTipText(resources.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID)
-				+ keyStroke.toString().split(" ")[1]);
+				+ String.join("-", keyStroke.toString().replaceFirst("pressed ", "").split(" ")));
 	}
 
 	private void setShortcut(final JComponent focusTarget, final KeyStroke keyStroke,
