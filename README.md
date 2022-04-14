@@ -17,6 +17,7 @@ To find out more about using the software, visit the [ORIPA project's website](h
 * Undo by pressing Ctrl + z or clicking right mouse button.
 * Redo by pressing Ctrl + y.
 * You can select multi-lines by Dragging.
+* After selecting lines, you can scale the selected lines by scale mode.
 * On delete-line mode, you can delete multi-lines by Dragging.	
 * The folded shape can be saved as SVG. In the output, each face keeps the pre-creases (Auxiliary lines) on it.
 
@@ -35,7 +36,6 @@ java -jar ./oripa-1.50.jar
 ### Next challenge(s)
 --------
 * Dividing lines by an input circle.
-* Enlarging selected lines.
 * Importing other crease pattern.
 * Drawing copyright on saved picture.
 * Screenshot of folded model.
