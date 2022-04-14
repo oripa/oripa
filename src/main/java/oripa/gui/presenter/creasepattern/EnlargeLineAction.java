@@ -20,6 +20,7 @@ package oripa.gui.presenter.creasepattern;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
@@ -37,7 +38,6 @@ import oripa.value.OriLine;
 public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	private Vector2d mouseCandidatePoint;
 	private Vector2d startPoint;
-	private Vector2d currentPoint;
 
 	private RectangleDomain originalDomain;
 	private RectangleDomain enlargedDomain;
@@ -111,46 +111,77 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final boolean differentAction) {
 
 		var mousePoint = viewContext.getLogicalMousePoint();
-		var diff = new Vector2d();
 
-		diff.sub(mousePoint, startPoint);
-
-		double scaleX = diff.x / originalDomain.getWidth();
-		double scaleY = diff.y / originalDomain.getHeight();
-		double absScale = Math.min(Math.abs(scaleX), Math.abs(scaleY));
-
-		double signX = Math.signum(scaleX);
-		double signY = Math.signum(scaleY);
+		var scales = computeScales(mousePoint);
 
 		var oppositePoint = getOppositePoint(originalDomain, startPoint);
-		var scaledDiff = new Vector2d();
-		scaledDiff.setX((oppositePoint.getX() - startPoint.getX()) * absScale * signX);
-		scaledDiff.setY((oppositePoint.getY() - startPoint.getY()) * absScale * signY);
 
-		currentPoint = new Vector2d();
-		currentPoint.add(startPoint, scaledDiff);
+		var currentPoint = scalePosition(oppositePoint, scales.getX(), scales.getY());
 
 		enlargedDomain = new RectangleDomain(
 				startPoint.getX(), startPoint.getY(),
 				currentPoint.getX(), currentPoint.getY());
 	}
 
+	private Vector2d computeScales(final Vector2d mousePoint) {
+		var diff = new Vector2d();
+
+		diff.sub(mousePoint, startPoint);
+
+		double scaleX = diff.x / originalDomain.getWidth();
+		double scaleY = diff.y / originalDomain.getHeight();
+
+		return new Vector2d(scaleX, scaleY);
+	}
+
+	private Vector2d scalePosition(final Vector2d p, final double scaleX, final double scaleY) {
+
+		double absScale = Math.min(Math.abs(scaleX), Math.abs(scaleY));
+
+		double signX = Math.signum(scaleX);
+		double signY = Math.signum(scaleY);
+
+		var scaledDiff = new Vector2d();
+		scaledDiff.setX(Math.abs(p.getX() - startPoint.getX()) * absScale * signX);
+		scaledDiff.setY(Math.abs(p.getY() - startPoint.getY()) * absScale * signY);
+
+		var scaled = new Vector2d();
+		scaled.add(startPoint, scaledDiff);
+
+		return scaled;
+	}
+
 	@Override
 	public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		if (startPoint != null && currentPoint != null) {
-			enlargeLines();
+		if (startPoint != null) {
+			enlargeLines(viewContext, paintContext);
 		}
 
 		startPoint = null;
-		currentPoint = null;
 
+		mouseCandidatePoint = null;
+		originalDomain = null;
 		enlargedDomain = null;
 	}
 
-	private void enlargeLines() {
+	private void enlargeLines(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+		var painter = paintContext.getPainter();
+		painter.removeLines(paintContext.getPickedLines());
 
+		var scales = computeScales(viewContext.getLogicalMousePoint());
+
+		var scaledLines = paintContext.getPickedLines().stream()
+				.map(line -> new OriLine(
+						scalePosition(line.getP0(), scales.getX(), scales.getY()),
+						scalePosition(line.getP1(), scales.getX(), scales.getY()),
+						line.getType()))
+				.collect(Collectors.toList());
+
+		painter.addLines(scaledLines);
+
+		paintContext.clear(true);
 	}
 
 	@Override
