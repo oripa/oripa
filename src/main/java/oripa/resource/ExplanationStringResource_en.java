@@ -50,7 +50,7 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 			{ StringID.SELECT_LINE_ID, SELECT_LINE_TEXT },
 
 			{ StringID.ENLARGE_ID,
-					"Drag rectalge corner to scale the selected lines. Select lines before activating this functionality." },
+					"Drag rectalge's corner to scale the selected lines. Select lines before activating this functionality." },
 
 			{ StringID.SELECT_ALL_LINE_ID, SELECT_LINE_TEXT },
 
