@@ -617,8 +617,7 @@ public class UIPanel extends JPanel {
 				StringID.UI.INPUT_LINE_ID);
 
 		editModeLineSelectionButton = viewChangeBinder.createButton(
-				JRadioButton.class, null, // new
-											// ChangeOnSelectButtonSelected(setting),
+				JRadioButton.class, null,
 				StringID.SELECT_ID,
 				screenUpdater.getKeyListener());
 
