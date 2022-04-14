@@ -621,8 +621,6 @@ public class UIPanel extends JPanel {
 											// ChangeOnSelectButtonSelected(setting),
 				StringID.SELECT_ID,
 				screenUpdater.getKeyListener());
-		setShortcut(editModeLineSelectionButton, KeyStrokes.get(KeyEvent.VK_S),
-				StringID.SELECT_ID);
 
 		editModeDeleteLineButton = buttonFactory.create(
 				this, JRadioButton.class, StringID.DELETE_LINE_ID,
@@ -653,10 +651,14 @@ public class UIPanel extends JPanel {
 		selectionButton = buttonFactory.create(
 				this, JRadioButton.class, StringID.SELECT_LINE_ID,
 				screenUpdater.getKeyListener());
+		setLineSelectionGlobalShortcut(selectionButton, KeyStrokes.get(KeyEvent.VK_S),
+				StringID.SELECT_LINE_ID);
 
 		enlargementButton = buttonFactory.create(
 				this, JRadioButton.class, StringID.ENLARGE_ID,
 				screenUpdater.getKeyListener());
+		setLineSelectionGlobalShortcut(enlargementButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_S),
+				StringID.ENLARGE_ID);
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding how to enter the line
@@ -741,6 +743,11 @@ public class UIPanel extends JPanel {
 			}
 		});
 		button.setToolTipText(resources.getString(ResourceKey.LABEL, StringID.UI.SHORTCUT_ID));
+	}
+
+	private void setLineSelectionGlobalShortcut(final AbstractButton button, final KeyStroke keyStroke,
+			final String id) {
+		setToolSettingGlobalShortcut(editModeLineSelectionButton, button, keyStroke, id);
 	}
 
 	/**
