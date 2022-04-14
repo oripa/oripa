@@ -82,7 +82,6 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		}
 
 		return null;
-//		return super.onMove(viewContext, paintContext, differentAction);
 	}
 
 	@Override
@@ -110,8 +109,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		var mousePoint = getMousePoint(viewContext, paintContext, differentAction);
-//		var mousePoint = viewContext.getLogicalMousePoint();
+		var mousePoint = getMousePoint(viewContext, paintContext);
 
 		var scales = computeScales(mousePoint);
 
@@ -124,9 +122,8 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 				currentPoint.getX(), currentPoint.getY());
 	}
 
-	private Vector2d getMousePoint(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
-		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
+	private Vector2d getMousePoint(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+		setCandidateVertexOnMove(viewContext, paintContext, false);
 
 		var mousePoint = paintContext.getCandidateVertexToPick();
 		if (mousePoint == null) {
@@ -184,18 +181,22 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		var painter = paintContext.getPainter();
 		painter.removeLines(paintContext.getPickedLines());
 
-		var scales = computeScales(getMousePoint(viewContext, paintContext, differentAction));
+		painter.addLines(createEnlargedLines(viewContext, paintContext));
 
-		var scaledLines = paintContext.getPickedLines().stream()
+		paintContext.clear(true);
+	}
+
+	private Collection<OriLine> createEnlargedLines(final CreasePatternViewContext viewContext,
+			final PaintContext paintContext) {
+		var scales = computeScales(getMousePoint(viewContext, paintContext));
+
+		return paintContext.getPickedLines().stream()
 				.map(line -> new OriLine(
 						scalePosition(line.getP0(), scales.getX(), scales.getY()),
 						scalePosition(line.getP1(), scales.getX(), scales.getY()),
 						line.getType()))
 				.collect(Collectors.toList());
 
-		painter.addLines(scaledLines);
-
-		paintContext.clear(true);
 	}
 
 	@Override
@@ -219,6 +220,10 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		}
 
 		if (enlargedDomain != null) {
+			drawer.selectCandidateLineStroke(viewContext.getScale(), viewContext.isZeroLineWidth());
+			drawer.selectAssistLineColor();
+			createEnlargedLines(viewContext, paintContext).forEach(drawer::drawLine);
+
 			drawer.selectAreaSelectionStroke(viewContext.getScale());
 			drawer.selectAssistLineColor();
 
