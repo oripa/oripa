@@ -360,6 +360,9 @@ public class UIPanel extends JPanel {
 
 		lineSelectionPanel.add(selectionButton, gbBuilder.getNextField());
 		lineSelectionPanel.add(enlargementButton, gbBuilder.getNextField());
+		// dummies to align buttons left
+		lineSelectionPanel.add(new JPanel(), gbBuilder.getNextField());
+		lineSelectionPanel.add(new JPanel(), gbBuilder.getNextField());
 
 		setLineSelectionButtonIcons();
 
