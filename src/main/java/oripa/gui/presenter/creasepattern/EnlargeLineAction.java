@@ -152,9 +152,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		var mousePoint = getMousePoint(viewContext, paintContext);
-
-		var scales = computeScales(mousePoint);
+		var scales = computeScales(getMousePoint(viewContext, paintContext));
 
 		var currentPoint = scalePosition(mouseStartPoint, scales.getX(), scales.getY());
 
@@ -238,7 +236,6 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 						scalePosition(line.getP1(), scales.getX(), scales.getY()),
 						line.getType()))
 				.collect(Collectors.toList());
-
 	}
 
 	@Override
@@ -275,7 +272,6 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 
 			drawer.drawRectangle(enlargedDomain.getLeftTop(), enlargedDomain.getRightBottom());
 		}
-
 	}
 
 }
