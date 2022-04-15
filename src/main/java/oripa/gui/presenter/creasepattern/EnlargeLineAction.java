@@ -181,8 +181,8 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 
 		diff.sub(mousePoint, startPoint);
 
-		double scaleX = diff.x / originalDomain.getWidth();
-		double scaleY = diff.y / originalDomain.getHeight();
+		double scaleX = diff.getX() / originalDomain.getWidth();
+		double scaleY = diff.getY() / originalDomain.getHeight();
 
 		return new Vector2d(scaleX, scaleY);
 	}
