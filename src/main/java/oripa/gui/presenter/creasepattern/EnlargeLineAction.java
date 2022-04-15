@@ -256,7 +256,6 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		if (originalDomain != null) {
 			drawer.selectAreaSelectionStroke(viewContext.getScale());
 			drawer.selectAreaSelectionColor();
-
 			drawer.drawRectangle(originalDomain.getLeftTop(), originalDomain.getRightBottom());
 		}
 
@@ -269,9 +268,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 
 			drawer.selectAreaSelectionStroke(viewContext.getScale());
 			drawer.selectAssistLineColor();
-
 			drawer.drawRectangle(enlargedDomain.getLeftTop(), enlargedDomain.getRightBottom());
 		}
 	}
-
 }
