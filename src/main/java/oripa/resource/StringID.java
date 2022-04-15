@@ -165,6 +165,8 @@ public class StringID {
 	public static final String DELETE_VERTEX_ID = "DeleteVertex";
 	public static final String PERPENDICULAR_BISECTOR_ID = "PBisec";
 	public static final String SELECT_ID = "SelectLine";
+	public static final String SELECT_LINE_ID = "SelectLine_command";
+	public static final String ENLARGE_ID = "EnlargeLines";
 	public static final String ADD_VERTEX_ID = "AddVertex";
 	public static final String COPY_PASTE_ID = "Copy_and_Paste";
 	public static final String CUT_PASTE_ID = "Cut_and_Paste";

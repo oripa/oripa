@@ -19,8 +19,7 @@
 
 package oripa.geom;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import static java.lang.Math.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -111,6 +110,22 @@ public class RectangleDomain {
 	public boolean contains(final Vector2d point) {
 		return getLeft() <= point.x && point.x <= getRight() &&
 				getTop() <= point.y && point.y <= getBottom();
+	}
+
+	public Vector2d getLeftTop() {
+		return new Vector2d(left, top);
+	}
+
+	public Vector2d getLeftBottom() {
+		return new Vector2d(left, bottom);
+	}
+
+	public Vector2d getRightTop() {
+		return new Vector2d(right, top);
+	}
+
+	public Vector2d getRightBottom() {
+		return new Vector2d(right, bottom);
 	}
 
 	public double getLeft() {

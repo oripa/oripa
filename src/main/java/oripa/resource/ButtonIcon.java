@@ -32,6 +32,8 @@ import oripa.file.ImageResourceLoader;
  *
  */
 public enum ButtonIcon {
+	SELECT("select"),
+	ENLARGE("enlarge"),
 	DIRECT_V("segment"),
 	ON_V("line"),
 	PERPENDICULAR_BISECTOR("pbisector"),

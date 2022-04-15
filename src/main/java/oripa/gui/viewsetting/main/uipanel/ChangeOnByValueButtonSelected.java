@@ -17,7 +17,10 @@ public class ChangeOnByValueButtonSelected implements ChangeViewSetting {
 		setting.selectInputMode();
 
 		setting.setByValuePanelVisible(true);
+
+		setting.setLineSelectionPanelVisible(false);
 		setting.setLineInputPanelVisible(true);
+
 		setting.setAngleStepPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(false);

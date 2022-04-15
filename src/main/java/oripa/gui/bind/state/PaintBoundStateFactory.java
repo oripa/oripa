@@ -70,13 +70,13 @@ public class PaintBoundStateFactory {
 		var changeHint = new ChangeHint(mainFrameSetting, id);
 
 		switch (id) {
-		case StringID.SELECT_ID:
-			state = createState(
-					stateFactory, setterFactory, new SelectLineAction(), changeHint,
-					new ActionListener[] {
-							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
-									.changeViewSetting() });
-			break;
+//		case StringID.SELECT_ID:
+//			state = createState(
+//					stateFactory, setterFactory, new SelectLineAction(), changeHint,
+//					new ActionListener[] {
+//							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
+//									.changeViewSetting() });
+//			break;
 
 		case StringID.DELETE_LINE_ID:
 			state = createState(
@@ -149,6 +149,11 @@ public class PaintBoundStateFactory {
 									.changeViewSetting() });
 			break;
 
+		case StringID.SELECT_LINE_ID:
+		case StringID.ENLARGE_ID:
+			state = createLineSelectionState(parent, setterFactory, id);
+			break;
+
 		default:
 			state = createLineInputState(parent, setterFactory, id);
 		}
@@ -158,6 +163,33 @@ public class PaintBoundStateFactory {
 		}
 
 		return state;
+	}
+
+	private ApplicationState<EditMode> createLineSelectionState(
+			final Component parent, final PaintActionSetterFactory setterFactory,
+			final String id) {
+
+		var changeHint = new ChangeHint(mainFrameSetting, id);
+
+		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
+				stateManager,
+				new ActionListener[] {
+						e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
+								.changeViewSetting() });
+
+		switch (id) {
+		case StringID.SELECT_LINE_ID:
+			return createState(
+					stateFactory, setterFactory, new SelectLineAction(), changeHint,
+					null);
+		case StringID.ENLARGE_ID:
+			return createState(
+					stateFactory, setterFactory, new EnlargeLineAction(), changeHint,
+					null);
+
+		}
+
+		return null;
 	}
 
 	private ApplicationState<EditMode> createLineInputState(

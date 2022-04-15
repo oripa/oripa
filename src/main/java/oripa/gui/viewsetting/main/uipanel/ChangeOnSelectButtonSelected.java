@@ -1,8 +1,13 @@
 package oripa.gui.viewsetting.main.uipanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.gui.viewsetting.ChangeViewSetting;
 
 public class ChangeOnSelectButtonSelected implements ChangeViewSetting {
+	private static final Logger logger = LoggerFactory.getLogger(ChangeOnSelectButtonSelected.class);
+
 	private final UIPanelSetting setting;
 
 	/**
@@ -14,10 +19,14 @@ public class ChangeOnSelectButtonSelected implements ChangeViewSetting {
 
 	@Override
 	public void changeViewSetting() {
+		logger.debug("change UI to selection mode");
+
 		setting.selectSelectMode();
 
 		setting.setByValuePanelVisible(false);
 		setting.setAngleStepPanelVisible(false);
+
+		setting.setLineSelectionPanelVisible(true);
 		setting.setLineInputPanelVisible(false);
 
 		setting.setAlterLineTypePanelVisible(false);

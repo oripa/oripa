@@ -16,6 +16,9 @@ public class UIPanelSetting implements TypeForChangeGettable {
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
+	private boolean lineSelectionPanelVisible = false;
+	public static final String LINE_SELECTION_PANEL_VISIBLE = "line-selection-panel-visible";
+
 	private boolean lineInputPanelVisible = true;
 	public static final String LINE_INPUT_PANEL_VISIBLE = "line-input-panel-visible";
 
@@ -70,6 +73,10 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		return alterLineTypePanelVisible;
 	}
 
+	public boolean isSelectLinePanelVisible() {
+		return lineSelectionPanelVisible;
+	}
+
 	public boolean isLineInputPanelVisible() {
 		return lineInputPanelVisible;
 	}
@@ -90,6 +97,13 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		var old = this.alterLineTypePanelVisible;
 		this.alterLineTypePanelVisible = alterLineTypePanelVisible;
 		support.firePropertyChange(ALTER_LINE_TYPE_PANEL_VISIBLE, old, alterLineTypePanelVisible);
+	}
+
+	public void setLineSelectionPanelVisible(final boolean lineSelectionPanelVisible) {
+		logger.info("set line selection panel visible: " + lineSelectionPanelVisible);
+		var old = this.lineSelectionPanelVisible;
+		this.lineSelectionPanelVisible = lineSelectionPanelVisible;
+		support.firePropertyChange(LINE_SELECTION_PANEL_VISIBLE, old, lineSelectionPanelVisible);
 	}
 
 	public void setLineInputPanelVisible(final boolean lineInputPanelVisible) {

@@ -4,8 +4,8 @@ import java.util.ListResourceBundle;
 
 public class ExplanationStringResource_en extends ListResourceBundle {
 
-	private static final String SELECT_LINE_TEXT = "Select/UnSelect Lines by Left Click or Left Drag";
-	private static final String COPY_PASTE_TEXT = "Left Click for Paste. [Ctrl] allows you to change the origin of pasting.";
+	private static final String SELECT_LINE_TEXT = "Select/Unselect lines by left click or left drag.";
+	private static final String COPY_PASTE_TEXT = "Left click for paste. [Ctrl] allows you to change the origin of pasting.";
 
 	static final Object[][] strings = {
 			{ StringID.DIRECT_V_ID,
@@ -34,7 +34,7 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 
 			{ StringID.CHANGE_LINE_TYPE_ID, "Change type of a segment. Pick a segment." },
 
-			{ StringID.DELETE_LINE_ID, "Delete a segment. Pick a segment" },
+			{ StringID.DELETE_LINE_ID, "Delete a segment. Pick a segment." },
 
 			{ StringID.ADD_VERTEX_ID, "Add vertex on a segment." },
 
@@ -47,7 +47,10 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 
 			{ StringID.ANGLE_SNAP_ID, "Input a segment fitting to selected angle step." },
 
-			{ StringID.SELECT_ID, SELECT_LINE_TEXT },
+			{ StringID.SELECT_LINE_ID, SELECT_LINE_TEXT },
+
+			{ StringID.ENLARGE_ID,
+					"Drag rectalge's corner to scale the selected lines. You can select lines by left click." },
 
 			{ StringID.SELECT_ALL_LINE_ID, SELECT_LINE_TEXT },
 
