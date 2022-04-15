@@ -185,7 +185,7 @@ public class PaintBoundStateFactory {
 		case StringID.ENLARGE_ID:
 			return createState(
 					stateFactory, setterFactory, new EnlargeLineAction(), changeHint,
-					null); // tentative
+					null);
 
 		}
 
