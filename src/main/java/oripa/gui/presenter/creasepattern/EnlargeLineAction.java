@@ -62,13 +62,19 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 				.filter(line -> line.selected)
 				.forEach(context::pushLine);
 
-		originalDomain = new RectangleDomain(context.getPickedLines());
+		originalDomain = createOriginalDomain(context.getPickedLines());
+	}
+
+	private RectangleDomain createOriginalDomain(final Collection<OriLine> lines) {
+		return lines.isEmpty() ? null : new RectangleDomain(lines);
 	}
 
 	@Override
 	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		if (startPoint == null) {
+		super.onMove(viewContext, paintContext, differentAction);
+
+		if (startPoint == null && paintContext.getCandidateLineToPick() == null) {
 			var points = List.of(
 					originalDomain.getLeftTop(),
 					originalDomain.getLeftBottom(),
@@ -85,10 +91,47 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
+	public GraphicMouseAction onLeftClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+			final boolean differentAction) {
+		var nextAction = super.onLeftClick(viewContext, paintContext, differentAction);
+
+		originalDomain = createOriginalDomain(paintContext.getPickedLines());
+
+		return nextAction;
+	}
+
+	@Override
+	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+			final boolean doSpecial) {
+		super.onRightClick(viewContext, paintContext, doSpecial);
+
+		originalDomain = createOriginalDomain(paintContext.getPickedLines());
+	}
+
+	/**
+	 * set old line-selected marks to current context.
+	 */
+	@Override
+	public void undo(final PaintContext context) {
+		context.creasePatternUndo().undo();
+
+		recover(context);
+	}
+
+	@Override
+	public void redo(final PaintContext context) {
+		context.creasePatternUndo().redo();
+
+		recover(context);
+	}
+
+	@Override
 	public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		startPoint = getOppositePoint(originalDomain, mouseCandidatePoint);
+		if (paintContext.getCandidateLineToPick() == null) {
+			startPoint = getOppositePoint(originalDomain, mouseCandidatePoint);
+		}
 	}
 
 	private Vector2d getOppositePoint(final RectangleDomain domain, final Vector2d p) {
@@ -166,6 +209,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final boolean differentAction) {
 
 		if (startPoint != null) {
+			paintContext.creasePatternUndo().pushUndoInfo();
 			enlargeLines(viewContext, paintContext, differentAction);
 		}
 
@@ -204,7 +248,9 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final PaintContext paintContext) {
 		super.onDraw(drawer, viewContext, paintContext);
 
-		this.drawPickCandidateVertex(drawer, viewContext, paintContext);
+		if (startPoint == null) {
+			this.drawPickCandidateLine(drawer, viewContext, paintContext);
+		}
 
 		if (mouseCandidatePoint != null) {
 			drawer.selectAssistLineColor();
@@ -220,6 +266,8 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		}
 
 		if (enlargedDomain != null) {
+			this.drawPickCandidateVertex(drawer, viewContext, paintContext);
+
 			drawer.selectCandidateLineStroke(viewContext.getScale(), viewContext.isZeroLineWidth());
 			drawer.selectAssistLineColor();
 			createEnlargedLines(viewContext, paintContext).forEach(drawer::drawLine);
