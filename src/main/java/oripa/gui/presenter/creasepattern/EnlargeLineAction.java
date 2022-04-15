@@ -46,7 +46,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		setEditMode(EditMode.SELECT);
 		setNeedSelect(true);
 
-		setActionState(new SelectingLine()); // dummy
+		setActionState(new SelectingLine());
 	}
 
 	@Override
