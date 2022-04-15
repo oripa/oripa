@@ -252,7 +252,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			this.drawPickCandidateLine(drawer, viewContext, paintContext);
 		}
 
-		if (mouseCandidatePoint != null) {
+		if (mouseCandidatePoint != null && paintContext.getCandidateLineToPick() == null) {
 			drawer.selectAssistLineColor();
 			drawer.selectMouseActionVertexSize(viewContext.getScale());
 			drawer.drawVertex(mouseCandidatePoint);
