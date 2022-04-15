@@ -62,10 +62,10 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 				.filter(line -> line.selected)
 				.forEach(context::pushLine);
 
-		originalDomain = createOriginalDomain(context.getPickedLines());
+		originalDomain = createDomain(context.getPickedLines());
 	}
 
-	private RectangleDomain createOriginalDomain(final Collection<OriLine> lines) {
+	private RectangleDomain createDomain(final Collection<OriLine> lines) {
 		return lines.isEmpty() ? null : new RectangleDomain(lines);
 	}
 
@@ -95,7 +95,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final boolean differentAction) {
 		var nextAction = super.onLeftClick(viewContext, paintContext, differentAction);
 
-		originalDomain = createOriginalDomain(paintContext.getPickedLines());
+		originalDomain = createDomain(paintContext.getPickedLines());
 
 		return nextAction;
 	}
@@ -105,7 +105,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final boolean doSpecial) {
 		super.onRightClick(viewContext, paintContext, doSpecial);
 
-		originalDomain = createOriginalDomain(paintContext.getPickedLines());
+		originalDomain = createDomain(paintContext.getPickedLines());
 	}
 
 	/**
