@@ -150,15 +150,21 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final boolean differentAction) {
 
 		if (mouseStartPoint != null) {
-			enlarger = differentAction ? new CenterOriginEnlarger() : new CornerOriginEnlarger();
-			originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint);
+			switchEnlarger(differentAction);
 		}
+	}
+
+	private void switchEnlarger(final boolean differentAction) {
+		enlarger = differentAction ? new CenterOriginEnlarger() : new CornerOriginEnlarger();
+		originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint);
 	}
 
 	@Override
 	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		var mousePoint = getMousePoint(viewContext, paintContext);
+
+		switchEnlarger(differentAction);
 		enlargedDomain = enlarger.createEnlargedDomain(mousePoint, originOfEnlargement, mouseStartPoint);
 	}
 
