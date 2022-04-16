@@ -348,7 +348,7 @@ public class PainterScreen extends JPanel
 	public void mouseDragged(final MouseEvent e) {
 		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 
-		if (!action.usesCtrlkeyOnDrag()) {
+		if (!action.usesCtrlKeyOnDrag()) {
 			if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
 				viewContext.setScale(camera.getScale());
 				return;

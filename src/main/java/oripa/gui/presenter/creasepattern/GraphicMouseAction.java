@@ -14,7 +14,7 @@ public interface GraphicMouseAction {
 	 */
 	public abstract boolean needSelect();
 
-	public default boolean usesCtrlkeyOnDrag() {
+	public default boolean usesCtrlKeyOnDrag() {
 		return false;
 	}
 
