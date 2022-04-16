@@ -89,7 +89,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final boolean differentAction) {
 		super.onMove(viewContext, paintContext, false);
 
-		if (!isEnlarging() && paintContext.getCandidateLineToPick() == null) {
+		if (!isEnlarging()) {
 			var points = List.of(
 					originalDomain.getLeftTop(),
 					originalDomain.getLeftBottom(),
@@ -149,7 +149,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		if (paintContext.getCandidateLineToPick() == null && mouseStartPoint != null) {
+		if (mouseStartPoint != null) {
 			enlarger = differentAction ? new CenterOriginEnlarger() : new CornerOriginEnlarger();
 			originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint);
 		}
@@ -213,7 +213,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			this.drawPickCandidateLine(drawer, viewContext, paintContext);
 		}
 
-		if (mouseStartPoint != null && paintContext.getCandidateLineToPick() == null) {
+		if (mouseStartPoint != null) {
 			drawer.selectAssistLineColor();
 			drawer.selectMouseActionVertexSize(viewContext.getScale());
 			drawer.drawVertex(mouseStartPoint);
