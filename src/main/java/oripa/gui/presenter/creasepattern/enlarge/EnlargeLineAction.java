@@ -57,6 +57,10 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 
 	@Override
 	public boolean usesCtrlKeyOnDrag() {
+		return isEnlarging();
+	}
+
+	private boolean isEnlarging() {
 		return originOfEnlargement != null;
 	}
 
@@ -85,7 +89,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final boolean differentAction) {
 		super.onMove(viewContext, paintContext, false);
 
-		if (originOfEnlargement == null && paintContext.getCandidateLineToPick() == null) {
+		if (!isEnlarging() && paintContext.getCandidateLineToPick() == null) {
 			var points = List.of(
 					originalDomain.getLeftTop(),
 					originalDomain.getLeftBottom(),
@@ -173,7 +177,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		if (originOfEnlargement == null) {
+		if (!isEnlarging()) {
 			return;
 		}
 
@@ -205,7 +209,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final PaintContext paintContext) {
 		super.onDraw(drawer, viewContext, paintContext);
 
-		if (originOfEnlargement == null) {
+		if (!isEnlarging()) {
 			this.drawPickCandidateLine(drawer, viewContext, paintContext);
 		}
 
