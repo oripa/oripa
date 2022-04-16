@@ -56,7 +56,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public boolean usesCtrlKeyOnDrag() {
+	public boolean isUsingCtrlKeyOnDrag() {
 		return isEnlarging();
 	}
 
