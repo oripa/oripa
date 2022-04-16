@@ -90,6 +90,11 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		super.onMove(viewContext, paintContext, false);
 
 		if (!isEnlarging()) {
+
+			if (originalDomain == null) {
+				return null;
+			}
+
 			var points = List.of(
 					originalDomain.getLeftTop(),
 					originalDomain.getLeftBottom(),
@@ -163,6 +168,10 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		var mousePoint = getMousePoint(viewContext, paintContext);
+
+		if (mouseStartPoint == null) {
+			return;
+		}
 
 		switchEnlarger(differentAction);
 		enlargedDomain = enlarger.createEnlargedDomain(mousePoint, originOfEnlargement, mouseStartPoint);
