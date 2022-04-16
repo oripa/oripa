@@ -320,8 +320,11 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		action.onPress(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-
+		try {
+			action.onPress(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+		} catch (Exception ex) {
+			logger.debug("error on mouse button press", ex);
+		}
 		preMousePoint = e.getPoint();
 	}
 
@@ -359,9 +362,14 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		// Drag by left button
-		viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
-		action.onDrag(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+		try {
+			// Drag by left button
+			viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
+			action.onDrag(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+		} catch (Exception ex) {
+			logger.debug("error on mouse dragging", ex);
+		}
+
 		repaint();
 	}
 
@@ -396,7 +404,11 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				action.onMove(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+				try {
+					action.onMove(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+				} catch (Exception ex) {
+					logger.debug("error on mouse move", ex);
+				}
 				return null;
 			}
 
