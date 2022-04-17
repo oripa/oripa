@@ -89,26 +89,29 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final boolean differentAction) {
 		super.onMove(viewContext, paintContext, false);
 
-		if (!isEnlarging()) {
+		if (isEnlarging()) {
+			// Should not come to this path because onDrag() should be called
+			// instead.
+			throw new RuntimeException("wrong execution path.");
+		}
 
-			if (originalDomain == null) {
-				return null;
-			}
+		if (originalDomain == null) {
+			return null;
+		}
 
-			var points = List.of(
-					originalDomain.getLeftTop(),
-					originalDomain.getLeftBottom(),
-					originalDomain.getRightTop(),
-					originalDomain.getRightBottom());
+		var points = List.of(
+				originalDomain.getLeftTop(),
+				originalDomain.getLeftBottom(),
+				originalDomain.getRightTop(),
+				originalDomain.getRightBottom());
 
-			var nearest = NearestVertexFinder.findNearestVertex(
-					viewContext.getLogicalMousePoint(), points);
+		var nearest = NearestVertexFinder.findNearestVertex(
+				viewContext.getLogicalMousePoint(), points);
 
-			if (nearest.distance < CalculationResource.CLOSE_THRESHOLD * 2) {
-				mouseStartPoint = nearest.point;
+		if (nearest.distance < CalculationResource.CLOSE_THRESHOLD * 2) {
+			mouseStartPoint = nearest.point;
 
-				return mouseStartPoint;
-			}
+			return mouseStartPoint;
 		}
 
 		mouseStartPoint = null;
@@ -154,9 +157,11 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		if (mouseStartPoint != null) {
-			switchEnlarger(differentAction);
+		if (mouseStartPoint == null) {
+			return;
 		}
+
+		switchEnlarger(differentAction);
 	}
 
 	private void switchEnlarger(final boolean differentAction) {
