@@ -63,8 +63,9 @@ public class AngleSnapAction extends AbstractGraphicMouseAction {
 			drawSnapPoints(drawer, viewContext, paintContext);
 		}
 
-		super.onDraw(drawer, viewContext, paintContext);
 		drawTemporaryLine(drawer, viewContext, paintContext);
 		drawPickCandidateVertex(drawer, viewContext, paintContext);
+
+		super.onDraw(drawer, viewContext, paintContext);
 	}
 }
