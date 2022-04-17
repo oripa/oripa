@@ -19,12 +19,12 @@ public class VerticalLineAction extends AbstractGraphicMouseAction {
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 
-		super.onDraw(drawer, viewContext, paintContext);
-
 		if (paintContext.getVertexCount() == 0) {
 			drawPickCandidateVertex(drawer, viewContext, paintContext);
 		} else if (paintContext.getVertexCount() == 1) {
 			drawPickCandidateLine(drawer, viewContext, paintContext);
 		}
+
+		super.onDraw(drawer, viewContext, paintContext);
 	}
 }
