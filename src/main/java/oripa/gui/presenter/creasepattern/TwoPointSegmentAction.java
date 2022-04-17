@@ -24,10 +24,11 @@ public class TwoPointSegmentAction extends AbstractGraphicMouseAction {
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 
+		drawPickCandidateVertex(drawer, viewContext, paintContext);
+
 		super.onDraw(drawer, viewContext, paintContext);
 
 		drawTemporaryLine(drawer, viewContext, paintContext);
-		drawPickCandidateVertex(drawer, viewContext, paintContext);
 
 	}
 }
