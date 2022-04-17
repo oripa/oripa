@@ -684,12 +684,12 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if (MouseUtility.isLeftButtonDown(e)) {
+		if (MouseUtility.isLeftButtonEvent(e)) {
 			rotateAngle -= (e.getX() - preMousePoint.getX()) / 100.0;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
-		} else if (MouseUtility.isRightButtonDown(e)) {
+		} else if (MouseUtility.isRightButtonEvent(e)) {
 			transX += (e.getX() - preMousePoint.getX()) / scale;
 			transY += (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();

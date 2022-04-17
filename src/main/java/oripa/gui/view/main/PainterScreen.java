@@ -286,7 +286,7 @@ public class PainterScreen extends JPanel
 			@Override
 			protected Void doInBackground() throws Exception {
 				try {
-					if (MouseUtility.isRightButtonDown(e)) {
+					if (MouseUtility.isRightButtonEvent(e)) {
 						action.onRightClick(
 								viewContext, paintContext,
 								MouseUtility.isControlKeyDown(e));
@@ -321,7 +321,9 @@ public class PainterScreen extends JPanel
 		}
 
 		try {
-			action.onPress(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+			if (MouseUtility.isLeftButtonEvent(e)) {
+				action.onPress(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+			}
 		} catch (Exception ex) {
 			logger.debug("error on mouse button press", ex);
 		}
@@ -333,9 +335,18 @@ public class PainterScreen extends JPanel
 		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 		// Rectangular Selection
 
-		if (action != null) {
-			action.onRelease(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+		if (action == null) {
+			return;
 		}
+
+		try {
+			if (MouseUtility.isLeftButtonEvent(e)) {
+				action.onRelease(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+			}
+		} catch (Exception ex) {
+			logger.debug("error on mouse button release", ex);
+		}
+
 		repaint();
 	}
 
@@ -363,9 +374,10 @@ public class PainterScreen extends JPanel
 		}
 
 		try {
-			// Drag by left button
-			viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
-			action.onDrag(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+			if (MouseUtility.isLeftButtonEvent(e)) {
+				viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
+				action.onDrag(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+			}
 		} catch (Exception ex) {
 			logger.debug("error on mouse dragging", ex);
 		}

@@ -101,8 +101,8 @@ public class AffineCamera {
 			final MouseEvent e, final Point2D preMousePoint) {
 
 		// move camera
-		if (MouseUtility.isRightButtonDown(e) ||
-				(MouseUtility.isLeftButtonDown(e) && MouseUtility.isShiftKeyDown(e))) {
+		if (MouseUtility.isRightButtonEvent(e) ||
+				(MouseUtility.isLeftButtonEvent(e) && MouseUtility.isShiftKeyDown(e))) {
 			double transX = getTranslateXOfPaper()
 					+ (e.getX() - preMousePoint.getX()) / getScale();
 			double transY = getTranslateYOfPaper()
@@ -124,7 +124,7 @@ public class AffineCamera {
 			final MouseEvent e, final Point2D preMousePoint) {
 
 		// zoom
-		if (MouseUtility.isLeftButtonDown(e) &&
+		if (MouseUtility.isLeftButtonEvent(e) &&
 				MouseUtility.isControlKeyDown(e)) {
 
 			double moved = e.getX() - preMousePoint.getX() + e.getY()
