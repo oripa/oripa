@@ -128,6 +128,10 @@ public class RectangleDomain {
 		return new Vector2d(right, bottom);
 	}
 
+	public Vector2d getCenter() {
+		return new Vector2d(getCenterX(), getCenterY());
+	}
+
 	public double getLeft() {
 		return left;
 	}

@@ -16,17 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.creasepattern;
+package oripa.gui.presenter.creasepattern.enlarge;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.selectline.SelectingLine;
 import oripa.geom.RectangleDomain;
+import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
+import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
@@ -42,11 +46,22 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	private RectangleDomain originalDomain;
 	private RectangleDomain enlargedDomain;
 
+	private Enlarger enlarger;
+
 	public EnlargeLineAction() {
 		setEditMode(EditMode.SELECT);
 		setNeedSelect(true);
 
 		setActionState(new SelectingLine());
+	}
+
+	@Override
+	public boolean isUsingCtrlKeyOnDrag() {
+		return isEnlarging();
+	}
+
+	private boolean isEnlarging() {
+		return originOfEnlargement != null;
 	}
 
 	@Override
@@ -72,22 +87,35 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	@Override
 	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		super.onMove(viewContext, paintContext, differentAction);
+		super.onMove(viewContext, paintContext, false);
 
-		if (originOfEnlargement == null && paintContext.getCandidateLineToPick() == null) {
-			var points = List.of(
-					originalDomain.getLeftTop(),
-					originalDomain.getLeftBottom(),
-					originalDomain.getRightTop(),
-					originalDomain.getRightBottom());
+		if (isEnlarging()) {
+			// Should not come to this path because onDrag() should be called
+			// instead.
+			throw new RuntimeException("wrong execution path.");
+		}
 
-			mouseStartPoint = NearestVertexFinder.findNearestVertex(
-					viewContext.getLogicalMousePoint(), points).point;
+		if (originalDomain == null) {
+			return null;
+		}
+
+		var points = List.of(
+				originalDomain.getLeftTop(),
+				originalDomain.getLeftBottom(),
+				originalDomain.getRightTop(),
+				originalDomain.getRightBottom());
+
+		var nearest = NearestVertexFinder.findNearestVertex(
+				viewContext.getLogicalMousePoint(), points);
+
+		if (nearest.distance < CalculationResource.CLOSE_THRESHOLD * 2) {
+			mouseStartPoint = nearest.point;
 
 			return mouseStartPoint;
 		}
 
-		return null;
+		mouseStartPoint = null;
+		return mouseStartPoint;
 	}
 
 	@Override
@@ -129,36 +157,29 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		if (paintContext.getCandidateLineToPick() == null) {
-			originOfEnlargement = getOppositePoint(originalDomain, mouseStartPoint);
+		if (mouseStartPoint == null) {
+			return;
 		}
+
+		switchEnlarger(differentAction);
 	}
 
-	private Vector2d getOppositePoint(final RectangleDomain domain, final Vector2d p) {
-		if (p.epsilonEquals(domain.getLeftTop(), CalculationResource.POINT_EPS)) {
-			return domain.getRightBottom();
-		} else if (p.epsilonEquals(domain.getLeftBottom(), CalculationResource.POINT_EPS)) {
-			return domain.getRightTop();
-		} else if (p.epsilonEquals(domain.getRightTop(), CalculationResource.POINT_EPS)) {
-			return domain.getLeftBottom();
-		} else if (p.epsilonEquals(domain.getRightBottom(), CalculationResource.POINT_EPS)) {
-			return domain.getLeftTop();
-		}
-
-		return null;
+	private void switchEnlarger(final boolean differentAction) {
+		enlarger = differentAction ? new CenterOriginEnlarger() : new CornerOriginEnlarger();
+		originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint);
 	}
 
 	@Override
 	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
+		var mousePoint = getMousePoint(viewContext, paintContext);
 
-		var scales = computeScales(getMousePoint(viewContext, paintContext));
+		if (mouseStartPoint == null) {
+			return;
+		}
 
-		var currentPoint = scalePosition(mouseStartPoint, scales.getX(), scales.getY());
-
-		enlargedDomain = new RectangleDomain(
-				originOfEnlargement.getX(), originOfEnlargement.getY(),
-				currentPoint.getX(), currentPoint.getY());
+		switchEnlarger(differentAction);
+		enlargedDomain = enlarger.createEnlargedDomain(mousePoint, originOfEnlargement, mouseStartPoint);
 	}
 
 	private Vector2d getMousePoint(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
@@ -172,70 +193,35 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		return mousePoint;
 	}
 
-	private Vector2d computeScales(final Vector2d mousePoint) {
-		var diff = new Vector2d();
-
-		diff.sub(mousePoint, originOfEnlargement);
-
-		double scaleX = diff.getX() / originalDomain.getWidth();
-		double scaleY = diff.getY() / originalDomain.getHeight();
-
-		return new Vector2d(scaleX, scaleY);
-	}
-
-	private Vector2d scalePosition(final Vector2d p, final double scaleX, final double scaleY) {
-
-		double absScale = Math.min(Math.abs(scaleX), Math.abs(scaleY));
-
-		double signX = Math.signum(scaleX);
-		double signY = Math.signum(scaleY);
-
-		var scaledDiff = new Vector2d();
-		scaledDiff.setX(Math.abs(p.getX() - originOfEnlargement.getX()) * absScale * signX);
-		scaledDiff.setY(Math.abs(p.getY() - originOfEnlargement.getY()) * absScale * signY);
-
-		var scaled = new Vector2d();
-		scaled.add(originOfEnlargement, scaledDiff);
-
-		return scaled;
-	}
-
 	@Override
 	public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		if (originOfEnlargement != null) {
-			paintContext.creasePatternUndo().pushUndoInfo();
-			enlargeLines(viewContext, paintContext, differentAction);
+		if (!isEnlarging()) {
+			return;
 		}
+
+		paintContext.creasePatternUndo().pushUndoInfo();
+		enlargeLines(viewContext, paintContext);
 
 		originOfEnlargement = null;
 
 		mouseStartPoint = null;
 		originalDomain = null;
 		enlargedDomain = null;
+
+		enlarger = null;
 	}
 
-	private void enlargeLines(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
+	private void enlargeLines(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 		var painter = paintContext.getPainter();
 		painter.removeLines(paintContext.getPickedLines());
 
-		painter.addLines(createEnlargedLines(viewContext, paintContext));
+		var mousePoint = getMousePoint(viewContext, paintContext);
+		painter.addLines(enlarger.createEnlargedLines(mousePoint, originOfEnlargement, mouseStartPoint,
+				paintContext.getPickedLines()));
 
 		paintContext.clear(true);
-	}
-
-	private Collection<OriLine> createEnlargedLines(final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
-		var scales = computeScales(getMousePoint(viewContext, paintContext));
-
-		return paintContext.getPickedLines().stream()
-				.map(line -> new OriLine(
-						scalePosition(line.getP0(), scales.getX(), scales.getY()),
-						scalePosition(line.getP1(), scales.getX(), scales.getY()),
-						line.getType()))
-				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -243,11 +229,11 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			final PaintContext paintContext) {
 		super.onDraw(drawer, viewContext, paintContext);
 
-		if (originOfEnlargement == null) {
+		if (!isEnlarging()) {
 			this.drawPickCandidateLine(drawer, viewContext, paintContext);
 		}
 
-		if (mouseStartPoint != null && paintContext.getCandidateLineToPick() == null) {
+		if (mouseStartPoint != null) {
 			drawer.selectAssistLineColor();
 			drawer.selectMouseActionVertexSize(viewContext.getScale());
 			drawer.drawVertex(mouseStartPoint);
@@ -264,7 +250,9 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 
 			drawer.selectCandidateLineStroke(viewContext.getScale(), viewContext.isZeroLineWidth());
 			drawer.selectAssistLineColor();
-			createEnlargedLines(viewContext, paintContext).forEach(drawer::drawLine);
+			var mousePoint = getMousePoint(viewContext, paintContext);
+			enlarger.createEnlargedLines(mousePoint, originOfEnlargement, mouseStartPoint,
+					paintContext.getPickedLines()).forEach(drawer::drawLine);
 
 			drawer.selectAreaSelectionStroke(viewContext.getScale());
 			drawer.selectAssistLineColor();

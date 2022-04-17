@@ -41,18 +41,18 @@ public class MouseUtility {
 	/**
 	 *
 	 * @param event
-	 * @return true if left button of the mouse is pressed, otherwise false.
+	 * @return true if the event was fired by left button of the mouse.
 	 */
-	public static boolean isLeftButtonDown(final MouseEvent event) {
+	public static boolean isLeftButtonEvent(final MouseEvent event) {
 		return SwingUtilities.isLeftMouseButton(event);
 	}
 
 	/**
 	 *
 	 * @param event
-	 * @return true if right button of the mouse is pressed, otherwise false.
+	 * @return true if the event was fired by right button of the mouse.
 	 */
-	public static boolean isRightButtonDown(final MouseEvent event) {
+	public static boolean isRightButtonEvent(final MouseEvent event) {
 		return SwingUtilities.isRightMouseButton(event);
 	}
 

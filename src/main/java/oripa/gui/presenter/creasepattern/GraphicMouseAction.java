@@ -14,6 +14,10 @@ public interface GraphicMouseAction {
 	 */
 	public abstract boolean needSelect();
 
+	public default boolean isUsingCtrlKeyOnDrag() {
+		return false;
+	}
+
 	public abstract EditMode getEditMode();
 
 	/**

@@ -286,7 +286,7 @@ public class PainterScreen extends JPanel
 			@Override
 			protected Void doInBackground() throws Exception {
 				try {
-					if (MouseUtility.isRightButtonDown(e)) {
+					if (MouseUtility.isRightButtonEvent(e)) {
 						action.onRightClick(
 								viewContext, paintContext,
 								MouseUtility.isControlKeyDown(e));
@@ -320,8 +320,13 @@ public class PainterScreen extends JPanel
 			return;
 		}
 
-		action.onPress(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-
+		try {
+			if (MouseUtility.isLeftButtonEvent(e)) {
+				action.onPress(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+			}
+		} catch (Exception ex) {
+			logger.debug("error on mouse button press", ex);
+		}
 		preMousePoint = e.getPoint();
 	}
 
@@ -330,9 +335,18 @@ public class PainterScreen extends JPanel
 		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 		// Rectangular Selection
 
-		if (action != null) {
-			action.onRelease(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+		if (action == null) {
+			return;
 		}
+
+		try {
+			if (MouseUtility.isLeftButtonEvent(e)) {
+				action.onRelease(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+			}
+		} catch (Exception ex) {
+			logger.debug("error on mouse button release", ex);
+		}
+
 		repaint();
 	}
 
@@ -346,21 +360,28 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
+		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 
-		if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
-			viewContext.setScale(camera.getScale());
-			return;
+		if (!action.isUsingCtrlKeyOnDrag()) {
+			if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
+				viewContext.setScale(camera.getScale());
+				return;
+			}
 		}
 
 		if (doCameraDragAction(e, camera::updateTranslateByMouseDragged)) {
 			return;
 		}
 
-		GraphicMouseAction action = mouseActionHolder.getMouseAction();
+		try {
+			if (MouseUtility.isLeftButtonEvent(e)) {
+				viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
+				action.onDrag(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+			}
+		} catch (Exception ex) {
+			logger.debug("error on mouse dragging", ex);
+		}
 
-		// Drag by left button
-		viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
-		action.onDrag(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
 		repaint();
 	}
 
@@ -395,7 +416,11 @@ public class PainterScreen extends JPanel
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				action.onMove(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+				try {
+					action.onMove(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
+				} catch (Exception ex) {
+					logger.debug("error on mouse move", ex);
+				}
 				return null;
 			}
 

@@ -10,6 +10,7 @@ import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.*;
 import oripa.gui.presenter.creasepattern.byvalue.LineByValueAction;
+import oripa.gui.presenter.creasepattern.enlarge.EnlargeLineAction;
 import oripa.gui.viewsetting.main.ChangeHint;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.uipanel.ChangeOnAlterTypeButtonSelected;
