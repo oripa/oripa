@@ -47,4 +47,34 @@ class CenterOriginEnlarger extends AbstractEnlarger {
 				originOfEnlargement.getX() - diff.getX(), originOfEnlargement.getY() - diff.getY(),
 				currentPoint.getX(), currentPoint.getY());
 	}
+
+	@Override
+	protected Vector2d scalePosition(final Vector2d p, final Vector2d mousePoint, final Vector2d originOfEnlargement,
+			final Vector2d mouseStartPoint) {
+
+		var scales = computeScales(mousePoint, originOfEnlargement, mouseStartPoint);
+		double absScale = Math.min(Math.abs(scales.getX()), Math.abs(scales.getY()));
+
+		var scaledDiff = new Vector2d();
+		scaledDiff.setX((p.getX() - originOfEnlargement.getX()) * absScale);
+		scaledDiff.setY((p.getY() - originOfEnlargement.getY()) * absScale);
+
+		var scaled = new Vector2d();
+		scaled.add(originOfEnlargement, scaledDiff);
+
+		return scaled;
+	}
+
+	private Vector2d computeScales(final Vector2d mousePoint, final Vector2d originOfEnlargement,
+			final Vector2d mouseStartPoint) {
+		var diff = new Vector2d();
+
+		diff.sub(mousePoint, originOfEnlargement);
+
+		double scaleX = diff.getX() / Math.abs(mouseStartPoint.getX() - originOfEnlargement.getX());
+		double scaleY = diff.getY() / Math.abs(mouseStartPoint.getY() - originOfEnlargement.getY());
+
+		return new Vector2d(scaleX, scaleY);
+	}
+
 }
