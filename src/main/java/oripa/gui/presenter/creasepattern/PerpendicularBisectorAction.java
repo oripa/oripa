@@ -41,7 +41,8 @@ public class PerpendicularBisectorAction extends AbstractGraphicMouseAction {
 			drawTemporaryLine(drawer, viewContext, paintContext);
 		}
 
-		super.onDraw(drawer, viewContext, paintContext);
 		drawPickCandidateVertex(drawer, viewContext, paintContext);
+
+		super.onDraw(drawer, viewContext, paintContext);
 	}
 }

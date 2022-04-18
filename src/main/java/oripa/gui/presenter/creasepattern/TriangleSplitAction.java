@@ -13,8 +13,8 @@ public class TriangleSplitAction extends AbstractGraphicMouseAction {
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 
-		super.onDraw(drawer, viewContext, paintContext);
-
 		drawPickCandidateVertex(drawer, viewContext, paintContext);
+
+		super.onDraw(drawer, viewContext, paintContext);
 	}
 }

@@ -28,9 +28,11 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
-		super.onDraw(drawer, viewContext, paintContext);
 
 		drawPickCandidateVertex(drawer, viewContext, paintContext);
+
+		super.onDraw(drawer, viewContext, paintContext);
+
 		Vector2d v = paintContext.getCandidateVertexToPick();
 		if (v == null) {
 			return;

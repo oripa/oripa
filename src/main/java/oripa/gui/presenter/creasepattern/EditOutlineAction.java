@@ -35,9 +35,10 @@ public class EditOutlineAction extends AbstractGraphicMouseAction {
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
-		super.onDraw(drawer, viewContext, paintContext);
 
 		this.drawPickCandidateVertex(drawer, viewContext, paintContext);
+
+		super.onDraw(drawer, viewContext, paintContext);
 
 		List<Vector2d> outlinevertices = paintContext.getPickedVertices();
 
