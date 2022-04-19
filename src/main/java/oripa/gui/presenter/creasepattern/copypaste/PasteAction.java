@@ -73,6 +73,10 @@ public class PasteAction extends AbstractGraphicMouseAction {
 
 		}
 
+		if (closeVertex == null) {
+			closeVertex = viewContext.getLogicalMousePoint();
+		}
+
 		paintContext.setCandidateVertexToPick(closeVertex);
 
 		return closeVertex;
