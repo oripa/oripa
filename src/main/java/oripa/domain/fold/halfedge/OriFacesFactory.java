@@ -20,13 +20,14 @@ package oripa.domain.fold.halfedge;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import oripa.geom.GeomUtil;
 
 /**
  * @author OUCHI Koji
@@ -52,38 +53,26 @@ public class OriFacesFactory {
 
 		boolean valid = true;
 
+		var createdFaces = createFaces(vertices);
+
+		logger.debug("created faces: {}", createdFaces);
+
+		if (createdFaces.stream().anyMatch(Objects::isNull)) {
+			createdFaces = createdFaces.stream()
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
+			valid = false;
+		}
+
 		var boundaryFaces = createBoundaryFaces(vertices);
-		var splitVertices = new HashMap<OriFace, Collection<OriVertex>>();
-		boundaryFaces.forEach(face -> splitVertices.put(face, new ArrayList<>()));
 
-		for (var boundaryFace : boundaryFaces) {
-			for (var v : vertices) {
-				if (boundaryFace.isOnFaceInclusively(v.getPosition())) {
-					var vs = splitVertices.get(boundaryFace);
-					vs.add(v);
-				}
-			}
-		}
+		// find boundary face with no internal vertex
+		boundaryFaces.removeIf(
+				face -> vertices.stream().anyMatch(
+						vertex -> face.isOnFaceExclusively(vertex.getPosition(), GeomUtil.EPS)));
 
-		for (var boundaryFace : boundaryFaces) {
-
-			var createdFaces = createFaces(splitVertices.get(boundaryFace));
-
-			logger.debug("created faces for {}: {}", boundaryFace, createdFaces);
-
-			if (createdFaces.stream().anyMatch(Objects::isNull)) {
-				createdFaces = createdFaces.stream()
-						.filter(Objects::nonNull)
-						.collect(Collectors.toList());
-				valid = false;
-			}
-
-			if (createdFaces.isEmpty()) {
-				faces.add(boundaryFace);
-			} else {
-				faces.addAll(createdFaces);
-			}
-		}
+		faces.addAll(createdFaces);
+		faces.addAll(boundaryFaces);
 
 		return valid;
 	}
@@ -181,6 +170,7 @@ public class OriFacesFactory {
 			} else {
 				walkE.setRight(he);
 			}
+
 			walkV = walkE.oppositeVertex(walkV);
 			walkE = walkV.getPrevEdge(walkE); // to make a loop in clockwise
 		} while (walkV != startingVertex);
