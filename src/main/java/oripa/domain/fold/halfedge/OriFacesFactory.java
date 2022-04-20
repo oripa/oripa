@@ -99,10 +99,6 @@ public class OriFacesFactory {
 					.collect(Collectors.toList());
 
 			faces.addAll(createdFaces);
-//			faces.addAll(createdFaces.stream()
-//					.filter(Objects::nonNull)
-//					.collect(Collectors.toList()));
-
 		}
 
 		return faces;
