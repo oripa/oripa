@@ -64,12 +64,16 @@ public class OrigamiModelInteractiveBuilder {
 
 		if (checker.testLocalFlatFoldability(origamiModel)) {
 			logger.debug("No modification is needed.");
+			origamiModel = modelFactory
+					.createOrigamiModels(creasePattern).get(0);
 			return origamiModel;
 		}
 
 		// ask if ORIPA should try to remove duplication.
 		if (!needCleaningUpDuplication.get()) {
 			// the answer is "no."
+			origamiModel = modelFactory
+					.createOrigamiModels(creasePattern).get(0);
 			return origamiModel;
 		}
 
@@ -79,8 +83,7 @@ public class OrigamiModelInteractiveBuilder {
 		}
 		// re-create the model data for simplified crease pattern
 		origamiModel = modelFactory
-				.createOrigamiModel(
-						creasePattern, creasePattern.getPaperSize());
+				.createOrigamiModels(creasePattern).get(0);
 
 		if (checker.testLocalFlatFoldability(origamiModel)) {
 			return origamiModel;

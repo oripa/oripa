@@ -161,4 +161,9 @@ public class OrigamiModel {
 
 		return paperDomain;
 	}
+
+	@Override
+	public String toString() {
+		return "[" + faces.toString() + edges.toString() + vertices.toString() + "]";
+	}
 }

@@ -118,7 +118,7 @@ public class OriFacesFactory {
 		return true;
 	}
 
-	private List<OriFace> createBoundaryFaces(final Collection<OriVertex> vertices) {
+	List<OriFace> createBoundaryFaces(final Collection<OriVertex> vertices) {
 
 		var boundaryFaces = new ArrayList<OriFace>();
 
@@ -184,7 +184,7 @@ public class OriFacesFactory {
 		OriEdge walkE = startingEdge;
 		int debugCount = 0;
 		do {
-			if (debugCount++ > 100) {
+			if (debugCount++ > 1000) {
 				logger.error("invalid input for making faces.");
 //						throw new UnfoldableModelException("algorithmic error");
 				return null;
