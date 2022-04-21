@@ -18,6 +18,8 @@
  */
 package oripa.gui.view.model;
 
+import java.util.List;
+
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -44,7 +46,7 @@ public class ModelViewFrameFactory {
 
 	public JFrame createFrame(
 			final JComponent parent,
-			final OrigamiModel origamiModel,
+			final List<OrigamiModel> origamiModels,
 			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
 
 		ModelViewFrame frame = (ModelViewFrame) childFrameManager.find(parent,
@@ -54,7 +56,7 @@ public class ModelViewFrameFactory {
 			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine, mainScreenSetting);
 		}
 
-		frame.setModel(origamiModel);
+		frame.setModels(origamiModels);
 
 		childFrameManager.putChild(parent, frame);
 
