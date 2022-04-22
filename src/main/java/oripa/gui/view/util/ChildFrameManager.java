@@ -55,13 +55,13 @@ public class ChildFrameManager {
 		getChildren(parent).add(child);
 	}
 
-	public JFrame find(final JComponent parent, final Class<? extends JFrame> clazz) {
+	public <TFrame extends JFrame> TFrame find(final JComponent parent, final Class<TFrame> clazz) {
 		var children = getChildren(parent);
 		logger.info("children of " + parent + ": " + children);
 		for (var child : children) {
 			if (clazz.isInstance(child)) {
 				logger.info("child(class = " + clazz.getName() + ") is found.");
-				return child;
+				return clazz.cast(child);
 			}
 		}
 

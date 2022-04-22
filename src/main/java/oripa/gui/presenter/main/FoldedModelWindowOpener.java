@@ -39,7 +39,6 @@ import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
-import oripa.gui.view.estimation.EstimationResultFrame;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
@@ -113,7 +112,7 @@ public class FoldedModelWindowOpener {
 
 					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 							childFrameManager);
-					var resultFrame = (EstimationResultFrame) resultFrameFactory.createFrame(ownerView, foldedModel);
+					var resultFrame = resultFrameFactory.createFrame(ownerView, foldedModel);
 
 					resultFrame.setColors(frontColor, backColor);
 					resultFrame.setSaveColorsListener(saveColors);
