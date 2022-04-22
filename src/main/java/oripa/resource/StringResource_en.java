@@ -78,16 +78,16 @@ public class StringResource_en extends ListResourceBundle {
 			{ StringID.Warning.FOLD_FAILED_WRONG_STRUCTURE_ID,
 					"Failed to fold. It seems the pattern has basic problems." },
 
-			{ StringID.ModelMenu.DISPLAY_ID, "Display" },
-			{ StringID.ModelMenu.EXPORT_DXF_ID, "Export Model Line(DXF)" },
-			{ StringID.ModelMenu.INVERT_ID, "Invert" },
-			{ StringID.ModelMenu.SLIDE_FACES_ID, "Slide Faces" },
-			{ StringID.ModelMenu.DIRECTION_BASIC_ID,
+			{ StringID.ModelUI.DISPLAY_ID, "Display" },
+			{ StringID.ModelUI.EXPORT_DXF_ID, "Export Model Line(DXF)" },
+			{ StringID.ModelUI.INVERT_ID, "Invert" },
+			{ StringID.ModelUI.SLIDE_FACES_ID, "Slide Faces" },
+			{ StringID.ModelUI.DIRECTION_BASIC_ID,
 					"    L: Rot R:Move Wheel:Zoom " },
-			{ StringID.ModelMenu.DISPLAY_TYPE_ID, "Drawing type" },
-			{ StringID.ModelMenu.FILL_ALPHA_ID, "Fill Transmission" },
-			{ StringID.ModelMenu.DRAW_LINES_ID, "Draw Lines" },
-			{ StringID.ModelMenu.TITLE_ID, "Expected Folded Origami" }
+			{ StringID.ModelUI.DISPLAY_TYPE_ID, "Drawing type" },
+			{ StringID.ModelUI.FILL_ALPHA_ID, "Fill Transmission" },
+			{ StringID.ModelUI.DRAW_LINES_ID, "Draw Lines" },
+			{ StringID.ModelUI.TITLE_ID, "Expected Folded Origami" }
 	};
 
 	@Override

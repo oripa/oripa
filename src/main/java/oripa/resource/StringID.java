@@ -174,7 +174,7 @@ public class StringID {
 	public static final String SELECT_ALL_LINE_ID = "selectAll";
 	public static final String ANGLE_SNAP_ID = "angleSnap";
 
-	public static class ModelMenu {
+	public static class ModelUI {
 		public static final String FILE_ID = "ModelFile";
 		public static final String DISPLAY_ID = "MENU_Disp";
 		public static final String EXPORT_DXF_ID = "MENU_ExportModelLine_DXF";
@@ -188,6 +188,8 @@ public class StringID {
 		public static final String DRAW_LINES_ID = "MENU_DrawLines";
 		public static final String TITLE_ID = "ExpectedFoldedOrigami";
 		public static final String SHOW_CROSS_LINE_ID = "ShowCrossLine";
+		public static final String NEXT_MODEL_ID = "Model_NextModel";
+		public static final String PREV_MODEL_ID = "Model_PrevModel";
 	}
 
 }
