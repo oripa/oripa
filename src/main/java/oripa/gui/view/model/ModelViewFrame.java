@@ -89,8 +89,6 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			Adjustable.VERTICAL, 0, 5, -150, 150);
 
-	private final JPanel southPanel = new JPanel();
-
 	private final MainScreenSetting mainScreenSetting;
 
 	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
