@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import oripa.application.main.OrigamiModelInteractiveBuilder;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.foldability.FoldabilityChecker;
@@ -98,10 +99,7 @@ public class FoldedModelWindowOpener {
 					.map(model -> folder.fold(model, fullEstimation))
 					.collect(Collectors.toList());
 
-			// TODO: delete this by enabling selection of folded models.
-			var foldedModel = foldedModels.get(0);
-
-			final int foldableModelCount = foldedModel.getFoldablePatternCount();
+			final int foldableModelCount = countFoldablePatterns(foldedModels);
 
 			if (fullEstimation) {
 
@@ -112,7 +110,7 @@ public class FoldedModelWindowOpener {
 
 					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 							childFrameManager);
-					var resultFrame = resultFrameFactory.createFrame(ownerView, foldedModel);
+					var resultFrame = resultFrameFactory.createFrame(ownerView, foldedModels);
 
 					resultFrame.setColors(frontColor, backColor);
 					resultFrame.setSaveColorsListener(saveColors);
@@ -136,6 +134,10 @@ public class FoldedModelWindowOpener {
 		frames.add(modelViewFrame);
 
 		return frames;
+	}
+
+	private int countFoldablePatterns(final List<FoldedModel> foldedModels) {
+		return foldedModels.stream().mapToInt(m -> m.getFoldablePatternCount()).sum();
 	}
 
 	/**

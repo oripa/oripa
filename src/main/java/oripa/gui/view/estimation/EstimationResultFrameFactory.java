@@ -1,5 +1,7 @@
 package oripa.gui.view.estimation;
 
+import java.util.List;
+
 import javax.swing.JComponent;
 
 import oripa.domain.fold.FoldedModel;
@@ -18,7 +20,7 @@ public class EstimationResultFrameFactory {
 
 	public EstimationResultFrame createFrame(
 			final JComponent parent,
-			final FoldedModel foldedModel) {
+			final List<FoldedModel> foldedModels) {
 
 		EstimationResultFrame frame = childFrameManager.find(parent,
 				EstimationResultFrame.class);
@@ -26,7 +28,7 @@ public class EstimationResultFrameFactory {
 			frame = new EstimationResultFrame();
 		}
 
-		frame.setModel(foldedModel);
+		frame.setModels(foldedModels);
 		childFrameManager.putChild(parent, frame);
 
 		return frame;

@@ -46,7 +46,7 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 	private final JLabel selectedItemIndexLabel = new JLabel();
 
 	private List<Item> items;
-	private int selectionIndex = 0;
+	private int selectionIndex = -1;
 	private Item item;
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);

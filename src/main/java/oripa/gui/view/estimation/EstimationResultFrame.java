@@ -20,12 +20,14 @@ package oripa.gui.view.estimation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModel;
+import oripa.gui.view.util.ListItemSelectionPanel;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -36,6 +38,7 @@ public class EstimationResultFrame extends JFrame {
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
+	private final ListItemSelectionPanel<FoldedModel> modelSelectionPanel = new ListItemSelectionPanel<>("Model");
 	private final FoldedModelScreen screen = new FoldedModelScreen();
 	private final EstimationResultUI ui = new EstimationResultUI();
 	private final JLabel hintLabel = new JLabel(
@@ -48,12 +51,29 @@ public class EstimationResultFrame extends JFrame {
 
 		ui.setScreen(screen);
 
+		add(modelSelectionPanel, BorderLayout.NORTH);
 		add(ui, BorderLayout.WEST);
 		add(screen, BorderLayout.CENTER);
 		add(hintLabel, BorderLayout.SOUTH);
+
+		addPropertyChangeListenerToComponents();
+	}
+
+	private void addPropertyChangeListenerToComponents() {
+		modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.ITEM,
+				e -> setModel((FoldedModel) e.getNewValue()));
+	}
+
+	public void setModels(final List<FoldedModel> models) {
+		modelSelectionPanel.setItems(models);
 	}
 
 	public void setModel(final FoldedModel foldedModel) {
+		if (foldedModel.getFoldablePatternCount() == 0) {
+			screen.setModel(null);
+			ui.setModel(null);
+			return;
+		}
 		screen.setModel(foldedModel);
 		ui.setModel(foldedModel);
 	}
