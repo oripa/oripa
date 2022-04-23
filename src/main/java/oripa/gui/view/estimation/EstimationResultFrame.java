@@ -68,7 +68,7 @@ public class EstimationResultFrame extends JFrame {
 		modelSelectionPanel.setItems(models);
 	}
 
-	public void setModel(final FoldedModel foldedModel) {
+	private void setModel(final FoldedModel foldedModel) {
 		if (foldedModel.getFoldablePatternCount() == 0) {
 			screen.setModel(null);
 			ui.setModel(null);

@@ -105,20 +105,18 @@ public class ModelViewFrame extends JFrame
 		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.TITLE_ID));
 		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine, mainScreenSetting);
 
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(screen, BorderLayout.CENTER);
-
-		buildModelSelectionPanel();
+		setLayout(new BorderLayout());
+		add(screen, BorderLayout.CENTER);
 
 		var southPanel = new JPanel();
 		southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
 		southPanel.add(modelSelectionPanel);
 		southPanel.add(hintLabel);
 
-		getContentPane().add(southPanel, BorderLayout.SOUTH);
+		add(southPanel, BorderLayout.SOUTH);
 
-		getContentPane().add(scrollBarAngle, BorderLayout.NORTH);
-		getContentPane().add(scrollBarPosition, BorderLayout.WEST);
+		add(scrollBarAngle, BorderLayout.NORTH);
+		add(scrollBarPosition, BorderLayout.WEST);
 
 		// Construct menu bar
 		JMenuBar menuBar = new JMenuBar();
@@ -138,6 +136,7 @@ public class ModelViewFrame extends JFrame
 
 		menuItemFillAlpha.setSelected(true);
 
+		addPropertyChangeListenerToComponents();
 		addActionListenersToComponents();
 
 		menuBar.add(menuFile);
@@ -149,7 +148,7 @@ public class ModelViewFrame extends JFrame
 		scrollBarPosition.addAdjustmentListener(this);
 	}
 
-	private void buildModelSelectionPanel() {
+	private void addPropertyChangeListenerToComponents() {
 		modelSelectionPanel.addPropertyChangeListener(
 				ListItemSelectionPanel.ITEM,
 				e -> setModel((OrigamiModel) e.getNewValue()));
