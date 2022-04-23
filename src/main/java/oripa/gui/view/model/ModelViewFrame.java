@@ -89,6 +89,8 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			Adjustable.VERTICAL, 0, 5, -150, 150);
 
+	private final JPanel southPanel = new JPanel();
+
 	private final MainScreenSetting mainScreenSetting;
 
 	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
@@ -181,7 +183,7 @@ public class ModelViewFrame extends JFrame
 
 	private void setModel(final OrigamiModel origamiModel) {
 		int boundSize = Math.min(getWidth(), getHeight()
-				- getJMenuBar().getHeight() - 50);
+				- getJMenuBar().getHeight() - 100);
 		screen.setModel(origamiModel, boundSize);
 		this.origamiModel = origamiModel;
 

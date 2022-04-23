@@ -52,7 +52,7 @@ public class EstimationResultFrame extends JFrame {
 
 	public EstimationResultFrame() {
 		setTitle(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
-		setBounds(0, 0, 800, 600);
+		setBounds(0, 0, 800, 650);
 		setLayout(new BorderLayout());
 
 		ui.setScreen(screen);
