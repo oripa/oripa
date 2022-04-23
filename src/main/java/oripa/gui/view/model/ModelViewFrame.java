@@ -31,6 +31,7 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.Dialogs;
+import oripa.gui.view.util.ListItemSelectionPanel;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.persistence.entity.OrigamiModelDAO;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
@@ -82,15 +83,8 @@ public class ModelViewFrame extends JFrame
 	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
 	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
 
-	private final JPanel modelSelectionPanel = new JPanel();
-	private final JButton nextModelButton = new JButton(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.NEXT_MODEL_ID));
-	private final JButton prevModelButton = new JButton(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.PREV_MODEL_ID));
-	private final JLabel selectedModelIndexLabel = new JLabel();
+	private final ListItemSelectionPanel<OrigamiModel> modelSelectionPanel = new ListItemSelectionPanel<>("Model");
 
-	private List<OrigamiModel> origamiModels;
-	private int selectionIndex = 0;
 	private OrigamiModel origamiModel = null;
 
 	public ModelViewFrame(
@@ -156,38 +150,13 @@ public class ModelViewFrame extends JFrame
 	}
 
 	private void buildModelSelectionPanel() {
-		modelSelectionPanel.add(prevModelButton);
-		modelSelectionPanel.add(selectedModelIndexLabel);
-		modelSelectionPanel.add(nextModelButton);
-
-		prevModelButton.addActionListener(e -> {
-			if (selectionIndex == 0) {
-				return;
-			}
-			selectModel(selectionIndex - 1);
-		});
-
-		nextModelButton.addActionListener(e -> {
-			if (selectionIndex == origamiModels.size() - 1) {
-				return;
-			}
-			selectModel(selectionIndex + 1);
-		});
+		modelSelectionPanel.addPropertyChangeListener(
+				ListItemSelectionPanel.ITEM,
+				e -> setModel((OrigamiModel) e.getNewValue()));
 	}
-
-	private void updateSelectionModelIndexLabel() {
-		selectedModelIndexLabel.setText((selectionIndex + 1) + "/" + origamiModels.size());
-	};
 
 	public void setModels(final List<OrigamiModel> origamiModels) {
-		this.origamiModels = origamiModels;
-		selectModel(0);
-	}
-
-	private void selectModel(final int index) {
-		selectionIndex = index;
-		setModel(origamiModels.get(selectionIndex));
-		updateSelectionModelIndexLabel();
+		modelSelectionPanel.setItems(origamiModels);
 	}
 
 	private void setModel(final OrigamiModel origamiModel) {
