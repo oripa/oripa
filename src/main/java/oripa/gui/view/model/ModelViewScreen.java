@@ -83,6 +83,8 @@ public class ModelViewScreen extends JPanel
 	private final CallbackOnUpdate onUpdateScissorsLine;
 	private final MainScreenSetting mainScreenSetting;
 
+	private Vector2d mousePoint;
+
 	public ModelViewScreen(final CutModelOutlinesHolder aLineHolder, final CallbackOnUpdate c,
 			final MainScreenSetting mainScreenSetting) {
 
@@ -126,6 +128,7 @@ public class ModelViewScreen extends JPanel
 	}
 
 	public void setModel(final OrigamiModel origamiModel, final int boundSize) {
+		logger.debug("set origami model {}", origamiModel);
 		this.origamiModel = origamiModel;
 		resetViewMatrix(boundSize);
 	}
@@ -149,6 +152,8 @@ public class ModelViewScreen extends JPanel
 			var domain = origamiModel.createDomainOfFoldedModel();
 			modelCenter.x = domain.getCenterX();
 			modelCenter.y = domain.getCenterY();
+
+			logger.debug("model center = {}", modelCenter);
 
 			scale = 0.8 * Math.min(
 					boundSize / domain.getWidth(), boundSize / domain.getHeight());
@@ -212,7 +217,6 @@ public class ModelViewScreen extends JPanel
 		drawer.draw(objDrawer, origamiModel, scissorsLineVisible ? scissorsLine : null, modelDisplayMode, scale);
 
 		g.drawImage(bufferImage, 0, 0, this);
-
 	}
 
 	@Override
@@ -294,6 +298,7 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
+
 	}
 
 	@Override

@@ -41,14 +41,14 @@ public class FoldedModelFilterSelector extends AbstractFilterSelector<FoldedMode
 		// TODO: StringID.ModelMenu.FILE_ID is tentative. Replace it with new
 		// string ID.
 		FoldedModelFileTypeKey key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
-		putFilter(key, createDescription(key, StringID.ModelMenu.FILE_ID));
+		putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
 
 		if (modelFlip) {
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP;
-			putFilter(key, createDescription(key, StringID.ModelMenu.FILE_ID));
+			putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
 		} else {
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL;
-			putFilter(key, createDescription(key, StringID.ModelMenu.FILE_ID));
+			putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
 		}
 	}
 

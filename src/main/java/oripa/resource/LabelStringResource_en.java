@@ -118,18 +118,20 @@ public class LabelStringResource_en extends ListResourceBundle {
 
 			{ StringID.EstimationResultUI.HINT_LABEL_ID, "L: Rotate / Wheel: Zoom / R: Move" },
 
-			{ StringID.ModelMenu.FILE_ID, "File" },
-			{ StringID.ModelMenu.DISPLAY_ID, "Display" },
-			{ StringID.ModelMenu.EXPORT_DXF_ID, "Export model lines (DXF)" },
-			{ StringID.ModelMenu.EXPORT_OBJ_ID, "Export to OBJ file" },
-			{ StringID.ModelMenu.EXPORT_SVG_ID, "Export to SVG file" },
-			{ StringID.ModelMenu.INVERT_ID, "Invert" },
-			{ StringID.ModelMenu.DIRECTION_BASIC_ID, "L: Rot R:Move Wheel:Zoom" },
-			{ StringID.ModelMenu.DISPLAY_TYPE_ID, "Drawing type" },
-			{ StringID.ModelMenu.FILL_ALPHA_ID, "Fill transmission" },
-			{ StringID.ModelMenu.DRAW_LINES_ID, "Draw lines" },
-			{ StringID.ModelMenu.TITLE_ID, "Expected Folded Origami" },
-			{ StringID.ModelMenu.SHOW_CROSS_LINE_ID, "Show cross-line" },
+			{ StringID.ModelUI.FILE_ID, "File" },
+			{ StringID.ModelUI.DISPLAY_ID, "Display" },
+			{ StringID.ModelUI.EXPORT_DXF_ID, "Export model lines (DXF)" },
+			{ StringID.ModelUI.EXPORT_OBJ_ID, "Export to OBJ file" },
+			{ StringID.ModelUI.EXPORT_SVG_ID, "Export to SVG file" },
+			{ StringID.ModelUI.INVERT_ID, "Invert" },
+			{ StringID.ModelUI.DIRECTION_BASIC_ID, "L: Rot R:Move Wheel:Zoom" },
+			{ StringID.ModelUI.DISPLAY_TYPE_ID, "Drawing type" },
+			{ StringID.ModelUI.FILL_ALPHA_ID, "Fill transmission" },
+			{ StringID.ModelUI.DRAW_LINES_ID, "Draw lines" },
+			{ StringID.ModelUI.TITLE_ID, "Expected Folded Origami" },
+			{ StringID.ModelUI.SHOW_CROSS_LINE_ID, "Show cross-line" },
+			{ StringID.ModelUI.NEXT_MODEL_ID, "Next" },
+			{ StringID.ModelUI.PREV_MODEL_ID, "Prev" },
 	};
 
 	@Override

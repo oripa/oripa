@@ -41,13 +41,13 @@ public class OrigamiModelFilterSelector extends AbstractFilterSelector<OrigamiMo
 		filters = new TreeMap<>();
 
 		OrigamiModelFileTypeKey key = OrigamiModelFileTypeKey.DXF_MODEL;
-		putFilter(key, createDescription(key, StringID.ModelMenu.FILE_ID));
+		putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
 
 		key = OrigamiModelFileTypeKey.OBJ_MODEL;
-		putFilter(key, createDescription(key, StringID.ModelMenu.FILE_ID));
+		putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
 
 		key = OrigamiModelFileTypeKey.SVG_MODEL;
-		putFilter(key, createDescription(key, StringID.ModelMenu.FILE_ID));
+		putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
 
 	}
 

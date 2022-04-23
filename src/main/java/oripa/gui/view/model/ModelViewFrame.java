@@ -22,16 +22,9 @@ import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.util.List;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollBar;
+import javax.swing.*;
 
 import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
@@ -59,36 +52,46 @@ public class ModelViewFrame extends JFrame
 
 	private ModelViewScreen screen;
 	private final JMenu menuDisp = new JMenu(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.DISPLAY_ID));
-	private final JMenu menuFile = new JMenu(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.FILE_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_ID));
+	private final JMenu menuFile = new JMenu(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILE_ID));
 	private final JMenuItem menuItemExportDXF = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.EXPORT_DXF_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_DXF_ID));
 	private final JMenuItem menuItemExportOBJ = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.EXPORT_OBJ_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_OBJ_ID));
 	private final JMenuItem menuItemExportSVG = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.EXPORT_SVG_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.EXPORT_SVG_ID));
 	private final JMenuItem menuItemFlip = new JMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.INVERT_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.INVERT_ID));
 	private final JCheckBoxMenuItem menuItemCrossLine = new JCheckBoxMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.SHOW_CROSS_LINE_ID), false);
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.SHOW_CROSS_LINE_ID), false);
 	private final JLabel hintLabel = new JLabel(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.DIRECTION_BASIC_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DIRECTION_BASIC_ID));
 	private final JMenu dispSubMenu = new JMenu(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.DISPLAY_TYPE_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DISPLAY_TYPE_ID));
 	private final JRadioButtonMenuItem menuItemFillAlpha = new JRadioButtonMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.FILL_ALPHA_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.FILL_ALPHA_ID));
 	private final JRadioButtonMenuItem menuItemFillNone = new JRadioButtonMenuItem(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.DRAW_LINES_ID));
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.DRAW_LINES_ID));
 	private final JScrollBar scrollBarAngle = new JScrollBar(
 			Adjustable.HORIZONTAL, 90, 5, 0, 185);
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			Adjustable.VERTICAL, 0, 5, -150, 150);
 
-	private OrigamiModel origamiModel = null;
 	private final MainScreenSetting mainScreenSetting;
 
 	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
 	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
+
+	private final JPanel modelSelectionPanel = new JPanel();
+	private final JButton nextModelButton = new JButton(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.NEXT_MODEL_ID));
+	private final JButton prevModelButton = new JButton(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.PREV_MODEL_ID));
+	private final JLabel selectedModelIndexLabel = new JLabel();
+
+	private List<OrigamiModel> origamiModels;
+	private int selectionIndex = 0;
+	private OrigamiModel origamiModel = null;
 
 	public ModelViewFrame(
 			final int width, final int height,
@@ -105,12 +108,21 @@ public class ModelViewFrame extends JFrame
 	private void initialize(final CutModelOutlinesHolder lineHolder,
 			final CallbackOnUpdate onUpdateCrossLine) {
 
-		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelMenu.TITLE_ID));
+		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.TITLE_ID));
 		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine, mainScreenSetting);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(screen, BorderLayout.CENTER);
-		getContentPane().add(hintLabel, BorderLayout.SOUTH);
+
+		buildModelSelectionPanel();
+
+		var southPanel = new JPanel();
+		southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
+		southPanel.add(modelSelectionPanel);
+		southPanel.add(hintLabel);
+
+		getContentPane().add(southPanel, BorderLayout.SOUTH);
+
 		getContentPane().add(scrollBarAngle, BorderLayout.NORTH);
 		getContentPane().add(scrollBarPosition, BorderLayout.WEST);
 
@@ -143,7 +155,42 @@ public class ModelViewFrame extends JFrame
 		scrollBarPosition.addAdjustmentListener(this);
 	}
 
-	public void setModel(final OrigamiModel origamiModel) {
+	private void buildModelSelectionPanel() {
+		modelSelectionPanel.add(prevModelButton);
+		modelSelectionPanel.add(selectedModelIndexLabel);
+		modelSelectionPanel.add(nextModelButton);
+
+		prevModelButton.addActionListener(e -> {
+			if (selectionIndex == 0) {
+				return;
+			}
+			selectModel(selectionIndex - 1);
+		});
+
+		nextModelButton.addActionListener(e -> {
+			if (selectionIndex == origamiModels.size() - 1) {
+				return;
+			}
+			selectModel(selectionIndex + 1);
+		});
+	}
+
+	private void updateSelectionModelIndexLabel() {
+		selectedModelIndexLabel.setText((selectionIndex + 1) + "/" + origamiModels.size());
+	};
+
+	public void setModels(final List<OrigamiModel> origamiModels) {
+		this.origamiModels = origamiModels;
+		selectModel(0);
+	}
+
+	private void selectModel(final int index) {
+		selectionIndex = index;
+		setModel(origamiModels.get(selectionIndex));
+		updateSelectionModelIndexLabel();
+	}
+
+	private void setModel(final OrigamiModel origamiModel) {
 		int boundSize = Math.min(getWidth(), getHeight()
 				- getJMenuBar().getHeight() - 50);
 		screen.setModel(origamiModel, boundSize);

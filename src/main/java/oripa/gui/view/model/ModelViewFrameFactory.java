@@ -18,8 +18,9 @@
  */
 package oripa.gui.view.model;
 
+import java.util.List;
+
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -42,19 +43,19 @@ public class ModelViewFrameFactory {
 		this.childFrameManager = childFrameManager;
 	}
 
-	public JFrame createFrame(
+	public ModelViewFrame createFrame(
 			final JComponent parent,
-			final OrigamiModel origamiModel,
+			final List<OrigamiModel> origamiModels,
 			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
 
-		ModelViewFrame frame = (ModelViewFrame) childFrameManager.find(parent,
+		ModelViewFrame frame = childFrameManager.find(parent,
 				ModelViewFrame.class);
 
 		if (frame == null) {
 			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine, mainScreenSetting);
 		}
 
-		frame.setModel(origamiModel);
+		frame.setModels(origamiModels);
 
 		childFrameManager.putChild(parent, frame);
 

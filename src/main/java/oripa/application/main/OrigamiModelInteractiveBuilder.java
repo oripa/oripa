@@ -18,6 +18,7 @@
  */
 package oripa.application.main;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -51,26 +52,29 @@ public class OrigamiModelInteractiveBuilder {
 	 *            an action that tells folding failed.
 	 * @return origami model data.
 	 */
-	public OrigamiModel build(final CreasePattern creasePattern,
+	public List<OrigamiModel> build(final CreasePattern creasePattern,
 			final Supplier<Boolean> needCleaningUpDuplication,
 			final Runnable showCleaningUpMessage,
 			final Runnable showFailureMessage) {
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		OrigamiModel origamiModel = modelFactory.createOrigamiModel(
+		OrigamiModel wholeModel = modelFactory.createOrigamiModel(
 				creasePattern, creasePattern.getPaperSize());
+
+		List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern);
+
 		var checker = new FoldabilityChecker();
 
 		logger.debug("Building origami model.");
 
-		if (checker.testLocalFlatFoldability(origamiModel)) {
+		if (checker.testLocalFlatFoldability(wholeModel)) {
 			logger.debug("No modification is needed.");
-			return origamiModel;
+			return origamiModels;
 		}
 
 		// ask if ORIPA should try to remove duplication.
 		if (!needCleaningUpDuplication.get()) {
 			// the answer is "no."
-			return origamiModel;
+			return origamiModels;
 		}
 
 		// clean up the crease pattern
@@ -78,17 +82,16 @@ public class OrigamiModelInteractiveBuilder {
 			showCleaningUpMessage.run();
 		}
 		// re-create the model data for simplified crease pattern
-		origamiModel = modelFactory
-				.createOrigamiModel(
-						creasePattern, creasePattern.getPaperSize());
+		wholeModel = modelFactory
+				.createOrigamiModel(creasePattern, creasePattern.getPaperSize());
 
-		if (checker.testLocalFlatFoldability(origamiModel)) {
-			return origamiModel;
+		if (checker.testLocalFlatFoldability(wholeModel)) {
+			return modelFactory.createOrigamiModels(creasePattern);
 		}
 
 		showFailureMessage.run();
 
-		return origamiModel;
+		return origamiModels;
 
 	}
 }

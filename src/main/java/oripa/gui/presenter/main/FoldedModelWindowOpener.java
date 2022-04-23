@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -38,7 +39,6 @@ import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
-import oripa.gui.view.estimation.EstimationResultFrame;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
@@ -88,14 +88,19 @@ public class FoldedModelWindowOpener {
 		var folderFactory = new FolderFactory();
 		Folder folder = folderFactory.create();
 
-		OrigamiModel origamiModel = buildOrigamiModel(creasePattern);
+		List<OrigamiModel> origamiModels = buildOrigamiModels(creasePattern);
 		var checker = new FoldabilityChecker();
 
-		if (!checker.testLocalFlatFoldability(origamiModel)) {
-			folder.foldWithoutLineType(origamiModel);
+		if (!origamiModels.stream().allMatch(m -> checker.testLocalFlatFoldability(m))) {
+			origamiModels.forEach(model -> folder.foldWithoutLineType(model));
 		} else {
-			var foldedModel = folder.fold(
-					origamiModel, fullEstimation);
+			var foldedModels = origamiModels.stream()
+					.map(model -> folder.fold(model, fullEstimation))
+					.collect(Collectors.toList());
+
+			// TODO: delete this by enabling selection of folded models.
+			var foldedModel = foldedModels.get(0);
+
 			final int foldableModelCount = foldedModel.getFoldablePatternCount();
 
 			if (fullEstimation) {
@@ -107,7 +112,7 @@ public class FoldedModelWindowOpener {
 
 					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 							childFrameManager);
-					var resultFrame = (EstimationResultFrame) resultFrameFactory.createFrame(ownerView, foldedModel);
+					var resultFrame = resultFrameFactory.createFrame(ownerView, foldedModel);
 
 					resultFrame.setColors(frontColor, backColor);
 					resultFrame.setSaveColorsListener(saveColors);
@@ -122,7 +127,7 @@ public class FoldedModelWindowOpener {
 		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
 				mainScreenSetting,
 				childFrameManager);
-		var modelViewFrame = modelViewFactory.createFrame(ownerView, origamiModel,
+		var modelViewFrame = modelViewFactory.createFrame(ownerView, origamiModels,
 				cutOutlinesHolder, screenUpdater::updateScreen);
 
 		modelViewFrame.repaint();
@@ -139,7 +144,7 @@ public class FoldedModelWindowOpener {
 	 *
 	 * @return folded Origami model
 	 */
-	private OrigamiModel buildOrigamiModel(final CreasePattern creasePattern) {
+	private List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern) {
 		var builder = new OrigamiModelInteractiveBuilder();
 
 		return builder.build(

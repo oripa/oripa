@@ -17,6 +17,7 @@
  */
 package oripa.domain.fold.halfedge;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.ElementRemover;
 import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.geom.RectangleDomain;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
@@ -49,6 +51,11 @@ public class OrigamiModelFactory {
 	public OrigamiModel createOrigamiModel(
 			final Collection<OriLine> creasePattern, final double paperSize) {
 		return this.createOrigamiModelImpl3(creasePattern, paperSize);
+	}
+
+	public List<OrigamiModel> createOrigamiModels(
+			final Collection<OriLine> creasePattern) {
+		return createOrigamiModelsImpl(creasePattern);
 	}
 
 	/**
@@ -121,42 +128,119 @@ public class OrigamiModelFactory {
 
 		var remover = new ElementRemover();
 
+		List<OriLine> precreases = createPrecreases(creasePattern);
+
 		logger.debug(
 				"removeMeaninglessVertices() start: " + watch.getMilliSec() + "[ms]");
 		remover.removeMeaninglessVertices(simplifiedCreasePattern);
 		logger.debug(
 				"removeMeaninglessVertices() end: " + watch.getMilliSec() + "[ms]");
 
-		OrigamiModel origamiModel = new OrigamiModel(paperSize);
-		List<OriFace> faces = origamiModel.getFaces();
-		List<OriEdge> edges = origamiModel.getEdges();
-		List<OriVertex> vertices = origamiModel.getVertices();
+		var vertices = new ArrayList<OriVertex>();
+		buildVertices(simplifiedCreasePattern, vertices);
+		OrigamiModel origamiModel = create(vertices, precreases);
+
+		logger.debug(
+				"createOrigamiModelImpl3(): " + watch.getMilliSec() + "[ms]");
+		return origamiModel;
+	}
+
+	private List<OrigamiModel> createOrigamiModelsImpl(
+			final Collection<OriLine> creasePattern) {
+
+		var watch = new StopWatch(true);
+
+		var simplifiedCreasePattern = creasePattern.stream()
+				.filter(line -> !line.isAux())
+				.collect(Collectors.toSet());
 
 		List<OriLine> precreases = createPrecreases(creasePattern);
-		buildVertices(simplifiedCreasePattern, vertices);
+
+		var remover = new ElementRemover();
+
+		logger.debug(
+				"removeMeaninglessVertices() start: " + watch.getMilliSec() + "[ms]");
+		remover.removeMeaninglessVertices(simplifiedCreasePattern);
+		logger.debug(
+				"removeMeaninglessVertices() end: " + watch.getMilliSec() + "[ms]");
+
+		var boundaryCreasePattern = simplifiedCreasePattern.stream()
+				.filter(line -> line.isBoundary())
+				.collect(Collectors.toList());
+
+		var wholeVertices = new ArrayList<OriVertex>();
+		buildVertices(simplifiedCreasePattern, wholeVertices);
+
+		var origamiModels = new ArrayList<OrigamiModel>();
+
+		var boundaryVertices = new ArrayList<OriVertex>();
+		buildVertices(boundaryCreasePattern, boundaryVertices);
+
+		var boundaryFaces = facesFactory.createBoundaryFaces(boundaryVertices);
+
+		for (var boundaryFace : boundaryFaces) {
+			var extracted = new ModelVerticesExtractor().extractByBoundary(
+					wholeVertices, precreases, boundaryFace);
+
+			origamiModels.add(create(extracted.getVertices(), extracted.getPrecreases()));
+		}
+
+		logger.debug("create origami models: {}", origamiModels);
+
+		return origamiModels;
+	}
+
+	private OrigamiModel create(final List<OriVertex> modelVertices, final List<OriLine> modelPrecreases) {
+		OrigamiModel origamiModel = new OrigamiModel(computePaperSize(modelVertices));
+		List<OriFace> faces = origamiModel.getFaces();
+		List<OriEdge> edges = origamiModel.getEdges();
+
+		origamiModel.setVertices(modelVertices);
+
+		List<OriVertex> vertices = origamiModel.getVertices();
 
 		// Construct the faces
 		if (!buildFaces(vertices, faces)) {
 			return origamiModel;
 		}
 
-		logger.debug(
-				"makeEdges() start: " + watch.getMilliSec() + "[ms]");
 		buildEdges(edges, faces);
-		logger.debug(
-				"makeEdges() end: " + watch.getMilliSec() + "[ms]");
 
 		// attach precrease lines to faces
 		for (OriFace face : faces) {
-			face.addAllPrecreases(precreases.stream()
+			face.addAllPrecreases(modelPrecreases.stream()
 					.filter(precrease -> OriGeomUtil.isOriLineIncludedInFace(face, precrease))
 					.collect(Collectors.toList()));
 		}
 		origamiModel.setHasModel(true);
 
-		logger.debug(
-				"createOrigamiModelImpl3(): " + watch.getMilliSec() + "[ms]");
 		return origamiModel;
+	}
+
+	private double computePaperSize(final List<OriVertex> vertices) {
+		double minX = vertices.stream()
+				.mapToDouble(v -> v.getPosition().getX())
+				.min()
+				.getAsDouble();
+
+		double maxX = vertices.stream()
+				.mapToDouble(v -> v.getPosition().getX())
+				.max()
+				.getAsDouble();
+
+		double minY = vertices.stream()
+				.mapToDouble(v -> v.getPosition().getY())
+				.min()
+				.getAsDouble();
+
+		double maxY = vertices.stream()
+				.mapToDouble(v -> v.getPosition().getY())
+				.max()
+				.getAsDouble();
+
+		var domain = new RectangleDomain(minX, minY, maxX, maxY);
+
+		return domain.maxWidthHeight();
 	}
 
 	private List<OriLine> createPrecreases(final Collection<OriLine> creasePattern) {
