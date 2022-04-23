@@ -47,7 +47,7 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 
 	private List<Item> items;
 	private int selectionIndex = -1;
-	private Item item;
+	private Item item = null;
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 	public final static String ITEM = "ITEM";
@@ -58,6 +58,12 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 		build();
 	}
 
+	/**
+	 * calls {@link #selectItem(int)} with the parameter = 0 if the
+	 * {@code items} is not empty.
+	 *
+	 * @param items
+	 */
 	public void setItems(final List<Item> items) {
 		this.items = items;
 		if (items.isEmpty()) {

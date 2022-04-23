@@ -19,6 +19,7 @@
 package oripa.gui.presenter.main;
 
 import java.awt.Color;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -84,6 +85,7 @@ public class FoldedModelWindowOpener {
 			final Color frontColor,
 			final Color backColor,
 			final BiConsumer<Color, Color> saveColors,
+			final PropertyChangeListener paperDomainOfModelChangedListener,
 			final ScreenUpdater screenUpdater) {
 
 		var frames = new ArrayList<JFrame>();
@@ -131,7 +133,7 @@ public class FoldedModelWindowOpener {
 				mainScreenSetting,
 				childFrameManager);
 		modelViewFrame = modelViewFactory.createFrame(ownerView, origamiModels,
-				cutOutlinesHolder, screenUpdater::updateScreen);
+				cutOutlinesHolder, screenUpdater::updateScreen, paperDomainOfModelChangedListener);
 
 		modelViewFrame.repaint();
 		modelViewFrame.setVisible(true);

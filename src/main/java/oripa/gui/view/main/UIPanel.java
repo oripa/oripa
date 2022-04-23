@@ -26,6 +26,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
@@ -221,6 +222,8 @@ public class UIPanel extends JPanel {
 	private Color estimationResultFrontColor;
 	private Color estimationResultBackColor;
 	private BiConsumer<Color, Color> estimationResultSaveColorsListener;
+
+	private PropertyChangeListener paperDomainOfModelChangeListener;
 
 	public UIPanel(
 			final StateManager<EditMode> stateManager,
@@ -969,6 +972,10 @@ public class UIPanel extends JPanel {
 		}
 	}
 
+	public void setPaperDomainOfModelChangeListener(final PropertyChangeListener listener) {
+		paperDomainOfModelChangeListener = listener;
+	}
+
 	public void setEstimationResultColors(final Color frontColor, final Color backColor) {
 		estimationResultFrontColor = frontColor;
 		estimationResultBackColor = backColor;
@@ -1019,6 +1026,7 @@ public class UIPanel extends JPanel {
 							estimationResultFrontColor,
 							estimationResultBackColor,
 							estimationResultSaveColorsListener,
+							paperDomainOfModelChangeListener,
 							screenUpdater);
 				} catch (Exception e) {
 					logger.error("error when folding", e);

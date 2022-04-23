@@ -22,16 +22,23 @@ import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 
 import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.geom.RectangleDomain;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.ListItemSelectionPanel;
@@ -51,7 +58,8 @@ import oripa.resource.StringID;
  *
  */
 public class ModelViewFrame extends JFrame
-		implements AdjustmentListener {
+		implements AdjustmentListener, WindowListener, ComponentListener {
+
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private ModelViewScreen screen;
@@ -91,6 +99,11 @@ public class ModelViewFrame extends JFrame
 	private OrigamiModel origamiModel = null;
 
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
+
+	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+	private final String PAPER_DOMAIN = "PAPER_DOMAIN";
+	private RectangleDomain domainBeforeFolding;
+	private final Map<Object, PropertyChangeListener> paperDomainChangeListenerMap = new HashMap<>();
 
 	public ModelViewFrame(
 			final int width, final int height,
@@ -151,6 +164,9 @@ public class ModelViewFrame extends JFrame
 
 		scrollBarAngle.addAdjustmentListener(this);
 		scrollBarPosition.addAdjustmentListener(this);
+
+		addWindowListener(this);
+		addComponentListener(this);
 	}
 
 	private void addPropertyChangeListenerToComponents() {
@@ -168,6 +184,31 @@ public class ModelViewFrame extends JFrame
 				- getJMenuBar().getHeight() - 50);
 		screen.setModel(origamiModel, boundSize);
 		this.origamiModel = origamiModel;
+
+		setDomainBeforeFolding(createDomainBeforeFolding());
+	}
+
+	private RectangleDomain createDomainBeforeFolding() {
+		var domain = new RectangleDomain();
+
+		domain.enlarge(origamiModel.getVertices().stream()
+				.map(v -> v.getPositionBeforeFolding())
+				.collect(Collectors.toList()));
+
+		return domain;
+	}
+
+	private void setDomainBeforeFolding(final RectangleDomain domain) {
+		var old = domainBeforeFolding;
+		domainBeforeFolding = domain;
+		support.firePropertyChange(PAPER_DOMAIN, old, domainBeforeFolding);
+	}
+
+	public void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
+		if (paperDomainChangeListenerMap.get(parentOfListener) == null) {
+			paperDomainChangeListenerMap.put(parentOfListener, listener);
+			support.addPropertyChangeListener(PAPER_DOMAIN, listener);
+		}
 	}
 
 	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
@@ -228,6 +269,61 @@ public class ModelViewFrame extends JFrame
 			Dialogs.showErrorDialog(this, resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID),
 					e);
 		}
+	}
+
+	@Override
+	public void windowOpened(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowClosing(final WindowEvent e) {
+		setDomainBeforeFolding(null);
+	}
+
+	@Override
+	public void windowClosed(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowIconified(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowDeiconified(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowActivated(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowDeactivated(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void componentResized(final ComponentEvent e) {
+
+	}
+
+	@Override
+	public void componentMoved(final ComponentEvent e) {
+
+	}
+
+	@Override
+	public void componentShown(final ComponentEvent e) {
+
+	}
+
+	@Override
+	public void componentHidden(final ComponentEvent e) {
+		setDomainBeforeFolding(null);
 	}
 
 }

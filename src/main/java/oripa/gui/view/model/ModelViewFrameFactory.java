@@ -18,6 +18,7 @@
  */
 package oripa.gui.view.model;
 
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -46,7 +47,8 @@ public class ModelViewFrameFactory {
 	public ModelViewFrame createFrame(
 			final JComponent parent,
 			final List<OrigamiModel> origamiModels,
-			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine) {
+			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine,
+			final PropertyChangeListener onChangePaperDomain) {
 
 		ModelViewFrame frame = childFrameManager.find(parent,
 				ModelViewFrame.class);
@@ -54,6 +56,8 @@ public class ModelViewFrameFactory {
 		if (frame == null) {
 			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine, mainScreenSetting);
 		}
+
+		frame.putPaperDomainChangeListener(parent, onChangePaperDomain);
 
 		frame.setModels(origamiModels);
 

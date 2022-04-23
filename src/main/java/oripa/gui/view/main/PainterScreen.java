@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.drawer.java2d.CreasePatternObjectDrawer;
+import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -70,6 +71,8 @@ public class PainterScreen extends JPanel
 	private final CreasePatternViewContext viewContext;
 
 	private final CutModelOutlinesHolder cutOutlinesHolder;
+
+	private RectangleDomain paperDomainOfModel = null;
 
 	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
@@ -231,6 +234,10 @@ public class PainterScreen extends JPanel
 		drawer.draw(bufferObjDrawer, viewContext, paintContext,
 				action == null ? false : action.getEditMode() == EditMode.VERTEX);
 
+		if (paperDomainOfModel != null) {
+			drawPaperDomainOfModel(bufferObjDrawer);
+		}
+
 		if (viewContext.isCrossLineVisible()) {
 			var crossLines = cutOutlinesHolder.getOutlines();
 			drawer.drawAllLines(bufferObjDrawer, crossLines, camera.getScale(),
@@ -272,6 +279,15 @@ public class PainterScreen extends JPanel
 		ObjectGraphicDrawer objDrawer = new CreasePatternObjectDrawer((Graphics2D) g);
 		drawer.drawCandidatePositionString(objDrawer,
 				paintContext.getCandidateVertexToPick());
+	}
+
+	private void drawPaperDomainOfModel(final ObjectGraphicDrawer objDrawer) {
+		objDrawer.selectAssistLineColor();
+		objDrawer.selectAreaSelectionStroke(viewContext.getScale());
+		var domain = new RectangleDomain(
+				paperDomainOfModel.getLeft() - 10, paperDomainOfModel.getTop() - 10,
+				paperDomainOfModel.getRight() + 10, paperDomainOfModel.getBottom() + 10);
+		objDrawer.drawRectangle(domain.getLeftTop(), domain.getRightBottom());
 	}
 
 	@Override
@@ -462,6 +478,11 @@ public class PainterScreen extends JPanel
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
 
+	}
+
+	public void setPaperDomainOfModel(final RectangleDomain domain) {
+		paperDomainOfModel = domain;
+		repaint();
 	}
 
 	private void addPropertyChangeListenersToSetting() {
