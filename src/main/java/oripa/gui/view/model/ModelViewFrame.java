@@ -22,7 +22,10 @@ import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -84,8 +87,9 @@ public class ModelViewFrame extends JFrame
 	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
 
 	private final ListItemSelectionPanel<OrigamiModel> modelSelectionPanel = new ListItemSelectionPanel<>("Model");
-
 	private OrigamiModel origamiModel = null;
+
+	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
 
 	public ModelViewFrame(
 			final int width, final int height,
@@ -163,6 +167,17 @@ public class ModelViewFrame extends JFrame
 				- getJMenuBar().getHeight() - 50);
 		screen.setModel(origamiModel, boundSize);
 		this.origamiModel = origamiModel;
+	}
+
+	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
+		if (modelIndexChangeListenerMap.get(parentOfListener) == null) {
+			modelIndexChangeListenerMap.put(parentOfListener, listener);
+			modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
+		}
+	}
+
+	public void selectModel(final int index) {
+		modelSelectionPanel.selectItem(index);
 	}
 
 	private void addActionListenersToComponents() {

@@ -40,7 +40,9 @@ import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.gui.view.estimation.EstimationResultFrame;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
+import oripa.gui.view.model.ModelViewFrame;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.main.MainScreenSetting;
@@ -92,6 +94,9 @@ public class FoldedModelWindowOpener {
 		List<OrigamiModel> origamiModels = buildOrigamiModels(creasePattern);
 		var checker = new FoldabilityChecker();
 
+		ModelViewFrame modelViewFrame = null;
+		EstimationResultFrame resultFrame = null;
+
 		if (!origamiModels.stream().allMatch(m -> checker.testLocalFlatFoldability(m))) {
 			origamiModels.forEach(model -> folder.foldWithoutLineType(model));
 		} else {
@@ -110,7 +115,7 @@ public class FoldedModelWindowOpener {
 
 					EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 							childFrameManager);
-					var resultFrame = resultFrameFactory.createFrame(ownerView, foldedModels);
+					resultFrame = resultFrameFactory.createFrame(ownerView, foldedModels);
 
 					resultFrame.setColors(frontColor, backColor);
 					resultFrame.setSaveColorsListener(saveColors);
@@ -125,7 +130,7 @@ public class FoldedModelWindowOpener {
 		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
 				mainScreenSetting,
 				childFrameManager);
-		var modelViewFrame = modelViewFactory.createFrame(ownerView, origamiModels,
+		modelViewFrame = modelViewFactory.createFrame(ownerView, origamiModels,
 				cutOutlinesHolder, screenUpdater::updateScreen);
 
 		modelViewFrame.repaint();
@@ -133,11 +138,30 @@ public class FoldedModelWindowOpener {
 
 		frames.add(modelViewFrame);
 
+		putModelIndexChangeListener(modelViewFrame, resultFrame);
+
 		return frames;
 	}
 
 	private int countFoldablePatterns(final List<FoldedModel> foldedModels) {
 		return foldedModels.stream().mapToInt(m -> m.getFoldablePatternCount()).sum();
+	}
+
+	private void putModelIndexChangeListener(final ModelViewFrame modelViewFrame,
+			final EstimationResultFrame resultFrame) {
+		if (modelViewFrame == null || resultFrame == null) {
+			return;
+		}
+		modelViewFrame.putModelIndexChangeListener(resultFrame,
+				e -> {
+					logger.debug("modelViewFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
+					resultFrame.selectModel((Integer) e.getNewValue());
+				});
+		resultFrame.putModelIndexChangeListener(modelViewFrame,
+				e -> {
+					logger.debug("resultFrame model index change: {} -> {}", e.getOldValue(), e.getNewValue());
+					modelViewFrame.selectModel((Integer) e.getNewValue());
+				});
 	}
 
 	/**

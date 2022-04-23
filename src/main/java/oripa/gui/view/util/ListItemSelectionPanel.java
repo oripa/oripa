@@ -94,9 +94,9 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 		});
 	}
 
-	private void selectItem(final int index) {
+	public void selectItem(final int index) {
 		setSelectionIndex(index);
-		setItem(items.get(selectionIndex));
+		setItem(items.get(index));
 		updateSelectionIndexLabel();
 	}
 
@@ -105,6 +105,10 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 	};
 
 	private void setSelectionIndex(final int index) {
+		if (index < 0 || index >= items.size()) {
+			throw new IndexOutOfBoundsException(index);
+		}
+
 		int old = selectionIndex;
 		selectionIndex = index;
 		support.firePropertyChange(INDEX, old, index);

@@ -20,7 +20,10 @@ package oripa.gui.view.estimation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 import javax.swing.JFrame;
@@ -43,6 +46,9 @@ public class EstimationResultFrame extends JFrame {
 	private final EstimationResultUI ui = new EstimationResultUI();
 	private final JLabel hintLabel = new JLabel(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.HINT_LABEL_ID));;
+
+	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
+	private static final String MODEL_INDEX = "model index";
 
 	public EstimationResultFrame() {
 		setTitle(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
@@ -84,5 +90,16 @@ public class EstimationResultFrame extends JFrame {
 
 	public void setSaveColorsListener(final BiConsumer<Color, Color> listener) {
 		ui.setSaveColorsListener(listener);
+	}
+
+	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
+		if (modelIndexChangeListenerMap.get(parentOfListener) == null) {
+			modelIndexChangeListenerMap.put(parentOfListener, listener);
+			modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
+		}
+	}
+
+	public void selectModel(final int index) {
+		modelSelectionPanel.selectItem(index);
 	}
 }
