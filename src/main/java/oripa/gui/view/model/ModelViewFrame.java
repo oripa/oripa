@@ -86,7 +86,8 @@ public class ModelViewFrame extends JFrame
 	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
 	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
 
-	private final ListItemSelectionPanel<OrigamiModel> modelSelectionPanel = new ListItemSelectionPanel<>("Model");
+	private final ListItemSelectionPanel<OrigamiModel> modelSelectionPanel = new ListItemSelectionPanel<>(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.MODEL_ID));
 	private OrigamiModel origamiModel = null;
 
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();

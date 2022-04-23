@@ -41,14 +41,14 @@ public class EstimationResultFrame extends JFrame {
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
-	private final ListItemSelectionPanel<FoldedModel> modelSelectionPanel = new ListItemSelectionPanel<>("Model");
+	private final ListItemSelectionPanel<FoldedModel> modelSelectionPanel = new ListItemSelectionPanel<>(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.MODEL_ID));
 	private final FoldedModelScreen screen = new FoldedModelScreen();
 	private final EstimationResultUI ui = new EstimationResultUI();
 	private final JLabel hintLabel = new JLabel(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.HINT_LABEL_ID));;
 
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
-	private static final String MODEL_INDEX = "model index";
 
 	public EstimationResultFrame() {
 		setTitle(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
