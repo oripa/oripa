@@ -63,6 +63,10 @@ public class StringID {
 		public static final String CIRCLE_COPY_TITLE_ID = "Warning_CCTitle";
 		public static final String SAVE_TITLE_ID = "Warning_SaveTitle";
 		public static final String FAILED_TITLE_ID = "UI_FailedTitle";
+		public static final String SAVE_ON_CLOSE_TITLE_ID = "Warning_SaveOnCloseTitle";
+		public static final String SAVE_ON_CLOSE_MESSAGE_ID = "Warning_SaveOnCloseMessage";
+		public static final String MODEL_BUILD_FAILURE_TITLE_ID = "Warning_ModelBuildFailureTitle";
+		public static final String MODEL_BUILD_FAILURE_MESSAGE_ID = "Warning_ModelBuildFailureMessage";
 	}
 
 	public static class Information {

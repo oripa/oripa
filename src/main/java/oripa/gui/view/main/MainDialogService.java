@@ -100,17 +100,19 @@ public class MainDialogService {
 	public int showModelBuildFailureDialog(final Component ownerView) {
 		return JOptionPane.showConfirmDialog(
 				ownerView,
-				"Warning: Building a set of polygons from crease pattern "
-						+ "was failed.",
-				"Warning", JOptionPane.OK_CANCEL_OPTION,
+				resources.getString(ResourceKey.WARNING, StringID.Warning.MODEL_BUILD_FAILURE_MESSAGE_ID),
+				resources.getString(ResourceKey.WARNING, StringID.Warning.MODEL_BUILD_FAILURE_TITLE_ID),
+				JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.WARNING_MESSAGE);
 	}
 
 	public int showSaveOnCloseDialog(final Component ownerView) {
 		return JOptionPane.showConfirmDialog(
 				ownerView,
-				"The crease pattern has been modified. Would you like to save?",
-				"Comfirm to save", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				resources.getString(ResourceKey.WARNING, StringID.Warning.SAVE_ON_CLOSE_MESSAGE_ID),
+				resources.getString(ResourceKey.WARNING, StringID.Warning.SAVE_ON_CLOSE_TITLE_ID),
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE);
 	}
 
 	public void showAboutAppMessage(final Component ownerView) {
