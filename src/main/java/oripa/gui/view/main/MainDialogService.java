@@ -98,10 +98,25 @@ public class MainDialogService {
 	}
 
 	public int showModelBuildFailureDialog(final Component ownerView) {
-		return JOptionPane.showConfirmDialog(null,
+		return JOptionPane.showConfirmDialog(
+				ownerView,
 				"Warning: Building a set of polygons from crease pattern "
 						+ "was failed.",
 				"Warning", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.WARNING_MESSAGE);
+	}
+
+	public int showSaveOnCloseDialog(final Component ownerView) {
+		return JOptionPane.showConfirmDialog(
+				ownerView,
+				"The crease pattern has been modified. Would you like to save?",
+				"Comfirm to save", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+	}
+
+	public void showAboutAppMessage(final Component ownerView) {
+		JOptionPane.showMessageDialog(ownerView,
+				resources.getString(ResourceKey.APP_INFO, StringID.AppInfo.ABOUT_THIS_ID),
+				resources.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 }
