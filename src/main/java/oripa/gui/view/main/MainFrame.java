@@ -29,6 +29,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import javax.swing.JFrame;
@@ -161,6 +162,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL,
 					StringID.Main.PROPERTY_ID));
 
+	private JMenuItem menuItemImport;
+
 	// edit menu items
 	/**
 	 * For changing outline
@@ -279,11 +282,12 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		createPaintMenuItems();
 		IntStream.range(0, Constants.MRUFILE_NUM)
 				.forEach(i -> MRUFilesMenuItem[i] = new JMenuItem());
-		addActionListenersToComponents();
 
 		// Building the menu bar
 		JMenuBar menuBar = new JMenuBar();
 		buildFileMenu();
+
+		addActionListenersToComponents();
 
 		menuEdit.add(menuItemCopyAndPaste);
 		menuEdit.add(menuItemCutAndPaste);
@@ -347,6 +351,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		});
 
 		menuItemOpen.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_O));
+
+		addImportActionListener();
 
 		menuItemSave.addActionListener(e -> {
 			var filePath = document.getDataFilePath();
@@ -455,6 +461,32 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		uiPanel.setPaperDomainOfModelChangeListener(
 				e -> mainScreen.setPaperDomainOfModel((RectangleDomain) e.getNewValue()));
+	}
+
+	/**
+	 * Ensure the execution order as loading file comes first.
+	 */
+	private void addImportActionListener() {
+		var original = Arrays.asList(menuItemImport.getActionListeners());
+		original.forEach(menuItemImport::removeActionListener);
+
+		menuItemImport.addActionListener(e -> {
+			try {
+				dataFileAccess
+						.loadFile(null, fileHistory.getLastPath(), this, filterSelector.getLoadables())
+						.ifPresent(otherDoc -> {
+							paintContext.getPainter().resetSelectedOriLines();
+							var otherCreasePattern = otherDoc.getCreasePattern();
+							otherCreasePattern.forEach(l -> l.selected = true);
+							paintContext.getCreasePattern().addAll(otherCreasePattern);
+						});
+				original.forEach(listener -> listener.actionPerformed(e));
+			} catch (IllegalArgumentException | FileVersionError | WrongDataFormatException | IOException ex) {
+				logger.error("failed to load (import)", ex);
+				Dialogs.showErrorDialog(this, resourceHolder.getString(
+						ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), ex);
+			}
+		});
 	}
 
 	private void modifySavingActions() {
@@ -622,8 +654,13 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	private void buildFileMenu() {
 		menuFile.removeAll();
 
+		if (menuItemImport == null) {
+			menuItemImport = buttonFactory.create(this, JMenuItem.class, StringID.IMPORT_CP_ID, null);
+		}
+
 		menuFile.add(menuItemClear);
 		menuFile.add(menuItemOpen);
+		menuFile.add(menuItemImport);
 		menuFile.add(menuItemSave);
 		menuFile.add(menuItemSaveAs);
 		menuFile.add(menuItemSaveAsImage);

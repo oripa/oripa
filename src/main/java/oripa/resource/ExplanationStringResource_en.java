@@ -57,6 +57,8 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 			{ StringID.COPY_PASTE_ID, COPY_PASTE_TEXT },
 			{ StringID.CUT_PASTE_ID, COPY_PASTE_TEXT },
 
+			{ StringID.IMPORT_CP_ID, COPY_PASTE_TEXT },
+
 	};
 
 	@Override

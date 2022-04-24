@@ -34,7 +34,8 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 * @param changeHint
 	 *            event handler for hint.
 	 * @param actions
-	 *            additional actions.
+	 *            additional actions. These will be performed before state
+	 *            changes.
 	 */
 	public PaintBoundState(
 			final StateManager<EditMode> stateManager,
@@ -59,7 +60,8 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 * @param changeHint
 	 *            event handler for hint.
 	 * @param actions
-	 *            additional actions.
+	 *            additional actions. These will be performed before state
+	 *            changes.
 	 */
 	public PaintBoundState(
 			final Component parent,

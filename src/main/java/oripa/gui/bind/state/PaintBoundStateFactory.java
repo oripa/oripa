@@ -150,6 +150,16 @@ public class PaintBoundStateFactory {
 									.changeViewSetting() });
 			break;
 
+		case StringID.IMPORT_CP_ID:
+			state = createState(
+					stateFactory, setterFactory,
+					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
+					changeHint,
+					new ActionListener[] {
+							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
+									.changeViewSetting() });
+			break;
+
 		case StringID.SELECT_LINE_ID:
 		case StringID.ENLARGE_ID:
 			state = createLineSelectionState(parent, setterFactory, id);
