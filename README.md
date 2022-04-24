@@ -14,16 +14,18 @@ To find out more about using the software, visit the [ORIPA project's website](h
 * You can save your crease pattern as a JPG or PNG image file.
 * Cut by Ctrl + x or copy by Ctrl + c, paste by clicking left mouse button.
   On pasting mode, you can select the origin vertex by pressing Ctrl key.
+* Importing other crease pattern is available for any acceptable files such as .opx and .cp.
 * Undo by pressing Ctrl + z or clicking right mouse button.
 * Redo by pressing Ctrl + y.
 * You can select multi-lines by Dragging.
 * After selecting lines, you can scale the selected lines by scale mode.
 * On delete-line mode, you can delete multi-lines by Dragging.	
 * The folded shape can be saved as SVG. In the output, each face keeps the pre-creases (Auxiliary lines) on it.
+* Multiple crease patterns are supported. However, note that you need to save as single crease pattern if you would like to export the data as other than .opx.
 
 ### Download
 ------------
-You can download the executable jar file at the [release page](https://github.com/oripa/oripa/releases)
+You can download the executable jar file at the [release page](https://github.com/oripa/oripa/releases).
 
 To run ORIPA, **you need install JDK 11 or above.**
 
@@ -36,7 +38,6 @@ java -jar ./oripa-1.50.jar
 ### Next challenge(s)
 --------
 * Dividing lines by an input circle.
-* Importing other crease pattern.
 * Drawing copyright on saved picture.
 * Screenshot of folded model.
 
