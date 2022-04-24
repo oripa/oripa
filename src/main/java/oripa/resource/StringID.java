@@ -42,6 +42,10 @@ public class StringID {
 		public static final String PROP_DIALOG_SOURCE_ID = "PD_Source";
 		public static final String PROP_DIALOG_MEMO_ID = "PD_Memo";
 		public static final String PROP_DIALOG_OK_ID = "PD_OK_text";
+
+		public static final String ARRAY_COPY_DIALOG_TITLE_ID = "ArrayCopyDialog_Title";
+		public static final String CIRCLE_COPY_DIALOG_TITLE_ID = "CircleCopyDialog_Title";
+
 	}
 
 	public static class Error {

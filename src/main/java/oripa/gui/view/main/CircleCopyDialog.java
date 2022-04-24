@@ -31,10 +31,15 @@ import javax.swing.JTextField;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.circlecopy.CircleCopyCommand;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
 import oripa.util.Command;
 
-// TODO: Use label resource.
 public class CircleCopyDialog extends JDialog {
+
+	private final ResourceHolder resources = ResourceHolder.getInstance();
+
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JButton jButtonOK = null;
@@ -76,7 +81,7 @@ public class CircleCopyDialog extends JDialog {
 	 */
 	private void initialize() {
 		this.setSize(160, 171);
-		this.setTitle("CircleCoppy");
+		this.setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.CIRCLE_COPY_DIALOG_TITLE_ID));
 		this.setLocation(
 				owner.getLocation().x + 200,
 				owner.getLocation().y + 100);
