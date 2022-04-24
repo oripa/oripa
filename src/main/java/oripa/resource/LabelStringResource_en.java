@@ -68,6 +68,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.ADD_VERTEX_ID, "Add Vertex" },
 			{ StringID.DELETE_VERTEX_ID, "Delete Vertex" },
 			{ StringID.SELECT_ALL_LINE_ID, "Select All" },
+			{ StringID.IMPORT_CP_ID, "Import" },
 
 			{ StringID.UI.MEASURE_ID, "Measure" },
 			{ StringID.UI.FOLD_ID, "Fold..." },

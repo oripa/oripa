@@ -175,6 +175,7 @@ public class StringID {
 	public static final String EDIT_CONTOUR_ID = "EditContour";
 	public static final String SELECT_ALL_LINE_ID = "selectAll";
 	public static final String ANGLE_SNAP_ID = "angleSnap";
+	public static final String IMPORT_CP_ID = "importCP";
 
 	public static class ModelUI {
 		public static final String TITLE_ID = "ExpectedFoldedOrigami";
