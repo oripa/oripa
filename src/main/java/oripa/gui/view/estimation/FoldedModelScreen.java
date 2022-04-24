@@ -283,8 +283,13 @@ public class FoldedModelScreen extends JPanel
 //	}
 
 	public void setModel(final FoldedModel foldedModel) {
-		this.origamiModel = foldedModel.getOrigamiModel();
-		this.overlapRelationList = foldedModel.getOverlapRelationList();
+		if (foldedModel == null) {
+			this.origamiModel = null;
+			this.overlapRelationList = null;
+		} else {
+			this.origamiModel = foldedModel.getOrigamiModel();
+			this.overlapRelationList = foldedModel.getOverlapRelationList();
+		}
 
 		resetViewMatrix();
 		redrawOrigami();

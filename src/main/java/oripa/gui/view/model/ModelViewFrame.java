@@ -22,15 +22,26 @@ import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 
 import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.geom.RectangleDomain;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.Dialogs;
+import oripa.gui.view.util.ListItemSelectionPanel;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.persistence.entity.OrigamiModelDAO;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
@@ -47,7 +58,8 @@ import oripa.resource.StringID;
  *
  */
 public class ModelViewFrame extends JFrame
-		implements AdjustmentListener {
+		implements AdjustmentListener, WindowListener, ComponentListener {
+
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private ModelViewScreen screen;
@@ -82,16 +94,16 @@ public class ModelViewFrame extends JFrame
 	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
 	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
 
-	private final JPanel modelSelectionPanel = new JPanel();
-	private final JButton nextModelButton = new JButton(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.NEXT_MODEL_ID));
-	private final JButton prevModelButton = new JButton(
-			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.PREV_MODEL_ID));
-	private final JLabel selectedModelIndexLabel = new JLabel();
-
-	private List<OrigamiModel> origamiModels;
-	private int selectionIndex = 0;
+	private final ListItemSelectionPanel<OrigamiModel> modelSelectionPanel = new ListItemSelectionPanel<>(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.MODEL_ID));
 	private OrigamiModel origamiModel = null;
+
+	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
+
+	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+	private final String PAPER_DOMAIN = "PAPER_DOMAIN";
+	private RectangleDomain domainBeforeFolding;
+	private final Map<Object, PropertyChangeListener> paperDomainChangeListenerMap = new HashMap<>();
 
 	public ModelViewFrame(
 			final int width, final int height,
@@ -111,20 +123,18 @@ public class ModelViewFrame extends JFrame
 		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.TITLE_ID));
 		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine, mainScreenSetting);
 
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(screen, BorderLayout.CENTER);
-
-		buildModelSelectionPanel();
+		setLayout(new BorderLayout());
+		add(screen, BorderLayout.CENTER);
 
 		var southPanel = new JPanel();
 		southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
 		southPanel.add(modelSelectionPanel);
 		southPanel.add(hintLabel);
 
-		getContentPane().add(southPanel, BorderLayout.SOUTH);
+		add(southPanel, BorderLayout.SOUTH);
 
-		getContentPane().add(scrollBarAngle, BorderLayout.NORTH);
-		getContentPane().add(scrollBarPosition, BorderLayout.WEST);
+		add(scrollBarAngle, BorderLayout.NORTH);
+		add(scrollBarPosition, BorderLayout.WEST);
 
 		// Construct menu bar
 		JMenuBar menuBar = new JMenuBar();
@@ -144,6 +154,7 @@ public class ModelViewFrame extends JFrame
 
 		menuItemFillAlpha.setSelected(true);
 
+		addPropertyChangeListenerToComponents();
 		addActionListenersToComponents();
 
 		menuBar.add(menuFile);
@@ -153,48 +164,62 @@ public class ModelViewFrame extends JFrame
 
 		scrollBarAngle.addAdjustmentListener(this);
 		scrollBarPosition.addAdjustmentListener(this);
+
+		addWindowListener(this);
+		addComponentListener(this);
 	}
 
-	private void buildModelSelectionPanel() {
-		modelSelectionPanel.add(prevModelButton);
-		modelSelectionPanel.add(selectedModelIndexLabel);
-		modelSelectionPanel.add(nextModelButton);
-
-		prevModelButton.addActionListener(e -> {
-			if (selectionIndex == 0) {
-				return;
-			}
-			selectModel(selectionIndex - 1);
-		});
-
-		nextModelButton.addActionListener(e -> {
-			if (selectionIndex == origamiModels.size() - 1) {
-				return;
-			}
-			selectModel(selectionIndex + 1);
-		});
+	private void addPropertyChangeListenerToComponents() {
+		modelSelectionPanel.addPropertyChangeListener(
+				ListItemSelectionPanel.ITEM,
+				e -> setModel((OrigamiModel) e.getNewValue()));
 	}
-
-	private void updateSelectionModelIndexLabel() {
-		selectedModelIndexLabel.setText((selectionIndex + 1) + "/" + origamiModels.size());
-	};
 
 	public void setModels(final List<OrigamiModel> origamiModels) {
-		this.origamiModels = origamiModels;
-		selectModel(0);
-	}
-
-	private void selectModel(final int index) {
-		selectionIndex = index;
-		setModel(origamiModels.get(selectionIndex));
-		updateSelectionModelIndexLabel();
+		modelSelectionPanel.setItems(origamiModels);
 	}
 
 	private void setModel(final OrigamiModel origamiModel) {
 		int boundSize = Math.min(getWidth(), getHeight()
-				- getJMenuBar().getHeight() - 50);
+				- getJMenuBar().getHeight() - 100);
 		screen.setModel(origamiModel, boundSize);
 		this.origamiModel = origamiModel;
+
+		setDomainBeforeFolding(createDomainBeforeFolding());
+	}
+
+	private RectangleDomain createDomainBeforeFolding() {
+		var domain = new RectangleDomain();
+
+		domain.enlarge(origamiModel.getVertices().stream()
+				.map(v -> v.getPositionBeforeFolding())
+				.collect(Collectors.toList()));
+
+		return domain;
+	}
+
+	private void setDomainBeforeFolding(final RectangleDomain domain) {
+		var old = domainBeforeFolding;
+		domainBeforeFolding = domain;
+		support.firePropertyChange(PAPER_DOMAIN, old, domainBeforeFolding);
+	}
+
+	public void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
+		if (paperDomainChangeListenerMap.get(parentOfListener) == null) {
+			paperDomainChangeListenerMap.put(parentOfListener, listener);
+			support.addPropertyChangeListener(PAPER_DOMAIN, listener);
+		}
+	}
+
+	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
+		if (modelIndexChangeListenerMap.get(parentOfListener) == null) {
+			modelIndexChangeListenerMap.put(parentOfListener, listener);
+			modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX, listener);
+		}
+	}
+
+	public void selectModel(final int index) {
+		modelSelectionPanel.selectItem(index);
 	}
 
 	private void addActionListenersToComponents() {
@@ -244,6 +269,61 @@ public class ModelViewFrame extends JFrame
 			Dialogs.showErrorDialog(this, resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID),
 					e);
 		}
+	}
+
+	@Override
+	public void windowOpened(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowClosing(final WindowEvent e) {
+		setDomainBeforeFolding(null);
+	}
+
+	@Override
+	public void windowClosed(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowIconified(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowDeiconified(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowActivated(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowDeactivated(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void componentResized(final ComponentEvent e) {
+
+	}
+
+	@Override
+	public void componentMoved(final ComponentEvent e) {
+
+	}
+
+	@Override
+	public void componentShown(final ComponentEvent e) {
+
+	}
+
+	@Override
+	public void componentHidden(final ComponentEvent e) {
+		setDomainBeforeFolding(null);
 	}
 
 }

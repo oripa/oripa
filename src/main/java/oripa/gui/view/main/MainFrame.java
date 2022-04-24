@@ -54,6 +54,7 @@ import oripa.file.FileHistory;
 import oripa.file.ImageResourceLoader;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.geom.RectangleDomain;
 import oripa.gui.bind.ButtonFactory;
 import oripa.gui.bind.PaintActionButtonFactory;
 import oripa.gui.bind.state.EditModeStateManager;
@@ -203,9 +204,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL, StringID.Main.ABOUT_ID));
 
 	private UIPanel uiPanel;
-
-	// -----------------------------------------------------------------------------------------------------------
-	// Create paint button
+	private final PainterScreen mainScreen;
 
 	private final IniFileAccess iniFileAccess = new IniFileAccess(
 			new InitDataFileReader(), new InitDataFileWriter());
@@ -217,7 +216,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		document.setCreasePattern(paintContext.getCreasePattern());
 
-		var mainScreen = new PainterScreen(actionHolder,
+		mainScreen = new PainterScreen(actionHolder,
 				viewContext, paintContext,
 				document);
 		screenUpdater = mainScreen.getScreenUpdater();
@@ -453,6 +452,9 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 			menuItemSave.doClick();
 		});
+
+		uiPanel.setPaperDomainOfModelChangeListener(
+				e -> mainScreen.setPaperDomainOfModel((RectangleDomain) e.getNewValue()));
 	}
 
 	private void modifySavingActions() {

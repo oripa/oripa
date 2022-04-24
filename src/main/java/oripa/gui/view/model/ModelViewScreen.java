@@ -83,8 +83,6 @@ public class ModelViewScreen extends JPanel
 	private final CallbackOnUpdate onUpdateScissorsLine;
 	private final MainScreenSetting mainScreenSetting;
 
-	private Vector2d mousePoint;
-
 	public ModelViewScreen(final CutModelOutlinesHolder aLineHolder, final CallbackOnUpdate c,
 			final MainScreenSetting mainScreenSetting) {
 

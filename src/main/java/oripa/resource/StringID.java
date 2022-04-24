@@ -125,6 +125,8 @@ public class StringID {
 	public static class EstimationResultUI {
 		public static final String TITLE_ID = "ER_Title";
 
+		public static final String MODEL_ID = "ER_Model";
+
 		public static final String ANSWERS_PANEL_ID = "ER_Answer_Panel";
 		public static final String NEXT_RESULT_ID = "ER_Next_Result";
 		public static final String PREV_RESULT_ID = "ER_Prev_Result";
@@ -175,6 +177,10 @@ public class StringID {
 	public static final String ANGLE_SNAP_ID = "angleSnap";
 
 	public static class ModelUI {
+		public static final String TITLE_ID = "ExpectedFoldedOrigami";
+
+		public static final String MODEL_ID = "Model_Model";
+
 		public static final String FILE_ID = "ModelFile";
 		public static final String DISPLAY_ID = "MENU_Disp";
 		public static final String EXPORT_DXF_ID = "MENU_ExportModelLine_DXF";
@@ -186,7 +192,6 @@ public class StringID {
 		public static final String DISPLAY_TYPE_ID = "MENU_DispType";
 		public static final String FILL_ALPHA_ID = "MENU_FillAlpha";
 		public static final String DRAW_LINES_ID = "MENU_DrawLines";
-		public static final String TITLE_ID = "ExpectedFoldedOrigami";
 		public static final String SHOW_CROSS_LINE_ID = "ShowCrossLine";
 		public static final String NEXT_MODEL_ID = "Model_NextModel";
 		public static final String PREV_MODEL_ID = "Model_PrevModel";
