@@ -57,6 +57,9 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.Main.PROP_DIALOG_MEMO_ID, "Memo" },
 			{ StringID.Main.PROP_DIALOG_OK_ID, "OK" },
 
+			{ StringID.Main.ARRAY_COPY_DIALOG_TITLE_ID, "Array Copy" },
+			{ StringID.Main.CIRCLE_COPY_DIALOG_TITLE_ID, "Circle Copy" },
+
 			// ---------------------------------------------------------
 			// Integrated IDs
 			{ StringID.COPY_PASTE_ID, "Copy and Paste" },

@@ -98,10 +98,27 @@ public class MainDialogService {
 	}
 
 	public int showModelBuildFailureDialog(final Component ownerView) {
-		return JOptionPane.showConfirmDialog(null,
-				"Warning: Building a set of polygons from crease pattern "
-						+ "was failed.",
-				"Warning", JOptionPane.OK_CANCEL_OPTION,
+		return JOptionPane.showConfirmDialog(
+				ownerView,
+				resources.getString(ResourceKey.WARNING, StringID.Warning.MODEL_BUILD_FAILURE_MESSAGE_ID),
+				resources.getString(ResourceKey.WARNING, StringID.Warning.MODEL_BUILD_FAILURE_TITLE_ID),
+				JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.WARNING_MESSAGE);
+	}
+
+	public int showSaveOnCloseDialog(final Component ownerView) {
+		return JOptionPane.showConfirmDialog(
+				ownerView,
+				resources.getString(ResourceKey.WARNING, StringID.Warning.SAVE_ON_CLOSE_MESSAGE_ID),
+				resources.getString(ResourceKey.WARNING, StringID.Warning.SAVE_ON_CLOSE_TITLE_ID),
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE);
+	}
+
+	public void showAboutAppMessage(final Component ownerView) {
+		JOptionPane.showMessageDialog(ownerView,
+				resources.getString(ResourceKey.APP_INFO, StringID.AppInfo.ABOUT_THIS_ID),
+				resources.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 }

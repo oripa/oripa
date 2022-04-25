@@ -413,10 +413,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		menuItemClear.addActionListener(e -> clear());
 		menuItemClear.setAccelerator(KeyStrokes.getWithControlDown(KeyEvent.VK_N));
 
-		menuItemAbout.addActionListener(e -> JOptionPane.showMessageDialog(this,
-				resourceHolder.getString(ResourceKey.APP_INFO, StringID.AppInfo.ABOUT_THIS_ID),
-				resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID),
-				JOptionPane.INFORMATION_MESSAGE));
+		menuItemAbout.addActionListener(e -> dialogService.showAboutAppMessage(this));
 
 		menuItemExportDXF
 				.addActionListener(e -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
@@ -814,13 +811,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 	public void windowClosing(final WindowEvent arg0) {
 
 		if (paintContext.creasePatternUndo().changeExists()) {
-			// TODO: Use string resource.
 			// confirm saving edited opx
-			int selected = JOptionPane
-					.showConfirmDialog(
-							this,
-							"The crease pattern has been modified. Would you like to save?",
-							"Comfirm to save", JOptionPane.YES_NO_OPTION);
+			int selected = dialogService.showSaveOnCloseDialog(this);
 			if (selected == JOptionPane.YES_OPTION) {
 
 				document.setCreasePattern(paintContext.getCreasePattern());

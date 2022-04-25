@@ -33,10 +33,14 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.arraycopy.ArrayCopyFillerCommand;
 import oripa.domain.paint.arraycopy.ArrayCopyTilerCommand;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
 import oripa.util.Command;
 
-// TODO: Use label resource.
 public class ArrayCopyDialog extends JDialog {
+
+	private final ResourceHolder resources = ResourceHolder.getInstance();
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -80,7 +84,7 @@ public class ArrayCopyDialog extends JDialog {
 		this.setSize(123, 249);
 		this.setLocation(owner.getLocation().x + 200,
 				owner.getLocation().y + 100);
-		this.setTitle("ArrayCopy");
+		this.setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.ARRAY_COPY_DIALOG_TITLE_ID));
 		this.setContentPane(getJContentPane(context));
 	}
 

@@ -42,6 +42,10 @@ public class StringID {
 		public static final String PROP_DIALOG_SOURCE_ID = "PD_Source";
 		public static final String PROP_DIALOG_MEMO_ID = "PD_Memo";
 		public static final String PROP_DIALOG_OK_ID = "PD_OK_text";
+
+		public static final String ARRAY_COPY_DIALOG_TITLE_ID = "ArrayCopyDialog_Title";
+		public static final String CIRCLE_COPY_DIALOG_TITLE_ID = "CircleCopyDialog_Title";
+
 	}
 
 	public static class Error {
@@ -63,6 +67,10 @@ public class StringID {
 		public static final String CIRCLE_COPY_TITLE_ID = "Warning_CCTitle";
 		public static final String SAVE_TITLE_ID = "Warning_SaveTitle";
 		public static final String FAILED_TITLE_ID = "UI_FailedTitle";
+		public static final String SAVE_ON_CLOSE_TITLE_ID = "Warning_SaveOnCloseTitle";
+		public static final String SAVE_ON_CLOSE_MESSAGE_ID = "Warning_SaveOnCloseMessage";
+		public static final String MODEL_BUILD_FAILURE_TITLE_ID = "Warning_ModelBuildFailureTitle";
+		public static final String MODEL_BUILD_FAILURE_MESSAGE_ID = "Warning_ModelBuildFailureMessage";
 	}
 
 	public static class Information {

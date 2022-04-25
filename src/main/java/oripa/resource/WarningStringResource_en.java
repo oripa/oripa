@@ -21,6 +21,15 @@ public class WarningStringResource_en extends ListResourceBundle {
 					"Save" },
 			{ StringID.Warning.FAILED_TITLE_ID,
 					"Failed" },
+			{ StringID.Warning.SAVE_ON_CLOSE_TITLE_ID,
+					"Comfirm to save" },
+			{ StringID.Warning.SAVE_ON_CLOSE_MESSAGE_ID,
+					"The crease pattern has been modified. Would you like to save?" },
+			{ StringID.Warning.MODEL_BUILD_FAILURE_TITLE_ID,
+					"Warning" },
+			{ StringID.Warning.MODEL_BUILD_FAILURE_MESSAGE_ID,
+					"Warning: Building a set of polygons from crease pattern "
+							+ "was failed." },
 
 	};
 
