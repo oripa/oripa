@@ -18,10 +18,13 @@
  */
 package oripa.value;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
+import javax.vecmath.Vector2d;
 
 import org.junit.jupiter.api.Test;
+
+import oripa.geom.Segment;
 
 /**
  * @author OUCHI Koji
@@ -47,4 +50,11 @@ class OriLineTest {
 
 	}
 
+	@Test
+	void testAffineValues() {
+		Segment segment = new OriLine(new Vector2d(0, 2), new Vector2d(1, 0), OriLine.Type.MOUNTAIN);
+
+		assertEquals(1, segment.getAffineYValueAt(0.5), 1e-8);
+		assertEquals(0.5, segment.getAffineXValueAt(1), 1e-8);
+	}
 }

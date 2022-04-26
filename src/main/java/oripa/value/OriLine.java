@@ -133,24 +133,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	}
 
 	/**
-	 * Calculates the affine value on the line, at the {@code xTested}
-	 * coordinate using the y = ax + b expression
-	 */
-	@Override
-	public double getAffineYValueAt(final double xTested) {
-		return (p1.y - p0.y) * (xTested - p0.x) / (p1.x - p0.x) + p0.y;
-	}
-
-	/**
-	 * Calculates the affine value on the line, at the {@code yTested}
-	 * coordinate using the x = ay + b expression
-	 */
-	@Override
-	public double getAffineXValueAt(final double yTested) {
-		return (p1.x - p0.x) * (yTested - p0.y) / (p1.y - p0.y) + p0.x;
-	}
-
-	/**
 	 * gives order to this class's object.
 	 *
 	 * line type is not in comparison because there is only one line in the real
