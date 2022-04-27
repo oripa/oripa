@@ -31,8 +31,7 @@ import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
-import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
-import oripa.value.CalculationResource;
+import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.value.OriLine;
 
 /**
@@ -105,16 +104,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 				originalDomain.getRightTop(),
 				originalDomain.getRightBottom());
 
-		var nearest = NearestVertexFinder.findNearestVertex(
-				viewContext.getLogicalMousePoint(), points);
-
-		if (nearest.distance < CalculationResource.CLOSE_THRESHOLD * 2) {
-			mouseStartPoint = nearest.point;
-
-			return mouseStartPoint;
-		}
-
-		mouseStartPoint = null;
+		mouseStartPoint = NearestItemFinder.getNearestVertex(viewContext, points);
 		return mouseStartPoint;
 	}
 
