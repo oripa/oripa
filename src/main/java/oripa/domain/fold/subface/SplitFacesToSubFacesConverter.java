@@ -34,7 +34,7 @@ public class SplitFacesToSubFacesConverter {
 	 *
 	 * @param splitFaces
 	 *            result of
-	 *            {@link OrigamiModelFactory#buildOrigami(java.util.Collection, double)}
+	 *            {@link OrigamiModelFactory#buildOrigamiForSubfaces(java.util.Collection, double)}
 	 *            where the parameter collection contains edges after fold.
 	 * @return
 	 */

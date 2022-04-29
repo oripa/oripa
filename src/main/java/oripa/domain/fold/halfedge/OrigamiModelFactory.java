@@ -74,7 +74,7 @@ public class OrigamiModelFactory {
 	 * @return A model data converted from crease pattern.
 	 */
 	// TODO: change as: throw error if creation failed.
-	public OrigamiModel buildOrigami(
+	public OrigamiModel buildOrigamiForSubfaces(
 			final Collection<OriLine> creasePattern, final double paperSize) {
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
