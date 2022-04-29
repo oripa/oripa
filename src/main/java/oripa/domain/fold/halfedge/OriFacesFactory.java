@@ -162,14 +162,8 @@ public class OriFacesFactory {
 //						throw new UnfoldableModelException("algorithmic error");
 				return null;
 			}
-			OriHalfedge he = new OriHalfedge(walkV, face);
-			face.addHalfedge(he);
-			he.setTemporaryType(walkE.getType());
-			if (walkE.getStartVertex() == walkV) {
-				walkE.setLeft(he);
-			} else {
-				walkE.setRight(he);
-			}
+
+			setHalfedgeToFaceAndEdge(walkV, walkE, face);
 
 			walkV = walkE.oppositeVertex(walkV);
 			walkE = walkV.getPrevEdge(walkE); // to make a loop in clockwise
@@ -189,14 +183,9 @@ public class OriFacesFactory {
 //						throw new UnfoldableModelException("algorithmic error");
 				return null;
 			}
-			OriHalfedge he = new OriHalfedge(walkV, face);
-			face.addHalfedge(he);
-			he.setTemporaryType(walkE.getType());
-			if (walkE.getStartVertex() == walkV) {
-				walkE.setLeft(he);
-			} else {
-				walkE.setRight(he);
-			}
+
+			setHalfedgeToFaceAndEdge(walkV, walkE, face);
+
 			walkV = walkE.oppositeVertex(walkV);
 			do {
 				walkE = walkV.getPrevEdge(walkE); // to make a loop in clockwise
@@ -205,6 +194,17 @@ public class OriFacesFactory {
 		} while (walkV != startingVertex);
 		face.makeHalfedgeLoop();
 		return face;
+	}
+
+	private void setHalfedgeToFaceAndEdge(final OriVertex walkV, final OriEdge walkE, final OriFace face) {
+		OriHalfedge he = new OriHalfedge(walkV, face);
+		face.addHalfedge(he);
+		he.setTemporaryType(walkE.getType());
+		if (walkE.getStartVertex() == walkV) {
+			walkE.setLeft(he);
+		} else {
+			walkE.setRight(he);
+		}
 	}
 
 }
