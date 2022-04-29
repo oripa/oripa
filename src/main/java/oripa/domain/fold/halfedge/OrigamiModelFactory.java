@@ -37,6 +37,7 @@ public class OrigamiModelFactory {
 	private final OriVerticesFactory verticesFactory = new OriVerticesFactory();
 	private final OriEdgesFactory edgesFactory = new OriEdgesFactory();
 	private final OriFacesFactory facesFactory = new OriFacesFactory();
+	private final ModelVerticesExtractor modelExtractor = new ModelVerticesExtractor();
 
 	/**
 	 * Constructs the half-edge based data structure which describes relation
@@ -179,7 +180,7 @@ public class OrigamiModelFactory {
 		var boundaryFaces = facesFactory.createBoundaryFaces(boundaryVertices);
 
 		for (var boundaryFace : boundaryFaces) {
-			var extracted = new ModelVerticesExtractor().extractByBoundary(
+			var extracted = modelExtractor.extractByBoundary(
 					wholeVertices, precreases, boundaryFace);
 
 			origamiModels.add(create(extracted.getVertices(), extracted.getPrecreases()));
