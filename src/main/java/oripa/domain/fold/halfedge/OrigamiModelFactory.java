@@ -37,6 +37,9 @@ public class OrigamiModelFactory {
 	private final OriVerticesFactory verticesFactory = new OriVerticesFactory();
 	private final OriEdgesFactory edgesFactory = new OriEdgesFactory();
 	private final OriFacesFactory facesFactory = new OriFacesFactory();
+
+	private final ElementRemover remover = new ElementRemover();
+
 	private final ModelVerticesExtractor modelExtractor = new ModelVerticesExtractor();
 
 	/**
@@ -127,8 +130,6 @@ public class OrigamiModelFactory {
 				.filter(line -> !line.isAux())
 				.collect(Collectors.toSet());
 
-		var remover = new ElementRemover();
-
 		List<OriLine> precreases = createPrecreases(creasePattern);
 
 		logger.debug(
@@ -156,8 +157,6 @@ public class OrigamiModelFactory {
 				.collect(Collectors.toSet());
 
 		List<OriLine> precreases = createPrecreases(creasePattern);
-
-		var remover = new ElementRemover();
 
 		logger.debug(
 				"removeMeaninglessVertices() start: " + watch.getMilliSec() + "[ms]");
