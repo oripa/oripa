@@ -219,27 +219,12 @@ public class OrigamiModelFactory {
 	}
 
 	private double computePaperSize(final List<OriVertex> vertices) {
-		double minX = vertices.stream()
-				.mapToDouble(v -> v.getPosition().getX())
-				.min()
-				.getAsDouble();
 
-		double maxX = vertices.stream()
-				.mapToDouble(v -> v.getPosition().getX())
-				.max()
-				.getAsDouble();
+		var domain = new RectangleDomain();
 
-		double minY = vertices.stream()
-				.mapToDouble(v -> v.getPosition().getY())
-				.min()
-				.getAsDouble();
-
-		double maxY = vertices.stream()
-				.mapToDouble(v -> v.getPosition().getY())
-				.max()
-				.getAsDouble();
-
-		var domain = new RectangleDomain(minX, minY, maxX, maxY);
+		domain.enlarge(vertices.stream()
+				.map(v -> v.getPosition())
+				.collect(Collectors.toList()));
 
 		return domain.maxWidthHeight();
 	}
