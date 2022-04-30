@@ -174,12 +174,12 @@ public class OrigamiModelFactory {
 		var origamiModels = new ArrayList<OrigamiModel>();
 
 		for (var boundaryFace : boundaryFaces) {
-			var extractedVertices = componentExtractor.extractByBoundary(
+			var modelVertices = componentExtractor.extractByBoundary(
 					wholeVertices, boundaryFace);
-			var extractedPrecreases = componentExtractor.extractByBoundary(
+			var modelPrecreases = componentExtractor.extractByBoundary(
 					precreases, boundaryFace);
 
-			origamiModels.add(create(extractedVertices, extractedPrecreases));
+			origamiModels.add(create(modelVertices, modelPrecreases));
 		}
 
 		logger.debug("create origami models: {}", origamiModels);
