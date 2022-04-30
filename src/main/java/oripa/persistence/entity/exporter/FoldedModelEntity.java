@@ -16,58 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
-
-import java.util.List;
+package oripa.persistence.entity.exporter;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 
 /**
- * An entity of folded model.
- *
  * @author OUCHI Koji
  *
  */
-public class FoldedModel {
+public class FoldedModelEntity {
 	private final OrigamiModel origamiModel;
-	private final List<OverlapRelation> overlapRelations;
+	private final OverlapRelation overlapRelation;
 
-	/**
-	 * Constructor
-	 */
-	public FoldedModel(final OrigamiModel origamiModel, final List<OverlapRelation> overlapRelations) {
+	public FoldedModelEntity(final OrigamiModel origamiModel, final OverlapRelation overlapRelation) {
 		this.origamiModel = origamiModel;
-		this.overlapRelations = overlapRelations;
+		this.overlapRelation = overlapRelation;
 	}
 
-	/**
-	 * @return origamiModel
-	 */
 	public OrigamiModel getOrigamiModel() {
 		return origamiModel;
 	}
 
-	/**
-	 * @return overlapRelations
-	 */
-	public List<OverlapRelation> getOverlapRelations() {
-		return overlapRelations;
-	}
-
-	/**
-	 *
-	 * @return the number of foldable patterns.
-	 */
-	public int getFoldablePatternCount() {
-		return overlapRelations.size();
-	}
-
-	/**
-	 *
-	 * @return whether the model is after fold or not.
-	 */
-	public boolean isFolded() {
-		return origamiModel.isFolded();
+	public OverlapRelation getOverlapRelation() {
+		return overlapRelation;
 	}
 }

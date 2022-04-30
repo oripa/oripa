@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.persistence.filetool.FileAccessSupportFilter;
 import oripa.persistence.filetool.FileChooserCanceledException;
 
@@ -34,17 +35,17 @@ import oripa.persistence.filetool.FileChooserCanceledException;
  *
  */
 public class EstimationResultFileAccess {
-	private final DataAccessObject<FoldedModel> dao;
+	private final DataAccessObject<FoldedModelEntity> dao;
 
 	/**
 	 * Constructor
 	 */
-	public EstimationResultFileAccess(final DataAccessObject<FoldedModel> dao) {
+	public EstimationResultFileAccess(final DataAccessObject<FoldedModelEntity> dao) {
 		this.dao = dao;
 	}
 
-	public String saveFile(final FoldedModel foldedModel, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<FoldedModel>... filters)
+	public String saveFile(final FoldedModelEntity foldedModel, final String lastFilePath,
+			final Component owner, final FileAccessSupportFilter<FoldedModelEntity>... filters)
 			throws IllegalArgumentException, IOException {
 		try {
 			return dao.saveUsingGUI(foldedModel, lastFilePath, owner, filters);

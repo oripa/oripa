@@ -23,21 +23,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import oripa.domain.fold.FoldedModel;
-import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.persistence.filetool.Exporter;
 
 // export folded model
-public class ExporterORmat implements Exporter<FoldedModel> {
+public class ExporterORmat implements Exporter<FoldedModelEntity> {
 
 	@Override
-	public boolean export(final FoldedModel foldedModel, final String filepath)
+	public boolean export(final FoldedModelEntity foldedModel, final String filepath)
 			throws IOException, IllegalArgumentException {
 		OrigamiModel origamiModel = foldedModel.getOrigamiModel();
-		OverlapRelationList overlapRelationList = foldedModel.getOverlapRelationList();
+		OverlapRelation overlapRelation = foldedModel.getOverlapRelation();
 
 		try (var fw = new FileWriter(filepath);
 				var bw = new BufferedWriter(fw);) {
@@ -78,7 +77,6 @@ public class ExporterORmat implements Exporter<FoldedModel> {
 			bw.write("# 9: UNDEFINED (not used)\n");
 			bw.write("# matrix size (face num) =" + faceNum + "\n");
 
-			var overlapRelation = overlapRelationList.getOverlapRelation();
 			for (int f0 = 0; f0 < faceNum; f0++) {
 				for (int f1 = 0; f1 < faceNum; f1++) {
 					bw.write("" + overlapRelation.get(f0, f1) + " ");

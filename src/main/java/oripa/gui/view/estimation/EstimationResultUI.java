@@ -26,7 +26,6 @@ import java.util.function.BiConsumer;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 
@@ -35,13 +34,15 @@ import org.slf4j.LoggerFactory;
 
 import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.domain.fold.FoldedModel;
-import oripa.domain.fold.OverlapRelationList;
+import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.gui.view.util.ColorRGBPanel;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
+import oripa.gui.view.util.ListItemSelectionPanel;
 import oripa.gui.view.util.TitledBorderFactory;
 import oripa.persistence.entity.FoldedModelDAO;
 import oripa.persistence.entity.FoldedModelFilterSelector;
+import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -53,19 +54,11 @@ public class EstimationResultUI extends JPanel {
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
-	private final String indexLabelString = resources.getString(ResourceKey.LABEL,
-			StringID.EstimationResultUI.INDEX_ID);
-
 	// JPanel drawing the model estimation
 	private FoldedModelScreen screen;
 
 	// setup components used
-	private final JLabel indexLabel = new JLabel();
-
-	private final JButton nextAnswerButton = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.NEXT_RESULT_ID));
-	private final JButton prevAnswerButton = new JButton(
-			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.PREV_RESULT_ID));
+	private final ListItemSelectionPanel<OverlapRelation> answerSelectionPanel = new ListItemSelectionPanel<>("");
 
 	private final JCheckBox orderCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ORDER_FLIP_ID));
@@ -94,7 +87,7 @@ public class EstimationResultUI extends JPanel {
 	private String lastFilePath = null;
 
 	private FoldedModel foldedModel;
-	private OverlapRelationList overlapRelationList = null;
+	private OverlapRelation overlapRelation;
 
 	private BiConsumer<Color, Color> saveColorsListener;
 
@@ -129,9 +122,7 @@ public class EstimationResultUI extends JPanel {
 	 */
 	public void setModel(final FoldedModel foldedModel) {
 		this.foldedModel = foldedModel;
-		this.overlapRelationList = foldedModel.getOverlapRelationList();
-
-		this.updateIndexLabel();
+		answerSelectionPanel.setItems(foldedModel.getOverlapRelations());
 	}
 
 	/**
@@ -158,7 +149,6 @@ public class EstimationResultUI extends JPanel {
 				.setAnchor(GridBagConstraints.LAST_LINE_START);
 		add(exportButton, gbBuilder.getLineField());
 
-		updateIndexLabel();
 		initialCheckBoxSetting();
 		addActionListenersToComponents();
 	}
@@ -167,16 +157,12 @@ public class EstimationResultUI extends JPanel {
 	 * register listeners with all used components
 	 */
 	private void addActionListenersToComponents() {
-		nextAnswerButton.addActionListener(e -> {
-			overlapRelationList.setNextIndex();
-			screen.redrawOrigami();
-			updateIndexLabel();
-		});
-		prevAnswerButton.addActionListener(e -> {
-			overlapRelationList.setPrevIndex();
-			screen.redrawOrigami();
-			updateIndexLabel();
-		});
+		answerSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.ITEM,
+				e -> {
+					var newValue = (OverlapRelation) e.getNewValue();
+					overlapRelation = newValue;
+					screen.setOverlapRelation(newValue);
+				});
 
 		orderCheckBox.addItemListener(e -> {
 			screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
@@ -222,13 +208,15 @@ public class EstimationResultUI extends JPanel {
 		answerShiftPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
 				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ANSWERS_PANEL_ID)));
 
-		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
-				.setWeight(0.5, 1.0);
+//		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
+//				.setWeight(0.5, 1.0);
 
-		answerShiftPanel.add(prevAnswerButton, gbBuilder.getNextField());
-		answerShiftPanel.add(nextAnswerButton, gbBuilder.getNextField());
+		answerShiftPanel.add(answerSelectionPanel);
 
-		answerShiftPanel.add(indexLabel, gbBuilder.getLineField());
+//		answerShiftPanel.add(prevAnswerButton, gbBuilder.getNextField());
+//		answerShiftPanel.add(nextAnswerButton, gbBuilder.getNextField());
+//
+//		answerShiftPanel.add(indexLabel, gbBuilder.getLineField());
 
 		return answerShiftPanel;
 	}
@@ -270,21 +258,6 @@ public class EstimationResultUI extends JPanel {
 		return colorPanel;
 	}
 
-	/**
-	 * update the label showing which estimation is currently shown on screen
-	 */
-	private void updateIndexLabel() {
-
-		if (overlapRelationList == null) {
-			return;
-		}
-
-		indexLabel.setText(indexLabelString + " ["
-				+ (overlapRelationList.getCurrentIndex() + 1) + "/"
-				+ overlapRelationList.getCount() + "]");
-
-	}
-
 	public void setColors(final Color front, final Color back) {
 		logger.debug("Front color = {}", front);
 		logger.debug("Back color = {}", back);
@@ -304,7 +277,10 @@ public class EstimationResultUI extends JPanel {
 			var filterSelector = new FoldedModelFilterSelector(screen.isFaceOrderFlipped());
 			final FoldedModelDAO dao = new FoldedModelDAO(filterSelector);
 			EstimationResultFileAccess fileAccess = new EstimationResultFileAccess(dao);
-			lastFilePath = fileAccess.saveFile(foldedModel, lastFilePath, this,
+
+			var entity = new FoldedModelEntity(foldedModel.getOrigamiModel(), overlapRelation);
+
+			lastFilePath = fileAccess.saveFile(entity, lastFilePath, this,
 					filterSelector.getSavables());
 		} catch (Exception ex) {
 			logger.error("error: ", ex);

@@ -18,18 +18,18 @@
  */
 package oripa.persistence.entity;
 
-import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.AbstractFilterSelector;
+import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.persistence.filetool.FileTypeProperty;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class FoldedModelDAO extends AbstractFileDAO<FoldedModel> {
-	private final AbstractFilterSelector<FoldedModel> selector;
+public class FoldedModelDAO extends AbstractFileDAO<FoldedModelEntity> {
+	private final AbstractFilterSelector<FoldedModelEntity> selector;
 
 	/**
 	 * Constructor
@@ -39,7 +39,7 @@ public class FoldedModelDAO extends AbstractFileDAO<FoldedModel> {
 	 *            {@link AbstractFileDAO#save(OrigamiModel, String, FileTypeProperty)},
 	 *            {@code selector} can be null.
 	 */
-	public FoldedModelDAO(final AbstractFilterSelector<FoldedModel> selector) {
+	public FoldedModelDAO(final AbstractFilterSelector<FoldedModelEntity> selector) {
 		this.selector = selector;
 	}
 
@@ -47,7 +47,7 @@ public class FoldedModelDAO extends AbstractFileDAO<FoldedModel> {
 	 * @see oripa.persistent.dao.AbstractDAO#getFilterSelector()
 	 */
 	@Override
-	protected AbstractFilterSelector<FoldedModel> getFilterSelector() {
+	protected AbstractFilterSelector<FoldedModelEntity> getFilterSelector() {
 		return selector;
 	}
 

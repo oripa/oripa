@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -78,7 +80,7 @@ public class LayerOrderEnumerator {
 		this.subFacesFactory = subFacesFactory;
 	}
 
-	public OverlapRelationList enumerate(final OrigamiModel origamiModel) {
+	public List<OverlapRelation> enumerate(final OrigamiModel origamiModel) {
 		var faces = origamiModel.getFaces();
 		var edges = origamiModel.getEdges();
 
@@ -128,7 +130,7 @@ public class LayerOrderEnumerator {
 				.map(Entry::getKey)
 				.collect(Collectors.toList());
 
-		var overlapRelationList = new OverlapRelationList();
+		var overlapRelations = Collections.synchronizedList(new ArrayList<OverlapRelation>());
 
 		watch.start();
 
@@ -136,7 +138,7 @@ public class LayerOrderEnumerator {
 		callCount = new AtomicInteger();
 		penetrationTestCallCount = new AtomicInteger();
 		penetrationCount = new AtomicInteger();
-		findAnswer(faces, overlapRelationList, 0, overlapRelation, changedFaceIDs);
+		findAnswer(faces, overlapRelations, 0, overlapRelation, changedFaceIDs);
 		var time = watch.getMilliSec();
 
 		logger.debug("#call = {}", callCount);
@@ -144,7 +146,7 @@ public class LayerOrderEnumerator {
 		logger.debug("#penetration = {}", penetrationCount);
 		logger.debug("time = {}[ms]", time);
 
-		return overlapRelationList;
+		return overlapRelations;
 	}
 
 	private double eps(final double paperSize) {
@@ -233,7 +235,7 @@ public class LayerOrderEnumerator {
 	 *
 	 * @param faces
 	 *            all faces of the origami model.
-	 * @param overlapRelationList
+	 * @param overlapRelations
 	 *            an object to store the result
 	 * @param subFaceIndex
 	 *            the index of subface to be used
@@ -245,7 +247,7 @@ public class LayerOrderEnumerator {
 	 */
 	private void findAnswer(
 			final List<OriFace> faces,
-			final OverlapRelationList overlapRelationList, final int subFaceIndex,
+			final List<OverlapRelation> overlapRelations, final int subFaceIndex,
 			final OverlapRelation overlapRelation,
 			final Set<Integer> changedFaceIDs) {
 		callCount.incrementAndGet();
@@ -264,7 +266,7 @@ public class LayerOrderEnumerator {
 
 		if (subFaceIndex == subFaces.size()) {
 			var answer = overlapRelation.clone();
-			overlapRelationList.add(answer);
+			overlapRelations.add(answer);
 			return;
 		}
 
@@ -273,7 +275,7 @@ public class LayerOrderEnumerator {
 		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, false);
 
 		if (localLayerOrders == null) {
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1, overlapRelation,
+			findAnswer(faces, overlapRelations, subFaceIndex + 1, overlapRelation,
 					new HashSet<>());
 			return;
 		}
@@ -305,7 +307,7 @@ public class LayerOrderEnumerator {
 				}
 			});
 
-			findAnswer(faces, overlapRelationList, subFaceIndex + 1,
+			findAnswer(faces, overlapRelations, subFaceIndex + 1,
 					nextOverlapRelation, nextChangedFaceIDs);
 		});
 

@@ -18,6 +18,8 @@
 
 package oripa.domain.fold;
 
+import java.util.List;
+
 import oripa.domain.fold.halfedge.OrigamiModel;
 
 public class Folder {
@@ -52,14 +54,14 @@ public class Folder {
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
-			return new FoldedModel(origamiModel, new OverlapRelationList());
+			return new FoldedModel(origamiModel, List.of());
 		}
 
-		var overlapRelationList = enumerator.enumerate(origamiModel);
+		var overlapRelations = enumerator.enumerate(origamiModel);
 
-		var foldedModel = new FoldedModel(origamiModel, overlapRelationList);
+		var foldedModel = new FoldedModel(origamiModel, overlapRelations);
 
-		if (overlapRelationList.isEmpty()) {
+		if (overlapRelations.isEmpty()) {
 			return foldedModel;
 		}
 
