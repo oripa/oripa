@@ -20,6 +20,7 @@ package oripa.domain.fold.halfedge;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -126,9 +127,7 @@ public class OrigamiModelFactory {
 
 		var watch = new StopWatch(true);
 
-		var simplifiedCreasePattern = creasePattern.stream()
-				.filter(line -> !line.isAux())
-				.collect(Collectors.toSet());
+		var simplifiedCreasePattern = createCreasePatternWithoutPrecreases(creasePattern);
 
 		List<OriLine> precreases = createPrecreases(creasePattern);
 
@@ -152,9 +151,7 @@ public class OrigamiModelFactory {
 
 		var watch = new StopWatch(true);
 
-		var simplifiedCreasePattern = creasePattern.stream()
-				.filter(line -> !line.isAux())
-				.collect(Collectors.toSet());
+		var simplifiedCreasePattern = createCreasePatternWithoutPrecreases(creasePattern);
 
 		List<OriLine> precreases = createPrecreases(creasePattern);
 
@@ -171,12 +168,12 @@ public class OrigamiModelFactory {
 		var wholeVertices = new ArrayList<OriVertex>();
 		buildVertices(simplifiedCreasePattern, wholeVertices);
 
-		var origamiModels = new ArrayList<OrigamiModel>();
-
 		var boundaryVertices = new ArrayList<OriVertex>();
 		buildVertices(boundaryCreasePattern, boundaryVertices);
 
 		var boundaryFaces = facesFactory.createBoundaryFaces(boundaryVertices);
+
+		var origamiModels = new ArrayList<OrigamiModel>();
 
 		for (var boundaryFace : boundaryFaces) {
 			var extracted = modelExtractor.extractByBoundary(
@@ -226,6 +223,12 @@ public class OrigamiModelFactory {
 				.collect(Collectors.toList()));
 
 		return domain.maxWidthHeight();
+	}
+
+	private Set<OriLine> createCreasePatternWithoutPrecreases(final Collection<OriLine> creasePattern) {
+		return creasePattern.stream()
+				.filter(line -> !line.isAux())
+				.collect(Collectors.toSet());
 	}
 
 	private List<OriLine> createPrecreases(final Collection<OriLine> creasePattern) {
