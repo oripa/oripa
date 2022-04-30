@@ -55,7 +55,7 @@ public class CheckerWindowOpener {
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		origamiModel = modelFactory.createOrigamiModel(
-				creasePattern, creasePattern.getPaperSize());
+				creasePattern);
 
 		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory(
 				childFrameManager);

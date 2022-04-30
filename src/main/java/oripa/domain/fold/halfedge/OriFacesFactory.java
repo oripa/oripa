@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -152,59 +153,53 @@ public class OriFacesFactory {
 	}
 
 	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge) {
+		return makeFace(startingVertex, startingEdge, 100,
+				// to make a loop in clockwise
+				(walkV, walkE) -> walkV.getPrevEdge(walkE));
+	}
+
+	private OriFace makeBoundaryFace(final OriVertex startingVertex, final OriEdge startingEdge) {
+		return makeFace(startingVertex, startingEdge, 1000,
+				(walkV, walkE) -> {
+					var nextEdge = walkE;
+					do {
+						nextEdge = walkV.getPrevEdge(nextEdge);
+					} while (!nextEdge.isBoundary());
+					return nextEdge;
+				});
+	}
+
+	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge, final int maxCount,
+			final BiFunction<OriVertex, OriEdge, OriEdge> getNextEdge) {
 		OriFace face = new OriFace();
 		OriVertex walkV = startingVertex;
 		OriEdge walkE = startingEdge;
 		int debugCount = 0;
 		do {
-			if (debugCount++ > 100) {
+			if (debugCount++ > maxCount) {
 				logger.error("invalid input for making faces.");
 //						throw new UnfoldableModelException("algorithmic error");
 				return null;
 			}
-			OriHalfedge he = new OriHalfedge(walkV, face);
-			face.addHalfedge(he);
-			he.setTemporaryType(walkE.getType());
-			if (walkE.getStartVertex() == walkV) {
-				walkE.setLeft(he);
-			} else {
-				walkE.setRight(he);
-			}
+
+			setHalfedgeToFaceAndEdge(walkV, walkE, face);
 
 			walkV = walkE.oppositeVertex(walkV);
-			walkE = walkV.getPrevEdge(walkE); // to make a loop in clockwise
+			walkE = getNextEdge.apply(walkV, walkE);
 		} while (walkV != startingVertex);
 		face.makeHalfedgeLoop();
 		return face;
 	}
 
-	private OriFace makeBoundaryFace(final OriVertex startingVertex, final OriEdge startingEdge) {
-		OriFace face = new OriFace();
-		OriVertex walkV = startingVertex;
-		OriEdge walkE = startingEdge;
-		int debugCount = 0;
-		do {
-			if (debugCount++ > 1000) {
-				logger.error("invalid input for making faces.");
-//						throw new UnfoldableModelException("algorithmic error");
-				return null;
-			}
-			OriHalfedge he = new OriHalfedge(walkV, face);
-			face.addHalfedge(he);
-			he.setTemporaryType(walkE.getType());
-			if (walkE.getStartVertex() == walkV) {
-				walkE.setLeft(he);
-			} else {
-				walkE.setRight(he);
-			}
-			walkV = walkE.oppositeVertex(walkV);
-			do {
-				walkE = walkV.getPrevEdge(walkE); // to make a loop in clockwise
-			} while (!walkE.isBoundary());
-
-		} while (walkV != startingVertex);
-		face.makeHalfedgeLoop();
-		return face;
+	private void setHalfedgeToFaceAndEdge(final OriVertex walkV, final OriEdge walkE, final OriFace face) {
+		OriHalfedge he = new OriHalfedge(walkV, face);
+		face.addHalfedge(he);
+		he.setTemporaryType(walkE.getType());
+		if (walkE.getStartVertex() == walkV) {
+			walkE.setLeft(he);
+		} else {
+			walkE.setRight(he);
+		}
 	}
 
 }
