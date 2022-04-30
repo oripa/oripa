@@ -41,7 +41,7 @@ public class OrigamiModelFactory {
 
 	private final ElementRemover remover = new ElementRemover();
 
-	private final ModelVerticesExtractor modelExtractor = new ModelVerticesExtractor();
+	private final ModelComponentExtractor componentExtractor = new ModelComponentExtractor();
 
 	/**
 	 * Constructs the half-edge based data structure which describes relation
@@ -174,10 +174,12 @@ public class OrigamiModelFactory {
 		var origamiModels = new ArrayList<OrigamiModel>();
 
 		for (var boundaryFace : boundaryFaces) {
-			var extracted = modelExtractor.extractByBoundary(
-					wholeVertices, precreases, boundaryFace);
+			var extractedVertices = componentExtractor.extractByBoundary(
+					wholeVertices, boundaryFace);
+			var extractedPrecreases = componentExtractor.extractByBoundary(
+					precreases, boundaryFace);
 
-			origamiModels.add(create(extracted.getVertices(), extracted.getPrecreases()));
+			origamiModels.add(create(extractedVertices, extractedPrecreases));
 		}
 
 		logger.debug("create origami models: {}", origamiModels);

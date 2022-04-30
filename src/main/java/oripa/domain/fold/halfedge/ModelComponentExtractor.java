@@ -29,39 +29,22 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-public class ModelVerticesExtractor {
+public class ModelComponentExtractor {
 
-	public static class Result {
-		private final List<OriVertex> vertices;
-		private final List<OriLine> precreases;
-
-		public Result(final List<OriVertex> vertices, final List<OriLine> precreases) {
-			this.vertices = vertices;
-			this.precreases = precreases;
-		}
-
-		public List<OriVertex> getVertices() {
-			return vertices;
-		}
-
-		public List<OriLine> getPrecreases() {
-			return precreases;
-		}
-	}
-
-	public Result extractByBoundary(final List<OriVertex> wholeVertices,
-			final Collection<OriLine> wholePrecreases,
+	public List<OriVertex> extractByBoundary(final List<OriVertex> wholeVertices,
 			final OriFace boundaryFace) {
 
-		var vertices = wholeVertices.stream()
+		return wholeVertices.stream()
 				.filter(vertex -> boundaryFace.isOnFaceInclusively(vertex.getPosition()))
 				.collect(Collectors.toList());
+	}
 
-		var precreases = wholePrecreases.stream()
+	public List<OriLine> extractByBoundary(final Collection<OriLine> wholePrecreases,
+			final OriFace boundaryFace) {
+
+		return wholePrecreases.stream()
 				.filter(p -> OriGeomUtil.isOriLineIncludedInFace(boundaryFace, p))
 				.collect(Collectors.toList());
-
-		return new Result(vertices, precreases);
-
 	}
+
 }
