@@ -208,15 +208,7 @@ public class EstimationResultUI extends JPanel {
 		answerShiftPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
 				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ANSWERS_PANEL_ID)));
 
-//		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
-//				.setWeight(0.5, 1.0);
-
 		answerShiftPanel.add(answerSelectionPanel);
-
-//		answerShiftPanel.add(prevAnswerButton, gbBuilder.getNextField());
-//		answerShiftPanel.add(nextAnswerButton, gbBuilder.getNextField());
-//
-//		answerShiftPanel.add(indexLabel, gbBuilder.getLineField());
 
 		return answerShiftPanel;
 	}

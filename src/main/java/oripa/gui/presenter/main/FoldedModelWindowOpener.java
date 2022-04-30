@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -99,8 +100,8 @@ public class FoldedModelWindowOpener {
 		ModelViewFrame modelViewFrame = null;
 		EstimationResultFrame resultFrame = null;
 
-		if (!origamiModels.stream().allMatch(m -> checker.testLocalFlatFoldability(m))) {
-			origamiModels.forEach(model -> folder.foldWithoutLineType(model));
+		if (origamiModels.stream().anyMatch(Predicate.not(checker::testLocalFlatFoldability))) {
+			origamiModels.forEach(folder::foldWithoutLineType);
 		} else {
 			var foldedModels = origamiModels.stream()
 					.map(model -> folder.fold(model, fullEstimation))
