@@ -31,7 +31,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.swing.*;
 
@@ -185,17 +184,7 @@ public class ModelViewFrame extends JFrame
 		screen.setModel(origamiModel, boundSize);
 		this.origamiModel = origamiModel;
 
-		setDomainBeforeFolding(createDomainBeforeFolding());
-	}
-
-	private RectangleDomain createDomainBeforeFolding() {
-		var domain = new RectangleDomain();
-
-		domain.enlarge(origamiModel.getVertices().stream()
-				.map(v -> v.getPositionBeforeFolding())
-				.collect(Collectors.toList()));
-
-		return domain;
+		setDomainBeforeFolding(origamiModel.createPaperDomain());
 	}
 
 	private void setDomainBeforeFolding(final RectangleDomain domain) {
