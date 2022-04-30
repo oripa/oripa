@@ -50,12 +50,11 @@ public class OrigamiModelFactory {
 	 * meaningless vertices.
 	 *
 	 * @param creasePattern
-	 * @param paperSize
 	 * @return A model data converted from crease pattern.
 	 */
 	public OrigamiModel createOrigamiModel(
-			final Collection<OriLine> creasePattern, final double paperSize) {
-		return this.createOrigamiModelImpl3(creasePattern, paperSize);
+			final Collection<OriLine> creasePattern) {
+		return this.createOrigamiModelImpl3(creasePattern);
 	}
 
 	public List<OrigamiModel> createOrigamiModels(
@@ -119,11 +118,10 @@ public class OrigamiModelFactory {
 	 * meaningless vertices.
 	 *
 	 * @param creasePattern
-	 * @param paperSize
 	 * @return A model data converted from crease pattern.
 	 */
 	private OrigamiModel createOrigamiModelImpl3(
-			final Collection<OriLine> creasePattern, final double paperSize) {
+			final Collection<OriLine> creasePattern) {
 
 		var watch = new StopWatch(true);
 

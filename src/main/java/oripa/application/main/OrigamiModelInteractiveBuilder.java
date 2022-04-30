@@ -58,7 +58,7 @@ public class OrigamiModelInteractiveBuilder {
 			final Runnable showFailureMessage) {
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		OrigamiModel wholeModel = modelFactory.createOrigamiModel(
-				creasePattern, creasePattern.getPaperSize());
+				creasePattern);
 
 		List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern);
 
@@ -83,7 +83,7 @@ public class OrigamiModelInteractiveBuilder {
 		}
 		// re-create the model data for simplified crease pattern
 		wholeModel = modelFactory
-				.createOrigamiModel(creasePattern, creasePattern.getPaperSize());
+				.createOrigamiModel(creasePattern);
 
 		if (checker.testLocalFlatFoldability(wholeModel)) {
 			return modelFactory.createOrigamiModels(creasePattern);
