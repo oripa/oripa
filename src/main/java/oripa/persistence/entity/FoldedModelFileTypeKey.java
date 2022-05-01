@@ -18,8 +18,8 @@
  */
 package oripa.persistence.entity;
 
-import oripa.domain.fold.FoldedModel;
 import oripa.persistence.entity.exporter.ExporterORmat;
+import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.persistence.entity.exporter.FoldedModelExporterSVG;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -29,7 +29,7 @@ import oripa.persistence.filetool.Loader;
  * @author OUCHI Koji
  *
  */
-public enum FoldedModelFileTypeKey implements FileTypeProperty<FoldedModel> {
+public enum FoldedModelFileTypeKey implements FileTypeProperty<FoldedModelEntity> {
 	SVG_FOLDED_MODEL("svg_folded_model", 1, null, new FoldedModelExporterSVG(false), ".svg"),
 	SVG_FOLDED_MODEL_FLIP("svg_folded_model_flip", 1, null, new FoldedModelExporterSVG(true), ".svg"),
 	ORMAT_FOLDED_MODEL("ormat", 2, null, new ExporterORmat(), ".ormat");
@@ -38,8 +38,8 @@ public enum FoldedModelFileTypeKey implements FileTypeProperty<FoldedModel> {
 	private final Integer order;
 	private final String[] extensions;
 
-	private final Loader<FoldedModel> loader;
-	private final Exporter<FoldedModel> exporter;
+	private final Loader<FoldedModelEntity> loader;
+	private final Exporter<FoldedModelEntity> exporter;
 
 	/**
 	 *
@@ -55,8 +55,8 @@ public enum FoldedModelFileTypeKey implements FileTypeProperty<FoldedModel> {
 	 * @param savingAction
 	 */
 	private FoldedModelFileTypeKey(final String key, final Integer order,
-			final Loader<FoldedModel> loader,
-			final Exporter<FoldedModel> exporter,
+			final Loader<FoldedModelEntity> loader,
+			final Exporter<FoldedModelEntity> exporter,
 			final String... extensions) {
 		this.keyText = key;
 		this.order = order;
@@ -91,12 +91,12 @@ public enum FoldedModelFileTypeKey implements FileTypeProperty<FoldedModel> {
 	}
 
 	@Override
-	public Loader<FoldedModel> getLoader() {
+	public Loader<FoldedModelEntity> getLoader() {
 		return loader;
 	}
 
 	@Override
-	public Exporter<FoldedModel> getExporter() {
+	public Exporter<FoldedModelEntity> getExporter() {
 		return exporter;
 	}
 }

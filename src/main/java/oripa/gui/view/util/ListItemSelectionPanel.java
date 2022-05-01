@@ -73,6 +73,13 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 		}
 	}
 
+	/**
+	 * Possible property names:
+	 * <ul>
+	 * <li>{@link #ITEM}</li>
+	 * <li>{@link #INDEX}</li>
+	 * </ul>
+	 */
 	@Override
 	public void addPropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {

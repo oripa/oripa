@@ -21,8 +21,8 @@ package oripa.persistence.entity;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import oripa.domain.fold.FoldedModel;
 import oripa.persistence.dao.AbstractFilterSelector;
+import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.persistence.filetool.FileAccessSupportFilter;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
@@ -31,8 +31,8 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFilterSelector extends AbstractFilterSelector<FoldedModel> {
-	private final SortedMap<FileTypeProperty<FoldedModel>, FileAccessSupportFilter<FoldedModel>> filters = new TreeMap<>();
+public class FoldedModelFilterSelector extends AbstractFilterSelector<FoldedModelEntity> {
+	private final SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupportFilter<FoldedModelEntity>> filters = new TreeMap<>();
 
 	/**
 	 * Constructor
@@ -53,7 +53,7 @@ public class FoldedModelFilterSelector extends AbstractFilterSelector<FoldedMode
 	}
 
 	@Override
-	protected SortedMap<FileTypeProperty<FoldedModel>, FileAccessSupportFilter<FoldedModel>> getFilters() {
+	protected SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupportFilter<FoldedModelEntity>> getFilters() {
 		return filters;
 	}
 }

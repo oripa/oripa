@@ -27,49 +27,51 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import oripa.domain.fold.FoldedModel;
-import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.svg.FacesToSvgConverter;
 
 /**
  * @author OUCHI Koji / BETTINELLI Jean-Noel
  */
-public class FoldedModelExporterSVG implements Exporter<FoldedModel> {
+public class FoldedModelExporterSVG implements Exporter<FoldedModelEntity> {
 
-    private final FacesToSvgConverter facesToSvgConverter;
-    private final boolean faceOrderFlip;
+	private final FacesToSvgConverter facesToSvgConverter;
+	private final boolean faceOrderFlip;
 
-    public FoldedModelExporterSVG(final boolean faceOrderFlip) {
-        facesToSvgConverter = new FacesToSvgConverter();
-        this.faceOrderFlip = faceOrderFlip;
-        if (faceOrderFlip) facesToSvgConverter.setFaceStyles(PATH_STYLE_BACK, PATH_STYLE_FRONT);
-        else facesToSvgConverter.setFaceStyles(PATH_STYLE_FRONT, PATH_STYLE_BACK);
-        facesToSvgConverter.setPrecreaseLineStyle(THICK_LINE_STYLE);
-    }
+	public FoldedModelExporterSVG(final boolean faceOrderFlip) {
+		facesToSvgConverter = new FacesToSvgConverter();
+		this.faceOrderFlip = faceOrderFlip;
+		if (faceOrderFlip) {
+			facesToSvgConverter.setFaceStyles(PATH_STYLE_BACK, PATH_STYLE_FRONT);
+		} else {
+			facesToSvgConverter.setFaceStyles(PATH_STYLE_FRONT, PATH_STYLE_BACK);
+		}
+		facesToSvgConverter.setPrecreaseLineStyle(THICK_LINE_STYLE);
+	}
 
-    @Override
-    public boolean export(final FoldedModel foldedModel, final String filepath)
-            throws IOException {
-        OrigamiModel origamiModel = foldedModel.getOrigamiModel();
-        OverlapRelationList overlapRelationList = foldedModel.getOverlapRelationList();
+	@Override
+	public boolean export(final FoldedModelEntity foldedModel, final String filepath)
+			throws IOException {
+		OrigamiModel origamiModel = foldedModel.getOrigamiModel();
+		OverlapRelation overlapRelation = foldedModel.getOverlapRelation();
 
-        FaceSorter faceSorter = new FaceSorter(origamiModel.getFaces(), overlapRelationList.getOverlapRelation());
+		FaceSorter faceSorter = new FaceSorter(origamiModel.getFaces(), overlapRelation);
 
-        List<OriFace> faces = faceSorter.sortFaces(faceOrderFlip);
+		List<OriFace> faces = faceSorter.sortFaces(faceOrderFlip);
 
-        facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
+		facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
 
-        try (var fw = new FileWriter(filepath);
-             var bw = new BufferedWriter(fw)) {
+		try (var fw = new FileWriter(filepath);
+				var bw = new BufferedWriter(fw)) {
 
-            bw.write(SVG_START);
-            bw.write(GRADIENTS_DEFINITION);
-            bw.write(facesToSvgConverter.getSvgFaces(faces));
-            bw.write(SVG_END_TAG);
-        }
-        return true;
-    }
+			bw.write(SVG_START);
+			bw.write(GRADIENTS_DEFINITION);
+			bw.write(facesToSvgConverter.getSvgFaces(faces));
+			bw.write(SVG_END_TAG);
+		}
+		return true;
+	}
 }

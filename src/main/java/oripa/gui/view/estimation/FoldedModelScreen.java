@@ -42,9 +42,9 @@ import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.FoldedModel;
-import oripa.domain.fold.OverlapRelationList;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.util.MouseUtility;
@@ -98,7 +98,8 @@ public class FoldedModelScreen extends JPanel
 	private final Color singleColor = DefaultColors.WHITE;
 
 	private OrigamiModel origamiModel = null;
-	private OverlapRelationList overlapRelationList = null;
+	private OverlapRelation overlapRelation;
+
 	private RectangleDomain domain;
 
 	public FoldedModelScreen() {
@@ -285,13 +286,23 @@ public class FoldedModelScreen extends JPanel
 	public void setModel(final FoldedModel foldedModel) {
 		if (foldedModel == null) {
 			this.origamiModel = null;
-			this.overlapRelationList = null;
 		} else {
 			this.origamiModel = foldedModel.getOrigamiModel();
-			this.overlapRelationList = foldedModel.getOverlapRelationList();
+
+			var overlapRelations = foldedModel.getOverlapRelations();
+			if (overlapRelations == null || overlapRelations.isEmpty()) {
+				overlapRelation = null;
+			} else {
+				overlapRelation = overlapRelations.get(0);
+			}
 		}
 
 		resetViewMatrix();
+		redrawOrigami();
+	}
+
+	public void setOverlapRelation(final OverlapRelation overlapRelation) {
+		this.overlapRelation = overlapRelation;
 		redrawOrigami();
 	}
 
@@ -331,7 +342,7 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public void drawOrigami() {
-		if (origamiModel == null || overlapRelationList == null) {
+		if (origamiModel == null || overlapRelation == null) {
 			return;
 		}
 
@@ -487,8 +498,6 @@ public class FoldedModelScreen extends JPanel
 				byte renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
 						: OverlapRelationValues.LOWER;
 
-				var overlapRelation = overlapRelationList.getOverlapRelation();
-
 				if (zbuf[p] == -1 || overlapRelation.get(zbuf[p], id) == renderFace) {
 
 					int tr = r >> 16;
@@ -636,8 +645,6 @@ public class FoldedModelScreen extends JPanel
 						if (f_id == -1 && f_id2 != -1) {
 							cnt++;
 						} else {
-							var overlapRelation = overlapRelationList.getOverlapRelation();
-
 							if (f_id2 != -1 && overlapRelation.get(f_id, f_id2) == renderFace) {
 								cnt++;
 							}
