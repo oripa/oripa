@@ -24,6 +24,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.view.main.MainFrame;
 
 public class ORIPA {
@@ -47,7 +48,9 @@ public class ORIPA {
 
 			mainFrame.setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			mainFrame.setVisible(true);
+
+			var presenter = new MainFramePresenter(mainFrame);
+			presenter.setViewVisible(true);
 
 //			if (Config.FOR_STUDY) {
 //				int modelFrameWidth = 400;

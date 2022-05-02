@@ -28,4 +28,5 @@ import oripa.gui.view.View;
  */
 public interface UIPanelView extends View {
 	void setEstimationResultColors(Color front, Color back);
+
 }

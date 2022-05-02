@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import oripa.resource.Constants;
@@ -63,7 +64,7 @@ public class FileHistory {
 	 *
 	 * @return most recently used paths
 	 */
-	public Collection<String> getHistory() {
+	public List<String> getHistory() {
 		return mostRecentlyUsedHistory;
 	}
 

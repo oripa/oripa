@@ -18,8 +18,17 @@
  */
 package oripa.gui.view.main;
 
+import java.awt.Color;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import oripa.appstate.StateManager;
+import oripa.doc.Doc;
+import oripa.domain.paint.PaintContext;
+import oripa.geom.RectangleDomain;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.FrameView;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
@@ -87,16 +96,56 @@ public interface MainFrameView extends FrameView {
 
 	void addAboutButtonListener(Runnable listener);
 
-	void setMRUFilesMenuItem(int index, String path);
+	void addExitButtonListener(Runnable listener);
+
+	void setEstimationResultSaveColorsListener(BiConsumer<Color, Color> listener);
+
+	void setPaperDomainOfModelChangeListener(Consumer<RectangleDomain> listener);
+
+	void setPaperDomainOfModel(RectangleDomain domain);
 
 	/**
+	 * invoked when MRU file menu item is clicked.
+	 *
+	 * @param listener
+	 *            the parameter of this listener is the file path.
+	 */
+	void addMRUFileButtonListener(Consumer<String> listener);
+
+	/**
+	 * invoked when the MRU file menu item changed.
 	 *
 	 * @param listener
 	 *            the parameter of this listener is the index of MRU list.
 	 */
-	void addMRUFilesMenuUpdateListener(Consumer<Integer> listener);
+	void addMRUFilesMenuItemUpdateListener(Consumer<Integer> listener);
+
+	// void addMRUFilesMenuListUpdateListener(Runnable listener);
+
+	void setTitleUpdateListener(Runnable listener);
+
+	void addWindowClosingListener(Runnable listener);
+
+	// --------------------------------------------------------
+
+	void setMRUFilesMenuItem(int index, String path);
 
 	void setFileNameToTitle(String fileName);
 
 	void buildFileMenu();
+
+	@Deprecated
+	PaintContext getPaintContext();
+
+	@Deprecated
+	CreasePatternViewContext getCreasePattenViewContext();
+
+	@Deprecated
+	MouseActionHolder getActionHolder();
+
+	@Deprecated
+	Doc getDocument();
+
+	@Deprecated
+	StateManager<EditMode> getStateManager();
 }

@@ -30,18 +30,21 @@ import org.slf4j.LoggerFactory;
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
+import oripa.appstate.StateManager;
+import oripa.appstate.StatePopper;
 import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.file.FileHistory;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
-import oripa.gui.bind.state.EditModeStateManager;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
+import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
+import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
+import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
 import oripa.gui.view.main.ArrayCopyDialogFactory;
 import oripa.gui.view.main.CircleCopyDialogFactory;
 import oripa.gui.view.main.MainDialogService;
@@ -76,7 +79,7 @@ public class MainFramePresenter {
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
-	private final EditModeStateManager stateManager = new EditModeStateManager();
+	private final StateManager<EditMode> stateManager;
 	private final SelectionOriginHolder selectionOriginHolder = new SelectionOriginHolder();
 
 //	private final MainFrameSetting setting = new MainFrameSetting();
@@ -94,14 +97,16 @@ public class MainFramePresenter {
 
 	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
 
-	private final Doc document = new Doc();
+	private final Doc document;
 
 	// Create UI Factories
-	private final PaintContextFactory contextFactory = new PaintContextFactory();
-	private final PaintContext paintContext = contextFactory.createContext();
-	private final CreasePatternViewContextFactory viewContextFactory = new CreasePatternViewContextFactory();
-	private final CreasePatternViewContext viewContext = viewContextFactory.create(paintContext);
-	private final MouseActionHolder actionHolder = new MouseActionHolder();
+	private final PaintContext paintContext;
+	private final CreasePatternViewContext viewContext;
+	private final MouseActionHolder actionHolder;
+//	private final PaintContextFactory contextFactory = new PaintContextFactory();
+//	private final PaintContext paintContext = contextFactory.createContext();
+//	private final CreasePatternViewContextFactory viewContextFactory = new CreasePatternViewContextFactory();
+//	private final CreasePatternViewContext viewContext = viewContextFactory.create(paintContext);
 
 	private final IniFileAccess iniFileAccess = new IniFileAccess(
 			new InitDataFileReader(), new InitDataFileWriter());
@@ -110,6 +115,12 @@ public class MainFramePresenter {
 
 	public MainFramePresenter(final MainFrameView view) {
 		this.view = view;
+
+		document = view.getDocument();
+		paintContext = view.getPaintContext();
+		viewContext = view.getCreasePattenViewContext();
+		actionHolder = view.getActionHolder();
+		stateManager = view.getStateManager();
 
 		screenUpdater = view.getScreenUpdater();
 		screenSetting = view.getMainScreenSetting();
@@ -124,6 +135,112 @@ public class MainFramePresenter {
 				() -> dialogService.showNoSelectionMessageForArrayCopy(view.asFrame()),
 				() -> dialogService.showNoSelectionMessageForCircleCopy(view.asFrame()));
 
+		loadIniFile();
+
+		modifySavingActions();
+
+		addListeners();
+
+		view.buildFileMenu();
+		updateTitleText();
+	}
+
+	public void setViewVisible(final boolean visible) {
+		view.setViewVisible(visible);
+	}
+
+	private void addListeners() {
+		view.addOpenButtonListener(() -> {
+			String path = loadFile(null);
+			screenUpdater.updateScreen();
+			updateMenu(path);
+			updateTitleText();
+		});
+
+		addImportActionListener();
+
+		view.addSaveButtonLisetener(() -> {
+			var filePath = document.getDataFilePath();
+			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
+				saveProjectFile(document, filePath, CreasePatternFileTypeKey.OPX);
+			} else if (CreasePatternFileTypeKey.FOLD.extensionsMatch(filePath)) {
+				saveProjectFile(document, filePath, CreasePatternFileTypeKey.FOLD);
+			} else {
+				saveAnyTypeUsingGUI();
+			}
+		});
+
+		view.addSaveAsButtonListener(() -> saveAnyTypeUsingGUI());
+
+		view.addExportFOLDButtonListener(() -> {
+			String lastDirectory = fileHistory.getLastDirectory();
+			saveFile(lastDirectory, document.getDataFileName(),
+					filterSelector.getFilter(CreasePatternFileTypeKey.FOLD));
+		});
+
+		view.addSaveAsImageButtonListener(() -> {
+			String lastDirectory = fileHistory.getLastDirectory();
+			saveFile(lastDirectory, document.getDataFileName(),
+					filterSelector.getFilter(CreasePatternFileTypeKey.PICT));
+		});
+
+		view.addExitButtonListener(() -> exit());
+
+		view.addUndoButtonListener(() -> {
+			try {
+				actionHolder.getMouseAction().undo(paintContext);
+			} catch (NullPointerException ex) {
+				if (actionHolder.getMouseAction() == null) {
+					logger.error("mouseAction should not be null.", ex);
+				} else {
+					logger.error("Wrong implementation.", ex);
+				}
+			}
+			screenUpdater.updateScreen();
+		});
+
+		view.addRedoButtonListener(() -> {
+			try {
+				actionHolder.getMouseAction().redo(paintContext);
+			} catch (NullPointerException ex) {
+				if (actionHolder.getMouseAction() == null) {
+					logger.error("mouseAction should not be null.", ex);
+				} else {
+					logger.error("Wrong implementation.", ex);
+				}
+			}
+			screenUpdater.updateScreen();
+		});
+
+		view.addClearButtonListener(() -> clear());
+
+		view.addAboutButtonListener(() -> dialogService.showAboutAppMessage(view.asFrame()));
+
+		view.addExportDXFButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
+		view.addExportCPButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
+		view.addExportSVGButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.SVG));
+
+		view.addPropertyButtonListener(() -> showPropertyDialog());
+		view.addRepeatCopyButtonListener(() -> showArrayCopyDialog());
+		view.addCircleCopyButtonListener(() -> showCircleCopyDialog());
+
+		addPaintMenuItemsListener();
+
+		for (int i = 0; i < Constants.MRUFILE_NUM; i++) {
+			view.addMRUFileButtonListener(this::loadFileFromMRUFileMenuItem);
+		}
+		view.addMRUFilesMenuItemUpdateListener(this::updateMRUFilesMenuItem);
+
+		view.setEstimationResultSaveColorsListener((front, back) -> {
+			var property = document.getProperty();
+			property.putFrontColorCode(convertColorToCode(front));
+			property.putBackColorCode(convertColorToCode(back));
+
+		});
+
+		view.setPaperDomainOfModelChangeListener(view::setPaperDomainOfModel);
+
+		view.addWindowClosingListener(this::windowClosing);
 	}
 
 	/**
@@ -151,6 +268,51 @@ public class MainFramePresenter {
 		});
 	}
 
+	private void addPaintMenuItemsListener() {
+		var frame = view.asFrame();
+
+		/*
+		 * For changing outline
+		 */
+		var changeOutlineState = stateFactory.create(frame, actionHolder, paintContext, screenUpdater,
+				StringID.EDIT_CONTOUR_ID);
+		view.addChangeOutlineButtonListener(() -> changeOutlineState.performActions(null));
+
+		/*
+		 * For selecting all lines
+		 */
+		var selectAllState = stateFactory.create(frame, actionHolder, paintContext, screenUpdater,
+				StringID.SELECT_ALL_LINE_ID);
+		view.addSelectAllButtonListener(() -> selectAllState.performActions(null));
+		var selectAllListener = new SelectAllLineActionListener(paintContext);
+		view.addSelectAllButtonListener(() -> selectAllListener.actionPerformed(null));
+
+		/*
+		 * For starting copy-and-paste
+		 */
+		var copyPasteState = stateFactory.create(frame, actionHolder, paintContext, screenUpdater,
+				StringID.COPY_PASTE_ID);
+		view.addCopyAndPasteButtonListener(() -> copyPasteState.performActions(null));
+
+		/*
+		 * For starting cut-and-paste
+		 */
+		var cutPasteState = stateFactory.create(frame, actionHolder, paintContext, screenUpdater,
+				StringID.CUT_PASTE_ID);
+		view.addCutAndPasteButtonListener(() -> cutPasteState.performActions(null));
+
+		var statePopper = new StatePopper<EditMode>(stateManager);
+		var unselectListener = new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
+				screenUpdater);
+		view.addUnselectAllButtonListener(
+				() -> unselectListener.actionPerformed(null));
+
+		var deleteLinesListener = new DeleteSelectedLinesActionListener(paintContext, screenUpdater);
+		view.addDeleteSelectedLinesButtonListener(
+				() -> deleteLinesListener.actionPerformed(null));
+
+	}
+
 	private void modifySavingActions() {
 		// overwrite the action to update GUI after saving.
 		setProjectSavingAction(CreasePatternFileTypeKey.OPX);
@@ -173,6 +335,15 @@ public class MainFramePresenter {
 					}
 				});
 
+	}
+
+	private void updateMRUFilesMenuItem(final int index) {
+		var histories = fileHistory.getHistory();
+		if (index < histories.size()) {
+			view.setMRUFilesMenuItem(index, histories.get(index));
+		} else {
+			view.setMRUFilesMenuItem(index, "");
+		}
 	}
 
 	private void loadFileFromMRUFileMenuItem(final String filePath) {
@@ -413,6 +584,26 @@ public class MainFramePresenter {
 
 		logger.debug("loaded ini.vertexVisible: " + ini.isVertexVisible());
 		screenSetting.setVertexVisible(ini.isVertexVisible());
+	}
+
+	private void windowClosing() {
+
+		if (paintContext.creasePatternUndo().changeExists()) {
+			// confirm saving edited opx
+			int selected = dialogService.showSaveOnCloseDialog(view.asFrame());
+			if (selected == JOptionPane.YES_OPTION) {
+
+				document.setCreasePattern(paintContext.getCreasePattern());
+
+				String path = saveFile(fileHistory.getLastDirectory(),
+						document.getDataFileName(), filterSelector.getSavables());
+				if (path == null) {
+
+				}
+			}
+		}
+
+		saveIniFile();
 	}
 
 }
