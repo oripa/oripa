@@ -83,7 +83,7 @@ import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
 
-public class UIPanel extends JPanel {
+public class UIPanel extends JPanel implements UIPanelView {
 
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
@@ -976,6 +976,7 @@ public class UIPanel extends JPanel {
 		paperDomainOfModelChangeListener = listener;
 	}
 
+	@Override
 	public void setEstimationResultColors(final Color frontColor, final Color backColor) {
 		estimationResultFrontColor = frontColor;
 		estimationResultBackColor = backColor;
@@ -1139,5 +1140,10 @@ public class UIPanel extends JPanel {
 
 	public UIPanelSetting getUIPanelSetting() {
 		return setting;
+	}
+
+	@Override
+	public void setViewVisible(final boolean visible) {
+		setVisible(visible);
 	}
 }

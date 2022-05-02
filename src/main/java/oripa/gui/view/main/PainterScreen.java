@@ -60,7 +60,7 @@ import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
 
 public class PainterScreen extends JPanel
-		implements MouseListener, MouseMotionListener, MouseWheelListener,
+		implements PainterScreenView, MouseListener, MouseMotionListener, MouseWheelListener,
 		ComponentListener {
 
 	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
@@ -527,5 +527,10 @@ public class PainterScreen extends JPanel
 					repaint();
 				});
 
+	}
+
+	@Override
+	public void setViewVisible(final boolean visible) {
+		setVisible(visible);
 	}
 }

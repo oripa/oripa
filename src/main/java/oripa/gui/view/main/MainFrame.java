@@ -30,6 +30,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import javax.swing.JFrame;
@@ -74,6 +75,7 @@ import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
+import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.persistence.dao.AbstractFilterSelector;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
 import oripa.persistence.doc.DocDAO;
@@ -87,7 +89,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 
-public class MainFrame extends JFrame implements ComponentListener, WindowListener {
+public class MainFrame extends JFrame implements MainFrameView, ComponentListener, WindowListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
@@ -162,7 +164,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			resourceHolder.getString(ResourceKey.LABEL,
 					StringID.Main.PROPERTY_ID));
 
-	private JMenuItem menuItemImport;
+	private final JMenuItem menuItemImport = new JMenuItem(
+			resourceHolder.getString(ResourceKey.LABEL, StringID.IMPORT_CP_ID));
 
 	// edit menu items
 	/**
@@ -213,6 +216,8 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			new InitDataFileReader(), new InitDataFileWriter());
 	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO(new DocFilterSelector()));
 	private final PaintContextModification paintContextModification = new PaintContextModification();
+
+	private Consumer<Integer> MRUFilesMenuUpdateListener;
 
 	public MainFrame() {
 		logger.info("frame construction starts.");
@@ -648,12 +653,9 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 		}
 	}
 
-	private void buildFileMenu() {
+	@Override
+	public void buildFileMenu() {
 		menuFile.removeAll();
-
-		if (menuItemImport == null) {
-			menuItemImport = buttonFactory.create(this, JMenuItem.class, StringID.IMPORT_CP_ID, null);
-		}
 
 		menuFile.add(menuItemClear);
 		menuFile.add(menuItemOpen);
@@ -671,7 +673,7 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		int i = 0;
 		for (String path : fileHistory.getHistory()) {
-			MRUFilesMenuItem[i].setText(path);
+			MRUFilesMenuUpdateListener.accept(i);
 			menuFile.add(MRUFilesMenuItem[i]);
 
 			i++;
@@ -683,6 +685,11 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 
 		menuFile.addSeparator();
 		menuFile.add(menuItemExit);
+	}
+
+	@Override
+	public void addMRUFilesMenuUpdateListener(final Consumer<Integer> listener) {
+		MRUFilesMenuUpdateListener = listener;
 	}
 
 	/**
@@ -854,5 +861,163 @@ public class MainFrame extends JFrame implements ComponentListener, WindowListen
 			hintLabel.repaint();
 		});
 
+	}
+
+	@Override
+	public void setViewVisible(final boolean visible) {
+		setVisible(visible);
+	}
+
+	@Override
+	public MainFrameSetting getMainFrameSetting() {
+		return setting;
+	}
+
+	@Override
+	public UIPanelView getUIPanelView() {
+		return uiPanel;
+	}
+
+	@Override
+	public UIPanelSetting getUIPanelSetting() {
+		return uiPanel.getUIPanelSetting();
+	}
+
+	@Override
+	public PainterScreenView getPainterScreenView() {
+		return mainScreen;
+	}
+
+	@Override
+	public MainScreenSetting getMainScreenSetting() {
+		return mainScreen.getMainScreenSetting();
+	}
+
+	@Override
+	public ViewScreenUpdater getScreenUpdater() {
+		return mainScreen.getScreenUpdater();
+	}
+
+	@Override
+	public void addClearButtonListener(final Runnable listener) {
+		menuItemClear.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addOpenButtonListener(final Runnable listener) {
+		menuItemOpen.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addImportButtonListener(final Runnable listener) {
+		menuItemImport.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addSaveButtonLisetener(final Runnable listener) {
+		menuItemSave.addActionListener(e -> listener.run());
+
+	}
+
+	@Override
+	public void addSaveAsButtonListener(final Runnable listener) {
+		menuItemSaveAs.addActionListener(e -> listener.run());
+
+	}
+
+	@Override
+	public void addSaveAsImageButtonListener(final Runnable listener) {
+		menuItemSaveAsImage.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addExportFOLDButtonListener(final Runnable listener) {
+		menuItemExportFOLD.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addExportDXFButtonListener(final Runnable listener) {
+		menuItemExportDXF.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addExportCPButtonListener(final Runnable listener) {
+		menuItemExportCP.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addExportSVGButtonListener(final Runnable listener) {
+		menuItemExportSVG.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addPropertyButtonListener(final Runnable listener) {
+		menuItemProperty.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addChangeOutlineButtonListener(final Runnable listener) {
+		menuItemChangeOutline.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addSelectAllButtonListener(final Runnable listener) {
+		menuItemSelectAll.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addCopyAndPasteButtonListener(final Runnable listener) {
+		menuItemCopyAndPaste.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addCutAndPasteButtonListener(final Runnable listener) {
+		menuItemCutAndPaste.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addUndoButtonListener(final Runnable listener) {
+		menuItemUndo.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addRedoButtonListener(final Runnable listener) {
+		menuItemRedo.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addRepeatCopyButtonListener(final Runnable listener) {
+		menuItemRepeatCopy.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addCircleCopyButtonListener(final Runnable listener) {
+		menuItemCircleCopy.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addUnselectAllButtonListener(final Runnable listener) {
+		menuItemUnSelectAll.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addDeleteSelectedLinesButtonListener(final Runnable listener) {
+		menuItemDeleteSelectedLines.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addAboutButtonListener(final Runnable listener) {
+		menuItemAbout.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void setMRUFilesMenuItem(final int index, final String path) {
+		MRUFilesMenuItem[index].setText(path);
+	}
+
+	@Override
+	public void setFileNameToTitle(final String fileName) {
+		setTitle(fileName + " - "
+				+ resourceHolder.getString(ResourceKey.LABEL, StringID.Main.TITLE_ID));
 	}
 }
