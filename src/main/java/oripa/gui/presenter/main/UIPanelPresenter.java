@@ -184,6 +184,10 @@ public class UIPanelPresenter {
 				StringID.ON_V_ID);
 		view.addLineInputOnVButtonListener(onVState::performActions, screenUpdater.getKeyListener());
 
+		var verticalLineState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.VERTICAL_ID);
+		view.addLineInputVerticalLineButtonListener(verticalLineState::performActions, screenUpdater.getKeyListener());
+
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 	}
 
