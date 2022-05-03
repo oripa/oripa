@@ -19,14 +19,19 @@
 package oripa.gui.view.main;
 
 import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeListener;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
+import oripa.appstate.StateManager;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.View;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
@@ -52,6 +57,12 @@ public interface UIPanelView extends View {
 	@Deprecated
 	ViewScreenUpdater getScreenUpdater();
 
+	@Deprecated
+	StateManager<EditMode> getStateManager();
+
+	@Deprecated
+	MouseActionHolder getMouseActionHolder();
+
 	void addGridSmallButtonListener(Runnable listener);
 
 	void addGridLargeButtonListener(Runnable listener);
@@ -71,6 +82,8 @@ public interface UIPanelView extends View {
 	Color getEstimationResultFrontColor();
 
 	Color getEstimationResultBackColor();
+
+	void addEditModeInputLineButtonListener(ActionListener listener, KeyListener keyListener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 

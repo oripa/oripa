@@ -29,11 +29,16 @@ import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.appstate.CommandStatePopper;
+import oripa.appstate.StateManager;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.main.DialogWhileFolding;
 import oripa.gui.view.main.MainDialogService;
 import oripa.gui.view.main.UIPanelView;
@@ -67,6 +72,8 @@ public class UIPanelPresenter {
 
 	private ChildFrameManager childFrameManager;
 
+	private final MouseActionHolder actionHolder;
+	private final StateManager<EditMode> stateManager;
 	private final ViewScreenUpdater screenUpdater;
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
@@ -81,6 +88,10 @@ public class UIPanelPresenter {
 		screenUpdater = view.getScreenUpdater();
 		paintContext = view.getPaintContext();
 		viewContext = view.getViewContext();
+
+		stateManager = view.getStateManager();
+
+		actionHolder = view.getMouseActionHolder();
 
 		this.mainScreenSetting = mainScreenSetting;
 		this.cutOutlinesHolder = cutOutlinesHolder;
@@ -98,6 +109,14 @@ public class UIPanelPresenter {
 		view.addGridChangeButtonListener(this::updateGridDivNum);
 
 		view.addBuildButtonListener(this::showFoldedModelWindows);
+
+		PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
+				actionHolder, screenUpdater, paintContext);
+
+		view.addEditModeInputLineButtonListener(
+				new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT),
+				screenUpdater.getKeyListener());
+
 	}
 
 	private void makeGridSizeHalf() {

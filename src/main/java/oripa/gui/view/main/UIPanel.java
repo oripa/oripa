@@ -24,7 +24,9 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
@@ -94,6 +96,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final ViewScreenUpdater screenUpdater;
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
+
+	private final MouseActionHolder actionHolder;
+	private final StateManager<EditMode> stateManager;
 
 	private boolean fullEstimation = true;
 
@@ -234,6 +239,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		this.screenUpdater = screenUpdater;
 		this.viewContext = viewContext;
 		this.paintContext = aContext;
+
+		this.actionHolder = actionHolder;
+		this.stateManager = stateManager;
 
 		constructButtons(stateManager, actionHolder, mainFrameSetting, mainScreenSetting);
 
@@ -608,10 +616,13 @@ public class UIPanel extends JPanel implements UIPanelView {
 		ButtonFactory buttonFactory = new PaintActionButtonFactory(
 				stateFactory, paintContext, actionHolder, screenUpdater);
 
-		editModeInputLineButton = viewChangeBinder.createButton(
-				JRadioButton.class, null,
-				StringID.UI.INPUT_LINE_ID,
-				screenUpdater.getKeyListener());
+		editModeInputLineButton = new JRadioButton(
+				resources.getString(ResourceKey.LABEL, StringID.UI.INPUT_LINE_ID));
+		screenUpdater.getKeyListener();
+//		editModeInputLineButton = viewChangeBinder.createButton(
+//				JRadioButton.class, null,
+//				StringID.UI.INPUT_LINE_ID,
+//				screenUpdater.getKeyListener());
 		setShortcut(editModeInputLineButton, KeyStrokes.get(KeyEvent.VK_I),
 				StringID.UI.INPUT_LINE_ID);
 
@@ -839,8 +850,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 				actionHolder, screenUpdater, paintContext);
 
 		// edit mode line input radio button
-		editModeInputLineButton
-				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT));
+
+//		editModeInputLineButton
+//				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT));
 
 		// edit mode line selection radio button
 		editModeLineSelectionButton
@@ -918,6 +930,17 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 //		buildButton.addActionListener(
 //				e -> showFoldedModelWindows(cutOutlinesHolder, mainScreenSetting));
+	}
+
+	@Override
+	public void addEditModeInputLineButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(editModeInputLineButton, listener, keyListener);
+	}
+
+	private void addButtonListener(final AbstractButton button, final ActionListener listener,
+			final KeyListener keyListener) {
+		button.addActionListener(listener);
+		button.addKeyListener(keyListener);
 	}
 
 	/**
@@ -1186,5 +1209,15 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public CreasePatternViewContext getViewContext() {
 		return viewContext;
+	}
+
+	@Override
+	public MouseActionHolder getMouseActionHolder() {
+		return actionHolder;
+	}
+
+	@Override
+	public StateManager<EditMode> getStateManager() {
+		return stateManager;
 	}
 }
