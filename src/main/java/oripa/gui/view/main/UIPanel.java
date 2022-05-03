@@ -628,7 +628,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		editModeLineSelectionButton = new JRadioButton(
 				resources.getString(ResourceKey.LABEL, StringID.SELECT_ID));
-
 //		editModeLineSelectionButton = viewChangeBinder.createButton(
 //				JRadioButton.class, null,
 //				StringID.SELECT_ID,
@@ -650,9 +649,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setShortcut(editModeLineTypeButton, KeyStrokes.get(KeyEvent.VK_T),
 				StringID.CHANGE_LINE_TYPE_ID);
 
-		editModeAddVertex = buttonFactory.create(
-				this, JRadioButton.class, StringID.ADD_VERTEX_ID,
-				screenUpdater.getKeyListener());
+		editModeAddVertex = new JRadioButton(
+				resources.getString(ResourceKey.LABEL, StringID.ADD_VERTEX_ID));
+//		editModeAddVertex = buttonFactory.create(
+//				this, JRadioButton.class, StringID.ADD_VERTEX_ID,
+//				screenUpdater.getKeyListener());
 		setShortcut(editModeAddVertex, KeyStrokes.get(KeyEvent.VK_X),
 				StringID.ADD_VERTEX_ID);
 
@@ -987,6 +988,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addAngleTextFieldListener(final DocumentListener listener) {
 		textFieldAngle.getDocument().addDocumentListener(listener);
+	}
+
+	@Override
+	public void addEditModeAddVertexButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(editModeAddVertex, listener, keyListener);
 	}
 
 	private void addButtonListener(final AbstractButton button, final ActionListener listener,

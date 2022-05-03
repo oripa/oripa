@@ -109,6 +109,8 @@ public interface UIPanelView extends View {
 
 	void addAngleTextFieldListener(DocumentListener listener);
 
+	void addEditModeAddVertexButtonListener(ActionListener listener, KeyListener keyListener);
+
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();

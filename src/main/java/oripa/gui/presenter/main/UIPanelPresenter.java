@@ -157,6 +157,10 @@ public class UIPanelPresenter {
 				new LengthValueInputListener(valueSetting));
 		view.addAngleTextFieldListener(
 				new AngleValueInputListener(valueSetting));
+
+		var addVertexState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.ADD_VERTEX_ID);
+		view.addEditModeAddVertexButtonListener(addVertexState::performActions, screenUpdater.getKeyListener());
 	}
 
 	private void makeGridSizeHalf() {
