@@ -25,6 +25,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
@@ -71,8 +72,6 @@ import oripa.gui.viewsetting.ChangeViewSetting;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.uipanel.FromLineTypeItemListener;
-import oripa.gui.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ButtonIcon;
 import oripa.resource.Constants;
@@ -870,8 +869,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 //				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.SELECT));
 
 		// change line type tool
-		alterLineComboFrom.addItemListener(new FromLineTypeItemListener(setting));
-		alterLineComboTo.addItemListener(new ToLineTypeItemListener(setting));
+//		alterLineComboFrom.addItemListener(new FromLineTypeItemListener(setting));
+//		alterLineComboTo.addItemListener(new ToLineTypeItemListener(setting));
 
 		// draw line by value tool
 		buttonLength.addActionListener(
@@ -961,6 +960,16 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addEditModeLineTypeButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(editModeLineTypeButton, listener, keyListener);
+	}
+
+	@Override
+	public void addAlterLineComboFromListener(final ItemListener listener) {
+		alterLineComboFrom.addItemListener(listener);
+	}
+
+	@Override
+	public void addAlterLineComboToListener(final ItemListener listener) {
+		alterLineComboTo.addItemListener(listener);
 	}
 
 	private void addButtonListener(final AbstractButton button, final ActionListener listener,

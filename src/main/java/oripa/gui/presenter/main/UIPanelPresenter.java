@@ -49,6 +49,8 @@ import oripa.gui.view.util.Dialogs;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
+import oripa.gui.viewsetting.main.uipanel.FromLineTypeItemListener;
+import oripa.gui.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -139,6 +141,9 @@ public class UIPanelPresenter {
 		var lineTypeState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
 				StringID.CHANGE_LINE_TYPE_ID);
 		view.addEditModeLineTypeButtonListener(lineTypeState::performActions, screenUpdater.getKeyListener());
+
+		view.addAlterLineComboFromListener(new FromLineTypeItemListener(setting));
+		view.addAlterLineComboToListener(new ToLineTypeItemListener(setting));
 	}
 
 	private void makeGridSizeHalf() {
