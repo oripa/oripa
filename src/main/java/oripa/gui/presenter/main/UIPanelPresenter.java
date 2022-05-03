@@ -135,6 +135,10 @@ public class UIPanelPresenter {
 		var deleteLineState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
 				StringID.DELETE_LINE_ID);
 		view.addEditModeDeleteLineButtonListener(deleteLineState::performActions, screenUpdater.getKeyListener());
+
+		var lineTypeState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.CHANGE_LINE_TYPE_ID);
+		view.addEditModeLineTypeButtonListener(lineTypeState::performActions, screenUpdater.getKeyListener());
 	}
 
 	private void makeGridSizeHalf() {

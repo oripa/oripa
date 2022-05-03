@@ -646,9 +646,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setShortcut(editModeDeleteLineButton, KeyStrokes.get(KeyEvent.VK_D),
 				StringID.DELETE_LINE_ID);
 
-		editModeLineTypeButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID,
-				screenUpdater.getKeyListener());
+		editModeLineTypeButton = new JRadioButton(
+				resources.getString(ResourceKey.LABEL, StringID.CHANGE_LINE_TYPE_ID));
+//		editModeLineTypeButton = buttonFactory.create(
+//				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID,
+//				screenUpdater.getKeyListener());
 		setShortcut(editModeLineTypeButton, KeyStrokes.get(KeyEvent.VK_T),
 				StringID.CHANGE_LINE_TYPE_ID);
 
@@ -954,6 +956,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addEditModeDeleteLineButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(editModeDeleteLineButton, listener, keyListener);
+	}
+
+	@Override
+	public void addEditModeLineTypeButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(editModeLineTypeButton, listener, keyListener);
 	}
 
 	private void addButtonListener(final AbstractButton button, final ActionListener listener,

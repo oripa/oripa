@@ -93,6 +93,8 @@ public interface UIPanelView extends View {
 
 	void addEditModeDeleteLineButtonListener(ActionListener listener, KeyListener keyListener);
 
+	void addEditModeLineTypeButtonListener(ActionListener listener, KeyListener keyListener);
+
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();
