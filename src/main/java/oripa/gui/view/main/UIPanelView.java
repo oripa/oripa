@@ -70,6 +70,8 @@ public interface UIPanelView extends View {
 	@Deprecated
 	MainFrameSetting getMainFrameSetting();
 
+	void initializeButtonSelection();
+
 	void addGridSmallButtonListener(Runnable listener);
 
 	void addGridLargeButtonListener(Runnable listener);
@@ -113,6 +115,8 @@ public interface UIPanelView extends View {
 	void addEditModeAddVertexButtonListener(ActionListener listener, KeyListener keyListener);
 
 	void addEditModeDeleteVertexButtonListener(ActionListener listener, KeyListener keyListener);
+
+	void addSelectionButtonListener(ActionListener listener, KeyListener keyListener);
 
 	void addAngleStepComboListener(Consumer<AngleStep> listener);
 

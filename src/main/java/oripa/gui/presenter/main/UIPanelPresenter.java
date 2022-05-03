@@ -112,6 +112,8 @@ public class UIPanelPresenter {
 		originHolder = mainScreenSetting.getSelectionOriginHolder();
 
 		addListeners();
+
+		view.initializeButtonSelection();
 	}
 
 	public void setChildFrameManager(final ChildFrameManager manager) {
@@ -165,6 +167,10 @@ public class UIPanelPresenter {
 		var deleteVertexState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
 				StringID.DELETE_VERTEX_ID);
 		view.addEditModeDeleteVertexButtonListener(deleteVertexState::performActions, screenUpdater.getKeyListener());
+
+		var selectLineState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.SELECT_LINE_ID);
+		view.addSelectionButtonListener(selectLineState::performActions, screenUpdater.getKeyListener());
 
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 	}

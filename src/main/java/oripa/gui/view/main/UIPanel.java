@@ -120,7 +120,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// Line Selection Tools panel
 	private final JPanel lineSelectionPanel = new JPanel();
 
-	private JRadioButton selectionButton;
+	private final JRadioButton selectionButton = new JRadioButton();;
 	private JRadioButton enlargementButton;
 
 	// Insert Line Tools Panel
@@ -325,6 +325,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 		addActionListenersToComponents(stateManager, actionHolder, cutOutlinesHolder,
 				mainScreenSetting);
 
+	}
+
+	@Override
+	public void initializeButtonSelection() {
 		// -------------------------------------------------
 		// Initialize selection
 		// -------------------------------------------------
@@ -343,6 +347,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		doFullEstimationCheckBox.setSelected(true);
 		lineTypeMountainButton.doClick();
+
 	}
 
 	private void buildLineSelectionPanel() {
@@ -667,9 +672,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding line selection tools
-		selectionButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.SELECT_LINE_ID,
-				screenUpdater.getKeyListener());
+//		selectionButton = buttonFactory.create(
+//				this, JRadioButton.class, StringID.SELECT_LINE_ID,
+//				screenUpdater.getKeyListener());
 		setLineSelectionGlobalShortcut(selectionButton, KeyStrokes.get(KeyEvent.VK_S),
 				StringID.SELECT_LINE_ID);
 
@@ -1000,6 +1005,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addEditModeDeleteVertexButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(editModeDeleteVertex, listener, keyListener);
+	}
+
+	@Override
+	public void addSelectionButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(selectionButton, listener, keyListener);
 	}
 
 	@Override
