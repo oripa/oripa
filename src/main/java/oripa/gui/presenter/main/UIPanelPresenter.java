@@ -180,6 +180,10 @@ public class UIPanelPresenter {
 				StringID.DIRECT_V_ID);
 		view.addLineInputDirectVButtonListener(directVState::performActions, screenUpdater.getKeyListener());
 
+		var onVState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.ON_V_ID);
+		view.addLineInputOnVButtonListener(onVState::performActions, screenUpdater.getKeyListener());
+
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 	}
 

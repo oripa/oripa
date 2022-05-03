@@ -130,7 +130,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JPanel lineInputPanel = new JPanel();
 
 	private final JRadioButton lineInputDirectVButton = new JRadioButton();
-	private JRadioButton lineInputOnVButton;
+	private final JRadioButton lineInputOnVButton = new JRadioButton();
 	private JRadioButton lineInputVerticalLineButton;
 	private JRadioButton lineInputAngleBisectorButton;
 	private JRadioButton lineInputTriangleSplitButton;
@@ -683,9 +683,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineInputGlobalShortcut(lineInputDirectVButton, KeyStrokes.get(KeyEvent.VK_E),
 				StringID.DIRECT_V_ID);
 
-		lineInputOnVButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.ON_V_ID,
-				screenUpdater.getKeyListener());
+//		lineInputOnVButton = buttonFactory.create(
+//				this, JRadioButton.class, StringID.ON_V_ID,
+//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputOnVButton, KeyStrokes.get(KeyEvent.VK_O),
 				StringID.ON_V_ID);
 
@@ -1011,6 +1011,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineInputDirectVButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(lineInputDirectVButton, listener, keyListener);
+	}
+
+	@Override
+	public void addLineInputOnVButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(lineInputOnVButton, listener, keyListener);
 	}
 
 	@Override
