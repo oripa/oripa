@@ -30,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentListener;
 
 import oripa.appstate.StateManager;
+import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -110,6 +111,8 @@ public interface UIPanelView extends View {
 	void addAngleTextFieldListener(DocumentListener listener);
 
 	void addEditModeAddVertexButtonListener(ActionListener listener, KeyListener keyListener);
+
+	void addAngleStepComboListener(Consumer<AngleStep> listener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 

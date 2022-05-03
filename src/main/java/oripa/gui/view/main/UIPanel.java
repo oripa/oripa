@@ -882,7 +882,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 //				new AngleValueInputListener(valueSetting));
 
 		// angle step tool
-		angleStepCombo.addItemListener(e -> paintContext.setAngleStep((AngleStep) e.getItem()));
+//		angleStepCombo.addItemListener(e -> paintContext.setAngleStep((AngleStep) e.getItem()));
 
 		// line type radio buttons
 		lineTypeMountainButton.addActionListener(
@@ -993,6 +993,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addEditModeAddVertexButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(editModeAddVertex, listener, keyListener);
+	}
+
+	@Override
+	public void addAngleStepComboListener(final Consumer<AngleStep> listener) {
+		angleStepCombo.addItemListener(e -> listener.accept((AngleStep) e.getItem()));
 	}
 
 	private void addButtonListener(final AbstractButton button, final ActionListener listener,

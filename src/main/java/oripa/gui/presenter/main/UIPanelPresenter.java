@@ -161,6 +161,8 @@ public class UIPanelPresenter {
 		var addVertexState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
 				StringID.ADD_VERTEX_ID);
 		view.addEditModeAddVertexButtonListener(addVertexState::performActions, screenUpdater.getKeyListener());
+
+		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 	}
 
 	private void makeGridSizeHalf() {
