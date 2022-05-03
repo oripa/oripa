@@ -19,14 +19,45 @@
 package oripa.gui.view.main;
 
 import java.awt.Color;
+import java.util.function.Consumer;
 
+import javax.swing.JPanel;
+
+import oripa.domain.paint.PaintContext;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.view.View;
+import oripa.gui.viewsetting.ViewScreenUpdater;
+import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 
 /**
  * @author OUCHI Koji
  *
  */
 public interface UIPanelView extends View {
+	default JPanel asPanel() {
+		return (JPanel) this;
+	}
+
+	@Deprecated
+	UIPanelSetting getUIPanelSetting();
+
+	@Deprecated
+	PaintContext getPaintContext();
+
+	@Deprecated
+	CreasePatternViewContext getViewContext();
+
+	@Deprecated
+	ViewScreenUpdater getScreenUpdater();
+
+	void addGridSmallButtonListener(Runnable listener);
+
+	void addGridLargeButtonListener(Runnable listener);
+
+	void addGridChangeButtonListener(Consumer<Integer> listener);
+
+	void setGridDivNum(int gridDivNum);
+
 	void setEstimationResultColors(Color front, Color back);
 
 }

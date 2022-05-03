@@ -34,6 +34,7 @@ import java.util.Locale;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -78,6 +79,7 @@ import oripa.gui.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ButtonIcon;
+import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -890,13 +892,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 			screenUpdater.updateScreen();
 		});
 
-		gridSmallButton.addActionListener(e -> makeGridSizeHalf());
+//		gridChangeButton.addActionListener(e -> setGridDivNum());
 
-		gridLargeButton.addActionListener(e -> makeGridSizeTwiceLarge());
-
-		gridChangeButton.addActionListener(e -> setGridDivNum());
-
-		textFieldGrid.addActionListener(e -> setGridDivNum());
+		// textFieldGrid.addActionListener(e -> setGridDivNum());
 
 		// display/view settings
 		dispVertexCheckBox.addActionListener(e -> {
@@ -939,37 +937,35 @@ public class UIPanel extends JPanel implements UIPanelView {
 		windowOpener.showCheckerWindow(context.getCreasePattern(), viewContext.isZeroLineWidth());
 	}
 
-	private void makeGridSizeHalf() {
-		if (paintContext.getGridDivNum() < 65) {
-			paintContext.setGridDivNum(paintContext.getGridDivNum() * 2);
-			textFieldGrid.setValue(paintContext.getGridDivNum());
-
-			screenUpdater.updateScreen();
-		}
+	@Override
+	public void addGridSmallButtonListener(final Runnable listener) {
+		gridSmallButton.addActionListener(e -> listener.run());
 	}
 
-	private void makeGridSizeTwiceLarge() {
-		if (paintContext.getGridDivNum() > 3) {
-			paintContext.setGridDivNum(paintContext.getGridDivNum() / 2);
-			textFieldGrid.setValue(paintContext.getGridDivNum());
-
-			screenUpdater.updateScreen();
-		}
+	@Override
+	public void addGridLargeButtonListener(final Runnable listener) {
+		gridLargeButton.addActionListener(e -> listener.run());
 	}
 
-	private void setGridDivNum() {
-		int value;
+	@Override
+	public void addGridChangeButtonListener(final Consumer<Integer> listener) {
+		gridChangeButton.addActionListener(e -> listener.accept(parseGridDivNumText()));
+		textFieldGrid.addActionListener(e -> listener.accept(parseGridDivNumText()));
+	}
+
+	private int parseGridDivNumText() {
 		try {
-			value = Integer.parseInt(textFieldGrid.getText());
-			logger.debug("grid division num: {}", value);
-
-			if (value < 128 && value > 2) {
-				paintContext.setGridDivNum(value);
-				screenUpdater.updateScreen();
-			}
-		} catch (Exception ex) {
-			logger.error("failed to get grid division num.", ex);
+			return Integer.parseInt(textFieldGrid.getText());
+		} catch (Exception e) {
+			logger.debug("wrong text for grid div. num.", e);
+			textFieldGrid.setText(Integer.toString(Constants.DEFAULT_GRID_DIV_NUM));
+			return Constants.DEFAULT_GRID_DIV_NUM;
 		}
+	}
+
+	@Override
+	public void setGridDivNum(final int gridDivNum) {
+		textFieldGrid.setValue(gridDivNum);
 	}
 
 	public void setPaperDomainOfModelChangeListener(final PropertyChangeListener listener) {
@@ -1138,6 +1134,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		editModeGroup.setSelected(modeButton.getModel(), true);
 	}
 
+	@Override
 	public UIPanelSetting getUIPanelSetting() {
 		return setting;
 	}
@@ -1145,5 +1142,20 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void setViewVisible(final boolean visible) {
 		setVisible(visible);
+	}
+
+	@Override
+	public PaintContext getPaintContext() {
+		return paintContext;
+	}
+
+	@Override
+	public ViewScreenUpdater getScreenUpdater() {
+		return screenUpdater;
+	}
+
+	@Override
+	public CreasePatternViewContext getViewContext() {
+		return viewContext;
 	}
 }

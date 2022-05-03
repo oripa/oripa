@@ -77,6 +77,7 @@ public class MainFramePresenter {
 	private final MainFrameView view;
 
 	private final PainterScreenPresenter screenPresenter;
+	private final UIPanelPresenter uiPanelPresenter;
 
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
@@ -134,6 +135,8 @@ public class MainFramePresenter {
 				viewContext,
 				paintContext,
 				document);
+
+		uiPanelPresenter = new UIPanelPresenter(view.getUIPanelView());
 
 		stateFactory = new PaintBoundStateFactory(stateManager, view.getMainFrameSetting(), view.getUIPanelSetting(),
 				selectionOriginHolder);
