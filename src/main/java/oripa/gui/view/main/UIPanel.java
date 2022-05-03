@@ -39,6 +39,7 @@ import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,10 +60,6 @@ import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
-import oripa.gui.presenter.creasepattern.byvalue.AngleValueInputListener;
-import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
-import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
 import oripa.gui.presenter.main.CheckerWindowOpener;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
@@ -873,15 +870,15 @@ public class UIPanel extends JPanel implements UIPanelView {
 //		alterLineComboTo.addItemListener(new ToLineTypeItemListener(setting));
 
 		// draw line by value tool
-		buttonLength.addActionListener(
-				setterFactory.create(new LengthMeasuringAction(valueSetting)));
-		buttonAngle.addActionListener(
-				setterFactory.create(new AngleMeasuringAction(valueSetting)));
+//		buttonLength.addActionListener(
+//				setterFactory.create(new LengthMeasuringAction(valueSetting)));
+//		buttonAngle.addActionListener(
+//				setterFactory.create(new AngleMeasuringAction(valueSetting)));
 
-		textFieldLength.getDocument().addDocumentListener(
-				new LengthValueInputListener(valueSetting));
-		textFieldAngle.getDocument().addDocumentListener(
-				new AngleValueInputListener(valueSetting));
+//		textFieldLength.getDocument().addDocumentListener(
+//				new LengthValueInputListener(valueSetting));
+//		textFieldAngle.getDocument().addDocumentListener(
+//				new AngleValueInputListener(valueSetting));
 
 		// angle step tool
 		angleStepCombo.addItemListener(e -> paintContext.setAngleStep((AngleStep) e.getItem()));
@@ -970,6 +967,26 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addAlterLineComboToListener(final ItemListener listener) {
 		alterLineComboTo.addItemListener(listener);
+	}
+
+	@Override
+	public void addLengthButtonListener(final ActionListener listener) {
+		buttonLength.addActionListener(listener);
+	}
+
+	@Override
+	public void addAngleButtonListener(final ActionListener listener) {
+		buttonAngle.addActionListener(listener);
+	}
+
+	@Override
+	public void addLengthTextFieldListener(final DocumentListener listener) {
+		textFieldLength.getDocument().addDocumentListener(listener);
+	}
+
+	@Override
+	public void addAngleTextFieldListener(final DocumentListener listener) {
+		textFieldAngle.getDocument().addDocumentListener(listener);
 	}
 
 	private void addButtonListener(final AbstractButton button, final ActionListener listener,

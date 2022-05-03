@@ -27,6 +27,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
+import javax.swing.event.DocumentListener;
 
 import oripa.appstate.StateManager;
 import oripa.domain.paint.PaintContext;
@@ -99,6 +100,14 @@ public interface UIPanelView extends View {
 	void addAlterLineComboFromListener(ItemListener listener);
 
 	void addAlterLineComboToListener(ItemListener listener);
+
+	void addLengthButtonListener(ActionListener listener);
+
+	void addAngleButtonListener(ActionListener listener);
+
+	void addLengthTextFieldListener(DocumentListener listener);
+
+	void addAngleTextFieldListener(DocumentListener listener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 

@@ -41,6 +41,10 @@ import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
+import oripa.gui.presenter.creasepattern.byvalue.AngleValueInputListener;
+import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
+import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
 import oripa.gui.view.main.DialogWhileFolding;
 import oripa.gui.view.main.MainDialogService;
 import oripa.gui.view.main.UIPanelView;
@@ -144,6 +148,15 @@ public class UIPanelPresenter {
 
 		view.addAlterLineComboFromListener(new FromLineTypeItemListener(setting));
 		view.addAlterLineComboToListener(new ToLineTypeItemListener(setting));
+
+		view.addLengthButtonListener(
+				setterFactory.create(new LengthMeasuringAction(valueSetting)));
+		view.addAngleButtonListener(
+				setterFactory.create(new AngleMeasuringAction(valueSetting)));
+		view.addLengthTextFieldListener(
+				new LengthValueInputListener(valueSetting));
+		view.addAngleTextFieldListener(
+				new AngleValueInputListener(valueSetting));
 	}
 
 	private void makeGridSizeHalf() {
