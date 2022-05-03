@@ -110,7 +110,7 @@ public class PainterScreenPresenter {
 
 	private void paintComponent(final PaintComponentParameter p) {
 		var g = p.getGraphics();
-		var g2d = (Graphics2D) p.getGraphics();
+		var g2d = (Graphics2D) g;
 		var bufferG2D = p.getBufferGraphics();
 		var bufferImage = p.getBufferImage();
 
@@ -135,29 +135,6 @@ public class PainterScreenPresenter {
 			drawer.drawAllLines(bufferObjDrawer, crossLines, viewContext.getScale(),
 					viewContext.isZeroLineWidth());
 		}
-
-		// Line that links the pair of unsetled faces
-		// if (Config.FOR_STUDY) {
-		// List<OriFace> faces = origamiModel.getFaces();
-		//
-		// int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
-		//
-		// if (overlapRelation != null) {
-		// g2d.setStroke(LineSetting.STROKE_RIDGE);
-		// g2d.setColor(Color.MAGENTA);
-		// int size = faces.size();
-		// for (int i = 0; i < size; i++) {
-		// for (int j = i + 1; j < size; j++) {
-		// if (overlapRelation[i][j] == Doc.UNDEFINED) {
-		// Vector2d v0 = faces.get(i).getCenter();
-		// Vector2d v1 = faces.get(j).getCenter();
-		// g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));
-		//
-		// }
-		// }
-		// }
-		// }
-		// }
 
 		if (action == null) {
 			g.drawImage(bufferImage, 0, 0, view.asPanel());
@@ -191,35 +168,6 @@ public class PainterScreenPresenter {
 
 		mouseActionHolder.setMouseAction(action.onLeftClick(
 				viewContext, paintContext, isCtrlKeyDown));
-
-//
-//		new SwingWorker<Void, Void>() {
-//			@Override
-//			protected Void doInBackground() throws Exception {
-//				try {
-//					if (MouseUtility.isRightButtonEvent(e)) {
-//						action.onRightClick(
-//								viewContext, paintContext,
-//								MouseUtility.isControlKeyDown(e));
-//
-//						return null;
-//					}
-//
-//					mouseActionHolder.setMouseAction(action.onLeftClick(
-//							viewContext, paintContext,
-//							MouseUtility.isControlKeyDown(e)));
-//					return null;
-//				} catch (Exception e) {
-//					logger.error("error on mouse click", e);
-//				}
-//				return null;
-//			}
-//
-//			@Override
-//			protected void done() {
-//				repaint();
-//			}
-//		}.execute();
 	}
 
 	private void mouseRightClicked(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
@@ -230,35 +178,6 @@ public class PainterScreenPresenter {
 		}
 
 		action.onRightClick(viewContext, paintContext, isCtrlKeyDown);
-
-//
-//		new SwingWorker<Void, Void>() {
-//			@Override
-//			protected Void doInBackground() throws Exception {
-//				try {
-//					if (MouseUtility.isRightButtonEvent(e)) {
-//						action.onRightClick(
-//								viewContext, paintContext,
-//								MouseUtility.isControlKeyDown(e));
-//
-//						return null;
-//					}
-//
-//					mouseActionHolder.setMouseAction(action.onLeftClick(
-//							viewContext, paintContext,
-//							MouseUtility.isControlKeyDown(e)));
-//					return null;
-//				} catch (Exception e) {
-//					logger.error("error on mouse click", e);
-//				}
-//				return null;
-//			}
-//
-//			@Override
-//			protected void done() {
-//				repaint();
-//			}
-//		}.execute();
 	}
 
 	private void mousePressed(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
@@ -269,36 +188,16 @@ public class PainterScreenPresenter {
 		}
 
 		action.onPress(viewContext, paintContext, isCtrlKeyDown);
-
-//		try {
-//			if (MouseUtility.isLeftButtonEvent(e)) {
-//				action.onPress(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-//			}
-//		} catch (Exception ex) {
-//			logger.debug("error on mouse button press", ex);
-//		}
-//		preMousePoint = e.getPoint();
 	}
 
 	private void mouseReleased(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
 		GraphicMouseAction action = mouseActionHolder.getMouseAction();
-		// Rectangular Selection
 
 		if (action == null) {
 			return;
 		}
 
 		action.onRelease(viewContext, paintContext, isCtrlKeyDown);
-
-//		try {
-//			if (MouseUtility.isLeftButtonEvent(e)) {
-//				action.onRelease(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-//			}
-//		} catch (Exception ex) {
-//			logger.debug("error on mouse button release", ex);
-//		}
-//
-//		repaint();
 	}
 
 	private void mouseDragged(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
@@ -306,28 +205,6 @@ public class PainterScreenPresenter {
 
 		viewContext.setLogicalMousePoint(mousePoint);
 		action.onDrag(viewContext, paintContext, isCtrlKeyDown);
-
-//		if (!action.isUsingCtrlKeyOnDrag()) {
-//			if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
-//				viewContext.setScale(camera.getScale());
-//				return;
-//			}
-//		}
-//
-//		if (doCameraDragAction(e, camera::updateTranslateByMouseDragged)) {
-//			return;
-//		}
-//
-//		try {
-//			if (MouseUtility.isLeftButtonEvent(e)) {
-//				viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
-//				action.onDrag(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-//			}
-//		} catch (Exception ex) {
-//			logger.debug("error on mouse dragging", ex);
-//		}
-//
-//		repaint();
 	}
 
 	private void updateCameraScale(final Double scale) {
@@ -348,31 +225,6 @@ public class PainterScreenPresenter {
 		}
 
 		action.onMove(viewContext, paintContext, isCtrlKeyDown);
-
-//		viewContext.setScale(camera.getScale());
-//		viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
-//
-//		final GraphicMouseAction action = mouseActionHolder.getMouseAction();
-//		if (action == null) {
-//			return;
-//		}
-//
-//		new SwingWorker<Void, Void>() {
-//			@Override
-//			protected Void doInBackground() throws Exception {
-//				try {
-//					action.onMove(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-//				} catch (Exception ex) {
-//					logger.debug("error on mouse move", ex);
-//				}
-//				return null;
-//			}
-//
-//			@Override
-//			protected void done() {
-//				repaint();
-//			}
-//		}.execute();
 	}
 
 	public void setPaperDomainOfModel(final RectangleDomain domain) {

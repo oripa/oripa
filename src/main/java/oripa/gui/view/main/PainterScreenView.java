@@ -40,18 +40,6 @@ public interface PainterScreenView extends ScreenView {
 
 	MainScreenUpdater getScreenUpdater();
 
-//	@Deprecated
-//	PaintContext getPaintContext();
-//
-//	@Deprecated
-//	CreasePatternViewContext getViewContext();
-//
-//	@Deprecated
-//	CutModelOutlinesHolder getCutModelOutlinesHolder();
-//
-//	@Deprecated
-//	MouseActionHolder getMouseActionHolder();
-
 	void initializeCamera(RectangleDomain domain);
 
 	void setPaintComponentListener(Consumer<PaintComponentParameter> listener);
@@ -74,8 +62,6 @@ public interface PainterScreenView extends ScreenView {
 
 	void setUsingCtrlKeyOnDragListener(Runnable listener);
 
-//	void setRedrawRequestListener(Runnable listener);
-
 	void setZeroLineWidthUpdateListener(Consumer<Boolean> listener);
 
 	void setVertexVisibleUpdateListener(Consumer<Boolean> listener);
@@ -91,5 +77,4 @@ public interface PainterScreenView extends ScreenView {
 	void updateCameraCenter(RectangleDomain paperDomain);
 
 	void setUsingCtrlKeyOnDrag(boolean using);
-//	void setPaperDomainOfModel(RectangleDomain domain);
 }
