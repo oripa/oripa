@@ -53,8 +53,6 @@ import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.bind.ButtonFactory;
 import oripa.gui.bind.PaintActionButtonFactory;
-import oripa.gui.bind.binder.Binder;
-import oripa.gui.bind.binder.ViewChangeBinder;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
@@ -65,7 +63,6 @@ import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
-import oripa.gui.viewsetting.ChangeViewSetting;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
@@ -110,12 +107,18 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// Binding edit mode
 	private final ButtonGroup editModeGroup;
 
-	private JRadioButton editModeInputLineButton;
-	private JRadioButton editModeLineSelectionButton;
-	private JRadioButton editModeDeleteLineButton;
-	private JRadioButton editModeLineTypeButton;
-	private JRadioButton editModeAddVertex;
-	private JRadioButton editModeDeleteVertex;
+	private final JRadioButton editModeInputLineButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.INPUT_LINE_ID));
+	private final JRadioButton editModeLineSelectionButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.SELECT_ID));
+	private final JRadioButton editModeDeleteLineButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.DELETE_LINE_ID));
+	private final JRadioButton editModeLineTypeButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.CHANGE_LINE_TYPE_ID));
+	private final JRadioButton editModeAddVertex = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.ADD_VERTEX_ID));
+	private final JRadioButton editModeDeleteVertex = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.DELETE_VERTEX_ID));
 
 	// Line Selection Tools panel
 	private final JPanel lineSelectionPanel = new JPanel();
@@ -614,7 +617,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 			final MainFrameSetting mainFrameSetting,
 			final MainScreenSetting mainScreenSetting) {
 
-		Binder<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
+//		Binder<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
 
 		var stateFactory = new PaintBoundStateFactory(stateManager, mainFrameSetting, setting,
 				mainScreenSetting.getSelectionOriginHolder());
@@ -622,8 +625,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 		ButtonFactory buttonFactory = new PaintActionButtonFactory(
 				stateFactory, paintContext, actionHolder, screenUpdater);
 
-		editModeInputLineButton = new JRadioButton(
-				resources.getString(ResourceKey.LABEL, StringID.UI.INPUT_LINE_ID));
 //		editModeInputLineButton = viewChangeBinder.createButton(
 //				JRadioButton.class, null,
 //				StringID.UI.INPUT_LINE_ID,
@@ -631,39 +632,29 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setShortcut(editModeInputLineButton, KeyStrokes.get(KeyEvent.VK_I),
 				StringID.UI.INPUT_LINE_ID);
 
-		editModeLineSelectionButton = new JRadioButton(
-				resources.getString(ResourceKey.LABEL, StringID.SELECT_ID));
 //		editModeLineSelectionButton = viewChangeBinder.createButton(
 //				JRadioButton.class, null,
 //				StringID.SELECT_ID,
 //				screenUpdater.getKeyListener());
 
-		editModeDeleteLineButton = new JRadioButton(
-				resources.getString(ResourceKey.LABEL, StringID.DELETE_LINE_ID));
 //		editModeDeleteLineButton = buttonFactory.create(
 //				this, JRadioButton.class, StringID.DELETE_LINE_ID,
 //				screenUpdater.getKeyListener());
 		setShortcut(editModeDeleteLineButton, KeyStrokes.get(KeyEvent.VK_D),
 				StringID.DELETE_LINE_ID);
 
-		editModeLineTypeButton = new JRadioButton(
-				resources.getString(ResourceKey.LABEL, StringID.CHANGE_LINE_TYPE_ID));
 //		editModeLineTypeButton = buttonFactory.create(
 //				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID,
 //				screenUpdater.getKeyListener());
 		setShortcut(editModeLineTypeButton, KeyStrokes.get(KeyEvent.VK_T),
 				StringID.CHANGE_LINE_TYPE_ID);
 
-		editModeAddVertex = new JRadioButton(
-				resources.getString(ResourceKey.LABEL, StringID.ADD_VERTEX_ID));
 //		editModeAddVertex = buttonFactory.create(
 //				this, JRadioButton.class, StringID.ADD_VERTEX_ID,
 //				screenUpdater.getKeyListener());
 		setShortcut(editModeAddVertex, KeyStrokes.get(KeyEvent.VK_X),
 				StringID.ADD_VERTEX_ID);
 
-		editModeDeleteVertex = new JRadioButton(
-				resources.getString(ResourceKey.LABEL, StringID.DELETE_VERTEX_ID));
 //		editModeDeleteVertex = buttonFactory.create(
 //				this, JRadioButton.class, StringID.DELETE_VERTEX_ID,
 //				screenUpdater.getKeyListener());
