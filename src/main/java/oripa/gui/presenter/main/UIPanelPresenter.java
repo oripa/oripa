@@ -132,6 +132,9 @@ public class UIPanelPresenter {
 
 		var stateFactory = new PaintBoundStateFactory(stateManager, mainFrameSetting, setting, originHolder);
 
+		// ------------------------------------------------------------
+		// edit mode buttons
+
 		view.addEditModeInputLineButtonListener(
 				new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT),
 				screenUpdater.getKeyListener());
@@ -151,15 +154,6 @@ public class UIPanelPresenter {
 		view.addAlterLineComboFromListener(new FromLineTypeItemListener(setting));
 		view.addAlterLineComboToListener(new ToLineTypeItemListener(setting));
 
-		view.addLengthButtonListener(
-				setterFactory.create(new LengthMeasuringAction(valueSetting)));
-		view.addAngleButtonListener(
-				setterFactory.create(new AngleMeasuringAction(valueSetting)));
-		view.addLengthTextFieldListener(
-				new LengthValueInputListener(valueSetting));
-		view.addAngleTextFieldListener(
-				new AngleValueInputListener(valueSetting));
-
 		var addVertexState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
 				StringID.ADD_VERTEX_ID);
 		view.addEditModeAddVertexButtonListener(addVertexState::performActions, screenUpdater.getKeyListener());
@@ -168,6 +162,9 @@ public class UIPanelPresenter {
 				StringID.DELETE_VERTEX_ID);
 		view.addEditModeDeleteVertexButtonListener(deleteVertexState::performActions, screenUpdater.getKeyListener());
 
+		// ------------------------------------------------------------
+		// selection command buttons
+
 		var selectLineState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
 				StringID.SELECT_LINE_ID);
 		view.addSelectionButtonListener(selectLineState::performActions, screenUpdater.getKeyListener());
@@ -175,6 +172,9 @@ public class UIPanelPresenter {
 		var enlargementState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
 				StringID.ENLARGE_ID);
 		view.addEnlargementButtonListener(enlargementState::performActions, screenUpdater.getKeyListener());
+
+		// ------------------------------------------------------------
+		// input command buttons
 
 		var directVState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
 				StringID.DIRECT_V_ID);
@@ -187,6 +187,20 @@ public class UIPanelPresenter {
 		var verticalLineState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
 				StringID.VERTICAL_ID);
 		view.addLineInputVerticalLineButtonListener(verticalLineState::performActions, screenUpdater.getKeyListener());
+
+		var angleBisectorState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.BISECTOR_ID);
+		view.addLineInputAngleBisectorButtonListener(angleBisectorState::performActions,
+				screenUpdater.getKeyListener());
+
+		view.addLengthButtonListener(
+				setterFactory.create(new LengthMeasuringAction(valueSetting)));
+		view.addAngleButtonListener(
+				setterFactory.create(new AngleMeasuringAction(valueSetting)));
+		view.addLengthTextFieldListener(
+				new LengthValueInputListener(valueSetting));
+		view.addAngleTextFieldListener(
+				new AngleValueInputListener(valueSetting));
 
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 	}
