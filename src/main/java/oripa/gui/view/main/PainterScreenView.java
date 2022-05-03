@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,12 +18,80 @@
  */
 package oripa.gui.view.main;
 
-import oripa.gui.view.View;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+import javax.vecmath.Vector2d;
+
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.paint.PaintContext;
+import oripa.geom.RectangleDomain;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.view.ScreenView;
+import oripa.gui.viewsetting.main.MainScreenSetting;
+import oripa.gui.viewsetting.main.MainScreenUpdater;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface PainterScreenView extends View {
+public interface PainterScreenView extends ScreenView {
 
+	static final double INITIAL_CAMERA_SCALE = 1.5;
+
+	@Deprecated
+	MainScreenSetting getMainScreenSetting();
+
+	@Deprecated
+	MainScreenUpdater getScreenUpdater();
+
+	@Deprecated
+	PaintContext getPaintContext();
+
+	@Deprecated
+	CreasePatternViewContext getViewContext();
+
+	@Deprecated
+	CutModelOutlinesHolder getCutModelOutlinesHolder();
+
+	@Deprecated
+	MouseActionHolder getMouseActionHolder();
+
+	void initializeCamera(RectangleDomain domain);
+
+	void setPaintComponentListener(Consumer<PaintComponentParameter> listener);
+
+	void setMouseLeftClickListener(BiConsumer<Vector2d, Boolean> listener);
+
+	void setMouseRightClickListener(BiConsumer<Vector2d, Boolean> listener);
+
+	void setMousePressListener(BiConsumer<Vector2d, Boolean> listener);
+
+	void setMouseReleaseListener(BiConsumer<Vector2d, Boolean> listener);
+
+	void setMouseDragListener(BiConsumer<Vector2d, Boolean> listener);
+
+	void setMouseMoveListener(BiConsumer<Vector2d, Boolean> listener);
+
+	void setCameraScaleUpdateListener(Consumer<Double> listener);
+
+	void setCameraCenterUpdateListener(Runnable listener);
+
+//	void setRedrawRequestListener(Runnable listener);
+
+	void setZeroLineWidthUpdateListener(Consumer<Boolean> listener);
+
+	void setVertexVisibleUpdateListener(Consumer<Boolean> listener);
+
+	void setMVLineVisibleUpdateListener(Consumer<Boolean> listener);
+
+	void setAuxLineVisibleUpdateListener(Consumer<Boolean> listener);
+
+	void setGridVisibleUpdateListener(Consumer<Boolean> listener);
+
+	void setCrossLineVisibleUpdateListener(Consumer<Boolean> listener);
+
+	void updateCameraCenter(RectangleDomain paperDomain);
+//	void setPaperDomainOfModel(RectangleDomain domain);
 }

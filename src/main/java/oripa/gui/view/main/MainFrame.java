@@ -58,6 +58,7 @@ import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
+import oripa.gui.viewsetting.main.MainScreenUpdater;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
@@ -213,7 +214,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 		screenUpdater = mainScreen.getScreenUpdater();
 		screenSetting = mainScreen.getMainScreenSetting();
 
-		var originHolder = screenSetting.getSelectionOriginHolder();
+//		var originHolder = screenSetting.getSelectionOriginHolder();
 
 		// this has to be done before instantiation of UI panel.
 		addHintPropertyChangeListenersToSetting();
@@ -884,7 +885,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	}
 
 	@Override
-	public ViewScreenUpdater getScreenUpdater() {
+	public MainScreenUpdater getScreenUpdater() {
 		return mainScreen.getScreenUpdater();
 	}
 
@@ -1046,10 +1047,10 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 		uiPanel.setPaperDomainOfModelChangeListener(e -> listener.accept((RectangleDomain) e.getNewValue()));
 	}
 
-	@Override
-	public void setPaperDomainOfModel(final RectangleDomain domain) {
-		mainScreen.setPaperDomainOfModel(domain);
-	}
+//	@Override
+//	public void setPaperDomainOfModel(final RectangleDomain domain) {
+//		mainScreen.setPaperDomainOfModel(domain);
+//	}
 
 	@Override
 	public PaintContext getPaintContext() {

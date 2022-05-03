@@ -30,9 +30,9 @@ import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.FrameView;
-import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
+import oripa.gui.viewsetting.main.MainScreenUpdater;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 
 /**
@@ -50,7 +50,7 @@ public interface MainFrameView extends FrameView {
 
 	MainScreenSetting getMainScreenSetting();
 
-	ViewScreenUpdater getScreenUpdater();
+	MainScreenUpdater getScreenUpdater();
 
 	void addClearButtonListener(Runnable listener);
 
@@ -102,7 +102,7 @@ public interface MainFrameView extends FrameView {
 
 	void setPaperDomainOfModelChangeListener(Consumer<RectangleDomain> listener);
 
-	void setPaperDomainOfModel(RectangleDomain domain);
+//	void setPaperDomainOfModel(RectangleDomain domain);
 
 	/**
 	 * invoked when MRU file menu item is clicked.

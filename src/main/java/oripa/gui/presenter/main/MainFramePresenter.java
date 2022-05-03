@@ -52,8 +52,8 @@ import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PropertyDialog;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.Dialogs;
-import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainScreenSetting;
+import oripa.gui.viewsetting.main.MainScreenUpdater;
 import oripa.persistence.dao.AbstractFilterSelector;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
 import oripa.persistence.doc.DocDAO;
@@ -76,14 +76,16 @@ public class MainFramePresenter {
 
 	private final MainFrameView view;
 
+	private final PainterScreenPresenter screenPresenter;
+
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private final StateManager<EditMode> stateManager;
-	private final SelectionOriginHolder selectionOriginHolder = new SelectionOriginHolder();
+	private final SelectionOriginHolder selectionOriginHolder;
 
 //	private final MainFrameSetting setting = new MainFrameSetting();
-	private final ViewScreenUpdater screenUpdater;
+	private final MainScreenUpdater screenUpdater;
 	private final MainScreenSetting screenSetting;
 
 	private final PaintBoundStateFactory stateFactory;
@@ -124,6 +126,9 @@ public class MainFramePresenter {
 
 		screenUpdater = view.getScreenUpdater();
 		screenSetting = view.getMainScreenSetting();
+		selectionOriginHolder = screenSetting.getSelectionOriginHolder();
+
+		screenPresenter = new PainterScreenPresenter(view.getPainterScreenView());
 
 		stateFactory = new PaintBoundStateFactory(stateManager, view.getMainFrameSetting(), view.getUIPanelSetting(),
 				selectionOriginHolder);
@@ -238,7 +243,7 @@ public class MainFramePresenter {
 
 		});
 
-		view.setPaperDomainOfModelChangeListener(view::setPaperDomainOfModel);
+		view.setPaperDomainOfModelChangeListener(screenPresenter::setPaperDomainOfModel);
 
 		view.addWindowClosingListener(this::windowClosing);
 	}
