@@ -38,8 +38,8 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.main.PaintComponentParameter;
 import oripa.gui.view.main.PainterScreenView;
-import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainScreenSetting;
+import oripa.gui.viewsetting.main.MainScreenUpdater;
 
 /**
  * @author OUCHI Koji
@@ -51,7 +51,7 @@ public class PainterScreenPresenter {
 	private final PainterScreenView view;
 
 	private final MainScreenSetting setting;
-	private final ViewScreenUpdater screenUpdater;
+	private final MainScreenUpdater screenUpdater;
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 
@@ -63,15 +63,22 @@ public class PainterScreenPresenter {
 
 	private RectangleDomain paperDomainOfModel;
 
-	public PainterScreenPresenter(final PainterScreenView view) {
+	public PainterScreenPresenter(final PainterScreenView view,
+			final MouseActionHolder mouseActionHolder,
+			final CreasePatternViewContext viewContext,
+			final PaintContext paintContext,
+			final CutModelOutlinesHolder cutOutlineHolder) {
 		this.view = view;
 
 		setting = view.getMainScreenSetting();
 		screenUpdater = view.getScreenUpdater();
-		paintContext = view.getPaintContext();
-		viewContext = view.getViewContext();
-		cutOutlinesHolder = view.getCutModelOutlinesHolder();
-		mouseActionHolder = view.getMouseActionHolder();
+		this.paintContext = paintContext;
+		this.viewContext = viewContext;
+		this.cutOutlinesHolder = cutOutlineHolder;
+		this.mouseActionHolder = mouseActionHolder;
+
+		var actionSwitcher = new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder);
+		screenUpdater.setChangeActionIfCopyAndPaste(actionSwitcher);
 
 		setListeners();
 
@@ -97,6 +104,8 @@ public class PainterScreenPresenter {
 
 		view.setCameraScaleUpdateListener(this::updateCameraScale);
 		view.setCameraCenterUpdateListener(this::updateCameraCenter);
+
+		view.setUsingCtrlKeyOnDragListener(this::updateUsingCtrlKeyOnDrag);
 	}
 
 	private void paintComponent(final PaintComponentParameter p) {
@@ -369,6 +378,10 @@ public class PainterScreenPresenter {
 	public void setPaperDomainOfModel(final RectangleDomain domain) {
 		paperDomainOfModel = domain;
 		screenUpdater.updateScreen();
+	}
+
+	private void updateUsingCtrlKeyOnDrag() {
+		view.setUsingCtrlKeyOnDrag(mouseActionHolder.getMouseAction().isUsingCtrlKeyOnDrag());
 	}
 
 }

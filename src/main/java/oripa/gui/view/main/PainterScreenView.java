@@ -23,11 +23,7 @@ import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.ScreenView;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
@@ -40,23 +36,21 @@ public interface PainterScreenView extends ScreenView {
 
 	static final double INITIAL_CAMERA_SCALE = 1.5;
 
-	@Deprecated
 	MainScreenSetting getMainScreenSetting();
 
-	@Deprecated
 	MainScreenUpdater getScreenUpdater();
 
-	@Deprecated
-	PaintContext getPaintContext();
-
-	@Deprecated
-	CreasePatternViewContext getViewContext();
-
-	@Deprecated
-	CutModelOutlinesHolder getCutModelOutlinesHolder();
-
-	@Deprecated
-	MouseActionHolder getMouseActionHolder();
+//	@Deprecated
+//	PaintContext getPaintContext();
+//
+//	@Deprecated
+//	CreasePatternViewContext getViewContext();
+//
+//	@Deprecated
+//	CutModelOutlinesHolder getCutModelOutlinesHolder();
+//
+//	@Deprecated
+//	MouseActionHolder getMouseActionHolder();
 
 	void initializeCamera(RectangleDomain domain);
 
@@ -78,6 +72,8 @@ public interface PainterScreenView extends ScreenView {
 
 	void setCameraCenterUpdateListener(Runnable listener);
 
+	void setUsingCtrlKeyOnDragListener(Runnable listener);
+
 //	void setRedrawRequestListener(Runnable listener);
 
 	void setZeroLineWidthUpdateListener(Consumer<Boolean> listener);
@@ -93,5 +89,7 @@ public interface PainterScreenView extends ScreenView {
 	void setCrossLineVisibleUpdateListener(Consumer<Boolean> listener);
 
 	void updateCameraCenter(RectangleDomain paperDomain);
+
+	void setUsingCtrlKeyOnDrag(boolean using);
 //	void setPaperDomainOfModel(RectangleDomain domain);
 }

@@ -43,13 +43,7 @@ import javax.vecmath.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.view.util.AffineCamera;
 import oripa.gui.view.util.MouseUtility;
 import oripa.gui.viewsetting.ViewScreenUpdater;
@@ -64,19 +58,12 @@ public class PainterScreen extends JPanel
 
 	private final MainScreenSetting setting = new MainScreenSetting();
 	private final MainScreenUpdater screenUpdater = new MainScreenUpdater();
-	private final PaintContext paintContext;
-	private final CreasePatternViewContext viewContext;
 
-	private final CutModelOutlinesHolder cutOutlinesHolder;
-
-	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
 	private Point2D preMousePoint; // Screen coordinates
 
 	private final AffineCamera camera = new AffineCamera();
 	private AffineTransform affineTransform = new AffineTransform();
-
-	private final MouseActionHolder mouseActionHolder;
 
 	private Consumer<PaintComponentParameter> paintComponentListener;
 	private BiConsumer<Vector2d, Boolean> mouseLeftClickListener;
@@ -88,7 +75,9 @@ public class PainterScreen extends JPanel
 
 	private Consumer<Double> cameraScaleUpdateListener;
 	private Runnable cameraCenterUpdateListener;
-	private Runnable redrawRequestListener;
+
+	private Runnable usingCtrlKeyOnDragListener;
+
 	private Consumer<Boolean> zeroLineWidthUpdateListener;
 	private Consumer<Boolean> vertexVisibleUpdateListener;
 	private Consumer<Boolean> mvLineVisibleUpdateListener;
@@ -96,31 +85,16 @@ public class PainterScreen extends JPanel
 	private Consumer<Boolean> gridVisibleUpdateListener;
 	private Consumer<Boolean> crossLineVisibleUpdateListener;
 
-	public PainterScreen(
-			final MouseActionHolder mouseActionHolder,
-			final CreasePatternViewContext viewContext,
-			final PaintContext paintContext,
-			final CutModelOutlinesHolder aCutOutlineHolder) {
-		this.mouseActionHolder = mouseActionHolder;
+	private boolean actionUsingCtrlKeyOnDrag;
 
-		var actionSwitcher = new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder);
-		screenUpdater.setChangeActionIfCopyAndPaste(actionSwitcher);
+	public PainterScreen() {
 
-		this.paintContext = paintContext;
-		this.viewContext = viewContext;
-		cutOutlinesHolder = aCutOutlineHolder;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
 		addComponentListener(this);
 
 		addPropertyChangeListenersToSetting();
-
-//		camera.updateScale(INITIAL_CAMERA_SCALE);
-//		var domain = paintContext.getPaperDomain();
-//		camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
-//
-//		viewContext.setScale(camera.getScale());
 
 		setBackground(Color.WHITE);
 	}
@@ -145,71 +119,6 @@ public class PainterScreen extends JPanel
 		return setting;
 	}
 
-	/*
-	 * for verifying algorithm
-	 *
-	 * @param g2d
-	 */
-	// public void drawModel(Graphics2D g2d) {
-	//
-	// if (! Config.FOR_STUDY) {
-	// return;
-	// }
-	//
-	// Doc document = ORIPA.doc;
-	// OrigamiModel origamiModel = document.getOrigamiModel();
-	//
-	// List<OriFace> faces = origamiModel.getFaces();
-	// List<OriVertex> vertices = origamiModel.getVertices();
-	//
-	//
-	// if (bDrawFaceID) {
-	// g2d.setColor(Color.BLACK);
-	// for (OriFace face : faces) {
-	// g2d.drawString("" + face.tmpInt, (int) face.getCenter().x,
-	// (int) face.getCenter().y);
-	// }
-	// }
-	//
-	// g2d.setColor(new Color(255, 210, 220));
-	// for (OriFace face : faces) {
-	// if (face.tmpInt2 == 0) {
-	// g2d.setColor(Color.RED);
-	// g2d.fill(face.preOutline);
-	// } else {
-	// g2d.setColor(face.color);
-	// }
-	//
-	// if (face.hasProblem) {
-	// g2d.setColor(Color.RED);
-	// } else {
-	// if (face.faceFront) {
-	// g2d.setColor(new Color(255, 200, 200));
-	// } else {
-	// g2d.setColor(new Color(200, 200, 255));
-	// }
-	// }
-	//
-	// // g2d.fill(face.preOutline);
-	// }
-	//
-	// g2d.setColor(Color.BLACK);
-	//
-	//
-	// for (OriFace face : faces) {
-	// g2d.drawString("" + face.z_order, (int) face.getCenter().x,
-	// (int) face.getCenter().y);
-	// }
-	//
-	// g2d.setColor(Color.RED);
-	// for (OriVertex v : vertices) {
-	// if (v.hasProblem) {
-	// g2d.fill(new Rectangle2D.Double(v.p.x - 8.0 / scale,
-	// v.p.y - 8.0 / scale, 16.0 / scale, 16.0 / scale));
-	// }
-	// }
-	// }
-
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
 		affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
@@ -229,8 +138,6 @@ public class PainterScreen extends JPanel
 		bufferg.setColor(Color.WHITE);
 		bufferg.fillRect(0, 0, getWidth(), getHeight());
 
-//		var domain = paintContext.getPaperDomain();
-
 		cameraCenterUpdateListener.run();
 
 		// set the AffineTransform of buffer
@@ -245,64 +152,6 @@ public class PainterScreen extends JPanel
 
 		paintComponentListener.accept(new PaintComponentParameter(g, updateBufferImage(), bufferImage));
 
-//
-//		if (!viewContext.isZeroLineWidth()) {
-//			bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-//					RenderingHints.VALUE_ANTIALIAS_ON);
-//		}
-//
-//		GraphicMouseAction action = mouseActionHolder.getMouseAction();
-//
-//		ObjectGraphicDrawer bufferObjDrawer = new CreasePatternObjectDrawer(bufferG2D);
-//
-//		drawer.draw(bufferObjDrawer, viewContext, paintContext,
-//				action == null ? false : action.getEditMode() == EditMode.VERTEX);
-//
-//		if (paperDomainOfModel != null) {
-//			drawPaperDomainOfModel(bufferObjDrawer);
-//		}
-//
-//		if (viewContext.isCrossLineVisible()) {
-//			var crossLines = cutOutlinesHolder.getOutlines();
-//			drawer.drawAllLines(bufferObjDrawer, crossLines, camera.getScale(),
-//					viewContext.isZeroLineWidth());
-//		}
-//
-//		// Line that links the pair of unsetled faces
-//		// if (Config.FOR_STUDY) {
-//		// List<OriFace> faces = origamiModel.getFaces();
-//		//
-//		// int[][] overlapRelation = foldedModelInfo.getOverlapRelation();
-//		//
-//		// if (overlapRelation != null) {
-//		// g2d.setStroke(LineSetting.STROKE_RIDGE);
-//		// g2d.setColor(Color.MAGENTA);
-//		// int size = faces.size();
-//		// for (int i = 0; i < size; i++) {
-//		// for (int j = i + 1; j < size; j++) {
-//		// if (overlapRelation[i][j] == Doc.UNDEFINED) {
-//		// Vector2d v0 = faces.get(i).getCenter();
-//		// Vector2d v1 = faces.get(j).getCenter();
-//		// g2d.draw(new Line2D.Double(v0.x, v0.y, v1.x, v1.y));
-//		//
-//		// }
-//		// }
-//		// }
-//		// }
-//		// }
-//
-//		if (action == null) {
-//			g.drawImage(bufferImage, 0, 0, this);
-//			return;
-//		}
-//
-//		action.onDraw(bufferObjDrawer, viewContext, paintContext);
-//
-//		g.drawImage(bufferImage, 0, 0, this);
-//
-//		ObjectGraphicDrawer objDrawer = new CreasePatternObjectDrawer((Graphics2D) g);
-//		drawer.drawCandidatePositionString(objDrawer,
-//				paintContext.getCandidateVertexToPick());
 	}
 
 	@Override
@@ -336,40 +185,6 @@ public class PainterScreen extends JPanel
 			}
 		}.execute();
 
-//		final GraphicMouseAction action = mouseActionHolder.getMouseAction();
-//
-//		if (action == null) {
-//			return;
-//		}
-//
-//		new SwingWorker<Void, Void>() {
-//			@Override
-//			protected Void doInBackground() throws Exception {
-//				try {
-//					if (MouseUtility.isRightButtonEvent(e)) {
-//						action.onRightClick(
-//								viewContext, paintContext,
-//								MouseUtility.isControlKeyDown(e));
-//
-//						return null;
-//					}
-//
-//					mouseActionHolder.setMouseAction(action.onLeftClick(
-//							viewContext, paintContext,
-//							MouseUtility.isControlKeyDown(e)));
-//					return null;
-//				} catch (Exception e) {
-//					logger.error("error on mouse click", e);
-//				}
-//				return null;
-//			}
-//
-//			@Override
-//			protected void done() {
-//				repaint();
-//			}
-//		}.execute();
-//
 	}
 
 	@Override
@@ -383,21 +198,6 @@ public class PainterScreen extends JPanel
 			logger.debug("error on mouse button press", ex);
 		}
 		preMousePoint = e.getPoint();
-
-//		GraphicMouseAction action = mouseActionHolder.getMouseAction();
-//
-//		if (action == null) {
-//			return;
-//		}
-//
-//		try {
-//			if (MouseUtility.isLeftButtonEvent(e)) {
-//				action.onPress(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-//			}
-//		} catch (Exception ex) {
-//			logger.debug("error on mouse button press", ex);
-//		}
-//		preMousePoint = e.getPoint();
 	}
 
 	@Override
@@ -412,22 +212,6 @@ public class PainterScreen extends JPanel
 		}
 
 		repaint();
-
-//		GraphicMouseAction action = mouseActionHolder.getMouseAction();
-//
-//		if (action == null) {
-//			return;
-//		}
-//
-//		try {
-//			if (MouseUtility.isLeftButtonEvent(e)) {
-//				action.onRelease(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-//			}
-//		} catch (Exception ex) {
-//			logger.debug("error on mouse button release", ex);
-//		}
-//
-//		repaint();
 	}
 
 	@Override
@@ -440,9 +224,10 @@ public class PainterScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 
-		if (!action.isUsingCtrlKeyOnDrag()) {
+		usingCtrlKeyOnDragListener.run();
+
+		if (!actionUsingCtrlKeyOnDrag) {
 			if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
 				cameraScaleUpdateListener.accept(camera.getScale());
 				return;
@@ -464,28 +249,6 @@ public class PainterScreen extends JPanel
 		}
 
 		repaint();
-
-//		if (!action.isUsingCtrlKeyOnDrag()) {
-//			if (doCameraDragAction(e, camera::updateScaleByMouseDragged)) {
-//				viewContext.setScale(camera.getScale());
-//				return;
-//			}
-//		}
-//
-//		if (doCameraDragAction(e, camera::updateTranslateByMouseDragged)) {
-//			return;
-//		}
-//
-//		try {
-//			if (MouseUtility.isLeftButtonEvent(e)) {
-//				viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
-//				action.onDrag(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-//			}
-//		} catch (Exception ex) {
-//			logger.debug("error on mouse dragging", ex);
-//		}
-//
-//		repaint();
 	}
 
 	private Vector2d createMousePoint(final AffineTransform affineTransform, final Point point) {
@@ -527,31 +290,6 @@ public class PainterScreen extends JPanel
 				repaint();
 			}
 		}.execute();
-
-//		viewContext.setScale(camera.getScale());
-//		viewContext.setLogicalMousePoint(createMousePoint(affineTransform, e.getPoint()));
-//
-//		final GraphicMouseAction action = mouseActionHolder.getMouseAction();
-//		if (action == null) {
-//			return;
-//		}
-//
-//		new SwingWorker<Void, Void>() {
-//			@Override
-//			protected Void doInBackground() throws Exception {
-//				try {
-//					action.onMove(viewContext, paintContext, MouseUtility.isControlKeyDown(e));
-//				} catch (Exception ex) {
-//					logger.debug("error on mouse move", ex);
-//				}
-//				return null;
-//			}
-//
-//			@Override
-//			protected void done() {
-//				repaint();
-//			}
-//		}.execute();
 	}
 
 	@Override
@@ -559,7 +297,7 @@ public class PainterScreen extends JPanel
 		affineTransform = camera.updateScaleByMouseWheel(e);
 
 		cameraScaleUpdateListener.accept(camera.getScale());
-		// viewContext.setScale(camera.getScale());
+
 		repaint();
 	}
 
@@ -588,12 +326,6 @@ public class PainterScreen extends JPanel
 	public void componentHidden(final ComponentEvent arg0) {
 
 	}
-
-//	@Override
-//	public void setPaperDomainOfModel(final RectangleDomain domain) {
-//		paperDomainOfModel = domain;
-//		repaint();
-//	}
 
 	private void addPropertyChangeListenersToSetting() {
 		screenUpdater.addPropertyChangeListener(
@@ -634,75 +366,11 @@ public class PainterScreen extends JPanel
 					crossLineVisibleUpdateListener.accept((Boolean) e.getNewValue());
 					repaint();
 				});
-
-//		setting.addPropertyChangeListener(
-//				MainScreenSetting.ZERO_LINE_WIDTH, e -> {
-//					viewContext.setZeroLineWidth((boolean) e.getNewValue());
-//					repaint();
-//				});
-//
-//		setting.addPropertyChangeListener(
-//				MainScreenSetting.VERTEX_VISIBLE, e -> {
-//					viewContext.setVertexVisible((boolean) e.getNewValue());
-//					repaint();
-//				});
-//
-//		setting.addPropertyChangeListener(
-//				MainScreenSetting.MV_LINE_VISIBLE, e -> {
-//					viewContext.setMVLineVisible((boolean) e.getNewValue());
-//					repaint();
-//				});
-//
-//		setting.addPropertyChangeListener(
-//				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
-//					viewContext.setAuxLineVisible((boolean) e.getNewValue());
-//					repaint();
-//				});
-//
-//		setting.addPropertyChangeListener(
-//				MainScreenSetting.GRID_VISIBLE, e -> {
-//					viewContext.setGridVisible((boolean) e.getNewValue());
-//					repaint();
-//				});
-//
-//		setting.addPropertyChangeListener(
-//				MainScreenSetting.CROSS_LINE_VISIBLE, e -> {
-//					var visible = (boolean) e.getNewValue();
-//					logger.info("receive crossLineVisible has become " + visible);
-//					viewContext.setCrossLineVisible(visible);
-//					repaint();
-//				});
-
 	}
 
 	@Override
 	public void setViewVisible(final boolean visible) {
 		setVisible(visible);
-	}
-
-//	@Override
-//	public void updateView() {
-//		repaint();
-//	}
-
-	@Override
-	public PaintContext getPaintContext() {
-		return paintContext;
-	}
-
-	@Override
-	public CreasePatternViewContext getViewContext() {
-		return viewContext;
-	}
-
-	@Override
-	public CutModelOutlinesHolder getCutModelOutlinesHolder() {
-		return cutOutlinesHolder;
-	}
-
-	@Override
-	public MouseActionHolder getMouseActionHolder() {
-		return mouseActionHolder;
 	}
 
 	@Override
@@ -755,11 +423,6 @@ public class PainterScreen extends JPanel
 		affineTransform = camera.updateCenterOfPaper(paperDomain.getCenterX(), paperDomain.getCenterY());
 	}
 
-//	@Override
-//	public void setRedrawRequestListener(final Runnable listener) {
-//		redrawRequestListener = listener;
-//	}
-
 	@Override
 	public void setZeroLineWidthUpdateListener(final Consumer<Boolean> listener) {
 		zeroLineWidthUpdateListener = listener;
@@ -789,4 +452,15 @@ public class PainterScreen extends JPanel
 	public void setCrossLineVisibleUpdateListener(final Consumer<Boolean> listener) {
 		crossLineVisibleUpdateListener = listener;
 	}
+
+	@Override
+	public void setUsingCtrlKeyOnDragListener(final Runnable listener) {
+		usingCtrlKeyOnDragListener = listener;
+	}
+
+	@Override
+	public void setUsingCtrlKeyOnDrag(final boolean using) {
+		actionUsingCtrlKeyOnDrag = using;
+	}
+
 }

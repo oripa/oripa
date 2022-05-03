@@ -208,9 +208,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 		document.setCreasePattern(paintContext.getCreasePattern());
 
-		mainScreen = new PainterScreen(actionHolder,
-				viewContext, paintContext,
-				document);
+		mainScreen = new PainterScreen();
 		screenUpdater = mainScreen.getScreenUpdater();
 		screenSetting = mainScreen.getMainScreenSetting();
 

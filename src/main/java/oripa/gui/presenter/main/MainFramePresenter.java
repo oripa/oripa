@@ -128,7 +128,12 @@ public class MainFramePresenter {
 		screenSetting = view.getMainScreenSetting();
 		selectionOriginHolder = screenSetting.getSelectionOriginHolder();
 
-		screenPresenter = new PainterScreenPresenter(view.getPainterScreenView());
+		screenPresenter = new PainterScreenPresenter(
+				view.getPainterScreenView(),
+				actionHolder,
+				viewContext,
+				paintContext,
+				document);
 
 		stateFactory = new PaintBoundStateFactory(stateManager, view.getMainFrameSetting(), view.getUIPanelSetting(),
 				selectionOriginHolder);
