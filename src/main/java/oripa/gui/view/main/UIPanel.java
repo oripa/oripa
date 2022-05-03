@@ -617,7 +617,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		editModeInputLineButton = new JRadioButton(
 				resources.getString(ResourceKey.LABEL, StringID.UI.INPUT_LINE_ID));
-		screenUpdater.getKeyListener();
 //		editModeInputLineButton = viewChangeBinder.createButton(
 //				JRadioButton.class, null,
 //				StringID.UI.INPUT_LINE_ID,
@@ -625,10 +624,13 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setShortcut(editModeInputLineButton, KeyStrokes.get(KeyEvent.VK_I),
 				StringID.UI.INPUT_LINE_ID);
 
-		editModeLineSelectionButton = viewChangeBinder.createButton(
-				JRadioButton.class, null,
-				StringID.SELECT_ID,
-				screenUpdater.getKeyListener());
+		editModeLineSelectionButton = new JRadioButton(
+				resources.getString(ResourceKey.LABEL, StringID.SELECT_ID));
+
+//		editModeLineSelectionButton = viewChangeBinder.createButton(
+//				JRadioButton.class, null,
+//				StringID.SELECT_ID,
+//				screenUpdater.getKeyListener());
 
 		editModeDeleteLineButton = buttonFactory.create(
 				this, JRadioButton.class, StringID.DELETE_LINE_ID,
