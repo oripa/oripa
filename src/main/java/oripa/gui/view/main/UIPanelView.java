@@ -19,6 +19,8 @@
 package oripa.gui.view.main;
 
 import java.awt.Color;
+import java.beans.PropertyChangeListener;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
@@ -58,6 +60,20 @@ public interface UIPanelView extends View {
 
 	void setGridDivNum(int gridDivNum);
 
+	void addBuildButtonListener(Runnable listener);
+
 	void setEstimationResultColors(Color front, Color back);
+
+	void setBuildButtonEnabled(boolean enabled);
+
+	boolean getFullEstimation();
+
+	Color getEstimationResultFrontColor();
+
+	Color getEstimationResultBackColor();
+
+	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
+
+	PropertyChangeListener getPaperDomainOfModelChangeListener();
 
 }

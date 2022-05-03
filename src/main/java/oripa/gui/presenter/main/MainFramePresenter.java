@@ -136,7 +136,12 @@ public class MainFramePresenter {
 				paintContext,
 				document);
 
-		uiPanelPresenter = new UIPanelPresenter(view.getUIPanelView());
+		uiPanelPresenter = new UIPanelPresenter(
+				view.getUIPanelView(),
+				screenSetting,
+				document);
+
+		uiPanelPresenter.setChildFrameManager(childFrameManager);
 
 		stateFactory = new PaintBoundStateFactory(stateManager, view.getMainFrameSetting(), view.getUIPanelSetting(),
 				selectionOriginHolder);

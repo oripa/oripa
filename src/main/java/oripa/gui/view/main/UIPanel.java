@@ -29,10 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -46,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import oripa.appstate.CommandStatePopper;
 import oripa.appstate.StateManager;
 import oripa.domain.cptool.TypeForChange;
-import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
@@ -65,9 +61,7 @@ import oripa.gui.presenter.creasepattern.byvalue.AngleValueInputListener;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
 import oripa.gui.presenter.main.CheckerWindowOpener;
-import oripa.gui.presenter.main.FoldedModelWindowOpener;
 import oripa.gui.view.util.ChildFrameManager;
-import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
@@ -922,8 +916,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		buttonCheckWindow.addActionListener(e -> showCheckerWindow(viewContext, paintContext));
 
-		buildButton.addActionListener(
-				e -> showFoldedModelWindows(cutOutlinesHolder, mainScreenSetting));
+//		buildButton.addActionListener(
+//				e -> showFoldedModelWindows(cutOutlinesHolder, mainScreenSetting));
 	}
 
 	/**
@@ -985,80 +979,85 @@ public class UIPanel extends JPanel implements UIPanelView {
 		};
 	}
 
-	/**
-	 * open window with folded model
-	 */
-	private void showFoldedModelWindows(
-			final CutModelOutlinesHolder cutOutlinesHolder,
-			final MainScreenSetting mainScreenSetting) {
+//	/**
+//	 * open window with folded model
+//	 */
+//	private void showFoldedModelWindows(
+//			final CutModelOutlinesHolder cutOutlinesHolder,
+//			final MainScreenSetting mainScreenSetting) {
+//
+//		var frame = (JFrame) this.getTopLevelAncestor();
+//
+//		// modal dialog while folding
+//		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
+//
+//		var worker = new SwingWorker<List<JFrame>, Void>() {
+//			@Override
+//			protected List<JFrame> doInBackground() throws Exception {
+//				CreasePattern creasePattern = paintContext.getCreasePattern();
+//
+//				var parent = UIPanel.this;
+//
+//				var windowOpener = new FoldedModelWindowOpener(parent, childFrameManager,
+//						// ask if ORIPA should try to remove duplication.
+//						() -> dialogService.showCleaningUpDuplicationDialog(parent) == JOptionPane.YES_OPTION,
+//						// clean up the crease pattern
+//						() -> dialogService.showCleaningUpMessage(parent),
+//						// folding failed.
+//						() -> dialogService.showFoldFailureMessage(parent),
+//						// no answer is found.
+//						() -> dialogService.showNoAnswerMessage(parent));
+//
+//				try {
+//					return windowOpener.showFoldedModelWindows(
+//							creasePattern,
+//							cutOutlinesHolder,
+//							mainScreenSetting,
+//							fullEstimation,
+//							estimationResultFrontColor,
+//							estimationResultBackColor,
+//							estimationResultSaveColorsListener,
+//							paperDomainOfModelChangeListener,
+//							screenUpdater);
+//				} catch (Exception e) {
+//					logger.error("error when folding", e);
+//					Dialogs.showErrorDialog(parent,
+//							resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+//				}
+//				return List.of();
+//			}
+//
+//			@Override
+//			protected void done() {
+//				dialogWhileFolding.setVisible(false);
+//				dialogWhileFolding.dispose();
+//
+//				// this action moves the main window to front.
+//				buildButton.setEnabled(true);
+//			}
+//		};
+//
+//		dialogWhileFolding.setWorker(worker);
+//
+//		worker.execute();
+//
+//		buildButton.setEnabled(false);
+//		dialogWhileFolding.setVisible(true);
+//
+//		try {
+//			var openedWindows = worker.get();
+//			// bring new windows to front.
+//			openedWindows.forEach(w -> w.setVisible(true));
+//
+//		} catch (CancellationException | InterruptedException | ExecutionException e) {
+//			logger.info("folding failed or cancelled.", e);
+//			Dialogs.showErrorDialog(this, resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+//		}
+//	}
 
-		var frame = (JFrame) this.getTopLevelAncestor();
-
-		// modal dialog while folding
-		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
-
-		var worker = new SwingWorker<List<JFrame>, Void>() {
-			@Override
-			protected List<JFrame> doInBackground() throws Exception {
-				CreasePattern creasePattern = paintContext.getCreasePattern();
-
-				var parent = UIPanel.this;
-
-				var windowOpener = new FoldedModelWindowOpener(parent, childFrameManager,
-						// ask if ORIPA should try to remove duplication.
-						() -> dialogService.showCleaningUpDuplicationDialog(parent) == JOptionPane.YES_OPTION,
-						// clean up the crease pattern
-						() -> dialogService.showCleaningUpMessage(parent),
-						// folding failed.
-						() -> dialogService.showFoldFailureMessage(parent),
-						// no answer is found.
-						() -> dialogService.showNoAnswerMessage(parent));
-
-				try {
-					return windowOpener.showFoldedModelWindows(
-							creasePattern,
-							cutOutlinesHolder,
-							mainScreenSetting,
-							fullEstimation,
-							estimationResultFrontColor,
-							estimationResultBackColor,
-							estimationResultSaveColorsListener,
-							paperDomainOfModelChangeListener,
-							screenUpdater);
-				} catch (Exception e) {
-					logger.error("error when folding", e);
-					Dialogs.showErrorDialog(parent,
-							resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
-				}
-				return List.of();
-			}
-
-			@Override
-			protected void done() {
-				dialogWhileFolding.setVisible(false);
-				dialogWhileFolding.dispose();
-
-				// this action moves the main window to front.
-				buildButton.setEnabled(true);
-			}
-		};
-
-		dialogWhileFolding.setWorker(worker);
-
-		worker.execute();
-
-		buildButton.setEnabled(false);
-		dialogWhileFolding.setVisible(true);
-
-		try {
-			var openedWindows = worker.get();
-			// bring new windows to front.
-			openedWindows.forEach(w -> w.setVisible(true));
-
-		} catch (CancellationException | InterruptedException | ExecutionException e) {
-			logger.info("folding failed or cancelled.", e);
-			Dialogs.showErrorDialog(this, resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
-		}
+	@Override
+	public void addBuildButtonListener(final Runnable listener) {
+		buildButton.addActionListener(e -> listener.run());
 	}
 
 	private void addPropertyChangeListenersToSetting(final MainScreenSetting mainScreenSetting) {
@@ -1142,6 +1141,36 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void setViewVisible(final boolean visible) {
 		setVisible(visible);
+	}
+
+	@Override
+	public Color getEstimationResultFrontColor() {
+		return estimationResultFrontColor;
+	}
+
+	@Override
+	public Color getEstimationResultBackColor() {
+		return estimationResultBackColor;
+	}
+
+	@Override
+	public BiConsumer<Color, Color> getEstimationResultSaveColorsListener() {
+		return estimationResultSaveColorsListener;
+	}
+
+	@Override
+	public boolean getFullEstimation() {
+		return fullEstimation;
+	}
+
+	@Override
+	public PropertyChangeListener getPaperDomainOfModelChangeListener() {
+		return paperDomainOfModelChangeListener;
+	}
+
+	@Override
+	public void setBuildButtonEnabled(final boolean enabled) {
+		buildButton.setEnabled(enabled);
 	}
 
 	@Override
