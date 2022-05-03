@@ -42,7 +42,6 @@ import javax.swing.border.TitledBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.appstate.CommandStatePopper;
 import oripa.appstate.StateManager;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
@@ -855,8 +854,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 //				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT));
 
 		// edit mode line selection radio button
-		editModeLineSelectionButton
-				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.SELECT));
+//		editModeLineSelectionButton
+//				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.SELECT));
 
 		// change line type tool
 		alterLineComboFrom.addItemListener(new FromLineTypeItemListener(setting));
@@ -935,6 +934,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addEditModeInputLineButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(editModeInputLineButton, listener, keyListener);
+	}
+
+	@Override
+	public void addEditModeLineSelectionButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(editModeLineSelectionButton, listener, keyListener);
 	}
 
 	private void addButtonListener(final AbstractButton button, final ActionListener listener,

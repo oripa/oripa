@@ -85,6 +85,8 @@ public interface UIPanelView extends View {
 
 	void addEditModeInputLineButtonListener(ActionListener listener, KeyListener keyListener);
 
+	void addEditModeLineSelectionButtonListener(ActionListener listener, KeyListener keyListener);
+
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();

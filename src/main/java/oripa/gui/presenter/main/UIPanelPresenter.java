@@ -117,6 +117,10 @@ public class UIPanelPresenter {
 				new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT),
 				screenUpdater.getKeyListener());
 
+		view.addEditModeLineSelectionButtonListener(
+				new CommandStatePopper<EditMode>(stateManager, EditMode.SELECT),
+				screenUpdater.getKeyListener());
+
 	}
 
 	private void makeGridSizeHalf() {
