@@ -34,6 +34,7 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.View;
 import oripa.gui.viewsetting.ViewScreenUpdater;
+import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 
 /**
@@ -63,6 +64,9 @@ public interface UIPanelView extends View {
 	@Deprecated
 	MouseActionHolder getMouseActionHolder();
 
+	@Deprecated
+	MainFrameSetting getMainFrameSetting();
+
 	void addGridSmallButtonListener(Runnable listener);
 
 	void addGridLargeButtonListener(Runnable listener);
@@ -86,6 +90,8 @@ public interface UIPanelView extends View {
 	void addEditModeInputLineButtonListener(ActionListener listener, KeyListener keyListener);
 
 	void addEditModeLineSelectionButtonListener(ActionListener listener, KeyListener keyListener);
+
+	void addEditModeDeleteLineButtonListener(ActionListener listener, KeyListener keyListener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 

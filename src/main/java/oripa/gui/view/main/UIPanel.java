@@ -48,6 +48,7 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.bind.ButtonFactory;
 import oripa.gui.bind.PaintActionButtonFactory;
 import oripa.gui.bind.binder.Binder;
@@ -98,6 +99,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	private final MouseActionHolder actionHolder;
 	private final StateManager<EditMode> stateManager;
+
+	private final MainFrameSetting mainFrameSetting;
+	private final SelectionOriginHolder originHolder;
 
 	private boolean fullEstimation = true;
 
@@ -241,6 +245,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		this.actionHolder = actionHolder;
 		this.stateManager = stateManager;
+		this.mainFrameSetting = mainFrameSetting;
+		this.originHolder = mainScreenSetting.getSelectionOriginHolder();
 
 		constructButtons(stateManager, actionHolder, mainFrameSetting, mainScreenSetting);
 
@@ -632,9 +638,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 //				StringID.SELECT_ID,
 //				screenUpdater.getKeyListener());
 
-		editModeDeleteLineButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.DELETE_LINE_ID,
-				screenUpdater.getKeyListener());
+		editModeDeleteLineButton = new JRadioButton(
+				resources.getString(ResourceKey.LABEL, StringID.DELETE_LINE_ID));
+//		editModeDeleteLineButton = buttonFactory.create(
+//				this, JRadioButton.class, StringID.DELETE_LINE_ID,
+//				screenUpdater.getKeyListener());
 		setShortcut(editModeDeleteLineButton, KeyStrokes.get(KeyEvent.VK_D),
 				StringID.DELETE_LINE_ID);
 
@@ -943,6 +951,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 		addButtonListener(editModeLineSelectionButton, listener, keyListener);
 	}
 
+	@Override
+	public void addEditModeDeleteLineButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(editModeDeleteLineButton, listener, keyListener);
+	}
+
 	private void addButtonListener(final AbstractButton button, final ActionListener listener,
 			final KeyListener keyListener) {
 		button.addActionListener(listener);
@@ -1225,5 +1238,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public StateManager<EditMode> getStateManager() {
 		return stateManager;
+	}
+
+	@Override
+	public MainFrameSetting getMainFrameSetting() {
+		return mainFrameSetting;
 	}
 }

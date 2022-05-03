@@ -35,6 +35,8 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.copypaste.SelectionOriginHolder;
+import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -45,6 +47,7 @@ import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.viewsetting.ViewScreenUpdater;
+import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ResourceHolder;
@@ -78,6 +81,9 @@ public class UIPanelPresenter {
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 
+	private final MainFrameSetting mainFrameSetting;
+	private final SelectionOriginHolder originHolder;
+
 	public UIPanelPresenter(final UIPanelView view,
 			final MainScreenSetting mainScreenSetting,
 			final CutModelOutlinesHolder cutOutlinesHolder) {
@@ -92,9 +98,12 @@ public class UIPanelPresenter {
 		stateManager = view.getStateManager();
 
 		actionHolder = view.getMouseActionHolder();
+		mainFrameSetting = view.getMainFrameSetting();
 
 		this.mainScreenSetting = mainScreenSetting;
 		this.cutOutlinesHolder = cutOutlinesHolder;
+
+		originHolder = mainScreenSetting.getSelectionOriginHolder();
 
 		addListeners();
 	}
@@ -113,6 +122,8 @@ public class UIPanelPresenter {
 		PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
 				actionHolder, screenUpdater, paintContext);
 
+		var stateFactory = new PaintBoundStateFactory(stateManager, mainFrameSetting, setting, originHolder);
+
 		view.addEditModeInputLineButtonListener(
 				new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT),
 				screenUpdater.getKeyListener());
@@ -121,6 +132,9 @@ public class UIPanelPresenter {
 				new CommandStatePopper<EditMode>(stateManager, EditMode.SELECT),
 				screenUpdater.getKeyListener());
 
+		var deleteLineState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.DELETE_LINE_ID);
+		view.addEditModeDeleteLineButtonListener(deleteLineState::performActions, screenUpdater.getKeyListener());
 	}
 
 	private void makeGridSizeHalf() {
