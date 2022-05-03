@@ -162,6 +162,10 @@ public class UIPanelPresenter {
 				StringID.ADD_VERTEX_ID);
 		view.addEditModeAddVertexButtonListener(addVertexState::performActions, screenUpdater.getKeyListener());
 
+		var deleteVertexState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.DELETE_VERTEX_ID);
+		view.addEditModeDeleteVertexButtonListener(deleteVertexState::performActions, screenUpdater.getKeyListener());
+
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 	}
 

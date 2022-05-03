@@ -112,6 +112,8 @@ public interface UIPanelView extends View {
 
 	void addEditModeAddVertexButtonListener(ActionListener listener, KeyListener keyListener);
 
+	void addEditModeDeleteVertexButtonListener(ActionListener listener, KeyListener keyListener);
+
 	void addAngleStepComboListener(Consumer<AngleStep> listener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();

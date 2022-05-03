@@ -657,9 +657,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setShortcut(editModeAddVertex, KeyStrokes.get(KeyEvent.VK_X),
 				StringID.ADD_VERTEX_ID);
 
-		editModeDeleteVertex = buttonFactory.create(
-				this, JRadioButton.class, StringID.DELETE_VERTEX_ID,
-				screenUpdater.getKeyListener());
+		editModeDeleteVertex = new JRadioButton(
+				resources.getString(ResourceKey.LABEL, StringID.DELETE_VERTEX_ID));
+//		editModeDeleteVertex = buttonFactory.create(
+//				this, JRadioButton.class, StringID.DELETE_VERTEX_ID,
+//				screenUpdater.getKeyListener());
 		setShortcut(editModeDeleteVertex, KeyStrokes.get(KeyEvent.VK_Y),
 				StringID.DELETE_VERTEX_ID);
 
@@ -993,6 +995,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addEditModeAddVertexButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(editModeAddVertex, listener, keyListener);
+	}
+
+	@Override
+	public void addEditModeDeleteVertexButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(editModeDeleteVertex, listener, keyListener);
 	}
 
 	@Override
