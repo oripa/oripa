@@ -120,6 +120,8 @@ public interface UIPanelView extends View {
 
 	void addEnlargementButtonListener(ActionListener listener, KeyListener keyListener);
 
+	void addLineInputDirectVButtonListener(ActionListener listener, KeyListener keyListener);
+
 	void addAngleStepComboListener(Consumer<AngleStep> listener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
