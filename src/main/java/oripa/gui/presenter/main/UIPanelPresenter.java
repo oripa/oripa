@@ -172,6 +172,10 @@ public class UIPanelPresenter {
 				StringID.SELECT_LINE_ID);
 		view.addSelectionButtonListener(selectLineState::performActions, screenUpdater.getKeyListener());
 
+		var enlargementState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.ENLARGE_ID);
+		view.addEnlargementButtonListener(enlargementState::performActions, screenUpdater.getKeyListener());
+
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 	}
 

@@ -120,8 +120,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// Line Selection Tools panel
 	private final JPanel lineSelectionPanel = new JPanel();
 
-	private final JRadioButton selectionButton = new JRadioButton();;
-	private JRadioButton enlargementButton;
+	private final JRadioButton selectionButton = new JRadioButton();
+	private final JRadioButton enlargementButton = new JRadioButton();
 
 	// Insert Line Tools Panel
 	private final JPanel lineInputPanel = new JPanel();
@@ -678,9 +678,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineSelectionGlobalShortcut(selectionButton, KeyStrokes.get(KeyEvent.VK_S),
 				StringID.SELECT_LINE_ID);
 
-		enlargementButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.ENLARGE_ID,
-				screenUpdater.getKeyListener());
+//		enlargementButton = buttonFactory.create(
+//				this, JRadioButton.class, StringID.ENLARGE_ID,
+//				screenUpdater.getKeyListener());
 		setLineSelectionGlobalShortcut(enlargementButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_S),
 				StringID.ENLARGE_ID);
 
@@ -1010,6 +1010,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addSelectionButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(selectionButton, listener, keyListener);
+	}
+
+	@Override
+	public void addEnlargementButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(enlargementButton, listener, keyListener);
 	}
 
 	@Override
