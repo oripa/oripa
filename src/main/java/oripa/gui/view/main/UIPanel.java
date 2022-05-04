@@ -44,20 +44,12 @@ import javax.swing.event.DocumentListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.appstate.StateManager;
 import oripa.domain.cptool.TypeForChange;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.AngleStep;
-import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
-import oripa.gui.viewsetting.ViewScreenUpdater;
-import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ButtonIcon;
@@ -74,15 +66,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueSetting valueSetting = setting.getValueSetting();
-
-	private final ViewScreenUpdater screenUpdater;
-	private final PaintContext paintContext;
-	private final CreasePatternViewContext viewContext;
-
-	private final MouseActionHolder actionHolder;
-	private final StateManager<EditMode> stateManager;
-
-	private final MainFrameSetting mainFrameSetting;
 
 	// main three panels
 	private final JPanel editModePanel = new JPanel();
@@ -214,23 +197,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	private PropertyChangeListener paperDomainOfModelChangeListener;
 
-	public UIPanel(
-			final StateManager<EditMode> stateManager,
-			final ViewScreenUpdater screenUpdater,
-			final MouseActionHolder actionHolder,
-			final CreasePatternViewContext viewContext,
-			final PaintContext aContext,
-			final CutModelOutlinesHolder cutOutlinesHolder,
-			final MainFrameSetting mainFrameSetting,
-			final MainScreenSetting mainScreenSetting) {
-
-		this.screenUpdater = screenUpdater;
-		this.viewContext = viewContext;
-		this.paintContext = aContext;
-
-		this.actionHolder = actionHolder;
-		this.stateManager = stateManager;
-		this.mainFrameSetting = mainFrameSetting;
+	public UIPanel(final MainScreenSetting mainScreenSetting) {
 
 		setShortcuts();
 
@@ -529,7 +496,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		textFieldGrid = new JFormattedTextField(new DecimalFormat("#"));
 		textFieldGrid.setColumns(2);
-		textFieldGrid.setValue(paintContext.getGridDivNum());
+		textFieldGrid.setValue(Constants.DEFAULT_GRID_DIV_NUM);
 		textFieldGrid.setHorizontalAlignment(RIGHT);
 
 		gridPanel.setLayout(new GridBagLayout());
@@ -1108,33 +1075,4 @@ public class UIPanel extends JPanel implements UIPanelView {
 		buildButton.setEnabled(enabled);
 	}
 
-	@Override
-	public PaintContext getPaintContext() {
-		return paintContext;
-	}
-
-	@Override
-	public ViewScreenUpdater getScreenUpdater() {
-		return screenUpdater;
-	}
-
-	@Override
-	public CreasePatternViewContext getViewContext() {
-		return viewContext;
-	}
-
-	@Override
-	public MouseActionHolder getMouseActionHolder() {
-		return actionHolder;
-	}
-
-	@Override
-	public StateManager<EditMode> getStateManager() {
-		return stateManager;
-	}
-
-	@Override
-	public MainFrameSetting getMainFrameSetting() {
-		return mainFrameSetting;
-	}
 }

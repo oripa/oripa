@@ -126,7 +126,7 @@ public class MainFramePresenter {
 		stateManager = view.getStateManager();
 
 		screenUpdater = view.getScreenUpdater();
-		screenSetting = view.getMainScreenSetting();
+		screenSetting = view.getPainterScreenView().getMainScreenSetting();
 		selectionOriginHolder = screenSetting.getSelectionOriginHolder();
 
 		screenPresenter = new PainterScreenPresenter(
@@ -138,8 +138,14 @@ public class MainFramePresenter {
 
 		uiPanelPresenter = new UIPanelPresenter(
 				view.getUIPanelView(),
-				screenSetting,
-				document);
+				stateManager,
+				screenUpdater,
+				actionHolder,
+				viewContext,
+				paintContext,
+				document,
+				view.getMainFrameSetting(),
+				screenSetting);
 
 		uiPanelPresenter.setChildFrameManager(childFrameManager);
 

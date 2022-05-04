@@ -92,20 +92,26 @@ public class UIPanelPresenter {
 	private final SelectionOriginHolder originHolder;
 
 	public UIPanelPresenter(final UIPanelView view,
-			final MainScreenSetting mainScreenSetting,
-			final CutModelOutlinesHolder cutOutlinesHolder) {
+			final StateManager<EditMode> stateManager,
+			final ViewScreenUpdater screenUpdater,
+			final MouseActionHolder actionHolder,
+			final CreasePatternViewContext viewContext,
+			final PaintContext paintContext,
+			final CutModelOutlinesHolder cutOutlinesHolder,
+			final MainFrameSetting mainFrameSetting,
+			final MainScreenSetting mainScreenSetting) {
 		this.view = view;
 
 		setting = view.getUIPanelSetting();
 		valueSetting = setting.getValueSetting();
-		screenUpdater = view.getScreenUpdater();
-		paintContext = view.getPaintContext();
-		viewContext = view.getViewContext();
+		this.screenUpdater = screenUpdater;
+		this.paintContext = paintContext;
+		this.viewContext = viewContext;
 
-		stateManager = view.getStateManager();
+		this.stateManager = stateManager;
 
-		actionHolder = view.getMouseActionHolder();
-		mainFrameSetting = view.getMainFrameSetting();
+		this.actionHolder = actionHolder;
+		this.mainFrameSetting = mainFrameSetting;
 
 		this.mainScreenSetting = mainScreenSetting;
 		this.cutOutlinesHolder = cutOutlinesHolder;

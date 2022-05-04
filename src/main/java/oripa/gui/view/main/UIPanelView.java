@@ -29,15 +29,8 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentListener;
 
-import oripa.appstate.StateManager;
 import oripa.domain.paint.AngleStep;
-import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.View;
-import oripa.gui.viewsetting.ViewScreenUpdater;
-import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 
 /**
@@ -49,26 +42,7 @@ public interface UIPanelView extends View {
 		return (JPanel) this;
 	}
 
-	@Deprecated
 	UIPanelSetting getUIPanelSetting();
-
-	@Deprecated
-	PaintContext getPaintContext();
-
-	@Deprecated
-	CreasePatternViewContext getViewContext();
-
-	@Deprecated
-	ViewScreenUpdater getScreenUpdater();
-
-	@Deprecated
-	StateManager<EditMode> getStateManager();
-
-	@Deprecated
-	MouseActionHolder getMouseActionHolder();
-
-	@Deprecated
-	MainFrameSetting getMainFrameSetting();
 
 	void initializeButtonSelection();
 
