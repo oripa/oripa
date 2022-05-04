@@ -156,6 +156,8 @@ public interface UIPanelView extends View {
 
 	void addDispAuxLinesCheckBoxListener(Consumer<Boolean> listener);
 
+	void addZeroLineWidthCheckBoxListener(Consumer<Boolean> listener);
+
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();

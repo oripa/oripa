@@ -923,10 +923,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 //			mainScreenSetting.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
 //		});
 
-		zeroLineWidthCheckBox.addActionListener(e -> {
-			mainScreenSetting.setZeroLineWidth(zeroLineWidthCheckBox.isSelected());
-			screenUpdater.updateScreen();
-		});
+//		zeroLineWidthCheckBox.addActionListener(e -> {
+//			mainScreenSetting.setZeroLineWidth(zeroLineWidthCheckBox.isSelected());
+//			screenUpdater.updateScreen();
+//		});
 
 		// buttons panel
 		doFullEstimationCheckBox.addActionListener(e -> fullEstimation = doFullEstimationCheckBox.isSelected());
@@ -1127,6 +1127,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addDispAuxLinesCheckBoxListener(final Consumer<Boolean> listener) {
 		dispAuxLinesCheckBox.addActionListener(e -> listener.accept(dispAuxLinesCheckBox.isSelected()));
+	}
+
+	@Override
+	public void addZeroLineWidthCheckBoxListener(final Consumer<Boolean> listener) {
+		zeroLineWidthCheckBox.addActionListener(e -> listener.accept(zeroLineWidthCheckBox.isSelected()));
 	}
 
 	@Override

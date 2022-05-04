@@ -255,6 +255,11 @@ public class UIPanelPresenter {
 			logger.debug("auxLineVisible at listener: {}", checked);
 			mainScreenSetting.setAuxLineVisible(checked);
 		});
+
+		view.addZeroLineWidthCheckBoxListener(checked -> {
+			mainScreenSetting.setZeroLineWidth(checked);
+			screenUpdater.updateScreen();
+		});
 		// ------------------------------------------------------------
 		// fold
 
