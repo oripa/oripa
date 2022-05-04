@@ -122,12 +122,6 @@ public class UIPanelPresenter {
 	}
 
 	private void addListeners() {
-		view.addGridSmallButtonListener(this::makeGridSizeHalf);
-		view.addGridLargeButtonListener(this::makeGridSizeTwiceLarge);
-		view.addGridChangeButtonListener(this::updateGridDivNum);
-
-		view.addBuildButtonListener(this::showFoldedModelWindows);
-
 		PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
 				actionHolder, screenUpdater, paintContext);
 
@@ -234,10 +228,29 @@ public class UIPanelPresenter {
 		view.addLineTypeValleyButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
 		view.addLineTypeAuxButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
 
+		// ------------------------------------------------------------
+		// grid setting
+
 		view.addDispGridCheckBoxListener(checked -> {
 			mainScreenSetting.setGridVisible(checked);
-			screenUpdater.updateScreen();
 		});
+		view.addGridSmallButtonListener(this::makeGridSizeHalf);
+		view.addGridLargeButtonListener(this::makeGridSizeTwiceLarge);
+		view.addGridChangeButtonListener(this::updateGridDivNum);
+
+		// ------------------------------------------------------------
+		// display setting
+
+		view.addDispVertexCheckBoxListener(checked -> {
+			logger.debug("vertexVisible at listener: {}", checked);
+			mainScreenSetting.setVertexVisible(checked);
+		});
+
+		// ------------------------------------------------------------
+		// fold
+
+		view.addBuildButtonListener(this::showFoldedModelWindows);
+
 	}
 
 	private void makeGridSizeHalf() {

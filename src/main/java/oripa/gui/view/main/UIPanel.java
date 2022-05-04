@@ -908,10 +908,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 		// textFieldGrid.addActionListener(e -> setGridDivNum());
 
 		// display/view settings
-		dispVertexCheckBox.addActionListener(e -> {
-			logger.debug("vertexVisible at listener: {}", dispVertexCheckBox.isSelected());
-			mainScreenSetting.setVertexVisible(dispVertexCheckBox.isSelected());
-		});
+//		dispVertexCheckBox.addActionListener(e -> {
+//			logger.debug("vertexVisible at listener: {}", dispVertexCheckBox.isSelected());
+//			mainScreenSetting.setVertexVisible(dispVertexCheckBox.isSelected());
+//		});
 
 		dispMVLinesCheckBox.addActionListener(e -> {
 			logger.debug("mvLineVisible at listener: {}", dispMVLinesCheckBox.isSelected());
@@ -1112,6 +1112,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 			textFieldGrid.setText(Integer.toString(Constants.DEFAULT_GRID_DIV_NUM));
 			return Constants.DEFAULT_GRID_DIV_NUM;
 		}
+	}
+
+	@Override
+	public void addDispVertexCheckBoxListener(final Consumer<Boolean> listener) {
+		dispVertexCheckBox.addActionListener(e -> listener.accept(dispVertexCheckBox.isSelected()));
 	}
 
 	@Override
