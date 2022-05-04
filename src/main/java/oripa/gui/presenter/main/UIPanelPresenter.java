@@ -198,6 +198,10 @@ public class UIPanelPresenter {
 		view.addLineInputTriangleSplitButtonListener(triangleSplitState::performActions,
 				screenUpdater.getKeyListener());
 
+		var symmetricState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.SYMMETRIC_ID);
+		view.addLineInputSymmetricButtonListener(symmetricState::performActions, screenUpdater.getKeyListener());
+
 		view.addLengthButtonListener(
 				setterFactory.create(new LengthMeasuringAction(valueSetting)));
 		view.addAngleButtonListener(
