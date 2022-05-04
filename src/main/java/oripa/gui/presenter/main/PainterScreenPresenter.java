@@ -23,9 +23,6 @@ import java.awt.RenderingHints;
 
 import javax.vecmath.Vector2d;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.drawer.java2d.CreasePatternObjectDrawer;
@@ -38,7 +35,6 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.main.PaintComponentParameter;
 import oripa.gui.view.main.PainterScreenView;
-import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
 
 /**
@@ -46,11 +42,8 @@ import oripa.gui.viewsetting.main.MainScreenUpdater;
  *
  */
 public class PainterScreenPresenter {
-	private static final Logger logger = LoggerFactory.getLogger(PainterScreenPresenter.class);
-
 	private final PainterScreenView view;
 
-	private final MainScreenSetting setting;
 	private final MainScreenUpdater screenUpdater;
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
@@ -70,7 +63,6 @@ public class PainterScreenPresenter {
 			final CutModelOutlinesHolder cutOutlineHolder) {
 		this.view = view;
 
-		setting = view.getMainScreenSetting();
 		screenUpdater = view.getScreenUpdater();
 		this.paintContext = paintContext;
 		this.viewContext = viewContext;

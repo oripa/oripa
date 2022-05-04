@@ -41,17 +41,8 @@ import javax.swing.JScrollPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.appstate.StateManager;
-import oripa.doc.Doc;
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintContextFactory;
 import oripa.file.ImageResourceLoader;
 import oripa.geom.RectangleDomain;
-import oripa.gui.bind.state.EditModeStateManager;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.viewsetting.main.MainFrameSetting;
@@ -72,19 +63,8 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
-	private final EditModeStateManager stateManager = new EditModeStateManager();
-
 	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenSetting screenSetting;
-
-	private final Doc document = new Doc();
-
-	// Create UI Factories
-	private final PaintContextFactory contextFactory = new PaintContextFactory();
-	private final PaintContext paintContext = contextFactory.createContext();
-	private final CreasePatternViewContextFactory viewContextFactory = new CreasePatternViewContextFactory();
-	private final CreasePatternViewContext viewContext = viewContextFactory.create(paintContext);
-	private final MouseActionHolder actionHolder = new MouseActionHolder();
 
 	private final JLabel hintLabel = new JLabel();
 
@@ -184,8 +164,6 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 	public MainFrame() {
 		logger.info("frame construction starts.");
-
-		document.setCreasePattern(paintContext.getCreasePattern());
 
 		mainScreen = new PainterScreen();
 		screenSetting = mainScreen.getMainScreenSetting();
@@ -549,30 +527,5 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	@Override
 	public void setPaperDomainOfModelChangeListener(final Consumer<RectangleDomain> listener) {
 		uiPanel.setPaperDomainOfModelChangeListener(e -> listener.accept((RectangleDomain) e.getNewValue()));
-	}
-
-	@Override
-	public PaintContext getPaintContext() {
-		return paintContext;
-	}
-
-	@Override
-	public CreasePatternViewContext getCreasePattenViewContext() {
-		return viewContext;
-	}
-
-	@Override
-	public MouseActionHolder getActionHolder() {
-		return actionHolder;
-	}
-
-	@Override
-	public Doc getDocument() {
-		return document;
-	}
-
-	@Override
-	public StateManager<EditMode> getStateManager() {
-		return stateManager;
 	}
 }

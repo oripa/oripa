@@ -30,16 +30,18 @@ import org.slf4j.LoggerFactory;
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
-import oripa.appstate.StateManager;
 import oripa.appstate.StatePopper;
 import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.file.FileHistory;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.gui.bind.state.EditModeStateManager;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
@@ -82,10 +84,9 @@ public class MainFramePresenter {
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
-	private final StateManager<EditMode> stateManager;
+	private final EditModeStateManager stateManager = new EditModeStateManager();
 	private final SelectionOriginHolder selectionOriginHolder;
 
-//	private final MainFrameSetting setting = new MainFrameSetting();
 	private final MainScreenUpdater screenUpdater;
 	private final MainScreenSetting screenSetting;
 
@@ -100,16 +101,14 @@ public class MainFramePresenter {
 
 	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
 
-	private final Doc document;
+	private final Doc document = new Doc();
 
 	// Create UI Factories
-	private final PaintContext paintContext;
-	private final CreasePatternViewContext viewContext;
-	private final MouseActionHolder actionHolder;
-//	private final PaintContextFactory contextFactory = new PaintContextFactory();
-//	private final PaintContext paintContext = contextFactory.createContext();
-//	private final CreasePatternViewContextFactory viewContextFactory = new CreasePatternViewContextFactory();
-//	private final CreasePatternViewContext viewContext = viewContextFactory.create(paintContext);
+	private final PaintContextFactory contextFactory = new PaintContextFactory();
+	private final PaintContext paintContext = contextFactory.createContext();
+	private final CreasePatternViewContextFactory viewContextFactory = new CreasePatternViewContextFactory();
+	private final CreasePatternViewContext viewContext = viewContextFactory.create(paintContext);
+	private final MouseActionHolder actionHolder = new MouseActionHolder();
 
 	private final IniFileAccess iniFileAccess = new IniFileAccess(
 			new InitDataFileReader(), new InitDataFileWriter());
@@ -119,11 +118,7 @@ public class MainFramePresenter {
 	public MainFramePresenter(final MainFrameView view) {
 		this.view = view;
 
-		document = view.getDocument();
-		paintContext = view.getPaintContext();
-		viewContext = view.getCreasePattenViewContext();
-		actionHolder = view.getActionHolder();
-		stateManager = view.getStateManager();
+		document.setCreasePattern(paintContext.getCreasePattern());
 
 		screenUpdater = view.getScreenUpdater();
 		screenSetting = view.getPainterScreenView().getMainScreenSetting();

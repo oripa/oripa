@@ -22,13 +22,7 @@ import java.awt.Color;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import oripa.appstate.StateManager;
-import oripa.doc.Doc;
-import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.FrameView;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
@@ -130,18 +124,4 @@ public interface MainFrameView extends FrameView {
 
 	void buildFileMenu();
 
-	@Deprecated
-	PaintContext getPaintContext();
-
-	@Deprecated
-	CreasePatternViewContext getCreasePattenViewContext();
-
-	@Deprecated
-	MouseActionHolder getActionHolder();
-
-	@Deprecated
-	Doc getDocument();
-
-	@Deprecated
-	StateManager<EditMode> getStateManager();
 }
