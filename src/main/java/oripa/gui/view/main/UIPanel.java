@@ -913,15 +913,15 @@ public class UIPanel extends JPanel implements UIPanelView {
 //			mainScreenSetting.setVertexVisible(dispVertexCheckBox.isSelected());
 //		});
 
-		dispMVLinesCheckBox.addActionListener(e -> {
-			logger.debug("mvLineVisible at listener: {}", dispMVLinesCheckBox.isSelected());
-			mainScreenSetting.setMVLineVisible(dispMVLinesCheckBox.isSelected());
-		});
+//		dispMVLinesCheckBox.addActionListener(e -> {
+//			logger.debug("mvLineVisible at listener: {}", dispMVLinesCheckBox.isSelected());
+//			mainScreenSetting.setMVLineVisible(dispMVLinesCheckBox.isSelected());
+//		});
 
-		dispAuxLinesCheckBox.addActionListener(e -> {
-			logger.debug("auxLineVisible at listener: {}", dispAuxLinesCheckBox.isSelected());
-			mainScreenSetting.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
-		});
+//		dispAuxLinesCheckBox.addActionListener(e -> {
+//			logger.debug("auxLineVisible at listener: {}", dispAuxLinesCheckBox.isSelected());
+//			mainScreenSetting.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
+//		});
 
 		zeroLineWidthCheckBox.addActionListener(e -> {
 			mainScreenSetting.setZeroLineWidth(zeroLineWidthCheckBox.isSelected());
@@ -1117,6 +1117,16 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addDispVertexCheckBoxListener(final Consumer<Boolean> listener) {
 		dispVertexCheckBox.addActionListener(e -> listener.accept(dispVertexCheckBox.isSelected()));
+	}
+
+	@Override
+	public void addDispMVLinesCheckBoxListener(final Consumer<Boolean> listener) {
+		dispMVLinesCheckBox.addActionListener(e -> listener.accept(dispMVLinesCheckBox.isSelected()));
+	}
+
+	@Override
+	public void addDispAuxLinesCheckBoxListener(final Consumer<Boolean> listener) {
+		dispAuxLinesCheckBox.addActionListener(e -> listener.accept(dispAuxLinesCheckBox.isSelected()));
 	}
 
 	@Override

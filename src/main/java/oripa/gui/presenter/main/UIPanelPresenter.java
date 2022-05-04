@@ -246,6 +246,15 @@ public class UIPanelPresenter {
 			mainScreenSetting.setVertexVisible(checked);
 		});
 
+		view.addDispMVLinesCheckBoxListener(checked -> {
+			logger.debug("mvLineVisible at listener: {}", checked);
+			mainScreenSetting.setMVLineVisible(checked);
+		});
+
+		view.addDispAuxLinesCheckBoxListener(checked -> {
+			logger.debug("auxLineVisible at listener: {}", checked);
+			mainScreenSetting.setAuxLineVisible(checked);
+		});
 		// ------------------------------------------------------------
 		// fold
 

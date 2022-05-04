@@ -152,6 +152,10 @@ public interface UIPanelView extends View {
 
 	void addDispVertexCheckBoxListener(Consumer<Boolean> listener);
 
+	void addDispMVLinesCheckBoxListener(Consumer<Boolean> listener);
+
+	void addDispAuxLinesCheckBoxListener(Consumer<Boolean> listener);
+
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();
