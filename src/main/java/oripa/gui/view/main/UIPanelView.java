@@ -146,6 +146,8 @@ public interface UIPanelView extends View {
 
 	void addLineTypeValleyButtonListener(Runnable listener);
 
+	void addLineTypeAuxButtonListener(Runnable listener);
+
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();

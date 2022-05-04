@@ -72,7 +72,6 @@ import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.value.OriLine;
 
 public class UIPanel extends JPanel implements UIPanelView {
 
@@ -893,8 +892,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setShortcut(lineTypeValleyButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_V),
 				StringID.UI.VALLEY_ID);
 
-		lineTypeAuxButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
+//		lineTypeAuxButton.addActionListener(
+//				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
 		setShortcut(lineTypeAuxButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_A),
 				StringID.UI.AUX_ID);
 
@@ -1077,6 +1076,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineTypeValleyButtonListener(final Runnable listener) {
 		lineTypeValleyButton.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addLineTypeAuxButtonListener(final Runnable listener) {
+		lineTypeAuxButton.addActionListener(e -> listener.run());
 	}
 
 	/**
