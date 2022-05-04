@@ -148,6 +148,8 @@ public interface UIPanelView extends View {
 
 	void addLineTypeAuxButtonListener(Runnable listener);
 
+	void addDispGridCheckBoxListener(Consumer<Boolean> listener);
+
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();

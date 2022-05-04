@@ -898,10 +898,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 				StringID.UI.AUX_ID);
 
 		// grid settings
-		dispGridCheckBox.addActionListener(e -> {
-			mainScreenSetting.setGridVisible(dispGridCheckBox.isSelected());
-			screenUpdater.updateScreen();
-		});
+//		dispGridCheckBox.addActionListener(e -> {
+//			mainScreenSetting.setGridVisible(dispGridCheckBox.isSelected());
+//			screenUpdater.updateScreen();
+//		});
 
 //		gridChangeButton.addActionListener(e -> setGridDivNum());
 
@@ -1083,15 +1083,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		lineTypeAuxButton.addActionListener(e -> listener.run());
 	}
 
-	/**
-	 * display window with foldability checks
-	 *
-	 * @param context
-	 *            the cp data to be used
-	 */
-	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContext context) {
-		var windowOpener = new CheckerWindowOpener(this, childFrameManager);
-		windowOpener.showCheckerWindow(context.getCreasePattern(), viewContext.isZeroLineWidth());
+	@Override
+	public void addDispGridCheckBoxListener(final Consumer<Boolean> listener) {
+		dispGridCheckBox.addActionListener(e -> listener.accept(dispGridCheckBox.isSelected()));
 	}
 
 	@Override
@@ -1140,6 +1134,17 @@ public class UIPanel extends JPanel implements UIPanelView {
 			setEstimationResultColors(front, back);
 			listener.accept(front, back);
 		};
+	}
+
+	/**
+	 * display window with foldability checks
+	 *
+	 * @param context
+	 *            the cp data to be used
+	 */
+	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContext context) {
+		var windowOpener = new CheckerWindowOpener(this, childFrameManager);
+		windowOpener.showCheckerWindow(context.getCreasePattern(), viewContext.isZeroLineWidth());
 	}
 
 //	/**

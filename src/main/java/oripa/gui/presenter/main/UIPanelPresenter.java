@@ -233,6 +233,11 @@ public class UIPanelPresenter {
 		view.addLineTypeMountainButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
 		view.addLineTypeValleyButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
 		view.addLineTypeAuxButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
+
+		view.addDispGridCheckBoxListener(checked -> {
+			mainScreenSetting.setGridVisible(checked);
+			screenUpdater.updateScreen();
+		});
 	}
 
 	private void makeGridSizeHalf() {
