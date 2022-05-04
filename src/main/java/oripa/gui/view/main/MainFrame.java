@@ -226,12 +226,6 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 		menuBar.add(menuEdit);
 		menuBar.add(menuHelp);
 		setJMenuBar(menuBar);
-
-//		modifySavingActions();
-
-//		updateTitleText();
-//		titleUpdateListener.run();
-
 	}
 
 	private void setAccelerators() {
