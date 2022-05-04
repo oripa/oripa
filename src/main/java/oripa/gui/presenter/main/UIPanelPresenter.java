@@ -260,9 +260,11 @@ public class UIPanelPresenter {
 			mainScreenSetting.setZeroLineWidth(checked);
 			screenUpdater.updateScreen();
 		});
+
 		// ------------------------------------------------------------
 		// fold
 
+		view.addCheckWindowButtonListener(this::showCheckerWindow);
 		view.addBuildButtonListener(this::showFoldedModelWindows);
 
 	}
@@ -289,6 +291,14 @@ public class UIPanelPresenter {
 		paintContext.setGridDivNum(gridDivNum);
 
 		screenUpdater.updateScreen();
+	}
+
+	/**
+	 * display window with foldability checks
+	 */
+	private void showCheckerWindow() {
+		var windowOpener = new CheckerWindowOpener(view.asPanel(), childFrameManager);
+		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth());
 	}
 
 	/**

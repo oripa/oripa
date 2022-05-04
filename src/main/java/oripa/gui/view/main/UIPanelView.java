@@ -80,8 +80,6 @@ public interface UIPanelView extends View {
 
 	void setGridDivNum(int gridDivNum);
 
-	void addBuildButtonListener(Runnable listener);
-
 	void setEstimationResultColors(Color front, Color back);
 
 	void setBuildButtonEnabled(boolean enabled);
@@ -157,6 +155,10 @@ public interface UIPanelView extends View {
 	void addDispAuxLinesCheckBoxListener(Consumer<Boolean> listener);
 
 	void addZeroLineWidthCheckBoxListener(Consumer<Boolean> listener);
+
+	void addCheckWindowButtonListener(Runnable listener);
+
+	void addBuildButtonListener(Runnable listener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 

@@ -58,7 +58,6 @@ import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.main.CheckerWindowOpener;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
@@ -95,7 +94,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final MainFrameSetting mainFrameSetting;
 	private final SelectionOriginHolder originHolder;
 
-	private boolean fullEstimation = true;
+//	private boolean fullEstimation = true;
 
 	// main three panels
 	private final JPanel editModePanel = new JPanel();
@@ -218,7 +217,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	private final JButton buildButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.FOLD_ID));
-	private final JButton buttonCheckWindow = new JButton(
+	private final JButton checkWindowButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.CHECK_WINDOW_ID));
 
 	private Color estimationResultFrontColor;
@@ -595,7 +594,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		buttonsPanel.add(doFullEstimationCheckBox, gbBuilder.getLineField());
 
-		buttonsPanel.add(buttonCheckWindow, gbBuilder.getLineField());
+		buttonsPanel.add(checkWindowButton, gbBuilder.getLineField());
 		buttonsPanel.add(buildButton, gbBuilder.getLineField());
 	}
 
@@ -929,9 +928,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 //		});
 
 		// buttons panel
-		doFullEstimationCheckBox.addActionListener(e -> fullEstimation = doFullEstimationCheckBox.isSelected());
+//		doFullEstimationCheckBox.addActionListener(e -> fullEstimation = doFullEstimationCheckBox.isSelected());
 
-		buttonCheckWindow.addActionListener(e -> showCheckerWindow(viewContext, paintContext));
+//		buttonCheckWindow.addActionListener(e -> showCheckerWindow(viewContext, paintContext));
 
 //		buildButton.addActionListener(
 //				e -> showFoldedModelWindows(cutOutlinesHolder, mainScreenSetting));
@@ -1156,16 +1155,16 @@ public class UIPanel extends JPanel implements UIPanelView {
 		};
 	}
 
-	/**
-	 * display window with foldability checks
-	 *
-	 * @param context
-	 *            the cp data to be used
-	 */
-	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContext context) {
-		var windowOpener = new CheckerWindowOpener(this, childFrameManager);
-		windowOpener.showCheckerWindow(context.getCreasePattern(), viewContext.isZeroLineWidth());
-	}
+//	/**
+//	 * display window with foldability checks
+//	 *
+//	 * @param context
+//	 *            the cp data to be used
+//	 */
+//	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContext context) {
+//		var windowOpener = new CheckerWindowOpener(this, childFrameManager);
+//		windowOpener.showCheckerWindow(context.getCreasePattern(), viewContext.isZeroLineWidth());
+//	}
 
 //	/**
 //	 * open window with folded model
@@ -1242,6 +1241,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 //			Dialogs.showErrorDialog(this, resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
 //		}
 //	}
+
+	@Override
+	public void addCheckWindowButtonListener(final Runnable listener) {
+		checkWindowButton.addActionListener(e -> listener.run());
+	}
 
 	@Override
 	public void addBuildButtonListener(final Runnable listener) {
@@ -1348,7 +1352,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	@Override
 	public boolean getFullEstimation() {
-		return fullEstimation;
+		return doFullEstimationCheckBox.isSelected();
 	}
 
 	@Override
