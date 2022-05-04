@@ -14,6 +14,7 @@ import oripa.resource.StringID;
  * @author koji
  *
  */
+@Deprecated
 public class ApplicationStateButtonBinder
 		extends AbstractButtonBinder<ApplicationState<EditMode>> {
 

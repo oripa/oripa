@@ -12,6 +12,7 @@ import javax.swing.AbstractButton;
  *
  * @param <ToBeBound>
  */
+@Deprecated
 public interface Binder<ToBeBound> {
 
 	/**

@@ -6,6 +6,7 @@ import javax.swing.AbstractButton;
 
 import oripa.gui.viewsetting.ChangeViewSetting;
 
+@Deprecated
 public class ViewChangeBinder extends AbstractButtonBinder<ChangeViewSetting> {
 
 	public ViewChangeBinder() {

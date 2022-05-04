@@ -14,6 +14,7 @@ import oripa.resource.StringID;
  * @author Koji
  *
  */
+@Deprecated
 public interface ButtonFactory {
 
 	/**

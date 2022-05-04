@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
+@Deprecated
 public abstract class AbstractButtonBinder<ToBeBound>
 		implements Binder<ToBeBound> {
 

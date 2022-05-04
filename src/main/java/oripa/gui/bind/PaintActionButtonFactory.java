@@ -19,6 +19,7 @@ import oripa.gui.presenter.creasepattern.ScreenUpdater;
  * @author koji
  *
  */
+@Deprecated
 public class PaintActionButtonFactory implements ButtonFactory {
 
 	private final PaintBoundStateFactory stateFactory;
