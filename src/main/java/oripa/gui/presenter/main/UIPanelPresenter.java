@@ -219,6 +219,10 @@ public class UIPanelPresenter {
 		view.addAngleTextFieldListener(
 				new AngleValueInputListener(valueSetting));
 
+		var pbisecState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.PERPENDICULAR_BISECTOR_ID);
+		view.addLineInputPBisectorButtonListener(pbisecState::performActions, screenUpdater.getKeyListener());
+
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 	}
 

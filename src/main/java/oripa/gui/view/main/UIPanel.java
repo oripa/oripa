@@ -137,7 +137,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JRadioButton lineInputSymmetricButton = new JRadioButton();
 	private final JRadioButton lineInputMirrorButton = new JRadioButton();
 	private final JRadioButton lineInputByValueButton = new JRadioButton();
-	private JRadioButton lineInputPBisectorButton;
+	private final JRadioButton lineInputPBisectorButton = new JRadioButton();
 	private JRadioButton lineInputAngleSnapButton;
 
 	// lineTypePanel
@@ -725,9 +725,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineInputGlobalShortcut(lineInputByValueButton, KeyStrokes.get(KeyEvent.VK_L),
 				StringID.BY_VALUE_ID);
 
-		lineInputPBisectorButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID,
-				screenUpdater.getKeyListener());
+//		lineInputPBisectorButton = buttonFactory.create(
+//				this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID,
+//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputPBisectorButton, KeyStrokes.get(KeyEvent.VK_P),
 				StringID.PERPENDICULAR_BISECTOR_ID);
 
@@ -969,26 +969,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addLengthButtonListener(final ActionListener listener) {
-		buttonLength.addActionListener(listener);
-	}
-
-	@Override
-	public void addAngleButtonListener(final ActionListener listener) {
-		buttonAngle.addActionListener(listener);
-	}
-
-	@Override
-	public void addLengthTextFieldListener(final DocumentListener listener) {
-		textFieldLength.getDocument().addDocumentListener(listener);
-	}
-
-	@Override
-	public void addAngleTextFieldListener(final DocumentListener listener) {
-		textFieldAngle.getDocument().addDocumentListener(listener);
-	}
-
-	@Override
 	public void addEditModeAddVertexButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(editModeAddVertex, listener, keyListener);
 	}
@@ -1046,6 +1026,31 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineInputByValueButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(lineInputByValueButton, listener, keyListener);
+	}
+
+	@Override
+	public void addLengthButtonListener(final ActionListener listener) {
+		buttonLength.addActionListener(listener);
+	}
+
+	@Override
+	public void addAngleButtonListener(final ActionListener listener) {
+		buttonAngle.addActionListener(listener);
+	}
+
+	@Override
+	public void addLengthTextFieldListener(final DocumentListener listener) {
+		textFieldLength.getDocument().addDocumentListener(listener);
+	}
+
+	@Override
+	public void addAngleTextFieldListener(final DocumentListener listener) {
+		textFieldAngle.getDocument().addDocumentListener(listener);
+	}
+
+	@Override
+	public void addLineInputPBisectorButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(lineInputPBisectorButton, listener, keyListener);
 	}
 
 	@Override

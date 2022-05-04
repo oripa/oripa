@@ -136,6 +136,8 @@ public interface UIPanelView extends View {
 
 	void addAngleTextFieldListener(DocumentListener listener);
 
+	void addLineInputPBisectorButtonListener(ActionListener listener, KeyListener keyListener);
+
 	void addAngleStepComboListener(Consumer<AngleStep> listener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
