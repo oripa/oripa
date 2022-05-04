@@ -202,6 +202,10 @@ public class UIPanelPresenter {
 				StringID.SYMMETRIC_ID);
 		view.addLineInputSymmetricButtonListener(symmetricState::performActions, screenUpdater.getKeyListener());
 
+		var mirrorState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.MIRROR_ID);
+		view.addLineInputMirrorButtonListener(mirrorState::performActions, screenUpdater.getKeyListener());
+
 		view.addLengthButtonListener(
 				setterFactory.create(new LengthMeasuringAction(valueSetting)));
 		view.addAngleButtonListener(

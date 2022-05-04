@@ -132,6 +132,8 @@ public interface UIPanelView extends View {
 
 	void addLineInputSymmetricButtonListener(ActionListener listener, KeyListener keyListener);
 
+	void addLineInputMirrorButtonListener(ActionListener listener, KeyListener keyListener);
+
 	void addAngleStepComboListener(Consumer<AngleStep> listener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
