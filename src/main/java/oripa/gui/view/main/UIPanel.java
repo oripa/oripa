@@ -50,15 +50,9 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
-import oripa.domain.paint.copypaste.SelectionOriginHolder;
-import oripa.gui.bind.ButtonFactory;
-import oripa.gui.bind.PaintActionButtonFactory;
-import oripa.gui.bind.state.PaintBoundStateFactory;
-import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
@@ -78,11 +72,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
-	private final MainDialogService dialogService = new MainDialogService(resources);
-
 	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueSetting valueSetting = setting.getValueSetting();
-	private ChildFrameManager childFrameManager;
 
 	private final ViewScreenUpdater screenUpdater;
 	private final PaintContext paintContext;
@@ -92,9 +83,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final StateManager<EditMode> stateManager;
 
 	private final MainFrameSetting mainFrameSetting;
-	private final SelectionOriginHolder originHolder;
-
-//	private boolean fullEstimation = true;
 
 	// main three panels
 	private final JPanel editModePanel = new JPanel();
@@ -243,9 +231,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 		this.actionHolder = actionHolder;
 		this.stateManager = stateManager;
 		this.mainFrameSetting = mainFrameSetting;
-		this.originHolder = mainScreenSetting.getSelectionOriginHolder();
 
-		constructButtons(stateManager, actionHolder, mainFrameSetting, mainScreenSetting);
+		setShortcuts();
 
 		// edit mode Selection panel
 		editModeGroup = new ButtonGroup();
@@ -321,11 +308,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 				.setAnchor(GridBagConstraints.LAST_LINE_START);
 		add(generalSettingsPanel, gbBuilder.getLineField());
 
-		// add listeners
 		addPropertyChangeListenersToSetting(mainScreenSetting);
-		addActionListenersToComponents(stateManager, actionHolder, cutOutlinesHolder,
-				mainScreenSetting);
-
 	}
 
 	@Override
@@ -598,10 +581,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 		buttonsPanel.add(buildButton, gbBuilder.getLineField());
 	}
 
-	public void setChildFrameManager(final ChildFrameManager childFrameManager) {
-		this.childFrameManager = childFrameManager;
-	}
-
 	private TitledBorder createTitledBorder(final String text) {
 		return new TitledBorderFactory().createTitledBorder(this, text);
 	}
@@ -610,130 +589,71 @@ public class UIPanel extends JPanel implements UIPanelView {
 		return new TitledBorderFactory().createTitledBorderFrame(this, text);
 	}
 
-	private void constructButtons(final StateManager<EditMode> stateManager,
-			final MouseActionHolder actionHolder,
-			final MainFrameSetting mainFrameSetting,
-			final MainScreenSetting mainScreenSetting) {
-
-//		Binder<ChangeViewSetting> viewChangeBinder = new ViewChangeBinder();
-
-		var stateFactory = new PaintBoundStateFactory(stateManager, mainFrameSetting, setting,
-				mainScreenSetting.getSelectionOriginHolder());
-
-		ButtonFactory buttonFactory = new PaintActionButtonFactory(
-				stateFactory, paintContext, actionHolder, screenUpdater);
-
-//		editModeInputLineButton = viewChangeBinder.createButton(
-//				JRadioButton.class, null,
-//				StringID.UI.INPUT_LINE_ID,
-//				screenUpdater.getKeyListener());
+	private void setShortcuts() {
 		setShortcut(editModeInputLineButton, KeyStrokes.get(KeyEvent.VK_I),
 				StringID.UI.INPUT_LINE_ID);
 
-//		editModeLineSelectionButton = viewChangeBinder.createButton(
-//				JRadioButton.class, null,
-//				StringID.SELECT_ID,
-//				screenUpdater.getKeyListener());
-
-//		editModeDeleteLineButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.DELETE_LINE_ID,
-//				screenUpdater.getKeyListener());
 		setShortcut(editModeDeleteLineButton, KeyStrokes.get(KeyEvent.VK_D),
 				StringID.DELETE_LINE_ID);
 
-//		editModeLineTypeButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.CHANGE_LINE_TYPE_ID,
-//				screenUpdater.getKeyListener());
 		setShortcut(editModeLineTypeButton, KeyStrokes.get(KeyEvent.VK_T),
 				StringID.CHANGE_LINE_TYPE_ID);
 
-//		editModeAddVertex = buttonFactory.create(
-//				this, JRadioButton.class, StringID.ADD_VERTEX_ID,
-//				screenUpdater.getKeyListener());
 		setShortcut(editModeAddVertex, KeyStrokes.get(KeyEvent.VK_X),
 				StringID.ADD_VERTEX_ID);
 
-//		editModeDeleteVertex = buttonFactory.create(
-//				this, JRadioButton.class, StringID.DELETE_VERTEX_ID,
-//				screenUpdater.getKeyListener());
 		setShortcut(editModeDeleteVertex, KeyStrokes.get(KeyEvent.VK_Y),
 				StringID.DELETE_VERTEX_ID);
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding line selection tools
-//		selectionButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.SELECT_LINE_ID,
-//				screenUpdater.getKeyListener());
 		setLineSelectionGlobalShortcut(selectionButton, KeyStrokes.get(KeyEvent.VK_S),
 				StringID.SELECT_LINE_ID);
 
-//		enlargementButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.ENLARGE_ID,
-//				screenUpdater.getKeyListener());
 		setLineSelectionGlobalShortcut(enlargementButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_S),
 				StringID.ENLARGE_ID);
 
 		// ---------------------------------------------------------------------------------------------------------------------------
 		// Binding how to enter the line
-//		lineInputDirectVButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.DIRECT_V_ID,
-//				screenUpdater.getKeyListener());
+
 		setLineInputGlobalShortcut(lineInputDirectVButton, KeyStrokes.get(KeyEvent.VK_E),
 				StringID.DIRECT_V_ID);
 
-//		lineInputOnVButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.ON_V_ID,
-//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputOnVButton, KeyStrokes.get(KeyEvent.VK_O),
 				StringID.ON_V_ID);
 
-//		lineInputVerticalLineButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.VERTICAL_ID,
-//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputVerticalLineButton, KeyStrokes.get(KeyEvent.VK_V),
 				StringID.VERTICAL_ID);
 
-//		lineInputAngleBisectorButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.BISECTOR_ID,
-//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputAngleBisectorButton, KeyStrokes.get(KeyEvent.VK_B),
 				StringID.BISECTOR_ID);
 
-//		lineInputTriangleSplitButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.TRIANGLE_ID,
-//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputTriangleSplitButton, KeyStrokes.get(KeyEvent.VK_R),
 				StringID.TRIANGLE_ID);
 
-//		lineInputSymmetricButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.SYMMETRIC_ID,
-//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputSymmetricButton, KeyStrokes.get(KeyEvent.VK_W),
 				StringID.SYMMETRIC_ID);
 
-//		lineInputMirrorButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.MIRROR_ID,
-//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputMirrorButton, KeyStrokes.get(KeyEvent.VK_M),
 				StringID.MIRROR_ID);
 
-//		lineInputByValueButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.BY_VALUE_ID,
-//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputByValueButton, KeyStrokes.get(KeyEvent.VK_L),
 				StringID.BY_VALUE_ID);
 
-//		lineInputPBisectorButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.PERPENDICULAR_BISECTOR_ID,
-//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputPBisectorButton, KeyStrokes.get(KeyEvent.VK_P),
 				StringID.PERPENDICULAR_BISECTOR_ID);
 
-//		lineInputAngleSnapButton = buttonFactory.create(
-//				this, JRadioButton.class, StringID.ANGLE_SNAP_ID,
-//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputAngleSnapButton, KeyStrokes.get(KeyEvent.VK_A),
 				StringID.ANGLE_SNAP_ID);
+
+		setShortcut(lineTypeMountainButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_M),
+				StringID.UI.MOUNTAIN_ID);
+
+		setShortcut(lineTypeValleyButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_V),
+				StringID.UI.VALLEY_ID);
+
+		setShortcut(lineTypeAuxButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_A),
+				StringID.UI.AUX_ID);
 	}
 
 	/**
@@ -844,96 +764,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private void setButtonIcon(final AbstractButton button, final ButtonIcon icon) {
 		button.setIcon(icon.loadIcon());
 		button.setSelectedIcon(icon.loadSelectedIcon());
-	}
-
-	private void addActionListenersToComponents(final StateManager<EditMode> stateManager,
-			final MouseActionHolder actionHolder,
-			final CutModelOutlinesHolder cutOutlinesHolder,
-			final MainScreenSetting mainScreenSetting) {
-		PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
-				actionHolder, screenUpdater, paintContext);
-
-		// edit mode line input radio button
-
-//		editModeInputLineButton
-//				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT));
-
-		// edit mode line selection radio button
-//		editModeLineSelectionButton
-//				.addActionListener(new CommandStatePopper<EditMode>(stateManager, EditMode.SELECT));
-
-		// change line type tool
-//		alterLineComboFrom.addItemListener(new FromLineTypeItemListener(setting));
-//		alterLineComboTo.addItemListener(new ToLineTypeItemListener(setting));
-
-		// draw line by value tool
-//		buttonLength.addActionListener(
-//				setterFactory.create(new LengthMeasuringAction(valueSetting)));
-//		buttonAngle.addActionListener(
-//				setterFactory.create(new AngleMeasuringAction(valueSetting)));
-
-//		textFieldLength.getDocument().addDocumentListener(
-//				new LengthValueInputListener(valueSetting));
-//		textFieldAngle.getDocument().addDocumentListener(
-//				new AngleValueInputListener(valueSetting));
-
-		// angle step tool
-//		angleStepCombo.addItemListener(e -> paintContext.setAngleStep((AngleStep) e.getItem()));
-
-		// line type radio buttons
-//		lineTypeMountainButton.addActionListener(
-//				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
-		setShortcut(lineTypeMountainButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_M),
-				StringID.UI.MOUNTAIN_ID);
-
-//		lineTypeValleyButton.addActionListener(
-//				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
-		setShortcut(lineTypeValleyButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_V),
-				StringID.UI.VALLEY_ID);
-
-//		lineTypeAuxButton.addActionListener(
-//				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
-		setShortcut(lineTypeAuxButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_A),
-				StringID.UI.AUX_ID);
-
-		// grid settings
-//		dispGridCheckBox.addActionListener(e -> {
-//			mainScreenSetting.setGridVisible(dispGridCheckBox.isSelected());
-//			screenUpdater.updateScreen();
-//		});
-
-//		gridChangeButton.addActionListener(e -> setGridDivNum());
-
-		// textFieldGrid.addActionListener(e -> setGridDivNum());
-
-		// display/view settings
-//		dispVertexCheckBox.addActionListener(e -> {
-//			logger.debug("vertexVisible at listener: {}", dispVertexCheckBox.isSelected());
-//			mainScreenSetting.setVertexVisible(dispVertexCheckBox.isSelected());
-//		});
-
-//		dispMVLinesCheckBox.addActionListener(e -> {
-//			logger.debug("mvLineVisible at listener: {}", dispMVLinesCheckBox.isSelected());
-//			mainScreenSetting.setMVLineVisible(dispMVLinesCheckBox.isSelected());
-//		});
-
-//		dispAuxLinesCheckBox.addActionListener(e -> {
-//			logger.debug("auxLineVisible at listener: {}", dispAuxLinesCheckBox.isSelected());
-//			mainScreenSetting.setAuxLineVisible(dispAuxLinesCheckBox.isSelected());
-//		});
-
-//		zeroLineWidthCheckBox.addActionListener(e -> {
-//			mainScreenSetting.setZeroLineWidth(zeroLineWidthCheckBox.isSelected());
-//			screenUpdater.updateScreen();
-//		});
-
-		// buttons panel
-//		doFullEstimationCheckBox.addActionListener(e -> fullEstimation = doFullEstimationCheckBox.isSelected());
-
-//		buttonCheckWindow.addActionListener(e -> showCheckerWindow(viewContext, paintContext));
-
-//		buildButton.addActionListener(
-//				e -> showFoldedModelWindows(cutOutlinesHolder, mainScreenSetting));
 	}
 
 	@Override
@@ -1154,93 +984,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 			listener.accept(front, back);
 		};
 	}
-
-//	/**
-//	 * display window with foldability checks
-//	 *
-//	 * @param context
-//	 *            the cp data to be used
-//	 */
-//	private void showCheckerWindow(final CreasePatternViewContext viewContext, final PaintContext context) {
-//		var windowOpener = new CheckerWindowOpener(this, childFrameManager);
-//		windowOpener.showCheckerWindow(context.getCreasePattern(), viewContext.isZeroLineWidth());
-//	}
-
-//	/**
-//	 * open window with folded model
-//	 */
-//	private void showFoldedModelWindows(
-//			final CutModelOutlinesHolder cutOutlinesHolder,
-//			final MainScreenSetting mainScreenSetting) {
-//
-//		var frame = (JFrame) this.getTopLevelAncestor();
-//
-//		// modal dialog while folding
-//		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
-//
-//		var worker = new SwingWorker<List<JFrame>, Void>() {
-//			@Override
-//			protected List<JFrame> doInBackground() throws Exception {
-//				CreasePattern creasePattern = paintContext.getCreasePattern();
-//
-//				var parent = UIPanel.this;
-//
-//				var windowOpener = new FoldedModelWindowOpener(parent, childFrameManager,
-//						// ask if ORIPA should try to remove duplication.
-//						() -> dialogService.showCleaningUpDuplicationDialog(parent) == JOptionPane.YES_OPTION,
-//						// clean up the crease pattern
-//						() -> dialogService.showCleaningUpMessage(parent),
-//						// folding failed.
-//						() -> dialogService.showFoldFailureMessage(parent),
-//						// no answer is found.
-//						() -> dialogService.showNoAnswerMessage(parent));
-//
-//				try {
-//					return windowOpener.showFoldedModelWindows(
-//							creasePattern,
-//							cutOutlinesHolder,
-//							mainScreenSetting,
-//							fullEstimation,
-//							estimationResultFrontColor,
-//							estimationResultBackColor,
-//							estimationResultSaveColorsListener,
-//							paperDomainOfModelChangeListener,
-//							screenUpdater);
-//				} catch (Exception e) {
-//					logger.error("error when folding", e);
-//					Dialogs.showErrorDialog(parent,
-//							resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
-//				}
-//				return List.of();
-//			}
-//
-//			@Override
-//			protected void done() {
-//				dialogWhileFolding.setVisible(false);
-//				dialogWhileFolding.dispose();
-//
-//				// this action moves the main window to front.
-//				buildButton.setEnabled(true);
-//			}
-//		};
-//
-//		dialogWhileFolding.setWorker(worker);
-//
-//		worker.execute();
-//
-//		buildButton.setEnabled(false);
-//		dialogWhileFolding.setVisible(true);
-//
-//		try {
-//			var openedWindows = worker.get();
-//			// bring new windows to front.
-//			openedWindows.forEach(w -> w.setVisible(true));
-//
-//		} catch (CancellationException | InterruptedException | ExecutionException e) {
-//			logger.info("folding failed or cancelled.", e);
-//			Dialogs.showErrorDialog(this, resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
-//		}
-//	}
 
 	@Override
 	public void addCheckWindowButtonListener(final Runnable listener) {

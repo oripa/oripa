@@ -222,7 +222,6 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 			uiPanel = new UIPanel(
 					stateManager, screenUpdater, actionHolder, viewContext, paintContext, document,
 					setting, screenSetting);
-			uiPanel.setChildFrameManager(childFrameManager);
 		} catch (RuntimeException ex) {
 			logger.error("UI panel construction failed", ex);
 			Dialogs.showErrorDialog(
