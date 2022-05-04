@@ -120,10 +120,6 @@ public interface MainFrameView extends FrameView {
 	 */
 	void addMRUFilesMenuItemUpdateListener(Consumer<Integer> listener);
 
-	// void addMRUFilesMenuListUpdateListener(Runnable listener);
-
-	void setTitleUpdateListener(Runnable listener);
-
 	void addWindowClosingListener(Runnable listener);
 
 	// --------------------------------------------------------
