@@ -142,6 +142,8 @@ public interface UIPanelView extends View {
 
 	void addAngleStepComboListener(Consumer<AngleStep> listener);
 
+	void addLineTypeMountainButtonListener(Runnable listener);
+
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();

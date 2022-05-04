@@ -59,6 +59,7 @@ import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -228,6 +229,8 @@ public class UIPanelPresenter {
 		view.addLineInputAngleSnapButtonListener(angleSnapState::performActions, screenUpdater.getKeyListener());
 
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
+
+		view.addLineTypeMountainButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
 	}
 
 	private void makeGridSizeHalf() {

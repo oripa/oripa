@@ -883,8 +883,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 //		angleStepCombo.addItemListener(e -> paintContext.setAngleStep((AngleStep) e.getItem()));
 
 		// line type radio buttons
-		lineTypeMountainButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
+//		lineTypeMountainButton.addActionListener(
+//				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
 		setShortcut(lineTypeMountainButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_M),
 				StringID.UI.MOUNTAIN_ID);
 
@@ -1067,6 +1067,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 			final KeyListener keyListener) {
 		button.addActionListener(listener);
 		button.addKeyListener(keyListener);
+	}
+
+	@Override
+	public void addLineTypeMountainButtonListener(final Runnable listener) {
+		lineTypeMountainButton.addActionListener(e -> listener.run());
 	}
 
 	/**
