@@ -138,6 +138,8 @@ public interface UIPanelView extends View {
 
 	void addLineInputPBisectorButtonListener(ActionListener listener, KeyListener keyListener);
 
+	void addLineInputAngleSnapButtonListener(ActionListener listener, KeyListener keyListener);
+
 	void addAngleStepComboListener(Consumer<AngleStep> listener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();

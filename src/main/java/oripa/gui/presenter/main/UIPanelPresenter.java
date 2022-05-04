@@ -223,6 +223,10 @@ public class UIPanelPresenter {
 				StringID.PERPENDICULAR_BISECTOR_ID);
 		view.addLineInputPBisectorButtonListener(pbisecState::performActions, screenUpdater.getKeyListener());
 
+		var angleSnapState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.ANGLE_SNAP_ID);
+		view.addLineInputAngleSnapButtonListener(angleSnapState::performActions, screenUpdater.getKeyListener());
+
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 	}
 

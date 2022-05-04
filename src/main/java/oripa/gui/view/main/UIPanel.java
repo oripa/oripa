@@ -138,7 +138,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JRadioButton lineInputMirrorButton = new JRadioButton();
 	private final JRadioButton lineInputByValueButton = new JRadioButton();
 	private final JRadioButton lineInputPBisectorButton = new JRadioButton();
-	private JRadioButton lineInputAngleSnapButton;
+	private final JRadioButton lineInputAngleSnapButton = new JRadioButton();
 
 	// lineTypePanel
 	private final JPanel lineTypePanel = new JPanel();
@@ -731,9 +731,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineInputGlobalShortcut(lineInputPBisectorButton, KeyStrokes.get(KeyEvent.VK_P),
 				StringID.PERPENDICULAR_BISECTOR_ID);
 
-		lineInputAngleSnapButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.ANGLE_SNAP_ID,
-				screenUpdater.getKeyListener());
+//		lineInputAngleSnapButton = buttonFactory.create(
+//				this, JRadioButton.class, StringID.ANGLE_SNAP_ID,
+//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputAngleSnapButton, KeyStrokes.get(KeyEvent.VK_A),
 				StringID.ANGLE_SNAP_ID);
 	}
@@ -1051,6 +1051,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineInputPBisectorButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(lineInputPBisectorButton, listener, keyListener);
+	}
+
+	@Override
+	public void addLineInputAngleSnapButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(lineInputAngleSnapButton, listener, keyListener);
 	}
 
 	@Override
