@@ -133,7 +133,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JRadioButton lineInputOnVButton = new JRadioButton();
 	private final JRadioButton lineInputVerticalLineButton = new JRadioButton();
 	private final JRadioButton lineInputAngleBisectorButton = new JRadioButton();
-	private JRadioButton lineInputTriangleSplitButton;
+	private final JRadioButton lineInputTriangleSplitButton = new JRadioButton();
 	private JRadioButton lineInputSymmetricButton;
 	private JRadioButton lineInputMirrorButton;
 	private JRadioButton lineInputByValueButton;
@@ -701,9 +701,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineInputGlobalShortcut(lineInputAngleBisectorButton, KeyStrokes.get(KeyEvent.VK_B),
 				StringID.BISECTOR_ID);
 
-		lineInputTriangleSplitButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.TRIANGLE_ID,
-				screenUpdater.getKeyListener());
+//		lineInputTriangleSplitButton = buttonFactory.create(
+//				this, JRadioButton.class, StringID.TRIANGLE_ID,
+//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputTriangleSplitButton, KeyStrokes.get(KeyEvent.VK_R),
 				StringID.TRIANGLE_ID);
 
@@ -1026,6 +1026,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineInputAngleBisectorButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(lineInputAngleBisectorButton, listener, keyListener);
+	}
+
+	@Override
+	public void addLineInputTriangleSplitButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(lineInputTriangleSplitButton, listener, keyListener);
 	}
 
 	@Override

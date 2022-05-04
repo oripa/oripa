@@ -193,6 +193,11 @@ public class UIPanelPresenter {
 		view.addLineInputAngleBisectorButtonListener(angleBisectorState::performActions,
 				screenUpdater.getKeyListener());
 
+		var triangleSplitState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.TRIANGLE_ID);
+		view.addLineInputTriangleSplitButtonListener(triangleSplitState::performActions,
+				screenUpdater.getKeyListener());
+
 		view.addLengthButtonListener(
 				setterFactory.create(new LengthMeasuringAction(valueSetting)));
 		view.addAngleButtonListener(
