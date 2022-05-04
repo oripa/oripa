@@ -206,6 +206,10 @@ public class UIPanelPresenter {
 				StringID.MIRROR_ID);
 		view.addLineInputMirrorButtonListener(mirrorState::performActions, screenUpdater.getKeyListener());
 
+		var byValueState = stateFactory.create(view.asPanel(), actionHolder, paintContext, screenUpdater,
+				StringID.BY_VALUE_ID);
+		view.addLineInputByValueButtonListener(byValueState::performActions, screenUpdater.getKeyListener());
+
 		view.addLengthButtonListener(
 				setterFactory.create(new LengthMeasuringAction(valueSetting)));
 		view.addAngleButtonListener(

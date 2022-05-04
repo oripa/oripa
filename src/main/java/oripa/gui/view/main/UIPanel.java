@@ -136,7 +136,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JRadioButton lineInputTriangleSplitButton = new JRadioButton();
 	private final JRadioButton lineInputSymmetricButton = new JRadioButton();
 	private final JRadioButton lineInputMirrorButton = new JRadioButton();
-	private JRadioButton lineInputByValueButton;
+	private final JRadioButton lineInputByValueButton = new JRadioButton();
 	private JRadioButton lineInputPBisectorButton;
 	private JRadioButton lineInputAngleSnapButton;
 
@@ -719,9 +719,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineInputGlobalShortcut(lineInputMirrorButton, KeyStrokes.get(KeyEvent.VK_M),
 				StringID.MIRROR_ID);
 
-		lineInputByValueButton = buttonFactory.create(
-				this, JRadioButton.class, StringID.BY_VALUE_ID,
-				screenUpdater.getKeyListener());
+//		lineInputByValueButton = buttonFactory.create(
+//				this, JRadioButton.class, StringID.BY_VALUE_ID,
+//				screenUpdater.getKeyListener());
 		setLineInputGlobalShortcut(lineInputByValueButton, KeyStrokes.get(KeyEvent.VK_L),
 				StringID.BY_VALUE_ID);
 
@@ -1041,6 +1041,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineInputMirrorButtonListener(final ActionListener listener, final KeyListener keyListener) {
 		addButtonListener(lineInputMirrorButton, listener, keyListener);
+	}
+
+	@Override
+	public void addLineInputByValueButtonListener(final ActionListener listener, final KeyListener keyListener) {
+		addButtonListener(lineInputByValueButton, listener, keyListener);
 	}
 
 	@Override

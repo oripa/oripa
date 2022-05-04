@@ -104,14 +104,6 @@ public interface UIPanelView extends View {
 
 	void addAlterLineComboToListener(ItemListener listener);
 
-	void addLengthButtonListener(ActionListener listener);
-
-	void addAngleButtonListener(ActionListener listener);
-
-	void addLengthTextFieldListener(DocumentListener listener);
-
-	void addAngleTextFieldListener(DocumentListener listener);
-
 	void addEditModeAddVertexButtonListener(ActionListener listener, KeyListener keyListener);
 
 	void addEditModeDeleteVertexButtonListener(ActionListener listener, KeyListener keyListener);
@@ -133,6 +125,16 @@ public interface UIPanelView extends View {
 	void addLineInputSymmetricButtonListener(ActionListener listener, KeyListener keyListener);
 
 	void addLineInputMirrorButtonListener(ActionListener listener, KeyListener keyListener);
+
+	void addLineInputByValueButtonListener(ActionListener listener, KeyListener keyListener);
+
+	void addLengthButtonListener(ActionListener listener);
+
+	void addAngleButtonListener(ActionListener listener);
+
+	void addLengthTextFieldListener(DocumentListener listener);
+
+	void addAngleTextFieldListener(DocumentListener listener);
 
 	void addAngleStepComboListener(Consumer<AngleStep> listener);
 
