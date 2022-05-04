@@ -231,6 +231,7 @@ public class UIPanelPresenter {
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
 
 		view.addLineTypeMountainButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
+		view.addLineTypeValleyButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
 	}
 
 	private void makeGridSizeHalf() {

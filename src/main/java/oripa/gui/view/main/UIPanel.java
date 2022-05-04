@@ -888,8 +888,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setShortcut(lineTypeMountainButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_M),
 				StringID.UI.MOUNTAIN_ID);
 
-		lineTypeValleyButton.addActionListener(
-				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
+//		lineTypeValleyButton.addActionListener(
+//				e -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
 		setShortcut(lineTypeValleyButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_V),
 				StringID.UI.VALLEY_ID);
 
@@ -1072,6 +1072,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineTypeMountainButtonListener(final Runnable listener) {
 		lineTypeMountainButton.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addLineTypeValleyButtonListener(final Runnable listener) {
+		lineTypeValleyButton.addActionListener(e -> listener.run());
 	}
 
 	/**
