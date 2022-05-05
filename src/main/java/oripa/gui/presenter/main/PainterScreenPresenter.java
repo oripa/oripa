@@ -29,7 +29,7 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
-import oripa.gui.view.main.PaintComponentParameter;
+import oripa.gui.view.creasepattern.PaintComponentGraphics;
 import oripa.gui.view.main.PainterScreenView;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
 
@@ -96,7 +96,7 @@ public class PainterScreenPresenter {
 		view.setUsingCtrlKeyOnDragListener(this::updateUsingCtrlKeyOnDrag);
 	}
 
-	private void paintComponent(final PaintComponentParameter p) {
+	private void paintComponent(final PaintComponentGraphics p) {
 		ObjectGraphicDrawer bufferObjDrawer = p.getBufferObjectDrawer();
 		ObjectGraphicDrawer objDrawer = p.getObjectDrawer();
 
