@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -22,6 +22,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import oripa.drawer.java2d.CreasePatternObjectDrawer;
+import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+
 public class PaintComponentParameter {
 	private final Graphics g;
 	private final Graphics2D bufferg;
@@ -37,8 +40,8 @@ public class PaintComponentParameter {
 		return g;
 	}
 
-	public Graphics2D getBufferGraphics() {
-		return bufferg;
+	public ObjectGraphicDrawer getBufferObjectDrawer() {
+		return new CreasePatternObjectDrawer(bufferg);
 	}
 
 	public Image getBufferImage() {

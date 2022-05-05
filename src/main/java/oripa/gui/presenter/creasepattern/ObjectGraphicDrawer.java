@@ -87,4 +87,6 @@ public interface ObjectGraphicDrawer {
 	void fillFace(final List<Vector2d> vertices);
 
 	void drawString(String text, float x, float y);
+
+	void setUntiAlias(boolean untiAlias);
 }

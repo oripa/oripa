@@ -19,7 +19,6 @@
 package oripa.gui.presenter.main;
 
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 
 import javax.vecmath.Vector2d;
 
@@ -103,17 +102,13 @@ public class PainterScreenPresenter {
 	private void paintComponent(final PaintComponentParameter p) {
 		var g = p.getGraphics();
 		var g2d = (Graphics2D) g;
-		var bufferG2D = p.getBufferGraphics();
 		var bufferImage = p.getBufferImage();
 
-		if (!viewContext.isZeroLineWidth()) {
-			bufferG2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-		}
+		ObjectGraphicDrawer bufferObjDrawer = p.getBufferObjectDrawer();
+
+		bufferObjDrawer.setUntiAlias(!viewContext.isZeroLineWidth());
 
 		GraphicMouseAction action = mouseActionHolder.getMouseAction();
-
-		ObjectGraphicDrawer bufferObjDrawer = new CreasePatternObjectDrawer(bufferG2D);
 
 		drawer.draw(bufferObjDrawer, viewContext, paintContext,
 				action == null ? false : action.getEditMode() == EditMode.VERTEX);

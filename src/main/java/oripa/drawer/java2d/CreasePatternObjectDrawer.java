@@ -2,6 +2,7 @@ package oripa.drawer.java2d;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
@@ -159,5 +160,12 @@ public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
 	public void drawString(final String text, final float x, final float y) {
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(text, x, y);
+	}
+
+	@Override
+	public void setUntiAlias(final boolean untiAlias) {
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				untiAlias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
+
 	}
 }
