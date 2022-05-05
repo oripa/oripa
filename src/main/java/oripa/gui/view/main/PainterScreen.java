@@ -43,8 +43,8 @@ import javax.vecmath.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.drawer.java2d.CreasePatternGraphics;
 import oripa.geom.RectangleDomain;
-import oripa.gui.view.creasepattern.PaintComponentGraphicsJava2D;
 import oripa.gui.view.util.AffineCamera;
 import oripa.gui.view.util.MouseUtility;
 import oripa.gui.viewsetting.ViewScreenUpdater;
@@ -66,7 +66,7 @@ public class PainterScreen extends JPanel
 	private final AffineCamera camera = new AffineCamera();
 	private AffineTransform affineTransform = new AffineTransform();
 
-	private Consumer<PaintComponentGraphicsJava2D> paintComponentListener;
+	private Consumer<CreasePatternGraphics> paintComponentListener;
 	private BiConsumer<Vector2d, Boolean> mouseLeftClickListener;
 	private BiConsumer<Vector2d, Boolean> mouseRightClickListener;
 	private BiConsumer<Vector2d, Boolean> mousePressListener;
@@ -151,7 +151,7 @@ public class PainterScreen extends JPanel
 	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
-		paintComponentListener.accept(new PaintComponentGraphicsJava2D(g, updateBufferImage(), bufferImage));
+		paintComponentListener.accept(new CreasePatternGraphics(g, updateBufferImage(), bufferImage));
 
 	}
 
@@ -375,7 +375,7 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void setPaintComponentListener(final Consumer<PaintComponentGraphicsJava2D> listener) {
+	public void setPaintComponentListener(final Consumer<CreasePatternGraphics> listener) {
 		paintComponentListener = listener;
 	}
 

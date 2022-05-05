@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
+import oripa.drawer.java2d.CreasePatternGraphics;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.ScreenView;
-import oripa.gui.view.creasepattern.PaintComponentGraphicsJava2D;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
 
@@ -43,7 +43,7 @@ public interface PainterScreenView extends ScreenView {
 
 	void initializeCamera(RectangleDomain domain);
 
-	void setPaintComponentListener(Consumer<PaintComponentGraphicsJava2D> listener);
+	void setPaintComponentListener(Consumer<CreasePatternGraphics> listener);
 
 	void setMouseLeftClickListener(BiConsumer<Vector2d, Boolean> listener);
 

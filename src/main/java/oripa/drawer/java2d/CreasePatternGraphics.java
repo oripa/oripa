@@ -16,21 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.creasepattern;
+package oripa.drawer.java2d;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
-import oripa.drawer.java2d.CreasePatternObjectDrawer;
 import oripa.gui.view.ScreenView;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.PaintComponentGraphics;
 
-public class PaintComponentGraphicsJava2D implements PaintComponentGraphics {
+public class CreasePatternGraphics implements PaintComponentGraphics {
 	private final Graphics g;
 	private final Graphics2D bufferg;
 	private final Image bufferImage;
 
-	public PaintComponentGraphicsJava2D(final Graphics g, final Graphics2D bufferg, final Image bufferImage) {
+	public CreasePatternGraphics(final Graphics g, final Graphics2D bufferg, final Image bufferImage) {
 		this.g = g;
 		this.bufferg = bufferg;
 		this.bufferImage = bufferImage;
