@@ -24,7 +24,7 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.gui.presenter.model.ObjectGraphicDrawer;
+import oripa.gui.view.model.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 
 /**

@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.model.ModelDisplayMode;
+import oripa.gui.view.model.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 
 /**
