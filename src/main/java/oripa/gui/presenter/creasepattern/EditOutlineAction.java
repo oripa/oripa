@@ -13,6 +13,7 @@ import oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop;
 import oripa.domain.paint.outline.SelectingVertexForOutline;
 import oripa.domain.paint.util.PairLoop;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class EditOutlineAction extends AbstractGraphicMouseAction {
 

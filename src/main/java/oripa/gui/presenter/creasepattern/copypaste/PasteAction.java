@@ -10,9 +10,9 @@ import oripa.domain.paint.copypaste.ShiftedLineFactory;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 
 public class PasteAction extends AbstractGraphicMouseAction {

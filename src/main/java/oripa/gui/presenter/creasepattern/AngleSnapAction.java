@@ -23,6 +23,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.angle.SelectingStartPoint;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 /**
  * @author OUCHI Koji

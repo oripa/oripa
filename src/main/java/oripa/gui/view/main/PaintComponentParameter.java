@@ -23,7 +23,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 
 import oripa.drawer.java2d.CreasePatternObjectDrawer;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.ScreenView;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class PaintComponentParameter {
 	private final Graphics g;
@@ -40,11 +41,15 @@ public class PaintComponentParameter {
 		return g;
 	}
 
+	public ObjectGraphicDrawer getObjectDrawer() {
+		return new CreasePatternObjectDrawer((Graphics2D) g);
+	}
+
 	public ObjectGraphicDrawer getBufferObjectDrawer() {
 		return new CreasePatternObjectDrawer(bufferg);
 	}
 
-	public Image getBufferImage() {
-		return bufferImage;
+	public void drawBufferImage(final ScreenView view) {
+		g.drawImage(bufferImage, 0, 0, view.asPanel());
 	}
 }

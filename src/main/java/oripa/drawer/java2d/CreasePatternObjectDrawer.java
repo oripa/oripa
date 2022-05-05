@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
 

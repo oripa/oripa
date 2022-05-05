@@ -5,6 +5,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.line.SelectingFirstVertexForLine;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class TwoPointLineAction extends AbstractGraphicMouseAction {
 

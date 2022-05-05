@@ -7,7 +7,7 @@ import oripa.domain.paint.byvalue.SelectingVertexToDrawLine;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class LineByValueAction extends AbstractGraphicMouseAction {
 

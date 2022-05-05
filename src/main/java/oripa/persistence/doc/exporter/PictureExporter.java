@@ -35,7 +35,7 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.drawer.java2d.CreasePatternObjectDrawer;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.util.AffineCamera;
 
 /**

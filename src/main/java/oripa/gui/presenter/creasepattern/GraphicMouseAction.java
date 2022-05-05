@@ -3,6 +3,7 @@ package oripa.gui.presenter.creasepattern;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public interface GraphicMouseAction {
 

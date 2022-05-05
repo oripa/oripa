@@ -8,7 +8,7 @@ import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class CopyAndPasteAction extends AbstractGraphicMouseAction {
 

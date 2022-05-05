@@ -4,6 +4,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.symmetric.SelectingVertexForSymmetric;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class SymmetricalLineAction extends AbstractGraphicMouseAction {
 

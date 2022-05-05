@@ -24,7 +24,7 @@ import java.util.List;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 /**
  * @author OUCHI Koji

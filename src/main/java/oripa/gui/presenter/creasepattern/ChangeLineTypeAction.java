@@ -6,6 +6,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.linetype.LineTypeChangerCommand;
 import oripa.domain.paint.linetype.SelectingLineForLineType;
 import oripa.domain.paint.linetype.TypeForChangeGettable;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.util.Command;
 import oripa.value.OriLine;
 

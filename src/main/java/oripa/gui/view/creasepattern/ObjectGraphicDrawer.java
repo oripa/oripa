@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.creasepattern;
+package oripa.gui.view.creasepattern;
 
 import java.util.List;
 

@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.selectline.SelectingLine;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 
 public class SelectLineAction extends RectangularSelectableAction {

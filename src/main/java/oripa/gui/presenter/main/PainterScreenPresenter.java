@@ -18,20 +18,17 @@
  */
 package oripa.gui.presenter.main;
 
-import java.awt.Graphics2D;
-
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
-import oripa.drawer.java2d.CreasePatternObjectDrawer;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.main.PaintComponentParameter;
 import oripa.gui.view.main.PainterScreenView;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
@@ -100,11 +97,8 @@ public class PainterScreenPresenter {
 	}
 
 	private void paintComponent(final PaintComponentParameter p) {
-		var g = p.getGraphics();
-		var g2d = (Graphics2D) g;
-		var bufferImage = p.getBufferImage();
-
 		ObjectGraphicDrawer bufferObjDrawer = p.getBufferObjectDrawer();
+		ObjectGraphicDrawer objDrawer = p.getObjectDrawer();
 
 		bufferObjDrawer.setUntiAlias(!viewContext.isZeroLineWidth());
 
@@ -124,15 +118,14 @@ public class PainterScreenPresenter {
 		}
 
 		if (action == null) {
-			g.drawImage(bufferImage, 0, 0, view.asPanel());
+			p.drawBufferImage(view);
 			return;
 		}
 
 		action.onDraw(bufferObjDrawer, viewContext, paintContext);
 
-		g.drawImage(bufferImage, 0, 0, view.asPanel());
+		p.drawBufferImage(view);
 
-		ObjectGraphicDrawer objDrawer = new CreasePatternObjectDrawer(g2d);
 		drawer.drawCandidatePositionString(objDrawer,
 				paintContext.getCandidateVertexToPick());
 	}
