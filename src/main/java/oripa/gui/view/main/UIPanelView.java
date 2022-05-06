@@ -138,4 +138,12 @@ public interface UIPanelView extends View {
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();
 
+	public void showNoAnswerMessage();
+
+	public boolean showCleaningUpDuplicationDialog();
+
+	public void showCleaningUpMessage();
+
+	public void showFoldFailureMessage();
+
 }

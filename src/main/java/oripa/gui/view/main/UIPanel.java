@@ -63,6 +63,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanel.class);
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
+	private final MainDialogService dialogService = new MainDialogService(resources);
 
 	private final UIPanelSetting setting = new UIPanelSetting();
 	private final ValueSetting valueSetting = setting.getValueSetting();
@@ -1075,4 +1076,23 @@ public class UIPanel extends JPanel implements UIPanelView {
 		buildButton.setEnabled(enabled);
 	}
 
+	@Override
+	public void showNoAnswerMessage() {
+		dialogService.showNoAnswerMessage(this);
+	}
+
+	@Override
+	public boolean showCleaningUpDuplicationDialog() {
+		return dialogService.showCleaningUpDuplicationDialog(this) == JOptionPane.YES_OPTION;
+	}
+
+	@Override
+	public void showCleaningUpMessage() {
+		dialogService.showCleaningUpMessage(this);
+	}
+
+	@Override
+	public void showFoldFailureMessage() {
+		dialogService.showFoldFailureMessage(this);
+	}
 }

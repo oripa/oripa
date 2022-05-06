@@ -18,12 +18,15 @@
  */
 package oripa.gui.presenter.main;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import org.slf4j.Logger;
@@ -49,7 +52,6 @@ import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.view.estimation.EstimationResultFrame;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.main.DialogWhileFolding;
-import oripa.gui.view.main.MainDialogService;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.model.ModelViewFrame;
 import oripa.gui.view.model.ModelViewFrameFactory;
@@ -76,8 +78,6 @@ public class UIPanelPresenter {
 	UIPanelView view;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
-
-	private final MainDialogService dialogService = new MainDialogService(resources);
 
 	private final UIPanelSetting setting;
 	private final ValueSetting valueSetting;
@@ -316,6 +316,7 @@ public class UIPanelPresenter {
 	 * open window with folded model
 	 */
 	private void showFoldedModelWindows() {
+		// TODO remove Swing-specific code
 
 		var frame = (JFrame) view.asPanel().getTopLevelAncestor();
 		var parent = view.asPanel();
@@ -324,15 +325,33 @@ public class UIPanelPresenter {
 		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
 		var modelComputation = new ModelComputationFacade(
 				// ask if ORIPA should try to remove duplication.
-				() -> dialogService.showCleaningUpDuplicationDialog(parent) == JOptionPane.YES_OPTION,
+				() -> {
+					RunnableFuture<Boolean> f = new FutureTask<>(view::showCleaningUpDuplicationDialog);
+					SwingUtilities.invokeLater(f);
+					try {
+						return f.get();
+					} catch (InterruptedException | ExecutionException e1) {
+						return null;
+					}
+				},
 				// clean up the crease pattern
-				() -> dialogService.showCleaningUpMessage(parent),
+				() -> {
+					try {
+						SwingUtilities.invokeAndWait(view::showCleaningUpMessage);
+					} catch (InvocationTargetException | InterruptedException e1) {
+					}
+				},
 				// folding failed.
-				() -> dialogService.showFoldFailureMessage(parent));
+				() -> {
+					try {
+						SwingUtilities.invokeAndWait(view::showFoldFailureMessage);
+					} catch (InvocationTargetException | InterruptedException e1) {
+					}
+				});
 
-		var worker = new SwingWorker<ModelComputationFacade.ComputationResult, Void>() {
+		var worker = new SwingWorker<ComputationResult, Void>() {
 			@Override
-			protected ModelComputationFacade.ComputationResult doInBackground() throws Exception {
+			protected ComputationResult doInBackground() throws Exception {
 				CreasePattern creasePattern = paintContext.getCreasePattern();
 
 				// FIXME should not access swing component in
@@ -403,7 +422,7 @@ public class UIPanelPresenter {
 
 			if (result.countFoldablePatterns() == 0) {
 				// no answer is found.
-				dialogService.showNoAnswerMessage(parent);
+				view.showNoAnswerMessage();
 				return;
 			} else {
 				logger.info("foldable layer layout is found.");
