@@ -120,19 +120,23 @@ public class MainFramePresenter {
 
 		document.setCreasePattern(paintContext.getCreasePattern());
 
-		screenUpdater = view.getScreenUpdater();
-		screenSetting = view.getPainterScreenView().getMainScreenSetting();
+		var screen = view.getPainterScreenView();
+		screenUpdater = screen.getScreenUpdater();
+		screenSetting = screen.getMainScreenSetting();
 		selectionOriginHolder = screenSetting.getSelectionOriginHolder();
 
+		var uiPanel = view.getUIPanelView();
+		var uiPanelSetting = uiPanel.getUIPanelSetting();
+
 		screenPresenter = new PainterScreenPresenter(
-				view.getPainterScreenView(),
+				screen,
 				actionHolder,
 				viewContext,
 				paintContext,
 				document);
 
 		uiPanelPresenter = new UIPanelPresenter(
-				view.getUIPanelView(),
+				uiPanel,
 				stateManager,
 				screenUpdater,
 				actionHolder,
@@ -144,7 +148,7 @@ public class MainFramePresenter {
 
 		uiPanelPresenter.setChildFrameManager(childFrameManager);
 
-		stateFactory = new PaintBoundStateFactory(stateManager, view.getMainFrameSetting(), view.getUIPanelSetting(),
+		stateFactory = new PaintBoundStateFactory(stateManager, view.getMainFrameSetting(), uiPanelSetting,
 				selectionOriginHolder);
 
 		// Setup Dialog Windows
@@ -266,7 +270,7 @@ public class MainFramePresenter {
 	 * Ensure the execution order as loading file comes first.
 	 */
 	private void addImportActionListener() {
-		var state = stateFactory.create(view.asFrame(), actionHolder, paintContext, view.getScreenUpdater(),
+		var state = stateFactory.create(view.asFrame(), actionHolder, paintContext, screenUpdater,
 				StringID.IMPORT_CP_ID);
 		view.addImportButtonListener(() -> {
 			try {

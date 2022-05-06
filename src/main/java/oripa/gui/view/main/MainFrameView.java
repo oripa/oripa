@@ -25,9 +25,6 @@ import java.util.function.Consumer;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.FrameView;
 import oripa.gui.viewsetting.main.MainFrameSetting;
-import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.MainScreenUpdater;
-import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 
 /**
  * @author OUCHI Koji
@@ -38,13 +35,7 @@ public interface MainFrameView extends FrameView {
 
 	UIPanelView getUIPanelView();
 
-	UIPanelSetting getUIPanelSetting();
-
 	PainterScreenView getPainterScreenView();
-
-	MainScreenSetting getMainScreenSetting();
-
-	MainScreenUpdater getScreenUpdater();
 
 	void addClearButtonListener(Runnable listener);
 

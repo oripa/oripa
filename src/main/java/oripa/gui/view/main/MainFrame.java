@@ -47,8 +47,6 @@ import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.MainScreenUpdater;
-import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -351,23 +349,8 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	}
 
 	@Override
-	public UIPanelSetting getUIPanelSetting() {
-		return uiPanel.getUIPanelSetting();
-	}
-
-	@Override
 	public PainterScreenView getPainterScreenView() {
 		return mainScreen;
-	}
-
-	@Override
-	public MainScreenSetting getMainScreenSetting() {
-		return mainScreen.getMainScreenSetting();
-	}
-
-	@Override
-	public MainScreenUpdater getScreenUpdater() {
-		return mainScreen.getScreenUpdater();
 	}
 
 	@Override
