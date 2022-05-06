@@ -18,13 +18,6 @@
  */
 package oripa.gui.presenter.main;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.RunnableFuture;
-
-import javax.swing.SwingUtilities;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +44,6 @@ import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.model.ModelViewFrame;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
-import oripa.gui.view.util.Dialogs;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
@@ -59,7 +51,6 @@ import oripa.gui.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ResourceHolder;
-import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
 
@@ -311,47 +302,21 @@ public class UIPanelPresenter {
 	}
 
 	private void computeModels() {
-		// TODO remove Swing-specific code
 		var modelComputation = new ModelComputationFacade(
 				// ask if ORIPA should try to remove duplication.
-				() -> {
-					RunnableFuture<Boolean> f = new FutureTask<>(view::showCleaningUpDuplicationDialog);
-					SwingUtilities.invokeLater(f);
-					try {
-						return f.get();
-					} catch (InterruptedException | ExecutionException e) {
-						return null;
-					}
-				},
+				view::showCleaningUpDuplicationDialog,
 				// clean up the crease pattern
-				() -> {
-					try {
-						SwingUtilities.invokeAndWait(view::showCleaningUpMessage);
-					} catch (InvocationTargetException | InterruptedException e) {
-					}
-				},
+				view::showCleaningUpMessage,
 				// folding failed.
-				() -> {
-					try {
-						SwingUtilities.invokeAndWait(view::showFoldFailureMessage);
-					} catch (InvocationTargetException | InterruptedException e) {
-					}
-				});
+				view::showFoldFailureMessage);
 
-		try {
+		CreasePattern creasePattern = paintContext.getCreasePattern();
 
-			CreasePattern creasePattern = paintContext.getCreasePattern();
+		var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
 
-			var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
-
-			computationResult = modelComputation.computeModels(
-					origamiModels,
-					view.getFullEstimation());
-		} catch (Exception e) {
-			logger.error("error when folding", e);
-			Dialogs.showErrorDialog(view.asPanel(),
-					resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
-		}
+		computationResult = modelComputation.computeModels(
+				origamiModels,
+				view.getFullEstimation());
 	}
 
 	private void showFoldedModelWindows() {
@@ -371,12 +336,11 @@ public class UIPanelPresenter {
 		EstimationResultFrame resultFrame = null;
 
 		if (view.getFullEstimation()) {
-
-			if (computationResult.countFoldablePatterns() == 0) {
+			var count = computationResult.countFoldablePatterns();
+			if (count == 0) {
 				// no answer is found.
 				view.showNoAnswerMessage();
-				return;
-			} else {
+			} else if (count > 0) {
 				logger.info("foldable layer layout is found.");
 
 				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
@@ -393,9 +357,10 @@ public class UIPanelPresenter {
 			}
 		}
 
-		modelViewFrame.setVisible(true);
-
 		putModelIndexChangeListener(modelViewFrame, resultFrame);
+
+		logger.debug("show X-ray model frame.");
+		modelViewFrame.setVisible(true);
 	}
 
 	public void putModelIndexChangeListener(final ModelViewFrame modelViewFrame,

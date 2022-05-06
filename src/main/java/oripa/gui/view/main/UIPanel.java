@@ -30,11 +30,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -1088,19 +1090,41 @@ public class UIPanel extends JPanel implements UIPanelView {
 		dialogService.showNoAnswerMessage(this);
 	}
 
+	/**
+	 * Do not call this method from Event Dispatch Thread.
+	 */
 	@Override
 	public boolean showCleaningUpDuplicationDialog() {
-		return dialogService.showCleaningUpDuplicationDialog(this) == JOptionPane.YES_OPTION;
+		RunnableFuture<Boolean> f = new FutureTask<>(
+				() -> dialogService.showCleaningUpDuplicationDialog(this) == JOptionPane.YES_OPTION);
+		SwingUtilities.invokeLater(f);
+		try {
+			return f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			return false;
+		}
 	}
 
+	/**
+	 * Do not call this method from Event Dispatch Thread.
+	 */
 	@Override
 	public void showCleaningUpMessage() {
-		dialogService.showCleaningUpMessage(this);
+		try {
+			SwingUtilities.invokeAndWait(() -> dialogService.showCleaningUpMessage(this));
+		} catch (InvocationTargetException | InterruptedException e) {
+		}
 	}
 
+	/**
+	 * Do not call this method from Event Dispatch Thread.
+	 */
 	@Override
 	public void showFoldFailureMessage() {
-		dialogService.showFoldFailureMessage(this);
+		try {
+			SwingUtilities.invokeAndWait(() -> dialogService.showFoldFailureMessage(this));
+		} catch (InvocationTargetException | InterruptedException e) {
+		}
 	}
 
 	@Override
@@ -1161,7 +1185,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 			showFoldedModelWindowsListener.run();
 
-		} catch (CancellationException | InterruptedException | ExecutionException e) {
+		} catch (Exception e) {
 			logger.info("folding failed or cancelled.", e);
 			Dialogs.showErrorDialog(this,
 					resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);

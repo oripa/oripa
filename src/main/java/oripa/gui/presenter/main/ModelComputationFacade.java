@@ -56,10 +56,16 @@ public class ModelComputationFacade {
 		}
 
 		public List<FoldedModel> getFoldedModels() {
+			if (foldedModels == null) {
+				return List.of();
+			}
 			return Collections.unmodifiableList(foldedModels);
 		}
 
 		public int countFoldablePatterns() {
+			if (foldedModels == null) {
+				return -1;
+			}
 			return foldedModels.stream().mapToInt(m -> m.getFoldablePatternCount()).sum();
 		}
 
