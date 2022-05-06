@@ -19,14 +19,10 @@
 package oripa.gui.view.main;
 
 import java.awt.GridBagLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.List;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.SwingWorker;
 
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -38,7 +34,7 @@ import oripa.resource.StringID;
  */
 public class DialogWhileFolding extends JDialog {
 
-	private SwingWorker<List<JFrame>, Void> worker;
+//	private SwingWorker<List<JFrame>, Void> worker;
 	private final int WIDTH = 200;
 	private final int HEIGHT = 100;
 
@@ -56,15 +52,15 @@ public class DialogWhileFolding extends JDialog {
 
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(final WindowEvent e) {
-				worker.cancel(true); // doesn't work so far.
-			}
-		});
+//		addWindowListener(new WindowAdapter() {
+//			@Override
+//			public void windowClosed(final WindowEvent e) {
+//				worker.cancel(true); // doesn't work so far.
+//			}
+//		});
 	}
 
-	public void setWorker(final SwingWorker<List<JFrame>, Void> worker) {
-		this.worker = worker;
-	}
+//	public void setWorker(final SwingWorker<List<JFrame>, Void> worker) {
+//		this.worker = worker;
+//	}
 }

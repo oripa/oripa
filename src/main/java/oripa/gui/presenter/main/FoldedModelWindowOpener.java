@@ -21,6 +21,7 @@ package oripa.gui.presenter.main;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
@@ -56,6 +57,29 @@ import oripa.gui.viewsetting.main.MainScreenSetting;
 public class FoldedModelWindowOpener {
 	private static final Logger logger = LoggerFactory.getLogger(FoldedModelWindowOpener.class);
 
+	public class ComputationResult {
+		private final List<OrigamiModel> origamiModels;
+		private final List<FoldedModel> foldedModels;
+
+		public ComputationResult(final List<OrigamiModel> origamiModels, final List<FoldedModel> foldedModels) {
+			this.origamiModels = origamiModels;
+			this.foldedModels = foldedModels;
+		}
+
+		public List<OrigamiModel> getOrigamiModels() {
+			return Collections.unmodifiableList(origamiModels);
+		}
+
+		public List<FoldedModel> getFoldedModels() {
+			return Collections.unmodifiableList(foldedModels);
+		}
+
+		public int countFoldablePatterns() {
+			return foldedModels.stream().mapToInt(m -> m.getFoldablePatternCount()).sum();
+		}
+
+	}
+
 	private final JComponent ownerView;
 	private final ChildFrameManager childFrameManager;
 	private final Supplier<Boolean> needCleaningUpDuplication;
@@ -78,6 +102,30 @@ public class FoldedModelWindowOpener {
 		this.showNoAnswerMessage = showNoAnswerMessage;
 	}
 
+	public ComputationResult computeModels(
+			final CreasePattern creasePattern,
+			final boolean fullEstimation) {
+
+		var folderFactory = new FolderFactory();
+		Folder folder = folderFactory.create();
+
+		List<OrigamiModel> origamiModels = buildOrigamiModels(creasePattern);
+		List<FoldedModel> foldedModels = null;
+
+		var checker = new FoldabilityChecker();
+
+		if (origamiModels.stream().anyMatch(Predicate.not(checker::testLocalFlatFoldability))) {
+			origamiModels.forEach(folder::foldWithoutLineType);
+		} else {
+			foldedModels = origamiModels.stream()
+					.map(model -> folder.fold(model, fullEstimation))
+					.collect(Collectors.toList());
+		}
+
+		return new ComputationResult(origamiModels, foldedModels);
+	}
+
+	@Deprecated
 	public List<JFrame> showFoldedModelWindows(
 			final CreasePattern creasePattern,
 			final CutModelOutlinesHolder cutOutlinesHolder,
