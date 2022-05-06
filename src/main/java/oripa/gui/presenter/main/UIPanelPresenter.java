@@ -335,6 +335,8 @@ public class UIPanelPresenter {
 						() -> dialogService.showNoAnswerMessage(parent));
 
 				try {
+					// FIXME should not access swing component in
+					// doInBackground(). Do it in done().
 					return windowOpener.showFoldedModelWindows(
 							creasePattern,
 							cutOutlinesHolder,
