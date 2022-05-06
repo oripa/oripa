@@ -249,9 +249,7 @@ public class MainFramePresenter {
 
 		addPaintMenuItemsListener();
 
-		for (int i = 0; i < Constants.MRUFILE_NUM; i++) {
-			view.addMRUFileButtonListener(this::loadFileFromMRUFileMenuItem);
-		}
+		view.addMRUFileButtonListener(this::loadFileFromMRUFileMenuItem);
 		view.addMRUFilesMenuItemUpdateListener(this::updateMRUFilesMenuItem);
 
 		view.setEstimationResultSaveColorsListener((front, back) -> {
