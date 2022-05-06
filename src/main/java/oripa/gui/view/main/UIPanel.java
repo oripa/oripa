@@ -33,6 +33,8 @@ import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -47,6 +49,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
@@ -198,6 +201,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	private PropertyChangeListener paperDomainOfModelChangeListener;
 
+	private Runnable modelComputationListener;
+	private Runnable showFoldedModelWindowsListener;
+
 	public UIPanel(final MainScreenSetting mainScreenSetting) {
 
 		setShortcuts();
@@ -277,6 +283,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		add(generalSettingsPanel, gbBuilder.getLineField());
 
 		addPropertyChangeListenersToSetting(mainScreenSetting);
+		buildButton.addActionListener(e -> showFoldedModelWindows());
 	}
 
 	@Override
@@ -958,10 +965,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 		checkWindowButton.addActionListener(e -> listener.run());
 	}
 
-	@Override
-	public void addBuildButtonListener(final Runnable listener) {
-		buildButton.addActionListener(e -> listener.run());
-	}
+//	@Override
+//	public void addBuildButtonListener(final Runnable listener) {
+//		buildButton.addActionListener(e -> listener.run());
+//	}
 
 	private void addPropertyChangeListenersToSetting(final MainScreenSetting mainScreenSetting) {
 		mainScreenSetting.addPropertyChangeListener(
@@ -1095,4 +1102,70 @@ public class UIPanel extends JPanel implements UIPanelView {
 	public void showFoldFailureMessage() {
 		dialogService.showFoldFailureMessage(this);
 	}
+
+	@Override
+	public void setModelComputationListener(final Runnable listener) {
+		modelComputationListener = listener;
+	}
+
+	@Override
+	public void setShowFoldedModelWindowsListener(final Runnable listener) {
+		showFoldedModelWindowsListener = listener;
+	}
+
+	/**
+	 * open window with folded model
+	 */
+	private void showFoldedModelWindows() {
+
+		var frame = (JFrame) getTopLevelAncestor();
+		var parent = this;
+
+		// modal dialog while folding
+		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
+
+		var worker = new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				try {
+					modelComputationListener.run();
+				} catch (Exception e) {
+					logger.error("error when folding", e);
+					Dialogs.showErrorDialog(parent,
+							resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+				}
+				return null;
+			}
+		};
+
+//		dialogWhileFolding.setWorker(worker);
+
+		worker.addPropertyChangeListener(e -> {
+			if ("state".equals(e.getPropertyName())
+					&& SwingWorker.StateValue.DONE == e.getNewValue()) {
+				dialogWhileFolding.setVisible(false);
+				dialogWhileFolding.dispose();
+			}
+		});
+
+		worker.execute();
+
+		setBuildButtonEnabled(false);
+		dialogWhileFolding.setVisible(true);
+
+		try {
+			worker.get();
+
+			// this action moves the main window to front.
+			setBuildButtonEnabled(true);
+
+			showFoldedModelWindowsListener.run();
+
+		} catch (CancellationException | InterruptedException | ExecutionException e) {
+			logger.info("folding failed or cancelled.", e);
+			Dialogs.showErrorDialog(this,
+					resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+		}
+	}
+
 }

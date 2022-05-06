@@ -19,15 +19,11 @@
 package oripa.gui.presenter.main;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +47,6 @@ import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.view.estimation.EstimationResultFrame;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
-import oripa.gui.view.main.DialogWhileFolding;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.model.ModelViewFrame;
 import oripa.gui.view.model.ModelViewFrameFactory;
@@ -95,6 +90,8 @@ public class UIPanelPresenter {
 
 	private final MainFrameSetting mainFrameSetting;
 	private final SelectionOriginHolder originHolder;
+
+	private ComputationResult computationResult;
 
 	public UIPanelPresenter(final UIPanelView view,
 			final StateManager<EditMode> stateManager,
@@ -276,8 +273,9 @@ public class UIPanelPresenter {
 		// fold
 
 		view.addCheckWindowButtonListener(this::showCheckerWindow);
-		view.addBuildButtonListener(this::showFoldedModelWindows);
-
+		// view.addBuildButtonListener(this::showFoldedModelWindows);
+		view.setModelComputationListener(this::computeModels);
+		view.setShowFoldedModelWindowsListener(this::showFoldedModelWindows);
 	}
 
 	private void makeGridSizeHalf() {
@@ -312,17 +310,8 @@ public class UIPanelPresenter {
 		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth());
 	}
 
-	/**
-	 * open window with folded model
-	 */
-	private void showFoldedModelWindows() {
+	private void computeModels() {
 		// TODO remove Swing-specific code
-
-		var frame = (JFrame) view.asPanel().getTopLevelAncestor();
-		var parent = view.asPanel();
-
-		// modal dialog while folding
-		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
 		var modelComputation = new ModelComputationFacade(
 				// ask if ORIPA should try to remove duplication.
 				() -> {
@@ -330,7 +319,7 @@ public class UIPanelPresenter {
 					SwingUtilities.invokeLater(f);
 					try {
 						return f.get();
-					} catch (InterruptedException | ExecutionException e1) {
+					} catch (InterruptedException | ExecutionException e) {
 						return null;
 					}
 				},
@@ -338,75 +327,38 @@ public class UIPanelPresenter {
 				() -> {
 					try {
 						SwingUtilities.invokeAndWait(view::showCleaningUpMessage);
-					} catch (InvocationTargetException | InterruptedException e1) {
+					} catch (InvocationTargetException | InterruptedException e) {
 					}
 				},
 				// folding failed.
 				() -> {
 					try {
 						SwingUtilities.invokeAndWait(view::showFoldFailureMessage);
-					} catch (InvocationTargetException | InterruptedException e1) {
+					} catch (InvocationTargetException | InterruptedException e) {
 					}
 				});
 
-		var worker = new SwingWorker<ComputationResult, Void>() {
-			@Override
-			protected ComputationResult doInBackground() throws Exception {
-				CreasePattern creasePattern = paintContext.getCreasePattern();
-
-				// FIXME should not access swing component in
-				// doInBackground().
-				try {
-					return modelComputation.computeModels(
-							creasePattern,
-							view.getFullEstimation());
-				} catch (Exception e) {
-					logger.error("error when folding", e);
-					Dialogs.showErrorDialog(parent,
-							resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
-				}
-				return null;
-			}
-
-			@Override
-			protected void done() {
-
-			}
-		};
-
-//		dialogWhileFolding.setWorker(worker);
-
-		worker.addPropertyChangeListener(e -> {
-			if ("state".equals(e.getPropertyName())
-					&& SwingWorker.StateValue.DONE == e.getNewValue()) {
-				dialogWhileFolding.setVisible(false);
-				dialogWhileFolding.dispose();
-			}
-		});
-
-		worker.execute();
-
-		view.setBuildButtonEnabled(false);
-		dialogWhileFolding.setVisible(true);
-
 		try {
-			var result = worker.get();
 
-			// this action moves the main window to front.
-			view.setBuildButtonEnabled(true);
+			CreasePattern creasePattern = paintContext.getCreasePattern();
 
-			showFoldedModelWindows(parent, result);
+			var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
 
-		} catch (CancellationException | InterruptedException | ExecutionException e) {
-			logger.info("folding failed or cancelled.", e);
+			computationResult = modelComputation.computeModels(
+					origamiModels,
+					view.getFullEstimation());
+		} catch (Exception e) {
+			logger.error("error when folding", e);
 			Dialogs.showErrorDialog(view.asPanel(),
 					resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
 		}
 	}
 
-	private void showFoldedModelWindows(final JComponent parent, final ComputationResult result) {
-		var origamiModels = result.getOrigamiModels();
-		var foldedModels = result.getFoldedModels();
+	private void showFoldedModelWindows() {
+		var parent = view.asPanel();
+
+		var origamiModels = computationResult.getOrigamiModels();
+		var foldedModels = computationResult.getFoldedModels();
 
 		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
 				mainScreenSetting,
@@ -420,7 +372,7 @@ public class UIPanelPresenter {
 
 		if (view.getFullEstimation()) {
 
-			if (result.countFoldablePatterns() == 0) {
+			if (computationResult.countFoldablePatterns() == 0) {
 				// no answer is found.
 				view.showNoAnswerMessage();
 				return;

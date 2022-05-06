@@ -27,13 +27,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.main.OrigamiModelInteractiveBuilder;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
 
 /**
  * @author OUCHI Koji
@@ -79,13 +79,12 @@ public class ModelComputationFacade {
 	}
 
 	public ComputationResult computeModels(
-			final CreasePattern creasePattern,
+			final List<OrigamiModel> origamiModels,
 			final boolean fullEstimation) {
 
 		var folderFactory = new FolderFactory();
 		Folder folder = folderFactory.create();
 
-		List<OrigamiModel> origamiModels = buildOrigamiModels(creasePattern);
 		List<FoldedModel> foldedModels = null;
 
 		var checker = new FoldabilityChecker();
@@ -107,14 +106,43 @@ public class ModelComputationFacade {
 	 *
 	 * @return folded Origami model
 	 */
-	private List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern) {
-		var builder = new OrigamiModelInteractiveBuilder();
+	public List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern) {
+		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		OrigamiModel wholeModel = modelFactory.createOrigamiModel(
+				creasePattern);
 
-		return builder.build(
-				creasePattern,
-				needCleaningUpDuplication,
-				showCleaningUpMessage,
-				showFailureMessage);
+		List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern);
+
+		var checker = new FoldabilityChecker();
+
+		logger.debug("Building origami model.");
+
+		if (checker.testLocalFlatFoldability(wholeModel)) {
+			logger.debug("No modification is needed.");
+			return origamiModels;
+		}
+
+		// ask if ORIPA should try to remove duplication.
+		if (!needCleaningUpDuplication.get()) {
+			// the answer is "no."
+			return origamiModels;
+		}
+
+		// clean up the crease pattern
+		if (creasePattern.cleanDuplicatedLines()) {
+			showCleaningUpMessage.run();
+		}
+		// re-create the model data for simplified crease pattern
+		wholeModel = modelFactory
+				.createOrigamiModel(creasePattern);
+
+		if (checker.testLocalFlatFoldability(wholeModel)) {
+			return modelFactory.createOrigamiModels(creasePattern);
+		}
+
+		showFailureMessage.run();
+
+		return origamiModels;
 	}
 
 }
