@@ -369,7 +369,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	}
 
 	@Override
-	public void addSaveButtonLisetener(final Runnable listener) {
+	public void addSaveButtonListener(final Runnable listener) {
 		menuItemSave.addActionListener(e -> listener.run());
 
 	}

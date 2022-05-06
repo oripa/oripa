@@ -182,7 +182,7 @@ public class MainFramePresenter {
 
 		addImportActionListener();
 
-		view.addSaveButtonLisetener(() -> {
+		view.addSaveButtonListener(() -> {
 			var filePath = document.getDataFilePath();
 			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
 				saveProjectFile(document, filePath, CreasePatternFileTypeKey.OPX);

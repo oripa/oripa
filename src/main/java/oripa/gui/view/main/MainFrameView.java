@@ -43,7 +43,7 @@ public interface MainFrameView extends FrameView {
 
 	void addImportButtonListener(Runnable listener);
 
-	void addSaveButtonLisetener(Runnable listener);
+	void addSaveButtonListener(Runnable listener);
 
 	void addSaveAsButtonListener(Runnable listener);
 
