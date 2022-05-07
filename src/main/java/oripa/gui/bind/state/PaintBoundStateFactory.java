@@ -1,7 +1,7 @@
 package oripa.gui.bind.state;
 
-import java.awt.Component;
 import java.awt.event.ActionListener;
+import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
@@ -46,22 +46,26 @@ public class PaintBoundStateFactory {
 	/**
 	 * Create a state specified by ID
 	 *
-	 * @param parent
 	 * @param actionHolder
 	 * @param context
 	 * @param screenUpdater
+	 * @param errorDetecter
+	 *            can be null if no error check is needed.
+	 * @param errorHandler
+	 *            can be null if no error check is needed.
 	 * @param id
 	 *            A member of StringID
 	 * @return
 	 */
-	public ApplicationState<EditMode> create(final Component parent,
-			final MouseActionHolder actionHolder,
+	public ApplicationState<EditMode> create(final MouseActionHolder actionHolder,
 			final PaintContext context,
 			final ScreenUpdater screenUpdater,
+			final Supplier<Boolean> errorDetecter,
+			final Runnable errorHandler,
 			final String id) {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
-				parent, stateManager, null);
+				stateManager, null);
 
 		final PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
 				actionHolder, screenUpdater, context);
@@ -134,7 +138,7 @@ public class PaintBoundStateFactory {
 			state = createState(
 					stateFactory, setterFactory,
 					new CopyAndPasteActionWrapper(stateManager, false, originHolder),
-					new CopyPasteErrorListener(context), changeHint,
+					errorDetecter, errorHandler, changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
@@ -144,7 +148,7 @@ public class PaintBoundStateFactory {
 			state = createState(
 					stateFactory, setterFactory,
 					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
-					new CopyPasteErrorListener(context), changeHint,
+					errorDetecter, errorHandler, changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
@@ -162,11 +166,11 @@ public class PaintBoundStateFactory {
 
 		case StringID.SELECT_LINE_ID:
 		case StringID.ENLARGE_ID:
-			state = createLineSelectionState(parent, setterFactory, id);
+			state = createLineSelectionState(setterFactory, id);
 			break;
 
 		default:
-			state = createLineInputState(parent, setterFactory, id);
+			state = createLineInputState(setterFactory, id);
 		}
 
 		if (state == null) {
@@ -177,12 +181,12 @@ public class PaintBoundStateFactory {
 	}
 
 	private ApplicationState<EditMode> createLineSelectionState(
-			final Component parent, final PaintActionSetterFactory setterFactory,
+			final PaintActionSetterFactory setterFactory,
 			final String id) {
 
 		var changeHint = new ChangeHint(mainFrameSetting, id);
 
-		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
+		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager,
 				new ActionListener[] {
 						e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
@@ -204,12 +208,12 @@ public class PaintBoundStateFactory {
 	}
 
 	private ApplicationState<EditMode> createLineInputState(
-			final Component parent, final PaintActionSetterFactory setterFactory,
+			final PaintActionSetterFactory setterFactory,
 			final String id) {
 
 		var changeHint = new ChangeHint(mainFrameSetting, id);
 
-		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(parent,
+		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager,
 				new ActionListener[] {
 						e -> (new ChangeOnPaintInputButtonSelected(uiPanelSetting))
@@ -246,7 +250,7 @@ public class PaintBoundStateFactory {
 
 		case StringID.BY_VALUE_ID:
 			LocalPaintBoundStateFactory byValueFactory = new LocalPaintBoundStateFactory(
-					parent, stateManager, new ActionListener[] {
+					stateManager, new ActionListener[] {
 							e -> (new ChangeOnByValueButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			return createState(
@@ -259,7 +263,7 @@ public class PaintBoundStateFactory {
 
 		case StringID.ANGLE_SNAP_ID:
 			LocalPaintBoundStateFactory angleSnapFactory = new LocalPaintBoundStateFactory(
-					parent, stateManager, new ActionListener[] {
+					stateManager, new ActionListener[] {
 							e -> (new ChangeOnAngleSnapButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			return createState(
@@ -285,13 +289,14 @@ public class PaintBoundStateFactory {
 			final LocalPaintBoundStateFactory stateFactory,
 			final PaintActionSetterFactory setterFactory,
 			final GraphicMouseAction mouseAction,
-			final ErrorListener errorListener,
+			final Supplier<Boolean> errorDetecter,
+			final Runnable errorHandler,
 			final ChangeHint changeHint,
 			final ActionListener[] actions) {
 
 		return stateFactory.create(
 				mouseAction.getEditMode(), setterFactory.create(mouseAction),
-				errorListener, changeHint, actions);
+				errorDetecter, errorHandler, changeHint, actions);
 	}
 
 }

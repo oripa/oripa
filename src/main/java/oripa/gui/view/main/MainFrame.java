@@ -35,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -505,4 +506,10 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	public void setPaperDomainOfModelChangeListener(final Consumer<RectangleDomain> listener) {
 		uiPanel.setPaperDomainOfModelChangeListener(e -> listener.accept((RectangleDomain) e.getNewValue()));
 	}
+
+	public void showCopyPasteErrorMessage() {
+		JOptionPane.showMessageDialog(this, "Select target lines",
+				"Copy and Paste", JOptionPane.WARNING_MESSAGE);
+	}
+
 }

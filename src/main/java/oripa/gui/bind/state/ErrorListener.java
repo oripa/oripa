@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
  * @author koji
  *
  */
+@Deprecated
 public interface ErrorListener {
 	/**
 	 * Define a condition of error by this method.

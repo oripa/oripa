@@ -115,4 +115,5 @@ public interface MainFrameView extends FrameView {
 
 	void buildFileMenu();
 
+	public void showCopyPasteErrorMessage();
 }

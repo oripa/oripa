@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 
+@Deprecated
 public class CopyPasteErrorListener implements ErrorListener {
 
 	private final PaintContext context;

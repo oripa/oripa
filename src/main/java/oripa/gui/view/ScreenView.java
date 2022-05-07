@@ -25,6 +25,7 @@ import javax.swing.JPanel;
  *
  */
 public interface ScreenView extends View {
+	@Deprecated
 	default JPanel asPanel() {
 		return (JPanel) this;
 	}

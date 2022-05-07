@@ -1,8 +1,8 @@
 package oripa.gui.bind.state;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
@@ -23,8 +23,8 @@ import oripa.gui.viewsetting.ChangeViewSetting;
  *
  */
 public class PaintBoundState extends ApplicationState<EditMode> {
-	private Component parent;
-	private ErrorListener errorListener;
+	private Runnable errorHandler;
+	private Supplier<Boolean> errorDetecter;
 
 	/**
 	 * set paint action and hint updater without error handler.
@@ -51,12 +51,12 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	/**
 	 * set paint action and hint updater.
 	 *
-	 * @param parent
-	 *            a parent component
-	 * @param el
-	 *            for managing error on {@code performActions()}.
-	 * @param mouseAction
-	 *            paint action
+	 * @param stateManager
+	 *            state manager.
+	 * @param errorDetecter
+	 *            Detects error. returns true if an error occurs.
+	 * @param errorHandler
+	 *            a callback for error handling.
 	 * @param changeHint
 	 *            event handler for hint.
 	 * @param actions
@@ -64,9 +64,9 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 *            changes.
 	 */
 	public PaintBoundState(
-			final Component parent,
 			final StateManager<EditMode> stateManager,
-			final ErrorListener el,
+			final Supplier<Boolean> errorDetecter,
+			final Runnable errorHandler,
 			final EditMode editMode,
 			final PaintActionSetter actionSetter,
 			final ChangeViewSetting changeHint,
@@ -76,9 +76,8 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 
 		addBasicListeners(stateManager, actionSetter, changeHint);
 
-		// set a listener to handle an error on performActions().
-		this.parent = parent;
-		setErrorListener(el);
+		this.errorHandler = errorHandler;
+		this.errorDetecter = errorDetecter;
 	}
 
 	private void addBasicListeners(
@@ -99,8 +98,9 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 
 	}
 
-	public void setErrorListener(final ErrorListener el) {
-		errorListener = el;
+	public void setErrorListeners(final Supplier<Boolean> detecter, final Runnable handler) {
+		errorDetecter = detecter;
+		errorHandler = handler;
 	}
 
 	/**
@@ -111,9 +111,9 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 */
 	@Override
 	public void performActions(final ActionEvent e) {
-		if (errorListener != null) {
-			if (errorListener.isError(e)) {
-				errorListener.onError(parent, e);
+		if (errorDetecter != null) {
+			if (errorDetecter.get()) {
+				errorHandler.run();
 				return;
 			}
 		}

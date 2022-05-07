@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Supplier;
 
 import javax.swing.JFrame;
 
@@ -28,7 +29,7 @@ public class LocalPaintBoundStateFactoryTest {
 			var basicAction2 = mock(ActionListener.class);
 			var stateManager = mock(EditModeStateManager.class);
 
-			var factory = new LocalPaintBoundStateFactory(parent,
+			var factory = new LocalPaintBoundStateFactory(
 					stateManager,
 					new ActionListener[] { basicAction1, basicAction2 });
 
@@ -38,23 +39,24 @@ public class LocalPaintBoundStateFactoryTest {
 			var action2 = mock(ActionListener.class);
 
 			// assume that some error occurs.
-			var errorListener = mock(ErrorListener.class);
+			var errorDetecter = mock(Supplier.class);
+			var errorHandler = mock(Runnable.class);
 			var event = mock(ActionEvent.class);
-			when(errorListener.isError(event)).thenReturn(true);
+			when(errorDetecter.get()).thenReturn(true);
 
 			var changeHint = mock(ChangeViewSetting.class);
 
 			var actionSetter = mock(PaintActionSetter.class);
 			ApplicationState<EditMode> state = factory.create(
-					EditMode.INPUT, actionSetter, errorListener, changeHint,
+					EditMode.INPUT, actionSetter, errorDetecter, errorHandler, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
 			state.performActions(event);
 
 			// error handling should happen.
-			verify(errorListener).isError(event);
-			verify(errorListener).onError(parent, event);
+			verify(errorDetecter).get();
+			verify(errorHandler).run();
 
 			// no action listener should be called.
 			verify(basicAction1, never()).actionPerformed(event);
@@ -72,7 +74,7 @@ public class LocalPaintBoundStateFactoryTest {
 			var basicAction1 = mock(ActionListener.class);
 			var basicAction2 = mock(ActionListener.class);
 
-			var factory = new LocalPaintBoundStateFactory(parent,
+			var factory = new LocalPaintBoundStateFactory(
 					stateManager,
 					new ActionListener[] { basicAction1, basicAction2 });
 
@@ -80,24 +82,25 @@ public class LocalPaintBoundStateFactoryTest {
 			var action2 = mock(ActionListener.class);
 
 			// assume that no error occurs.
-			var errorListener = mock(ErrorListener.class);
+			var errorDetecter = mock(Supplier.class);
+			var errorHandler = mock(Runnable.class);
 			var event = mock(ActionEvent.class);
-			when(errorListener.isError(event)).thenReturn(false);
+			when(errorDetecter.get()).thenReturn(false);
 
 			var changeHint = mock(ChangeViewSetting.class);
 
 			var paintActionSetter = mock(PaintActionSetter.class);
 
 			ApplicationState<EditMode> state = factory.create(
-					EditMode.INPUT, paintActionSetter, errorListener, changeHint,
+					EditMode.INPUT, paintActionSetter, errorDetecter, errorHandler, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
 			state.performActions(event);
 
 			// error handling should never happen.
-			verify(errorListener).isError(event);
-			verify(errorListener, never()).onError(parent, event);
+			verify(errorDetecter).get();
+			verify(errorHandler, never()).run();
 
 			verify(paintActionSetter).actionPerformed(event);
 

@@ -21,6 +21,7 @@ package oripa.gui.presenter.main;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import javax.swing.JOptionPane;
 
@@ -268,7 +269,8 @@ public class MainFramePresenter {
 	 * Ensure the execution order as loading file comes first.
 	 */
 	private void addImportActionListener() {
-		var state = stateFactory.create(view.asFrame(), actionHolder, paintContext, screenUpdater,
+		var state = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
+				null,
 				StringID.IMPORT_CP_ID);
 		view.addImportButtonListener(() -> {
 			try {
@@ -290,20 +292,18 @@ public class MainFramePresenter {
 	}
 
 	private void addPaintMenuItemsListener() {
-		var frame = view.asFrame();
-
 		/*
 		 * For changing outline
 		 */
-		var changeOutlineState = stateFactory.create(frame, actionHolder, paintContext, screenUpdater,
-				StringID.EDIT_CONTOUR_ID);
+		var changeOutlineState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
+				null, StringID.EDIT_CONTOUR_ID);
 		view.addChangeOutlineButtonListener(() -> changeOutlineState.performActions(null));
 
 		/*
 		 * For selecting all lines
 		 */
-		var selectAllState = stateFactory.create(frame, actionHolder, paintContext, screenUpdater,
-				StringID.SELECT_ALL_LINE_ID);
+		var selectAllState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
+				null, StringID.SELECT_ALL_LINE_ID);
 		view.addSelectAllButtonListener(() -> selectAllState.performActions(null));
 		var selectAllListener = new SelectAllLineActionListener(paintContext);
 		view.addSelectAllButtonListener(() -> selectAllListener.actionPerformed(null));
@@ -311,15 +311,16 @@ public class MainFramePresenter {
 		/*
 		 * For starting copy-and-paste
 		 */
-		var copyPasteState = stateFactory.create(frame, actionHolder, paintContext, screenUpdater,
-				StringID.COPY_PASTE_ID);
+		Supplier<Boolean> detectCopyPasteError = () -> paintContext.getPainter().countSelectedLines() == 0;
+		var copyPasteState = stateFactory.create(actionHolder, paintContext, screenUpdater,
+				detectCopyPasteError, view::showCopyPasteErrorMessage, StringID.COPY_PASTE_ID);
 		view.addCopyAndPasteButtonListener(() -> copyPasteState.performActions(null));
 
 		/*
 		 * For starting cut-and-paste
 		 */
-		var cutPasteState = stateFactory.create(frame, actionHolder, paintContext, screenUpdater,
-				StringID.CUT_PASTE_ID);
+		var cutPasteState = stateFactory.create(actionHolder, paintContext, screenUpdater,
+				detectCopyPasteError, view::showCopyPasteErrorMessage, StringID.CUT_PASTE_ID);
 		view.addCutAndPasteButtonListener(() -> cutPasteState.performActions(null));
 
 		var statePopper = new StatePopper<EditMode>(stateManager);
