@@ -118,13 +118,13 @@ public class PainterScreenPresenter {
 		}
 
 		if (action == null) {
-			p.drawBufferImage(view);
+			p.drawBufferImage();
 			return;
 		}
 
 		action.onDraw(bufferObjDrawer, viewContext, paintContext);
 
-		p.drawBufferImage(view);
+		p.drawBufferImage();
 
 		drawer.drawCandidatePositionString(objDrawer,
 				paintContext.getCandidateVertexToPick());

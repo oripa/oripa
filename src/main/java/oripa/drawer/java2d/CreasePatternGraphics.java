@@ -21,8 +21,8 @@ package oripa.drawer.java2d;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.ImageObserver;
 
-import oripa.gui.view.ScreenView;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
 
@@ -30,11 +30,14 @@ public class CreasePatternGraphics implements PaintComponentGraphics {
 	private final Graphics g;
 	private final Graphics2D bufferg;
 	private final Image bufferImage;
+	private final ImageObserver screen;
 
-	public CreasePatternGraphics(final Graphics g, final Graphics2D bufferg, final Image bufferImage) {
+	public CreasePatternGraphics(final Graphics g, final Graphics2D bufferg, final Image bufferImage,
+			final ImageObserver screen) {
 		this.g = g;
 		this.bufferg = bufferg;
 		this.bufferImage = bufferImage;
+		this.screen = screen;
 	}
 
 	@Override
@@ -48,7 +51,7 @@ public class CreasePatternGraphics implements PaintComponentGraphics {
 	}
 
 	@Override
-	public void drawBufferImage(final ScreenView view) {
-		g.drawImage(bufferImage, 0, 0, view.asPanel());
+	public void drawBufferImage() {
+		g.drawImage(bufferImage, 0, 0, screen);
 	}
 }
