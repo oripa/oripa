@@ -50,7 +50,6 @@ import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
-import oripa.resource.ResourceHolder;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
 
@@ -62,8 +61,6 @@ public class UIPanelPresenter {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanelPresenter.class);
 
 	UIPanelView view;
-
-	private final ResourceHolder resources = ResourceHolder.getInstance();
 
 	private final UIPanelSetting setting;
 	private final ValueSetting valueSetting;
@@ -359,7 +356,6 @@ public class UIPanelPresenter {
 
 		putModelIndexChangeListener(modelViewFrame, resultFrame);
 
-		logger.debug("show X-ray model frame.");
 		modelViewFrame.setVisible(true);
 	}
 

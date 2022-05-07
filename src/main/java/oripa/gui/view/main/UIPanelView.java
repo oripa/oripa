@@ -132,8 +132,6 @@ public interface UIPanelView extends View {
 
 	void addCheckWindowButtonListener(Runnable listener);
 
-//	void addBuildButtonListener(Runnable listener);
-
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();
 
 	PropertyChangeListener getPaperDomainOfModelChangeListener();
@@ -149,4 +147,6 @@ public interface UIPanelView extends View {
 	public void setModelComputationListener(Runnable listener);
 
 	public void setShowFoldedModelWindowsListener(Runnable listener);
+
+	public void showErrorMessage(Exception e);
 }

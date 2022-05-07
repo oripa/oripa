@@ -1142,7 +1142,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	 */
 	private void showFoldedModelWindows() {
 
-		var frame = (JFrame) getTopLevelAncestor();
+		var frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 		var parent = this;
 
 		// modal dialog while folding
@@ -1155,8 +1155,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 					modelComputationListener.run();
 				} catch (Exception e) {
 					logger.error("error when folding", e);
-					Dialogs.showErrorDialog(parent,
-							resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+					showErrorMessage(e);
 				}
 				return null;
 			}
@@ -1187,9 +1186,13 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		} catch (Exception e) {
 			logger.info("folding failed or cancelled.", e);
-			Dialogs.showErrorDialog(this,
-					resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+			showErrorMessage(e);
 		}
 	}
 
+	@Override
+	public void showErrorMessage(final Exception e) {
+		Dialogs.showErrorDialog(this,
+				resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
+	}
 }
