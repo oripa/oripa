@@ -115,5 +115,23 @@ public interface MainFrameView extends FrameView {
 
 	void buildFileMenu();
 
-	public void showCopyPasteErrorMessage();
+	void showCopyPasteErrorMessage();
+
+	void showNoSelectionMessageForArrayCopy();
+
+	void showNoSelectionMessageForCircleCopy();
+
+	void showAboutAppMessage();
+
+	/**
+	 *
+	 * @return true if OK button is selected.
+	 */
+	boolean showModelBuildFailureDialog();
+
+	/**
+	 *
+	 * @return true if yes button is selected.
+	 */
+	boolean showSaveOnCloseDialog();
 }

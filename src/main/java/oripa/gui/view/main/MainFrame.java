@@ -156,6 +156,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 	private UIPanel uiPanel;
 	private final PainterScreen mainScreen;
+	private final MainDialogService dialogService = new MainDialogService(resourceHolder);
 
 	private Consumer<Integer> MRUFilesMenuItemUpdateListener;
 
@@ -507,9 +508,34 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 		uiPanel.setPaperDomainOfModelChangeListener(e -> listener.accept((RectangleDomain) e.getNewValue()));
 	}
 
+	@Override
 	public void showCopyPasteErrorMessage() {
 		JOptionPane.showMessageDialog(this, "Select target lines",
 				"Copy and Paste", JOptionPane.WARNING_MESSAGE);
 	}
 
+	@Override
+	public void showNoSelectionMessageForArrayCopy() {
+		dialogService.showNoSelectionMessageForArrayCopy(this);
+	}
+
+	@Override
+	public void showNoSelectionMessageForCircleCopy() {
+		dialogService.showNoSelectionMessageForCircleCopy(this);
+	}
+
+	@Override
+	public void showAboutAppMessage() {
+		dialogService.showAboutAppMessage(this);
+	}
+
+	@Override
+	public boolean showModelBuildFailureDialog() {
+		return dialogService.showModelBuildFailureDialog(this) == JOptionPane.OK_OPTION;
+	}
+
+	@Override
+	public boolean showSaveOnCloseDialog() {
+		return dialogService.showSaveOnCloseDialog(this) == JOptionPane.YES_OPTION;
+	}
 }

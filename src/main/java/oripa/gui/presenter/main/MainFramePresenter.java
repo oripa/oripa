@@ -23,8 +23,6 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.function.Supplier;
 
-import javax.swing.JOptionPane;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +48,6 @@ import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
 import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
 import oripa.gui.view.main.ArrayCopyDialogFactory;
 import oripa.gui.view.main.CircleCopyDialogFactory;
-import oripa.gui.view.main.MainDialogService;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PropertyDialog;
 import oripa.gui.view.util.ChildFrameManager;
@@ -95,7 +92,6 @@ public class MainFramePresenter {
 
 	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
-	private final MainDialogService dialogService = new MainDialogService(resourceHolder);
 	private final CopyDialogOpener copyDialogOpener;
 
 	private final FileHistory fileHistory = new FileHistory(Constants.MRUFILE_NUM);
@@ -156,8 +152,8 @@ public class MainFramePresenter {
 		copyDialogOpener = new CopyDialogOpener(
 				new ArrayCopyDialogFactory(),
 				new CircleCopyDialogFactory(),
-				() -> dialogService.showNoSelectionMessageForArrayCopy(view.asFrame()),
-				() -> dialogService.showNoSelectionMessageForCircleCopy(view.asFrame()));
+				view::showNoSelectionMessageForArrayCopy,
+				view::showNoSelectionMessageForCircleCopy);
 
 		loadIniFile();
 
@@ -238,7 +234,7 @@ public class MainFramePresenter {
 
 		view.addClearButtonListener(() -> clear());
 
-		view.addAboutButtonListener(() -> dialogService.showAboutAppMessage(view.asFrame()));
+		view.addAboutButtonListener(view::showAboutAppMessage);
 
 		view.addExportDXFButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.DXF));
 		view.addExportCPButtonListener(() -> saveFileWithModelCheck(CreasePatternFileTypeKey.CP));
@@ -492,7 +488,7 @@ public class MainFramePresenter {
 		try {
 			dataFileAccess.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
 					filterSelector.getFilter(type), frame,
-					() -> dialogService.showModelBuildFailureDialog(frame) == JOptionPane.OK_OPTION);
+					view::showModelBuildFailureDialog);
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
 			Dialogs.showErrorDialog(frame, resourceHolder.getString(
@@ -612,8 +608,7 @@ public class MainFramePresenter {
 
 		if (paintContext.creasePatternUndo().changeExists()) {
 			// confirm saving edited opx
-			int selected = dialogService.showSaveOnCloseDialog(view.asFrame());
-			if (selected == JOptionPane.YES_OPTION) {
+			if (view.showSaveOnCloseDialog()) {
 
 				document.setCreasePattern(paintContext.getCreasePattern());
 
