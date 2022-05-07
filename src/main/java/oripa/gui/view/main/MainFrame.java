@@ -538,4 +538,22 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	public boolean showSaveOnCloseDialog() {
 		return dialogService.showSaveOnCloseDialog(this) == JOptionPane.YES_OPTION;
 	}
+
+	@Override
+	public void showLoadFailureErrorMessage(final Exception e) {
+		Dialogs.showErrorDialog(this, resourceHolder.getString(
+				ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
+	}
+
+	@Override
+	public void showSaveFailureErrorMessage(final Exception e) {
+		Dialogs.showErrorDialog(this, resourceHolder.getString(
+				ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+	}
+
+	@Override
+	public void showSaveIniFileFailureErrorMessage(final Exception e) {
+		Dialogs.showErrorDialog(this, resourceHolder.getString(
+				ResourceKey.ERROR, StringID.Error.SAVE_INI_FAILED_ID), e);
+	}
 }

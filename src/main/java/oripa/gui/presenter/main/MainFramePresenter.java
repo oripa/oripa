@@ -51,7 +51,6 @@ import oripa.gui.view.main.CircleCopyDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.PropertyDialog;
 import oripa.gui.view.util.ChildFrameManager;
-import oripa.gui.view.util.Dialogs;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
 import oripa.persistence.dao.AbstractFilterSelector;
@@ -281,8 +280,7 @@ public class MainFramePresenter {
 				state.performActions(null);
 			} catch (IllegalArgumentException | FileVersionError | WrongDataFormatException | IOException ex) {
 				logger.error("failed to load (import)", ex);
-				Dialogs.showErrorDialog(view.asFrame(), resourceHolder.getString(
-						ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), ex);
+				view.showLoadFailureErrorMessage(ex);
 			}
 		});
 	}
@@ -371,8 +369,7 @@ public class MainFramePresenter {
 			updateTitleText();
 		} catch (Exception ex) {
 			logger.error("error when loading: ", ex);
-			Dialogs.showErrorDialog(view.asFrame(), resourceHolder.getString(
-					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), ex);
+			view.showLoadFailureErrorMessage(ex);
 		}
 		screenUpdater.updateScreen();
 	}
@@ -446,8 +443,7 @@ public class MainFramePresenter {
 			dataFileAccess.saveProjectFile(doc, filePath, fileType);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
-			Dialogs.showErrorDialog(view.asFrame(), resourceHolder.getString(
-					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+			view.showSaveFailureErrorMessage(e);
 		}
 
 		paintContext.creasePatternUndo().clearChanged();
@@ -473,8 +469,7 @@ public class MainFramePresenter {
 					.orElse(document.getDataFilePath());
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("failed to save", e);
-			Dialogs.showErrorDialog(view.asFrame(), resourceHolder.getString(
-					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+			view.showSaveFailureErrorMessage(e);
 			return document.getDataFilePath();
 		}
 	}
@@ -491,12 +486,10 @@ public class MainFramePresenter {
 					view::showModelBuildFailureDialog);
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
-			Dialogs.showErrorDialog(frame, resourceHolder.getString(
-					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+			view.showSaveFailureErrorMessage(e);
 		} catch (IllegalArgumentException e) {
 			logger.error("Maybe data is not appropriate.", e);
-			Dialogs.showErrorDialog(frame, resourceHolder.getString(
-					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+			view.showSaveFailureErrorMessage(e);
 		}
 	}
 
@@ -556,8 +549,7 @@ public class MainFramePresenter {
 		} catch (FileVersionError | IllegalArgumentException | WrongDataFormatException
 				| IOException e) {
 			logger.error("failed to load", e);
-			Dialogs.showErrorDialog(frame, resourceHolder.getString(
-					ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
+			view.showLoadFailureErrorMessage(e);
 			return document.getDataFilePath();
 		}
 	}
@@ -583,8 +575,7 @@ public class MainFramePresenter {
 			iniFileAccess.save(fileHistory, viewContext);
 		} catch (IllegalStateException e) {
 			logger.error("error when building ini file data", e);
-			Dialogs.showErrorDialog(view.asFrame(), resourceHolder.getString(
-					ResourceKey.ERROR, StringID.Error.SAVE_INI_FAILED_ID), e);
+			view.showSaveIniFileFailureErrorMessage(e);
 		}
 	}
 

@@ -134,4 +134,10 @@ public interface MainFrameView extends FrameView {
 	 * @return true if yes button is selected.
 	 */
 	boolean showSaveOnCloseDialog();
+
+	void showLoadFailureErrorMessage(Exception e);
+
+	void showSaveFailureErrorMessage(Exception e);
+
+	void showSaveIniFileFailureErrorMessage(Exception e);
 }
