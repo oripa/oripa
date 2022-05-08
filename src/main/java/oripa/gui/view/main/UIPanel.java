@@ -1143,7 +1143,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private void showFoldedModelWindows() {
 
 		var frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-		var parent = this;
 
 		// modal dialog while folding
 		var dialogWhileFolding = new DialogWhileFolding(frame, resources);

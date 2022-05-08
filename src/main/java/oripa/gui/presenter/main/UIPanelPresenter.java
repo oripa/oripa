@@ -27,12 +27,10 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
-import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.AngleValueInputListener;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
@@ -45,7 +43,6 @@ import oripa.gui.view.model.ModelViewFrame;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.ViewScreenUpdater;
-import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.uipanel.FromLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.ToLineTypeItemListener;
@@ -70,25 +67,25 @@ public class UIPanelPresenter {
 
 	private ChildFrameManager childFrameManager;
 
-	private final MouseActionHolder actionHolder;
 	private final StateManager<EditMode> stateManager;
 	private final ViewScreenUpdater screenUpdater;
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 
-	private final MainFrameSetting mainFrameSetting;
-	private final SelectionOriginHolder originHolder;
+	private final PaintActionSetterFactory setterFactory;
+
+	private final PaintBoundStateFactory stateFactory;
 
 	private ComputationResult computationResult;
 
 	public UIPanelPresenter(final UIPanelView view,
 			final StateManager<EditMode> stateManager,
 			final ViewScreenUpdater screenUpdater,
-			final MouseActionHolder actionHolder,
 			final CreasePatternViewContext viewContext,
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutOutlinesHolder,
-			final MainFrameSetting mainFrameSetting,
+			final PaintActionSetterFactory setterFactory,
+			final PaintBoundStateFactory stateFactory,
 			final MainScreenSetting mainScreenSetting) {
 		this.view = view;
 
@@ -100,13 +97,11 @@ public class UIPanelPresenter {
 
 		this.stateManager = stateManager;
 
-		this.actionHolder = actionHolder;
-		this.mainFrameSetting = mainFrameSetting;
+		this.setterFactory = setterFactory;
+		this.stateFactory = stateFactory;
 
 		this.mainScreenSetting = mainScreenSetting;
 		this.cutOutlinesHolder = cutOutlinesHolder;
-
-		originHolder = mainScreenSetting.getSelectionOriginHolder();
 
 		addListeners();
 
@@ -118,11 +113,6 @@ public class UIPanelPresenter {
 	}
 
 	private void addListeners() {
-		PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
-				actionHolder, screenUpdater, paintContext);
-
-		var stateFactory = new PaintBoundStateFactory(stateManager, mainFrameSetting, setting, originHolder);
-
 		// ------------------------------------------------------------
 		// edit mode buttons
 
@@ -134,71 +124,71 @@ public class UIPanelPresenter {
 				new CommandStatePopper<EditMode>(stateManager, EditMode.SELECT),
 				screenUpdater.getKeyListener());
 
-		var deleteLineState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.DELETE_LINE_ID);
+		var deleteLineState = stateFactory.create(StringID.DELETE_LINE_ID,
+				null, null);
 		view.addEditModeDeleteLineButtonListener(deleteLineState::performActions, screenUpdater.getKeyListener());
 
-		var lineTypeState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.CHANGE_LINE_TYPE_ID);
+		var lineTypeState = stateFactory.create(StringID.CHANGE_LINE_TYPE_ID,
+				null, null);
 		view.addEditModeLineTypeButtonListener(lineTypeState::performActions, screenUpdater.getKeyListener());
 
 		view.addAlterLineComboFromListener(new FromLineTypeItemListener(setting));
 		view.addAlterLineComboToListener(new ToLineTypeItemListener(setting));
 
-		var addVertexState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.ADD_VERTEX_ID);
+		var addVertexState = stateFactory.create(StringID.ADD_VERTEX_ID,
+				null, null);
 		view.addEditModeAddVertexButtonListener(addVertexState::performActions, screenUpdater.getKeyListener());
 
-		var deleteVertexState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.DELETE_VERTEX_ID);
+		var deleteVertexState = stateFactory.create(StringID.DELETE_VERTEX_ID,
+				null, null);
 		view.addEditModeDeleteVertexButtonListener(deleteVertexState::performActions, screenUpdater.getKeyListener());
 
 		// ------------------------------------------------------------
 		// selection command buttons
 
-		var selectLineState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.SELECT_LINE_ID);
+		var selectLineState = stateFactory.create(StringID.SELECT_LINE_ID,
+				null, null);
 		view.addSelectionButtonListener(selectLineState::performActions, screenUpdater.getKeyListener());
 
-		var enlargementState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.ENLARGE_ID);
+		var enlargementState = stateFactory.create(StringID.ENLARGE_ID,
+				null, null);
 		view.addEnlargementButtonListener(enlargementState::performActions, screenUpdater.getKeyListener());
 
 		// ------------------------------------------------------------
 		// input command buttons
 
-		var directVState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.DIRECT_V_ID);
+		var directVState = stateFactory.create(StringID.DIRECT_V_ID,
+				null, null);
 		view.addLineInputDirectVButtonListener(directVState::performActions, screenUpdater.getKeyListener());
 
-		var onVState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.ON_V_ID);
+		var onVState = stateFactory.create(StringID.ON_V_ID,
+				null, null);
 		view.addLineInputOnVButtonListener(onVState::performActions, screenUpdater.getKeyListener());
 
-		var verticalLineState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.VERTICAL_ID);
+		var verticalLineState = stateFactory.create(StringID.VERTICAL_ID,
+				null, null);
 		view.addLineInputVerticalLineButtonListener(verticalLineState::performActions, screenUpdater.getKeyListener());
 
-		var angleBisectorState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.BISECTOR_ID);
+		var angleBisectorState = stateFactory.create(StringID.BISECTOR_ID,
+				null, null);
 		view.addLineInputAngleBisectorButtonListener(angleBisectorState::performActions,
 				screenUpdater.getKeyListener());
 
-		var triangleSplitState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.TRIANGLE_ID);
+		var triangleSplitState = stateFactory.create(StringID.TRIANGLE_ID,
+				null, null);
 		view.addLineInputTriangleSplitButtonListener(triangleSplitState::performActions,
 				screenUpdater.getKeyListener());
 
-		var symmetricState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.SYMMETRIC_ID);
+		var symmetricState = stateFactory.create(StringID.SYMMETRIC_ID,
+				null, null);
 		view.addLineInputSymmetricButtonListener(symmetricState::performActions, screenUpdater.getKeyListener());
 
-		var mirrorState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.MIRROR_ID);
+		var mirrorState = stateFactory.create(StringID.MIRROR_ID,
+				null, null);
 		view.addLineInputMirrorButtonListener(mirrorState::performActions, screenUpdater.getKeyListener());
 
-		var byValueState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.BY_VALUE_ID);
+		var byValueState = stateFactory.create(StringID.BY_VALUE_ID,
+				null, null);
 		view.addLineInputByValueButtonListener(byValueState::performActions, screenUpdater.getKeyListener());
 
 		view.addLengthButtonListener(
@@ -210,12 +200,12 @@ public class UIPanelPresenter {
 		view.addAngleTextFieldListener(
 				new AngleValueInputListener(valueSetting));
 
-		var pbisecState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.PERPENDICULAR_BISECTOR_ID);
+		var pbisecState = stateFactory.create(StringID.PERPENDICULAR_BISECTOR_ID,
+				null, null);
 		view.addLineInputPBisectorButtonListener(pbisecState::performActions, screenUpdater.getKeyListener());
 
-		var angleSnapState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.ANGLE_SNAP_ID);
+		var angleSnapState = stateFactory.create(StringID.ANGLE_SNAP_ID,
+				null, null);
 		view.addLineInputAngleSnapButtonListener(angleSnapState::performActions, screenUpdater.getKeyListener());
 
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
@@ -261,7 +251,6 @@ public class UIPanelPresenter {
 		// fold
 
 		view.addCheckWindowButtonListener(this::showCheckerWindow);
-		// view.addBuildButtonListener(this::showFoldedModelWindows);
 		view.setModelComputationListener(this::computeModels);
 		view.setShowFoldedModelWindowsListener(this::showFoldedModelWindows);
 	}

@@ -35,6 +35,7 @@ import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
 import oripa.file.FileHistory;
 import oripa.gui.bind.state.PaintBoundStateFactory;
+import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -132,6 +133,9 @@ public class MainFramePresenter {
 		var uiPanel = view.getUIPanelView();
 		var uiPanelSetting = uiPanel.getUIPanelSetting();
 
+		stateFactory = new PaintBoundStateFactory(stateManager, view.getMainFrameSetting(), uiPanelSetting,
+				actionHolder, paintContext, screenUpdater, selectionOriginHolder);
+
 		screenPresenter = new PainterScreenPresenter(
 				screen,
 				actionHolder,
@@ -143,17 +147,15 @@ public class MainFramePresenter {
 				uiPanel,
 				stateManager,
 				screenUpdater,
-				actionHolder,
 				viewContext,
 				paintContext,
 				document,
-				view.getMainFrameSetting(),
+				new PaintActionSetterFactory(
+						actionHolder, screenUpdater, paintContext),
+				stateFactory,
 				screenSetting);
 
 		uiPanelPresenter.setChildFrameManager(childFrameManager);
-
-		stateFactory = new PaintBoundStateFactory(stateManager, view.getMainFrameSetting(), uiPanelSetting,
-				selectionOriginHolder);
 
 		// Setup Dialog Windows
 		copyDialogOpener = new CopyDialogOpener(
@@ -272,9 +274,9 @@ public class MainFramePresenter {
 	 * Ensure the execution order as loading file comes first.
 	 */
 	private void addImportActionListener() {
-		var state = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
+		var state = stateFactory.create(StringID.IMPORT_CP_ID,
 				null,
-				StringID.IMPORT_CP_ID);
+				null);
 		view.addImportButtonListener(() -> {
 			try {
 				dataFileAccess
@@ -297,15 +299,15 @@ public class MainFramePresenter {
 		/*
 		 * For changing outline
 		 */
-		var changeOutlineState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.EDIT_CONTOUR_ID);
+		var changeOutlineState = stateFactory.create(StringID.EDIT_CONTOUR_ID,
+				null, null);
 		view.addChangeOutlineButtonListener(() -> changeOutlineState.performActions(null));
 
 		/*
 		 * For selecting all lines
 		 */
-		var selectAllState = stateFactory.create(actionHolder, paintContext, screenUpdater, null,
-				null, StringID.SELECT_ALL_LINE_ID);
+		var selectAllState = stateFactory.create(StringID.SELECT_ALL_LINE_ID,
+				null, null);
 		view.addSelectAllButtonListener(() -> selectAllState.performActions(null));
 		var selectAllListener = new SelectAllLineActionListener(paintContext);
 		view.addSelectAllButtonListener(() -> selectAllListener.actionPerformed(null));
@@ -314,15 +316,15 @@ public class MainFramePresenter {
 		 * For starting copy-and-paste
 		 */
 		Supplier<Boolean> detectCopyPasteError = () -> paintContext.getPainter().countSelectedLines() == 0;
-		var copyPasteState = stateFactory.create(actionHolder, paintContext, screenUpdater,
-				detectCopyPasteError, view::showCopyPasteErrorMessage, StringID.COPY_PASTE_ID);
+		var copyPasteState = stateFactory.create(StringID.COPY_PASTE_ID,
+				detectCopyPasteError, view::showCopyPasteErrorMessage);
 		view.addCopyAndPasteButtonListener(() -> copyPasteState.performActions(null));
 
 		/*
 		 * For starting cut-and-paste
 		 */
-		var cutPasteState = stateFactory.create(actionHolder, paintContext, screenUpdater,
-				detectCopyPasteError, view::showCopyPasteErrorMessage, StringID.CUT_PASTE_ID);
+		var cutPasteState = stateFactory.create(StringID.CUT_PASTE_ID,
+				detectCopyPasteError, view::showCopyPasteErrorMessage);
 		view.addCutAndPasteButtonListener(() -> cutPasteState.performActions(null));
 
 		var statePopper = new StatePopper<EditMode>(stateManager);

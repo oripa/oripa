@@ -28,6 +28,9 @@ public class PaintBoundStateFactory {
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
 	private final SelectionOriginHolder originHolder;
+	private final MouseActionHolder actionHolder;
+	private final PaintContext context;
+	private final ScreenUpdater screenUpdater;
 
 	/**
 	 * Constructor
@@ -36,33 +39,37 @@ public class PaintBoundStateFactory {
 			final StateManager<EditMode> stateManager,
 			final MainFrameSetting mainFrameSetting,
 			final UIPanelSetting uiPanelSetting,
+			final MouseActionHolder actionHolder,
+			final PaintContext context,
+			final ScreenUpdater screenUpdater,
 			final SelectionOriginHolder originHolder) {
 		this.stateManager = stateManager;
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
+		this.actionHolder = actionHolder;
+		this.context = context;
+		this.screenUpdater = screenUpdater;
 		this.originHolder = originHolder;
 	}
 
 	/**
 	 * Create a state specified by ID
 	 *
-	 * @param actionHolder
-	 * @param context
+	 * @param id
+	 *            A member of StringID
 	 * @param screenUpdater
 	 * @param errorDetecter
 	 *            can be null if no error check is needed.
 	 * @param errorHandler
 	 *            can be null if no error check is needed.
-	 * @param id
-	 *            A member of StringID
+	 *
+	 *
 	 * @return
 	 */
-	public ApplicationState<EditMode> create(final MouseActionHolder actionHolder,
-			final PaintContext context,
-			final ScreenUpdater screenUpdater,
+	public ApplicationState<EditMode> create(
+			final String id,
 			final Supplier<Boolean> errorDetecter,
-			final Runnable errorHandler,
-			final String id) {
+			final Runnable errorHandler) {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, null);
