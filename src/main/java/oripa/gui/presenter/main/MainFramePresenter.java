@@ -84,23 +84,22 @@ public class MainFramePresenter {
 
 	private final ChildFrameManager childFrameManager = new ChildFrameManager();
 
-	private final CopyDialogOpener copyDialogOpener;
-
-	private final FileHistory fileHistory;
-
-	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
-
 	private final Doc document;
-
-	// Create UI Factories
 
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 	private final MouseActionHolder actionHolder;
 
+	// data access
 	private final IniFileAccess iniFileAccess;
 	private final DataFileAccess dataFileAccess;
+	private final FileHistory fileHistory;
+	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
 
+	// presentation
+	private final CopyDialogOpener copyDialogOpener;
+
+	// services
 	private final PaintContextModification paintContextModification = new PaintContextModification();
 
 	public MainFramePresenter(final MainFrameView view,
