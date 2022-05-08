@@ -62,6 +62,11 @@ public class ModelComputationFacade {
 			return Collections.unmodifiableList(foldedModels);
 		}
 
+		/**
+		 *
+		 * @return the sum of the number of the foldable patterns for each
+		 *         crease pattern. -1 if nothing is foldable.
+		 */
 		public int countFoldablePatterns() {
 			if (foldedModels == null) {
 				return -1;

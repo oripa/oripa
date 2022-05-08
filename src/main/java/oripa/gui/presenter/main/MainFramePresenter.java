@@ -133,8 +133,16 @@ public class MainFramePresenter {
 		var uiPanel = view.getUIPanelView();
 		var uiPanelSetting = uiPanel.getUIPanelSetting();
 
-		stateFactory = new PaintBoundStateFactory(stateManager, view.getMainFrameSetting(), uiPanelSetting,
-				actionHolder, paintContext, screenUpdater, selectionOriginHolder);
+		var setterFactory = new PaintActionSetterFactory(
+				actionHolder, screenUpdater, paintContext);
+
+		stateFactory = new PaintBoundStateFactory(
+				stateManager,
+				setterFactory,
+				view.getMainFrameSetting(),
+				uiPanelSetting,
+				actionHolder,
+				selectionOriginHolder);
 
 		screenPresenter = new PainterScreenPresenter(
 				screen,
@@ -150,8 +158,7 @@ public class MainFramePresenter {
 				viewContext,
 				paintContext,
 				document,
-				new PaintActionSetterFactory(
-						actionHolder, screenUpdater, paintContext),
+				setterFactory,
 				stateFactory,
 				screenSetting);
 

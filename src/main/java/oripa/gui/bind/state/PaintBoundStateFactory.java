@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.*;
@@ -25,30 +24,27 @@ import oripa.resource.StringID;
 public class PaintBoundStateFactory {
 
 	private final StateManager<EditMode> stateManager;
+	private final PaintActionSetterFactory setterFactory;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
 	private final SelectionOriginHolder originHolder;
 	private final MouseActionHolder actionHolder;
-	private final PaintContext context;
-	private final ScreenUpdater screenUpdater;
 
 	/**
 	 * Constructor
 	 */
 	public PaintBoundStateFactory(
 			final StateManager<EditMode> stateManager,
+			final PaintActionSetterFactory setterFactory,
 			final MainFrameSetting mainFrameSetting,
 			final UIPanelSetting uiPanelSetting,
 			final MouseActionHolder actionHolder,
-			final PaintContext context,
-			final ScreenUpdater screenUpdater,
 			final SelectionOriginHolder originHolder) {
 		this.stateManager = stateManager;
+		this.setterFactory = setterFactory;
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
 		this.actionHolder = actionHolder;
-		this.context = context;
-		this.screenUpdater = screenUpdater;
 		this.originHolder = originHolder;
 	}
 
@@ -57,7 +53,6 @@ public class PaintBoundStateFactory {
 	 *
 	 * @param id
 	 *            A member of StringID
-	 * @param screenUpdater
 	 * @param errorDetecter
 	 *            should detect whether the application is ready to perform the
 	 *            action of the new state or not. This should return true if an
@@ -77,8 +72,8 @@ public class PaintBoundStateFactory {
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, null);
 
-		final PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
-				actionHolder, screenUpdater, context);
+//		final PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
+//				actionHolder, screenUpdater, context);
 
 		ApplicationState<EditMode> state = null;
 
