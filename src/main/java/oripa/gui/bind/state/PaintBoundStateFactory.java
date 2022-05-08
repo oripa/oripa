@@ -72,9 +72,6 @@ public class PaintBoundStateFactory {
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, null);
 
-//		final PaintActionSetterFactory setterFactory = new PaintActionSetterFactory(
-//				actionHolder, screenUpdater, context);
-
 		ApplicationState<EditMode> state = null;
 
 		var changeHint = new ChangeHint(mainFrameSetting, id);
