@@ -13,11 +13,10 @@ import java.util.List;
  * @param <GroupEnum>
  *            Enum of group identifier
  */
+// TODO Use Runnable instead of ActionListener.
 public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 	private final GroupEnum group;
 
-	// This class doesn't need ActionEvent parameter but compatibility
-	// with ActionListner is convenient in some cases.
 	private final ArrayList<ActionListener> actions = new ArrayList<ActionListener>();
 
 	/**
@@ -50,6 +49,7 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 	 *
 	 * @param e
 	 */
+	// TODO make this parameterless.
 	public void performActions(final ActionEvent e) {
 		if (actions == null) {
 			return;

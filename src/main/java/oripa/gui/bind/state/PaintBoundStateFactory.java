@@ -59,8 +59,11 @@ public class PaintBoundStateFactory {
 	 *            A member of StringID
 	 * @param screenUpdater
 	 * @param errorDetecter
-	 *            can be null if no error check is needed.
+	 *            should detect whether the application is ready to perform the
+	 *            action of the new state or not. This should return true if an
+	 *            error occurs. This can be null if no error check is needed.
 	 * @param errorHandler
+	 *            should handle error the {@code errorDetecter} detected. This
 	 *            can be null if no error check is needed.
 	 *
 	 *

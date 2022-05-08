@@ -22,9 +22,6 @@ class LocalPaintBoundStateFactory {
 
 	/**
 	 *
-	 * @param parent
-	 *            A parent component. This object can be used as the parent of
-	 *            an error dialog by {@link ErrorListener}.
 	 * @param stateManager
 	 * @param basicActions
 	 *            Actions for all created states.
@@ -39,13 +36,15 @@ class LocalPaintBoundStateFactory {
 	/**
 	 * Create a state with error handler.
 	 *
-	 * @param mouseAction
-	 *            Action for painting
-	 * @param errorListener
-	 *            For managing error on {@code performActions()} of created
-	 *            state.
-	 * @param context
-	 *            context of painting.
+	 * @param editMode
+	 * @param actionSetter
+	 * @param errorDetecter
+	 *            should detect whether the application is ready to perform the
+	 *            action of the new state or not. This should return true if an
+	 *            error occurs. This can be null if no error check is needed.
+	 * @param errorHandler
+	 *            should handle error the {@code errorDetecter} detected. This
+	 *            can be null if no error check is needed.
 	 * @param changeHint
 	 *            event handler to change a hint of painting.
 	 * @param actions
@@ -74,10 +73,8 @@ class LocalPaintBoundStateFactory {
 	 *
 	 * Create a state.
 	 *
-	 * @param mouseAction
-	 *            Action for painting
-	 * @param context
-	 *            Context of painting.
+	 * @param editMode
+	 * @param actionSetter
 	 * @param changeHint
 	 *            event handler to change a hint of painting.
 	 * @param actions
