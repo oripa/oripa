@@ -29,18 +29,13 @@ import org.slf4j.LoggerFactory;
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
+import oripa.appstate.StateManager;
 import oripa.appstate.StatePopper;
 import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintContextFactory;
-import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.file.FileHistory;
-import oripa.file.InitDataFileReader;
-import oripa.file.InitDataFileWriter;
-import oripa.gui.bind.state.EditModeStateManager;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
@@ -55,7 +50,6 @@ import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
 import oripa.persistence.dao.AbstractFilterSelector;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
-import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFilterSelector;
 import oripa.persistence.filetool.AbstractSavingAction;
 import oripa.persistence.filetool.FileAccessSupportFilter;
@@ -81,8 +75,7 @@ public class MainFramePresenter {
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
-	private final EditModeStateManager stateManager = new EditModeStateManager();
-	private final SelectionOriginHolder selectionOriginHolder;
+	private final StateManager<EditMode> stateManager;
 
 	private final MainScreenUpdater screenUpdater;
 	private final MainScreenSetting screenSetting;
@@ -93,33 +86,49 @@ public class MainFramePresenter {
 
 	private final CopyDialogOpener copyDialogOpener;
 
-	private final FileHistory fileHistory = new FileHistory(Constants.MRUFILE_NUM);
+	private final FileHistory fileHistory;
 
 	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
 
-	private final Doc document = new Doc();
+	private final Doc document;
 
 	// Create UI Factories
-	private final PaintContextFactory contextFactory = new PaintContextFactory();
-	private final PaintContext paintContext = contextFactory.createContext();
-	private final CreasePatternViewContextFactory viewContextFactory = new CreasePatternViewContextFactory();
-	private final CreasePatternViewContext viewContext = viewContextFactory.create(paintContext);
-	private final MouseActionHolder actionHolder = new MouseActionHolder();
 
-	private final IniFileAccess iniFileAccess = new IniFileAccess(
-			new InitDataFileReader(), new InitDataFileWriter());
-	private final DataFileAccess dataFileAccess = new DataFileAccess(new DocDAO(new DocFilterSelector()));
+	private final PaintContext paintContext;
+	private final CreasePatternViewContext viewContext;
+	private final MouseActionHolder actionHolder;
+
+	private final IniFileAccess iniFileAccess;
+	private final DataFileAccess dataFileAccess;
+
 	private final PaintContextModification paintContextModification = new PaintContextModification();
 
-	public MainFramePresenter(final MainFrameView view) {
+	public MainFramePresenter(final MainFrameView view,
+			final Doc document,
+			final PaintContext paintContext,
+			final CreasePatternViewContext viewContext,
+			final StateManager<EditMode> stateManager,
+			final MouseActionHolder actionHolder,
+			final FileHistory fileHistory,
+			final IniFileAccess iniFileAccess,
+			final DataFileAccess dataFileAccess) {
 		this.view = view;
+
+		this.document = document;
+		this.paintContext = paintContext;
+		this.viewContext = viewContext;
+		this.stateManager = stateManager;
+		this.actionHolder = actionHolder;
+		this.fileHistory = fileHistory;
+		this.iniFileAccess = iniFileAccess;
+		this.dataFileAccess = dataFileAccess;
 
 		document.setCreasePattern(paintContext.getCreasePattern());
 
 		var screen = view.getPainterScreenView();
 		screenUpdater = screen.getScreenUpdater();
 		screenSetting = screen.getMainScreenSetting();
-		selectionOriginHolder = screenSetting.getSelectionOriginHolder();
+		var selectionOriginHolder = screenSetting.getSelectionOriginHolder();
 
 		var uiPanel = view.getUIPanelView();
 		var uiPanelSetting = uiPanel.getUIPanelSetting();

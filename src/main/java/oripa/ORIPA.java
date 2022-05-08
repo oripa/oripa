@@ -24,8 +24,21 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import oripa.application.main.DataFileAccess;
+import oripa.application.main.IniFileAccess;
+import oripa.doc.Doc;
+import oripa.domain.paint.PaintContextFactory;
+import oripa.file.FileHistory;
+import oripa.file.InitDataFileReader;
+import oripa.file.InitDataFileWriter;
+import oripa.gui.bind.state.EditModeStateManager;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.view.main.MainFrame;
+import oripa.persistence.doc.DocDAO;
+import oripa.persistence.doc.DocFilterSelector;
+import oripa.resource.Constants;
 
 public class ORIPA {
 	public static void main(final String[] args) {
@@ -49,7 +62,20 @@ public class ORIPA {
 			mainFrame.setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-			var presenter = new MainFramePresenter(mainFrame);
+			var paintContext = new PaintContextFactory().createContext();
+			var viewContext = new CreasePatternViewContextFactory().create(paintContext);
+
+			var presenter = new MainFramePresenter(
+					mainFrame,
+					new Doc(),
+					paintContext,
+					viewContext,
+					new EditModeStateManager(),
+					new MouseActionHolder(),
+					new FileHistory(Constants.MRUFILE_NUM),
+					new IniFileAccess(
+							new InitDataFileReader(), new InitDataFileWriter()),
+					new DataFileAccess(new DocDAO(new DocFilterSelector())));
 			presenter.setViewVisible(true);
 
 //			if (Config.FOR_STUDY) {

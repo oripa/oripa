@@ -60,7 +60,7 @@ import oripa.value.OriLine;
 public class UIPanelPresenter {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanelPresenter.class);
 
-	UIPanelView view;
+	private final UIPanelView view;
 
 	private final UIPanelSetting setting;
 	private final ValueSetting valueSetting;

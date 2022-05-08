@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author Koji
  *
  */
+//TODO use View interface, not JComponent.
 public class ChildFrameManager {
 	private static final Logger logger = LoggerFactory.getLogger(ChildFrameManager.class);
 
