@@ -6,15 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.function.Supplier;
 
-import javax.swing.JFrame;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import oripa.appstate.ApplicationState;
 import oripa.gui.bind.state.action.PaintActionSetter;
-import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
+import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.viewsetting.ChangeViewSetting;
 
@@ -24,17 +23,19 @@ public class LocalPaintBoundStateFactoryTest {
 	public class CreateWithErrorListenerTests {
 		@Test
 		void errorOccurs() {
-			var parent = mock(JFrame.class);
 			var basicAction1 = mock(ActionListener.class);
 			var basicAction2 = mock(ActionListener.class);
 			var stateManager = mock(EditModeStateManager.class);
+			var setterFactory = mock(PaintActionSetterFactory.class);
 
 			var factory = new LocalPaintBoundStateFactory(
 					stateManager,
+					setterFactory,
 					new ActionListener[] { basicAction1, basicAction2 });
 
 			var actionHolder = mock(MouseActionHolder.class);
-			var mouseAction = mock(AbstractGraphicMouseAction.class);
+			var mouseAction = mock(GraphicMouseAction.class);
+			when(mouseAction.getEditMode()).thenReturn(EditMode.INPUT);
 			var action1 = mock(ActionListener.class);
 			var action2 = mock(ActionListener.class);
 
@@ -46,9 +47,9 @@ public class LocalPaintBoundStateFactoryTest {
 
 			var changeHint = mock(ChangeViewSetting.class);
 
-			var actionSetter = mock(PaintActionSetter.class);
+			@SuppressWarnings("unchecked")
 			ApplicationState<EditMode> state = factory.create(
-					EditMode.INPUT, actionSetter, errorDetecter, errorHandler, changeHint,
+					mouseAction, errorDetecter, errorHandler, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method
@@ -69,13 +70,21 @@ public class LocalPaintBoundStateFactoryTest {
 
 		@Test
 		void noErrors() {
-			var parent = mock(JFrame.class);
 			var stateManager = mock(EditModeStateManager.class);
+
+			var setterFactory = mock(PaintActionSetterFactory.class);
+			var paintActionSetter = mock(PaintActionSetter.class);
+			var mouseAction = mock(GraphicMouseAction.class);
+			when(mouseAction.getEditMode()).thenReturn(EditMode.INPUT);
+
+			when(setterFactory.create(mouseAction)).thenReturn(paintActionSetter);
+
 			var basicAction1 = mock(ActionListener.class);
 			var basicAction2 = mock(ActionListener.class);
 
 			var factory = new LocalPaintBoundStateFactory(
 					stateManager,
+					setterFactory,
 					new ActionListener[] { basicAction1, basicAction2 });
 
 			var action1 = mock(ActionListener.class);
@@ -89,10 +98,9 @@ public class LocalPaintBoundStateFactoryTest {
 
 			var changeHint = mock(ChangeViewSetting.class);
 
-			var paintActionSetter = mock(PaintActionSetter.class);
-
+			@SuppressWarnings("unchecked")
 			ApplicationState<EditMode> state = factory.create(
-					EditMode.INPUT, paintActionSetter, errorDetecter, errorHandler, changeHint,
+					mouseAction, errorDetecter, errorHandler, changeHint,
 					new ActionListener[] { action1, action2 });
 
 			// run the target method

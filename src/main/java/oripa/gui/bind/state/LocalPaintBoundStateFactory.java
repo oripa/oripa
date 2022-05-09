@@ -5,8 +5,9 @@ import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.gui.bind.state.action.PaintActionSetter;
+import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.viewsetting.ChangeViewSetting;
 
 /**
@@ -18,6 +19,8 @@ import oripa.gui.viewsetting.ChangeViewSetting;
 class LocalPaintBoundStateFactory {
 
 	private final StateManager<EditMode> stateManager;
+	private final PaintActionSetterFactory setterFactory;
+
 	private final ActionListener[] basicActions;
 
 	/**
@@ -28,8 +31,10 @@ class LocalPaintBoundStateFactory {
 	 */
 	public LocalPaintBoundStateFactory(
 			final StateManager<EditMode> stateManager,
+			final PaintActionSetterFactory setterFactory,
 			final ActionListener[] basicActions) {
 		this.stateManager = stateManager;
+		this.setterFactory = setterFactory;
 		this.basicActions = basicActions;
 	}
 
@@ -52,8 +57,7 @@ class LocalPaintBoundStateFactory {
 	 * @return
 	 */
 	public ApplicationState<EditMode> create(
-			final EditMode editMode,
-			final PaintActionSetter actionSetter,
+			final GraphicMouseAction mouseAction,
 			final Supplier<Boolean> errorDetecter,
 			final Runnable errorHandler,
 			final ChangeViewSetting changeHint,
@@ -61,7 +65,7 @@ class LocalPaintBoundStateFactory {
 
 		PaintBoundState state = new PaintBoundState(
 				stateManager, errorDetecter, errorHandler,
-				editMode, actionSetter, changeHint, basicActions);
+				mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint, basicActions);
 
 		state.addActions(actions);
 		// state.setErrorListeners(errorDetecter, errorHandler);
@@ -82,13 +86,12 @@ class LocalPaintBoundStateFactory {
 	 * @return
 	 */
 	public ApplicationState<EditMode> create(
-			final EditMode editMode,
-			final PaintActionSetter actionSetter,
+			final GraphicMouseAction mouseAction,
 			final ChangeViewSetting changeHint,
 			final ActionListener[] actions) {
 
 		ApplicationState<EditMode> state = new PaintBoundState(
-				stateManager, editMode, actionSetter, changeHint,
+				stateManager, mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,
 				basicActions);
 
 		state.addActions(actions);

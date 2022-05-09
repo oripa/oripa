@@ -70,7 +70,7 @@ public class PaintBoundStateFactory {
 			final Runnable errorHandler) {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
-				stateManager, null);
+				stateManager, setterFactory, null);
 
 		ApplicationState<EditMode> state = null;
 
@@ -86,37 +86,37 @@ public class PaintBoundStateFactory {
 //			break;
 
 		case StringID.DELETE_LINE_ID:
-			state = createState(
-					stateFactory, new DeleteLineAction(), changeHint, new ActionListener[] {
+			state = stateFactory.create(
+					new DeleteLineAction(), changeHint, new ActionListener[] {
 							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.CHANGE_LINE_TYPE_ID:
-			state = createState(
-					stateFactory, new ChangeLineTypeAction(uiPanelSetting),
+			state = stateFactory.create(
+					new ChangeLineTypeAction(uiPanelSetting),
 					changeHint, new ActionListener[] {
 							(e) -> (new ChangeOnAlterTypeButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.ADD_VERTEX_ID:
-			state = createState(
-					stateFactory, new AddVertexAction(), changeHint, new ActionListener[] {
+			state = stateFactory.create(
+					new AddVertexAction(), changeHint, new ActionListener[] {
 							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.DELETE_VERTEX_ID:
-			state = createState(
-					stateFactory, new DeleteVertexAction(), changeHint, new ActionListener[] {
+			state = stateFactory.create(
+					new DeleteVertexAction(), changeHint, new ActionListener[] {
 							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.EDIT_CONTOUR_ID:
-			state = createState(
-					stateFactory, new EditOutlineActionWrapper(stateManager, actionHolder),
+			state = stateFactory.create(
+					new EditOutlineActionWrapper(stateManager, actionHolder),
 					changeHint, new ActionListener[] {
 							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
@@ -124,15 +124,15 @@ public class PaintBoundStateFactory {
 
 		case StringID.SELECT_ALL_LINE_ID:
 			// selecting all lines should be done in other listener
-			state = createState(
-					stateFactory, new SelectLineAction(), changeHint, new ActionListener[] {
+			state = stateFactory.create(
+					new SelectLineAction(), changeHint, new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.COPY_PASTE_ID:
-			state = createState(
-					stateFactory, new CopyAndPasteActionWrapper(stateManager, false, originHolder),
+			state = stateFactory.create(
+					new CopyAndPasteActionWrapper(stateManager, false, originHolder),
 					errorDetecter,
 					errorHandler, changeHint, new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
@@ -140,8 +140,8 @@ public class PaintBoundStateFactory {
 			break;
 
 		case StringID.CUT_PASTE_ID:
-			state = createState(
-					stateFactory, new CopyAndPasteActionWrapper(stateManager, true, originHolder),
+			state = stateFactory.create(
+					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
 					errorDetecter,
 					errorHandler, changeHint, new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
@@ -149,8 +149,8 @@ public class PaintBoundStateFactory {
 			break;
 
 		case StringID.IMPORT_CP_ID:
-			state = createState(
-					stateFactory, new CopyAndPasteActionWrapper(stateManager, true, originHolder),
+			state = stateFactory.create(
+					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
 					changeHint,
 					new ActionListener[] {
 							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
@@ -179,18 +179,18 @@ public class PaintBoundStateFactory {
 		var changeHint = new ChangeHint(mainFrameSetting, id);
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
-				stateManager,
+				stateManager, setterFactory,
 				new ActionListener[] {
 						e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
 								.changeViewSetting() });
 
 		switch (id) {
 		case StringID.SELECT_LINE_ID:
-			return createState(
-					stateFactory, new SelectLineAction(), changeHint, null);
+			return stateFactory.create(
+					new SelectLineAction(), changeHint, null);
 		case StringID.ENLARGE_ID:
-			return createState(
-					stateFactory, new EnlargeLineAction(), changeHint, null);
+			return stateFactory.create(
+					new EnlargeLineAction(), changeHint, null);
 
 		}
 
@@ -203,87 +203,62 @@ public class PaintBoundStateFactory {
 		var changeHint = new ChangeHint(mainFrameSetting, id);
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
-				stateManager,
+				stateManager, setterFactory,
 				new ActionListener[] {
 						e -> (new ChangeOnPaintInputButtonSelected(uiPanelSetting))
 								.changeViewSetting() });
 
 		switch (id) {
 		case StringID.DIRECT_V_ID:
-			return createState(
-					stateFactory, new TwoPointSegmentAction(), changeHint, null);
+			return stateFactory.create(
+					new TwoPointSegmentAction(), changeHint, null);
 
 		case StringID.ON_V_ID:
-			return createState(
-					stateFactory, new TwoPointLineAction(), changeHint, null);
+			return stateFactory.create(
+					new TwoPointLineAction(), changeHint, null);
 
 		case StringID.VERTICAL_ID:
-			return createState(
-					stateFactory, new VerticalLineAction(), changeHint, null);
+			return stateFactory.create(
+					new VerticalLineAction(), changeHint, null);
 
 		case StringID.BISECTOR_ID:
-			return createState(
-					stateFactory, new AngleBisectorAction(), changeHint, null);
+			return stateFactory.create(
+					new AngleBisectorAction(), changeHint, null);
 
 		case StringID.TRIANGLE_ID:
-			return createState(
-					stateFactory, new TriangleSplitAction(), changeHint, null);
+			return stateFactory.create(
+					new TriangleSplitAction(), changeHint, null);
 
 		case StringID.SYMMETRIC_ID:
-			return createState(
-					stateFactory, new SymmetricalLineAction(), changeHint, null);
+			return stateFactory.create(
+					new SymmetricalLineAction(), changeHint, null);
 
 		case StringID.MIRROR_ID:
-			return createState(
-					stateFactory, new MirrorCopyAction(), changeHint, null);
+			return stateFactory.create(
+					new MirrorCopyAction(), changeHint, null);
 
 		case StringID.BY_VALUE_ID:
 			LocalPaintBoundStateFactory byValueFactory = new LocalPaintBoundStateFactory(
-					stateManager, new ActionListener[] {
+					stateManager, setterFactory, new ActionListener[] {
 							e -> (new ChangeOnByValueButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
-			return createState(
-					byValueFactory, new LineByValueAction(uiPanelSetting.getValueSetting()),
+			return byValueFactory.create(
+					new LineByValueAction(uiPanelSetting.getValueSetting()),
 					changeHint, null);
 
 		case StringID.PERPENDICULAR_BISECTOR_ID:
-			return createState(
-					stateFactory, new PerpendicularBisectorAction(), changeHint, null);
+			return stateFactory.create(
+					new PerpendicularBisectorAction(), changeHint, null);
 
 		case StringID.ANGLE_SNAP_ID:
 			LocalPaintBoundStateFactory angleSnapFactory = new LocalPaintBoundStateFactory(
-					stateManager, new ActionListener[] {
+					stateManager, setterFactory, new ActionListener[] {
 							e -> (new ChangeOnAngleSnapButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
-			return createState(
-					angleSnapFactory, new AngleSnapAction(), changeHint, null);
+			return angleSnapFactory.create(
+					new AngleSnapAction(), changeHint, null);
 		}
 
 		return null;
 	}
-
-	private ApplicationState<EditMode> createState(
-			final LocalPaintBoundStateFactory stateFactory,
-			final GraphicMouseAction mouseAction,
-			final ChangeHint changeHint,
-			final ActionListener[] actions) {
-
-		return stateFactory.create(
-				mouseAction.getEditMode(), setterFactory.create(mouseAction),
-				changeHint, actions);
-	}
-
-	private ApplicationState<EditMode> createState(
-			final LocalPaintBoundStateFactory stateFactory,
-			final GraphicMouseAction mouseAction,
-			final Supplier<Boolean> errorDetecter,
-			final Runnable errorHandler,
-			final ChangeHint changeHint,
-			final ActionListener[] actions) {
-
-		return stateFactory.create(
-				mouseAction.getEditMode(), setterFactory.create(mouseAction),
-				errorDetecter, errorHandler, changeHint, actions);
-	}
-
 }
