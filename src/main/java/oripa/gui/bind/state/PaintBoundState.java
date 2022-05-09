@@ -104,10 +104,10 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	}
 
 	/**
-	 * This method first detects error by {@code ErrorListener.isError()}. Then
-	 * {@code ErrorListener.onError()} is called if an error occurs. If no error
-	 * occurs or ErrorListener is not given, it sets given paint action to a
-	 * current paint mode.
+	 * This method first detects error by {@code errorDetecter}. Then
+	 * {@code errorHandler.run()} is called if an error occurs. If no error
+	 * occurs or {@code errorDetecter} is not given, it sets given paint action
+	 * to a current paint mode.
 	 */
 	@Override
 	public void performActions(final ActionEvent e) {
