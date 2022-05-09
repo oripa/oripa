@@ -122,44 +122,13 @@ public class PaintBoundStateFactory {
 									.changeViewSetting() });
 			break;
 
-		case StringID.SELECT_ALL_LINE_ID:
-			// selecting all lines should be done in other listener
-			state = stateFactory.create(
-					new SelectLineAction(), changeHint, new ActionListener[] {
-							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
-									.changeViewSetting() });
-			break;
-
 		case StringID.COPY_PASTE_ID:
-			state = stateFactory.create(
-					new CopyAndPasteActionWrapper(stateManager, false, originHolder),
-					errorDetecter,
-					errorHandler, changeHint, new ActionListener[] {
-							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
-									.changeViewSetting() });
-			break;
-
 		case StringID.CUT_PASTE_ID:
-			state = stateFactory.create(
-					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
-					errorDetecter,
-					errorHandler, changeHint, new ActionListener[] {
-							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
-									.changeViewSetting() });
-			break;
-
 		case StringID.IMPORT_CP_ID:
-			state = stateFactory.create(
-					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
-					changeHint,
-					new ActionListener[] {
-							e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
-									.changeViewSetting() });
-			break;
-
+		case StringID.SELECT_ALL_LINE_ID:
 		case StringID.SELECT_LINE_ID:
 		case StringID.ENLARGE_ID:
-			state = createLineSelectionState(id);
+			state = createLineSelectionState(id, errorDetecter, errorHandler);
 			break;
 
 		default:
@@ -174,7 +143,9 @@ public class PaintBoundStateFactory {
 	}
 
 	private ApplicationState<EditMode> createLineSelectionState(
-			final String id) {
+			final String id,
+			final Supplier<Boolean> errorDetecter,
+			final Runnable errorHandler) {
 
 		var changeHint = new ChangeHint(mainFrameSetting, id);
 
@@ -188,9 +159,30 @@ public class PaintBoundStateFactory {
 		case StringID.SELECT_LINE_ID:
 			return stateFactory.create(
 					new SelectLineAction(), changeHint, null);
+
 		case StringID.ENLARGE_ID:
 			return stateFactory.create(
 					new EnlargeLineAction(), changeHint, null);
+
+		case StringID.SELECT_ALL_LINE_ID:
+			// selecting all lines should be done in other listener
+			return stateFactory.create(
+					new SelectLineAction(), changeHint, null);
+
+		case StringID.COPY_PASTE_ID:
+			return stateFactory.create(
+					new CopyAndPasteActionWrapper(stateManager, false, originHolder),
+					errorDetecter, errorHandler, changeHint, null);
+
+		case StringID.CUT_PASTE_ID:
+			return stateFactory.create(
+					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
+					errorDetecter, errorHandler, changeHint, null);
+
+		case StringID.IMPORT_CP_ID:
+			return stateFactory.create(
+					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
+					changeHint, null);
 
 		}
 
