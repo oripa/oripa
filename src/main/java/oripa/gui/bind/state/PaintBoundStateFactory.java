@@ -115,6 +115,7 @@ public class PaintBoundStateFactory {
 			break;
 
 		case StringID.EDIT_CONTOUR_ID:
+			// TODO make the command as usual one and get rid of the wrapper.
 			state = stateFactory.create(
 					new EditOutlineActionWrapper(stateManager, actionHolder),
 					changeHint, new ActionListener[] {
