@@ -16,31 +16,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.angle;
+package oripa.domain.paint.core;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.cptool.PseudoRayFactory;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.MultipleRaySnapPointFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
-class AngleSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
-		var step = context.getAngleStep();
+public class MultipleRaySnapPointFactory {
 
-		var sp = context.peekVertex();
-		var angles = IntStream.range(0, step.getDivNum() * 2)
-				.mapToDouble(i -> i * step.getRadianStep())
-				.boxed()
+	public Collection<Vector2d> createSnapPoints(
+			final PaintContext context,
+			final Vector2d v,
+			final Collection<Double> angles) {
+
+		var paperSize = context.getCreasePattern().getPaperSize();
+		var snapPointFactory = new SnapPointFactory();
+		var rayFactory = new PseudoRayFactory();
+
+		return angles.stream()
+				.map(angle -> rayFactory.create(v, angle, paperSize))
+				.flatMap(ray -> snapPointFactory.createSnapPoints(context, ray).stream())
 				.collect(Collectors.toList());
-
-		return new MultipleRaySnapPointFactory().createSnapPoints(context, sp, angles);
 	}
 }
