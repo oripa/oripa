@@ -16,38 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.angle;
-
-import java.util.ArrayList;
-import java.util.Collection;
+package oripa.domain.cptool;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.cptool.PseudoRayFactory;
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.SnapPointFactory;
+import oripa.geom.Segment;
 
 /**
  * @author OUCHI Koji
  *
  */
-class AngleSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
-		var step = context.getAngleStep();
-		var paperSize = context.getCreasePattern().getPaperSize();
+public class PseudoRayFactory {
 
-		var crossPoints = new ArrayList<Vector2d>();
+	public Segment create(final Vector2d v, final Vector2d dir, final double paperSize) {
+		var d = new Vector2d(dir);
+		d.normalize();
+		d.scale(paperSize * 4);
 
-		var sp = context.peekVertex();
-		for (int i = 0; i < step.getDivNum() * 2; i++) {
-			double angle = i * step.getRadianStep();
-			var ray = new PseudoRayFactory().create(sp, angle, paperSize);
+		return new Segment(
+				v.getX(), v.getY(),
+				v.getX() + d.getX(), v.getY() + d.getY());
+	}
 
-			var snapPointFactory = new SnapPointFactory();
-
-			crossPoints.addAll(snapPointFactory.createSnapPoints(context, ray));
-		}
-
-		return crossPoints;
+	public Segment create(final Vector2d v, final double angle, final double paperSize) {
+		return create(v, new Vector2d(Math.cos(angle), Math.sin(angle)), paperSize);
 	}
 }
