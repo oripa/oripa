@@ -18,6 +18,8 @@
 
 package oripa.domain.fold.halfedge;
 
+import javax.vecmath.Vector2d;
+
 import oripa.value.OriLine;
 
 /**
@@ -94,6 +96,22 @@ public class OriEdge {
 
 	public OriVertex oppositeVertex(final OriVertex v) {
 		return v == startVertex ? endVertex : startVertex;
+	}
+
+	/**
+	 * Computes the angle of the direction of this edge if given {@code sv} is
+	 * the start point of the direction.
+	 *
+	 * @param sv
+	 *            start vertex of the direction
+	 * @return arc tangent of direction vector
+	 */
+	public double getAngle(final OriVertex sv) {
+		var ev = oppositeVertex(sv);
+		Vector2d dir = new Vector2d(ev.getPosition());
+		dir.sub(sv.getPosition());
+
+		return Math.atan2(dir.y, dir.x);
 	}
 
 	public boolean isBoundary() {
