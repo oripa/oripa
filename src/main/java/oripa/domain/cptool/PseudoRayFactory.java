@@ -33,9 +33,10 @@ public class PseudoRayFactory {
 		d.normalize();
 		d.scale(paperSize * 4);
 
-		return new Segment(
-				v.getX(), v.getY(),
-				v.getX() + d.getX(), v.getY() + d.getY());
+		var ev = new Vector2d(v);
+		ev.add(d);
+
+		return new Segment(v, ev);
 	}
 
 	public Segment create(final Vector2d v, final double angle, final double paperSize) {

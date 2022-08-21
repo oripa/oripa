@@ -30,13 +30,19 @@ public class PseudoLineFactory {
 	public Segment create(
 			final Vector2d v0, final Vector2d v1, final double paperSize) {
 
-		Vector2d dir = new Vector2d(v0.x - v1.x, v0.y - v1.y);
+		Vector2d dir = new Vector2d(v0);
+		dir.sub(v1);
 		dir.normalize();
 		dir.scale(paperSize * 8);
 
+		Vector2d sv = new Vector2d(v0);
+		sv.sub(dir);
+
+		Vector2d ev = new Vector2d(v0);
+		ev.add(dir);
+
 		// create new line
-		Segment line = new Segment(v0.x - dir.x, v0.y - dir.y,
-				v0.x + dir.x, v0.y + dir.y);
+		Segment line = new Segment(sv, ev);
 
 		return line;
 	}
