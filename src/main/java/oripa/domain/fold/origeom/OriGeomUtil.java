@@ -184,4 +184,18 @@ public class OriGeomUtil {
 
 		return preP.angle(nxtP);
 	}
+
+	/**
+	 * The angle between i-th edge and (i+1)-th edge incident to {@code v}.
+	 *
+	 * @param v
+	 * @param index
+	 * @return 0 to pi between i-th edge and (i+1)-th edge
+	 */
+	public static double getAngleDifference(final OriVertex v, final int index) {
+		return getAngleDifference(
+				v.getOppositeVertex(index),
+				v,
+				v.getOppositeVertex(index + 1));
+	}
 }
