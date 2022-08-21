@@ -111,16 +111,7 @@ public class OriVertex {
 	}
 
 	private double getAngle(final OriEdge edge) {
-		Vector2d dir = new Vector2d();
-		var sv = edge.getStartVertex();
-		if (sv == this) {
-			var ev = edge.getEndVertex();
-			dir.set(ev.position.x - this.position.x, ev.position.y - this.position.y);
-		} else {
-			dir.set(sv.position.x - this.position.x, sv.position.y - this.position.y);
-		}
-
-		return Math.atan2(dir.y, dir.x);
+		return edge.getAngle(this);
 	}
 
 	public OriEdge getPrevEdge(final OriEdge e) {
