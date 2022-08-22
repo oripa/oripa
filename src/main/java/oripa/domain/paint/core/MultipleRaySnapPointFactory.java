@@ -16,34 +16,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.cptool;
+package oripa.domain.paint.core;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
-import oripa.geom.Segment;
+import oripa.domain.cptool.PseudoRayFactory;
+import oripa.domain.paint.PaintContext;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class PseudoLineFactory {
-	public Segment create(
-			final Vector2d v0, final Vector2d v1, final double paperSize) {
+public class MultipleRaySnapPointFactory {
 
-		Vector2d dir = new Vector2d(v0);
-		dir.sub(v1);
-		dir.normalize();
-		dir.scale(paperSize * 8);
+	public Collection<Vector2d> createSnapPoints(
+			final PaintContext context,
+			final Vector2d v,
+			final Collection<Double> angles) {
 
-		Vector2d sv = new Vector2d(v0);
-		sv.sub(dir);
+		var paperSize = context.getCreasePattern().getPaperSize();
+		var snapPointFactory = new SnapPointFactory();
+		var rayFactory = new PseudoRayFactory();
 
-		Vector2d ev = new Vector2d(v0);
-		ev.add(dir);
-
-		// create new line
-		Segment line = new Segment(sv, ev);
-
-		return line;
+		return angles.stream()
+				.map(angle -> rayFactory.create(v, angle, paperSize))
+				.flatMap(ray -> snapPointFactory.createSnapPoints(context, ray).stream())
+				.collect(Collectors.toList());
 	}
 }

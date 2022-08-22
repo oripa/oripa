@@ -18,14 +18,14 @@
  */
 package oripa.domain.paint.angle;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.SnapPointFactory;
-import oripa.geom.Segment;
+import oripa.domain.paint.core.MultipleRaySnapPointFactory;
 
 /**
  * @author OUCHI Koji
@@ -34,23 +34,13 @@ import oripa.geom.Segment;
 class AngleSnapPointFactory {
 	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
 		var step = context.getAngleStep();
-		var paperSize = context.getCreasePattern().getPaperSize();
-
-		var crossPoints = new ArrayList<Vector2d>();
 
 		var sp = context.peekVertex();
-		for (int i = 0; i < step.getDivNum() * 2; i++) {
-			double angle = i * step.getRadianStep();
-			double dx = paperSize * 4 * Math.cos(angle);
-			double dy = paperSize * 4 * Math.sin(angle);
-			var line = new Segment(sp.x, sp.y,
-					sp.x + dx, sp.y + dy);
+		var angles = IntStream.range(0, step.getDivNum() * 2)
+				.mapToDouble(i -> i * step.getRadianStep())
+				.boxed()
+				.collect(Collectors.toList());
 
-			var snapPointFactory = new SnapPointFactory();
-
-			crossPoints.addAll(snapPointFactory.createSnapPoints(context, line));
-		}
-
-		return crossPoints;
+		return new MultipleRaySnapPointFactory().createSnapPoints(context, sp, angles);
 	}
 }

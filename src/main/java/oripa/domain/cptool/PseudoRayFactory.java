@@ -26,24 +26,20 @@ import oripa.geom.Segment;
  * @author OUCHI Koji
  *
  */
-public class PseudoLineFactory {
-	public Segment create(
-			final Vector2d v0, final Vector2d v1, final double paperSize) {
+public class PseudoRayFactory {
 
-		Vector2d dir = new Vector2d(v0);
-		dir.sub(v1);
-		dir.normalize();
-		dir.scale(paperSize * 8);
+	public Segment create(final Vector2d v, final Vector2d dir, final double paperSize) {
+		var d = new Vector2d(dir);
+		d.normalize();
+		d.scale(paperSize * 4);
 
-		Vector2d sv = new Vector2d(v0);
-		sv.sub(dir);
+		var ev = new Vector2d(v);
+		ev.add(d);
 
-		Vector2d ev = new Vector2d(v0);
-		ev.add(dir);
+		return new Segment(v, ev);
+	}
 
-		// create new line
-		Segment line = new Segment(sv, ev);
-
-		return line;
+	public Segment create(final Vector2d v, final double angle, final double paperSize) {
+		return create(v, new Vector2d(Math.cos(angle), Math.sin(angle)), paperSize);
 	}
 }
