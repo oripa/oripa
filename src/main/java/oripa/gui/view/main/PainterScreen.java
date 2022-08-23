@@ -37,6 +37,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.vecmath.Vector2d;
 
@@ -45,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.drawer.java2d.CreasePatternGraphics;
 import oripa.geom.RectangleDomain;
+import oripa.gui.view.View;
 import oripa.gui.view.util.AffineCamera;
 import oripa.gui.view.util.MouseUtility;
 import oripa.gui.viewsetting.ViewScreenUpdater;
@@ -367,6 +369,11 @@ public class PainterScreen extends JPanel
 					crossLineVisibleUpdateListener.accept((Boolean) e.getNewValue());
 					repaint();
 				});
+	}
+
+	@Override
+	public View getTopLevelView() {
+		return (View) SwingUtilities.getWindowAncestor(this);
 	}
 
 	@Override

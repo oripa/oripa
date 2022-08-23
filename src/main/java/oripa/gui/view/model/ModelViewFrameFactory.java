@@ -21,10 +21,9 @@ package oripa.gui.view.model;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import javax.swing.JComponent;
-
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.gui.view.FrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.main.MainScreenSetting;
@@ -45,7 +44,7 @@ public class ModelViewFrameFactory {
 	}
 
 	public ModelViewFrame createFrame(
-			final JComponent parent,
+			final FrameView parent,
 			final List<OrigamiModel> origamiModels,
 			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine,
 			final PropertyChangeListener onChangePaperDomain) {

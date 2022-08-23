@@ -30,12 +30,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModel;
+import oripa.gui.view.FrameView;
 import oripa.gui.view.util.ListItemSelectionPanel;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 
-public class EstimationResultFrame extends JFrame {
+public class EstimationResultFrame extends JFrame implements FrameView {
 
 	private static final long serialVersionUID = 1L;
 
@@ -101,5 +102,10 @@ public class EstimationResultFrame extends JFrame {
 
 	public void selectModel(final int index) {
 		modelSelectionPanel.selectItem(index);
+	}
+
+	@Override
+	public void setViewVisible(final boolean visible) {
+		setVisible(visible);
 	}
 }

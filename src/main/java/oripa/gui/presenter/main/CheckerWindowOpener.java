@@ -18,12 +18,11 @@
  */
 package oripa.gui.presenter.main;
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.gui.view.FrameView;
+import oripa.gui.view.View;
 import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
 
@@ -32,11 +31,11 @@ import oripa.gui.view.util.ChildFrameManager;
  *
  */
 public class CheckerWindowOpener {
-	private final JComponent ownerView;
+	private final FrameView ownerView;
 	private final ChildFrameManager childFrameManager;
 
 	public CheckerWindowOpener(
-			final JComponent ownerView,
+			final FrameView ownerView,
 			final ChildFrameManager childFrameManager) {
 		this.ownerView = ownerView;
 		this.childFrameManager = childFrameManager;
@@ -59,9 +58,9 @@ public class CheckerWindowOpener {
 
 		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory(
 				childFrameManager);
-		JFrame checker = checkerFactory.createFrame(
+		View checker = checkerFactory.createFrame(
 				ownerView, origamiModel, creasePattern, isZeroLineWidth);
 		checker.repaint();
-		checker.setVisible(true);
+		checker.setViewVisible(true);
 	}
 }

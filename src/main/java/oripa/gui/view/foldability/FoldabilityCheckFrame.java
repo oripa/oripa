@@ -26,9 +26,10 @@ import java.util.Collection;
 import javax.swing.JFrame;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.gui.view.FrameView;
 import oripa.value.OriLine;
 
-public class FoldabilityCheckFrame extends JFrame implements ActionListener {
+public class FoldabilityCheckFrame extends JFrame implements FrameView, ActionListener {
 
 	FoldabilityScreen screen;
 
@@ -55,4 +56,8 @@ public class FoldabilityCheckFrame extends JFrame implements ActionListener {
 				origamiModel, creasePattern, zeroLineWidth);
 	}
 
+	@Override
+	public void setViewVisible(final boolean visible) {
+		setVisible(visible);
+	}
 }

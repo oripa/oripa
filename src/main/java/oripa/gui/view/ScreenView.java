@@ -18,15 +18,10 @@
  */
 package oripa.gui.view;
 
-import javax.swing.JPanel;
-
 /**
  * @author OUCHI Koji
  *
  */
 public interface ScreenView extends View {
-	@Deprecated
-	default JPanel asPanel() {
-		return (JPanel) this;
-	}
+
 }

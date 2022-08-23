@@ -36,6 +36,7 @@ import oripa.gui.presenter.creasepattern.byvalue.AngleValueInputListener;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
+import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultFrame;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.main.UIPanelView;
@@ -283,7 +284,7 @@ public class UIPanelPresenter {
 	 * display window with foldability checks
 	 */
 	private void showCheckerWindow() {
-		var windowOpener = new CheckerWindowOpener(view.asPanel(), childFrameManager);
+		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), childFrameManager);
 		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth());
 	}
 
@@ -306,7 +307,7 @@ public class UIPanelPresenter {
 	}
 
 	private void showFoldedModelWindows() {
-		var parent = view.asPanel();
+		var parent = (FrameView) view.getTopLevelView();
 
 		var origamiModels = computationResult.getOrigamiModels();
 		var foldedModels = computationResult.getFoldedModels();

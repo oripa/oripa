@@ -23,5 +23,13 @@ package oripa.gui.view;
  *
  */
 public interface View {
+	/**
+	 *
+	 * @return the ancestor frame view. null if this view is a frame.
+	 */
+	View getTopLevelView();
+
+	void repaint();
+
 	void setViewVisible(boolean visible);
 }

@@ -23,6 +23,8 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.function.Supplier;
 
+import javax.swing.JFrame;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -287,7 +289,7 @@ public class MainFramePresenter {
 		view.addImportButtonListener(() -> {
 			try {
 				dataFileAccess
-						.loadFile(null, fileHistory.getLastPath(), view.asFrame(), filterSelector.getLoadables())
+						.loadFile(null, fileHistory.getLastPath(), (JFrame) view, filterSelector.getLoadables())
 						.ifPresent(otherDoc -> {
 							paintContext.getPainter().resetSelectedOriLines();
 							var otherCreasePattern = otherDoc.getCreasePattern();
@@ -414,14 +416,14 @@ public class MainFramePresenter {
 
 		screenSetting.setGridVisible(true);
 
-		childFrameManager.closeAllChildrenRecursively(view.asFrame());
+		childFrameManager.closeAll(view);
 
 		screenUpdater.updateScreen();
 		updateTitleText();
 	}
 
 	private void showPropertyDialog() {
-		var frame = view.asFrame();
+		var frame = (JFrame) view;
 		PropertyDialog dialog = new PropertyDialog(frame, document);
 
 		Rectangle rec = frame.getBounds();
@@ -433,11 +435,11 @@ public class MainFramePresenter {
 	}
 
 	private void showArrayCopyDialog() {
-		copyDialogOpener.showArrayCopyDialog(view.asFrame(), paintContext, screenUpdater);
+		copyDialogOpener.showArrayCopyDialog((JFrame) view, paintContext, screenUpdater);
 	}
 
 	private void showCircleCopyDialog() {
-		copyDialogOpener.showCircleCopyDialog(view.asFrame(), paintContext, screenUpdater);
+		copyDialogOpener.showCircleCopyDialog((JFrame) view, paintContext, screenUpdater);
 	}
 
 	private void updateTitleText() {
@@ -478,7 +480,7 @@ public class MainFramePresenter {
 
 		try {
 			return dataFileAccess.saveFile(
-					document, directory, fileName, view.asFrame(), filters)
+					document, directory, fileName, (JFrame) view, filters)
 					.map(path -> {
 						paintContext.creasePatternUndo().clearChanged();
 						return path;
@@ -496,7 +498,7 @@ public class MainFramePresenter {
 	 * model check before saving.
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
-		var frame = view.asFrame();
+		var frame = (JFrame) view;
 		try {
 			dataFileAccess.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
 					filterSelector.getFilter(type), frame,
@@ -539,9 +541,9 @@ public class MainFramePresenter {
 	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
 	private String loadFile(final String filePath) {
-		var frame = view.asFrame();
+		var frame = (JFrame) view;
 
-		childFrameManager.closeAllChildrenRecursively(frame);
+		childFrameManager.closeAll(view);
 
 		try {
 			return dataFileAccess.loadFile(

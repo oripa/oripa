@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.gui.view.View;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
@@ -1048,6 +1049,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public UIPanelSetting getUIPanelSetting() {
 		return setting;
+	}
+
+	@Override
+	public View getTopLevelView() {
+		return (View) SwingUtilities.getWindowAncestor(this);
 	}
 
 	@Override

@@ -38,6 +38,7 @@ import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
+import oripa.gui.view.FrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.ListItemSelectionPanel;
@@ -57,7 +58,7 @@ import oripa.resource.StringID;
  *
  */
 public class ModelViewFrame extends JFrame
-		implements AdjustmentListener, WindowListener, ComponentListener {
+		implements FrameView, AdjustmentListener, WindowListener, ComponentListener {
 
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
@@ -313,6 +314,11 @@ public class ModelViewFrame extends JFrame
 	@Override
 	public void componentHidden(final ComponentEvent e) {
 		setDomainBeforeFolding(null);
+	}
+
+	@Override
+	public void setViewVisible(final boolean visible) {
+		setVisible(visible);
 	}
 
 }
