@@ -88,5 +88,5 @@ public interface ObjectGraphicDrawer {
 
 	void drawString(String text, float x, float y);
 
-	void setUntiAlias(boolean untiAlias);
+	void setAntiAlias(boolean antiAlias);
 }

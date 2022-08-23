@@ -163,9 +163,9 @@ public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
 	}
 
 	@Override
-	public void setUntiAlias(final boolean untiAlias) {
+	public void setAntiAlias(final boolean antiAlias) {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				untiAlias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
+				antiAlias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
 
 	}
 }

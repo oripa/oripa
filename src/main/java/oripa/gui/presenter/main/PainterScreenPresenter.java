@@ -100,7 +100,7 @@ public class PainterScreenPresenter {
 		ObjectGraphicDrawer bufferObjDrawer = p.getBufferObjectDrawer();
 		ObjectGraphicDrawer objDrawer = p.getObjectDrawer();
 
-		bufferObjDrawer.setUntiAlias(!viewContext.isZeroLineWidth());
+		bufferObjDrawer.setAntiAlias(!viewContext.isZeroLineWidth());
 
 		GraphicMouseAction action = mouseActionHolder.getMouseAction();
 
