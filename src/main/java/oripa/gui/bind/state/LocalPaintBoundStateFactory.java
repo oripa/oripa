@@ -41,8 +41,7 @@ class LocalPaintBoundStateFactory {
 	/**
 	 * Create a state with error handler.
 	 *
-	 * @param editMode
-	 * @param actionSetter
+	 * @param mouseAction
 	 * @param errorDetecter
 	 *            should detect whether the application is ready to perform the
 	 *            action of the new state or not. This should return true if an
@@ -77,8 +76,7 @@ class LocalPaintBoundStateFactory {
 	 *
 	 * Create a state.
 	 *
-	 * @param editMode
-	 * @param actionSetter
+	 * @param mouseAction
 	 * @param changeHint
 	 *            event handler to change a hint of painting.
 	 * @param actions
