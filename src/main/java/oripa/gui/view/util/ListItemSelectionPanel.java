@@ -20,7 +20,6 @@ package oripa.gui.view.util;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -34,7 +33,7 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class ListItemSelectionPanel<Item> extends JPanel {
+public class ListItemSelectionPanel extends JPanel {
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private final JLabel titleLabel = new JLabel();
@@ -45,12 +44,10 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.PREV_MODEL_ID));
 	private final JLabel selectedItemIndexLabel = new JLabel();
 
-	private List<Item> items;
+	private int itemCount = 0;
 	private int selectionIndex = -1;
-	private Item item = null;
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-	public final static String ITEM = "ITEM";
 	public final static String INDEX = "INDEX";
 
 	public ListItemSelectionPanel(final String title) {
@@ -64,11 +61,9 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 	 *
 	 * @param items
 	 */
-	public void setItems(final List<Item> items) {
-		this.items = items;
-		if (items.isEmpty()) {
-			item = null;
-		} else {
+	public void setItemCount(final int itemCount) {
+		this.itemCount = itemCount;
+		if (itemCount > 0) {
 			selectItem(0);
 		}
 	}
@@ -76,7 +71,6 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 	/**
 	 * Possible property names:
 	 * <ul>
-	 * <li>{@link #ITEM}</li>
 	 * <li>{@link #INDEX}</li>
 	 * </ul>
 	 */
@@ -100,7 +94,7 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 		});
 
 		nextButton.addActionListener(e -> {
-			if (selectionIndex == items.size() - 1) {
+			if (selectionIndex == itemCount - 1) {
 				return;
 			}
 			selectItem(selectionIndex + 1);
@@ -109,16 +103,15 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 
 	public void selectItem(final int index) {
 		setSelectionIndex(index);
-		setItem(items.get(index));
 		updateSelectionIndexLabel();
 	}
 
 	private void updateSelectionIndexLabel() {
-		selectedItemIndexLabel.setText((selectionIndex + 1) + "/" + items.size());
+		selectedItemIndexLabel.setText((selectionIndex + 1) + "/" + itemCount);
 	};
 
 	private void setSelectionIndex(final int index) {
-		if (index < 0 || index >= items.size()) {
+		if (index < 0 || index >= itemCount) {
 			throw new IndexOutOfBoundsException(index);
 		}
 
@@ -126,11 +119,4 @@ public class ListItemSelectionPanel<Item> extends JPanel {
 		selectionIndex = index;
 		support.firePropertyChange(INDEX, old, index);
 	}
-
-	private void setItem(final Item item) {
-		var old = this.item;
-		this.item = item;
-		support.firePropertyChange(ITEM, old, item);
-	}
-
 }

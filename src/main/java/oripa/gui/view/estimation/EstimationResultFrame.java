@@ -21,6 +21,7 @@ package oripa.gui.view.estimation;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,9 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
-	private final ListItemSelectionPanel<FoldedModel> modelSelectionPanel = new ListItemSelectionPanel<>(
+	private List<FoldedModel> foldedModels = new ArrayList<>();
+
+	private final ListItemSelectionPanel modelSelectionPanel = new ListItemSelectionPanel(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.MODEL_ID));
 	private final FoldedModelScreen screen = new FoldedModelScreen();
 	private final EstimationResultUI ui = new EstimationResultUI();
@@ -66,13 +69,14 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 	}
 
 	private void addPropertyChangeListenerToComponents() {
-		modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.ITEM,
-				e -> setModel((FoldedModel) e.getNewValue()));
+		modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX,
+				e -> setModel(foldedModels.get((Integer) e.getNewValue())));
 	}
 
 	@Override
 	public void setModels(final List<FoldedModel> models) {
-		modelSelectionPanel.setItems(models);
+		foldedModels = models;
+		modelSelectionPanel.setItemCount(models.size());
 	}
 
 	private void setModel(final FoldedModel foldedModel) {

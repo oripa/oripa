@@ -28,6 +28,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,8 +94,10 @@ public class ModelViewFrame extends JFrame
 	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
 	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
 
-	private final ListItemSelectionPanel<OrigamiModel> modelSelectionPanel = new ListItemSelectionPanel<>(
+	private final ListItemSelectionPanel modelSelectionPanel = new ListItemSelectionPanel(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.MODEL_ID));
+
+	private List<OrigamiModel> origamiModels = new ArrayList<>();
 	private OrigamiModel origamiModel = null;
 
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
@@ -170,13 +173,14 @@ public class ModelViewFrame extends JFrame
 
 	private void addPropertyChangeListenerToComponents() {
 		modelSelectionPanel.addPropertyChangeListener(
-				ListItemSelectionPanel.ITEM,
-				e -> setModel((OrigamiModel) e.getNewValue()));
+				ListItemSelectionPanel.INDEX,
+				e -> setModel(origamiModels.get((Integer) e.getNewValue())));
 	}
 
 	@Override
 	public void setModels(final List<OrigamiModel> origamiModels) {
-		modelSelectionPanel.setItems(origamiModels);
+		this.origamiModels = origamiModels;
+		modelSelectionPanel.setItemCount(origamiModels.size());
 	}
 
 	private void setModel(final OrigamiModel origamiModel) {

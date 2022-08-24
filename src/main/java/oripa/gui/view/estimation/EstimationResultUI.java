@@ -58,7 +58,7 @@ public class EstimationResultUI extends JPanel {
 	private FoldedModelScreen screen;
 
 	// setup components used
-	private final ListItemSelectionPanel<OverlapRelation> answerSelectionPanel = new ListItemSelectionPanel<>("");
+	private final ListItemSelectionPanel answerSelectionPanel = new ListItemSelectionPanel("");
 
 	private final JCheckBox orderCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ORDER_FLIP_ID));
@@ -122,7 +122,7 @@ public class EstimationResultUI extends JPanel {
 	 */
 	public void setModel(final FoldedModel foldedModel) {
 		this.foldedModel = foldedModel;
-		answerSelectionPanel.setItems(foldedModel.getOverlapRelations());
+		answerSelectionPanel.setItemCount(foldedModel.getOverlapRelations().size());
 	}
 
 	/**
@@ -157,11 +157,11 @@ public class EstimationResultUI extends JPanel {
 	 * register listeners with all used components
 	 */
 	private void addActionListenersToComponents() {
-		answerSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.ITEM,
+		answerSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX,
 				e -> {
-					var newValue = (OverlapRelation) e.getNewValue();
-					overlapRelation = newValue;
-					screen.setOverlapRelation(newValue);
+					var newIndex = (Integer) e.getNewValue();
+					overlapRelation = foldedModel.getOverlapRelations().get(newIndex);
+					screen.setOverlapRelation(overlapRelation);
 				});
 
 		orderCheckBox.addItemListener(e -> {
