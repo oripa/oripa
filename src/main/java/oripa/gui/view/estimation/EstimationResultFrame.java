@@ -30,13 +30,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModel;
-import oripa.gui.view.FrameView;
 import oripa.gui.view.util.ListItemSelectionPanel;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 
-public class EstimationResultFrame extends JFrame implements FrameView {
+public class EstimationResultFrame extends JFrame implements EstimationResultFrameView {
 
 	private static final long serialVersionUID = 1L;
 
@@ -71,6 +70,7 @@ public class EstimationResultFrame extends JFrame implements FrameView {
 				e -> setModel((FoldedModel) e.getNewValue()));
 	}
 
+	@Override
 	public void setModels(final List<FoldedModel> models) {
 		modelSelectionPanel.setItems(models);
 	}
@@ -85,14 +85,17 @@ public class EstimationResultFrame extends JFrame implements FrameView {
 		ui.setModel(foldedModel);
 	}
 
+	@Override
 	public void setColors(final Color front, final Color back) {
 		ui.setColors(front, back);
 	}
 
+	@Override
 	public void setSaveColorsListener(final BiConsumer<Color, Color> listener) {
 		ui.setSaveColorsListener(listener);
 	}
 
+	@Override
 	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
 		if (modelIndexChangeListenerMap.get(parentOfListener) == null) {
 			modelIndexChangeListenerMap.put(parentOfListener, listener);
@@ -100,6 +103,7 @@ public class EstimationResultFrame extends JFrame implements FrameView {
 		}
 	}
 
+	@Override
 	public void selectModel(final int index) {
 		modelSelectionPanel.selectItem(index);
 	}

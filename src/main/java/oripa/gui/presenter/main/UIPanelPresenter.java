@@ -37,11 +37,11 @@ import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.view.FrameView;
-import oripa.gui.view.estimation.EstimationResultFrame;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
+import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.main.UIPanelView;
-import oripa.gui.view.model.ModelViewFrame;
 import oripa.gui.view.model.ModelViewFrameFactory;
+import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainScreenSetting;
@@ -315,12 +315,12 @@ public class UIPanelPresenter {
 		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
 				mainScreenSetting,
 				childFrameManager);
-		ModelViewFrame modelViewFrame = modelViewFactory.createFrame(parent, origamiModels,
+		ModelViewFrameView modelViewFrame = modelViewFactory.createFrame(parent, origamiModels,
 				cutOutlinesHolder, screenUpdater::updateScreen, view.getPaperDomainOfModelChangeListener());
 
 		modelViewFrame.repaint();
 
-		EstimationResultFrame resultFrame = null;
+		EstimationResultFrameView resultFrame = null;
 
 		if (view.getFullEstimation()) {
 			var count = computationResult.countFoldablePatterns();
@@ -340,17 +340,17 @@ public class UIPanelPresenter {
 				resultFrame.setSaveColorsListener(view.getEstimationResultSaveColorsListener());
 				resultFrame.repaint();
 
-				resultFrame.setVisible(true);
+				resultFrame.setViewVisible(true);
 			}
 		}
 
 		putModelIndexChangeListener(modelViewFrame, resultFrame);
 
-		modelViewFrame.setVisible(true);
+		modelViewFrame.setViewVisible(true);
 	}
 
-	public void putModelIndexChangeListener(final ModelViewFrame modelViewFrame,
-			final EstimationResultFrame resultFrame) {
+	public void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,
+			final EstimationResultFrameView resultFrame) {
 		if (modelViewFrame == null || resultFrame == null) {
 			return;
 		}

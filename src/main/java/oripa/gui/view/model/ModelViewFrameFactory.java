@@ -43,7 +43,7 @@ public class ModelViewFrameFactory {
 		this.childFrameManager = childFrameManager;
 	}
 
-	public ModelViewFrame createFrame(
+	public ModelViewFrameView createFrame(
 			final FrameView parent,
 			final List<OrigamiModel> origamiModels,
 			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine,

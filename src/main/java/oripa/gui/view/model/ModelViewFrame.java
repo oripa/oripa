@@ -38,7 +38,6 @@ import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
-import oripa.gui.view.FrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.ListItemSelectionPanel;
@@ -58,7 +57,7 @@ import oripa.resource.StringID;
  *
  */
 public class ModelViewFrame extends JFrame
-		implements FrameView, AdjustmentListener, WindowListener, ComponentListener {
+		implements ModelViewFrameView, AdjustmentListener, WindowListener, ComponentListener {
 
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
@@ -175,6 +174,7 @@ public class ModelViewFrame extends JFrame
 				e -> setModel((OrigamiModel) e.getNewValue()));
 	}
 
+	@Override
 	public void setModels(final List<OrigamiModel> origamiModels) {
 		modelSelectionPanel.setItems(origamiModels);
 	}
@@ -194,6 +194,7 @@ public class ModelViewFrame extends JFrame
 		support.firePropertyChange(PAPER_DOMAIN, old, domainBeforeFolding);
 	}
 
+	@Override
 	public void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
 		if (paperDomainChangeListenerMap.get(parentOfListener) == null) {
 			paperDomainChangeListenerMap.put(parentOfListener, listener);
@@ -201,6 +202,7 @@ public class ModelViewFrame extends JFrame
 		}
 	}
 
+	@Override
 	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener) {
 		if (modelIndexChangeListenerMap.get(parentOfListener) == null) {
 			modelIndexChangeListenerMap.put(parentOfListener, listener);
@@ -208,6 +210,7 @@ public class ModelViewFrame extends JFrame
 		}
 	}
 
+	@Override
 	public void selectModel(final int index) {
 		modelSelectionPanel.selectItem(index);
 	}

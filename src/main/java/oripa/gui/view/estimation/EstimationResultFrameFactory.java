@@ -17,7 +17,7 @@ public class EstimationResultFrameFactory {
 		this.childFrameManager = childFrameManager;
 	}
 
-	public EstimationResultFrame createFrame(
+	public EstimationResultFrameView createFrame(
 			final FrameView parent,
 			final List<FoldedModel> foldedModels) {
 
