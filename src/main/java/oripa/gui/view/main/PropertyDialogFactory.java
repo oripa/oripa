@@ -18,10 +18,11 @@
  */
 package oripa.gui.view.main;
 
+import java.awt.Rectangle;
+
 import javax.swing.JFrame;
 
-import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.doc.Doc;
 import oripa.gui.view.DialogView;
 import oripa.gui.view.FrameView;
 
@@ -29,15 +30,15 @@ import oripa.gui.view.FrameView;
  * @author OUCHI Koji
  *
  */
-public class CircleCopyDialogFactory implements CopyDialogFactory {
-	private CircleCopyDialog dialog;
+public class PropertyDialogFactory {
+	public DialogView create(final FrameView parent, final Doc document) {
+		var frame = (JFrame) parent;
+		PropertyDialog dialog = new PropertyDialog(frame, document);
 
-	@Override
-	public DialogView create(final FrameView owner, final PaintContext paintContext,
-			final ScreenUpdater screenUpdater) {
-		if (dialog == null) {
-			dialog = new CircleCopyDialog((JFrame) owner, paintContext, screenUpdater);
-		}
+		Rectangle rec = frame.getBounds();
+		dialog.setLocation(
+				(int) (rec.getCenterX() - dialog.getWidth() / 2),
+				(int) (rec.getCenterY() - dialog.getHeight() / 2));
 
 		return dialog;
 	}

@@ -22,6 +22,8 @@ import javax.swing.JFrame;
 
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.gui.view.DialogView;
+import oripa.gui.view.FrameView;
 
 /**
  * @author OUCHI Koji
@@ -31,10 +33,10 @@ public class ArrayCopyDialogFactory implements CopyDialogFactory {
 	private ArrayCopyDialog dialog;
 
 	@Override
-	public ArrayCopyDialog create(final JFrame owner, final PaintContext paintContext,
+	public DialogView create(final FrameView owner, final PaintContext paintContext,
 			final ScreenUpdater screenUpdater) {
 		if (dialog == null) {
-			dialog = new ArrayCopyDialog(owner, paintContext, screenUpdater);
+			dialog = new ArrayCopyDialog((JFrame) owner, paintContext, screenUpdater);
 		}
 
 		return dialog;

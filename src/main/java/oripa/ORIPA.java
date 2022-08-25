@@ -35,7 +35,11 @@ import oripa.gui.bind.state.EditModeStateManager;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.main.MainFramePresenter;
+import oripa.gui.view.main.ArrayCopyDialogFactory;
+import oripa.gui.view.main.CircleCopyDialogFactory;
 import oripa.gui.view.main.MainFrame;
+import oripa.gui.view.main.MainFrameSwingDialogFactory;
+import oripa.gui.view.main.PropertyDialogFactory;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFilterSelector;
 import oripa.resource.Constants;
@@ -65,8 +69,14 @@ public class ORIPA {
 			var paintContext = new PaintContextFactory().createContext();
 			var viewContext = new CreasePatternViewContextFactory().create(paintContext);
 
+			var dialogFactory = new MainFrameSwingDialogFactory(
+					new ArrayCopyDialogFactory(),
+					new CircleCopyDialogFactory(),
+					new PropertyDialogFactory());
+
 			var presenter = new MainFramePresenter(
 					mainFrame,
+					dialogFactory,
 					new Doc(),
 					paintContext,
 					viewContext,

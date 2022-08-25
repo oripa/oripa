@@ -34,6 +34,7 @@ import javax.swing.JTextField;
 
 import oripa.doc.Doc;
 import oripa.doc.Property;
+import oripa.gui.view.DialogView;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -44,7 +45,7 @@ import oripa.resource.StringID;
  *
  */
 public class PropertyDialog extends JDialog implements
-		ComponentListener {
+		DialogView, ComponentListener {
 
 	private static final long serialVersionUID = -5864700666603644379L;
 
@@ -175,5 +176,10 @@ public class PropertyDialog extends JDialog implements
 
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
+	}
+
+	@Override
+	public void setViewVisible(final boolean visible) {
+		setVisible(visible);
 	}
 }

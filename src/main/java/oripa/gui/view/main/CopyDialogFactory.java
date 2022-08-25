@@ -18,16 +18,16 @@
  */
 package oripa.gui.view.main;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.gui.view.DialogView;
+import oripa.gui.view.FrameView;
 
 /**
  * @author OUCHI Koji
  *
  */
+// TODO remove objects not in view layer
 public interface CopyDialogFactory {
-	JDialog create(JFrame owner, PaintContext paintContext, ScreenUpdater screenUpdater);
+	DialogView create(FrameView owner, PaintContext paintContext, ScreenUpdater screenUpdater);
 }

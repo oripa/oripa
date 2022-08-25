@@ -33,12 +33,13 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.arraycopy.ArrayCopyFillerCommand;
 import oripa.domain.paint.arraycopy.ArrayCopyTilerCommand;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import oripa.gui.view.DialogView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.util.Command;
 
-public class ArrayCopyDialog extends JDialog {
+public class ArrayCopyDialog extends JDialog implements DialogView {
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
@@ -311,5 +312,10 @@ public class ArrayCopyDialog extends JDialog {
 			});
 		}
 		return jButtonCancel;
+	}
+
+	@Override
+	public void setViewVisible(final boolean visible) {
+		setVisible(visible);
 	}
 }

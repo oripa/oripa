@@ -16,29 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.main;
-
-import javax.swing.JFrame;
-
-import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
-import oripa.gui.view.DialogView;
-import oripa.gui.view.FrameView;
+package oripa.gui.view;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CircleCopyDialogFactory implements CopyDialogFactory {
-	private CircleCopyDialog dialog;
+public interface DialogView extends FrameView {
 
-	@Override
-	public DialogView create(final FrameView owner, final PaintContext paintContext,
-			final ScreenUpdater screenUpdater) {
-		if (dialog == null) {
-			dialog = new CircleCopyDialog((JFrame) owner, paintContext, screenUpdater);
-		}
-
-		return dialog;
-	}
+	public void setModal(boolean modal);
 }

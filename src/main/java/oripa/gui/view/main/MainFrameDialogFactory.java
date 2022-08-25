@@ -18,8 +18,7 @@
  */
 package oripa.gui.view.main;
 
-import javax.swing.JFrame;
-
+import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.gui.view.DialogView;
@@ -29,16 +28,13 @@ import oripa.gui.view.FrameView;
  * @author OUCHI Koji
  *
  */
-public class CircleCopyDialogFactory implements CopyDialogFactory {
-	private CircleCopyDialog dialog;
+// TODO remove objects not in view layer
+public interface MainFrameDialogFactory {
+	public DialogView createArrayCopyDialog(final FrameView owner, final PaintContext paintContext,
+			final ScreenUpdater screenUpdater);
 
-	@Override
-	public DialogView create(final FrameView owner, final PaintContext paintContext,
-			final ScreenUpdater screenUpdater) {
-		if (dialog == null) {
-			dialog = new CircleCopyDialog((JFrame) owner, paintContext, screenUpdater);
-		}
+	public DialogView createCircleCopyDialog(final FrameView owner, final PaintContext paintContext,
+			final ScreenUpdater screenUpdater);
 
-		return dialog;
-	}
+	public DialogView createPropertyDialog(final FrameView parent, final Doc document);
 }

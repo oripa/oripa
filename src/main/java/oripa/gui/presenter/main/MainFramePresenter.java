@@ -19,7 +19,6 @@
 package oripa.gui.presenter.main;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.function.Supplier;
 
@@ -44,10 +43,8 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
 import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
-import oripa.gui.view.main.ArrayCopyDialogFactory;
-import oripa.gui.view.main.CircleCopyDialogFactory;
+import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
-import oripa.gui.view.main.PropertyDialog;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.MainScreenUpdater;
@@ -71,6 +68,7 @@ public class MainFramePresenter {
 	private static final Logger logger = LoggerFactory.getLogger(MainFramePresenter.class);
 
 	private final MainFrameView view;
+	private final MainFrameDialogFactory dialogFactory;
 
 	private final PainterScreenPresenter screenPresenter;
 	private final UIPanelPresenter uiPanelPresenter;
@@ -99,13 +97,11 @@ public class MainFramePresenter {
 	private final FileHistory fileHistory;
 	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
 
-	// presentation
-	private final CopyDialogOpener copyDialogOpener;
-
 	// services
 	private final PaintContextModification paintContextModification = new PaintContextModification();
 
 	public MainFramePresenter(final MainFrameView view,
+			final MainFrameDialogFactory dialogFactory,
 			final Doc document,
 			final PaintContext paintContext,
 			final CreasePatternViewContext viewContext,
@@ -115,6 +111,7 @@ public class MainFramePresenter {
 			final IniFileAccess iniFileAccess,
 			final DataFileAccess dataFileAccess) {
 		this.view = view;
+		this.dialogFactory = dialogFactory;
 
 		this.document = document;
 		this.paintContext = paintContext;
@@ -165,13 +162,6 @@ public class MainFramePresenter {
 				screenSetting);
 
 		uiPanelPresenter.setChildFrameManager(childFrameManager);
-
-		// Setup Dialog Windows
-		copyDialogOpener = new CopyDialogOpener(
-				new ArrayCopyDialogFactory(),
-				new CircleCopyDialogFactory(),
-				view::showNoSelectionMessageForArrayCopy,
-				view::showNoSelectionMessageForCircleCopy);
 
 		loadIniFile();
 
@@ -423,23 +413,37 @@ public class MainFramePresenter {
 	}
 
 	private void showPropertyDialog() {
-		var frame = (JFrame) view;
-		PropertyDialog dialog = new PropertyDialog(frame, document);
+		var dialog = dialogFactory.createPropertyDialog(view, document);
 
-		Rectangle rec = frame.getBounds();
-		dialog.setLocation(
-				(int) (rec.getCenterX() - dialog.getWidth() / 2),
-				(int) (rec.getCenterY() - dialog.getHeight() / 2));
-		dialog.setModal(true);
-		dialog.setVisible(true);
+		// TODO dialog presenter here.
+
+		dialog.setViewVisible(true);
 	}
 
 	private void showArrayCopyDialog() {
-		copyDialogOpener.showArrayCopyDialog((JFrame) view, paintContext, screenUpdater);
+		if (paintContext.getPainter().countSelectedLines() == 0) {
+			view.showNoSelectionMessageForArrayCopy();
+			return;
+		}
+
+		var dialog = dialogFactory.createArrayCopyDialog(view, paintContext, screenUpdater);
+
+		// TODO dialog presenter here.
+
+		dialog.setViewVisible(true);
 	}
 
 	private void showCircleCopyDialog() {
-		copyDialogOpener.showCircleCopyDialog((JFrame) view, paintContext, screenUpdater);
+		if (paintContext.getPainter().countSelectedLines() == 0) {
+			view.showNoSelectionMessageForCircleCopy();
+			return;
+		}
+
+		var dialog = dialogFactory.createCircleCopyDialog(view, paintContext, screenUpdater);
+
+		// TODO dialog presenter here.
+
+		dialog.setViewVisible(true);
 	}
 
 	private void updateTitleText() {
