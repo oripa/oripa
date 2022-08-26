@@ -20,25 +20,15 @@ package oripa.gui.view.main;
 
 import javax.swing.JFrame;
 
-import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
-import oripa.gui.view.DialogView;
 import oripa.gui.view.FrameView;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CircleCopyDialogFactory implements CopyDialogFactory {
-	private CircleCopyDialog dialog;
+public class CircleCopyDialogFactory {
 
-	@Override
-	public DialogView create(final FrameView owner, final PaintContext paintContext,
-			final ScreenUpdater screenUpdater) {
-		if (dialog == null) {
-			dialog = new CircleCopyDialog((JFrame) owner, paintContext, screenUpdater);
-		}
-
-		return dialog;
+	public CircleCopyDialogView create(final FrameView owner) {
+		return new CircleCopyDialog((JFrame) owner);
 	}
 }

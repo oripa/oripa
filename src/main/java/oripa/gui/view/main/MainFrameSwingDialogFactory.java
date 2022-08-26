@@ -30,7 +30,7 @@ import oripa.gui.view.FrameView;
 public class MainFrameSwingDialogFactory implements MainFrameDialogFactory {
 
 	private final CopyDialogFactory arrayCopyDialogFactory;
-	private final CopyDialogFactory circleCopyDialogFactory;
+	private final CircleCopyDialogFactory circleCopyDialogFactory;
 	private final PropertyDialogFactory propertyDialogFactory;
 
 	public MainFrameSwingDialogFactory(final ArrayCopyDialogFactory arrayCopyDialogFactory,
@@ -48,9 +48,8 @@ public class MainFrameSwingDialogFactory implements MainFrameDialogFactory {
 	}
 
 	@Override
-	public DialogView createCircleCopyDialog(final FrameView owner, final PaintContext paintContext,
-			final ScreenUpdater screenUpdater) {
-		return circleCopyDialogFactory.create(owner, paintContext, screenUpdater);
+	public CircleCopyDialogView createCircleCopyDialog(final FrameView owner) {
+		return circleCopyDialogFactory.create(owner);
 	}
 
 	@Override

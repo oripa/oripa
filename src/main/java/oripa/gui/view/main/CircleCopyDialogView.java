@@ -18,21 +18,32 @@
  */
 package oripa.gui.view.main;
 
-import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import java.util.function.Supplier;
+
 import oripa.gui.view.DialogView;
-import oripa.gui.view.FrameView;
 
 /**
  * @author OUCHI Koji
  *
  */
-// TODO remove objects not in view layer
-public interface MainFrameDialogFactory {
-	public DialogView createArrayCopyDialog(final FrameView owner, final PaintContext paintContext,
-			final ScreenUpdater screenUpdater);
+public interface CircleCopyDialogView extends DialogView {
 
-	public CircleCopyDialogView createCircleCopyDialog(final FrameView owner);
+	void showWrongCopyCountMessage();
 
-	public PropertyDialogView createPropertyDialog(final FrameView parent);
+	/**
+	 *
+	 * @param listener
+	 *            returns true if the action completes, which suggests this view
+	 *            to dispose.
+	 */
+	void setOKButtonListener(final Supplier<Boolean> listener);
+
+	int getCopyCount();
+
+	double getAngleDegree();
+
+	double getCenterY();
+
+	double getCenterX();
+
 }

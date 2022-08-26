@@ -19,6 +19,8 @@
 package oripa.gui.view.main;
 
 import java.awt.Rectangle;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -28,16 +30,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.circlecopy.CircleCopyCommand;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
-import oripa.gui.view.DialogView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.Command;
 
-public class CircleCopyDialog extends JDialog implements DialogView {
+public class CircleCopyDialog extends JDialog implements CircleCopyDialogView {
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
@@ -54,24 +51,15 @@ public class CircleCopyDialog extends JDialog implements DialogView {
 	private JLabel jLabel3 = null;
 	private JTextField jTextFieldNum = null;
 
-	private double m_cx = 0;
-	private double m_cy = 0;
-	private double m_angleDeg = 30;
-	private int m_num = 1;
-
 	private final JFrame owner;
-	private final PaintContext context;
-	private final ScreenUpdater screenUpdater;
 
 	/**
 	 * @param owner
 	 */
-	public CircleCopyDialog(final JFrame owner, final PaintContext aContext, final ScreenUpdater screenUpdater) {
+	public CircleCopyDialog(final JFrame owner) {
 		super(owner);
 
 		this.owner = owner;
-		context = aContext;
-		this.screenUpdater = screenUpdater;
 		initialize();
 	}
 
@@ -135,51 +123,6 @@ public class CircleCopyDialog extends JDialog implements DialogView {
 			jButtonOK = new JButton();
 			jButtonOK.setBounds(new Rectangle(5, 110, 56, 21));
 			jButtonOK.setText("OK");
-			jButtonOK.addActionListener(new java.awt.event.ActionListener() {
-				@Override
-				public void actionPerformed(final java.awt.event.ActionEvent e) {
-					System.out.println("actionPerformed()");
-
-					try {
-						m_cx = Double.valueOf(jTextFieldCX.getText());
-					} catch (Exception ex) {
-						m_cx = 0;
-					}
-
-					try {
-						m_cy = Double.valueOf(jTextFieldCY.getText());
-					} catch (Exception ex) {
-						m_cy = 0;
-					}
-
-					try {
-						m_angleDeg = Double.valueOf(jTextFieldAngle.getText());
-					} catch (Exception ex) {
-						m_angleDeg = 0;
-					}
-
-					try {
-						m_num = Integer.valueOf(jTextFieldNum.getText());
-					} catch (Exception ex) {
-						m_num = 0;
-					}
-
-					if (m_num <= 0) {
-						JOptionPane.showMessageDialog(
-								owner, "Specify positive integer to Number.",
-								"Circle Copy",
-								JOptionPane.INFORMATION_MESSAGE);
-
-					} else {
-						Command command = new CircleCopyCommand(m_cx, m_cy, m_angleDeg, m_num, context);
-						command.execute();
-
-						screenUpdater.updateScreen();
-
-						setVisible(false);
-					}
-				}
-			});
 		}
 		return jButtonOK;
 	}
@@ -194,13 +137,7 @@ public class CircleCopyDialog extends JDialog implements DialogView {
 			jButtonCancel = new JButton();
 			jButtonCancel.setBounds(new Rectangle(65, 110, 81, 21));
 			jButtonCancel.setText("Cancel");
-			jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
-				@Override
-				public void actionPerformed(final java.awt.event.ActionEvent e) {
-					System.out.println("actionPerformed()");
-					setVisible(false);
-				}
-			});
+			jButtonCancel.addActionListener(e -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -270,4 +207,57 @@ public class CircleCopyDialog extends JDialog implements DialogView {
 		setVisible(visible);
 	}
 
+	@Override
+	public double getCenterX() {
+		try {
+			return Double.valueOf(jTextFieldCX.getText());
+		} catch (Exception ex) {
+			return 0;
+		}
+	}
+
+	@Override
+	public double getCenterY() {
+		try {
+			return Double.valueOf(jTextFieldCY.getText());
+		} catch (Exception ex) {
+			return 0;
+		}
+	}
+
+	@Override
+	public double getAngleDegree() {
+		try {
+			return Double.valueOf(jTextFieldAngle.getText());
+		} catch (Exception ex) {
+			return 0;
+		}
+	}
+
+	@Override
+	public int getCopyCount() {
+		try {
+			return Integer.valueOf(jTextFieldNum.getText());
+		} catch (Exception ex) {
+			return 0;
+		}
+	}
+
+	@Override
+	public void setOKButtonListener(final Supplier<Boolean> listener) {
+		Stream.of(jButtonOK.getActionListeners()).forEach(l -> jButtonOK.removeActionListener(l));
+		jButtonOK.addActionListener(e -> {
+			if (listener.get()) {
+				dispose();
+			}
+		});
+	}
+
+	@Override
+	public void showWrongCopyCountMessage() {
+		JOptionPane.showMessageDialog(
+				owner, "Specify positive integer to Number.",
+				"Circle Copy",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
 }
