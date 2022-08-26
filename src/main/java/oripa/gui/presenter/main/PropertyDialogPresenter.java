@@ -36,7 +36,7 @@ public class PropertyDialogPresenter {
 		this.view = view;
 		this.document = document;
 
-		view.addOKButtonListener(this::setValueToDomain);
+		view.addOKButtonListener(this::setValuesToDomain);
 
 		setValuesToView();
 	}
@@ -51,7 +51,7 @@ public class PropertyDialogPresenter {
 		view.setMemo(property.getMemo());
 	}
 
-	private void setValueToDomain() {
+	private void setValuesToDomain() {
 		Property prop = new Property(document.getProperty().getDataFilePath());
 
 		prop.setTitle(view.getModelTitle());
