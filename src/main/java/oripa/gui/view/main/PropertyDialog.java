@@ -23,6 +23,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -32,9 +34,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import oripa.doc.Doc;
-import oripa.doc.Property;
-import oripa.gui.view.DialogView;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -45,7 +44,7 @@ import oripa.resource.StringID;
  *
  */
 public class PropertyDialog extends JDialog implements
-		DialogView, ComponentListener {
+		PropertyDialogView, ComponentListener {
 
 	private static final long serialVersionUID = -5864700666603644379L;
 
@@ -57,16 +56,23 @@ public class PropertyDialog extends JDialog implements
 	private final JTextField referenceTextField = new JTextField();
 	private final JTextArea memoTextArea = new JTextArea();
 
+	private final List<Runnable> okListeners = new ArrayList<>();
+
 	private final JButton okButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_OK_ID));
 
-	private final Doc document;
-
-	public PropertyDialog(final JFrame parent, final Doc doc) {
+	public PropertyDialog(final JFrame parent) {
 		super(parent);
 
-		this.document = doc;
+		build();
 
+		okButton.addActionListener(e -> {
+			okListeners.forEach(listener -> listener.run());
+			dispose();
+		});
+	}
+
+	private void build() {
 		setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.PROP_DIALOG_TITLE_ID));
 		setSize(420, 278);
 		addComponentListener(this);
@@ -78,12 +84,6 @@ public class PropertyDialog extends JDialog implements
 		memoScrollPane.setVerticalScrollBarPolicy(
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		memoScrollPane.setPreferredSize(new Dimension(250, 250));
-
-		// add action listener to OK button
-		okButton.addActionListener(e -> {
-			document.setProperty(getEditedProperty());
-			dispose();
-		});
 
 		// Add Components to contentPane
 		var contentPane = getContentPane();
@@ -128,37 +128,61 @@ public class PropertyDialog extends JDialog implements
 		gbcBuilder.setWeight(leftWeight, 0.0).setFill(GridBagConstraints.NONE);
 		contentPane.add(okButton, gbcBuilder.getLineField());
 
-		readValues();
 	}
 
-	/**
-	 * Read values of {@link oripa.doc.Property} into textFields.
-	 */
-	public void readValues() {
-		Property property = document.getProperty();
-
-		titleTextField.setText(property.getTitle());
-		editorNameTextField.setText(property.getEditorName());
-		originalAuthorTextField.setText(property.getOriginalAuthorName());
-		referenceTextField.setText(property.getReference());
-		memoTextArea.setText(property.getMemo());
+	@Override
+	public void addOKButtonListener(final Runnable listener) {
+		okButton.addActionListener(e -> listener.run());
 	}
 
-	/**
-	 * Create Property from input fields
-	 *
-	 * @return updated {@link oripa.doc.Property}
-	 */
-	private Property getEditedProperty() {
-		Property prop = new Property(document.getProperty().getDataFilePath());
+	@Override
+	public String getModelTitle() {
+		return titleTextField.getText();
+	}
 
-		prop.setTitle(titleTextField.getText());
-		prop.setEditorName(editorNameTextField.getText());
-		prop.setOriginalAuthorName(originalAuthorTextField.getText());
-		prop.setReference(referenceTextField.getText());
-		prop.setMemo(memoTextArea.getText());
+	@Override
+	public void setModelTitle(final String title) {
+		titleTextField.setText(title);
+	}
 
-		return prop;
+	@Override
+	public String getEditorName() {
+		return editorNameTextField.getText();
+	}
+
+	@Override
+	public void setEditorName(final String editorName) {
+		editorNameTextField.setText(editorName);
+	}
+
+	@Override
+	public String getOriginalAuthor() {
+		return originalAuthorTextField.getText();
+	}
+
+	@Override
+	public void setOriginalAutor(final String originalAuthor) {
+		originalAuthorTextField.setText(originalAuthor);
+	}
+
+	@Override
+	public String getReference() {
+		return referenceTextField.getText();
+	}
+
+	@Override
+	public void setReference(final String reference) {
+		referenceTextField.setText(reference);
+	}
+
+	@Override
+	public String getMemo() {
+		return memoTextArea.getText();
+	}
+
+	@Override
+	public void setMemo(final String memo) {
+		memoTextArea.setText(memo);
 	}
 
 	@Override

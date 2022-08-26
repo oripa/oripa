@@ -18,7 +18,6 @@
  */
 package oripa.gui.view.main;
 
-import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.gui.view.DialogView;
@@ -55,8 +54,8 @@ public class MainFrameSwingDialogFactory implements MainFrameDialogFactory {
 	}
 
 	@Override
-	public DialogView createPropertyDialog(final FrameView parent, final Doc document) {
-		return propertyDialogFactory.create(parent, document);
+	public PropertyDialogView createPropertyDialog(final FrameView parent) {
+		return propertyDialogFactory.create(parent);
 	}
 
 }

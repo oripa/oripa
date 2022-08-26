@@ -413,11 +413,11 @@ public class MainFramePresenter {
 	}
 
 	private void showPropertyDialog() {
-		var dialog = dialogFactory.createPropertyDialog(view, document);
+		var dialog = dialogFactory.createPropertyDialog(view);
 
-		// TODO dialog presenter here.
+		var presenter = new PropertyDialogPresenter(dialog, document);
 
-		dialog.setViewVisible(true);
+		presenter.setViewVisible(true);
 	}
 
 	private void showArrayCopyDialog() {

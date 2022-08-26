@@ -18,7 +18,6 @@
  */
 package oripa.gui.view.main;
 
-import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.gui.view.DialogView;
@@ -36,5 +35,5 @@ public interface MainFrameDialogFactory {
 	public DialogView createCircleCopyDialog(final FrameView owner, final PaintContext paintContext,
 			final ScreenUpdater screenUpdater);
 
-	public DialogView createPropertyDialog(final FrameView parent, final Doc document);
+	public PropertyDialogView createPropertyDialog(final FrameView parent);
 }

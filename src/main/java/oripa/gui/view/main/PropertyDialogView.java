@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor
+ * ORIPA - Origami Pattern Editor 
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,26 +18,34 @@
  */
 package oripa.gui.view.main;
 
-import java.awt.Rectangle;
-
-import javax.swing.JFrame;
-
-import oripa.gui.view.FrameView;
+import oripa.gui.view.DialogView;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class PropertyDialogFactory {
-	public PropertyDialogView create(final FrameView parent) {
-		var frame = (JFrame) parent;
-		PropertyDialog dialog = new PropertyDialog(frame);
+public interface PropertyDialogView extends DialogView {
 
-		Rectangle rec = frame.getBounds();
-		dialog.setLocation(
-				(int) (rec.getCenterX() - dialog.getWidth() / 2),
-				(int) (rec.getCenterY() - dialog.getHeight() / 2));
+	void setMemo(final String memo);
 
-		return dialog;
-	}
+	String getMemo();
+
+	void setReference(final String reference);
+
+	String getReference();
+
+	void setOriginalAutor(final String originalAuthor);
+
+	String getOriginalAuthor();
+
+	void setEditorName(final String editorName);
+
+	String getEditorName();
+
+	void setModelTitle(final String title);
+
+	String getModelTitle();
+
+	void addOKButtonListener(final Runnable listener);
+
 }
