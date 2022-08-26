@@ -40,10 +40,17 @@ public interface CircleCopyDialogView extends DialogView {
 
 	int getCopyCount();
 
+	void setCopyCount(int copyCount);
+
 	double getAngleDegree();
+
+	void setAngleDegree(double angleDegree);
 
 	double getCenterY();
 
+	void setCenterY(double centerY);
+
 	double getCenterX();
 
+	void setCenterX(double centerX);
 }

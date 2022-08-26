@@ -16,40 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.circlecopy;
-
-import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.ValidatablePaintCommand;
+package oripa.domain.paint;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CircleCopyCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+public class CircleCopyParameter {
+	private final int copyCount;
+	private final double centerX;
+	private final double centerY;
+	private final double angleDegree;
 
-	public CircleCopyCommand(final PaintContext context) {
-		this.context = context;
+	public CircleCopyParameter(final double cx, final double cy, final double angleDeg, final int copyCount) {
+		centerX = cx;
+		centerY = cy;
+		angleDegree = angleDeg;
+		this.copyCount = copyCount;
 	}
 
-	@Override
-	public void execute() {
-		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+	public int getCopyCount() {
+		return copyCount;
+	}
 
-		context.creasePatternUndo().pushUndoInfo();
+	public double getCenterX() {
+		return centerX;
+	}
 
-		var parameter = context.getCircleCopyParameter();
-		var cx = parameter.getCenterX();
-		var cy = parameter.getCenterY();
+	public double getCenterY() {
+		return centerY;
+	}
 
-		var angleDeg = parameter.getAngleDegree();
-
-		var count = parameter.getCopyCount();
-
-		Painter painter = context.getPainter();
-		painter.copyWithRotation(cx, cy, angleDeg, count, context.getPickedLines());
-
+	public double getAngleDegree() {
+		return angleDegree;
 	}
 
 }

@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main;
 
+import oripa.domain.paint.CircleCopyParameter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.circlecopy.CircleCopyCommand;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
@@ -43,23 +44,37 @@ public class CircleCopyDialogPresenter {
 		this.paintContext = paintContext;
 		this.screenUpdater = screenUpdater;
 
+		setParameterToView();
+
 		view.setOKButtonListener(this::doCircleCopy);
 	}
 
-	private boolean doCircleCopy() {
-		var copyCount = view.getCopyCount();
+	private void setParameterToView() {
+		var parameter = paintContext.getCircleCopyParameter();
 
-		if (copyCount <= 0) {
+		if (parameter == null) {
+			return;
+		}
+
+		view.setCenterX(parameter.getCenterX());
+		view.setCenterY(parameter.getCenterY());
+		view.setAngleDegree(parameter.getAngleDegree());
+		view.setCopyCount(parameter.getCopyCount());
+
+	}
+
+	private boolean doCircleCopy() {
+		var parameter = new CircleCopyParameter(
+				view.getCenterX(), view.getCenterY(), view.getAngleDegree(), view.getCopyCount());
+
+		if (parameter.getCopyCount() <= 0) {
 			view.showWrongCopyCountMessage();
 			return false;
 		}
 
-		double centerX = view.getCenterX();
-		double centerY = view.getCenterY();
-		double angleDegree = view.getAngleDegree();
+		paintContext.setCircleCopyParameter(parameter);
 
-		Command command = new CircleCopyCommand(
-				centerX, centerY, angleDegree, copyCount, paintContext);
+		Command command = new CircleCopyCommand(paintContext);
 		command.execute();
 
 		screenUpdater.updateScreen();

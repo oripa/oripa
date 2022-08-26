@@ -217,12 +217,22 @@ public class CircleCopyDialog extends JDialog implements CircleCopyDialogView {
 	}
 
 	@Override
+	public void setCenterX(final double centerX) {
+		jTextFieldCX.setText(Double.toString(centerX));
+	}
+
+	@Override
 	public double getCenterY() {
 		try {
 			return Double.valueOf(jTextFieldCY.getText());
 		} catch (Exception ex) {
 			return 0;
 		}
+	}
+
+	@Override
+	public void setCenterY(final double centerY) {
+		jTextFieldCY.setText(Double.toString(centerY));
 	}
 
 	@Override
@@ -235,12 +245,22 @@ public class CircleCopyDialog extends JDialog implements CircleCopyDialogView {
 	}
 
 	@Override
+	public void setAngleDegree(final double angleDegree) {
+		jTextFieldAngle.setText(Double.toString(angleDegree));
+	}
+
+	@Override
 	public int getCopyCount() {
 		try {
 			return Integer.valueOf(jTextFieldNum.getText());
 		} catch (Exception ex) {
 			return 0;
 		}
+	}
+
+	@Override
+	public void setCopyCount(final int copyCount) {
+		jTextFieldNum.setText(Integer.toString(copyCount));
 	}
 
 	@Override

@@ -35,6 +35,8 @@ class PaintContextImpl implements PaintContext {
 
 	private Collection<Vector2d> snapPoints = new ArrayList<Vector2d>();
 
+	private CircleCopyParameter circleCopyParameter;
+
 	public PaintContextImpl() {
 	}
 
@@ -403,6 +405,16 @@ class PaintContextImpl implements PaintContext {
 	public String toString() {
 		return "PaintContext: #line=" + pickedLines.size() +
 				", #vertex=" + pickedVertices.size();
+	}
+
+	@Override
+	public CircleCopyParameter getCircleCopyParameter() {
+		return circleCopyParameter;
+	}
+
+	@Override
+	public void setCircleCopyParameter(final CircleCopyParameter circleCopyParameter) {
+		this.circleCopyParameter = circleCopyParameter;
 	}
 
 }

@@ -182,4 +182,8 @@ public interface PaintContext extends CreasePatternHolder {
 	 */
 	public abstract Collection<Vector2d> getGrids();
 
+	public void setCircleCopyParameter(CircleCopyParameter p);
+
+	public CircleCopyParameter getCircleCopyParameter();
+
 }
