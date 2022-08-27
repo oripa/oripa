@@ -2,8 +2,6 @@ package oripa.gui.bind.state;
 
 import static org.mockito.Mockito.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Nested;
@@ -23,26 +21,25 @@ public class LocalPaintBoundStateFactoryTest {
 	public class CreateWithErrorListenerTests {
 		@Test
 		void errorOccurs() {
-			var basicAction1 = mock(ActionListener.class);
-			var basicAction2 = mock(ActionListener.class);
+			var basicAction1 = mock(Runnable.class);
+			var basicAction2 = mock(Runnable.class);
 			var stateManager = mock(EditModeStateManager.class);
 			var setterFactory = mock(PaintActionSetterFactory.class);
 
 			var factory = new LocalPaintBoundStateFactory(
 					stateManager,
 					setterFactory,
-					new ActionListener[] { basicAction1, basicAction2 });
+					new Runnable[] { basicAction1, basicAction2 });
 
 			var actionHolder = mock(MouseActionHolder.class);
 			var mouseAction = mock(GraphicMouseAction.class);
 			when(mouseAction.getEditMode()).thenReturn(EditMode.INPUT);
-			var action1 = mock(ActionListener.class);
-			var action2 = mock(ActionListener.class);
+			var action1 = mock(Runnable.class);
+			var action2 = mock(Runnable.class);
 
 			// assume that some error occurs.
 			var errorDetecter = mock(Supplier.class);
 			var errorHandler = mock(Runnable.class);
-			var event = mock(ActionEvent.class);
 			when(errorDetecter.get()).thenReturn(true);
 
 			var changeHint = mock(ChangeViewSetting.class);
@@ -50,20 +47,20 @@ public class LocalPaintBoundStateFactoryTest {
 			@SuppressWarnings("unchecked")
 			ApplicationState<EditMode> state = factory.create(
 					mouseAction, errorDetecter, errorHandler, changeHint,
-					new ActionListener[] { action1, action2 });
+					new Runnable[] { action1, action2 });
 
 			// run the target method
-			state.performActions(event);
+			state.performActions();
 
 			// error handling should happen.
 			verify(errorDetecter).get();
 			verify(errorHandler).run();
 
 			// no action listener should be called.
-			verify(basicAction1, never()).actionPerformed(event);
-			verify(basicAction2, never()).actionPerformed(event);
-			verify(action1, never()).actionPerformed(event);
-			verify(action2, never()).actionPerformed(event);
+			verify(basicAction1, never()).run();
+			verify(basicAction2, never()).run();
+			verify(action1, never()).run();
+			verify(action2, never()).run();
 			verify(actionHolder, never()).setMouseAction(mouseAction);
 			verify(changeHint, never()).changeViewSetting();
 		}
@@ -79,21 +76,21 @@ public class LocalPaintBoundStateFactoryTest {
 
 			when(setterFactory.create(mouseAction)).thenReturn(paintActionSetter);
 
-			var basicAction1 = mock(ActionListener.class);
-			var basicAction2 = mock(ActionListener.class);
+			var basicAction1 = mock(Runnable.class);
+			var basicAction2 = mock(Runnable.class);
 
 			var factory = new LocalPaintBoundStateFactory(
 					stateManager,
 					setterFactory,
-					new ActionListener[] { basicAction1, basicAction2 });
+					new Runnable[] { basicAction1, basicAction2 });
 
-			var action1 = mock(ActionListener.class);
-			var action2 = mock(ActionListener.class);
+			var action1 = mock(Runnable.class);
+			var action2 = mock(Runnable.class);
 
 			// assume that no error occurs.
 			var errorDetecter = mock(Supplier.class);
 			var errorHandler = mock(Runnable.class);
-			var event = mock(ActionEvent.class);
+
 			when(errorDetecter.get()).thenReturn(false);
 
 			var changeHint = mock(ChangeViewSetting.class);
@@ -101,19 +98,19 @@ public class LocalPaintBoundStateFactoryTest {
 			@SuppressWarnings("unchecked")
 			ApplicationState<EditMode> state = factory.create(
 					mouseAction, errorDetecter, errorHandler, changeHint,
-					new ActionListener[] { action1, action2 });
+					new Runnable[] { action1, action2 });
 
 			// run the target method
-			state.performActions(event);
+			state.performActions();
 
 			// error handling should never happen.
 			verify(errorDetecter).get();
 			verify(errorHandler, never()).run();
 
-			verify(paintActionSetter).actionPerformed(event);
+			verify(paintActionSetter).run();
 
-			verify(action1).actionPerformed(event);
-			verify(action2).actionPerformed(event);
+			verify(action1).run();
+			verify(action2).run();
 
 			verify(changeHint).changeViewSetting();
 		}

@@ -1,7 +1,5 @@
 package oripa.appstate;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -13,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @author OUCHI Koji
  *
  */
-public class CommandStatePopper<GroupEnum> implements ActionListener {
+public class CommandStatePopper<GroupEnum> implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(CommandStatePopper.class);
 
 	private final StateManager<GroupEnum> stateManager;
@@ -28,12 +26,12 @@ public class CommandStatePopper<GroupEnum> implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(final ActionEvent e) {
+	public void run() {
 		Optional<ApplicationState<GroupEnum>> currentOpt = stateManager.popLastOf(editMode);
 
 		currentOpt.ifPresent(current -> {
 			logger.debug("pop {} command state: {}", editMode, current);
-			current.performActions(e);
+			current.performActions();
 		});
 	}
 }

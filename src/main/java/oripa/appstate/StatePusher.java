@@ -1,8 +1,5 @@
 package oripa.appstate;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * @author OUCHI Koji
  *
  */
-public class StatePusher<GroupEnum> implements ActionListener {
+public class StatePusher<GroupEnum> implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(StatePusher.class);
 
 	private final StateManager<GroupEnum> stateManager;
@@ -24,7 +21,7 @@ public class StatePusher<GroupEnum> implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(final ActionEvent e) {
+	public void run() {
 		logger.debug("push paint bound state: " + state);
 		stateManager.push(state);
 	}

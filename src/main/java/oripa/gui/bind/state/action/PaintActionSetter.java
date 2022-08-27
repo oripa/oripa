@@ -1,8 +1,5 @@
 package oripa.gui.bind.state.action;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
@@ -14,7 +11,7 @@ import oripa.gui.presenter.creasepattern.ScreenUpdater;
  * @author koji
  *
  */
-public class PaintActionSetter implements ActionListener {
+public class PaintActionSetter implements Runnable {
 
 	private final GraphicMouseAction mouseAction;
 	private final MouseActionHolder actionHolder;
@@ -32,7 +29,7 @@ public class PaintActionSetter implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(final ActionEvent e) {
+	public void run() {
 
 		GraphicMouseAction currentAction = actionHolder
 				.getMouseAction();

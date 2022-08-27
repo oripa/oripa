@@ -57,7 +57,7 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	private void popPreviousState() {
 		Optional<ApplicationState<EditMode>> prevOpt = stateManager.pop();
 
-		prevOpt.ifPresent(prev -> prev.performActions(null));
+		prevOpt.ifPresent(prev -> prev.performActions());
 	}
 
 }

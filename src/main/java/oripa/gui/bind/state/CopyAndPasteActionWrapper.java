@@ -45,7 +45,7 @@ public class CopyAndPasteActionWrapper extends CopyAndPasteAction {
 			final boolean differentAction) {
 		Optional<ApplicationState<EditMode>> prevOpt = stateManager.pop();
 
-		prevOpt.ifPresent(prev -> prev.performActions(null));
+		prevOpt.ifPresent(prev -> prev.performActions());
 	}
 
 }

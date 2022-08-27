@@ -1,7 +1,5 @@
 package oripa.gui.bind.state;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
@@ -42,7 +40,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final EditMode editMode,
 			final PaintActionSetter actionSetter,
 			final ChangeViewSetting changeHint,
-			final ActionListener[] actions) {
+			final Runnable[] actions) {
 		super(editMode, actions);
 
 		addBasicListeners(stateManager, actionSetter, changeHint);
@@ -70,7 +68,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final EditMode editMode,
 			final PaintActionSetter actionSetter,
 			final ChangeViewSetting changeHint,
-			final ActionListener[] actions) {
+			final Runnable[] actions) {
 
 		super(editMode, actions);
 
@@ -93,7 +91,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 
 		if (changeHint != null) {
 			// add view updater
-			addAction(e -> changeHint.changeViewSetting());
+			addAction(changeHint::changeViewSetting);
 		}
 
 	}
@@ -110,7 +108,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 * to a current paint mode.
 	 */
 	@Override
-	public void performActions(final ActionEvent e) {
+	public void performActions() {
 		if (errorDetecter != null) {
 			if (errorDetecter.get()) {
 				errorHandler.run();
@@ -118,6 +116,6 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			}
 		}
 
-		super.performActions(e);
+		super.performActions();
 	}
 }

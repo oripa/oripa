@@ -24,6 +24,6 @@ public class StatePopper<GroupEnum> implements ActionListener {
 	public void actionPerformed(final ActionEvent e) {
 		Optional<ApplicationState<GroupEnum>> currentOpt = stateManager.pop();
 
-		currentOpt.ifPresent(current -> current.performActions(e));
+		currentOpt.ifPresent(current -> current.performActions());
 	}
 }

@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -745,22 +744,22 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addEditModeInputLineButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addEditModeInputLineButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(editModeInputLineButton, listener, keyListener);
 	}
 
 	@Override
-	public void addEditModeLineSelectionButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addEditModeLineSelectionButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(editModeLineSelectionButton, listener, keyListener);
 	}
 
 	@Override
-	public void addEditModeDeleteLineButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addEditModeDeleteLineButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(editModeDeleteLineButton, listener, keyListener);
 	}
 
 	@Override
-	public void addEditModeLineTypeButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addEditModeLineTypeButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(editModeLineTypeButton, listener, keyListener);
 	}
 
@@ -775,73 +774,73 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addEditModeAddVertexButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addEditModeAddVertexButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(editModeAddVertex, listener, keyListener);
 	}
 
 	@Override
-	public void addEditModeDeleteVertexButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addEditModeDeleteVertexButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(editModeDeleteVertex, listener, keyListener);
 	}
 
 	@Override
-	public void addSelectionButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addSelectionButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(selectionButton, listener, keyListener);
 	}
 
 	@Override
-	public void addEnlargementButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addEnlargementButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(enlargementButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLineInputDirectVButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputDirectVButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputDirectVButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLineInputOnVButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputOnVButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputOnVButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLineInputVerticalLineButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputVerticalLineButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputVerticalLineButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLineInputAngleBisectorButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputAngleBisectorButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputAngleBisectorButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLineInputTriangleSplitButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputTriangleSplitButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputTriangleSplitButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLineInputSymmetricButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputSymmetricButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputSymmetricButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLineInputMirrorButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputMirrorButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputMirrorButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLineInputByValueButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputByValueButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputByValueButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLengthButtonListener(final ActionListener listener) {
-		buttonLength.addActionListener(listener);
+	public void addLengthButtonListener(final Runnable listener) {
+		buttonLength.addActionListener(e -> listener.run());
 	}
 
 	@Override
-	public void addAngleButtonListener(final ActionListener listener) {
-		buttonAngle.addActionListener(listener);
+	public void addAngleButtonListener(final Runnable listener) {
+		buttonAngle.addActionListener(e -> listener.run());
 	}
 
 	@Override
@@ -855,12 +854,12 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addLineInputPBisectorButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputPBisectorButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputPBisectorButton, listener, keyListener);
 	}
 
 	@Override
-	public void addLineInputAngleSnapButtonListener(final ActionListener listener, final KeyListener keyListener) {
+	public void addLineInputAngleSnapButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(lineInputAngleSnapButton, listener, keyListener);
 	}
 
@@ -869,9 +868,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		angleStepCombo.addItemListener(e -> listener.accept((AngleStep) e.getItem()));
 	}
 
-	private void addButtonListener(final AbstractButton button, final ActionListener listener,
+	private void addButtonListener(final AbstractButton button, final Runnable listener,
 			final KeyListener keyListener) {
-		button.addActionListener(listener);
+		button.addActionListener(e -> listener.run());
 		button.addKeyListener(keyListener);
 	}
 

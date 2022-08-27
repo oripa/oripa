@@ -1,6 +1,5 @@
 package oripa.gui.bind.state;
 
-import java.awt.event.ActionListener;
 import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
@@ -21,7 +20,7 @@ class LocalPaintBoundStateFactory {
 	private final StateManager<EditMode> stateManager;
 	private final PaintActionSetterFactory setterFactory;
 
-	private final ActionListener[] basicActions;
+	private final Runnable[] basicActions;
 
 	/**
 	 *
@@ -32,7 +31,7 @@ class LocalPaintBoundStateFactory {
 	public LocalPaintBoundStateFactory(
 			final StateManager<EditMode> stateManager,
 			final PaintActionSetterFactory setterFactory,
-			final ActionListener[] basicActions) {
+			final Runnable[] basicActions) {
 		this.stateManager = stateManager;
 		this.setterFactory = setterFactory;
 		this.basicActions = basicActions;
@@ -60,7 +59,7 @@ class LocalPaintBoundStateFactory {
 			final Supplier<Boolean> errorDetecter,
 			final Runnable errorHandler,
 			final ChangeViewSetting changeHint,
-			final ActionListener[] actions) {
+			final Runnable[] actions) {
 
 		PaintBoundState state = new PaintBoundState(
 				stateManager, errorDetecter, errorHandler,
@@ -86,7 +85,7 @@ class LocalPaintBoundStateFactory {
 	public ApplicationState<EditMode> create(
 			final GraphicMouseAction mouseAction,
 			final ChangeViewSetting changeHint,
-			final ActionListener[] actions) {
+			final Runnable[] actions) {
 
 		ApplicationState<EditMode> state = new PaintBoundState(
 				stateManager, mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,

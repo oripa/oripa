@@ -19,7 +19,6 @@
 package oripa.gui.view.main;
 
 import java.awt.Color;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeListener;
@@ -64,53 +63,53 @@ public interface UIPanelView extends View {
 
 	Color getEstimationResultBackColor();
 
-	void addEditModeInputLineButtonListener(ActionListener listener, KeyListener keyListener);
+	void addEditModeInputLineButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addEditModeLineSelectionButtonListener(ActionListener listener, KeyListener keyListener);
+	void addEditModeLineSelectionButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addEditModeDeleteLineButtonListener(ActionListener listener, KeyListener keyListener);
+	void addEditModeDeleteLineButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addEditModeLineTypeButtonListener(ActionListener listener, KeyListener keyListener);
+	void addEditModeLineTypeButtonListener(Runnable listener, KeyListener keyListener);
 
 	void addAlterLineComboFromListener(ItemListener listener);
 
 	void addAlterLineComboToListener(ItemListener listener);
 
-	void addEditModeAddVertexButtonListener(ActionListener listener, KeyListener keyListener);
+	void addEditModeAddVertexButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addEditModeDeleteVertexButtonListener(ActionListener listener, KeyListener keyListener);
+	void addEditModeDeleteVertexButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addSelectionButtonListener(ActionListener listener, KeyListener keyListener);
+	void addSelectionButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addEnlargementButtonListener(ActionListener listener, KeyListener keyListener);
+	void addEnlargementButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLineInputDirectVButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputDirectVButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLineInputOnVButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputOnVButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLineInputVerticalLineButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputVerticalLineButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLineInputAngleBisectorButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputAngleBisectorButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLineInputTriangleSplitButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputTriangleSplitButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLineInputSymmetricButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputSymmetricButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLineInputMirrorButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputMirrorButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLineInputByValueButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputByValueButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLengthButtonListener(ActionListener listener);
+	void addLengthButtonListener(Runnable listener);
 
-	void addAngleButtonListener(ActionListener listener);
+	void addAngleButtonListener(Runnable listener);
 
 	void addLengthTextFieldListener(DocumentListener listener);
 
 	void addAngleTextFieldListener(DocumentListener listener);
 
-	void addLineInputPBisectorButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputPBisectorButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addLineInputAngleSnapButtonListener(ActionListener listener, KeyListener keyListener);
+	void addLineInputAngleSnapButtonListener(Runnable listener, KeyListener keyListener);
 
 	void addAngleStepComboListener(Consumer<AngleStep> listener);
 

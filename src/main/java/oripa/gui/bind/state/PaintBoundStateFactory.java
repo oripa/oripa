@@ -1,6 +1,5 @@
 package oripa.gui.bind.state;
 
-import java.awt.event.ActionListener;
 import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
@@ -87,30 +86,30 @@ public class PaintBoundStateFactory {
 
 		case StringID.DELETE_LINE_ID:
 			state = stateFactory.create(
-					new DeleteLineAction(), changeHint, new ActionListener[] {
-							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
+					new DeleteLineAction(), changeHint, new Runnable[] {
+							() -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.CHANGE_LINE_TYPE_ID:
 			state = stateFactory.create(
 					new ChangeLineTypeAction(uiPanelSetting),
-					changeHint, new ActionListener[] {
-							(e) -> (new ChangeOnAlterTypeButtonSelected(uiPanelSetting))
+					changeHint, new Runnable[] {
+							() -> (new ChangeOnAlterTypeButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.ADD_VERTEX_ID:
 			state = stateFactory.create(
-					new AddVertexAction(), changeHint, new ActionListener[] {
-							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
+					new AddVertexAction(), changeHint, new Runnable[] {
+							() -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
 		case StringID.DELETE_VERTEX_ID:
 			state = stateFactory.create(
-					new DeleteVertexAction(), changeHint, new ActionListener[] {
-							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
+					new DeleteVertexAction(), changeHint, new Runnable[] {
+							() -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
@@ -118,8 +117,8 @@ public class PaintBoundStateFactory {
 			// TODO make the command as usual one and get rid of the wrapper.
 			state = stateFactory.create(
 					new EditOutlineActionWrapper(stateManager, actionHolder),
-					changeHint, new ActionListener[] {
-							e -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
+					changeHint, new Runnable[] {
+							() -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			break;
 
@@ -152,8 +151,8 @@ public class PaintBoundStateFactory {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, setterFactory,
-				new ActionListener[] {
-						e -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
+				new Runnable[] {
+						() -> (new ChangeOnSelectButtonSelected(uiPanelSetting))
 								.changeViewSetting() });
 
 		switch (id) {
@@ -197,8 +196,8 @@ public class PaintBoundStateFactory {
 
 		LocalPaintBoundStateFactory stateFactory = new LocalPaintBoundStateFactory(
 				stateManager, setterFactory,
-				new ActionListener[] {
-						e -> (new ChangeOnPaintInputButtonSelected(uiPanelSetting))
+				new Runnable[] {
+						() -> (new ChangeOnPaintInputButtonSelected(uiPanelSetting))
 								.changeViewSetting() });
 
 		switch (id) {
@@ -232,8 +231,8 @@ public class PaintBoundStateFactory {
 
 		case StringID.BY_VALUE_ID:
 			LocalPaintBoundStateFactory byValueFactory = new LocalPaintBoundStateFactory(
-					stateManager, setterFactory, new ActionListener[] {
-							e -> (new ChangeOnByValueButtonSelected(uiPanelSetting))
+					stateManager, setterFactory, new Runnable[] {
+							() -> (new ChangeOnByValueButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			return byValueFactory.create(
 					new LineByValueAction(uiPanelSetting.getValueSetting()),
@@ -245,8 +244,8 @@ public class PaintBoundStateFactory {
 
 		case StringID.ANGLE_SNAP_ID:
 			LocalPaintBoundStateFactory angleSnapFactory = new LocalPaintBoundStateFactory(
-					stateManager, setterFactory, new ActionListener[] {
-							e -> (new ChangeOnAngleSnapButtonSelected(uiPanelSetting))
+					stateManager, setterFactory, new Runnable[] {
+							() -> (new ChangeOnAngleSnapButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			return angleSnapFactory.create(
 					new AngleSnapAction(), changeHint, null);

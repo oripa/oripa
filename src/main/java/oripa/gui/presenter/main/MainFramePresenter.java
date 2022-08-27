@@ -286,7 +286,7 @@ public class MainFramePresenter {
 							otherCreasePattern.forEach(l -> l.selected = true);
 							paintContext.getCreasePattern().addAll(otherCreasePattern);
 						});
-				state.performActions(null);
+				state.performActions();
 			} catch (IllegalArgumentException | FileVersionError | WrongDataFormatException | IOException ex) {
 				logger.error("failed to load (import)", ex);
 				view.showLoadFailureErrorMessage(ex);
@@ -300,16 +300,16 @@ public class MainFramePresenter {
 		 */
 		var changeOutlineState = stateFactory.create(StringID.EDIT_CONTOUR_ID,
 				null, null);
-		view.addChangeOutlineButtonListener(() -> changeOutlineState.performActions(null));
+		view.addChangeOutlineButtonListener(changeOutlineState::performActions);
 
 		/*
 		 * For selecting all lines
 		 */
 		var selectAllState = stateFactory.create(StringID.SELECT_ALL_LINE_ID,
 				null, null);
-		view.addSelectAllButtonListener(() -> selectAllState.performActions(null));
+		view.addSelectAllButtonListener(selectAllState::performActions);
 		var selectAllListener = new SelectAllLineActionListener(paintContext);
-		view.addSelectAllButtonListener(() -> selectAllListener.actionPerformed(null));
+		view.addSelectAllButtonListener(selectAllListener);
 
 		/*
 		 * For starting copy-and-paste
@@ -317,14 +317,14 @@ public class MainFramePresenter {
 		Supplier<Boolean> detectCopyPasteError = () -> paintContext.getPainter().countSelectedLines() == 0;
 		var copyPasteState = stateFactory.create(StringID.COPY_PASTE_ID,
 				detectCopyPasteError, view::showCopyPasteErrorMessage);
-		view.addCopyAndPasteButtonListener(() -> copyPasteState.performActions(null));
+		view.addCopyAndPasteButtonListener(copyPasteState::performActions);
 
 		/*
 		 * For starting cut-and-paste
 		 */
 		var cutPasteState = stateFactory.create(StringID.CUT_PASTE_ID,
 				detectCopyPasteError, view::showCopyPasteErrorMessage);
-		view.addCutAndPasteButtonListener(() -> cutPasteState.performActions(null));
+		view.addCutAndPasteButtonListener(cutPasteState::performActions);
 
 		var statePopper = new StatePopper<EditMode>(stateManager);
 		var unselectListener = new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
