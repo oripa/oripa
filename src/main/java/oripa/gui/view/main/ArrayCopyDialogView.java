@@ -18,16 +18,38 @@
  */
 package oripa.gui.view.main;
 
-import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import java.util.function.Supplier;
+
 import oripa.gui.view.DialogView;
-import oripa.gui.view.FrameView;
 
 /**
  * @author OUCHI Koji
  *
  */
-// TODO remove objects not in view layer
-public interface CopyDialogFactory {
-	DialogView create(FrameView owner, PaintContext paintContext, ScreenUpdater screenUpdater);
+public interface ArrayCopyDialogView extends DialogView {
+
+	int getRowSize();
+
+	void setRowSize(int rowSize);
+
+	int getColumnSize();
+
+	void setColumnSize(int columnSize);
+
+	double getIntervalX();
+
+	void setIntervalX(double intervalX);
+
+	double getIntervalY();
+
+	void setIntervalY(double intervalY);
+
+	boolean shouldFillUp();
+
+	void setFillUp(boolean fillUp);
+
+	void setOKButtonListener(Supplier<Boolean> listener);
+
+	void showWrongInputMessage();
+
 }

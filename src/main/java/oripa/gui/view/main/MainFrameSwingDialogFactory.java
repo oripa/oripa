@@ -18,9 +18,6 @@
  */
 package oripa.gui.view.main;
 
-import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
-import oripa.gui.view.DialogView;
 import oripa.gui.view.FrameView;
 
 /**
@@ -29,7 +26,7 @@ import oripa.gui.view.FrameView;
  */
 public class MainFrameSwingDialogFactory implements MainFrameDialogFactory {
 
-	private final CopyDialogFactory arrayCopyDialogFactory;
+	private final ArrayCopyDialogFactory arrayCopyDialogFactory;
 	private final CircleCopyDialogFactory circleCopyDialogFactory;
 	private final PropertyDialogFactory propertyDialogFactory;
 
@@ -42,9 +39,8 @@ public class MainFrameSwingDialogFactory implements MainFrameDialogFactory {
 	}
 
 	@Override
-	public DialogView createArrayCopyDialog(final FrameView owner, final PaintContext paintContext,
-			final ScreenUpdater screenUpdater) {
-		return arrayCopyDialogFactory.create(owner, paintContext, screenUpdater);
+	public ArrayCopyDialogView createArrayCopyDialog(final FrameView owner) {
+		return arrayCopyDialogFactory.create(owner);
 	}
 
 	@Override

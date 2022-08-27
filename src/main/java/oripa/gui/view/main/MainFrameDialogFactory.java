@@ -18,9 +18,6 @@
  */
 package oripa.gui.view.main;
 
-import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
-import oripa.gui.view.DialogView;
 import oripa.gui.view.FrameView;
 
 /**
@@ -29,8 +26,7 @@ import oripa.gui.view.FrameView;
  */
 // TODO remove objects not in view layer
 public interface MainFrameDialogFactory {
-	public DialogView createArrayCopyDialog(final FrameView owner, final PaintContext paintContext,
-			final ScreenUpdater screenUpdater);
+	public ArrayCopyDialogView createArrayCopyDialog(final FrameView owner);
 
 	public CircleCopyDialogView createCircleCopyDialog(final FrameView owner);
 

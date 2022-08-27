@@ -19,6 +19,8 @@
 package oripa.gui.view.main;
 
 import java.awt.Rectangle;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -29,17 +31,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.arraycopy.ArrayCopyFillerCommand;
-import oripa.domain.paint.arraycopy.ArrayCopyTilerCommand;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
-import oripa.gui.view.DialogView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.util.Command;
 
-public class ArrayCopyDialog extends JDialog implements DialogView {
+public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 
@@ -57,23 +53,17 @@ public class ArrayCopyDialog extends JDialog implements DialogView {
 	private JTextField jTextFieldIntY = null;
 	private JButton jButtonOK = null;
 	private JButton jButtonCancel = null;
-	private int m_row, m_col;
-	private double m_interX, m_interY;
-	private boolean m_bFillSheet;
 
 	private final JFrame owner;
-	private final ScreenUpdater screenUpdater;
 
 	/**
 	 * @param owner
 	 */
-	public ArrayCopyDialog(final JFrame owner, final PaintContext context, final ScreenUpdater screenUpdater) {
+	public ArrayCopyDialog(final JFrame owner) {
 		super(owner);
 		this.owner = owner;
 
-		this.screenUpdater = screenUpdater;
-
-		initialize(context);
+		initialize();
 	}
 
 	/**
@@ -81,12 +71,12 @@ public class ArrayCopyDialog extends JDialog implements DialogView {
 	 *
 	 * @return void
 	 */
-	private void initialize(final PaintContext context) {
+	private void initialize() {
 		this.setSize(123, 249);
 		this.setLocation(owner.getLocation().x + 200,
 				owner.getLocation().y + 100);
 		this.setTitle(resources.getString(ResourceKey.LABEL, StringID.Main.ARRAY_COPY_DIALOG_TITLE_ID));
-		this.setContentPane(getJContentPane(context));
+		this.setContentPane(getJContentPane());
 	}
 
 	/**
@@ -94,7 +84,7 @@ public class ArrayCopyDialog extends JDialog implements DialogView {
 	 *
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJContentPane(final PaintContext context) {
+	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jLabelIntY = new JLabel();
 			jLabelIntY.setBounds(new Rectangle(5, 130, 26, 21));
@@ -132,7 +122,7 @@ public class ArrayCopyDialog extends JDialog implements DialogView {
 			jContentPane.add(jLabelIntY, null);
 			jContentPane.add(getJTextFieldIntX(), null);
 			jContentPane.add(getJTextFieldIntY(), null);
-			jContentPane.add(getJButtonOK(context), null);
+			jContentPane.add(getJButtonOK(), null);
 			jContentPane.add(getJButtonCancel(), null);
 		}
 		return jContentPane;
@@ -233,62 +223,11 @@ public class ArrayCopyDialog extends JDialog implements DialogView {
 	 *
 	 * @return javax.swing.JButton
 	 */
-	private JButton getJButtonOK(final PaintContext context) {
+	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton();
 			jButtonOK.setBounds(new Rectangle(10, 160, 96, 21));
 			jButtonOK.setText("OK");
-			jButtonOK.addActionListener(new java.awt.event.ActionListener() {
-
-				@Override
-				public void actionPerformed(final java.awt.event.ActionEvent e) {
-					try {
-						m_row = Integer.valueOf(jTextFieldX.getText());
-					} catch (Exception ex) {
-						m_row = 0;
-					}
-
-					try {
-						m_col = Integer.valueOf(jTextFieldY.getText());
-					} catch (Exception ex) {
-						m_col = 0;
-					}
-
-					try {
-						m_interX = Double.valueOf(jTextFieldIntX.getText());
-					} catch (Exception ex) {
-						m_interX = 0;
-					}
-
-					try {
-						m_interY = Double.valueOf(jTextFieldIntY.getText());
-					} catch (Exception ey) {
-						m_interY = 0;
-					}
-
-					m_bFillSheet = jCheckBoxFill.isSelected();
-
-					if (!m_bFillSheet && (m_row == 0 || m_col == 0)) {
-						JOptionPane.showMessageDialog(
-								owner, "Specify non-Zero value to Row and Col.",
-								"Array Copy",
-								JOptionPane.INFORMATION_MESSAGE);
-
-					} else {
-						Command command;
-						if (m_bFillSheet) {
-							command = new ArrayCopyFillerCommand(context);
-						} else {
-							command = new ArrayCopyTilerCommand(m_row, m_col, m_interX, m_interY, context);
-						}
-						command.execute();
-
-						screenUpdater.updateScreen();
-
-						setVisible(false);
-					}
-				}
-			});
 		}
 		return jButtonOK;
 	}
@@ -303,19 +242,97 @@ public class ArrayCopyDialog extends JDialog implements DialogView {
 			jButtonCancel = new JButton();
 			jButtonCancel.setBounds(new Rectangle(10, 185, 96, 21));
 			jButtonCancel.setText("Cancel");
-			jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
-
-				@Override
-				public void actionPerformed(final java.awt.event.ActionEvent e) {
-					setVisible(false);
-				}
-			});
+			jButtonCancel.addActionListener(e -> dispose());
 		}
 		return jButtonCancel;
 	}
 
 	@Override
+	public int getRowSize() {
+		try {
+			return Integer.valueOf(jTextFieldX.getText());
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	@Override
+	public void setRowSize(final int rowSize) {
+		jTextFieldX.setText(Integer.toString(rowSize));
+	}
+
+	@Override
+	public int getColumnSize() {
+		try {
+			return Integer.valueOf(jTextFieldY.getText());
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	@Override
+	public void setColumnSize(final int columnSize) {
+		jTextFieldY.setText(Integer.toString(columnSize));
+	}
+
+	@Override
+	public double getIntervalX() {
+		try {
+			return Double.valueOf(jTextFieldIntX.getText());
+		} catch (Exception ex) {
+			return 0;
+		}
+	}
+
+	@Override
+	public void setIntervalX(final double intervalX) {
+		jTextFieldIntX.setText(Double.toString(intervalX));
+	}
+
+	@Override
+	public double getIntervalY() {
+		try {
+			return Double.valueOf(jTextFieldIntY.getText());
+		} catch (Exception ex) {
+			return 0;
+		}
+	}
+
+	@Override
+	public void setIntervalY(final double intervalY) {
+		jTextFieldIntY.setText(Double.toString(intervalY));
+	}
+
+	@Override
+	public boolean shouldFillUp() {
+		return jCheckBoxFill.isSelected();
+	}
+
+	@Override
+	public void setFillUp(final boolean fillUp) {
+		jCheckBoxFill.setSelected(fillUp);
+	}
+
+	@Override
+	public void setOKButtonListener(final Supplier<Boolean> listener) {
+		Stream.of(jButtonOK.getActionListeners()).forEach(l -> jButtonOK.removeActionListener(l));
+		jButtonOK.addActionListener(e -> {
+			if (listener.get()) {
+				dispose();
+			}
+		});
+	}
+
+	@Override
 	public void setViewVisible(final boolean visible) {
 		setVisible(visible);
+	}
+
+	@Override
+	public void showWrongInputMessage() {
+		JOptionPane.showMessageDialog(
+				owner, "Specify non-Zero value to Row and Col.",
+				"Array Copy",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 }

@@ -426,11 +426,11 @@ public class MainFramePresenter {
 			return;
 		}
 
-		var dialog = dialogFactory.createArrayCopyDialog(view, paintContext, screenUpdater);
+		var dialog = dialogFactory.createArrayCopyDialog(view);
 
-		// TODO dialog presenter here.
+		var presenter = new ArrayCopyDialogPresenter(dialog, paintContext, screenUpdater);
 
-		dialog.setViewVisible(true);
+		presenter.setViewVisible(true);
 	}
 
 	private void showCircleCopyDialog() {
