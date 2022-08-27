@@ -24,7 +24,6 @@ import oripa.gui.view.FrameView;
  * @author OUCHI Koji
  *
  */
-// TODO remove objects not in view layer
 public interface MainFrameDialogFactory {
 	public ArrayCopyDialogView createArrayCopyDialog(final FrameView owner);
 

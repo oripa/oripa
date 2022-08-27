@@ -31,7 +31,6 @@ import oripa.gui.view.FrameView;
  * @author Koji
  *
  */
-//TODO use View interface, not JComponent.
 public class ChildFrameManager {
 	private static final Logger logger = LoggerFactory.getLogger(ChildFrameManager.class);
 
