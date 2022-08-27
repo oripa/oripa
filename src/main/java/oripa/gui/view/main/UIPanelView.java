@@ -45,6 +45,10 @@ public interface UIPanelView extends View {
 
 	void initializeButtonSelection();
 
+	void addItemOfAlterLineComboFrom(String item);
+
+	void addItemOfAlterLineComboTo(String item);
+
 	void addGridSmallButtonListener(Runnable listener);
 
 	void addGridLargeButtonListener(Runnable listener);

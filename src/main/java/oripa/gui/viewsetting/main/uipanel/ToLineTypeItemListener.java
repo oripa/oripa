@@ -3,8 +3,6 @@ package oripa.gui.viewsetting.main.uipanel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import oripa.domain.cptool.TypeForChange;
-
 public class ToLineTypeItemListener implements ItemListener {
 	private final UIPanelSetting setting;
 
@@ -18,8 +16,7 @@ public class ToLineTypeItemListener implements ItemListener {
 	@Override
 	public void itemStateChanged(final ItemEvent e) {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
-			setting.setTypeTo(
-					(TypeForChange) e.getItem());
+			setting.setTypeTo((String) e.getItem());
 		}
 	}
 }

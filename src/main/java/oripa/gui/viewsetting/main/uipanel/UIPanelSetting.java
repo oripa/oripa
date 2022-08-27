@@ -52,8 +52,8 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		return typeFrom;
 	}
 
-	public void setTypeFrom(final TypeForChange typeFrom) {
-		this.typeFrom = typeFrom;
+	public void setTypeFrom(final String typeFrom) {
+		this.typeFrom = TypeForChange.fromString(typeFrom).get();
 	}
 
 	@Override
@@ -61,8 +61,8 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		return typeTo;
 	}
 
-	public void setTypeTo(final TypeForChange typeTo) {
-		this.typeTo = typeTo;
+	public void setTypeTo(final String typeTo) {
+		this.typeTo = TypeForChange.fromString(typeTo).get();
 	}
 
 	public boolean isByValuePanelVisible() {

@@ -18,11 +18,14 @@
  */
 package oripa.gui.presenter.main;
 
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.appstate.CommandStatePopper;
 import oripa.appstate.StateManager;
+import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
@@ -59,6 +62,13 @@ public class UIPanelPresenter {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanelPresenter.class);
 
 	private final UIPanelView view;
+
+	private final TypeForChange[] alterLineComboDataFrom = {
+			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
+			TypeForChange.CUT };
+	private final TypeForChange[] alterLineComboDataTo = {
+			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
+			TypeForChange.CUT, TypeForChange.DELETE, };
 
 	private final UIPanelSetting setting;
 	private final ValueSetting valueSetting;
@@ -103,6 +113,9 @@ public class UIPanelPresenter {
 
 		this.mainScreenSetting = mainScreenSetting;
 		this.cutOutlinesHolder = cutOutlinesHolder;
+
+		Stream.of(alterLineComboDataFrom).forEach(item -> view.addItemOfAlterLineComboFrom(item.toString()));
+		Stream.of(alterLineComboDataTo).forEach(item -> view.addItemOfAlterLineComboTo(item.toString()));
 
 		addListeners();
 

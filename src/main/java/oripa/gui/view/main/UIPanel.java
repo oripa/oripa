@@ -47,7 +47,6 @@ import javax.swing.event.DocumentListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cptool.TypeForChange;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.view.View;
@@ -138,17 +137,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// AlterLineTypePanel
 	private final JPanel alterLineTypePanel = new JPanel();
 
-	private final TypeForChange[] alterLineComboDataFrom = {
-			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
-			TypeForChange.CUT };
-	private final TypeForChange[] alterLineComboDataTo = {
-			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
-			TypeForChange.CUT, TypeForChange.DELETE, };
-
-	private final JComboBox<TypeForChange> alterLineComboFrom = new JComboBox<>(
-			alterLineComboDataFrom);
-	private final JComboBox<TypeForChange> alterLineComboTo = new JComboBox<>(
-			alterLineComboDataTo);
+	private final JComboBox<String> alterLineComboFrom = new JComboBox<>();
+	private final JComboBox<String> alterLineComboTo = new JComboBox<>();
 
 	// Angle Step Panel
 	private final JPanel angleStepComboPanel = new JPanel();
@@ -301,10 +291,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 		lineInputDirectVButton.doClick();
 
 		// of line type on setting
-		setting.setTypeFrom((TypeForChange) alterLineComboFrom
-				.getSelectedItem());
-		setting.setTypeTo((TypeForChange) alterLineComboTo
-				.getSelectedItem());
+		setting.setTypeFrom((String) alterLineComboFrom.getSelectedItem());
+		setting.setTypeTo((String) alterLineComboTo.getSelectedItem());
 
 		doFullEstimationCheckBox.setSelected(true);
 		lineTypeMountainButton.doClick();
@@ -741,6 +729,16 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private void setButtonIcon(final AbstractButton button, final ButtonIcon icon) {
 		button.setIcon(icon.loadIcon());
 		button.setSelectedIcon(icon.loadSelectedIcon());
+	}
+
+	@Override
+	public void addItemOfAlterLineComboFrom(final String item) {
+		alterLineComboFrom.addItem(item);
+	}
+
+	@Override
+	public void addItemOfAlterLineComboTo(final String item) {
+		alterLineComboTo.addItem(item);
 	}
 
 	@Override
