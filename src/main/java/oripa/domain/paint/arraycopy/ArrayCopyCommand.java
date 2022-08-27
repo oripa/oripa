@@ -46,8 +46,8 @@ public class ArrayCopyCommand extends ValidatablePaintCommand {
 		if (parameter.shouldFillUp()) {
 			painter.fillUp(context.getPickedLines());
 		} else {
-			int row = parameter.getRowSize();
-			int col = parameter.getColumnSize();
+			int row = parameter.getRowCount();
+			int col = parameter.getColumnCount();
 
 			double interX = parameter.getIntervalX();
 			double interY = parameter.getIntervalY();

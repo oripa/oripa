@@ -41,10 +41,10 @@ public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
-	private JTextField jTextFieldX = null;
+	private JTextField jTextFieldRow = null;
 	private JLabel jLabelRow = null;
 	private JLabel jLabelCol = null;
-	private JTextField jTextFieldY = null;
+	private JTextField jTextFieldCol = null;
 	private JCheckBox jCheckBoxFill = null;
 	private JLabel jLabelInterval = null;
 	private JLabel jLabelIntX = null;
@@ -112,10 +112,10 @@ public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 
 			jContentPane = new JPanel();
 			jContentPane.setLayout(null);
-			jContentPane.add(getJTextFieldX(), null);
+			jContentPane.add(getJTextFieldRow(), null);
 			jContentPane.add(jLabelRow, null);
 			jContentPane.add(jLabelCol, null);
-			jContentPane.add(getJTextFieldY(), null);
+			jContentPane.add(getJTextFieldCol(), null);
 			jContentPane.add(getJCheckBoxFill(), null);
 			jContentPane.add(jLabelInterval, null);
 			jContentPane.add(jLabelIntX, null);
@@ -133,14 +133,14 @@ public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 	 *
 	 * @return javax.swing.JTextField
 	 */
-	private JTextField getJTextFieldX() {
-		if (jTextFieldX == null) {
-			jTextFieldX = new JTextField();
-			jTextFieldX.setBounds(new Rectangle(60, 30, 41, 21));
-			jTextFieldX.setHorizontalAlignment(JTextField.RIGHT);
-			jTextFieldX.setEnabled(false);
+	private JTextField getJTextFieldRow() {
+		if (jTextFieldRow == null) {
+			jTextFieldRow = new JTextField();
+			jTextFieldRow.setBounds(new Rectangle(60, 30, 41, 21));
+			jTextFieldRow.setHorizontalAlignment(JTextField.RIGHT);
+			jTextFieldRow.setEnabled(false);
 		}
-		return jTextFieldX;
+		return jTextFieldRow;
 	}
 
 	/**
@@ -148,14 +148,14 @@ public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 	 *
 	 * @return javax.swing.JTextField
 	 */
-	private JTextField getJTextFieldY() {
-		if (jTextFieldY == null) {
-			jTextFieldY = new JTextField();
-			jTextFieldY.setBounds(new Rectangle(60, 55, 41, 21));
-			jTextFieldY.setHorizontalAlignment(JTextField.RIGHT);
-			jTextFieldY.setEnabled(false);
+	private JTextField getJTextFieldCol() {
+		if (jTextFieldCol == null) {
+			jTextFieldCol = new JTextField();
+			jTextFieldCol.setBounds(new Rectangle(60, 55, 41, 21));
+			jTextFieldCol.setHorizontalAlignment(JTextField.RIGHT);
+			jTextFieldCol.setEnabled(false);
 		}
-		return jTextFieldY;
+		return jTextFieldCol;
 	}
 
 	/**
@@ -173,8 +173,8 @@ public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 
 				@Override
 				public void itemStateChanged(final java.awt.event.ItemEvent e) {
-					jTextFieldX.setEnabled(!jCheckBoxFill.isSelected());
-					jTextFieldY.setEnabled(!jCheckBoxFill.isSelected());
+					jTextFieldRow.setEnabled(!jCheckBoxFill.isSelected());
+					jTextFieldCol.setEnabled(!jCheckBoxFill.isSelected());
 					jLabelRow.setEnabled(!jCheckBoxFill.isSelected());
 					jLabelCol.setEnabled(!jCheckBoxFill.isSelected());
 
@@ -248,31 +248,31 @@ public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 	}
 
 	@Override
-	public int getRowSize() {
+	public int getRowCount() {
 		try {
-			return Integer.valueOf(jTextFieldX.getText());
+			return Integer.valueOf(jTextFieldRow.getText());
 		} catch (Exception e) {
 			return 0;
 		}
 	}
 
 	@Override
-	public void setRowSize(final int rowSize) {
-		jTextFieldX.setText(Integer.toString(rowSize));
+	public void setRowCount(final int rowCount) {
+		jTextFieldRow.setText(Integer.toString(rowCount));
 	}
 
 	@Override
-	public int getColumnSize() {
+	public int getColumnCount() {
 		try {
-			return Integer.valueOf(jTextFieldY.getText());
+			return Integer.valueOf(jTextFieldCol.getText());
 		} catch (Exception e) {
 			return 0;
 		}
 	}
 
 	@Override
-	public void setColumnSize(final int columnSize) {
-		jTextFieldY.setText(Integer.toString(columnSize));
+	public void setColumnCount(final int columnCount) {
+		jTextFieldCol.setText(Integer.toString(columnCount));
 	}
 
 	@Override

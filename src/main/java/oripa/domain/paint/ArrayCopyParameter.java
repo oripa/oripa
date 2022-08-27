@@ -24,16 +24,16 @@ package oripa.domain.paint;
  */
 public class ArrayCopyParameter {
 	private final boolean fillUp;
-	private final int rowSize;
-	private final int columnSize;
+	private final int rowCount;
+	private final int columnCount;
 	private final double intervalX;
 	private final double intervalY;
 
-	public ArrayCopyParameter(final boolean fillUp, final int rowSize, final int columnSize,
+	public ArrayCopyParameter(final boolean fillUp, final int rowCount, final int columnCount,
 			final double intervalX, final double intervalY) {
 		this.fillUp = fillUp;
-		this.rowSize = rowSize;
-		this.columnSize = columnSize;
+		this.rowCount = rowCount;
+		this.columnCount = columnCount;
 		this.intervalX = intervalX;
 		this.intervalY = intervalY;
 	}
@@ -42,12 +42,12 @@ public class ArrayCopyParameter {
 		return fillUp;
 	}
 
-	public int getRowSize() {
-		return rowSize;
+	public int getRowCount() {
+		return rowCount;
 	}
 
-	public int getColumnSize() {
-		return columnSize;
+	public int getColumnCount() {
+		return columnCount;
 	}
 
 	public double getIntervalX() {

@@ -56,8 +56,8 @@ public class ArrayCopyDialogPresenter {
 		}
 
 		view.setFillUp(parameter.shouldFillUp());
-		view.setRowSize(parameter.getRowSize());
-		view.setColumnSize(parameter.getColumnSize());
+		view.setRowCount(parameter.getRowCount());
+		view.setColumnCount(parameter.getColumnCount());
 		view.setIntervalX(parameter.getIntervalX());
 		view.setIntervalY(parameter.getIntervalY());
 	}
@@ -65,18 +65,18 @@ public class ArrayCopyDialogPresenter {
 	private boolean doArrayCopy() {
 
 		boolean shouldFillUp = view.shouldFillUp();
-		int rowSize = view.getRowSize();
-		int columnSize = view.getColumnSize();
+		int rowCount = view.getRowCount();
+		int columnCount = view.getColumnCount();
 		double intervalX = view.getIntervalX();
 		double intervalY = view.getIntervalY();
 
-		if (!shouldFillUp && (rowSize == 0 || columnSize == 0)) {
+		if (!shouldFillUp && (rowCount == 0 || columnCount == 0)) {
 			view.showWrongInputMessage();
 			return false;
 		}
 
 		paintContext.setArrayCopyParameter(
-				new ArrayCopyParameter(shouldFillUp, rowSize, columnSize, intervalX, intervalY));
+				new ArrayCopyParameter(shouldFillUp, rowCount, columnCount, intervalX, intervalY));
 
 		Command command = new ArrayCopyCommand(paintContext);
 		command.execute();

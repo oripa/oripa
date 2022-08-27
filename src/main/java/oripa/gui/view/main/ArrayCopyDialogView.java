@@ -28,13 +28,13 @@ import oripa.gui.view.DialogView;
  */
 public interface ArrayCopyDialogView extends DialogView {
 
-	int getRowSize();
+	int getRowCount();
 
-	void setRowSize(int rowSize);
+	void setRowCount(int rowCount);
 
-	int getColumnSize();
+	int getColumnCount();
 
-	void setColumnSize(int columnSize);
+	void setColumnCount(int columnCount);
 
 	double getIntervalX();
 
