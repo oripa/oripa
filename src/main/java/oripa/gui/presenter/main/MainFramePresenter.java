@@ -329,12 +329,10 @@ public class MainFramePresenter {
 		var statePopper = new StatePopper<EditMode>(stateManager);
 		var unselectListener = new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
 				screenUpdater);
-		view.addUnselectAllButtonListener(
-				() -> unselectListener.actionPerformed(null));
+		view.addUnselectAllButtonListener(unselectListener);
 
 		var deleteLinesListener = new DeleteSelectedLinesActionListener(paintContext, screenUpdater);
-		view.addDeleteSelectedLinesButtonListener(
-				() -> deleteLinesListener.actionPerformed(null));
+		view.addDeleteSelectedLinesButtonListener(deleteLinesListener);
 
 	}
 
