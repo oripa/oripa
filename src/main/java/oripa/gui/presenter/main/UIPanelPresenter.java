@@ -257,27 +257,29 @@ public class UIPanelPresenter {
 	}
 
 	private void makeGridSizeHalf() {
-		if (paintContext.getGridDivNum() < 65) {
-			paintContext.setGridDivNum(paintContext.getGridDivNum() * 2);
-			view.setGridDivNum(paintContext.getGridDivNum());
-
-			screenUpdater.updateScreen();
-		}
+		setGridDivNumIfValid(paintContext.getGridDivNum() * 2);
 	}
 
 	private void makeGridSizeTwiceLarge() {
-		if (paintContext.getGridDivNum() > 3) {
-			paintContext.setGridDivNum(paintContext.getGridDivNum() / 2);
-			view.setGridDivNum(paintContext.getGridDivNum());
-
-			screenUpdater.updateScreen();
-		}
+		setGridDivNumIfValid(paintContext.getGridDivNum() / 2);
 	}
 
 	private void updateGridDivNum(final int gridDivNum) {
+		setGridDivNumIfValid(gridDivNum);
+	}
+
+	private void setGridDivNumIfValid(final int gridDivNum) {
+		if (!isValidGridDivNum(gridDivNum)) {
+			return;
+		}
 		paintContext.setGridDivNum(gridDivNum);
+		view.setGridDivNum(gridDivNum);
 
 		screenUpdater.updateScreen();
+	}
+
+	private boolean isValidGridDivNum(final int gridDivNum) {
+		return gridDivNum >= 2 && gridDivNum <= 128;
 	}
 
 	/**
