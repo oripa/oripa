@@ -368,7 +368,7 @@ public class Painter {
 	 *
 	 * @param selectedLines
 	 */
-	public void fillOut(final Collection<OriLine> selectedLines) {
+	public void fillUp(final Collection<OriLine> selectedLines) {
 		Collection<OriLine> copiedLines = tileFactory.createFullyTiledLines(
 				selectedLines, creasePattern,
 				creasePattern.getPaperSize());

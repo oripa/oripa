@@ -16,31 +16,46 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.arraycopy;
-
-import oripa.domain.cptool.Painter;
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.ValidatablePaintCommand;
+package oripa.domain.paint;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class ArrayCopyFillerCommand extends ValidatablePaintCommand {
-	private final PaintContext context;
+public class ArrayCopyParameter {
+	private final boolean fillUp;
+	private final int rowSize;
+	private final int columnSize;
+	private final double intervalX;
+	private final double intervalY;
 
-	public ArrayCopyFillerCommand(final PaintContext context) {
-		this.context = context;
+	public ArrayCopyParameter(final boolean fillUp, final int rowSize, final int columnSize,
+			final double intervalX, final double intervalY) {
+		this.fillUp = fillUp;
+		this.rowSize = rowSize;
+		this.columnSize = columnSize;
+		this.intervalX = intervalX;
+		this.intervalY = intervalY;
 	}
 
-	@Override
-	public void execute() {
-		validateThat(() -> context.getLineCount() > 0, "Wrong state. There should be one or more pickedLines.");
+	public boolean shouldFillUp() {
+		return fillUp;
+	}
 
-		context.creasePatternUndo().pushUndoInfo();
+	public int getRowSize() {
+		return rowSize;
+	}
 
-		Painter painter = context.getPainter();
-		painter.fillOut(context.getPickedLines());
+	public int getColumnSize() {
+		return columnSize;
+	}
+
+	public double getIntervalX() {
+		return intervalX;
+	}
+
+	public double getIntervalY() {
+		return intervalY;
 	}
 
 }

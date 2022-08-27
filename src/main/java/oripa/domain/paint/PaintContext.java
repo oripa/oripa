@@ -186,4 +186,7 @@ public interface PaintContext extends CreasePatternHolder {
 
 	public CircleCopyParameter getCircleCopyParameter();
 
+	public void setArrayCopyParameter(ArrayCopyParameter p);
+
+	public ArrayCopyParameter getArrayCopyParameter();
 }

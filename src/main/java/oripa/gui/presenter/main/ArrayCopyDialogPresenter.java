@@ -18,9 +18,9 @@
  */
 package oripa.gui.presenter.main;
 
+import oripa.domain.paint.ArrayCopyParameter;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.arraycopy.ArrayCopyFillerCommand;
-import oripa.domain.paint.arraycopy.ArrayCopyTilerCommand;
+import oripa.domain.paint.arraycopy.ArrayCopyCommand;
 import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.gui.view.main.ArrayCopyDialogView;
 import oripa.util.Command;
@@ -43,7 +43,23 @@ public class ArrayCopyDialogPresenter {
 		this.paintContext = paintContext;
 		this.screenUpdater = screenUpdater;
 
+		setParameterToView();
+
 		view.setOKButtonListener(this::doArrayCopy);
+	}
+
+	private void setParameterToView() {
+		var parameter = paintContext.getArrayCopyParameter();
+
+		if (parameter == null) {
+			return;
+		}
+
+		view.setFillUp(parameter.shouldFillUp());
+		view.setRowSize(parameter.getRowSize());
+		view.setColumnSize(parameter.getColumnSize());
+		view.setIntervalX(parameter.getIntervalX());
+		view.setIntervalY(parameter.getIntervalY());
 	}
 
 	private boolean doArrayCopy() {
@@ -59,12 +75,10 @@ public class ArrayCopyDialogPresenter {
 			return false;
 		}
 
-		Command command;
-		if (shouldFillUp) {
-			command = new ArrayCopyFillerCommand(paintContext);
-		} else {
-			command = new ArrayCopyTilerCommand(rowSize, columnSize, intervalX, intervalY, paintContext);
-		}
+		paintContext.setArrayCopyParameter(
+				new ArrayCopyParameter(shouldFillUp, rowSize, columnSize, intervalX, intervalY));
+
+		Command command = new ArrayCopyCommand(paintContext);
 		command.execute();
 
 		screenUpdater.updateScreen();

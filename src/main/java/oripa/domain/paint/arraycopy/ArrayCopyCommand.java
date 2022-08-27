@@ -26,19 +26,10 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  * @author OUCHI Koji
  *
  */
-public class ArrayCopyTilerCommand extends ValidatablePaintCommand {
-	private final int row, col;
-	private final double interX, interY;
+public class ArrayCopyCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
 
-	public ArrayCopyTilerCommand(final int row, final int col, final double interX, final double interY,
-			final PaintContext context) {
-		this.row = row;
-		this.col = col;
-
-		this.interX = interX;
-		this.interY = interY;
-
+	public ArrayCopyCommand(final PaintContext context) {
 		this.context = context;
 	}
 
@@ -49,6 +40,20 @@ public class ArrayCopyTilerCommand extends ValidatablePaintCommand {
 		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
-		painter.copyWithTiling(row, col, interX, interY, context.getPickedLines());
+
+		var parameter = context.getArrayCopyParameter();
+
+		if (parameter.shouldFillUp()) {
+			painter.fillUp(context.getPickedLines());
+		} else {
+			int row = parameter.getRowSize();
+			int col = parameter.getColumnSize();
+
+			double interX = parameter.getIntervalX();
+			double interY = parameter.getIntervalY();
+
+			painter.copyWithTiling(row, col, interX, interY, context.getPickedLines());
+		}
 	}
+
 }
