@@ -58,7 +58,7 @@ public interface UIPanelView extends View {
 
 	void setBuildButtonEnabled(boolean enabled);
 
-	boolean getFullEstimation();
+	boolean isFullEstimation();
 
 	Color getEstimationResultFrontColor();
 

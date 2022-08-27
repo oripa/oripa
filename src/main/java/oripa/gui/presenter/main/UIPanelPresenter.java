@@ -305,7 +305,7 @@ public class UIPanelPresenter {
 
 		computationResult = modelComputation.computeModels(
 				origamiModels,
-				view.getFullEstimation());
+				view.isFullEstimation());
 	}
 
 	private void showFoldedModelWindows() {
@@ -324,7 +324,7 @@ public class UIPanelPresenter {
 
 		EstimationResultFrameView resultFrame = null;
 
-		if (view.getFullEstimation()) {
+		if (view.isFullEstimation()) {
 			var count = computationResult.countFoldablePatterns();
 			if (count == 0) {
 				// no answer is found.

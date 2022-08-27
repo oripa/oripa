@@ -1077,7 +1077,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public boolean getFullEstimation() {
+	public boolean isFullEstimation() {
 		return doFullEstimationCheckBox.isSelected();
 	}
 
