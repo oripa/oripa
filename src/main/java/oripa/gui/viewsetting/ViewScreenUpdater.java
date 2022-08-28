@@ -6,11 +6,13 @@ public interface ViewScreenUpdater extends ScreenUpdater {
 
 	public static final String REDRAW_REQUESTED = "redraw requested";
 
+	public interface KeyProcessing {
+		public void controlKeyPressed();
 
-	/**
-	 * a option for View classes to change behavior.
-	 * @return
-	 */
-	public abstract java.awt.event.KeyListener getKeyListener();
+		public void escapeKeyPressed();
 
+		public void keyReleased();
+	}
+
+	public KeyProcessing getKeyProcessing();
 }

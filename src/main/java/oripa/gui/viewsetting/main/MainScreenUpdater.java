@@ -1,6 +1,5 @@
 package oripa.gui.viewsetting.main;
 
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.function.Consumer;
@@ -35,38 +34,28 @@ public class MainScreenUpdater implements ViewScreenUpdater {
 
 	}
 
-	private class KeyListener implements java.awt.event.KeyListener {
-		@Override
-		public void keyTyped(final KeyEvent e) {
-		}
+	private class KeyProcessingImpl implements KeyProcessing {
 
 		@Override
-		public void keyPressed(final KeyEvent e) {
-			if (e.isControlDown()) {
-				changeActionIfCopyAndPaste.accept(true);
-				updateScreen();
-			} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-				updateScreen();
-			}
-
-		}
-
-		@Override
-		public void keyReleased(final KeyEvent e) {
-			changeActionIfCopyAndPaste.accept(false);
+		public void controlKeyPressed() {
+			changeActionIfCopyAndPaste.accept(true);
 			updateScreen();
 		}
 
+		@Override
+		public void escapeKeyPressed() {
+			updateScreen();
+		}
+
+		@Override
+		public void keyReleased() {
+			changeActionIfCopyAndPaste.accept(false);
+			updateScreen();
+		}
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.viewsetting.main.ViewScreenUpdater#getKeyListener()
-	 */
 	@Override
-	public java.awt.event.KeyListener getKeyListener() {
-		return new KeyListener();
+	public KeyProcessing getKeyProcessing() {
+		return new KeyProcessingImpl();
 	}
-
 }

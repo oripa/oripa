@@ -53,6 +53,7 @@ import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
+import oripa.gui.viewsetting.ViewScreenUpdater.KeyProcessing;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ButtonIcon;
@@ -745,23 +746,23 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addEditModeInputLineButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(editModeInputLineButton, listener, keyListener);
+	public void addEditModeInputLineButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(editModeInputLineButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addEditModeLineSelectionButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(editModeLineSelectionButton, listener, keyListener);
+	public void addEditModeLineSelectionButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(editModeLineSelectionButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addEditModeDeleteLineButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(editModeDeleteLineButton, listener, keyListener);
+	public void addEditModeDeleteLineButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(editModeDeleteLineButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addEditModeLineTypeButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(editModeLineTypeButton, listener, keyListener);
+	public void addEditModeLineTypeButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(editModeLineTypeButton, listener, keyProcessing);
 	}
 
 	@Override
@@ -783,63 +784,63 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addEditModeAddVertexButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(editModeAddVertex, listener, keyListener);
+	public void addEditModeAddVertexButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(editModeAddVertex, listener, keyProcessing);
 	}
 
 	@Override
-	public void addEditModeDeleteVertexButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(editModeDeleteVertex, listener, keyListener);
+	public void addEditModeDeleteVertexButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(editModeDeleteVertex, listener, keyProcessing);
 	}
 
 	@Override
-	public void addSelectionButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(selectionButton, listener, keyListener);
+	public void addSelectionButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(selectionButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addEnlargementButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(enlargementButton, listener, keyListener);
+	public void addEnlargementButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(enlargementButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addLineInputDirectVButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputDirectVButton, listener, keyListener);
+	public void addLineInputDirectVButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputDirectVButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addLineInputOnVButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputOnVButton, listener, keyListener);
+	public void addLineInputOnVButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputOnVButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addLineInputVerticalLineButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputVerticalLineButton, listener, keyListener);
+	public void addLineInputVerticalLineButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputVerticalLineButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addLineInputAngleBisectorButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputAngleBisectorButton, listener, keyListener);
+	public void addLineInputAngleBisectorButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputAngleBisectorButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addLineInputTriangleSplitButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputTriangleSplitButton, listener, keyListener);
+	public void addLineInputTriangleSplitButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputTriangleSplitButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addLineInputSymmetricButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputSymmetricButton, listener, keyListener);
+	public void addLineInputSymmetricButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputSymmetricButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addLineInputMirrorButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputMirrorButton, listener, keyListener);
+	public void addLineInputMirrorButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputMirrorButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addLineInputByValueButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputByValueButton, listener, keyListener);
+	public void addLineInputByValueButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputByValueButton, listener, keyProcessing);
 	}
 
 	@Override
@@ -863,13 +864,13 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addLineInputPBisectorButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputPBisectorButton, listener, keyListener);
+	public void addLineInputPBisectorButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputPBisectorButton, listener, keyProcessing);
 	}
 
 	@Override
-	public void addLineInputAngleSnapButtonListener(final Runnable listener, final KeyListener keyListener) {
-		addButtonListener(lineInputAngleSnapButton, listener, keyListener);
+	public void addLineInputAngleSnapButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputAngleSnapButton, listener, keyProcessing);
 	}
 
 	@Override
@@ -878,9 +879,31 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	private void addButtonListener(final AbstractButton button, final Runnable listener,
-			final KeyListener keyListener) {
+			final KeyProcessing keyProcessing) {
 		button.addActionListener(e -> listener.run());
-		button.addKeyListener(keyListener);
+		button.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(final KeyEvent e) {
+
+			}
+
+			@Override
+			public void keyPressed(final KeyEvent e) {
+				if (e.isControlDown()) {
+					keyProcessing.controlKeyPressed();
+				} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					keyProcessing.escapeKeyPressed();
+				}
+
+			}
+
+			@Override
+			public void keyReleased(final KeyEvent e) {
+				keyProcessing.keyReleased();
+			}
+
+		});
 	}
 
 	@Override

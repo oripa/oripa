@@ -19,7 +19,6 @@
 package oripa.gui.view.main;
 
 import java.awt.Color;
-import java.awt.event.KeyListener;
 import java.beans.PropertyChangeListener;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -27,6 +26,7 @@ import java.util.function.Consumer;
 import javax.swing.event.DocumentListener;
 
 import oripa.gui.view.View;
+import oripa.gui.viewsetting.ViewScreenUpdater.KeyProcessing;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 
 /**
@@ -63,41 +63,41 @@ public interface UIPanelView extends View {
 
 	Color getEstimationResultBackColor();
 
-	void addEditModeInputLineButtonListener(Runnable listener, KeyListener keyListener);
+	void addEditModeInputLineButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEditModeLineSelectionButtonListener(Runnable listener, KeyListener keyListener);
+	void addEditModeLineSelectionButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEditModeDeleteLineButtonListener(Runnable listener, KeyListener keyListener);
+	void addEditModeDeleteLineButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEditModeLineTypeButtonListener(Runnable listener, KeyListener keyListener);
+	void addEditModeLineTypeButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
 	void addAlterLineComboFromSelectionListener(Consumer<String> listener);
 
 	void addAlterLineComboToSelectionListener(Consumer<String> listener);
 
-	void addEditModeAddVertexButtonListener(Runnable listener, KeyListener keyListener);
+	void addEditModeAddVertexButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEditModeDeleteVertexButtonListener(Runnable listener, KeyListener keyListener);
+	void addEditModeDeleteVertexButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addSelectionButtonListener(Runnable listener, KeyListener keyListener);
+	void addSelectionButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addEnlargementButtonListener(Runnable listener, KeyListener keyListener);
+	void addEnlargementButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputDirectVButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputDirectVButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputOnVButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputOnVButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputVerticalLineButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputVerticalLineButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputAngleBisectorButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputAngleBisectorButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputTriangleSplitButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputTriangleSplitButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputSymmetricButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputSymmetricButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputMirrorButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputMirrorButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputByValueButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputByValueButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
 	void addLengthButtonListener(Runnable listener);
 
@@ -107,9 +107,9 @@ public interface UIPanelView extends View {
 
 	void addAngleTextFieldListener(DocumentListener listener);
 
-	void addLineInputPBisectorButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputPBisectorButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
-	void addLineInputAngleSnapButtonListener(Runnable listener, KeyListener keyListener);
+	void addLineInputAngleSnapButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
 	void addAngleStepComboListener(Consumer<String> listener);
 
