@@ -25,10 +25,8 @@ import java.beans.PropertyChangeListener;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javax.swing.JPanel;
 import javax.swing.event.DocumentListener;
 
-import oripa.domain.paint.AngleStep;
 import oripa.gui.view.View;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 
@@ -37,17 +35,16 @@ import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
  *
  */
 public interface UIPanelView extends View {
-	default JPanel asPanel() {
-		return (JPanel) this;
-	}
 
 	UIPanelSetting getUIPanelSetting();
 
-	void initializeButtonSelection();
+	void initializeButtonSelection(String angleStep);
 
 	void addItemOfAlterLineComboFrom(String item);
 
 	void addItemOfAlterLineComboTo(String item);
+
+	void addItemOfAngleStepCombo(String item);
 
 	void addGridSmallButtonListener(Runnable listener);
 
@@ -115,7 +112,7 @@ public interface UIPanelView extends View {
 
 	void addLineInputAngleSnapButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addAngleStepComboListener(Consumer<AngleStep> listener);
+	void addAngleStepComboListener(Consumer<String> listener);
 
 	void addLineTypeMountainButtonListener(Runnable listener);
 

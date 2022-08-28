@@ -28,6 +28,7 @@ import oripa.appstate.StateManager;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.bind.state.PaintBoundStateFactory;
@@ -117,9 +118,11 @@ public class UIPanelPresenter {
 		Stream.of(alterLineComboDataFrom).forEach(item -> view.addItemOfAlterLineComboFrom(item.toString()));
 		Stream.of(alterLineComboDataTo).forEach(item -> view.addItemOfAlterLineComboTo(item.toString()));
 
+		Stream.of(AngleStep.values()).forEach(item -> view.addItemOfAngleStepCombo(item.toString()));
+
 		addListeners();
 
-		view.initializeButtonSelection();
+		view.initializeButtonSelection(AngleStep.PI_OVER_8.toString());
 	}
 
 	public void setChildFrameManager(final ChildFrameManager manager) {
@@ -222,7 +225,7 @@ public class UIPanelPresenter {
 				null, null);
 		view.addLineInputAngleSnapButtonListener(angleSnapState::performActions, screenUpdater.getKeyListener());
 
-		view.addAngleStepComboListener(step -> paintContext.setAngleStep(step));
+		view.addAngleStepComboListener(step -> paintContext.setAngleStep(AngleStep.fromString(step).get()));
 
 		view.addLineTypeMountainButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
 		view.addLineTypeValleyButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));

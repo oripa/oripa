@@ -27,7 +27,7 @@ public enum TypeForChange {
 	}
 
 	public static Optional<TypeForChange> fromString(final String s) {
-		return Stream.of(TypeForChange.values())
+		return Stream.of(values())
 				.filter(type -> type.toString().equals(s))
 				.findFirst();
 	}

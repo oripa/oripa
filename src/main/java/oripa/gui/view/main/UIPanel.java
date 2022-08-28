@@ -47,7 +47,6 @@ import javax.swing.event.DocumentListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.view.View;
 import oripa.gui.view.util.Dialogs;
@@ -143,8 +142,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// Angle Step Panel
 	private final JPanel angleStepComboPanel = new JPanel();
 
-	private final JComboBox<AngleStep> angleStepCombo = new JComboBox<>(
-			AngleStep.values());
+	private final JComboBox<String> angleStepCombo = new JComboBox<>();
 
 	// gridPanel
 	private final JPanel gridPanel = new JPanel();
@@ -279,12 +277,12 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void initializeButtonSelection() {
+	public void initializeButtonSelection(final String angleStep) {
 		// -------------------------------------------------
 		// Initialize selection
 		// -------------------------------------------------
 		editModeInputLineButton.setSelected(true);
-		angleStepCombo.setSelectedItem(AngleStep.PI_OVER_8);
+		angleStepCombo.setSelectedItem(angleStep);
 
 		// of paint command
 		selectionButton.doClick();
@@ -742,6 +740,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
+	public void addItemOfAngleStepCombo(final String item) {
+		angleStepCombo.addItem(item);
+	}
+
+	@Override
 	public void addEditModeInputLineButtonListener(final Runnable listener, final KeyListener keyListener) {
 		addButtonListener(editModeInputLineButton, listener, keyListener);
 	}
@@ -862,8 +865,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addAngleStepComboListener(final Consumer<AngleStep> listener) {
-		angleStepCombo.addItemListener(e -> listener.accept((AngleStep) e.getItem()));
+	public void addAngleStepComboListener(final Consumer<String> listener) {
+		angleStepCombo.addItemListener(e -> listener.accept((String) e.getItem()));
 	}
 
 	private void addButtonListener(final AbstractButton button, final Runnable listener,
