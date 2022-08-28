@@ -36,9 +36,7 @@ import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
-import oripa.gui.presenter.creasepattern.byvalue.AngleValueInputListener;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
-import oripa.gui.presenter.creasepattern.byvalue.LengthValueInputListener;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
@@ -211,10 +209,8 @@ public class UIPanelPresenter {
 				setterFactory.create(new LengthMeasuringAction(valueSetting)));
 		view.addAngleButtonListener(
 				setterFactory.create(new AngleMeasuringAction(valueSetting)));
-		view.addLengthTextFieldListener(
-				new LengthValueInputListener(valueSetting));
-		view.addAngleTextFieldListener(
-				new AngleValueInputListener(valueSetting));
+		view.addLengthTextFieldListener(valueSetting::setLength);
+		view.addAngleTextFieldListener(valueSetting::setAngle);
 
 		var pbisecState = stateFactory.create(StringID.PERPENDICULAR_BISECTOR_ID,
 				null, null);

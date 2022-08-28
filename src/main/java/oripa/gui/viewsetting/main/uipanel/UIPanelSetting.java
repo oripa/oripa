@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.TypeForChange;
-import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.domain.paint.linetype.TypeForChangeGettable;
 import oripa.gui.presenter.creasepattern.EditMode;
 
@@ -40,7 +39,7 @@ public class UIPanelSetting implements TypeForChangeGettable {
 	private TypeForChange typeTo = TypeForChange.EMPTY;
 	public static final String TYPE_TO = "line type of 'to' box";
 
-	private final ValueSetting valueSetting = new ValueSetting();
+	private final ByValueSetting valueSetting = new ByValueSetting();
 
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener) {
@@ -143,7 +142,7 @@ public class UIPanelSetting implements TypeForChangeGettable {
 		return ret;
 	}
 
-	public ValueSetting getValueSetting() {
+	public ByValueSetting getValueSetting() {
 		return valueSetting;
 	}
 }

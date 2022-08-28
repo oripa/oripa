@@ -23,8 +23,6 @@ import java.beans.PropertyChangeListener;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javax.swing.event.DocumentListener;
-
 import oripa.gui.view.View;
 import oripa.gui.viewsetting.ViewScreenUpdater.KeyProcessing;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
@@ -103,9 +101,9 @@ public interface UIPanelView extends View {
 
 	void addAngleButtonListener(Runnable listener);
 
-	void addLengthTextFieldListener(DocumentListener listener);
+	void addLengthTextFieldListener(Consumer<Double> listener);
 
-	void addAngleTextFieldListener(DocumentListener listener);
+	void addAngleTextFieldListener(Consumer<Double> listener);
 
 	void addLineInputPBisectorButtonListener(Runnable listener, KeyProcessing keyProcessing);
 

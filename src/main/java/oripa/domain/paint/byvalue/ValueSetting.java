@@ -1,53 +1,39 @@
+/**
+ * ORIPA - Origami Pattern Editor 
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package oripa.domain.paint.byvalue;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+/**
+ * @author OUCHI Koji
+ *
+ */
+public interface ValueSetting {
 
-public class ValueSetting {
+	double getLength();
 
-	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-
-	private double length = 0;
-	public static final String LENGTH = "length";
-
-	private double angle = 0;
-	public static final String ANGLE = "angle";
-
-	public void addPropertyChangeListener(
-			final String propertyName, final PropertyChangeListener listener) {
-		support.addPropertyChangeListener(propertyName, listener);
-	}
-
-	public double getLength() {
-		return length;
-	}
-
-	public void setLength(final double length) {
-		var old = this.length;
-		this.length = length;
-		support.firePropertyChange(LENGTH, old, length);
-	}
+	void setLength(double length);
 
 	/**
 	 *
 	 * @return angle [degree]
 	 */
-	public double getAngle() {
-		return angle;
-	}
+	double getAngle();
 
-	public void setAngle(final double angle) {
-		var old = this.angle;
-		this.angle = angle;
-		support.firePropertyChange(ANGLE, old, angle);
-	}
-//
-//	/**
-//	 * @return full-path class name
-//	 */
-//	@Override
-//	public String toString() {
-//		return this.getClass().getName();
-//	}
+	void setAngle(double angle);
 
 }

@@ -42,12 +42,13 @@ import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.view.View;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
@@ -55,6 +56,7 @@ import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
 import oripa.gui.viewsetting.ViewScreenUpdater.KeyProcessing;
 import oripa.gui.viewsetting.main.MainScreenSetting;
+import oripa.gui.viewsetting.main.uipanel.ByValueSetting;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ButtonIcon;
 import oripa.resource.Constants;
@@ -70,7 +72,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final MainDialogService dialogService = new MainDialogService(resources);
 
 	private final UIPanelSetting setting = new UIPanelSetting();
-	private final ValueSetting valueSetting = setting.getValueSetting();
+	private final ByValueSetting valueSetting = setting.getValueSetting();
 
 	// main three panels
 	private final JPanel editModePanel = new JPanel();
@@ -854,13 +856,46 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addLengthTextFieldListener(final DocumentListener listener) {
-		textFieldLength.getDocument().addDocumentListener(listener);
+	public void addLengthTextFieldListener(final Consumer<Double> listener) {
+		addMeasureDocumentListener(textFieldLength, listener);
 	}
 
 	@Override
-	public void addAngleTextFieldListener(final DocumentListener listener) {
-		textFieldAngle.getDocument().addDocumentListener(listener);
+	public void addAngleTextFieldListener(final Consumer<Double> listener) {
+		addMeasureDocumentListener(textFieldAngle, listener);
+	}
+
+	private void addMeasureDocumentListener(final JFormattedTextField field, final Consumer<Double> listener) {
+		field.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(final DocumentEvent e) {
+				setValue(e);
+
+			}
+
+			@Override
+			public void removeUpdate(final DocumentEvent e) {
+				setValue(e);
+
+			}
+
+			@Override
+			public void changedUpdate(final DocumentEvent e) {
+				setValue(e);
+			}
+
+			private void setValue(final DocumentEvent e) {
+				Document document = e.getDocument();
+				try {
+					String text = document.getText(0, document.getLength());
+					double value = Double.valueOf(text);
+
+					listener.accept(value);
+				} catch (Exception ex) {
+
+				}
+			}
+		});
 	}
 
 	@Override
@@ -902,7 +937,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 			public void keyReleased(final KeyEvent e) {
 				keyProcessing.keyReleased();
 			}
-
 		});
 	}
 
@@ -1033,10 +1067,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 				});
 
 		valueSetting.addPropertyChangeListener(
-				ValueSetting.ANGLE, e -> textFieldAngle.setValue(e.getNewValue()));
+				ByValueSetting.ANGLE, e -> textFieldAngle.setValue(e.getNewValue()));
 
 		valueSetting.addPropertyChangeListener(
-				ValueSetting.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
+				ByValueSetting.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
 
 		setting.addPropertyChangeListener(
 				UIPanelSetting.SELECTED_MODE, this::onChangeEditModeButtonSelection);
