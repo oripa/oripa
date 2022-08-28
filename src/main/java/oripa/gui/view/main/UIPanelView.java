@@ -19,7 +19,6 @@
 package oripa.gui.view.main;
 
 import java.awt.Color;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeListener;
 import java.util.function.BiConsumer;
@@ -72,9 +71,9 @@ public interface UIPanelView extends View {
 
 	void addEditModeLineTypeButtonListener(Runnable listener, KeyListener keyListener);
 
-	void addAlterLineComboFromListener(ItemListener listener);
+	void addAlterLineComboFromSelectionListener(Consumer<String> listener);
 
-	void addAlterLineComboToListener(ItemListener listener);
+	void addAlterLineComboToSelectionListener(Consumer<String> listener);
 
 	void addEditModeAddVertexButtonListener(Runnable listener, KeyListener keyListener);
 

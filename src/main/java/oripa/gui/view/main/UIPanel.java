@@ -24,7 +24,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
@@ -765,13 +765,21 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void addAlterLineComboFromListener(final ItemListener listener) {
-		alterLineComboFrom.addItemListener(listener);
+	public void addAlterLineComboFromSelectionListener(final Consumer<String> listener) {
+		alterLineComboFrom.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				listener.accept((String) e.getItem());
+			}
+		});
 	}
 
 	@Override
-	public void addAlterLineComboToListener(final ItemListener listener) {
-		alterLineComboTo.addItemListener(listener);
+	public void addAlterLineComboToSelectionListener(final Consumer<String> listener) {
+		alterLineComboTo.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				listener.accept((String) e.getItem());
+			}
+		});
 	}
 
 	@Override

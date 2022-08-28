@@ -49,8 +49,6 @@ import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.uipanel.FromLineTypeItemListener;
-import oripa.gui.viewsetting.main.uipanel.ToLineTypeItemListener;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
@@ -149,8 +147,8 @@ public class UIPanelPresenter {
 				null, null);
 		view.addEditModeLineTypeButtonListener(lineTypeState::performActions, screenUpdater.getKeyListener());
 
-		view.addAlterLineComboFromListener(new FromLineTypeItemListener(setting));
-		view.addAlterLineComboToListener(new ToLineTypeItemListener(setting));
+		view.addAlterLineComboFromSelectionListener(item -> setting.setTypeFrom(item));
+		view.addAlterLineComboToSelectionListener(item -> setting.setTypeTo(item));
 
 		var addVertexState = stateFactory.create(StringID.ADD_VERTEX_ID,
 				null, null);
