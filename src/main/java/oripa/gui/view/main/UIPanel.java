@@ -55,6 +55,7 @@ import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
 import oripa.gui.viewsetting.ViewScreenUpdater.KeyProcessing;
+import oripa.gui.viewsetting.main.InitialVisibilities;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.gui.viewsetting.main.uipanel.ByValueSetting;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;

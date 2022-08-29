@@ -55,12 +55,12 @@ public interface CreasePatternViewContext {
 
 	/**
 	 * Should update grid by calling {@link PaintContext#updateGrids()} if
-	 * {@code dispGrid} is true, and should clear grid if {@code dispGrid} is
-	 * false.
+	 * {@code gridVisible} is true, and should clear grid if {@code gridVisible}
+	 * is false.
 	 *
 	 * @param dispGrid
 	 */
-	public abstract void setGridVisible(boolean dispGrid);
+	public abstract void setGridVisible(boolean gridVisible);
 
 	public abstract boolean isGridVisible();
 
