@@ -24,6 +24,7 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
+import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
@@ -53,17 +54,16 @@ public class PainterScreenPresenter {
 	private RectangleDomain paperDomainOfModel;
 
 	public PainterScreenPresenter(final PainterScreenView view,
-			final MouseActionHolder mouseActionHolder,
-			final CreasePatternViewContext viewContext,
+			final CreasePatternPresentationContext presentationContext,
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutOutlineHolder) {
 		this.view = view;
 
 		screenUpdater = view.getScreenUpdater();
 		this.paintContext = paintContext;
-		this.viewContext = viewContext;
+		this.viewContext = presentationContext.getViewContext();
+		this.mouseActionHolder = presentationContext.getActionHolder();
 		this.cutOutlinesHolder = cutOutlineHolder;
-		this.mouseActionHolder = mouseActionHolder;
 
 		var actionSwitcher = new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder);
 		screenUpdater.setChangeActionIfCopyAndPaste(actionSwitcher);

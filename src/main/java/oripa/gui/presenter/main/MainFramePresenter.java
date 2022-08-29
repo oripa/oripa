@@ -33,8 +33,8 @@ import oripa.application.main.PaintContextModification;
 import oripa.appstate.StateManager;
 import oripa.appstate.StatePopper;
 import oripa.doc.Doc;
-import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.PaintDomainContext;
 import oripa.file.FileHistory;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
@@ -117,8 +117,8 @@ public class MainFramePresenter {
 		this.document = document;
 		this.paintContext = domainContext.getPaintContext();
 		this.viewContext = presentationContext.getViewContext();
-		this.stateManager = stateManager;
 		this.actionHolder = presentationContext.getActionHolder();
+		this.stateManager = stateManager;
 		this.fileHistory = fileHistory;
 		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
@@ -146,8 +146,7 @@ public class MainFramePresenter {
 
 		screenPresenter = new PainterScreenPresenter(
 				screen,
-				actionHolder,
-				viewContext,
+				presentationContext,
 				paintContext,
 				document);
 
