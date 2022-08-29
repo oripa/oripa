@@ -141,7 +141,7 @@ public class MainFramePresenter {
 				setterFactory,
 				view.getMainFrameSetting(),
 				uiPanelSetting,
-				actionHolder,
+				presentationContext,
 				selectionOriginHolder);
 
 		screenPresenter = new PainterScreenPresenter(
@@ -154,7 +154,7 @@ public class MainFramePresenter {
 				uiPanel,
 				stateManager,
 				screenUpdater,
-				viewContext,
+				presentationContext,
 				paintContext,
 				document,
 				setterFactory,

@@ -6,11 +6,9 @@ import java.beans.PropertyChangeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cptool.TypeForChange;
-import oripa.domain.paint.linetype.TypeForChangeGettable;
 import oripa.gui.presenter.creasepattern.EditMode;
 
-public class UIPanelSetting implements TypeForChangeGettable {
+public class UIPanelSetting {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanelSetting.class);
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
@@ -33,35 +31,11 @@ public class UIPanelSetting implements TypeForChangeGettable {
 	private EditMode selectedMode = EditMode.NONE;
 	public static final String SELECTED_MODE = "selected mode";
 
-	private TypeForChange typeFrom = TypeForChange.EMPTY;
-	public static final String TYPE_FROM = "line type of 'from' box";
-
-	private TypeForChange typeTo = TypeForChange.EMPTY;
-	public static final String TYPE_TO = "line type of 'to' box";
-
 	private final ByValueSetting valueSetting = new ByValueSetting();
 
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);
-	}
-
-	@Override
-	public TypeForChange getTypeFrom() {
-		return typeFrom;
-	}
-
-	public void setTypeFrom(final String typeFrom) {
-		this.typeFrom = TypeForChange.fromString(typeFrom).get();
-	}
-
-	@Override
-	public TypeForChange getTypeTo() {
-		return typeTo;
-	}
-
-	public void setTypeTo(final String typeTo) {
-		this.typeTo = TypeForChange.fromString(typeTo).get();
 	}
 
 	public boolean isByValuePanelVisible() {

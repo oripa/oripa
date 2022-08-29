@@ -280,7 +280,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void initializeButtonSelection(final String angleStep) {
+	public void initializeButtonSelection(final String angleStep, final String typeFrom, final String typeTo) {
 		// -------------------------------------------------
 		// Initialize selection
 		// -------------------------------------------------
@@ -292,8 +292,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 		lineInputDirectVButton.doClick();
 
 		// of line type on setting
-		setting.setTypeFrom((String) alterLineComboFrom.getSelectedItem());
-		setting.setTypeTo((String) alterLineComboTo.getSelectedItem());
+		alterLineComboFrom.setSelectedItem(typeFrom);
+		alterLineComboTo.setSelectedItem(typeTo);
 
 		doFullEstimationCheckBox.setSelected(true);
 		lineTypeMountainButton.doClick();

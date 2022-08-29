@@ -27,8 +27,8 @@ import javax.swing.SwingUtilities;
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.doc.Doc;
-import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.PaintContextFactory;
+import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolderImpl;
 import oripa.file.FileHistory;
 import oripa.file.InitDataFileReader;
@@ -37,6 +37,7 @@ import oripa.gui.bind.state.EditModeStateManager;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.view.main.ArrayCopyDialogFactory;
 import oripa.gui.view.main.CircleCopyDialogFactory;
@@ -82,7 +83,8 @@ public class ORIPA {
 					dialogFactory,
 					new Doc(),
 					new PaintDomainContext(paintContext, new SelectionOriginHolderImpl()),
-					new CreasePatternPresentationContext(viewContext, new MouseActionHolder()),
+					new CreasePatternPresentationContext(viewContext, new MouseActionHolder(),
+							new TypeForChangeContext()),
 					new EditModeStateManager(),
 					new FileHistory(Constants.MRUFILE_NUM),
 					new IniFileAccess(

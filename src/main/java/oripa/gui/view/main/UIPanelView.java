@@ -35,7 +35,7 @@ public interface UIPanelView extends View {
 
 	UIPanelSetting getUIPanelSetting();
 
-	void initializeButtonSelection(String angleStep);
+	void initializeButtonSelection(String angleStep, String typeFrom, String typeTo);
 
 	void addItemOfAlterLineComboFrom(String item);
 

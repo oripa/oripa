@@ -18,32 +18,36 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import oripa.domain.cptool.TypeForChange;
+import oripa.domain.paint.linetype.TypeForChangeGettable;
+
 /**
  * @author OUCHI Koji
  *
  */
-public class CreasePatternPresentationContext {
-	private final CreasePatternViewContext viewContext;
-	private final MouseActionHolder actionHolder;
-	private final TypeForChangeContext typeForChangeContext;
+public class TypeForChangeContext implements TypeForChangeGettable {
+	private TypeForChange typeFrom = TypeForChange.EMPTY;
+	public static final String TYPE_FROM = "line type of 'from' box";
 
-	public CreasePatternPresentationContext(final CreasePatternViewContext viewContext,
-			final MouseActionHolder actionHolder,
-			final TypeForChangeContext typeForChangeContext) {
-		this.viewContext = viewContext;
-		this.actionHolder = actionHolder;
-		this.typeForChangeContext = typeForChangeContext;
+	private TypeForChange typeTo = TypeForChange.EMPTY;
+	public static final String TYPE_TO = "line type of 'to' box";
+
+	@Override
+	public TypeForChange getTypeFrom() {
+		return typeFrom;
 	}
 
-	public CreasePatternViewContext getViewContext() {
-		return viewContext;
+	public void setTypeFrom(final TypeForChange typeFrom) {
+		this.typeFrom = typeFrom;
 	}
 
-	public MouseActionHolder getActionHolder() {
-		return actionHolder;
+	@Override
+	public TypeForChange getTypeTo() {
+		return typeTo;
 	}
 
-	public TypeForChangeContext getTypeForChangeContext() {
-		return typeForChangeContext;
+	public void setTypeTo(final TypeForChange typeTo) {
+		this.typeTo = typeTo;
 	}
+
 }

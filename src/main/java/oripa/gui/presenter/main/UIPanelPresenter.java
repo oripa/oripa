@@ -33,8 +33,10 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
+import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
@@ -80,6 +82,8 @@ public class UIPanelPresenter {
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 
+	private final TypeForChangeContext typeForChangeContext;
+
 	private final PaintActionSetterFactory setterFactory;
 
 	private final PaintBoundStateFactory stateFactory;
@@ -89,7 +93,7 @@ public class UIPanelPresenter {
 	public UIPanelPresenter(final UIPanelView view,
 			final StateManager<EditMode> stateManager,
 			final ViewScreenUpdater screenUpdater,
-			final CreasePatternViewContext viewContext,
+			final CreasePatternPresentationContext presentationContext,
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final PaintActionSetterFactory setterFactory,
@@ -99,9 +103,10 @@ public class UIPanelPresenter {
 
 		setting = view.getUIPanelSetting();
 		valueSetting = setting.getValueSetting();
+		typeForChangeContext = presentationContext.getTypeForChangeContext();
 		this.screenUpdater = screenUpdater;
 		this.paintContext = paintContext;
-		this.viewContext = viewContext;
+		this.viewContext = presentationContext.getViewContext();
 
 		this.stateManager = stateManager;
 
@@ -118,7 +123,12 @@ public class UIPanelPresenter {
 
 		addListeners();
 
-		view.initializeButtonSelection(AngleStep.PI_OVER_8.toString());
+		typeForChangeContext.setTypeFrom(alterLineComboDataFrom[0]);
+		typeForChangeContext.setTypeTo(alterLineComboDataTo[0]);
+
+		view.initializeButtonSelection(AngleStep.PI_OVER_8.toString(),
+				typeForChangeContext.getTypeFrom().toString(),
+				typeForChangeContext.getTypeTo().toString());
 	}
 
 	public void setChildFrameManager(final ChildFrameManager manager) {
@@ -145,8 +155,10 @@ public class UIPanelPresenter {
 				null, null);
 		view.addEditModeLineTypeButtonListener(lineTypeState::performActions, screenUpdater.getKeyProcessing());
 
-		view.addAlterLineComboFromSelectionListener(item -> setting.setTypeFrom(item));
-		view.addAlterLineComboToSelectionListener(item -> setting.setTypeTo(item));
+		view.addAlterLineComboFromSelectionListener(
+				item -> typeForChangeContext.setTypeFrom(TypeForChange.fromString(item).get()));
+		view.addAlterLineComboToSelectionListener(
+				item -> typeForChangeContext.setTypeTo(TypeForChange.fromString(item).get()));
 
 		var addVertexState = stateFactory.create(StringID.ADD_VERTEX_ID,
 				null, null);

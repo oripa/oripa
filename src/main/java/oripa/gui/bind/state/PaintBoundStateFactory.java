@@ -28,6 +28,7 @@ public class PaintBoundStateFactory {
 	private final UIPanelSetting uiPanelSetting;
 	private final SelectionOriginHolder originHolder;
 	private final MouseActionHolder actionHolder;
+	private final TypeForChangeContext typeForChangeContext;
 
 	/**
 	 * Constructor
@@ -37,14 +38,16 @@ public class PaintBoundStateFactory {
 			final PaintActionSetterFactory setterFactory,
 			final MainFrameSetting mainFrameSetting,
 			final UIPanelSetting uiPanelSetting,
-			final MouseActionHolder actionHolder,
+			final CreasePatternPresentationContext presentationContext,
 			final SelectionOriginHolder originHolder) {
+
 		this.stateManager = stateManager;
 		this.setterFactory = setterFactory;
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
-		this.actionHolder = actionHolder;
+		this.actionHolder = presentationContext.getActionHolder();
 		this.originHolder = originHolder;
+		this.typeForChangeContext = presentationContext.getTypeForChangeContext();
 	}
 
 	/**
@@ -93,7 +96,7 @@ public class PaintBoundStateFactory {
 
 		case StringID.CHANGE_LINE_TYPE_ID:
 			state = stateFactory.create(
-					new ChangeLineTypeAction(uiPanelSetting),
+					new ChangeLineTypeAction(typeForChangeContext),
 					changeHint, new Runnable[] {
 							() -> (new ChangeOnAlterTypeButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
