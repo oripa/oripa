@@ -27,10 +27,7 @@ import oripa.domain.paint.linetype.TypeForChangeGettable;
  */
 public class TypeForChangeContext implements TypeForChangeGettable {
 	private TypeForChange typeFrom = TypeForChange.EMPTY;
-	public static final String TYPE_FROM = "line type of 'from' box";
-
 	private TypeForChange typeTo = TypeForChange.EMPTY;
-	public static final String TYPE_TO = "line type of 'to' box";
 
 	@Override
 	public TypeForChange getTypeFrom() {
