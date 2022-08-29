@@ -33,11 +33,12 @@ import oripa.application.main.PaintContextModification;
 import oripa.appstate.StateManager;
 import oripa.appstate.StatePopper;
 import oripa.doc.Doc;
+import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.copypaste.SelectionOriginHolderImpl;
 import oripa.file.FileHistory;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
+import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -104,10 +105,9 @@ public class MainFramePresenter {
 	public MainFramePresenter(final MainFrameView view,
 			final MainFrameDialogFactory dialogFactory,
 			final Doc document,
-			final PaintContext paintContext,
-			final CreasePatternViewContext viewContext,
+			final PaintDomainContext domainContext,
+			final CreasePatternPresentationContext presentationContext,
 			final StateManager<EditMode> stateManager,
-			final MouseActionHolder actionHolder,
 			final FileHistory fileHistory,
 			final IniFileAccess iniFileAccess,
 			final DataFileAccess dataFileAccess) {
@@ -115,10 +115,10 @@ public class MainFramePresenter {
 		this.dialogFactory = dialogFactory;
 
 		this.document = document;
-		this.paintContext = paintContext;
-		this.viewContext = viewContext;
+		this.paintContext = domainContext.getPaintContext();
+		this.viewContext = presentationContext.getViewContext();
 		this.stateManager = stateManager;
-		this.actionHolder = actionHolder;
+		this.actionHolder = presentationContext.getActionHolder();
 		this.fileHistory = fileHistory;
 		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
@@ -128,7 +128,7 @@ public class MainFramePresenter {
 		var screen = view.getPainterScreenView();
 		screenUpdater = screen.getScreenUpdater();
 		screenSetting = screen.getMainScreenSetting();
-		var selectionOriginHolder = new SelectionOriginHolderImpl();
+		var selectionOriginHolder = domainContext.getSelectionOriginHolder();
 
 		var uiPanel = view.getUIPanelView();
 		var uiPanelSetting = uiPanel.getUIPanelSetting();
