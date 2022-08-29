@@ -34,6 +34,7 @@ import oripa.appstate.StateManager;
 import oripa.appstate.StatePopper;
 import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.copypaste.SelectionOriginHolderImpl;
 import oripa.file.FileHistory;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
@@ -127,7 +128,7 @@ public class MainFramePresenter {
 		var screen = view.getPainterScreenView();
 		screenUpdater = screen.getScreenUpdater();
 		screenSetting = screen.getMainScreenSetting();
-		var selectionOriginHolder = screenSetting.getSelectionOriginHolder();
+		var selectionOriginHolder = new SelectionOriginHolderImpl();
 
 		var uiPanel = view.getUIPanelView();
 		var uiPanelSetting = uiPanel.getUIPanelSetting();

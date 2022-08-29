@@ -6,7 +6,6 @@ import java.beans.PropertyChangeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.view.main.InitialVisibilities;
 
 public class MainScreenSetting {
@@ -29,8 +28,6 @@ public class MainScreenSetting {
 
 	private boolean auxLineVisible = InitialVisibilities.AUX;
 	public static final String AUX_LINE_VISIBLE = "aux line visible";
-
-	private final SelectionOriginHolder originHolder = new SelectionOriginHolder();
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -76,9 +73,5 @@ public class MainScreenSetting {
 		this.auxLineVisible = auxLineVisible;
 		logger.debug("firing change of auxLineVisible: " + old + " -> " + auxLineVisible);
 		support.firePropertyChange(AUX_LINE_VISIBLE, old, auxLineVisible);
-	}
-
-	public SelectionOriginHolder getSelectionOriginHolder() {
-		return originHolder;
 	}
 }
