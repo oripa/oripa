@@ -769,18 +769,19 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	@Override
 	public void addAlterLineComboFromSelectionListener(final Consumer<String> listener) {
-		alterLineComboFrom.addItemListener(e -> {
-			if (e.getStateChange() == ItemEvent.SELECTED) {
-				listener.accept((String) e.getItem());
-			}
-		});
+		addSelectionListener(alterLineComboFrom, listener);
 	}
 
 	@Override
 	public void addAlterLineComboToSelectionListener(final Consumer<String> listener) {
-		alterLineComboTo.addItemListener(e -> {
+		addSelectionListener(alterLineComboTo, listener);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> void addSelectionListener(final JComboBox<T> combo, final Consumer<T> listener) {
+		combo.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
-				listener.accept((String) e.getItem());
+				listener.accept((T) e.getItem());
 			}
 		});
 	}
