@@ -327,8 +327,7 @@ public class PainterScreen extends JPanel
 	}
 
 	private void addPropertyChangeListenersToSetting() {
-		screenUpdater.addPropertyChangeListener(
-				ViewScreenUpdater.REDRAW_REQUESTED, e -> repaint());
+		screenUpdater.addListener(() -> repaint());
 
 		setting.addPropertyChangeListener(
 				MainScreenSetting.ZERO_LINE_WIDTH, e -> {

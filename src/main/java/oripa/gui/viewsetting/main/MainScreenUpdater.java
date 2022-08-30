@@ -12,10 +12,14 @@ public class MainScreenUpdater implements ViewScreenUpdater {
 	public MainScreenUpdater() {
 	}
 
-	@Override
-	public void addPropertyChangeListener(final String propertyName,
+	private void addPropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+	@Override
+	public void addListener(final Runnable listener) {
+		addPropertyChangeListener(REDRAW_REQUESTED, e -> listener.run());
 	}
 
 	/*
