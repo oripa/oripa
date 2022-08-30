@@ -47,12 +47,12 @@ import oripa.gui.view.main.MainFrame;
 import oripa.gui.view.main.MainFrameSwingDialogFactory;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.PropertyDialogFactory;
-import oripa.gui.viewsetting.ViewUpdateSupport;
+import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.viewsetting.main.KeyProcessingImpl;
 import oripa.gui.viewsetting.main.MainFrameSettingImpl;
-import oripa.gui.viewsetting.main.MainScreenUpdater;
+import oripa.gui.viewsetting.main.PainterScreenUpdater;
+import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
-import oripa.gui.viewsetting.main.uipanel.UIPanelSettingImpl;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFilterSelector;
 import oripa.resource.Constants;
@@ -70,7 +70,7 @@ public class ORIPA {
 
 			// Construction of the main frame
 
-			var screenUpdater = new MainScreenUpdater();
+			var screenUpdater = new PainterScreenUpdater();
 			var mouseActionHolder = new MouseActionHolder();
 			var keyProcessing = new KeyProcessingImpl(
 					new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder),

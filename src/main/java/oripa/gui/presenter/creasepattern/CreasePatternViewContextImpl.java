@@ -21,7 +21,7 @@ package oripa.gui.presenter.creasepattern;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
-import oripa.gui.viewsetting.main.InitialVisibilities;
+import oripa.gui.view.main.InitialVisibilities;
 
 /**
  * @author OUCHI Koji

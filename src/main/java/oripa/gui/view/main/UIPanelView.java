@@ -24,7 +24,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import oripa.gui.view.View;
-import oripa.gui.viewsetting.KeyProcessing;
 
 /**
  * @author OUCHI Koji

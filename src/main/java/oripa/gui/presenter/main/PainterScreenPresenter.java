@@ -32,8 +32,8 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
 import oripa.gui.view.main.PainterScreenView;
-import oripa.gui.viewsetting.ViewScreenUpdater;
-import oripa.gui.viewsetting.ViewUpdateSupport;
+import oripa.gui.view.main.ViewScreenUpdater;
+import oripa.gui.view.main.ViewUpdateSupport;
 
 /**
  * @author OUCHI Koji

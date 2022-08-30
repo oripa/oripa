@@ -13,7 +13,7 @@ import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.viewsetting.ChangeViewSetting;
+import oripa.gui.viewchange.ChangeViewSetting;
 
 public class LocalPaintBoundStateFactoryTest {
 

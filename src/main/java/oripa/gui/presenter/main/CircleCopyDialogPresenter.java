@@ -22,7 +22,7 @@ import oripa.domain.paint.CircleCopyParameter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.circlecopy.CircleCopyCommand;
 import oripa.gui.view.main.CircleCopyDialogView;
-import oripa.gui.viewsetting.ViewScreenUpdater;
+import oripa.gui.view.main.ViewScreenUpdater;
 import oripa.util.Command;
 
 /**

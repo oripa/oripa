@@ -49,7 +49,6 @@ import oripa.geom.RectangleDomain;
 import oripa.gui.view.View;
 import oripa.gui.view.util.AffineCamera;
 import oripa.gui.view.util.MouseUtility;
-import oripa.gui.viewsetting.ViewScreenUpdater;
 
 public class PainterScreen extends JPanel
 		implements PainterScreenView, MouseListener, MouseMotionListener, MouseWheelListener,

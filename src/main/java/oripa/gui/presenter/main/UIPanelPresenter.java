@@ -44,14 +44,14 @@ import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
+import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.UIPanelView;
+import oripa.gui.view.main.ViewScreenUpdater;
+import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.ChildFrameManager;
-import oripa.gui.viewsetting.KeyProcessing;
-import oripa.gui.viewsetting.ViewScreenUpdater;
-import oripa.gui.viewsetting.ViewUpdateSupport;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
 

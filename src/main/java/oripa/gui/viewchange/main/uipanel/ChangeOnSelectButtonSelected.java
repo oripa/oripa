@@ -1,10 +1,10 @@
-package oripa.gui.viewsetting.main.uipanel;
+package oripa.gui.viewchange.main.uipanel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.gui.view.main.UIPanelSetting;
-import oripa.gui.viewsetting.ChangeViewSetting;
+import oripa.gui.viewchange.ChangeViewSetting;
 
 public class ChangeOnSelectButtonSelected implements ChangeViewSetting {
 	private static final Logger logger = LoggerFactory.getLogger(ChangeOnSelectButtonSelected.class);

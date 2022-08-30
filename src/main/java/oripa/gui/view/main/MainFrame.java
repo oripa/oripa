@@ -46,7 +46,6 @@ import oripa.file.ImageResourceLoader;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.KeyStrokes;
-import oripa.gui.viewsetting.ViewUpdateSupport;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;

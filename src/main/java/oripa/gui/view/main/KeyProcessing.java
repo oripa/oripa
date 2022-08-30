@@ -16,21 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.viewsetting.main;
+package oripa.gui.view.main;
 
-/**
- * Define the initial values for visibilities of line, vertex and so on.
- *
- * Should be used to initialize CreasePatternViewContext and view states.
- *
- * @author OUCHI Koji
- *
- */
-public class InitialVisibilities {
-	public static final boolean ZERO_LINE_WIDTH = false;
-	public static final boolean MV = true;
-	public static final boolean AUX = true;
-	public static final boolean VERTEX = true;
-	public static final boolean CROSS = false;
-	public static final boolean GRID = true;
+public interface KeyProcessing {
+
+	public void controlKeyPressed();
+
+	public void escapeKeyPressed();
+
+	public void keyReleased();
 }

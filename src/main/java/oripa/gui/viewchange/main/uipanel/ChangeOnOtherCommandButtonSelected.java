@@ -1,7 +1,7 @@
-package oripa.gui.viewsetting.main.uipanel;
+package oripa.gui.viewchange.main.uipanel;
 
 import oripa.gui.view.main.UIPanelSetting;
-import oripa.gui.viewsetting.ChangeViewSetting;
+import oripa.gui.viewchange.ChangeViewSetting;
 
 public class ChangeOnOtherCommandButtonSelected implements ChangeViewSetting {
 	private final UIPanelSetting setting;

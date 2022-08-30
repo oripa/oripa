@@ -7,7 +7,7 @@ import oripa.appstate.StateManager;
 import oripa.appstate.StatePusher;
 import oripa.gui.bind.state.action.PaintActionSetter;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.viewsetting.ChangeViewSetting;
+import oripa.gui.viewchange.ChangeViewSetting;
 
 /**
  * A state when user is painting. This class performs:

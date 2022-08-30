@@ -1,9 +1,9 @@
-package oripa.gui.viewsetting.main;
+package oripa.gui.viewchange.main;
 
 import java.util.ResourceBundle;
 
 import oripa.gui.view.main.MainFrameSetting;
-import oripa.gui.viewsetting.ChangeViewSetting;
+import oripa.gui.viewchange.ChangeViewSetting;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 

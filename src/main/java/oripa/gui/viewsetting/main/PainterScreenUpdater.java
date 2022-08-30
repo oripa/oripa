@@ -3,15 +3,15 @@ package oripa.gui.viewsetting.main;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import oripa.gui.viewsetting.ViewScreenUpdater;
+import oripa.gui.view.main.ViewScreenUpdater;
 
-public class MainScreenUpdater implements ViewScreenUpdater {
+public class PainterScreenUpdater implements ViewScreenUpdater {
 
 	private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
 	public static final String REDRAW_REQUESTED = "redraw requested";
 
-	public MainScreenUpdater() {
+	public PainterScreenUpdater() {
 	}
 
 	private void addPropertyChangeListener(final String propertyName,

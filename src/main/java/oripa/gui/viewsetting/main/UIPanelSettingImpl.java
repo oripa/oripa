@@ -1,4 +1,4 @@
-package oripa.gui.viewsetting.main.uipanel;
+package oripa.gui.viewsetting.main;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

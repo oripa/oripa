@@ -14,13 +14,13 @@ import oripa.gui.presenter.creasepattern.enlarge.EnlargeLineAction;
 import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.UIPanelSetting;
-import oripa.gui.viewsetting.main.ChangeHint;
-import oripa.gui.viewsetting.main.uipanel.ChangeOnAlterTypeButtonSelected;
-import oripa.gui.viewsetting.main.uipanel.ChangeOnAngleSnapButtonSelected;
-import oripa.gui.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
-import oripa.gui.viewsetting.main.uipanel.ChangeOnOtherCommandButtonSelected;
-import oripa.gui.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
-import oripa.gui.viewsetting.main.uipanel.ChangeOnSelectButtonSelected;
+import oripa.gui.viewchange.main.ChangeHint;
+import oripa.gui.viewchange.main.uipanel.ChangeOnAlterTypeButtonSelected;
+import oripa.gui.viewchange.main.uipanel.ChangeOnAngleSnapButtonSelected;
+import oripa.gui.viewchange.main.uipanel.ChangeOnByValueButtonSelected;
+import oripa.gui.viewchange.main.uipanel.ChangeOnOtherCommandButtonSelected;
+import oripa.gui.viewchange.main.uipanel.ChangeOnPaintInputButtonSelected;
+import oripa.gui.viewchange.main.uipanel.ChangeOnSelectButtonSelected;
 import oripa.resource.StringID;
 
 public class PaintBoundStateFactory {

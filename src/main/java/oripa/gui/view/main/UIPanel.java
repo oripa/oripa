@@ -55,8 +55,6 @@ import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
-import oripa.gui.viewsetting.KeyProcessing;
-import oripa.gui.viewsetting.main.InitialVisibilities;
 import oripa.resource.ButtonIcon;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;

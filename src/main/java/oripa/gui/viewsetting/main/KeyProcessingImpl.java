@@ -20,8 +20,8 @@ package oripa.gui.viewsetting.main;
 
 import java.util.function.Consumer;
 
-import oripa.gui.viewsetting.KeyProcessing;
-import oripa.gui.viewsetting.ViewScreenUpdater;
+import oripa.gui.view.main.KeyProcessing;
+import oripa.gui.view.main.ViewScreenUpdater;
 
 public class KeyProcessingImpl implements KeyProcessing {
 

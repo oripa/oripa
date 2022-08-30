@@ -1,4 +1,4 @@
-package oripa.gui.viewsetting;
+package oripa.gui.view.main;
 
 public interface ViewScreenUpdater {
 
