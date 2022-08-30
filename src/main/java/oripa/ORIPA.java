@@ -39,11 +39,15 @@ import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.main.MainFramePresenter;
+import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.view.main.ArrayCopyDialogFactory;
 import oripa.gui.view.main.CircleCopyDialogFactory;
 import oripa.gui.view.main.MainFrame;
 import oripa.gui.view.main.MainFrameSwingDialogFactory;
 import oripa.gui.view.main.PropertyDialogFactory;
+import oripa.gui.viewsetting.ViewUpdateSupport;
+import oripa.gui.viewsetting.main.KeyProcessingImpl;
+import oripa.gui.viewsetting.main.MainScreenUpdater;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFilterSelector;
 import oripa.resource.Constants;
@@ -60,7 +64,13 @@ public class ORIPA {
 			int appTotalHeight = mainFrameHeight;
 
 			// Construction of the main frame
-			var mainFrame = new MainFrame();
+			var screenUpdater = new MainScreenUpdater();
+			var mouseActionHolder = new MouseActionHolder();
+			var keyProcessing = new KeyProcessingImpl(
+					new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder),
+					screenUpdater);
+			var viewUpdateSupport = new ViewUpdateSupport(screenUpdater, keyProcessing);
+			var mainFrame = new MainFrame(viewUpdateSupport);
 
 			Toolkit toolkit = mainFrame.getToolkit();
 			Dimension dim = toolkit.getScreenSize();
@@ -80,10 +90,11 @@ public class ORIPA {
 
 			var presenter = new MainFramePresenter(
 					mainFrame,
+					viewUpdateSupport,
 					dialogFactory,
 					new Doc(),
 					new PaintDomainContext(paintContext, new SelectionOriginHolderImpl()),
-					new CreasePatternPresentationContext(viewContext, new MouseActionHolder(),
+					new CreasePatternPresentationContext(viewContext, mouseActionHolder,
 							new TypeForChangeContext()),
 					new EditModeStateManager(),
 					new FileHistory(Constants.MRUFILE_NUM),

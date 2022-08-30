@@ -51,7 +51,6 @@ import oripa.gui.view.util.AffineCamera;
 import oripa.gui.view.util.MouseUtility;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.MainScreenUpdater;
 
 public class PainterScreen extends JPanel
 		implements PainterScreenView, MouseListener, MouseMotionListener, MouseWheelListener,
@@ -60,7 +59,7 @@ public class PainterScreen extends JPanel
 	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
 
 	private final MainScreenSetting setting = new MainScreenSetting();
-	private final MainScreenUpdater screenUpdater = new MainScreenUpdater();
+	private final ViewScreenUpdater screenUpdater;
 
 	private Image bufferImage;
 	private Point2D preMousePoint; // Screen coordinates
@@ -90,7 +89,9 @@ public class PainterScreen extends JPanel
 
 	private boolean actionUsingCtrlKeyOnDrag;
 
-	public PainterScreen() {
+	public PainterScreen(final ViewScreenUpdater screenUpdater) {
+
+		this.screenUpdater = screenUpdater;
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -110,11 +111,6 @@ public class PainterScreen extends JPanel
 		cameraScaleUpdateListener.accept(INITIAL_CAMERA_SCALE);
 
 		repaint();
-	}
-
-	@Override
-	public MainScreenUpdater getScreenUpdater() {
-		return screenUpdater;
 	}
 
 	@Override

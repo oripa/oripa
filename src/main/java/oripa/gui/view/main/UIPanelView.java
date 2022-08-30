@@ -24,7 +24,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import oripa.gui.view.View;
-import oripa.gui.viewsetting.ViewScreenUpdater.KeyProcessing;
+import oripa.gui.viewsetting.KeyProcessing;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 
 /**

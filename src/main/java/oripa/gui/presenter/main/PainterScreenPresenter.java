@@ -32,7 +32,8 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
 import oripa.gui.view.main.PainterScreenView;
-import oripa.gui.viewsetting.main.MainScreenUpdater;
+import oripa.gui.viewsetting.ViewScreenUpdater;
+import oripa.gui.viewsetting.ViewUpdateSupport;
 
 /**
  * @author OUCHI Koji
@@ -41,7 +42,7 @@ import oripa.gui.viewsetting.main.MainScreenUpdater;
 public class PainterScreenPresenter {
 	private final PainterScreenView view;
 
-	private final MainScreenUpdater screenUpdater;
+	private final ViewScreenUpdater screenUpdater;
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 
@@ -54,19 +55,17 @@ public class PainterScreenPresenter {
 	private RectangleDomain paperDomainOfModel;
 
 	public PainterScreenPresenter(final PainterScreenView view,
+			final ViewUpdateSupport viewUpdateSupport,
 			final CreasePatternPresentationContext presentationContext,
 			final PaintContext paintContext,
 			final CutModelOutlinesHolder cutOutlineHolder) {
 		this.view = view;
 
-		screenUpdater = view.getScreenUpdater();
+		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
 		this.paintContext = paintContext;
 		this.viewContext = presentationContext.getViewContext();
 		this.mouseActionHolder = presentationContext.getActionHolder();
 		this.cutOutlinesHolder = cutOutlineHolder;
-
-		var actionSwitcher = new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder);
-		screenUpdater.setChangeActionIfCopyAndPaste(actionSwitcher);
 
 		setListeners();
 

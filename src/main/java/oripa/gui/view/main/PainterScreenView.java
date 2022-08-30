@@ -27,7 +27,6 @@ import oripa.drawer.java2d.CreasePatternGraphics;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.ScreenView;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.MainScreenUpdater;
 
 /**
  * @author OUCHI Koji
@@ -38,8 +37,6 @@ public interface PainterScreenView extends ScreenView {
 	static final double INITIAL_CAMERA_SCALE = 1.5;
 
 	MainScreenSetting getMainScreenSetting();
-
-	MainScreenUpdater getScreenUpdater();
 
 	void initializeCamera(RectangleDomain domain);
 

@@ -1,18 +1,13 @@
 package oripa.gui.viewsetting;
 
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
+import java.beans.PropertyChangeListener;
 
-public interface ViewScreenUpdater extends ScreenUpdater {
+public interface ViewScreenUpdater {
 
 	public static final String REDRAW_REQUESTED = "redraw requested";
 
-	public interface KeyProcessing {
-		public void controlKeyPressed();
+	public void updateScreen();
 
-		public void escapeKeyPressed();
-
-		public void keyReleased();
-	}
-
-	public KeyProcessing getKeyProcessing();
+	public void addPropertyChangeListener(final String propertyName,
+			final PropertyChangeListener listener);
 }

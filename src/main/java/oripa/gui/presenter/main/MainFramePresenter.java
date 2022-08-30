@@ -48,8 +48,9 @@ import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.util.ChildFrameManager;
+import oripa.gui.viewsetting.ViewScreenUpdater;
+import oripa.gui.viewsetting.ViewUpdateSupport;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.MainScreenUpdater;
 import oripa.persistence.dao.AbstractFilterSelector;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
 import oripa.persistence.doc.DocFilterSelector;
@@ -80,7 +81,7 @@ public class MainFramePresenter {
 
 	private final StateManager<EditMode> stateManager;
 
-	private final MainScreenUpdater screenUpdater;
+	private final ViewScreenUpdater screenUpdater;
 	private final MainScreenSetting screenSetting;
 
 	private final PaintBoundStateFactory stateFactory;
@@ -103,6 +104,7 @@ public class MainFramePresenter {
 	private final PaintContextModification paintContextModification = new PaintContextModification();
 
 	public MainFramePresenter(final MainFrameView view,
+			final ViewUpdateSupport viewUpdateSupport,
 			final MainFrameDialogFactory dialogFactory,
 			final Doc document,
 			final PaintDomainContext domainContext,
@@ -126,7 +128,7 @@ public class MainFramePresenter {
 		document.setCreasePattern(paintContext.getCreasePattern());
 
 		var screen = view.getPainterScreenView();
-		screenUpdater = screen.getScreenUpdater();
+		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
 		screenSetting = screen.getMainScreenSetting();
 		var selectionOriginHolder = domainContext.getSelectionOriginHolder();
 
@@ -134,7 +136,7 @@ public class MainFramePresenter {
 		var uiPanelSetting = uiPanel.getUIPanelSetting();
 
 		var setterFactory = new PaintActionSetterFactory(
-				actionHolder, screenUpdater, paintContext);
+				actionHolder, screenUpdater::updateScreen, paintContext);
 
 		stateFactory = new PaintBoundStateFactory(
 				stateManager,
@@ -146,6 +148,7 @@ public class MainFramePresenter {
 
 		screenPresenter = new PainterScreenPresenter(
 				screen,
+				viewUpdateSupport,
 				presentationContext,
 				paintContext,
 				document);
@@ -153,7 +156,7 @@ public class MainFramePresenter {
 		uiPanelPresenter = new UIPanelPresenter(
 				uiPanel,
 				stateManager,
-				screenUpdater,
+				viewUpdateSupport,
 				presentationContext,
 				paintContext,
 				document,
@@ -328,10 +331,10 @@ public class MainFramePresenter {
 
 		var statePopper = new StatePopper<EditMode>(stateManager);
 		var unselectListener = new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
-				screenUpdater);
+				screenUpdater::updateScreen);
 		view.addUnselectAllButtonListener(unselectListener);
 
-		var deleteLinesListener = new DeleteSelectedLinesActionListener(paintContext, screenUpdater);
+		var deleteLinesListener = new DeleteSelectedLinesActionListener(paintContext, screenUpdater::updateScreen);
 		view.addDeleteSelectedLinesButtonListener(deleteLinesListener);
 
 	}

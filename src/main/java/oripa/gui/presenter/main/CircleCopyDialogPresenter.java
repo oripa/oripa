@@ -21,8 +21,8 @@ package oripa.gui.presenter.main;
 import oripa.domain.paint.CircleCopyParameter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.circlecopy.CircleCopyCommand;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.gui.view.main.CircleCopyDialogView;
+import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.util.Command;
 
 /**
@@ -33,12 +33,12 @@ public class CircleCopyDialogPresenter {
 
 	private final CircleCopyDialogView view;
 	private final PaintContext paintContext;
-	private final ScreenUpdater screenUpdater;
+	private final ViewScreenUpdater screenUpdater;
 
 	public CircleCopyDialogPresenter(
 			final CircleCopyDialogView view,
 			final PaintContext paintContext,
-			final ScreenUpdater screenUpdater) {
+			final ViewScreenUpdater screenUpdater) {
 
 		this.view = view;
 		this.paintContext = paintContext;

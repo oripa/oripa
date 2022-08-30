@@ -46,6 +46,7 @@ import oripa.file.ImageResourceLoader;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.KeyStrokes;
+import oripa.gui.viewsetting.ViewUpdateSupport;
 import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.resource.Constants;
@@ -162,10 +163,10 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 	private Runnable windowClosingListener;
 
-	public MainFrame() {
+	public MainFrame(final ViewUpdateSupport viewUpdateSupport) {
 		logger.info("frame construction starts.");
 
-		mainScreen = new PainterScreen();
+		mainScreen = new PainterScreen(viewUpdateSupport.getViewScreenUpdater());
 		screenSetting = mainScreen.getMainScreenSetting();
 
 		// this has to be done before instantiation of UI panel.

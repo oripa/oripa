@@ -21,8 +21,8 @@ package oripa.gui.presenter.main;
 import oripa.domain.paint.ArrayCopyParameter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.arraycopy.ArrayCopyCommand;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
 import oripa.gui.view.main.ArrayCopyDialogView;
+import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.util.Command;
 
 /**
@@ -33,11 +33,11 @@ public class ArrayCopyDialogPresenter {
 
 	private final ArrayCopyDialogView view;
 	private final PaintContext paintContext;
-	private final ScreenUpdater screenUpdater;
+	private final ViewScreenUpdater screenUpdater;
 
 	public ArrayCopyDialogPresenter(final ArrayCopyDialogView view,
 			final PaintContext paintContext,
-			final ScreenUpdater screenUpdater) {
+			final ViewScreenUpdater screenUpdater) {
 
 		this.view = view;
 		this.paintContext = paintContext;
