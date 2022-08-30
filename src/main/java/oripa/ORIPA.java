@@ -29,6 +29,7 @@ import oripa.application.main.IniFileAccess;
 import oripa.doc.Doc;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintDomainContext;
+import oripa.domain.paint.byvalue.ValueSettingImpl;
 import oripa.domain.paint.copypaste.SelectionOriginHolderImpl;
 import oripa.file.FileHistory;
 import oripa.file.InitDataFileReader;
@@ -93,7 +94,7 @@ public class ORIPA {
 					viewUpdateSupport,
 					dialogFactory,
 					new Doc(),
-					new PaintDomainContext(paintContext, new SelectionOriginHolderImpl()),
+					new PaintDomainContext(paintContext, new SelectionOriginHolderImpl(), new ValueSettingImpl()),
 					new CreasePatternPresentationContext(viewContext, mouseActionHolder,
 							new TypeForChangeContext()),
 					new EditModeStateManager(),

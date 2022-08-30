@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,11 +18,19 @@
  */
 package oripa.domain.paint.byvalue;
 
+import java.beans.PropertyChangeListener;
+
 /**
  * @author OUCHI Koji
  *
  */
 public interface ValueSetting {
+
+	public void addPropertyChangeListener(
+			final String propertyName, final PropertyChangeListener listener);
+
+	public static final String LENGTH = "length";
+	public static final String ANGLE = "angle";
 
 	double getLength();
 

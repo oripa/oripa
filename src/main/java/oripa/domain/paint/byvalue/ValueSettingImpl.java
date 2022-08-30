@@ -1,19 +1,15 @@
-package oripa.gui.viewsetting.main.uipanel;
+package oripa.domain.paint.byvalue;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import oripa.domain.paint.byvalue.ValueSetting;
-
-public class ByValueSetting implements ValueSetting {
+public class ValueSettingImpl implements ValueSetting {
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 	private double length = 0;
-	public static final String LENGTH = "length";
 
 	private double angle = 0;
-	public static final String ANGLE = "angle";
 
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener) {

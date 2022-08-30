@@ -57,7 +57,6 @@ import oripa.gui.view.util.TitledBorderFactory;
 import oripa.gui.viewsetting.KeyProcessing;
 import oripa.gui.viewsetting.main.InitialVisibilities;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.uipanel.ByValueSetting;
 import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ButtonIcon;
 import oripa.resource.Constants;
@@ -73,7 +72,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final MainDialogService dialogService = new MainDialogService(resources);
 
 	private final UIPanelSetting setting = new UIPanelSetting();
-	private final ByValueSetting valueSetting = setting.getValueSetting();
+//	private final ByValueSetting valueSetting = setting.getValueSetting();
 
 	// main three panels
 	private final JPanel editModePanel = new JPanel();
@@ -1068,12 +1067,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 					dispAuxLinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
-		valueSetting.addPropertyChangeListener(
-				ByValueSetting.ANGLE, e -> textFieldAngle.setValue(e.getNewValue()));
-
-		valueSetting.addPropertyChangeListener(
-				ByValueSetting.LENGTH, e -> textFieldLength.setValue(e.getNewValue()));
-
 		setting.addPropertyChangeListener(
 				UIPanelSetting.SELECTED_MODE, this::onChangeEditModeButtonSelection);
 
@@ -1156,6 +1149,16 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void setBuildButtonEnabled(final boolean enabled) {
 		buildButton.setEnabled(enabled);
+	}
+
+	@Override
+	public void setByValueAngle(final double angle) {
+		textFieldAngle.setValue(angle);
+	}
+
+	@Override
+	public void setByValueLength(final double length) {
+		textFieldLength.setValue(length);
 	}
 
 	@Override

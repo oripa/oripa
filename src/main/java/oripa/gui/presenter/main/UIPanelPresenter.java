@@ -30,6 +30,7 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.byvalue.ValueSetting;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
@@ -51,7 +52,6 @@ import oripa.gui.viewsetting.KeyProcessing;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.ViewUpdateSupport;
 import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
 
@@ -71,7 +71,6 @@ public class UIPanelPresenter {
 			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
 			TypeForChange.CUT, TypeForChange.DELETE, };
 
-	private final UIPanelSetting setting;
 	private final ValueSetting valueSetting;
 
 	final CutModelOutlinesHolder cutOutlinesHolder;
@@ -97,19 +96,18 @@ public class UIPanelPresenter {
 			final StateManager<EditMode> stateManager,
 			final ViewUpdateSupport viewUpdateSupport,
 			final CreasePatternPresentationContext presentationContext,
-			final PaintContext paintContext,
+			final PaintDomainContext domainContext,
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final PaintActionSetterFactory setterFactory,
 			final PaintBoundStateFactory stateFactory,
 			final MainScreenSetting mainScreenSetting) {
 		this.view = view;
 
-		setting = view.getUIPanelSetting();
-		valueSetting = setting.getValueSetting();
+		this.valueSetting = domainContext.getValueSetting();
 		typeForChangeContext = presentationContext.getTypeForChangeContext();
 		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
 		this.keyProcessing = viewUpdateSupport.getKeyProcessing();
-		this.paintContext = paintContext;
+		this.paintContext = domainContext.getPaintContext();
 		this.viewContext = presentationContext.getViewContext();
 
 		this.stateManager = stateManager;
@@ -273,6 +271,11 @@ public class UIPanelPresenter {
 		view.addZeroLineWidthCheckBoxListener(checked -> {
 			mainScreenSetting.setZeroLineWidth(checked);
 		});
+
+		valueSetting.addPropertyChangeListener(ValueSetting.ANGLE,
+				e -> view.setByValueAngle((double) e.getNewValue()));
+		valueSetting.addPropertyChangeListener(ValueSetting.LENGTH,
+				e -> view.setByValueLength((double) e.getNewValue()));
 
 		// ------------------------------------------------------------
 		// fold

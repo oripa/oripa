@@ -130,7 +130,6 @@ public class MainFramePresenter {
 		var screen = view.getPainterScreenView();
 		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
 		screenSetting = screen.getMainScreenSetting();
-		var selectionOriginHolder = domainContext.getSelectionOriginHolder();
 
 		var uiPanel = view.getUIPanelView();
 		var uiPanelSetting = uiPanel.getUIPanelSetting();
@@ -144,7 +143,7 @@ public class MainFramePresenter {
 				view.getMainFrameSetting(),
 				uiPanelSetting,
 				presentationContext,
-				selectionOriginHolder);
+				domainContext);
 
 		screenPresenter = new PainterScreenPresenter(
 				screen,
@@ -158,7 +157,7 @@ public class MainFramePresenter {
 				stateManager,
 				viewUpdateSupport,
 				presentationContext,
-				paintContext,
+				domainContext,
 				document,
 				setterFactory,
 				stateFactory,

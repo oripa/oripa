@@ -55,6 +55,10 @@ public interface UIPanelView extends View {
 
 	void setBuildButtonEnabled(boolean enabled);
 
+	void setByValueAngle(double angle);
+
+	void setByValueLength(double length);
+
 	boolean isFullEstimation();
 
 	Color getEstimationResultFrontColor();

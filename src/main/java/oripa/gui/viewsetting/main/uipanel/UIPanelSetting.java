@@ -31,8 +31,6 @@ public class UIPanelSetting {
 	private EditMode selectedMode = EditMode.NONE;
 	public static final String SELECTED_MODE = "selected mode";
 
-	private final ByValueSetting valueSetting = new ByValueSetting();
-
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);
@@ -114,9 +112,5 @@ public class UIPanelSetting {
 		selectedMode = EditMode.NONE; // a hack to trigger an update every time.
 
 		return ret;
-	}
-
-	public ByValueSetting getValueSetting() {
-		return valueSetting;
 	}
 }
