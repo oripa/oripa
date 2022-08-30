@@ -3,7 +3,7 @@ package oripa.domain.paint.byvalue;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class ValueSettingImpl implements ValueSetting {
+public class ByValueContextImpl implements ByValueContext {
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -11,6 +11,7 @@ public class ValueSettingImpl implements ValueSetting {
 
 	private double angle = 0;
 
+	@Override
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);

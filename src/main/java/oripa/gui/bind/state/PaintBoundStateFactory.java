@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.domain.paint.PaintDomainContext;
-import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.*;
@@ -28,7 +28,7 @@ public class PaintBoundStateFactory {
 	private final PaintActionSetterFactory setterFactory;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
-	private final ValueSetting valueSetting;
+	private final ByValueContext byValueContext;
 	private final SelectionOriginHolder originHolder;
 	private final MouseActionHolder actionHolder;
 	private final TypeForChangeContext typeForChangeContext;
@@ -48,7 +48,7 @@ public class PaintBoundStateFactory {
 		this.setterFactory = setterFactory;
 		this.mainFrameSetting = mainFrameSetting;
 		this.uiPanelSetting = uiPanelSetting;
-		this.valueSetting = domainContext.getValueSetting();
+		this.byValueContext = domainContext.getByValueContext();
 		this.actionHolder = presentationContext.getActionHolder();
 		this.originHolder = domainContext.getSelectionOriginHolder();
 		this.typeForChangeContext = presentationContext.getTypeForChangeContext();
@@ -242,7 +242,7 @@ public class PaintBoundStateFactory {
 							() -> (new ChangeOnByValueButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			return byValueFactory.create(
-					new LineByValueAction(valueSetting),
+					new LineByValueAction(byValueContext),
 					changeHint, null);
 
 		case StringID.PERPENDICULAR_BISECTOR_ID:

@@ -24,7 +24,7 @@ import java.beans.PropertyChangeListener;
  * @author OUCHI Koji
  *
  */
-public interface ValueSetting {
+public interface ByValueContext {
 
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener);

@@ -31,7 +31,7 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
-import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
@@ -71,7 +71,7 @@ public class UIPanelPresenter {
 			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
 			TypeForChange.CUT, TypeForChange.DELETE, };
 
-	private final ValueSetting valueSetting;
+	private final ByValueContext byValueContext;
 
 	final CutModelOutlinesHolder cutOutlinesHolder;
 	final MainScreenSetting mainScreenSetting;
@@ -103,7 +103,7 @@ public class UIPanelPresenter {
 			final MainScreenSetting mainScreenSetting) {
 		this.view = view;
 
-		this.valueSetting = domainContext.getValueSetting();
+		this.byValueContext = domainContext.getByValueContext();
 		typeForChangeContext = presentationContext.getTypeForChangeContext();
 		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
 		this.keyProcessing = viewUpdateSupport.getKeyProcessing();
@@ -220,11 +220,11 @@ public class UIPanelPresenter {
 		view.addLineInputByValueButtonListener(byValueState::performActions, keyProcessing);
 
 		view.addLengthButtonListener(
-				setterFactory.create(new LengthMeasuringAction(valueSetting)));
+				setterFactory.create(new LengthMeasuringAction(byValueContext)));
 		view.addAngleButtonListener(
-				setterFactory.create(new AngleMeasuringAction(valueSetting)));
-		view.addLengthTextFieldListener(valueSetting::setLength);
-		view.addAngleTextFieldListener(valueSetting::setAngle);
+				setterFactory.create(new AngleMeasuringAction(byValueContext)));
+		view.addLengthTextFieldListener(byValueContext::setLength);
+		view.addAngleTextFieldListener(byValueContext::setAngle);
 
 		var pbisecState = stateFactory.create(StringID.PERPENDICULAR_BISECTOR_ID,
 				null, null);
@@ -272,9 +272,9 @@ public class UIPanelPresenter {
 			mainScreenSetting.setZeroLineWidth(checked);
 		});
 
-		valueSetting.addPropertyChangeListener(ValueSetting.ANGLE,
+		byValueContext.addPropertyChangeListener(ByValueContext.ANGLE,
 				e -> view.setByValueAngle((double) e.getNewValue()));
-		valueSetting.addPropertyChangeListener(ValueSetting.LENGTH,
+		byValueContext.addPropertyChangeListener(ByValueContext.LENGTH,
 				e -> view.setByValueLength((double) e.getNewValue()));
 
 		// ------------------------------------------------------------

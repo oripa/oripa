@@ -29,9 +29,9 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  */
 public class AngleMeasureCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
-	private final ValueSetting valueSetting;
+	private final ByValueContext valueSetting;
 
-	public AngleMeasureCommand(final PaintContext context, final ValueSetting valueSetting) {
+	public AngleMeasureCommand(final PaintContext context, final ByValueContext valueSetting) {
 		this.context = context;
 		this.valueSetting = valueSetting;
 	}

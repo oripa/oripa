@@ -18,7 +18,7 @@
  */
 package oripa.domain.paint;
 
-import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 
 /**
@@ -28,10 +28,10 @@ import oripa.domain.paint.copypaste.SelectionOriginHolder;
 public class PaintDomainContext {
 	private final PaintContext paintContext;
 	private final SelectionOriginHolder selectionOriginHolder;
-	private final ValueSetting valueSetting;
+	private final ByValueContext valueSetting;
 
 	public PaintDomainContext(final PaintContext paintContext, final SelectionOriginHolder originHolder,
-			final ValueSetting valueSetting) {
+			final ByValueContext valueSetting) {
 		this.paintContext = paintContext;
 		this.selectionOriginHolder = originHolder;
 		this.valueSetting = valueSetting;
@@ -54,7 +54,7 @@ public class PaintDomainContext {
 	/**
 	 * @return valueSetting
 	 */
-	public ValueSetting getValueSetting() {
+	public ByValueContext getByValueContext() {
 		return valueSetting;
 	}
 }

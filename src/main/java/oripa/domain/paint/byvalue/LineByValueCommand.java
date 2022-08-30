@@ -37,9 +37,9 @@ public class LineByValueCommand extends ValidatablePaintCommand {
 	private final static Logger logger = LoggerFactory.getLogger(LineByValueCommand.class);
 
 	private final PaintContext context;
-	private final ValueSetting valueSetting;
+	private final ByValueContext valueSetting;
 
-	public LineByValueCommand(final PaintContext context, final ValueSetting valueSetting) {
+	public LineByValueCommand(final PaintContext context, final ByValueContext valueSetting) {
 		this.context = context;
 		this.valueSetting = valueSetting;
 	}
