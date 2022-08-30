@@ -9,6 +9,8 @@ public class MainScreenUpdater implements ViewScreenUpdater {
 
 	private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
+	public static final String REDRAW_REQUESTED = "redraw requested";
+
 	public MainScreenUpdater() {
 	}
 
