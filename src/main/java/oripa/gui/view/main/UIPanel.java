@@ -49,6 +49,7 @@ import javax.swing.text.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.view.View;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
@@ -56,8 +57,6 @@ import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.view.util.TitledBorderFactory;
 import oripa.gui.viewsetting.KeyProcessing;
 import oripa.gui.viewsetting.main.InitialVisibilities;
-import oripa.gui.viewsetting.main.MainScreenSetting;
-import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.ButtonIcon;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
@@ -71,7 +70,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final ResourceHolder resources = ResourceHolder.getInstance();
 	private final MainDialogService dialogService = new MainDialogService(resources);
 
-	private final UIPanelSetting setting = new UIPanelSetting();
+	private final UIPanelSetting setting;
 //	private final ByValueSetting valueSetting = setting.getValueSetting();
 
 	// main three panels
@@ -197,7 +196,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private Runnable modelComputationListener;
 	private Runnable showFoldedModelWindowsListener;
 
-	public UIPanel(final MainScreenSetting mainScreenSetting) {
+	public UIPanel(final MainViewSetting viewSetting) {
+
+		setting = viewSetting.getUiPanelSetting();
 
 		setShortcuts();
 
@@ -275,7 +276,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 				.setAnchor(GridBagConstraints.LAST_LINE_START);
 		add(generalSettingsPanel, gbBuilder.getLineField());
 
-		addPropertyChangeListenersToSetting(mainScreenSetting);
+		addPropertyChangeListenersToSetting(viewSetting.getPainterScreenSetting());
 		buildButton.addActionListener(e -> showFoldedModelWindows());
 	}
 
@@ -1039,30 +1040,31 @@ public class UIPanel extends JPanel implements UIPanelView {
 //		buildButton.addActionListener(e -> listener.run());
 //	}
 
-	private void addPropertyChangeListenersToSetting(final MainScreenSetting mainScreenSetting) {
+	private void addPropertyChangeListenersToSetting(final PainterScreenSetting mainScreenSetting) {
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSetting.ZERO_LINE_WIDTH, e -> zeroLineWidthCheckBox.setSelected((boolean) e.getNewValue()));
+				PainterScreenSetting.ZERO_LINE_WIDTH,
+				e -> zeroLineWidthCheckBox.setSelected((boolean) e.getNewValue()));
 
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSetting.GRID_VISIBLE, e -> {
+				PainterScreenSetting.GRID_VISIBLE, e -> {
 					dispGridCheckBox.setSelected((boolean) e.getNewValue());
 					repaint();
 				});
 
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSetting.VERTEX_VISIBLE, e -> {
+				PainterScreenSetting.VERTEX_VISIBLE, e -> {
 					logger.debug("vertexVisible property change: {}", e.getNewValue());
 					dispVertexCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSetting.MV_LINE_VISIBLE, e -> {
+				PainterScreenSetting.MV_LINE_VISIBLE, e -> {
 					logger.debug("mvLineVisible property change: {}", e.getNewValue());
 					dispMVLinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
+				PainterScreenSetting.AUX_LINE_VISIBLE, e -> {
 					logger.debug("auxLineVisible property change: {}", e.getNewValue());
 					dispAuxLinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
@@ -1090,7 +1092,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	private void onChangeEditModeButtonSelection(final PropertyChangeEvent e) {
-		switch (setting.getSelectedMode()) {
+		switch (EditMode.fromString(setting.getSelectedModeString()).get()) {
 		case INPUT:
 			selectEditModeButton(editModeInputLineButton);
 			break;
@@ -1104,11 +1106,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	private void selectEditModeButton(final AbstractButton modeButton) {
 		editModeGroup.setSelected(modeButton.getModel(), true);
-	}
-
-	@Override
-	public UIPanelSetting getUIPanelSetting() {
-		return setting;
 	}
 
 	@Override

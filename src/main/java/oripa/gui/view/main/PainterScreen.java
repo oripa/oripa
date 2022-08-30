@@ -50,7 +50,6 @@ import oripa.gui.view.View;
 import oripa.gui.view.util.AffineCamera;
 import oripa.gui.view.util.MouseUtility;
 import oripa.gui.viewsetting.ViewScreenUpdater;
-import oripa.gui.viewsetting.main.MainScreenSetting;
 
 public class PainterScreen extends JPanel
 		implements PainterScreenView, MouseListener, MouseMotionListener, MouseWheelListener,
@@ -58,7 +57,7 @@ public class PainterScreen extends JPanel
 
 	private static Logger logger = LoggerFactory.getLogger(PainterScreen.class);
 
-	private final MainScreenSetting setting = new MainScreenSetting();
+	private final PainterScreenSetting setting;
 	private final ViewScreenUpdater screenUpdater;
 
 	private Image bufferImage;
@@ -89,8 +88,9 @@ public class PainterScreen extends JPanel
 
 	private boolean actionUsingCtrlKeyOnDrag;
 
-	public PainterScreen(final ViewScreenUpdater screenUpdater) {
+	public PainterScreen(final PainterScreenSetting setting, final ViewScreenUpdater screenUpdater) {
 
+		this.setting = setting;
 		this.screenUpdater = screenUpdater;
 
 		addMouseListener(this);
@@ -111,11 +111,6 @@ public class PainterScreen extends JPanel
 		cameraScaleUpdateListener.accept(INITIAL_CAMERA_SCALE);
 
 		repaint();
-	}
-
-	@Override
-	public MainScreenSetting getMainScreenSetting() {
-		return setting;
 	}
 
 	private void buildBufferImage() {
@@ -330,37 +325,37 @@ public class PainterScreen extends JPanel
 		screenUpdater.addListener(() -> repaint());
 
 		setting.addPropertyChangeListener(
-				MainScreenSetting.ZERO_LINE_WIDTH, e -> {
+				PainterScreenSetting.ZERO_LINE_WIDTH, e -> {
 					zeroLineWidthUpdateListener.accept((Boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
-				MainScreenSetting.VERTEX_VISIBLE, e -> {
+				PainterScreenSetting.VERTEX_VISIBLE, e -> {
 					vertexVisibleUpdateListener.accept((Boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
-				MainScreenSetting.MV_LINE_VISIBLE, e -> {
+				PainterScreenSetting.MV_LINE_VISIBLE, e -> {
 					mvLineVisibleUpdateListener.accept((Boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
-				MainScreenSetting.AUX_LINE_VISIBLE, e -> {
+				PainterScreenSetting.AUX_LINE_VISIBLE, e -> {
 					auxLineVisibleUpdateListener.accept((Boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
-				MainScreenSetting.GRID_VISIBLE, e -> {
+				PainterScreenSetting.GRID_VISIBLE, e -> {
 					gridVisibleUpdateListener.accept((Boolean) e.getNewValue());
 					repaint();
 				});
 
 		setting.addPropertyChangeListener(
-				MainScreenSetting.CROSS_LINE_VISIBLE, e -> {
+				PainterScreenSetting.CROSS_LINE_VISIBLE, e -> {
 					crossLineVisibleUpdateListener.accept((Boolean) e.getNewValue());
 					repaint();
 				});

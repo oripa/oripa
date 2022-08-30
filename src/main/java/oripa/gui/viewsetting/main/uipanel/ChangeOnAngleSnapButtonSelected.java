@@ -1,5 +1,6 @@
 package oripa.gui.viewsetting.main.uipanel;
 
+import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewsetting.ChangeViewSetting;
 
 public class ChangeOnAngleSnapButtonSelected implements ChangeViewSetting {

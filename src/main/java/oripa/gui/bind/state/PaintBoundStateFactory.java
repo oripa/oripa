@@ -11,15 +11,16 @@ import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.*;
 import oripa.gui.presenter.creasepattern.byvalue.LineByValueAction;
 import oripa.gui.presenter.creasepattern.enlarge.EnlargeLineAction;
+import oripa.gui.view.main.MainFrameSetting;
+import oripa.gui.view.main.MainViewSetting;
+import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewsetting.main.ChangeHint;
-import oripa.gui.viewsetting.main.MainFrameSetting;
 import oripa.gui.viewsetting.main.uipanel.ChangeOnAlterTypeButtonSelected;
 import oripa.gui.viewsetting.main.uipanel.ChangeOnAngleSnapButtonSelected;
 import oripa.gui.viewsetting.main.uipanel.ChangeOnByValueButtonSelected;
 import oripa.gui.viewsetting.main.uipanel.ChangeOnOtherCommandButtonSelected;
 import oripa.gui.viewsetting.main.uipanel.ChangeOnPaintInputButtonSelected;
 import oripa.gui.viewsetting.main.uipanel.ChangeOnSelectButtonSelected;
-import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 import oripa.resource.StringID;
 
 public class PaintBoundStateFactory {
@@ -39,15 +40,14 @@ public class PaintBoundStateFactory {
 	public PaintBoundStateFactory(
 			final StateManager<EditMode> stateManager,
 			final PaintActionSetterFactory setterFactory,
-			final MainFrameSetting mainFrameSetting,
-			final UIPanelSetting uiPanelSetting,
+			final MainViewSetting viewSetting,
 			final CreasePatternPresentationContext presentationContext,
 			final PaintDomainContext domainContext) {
 
 		this.stateManager = stateManager;
 		this.setterFactory = setterFactory;
-		this.mainFrameSetting = mainFrameSetting;
-		this.uiPanelSetting = uiPanelSetting;
+		this.mainFrameSetting = viewSetting.getMainFrameSetting();
+		this.uiPanelSetting = viewSetting.getUiPanelSetting();
 		this.byValueContext = domainContext.getByValueContext();
 		this.actionHolder = presentationContext.getActionHolder();
 		this.originHolder = domainContext.getSelectionOriginHolder();

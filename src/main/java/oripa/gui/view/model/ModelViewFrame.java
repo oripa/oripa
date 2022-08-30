@@ -39,10 +39,10 @@ import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
+import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.ListItemSelectionPanel;
-import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.persistence.entity.OrigamiModelDAO;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
 import oripa.persistence.entity.OrigamiModelFilterSelector;
@@ -89,7 +89,7 @@ public class ModelViewFrame extends JFrame
 	private final JScrollBar scrollBarPosition = new JScrollBar(
 			Adjustable.VERTICAL, 0, 5, -150, 150);
 
-	private final MainScreenSetting mainScreenSetting;
+	private final PainterScreenSetting mainScreenSetting;
 
 	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
 	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
@@ -110,7 +110,7 @@ public class ModelViewFrame extends JFrame
 	public ModelViewFrame(
 			final int width, final int height,
 			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine,
-			final MainScreenSetting mainScreenSetting) {
+			final PainterScreenSetting mainScreenSetting) {
 
 		this.mainScreenSetting = mainScreenSetting;
 

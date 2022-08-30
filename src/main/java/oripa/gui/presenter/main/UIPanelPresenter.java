@@ -44,6 +44,7 @@ import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
+import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.model.ModelViewFrameView;
@@ -51,7 +52,6 @@ import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.KeyProcessing;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.ViewUpdateSupport;
-import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
 
@@ -74,7 +74,7 @@ public class UIPanelPresenter {
 	private final ByValueContext byValueContext;
 
 	final CutModelOutlinesHolder cutOutlinesHolder;
-	final MainScreenSetting mainScreenSetting;
+	final PainterScreenSetting mainScreenSetting;
 
 	private ChildFrameManager childFrameManager;
 
@@ -100,7 +100,7 @@ public class UIPanelPresenter {
 			final CutModelOutlinesHolder cutOutlinesHolder,
 			final PaintActionSetterFactory setterFactory,
 			final PaintBoundStateFactory stateFactory,
-			final MainScreenSetting mainScreenSetting) {
+			final PainterScreenSetting mainScreenSetting) {
 		this.view = view;
 
 		this.byValueContext = domainContext.getByValueContext();

@@ -47,8 +47,6 @@ import oripa.geom.RectangleDomain;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.gui.viewsetting.ViewUpdateSupport;
-import oripa.gui.viewsetting.main.MainFrameSetting;
-import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
@@ -63,8 +61,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
-	private final MainFrameSetting setting = new MainFrameSetting();
-	private final MainScreenSetting screenSetting;
+	private final MainFrameSetting setting;
 
 	private final JLabel hintLabel = new JLabel();
 
@@ -163,18 +160,19 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 	private Runnable windowClosingListener;
 
-	public MainFrame(final ViewUpdateSupport viewUpdateSupport) {
+	public MainFrame(final MainViewSetting viewSetting, final ViewUpdateSupport viewUpdateSupport) {
 		logger.info("frame construction starts.");
 
-		mainScreen = new PainterScreen(viewUpdateSupport.getViewScreenUpdater());
-		screenSetting = mainScreen.getMainScreenSetting();
+		setting = viewSetting.getMainFrameSetting();
+
+		mainScreen = new PainterScreen(viewSetting.getPainterScreenSetting(), viewUpdateSupport.getViewScreenUpdater());
 
 		// this has to be done before instantiation of UI panel.
 		addHintPropertyChangeListenersToSetting();
 
 		logger.info("start constructing UI panel.");
 		try {
-			uiPanel = new UIPanel(screenSetting);
+			uiPanel = new UIPanel(viewSetting);
 		} catch (RuntimeException ex) {
 			logger.error("UI panel construction failed", ex);
 			Dialogs.showErrorDialog(
@@ -339,11 +337,6 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	@Override
 	public void setViewVisible(final boolean visible) {
 		setVisible(visible);
-	}
-
-	@Override
-	public MainFrameSetting getMainFrameSetting() {
-		return setting;
 	}
 
 	@Override

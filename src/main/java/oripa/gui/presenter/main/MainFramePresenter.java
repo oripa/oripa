@@ -47,10 +47,11 @@ import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
 import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
+import oripa.gui.view.main.MainViewSetting;
+import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.ViewScreenUpdater;
 import oripa.gui.viewsetting.ViewUpdateSupport;
-import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.persistence.dao.AbstractFilterSelector;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
 import oripa.persistence.doc.DocFilterSelector;
@@ -82,7 +83,7 @@ public class MainFramePresenter {
 	private final StateManager<EditMode> stateManager;
 
 	private final ViewScreenUpdater screenUpdater;
-	private final MainScreenSetting screenSetting;
+	private final PainterScreenSetting screenSetting;
 
 	private final PaintBoundStateFactory stateFactory;
 
@@ -106,6 +107,7 @@ public class MainFramePresenter {
 	public MainFramePresenter(final MainFrameView view,
 			final ViewUpdateSupport viewUpdateSupport,
 			final MainFrameDialogFactory dialogFactory,
+			final MainViewSetting viewSetting,
 			final Doc document,
 			final PaintDomainContext domainContext,
 			final CreasePatternPresentationContext presentationContext,
@@ -125,14 +127,14 @@ public class MainFramePresenter {
 		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
 
+		this.screenSetting = viewSetting.getPainterScreenSetting();
+
 		document.setCreasePattern(paintContext.getCreasePattern());
 
 		var screen = view.getPainterScreenView();
 		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
-		screenSetting = screen.getMainScreenSetting();
 
 		var uiPanel = view.getUIPanelView();
-		var uiPanelSetting = uiPanel.getUIPanelSetting();
 
 		var setterFactory = new PaintActionSetterFactory(
 				actionHolder, screenUpdater::updateScreen, paintContext);
@@ -140,8 +142,7 @@ public class MainFramePresenter {
 		stateFactory = new PaintBoundStateFactory(
 				stateManager,
 				setterFactory,
-				view.getMainFrameSetting(),
-				uiPanelSetting,
+				viewSetting,
 				presentationContext,
 				domainContext);
 

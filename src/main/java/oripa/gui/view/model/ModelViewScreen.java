@@ -45,9 +45,9 @@ import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.drawer.java2d.OrigamiModelObjectDrawer;
 import oripa.gui.presenter.model.OrigamiModelGraphicDrawer;
+import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.MouseUtility;
-import oripa.gui.viewsetting.main.MainScreenSetting;
 import oripa.value.OriLine;
 
 /**
@@ -81,10 +81,10 @@ public class ModelViewScreen extends JPanel
 	private OrigamiModel origamiModel = null;
 	private final CutModelOutlinesHolder lineHolder;
 	private final CallbackOnUpdate onUpdateScissorsLine;
-	private final MainScreenSetting mainScreenSetting;
+	private final PainterScreenSetting mainScreenSetting;
 
 	public ModelViewScreen(final CutModelOutlinesHolder aLineHolder, final CallbackOnUpdate c,
-			final MainScreenSetting mainScreenSetting) {
+			final PainterScreenSetting mainScreenSetting) {
 
 		lineHolder = aLineHolder;
 		onUpdateScissorsLine = c;
@@ -106,7 +106,7 @@ public class ModelViewScreen extends JPanel
 
 	private void addPropertyChangeListenersToSetting() {
 		mainScreenSetting.addPropertyChangeListener(
-				MainScreenSetting.CROSS_LINE_VISIBLE, e -> {
+				PainterScreenSetting.CROSS_LINE_VISIBLE, e -> {
 					scissorsLineVisible = (boolean) e.getNewValue();
 					if (scissorsLineVisible) {
 						recalcScissorsLine();

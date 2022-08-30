@@ -3,6 +3,7 @@ package oripa.gui.viewsetting.main.uipanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewsetting.ChangeViewSetting;
 
 public class ChangeOnSelectButtonSelected implements ChangeViewSetting {

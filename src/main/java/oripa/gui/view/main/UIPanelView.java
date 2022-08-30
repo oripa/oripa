@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 
 import oripa.gui.view.View;
 import oripa.gui.viewsetting.KeyProcessing;
-import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
 
 /**
  * @author OUCHI Koji
@@ -33,7 +32,7 @@ import oripa.gui.viewsetting.main.uipanel.UIPanelSetting;
  */
 public interface UIPanelView extends View {
 
-	UIPanelSetting getUIPanelSetting();
+	// UIPanelSetting getUIPanelSetting();
 
 	void initializeButtonSelection(String angleStep, String typeFrom, String typeTo);
 

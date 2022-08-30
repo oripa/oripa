@@ -24,9 +24,9 @@ import java.util.List;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.FrameView;
+import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.ChildFrameManager;
-import oripa.gui.viewsetting.main.MainScreenSetting;
 
 /**
  * @author Koji
@@ -34,10 +34,10 @@ import oripa.gui.viewsetting.main.MainScreenSetting;
  */
 public class ModelViewFrameFactory {
 
-	private final MainScreenSetting mainScreenSetting;
+	private final PainterScreenSetting mainScreenSetting;
 	private final ChildFrameManager childFrameManager;
 
-	public ModelViewFrameFactory(final MainScreenSetting mainScreenSetting,
+	public ModelViewFrameFactory(final PainterScreenSetting mainScreenSetting,
 			final ChildFrameManager childFrameManager) {
 		this.mainScreenSetting = mainScreenSetting;
 		this.childFrameManager = childFrameManager;

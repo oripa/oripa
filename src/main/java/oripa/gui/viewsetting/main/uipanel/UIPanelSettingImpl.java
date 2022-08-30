@@ -7,55 +7,51 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.view.main.UIPanelSetting;
 
-public class UIPanelSetting {
-	private static final Logger logger = LoggerFactory.getLogger(UIPanelSetting.class);
+public class UIPanelSettingImpl implements UIPanelSetting {
+	private static final Logger logger = LoggerFactory.getLogger(UIPanelSettingImpl.class);
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 	private boolean lineSelectionPanelVisible = false;
-	public static final String LINE_SELECTION_PANEL_VISIBLE = "line-selection-panel-visible";
-
 	private boolean lineInputPanelVisible = true;
-	public static final String LINE_INPUT_PANEL_VISIBLE = "line-input-panel-visible";
-
 	private boolean byValuePanelVisible = false;
-	public static final String BY_VALUE_PANEL_VISIBLE = "by-value panel visible";
-
 	private boolean alterLineTypePanelVisible = true;
-	public static final String ALTER_LINE_TYPE_PANEL_VISIBLE = "alter-line-type panel visible";
-
 	private boolean angleStepPanelVisible = false;
-	public static final String ANGLE_STEP_PANEL_VISIBLE = "angle step panel visible";
-
 	private EditMode selectedMode = EditMode.NONE;
-	public static final String SELECTED_MODE = "selected mode";
-
+	@Override
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);
 	}
 
+	@Override
 	public boolean isByValuePanelVisible() {
 		return byValuePanelVisible;
 	}
 
+	@Override
 	public boolean isAlterLineTypePanelVisible() {
 		return alterLineTypePanelVisible;
 	}
 
+	@Override
 	public boolean isSelectLinePanelVisible() {
 		return lineSelectionPanelVisible;
 	}
 
+	@Override
 	public boolean isLineInputPanelVisible() {
 		return lineInputPanelVisible;
 	}
 
+	@Override
 	public boolean isAngleStepPanelVisible() {
 		return angleStepPanelVisible;
 	}
 
+	@Override
 	public void setByValuePanelVisible(final boolean byValuePanelVisible) {
 		logger.info("set by-value panel visible: " + byValuePanelVisible);
 		var old = this.byValuePanelVisible;
@@ -63,6 +59,7 @@ public class UIPanelSetting {
 		support.firePropertyChange(BY_VALUE_PANEL_VISIBLE, old, byValuePanelVisible);
 	}
 
+	@Override
 	public void setAlterLineTypePanelVisible(final boolean alterLineTypePanelVisible) {
 		logger.info("set alter line type panel visible: " + alterLineTypePanelVisible);
 		var old = this.alterLineTypePanelVisible;
@@ -70,6 +67,7 @@ public class UIPanelSetting {
 		support.firePropertyChange(ALTER_LINE_TYPE_PANEL_VISIBLE, old, alterLineTypePanelVisible);
 	}
 
+	@Override
 	public void setLineSelectionPanelVisible(final boolean lineSelectionPanelVisible) {
 		logger.info("set line selection panel visible: " + lineSelectionPanelVisible);
 		var old = this.lineSelectionPanelVisible;
@@ -77,6 +75,7 @@ public class UIPanelSetting {
 		support.firePropertyChange(LINE_SELECTION_PANEL_VISIBLE, old, lineSelectionPanelVisible);
 	}
 
+	@Override
 	public void setLineInputPanelVisible(final boolean lineInputPanelVisible) {
 		logger.info("set line input panel visible: " + lineInputPanelVisible);
 		var old = this.lineInputPanelVisible;
@@ -84,6 +83,7 @@ public class UIPanelSetting {
 		support.firePropertyChange(LINE_INPUT_PANEL_VISIBLE, old, lineInputPanelVisible);
 	}
 
+	@Override
 	public void setAngleStepPanelVisible(final boolean angleStepVisible) {
 		logger.info("set angle step panel visible: " + angleStepVisible);
 		var old = this.angleStepPanelVisible;
@@ -98,19 +98,22 @@ public class UIPanelSetting {
 		support.firePropertyChange(SELECTED_MODE, old, mode);
 	}
 
+	@Override
 	public void selectInputMode() {
 		setSelectedMode(EditMode.INPUT);
 	}
 
+	@Override
 	public void selectSelectMode() {
 		setSelectedMode(EditMode.SELECT);
 	}
 
-	public EditMode getSelectedMode() {
+	@Override
+	public String getSelectedModeString() {
 		EditMode ret = selectedMode;
 
 		selectedMode = EditMode.NONE; // a hack to trigger an update every time.
 
-		return ret;
+		return ret.toString();
 	}
 }

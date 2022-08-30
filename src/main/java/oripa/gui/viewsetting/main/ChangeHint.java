@@ -2,6 +2,7 @@ package oripa.gui.viewsetting.main;
 
 import java.util.ResourceBundle;
 
+import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.viewsetting.ChangeViewSetting;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;

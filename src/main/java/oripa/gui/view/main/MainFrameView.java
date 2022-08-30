@@ -24,14 +24,13 @@ import java.util.function.Consumer;
 
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.FrameView;
-import oripa.gui.viewsetting.main.MainFrameSetting;
 
 /**
  * @author OUCHI Koji
  *
  */
 public interface MainFrameView extends FrameView {
-	MainFrameSetting getMainFrameSetting();
+	// MainFrameSetting getMainFrameSetting();
 
 	UIPanelView getUIPanelView();
 

@@ -3,18 +3,21 @@ package oripa.gui.viewsetting.main;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class MainFrameSetting {
+import oripa.gui.view.main.MainFrameSetting;
+
+public class MainFrameSettingImpl implements MainFrameSetting {
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 	private String hint;
-	public static String HINT = "hint";
 
+	@Override
 	public void addPropertyChangeListener(final String propertyName,
 			final PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);
 	}
 
+	@Override
 	public void setHint(final String hint) {
 		var old = this.hint;
 		this.hint = hint;
