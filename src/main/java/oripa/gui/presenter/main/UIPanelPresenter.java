@@ -268,7 +268,6 @@ public class UIPanelPresenter {
 
 		view.addZeroLineWidthCheckBoxListener(checked -> {
 			mainScreenSetting.setZeroLineWidth(checked);
-			screenUpdater.updateScreen();
 		});
 
 		// ------------------------------------------------------------
