@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.appstate.StatePusher;
-import oripa.gui.bind.state.action.PaintActionSetter;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.MouseActionSetter;
 import oripa.gui.viewchange.ChangeViewSetting;
 
 /**
@@ -38,7 +38,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	public PaintBoundState(
 			final StateManager<EditMode> stateManager,
 			final EditMode editMode,
-			final PaintActionSetter actionSetter,
+			final MouseActionSetter actionSetter,
 			final ChangeViewSetting changeHint,
 			final Runnable[] actions) {
 		super(editMode, actions);
@@ -66,7 +66,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 			final Supplier<Boolean> errorDetecter,
 			final Runnable errorHandler,
 			final EditMode editMode,
-			final PaintActionSetter actionSetter,
+			final MouseActionSetter actionSetter,
 			final ChangeViewSetting changeHint,
 			final Runnable[] actions) {
 
@@ -80,7 +80,7 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 
 	private void addBasicListeners(
 			final StateManager<EditMode> stateManager,
-			final PaintActionSetter actionSetter,
+			final MouseActionSetter actionSetter,
 			final ChangeViewSetting changeHint) {
 
 		// add a listener to push this state to the history stack.

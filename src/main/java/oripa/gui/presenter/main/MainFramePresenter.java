@@ -38,14 +38,8 @@ import oripa.domain.paint.PaintDomainContext;
 import oripa.file.FileHistory;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.bind.state.PaintBoundStateFactory;
-import oripa.gui.bind.state.action.PaintActionSetterFactory;
-import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.DeleteSelectedLinesActionListener;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.SelectAllLineActionListener;
-import oripa.gui.presenter.creasepattern.UnselectAllItemsActionListener;
+import oripa.gui.presenter.creasepattern.*;
+import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.MainViewSetting;
@@ -137,7 +131,7 @@ public class MainFramePresenter {
 
 		var uiPanel = view.getUIPanelView();
 
-		var setterFactory = new PaintActionSetterFactory(
+		var setterFactory = new MouseActionSetterFactory(
 				actionHolder, screenUpdater::updateScreen, paintContext);
 
 		stateFactory = new PaintBoundStateFactory(
@@ -145,7 +139,10 @@ public class MainFramePresenter {
 				setterFactory,
 				viewSetting,
 				presentationContext,
-				domainContext);
+				new ComplexActionFactory(
+						new EditOutlineActionFactory(stateManager, actionHolder),
+						new CopyAndPasteActionFactory(stateManager, domainContext.getSelectionOriginHolder()),
+						domainContext.getByValueContext()));
 
 		screenPresenter = new PainterScreenPresenter(
 				screen,

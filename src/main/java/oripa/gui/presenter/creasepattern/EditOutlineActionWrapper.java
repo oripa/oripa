@@ -1,15 +1,10 @@
-package oripa.gui.bind.state;
+package oripa.gui.presenter.creasepattern;
 
 import java.util.Optional;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.EditOutlineAction;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
 

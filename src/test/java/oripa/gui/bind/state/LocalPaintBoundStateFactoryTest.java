@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import oripa.appstate.ApplicationState;
-import oripa.gui.bind.state.action.PaintActionSetter;
-import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.MouseActionSetter;
+import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.viewchange.ChangeViewSetting;
 
 public class LocalPaintBoundStateFactoryTest {
@@ -24,7 +24,7 @@ public class LocalPaintBoundStateFactoryTest {
 			var basicAction1 = mock(Runnable.class);
 			var basicAction2 = mock(Runnable.class);
 			var stateManager = mock(EditModeStateManager.class);
-			var setterFactory = mock(PaintActionSetterFactory.class);
+			var setterFactory = mock(MouseActionSetterFactory.class);
 
 			var factory = new LocalPaintBoundStateFactory(
 					stateManager,
@@ -69,8 +69,8 @@ public class LocalPaintBoundStateFactoryTest {
 		void noErrors() {
 			var stateManager = mock(EditModeStateManager.class);
 
-			var setterFactory = mock(PaintActionSetterFactory.class);
-			var paintActionSetter = mock(PaintActionSetter.class);
+			var setterFactory = mock(MouseActionSetterFactory.class);
+			var paintActionSetter = mock(MouseActionSetter.class);
 			var mouseAction = mock(GraphicMouseAction.class);
 			when(mouseAction.getEditMode()).thenReturn(EditMode.INPUT);
 

@@ -16,35 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.bind.state.action;
+package oripa.gui.presenter.creasepattern.copypaste;
 
-import oripa.domain.paint.PaintContext;
+import oripa.appstate.StateManager;
+import oripa.domain.paint.copypaste.SelectionOriginHolder;
+import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class PaintActionSetterFactory {
-	private final MouseActionHolder actionHolder;
-	private final ScreenUpdater screenUpdater;
-	private final PaintContext context;
+public class CopyAndPasteActionFactory {
 
-	/**
-	 * Constructor
-	 */
-	public PaintActionSetterFactory(
-			final MouseActionHolder actionHolder,
-			final ScreenUpdater screenUpdater,
-			final PaintContext context) {
-		this.actionHolder = actionHolder;
-		this.screenUpdater = screenUpdater;
-		this.context = context;
+	private final StateManager<EditMode> stateManager;
+	private final SelectionOriginHolder originHolder;
+
+	public CopyAndPasteActionFactory(final StateManager<EditMode> stateManager,
+			final SelectionOriginHolder originHolder) {
+		this.stateManager = stateManager;
+		this.originHolder = originHolder;
 	}
 
-	public PaintActionSetter create(final GraphicMouseAction mouseAction) {
-		return new PaintActionSetter(actionHolder, mouseAction, screenUpdater, context);
+	public GraphicMouseAction createCopyAndPaste() {
+		return new CopyAndPasteActionWrapper(stateManager, false, originHolder);
+	}
+
+	public GraphicMouseAction createCutAndPaste() {
+		return new CopyAndPasteActionWrapper(stateManager, true, originHolder);
 	}
 }

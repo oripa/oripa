@@ -4,12 +4,7 @@ import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
-import oripa.domain.paint.PaintDomainContext;
-import oripa.domain.paint.byvalue.ByValueContext;
-import oripa.domain.paint.copypaste.SelectionOriginHolder;
-import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.*;
-import oripa.gui.presenter.creasepattern.byvalue.LineByValueAction;
 import oripa.gui.presenter.creasepattern.enlarge.EnlargeLineAction;
 import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.MainViewSetting;
@@ -26,32 +21,28 @@ import oripa.resource.StringID;
 public class PaintBoundStateFactory {
 
 	private final StateManager<EditMode> stateManager;
-	private final PaintActionSetterFactory setterFactory;
+	private final MouseActionSetterFactory setterFactory;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
-	private final ByValueContext byValueContext;
-	private final SelectionOriginHolder originHolder;
-	private final MouseActionHolder actionHolder;
 	private final TypeForChangeContext typeForChangeContext;
+	private final ComplexActionFactory complexActionFactory;
 
 	/**
 	 * Constructor
 	 */
 	public PaintBoundStateFactory(
 			final StateManager<EditMode> stateManager,
-			final PaintActionSetterFactory setterFactory,
+			final MouseActionSetterFactory setterFactory,
 			final MainViewSetting viewSetting,
 			final CreasePatternPresentationContext presentationContext,
-			final PaintDomainContext domainContext) {
+			final ComplexActionFactory complexActionFactory) {
 
 		this.stateManager = stateManager;
 		this.setterFactory = setterFactory;
 		this.mainFrameSetting = viewSetting.getMainFrameSetting();
 		this.uiPanelSetting = viewSetting.getUiPanelSetting();
-		this.byValueContext = domainContext.getByValueContext();
-		this.actionHolder = presentationContext.getActionHolder();
-		this.originHolder = domainContext.getSelectionOriginHolder();
 		this.typeForChangeContext = presentationContext.getTypeForChangeContext();
+		this.complexActionFactory = complexActionFactory;
 	}
 
 	/**
@@ -121,9 +112,8 @@ public class PaintBoundStateFactory {
 			break;
 
 		case StringID.EDIT_CONTOUR_ID:
-			// TODO make the command as usual one and get rid of the wrapper.
 			state = stateFactory.create(
-					new EditOutlineActionWrapper(stateManager, actionHolder),
+					complexActionFactory.createEditOutline(),
 					changeHint, new Runnable[] {
 							() -> (new ChangeOnOtherCommandButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
@@ -178,17 +168,17 @@ public class PaintBoundStateFactory {
 
 		case StringID.COPY_PASTE_ID:
 			return stateFactory.create(
-					new CopyAndPasteActionWrapper(stateManager, false, originHolder),
+					complexActionFactory.createCopyAndPaste(),
 					errorDetecter, errorHandler, changeHint, null);
 
 		case StringID.CUT_PASTE_ID:
 			return stateFactory.create(
-					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
+					complexActionFactory.createCutAndPaste(),
 					errorDetecter, errorHandler, changeHint, null);
 
 		case StringID.IMPORT_CP_ID:
 			return stateFactory.create(
-					new CopyAndPasteActionWrapper(stateManager, true, originHolder),
+					complexActionFactory.createCopyAndPaste(),
 					changeHint, null);
 
 		}
@@ -242,7 +232,7 @@ public class PaintBoundStateFactory {
 							() -> (new ChangeOnByValueButtonSelected(uiPanelSetting))
 									.changeViewSetting() });
 			return byValueFactory.create(
-					new LineByValueAction(byValueContext),
+					complexActionFactory.createByValue(),
 					changeHint, null);
 
 		case StringID.PERPENDICULAR_BISECTOR_ID:

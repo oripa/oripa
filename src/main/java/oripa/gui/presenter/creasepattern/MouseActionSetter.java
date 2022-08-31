@@ -1,9 +1,6 @@
-package oripa.gui.bind.state.action;
+package oripa.gui.presenter.creasepattern;
 
 import oripa.domain.paint.PaintContext;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.MouseActionHolder;
-import oripa.gui.presenter.creasepattern.ScreenUpdater;
 
 /**
  * Add this listener to Button object or something for selecting paint action.
@@ -11,14 +8,14 @@ import oripa.gui.presenter.creasepattern.ScreenUpdater;
  * @author koji
  *
  */
-public class PaintActionSetter implements Runnable {
+public class MouseActionSetter implements Runnable {
 
 	private final GraphicMouseAction mouseAction;
 	private final MouseActionHolder actionHolder;
 	private final ScreenUpdater screenUpdater;
 	private final PaintContext context;
 
-	public PaintActionSetter(final MouseActionHolder anActionHolder,
+	public MouseActionSetter(final MouseActionHolder anActionHolder,
 			final GraphicMouseAction thisMouseAction,
 			final ScreenUpdater screenUpdater,
 			final PaintContext aContext) {

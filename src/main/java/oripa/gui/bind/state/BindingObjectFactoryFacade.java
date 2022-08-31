@@ -21,10 +21,10 @@ package oripa.gui.bind.state;
 import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
-import oripa.gui.bind.state.action.PaintActionSetter;
-import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
+import oripa.gui.presenter.creasepattern.MouseActionSetter;
+import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 
 /**
  * @author OUCHI Koji
@@ -32,10 +32,10 @@ import oripa.gui.presenter.creasepattern.GraphicMouseAction;
  */
 public class BindingObjectFactoryFacade {
 	private final PaintBoundStateFactory stateFactory;
-	private final PaintActionSetterFactory setterFactory;
+	private final MouseActionSetterFactory setterFactory;
 
 	public BindingObjectFactoryFacade(final PaintBoundStateFactory stateFactory,
-			final PaintActionSetterFactory setterFactory) {
+			final MouseActionSetterFactory setterFactory) {
 		this.stateFactory = stateFactory;
 		this.setterFactory = setterFactory;
 	}
@@ -52,7 +52,7 @@ public class BindingObjectFactoryFacade {
 		return stateFactory.create(id, null, null);
 	}
 
-	public PaintActionSetter createActionSetter(final GraphicMouseAction action) {
+	public MouseActionSetter createActionSetter(final GraphicMouseAction action) {
 		return setterFactory.create(action);
 	}
 }
