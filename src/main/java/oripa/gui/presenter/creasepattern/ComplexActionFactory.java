@@ -30,13 +30,16 @@ public class ComplexActionFactory {
 	private final EditOutlineActionFactory outlineFactory;
 	private final CopyAndPasteActionFactory copyPasteFactory;
 	private final ByValueContext byValueContext;
+	private final TypeForChangeContext typeForChangeContext;
 
 	public ComplexActionFactory(final EditOutlineActionFactory outlineFactory,
 			final CopyAndPasteActionFactory copyPasteFactory,
-			final ByValueContext byValueContext) {
+			final ByValueContext byValueContext,
+			final TypeForChangeContext typeForChangeContext) {
 		this.outlineFactory = outlineFactory;
 		this.copyPasteFactory = copyPasteFactory;
 		this.byValueContext = byValueContext;
+		this.typeForChangeContext = typeForChangeContext;
 	}
 
 	public GraphicMouseAction createEditOutline() {
@@ -53,5 +56,9 @@ public class ComplexActionFactory {
 
 	public GraphicMouseAction createByValue() {
 		return new LineByValueAction(byValueContext);
+	}
+
+	public GraphicMouseAction createTypeChange() {
+		return new LineTypeChangeAction(typeForChangeContext);
 	}
 }

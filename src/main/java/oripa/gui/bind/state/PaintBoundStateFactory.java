@@ -24,7 +24,6 @@ public class PaintBoundStateFactory {
 	private final MouseActionSetterFactory setterFactory;
 	private final MainFrameSetting mainFrameSetting;
 	private final UIPanelSetting uiPanelSetting;
-	private final TypeForChangeContext typeForChangeContext;
 	private final ComplexActionFactory complexActionFactory;
 
 	/**
@@ -34,14 +33,12 @@ public class PaintBoundStateFactory {
 			final StateManager<EditMode> stateManager,
 			final MouseActionSetterFactory setterFactory,
 			final MainViewSetting viewSetting,
-			final CreasePatternPresentationContext presentationContext,
 			final ComplexActionFactory complexActionFactory) {
 
 		this.stateManager = stateManager;
 		this.setterFactory = setterFactory;
 		this.mainFrameSetting = viewSetting.getMainFrameSetting();
 		this.uiPanelSetting = viewSetting.getUiPanelSetting();
-		this.typeForChangeContext = presentationContext.getTypeForChangeContext();
 		this.complexActionFactory = complexActionFactory;
 	}
 
@@ -91,7 +88,7 @@ public class PaintBoundStateFactory {
 
 		case StringID.CHANGE_LINE_TYPE_ID:
 			state = stateFactory.create(
-					new ChangeLineTypeAction(typeForChangeContext),
+					complexActionFactory.createTypeChange(),
 					changeHint, new Runnable[] {
 							() -> (new ChangeOnAlterTypeButtonSelected(uiPanelSetting))
 									.changeViewSetting() });

@@ -138,11 +138,11 @@ public class MainFramePresenter {
 				stateManager,
 				setterFactory,
 				viewSetting,
-				presentationContext,
 				new ComplexActionFactory(
 						new EditOutlineActionFactory(stateManager, actionHolder),
 						new CopyAndPasteActionFactory(stateManager, domainContext.getSelectionOriginHolder()),
-						domainContext.getByValueContext()));
+						domainContext.getByValueContext(),
+						presentationContext.getTypeForChangeContext()));
 
 		screenPresenter = new PainterScreenPresenter(
 				screen,

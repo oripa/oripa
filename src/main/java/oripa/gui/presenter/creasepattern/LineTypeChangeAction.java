@@ -10,10 +10,10 @@ import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.util.Command;
 import oripa.value.OriLine;
 
-public class ChangeLineTypeAction extends RectangularSelectableAction {
+public class LineTypeChangeAction extends RectangularSelectableAction {
 	private final TypeForChangeGettable setting;
 
-	public ChangeLineTypeAction(final TypeForChangeGettable setting) {
+	public LineTypeChangeAction(final TypeForChangeGettable setting) {
 		this.setting = setting;
 		setEditMode(EditMode.CHANGE_TYPE);
 		setActionState(new SelectingLineForLineType(setting));
