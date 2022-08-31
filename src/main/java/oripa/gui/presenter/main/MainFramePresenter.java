@@ -36,6 +36,7 @@ import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.file.FileHistory;
+import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.bind.state.action.PaintActionSetterFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
@@ -160,8 +161,7 @@ public class MainFramePresenter {
 				presentationContext,
 				domainContext,
 				document,
-				setterFactory,
-				stateFactory,
+				new BindingObjectFactoryFacade(stateFactory, setterFactory),
 				screenSetting);
 
 		uiPanelPresenter.setChildFrameManager(childFrameManager);
