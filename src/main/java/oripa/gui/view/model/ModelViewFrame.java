@@ -41,8 +41,6 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.gui.view.util.Dialogs;
-import oripa.gui.view.util.ListItemSelectionPanel;
 import oripa.persistence.entity.OrigamiModelDAO;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
 import oripa.persistence.entity.OrigamiModelFilterSelector;
@@ -50,6 +48,8 @@ import oripa.persistence.filetool.FileChooserCanceledException;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.swing.view.util.Dialogs;
+import oripa.swing.view.util.ListItemSelectionPanel;
 
 /**
  * A frame to show a transparent folded model.

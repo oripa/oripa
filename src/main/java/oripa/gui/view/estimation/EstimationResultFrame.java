@@ -31,10 +31,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModel;
-import oripa.gui.view.util.ListItemSelectionPanel;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.swing.view.util.ListItemSelectionPanel;
 
 public class EstimationResultFrame extends JFrame implements EstimationResultFrameView {
 

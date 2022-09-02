@@ -1,4 +1,4 @@
-package oripa.gui.view.util;
+package oripa.swing.view.util;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;

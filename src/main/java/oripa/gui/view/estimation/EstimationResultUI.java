@@ -35,17 +35,17 @@ import org.slf4j.LoggerFactory;
 import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.origeom.OverlapRelation;
-import oripa.gui.view.util.ColorRGBPanel;
-import oripa.gui.view.util.Dialogs;
-import oripa.gui.view.util.GridBagConstraintsBuilder;
-import oripa.gui.view.util.ListItemSelectionPanel;
-import oripa.gui.view.util.TitledBorderFactory;
 import oripa.persistence.entity.FoldedModelDAO;
 import oripa.persistence.entity.FoldedModelFilterSelector;
 import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.swing.view.util.ColorRGBPanel;
+import oripa.swing.view.util.Dialogs;
+import oripa.swing.view.util.GridBagConstraintsBuilder;
+import oripa.swing.view.util.ListItemSelectionPanel;
+import oripa.swing.view.util.TitledBorderFactory;
 
 public class EstimationResultUI extends JPanel {
 	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUI.class);

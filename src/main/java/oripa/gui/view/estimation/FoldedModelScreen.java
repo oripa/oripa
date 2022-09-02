@@ -47,7 +47,7 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
-import oripa.gui.view.util.MouseUtility;
+import oripa.swing.view.util.MouseUtility;
 
 /**
  * A screen to show the folded state of origami.

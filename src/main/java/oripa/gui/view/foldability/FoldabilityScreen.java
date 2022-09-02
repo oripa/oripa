@@ -52,9 +52,9 @@ import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
 import oripa.gui.presenter.foldability.FoldabilityGraphicDrawer;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
-import oripa.gui.view.util.AffineCamera;
-import oripa.gui.view.util.MouseUtility;
 import oripa.swing.drawer.java2d.CreasePatternObjectDrawer;
+import oripa.swing.view.util.AffineCamera;
+import oripa.swing.view.util.MouseUtility;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 

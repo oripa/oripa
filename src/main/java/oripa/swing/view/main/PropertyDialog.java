@@ -35,10 +35,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import oripa.gui.view.main.PropertyDialogView;
-import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.swing.view.util.GridBagConstraintsBuilder;
 
 /**
  * Provides JDialog with input fields for {@link oripa.doc.Property} values.

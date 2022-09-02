@@ -46,8 +46,8 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.model.OrigamiModelGraphicDrawer;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.gui.view.util.MouseUtility;
 import oripa.swing.drawer.java2d.OrigamiModelObjectDrawer;
+import oripa.swing.view.util.MouseUtility;
 import oripa.value.OriLine;
 
 /**

@@ -57,15 +57,15 @@ import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.view.main.UIPanelView;
-import oripa.gui.view.util.Dialogs;
-import oripa.gui.view.util.GridBagConstraintsBuilder;
-import oripa.gui.view.util.KeyStrokes;
-import oripa.gui.view.util.TitledBorderFactory;
 import oripa.resource.ButtonIcon;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.swing.view.util.Dialogs;
+import oripa.swing.view.util.GridBagConstraintsBuilder;
+import oripa.swing.view.util.KeyStrokes;
+import oripa.swing.view.util.TitledBorderFactory;
 
 public class UIPanel extends JPanel implements UIPanelView {
 

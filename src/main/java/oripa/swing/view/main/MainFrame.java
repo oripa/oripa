@@ -50,12 +50,12 @@ import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.PainterScreenView;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.main.ViewUpdateSupport;
-import oripa.gui.view.util.Dialogs;
-import oripa.gui.view.util.KeyStrokes;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.swing.view.util.Dialogs;
+import oripa.swing.view.util.KeyStrokes;
 
 public class MainFrame extends JFrame implements MainFrameView, ComponentListener, WindowListener {
 

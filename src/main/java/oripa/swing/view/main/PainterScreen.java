@@ -49,9 +49,9 @@ import oripa.gui.view.View;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.PainterScreenView;
 import oripa.gui.view.main.ViewScreenUpdater;
-import oripa.gui.view.util.AffineCamera;
-import oripa.gui.view.util.MouseUtility;
 import oripa.swing.drawer.java2d.CreasePatternGraphics;
+import oripa.swing.view.util.AffineCamera;
+import oripa.swing.view.util.MouseUtility;
 
 public class PainterScreen extends JPanel
 		implements PainterScreenView, MouseListener, MouseMotionListener, MouseWheelListener,
