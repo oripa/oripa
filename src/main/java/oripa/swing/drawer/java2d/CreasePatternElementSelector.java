@@ -1,4 +1,4 @@
-package oripa.drawer.java2d;
+package oripa.swing.drawer.java2d;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

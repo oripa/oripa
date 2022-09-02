@@ -43,11 +43,6 @@ import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.ViewUpdateSupport;
-import oripa.gui.view.main.swing.ArrayCopyDialogFactory;
-import oripa.gui.view.main.swing.CircleCopyDialogFactory;
-import oripa.gui.view.main.swing.MainFrame;
-import oripa.gui.view.main.swing.MainFrameSwingDialogFactory;
-import oripa.gui.view.main.swing.PropertyDialogFactory;
 import oripa.gui.viewsetting.main.KeyProcessingImpl;
 import oripa.gui.viewsetting.main.MainFrameSettingImpl;
 import oripa.gui.viewsetting.main.PainterScreenUpdater;
@@ -56,6 +51,11 @@ import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFilterSelector;
 import oripa.resource.Constants;
+import oripa.swing.view.main.ArrayCopyDialogFactory;
+import oripa.swing.view.main.CircleCopyDialogFactory;
+import oripa.swing.view.main.MainFrame;
+import oripa.swing.view.main.MainFrameSwingDialogFactory;
+import oripa.swing.view.main.PropertyDialogFactory;
 
 public class ORIPA {
 	public static void main(final String[] args) {

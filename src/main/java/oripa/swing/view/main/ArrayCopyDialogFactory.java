@@ -16,20 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.main.swing;
+package oripa.swing.view.main;
 
 import javax.swing.JFrame;
 
 import oripa.gui.view.FrameView;
-import oripa.gui.view.main.CircleCopyDialogView;
+import oripa.gui.view.main.ArrayCopyDialogView;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CircleCopyDialogFactory {
-
-	public CircleCopyDialogView create(final FrameView owner) {
-		return new CircleCopyDialog((JFrame) owner);
+public class ArrayCopyDialogFactory {
+	public ArrayCopyDialogView create(final FrameView owner) {
+		return new ArrayCopyDialog((JFrame) owner);
 	}
 }

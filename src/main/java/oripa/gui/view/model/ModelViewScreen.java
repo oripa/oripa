@@ -43,11 +43,11 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.drawer.java2d.OrigamiModelObjectDrawer;
 import oripa.gui.presenter.model.OrigamiModelGraphicDrawer;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.MouseUtility;
+import oripa.swing.drawer.java2d.OrigamiModelObjectDrawer;
 import oripa.value.OriLine;
 
 /**

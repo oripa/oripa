@@ -1,4 +1,4 @@
-package oripa.drawer.java2d;
+package oripa.swing.drawer.java2d;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

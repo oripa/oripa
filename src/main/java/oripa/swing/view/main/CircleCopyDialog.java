@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.main.swing;
+package oripa.swing.view.main;
 
 import java.awt.Rectangle;
 import java.util.function.Supplier;

@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
-import oripa.drawer.java2d.CreasePatternGraphics;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.ScreenView;
+import oripa.swing.drawer.java2d.CreasePatternGraphics;
 
 /**
  * @author OUCHI Koji

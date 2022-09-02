@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.drawer.java2d;
+package oripa.swing.drawer.java2d;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
