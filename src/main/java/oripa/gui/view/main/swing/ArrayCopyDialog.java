@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.main;
+package oripa.gui.view.main.swing;
 
 import java.awt.Rectangle;
 import java.util.function.Supplier;
@@ -31,6 +31,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import oripa.gui.view.main.ArrayCopyDialogView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;

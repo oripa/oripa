@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.main;
+package oripa.gui.view.main.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -44,6 +44,12 @@ import org.slf4j.LoggerFactory;
 
 import oripa.file.ImageResourceLoader;
 import oripa.geom.RectangleDomain;
+import oripa.gui.view.main.MainFrameSetting;
+import oripa.gui.view.main.MainFrameView;
+import oripa.gui.view.main.MainViewSetting;
+import oripa.gui.view.main.PainterScreenView;
+import oripa.gui.view.main.UIPanelView;
+import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.KeyStrokes;
 import oripa.resource.Constants;

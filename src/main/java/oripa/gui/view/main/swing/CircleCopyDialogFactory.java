@@ -16,28 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.main;
-
-import java.awt.Rectangle;
+package oripa.gui.view.main.swing;
 
 import javax.swing.JFrame;
 
 import oripa.gui.view.FrameView;
+import oripa.gui.view.main.CircleCopyDialogView;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class PropertyDialogFactory {
-	public PropertyDialogView create(final FrameView parent) {
-		var frame = (JFrame) parent;
-		PropertyDialog dialog = new PropertyDialog(frame);
+public class CircleCopyDialogFactory {
 
-		Rectangle rec = frame.getBounds();
-		dialog.setLocation(
-				(int) (rec.getCenterX() - dialog.getWidth() / 2),
-				(int) (rec.getCenterY() - dialog.getHeight() / 2));
-
-		return dialog;
+	public CircleCopyDialogView create(final FrameView owner) {
+		return new CircleCopyDialog((JFrame) owner);
 	}
 }

@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.main;
+package oripa.gui.view.main.swing;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -47,6 +47,9 @@ import org.slf4j.LoggerFactory;
 import oripa.drawer.java2d.CreasePatternGraphics;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.View;
+import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.main.PainterScreenView;
+import oripa.gui.view.main.ViewScreenUpdater;
 import oripa.gui.view.util.AffineCamera;
 import oripa.gui.view.util.MouseUtility;
 

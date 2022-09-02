@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.main;
+package oripa.gui.view.main.swing;
 
 import static javax.swing.SwingConstants.*;
 
@@ -51,6 +51,12 @@ import org.slf4j.LoggerFactory;
 
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.view.View;
+import oripa.gui.view.main.InitialVisibilities;
+import oripa.gui.view.main.KeyProcessing;
+import oripa.gui.view.main.MainViewSetting;
+import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.main.UIPanelSetting;
+import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.util.Dialogs;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.gui.view.util.KeyStrokes;

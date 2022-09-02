@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.main;
+package oripa.gui.view.main.swing;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -34,6 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import oripa.gui.view.main.PropertyDialogView;
 import oripa.gui.view.util.GridBagConstraintsBuilder;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
