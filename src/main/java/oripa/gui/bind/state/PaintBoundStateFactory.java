@@ -175,7 +175,7 @@ public class PaintBoundStateFactory {
 
 		case StringID.IMPORT_CP_ID:
 			return stateFactory.create(
-					complexActionFactory.createCopyAndPaste(),
+					complexActionFactory.createCutAndPaste(),
 					changeHint, null);
 
 		}
