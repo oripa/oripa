@@ -18,9 +18,9 @@
  */
 package oripa.gui.view.util;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class ChildFrameManager {
 	public Collection<FrameView> getChildren(final FrameView parentFrame) {
 		var children = relationMap.get(parentFrame);
 		if (children == null) {
-			children = new ArrayList<>();
+			children = new HashSet<>();
 			relationMap.put(parentFrame, children);
 		}
 
@@ -50,12 +50,23 @@ public class ChildFrameManager {
 	}
 
 	public void putChild(final FrameView parentFrame, final FrameView childFrame) {
-		getChildren(parentFrame).add(childFrame);
+		var children = getChildren(parentFrame);
+		children.add(childFrame);
+		logger.info("{} is put.", childFrame);
+		logger.info("There are {} children.", children.size());
+	}
+
+	public void removeChild(final FrameView parentFrame, final FrameView childFrame) {
+		var children = getChildren(parentFrame);
+		if (children.remove(childFrame)) {
+			logger.info("{} is removed.", childFrame);
+			logger.info("There are {} children.", children.size());
+		}
 	}
 
 	public <TFrame extends FrameView> TFrame find(final FrameView parentFrame, final Class<TFrame> clazz) {
 		var children = getChildren(parentFrame);
-		logger.info("children of " + parentFrame + ": " + children);
+		logger.info("{} children of  {}: {}", children.size(), parentFrame, children);
 		for (var child : children) {
 			if (clazz.isInstance(child)) {
 				logger.info("child(class = " + clazz.getName() + ") is found.");
@@ -73,9 +84,13 @@ public class ChildFrameManager {
 
 		var children = getChildren(parentFrame);
 
-		for (FrameView frame : children) {
-			closeAll(frame);
-			frame.setViewVisible(false);
+		var iterator = children.iterator();
+		while (iterator.hasNext()) {
+			var child = iterator.next();
+			closeAll(child);
+			child.setViewVisible(false);
+			iterator.remove();
 		}
 	}
+
 }
