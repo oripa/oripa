@@ -16,32 +16,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.estimation;
+package oripa.gui.view.foldability;
 
-import java.awt.Color;
-import java.beans.PropertyChangeListener;
-import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.Collection;
 import java.util.function.Consumer;
 
-import oripa.domain.fold.FoldedModel;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.FrameView;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface EstimationResultFrameView extends FrameView {
-	public void setModels(final List<FoldedModel> models);
+public interface FoldabilityCheckFrameView extends FrameView {
 
-	public void setColors(final Color front, final Color back);
+	void setModel(
+			OrigamiModel origamiModel,
+			Collection<OriLine> creasePattern,
+			boolean zeroLineWidth);
 
-	public void setSaveColorsListener(final BiConsumer<Color, Color> listener);
-
-	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
-
-	public void setOnCloseListener(final Consumer<FrameView> listener);
-
-	public void selectModel(final int index);
+	void setOnCloseListener(Consumer<FrameView> listener);
 
 }

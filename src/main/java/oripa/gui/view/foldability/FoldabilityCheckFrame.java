@@ -21,7 +21,10 @@ package oripa.gui.view.foldability;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 
@@ -29,9 +32,11 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.FrameView;
 import oripa.value.OriLine;
 
-public class FoldabilityCheckFrame extends JFrame implements FrameView, ActionListener {
+public class FoldabilityCheckFrame extends JFrame implements FoldabilityCheckFrameView, ActionListener, WindowListener {
 
 	FoldabilityScreen screen;
+
+	private Consumer<FrameView> onCloseListener;
 
 	public FoldabilityCheckFrame() {
 		// Called when the "Check window" button is pressed.
@@ -41,6 +46,9 @@ public class FoldabilityCheckFrame extends JFrame implements FrameView, ActionLi
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(screen, BorderLayout.CENTER);
 
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+		addWindowListener(this);
 	}
 
 	@Override
@@ -48,6 +56,7 @@ public class FoldabilityCheckFrame extends JFrame implements FrameView, ActionLi
 
 	}
 
+	@Override
 	public void setModel(
 			final OrigamiModel origamiModel,
 			final Collection<OriLine> creasePattern,
@@ -59,5 +68,44 @@ public class FoldabilityCheckFrame extends JFrame implements FrameView, ActionLi
 	@Override
 	public void setViewVisible(final boolean visible) {
 		setVisible(visible);
+	}
+
+	@Override
+	public void setOnCloseListener(final Consumer<FrameView> listener) {
+		onCloseListener = listener;
+	}
+
+	@Override
+	public void windowOpened(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowClosing(final WindowEvent e) {
+	}
+
+	@Override
+	public void windowClosed(final WindowEvent e) {
+		onCloseListener.accept(this);
+	}
+
+	@Override
+	public void windowIconified(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowDeiconified(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowActivated(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowDeactivated(final WindowEvent e) {
+
 	}
 }

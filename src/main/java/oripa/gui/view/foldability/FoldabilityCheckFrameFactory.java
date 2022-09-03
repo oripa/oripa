@@ -17,7 +17,7 @@ public class FoldabilityCheckFrameFactory {
 		this.childFrameManager = childFrameManager;
 	}
 
-	public FoldabilityCheckFrame createFrame(final FrameView parent, final OrigamiModel origamiModel,
+	public FoldabilityCheckFrameView createFrame(final FrameView parent, final OrigamiModel origamiModel,
 			final Collection<OriLine> creasePattern, final boolean zeroLineWidth) {
 
 		FoldabilityCheckFrame frame = childFrameManager.find(parent,
@@ -27,6 +27,7 @@ public class FoldabilityCheckFrameFactory {
 		}
 
 		frame.setModel(origamiModel, creasePattern, zeroLineWidth);
+		frame.setOnCloseListener(f -> childFrameManager.removeFromChildren(f));
 		childFrameManager.putChild(parent, frame);
 
 		return frame;

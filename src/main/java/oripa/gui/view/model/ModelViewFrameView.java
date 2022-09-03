@@ -20,6 +20,7 @@ package oripa.gui.view.model;
 
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.function.Consumer;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.FrameView;
@@ -34,6 +35,8 @@ public interface ModelViewFrameView extends FrameView {
 	public void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
 	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
+
+	public void setOnCloseListener(final Consumer<FrameView> listener);
 
 	public void selectModel(final int index);
 

@@ -59,6 +59,7 @@ public class ModelViewFrameFactory {
 		frame.putPaperDomainChangeListener(parent, onChangePaperDomain);
 
 		frame.setModels(origamiModels);
+		frame.setOnCloseListener(f -> childFrameManager.removeFromChildren(f));
 
 		childFrameManager.putChild(parent, frame);
 

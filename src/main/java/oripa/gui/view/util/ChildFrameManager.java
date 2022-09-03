@@ -64,6 +64,10 @@ public class ChildFrameManager {
 		}
 	}
 
+	public void removeFromChildren(final FrameView childFrame) {
+		relationMap.keySet().forEach(parentFrame -> removeChild(parentFrame, childFrame));
+	}
+
 	public <TFrame extends FrameView> TFrame find(final FrameView parentFrame, final Class<TFrame> clazz) {
 		var children = getChildren(parentFrame);
 		logger.info("{} children of  {}: {}", children.size(), parentFrame, children);
@@ -77,6 +81,11 @@ public class ChildFrameManager {
 		return null;
 	}
 
+	/**
+	 * Disposes all descendants of {@code parentFrame}.
+	 *
+	 * @param parentFrame
+	 */
 	public void closeAll(final FrameView parentFrame) {
 		if (parentFrame == null) {
 			return;
@@ -88,8 +97,8 @@ public class ChildFrameManager {
 		while (iterator.hasNext()) {
 			var child = iterator.next();
 			closeAll(child);
-			child.setViewVisible(false);
 			iterator.remove();
+			child.dispose();
 		}
 	}
 

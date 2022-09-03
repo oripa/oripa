@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 
@@ -39,6 +40,7 @@ import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
+import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.persistence.entity.OrigamiModelDAO;
@@ -107,6 +109,8 @@ public class ModelViewFrame extends JFrame
 	private RectangleDomain domainBeforeFolding;
 	private final Map<Object, PropertyChangeListener> paperDomainChangeListenerMap = new HashMap<>();
 
+	private Consumer<FrameView> onCloseListener;
+
 	public ModelViewFrame(
 			final int width, final int height,
 			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine,
@@ -117,6 +121,7 @@ public class ModelViewFrame extends JFrame
 		initialize(lineHolder, onUpdateCrossLine);
 		this.setBounds(0, 0, width, height);
 
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
 	private void initialize(final CutModelOutlinesHolder lineHolder,
@@ -269,6 +274,11 @@ public class ModelViewFrame extends JFrame
 	}
 
 	@Override
+	public void setOnCloseListener(final Consumer<FrameView> listener) {
+		onCloseListener = listener;
+	}
+
+	@Override
 	public void windowOpened(final WindowEvent e) {
 
 	}
@@ -280,7 +290,7 @@ public class ModelViewFrame extends JFrame
 
 	@Override
 	public void windowClosed(final WindowEvent e) {
-
+		onCloseListener.accept(this);
 	}
 
 	@Override

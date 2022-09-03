@@ -20,23 +20,27 @@ package oripa.gui.view.estimation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModel;
+import oripa.gui.view.FrameView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.swing.view.util.ListItemSelectionPanel;
 
-public class EstimationResultFrame extends JFrame implements EstimationResultFrameView {
+public class EstimationResultFrame extends JFrame implements EstimationResultFrameView, WindowListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,6 +57,8 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
 
+	private Consumer<FrameView> onCloseListener;
+
 	public EstimationResultFrame() {
 		setTitle(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
 		setBounds(0, 0, 800, 650);
@@ -66,6 +72,9 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 		add(hintLabel, BorderLayout.SOUTH);
 
 		addPropertyChangeListenerToComponents();
+
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		addWindowListener(this);
 	}
 
 	private void addPropertyChangeListenerToComponents() {
@@ -115,5 +124,44 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 	@Override
 	public void setViewVisible(final boolean visible) {
 		setVisible(visible);
+	}
+
+	@Override
+	public void setOnCloseListener(final Consumer<FrameView> listener) {
+		onCloseListener = listener;
+	}
+
+	@Override
+	public void windowOpened(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowClosing(final WindowEvent e) {
+	}
+
+	@Override
+	public void windowClosed(final WindowEvent e) {
+		onCloseListener.accept(this);
+	}
+
+	@Override
+	public void windowIconified(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowDeiconified(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowActivated(final WindowEvent e) {
+
+	}
+
+	@Override
+	public void windowDeactivated(final WindowEvent e) {
+
 	}
 }

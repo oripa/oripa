@@ -28,6 +28,7 @@ public class EstimationResultFrameFactory {
 		}
 
 		frame.setModels(foldedModels);
+		frame.setOnCloseListener(f -> childFrameManager.removeFromChildren(f));
 		childFrameManager.putChild(parent, frame);
 
 		return frame;
