@@ -29,10 +29,10 @@ import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
 import oripa.gui.view.main.PainterScreenView;
-import oripa.gui.view.main.ViewScreenUpdater;
 import oripa.gui.view.main.ViewUpdateSupport;
 
 /**

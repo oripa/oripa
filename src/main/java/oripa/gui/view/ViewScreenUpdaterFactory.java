@@ -16,37 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.viewsetting.main;
+package oripa.gui.view;
 
-import java.util.function.Consumer;
-
-import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.main.KeyProcessing;
-
-public class KeyProcessingImpl implements KeyProcessing {
-
-	private final Consumer<Boolean> changeActionIfCopyAndPaste;
-	private final ViewScreenUpdater screenUpdater;
-
-	public KeyProcessingImpl(final Consumer<Boolean> changeAction, final ViewScreenUpdater screenUpdater) {
-		this.changeActionIfCopyAndPaste = changeAction;
-		this.screenUpdater = screenUpdater;
-	}
-
-	@Override
-	public void controlKeyPressed() {
-		changeActionIfCopyAndPaste.accept(true);
-		screenUpdater.updateScreen();
-	}
-
-	@Override
-	public void escapeKeyPressed() {
-		screenUpdater.updateScreen();
-	}
-
-	@Override
-	public void keyReleased() {
-		changeActionIfCopyAndPaste.accept(false);
-		screenUpdater.updateScreen();
+/**
+ * @author OUCHI Koji
+ *
+ */
+public class ViewScreenUpdaterFactory {
+	public ViewScreenUpdater create() {
+		return new ViewScreenUpdaterImpl();
 	}
 }

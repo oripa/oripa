@@ -18,6 +18,8 @@
  */
 package oripa.gui.view.main;
 
+import oripa.gui.view.ViewScreenUpdater;
+
 /**
  * @author OUCHI Koji
  *

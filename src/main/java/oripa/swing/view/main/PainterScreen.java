@@ -46,9 +46,9 @@ import org.slf4j.LoggerFactory;
 
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.View;
+import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.PainterScreenView;
-import oripa.gui.view.main.ViewScreenUpdater;
 import oripa.swing.drawer.java2d.CreasePatternGraphics;
 import oripa.swing.view.util.AffineCamera;
 import oripa.swing.view.util.MouseUtility;

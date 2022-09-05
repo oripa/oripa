@@ -41,13 +41,13 @@ import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
+import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.viewsetting.main.KeyProcessingImpl;
 import oripa.gui.viewsetting.main.MainFrameSettingImpl;
-import oripa.gui.viewsetting.main.PainterScreenUpdater;
-import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
+import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFilterSelector;
 import oripa.resource.Constants;
@@ -70,7 +70,9 @@ public class ORIPA {
 
 			// Construction of the main frame
 
-			var screenUpdater = new PainterScreenUpdater();
+			var screenUpdaterFactory = new ViewScreenUpdaterFactory();
+
+			var screenUpdater = screenUpdaterFactory.create();
 			var mouseActionHolder = new MouseActionHolder();
 			var keyProcessing = new KeyProcessingImpl(
 					new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder),
@@ -82,6 +84,9 @@ public class ORIPA {
 					new PainterScreenSettingImpl(),
 					new UIPanelSettingImpl());
 			var mainFrame = new MainFrame(mainViewSetting, viewUpdateSupport);
+			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+			// Configure position and size of the frame
 
 			Toolkit toolkit = mainFrame.getToolkit();
 			Dimension dim = toolkit.getScreenSize();
@@ -89,7 +94,8 @@ public class ORIPA {
 			int originY = (int) (dim.getHeight() / 2 - appTotalHeight / 2);
 
 			mainFrame.setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
-			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+			// Construct the presenter
 
 			var paintContext = new PaintContextFactory().createContext();
 			var viewContext = new CreasePatternViewContextFactory().create(paintContext);

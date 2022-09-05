@@ -21,8 +21,8 @@ package oripa.gui.presenter.main;
 import oripa.domain.paint.ArrayCopyParameter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.arraycopy.ArrayCopyCommand;
+import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.main.ArrayCopyDialogView;
-import oripa.gui.view.main.ViewScreenUpdater;
 import oripa.util.Command;
 
 /**
