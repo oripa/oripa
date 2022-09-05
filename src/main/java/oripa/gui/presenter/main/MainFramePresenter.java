@@ -174,7 +174,7 @@ public class MainFramePresenter {
 	}
 
 	public void setViewVisible(final boolean visible) {
-		view.setViewVisible(visible);
+		view.setVisible(visible);
 	}
 
 	private void addListeners() {

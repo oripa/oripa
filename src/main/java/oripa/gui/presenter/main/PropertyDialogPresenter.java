@@ -63,6 +63,6 @@ public class PropertyDialogPresenter {
 	}
 
 	public void setViewVisible(final boolean visible) {
-		view.setViewVisible(visible);
+		view.setVisible(visible);
 	}
 }

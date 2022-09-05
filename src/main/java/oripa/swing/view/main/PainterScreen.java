@@ -369,11 +369,6 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void setViewVisible(final boolean visible) {
-		setVisible(visible);
-	}
-
-	@Override
 	public void setPaintComponentListener(final Consumer<CreasePatternGraphics> listener) {
 		paintComponentListener = listener;
 	}

@@ -66,11 +66,6 @@ public class FoldabilityCheckFrame extends JFrame implements FoldabilityCheckFra
 	}
 
 	@Override
-	public void setViewVisible(final boolean visible) {
-		setVisible(visible);
-	}
-
-	@Override
 	public void setOnCloseListener(final Consumer<FrameView> listener) {
 		onCloseListener = listener;
 	}

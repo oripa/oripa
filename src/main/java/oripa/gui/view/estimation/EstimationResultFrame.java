@@ -122,11 +122,6 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 	}
 
 	@Override
-	public void setViewVisible(final boolean visible) {
-		setVisible(visible);
-	}
-
-	@Override
 	public void setOnCloseListener(final Consumer<FrameView> listener) {
 		onCloseListener = listener;
 	}

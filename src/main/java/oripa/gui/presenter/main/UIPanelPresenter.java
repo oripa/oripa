@@ -352,13 +352,13 @@ public class UIPanelPresenter {
 				resultFrame.setSaveColorsListener(view.getEstimationResultSaveColorsListener());
 				resultFrame.repaint();
 
-				resultFrame.setViewVisible(true);
+				resultFrame.setVisible(true);
 			}
 		}
 
 		putModelIndexChangeListener(modelViewFrame, resultFrame);
 
-		modelViewFrame.setViewVisible(true);
+		modelViewFrame.setVisible(true);
 	}
 
 	public void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,

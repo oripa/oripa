@@ -204,11 +204,6 @@ public class CircleCopyDialog extends JDialog implements CircleCopyDialogView {
 	}
 
 	@Override
-	public void setViewVisible(final boolean visible) {
-		setVisible(visible);
-	}
-
-	@Override
 	public double getCenterX() {
 		try {
 			return Double.valueOf(jTextFieldCX.getText());

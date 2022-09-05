@@ -31,5 +31,5 @@ public interface View {
 
 	void repaint();
 
-	void setViewVisible(boolean visible);
+	void setVisible(boolean visible);
 }

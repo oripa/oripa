@@ -61,6 +61,6 @@ public class CheckerWindowOpener {
 		View checker = checkerFactory.createFrame(
 				ownerView, origamiModel, creasePattern, isZeroLineWidth);
 		checker.repaint();
-		checker.setViewVisible(true);
+		checker.setVisible(true);
 	}
 }

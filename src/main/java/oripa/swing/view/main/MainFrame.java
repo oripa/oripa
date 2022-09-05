@@ -340,11 +340,6 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 	}
 
 	@Override
-	public void setViewVisible(final boolean visible) {
-		setVisible(visible);
-	}
-
-	@Override
 	public UIPanelView getUIPanelView() {
 		return uiPanel;
 	}

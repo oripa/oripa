@@ -332,10 +332,4 @@ public class ModelViewFrame extends JFrame
 	public void componentHidden(final ComponentEvent e) {
 		setDomainBeforeFolding(null);
 	}
-
-	@Override
-	public void setViewVisible(final boolean visible) {
-		setVisible(visible);
-	}
-
 }

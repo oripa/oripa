@@ -1118,11 +1118,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void setViewVisible(final boolean visible) {
-		setVisible(visible);
-	}
-
-	@Override
 	public Color getEstimationResultFrontColor() {
 		return estimationResultFrontColor;
 	}

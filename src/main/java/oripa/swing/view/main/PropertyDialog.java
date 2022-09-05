@@ -202,9 +202,4 @@ public class PropertyDialog extends JDialog implements
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
 	}
-
-	@Override
-	public void setViewVisible(final boolean visible) {
-		setVisible(visible);
-	}
 }

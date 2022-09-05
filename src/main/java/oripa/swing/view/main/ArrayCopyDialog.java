@@ -325,11 +325,6 @@ public class ArrayCopyDialog extends JDialog implements ArrayCopyDialogView {
 	}
 
 	@Override
-	public void setViewVisible(final boolean visible) {
-		setVisible(visible);
-	}
-
-	@Override
 	public void showWrongInputMessage() {
 		JOptionPane.showMessageDialog(
 				owner, "Specify non-Zero value to Row and Col.",
