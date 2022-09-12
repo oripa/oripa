@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.View;
 import oripa.gui.view.ViewScreenUpdater;
+import oripa.gui.view.creasepattern.PaintComponentGraphics;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.PainterScreenView;
 import oripa.swing.drawer.java2d.CreasePatternGraphics;
@@ -68,7 +69,7 @@ public class PainterScreen extends JPanel
 	private final AffineCamera camera = new AffineCamera();
 	private AffineTransform affineTransform = new AffineTransform();
 
-	private Consumer<CreasePatternGraphics> paintComponentListener;
+	private Consumer<PaintComponentGraphics> paintComponentListener;
 	private BiConsumer<Vector2d, Boolean> mouseLeftClickListener;
 	private BiConsumer<Vector2d, Boolean> mouseRightClickListener;
 	private BiConsumer<Vector2d, Boolean> mousePressListener;
@@ -369,7 +370,7 @@ public class PainterScreen extends JPanel
 	}
 
 	@Override
-	public void setPaintComponentListener(final Consumer<CreasePatternGraphics> listener) {
+	public void setPaintComponentListener(final Consumer<PaintComponentGraphics> listener) {
 		paintComponentListener = listener;
 	}
 
