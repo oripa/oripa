@@ -21,16 +21,20 @@ public class FoldabilityCheckSwingFrameFactory implements FoldabilityCheckFrameF
 		FoldabilityCheckFrame frame = childFrameManager.find(parent,
 				FoldabilityCheckFrame.class);
 		if (frame != null) {
-			childFrameManager.closeAll(frame);
-			childFrameManager.removeFromChildren(frame);
+			removeFromChildFrameManager(frame);
 			frame.dispose();
 		}
 
 		frame = new FoldabilityCheckFrame();
 
-		frame.setOnCloseListener(f -> childFrameManager.removeFromChildren(f));
+		frame.setOnCloseListener(this::removeFromChildFrameManager);
 		childFrameManager.putChild(parent, frame);
 
 		return frame;
+	}
+
+	private void removeFromChildFrameManager(final FrameView frame) {
+		childFrameManager.closeAll(frame);
+		childFrameManager.removeFromChildren(frame);
 	}
 }
