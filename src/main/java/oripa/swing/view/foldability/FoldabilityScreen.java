@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.foldability;
+package oripa.swing.view.foldability;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -45,6 +45,7 @@ import oripa.domain.fold.halfedge.OriVertex;
 import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
 import oripa.gui.view.View;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
+import oripa.gui.view.foldability.FoldabilityScreenView;
 import oripa.swing.drawer.java2d.CreasePatternGraphics;
 import oripa.swing.view.util.AffineCamera;
 import oripa.swing.view.util.MouseUtility;

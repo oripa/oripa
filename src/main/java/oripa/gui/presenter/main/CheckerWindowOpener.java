@@ -21,10 +21,10 @@ package oripa.gui.presenter.main;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
 import oripa.gui.view.FrameView;
-import oripa.gui.view.View;
 import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
-import oripa.gui.view.util.ChildFrameManager;
+import oripa.gui.view.foldability.FoldabilityCheckFrameView;
 
 /**
  * @author OUCHI Koji
@@ -32,13 +32,13 @@ import oripa.gui.view.util.ChildFrameManager;
  */
 public class CheckerWindowOpener {
 	private final FrameView ownerView;
-	private final ChildFrameManager childFrameManager;
+	private final FoldabilityCheckFrameFactory frameFactory;
 
 	public CheckerWindowOpener(
 			final FrameView ownerView,
-			final ChildFrameManager childFrameManager) {
+			final FoldabilityCheckFrameFactory frameFactory) {
 		this.ownerView = ownerView;
-		this.childFrameManager = childFrameManager;
+		this.frameFactory = frameFactory;
 	}
 
 	/**
@@ -56,11 +56,14 @@ public class CheckerWindowOpener {
 		origamiModel = modelFactory.createOrigamiModel(
 				creasePattern);
 
-		FoldabilityCheckFrameFactory checkerFactory = new FoldabilityCheckFrameFactory(
-				childFrameManager);
-		View checker = checkerFactory.createFrame(
-				ownerView, origamiModel, creasePattern, isZeroLineWidth);
-		checker.repaint();
-		checker.setVisible(true);
+		FoldabilityCheckFrameView checker = frameFactory.createFrame(ownerView);
+
+		var foldabilityPresenter = new FoldabilityCheckFramePresenter(
+				checker,
+				origamiModel,
+				creasePattern,
+				isZeroLineWidth);
+
+		foldabilityPresenter.setViewVisible(true);
 	}
 }

@@ -44,6 +44,7 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
+import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.UIPanelView;
@@ -62,6 +63,7 @@ public class UIPanelPresenter {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanelPresenter.class);
 
 	private final UIPanelView view;
+	private final FoldabilityCheckFrameFactory foldabilityFrameFactory;
 
 	private final TypeForChange[] alterLineComboDataFrom = {
 			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
@@ -90,6 +92,7 @@ public class UIPanelPresenter {
 	private ComputationResult computationResult;
 
 	public UIPanelPresenter(final UIPanelView view,
+			final FoldabilityCheckFrameFactory foldabilityFrameFactory,
 			final StateManager<EditMode> stateManager,
 			final ViewUpdateSupport viewUpdateSupport,
 			final CreasePatternPresentationContext presentationContext,
@@ -98,6 +101,7 @@ public class UIPanelPresenter {
 			final BindingObjectFactoryFacade bindingFactory,
 			final PainterScreenSetting mainScreenSetting) {
 		this.view = view;
+		this.foldabilityFrameFactory = foldabilityFrameFactory;
 
 		this.byValueContext = domainContext.getByValueContext();
 		typeForChangeContext = presentationContext.getTypeForChangeContext();
@@ -296,7 +300,7 @@ public class UIPanelPresenter {
 	 * display window with foldability checks
 	 */
 	private void showCheckerWindow() {
-		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), childFrameManager);
+		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), foldabilityFrameFactory);
 		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth());
 	}
 

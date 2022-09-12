@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.foldability;
+package oripa.swing.view.foldability;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -31,6 +31,8 @@ import javax.swing.JFrame;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.foldability.FoldabilityScreenPresenter;
 import oripa.gui.view.FrameView;
+import oripa.gui.view.foldability.FoldabilityCheckFrameView;
+import oripa.gui.view.foldability.FoldabilityScreenView;
 import oripa.value.OriLine;
 
 public class FoldabilityCheckFrame extends JFrame implements FoldabilityCheckFrameView, ActionListener, WindowListener {
@@ -105,5 +107,10 @@ public class FoldabilityCheckFrame extends JFrame implements FoldabilityCheckFra
 	@Override
 	public void windowDeactivated(final WindowEvent e) {
 
+	}
+
+	@Override
+	public FoldabilityScreenView getFoldabilityScreenView() {
+		return screen;
 	}
 }

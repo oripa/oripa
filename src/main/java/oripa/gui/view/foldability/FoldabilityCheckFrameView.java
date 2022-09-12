@@ -31,6 +31,8 @@ import oripa.value.OriLine;
  */
 public interface FoldabilityCheckFrameView extends FrameView {
 
+	FoldabilityScreenView getFoldabilityScreenView();
+
 	void setModel(
 			OrigamiModel origamiModel,
 			Collection<OriLine> creasePattern,

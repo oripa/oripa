@@ -44,6 +44,7 @@ import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.ViewUpdateSupport;
+import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.main.KeyProcessingImpl;
 import oripa.gui.viewsetting.main.MainFrameSettingImpl;
 import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
@@ -51,6 +52,7 @@ import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFilterSelector;
 import oripa.resource.Constants;
+import oripa.swing.view.foldability.FoldabilityCheckSwingFrameFactory;
 import oripa.swing.view.main.ArrayCopyDialogFactory;
 import oripa.swing.view.main.CircleCopyDialogFactory;
 import oripa.swing.view.main.MainFrame;
@@ -105,10 +107,14 @@ public class ORIPA {
 					new CircleCopyDialogFactory(),
 					new PropertyDialogFactory());
 
+			var childFrameManager = new ChildFrameManager();
+
 			var presenter = new MainFramePresenter(
 					mainFrame,
 					viewUpdateSupport,
 					dialogFactory,
+					new FoldabilityCheckSwingFrameFactory(childFrameManager),
+					childFrameManager,
 					mainViewSetting,
 					new Doc(),
 					new PaintDomainContext(paintContext, new SelectionOriginHolderImpl(), new ByValueContextImpl()),

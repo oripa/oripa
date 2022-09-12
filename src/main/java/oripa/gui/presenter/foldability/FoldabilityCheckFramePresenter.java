@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,16 +16,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.foldability;
+package oripa.gui.presenter.foldability;
 
-import oripa.gui.view.FrameView;
+import java.util.Collection;
+
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.gui.view.foldability.FoldabilityCheckFrameView;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface FoldabilityCheckFrameFactory {
+public class FoldabilityCheckFramePresenter {
 
-	FoldabilityCheckFrameView createFrame(FrameView parent);
+	private final FoldabilityCheckFrameView view;
 
+	public FoldabilityCheckFramePresenter(
+			final FoldabilityCheckFrameView view,
+			final OrigamiModel origamiModel,
+			final Collection<OriLine> creasePattern,
+			final boolean zeroLineWidth) {
+
+		this.view = view;
+
+		var screenPresenter = new FoldabilityScreenPresenter(
+				view.getFoldabilityScreenView(),
+				origamiModel,
+				creasePattern,
+				zeroLineWidth);
+	}
+
+	public void setViewVisible(final boolean visible) {
+		view.setVisible(visible);
+	}
 }
