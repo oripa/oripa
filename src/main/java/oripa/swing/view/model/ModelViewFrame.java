@@ -90,8 +90,6 @@ public class ModelViewFrame extends JFrame
 	private final ListItemSelectionPanel modelSelectionPanel = new ListItemSelectionPanel(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.MODEL_ID));
 
-	private OrigamiModel origamiModel = null;
-
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
 
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
@@ -183,7 +181,6 @@ public class ModelViewFrame extends JFrame
 		int boundSize = Math.min(getWidth(), getHeight()
 				- getJMenuBar().getHeight() - 100);
 		screen.setModel(origamiModel, boundSize);
-		this.origamiModel = origamiModel;
 
 		setDomainBeforeFolding(origamiModel.createPaperDomain());
 	}
@@ -214,11 +211,6 @@ public class ModelViewFrame extends JFrame
 	public void selectModel(final int index) {
 		modelSelectionPanel.selectItem(index);
 
-	}
-
-	private void flipOrigamiModel() {
-		origamiModel.flipXCoordinates();
-		screen.repaint();
 	}
 
 	@Override
