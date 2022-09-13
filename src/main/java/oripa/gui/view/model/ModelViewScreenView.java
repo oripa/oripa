@@ -18,21 +18,19 @@
  */
 package oripa.gui.view.model;
 
-import java.beans.PropertyChangeListener;
-
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.gui.view.FrameView;
-import oripa.gui.view.util.CallbackOnUpdate;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.gui.view.ScreenView;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface ModelViewFrameFactory {
+public interface ModelViewScreenView extends ScreenView {
 
-	ModelViewFrameView createFrame(
-			FrameView parent,
-			CutModelOutlinesHolder lineHolder, CallbackOnUpdate onUpdateLine,
-			PropertyChangeListener onChangePaperDomain);
+	void setModelDisplayMode(ModelDisplayMode mode);
+
+	ModelDisplayMode getModelDisplayMode();
+
+	void setModel(OrigamiModel origamiModel, int boundSize);
 
 }

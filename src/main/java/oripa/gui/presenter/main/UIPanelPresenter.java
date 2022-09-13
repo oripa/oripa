@@ -40,17 +40,19 @@ import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
+import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
-import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.model.ModelViewFrameView;
+import oripa.gui.view.model.ModelViewSwingFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
@@ -63,7 +65,7 @@ public class UIPanelPresenter {
 	private static final Logger logger = LoggerFactory.getLogger(UIPanelPresenter.class);
 
 	private final UIPanelView view;
-	private final FoldabilityCheckFrameFactory foldabilityFrameFactory;
+	private final SubFrameFactory subFrameFactory;
 
 	private final TypeForChange[] alterLineComboDataFrom = {
 			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
@@ -92,7 +94,7 @@ public class UIPanelPresenter {
 	private ComputationResult computationResult;
 
 	public UIPanelPresenter(final UIPanelView view,
-			final FoldabilityCheckFrameFactory foldabilityFrameFactory,
+			final SubFrameFactory subFrameFactory,
 			final StateManager<EditMode> stateManager,
 			final ViewUpdateSupport viewUpdateSupport,
 			final CreasePatternPresentationContext presentationContext,
@@ -101,7 +103,7 @@ public class UIPanelPresenter {
 			final BindingObjectFactoryFacade bindingFactory,
 			final PainterScreenSetting mainScreenSetting) {
 		this.view = view;
-		this.foldabilityFrameFactory = foldabilityFrameFactory;
+		this.subFrameFactory = subFrameFactory;
 
 		this.byValueContext = domainContext.getByValueContext();
 		typeForChangeContext = presentationContext.getTypeForChangeContext();
@@ -300,7 +302,7 @@ public class UIPanelPresenter {
 	 * display window with foldability checks
 	 */
 	private void showCheckerWindow() {
-		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), foldabilityFrameFactory);
+		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), subFrameFactory);
 		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth());
 	}
 
@@ -328,13 +330,14 @@ public class UIPanelPresenter {
 		var origamiModels = computationResult.getOrigamiModels();
 		var foldedModels = computationResult.getFoldedModels();
 
-		ModelViewFrameFactory modelViewFactory = new ModelViewFrameFactory(
+		ModelViewFrameFactory modelViewFactory = new ModelViewSwingFrameFactory(
 				mainScreenSetting,
 				childFrameManager);
-		ModelViewFrameView modelViewFrame = modelViewFactory.createFrame(parent, origamiModels,
+		ModelViewFrameView modelViewFrame = subFrameFactory.createModelViewFrame(parent,
 				cutOutlinesHolder, screenUpdater::updateScreen, view.getPaperDomainOfModelChangeListener());
 
-		modelViewFrame.repaint();
+		var modelViewPresenter = new ModelViewFramePresenter(modelViewFrame, mainScreenSetting, origamiModels);
+		modelViewPresenter.setViewVisible(true);
 
 		EstimationResultFrameView resultFrame = null;
 
@@ -362,7 +365,7 @@ public class UIPanelPresenter {
 
 		putModelIndexChangeListener(modelViewFrame, resultFrame);
 
-		modelViewFrame.setVisible(true);
+		modelViewPresenter.setViewVisible(true);
 	}
 
 	public void putModelIndexChangeListener(final ModelViewFrameView modelViewFrame,

@@ -57,9 +57,9 @@ public class ListItemSelectionPanel extends JPanel {
 
 	/**
 	 * calls {@link #selectItem(int)} with the parameter = 0 if the
-	 * {@code items} is not empty.
+	 * {@code itemCount} is larger than zero.
 	 *
-	 * @param items
+	 * @param itemCount
 	 */
 	public void setItemCount(final int itemCount) {
 		this.itemCount = itemCount;

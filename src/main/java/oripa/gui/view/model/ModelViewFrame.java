@@ -28,25 +28,18 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import javax.swing.*;
 
-import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.persistence.entity.OrigamiModelDAO;
-import oripa.persistence.entity.OrigamiModelFileTypeKey;
-import oripa.persistence.entity.OrigamiModelFilterSelector;
-import oripa.persistence.filetool.FileChooserCanceledException;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -93,13 +86,9 @@ public class ModelViewFrame extends JFrame
 
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
-	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
-
 	private final ListItemSelectionPanel modelSelectionPanel = new ListItemSelectionPanel(
 			resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.MODEL_ID));
 
-	private List<OrigamiModel> origamiModels = new ArrayList<>();
 	private OrigamiModel origamiModel = null;
 
 	private final Map<Object, PropertyChangeListener> modelIndexChangeListenerMap = new HashMap<>();
@@ -161,9 +150,6 @@ public class ModelViewFrame extends JFrame
 
 		menuItemFillAlpha.setSelected(true);
 
-		addPropertyChangeListenerToComponents();
-		addActionListenersToComponents();
-
 		menuBar.add(menuFile);
 		menuBar.add(menuDisp);
 
@@ -176,19 +162,20 @@ public class ModelViewFrame extends JFrame
 		addComponentListener(this);
 	}
 
-	private void addPropertyChangeListenerToComponents() {
+	@Override
+	public void addModelSwitchListener(final Consumer<Integer> listener) {
 		modelSelectionPanel.addPropertyChangeListener(
 				ListItemSelectionPanel.INDEX,
-				e -> setModel(origamiModels.get((Integer) e.getNewValue())));
+				e -> listener.accept((Integer) e.getNewValue()));
 	}
 
 	@Override
-	public void setModels(final List<OrigamiModel> origamiModels) {
-		this.origamiModels = origamiModels;
-		modelSelectionPanel.setItemCount(origamiModels.size());
+	public void setModelCount(final int count) {
+		modelSelectionPanel.setItemCount(count);
 	}
 
-	private void setModel(final OrigamiModel origamiModel) {
+	@Override
+	public void setModel(final OrigamiModel origamiModel) {
 		int boundSize = Math.min(getWidth(), getHeight()
 				- getJMenuBar().getHeight() - 100);
 		screen.setModel(origamiModel, boundSize);
@@ -222,28 +209,7 @@ public class ModelViewFrame extends JFrame
 	@Override
 	public void selectModel(final int index) {
 		modelSelectionPanel.selectItem(index);
-	}
 
-	private void addActionListenersToComponents() {
-		menuItemFlip.addActionListener(e -> flipOrigamiModel());
-
-		menuItemCrossLine.addActionListener(e -> mainScreenSetting.setCrossLineVisible(menuItemCrossLine.isSelected()));
-
-		menuItemExportDXF.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.DXF_MODEL));
-
-		menuItemExportOBJ.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.OBJ_MODEL));
-
-		menuItemExportSVG.addActionListener(e -> exportFile(OrigamiModelFileTypeKey.SVG_MODEL));
-
-		menuItemFillAlpha.addActionListener(e -> {
-			screen.setModelDisplayMode(ModelDisplayMode.FILL_ALPHA);
-			screen.repaint();
-		});
-
-		menuItemFillNone.addActionListener(e -> {
-			screen.setModelDisplayMode(ModelDisplayMode.FILL_NONE);
-			screen.repaint();
-		});
 	}
 
 	private void flipOrigamiModel() {
@@ -259,18 +225,6 @@ public class ModelViewFrame extends JFrame
 			screen.setScissorsLinePosition(e.getValue());
 		}
 
-	}
-
-	private void exportFile(final OrigamiModelFileTypeKey type) {
-
-		try {
-			fileAccess.saveFile(origamiModel, this, filterSelector.getFilter(type));
-		} catch (FileChooserCanceledException ignored) {
-			// ignored
-		} catch (Exception e) {
-			Dialogs.showErrorDialog(this, resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID),
-					e);
-		}
 	}
 
 	@Override
@@ -331,5 +285,61 @@ public class ModelViewFrame extends JFrame
 	@Override
 	public void componentHidden(final ComponentEvent e) {
 		setDomainBeforeFolding(null);
+	}
+
+	@Override
+	public void addFlipModelButtonListener(final Runnable listener) {
+		addButtonListener(menuItemFlip, listener);
+	}
+
+	@Override
+	public void addCrossLineButtonListener(final Runnable listener) {
+		addButtonListener(menuItemCrossLine, listener);
+	}
+
+	@Override
+	public void addExportDXFButtonListener(final Runnable listener) {
+		addButtonListener(menuItemExportDXF, listener);
+	}
+
+	@Override
+	public void addExportOBJButtonListener(final Runnable listener) {
+		addButtonListener(menuItemExportOBJ, listener);
+	}
+
+	@Override
+	public void addExportSVGButtonListener(final Runnable listener) {
+		addButtonListener(menuItemExportSVG, listener);
+	}
+
+	@Override
+	public void addFillAlphaButtonListener(final Runnable listener) {
+		addButtonListener(menuItemFillAlpha, listener);
+	}
+
+	@Override
+	public void addFillNoneButtonListener(final Runnable listener) {
+		addButtonListener(menuItemFillNone, listener);
+	}
+
+	private void addButtonListener(final AbstractButton button, final Runnable listener) {
+		button.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public boolean isCrossLineVisible() {
+		return menuItemCrossLine.isSelected();
+	}
+
+	@Override
+	public void setModelDisplayMode(final ModelDisplayMode mode) {
+		screen.setModelDisplayMode(mode);
+	}
+
+	@Override
+	public void showExportErrorMessage(final Exception e) {
+		Dialogs.showErrorDialog(this, resourceHolder.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID),
+				e);
+
 	}
 }

@@ -44,6 +44,7 @@ import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.view.ViewScreenUpdaterFactory;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.ViewUpdateSupport;
+import oripa.gui.view.model.ModelViewSwingFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.viewsetting.main.KeyProcessingImpl;
 import oripa.gui.viewsetting.main.MainFrameSettingImpl;
@@ -58,6 +59,7 @@ import oripa.swing.view.main.CircleCopyDialogFactory;
 import oripa.swing.view.main.MainFrame;
 import oripa.swing.view.main.MainFrameSwingDialogFactory;
 import oripa.swing.view.main.PropertyDialogFactory;
+import oripa.swing.view.main.SubSwingFrameFactory;
 
 public class ORIPA {
 	public static void main(final String[] args) {
@@ -113,7 +115,10 @@ public class ORIPA {
 					mainFrame,
 					viewUpdateSupport,
 					dialogFactory,
-					new FoldabilityCheckSwingFrameFactory(childFrameManager),
+					new SubSwingFrameFactory(
+							new FoldabilityCheckSwingFrameFactory(childFrameManager),
+							new ModelViewSwingFrameFactory(mainViewSetting.getPainterScreenSetting(),
+									childFrameManager)),
 					childFrameManager,
 					mainViewSetting,
 					new Doc(),

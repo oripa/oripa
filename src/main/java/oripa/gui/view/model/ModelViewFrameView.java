@@ -19,7 +19,6 @@
 package oripa.gui.view.model;
 
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import java.util.function.Consumer;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -30,7 +29,9 @@ import oripa.gui.view.FrameView;
  *
  */
 public interface ModelViewFrameView extends FrameView {
-	public void setModels(final List<OrigamiModel> origamiModels);
+	public void setModelCount(int count);
+
+	public void setModel(final OrigamiModel origamiModel);
 
 	public void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
@@ -40,4 +41,25 @@ public interface ModelViewFrameView extends FrameView {
 
 	public void selectModel(final int index);
 
+	public void addFlipModelButtonListener(Runnable listener);
+
+	public void addCrossLineButtonListener(Runnable listener);
+
+	public void addExportDXFButtonListener(Runnable listener);
+
+	public void addExportOBJButtonListener(Runnable listener);
+
+	public void addExportSVGButtonListener(Runnable listener);
+
+	public void addFillAlphaButtonListener(Runnable listener);
+
+	public void addFillNoneButtonListener(Runnable listener);
+
+	public boolean isCrossLineVisible();
+
+	public void setModelDisplayMode(ModelDisplayMode mode);
+
+	public void addModelSwitchListener(Consumer<Integer> listener);
+
+	public void showExportErrorMessage(Exception e);
 }

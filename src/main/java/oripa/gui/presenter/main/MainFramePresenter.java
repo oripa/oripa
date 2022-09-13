@@ -41,11 +41,11 @@ import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.*;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.MainViewSetting;
 import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.AbstractFilterSelector;
@@ -103,7 +103,7 @@ public class MainFramePresenter {
 	public MainFramePresenter(final MainFrameView view,
 			final ViewUpdateSupport viewUpdateSupport,
 			final MainFrameDialogFactory dialogFactory,
-			final FoldabilityCheckFrameFactory foldabilityFrameFactory,
+			final SubFrameFactory subFrameFactory,
 			final ChildFrameManager childFrameManager,
 			final MainViewSetting viewSetting,
 			final Doc document,
@@ -158,7 +158,7 @@ public class MainFramePresenter {
 
 		uiPanelPresenter = new UIPanelPresenter(
 				uiPanel,
-				foldabilityFrameFactory,
+				subFrameFactory,
 				stateManager,
 				viewUpdateSupport,
 				presentationContext,

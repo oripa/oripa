@@ -35,6 +35,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
@@ -44,6 +45,8 @@ import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.model.OrigamiModelGraphicDrawer;
+import oripa.gui.view.FrameView;
+import oripa.gui.view.View;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.swing.drawer.java2d.OrigamiModelObjectDrawer;
@@ -59,7 +62,7 @@ import oripa.value.OriLine;
  */
 public class ModelViewScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,
-		ComponentListener {
+		ComponentListener, ModelViewScreenView {
 	private static final Logger logger = LoggerFactory.getLogger(ModelViewScreen.class);
 
 	private Image bufferImage = null;
@@ -117,14 +120,17 @@ public class ModelViewScreen extends JPanel
 				});
 	}
 
+	@Override
 	public void setModelDisplayMode(final ModelDisplayMode mode) {
 		modelDisplayMode = mode;
 	}
 
+	@Override
 	public ModelDisplayMode getModelDisplayMode() {
 		return modelDisplayMode;
 	}
 
+	@Override
 	public void setModel(final OrigamiModel origamiModel, final int boundSize) {
 		logger.debug("set origami model {}", origamiModel);
 		this.origamiModel = origamiModel;
@@ -236,7 +242,7 @@ public class ModelViewScreen extends JPanel
 		recalcScissorsLine();
 	}
 
-	public void recalcScissorsLine() {
+	private void recalcScissorsLine() {
 		scissorsLine = new OriLine();
 
 		Vector2d dir = new Vector2d(Math.cos(Math.PI * scissorsLineAngleDegree / 180.0),
@@ -331,5 +337,10 @@ public class ModelViewScreen extends JPanel
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
 
+	}
+
+	@Override
+	public View getTopLevelView() {
+		return (FrameView) SwingUtilities.getWindowAncestor(this);
 	}
 }
