@@ -66,7 +66,6 @@ public class ModelViewScreen extends JPanel
 	private static final Logger logger = LoggerFactory.getLogger(ModelViewScreen.class);
 
 	private Image bufferImage = null;
-	private Graphics2D bufferg = null;
 	private Point2D preMousePoint; // Screen coordinates
 	private double scale = 1;
 	private double transX = 0;
@@ -176,10 +175,8 @@ public class ModelViewScreen extends JPanel
 
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
-		bufferg = (Graphics2D) bufferImage.getGraphics();
 
 		updateAffineTransform();
-
 	}
 
 	private Graphics2D resetBufferImage() {
@@ -187,6 +184,8 @@ public class ModelViewScreen extends JPanel
 		if (bufferImage == null) {
 			buildBufferImage();
 		}
+
+		var bufferg = (Graphics2D) bufferImage.getGraphics();
 
 		bufferg.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
@@ -205,9 +204,9 @@ public class ModelViewScreen extends JPanel
 	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
-		Graphics2D g2d = resetBufferImage();
+		Graphics2D bufferg = resetBufferImage();
 
-		paintComponentListener.accept(new XRayModelGraphics(g, g2d, bufferImage, this));
+		paintComponentListener.accept(new XRayModelGraphics(g, bufferg, bufferImage, this));
 	}
 
 	@Override
