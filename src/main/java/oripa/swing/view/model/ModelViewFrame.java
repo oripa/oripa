@@ -34,14 +34,13 @@ import java.util.function.Consumer;
 
 import javax.swing.*;
 
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
-import oripa.gui.view.util.CallbackOnUpdate;
+import oripa.gui.view.model.ModelViewScreenView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -104,22 +103,20 @@ public class ModelViewFrame extends JFrame
 
 	public ModelViewFrame(
 			final int width, final int height,
-			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateCrossLine,
 			final PainterScreenSetting mainScreenSetting) {
 
 		this.mainScreenSetting = mainScreenSetting;
 
-		initialize(lineHolder, onUpdateCrossLine);
+		initialize();
 		this.setBounds(0, 0, width, height);
 
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
-	private void initialize(final CutModelOutlinesHolder lineHolder,
-			final CallbackOnUpdate onUpdateCrossLine) {
+	private void initialize() {
 
 		setTitle(resourceHolder.getString(ResourceKey.LABEL, StringID.ModelUI.TITLE_ID));
-		screen = new ModelViewScreen(lineHolder, onUpdateCrossLine, mainScreenSetting);
+		screen = new ModelViewScreen(mainScreenSetting);
 
 		setLayout(new BorderLayout());
 		add(screen, BorderLayout.CENTER);
@@ -162,6 +159,11 @@ public class ModelViewFrame extends JFrame
 
 		addWindowListener(this);
 		addComponentListener(this);
+	}
+
+	@Override
+	public ModelViewScreenView getModelScreenView() {
+		return screen;
 	}
 
 	@Override

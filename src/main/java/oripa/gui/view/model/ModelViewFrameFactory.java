@@ -20,9 +20,7 @@ package oripa.gui.view.model;
 
 import java.beans.PropertyChangeListener;
 
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.gui.view.FrameView;
-import oripa.gui.view.util.CallbackOnUpdate;
 
 /**
  * @author OUCHI Koji
@@ -32,7 +30,6 @@ public interface ModelViewFrameFactory {
 
 	ModelViewFrameView createFrame(
 			FrameView parent,
-			CutModelOutlinesHolder lineHolder, CallbackOnUpdate onUpdateLine,
 			PropertyChangeListener onChangePaperDomain);
 
 }

@@ -20,12 +20,10 @@ package oripa.swing.view.model;
 
 import java.beans.PropertyChangeListener;
 
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.model.ModelViewFrameView;
-import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.ChildFrameManager;
 
 /**
@@ -46,7 +44,6 @@ public class ModelViewSwingFrameFactory implements ModelViewFrameFactory {
 	@Override
 	public ModelViewFrameView createFrame(
 			final FrameView parent,
-			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine,
 			final PropertyChangeListener onChangePaperDomain) {
 
 		ModelViewFrame frame = childFrameManager.find(parent,
@@ -56,7 +53,7 @@ public class ModelViewSwingFrameFactory implements ModelViewFrameFactory {
 			removeFromChildFrameManager(frame);
 			frame.dispose();
 		}
-		frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine, mainScreenSetting);
+		frame = new ModelViewFrame(400, 400, mainScreenSetting);
 
 		frame.putPaperDomainChangeListener(parent, onChangePaperDomain);
 

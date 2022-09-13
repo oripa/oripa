@@ -29,6 +29,9 @@ import oripa.gui.view.FrameView;
  *
  */
 public interface ModelViewFrameView extends FrameView {
+
+	public ModelViewScreenView getModelScreenView();
+
 	public void setModelCount(int count);
 
 	public void setModel(final OrigamiModel origamiModel);

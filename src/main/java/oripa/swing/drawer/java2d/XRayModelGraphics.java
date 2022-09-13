@@ -16,23 +16,44 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.main;
+package oripa.swing.drawer.java2d;
 
-import java.beans.PropertyChangeListener;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.ImageObserver;
 
-import oripa.gui.view.FrameView;
-import oripa.gui.view.foldability.FoldabilityCheckFrameView;
-import oripa.gui.view.model.ModelViewFrameView;
+import oripa.gui.view.model.ModelGraphics;
+import oripa.gui.view.model.ObjectGraphicDrawer;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface SubFrameFactory {
-	FoldabilityCheckFrameView createFoldabilityFrame(FrameView parent);
+public class XRayModelGraphics implements ModelGraphics {
 
-	ModelViewFrameView createModelViewFrame(
-			FrameView parent,
-			PropertyChangeListener onChangePaperDomain);
+	private final Graphics g;
+	private final Graphics2D bufferg;
+	private final Image bufferImage;
+	private final ImageObserver screen;
+
+	public XRayModelGraphics(final Graphics g, final Graphics2D bufferg, final Image bufferImage,
+			final ImageObserver screen) {
+
+		this.g = g;
+		this.bufferg = bufferg;
+		this.bufferImage = bufferImage;
+		this.screen = screen;
+	}
+
+	@Override
+	public ObjectGraphicDrawer getBufferObjectDrawer() {
+		return new OrigamiModelObjectDrawer(bufferg);
+	}
+
+	@Override
+	public void drawBufferImage() {
+		g.drawImage(bufferImage, 0, 0, screen);
+	}
 
 }

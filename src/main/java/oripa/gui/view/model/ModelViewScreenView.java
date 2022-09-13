@@ -18,8 +18,13 @@
  */
 package oripa.gui.view.model;
 
+import java.util.function.Consumer;
+
+import javax.vecmath.Vector2d;
+
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.ScreenView;
+import oripa.gui.view.util.CallbackOnUpdate;
 
 /**
  * @author OUCHI Koji
@@ -31,6 +36,23 @@ public interface ModelViewScreenView extends ScreenView {
 
 	ModelDisplayMode getModelDisplayMode();
 
+	boolean isScissorsLineVisible();
+
+	double getScale();
+
+	double getScissorsLineAngleDegree();
+
+	double getScissorsLinePosition();
+
+	Vector2d getModelCenter();
+
 	void setModel(OrigamiModel origamiModel, int boundSize);
 
+	OrigamiModel getModel();
+
+	void setPaintComponentListener(Consumer<ModelGraphics> listener);
+
+	void setScissorsLineChangeListener(Runnable listener);
+
+	void setCallbackOnUpdateScissorsLine(CallbackOnUpdate listener);
 }

@@ -20,14 +20,12 @@ package oripa.swing.view.main;
 
 import java.beans.PropertyChangeListener;
 
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
 import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.model.ModelViewFrameView;
-import oripa.gui.view.util.CallbackOnUpdate;
 
 /**
  * @author OUCHI Koji
@@ -53,10 +51,9 @@ public class SubSwingFrameFactory implements SubFrameFactory {
 
 	@Override
 	public ModelViewFrameView createModelViewFrame(final FrameView parent,
-			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine,
 			final PropertyChangeListener onChangePaperDomain) {
 
-		return modelViewFrameFactory.createFrame(parent, lineHolder, onUpdateLine, onChangePaperDomain);
+		return modelViewFrameFactory.createFrame(parent, onChangePaperDomain);
 	}
 
 }

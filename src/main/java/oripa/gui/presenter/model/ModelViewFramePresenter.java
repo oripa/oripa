@@ -21,10 +21,12 @@ package oripa.gui.presenter.model;
 import java.util.List;
 
 import oripa.application.model.OrigamiModelFileAccess;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
+import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.persistence.entity.OrigamiModelDAO;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
 import oripa.persistence.entity.OrigamiModelFilterSelector;
@@ -47,10 +49,14 @@ public class ModelViewFramePresenter {
 	public ModelViewFramePresenter(
 			final ModelViewFrameView view,
 			final PainterScreenSetting mainScreenSetting,
-			final List<OrigamiModel> origamiModels) {
+			final List<OrigamiModel> origamiModels,
+			final CutModelOutlinesHolder lineHolder,
+			final CallbackOnUpdate onUpdateScissorsLine) {
 		this.view = view;
 		this.mainScreenSetting = mainScreenSetting;
 		this.origamiModels = origamiModels;
+
+		var screenPresenter = new ModelViewScreenPresenter(view.getModelScreenView(), lineHolder, onUpdateScissorsLine);
 
 		addListenersToComponents();
 

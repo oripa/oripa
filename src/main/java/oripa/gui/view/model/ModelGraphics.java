@@ -16,23 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.main;
-
-import java.beans.PropertyChangeListener;
-
-import oripa.gui.view.FrameView;
-import oripa.gui.view.foldability.FoldabilityCheckFrameView;
-import oripa.gui.view.model.ModelViewFrameView;
+package oripa.gui.view.model;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface SubFrameFactory {
-	FoldabilityCheckFrameView createFoldabilityFrame(FrameView parent);
+public interface ModelGraphics {
+	ObjectGraphicDrawer getBufferObjectDrawer();
 
-	ModelViewFrameView createModelViewFrame(
-			FrameView parent,
-			PropertyChangeListener onChangePaperDomain);
-
+	void drawBufferImage();
 }
