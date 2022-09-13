@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.model;
+package oripa.swing.view.model;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -48,6 +48,8 @@ import oripa.gui.presenter.model.OrigamiModelGraphicDrawer;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.View;
 import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.model.ModelDisplayMode;
+import oripa.gui.view.model.ModelViewScreenView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.swing.drawer.java2d.OrigamiModelObjectDrawer;
 import oripa.swing.view.util.MouseUtility;

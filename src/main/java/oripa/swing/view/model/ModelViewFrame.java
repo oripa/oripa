@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.model;
+package oripa.swing.view.model;
 
 import java.awt.Adjustable;
 import java.awt.BorderLayout;
@@ -39,6 +39,8 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.model.ModelDisplayMode;
+import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;

@@ -29,14 +29,12 @@ import oripa.persistence.entity.OrigamiModelDAO;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
 import oripa.persistence.entity.OrigamiModelFilterSelector;
 import oripa.persistence.filetool.FileChooserCanceledException;
-import oripa.resource.ResourceHolder;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class ModelViewFramePresenter {
-	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	private final ModelViewFrameView view;
 	private final List<OrigamiModel> origamiModels;

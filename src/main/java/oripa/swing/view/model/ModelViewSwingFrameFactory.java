@@ -16,13 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.model;
+package oripa.swing.view.model;
 
 import java.beans.PropertyChangeListener;
 
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.model.ModelViewFrameFactory;
+import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.gui.view.util.ChildFrameManager;
 

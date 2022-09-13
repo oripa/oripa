@@ -52,9 +52,9 @@ import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.model.ModelViewFrameFactory;
 import oripa.gui.view.model.ModelViewFrameView;
-import oripa.gui.view.model.ModelViewSwingFrameFactory;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.resource.StringID;
+import oripa.swing.view.model.ModelViewSwingFrameFactory;
 import oripa.value.OriLine;
 
 /**
