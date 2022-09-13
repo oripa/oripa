@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,14 +18,32 @@
  */
 package oripa.gui.view.foldability;
 
-import oripa.gui.view.FrameView;
+import java.util.Collection;
+import java.util.function.Consumer;
+
+import oripa.domain.fold.halfedge.OriVertex;
+import oripa.gui.view.ScreenView;
+import oripa.gui.view.creasepattern.PaintComponentGraphics;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface FoldabilityCheckFrameFactory {
+public interface FoldabilityScreenView extends ScreenView {
 
-	FoldabilityCheckFrameView createFrame(FrameView parent);
+	void updateCenterOfPaper(double x, double y);
 
+	double getScale();
+
+	void setViolatingVertices(Collection<OriVertex> vertices);
+
+	OriVertex getPickedViolatingVertex();
+
+//	void setViolatingVertices(Collection<OriVertex> vertices);
+//
+//	void setViolatingFaces(Collection<OriFace> faces);
+//
+//	void setOverlappingLines(Collection<OriLine> lines);
+
+	public void setPaintComponentListener(final Consumer<PaintComponentGraphics> listener);
 }

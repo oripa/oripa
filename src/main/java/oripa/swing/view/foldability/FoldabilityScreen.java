@@ -16,13 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.foldability;
+package oripa.swing.view.foldability;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -35,41 +34,34 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.vecmath.Vector2d;
 
-import oripa.domain.cptool.OverlappingLineExtractor;
-import oripa.domain.fold.foldability.FoldabilityChecker;
-import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.geom.RectangleDomain;
-import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
-import oripa.gui.presenter.foldability.FoldabilityGraphicDrawer;
-import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
-import oripa.swing.drawer.java2d.CreasePatternObjectDrawer;
+import oripa.gui.view.View;
+import oripa.gui.view.creasepattern.PaintComponentGraphics;
+import oripa.gui.view.foldability.FoldabilityScreenView;
+import oripa.swing.drawer.java2d.CreasePatternGraphics;
 import oripa.swing.view.util.AffineCamera;
 import oripa.swing.view.util.MouseUtility;
 import oripa.value.CalculationResource;
-import oripa.value.OriLine;
 
 /**
  * A screen to show whether Maekawa theorem and Kawasaki theorem (and others)
- * holds.
+ * hold.
  *
  * @author Koji
  *
  */
 public class FoldabilityScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,
-		ComponentListener {
+		ComponentListener, FoldabilityScreenView {
 
-	private final boolean bDrawFaceID = false;
 	private Image bufferImage;
 
 	private final AffineCamera camera = new AffineCamera();
@@ -77,16 +69,9 @@ public class FoldabilityScreen extends JPanel
 	// Affine transformation information
 	private AffineTransform affineTransform = new AffineTransform();
 
-	private final JPopupMenu popup = new JPopupMenu();
-	private final JMenuItem popupItem_DivideFace = new JMenuItem("Face division");
-	private final JMenuItem popupItem_FlipFace = new JMenuItem("Face Inversion");
-
-	private OrigamiModel origamiModel = null;
-	private Collection<OriLine> creasePattern = null;
-
 	private Point2D preMousePoint; // Screen coordinates
 
-	private boolean zeroLineWidth = false;
+	private Consumer<PaintComponentGraphics> paintComponentListener;
 
 	FoldabilityScreen() {
 
@@ -97,57 +82,17 @@ public class FoldabilityScreen extends JPanel
 
 		camera.updateScale(1.5);
 		setBackground(Color.WHITE);
-
-		popup.add(popupItem_DivideFace);
-		popup.add(popupItem_FlipFace);
 	}
 
-	private final FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 	private Collection<OriVertex> violatingVertices = new ArrayList<>();
-	private Collection<OriFace> violatingFaces = new ArrayList<>();
 	private OriVertex pickedViolatingVertex;
-
-	private Collection<OriLine> overlappingLines = new ArrayList<>();
-
-	public void showModel(
-			final OrigamiModel origamiModel,
-			final Collection<OriLine> creasePattern,
-			final boolean zeroLineWidth) {
-		this.origamiModel = origamiModel;
-		this.creasePattern = creasePattern.stream()
-				.map(line -> new OriLine(line)).collect(Collectors.toList());
-		this.zeroLineWidth = zeroLineWidth;
-
-		violatingVertices = foldabilityChecker.findViolatingVertices(
-				origamiModel.getVertices());
-
-		violatingFaces = foldabilityChecker.findViolatingFaces(
-				origamiModel.getFaces());
-
-		var overlappingLineExtractor = new OverlappingLineExtractor();
-		overlappingLines = overlappingLineExtractor.extract(creasePattern);
-
-		var domain = new RectangleDomain(creasePattern);
-		camera.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
-
-		this.setVisible(true);
-	}
-
-	private void drawFoldability(final ObjectGraphicDrawer objDrawer, final double scale) {
-		FoldabilityGraphicDrawer drawer = new FoldabilityGraphicDrawer();
-
-		drawer.draw(objDrawer, origamiModel, violatingFaces, violatingVertices, scale);
-	}
 
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
 		affineTransform = camera.updateCameraPosition(getWidth() * 0.5, getHeight() * 0.5);
 	}
 
-	@Override
-	public void paintComponent(final Graphics g) {
-		super.paintComponent(g);
-
+	private Graphics2D updateBufferImage() {
 		if (bufferImage == null) {
 			buildBufferImage();
 		}
@@ -160,41 +105,14 @@ public class FoldabilityScreen extends JPanel
 
 		bufferg.setTransform(affineTransform);
 
-		if (!zeroLineWidth) {
-			bufferg.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-		}
-
-		ObjectGraphicDrawer bufferObjDrawer = new CreasePatternObjectDrawer(bufferg);
-
-		var scale = camera.getScale();
-
-		drawCreasePattern(bufferObjDrawer, scale);
-
-		drawFoldability(bufferObjDrawer, scale);
-
-		g.drawImage(bufferImage, 0, 0, this);
-
-		drawVertexViolationNames(new CreasePatternObjectDrawer((Graphics2D) g));
+		return bufferg;
 	}
 
-	private void drawCreasePattern(final ObjectGraphicDrawer objDrawer, final double scale) {
-		CreasePatternGraphicDrawer drawer = new CreasePatternGraphicDrawer();
+	@Override
+	public void paintComponent(final Graphics g) {
+		super.paintComponent(g);
 
-		drawer.highlightOverlappingLines(objDrawer, overlappingLines, scale);
-
-		drawer.drawAllLines(objDrawer, creasePattern, scale, zeroLineWidth);
-		drawer.drawCreaseVertices(objDrawer, creasePattern, scale);
-	}
-
-	private void drawVertexViolationNames(final ObjectGraphicDrawer drawer) {
-		if (pickedViolatingVertex == null) {
-			return;
-		}
-
-		var violationNames = foldabilityChecker.getVertexViolationNames(pickedViolatingVertex);
-
-		drawer.drawString("error(s): " + String.join(", ", violationNames), 0, 10);
+		paintComponentListener.accept(new CreasePatternGraphics(g, updateBufferImage(), bufferImage, this));
 	}
 
 	@Override
@@ -343,4 +261,35 @@ public class FoldabilityScreen extends JPanel
 	public void componentHidden(final ComponentEvent arg0) {
 
 	}
+
+	@Override
+	public View getTopLevelView() {
+		return (View) SwingUtilities.getWindowAncestor(this);
+	}
+
+	@Override
+	public void setViolatingVertices(final Collection<OriVertex> vertices) {
+		this.violatingVertices = vertices;
+	}
+
+	@Override
+	public void setPaintComponentListener(final Consumer<PaintComponentGraphics> listener) {
+		paintComponentListener = listener;
+	}
+
+	@Override
+	public void updateCenterOfPaper(final double x, final double y) {
+		camera.updateCenterOfPaper(x, y);
+	}
+
+	@Override
+	public double getScale() {
+		return camera.getScale();
+	}
+
+	@Override
+	public OriVertex getPickedViolatingVertex() {
+		return pickedViolatingVertex;
+	}
+
 }
