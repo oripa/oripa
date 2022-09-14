@@ -39,6 +39,7 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
+import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.view.FrameView;
@@ -347,15 +348,16 @@ public class UIPanelPresenter {
 
 				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
 						childFrameManager);
-				resultFrame = resultFrameFactory.createFrame(parent, foldedModels);
+				resultFrame = resultFrameFactory.createFrame(parent);
 
 				resultFrame.setColors(
 						view.getEstimationResultFrontColor(),
 						view.getEstimationResultBackColor());
 				resultFrame.setSaveColorsListener(view.getEstimationResultSaveColorsListener());
-				resultFrame.repaint();
+				// resultFrame.repaint();
 
-				resultFrame.setVisible(true);
+				var resultFramePresenter = new EstimationResultFramePresenter(resultFrame, foldedModels);
+				resultFramePresenter.setViewVisible(true);
 			}
 		}
 

@@ -23,9 +23,7 @@ import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -45,8 +43,6 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 	private static final long serialVersionUID = 1L;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
-
-	private List<FoldedModel> foldedModels = new ArrayList<>();
 
 	private final ListItemSelectionPanel modelSelectionPanel = new ListItemSelectionPanel(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.MODEL_ID));
@@ -71,24 +67,24 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 		add(screen, BorderLayout.CENTER);
 		add(hintLabel, BorderLayout.SOUTH);
 
-		addPropertyChangeListenerToComponents();
-
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		addWindowListener(this);
 	}
 
-	private void addPropertyChangeListenerToComponents() {
-		modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX,
-				e -> setModel(foldedModels.get((Integer) e.getNewValue())));
+	@Override
+	public void addModelSwitchListener(final Consumer<Integer> listener) {
+		modelSelectionPanel.addPropertyChangeListener(
+				ListItemSelectionPanel.INDEX,
+				e -> listener.accept((Integer) e.getNewValue()));
 	}
 
 	@Override
-	public void setModels(final List<FoldedModel> models) {
-		foldedModels = models;
-		modelSelectionPanel.setItemCount(models.size());
+	public void setModelCount(final int count) {
+		modelSelectionPanel.setItemCount(count);
 	}
 
-	private void setModel(final FoldedModel foldedModel) {
+	@Override
+	public void setModel(final FoldedModel foldedModel) {
 		if (foldedModel.getFoldablePatternCount() == 0) {
 			screen.setModel(null);
 			ui.setModel(null);

@@ -16,34 +16,46 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.estimation;
+package oripa.gui.presenter.estimation;
 
-import java.awt.Color;
-import java.beans.PropertyChangeListener;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.List;
 
 import oripa.domain.fold.FoldedModel;
-import oripa.gui.view.FrameView;
+import oripa.gui.view.estimation.EstimationResultFrameView;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface EstimationResultFrameView extends FrameView {
-	public void setModelCount(int count);
+public class EstimationResultFramePresenter {
+	private final EstimationResultFrameView view;
+	private final List<FoldedModel> foldedModels;
+	private FoldedModel foldedModel;
 
-	public void setColors(final Color front, final Color back);
+	public EstimationResultFramePresenter(
+			final EstimationResultFrameView view,
+			final List<FoldedModel> foldedModels) {
+		this.view = view;
 
-	public void setSaveColorsListener(final BiConsumer<Color, Color> listener);
+		this.foldedModels = foldedModels;
 
-	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
+		addListeners();
 
-	public void setOnCloseListener(final Consumer<FrameView> listener);
+		setToView();
+	}
 
-	public void selectModel(final int index);
+	private void setToView() {
+		view.setModelCount(foldedModels.size());
+	}
 
-	public void addModelSwitchListener(final Consumer<Integer> listener);
+	private void addListeners() {
+		view.addModelSwitchListener(index -> {
+			foldedModel = foldedModels.get(index);
+			view.setModel(foldedModel);
+		});
+	}
 
-	public void setModel(final FoldedModel foldedModel);
+	public void setViewVisible(final boolean visible) {
+		view.setVisible(visible);
+	}
 }
