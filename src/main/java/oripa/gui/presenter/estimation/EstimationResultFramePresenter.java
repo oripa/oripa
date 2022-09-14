@@ -39,6 +39,8 @@ public class EstimationResultFramePresenter {
 
 		this.foldedModels = foldedModels;
 
+		var uiPresenter = new EstimationResultUIPresenter(view.getUI());
+
 		addListeners();
 
 		setToView();

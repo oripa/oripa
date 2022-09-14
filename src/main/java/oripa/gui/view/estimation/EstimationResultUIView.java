@@ -18,35 +18,31 @@
  */
 package oripa.gui.view.estimation;
 
-import java.awt.Color;
-import java.beans.PropertyChangeListener;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-
 import oripa.domain.fold.FoldedModel;
-import oripa.gui.view.FrameView;
+import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.gui.view.View;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface EstimationResultFrameView extends FrameView {
+public interface EstimationResultUIView extends View {
 
-	public EstimationResultUIView getUI();
+	/**
+	 * Set Model to be displayed and update index label
+	 *
+	 * @param foldedModel
+	 *            {@code FoldedModel} to be displayed
+	 */
+	void setModel(FoldedModel foldedModel);
 
-	public void setModelCount(int count);
+	FoldedModel getModel();
 
-	public void setColors(final Color front, final Color back);
+	OverlapRelation getOverlapRelation();
 
-	public void setSaveColorsListener(final BiConsumer<Color, Color> listener);
+	boolean isFaceOrderFlipped();
 
-	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
+	void addExportButtonListener(Runnable listener);
 
-	public void setOnCloseListener(final Consumer<FrameView> listener);
-
-	public void selectModel(final int index);
-
-	public void addModelSwitchListener(final Consumer<Integer> listener);
-
-	public void setModel(final FoldedModel foldedModel);
+	void showExportErrorMessage(Exception e);
 }

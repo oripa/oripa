@@ -72,6 +72,11 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 	}
 
 	@Override
+	public EstimationResultUIView getUI() {
+		return ui;
+	}
+
+	@Override
 	public void addModelSwitchListener(final Consumer<Integer> listener) {
 		modelSelectionPanel.addPropertyChangeListener(
 				ListItemSelectionPanel.INDEX,
