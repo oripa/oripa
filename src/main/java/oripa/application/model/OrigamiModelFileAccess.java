@@ -18,10 +18,12 @@
  */
 package oripa.application.model;
 
-import java.awt.Component;
 import java.io.IOException;
 
+import javax.swing.JFrame;
+
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.gui.view.FrameView;
 import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.filetool.FileAccessSupportFilter;
 import oripa.persistence.filetool.FileChooserCanceledException;
@@ -43,11 +45,11 @@ public class OrigamiModelFileAccess {
 		this.dao = dao;
 	}
 
-	public void saveFile(final OrigamiModel origamiModel, final Component owner,
+	public void saveFile(final OrigamiModel origamiModel, final FrameView owner,
 			final FileAccessSupportFilter<OrigamiModel>... filters)
 			throws IllegalArgumentException, IOException, FileChooserCanceledException {
 
-		dao.saveUsingGUI(origamiModel, null, owner, filters);
+		dao.saveUsingGUI(origamiModel, null, (JFrame) owner, filters);
 	}
 
 }

@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.model;
+package oripa.swing.view.model;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -33,22 +33,25 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.function.Consumer;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cutmodel.CutModelOutlinesFactory;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.gui.presenter.model.OrigamiModelGraphicDrawer;
+import oripa.gui.view.FrameView;
+import oripa.gui.view.View;
 import oripa.gui.view.main.PainterScreenSetting;
+import oripa.gui.view.model.ModelDisplayMode;
+import oripa.gui.view.model.ModelGraphics;
+import oripa.gui.view.model.ModelViewScreenView;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.swing.drawer.java2d.OrigamiModelObjectDrawer;
+import oripa.swing.drawer.java2d.XRayModelGraphics;
 import oripa.swing.view.util.MouseUtility;
-import oripa.value.OriLine;
 
 /**
  * Screen to show the silhouette of origami which is the result of face
@@ -59,11 +62,10 @@ import oripa.value.OriLine;
  */
 public class ModelViewScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener,
-		ComponentListener {
+		ComponentListener, ModelViewScreenView {
 	private static final Logger logger = LoggerFactory.getLogger(ModelViewScreen.class);
 
 	private Image bufferImage = null;
-	private Graphics2D bufferg = null;
 	private Point2D preMousePoint; // Screen coordinates
 	private double scale = 1;
 	private double transX = 0;
@@ -72,22 +74,19 @@ public class ModelViewScreen extends JPanel
 	private double rotateAngle = 0;
 	private final AffineTransform affineTransform = new AffineTransform();
 
-	private OriLine scissorsLine = null;
 	private boolean scissorsLineVisible = false;
 	private int scissorsLineAngleDegree = 90;
 	private double scissorsLinePosition = 0;
 	private ModelDisplayMode modelDisplayMode = ModelDisplayMode.FILL_ALPHA;
 
 	private OrigamiModel origamiModel = null;
-	private final CutModelOutlinesHolder lineHolder;
-	private final CallbackOnUpdate onUpdateScissorsLine;
+	private CallbackOnUpdate onUpdateScissorsLine;
 	private final PainterScreenSetting mainScreenSetting;
 
-	public ModelViewScreen(final CutModelOutlinesHolder aLineHolder, final CallbackOnUpdate c,
-			final PainterScreenSetting mainScreenSetting) {
+	private Consumer<ModelGraphics> paintComponentListener;
+	private Runnable scissorsLineChangeListener;
 
-		lineHolder = aLineHolder;
-		onUpdateScissorsLine = c;
+	public ModelViewScreen(final PainterScreenSetting mainScreenSetting) {
 
 		this.mainScreenSetting = mainScreenSetting;
 
@@ -117,14 +116,17 @@ public class ModelViewScreen extends JPanel
 				});
 	}
 
+	@Override
 	public void setModelDisplayMode(final ModelDisplayMode mode) {
 		modelDisplayMode = mode;
 	}
 
+	@Override
 	public ModelDisplayMode getModelDisplayMode() {
 		return modelDisplayMode;
 	}
 
+	@Override
 	public void setModel(final OrigamiModel origamiModel, final int boundSize) {
 		logger.debug("set origami model {}", origamiModel);
 		this.origamiModel = origamiModel;
@@ -173,20 +175,17 @@ public class ModelViewScreen extends JPanel
 
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
-		bufferg = (Graphics2D) bufferImage.getGraphics();
 
 		updateAffineTransform();
-
 	}
 
-	// Scaling relative to the center of the screen
-	@Override
-	public void paintComponent(final Graphics g) {
-		super.paintComponent(g);
+	private Graphics2D resetBufferImage() {
 
 		if (bufferImage == null) {
 			buildBufferImage();
 		}
+
+		var bufferg = (Graphics2D) bufferImage.getGraphics();
 
 		bufferg.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
@@ -197,24 +196,17 @@ public class ModelViewScreen extends JPanel
 
 		bufferg.setTransform(affineTransform);
 
-		Graphics2D g2d = bufferg;
+		return bufferg;
+	}
 
-		if (origamiModel == null) {
-			logger.info("null origamiModel.");
-			return;
-		}
+	// Scaling relative to the center of the screen
+	@Override
+	public void paintComponent(final Graphics g) {
+		super.paintComponent(g);
 
-		if (!origamiModel.hasModel()) {
-			logger.info("origamiModel does not have a model data.");
-			return;
-		}
-		var objDrawer = new OrigamiModelObjectDrawer(g2d);
+		Graphics2D bufferg = resetBufferImage();
 
-		var drawer = new OrigamiModelGraphicDrawer();
-
-		drawer.draw(objDrawer, origamiModel, scissorsLineVisible ? scissorsLine : null, modelDisplayMode, scale);
-
-		g.drawImage(bufferImage, 0, 0, this);
+		paintComponentListener.accept(new XRayModelGraphics(g, bufferg, bufferImage, this));
 	}
 
 	@Override
@@ -236,25 +228,8 @@ public class ModelViewScreen extends JPanel
 		recalcScissorsLine();
 	}
 
-	public void recalcScissorsLine() {
-		scissorsLine = new OriLine();
-
-		Vector2d dir = new Vector2d(Math.cos(Math.PI * scissorsLineAngleDegree / 180.0),
-				Math.sin(Math.PI * scissorsLineAngleDegree / 180.0));
-		scissorsLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);
-		scissorsLine.p1.set(modelCenter.x + dir.x * 300, modelCenter.y + dir.y * 300);
-		Vector2d moveVec = new Vector2d(-dir.y, dir.x);
-		moveVec.normalize();
-		moveVec.scale(scissorsLinePosition);
-		scissorsLine.p0.add(moveVec);
-		scissorsLine.p1.add(moveVec);
-
-		var factory = new CutModelOutlinesFactory();
-		lineHolder.setOutlines(factory.createOutlines(scissorsLine, origamiModel));
-
-		repaint();
-
-		onUpdateScissorsLine.onUpdate();
+	private void recalcScissorsLine() {
+		scissorsLineChangeListener.run();
 	}
 
 	@Override
@@ -331,5 +306,55 @@ public class ModelViewScreen extends JPanel
 	@Override
 	public void componentHidden(final ComponentEvent arg0) {
 
+	}
+
+	@Override
+	public View getTopLevelView() {
+		return (FrameView) SwingUtilities.getWindowAncestor(this);
+	}
+
+	@Override
+	public boolean isScissorsLineVisible() {
+		return scissorsLineVisible;
+	}
+
+	@Override
+	public double getScale() {
+		return scale;
+	}
+
+	@Override
+	public double getScissorsLineAngleDegree() {
+		return scissorsLineAngleDegree;
+	}
+
+	@Override
+	public double getScissorsLinePosition() {
+		return scissorsLinePosition;
+	}
+
+	@Override
+	public Vector2d getModelCenter() {
+		return modelCenter;
+	}
+
+	@Override
+	public OrigamiModel getModel() {
+		return origamiModel;
+	}
+
+	@Override
+	public void setPaintComponentListener(final Consumer<ModelGraphics> listener) {
+		paintComponentListener = listener;
+	}
+
+	@Override
+	public void setScissorsLineChangeListener(final Runnable listener) {
+		scissorsLineChangeListener = listener;
+	}
+
+	@Override
+	public void setCallbackOnUpdateScissorsLine(final CallbackOnUpdate listener) {
+		onUpdateScissorsLine = listener;
 	}
 }

@@ -23,8 +23,8 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
 import oripa.gui.view.FrameView;
-import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
+import oripa.gui.view.main.SubFrameFactory;
 
 /**
  * @author OUCHI Koji
@@ -32,11 +32,11 @@ import oripa.gui.view.foldability.FoldabilityCheckFrameView;
  */
 public class CheckerWindowOpener {
 	private final FrameView ownerView;
-	private final FoldabilityCheckFrameFactory frameFactory;
+	private final SubFrameFactory frameFactory;
 
 	public CheckerWindowOpener(
 			final FrameView ownerView,
-			final FoldabilityCheckFrameFactory frameFactory) {
+			final SubFrameFactory frameFactory) {
 		this.ownerView = ownerView;
 		this.frameFactory = frameFactory;
 	}
@@ -56,7 +56,7 @@ public class CheckerWindowOpener {
 		origamiModel = modelFactory.createOrigamiModel(
 				creasePattern);
 
-		FoldabilityCheckFrameView checker = frameFactory.createFrame(ownerView);
+		FoldabilityCheckFrameView checker = frameFactory.createFoldabilityFrame(ownerView);
 
 		var foldabilityPresenter = new FoldabilityCheckFramePresenter(
 				checker,

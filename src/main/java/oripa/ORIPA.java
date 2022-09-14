@@ -58,6 +58,8 @@ import oripa.swing.view.main.CircleCopyDialogFactory;
 import oripa.swing.view.main.MainFrame;
 import oripa.swing.view.main.MainFrameSwingDialogFactory;
 import oripa.swing.view.main.PropertyDialogFactory;
+import oripa.swing.view.main.SubSwingFrameFactory;
+import oripa.swing.view.model.ModelViewSwingFrameFactory;
 
 public class ORIPA {
 	public static void main(final String[] args) {
@@ -113,7 +115,10 @@ public class ORIPA {
 					mainFrame,
 					viewUpdateSupport,
 					dialogFactory,
-					new FoldabilityCheckSwingFrameFactory(childFrameManager),
+					new SubSwingFrameFactory(
+							new FoldabilityCheckSwingFrameFactory(childFrameManager),
+							new ModelViewSwingFrameFactory(mainViewSetting.getPainterScreenSetting(),
+									childFrameManager)),
 					childFrameManager,
 					mainViewSetting,
 					new Doc(),

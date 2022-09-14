@@ -18,18 +18,41 @@
  */
 package oripa.gui.view.model;
 
-import java.beans.PropertyChangeListener;
+import java.util.function.Consumer;
 
-import oripa.gui.view.FrameView;
+import javax.vecmath.Vector2d;
+
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.gui.view.ScreenView;
+import oripa.gui.view.util.CallbackOnUpdate;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface ModelViewFrameFactory {
+public interface ModelViewScreenView extends ScreenView {
 
-	ModelViewFrameView createFrame(
-			FrameView parent,
-			PropertyChangeListener onChangePaperDomain);
+	void setModelDisplayMode(ModelDisplayMode mode);
 
+	ModelDisplayMode getModelDisplayMode();
+
+	boolean isScissorsLineVisible();
+
+	double getScale();
+
+	double getScissorsLineAngleDegree();
+
+	double getScissorsLinePosition();
+
+	Vector2d getModelCenter();
+
+	void setModel(OrigamiModel origamiModel, int boundSize);
+
+	OrigamiModel getModel();
+
+	void setPaintComponentListener(Consumer<ModelGraphics> listener);
+
+	void setScissorsLineChangeListener(Runnable listener);
+
+	void setCallbackOnUpdateScissorsLine(CallbackOnUpdate listener);
 }

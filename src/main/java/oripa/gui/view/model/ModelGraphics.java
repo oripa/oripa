@@ -18,18 +18,12 @@
  */
 package oripa.gui.view.model;
 
-import java.beans.PropertyChangeListener;
-
-import oripa.gui.view.FrameView;
-
 /**
  * @author OUCHI Koji
  *
  */
-public interface ModelViewFrameFactory {
+public interface ModelGraphics {
+	ObjectGraphicDrawer getBufferObjectDrawer();
 
-	ModelViewFrameView createFrame(
-			FrameView parent,
-			PropertyChangeListener onChangePaperDomain);
-
+	void drawBufferImage();
 }
