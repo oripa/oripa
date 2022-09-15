@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.estimation;
+package oripa.swing.view.estimation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,6 +33,8 @@ import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.gui.view.FrameView;
+import oripa.gui.view.estimation.EstimationResultFrameView;
+import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;

@@ -21,6 +21,8 @@ package oripa.swing.view.main;
 import java.beans.PropertyChangeListener;
 
 import oripa.gui.view.FrameView;
+import oripa.gui.view.estimation.EstimationResultFrameFactory;
+import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.foldability.FoldabilityCheckFrameFactory;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
 import oripa.gui.view.main.SubFrameFactory;
@@ -35,13 +37,16 @@ public class SubSwingFrameFactory implements SubFrameFactory {
 
 	private final FoldabilityCheckFrameFactory foldabilityFrameFactory;
 	private final ModelViewFrameFactory modelViewFrameFactory;
+	private final EstimationResultFrameFactory resultFrameFactory;
 
 	public SubSwingFrameFactory(
 			final FoldabilityCheckFrameFactory foldaFrameFactory,
-			final ModelViewFrameFactory modelViewFrameFactory) {
+			final ModelViewFrameFactory modelViewFrameFactory,
+			final EstimationResultFrameFactory resultFrameFactory) {
 
 		this.foldabilityFrameFactory = foldaFrameFactory;
 		this.modelViewFrameFactory = modelViewFrameFactory;
+		this.resultFrameFactory = resultFrameFactory;
 	}
 
 	@Override
@@ -56,4 +61,8 @@ public class SubSwingFrameFactory implements SubFrameFactory {
 		return modelViewFrameFactory.createFrame(parent, onChangePaperDomain);
 	}
 
+	@Override
+	public EstimationResultFrameView createResultFrame(final FrameView parent) {
+		return resultFrameFactory.createFrame(parent);
+	}
 }

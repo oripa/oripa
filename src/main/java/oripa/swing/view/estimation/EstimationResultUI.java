@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.estimation;
+package oripa.swing.view.estimation;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -37,6 +37,8 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.gui.view.View;
+import oripa.gui.view.estimation.DefaultColors;
+import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;

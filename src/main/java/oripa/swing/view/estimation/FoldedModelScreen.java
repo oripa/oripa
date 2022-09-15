@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.estimation;
+package oripa.swing.view.estimation;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -47,6 +47,7 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
+import oripa.gui.view.estimation.DefaultColors;
 import oripa.swing.view.util.MouseUtility;
 
 /**
