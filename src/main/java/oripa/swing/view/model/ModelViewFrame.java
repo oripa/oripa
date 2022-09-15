@@ -241,6 +241,7 @@ public class ModelViewFrame extends JFrame
 	@Override
 	public void windowClosed(final WindowEvent e) {
 		onCloseListener.accept(this);
+		mainScreenSetting.setCrossLineVisible(false);
 	}
 
 	@Override
