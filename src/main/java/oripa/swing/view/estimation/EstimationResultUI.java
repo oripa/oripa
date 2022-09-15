@@ -85,8 +85,6 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
 
-	private final String lastFilePath = null;
-
 	private FoldedModel foldedModel;
 	private OverlapRelation overlapRelation;
 

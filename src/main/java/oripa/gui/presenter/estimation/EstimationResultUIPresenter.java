@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.estimation;
 
+import java.util.function.Consumer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +39,14 @@ public class EstimationResultUIPresenter {
 
 	private final EstimationResultUIView view;
 	private String lastFilePath;
+	private Consumer<String> lastFilePathChangeListener;
 
-	public EstimationResultUIPresenter(final EstimationResultUIView view) {
+	public EstimationResultUIPresenter(
+			final EstimationResultUIView view,
+			final String lastFilePath) {
 		this.view = view;
+
+		this.lastFilePath = lastFilePath;
 
 		addListener();
 	}
@@ -64,10 +71,15 @@ public class EstimationResultUIPresenter {
 
 			lastFilePath = fileAccess.saveFile(entity, lastFilePath, (FrameView) view.getTopLevelView(),
 					filterSelector.getSavables());
+			lastFilePathChangeListener.accept(lastFilePath);
 		} catch (Exception ex) {
 			logger.error("error: ", ex);
 			view.showExportErrorMessage(ex);
 		}
+	}
+
+	public void setLastFilePathChangeListener(final Consumer<String> listener) {
+		lastFilePathChangeListener = listener;
 	}
 
 }

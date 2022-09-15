@@ -88,6 +88,8 @@ public class UIPanelPresenter {
 
 	private ComputationResult computationResult;
 
+	private String lastResultFilePath;
+
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
 			final StateManager<EditMode> stateManager,
@@ -346,7 +348,12 @@ public class UIPanelPresenter {
 				resultFrame.setSaveColorsListener(view.getEstimationResultSaveColorsListener());
 				// resultFrame.repaint();
 
-				var resultFramePresenter = new EstimationResultFramePresenter(resultFrame, foldedModels);
+				var resultFramePresenter = new EstimationResultFramePresenter(
+						resultFrame,
+						foldedModels,
+						lastResultFilePath,
+						path -> lastResultFilePath = path);
+
 				resultFramePresenter.setViewVisible(true);
 			}
 		}

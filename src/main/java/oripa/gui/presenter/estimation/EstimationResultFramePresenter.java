@@ -19,6 +19,7 @@
 package oripa.gui.presenter.estimation;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.gui.view.estimation.EstimationResultFrameView;
@@ -34,12 +35,15 @@ public class EstimationResultFramePresenter {
 
 	public EstimationResultFramePresenter(
 			final EstimationResultFrameView view,
-			final List<FoldedModel> foldedModels) {
+			final List<FoldedModel> foldedModels,
+			final String lastFilePath,
+			final Consumer<String> lastFilePathChangeListener) {
 		this.view = view;
 
 		this.foldedModels = foldedModels;
 
-		var uiPresenter = new EstimationResultUIPresenter(view.getUI());
+		var uiPresenter = new EstimationResultUIPresenter(view.getUI(), lastFilePath);
+		uiPresenter.setLastFilePathChangeListener(lastFilePathChangeListener);
 
 		addListeners();
 
