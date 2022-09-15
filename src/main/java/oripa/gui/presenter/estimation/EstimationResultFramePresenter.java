@@ -42,8 +42,7 @@ public class EstimationResultFramePresenter {
 
 		this.foldedModels = foldedModels;
 
-		var uiPresenter = new EstimationResultUIPresenter(view.getUI(), lastFilePath);
-		uiPresenter.setLastFilePathChangeListener(lastFilePathChangeListener);
+		var uiPresenter = new EstimationResultUIPresenter(view.getUI(), lastFilePath, lastFilePathChangeListener);
 
 		addListeners();
 

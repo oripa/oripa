@@ -39,14 +39,16 @@ public class EstimationResultUIPresenter {
 
 	private final EstimationResultUIView view;
 	private String lastFilePath;
-	private Consumer<String> lastFilePathChangeListener;
+	private final Consumer<String> lastFilePathChangeListener;
 
 	public EstimationResultUIPresenter(
 			final EstimationResultUIView view,
-			final String lastFilePath) {
+			final String lastFilePath,
+			final Consumer<String> lastFilePathChangeListener) {
 		this.view = view;
 
 		this.lastFilePath = lastFilePath;
+		this.lastFilePathChangeListener = lastFilePathChangeListener;
 
 		addListener();
 	}
@@ -77,9 +79,4 @@ public class EstimationResultUIPresenter {
 			view.showExportErrorMessage(ex);
 		}
 	}
-
-	public void setLastFilePathChangeListener(final Consumer<String> listener) {
-		lastFilePathChangeListener = listener;
-	}
-
 }
