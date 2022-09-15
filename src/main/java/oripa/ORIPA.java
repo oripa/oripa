@@ -52,6 +52,7 @@ import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFilterSelector;
 import oripa.resource.Constants;
+import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
 import oripa.swing.view.foldability.FoldabilityCheckSwingFrameFactory;
 import oripa.swing.view.main.ArrayCopyDialogFactory;
 import oripa.swing.view.main.CircleCopyDialogFactory;
@@ -118,7 +119,8 @@ public class ORIPA {
 					new SubSwingFrameFactory(
 							new FoldabilityCheckSwingFrameFactory(childFrameManager),
 							new ModelViewSwingFrameFactory(mainViewSetting.getPainterScreenSetting(),
-									childFrameManager)),
+									childFrameManager),
+							new EstimationResultSwingFrameFactory(childFrameManager)),
 					childFrameManager,
 					mainViewSetting,
 					new Doc(),

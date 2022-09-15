@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.estimation;
+package oripa.swing.view.estimation;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,20 +24,21 @@ import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.util.function.BiConsumer;
 
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.origeom.OverlapRelation;
-import oripa.persistence.entity.FoldedModelDAO;
-import oripa.persistence.entity.FoldedModelFilterSelector;
-import oripa.persistence.entity.exporter.FoldedModelEntity;
+import oripa.gui.view.View;
+import oripa.gui.view.estimation.DefaultColors;
+import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -47,7 +48,7 @@ import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ListItemSelectionPanel;
 import oripa.swing.view.util.TitledBorderFactory;
 
-public class EstimationResultUI extends JPanel {
+public class EstimationResultUI extends JPanel implements EstimationResultUIView {
 	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUI.class);
 
 	private static final long serialVersionUID = 1L;
@@ -84,8 +85,6 @@ public class EstimationResultUI extends JPanel {
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
 
-	private String lastFilePath = null;
-
 	private FoldedModel foldedModel;
 	private OverlapRelation overlapRelation;
 
@@ -114,15 +113,18 @@ public class EstimationResultUI extends JPanel {
 		screen = s;
 	}
 
-	/**
-	 * Set Model to be displayed and update index label
-	 *
-	 * @param foldedModel
-	 *            {@code FoldedModel} to be displayed
+	/* (non Javadoc)
+	 * @see oripa.gui.view.estimation.EstimationResultUIView#setModel(oripa.domain.fold.FoldedModel)
 	 */
+	@Override
 	public void setModel(final FoldedModel foldedModel) {
 		this.foldedModel = foldedModel;
 		answerSelectionPanel.setItemCount(foldedModel.getOverlapRelations().size());
+	}
+
+	@Override
+	public FoldedModel getModel() {
+		return foldedModel;
 	}
 
 	/**
@@ -191,8 +193,6 @@ public class EstimationResultUI extends JPanel {
 
 		saveColorsButton.addActionListener(
 				e -> saveColorsListener.accept(frontColorRGBPanel.getColor(), backColorRGBPanel.getColor()));
-
-		exportButton.addActionListener(e -> export());
 	}
 
 	private void initialCheckBoxSetting() {
@@ -261,23 +261,33 @@ public class EstimationResultUI extends JPanel {
 		saveColorsListener = listener;
 	}
 
-	/**
-	 * open export dialog for current folded estimation
-	 */
-	private void export() {
-		try {
-			var filterSelector = new FoldedModelFilterSelector(screen.isFaceOrderFlipped());
-			final FoldedModelDAO dao = new FoldedModelDAO(filterSelector);
-			EstimationResultFileAccess fileAccess = new EstimationResultFileAccess(dao);
+	@Override
+	public void addExportButtonListener(final Runnable listener) {
+		addButtonListener(exportButton, listener);
+	}
 
-			var entity = new FoldedModelEntity(foldedModel.getOrigamiModel(), overlapRelation);
+	private void addButtonListener(final AbstractButton button, final Runnable listener) {
+		button.addActionListener(e -> listener.run());
+	}
 
-			lastFilePath = fileAccess.saveFile(entity, lastFilePath, this,
-					filterSelector.getSavables());
-		} catch (Exception ex) {
-			logger.error("error: ", ex);
-			Dialogs.showErrorDialog(this, resources.getString(
-					ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), ex);
-		}
+	@Override
+	public OverlapRelation getOverlapRelation() {
+		return overlapRelation;
+	}
+
+	@Override
+	public boolean isFaceOrderFlipped() {
+		return screen.isFaceOrderFlipped();
+	}
+
+	@Override
+	public void showExportErrorMessage(final Exception e) {
+		Dialogs.showErrorDialog(this, resources.getString(
+				ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+	}
+
+	@Override
+	public View getTopLevelView() {
+		return (View) SwingUtilities.getWindowAncestor(this);
 	}
 }

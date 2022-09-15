@@ -39,11 +39,11 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
 import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
+import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.ViewScreenUpdater;
-import oripa.gui.view.estimation.EstimationResultFrameFactory;
 import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
@@ -51,7 +51,6 @@ import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.model.ModelViewFrameView;
-import oripa.gui.view.util.ChildFrameManager;
 import oripa.resource.StringID;
 import oripa.value.OriLine;
 
@@ -77,8 +76,6 @@ public class UIPanelPresenter {
 	final CutModelOutlinesHolder cutOutlinesHolder;
 	final PainterScreenSetting mainScreenSetting;
 
-	private ChildFrameManager childFrameManager;
-
 	private final StateManager<EditMode> stateManager;
 	private final ViewScreenUpdater screenUpdater;
 	private final KeyProcessing keyProcessing;
@@ -90,6 +87,8 @@ public class UIPanelPresenter {
 	private final BindingObjectFactoryFacade bindingFactory;
 
 	private ComputationResult computationResult;
+
+	private String lastResultFilePath;
 
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
@@ -130,10 +129,6 @@ public class UIPanelPresenter {
 		view.initializeButtonSelection(AngleStep.PI_OVER_8.toString(),
 				typeForChangeContext.getTypeFrom().toString(),
 				typeForChangeContext.getTypeTo().toString());
-	}
-
-	public void setChildFrameManager(final ChildFrameManager manager) {
-		childFrameManager = manager;
 	}
 
 	private void addListeners() {
@@ -345,17 +340,21 @@ public class UIPanelPresenter {
 			} else if (count > 0) {
 				logger.info("foldable layer layout is found.");
 
-				EstimationResultFrameFactory resultFrameFactory = new EstimationResultFrameFactory(
-						childFrameManager);
-				resultFrame = resultFrameFactory.createFrame(parent, foldedModels);
+				resultFrame = subFrameFactory.createResultFrame(parent);
 
 				resultFrame.setColors(
 						view.getEstimationResultFrontColor(),
 						view.getEstimationResultBackColor());
 				resultFrame.setSaveColorsListener(view.getEstimationResultSaveColorsListener());
-				resultFrame.repaint();
+				// resultFrame.repaint();
 
-				resultFrame.setVisible(true);
+				var resultFramePresenter = new EstimationResultFramePresenter(
+						resultFrame,
+						foldedModels,
+						lastResultFilePath,
+						path -> lastResultFilePath = path);
+
+				resultFramePresenter.setViewVisible(true);
 			}
 		}
 

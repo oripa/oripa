@@ -16,16 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.estimation;
+package oripa.swing.view.estimation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -35,6 +33,8 @@ import javax.swing.JLabel;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.gui.view.FrameView;
+import oripa.gui.view.estimation.EstimationResultFrameView;
+import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -45,8 +45,6 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 	private static final long serialVersionUID = 1L;
 
 	private final ResourceHolder resources = ResourceHolder.getInstance();
-
-	private List<FoldedModel> foldedModels = new ArrayList<>();
 
 	private final ListItemSelectionPanel modelSelectionPanel = new ListItemSelectionPanel(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.MODEL_ID));
@@ -71,24 +69,29 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 		add(screen, BorderLayout.CENTER);
 		add(hintLabel, BorderLayout.SOUTH);
 
-		addPropertyChangeListenerToComponents();
-
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		addWindowListener(this);
 	}
 
-	private void addPropertyChangeListenerToComponents() {
-		modelSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX,
-				e -> setModel(foldedModels.get((Integer) e.getNewValue())));
+	@Override
+	public EstimationResultUIView getUI() {
+		return ui;
 	}
 
 	@Override
-	public void setModels(final List<FoldedModel> models) {
-		foldedModels = models;
-		modelSelectionPanel.setItemCount(models.size());
+	public void addModelSwitchListener(final Consumer<Integer> listener) {
+		modelSelectionPanel.addPropertyChangeListener(
+				ListItemSelectionPanel.INDEX,
+				e -> listener.accept((Integer) e.getNewValue()));
 	}
 
-	private void setModel(final FoldedModel foldedModel) {
+	@Override
+	public void setModelCount(final int count) {
+		modelSelectionPanel.setItemCount(count);
+	}
+
+	@Override
+	public void setModel(final FoldedModel foldedModel) {
 		if (foldedModel.getFoldablePatternCount() == 0) {
 			screen.setModel(null);
 			ui.setModel(null);

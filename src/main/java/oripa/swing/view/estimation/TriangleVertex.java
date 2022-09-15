@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.gui.view.estimation;
+package oripa.swing.view.estimation;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;

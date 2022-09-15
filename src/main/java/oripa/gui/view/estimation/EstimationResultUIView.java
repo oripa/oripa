@@ -16,36 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.main;
+package oripa.gui.view.estimation;
 
-import java.beans.PropertyChangeListener;
+import oripa.domain.fold.FoldedModel;
+import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.gui.view.View;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface PainterScreenSetting {
+public interface EstimationResultUIView extends View {
 
-	String GRID_VISIBLE = "grid visible";
-	String CROSS_LINE_VISIBLE = "cross line visible";
-	String ZERO_LINE_WIDTH = "zero line width";
-	String VERTEX_VISIBLE = "vertex visible";
-	String MV_LINE_VISIBLE = "mv line visible";
-	String AUX_LINE_VISIBLE = "aux line visible";
+	/**
+	 * Set Model to be displayed and update index label
+	 *
+	 * @param foldedModel
+	 *            {@code FoldedModel} to be displayed
+	 */
+	void setModel(FoldedModel foldedModel);
 
-	void addPropertyChangeListener(String propertyName,
-			PropertyChangeListener listener);
+	FoldedModel getModel();
 
-	void setGridVisible(boolean gridVisible);
+	OverlapRelation getOverlapRelation();
 
-	void setCrossLineVisible(boolean visible);
+	boolean isFaceOrderFlipped();
 
-	void setZeroLineWidth(boolean zeroLineWidth);
+	void addExportButtonListener(Runnable listener);
 
-	void setVertexVisible(boolean vertexVisible);
-
-	void setMVLineVisible(boolean mvLineVisible);
-
-	void setAuxLineVisible(boolean auxLineVisible);
-
+	void showExportErrorMessage(Exception e);
 }

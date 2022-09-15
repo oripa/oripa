@@ -20,7 +20,6 @@ package oripa.gui.view.estimation;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -32,7 +31,10 @@ import oripa.gui.view.FrameView;
  *
  */
 public interface EstimationResultFrameView extends FrameView {
-	public void setModels(final List<FoldedModel> models);
+
+	public EstimationResultUIView getUI();
+
+	public void setModelCount(int count);
 
 	public void setColors(final Color front, final Color back);
 
@@ -44,4 +46,7 @@ public interface EstimationResultFrameView extends FrameView {
 
 	public void selectModel(final int index);
 
+	public void addModelSwitchListener(final Consumer<Integer> listener);
+
+	public void setModel(final FoldedModel foldedModel);
 }

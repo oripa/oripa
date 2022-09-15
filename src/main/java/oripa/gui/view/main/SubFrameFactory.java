@@ -21,6 +21,7 @@ package oripa.gui.view.main;
 import java.beans.PropertyChangeListener;
 
 import oripa.gui.view.FrameView;
+import oripa.gui.view.estimation.EstimationResultFrameView;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
 import oripa.gui.view.model.ModelViewFrameView;
 
@@ -35,4 +36,5 @@ public interface SubFrameFactory {
 			FrameView parent,
 			PropertyChangeListener onChangePaperDomain);
 
+	EstimationResultFrameView createResultFrame(FrameView parent);
 }

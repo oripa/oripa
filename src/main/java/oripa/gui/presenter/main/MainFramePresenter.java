@@ -167,8 +167,6 @@ public class MainFramePresenter {
 				new BindingObjectFactoryFacade(stateFactory, setterFactory),
 				screenSetting);
 
-		uiPanelPresenter.setChildFrameManager(childFrameManager);
-
 		loadIniFile();
 
 		modifySavingActions();
