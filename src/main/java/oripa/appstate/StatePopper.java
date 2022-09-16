@@ -1,7 +1,5 @@
 package oripa.appstate;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Optional;
 
 /**
@@ -10,7 +8,7 @@ import java.util.Optional;
  * @author OUCHI Koji
  *
  */
-public class StatePopper<GroupEnum> implements ActionListener {
+public class StatePopper<GroupEnum> implements Runnable {
 	private final StateManager<GroupEnum> stateManager;
 
 	/**
@@ -21,9 +19,9 @@ public class StatePopper<GroupEnum> implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(final ActionEvent e) {
+	public void run() {
 		Optional<ApplicationState<GroupEnum>> currentOpt = stateManager.pop();
 
-		currentOpt.ifPresent(current -> current.performActions(e));
+		currentOpt.ifPresent(current -> current.performActions());
 	}
 }

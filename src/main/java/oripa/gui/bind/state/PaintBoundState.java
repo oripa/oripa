@@ -1,15 +1,13 @@
 package oripa.gui.bind.state;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.function.Supplier;
 
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.appstate.StatePusher;
-import oripa.gui.bind.state.action.PaintActionSetter;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.viewsetting.ChangeViewSetting;
+import oripa.gui.presenter.creasepattern.MouseActionSetter;
+import oripa.gui.viewchange.ChangeViewSetting;
 
 /**
  * A state when user is painting. This class performs:
@@ -23,8 +21,8 @@ import oripa.gui.viewsetting.ChangeViewSetting;
  *
  */
 public class PaintBoundState extends ApplicationState<EditMode> {
-	private Component parent;
-	private ErrorListener errorListener;
+	private Runnable errorHandler;
+	private Supplier<Boolean> errorDetecter;
 
 	/**
 	 * set paint action and hint updater without error handler.
@@ -40,9 +38,9 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	public PaintBoundState(
 			final StateManager<EditMode> stateManager,
 			final EditMode editMode,
-			final PaintActionSetter actionSetter,
+			final MouseActionSetter actionSetter,
 			final ChangeViewSetting changeHint,
-			final ActionListener[] actions) {
+			final Runnable[] actions) {
 		super(editMode, actions);
 
 		addBasicListeners(stateManager, actionSetter, changeHint);
@@ -51,12 +49,12 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	/**
 	 * set paint action and hint updater.
 	 *
-	 * @param parent
-	 *            a parent component
-	 * @param el
-	 *            for managing error on {@code performActions()}.
-	 * @param mouseAction
-	 *            paint action
+	 * @param stateManager
+	 *            state manager.
+	 * @param errorDetecter
+	 *            Detects error. returns true if an error occurs.
+	 * @param errorHandler
+	 *            a callback for error handling.
 	 * @param changeHint
 	 *            event handler for hint.
 	 * @param actions
@@ -64,26 +62,25 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	 *            changes.
 	 */
 	public PaintBoundState(
-			final Component parent,
 			final StateManager<EditMode> stateManager,
-			final ErrorListener el,
+			final Supplier<Boolean> errorDetecter,
+			final Runnable errorHandler,
 			final EditMode editMode,
-			final PaintActionSetter actionSetter,
+			final MouseActionSetter actionSetter,
 			final ChangeViewSetting changeHint,
-			final ActionListener[] actions) {
+			final Runnable[] actions) {
 
 		super(editMode, actions);
 
 		addBasicListeners(stateManager, actionSetter, changeHint);
 
-		// set a listener to handle an error on performActions().
-		this.parent = parent;
-		setErrorListener(el);
+		this.errorHandler = errorHandler;
+		this.errorDetecter = errorDetecter;
 	}
 
 	private void addBasicListeners(
 			final StateManager<EditMode> stateManager,
-			final PaintActionSetter actionSetter,
+			final MouseActionSetter actionSetter,
 			final ChangeViewSetting changeHint) {
 
 		// add a listener to push this state to the history stack.
@@ -94,30 +91,31 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 
 		if (changeHint != null) {
 			// add view updater
-			addAction(e -> changeHint.changeViewSetting());
+			addAction(changeHint::changeViewSetting);
 		}
 
 	}
 
-	public void setErrorListener(final ErrorListener el) {
-		errorListener = el;
+	public void setErrorListeners(final Supplier<Boolean> detecter, final Runnable handler) {
+		errorDetecter = detecter;
+		errorHandler = handler;
 	}
 
 	/**
-	 * This method first detects error by {@code ErrorListener.isError()}. Then
-	 * {@code ErrorListener.onError()} is called if an error occurs. If no error
-	 * occurs or ErrorListener is not given, it sets given paint action to a
-	 * current paint mode.
+	 * This method first detects error by {@code errorDetecter}. Then
+	 * {@code errorHandler.run()} is called if an error occurs. If no error
+	 * occurs or {@code errorDetecter} is not given, it sets given paint action
+	 * to a current paint mode.
 	 */
 	@Override
-	public void performActions(final ActionEvent e) {
-		if (errorListener != null) {
-			if (errorListener.isError(e)) {
-				errorListener.onError(parent, e);
+	public void performActions() {
+		if (errorDetecter != null) {
+			if (errorDetecter.get()) {
+				errorHandler.run();
 				return;
 			}
 		}
 
-		super.performActions(e);
+		super.performActions();
 	}
 }

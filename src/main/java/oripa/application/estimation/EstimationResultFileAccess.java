@@ -18,10 +18,12 @@
  */
 package oripa.application.estimation;
 
-import java.awt.Component;
 import java.io.IOException;
 
+import javax.swing.JFrame;
+
 import oripa.domain.fold.FoldedModel;
+import oripa.gui.view.FrameView;
 import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.persistence.filetool.FileAccessSupportFilter;
@@ -45,10 +47,10 @@ public class EstimationResultFileAccess {
 	}
 
 	public String saveFile(final FoldedModelEntity foldedModel, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<FoldedModelEntity>... filters)
+			final FrameView owner, final FileAccessSupportFilter<FoldedModelEntity>... filters)
 			throws IllegalArgumentException, IOException {
 		try {
-			return dao.saveUsingGUI(foldedModel, lastFilePath, owner, filters);
+			return dao.saveUsingGUI(foldedModel, lastFilePath, (JFrame) owner, filters);
 		} catch (FileChooserCanceledException e) {
 			return lastFilePath;
 		}

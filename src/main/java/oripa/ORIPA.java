@@ -24,7 +24,43 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import oripa.gui.view.main.MainFrame;
+import oripa.application.main.DataFileAccess;
+import oripa.application.main.IniFileAccess;
+import oripa.doc.Doc;
+import oripa.domain.paint.PaintContextFactory;
+import oripa.domain.paint.PaintDomainContext;
+import oripa.domain.paint.byvalue.ByValueContextImpl;
+import oripa.domain.paint.copypaste.SelectionOriginHolderImpl;
+import oripa.file.FileHistory;
+import oripa.file.InitDataFileReader;
+import oripa.file.InitDataFileWriter;
+import oripa.gui.bind.state.EditModeStateManager;
+import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
+import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.TypeForChangeContext;
+import oripa.gui.presenter.main.MainFramePresenter;
+import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
+import oripa.gui.view.ViewScreenUpdaterFactory;
+import oripa.gui.view.main.MainViewSetting;
+import oripa.gui.view.main.ViewUpdateSupport;
+import oripa.gui.view.util.ChildFrameManager;
+import oripa.gui.viewsetting.main.KeyProcessingImpl;
+import oripa.gui.viewsetting.main.MainFrameSettingImpl;
+import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
+import oripa.gui.viewsetting.main.UIPanelSettingImpl;
+import oripa.persistence.doc.DocDAO;
+import oripa.persistence.doc.DocFilterSelector;
+import oripa.resource.Constants;
+import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
+import oripa.swing.view.foldability.FoldabilityCheckSwingFrameFactory;
+import oripa.swing.view.main.ArrayCopyDialogFactory;
+import oripa.swing.view.main.CircleCopyDialogFactory;
+import oripa.swing.view.main.MainFrame;
+import oripa.swing.view.main.MainFrameSwingDialogFactory;
+import oripa.swing.view.main.PropertyDialogFactory;
+import oripa.swing.view.main.SubSwingFrameFactory;
+import oripa.swing.view.model.ModelViewSwingFrameFactory;
 
 public class ORIPA {
 	public static void main(final String[] args) {
@@ -38,7 +74,24 @@ public class ORIPA {
 			int appTotalHeight = mainFrameHeight;
 
 			// Construction of the main frame
-			var mainFrame = new MainFrame();
+
+			var screenUpdaterFactory = new ViewScreenUpdaterFactory();
+
+			var screenUpdater = screenUpdaterFactory.create();
+			var mouseActionHolder = new MouseActionHolder();
+			var keyProcessing = new KeyProcessingImpl(
+					new SwitcherBetweenPasteAndChangeOrigin(mouseActionHolder),
+					screenUpdater);
+			var viewUpdateSupport = new ViewUpdateSupport(screenUpdater, keyProcessing);
+
+			var mainViewSetting = new MainViewSetting(
+					new MainFrameSettingImpl(),
+					new PainterScreenSettingImpl(),
+					new UIPanelSettingImpl());
+			var mainFrame = new MainFrame(mainViewSetting, viewUpdateSupport);
+			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+			// Configure position and size of the frame
 
 			Toolkit toolkit = mainFrame.getToolkit();
 			Dimension dim = toolkit.getScreenSize();
@@ -46,8 +99,40 @@ public class ORIPA {
 			int originY = (int) (dim.getHeight() / 2 - appTotalHeight / 2);
 
 			mainFrame.setBounds(originX + uiPanelWidth, originY, mainFrameWidth, mainFrameHeight);
-			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			mainFrame.setVisible(true);
+
+			// Construct the presenter
+
+			var paintContext = new PaintContextFactory().createContext();
+			var viewContext = new CreasePatternViewContextFactory().create(paintContext);
+
+			var dialogFactory = new MainFrameSwingDialogFactory(
+					new ArrayCopyDialogFactory(),
+					new CircleCopyDialogFactory(),
+					new PropertyDialogFactory());
+
+			var childFrameManager = new ChildFrameManager();
+
+			var presenter = new MainFramePresenter(
+					mainFrame,
+					viewUpdateSupport,
+					dialogFactory,
+					new SubSwingFrameFactory(
+							new FoldabilityCheckSwingFrameFactory(childFrameManager),
+							new ModelViewSwingFrameFactory(mainViewSetting.getPainterScreenSetting(),
+									childFrameManager),
+							new EstimationResultSwingFrameFactory(childFrameManager)),
+					childFrameManager,
+					mainViewSetting,
+					new Doc(),
+					new PaintDomainContext(paintContext, new SelectionOriginHolderImpl(), new ByValueContextImpl()),
+					new CreasePatternPresentationContext(viewContext, mouseActionHolder,
+							new TypeForChangeContext()),
+					new EditModeStateManager(),
+					new FileHistory(Constants.MRUFILE_NUM),
+					new IniFileAccess(
+							new InitDataFileReader(), new InitDataFileWriter()),
+					new DataFileAccess(new DocDAO(new DocFilterSelector())));
+			presenter.setViewVisible(true);
 
 //			if (Config.FOR_STUDY) {
 //				int modelFrameWidth = 400;

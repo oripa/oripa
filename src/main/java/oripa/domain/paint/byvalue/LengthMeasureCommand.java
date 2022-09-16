@@ -28,9 +28,9 @@ import oripa.geom.GeomUtil;
  */
 public class LengthMeasureCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
-	private final ValueSetting valueSetting;
+	private final ByValueContext valueSetting;
 
-	public LengthMeasureCommand(final PaintContext context, final ValueSetting valueSetting) {
+	public LengthMeasureCommand(final PaintContext context, final ByValueContext valueSetting) {
 		this.context = context;
 		this.valueSetting = valueSetting;
 	}

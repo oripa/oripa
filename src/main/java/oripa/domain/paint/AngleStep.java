@@ -18,12 +18,20 @@
  */
 package oripa.domain.paint;
 
+import java.util.Optional;
+import java.util.stream.Stream;
+
 /**
  * @author OUCHI Koji
  *
  */
 public enum AngleStep {
-	PI_OVER_12(12), PI_OVER_10(10), PI_OVER_8(8), PI_OVER_6(6), PI_OVER_4(4), PI_OVER_2(2);
+	PI_OVER_12(12),
+	PI_OVER_10(10),
+	PI_OVER_8(8),
+	PI_OVER_6(6),
+	PI_OVER_4(4),
+	PI_OVER_2(2);
 
 	private final int divNum;
 
@@ -45,6 +53,12 @@ public enum AngleStep {
 
 	public double getRadianStep() {
 		return Math.PI / divNum;
+	}
+
+	public static Optional<AngleStep> fromString(final String s) {
+		return Stream.of(values())
+				.filter(type -> type.toString().equals(s))
+				.findFirst();
 	}
 
 	/*

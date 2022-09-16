@@ -10,12 +10,12 @@ import oripa.util.Command;
 public class SelectingVertexToDrawLine extends PickingVertex {
 	private static final Logger logger = LoggerFactory.getLogger(SelectingVertexToDrawLine.class);
 
-	private final ValueSetting valueSetting;
+	private final ByValueContext valueSetting;
 
 	/**
 	 * Constructor
 	 */
-	public SelectingVertexToDrawLine(final ValueSetting valueSetting) {
+	public SelectingVertexToDrawLine(final ByValueContext valueSetting) {
 		super();
 		this.valueSetting = valueSetting;
 	}

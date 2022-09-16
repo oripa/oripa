@@ -4,20 +4,20 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.SelectingVertexToDrawLine;
-import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class LineByValueAction extends AbstractGraphicMouseAction {
 
-	private final ValueSetting valueSetting;
+	private final ByValueContext byValueContext;
 
-	public LineByValueAction(final ValueSetting valueSetting) {
+	public LineByValueAction(final ByValueContext byValueContext) {
 		super();
-		setActionState(new SelectingVertexToDrawLine(valueSetting));
+		setActionState(new SelectingVertexToDrawLine(byValueContext));
 
-		this.valueSetting = valueSetting;
+		this.byValueContext = byValueContext;
 	}
 
 	@Override
@@ -38,8 +38,8 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 			return;
 		}
 		try {
-			var angle = valueSetting.getAngle();
-			var length = valueSetting.getLength();
+			var angle = byValueContext.getAngle();
+			var length = byValueContext.getLength();
 
 			var radianAngle = Math.toRadians(angle);
 

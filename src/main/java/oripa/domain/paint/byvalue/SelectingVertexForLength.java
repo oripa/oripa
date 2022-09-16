@@ -8,9 +8,9 @@ import oripa.util.Command;
 
 public class SelectingVertexForLength extends PickingVertex {
 
-	private final ValueSetting valueSetting;
+	private final ByValueContext valueSetting;
 
-	public SelectingVertexForLength(final ValueSetting valueSetting) {
+	public SelectingVertexForLength(final ByValueContext valueSetting) {
 		super();
 		this.valueSetting = valueSetting;
 	}

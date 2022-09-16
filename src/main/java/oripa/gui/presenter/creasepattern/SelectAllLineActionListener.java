@@ -18,9 +18,6 @@
  */
 package oripa.gui.presenter.creasepattern;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.selectline.AllLineSelecterCommand;
 import oripa.util.Command;
@@ -29,7 +26,7 @@ import oripa.util.Command;
  * @author OUCHI Koji
  *
  */
-public class SelectAllLineActionListener implements ActionListener {
+public class SelectAllLineActionListener implements Runnable {
 	private final PaintContext context;
 
 	/**
@@ -46,7 +43,7 @@ public class SelectAllLineActionListener implements ActionListener {
 	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
-	public void actionPerformed(final ActionEvent e) {
+	public void run() {
 		Command command = new AllLineSelecterCommand(context);
 		command.execute();
 	}

@@ -9,6 +9,7 @@ import oripa.domain.paint.ActionState;
 import oripa.domain.paint.BasicUndo;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 
 public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {

@@ -5,6 +5,7 @@ import java.util.Collection;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.deleteline.DeletingLine;
 import oripa.domain.paint.deleteline.LineDeleterCommand;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.util.Command;
 import oripa.value.OriLine;
 

@@ -19,51 +19,17 @@
 package oripa.gui.view.model;
 
 import java.beans.PropertyChangeListener;
-import java.util.List;
 
-import javax.swing.JComponent;
-
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.gui.view.util.ChildFrameManager;
-import oripa.gui.viewsetting.main.MainScreenSetting;
+import oripa.gui.view.FrameView;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public class ModelViewFrameFactory {
+public interface ModelViewFrameFactory {
 
-	private final MainScreenSetting mainScreenSetting;
-	private final ChildFrameManager childFrameManager;
-
-	public ModelViewFrameFactory(final MainScreenSetting mainScreenSetting,
-			final ChildFrameManager childFrameManager) {
-		this.mainScreenSetting = mainScreenSetting;
-		this.childFrameManager = childFrameManager;
-	}
-
-	public ModelViewFrame createFrame(
-			final JComponent parent,
-			final List<OrigamiModel> origamiModels,
-			final CutModelOutlinesHolder lineHolder, final CallbackOnUpdate onUpdateLine,
-			final PropertyChangeListener onChangePaperDomain) {
-
-		ModelViewFrame frame = childFrameManager.find(parent,
-				ModelViewFrame.class);
-
-		if (frame == null) {
-			frame = new ModelViewFrame(400, 400, lineHolder, onUpdateLine, mainScreenSetting);
-		}
-
-		frame.putPaperDomainChangeListener(parent, onChangePaperDomain);
-
-		frame.setModels(origamiModels);
-
-		childFrameManager.putChild(parent, frame);
-
-		return frame;
-	}
+	ModelViewFrameView createFrame(
+			FrameView parent,
+			PropertyChangeListener onChangePaperDomain);
 
 }

@@ -1,7 +1,5 @@
 package oripa.appstate;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +14,7 @@ import java.util.List;
 public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 	private final GroupEnum group;
 
-	// This class doesn't need ActionEvent parameter but compatibility
-	// with ActionListner is convenient in some cases.
-	private final ArrayList<ActionListener> actions = new ArrayList<ActionListener>();
+	private final ArrayList<Runnable> actions = new ArrayList<Runnable>();
 
 	/**
 	 * A constructor which binds a group and actions to this state.
@@ -28,16 +24,16 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 	 * @param actions
 	 *            actions to be performed on this state.
 	 */
-	public ApplicationState(final GroupEnum group, final ActionListener... actions) {
+	public ApplicationState(final GroupEnum group, final Runnable... actions) {
 		this.group = group;
 		addActions(actions);
 	}
 
-	public void addAction(final ActionListener action) {
+	public void addAction(final Runnable action) {
 		this.actions.add(action);
 	}
 
-	public void addActions(final ActionListener[] actions) {
+	public void addActions(final Runnable[] actions) {
 		if (actions == null) {
 			return;
 		}
@@ -47,15 +43,13 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 
 	/**
 	 * performs actions of this state.
-	 *
-	 * @param e
 	 */
-	public void performActions(final ActionEvent e) {
+	public void performActions() {
 		if (actions == null) {
 			return;
 		}
 
-		actions.forEach(action -> action.actionPerformed(e));
+		actions.forEach(action -> action.run());
 	}
 
 	@Override

@@ -2,19 +2,19 @@ package oripa.gui.presenter.creasepattern.byvalue;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.SelectingVertexForAngle;
-import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class AngleMeasuringAction extends AbstractGraphicMouseAction {
 
-	private final ValueSetting valueSetting;
+	private final ByValueContext byValueContext;
 
-	public AngleMeasuringAction(final ValueSetting valueSetting) {
-		setActionState(new SelectingVertexForAngle(valueSetting));
-		this.valueSetting = valueSetting;
+	public AngleMeasuringAction(final ByValueContext byValueContext) {
+		setActionState(new SelectingVertexForAngle(byValueContext));
+		this.byValueContext = byValueContext;
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class AngleMeasuringAction extends AbstractGraphicMouseAction {
 		int vertexCountAfterAction = paintContext.getVertexCount();
 
 		if (isActionPerformed(vertexCountBeforeAction, vertexCountAfterAction)) {
-			action = new LineByValueAction(valueSetting);
+			action = new LineByValueAction(byValueContext);
 		}
 
 		return action;

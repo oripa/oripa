@@ -18,16 +18,14 @@
  */
 package oripa.gui.view.util;
 
-import java.awt.Component;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-
-import javax.swing.JComponent;
-import javax.swing.JFrame;
+import java.util.HashSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import oripa.gui.view.FrameView;
 
 /**
  * @author Koji
@@ -36,28 +34,43 @@ import org.slf4j.LoggerFactory;
 public class ChildFrameManager {
 	private static final Logger logger = LoggerFactory.getLogger(ChildFrameManager.class);
 
-	private final HashMap<JComponent, Collection<JFrame>> relationMap = new HashMap<>();
+	private final HashMap<FrameView, Collection<FrameView>> relationMap = new HashMap<>();
 
 	public ChildFrameManager() {
 	}
 
-	public Collection<JFrame> getChildren(final JComponent parent) {
-		var children = relationMap.get(parent);
+	public Collection<FrameView> getChildren(final FrameView parentFrame) {
+		var children = relationMap.get(parentFrame);
 		if (children == null) {
-			children = new ArrayList<>();
-			relationMap.put(parent, children);
+			children = new HashSet<>();
+			relationMap.put(parentFrame, children);
 		}
 
 		return children;
 	}
 
-	public void putChild(final JComponent parent, final JFrame child) {
-		getChildren(parent).add(child);
+	public void putChild(final FrameView parentFrame, final FrameView childFrame) {
+		var children = getChildren(parentFrame);
+		children.add(childFrame);
+		logger.info("{} is put.", childFrame);
+		logger.info("There are {} children.", children.size());
 	}
 
-	public <TFrame extends JFrame> TFrame find(final JComponent parent, final Class<TFrame> clazz) {
-		var children = getChildren(parent);
-		logger.info("children of " + parent + ": " + children);
+	public void removeChild(final FrameView parentFrame, final FrameView childFrame) {
+		var children = getChildren(parentFrame);
+		if (children.remove(childFrame)) {
+			logger.info("{} is removed.", childFrame);
+			logger.info("There are {} children.", children.size());
+		}
+	}
+
+	public void removeFromChildren(final FrameView childFrame) {
+		relationMap.keySet().forEach(parentFrame -> removeChild(parentFrame, childFrame));
+	}
+
+	public <TFrame extends FrameView> TFrame find(final FrameView parentFrame, final Class<TFrame> clazz) {
+		var children = getChildren(parentFrame);
+		logger.info("{} children of  {}: {}", children.size(), parentFrame, children);
 		for (var child : children) {
 			if (clazz.isInstance(child)) {
 				logger.info("child(class = " + clazz.getName() + ") is found.");
@@ -68,45 +81,24 @@ public class ChildFrameManager {
 		return null;
 	}
 
-	public void closeAll(final JComponent parent) {
-		var children = getChildren(parent);
-		for (JFrame frame : children) {
-			// TODO make all frames short-life object
-			// then change the following to dispose()
-			frame.setVisible(false);
-		}
-		// children.clear(); // enable this if dispose() is used.
-	}
-
 	/**
-	 * Close all child frames of the given component and do the same for
-	 * descendants of the given component.
+	 * Disposes all descendants of {@code parentFrame}.
 	 *
-	 * @param frame
+	 * @param parentFrame
 	 */
-	public void closeAllChildrenRecursively(final JFrame frame) {
-		for (Component component : frame.getComponents()) {
-			if (!(component instanceof JComponent)) {
-				continue;
-			}
-			JComponent casted = (JComponent) component;
-			closeAllRecursively(casted);
+	public void closeAll(final FrameView parentFrame) {
+		if (parentFrame == null) {
+			return;
 		}
-	}
 
-	/**
-	 * Close all child frames of the given component and do the same for
-	 * descendants of the given component.
-	 *
-	 * @param parent
-	 */
-	private void closeAllRecursively(final JComponent parent) {
-		closeAll(parent);
+		var children = getChildren(parentFrame);
 
-		for (JComponent key : relationMap.keySet()) {
-			if (parent.isAncestorOf(key)) {
-				closeAll(key);
-			}
+		var iterator = children.iterator();
+		while (iterator.hasNext()) {
+			var child = iterator.next();
+			closeAll(child);
+			iterator.remove();
+			child.dispose();
 		}
 	}
 

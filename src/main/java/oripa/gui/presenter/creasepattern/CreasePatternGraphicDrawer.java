@@ -26,6 +26,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 
 /**

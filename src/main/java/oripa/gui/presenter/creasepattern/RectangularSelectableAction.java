@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cptool.RectangleClipper;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 
 public abstract class RectangularSelectableAction extends AbstractGraphicMouseAction {

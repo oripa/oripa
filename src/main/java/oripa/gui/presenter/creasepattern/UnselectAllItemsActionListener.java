@@ -18,9 +18,6 @@
  */
 package oripa.gui.presenter.creasepattern;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import oripa.appstate.StatePopper;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.unselect.AllItemUnselecterCommand;
@@ -30,7 +27,7 @@ import oripa.util.Command;
  * @author OUCHI Koji
  *
  */
-public class UnselectAllItemsActionListener implements ActionListener {
+public class UnselectAllItemsActionListener implements Runnable {
 	private final MouseActionHolder actionHolder;
 	private final PaintContext context;
 	private final StatePopper<EditMode> statePopper;
@@ -57,7 +54,7 @@ public class UnselectAllItemsActionListener implements ActionListener {
 	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
-	public void actionPerformed(final ActionEvent e) {
+	public void run() {
 		Command command = new AllItemUnselecterCommand(context);
 
 		command.execute();
@@ -72,7 +69,7 @@ public class UnselectAllItemsActionListener implements ActionListener {
 
 		if (currentAction.getEditMode() == EditMode.COPY ||
 				currentAction.getEditMode() == EditMode.CUT) {
-			statePopper.actionPerformed(e);
+			statePopper.run();
 		}
 
 		screenUpdater.updateScreen();

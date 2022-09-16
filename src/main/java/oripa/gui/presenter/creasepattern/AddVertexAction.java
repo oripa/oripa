@@ -4,6 +4,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.addvertex.AddingVertex;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class AddVertexAction extends AbstractGraphicMouseAction {
 

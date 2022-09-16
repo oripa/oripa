@@ -2,20 +2,20 @@ package oripa.gui.presenter.creasepattern.byvalue;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.byvalue.SelectingVertexForLength;
-import oripa.domain.paint.byvalue.ValueSetting;
+import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-import oripa.gui.presenter.creasepattern.ObjectGraphicDrawer;
+import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
 public class LengthMeasuringAction extends AbstractGraphicMouseAction {
 
-	private final ValueSetting valueSetting;
+	private final ByValueContext byValueContext;
 
-	public LengthMeasuringAction(final ValueSetting valueSetting) {
+	public LengthMeasuringAction(final ByValueContext vbyValueContext) {
 		super();
-		setActionState(new SelectingVertexForLength(valueSetting));
-		this.valueSetting = valueSetting;
+		setActionState(new SelectingVertexForLength(vbyValueContext));
+		this.byValueContext = vbyValueContext;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class LengthMeasuringAction extends AbstractGraphicMouseAction {
 		int vertexCountAfterAction = paintContext.getVertexCount();
 
 		if (isActionPerformed(vertexCountBeforeAction, vertexCountAfterAction)) {
-			action = new LineByValueAction(valueSetting);
+			action = new LineByValueAction(byValueContext);
 		}
 
 		return action;
