@@ -21,9 +21,9 @@ package oripa.persistence.entity;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import oripa.persistence.dao.AbstractFilterSelector;
+import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.entity.exporter.FoldedModelEntity;
-import oripa.persistence.filetool.FileAccessSupportFilter;
+import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
 
@@ -31,29 +31,29 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFilterSelector extends AbstractFilterSelector<FoldedModelEntity> {
-	private final SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupportFilter<FoldedModelEntity>> filters = new TreeMap<>();
+public class FoldedModelFileAccessSupportSelector extends AbstractFileAccessSupportSelector<FoldedModelEntity> {
+	private final SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>> filters = new TreeMap<>();
 
 	/**
 	 * Constructor
 	 */
-	public FoldedModelFilterSelector(final boolean modelFlip) {
+	public FoldedModelFileAccessSupportSelector(final boolean modelFlip) {
 		// TODO: StringID.ModelMenu.FILE_ID is tentative. Replace it with new
 		// string ID.
 		FoldedModelFileTypeKey key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
-		putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
+		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
 
 		if (modelFlip) {
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP;
-			putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
+			putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
 		} else {
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL;
-			putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
+			putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
 		}
 	}
 
 	@Override
-	protected SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupportFilter<FoldedModelEntity>> getFilters() {
+	protected SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>> getFileAccessSupports() {
 		return filters;
 	}
 }

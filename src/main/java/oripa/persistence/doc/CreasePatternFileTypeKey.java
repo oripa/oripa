@@ -41,13 +41,13 @@ import oripa.persistence.filetool.Loader;
  *
  */
 public enum CreasePatternFileTypeKey implements FileTypeProperty<Doc> {
-	OPX("opx", 1, new LoaderXML(), new ExporterXML(), ".opx", ".xml"),
-	FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(), ".fold"),
-	PICT("pict", 3, null, new PictureExporter(), ".png", ".jpg"),
-	DXF("dxf", 4, new LoaderDXF(), ExporterDXFFactory.createCreasePatternExporter(), ".dxf"),
-	CP("cp", 5, new LoaderCP(), new ExporterCP(), ".cp"),
-	SVG("svg", 6, null, ExporterSVGFactory.createCreasePatternExporter(), ".svg"),
-	PDF("pdf", 7, new LoaderPDF(), null, ".pdf");
+	OPX("opx", 1, new LoaderXML(), new ExporterXML(), "opx", "xml"),
+	FOLD("fold", 2, new LoaderFOLD(), new ExporterFOLD(), "fold"),
+	PICT("pict", 3, null, new PictureExporter(), "png", "jpg"),
+	DXF("dxf", 4, new LoaderDXF(), ExporterDXFFactory.createCreasePatternExporter(), "dxf"),
+	CP("cp", 5, new LoaderCP(), new ExporterCP(), "cp"),
+	SVG("svg", 6, null, ExporterSVGFactory.createCreasePatternExporter(), "svg"),
+	PDF("pdf", 7, new LoaderPDF(), null, "pdf");
 
 	private final String keyText;
 	private final Integer order;

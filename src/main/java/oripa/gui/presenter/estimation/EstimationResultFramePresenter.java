@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.gui.view.estimation.EstimationResultFrameView;
+import oripa.gui.view.file.FileChooserFactory;
 
 /**
  * @author OUCHI Koji
@@ -35,6 +36,7 @@ public class EstimationResultFramePresenter {
 
 	public EstimationResultFramePresenter(
 			final EstimationResultFrameView view,
+			final FileChooserFactory fileChooserFactory,
 			final List<FoldedModel> foldedModels,
 			final String lastFilePath,
 			final Consumer<String> lastFilePathChangeListener) {
@@ -42,7 +44,8 @@ public class EstimationResultFramePresenter {
 
 		this.foldedModels = foldedModels;
 
-		var uiPresenter = new EstimationResultUIPresenter(view.getUI(), lastFilePath, lastFilePathChangeListener);
+		var uiPresenter = new EstimationResultUIPresenter(view.getUI(), fileChooserFactory, lastFilePath,
+				lastFilePathChangeListener);
 
 		addListeners();
 

@@ -18,12 +18,9 @@
  */
 package oripa.persistence.dao;
 
-import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
@@ -71,52 +68,54 @@ public interface DataAccessObject<Data> {
 	void save(Data data, String path, FileTypeProperty<Data> type)
 			throws IOException, IllegalArgumentException;
 
-	/**
-	 * open save dialog for file types in {@code filters}
-	 *
-	 * @param data
-	 *            to be saved
-	 * @param homePath
-	 *            starting path to display
-	 * @param parent
-	 * @param filters
-	 * @return chosen path
-	 * @throws FileChooserCanceledException
-	 * @throws IOException
-	 *             file IO trouble.
-	 * @throws IllegalArgumentException
-	 *             the filter chosen from {@code filters} by user accepts the
-	 *             selected file but is not for saving the file.
-	 */
-	String saveUsingGUI(Data data, String homePath,
-			Component parent,
-			FileAccessSupportFilter<Data>... filters)
-			throws FileChooserCanceledException, IOException, IllegalArgumentException;
-
-	/**
-	 * open dialog to load file
-	 *
-	 * @param homePath
-	 *            starting path
-	 * @param filters
-	 *            supported file types
-	 * @param parent
-	 * @return loaded data.
-	 * @throws FileVersionError
-	 * @throws FileChooserCanceledException
-	 * @throws IllegalArgumentException
-	 *             the filter chosen from {@code filters} by user accepts the
-	 *             selected file but is not for loading the file.
-	 * @throws IOException
-	 *             file IO trouble.
-	 * @throws FileNotFoundException
-	 *             selected file doesn't exist.
-	 * @throws WrongDataFormatException
-	 *             loading failed because of data format problem.
-	 */
-	Data loadUsingGUI(String homePath,
-			FileAccessSupportFilter<Data>[] filters, Component parent)
-			throws FileVersionError, FileChooserCanceledException, IllegalArgumentException,
-			IOException, FileNotFoundException, WrongDataFormatException;
+//	/**
+//	 * open save dialog for file types in {@code filters}
+//	 *
+//	 * @param data
+//	 *            to be saved
+//	 * @param homePath
+//	 *            starting path to display
+//	 * @param parent
+//	 * @param filters
+//	 * @return chosen path
+//	 * @throws FileChooserCanceledException
+//	 * @throws IOException
+//	 *             file IO trouble.
+//	 * @throws IllegalArgumentException
+//	 *             the filter chosen from {@code filters} by user accepts the
+//	 *             selected file but is not for saving the file.
+//	 */
+//	@Deprecated
+//	String saveUsingGUI(Data data, String homePath,
+//			Component parent,
+//			FileAccessSupport<Data>... filters)
+//			throws FileChooserCanceledException, IOException, IllegalArgumentException;
+//
+//	/**
+//	 * open dialog to load file
+//	 *
+//	 * @param homePath
+//	 *            starting path
+//	 * @param filters
+//	 *            supported file types
+//	 * @param parent
+//	 * @return loaded data.
+//	 * @throws FileVersionError
+//	 * @throws FileChooserCanceledException
+//	 * @throws IllegalArgumentException
+//	 *             the filter chosen from {@code filters} by user accepts the
+//	 *             selected file but is not for loading the file.
+//	 * @throws IOException
+//	 *             file IO trouble.
+//	 * @throws FileNotFoundException
+//	 *             selected file doesn't exist.
+//	 * @throws WrongDataFormatException
+//	 *             loading failed because of data format problem.
+//	 */
+//	@Deprecated
+//	Data loadUsingGUI(String homePath,
+//			FileAccessSupport<Data>[] filters, Component parent)
+//			throws FileVersionError, FileChooserCanceledException, IllegalArgumentException,
+//			IOException, FileNotFoundException, WrongDataFormatException;
 
 }

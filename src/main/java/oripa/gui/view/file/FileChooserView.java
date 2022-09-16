@@ -16,38 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.filetool;
+package oripa.gui.view.file;
 
-import java.util.Arrays;
+import java.io.File;
+
+import oripa.gui.view.FrameView;
+import oripa.gui.view.View;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public interface FileTypeProperty<Data> {
+public interface FileChooserView extends View {
 
-	/**
-	 *
-	 * @return extensions for this file type.
-	 */
-	String[] getExtensions();
-
-	default boolean extensionsMatch(final String filePath) {
-		if (filePath == null) {
-			return false;
-		}
-		return Arrays.asList(getExtensions()).stream()
-				.anyMatch(extension -> filePath.endsWith("." + extension));
+	@Override
+	default View getTopLevelView() {
+		return null;
 	}
 
 	/**
-	 * @return a text for identifying file type.
+	 *
+	 * @return true if user selected a file. false if user canceled.
 	 */
-	String getKeyText();
+	boolean showDialog(FrameView parent);
 
-	Integer getOrder();
+	File getSelectedFile();
 
-	Loader<Data> getLoader();
+	String[] getSelectedFilterExtensions();
 
-	Exporter<Data> getExporter();
+	void showErrorMessage(Exception e);
 }

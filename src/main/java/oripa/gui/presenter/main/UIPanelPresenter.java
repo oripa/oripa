@@ -45,6 +45,7 @@ import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.estimation.EstimationResultFrameView;
+import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.KeyProcessing;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
@@ -63,6 +64,7 @@ public class UIPanelPresenter {
 
 	private final UIPanelView view;
 	private final SubFrameFactory subFrameFactory;
+	private final FileChooserFactory fileChooserFactory;
 
 	private final TypeForChange[] alterLineComboDataFrom = {
 			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
@@ -92,6 +94,7 @@ public class UIPanelPresenter {
 
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
+			final FileChooserFactory fileChooserFactory,
 			final StateManager<EditMode> stateManager,
 			final ViewUpdateSupport viewUpdateSupport,
 			final CreasePatternPresentationContext presentationContext,
@@ -101,6 +104,8 @@ public class UIPanelPresenter {
 			final PainterScreenSetting mainScreenSetting) {
 		this.view = view;
 		this.subFrameFactory = subFrameFactory;
+
+		this.fileChooserFactory = fileChooserFactory;
 
 		this.byValueContext = domainContext.getByValueContext();
 		typeForChangeContext = presentationContext.getTypeForChangeContext();
@@ -326,8 +331,13 @@ public class UIPanelPresenter {
 		ModelViewFrameView modelViewFrame = subFrameFactory.createModelViewFrame(parent,
 				view.getPaperDomainOfModelChangeListener());
 
-		var modelViewPresenter = new ModelViewFramePresenter(modelViewFrame, mainScreenSetting, origamiModels,
-				cutOutlinesHolder, screenUpdater::updateScreen);
+		var modelViewPresenter = new ModelViewFramePresenter(
+				modelViewFrame,
+				fileChooserFactory,
+				mainScreenSetting,
+				origamiModels,
+				cutOutlinesHolder,
+				screenUpdater::updateScreen);
 		modelViewPresenter.setViewVisible(true);
 
 		EstimationResultFrameView resultFrame = null;
@@ -350,6 +360,7 @@ public class UIPanelPresenter {
 
 				var resultFramePresenter = new EstimationResultFramePresenter(
 						resultFrame,
+						fileChooserFactory,
 						foldedModels,
 						lastResultFilePath,
 						path -> lastResultFilePath = path);

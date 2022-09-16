@@ -16,38 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.filetool;
+package oripa.gui.view.file;
 
-import java.util.Arrays;
+import java.util.Collection;
+
+import oripa.persistence.filetool.FileAccessSupport;
 
 /**
- * @author Koji
+ * @author OUCHI Koji
  *
  */
-public interface FileTypeProperty<Data> {
+public interface FileChooserFactory {
 
-	/**
-	 *
-	 * @return extensions for this file type.
-	 */
-	String[] getExtensions();
+	public <Data> FileChooserView createForSaving(String path,
+			final Collection<FileAccessSupport<Data>> supports);
 
-	default boolean extensionsMatch(final String filePath) {
-		if (filePath == null) {
-			return false;
-		}
-		return Arrays.asList(getExtensions()).stream()
-				.anyMatch(extension -> filePath.endsWith("." + extension));
-	}
-
-	/**
-	 * @return a text for identifying file type.
-	 */
-	String getKeyText();
-
-	Integer getOrder();
-
-	Loader<Data> getLoader();
-
-	Exporter<Data> getExporter();
+	public <Data> FileChooserView createForLoading(String path,
+			final Collection<FileAccessSupport<Data>> supports);
 }

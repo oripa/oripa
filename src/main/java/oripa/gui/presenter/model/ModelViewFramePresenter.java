@@ -20,17 +20,17 @@ package oripa.gui.presenter.model;
 
 import java.util.List;
 
-import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.exception.UserCanceledException;
+import oripa.gui.presenter.file.FileAccessPresenter;
+import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.persistence.entity.OrigamiModelDAO;
+import oripa.persistence.entity.OrigamiModelFileAccessSupportSelector;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
-import oripa.persistence.entity.OrigamiModelFilterSelector;
-import oripa.persistence.filetool.FileChooserCanceledException;
 
 /**
  * @author OUCHI Koji
@@ -39,20 +39,25 @@ import oripa.persistence.filetool.FileChooserCanceledException;
 public class ModelViewFramePresenter {
 
 	private final ModelViewFrameView view;
+	private final FileChooserFactory fileChooserFactory;
+
 	private final List<OrigamiModel> origamiModels;
 	private OrigamiModel origamiModel;
 	private final PainterScreenSetting mainScreenSetting;
 
-	private final OrigamiModelFilterSelector filterSelector = new OrigamiModelFilterSelector();
-	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
+	private final OrigamiModelFileAccessSupportSelector supportSelector = new OrigamiModelFileAccessSupportSelector();
+//	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
 
 	public ModelViewFramePresenter(
 			final ModelViewFrameView view,
+			final FileChooserFactory fileChooserFactory,
 			final PainterScreenSetting mainScreenSetting,
 			final List<OrigamiModel> origamiModels,
 			final CutModelOutlinesHolder lineHolder,
 			final CallbackOnUpdate onUpdateScissorsLine) {
 		this.view = view;
+		this.fileChooserFactory = fileChooserFactory;
+
 		this.mainScreenSetting = mainScreenSetting;
 		this.origamiModels = origamiModels;
 
@@ -102,9 +107,12 @@ public class ModelViewFramePresenter {
 	private void exportFile(final OrigamiModelFileTypeKey type) {
 
 		try {
-			fileAccess.saveFile(origamiModel, view, filterSelector.getFilter(type));
-		} catch (FileChooserCanceledException ignored) {
-			// ignored
+			var presenter = new FileAccessPresenter<>(view, fileChooserFactory, supportSelector);
+
+			presenter.saveUsingGUI(origamiModel, null, List.of(type));
+//			fileAccess.saveFile(origamiModel, view, supportSelector.getFileAccessSupport(type));
+		} catch (UserCanceledException e) {
+
 		} catch (Exception e) {
 			view.showExportErrorMessage(e);
 		}

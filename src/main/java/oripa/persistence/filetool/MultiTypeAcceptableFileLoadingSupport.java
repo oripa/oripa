@@ -30,19 +30,19 @@ import org.slf4j.LoggerFactory;
  * @author OUCHI Koji
  *
  */
-public class MultiTypeAcceptableFileLoadingFilter<Data>
-		extends FileAccessSupportFilter<Data> {
+public class MultiTypeAcceptableFileLoadingSupport<Data>
+		extends FileAccessSupport<Data> {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(MultiTypeAcceptableFileLoadingFilter.class);
+			.getLogger(MultiTypeAcceptableFileLoadingSupport.class);
 
-	private final Collection<FileAccessSupportFilter<Data>> filters;
+	private final Collection<FileAccessSupport<Data>> filters;
 
 	/**
 	 *
 	 * Constructor.
 	 *
-	 * @param filters
+	 * @param supports
 	 *            filters whose loading action objects are not null. Filters
 	 *            will be copied to this object.
 	 * @param msg
@@ -50,23 +50,23 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 	 * @throws IllegalArgumentException
 	 *             if a loading action of a filter is null.
 	 */
-	public MultiTypeAcceptableFileLoadingFilter(
-			final Collection<FileAccessSupportFilter<Data>> filters,
+	public MultiTypeAcceptableFileLoadingSupport(
+			final Collection<FileAccessSupport<Data>> supports,
 			final String msg) throws IllegalArgumentException {
 
 		super(new MultiTypeProperty<Data>(
-				filters.stream()
+				supports.stream()
 						.map(f -> f.getTargetType())
 						.collect(Collectors.toList())),
 				msg);
 
-		filters.forEach(filter -> {
+		supports.forEach(filter -> {
 			if (filter.getLoadingAction() == null) {
-				throw new IllegalArgumentException("filter should have a loadingAction.");
+				throw new IllegalArgumentException("file access support should have a loadingAction.");
 			}
 		});
 
-		this.filters = new ArrayList<>(filters);
+		this.filters = new ArrayList<>(supports);
 	}
 
 	@Deprecated
@@ -88,23 +88,7 @@ public class MultiTypeAcceptableFileLoadingFilter<Data>
 	@Override
 	public String[] getExtensions() {
 		return filters.stream()
-				.flatMap(filter -> Arrays.asList(filter.getExtensions()).stream())
+				.flatMap(support -> Arrays.asList(support.getExtensions()).stream())
 				.collect(Collectors.toList()).toArray(new String[0]);
-	}
-
-	/**
-	 *
-	 * @param filePath
-	 * @return loading action for the given {@code filePath}.
-	 * @throws IllegalArgumentException
-	 *             if no loading action is for the given {@code filePath}.
-	 */
-	public AbstractLoadingAction<Data> getLoadingAction(final String filePath)
-			throws IllegalArgumentException {
-		return filters.stream()
-				.filter(f -> f.getTargetType().extensionsMatch(filePath))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("No filter for the given path."))
-				.getLoadingAction();
 	}
 }

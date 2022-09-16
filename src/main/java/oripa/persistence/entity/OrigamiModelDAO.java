@@ -20,7 +20,7 @@ package oripa.persistence.entity;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistence.dao.AbstractFileDAO;
-import oripa.persistence.dao.AbstractFilterSelector;
+import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.filetool.FileTypeProperty;
 
 /**
@@ -28,7 +28,7 @@ import oripa.persistence.filetool.FileTypeProperty;
  *
  */
 public class OrigamiModelDAO extends AbstractFileDAO<OrigamiModel> {
-	private final AbstractFilterSelector<OrigamiModel> selector;
+	private final AbstractFileAccessSupportSelector<OrigamiModel> selector;
 
 	/**
 	 * Constructor
@@ -38,7 +38,7 @@ public class OrigamiModelDAO extends AbstractFileDAO<OrigamiModel> {
 	 *            {@link AbstractFileDAO#save(OrigamiModel, String, FileTypeProperty)},
 	 *            {@code selector} can be null.
 	 */
-	public OrigamiModelDAO(final AbstractFilterSelector<OrigamiModel> selector) {
+	public OrigamiModelDAO(final AbstractFileAccessSupportSelector<OrigamiModel> selector) {
 		this.selector = selector;
 	}
 
@@ -46,7 +46,7 @@ public class OrigamiModelDAO extends AbstractFileDAO<OrigamiModel> {
 	 * @see oripa.persistent.dao.AbstractDAO#getFilterSelector()
 	 */
 	@Override
-	protected AbstractFilterSelector<OrigamiModel> getFilterSelector() {
+	protected AbstractFileAccessSupportSelector<OrigamiModel> getFileAccessSupportSelector() {
 		return selector;
 	}
 

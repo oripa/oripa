@@ -18,17 +18,10 @@
  */
 package oripa.persistence.dao;
 
-import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import oripa.persistence.filetool.AbstractSavingAction;
-import oripa.persistence.filetool.FileAccessActionProvider;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooser;
-import oripa.persistence.filetool.FileChooserCanceledException;
-import oripa.persistence.filetool.FileChooserFactory;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
@@ -47,7 +40,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	 *         acceptable if you don't use {@link #load(String)} and
 	 *         {@link #save(Data, String, FileTypeProperty)}.
 	 */
-	protected abstract AbstractFilterSelector<Data> getFilterSelector();
+	protected abstract AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
 
 	@Override
 	public Data load(final String path)
@@ -60,7 +53,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 			throw new FileNotFoundException(canonicalPath + " doesn't exist.");
 		}
 
-		var loadingAction = getFilterSelector().getLoadableFilterOf(canonicalPath).getLoadingAction();
+		var loadingAction = getFileAccessSupportSelector().getLoadableOf(canonicalPath).getLoadingAction();
 
 		return loadingAction.setPath(canonicalPath).load();
 	}
@@ -69,7 +62,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	public void save(final Data data, final String path, final FileTypeProperty<Data> type)
 			throws IOException, IllegalArgumentException {
 
-		var savingAction = getFilterSelector().getFilter(type).getSavingAction();
+		var savingAction = getFileAccessSupportSelector().getFileAccessSupport(type).getSavingAction();
 
 		savingAction.setPath(nullableCanonicalPath(path)).save(data);
 	}
@@ -78,43 +71,43 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		return path == null ? null : (new File(path)).getCanonicalPath();
 	}
 
-	@Override
-	public String saveUsingGUI(final Data data, final String homePath,
-			final Component parent,
-			final FileAccessSupportFilter<Data>... filters)
-			throws FileChooserCanceledException, IOException, IllegalArgumentException {
-		FileChooserFactory<Data> chooserFactory = new FileChooserFactory<>();
-
-		var canonicalPath = nullableCanonicalPath(homePath);
-		FileAccessActionProvider<Data> chooser = chooserFactory.createChooser(
-				canonicalPath, filters);
-
-		try {
-			AbstractSavingAction<Data> saver = chooser.getActionForSavingFile(parent);
-			saver.save(data);
-			return saver.getPath();
-		} catch (IllegalStateException e) {
-			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
-		}
-	}
-
-	@Override
-	public Data loadUsingGUI(final String homePath,
-			final FileAccessSupportFilter<Data>[] filters, final Component parent)
-			throws FileVersionError, FileChooserCanceledException, IllegalArgumentException,
-			IOException, FileNotFoundException, WrongDataFormatException {
-		FileChooserFactory<Data> factory = new FileChooserFactory<>();
-
-		var canonicalPath = nullableCanonicalPath(homePath);
-		FileChooser<Data> fileChooser = factory.createChooser(
-				canonicalPath, filters);
-
-		try {
-			return fileChooser.getActionForLoadingFile(parent).load();
-		} catch (IllegalStateException e) {
-			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
-		}
-
-	}
+//	@Override
+//	public String saveUsingGUI(final Data data, final String homePath,
+//			final Component parent,
+//			final FileAccessSupport<Data>... filters)
+//			throws FileChooserCanceledException, IOException, IllegalArgumentException {
+//		FileChooserFactory<Data> chooserFactory = new FileChooserFactory<>();
+//
+//		var canonicalPath = nullableCanonicalPath(homePath);
+//		FileAccessActionProvider<Data> chooser = chooserFactory.createChooser(
+//				canonicalPath, filters);
+//
+//		try {
+//			AbstractSavingAction<Data> saver = chooser.getActionForSavingFile(parent);
+//			saver.save(data);
+//			return saver.getPath();
+//		} catch (IllegalStateException e) {
+//			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
+//		}
+//	}
+//
+//	@Override
+//	public Data loadUsingGUI(final String homePath,
+//			final FileAccessSupport<Data>[] filters, final Component parent)
+//			throws FileVersionError, FileChooserCanceledException, IllegalArgumentException,
+//			IOException, FileNotFoundException, WrongDataFormatException {
+//		FileChooserFactory<Data> factory = new FileChooserFactory<>();
+//
+//		var canonicalPath = nullableCanonicalPath(homePath);
+//		FileChooser<Data> fileChooser = factory.createChooser(
+//				canonicalPath, filters);
+//
+//		try {
+//			return fileChooser.getActionForLoadingFile(parent).load();
+//		} catch (IllegalStateException e) {
+//			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
+//		}
+//
+//	}
 
 }

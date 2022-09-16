@@ -19,14 +19,17 @@
 package oripa.persistence.dao;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import oripa.persistence.filetool.FileAccessSupportFilter;
+import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
-import oripa.persistence.filetool.MultiTypeAcceptableFileLoadingFilter;
+import oripa.persistence.filetool.MultiTypeAcceptableFileLoadingSupport;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
@@ -37,14 +40,14 @@ import oripa.resource.ResourceKey;
  * @author OUCHI Koji
  *
  */
-public abstract class AbstractFilterSelector<Data> {
+public abstract class AbstractFileAccessSupportSelector<Data> {
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
 	/**
 	 *
 	 * @return available filters.
 	 */
-	protected abstract SortedMap<FileTypeProperty<Data>, FileAccessSupportFilter<Data>> getFilters();
+	protected abstract SortedMap<FileTypeProperty<Data>, FileAccessSupport<Data>> getFileAccessSupports();
 
 	/**
 	 * A utility method for creating filter. This method provides an explanation
@@ -56,20 +59,42 @@ public abstract class AbstractFilterSelector<Data> {
 	 */
 	protected String createDescription(final FileTypeProperty<Data> fileTypeKey,
 			final String resourceKey) {
-		return FileAccessSupportFilter.createDefaultDescription(fileTypeKey,
+		return createDefaultDescription(fileTypeKey,
 				resourceHolder.getString(ResourceKey.LABEL, resourceKey));
 
 	}
 
 	/**
+	 *
+	 * @param type
+	 *            file type
+	 * @param explanation
+	 * @return in the style of "(*.extension1, *.extension2, ...)
+	 *         ${explanation}"
+	 */
+	protected String createDefaultDescription(final FileTypeProperty<?> type,
+			final String explanation) {
+		String[] extensions = type.getExtensions();
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("(");
+		builder.append("*");
+		builder.append(String.join(",*.", extensions));
+		builder.append(") ");
+		builder.append(explanation);
+
+		return builder.toString();
+	}
+
+	/**
 	 * Creates and puts a filter for given file type key with given description
-	 * to filter map obtained by {@link #getFilters()}.
+	 * to filter map obtained by {@link #getFileAccessSupports()}.
 	 *
 	 * @param key
 	 * @param desctiption
 	 */
-	protected void putFilter(final FileTypeProperty<Data> key, final String desctiption) {
-		this.putFilter(key, new FileAccessSupportFilter<Data>(key, desctiption));
+	protected void putFileAccessSupport(final FileTypeProperty<Data> key, final String desctiption) {
+		this.putFileAccessSupport(key, new FileAccessSupport<Data>(key, desctiption));
 	}
 
 	/**
@@ -78,8 +103,8 @@ public abstract class AbstractFilterSelector<Data> {
 	 *            A value that describes the file type you want.
 	 * @return A filter for given key.
 	 */
-	public FileAccessSupportFilter<Data> getFilter(final FileTypeProperty<Data> key) {
-		return getFilters().get(key);
+	public FileAccessSupport<Data> getFileAccessSupport(final FileTypeProperty<Data> key) {
+		return getFileAccessSupports().get(key);
 	}
 
 	/**
@@ -91,43 +116,59 @@ public abstract class AbstractFilterSelector<Data> {
 	 * @return The previous filter for given key.
 	 */
 
-	public FileAccessSupportFilter<Data> putFilter(final FileTypeProperty<Data> key,
-			final FileAccessSupportFilter<Data> filter) {
-		return getFilters().put(key, filter);
+	public FileAccessSupport<Data> putFileAccessSupport(final FileTypeProperty<Data> key,
+			final FileAccessSupport<Data> filter) {
+		return getFileAccessSupports().put(key, filter);
 	}
 
 	/**
 	 *
 	 * @return all filters in this instance.
 	 */
-	public FileAccessSupportFilter<Data>[] toArray() {
+	public FileAccessSupport<Data>[] toArray() {
 		@SuppressWarnings("unchecked")
-		FileAccessSupportFilter<Data>[] array = new FileAccessSupportFilter[getFilters()
+		FileAccessSupport<Data>[] array = new FileAccessSupport[getFileAccessSupports()
 				.size()];
 
-		return getFilters().values().toArray(array);
+		return getFileAccessSupports().values().toArray(array);
 	}
 
 	/**
 	 *
 	 * @return filters that can load data from a file.
 	 */
-	public FileAccessSupportFilter<Data>[] getLoadables() {
-		var loadables = getFilters().values().stream()
-				.filter(f -> f.getLoadingAction() != null)
-				.collect(Collectors.toList());
+	public List<FileAccessSupport<Data>> getLoadablesWithMultiType() {
+		var loadables = getLoadables();
 
-		var multi = new MultiTypeAcceptableFileLoadingFilter<Data>(
+		var multi = new MultiTypeAcceptableFileLoadingSupport<Data>(
 				loadables, "Any type");
 		loadables.add(multi);
 
 		Collections.sort(loadables);
 
-		@SuppressWarnings("unchecked")
-		FileAccessSupportFilter<Data>[] array = new FileAccessSupportFilter[loadables
-				.size()];
+		return loadables;
+	}
 
-		return loadables.toArray(array);
+	public List<FileAccessSupport<Data>> getLoadables() {
+		return getFileAccessSupports().values().stream()
+				.filter(f -> f.getLoadingAction() != null)
+				.sorted()
+				.collect(Collectors.toList());
+	}
+
+	public List<FileTypeProperty<Data>> getTargetTypes(final Collection<FileAccessSupport<Data>> supports) {
+		return supports.stream()
+				.map(support -> support.getTargetType())
+				.collect(Collectors.toList());
+	}
+
+	public FileAccessSupport<Data> findFirst(
+			final Collection<FileAccessSupport<Data>> supports,
+			final FileTypeProperty<Data> type) {
+		return supports.stream()
+				.filter(support -> support.getTargetType().equals(type))
+				.findFirst()
+				.get();
 	}
 
 	/**
@@ -137,7 +178,7 @@ public abstract class AbstractFilterSelector<Data> {
 	 *             No filter is available for the given path. Or, the path is
 	 *             null or is for a directory.
 	 */
-	public FileAccessSupportFilter<Data> getLoadableFilterOf(final String path)
+	public FileAccessSupport<Data> getLoadableOf(final String path)
 			throws IllegalArgumentException {
 		if (path == null) {
 			throw new IllegalArgumentException("Wrong path (null)");
@@ -149,26 +190,30 @@ public abstract class AbstractFilterSelector<Data> {
 		}
 
 		return Stream.of(toArray())
-				.filter(f -> f.accept(file) && f.getLoadingAction() != null)
+				.filter(f -> f.getTargetType().extensionsMatch(nullableCanonicalPath(file))
+						&& f.getLoadingAction() != null)
 				.findFirst()
 				.orElseThrow(() -> new IllegalArgumentException(
 						"cannot load the file with the extension."));
+	}
+
+	private String nullableCanonicalPath(final File file) {
+		try {
+			return file.getCanonicalPath();
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	/**
 	 *
 	 * @return filters that can save a data object.
 	 */
-	@SuppressWarnings("unchecked")
-	public FileAccessSupportFilter<Data>[] getSavables() {
-		var savables = getFilters().values().stream()
+	public List<FileAccessSupport<Data>> getSavables() {
+		return getFileAccessSupports().values().stream()
 				.filter(f -> f.getSavingAction() != null)
+				.sorted()
 				.collect(Collectors.toList());
-
-		Collections.sort(savables);
-
-		return (FileAccessSupportFilter<Data>[]) savables
-				.toArray(new FileAccessSupportFilter<?>[savables.size()]);
 	}
 
 }
