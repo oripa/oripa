@@ -32,13 +32,13 @@ import oripa.resource.StringID;
  *
  */
 public class OrigamiModelFileAccessSupportSelector extends AbstractFileAccessSupportSelector<OrigamiModel> {
-	private final SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>> filters;
+	private final SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>> supports;
 
 	/**
 	 * Constructor
 	 */
 	public OrigamiModelFileAccessSupportSelector() {
-		filters = new TreeMap<>();
+		supports = new TreeMap<>();
 
 		OrigamiModelFileTypeKey key = OrigamiModelFileTypeKey.DXF_MODEL;
 		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
@@ -56,7 +56,7 @@ public class OrigamiModelFileAccessSupportSelector extends AbstractFileAccessSup
 	 */
 	@Override
 	protected SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>> getFileAccessSupports() {
-		return filters;
+		return supports;
 	}
 
 }

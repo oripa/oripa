@@ -46,7 +46,6 @@ public class ModelViewFramePresenter {
 	private final PainterScreenSetting mainScreenSetting;
 
 	private final OrigamiModelFileAccessSupportSelector supportSelector = new OrigamiModelFileAccessSupportSelector();
-//	private final OrigamiModelFileAccess fileAccess = new OrigamiModelFileAccess(new OrigamiModelDAO(filterSelector));
 
 	public ModelViewFramePresenter(
 			final ModelViewFrameView view,
@@ -110,7 +109,6 @@ public class ModelViewFramePresenter {
 			var presenter = new FileAccessPresenter<>(view, fileChooserFactory, supportSelector);
 
 			presenter.saveUsingGUI(origamiModel, null, List.of(type));
-//			fileAccess.saveFile(origamiModel, view, supportSelector.getFileAccessSupport(type));
 		} catch (UserCanceledException e) {
 
 		} catch (Exception e) {

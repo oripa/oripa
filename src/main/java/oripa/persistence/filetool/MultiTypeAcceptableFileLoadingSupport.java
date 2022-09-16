@@ -36,7 +36,7 @@ public class MultiTypeAcceptableFileLoadingSupport<Data>
 	private static final Logger logger = LoggerFactory
 			.getLogger(MultiTypeAcceptableFileLoadingSupport.class);
 
-	private final Collection<FileAccessSupport<Data>> filters;
+	private final Collection<FileAccessSupport<Data>> fileAccessSupports;
 
 	/**
 	 *
@@ -60,13 +60,13 @@ public class MultiTypeAcceptableFileLoadingSupport<Data>
 						.collect(Collectors.toList())),
 				msg);
 
-		supports.forEach(filter -> {
-			if (filter.getLoadingAction() == null) {
+		supports.forEach(support -> {
+			if (support.getLoadingAction() == null) {
 				throw new IllegalArgumentException("file access support should have a loadingAction.");
 			}
 		});
 
-		this.filters = new ArrayList<>(supports);
+		fileAccessSupports = new ArrayList<>(supports);
 	}
 
 	@Deprecated
@@ -87,7 +87,7 @@ public class MultiTypeAcceptableFileLoadingSupport<Data>
 	 */
 	@Override
 	public String[] getExtensions() {
-		return filters.stream()
+		return fileAccessSupports.stream()
 				.flatMap(support -> Arrays.asList(support.getExtensions()).stream())
 				.collect(Collectors.toList()).toArray(new String[0]);
 	}

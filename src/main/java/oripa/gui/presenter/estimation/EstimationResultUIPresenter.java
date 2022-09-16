@@ -69,7 +69,7 @@ public class EstimationResultUIPresenter {
 	 */
 	private void export() {
 		try {
-			var filterSelector = new FoldedModelFileAccessSupportSelector(view.isFaceOrderFlipped());
+			var supportSelector = new FoldedModelFileAccessSupportSelector(view.isFaceOrderFlipped());
 
 			var foldedModel = view.getModel();
 			var overlapRelation = view.getOverlapRelation();
@@ -77,7 +77,7 @@ public class EstimationResultUIPresenter {
 			var entity = new FoldedModelEntity(foldedModel.getOrigamiModel(), overlapRelation);
 
 			var presenter = new FileAccessPresenter<FoldedModelEntity>((FrameView) view.getTopLevelView(),
-					fileChooserFactory, filterSelector);
+					fileChooserFactory, supportSelector);
 
 			lastFilePath = presenter.saveUsingGUI(entity, lastFilePath).get();
 

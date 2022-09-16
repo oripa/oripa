@@ -32,14 +32,12 @@ import oripa.resource.StringID;
  *
  */
 public class FoldedModelFileAccessSupportSelector extends AbstractFileAccessSupportSelector<FoldedModelEntity> {
-	private final SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>> filters = new TreeMap<>();
+	private final SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>> supports = new TreeMap<>();
 
 	/**
 	 * Constructor
 	 */
 	public FoldedModelFileAccessSupportSelector(final boolean modelFlip) {
-		// TODO: StringID.ModelMenu.FILE_ID is tentative. Replace it with new
-		// string ID.
 		FoldedModelFileTypeKey key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
 		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
 
@@ -54,6 +52,6 @@ public class FoldedModelFileAccessSupportSelector extends AbstractFileAccessSupp
 
 	@Override
 	protected SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>> getFileAccessSupports() {
-		return filters;
+		return supports;
 	}
 }
