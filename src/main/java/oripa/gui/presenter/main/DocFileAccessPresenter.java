@@ -32,7 +32,6 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
-import oripa.persistence.filetool.FileChooserCanceledException;
 
 /**
  * @author OUCHI Koji

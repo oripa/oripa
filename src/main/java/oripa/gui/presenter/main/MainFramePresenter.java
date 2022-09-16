@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.swing.JFrame;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -411,7 +409,6 @@ public class MainFramePresenter {
 		screenUpdater.updateScreen();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void saveAnyTypeUsingGUI() {
 		String lastDirectory = fileHistory.getLastDirectory();
 
@@ -601,7 +598,6 @@ public class MainFramePresenter {
 	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
 	private String loadFile(final String filePath) {
-		var frame = (JFrame) view;
 
 		childFrameManager.closeAll(view);
 
@@ -704,7 +700,6 @@ public class MainFramePresenter {
 		screenSetting.setVertexVisible(ini.isVertexVisible());
 	}
 
-	@SuppressWarnings("unchecked")
 	private void windowClosing() {
 
 		if (paintContext.creasePatternUndo().changeExists()) {
