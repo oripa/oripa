@@ -53,7 +53,9 @@ import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
+import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFileAccessSupportSelector;
 import oripa.persistence.filetool.AbstractSavingAction;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -101,6 +103,7 @@ public class MainFramePresenter {
 	private final DataFileAccess dataFileAccess;
 	private final FileHistory fileHistory;
 	private final AbstractFileAccessSupportSelector<Doc> fileAccessSupportSelector = new DocFileAccessSupportSelector();
+	private final DataAccessObject<Doc> dao = new DocDAO(fileAccessSupportSelector);
 
 	// services
 	private final PaintContextModification paintContextModification = new PaintContextModification();
@@ -291,7 +294,7 @@ public class MainFramePresenter {
 
 		view.addImportButtonListener(() -> {
 			try {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector);
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
 
 				presenter.loadUsingGUI(fileHistory.getLastPath())
 						.ifPresent(otherDoc -> {
@@ -498,7 +501,7 @@ public class MainFramePresenter {
 			final FileTypeProperty<Doc>... types) {
 
 		try {
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector);
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
 
 			Optional<String> docOpt;
 
@@ -531,7 +534,7 @@ public class MainFramePresenter {
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector);
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
 
 			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
 					fileAccessSupportSelector.getFileAccessSupport(type), view, view::showModelBuildFailureDialog);
@@ -584,7 +587,7 @@ public class MainFramePresenter {
 			if (filePath != null) {
 				docOpt = dataFileAccess.loadFile(filePath);
 			} else {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector);
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
 				docOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
 			}
 

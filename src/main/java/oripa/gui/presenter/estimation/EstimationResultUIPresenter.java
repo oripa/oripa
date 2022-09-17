@@ -28,6 +28,7 @@ import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
+import oripa.persistence.entity.FoldedModelDAO;
 import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
 import oripa.persistence.entity.exporter.FoldedModelEntity;
 
@@ -70,6 +71,7 @@ public class EstimationResultUIPresenter {
 	private void export() {
 		try {
 			var supportSelector = new FoldedModelFileAccessSupportSelector(view.isFaceOrderFlipped());
+			var dao = new FoldedModelDAO(supportSelector);
 
 			var foldedModel = view.getModel();
 			var overlapRelation = view.getOverlapRelation();
@@ -77,7 +79,7 @@ public class EstimationResultUIPresenter {
 			var entity = new FoldedModelEntity(foldedModel.getOrigamiModel(), overlapRelation);
 
 			var presenter = new FileAccessPresenter<FoldedModelEntity>((FrameView) view.getTopLevelView(),
-					fileChooserFactory, supportSelector);
+					fileChooserFactory, supportSelector, dao);
 
 			lastFilePath = presenter.saveUsingGUI(entity, lastFilePath).get();
 

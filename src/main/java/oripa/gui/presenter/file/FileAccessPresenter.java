@@ -34,10 +34,9 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileFilterProperty;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
-import oripa.persistence.filetool.FileVersionError;
-import oripa.persistence.filetool.WrongDataFormatException;
 
 /**
  * @author OUCHI Koji
@@ -50,14 +49,17 @@ public class FileAccessPresenter<Data> {
 	private final FrameView parent;
 	private final FileChooserFactory chooserFactory;
 	private final AbstractFileAccessSupportSelector<Data> selector;
+	private final DataAccessObject<Data> dao;
 
 	public FileAccessPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
-			final AbstractFileAccessSupportSelector<Data> selector) {
+			final AbstractFileAccessSupportSelector<Data> selector,
+			final DataAccessObject<Data> dao) {
 		this.parent = parent;
 		this.chooserFactory = chooserFactory;
 		this.selector = selector;
+		this.dao = dao;
 	}
 
 	public Optional<String> saveUsingGUI(final Data data, final String path) throws UserCanceledException {
@@ -102,10 +104,10 @@ public class FileAccessPresenter<Data> {
 		types.stream()
 				.filter(type -> type.extensionsMatch(correctedPath))
 				.findFirst()
-				.map(type -> selector.findFirst(selector.getSavables(), type))
-				.map(support -> {
+				.map(type -> {
 					try {
-						return support.getSavingAction().setPath(correctedPath).save(data);
+						dao.save(data, correctedPath, type);
+						return true;
 					} catch (Exception e) {
 						chooser.showErrorMessage(e);
 						return false;
@@ -116,8 +118,6 @@ public class FileAccessPresenter<Data> {
 	}
 
 	public Optional<Data> loadUsingGUI(final String lastFilePath) throws UserCanceledException, FileNotFoundException {
-
-		var types = selector.getTargetTypes(selector.getLoadables());
 
 		var chooser = chooserFactory.createForLoading(
 				lastFilePath,
@@ -138,20 +138,12 @@ public class FileAccessPresenter<Data> {
 			throw new IllegalStateException("Failed to get canonical path.");
 		}
 
-		var data = types.stream()
-				.filter(type -> type.extensionsMatch(filePath))
-				.findFirst()
-				.map(type -> selector.findFirst(selector.getLoadables(), type))
-				.map(support -> {
-					try {
-						return support.getLoadingAction().setPath(filePath).load();
-					} catch (WrongDataFormatException | IOException | FileVersionError e) {
-						chooser.showErrorMessage(e);
-						return null;
-					}
-				});
-
-		return data;
+		try {
+			return Optional.of(dao.load(filePath));
+		} catch (Exception e) {
+			chooser.showErrorMessage(e);
+			return Optional.empty();
+		}
 	}
 
 	private List<FileFilterProperty> toFileFilterProperties(final List<FileAccessSupport<Data>> supports) {

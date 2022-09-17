@@ -32,6 +32,7 @@ import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.filetool.FileAccessSupport;
 
 /**
@@ -43,8 +44,9 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 	public DocFileAccessPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
-			final AbstractFileAccessSupportSelector<Doc> selector) {
-		super(parent, chooserFactory, selector);
+			final AbstractFileAccessSupportSelector<Doc> selector,
+			final DataAccessObject<Doc> dao) {
+		super(parent, chooserFactory, selector, dao);
 	}
 
 	/**
