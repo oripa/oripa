@@ -24,8 +24,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -124,19 +124,8 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 
 	/**
 	 *
-	 * @return all suppot objects in this instance.
-	 */
-	public FileAccessSupport<Data>[] toArray() {
-		@SuppressWarnings("unchecked")
-		FileAccessSupport<Data>[] array = new FileAccessSupport[getFileAccessSupports()
-				.size()];
-
-		return getFileAccessSupports().values().toArray(array);
-	}
-
-	/**
-	 *
-	 * @return support objects that can load data from a file.
+	 * @return support objects that can load data from a file, including a
+	 *         support object accepting all available types.
 	 */
 	public List<FileAccessSupport<Data>> getLoadablesWithMultiType() {
 		var loadables = getLoadables();
@@ -150,6 +139,10 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 		return loadables;
 	}
 
+	/**
+	 *
+	 * @return support objects that can load data from a file.
+	 */
 	public List<FileAccessSupport<Data>> getLoadables() {
 		return getFileAccessSupports().values().stream()
 				.filter(f -> f.getLoadingAction() != null)
@@ -176,8 +169,8 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	 * @param path
 	 * @return a support object that can load the file at the path.
 	 * @throws IllegalArgumentException
-	 *             No filter is available for the given path. Or, the path is
-	 *             null or is for a directory.
+	 *             No support object is available for the given path. Or, the
+	 *             path is null or is for a directory.
 	 */
 	public FileAccessSupport<Data> getLoadableOf(final String path)
 			throws IllegalArgumentException {
@@ -190,11 +183,8 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 			throw new IllegalArgumentException("The path is for directory.");
 		}
 
-		return Stream.of(toArray())
-				.filter(f -> f.getTargetType().extensionsMatch(nullableCanonicalPath(file))
-						&& f.getLoadingAction() != null)
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(
+		return find(getLoadables(), nullableCanonicalPath(file),
+				() -> new IllegalArgumentException(
 						"cannot load the file with the extension."));
 	}
 
@@ -212,9 +202,28 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	 */
 	public List<FileAccessSupport<Data>> getSavables() {
 		return getFileAccessSupports().values().stream()
-				.filter(f -> f.getSavingAction() != null)
+				.filter(support -> support.getSavingAction() != null)
 				.sorted()
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 *
+	 * @param path
+	 *            file path to save
+	 * @return A support object that can save a data object.
+	 */
+	public FileAccessSupport<Data> getSavableOf(final String path) {
+		return find(getSavables(), path,
+				() -> new IllegalArgumentException(
+						"The file type guessed from the extension is not supported."));
+	}
+
+	private FileAccessSupport<Data> find(final List<FileAccessSupport<Data>> supports, final String path,
+			final Supplier<IllegalArgumentException> exceptionSupplier) {
+		return supports.stream()
+				.filter(support -> support.getTargetType().extensionsMatch(path))
+				.findFirst()
+				.orElseThrow(exceptionSupplier);
+	}
 }

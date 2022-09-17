@@ -68,14 +68,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	public void save(final Data data, final String path)
 			throws IOException, IllegalArgumentException {
 
-		var type = getFileAccessSupportSelector().getSavables().stream()
-				.map(support -> support.getTargetType())
-				.filter(t -> t.extensionsMatch(path))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(
-						"The file type guessed from the extension is not supported."));
-
-		var savingAction = getFileAccessSupportSelector().getFileAccessSupport(type).getSavingAction();
+		var savingAction = getFileAccessSupportSelector().getSavableOf(path).getSavingAction();
 
 		savingAction.setPath(nullableCanonicalPath(path)).save(data);
 	}
