@@ -34,8 +34,9 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 
 /**
- * A template for managing available filters for file access. Typical usage is:
- * 1) create filters in constructor, and 2) return the filters in getFilters().
+ * A template for managing available file access support objects. Typical usage
+ * is: 1) create supports in constructor, and 2) return the filters in
+ * {@link #getFileAccessSupports()}
  *
  * @author OUCHI Koji
  *
@@ -45,13 +46,13 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 
 	/**
 	 *
-	 * @return available filters.
+	 * @return available supports.
 	 */
 	protected abstract SortedMap<FileTypeProperty<Data>, FileAccessSupport<Data>> getFileAccessSupports();
 
 	/**
-	 * A utility method for creating filter. This method provides an explanation
-	 * text for dialog.
+	 * A utility method for creating support object. This method provides an
+	 * explanation text for dialog.
 	 *
 	 * @param fileTypeKey
 	 * @param resourceKey
@@ -87,8 +88,8 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	}
 
 	/**
-	 * Creates and puts a filter for given file type key with given description
-	 * to filter map obtained by {@link #getFileAccessSupports()}.
+	 * Creates and puts a support object for given file type key with given
+	 * description to a map obtained by {@link #getFileAccessSupports()}.
 	 *
 	 * @param key
 	 * @param desctiption
@@ -101,7 +102,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	 *
 	 * @param key
 	 *            A value that describes the file type you want.
-	 * @return A filter for given key.
+	 * @return A support object for given key.
 	 */
 	public FileAccessSupport<Data> getFileAccessSupport(final FileTypeProperty<Data> key) {
 		return getFileAccessSupports().get(key);
@@ -111,19 +112,19 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	 *
 	 * @param key
 	 *            A value that describes the file type you want.
-	 * @param filter
-	 *            A filter to be set.
-	 * @return The previous filter for given key.
+	 * @param support
+	 *            A support object to be set.
+	 * @return The previous support object for given key.
 	 */
 
 	public FileAccessSupport<Data> putFileAccessSupport(final FileTypeProperty<Data> key,
-			final FileAccessSupport<Data> filter) {
-		return getFileAccessSupports().put(key, filter);
+			final FileAccessSupport<Data> support) {
+		return getFileAccessSupports().put(key, support);
 	}
 
 	/**
 	 *
-	 * @return all filters in this instance.
+	 * @return all suppot objects in this instance.
 	 */
 	public FileAccessSupport<Data>[] toArray() {
 		@SuppressWarnings("unchecked")
@@ -135,7 +136,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 
 	/**
 	 *
-	 * @return filters that can load data from a file.
+	 * @return support objects that can load data from a file.
 	 */
 	public List<FileAccessSupport<Data>> getLoadablesWithMultiType() {
 		var loadables = getLoadables();
@@ -173,7 +174,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 
 	/**
 	 * @param path
-	 * @return a filter that can load the file at the path.
+	 * @return a support object that can load the file at the path.
 	 * @throws IllegalArgumentException
 	 *             No filter is available for the given path. Or, the path is
 	 *             null or is for a directory.
@@ -207,7 +208,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 
 	/**
 	 *
-	 * @return filters that can save a data object.
+	 * @return support objects that can save a data object.
 	 */
 	public List<FileAccessSupport<Data>> getSavables() {
 		return getFileAccessSupports().values().stream()

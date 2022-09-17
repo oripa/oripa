@@ -28,7 +28,9 @@ public interface FileTypeProperty<Data> {
 
 	/**
 	 *
-	 * @return extensions for this file type.
+	 * @return extensions for this file type. Each extension is supposed to be
+	 *         without period (.). For example, "jpg" is acceptable but ".jpg"
+	 *         is not.
 	 */
 	String[] getExtensions();
 
