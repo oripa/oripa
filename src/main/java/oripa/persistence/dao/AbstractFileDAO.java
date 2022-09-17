@@ -36,9 +36,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 
 	/**
 	 *
-	 * @return filter selector managing available file type. {@code null} is
-	 *         acceptable if you don't use {@link #load(String)} and
-	 *         {@link #save(Data, String, FileTypeProperty)}.
+	 * @return a selector managing available file types.
 	 */
 	protected abstract AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
 
@@ -70,44 +68,4 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	private String nullableCanonicalPath(final String path) throws IOException {
 		return path == null ? null : (new File(path)).getCanonicalPath();
 	}
-
-//	@Override
-//	public String saveUsingGUI(final Data data, final String homePath,
-//			final Component parent,
-//			final FileAccessSupport<Data>... filters)
-//			throws FileChooserCanceledException, IOException, IllegalArgumentException {
-//		FileChooserFactory<Data> chooserFactory = new FileChooserFactory<>();
-//
-//		var canonicalPath = nullableCanonicalPath(homePath);
-//		FileAccessActionProvider<Data> chooser = chooserFactory.createChooser(
-//				canonicalPath, filters);
-//
-//		try {
-//			AbstractSavingAction<Data> saver = chooser.getActionForSavingFile(parent);
-//			saver.save(data);
-//			return saver.getPath();
-//		} catch (IllegalStateException e) {
-//			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
-//		}
-//	}
-//
-//	@Override
-//	public Data loadUsingGUI(final String homePath,
-//			final FileAccessSupport<Data>[] filters, final Component parent)
-//			throws FileVersionError, FileChooserCanceledException, IllegalArgumentException,
-//			IOException, FileNotFoundException, WrongDataFormatException {
-//		FileChooserFactory<Data> factory = new FileChooserFactory<>();
-//
-//		var canonicalPath = nullableCanonicalPath(homePath);
-//		FileChooser<Data> fileChooser = factory.createChooser(
-//				canonicalPath, filters);
-//
-//		try {
-//			return fileChooser.getActionForLoadingFile(parent).load();
-//		} catch (IllegalStateException e) {
-//			throw new IllegalArgumentException("Wrong filter(s) is(are) given.", e);
-//		}
-//
-//	}
-
 }
