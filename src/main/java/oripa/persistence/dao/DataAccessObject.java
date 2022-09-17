@@ -21,7 +21,6 @@ package oripa.persistence.dao;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -51,20 +50,37 @@ public interface DataAccessObject<Data> {
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException;
 
+//	/**
+//	 * save data to {@code path}.
+//	 *
+//	 * @param data
+//	 *            to be saved.
+//	 * @param path
+//	 *            for the place to save the {@code data}.
+//	 * @param type
+//	 *            file type.
+//	 * @throws IOException
+//	 *             file IO trouble.
+//	 * @throws IllegalArgumentException
+//	 *             {@code data} can't be saved as the suggested file type.
+//	 */
+//	@Deprecated
+//	void save(Data data, String path, FileTypeProperty<Data> type)
+//			throws IOException, IllegalArgumentException;
+
 	/**
-	 * save without dialog
+	 * save data to {@code path}.
 	 *
 	 * @param data
 	 *            to be saved.
 	 * @param path
 	 *            for the place to save the {@code data}.
-	 * @param type
-	 *            file type.
 	 * @throws IOException
 	 *             file IO trouble.
 	 * @throws IllegalArgumentException
-	 *             {@code data} can't be saved as the suggested file type.
+	 *             {@code data} can't be saved as the given extension.
 	 */
-	void save(Data data, String path, FileTypeProperty<Data> type)
+	void save(Data data, String path)
 			throws IOException, IllegalArgumentException;
+
 }

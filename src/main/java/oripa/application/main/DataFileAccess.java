@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import oripa.doc.Doc;
 import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.doc.CreasePatternFileTypeKey;
-import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -58,11 +56,10 @@ public class DataFileAccess {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public void saveProjectFile(final Doc doc, final String filePath,
-			final CreasePatternFileTypeKey fileType)
+	public void saveProjectFile(final Doc doc, final String filePath)
 			throws IOException, IllegalArgumentException {
 
-		dao.save(doc, filePath, fileType);
+		dao.save(doc, filePath);
 
 		doc.setDataFilePath(filePath);
 	}
@@ -74,13 +71,11 @@ public class DataFileAccess {
 	 * @param directory
 	 * @param fileName
 	 *            if empty "newFile.opx" is used
-	 * @param support
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
 	public final void saveFile(final Doc document,
-			final String directory, final String fileName,
-			final FileAccessSupport<Doc> support)
+			final String directory, final String fileName)
 			throws IOException, IllegalArgumentException {
 
 		File givenFile = new File(directory,
@@ -88,7 +83,7 @@ public class DataFileAccess {
 
 		var filePath = givenFile.getCanonicalPath();
 
-		dao.save(document, filePath, support.getTargetType());
+		dao.save(document, filePath);
 	}
 
 	/**

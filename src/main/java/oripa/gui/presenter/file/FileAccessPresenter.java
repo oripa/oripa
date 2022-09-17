@@ -101,18 +101,12 @@ public class FileAccessPresenter<Data> {
 
 		logger.debug("saving {}", correctedPath);
 
-		types.stream()
-				.filter(type -> type.extensionsMatch(correctedPath))
-				.findFirst()
-				.map(type -> {
-					try {
-						dao.save(data, correctedPath, type);
-						return true;
-					} catch (Exception e) {
-						chooser.showErrorMessage(e);
-						return false;
-					}
-				});
+		try {
+			dao.save(data, correctedPath);
+		} catch (Exception e) {
+			chooser.showErrorMessage(e);
+			return Optional.empty();
+		}
 
 		return Optional.of(correctedPath);
 	}

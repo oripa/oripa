@@ -205,9 +205,9 @@ public class MainFramePresenter {
 		view.addSaveButtonListener(() -> {
 			var filePath = document.getDataFilePath();
 			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, CreasePatternFileTypeKey.OPX);
+				saveProjectFile(document, filePath);
 			} else if (CreasePatternFileTypeKey.FOLD.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, CreasePatternFileTypeKey.FOLD);
+				saveProjectFile(document, filePath);
 			} else {
 				saveAnyTypeUsingGUI();
 			}
@@ -370,7 +370,7 @@ public class MainFramePresenter {
 					@Override
 					public boolean save(final Doc data) {
 						try {
-							saveProjectFile(data, getPath(), fileType);
+							saveProjectFile(data, getPath());
 						} catch (Exception e) {
 							logger.error("Failed to save file " + getPath(), e);
 							return false;
@@ -478,10 +478,9 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveProjectFile(final Doc doc, final String filePath,
-			final CreasePatternFileTypeKey fileType) {
+	private void saveProjectFile(final Doc doc, final String filePath) {
 		try {
-			dataFileAccess.saveProjectFile(doc, filePath, fileType);
+			dataFileAccess.saveProjectFile(doc, filePath);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
 			view.showSaveFailureErrorMessage(e);

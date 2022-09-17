@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -56,9 +55,25 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		return loadingAction.setPath(canonicalPath).load();
 	}
 
+//	@Override
+//	public void save(final Data data, final String path, final FileTypeProperty<Data> type)
+//			throws IOException, IllegalArgumentException {
+//
+//		var savingAction = getFileAccessSupportSelector().getFileAccessSupport(type).getSavingAction();
+//
+//		savingAction.setPath(nullableCanonicalPath(path)).save(data);
+//	}
+
 	@Override
-	public void save(final Data data, final String path, final FileTypeProperty<Data> type)
+	public void save(final Data data, final String path)
 			throws IOException, IllegalArgumentException {
+
+		var type = getFileAccessSupportSelector().getSavables().stream()
+				.map(support -> support.getTargetType())
+				.filter(t -> t.extensionsMatch(path))
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException(
+						"The file type guessed from the extension is not supported."));
 
 		var savingAction = getFileAccessSupportSelector().getFileAccessSupport(type).getSavingAction();
 
