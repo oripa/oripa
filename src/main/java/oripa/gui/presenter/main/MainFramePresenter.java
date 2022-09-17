@@ -537,7 +537,7 @@ public class MainFramePresenter {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
 
 			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
-					fileAccessSupportSelector.getFileAccessSupport(type), view, view::showModelBuildFailureDialog);
+					type, view, view::showModelBuildFailureDialog);
 
 		} catch (UserCanceledException e) {
 			// ignore

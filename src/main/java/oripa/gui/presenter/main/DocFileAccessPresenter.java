@@ -33,7 +33,7 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.filetool.FileAccessSupport;
+import oripa.persistence.filetool.FileTypeProperty;
 
 /**
  * @author OUCHI Koji
@@ -56,7 +56,7 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 	 *
 	 * @param document
 	 * @param directory
-	 * @param fileAccessSupport
+	 * @param type
 	 * @param owner
 	 * @throws FileChooserCanceledException
 	 * @throws IOException
@@ -65,10 +65,10 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 	 */
 	public void saveFileWithModelCheck(final Doc doc,
 			final String directory,
-			final FileAccessSupport<Doc> fileAccessSupport, final FrameView owner,
+			final FileTypeProperty<Doc> type, final FrameView owner,
 			final Supplier<Boolean> acceptModelError)
 			throws IOException, IllegalArgumentException, UserCanceledException {
-		File givenFile = new File(directory, "export." + fileAccessSupport.getExtensions()[0]);
+		File givenFile = new File(directory, "export." + type.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
 		CreasePattern creasePattern = doc.getCreasePattern();
@@ -84,7 +84,7 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 			}
 		}
 
-		saveUsingGUI(doc, filePath, List.of(fileAccessSupport.getTargetType()));
+		saveUsingGUI(doc, filePath, List.of(type));
 	}
 
 }
