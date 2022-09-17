@@ -88,6 +88,12 @@ public class FileAccessPresenter<Data> {
 			throw new IllegalStateException("Failed to get canonical path.");
 		}
 
+		if (file.exists()) {
+			if (!chooser.showOverwriteConfirmMessage()) {
+				throw new UserCanceledException();
+			}
+		}
+
 		var correctedPath = correctExtension(filePath, chooser.getSelectedFilterExtensions());
 		logger.debug("saving {}", correctedPath);
 

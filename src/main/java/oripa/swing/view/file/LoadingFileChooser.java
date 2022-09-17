@@ -26,8 +26,8 @@ import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import oripa.gui.view.FrameView;
-import oripa.gui.view.file.FileChooserView;
 import oripa.gui.view.file.FileFilterProperty;
+import oripa.gui.view.file.LoadingFileChooserView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -37,7 +37,7 @@ import oripa.swing.view.util.Dialogs;
  * @author OUCHI Koji
  *
  */
-public class LoadingFileChooser extends JFileChooser implements FileChooserView {
+public class LoadingFileChooser extends JFileChooser implements LoadingFileChooserView {
 
 	public LoadingFileChooser(final String path, final Collection<FileFilterProperty> filterProperties) {
 		super(path);

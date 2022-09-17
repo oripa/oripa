@@ -26,8 +26,8 @@ import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import oripa.gui.view.FrameView;
-import oripa.gui.view.file.FileChooserView;
 import oripa.gui.view.file.FileFilterProperty;
+import oripa.gui.view.file.SavingFileChooserView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -37,7 +37,9 @@ import oripa.swing.view.util.Dialogs;
  * @author OUCHI Koji
  *
  */
-public class SavingFileChooser extends JFileChooser implements FileChooserView {
+public class SavingFileChooser extends JFileChooser implements SavingFileChooserView {
+
+	private final ResourceHolder resources = ResourceHolder.getInstance();
 
 	public SavingFileChooser(final String path, final Collection<FileFilterProperty> filterProperties) {
 		super(path);
@@ -65,9 +67,16 @@ public class SavingFileChooser extends JFileChooser implements FileChooserView {
 	}
 
 	@Override
+	public boolean showOverwriteConfirmMessage() {
+		return Dialogs.showYesNoConfirmDialog(this,
+				resources.getString(ResourceKey.WARNING, StringID.Warning.SAVE_TITLE_ID),
+				resources.getString(ResourceKey.WARNING, StringID.Warning.SAME_FILE_EXISTS_ID));
+	}
+
+	@Override
 	public void showErrorMessage(final Exception e) {
 		Dialogs.showErrorDialog(this,
-				ResourceHolder.getInstance().getString(ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+				resources.getString(ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
 	}
 
 }

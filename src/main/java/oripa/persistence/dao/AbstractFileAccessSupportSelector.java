@@ -78,7 +78,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("(");
-		builder.append("*");
+		builder.append("*.");
 		builder.append(String.join(",*.", extensions));
 		builder.append(") ");
 		builder.append(explanation);

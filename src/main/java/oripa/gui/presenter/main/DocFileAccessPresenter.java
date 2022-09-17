@@ -20,6 +20,7 @@ package oripa.gui.presenter.main;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.function.Supplier;
 
 import oripa.doc.Doc;
@@ -81,7 +82,7 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 			}
 		}
 
-		saveUsingGUI(doc, filePath);
+		saveUsingGUI(doc, filePath, List.of(fileAccessSupport.getTargetType()));
 	}
 
 }
