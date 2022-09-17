@@ -27,7 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserView;
-import oripa.persistence.filetool.FileAccessSupport;
+import oripa.gui.view.file.FileFilterProperty;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -37,9 +37,9 @@ import oripa.swing.view.util.Dialogs;
  * @author OUCHI Koji
  *
  */
-public class SavingFileChooser<Data> extends JFileChooser implements FileChooserView {
+public class SavingFileChooser extends JFileChooser implements FileChooserView {
 
-	public SavingFileChooser(final String path, final Collection<FileAccessSupport<Data>> supports) {
+	public SavingFileChooser(final String path, final Collection<FileFilterProperty> filterProperties) {
 		super(path);
 
 		if (path != null) {
@@ -47,8 +47,8 @@ public class SavingFileChooser<Data> extends JFileChooser implements FileChooser
 			this.setSelectedFile(file);
 		}
 
-		supports.forEach(support -> {
-			addChoosableFileFilter(new FileNameExtensionFilter(support.getDescription(), support.getExtensions()));
+		filterProperties.forEach(property -> {
+			addChoosableFileFilter(new FileNameExtensionFilter(property.getDescription(), property.getExtensions()));
 		});
 
 		setAcceptAllFileFilterUsed(false);

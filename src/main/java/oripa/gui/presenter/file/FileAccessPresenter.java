@@ -32,7 +32,9 @@ import org.slf4j.LoggerFactory;
 import oripa.exception.UserCanceledException;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
+import oripa.gui.view.file.FileFilterProperty;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
@@ -67,22 +69,19 @@ public class FileAccessPresenter<Data> {
 	public Optional<String> saveUsingGUI(final Data data, final String path, final List<FileTypeProperty<Data>> types)
 			throws UserCanceledException {
 
+		var supports = selector.getSavables().stream()
+				.filter(support -> types.contains(support.getTargetType()))
+				.collect(Collectors.toList());
+
 		var chooser = chooserFactory.createForSaving(
 				path,
-				selector.getSavables().stream()
-						.filter(support -> types.contains(support.getTargetType()))
-						.collect(Collectors.toList()));
+				toFileFilterProperties(supports));
 
 		if (!chooser.showDialog(parent)) {
 			throw new UserCanceledException();
 		}
 
 		var file = chooser.getSelectedFile();
-
-//		if (!file.exists()) {
-//			chooser.showErrorMessage(new FileNotFoundException("Selected file doesn't exist."));
-//			return Optional.empty();
-//		}
 
 		String filePath = nullableCanonicalPath(file);
 		if (filePath == null) {
@@ -113,7 +112,8 @@ public class FileAccessPresenter<Data> {
 		var types = selector.getTargetTypes(selector.getLoadables());
 
 		var chooser = chooserFactory.createForLoading(
-				lastFilePath, selector.getLoadablesWithMultiType());
+				lastFilePath,
+				toFileFilterProperties(selector.getLoadablesWithMultiType()));
 
 		if (!chooser.showDialog(parent)) {
 			throw new UserCanceledException();
@@ -131,7 +131,7 @@ public class FileAccessPresenter<Data> {
 		}
 
 		var data = types.stream()
-				.filter(type -> type.extensionsMatch(nullableCanonicalPath(file)))
+				.filter(type -> type.extensionsMatch(filePath))
 				.findFirst()
 				.map(type -> selector.findFirst(selector.getLoadables(), type))
 				.map(support -> {
@@ -144,6 +144,12 @@ public class FileAccessPresenter<Data> {
 				});
 
 		return data;
+	}
+
+	private List<FileFilterProperty> toFileFilterProperties(final List<FileAccessSupport<Data>> supports) {
+		return supports.stream()
+				.map(support -> new FileFilterProperty(support.getDescription(), support.getExtensions()))
+				.collect(Collectors.toList());
 	}
 
 	private String replaceExtension(final String path, final String ext) {

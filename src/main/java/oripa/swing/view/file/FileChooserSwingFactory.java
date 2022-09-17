@@ -22,7 +22,7 @@ import java.util.Collection;
 
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileChooserView;
-import oripa.persistence.filetool.FileAccessSupport;
+import oripa.gui.view.file.FileFilterProperty;
 
 /**
  * @author OUCHI Koji
@@ -32,14 +32,14 @@ public class FileChooserSwingFactory implements FileChooserFactory {
 
 	@Override
 	public <Data> FileChooserView createForSaving(final String path,
-			final Collection<FileAccessSupport<Data>> supports) {
-		return new SavingFileChooser<>(path, supports);
+			final Collection<FileFilterProperty> filterProperties) {
+		return new SavingFileChooser(path, filterProperties);
 	}
 
 	@Override
 	public <Data> FileChooserView createForLoading(final String path,
-			final Collection<FileAccessSupport<Data>> supports) {
-		return new LoadingFileChooser<Data>(path, supports);
+			final Collection<FileFilterProperty> filterProperties) {
+		return new LoadingFileChooser(path, filterProperties);
 	}
 
 }

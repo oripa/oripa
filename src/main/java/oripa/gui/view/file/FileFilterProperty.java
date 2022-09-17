@@ -18,17 +18,24 @@
  */
 package oripa.gui.view.file;
 
-import java.util.Collection;
-
 /**
  * @author OUCHI Koji
  *
  */
-public interface FileChooserFactory {
+public class FileFilterProperty {
+	private final String description;
+	private final String[] extensions;
 
-	public <Data> FileChooserView createForSaving(String path,
-			final Collection<FileFilterProperty> filterProperties);
+	public FileFilterProperty(final String description, final String... extensions) {
+		this.description = description;
+		this.extensions = extensions;
+	}
 
-	public <Data> FileChooserView createForLoading(String path,
-			final Collection<FileFilterProperty> filterProperties);
+	public String getDescription() {
+		return description;
+	}
+
+	public String[] getExtensions() {
+		return extensions;
+	}
 }
