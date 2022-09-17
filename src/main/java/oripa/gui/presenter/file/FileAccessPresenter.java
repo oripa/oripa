@@ -89,9 +89,9 @@ public class FileAccessPresenter<Data> {
 		}
 
 		var correctedPath = correctExtension(filePath, chooser.getSelectedFilterExtensions());
-		file = new File(correctedPath);
+		var correctedFile = new File(correctedPath);
 
-		if (file.exists()) {
+		if (correctedFile.exists()) {
 			if (!chooser.showOverwriteConfirmMessage()) {
 				throw new UserCanceledException();
 			}
