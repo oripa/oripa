@@ -88,13 +88,15 @@ public class FileAccessPresenter<Data> {
 			throw new IllegalStateException("Failed to get canonical path.");
 		}
 
+		var correctedPath = correctExtension(filePath, chooser.getSelectedFilterExtensions());
+		file = new File(correctedPath);
+
 		if (file.exists()) {
 			if (!chooser.showOverwriteConfirmMessage()) {
 				throw new UserCanceledException();
 			}
 		}
 
-		var correctedPath = correctExtension(filePath, chooser.getSelectedFilterExtensions());
 		logger.debug("saving {}", correctedPath);
 
 		types.stream()
@@ -110,7 +112,7 @@ public class FileAccessPresenter<Data> {
 					}
 				});
 
-		return Optional.of(filePath);
+		return Optional.of(correctedPath);
 	}
 
 	public Optional<Data> loadUsingGUI(final String lastFilePath) throws UserCanceledException, FileNotFoundException {

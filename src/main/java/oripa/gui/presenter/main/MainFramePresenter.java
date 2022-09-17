@@ -301,16 +301,6 @@ public class MainFramePresenter {
 							paintContext.getCreasePattern().addAll(otherCreasePattern);
 						});
 
-//
-//				dataFileAccess
-//						.loadFile(null, fileHistory.getLastPath(), (JFrame) view,
-//								fileAccessSupportSelector.getLoadablesWithMultiType())
-//						.ifPresent(otherDoc -> {
-//							paintContext.getPainter().resetSelectedOriLines();
-//							var otherCreasePattern = otherDoc.getCreasePattern();
-//							otherCreasePattern.forEach(l -> l.selected = true);
-//							paintContext.getCreasePattern().addAll(otherCreasePattern);
-//						});
 				state.performActions();
 			} catch (UserCanceledException e) {
 				// ignore
@@ -525,14 +515,6 @@ public class MainFramePresenter {
 					})
 					.orElse(document.getDataFilePath());
 
-//
-//			return dataFileAccess.saveFile(
-//					document, directory, fileName, (JFrame) view, filters)
-//					.map(path -> {
-//						paintContext.creasePatternUndo().clearChanged();
-//						return path;
-//					})
-//					.orElse(document.getDataFilePath());
 		} catch (UserCanceledException e) {
 			// ignore
 			return document.getDataFilePath();
@@ -548,16 +530,12 @@ public class MainFramePresenter {
 	 * model check before saving.
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
-//		var frame = (JFrame) view;
 		try {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector);
 
 			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
 					fileAccessSupportSelector.getFileAccessSupport(type), view, view::showModelBuildFailureDialog);
 
-//			dataFileAccess.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
-//					fileAccessSupportSelector.getFileAccessSupport(type), frame,
-//					view::showModelBuildFailureDialog);
 		} catch (UserCanceledException e) {
 			// ignore
 		} catch (IOException e) {
@@ -628,26 +606,6 @@ public class MainFramePresenter {
 										document.getCreasePattern(), paintContext);
 						return document.getDataFilePath();
 					}).orElse(null);
-//
-//			return dataFileAccess.loadFile(
-//					filePath, fileHistory.getLastPath(), frame, fileAccessSupportSelector.getLoadablesWithMultiType())
-//					.map(doc -> {
-//						// we can't substitute a loaded object because
-//						// the document object is referred by screen and UI
-//						// panel as a Holder.
-//						document.set(doc);
-//
-//						var property = document.getProperty();
-//						view.getUIPanelView().setEstimationResultColors(
-//								convertCodeToColor(property.extractFrontColorCode()),
-//								convertCodeToColor(property.extractBackColorCode()));
-//
-//						screenSetting.setGridVisible(false);
-//						paintContextModification
-//								.setCreasePatternToPaintContext(
-//										document.getCreasePattern(), paintContext);
-//						return document.getDataFilePath();
-//					}).orElse(null);
 		} catch (UserCanceledException e) {
 			// ignore
 			return document.getDataFilePath();
