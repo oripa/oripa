@@ -502,15 +502,15 @@ public class MainFramePresenter {
 		try {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
 
-			Optional<String> docOpt;
+			Optional<String> pathOpt;
 
 			if (types == null || types.length == 0) {
-				docOpt = presenter.saveUsingGUI(document, Paths.get(directory, fileName).toString());
+				pathOpt = presenter.saveUsingGUI(document, Paths.get(directory, fileName).toString());
 			} else {
-				docOpt = presenter.saveUsingGUI(document, Paths.get(directory, fileName).toString(), List.of(types));
+				pathOpt = presenter.saveUsingGUI(document, Paths.get(directory, fileName).toString(), List.of(types));
 			}
 
-			return docOpt
+			return pathOpt
 					.map(path -> {
 						paintContext.creasePatternUndo().clearChanged();
 						return path;
