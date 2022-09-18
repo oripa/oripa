@@ -3,17 +3,10 @@ package oripa.persistence.filetool;
 public class FileAccessSupport<Data>
 		implements Comparable<FileAccessSupport<Data>> {
 
-//	private static final Logger logger = LoggerFactory
-//			.getLogger(FileAccessSupportFilter.class);
-
-	/**
-	 *
-	 * @author OUCHI Koji
-	 *
-	 */
-
 	private final FileTypeProperty<Data> fileType;
-	private final String msg;
+	// TODO description is not related to persistence responsibility.
+	// this should be removed.
+	private final String description;
 	private AbstractLoadingAction<Data> loadingAction;
 	private AbstractSavingAction<Data> savingAction;
 
@@ -23,12 +16,12 @@ public class FileAccessSupport<Data>
 	 *
 	 * @param fileType
 	 *            specifies what to filter
-	 * @param msg
+	 * @param description
 	 *            message in filter box
 	 */
-	public FileAccessSupport(final FileTypeProperty<Data> fileType, final String msg) {
+	public FileAccessSupport(final FileTypeProperty<Data> fileType, final String description) {
 		this.fileType = fileType;
-		this.msg = msg;
+		this.description = description;
 
 		var exporter = fileType.getExporter();
 		if (exporter != null) {
@@ -54,17 +47,18 @@ public class FileAccessSupport<Data>
 	}
 
 	public String getDescription() {
-		return msg;
+		return description;
 	}
 
 	/**
-	 * order property is the most prior, the second is msg property.
+	 * The order property is the most prior, the second is the description
+	 * property.
 	 */
 	@Override
 	public int compareTo(final FileAccessSupport<Data> o) {
 		int cmp = fileType.getOrder().compareTo(o.fileType.getOrder());
 		if (cmp == 0) {
-			return msg.compareTo(o.msg);
+			return description.compareTo(o.description);
 		}
 
 		return cmp;

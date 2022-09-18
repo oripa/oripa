@@ -56,7 +56,7 @@ public class MultiTypeAcceptableFileLoadingSupport<Data>
 
 		super(new MultiTypeProperty<Data>(
 				supports.stream()
-						.map(f -> f.getTargetType())
+						.map(support -> support.getTargetType())
 						.collect(Collectors.toList())),
 				msg);
 
