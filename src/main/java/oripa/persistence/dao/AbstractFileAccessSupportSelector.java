@@ -35,7 +35,7 @@ import oripa.resource.ResourceKey;
 
 /**
  * A template for managing available file access support objects. Typical usage
- * is: 1) create supports in constructor, and 2) return the filters in
+ * is: 1) create supports in constructor, and 2) return the supports in
  * {@link #getFileAccessSupports()}
  *
  * @author OUCHI Koji
@@ -92,10 +92,10 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	 * description to a map obtained by {@link #getFileAccessSupports()}.
 	 *
 	 * @param key
-	 * @param desctiption
+	 * @param description
 	 */
-	protected void putFileAccessSupport(final FileTypeProperty<Data> key, final String desctiption) {
-		this.putFileAccessSupport(key, new FileAccessSupport<Data>(key, desctiption));
+	protected void putFileAccessSupport(final FileTypeProperty<Data> key, final String description) {
+		this.putFileAccessSupport(key, new FileAccessSupport<Data>(key, description));
 	}
 
 	/**
