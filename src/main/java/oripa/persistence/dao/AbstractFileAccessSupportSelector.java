@@ -145,7 +145,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	 */
 	public List<FileAccessSupport<Data>> getLoadables() {
 		return getFileAccessSupports().values().stream()
-				.filter(f -> f.getLoadingAction() != null)
+				.filter(support -> support.getLoadingAction() != null)
 				.sorted()
 				.collect(Collectors.toList());
 	}
@@ -154,15 +154,6 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 		return supports.stream()
 				.map(support -> support.getTargetType())
 				.collect(Collectors.toList());
-	}
-
-	public FileAccessSupport<Data> findFirst(
-			final Collection<FileAccessSupport<Data>> supports,
-			final FileTypeProperty<Data> type) {
-		return supports.stream()
-				.filter(support -> support.getTargetType().equals(type))
-				.findFirst()
-				.get();
 	}
 
 	/**
