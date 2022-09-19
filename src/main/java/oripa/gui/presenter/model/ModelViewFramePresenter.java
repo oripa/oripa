@@ -20,6 +20,8 @@ package oripa.gui.presenter.model;
 
 import java.util.List;
 
+import oripa.application.FileAccessService;
+import oripa.application.model.OrigamiModelFileAccess;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.exception.UserCanceledException;
@@ -49,6 +51,7 @@ public class ModelViewFramePresenter {
 
 	private final OrigamiModelFileAccessSupportSelector supportSelector = new OrigamiModelFileAccessSupportSelector();
 	private final DataAccessObject<OrigamiModel> dao = new OrigamiModelDAO(supportSelector);
+	private final FileAccessService<OrigamiModel> fileAccessService = new OrigamiModelFileAccess(dao);
 
 	public ModelViewFramePresenter(
 			final ModelViewFrameView view,
@@ -109,7 +112,7 @@ public class ModelViewFramePresenter {
 	private void exportFile(final OrigamiModelFileTypeKey type) {
 
 		try {
-			var presenter = new FileAccessPresenter<>(view, fileChooserFactory, supportSelector, dao);
+			var presenter = new FileAccessPresenter<>(view, fileChooserFactory, supportSelector, fileAccessService);
 
 			presenter.saveUsingGUI(origamiModel, null, List.of(type));
 		} catch (UserCanceledException e) {

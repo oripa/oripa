@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.application.FileAccessService;
 import oripa.exception.UserCanceledException;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileFilterProperty;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
-import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 
@@ -49,17 +49,17 @@ public class FileAccessPresenter<Data> {
 	private final FrameView parent;
 	private final FileChooserFactory chooserFactory;
 	private final AbstractFileAccessSupportSelector<Data> selector;
-	private final DataAccessObject<Data> dao;
+	private final FileAccessService<Data> fileAccessService;
 
 	public FileAccessPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
 			final AbstractFileAccessSupportSelector<Data> selector,
-			final DataAccessObject<Data> dao) {
+			final FileAccessService<Data> fileAccessService) {
 		this.parent = parent;
 		this.chooserFactory = chooserFactory;
 		this.selector = selector;
-		this.dao = dao;
+		this.fileAccessService = fileAccessService;
 	}
 
 	public Optional<String> saveUsingGUI(final Data data, final String path) throws UserCanceledException {
@@ -102,7 +102,7 @@ public class FileAccessPresenter<Data> {
 		logger.debug("saving {}", correctedPath);
 
 		try {
-			dao.save(data, correctedPath);
+			fileAccessService.saveFile(data, correctedPath);
 		} catch (Exception e) {
 			chooser.showErrorMessage(e);
 			return Optional.empty();
@@ -133,7 +133,7 @@ public class FileAccessPresenter<Data> {
 		}
 
 		try {
-			return Optional.of(dao.load(filePath));
+			return fileAccessService.loadFile(filePath);
 		} catch (Exception e) {
 			chooser.showErrorMessage(e);
 			return Optional.empty();

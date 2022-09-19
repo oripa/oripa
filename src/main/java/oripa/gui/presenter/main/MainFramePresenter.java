@@ -53,13 +53,11 @@ import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
-import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
-import oripa.persistence.doc.DocDAO;
-import oripa.persistence.doc.DocFileAccessSupportSelector;
-import oripa.persistence.filetool.AbstractSavingAction;
+import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
+import oripa.persistence.filetool.SavingActionTemplate;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
@@ -102,8 +100,7 @@ public class MainFramePresenter {
 	private final IniFileAccess iniFileAccess;
 	private final DataFileAccess dataFileAccess;
 	private final FileHistory fileHistory;
-	private final AbstractFileAccessSupportSelector<Doc> fileAccessSupportSelector = new DocFileAccessSupportSelector();
-	private final DataAccessObject<Doc> dao = new DocDAO(fileAccessSupportSelector);
+	private final AbstractFileAccessSupportSelector<Doc> fileAccessSupportSelector;
 
 	// services
 	private final PaintContextModification paintContextModification = new PaintContextModification();
@@ -136,6 +133,7 @@ public class MainFramePresenter {
 		this.fileHistory = fileHistory;
 		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
+		fileAccessSupportSelector = dataFileAccess.getFileAccessSupportSelector();
 
 		this.screenSetting = viewSetting.getPainterScreenSetting();
 
@@ -205,9 +203,9 @@ public class MainFramePresenter {
 		view.addSaveButtonListener(() -> {
 			var filePath = document.getDataFilePath();
 			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath);
+				saveProjectFile(document, filePath, CreasePatternFileTypeKey.OPX);
 			} else if (CreasePatternFileTypeKey.FOLD.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath);
+				saveProjectFile(document, filePath, CreasePatternFileTypeKey.FOLD);
 			} else {
 				saveAnyTypeUsingGUI();
 			}
@@ -217,13 +215,13 @@ public class MainFramePresenter {
 
 		view.addExportFOLDButtonListener(() -> {
 			String lastDirectory = fileHistory.getLastDirectory();
-			saveFile(lastDirectory, document.getDataFileName(),
+			saveFileUsingGUI(lastDirectory, document.getDataFileName(),
 					CreasePatternFileTypeKey.FOLD);
 		});
 
 		view.addSaveAsImageButtonListener(() -> {
 			String lastDirectory = fileHistory.getLastDirectory();
-			saveFile(lastDirectory, document.getDataFileName(),
+			saveFileUsingGUI(lastDirectory, document.getDataFileName(),
 					CreasePatternFileTypeKey.PICT);
 		});
 
@@ -294,7 +292,8 @@ public class MainFramePresenter {
 
 		view.addImportButtonListener(() -> {
 			try {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector,
+						dataFileAccess);
 
 				presenter.loadUsingGUI(fileHistory.getLastPath())
 						.ifPresent(otherDoc -> {
@@ -363,25 +362,26 @@ public class MainFramePresenter {
 		setProjectSavingAction(CreasePatternFileTypeKey.FOLD);
 	}
 
+	private class ProjectSavingAction extends SavingActionTemplate<Doc> {
+
+		public ProjectSavingAction(final Exporter<Doc> exporter) {
+			super(exporter);
+		}
+
+		@Override
+		protected void afterSave(final Doc data) {
+			var path = getPath();
+			data.setDataFilePath(path);
+			paintContext.creasePatternUndo().clearChanged();
+
+			updateMenu(path);
+			updateTitleText();
+		}
+	}
+
 	private void setProjectSavingAction(final CreasePatternFileTypeKey fileType) {
-		// FIXME very dangerous implementation. Modified action calls the action
-		// in another selector that is held by dataFileAccess instance.
-		// If you try using same selector, it will cause infinite calls.
-		fileAccessSupportSelector.getFileAccessSupport(fileType).setSavingAction(
-				new AbstractSavingAction<Doc>() {
-
-					@Override
-					public boolean save(final Doc data) {
-						try {
-							saveProjectFile(data, getPath());
-						} catch (Exception e) {
-							logger.error("Failed to save file " + getPath(), e);
-							return false;
-						}
-						return true;
-					}
-				});
-
+		dataFileAccess.setFileSavingAction(
+				new ProjectSavingAction(fileType.getExporter()), fileType);
 	}
 
 	private void updateMRUFilesMenuItem(final int index) {
@@ -408,7 +408,7 @@ public class MainFramePresenter {
 	private void saveAnyTypeUsingGUI() {
 		String lastDirectory = fileHistory.getLastDirectory();
 
-		String path = saveFile(lastDirectory, document.getDataFileName());
+		String path = saveFileUsingGUI(lastDirectory, document.getDataFileName());
 
 		updateMenu(path);
 		updateTitleText();
@@ -481,29 +481,25 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveProjectFile(final Doc doc, final String filePath) {
+	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeProperty<Doc> type) {
 		try {
-			dataFileAccess.saveProjectFile(doc, filePath);
+			new ProjectSavingAction(type.getExporter()).setPath(filePath).save(doc);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
 			view.showSaveFailureErrorMessage(e);
 		}
-
-		paintContext.creasePatternUndo().clearChanged();
-
-		updateMenu(filePath);
-		updateTitleText();
 	}
 
 	/**
 	 * save file without origami model check
 	 */
 	@SafeVarargs
-	private String saveFile(final String directory, final String fileName,
+	private String saveFileUsingGUI(final String directory, final String fileName,
 			final FileTypeProperty<Doc>... types) {
 
 		try {
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector,
+					dataFileAccess);
 
 			File givenFile = new File(directory,
 					(fileName.isEmpty()) ? "newFile.opx" : fileName);
@@ -541,7 +537,8 @@ public class MainFramePresenter {
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector,
+					dataFileAccess);
 
 			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
 					type, view, view::showModelBuildFailureDialog);
@@ -564,7 +561,7 @@ public class MainFramePresenter {
 	 * @param filePath
 	 */
 	private void updateMenu(final String filePath) {
-		if (filePath == null) {
+		if (filePath == null || filePath.isEmpty()) {
 			return;
 		}
 		try {
@@ -594,7 +591,8 @@ public class MainFramePresenter {
 			if (filePath != null) {
 				docOpt = dataFileAccess.loadFile(filePath);
 			} else {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector,
+						dataFileAccess);
 				docOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
 			}
 
@@ -676,7 +674,7 @@ public class MainFramePresenter {
 
 				document.setCreasePattern(paintContext.getCreasePattern());
 
-				String path = saveFile(fileHistory.getLastDirectory(),
+				String path = saveFileUsingGUI(fileHistory.getLastDirectory(),
 						document.getDataFileName());
 				if (path == null) {
 

@@ -176,7 +176,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 
 		return find(getLoadables(), nullableCanonicalPath(file),
 				() -> new IllegalArgumentException(
-						"cannot load the file with the extension."));
+						"cannot load the file with the extension. " + file.getPath()));
 	}
 
 	private String nullableCanonicalPath(final File file) {

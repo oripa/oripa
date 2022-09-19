@@ -32,7 +32,17 @@ public class SavingActionTemplate<Data> extends AbstractSavingAction<Data> {
 	}
 
 	@Override
-	public boolean save(final Data data) throws IOException, IllegalArgumentException {
+	protected void beforeSave(final Data data) {
+
+	}
+
+	@Override
+	protected void afterSave(final Data data) {
+
+	}
+
+	@Override
+	protected boolean saveImpl(final Data data) throws IOException, IllegalArgumentException {
 		return exporter.export(data, getPath());
 	}
 

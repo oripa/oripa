@@ -41,7 +41,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	 *
 	 * @return a selector managing available file types.
 	 */
-	protected abstract AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
+	public abstract AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
 
 	@Override
 	public Data load(final String path)

@@ -1,8 +1,8 @@
 package oripa.persistence.doc;
 
 import oripa.doc.Doc;
-import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.filetool.FileTypeProperty;
 
 /**
@@ -28,11 +28,8 @@ public class DocDAO extends AbstractFileDAO<Doc> {
 		this.selector = selector;
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.dao.AbstractDAO#getFilterSelector()
-	 */
 	@Override
-	protected AbstractFileAccessSupportSelector<Doc> getFileAccessSupportSelector() {
+	public AbstractFileAccessSupportSelector<Doc> getFileAccessSupportSelector() {
 		return selector;
 	}
 }

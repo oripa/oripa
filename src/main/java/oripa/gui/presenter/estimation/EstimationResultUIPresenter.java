@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
@@ -72,6 +73,7 @@ public class EstimationResultUIPresenter {
 		try {
 			var supportSelector = new FoldedModelFileAccessSupportSelector(view.isFaceOrderFlipped());
 			var dao = new FoldedModelDAO(supportSelector);
+			var fileAccessService = new EstimationResultFileAccess(dao);
 
 			var foldedModel = view.getModel();
 			var overlapRelation = view.getOverlapRelation();
@@ -79,7 +81,7 @@ public class EstimationResultUIPresenter {
 			var entity = new FoldedModelEntity(foldedModel.getOrigamiModel(), overlapRelation);
 
 			var presenter = new FileAccessPresenter<FoldedModelEntity>((FrameView) view.getTopLevelView(),
-					fileChooserFactory, supportSelector, dao);
+					fileChooserFactory, supportSelector, fileAccessService);
 
 			lastFilePath = presenter.saveUsingGUI(entity, lastFilePath).get();
 

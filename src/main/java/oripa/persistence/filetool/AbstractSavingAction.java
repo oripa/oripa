@@ -14,6 +14,17 @@ public abstract class AbstractSavingAction<Data> {
 		return path;
 	}
 
-	public abstract boolean save(Data data) throws IOException, IllegalArgumentException;
+	public final boolean save(final Data data) throws IOException, IllegalArgumentException {
+		beforeSave(data);
+		var result = saveImpl(data);
+		afterSave(data);
+		return result;
+	}
+
+	protected abstract void beforeSave(Data data);
+
+	protected abstract void afterSave(Data data);
+
+	protected abstract boolean saveImpl(Data data) throws IOException, IllegalArgumentException;
 
 }

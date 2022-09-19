@@ -19,8 +19,8 @@
 package oripa.persistence.entity;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.persistence.filetool.FileTypeProperty;
 
@@ -43,11 +43,8 @@ public class FoldedModelDAO extends AbstractFileDAO<FoldedModelEntity> {
 		this.selector = selector;
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.dao.AbstractDAO#getFilterSelector()
-	 */
 	@Override
-	protected AbstractFileAccessSupportSelector<FoldedModelEntity> getFileAccessSupportSelector() {
+	public AbstractFileAccessSupportSelector<FoldedModelEntity> getFileAccessSupportSelector() {
 		return selector;
 	}
 

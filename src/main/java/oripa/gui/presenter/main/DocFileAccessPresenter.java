@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Supplier;
 
+import oripa.application.FileAccessService;
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.foldability.FoldabilityChecker;
@@ -32,7 +33,6 @@ import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
-import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.filetool.FileTypeProperty;
 
 /**
@@ -45,8 +45,8 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
 			final AbstractFileAccessSupportSelector<Doc> selector,
-			final DataAccessObject<Doc> dao) {
-		super(parent, chooserFactory, selector, dao);
+			final FileAccessService<Doc> fileAccessService) {
+		super(parent, chooserFactory, selector, fileAccessService);
 	}
 
 	/**

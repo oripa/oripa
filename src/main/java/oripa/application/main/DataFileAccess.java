@@ -18,7 +18,6 @@
  */
 package oripa.application.main;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
@@ -26,8 +25,13 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.application.FileAccessService;
 import oripa.doc.Doc;
+import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.filetool.AbstractSavingAction;
+import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -37,65 +41,33 @@ import oripa.persistence.filetool.WrongDataFormatException;
  * @author OUCHI Koji
  *
  */
-public class DataFileAccess {
+public class DataFileAccess implements FileAccessService<Doc> {
 	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
 
-	private final DataAccessObject<Doc> dao;
+	private final AbstractFileDAO<Doc> dao;
 
 	public DataFileAccess(
-			final DataAccessObject<Doc> dao) {
+			final AbstractFileDAO<Doc> dao) {
 		this.dao = dao;
 	}
 
-	/**
-	 * save the doc to given path and set the path to the doc.
-	 *
-	 * @param doc
-	 * @param filePath
-	 * @param fileType
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
-	public void saveProjectFile(final Doc doc, final String filePath)
-			throws IOException, IllegalArgumentException {
-
-		dao.save(doc, filePath);
-
-		doc.setDataFilePath(filePath);
+	public void setFileSavingAction(final AbstractSavingAction<Doc> action, final FileTypeProperty<Doc> type) {
+		dao.getFileAccessSupportSelector().getFileAccessSupport(type).setSavingAction(action);
 	}
 
-	/**
-	 * save file with given parameters.
-	 *
-	 * @param document
-	 * @param directory
-	 * @param fileName
-	 *            if empty "newFile.opx" is used
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
+	public AbstractFileAccessSupportSelector<Doc> getFileAccessSupportSelector() {
+		return dao.getFileAccessSupportSelector();
+	}
+
+	@Override
 	public final void saveFile(final Doc document,
-			final String directory, final String fileName)
+			final String path)
 			throws IOException, IllegalArgumentException {
 
-		File givenFile = new File(directory,
-				(fileName.isEmpty()) ? "newFile.opx" : fileName);
-
-		var filePath = givenFile.getCanonicalPath();
-
-		dao.save(document, filePath);
+		dao.save(document, path);
 	}
 
-	/**
-	 * if filePath is null, this method opens a dialog to select the target.
-	 * otherwise, it tries to read data from the path.
-	 *
-	 * @param filePath
-	 * @param lastFilePath
-	 * @param owner
-	 * @param accessSupports
-	 * @return the path of loaded file. Empty if the file choosing is canceled.
-	 */
+	@Override
 	public Optional<Doc> loadFile(final String filePath)
 			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
 			IOException, FileNotFoundException {

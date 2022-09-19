@@ -16,35 +16,37 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.entity;
+package oripa.application;
 
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.dao.AbstractFileAccessSupportSelector;
-import oripa.persistence.dao.AbstractFileDAO;
-import oripa.persistence.filetool.FileTypeProperty;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Optional;
+
+import oripa.persistence.filetool.FileVersionError;
+import oripa.persistence.filetool.WrongDataFormatException;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class OrigamiModelDAO extends AbstractFileDAO<OrigamiModel> {
-	private final AbstractFileAccessSupportSelector<OrigamiModel> selector;
+public interface FileAccessService<Data> {
+	/**
+	 * save file with given parameters.
+	 *
+	 * @param document
+	 * @param path
+	 * @throws IllegalArgumentException
+	 */
+	void saveFile(final Data data, final String path)
+			throws IOException, IllegalArgumentException;
 
 	/**
-	 * Constructor
+	 * tries to read data from the path.
 	 *
-	 * @param selector
-	 *            If you don't use {@link #load(String)} and
-	 *            {@link AbstractFileDAO#save(OrigamiModel, String, FileTypeProperty)},
-	 *            {@code selector} can be null.
+	 * @param filePath
+	 * @return the Data of loaded file.
 	 */
-	public OrigamiModelDAO(final AbstractFileAccessSupportSelector<OrigamiModel> selector) {
-		this.selector = selector;
-	}
-
-	@Override
-	public AbstractFileAccessSupportSelector<OrigamiModel> getFileAccessSupportSelector() {
-		return selector;
-	}
-
+	Optional<Data> loadFile(final String filePath)
+			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
+			IOException, FileNotFoundException;
 }
