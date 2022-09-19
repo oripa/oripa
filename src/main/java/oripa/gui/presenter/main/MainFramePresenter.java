@@ -364,6 +364,9 @@ public class MainFramePresenter {
 	}
 
 	private void setProjectSavingAction(final CreasePatternFileTypeKey fileType) {
+		// FIXME very dangerous implementation. modified action calls the action
+		// in another selector that is held by dataFileAccess instance.
+		// If you try using same selector, it will cause infinite calls.
 		fileAccessSupportSelector.getFileAccessSupport(fileType).setSavingAction(
 				new AbstractSavingAction<Doc>() {
 

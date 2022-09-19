@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -32,6 +35,7 @@ import oripa.persistence.filetool.WrongDataFormatException;
  *
  */
 public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
+	private static Logger logger = LoggerFactory.getLogger(AbstractFileDAO.class);
 
 	/**
 	 *
@@ -67,6 +71,8 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	@Override
 	public void save(final Data data, final String path)
 			throws IOException, IllegalArgumentException {
+
+		logger.info("save(): path = {}", path);
 
 		var savingAction = getFileAccessSupportSelector().getSavableOf(path).getSavingAction();
 
