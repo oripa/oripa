@@ -19,9 +19,9 @@
 package oripa.gui.presenter.main;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -364,7 +364,7 @@ public class MainFramePresenter {
 	}
 
 	private void setProjectSavingAction(final CreasePatternFileTypeKey fileType) {
-		// FIXME very dangerous implementation. modified action calls the action
+		// FIXME very dangerous implementation. Modified action calls the action
 		// in another selector that is held by dataFileAccess instance.
 		// If you try using same selector, it will cause infinite calls.
 		fileAccessSupportSelector.getFileAccessSupport(fileType).setSavingAction(
@@ -505,12 +505,17 @@ public class MainFramePresenter {
 		try {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector, dao);
 
+			File givenFile = new File(directory,
+					(fileName.isEmpty()) ? "newFile.opx" : fileName);
+
+			var filePath = givenFile.getCanonicalPath();
+
 			Optional<String> pathOpt;
 
 			if (types == null || types.length == 0) {
-				pathOpt = presenter.saveUsingGUI(document, Paths.get(directory, fileName).toString());
+				pathOpt = presenter.saveUsingGUI(document, filePath);
 			} else {
-				pathOpt = presenter.saveUsingGUI(document, Paths.get(directory, fileName).toString(), List.of(types));
+				pathOpt = presenter.saveUsingGUI(document, filePath, List.of(types));
 			}
 
 			return pathOpt
@@ -523,7 +528,7 @@ public class MainFramePresenter {
 		} catch (UserCanceledException e) {
 			// ignore
 			return document.getDataFilePath();
-		} catch (IllegalArgumentException e) {
+		} catch (IOException | IllegalArgumentException e) {
 			logger.error("failed to save", e);
 			view.showSaveFailureErrorMessage(e);
 			return document.getDataFilePath();
