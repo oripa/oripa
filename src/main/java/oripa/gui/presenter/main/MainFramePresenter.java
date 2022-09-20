@@ -502,7 +502,7 @@ public class MainFramePresenter {
 			File givenFile = new File(directory,
 					(fileName.isEmpty()) ? "newFile.opx" : fileName);
 
-			var filePath = givenFile.getCanonicalPath();
+			var filePath = givenFile.getPath();
 
 			Optional<String> pathOpt;
 
@@ -522,7 +522,7 @@ public class MainFramePresenter {
 		} catch (UserCanceledException e) {
 			// ignore
 			return document.getDataFilePath();
-		} catch (IOException | IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			logger.error("failed to save", e);
 			view.showSaveFailureErrorMessage(e);
 			return document.getDataFilePath();
