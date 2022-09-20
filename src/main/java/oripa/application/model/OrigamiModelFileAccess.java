@@ -24,6 +24,8 @@ import java.util.Optional;
 
 import oripa.application.FileAccessService;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
@@ -36,12 +38,17 @@ import oripa.persistence.filetool.WrongDataFormatException;
  *
  */
 public class OrigamiModelFileAccess implements FileAccessService<OrigamiModel> {
-	private final DataAccessObject<OrigamiModel> dao;
+	private final AbstractFileDAO<OrigamiModel> dao;
+
+	@Override
+	public AbstractFileAccessSupportSelector<OrigamiModel> getFileAccessSupportSelector() {
+		return dao.getFileAccessSupportSelector();
+	}
 
 	/**
 	 * Constructor
 	 */
-	public OrigamiModelFileAccess(final DataAccessObject<OrigamiModel> dao) {
+	public OrigamiModelFileAccess(final AbstractFileDAO<OrigamiModel> dao) {
 		this.dao = dao;
 	}
 

@@ -81,7 +81,7 @@ public class EstimationResultUIPresenter {
 			var entity = new FoldedModelEntity(foldedModel.getOrigamiModel(), overlapRelation);
 
 			var presenter = new FileAccessPresenter<FoldedModelEntity>((FrameView) view.getTopLevelView(),
-					fileChooserFactory, supportSelector, fileAccessService);
+					fileChooserFactory, fileAccessService);
 
 			lastFilePath = presenter.saveUsingGUI(entity, lastFilePath).get();
 

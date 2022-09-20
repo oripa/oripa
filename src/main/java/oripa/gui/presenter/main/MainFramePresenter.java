@@ -292,8 +292,7 @@ public class MainFramePresenter {
 
 		view.addImportButtonListener(() -> {
 			try {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector,
-						dataFileAccess);
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 				presenter.loadUsingGUI(fileHistory.getLastPath())
 						.ifPresent(otherDoc -> {
@@ -498,8 +497,7 @@ public class MainFramePresenter {
 			final FileTypeProperty<Doc>... types) {
 
 		try {
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector,
-					dataFileAccess);
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 			File givenFile = new File(directory,
 					(fileName.isEmpty()) ? "newFile.opx" : fileName);
@@ -537,8 +535,7 @@ public class MainFramePresenter {
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
-			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector,
-					dataFileAccess);
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
 					type, view, view::showModelBuildFailureDialog);
@@ -591,8 +588,7 @@ public class MainFramePresenter {
 			if (filePath != null) {
 				docOpt = dataFileAccess.loadFile(filePath);
 			} else {
-				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, fileAccessSupportSelector,
-						dataFileAccess);
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 				docOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
 			}
 

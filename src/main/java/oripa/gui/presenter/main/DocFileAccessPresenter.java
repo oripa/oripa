@@ -32,7 +32,6 @@ import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
-import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.filetool.FileTypeProperty;
 
 /**
@@ -44,9 +43,8 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 	public DocFileAccessPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
-			final AbstractFileAccessSupportSelector<Doc> selector,
 			final FileAccessService<Doc> fileAccessService) {
-		super(parent, chooserFactory, selector, fileAccessService);
+		super(parent, chooserFactory, fileAccessService);
 	}
 
 	/**

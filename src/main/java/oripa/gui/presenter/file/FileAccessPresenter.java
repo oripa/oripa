@@ -54,11 +54,10 @@ public class FileAccessPresenter<Data> {
 	public FileAccessPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
-			final AbstractFileAccessSupportSelector<Data> selector,
 			final FileAccessService<Data> fileAccessService) {
 		this.parent = parent;
 		this.chooserFactory = chooserFactory;
-		this.selector = selector;
+		this.selector = fileAccessService.getFileAccessSupportSelector();
 		this.fileAccessService = fileAccessService;
 	}
 

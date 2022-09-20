@@ -31,7 +31,7 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.model.ModelDisplayMode;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.entity.OrigamiModelDAO;
 import oripa.persistence.entity.OrigamiModelFileAccessSupportSelector;
 import oripa.persistence.entity.OrigamiModelFileTypeKey;
@@ -50,7 +50,7 @@ public class ModelViewFramePresenter {
 	private final PainterScreenSetting mainScreenSetting;
 
 	private final OrigamiModelFileAccessSupportSelector supportSelector = new OrigamiModelFileAccessSupportSelector();
-	private final DataAccessObject<OrigamiModel> dao = new OrigamiModelDAO(supportSelector);
+	private final AbstractFileDAO<OrigamiModel> dao = new OrigamiModelDAO(supportSelector);
 	private final FileAccessService<OrigamiModel> fileAccessService = new OrigamiModelFileAccess(dao);
 
 	public ModelViewFramePresenter(
@@ -112,7 +112,7 @@ public class ModelViewFramePresenter {
 	private void exportFile(final OrigamiModelFileTypeKey type) {
 
 		try {
-			var presenter = new FileAccessPresenter<>(view, fileChooserFactory, supportSelector, fileAccessService);
+			var presenter = new FileAccessPresenter<>(view, fileChooserFactory, fileAccessService);
 
 			presenter.saveUsingGUI(origamiModel, null, List.of(type));
 		} catch (UserCanceledException e) {

@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
+import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -30,6 +31,9 @@ import oripa.persistence.filetool.WrongDataFormatException;
  *
  */
 public interface FileAccessService<Data> {
+
+	public AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
+
 	/**
 	 * save file with given parameters.
 	 *

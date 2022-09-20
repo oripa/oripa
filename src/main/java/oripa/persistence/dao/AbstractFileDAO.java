@@ -59,15 +59,6 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		return loadingAction.setPath(canonicalPath).load();
 	}
 
-//	@Override
-//	public void save(final Data data, final String path, final FileTypeProperty<Data> type)
-//			throws IOException, IllegalArgumentException {
-//
-//		var savingAction = getFileAccessSupportSelector().getFileAccessSupport(type).getSavingAction();
-//
-//		savingAction.setPath(nullableCanonicalPath(path)).save(data);
-//	}
-
 	@Override
 	public void save(final Data data, final String path)
 			throws IOException, IllegalArgumentException {
