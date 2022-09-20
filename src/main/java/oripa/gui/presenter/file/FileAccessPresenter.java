@@ -20,7 +20,6 @@ package oripa.gui.presenter.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -84,10 +83,7 @@ public class FileAccessPresenter<Data> {
 
 		var file = chooser.getSelectedFile();
 
-		String filePath = nullableCanonicalPath(file);
-		if (filePath == null) {
-			throw new IllegalStateException("Failed to get canonical path.");
-		}
+		String filePath = file.getPath();
 
 		var correctedPath = correctExtension(filePath, chooser.getSelectedFilterExtensions());
 		var correctedFile = new File(correctedPath);
@@ -126,10 +122,7 @@ public class FileAccessPresenter<Data> {
 			throw new FileNotFoundException("Selected file doesn't exist.");
 		}
 
-		String filePath = nullableCanonicalPath(file);
-		if (filePath == null) {
-			throw new IllegalStateException("Failed to get canonical path.");
-		}
+		String filePath = file.getPath();
 
 		try {
 			return fileAccessService.loadFile(filePath);
@@ -183,13 +176,4 @@ public class FileAccessPresenter<Data> {
 
 		return path_new;
 	}
-
-	private String nullableCanonicalPath(final File file) {
-		try {
-			return file.getCanonicalPath();
-		} catch (IOException e) {
-			return null;
-		}
-	}
-
 }
