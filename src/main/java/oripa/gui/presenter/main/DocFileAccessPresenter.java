@@ -49,8 +49,8 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 
 	/**
 	 * Opens dialog for saving given data to a file. Conducts foldability check
-	 * before saving. The default file name is "export.xxx" where ".xxx" is the
-	 * extension designated by the {@code filter}.
+	 * before saving. The default file name is "export.xxx" where "xxx" is the
+	 * extension designated by the {@code type}.
 	 *
 	 * @param document
 	 * @param directory
@@ -58,14 +58,13 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 	 * @param owner
 	 * @throws FileChooserCanceledException
 	 * @throws IOException
-	 * @throws IllegalArgumentException
 	 * @throws UserCanceledException
 	 */
 	public void saveFileWithModelCheck(final Doc doc,
 			final String directory,
 			final FileTypeProperty<Doc> type, final FrameView owner,
 			final Supplier<Boolean> acceptModelError)
-			throws IOException, IllegalArgumentException, UserCanceledException {
+			throws IOException, UserCanceledException {
 		File givenFile = new File(directory, "export." + type.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 

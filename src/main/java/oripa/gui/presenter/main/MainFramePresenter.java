@@ -20,7 +20,6 @@ package oripa.gui.presenter.main;
 
 import java.awt.Color;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -305,9 +304,6 @@ public class MainFramePresenter {
 				state.performActions();
 			} catch (UserCanceledException e) {
 				// ignore
-			} catch (FileNotFoundException | IllegalArgumentException ex) {
-				logger.error("failed to load (import)", ex);
-				view.showLoadFailureErrorMessage(ex);
 			}
 		});
 
@@ -522,10 +518,6 @@ public class MainFramePresenter {
 		} catch (UserCanceledException e) {
 			// ignore
 			return document.getDataFilePath();
-		} catch (IllegalArgumentException e) {
-			logger.error("failed to save", e);
-			view.showSaveFailureErrorMessage(e);
-			return document.getDataFilePath();
 		}
 	}
 
@@ -544,9 +536,6 @@ public class MainFramePresenter {
 			// ignore
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
-			view.showSaveFailureErrorMessage(e);
-		} catch (IllegalArgumentException e) {
-			logger.error("Maybe data is not appropriate.", e);
 			view.showSaveFailureErrorMessage(e);
 		}
 	}

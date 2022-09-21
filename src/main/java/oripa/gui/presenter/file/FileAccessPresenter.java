@@ -19,7 +19,6 @@
 package oripa.gui.presenter.file;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -88,6 +87,8 @@ public class FileAccessPresenter<Data> {
 		var correctedPath = correctExtension(filePath, chooser.getSelectedFilterExtensions());
 		var correctedFile = new File(correctedPath);
 
+		// TODO make a wrapper of File: exists() depends on file system and it's
+		// not testable.
 		if (correctedFile.exists()) {
 			if (!chooser.showOverwriteConfirmMessage()) {
 				throw new UserCanceledException();
@@ -106,7 +107,7 @@ public class FileAccessPresenter<Data> {
 		return Optional.of(correctedPath);
 	}
 
-	public Optional<Data> loadUsingGUI(final String lastFilePath) throws UserCanceledException, FileNotFoundException {
+	public Optional<Data> loadUsingGUI(final String lastFilePath) throws UserCanceledException {
 
 		var chooser = chooserFactory.createForLoading(
 				lastFilePath,
@@ -117,10 +118,6 @@ public class FileAccessPresenter<Data> {
 		}
 
 		var file = chooser.getSelectedFile();
-
-		if (!file.exists()) {
-			throw new FileNotFoundException("Selected file doesn't exist.");
-		}
 
 		String filePath = file.getPath();
 
