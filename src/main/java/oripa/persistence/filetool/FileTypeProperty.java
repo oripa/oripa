@@ -28,26 +28,28 @@ public interface FileTypeProperty<Data> {
 
 	/**
 	 *
-	 * @return extensions for this file type.
+	 * @return extensions for this file type. Each extension is supposed to be
+	 *         without period (.). For example, "jpg" is acceptable but ".jpg"
+	 *         is not.
 	 */
-	public abstract String[] getExtensions();
+	String[] getExtensions();
 
-	public default boolean extensionsMatch(final String filePath) {
+	default boolean extensionsMatch(final String filePath) {
 		if (filePath == null) {
 			return false;
 		}
 		return Arrays.asList(getExtensions()).stream()
-				.anyMatch(extension -> filePath.endsWith(extension));
+				.anyMatch(extension -> filePath.endsWith("." + extension));
 	}
 
 	/**
 	 * @return a text for identifying file type.
 	 */
-	public abstract String getKeyText();
+	String getKeyText();
 
-	public abstract Integer getOrder();
+	Integer getOrder();
 
-	public abstract Loader<Data> getLoader();
+	Loader<Data> getLoader();
 
-	public abstract Exporter<Data> getExporter();
+	Exporter<Data> getExporter();
 }

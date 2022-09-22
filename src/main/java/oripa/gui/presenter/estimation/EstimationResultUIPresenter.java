@@ -24,10 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.estimation.EstimationResultFileAccess;
+import oripa.exception.UserCanceledException;
+import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultUIView;
+import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.entity.FoldedModelDAO;
-import oripa.persistence.entity.FoldedModelFilterSelector;
+import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
 import oripa.persistence.entity.exporter.FoldedModelEntity;
 
 /**
@@ -38,14 +41,20 @@ public class EstimationResultUIPresenter {
 	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUIPresenter.class);
 
 	private final EstimationResultUIView view;
+
+	final FileChooserFactory fileChooserFactory;
+
 	private String lastFilePath;
 	private final Consumer<String> lastFilePathChangeListener;
 
 	public EstimationResultUIPresenter(
 			final EstimationResultUIView view,
+			final FileChooserFactory fileChooserFactory,
 			final String lastFilePath,
 			final Consumer<String> lastFilePathChangeListener) {
 		this.view = view;
+
+		this.fileChooserFactory = fileChooserFactory;
 
 		this.lastFilePath = lastFilePath;
 		this.lastFilePathChangeListener = lastFilePathChangeListener;
@@ -62,18 +71,23 @@ public class EstimationResultUIPresenter {
 	 */
 	private void export() {
 		try {
-			var filterSelector = new FoldedModelFilterSelector(view.isFaceOrderFlipped());
-			final FoldedModelDAO dao = new FoldedModelDAO(filterSelector);
-			EstimationResultFileAccess fileAccess = new EstimationResultFileAccess(dao);
+			var supportSelector = new FoldedModelFileAccessSupportSelector(view.isFaceOrderFlipped());
+			var dao = new FoldedModelDAO(supportSelector);
+			var fileAccessService = new EstimationResultFileAccess(dao);
 
 			var foldedModel = view.getModel();
 			var overlapRelation = view.getOverlapRelation();
 
 			var entity = new FoldedModelEntity(foldedModel.getOrigamiModel(), overlapRelation);
 
-			lastFilePath = fileAccess.saveFile(entity, lastFilePath, (FrameView) view.getTopLevelView(),
-					filterSelector.getSavables());
+			var presenter = new FileAccessPresenter<FoldedModelEntity>((FrameView) view.getTopLevelView(),
+					fileChooserFactory, fileAccessService);
+
+			lastFilePath = presenter.saveUsingGUI(entity, lastFilePath).get();
+
 			lastFilePathChangeListener.accept(lastFilePath);
+		} catch (UserCanceledException e) {
+
 		} catch (Exception ex) {
 			logger.error("error: ", ex);
 			view.showExportErrorMessage(ex);

@@ -16,32 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.swing.view.util;
+package oripa.gui.view.file;
 
-import java.awt.Component;
-
-import javax.swing.JOptionPane;
+import java.util.Collection;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class Dialogs {
-	public static void showErrorDialog(final Component parent, final String title,
-			final Exception ex) {
-		JOptionPane.showMessageDialog(parent,
-				ex.getClass().getName() + ": " + ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
-	}
+public interface FileChooserFactory {
 
-	/**
-	 *
-	 * @param parent
-	 * @param title
-	 * @param description
-	 * @return true if user selected "yes".
-	 */
-	public static boolean showYesNoConfirmDialog(final Component parent, final String title, final String description) {
-		return JOptionPane.showConfirmDialog(parent, description, title,
-				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
-	}
+	public SavingFileChooserView createForSaving(String path,
+			final Collection<FileFilterProperty> filterProperties);
+
+	public LoadingFileChooserView createForLoading(String path,
+			final Collection<FileFilterProperty> filterProperties);
 }

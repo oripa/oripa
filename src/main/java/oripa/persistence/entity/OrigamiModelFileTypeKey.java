@@ -19,7 +19,9 @@
 package oripa.persistence.entity;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.entity.exporter.*;
+import oripa.persistence.entity.exporter.OrigamiModelExporterDXF;
+import oripa.persistence.entity.exporter.OrigamiModelExporterOBJ;
+import oripa.persistence.entity.exporter.OrigamiModelExporterSVG;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.Loader;
@@ -29,10 +31,9 @@ import oripa.persistence.filetool.Loader;
  *
  */
 public enum OrigamiModelFileTypeKey implements FileTypeProperty<OrigamiModel> {
-	OBJ_MODEL("obj", 1, null, new OrigamiModelExporterOBJ(), ".obj"),
-	DXF_MODEL("dxf", 2,	null, new OrigamiModelExporterDXF(), ".dxf"),
-	SVG_MODEL("svg", 3, null, new OrigamiModelExporterSVG(), ".svg");
-
+	OBJ_MODEL("obj", 1, null, new OrigamiModelExporterOBJ(), "obj"),
+	DXF_MODEL("dxf", 2, null, new OrigamiModelExporterDXF(), "dxf"),
+	SVG_MODEL("svg", 3, null, new OrigamiModelExporterSVG(), "svg");
 
 	private final String keyText;
 	private final Integer order;
@@ -52,8 +53,8 @@ public enum OrigamiModelFileTypeKey implements FileTypeProperty<OrigamiModel> {
 	 *            which should be managed as that file type.
 	 */
 	OrigamiModelFileTypeKey(final String key, final Integer order,
-			Loader<OrigamiModel> loader,
-			Exporter<OrigamiModel> exporter,			
+			final Loader<OrigamiModel> loader,
+			final Exporter<OrigamiModel> exporter,
 			final String... extensions) {
 		this.keyText = key;
 		this.order = order;
@@ -86,12 +87,12 @@ public enum OrigamiModelFileTypeKey implements FileTypeProperty<OrigamiModel> {
 	public Integer getOrder() {
 		return order;
 	}
-	
+
 	@Override
 	public Loader<OrigamiModel> getLoader() {
 		return loader;
 	}
-	
+
 	@Override
 	public Exporter<OrigamiModel> getExporter() {
 		return exporter;

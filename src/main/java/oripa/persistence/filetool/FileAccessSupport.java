@@ -1,20 +1,12 @@
 package oripa.persistence.filetool;
 
-public class FileAccessSupportFilter<Data>
-		extends javax.swing.filechooser.FileFilter
-		implements Comparable<FileAccessSupportFilter<Data>> {
-
-//	private static final Logger logger = LoggerFactory
-//			.getLogger(FileAccessSupportFilter.class);
-
-	/**
-	 *
-	 * @author OUCHI Koji
-	 *
-	 */
+public class FileAccessSupport<Data>
+		implements Comparable<FileAccessSupport<Data>> {
 
 	private final FileTypeProperty<Data> fileType;
-	private final String msg;
+	// TODO description is not related to persistence responsibility.
+	// this should be removed.
+	private final String description;
 	private AbstractLoadingAction<Data> loadingAction;
 	private AbstractSavingAction<Data> savingAction;
 
@@ -24,12 +16,12 @@ public class FileAccessSupportFilter<Data>
 	 *
 	 * @param fileType
 	 *            specifies what to filter
-	 * @param msg
+	 * @param description
 	 *            message in filter box
 	 */
-	public FileAccessSupportFilter(final FileTypeProperty<Data> fileType, final String msg) {
+	public FileAccessSupport(final FileTypeProperty<Data> fileType, final String description) {
 		this.fileType = fileType;
-		this.msg = msg;
+		this.description = description;
 
 		var exporter = fileType.getExporter();
 		if (exporter != null) {
@@ -50,57 +42,26 @@ public class FileAccessSupportFilter<Data>
 		return fileType.getExtensions();
 	}
 
-	@Override
-	public boolean accept(final java.io.File f) {
-		if (f.isDirectory()) {
-			return true;
-		}
-
-		return fileType.extensionsMatch(f.getName());
-	}
-
-	@Override
-	public String getDescription() {
-		return msg;
-	}
-
 	public FileTypeProperty<Data> getTargetType() {
 		return fileType;
 	}
 
-	/**
-	 * order property is the most prior, the second is msg property.
-	 */
-	@Override
-	public int compareTo(final FileAccessSupportFilter<Data> o) {
-		int cmp = fileType.getOrder().compareTo(o.fileType.getOrder());
-		if (cmp == 0) {
-			return msg.compareTo(o.msg);
-		}
-
-		return cmp;
+	public String getDescription() {
+		return description;
 	}
 
 	/**
-	 *
-	 * @param type
-	 *            file type
-	 * @param explanation
-	 * @return in the style of "(*.extension1, *.extension2, ...)
-	 *         ${explanation}"
+	 * The order property is the most prior, the second is the description
+	 * property.
 	 */
-	public static String createDefaultDescription(final FileTypeProperty<?> type,
-			final String explanation) {
-		String[] extensions = type.getExtensions();
+	@Override
+	public int compareTo(final FileAccessSupport<Data> o) {
+		int cmp = fileType.getOrder().compareTo(o.fileType.getOrder());
+		if (cmp == 0) {
+			return description.compareTo(o.description);
+		}
 
-		StringBuilder builder = new StringBuilder();
-		builder.append("(");
-		builder.append("*");
-		builder.append(String.join(",*", extensions));
-		builder.append(") ");
-		builder.append(explanation);
-
-		return builder.toString();
+		return cmp;
 	}
 
 	/**

@@ -18,24 +18,20 @@
  */
 package oripa.application.main;
 
-import java.awt.Component;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.application.FileAccessService;
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.fold.foldability.FoldabilityChecker;
-import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.doc.CreasePatternFileTypeKey;
-import oripa.persistence.filetool.FileAccessSupportFilter;
-import oripa.persistence.filetool.FileChooserCanceledException;
+import oripa.persistence.filetool.AbstractSavingAction;
+import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -45,131 +41,37 @@ import oripa.persistence.filetool.WrongDataFormatException;
  * @author OUCHI Koji
  *
  */
-public class DataFileAccess {
+public class DataFileAccess implements FileAccessService<Doc> {
 	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
 
-	private final DataAccessObject<Doc> dao;
+	private final AbstractFileDAO<Doc> dao;
 
-	public DataFileAccess(final DataAccessObject<Doc> dao) {
+	public DataFileAccess(
+			final AbstractFileDAO<Doc> dao) {
 		this.dao = dao;
 	}
 
-	/**
-	 * save the doc to given path and set the path to the doc.
-	 *
-	 * @param doc
-	 * @param filePath
-	 * @param fileType
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
-	public void saveProjectFile(final Doc doc, final String filePath,
-			final CreasePatternFileTypeKey fileType)
-			throws IOException, IllegalArgumentException {
-
-		dao.save(doc, filePath, fileType);
-
-		doc.setDataFilePath(filePath);
+	public void setFileSavingAction(final AbstractSavingAction<Doc> action, final FileTypeProperty<Doc> type) {
+		dao.getFileAccessSupportSelector().getFileAccessSupport(type).setSavingAction(action);
 	}
 
-	/**
-	 * opens dialog for saving file with given parameters.
-	 *
-	 * @param document
-	 * @param directory
-	 * @param fileName
-	 *            if empty "newFile.opx" is used
-	 * @param owner
-	 * @param filters
-	 * @return the path of saved file. Empty if the file choosing is canceled.
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
-	@SafeVarargs
-	public final Optional<String> saveFile(final Doc document,
-			final String directory, final String fileName, final Component owner,
-			final FileAccessSupportFilter<Doc>... filters)
-			throws IOException, IllegalArgumentException {
-
-		File givenFile = new File(directory,
-				(fileName.isEmpty()) ? "newFile.opx" : fileName);
-
-		var filePath = givenFile.getCanonicalPath();
-
-		try {
-			String savedPath = dao.saveUsingGUI(document, filePath, owner, filters);
-			return Optional.of(savedPath);
-		} catch (FileChooserCanceledException e) {
-			logger.info("File selection is canceled.");
-			return Optional.empty();
-		}
+	public AbstractFileAccessSupportSelector<Doc> getFileAccessSupportSelector() {
+		return dao.getFileAccessSupportSelector();
 	}
 
-	/**
-	 * Opens dialog for saving given data to a file. Conducts foldability check
-	 * before saving. The default file name is "export.xxx" where ".xxx" is the
-	 * extension designated by the {@code filter}.
-	 *
-	 * @param document
-	 * @param directory
-	 * @param filter
-	 * @param owner
-	 * @throws FileChooserCanceledException
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
-	public void saveFileWithModelCheck(final Doc doc,
-			final String directory,
-			final FileAccessSupportFilter<Doc> filter, final Component owner,
-			final Supplier<Boolean> acceptModelError)
+	@Override
+	public final void saveFile(final Doc document,
+			final String path)
 			throws IOException, IllegalArgumentException {
-		File givenFile = new File(directory, "export" + filter.getExtensions()[0]);
-		var filePath = givenFile.getCanonicalPath();
 
-		CreasePattern creasePattern = doc.getCreasePattern();
-
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
-		var origamiModel = modelFactory.createOrigamiModel(
-				creasePattern);
-		var checker = new FoldabilityChecker();
-
-		if (!checker.testLocalFlatFoldability(origamiModel)) {
-			if (!acceptModelError.get()) {
-				return;
-			}
-		}
-
-		try {
-			dao.saveUsingGUI(doc, filePath, owner, filter);
-		} catch (FileChooserCanceledException e) {
-			logger.info("File selection is canceled.");
-		}
+		dao.save(document, path);
 	}
 
-	/**
-	 * if filePath is null, this method opens a dialog to select the target.
-	 * otherwise, it tries to read data from the path.
-	 *
-	 * @param filePath
-	 * @param lastFilePath
-	 * @param owner
-	 * @param filters
-	 * @return the path of loaded file. Empty if the file choosing is canceled.
-	 */
-	public Optional<Doc> loadFile(final String filePath, final String lastFilePath,
-			final Component owner, final FileAccessSupportFilter<Doc>... filters)
+	@Override
+	public Optional<Doc> loadFile(final String filePath)
 			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
 			IOException, FileNotFoundException {
 
-		try {
-			if (filePath != null) {
-				return Optional.of(dao.load(filePath));
-			} else {
-				return Optional.of(dao.loadUsingGUI(
-						lastFilePath, filters, owner));
-			}
-		} catch (FileChooserCanceledException cancel) {
-			return Optional.empty();
-		}
+		return Optional.of(dao.load(filePath));
 	}
 }

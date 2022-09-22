@@ -50,9 +50,10 @@ import oripa.gui.viewsetting.main.MainFrameSettingImpl;
 import oripa.gui.viewsetting.main.PainterScreenSettingImpl;
 import oripa.gui.viewsetting.main.UIPanelSettingImpl;
 import oripa.persistence.doc.DocDAO;
-import oripa.persistence.doc.DocFilterSelector;
+import oripa.persistence.doc.DocFileAccessSupportSelector;
 import oripa.resource.Constants;
 import oripa.swing.view.estimation.EstimationResultSwingFrameFactory;
+import oripa.swing.view.file.FileChooserSwingFactory;
 import oripa.swing.view.foldability.FoldabilityCheckSwingFrameFactory;
 import oripa.swing.view.main.ArrayCopyDialogFactory;
 import oripa.swing.view.main.CircleCopyDialogFactory;
@@ -121,6 +122,7 @@ public class ORIPA {
 							new ModelViewSwingFrameFactory(mainViewSetting.getPainterScreenSetting(),
 									childFrameManager),
 							new EstimationResultSwingFrameFactory(childFrameManager)),
+					new FileChooserSwingFactory(),
 					childFrameManager,
 					mainViewSetting,
 					new Doc(),
@@ -131,7 +133,7 @@ public class ORIPA {
 					new FileHistory(Constants.MRUFILE_NUM),
 					new IniFileAccess(
 							new InitDataFileReader(), new InitDataFileWriter()),
-					new DataFileAccess(new DocDAO(new DocFilterSelector())));
+					new DataFileAccess(new DocDAO(new DocFileAccessSupportSelector())));
 			presenter.setViewVisible(true);
 
 //			if (Config.FOR_STUDY) {

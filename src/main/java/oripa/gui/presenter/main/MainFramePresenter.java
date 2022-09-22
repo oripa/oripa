@@ -19,10 +19,11 @@
 package oripa.gui.presenter.main;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
-
-import javax.swing.JFrame;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +36,14 @@ import oripa.appstate.StatePopper;
 import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
+import oripa.exception.UserCanceledException;
 import oripa.file.FileHistory;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.*;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.view.ViewScreenUpdater;
+import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.MainFrameDialogFactory;
 import oripa.gui.view.main.MainFrameView;
 import oripa.gui.view.main.MainViewSetting;
@@ -48,12 +51,12 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
-import oripa.persistence.dao.AbstractFilterSelector;
+import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
-import oripa.persistence.doc.DocFilterSelector;
-import oripa.persistence.filetool.AbstractSavingAction;
-import oripa.persistence.filetool.FileAccessSupportFilter;
+import oripa.persistence.filetool.Exporter;
+import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
+import oripa.persistence.filetool.SavingActionTemplate;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
@@ -69,6 +72,7 @@ public class MainFramePresenter {
 
 	private final MainFrameView view;
 	private final MainFrameDialogFactory dialogFactory;
+	private final FileChooserFactory fileChooserFactory;
 
 	private final PainterScreenPresenter screenPresenter;
 	private final UIPanelPresenter uiPanelPresenter;
@@ -95,7 +99,7 @@ public class MainFramePresenter {
 	private final IniFileAccess iniFileAccess;
 	private final DataFileAccess dataFileAccess;
 	private final FileHistory fileHistory;
-	private final AbstractFilterSelector<Doc> filterSelector = new DocFilterSelector();
+	private final AbstractFileAccessSupportSelector<Doc> fileAccessSupportSelector;
 
 	// services
 	private final PaintContextModification paintContextModification = new PaintContextModification();
@@ -104,6 +108,7 @@ public class MainFramePresenter {
 			final ViewUpdateSupport viewUpdateSupport,
 			final MainFrameDialogFactory dialogFactory,
 			final SubFrameFactory subFrameFactory,
+			final FileChooserFactory fileChooserFactory,
 			final ChildFrameManager childFrameManager,
 			final MainViewSetting viewSetting,
 			final Doc document,
@@ -115,6 +120,7 @@ public class MainFramePresenter {
 			final DataFileAccess dataFileAccess) {
 		this.view = view;
 		this.dialogFactory = dialogFactory;
+		this.fileChooserFactory = fileChooserFactory;
 
 		this.childFrameManager = childFrameManager;
 
@@ -126,6 +132,7 @@ public class MainFramePresenter {
 		this.fileHistory = fileHistory;
 		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
+		fileAccessSupportSelector = dataFileAccess.getFileAccessSupportSelector();
 
 		this.screenSetting = viewSetting.getPainterScreenSetting();
 
@@ -159,6 +166,7 @@ public class MainFramePresenter {
 		uiPanelPresenter = new UIPanelPresenter(
 				uiPanel,
 				subFrameFactory,
+				fileChooserFactory,
 				stateManager,
 				viewUpdateSupport,
 				presentationContext,
@@ -206,14 +214,14 @@ public class MainFramePresenter {
 
 		view.addExportFOLDButtonListener(() -> {
 			String lastDirectory = fileHistory.getLastDirectory();
-			saveFile(lastDirectory, document.getDataFileName(),
-					filterSelector.getFilter(CreasePatternFileTypeKey.FOLD));
+			saveFileUsingGUI(lastDirectory, document.getDataFileName(),
+					CreasePatternFileTypeKey.FOLD);
 		});
 
 		view.addSaveAsImageButtonListener(() -> {
 			String lastDirectory = fileHistory.getLastDirectory();
-			saveFile(lastDirectory, document.getDataFileName(),
-					filterSelector.getFilter(CreasePatternFileTypeKey.PICT));
+			saveFileUsingGUI(lastDirectory, document.getDataFileName(),
+					CreasePatternFileTypeKey.PICT);
 		});
 
 		view.addExitButtonListener(() -> exit());
@@ -280,22 +288,25 @@ public class MainFramePresenter {
 		var state = stateFactory.create(StringID.IMPORT_CP_ID,
 				null,
 				null);
+
 		view.addImportButtonListener(() -> {
 			try {
-				dataFileAccess
-						.loadFile(null, fileHistory.getLastPath(), (JFrame) view, filterSelector.getLoadables())
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
+
+				presenter.loadUsingGUI(fileHistory.getLastPath())
 						.ifPresent(otherDoc -> {
 							paintContext.getPainter().resetSelectedOriLines();
 							var otherCreasePattern = otherDoc.getCreasePattern();
 							otherCreasePattern.forEach(l -> l.selected = true);
 							paintContext.getCreasePattern().addAll(otherCreasePattern);
 						});
+
 				state.performActions();
-			} catch (IllegalArgumentException | FileVersionError | WrongDataFormatException | IOException ex) {
-				logger.error("failed to load (import)", ex);
-				view.showLoadFailureErrorMessage(ex);
+			} catch (UserCanceledException e) {
+				// ignore
 			}
 		});
+
 	}
 
 	private void addPaintMenuItemsListener() {
@@ -346,22 +357,26 @@ public class MainFramePresenter {
 		setProjectSavingAction(CreasePatternFileTypeKey.FOLD);
 	}
 
+	private class ProjectSavingAction extends SavingActionTemplate<Doc> {
+
+		public ProjectSavingAction(final Exporter<Doc> exporter) {
+			super(exporter);
+		}
+
+		@Override
+		protected void afterSave(final Doc data) {
+			var path = getPath();
+			data.setDataFilePath(path);
+			paintContext.creasePatternUndo().clearChanged();
+
+			updateMenu(path);
+			updateTitleText();
+		}
+	}
+
 	private void setProjectSavingAction(final CreasePatternFileTypeKey fileType) {
-		filterSelector.getFilter(fileType).setSavingAction(
-				new AbstractSavingAction<Doc>() {
-
-					@Override
-					public boolean save(final Doc data) {
-						try {
-							saveProjectFile(data, getPath(), fileType);
-						} catch (Exception e) {
-							logger.error("Failed to save file " + getPath(), e);
-							return false;
-						}
-						return true;
-					}
-				});
-
+		dataFileAccess.setFileSavingAction(
+				new ProjectSavingAction(fileType.getExporter()), fileType);
 	}
 
 	private void updateMRUFilesMenuItem(final int index) {
@@ -388,8 +403,7 @@ public class MainFramePresenter {
 	private void saveAnyTypeUsingGUI() {
 		String lastDirectory = fileHistory.getLastDirectory();
 
-		String path = saveFile(lastDirectory, document.getDataFileName(),
-				filterSelector.getSavables());
+		String path = saveFileUsingGUI(lastDirectory, document.getDataFileName());
 
 		updateMenu(path);
 		updateTitleText();
@@ -462,39 +476,47 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveProjectFile(final Doc doc, final String filePath,
-			final CreasePatternFileTypeKey fileType) {
+	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeProperty<Doc> type) {
 		try {
-			dataFileAccess.saveProjectFile(doc, filePath, fileType);
+			new ProjectSavingAction(type.getExporter()).setPath(filePath).save(doc);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
 			view.showSaveFailureErrorMessage(e);
 		}
-
-		paintContext.creasePatternUndo().clearChanged();
-
-		updateMenu(filePath);
-		updateTitleText();
 	}
 
 	/**
 	 * save file without origami model check
 	 */
 	@SafeVarargs
-	private String saveFile(final String directory, final String fileName,
-			final FileAccessSupportFilter<Doc>... filters) {
+	private String saveFileUsingGUI(final String directory, final String fileName,
+			final FileTypeProperty<Doc>... types) {
 
 		try {
-			return dataFileAccess.saveFile(
-					document, directory, fileName, (JFrame) view, filters)
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
+
+			File givenFile = new File(directory,
+					(fileName.isEmpty()) ? "newFile.opx" : fileName);
+
+			var filePath = givenFile.getPath();
+
+			Optional<String> pathOpt;
+
+			if (types == null || types.length == 0) {
+				pathOpt = presenter.saveUsingGUI(document, filePath);
+			} else {
+				pathOpt = presenter.saveUsingGUI(document, filePath, List.of(types));
+			}
+
+			return pathOpt
 					.map(path -> {
 						paintContext.creasePatternUndo().clearChanged();
 						return path;
 					})
 					.orElse(document.getDataFilePath());
-		} catch (IOException | IllegalArgumentException e) {
-			logger.error("failed to save", e);
-			view.showSaveFailureErrorMessage(e);
+
+		} catch (UserCanceledException e) {
+			// ignore
 			return document.getDataFilePath();
 		}
 	}
@@ -504,16 +526,16 @@ public class MainFramePresenter {
 	 * model check before saving.
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
-		var frame = (JFrame) view;
 		try {
-			dataFileAccess.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
-					filterSelector.getFilter(type), frame,
-					view::showModelBuildFailureDialog);
+			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
+
+			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
+					type, view, view::showModelBuildFailureDialog);
+
+		} catch (UserCanceledException e) {
+			// ignore
 		} catch (IOException e) {
 			logger.error("IO trouble", e);
-			view.showSaveFailureErrorMessage(e);
-		} catch (IllegalArgumentException e) {
-			logger.error("Maybe data is not appropriate.", e);
 			view.showSaveFailureErrorMessage(e);
 		}
 	}
@@ -525,11 +547,11 @@ public class MainFramePresenter {
 	 * @param filePath
 	 */
 	private void updateMenu(final String filePath) {
-		if (filePath == null) {
+		if (filePath == null || filePath.isEmpty()) {
 			return;
 		}
 		try {
-			filterSelector.getLoadableFilterOf(filePath);
+			fileAccessSupportSelector.getLoadableOf(filePath);
 		} catch (IllegalArgumentException e) {
 			logger.debug("updating menu is canceled.", e);
 			return;
@@ -547,13 +569,19 @@ public class MainFramePresenter {
 	 * @return file path for loaded file. {@code null} if loading is not done.
 	 */
 	private String loadFile(final String filePath) {
-		var frame = (JFrame) view;
 
 		childFrameManager.closeAll(view);
 
 		try {
-			return dataFileAccess.loadFile(
-					filePath, fileHistory.getLastPath(), frame, filterSelector.getLoadables())
+			Optional<Doc> docOpt;
+			if (filePath != null) {
+				docOpt = dataFileAccess.loadFile(filePath);
+			} else {
+				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
+				docOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
+			}
+
+			return docOpt
 					.map(doc -> {
 						// we can't substitute a loaded object because
 						// the document object is referred by screen and UI
@@ -571,6 +599,9 @@ public class MainFramePresenter {
 										document.getCreasePattern(), paintContext);
 						return document.getDataFilePath();
 					}).orElse(null);
+		} catch (UserCanceledException e) {
+			// ignore
+			return document.getDataFilePath();
 		} catch (FileVersionError | IllegalArgumentException | WrongDataFormatException
 				| IOException e) {
 			logger.error("failed to load", e);
@@ -628,8 +659,8 @@ public class MainFramePresenter {
 
 				document.setCreasePattern(paintContext.getCreasePattern());
 
-				String path = saveFile(fileHistory.getLastDirectory(),
-						document.getDataFileName(), filterSelector.getSavables());
+				String path = saveFileUsingGUI(fileHistory.getLastDirectory(),
+						document.getDataFileName());
 				if (path == null) {
 
 				}

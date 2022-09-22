@@ -28,18 +28,10 @@ public class LoadingActionTemplate<Data> extends AbstractLoadingAction<Data> {
 
 	private final Loader<Data> loader;
 
-	/**
-	 * Constructor
-	 */
 	public LoadingActionTemplate(final Loader<Data> l) {
 		loader = l;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.persistent.filetool.AbstractLoadingAction#load()
-	 */
 	@Override
 	public Data load() throws FileVersionError, IOException, WrongDataFormatException {
 		return loader.load(getPath());

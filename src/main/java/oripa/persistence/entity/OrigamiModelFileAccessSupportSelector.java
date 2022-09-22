@@ -21,9 +21,9 @@ package oripa.persistence.entity;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import oripa.persistence.dao.AbstractFilterSelector;
-import oripa.persistence.entity.exporter.FoldedModelEntity;
-import oripa.persistence.filetool.FileAccessSupportFilter;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
 
@@ -31,29 +31,32 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFilterSelector extends AbstractFilterSelector<FoldedModelEntity> {
-	private final SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupportFilter<FoldedModelEntity>> filters = new TreeMap<>();
+public class OrigamiModelFileAccessSupportSelector extends AbstractFileAccessSupportSelector<OrigamiModel> {
+	private final SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>> supports;
 
 	/**
 	 * Constructor
 	 */
-	public FoldedModelFilterSelector(final boolean modelFlip) {
-		// TODO: StringID.ModelMenu.FILE_ID is tentative. Replace it with new
-		// string ID.
-		FoldedModelFileTypeKey key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
-		putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
+	public OrigamiModelFileAccessSupportSelector() {
+		supports = new TreeMap<>();
 
-		if (modelFlip) {
-			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP;
-			putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
-		} else {
-			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL;
-			putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
-		}
+		OrigamiModelFileTypeKey key = OrigamiModelFileTypeKey.DXF_MODEL;
+		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+
+		key = OrigamiModelFileTypeKey.OBJ_MODEL;
+		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+
+		key = OrigamiModelFileTypeKey.SVG_MODEL;
+		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+
 	}
 
+	/* (non Javadoc)
+	 * @see oripa.persistent.dao.AbstractFilterSelector#getFilters()
+	 */
 	@Override
-	protected SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupportFilter<FoldedModelEntity>> getFilters() {
-		return filters;
+	protected SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupport<OrigamiModel>> getFileAccessSupports() {
+		return supports;
 	}
+
 }

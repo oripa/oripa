@@ -21,9 +21,9 @@ package oripa.persistence.entity;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.dao.AbstractFilterSelector;
-import oripa.persistence.filetool.FileAccessSupportFilter;
+import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.entity.exporter.FoldedModelEntity;
+import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;
 
@@ -31,32 +31,27 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class OrigamiModelFilterSelector extends AbstractFilterSelector<OrigamiModel> {
-	private final SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupportFilter<OrigamiModel>> filters;
+public class FoldedModelFileAccessSupportSelector extends AbstractFileAccessSupportSelector<FoldedModelEntity> {
+	private final SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>> supports = new TreeMap<>();
 
 	/**
 	 * Constructor
 	 */
-	public OrigamiModelFilterSelector() {
-		filters = new TreeMap<>();
+	public FoldedModelFileAccessSupportSelector(final boolean modelFlip) {
+		FoldedModelFileTypeKey key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
+		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
 
-		OrigamiModelFileTypeKey key = OrigamiModelFileTypeKey.DXF_MODEL;
-		putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
-
-		key = OrigamiModelFileTypeKey.OBJ_MODEL;
-		putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
-
-		key = OrigamiModelFileTypeKey.SVG_MODEL;
-		putFilter(key, createDescription(key, StringID.ModelUI.FILE_ID));
-
+		if (modelFlip) {
+			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP;
+			putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+		} else {
+			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL;
+			putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+		}
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.persistent.dao.AbstractFilterSelector#getFilters()
-	 */
 	@Override
-	protected SortedMap<FileTypeProperty<OrigamiModel>, FileAccessSupportFilter<OrigamiModel>> getFilters() {
-		return filters;
+	protected SortedMap<FileTypeProperty<FoldedModelEntity>, FileAccessSupport<FoldedModelEntity>> getFileAccessSupports() {
+		return supports;
 	}
-
 }

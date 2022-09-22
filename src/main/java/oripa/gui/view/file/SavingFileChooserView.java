@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,24 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.filetool;
+package oripa.gui.view.file;
 
 /**
- * @author Koji
- * 
+ * @author OUCHI Koji
+ *
  */
-public class FileChooserCanceledException extends Exception {
+public interface SavingFileChooserView extends FileChooserView {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3178441866178146819L;
+	boolean showOverwriteConfirmMessage();
 
-	/**
-	 * 
-	 * Constructor
-	 */
-	public FileChooserCanceledException() {
-
-	}
 }
