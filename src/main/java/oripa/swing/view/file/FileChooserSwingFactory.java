@@ -32,13 +32,13 @@ import oripa.gui.view.file.SavingFileChooserView;
 public class FileChooserSwingFactory implements FileChooserFactory {
 
 	@Override
-	public <Data> SavingFileChooserView createForSaving(final String path,
+	public SavingFileChooserView createForSaving(final String path,
 			final Collection<FileFilterProperty> filterProperties) {
 		return new SavingFileChooser(path, filterProperties);
 	}
 
 	@Override
-	public <Data> LoadingFileChooserView createForLoading(final String path,
+	public LoadingFileChooserView createForLoading(final String path,
 			final Collection<FileFilterProperty> filterProperties) {
 		return new LoadingFileChooser(path, filterProperties);
 	}
