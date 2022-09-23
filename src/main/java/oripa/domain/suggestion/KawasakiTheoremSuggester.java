@@ -22,10 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import oripa.domain.cptool.PseudoRayFactory;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OriGeomUtil;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -33,13 +31,15 @@ import oripa.value.OriLine;
  */
 public class KawasakiTheoremSuggester {
 
-	private final double paperSize;
-
-	public KawasakiTheoremSuggester(final double paperSize) {
-		this.paperSize = paperSize;
+	public KawasakiTheoremSuggester() {
 	}
 
-	public Collection<OriLine> suggest(final OriVertex vertex) {
+	/**
+	 *
+	 * @param vertex
+	 * @return angles of suggested lines
+	 */
+	public Collection<Double> suggest(final OriVertex vertex) {
 
 		int angleCount = vertex.edgeCount();
 
@@ -47,8 +47,12 @@ public class KawasakiTheoremSuggester {
 			return List.of();
 		}
 
-		var suggestions = new ArrayList<OriLine>();
-		var type = guessType(vertex);
+		if (vertex.edgeStream().anyMatch(edge -> edge.isBoundary())) {
+			return List.of();
+		}
+
+		var suggestions = new ArrayList<Double>();
+		var type = new MaekawaTheoremSuggester().suggest(vertex);
 
 		if (type == null) {
 			return List.of();
@@ -72,9 +76,7 @@ public class KawasakiTheoremSuggester {
 
 			if (evenSum < Math.PI && oddSum < Math.PI) {
 				var baseAngle = vertex.getEdge(i).getAngle(vertex);
-				var factory = new PseudoRayFactory();
-				var segment = factory.create(vertex.getPositionBeforeFolding(), baseAngle + t, paperSize);
-				suggestions.add(new OriLine(segment, type));
+				suggestions.add((baseAngle + t));
 			}
 
 			var tmpEvenSum = evenSum;
@@ -83,32 +85,5 @@ public class KawasakiTheoremSuggester {
 		}
 
 		return suggestions;
-	}
-
-	private OriLine.Type guessType(final OriVertex vertex) {
-		double edgeCount = vertex.edgeCount();
-		int mountainCount = 0;
-		int valleyCount = 0;
-
-		for (int i = 0; i < edgeCount; i++) {
-			if (vertex.getEdge(i).isMountain()) {
-				mountainCount++;
-			} else {
-				valleyCount++;
-			}
-		}
-		int diff = mountainCount - valleyCount;
-		switch (diff) {
-		case 3:
-			return OriLine.Type.VALLEY;
-		case -3:
-			return OriLine.Type.MOUNTAIN;
-		case 1:
-			return OriLine.Type.MOUNTAIN;
-		case -1:
-			return OriLine.Type.VALLEY;
-		default:
-			return null;
-		}
 	}
 }

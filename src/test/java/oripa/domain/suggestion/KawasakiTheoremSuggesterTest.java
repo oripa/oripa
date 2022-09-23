@@ -30,11 +30,9 @@ class KawasakiTheoremSuggesterTest {
 
 		edges.forEach(vertex::addEdge);
 
-		var suggester = new KawasakiTheoremSuggester(1);
+		var suggester = new KawasakiTheoremSuggester();
 
 		var suggestions = suggester.suggest(vertex);
-
-		assertSame(OriLine.Type.VALLEY, suggestions.stream().findFirst().get().getType());
 
 		var expectedLines = List.of(
 				createLine(vertex, 4, OriLine.Type.VALLEY),
@@ -46,14 +44,18 @@ class KawasakiTheoremSuggesterTest {
 						.anyMatch(line -> angleEquals(line, expected, vertex))));
 	}
 
-	private boolean angleEquals(final OriLine l1, final OriLine l2, final OriVertex center) {
+	private boolean angleEquals(final double a1, final OriLine l2, final OriVertex center) {
 
-		var angle1 = getAngle(l1, center);
-		var angle2 = getAngle(l2, center);
+		var angle1 = normalizeAngle(a1);
+		var angle2 = normalizeAngle(getAngle(l2, center));
 
 		logger.debug("angle1: {}, angle2: {}", angle1, angle2);
 
 		return Math.abs(angle1 - angle2) < 1e-5;
+	}
+
+	private double normalizeAngle(final double angle) {
+		return (angle + 2 * Math.PI) % (2 * Math.PI);
 	}
 
 	private double getAngle(final OriLine line, final OriVertex center) {

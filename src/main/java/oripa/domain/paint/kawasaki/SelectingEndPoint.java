@@ -16,13 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.angle;
+package oripa.domain.paint.kawasaki;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.AbstractActionState;
 import oripa.domain.paint.core.PickedVerticesConnectionLineAdderCommand;
+import oripa.domain.suggestion.MaekawaTheoremSuggester;
 import oripa.util.Command;
 
 /**
@@ -30,7 +31,6 @@ import oripa.util.Command;
  *
  */
 public class SelectingEndPoint extends AbstractActionState {
-
 	@Override
 	protected void initialize() {
 		setPreviousClass(SelectingStartPoint.class);
@@ -58,7 +58,10 @@ public class SelectingEndPoint extends AbstractActionState {
 			throw new IllegalStateException("wrong state: impossible vertex selection.");
 		}
 
-		Command command = new PickedVerticesConnectionLineAdderCommand(context);
+		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0));
+		var type = new MaekawaTheoremSuggester().suggest(vertex);
+
+		Command command = new PickedVerticesConnectionLineAdderCommand(context, type);
 		command.execute();
 	}
 

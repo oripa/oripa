@@ -21,7 +21,7 @@ package oripa.gui.presenter.creasepattern;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.angle.SelectingStartPoint;
+import oripa.domain.paint.kawasaki.SelectingStartPoint;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
@@ -29,16 +29,11 @@ import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
  * @author OUCHI Koji
  *
  */
-public class AngleSnapAction extends AbstractGraphicMouseAction {
+public class KawasakiTheoremSuggestionAction extends AbstractGraphicMouseAction {
 
-	public AngleSnapAction() {
+	public KawasakiTheoremSuggestionAction() {
 		super();
 
-		setActionState(new SelectingStartPoint());
-	}
-
-	@Override
-	protected void recoverImpl(final PaintContext context) {
 		setActionState(new SelectingStartPoint());
 	}
 
@@ -66,4 +61,5 @@ public class AngleSnapAction extends AbstractGraphicMouseAction {
 
 		super.onDraw(drawer, viewContext, paintContext);
 	}
+
 }

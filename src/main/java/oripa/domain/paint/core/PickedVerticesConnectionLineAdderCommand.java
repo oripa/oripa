@@ -31,9 +31,16 @@ import oripa.value.OriLine;
  */
 public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCommand {
 	private final PaintContext context;
+	private final OriLine.Type type;
 
 	public PickedVerticesConnectionLineAdderCommand(final PaintContext context) {
 		this.context = context;
+		this.type = context.getLineTypeOfNewLines();
+	}
+
+	public PickedVerticesConnectionLineAdderCommand(final PaintContext context, final OriLine.Type type) {
+		this.context = context;
+		this.type = type;
 	}
 
 	@Override
@@ -48,7 +55,7 @@ public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCo
 		context.creasePatternUndo().pushUndoInfo();
 
 		context.getPainter().addLine(
-				new OriLine(p0, p1, context.getLineTypeOfNewLines()));
+				new OriLine(p0, p1, type));
 
 		context.clear(false);
 	}
