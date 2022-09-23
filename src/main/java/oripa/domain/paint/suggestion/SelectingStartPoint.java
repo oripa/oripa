@@ -20,7 +20,6 @@ package oripa.domain.paint.suggestion;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.domain.suggestion.FoldableLineAngleSuggester;
 
 /**
  * @author OUCHI Koji
@@ -34,15 +33,6 @@ public class SelectingStartPoint extends PickingVertex {
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-
-		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0));
-
-		var suggester = new FoldableLineAngleSuggester();
-		var suggestedAngles = suggester.suggest(vertex);
-
-		var snapPoints = new SuggestionSnapPointFactory().createSnapPoints(context, vertex.getPositionBeforeFolding(),
-				suggestedAngles);
-
-		context.setSnapPoints(snapPoints);
+		new SuggestionSnapPointsSetterCommand(context).execute();
 	}
 }
