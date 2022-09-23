@@ -16,24 +16,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.kawasaki;
-
-import java.util.Collection;
+package oripa.domain.paint.suggestion;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.MultipleRaySnapPointFactory;
+import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.fold.halfedge.OriVertex;
+import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.geom.GeomUtil;
+import oripa.gui.presenter.creasepattern.geometry.NearestPoint;
 
 /**
  * @author OUCHI Koji
  *
  */
-class KawasakiSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Vector2d sp,
-			final Collection<Double> angles) {
+public class TargetOriVertexFactory {
 
-		return new MultipleRaySnapPointFactory().createSnapPoints(context, sp, angles);
+	public OriVertex create(final CreasePattern creasePattern, final Vector2d target) {
+		var origamiModelFactory = new OrigamiModelFactory();
+		var origamiModel = origamiModelFactory.createOrigamiModel(creasePattern);
+
+		var nearest = new NearestPoint();
+		var vertex = origamiModel.getVertices().get(0);
+
+		for (var v : origamiModel.getVertices()) {
+			var p = v.getPositionBeforeFolding();
+			var distance = GeomUtil.distance(p, target);
+			if (distance < nearest.distance) {
+				nearest.point = p;
+				nearest.distance = distance;
+				vertex = v;
+			}
+		}
+
+		return vertex;
 	}
 
 }

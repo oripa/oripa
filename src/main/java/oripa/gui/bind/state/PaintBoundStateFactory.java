@@ -244,9 +244,9 @@ public class PaintBoundStateFactory {
 			return angleSnapFactory.create(
 					new AngleSnapAction(), changeHint, null);
 
-		case StringID.KAWASAKI_SUGGESTION_ID:
+		case StringID.SUGGESTION_ID:
 			return stateFactory.create(
-					new KawasakiTheoremSuggestionAction(), changeHint, null);
+					new SuggestionAction(), changeHint, null);
 
 		}
 

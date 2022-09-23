@@ -84,6 +84,17 @@ public class FoldabilityChecker {
 				&& convexRuleConjunction.holds(origamiModel.getFaces());
 	}
 
+	/**
+	 * Tests local flat foldability of given vertex.
+	 *
+	 * @param origamiModel
+	 * @return true if the given {@code origamiModel} is locally flat foldable.
+	 */
+	public boolean testLocalFlatFoldability(final OriVertex vertex) {
+		return Stream.of(VertexRule.values()).parallel()
+				.allMatch(rule -> rule.getRule().holds(vertex));
+	}
+
 	public Collection<OriVertex> findViolatingVertices(final Collection<OriVertex> vertices) {
 		var watch = new StopWatch(true);
 

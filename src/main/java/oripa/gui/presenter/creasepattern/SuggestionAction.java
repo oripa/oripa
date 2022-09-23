@@ -21,7 +21,7 @@ package oripa.gui.presenter.creasepattern;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.kawasaki.SelectingStartPoint;
+import oripa.domain.paint.suggestion.SelectingStartPoint;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 
@@ -29,9 +29,9 @@ import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
  * @author OUCHI Koji
  *
  */
-public class KawasakiTheoremSuggestionAction extends AbstractGraphicMouseAction {
+public class SuggestionAction extends AbstractGraphicMouseAction {
 
-	public KawasakiTheoremSuggestionAction() {
+	public SuggestionAction() {
 		super();
 
 		setActionState(new SelectingStartPoint());

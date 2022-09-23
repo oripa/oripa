@@ -16,11 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.kawasaki;
+package oripa.domain.paint.suggestion;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.domain.suggestion.KawasakiTheoremSuggester;
+import oripa.domain.suggestion.FoldableLineAngleSuggester;
 
 /**
  * @author OUCHI Koji
@@ -37,10 +37,10 @@ public class SelectingStartPoint extends PickingVertex {
 
 		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0));
 
-		var suggester = new KawasakiTheoremSuggester();
+		var suggester = new FoldableLineAngleSuggester();
 		var suggestedAngles = suggester.suggest(vertex);
 
-		var snapPoints = new KawasakiSnapPointFactory().createSnapPoints(context, vertex.getPositionBeforeFolding(),
+		var snapPoints = new SuggestionSnapPointFactory().createSnapPoints(context, vertex.getPositionBeforeFolding(),
 				suggestedAngles);
 
 		context.setSnapPoints(snapPoints);
