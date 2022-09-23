@@ -74,7 +74,8 @@ public class KawasakiTheoremSuggester {
 			double theta = OriGeomUtil.getAngleDifference(vertex, i);
 			double t = evenSum + theta - Math.PI;
 
-			if (evenSum < Math.PI && oddSum < Math.PI) {
+			final double EPS = 1e-6;
+			if (evenSum < Math.PI - EPS && oddSum < Math.PI - EPS) {
 				var baseAngle = vertex.getEdge(i).getAngle(vertex);
 				suggestions.add((baseAngle + t));
 			}

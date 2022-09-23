@@ -2,6 +2,7 @@ package oripa.domain.suggestion;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
@@ -28,22 +29,47 @@ class KawasakiTheoremSuggesterTest {
 				createEdge(vertex, 8, OriLine.Type.MOUNTAIN),
 				createEdge(vertex, 13, OriLine.Type.MOUNTAIN));
 
+		var expectedLines = List.of(
+				createLine(vertex, 4, OriLine.Type.VALLEY),
+				createLine(vertex, 12, OriLine.Type.VALLEY),
+				createLine(vertex, 14, OriLine.Type.VALLEY));
+
+		doTest(expectedLines, vertex, edges);
+
+	}
+
+	@Test
+	void test_3InputLines_symmetric() {
+		var vertex = new OriVertex(0, 0);
+
+		var edges = List.of(
+				createEdge(vertex, 2, OriLine.Type.MOUNTAIN),
+				createEdge(vertex, 8, OriLine.Type.MOUNTAIN),
+				createEdge(vertex, 14, OriLine.Type.MOUNTAIN));
+
+		var expectedLines = List.of(
+				createLine(vertex, 0, OriLine.Type.VALLEY),
+				createLine(vertex, 4, OriLine.Type.VALLEY),
+				createLine(vertex, 12, OriLine.Type.VALLEY));
+
+		doTest(expectedLines, vertex, edges);
+
+	}
+
+	private void doTest(final Collection<OriLine> expectedLines, final OriVertex vertex,
+			final Collection<OriEdge> edges) {
 		edges.forEach(vertex::addEdge);
 
 		var suggester = new KawasakiTheoremSuggester();
 
 		var suggestions = suggester.suggest(vertex);
 
-		var expectedLines = List.of(
-				createLine(vertex, 4, OriLine.Type.VALLEY),
-				createLine(vertex, 12, OriLine.Type.VALLEY),
-				createLine(vertex, 14, OriLine.Type.VALLEY));
-
-		assertEquals(3, expectedLines.size());
+		assertEquals(expectedLines.size(), suggestions.size());
 
 		expectedLines.forEach(expected -> assertTrue(
 				suggestions.stream()
 						.anyMatch(line -> angleEquals(line, expected, vertex))));
+
 	}
 
 	private boolean angleEquals(final double a1, final OriLine l2, final OriVertex center) {
