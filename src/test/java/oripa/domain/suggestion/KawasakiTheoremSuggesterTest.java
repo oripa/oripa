@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
+import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
 class KawasakiTheoremSuggesterTest {
@@ -22,6 +23,8 @@ class KawasakiTheoremSuggesterTest {
 
 	@Test
 	void test_3InputLines() {
+		logger.debug("test 3 lines");
+
 		var vertex = new OriVertex(0, 0);
 
 		var edges = List.of(
@@ -40,6 +43,7 @@ class KawasakiTheoremSuggesterTest {
 
 	@Test
 	void test_3InputLines_symmetric() {
+		logger.debug("test 3 input lines symmetric");
 		var vertex = new OriVertex(0, 0);
 
 		var edges = List.of(
@@ -51,6 +55,24 @@ class KawasakiTheoremSuggesterTest {
 				createLine(vertex, 0, OriLine.Type.VALLEY),
 				createLine(vertex, 4, OriLine.Type.VALLEY),
 				createLine(vertex, 12, OriLine.Type.VALLEY));
+
+		doTest(expectedLines, vertex, edges);
+
+	}
+
+	@Test
+	void test_3CloseInputLine() {
+		logger.debug("test 3 close lines");
+
+		var vertex = new OriVertex(0, 0);
+
+		var edges = List.of(
+				createEdge(vertex, 0, OriLine.Type.MOUNTAIN),
+				createEdge(vertex, 12, OriLine.Type.VALLEY),
+				createEdge(vertex, 14, OriLine.Type.MOUNTAIN));
+
+		var expectedLines = List.of(
+				createLine(vertex, 6, OriLine.Type.VALLEY));
 
 		doTest(expectedLines, vertex, edges);
 
@@ -68,22 +90,18 @@ class KawasakiTheoremSuggesterTest {
 
 		expectedLines.forEach(expected -> assertTrue(
 				suggestions.stream()
-						.anyMatch(line -> angleEquals(line, expected, vertex))));
+						.anyMatch(lineAngle -> angleEquals(lineAngle, expected, vertex))));
 
 	}
 
 	private boolean angleEquals(final double a1, final OriLine l2, final OriVertex center) {
 
-		var angle1 = normalizeAngle(a1);
-		var angle2 = normalizeAngle(getAngle(l2, center));
+		var angle1 = MathUtil.normalizeAngle(a1);
+		var angle2 = MathUtil.normalizeAngle(getAngle(l2, center));
 
 		logger.debug("angle1: {}, angle2: {}", angle1, angle2);
 
 		return Math.abs(angle1 - angle2) < 1e-5;
-	}
-
-	private double normalizeAngle(final double angle) {
-		return (angle + 2 * Math.PI) % (2 * Math.PI);
 	}
 
 	private double getAngle(final OriLine line, final OriVertex center) {
@@ -96,7 +114,7 @@ class KawasakiTheoremSuggesterTest {
 			dir.sub(line.getP1());
 		}
 
-		return Math.atan2(dir.getY(), dir.getX());
+		return MathUtil.normalizeAngle(Math.atan2(dir.getY(), dir.getX()));
 	}
 
 	private OriEdge createEdge(final OriVertex start, final int angle, final OriLine.Type type) {

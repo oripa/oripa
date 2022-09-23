@@ -20,6 +20,7 @@ package oripa.domain.fold.halfedge;
 
 import javax.vecmath.Vector2d;
 
+import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
 /**
@@ -111,7 +112,7 @@ public class OriEdge {
 		Vector2d dir = new Vector2d(ev.getPosition());
 		dir.sub(sv.getPosition());
 
-		return Math.atan2(dir.y, dir.x);
+		return MathUtil.angleOf(dir);
 	}
 
 	public boolean isBoundary() {

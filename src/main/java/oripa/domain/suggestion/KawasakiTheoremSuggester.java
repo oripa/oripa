@@ -49,11 +49,6 @@ public class KawasakiTheoremSuggester {
 		}
 
 		var suggestions = new ArrayList<Double>();
-//		var type = new MaekawaTheoremSuggester().suggest(vertex);
-//
-//		if (type == null) {
-//			return List.of();
-//		}
 
 		double evenSum = 0;
 
