@@ -43,7 +43,8 @@ public enum ButtonIcon {
 	SYMMETRIC("symmetry"),
 	MIRROR("mirror"),
 	BY_VALUE("by_value"),
-	ANGLE_SNAP("angle");
+	ANGLE_SNAP("angle"),
+	KAWASAKI("kawasaki");
 
 	private static final String DIRECTORY = "icon/";
 
