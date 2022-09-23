@@ -33,9 +33,9 @@ class KawasakiTheoremSuggesterTest {
 				createEdge(vertex, 13, OriLine.Type.MOUNTAIN));
 
 		var expectedLines = List.of(
-				createLine(vertex, 4, OriLine.Type.VALLEY),
-				createLine(vertex, 12, OriLine.Type.VALLEY),
-				createLine(vertex, 14, OriLine.Type.VALLEY));
+				4 * UNIT_ANGLE,
+				12 * UNIT_ANGLE,
+				14 * UNIT_ANGLE);
 
 		doTest(expectedLines, vertex, edges);
 
@@ -52,9 +52,9 @@ class KawasakiTheoremSuggesterTest {
 				createEdge(vertex, 14, OriLine.Type.MOUNTAIN));
 
 		var expectedLines = List.of(
-				createLine(vertex, 0, OriLine.Type.VALLEY),
-				createLine(vertex, 4, OriLine.Type.VALLEY),
-				createLine(vertex, 12, OriLine.Type.VALLEY));
+				0 * UNIT_ANGLE,
+				4 * UNIT_ANGLE,
+				12 * UNIT_ANGLE);
 
 		doTest(expectedLines, vertex, edges);
 
@@ -72,13 +72,13 @@ class KawasakiTheoremSuggesterTest {
 				createEdge(vertex, 14, OriLine.Type.MOUNTAIN));
 
 		var expectedLines = List.of(
-				createLine(vertex, 6, OriLine.Type.VALLEY));
+				6 * UNIT_ANGLE);
 
 		doTest(expectedLines, vertex, edges);
 
 	}
 
-	private void doTest(final Collection<OriLine> expectedLines, final OriVertex vertex,
+	private void doTest(final Collection<Double> expectedLines, final OriVertex vertex,
 			final Collection<OriEdge> edges) {
 		edges.forEach(vertex::addEdge);
 
@@ -90,31 +90,18 @@ class KawasakiTheoremSuggesterTest {
 
 		expectedLines.forEach(expected -> assertTrue(
 				suggestions.stream()
-						.anyMatch(lineAngle -> angleEquals(lineAngle, expected, vertex))));
+						.anyMatch(lineAngle -> angleEquals(lineAngle, expected))));
 
 	}
 
-	private boolean angleEquals(final double a1, final OriLine l2, final OriVertex center) {
+	private boolean angleEquals(final double a1, final double a2) {
 
 		var angle1 = MathUtil.normalizeAngle(a1);
-		var angle2 = MathUtil.normalizeAngle(getAngle(l2, center));
+		var angle2 = MathUtil.normalizeAngle(a2);
 
 		logger.debug("angle1: {}, angle2: {}", angle1, angle2);
 
 		return Math.abs(angle1 - angle2) < 1e-5;
-	}
-
-	private double getAngle(final OriLine line, final OriVertex center) {
-		Vector2d dir;
-		if (line.getP0().epsilonEquals(center.getPosition(), 1e-5)) {
-			dir = line.getP1();
-			dir.sub(line.getP0());
-		} else {
-			dir = line.getP0();
-			dir.sub(line.getP1());
-		}
-
-		return MathUtil.normalizeAngle(Math.atan2(dir.getY(), dir.getX()));
 	}
 
 	private OriEdge createEdge(final OriVertex start, final int angle, final OriLine.Type type) {
@@ -123,10 +110,6 @@ class KawasakiTheoremSuggesterTest {
 				new OriVertex(
 						createPoint(start, angle)),
 				type.toInt());
-	}
-
-	private OriLine createLine(final OriVertex start, final int angle, final OriLine.Type type) {
-		return new OriLine(start.getPosition(), createPoint(start, angle), type);
 	}
 
 	private Vector2d createPoint(final OriVertex start, final int angle) {
