@@ -83,20 +83,6 @@ public class KawasakiTheoremSuggester {
 		}
 
 		return suggestions;
-
-//				b = 2*PI - a
-//				a = a - theta_0
-//
-//				for i = 0; i < n; i++
-//				  t = a + theta_i - PI
-//				  if a < PI and b < PI
-//				    l = a new line between l_i and l_(i+1) as the angle between l_i is t.
-//				    add l to K
-//				  a_tmp = a
-//				  a = b + theta_i - theta_(i+1)
-//				  b = a_tmp
-//				return K
-
 	}
 
 	private OriLine.Type guessType(final OriVertex vertex) {
