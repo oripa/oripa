@@ -21,7 +21,6 @@ package oripa.domain.fold.foldability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.rule.AbstractRule;
@@ -46,22 +45,19 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 
 	/**
 	 *
-	 * @param vertices
-	 * @return true if all vertices pass the theorem test.
+	 * @param vertex
+	 * @return true if the {@code vertex} passes the theorem test.
 	 */
 	@Override
 	public boolean holds(final OriVertex vertex) {
 
+		if (!vertex.isInsideOfPaper()) {
+			return true;
+		}
+
 		double oddSum = 0;
 
 		for (int i = 0; i < vertex.edgeCount(); i++) {
-			OriEdge e = vertex.getEdge(i);
-
-			// corner does not need test
-			if (e.isBoundary()) {
-				return true;
-			}
-
 			double angle = OriGeomUtil.getAngleDifference(vertex, i);
 
 			if (i % 2 == 0) {

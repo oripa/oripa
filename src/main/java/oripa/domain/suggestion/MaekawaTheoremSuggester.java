@@ -39,7 +39,7 @@ public class MaekawaTheoremSuggester {
 			return null;
 		}
 
-		if (vertex.edgeStream().anyMatch(edge -> edge.isBoundary())) {
+		if (!vertex.isInsideOfPaper()) {
 			return null;
 		}
 

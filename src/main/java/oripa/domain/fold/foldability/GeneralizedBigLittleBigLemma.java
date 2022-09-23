@@ -66,7 +66,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 	 */
 	@Override
 	public boolean holds(final OriVertex vertex) {
-		if (vertex.edgeStream().anyMatch(e -> e.isBoundary())) {
+		if (!vertex.isInsideOfPaper()) {
 			return true;
 		}
 

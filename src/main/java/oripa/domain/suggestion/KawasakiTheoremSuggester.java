@@ -44,7 +44,7 @@ public class KawasakiTheoremSuggester {
 			return List.of();
 		}
 
-		if (vertex.edgeStream().anyMatch(edge -> edge.isBoundary())) {
+		if (!vertex.isInsideOfPaper()) {
 			return List.of();
 		}
 

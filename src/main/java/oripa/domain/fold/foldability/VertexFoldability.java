@@ -40,6 +40,11 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 
 	@Override
 	public boolean holds(final OriVertex vertex) {
+
+		if (!vertex.isInsideOfPaper()) {
+			return true;
+		}
+
 		var ring = createRing(vertex);
 		var minimalIndices = new MinimalAngleIndexManager(ring);
 		var helper = new AngleMinimalityHelper();
@@ -56,7 +61,7 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 				} while (!ring.exists(minimalIndex));
 			} while (!helper.isMinimal(ring, minimalIndex));
 
-			logger.debug("fold {}th gap", minimalIndex);
+			logger.trace("fold {}th gap", minimalIndex);
 
 			var mergedRingIndex = helper.foldPartially(ring, minimalIndex);
 
@@ -66,7 +71,7 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 
 		}
 
-		logger.debug(ring.toString());
+		logger.trace(ring.toString());
 
 		if (ring.size() == 0) {
 			return true;
@@ -86,39 +91,6 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 		}
 
 		return true;
-
-//		bool isFoldable(mylib::RingArrayList<LineGap>& ring) {
-//			MinimalAngleIndexManager minimals(ring);
-//
-//			while (ring.count() > 2) {
-//				FoldabilityRingArrayHelper helper;
-//
-//				int minimalIndex;
-//				//!!! the book lacks this check.
-//				// ignore old items.
-//				do {
-//					do {
-//						if (minimals.empty()) return false;
-//						minimalIndex = minimals.pop();
-//					} while (!ring.exists(minimalIndex));
-//				} while (!helper.isMinimalToBeFolded(ring, minimalIndex));
-//
-//				minimalIndex = helper.foldPartially(ring, minimalIndex);
-//
-//				//!!! the book's explanation is too ambiguous.
-//				// we have to check 3 angles: merged angle and its surroundings!
-//
-//				minimals.pushIfMinimalToBeFolded(ring, minimalIndex);
-//				minimals.pushIfMinimalToBeFolded(ring, ring.nextIndexOf(minimalIndex));
-//				minimals.pushIfMinimalToBeFolded(ring, ring.prevIndexOf(minimalIndex));
-//			}
-//
-//			if (ring.count() == 0)
-//				return true;
-//
-//			if (ring.count() == 2 && (ring.head() == ring.tail()))
-//				return true;
-
 	}
 
 	private RingArrayList<LineGap> createRing(final OriVertex vertex) {

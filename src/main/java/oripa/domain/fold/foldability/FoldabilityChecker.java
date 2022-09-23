@@ -44,7 +44,8 @@ public class FoldabilityChecker {
 		MAEKAWA(new MaekawaTheorem(), "Maekawa"),
 		KAWASAKI(new KawasakiTheorem(), "Kawasaki"),
 		BIG_LITTLE_BIG(new BigLittleBigLemma(), "Big-little-big"),
-		GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma(), "gen. Big-little-big");
+		GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma(), "gen. Big-little-big"),
+		FOLDABILITY(new VertexFoldability(), "foldability");
 
 		private final Rule<OriVertex> rule;
 		private final String name;
