@@ -54,8 +54,10 @@ public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCo
 
 		context.creasePatternUndo().pushUndoInfo();
 
-		context.getPainter().addLine(
-				new OriLine(p0, p1, type));
+		if (type != null) {
+			context.getPainter().addLine(
+					new OriLine(p0, p1, type));
+		}
 
 		context.clear(false);
 	}

@@ -38,13 +38,24 @@ public class SuggestionAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
+	protected void recoverImpl(final PaintContext context) {
+		setActionState(new SelectingStartPoint());
+	}
+
+	@Override
 	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		if (paintContext.getVertexCount() == 0) {
 			return super.onMove(viewContext, paintContext, differentAction);
 		}
 
-		var snapPoint = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
+		var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
+
+		if (snapPointOpt.isEmpty()) {
+			return null;
+		}
+
+		var snapPoint = snapPointOpt.get();
 		paintContext.setCandidateVertexToPick(snapPoint);
 		return snapPoint;
 	}

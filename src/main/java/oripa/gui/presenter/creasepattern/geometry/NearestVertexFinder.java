@@ -1,6 +1,7 @@
 package oripa.gui.presenter.creasepattern.geometry;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.vecmath.Vector2d;
 
@@ -69,8 +70,12 @@ public class NearestVertexFinder {
 	 * @param vertices
 	 * @return nearest point
 	 */
-	public static NearestPoint findNearestVertex(final Vector2d p,
+	public static Optional<NearestPoint> findNearestVertex(final Vector2d p,
 			final Collection<Vector2d> vertices) {
+
+		if (vertices.isEmpty()) {
+			return Optional.empty();
+		}
 
 		NearestPoint minPosition = new NearestPoint();
 
@@ -78,7 +83,7 @@ public class NearestVertexFinder {
 			findNearestOf(p, minPosition, vertex);
 		}
 
-		return minPosition;
+		return Optional.of(minPosition);
 	}
 
 	/**
@@ -102,19 +107,27 @@ public class NearestVertexFinder {
 				currentPoint.x, currentPoint.y, distance);
 
 		for (Collection<Vector2d> locals : vertices) {
-			NearestPoint nearest;
-			nearest = findNearestVertex(currentPoint, locals);
+			var nearestOpt = findNearestVertex(currentPoint, locals);
+
+			if (nearestOpt.isEmpty()) {
+				continue;
+			}
+
+			var nearest = nearestOpt.get();
 
 			if (nearest.distance < nearestPosition.distance) {
 				nearestPosition = nearest;
 			}
 		}
 
-		NearestPoint nearestGrid = findNearestVertex(
+		var nearestGridOpt = findNearestVertex(
 				currentPoint, grids);
 
-		if (nearestGrid.distance < nearestPosition.distance) {
-			nearestPosition = nearestGrid;
+		if (nearestGridOpt.isPresent()) {
+			NearestPoint nearestGrid = nearestGridOpt.get();
+			if (nearestGrid.distance < nearestPosition.distance) {
+				nearestPosition = nearestGrid;
+			}
 		}
 
 		if (nearestPosition.distance >= distance) {

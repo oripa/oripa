@@ -49,7 +49,13 @@ public class AngleSnapAction extends AbstractGraphicMouseAction {
 			return super.onMove(viewContext, paintContext, differentAction);
 		}
 
-		var snapPoint = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
+		var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
+
+		if (snapPointOpt.isEmpty()) {
+			return null;
+		}
+
+		var snapPoint = snapPointOpt.get();
 		paintContext.setCandidateVertexToPick(snapPoint);
 		return snapPoint;
 	}
