@@ -174,7 +174,7 @@ public class OriGeomUtil {
 	 * @param v3
 	 * @return 0 to 2 * pi between edges v1-v2 and v2-v3
 	 */
-	public static double getAngleDifference(
+	private static double getAngleDifference(
 			final OriVertex v1, final OriVertex v2, final OriVertex v3) {
 		var preP = new Vector2d(v1.getPosition());
 		var p = new Vector2d(v2.getPosition());

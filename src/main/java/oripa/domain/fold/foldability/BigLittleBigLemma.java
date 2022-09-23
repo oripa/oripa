@@ -48,21 +48,16 @@ public class BigLittleBigLemma extends AbstractRule<OriVertex> {
 		var lemmaHolds = true;
 
 		for (int i = 0; i < edgeNum; i++) {
-			var e1 = vertex.getEdge(i);
 			var e2 = vertex.getEdge(i + 1);
 			var e3 = vertex.getEdge(i + 2);
-			var e4 = vertex.getEdge(i + 3);
 
 			if (!e2.isFoldLine() || !e3.isFoldLine()) {
 				continue;
 			}
 
-			var a1 = OriGeomUtil.getAngleDifference(
-					e1.oppositeVertex(vertex), vertex, e2.oppositeVertex(vertex));
-			var a2 = OriGeomUtil.getAngleDifference(
-					e2.oppositeVertex(vertex), vertex, e3.oppositeVertex(vertex));
-			var a3 = OriGeomUtil.getAngleDifference(
-					e3.oppositeVertex(vertex), vertex, e4.oppositeVertex(vertex));
+			var a1 = OriGeomUtil.getAngleDifference(vertex, i);
+			var a2 = OriGeomUtil.getAngleDifference(vertex, i + 1);
+			var a3 = OriGeomUtil.getAngleDifference(vertex, i + 2);
 
 			if (a1 - a2 > EPS && a3 - a2 > EPS) {
 				lemmaHolds &= e2.getType() != e3.getType();
