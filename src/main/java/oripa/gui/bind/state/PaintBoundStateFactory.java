@@ -243,6 +243,11 @@ public class PaintBoundStateFactory {
 									.changeViewSetting() });
 			return angleSnapFactory.create(
 					new AngleSnapAction(), changeHint, null);
+
+		case StringID.KAWASAKI_SUGGESTION_ID:
+			return stateFactory.create(
+					new KawasakiTheoremSuggestionAction(), changeHint, null);
+
 		}
 
 		return null;

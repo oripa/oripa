@@ -39,6 +39,8 @@ class KawasakiTheoremSuggesterTest {
 				createLine(vertex, 12, OriLine.Type.VALLEY),
 				createLine(vertex, 14, OriLine.Type.VALLEY));
 
+		assertEquals(3, expectedLines.size());
+
 		expectedLines.forEach(expected -> assertTrue(
 				suggestions.stream()
 						.anyMatch(line -> angleEquals(line, expected, vertex))));

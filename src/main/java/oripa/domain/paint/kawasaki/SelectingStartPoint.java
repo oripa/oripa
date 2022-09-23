@@ -40,7 +40,8 @@ public class SelectingStartPoint extends PickingVertex {
 		var suggester = new KawasakiTheoremSuggester();
 		var suggestedAngles = suggester.suggest(vertex);
 
-		var snapPoints = new KawasakiSnapPointFactory().createSnapPoints(context, suggestedAngles);
+		var snapPoints = new KawasakiSnapPointFactory().createSnapPoints(context, vertex.getPositionBeforeFolding(),
+				suggestedAngles);
 
 		context.setSnapPoints(snapPoints);
 	}

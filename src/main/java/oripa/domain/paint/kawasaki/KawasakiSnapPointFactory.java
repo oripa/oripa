@@ -30,9 +30,8 @@ import oripa.domain.paint.core.MultipleRaySnapPointFactory;
  *
  */
 class KawasakiSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Collection<Double> angles) {
-
-		var sp = context.peekVertex();
+	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Vector2d sp,
+			final Collection<Double> angles) {
 
 		return new MultipleRaySnapPointFactory().createSnapPoints(context, sp, angles);
 	}
