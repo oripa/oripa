@@ -34,6 +34,12 @@ import oripa.domain.fold.halfedge.OriVertex;
  */
 public class FoldableLineAngleSuggester {
 
+	/**
+	 *
+	 * @param vertex
+	 * @return angles of suggested lines. Empty collection if impossible or no
+	 *         need to interpolate.
+	 */
 	public Collection<Double> suggest(final OriVertex vertex) {
 		var type = new MaekawaTheoremSuggester().suggest(vertex);
 

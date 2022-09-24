@@ -30,7 +30,8 @@ public class MaekawaTheoremSuggester {
 	 *
 	 * @param vertex
 	 * @return type to be used for new line. null if {@code vertex} is not at
-	 *         inside of paper.
+	 *         inside of paper or the lines can't be interpolated to satisfy the
+	 *         theorem.
 	 */
 	public OriLine.Type suggest(final OriVertex vertex) {
 		double edgeCount = vertex.edgeCount();

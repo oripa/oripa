@@ -34,7 +34,8 @@ public class KawasakiTheoremSuggester {
 	/**
 	 *
 	 * @param vertex
-	 * @return angles of suggested lines
+	 * @return angles of suggested lines. empty collection if the vertex is not
+	 *         inside of paper or there is no need to interpolate.
 	 */
 	public Collection<Double> suggest(final OriVertex vertex) {
 
