@@ -45,7 +45,7 @@ class OriVertexFactoryForTest {
 		return vertex;
 	}
 
-	private static void stubGetEdge(final OriVertex centralVertex, final List<OriEdge> edgeSpys) {
+	static void stubGetEdge(final OriVertex centralVertex, final List<OriEdge> edgeSpys) {
 		for (int i = 0; i < edgeSpys.size(); i++) {
 			lenient().doReturn(edgeSpys.get(i)).when(centralVertex).getEdge(i);
 			lenient().doReturn(edgeSpys.get(i)).when(centralVertex).getEdge(i + edgeSpys.size());

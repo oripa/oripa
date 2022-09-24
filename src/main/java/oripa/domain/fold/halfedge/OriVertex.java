@@ -130,6 +130,10 @@ public class OriVertex {
 		return edges.size();
 	}
 
+	public boolean isInsideOfPaper() {
+		return edgeStream().allMatch(edge -> !edge.isBoundary());
+	}
+
 	/**
 	 * @return vertexID
 	 */

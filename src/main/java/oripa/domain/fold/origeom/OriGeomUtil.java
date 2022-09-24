@@ -26,6 +26,7 @@ import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.Segment;
+import oripa.util.MathUtil;
 
 /**
  * Mathematical operations related to half-edge data structure elements.
@@ -171,9 +172,9 @@ public class OriGeomUtil {
 	 * @param v1
 	 * @param v2
 	 * @param v3
-	 * @return 0 to pi between edges v1-v2 and v2-v3
+	 * @return 0 to 2 * pi between edges v1-v2 and v2-v3
 	 */
-	public static double getAngleDifference(
+	private static double getAngleDifference(
 			final OriVertex v1, final OriVertex v2, final OriVertex v3) {
 		var preP = new Vector2d(v1.getPosition());
 		var p = new Vector2d(v2.getPosition());
@@ -182,7 +183,16 @@ public class OriGeomUtil {
 		nxtP.sub(p);
 		preP.sub(p);
 
-		return preP.angle(nxtP);
+		var prePAngle = MathUtil.angleOf(preP);
+		var nxtPAngle = MathUtil.angleOf(nxtP);
+
+		while (prePAngle > nxtPAngle) {
+			nxtPAngle += 2 * Math.PI;
+		}
+
+		return nxtPAngle - prePAngle;
+
+//		return preP.angle(nxtP); // fails if a concave face occurs.
 	}
 
 	/**

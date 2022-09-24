@@ -54,9 +54,9 @@ class OriVertexTest {
 
 		Stream.of(e1, e2, e3).forEach(e -> vertex.addEdge(e));
 
-		assertSame(e3, vertex.getEdge(0));
-		assertSame(e1, vertex.getEdge(1));
-		assertSame(e2, vertex.getEdge(2));
+		assertSame(e1, vertex.getEdge(0));
+		assertSame(e2, vertex.getEdge(1));
+		assertSame(e3, vertex.getEdge(2));
 
 		var v4 = new OriVertex(1, 0); // -90 deg.
 		// reversed direction
@@ -64,10 +64,10 @@ class OriVertexTest {
 
 		vertex.addEdge(e4);
 
-		assertSame(e3, vertex.getEdge(0));
-		assertSame(e4, vertex.getEdge(1));
-		assertSame(e1, vertex.getEdge(2));
-		assertSame(e2, vertex.getEdge(3));
+		assertSame(e1, vertex.getEdge(0));
+		assertSame(e2, vertex.getEdge(1));
+		assertSame(e3, vertex.getEdge(2));
+		assertSame(e4, vertex.getEdge(3));
 	}
 
 }

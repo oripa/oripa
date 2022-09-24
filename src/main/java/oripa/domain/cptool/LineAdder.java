@@ -171,7 +171,7 @@ public class LineAdder {
 				inputDomainClipper.selectByArea(currentLines));
 		currentLines.removeAll(crossingCurrentLines);
 
-		logger.debug("addAll() divideCurrentLines() start: {}[ms]", watch.getMilliSec());
+		logger.trace("addAll() divideCurrentLines() start: {}[ms]", watch.getMilliSec());
 
 		// a map from an input line to a map from a cross point to a line
 		// crossing with the input line.
@@ -185,14 +185,14 @@ public class LineAdder {
 		// feed back the result of line divisions
 		currentLines.addAll(crossingCurrentLines);
 
-		logger.debug("addAll() createInputLinePoints() start: {}[ms]", watch.getMilliSec());
+		logger.trace("addAll() createInputLinePoints() start: {}[ms]", watch.getMilliSec());
 
 		ArrayList<List<Vector2d>> pointLists = new ArrayList<>();
 
 		nonExistingNewLines
 				.forEach(inputLine -> pointLists.add(createInputLinePoints(inputLine, crossMaps.get(inputLine))));
 
-		logger.debug("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
+		logger.trace("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
 		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists);
 		divider.divideIfOverlap(crossingCurrentLines, splitNewLines);
@@ -202,7 +202,7 @@ public class LineAdder {
 		var lineTypeOverwriter = new LineTypeOverwriter();
 		lineTypeOverwriter.overwriteLineTypes(splitNewLines, currentLines);
 
-		logger.debug("addAll(): {}[ms]", watch.getMilliSec());
+		logger.trace("addAll(): {}[ms]", watch.getMilliSec());
 	}
 
 	/**

@@ -16,56 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.angle;
-
-import javax.vecmath.Vector2d;
+package oripa.domain.paint.suggestion;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.AbstractActionState;
-import oripa.domain.paint.core.PickedVerticesConnectionLineAdderCommand;
-import oripa.util.Command;
+import oripa.domain.paint.core.PickingVertex;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SelectingEndPoint extends AbstractActionState {
-
+public class SelectingStartPoint extends PickingVertex {
 	@Override
 	protected void initialize() {
-		setPreviousClass(SelectingStartPoint.class);
-		setNextClass(SelectingStartPoint.class);
-	}
-
-	@Override
-	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
-			final boolean doSpecial) {
-		var picked = context.getCandidateVertexToPick();
-
-		if (picked == null) {
-			return false;
-		}
-
-		context.pushVertex(picked);
-
-		return true;
+		setNextClass(SelectingEndPoint.class);
 	}
 
 	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
-
-		if (context.getVertexCount() != 2) {
-			throw new IllegalStateException("wrong state: impossible vertex selection.");
-		}
-
-		Command command = new PickedVerticesConnectionLineAdderCommand(context);
-		command.execute();
+		new SuggestionSnapPointsSetterCommand(context).execute();
 	}
-
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popVertex();
-		context.getSnapPoints().clear();
-	}
-
 }

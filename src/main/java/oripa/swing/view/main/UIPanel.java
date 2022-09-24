@@ -118,6 +118,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JRadioButton lineInputByValueButton = new JRadioButton();
 	private final JRadioButton lineInputPBisectorButton = new JRadioButton();
 	private final JRadioButton lineInputAngleSnapButton = new JRadioButton();
+	private final JRadioButton lineInputSuggestionButton = new JRadioButton();
 
 	// lineTypePanel
 	private final JPanel lineTypePanel = new JPanel();
@@ -364,6 +365,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		lineInputGroup.add(lineInputByValueButton);
 		lineInputGroup.add(lineInputPBisectorButton);
 		lineInputGroup.add(lineInputAngleSnapButton);
+		lineInputGroup.add(lineInputSuggestionButton);
 
 		// put layout together
 		lineInputPanel.setLayout(new GridBagLayout());
@@ -399,6 +401,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		lineInputPanel.add(lineInputMirrorButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputByValueButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputAngleSnapButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputSuggestionButton, gbBuilder.getNextField());
 
 		setLineInputButtonIcons();
 	}
@@ -617,6 +620,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineInputGlobalShortcut(lineInputAngleSnapButton, KeyStrokes.get(KeyEvent.VK_A),
 				StringID.ANGLE_SNAP_ID);
 
+		setLineInputGlobalShortcut(lineInputSuggestionButton, KeyStrokes.get(KeyEvent.VK_F),
+				StringID.SUGGESTION_ID);
+
 		setShortcut(lineTypeMountainButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_M),
 				StringID.UI.MOUNTAIN_ID);
 
@@ -730,6 +736,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setButtonIcon(lineInputMirrorButton, ButtonIcon.MIRROR);
 		setButtonIcon(lineInputByValueButton, ButtonIcon.BY_VALUE);
 		setButtonIcon(lineInputAngleSnapButton, ButtonIcon.ANGLE_SNAP);
+		setButtonIcon(lineInputSuggestionButton, ButtonIcon.SUGGESTION);
 	}
 
 	private void setButtonIcon(final AbstractButton button, final ButtonIcon icon) {
@@ -912,6 +919,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineInputAngleSnapButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
 		addButtonListener(lineInputAngleSnapButton, listener, keyProcessing);
+	}
+
+	@Override
+	public void addLineInputSuggestionButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputSuggestionButton, listener, keyProcessing);
 	}
 
 	@Override

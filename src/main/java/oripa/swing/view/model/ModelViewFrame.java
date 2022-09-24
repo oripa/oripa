@@ -235,11 +235,11 @@ public class ModelViewFrame extends JFrame
 
 	@Override
 	public void windowClosing(final WindowEvent e) {
-		setDomainBeforeFolding(null);
 	}
 
 	@Override
 	public void windowClosed(final WindowEvent e) {
+		setDomainBeforeFolding(null);
 		onCloseListener.accept(this);
 		mainScreenSetting.setCrossLineVisible(false);
 	}
@@ -281,7 +281,7 @@ public class ModelViewFrame extends JFrame
 
 	@Override
 	public void componentHidden(final ComponentEvent e) {
-		setDomainBeforeFolding(null);
+		// setDomainBeforeFolding(null);
 	}
 
 	@Override

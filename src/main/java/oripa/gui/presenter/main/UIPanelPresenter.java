@@ -211,15 +211,16 @@ public class UIPanelPresenter {
 		view.addLengthTextFieldListener(byValueContext::setLength);
 		view.addAngleTextFieldListener(byValueContext::setAngle);
 
-		var pbisecState = bindingFactory.createState(StringID.PERPENDICULAR_BISECTOR_ID,
-				null, null);
+		var pbisecState = bindingFactory.createState(StringID.PERPENDICULAR_BISECTOR_ID);
 		view.addLineInputPBisectorButtonListener(pbisecState::performActions, keyProcessing);
 
-		var angleSnapState = bindingFactory.createState(StringID.ANGLE_SNAP_ID,
-				null, null);
+		var angleSnapState = bindingFactory.createState(StringID.ANGLE_SNAP_ID);
 		view.addLineInputAngleSnapButtonListener(angleSnapState::performActions, keyProcessing);
 
 		view.addAngleStepComboListener(step -> paintContext.setAngleStep(AngleStep.fromString(step).get()));
+
+		var suggestionState = bindingFactory.createState(StringID.SUGGESTION_ID);
+		view.addLineInputSuggestionButtonListener(suggestionState::performActions, keyProcessing);
 
 		view.addLineTypeMountainButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
 		view.addLineTypeValleyButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));

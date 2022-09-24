@@ -16,52 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.core;
+package oripa.domain.paint.suggestion;
 
 import oripa.domain.paint.PaintContext;
-import oripa.value.OriLine;
+import oripa.domain.paint.core.ValidatablePaintCommand;
+import oripa.domain.suggestion.FoldableLineAngleSuggester;
 
 /**
- * Adds a line which is a connection between two selected vertices in context to
- * crease pattern. This object also pushes undo information and clear the
- * selections.
- *
  * @author OUCHI Koji
  *
  */
-public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCommand {
+public class SuggestionSnapPointsSetterCommand extends ValidatablePaintCommand {
+
 	private final PaintContext context;
-	private final OriLine.Type type;
 
-	public PickedVerticesConnectionLineAdderCommand(final PaintContext context) {
+	public SuggestionSnapPointsSetterCommand(final PaintContext context) {
 		this.context = context;
-		this.type = context.getLineTypeOfNewLines();
-	}
-
-	public PickedVerticesConnectionLineAdderCommand(final PaintContext context, final OriLine.Type type) {
-		this.context = context;
-		this.type = type;
 	}
 
 	@Override
 	public void execute() {
-		final int correctVertexCount = 2;
+		final int correctVertexCount = 1;
 		final int correctLineCount = 0;
 		validateCounts(context, correctVertexCount, correctLineCount);
 
-		var p0 = context.popVertex();
-		var p1 = context.popVertex();
+		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0));
 
-		if (type == null || p0 == null || p1 == null) {
-			context.clear(false);
-			return;
-		}
+		var suggester = new FoldableLineAngleSuggester();
+		var suggestedAngles = suggester.suggest(vertex);
 
-		context.creasePatternUndo().pushUndoInfo();
+		var snapPoints = new SuggestionSnapPointFactory().createSnapPoints(context, vertex.getPositionBeforeFolding(),
+				suggestedAngles);
 
-		context.getPainter().addLine(
-				new OriLine(p0, p1, type));
-
-		context.clear(false);
+		context.setSnapPoints(snapPoints);
 	}
+
 }

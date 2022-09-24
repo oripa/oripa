@@ -47,6 +47,9 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 
 			{ StringID.ANGLE_SNAP_ID, "Input a segment fitting to selected angle step." },
 
+			{ StringID.SUGGESTION_ID,
+					"Suggest segments satisfying foldability Theorems. Works only for vertex with odd lines." },
+
 			{ StringID.SELECT_LINE_ID, SELECT_LINE_TEXT },
 
 			{ StringID.ENLARGE_ID,

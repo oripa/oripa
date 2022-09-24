@@ -1,6 +1,7 @@
 package oripa.gui.presenter.creasepattern.geometry;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.vecmath.Vector2d;
 
@@ -119,18 +120,25 @@ public class NearestItemFinder {
 		return candidate == null ? viewContext.getLogicalMousePoint() : candidate;
 	}
 
-	public static Vector2d getNearestInSnapPoints(final CreasePatternViewContext viewContext,
+	public static Optional<Vector2d> getNearestInSnapPoints(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
-		return NearestVertexFinder.findNearestVertex(
+		var nearestOpt = NearestVertexFinder.findNearestVertex(
 				viewContext.getLogicalMousePoint(),
-				paintContext.getSnapPoints()).point;
+				paintContext.getSnapPoints());
+
+		return nearestOpt.map(nearest -> nearest.point);
 	}
 
 	public static Vector2d getNearestVertex(final CreasePatternViewContext viewContext,
 			final Collection<Vector2d> vertices) {
-		var nearest = NearestVertexFinder.findNearestVertex(
+		var nearestOpt = NearestVertexFinder.findNearestVertex(
 				viewContext.getLogicalMousePoint(), vertices);
 
+		if (nearestOpt.isEmpty()) {
+			return null;
+		}
+
+		var nearest = nearestOpt.get();
 		if (nearest.distance < scaleThreshold(viewContext)) {
 			return nearest.point;
 		}

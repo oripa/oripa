@@ -218,11 +218,17 @@ public class FoldabilityScreen extends JPanel
 		var logicalPoint = MouseUtility.getLogicalPoint(affineTransform, e.getPoint());
 		var mousePoint = new Vector2d(logicalPoint.x, logicalPoint.y);
 
-		var nearest = NearestVertexFinder.findNearestVertex(
+		var nearestOpt = NearestVertexFinder.findNearestVertex(
 				mousePoint,
 				violatingVertices.stream()
 						.map(v -> v.getPositionBeforeFolding())
 						.collect(Collectors.toList()));
+
+		if (nearestOpt.isEmpty()) {
+			return;
+		}
+
+		var nearest = nearestOpt.get();
 
 		if (nearest.distance >= scaleDistanceThreshold()) {
 			pickedViolatingVertex = null;

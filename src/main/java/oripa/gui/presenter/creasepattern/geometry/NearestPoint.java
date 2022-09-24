@@ -7,13 +7,13 @@ public class NearestPoint {
 	public double distance = Double.MAX_VALUE;
 
 	/**
-	 * distance is set to maximum. point is nut null but dummy.
+	 * distance is set to maximum. point is not null but dummy.
 	 */
 	public NearestPoint() {
 	}
-	
-	public NearestPoint(NearestPoint p) {
-		if(p != null){
+
+	public NearestPoint(final NearestPoint p) {
+		if (p != null) {
 			point.set(p.point);
 			distance = p.distance;
 		}

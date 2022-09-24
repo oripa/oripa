@@ -16,43 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.core;
+package oripa.domain.paint.suggestion;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
-import oripa.geom.GeomUtil;
-import oripa.geom.Segment;
+import oripa.domain.paint.core.MultipleRaySnapPointFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Segment line) {
-		Collection<Vector2d> snapPoints = new ArrayList<>();
+class SuggestionSnapPointFactory {
+	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Vector2d sp,
+			final Collection<Double> angles) {
 
-		// snap on cross points of line and creases.
-		snapPoints.addAll(
-				context.getCreasePattern().stream()
-						.map(crease -> GeomUtil.getCrossPoint(line, crease))
-						.filter(Objects::nonNull)
-						.collect(Collectors.toList()));
-
-		// snap on end points of overlapping creases.
-		context.getCreasePattern().stream()
-				.filter(crease -> GeomUtil.isLineSegmentsTotallyOverlap(
-						line.getP0(), line.getP1(), crease.getP0(), crease.getP1()))
-				.forEach(crease -> {
-					snapPoints.add(crease.getP0());
-					snapPoints.add(crease.getP1());
-				});
-
-		return snapPoints;
+		return new MultipleRaySnapPointFactory().createSnapPoints(context, sp, angles);
 	}
+
 }

@@ -111,6 +111,8 @@ public interface UIPanelView extends View {
 
 	void addLineInputAngleSnapButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
+	void addLineInputSuggestionButtonListener(Runnable listener, KeyProcessing keyProcessing);
+
 	void addAngleStepComboListener(Consumer<String> listener);
 
 	void addLineTypeMountainButtonListener(Runnable listener);
