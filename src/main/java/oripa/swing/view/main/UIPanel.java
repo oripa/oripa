@@ -620,7 +620,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineInputGlobalShortcut(lineInputAngleSnapButton, KeyStrokes.get(KeyEvent.VK_A),
 				StringID.ANGLE_SNAP_ID);
 
-		setLineInputGlobalShortcut(lineInputSuggestionButton, KeyStrokes.get(KeyEvent.VK_K),
+		setLineInputGlobalShortcut(lineInputSuggestionButton, KeyStrokes.get(KeyEvent.VK_F),
 				StringID.SUGGESTION_ID);
 
 		setShortcut(lineTypeMountainButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_M),
