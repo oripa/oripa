@@ -25,7 +25,7 @@ public class RingElement<V> {
 	private final int index;
 	private final V value;
 
-	public RingElement(final int index, final V value) {
+	RingElement(final int index, final V value) {
 		this.index = index;
 		this.value = value;
 	}
@@ -34,7 +34,7 @@ public class RingElement<V> {
 		return next;
 	}
 
-	public void setNext(final RingElement<V> next) {
+	void setNext(final RingElement<V> next) {
 		this.next = next;
 	}
 
@@ -42,7 +42,7 @@ public class RingElement<V> {
 		return previous;
 	}
 
-	public void setPrevious(final RingElement<V> previous) {
+	void setPrevious(final RingElement<V> previous) {
 		this.previous = previous;
 	}
 
