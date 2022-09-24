@@ -10,7 +10,7 @@ import oripa.value.OriLine;
 
 class AngleMinimalityHelperTest {
 
-	private final double UNIT_ANGLE = Math.PI;
+	private final double UNIT_ANGLE = Math.PI / 8;
 
 	@Test
 	void test_differentAngle_foldable() {
@@ -51,18 +51,19 @@ class AngleMinimalityHelperTest {
 	@Test
 	void test_foldPartially() {
 		var ring = new RingArrayList<>(List.of(
+				new LineGap(5 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt()),
 				new LineGap(2 * UNIT_ANGLE, OriLine.Type.MOUNTAIN.toInt()),
 				new LineGap(1 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt()),
 				new LineGap(2 * UNIT_ANGLE, OriLine.Type.VALLEY.toInt())));
 
 		var helper = new AngleMinimalityHelper();
 
-		var mergedIndex = helper.foldPartially(ring, 1);
+		var mergedIndex = helper.foldPartially(ring, 2);
 
-		assertEquals(0, mergedIndex);
-		assertEquals(1, ring.size());
+		assertEquals(1, mergedIndex);
+		assertEquals(2, ring.size());
 
-		assertEquals(3 * UNIT_ANGLE, ring.get(0).getAngle());
+		assertEquals(3 * UNIT_ANGLE, ring.get(1).getAngle());
 
 	}
 
