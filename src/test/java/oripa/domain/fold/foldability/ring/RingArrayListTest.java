@@ -1,10 +1,12 @@
-package oripa.domain.fold.foldability;
+package oripa.domain.fold.foldability.ring;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import oripa.domain.fold.foldability.ring.RingArrayList;
 
 class RingArrayListTest {
 

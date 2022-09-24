@@ -16,14 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold.foldability;
+package oripa.domain.fold.foldability.ring;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import oripa.util.collection.CollectionUtil;
 
-class RingArrayList<Data> {
+public class RingArrayList<Data> {
 
 	private final List<RingElement<Data>> list = new ArrayList<>();
 	private int headIndex = -1;

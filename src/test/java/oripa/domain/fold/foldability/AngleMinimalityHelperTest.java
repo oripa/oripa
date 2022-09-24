@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import oripa.domain.fold.foldability.ring.RingArrayList;
 import oripa.value.OriLine;
 
 class AngleMinimalityHelperTest {
@@ -63,7 +64,7 @@ class AngleMinimalityHelperTest {
 		assertEquals(1, mergedIndex);
 		assertEquals(2, ring.size());
 
-		assertEquals(3 * UNIT_ANGLE, ring.get(1).getAngle());
+		assertEquals(3 * UNIT_ANGLE, ring.get(1).getAngleGap());
 
 	}
 

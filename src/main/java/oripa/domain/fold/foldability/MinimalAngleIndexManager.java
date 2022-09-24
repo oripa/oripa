@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import oripa.domain.fold.foldability.ring.RingArrayList;
+
 /**
  * @author OUCHI Koji
  *
@@ -47,14 +49,15 @@ class MinimalAngleIndexManager {
 	}
 
 	public void pushIfMinimal(final RingArrayList<LineGap> ring, final int ringIndex) {
-		if (helper.isMinimal(ring, ringIndex)) {
-			if (exists(ringIndex)) {
-				return;
-			}
-
-			indices.add(ringIndex);
-			existences.set(ringIndex, true);
+		if (!helper.isMinimal(ring, ringIndex)) {
+			return;
 		}
+		if (exists(ringIndex)) {
+			return;
+		}
+
+		indices.add(ringIndex);
+		existences.set(ringIndex, true);
 	}
 
 	public int pop() {

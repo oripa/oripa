@@ -19,20 +19,20 @@
 package oripa.domain.fold.foldability;
 
 class LineGap {
-	private double angle;
+	private double angleGap;
 	private final int lineType;
 
-	public LineGap(final double angle, final int lineType) {
-		this.angle = angle;
+	public LineGap(final double angleGap, final int lineType) {
+		this.angleGap = angleGap;
 		this.lineType = lineType;
 	}
 
-	public double getAngle() {
-		return angle;
+	public double getAngleGap() {
+		return angleGap;
 	}
 
-	public void setAngle(final double angle) {
-		this.angle = angle;
+	public void setAngleGap(final double angle) {
+		this.angleGap = angle;
 	}
 
 	public int getLineType() {
@@ -41,6 +41,6 @@ class LineGap {
 
 	@Override
 	public String toString() {
-		return "(angle: " + angle + ", type: " + lineType + ")";
+		return "(angleGap: " + angleGap + ", type: " + lineType + ")";
 	}
 }

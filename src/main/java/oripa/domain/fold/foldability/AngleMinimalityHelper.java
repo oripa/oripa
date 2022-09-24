@@ -18,11 +18,13 @@
  */
 package oripa.domain.fold.foldability;
 
+import oripa.domain.fold.foldability.ring.RingArrayList;
+
 /**
  * @author OUCHI Koji
  *
  */
-public class AngleMinimalityHelper {
+class AngleMinimalityHelper {
 	public static final double EPS = 1e-6;
 
 	public boolean isMinimal(final RingArrayList<LineGap> ring, final int index) {
@@ -34,8 +36,8 @@ public class AngleMinimalityHelper {
 			return false;
 		}
 
-		return previous.getAngle() - target.getAngle() > -EPS &&
-				next.getAngle() - target.getAngle() > -EPS;
+		return previous.getAngleGap() - target.getAngleGap() > -EPS &&
+				next.getAngleGap() - target.getAngleGap() > -EPS;
 	}
 
 	public int foldPartially(final RingArrayList<LineGap> ring, final int index) {
@@ -47,7 +49,7 @@ public class AngleMinimalityHelper {
 		var target = targetElement.getValue();
 		var next = nextElement.getValue();
 
-		previous.setAngle(previous.getAngle() + next.getAngle() - target.getAngle());
+		previous.setAngleGap(previous.getAngleGap() + next.getAngleGap() - target.getAngleGap());
 
 		ring.dropConnection(nextElement.getRingIndex());
 		ring.dropConnection(targetElement.getRingIndex());
