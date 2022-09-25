@@ -25,6 +25,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.PseudoRayFactory;
 import oripa.domain.paint.PaintContext;
+import oripa.geom.GeomUtil;
 
 /**
  * @author OUCHI Koji
@@ -44,6 +45,7 @@ public class MultipleRaySnapPointFactory {
 		return angles.stream()
 				.map(angle -> rayFactory.create(v, angle, paperSize))
 				.flatMap(ray -> snapPointFactory.createSnapPoints(context, ray).stream())
+				.filter(point -> GeomUtil.distance(point, v) > GeomUtil.EPS)
 				.collect(Collectors.toList());
 	}
 }
