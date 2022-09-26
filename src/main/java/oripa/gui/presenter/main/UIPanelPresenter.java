@@ -294,7 +294,7 @@ public class UIPanelPresenter {
 	}
 
 	private boolean isValidGridDivNum(final int gridDivNum) {
-		return gridDivNum >= 2 && gridDivNum <= 128;
+		return gridDivNum >= 2 && gridDivNum <= 256;
 	}
 
 	/**
