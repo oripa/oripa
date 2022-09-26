@@ -8,8 +8,6 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
@@ -19,12 +17,8 @@ import oripa.value.OriLine;
 class KawasakiTheoremSuggesterTest {
 	private final double UNIT_ANGLE = Math.PI / 8;
 
-	private static Logger logger = LoggerFactory.getLogger(KawasakiTheoremSuggesterTest.class);
-
 	@Test
 	void test_3InputLines() {
-		logger.debug("test 3 lines");
-
 		var vertex = new OriVertex(0, 0);
 
 		var edges = List.of(
@@ -32,18 +26,17 @@ class KawasakiTheoremSuggesterTest {
 				createEdge(vertex, 8, OriLine.Type.MOUNTAIN),
 				createEdge(vertex, 13, OriLine.Type.MOUNTAIN));
 
-		var expectedLines = List.of(
+		var expectedLineAngles = List.of(
 				4 * UNIT_ANGLE,
 				12 * UNIT_ANGLE,
 				14 * UNIT_ANGLE);
 
-		doTest(expectedLines, vertex, edges);
+		doTest(expectedLineAngles, vertex, edges);
 
 	}
 
 	@Test
 	void test_3InputLines_symmetric() {
-		logger.debug("test 3 input lines symmetric");
 		var vertex = new OriVertex(0, 0);
 
 		var edges = List.of(
@@ -51,19 +44,17 @@ class KawasakiTheoremSuggesterTest {
 				createEdge(vertex, 8, OriLine.Type.MOUNTAIN),
 				createEdge(vertex, 14, OriLine.Type.MOUNTAIN));
 
-		var expectedLines = List.of(
+		var expectedLineAngles = List.of(
 				0 * UNIT_ANGLE,
 				4 * UNIT_ANGLE,
 				12 * UNIT_ANGLE);
 
-		doTest(expectedLines, vertex, edges);
+		doTest(expectedLineAngles, vertex, edges);
 
 	}
 
 	@Test
 	void test_3CloseInputLine() {
-		logger.debug("test 3 close lines");
-
 		var vertex = new OriVertex(0, 0);
 
 		var edges = List.of(
@@ -78,7 +69,7 @@ class KawasakiTheoremSuggesterTest {
 
 	}
 
-	private void doTest(final Collection<Double> expectedLines, final OriVertex vertex,
+	private void doTest(final Collection<Double> expectedLineAngles, final OriVertex vertex,
 			final Collection<OriEdge> edges) {
 		edges.forEach(vertex::addEdge);
 
@@ -86,11 +77,12 @@ class KawasakiTheoremSuggesterTest {
 
 		var suggestions = suggester.suggest(vertex);
 
-		assertEquals(expectedLines.size(), suggestions.size());
+		assertEquals(expectedLineAngles.size(), suggestions.size());
 
-		expectedLines.forEach(expected -> assertTrue(
+		expectedLineAngles.forEach(expected -> assertTrue(
 				suggestions.stream()
-						.anyMatch(lineAngle -> angleEquals(lineAngle, expected))));
+						.anyMatch(lineAngle -> angleEquals(lineAngle, expected)),
+				() -> "expected: " + expected + ", no match on actuals: " + suggestions.toString()));
 
 	}
 
@@ -98,8 +90,6 @@ class KawasakiTheoremSuggesterTest {
 
 		var angle1 = MathUtil.normalizeAngle(a1);
 		var angle2 = MathUtil.normalizeAngle(a2);
-
-		logger.debug("angle1: {}, angle2: {}", angle1, angle2);
 
 		return Math.abs(angle1 - angle2) < 1e-5;
 	}
