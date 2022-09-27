@@ -85,13 +85,6 @@ public class GeomUtil {
 
 	}
 
-	public static boolean isLineSegmentsTotallyOverlap(final Vector2d s0, final Vector2d e0,
-			final Vector2d s1, final Vector2d e1) {
-		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1);
-		return cnt >= 3;
-
-	}
-
 	/**
 	 * Both distances between the extremities of the lines should be less than
 	 * the threshold The lines can be reversed, so the test has to be done both
