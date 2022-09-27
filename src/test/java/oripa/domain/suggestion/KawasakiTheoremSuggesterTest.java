@@ -1,6 +1,7 @@
 package oripa.domain.suggestion;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static oripa.test.util.AssertionUtil.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -79,11 +80,8 @@ class KawasakiTheoremSuggesterTest {
 
 		assertEquals(expectedLineAngles.size(), suggestions.size());
 
-		expectedLineAngles.forEach(expected -> assertTrue(
-				suggestions.stream()
-						.anyMatch(lineAngle -> angleEquals(lineAngle, expected)),
-				() -> "expected: " + expected + ", no match on actuals: " + suggestions.toString()));
-
+		expectedLineAngles.forEach(expected -> assertAnyMatch(
+				expected, suggestions, this::angleEquals));
 	}
 
 	private boolean angleEquals(final double a1, final double a2) {
