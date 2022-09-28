@@ -1,0 +1,81 @@
+/**
+ * ORIPA - Origami Pattern Editor
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package oripa.domain.paint.core;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.vecmath.Vector2d;
+
+import oripa.domain.paint.PaintContext;
+import oripa.geom.GeomUtil;
+import oripa.geom.Segment;
+
+/**
+ * @author OUCHI Koji
+ *
+ */
+public class RaySnapPointFactory {
+	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Segment ray) {
+		Collection<Vector2d> snapPoints = new ArrayList<>();
+
+		// snap on cross points of line and creases.
+		snapPoints.addAll(
+				context.getCreasePattern().stream()
+						.map(crease -> GeomUtil.getCrossPoint(ray, crease))
+						.filter(Objects::nonNull)
+						.collect(Collectors.toList()));
+
+		// snap on end points of overlapping creases.
+		context.getCreasePattern().stream()
+				.filter(crease -> GeomUtil.isLineSegmentsOverlap(
+						ray.getP0(), ray.getP1(), crease.getP0(), crease.getP1()))
+				.filter(crease -> !sharesEndPoint(crease, ray) || overlapsEntirely(crease, ray))
+				.flatMap(crease -> crease.pointStream())
+				.forEach(point -> {
+					snapPoints.add(point);
+				});
+
+		return snapPoints;
+	}
+
+	private boolean sharesEndPoint(final Segment s1, final Segment s2) {
+		return findSharedEndPoint(s1, s2).isPresent();
+	}
+
+	private boolean overlapsEntirely(final Segment crease, final Segment ray) {
+		return GeomUtil.distinguishLineSegmentsOverlap(
+				ray.getP0(), ray.getP1(), crease.getP0(), crease.getP1()) >= 3;
+	}
+
+	private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2) {
+		return s1.pointStream()
+				.filter(p -> s2.pointStream()
+						.anyMatch(q -> nearlyEquals(p, q)))
+				.findFirst();
+	}
+
+	private boolean nearlyEquals(final Vector2d p1, final Vector2d p2) {
+		return GeomUtil.distance(p1, p2) < GeomUtil.EPS;
+	}
+
+}

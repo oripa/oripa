@@ -20,7 +20,7 @@ class MultipleRaySnapPointFactoryTest {
 	MultipleRaySnapPointFactory factory = new MultipleRaySnapPointFactory();
 
 	@Test
-	void test() {
+	void test_noOverlap() {
 		var creases = List.of(
 				new OriLine(-1, -1, -1, 1, OriLine.Type.CUT),
 				new OriLine(-1, 1, 1, 1, OriLine.Type.CUT),
@@ -40,6 +40,34 @@ class MultipleRaySnapPointFactoryTest {
 		var points = factory.createSnapPoints(contextMock, sourcePoint, angles);
 
 		var expectedPoints = List.of(new Vector2d(1, 0), new Vector2d(-1, 0));
+
+		assertEquals(expectedPoints.size(), points.size());
+		expectedPoints
+				.forEach(expected -> assertAnyMatch(expected, points, (p1, p2) -> GeomUtil.distance(p1, p2) < 1e-6));
+	}
+
+	@Test
+	void test_overlap() {
+		var creases = List.of(
+				new OriLine(-1, -1, -1, 1, OriLine.Type.CUT),
+				new OriLine(-1, 1, 1, 1, OriLine.Type.CUT),
+				new OriLine(1, 1, 1, -1, OriLine.Type.CUT),
+				new OriLine(1, -1, -1, -1, OriLine.Type.CUT),
+				new OriLine(0, 0, -0.5, 0, OriLine.Type.MOUNTAIN),
+				new OriLine(0.25, 0, 0.5, 0, OriLine.Type.MOUNTAIN));
+
+		var creasePattern = new CreasePatternFactory().createCreasePattern(creases);
+		var contextMock = mock(PaintContext.class);
+
+		when(contextMock.getCreasePattern()).thenReturn(creasePattern);
+
+		var sourcePoint = new Vector2d(0, 0);
+
+		var angles = List.of(0.0);
+
+		var points = factory.createSnapPoints(contextMock, sourcePoint, angles);
+
+		var expectedPoints = List.of(new Vector2d(1, 0), new Vector2d(0.25, 0), new Vector2d(0.5, 0));
 
 		assertEquals(expectedPoints.size(), points.size());
 		expectedPoints

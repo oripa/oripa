@@ -39,7 +39,7 @@ public class MultipleRaySnapPointFactory {
 			final Collection<Double> angles) {
 
 		var paperSize = context.getCreasePattern().getPaperSize();
-		var snapPointFactory = new SnapPointFactory();
+		var snapPointFactory = new RaySnapPointFactory();
 		var rayFactory = new PseudoRayFactory();
 
 		return angles.stream()
