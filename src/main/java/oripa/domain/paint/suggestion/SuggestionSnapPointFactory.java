@@ -24,7 +24,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.MultipleRaySnapPointFactory;
-import oripa.geom.GeomUtil;
 
 /**
  * @author OUCHI Koji
@@ -44,10 +43,6 @@ class SuggestionSnapPointFactory {
 			final Collection<Double> angles) {
 
 		return new MultipleRaySnapPointFactory().createSnapPoints(context, sp, angles);
-	}
-
-	private boolean nearlyEquals(final Vector2d p1, final Vector2d p2) {
-		return GeomUtil.distance(p1, p2) < GeomUtil.EPS;
 	}
 
 }
