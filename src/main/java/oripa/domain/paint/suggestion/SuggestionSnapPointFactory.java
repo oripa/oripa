@@ -19,21 +19,54 @@
 package oripa.domain.paint.suggestion;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 
+import oripa.domain.cptool.PseudoRayFactory;
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.MultipleRaySnapPointFactory;
+import oripa.domain.paint.core.SnapPointFactory;
+import oripa.geom.GeomUtil;
 
 /**
  * @author OUCHI Koji
  *
  */
 class SuggestionSnapPointFactory {
+	/**
+	 * Ignores the end points of the lines incident to {@code sp}.
+	 *
+	 * @param context
+	 * @param sp
+	 *            the end point of suggested ray.
+	 * @param angles
+	 * @return snap points for suggestions.
+	 */
 	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Vector2d sp,
 			final Collection<Double> angles) {
 
-		return new MultipleRaySnapPointFactory().createSnapPoints(context, sp, angles);
+		var paperSize = context.getCreasePattern().getPaperSize();
+		var snapPointFactory = new SnapPointFactory();
+		var rayFactory = new PseudoRayFactory();
+
+		var incidentCreasePoints = context.getCreasePattern().stream()
+				.filter(crease -> nearlyEquals(sp, crease.getP0()) || nearlyEquals(sp, crease.getP1()))
+				.flatMap(crease -> Stream.of(crease.getP0(), crease.getP1()))
+				.filter(point -> !nearlyEquals(point, sp))
+				.collect(Collectors.toList());
+
+		return angles.stream()
+				.map(angle -> rayFactory.create(sp, angle, paperSize))
+				.flatMap(ray -> snapPointFactory.createSnapPoints(context, ray).stream())
+				.filter(point -> !nearlyEquals(point, sp))
+				.filter(point -> incidentCreasePoints.stream()
+						.allMatch(creasePoint -> !nearlyEquals(point, creasePoint)))
+				.collect(Collectors.toList());
+	}
+
+	private boolean nearlyEquals(final Vector2d p1, final Vector2d p2) {
+		return GeomUtil.distance(p1, p2) < GeomUtil.EPS;
 	}
 
 }
