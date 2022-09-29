@@ -7,7 +7,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 
@@ -257,7 +256,7 @@ public class ElementRemover {
 		linesToBeRemoved.forEach(creasePattern::remove);
 
 		var removedPoints = linesToBeRemoved.stream()
-				.flatMap(line -> Stream.of(line.p0, line.p1))
+				.flatMap(line -> line.oriPointStream())
 				.collect(Collectors.toCollection(() -> new TreeSet<>()));
 
 		// merge lines after removing all lines to be removed.

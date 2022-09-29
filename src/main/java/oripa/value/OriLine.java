@@ -20,6 +20,7 @@
 package oripa.value;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 
@@ -119,6 +120,10 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 
 	public Line getLine() {
 		return new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
+	}
+
+	public Stream<OriPoint> oriPointStream() {
+		return Stream.of(p0, p1);
 	}
 
 	/**

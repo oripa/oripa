@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,7 @@ public class CreasePatternElementConverter {
 			return verticesCoords;
 		}
 		verticesCoords = lines.parallelStream()
-				.flatMap(line -> Stream.of(line.p0, line.p1))
+				.flatMap(line -> line.oriPointStream())
 				.distinct()
 				.map(point -> vertexToList(point))
 				.collect(Collectors.toList());

@@ -18,6 +18,8 @@
 
 package oripa.geom;
 
+import java.util.stream.Stream;
+
 import javax.vecmath.Vector2d;
 
 public class Segment {
@@ -47,6 +49,10 @@ public class Segment {
 
 	public Vector2d getP1() {
 		return p1;
+	}
+
+	public Stream<Vector2d> pointStream() {
+		return Stream.of(getP0(), getP1());
 	}
 
 	/**

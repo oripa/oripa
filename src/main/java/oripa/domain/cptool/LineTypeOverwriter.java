@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import oripa.domain.cptool.compgeom.AnalyticLine;
 import oripa.value.OriLine;
@@ -112,7 +111,7 @@ public class LineTypeOverwriter {
 
 	private List<OriPoint> sortLineEndPoints(final Collection<OriLine> overlaps) {
 		var points = overlaps.stream()
-				.flatMap(line -> Stream.of(line.p0, line.p1))
+				.flatMap(line -> line.oriPointStream())
 				.collect(Collectors.toList());
 		var analyticLine = new AnalyticLine(overlaps.stream().findFirst().get());
 		if (analyticLine.isVertical()) {
