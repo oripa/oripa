@@ -25,27 +25,27 @@ import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
-import oripa.domain.paint.PaintContext;
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class SnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Segment line) {
+	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment line) {
 		Collection<Vector2d> snapPoints = new ArrayList<>();
 
 		// snap on cross points of line and creases.
 		snapPoints.addAll(
-				context.getCreasePattern().stream()
+				creasePattern.stream()
 						.map(crease -> GeomUtil.getCrossPoint(line, crease))
 						.filter(Objects::nonNull)
 						.collect(Collectors.toList()));
 
 		// snap on end points of overlapping creases.
-		context.getCreasePattern().stream()
+		creasePattern.stream()
 				.filter(crease -> GeomUtil.isLineSegmentsOverlap(
 						line.getP0(), line.getP1(), crease.getP0(), crease.getP1()))
 				.forEach(crease -> {

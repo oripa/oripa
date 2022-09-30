@@ -37,11 +37,12 @@ public class LineSnapPointFactory {
 		p0 = context.getVertex(0);
 		p1 = context.getVertex(1);
 
-		var segment = new PseudoLineFactory().create(p0, p1, context.getCreasePattern().getPaperSize());
+		var creasePattern = context.getCreasePattern();
+		var segment = new PseudoLineFactory().create(p0, p1, creasePattern.getPaperSize());
 
 		var snapPointFactory = new SnapPointFactory();
 
-		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(context, segment);
+		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(creasePattern, segment);
 
 		snapPoints.add(p0);
 		snapPoints.add(p1);

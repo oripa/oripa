@@ -42,7 +42,7 @@ public class PerpendicularBisectorSnapPointFactory {
 
 		var snapPointFactory = new SnapPointFactory();
 
-		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(context, pbisec);
+		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(context.getCreasePattern(), pbisec);
 
 		return snapPoints;
 	}
