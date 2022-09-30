@@ -38,13 +38,14 @@ public class MultipleRaySnapPointFactory {
 			final Vector2d v,
 			final Collection<Double> angles) {
 
-		var paperSize = context.getCreasePattern().getPaperSize();
+		var creasePattern = context.getCreasePattern();
+		var paperSize = creasePattern.getPaperSize();
 		var snapPointFactory = new RaySnapPointFactory();
 		var rayFactory = new PseudoRayFactory();
 
 		return angles.stream()
 				.map(angle -> rayFactory.create(v, angle, paperSize))
-				.flatMap(ray -> snapPointFactory.createSnapPoints(context, ray).stream())
+				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray).stream())
 				.filter(point -> GeomUtil.distance(point, v) > GeomUtil.EPS)
 				.collect(Collectors.toList());
 	}
