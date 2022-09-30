@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.PseudoRayFactory;
-import oripa.domain.paint.PaintContext;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 
 /**
@@ -34,11 +34,10 @@ import oripa.geom.GeomUtil;
 public class MultipleRaySnapPointFactory {
 
 	public Collection<Vector2d> createSnapPoints(
-			final PaintContext context,
+			final CreasePattern creasePattern,
 			final Vector2d v,
 			final Collection<Double> angles) {
 
-		var creasePattern = context.getCreasePattern();
 		var paperSize = creasePattern.getPaperSize();
 		var snapPointFactory = new RaySnapPointFactory();
 		var rayFactory = new PseudoRayFactory();
