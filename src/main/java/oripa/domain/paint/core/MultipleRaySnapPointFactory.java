@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.PseudoRayFactory;
-import oripa.domain.paint.PaintContext;
+import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 
 /**
@@ -34,17 +34,17 @@ import oripa.geom.GeomUtil;
 public class MultipleRaySnapPointFactory {
 
 	public Collection<Vector2d> createSnapPoints(
-			final PaintContext context,
+			final CreasePattern creasePattern,
 			final Vector2d v,
 			final Collection<Double> angles) {
 
-		var paperSize = context.getCreasePattern().getPaperSize();
+		var paperSize = creasePattern.getPaperSize();
 		var snapPointFactory = new RaySnapPointFactory();
 		var rayFactory = new PseudoRayFactory();
 
 		return angles.stream()
 				.map(angle -> rayFactory.create(v, angle, paperSize))
-				.flatMap(ray -> snapPointFactory.createSnapPoints(context, ray).stream())
+				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray).stream())
 				.filter(point -> GeomUtil.distance(point, v) > GeomUtil.EPS)
 				.collect(Collectors.toList());
 	}
