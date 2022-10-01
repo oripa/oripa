@@ -78,6 +78,10 @@ public class GeomUtil {
 		return cnt;
 	}
 
+	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1) {
+		return distinguishLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1());
+	}
+
 	public static boolean isLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1) {
 		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1);

@@ -93,8 +93,7 @@ public class OverlappingLineDivider {
 				.forEach(line -> {
 					var splitPoints = new ArrayList<Vector2d>();
 
-					int overlapCount = GeomUtil.distinguishLineSegmentsOverlap(dividerLine.getP0(), dividerLine.getP1(),
-							line.getP0(), line.getP1());
+					int overlapCount = GeomUtil.distinguishLineSegmentsOverlap(dividerLine, line);
 
 					switch (overlapCount) {
 					case 2:

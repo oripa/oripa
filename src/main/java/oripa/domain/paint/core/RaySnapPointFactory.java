@@ -65,8 +65,7 @@ public class RaySnapPointFactory {
 			return false;
 		}
 
-		return !sharesEndPoint(crease, ray) || GeomUtil.distinguishLineSegmentsOverlap(
-				ray.getP0(), ray.getP1(), crease.getP0(), crease.getP1()) >= 3;
+		return !sharesEndPoint(crease, ray) || GeomUtil.distinguishLineSegmentsOverlap(ray, crease) >= 3;
 	}
 
 	private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2) {
