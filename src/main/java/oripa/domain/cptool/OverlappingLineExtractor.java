@@ -43,8 +43,7 @@ public class OverlappingLineExtractor {
 	private static final double EPS = 1e-5;
 
 	public boolean isOverlap(final OriLine line0, final OriLine line1) {
-		var overlapCount = GeomUtil.distinguishLineSegmentsOverlap(
-				line0.p0, line0.p1, line1.p0, line1.p1);
+		var overlapCount = GeomUtil.distinguishLineSegmentsOverlap(line0, line1);
 		if (overlapCount >= 3) {
 			return true;
 		}

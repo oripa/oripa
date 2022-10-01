@@ -47,9 +47,7 @@ public class RaySnapPointFactory {
 
 		// snap on end points of overlapping creases.
 		creasePattern.stream()
-				.filter(crease -> GeomUtil.isLineSegmentsOverlap(
-						ray.getP0(), ray.getP1(), crease.getP0(), crease.getP1()))
-				.filter(crease -> !sharesEndPoint(crease, ray) || overlapsEntirely(crease, ray))
+				.filter(crease -> overlapsEntirely(crease, ray))
 				.flatMap(crease -> crease.pointStream())
 				.forEach(point -> {
 					snapPoints.add(point);
@@ -63,8 +61,11 @@ public class RaySnapPointFactory {
 	}
 
 	private boolean overlapsEntirely(final Segment crease, final Segment ray) {
-		return GeomUtil.distinguishLineSegmentsOverlap(
-				ray.getP0(), ray.getP1(), crease.getP0(), crease.getP1()) >= 3;
+		if (!GeomUtil.isLineSegmentsOverlap(ray, crease)) {
+			return false;
+		}
+
+		return !sharesEndPoint(crease, ray) || GeomUtil.distinguishLineSegmentsOverlap(ray, crease) >= 3;
 	}
 
 	private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2) {
