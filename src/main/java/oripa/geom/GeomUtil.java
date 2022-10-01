@@ -85,6 +85,10 @@ public class GeomUtil {
 
 	}
 
+	public static boolean isLineSegmentsOverlap(final Segment seg0, final Segment seg1) {
+		return isLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1());
+	}
+
 	/**
 	 * Both distances between the extremities of the lines should be less than
 	 * the threshold The lines can be reversed, so the test has to be done both
