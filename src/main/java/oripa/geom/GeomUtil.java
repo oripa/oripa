@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
+import oripa.util.MathUtil;
 import oripa.value.CalculationResource;
 
 public class GeomUtil {
@@ -199,6 +200,11 @@ public class GeomUtil {
 		Vector2d v2_v1 = new Vector2d();
 		v2_v1.sub(v2, v1);
 		v2_v1.normalize();
+
+		if (v0_v1.dot(v2_v1) < EPS) {
+			double angle = MathUtil.angleOf(v0_v1) + Math.PI / 2;
+			return new Vector2d(Math.cos(angle), Math.sin(angle));
+		}
 
 		return new Vector2d(v0_v1.x + v2_v1.x, v0_v1.y + v2_v1.y);
 	}
