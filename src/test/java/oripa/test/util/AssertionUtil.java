@@ -21,7 +21,12 @@ package oripa.test.util;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.BiFunction;
+
+import javax.vecmath.Vector2d;
+
+import oripa.geom.Segment;
 
 /**
  * @author OUCHI Koji
@@ -36,5 +41,12 @@ public class AssertionUtil {
 						.anyMatch(actual -> equalityComparer.apply(expected, actual)),
 				() -> "expected: " + expected + ", no match on actuals: " + actuals.toString());
 
+	}
+
+	public static void assertSegmentEquals(final Segment expected, final Segment actual,
+			final BiFunction<Vector2d, Vector2d, Boolean> equalityComparer) {
+		var actuals = List.of(actual.getP0(), actual.getP1());
+		assertAnyMatch(expected.getP0(), actuals, equalityComparer);
+		assertAnyMatch(expected.getP1(), actuals, equalityComparer);
 	}
 }
