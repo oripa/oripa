@@ -150,4 +150,8 @@ public interface UIPanelView extends View {
 	public void setShowFoldedModelWindowsListener(Runnable listener);
 
 	public void showErrorMessage(Exception e);
+
+	public void addMouseActionPluginListener(final String name, Runnable listener, KeyProcessing keyProcessing);
+
+	public void updatePluginPanel();
 }

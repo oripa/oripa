@@ -32,6 +32,8 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -163,6 +165,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JButton gridChangeButton = new JButton(
 			resources.getString(ResourceKey.LABEL,
 					StringID.UI.GRID_SIZE_CHANGE_ID));
+
+	// plug-in
+	private final JPanel pluginPanel = new JPanel();
+	private final List<JRadioButton> pluginButtons = new ArrayList<>();
 
 	// view Panel
 	private final JPanel viewPanel = new JPanel();
@@ -306,6 +312,40 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	}
 
+	@Override
+	public void addMouseActionPluginListener(final String name, final Runnable listener,
+			final KeyProcessing keyProcessing) {
+		var button = new JRadioButton(name);
+
+		addButtonListener(button, listener, keyProcessing);
+
+		pluginButtons.add(button);
+	}
+
+	@Override
+	public void updatePluginPanel() {
+
+		var gbBuilder = new GridBagConstraintsBuilder(1) // 1 column used
+				.setAnchor(GridBagConstraints.CENTER)
+				.setWeight(1, 1)
+				.setFill(GridBagConstraints.HORIZONTAL);
+
+		pluginPanel.removeAll();
+
+		pluginPanel.setBorder(createTitledBorder("Plug-in"));
+
+		ButtonGroup buttonGroup = new ButtonGroup();
+
+		pluginPanel.setLayout(new GridBagLayout());
+
+		pluginButtons.forEach(button -> buttonGroup.add(button));
+
+		logger.debug("{} plugins", pluginButtons.size());
+		pluginButtons.forEach(button -> pluginPanel.add(button, gbBuilder.getNextField()));
+
+		pluginPanel.setVisible(true);
+	}
+
 	private void buildLineSelectionPanel() {
 		ButtonGroup lineSelectionGroup = new ButtonGroup();
 
@@ -403,7 +443,14 @@ public class UIPanel extends JPanel implements UIPanelView {
 		lineInputPanel.add(lineInputAngleSnapButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputSuggestionButton, gbBuilder.getNextField());
 
+		// dummies to align buttons left
+		lineInputPanel.add(new JPanel(), gbBuilder.getNextField());
+
 		setLineInputButtonIcons();
+
+		gbBuilder.setFill(GridBagConstraints.HORIZONTAL);
+		lineInputPanel.add(pluginPanel, gbBuilder.getLineField());
+
 	}
 
 	/**

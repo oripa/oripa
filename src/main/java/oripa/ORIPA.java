@@ -113,6 +113,11 @@ public class ORIPA {
 
 			var childFrameManager = new ChildFrameManager();
 
+			var pluginLoader = new PluginLoader();
+
+			var plugins = pluginLoader.loadMouseActionPlugins(mainViewSetting.getMainFrameSetting(),
+					mainViewSetting.getUiPanelSetting());
+
 			var presenter = new MainFramePresenter(
 					mainFrame,
 					viewUpdateSupport,
@@ -133,7 +138,8 @@ public class ORIPA {
 					new FileHistory(Constants.MRUFILE_NUM),
 					new IniFileAccess(
 							new InitDataFileReader(), new InitDataFileWriter()),
-					new DataFileAccess(new DocDAO(new DocFileAccessSupportSelector())));
+					new DataFileAccess(new DocDAO(new DocFileAccessSupportSelector())),
+					plugins);
 			presenter.setViewVisible(true);
 
 //			if (Config.FOR_STUDY) {

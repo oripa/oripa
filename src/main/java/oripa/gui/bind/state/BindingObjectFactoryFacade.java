@@ -52,6 +52,10 @@ public class BindingObjectFactoryFacade {
 		return stateFactory.create(id, null, null);
 	}
 
+	public MouseActionSetterFactory getSetterFactory() {
+		return setterFactory;
+	}
+
 	public MouseActionSetter createActionSetter(final GraphicMouseAction action) {
 		return setterFactory.create(action);
 	}

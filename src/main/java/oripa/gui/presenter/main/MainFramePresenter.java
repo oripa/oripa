@@ -42,6 +42,7 @@ import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.bind.state.PaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.*;
 import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
+import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.main.MainFrameDialogFactory;
@@ -117,7 +118,8 @@ public class MainFramePresenter {
 			final StateManager<EditMode> stateManager,
 			final FileHistory fileHistory,
 			final IniFileAccess iniFileAccess,
-			final DataFileAccess dataFileAccess) {
+			final DataFileAccess dataFileAccess,
+			final List<GraphicMouseActionPlugin> plugins) {
 		this.view = view;
 		this.dialogFactory = dialogFactory;
 		this.fileChooserFactory = fileChooserFactory;
@@ -181,12 +183,19 @@ public class MainFramePresenter {
 
 		addListeners();
 
+		addPlugins(plugins);
+
 		view.buildFileMenu();
 		updateTitleText();
 	}
 
 	public void setViewVisible(final boolean visible) {
 		view.setVisible(visible);
+	}
+
+	private void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
+		uiPanelPresenter.addPlugins(plugins);
+		view.getUIPanelView().updatePluginPanel();
 	}
 
 	private void addListeners() {
