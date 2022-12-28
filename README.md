@@ -35,6 +35,16 @@ Once downloaded, to run ORIPA in a terminal just run:
 java -jar ./oripa-1.50.jar
 ```
 
+### Plug-in system
+--------
+ORIPA newer than ver.1.62 provides plug-in system using Java's default `ServiceLoader`.
+You can add a line-input functionality by:
+
+* implement `oripa.gui.presenter.plugin.GraphicMouseActionPlugin` in a project different from the ORIPA's main project.
+* add resources/META-INF/services/oripa.gui.presenter.plugin.GraphicMouseActionPlugin that contains
+  the FQN of your implementation class(es).
+* Make a jar and add it to classpath.
+
 ### Next challenge(s)
 --------
 * Dividing lines by an input circle.
