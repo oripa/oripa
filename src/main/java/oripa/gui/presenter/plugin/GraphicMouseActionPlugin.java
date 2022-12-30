@@ -18,6 +18,11 @@
  */
 package oripa.gui.presenter.plugin;
 
+import oripa.domain.paint.ActionState;
+import oripa.domain.paint.CreasePatternUndoManager;
+import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
+import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.UIPanelSetting;
@@ -36,10 +41,39 @@ public interface GraphicMouseActionPlugin {
 
 	String getHint();
 
+	/**
+	 *
+	 * @return {@link ChangeViewSetting} that sets a hint text of this plugin's
+	 *         action to {@link MainFrameSetting}.
+	 */
 	ChangeViewSetting getChangeHint();
 
+	/**
+	 *
+	 * @return {@link ChangeViewSetting} that configures visibilities of view
+	 *         panels by setting values to {@link UIPanelSetting}.
+	 */
 	ChangeViewSetting getChangeOnSelected();
 
+	/**
+	 * This method should return {@link GraphicMouseAction} that satisfies the
+	 * conditions below:
+	 * <ul>
+	 * <li>{@code getEditMode()} should return {@link EditMode#INPUT}.</li>
+	 * <li>It should manage undo/redo registration by
+	 * {@link CreasePatternUndoManager} that is provided by {@code paintContext}
+	 * given as a parameter of each method. Typically you need do that in
+	 * {@link GraphicMouseAction#onLeftClick(CreasePatternViewContext, PaintContext, boolean)}
+	 * and
+	 * {@link GraphicMouseAction#onRightClick(CreasePatternViewContext, PaintContext, boolean)}.</li>
+	 * </ul>
+	 *
+	 * It is recommended to extend {@link AbstractGraphicMouseAction} and use
+	 * {@link ActionState}, which offer a variant of State pattern to follow the
+	 * requirements easily.
+	 *
+	 * @return {@link GraphicMouseAction}.
+	 */
 	GraphicMouseAction getGraphicMouseAction();
 
 }
