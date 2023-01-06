@@ -30,7 +30,7 @@ public class TestMouseActionPlugin extends AbstractGraphicMouseActionPlugin {
 
 	@Override
 	public String getName() {
-		return "Test";
+		return "Example";
 	}
 
 	@Override
@@ -41,6 +41,8 @@ public class TestMouseActionPlugin extends AbstractGraphicMouseActionPlugin {
 	@Override
 	public ChangeViewSetting getChangeOnSelected() {
 		return () -> {
+			var uiPanelSetting = getUIPanelSetting();
+
 			uiPanelSetting.setAlterLineTypePanelVisible(false);
 			uiPanelSetting.setAngleStepPanelVisible(false);
 			uiPanelSetting.setByValuePanelVisible(false);
