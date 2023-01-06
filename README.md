@@ -40,10 +40,10 @@ java -jar ./oripa-1.50.jar
 ORIPA newer than ver.1.62 provides plug-in system using Java's default `ServiceLoader`.
 You can add a line-input functionality by:
 
-* implement `oripa.gui.presenter.plugin.GraphicMouseActionPlugin` in a project different from the ORIPA's main project.
-* add resources/META-INF/services/oripa.gui.presenter.plugin.GraphicMouseActionPlugin that contains
+* Implement `oripa.gui.presenter.plugin.GraphicMouseActionPlugin` in a project different from the ORIPA's main project. If you use Maven, you need install ORIPA into your Maven local repository by `mvn install` and add the dependency in your plug-in project's pom.xml.
+* Add resources/META-INF/services/oripa.gui.presenter.plugin.GraphicMouseActionPlugin that contains
   the FQN of your implementation class(es).
-* Make a jar and add it to classpath.
+* Make a jar and add it to classpath. The command will be like: `java -cp oripa-1.63.jar;your-plugin.jar oripa.ORIPA`.
 
 ### Next challenge(s)
 --------
