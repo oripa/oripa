@@ -15,7 +15,7 @@ public abstract class AbstractGraphicMouseActionPlugin implements GraphicMouseAc
 		frameSetting = setting;
 	}
 
-	public MainFrameSetting getMainFrameSetting() {
+	protected MainFrameSetting getMainFrameSetting() {
 		return frameSetting;
 	}
 
@@ -24,7 +24,7 @@ public abstract class AbstractGraphicMouseActionPlugin implements GraphicMouseAc
 		uiPanelSetting = setting;
 	}
 
-	public UIPanelSetting getUIPanelSetting() {
+	protected UIPanelSetting getUIPanelSetting() {
 		return uiPanelSetting;
 	}
 
