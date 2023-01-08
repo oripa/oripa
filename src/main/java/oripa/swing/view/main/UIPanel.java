@@ -58,12 +58,14 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.view.main.UIPanelView;
 import oripa.resource.ButtonIcon;
+import oripa.resource.ButtonIconResource;
 import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
+import oripa.swing.view.util.ImageResourceLoader;
 import oripa.swing.view.util.KeyStrokes;
 import oripa.swing.view.util.TitledBorderFactory;
 
@@ -739,9 +741,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setButtonIcon(lineInputSuggestionButton, ButtonIcon.SUGGESTION);
 	}
 
-	private void setButtonIcon(final AbstractButton button, final ButtonIcon icon) {
-		button.setIcon(icon.loadIcon());
-		button.setSelectedIcon(icon.loadSelectedIcon());
+	private void setButtonIcon(final AbstractButton button, final ButtonIconResource icon) {
+		var imageLoader = new ImageResourceLoader();
+
+		button.setIcon(imageLoader.loadAsIcon(icon.getIconResourcePath()));
+		button.setSelectedIcon(imageLoader.loadAsIcon(icon.getSelectedIconResourcePath()));
 	}
 
 	@Override
