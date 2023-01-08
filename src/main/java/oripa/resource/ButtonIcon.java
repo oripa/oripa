@@ -18,20 +18,16 @@
  */
 package oripa.resource;
 
-import javax.swing.ImageIcon;
-
-import oripa.file.ImageResourceLoader;
-
 /**
- * Each enum value provides two icons, whose paths are in the style of
+ * Each enum value provides the paths of two icons that are in the style of
  * "icon/filename.gif" for default icon and "icon/filename_p.gif" for selected
  * state icon. If you would like to add a button with icon, draw the icons, put
- * them at icon directory, and name them like "hoge.gif" and "hoge_p.gif".
+ * them at icon directory, and name them like "foo.gif" and "foo_p.gif".
  *
  * @author OUCHI Koji
  *
  */
-public enum ButtonIcon {
+public enum ButtonIcon implements ButtonIconResource {
 	SELECT("select"),
 	ENLARGE("enlarge"),
 	DIRECT_V("segment"),
@@ -49,7 +45,6 @@ public enum ButtonIcon {
 	private static final String DIRECTORY = "icon/";
 
 	private final String fileName;
-	private final ImageResourceLoader imageLoader = new ImageResourceLoader();
 
 	private ButtonIcon(final String fileName) {
 		this.fileName = fileName;
@@ -63,17 +58,13 @@ public enum ButtonIcon {
 		return DIRECTORY + fileName + fileNameSuffix + ".gif";
 	}
 
-	/**
-	 * Loads an icon for default state.
-	 */
-	public ImageIcon loadIcon() {
-		return imageLoader.loadAsIcon(getPath());
+	@Override
+	public String getIconResourcePath() {
+		return getPath();
 	}
 
-	/**
-	 * Loads an icon for selected state.
-	 */
-	public ImageIcon loadSelectedIcon() {
-		return imageLoader.loadAsIcon(getPath("_p"));
+	@Override
+	public String getSelectedIconResourcePath() {
+		return getPath("_p");
 	}
 }

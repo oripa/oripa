@@ -42,7 +42,6 @@ import javax.swing.JScrollPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.file.ImageResourceLoader;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.main.MainFrameSetting;
 import oripa.gui.view.main.MainFrameView;
@@ -55,6 +54,7 @@ import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
 import oripa.swing.view.util.Dialogs;
+import oripa.swing.view.util.ImageResourceLoader;
 import oripa.swing.view.util.KeyStrokes;
 
 public class MainFrame extends JFrame implements MainFrameView, ComponentListener, WindowListener {
@@ -200,8 +200,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 		getContentPane().add(hintLabel, BorderLayout.SOUTH);
 
 		ImageResourceLoader imgLoader = new ImageResourceLoader();
-		this.setIconImage(imgLoader.loadAsIcon("icon/oripa.gif", getClass())
-				.getImage());
+		this.setIconImage(imgLoader.loadAsIcon("icon/oripa.gif").getImage());
 
 		addWindowListener(this);
 

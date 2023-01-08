@@ -1,4 +1,4 @@
-package oripa.file;
+package oripa.swing.view.util;
 
 import java.net.URL;
 
