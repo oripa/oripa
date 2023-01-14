@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.main;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
+import oripa.gui.bind.state.PluginPaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -42,6 +44,7 @@ import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
+import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.estimation.EstimationResultFrameView;
@@ -134,6 +137,17 @@ public class UIPanelPresenter {
 		view.initializeButtonSelection(AngleStep.PI_OVER_8.toString(),
 				typeForChangeContext.getTypeFrom().toString(),
 				typeForChangeContext.getTypeTo().toString());
+	}
+
+	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
+		var stateFactory = new PluginPaintBoundStateFactory(stateManager, bindingFactory.getSetterFactory());
+
+		for (var plugin : plugins) {
+			var state = stateFactory.create(plugin.getGraphicMouseAction(), plugin.getChangeHint(),
+					plugin.getChangeOnSelected());
+
+			view.addMouseActionPluginListener(plugin.getName(), state::performActions, keyProcessing);
+		}
 	}
 
 	private void addListeners() {
