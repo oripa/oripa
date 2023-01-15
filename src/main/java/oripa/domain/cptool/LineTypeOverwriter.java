@@ -29,6 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import oripa.domain.cptool.compgeom.AnalyticLine;
+import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -88,7 +89,7 @@ public class LineTypeOverwriter {
 
 			Function<Collection<OriLine>, Boolean> find = overlapsForFilter -> {
 				var filteredOverlap = overlapsForFilter.stream()
-						.filter(line -> extractor.isOverlap(splitLine, line))
+						.filter(line -> GeomUtil.isOverlap(splitLine, line))
 						.findFirst();
 
 				if (filteredOverlap.isPresent()) {

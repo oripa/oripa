@@ -20,6 +20,7 @@ package oripa.domain.fold.halfedge;
 
 import javax.vecmath.Vector2d;
 
+import oripa.geom.Segment;
 import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
@@ -129,6 +130,10 @@ public class OriEdge {
 
 	public boolean isFoldLine() {
 		return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt();
+	}
+
+	public Segment toSegment() {
+		return new Segment(getStartVertex().getPosition(), getEndVertex().getPosition());
 	}
 
 }

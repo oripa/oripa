@@ -86,7 +86,8 @@ public class LayerOrderEnumerator {
 
 		// construct the subfaces
 		double paperSize = origamiModel.getPaperSize();
-		subFaces = subFacesFactory.createSubFaces(faces, paperSize, eps(paperSize));
+		final double EPS = eps(paperSize);
+		subFaces = subFacesFactory.createSubFaces(faces, paperSize, EPS);
 		logger.debug("subFaces.size() = " + subFaces.size());
 
 		OverlapRelation overlapRelation = createOverlapRelation(faces, paperSize);
@@ -104,9 +105,12 @@ public class LayerOrderEnumerator {
 		holdCondition3s(faces, overlapRelation);
 
 		condition4s = new HashSet<>();
-		holdCondition4s(faces, edges, overlapRelation);
+		holdCondition4s(faces, edges, overlapRelation, EPS);
 
 		estimate(faces, overlapRelation);
+
+		var undefinedRelationCount = countUndefinedRelations(overlapRelation);
+		logger.debug("#undefined = {}", undefinedRelationCount);
 
 		watch.start();
 		var localLayerOrderCountMap = new HashMap<SubFace, Integer>();
@@ -147,6 +151,21 @@ public class LayerOrderEnumerator {
 		logger.debug("time = {}[ms]", time);
 
 		return overlapRelations;
+	}
+
+	private int countUndefinedRelations(final OverlapRelation overlapRelation) {
+		int size = overlapRelation.getSize();
+
+		int count = 0;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (overlapRelation.isUndefined(i, j)) {
+					count++;
+				}
+			}
+		}
+
+		return count;
 	}
 
 	private double eps(final double paperSize) {
@@ -559,7 +578,7 @@ public class LayerOrderEnumerator {
 	 *            overlap relation matrix
 	 */
 	private void holdCondition4s(final List<OriFace> faces,
-			final List<OriEdge> edges, final OverlapRelation overlapRelation) {
+			final List<OriEdge> edges, final OverlapRelation overlapRelation, final double eps) {
 
 		int edgeNum = edges.size();
 		logger.debug("edgeNum = " + edgeNum);
@@ -585,9 +604,7 @@ public class LayerOrderEnumerator {
 					continue;
 				}
 
-				if (!GeomUtil.isLineSegmentsOverlap(e0Left.getPosition(),
-						e0Left.getNext().getPosition(),
-						e1Left.getPosition(), e1Left.getNext().getPosition())) {
+				if (!GeomUtil.isOverlap(e0.toSegment(), e1.toSegment(), eps)) {
 					continue;
 				}
 

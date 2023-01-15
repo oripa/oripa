@@ -46,7 +46,7 @@ public class SnapPointFactory {
 
 		// snap on end points of overlapping creases.
 		creasePattern.stream()
-				.filter(crease -> GeomUtil.isLineSegmentsOverlap(line, crease))
+				.filter(crease -> GeomUtil.isRelaxedOverlap(line, crease))
 				.forEach(crease -> {
 					snapPoints.add(crease.getP0());
 					snapPoints.add(crease.getP1());
