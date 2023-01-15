@@ -150,7 +150,7 @@ public class LayerOrderEnumerator {
 	}
 
 	private double eps(final double paperSize) {
-		return paperSize * 0.00001;
+		return GeomUtil.eps(paperSize);
 	}
 
 	@SuppressWarnings("unchecked")

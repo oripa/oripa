@@ -161,9 +161,9 @@ public class OriGeomUtil {
 	 * @param line
 	 * @return {@code true} if {@code face} includes {@code line} entirely.
 	 */
-	public static boolean isOriLineIncludedInFace(final OriFace face, final Segment line) {
-		return face.isOnFaceInclusively(line.getP0())
-				&& face.isOnFaceInclusively(line.getP1());
+	public static boolean isOriLineIncludedInFace(final OriFace face, final Segment line, final double eps) {
+		return face.isOnFaceInclusively(line.getP0(), eps)
+				&& face.isOnFaceInclusively(line.getP1(), eps);
 	}
 
 	/**

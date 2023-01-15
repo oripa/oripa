@@ -21,6 +21,7 @@ package oripa.gui.presenter.main;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.geom.GeomUtil;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
@@ -54,7 +55,8 @@ public class CheckerWindowOpener {
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		origamiModel = modelFactory.createOrigamiModel(
-				creasePattern);
+				creasePattern,
+				GeomUtil.eps(creasePattern.getPaperSize()));
 
 		FoldabilityCheckFrameView checker = frameFactory.createFoldabilityFrame(ownerView);
 

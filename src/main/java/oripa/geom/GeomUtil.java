@@ -33,6 +33,10 @@ import oripa.value.CalculationResource;
 public class GeomUtil {
 	public final static double EPS = CalculationResource.POINT_EPS;
 
+	public final static double eps(final double paperSize) {
+		return EPS * paperSize;
+	}
+
 	public static double distance(final Vector2d p0, final Vector2d p1) {
 		return distance(p0.x, p0.y, p1.x, p1.y);
 	}

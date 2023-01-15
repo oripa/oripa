@@ -28,6 +28,7 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.geom.GeomUtil;
 
 /**
  * Creates {@link OrigamiModel} according to the interaction with the user.
@@ -56,11 +57,14 @@ public class OrigamiModelInteractiveBuilder {
 			final Supplier<Boolean> needCleaningUpDuplication,
 			final Runnable showCleaningUpMessage,
 			final Runnable showFailureMessage) {
+		var eps = GeomUtil.eps(creasePattern.getPaperSize());
+
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		OrigamiModel wholeModel = modelFactory.createOrigamiModel(
-				creasePattern);
+				creasePattern, eps);
 
-		List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern);
+		List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(
+				creasePattern, eps);
 
 		var checker = new FoldabilityChecker();
 
@@ -81,12 +85,13 @@ public class OrigamiModelInteractiveBuilder {
 		if (creasePattern.cleanDuplicatedLines()) {
 			showCleaningUpMessage.run();
 		}
+
 		// re-create the model data for simplified crease pattern
 		wholeModel = modelFactory
-				.createOrigamiModel(creasePattern);
+				.createOrigamiModel(creasePattern, eps);
 
 		if (checker.testLocalFlatFoldability(wholeModel)) {
-			return modelFactory.createOrigamiModels(creasePattern);
+			return modelFactory.createOrigamiModels(creasePattern, eps);
 		}
 
 		showFailureMessage.run();
