@@ -85,12 +85,12 @@ public class LayerOrderEnumerator {
 		var edges = origamiModel.getEdges();
 
 		// construct the subfaces
-		double paperSize = origamiModel.getPaperSize();
-		final double EPS = eps(paperSize);
-		subFaces = subFacesFactory.createSubFaces(faces, paperSize, EPS);
+		final double paperSize = origamiModel.getPaperSize();
+		final double eps = GeomUtil.eps(paperSize);
+		subFaces = subFacesFactory.createSubFaces(faces, paperSize, eps);
 		logger.debug("subFaces.size() = " + subFaces.size());
 
-		OverlapRelation overlapRelation = createOverlapRelation(faces, paperSize);
+		OverlapRelation overlapRelation = createOverlapRelation(faces, eps);
 
 		// Set overlap relations based on valley/mountain folds information
 		determineOverlapRelationByLineType(faces, overlapRelation);
@@ -98,14 +98,14 @@ public class LayerOrderEnumerator {
 		var watch = new StopWatch(true);
 
 		overlappingFaceIndexIntersections = createOverlappingFaceIndexIntersections(faces, overlapRelation);
-		faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, paperSize);
+		faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, eps);
 
 		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
 
 		holdCondition3s(faces, overlapRelation);
 
 		condition4s = new HashSet<>();
-		holdCondition4s(faces, edges, overlapRelation, EPS);
+		holdCondition4s(faces, edges, overlapRelation, eps);
 
 		estimate(faces, overlapRelation);
 
@@ -168,10 +168,6 @@ public class LayerOrderEnumerator {
 		return count;
 	}
 
-	private double eps(final double paperSize) {
-		return GeomUtil.eps(paperSize);
-	}
-
 	@SuppressWarnings("unchecked")
 	private List<Integer>[][] createOverlappingFaceIndexIntersections(final List<OriFace> faces,
 			final OverlapRelation overlapRelation) {
@@ -214,9 +210,8 @@ public class LayerOrderEnumerator {
 	}
 
 	private Map<OriHalfedge, Set<Integer>> createFaceIndicesOnHalfEdge(
-			final List<OriFace> faces, final double paperSize) {
+			final List<OriFace> faces, final double eps) {
 
-		final double EPS = eps(paperSize);
 		Map<OriHalfedge, Set<Integer>> indices = new HashMap<>();
 
 		for (var face : faces) {
@@ -232,7 +227,7 @@ public class LayerOrderEnumerator {
 					if (other == face) {
 						continue;
 					}
-					if (OriGeomUtil.isLineCrossFace(other, halfedge, EPS)) {
+					if (OriGeomUtil.isLineCrossFace(other, halfedge, eps)) {
 						indexSet.add(other.getFaceID());
 					}
 				}
@@ -352,7 +347,6 @@ public class LayerOrderEnumerator {
 
 		for (var faceID : changedFaceIDs) {
 			var face = faces.get(faceID);
-//		for (var face : faces) {
 			for (var he : face.halfedgeIterable()) {
 				var pair = he.getPair();
 				if (pair == null) {
@@ -743,14 +737,14 @@ public class LayerOrderEnumerator {
 	 * @return whether overlapRelation is changed or not.
 	 */
 	private boolean estimateBy3FaceTransitiveRelation(final OverlapRelation overlapRelation) {
-		boolean bChanged = false;
+		boolean changed = false;
 
 		for (SubFace sub : subFaces) {
 			while (updateOverlapRelationBy3FaceTransitiveRelation(sub, overlapRelation)) {
-				bChanged = true;
+				changed = true;
 			}
 		}
-		return bChanged;
+		return changed;
 	}
 
 	/**
@@ -898,7 +892,7 @@ public class LayerOrderEnumerator {
 	 *            paper size before fold
 	 * @return initialized overlap relation matrix
 	 */
-	private OverlapRelation createOverlapRelation(final List<OriFace> faces, final double paperSize) {
+	private OverlapRelation createOverlapRelation(final List<OriFace> faces, final double eps) {
 
 		int size = faces.size();
 		OverlapRelation overlapRelation = new OverlapRelation(size);
@@ -908,7 +902,7 @@ public class LayerOrderEnumerator {
 			overlapRelation.setNoOverlap(i, i);
 			countOfZeros++;
 			for (int j = i + 1; j < size; j++) {
-				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), eps(paperSize))) {
+				if (OriGeomUtil.isFaceOverlap(faces.get(i), faces.get(j), eps)) {
 					overlapRelation.setUndefined(i, j);
 				} else {
 					overlapRelation.setNoOverlap(i, j);
