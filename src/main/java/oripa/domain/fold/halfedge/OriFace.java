@@ -250,9 +250,9 @@ public class OriFace {
 	 *            point to be tested.
 	 * @return true if v is inside or on the edges of this face.
 	 */
-	public boolean isOnFaceInclusively(final Vector2d v) {
+	public boolean isOnFaceInclusively(final Vector2d v, final double eps) {
 		// If it's on the face's edge, return true
-		if (isOnEdge(v, GeomUtil.EPS, OriHalfedge::getPosition)) {
+		if (isOnEdge(v, eps, OriHalfedge::getPosition)) {
 			return true;
 		}
 

@@ -42,28 +42,6 @@ public class OverlappingLineExtractor {
 	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
 	private static final double EPS = 1e-5;
 
-	public boolean isOverlap(final OriLine line0, final OriLine line1) {
-		var overlapCount = GeomUtil.distinguishLineSegmentsOverlap(line0, line1);
-		if (overlapCount >= 3) {
-			return true;
-		}
-		if (overlapCount == 2) {
-			if (GeomUtil.distance(line0.p0, line1.p0) < GeomUtil.EPS) {
-				return false;
-			} else if (GeomUtil.distance(line0.p0, line1.p1) < GeomUtil.EPS) {
-				return false;
-			} else if (GeomUtil.distance(line0.p1, line1.p0) < GeomUtil.EPS) {
-				return false;
-			} else if (GeomUtil.distance(line0.p1, line1.p1) < GeomUtil.EPS) {
-				return false;
-			} else {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public Collection<List<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines) {
 		// make a data structure for fast computation.
 		var hashFactory = new AnalyticLineHashFactory(EPS);
@@ -84,7 +62,7 @@ public class OverlappingLineExtractor {
 					// search another line of overlapping
 					IntStream.range(i + 1, byIntercept.size()).parallel().forEach(j -> {
 						var line1 = byIntercept.get(j).getLine();
-						if (isOverlap(line0, line1)) {
+						if (GeomUtil.isOverlap(line0, line1)) {
 							overlaps.add(line0);
 							overlaps.add(line1);
 						}
@@ -126,7 +104,7 @@ public class OverlappingLineExtractor {
 					// search another line of overlapping
 					IntStream.range(i + 1, byIntercept.size()).parallel().forEach(j -> {
 						var line1 = byIntercept.get(j).getLine();
-						if (isOverlap(line0, line1)) {
+						if (GeomUtil.isOverlap(line0, line1)) {
 							overlappingLines.add(line0);
 							overlappingLines.add(line1);
 						}
@@ -148,7 +126,7 @@ public class OverlappingLineExtractor {
 	 */
 	public Collection<OriLine> extract(final Collection<OriLine> lines, final OriLine target) {
 		return lines.parallelStream()
-				.filter(l -> isOverlap(l, target))
+				.filter(l -> GeomUtil.isOverlap(l, target))
 				.collect(Collectors.toList());
 	}
 }

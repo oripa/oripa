@@ -61,7 +61,7 @@ public class RaySnapPointFactory {
 	}
 
 	private boolean overlapsEntirely(final Segment crease, final Segment ray) {
-		if (!GeomUtil.isLineSegmentsOverlap(ray, crease)) {
+		if (!GeomUtil.isRelaxedOverlap(ray, crease)) {
 			return false;
 		}
 

@@ -34,7 +34,9 @@ public class TargetOriVertexFactory {
 
 	public OriVertex create(final CreasePattern creasePattern, final Vector2d target) {
 		var origamiModelFactory = new OrigamiModelFactory();
-		var origamiModel = origamiModelFactory.createOrigamiModel(creasePattern);
+		var origamiModel = origamiModelFactory.createOrigamiModel(
+				creasePattern,
+				GeomUtil.eps(creasePattern.getPaperSize()));
 
 		var nearest = new NearestPoint();
 		var vertex = origamiModel.getVertices().get(0);

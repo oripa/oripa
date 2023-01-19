@@ -68,9 +68,9 @@ class OriFaceTest {
 	 */
 	@Test
 	void testIsOnFaceInclusively() {
-		assertTrue(face.isOnFaceInclusively(new Vector2d(5, 5)));
-		assertTrue(face.isOnFaceInclusively(new Vector2d(5, 10 + 1e-8)));
-		assertFalse(face.isOnFaceInclusively(new Vector2d(5, 10.1)));
+		assertTrue(face.isOnFaceInclusively(new Vector2d(5, 5), 1e-6));
+		assertTrue(face.isOnFaceInclusively(new Vector2d(5, 10 + 1e-8), 1e-6));
+		assertFalse(face.isOnFaceInclusively(new Vector2d(5, 10.1), 1e-6));
 	}
 
 	/**
