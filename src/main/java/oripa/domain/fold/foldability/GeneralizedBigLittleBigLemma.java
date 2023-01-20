@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.geom.GeomUtil;
 import oripa.util.collection.CollectionUtil;
 import oripa.util.rule.AbstractRule;
 
@@ -47,7 +48,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 	private static final Logger logger = LoggerFactory
 			.getLogger(GeneralizedBigLittleBigLemma.class);
 
-	private static final double EPS = 1e-5;
+	private static final double EPS = GeomUtil.angleRadianEps();
 
 	private class Range {
 		public int begin;
