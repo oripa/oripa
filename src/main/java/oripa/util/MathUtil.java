@@ -34,4 +34,12 @@ public class MathUtil {
 		return normalizeAngle(Math.atan2(v.getY(), v.getX()));
 	}
 
+	public static double angleRadianEps() {
+		return 1e-5;
+	}
+
+	public static double normalizedValueEps() {
+		return 1e-6;
+	}
+
 }

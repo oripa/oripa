@@ -20,7 +20,7 @@ package oripa.domain.fold.foldability;
 
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OriGeomUtil;
-import oripa.geom.GeomUtil;
+import oripa.util.MathUtil;
 import oripa.util.rule.AbstractRule;
 
 /**
@@ -32,7 +32,7 @@ import oripa.util.rule.AbstractRule;
  *
  */
 public class BigLittleBigLemma extends AbstractRule<OriVertex> {
-	private static final double EPS = GeomUtil.angleRadianEps();
+	private static final double EPS = MathUtil.angleRadianEps();
 
 	/*
 	 * (non Javadoc)

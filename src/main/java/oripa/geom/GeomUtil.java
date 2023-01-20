@@ -41,14 +41,6 @@ public class GeomUtil {
 		return CalculationResource.POINT_EPS;
 	}
 
-	public static double angleRadianEps() {
-		return 1e-5;
-	}
-
-	private static double normalizedValueEps() {
-		return 1e-6;
-	}
-
 	public static boolean areEqual(final Vector2d p0, final Vector2d p1, final double eps) {
 		return distance(p0, p1) < eps;
 	}
@@ -59,7 +51,7 @@ public class GeomUtil {
 
 	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
 		double angle = dir0.angle(dir1);
-		return angle < angleRadianEps() || angle > Math.PI - angleRadianEps();
+		return angle < MathUtil.angleRadianEps() || angle > Math.PI - MathUtil.angleRadianEps();
 	}
 
 	/**
@@ -276,7 +268,7 @@ public class GeomUtil {
 		// a dot b = |a||b| cos(theta)
 		double angle = Math.acos(v0_v1.dot(v2_v1));
 
-		if (Math.abs(angle - Math.PI) < angleRadianEps()) {
+		if (Math.abs(angle - Math.PI) < MathUtil.angleRadianEps()) {
 			double bisectorAngle = MathUtil.angleOf(v0_v1) + Math.PI / 2;
 			return new Vector2d(Math.cos(bisectorAngle), Math.sin(bisectorAngle));
 		}
@@ -346,7 +338,7 @@ public class GeomUtil {
 		Vector2d diff = new Vector2d(l1.p.x - p0.x, l1.p.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
-		if (det * det <= normalizedValueEps() * d0.lengthSquared() * d1.lengthSquared()) {
+		if (det * det <= MathUtil.normalizedValueEps() * d0.lengthSquared() * d1.lengthSquared()) {
 			return null;
 		}
 
@@ -468,7 +460,7 @@ public class GeomUtil {
 		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
-		final double eps = normalizedValueEps();
+		final double eps = MathUtil.normalizedValueEps();
 
 		if (det * det <= eps * d0.lengthSquared() * d1.lengthSquared()) {
 			return null;
@@ -514,7 +506,7 @@ public class GeomUtil {
 	}
 
 	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q) {
-		return CCWcheck(p0, p1, q, normalizedValueEps());
+		return CCWcheck(p0, p1, q, MathUtil.normalizedValueEps());
 	}
 
 	/**

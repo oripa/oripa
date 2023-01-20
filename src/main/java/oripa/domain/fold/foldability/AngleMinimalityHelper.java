@@ -19,14 +19,14 @@
 package oripa.domain.fold.foldability;
 
 import oripa.domain.fold.foldability.ring.RingArrayList;
-import oripa.geom.GeomUtil;
+import oripa.util.MathUtil;
 
 /**
  * @author OUCHI Koji
  *
  */
 class AngleMinimalityHelper {
-	public static final double EPS = GeomUtil.angleRadianEps();
+	public static final double EPS = MathUtil.angleRadianEps();
 
 	public boolean isMinimal(final RingArrayList<LineGap> ring, final int index) {
 		var previous = ring.getPrevious(index).getValue();

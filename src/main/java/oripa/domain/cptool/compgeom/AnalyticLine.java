@@ -18,7 +18,7 @@
  */
 package oripa.domain.cptool.compgeom;
 
-import oripa.geom.GeomUtil;
+import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
 /**
@@ -43,7 +43,7 @@ public class AnalyticLine {
 			angle += Math.PI;
 		}
 		// a line with angle PI is the same as one with angle 0.
-		if (Math.PI - angle < GeomUtil.angleRadianEps()) {
+		if (Math.PI - angle < MathUtil.angleRadianEps()) {
 			angle = 0;
 		}
 		this.angle = angle;
@@ -59,7 +59,7 @@ public class AnalyticLine {
 	}
 
 	public boolean isVertical() {
-		return Math.abs(Math.PI / 2 - angle) < GeomUtil.angleRadianEps();
+		return Math.abs(Math.PI / 2 - angle) < MathUtil.angleRadianEps();
 	}
 
 	/**
