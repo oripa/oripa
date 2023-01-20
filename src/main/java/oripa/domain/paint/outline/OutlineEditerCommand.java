@@ -58,7 +58,7 @@ public class OutlineEditerCommand extends ValidatablePaintCommand {
 				.collect(Collectors.toList());
 
 		if (pickedVertices.stream()
-				.anyMatch(tv -> GeomUtil.distance(v, tv) < 1)) {
+				.anyMatch(tv -> GeomUtil.distance(v, tv) < context.getPointEps())) {
 			if (pickedVertices.size() > 2) {
 				// finish editing
 				context.creasePatternUndo().pushUndoInfo();

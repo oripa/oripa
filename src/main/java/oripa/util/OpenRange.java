@@ -22,12 +22,12 @@ package oripa.util;
  * @author OUCHI Koji
  *
  */
-public class ClosedRange implements Range {
+public class OpenRange implements Range {
 	double min;
 	double max;
 	double eps;
 
-	public ClosedRange(final double min, final double max, final double eps) {
+	public OpenRange(final double min, final double max, final double eps) {
 		if (min > max) {
 			throw new IllegalArgumentException("min should be smaller than max.");
 		}
@@ -43,6 +43,7 @@ public class ClosedRange implements Range {
 
 	@Override
 	public boolean includes(final double value) {
-		return value > min - eps && value < max + eps;
+		return value > min + eps && value < max - eps;
 	}
+
 }
