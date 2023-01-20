@@ -142,13 +142,13 @@ public class GeomUtil {
 			return true;
 		}
 		if (overlapCount == 2) {
-			if (distance(seg0.getP0(), seg1.getP0()) < pointEps) {
+			if (areEqual(seg0.getP0(), seg1.getP0(), pointEps)) {
 				return false;
-			} else if (distance(seg0.getP0(), seg1.getP1()) < pointEps) {
+			} else if (areEqual(seg0.getP0(), seg1.getP1(), pointEps)) {
 				return false;
-			} else if (distance(seg0.getP1(), seg1.getP0()) < pointEps) {
+			} else if (areEqual(seg0.getP1(), seg1.getP0(), pointEps)) {
 				return false;
-			} else if (distance(seg0.getP1(), seg1.getP1()) < pointEps) {
+			} else if (areEqual(seg0.getP1(), seg1.getP1(), pointEps)) {
 				return false;
 			} else {
 				return true;
