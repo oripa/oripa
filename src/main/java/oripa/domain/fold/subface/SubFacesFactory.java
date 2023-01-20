@@ -85,7 +85,7 @@ public class SubFacesFactory {
 		// after folding where the edges are split at cross points in the crease
 		// pattern. (layering is not considered)
 		// We call such face a subface hereafter.
-		var splitFaceOrigamiModel = modelFactory.buildOrigamiForSubfaces(creasePattern, paperSize);
+		var splitFaceOrigamiModel = modelFactory.buildOrigamiForSubfaces(creasePattern, paperSize, eps);
 
 		var subFaces = facesToSubFacesConverter.convertToSubFaces(splitFaceOrigamiModel.getFaces());
 

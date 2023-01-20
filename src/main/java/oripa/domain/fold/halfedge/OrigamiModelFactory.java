@@ -76,13 +76,13 @@ public class OrigamiModelFactory {
 	 */
 	// TODO: change as: throw error if creation failed.
 	public OrigamiModel buildOrigamiForSubfaces(
-			final Collection<OriLine> creasePattern, final double paperSize) {
+			final Collection<OriLine> creasePattern, final double paperSize, final double pointEps) {
 		OrigamiModel origamiModel = new OrigamiModel(paperSize);
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
 		List<OriVertex> vertices = origamiModel.getVertices();
 
-		buildVertices(creasePattern, vertices);
+		buildVertices(creasePattern, vertices, pointEps);
 
 		if (!buildFaces(vertices, faces, GeomUtil.pointEps(paperSize))) {
 			return origamiModel;
@@ -96,9 +96,9 @@ public class OrigamiModelFactory {
 	}
 
 	private void buildVertices(final Collection<OriLine> creasePatternWithoutAux,
-			final Collection<OriVertex> vertices) {
+			final Collection<OriVertex> vertices, final double pointEps) {
 		vertices.clear();
-		vertices.addAll(verticesFactory.createOriVertices(creasePatternWithoutAux));
+		vertices.addAll(verticesFactory.createOriVertices(creasePatternWithoutAux, pointEps));
 	}
 
 	private boolean buildFaces(final Collection<OriVertex> vertices,
@@ -137,7 +137,7 @@ public class OrigamiModelFactory {
 				"removeMeaninglessVertices() end: " + watch.getMilliSec() + "[ms]");
 
 		var vertices = new ArrayList<OriVertex>();
-		buildVertices(simplifiedCreasePattern, vertices);
+		buildVertices(simplifiedCreasePattern, vertices, pointEps);
 		OrigamiModel origamiModel = create(vertices, precreases, pointEps);
 
 		logger.debug(
@@ -165,10 +165,10 @@ public class OrigamiModelFactory {
 				.collect(Collectors.toList());
 
 		var wholeVertices = new ArrayList<OriVertex>();
-		buildVertices(simplifiedCreasePattern, wholeVertices);
+		buildVertices(simplifiedCreasePattern, wholeVertices, pointEps);
 
 		var boundaryVertices = new ArrayList<OriVertex>();
-		buildVertices(boundaryCreasePattern, boundaryVertices);
+		buildVertices(boundaryCreasePattern, boundaryVertices, pointEps);
 
 		var boundaryFaces = facesFactory.createBoundaryFaces(boundaryVertices);
 

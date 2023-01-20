@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.geom.GeomUtil;
-import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -39,15 +38,15 @@ import oripa.value.OriPoint;
 public class OriVerticesFactory {
 	private static final Logger logger = LoggerFactory.getLogger(OriVerticesFactory.class);
 
-	public List<OriVertex> createOriVertices(final Collection<OriLine> creasePatternWithoutAux) {
+	public List<OriVertex> createOriVertices(final Collection<OriLine> creasePatternWithoutAux, final double pointEps) {
 		var vertices = new ArrayList<OriVertex>();
 		var verticesMap = new TreeMap<OriPoint, OriVertex>();
 
 		int edgeCount = 0;
 
 		for (OriLine l : creasePatternWithoutAux) {
-			OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.p0);
-			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.p1);
+			OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.p0, pointEps);
+			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.p1, pointEps);
 			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
 			edgeCount++;
 			sv.addEdge(eg);
@@ -62,14 +61,13 @@ public class OriVerticesFactory {
 	}
 
 	private OriVertex addAndGetVertexFromVVec(
-			final TreeMap<OriPoint, OriVertex> verticesMap, final OriPoint p) {
-		final double EPS = CalculationResource.POINT_EPS;
+			final TreeMap<OriPoint, OriVertex> verticesMap, final OriPoint p, final double pointEps) {
 		var boundMap = verticesMap
-				.headMap(new OriPoint(p.getX() + EPS, p.getY() + EPS), true)
-				.tailMap(new OriPoint(p.getX() - EPS, p.getY() - EPS));
+				.headMap(new OriPoint(p.getX() + pointEps, p.getY() + pointEps), true)
+				.tailMap(new OriPoint(p.getX() - pointEps, p.getY() - pointEps));
 
 		var neighbors = boundMap.keySet().stream()
-				.filter(point -> GeomUtil.distance(point, p) < EPS)
+				.filter(point -> GeomUtil.areEqual(point, p, pointEps))
 				.collect(Collectors.toList());
 
 		if (neighbors.isEmpty()) {

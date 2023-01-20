@@ -66,6 +66,7 @@ class SubFacesFactoryTest {
 	@Test
 	void testCreateSubFaces() {
 		final double PAPER_SIZE = 400;
+		final double EPS = GeomUtil.pointEps(PAPER_SIZE);
 
 		var face1 = mock(OriFace.class);
 		var face2 = mock(OriFace.class);
@@ -73,7 +74,7 @@ class SubFacesFactoryTest {
 		var inputFaces = List.of(face1, face2, face3);
 
 		when(facesToCPConverter.convertToCreasePattern(inputFaces, GeomUtil.pointEps(PAPER_SIZE))).thenReturn(cp);
-		when(modelFactory.buildOrigamiForSubfaces(cp, PAPER_SIZE)).thenReturn(model);
+		when(modelFactory.buildOrigamiForSubfaces(cp, PAPER_SIZE, EPS)).thenReturn(model);
 
 		var splitFaces = new ArrayList<OriFace>();
 		when(model.getFaces()).thenReturn(splitFaces);
@@ -94,7 +95,6 @@ class SubFacesFactoryTest {
 		var subFacesWithDuplication = List.of(sub1, sub2, sub3);
 		when(facesToSubFacesConverter.convertToSubFaces(splitFaces)).thenReturn(subFacesWithDuplication);
 
-		final double EPS = GeomUtil.pointEps(PAPER_SIZE);
 		when(parentCollector.collect(inputFaces, sub1, EPS))
 				.thenReturn(List.of(face1, face2));
 		when(parentCollector.collect(inputFaces, sub2, EPS))
@@ -105,7 +105,7 @@ class SubFacesFactoryTest {
 		var subFaces = subFacesFactory.createSubFaces(inputFaces, PAPER_SIZE, EPS);
 
 		verify(facesToCPConverter).convertToCreasePattern(inputFaces, EPS);
-		verify(modelFactory).buildOrigamiForSubfaces(cp, PAPER_SIZE);
+		verify(modelFactory).buildOrigamiForSubfaces(cp, PAPER_SIZE, EPS);
 		verify(facesToSubFacesConverter).convertToSubFaces(splitFaces);
 		verify(parentCollector).collect(inputFaces, sub1, EPS);
 		verify(parentCollector).collect(inputFaces, sub2, EPS);
