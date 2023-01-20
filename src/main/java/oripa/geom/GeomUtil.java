@@ -42,7 +42,7 @@ public class GeomUtil {
 		return 1e-5;
 	}
 
-	private static double normalizedVectorEps() {
+	private static double normalizedValueEps() {
 		return 1e-6;
 	}
 
@@ -465,7 +465,9 @@ public class GeomUtil {
 		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
-		if (det * det <= EPS * d0.lengthSquared() * d1.lengthSquared()) {
+		final double eps = normalizedValueEps();
+
+		if (det * det <= eps * d0.lengthSquared() * d1.lengthSquared()) {
 			return null;
 		}
 
@@ -474,9 +476,9 @@ public class GeomUtil {
 		double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
 		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
 
-		if (t < 0.0 - EPS || t > 1.0 + EPS) {
+		if (t < 0.0 - eps || t > 1.0 + eps) {
 			return null;
-		} else if (s < 0.0 - EPS || s > 1.0 + EPS) {
+		} else if (s < 0.0 - eps || s > 1.0 + eps) {
 			return null;
 		}
 
@@ -509,7 +511,7 @@ public class GeomUtil {
 	}
 
 	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q) {
-		return CCWcheck(p0, p1, q, normalizedVectorEps());
+		return CCWcheck(p0, p1, q, normalizedValueEps());
 	}
 
 	/**
