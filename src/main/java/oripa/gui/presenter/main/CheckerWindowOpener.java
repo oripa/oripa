@@ -64,7 +64,8 @@ public class CheckerWindowOpener {
 				checker,
 				origamiModel,
 				creasePattern,
-				isZeroLineWidth);
+				isZeroLineWidth,
+				pointEps);
 
 		foldabilityPresenter.setViewVisible(true);
 	}

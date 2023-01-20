@@ -36,7 +36,8 @@ public interface FoldabilityCheckFrameView extends FrameView {
 	void setModel(
 			OrigamiModel origamiModel,
 			Collection<OriLine> creasePattern,
-			boolean zeroLineWidth);
+			boolean zeroLineWidth,
+			double pointEps);
 
 	void setOnCloseListener(Consumer<FrameView> listener);
 

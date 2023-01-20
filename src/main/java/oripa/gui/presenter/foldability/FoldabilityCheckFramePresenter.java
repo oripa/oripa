@@ -36,7 +36,8 @@ public class FoldabilityCheckFramePresenter {
 			final FoldabilityCheckFrameView view,
 			final OrigamiModel origamiModel,
 			final Collection<OriLine> creasePattern,
-			final boolean zeroLineWidth) {
+			final boolean zeroLineWidth,
+			final double pointEps) {
 
 		this.view = view;
 
@@ -44,7 +45,8 @@ public class FoldabilityCheckFramePresenter {
 				view.getFoldabilityScreenView(),
 				origamiModel,
 				creasePattern,
-				zeroLineWidth);
+				zeroLineWidth,
+				pointEps);
 	}
 
 	public void setViewVisible(final boolean visible) {
