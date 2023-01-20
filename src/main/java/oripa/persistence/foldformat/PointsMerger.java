@@ -32,17 +32,15 @@ import oripa.value.OriPoint;
  */
 public class PointsMerger {
 
-	private final double EPS = 1e-4;
-
 	/**
 	 *
 	 * @param lines
 	 * @return new lines with merged vertices. very short lines are removed from
 	 *         the result.
 	 */
-	public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines) {
+	public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines, final double pointEps) {
 		var cleaned = lines.stream()
-				.filter(line -> GeomUtil.distance(line.p0, line.p1) > EPS)
+				.filter(line -> GeomUtil.distance(line.p0, line.p1) > pointEps)
 				.collect(Collectors.toList());
 
 		final var merged = new ArrayList<OriLine>();
@@ -56,19 +54,19 @@ public class PointsMerger {
 				var p10 = merged.get(j).p0;
 				var p11 = merged.get(j).p1;
 
-				substituteToP1IfClose(p00, p10);
-				substituteToP1IfClose(p00, p11);
+				substituteToP1IfClose(p00, p10, pointEps);
+				substituteToP1IfClose(p00, p11, pointEps);
 
-				substituteToP1IfClose(p01, p10);
-				substituteToP1IfClose(p01, p11);
+				substituteToP1IfClose(p01, p10, pointEps);
+				substituteToP1IfClose(p01, p11, pointEps);
 			}
 		}
 
 		return merged;
 	}
 
-	private void substituteToP1IfClose(final OriPoint p0, final OriPoint p1) {
-		if (GeomUtil.distance(p0, p1) <= EPS) {
+	private void substituteToP1IfClose(final OriPoint p0, final OriPoint p1, final double pointEps) {
+		if (GeomUtil.distance(p0, p1) <= pointEps) {
 			p1.x = p0.x;
 			p1.y = p0.y;
 		}
