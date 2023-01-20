@@ -163,10 +163,6 @@ public class GeomUtil {
 		return false;
 	}
 
-	public static boolean isOverlap(final Segment line0, final Segment line1) {
-		return isOverlap(line0, line1, EPS);
-	}
-
 	/**
 	 * Both distances between the extremities of the lines should be less than
 	 * the threshold The lines can be reversed, so the test has to be done both

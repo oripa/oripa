@@ -91,7 +91,7 @@ class OverlappingLineExtractorTest {
 		var lines = List.of(overlap1, overlap2,
 				new OriLine(10, 10, 20, 0, OriLine.Type.MOUNTAIN));
 
-		var overlaps = extractor.extract(lines, overlap1);
+		var overlaps = extractor.extract(lines, overlap1, EPS);
 
 		assertEquals(2, overlaps.size());
 

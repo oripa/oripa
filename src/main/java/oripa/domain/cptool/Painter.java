@@ -376,7 +376,7 @@ public class Painter {
 		addLines(copiedLines);
 	}
 
-	private double pointEps() {
+	public double pointEps() {
 		return GeomUtil.pointEps(creasePattern.getPaperSize());
 	}
 }

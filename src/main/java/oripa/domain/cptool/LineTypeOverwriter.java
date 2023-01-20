@@ -91,7 +91,7 @@ public class LineTypeOverwriter {
 
 			Function<Collection<OriLine>, Boolean> find = overlapsForFilter -> {
 				var filteredOverlap = overlapsForFilter.stream()
-						.filter(line -> GeomUtil.isOverlap(splitLine, line))
+						.filter(line -> GeomUtil.isOverlap(splitLine, line, pointEps))
 						.findFirst();
 
 				if (filteredOverlap.isPresent()) {
