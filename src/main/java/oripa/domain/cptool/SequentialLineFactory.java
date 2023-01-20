@@ -24,7 +24,6 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
-import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 /**
@@ -43,7 +42,7 @@ public class SequentialLineFactory {
 	 * @return lines created by connecting points in {@code points} one by one.
 	 */
 	public List<OriLine> createSequentialLines(final List<? extends Vector2d> points,
-			final OriLine.Type lineType) {
+			final OriLine.Type lineType, final double pointEps) {
 		var newLines = new ArrayList<OriLine>();
 
 		Vector2d prePoint = points.get(0);
@@ -52,7 +51,7 @@ public class SequentialLineFactory {
 		for (int i = 1; i < points.size(); i++) {
 			Vector2d p = points.get(i);
 			// remove very short line
-			if (GeomUtil.distance(prePoint, p) < CalculationResource.POINT_EPS) {
+			if (GeomUtil.distance(prePoint, p) < pointEps) {
 				continue;
 			}
 

@@ -163,7 +163,7 @@ public class Painter {
 	public boolean addVertexOnLine(
 			final OriLine line, final Vector2d v) {
 		Collection<OriLine> dividedLines = lineDivider.divideLine(line, v,
-				creasePattern.getPaperSize());
+				pointEps());
 
 		if (dividedLines == null) {
 			return false;

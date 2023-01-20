@@ -194,7 +194,7 @@ public class LineAdder {
 
 		logger.trace("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
-		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists);
+		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists, pointEps);
 		divider.divideIfOverlap(crossingCurrentLines, splitNewLines, pointEps);
 
 		currentLines.addAll(splitNewLines);
@@ -216,10 +216,10 @@ public class LineAdder {
 	 * @return collection of all new lists
 	 */
 	private List<OriLine> getSplitNewLines(final List<OriLine> nonExistingNewLines,
-			final ArrayList<List<Vector2d>> pointLists) {
+			final ArrayList<List<Vector2d>> pointLists, final double pointEps) {
 		return IntStream.range(0, nonExistingNewLines.size()).parallel()
 				.mapToObj(j -> sequentialLineFactory.createSequentialLines(pointLists.get(j),
-						nonExistingNewLines.get(j).getType()))
+						nonExistingNewLines.get(j).getType(), pointEps))
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList());
 	}

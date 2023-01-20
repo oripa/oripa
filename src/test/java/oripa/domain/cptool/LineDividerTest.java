@@ -31,6 +31,8 @@ import oripa.value.OriPoint;
  */
 class LineDividerTest {
 
+	static final double EPS = 1e-4;
+
 	/**
 	 * Test method for
 	 * {@link oripa.domain.cptool.LineDivider#divideLine(oripa.value.OriLine, javax.vecmath.Vector2d, double)}.
@@ -42,7 +44,7 @@ class LineDividerTest {
 
 		var divider = new LineDivider();
 
-		var divided = divider.divideLine(line, dividingPoint, 200);
+		var divided = divider.divideLine(line, dividingPoint, EPS);
 
 		assertNotNull(divided);
 		assertEquals(2, divided.size());
@@ -55,7 +57,7 @@ class LineDividerTest {
 
 		var divider = new LineDivider();
 
-		var divided = divider.divideLine(line, dividingPoint, 200);
+		var divided = divider.divideLine(line, dividingPoint, EPS);
 
 		assertNull(divided);
 	}
@@ -67,7 +69,7 @@ class LineDividerTest {
 
 		var divider = new LineDivider();
 
-		var divided = divider.divideLine(line, dividingPoint, 200);
+		var divided = divider.divideLine(line, dividingPoint, EPS);
 
 		assertNull(divided);
 	}

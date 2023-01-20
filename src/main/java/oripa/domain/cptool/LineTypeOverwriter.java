@@ -60,7 +60,7 @@ public class LineTypeOverwriter {
 		allLineSet.addAll(allLines);
 
 		overlapGroups.parallelStream().forEach(overlaps -> {
-			determineLineTypes(overlaps, addedLineSet, allLineSet);
+			determineLineTypes(overlaps, addedLineSet, allLineSet, pointEps);
 		});
 
 		allLines.clear();
@@ -68,7 +68,7 @@ public class LineTypeOverwriter {
 	}
 
 	private void determineLineTypes(final Collection<OriLine> overlaps, final Set<OriLine> addedLines,
-			final Set<OriLine> allLines) {
+			final Set<OriLine> allLines, final double pointEps) {
 
 		var addedOverlaps = overlaps.stream()
 				.filter(ov -> addedLines.contains(ov))
@@ -82,7 +82,8 @@ public class LineTypeOverwriter {
 		allLines.removeAll(existingOverlaps);
 
 		var sortedPoints = sortLineEndPoints(overlaps);
-		List<OriLine> splitLines = sequentialLineFactory.createSequentialLines(sortedPoints, OriLine.Type.AUX);
+		List<OriLine> splitLines = sequentialLineFactory.createSequentialLines(sortedPoints, OriLine.Type.AUX,
+				pointEps);
 
 		// find lines to be a part of crease pattern
 		var linesToBeUsed = new ArrayList<OriLine>();

@@ -111,7 +111,7 @@ public class OverlappingLineDivider {
 
 					targettedLines.add(line);
 					splitLines.addAll(
-							sequentialLineFactory.createSequentialLines(splitPoints, line.getType()));
+							sequentialLineFactory.createSequentialLines(splitPoints, line.getType(), pointEps));
 				});
 
 		lines.removeAll(targettedLines);
