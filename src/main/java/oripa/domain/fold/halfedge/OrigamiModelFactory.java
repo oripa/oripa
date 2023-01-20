@@ -54,13 +54,13 @@ public class OrigamiModelFactory {
 	 * @return A model data converted from crease pattern.
 	 */
 	public OrigamiModel createOrigamiModel(
-			final Collection<OriLine> creasePattern, final double eps) {
-		return this.createOrigamiModelImpl3(creasePattern, eps);
+			final Collection<OriLine> creasePattern, final double pointEps) {
+		return this.createOrigamiModelImpl3(creasePattern, pointEps);
 	}
 
 	public List<OrigamiModel> createOrigamiModels(
-			final Collection<OriLine> creasePattern, final double eps) {
-		return createOrigamiModelsImpl(creasePattern, eps);
+			final Collection<OriLine> creasePattern, final double pointEps) {
+		return createOrigamiModelsImpl(creasePattern, pointEps);
 	}
 
 	/**
@@ -102,9 +102,9 @@ public class OrigamiModelFactory {
 	}
 
 	private boolean buildFaces(final Collection<OriVertex> vertices,
-			final Collection<OriFace> faces, final double eps) {
+			final Collection<OriFace> faces, final double pointEps) {
 		faces.clear();
-		return facesFactory.buildFaces(vertices, faces, eps);
+		return facesFactory.buildFaces(vertices, faces, pointEps);
 	}
 
 	private void buildEdges(final List<OriEdge> edges, final List<OriFace> faces) {
@@ -122,7 +122,7 @@ public class OrigamiModelFactory {
 	 * @return A model data converted from crease pattern.
 	 */
 	private OrigamiModel createOrigamiModelImpl3(
-			final Collection<OriLine> creasePattern, final double eps) {
+			final Collection<OriLine> creasePattern, final double pointEps) {
 
 		var watch = new StopWatch(true);
 
@@ -132,13 +132,13 @@ public class OrigamiModelFactory {
 
 		logger.debug(
 				"removeMeaninglessVertices() start: " + watch.getMilliSec() + "[ms]");
-		remover.removeMeaninglessVertices(simplifiedCreasePattern);
+		remover.removeMeaninglessVertices(simplifiedCreasePattern, pointEps);
 		logger.debug(
 				"removeMeaninglessVertices() end: " + watch.getMilliSec() + "[ms]");
 
 		var vertices = new ArrayList<OriVertex>();
 		buildVertices(simplifiedCreasePattern, vertices);
-		OrigamiModel origamiModel = create(vertices, precreases, eps);
+		OrigamiModel origamiModel = create(vertices, precreases, pointEps);
 
 		logger.debug(
 				"createOrigamiModelImpl3(): " + watch.getMilliSec() + "[ms]");
@@ -146,7 +146,7 @@ public class OrigamiModelFactory {
 	}
 
 	private List<OrigamiModel> createOrigamiModelsImpl(
-			final Collection<OriLine> creasePattern, final double eps) {
+			final Collection<OriLine> creasePattern, final double pointEps) {
 
 		var watch = new StopWatch(true);
 
@@ -156,7 +156,7 @@ public class OrigamiModelFactory {
 
 		logger.debug(
 				"removeMeaninglessVertices() start: " + watch.getMilliSec() + "[ms]");
-		remover.removeMeaninglessVertices(simplifiedCreasePattern);
+		remover.removeMeaninglessVertices(simplifiedCreasePattern, pointEps);
 		logger.debug(
 				"removeMeaninglessVertices() end: " + watch.getMilliSec() + "[ms]");
 
@@ -176,11 +176,11 @@ public class OrigamiModelFactory {
 
 		for (var boundaryFace : boundaryFaces) {
 			var modelVertices = componentExtractor.extractByBoundary(
-					wholeVertices, boundaryFace, eps);
+					wholeVertices, boundaryFace, pointEps);
 			var modelPrecreases = componentExtractor.extractByBoundary(
-					precreases, boundaryFace, eps);
+					precreases, boundaryFace, pointEps);
 
-			origamiModels.add(create(modelVertices, modelPrecreases, eps));
+			origamiModels.add(create(modelVertices, modelPrecreases, pointEps));
 		}
 
 		logger.debug("create origami models: {}", origamiModels);
@@ -189,7 +189,7 @@ public class OrigamiModelFactory {
 	}
 
 	private OrigamiModel create(final List<OriVertex> modelVertices, final List<OriLine> modelPrecreases,
-			final double eps) {
+			final double pointEps) {
 		OrigamiModel origamiModel = new OrigamiModel(computePaperSize(modelVertices));
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriEdge> edges = origamiModel.getEdges();
@@ -199,7 +199,7 @@ public class OrigamiModelFactory {
 		List<OriVertex> vertices = origamiModel.getVertices();
 
 		// Construct the faces
-		if (!buildFaces(vertices, faces, eps)) {
+		if (!buildFaces(vertices, faces, pointEps)) {
 			return origamiModel;
 		}
 
@@ -208,7 +208,7 @@ public class OrigamiModelFactory {
 		// attach precrease lines to faces
 		for (OriFace face : faces) {
 			face.addAllPrecreases(modelPrecreases.stream()
-					.filter(precrease -> OriGeomUtil.isOriLineIncludedInFace(face, precrease, eps))
+					.filter(precrease -> OriGeomUtil.isOriLineIncludedInFace(face, precrease, pointEps))
 					.collect(Collectors.toList()));
 		}
 		origamiModel.setHasModel(true);

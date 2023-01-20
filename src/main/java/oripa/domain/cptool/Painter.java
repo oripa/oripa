@@ -77,7 +77,7 @@ public class Painter {
 	 *
 	 */
 	public void removeSelectedLines() {
-		elementRemover.removeSelectedLines(creasePattern);
+		elementRemover.removeSelectedLines(creasePattern, pointEps());
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class Painter {
 	 */
 	public void addLine(final OriLine inputLine) {
 		lineAdder.addLine(inputLine, creasePattern, pointEps());
-		elementRemover.removeMeaninglessVertices(creasePattern);
+		elementRemover.removeMeaninglessVertices(creasePattern, pointEps());
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class Painter {
 	 */
 	public void addLines(final Collection<OriLine> lines) {
 		lineAdder.addAll(lines, creasePattern, pointEps());
-		elementRemover.removeMeaninglessVertices(creasePattern);
+		elementRemover.removeMeaninglessVertices(creasePattern, pointEps());
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class Painter {
 	 *            the line to be removed
 	 */
 	public void removeLine(final OriLine l) {
-		elementRemover.removeLine(l, creasePattern);
+		elementRemover.removeLine(l, creasePattern, pointEps());
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class Painter {
 	 *            to be removed
 	 */
 	public void removeLines(final Collection<OriLine> lines) {
-		elementRemover.removeLines(lines, creasePattern);
+		elementRemover.removeLines(lines, creasePattern, pointEps());
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class Painter {
 	 */
 	public void removeVertex(
 			final Vector2d v) {
-		elementRemover.removeVertex(v, creasePattern);
+		elementRemover.removeVertex(v, creasePattern, pointEps());
 	}
 
 	/**
@@ -168,9 +168,9 @@ public class Painter {
 		if (dividedLines == null) {
 			return false;
 		}
-		elementRemover.removeLine(line, creasePattern);
+		elementRemover.removeLine(line, creasePattern, pointEps());
 
-		lineAdder.addAll(dividedLines, creasePattern, creasePattern.getPaperSize());
+		lineAdder.addAll(dividedLines, creasePattern, pointEps());
 
 		return true;
 	}
@@ -231,7 +231,7 @@ public class Painter {
 	 */
 	public void alterLineType(
 			final OriLine l, final TypeForChange from, final TypeForChange to) {
-		typeChanger.alterLineType(l, creasePattern, from, to);
+		typeChanger.alterLineType(l, creasePattern, from, to, pointEps());
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class Painter {
 	 */
 	public void alterLineTypes(
 			final Collection<OriLine> lines, final TypeForChange from, final TypeForChange to) {
-		typeChanger.alterLineTypes(lines, creasePattern, from, to);
+		typeChanger.alterLineTypes(lines, creasePattern, from, to, pointEps());
 	}
 
 	/**
