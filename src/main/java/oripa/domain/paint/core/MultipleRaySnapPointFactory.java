@@ -42,11 +42,13 @@ public class MultipleRaySnapPointFactory {
 		var snapPointFactory = new RaySnapPointFactory();
 		var rayFactory = new PseudoRayFactory();
 
+		var pointEps = GeomUtil.pointEps(paperSize);
+
 		return angles.stream()
 				.map(angle -> rayFactory.create(v, angle, paperSize))
-				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray, GeomUtil.pointEps(paperSize))
+				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray, pointEps)
 						.stream())
-				.filter(point -> !GeomUtil.areEqual(point, v, GeomUtil.pointEps(paperSize)))
+				.filter(point -> !GeomUtil.areEqual(point, v, pointEps))
 				.collect(Collectors.toList());
 	}
 }
