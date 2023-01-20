@@ -23,9 +23,9 @@ package oripa.util;
  *
  */
 public class OpenRange implements Range {
-	double min;
-	double max;
-	double eps;
+	final double min;
+	final double max;
+	final double eps;
 
 	public OpenRange(final double min, final double max, final double eps) {
 		if (min > max) {

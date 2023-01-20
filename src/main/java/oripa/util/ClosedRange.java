@@ -23,9 +23,9 @@ package oripa.util;
  *
  */
 public class ClosedRange implements Range {
-	double min;
-	double max;
-	double eps;
+	final double min;
+	final double max;
+	final double eps;
 
 	public ClosedRange(final double min, final double max, final double eps) {
 		if (min > max) {
@@ -41,8 +41,15 @@ public class ClosedRange implements Range {
 		this.eps = eps;
 	}
 
+	public ClosedRange(final double min, final double max) {
+		this(min, max, 0);
+	}
+
 	@Override
 	public boolean includes(final double value) {
+		if (eps == 0) {
+			return value >= min && value <= max;
+		}
 		return value > min - eps && value < max + eps;
 	}
 }
