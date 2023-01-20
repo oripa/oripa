@@ -9,6 +9,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
+import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
 public class CutModelOutlinesFactory {
@@ -21,14 +22,14 @@ public class CutModelOutlinesFactory {
 	 * @return
 	 */
 	public Collection<OriLine> createOutlines(
-			final OriLine scissorsLine, final OrigamiModel origamiModel) {
+			final OriLine scissorsLine, final OrigamiModel origamiModel, final double pointEps) {
 
 		Collection<OriLine> cutLines = new ArrayList<>();
 
 		List<OriFace> faces = origamiModel.getFaces();
 
 		for (OriFace face : faces) {
-			List<Vector2d> vv = findOutlineEdgeTerminals(scissorsLine, face);
+			List<Vector2d> vv = findOutlineEdgeTerminals(scissorsLine, face, pointEps);
 
 			if (vv.size() >= 2) {
 				cutLines.add(new OriLine(vv.get(0), vv.get(1), OriLine.Type.CUT_MODEL));
@@ -38,7 +39,7 @@ public class CutModelOutlinesFactory {
 		return cutLines;
 	}
 
-	private List<Vector2d> findOutlineEdgeTerminals(final OriLine cutLine, final OriFace face) {
+	private List<Vector2d> findOutlineEdgeTerminals(final OriLine cutLine, final OriFace face, final double pointEps) {
 		List<Vector2d> vv = new ArrayList<>(2);
 
 		face.halfedgeStream().forEach(he -> {
@@ -62,7 +63,7 @@ public class CutModelOutlinesFactory {
 
 				boolean isNewPoint = true;
 				for (Vector2d v2d : vv) {
-					if (GeomUtil.distance(v2d, crossV) < 1) {
+					if (GeomUtil.distance(v2d, crossV) < pointEps) {
 						isNewPoint = false;
 						break;
 					}
@@ -87,8 +88,7 @@ public class CutModelOutlinesFactory {
 		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
-		double epsilon = 1.0e-6;
-		if (det * det > epsilon * d0.lengthSquared() * d1.lengthSquared()) {
+		if (det * det > MathUtil.normalizedValueEps() * d0.lengthSquared() * d1.lengthSquared()) {
 			// Lines intersect in a single point. Return both s and t values for
 			// use by calling functions.
 			double invDet = 1.0 / det;
