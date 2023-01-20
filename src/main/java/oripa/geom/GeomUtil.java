@@ -32,8 +32,7 @@ import oripa.value.CalculationResource;
 
 public class GeomUtil {
 
-	@Deprecated
-	public final static double EPS = CalculationResource.POINT_EPS;
+	private static double EPS = CalculationResource.POINT_EPS;
 
 	public static double pointEps(final double paperSize) {
 		return paperSize * 1e-7;
@@ -41,6 +40,10 @@ public class GeomUtil {
 
 	public static double angleRadianEps() {
 		return 1e-5;
+	}
+
+	private static double normalizedVectorEps() {
+		return 1e-6;
 	}
 
 	public static boolean areEqual(final Vector2d p0, final Vector2d p1, final double eps) {
@@ -505,11 +508,18 @@ public class GeomUtil {
 	 * @return true if vector p0 -> q ends in left side of p1 -> p0 (q is at
 	 *         counterclockwise position) otherwise false.
 	 */
-	public static boolean CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q) {
+	public static boolean isCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		return CCWcheck(p0, p1, q, 0) == 1;
 	}
 
+	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q) {
+		return CCWcheck(p0, p1, q, normalizedVectorEps());
+	}
+
 	/**
+	 * tests whether counterclockwise position or not by cross product of
+	 * normalized vectors.
+	 *
 	 * @return 1 if vector p0 -> q ends on the left side of p0 -> p1 (q is at
 	 *         counterclockwise position in right-handed coordinate system), 0
 	 *         if p0-p1 and p0-q is collinear, otherwise -1;
@@ -528,10 +538,18 @@ public class GeomUtil {
 	private static double computeCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		double dx1, dx2, dy1, dy2;
 
-		dx1 = p1.x - p0.x;
-		dy1 = p1.y - p0.y;
-		dx2 = q.x - p0.x;
-		dy2 = q.y - p0.y;
+		var d1 = new Vector2d(p1);
+		d1.sub(p0);
+		d1.normalize();
+
+		var d2 = new Vector2d(q);
+		d2.sub(p0);
+		d2.normalize();
+
+		dx1 = d1.getX();
+		dy1 = d1.getY();
+		dx2 = d2.getX();
+		dy2 = d2.getY();
 
 		return dx1 * dy2 - dy1 * dx2;
 	}
