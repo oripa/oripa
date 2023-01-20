@@ -273,7 +273,7 @@ public class GeomUtil {
 		// a dot b = |a||b| cos(theta)
 		double angle = Math.acos(v0_v1.dot(v2_v1));
 
-		if (Math.abs(angle - Math.PI) < EPS) {
+		if (Math.abs(angle - Math.PI) < angleRadianEps()) {
 			double bisectorAngle = MathUtil.angleOf(v0_v1) + Math.PI / 2;
 			return new Vector2d(Math.cos(bisectorAngle), Math.sin(bisectorAngle));
 		}
