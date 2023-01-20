@@ -9,6 +9,7 @@ import javax.vecmath.Vector2d;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
+import oripa.util.ClosedRange;
 import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
@@ -50,9 +51,9 @@ public class CutModelOutlinesFactory {
 
 			double params[] = new double[2];
 			boolean res = getCrossPointParam(cutLine.p0, cutLine.p1, l.p0, l.p1, params);
+			var range = new ClosedRange(0, 1, 0.001);
 			if (res == true &&
-					params[0] > -0.001 && params[1] > -0.001 &&
-					params[0] < 1.001 && params[1] < 1.001) {
+					range.includes(params[0]) && range.includes(params[1])) {
 				double param = params[1];
 
 				Vector2d crossV = new Vector2d();
