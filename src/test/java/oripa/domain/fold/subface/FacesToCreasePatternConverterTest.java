@@ -74,6 +74,6 @@ class FacesToCreasePatternConverterTest {
 						.sum()))
 								.addLine(any(), anyCollection(), anyDouble());
 
-		verify(creasePattern).cleanDuplicatedLines();
+		verify(creasePattern).cleanDuplicatedLines(POINT_EPS);
 	}
 }

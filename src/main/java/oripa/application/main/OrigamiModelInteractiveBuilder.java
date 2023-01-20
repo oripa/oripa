@@ -82,7 +82,7 @@ public class OrigamiModelInteractiveBuilder {
 		}
 
 		// clean up the crease pattern
-		if (creasePattern.cleanDuplicatedLines()) {
+		if (creasePattern.cleanDuplicatedLines(eps)) {
 			showCleaningUpMessage.run();
 		}
 

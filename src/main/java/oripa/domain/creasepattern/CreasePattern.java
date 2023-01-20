@@ -55,5 +55,5 @@ public interface CreasePattern
 
 	void replaceWith(final Collection<OriLine> lines);
 
-	boolean cleanDuplicatedLines();
+	boolean cleanDuplicatedLines(final double pointEps);
 }

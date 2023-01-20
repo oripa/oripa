@@ -174,11 +174,11 @@ public class GeomUtil {
 	 *            Second line to compare
 	 * @return true if both segments are (at least almost) equals
 	 */
-	public static boolean isSameLineSegment(final Segment l0, final Segment l1) {
-		if (distance(l0.getP0(), l1.getP0()) < EPS && distance(l0.getP1(), l1.getP1()) < EPS) {
+	public static boolean isSameLineSegment(final Segment l0, final Segment l1, final double pointEps) {
+		if (areEqual(l0.getP0(), l1.getP0(), pointEps) && areEqual(l0.getP1(), l1.getP1(), pointEps)) {
 			return true;
 		}
-		if (distance(l0.getP0(), l1.getP1()) < EPS && distance(l0.getP1(), l1.getP0()) < EPS) {
+		if (areEqual(l0.getP0(), l1.getP1(), pointEps) && areEqual(l0.getP1(), l1.getP0(), pointEps)) {
 			return true;
 		}
 

@@ -143,7 +143,7 @@ public class ModelComputationFacade {
 		}
 
 		// clean up the crease pattern
-		if (creasePattern.cleanDuplicatedLines()) {
+		if (creasePattern.cleanDuplicatedLines(eps)) {
 			showCleaningUpMessage.run();
 		}
 		// re-create the model data for simplified crease pattern

@@ -73,7 +73,7 @@ public class FacesToCreasePatternConverter {
 			});
 		}
 		CreasePattern creasePattern = cpFactory.createCreasePattern(lines);
-		creasePattern.cleanDuplicatedLines();
+		creasePattern.cleanDuplicatedLines(pointEps);
 
 		logger.debug("toCreasePattern(): end");
 

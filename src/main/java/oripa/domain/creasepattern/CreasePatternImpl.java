@@ -361,11 +361,11 @@ class CreasePatternImpl implements CreasePattern {
 	 * oripa.domain.creasepattern.CreasePatternInterface#removeDuplicatedLines()
 	 */
 	@Override
-	public boolean cleanDuplicatedLines() {
+	public boolean cleanDuplicatedLines(final double pointEps) {
 		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(size());
 		for (OriLine l : this) {
 			if (tmpLines.stream()
-					.noneMatch(line -> GeomUtil.isSameLineSegment(line, l))) {
+					.noneMatch(line -> GeomUtil.isSameLineSegment(line, l, pointEps))) {
 				tmpLines.add(l);
 			}
 		}
