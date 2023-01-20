@@ -76,7 +76,7 @@ public class OverlappingLineDivider {
 
 			lineSet.removeAll(lineOverlaps);
 
-			dividerOverlaps.forEach(divider -> divideLinesIfOverlap(divider, lineOverlaps));
+			dividerOverlaps.forEach(divider -> divideLinesIfOverlap(divider, lineOverlaps, pointEps));
 
 			lineSet.addAll(lineOverlaps);
 		});
@@ -85,7 +85,8 @@ public class OverlappingLineDivider {
 		lines.addAll(lineSet);
 	}
 
-	private void divideLinesIfOverlap(final OriLine dividerLine, final Collection<OriLine> lines) {
+	private void divideLinesIfOverlap(final OriLine dividerLine, final Collection<OriLine> lines,
+			final double pointEps) {
 
 		Set<OriLine> targettedLines = ConcurrentHashMap.newKeySet();
 		Set<OriLine> splitLines = ConcurrentHashMap.newKeySet();
@@ -94,7 +95,7 @@ public class OverlappingLineDivider {
 				.forEach(line -> {
 					var splitPoints = new ArrayList<Vector2d>();
 
-					int overlapCount = GeomUtil.distinguishLineSegmentsOverlap(dividerLine, line);
+					int overlapCount = GeomUtil.distinguishLineSegmentsOverlap(dividerLine, line, pointEps);
 
 					switch (overlapCount) {
 					case 2:

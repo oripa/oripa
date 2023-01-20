@@ -34,7 +34,8 @@ import oripa.value.OriLine;
  *
  */
 public class SnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment line) {
+	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment line,
+			final double pointEps) {
 		Collection<Vector2d> snapPoints = new ArrayList<>();
 
 		// snap on cross points of line and creases.
@@ -46,7 +47,7 @@ public class SnapPointFactory {
 
 		// snap on end points of overlapping creases.
 		creasePattern.stream()
-				.filter(crease -> GeomUtil.isRelaxedOverlap(line, crease))
+				.filter(crease -> GeomUtil.isRelaxedOverlap(line, crease, pointEps))
 				.forEach(crease -> {
 					snapPoints.add(crease.getP0());
 					snapPoints.add(crease.getP1());

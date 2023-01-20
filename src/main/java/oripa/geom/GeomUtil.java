@@ -72,7 +72,7 @@ public class GeomUtil {
 	 * </ul>
 	 */
 	public static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
-			final Vector2d s1, final Vector2d e1) {
+			final Vector2d s1, final Vector2d e1, final double pointEps) {
 		// Whether or not is parallel
 		Vector2d dir0 = new Vector2d(e0);
 		dir0.sub(s0);
@@ -84,23 +84,23 @@ public class GeomUtil {
 		}
 
 		int cnt = 0;
-		if (distancePointToSegment(s0, s1, e1) < EPS) {
+		if (distancePointToSegment(s0, s1, e1) < pointEps) {
 			cnt++;
 		}
-		if (distancePointToSegment(e0, s1, e1) < EPS) {
+		if (distancePointToSegment(e0, s1, e1) < pointEps) {
 			cnt++;
 		}
-		if (distancePointToSegment(s1, s0, e0) < EPS) {
+		if (distancePointToSegment(s1, s0, e0) < pointEps) {
 			cnt++;
 		}
-		if (distancePointToSegment(e1, s0, e0) < EPS) {
+		if (distancePointToSegment(e1, s0, e0) < pointEps) {
 			cnt++;
 		}
 		return cnt;
 	}
 
-	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1) {
-		return distinguishLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1());
+	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
+		return distinguishLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
 	}
 
 	/**
@@ -114,8 +114,8 @@ public class GeomUtil {
 	 *         end points and does not share other part.
 	 */
 	public static boolean isRelaxedOverlap(final Vector2d s0, final Vector2d e0,
-			final Vector2d s1, final Vector2d e1) {
-		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1);
+			final Vector2d s1, final Vector2d e1, final double pointEps) {
+		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1, pointEps);
 		return cnt >= 2;
 
 	}
@@ -128,32 +128,32 @@ public class GeomUtil {
 	 *         Note that this method returns {@code true} if the lines touch at
 	 *         end points and does not share other part.
 	 */
-	public static boolean isRelaxedOverlap(final Segment seg0, final Segment seg1) {
-		return isRelaxedOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1());
+	public static boolean isRelaxedOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
+		return isRelaxedOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
 	}
 
 	/**
 	 *
 	 * @param seg0
 	 * @param seg1
-	 * @param eps
+	 * @param pointEps
 	 * @return {@code true} if end points of both lines are on the other line.
 	 *         Note that this method returns {@code false} if the lines touch at
 	 *         end points and does not share other part.
 	 */
-	public static boolean isOverlap(final Segment seg0, final Segment seg1, final double eps) {
-		var overlapCount = distinguishLineSegmentsOverlap(seg0, seg1);
+	public static boolean isOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
+		var overlapCount = distinguishLineSegmentsOverlap(seg0, seg1, pointEps);
 		if (overlapCount >= 3) {
 			return true;
 		}
 		if (overlapCount == 2) {
-			if (distance(seg0.getP0(), seg1.getP0()) < eps) {
+			if (distance(seg0.getP0(), seg1.getP0()) < pointEps) {
 				return false;
-			} else if (distance(seg0.getP0(), seg1.getP1()) < eps) {
+			} else if (distance(seg0.getP0(), seg1.getP1()) < pointEps) {
 				return false;
-			} else if (distance(seg0.getP1(), seg1.getP0()) < eps) {
+			} else if (distance(seg0.getP1(), seg1.getP0()) < pointEps) {
 				return false;
-			} else if (distance(seg0.getP1(), seg1.getP1()) < eps) {
+			} else if (distance(seg0.getP1(), seg1.getP1()) < pointEps) {
 				return false;
 			} else {
 				return true;

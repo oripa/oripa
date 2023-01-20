@@ -62,11 +62,11 @@ public class RaySnapPointFactory {
 	}
 
 	private boolean overlapsEntirely(final Segment crease, final Segment ray, final double eps) {
-		if (!GeomUtil.isRelaxedOverlap(ray, crease)) {
+		if (!GeomUtil.isRelaxedOverlap(ray, crease, eps)) {
 			return false;
 		}
 
-		return !sharesEndPoint(crease, ray, eps) || GeomUtil.distinguishLineSegmentsOverlap(ray, crease) >= 3;
+		return !sharesEndPoint(crease, ray, eps) || GeomUtil.distinguishLineSegmentsOverlap(ray, crease, eps) >= 3;
 	}
 
 	private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2, final double eps) {
