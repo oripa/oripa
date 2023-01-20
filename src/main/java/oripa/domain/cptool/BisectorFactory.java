@@ -25,7 +25,7 @@ public class BisectorFactory {
 	 */
 	public OriLine createPerpendicularBisector(
 			final Vector2d v0, final Vector2d v1,
-			final RectangleDomain domain, final OriLine.Type lineType) {
+			final RectangleDomain domain, final OriLine.Type lineType, final double pointEps) {
 
 		Vector2d cp = new Vector2d(v0);
 		cp.add(v1);
@@ -44,7 +44,7 @@ public class BisectorFactory {
 				cp.x - dir.x, cp.y - dir.y,
 				cp.x + dir.x, cp.y + dir.y);
 
-		return new OriLine(GeomUtil.clipLine(bisector, domain).orElse(bisector), lineType);
+		return new OriLine(GeomUtil.clipLine(bisector, domain, pointEps).orElse(bisector), lineType);
 	}
 
 	/**

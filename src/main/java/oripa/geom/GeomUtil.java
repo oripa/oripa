@@ -193,7 +193,7 @@ public class GeomUtil {
 	 *            defines clip area.
 	 * @return Optional of clipped segment. Empty if failed.
 	 */
-	public static Optional<Segment> clipLine(final Segment l, final RectangleDomain domain) {
+	public static Optional<Segment> clipLine(final Segment l, final RectangleDomain domain, final double pointEps) {
 
 		double left = domain.getLeft();
 		double right = domain.getRight();
@@ -213,7 +213,7 @@ public class GeomUtil {
 			if (cp == null) {
 				return;
 			}
-			if (crossPoints.stream().allMatch(v -> distance(v, cp) > EPS)) {
+			if (crossPoints.stream().allMatch(v -> distance(v, cp) > pointEps)) {
 				crossPoints.add(cp);
 			}
 		};

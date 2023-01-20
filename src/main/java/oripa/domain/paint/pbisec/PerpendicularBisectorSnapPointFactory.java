@@ -38,7 +38,7 @@ public class PerpendicularBisectorSnapPointFactory {
 
 		var bisectorFactory = new BisectorFactory();
 		var pbisec = bisectorFactory.createPerpendicularBisector(p0, p1, context.getPaperDomain(),
-				context.getLineTypeOfNewLines());
+				context.getLineTypeOfNewLines(), context.getPainter().pointEps());
 
 		var snapPointFactory = new SnapPointFactory();
 
