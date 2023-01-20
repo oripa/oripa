@@ -274,8 +274,8 @@ public class Painter {
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
 		OriLine symmetricLine;
 		try {
-			symmetricLine = symmetricFactory.createSymmetricLine(v0, v1, v2, creasePattern,
-					lineType);
+			symmetricLine = symmetricFactory.createSymmetricLine(
+					v0, v1, v2, creasePattern, lineType, getPointEps());
 		} catch (PainterCommandFailedException comEx) {
 			return false;
 		}
@@ -307,7 +307,7 @@ public class Painter {
 		Collection<OriLine> autoWalkLines;
 		try {
 			autoWalkLines = symmetricFactory.createSymmetricLineAutoWalk(
-					v0, v1, v2, v0, creasePattern, lineType);
+					v0, v1, v2, v0, creasePattern, lineType, getPointEps());
 
 		} catch (PainterCommandFailedException comEx) {
 			return false;

@@ -7,7 +7,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.Ray;
-import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 public class SymmetricLineFactory {
@@ -59,10 +58,10 @@ public class SymmetricLineFactory {
 	 */
 	public OriLine createSymmetricLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
-			final Collection<OriLine> creasePattern, final OriLine.Type lineType)
+			final Collection<OriLine> creasePattern, final OriLine.Type lineType, final double pointEps)
 			throws PainterCommandFailedException {
 
-		BestPair pair = findBestPair(v0, v1, v2, creasePattern);
+		BestPair pair = findBestPair(v0, v1, v2, creasePattern, pointEps);
 
 		Vector2d bestPoint = pair.getBestPoint();
 
@@ -86,7 +85,7 @@ public class SymmetricLineFactory {
 	 */
 	private BestPair findBestPair(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
-			final Collection<OriLine> creasePattern) {
+			final Collection<OriLine> creasePattern, final double pointEps) {
 		BestPair bestPair = new BestPair();
 
 		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
@@ -99,7 +98,7 @@ public class SymmetricLineFactory {
 				continue;
 			}
 			double distance = GeomUtil.distance(crossPoint, v1);
-			if (distance < CalculationResource.POINT_EPS) {
+			if (distance < pointEps) {
 				continue;
 			}
 
@@ -130,12 +129,12 @@ public class SymmetricLineFactory {
 	 */
 	public Collection<OriLine> createSymmetricLineAutoWalk(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final Vector2d startV,
-			final Collection<OriLine> creasePattern, final OriLine.Type lineType)
+			final Collection<OriLine> creasePattern, final OriLine.Type lineType, final double pointEps)
 			throws PainterCommandFailedException {
 
 		LinkedList<OriLine> autoWalkLines = new LinkedList<>();
 
-		addSymmetricLineAutoWalk(v0, v1, v2, 0, startV, creasePattern, autoWalkLines, lineType);
+		addSymmetricLineAutoWalk(v0, v1, v2, 0, startV, creasePattern, autoWalkLines, lineType, pointEps);
 
 		return autoWalkLines;
 	}
@@ -155,7 +154,7 @@ public class SymmetricLineFactory {
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, int stepCount,
 			final Vector2d startV,
 			final Collection<OriLine> creasePattern, final Collection<OriLine> autoWalkLines,
-			final OriLine.Type lineType) {
+			final OriLine.Type lineType, final double pointEps) {
 
 		// FIXME this method does not detect loop path. it causes meaningless
 		// recursion.
@@ -165,7 +164,7 @@ public class SymmetricLineFactory {
 			return;
 		}
 
-		BestPair pair = findBestPair(v0, v1, v2, creasePattern);
+		BestPair pair = findBestPair(v0, v1, v2, creasePattern, pointEps);
 
 		Vector2d bestPoint = pair.getBestPoint();
 		OriLine bestLine = pair.getBestLine();
@@ -179,13 +178,13 @@ public class SymmetricLineFactory {
 
 		autoWalkLines.add(autoWalk);
 
-		if (GeomUtil.distance(bestPoint, startV) < CalculationResource.POINT_EPS) {
+		if (GeomUtil.areEqual(bestPoint, startV, pointEps)) {
 			return;
 		}
 
 		addSymmetricLineAutoWalk(
 				v1, bestPoint, bestLine.p0, stepCount, startV,
-				creasePattern, autoWalkLines, lineType);
+				creasePattern, autoWalkLines, lineType, pointEps);
 
 	}
 

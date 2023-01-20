@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.util.StopWatch;
-import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -39,7 +38,7 @@ public class LineAdder {
 	 *         point.
 	 */
 	private Map<OriPoint, OriLine> divideCurrentLines(final OriLine inputLine,
-			final Collection<OriLine> currentLines) {
+			final Collection<OriLine> currentLines, final double pointEps) {
 
 		var toBeAdded = Collections.synchronizedList(new LinkedList<OriLine>());
 		var toBeRemoved = Collections.synchronizedList(new LinkedList<OriLine>());
@@ -64,7 +63,7 @@ public class LineAdder {
 					toBeRemoved.add(line);
 
 					Consumer<Vector2d> addIfLineCanBeSplit = v -> {
-						if (GeomUtil.distance(v, crossPoint) > CalculationResource.POINT_EPS) {
+						if (GeomUtil.distance(v, crossPoint) > pointEps) {
 							var l = new OriLine(v, crossPoint, line.getType());
 							// keep selection not to change the target of copy.
 							l.selected = line.selected;
@@ -179,7 +178,8 @@ public class LineAdder {
 		Map<OriLine, Map<OriPoint, OriLine>> crossMaps = new ConcurrentHashMap<>();
 
 		nonExistingNewLines
-				.forEach(inputLine -> crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines)));
+				.forEach(inputLine -> crossMaps.put(inputLine,
+						divideCurrentLines(inputLine, crossingCurrentLines, pointEps)));
 
 		divider.divideIfOverlap(nonExistingNewLines, crossingCurrentLines, pointEps);
 
