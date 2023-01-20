@@ -32,6 +32,11 @@ import oripa.value.CalculationResource;
 
 public class GeomUtil {
 
+	/**
+	 * Discouraged to use in order to make eps configurable.
+	 *
+	 * @return eps for point equality measured by distance.
+	 */
 	public static double pointEps() {
 		return CalculationResource.POINT_EPS;
 	}
@@ -53,8 +58,8 @@ public class GeomUtil {
 	}
 
 	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
-		// tolerance of 1 degree
-		return dir0.angle(dir1) < Math.PI / 180 || dir0.angle(dir1) > Math.PI * 179.0 / 180;
+		double angle = dir0.angle(dir1);
+		return angle < angleRadianEps() || angle > Math.PI - angleRadianEps();
 	}
 
 	/**
@@ -63,7 +68,7 @@ public class GeomUtil {
 	 * segment.
 	 * <ul>
 	 * <li>If the count is 0 or 1, then they are not overlapping.</li>
-	 * <li>If the count is 2, then they partially overlaps.</li>
+	 * <li>If the count is 2, then they partially overlap.</li>
 	 * <li>If the count is 3, then one segment overlaps entirely and an end
 	 * point is shared with the other segment.</li>
 	 * <li>If the count is 4, then the two segments are equal.</li>

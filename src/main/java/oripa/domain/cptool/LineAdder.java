@@ -92,7 +92,8 @@ public class LineAdder {
 	 */
 	private List<Vector2d> createInputLinePoints(
 			final OriLine inputLine,
-			final Map<OriPoint, OriLine> crossMap) {
+			final Map<OriPoint, OriLine> crossMap,
+			final double pointEps) {
 		var points = new ArrayList<Vector2d>();
 		points.add(inputLine.p0);
 		points.add(inputLine.p1);
@@ -103,20 +104,20 @@ public class LineAdder {
 				return;
 			}
 			// If the intersection is on the end of the line, skip
-			if (GeomUtil.distance(inputLine.p0, line.p0) < CalculationResource.POINT_EPS ||
-					GeomUtil.distance(inputLine.p0, line.p1) < CalculationResource.POINT_EPS ||
-					GeomUtil.distance(inputLine.p1, line.p0) < CalculationResource.POINT_EPS ||
-					GeomUtil.distance(inputLine.p1, line.p1) < CalculationResource.POINT_EPS) {
+			if (GeomUtil.areEqual(inputLine.p0, line.p0, pointEps) ||
+					GeomUtil.areEqual(inputLine.p0, line.p1, pointEps) ||
+					GeomUtil.areEqual(inputLine.p1, line.p0, pointEps) ||
+					GeomUtil.areEqual(inputLine.p1, line.p1, pointEps)) {
 				return;
 			}
 
 			// use end points on inputLine
 			if (GeomUtil.distancePointToSegment(line.p0, inputLine.p0,
-					inputLine.p1) < CalculationResource.POINT_EPS) {
+					inputLine.p1) < pointEps) {
 				points.add(line.p0);
 			}
 			if (GeomUtil.distancePointToSegment(line.p1, inputLine.p0,
-					inputLine.p1) < CalculationResource.POINT_EPS) {
+					inputLine.p1) < pointEps) {
 				points.add(line.p1);
 			}
 			points.add(crossPoint);
@@ -190,7 +191,8 @@ public class LineAdder {
 		ArrayList<List<Vector2d>> pointLists = new ArrayList<>();
 
 		nonExistingNewLines
-				.forEach(inputLine -> pointLists.add(createInputLinePoints(inputLine, crossMaps.get(inputLine))));
+				.forEach(inputLine -> pointLists
+						.add(createInputLinePoints(inputLine, crossMaps.get(inputLine), pointEps)));
 
 		logger.trace("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
