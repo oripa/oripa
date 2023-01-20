@@ -49,10 +49,11 @@ class TestCreasePatternFactory {
 
 		LineAdder adder = new LineAdder();
 
-		adder.addLine(slashLeftTop, creasePattern);
-		adder.addLine(slashRightTop, creasePattern);
-		adder.addLine(slashRightBottom, creasePattern);
-		adder.addLine(slashLeftBottom, creasePattern);
+		final double pointEps = 1e-7;
+		adder.addLine(slashLeftTop, creasePattern, pointEps);
+		adder.addLine(slashRightTop, creasePattern, pointEps);
+		adder.addLine(slashRightBottom, creasePattern, pointEps);
+		adder.addLine(slashLeftBottom, creasePattern, pointEps);
 
 		return creasePattern;
 	}

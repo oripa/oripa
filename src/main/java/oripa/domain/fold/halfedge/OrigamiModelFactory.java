@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.ElementRemover;
 import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
@@ -83,7 +84,7 @@ public class OrigamiModelFactory {
 
 		buildVertices(creasePattern, vertices);
 
-		if (!buildFaces(vertices, faces)) {
+		if (!buildFaces(vertices, faces, GeomUtil.pointEps(paperSize))) {
 			return origamiModel;
 		}
 
@@ -101,9 +102,9 @@ public class OrigamiModelFactory {
 	}
 
 	private boolean buildFaces(final Collection<OriVertex> vertices,
-			final Collection<OriFace> faces) {
+			final Collection<OriFace> faces, final double eps) {
 		faces.clear();
-		return facesFactory.buildFaces(vertices, faces);
+		return facesFactory.buildFaces(vertices, faces, eps);
 	}
 
 	private void buildEdges(final List<OriEdge> edges, final List<OriFace> faces) {
@@ -198,7 +199,7 @@ public class OrigamiModelFactory {
 		List<OriVertex> vertices = origamiModel.getVertices();
 
 		// Construct the faces
-		if (!buildFaces(vertices, faces)) {
+		if (!buildFaces(vertices, faces, eps)) {
 			return origamiModel;
 		}
 

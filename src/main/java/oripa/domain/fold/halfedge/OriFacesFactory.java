@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.geom.GeomUtil;
-
 /**
  * @author OUCHI Koji
  *
@@ -50,7 +48,7 @@ public class OriFacesFactory {
 	 * @return {@code true} if the face construction succeeds.
 	 */
 	public boolean buildFaces(final Collection<OriVertex> vertices,
-			final Collection<OriFace> faces) {
+			final Collection<OriFace> faces, final double eps) {
 
 		boolean valid = true;
 
@@ -70,7 +68,7 @@ public class OriFacesFactory {
 		// find boundary face with no internal vertex
 		boundaryFaces.removeIf(
 				face -> vertices.stream().anyMatch(
-						vertex -> face.isOnFaceExclusively(vertex.getPosition(), GeomUtil.EPS)));
+						vertex -> face.isOnFaceExclusively(vertex.getPosition(), eps)));
 
 		faces.addAll(createdFaces);
 		faces.addAll(boundaryFaces);

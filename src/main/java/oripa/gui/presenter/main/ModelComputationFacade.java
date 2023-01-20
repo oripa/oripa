@@ -119,7 +119,7 @@ public class ModelComputationFacade {
 	 * @return folded Origami model
 	 */
 	public List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern) {
-		var eps = GeomUtil.eps(creasePattern.getPaperSize());
+		var eps = GeomUtil.pointEps(creasePattern.getPaperSize());
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		OrigamiModel wholeModel = modelFactory.createOrigamiModel(

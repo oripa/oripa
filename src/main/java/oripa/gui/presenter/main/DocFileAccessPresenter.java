@@ -70,7 +70,7 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 		var filePath = givenFile.getCanonicalPath();
 
 		CreasePattern creasePattern = doc.getCreasePattern();
-		var eps = GeomUtil.eps(creasePattern.getPaperSize());
+		var eps = GeomUtil.pointEps(creasePattern.getPaperSize());
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		var origamiModel = modelFactory.createOrigamiModel(

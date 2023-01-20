@@ -57,7 +57,7 @@ public class OrigamiModelInteractiveBuilder {
 			final Supplier<Boolean> needCleaningUpDuplication,
 			final Runnable showCleaningUpMessage,
 			final Runnable showFailureMessage) {
-		var eps = GeomUtil.eps(creasePattern.getPaperSize());
+		var eps = GeomUtil.pointEps(creasePattern.getPaperSize());
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		OrigamiModel wholeModel = modelFactory.createOrigamiModel(

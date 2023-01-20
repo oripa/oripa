@@ -44,8 +44,9 @@ public class MultipleRaySnapPointFactory {
 
 		return angles.stream()
 				.map(angle -> rayFactory.create(v, angle, paperSize))
-				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray).stream())
-				.filter(point -> GeomUtil.distance(point, v) > GeomUtil.EPS)
+				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray, GeomUtil.pointEps(paperSize))
+						.stream())
+				.filter(point -> !GeomUtil.areEqual(point, v, GeomUtil.pointEps(paperSize)))
 				.collect(Collectors.toList());
 	}
 }

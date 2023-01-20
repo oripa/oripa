@@ -86,7 +86,7 @@ public class LayerOrderEnumerator {
 
 		// construct the subfaces
 		final double paperSize = origamiModel.getPaperSize();
-		final double eps = GeomUtil.eps(paperSize);
+		final double eps = GeomUtil.pointEps(paperSize);
 		subFaces = subFacesFactory.createSubFaces(faces, paperSize, eps);
 		logger.debug("subFaces.size() = " + subFaces.size());
 

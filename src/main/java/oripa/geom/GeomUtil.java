@@ -31,10 +31,20 @@ import oripa.util.MathUtil;
 import oripa.value.CalculationResource;
 
 public class GeomUtil {
+
+	@Deprecated
 	public final static double EPS = CalculationResource.POINT_EPS;
 
-	public final static double eps(final double paperSize) {
-		return EPS * paperSize;
+	public static double pointEps(final double paperSize) {
+		return paperSize * 1e-7;
+	}
+
+	public static double angleRadianEps() {
+		return 1e-5;
+	}
+
+	public static boolean areEqual(final Vector2d p0, final Vector2d p1, final double eps) {
+		return distance(p0, p1) < eps;
 	}
 
 	public static double distance(final Vector2d p0, final Vector2d p1) {

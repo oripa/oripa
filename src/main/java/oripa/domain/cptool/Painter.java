@@ -88,7 +88,7 @@ public class Painter {
 	 *            a line to be added
 	 */
 	public void addLine(final OriLine inputLine) {
-		lineAdder.addLine(inputLine, creasePattern);
+		lineAdder.addLine(inputLine, creasePattern, pointEps());
 		elementRemover.removeMeaninglessVertices(creasePattern);
 	}
 
@@ -101,7 +101,7 @@ public class Painter {
 	 * @param lines
 	 */
 	public void addLines(final Collection<OriLine> lines) {
-		lineAdder.addAll(lines, creasePattern);
+		lineAdder.addAll(lines, creasePattern, pointEps());
 		elementRemover.removeMeaninglessVertices(creasePattern);
 	}
 
@@ -170,7 +170,7 @@ public class Painter {
 		}
 		elementRemover.removeLine(line, creasePattern);
 
-		lineAdder.addAll(dividedLines, creasePattern);
+		lineAdder.addAll(dividedLines, creasePattern, creasePattern.getPaperSize());
 
 		return true;
 	}
@@ -374,5 +374,9 @@ public class Painter {
 				creasePattern.getPaperSize());
 
 		addLines(copiedLines);
+	}
+
+	private double pointEps() {
+		return GeomUtil.pointEps(creasePattern.getPaperSize());
 	}
 }

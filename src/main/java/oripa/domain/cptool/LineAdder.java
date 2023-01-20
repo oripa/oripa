@@ -139,8 +139,8 @@ public class LineAdder {
 	 *            list. it will be affected as new lines are added and
 	 *            unnecessary lines are removed.
 	 */
-	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines) {
-		addAll(List.of(inputLine), currentLines);
+	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines, final double pointEps) {
+		addAll(List.of(inputLine), currentLines, pointEps);
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class LineAdder {
 	 *            collection as a destination.
 	 */
 	public void addAll(final Collection<OriLine> inputLines,
-			final Collection<OriLine> currentLines) {
+			final Collection<OriLine> currentLines, final double pointEps) {
 
 		StopWatch watch = new StopWatch(true);
 
@@ -164,7 +164,7 @@ public class LineAdder {
 		// input domain can limit the current lines to be divided.
 		RectangleClipper inputDomainClipper = new RectangleClipper(
 				new RectangleDomain(nonExistingNewLines),
-				CalculationResource.POINT_EPS);
+				pointEps);
 		// use a hash set for avoiding worst case of computation time. (list
 		// takes O(n) time for deletion while hash set takes O(1) time.)
 		HashSet<OriLine> crossingCurrentLines = new HashSet<>(

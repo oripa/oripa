@@ -42,6 +42,8 @@ class LineAdderTest {
 	public static final OriLine DIAGONAL_LINE = new OriLine(-200, -200, 200, 200, OriLine.Type.MOUNTAIN);
 	private LineAdder adder;
 
+	private static final double POINT_EPS = 1e-5;
+
 	/**
 	 * Test method for
 	 * {@link oripa.domain.cptool.LineAdder#addLine(oripa.value.OriLine, java.util.Collection)}.
@@ -54,7 +56,7 @@ class LineAdderTest {
 
 		var line = new OriLine(20, 50, 20, -10, OriLine.Type.VALLEY);
 
-		adder.addLine(line, creasePattern);
+		adder.addLine(line, creasePattern, POINT_EPS);
 
 		assertEquals(6, creasePattern.size());
 	}
@@ -71,7 +73,7 @@ class LineAdderTest {
 		var line = new OriLine(200, 0, -200, 0, OriLine.Type.VALLEY);
 
 		// When
-		adder.addLine(line, creasePattern);
+		adder.addLine(line, creasePattern, POINT_EPS);
 
 		// Then
 		assertEquals(4, creasePattern.size());
@@ -88,7 +90,7 @@ class LineAdderTest {
 		var line = new OriLine(0, 0, 100, 0, OriLine.Type.VALLEY);
 
 		// When
-		adder.addLine(line, creasePattern);
+		adder.addLine(line, creasePattern, POINT_EPS);
 
 		logger.debug(creasePattern.toString());
 		// Then
@@ -104,7 +106,7 @@ class LineAdderTest {
 		var line = new OriLine(200, 0, 0, 0, OriLine.Type.VALLEY);
 
 		// When
-		adder.addLine(line, creasePattern);
+		adder.addLine(line, creasePattern, POINT_EPS);
 
 		// Then
 		assertEquals(3, creasePattern.size());
@@ -120,7 +122,7 @@ class LineAdderTest {
 		var line = new OriLine(-100, -100, 100, 100, OriLine.Type.VALLEY);
 
 		// When
-		adder.addLine(line, creasePattern);
+		adder.addLine(line, creasePattern, POINT_EPS);
 
 		// Then
 		assertEquals(3, creasePattern.size());
@@ -140,7 +142,7 @@ class LineAdderTest {
 		var line = new OriLine(-200, 0, 200, 0, OriLine.Type.MOUNTAIN);
 
 		// When
-		adder.addLine(line, creasePattern);
+		adder.addLine(line, creasePattern, POINT_EPS);
 
 		// Then
 		assertEquals(7, creasePattern.size());
@@ -166,7 +168,7 @@ class LineAdderTest {
 		var line1 = new OriLine(20, 50, 20, -10, OriLine.Type.VALLEY);
 		var line2 = new OriLine(40, 50, 40, 0, OriLine.Type.VALLEY);
 
-		adder.addAll(List.of(line1, line2), creasePattern);
+		adder.addAll(List.of(line1, line2), creasePattern, POINT_EPS);
 
 		assertEquals(9, creasePattern.size());
 		assertTypeCount(3, creasePattern, OriLine.Type.VALLEY);

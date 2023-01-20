@@ -35,7 +35,8 @@ import oripa.value.OriLine;
  *
  */
 public class RaySnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment ray) {
+	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment ray,
+			final double eps) {
 		Collection<Vector2d> snapPoints = new ArrayList<>();
 
 		// snap on cross points of line and creases.
@@ -47,7 +48,7 @@ public class RaySnapPointFactory {
 
 		// snap on end points of overlapping creases.
 		creasePattern.stream()
-				.filter(crease -> overlapsEntirely(crease, ray))
+				.filter(crease -> overlapsEntirely(crease, ray, eps))
 				.flatMap(crease -> crease.pointStream())
 				.forEach(point -> {
 					snapPoints.add(point);
@@ -56,27 +57,22 @@ public class RaySnapPointFactory {
 		return snapPoints;
 	}
 
-	private boolean sharesEndPoint(final Segment s1, final Segment s2) {
-		return findSharedEndPoint(s1, s2).isPresent();
+	private boolean sharesEndPoint(final Segment s1, final Segment s2, final double eps) {
+		return findSharedEndPoint(s1, s2, eps).isPresent();
 	}
 
-	private boolean overlapsEntirely(final Segment crease, final Segment ray) {
+	private boolean overlapsEntirely(final Segment crease, final Segment ray, final double eps) {
 		if (!GeomUtil.isRelaxedOverlap(ray, crease)) {
 			return false;
 		}
 
-		return !sharesEndPoint(crease, ray) || GeomUtil.distinguishLineSegmentsOverlap(ray, crease) >= 3;
+		return !sharesEndPoint(crease, ray, eps) || GeomUtil.distinguishLineSegmentsOverlap(ray, crease) >= 3;
 	}
 
-	private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2) {
+	private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2, final double eps) {
 		return s1.pointStream()
 				.filter(p -> s2.pointStream()
-						.anyMatch(q -> nearlyEquals(p, q)))
+						.anyMatch(q -> GeomUtil.areEqual(p, q, eps)))
 				.findFirst();
 	}
-
-	private boolean nearlyEquals(final Vector2d p1, final Vector2d p2) {
-		return GeomUtil.distance(p1, p2) < GeomUtil.EPS;
-	}
-
 }

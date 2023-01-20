@@ -56,7 +56,7 @@ public class CheckerWindowOpener {
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		origamiModel = modelFactory.createOrigamiModel(
 				creasePattern,
-				GeomUtil.eps(creasePattern.getPaperSize()));
+				GeomUtil.pointEps(creasePattern.getPaperSize()));
 
 		FoldabilityCheckFrameView checker = frameFactory.createFoldabilityFrame(ownerView);
 
