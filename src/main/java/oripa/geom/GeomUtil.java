@@ -32,10 +32,8 @@ import oripa.value.CalculationResource;
 
 public class GeomUtil {
 
-	private static double EPS = CalculationResource.POINT_EPS;
-
-	public static double pointEps(final double paperSize) {
-		return paperSize * 1e-7;
+	public static double pointEps() {
+		return CalculationResource.POINT_EPS;
 	}
 
 	public static double angleRadianEps() {
@@ -343,7 +341,7 @@ public class GeomUtil {
 		Vector2d diff = new Vector2d(l1.p.x - p0.x, l1.p.y - p0.y);
 		double det = d1.x * d0.y - d1.y * d0.x;
 
-		if (det * det <= EPS * d0.lengthSquared() * d1.lengthSquared()) {
+		if (det * det <= normalizedValueEps() * d0.lengthSquared() * d1.lengthSquared()) {
 			return null;
 		}
 

@@ -21,7 +21,6 @@ package oripa.gui.presenter.main;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.geom.GeomUtil;
 import oripa.gui.presenter.foldability.FoldabilityCheckFramePresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
@@ -50,13 +49,14 @@ public class CheckerWindowOpener {
 	 * @param isZeroLineWidth
 	 *            whether drawing lines thinner or not.
 	 */
-	public void showCheckerWindow(final CreasePattern creasePattern, final boolean isZeroLineWidth) {
+	public void showCheckerWindow(final CreasePattern creasePattern, final boolean isZeroLineWidth,
+			final double pointEps) {
 		OrigamiModel origamiModel;
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		origamiModel = modelFactory.createOrigamiModel(
 				creasePattern,
-				GeomUtil.pointEps(creasePattern.getPaperSize()));
+				pointEps);
 
 		FoldabilityCheckFrameView checker = frameFactory.createFoldabilityFrame(ownerView);
 

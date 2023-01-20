@@ -58,7 +58,8 @@ public class SelectingEndPoint extends AbstractActionState {
 			throw new IllegalStateException("wrong state: impossible vertex selection.");
 		}
 
-		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0));
+		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0),
+				context.pointEps());
 		var type = new MaekawaTheoremSuggester().suggest(vertex);
 
 		Command command = new PickedVerticesConnectionLineAdderCommand(context, type);

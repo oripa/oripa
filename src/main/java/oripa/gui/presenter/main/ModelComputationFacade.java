@@ -34,7 +34,6 @@ import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.geom.GeomUtil;
 
 /**
  * @author OUCHI Koji
@@ -118,14 +117,13 @@ public class ModelComputationFacade {
 	 *
 	 * @return folded Origami model
 	 */
-	public List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern) {
-		var eps = GeomUtil.pointEps(creasePattern.getPaperSize());
+	public List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern, final double pointEps) {
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		OrigamiModel wholeModel = modelFactory.createOrigamiModel(
-				creasePattern, eps);
+				creasePattern, pointEps);
 
-		List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern, eps);
+		List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern, pointEps);
 
 		var checker = new FoldabilityChecker();
 
@@ -143,15 +141,15 @@ public class ModelComputationFacade {
 		}
 
 		// clean up the crease pattern
-		if (creasePattern.cleanDuplicatedLines(eps)) {
+		if (creasePattern.cleanDuplicatedLines(pointEps)) {
 			showCleaningUpMessage.run();
 		}
 		// re-create the model data for simplified crease pattern
 		wholeModel = modelFactory
-				.createOrigamiModel(creasePattern, eps);
+				.createOrigamiModel(creasePattern, pointEps);
 
 		if (checker.testLocalFlatFoldability(wholeModel)) {
-			return modelFactory.createOrigamiModels(creasePattern, eps);
+			return modelFactory.createOrigamiModels(creasePattern, pointEps);
 		}
 
 		showFailureMessage.run();

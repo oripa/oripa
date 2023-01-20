@@ -73,7 +73,7 @@ class OutlineAdderTest {
 		final double eps = 1e-5;
 
 		when(painter.getCreasePattern()).thenReturn(creasePattern);
-		when(painter.pointEps()).thenReturn(eps);
+		when(painter.getPointEps()).thenReturn(eps);
 
 		var l0Cut = new OriLine(l0);
 		l0Cut.setType(OriLine.Type.CUT);

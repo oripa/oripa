@@ -29,7 +29,6 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.exception.UserCanceledException;
-import oripa.geom.GeomUtil;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
@@ -64,17 +63,17 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 	public void saveFileWithModelCheck(final Doc doc,
 			final String directory,
 			final FileTypeProperty<Doc> type, final FrameView owner,
-			final Supplier<Boolean> acceptModelError)
+			final Supplier<Boolean> acceptModelError,
+			final double pointEps)
 			throws IOException, UserCanceledException {
 		File givenFile = new File(directory, "export." + type.getExtensions()[0]);
 		var filePath = givenFile.getCanonicalPath();
 
 		CreasePattern creasePattern = doc.getCreasePattern();
-		var eps = GeomUtil.pointEps(creasePattern.getPaperSize());
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		var origamiModel = modelFactory.createOrigamiModel(
-				creasePattern, eps);
+				creasePattern, pointEps);
 		var checker = new FoldabilityChecker();
 
 		if (!checker.testLocalFlatFoldability(origamiModel)) {

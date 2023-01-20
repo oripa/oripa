@@ -51,7 +51,7 @@ public class ExporterFOLD implements DocExporter {
 			throws IOException, IllegalArgumentException {
 		logger.info("start exporting FOLD file.");
 
-		final double pointEps = GeomUtil.pointEps(doc.getCreasePattern().getPaperSize());
+		final double pointEps = GeomUtil.pointEps();
 
 		var pointsMerger = new PointsMerger();
 		var creasePattern = pointsMerger.mergeClosePoints(doc.getCreasePattern(), pointEps);

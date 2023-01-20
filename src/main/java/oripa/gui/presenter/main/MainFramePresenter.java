@@ -539,7 +539,7 @@ public class MainFramePresenter {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
-					type, view, view::showModelBuildFailureDialog);
+					type, view, view::showModelBuildFailureDialog, paintContext.pointEps());
 
 		} catch (UserCanceledException e) {
 			// ignore

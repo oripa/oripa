@@ -79,7 +79,7 @@ public class FoldabilityScreenPresenter {
 
 		var overlappingLineExtractor = new OverlappingLineExtractor();
 		overlappingLines = overlappingLineExtractor.extract(creasePattern,
-				GeomUtil.pointEps(origamiModel.getPaperSize()));
+				GeomUtil.pointEps());
 
 		var domain = new RectangleDomain(creasePattern);
 		view.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());

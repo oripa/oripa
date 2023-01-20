@@ -20,7 +20,9 @@ class CPToolIntegrationTest {
 		var line = new OriLine(new OriPoint(0, 0), new OriPoint(100, 0), Type.MOUNTAIN);
 		var changedLine = new OriLine(new OriPoint(0, 0), new OriPoint(100, 0), Type.VALLEY);
 
-		var painter = new Painter(creasePattern);
+		final double eps = 1e-5;
+
+		var painter = new Painter(creasePattern, eps);
 
 		painter.addLine(line);
 		logger.debug("CP = {}", creasePattern);

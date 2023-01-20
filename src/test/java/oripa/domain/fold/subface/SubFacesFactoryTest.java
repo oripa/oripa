@@ -34,7 +34,7 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.geom.GeomUtil;
+import oripa.domain.fold.origeom.OriGeomUtil;
 
 /**
  * @author OUCHI Koji
@@ -66,14 +66,14 @@ class SubFacesFactoryTest {
 	@Test
 	void testCreateSubFaces() {
 		final double PAPER_SIZE = 400;
-		final double EPS = GeomUtil.pointEps(PAPER_SIZE);
+		final double EPS = OriGeomUtil.pointEps(PAPER_SIZE);
 
 		var face1 = mock(OriFace.class);
 		var face2 = mock(OriFace.class);
 		var face3 = mock(OriFace.class);
 		var inputFaces = List.of(face1, face2, face3);
 
-		when(facesToCPConverter.convertToCreasePattern(inputFaces, GeomUtil.pointEps(PAPER_SIZE))).thenReturn(cp);
+		when(facesToCPConverter.convertToCreasePattern(inputFaces, EPS)).thenReturn(cp);
 		when(modelFactory.buildOrigamiForSubfaces(cp, PAPER_SIZE, EPS)).thenReturn(model);
 
 		var splitFaces = new ArrayList<OriFace>();

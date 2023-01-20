@@ -28,7 +28,6 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.geom.GeomUtil;
 
 /**
  * Creates {@link OrigamiModel} according to the interaction with the user.
@@ -36,6 +35,8 @@ import oripa.geom.GeomUtil;
  * @author OUCHI Koji
  *
  */
+// TODO delete this.
+@Deprecated
 public class OrigamiModelInteractiveBuilder {
 	private static final Logger logger = LoggerFactory
 			.getLogger(OrigamiModelInteractiveBuilder.class);
@@ -56,8 +57,8 @@ public class OrigamiModelInteractiveBuilder {
 	public List<OrigamiModel> build(final CreasePattern creasePattern,
 			final Supplier<Boolean> needCleaningUpDuplication,
 			final Runnable showCleaningUpMessage,
-			final Runnable showFailureMessage) {
-		var eps = GeomUtil.pointEps(creasePattern.getPaperSize());
+			final Runnable showFailureMessage,
+			final double eps) {
 
 		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		OrigamiModel wholeModel = modelFactory.createOrigamiModel(

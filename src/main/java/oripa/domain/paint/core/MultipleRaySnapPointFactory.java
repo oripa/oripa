@@ -36,13 +36,12 @@ public class MultipleRaySnapPointFactory {
 	public Collection<Vector2d> createSnapPoints(
 			final CreasePattern creasePattern,
 			final Vector2d v,
-			final Collection<Double> angles) {
+			final Collection<Double> angles,
+			final double pointEps) {
 
 		var paperSize = creasePattern.getPaperSize();
 		var snapPointFactory = new RaySnapPointFactory();
 		var rayFactory = new PseudoRayFactory();
-
-		var pointEps = GeomUtil.pointEps(paperSize);
 
 		return angles.stream()
 				.map(angle -> rayFactory.create(v, angle, paperSize))
