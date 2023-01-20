@@ -180,7 +180,7 @@ public class LineAdder {
 		nonExistingNewLines
 				.forEach(inputLine -> crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines)));
 
-		divider.divideIfOverlap(nonExistingNewLines, crossingCurrentLines);
+		divider.divideIfOverlap(nonExistingNewLines, crossingCurrentLines, pointEps);
 
 		// feed back the result of line divisions
 		currentLines.addAll(crossingCurrentLines);
@@ -195,12 +195,12 @@ public class LineAdder {
 		logger.trace("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
 		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists);
-		divider.divideIfOverlap(crossingCurrentLines, splitNewLines);
+		divider.divideIfOverlap(crossingCurrentLines, splitNewLines, pointEps);
 
 		currentLines.addAll(splitNewLines);
 
 		var lineTypeOverwriter = new LineTypeOverwriter();
-		lineTypeOverwriter.overwriteLineTypes(splitNewLines, currentLines);
+		lineTypeOverwriter.overwriteLineTypes(splitNewLines, currentLines, pointEps);
 
 		logger.trace("addAll(): {}[ms]", watch.getMilliSec());
 	}

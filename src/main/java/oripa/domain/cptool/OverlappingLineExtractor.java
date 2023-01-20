@@ -40,11 +40,11 @@ import oripa.value.OriLine;
  */
 public class OverlappingLineExtractor {
 	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
-	private static final double EPS = 1e-5;
 
-	public Collection<List<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines) {
+	public Collection<List<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines,
+			final double pointEps) {
 		// make a data structure for fast computation.
-		var hashFactory = new AnalyticLineHashFactory(EPS);
+		var hashFactory = new AnalyticLineHashFactory(pointEps);
 		var hash = hashFactory.create(lines);
 
 		var overlapGroups = new ConcurrentLinkedDeque<List<OriLine>>();
@@ -83,11 +83,11 @@ public class OverlappingLineExtractor {
 	 * @param lines
 	 * @return all overlapping lines.
 	 */
-	public Collection<OriLine> extract(final Collection<OriLine> lines) {
+	public Collection<OriLine> extract(final Collection<OriLine> lines, final double pointEps) {
 		var watch = new StopWatch(true);
 
 		// make a data structure for fast computation.
-		var hashFactory = new AnalyticLineHashFactory(EPS);
+		var hashFactory = new AnalyticLineHashFactory(pointEps);
 		var hash = hashFactory.create(lines);
 
 		var overlappingLines = new ConcurrentLinkedDeque<OriLine>();

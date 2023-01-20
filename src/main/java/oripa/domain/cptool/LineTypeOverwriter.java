@@ -51,8 +51,9 @@ public class LineTypeOverwriter {
 	 * @param allLines
 	 *            is the result of adding lines and splitting at cross points.
 	 */
-	public void overwriteLineTypes(final Collection<OriLine> addedLines, final Collection<OriLine> allLines) {
-		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines);
+	public void overwriteLineTypes(final Collection<OriLine> addedLines, final Collection<OriLine> allLines,
+			final double pointEps) {
+		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
 		var addedLineSet = new HashSet<>(addedLines);
 		Set<OriLine> allLineSet = ConcurrentHashMap.newKeySet();

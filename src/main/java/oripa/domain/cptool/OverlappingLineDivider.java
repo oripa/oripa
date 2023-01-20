@@ -51,13 +51,14 @@ public class OverlappingLineDivider {
 	 * @param lines
 	 *            lines to be divided
 	 */
-	public void divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines) {
+	public void divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines,
+			final double pointEps) {
 		var extractor = new OverlappingLineExtractor();
 
 		var allLines = new HashSet<OriLine>(dividerLines);
 		allLines.addAll(lines);
 
-		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines);
+		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
 		Set<OriLine> dividerLineSet = new HashSet<>(dividerLines);
 		Set<OriLine> lineSet = ConcurrentHashMap.newKeySet();

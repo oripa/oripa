@@ -39,6 +39,8 @@ class OverlappingLineExtractorTest {
 
 	private OverlappingLineExtractor extractor;
 
+	static final double EPS = 1e-5;
+
 	@BeforeEach
 	void setUp() {
 		extractor = new OverlappingLineExtractor();
@@ -55,7 +57,7 @@ class OverlappingLineExtractorTest {
 		var lines = List.of(overlap1, overlap2,
 				new OriLine(10, 10, 20, 0, OriLine.Type.MOUNTAIN));
 
-		var overlaps = extractor.extract(lines);
+		var overlaps = extractor.extract(lines, EPS);
 
 		assertEquals(2, overlaps.size());
 
@@ -70,7 +72,7 @@ class OverlappingLineExtractorTest {
 		var lines = List.of(overlap1, overlap2,
 				new OriLine(0, 55, 0, 60, OriLine.Type.MOUNTAIN));
 
-		var overlaps = extractor.extract(lines);
+		var overlaps = extractor.extract(lines, EPS);
 
 		assertEquals(2, overlaps.size());
 
@@ -103,7 +105,7 @@ class OverlappingLineExtractorTest {
 		var overlap2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
 		var lines = List.of(overlap1, overlap2);
 
-		var overlaps = extractor.extract(lines);
+		var overlaps = extractor.extract(lines, EPS);
 
 		assertEquals(2, overlaps.size());
 
@@ -121,7 +123,8 @@ class OverlappingLineExtractorTest {
 		var overlap2_2 = new OriLine(0, 0, 0, 100, OriLine.Type.MOUNTAIN);
 
 		var overlapGroups = extractor
-				.extractOverlapsGroupedBySupport(List.of(overlap1_1, overlap1_2, overlap1_3, overlap2_1, overlap2_2));
+				.extractOverlapsGroupedBySupport(List.of(overlap1_1, overlap1_2, overlap1_3, overlap2_1, overlap2_2),
+						EPS);
 
 		assertEquals(2, overlapGroups.size());
 
@@ -143,7 +146,7 @@ class OverlappingLineExtractorTest {
 		var overlap2 = new OriLine(0, 0, 100, 0, OriLine.Type.MOUNTAIN);
 		var lines = List.of(overlap1, overlap2);
 
-		var overlaps = extractor.extract(lines);
+		var overlaps = extractor.extract(lines, EPS);
 
 		assertEquals(0, overlaps.size());
 	}

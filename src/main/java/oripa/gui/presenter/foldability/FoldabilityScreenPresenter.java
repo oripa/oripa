@@ -26,6 +26,7 @@ import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
@@ -77,7 +78,8 @@ public class FoldabilityScreenPresenter {
 				origamiModel.getFaces());
 
 		var overlappingLineExtractor = new OverlappingLineExtractor();
-		overlappingLines = overlappingLineExtractor.extract(creasePattern);
+		overlappingLines = overlappingLineExtractor.extract(creasePattern,
+				GeomUtil.pointEps(origamiModel.getPaperSize()));
 
 		var domain = new RectangleDomain(creasePattern);
 		view.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
