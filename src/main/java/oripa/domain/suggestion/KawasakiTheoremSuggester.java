@@ -24,6 +24,7 @@ import java.util.List;
 
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.geom.GeomUtil;
 
 /**
  * @author OUCHI Koji
@@ -67,7 +68,7 @@ public class KawasakiTheoremSuggester {
 			double theta = OriGeomUtil.getAngleDifference(vertex, i);
 			double t = evenSum + theta - Math.PI;
 
-			final double EPS = 1e-6;
+			final double EPS = GeomUtil.angleRadianEps();
 			if (evenSum < Math.PI - EPS && oddSum < Math.PI - EPS) {
 				var baseAngle = vertex.getEdge(i).getAngle(vertex);
 				suggestions.add((baseAngle + t));
