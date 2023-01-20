@@ -39,6 +39,8 @@ class PaintContextImpl implements PaintContext {
 	private CircleCopyParameter circleCopyParameter;
 	private ArrayCopyParameter arrayCopyParameter;
 
+	private final double pointEps = GeomUtil.pointEps();
+
 	public PaintContextImpl() {
 	}
 
@@ -182,7 +184,7 @@ class PaintContextImpl implements PaintContext {
 
 	@Override
 	public Painter getPainter() {
-		return new Painter(creasePattern, GeomUtil.pointEps());
+		return new Painter(creasePattern, pointEps);
 	}
 
 	@Override
@@ -285,8 +287,8 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public double pointEps() {
-		return getPainter().getPointEps();
+	public double getPointEps() {
+		return pointEps;
 	}
 
 }

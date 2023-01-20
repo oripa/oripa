@@ -317,7 +317,7 @@ public class UIPanelPresenter {
 	private void showCheckerWindow() {
 		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), subFrameFactory);
 		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth(),
-				paintContext.pointEps());
+				paintContext.getPointEps());
 	}
 
 	private void computeModels() {
@@ -331,7 +331,7 @@ public class UIPanelPresenter {
 
 		CreasePattern creasePattern = paintContext.getCreasePattern();
 
-		var origamiModels = modelComputation.buildOrigamiModels(creasePattern, paintContext.pointEps());
+		var origamiModels = modelComputation.buildOrigamiModels(creasePattern, paintContext.getPointEps());
 
 		computationResult = modelComputation.computeModels(
 				origamiModels,

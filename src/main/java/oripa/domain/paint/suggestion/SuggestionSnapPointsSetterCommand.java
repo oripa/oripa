@@ -41,7 +41,7 @@ public class SuggestionSnapPointsSetterCommand extends ValidatablePaintCommand {
 		validateCounts(context, correctVertexCount, correctLineCount);
 
 		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0),
-				context.pointEps());
+				context.getPointEps());
 
 		var suggester = new FoldableLineAngleSuggester();
 		var suggestedAngles = suggester.suggest(vertex);

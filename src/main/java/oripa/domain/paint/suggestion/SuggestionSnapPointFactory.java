@@ -43,7 +43,7 @@ class SuggestionSnapPointFactory {
 			final Collection<Double> angles) {
 
 		return new MultipleRaySnapPointFactory().createSnapPoints(context.getCreasePattern(), sp, angles,
-				context.pointEps());
+				context.getPointEps());
 	}
 
 }

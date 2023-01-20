@@ -59,7 +59,7 @@ public class SelectingEndPoint extends AbstractActionState {
 		}
 
 		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0),
-				context.pointEps());
+				context.getPointEps());
 		var type = new MaekawaTheoremSuggester().suggest(vertex);
 
 		Command command = new PickedVerticesConnectionLineAdderCommand(context, type);
