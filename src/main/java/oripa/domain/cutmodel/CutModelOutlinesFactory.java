@@ -51,7 +51,7 @@ public class CutModelOutlinesFactory {
 
 			double params[] = new double[2];
 			boolean res = getCrossPointParam(cutLine.p0, cutLine.p1, l.p0, l.p1, params);
-			var range = new ClosedRange(0, 1, 0.001);
+			var range = new ClosedRange(0, 1, MathUtil.normalizedValueEps());
 			if (res == true &&
 					range.includes(params[0]) && range.includes(params[1])) {
 				double param = params[1];
