@@ -102,6 +102,8 @@ public class OriGeomUtil {
 	 */
 	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
+		// if halfedge is on a line on a face's edge, they are parallel and
+		// never cross.
 		if (isLineOnEdgeOfFace(face, heg, eps)) {
 			return false;
 		}
