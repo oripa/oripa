@@ -83,7 +83,7 @@ public class OrigamiModelFactory {
 
 		buildVertices(creasePattern, vertices, pointEps);
 
-		if (!buildFaces(vertices, faces, OriGeomUtil.pointEps(paperSize))) {
+		if (!buildFaces(vertices, faces, pointEps)) {
 			return origamiModel;
 		}
 
