@@ -41,6 +41,10 @@ public class OpenRange implements Range {
 		this.eps = eps;
 	}
 
+	public OpenRange(final double min, final double max) {
+		this(min, max, 0);
+	}
+
 	@Override
 	public boolean includes(final double value) {
 		return value > min + eps && value < max - eps;

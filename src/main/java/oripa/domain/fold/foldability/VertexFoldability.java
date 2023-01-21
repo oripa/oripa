@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.fold.foldability.ring.RingArrayList;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.util.MathUtil;
 import oripa.util.rule.AbstractRule;
 
 /**
@@ -84,7 +85,7 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 
 		var head = ring.head();
 		var tail = ring.tail();
-		if (Math.abs(head.getAngleGap() - tail.getAngleGap()) > AngleMinimalityHelper.EPS) {
+		if (!MathUtil.areEqual(head.getAngleGap(), tail.getAngleGap(), AngleMinimalityHelper.EPS)) {
 			return false;
 		}
 		if (head.getLineType() != tail.getLineType()) {

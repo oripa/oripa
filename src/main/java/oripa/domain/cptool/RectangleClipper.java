@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import javax.vecmath.Vector2d;
 
 import oripa.geom.RectangleDomain;
+import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
 /**
@@ -140,20 +141,20 @@ public class RectangleClipper {
 	 * @return {@code true} if {@code line} overlaps with border
 	 */
 	private boolean lineOverlapsBorder(final OriLine line) {
-		if (Math.abs(line.p0.x - m_minX) < EPSILON
-				&& Math.abs(line.p1.x - m_minX) < EPSILON) {
+		if (MathUtil.areEqual(line.p0.x, m_minX, EPSILON)
+				&& MathUtil.areEqual(line.p1.x, m_minX, EPSILON)) {
 			return true;
 		}
-		if (Math.abs(line.p0.x - m_maxX) < EPSILON
-				&& Math.abs(line.p1.x - m_maxX) < EPSILON) {
+		if (MathUtil.areEqual(line.p0.x, m_maxX, EPSILON)
+				&& MathUtil.areEqual(line.p1.x, m_maxX, EPSILON)) {
 			return true;
 		}
-		if (Math.abs(line.p0.y - m_minY) < EPSILON
-				&& Math.abs(line.p1.y - m_minY) < EPSILON) {
+		if (MathUtil.areEqual(line.p0.y, m_minY, EPSILON)
+				&& MathUtil.areEqual(line.p1.y, m_minY, EPSILON)) {
 			return true;
 		}
-		if (Math.abs(line.p0.y - m_maxY) < EPSILON
-				&& Math.abs(line.p1.y - m_maxY) < EPSILON) {
+		if (MathUtil.areEqual(line.p0.y, m_maxY, EPSILON)
+				&& MathUtil.areEqual(line.p1.y, m_maxY, EPSILON)) {
 			return true;
 		}
 		return false;

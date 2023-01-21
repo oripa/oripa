@@ -42,4 +42,8 @@ public class MathUtil {
 		return 1e-6;
 	}
 
+	public static boolean areEqual(final double v0, final double v1, final double eps) {
+		return Math.abs(v1 - v0) < eps;
+	}
+
 }

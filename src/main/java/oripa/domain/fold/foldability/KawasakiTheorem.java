@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.util.MathUtil;
 import oripa.util.rule.AbstractRule;
 
 /**
@@ -65,9 +66,8 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 			}
 		}
 
-		final double oneDegreeInRad = Math.PI / 180;
-		final double eps = oneDegreeInRad / 2;
-		if (Math.abs(oddSum - Math.PI) > eps) {
+		final double eps = MathUtil.angleRadianEps();
+		if (!MathUtil.areEqual(oddSum, Math.PI, eps)) {
 			logger.trace("edge angle sum invalid");
 			return false;
 		}
