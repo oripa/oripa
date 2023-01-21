@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
@@ -297,35 +298,30 @@ public class GeomUtil {
 	// Null if not intersect
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
 		Vector2d p0 = new Vector2d(ray.p);
+		Vector2d p1 = new Vector2d();
+		p1.add(p0, ray.dir);
 
 		Vector2d segP0 = seg.getP0();
 		Vector2d segP1 = seg.getP1();
 
-		Vector2d d0 = new Vector2d(ray.dir);
-		Vector2d d1 = new Vector2d(segP1.x - segP0.x, segP1.y - segP0.y);
-		Vector2d diff = new Vector2d(segP0.x - p0.x, segP0.y - p0.y);
-		double det = d1.x * d0.y - d1.y * d0.x;
+		var answerOpt = solveRayCrossPointVectorEquation(p0, p1, segP0, segP1);
 
-		double epsilon = 1.0e-6;
-		if (det * det <= epsilon * d0.lengthSquared() * d1.lengthSquared()) {
+		if (answerOpt.isEmpty()) {
 			return null;
 		}
 
-		// Lines intersect in a single point. Return both s and t values for
-		// use by calling functions.
-		double invDet = 1.0 / det;
-		double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
-		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
-
-		if (t < 0.0 - epsilon || t > 1.0 + epsilon) {
-			return null;
-		} else if (s < 0.0 - epsilon) {
-			return null;
-		}
+		double t = answerOpt.get().get(1);
 		Vector2d cp = new Vector2d();
 		cp.x = (1.0 - t) * segP0.x + t * segP1.x;
 		cp.y = (1.0 - t) * segP0.y + t * segP1.y;
 		return cp;
+	}
+
+	private static Optional<List<Double>> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+			final Vector2d segP0, final Vector2d segP1) {
+		double eps = MathUtil.normalizedValueEps();
+		return solveCrossPointVectorEquation(p0, p1, segP0, segP1,
+				(s, t) -> new ClosedRange(0, 1, eps).includes(t) && s >= -eps);
 	}
 
 	// Compute the intersection of straight lines
@@ -457,7 +453,7 @@ public class GeomUtil {
 	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
 
-		var parametersOpt = solveCrossPointVectorEquation(p0, p1, q0, q1);
+		var parametersOpt = solveSegmentsCrossPointVectorEquation(p0, p1, q0, q1);
 
 		if (parametersOpt.isEmpty()) {
 			return null;
@@ -483,8 +479,18 @@ public class GeomUtil {
 	 *         one at 1 is t for q0 and q1 equation. Empty if answer doesn't
 	 *         exist.
 	 */
-	public static Optional<List<Double>> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	public static Optional<List<Double>> solveSegmentsCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
+
+		final double eps = MathUtil.normalizedValueEps();
+		var range = new ClosedRange(0, 1, eps);
+
+		return solveCrossPointVectorEquation(p0, p1, q0, q1,
+				(s, t) -> range.includes(s) && range.includes(t));
+	}
+
+	private static Optional<List<Double>> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+			final Vector2d q0, final Vector2d q1, final BiFunction<Double, Double, Boolean> answerPredicate) {
 
 		var answer = new ArrayList<Double>();
 
@@ -503,9 +509,7 @@ public class GeomUtil {
 		double s = (d1.x * diff.y - d1.y * diff.x) / det;
 		double t = (d0.x * diff.y - d0.y * diff.x) / det;
 
-		var range = new ClosedRange(0, 1, eps);
-
-		if (!range.includes(t) || !range.includes(s)) {
+		if (!answerPredicate.apply(s, t)) {
 			return Optional.empty();
 		}
 

@@ -48,7 +48,7 @@ public class CutModelOutlinesFactory {
 			OriLine l = new OriLine(position.x, position.y,
 					nextPosition.x, nextPosition.y, OriLine.Type.AUX);
 
-			var parametersOpt = GeomUtil.solveCrossPointVectorEquation(
+			var parametersOpt = GeomUtil.solveSegmentsCrossPointVectorEquation(
 					cutLine.getP0(), cutLine.getP1(), l.getP0(), l.getP1());
 
 			parametersOpt.ifPresent(parameters -> {
