@@ -38,6 +38,10 @@ public class MathUtil {
 		return 1e-5;
 	}
 
+	public static double angleDegreeEps() {
+		return Math.toDegrees(angleRadianEps());
+	}
+
 	public static double normalizedValueEps() {
 		return 1e-6;
 	}

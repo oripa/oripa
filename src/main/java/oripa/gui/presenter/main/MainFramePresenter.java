@@ -204,6 +204,7 @@ public class MainFramePresenter {
 			screenUpdater.updateScreen();
 			updateMenu(path);
 			updateTitleText();
+			uiPanelPresenter.updateValuePanelFractionDigits();
 		});
 
 		addImportActionListener();

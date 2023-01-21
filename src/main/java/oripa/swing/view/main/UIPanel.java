@@ -46,7 +46,9 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.Document;
+import javax.swing.text.NumberFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -507,12 +509,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 		var angleLabel = new JLabel(
 				resources.getString(ResourceKey.LABEL, StringID.UI.ANGLE_ID));
 
-		NumberFormat doubleValueFormat = NumberFormat
-				.getNumberInstance(Locale.US);
-		doubleValueFormat.setMinimumFractionDigits(3);
-
-		textFieldLength = new JFormattedTextField(doubleValueFormat);
-		textFieldAngle = new JFormattedTextField(doubleValueFormat);
+		textFieldLength = new JFormattedTextField();
+		textFieldAngle = new JFormattedTextField();
 
 		textFieldLength.setColumns(5);
 		textFieldLength.setValue(0.0);
@@ -1098,14 +1096,24 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
+	public void setValuePanelFractionDigits(final int lengthDigitCount, final int angleDigitCount) {
+		setFractionDigits(textFieldLength, lengthDigitCount);
+		setFractionDigits(textFieldAngle, angleDigitCount);
+	}
+
+	private void setFractionDigits(final JFormattedTextField field, final int digitCount) {
+		var valueFormat = NumberFormat
+				.getNumberInstance(Locale.US);
+		valueFormat.setMinimumFractionDigits(digitCount);
+
+		field.setFormatterFactory(
+				new DefaultFormatterFactory(new NumberFormatter(valueFormat)));
+	}
+
+	@Override
 	public void addCheckWindowButtonListener(final Runnable listener) {
 		checkWindowButton.addActionListener(e -> listener.run());
 	}
-
-//	@Override
-//	public void addBuildButtonListener(final Runnable listener) {
-//		buildButton.addActionListener(e -> listener.run());
-//	}
 
 	private void addPropertyChangeListenersToSetting(final PainterScreenSetting mainScreenSetting) {
 		mainScreenSetting.addPropertyChangeListener(

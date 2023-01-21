@@ -20,6 +20,7 @@ public class UIPanelSettingImpl implements UIPanelSetting {
 	private boolean alterLineTypePanelVisible = true;
 	private boolean angleStepPanelVisible = false;
 	private EditMode selectedMode = EditMode.NONE;
+
 	@Override
 	public void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener) {

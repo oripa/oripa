@@ -56,6 +56,7 @@ import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.resource.StringID;
+import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
 /**
@@ -137,6 +138,8 @@ public class UIPanelPresenter {
 		view.initializeButtonSelection(AngleStep.PI_OVER_8.toString(),
 				typeForChangeContext.getTypeFrom().toString(),
 				typeForChangeContext.getTypeTo().toString());
+
+		updateValuePanelFractionDigits();
 	}
 
 	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
@@ -309,6 +312,20 @@ public class UIPanelPresenter {
 
 	private boolean isValidGridDivNum(final int gridDivNum) {
 		return gridDivNum >= 2 && gridDivNum <= 256;
+	}
+
+	/**
+	 * Updates text fields' format setting based on eps in context.
+	 */
+	public void updateValuePanelFractionDigits() {
+		view.setValuePanelFractionDigits(
+				computeValuePanelFractionDigits(paintContext.getPointEps()),
+				computeValuePanelFractionDigits(MathUtil.angleDegreeEps()));
+	}
+
+	private int computeValuePanelFractionDigits(final double eps) {
+		// 1 digit is added for precision.
+		return (int) Math.floor(Math.abs(Math.log10(eps))) + 1;
 	}
 
 	/**
