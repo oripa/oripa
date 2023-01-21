@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
+import oripa.util.ClosedRange;
 import oripa.util.MathUtil;
 import oripa.value.CalculationResource;
 
@@ -455,6 +456,37 @@ public class GeomUtil {
 	 */
 	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
+
+		var parametersOpt = solveCrossPointVectorEquation(p0, p1, q0, q1);
+
+		if (parametersOpt.isEmpty()) {
+			return null;
+		}
+
+		var t = parametersOpt.get().get(1);
+
+		// cp = (1 - t) * q0 + t * q1
+		Vector2d cp = new Vector2d();
+		cp.x = (1.0 - t) * q0.x + t * q1.x;
+		cp.y = (1.0 - t) * q0.y + t * q1.y;
+		return cp;
+	}
+
+	/**
+	 * solve: cross point = p0 + s * (p1 - p0) = q0 + t * (p1 - q0)
+	 *
+	 * @param p0
+	 * @param p1
+	 * @param q0
+	 * @param q1
+	 * @return list of answer values. value at 0 is s for p0 and p1 equation and
+	 *         one at 1 is t for q0 and q1 equation.
+	 */
+	public static Optional<List<Double>> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+			final Vector2d q0, final Vector2d q1) {
+
+		var answer = new ArrayList<Double>();
+
 		Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
 		Vector2d d1 = new Vector2d(q1.x - q0.x, q1.y - q0.y);
 		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
@@ -463,25 +495,23 @@ public class GeomUtil {
 		final double eps = MathUtil.normalizedValueEps();
 
 		if (det * det <= eps * d0.lengthSquared() * d1.lengthSquared()) {
-			return null;
+			return Optional.empty();
 		}
 
 		// Lines intersect in a single point.
-		double invDet = 1.0 / det;
-		double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
-		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
+		double s = (d1.x * diff.y - d1.y * diff.x) / det;
+		double t = (d0.x * diff.y - d0.y * diff.x) / det;
 
-		if (t < 0.0 - eps || t > 1.0 + eps) {
-			return null;
-		} else if (s < 0.0 - eps || s > 1.0 + eps) {
-			return null;
+		var range = new ClosedRange(0, 1, eps);
+
+		if (!range.includes(t) || !range.includes(s)) {
+			return Optional.empty();
 		}
 
-		// cp = (1 - t) * q0 + t * q1
-		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * q0.x + t * q1.x;
-		cp.y = (1.0 - t) * q0.y + t * q1.y;
-		return cp;
+		answer.add(s);
+		answer.add(t);
+
+		return Optional.of(answer);
 	}
 
 	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
