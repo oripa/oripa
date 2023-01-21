@@ -450,9 +450,9 @@ public class GeomUtil {
 	}
 
 	/**
-	 * solve: cross point = p0 + s * d0 = q0 + t * d1
+	 * Computes cross point of segments p0-p1 and q0-q1.
 	 *
-	 * @return cross point
+	 * @return cross point. null if the segments don't cross.
 	 */
 	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
@@ -480,7 +480,8 @@ public class GeomUtil {
 	 * @param q0
 	 * @param q1
 	 * @return list of answer values. value at 0 is s for p0 and p1 equation and
-	 *         one at 1 is t for q0 and q1 equation.
+	 *         one at 1 is t for q0 and q1 equation. Empty if answer doesn't
+	 *         exist.
 	 */
 	public static Optional<List<Double>> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
