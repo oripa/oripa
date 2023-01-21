@@ -473,7 +473,7 @@ public class GeomUtil {
 	}
 
 	/**
-	 * solve: cross point = p0 + s * (p1 - p0) = q0 + t * (p1 - q0)
+	 * solve: cross point = p0 + s * (p1 - p0) = q0 + t * (q1 - q0)
 	 *
 	 * @param p0
 	 * @param p1
