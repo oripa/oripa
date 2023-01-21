@@ -24,7 +24,6 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.GeomUtil;
-import oripa.geom.Line;
 import oripa.geom.Segment;
 import oripa.util.MathUtil;
 
@@ -122,9 +121,7 @@ public class OriGeomUtil {
 	private static boolean isLineOnEdgeOfFace(final OriFace face, final OriHalfedge heg, final double eps) {
 		Vector2d p1 = heg.getPosition();
 		Vector2d p2 = heg.getNext().getPosition();
-		Vector2d dir = new Vector2d();
-		dir.sub(p2, p1);
-		Line heLine = new Line(p1, dir);
+		var heLine = new Segment(p1, p2).getLine();
 
 		return face.halfedgeStream().anyMatch(he -> GeomUtil.distancePointToLine(he.getPosition(), heLine) < eps
 				&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < eps);

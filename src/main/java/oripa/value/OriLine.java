@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 
-import oripa.geom.Line;
 import oripa.geom.Segment;
 
 public class OriLine extends Segment implements Comparable<OriLine> {
@@ -116,10 +115,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 
 	public OriLine(final Segment segment, final Type type) {
 		this(segment.getP0(), segment.getP1(), type);
-	}
-
-	public Line getLine() {
-		return new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
 	}
 
 	public Stream<OriPoint> oriPointStream() {

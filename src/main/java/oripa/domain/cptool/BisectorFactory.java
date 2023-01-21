@@ -69,7 +69,7 @@ public class BisectorFactory {
 
 		Vector2d dir = GeomUtil.getBisectorVec(v0, v1, v2);
 		Vector2d cp = GeomUtil.getCrossPoint(
-				new Line(l.p0, new Vector2d(l.p1.x - l.p0.x, l.p1.y - l.p0.y)),
+				l.getLine(),
 				new Line(v1, dir));
 
 		OriLine bisector = new OriLine(v1, cp, lineType);
