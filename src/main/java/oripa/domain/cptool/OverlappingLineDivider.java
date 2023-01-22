@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
-import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 
 /**
@@ -51,13 +50,14 @@ public class OverlappingLineDivider {
 	 * @param lines
 	 *            lines to be divided
 	 */
-	public void divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines) {
+	public void divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines,
+			final double pointEps) {
 		var extractor = new OverlappingLineExtractor();
 
 		var allLines = new HashSet<OriLine>(dividerLines);
 		allLines.addAll(lines);
 
-		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines);
+		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
 		Set<OriLine> dividerLineSet = new HashSet<>(dividerLines);
 		Set<OriLine> lineSet = ConcurrentHashMap.newKeySet();
@@ -75,7 +75,7 @@ public class OverlappingLineDivider {
 
 			lineSet.removeAll(lineOverlaps);
 
-			dividerOverlaps.forEach(divider -> divideLinesIfOverlap(divider, lineOverlaps));
+			dividerOverlaps.forEach(divider -> divideLinesIfOverlap(divider, lineOverlaps, pointEps));
 
 			lineSet.addAll(lineOverlaps);
 		});
@@ -84,7 +84,8 @@ public class OverlappingLineDivider {
 		lines.addAll(lineSet);
 	}
 
-	private void divideLinesIfOverlap(final OriLine dividerLine, final Collection<OriLine> lines) {
+	private void divideLinesIfOverlap(final OriLine dividerLine, final Collection<OriLine> lines,
+			final double pointEps) {
 
 		Set<OriLine> targettedLines = ConcurrentHashMap.newKeySet();
 		Set<OriLine> splitLines = ConcurrentHashMap.newKeySet();
@@ -93,13 +94,13 @@ public class OverlappingLineDivider {
 				.forEach(line -> {
 					var splitPoints = new ArrayList<Vector2d>();
 
-					int overlapCount = GeomUtil.distinguishLineSegmentsOverlap(dividerLine, line);
+					int overlapCount = GeomUtil.distinguishLineSegmentsOverlap(dividerLine, line, pointEps);
 
 					switch (overlapCount) {
 					case 2:
 					case 3:
-						splitPoints.addAll(createSplitPoints(line, dividerLine.getP0()));
-						splitPoints.addAll(createSplitPoints(line, dividerLine.getP1()));
+						splitPoints.addAll(createSplitPoints(line, dividerLine.getP0(), pointEps));
+						splitPoints.addAll(createSplitPoints(line, dividerLine.getP1(), pointEps));
 						break;
 					default:
 						return;
@@ -109,25 +110,25 @@ public class OverlappingLineDivider {
 
 					targettedLines.add(line);
 					splitLines.addAll(
-							sequentialLineFactory.createSequentialLines(splitPoints, line.getType()));
+							sequentialLineFactory.createSequentialLines(splitPoints, line.getType(), pointEps));
 				});
 
 		lines.removeAll(targettedLines);
 		lines.addAll(splitLines);
 	}
 
-	private List<Vector2d> createSplitPoints(final OriLine line, final Vector2d p) {
+	private List<Vector2d> createSplitPoints(final OriLine line, final Vector2d p, final double pointEps) {
 		var points = new ArrayList<Vector2d>(List.of(line.getP0(), line.getP1()));
 
 		// is close to segment?
 		if (GeomUtil.distancePointToSegment(p, line.getP0(),
-				line.getP1()) > CalculationResource.POINT_EPS) {
+				line.getP1()) > pointEps) {
 			return points;
 		}
 
-		if (GeomUtil.distance(p, line.getP0()) >= CalculationResource.POINT_EPS) {
+		if (GeomUtil.distance(p, line.getP0()) >= pointEps) {
 			points.add(p);
-		} else if (GeomUtil.distance(p, line.getP1()) >= CalculationResource.POINT_EPS) {
+		} else if (GeomUtil.distance(p, line.getP1()) >= pointEps) {
 			points.add(p);
 		}
 

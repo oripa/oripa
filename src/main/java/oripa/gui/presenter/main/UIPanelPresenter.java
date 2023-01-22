@@ -56,6 +56,7 @@ import oripa.gui.view.main.UIPanelView;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.model.ModelViewFrameView;
 import oripa.resource.StringID;
+import oripa.util.MathUtil;
 import oripa.value.OriLine;
 
 /**
@@ -137,6 +138,8 @@ public class UIPanelPresenter {
 		view.initializeButtonSelection(AngleStep.PI_OVER_8.toString(),
 				typeForChangeContext.getTypeFrom().toString(),
 				typeForChangeContext.getTypeTo().toString());
+
+		updateValuePanelFractionDigits();
 	}
 
 	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
@@ -312,11 +315,26 @@ public class UIPanelPresenter {
 	}
 
 	/**
+	 * Updates text fields' format setting based on eps in context.
+	 */
+	public void updateValuePanelFractionDigits() {
+		view.setValuePanelFractionDigits(
+				computeValuePanelFractionDigits(paintContext.getPointEps()),
+				computeValuePanelFractionDigits(MathUtil.angleDegreeEps()));
+	}
+
+	private int computeValuePanelFractionDigits(final double eps) {
+		// 1 digit is added for precision.
+		return (int) Math.floor(Math.abs(Math.log10(eps))) + 1;
+	}
+
+	/**
 	 * display window with foldability checks
 	 */
 	private void showCheckerWindow() {
 		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), subFrameFactory);
-		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth());
+		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth(),
+				paintContext.getPointEps());
 	}
 
 	private void computeModels() {
@@ -330,7 +348,7 @@ public class UIPanelPresenter {
 
 		CreasePattern creasePattern = paintContext.getCreasePattern();
 
-		var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
+		var origamiModels = modelComputation.buildOrigamiModels(creasePattern, paintContext.getPointEps());
 
 		computationResult = modelComputation.computeModels(
 				origamiModels,

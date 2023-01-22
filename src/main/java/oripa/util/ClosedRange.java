@@ -18,36 +18,38 @@
  */
 package oripa.util;
 
-import javax.vecmath.Vector2d;
-
 /**
  * @author OUCHI Koji
  *
  */
-public class MathUtil {
-	public static double normalizeAngle(final double angle) {
-		final double TWO_PI = 2 * Math.PI;
-		return (TWO_PI + angle) % TWO_PI;
+public class ClosedRange implements Range {
+	final double min;
+	final double max;
+	final double eps;
+
+	public ClosedRange(final double min, final double max, final double eps) {
+		if (min > max) {
+			throw new IllegalArgumentException("min should be smaller than max.");
+		}
+
+		if (eps < 0) {
+			throw new IllegalArgumentException("eps should be positive");
+		}
+
+		this.min = min;
+		this.max = max;
+		this.eps = eps;
 	}
 
-	public static double angleOf(final Vector2d v) {
-		return normalizeAngle(Math.atan2(v.getY(), v.getX()));
+	public ClosedRange(final double min, final double max) {
+		this(min, max, 0);
 	}
 
-	public static double angleRadianEps() {
-		return 1e-5;
+	@Override
+	public boolean includes(final double value) {
+		if (eps == 0) {
+			return value >= min && value <= max;
+		}
+		return value > min - eps && value < max + eps;
 	}
-
-	public static double angleDegreeEps() {
-		return Math.toDegrees(angleRadianEps());
-	}
-
-	public static double normalizedValueEps() {
-		return 1e-6;
-	}
-
-	public static boolean areEqual(final double v0, final double v1, final double eps) {
-		return Math.abs(v1 - v0) < eps;
-	}
-
 }

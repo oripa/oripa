@@ -70,17 +70,20 @@ class OutlineAdderTest {
 
 		var creasePattern = (new CreasePatternFactory()).createCreasePattern(List.of(
 				l0, l1, l2, l3, l4));
+		final double eps = 1e-5;
 
 		when(painter.getCreasePattern()).thenReturn(creasePattern);
+		when(painter.getPointEps()).thenReturn(eps);
 
 		var l0Cut = new OriLine(l0);
 		l0Cut.setType(OriLine.Type.CUT);
 		var l1Cut = new OriLine(l1);
 		l1Cut.setType(OriLine.Type.CUT);
 
-		when(overlappingExtractor.extract(anyCollection(), eq(l0Cut))).thenReturn(List.of(l0));
-		when(overlappingExtractor.extract(anyCollection(), eq(l1Cut))).thenReturn(List.of(l1));
-		when(overlappingExtractor.extract(anyCollection(), not(or(eq(l0Cut), eq(l1Cut))))).thenReturn(List.of());
+		when(overlappingExtractor.extract(anyCollection(), eq(l0Cut), eq(eps))).thenReturn(List.of(l0));
+		when(overlappingExtractor.extract(anyCollection(), eq(l1Cut), eq(eps))).thenReturn(List.of(l1));
+		when(overlappingExtractor.extract(anyCollection(), not(or(eq(l0Cut), eq(l1Cut))), eq(eps)))
+				.thenReturn(List.of());
 
 		var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
 

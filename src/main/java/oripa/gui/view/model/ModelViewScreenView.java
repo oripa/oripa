@@ -52,7 +52,7 @@ public interface ModelViewScreenView extends ScreenView {
 
 	void setPaintComponentListener(Consumer<ModelGraphics> listener);
 
-	void setScissorsLineChangeListener(Runnable listener);
+	void setScissorsLineChangeListener(Consumer<Double> listener);
 
 	void setCallbackOnUpdateScissorsLine(CallbackOnUpdate listener);
 }

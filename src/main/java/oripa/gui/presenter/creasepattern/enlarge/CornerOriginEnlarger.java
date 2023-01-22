@@ -20,8 +20,8 @@ package oripa.gui.presenter.creasepattern.enlarge;
 
 import javax.vecmath.Vector2d;
 
+import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
-import oripa.value.CalculationResource;
 
 /**
  * @author OUCHI Koji
@@ -31,18 +31,19 @@ class CornerOriginEnlarger extends AbstractEnlarger {
 
 	@Override
 	public Vector2d createOriginOfEnlargement(final RectangleDomain originalDomain, final Vector2d mouseStartPoint) {
-
-		return getOppositePoint(originalDomain, mouseStartPoint);
+		// It is natural to fix the epsilon for mouse interaction.
+		final double eps = 1e-5;
+		return getOppositePoint(originalDomain, mouseStartPoint, eps);
 	}
 
-	private Vector2d getOppositePoint(final RectangleDomain domain, final Vector2d p) {
-		if (p.epsilonEquals(domain.getLeftTop(), CalculationResource.POINT_EPS)) {
+	private Vector2d getOppositePoint(final RectangleDomain domain, final Vector2d p, final double eps) {
+		if (GeomUtil.areEqual(p, domain.getLeftTop(), eps)) {
 			return domain.getRightBottom();
-		} else if (p.epsilonEquals(domain.getLeftBottom(), CalculationResource.POINT_EPS)) {
+		} else if (GeomUtil.areEqual(p, domain.getLeftBottom(), eps)) {
 			return domain.getRightTop();
-		} else if (p.epsilonEquals(domain.getRightTop(), CalculationResource.POINT_EPS)) {
+		} else if (GeomUtil.areEqual(p, domain.getRightTop(), eps)) {
 			return domain.getLeftBottom();
-		} else if (p.epsilonEquals(domain.getRightBottom(), CalculationResource.POINT_EPS)) {
+		} else if (GeomUtil.areEqual(p, domain.getRightBottom(), eps)) {
 			return domain.getLeftTop();
 		}
 

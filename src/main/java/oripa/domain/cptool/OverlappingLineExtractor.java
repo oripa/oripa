@@ -40,11 +40,11 @@ import oripa.value.OriLine;
  */
 public class OverlappingLineExtractor {
 	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
-	private static final double EPS = 1e-5;
 
-	public Collection<List<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines) {
+	public Collection<List<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines,
+			final double pointEps) {
 		// make a data structure for fast computation.
-		var hashFactory = new AnalyticLineHashFactory(EPS);
+		var hashFactory = new AnalyticLineHashFactory(pointEps);
 		var hash = hashFactory.create(lines);
 
 		var overlapGroups = new ConcurrentLinkedDeque<List<OriLine>>();
@@ -62,7 +62,7 @@ public class OverlappingLineExtractor {
 					// search another line of overlapping
 					IntStream.range(i + 1, byIntercept.size()).parallel().forEach(j -> {
 						var line1 = byIntercept.get(j).getLine();
-						if (GeomUtil.isOverlap(line0, line1)) {
+						if (GeomUtil.isOverlap(line0, line1, pointEps)) {
 							overlaps.add(line0);
 							overlaps.add(line1);
 						}
@@ -83,11 +83,11 @@ public class OverlappingLineExtractor {
 	 * @param lines
 	 * @return all overlapping lines.
 	 */
-	public Collection<OriLine> extract(final Collection<OriLine> lines) {
+	public Collection<OriLine> extract(final Collection<OriLine> lines, final double pointEps) {
 		var watch = new StopWatch(true);
 
 		// make a data structure for fast computation.
-		var hashFactory = new AnalyticLineHashFactory(EPS);
+		var hashFactory = new AnalyticLineHashFactory(pointEps);
 		var hash = hashFactory.create(lines);
 
 		var overlappingLines = new ConcurrentLinkedDeque<OriLine>();
@@ -104,7 +104,7 @@ public class OverlappingLineExtractor {
 					// search another line of overlapping
 					IntStream.range(i + 1, byIntercept.size()).parallel().forEach(j -> {
 						var line1 = byIntercept.get(j).getLine();
-						if (GeomUtil.isOverlap(line0, line1)) {
+						if (GeomUtil.isOverlap(line0, line1, pointEps)) {
 							overlappingLines.add(line0);
 							overlappingLines.add(line1);
 						}
@@ -124,9 +124,9 @@ public class OverlappingLineExtractor {
 	 * @param target
 	 * @return overlapping lines of {@code target}.
 	 */
-	public Collection<OriLine> extract(final Collection<OriLine> lines, final OriLine target) {
+	public Collection<OriLine> extract(final Collection<OriLine> lines, final OriLine target, final double pointEps) {
 		return lines.parallelStream()
-				.filter(l -> GeomUtil.isOverlap(l, target))
+				.filter(l -> GeomUtil.isOverlap(l, target, pointEps))
 				.collect(Collectors.toList());
 	}
 }

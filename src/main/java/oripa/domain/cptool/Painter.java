@@ -20,6 +20,8 @@ public class Painter {
 
 	private final CreasePattern creasePattern;
 
+	private final double pointEps;
+
 	private final LineSelectionModifier selectionModifier = new LineSelectionModifier();
 	private final ElementRemover elementRemover = new ElementRemover();
 	private final LineAdder lineAdder = new LineAdder();
@@ -34,10 +36,12 @@ public class Painter {
 	@SuppressWarnings("unused")
 	private Painter() {
 		creasePattern = null;
+		pointEps = 0;
 	}
 
-	public Painter(final CreasePattern aCreasePattern) {
+	public Painter(final CreasePattern aCreasePattern, final double pointEps) {
 		creasePattern = aCreasePattern;
+		this.pointEps = pointEps;
 	}
 
 	/**
@@ -77,7 +81,7 @@ public class Painter {
 	 *
 	 */
 	public void removeSelectedLines() {
-		elementRemover.removeSelectedLines(creasePattern);
+		elementRemover.removeSelectedLines(creasePattern, getPointEps());
 	}
 
 	/**
@@ -88,8 +92,8 @@ public class Painter {
 	 *            a line to be added
 	 */
 	public void addLine(final OriLine inputLine) {
-		lineAdder.addLine(inputLine, creasePattern);
-		elementRemover.removeMeaninglessVertices(creasePattern);
+		lineAdder.addLine(inputLine, creasePattern, getPointEps());
+		elementRemover.removeMeaninglessVertices(creasePattern, getPointEps());
 	}
 
 	/**
@@ -101,8 +105,8 @@ public class Painter {
 	 * @param lines
 	 */
 	public void addLines(final Collection<OriLine> lines) {
-		lineAdder.addAll(lines, creasePattern);
-		elementRemover.removeMeaninglessVertices(creasePattern);
+		lineAdder.addAll(lines, creasePattern, getPointEps());
+		elementRemover.removeMeaninglessVertices(creasePattern, getPointEps());
 	}
 
 	/**
@@ -127,7 +131,7 @@ public class Painter {
 	 *            the line to be removed
 	 */
 	public void removeLine(final OriLine l) {
-		elementRemover.removeLine(l, creasePattern);
+		elementRemover.removeLine(l, creasePattern, getPointEps());
 	}
 
 	/**
@@ -137,7 +141,7 @@ public class Painter {
 	 *            to be removed
 	 */
 	public void removeLines(final Collection<OriLine> lines) {
-		elementRemover.removeLines(lines, creasePattern);
+		elementRemover.removeLines(lines, creasePattern, getPointEps());
 	}
 
 	/**
@@ -148,7 +152,7 @@ public class Painter {
 	 */
 	public void removeVertex(
 			final Vector2d v) {
-		elementRemover.removeVertex(v, creasePattern);
+		elementRemover.removeVertex(v, creasePattern, getPointEps());
 	}
 
 	/**
@@ -163,14 +167,14 @@ public class Painter {
 	public boolean addVertexOnLine(
 			final OriLine line, final Vector2d v) {
 		Collection<OriLine> dividedLines = lineDivider.divideLine(line, v,
-				creasePattern.getPaperSize());
+				getPointEps());
 
 		if (dividedLines == null) {
 			return false;
 		}
-		elementRemover.removeLine(line, creasePattern);
+		elementRemover.removeLine(line, creasePattern, getPointEps());
 
-		lineAdder.addAll(dividedLines, creasePattern);
+		lineAdder.addAll(dividedLines, creasePattern, getPointEps());
 
 		return true;
 	}
@@ -231,7 +235,7 @@ public class Painter {
 	 */
 	public void alterLineType(
 			final OriLine l, final TypeForChange from, final TypeForChange to) {
-		typeChanger.alterLineType(l, creasePattern, from, to);
+		typeChanger.alterLineType(l, creasePattern, from, to, getPointEps());
 	}
 
 	/**
@@ -246,7 +250,7 @@ public class Painter {
 	 */
 	public void alterLineTypes(
 			final Collection<OriLine> lines, final TypeForChange from, final TypeForChange to) {
-		typeChanger.alterLineTypes(lines, creasePattern, from, to);
+		typeChanger.alterLineTypes(lines, creasePattern, from, to, getPointEps());
 	}
 
 	/**
@@ -270,8 +274,8 @@ public class Painter {
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final OriLine.Type lineType) {
 		OriLine symmetricLine;
 		try {
-			symmetricLine = symmetricFactory.createSymmetricLine(v0, v1, v2, creasePattern,
-					lineType);
+			symmetricLine = symmetricFactory.createSymmetricLine(
+					v0, v1, v2, creasePattern, lineType, getPointEps());
 		} catch (PainterCommandFailedException comEx) {
 			return false;
 		}
@@ -303,7 +307,7 @@ public class Painter {
 		Collection<OriLine> autoWalkLines;
 		try {
 			autoWalkLines = symmetricFactory.createSymmetricLineAutoWalk(
-					v0, v1, v2, v0, creasePattern, lineType);
+					v0, v1, v2, v0, creasePattern, lineType, getPointEps());
 
 		} catch (PainterCommandFailedException comEx) {
 			return false;
@@ -374,5 +378,9 @@ public class Painter {
 				creasePattern.getPaperSize());
 
 		addLines(copiedLines);
+	}
+
+	public double getPointEps() {
+		return pointEps;
 	}
 }

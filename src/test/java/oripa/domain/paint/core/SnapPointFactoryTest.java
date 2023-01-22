@@ -16,6 +16,8 @@ import oripa.value.OriLine;
 class SnapPointFactoryTest {
 	SnapPointFactory factory = new SnapPointFactory();
 
+	static final double EPS = 1e-6;
+
 	@Test
 	void test() {
 		var creases = List.of(
@@ -28,14 +30,14 @@ class SnapPointFactoryTest {
 
 		var line = new OriLine(-1, 0, 10, 0, OriLine.Type.MOUNTAIN);
 
-		var points = factory.createSnapPoints(creasePattern, line);
+		var points = factory.createSnapPoints(creasePattern, line, EPS);
 
 		var expectedPoints = List.of(new Vector2d(1, 0), new Vector2d(2, 0), new Vector2d(3, 0));
 
 		assertEquals(expectedPoints.size(), points.size());
 
 		expectedPoints.forEach(
-				expected -> assertAnyMatch(expected, points, (p1, p2) -> GeomUtil.distance(p1, p2) < 1e-6));
+				expected -> assertAnyMatch(expected, points, (p1, p2) -> GeomUtil.areEqual(p1, p2, EPS)));
 	}
 
 }

@@ -25,8 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.LineAdder;
-import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.value.OriLine;
 
@@ -58,7 +58,7 @@ public class FacesToCreasePatternConverter {
 	 *            faces after fold without layer ordering.
 	 * @return
 	 */
-	public CreasePattern convertToCreasePattern(final List<OriFace> faces) {
+	public CreasePattern convertToCreasePattern(final List<OriFace> faces, final double pointEps) {
 		logger.debug("toCreasePattern(): construct edge structure after folding");
 
 		var lines = new ArrayList<OriLine>();
@@ -68,12 +68,12 @@ public class FacesToCreasePatternConverter {
 						OriLine.Type.MOUNTAIN);
 				// make cross every time to divide the faces.
 				// addLines() cannot make cross among given lines.
-				lineAdder.addLine(line, lines);
+				lineAdder.addLine(line, lines, pointEps);
 
 			});
 		}
 		CreasePattern creasePattern = cpFactory.createCreasePattern(lines);
-		creasePattern.cleanDuplicatedLines();
+		creasePattern.cleanDuplicatedLines(pointEps);
 
 		logger.debug("toCreasePattern(): end");
 

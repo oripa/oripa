@@ -336,11 +336,10 @@ class CreasePatternImpl implements CreasePattern {
 
 		lines.addAll(this);
 
+		var d = new Vector2d(dx, dy);
 		lines.forEach(line -> {
-			line.p0.x += dx;
-			line.p0.y += dy;
-			line.p1.x += dx;
-			line.p1.y += dy;
+			line.getP0().add(d);
+			line.getP1().add(d);
 		});
 
 		// rebuild vertices info
@@ -361,11 +360,11 @@ class CreasePatternImpl implements CreasePattern {
 	 * oripa.domain.creasepattern.CreasePatternInterface#removeDuplicatedLines()
 	 */
 	@Override
-	public boolean cleanDuplicatedLines() {
+	public boolean cleanDuplicatedLines(final double pointEps) {
 		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(size());
 		for (OriLine l : this) {
 			if (tmpLines.stream()
-					.noneMatch(line -> GeomUtil.isSameLineSegment(line, l))) {
+					.noneMatch(line -> GeomUtil.isSameLineSegment(line, l, pointEps))) {
 				tmpLines.add(l);
 			}
 		}

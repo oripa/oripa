@@ -204,6 +204,7 @@ public class MainFramePresenter {
 			screenUpdater.updateScreen();
 			updateMenu(path);
 			updateTitleText();
+			uiPanelPresenter.updateValuePanelFractionDigits();
 		});
 
 		addImportActionListener();
@@ -539,7 +540,7 @@ public class MainFramePresenter {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
-					type, view, view::showModelBuildFailureDialog);
+					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
 
 		} catch (UserCanceledException e) {
 			// ignore

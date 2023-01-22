@@ -23,18 +23,28 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
+import oripa.util.ClosedRange;
 import oripa.util.MathUtil;
 import oripa.value.CalculationResource;
 
 public class GeomUtil {
-	public final static double EPS = CalculationResource.POINT_EPS;
 
-	public final static double eps(final double paperSize) {
-		return EPS * paperSize;
+	/**
+	 * Discouraged to use in order to make eps configurable.
+	 *
+	 * @return eps for point equality measured by distance.
+	 */
+	public static double pointEps() {
+		return CalculationResource.POINT_EPS;
+	}
+
+	public static boolean areEqual(final Vector2d p0, final Vector2d p1, final double eps) {
+		return distance(p0, p1) < eps;
 	}
 
 	public static double distance(final Vector2d p0, final Vector2d p1) {
@@ -42,8 +52,8 @@ public class GeomUtil {
 	}
 
 	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
-		// tolerance of 1 degree
-		return dir0.angle(dir1) < Math.PI / 180 || dir0.angle(dir1) > Math.PI * 179.0 / 180;
+		double angle = dir0.angle(dir1);
+		return angle < MathUtil.angleRadianEps() || angle > Math.PI - MathUtil.angleRadianEps();
 	}
 
 	/**
@@ -52,14 +62,14 @@ public class GeomUtil {
 	 * segment.
 	 * <ul>
 	 * <li>If the count is 0 or 1, then they are not overlapping.</li>
-	 * <li>If the count is 2, then they partially overlaps.</li>
+	 * <li>If the count is 2, then they partially overlap.</li>
 	 * <li>If the count is 3, then one segment overlaps entirely and an end
 	 * point is shared with the other segment.</li>
 	 * <li>If the count is 4, then the two segments are equal.</li>
 	 * </ul>
 	 */
 	public static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
-			final Vector2d s1, final Vector2d e1) {
+			final Vector2d s1, final Vector2d e1, final double pointEps) {
 		// Whether or not is parallel
 		Vector2d dir0 = new Vector2d(e0);
 		dir0.sub(s0);
@@ -71,23 +81,23 @@ public class GeomUtil {
 		}
 
 		int cnt = 0;
-		if (distancePointToSegment(s0, s1, e1) < EPS) {
+		if (distancePointToSegment(s0, s1, e1) < pointEps) {
 			cnt++;
 		}
-		if (distancePointToSegment(e0, s1, e1) < EPS) {
+		if (distancePointToSegment(e0, s1, e1) < pointEps) {
 			cnt++;
 		}
-		if (distancePointToSegment(s1, s0, e0) < EPS) {
+		if (distancePointToSegment(s1, s0, e0) < pointEps) {
 			cnt++;
 		}
-		if (distancePointToSegment(e1, s0, e0) < EPS) {
+		if (distancePointToSegment(e1, s0, e0) < pointEps) {
 			cnt++;
 		}
 		return cnt;
 	}
 
-	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1) {
-		return distinguishLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1());
+	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
+		return distinguishLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
 	}
 
 	/**
@@ -101,8 +111,8 @@ public class GeomUtil {
 	 *         end points and does not share other part.
 	 */
 	public static boolean isRelaxedOverlap(final Vector2d s0, final Vector2d e0,
-			final Vector2d s1, final Vector2d e1) {
-		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1);
+			final Vector2d s1, final Vector2d e1, final double pointEps) {
+		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1, pointEps);
 		return cnt >= 2;
 
 	}
@@ -115,32 +125,32 @@ public class GeomUtil {
 	 *         Note that this method returns {@code true} if the lines touch at
 	 *         end points and does not share other part.
 	 */
-	public static boolean isRelaxedOverlap(final Segment seg0, final Segment seg1) {
-		return isRelaxedOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1());
+	public static boolean isRelaxedOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
+		return isRelaxedOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
 	}
 
 	/**
 	 *
 	 * @param seg0
 	 * @param seg1
-	 * @param eps
+	 * @param pointEps
 	 * @return {@code true} if end points of both lines are on the other line.
 	 *         Note that this method returns {@code false} if the lines touch at
 	 *         end points and does not share other part.
 	 */
-	public static boolean isOverlap(final Segment seg0, final Segment seg1, final double eps) {
-		var overlapCount = distinguishLineSegmentsOverlap(seg0, seg1);
+	public static boolean isOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
+		var overlapCount = distinguishLineSegmentsOverlap(seg0, seg1, pointEps);
 		if (overlapCount >= 3) {
 			return true;
 		}
 		if (overlapCount == 2) {
-			if (distance(seg0.getP0(), seg1.getP0()) < eps) {
+			if (areEqual(seg0.getP0(), seg1.getP0(), pointEps)) {
 				return false;
-			} else if (distance(seg0.getP0(), seg1.getP1()) < eps) {
+			} else if (areEqual(seg0.getP0(), seg1.getP1(), pointEps)) {
 				return false;
-			} else if (distance(seg0.getP1(), seg1.getP0()) < eps) {
+			} else if (areEqual(seg0.getP1(), seg1.getP0(), pointEps)) {
 				return false;
-			} else if (distance(seg0.getP1(), seg1.getP1()) < eps) {
+			} else if (areEqual(seg0.getP1(), seg1.getP1(), pointEps)) {
 				return false;
 			} else {
 				return true;
@@ -148,10 +158,6 @@ public class GeomUtil {
 		}
 
 		return false;
-	}
-
-	public static boolean isOverlap(final Segment line0, final Segment line1) {
-		return isOverlap(line0, line1, EPS);
 	}
 
 	/**
@@ -165,11 +171,11 @@ public class GeomUtil {
 	 *            Second line to compare
 	 * @return true if both segments are (at least almost) equals
 	 */
-	public static boolean isSameLineSegment(final Segment l0, final Segment l1) {
-		if (distance(l0.getP0(), l1.getP0()) < EPS && distance(l0.getP1(), l1.getP1()) < EPS) {
+	public static boolean isSameLineSegment(final Segment l0, final Segment l1, final double pointEps) {
+		if (areEqual(l0.getP0(), l1.getP0(), pointEps) && areEqual(l0.getP1(), l1.getP1(), pointEps)) {
 			return true;
 		}
-		if (distance(l0.getP0(), l1.getP1()) < EPS && distance(l0.getP1(), l1.getP0()) < EPS) {
+		if (areEqual(l0.getP0(), l1.getP1(), pointEps) && areEqual(l0.getP1(), l1.getP0(), pointEps)) {
 			return true;
 		}
 
@@ -184,7 +190,7 @@ public class GeomUtil {
 	 *            defines clip area.
 	 * @return Optional of clipped segment. Empty if failed.
 	 */
-	public static Optional<Segment> clipLine(final Segment l, final RectangleDomain domain) {
+	public static Optional<Segment> clipLine(final Segment l, final RectangleDomain domain, final double pointEps) {
 
 		double left = domain.getLeft();
 		double right = domain.getRight();
@@ -204,7 +210,7 @@ public class GeomUtil {
 			if (cp == null) {
 				return;
 			}
-			if (crossPoints.stream().allMatch(v -> distance(v, cp) > EPS)) {
+			if (crossPoints.stream().allMatch(v -> distance(v, cp) > pointEps)) {
 				crossPoints.add(cp);
 			}
 		};
@@ -264,7 +270,7 @@ public class GeomUtil {
 		// a dot b = |a||b| cos(theta)
 		double angle = Math.acos(v0_v1.dot(v2_v1));
 
-		if (Math.abs(angle - Math.PI) < EPS) {
+		if (MathUtil.areEqual(angle, Math.PI, MathUtil.angleRadianEps())) {
 			double bisectorAngle = MathUtil.angleOf(v0_v1) + Math.PI / 2;
 			return new Vector2d(Math.cos(bisectorAngle), Math.sin(bisectorAngle));
 		}
@@ -292,60 +298,60 @@ public class GeomUtil {
 	// Null if not intersect
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
 		Vector2d p0 = new Vector2d(ray.p);
+		Vector2d p1 = new Vector2d();
+		p1.add(p0, ray.dir);
 
 		Vector2d segP0 = seg.getP0();
 		Vector2d segP1 = seg.getP1();
 
-		Vector2d d0 = new Vector2d(ray.dir);
-		Vector2d d1 = new Vector2d(segP1.x - segP0.x, segP1.y - segP0.y);
-		Vector2d diff = new Vector2d(segP0.x - p0.x, segP0.y - p0.y);
-		double det = d1.x * d0.y - d1.y * d0.x;
+		var answerOpt = solveRayCrossPointVectorEquation(p0, p1, segP0, segP1);
 
-		double epsilon = 1.0e-6;
-		if (det * det <= epsilon * d0.lengthSquared() * d1.lengthSquared()) {
+		if (answerOpt.isEmpty()) {
 			return null;
 		}
 
-		// Lines intersect in a single point. Return both s and t values for
-		// use by calling functions.
-		double invDet = 1.0 / det;
-		double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
-		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
-
-		if (t < 0.0 - epsilon || t > 1.0 + epsilon) {
-			return null;
-		} else if (s < 0.0 - epsilon) {
-			return null;
-		}
+		double t = answerOpt.get().get(1);
 		Vector2d cp = new Vector2d();
 		cp.x = (1.0 - t) * segP0.x + t * segP1.x;
 		cp.y = (1.0 - t) * segP0.y + t * segP1.y;
 		return cp;
 	}
 
+	private static Optional<List<Double>> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+			final Vector2d segP0, final Vector2d segP1) {
+		final double eps = MathUtil.normalizedValueEps();
+		return solveCrossPointVectorEquation(p0, p1, segP0, segP1,
+				(s, t) -> new ClosedRange(0, 1, eps).includes(t) && s >= -eps);
+	}
+
 	// Compute the intersection of straight lines
 	public static Vector2d getCrossPoint(final Line l0, final Line l1) {
-		Vector2d p0 = new Vector2d(l0.p);
-		Vector2d p1 = new Vector2d(l0.p);
-		p1.add(l0.dir);
+		var p0 = new Vector2d(l0.p);
+		var p1 = new Vector2d();
+		p1.add(p0, l0.dir);
 
-		Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
-		Vector2d d1 = new Vector2d(l1.dir);
-		Vector2d diff = new Vector2d(l1.p.x - p0.x, l1.p.y - p0.y);
-		double det = d1.x * d0.y - d1.y * d0.x;
+		var q0 = new Vector2d(l1.p);
+		var q1 = new Vector2d();
+		q1.add(q0, l1.dir);
 
-		if (det * det <= EPS * d0.lengthSquared() * d1.lengthSquared()) {
+		var answerOpt = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);
+
+		if (answerOpt.isEmpty()) {
 			return null;
 		}
 
-		// Lines intersect in a single point.
-		double invDet = 1.0 / det;
-		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
+		var t = answerOpt.get().get(1);
 
+		// cp = (1 - t) * q0 + t * q1
 		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * l1.p.x + t * (l1.p.x + l1.dir.x);
-		cp.y = (1.0 - t) * l1.p.y + t * (l1.p.y + l1.dir.y);
+		cp.x = (1.0 - t) * q0.x + t * q1.x;
+		cp.y = (1.0 - t) * q0.y + t * q1.y;
 		return cp;
+	}
+
+	private static Optional<List<Double>> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+			final Vector2d q0, final Vector2d q1) {
+		return solveCrossPointVectorEquation(p0, p1, q0, q1, (s, t) -> true);
 	}
 
 	public static Segment getLineByValue(final Vector2d sv, final double length,
@@ -445,37 +451,77 @@ public class GeomUtil {
 	}
 
 	/**
-	 * solve: cross point = p0 + s * d0 = q0 + t * d1
+	 * Computes cross point of segments p0-p1 and q0-q1.
 	 *
-	 * @return cross point
+	 * @return cross point. null if the segments don't cross.
 	 */
 	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
-		Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
-		Vector2d d1 = new Vector2d(q1.x - q0.x, q1.y - q0.y);
-		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
-		double det = d1.x * d0.y - d1.y * d0.x;
 
-		if (det * det <= EPS * d0.lengthSquared() * d1.lengthSquared()) {
+		var parametersOpt = solveSegmentsCrossPointVectorEquation(p0, p1, q0, q1);
+
+		if (parametersOpt.isEmpty()) {
 			return null;
 		}
 
-		// Lines intersect in a single point.
-		double invDet = 1.0 / det;
-		double s = (d1.x * diff.y - d1.y * diff.x) * invDet;
-		double t = (d0.x * diff.y - d0.y * diff.x) * invDet;
-
-		if (t < 0.0 - EPS || t > 1.0 + EPS) {
-			return null;
-		} else if (s < 0.0 - EPS || s > 1.0 + EPS) {
-			return null;
-		}
+		var t = parametersOpt.get().get(1);
 
 		// cp = (1 - t) * q0 + t * q1
 		Vector2d cp = new Vector2d();
 		cp.x = (1.0 - t) * q0.x + t * q1.x;
 		cp.y = (1.0 - t) * q0.y + t * q1.y;
 		return cp;
+	}
+
+	/**
+	 * solve: cross point = p0 + s * (p1 - p0) = q0 + t * (q1 - q0)
+	 *
+	 * @param p0
+	 * @param p1
+	 * @param q0
+	 * @param q1
+	 * @return list of answer values. value at 0 is s for p0 and p1 equation and
+	 *         one at 1 is t for q0 and q1 equation. Empty if answer doesn't
+	 *         exist.
+	 */
+	public static Optional<List<Double>> solveSegmentsCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+			final Vector2d q0, final Vector2d q1) {
+
+		final double eps = MathUtil.normalizedValueEps();
+		var range = new ClosedRange(0, 1, eps);
+
+		return solveCrossPointVectorEquation(p0, p1, q0, q1,
+				(s, t) -> range.includes(s) && range.includes(t));
+	}
+
+	private static Optional<List<Double>> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+			final Vector2d q0, final Vector2d q1, final BiPredicate<Double, Double> answerPredicate) {
+
+		var answer = new ArrayList<Double>();
+
+		Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
+		Vector2d d1 = new Vector2d(q1.x - q0.x, q1.y - q0.y);
+		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
+		double det = d1.x * d0.y - d1.y * d0.x;
+
+		final double eps = MathUtil.normalizedValueEps();
+
+		if (det * det <= eps * d0.lengthSquared() * d1.lengthSquared()) {
+			return Optional.empty();
+		}
+
+		// Lines intersect in a single point.
+		double s = (d1.x * diff.y - d1.y * diff.x) / det;
+		double t = (d0.x * diff.y - d0.y * diff.x) / det;
+
+		if (!answerPredicate.test(s, t)) {
+			return Optional.empty();
+		}
+
+		answer.add(s);
+		answer.add(t);
+
+		return Optional.of(answer);
 	}
 
 	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
@@ -495,11 +541,18 @@ public class GeomUtil {
 	 * @return true if vector p0 -> q ends in left side of p1 -> p0 (q is at
 	 *         counterclockwise position) otherwise false.
 	 */
-	public static boolean CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q) {
+	public static boolean isCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		return CCWcheck(p0, p1, q, 0) == 1;
 	}
 
+	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q) {
+		return CCWcheck(p0, p1, q, MathUtil.normalizedValueEps());
+	}
+
 	/**
+	 * tests whether counterclockwise position or not by cross product of
+	 * normalized vectors.
+	 *
 	 * @return 1 if vector p0 -> q ends on the left side of p0 -> p1 (q is at
 	 *         counterclockwise position in right-handed coordinate system), 0
 	 *         if p0-p1 and p0-q is collinear, otherwise -1;
@@ -518,10 +571,18 @@ public class GeomUtil {
 	private static double computeCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		double dx1, dx2, dy1, dy2;
 
-		dx1 = p1.x - p0.x;
-		dy1 = p1.y - p0.y;
-		dx2 = q.x - p0.x;
-		dy2 = q.y - p0.y;
+		var d1 = new Vector2d(p1);
+		d1.sub(p0);
+		d1.normalize();
+
+		var d2 = new Vector2d(q);
+		d2.sub(p0);
+		d2.normalize();
+
+		dx1 = d1.getX();
+		dy1 = d1.getY();
+		dx2 = d2.getX();
+		dy2 = d2.getY();
 
 		return dx1 * dy2 - dy1 * dx2;
 	}

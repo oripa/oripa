@@ -317,12 +317,12 @@ public class OriFace {
 		int heNum = halfedges.size();
 
 		OriHalfedge baseHe = halfedges.get(0);
-		boolean baseFlg = GeomUtil.CCWcheck(getPosition.apply(baseHe),
+		boolean baseFlg = GeomUtil.isCCW(getPosition.apply(baseHe),
 				getPosition.apply(baseHe.getNext()), v);
 
 		for (int i = 1; i < heNum; i++) {
 			OriHalfedge he = halfedges.get(i);
-			if (GeomUtil.CCWcheck(getPosition.apply(he), getPosition.apply(he.getNext()),
+			if (GeomUtil.isCCW(getPosition.apply(he), getPosition.apply(he.getNext()),
 					v) != baseFlg) {
 				return false;
 			}

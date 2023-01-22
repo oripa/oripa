@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.GsonBuilder;
 
 import oripa.doc.Doc;
+import oripa.geom.GeomUtil;
 import oripa.persistence.foldformat.CreasePatternElementConverter;
 import oripa.persistence.foldformat.CreasePatternFOLDFormat;
 import oripa.persistence.foldformat.PointsMerger;
@@ -50,8 +51,10 @@ public class ExporterFOLD implements DocExporter {
 			throws IOException, IllegalArgumentException {
 		logger.info("start exporting FOLD file.");
 
+		final double pointEps = GeomUtil.pointEps();
+
 		var pointsMerger = new PointsMerger();
-		var creasePattern = pointsMerger.mergeClosePoints(doc.getCreasePattern());
+		var creasePattern = pointsMerger.mergeClosePoints(doc.getCreasePattern(), pointEps);
 
 		var property = doc.getProperty();
 

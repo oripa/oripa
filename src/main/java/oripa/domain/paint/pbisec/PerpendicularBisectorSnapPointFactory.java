@@ -38,11 +38,13 @@ public class PerpendicularBisectorSnapPointFactory {
 
 		var bisectorFactory = new BisectorFactory();
 		var pbisec = bisectorFactory.createPerpendicularBisector(p0, p1, context.getPaperDomain(),
-				context.getLineTypeOfNewLines());
+				context.getLineTypeOfNewLines(), context.getPainter().getPointEps());
 
 		var snapPointFactory = new SnapPointFactory();
 
-		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(context.getCreasePattern(), pbisec);
+		var creasePattern = context.getCreasePattern();
+		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(creasePattern, pbisec,
+				creasePattern.getPaperSize());
 
 		return snapPoints;
 	}

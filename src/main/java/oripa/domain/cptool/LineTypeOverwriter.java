@@ -51,15 +51,16 @@ public class LineTypeOverwriter {
 	 * @param allLines
 	 *            is the result of adding lines and splitting at cross points.
 	 */
-	public void overwriteLineTypes(final Collection<OriLine> addedLines, final Collection<OriLine> allLines) {
-		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines);
+	public void overwriteLineTypes(final Collection<OriLine> addedLines, final Collection<OriLine> allLines,
+			final double pointEps) {
+		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
 		var addedLineSet = new HashSet<>(addedLines);
 		Set<OriLine> allLineSet = ConcurrentHashMap.newKeySet();
 		allLineSet.addAll(allLines);
 
 		overlapGroups.parallelStream().forEach(overlaps -> {
-			determineLineTypes(overlaps, addedLineSet, allLineSet);
+			determineLineTypes(overlaps, addedLineSet, allLineSet, pointEps);
 		});
 
 		allLines.clear();
@@ -67,7 +68,7 @@ public class LineTypeOverwriter {
 	}
 
 	private void determineLineTypes(final Collection<OriLine> overlaps, final Set<OriLine> addedLines,
-			final Set<OriLine> allLines) {
+			final Set<OriLine> allLines, final double pointEps) {
 
 		var addedOverlaps = overlaps.stream()
 				.filter(ov -> addedLines.contains(ov))
@@ -81,7 +82,8 @@ public class LineTypeOverwriter {
 		allLines.removeAll(existingOverlaps);
 
 		var sortedPoints = sortLineEndPoints(overlaps);
-		List<OriLine> splitLines = sequentialLineFactory.createSequentialLines(sortedPoints, OriLine.Type.AUX);
+		List<OriLine> splitLines = sequentialLineFactory.createSequentialLines(sortedPoints, OriLine.Type.AUX,
+				pointEps);
 
 		// find lines to be a part of crease pattern
 		var linesToBeUsed = new ArrayList<OriLine>();
@@ -89,7 +91,7 @@ public class LineTypeOverwriter {
 
 			Function<Collection<OriLine>, Boolean> find = overlapsForFilter -> {
 				var filteredOverlap = overlapsForFilter.stream()
-						.filter(line -> GeomUtil.isOverlap(splitLine, line))
+						.filter(line -> GeomUtil.isOverlap(splitLine, line, pointEps))
 						.findFirst();
 
 				if (filteredOverlap.isPresent()) {

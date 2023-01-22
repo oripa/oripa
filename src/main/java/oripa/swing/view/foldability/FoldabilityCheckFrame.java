@@ -63,9 +63,10 @@ public class FoldabilityCheckFrame extends JFrame implements FoldabilityCheckFra
 	public void setModel(
 			final OrigamiModel origamiModel,
 			final Collection<OriLine> creasePattern,
-			final boolean zeroLineWidth) {
+			final boolean zeroLineWidth,
+			final double pointEps) {
 
-		var presenter = new FoldabilityScreenPresenter(screen, origamiModel, creasePattern, zeroLineWidth);
+		var presenter = new FoldabilityScreenPresenter(screen, origamiModel, creasePattern, zeroLineWidth, pointEps);
 
 		presenter.setViewVisible(true);
 	}

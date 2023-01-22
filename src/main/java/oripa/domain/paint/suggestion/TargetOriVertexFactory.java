@@ -32,11 +32,11 @@ import oripa.gui.presenter.creasepattern.geometry.NearestPoint;
  */
 public class TargetOriVertexFactory {
 
-	public OriVertex create(final CreasePattern creasePattern, final Vector2d target) {
+	public OriVertex create(final CreasePattern creasePattern, final Vector2d target, final double pointEps) {
 		var origamiModelFactory = new OrigamiModelFactory();
 		var origamiModel = origamiModelFactory.createOrigamiModel(
 				creasePattern,
-				GeomUtil.eps(creasePattern.getPaperSize()));
+				pointEps);
 
 		var nearest = new NearestPoint();
 		var vertex = origamiModel.getVertices().get(0);

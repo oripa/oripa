@@ -189,4 +189,6 @@ public interface PaintContext extends CreasePatternHolder {
 	public void setArrayCopyParameter(ArrayCopyParameter p);
 
 	public ArrayCopyParameter getArrayCopyParameter();
+
+	public double getPointEps();
 }

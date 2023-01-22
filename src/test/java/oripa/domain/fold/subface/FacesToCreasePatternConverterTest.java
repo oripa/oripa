@@ -31,8 +31,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.domain.cptool.LineAdder;
-import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.creasepattern.CreasePatternFactory;
 
 /**
  * @author OUCHI Koji
@@ -50,6 +50,8 @@ class FacesToCreasePatternConverterTest {
 	@Mock
 	private CreasePattern creasePattern;
 
+	private static final double POINT_EPS = 1e-7;
+
 	/**
 	 * Test method for
 	 * {@link oripa.domain.fold.subface.FacesToCreasePatternConverter#convertToCreasePattern(java.util.List)}.
@@ -62,7 +64,7 @@ class FacesToCreasePatternConverterTest {
 
 		when(cpFactory.createCreasePattern(anyCollection())).thenReturn(creasePattern);
 
-		var converted = converter.convertToCreasePattern(faces);
+		var converted = converter.convertToCreasePattern(faces, POINT_EPS);
 		assertSame(creasePattern, converted);
 
 		// tried to convert all half-edges?
@@ -70,8 +72,8 @@ class FacesToCreasePatternConverterTest {
 				faces.stream()
 						.mapToInt(f -> f.halfedgeCount())
 						.sum()))
-								.addLine(any(), anyCollection());
+								.addLine(any(), anyCollection(), anyDouble());
 
-		verify(creasePattern).cleanDuplicatedLines();
+		verify(creasePattern).cleanDuplicatedLines(POINT_EPS);
 	}
 }

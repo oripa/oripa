@@ -27,6 +27,8 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
+import oripa.util.ClosedRange;
+
 /**
  * A rectangle domain fitting to given lines.
  *
@@ -108,8 +110,8 @@ public class RectangleDomain {
 	 * @return true if {@code point} is in domain
 	 */
 	public boolean contains(final Vector2d point) {
-		return getLeft() <= point.x && point.x <= getRight() &&
-				getTop() <= point.y && point.y <= getBottom();
+		return new ClosedRange(left, right).includes(point.getX()) &&
+				new ClosedRange(top, bottom).includes(point.getY());
 	}
 
 	public Vector2d getLeftTop() {

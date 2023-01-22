@@ -87,7 +87,8 @@ public class OriVertex {
 	}
 
 	/**
-	 * Stores and sorts edges in clockwise direction.
+	 * Stores and sorts edges in counterclockwise direction on the mathematical
+	 * coordinate system.
 	 *
 	 * @param edge
 	 *            an edge whose end point is this vertex.

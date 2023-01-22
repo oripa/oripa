@@ -131,6 +131,8 @@ public interface UIPanelView extends View {
 
 	void addZeroLineWidthCheckBoxListener(Consumer<Boolean> listener);
 
+	void setValuePanelFractionDigits(int lengthDigitCount, int angleDigitCount);
+
 	void addCheckWindowButtonListener(Runnable listener);
 
 	BiConsumer<Color, Color> getEstimationResultSaveColorsListener();

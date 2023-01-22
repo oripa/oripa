@@ -42,7 +42,8 @@ class SuggestionSnapPointFactory {
 	public Collection<Vector2d> createSnapPoints(final PaintContext context, final Vector2d sp,
 			final Collection<Double> angles) {
 
-		return new MultipleRaySnapPointFactory().createSnapPoints(context.getCreasePattern(), sp, angles);
+		return new MultipleRaySnapPointFactory().createSnapPoints(context.getCreasePattern(), sp, angles,
+				context.getPointEps());
 	}
 
 }

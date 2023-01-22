@@ -34,6 +34,8 @@ import oripa.value.OriPoint;
  */
 class ElementRemoverTest {
 
+	static final double EPS = 1e-5;
+
 	/**
 	 * Test method for
 	 * {@link oripa.domain.cptool.ElementRemover#removeLine(oripa.value.OriLine, java.util.Collection)}.
@@ -52,7 +54,7 @@ class ElementRemoverTest {
 
 		var remover = new ElementRemover();
 
-		remover.removeLine(toBeRemoved, creasePattern);
+		remover.removeLine(toBeRemoved, creasePattern, EPS);
 
 		// merge will happen
 		assertEquals(3, creasePattern.size());
@@ -75,7 +77,7 @@ class ElementRemoverTest {
 
 		var remover = new ElementRemover();
 
-		remover.removeVertex(toBeRemoved, creasePattern);
+		remover.removeVertex(toBeRemoved, creasePattern, EPS);
 		assertEquals(3, creasePattern.size());
 	}
 
@@ -91,7 +93,7 @@ class ElementRemoverTest {
 
 		var remover = new ElementRemover();
 
-		remover.removeVertex(shouldNotBeRemoved, creasePattern);
+		remover.removeVertex(shouldNotBeRemoved, creasePattern, EPS);
 		assertEquals(4, creasePattern.size());
 	}
 
@@ -107,7 +109,7 @@ class ElementRemoverTest {
 
 		var remover = new ElementRemover();
 
-		remover.removeVertex(shouldNotBeRemoved, creasePattern);
+		remover.removeVertex(shouldNotBeRemoved, creasePattern, EPS);
 		assertEquals(4, creasePattern.size());
 	}
 
@@ -126,7 +128,7 @@ class ElementRemoverTest {
 
 		var remover = new ElementRemover();
 
-		remover.removeMeaninglessVertices(creasePattern);
+		remover.removeMeaninglessVertices(creasePattern, EPS);
 		assertEquals(2, creasePattern.size());
 	}
 
@@ -150,7 +152,7 @@ class ElementRemoverTest {
 
 		var remover = new ElementRemover();
 
-		remover.removeLines(List.of(toBeRemoved1, toBeRemoved2), creasePattern);
+		remover.removeLines(List.of(toBeRemoved1, toBeRemoved2), creasePattern, EPS);
 		assertEquals(3, creasePattern.size());
 	}
 
@@ -176,7 +178,7 @@ class ElementRemoverTest {
 
 		var remover = new ElementRemover();
 
-		remover.removeSelectedLines(creasePattern);
+		remover.removeSelectedLines(creasePattern, EPS);
 		assertEquals(3, creasePattern.size());
 	}
 }

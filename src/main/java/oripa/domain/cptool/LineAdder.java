@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.util.StopWatch;
-import oripa.value.CalculationResource;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -39,7 +38,7 @@ public class LineAdder {
 	 *         point.
 	 */
 	private Map<OriPoint, OriLine> divideCurrentLines(final OriLine inputLine,
-			final Collection<OriLine> currentLines) {
+			final Collection<OriLine> currentLines, final double pointEps) {
 
 		var toBeAdded = Collections.synchronizedList(new LinkedList<OriLine>());
 		var toBeRemoved = Collections.synchronizedList(new LinkedList<OriLine>());
@@ -64,7 +63,7 @@ public class LineAdder {
 					toBeRemoved.add(line);
 
 					Consumer<Vector2d> addIfLineCanBeSplit = v -> {
-						if (GeomUtil.distance(v, crossPoint) > CalculationResource.POINT_EPS) {
+						if (GeomUtil.distance(v, crossPoint) > pointEps) {
 							var l = new OriLine(v, crossPoint, line.getType());
 							// keep selection not to change the target of copy.
 							l.selected = line.selected;
@@ -92,7 +91,8 @@ public class LineAdder {
 	 */
 	private List<Vector2d> createInputLinePoints(
 			final OriLine inputLine,
-			final Map<OriPoint, OriLine> crossMap) {
+			final Map<OriPoint, OriLine> crossMap,
+			final double pointEps) {
 		var points = new ArrayList<Vector2d>();
 		points.add(inputLine.p0);
 		points.add(inputLine.p1);
@@ -103,20 +103,20 @@ public class LineAdder {
 				return;
 			}
 			// If the intersection is on the end of the line, skip
-			if (GeomUtil.distance(inputLine.p0, line.p0) < CalculationResource.POINT_EPS ||
-					GeomUtil.distance(inputLine.p0, line.p1) < CalculationResource.POINT_EPS ||
-					GeomUtil.distance(inputLine.p1, line.p0) < CalculationResource.POINT_EPS ||
-					GeomUtil.distance(inputLine.p1, line.p1) < CalculationResource.POINT_EPS) {
+			if (GeomUtil.areEqual(inputLine.p0, line.p0, pointEps) ||
+					GeomUtil.areEqual(inputLine.p0, line.p1, pointEps) ||
+					GeomUtil.areEqual(inputLine.p1, line.p0, pointEps) ||
+					GeomUtil.areEqual(inputLine.p1, line.p1, pointEps)) {
 				return;
 			}
 
 			// use end points on inputLine
 			if (GeomUtil.distancePointToSegment(line.p0, inputLine.p0,
-					inputLine.p1) < CalculationResource.POINT_EPS) {
+					inputLine.p1) < pointEps) {
 				points.add(line.p0);
 			}
 			if (GeomUtil.distancePointToSegment(line.p1, inputLine.p0,
-					inputLine.p1) < CalculationResource.POINT_EPS) {
+					inputLine.p1) < pointEps) {
 				points.add(line.p1);
 			}
 			points.add(crossPoint);
@@ -139,8 +139,8 @@ public class LineAdder {
 	 *            list. it will be affected as new lines are added and
 	 *            unnecessary lines are removed.
 	 */
-	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines) {
-		addAll(List.of(inputLine), currentLines);
+	public void addLine(final OriLine inputLine, final Collection<OriLine> currentLines, final double pointEps) {
+		addAll(List.of(inputLine), currentLines, pointEps);
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class LineAdder {
 	 *            collection as a destination.
 	 */
 	public void addAll(final Collection<OriLine> inputLines,
-			final Collection<OriLine> currentLines) {
+			final Collection<OriLine> currentLines, final double pointEps) {
 
 		StopWatch watch = new StopWatch(true);
 
@@ -164,7 +164,7 @@ public class LineAdder {
 		// input domain can limit the current lines to be divided.
 		RectangleClipper inputDomainClipper = new RectangleClipper(
 				new RectangleDomain(nonExistingNewLines),
-				CalculationResource.POINT_EPS);
+				pointEps);
 		// use a hash set for avoiding worst case of computation time. (list
 		// takes O(n) time for deletion while hash set takes O(1) time.)
 		HashSet<OriLine> crossingCurrentLines = new HashSet<>(
@@ -178,9 +178,10 @@ public class LineAdder {
 		Map<OriLine, Map<OriPoint, OriLine>> crossMaps = new ConcurrentHashMap<>();
 
 		nonExistingNewLines
-				.forEach(inputLine -> crossMaps.put(inputLine, divideCurrentLines(inputLine, crossingCurrentLines)));
+				.forEach(inputLine -> crossMaps.put(inputLine,
+						divideCurrentLines(inputLine, crossingCurrentLines, pointEps)));
 
-		divider.divideIfOverlap(nonExistingNewLines, crossingCurrentLines);
+		divider.divideIfOverlap(nonExistingNewLines, crossingCurrentLines, pointEps);
 
 		// feed back the result of line divisions
 		currentLines.addAll(crossingCurrentLines);
@@ -190,17 +191,18 @@ public class LineAdder {
 		ArrayList<List<Vector2d>> pointLists = new ArrayList<>();
 
 		nonExistingNewLines
-				.forEach(inputLine -> pointLists.add(createInputLinePoints(inputLine, crossMaps.get(inputLine))));
+				.forEach(inputLine -> pointLists
+						.add(createInputLinePoints(inputLine, crossMaps.get(inputLine), pointEps)));
 
 		logger.trace("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
-		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists);
-		divider.divideIfOverlap(crossingCurrentLines, splitNewLines);
+		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists, pointEps);
+		divider.divideIfOverlap(crossingCurrentLines, splitNewLines, pointEps);
 
 		currentLines.addAll(splitNewLines);
 
 		var lineTypeOverwriter = new LineTypeOverwriter();
-		lineTypeOverwriter.overwriteLineTypes(splitNewLines, currentLines);
+		lineTypeOverwriter.overwriteLineTypes(splitNewLines, currentLines, pointEps);
 
 		logger.trace("addAll(): {}[ms]", watch.getMilliSec());
 	}
@@ -216,10 +218,10 @@ public class LineAdder {
 	 * @return collection of all new lists
 	 */
 	private List<OriLine> getSplitNewLines(final List<OriLine> nonExistingNewLines,
-			final ArrayList<List<Vector2d>> pointLists) {
+			final ArrayList<List<Vector2d>> pointLists, final double pointEps) {
 		return IntStream.range(0, nonExistingNewLines.size()).parallel()
 				.mapToObj(j -> sequentialLineFactory.createSequentialLines(pointLists.get(j),
-						nonExistingNewLines.get(j).getType()))
+						nonExistingNewLines.get(j).getType(), pointEps))
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList());
 	}

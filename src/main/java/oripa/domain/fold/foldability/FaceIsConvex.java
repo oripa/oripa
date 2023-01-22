@@ -37,12 +37,12 @@ public class FaceIsConvex extends AbstractRule<OriFace> {
 		}
 
 		OriHalfedge baseHe = face.getHalfedge(0);
-		boolean baseFlg = GeomUtil.CCWcheck(baseHe.getPrevious().getPosition(),
+		boolean baseFlg = GeomUtil.isCCW(baseHe.getPrevious().getPosition(),
 				baseHe.getPosition(), baseHe.getNext().getPosition());
 
 		for (int i = 1; i < face.halfedgeCount(); i++) {
 			OriHalfedge he = face.getHalfedge(i);
-			if (GeomUtil.CCWcheck(he.getPrevious().getPosition(), he.getPosition(),
+			if (GeomUtil.isCCW(he.getPrevious().getPosition(), he.getPosition(),
 					he.getNext().getPosition()) != baseFlg) {
 				return false;
 			}

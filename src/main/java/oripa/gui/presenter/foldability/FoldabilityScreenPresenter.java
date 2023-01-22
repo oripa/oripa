@@ -49,17 +49,21 @@ public class FoldabilityScreenPresenter {
 
 	private final FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 
+	private final double pointEps;
+
 	public FoldabilityScreenPresenter(
 			final FoldabilityScreenView view,
 			final OrigamiModel origamiModel,
 			final Collection<OriLine> creasePattern,
-			final boolean zeroLineWidth) {
+			final boolean zeroLineWidth,
+			final double pointEps) {
 		this.view = view;
 
 		this.origamiModel = origamiModel;
 		this.creasePattern = creasePattern.stream()
 				.map(line -> new OriLine(line)).collect(Collectors.toList());
 		this.zeroLineWidth = zeroLineWidth;
+		this.pointEps = pointEps;
 
 		setModel();
 
@@ -77,7 +81,7 @@ public class FoldabilityScreenPresenter {
 				origamiModel.getFaces());
 
 		var overlappingLineExtractor = new OverlappingLineExtractor();
-		overlappingLines = overlappingLineExtractor.extract(creasePattern);
+		overlappingLines = overlappingLineExtractor.extract(creasePattern, pointEps);
 
 		var domain = new RectangleDomain(creasePattern);
 		view.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());

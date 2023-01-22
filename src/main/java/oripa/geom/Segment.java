@@ -55,6 +55,12 @@ public class Segment {
 		return Stream.of(getP0(), getP1());
 	}
 
+	public Line getLine() {
+		var p0 = getP0();
+		var p1 = getP1();
+		return new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
+	}
+
 	/**
 	 * Calculates the affine value on the line, at the {@code xTested}
 	 * coordinate using the y = ax + b expression

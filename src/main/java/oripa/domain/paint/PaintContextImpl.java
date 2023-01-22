@@ -10,6 +10,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
@@ -37,6 +38,8 @@ class PaintContextImpl implements PaintContext {
 
 	private CircleCopyParameter circleCopyParameter;
 	private ArrayCopyParameter arrayCopyParameter;
+
+	private final double pointEps = GeomUtil.pointEps();
 
 	public PaintContextImpl() {
 	}
@@ -181,7 +184,7 @@ class PaintContextImpl implements PaintContext {
 
 	@Override
 	public Painter getPainter() {
-		return new Painter(creasePattern);
+		return new Painter(creasePattern, pointEps);
 	}
 
 	@Override
@@ -281,6 +284,11 @@ class PaintContextImpl implements PaintContext {
 	@Override
 	public ArrayCopyParameter getArrayCopyParameter() {
 		return arrayCopyParameter;
+	}
+
+	@Override
+	public double getPointEps() {
+		return pointEps;
 	}
 
 }

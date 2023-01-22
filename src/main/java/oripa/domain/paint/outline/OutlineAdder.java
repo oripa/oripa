@@ -51,7 +51,7 @@ public class OutlineAdder {
 		PairLoop.iterateAll(outlineVertices, (element, nextElement) -> {
 			var line = new OriLine(element, nextElement, OriLine.Type.CUT);
 			lines.add(line);
-			overlappings.addAll(overlappingExtractor.extract(creasePattern, line));
+			overlappings.addAll(overlappingExtractor.extract(creasePattern, line, painter.getPointEps()));
 
 			return true;
 		});

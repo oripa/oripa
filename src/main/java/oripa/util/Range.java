@@ -18,36 +18,10 @@
  */
 package oripa.util;
 
-import javax.vecmath.Vector2d;
-
 /**
  * @author OUCHI Koji
  *
  */
-public class MathUtil {
-	public static double normalizeAngle(final double angle) {
-		final double TWO_PI = 2 * Math.PI;
-		return (TWO_PI + angle) % TWO_PI;
-	}
-
-	public static double angleOf(final Vector2d v) {
-		return normalizeAngle(Math.atan2(v.getY(), v.getX()));
-	}
-
-	public static double angleRadianEps() {
-		return 1e-5;
-	}
-
-	public static double angleDegreeEps() {
-		return Math.toDegrees(angleRadianEps());
-	}
-
-	public static double normalizedValueEps() {
-		return 1e-6;
-	}
-
-	public static boolean areEqual(final double v0, final double v1, final double eps) {
-		return Math.abs(v1 - v0) < eps;
-	}
-
+public interface Range {
+	boolean includes(double value);
 }

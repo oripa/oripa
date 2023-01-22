@@ -45,6 +45,8 @@ public class ModelViewScreenPresenter {
 	private final CutModelOutlinesHolder lineHolder;
 	private final CallbackOnUpdate onUpdateScissorsLine;
 
+	private double pointEps;
+
 	public ModelViewScreenPresenter(
 			final ModelViewScreenView view,
 			final CutModelOutlinesHolder lineHolder,
@@ -88,7 +90,7 @@ public class ModelViewScreenPresenter {
 		m.drawBufferImage();
 	}
 
-	private void recalcScissorsLine() {
+	private void recalcScissorsLine(final double pointEps) {
 		scissorsLine = new OriLine();
 
 		var scissorsLineAngleDegree = view.getScissorsLineAngleDegree();
@@ -106,7 +108,7 @@ public class ModelViewScreenPresenter {
 		scissorsLine.p1.add(moveVec);
 
 		var factory = new CutModelOutlinesFactory();
-		lineHolder.setOutlines(factory.createOutlines(scissorsLine, view.getModel()));
+		lineHolder.setOutlines(factory.createOutlines(scissorsLine, view.getModel(), pointEps));
 
 		view.repaint();
 

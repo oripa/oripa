@@ -41,6 +41,7 @@ class AngleSnapPointFactory {
 				.boxed()
 				.collect(Collectors.toList());
 
-		return new MultipleRaySnapPointFactory().createSnapPoints(context.getCreasePattern(), sp, angles);
+		return new MultipleRaySnapPointFactory().createSnapPoints(context.getCreasePattern(), sp, angles,
+				context.getPointEps());
 	}
 }

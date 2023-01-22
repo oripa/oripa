@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.util.MathUtil;
 import oripa.util.collection.CollectionUtil;
 import oripa.util.rule.AbstractRule;
 
@@ -47,7 +48,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 	private static final Logger logger = LoggerFactory
 			.getLogger(GeneralizedBigLittleBigLemma.class);
 
-	private static final double EPS = 1e-5;
+	private static final double EPS = MathUtil.angleRadianEps();
 
 	private class Range {
 		public int begin;
@@ -123,7 +124,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 
 		var maxBounds = new ArrayList<Integer>();
 		for (int i = 0; i < edgeNum; i++) {
-			if (getAngle.apply(i + 1) - getAngle.apply(i) > EPS) {
+			if (getAngle.apply(i + 1) - getAngle.apply(i) >= EPS) {
 				maxBounds.add(i + 1);
 			}
 		}
@@ -132,7 +133,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 			int maxBound = maxBounds.get(i);
 			int minBound = maxBound - 1;
 
-			while (Math.abs(getAngle.apply(minBound) - getAngle.apply(maxBound - 1)) <= EPS) {
+			while (MathUtil.areEqual(getAngle.apply(minBound), getAngle.apply(maxBound - 1), EPS)) {
 				// minBound should not exceeds the previous maxBound
 				if (minBound == CollectionUtil.getCircular(maxBounds, i - 1)) {
 					break;
@@ -140,7 +141,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 				minBound--;
 			}
 			// minBound angle is larger than the sequential equal angles.
-			if (getAngle.apply(minBound) - getAngle.apply(maxBound - 1) > EPS) {
+			if (getAngle.apply(minBound) - getAngle.apply(maxBound - 1) >= EPS) {
 				ranges.add(new Range(minBound + 1, maxBound));
 			}
 		}

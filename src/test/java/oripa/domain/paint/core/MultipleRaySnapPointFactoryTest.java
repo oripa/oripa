@@ -17,6 +17,8 @@ class MultipleRaySnapPointFactoryTest {
 
 	MultipleRaySnapPointFactory factory = new MultipleRaySnapPointFactory();
 
+	static final double POINT_EPS = 1e-5;
+
 	@Test
 	void test_noOverlap() {
 		var creases = List.of(
@@ -32,7 +34,7 @@ class MultipleRaySnapPointFactoryTest {
 
 		var angles = List.of(0.0, Math.PI);
 
-		var points = factory.createSnapPoints(creasePattern, sourcePoint, angles);
+		var points = factory.createSnapPoints(creasePattern, sourcePoint, angles, POINT_EPS);
 
 		var expectedPoints = List.of(new Vector2d(1, 0), new Vector2d(-1, 0));
 
@@ -57,7 +59,7 @@ class MultipleRaySnapPointFactoryTest {
 
 		var angles = List.of(0.0);
 
-		var points = factory.createSnapPoints(creasePattern, sourcePoint, angles);
+		var points = factory.createSnapPoints(creasePattern, sourcePoint, angles, POINT_EPS);
 
 		var expectedPoints = List.of(new Vector2d(1, 0), new Vector2d(0.25, 0), new Vector2d(0.5, 0));
 

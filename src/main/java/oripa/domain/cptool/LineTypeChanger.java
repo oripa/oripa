@@ -21,7 +21,7 @@ public class LineTypeChanger {
 	 * @param to
 	 */
 	public void alterLineType(final OriLine l, final Collection<OriLine> lines,
-			final TypeForChange from, final TypeForChange to) {
+			final TypeForChange from, final TypeForChange to, final double pointEps) {
 		if (!isTarget(l, from)) {
 			return;
 		}
@@ -29,7 +29,7 @@ public class LineTypeChanger {
 		if (to.getOriLineType() == null) {
 			switch (to) {
 			case DELETE:
-				remover.removeLine(l, lines);
+				remover.removeLine(l, lines, pointEps);
 				break;
 			case FLIP:
 				if (l.getType() == OriLine.Type.MOUNTAIN) {
@@ -67,16 +67,17 @@ public class LineTypeChanger {
 
 	public void alterLineTypes(final Collection<OriLine> toBeChanged,
 			final Collection<OriLine> lines,
-			final TypeForChange from, final TypeForChange to) {
+			final TypeForChange from, final TypeForChange to,
+			final double pointEps) {
 		var filtered = toBeChanged.stream()
 				.filter(line -> isTarget(line, from))
 				.collect(Collectors.toList());
 
 		if (to == TypeForChange.DELETE) {
-			remover.removeLines(filtered, lines);
+			remover.removeLines(filtered, lines, pointEps);
 			return;
 		}
 
-		filtered.forEach(line -> alterLineType(line, lines, from, to));
+		filtered.forEach(line -> alterLineType(line, lines, from, to, pointEps));
 	}
 }
