@@ -27,7 +27,6 @@ import javax.vecmath.Vector2d;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -70,16 +69,17 @@ public class VertexColorMapFactory {
 
 		for (OriHalfedge he : face.halfedgeIterable()) {
 			double val = 0;
-			if (he.getType() == OriLine.Type.MOUNTAIN.toInt()) {
+			var edge = he.getEdge();
+			if (edge.isMountain()) {
 				val += 1;
-			} else if (he.getType() == OriLine.Type.VALLEY.toInt()) {
+			} else if (edge.isValley()) {
 				val -= 1;
 			}
 
-			var prevHe = he.getPrevious();
-			if (prevHe.getType() == OriLine.Type.MOUNTAIN.toInt()) {
+			var prevEdge = he.getPrevious().getEdge();
+			if (prevEdge.isMountain()) {
 				val += 1;
-			} else if (prevHe.getType() == OriLine.Type.VALLEY.toInt()) {
+			} else if (prevEdge.isValley()) {
 				val -= 1;
 			}
 
