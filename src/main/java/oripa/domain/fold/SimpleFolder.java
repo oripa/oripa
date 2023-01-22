@@ -172,8 +172,7 @@ class SimpleFolder {
 		Vector2d afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
 
 		// Creates the base unit vector for before the rotation
-		// (reversed direction. the algorithm walks along the halfedges
-		// clockwisely in mathematical coordinate system)
+		// (reversed direction)
 		Vector2d baseDir = new Vector2d();
 		baseDir.sub(baseHePair.getPositionWhileFolding(), baseHePairNext.getPositionWhileFolding());
 
