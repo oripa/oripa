@@ -123,20 +123,42 @@ class SimpleFolder {
 		});
 	}
 
+	/**
+	 * Move the {@code vertex} keeping the face connection. The transformation
+	 * is based on geometric interpretation without affine transformation.
+	 *
+	 * @param vertex
+	 *            vertex to be moved. there will be a side effect.
+	 * @param preLine
+	 *            crease line before folding.
+	 * @param afterOrigin
+	 *            a reference point on the moved crease line.
+	 * @param afterDir
+	 *            clockwise direction vector of the moved crease line.
+	 */
 	private void transformVertex(final Vector2d vertex, final Line preLine,
 			final Vector2d afterOrigin, final Vector2d afterDir) {
 		double param[] = new double[1];
 		double d0 = GeomUtil.distance(vertex, preLine, param);
+		// distance between reference point of preLine and foot cross point from
+		// vertex to preLine
 		double d1 = param[0];
 
+		// compute foot cross point from vertex to moved mirror axis line (or
+		// the crease)
 		Vector2d footV = new Vector2d(afterOrigin);
 		footV.x += d1 * afterDir.x;
 		footV.y += d1 * afterDir.y;
 
+		// compute a direction vector perpendicular to the crease.
+		// the vector directs the right side of the crease halfedge
+		// since all vertices of the face are on the right side of the crease
+		// halfedge.
 		Vector2d afterDirFromFoot = new Vector2d();
 		afterDirFromFoot.x = afterDir.y;
 		afterDirFromFoot.y = -afterDir.x;
 
+		// set moved vertex coordinates
 		vertex.x = footV.x + d0 * afterDirFromFoot.x;
 		vertex.y = footV.y + d0 * afterDirFromFoot.y;
 	}
@@ -145,11 +167,13 @@ class SimpleFolder {
 		var baseHePair = baseHe.getPair();
 		var baseHePairNext = baseHePair.getNext();
 
-		// (Maybe) baseHe.pair keeps the position before folding.
+		// baseHe.pair keeps the position before folding.
 		Vector2d preOrigin = new Vector2d(baseHePairNext.getPositionWhileFolding());
 		Vector2d afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
 
 		// Creates the base unit vector for before the rotation
+		// (reversed direction. the algorithm walks along the halfedges
+		// clockwisely in mathematical coordinate system)
 		Vector2d baseDir = new Vector2d();
 		baseDir.sub(baseHePair.getPositionWhileFolding(), baseHePairNext.getPositionWhileFolding());
 
@@ -172,7 +196,7 @@ class SimpleFolder {
 			transformVertex(precrease.p1, preLine, afterOrigin, afterDir);
 		});
 
-		// Inversion
+		// add mirror effect if necessary
 		if (face.isFaceFront() == baseHe.getFace().isFaceFront()) {
 			Vector2d ep = baseHeNext.getPositionWhileFolding();
 			Vector2d sp = baseHe.getPositionWhileFolding();
