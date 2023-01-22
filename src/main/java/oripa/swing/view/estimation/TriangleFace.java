@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -96,10 +95,10 @@ public class TriangleFace {
 	 * @param paperDomain
 	 *            rectangle domain of the sheet of paper before fold.
 	 */
-	public void prepareColor(final Map<OriHalfedge, Vector3d> colorMap, final RectangleDomain paperDomain) {
+	public void prepareColor(final Map<OriHalfedge, FloatingRGB> colorMap, final RectangleDomain paperDomain) {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
 			var he = face.getHalfedge(halfEdgeIndices.get(i));
-			v[i].color = new Vector3d(colorMap.get(he));
+			v[i].color = new FloatingRGB(colorMap.get(he));
 
 			double x = (he.getPositionBeforeFolding().x - paperDomain.getCenterX()) / paperDomain.getWidth();
 			double y = (he.getPositionBeforeFolding().y - paperDomain.getCenterY()) / paperDomain.getHeight();
