@@ -67,7 +67,7 @@ class DeterministicLayerOrderEstimator {
 	private final List<OriFace> faces;
 	private final List<SubFace> subFaces;
 	private final List<Integer>[][] overlappingFaceIndexIntersections;
-	private final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge;
+	private final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge;
 	private final Set<StackConditionOf4Faces> condition4s;
 
 	/**
@@ -77,20 +77,20 @@ class DeterministicLayerOrderEstimator {
 	 * @param overlappingFaceIndexIntersections
 	 *            [FaceID1][FaceID2]
 	 * @param faceIndicesOnHalfEdge
-	 *            Key: halfedge, value: set of indices of faces which are under
-	 *            the halfedge.
+	 *            Key: halfedge, value: set of indices of faces that are on the
+	 *            halfedge.
 	 *
 	 */
 	public DeterministicLayerOrderEstimator(
 			final List<OriFace> faces,
 			final List<SubFace> subFaces,
 			final List<Integer>[][] overlappingFaceIndexIntersections,
-			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge,
+			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge,
 			final Set<StackConditionOf4Faces> condition4s) {
 		this.faces = faces;
 		this.subFaces = subFaces;
 		this.overlappingFaceIndexIntersections = overlappingFaceIndexIntersections;
-		this.faceIndicesOnHalfEdge = faceIndicesOnHalfEdge;
+		this.faceIndicesOnHalfedge = faceIndicesOnHalfedge;
 		this.condition4s = condition4s;
 	}
 
@@ -112,8 +112,7 @@ class DeterministicLayerOrderEstimator {
 		do {
 			changed = EstimationResult.NOT_CHANGED;
 
-			var result = estimateBy3FaceCover(
-					overlapRelation, overlappingFaceIndexIntersections, faceIndicesOnHalfEdge);
+			var result = estimateBy3FaceCover(overlapRelation);
 			changed = EstimationResult.selectStronger(result, changed);
 
 			result = estimateBy3FaceTransitiveRelation(overlapRelation);
@@ -134,7 +133,8 @@ class DeterministicLayerOrderEstimator {
 	 * Determines overlap relation using 4-face condition.
 	 *
 	 * @param overlapRelation
-	 * @return
+	 * @return whether overlapRelation is changed or not, or the model is
+	 *         unfoldable.
 	 */
 	private EstimationResult estimateBy4FaceStackCondition(
 			final OverlapRelation overlapRelation) {
@@ -240,7 +240,8 @@ class DeterministicLayerOrderEstimator {
 	 *
 	 * @param overlapRelation
 	 *            overlap-relation matrix
-	 * @return whether overlapRelation is changed or not.
+	 * @return whether overlapRelation is changed or not, or the model is
+	 *         unfoldable.
 	 */
 	private EstimationResult estimateBy3FaceTransitiveRelation(final OverlapRelation overlapRelation) {
 		var changed = EstimationResult.NOT_CHANGED;
@@ -308,19 +309,14 @@ class DeterministicLayerOrderEstimator {
 	 *
 	 * @param overlapRelation
 	 *            overlap relation matrix
-	 * @return whether overlapRelation is changed or not.
+	 * @return whether overlapRelation is changed or not, or the model is
+	 *         unfoldable.
 	 */
-	private EstimationResult estimateBy3FaceCover(
-			final OverlapRelation overlapRelation,
-			final List<Integer>[][] overlappingFaceIndexIntersections,
-			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge) {
+	private EstimationResult estimateBy3FaceCover(final OverlapRelation overlapRelation) {
 
 		var changed = EstimationResult.NOT_CHANGED;
 		for (OriFace f_i : faces) {
-			var updateResult = updateBy3FaceCover(
-					f_i, overlapRelation,
-					overlappingFaceIndexIntersections,
-					faceIndicesOnHalfEdge);
+			var updateResult = updateBy3FaceCover(f_i, overlapRelation);
 			changed = EstimationResult.selectStronger(updateResult, changed);
 			if (changed == EstimationResult.UNFOLDABLE) {
 				return EstimationResult.UNFOLDABLE;
@@ -332,9 +328,7 @@ class DeterministicLayerOrderEstimator {
 
 	private EstimationResult updateBy3FaceCover(
 			final OriFace f_i,
-			final OverlapRelation overlapRelation,
-			final List<Integer>[][] overlappingFaceIndexIntersections,
-			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge) {
+			final OverlapRelation overlapRelation) {
 		int index_i = f_i.getFaceID();
 
 		var changed = EstimationResult.NOT_CHANGED;
@@ -350,7 +344,7 @@ class DeterministicLayerOrderEstimator {
 				if (index_i == index_k || index_j == index_k) {
 					continue;
 				}
-				if (!faceIndicesOnHalfEdge.get(he).contains(index_k)) {
+				if (!faceIndicesOnHalfedge.get(he).contains(index_k)) {
 					continue;
 				}
 				if (!overlapRelation.isUndefined(index_i, index_k)) {

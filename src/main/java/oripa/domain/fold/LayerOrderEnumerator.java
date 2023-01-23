@@ -86,15 +86,15 @@ public class LayerOrderEnumerator {
 		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
 
 		var overlappingFaceIndexIntersections = createOverlappingFaceIndexIntersections(faces, overlapRelation);
-		var faceIndicesOnHalfEdge = createFaceIndicesOnHalfEdge(faces, eps);
-		holdCondition3s(faces, overlapRelation, overlappingFaceIndexIntersections, faceIndicesOnHalfEdge);
+		var faceIndicesOnHalfedge = createFaceIndicesOnHalfEdge(faces, eps);
+		holdCondition3s(faces, overlapRelation, overlappingFaceIndexIntersections, faceIndicesOnHalfedge);
 
 		var condition4s = holdCondition4s(faces, edges, overlapRelation, eps);
 
 		var estimator = new DeterministicLayerOrderEstimator(
 				faces, subFaces,
 				overlappingFaceIndexIntersections,
-				faceIndicesOnHalfEdge,
+				faceIndicesOnHalfedge,
 				condition4s);
 		var estimationResult = estimator.estimate(overlapRelation, eps);
 
@@ -310,7 +310,7 @@ public class LayerOrderEnumerator {
 	private void holdCondition3s(
 			final List<OriFace> faces, final OverlapRelation overlapRelation,
 			final List<Integer>[][] overlappingFaceIndexIntersections,
-			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfEdge) {
+			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge) {
 
 		int conditionCount = 0;
 
@@ -341,7 +341,7 @@ public class LayerOrderEnumerator {
 					if (index_i == index_k || index_j == index_k) {
 						continue;
 					}
-					if (!faceIndicesOnHalfEdge.get(he).contains(index_k)) {
+					if (!faceIndicesOnHalfedge.get(he).contains(index_k)) {
 						continue;
 					}
 					OriFace f_k = faces.get(index_k);
