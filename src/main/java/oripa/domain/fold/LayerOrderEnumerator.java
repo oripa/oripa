@@ -55,7 +55,6 @@ import oripa.util.StopWatch;
 public class LayerOrderEnumerator {
 	private static final Logger logger = LoggerFactory.getLogger(LayerOrderEnumerator.class);
 
-//	private HashSet<StackConditionOf4Faces> condition4s;
 	private List<SubFace> subFaces;
 
 	private AtomicInteger callCount;
