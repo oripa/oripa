@@ -22,12 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Vector3d;
+import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -39,16 +38,19 @@ public class VertexColorMapFactory {
 	 * @param face
 	 *            a face to be colored
 	 * @param frontColorFactor
-	 *            front-side color normalized as the values are 0.0 ~ 1.0 for x,
-	 *            y, z. x is for red, y is for green, and z is for blue.
+	 *            front-side color normalized as the values are 0.0 ~ 1.0 for
+	 *            each index. value at 0 is for red, value at 1 is for green,
+	 *            and value at 2 is for blue.
 	 * @param backColorFactor
-	 *            back-side color normalized as the values are 0.0 ~ 1.0 for x,
-	 *            y, z. x is for red, y is for green, and z is for blue.
+	 *            back-side color normalized as the values are 0.0 ~ 1.0 for
+	 *            each index. value at 0 is for red, value at 1 is for green,
+	 *            and value at 2 is for blue.
+	 *
 	 * @param flip
 	 *            {@code true} if the model is flipped.
 	 * @return a mapping halfedges of the given face to normalized colors.
 	 */
-	public Map<OriHalfedge, Vector3d> createVertexColors(
+	public Map<OriHalfedge, FloatingRGB> createVertexColors(
 			final OriFace face,
 			final List<Double> frontColorFactor,
 			final List<Double> backColorFactor,
@@ -63,20 +65,21 @@ public class VertexColorMapFactory {
 		double faceWidth = Math.sqrt(domain.getWidth() * domain.getWidth()
 				+ domain.getHeight() * domain.getHeight());
 
-		var map = new HashMap<OriHalfedge, Vector3d>();
+		var map = new HashMap<OriHalfedge, FloatingRGB>();
 
 		for (OriHalfedge he : face.halfedgeIterable()) {
 			double val = 0;
-			if (he.getType() == OriLine.Type.MOUNTAIN.toInt()) {
+			var edge = he.getEdge();
+			if (edge.isMountain()) {
 				val += 1;
-			} else if (he.getType() == OriLine.Type.VALLEY.toInt()) {
+			} else if (edge.isValley()) {
 				val -= 1;
 			}
 
-			var prevHe = he.getPrevious();
-			if (prevHe.getType() == OriLine.Type.MOUNTAIN.toInt()) {
+			var prevEdge = he.getPrevious().getEdge();
+			if (prevEdge.isMountain()) {
 				val += 1;
-			} else if (prevHe.getType() == OriLine.Type.VALLEY.toInt()) {
+			} else if (prevEdge.isValley()) {
 				val -= 1;
 			}
 
@@ -84,21 +87,18 @@ public class VertexColorMapFactory {
 			double v = (0.75 + vv * 0.25);
 
 			var position = he.getPosition();
-			v *= 0.9 + 0.15 * (Math.sqrt((position.x - minX)
-					* (position.x - minX)
-					+ (position.y - minY)
-							* (position.y - minY))
-					/ faceWidth);
+			var d = new Vector2d(position.x - minX, position.y - minY).length();
+			v *= 0.9 + 0.15 * d / faceWidth;
 
 			v = Math.min(1, v);
 
 			if (face.isFaceFront() ^ flip) {
-				map.put(he, new Vector3d(
+				map.put(he, new FloatingRGB(
 						v * frontColorFactor.get(0),
 						v * frontColorFactor.get(1),
 						v * frontColorFactor.get(2)));
 			} else {
-				map.put(he, new Vector3d(
+				map.put(he, new FloatingRGB(
 						v * backColorFactor.get(0),
 						v * backColorFactor.get(1),
 						v * backColorFactor.get(2)));

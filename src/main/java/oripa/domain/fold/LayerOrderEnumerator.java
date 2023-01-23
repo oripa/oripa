@@ -47,7 +47,6 @@ import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.geom.GeomUtil;
 import oripa.util.IntPair;
 import oripa.util.StopWatch;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -872,8 +871,9 @@ public class LayerOrderEnumerator {
 					continue;
 				}
 
-				if ((face.isFaceFront() && he.getType() == OriLine.Type.MOUNTAIN.toInt())
-						|| (!face.isFaceFront() && he.getType() == OriLine.Type.VALLEY.toInt())) {
+				var edge = he.getEdge();
+				if ((face.isFaceFront() && edge.isMountain())
+						|| (!face.isFaceFront() && edge.isValley())) {
 					overlapRelation.setUpper(faceID, pairFaceID);
 				} else {
 					overlapRelation.setLower(faceID, pairFaceID);

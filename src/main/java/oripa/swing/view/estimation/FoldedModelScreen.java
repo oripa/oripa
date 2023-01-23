@@ -547,9 +547,9 @@ public class FoldedModelScreen extends JPanel
 		int addx = (int) ((v2.p.x - v1.p.x) * 0xffff) / l;
 		int addy = (int) ((v2.p.y - v1.p.y) * 0xffff) / l;
 
-		int addr = (int) (255 * 0xffff * (v2.color.x - v1.color.x) / l);
-		int addg = (int) (255 * 0xffff * (v2.color.y - v1.color.y) / l);
-		int addb = (int) (255 * 0xffff * (v2.color.z - v1.color.z) / l);
+		int addr = (int) (255 * 0xffff * (v2.color.getR() - v1.color.getR()) / l);
+		int addg = (int) (255 * 0xffff * (v2.color.getG() - v1.color.getG()) / l);
+		int addb = (int) (255 * 0xffff * (v2.color.getB() - v1.color.getB()) / l);
 
 		double addu = (v2.uv.x - v1.uv.x) / l;
 		double addv = (v2.uv.y - v1.uv.y) / l;
@@ -557,9 +557,9 @@ public class FoldedModelScreen extends JPanel
 		// Initial value setting
 		int x = (int) (v1.p.x * 0xffff);
 		int y = (int) (v1.p.y * 0xffff);
-		int r = (int) (255 * 0xffff * v1.color.x);
-		int g = (int) (255 * 0xffff * v1.color.y);
-		int b = (int) (255 * 0xffff * v1.color.z);
+		int r = (int) (255 * 0xffff * v1.color.getR());
+		int g = (int) (255 * 0xffff * v1.color.getG());
+		int b = (int) (255 * 0xffff * v1.color.getB());
 		double u = v1.uv.x;
 		double v = v1.uv.y;
 
