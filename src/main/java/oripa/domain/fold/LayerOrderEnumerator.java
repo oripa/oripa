@@ -75,6 +75,12 @@ public class LayerOrderEnumerator {
 
 	private final SubFacesFactory subFacesFactory;
 
+	enum EstimationResult {
+		NOT_CHANGED,
+		CHANGED,
+		UNFOLDABLE,
+	}
+
 	public LayerOrderEnumerator(final SubFacesFactory subFacesFactory) {
 		this.subFacesFactory = subFacesFactory;
 	}
@@ -106,7 +112,10 @@ public class LayerOrderEnumerator {
 		condition4s = new HashSet<>();
 		holdCondition4s(faces, edges, overlapRelation, eps);
 
-		estimate(faces, overlapRelation);
+		if (estimate(faces, overlapRelation) == EstimationResult.UNFOLDABLE) {
+			logger.debug("found unfoldable before searching.");
+			return List.of();
+		}
 
 		var undefinedRelationCount = countUndefinedRelations(overlapRelation);
 		logger.debug("#undefined = {}", undefinedRelationCount);
@@ -267,10 +276,11 @@ public class LayerOrderEnumerator {
 
 		if (!changedFaceIDs.isEmpty()) {
 			penetrationTestCallCount.incrementAndGet();
-			if (detectPenetrationBy3faces(faces, changedFaceIDs, overlapRelation)) {
-				penetrationCount.incrementAndGet();
-				return;
-			}
+			// maybe unnecessary.
+//			if (detectPenetrationBy3faces(faces, changedFaceIDs, overlapRelation)) {
+//				penetrationCount.incrementAndGet();
+//				return;
+//			}
 			if (detectPenetrationBy4faces(overlapRelation)) {
 				penetrationCount.incrementAndGet();
 				return;
@@ -477,20 +487,29 @@ public class LayerOrderEnumerator {
 	 * @param overlapRelation
 	 *            overlap relation matrix
 	 */
-	private void estimate(final List<OriFace> faces, final OverlapRelation overlapRelation) {
+	private EstimationResult estimate(final List<OriFace> faces, final OverlapRelation overlapRelation) {
 		int estimationLoopCount = 0;
 
 		var watch = new StopWatch(true);
 		boolean changed;
 		do {
 			changed = false;
-			changed |= estimateBy3FaceCover(faces, overlapRelation);
+			var faceCoverResult = estimateBy3FaceCover(faces, overlapRelation);
+			if (faceCoverResult == EstimationResult.UNFOLDABLE) {
+				return EstimationResult.UNFOLDABLE;
+			}
+			changed |= faceCoverResult == EstimationResult.CHANGED;
 			changed |= estimateBy3FaceTransitiveRelation(overlapRelation);
 			changed |= estimateBy4FaceStackCondition(overlapRelation);
 			estimationLoopCount++;
 		} while (changed);
 		logger.debug("#estimation = {}", estimationLoopCount);
 		logger.debug("estimation time {}[ms]", watch.getMilliSec());
+
+		if (changed) {
+			return EstimationResult.CHANGED;
+		}
+		return EstimationResult.NOT_CHANGED;
 	}
 
 	/**
@@ -805,38 +824,70 @@ public class LayerOrderEnumerator {
 	 *            overlap relation matrix
 	 * @return whether overlapRelation is changed or not.
 	 */
-	private boolean estimateBy3FaceCover(
+	private EstimationResult estimateBy3FaceCover(
 			final List<OriFace> faces,
 			final OverlapRelation overlapRelation) {
 
-		boolean changed = false;
+		EstimationResult changed = EstimationResult.NOT_CHANGED;
 		for (OriFace f_i : faces) {
-			int index_i = f_i.getFaceID();
-			for (OriHalfedge he : f_i.halfedgeIterable()) {
-				var pair = he.getPair();
-				if (pair == null) {
+			var updateResult = updateBy3FaceCover(f_i, overlapRelation);
+			switch (updateResult) {
+			case UNFOLDABLE:
+				return EstimationResult.UNFOLDABLE;
+			case CHANGED:
+				changed = EstimationResult.CHANGED;
+			default:
+				break;
+			}
+		}
+
+		return changed;
+
+	}
+
+	private EstimationResult updateBy3FaceCover(
+			final OriFace f_i,
+			final OverlapRelation overlapRelation) {
+		int index_i = f_i.getFaceID();
+
+		var changed = EstimationResult.NOT_CHANGED;
+		for (OriHalfedge he : f_i.halfedgeIterable()) {
+			var pair = he.getPair();
+			if (pair == null) {
+				continue;
+			}
+			int index_j = pair.getFace().getFaceID();
+
+			var indices = overlappingFaceIndexIntersections[index_i][index_j];
+			for (var index_k : indices) {
+				if (index_i == index_k || index_j == index_k) {
 					continue;
 				}
-				int index_j = pair.getFace().getFaceID();
-
-				var indices = overlappingFaceIndexIntersections[index_i][index_j];
-				for (var index_k : indices) {
-					if (index_i == index_k || index_j == index_k) {
-						continue;
-					}
-					if (!faceIndicesOnHalfEdge.get(he).contains(index_k)) {
-						continue;
-					}
-					if (!overlapRelation.isUndefined(index_i, index_k)
-							&& overlapRelation.isUndefined(index_j, index_k)) {
+				if (!faceIndicesOnHalfEdge.get(he).contains(index_k)) {
+					continue;
+				}
+				if (!overlapRelation.isUndefined(index_i, index_k)) {
+					var value = overlapRelation.get(index_i, index_k);
+					if (overlapRelation.isUndefined(index_j, index_k)) {
 						overlapRelation.set(index_j, index_k, overlapRelation.get(index_i, index_k));
-						changed = true;
-					} else if (!overlapRelation.isUndefined(index_j, index_k)
-							&& overlapRelation.isUndefined(index_i, index_k)) {
-						overlapRelation.set(index_i, index_k, overlapRelation.get(index_j, index_k));
-						changed = true;
+						changed = EstimationResult.CHANGED;
+					} else if (overlapRelation.get(index_j, index_k) != value) {
+						// conflict. not foldable.
+						return EstimationResult.UNFOLDABLE;
 					}
 				}
+				if (!overlapRelation.isUndefined(index_j, index_k)) {
+					var value = overlapRelation.get(index_j, index_k);
+					if (overlapRelation.isUndefined(index_i, index_k)) {
+						overlapRelation.set(index_i, index_k, overlapRelation.get(index_j, index_k));
+						changed = EstimationResult.CHANGED;
+					} else if (overlapRelation.get(index_i, index_k) != value) {
+						// conflict. not foldable.
+						return EstimationResult.UNFOLDABLE;
+					}
+
+				}
+
 			}
 		}
 
