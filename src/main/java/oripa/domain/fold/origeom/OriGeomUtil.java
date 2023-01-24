@@ -89,8 +89,9 @@ public class OriGeomUtil {
 	}
 
 	/**
-	 * Whether {@code heg} crosses {@code face}. The inclusion test is
-	 * exclusive.
+	 * Whether {@code heg} crosses {@code face}. This method also returns
+	 * {@code true} if {@code face} includes both end points of the {@code heg}.
+	 * The inclusion test is exclusive.
 	 *
 	 * @param face
 	 * @param heg
@@ -164,7 +165,7 @@ public class OriGeomUtil {
 	 * @param line
 	 * @return {@code true} if {@code face} includes {@code line} entirely.
 	 */
-	public static boolean isOriLineIncludedInFace(final OriFace face, final Segment line, final double eps) {
+	public static boolean isSegmentIncludedInFace(final OriFace face, final Segment line, final double eps) {
 		return face.isOnFaceInclusively(line.getP0(), eps)
 				&& face.isOnFaceInclusively(line.getP1(), eps);
 	}
@@ -195,7 +196,7 @@ public class OriGeomUtil {
 
 		return nxtPAngle - prePAngle;
 
-//		return preP.angle(nxtP); // fails if a concave face occurs.
+//		return preP.angle(nxtP); // fails if a concave face exists.
 	}
 
 	/**
