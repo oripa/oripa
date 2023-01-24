@@ -111,7 +111,7 @@ public class OriGeomUtil {
 			return true;
 		}
 
-		if (isHalfedgeCrossEdgeOfFace(face, heg, eps)) {
+		if (isHalfedgeCrossEdgeOrIncluded(face, heg, eps)) {
 			return true;
 		}
 
@@ -149,7 +149,7 @@ public class OriGeomUtil {
 		return false;
 	}
 
-	private static boolean isHalfedgeCrossEdgeOfFace(final OriFace face, final OriHalfedge heg, final double eps) {
+	private static boolean isHalfedgeCrossEdgeOrIncluded(final OriFace face, final OriHalfedge heg, final double eps) {
 		// If at least one of the endpoints is fully contained
 
 		return face.isOnFaceExclusively(heg.getPosition(), eps)
