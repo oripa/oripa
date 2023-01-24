@@ -319,4 +319,11 @@ public class SubFace {
 				.allMatch(face -> sub.parentFaces.contains(face));
 	}
 
+	public int getAllCountOfConditionsOf2Faces(final OverlapRelation overlapRelation) {
+		var stackConditionAggregate = new StackConditionAggregate();
+
+		stackConditionAggregate.prepareConditionsOf2Faces(parentFaces, overlapRelation);
+
+		return stackConditionAggregate.getAllCountOfConditionsOf2Faces();
+	}
 }

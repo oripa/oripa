@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -58,8 +57,6 @@ public class LayerOrderEnumerator {
 	private List<SubFace> subFaces;
 
 	private AtomicInteger callCount;
-	private AtomicInteger penetrationTestCallCount;
-	private AtomicInteger penetrationCount;
 
 	private final SubFacesFactory subFacesFactory;
 
@@ -109,40 +106,23 @@ public class LayerOrderEnumerator {
 		logger.debug("#undefined = {}", undefinedRelationCount);
 
 		watch.start();
-		var localLayerOrderCountMap = new HashMap<SubFace, Integer>();
-		subFaces.stream().forEach(sub -> {
-			var localLayerOrderCount = sub.countLocalLayerOrders(faces, overlapRelation, true);
-			localLayerOrderCountMap.put(sub, localLayerOrderCount);
-		});
-		logger.debug("local layer ordering time = {}[ms]", watch.getMilliSec());
-		logger.debug("max #localLayerOrder {}",
-				localLayerOrderCountMap.values().stream().mapToInt(i -> i).max().getAsInt());
-		logger.debug("average #localLayerOrder {}",
-				localLayerOrderCountMap.values().stream().mapToInt(i -> i == -1 ? 1 : i).average().getAsDouble());
-		logger.debug("max #parentFace {}",
-				subFaces.stream().mapToInt(SubFace::getParentFaceCount).max().getAsInt());
-
-		// heuristic: fewer local layer orders mean the search on the subface
-		// has more possibility to be correct. Such confident search node should
-		// be consumed at early stage.
-		subFaces = localLayerOrderCountMap.entrySet().stream()
-				.sorted(Comparator.comparing(Entry::getValue))
-				.map(Entry::getKey)
+		// heuristic: apply the heuristic in local layer ordering to global
+		// subface ordering.
+		subFaces = subFaces.stream()
+				.sorted(Comparator.comparingInt(sub -> ((SubFace) sub).getAllCountOfConditionsOf2Faces(overlapRelation))
+						.reversed())
 				.collect(Collectors.toList());
+		logger.debug("subface ordering = {}[ms]", watch.getMilliSec());
 
 		var overlapRelations = Collections.synchronizedList(new ArrayList<OverlapRelation>());
 
 		watch.start();
 
 		callCount = new AtomicInteger();
-		penetrationTestCallCount = new AtomicInteger();
-		penetrationCount = new AtomicInteger();
 		findAnswer(faces, overlapRelations, 0, overlapRelation);
 		var time = watch.getMilliSec();
 
 		logger.debug("#call = {}", callCount);
-		logger.debug("#penetrationTest = {}", penetrationTestCallCount);
-		logger.debug("#penetration = {}", penetrationCount);
 		logger.debug("time = {}[ms]", time);
 
 		return overlapRelations;

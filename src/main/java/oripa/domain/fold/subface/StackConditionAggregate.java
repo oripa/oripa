@@ -220,4 +220,9 @@ class StackConditionAggregate {
 	int getCountOfConditionsOf2Faces(final OriFace face) {
 		return stackConditionsOf2Faces.get(face).size();
 	}
+
+	int getAllCountOfConditionsOf2Faces() {
+		return stackConditionsOf2Faces.values().stream().mapToInt(List::size).sum();
+	}
+
 }
