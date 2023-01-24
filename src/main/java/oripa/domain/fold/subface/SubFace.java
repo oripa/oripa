@@ -49,11 +49,11 @@ public class SubFace {
 
 	/**
 	 *
-	 * @param f
+	 * @param outline
 	 *            A face object describing the shape of this subface.
 	 */
-	public SubFace(final OriFace f) {
-		outline = f;
+	public SubFace(final OriFace outline) {
+		this.outline = outline;
 	}
 
 	/**
