@@ -18,11 +18,9 @@
  */
 package oripa.domain.fold;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,15 +50,8 @@ class DeterministicLayerOrderEstimator {
 
 		private final int order;
 
-		private int getOrder() {
-			return order;
-		}
-
-		public static EstimationResult selectStronger(final EstimationResult a, final EstimationResult b) {
-			return Stream.of(a, b)
-					.sorted(Comparator.comparing(EstimationResult::getOrder).reversed())
-					.findFirst()
-					.get();
+		public EstimationResult or(final EstimationResult e) {
+			return order > e.order ? this : e;
 		}
 	}
 
@@ -113,13 +104,13 @@ class DeterministicLayerOrderEstimator {
 			changed = EstimationResult.NOT_CHANGED;
 
 			var result = estimateBy3FaceCover(overlapRelation);
-			changed = EstimationResult.selectStronger(result, changed);
+			changed = result.or(changed);
 
 			result = estimateBy3FaceTransitiveRelation(overlapRelation);
-			changed = EstimationResult.selectStronger(result, changed);
+			changed = result.or(changed);
 
 			result = estimateBy4FaceStackCondition(overlapRelation);
-			changed = EstimationResult.selectStronger(result, changed);
+			changed = result.or(changed);
 
 			estimationLoopCount++;
 		} while (changed == EstimationResult.CHANGED);
@@ -147,26 +138,26 @@ class DeterministicLayerOrderEstimator {
 			// lower1 > lower2
 			if (overlapRelation.isLower(cond.lower1, cond.upper2)) {
 				var result = setLowerIfPossible(overlapRelation, cond.upper1, cond.upper2);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 
 				result = setLowerIfPossible(overlapRelation, cond.upper1, cond.lower2);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 
 				result = setLowerIfPossible(overlapRelation, cond.lower1, cond.lower2);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 			}
 
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
 			// lower2 > lower1
 			if (overlapRelation.isLower(cond.lower2, cond.upper1)) {
 				var result = setLowerIfPossible(overlapRelation, cond.upper2, cond.upper1);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 
 				result = setLowerIfPossible(overlapRelation, cond.upper2, cond.lower1);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 
 				result = setLowerIfPossible(overlapRelation, cond.lower2, cond.lower1);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 			}
 
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
@@ -174,10 +165,10 @@ class DeterministicLayerOrderEstimator {
 			if (overlapRelation.isLower(cond.upper1, cond.upper2)
 					&& overlapRelation.isLower(cond.upper2, cond.lower1)) {
 				var result = setLowerIfPossible(overlapRelation, cond.upper1, cond.lower2);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 
 				result = setLowerIfPossible(overlapRelation, cond.lower2, cond.lower1);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 			}
 
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
@@ -185,10 +176,10 @@ class DeterministicLayerOrderEstimator {
 			if (overlapRelation.isLower(cond.upper1, cond.lower2)
 					&& overlapRelation.isLower(cond.lower2, cond.lower1)) {
 				var result = setLowerIfPossible(overlapRelation, cond.upper1, cond.upper2);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 
 				result = setLowerIfPossible(overlapRelation, cond.upper2, cond.lower1);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 			}
 
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
@@ -196,10 +187,10 @@ class DeterministicLayerOrderEstimator {
 			if (overlapRelation.isLower(cond.upper2, cond.upper1)
 					&& overlapRelation.isLower(cond.upper1, cond.lower2)) {
 				var result = setLowerIfPossible(overlapRelation, cond.upper2, cond.lower1);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 
 				result = setLowerIfPossible(overlapRelation, cond.lower1, cond.lower2);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 			}
 
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
@@ -207,10 +198,10 @@ class DeterministicLayerOrderEstimator {
 			if (overlapRelation.isLower(cond.upper2, cond.lower1)
 					&& overlapRelation.isLower(cond.lower1, cond.lower2)) {
 				var result = setLowerIfPossible(overlapRelation, cond.upper2, cond.upper1);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 
 				result = setLowerIfPossible(overlapRelation, cond.upper1, cond.lower2);
-				changed = EstimationResult.selectStronger(result, changed);
+				changed = result.or(changed);
 			}
 
 			if (changed == EstimationResult.UNFOLDABLE) {
@@ -316,8 +307,8 @@ class DeterministicLayerOrderEstimator {
 
 		var changed = EstimationResult.NOT_CHANGED;
 		for (OriFace f_i : faces) {
-			var updateResult = updateBy3FaceCover(f_i, overlapRelation);
-			changed = EstimationResult.selectStronger(updateResult, changed);
+			var result = updateBy3FaceCover(f_i, overlapRelation);
+			changed = result.or(changed);
 			if (changed == EstimationResult.UNFOLDABLE) {
 				return EstimationResult.UNFOLDABLE;
 			}
@@ -350,12 +341,12 @@ class DeterministicLayerOrderEstimator {
 				if (!overlapRelation.isUndefined(index_i, index_k)) {
 					var result = setIfPossible(
 							overlapRelation, index_j, index_k, overlapRelation.get(index_i, index_k));
-					changed = EstimationResult.selectStronger(result, changed);
+					changed = result.or(changed);
 				}
 				if (!overlapRelation.isUndefined(index_j, index_k)) {
 					var result = setIfPossible(
 							overlapRelation, index_i, index_k, overlapRelation.get(index_j, index_k));
-					changed = EstimationResult.selectStronger(result, changed);
+					changed = result.or(changed);
 				}
 
 				if (changed == EstimationResult.UNFOLDABLE) {
