@@ -190,7 +190,7 @@ public class LayerOrderEnumerator {
 					if (other == face) {
 						continue;
 					}
-					if (OriGeomUtil.isLineCrossFace(other, halfedge, eps)) {
+					if (OriGeomUtil.isHalfedgeCrossFace(other, halfedge, eps)) {
 						indexSet.add(other.getFaceID());
 					}
 				}

@@ -76,12 +76,12 @@ public class OriGeomUtil {
 		}
 
 		// If the outline of face0 intersects face1's, true
-		if (face0.halfedgeStream().anyMatch(he0 -> isLineCrossFace(face1, he0, eps))) {
+		if (face0.halfedgeStream().anyMatch(he0 -> isHalfedgeCrossFace(face1, he0, eps))) {
 			return true;
 		}
 
 		// If the outline of face1 intersects face0's, true
-		if (face1.halfedgeStream().anyMatch(he1 -> isLineCrossFace(face0, he1, eps))) {
+		if (face1.halfedgeStream().anyMatch(he1 -> isHalfedgeCrossFace(face0, he1, eps))) {
 			return true;
 		}
 
@@ -100,7 +100,7 @@ public class OriGeomUtil {
 	 *         {@code false} if {@code heg} doesn't cross {@code face} or both
 	 *         end points of {@code heg} are on an edge of {@code face}.
 	 */
-	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
+	public static boolean isHalfedgeCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
 		// if halfedge is on a line on a face's edge, they are parallel and
 		// never cross.
