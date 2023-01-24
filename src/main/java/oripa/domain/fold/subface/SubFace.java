@@ -151,8 +151,7 @@ public class SubFace {
 		// the search tree.
 		// (earlier failure is better.)
 		var candidateFaces = parentFaces.stream()
-				.sorted(Comparator.comparing(f -> stackConditionAggregate.getCountOfConditionsOf2Faces(f),
-						Comparator.reverseOrder()))
+				.sorted(Comparator.comparing(stackConditionAggregate::getCountOfConditionsOf2Faces).reversed())
 				.collect(Collectors.toList());
 
 		// From the bottom

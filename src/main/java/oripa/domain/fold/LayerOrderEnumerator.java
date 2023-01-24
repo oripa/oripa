@@ -84,11 +84,14 @@ public class LayerOrderEnumerator {
 
 		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
 
+		var subFacesOfEachFace = createSubFacesOfEachFace(faces);
 		var overlappingFaceIndexIntersections = createOverlappingFaceIndexIntersections(faces, overlapRelation);
 		var faceIndicesOnHalfedge = createFaceIndicesOnHalfEdge(faces, eps);
-		holdCondition3s(faces, overlapRelation, overlappingFaceIndexIntersections, faceIndicesOnHalfedge);
 
-		var condition4s = holdCondition4s(faces, edges, overlapRelation, eps);
+		holdCondition3s(faces, overlapRelation, subFacesOfEachFace, overlappingFaceIndexIntersections,
+				faceIndicesOnHalfedge);
+
+		var condition4s = holdCondition4s(faces, edges, overlapRelation, subFacesOfEachFace, eps);
 
 		var estimator = new DeterministicLayerOrderEstimator(
 				faces, subFaces,
@@ -308,14 +311,13 @@ public class LayerOrderEnumerator {
 	 */
 	private void holdCondition3s(
 			final List<OriFace> faces, final OverlapRelation overlapRelation,
+			final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
 			final List<Integer>[][] overlappingFaceIndexIntersections,
 			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge) {
 
 		int conditionCount = 0;
 
 		var watch = new StopWatch(true);
-
-		var subFacesOfEachFace = createSubFacesOfEachFace(faces);
 
 		for (OriFace f_i : faces) {
 			var index_i = f_i.getFaceID();
@@ -377,15 +379,15 @@ public class LayerOrderEnumerator {
 	 *            overlap relation matrix
 	 */
 	private Set<StackConditionOf4Faces> holdCondition4s(final List<OriFace> faces,
-			final List<OriEdge> edges, final OverlapRelation overlapRelation, final double eps) {
+			final List<OriEdge> edges, final OverlapRelation overlapRelation,
+			final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
+			final double eps) {
 		var condition4s = new HashSet<StackConditionOf4Faces>();
 
 		int edgeNum = edges.size();
 		logger.debug("edgeNum = " + edgeNum);
 
 		var watch = new StopWatch(true);
-
-		var subFacesOfEachFace = createSubFacesOfEachFace(faces);
 
 		for (int i = 0; i < edgeNum; i++) {
 			OriEdge e0 = edges.get(i);
