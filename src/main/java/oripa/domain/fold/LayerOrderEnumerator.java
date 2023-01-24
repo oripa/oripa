@@ -109,7 +109,8 @@ public class LayerOrderEnumerator {
 		// heuristic: apply the heuristic in local layer ordering to global
 		// subface ordering.
 		subFaces = subFaces.stream()
-				.sorted(Comparator.comparingInt(sub -> ((SubFace) sub).getAllCountOfConditionsOf2Faces(overlapRelation))
+				.sorted(Comparator
+						.comparingInt((final SubFace sub) -> sub.getAllCountOfConditionsOf2Faces(overlapRelation))
 						.reversed())
 				.collect(Collectors.toList());
 		logger.debug("subface ordering = {}[ms]", watch.getMilliSec());
