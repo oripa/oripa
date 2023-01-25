@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
@@ -50,11 +49,11 @@ public class SubFace {
 
 	/**
 	 *
-	 * @param f
+	 * @param outline
 	 *            A face object describing the shape of this subface.
 	 */
-	public SubFace(final OriFace f) {
-		outline = f;
+	public SubFace(final OriFace outline) {
+		this.outline = outline;
 	}
 
 	/**
@@ -72,49 +71,12 @@ public class SubFace {
 	 */
 	public List<List<OriFace>> createLocalLayerOrders(final List<OriFace> modelFaces,
 			final OverlapRelation overlapRelation, final boolean parallel) {
-		var count = createInitialCountForCreatingOrders();
-		return solveLocalLayerOrders(modelFaces, overlapRelation, parallel, count);
-	}
-
-	/**
-	 * Counts all possible local layer orders. All parent faces should be added
-	 * to this subface before this method is called.
-	 *
-	 * @param modelFaces
-	 *            all faces of inputted model.
-	 * @param overlapRelation
-	 *            overlap relation matrix.
-	 * @param parallel
-	 *            {@code true} if the algorithm should try parallelization.
-	 * @return the number of possible local layer orders. {@code -1} if the
-	 *         order is uniquely determined by overlap relation.
-	 */
-	public int countLocalLayerOrders(final List<OriFace> modelFaces,
-			final OverlapRelation overlapRelation, final boolean parallel) {
-		var count = createInitialCountForCountingOrders();
-		var orders = solveLocalLayerOrders(modelFaces, overlapRelation, parallel, count);
-		if (orders == null) {
-			return -1;
-		}
-		return count.get();
-	}
-
-	private AtomicInteger createInitialCountForCreatingOrders() {
-		return new AtomicInteger(-1);
-	}
-
-	private AtomicInteger createInitialCountForCountingOrders() {
-		return new AtomicInteger(0);
-	}
-
-	private boolean shouldCreateOrder(final AtomicInteger count) {
-		return count.getPlain() == -1;
+		return solveLocalLayerOrders(modelFaces, overlapRelation, parallel);
 	}
 
 	private List<List<OriFace>> solveLocalLayerOrders(final List<OriFace> modelFaces,
 			final OverlapRelation overlapRelation,
-			final boolean parallel,
-			final AtomicInteger count) {
+			final boolean parallel) {
 
 		this.modelFaces = modelFaces;
 
@@ -151,15 +113,13 @@ public class SubFace {
 		// the search tree.
 		// (earlier failure is better.)
 		var candidateFaces = parentFaces.stream()
-				.sorted(Comparator.comparing(f -> stackConditionAggregate.getCountOfConditionsOf2Faces(f),
-						Comparator.reverseOrder()))
+				.sorted(Comparator.comparing(stackConditionAggregate::getCountOfConditionsOf2Faces).reversed())
 				.collect(Collectors.toList());
 
 		// From the bottom
 		sort(candidateFaces,
 				localLayerOrders,
 				localLayerOrder,
-				count,
 				alreadyInLocalLayerOrder,
 				indexOnOrdering,
 				stackConditionAggregate,
@@ -187,7 +147,6 @@ public class SubFace {
 			final List<OriFace> candidateFaces,
 			final List<List<OriFace>> localLayerOrders,
 			final List<OriFace> localLayerOrder,
-			final AtomicInteger localLayerOrderCount,
 			final boolean[] alreadyInLocalLayerOrder,
 			final Map<OriFace, Integer> indexOnOrdering,
 			final StackConditionAggregate stackConditionAggregate,
@@ -195,12 +154,8 @@ public class SubFace {
 			final boolean parallel) {
 
 		if (index == parentFaces.size()) {
-			if (shouldCreateOrder(localLayerOrderCount)) {
-				var ans = new ArrayList<>(localLayerOrder);
-				localLayerOrders.add(ans);
-			} else {
-				localLayerOrderCount.incrementAndGet();
-			}
+			var ans = new ArrayList<>(localLayerOrder);
+			localLayerOrders.add(ans);
 			return;
 		}
 
@@ -243,7 +198,6 @@ public class SubFace {
 				sort(facesToBePut,
 						localLayerOrders,
 						nextLocalLayerOrder,
-						localLayerOrderCount,
 						nextAlreadyInLocalLayerOrder,
 						nextIndexOnOrdering,
 						stackConditionAggregate,
@@ -257,7 +211,6 @@ public class SubFace {
 				sort(facesToBePut,
 						localLayerOrders,
 						localLayerOrder,
-						localLayerOrderCount,
 						alreadyInLocalLayerOrder,
 						indexOnOrdering,
 						stackConditionAggregate,
@@ -320,4 +273,11 @@ public class SubFace {
 				.allMatch(face -> sub.parentFaces.contains(face));
 	}
 
+	public int getAllCountOfConditionsOf2Faces(final OverlapRelation overlapRelation) {
+		var stackConditionAggregate = new StackConditionAggregate();
+
+		stackConditionAggregate.prepareConditionsOf2Faces(parentFaces, overlapRelation);
+
+		return stackConditionAggregate.getAllCountOfConditionsOf2Faces();
+	}
 }

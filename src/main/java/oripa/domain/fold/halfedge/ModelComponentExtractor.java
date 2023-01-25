@@ -43,7 +43,7 @@ public class ModelComponentExtractor {
 			final OriFace boundaryFace, final double eps) {
 
 		return wholePrecreases.stream()
-				.filter(p -> OriGeomUtil.isOriLineIncludedInFace(boundaryFace, p, eps))
+				.filter(p -> OriGeomUtil.isSegmentIncludedInFace(boundaryFace, p, eps))
 				.collect(Collectors.toList());
 	}
 

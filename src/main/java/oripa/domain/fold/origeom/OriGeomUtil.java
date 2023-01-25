@@ -76,12 +76,12 @@ public class OriGeomUtil {
 		}
 
 		// If the outline of face0 intersects face1's, true
-		if (face0.halfedgeStream().anyMatch(he0 -> isLineCrossFace(face1, he0, eps))) {
+		if (face0.halfedgeStream().anyMatch(he0 -> isHalfedgeCrossFace(face1, he0, eps))) {
 			return true;
 		}
 
 		// If the outline of face1 intersects face0's, true
-		if (face1.halfedgeStream().anyMatch(he1 -> isLineCrossFace(face0, he1, eps))) {
+		if (face1.halfedgeStream().anyMatch(he1 -> isHalfedgeCrossFace(face0, he1, eps))) {
 			return true;
 		}
 
@@ -89,8 +89,9 @@ public class OriGeomUtil {
 	}
 
 	/**
-	 * Whether {@code heg} crosses {@code face}. The inclusion test is
-	 * exclusive.
+	 * Whether {@code heg} crosses {@code face}. This method also returns
+	 * {@code true} if {@code face} includes both end points of the {@code heg}.
+	 * The inclusion test is exclusive.
 	 *
 	 * @param face
 	 * @param heg
@@ -99,7 +100,7 @@ public class OriGeomUtil {
 	 *         {@code false} if {@code heg} doesn't cross {@code face} or both
 	 *         end points of {@code heg} are on an edge of {@code face}.
 	 */
-	public static boolean isLineCrossFace(final OriFace face, final OriHalfedge heg,
+	public static boolean isHalfedgeCrossFace(final OriFace face, final OriHalfedge heg,
 			final double eps) {
 		// if halfedge is on a line on a face's edge, they are parallel and
 		// never cross.
@@ -111,7 +112,7 @@ public class OriGeomUtil {
 			return true;
 		}
 
-		if (isHalfedgeCrossEdgeOfFace(face, heg, eps)) {
+		if (isHalfedgeCrossEdgeOrIncluded(face, heg, eps)) {
 			return true;
 		}
 
@@ -149,7 +150,7 @@ public class OriGeomUtil {
 		return false;
 	}
 
-	private static boolean isHalfedgeCrossEdgeOfFace(final OriFace face, final OriHalfedge heg, final double eps) {
+	private static boolean isHalfedgeCrossEdgeOrIncluded(final OriFace face, final OriHalfedge heg, final double eps) {
 		// If at least one of the endpoints is fully contained
 
 		return face.isOnFaceExclusively(heg.getPosition(), eps)
@@ -164,7 +165,7 @@ public class OriGeomUtil {
 	 * @param line
 	 * @return {@code true} if {@code face} includes {@code line} entirely.
 	 */
-	public static boolean isOriLineIncludedInFace(final OriFace face, final Segment line, final double eps) {
+	public static boolean isSegmentIncludedInFace(final OriFace face, final Segment line, final double eps) {
 		return face.isOnFaceInclusively(line.getP0(), eps)
 				&& face.isOnFaceInclusively(line.getP1(), eps);
 	}
@@ -195,7 +196,7 @@ public class OriGeomUtil {
 
 		return nxtPAngle - prePAngle;
 
-//		return preP.angle(nxtP); // fails if a concave face occurs.
+//		return preP.angle(nxtP); // fails if a concave face exists.
 	}
 
 	/**

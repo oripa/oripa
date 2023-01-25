@@ -183,6 +183,15 @@ public class OverlapRelation {
 		return true;
 	}
 
+	public boolean setIfUndefined(final int i, final int j, final byte value) {
+		if (!isUndefined(i, j)) {
+			return false;
+		}
+
+		set(i, j, value);
+		return true;
+	}
+
 	/**
 	 *
 	 * @return {@code true} if {@code overlapRelation[i][j]} is equal to
