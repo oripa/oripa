@@ -40,6 +40,8 @@ public interface EstimationResultUIView extends View {
 
 	OverlapRelation getOverlapRelation();
 
+	int getOverlapRelationIndex();
+
 	boolean isFaceOrderFlipped();
 
 	void addExportButtonListener(Runnable listener);

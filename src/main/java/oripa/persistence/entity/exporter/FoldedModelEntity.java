@@ -18,6 +18,9 @@
  */
 package oripa.persistence.entity.exporter;
 
+import java.util.List;
+
+import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 
@@ -27,11 +30,17 @@ import oripa.domain.fold.origeom.OverlapRelation;
  */
 public class FoldedModelEntity {
 	private final OrigamiModel origamiModel;
-	private final OverlapRelation overlapRelation;
+	private final List<OverlapRelation> overlapRelations;
+	private final int index;
 
-	public FoldedModelEntity(final OrigamiModel origamiModel, final OverlapRelation overlapRelation) {
-		this.origamiModel = origamiModel;
-		this.overlapRelation = overlapRelation;
+	public FoldedModelEntity(final FoldedModel foldedModel, final int index) {
+		this.origamiModel = foldedModel.getOrigamiModel();
+		this.overlapRelations = foldedModel.getOverlapRelations();
+		this.index = index;
+	}
+
+	public FoldedModelEntity(final FoldedModel foldedModel) {
+		this(foldedModel, -1);
 	}
 
 	public OrigamiModel getOrigamiModel() {
@@ -39,6 +48,13 @@ public class FoldedModelEntity {
 	}
 
 	public OverlapRelation getOverlapRelation() {
-		return overlapRelation;
+		if (index < 0) {
+			throw new IllegalStateException("Index of overlap relation is not given.");
+		}
+		return overlapRelations.get(index);
+	}
+
+	public List<OverlapRelation> getOverlapRelations() {
+		return overlapRelations;
 	}
 }
