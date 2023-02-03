@@ -20,6 +20,7 @@ package oripa.persistence.entity;
 
 import oripa.persistence.entity.exporter.ExporterORmat;
 import oripa.persistence.entity.exporter.FoldedModelEntity;
+import oripa.persistence.entity.exporter.FoldedModelExporterFOLD;
 import oripa.persistence.entity.exporter.FoldedModelExporterSVG;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -32,7 +33,8 @@ import oripa.persistence.filetool.Loader;
 public enum FoldedModelFileTypeKey implements FileTypeProperty<FoldedModelEntity> {
 	SVG_FOLDED_MODEL("svg_folded_model", 1, null, new FoldedModelExporterSVG(false), "svg"),
 	SVG_FOLDED_MODEL_FLIP("svg_folded_model_flip", 1, null, new FoldedModelExporterSVG(true), "svg"),
-	ORMAT_FOLDED_MODEL("ormat", 2, null, new ExporterORmat(), "ormat");
+	ORMAT_FOLDED_MODEL("ormat", 2, null, new ExporterORmat(), "ormat"),
+	FOLD_ALL_OVERLAPS("fold_all_overlaps", 3, null, new FoldedModelExporterFOLD(), "fold");
 
 	private final String keyText;
 	private final Integer order;
