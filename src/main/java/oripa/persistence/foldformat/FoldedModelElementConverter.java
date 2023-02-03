@@ -23,8 +23,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import oripa.domain.fold.halfedge.OriEdge;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
 /**
@@ -32,6 +37,9 @@ import oripa.value.OriLine;
  *
  */
 public class FoldedModelElementConverter {
+
+	private final AssignmentConverter assignmentConverter = new AssignmentConverter();
+
 	/**
 	 * Call this method first of all. This method sets the ID of each vertex.
 	 *
@@ -83,21 +91,7 @@ public class FoldedModelElementConverter {
 		var edges = origamiModel.getEdges();
 
 		return edges.stream()
-				.map(edge -> {
-					switch (OriLine.Type.fromInt(edge.getType())) {
-					case AUX:
-						return "F";
-					case CUT:
-						return "B";
-					case MOUNTAIN:
-						return "M";
-					case VALLEY:
-						return "V";
-					default:
-						return null;
-					}
-
-				})
+				.map(edge -> assignmentConverter.toFOLD(OriLine.Type.fromInt(edge.getType())))
 				.collect(Collectors.toList());
 	}
 
@@ -143,5 +137,83 @@ public class FoldedModelElementConverter {
 		}
 
 		return orders;
+	}
+
+	public List<OriVertex> fromVerticesCoords(final List<List<Double>> verticesCoords) {
+		var vertices = new ArrayList<OriVertex>();
+
+		verticesCoords.forEach(coords -> {
+			vertices.add(new OriVertex(coords.get(0), coords.get(1)));
+		});
+
+		return vertices;
+	}
+
+	public List<OriEdge> fromEdges(final List<List<Integer>> edgesVertices, final List<String> edgesAssignment,
+			final List<OriVertex> vertices) {
+		var edges = new ArrayList<OriEdge>();
+
+		for (int i = 0; i < edgesVertices.size(); i++) {
+			var edgeVertices = edgesVertices.get(i);
+			var edge = new OriEdge(
+					vertices.get(edgeVertices.get(0)),
+					vertices.get(edgeVertices.get(1)),
+					assignmentConverter.fromFOLD(edgesAssignment.get(i)).toInt());
+			edges.add(edge);
+		}
+
+		return edges;
+	}
+
+	public List<OriFace> fromFacesVertices(final List<List<Integer>> facesVertices, final List<OriVertex> vertices) {
+		var faces = new ArrayList<OriFace>();
+
+		for (int i = 0; i < facesVertices.size(); i++) {
+			var face = new OriFace();
+
+			var faceVertices = facesVertices.get(i);
+
+			faceVertices.forEach(v -> {
+				var halfedge = new OriHalfedge(vertices.get(v), face);
+				face.addHalfedge(halfedge);
+			});
+			face.makeHalfedgeLoop();
+
+			if (!GeomUtil.isCCW(
+					face.getHalfedge(0).getPosition(),
+					face.getHalfedge(1).getPosition(),
+					face.getHalfedge(2).getPosition())) {
+				face.invertFaceFront();
+			}
+		}
+
+		return faces;
+	}
+
+	public OverlapRelation fromFaceOrders(final List<List<Integer>> faceOrders, final List<OriFace> faces) {
+		var overlapRelation = new OverlapRelation(faces.size());
+
+		faceOrders.forEach(order -> {
+			var i = order.get(0);
+			var j = order.get(1);
+			var g = faces.get(j);
+			var direction = order.get(2);
+			if (g.isFaceFront()) {
+				if (direction == 1) {
+					overlapRelation.setUpper(i, j);
+				} else if (direction == -1) {
+					overlapRelation.setLower(i, j);
+				}
+			} else {
+				if (direction == 1) {
+					overlapRelation.setLower(i, j);
+				} else if (direction == -1) {
+					overlapRelation.setUpper(i, j);
+				}
+
+			}
+		});
+
+		return overlapRelation;
 	}
 }

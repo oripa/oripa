@@ -538,7 +538,7 @@ public class GeomUtil {
 	}
 
 	/**
-	 * @return true if vector p0 -> q ends in left side of p1 -> p0 (q is at
+	 * @return true if vector p0 -> q ends in left side of p0 -> p1 (q is at
 	 *         counterclockwise position) otherwise false.
 	 */
 	public static boolean isCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
