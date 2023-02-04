@@ -34,6 +34,39 @@ Once downloaded, to run ORIPA in a terminal just run:
 ```sh
 java -jar ./oripa-1.50.jar
 ```
+### Command line interface (CLI)
+---------------------------
+If you give some command line option to ORIPA, ORIPA will run as a command line application.
+The CLI mode is designed as a file I/O application. The order of command arguments is interchangeable.
+
+Examples:
+
+```sh
+# Show help.
+java -jar ./oripa-1.65.jar --help
+```
+
+```sh
+# Crease pattern file format conversion.
+java -jar ./oripa-1.65.jar --convert converted.fold cp.opx
+# Short version with a different order of options.
+java -jar ./oripa-1.65.jar cp.opx -c converted.fold 
+
+# FOLD is also acceptable input. Image conversion is available.
+java -jar ./oripa-1.65.jar --convert converted.png cp.fold
+```
+
+```sh
+# Fold the crease pattern and output as a multiple frame FOLD.
+java -jar ./oripa-1.65.jar --fold folded.fold cp.opx
+```
+
+```sh
+# Output an image of the folded model at the given index.
+java -jar ./oripa-1.65.jar --image folded.svg -n 0 folded.fold
+```
+
+
 
 ### Plug-in system
 --------
