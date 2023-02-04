@@ -128,6 +128,8 @@ public class CommandLineInterfaceMain {
 				var outputFilePath = line.getOptionValue(foldOption);
 				var folder = new CommandLineFolder();
 				folder.fold(inputFilePath, outputFilePath);
+			} else if (line.getOptions().length == 0) {
+				throw new IllegalArgumentException("No option is given. Hint: see help by -" + helpOption.getOpt());
 			}
 
 		} catch (Exception ex) {
