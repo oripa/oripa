@@ -76,9 +76,8 @@ public class EstimationResultUIPresenter {
 			var fileAccessService = new EstimationResultFileAccess(dao);
 
 			var foldedModel = view.getModel();
-			var overlapRelation = view.getOverlapRelation();
 
-			var entity = new FoldedModelEntity(foldedModel.getOrigamiModel(), overlapRelation);
+			var entity = new FoldedModelEntity(foldedModel, view.getOverlapRelationIndex());
 
 			var presenter = new FileAccessPresenter<FoldedModelEntity>((FrameView) view.getTopLevelView(),
 					fileChooserFactory, fileAccessService);

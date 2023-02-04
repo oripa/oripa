@@ -87,6 +87,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	private FoldedModel foldedModel;
 	private OverlapRelation overlapRelation;
+	private int overlapRelationIndex = 0;
 
 	private BiConsumer<Color, Color> saveColorsListener;
 
@@ -161,8 +162,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private void addActionListenersToComponents() {
 		answerSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX,
 				e -> {
-					var newIndex = (Integer) e.getNewValue();
-					overlapRelation = foldedModel.getOverlapRelations().get(newIndex);
+					overlapRelationIndex = (int) e.getNewValue();
+					overlapRelation = foldedModel.getOverlapRelations().get(overlapRelationIndex);
 					screen.setOverlapRelation(overlapRelation);
 				});
 
@@ -273,6 +274,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	@Override
 	public OverlapRelation getOverlapRelation() {
 		return overlapRelation;
+	}
+
+	@Override
+	public int getOverlapRelationIndex() {
+		return overlapRelationIndex;
 	}
 
 	@Override

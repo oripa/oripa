@@ -99,6 +99,12 @@ public class OriVertex {
 		}
 	}
 
+	/**
+	 * Inserts the given edge as the angle list keeps in increasing order.
+	 *
+	 * @param edge
+	 * @return
+	 */
 	private boolean insertEdge(final OriEdge edge) {
 		double angle = getAngle(edge);
 		for (int i = 0; i < edges.size(); i++) {

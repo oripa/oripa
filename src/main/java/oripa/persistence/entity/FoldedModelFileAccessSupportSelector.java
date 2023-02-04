@@ -41,6 +41,9 @@ public class FoldedModelFileAccessSupportSelector extends AbstractFileAccessSupp
 		FoldedModelFileTypeKey key = FoldedModelFileTypeKey.ORMAT_FOLDED_MODEL;
 		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
 
+		key = FoldedModelFileTypeKey.FOLD_ALL_OVERLAPS;
+		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
+
 		if (modelFlip) {
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP;
 			putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));

@@ -20,7 +20,6 @@ package oripa.persistence.foldformat;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +47,8 @@ public class CreasePatternElementConverter {
 	private List<String> edgesAssignment;
 	private List<List<Integer>> verticesVertices;
 	private List<List<Integer>> facesVertices;
+
+	private final AssignmentConverter assignmentConverter = new AssignmentConverter();
 
 	/**
 	 * generates a list of coordinates of distinct vertices.
@@ -106,20 +107,7 @@ public class CreasePatternElementConverter {
 			return edgesAssignment;
 		}
 		edgesAssignment = lines.parallelStream()
-				.map(line -> {
-					switch (line.getType()) {
-					case AUX:
-						return "F";
-					case CUT:
-						return "B";
-					case MOUNTAIN:
-						return "M";
-					case VALLEY:
-						return "V";
-					default:
-						return null;
-					}
-				})
+				.map(line -> assignmentConverter.toFOLD(line.getType()))
 				.collect(Collectors.toList());
 
 		return edgesAssignment;
@@ -262,16 +250,9 @@ public class CreasePatternElementConverter {
 						OriLine.Type.AUX))
 				.collect(Collectors.toList());
 
-		var typeHash = new HashMap<String, OriLine.Type>();
-		typeHash.put("B", OriLine.Type.CUT);
-		typeHash.put("F", OriLine.Type.AUX);
-		typeHash.put("M", OriLine.Type.MOUNTAIN);
-		typeHash.put("V", OriLine.Type.VALLEY);
-		typeHash.put("U", OriLine.Type.AUX);
-
 		for (int i = 0; i < lines.size(); i++) {
 			var line = lines.get(i);
-			line.setType(typeHash.get(edgesAssignment.get(i)));
+			line.setType(assignmentConverter.fromFOLD(edgesAssignment.get(i)));
 		}
 
 		return lines;

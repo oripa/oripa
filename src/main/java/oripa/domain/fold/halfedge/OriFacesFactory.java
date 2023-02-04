@@ -152,7 +152,8 @@ public class OriFacesFactory {
 
 	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge) {
 		return makeFace(startingVertex, startingEdge, 100,
-				// to make a loop in clockwise
+				// to make a loop in counterclockwise in mathematical
+				// coordinates.
 				(walkV, walkE) -> walkV.getPrevEdge(walkE));
 	}
 
