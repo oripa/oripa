@@ -39,7 +39,7 @@ public class CreasePatternFileConverter {
 			var input = creasePatternFileAccess.loadFile(inputFilePath);
 			creasePatternFileAccess.saveFile(input.get(), outputFilePath);
 		} catch (Exception e) {
-			logger.error("converison error", e);
+			logger.error("conversion error", e);
 		}
 	}
 }
