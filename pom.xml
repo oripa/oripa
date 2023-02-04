@@ -126,6 +126,9 @@
 							<addClasspath>true</addClasspath>
 							<mainClass>oripa.ORIPA</mainClass>
 						</manifest>
+						<manifestEntries>
+							<Multi-Release>true</Multi-Release>
+						</manifestEntries>
 					</archive>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
