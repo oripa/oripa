@@ -48,7 +48,7 @@ public class CommandLineInterfaceMain {
 				.longOpt(CONVERT)
 				.hasArg()
 				.argName(CP_FILE)
-				.desc("Convert crease pattern file (opx, fold, cp) format to other crase pattern format "
+				.desc("Convert crease pattern file format (opx, fold, cp) to other crease pattern format "
 						+ "or creaese pattern image (png or jpg). The argument is output file path.")
 				.build();
 		options.addOption(convertOption);
@@ -67,7 +67,7 @@ public class CommandLineInterfaceMain {
 				.longOpt(INDEX)
 				.hasArg()
 				.argName(FRAME_INDEX)
-				.desc("0-start Index of face order matrices. This option is to be used with --image option.")
+				.desc("0-start Index of face order matrices. This option is to be used with --" + IMAGE + " option.")
 				.build();
 		options.addOption(indexOption);
 
@@ -116,7 +116,7 @@ public class CommandLineInterfaceMain {
 
 			} else if (line.hasOption(imageOption)) {
 				if (!line.hasOption(indexOption)) {
-					throw new IllegalArgumentException("Need --index option.");
+					throw new IllegalArgumentException("Need --" + indexOption.getLongOpt() + " option.");
 				}
 				var outputFilePath = line.getOptionValue(imageOption);
 				var index = Integer.parseInt(line.getOptionValue(indexOption));
