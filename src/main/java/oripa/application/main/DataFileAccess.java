@@ -55,6 +55,7 @@ public class DataFileAccess implements FileAccessService<Doc> {
 		dao.getFileAccessSupportSelector().getFileAccessSupport(type).setSavingAction(action);
 	}
 
+	@Override
 	public AbstractFileAccessSupportSelector<Doc> getFileAccessSupportSelector() {
 		return dao.getFileAccessSupportSelector();
 	}
