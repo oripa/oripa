@@ -36,7 +36,7 @@ java -jar ./oripa-1.50.jar
 ```
 ### Command line interface (CLI)
 ---------------------------
-If you give some command line option to ORIPA, ORIPA will run as a command line application.
+If you give some command line option to ORIPA ver.1.64 or above, ORIPA will run as a command line application.
 The CLI mode is designed as a file I/O application. The order of command arguments is interchangeable.
 
 Examples:
