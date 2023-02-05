@@ -19,36 +19,12 @@
 package oripa.persistence.foldformat;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class FoldedModelFOLDFormat extends Frame {
-	@SerializedName("file_spec")
-	@Expose
-	private double fileSpec = 1.1;
-
-	@SerializedName("file_creator")
-	@Expose
-	private String fileCreator = "ORIPA";
-
-	@SerializedName("file_author")
-	@Expose
-	private String fileAuthor;
-
-	@SerializedName("file_classes")
-	@Expose
-	private List<String> fileClasses;
-
-	@SerializedName("file_frames")
-	@Expose
-	private List<Frame> fileFrames = null;
-
+public class FoldedModelFOLDFormat extends FOLDFormat {
 	public FoldedModelFOLDFormat() {
 		setFileClasses(new ArrayList<>() {
 			{
@@ -67,98 +43,5 @@ public class FoldedModelFOLDFormat extends Frame {
 				add("2D");
 			}
 		});
-	}
-
-	public double getFileSpec() {
-		return fileSpec;
-	}
-
-	public void setFileSpec(final double fileSpec) {
-		this.fileSpec = fileSpec;
-	}
-
-	public String getFileCreator() {
-		return fileCreator;
-	}
-
-	public void setFileCreator(final String fileCreator) {
-		this.fileCreator = fileCreator;
-	}
-
-	public String getFileAuthor() {
-		return fileAuthor;
-	}
-
-	public void setFileAuthor(final String fileAuthor) {
-		this.fileAuthor = fileAuthor;
-	}
-
-	public List<String> getFileClasses() {
-		return fileClasses;
-	}
-
-	public void setFileClasses(final List<String> fileClasses) {
-		this.fileClasses = fileClasses;
-	}
-
-	public List<Frame> getFileFrames() {
-		return fileFrames;
-	}
-
-	public void setFileFrames(final List<Frame> fileFrames) {
-		this.fileFrames = fileFrames;
-	}
-
-	/**
-	 *
-	 * @param index
-	 *            0 points the key frame (this instance), and 1 or larger points
-	 *            child frame.
-	 * @return frame at the index. if the frame inherits other frame, the
-	 *         returned frame is the result of merging the frame and ancestors.
-	 */
-	public Frame getFrame(final int index) {
-		if (index == 0) {
-			return this;
-		}
-		var frame = fileFrames.get(index - 1);
-		if (frame.getFrameInherit()) {
-			var parent = getFrame(frame.getFrameParent());
-			return merge(parent, frame);
-		}
-
-		return frame;
-	}
-
-	private Frame merge(final Frame parent, final Frame child) {
-		var frame = new Frame();
-
-		frame.setEdgesAssignment(parent.getEdgesAssignment());
-		frame.setEdgesVertices(parent.getEdgesVertices());
-		frame.setVerticesCoords(parent.getVerticesCoords());
-		frame.setFaceOrders(parent.getFaceOrders());
-		frame.setFacesVertices(parent.getFacesVertices());
-
-		if (child.getEdgesAssignment() != null) {
-			frame.setEdgesAssignment(child.getEdgesAssignment());
-		}
-
-		if (child.getEdgesVertices() != null) {
-			frame.setEdgesVertices(child.getEdgesVertices());
-		}
-
-		if (child.getVerticesCoords() != null) {
-			frame.setVerticesCoords(child.getVerticesCoords());
-		}
-
-		if (child.getFaceOrders() != null) {
-			frame.setFaceOrders(child.getFaceOrders());
-		}
-
-		if (child.getFacesVertices() != null) {
-			frame.setFacesVertices(child.getFacesVertices());
-		}
-
-		return frame;
 	}
 }
