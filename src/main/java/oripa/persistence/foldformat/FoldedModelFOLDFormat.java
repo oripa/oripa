@@ -43,39 +43,31 @@ public class FoldedModelFOLDFormat extends Frame {
 
 	@SerializedName("file_classes")
 	@Expose
-	private List<String> fileClasses = new ArrayList<>() {
-		{
-			add("singleModel");
-		}
-	};
-
-	@SerializedName("frame_title")
-	@Expose
-	private String frameTitle;
-
-	@SerializedName("frame_classes")
-	@Expose
-	private List<String> frameClasses = new ArrayList<>() {
-		{
-			add("foldedForm");
-		}
-	};
-
-	@SerializedName("frame_attributes")
-	@Expose
-	private List<String> frameAttributes = new ArrayList<>() {
-		{
-			add("2D");
-		}
-	};
-
-	@SerializedName("frame_description")
-	@Expose
-	private String frameDescription;
+	private List<String> fileClasses;
 
 	@SerializedName("file_frames")
 	@Expose
 	private List<Frame> fileFrames = null;
+
+	public FoldedModelFOLDFormat() {
+		setFileClasses(new ArrayList<>() {
+			{
+				add("singleModel");
+			}
+		});
+
+		setFrameClasses(new ArrayList<>() {
+			{
+				add("foldedForm");
+			}
+		});
+
+		setFrameAttributes(new ArrayList<>() {
+			{
+				add("2D");
+			}
+		});
+	}
 
 	public double getFileSpec() {
 		return fileSpec;
@@ -107,38 +99,6 @@ public class FoldedModelFOLDFormat extends Frame {
 
 	public void setFileClasses(final List<String> fileClasses) {
 		this.fileClasses = fileClasses;
-	}
-
-	public String getFrameTitle() {
-		return frameTitle;
-	}
-
-	public void setFrameTitle(final String frameTitle) {
-		this.frameTitle = frameTitle;
-	}
-
-	public List<String> getFrameClasses() {
-		return frameClasses;
-	}
-
-	public void setFrameClasses(final List<String> frameClasses) {
-		this.frameClasses = frameClasses;
-	}
-
-	public List<String> getFrameAttributes() {
-		return frameAttributes;
-	}
-
-	public void setFrameAttributes(final List<String> frameAttributes) {
-		this.frameAttributes = frameAttributes;
-	}
-
-	public String getFrameDescription() {
-		return frameDescription;
-	}
-
-	public void setFrameDescription(final String frameDescription) {
-		this.frameDescription = frameDescription;
 	}
 
 	public List<Frame> getFileFrames() {
