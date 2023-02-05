@@ -28,6 +28,22 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 public class Frame {
+	@SerializedName("frame_title")
+	@Expose
+	private String frameTitle;
+
+	@SerializedName("frame_classes")
+	@Expose
+	private List<String> frameClasses;
+
+	@SerializedName("frame_attributes")
+	@Expose
+	private List<String> frameAttributes;
+
+	@SerializedName("frame_description")
+	@Expose
+	private String frameDescription;
+
 	@SerializedName("vertices_coords")
 	@Expose
 	private List<List<Double>> verticesCoords = null;
@@ -55,6 +71,38 @@ public class Frame {
 	@SerializedName("frame_inherit")
 	@Expose
 	private Boolean frameInherit = null;
+
+	public String getFrameTitle() {
+		return frameTitle;
+	}
+
+	public void setFrameTitle(final String frameTitle) {
+		this.frameTitle = frameTitle;
+	}
+
+	public List<String> getFrameClasses() {
+		return frameClasses;
+	}
+
+	public void setFrameClasses(final List<String> frameClasses) {
+		this.frameClasses = frameClasses;
+	}
+
+	public List<String> getFrameAttributes() {
+		return frameAttributes;
+	}
+
+	public void setFrameAttributes(final List<String> frameAttributes) {
+		this.frameAttributes = frameAttributes;
+	}
+
+	public String getFrameDescription() {
+		return frameDescription;
+	}
+
+	public void setFrameDescription(final String frameDescription) {
+		this.frameDescription = frameDescription;
+	}
 
 	public List<List<Double>> getVerticesCoords() {
 		return verticesCoords;
