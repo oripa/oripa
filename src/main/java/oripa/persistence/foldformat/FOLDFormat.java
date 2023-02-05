@@ -112,6 +112,27 @@ public abstract class FOLDFormat extends Frame {
 	private Frame merge(final Frame parent, final Frame child) {
 		var frame = new Frame();
 
+		frame.setFrameClasses(parent.getFrameClasses());
+		frame.setFrameAttributes(parent.getFrameAttributes());
+		frame.setFrameTitle(parent.getFrameTitle());
+		frame.setFrameDescription(parent.getFrameDescription());
+
+		if (child.getFrameClasses() != null) {
+			frame.setFrameClasses(child.getFrameClasses());
+		}
+
+		if (child.getFrameAttributes() != null) {
+			frame.setFrameAttributes(child.getFrameAttributes());
+		}
+
+		if (child.getFrameTitle() != null) {
+			frame.setFrameTitle(child.getFrameTitle());
+		}
+
+		if (child.getFrameDescription() != null) {
+			frame.setFrameDescription(child.getFrameDescription());
+		}
+
 		frame.setEdgesAssignment(parent.getEdgesAssignment());
 		frame.setEdgesVertices(parent.getEdgesVertices());
 		frame.setVerticesCoords(parent.getVerticesCoords());
