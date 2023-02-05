@@ -101,7 +101,8 @@ public abstract class FOLDFormat extends Frame {
 			return this;
 		}
 		var frame = fileFrames.get(index - 1);
-		if (frame.getFrameInherit()) {
+		var inherit = frame.getFrameInherit();
+		if (inherit != null && inherit) {
 			var parent = getFrame(frame.getFrameParent());
 			return merge(parent, frame);
 		}
