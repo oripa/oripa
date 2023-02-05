@@ -16,48 +16,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.foldformat;
+package oripa.cli;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import oripa.value.OriLine;
+import oripa.application.main.DataFileAccess;
+import oripa.persistence.doc.DocDAO;
+import oripa.persistence.doc.DocFileAccessSupportSelector;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AssignmentConverter {
+public class CreasePatternFileConverter {
+	private static final Logger logger = LoggerFactory.getLogger(CreasePatternFileConverter.class);
 
-	private final Map<String, OriLine.Type> typeHash;
+	public void convert(final String inputFilePath, final String outputFilePath) {
+		var creasePatternFileAccess = new DataFileAccess(new DocDAO(new DocFileAccessSupportSelector()));
 
-	public AssignmentConverter() {
-		typeHash = new HashMap<String, OriLine.Type>();
-
-		typeHash.put("B", OriLine.Type.CUT);
-		typeHash.put("F", OriLine.Type.AUX);
-		typeHash.put("M", OriLine.Type.MOUNTAIN);
-		typeHash.put("V", OriLine.Type.VALLEY);
-		typeHash.put("U", OriLine.Type.AUX);
-	}
-
-	public String toFOLD(final OriLine.Type type) {
-		switch (type) {
-		case AUX:
-			return "F";
-		case CUT:
-			return "B";
-		case MOUNTAIN:
-			return "M";
-		case VALLEY:
-			return "V";
-		default:
-			return null;
+		try {
+			var input = creasePatternFileAccess.loadFile(inputFilePath);
+			creasePatternFileAccess.saveFile(input.get(), outputFilePath);
+		} catch (Exception e) {
+			logger.error("conversion error", e);
 		}
 	}
-
-	public OriLine.Type fromFOLD(final String assignment) {
-		return typeHash.get(assignment);
-	}
-
 }

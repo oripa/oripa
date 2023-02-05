@@ -26,6 +26,7 @@ import javax.swing.SwingUtilities;
 
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
+import oripa.cli.CommandLineInterfaceMain;
 import oripa.doc.Doc;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintDomainContext;
@@ -65,6 +66,12 @@ import oripa.swing.view.model.ModelViewSwingFrameFactory;
 
 public class ORIPA {
 	public static void main(final String[] args) {
+
+		if (args.length > 0) {
+			new CommandLineInterfaceMain().run(args);
+			return;
+		}
+
 		SwingUtilities.invokeLater(() -> {
 			int uiPanelWidth = 0;// 150;
 

@@ -185,6 +185,8 @@ public class FoldedModelElementConverter {
 					face.getHalfedge(2).getPosition())) {
 				face.invertFaceFront();
 			}
+
+			faces.add(face);
 		}
 
 		return faces;
