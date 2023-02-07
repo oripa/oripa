@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriFace;
@@ -60,7 +61,7 @@ public class FoldedModelElementConverter {
 					var position = vertex.getPosition();
 					return List.of(position.getX(), position.getY());
 				})
-				.collect(Collectors.toList());
+				.collect(Collectors.toCollection(ArrayList::new));
 
 		return coords;
 	}
@@ -76,7 +77,7 @@ public class FoldedModelElementConverter {
 
 		var vertexIndices = edges.stream()
 				.map(edge -> List.of(edge.getStartVertex().getVertexID(), edge.getEndVertex().getVertexID()))
-				.collect(Collectors.toList());
+				.collect(Collectors.toCollection(ArrayList::new));
 
 		return vertexIndices;
 	}
@@ -92,7 +93,7 @@ public class FoldedModelElementConverter {
 
 		return edges.stream()
 				.map(edge -> assignmentConverter.toFOLD(OriLine.Type.fromInt(edge.getType())))
-				.collect(Collectors.toList());
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class FoldedModelElementConverter {
 				.map(face -> face.halfedgeStream()
 						.map(he -> he.getVertex().getVertexID())
 						.collect(Collectors.toList()))
-				.collect(Collectors.toList());
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	public List<List<Integer>> toFaceOrders(final OrigamiModel origamiModel, final OverlapRelation overlapRelation) {
@@ -217,5 +218,78 @@ public class FoldedModelElementConverter {
 		});
 
 		return overlapRelation;
+	}
+
+	/**
+	 * Converts model's precreases and adds them to FOLD properties. Does not
+	 * merge vertices of precreases.
+	 *
+	 * @param edgesVertices
+	 * @param edgesAssignment
+	 * @param verticesCoords
+	 * @param origamiModel
+	 */
+	public List<List<Integer>> addPrecreases(
+			final List<List<Integer>> edgesVertices,
+			final List<String> edgesAssignment,
+			final List<List<Double>> verticesCoords,
+			final OrigamiModel origamiModel) {
+
+		int precreaseIndex = edgesVertices.size();
+		var facesPrecreases = new ArrayList<List<Integer>>();
+
+		var faces = origamiModel.getFaces();
+
+		for (var face : faces) {
+			for (var precrease : face.precreaseIterable()) {
+				facesPrecreases.add(List.of(face.getFaceID(), precreaseIndex++));
+			}
+		}
+
+		var precreaseEdges = faces.stream()
+				.flatMap(OriFace::precreaseStream)
+				.map(precrease -> new OriEdge(
+						new OriVertex(precrease.getP0()), new OriVertex(precrease.getP1()),
+						precrease.getType().toInt()))
+				.collect(Collectors.toList());
+
+		var precreaseVertices = precreaseEdges.stream()
+				.flatMap(edge -> Stream.of(edge.getStartVertex(), edge.getEndVertex()))
+				.collect(Collectors.toList());
+
+		var vertexCount = verticesCoords.size();
+
+		for (int i = 0; i < precreaseVertices.size(); i++) {
+			var vertex = precreaseVertices.get(i);
+			vertex.setVertexID(vertexCount + i);
+			verticesCoords.add(List.of(
+					vertex.getPosition().getX(),
+					vertex.getPosition().getY()));
+		}
+
+		for (var edge : precreaseEdges) {
+			edgesVertices.add(List.of(edge.getStartVertex().getVertexID(), edge.getEndVertex().getVertexID()));
+			edgesAssignment.add(assignmentConverter.toFOLD(OriLine.Type.AUX));
+		}
+
+		return facesPrecreases;
+	}
+
+	public void restorePrecreases(final List<List<Integer>> facesPrecreases, final List<OriEdge> edges,
+			final List<OriFace> faces) {
+		for (int i = 0; i < faces.size(); i++) {
+			var faceID = i;
+			var face = faces.get(i);
+			var precreases = facesPrecreases.stream()
+					.filter(precrease -> precrease.get(0) == faceID)
+					.map(precrease -> edges.get(precrease.get(1)))
+					.map(edge -> new OriLine(
+							edge.getStartVertex().getPosition(),
+							edge.getEndVertex().getPosition(),
+							OriLine.Type.AUX))
+					.collect(Collectors.toList());
+
+			face.addAllPrecreases(precreases);
+		}
 	}
 }

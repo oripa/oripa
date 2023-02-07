@@ -19,12 +19,19 @@
 package oripa.persistence.foldformat;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class FoldedModelFOLDFormat extends FOLDFormat {
+
+	@SerializedName("faces_oripa:precreases")
+	private List<List<Integer>> facesPrecreases;
+
 	public FoldedModelFOLDFormat() {
 		setFileClasses(new ArrayList<>() {
 			{
@@ -43,5 +50,19 @@ public class FoldedModelFOLDFormat extends FOLDFormat {
 				add("2D");
 			}
 		});
+	}
+
+	/**
+	 * Each element of the returned list is a pair of face index and precrease's
+	 * edge index.
+	 *
+	 * @return
+	 */
+	public List<List<Integer>> getFacesPrecreases() {
+		return facesPrecreases;
+	}
+
+	public void setFacesPrecreases(final List<List<Integer>> facesPrecreases) {
+		this.facesPrecreases = facesPrecreases;
 	}
 }
