@@ -18,32 +18,7 @@
  */
 package oripa.persistence.foldformat;
 
-import java.util.ArrayList;
-
-/**
- * @author koji
- *
- */
-public class CreasePatternFOLDFormat extends FOLDFormat {
-
-	public CreasePatternFOLDFormat() {
-		setFileClasses(new ArrayList<>() {
-			{
-				add(FileClass.SINGLE_MODEL);
-			}
-		});
-
-		setFrameClasses(new ArrayList<>() {
-			{
-				add(FrameClass.CREASE_PATTERN);
-			}
-		});
-
-		setFrameAttributes(new ArrayList<>() {
-			{
-				add(FrameAttribute.TWO_DIMENSION);
-			}
-		});
-	}
-
+public class FrameClass {
+	public static final String FOLDED_FORM = "foldedForm";
+	public static final String CREASE_PATTERN = "creasePattern";
 }

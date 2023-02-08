@@ -37,6 +37,7 @@ import oripa.persistence.filetool.Loader;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.persistence.foldformat.FoldedModelElementConverter;
 import oripa.persistence.foldformat.FoldedModelFOLDFormat;
+import oripa.persistence.foldformat.FrameClass;
 
 /**
  * Does not restore all of data but enough for exporting SVG.
@@ -61,6 +62,11 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModel> {
 					"The file does not follow JSON style."
 							+ " Note that FOLD format is based on JSON.",
 					e);
+		}
+
+		var frameClasses = foldFormat.getFrameClasses();
+		if (frameClasses != null && !frameClasses.contains(FrameClass.FOLDED_FORM)) {
+			throw new WrongDataFormatException("frame_classes does not contain " + FrameClass.FOLDED_FORM + ".");
 		}
 
 		if (foldFormat.getEdgesVertices() == null) {
