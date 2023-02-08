@@ -56,6 +56,13 @@ public class FoldedModelExporterFOLD implements Exporter<FoldedModelEntity> {
 
 		foldFormat.setFacesVertices(elementConverter.toFacesVertices(origamiModel));
 
+		foldFormat.setFacesPrecreases(
+				elementConverter.addPrecreases(
+						foldFormat.getEdgesVertices(),
+						foldFormat.getEdgesAssignment(),
+						foldFormat.getVerticesCoords(),
+						origamiModel));
+
 		var frames = new ArrayList<Frame>();
 		overlapRelations.forEach(relation -> {
 			var frame = new Frame();
