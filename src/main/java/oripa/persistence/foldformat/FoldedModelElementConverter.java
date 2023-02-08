@@ -283,10 +283,7 @@ public class FoldedModelElementConverter {
 			var precreases = facesPrecreases.stream()
 					.filter(precrease -> precrease.get(0) == faceID)
 					.map(precrease -> edges.get(precrease.get(1)))
-					.map(edge -> new OriLine(
-							edge.getStartVertex().getPosition(),
-							edge.getEndVertex().getPosition(),
-							OriLine.Type.AUX))
+					.map(edge -> new OriLine(edge.toSegment(), OriLine.Type.AUX))
 					.collect(Collectors.toList());
 
 			face.addAllPrecreases(precreases);
