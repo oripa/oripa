@@ -160,4 +160,8 @@ public class Frame {
 		this.frameInherit = frameInherit;
 	}
 
+	public boolean frameClassesContains(final String frameClass) {
+		return getFrameClasses() == null || getFrameClasses().contains(frameClass);
+	}
+
 }

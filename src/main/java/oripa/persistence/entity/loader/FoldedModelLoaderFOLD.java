@@ -64,8 +64,7 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModel> {
 					e);
 		}
 
-		var frameClasses = foldFormat.getFrameClasses();
-		if (frameClasses != null && !frameClasses.contains(FrameClass.FOLDED_FORM)) {
+		if (!foldFormat.frameClassesContains(FrameClass.FOLDED_FORM)) {
 			throw new WrongDataFormatException("frame_classes does not contain " + FrameClass.FOLDED_FORM + ".");
 		}
 
