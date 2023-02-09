@@ -63,16 +63,21 @@ public class FoldedModelExporterFOLD implements Exporter<FoldedModelEntity> {
 						foldFormat.getVerticesCoords(),
 						origamiModel));
 
-		var frames = new ArrayList<Frame>();
-		overlapRelations.forEach(relation -> {
-			var frame = new Frame();
-			frame.setFrameInherit(true);
-			frame.setFrameParent(0);
-			frame.setFaceOrders(elementConverter.toFaceOrders(origamiModel, relation));
-			frames.add(frame);
-		});
+		if (entity.isSingleOverlapRelation()) {
+			foldFormat.setFaceOrders(elementConverter.toFaceOrders(origamiModel, entity.getOverlapRelation()));
+		} else {
 
-		foldFormat.setFileFrames(frames);
+			var frames = new ArrayList<Frame>();
+			overlapRelations.forEach(relation -> {
+				var frame = new Frame();
+				frame.setFrameInherit(true);
+				frame.setFrameParent(0);
+				frame.setFaceOrders(elementConverter.toFaceOrders(origamiModel, relation));
+				frames.add(frame);
+			});
+
+			foldFormat.setFileFrames(frames);
+		}
 
 		try (var writer = Files.newBufferedWriter(Path.of(filePath))) {
 			var gson = new GsonBuilder().setPrettyPrinting().create();

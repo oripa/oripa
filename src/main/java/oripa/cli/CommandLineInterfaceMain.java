@@ -67,7 +67,8 @@ public class CommandLineInterfaceMain {
 				.longOpt(INDEX)
 				.hasArg()
 				.argName(FRAME_INDEX)
-				.desc("0-start Index of face order matrices. This option is to be used with --" + IMAGE + " option.")
+				.desc("0-start Index of face order matrices. This option is to be used with --" + IMAGE + " option, "
+						+ "and is optional for --" + FOLD + " option.")
 				.build();
 		options.addOption(indexOption);
 
@@ -82,7 +83,8 @@ public class CommandLineInterfaceMain {
 				.hasArg()
 				.argName(FOLD_FILE)
 				.desc("Fold crease pattern file (opx, fold, cp) and save as a multipule frame FOLD format. "
-						+ "The argument is output file path.")
+						+ "The argument is output file path. If you specify --" + INDEX
+						+ " option, The output will be a single frame FOLD format.")
 				.build();
 		options.addOption(foldOption);
 
@@ -127,7 +129,10 @@ public class CommandLineInterfaceMain {
 			} else if (line.hasOption(foldOption)) {
 				var outputFilePath = line.getOptionValue(foldOption);
 				var folder = new CommandLineFolder();
-				folder.fold(inputFilePath, outputFilePath);
+				var indexString = line.getOptionValue(indexOption);
+				var index = indexString == null ? -1 : Integer.parseInt(indexString);
+				folder.fold(inputFilePath, index, outputFilePath);
+
 			} else if (line.getOptions().length == 0) {
 				throw new IllegalArgumentException("No option is given. Hint: see help by -" + helpOption.getOpt());
 			}
