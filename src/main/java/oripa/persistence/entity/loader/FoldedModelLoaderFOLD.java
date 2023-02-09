@@ -84,7 +84,10 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModel> {
 		var edges = converter.fromEdges(foldFormat.getEdgesVertices(), foldFormat.getEdgesAssignment(), vertices);
 		var faces = converter.fromFacesVertices(foldFormat.getFacesVertices(), vertices);
 
-		converter.restorePrecreases(foldFormat.getFacesPrecreases(), edges, faces);
+		var precreases = foldFormat.getFacesPrecreases();
+		if (precreases != null) {
+			converter.restorePrecreases(precreases, edges, faces);
+		}
 
 		var positions = vertices.stream().map(OriVertex::getPosition).collect(Collectors.toList());
 		var domain = new RectangleDomain();
