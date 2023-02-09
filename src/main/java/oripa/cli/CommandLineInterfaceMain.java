@@ -85,7 +85,7 @@ public class CommandLineInterfaceMain {
 				.desc("Fold crease pattern file (opx, fold, cp) and save as a multipule frame FOLD format. "
 						+ "The argument is output file path. If you specify --" + INDEX
 						+ " option, The output will be a single frame FOLD format but the output may differ for the same index "
-						+ "since the folding algorithm does not garantee the order of results.")
+						+ "since the folding algorithm does not guarantee the order of results.")
 				.build();
 		options.addOption(foldOption);
 
