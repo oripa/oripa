@@ -68,8 +68,7 @@ public class CommandLineInterfaceMain {
 				.longOpt(INDEX)
 				.hasArg()
 				.argName(FRAME_INDEX)
-				.desc("0-start Index of face order matrices. This option is to be used with --" + IMAGE + " option, "
-						+ "and is optional for --" + FOLD + " option.")
+				.desc("0-start Index of face order matrices. This option is to be used with --" + IMAGE + " option.")
 				.build();
 		options.addOption(indexOption);
 
