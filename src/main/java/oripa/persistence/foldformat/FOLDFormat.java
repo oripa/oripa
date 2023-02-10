@@ -162,5 +162,4 @@ public abstract class FOLDFormat extends Frame {
 
 		return frame;
 	}
-
 }

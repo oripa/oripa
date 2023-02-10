@@ -54,6 +54,10 @@ public class FoldedModelEntity {
 		return overlapRelations.get(index);
 	}
 
+	public boolean isSingleOverlapRelation() {
+		return index >= 0;
+	}
+
 	public List<OverlapRelation> getOverlapRelations() {
 		return overlapRelations;
 	}

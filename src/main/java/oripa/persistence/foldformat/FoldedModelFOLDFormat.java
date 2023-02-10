@@ -35,19 +35,19 @@ public class FoldedModelFOLDFormat extends FOLDFormat {
 	public FoldedModelFOLDFormat() {
 		setFileClasses(new ArrayList<>() {
 			{
-				add("singleModel");
+				add(FileClass.SINGLE_MODEL);
 			}
 		});
 
 		setFrameClasses(new ArrayList<>() {
 			{
-				add("foldedForm");
+				add(FrameClass.FOLDED_FORM);
 			}
 		});
 
 		setFrameAttributes(new ArrayList<>() {
 			{
-				add("2D");
+				add(FrameAttribute.TWO_DIMENSION);
 			}
 		});
 	}

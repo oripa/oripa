@@ -35,6 +35,10 @@ public class FoldedModelImageExporter {
 	public void export(final String inputFilePath, final int index, final boolean reverse,
 			final String outputFilePath) {
 
+		if (!inputFilePath.endsWith(".fold")) {
+			throw new IllegalArgumentException("Input format is not supported. acceptable format: fold");
+		}
+
 		if (!outputFilePath.endsWith(".svg")) {
 			throw new IllegalArgumentException("Output format is not supported. acceptable format: svg");
 		}

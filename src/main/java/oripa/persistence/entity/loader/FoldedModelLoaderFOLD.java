@@ -37,6 +37,7 @@ import oripa.persistence.filetool.Loader;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.persistence.foldformat.FoldedModelElementConverter;
 import oripa.persistence.foldformat.FoldedModelFOLDFormat;
+import oripa.persistence.foldformat.FrameClass;
 
 /**
  * Does not restore all of data but enough for exporting SVG.
@@ -63,6 +64,10 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModel> {
 					e);
 		}
 
+		if (!foldFormat.frameClassesContains(FrameClass.FOLDED_FORM)) {
+			throw new WrongDataFormatException("frame_classes does not contain " + FrameClass.FOLDED_FORM + ".");
+		}
+
 		if (foldFormat.getEdgesVertices() == null) {
 			throw new WrongDataFormatException("edges_vertices property is needed in the file.");
 		}
@@ -79,7 +84,10 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModel> {
 		var edges = converter.fromEdges(foldFormat.getEdgesVertices(), foldFormat.getEdgesAssignment(), vertices);
 		var faces = converter.fromFacesVertices(foldFormat.getFacesVertices(), vertices);
 
-		converter.restorePrecreases(foldFormat.getFacesPrecreases(), edges, faces);
+		var precreases = foldFormat.getFacesPrecreases();
+		if (precreases != null) {
+			converter.restorePrecreases(precreases, edges, faces);
+		}
 
 		var positions = vertices.stream().map(OriVertex::getPosition).collect(Collectors.toList());
 		var domain = new RectangleDomain();

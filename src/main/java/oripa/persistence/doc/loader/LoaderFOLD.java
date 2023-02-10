@@ -30,6 +30,7 @@ import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.persistence.foldformat.CreasePatternElementConverter;
 import oripa.persistence.foldformat.CreasePatternFOLDFormat;
+import oripa.persistence.foldformat.FrameClass;
 
 /**
  * @author OUCHI Koji
@@ -57,6 +58,11 @@ public class LoaderFOLD implements DocLoader {
 					"The file does not follow JSON style."
 							+ " Note that FOLD format is based on JSON.",
 					e);
+		}
+
+		if (!foldFormat.frameClassesContains(FrameClass.CREASE_PATTERN)) {
+			throw new WrongDataFormatException(
+					"frame_classes does not contain " + FrameClass.CREASE_PATTERN + ".");
 		}
 
 		if (foldFormat.getEdgesVertices() == null) {

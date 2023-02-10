@@ -33,6 +33,7 @@ public class CommandLineInterfaceMain {
 	private static final String IMAGE = "image";
 	private static final String INDEX = "index";
 	private static final String REVERSE = "reverse";
+	private static final String SPLIT = "split";
 	private static final String FOLD = "fold";
 	private static final String HELP = "help";
 
@@ -49,7 +50,7 @@ public class CommandLineInterfaceMain {
 				.hasArg()
 				.argName(CP_FILE)
 				.desc("Convert crease pattern file format (opx, fold, cp) to other crease pattern format "
-						+ "or creaese pattern image (png or jpg). The argument is output file path.")
+						+ "or crease pattern image (png or jpg). The argument is output file path.")
 				.build();
 		options.addOption(convertOption);
 
@@ -59,7 +60,7 @@ public class CommandLineInterfaceMain {
 				.argName(IMAGE_FILE)
 				.desc("Output image file (svg) of folded forms in multiple frame FOLD format. "
 						+ "The argument is output file path."
-						+ "This option requires --index option.")
+						+ "This option requires --" + INDEX + " option.")
 				.build();
 		options.addOption(imageOption);
 
@@ -77,12 +78,19 @@ public class CommandLineInterfaceMain {
 				.build();
 		options.addOption(reverseOption);
 
+		var splitOption = Option.builder("s")
+				.longOpt(SPLIT)
+				.desc("Put this option if the output of --" + FOLD + " should be single frame FOLD files.")
+				.build();
+		options.addOption(splitOption);
+
 		var foldOption = Option.builder("f")
 				.longOpt(FOLD)
 				.hasArg()
 				.argName(FOLD_FILE)
 				.desc("Fold crease pattern file (opx, fold, cp) and save as a multipule frame FOLD format. "
-						+ "The argument is output file path.")
+						+ "The argument is output file path. If you specify --" + SPLIT + " option, "
+						+ "the output will be single frame FOLD files and index will be inserted into file name as \"givenName.123.fold\".")
 				.build();
 		options.addOption(foldOption);
 
@@ -127,7 +135,9 @@ public class CommandLineInterfaceMain {
 			} else if (line.hasOption(foldOption)) {
 				var outputFilePath = line.getOptionValue(foldOption);
 				var folder = new CommandLineFolder();
-				folder.fold(inputFilePath, outputFilePath);
+				var split = line.hasOption(splitOption);
+				folder.fold(inputFilePath, split, outputFilePath);
+
 			} else if (line.getOptions().length == 0) {
 				throw new IllegalArgumentException("No option is given. Hint: see help by -" + helpOption.getOpt());
 			}
