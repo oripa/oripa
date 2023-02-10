@@ -33,6 +33,7 @@ public class CommandLineInterfaceMain {
 	private static final String IMAGE = "image";
 	private static final String INDEX = "index";
 	private static final String REVERSE = "reverse";
+	private static final String SPLIT = "split";
 	private static final String FOLD = "fold";
 	private static final String HELP = "help";
 
@@ -49,7 +50,7 @@ public class CommandLineInterfaceMain {
 				.hasArg()
 				.argName(CP_FILE)
 				.desc("Convert crease pattern file format (opx, fold, cp) to other crease pattern format "
-						+ "or creaese pattern image (png or jpg). The argument is output file path.")
+						+ "or crease pattern image (png or jpg). The argument is output file path.")
 				.build();
 		options.addOption(convertOption);
 
@@ -78,14 +79,19 @@ public class CommandLineInterfaceMain {
 				.build();
 		options.addOption(reverseOption);
 
+		var splitOption = Option.builder("s")
+				.longOpt(SPLIT)
+				.desc("Put this option if the output of --" + FOLD + " should be single frame FOLD files.")
+				.build();
+		options.addOption(splitOption);
+
 		var foldOption = Option.builder("f")
 				.longOpt(FOLD)
 				.hasArg()
 				.argName(FOLD_FILE)
 				.desc("Fold crease pattern file (opx, fold, cp) and save as a multipule frame FOLD format. "
-						+ "The argument is output file path. If you specify --" + INDEX
-						+ " option, The output will be a single frame FOLD format but the output may differ for the same index "
-						+ "since the folding algorithm does not guarantee the order of results.")
+						+ "The argument is output file path. If you specify --" + SPLIT + " option, "
+						+ "the output will be single frame FOLD files and index will be inserted into file name as \"givenName.123.fold\".")
 				.build();
 		options.addOption(foldOption);
 
@@ -130,9 +136,8 @@ public class CommandLineInterfaceMain {
 			} else if (line.hasOption(foldOption)) {
 				var outputFilePath = line.getOptionValue(foldOption);
 				var folder = new CommandLineFolder();
-				var indexString = line.getOptionValue(indexOption);
-				var index = indexString == null ? -1 : Integer.parseInt(indexString);
-				folder.fold(inputFilePath, index, outputFilePath);
+				var split = line.hasOption(splitOption);
+				folder.fold(inputFilePath, split, outputFilePath);
 
 			} else if (line.getOptions().length == 0) {
 				throw new IllegalArgumentException("No option is given. Hint: see help by -" + helpOption.getOpt());

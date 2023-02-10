@@ -40,7 +40,7 @@ import oripa.persistence.entity.exporter.FoldedModelExporterFOLD;
 public class CommandLineFolder {
 	private static final Logger logger = LoggerFactory.getLogger(CommandLineFolder.class);
 
-	public void fold(final String inputFilePath, final int index, final String outputFilePath) {
+	public void fold(final String inputFilePath, final boolean split, final String outputFilePath) {
 
 		if (!outputFilePath.endsWith(".fold")) {
 			throw new IllegalArgumentException("Output format is not supported. acceptable format: fold");
@@ -64,9 +64,18 @@ public class CommandLineFolder {
 			var folder = new FolderFactory().create();
 			var foldedModel = folder.fold(origamiModels.get(0), true);
 
-			foldedModelExporter.export(
-					index < 0 ? new FoldedModelEntity(foldedModel) : new FoldedModelEntity(foldedModel, index),
-					outputFilePath);
+			if (split) {
+				var digitLength = Integer.toString(foldedModel.getFoldablePatternCount()).length();
+				for (int i = 0; i < foldedModel.getFoldablePatternCount(); i++) {
+					var paddedNumber = "0".repeat(digitLength - Integer.toString(i).length()) + i;
+					var outputName = outputFilePath.replaceFirst("[.]fold$", "." + paddedNumber + ".fold");
+					foldedModelExporter.export(
+							new FoldedModelEntity(foldedModel, i), outputName);
+				}
+			} else {
+				foldedModelExporter.export(
+						new FoldedModelEntity(foldedModel), outputFilePath);
+			}
 
 		} catch (Exception e) {
 			logger.error("folding error", e);
