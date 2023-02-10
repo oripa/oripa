@@ -59,7 +59,7 @@ public class CommandLineInterfaceMain {
 				.argName(IMAGE_FILE)
 				.desc("Output image file (svg) of folded forms in multiple frame FOLD format. "
 						+ "The argument is output file path."
-						+ "This option requires --index option.")
+						+ "This option requires --" + INDEX + " option.")
 				.build();
 		options.addOption(imageOption);
 
