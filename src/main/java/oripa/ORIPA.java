@@ -35,11 +35,17 @@ import oripa.domain.paint.copypaste.SelectionOriginHolderImpl;
 import oripa.file.FileHistory;
 import oripa.file.InitDataFileReader;
 import oripa.file.InitDataFileWriter;
+import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.bind.state.EditModeStateManager;
+import oripa.gui.bind.state.PaintBoundStateFactory;
+import oripa.gui.presenter.creasepattern.ComplexActionFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
+import oripa.gui.presenter.creasepattern.EditOutlineActionFactory;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
+import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 import oripa.gui.presenter.creasepattern.TypeForChangeContext;
+import oripa.gui.presenter.creasepattern.copypaste.CopyAndPasteActionFactory;
 import oripa.gui.presenter.main.MainFramePresenter;
 import oripa.gui.presenter.main.SwitcherBetweenPasteAndChangeOrigin;
 import oripa.gui.view.ViewScreenUpdaterFactory;
@@ -125,6 +131,27 @@ public class ORIPA {
 			var plugins = pluginLoader.loadMouseActionPlugins(mainViewSetting.getMainFrameSetting(),
 					mainViewSetting.getUiPanelSetting());
 
+			var stateManager = new EditModeStateManager();
+			var domainContext = new PaintDomainContext(paintContext, new SelectionOriginHolderImpl(),
+					new ByValueContextImpl());
+			var presentationContext = new CreasePatternPresentationContext(viewContext, mouseActionHolder,
+					new TypeForChangeContext());
+
+			var setterFactory = new MouseActionSetterFactory(
+					mouseActionHolder, screenUpdater::updateScreen, paintContext);
+
+			var stateFactory = new PaintBoundStateFactory(
+					stateManager,
+					setterFactory,
+					mainViewSetting,
+					new ComplexActionFactory(
+							new EditOutlineActionFactory(stateManager, mouseActionHolder),
+							new CopyAndPasteActionFactory(stateManager, domainContext.getSelectionOriginHolder()),
+							domainContext.getByValueContext(),
+							presentationContext.getTypeForChangeContext()));
+
+			var bindingFactory = new BindingObjectFactoryFacade(stateFactory, setterFactory);
+
 			var presenter = new MainFramePresenter(
 					mainFrame,
 					viewUpdateSupport,
@@ -137,11 +164,11 @@ public class ORIPA {
 					new FileChooserSwingFactory(),
 					childFrameManager,
 					mainViewSetting,
+					bindingFactory,
 					new Doc(),
-					new PaintDomainContext(paintContext, new SelectionOriginHolderImpl(), new ByValueContextImpl()),
-					new CreasePatternPresentationContext(viewContext, mouseActionHolder,
-							new TypeForChangeContext()),
-					new EditModeStateManager(),
+					domainContext,
+					presentationContext,
+					stateManager,
 					new FileHistory(Constants.MRUFILE_NUM),
 					new IniFileAccess(
 							new InitDataFileReader(), new InitDataFileWriter()),
