@@ -1,9 +1,7 @@
 package oripa.gui.presenter.creasepattern;
 
-import java.util.Optional;
-
-import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
+import oripa.appstate.StatePopper;
 import oripa.domain.paint.PaintContext;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
@@ -50,9 +48,7 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	}
 
 	private void popPreviousState() {
-		Optional<ApplicationState<EditMode>> prevOpt = stateManager.pop();
-
-		prevOpt.ifPresent(prev -> prev.performActions());
+		new StatePopper<>(stateManager).run();
 	}
 
 }
