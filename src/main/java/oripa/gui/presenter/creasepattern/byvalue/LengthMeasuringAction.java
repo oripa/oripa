@@ -12,10 +12,10 @@ public class LengthMeasuringAction extends AbstractGraphicMouseAction {
 
 	private final ByValueContext byValueContext;
 
-	public LengthMeasuringAction(final ByValueContext vbyValueContext) {
+	public LengthMeasuringAction(final ByValueContext byValueContext) {
 		super();
-		setActionState(new SelectingVertexForLength(vbyValueContext));
-		this.byValueContext = vbyValueContext;
+		setActionState(new SelectingVertexForLength(byValueContext));
+		this.byValueContext = byValueContext;
 	}
 
 	@Override
