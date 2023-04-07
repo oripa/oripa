@@ -30,6 +30,10 @@ public class WarningStringResource_en extends ListResourceBundle {
 			{ StringID.Warning.MODEL_BUILD_FAILURE_MESSAGE_ID,
 					"Warning: Building a set of polygons from crease pattern "
 							+ "was failed." },
+			{ StringID.Warning.LOCAL_FLAT_FOLDABILITY_TITLE_ID,
+					"Warning: Local flat foldability violation" },
+			{ StringID.Warning.LOCAL_FLAT_FOLDABILITY_MESSAGE_ID,
+					"The crease pattern is not locally flat foldable. Check it in the Check window." },
 
 	};
 

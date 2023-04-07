@@ -1333,6 +1333,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
+	public void showLocalFlatFoldabilityViolationMessage() {
+		dialogService.showLocalFlatFoldabilityViolationDialog(this);
+	}
+
+	@Override
 	public void showErrorMessage(final Exception e) {
 		Dialogs.showErrorDialog(this,
 				resources.getString(ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);

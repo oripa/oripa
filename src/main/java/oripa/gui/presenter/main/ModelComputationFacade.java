@@ -74,7 +74,13 @@ public class ModelComputationFacade {
 			return foldedModels.stream().mapToInt(m -> m.getFoldablePatternCount()).sum();
 		}
 
+		public boolean allLocallyFlatFoldable() {
+			return origamiModels.stream().allMatch(OrigamiModel::isLocallyFlatFoldable);
+		}
 	}
+
+	OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+	FoldabilityChecker checker = new FoldabilityChecker();
 
 	private final Supplier<Boolean> needCleaningUpDuplication;
 	private final Runnable showCleaningUpMessage;
@@ -98,9 +104,7 @@ public class ModelComputationFacade {
 
 		List<FoldedModel> foldedModels = null;
 
-		var checker = new FoldabilityChecker();
-
-		if (origamiModels.stream().anyMatch(Predicate.not(checker::testLocalFlatFoldability))) {
+		if (origamiModels.stream().anyMatch(Predicate.not(OrigamiModel::isLocallyFlatFoldable))) {
 			origamiModels.forEach(folder::foldWithoutLineType);
 		} else {
 			foldedModels = origamiModels.stream()
@@ -115,29 +119,24 @@ public class ModelComputationFacade {
 	 * try building the crease pattern and ask for additional measures to help
 	 * clean it
 	 *
-	 * @return folded Origami model
+	 * @return Origami model before folding
 	 */
 	public List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern, final double pointEps) {
 
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
 		OrigamiModel wholeModel = modelFactory.createOrigamiModel(
 				creasePattern, pointEps);
-
-		List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern, pointEps);
-
-		var checker = new FoldabilityChecker();
 
 		logger.debug("Building origami model.");
 
 		if (checker.testLocalFlatFoldability(wholeModel)) {
 			logger.debug("No modification is needed.");
-			return origamiModels;
+			return createOrigamiModels(creasePattern, pointEps);
 		}
 
 		// ask if ORIPA should try to remove duplication.
 		if (!needCleaningUpDuplication.get()) {
 			// the answer is "no."
-			return origamiModels;
+			return createOrigamiModels(creasePattern, pointEps);
 		}
 
 		// clean up the crease pattern
@@ -149,12 +148,18 @@ public class ModelComputationFacade {
 				.createOrigamiModel(creasePattern, pointEps);
 
 		if (checker.testLocalFlatFoldability(wholeModel)) {
-			return modelFactory.createOrigamiModels(creasePattern, pointEps);
+			return createOrigamiModels(creasePattern, pointEps);
 		}
 
 		showFailureMessage.run();
 
-		return origamiModels;
+		return createOrigamiModels(creasePattern, pointEps);
 	}
 
+	private List<OrigamiModel> createOrigamiModels(final CreasePattern creasePattern, final double pointEps) {
+		List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern, pointEps);
+		origamiModels.forEach(model -> model.setLocallyFlatFoldable(checker.testLocalFlatFoldability(model)));
+
+		return origamiModels;
+	}
 }
