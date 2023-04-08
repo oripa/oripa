@@ -26,8 +26,7 @@ import java.util.function.Supplier;
 import oripa.application.FileAccessService;
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.fold.foldability.FoldabilityChecker;
-import oripa.domain.fold.halfedge.OrigamiModelFactory;
+import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
@@ -71,12 +70,11 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 
 		CreasePattern creasePattern = doc.getCreasePattern();
 
-		OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+		var modelFactory = new TestedOrigamiModelFactory();
 		var origamiModel = modelFactory.createOrigamiModel(
 				creasePattern, pointEps);
-		var checker = new FoldabilityChecker();
 
-		if (!checker.testLocalFlatFoldability(origamiModel)) {
+		if (!origamiModel.isLocallyFlatFoldable()) {
 			if (!acceptModelError.get()) {
 				return;
 			}

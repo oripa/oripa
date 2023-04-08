@@ -40,6 +40,8 @@ public class OrigamiModel {
 
 	private boolean folded = false;
 
+	private boolean locallyFlatFoldable = false;
+
 	private boolean hasModel = false;
 
 	private double paperSize = -1;
@@ -66,6 +68,21 @@ public class OrigamiModel {
 
 	public void setFolded(final boolean folded) {
 		this.folded = folded;
+	}
+
+	/**
+	 * Returns local flat foldability given by
+	 * {@link #setLocallyFlatFoldable(boolean)}. This method does not compute
+	 * the value to save the computation cost.
+	 *
+	 * @return
+	 */
+	public boolean isLocallyFlatFoldable() {
+		return locallyFlatFoldable;
+	}
+
+	public void setLocallyFlatFoldable(final boolean foldable) {
+		locallyFlatFoldable = foldable;
 	}
 
 	public List<OriFace> getFaces() {

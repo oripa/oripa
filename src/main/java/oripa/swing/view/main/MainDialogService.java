@@ -106,6 +106,14 @@ public class MainDialogService {
 				JOptionPane.WARNING_MESSAGE);
 	}
 
+	public void showLocalFlatFoldabilityViolationDialog(final Component ownerView) {
+		JOptionPane.showMessageDialog(
+				ownerView,
+				resources.getString(ResourceKey.WARNING, StringID.Warning.LOCAL_FLAT_FOLDABILITY_MESSAGE_ID),
+				resources.getString(ResourceKey.WARNING, StringID.Warning.LOCAL_FLAT_FOLDABILITY_TITLE_ID),
+				JOptionPane.WARNING_MESSAGE);
+	}
+
 	public int showSaveOnCloseDialog(final Component ownerView) {
 		return JOptionPane.showConfirmDialog(
 				ownerView,

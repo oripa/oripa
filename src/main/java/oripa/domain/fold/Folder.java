@@ -40,8 +40,8 @@ public class Folder {
 	 * Computes folded states.
 	 *
 	 * @param origamiModel
-	 *            half-edge based data structure. It will be affected by this
-	 *            method.
+	 *            half-edge based data structure before folding. It will be
+	 *            affected by this method.
 	 * @param fullEstimation
 	 *            whether the algorithm should compute all possible folded
 	 *            states or not.
@@ -76,9 +76,11 @@ public class Folder {
 	 *            half-edge based data structure. It will be affected by this
 	 *            method.
 	 */
-	public void foldWithoutLineType(
+	public FoldedModel foldWithoutLineType(
 			final OrigamiModel model) {
 		simpleFolder.foldWithoutLineType(model);
 		faceDisplayModifier.setCurrentPositionsToDisplayPositions(model);
+
+		return new FoldedModel(model, List.of());
 	}
 }

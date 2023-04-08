@@ -71,6 +71,8 @@ public class StringID {
 		public static final String SAVE_ON_CLOSE_MESSAGE_ID = "Warning_SaveOnCloseMessage";
 		public static final String MODEL_BUILD_FAILURE_TITLE_ID = "Warning_ModelBuildFailureTitle";
 		public static final String MODEL_BUILD_FAILURE_MESSAGE_ID = "Warning_ModelBuildFailureMessage";
+		public static final String LOCAL_FLAT_FOLDABILITY_TITLE_ID = "Warning_LocalFlatFoldabilityTitle";
+		public static final String LOCAL_FLAT_FOLDABILITY_MESSAGE_ID = "Warning_LocalFlatFoldabilityMessage";
 	}
 
 	public static class Information {

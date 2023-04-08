@@ -358,6 +358,12 @@ public class UIPanelPresenter {
 	private void showFoldedModelWindows() {
 		var parent = (FrameView) view.getTopLevelView();
 
+		if (!computationResult.allLocallyFlatFoldable()) {
+			view.showLocalFlatFoldabilityViolationMessage();
+			showCheckerWindow();
+			return;
+		}
+
 		var origamiModels = computationResult.getOrigamiModels();
 		var foldedModels = computationResult.getFoldedModels();
 

@@ -87,12 +87,9 @@ class SimpleFolder {
 		List<OriEdge> edges = model.getEdges();
 		List<OriFace> faces = model.getFaces();
 
-//			for (OriFace face : faces) {
-//				face.faceFront = true;
-//				face.movedByFold = false;
-//			}
-
-		walkFace(faces, faces.get(0), 0);
+		if (faces.size() > 0) {
+			walkFace(faces, faces.get(0), 0);
+		}
 
 		for (OriEdge e : edges) {
 			var sv = e.getStartVertex();
