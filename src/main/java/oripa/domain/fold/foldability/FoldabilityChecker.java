@@ -41,6 +41,7 @@ public class FoldabilityChecker {
 	private static final Logger logger = LoggerFactory.getLogger(FoldabilityChecker.class);
 
 	private enum VertexRule {
+		BOUNDARY_COUNT(new BoundaryCount(), "BoundaryCount"),
 		MAEKAWA(new MaekawaTheorem(), "Maekawa"),
 		KAWASAKI(new KawasakiTheorem(), "Kawasaki"),
 		BIG_LITTLE_BIG(new BigLittleBigLemma(), "Big-little-big"),
