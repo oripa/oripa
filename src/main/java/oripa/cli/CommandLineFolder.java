@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 
 import oripa.application.main.DataFileAccess;
 import oripa.domain.fold.FolderFactory;
+import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.geom.GeomUtil;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFileAccessSupportSelector;
@@ -51,7 +51,7 @@ public class CommandLineFolder {
 
 		try {
 			var creasePattern = creasePatternFileAccess.loadFile(inputFilePath).get().getCreasePattern();
-			OrigamiModelFactory modelFactory = new OrigamiModelFactory();
+			var modelFactory = new TestedOrigamiModelFactory();
 
 			var pointEps = GeomUtil.pointEps();
 
@@ -61,8 +61,14 @@ public class CommandLineFolder {
 				throw new IllegalArgumentException("Input should be a single model.");
 			}
 
+			var origamiModel = origamiModels.get(0);
+
+			if (!origamiModel.isLocallyFlatFoldable()) {
+				throw new IllegalArgumentException("Input crease pattern is not locally flat foldable.");
+			}
+
 			var folder = new FolderFactory().create();
-			var foldedModel = folder.fold(origamiModels.get(0), true);
+			var foldedModel = folder.fold(origamiModel, true);
 
 			if (split) {
 				var digitLength = Integer.toString(foldedModel.getFoldablePatternCount()).length();

@@ -70,6 +70,13 @@ public class OrigamiModel {
 		this.folded = folded;
 	}
 
+	/**
+	 * Returns local flat foldability given by
+	 * {@link #setLocallyFlatFoldable(boolean)}. This method does not compute
+	 * the value to save the computation cost.
+	 *
+	 * @return
+	 */
 	public boolean isLocallyFlatFoldable() {
 		return locallyFlatFoldable;
 	}
