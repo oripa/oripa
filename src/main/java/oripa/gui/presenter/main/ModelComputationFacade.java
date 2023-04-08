@@ -65,7 +65,7 @@ public class ModelComputationFacade {
 		/**
 		 *
 		 * @return the sum of the number of the foldable patterns for each
-		 *         crease pattern. -1 if nothing is foldable.
+		 *         crease pattern. -1 if some model is not foldable.
 		 */
 		public int countFoldablePatterns() {
 			if (foldedModels == null) {
