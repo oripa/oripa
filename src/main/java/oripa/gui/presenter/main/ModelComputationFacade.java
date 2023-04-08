@@ -20,7 +20,6 @@ package oripa.gui.presenter.main;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -68,7 +67,7 @@ public class ModelComputationFacade {
 		 *         crease pattern. -1 if some model is not foldable.
 		 */
 		public int countFoldablePatterns() {
-			if (foldedModels == null) {
+			if (!allLocallyFlatFoldable()) {
 				return -1;
 			}
 			return foldedModels.stream().mapToInt(m -> m.getFoldablePatternCount()).sum();
@@ -104,13 +103,10 @@ public class ModelComputationFacade {
 
 		List<FoldedModel> foldedModels = null;
 
-		if (origamiModels.stream().anyMatch(Predicate.not(OrigamiModel::isLocallyFlatFoldable))) {
-			origamiModels.forEach(folder::foldWithoutLineType);
-		} else {
-			foldedModels = origamiModels.stream()
-					.map(model -> folder.fold(model, fullEstimation))
-					.collect(Collectors.toList());
-		}
+		foldedModels = origamiModels.stream()
+				.map(model -> model.isLocallyFlatFoldable() ? folder.fold(model, fullEstimation)
+						: folder.foldWithoutLineType(model))
+				.collect(Collectors.toList());
 
 		return new ComputationResult(origamiModels, foldedModels);
 	}

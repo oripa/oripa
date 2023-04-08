@@ -76,9 +76,11 @@ public class Folder {
 	 *            half-edge based data structure. It will be affected by this
 	 *            method.
 	 */
-	public void foldWithoutLineType(
+	public FoldedModel foldWithoutLineType(
 			final OrigamiModel model) {
 		simpleFolder.foldWithoutLineType(model);
 		faceDisplayModifier.setCurrentPositionsToDisplayPositions(model);
+
+		return new FoldedModel(model, List.of());
 	}
 }
