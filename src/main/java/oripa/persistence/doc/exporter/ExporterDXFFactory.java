@@ -28,14 +28,14 @@ public class ExporterDXFFactory {
 
 	private static class CreasePatternExporter implements DocExporter {
 		@Override
-		public boolean export(final Doc doc, final String filePath)
+		public boolean export(final Doc doc, final String filePath, final Object configObj)
 				throws IOException, IllegalArgumentException {
 
 			CreasePattern creasePattern = doc.getCreasePattern();
 
 			CreasePatternExporterDXF exporter = new CreasePatternExporterDXF();
 
-			return exporter.export(creasePattern, filePath);
+			return exporter.export(creasePattern, filePath, configObj);
 		}
 
 	}

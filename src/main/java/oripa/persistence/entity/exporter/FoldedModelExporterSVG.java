@@ -54,7 +54,7 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModelEntity> {
 	}
 
 	@Override
-	public boolean export(final FoldedModelEntity foldedModel, final String filepath)
+	public boolean export(final FoldedModelEntity foldedModel, final String filepath, final Object configObj)
 			throws IOException {
 		OrigamiModel origamiModel = foldedModel.getOrigamiModel();
 		OverlapRelation overlapRelation = foldedModel.getOverlapRelation();

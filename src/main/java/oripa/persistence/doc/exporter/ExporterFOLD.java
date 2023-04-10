@@ -47,7 +47,7 @@ public class ExporterFOLD implements DocExporter {
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean export(final Doc doc, final String filePath)
+	public boolean export(final Doc doc, final String filePath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 		logger.info("start exporting FOLD file.");
 

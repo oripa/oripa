@@ -50,7 +50,7 @@ public class FoldedModelImageExporter {
 			var inputModelEntity = inputFileLoader.load(inputFilePath);
 			var entity = new FoldedModelEntity(inputModelEntity.toFoldedModel(), index);
 
-			outputFileExporter.export(entity, outputFilePath);
+			outputFileExporter.export(entity, outputFilePath, null);
 
 		} catch (Exception e) {
 			logger.error("image error", e);

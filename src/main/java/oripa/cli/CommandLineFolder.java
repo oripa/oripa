@@ -76,11 +76,11 @@ public class CommandLineFolder {
 					var paddedNumber = "0".repeat(digitLength - Integer.toString(i).length()) + i;
 					var outputName = outputFilePath.replaceFirst("[.]fold$", "." + paddedNumber + ".fold");
 					foldedModelExporter.export(
-							new FoldedModelEntity(foldedModel, i), outputName);
+							new FoldedModelEntity(foldedModel, i), outputName, null);
 				}
 			} else {
 				foldedModelExporter.export(
-						new FoldedModelEntity(foldedModel), outputFilePath);
+						new FoldedModelEntity(foldedModel), outputFilePath, null);
 			}
 
 		} catch (Exception e) {

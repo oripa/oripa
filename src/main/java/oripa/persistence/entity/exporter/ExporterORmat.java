@@ -34,7 +34,7 @@ import oripa.persistence.filetool.Exporter;
 public class ExporterORmat implements Exporter<FoldedModelEntity> {
 
 	@Override
-	public boolean export(final FoldedModelEntity foldedModel, final String filepath)
+	public boolean export(final FoldedModelEntity foldedModel, final String filepath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 		OrigamiModel origamiModel = foldedModel.getOrigamiModel();
 		OverlapRelation overlapRelation = foldedModel.getOverlapRelation();

@@ -53,7 +53,7 @@ public class PictureExporter implements DocExporter {
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean export(final Doc doc, final String filePath) throws IOException {
+	public boolean export(final Doc doc, final String filePath, final Object configObj) throws IOException {
 		CreasePattern creasePattern = doc.getCreasePattern();
 		var domain = new RectangleDomain(creasePattern);
 		double gWidth = domain.getWidth() * 2;
