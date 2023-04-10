@@ -27,6 +27,7 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.filetool.Exporter;
 
 // export folded model

@@ -30,7 +30,7 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFileAccessSupportSelector;
-import oripa.persistence.entity.exporter.FoldedModelEntity;
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.exporter.FoldedModelExporterFOLD;
 
 /**

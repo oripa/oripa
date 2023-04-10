@@ -21,7 +21,7 @@ package oripa.cli;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.persistence.entity.exporter.FoldedModelEntity;
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.exporter.FoldedModelExporterSVG;
 import oripa.persistence.entity.loader.FoldedModelLoaderFOLD;
 
@@ -47,8 +47,8 @@ public class FoldedModelImageExporter {
 		var outputFileExporter = new FoldedModelExporterSVG(reverse);
 
 		try {
-			var foldedModel = inputFileLoader.load(inputFilePath);
-			var entity = new FoldedModelEntity(foldedModel, index);
+			var inputModelEntity = inputFileLoader.load(inputFilePath);
+			var entity = new FoldedModelEntity(inputModelEntity.toFoldedModel(), index);
 
 			outputFileExporter.export(entity, outputFilePath);
 

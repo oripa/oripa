@@ -27,7 +27,7 @@ import oripa.domain.fold.FoldedModel;
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
-import oripa.persistence.entity.exporter.FoldedModelEntity;
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 

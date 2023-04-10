@@ -30,8 +30,8 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.entity.FoldedModelDAO;
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
-import oripa.persistence.entity.exporter.FoldedModelEntity;
 
 /**
  * @author OUCHI Koji

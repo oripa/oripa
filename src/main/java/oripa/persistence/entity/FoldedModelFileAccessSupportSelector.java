@@ -22,7 +22,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
-import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.resource.StringID;

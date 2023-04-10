@@ -20,7 +20,6 @@ package oripa.persistence.entity;
 
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.dao.AbstractFileDAO;
-import oripa.persistence.entity.exporter.FoldedModelEntity;
 
 /**
  * @author OUCHI Koji

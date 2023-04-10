@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import com.google.gson.GsonBuilder;
 
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.foldformat.FoldedModelElementConverter;
 import oripa.persistence.foldformat.FoldedModelFOLDFormat;
