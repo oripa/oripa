@@ -45,12 +45,6 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModelEntity> {
 	public FoldedModelExporterSVG(final boolean faceOrderFlip) {
 		facesToSvgConverter = new FacesToSvgConverter();
 		this.faceOrderFlip = faceOrderFlip;
-		if (faceOrderFlip) {
-			facesToSvgConverter.setFaceStyles(PATH_STYLE_BACK, PATH_STYLE_FRONT);
-		} else {
-			facesToSvgConverter.setFaceStyles(PATH_STYLE_FRONT, PATH_STYLE_BACK);
-		}
-		facesToSvgConverter.setPrecreaseLineStyle(THICK_LINE_STYLE);
 	}
 
 	@Override
@@ -65,14 +59,38 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModelEntity> {
 
 		facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
 
+		var config = configObj == null ? new FoldedModelSVGConfig()
+				: configObj instanceof FoldedModelSVGConfig ? (FoldedModelSVGConfig) configObj
+						: null;
+
+		if (config == null) {
+			throw new IllegalArgumentException("Wrong type for configObj.");
+		}
+
+		configure(config);
+
 		try (var fw = new FileWriter(filepath);
 				var bw = new BufferedWriter(fw)) {
-
 			bw.write(SVG_START);
 			bw.write(GRADIENTS_DEFINITION);
 			bw.write(facesToSvgConverter.getSvgFaces(faces));
 			bw.write(SVG_END_TAG);
 		}
 		return true;
+	}
+
+	private void configure(final FoldedModelSVGConfig config) {
+		double faceStrokeWidth = config.getFaceStrokeWidth();
+		double precreaseStrokeWidth = config.getPrecreaseStrokeWidth();
+
+		if (faceOrderFlip) {
+			facesToSvgConverter.setFaceStyles(getBackPathStyle(faceStrokeWidth).toString(),
+					getFrontPathStyle(faceStrokeWidth).toString());
+		} else {
+			facesToSvgConverter.setFaceStyles(getFrontPathStyle(faceStrokeWidth).toString(),
+					getBackPathStyle(faceStrokeWidth).toString());
+		}
+		facesToSvgConverter.setPrecreaseLineStyle(
+				getFoldedModelPrecreaseLineStyle(precreaseStrokeWidth).toString());
 	}
 }
