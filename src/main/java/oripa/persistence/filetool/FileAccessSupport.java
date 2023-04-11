@@ -96,8 +96,12 @@ public class FileAccessSupport<Data>
 	 * @return
 	 */
 	public AbstractSavingAction<Data> getSavingAction(final Supplier<Object> configSupplier) {
-		savingAction.setConfig(configSupplier);
+		setConfigToSavingAction(configSupplier);
 		return savingAction;
+	}
+
+	public void setConfigToSavingAction(final Supplier<Object> configSupplier) {
+		savingAction.setConfig(configSupplier);
 	}
 
 	/**

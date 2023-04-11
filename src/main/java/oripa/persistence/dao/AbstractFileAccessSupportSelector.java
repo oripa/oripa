@@ -102,7 +102,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	 *
 	 * @param key
 	 *            A value that describes the file type you want.
-	 * @return A support object for given key.
+	 * @return A support object for given key. null if no support for the key.
 	 */
 	public FileAccessSupport<Data> getFileAccessSupport(final FileTypeProperty<Data> key) {
 		return getFileAccessSupports().get(key);
@@ -150,12 +150,6 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 				.collect(Collectors.toList());
 	}
 
-	public List<FileTypeProperty<Data>> getTargetTypes(final Collection<FileAccessSupport<Data>> supports) {
-		return supports.stream()
-				.map(support -> support.getTargetType())
-				.collect(Collectors.toList());
-	}
-
 	/**
 	 * @param path
 	 * @return a support object that can load the file at the path.
@@ -195,6 +189,12 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 		return getFileAccessSupports().values().stream()
 				.filter(support -> support.getSavingAction() != null)
 				.sorted()
+				.collect(Collectors.toList());
+	}
+
+	public List<FileAccessSupport<Data>> getSavablesOf(final Collection<FileTypeProperty<Data>> types) {
+		return getSavables().stream()
+				.filter(support -> types.contains(support.getTargetType()))
 				.collect(Collectors.toList());
 	}
 

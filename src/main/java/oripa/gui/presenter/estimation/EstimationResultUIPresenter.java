@@ -18,10 +18,7 @@
  */
 package oripa.gui.presenter.estimation;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +34,6 @@ import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
 import oripa.persistence.entity.FoldedModelFileTypeKey;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
-import oripa.persistence.filetool.FileTypeProperty;
 
 //TODO save svg config to file (maybe with save button?) and load it at initialization.
 
@@ -55,8 +51,6 @@ public class EstimationResultUIPresenter {
 	private String lastFilePath;
 	private final Consumer<String> lastFilePathChangeListener;
 
-	private final Map<FileTypeProperty<FoldedModelEntity>, Supplier<Object>> configSuppliers;
-
 	public EstimationResultUIPresenter(
 			final EstimationResultUIView view,
 			final FileChooserFactory fileChooserFactory,
@@ -68,8 +62,6 @@ public class EstimationResultUIPresenter {
 
 		this.lastFilePath = lastFilePath;
 		this.lastFilePathChangeListener = lastFilePathChangeListener;
-
-		configSuppliers = createConfigSuppliers();
 
 		view.setSVGFaceStrokeWidth(2.0);
 		view.setSVGPrecreaseStrokeWidth(1.0);
@@ -88,8 +80,12 @@ public class EstimationResultUIPresenter {
 		try {
 			var supportSelector = new FoldedModelFileAccessSupportSelector(view.isFaceOrderFlipped());
 			var dao = new FoldedModelDAO(supportSelector);
-			dao.setSavingConfigSuppliers(configSuppliers);
 			var fileAccessService = new EstimationResultFileAccess(dao);
+
+			fileAccessService.setConfigToSavingAction(
+					FoldedModelFileTypeKey.SVG_FOLDED_MODEL, this::createSVGConfig);
+			fileAccessService.setConfigToSavingAction(
+					FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP, this::createSVGConfig);
 
 			var foldedModel = view.getModel();
 
@@ -107,15 +103,6 @@ public class EstimationResultUIPresenter {
 			logger.error("error: ", ex);
 			view.showExportErrorMessage(ex);
 		}
-	}
-
-	private Map<FileTypeProperty<FoldedModelEntity>, Supplier<Object>> createConfigSuppliers() {
-		var configs = new HashMap<FileTypeProperty<FoldedModelEntity>, Supplier<Object>>();
-
-		configs.put(FoldedModelFileTypeKey.SVG_FOLDED_MODEL, this::createSVGConfig);
-		configs.put(FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP, this::createSVGConfig);
-
-		return configs;
 	}
 
 	private FoldedModelSVGConfig createSVGConfig() {

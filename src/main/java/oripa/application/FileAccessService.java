@@ -21,8 +21,10 @@ package oripa.application;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -33,6 +35,24 @@ import oripa.persistence.filetool.WrongDataFormatException;
 public interface FileAccessService<Data> {
 
 	public AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
+
+	default void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
+		var support = getFileAccessSupportSelector().getFileAccessSupport(key);
+		if (support == null) {
+			return;
+		}
+
+		support.setConfigToSavingAction(configSupplier);
+	}
+
+	default boolean canLoad(final String filePath) {
+		try {
+			getFileAccessSupportSelector().getLoadableOf(filePath);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
 
 	/**
 	 * save file with given parameters.
