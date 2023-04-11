@@ -100,9 +100,18 @@ public class SVGUtils {
 
 	public static StringBuilder getFoldedModelPrecreaseLineStyle(final double strokeWidth) {
 		return new StringBuilder("style=\"")
-				.append("stroke:black;")
+				.append(getFillToken("none"))
+				.append("stroke:#000000;")
 				.append(getStrokeWidthToken(strokeWidth))
-				.append("\"");
+				.append("stroke-linecap:round;")
+				.append("stroke-linejoin:round;")
+				.append("stroke-opacity:1;")
+				.append("fill-opacity:1.0\"\n ");
+
+//		return new StringBuilder("style=\"")
+//				.append("stroke:black;")
+//				.append(getStrokeWidthToken(strokeWidth))
+//				.append("\"");
 	}
 
 	private static String getFillToken(final String colorCode) {
@@ -114,20 +123,33 @@ public class SVGUtils {
 	}
 
 	public static StringBuilder getLineTag(final Vector2d startPoint, final Vector2d endPoint, final String style) {
-		StringBuilder builder = new StringBuilder();
 
-		// TODO Output as a path.
+		StringBuilder pathBuilder = new StringBuilder();
+		pathBuilder.append("<path ");
+		pathBuilder.append(style);
+		pathBuilder.append(" d=\"M ");
 
-		// @formatter:off
-		builder.append("<line ")
-				.append("x1=\"").append(startPoint.x).append("\" ")
-				.append("y1=\"").append(startPoint.y).append("\" ")
-				.append("x2=\"").append(endPoint.x).append("\" ")
-				.append("y2=\"").append(endPoint.y).append("\" ")
-				.append(style)
-				.append("/>\n");
-		// @formatter:on
-		return builder;
+		pathBuilder.append(startPoint.x).append(",").append(startPoint.y).append(" ");
+
+		pathBuilder.append("L ");
+		pathBuilder.append(endPoint.x).append(",").append(endPoint.y);
+
+		pathBuilder.append("\" />\n");
+
+		return pathBuilder;
+
+//		StringBuilder builder = new StringBuilder();
+//
+//		// @formatter:off
+//		builder.append("<line ")
+//				.append("x1=\"").append(startPoint.x).append("\" ")
+//				.append("y1=\"").append(startPoint.y).append("\" ")
+//				.append("x2=\"").append(endPoint.x).append("\" ")
+//				.append("y2=\"").append(endPoint.y).append("\" ")
+//				.append(style)
+//				.append("/>\n");
+//		// @formatter:on
+//		return builder;
 	}
 
 	public static void putInGroup(final StringBuilder groupContent) {
