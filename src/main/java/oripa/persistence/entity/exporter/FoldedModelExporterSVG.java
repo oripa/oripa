@@ -86,6 +86,6 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModelEntity> {
 					getBackPathStyle(faceStrokeWidth).toString());
 		}
 		facesToSvgConverter.setPrecreaseLineStyle(
-				getPrecreaseLineStyle(precreaseStrokeWidth).toString());
+				getPrecreasePathStyle(precreaseStrokeWidth).toString());
 	}
 }

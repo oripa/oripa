@@ -65,58 +65,51 @@ public class SVGUtils {
 	/**
 	 * OrigamiModelExporterSVG styles
 	 */
-	public static final String PATH_STYLE_TRANSLUCENT = "style=\"" +
-			"fill:black;" +
-			"fill-opacity:0.04;" +
-			"stroke:black;" +
-			"stroke-width:0.25px;" +
-			"stroke-linecap:butt;" +
-			"stroke-linejoin:miter;" +
-			"stroke-opacity:1\"\n ";
+	public static final String PATH_STYLE_TRANSLUCENT = getFacePathStyle(0.25, "#000000", 0.04).toString();
 
-	public static final String THIN_LINE_STYLE = getPrecreaseLineStyle(0.25).toString();
+	public static final String THIN_LINE_STYLE = getPrecreasePathStyle(0.25).toString();
 
 	public static StringBuilder getFrontPathStyle(final double strokeWidth) {
-		return getFoldedModelPathStyle(strokeWidth, "url(#Gradient1)");
+		return getFacePathStyle(strokeWidth, "url(#Gradient1)", 1.0);
 	}
 
 	public static StringBuilder getBackPathStyle(final double strokeWidth) {
-		return getFoldedModelPathStyle(strokeWidth, "url(#Gradient2)");
+		return getFacePathStyle(strokeWidth, "url(#Gradient2)", 1.0);
 	}
 
-	private static StringBuilder getFoldedModelPathStyle(final double strokeWidth, final String fillColorCode) {
-		return new StringBuilder("style=\"")
-				.append(getFillToken(fillColorCode))
-				.append("stroke:#0000ff;")
-				.append(getStrokeWidthToken(strokeWidth))
-				.append("stroke-linecap:round;")
-				.append("stroke-linejoin:round;")
-				.append("stroke-opacity:1;")
-				.append("fill-opacity:1.0\"\n ");
+	private static StringBuilder getFacePathStyle(final double strokeWidth, final String fillColorCode,
+			final double fillOpacity) {
+		return getPathStyle(strokeWidth, fillColorCode, fillOpacity);
 	}
 
-	public static StringBuilder getPrecreaseLineStyle(final double strokeWidth) {
-		return new StringBuilder("style=\"")
-				.append(getFillToken("none"))
-				.append("stroke:#000000;")
-				.append(getStrokeWidthToken(strokeWidth))
-				.append("stroke-linecap:round;")
-				.append("stroke-linejoin:round;")
-				.append("stroke-opacity:1;")
-				.append("fill-opacity:1.0\"\n ");
+	public static StringBuilder getPrecreasePathStyle(final double strokeWidth) {
+		return getPathStyle(strokeWidth, "none", 1.0);
+	}
 
-//		return new StringBuilder("style=\"")
-//				.append("stroke:black;")
-//				.append(getStrokeWidthToken(strokeWidth))
-//				.append("\"");
+	private static StringBuilder getPathStyle(final double strokeWidth, final String fillColorCode,
+			final double fillOpacity) {
+		return new StringBuilder("style=\"")
+				.append(String.join(";", List.of(
+						getFillToken(fillColorCode),
+						"stroke:#000000",
+						getStrokeWidthToken(strokeWidth),
+						"stroke-linecap:round",
+						"stroke-linejoin:round",
+						"stroke-opacity:1",
+						getFillOpacityToken(fillOpacity))))
+				.append("\"\n ");
 	}
 
 	private static String getFillToken(final String colorCode) {
-		return String.format("fill:%s;", colorCode);
+		return String.format("fill:%s", colorCode);
 	}
 
 	private static String getStrokeWidthToken(final double strokeWidth) {
-		return String.format("stroke-width:%fpx;", strokeWidth);
+		return String.format("stroke-width:%fpx", strokeWidth);
+	}
+
+	private static String getFillOpacityToken(final double opacity) {
+		return String.format("fill-opacity:%f", opacity);
 	}
 
 	public static StringBuilder getLineTag(final Vector2d startPoint, final Vector2d endPoint, final String style) {
