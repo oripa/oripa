@@ -44,6 +44,14 @@ public interface EstimationResultUIView extends View {
 
 	boolean isFaceOrderFlipped();
 
+	double getSVGFaceStrokeWidth();
+
+	void setSVGFaceStrokeWidth(double strokeWidth);
+
+	double getSVGPrecreaseStrokeWidth();
+
+	void setSVGPrecreaseStrokeWidth(double strokeWidth);
+
 	void addExportButtonListener(Runnable listener);
 
 	void showExportErrorMessage(Exception e);

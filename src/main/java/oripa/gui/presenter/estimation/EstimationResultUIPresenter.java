@@ -39,6 +39,8 @@ import oripa.persistence.entity.FoldedModelFileTypeKey;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
 import oripa.persistence.filetool.FileTypeProperty;
 
+//TODO save svg config to file (maybe with save button?) and load it at initialization.
+
 /**
  * @author OUCHI Koji
  *
@@ -68,6 +70,9 @@ public class EstimationResultUIPresenter {
 		this.lastFilePathChangeListener = lastFilePathChangeListener;
 
 		configSuppliers = createConfigSuppliers();
+
+		view.setSVGFaceStrokeWidth(2.0);
+		view.setSVGPrecreaseStrokeWidth(1.0);
 
 		addListener();
 	}
@@ -116,8 +121,8 @@ public class EstimationResultUIPresenter {
 	private FoldedModelSVGConfig createSVGConfig() {
 		var svgConfig = new FoldedModelSVGConfig();
 
-		svgConfig.setFaceStrokeWidth(2);
-		svgConfig.setPrecreaseStrokeWidth(1);
+		svgConfig.setFaceStrokeWidth(view.getSVGFaceStrokeWidth());
+		svgConfig.setPrecreaseStrokeWidth(view.getSVGPrecreaseStrokeWidth());
 
 		return svgConfig;
 	}

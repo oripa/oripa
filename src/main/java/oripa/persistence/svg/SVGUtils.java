@@ -92,8 +92,8 @@ public class SVGUtils {
 				.append(getFillToken(fillColorCode))
 				.append("stroke:#0000ff;")
 				.append(getStrokeWidthToken(strokeWidth))
-				.append("stroke-linecap:butt;")
-				.append("stroke-linejoin:miter;")
+				.append("stroke-linecap:round;")
+				.append("stroke-linejoin:round;")
 				.append("stroke-opacity:1;")
 				.append("fill-opacity:1.0\"\n ");
 	}
@@ -115,6 +115,8 @@ public class SVGUtils {
 
 	public static StringBuilder getLineTag(final Vector2d startPoint, final Vector2d endPoint, final String style) {
 		StringBuilder builder = new StringBuilder();
+
+		// TODO Output as a path.
 
 		// @formatter:off
 		builder.append("<line ")

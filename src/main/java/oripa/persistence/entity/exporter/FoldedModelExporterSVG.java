@@ -60,12 +60,7 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModelEntity> {
 		facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
 
 		var config = configObj == null ? new FoldedModelSVGConfig()
-				: configObj instanceof FoldedModelSVGConfig ? (FoldedModelSVGConfig) configObj
-						: null;
-
-		if (config == null) {
-			throw new IllegalArgumentException("Wrong type for configObj.");
-		}
+				: (FoldedModelSVGConfig) configObj;
 
 		configure(config);
 
