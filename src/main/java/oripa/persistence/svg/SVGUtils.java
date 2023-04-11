@@ -74,10 +74,7 @@ public class SVGUtils {
 			"stroke-linejoin:miter;" +
 			"stroke-opacity:1\"\n ";
 
-	public static final String THIN_LINE_STYLE = "style=\"" +
-			"stroke:black;" +
-			"stroke-width:0.25px;" +
-			"\"";
+	public static final String THIN_LINE_STYLE = getPrecreaseLineStyle(0.25).toString();
 
 	public static StringBuilder getFrontPathStyle(final double strokeWidth) {
 		return getFoldedModelPathStyle(strokeWidth, "url(#Gradient1)");
@@ -98,7 +95,7 @@ public class SVGUtils {
 				.append("fill-opacity:1.0\"\n ");
 	}
 
-	public static StringBuilder getFoldedModelPrecreaseLineStyle(final double strokeWidth) {
+	public static StringBuilder getPrecreaseLineStyle(final double strokeWidth) {
 		return new StringBuilder("style=\"")
 				.append(getFillToken("none"))
 				.append("stroke:#000000;")
