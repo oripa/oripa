@@ -80,7 +80,7 @@ public class FacesToSvgConverter extends SvgConverter {
 
         String polygonStyle = face.isFaceFront() ? frontFaceStyle : backFaceStyle;
 
-        faceBuilder.append(getPathTag(points, polygonStyle));
+        faceBuilder.append(getFacePathTag(points, polygonStyle));
 
         face.precreaseStream().forEach(oriLine -> faceBuilder.append(getPrecreaseLineTag(oriLine)));
 
@@ -108,7 +108,7 @@ public class FacesToSvgConverter extends SvgConverter {
     private StringBuilder getPrecreaseLineTag(OriLine oriLine) {
         Vector2d startPoint = mapToDomain(oriLine.p0);
         Vector2d endPoint = mapToDomain(oriLine.p1);
-        return SVGUtils.getLineTag(startPoint, endPoint, precreaseLineStyle);
+        return SVGUtils.getLinePathTag(startPoint, endPoint, precreaseLineStyle);
     }
 
 }

@@ -19,6 +19,8 @@
 package oripa.persistence.svg;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 
@@ -79,40 +81,55 @@ public class SVGUtils {
 
 	private static StringBuilder getFacePathStyle(final double strokeWidth, final String fillColorCode,
 			final double fillOpacity) {
-		return getPathStyle(strokeWidth, fillColorCode, fillOpacity);
+		return getPathStyle(strokeWidth, "#000000", fillColorCode, fillOpacity);
 	}
 
+	/**
+	 * for X-ray/layer-ordered model
+	 *
+	 * @param strokeWidth
+	 * @return
+	 */
 	public static StringBuilder getPrecreasePathStyle(final double strokeWidth) {
-		return getPathStyle(strokeWidth, "none", 1.0);
+		return getLinePathStyle(strokeWidth, "#000000");
 	}
 
-	private static StringBuilder getPathStyle(final double strokeWidth, final String fillColorCode,
-			final double fillOpacity) {
+	private static StringBuilder getPathStyle(final double strokeWidth, final String strokeColorCode,
+			final String fillColorCode, final double fillOpacity) {
 		return new StringBuilder("style=\"")
-				.append(String.join(";", List.of(
+				.append(Stream.of(
 						getFillToken(fillColorCode),
-						"stroke:#000000",
+						getStrokeToken(strokeColorCode),
 						getStrokeWidthToken(strokeWidth),
 						"stroke-linecap:round",
 						"stroke-linejoin:round",
 						"stroke-opacity:1",
-						getFillOpacityToken(fillOpacity))))
+						getFillOpacityToken(fillOpacity))
+						.collect(Collectors.joining(";")))
 				.append("\"\n ");
 	}
 
-	private static String getFillToken(final String colorCode) {
-		return String.format("fill:%s", colorCode);
+	public static StringBuilder getLinePathStyle(final double strokeWidth, final String strokeColorCode) {
+		return getPathStyle(strokeWidth, strokeColorCode, "none", 1.0);
 	}
 
 	private static String getStrokeWidthToken(final double strokeWidth) {
 		return String.format("stroke-width:%fpx", strokeWidth);
 	}
 
+	private static String getStrokeToken(final String colorCode) {
+		return String.format("stroke:%s", colorCode);
+	}
+
+	private static String getFillToken(final String colorCode) {
+		return String.format("fill:%s", colorCode);
+	}
+
 	private static String getFillOpacityToken(final double opacity) {
 		return String.format("fill-opacity:%f", opacity);
 	}
 
-	public static StringBuilder getLineTag(final Vector2d startPoint, final Vector2d endPoint, final String style) {
+	public static StringBuilder getLinePathTag(final Vector2d startPoint, final Vector2d endPoint, final String style) {
 
 		StringBuilder pathBuilder = new StringBuilder();
 		pathBuilder.append("<path ");
@@ -127,19 +144,6 @@ public class SVGUtils {
 		pathBuilder.append("\" />\n");
 
 		return pathBuilder;
-
-//		StringBuilder builder = new StringBuilder();
-//
-//		// @formatter:off
-//		builder.append("<line ")
-//				.append("x1=\"").append(startPoint.x).append("\" ")
-//				.append("y1=\"").append(startPoint.y).append("\" ")
-//				.append("x2=\"").append(endPoint.x).append("\" ")
-//				.append("y2=\"").append(endPoint.y).append("\" ")
-//				.append(style)
-//				.append("/>\n");
-//		// @formatter:on
-//		return builder;
 	}
 
 	public static void putInGroup(final StringBuilder groupContent) {
@@ -147,7 +151,7 @@ public class SVGUtils {
 				.append("</g>");
 	}
 
-	public static StringBuilder getPathTag(final List<Vector2d> points, final String style) {
+	public static StringBuilder getFacePathTag(final List<Vector2d> points, final String style) {
 		StringBuilder pathBuilder = new StringBuilder();
 		pathBuilder.append("<path ");
 		pathBuilder.append(style);
