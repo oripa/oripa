@@ -31,6 +31,6 @@ public abstract class AbstractSavingAction<Data> {
 
 	protected abstract void afterSave(Data data);
 
-	protected abstract boolean saveImpl(Data data, Object confgObj) throws IOException, IllegalArgumentException;
+	protected abstract boolean saveImpl(Data data, Object configObj) throws IOException, IllegalArgumentException;
 
 }

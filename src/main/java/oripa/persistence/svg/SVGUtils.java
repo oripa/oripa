@@ -62,29 +62,6 @@ public class SVGUtils {
 
 	public static final String GRADIENTS_DEFINITION = GRADIENT_FRONT + GRADIENT_BACK;
 
-//	public static final String PATH_STYLE_FRONT = "style=\"" +
-//			"fill:url(#Gradient1);" +
-//			"stroke:#0000ff;" +
-//			"stroke-width:2px;" +
-//			"stroke-linecap:butt;" +
-//			"stroke-linejoin:miter;" +
-//			"stroke-opacity:1;" +
-//			"fill-opacity:1.0\"\n ";
-//
-//	public static final String PATH_STYLE_BACK = "style=\"" +
-//			"fill:url(#Gradient2);" +
-//			"stroke:#0000ff;" +
-//			"stroke-width:2px;" +
-//			"stroke-linecap:butt;" +
-//			"stroke-linejoin:miter;" +
-//			"stroke-opacity:1;" +
-//			"fill-opacity:1.0\"\n ";
-//
-//	public static final String THICK_LINE_STYLE = "style=\"" +
-//			"stroke:black;" +
-//			"stroke-width:2px;" +
-//			"\"";
-
 	/**
 	 * OrigamiModelExporterSVG styles
 	 */

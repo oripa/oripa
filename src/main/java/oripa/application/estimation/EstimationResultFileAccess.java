@@ -46,9 +46,6 @@ public class EstimationResultFileAccess implements FileAccessService<FoldedModel
 		return dao.getFileAccessSupportSelector();
 	}
 
-	/**
-	 * Constructor
-	 */
 	public EstimationResultFileAccess(final AbstractFileDAO<FoldedModelEntity> dao) {
 		this.dao = dao;
 	}

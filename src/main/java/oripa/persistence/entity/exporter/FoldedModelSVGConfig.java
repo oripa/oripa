@@ -30,6 +30,11 @@ public class FoldedModelSVGConfig {
 		return faceStrokeWidth;
 	}
 
+	/**
+	 *
+	 * @param faceStrokeWidth
+	 *            the unit is [px]
+	 */
 	public void setFaceStrokeWidth(final double faceStrokeWidth) {
 		this.faceStrokeWidth = faceStrokeWidth;
 	}
@@ -38,6 +43,11 @@ public class FoldedModelSVGConfig {
 		return precreaseStrokeWidth;
 	}
 
+	/**
+	 *
+	 * @param precreaseStrokeWidth
+	 *            the unit is [px]
+	 */
 	public void setPrecreaseStrokeWidth(final double precreaseStrokeWidth) {
 		this.precreaseStrokeWidth = precreaseStrokeWidth;
 	}

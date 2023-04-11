@@ -21,10 +21,14 @@ package oripa.persistence.dao;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -37,11 +41,22 @@ import oripa.persistence.filetool.WrongDataFormatException;
 public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	private static Logger logger = LoggerFactory.getLogger(AbstractFileDAO.class);
 
+	private Map<FileTypeProperty<Data>, Supplier<Object>> configSuppliers = new HashMap<FileTypeProperty<Data>, Supplier<Object>>();
+
 	/**
 	 *
 	 * @return a selector managing available file types.
 	 */
 	public abstract AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
+
+	/**
+	 *
+	 * @param configSuppliers
+	 *            each supplier should return config object.
+	 */
+	public void setSavingConfigSuppliers(final Map<FileTypeProperty<Data>, Supplier<Object>> configSuppliers) {
+		this.configSuppliers = configSuppliers;
+	}
 
 	@Override
 	public Data load(final String path)
@@ -65,7 +80,8 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 
 		logger.info("save(): path = {}", path);
 
-		var savingAction = getFileAccessSupportSelector().getSavableOf(path).getSavingAction();
+		var support = getFileAccessSupportSelector().getSavableOf(path);
+		var savingAction = support.getSavingAction(configSuppliers.get(support.getTargetType()));
 
 		savingAction.setPath(nullableCanonicalPath(path)).save(data);
 	}

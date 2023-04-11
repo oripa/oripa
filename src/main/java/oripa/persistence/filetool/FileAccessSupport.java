@@ -1,5 +1,7 @@
 package oripa.persistence.filetool;
 
+import java.util.function.Supplier;
+
 public class FileAccessSupport<Data>
 		implements Comparable<FileAccessSupport<Data>> {
 
@@ -83,6 +85,18 @@ public class FileAccessSupport<Data>
 	 * @return savingAction
 	 */
 	public AbstractSavingAction<Data> getSavingAction() {
+		return savingAction;
+	}
+
+	/**
+	 * Overwrites the config of savingAction and returns the savingAction.
+	 *
+	 * @param configSupplier
+	 *            should return config object.
+	 * @return
+	 */
+	public AbstractSavingAction<Data> getSavingAction(final Supplier<Object> configSupplier) {
+		savingAction.setConfig(configSupplier);
 		return savingAction;
 	}
 
