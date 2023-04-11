@@ -32,7 +32,6 @@ import oripa.exception.UserCanceledException;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileFilterProperty;
-import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 
@@ -47,7 +46,6 @@ public class FileAccessPresenter<Data> {
 	private final FrameView parent;
 	private final FileChooserFactory chooserFactory;
 	private final FileAccessService<Data> fileAccessService;
-	private final AbstractFileAccessSupportSelector<Data> supportSelector;
 
 	public FileAccessPresenter(
 			final FrameView parent,
@@ -56,18 +54,17 @@ public class FileAccessPresenter<Data> {
 		this.parent = parent;
 		this.chooserFactory = chooserFactory;
 		this.fileAccessService = fileAccessService;
-		this.supportSelector = fileAccessService.getFileAccessSupportSelector();
 	}
 
 	public Optional<String> saveUsingGUI(final Data data, final String path) throws UserCanceledException {
 
-		return saveUsingGUIImpl(data, path, supportSelector.getSavables());
+		return saveUsingGUIImpl(data, path, fileAccessService.getSavableSupports());
 	}
 
 	public Optional<String> saveUsingGUI(final Data data, final String path, final List<FileTypeProperty<Data>> types)
 			throws UserCanceledException {
 
-		return saveUsingGUIImpl(data, path, supportSelector.getSavablesOf(types));
+		return saveUsingGUIImpl(data, path, fileAccessService.getSavableSupportsOf(types));
 	}
 
 	private Optional<String> saveUsingGUIImpl(final Data data, final String path,
@@ -113,7 +110,7 @@ public class FileAccessPresenter<Data> {
 
 		var chooser = chooserFactory.createForLoading(
 				lastFilePath,
-				toFileFilterProperties(supportSelector.getLoadablesWithMultiType()));
+				toFileFilterProperties(fileAccessService.getLoadableSupportsWithMultiType()));
 
 		if (!chooser.showDialog(parent)) {
 			throw new UserCanceledException();

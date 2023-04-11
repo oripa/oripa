@@ -20,10 +20,14 @@ package oripa.application;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import oripa.persistence.dao.AbstractFileAccessSupportSelector;
+import oripa.persistence.dao.AbstractFileDAO;
+import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
@@ -32,26 +36,32 @@ import oripa.persistence.filetool.WrongDataFormatException;
  * @author OUCHI Koji
  *
  */
-public interface FileAccessService<Data> {
+public abstract class FileAccessService<Data> {
 
-	public AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
+	protected abstract AbstractFileDAO<Data> getFileDAO();
 
-	default void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
-		var support = getFileAccessSupportSelector().getFileAccessSupport(key);
-		if (support == null) {
-			return;
-		}
-
-		support.setConfigToSavingAction(configSupplier);
+	protected AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector() {
+		return getFileDAO().getFileAccessSupportSelector();
 	}
 
-	default boolean canLoad(final String filePath) {
-		try {
-			getFileAccessSupportSelector().getLoadableOf(filePath);
-			return true;
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
+	public List<FileAccessSupport<Data>> getSavableSupports() {
+		return getFileAccessSupportSelector().getSavables();
+	}
+
+	public List<FileAccessSupport<Data>> getSavableSupportsOf(final Collection<FileTypeProperty<Data>> types) {
+		return getFileAccessSupportSelector().getSavablesOf(types);
+	}
+
+	public List<FileAccessSupport<Data>> getLoadableSupportsWithMultiType() {
+		return getFileAccessSupportSelector().getLoadablesWithMultiType();
+	}
+
+	public void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
+		getFileDAO().setConfigToSavingAction(key, configSupplier);
+	}
+
+	public boolean canLoad(final String filePath) {
+		return getFileDAO().canLoad(filePath);
 	}
 
 	/**
@@ -61,7 +71,7 @@ public interface FileAccessService<Data> {
 	 * @param path
 	 * @throws IllegalArgumentException
 	 */
-	void saveFile(final Data data, final String path)
+	public abstract void saveFile(final Data data, final String path)
 			throws IOException, IllegalArgumentException;
 
 	/**
@@ -70,7 +80,7 @@ public interface FileAccessService<Data> {
 	 * @param filePath
 	 * @return the Data of loaded file.
 	 */
-	Optional<Data> loadFile(final String filePath)
+	public abstract Optional<Data> loadFile(final String filePath)
 			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
 			IOException, FileNotFoundException;
 }
