@@ -43,7 +43,7 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean export(final OrigamiModel origamiModel, final String filePath)
+	public boolean export(final OrigamiModel origamiModel, final String filePath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 		double paperSize = origamiModel.getPaperSize();
 

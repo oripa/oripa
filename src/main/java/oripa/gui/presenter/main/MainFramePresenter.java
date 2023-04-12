@@ -56,7 +56,6 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
-import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -104,7 +103,6 @@ public class MainFramePresenter {
 	private final IniFileAccess iniFileAccess;
 	private final DataFileAccess dataFileAccess;
 	private final FileHistory fileHistory;
-	private final AbstractFileAccessSupportSelector<Doc> fileAccessSupportSelector;
 
 	// services
 	private final PaintContextModification paintContextModification = new PaintContextModification();
@@ -141,7 +139,6 @@ public class MainFramePresenter {
 		this.fileHistory = fileHistory;
 		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
-		fileAccessSupportSelector = dataFileAccess.getFileAccessSupportSelector();
 
 		this.screenSetting = viewSetting.getPainterScreenSetting();
 
@@ -550,12 +547,12 @@ public class MainFramePresenter {
 		if (filePath == null || filePath.isEmpty()) {
 			return;
 		}
-		try {
-			fileAccessSupportSelector.getLoadableOf(filePath);
-		} catch (IllegalArgumentException e) {
-			logger.debug("updating menu is canceled.", e);
+
+		if (!dataFileAccess.canLoad(filePath)) {
+			logger.debug("updating menu is canceled: {}", filePath);
 			return;
 		}
+
 		fileHistory.useFile(filePath);
 
 		view.buildFileMenu();

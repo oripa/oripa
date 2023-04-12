@@ -19,7 +19,6 @@
 package oripa.persistence.entity;
 
 import oripa.persistence.entity.exporter.ExporterORmat;
-import oripa.persistence.entity.exporter.FoldedModelEntity;
 import oripa.persistence.entity.exporter.FoldedModelExporterFOLD;
 import oripa.persistence.entity.exporter.FoldedModelExporterSVG;
 import oripa.persistence.filetool.Exporter;

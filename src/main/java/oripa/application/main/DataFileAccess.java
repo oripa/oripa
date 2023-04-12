@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import oripa.application.FileAccessService;
 import oripa.doc.Doc;
-import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.filetool.AbstractSavingAction;
@@ -41,7 +40,7 @@ import oripa.persistence.filetool.WrongDataFormatException;
  * @author OUCHI Koji
  *
  */
-public class DataFileAccess implements FileAccessService<Doc> {
+public class DataFileAccess extends FileAccessService<Doc> {
 	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
 
 	private final AbstractFileDAO<Doc> dao;
@@ -56,8 +55,8 @@ public class DataFileAccess implements FileAccessService<Doc> {
 	}
 
 	@Override
-	public AbstractFileAccessSupportSelector<Doc> getFileAccessSupportSelector() {
-		return dao.getFileAccessSupportSelector();
+	protected AbstractFileDAO<Doc> getFileDAO() {
+		return dao;
 	}
 
 	@Override

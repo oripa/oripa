@@ -29,7 +29,7 @@ import oripa.doc.Doc;
 public class ExporterXML implements DocExporter {
 
 	@Override
-	public boolean export(final Doc doc, final String filePath) throws IOException {
+	public boolean export(final Doc doc, final String filePath, final Object configObj) throws IOException {
 		DataSet dataset = new DataSet(doc);
 
 		try (var fos = new FileOutputStream(filePath);

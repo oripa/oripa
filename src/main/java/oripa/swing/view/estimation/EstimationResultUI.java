@@ -27,7 +27,9 @@ import java.util.function.BiConsumer;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 
@@ -82,6 +84,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	private final JButton exportButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
+
+	private final JLabel svgFaceStrokeWidthLabel = new JLabel("face stroke-width:");
+	private final JTextField svgFaceStrokeWidthField = new JTextField();
+	private final JLabel svgPrecreaseStrokeWidthLabel = new JLabel("crease stroke-width:");
+	private final JTextField svgPrecreaseStrokeWidthField = new JTextField();
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
 
@@ -144,6 +151,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		add(createAnswerShiftPanel(), gbBuilder.getLineField());
 		add(createConfigPanel(), gbBuilder.getLineField());
 		add(createColorPanel(), gbBuilder.getLineField());
+
+		add(createSVGConfigPanel(), gbBuilder.getLineField());
 
 		gbBuilder.setWeight(1, 1).setFill(GridBagConstraints.BOTH);
 		add(new JPanel(), gbBuilder.getLineField());
@@ -251,6 +260,24 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		return colorPanel;
 	}
 
+	private JPanel createSVGConfigPanel() {
+		var svgPanel = new JPanel();
+
+		svgPanel.setLayout(new GridBagLayout());
+		svgPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this, "SVG config"));
+
+		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
+				.setWeight(1.0, 0.0);
+
+		svgPanel.add(svgFaceStrokeWidthLabel, gbBuilder.getNextField());
+		svgPanel.add(svgFaceStrokeWidthField, gbBuilder.getNextField());
+
+		svgPanel.add(svgPrecreaseStrokeWidthLabel, gbBuilder.getNextField());
+		svgPanel.add(svgPrecreaseStrokeWidthField, gbBuilder.getNextField());
+
+		return svgPanel;
+	}
+
 	public void setColors(final Color front, final Color back) {
 		logger.debug("Front color = {}", front);
 		logger.debug("Back color = {}", back);
@@ -284,6 +311,26 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	@Override
 	public boolean isFaceOrderFlipped() {
 		return screen.isFaceOrderFlipped();
+	}
+
+	@Override
+	public double getSVGFaceStrokeWidth() {
+		return Double.parseDouble(svgFaceStrokeWidthField.getText());
+	}
+
+	@Override
+	public void setSVGFaceStrokeWidth(final double strokeWidth) {
+		svgFaceStrokeWidthField.setText(Double.toString(strokeWidth));
+	}
+
+	@Override
+	public double getSVGPrecreaseStrokeWidth() {
+		return Double.parseDouble(svgPrecreaseStrokeWidthField.getText());
+	}
+
+	@Override
+	public void setSVGPrecreaseStrokeWidth(final double strokeWidth) {
+		svgPrecreaseStrokeWidthField.setText(Double.toString(strokeWidth));
 	}
 
 	@Override

@@ -29,6 +29,10 @@ public interface Exporter<Data> {
 	 *
 	 * @param data
 	 * @param filePath
+	 * @param configObj
+	 *            an object for configuration. The actual type is specified by
+	 *            the implementation class of this interface. null if no
+	 *            configuration is provided.
 	 * @return true if the action succeeds, otherwise false.
 	 * @throws IOException
 	 *             Error on file access.
@@ -36,6 +40,6 @@ public interface Exporter<Data> {
 	 *             thrown if the {@code data} cannot be converted to the aimed
 	 *             data format.
 	 */
-	public abstract boolean export(Data data, String filePath)
+	public abstract boolean export(Data data, String filePath, Object configObj)
 			throws IOException, IllegalArgumentException;
 }

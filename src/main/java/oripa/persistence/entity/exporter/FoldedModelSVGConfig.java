@@ -16,43 +16,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.estimation;
-
-import oripa.domain.fold.FoldedModel;
-import oripa.domain.fold.origeom.OverlapRelation;
-import oripa.gui.view.View;
+package oripa.persistence.entity.exporter;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface EstimationResultUIView extends View {
+public class FoldedModelSVGConfig {
+	private double faceStrokeWidth = 2;
+	private double precreaseStrokeWidth = 1;
+
+	public double getFaceStrokeWidth() {
+		return faceStrokeWidth;
+	}
 
 	/**
-	 * Set Model to be displayed and update index label
 	 *
-	 * @param foldedModel
-	 *            {@code FoldedModel} to be displayed
+	 * @param faceStrokeWidth
+	 *            the unit is [px]
 	 */
-	void setModel(FoldedModel foldedModel);
+	public void setFaceStrokeWidth(final double faceStrokeWidth) {
+		this.faceStrokeWidth = faceStrokeWidth;
+	}
 
-	FoldedModel getModel();
+	public double getPrecreaseStrokeWidth() {
+		return precreaseStrokeWidth;
+	}
 
-	OverlapRelation getOverlapRelation();
+	/**
+	 *
+	 * @param precreaseStrokeWidth
+	 *            the unit is [px]
+	 */
+	public void setPrecreaseStrokeWidth(final double precreaseStrokeWidth) {
+		this.precreaseStrokeWidth = precreaseStrokeWidth;
+	}
 
-	int getOverlapRelationIndex();
-
-	boolean isFaceOrderFlipped();
-
-	double getSVGFaceStrokeWidth();
-
-	void setSVGFaceStrokeWidth(double strokeWidth);
-
-	double getSVGPrecreaseStrokeWidth();
-
-	void setSVGPrecreaseStrokeWidth(double strokeWidth);
-
-	void addExportButtonListener(Runnable listener);
-
-	void showExportErrorMessage(Exception e);
 }

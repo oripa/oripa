@@ -27,13 +27,14 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.filetool.Exporter;
 
 // export folded model
 public class ExporterORmat implements Exporter<FoldedModelEntity> {
 
 	@Override
-	public boolean export(final FoldedModelEntity foldedModel, final String filepath)
+	public boolean export(final FoldedModelEntity foldedModel, final String filepath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 		OrigamiModel origamiModel = foldedModel.getOrigamiModel();
 		OverlapRelation overlapRelation = foldedModel.getOverlapRelation();

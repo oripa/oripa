@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.entity.exporter;
+package oripa.persistence.entity;
 
 import java.util.List;
 
@@ -60,5 +60,9 @@ public class FoldedModelEntity {
 
 	public List<OverlapRelation> getOverlapRelations() {
 		return overlapRelations;
+	}
+
+	public FoldedModel toFoldedModel() {
+		return new FoldedModel(origamiModel, overlapRelations);
 	}
 }

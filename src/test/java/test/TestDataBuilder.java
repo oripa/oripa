@@ -56,7 +56,7 @@ public class TestDataBuilder {
 		try {
 			Doc doc = new Doc(SIZE);
 			doc.setCreasePattern(creasePattern);
-			exporter.export(doc, "heavy_test.opx");
+			exporter.export(doc, "heavy_test.opx", null);
 		} catch (Exception e) {
 
 		}

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import com.google.gson.GsonBuilder;
 
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.foldformat.FoldedModelElementConverter;
 import oripa.persistence.foldformat.FoldedModelFOLDFormat;
@@ -37,7 +38,7 @@ import oripa.persistence.foldformat.Frame;
 public class FoldedModelExporterFOLD implements Exporter<FoldedModelEntity> {
 
 	@Override
-	public boolean export(final FoldedModelEntity entity, final String filePath)
+	public boolean export(final FoldedModelEntity entity, final String filePath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 
 		var origamiModel = entity.getOrigamiModel();

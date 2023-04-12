@@ -34,7 +34,7 @@ import oripa.persistence.svg.CreasePatternToSvgConverter;
  */
 public class CreasePatternExporterSVG implements Exporter<CreasePattern> {
 	@Override
-	public boolean export(final CreasePattern creasePattern, final String filepath)
+	public boolean export(final CreasePattern creasePattern, final String filepath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 
 		double scale = SVG_SIZE / creasePattern.getPaperSize();

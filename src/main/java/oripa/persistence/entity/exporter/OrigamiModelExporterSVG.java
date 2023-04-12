@@ -18,17 +18,17 @@
 
 package oripa.persistence.entity.exporter;
 
-import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.persistence.filetool.Exporter;
-import oripa.persistence.svg.FacesToSvgConverter;
-
 import static oripa.persistence.svg.SVGUtils.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.persistence.filetool.Exporter;
+import oripa.persistence.svg.FacesToSvgConverter;
 
 /**
  * @author Bettinelli Jean-Noël
@@ -48,7 +48,7 @@ public class OrigamiModelExporterSVG implements Exporter<OrigamiModel> {
 	}
 
 	@Override
-	public boolean export(final OrigamiModel origamiModel, final String filepath)
+	public boolean export(final OrigamiModel origamiModel, final String filepath, final Object configObj)
 			throws IOException {
 
 		List<OriFace> faces = origamiModel.getFaces();
@@ -56,7 +56,7 @@ public class OrigamiModelExporterSVG implements Exporter<OrigamiModel> {
 		facesToSvgConverter.initDomain(faces, origamiModel.getPaperSize());
 
 		try (var fw = new FileWriter(filepath);
-			 var bw = new BufferedWriter(fw)) {
+				var bw = new BufferedWriter(fw)) {
 			bw.write(SVG_START);
 			bw.write(facesToSvgConverter.getSvgFaces(faces));
 			bw.write(SVG_END_TAG);

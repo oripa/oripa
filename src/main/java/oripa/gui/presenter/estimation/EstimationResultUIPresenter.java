@@ -30,8 +30,12 @@ import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.persistence.entity.FoldedModelDAO;
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
-import oripa.persistence.entity.exporter.FoldedModelEntity;
+import oripa.persistence.entity.FoldedModelFileTypeKey;
+import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
+
+//TODO save svg config to file (maybe with save button?) and load it at initialization.
 
 /**
  * @author OUCHI Koji
@@ -59,6 +63,9 @@ public class EstimationResultUIPresenter {
 		this.lastFilePath = lastFilePath;
 		this.lastFilePathChangeListener = lastFilePathChangeListener;
 
+		view.setSVGFaceStrokeWidth(2.0);
+		view.setSVGPrecreaseStrokeWidth(1.0);
+
 		addListener();
 	}
 
@@ -74,6 +81,11 @@ public class EstimationResultUIPresenter {
 			var supportSelector = new FoldedModelFileAccessSupportSelector(view.isFaceOrderFlipped());
 			var dao = new FoldedModelDAO(supportSelector);
 			var fileAccessService = new EstimationResultFileAccess(dao);
+
+			fileAccessService.setConfigToSavingAction(
+					FoldedModelFileTypeKey.SVG_FOLDED_MODEL, this::createSVGConfig);
+			fileAccessService.setConfigToSavingAction(
+					FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP, this::createSVGConfig);
 
 			var foldedModel = view.getModel();
 
@@ -91,5 +103,14 @@ public class EstimationResultUIPresenter {
 			logger.error("error: ", ex);
 			view.showExportErrorMessage(ex);
 		}
+	}
+
+	private FoldedModelSVGConfig createSVGConfig() {
+		var svgConfig = new FoldedModelSVGConfig();
+
+		svgConfig.setFaceStrokeWidth(view.getSVGFaceStrokeWidth());
+		svgConfig.setPrecreaseStrokeWidth(view.getSVGPrecreaseStrokeWidth());
+
+		return svgConfig;
 	}
 }

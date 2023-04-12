@@ -28,7 +28,7 @@ import oripa.value.OriLine;
 public class ExporterCP implements DocExporter {
 
 	@Override
-	public boolean export(final Doc doc, final String filepath)
+	public boolean export(final Doc doc, final String filepath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 		try (var fw = new FileWriter(filepath);
 				var bw = new BufferedWriter(fw);) {

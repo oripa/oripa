@@ -32,6 +32,7 @@ import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.geom.RectangleDomain;
+import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.Loader;
 import oripa.persistence.filetool.WrongDataFormatException;
@@ -45,10 +46,10 @@ import oripa.persistence.foldformat.FrameClass;
  * @author OUCHI Koji
  *
  */
-public class FoldedModelLoaderFOLD implements Loader<FoldedModel> {
+public class FoldedModelLoaderFOLD implements Loader<FoldedModelEntity> {
 
 	@Override
-	public FoldedModel load(final String filePath)
+	public FoldedModelEntity load(final String filePath)
 			throws FileVersionError, IOException, WrongDataFormatException {
 		var gson = new Gson();
 		FoldedModelFOLDFormat foldFormat;
@@ -109,7 +110,7 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModel> {
 			}
 		}
 
-		return new FoldedModel(origamiModel, overlapRelations);
+		return new FoldedModelEntity(new FoldedModel(origamiModel, overlapRelations));
 	}
 
 }

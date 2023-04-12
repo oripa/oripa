@@ -32,7 +32,6 @@ import oripa.exception.UserCanceledException;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.file.FileFilterProperty;
-import oripa.persistence.dao.AbstractFileAccessSupportSelector;
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
 
@@ -46,7 +45,6 @@ public class FileAccessPresenter<Data> {
 
 	private final FrameView parent;
 	private final FileChooserFactory chooserFactory;
-	private final AbstractFileAccessSupportSelector<Data> selector;
 	private final FileAccessService<Data> fileAccessService;
 
 	public FileAccessPresenter(
@@ -55,26 +53,27 @@ public class FileAccessPresenter<Data> {
 			final FileAccessService<Data> fileAccessService) {
 		this.parent = parent;
 		this.chooserFactory = chooserFactory;
-		this.selector = fileAccessService.getFileAccessSupportSelector();
 		this.fileAccessService = fileAccessService;
 	}
 
 	public Optional<String> saveUsingGUI(final Data data, final String path) throws UserCanceledException {
-		var types = selector.getTargetTypes(selector.getSavables());
 
-		return saveUsingGUI(data, path, types);
+		return saveUsingGUIImpl(data, path, fileAccessService.getSavableSupports());
 	}
 
 	public Optional<String> saveUsingGUI(final Data data, final String path, final List<FileTypeProperty<Data>> types)
 			throws UserCanceledException {
 
-		var supports = selector.getSavables().stream()
-				.filter(support -> types.contains(support.getTargetType()))
-				.collect(Collectors.toList());
+		return saveUsingGUIImpl(data, path, fileAccessService.getSavableSupportsOf(types));
+	}
+
+	private Optional<String> saveUsingGUIImpl(final Data data, final String path,
+			final List<FileAccessSupport<Data>> savableSupports)
+			throws UserCanceledException {
 
 		var chooser = chooserFactory.createForSaving(
 				path,
-				toFileFilterProperties(supports));
+				toFileFilterProperties(savableSupports));
 
 		if (!chooser.showDialog(parent)) {
 			throw new UserCanceledException();
@@ -111,7 +110,7 @@ public class FileAccessPresenter<Data> {
 
 		var chooser = chooserFactory.createForLoading(
 				lastFilePath,
-				toFileFilterProperties(selector.getLoadablesWithMultiType()));
+				toFileFilterProperties(fileAccessService.getLoadableSupportsWithMultiType()));
 
 		if (!chooser.showDialog(parent)) {
 			throw new UserCanceledException();

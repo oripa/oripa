@@ -36,7 +36,7 @@ import oripa.persistence.filetool.Exporter;
 public class OrigamiModelExporterOBJ implements Exporter<OrigamiModel> {
 
 	@Override
-	public boolean export(final OrigamiModel origamiModel, final String filePath)
+	public boolean export(final OrigamiModel origamiModel, final String filePath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 		List<OriFace> faces = origamiModel.getFaces();
 		List<OriVertex> vertices = origamiModel.getVertices();

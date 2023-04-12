@@ -39,7 +39,7 @@ public class CreasePatternExporterDXF implements Exporter<CreasePattern> {
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean export(final CreasePattern creasePattern, final String filePath)
+	public boolean export(final CreasePattern creasePattern, final String filePath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 		double paperSize = creasePattern.getPaperSize();
 		double scale = 6.0 / paperSize; // 6.0 inch width
