@@ -82,6 +82,9 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final JButton saveColorsButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SAVE_COLORS_ID));
 
+	private final JButton saveSVGConfigButton = new JButton(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SAVE_SVG_CONFIG_ID));
+
 	private final JButton exportButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
 
@@ -275,6 +278,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		svgPanel.add(svgPrecreaseStrokeWidthLabel, gbBuilder.getNextField());
 		svgPanel.add(svgPrecreaseStrokeWidthField, gbBuilder.getNextField());
 
+		svgPanel.add(saveSVGConfigButton, gbBuilder.getLineField());
+
 		return svgPanel;
 	}
 
@@ -287,6 +292,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	public void setSaveColorsListener(final BiConsumer<Color, Color> listener) {
 		saveColorsListener = listener;
+	}
+
+	@Override
+	public void addSaveSVGCofigButtonListener(final Runnable listener) {
+		addButtonListener(saveSVGConfigButton, listener);
 	}
 
 	@Override
@@ -337,6 +347,12 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	public void showExportErrorMessage(final Exception e) {
 		Dialogs.showErrorDialog(this, resources.getString(
 				ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);
+	}
+
+	@Override
+	public void showErrorMessage(final Exception e) {
+		Dialogs.showErrorDialog(this, resources.getString(
+				ResourceKey.ERROR, StringID.Error.DEFAULT_TITLE_ID), e);
 	}
 
 	@Override
