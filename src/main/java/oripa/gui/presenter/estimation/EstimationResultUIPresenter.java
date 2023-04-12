@@ -36,8 +36,6 @@ import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
 import oripa.persistence.entity.FoldedModelFileTypeKey;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
 
-//TODO save svg config to file (maybe with save button?) and load it at initialization.
-
 /**
  * @author OUCHI Koji
  *
