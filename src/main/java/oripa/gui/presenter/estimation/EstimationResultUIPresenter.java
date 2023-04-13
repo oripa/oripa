@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.estimation.EstimationResultFileAccess;
+import oripa.application.estimation.FoldedModelSVGConfigFileAccess;
 import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
@@ -34,8 +35,6 @@ import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
 import oripa.persistence.entity.FoldedModelFileTypeKey;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
-
-//TODO save svg config to file (maybe with save button?) and load it at initialization.
 
 /**
  * @author OUCHI Koji
@@ -51,6 +50,8 @@ public class EstimationResultUIPresenter {
 	private String lastFilePath;
 	private final Consumer<String> lastFilePathChangeListener;
 
+	private final FoldedModelSVGConfigFileAccess svgConfigFileAccess = new FoldedModelSVGConfigFileAccess();
+
 	public EstimationResultUIPresenter(
 			final EstimationResultUIView view,
 			final FileChooserFactory fileChooserFactory,
@@ -63,13 +64,13 @@ public class EstimationResultUIPresenter {
 		this.lastFilePath = lastFilePath;
 		this.lastFilePathChangeListener = lastFilePathChangeListener;
 
-		view.setSVGFaceStrokeWidth(2.0);
-		view.setSVGPrecreaseStrokeWidth(1.0);
+		loadSVGConfig();
 
 		addListener();
 	}
 
 	private void addListener() {
+		view.addSaveSVGCofigButtonListener(this::saveSVGConfig);
 		view.addExportButtonListener(this::export);
 	}
 
@@ -112,5 +113,27 @@ public class EstimationResultUIPresenter {
 		svgConfig.setPrecreaseStrokeWidth(view.getSVGPrecreaseStrokeWidth());
 
 		return svgConfig;
+	}
+
+	private void saveSVGConfig() {
+		try {
+			svgConfigFileAccess.save(createSVGConfig());
+		} catch (Exception e) {
+			view.showErrorMessage(e);
+		}
+	}
+
+	private void loadSVGConfig() {
+		try {
+			var configOpt = svgConfigFileAccess.load();
+
+			var config = configOpt.orElse(new FoldedModelSVGConfig());
+
+			view.setSVGFaceStrokeWidth(config.getFaceStrokeWidth());
+			view.setSVGPrecreaseStrokeWidth(config.getPrecreaseStrokeWidth());
+
+		} catch (Exception e) {
+			view.showErrorMessage(e);
+		}
 	}
 }

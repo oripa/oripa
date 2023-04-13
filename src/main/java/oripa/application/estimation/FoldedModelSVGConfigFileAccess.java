@@ -16,47 +16,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.estimation;
+package oripa.application.estimation;
 
-import oripa.domain.fold.FoldedModel;
-import oripa.domain.fold.origeom.OverlapRelation;
-import oripa.gui.view.View;
+import java.io.IOException;
+import java.util.Optional;
+
+import oripa.file.FoldedModelSVGConfigReader;
+import oripa.file.FoldedModelSVGConfigWriter;
+import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
+import oripa.persistence.filetool.WrongDataFormatException;
+import oripa.resource.Constants;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface EstimationResultUIView extends View {
+public class FoldedModelSVGConfigFileAccess {
+	public void save(final FoldedModelSVGConfig config) throws IOException {
+		var writer = new FoldedModelSVGConfigWriter();
+		writer.write(config, Constants.FOLDED_SVG_CONFIG_PATH);
+	}
 
-	/**
-	 * Set Model to be displayed and update index label
-	 *
-	 * @param foldedModel
-	 *            {@code FoldedModel} to be displayed
-	 */
-	void setModel(FoldedModel foldedModel);
+	public Optional<FoldedModelSVGConfig> load() throws WrongDataFormatException {
+		var reader = new FoldedModelSVGConfigReader();
 
-	FoldedModel getModel();
+		try {
+			return Optional.of(reader.read(Constants.FOLDED_SVG_CONFIG_PATH));
+		} catch (IOException e) {
+			return Optional.empty();
+		}
+	}
 
-	OverlapRelation getOverlapRelation();
-
-	int getOverlapRelationIndex();
-
-	boolean isFaceOrderFlipped();
-
-	double getSVGFaceStrokeWidth();
-
-	void setSVGFaceStrokeWidth(double strokeWidth);
-
-	double getSVGPrecreaseStrokeWidth();
-
-	void setSVGPrecreaseStrokeWidth(double strokeWidth);
-
-	void addExportButtonListener(Runnable listener);
-
-	void addSaveSVGCofigButtonListener(Runnable listener);
-
-	void showExportErrorMessage(Exception e);
-
-	void showErrorMessage(Exception e);
 }
