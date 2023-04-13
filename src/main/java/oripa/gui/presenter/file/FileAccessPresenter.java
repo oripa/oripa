@@ -19,7 +19,6 @@
 package oripa.gui.presenter.file;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -137,16 +136,9 @@ public class FileAccessPresenter<Data> {
 	}
 
 	private String replaceExtension(final String path, final String ext) {
-
-		String path_new;
-
-		// drop the old extension
-		path_new = path.replaceAll("\\.\\w+$", "");
-
+		// drop the old extension and
 		// append the new extension
-		path_new += "." + ext;
-
-		return path_new;
+		return path.replaceAll("\\.\\w+$", "") + "." + ext;
 	}
 
 	/**
@@ -162,13 +154,8 @@ public class FileAccessPresenter<Data> {
 		String path_new = new String(path);
 
 		logger.debug("extensions[0] for correction: {}", extensions[0]);
-
-		var filtered = Arrays.asList(extensions).stream()
-				.filter(ext -> path.endsWith("." + ext))
-				.collect(Collectors.toList());
-
-		// the path's extension is not in the targets.
-		if (filtered.isEmpty()) {
+		if (List.of(extensions).stream()
+				.noneMatch(ext -> path.endsWith("." + ext))) {
 			path_new = replaceExtension(path_new, extensions[0]);
 		}
 
