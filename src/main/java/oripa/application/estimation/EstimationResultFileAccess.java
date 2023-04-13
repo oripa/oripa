@@ -27,6 +27,7 @@ import oripa.domain.fold.FoldedModel;
 import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
 import oripa.persistence.entity.FoldedModelEntity;
+import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -50,9 +51,15 @@ public class EstimationResultFileAccess extends FileAccessService<FoldedModelEnt
 	}
 
 	@Override
-	public void saveFile(final FoldedModelEntity foldedModel, final String path)
-			throws IllegalArgumentException, IOException {
-		dao.save(foldedModel, path);
+	public final void saveFile(final FoldedModelEntity document,
+			final String path, final FileTypeProperty<FoldedModelEntity> type)
+			throws IOException, IllegalArgumentException {
+
+		if (type == null) {
+			dao.save(document, path);
+		} else {
+			dao.save(document, path, type);
+		}
 	}
 
 	@Override

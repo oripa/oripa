@@ -18,34 +18,23 @@
  */
 package oripa.persistence.entity.exporter;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-
-import com.google.gson.GsonBuilder;
-
-import oripa.persistence.entity.FoldedModelEntity;
-import oripa.persistence.filetool.Exporter;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistence.foldformat.FoldedModelElementConverter;
 import oripa.persistence.foldformat.FoldedModelFOLDFormat;
-import oripa.persistence.foldformat.Frame;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class FoldedModelExporterFOLD implements Exporter<FoldedModelEntity> {
+class FoldedModelFOLDFactory {
 
-	@Override
-	public boolean export(final FoldedModelEntity entity, final String filePath, final Object configObj)
-			throws IOException, IllegalArgumentException {
+	private final FoldedModelElementConverter elementConverter;
 
-		var origamiModel = entity.getOrigamiModel();
-		var overlapRelations = entity.getOverlapRelations();
+	public FoldedModelFOLDFactory(final FoldedModelElementConverter elementConverter) {
+		this.elementConverter = elementConverter;
+	}
 
-		var elementConverter = new FoldedModelElementConverter();
-
+	public FoldedModelFOLDFormat createWithoutFaceOrders(final OrigamiModel origamiModel) {
 		var foldFormat = new FoldedModelFOLDFormat();
 
 		elementConverter.setVertexIDs(origamiModel);
@@ -64,29 +53,6 @@ public class FoldedModelExporterFOLD implements Exporter<FoldedModelEntity> {
 						foldFormat.getVerticesCoords(),
 						origamiModel));
 
-		if (entity.isSingleOverlapRelation()) {
-			foldFormat.setFaceOrders(elementConverter.toFaceOrders(origamiModel, entity.getOverlapRelation()));
-		} else {
-
-			var frames = new ArrayList<Frame>();
-			overlapRelations.forEach(relation -> {
-				var frame = new Frame();
-				frame.setFrameInherit(true);
-				frame.setFrameParent(0);
-				frame.setFaceOrders(elementConverter.toFaceOrders(origamiModel, relation));
-				frames.add(frame);
-			});
-
-			foldFormat.setFileFrames(frames);
-		}
-
-		try (var writer = Files.newBufferedWriter(Path.of(filePath))) {
-			var gson = new GsonBuilder().setPrettyPrinting().create();
-			gson.toJson(foldFormat, writer);
-			writer.flush();
-		}
-
-		return true;
+		return foldFormat;
 	}
-
 }

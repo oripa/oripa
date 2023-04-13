@@ -56,6 +56,14 @@ public abstract class FileAccessService<Data> {
 		return getFileAccessSupportSelector().getLoadablesWithMultiType();
 	}
 
+	public FileTypeProperty<Data> getSavableTypeByDescription(final String description) {
+		return getFileAccessSupportSelector().getSavables().stream()
+				.filter(support -> support.getDescription().equals(description))
+				.findFirst()
+				.get()
+				.getTargetType();
+	}
+
 	public void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
 		getFileDAO().setConfigToSavingAction(key, configSupplier);
 	}
@@ -67,12 +75,27 @@ public abstract class FileAccessService<Data> {
 	/**
 	 * save file with given parameters.
 	 *
-	 * @param document
+	 * @param data
 	 * @param path
+	 * @param type
+	 *
+	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	public abstract void saveFile(final Data data, final String path)
+	public abstract void saveFile(final Data data, final String path, FileTypeProperty<Data> type)
 			throws IOException, IllegalArgumentException;
+
+	/**
+	 * With auto type detection by file path extension.
+	 *
+	 * @param data
+	 * @param path
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 */
+	public void saveFile(final Data data, final String path) throws IOException, IllegalArgumentException {
+		saveFile(data, path, null);
+	}
 
 	/**
 	 * tries to read data from the path.

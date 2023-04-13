@@ -44,5 +44,7 @@ public interface FileChooserView extends View {
 
 	String[] getSelectedFilterExtensions();
 
+	String getSelectedFilterDescription();
+
 	void showErrorMessage(Exception e);
 }

@@ -21,6 +21,7 @@ package oripa.persistence.dao;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -86,6 +87,27 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 		logger.info("save(): path = {}", path);
 
 		var support = getFileAccessSupportSelector().getSavableOf(path);
+		var savingAction = support.getSavingAction();
+
+		savingAction.setPath(nullableCanonicalPath(path)).save(data);
+	}
+
+	/**
+	 * Extended version of {@link #save(Object, String)} for specifying saving
+	 * action.
+	 *
+	 * @param data
+	 * @param path
+	 * @param type
+	 * @throws IOException
+	 * @throws IllegalArgumentException
+	 */
+	public void save(final Data data, final String path, final FileTypeProperty<Data> type)
+			throws IOException, IllegalArgumentException {
+
+		logger.info("save(): path = {}", path);
+
+		var support = getFileAccessSupportSelector().getSavablesOf(List.of(type)).stream().findFirst().get();
 		var savingAction = support.getSavingAction();
 
 		savingAction.setPath(nullableCanonicalPath(path)).save(data);

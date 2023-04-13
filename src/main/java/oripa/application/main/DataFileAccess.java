@@ -61,10 +61,14 @@ public class DataFileAccess extends FileAccessService<Doc> {
 
 	@Override
 	public final void saveFile(final Doc document,
-			final String path)
+			final String path, final FileTypeProperty<Doc> type)
 			throws IOException, IllegalArgumentException {
 
-		dao.save(document, path);
+		if (type == null) {
+			dao.save(document, path);
+		} else {
+			dao.save(document, path, type);
+		}
 	}
 
 	@Override

@@ -67,6 +67,11 @@ public class SavingFileChooser extends JFileChooser implements SavingFileChooser
 	}
 
 	@Override
+	public String getSelectedFilterDescription() {
+		return ((FileNameExtensionFilter) this.getFileFilter()).getDescription();
+	}
+
+	@Override
 	public boolean showOverwriteConfirmMessage() {
 		return Dialogs.showYesNoConfirmDialog(this,
 				resources.getString(ResourceKey.WARNING, StringID.Warning.SAVE_TITLE_ID),

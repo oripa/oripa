@@ -97,7 +97,8 @@ public class FileAccessPresenter<Data> {
 		logger.debug("saving {}", correctedPath);
 
 		try {
-			fileAccessService.saveFile(data, correctedPath);
+			fileAccessService.saveFile(data, correctedPath,
+					fileAccessService.getSavableTypeByDescription(chooser.getSelectedFilterDescription()));
 		} catch (Exception e) {
 			chooser.showErrorMessage(e);
 			return Optional.empty();
@@ -130,7 +131,8 @@ public class FileAccessPresenter<Data> {
 
 	private List<FileFilterProperty> toFileFilterProperties(final List<FileAccessSupport<Data>> supports) {
 		return supports.stream()
-				.map(support -> new FileFilterProperty(support.getDescription(), support.getExtensions()))
+				.map(support -> new FileFilterProperty(
+						support.getTargetType().getKeyText(), support.getDescription(), support.getExtensions()))
 				.collect(Collectors.toList());
 	}
 

@@ -31,7 +31,8 @@ import oripa.geom.GeomUtil;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFileAccessSupportSelector;
 import oripa.persistence.entity.FoldedModelEntity;
-import oripa.persistence.entity.exporter.FoldedModelExporterFOLD;
+import oripa.persistence.entity.exporter.FoldedModelAllExporterFOLD;
+import oripa.persistence.entity.exporter.FoldedModelSingleExporterFOLD;
 
 /**
  * @author OUCHI Koji
@@ -47,7 +48,6 @@ public class CommandLineFolder {
 		}
 
 		var creasePatternFileAccess = new DataFileAccess(new DocDAO(new DocFileAccessSupportSelector()));
-		var foldedModelExporter = new FoldedModelExporterFOLD();
 
 		try {
 			var creasePattern = creasePatternFileAccess.loadFile(inputFilePath).get().getCreasePattern();
@@ -75,10 +75,13 @@ public class CommandLineFolder {
 				for (int i = 0; i < foldedModel.getFoldablePatternCount(); i++) {
 					var paddedNumber = "0".repeat(digitLength - Integer.toString(i).length()) + i;
 					var outputName = outputFilePath.replaceFirst("[.]fold$", "." + paddedNumber + ".fold");
+
+					var foldedModelExporter = new FoldedModelSingleExporterFOLD();
 					foldedModelExporter.export(
 							new FoldedModelEntity(foldedModel, i), outputName, null);
 				}
 			} else {
+				var foldedModelExporter = new FoldedModelAllExporterFOLD();
 				foldedModelExporter.export(
 						new FoldedModelEntity(foldedModel), outputFilePath, null);
 			}

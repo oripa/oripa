@@ -64,6 +64,11 @@ public class LoadingFileChooser extends JFileChooser implements LoadingFileChoos
 	}
 
 	@Override
+	public String getSelectedFilterDescription() {
+		return ((FileNameExtensionFilter) this.getFileFilter()).getDescription();
+	}
+
+	@Override
 	public void showErrorMessage(final Exception e) {
 		Dialogs.showErrorDialog(this,
 				ResourceHolder.getInstance().getString(ResourceKey.ERROR, StringID.Error.LOAD_FAILED_ID), e);
