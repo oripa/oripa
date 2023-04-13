@@ -146,7 +146,7 @@ public class FileAccessPresenter<Data> {
 	 *
 	 * @param path
 	 * @param extensions
-	 *            ex) ".png"
+	 *            example: "png"
 	 * @return path string with new extension
 	 */
 	private String correctExtension(final String path, final String[] extensions) {
