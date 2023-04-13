@@ -151,14 +151,12 @@ public class FileAccessPresenter<Data> {
 	 */
 	private String correctExtension(final String path, final String[] extensions) {
 
-		String path_new = new String(path);
-
 		logger.debug("extensions[0] for correction: {}", extensions[0]);
 		if (List.of(extensions).stream()
 				.noneMatch(ext -> path.endsWith("." + ext))) {
-			path_new = replaceExtension(path_new, extensions[0]);
+			return replaceExtension(path, extensions[0]);
 		}
 
-		return path_new;
+		return path;
 	}
 }
