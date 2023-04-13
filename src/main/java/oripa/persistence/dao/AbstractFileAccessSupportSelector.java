@@ -36,7 +36,9 @@ import oripa.resource.ResourceKey;
 /**
  * A template for managing available file access support objects. Typical usage
  * is: 1) create supports in constructor, and 2) return the supports in
- * {@link #getFileAccessSupports()}
+ * {@link #getFileAccessSupports()}.
+ *
+ * the descriptions among the {@link FileAccessSupport}s should be unique.
  *
  * @author OUCHI Koji
  *

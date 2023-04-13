@@ -26,6 +26,7 @@ import oripa.application.FileAccessService;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
 
@@ -52,10 +53,15 @@ public class OrigamiModelFileAccess extends FileAccessService<OrigamiModel> {
 	}
 
 	@Override
-	public void saveFile(final OrigamiModel origamiModel, final String path)
-			throws IllegalArgumentException, IOException {
+	public final void saveFile(final OrigamiModel document,
+			final String path, final FileTypeProperty<OrigamiModel> type)
+			throws IOException, IllegalArgumentException {
 
-		dao.save(origamiModel, path);
+		if (type == null) {
+			dao.save(document, path);
+		} else {
+			dao.save(document, path, type);
+		}
 	}
 
 	@Override
