@@ -100,8 +100,8 @@ public class ModelComputationFacade {
 		Folder folder = folderFactory.create();
 
 		var foldedModels = origamiModels.stream()
-				.map(model -> !model.isUnassigned() && model.isLocallyFlatFoldable()
-						? folder.fold(model, fullEstimation)
+				.map(model -> model.isLocallyFlatFoldable()
+						? folder.fold(model, fullEstimation && !model.isUnassigned())
 						: folder.foldWithoutLineType(model))
 				.collect(Collectors.toList());
 

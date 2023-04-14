@@ -48,30 +48,7 @@ class SimpleFolder {
 	 */
 	void simpleFoldWithoutZorder(
 			final OrigamiModel origamiModel) {
-		List<OriFace> faces = origamiModel.getFaces();
-		List<OriEdge> edges = origamiModel.getEdges();
-
-		int id = 0;
-		for (OriFace face : faces) {
-//			face.faceFront = true;
-//			face.movedByFold = false;
-			face.setFaceID(id);
-			id++;
-		}
-
-		walkFace(faces.get(0));
-
-		for (OriEdge e : edges) {
-			var sv = e.getStartVertex();
-			var ev = e.getEndVertex();
-
-			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
-
-			var right = e.getRight();
-			if (right != null) {
-				ev.getPosition().set(right.getPositionWhileFolding());
-			}
-		}
+		foldImpl(origamiModel, false);
 	}
 
 	/**
@@ -84,25 +61,50 @@ class SimpleFolder {
 	 */
 	public void foldWithoutLineType(
 			final OrigamiModel model) {
-		List<OriEdge> edges = model.getEdges();
-		List<OriFace> faces = model.getFaces();
+		foldImpl(model, true);
+	}
+
+	private void foldImpl(final OrigamiModel origamiModel, final boolean limitUsed) {
+		List<OriEdge> edges = origamiModel.getEdges();
+		List<OriFace> faces = origamiModel.getFaces();
+
+		int id = 0;
+		for (OriFace face : faces) {
+			face.setFaceID(id);
+			id++;
+		}
 
 		if (faces.size() > 0) {
-			walkFace(faces, faces.get(0), 0);
+			walkFace(faces.get(0), limitUsed ? 0 : -1);
 		}
 
 		for (OriEdge e : edges) {
 			var sv = e.getStartVertex();
+			var ev = e.getEndVertex();
+
 			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
+
+			var right = e.getRight();
+			if (right != null) {
+				ev.getPosition().set(right.getPositionWhileFolding());
+			}
 		}
 
 	}
 
 	/**
 	 * Recursive method that flips the faces, making the folds
+	 *
+	 * @param face
+	 * @param walkFaceCount
 	 */
-	private void walkFace(final OriFace face) {
+	private void walkFace(final OriFace face, final int walkFaceCount) {
 		face.setMovedByFold(true);
+
+		if (walkFaceCount > 1000) {
+			logger.error("walkFace too deep");
+			return;
+		}
 
 		face.halfedgeStream().forEach(he -> {
 			var pair = he.getPair();
@@ -116,7 +118,7 @@ class SimpleFolder {
 
 			flipFace(pairFace, he);
 			pairFace.setMovedByFold(true);
-			walkFace(pairFace);
+			walkFace(pairFace, walkFaceCount >= 0 ? walkFaceCount + 1 : -1);
 		});
 	}
 
@@ -207,42 +209,6 @@ class SimpleFolder {
 			});
 			face.invertFaceFront();
 		}
-	}
-
-	/**
-	 * Make the folds by flipping the faces
-	 *
-	 * @param faces
-	 * @param face
-	 * @param walkFaceCount
-	 */
-	private void walkFace(final List<OriFace> faces, final OriFace face, final int walkFaceCount) {
-		face.setMovedByFold(true);
-		if (walkFaceCount > 1000) {
-			logger.error("walkFace too deep");
-			return;
-		}
-		face.halfedgeStream().forEach(he -> {
-			var pair = he.getPair();
-			if (pair == null) {
-				return;
-			}
-			var pairFace = pair.getFace();
-			if (pairFace.isMovedByFold()) {
-				return;
-			}
-
-			flipFace2(faces, pairFace, he);
-			pairFace.setMovedByFold(true);
-			walkFace(faces, pairFace, walkFaceCount + 1);
-		});
-	}
-
-	private void flipFace2(final List<OriFace> faces, final OriFace face,
-			final OriHalfedge baseHe) {
-		flipFace(face, baseHe);
-		faces.remove(face);
-		faces.add(face);
 	}
 
 	private void flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d ep) {
