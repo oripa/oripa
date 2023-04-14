@@ -9,6 +9,7 @@ public enum TypeForChange {
 	EMPTY("Any", null),
 	MOUNTAIN("M", OriLine.Type.MOUNTAIN),
 	VALLEY("V", OriLine.Type.VALLEY),
+	UNASSIGNED("U", OriLine.Type.UNASSIGNED),
 	AUX("Aux", OriLine.Type.AUX),
 	CUT("Cut", OriLine.Type.CUT),
 	DELETE("Del", null),

@@ -71,11 +71,11 @@ public class UIPanelPresenter {
 	private final FileChooserFactory fileChooserFactory;
 
 	private final TypeForChange[] alterLineComboDataFrom = {
-			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
-			TypeForChange.CUT };
+			TypeForChange.EMPTY, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.UNASSIGNED,
+			TypeForChange.AUX, TypeForChange.CUT };
 	private final TypeForChange[] alterLineComboDataTo = {
-			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.AUX,
-			TypeForChange.CUT, TypeForChange.DELETE, };
+			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.UNASSIGNED,
+			TypeForChange.AUX, TypeForChange.CUT, TypeForChange.DELETE, };
 
 	private final ByValueContext byValueContext;
 
