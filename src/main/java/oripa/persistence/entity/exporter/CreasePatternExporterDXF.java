@@ -41,6 +41,11 @@ public class CreasePatternExporterDXF implements Exporter<CreasePattern> {
 	@Override
 	public boolean export(final CreasePattern creasePattern, final String filePath, final Object configObj)
 			throws IOException, IllegalArgumentException {
+
+		if (creasePattern.isUnassigned()) {
+			throw new IllegalArgumentException("Unassigned crease pattern is not allowed.");
+		}
+
 		double paperSize = creasePattern.getPaperSize();
 		double scale = 6.0 / paperSize; // 6.0 inch width
 		double center = 4.0; // inch
