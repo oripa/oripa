@@ -30,6 +30,11 @@ public class ExporterCP implements DocExporter {
 	@Override
 	public boolean export(final Doc doc, final String filepath, final Object configObj)
 			throws IOException, IllegalArgumentException {
+
+		if (doc.getCreasePattern().isUnassigned()) {
+			throw new IllegalArgumentException("Unassigned crease pattern is not allowed.");
+		}
+
 		try (var fw = new FileWriter(filepath);
 				var bw = new BufferedWriter(fw);) {
 

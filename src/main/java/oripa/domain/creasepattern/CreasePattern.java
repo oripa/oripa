@@ -43,6 +43,10 @@ public interface CreasePattern
 
 	RectangleDomain getPaperDomain();
 
+	default boolean isUnassigned() {
+		return stream().anyMatch(line -> line.isUnassigned());
+	}
+
 	/**
 	 * move all creases as the coordinate (x, y) becomes (x + dx, y + dx).
 	 *

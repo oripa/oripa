@@ -122,7 +122,7 @@ public class CreasePatternGraphicDrawer {
 					if (line.isAux() && !auxVisible) {
 						return;
 					}
-					if (line.isMV() && !creaseVisible) {
+					if (line.isFoldLine() && !creaseVisible) {
 						return;
 					}
 //					if (pickedLines != null && pickedLines.contains(line)) {
@@ -193,7 +193,7 @@ public class CreasePatternGraphicDrawer {
 			if (!auxVisible && line.isAux()) {
 				continue;
 			}
-			if (!creaseVisible && line.isMV()) {
+			if (!creaseVisible && line.isFoldLine()) {
 				continue;
 			}
 

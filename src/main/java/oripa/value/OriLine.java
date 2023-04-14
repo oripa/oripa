@@ -199,8 +199,12 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		return type == Type.CUT;
 	}
 
-	public boolean isMV() {
+	public boolean isFoldLine() {
 		return type == Type.MOUNTAIN || type == Type.VALLEY || type == Type.UNASSIGNED;
+	}
+
+	public boolean isUnassigned() {
+		return type == Type.UNASSIGNED;
 	}
 
 	public boolean isAux() {
