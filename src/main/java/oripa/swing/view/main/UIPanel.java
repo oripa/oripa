@@ -179,8 +179,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 	// view Panel
 	private final JPanel viewPanel = new JPanel();
 
-	private final JCheckBox dispMVLinesCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MV_ID),
+	private final JCheckBox dispMVULinesCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MVU_ID),
 			InitialVisibilities.MV);
 	private final JCheckBox dispAuxLinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
@@ -588,7 +588,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		viewPanel.add(zeroLineWidthCheckBox, gbBuilder.getLineField());
 
-		viewPanel.add(dispMVLinesCheckBox, gbBuilder.getLineField());
+		viewPanel.add(dispMVULinesCheckBox, gbBuilder.getLineField());
 		viewPanel.add(dispAuxLinesCheckBox, gbBuilder.getLineField());
 		viewPanel.add(dispVertexCheckBox, gbBuilder.getLineField());
 	}
@@ -1074,7 +1074,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	@Override
 	public void addDispMVLinesCheckBoxListener(final Consumer<Boolean> listener) {
-		dispMVLinesCheckBox.addActionListener(e -> listener.accept(dispMVLinesCheckBox.isSelected()));
+		dispMVULinesCheckBox.addActionListener(e -> listener.accept(dispMVULinesCheckBox.isSelected()));
 	}
 
 	@Override
@@ -1149,7 +1149,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		mainScreenSetting.addPropertyChangeListener(
 				PainterScreenSetting.MV_LINE_VISIBLE, e -> {
 					logger.debug("mvLineVisible property change: {}", e.getNewValue());
-					dispMVLinesCheckBox.setSelected((boolean) e.getNewValue());
+					dispMVULinesCheckBox.setSelected((boolean) e.getNewValue());
 				});
 
 		mainScreenSetting.addPropertyChangeListener(

@@ -97,7 +97,7 @@ public class StringID {
 		public static final String ZERO_LINE_WIDTH_ID = "UI_ZeroLineWidth";
 
 		public static final String SHOW_GRID_ID = "UI_ShowGrid";
-		public static final String SHOW_MV_ID = "UI_ShowMountainValley";
+		public static final String SHOW_MVU_ID = "UI_ShowMountainValley";
 		public static final String SHOW_AUX_ID = "UI_ShowAux";
 		public static final String SHOW_VERTICES_ID = "UI_ShowVertices";
 
