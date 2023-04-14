@@ -18,6 +18,8 @@ public class CreasePatternElementSelector {
 			return Color.RED;
 		case VALLEY:
 			return Color.BLUE;
+		case UNASSIGNED:
+			return Color.ORANGE;
 		case CUT_MODEL:
 			return Color.MAGENTA;
 		default:
@@ -32,6 +34,7 @@ public class CreasePatternElementSelector {
 		case CUT:
 		case MOUNTAIN:
 		case VALLEY:
+		case UNASSIGNED:
 			return new BasicStroke(createThinLineWidth(scale, zeroWidth), BasicStroke.CAP_BUTT,
 					BasicStroke.JOIN_MITER);
 		case CUT_MODEL:

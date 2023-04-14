@@ -34,6 +34,7 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.UI.AUX_ID, "Aux" },
 			{ StringID.UI.VALLEY_ID, "Valley" },
 			{ StringID.UI.MOUNTAIN_ID, "Mountain" },
+			{ StringID.UI.UNASSIGNED_ID, "Unassigned" },
 
 			{ StringID.UI.INPUT_LINE_ID, "Input Line" },
 			{ StringID.UI.SELECT_ID, "Select" },

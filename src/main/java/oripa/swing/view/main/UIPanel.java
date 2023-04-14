@@ -135,6 +135,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 			resources.getString(ResourceKey.LABEL, StringID.UI.MOUNTAIN_ID));
 	private final JRadioButton lineTypeValleyButton = new JRadioButton(
 			resources.getString(ResourceKey.LABEL, StringID.UI.VALLEY_ID));
+	private final JRadioButton lineTypeUnassignedButton = new JRadioButton(
+			resources.getString(ResourceKey.LABEL, StringID.UI.UNASSIGNED_ID));
 
 	// byValuePanel for length and angle
 	private final JPanel byValuePanel = new JPanel();
@@ -390,12 +392,15 @@ public class UIPanel extends JPanel implements UIPanelView {
 		ButtonGroup lineTypeGroup = new ButtonGroup();
 		lineTypeGroup.add(lineTypeMountainButton);
 		lineTypeGroup.add(lineTypeValleyButton);
+		lineTypeGroup.add(lineTypeUnassignedButton);
 		lineTypeGroup.add(lineTypeAuxButton);
 
-		lineTypePanel.setLayout(new BoxLayout(lineTypePanel, BoxLayout.LINE_AXIS));
-		lineTypePanel.add(lineTypeMountainButton);
-		lineTypePanel.add(lineTypeValleyButton);
-		lineTypePanel.add(lineTypeAuxButton);
+		var lineTypeGbBuilder = new GridBagConstraintsBuilder(2);
+		lineTypePanel.setLayout(new GridBagLayout());
+		lineTypePanel.add(lineTypeMountainButton, lineTypeGbBuilder.getNextField());
+		lineTypePanel.add(lineTypeValleyButton, lineTypeGbBuilder.getNextField());
+		lineTypePanel.add(lineTypeUnassignedButton, lineTypeGbBuilder.getNextField());
+		lineTypePanel.add(lineTypeAuxButton, lineTypeGbBuilder.getNextField());
 
 		// How to enter the line
 		ButtonGroup lineInputGroup = new ButtonGroup();
@@ -678,6 +683,10 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		setShortcut(lineTypeAuxButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_A),
 				StringID.UI.AUX_ID);
+
+		setShortcut(lineTypeUnassignedButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_U),
+				StringID.UI.UNASSIGNED_ID);
+
 	}
 
 	/**
@@ -1015,6 +1024,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineTypeValleyButtonListener(final Runnable listener) {
 		lineTypeValleyButton.addActionListener(e -> listener.run());
+	}
+
+	@Override
+	public void addLineTypeUnassignedButtonListener(final Runnable listener) {
+		lineTypeUnassignedButton.addActionListener(e -> listener.run());
 	}
 
 	@Override

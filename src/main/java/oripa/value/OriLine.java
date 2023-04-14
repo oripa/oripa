@@ -33,6 +33,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	private static final int TYPE_MOUNTAIN = 2;
 	private static final int TYPE_VALLEY = 3;
 	private static final int TYPE_CUT_MODEL = 4;
+	private static final int TYPE_UNASSIGNED = 5;
 
 	public enum Type {
 
@@ -40,7 +41,8 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		CUT(TYPE_CUT),
 		MOUNTAIN(TYPE_MOUNTAIN),
 		VALLEY(TYPE_VALLEY),
-		CUT_MODEL(TYPE_CUT_MODEL);
+		CUT_MODEL(TYPE_CUT_MODEL),
+		UNASSIGNED(TYPE_UNASSIGNED);
 
 		private final int val;
 
@@ -53,34 +55,29 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		}
 
 		public static Type fromInt(final int val) throws IllegalArgumentException {
-			Type type;
 			switch (val) {
 
 			case TYPE_CUT:
-				type = CUT;
-				break;
+				return CUT;
 
 			case TYPE_MOUNTAIN:
-				type = MOUNTAIN;
-				break;
+				return MOUNTAIN;
 
 			case TYPE_VALLEY:
-				type = VALLEY;
-				break;
+				return VALLEY;
 
 			case TYPE_CUT_MODEL:
-				type = CUT_MODEL;
-				break;
+				return CUT_MODEL;
+
+			case TYPE_UNASSIGNED:
+				return UNASSIGNED;
 
 			case TYPE_AUX:
-				type = AUX;
-				break;
+				return AUX;
 
 			default:
 				throw new IllegalArgumentException();
 			}
-
-			return type;
 		}
 	}
 
@@ -203,7 +200,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	}
 
 	public boolean isMV() {
-		return type == Type.MOUNTAIN || type == Type.VALLEY;
+		return type == Type.MOUNTAIN || type == Type.VALLEY || type == Type.UNASSIGNED;
 	}
 
 	public boolean isAux() {

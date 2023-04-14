@@ -241,6 +241,7 @@ public class UIPanelPresenter {
 
 		view.addLineTypeMountainButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN));
 		view.addLineTypeValleyButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.VALLEY));
+		view.addLineTypeUnassignedButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.UNASSIGNED));
 		view.addLineTypeAuxButtonListener(() -> paintContext.setLineTypeOfNewLines(OriLine.Type.AUX));
 
 		// ------------------------------------------------------------
