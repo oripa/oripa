@@ -56,6 +56,8 @@ public class CreasePatternToSvgConverter extends SvgConverter {
 			return getLinePathStyle(2, "red").toString();
 		case VALLEY:
 			return getLinePathStyle(2, "blue").toString();
+		case UNASSIGNED:
+			return getLinePathStyle(2, "orange").toString();
 		default:
 			return getLinePathStyle(1, "gray").toString();
 		}
