@@ -33,9 +33,11 @@ public class MaekawaTheorem extends AbstractRule<OriVertex> {
 
 	@Override
 	public boolean holds(final OriVertex vertex) {
-		boolean includesCut = vertex.edgeStream()
-				.anyMatch(e -> e.isBoundary());
-		if (includesCut) {
+		if (!vertex.isInsideOfPaper()) {
+			return true;
+		}
+
+		if (vertex.hasUnassignedEdge()) {
 			return true;
 		}
 

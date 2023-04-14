@@ -132,6 +132,10 @@ public class OriEdge {
 		return type == OriLine.Type.UNASSIGNED.toInt();
 	}
 
+	public boolean isAssigned() {
+		return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt();
+	}
+
 	public boolean isFoldLine() {
 		return type == OriLine.Type.MOUNTAIN.toInt() || type == OriLine.Type.VALLEY.toInt()
 				|| type == OriLine.Type.UNASSIGNED.toInt();
