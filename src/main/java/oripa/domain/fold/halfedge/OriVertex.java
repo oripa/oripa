@@ -141,6 +141,10 @@ public class OriVertex {
 		return edgeStream().allMatch(edge -> !edge.isBoundary());
 	}
 
+	public boolean hasUnassignedEdge() {
+		return edgeStream().anyMatch(edge -> edge.isUnassigned());
+	}
+
 	/**
 	 * @return vertexID
 	 */
