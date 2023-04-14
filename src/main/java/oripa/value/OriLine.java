@@ -32,8 +32,8 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	private static final int TYPE_CUT = 1;
 	private static final int TYPE_MOUNTAIN = 2;
 	private static final int TYPE_VALLEY = 3;
-	private static final int TYPE_CUT_MODEL = 4;
-	private static final int TYPE_UNASSIGNED = 5;
+	private static final int TYPE_UNASSIGNED = 4;
+	private static final int TYPE_CUT_MODEL = 9;
 
 	public enum Type {
 
