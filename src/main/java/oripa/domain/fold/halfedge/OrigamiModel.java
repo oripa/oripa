@@ -179,6 +179,10 @@ public class OrigamiModel {
 		return paperDomain;
 	}
 
+	public boolean isUnassigned() {
+		return edges.stream().anyMatch(edge -> edge.isUnassigned());
+	}
+
 	@Override
 	public String toString() {
 		return "[" + faces.toString() + edges.toString() + vertices.toString() + "]";

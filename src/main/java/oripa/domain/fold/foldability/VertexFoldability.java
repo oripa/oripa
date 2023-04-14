@@ -47,6 +47,10 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 			return true;
 		}
 
+		if (vertex.hasUnassignedEdge()) {
+			return true;
+		}
+
 		var ring = createRing(vertex);
 		var minimalIndices = new MinimalAngleIndexManager(ring);
 		var helper = new AngleMinimalityHelper();

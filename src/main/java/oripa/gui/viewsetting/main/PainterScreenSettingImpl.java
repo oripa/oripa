@@ -16,7 +16,7 @@ public class PainterScreenSettingImpl implements PainterScreenSetting {
 	private boolean crossLineVisible = InitialVisibilities.CROSS;
 	private boolean zeroLineWidth = InitialVisibilities.ZERO_LINE_WIDTH;
 	private boolean vertexVisible = InitialVisibilities.VERTEX;
-	private boolean mvLineVisible = InitialVisibilities.MV;
+	private boolean mvLineVisible = InitialVisibilities.MVU;
 	private boolean auxLineVisible = InitialVisibilities.AUX;
 	private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 

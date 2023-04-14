@@ -62,7 +62,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 				continue;
 			}
 			// Don't select if the line is hidden
-			if (!viewContext.isMVLineVisible() && line.isMV()) {
+			if (!viewContext.isMVLineVisible() && line.isFoldLine()) {
 				continue;
 			}
 			if (!viewContext.isAuxLineVisible() && line.isAux()) {

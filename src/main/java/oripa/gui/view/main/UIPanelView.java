@@ -121,6 +121,8 @@ public interface UIPanelView extends View {
 
 	void addLineTypeAuxButtonListener(Runnable listener);
 
+	void addLineTypeUnassignedButtonListener(Runnable listener);
+
 	void addDispGridCheckBoxListener(Consumer<Boolean> listener);
 
 	void addDispVertexCheckBoxListener(Consumer<Boolean> listener);

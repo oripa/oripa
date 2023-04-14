@@ -71,6 +71,10 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 			return true;
 		}
 
+		if (vertex.hasUnassignedEdge()) {
+			return true;
+		}
+
 		var ranges = findMinimalAngleSequences(vertex);
 
 		for (var range : ranges) {

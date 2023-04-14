@@ -38,7 +38,7 @@ public class AssignmentConverter {
 		typeHash.put("F", OriLine.Type.AUX);
 		typeHash.put("M", OriLine.Type.MOUNTAIN);
 		typeHash.put("V", OriLine.Type.VALLEY);
-		typeHash.put("U", OriLine.Type.AUX);
+		typeHash.put("U", OriLine.Type.UNASSIGNED);
 	}
 
 	public String toFOLD(final OriLine.Type type) {
@@ -51,6 +51,8 @@ public class AssignmentConverter {
 			return "M";
 		case VALLEY:
 			return "V";
+		case UNASSIGNED:
+			return "U";
 		default:
 			return null;
 		}

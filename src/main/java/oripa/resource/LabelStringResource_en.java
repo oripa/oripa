@@ -34,13 +34,14 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.UI.AUX_ID, "Aux" },
 			{ StringID.UI.VALLEY_ID, "Valley" },
 			{ StringID.UI.MOUNTAIN_ID, "Mountain" },
+			{ StringID.UI.UNASSIGNED_ID, "Unassigned" },
 
 			{ StringID.UI.INPUT_LINE_ID, "Input Line" },
 			{ StringID.UI.SELECT_ID, "Select" },
 			{ StringID.UI.DELETE_LINE_ID, "Delete Line" },
 
 			{ StringID.UI.SHOW_GRID_ID, "Show Grid" },
-			{ StringID.UI.SHOW_MV_ID, "Show M/V Lines" },
+			{ StringID.UI.SHOW_MVU_ID, "Show M/V/U Lines" },
 			{ StringID.UI.SHOW_AUX_ID, "Show Aux Lines" },
 
 			{ StringID.UI.CHANGE_LINE_TYPE_FROM_ID, "from" },

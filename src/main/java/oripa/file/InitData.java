@@ -29,7 +29,10 @@ public class InitData {
 	private String[] MRUFiles = new String[0];
 
 	private boolean zeroLineWidth = false;
+
+	// actually unassigned line is also controlled by this property.
 	private boolean mvLineVisible = true;
+
 	private boolean auxLineVisible = true;
 	private boolean vertexVisible = true;
 

@@ -44,6 +44,10 @@ public class MaekawaTheoremSuggester {
 			return null;
 		}
 
+		if (vertex.hasUnassignedEdge()) {
+			return null;
+		}
+
 		int mountainCount = 0;
 		int valleyCount = 0;
 

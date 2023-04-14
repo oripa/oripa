@@ -52,7 +52,7 @@ public class BigLittleBigLemma extends AbstractRule<OriVertex> {
 			var e2 = vertex.getEdge(i + 1);
 			var e3 = vertex.getEdge(i + 2);
 
-			if (!e2.isFoldLine() || !e3.isFoldLine()) {
+			if (!e2.isAssigned() || !e3.isAssigned()) {
 				continue;
 			}
 
