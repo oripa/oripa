@@ -181,7 +181,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 	private final JCheckBox dispMVULinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_MVU_ID),
-			InitialVisibilities.MV);
+			InitialVisibilities.MVU);
 	private final JCheckBox dispAuxLinesCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_AUX_ID),
 			InitialVisibilities.AUX);

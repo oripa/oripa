@@ -38,7 +38,7 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 	private boolean gridVisible = InitialVisibilities.GRID;
 
 	private boolean vertexVisible = InitialVisibilities.VERTEX;
-	private boolean mvLineVisible = InitialVisibilities.MV;
+	private boolean mvLineVisible = InitialVisibilities.MVU;
 	private boolean auxLineVisible = InitialVisibilities.AUX;
 	private boolean crossLineVisible = InitialVisibilities.CROSS;
 	private boolean zeroLineWidth = InitialVisibilities.ZERO_LINE_WIDTH;
