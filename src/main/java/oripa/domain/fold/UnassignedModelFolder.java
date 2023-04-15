@@ -28,15 +28,28 @@ import oripa.domain.fold.halfedge.OrigamiModel;
  *
  */
 public class UnassignedModelFolder {
+	private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
+	private final SimpleFolder simpleFolder;
+	private final LayerOrderEnumerator layerOrderEnumerator;
+
+	public UnassignedModelFolder(final SimpleFolder simpleFolder,
+			final LayerOrderEnumerator enumerator) {
+		this.simpleFolder = simpleFolder;
+		this.layerOrderEnumerator = enumerator;
+	}
+
 	public FoldedModel fold(final OrigamiModel origamiModel) {
-		var folderFactory = new FolderFactory();
-		Folder folder = folderFactory.create();
+		simpleFolder.simpleFoldWithoutZorder(origamiModel);
+		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
 		var foldedModels = new ArrayList<FoldedModel>();
 
-		var enumerator = new AssignmentEnumerator(model -> foldedModels.add(folder.fold(origamiModel, true)));
+		var assignmentEnumerator = new AssignmentEnumerator(model -> foldedModels.add(
+				new FoldedModel(origamiModel, layerOrderEnumerator.enumerate(origamiModel))));
 
-		enumerator.enumerate(origamiModel);
+		assignmentEnumerator.enumerate(origamiModel);
+
+		origamiModel.setFolded(true);
 
 		return new FoldedModel(origamiModel, foldedModels.stream()
 				.flatMap(model -> model.getOverlapRelations().stream())
