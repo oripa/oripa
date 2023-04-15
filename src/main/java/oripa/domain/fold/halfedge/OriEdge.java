@@ -37,7 +37,7 @@ public class OriEdge {
 	private final OriVertex endVertex;
 	private OriHalfedge left = null;
 	private OriHalfedge right = null;
-	private final int type;
+	private int type;
 
 	public OriEdge(final OriVertex startVertex, final OriVertex endVertex, final int type) {
 		this.type = type;
@@ -96,6 +96,10 @@ public class OriEdge {
 		return type;
 	}
 
+	public void setType(final int type) {
+		this.type = type;
+	}
+
 	public OriVertex oppositeVertex(final OriVertex v) {
 		return v == startVertex ? endVertex : startVertex;
 	}
@@ -110,8 +114,8 @@ public class OriEdge {
 	 */
 	public double getAngle(final OriVertex sv) {
 		var ev = oppositeVertex(sv);
-		Vector2d dir = new Vector2d(ev.getPosition());
-		dir.sub(sv.getPosition());
+		Vector2d dir = new Vector2d(ev.getPositionBeforeFolding());
+		dir.sub(sv.getPositionBeforeFolding());
 
 		return MathUtil.angleOf(dir);
 	}

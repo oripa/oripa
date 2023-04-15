@@ -31,6 +31,7 @@ import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.Folder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
+import oripa.domain.fold.UnassignedModelFolder;
 import oripa.domain.fold.halfedge.OrigamiModel;
 
 /**
@@ -99,9 +100,11 @@ public class ModelComputationFacade {
 		var folderFactory = new FolderFactory();
 		Folder folder = folderFactory.create();
 
+		UnassignedModelFolder unassignedFolder = new UnassignedModelFolder();
+
 		var foldedModels = origamiModels.stream()
 				.map(model -> model.isLocallyFlatFoldable()
-						? folder.fold(model, fullEstimation && !model.isUnassigned())
+						? (model.isUnassigned() ? unassignedFolder.fold(model) : folder.fold(model, fullEstimation))
 						: folder.foldWithoutLineType(model))
 				.collect(Collectors.toList());
 

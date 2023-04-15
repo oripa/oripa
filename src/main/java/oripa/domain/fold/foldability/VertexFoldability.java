@@ -57,6 +57,8 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 
 		int minimalIndex;
 
+		logger.trace(ring.toString());
+
 		while (ring.size() > 2) {
 			do {
 				do {
@@ -103,7 +105,8 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 		var gaps = new ArrayList<LineGap>();
 
 		for (int i = 0; i < vertex.edgeCount(); i++) {
-			gaps.add(new LineGap(OriGeomUtil.getAngleDifference(vertex, i), vertex.getEdge(i).getType()));
+			gaps.add(new LineGap(OriGeomUtil.getAngleDifference(vertex, i),
+					vertex.getEdge(i).getType()));
 		}
 
 		return new RingArrayList<>(gaps);
