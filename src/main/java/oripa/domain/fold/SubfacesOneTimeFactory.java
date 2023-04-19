@@ -18,29 +18,40 @@
  */
 package oripa.domain.fold;
 
-import oripa.domain.cptool.LineAdder;
-import oripa.domain.creasepattern.CreasePatternFactory;
+import java.util.List;
+
+import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.domain.fold.subface.FacesToCreasePatternConverter;
 import oripa.domain.fold.subface.ParentFacesCollector;
 import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
+import oripa.domain.fold.subface.SubFace;
+import oripa.domain.fold.subface.SubFacesFactory;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class UnassignedModelFolderFactory {
-	public UnassignedModelFolder create() {
-		var subfacesFactory = new SubfacesOneTimeFactory(
-				new FacesToCreasePatternConverter(
-						new CreasePatternFactory(),
-						new LineAdder()),
-				new OrigamiModelFactory(),
-				new SplitFacesToSubFacesConverter(),
-				new ParentFacesCollector());
+class SubfacesOneTimeFactory extends SubFacesFactory {
 
-		return new UnassignedModelFolder(
-				new SimpleFolder(),
-				new LayerOrderEnumerator(subfacesFactory));
+	private List<SubFace> subfaces = null;
+
+	public SubfacesOneTimeFactory(
+			final FacesToCreasePatternConverter facesToCPConverter,
+			final OrigamiModelFactory modelFactory,
+			final SplitFacesToSubFacesConverter facesToSubFacesConverter,
+			final ParentFacesCollector parentCollector) {
+		super(facesToCPConverter, modelFactory, facesToSubFacesConverter, parentCollector);
+	}
+
+	@Override
+	public List<SubFace> createSubFaces(final List<OriFace> faces, final double paperSize, final double eps) {
+		if (subfaces != null) {
+			return subfaces;
+		}
+
+		subfaces = super.createSubFaces(faces, paperSize, eps);
+
+		return subfaces;
 	}
 }

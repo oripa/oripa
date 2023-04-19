@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +35,7 @@ import oripa.domain.fold.foldability.VertexFoldability;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
 /**
@@ -47,7 +50,9 @@ public class AssignmentEnumerator {
 
 	private List<OriEdge> edges;
 	private Map<List<OriVertex>, OriEdge> edgeMap;
+	private Set<OriVertex> originallyAssigned;
 
+	private int callCount = 0;
 	private int answerCount = 0;
 
 	public AssignmentEnumerator(final Consumer<OrigamiModel> answerConsumer) {
@@ -60,11 +65,19 @@ public class AssignmentEnumerator {
 		edgeMap = new HashMap<>();
 		edges.forEach(edge -> edgeMap.put(edgeToKey(edge), edge));
 
+		originallyAssigned = origamiModel.getVertices().stream()
+				.filter(Predicate.not(OriVertex::hasUnassignedEdge))
+				.collect(Collectors.toSet());
+
+		callCount = 0;
 		answerCount = 0;
 
+		var watch = new StopWatch(true);
 		enumerateImpl(origamiModel, 0);
 
-		logger.debug("answerCount = {}", answerCount);
+		logger.debug("time: {}[ms]", watch.getMilliSec());
+
+		logger.debug("callCount = {}, answerCount = {}", callCount, answerCount);
 	}
 
 	private void enumerateImpl(final OrigamiModel origamiModel,
@@ -82,7 +95,7 @@ public class AssignmentEnumerator {
 
 		var vertex = vertices.get(vertexIndex);
 
-		if (!vertex.hasUnassignedEdge()) {
+		if (originallyAssigned.contains(vertex) || !vertex.hasUnassignedEdge()) {
 			enumerateImpl(origamiModel, vertexIndex + 1);
 			return;
 		}
@@ -137,6 +150,8 @@ public class AssignmentEnumerator {
 	private List<Map<List<OriVertex>, OriLine.Type>> createAssignments(final OriVertex vertex,
 			final int edgeIndex,
 			final long mountainCount, final long valleyCount) {
+
+		callCount++;
 
 		logger.trace("createAssignments(): vertex={}, edgeIndex={}", vertex, edgeIndex);
 
