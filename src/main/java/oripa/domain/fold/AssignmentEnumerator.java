@@ -35,6 +35,8 @@ import oripa.domain.fold.foldability.VertexFoldability;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.origeom.OriGeomUtil;
+import oripa.util.MathUtil;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 
@@ -188,11 +190,20 @@ public class AssignmentEnumerator {
 		var edge = vertex.getEdge(edgeIndex);
 
 		if (!edge.isUnassigned()) {
+			if (vertex.isInsideOfPaper() && vertex.edgeCount() >= 4) {
+				// big-little-big lemma
+				var prevAngle = OriGeomUtil.getAngleDifference(vertex, edgeIndex - 2);
+				var angle = OriGeomUtil.getAngleDifference(vertex, edgeIndex - 1);
+				var nextAngle = OriGeomUtil.getAngleDifference(vertex, edgeIndex);
+				if (prevAngle > angle + MathUtil.angleRadianEps()
+						&& nextAngle > angle + MathUtil.angleRadianEps()) {
+					if (edge.getType() == vertex.getEdge(edgeIndex - 1).getType()) {
+						return List.of();
+					}
+				}
+			}
 			return createAssignments(vertex, edgeIndex + 1, mountainCount, valleyCount);
 		}
-
-		var nextMountainCount = mountainCount;
-		var nextValleyCount = valleyCount;
 
 		var types = List.of(OriLine.Type.MOUNTAIN, OriLine.Type.VALLEY);
 
@@ -202,18 +213,19 @@ public class AssignmentEnumerator {
 			if (vertex.isInsideOfPaper()) {
 				// pruning by Maekawa's theorem
 				if (type == OriLine.Type.MOUNTAIN) {
-					if (nextMountainCount >= edgeCount / 2 + 1) {
+					if (mountainCount >= edgeCount / 2 + 1) {
 						continue;
 					}
-					nextMountainCount++;
 				}
 				if (type == OriLine.Type.VALLEY) {
-					if (nextValleyCount >= edgeCount / 2 + 1) {
+					if (valleyCount >= edgeCount / 2 + 1) {
 						continue;
 					}
-					nextValleyCount++;
 				}
 			}
+
+			var nextMountainCount = type == OriLine.Type.MOUNTAIN ? mountainCount + 1 : mountainCount;
+			var nextValleyCount = type == OriLine.Type.VALLEY ? valleyCount + 1 : valleyCount;
 
 			logger.trace("make assignment");
 			setType(edgeToKey(edge), type);
@@ -222,15 +234,6 @@ public class AssignmentEnumerator {
 
 			logger.trace("make unassignment");
 			setType(edgeToKey(edge), OriLine.Type.UNASSIGNED);
-
-			if (vertex.isInsideOfPaper()) {
-				if (type == OriLine.Type.MOUNTAIN) {
-					nextMountainCount--;
-				}
-				if (type == OriLine.Type.VALLEY) {
-					nextValleyCount--;
-				}
-			}
 		}
 
 		return assignments;
