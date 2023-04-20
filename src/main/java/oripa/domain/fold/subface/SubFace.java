@@ -236,6 +236,11 @@ public class SubFace {
 		return outline;
 	}
 
+	public void clearStackConditions() {
+		condition3s.clear();
+		condition4s.clear();
+	}
+
 	public void addStackConditionOf4Faces(final StackConditionOf4Faces condition) {
 		condition4s.add(condition);
 	}

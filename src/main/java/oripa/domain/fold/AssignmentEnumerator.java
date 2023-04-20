@@ -95,8 +95,15 @@ public class AssignmentEnumerator {
 
 		var vertex = vertices.get(vertexIndex);
 
-		if (originallyAssigned.contains(vertex) || !vertex.hasUnassignedEdge()) {
+		if (originallyAssigned.contains(vertex)) {
 			enumerateImpl(origamiModel, vertexIndex + 1);
+			return;
+		}
+
+		if (!vertex.hasUnassignedEdge()) {
+			if (foldability.holds(vertex)) {
+				enumerateImpl(origamiModel, vertexIndex + 1);
+			}
 			return;
 		}
 

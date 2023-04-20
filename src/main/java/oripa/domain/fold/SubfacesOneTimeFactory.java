@@ -47,6 +47,7 @@ class SubfacesOneTimeFactory extends SubFacesFactory {
 	@Override
 	public List<SubFace> createSubFaces(final List<OriFace> faces, final double paperSize, final double eps) {
 		if (subfaces != null) {
+			subfaces.forEach(SubFace::clearStackConditions);
 			return subfaces;
 		}
 
