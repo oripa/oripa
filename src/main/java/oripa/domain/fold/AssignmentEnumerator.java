@@ -59,6 +59,14 @@ public class AssignmentEnumerator {
 		this.answerConsumer = answerConsumer;
 	}
 
+	/**
+	 * Enumerates all locally-flat-foldable assignments on vertices of given
+	 * origamiModel. This method calls {@code answerConsumer}, which is given at
+	 * construction, every time the algorithm finds a locally-flat-foldable
+	 * assignment.
+	 *
+	 * @param origamiModel
+	 */
 	public void enumerate(final OrigamiModel origamiModel) {
 		edges = origamiModel.getEdges();
 
@@ -101,6 +109,8 @@ public class AssignmentEnumerator {
 		}
 
 		if (!vertex.hasUnassignedEdge()) {
+			// vertex can be fully assigned but sometimes not foldable if
+			// connected other vertex is assigned previously.
 			if (foldability.holds(vertex)) {
 				enumerateImpl(origamiModel, vertexIndex + 1);
 			}
@@ -190,6 +200,7 @@ public class AssignmentEnumerator {
 
 		for (var type : types) {
 			if (vertex.isInsideOfPaper()) {
+				// pruning by Maekawa's theorem
 				if (type == OriLine.Type.MOUNTAIN) {
 					if (nextMountainCount >= edgeCount / 2 + 1) {
 						continue;
@@ -203,9 +214,12 @@ public class AssignmentEnumerator {
 					nextValleyCount++;
 				}
 			}
+
 			logger.trace("make assignment");
 			setType(edgeToKey(edge), type);
+
 			assignments.addAll(createAssignments(vertex, edgeIndex + 1, nextMountainCount, nextValleyCount));
+
 			logger.trace("make unassignment");
 			setType(edgeToKey(edge), OriLine.Type.UNASSIGNED);
 
