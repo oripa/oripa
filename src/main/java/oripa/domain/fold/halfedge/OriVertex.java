@@ -19,11 +19,14 @@
 package oripa.domain.fold.halfedge;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import javax.vecmath.Vector2d;
 
 import oripa.util.collection.CollectionUtil;
+import oripa.value.OriPoint;
 
 /**
  * Vertex of crease pattern (or graph, more abstractly) with reference to edges
@@ -32,7 +35,7 @@ import oripa.util.collection.CollectionUtil;
  * @author OUCHI Koji
  *
  */
-public class OriVertex {
+public class OriVertex implements Comparable<OriVertex> {
 
 	/**
 	 * position. The constructor sets the given position to this field where the
@@ -47,6 +50,7 @@ public class OriVertex {
 	private final Vector2d positionBeforeFolding = new Vector2d();
 
 	private final ArrayList<OriEdge> edges = new ArrayList<>();
+	private final Map<OriVertex, OriEdge> edgeMap = new HashMap<>();
 
 	/**
 	 * For outputting file.
@@ -86,6 +90,10 @@ public class OriVertex {
 		return edges.stream();
 	}
 
+	public Iterable<OriEdge> edgeIterable() {
+		return edges;
+	}
+
 	/**
 	 * Stores and sorts edges in counterclockwise direction on the mathematical
 	 * coordinate system.
@@ -97,6 +105,7 @@ public class OriVertex {
 		if (!insertEdge(edge)) {
 			edges.add(edge);
 		}
+		edgeMap.put(edge.oppositeVertex(this), edge);
 	}
 
 	/**
@@ -129,6 +138,10 @@ public class OriVertex {
 		return CollectionUtil.getCircular(edges, index);
 	}
 
+	public OriEdge getEdge(final OriVertex vertex) {
+		return edgeMap.get(vertex);
+	}
+
 	public OriVertex getOppositeVertex(final int index) {
 		return getEdge(index).oppositeVertex(this);
 	}
@@ -158,5 +171,15 @@ public class OriVertex {
 	 */
 	public void setVertexID(final int vertexID) {
 		this.vertexID = vertexID;
+	}
+
+	@Override
+	public int compareTo(final OriVertex o) {
+		return new OriPoint(positionBeforeFolding).compareTo(new OriPoint(o.positionBeforeFolding));
+	}
+
+	@Override
+	public String toString() {
+		return "OriVertex@" + position;
 	}
 }

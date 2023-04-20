@@ -180,9 +180,9 @@ public class OriGeomUtil {
 	 */
 	private static double getAngleDifference(
 			final OriVertex v1, final OriVertex v2, final OriVertex v3) {
-		var preP = new Vector2d(v1.getPosition());
-		var p = new Vector2d(v2.getPosition());
-		var nxtP = new Vector2d(v3.getPosition());
+		var preP = new Vector2d(v1.getPositionBeforeFolding());
+		var p = new Vector2d(v2.getPositionBeforeFolding());
+		var nxtP = new Vector2d(v3.getPositionBeforeFolding());
 
 		nxtP.sub(p);
 		preP.sub(p);
@@ -190,7 +190,7 @@ public class OriGeomUtil {
 		var prePAngle = MathUtil.angleOf(preP);
 		var nxtPAngle = MathUtil.angleOf(nxtP);
 
-		while (prePAngle > nxtPAngle) {
+		if (prePAngle > nxtPAngle) {
 			nxtPAngle += 2 * Math.PI;
 		}
 
