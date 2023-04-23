@@ -23,12 +23,17 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.DataSet;
 import oripa.doc.Doc;
 import oripa.persistence.filetool.FileVersionError;
+import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.resource.Version;
 
 public class LoaderXML implements DocLoader {
+	private static final Logger logger = LoggerFactory.getLogger(LoaderXML.class);
 
 	public DataSet loadAsDataSet(final String filePath) {
 		DataSet dataset;
@@ -37,7 +42,7 @@ public class LoaderXML implements DocLoader {
 				var dec = new XMLDecoder(bis)) {
 			dataset = (DataSet) dec.readObject();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("failed to load.", e);
 			return null;
 		}
 
@@ -45,9 +50,13 @@ public class LoaderXML implements DocLoader {
 	}
 
 	@Override
-	public Doc load(final String filePath) throws FileVersionError {
+	public Doc load(final String filePath) throws FileVersionError, WrongDataFormatException {
 
 		DataSet data = loadAsDataSet(filePath);
+
+		if (data == null) {
+			throw new WrongDataFormatException("failed to load " + filePath);
+		}
 
 		if (data.getMainVersion() > Version.FILE_MAJOR_VERSION) {
 			throw new FileVersionError();
