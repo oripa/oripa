@@ -33,11 +33,11 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.fold.DeterministicLayerOrderEstimator.EstimationResult;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.origeom.EstimationResult;
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
@@ -75,7 +75,13 @@ public class LayerOrderEnumerator {
 		logger.debug("subFaces.size() = " + subFaces.size());
 
 		// Set overlap relations based on valley/mountain folds information
-		OverlapRelation overlapRelation = new OverlapRelationFactory().createOverlapRelationByLineType(faces, eps);
+		OverlapRelation overlapRelation;
+		try {
+			overlapRelation = new OverlapRelationFactory().createOverlapRelationByLineType(faces, eps);
+		} catch (Exception e) {
+			logger.debug("found unfoldable when constructing overlap relation.");
+			return List.of();
+		}
 
 		var watch = new StopWatch(true);
 
@@ -359,11 +365,11 @@ public class LayerOrderEnumerator {
 	 * @param overlapRelation
 	 *            overlap relation matrix
 	 */
-	private Set<StackConditionOf4Faces> holdCondition4s(final List<OriFace> faces,
+	private List<StackConditionOf4Faces> holdCondition4s(final List<OriFace> faces,
 			final List<OriEdge> edges, final OverlapRelation overlapRelation,
 			final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
 			final double eps) {
-		var condition4s = new HashSet<StackConditionOf4Faces>();
+		var condition4s = new ArrayList<StackConditionOf4Faces>();
 
 		int edgeNum = edges.size();
 		logger.debug("edgeNum = " + edgeNum);

@@ -145,6 +145,26 @@ public class OriEdge {
 				|| type == OriLine.Type.UNASSIGNED.toInt();
 	}
 
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(Stream.of(getStartVertex(), getEndVertex()).sorted().toArray(), getType());
+//	}
+//
+//	@Override
+//	public boolean equals(final Object obj) {
+//		if (obj instanceof OriEdge) {
+//			var that = (OriEdge) obj;
+//
+//			var thisVertices = Stream.of(getStartVertex(), getEndVertex()).toArray();
+//			var thatVertices = Stream.of(that.getStartVertex(), that.getEndVertex()).toArray();
+//
+//			return thisVertices[0].equals(thatVertices[0]) && thisVertices[1].equals(thatVertices[1])
+//					&& getType() == that.getType();
+//		}
+//
+//		return false;
+//	}
+
 	public Segment toSegment() {
 		return new Segment(getStartVertex().getPosition(), getEndVertex().getPosition());
 	}

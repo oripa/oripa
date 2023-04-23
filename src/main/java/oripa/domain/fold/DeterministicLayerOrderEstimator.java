@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.origeom.EstimationResult;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
@@ -39,27 +40,11 @@ import oripa.util.StopWatch;
 class DeterministicLayerOrderEstimator {
 	private static final Logger logger = LoggerFactory.getLogger(DeterministicLayerOrderEstimator.class);
 
-	enum EstimationResult {
-		NOT_CHANGED(0),
-		CHANGED(1),
-		UNFOLDABLE(2);
-
-		private EstimationResult(final int order) {
-			this.order = order;
-		}
-
-		private final int order;
-
-		public EstimationResult or(final EstimationResult e) {
-			return order > e.order ? this : e;
-		}
-	}
-
 	private final List<OriFace> faces;
 	private final List<SubFace> subFaces;
 	private final List<Integer>[][] overlappingFaceIndexIntersections;
 	private final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge;
-	private final Set<StackConditionOf4Faces> condition4s;
+	private final List<StackConditionOf4Faces> condition4s;
 
 	/**
 	 *
@@ -77,7 +62,7 @@ class DeterministicLayerOrderEstimator {
 			final List<SubFace> subFaces,
 			final List<Integer>[][] overlappingFaceIndexIntersections,
 			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge,
-			final Set<StackConditionOf4Faces> condition4s) {
+			final List<StackConditionOf4Faces> condition4s) {
 		this.faces = faces;
 		this.subFaces = subFaces;
 		this.overlappingFaceIndexIntersections = overlappingFaceIndexIntersections;
@@ -137,70 +122,65 @@ class DeterministicLayerOrderEstimator {
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2
 			if (overlapRelation.isLower(cond.lower1, cond.upper2)) {
-				var result = setLowerIfPossible(overlapRelation, cond.upper1, cond.upper2);
+				var result = overlapRelation.setLowerIfPossible(cond.upper1, cond.upper2);
 				changed = result.or(changed);
 
-				result = setLowerIfPossible(overlapRelation, cond.upper1, cond.lower2);
+				result = overlapRelation.setLowerIfPossible(cond.upper1, cond.lower2);
 				changed = result.or(changed);
 
-				result = setLowerIfPossible(overlapRelation, cond.lower1, cond.lower2);
+				result = overlapRelation.setLowerIfPossible(cond.lower1, cond.lower2);
 				changed = result.or(changed);
 			}
-
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
 			// lower2 > lower1
-			if (overlapRelation.isLower(cond.lower2, cond.upper1)) {
-				var result = setLowerIfPossible(overlapRelation, cond.upper2, cond.upper1);
+			else if (overlapRelation.isLower(cond.lower2, cond.upper1)) {
+				var result = overlapRelation.setLowerIfPossible(cond.upper2, cond.upper1);
 				changed = result.or(changed);
 
-				result = setLowerIfPossible(overlapRelation, cond.upper2, cond.lower1);
+				result = overlapRelation.setLowerIfPossible(cond.upper2, cond.lower1);
 				changed = result.or(changed);
 
-				result = setLowerIfPossible(overlapRelation, cond.lower2, cond.lower1);
+				result = overlapRelation.setLowerIfPossible(cond.lower2, cond.lower1);
 				changed = result.or(changed);
 			}
-
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
 			// lower1
-			if (overlapRelation.isLower(cond.upper1, cond.upper2)
+			else if (overlapRelation.isLower(cond.upper1, cond.upper2)
 					&& overlapRelation.isLower(cond.upper2, cond.lower1)) {
-				var result = setLowerIfPossible(overlapRelation, cond.upper1, cond.lower2);
+				var result = overlapRelation.setLowerIfPossible(cond.upper1, cond.lower2);
 				changed = result.or(changed);
 
-				result = setLowerIfPossible(overlapRelation, cond.lower2, cond.lower1);
+				result = overlapRelation.setLowerIfPossible(cond.lower2, cond.lower1);
 				changed = result.or(changed);
 			}
-
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
 			// lower1
-			if (overlapRelation.isLower(cond.upper1, cond.lower2)
+			else if (overlapRelation.isLower(cond.upper1, cond.lower2)
 					&& overlapRelation.isLower(cond.lower2, cond.lower1)) {
-				var result = setLowerIfPossible(overlapRelation, cond.upper1, cond.upper2);
+				var result = overlapRelation.setLowerIfPossible(cond.upper1, cond.upper2);
 				changed = result.or(changed);
 
-				result = setLowerIfPossible(overlapRelation, cond.upper2, cond.lower1);
+				result = overlapRelation.setLowerIfPossible(cond.upper2, cond.lower1);
 				changed = result.or(changed);
 			}
-
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
 			// lower2
-			if (overlapRelation.isLower(cond.upper2, cond.upper1)
+			else if (overlapRelation.isLower(cond.upper2, cond.upper1)
 					&& overlapRelation.isLower(cond.upper1, cond.lower2)) {
-				var result = setLowerIfPossible(overlapRelation, cond.upper2, cond.lower1);
+				var result = overlapRelation.setLowerIfPossible(cond.upper2, cond.lower1);
 				changed = result.or(changed);
 
-				result = setLowerIfPossible(overlapRelation, cond.lower1, cond.lower2);
+				result = overlapRelation.setLowerIfPossible(cond.lower1, cond.lower2);
 				changed = result.or(changed);
 			}
-
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
 			// lower2
-			if (overlapRelation.isLower(cond.upper2, cond.lower1)
+			else if (overlapRelation.isLower(cond.upper2, cond.lower1)
 					&& overlapRelation.isLower(cond.lower1, cond.lower2)) {
-				var result = setLowerIfPossible(overlapRelation, cond.upper2, cond.upper1);
+				var result = overlapRelation.setLowerIfPossible(cond.upper2, cond.upper1);
 				changed = result.or(changed);
 
-				result = setLowerIfPossible(overlapRelation, cond.upper1, cond.lower2);
+				result = overlapRelation.setLowerIfPossible(cond.upper1, cond.lower2);
 				changed = result.or(changed);
 			}
 
@@ -211,19 +191,6 @@ class DeterministicLayerOrderEstimator {
 		}
 
 		return changed;
-	}
-
-	private EstimationResult setLowerIfPossible(final OverlapRelation overlapRelation, final int i, final int j) {
-
-		if (overlapRelation.setLowerIfUndefined(i, j)) {
-			return EstimationResult.CHANGED;
-		}
-		if (overlapRelation.isUpper(i, j)) {
-			// conflict.
-			return EstimationResult.UNFOLDABLE;
-		}
-
-		return EstimationResult.NOT_CHANGED;
 	}
 
 	/**
@@ -238,8 +205,14 @@ class DeterministicLayerOrderEstimator {
 		var changed = EstimationResult.NOT_CHANGED;
 
 		for (SubFace sub : subFaces) {
-			while (updateOverlapRelationBy3FaceTransitiveRelation(sub, overlapRelation)) {
-				changed = EstimationResult.CHANGED;
+			while (true) {
+				changed = updateOverlapRelationBy3FaceTransitiveRelation(sub, overlapRelation);
+				if (changed != EstimationResult.CHANGED) {
+					break;
+				}
+			}
+			if (changed == EstimationResult.UNFOLDABLE) {
+				return changed;
 			}
 		}
 		return changed;
@@ -254,7 +227,7 @@ class DeterministicLayerOrderEstimator {
 	 *            overlap relation matrix.
 	 * @return true if an update happens.
 	 */
-	private boolean updateOverlapRelationBy3FaceTransitiveRelation(final SubFace sub,
+	private EstimationResult updateOverlapRelationBy3FaceTransitiveRelation(final SubFace sub,
 			final OverlapRelation overlapRelation) {
 
 		for (int i = 0; i < sub.getParentFaceCount(); i++) {
@@ -267,10 +240,8 @@ class DeterministicLayerOrderEstimator {
 				if (overlapRelation.isNoOverlap(index_i, index_j)) {
 					continue;
 				}
-				if (!overlapRelation.isUndefined(index_i, index_j)) {
-					continue;
-				}
-				// Find the intermediary face
+
+				// Find the middle face
 				for (int k = 0; k < sub.getParentFaceCount(); k++) {
 					if (k == i || k == j) {
 						continue;
@@ -280,18 +251,16 @@ class DeterministicLayerOrderEstimator {
 
 					if (overlapRelation.isUpper(index_i, index_k)
 							&& overlapRelation.isUpper(index_k, index_j)) {
-						overlapRelation.setUpper(index_i, index_j);
-						return true;
+						return overlapRelation.setUpperIfPossible(index_i, index_j);
 					}
 					if (overlapRelation.isLower(index_i, index_k)
 							&& overlapRelation.isLower(index_k, index_j)) {
-						overlapRelation.setLower(index_i, index_j);
-						return true;
+						return overlapRelation.setLowerIfPossible(index_i, index_j);
 					}
 				}
 			}
 		}
-		return false;
+		return EstimationResult.NOT_CHANGED;
 	}
 
 	/**
@@ -339,13 +308,11 @@ class DeterministicLayerOrderEstimator {
 					continue;
 				}
 				if (!overlapRelation.isUndefined(index_i, index_k)) {
-					var result = setIfPossible(
-							overlapRelation, index_j, index_k, overlapRelation.get(index_i, index_k));
+					var result = overlapRelation.setIfPossible(index_j, index_k, overlapRelation.get(index_i, index_k));
 					changed = result.or(changed);
 				}
 				if (!overlapRelation.isUndefined(index_j, index_k)) {
-					var result = setIfPossible(
-							overlapRelation, index_i, index_k, overlapRelation.get(index_j, index_k));
+					var result = overlapRelation.setIfPossible(index_i, index_k, overlapRelation.get(index_j, index_k));
 					changed = result.or(changed);
 				}
 
@@ -359,17 +326,4 @@ class DeterministicLayerOrderEstimator {
 		return changed;
 	}
 
-	private EstimationResult setIfPossible(final OverlapRelation overlapRelation,
-			final int i, final int j, final byte value) {
-
-		if (overlapRelation.setIfUndefined(i, j, value)) {
-			return EstimationResult.CHANGED;
-		}
-		if (overlapRelation.get(i, j) != value) {
-			// conflict.
-			return EstimationResult.UNFOLDABLE;
-		}
-
-		return EstimationResult.NOT_CHANGED;
-	}
 }
