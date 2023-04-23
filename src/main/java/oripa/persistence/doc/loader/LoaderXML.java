@@ -35,26 +35,25 @@ import oripa.resource.Version;
 public class LoaderXML implements DocLoader {
 	private static final Logger logger = LoggerFactory.getLogger(LoaderXML.class);
 
-	public DataSet loadAsDataSet(final String filePath) {
+	public DataSet loadAsDataSet(final String filePath) throws IOException {
 		DataSet dataset;
 		try (var fis = new FileInputStream(filePath);
 				var bis = new BufferedInputStream(fis);
 				var dec = new XMLDecoder(bis)) {
 			dataset = (DataSet) dec.readObject();
-		} catch (IOException e) {
-			logger.error("failed to load.", e);
-			return null;
 		}
 
 		return dataset;
 	}
 
 	@Override
-	public Doc load(final String filePath) throws FileVersionError, WrongDataFormatException {
+	public Doc load(final String filePath) throws FileVersionError, WrongDataFormatException, IOException {
 
-		DataSet data = loadAsDataSet(filePath);
+		DataSet data;
 
-		if (data == null) {
+		try {
+			data = loadAsDataSet(filePath);
+		} catch (RuntimeException e) {
 			throw new WrongDataFormatException("failed to load " + filePath);
 		}
 
