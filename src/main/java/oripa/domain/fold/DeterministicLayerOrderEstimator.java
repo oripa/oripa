@@ -212,7 +212,7 @@ class DeterministicLayerOrderEstimator {
 				}
 			}
 			if (changed == EstimationResult.UNFOLDABLE) {
-				return changed;
+				return EstimationResult.UNFOLDABLE;
 			}
 		}
 		return changed;
