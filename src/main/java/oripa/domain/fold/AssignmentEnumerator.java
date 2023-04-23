@@ -50,9 +50,10 @@ public class AssignmentEnumerator {
 	private final VertexFoldability foldability = new VertexFoldability();
 	private final Consumer<OrigamiModel> answerConsumer;
 
-	private List<OriEdge> edges;
 	private Map<List<OriVertex>, OriEdge> edgeMap;
 	private Set<OriVertex> originallyAssigned;
+
+	private Map<Map<List<OriVertex>, OriLine.Type>, List<Map<List<OriVertex>, OriLine.Type>>> assignmentMemos;
 
 	private int callCount = 0;
 	private int answerCount = 0;
@@ -70,7 +71,7 @@ public class AssignmentEnumerator {
 	 * @param origamiModel
 	 */
 	public void enumerate(final OrigamiModel origamiModel) {
-		edges = origamiModel.getEdges();
+		var edges = origamiModel.getEdges();
 
 		edgeMap = new HashMap<>();
 		edges.forEach(edge -> edgeMap.put(edgeToKey(edge), edge));
@@ -78,6 +79,8 @@ public class AssignmentEnumerator {
 		originallyAssigned = origamiModel.getVertices().stream()
 				.filter(Predicate.not(OriVertex::hasUnassignedEdge))
 				.collect(Collectors.toSet());
+
+		assignmentMemos = new HashMap<>();
 
 		callCount = 0;
 		answerCount = 0;
@@ -124,9 +127,14 @@ public class AssignmentEnumerator {
 
 		var originalAssignment = toAssignmentMap(vertex);
 
-		var assignments = createAssignments(vertex, 0,
-				mountainCount, valleyCount);
-
+		List<Map<List<OriVertex>, OriLine.Type>> assignments = null;
+		if (assignmentMemos.keySet().contains(originalAssignment)) {
+			assignments = assignmentMemos.get(originalAssignment);
+		} else {
+			assignments = createAssignments(vertex, 0,
+					mountainCount, valleyCount);
+			assignmentMemos.put(originalAssignment, assignments);
+		}
 		for (var assignment : assignments) {
 			logger.trace("go next. vertex@{} = {}, assignment = {}", vertexIndex, vertex.getPositionBeforeFolding(),
 					assignment);
@@ -155,7 +163,7 @@ public class AssignmentEnumerator {
 
 	private void apply(final Map<List<OriVertex>, OriLine.Type> assignment) {
 		logger.trace("apply assignment");
-		assignment.forEach((key, type) -> setType(key, type));
+		assignment.forEach(this::setType);
 	}
 
 	private void setType(final List<OriVertex> edgeKey, final OriLine.Type type) {

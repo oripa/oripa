@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.origeom.EstimationResult;
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelation;
 
@@ -40,9 +41,12 @@ class OverlapRelationFactory {
 	 *
 	 * @param overlapRelation
 	 *            overlap relation matrix
+	 *
+	 * @throws IllegalArgumentException
+	 *             when there is a contradiction of face order.
 	 */
 	public OverlapRelation createOverlapRelationByLineType(
-			final List<OriFace> faces, final double eps) {
+			final List<OriFace> faces, final double eps) throws IllegalArgumentException {
 		var overlapRelation = createOverlapRelation(faces, eps);
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedgeIterable()) {
@@ -54,18 +58,16 @@ class OverlapRelationFactory {
 				var faceID = face.getFaceID();
 				var pairFaceID = pairFace.getFaceID();
 
-				// If the relation is already decided, skip
-				if (overlapRelation.isUpper(faceID, pairFaceID)
-						|| overlapRelation.isLower(faceID, pairFaceID)) {
-					continue;
-				}
-
+				EstimationResult result = EstimationResult.NOT_CHANGED;
 				var edge = he.getEdge();
 				if ((face.isFaceFront() && edge.isMountain())
 						|| (!face.isFaceFront() && edge.isValley())) {
-					overlapRelation.setUpper(faceID, pairFaceID);
+					result = overlapRelation.setUpperIfPossible(faceID, pairFaceID);
 				} else {
-					overlapRelation.setLower(faceID, pairFaceID);
+					result = overlapRelation.setLowerIfPossible(faceID, pairFaceID);
+				}
+				if (result == EstimationResult.UNFOLDABLE) {
+					throw new IllegalArgumentException("impossible assignment.");
 				}
 			}
 		}

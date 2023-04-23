@@ -56,7 +56,7 @@ public class StackConditionOf4Faces {
 	 * ID of face of lower side sharing 2nd overlapping edge. "lower" means
 	 * "smaller index in the face stack of subface", which is reversed order of
 	 * overlap relation matrix values. Therefore, if face_i is UPPER than face_j
-	 * in overlap relation relation matrix, then Condition4.lower2 = i.
+	 * in overlap relation matrix, then Condition4.lower2 = i.
 	 */
 	public int lower2;
 

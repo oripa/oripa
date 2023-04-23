@@ -175,12 +175,11 @@ public class OverlapRelation {
 	 *         respectively.
 	 */
 	public boolean setLowerIfUndefined(final int i, final int j) {
-		if (!isUndefined(i, j)) {
-			return false;
-		}
-		overlapRelation.set(i, j, OverlapRelationValues.LOWER);
-		overlapRelation.set(j, i, OverlapRelationValues.UPPER);
-		return true;
+		return setIfUndefined(i, j, OverlapRelationValues.LOWER);
+	}
+
+	public boolean setUpperIfUndefined(final int i, final int j) {
+		return setIfUndefined(i, j, OverlapRelationValues.UPPER);
 	}
 
 	public boolean setIfUndefined(final int i, final int j, final byte value) {
@@ -227,4 +226,27 @@ public class OverlapRelation {
 	public boolean isNoOverlap(final int i, final int j) {
 		return overlapRelation.get(i, j) == OverlapRelationValues.NO_OVERLAP;
 	}
+
+	public EstimationResult setLowerIfPossible(final int i, final int j) {
+
+		return setIfPossible(i, j, OverlapRelationValues.LOWER);
+	}
+
+	public EstimationResult setUpperIfPossible(final int i, final int j) {
+		return setIfPossible(i, j, OverlapRelationValues.UPPER);
+	}
+
+	public EstimationResult setIfPossible(final int i, final int j, final byte value) {
+
+		if (setIfUndefined(i, j, value)) {
+			return EstimationResult.CHANGED;
+		}
+		if (get(i, j) != value) {
+			// conflict.
+			return EstimationResult.UNFOLDABLE;
+		}
+
+		return EstimationResult.NOT_CHANGED;
+	}
+
 }

@@ -178,6 +178,25 @@ public class OriVertex implements Comparable<OriVertex> {
 		return new OriPoint(positionBeforeFolding).compareTo(new OriPoint(o.positionBeforeFolding));
 	}
 
+//	/**
+//	 * Expects the position before folding is unique.
+//	 */
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(positionBeforeFolding.getX(), positionBeforeFolding.getY());
+//	}
+//
+//	@Override
+//	public boolean equals(final Object obj) {
+//		if (obj instanceof OriVertex) {
+//			var that = (OriVertex) obj;
+//			return positionBeforeFolding.getX() == that.positionBeforeFolding.getX()
+//					&& positionBeforeFolding.getY() == that.positionBeforeFolding.getY();
+//		}
+//
+//		return false;
+//	}
+
 	@Override
 	public String toString() {
 		return "OriVertex@" + position;
