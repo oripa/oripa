@@ -28,11 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.FoldedModel;
-import oripa.domain.fold.Folder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
-import oripa.domain.fold.UnassignedModelFolder;
-import oripa.domain.fold.UnassignedModelFolderFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
 
 /**
@@ -99,14 +96,9 @@ public class ModelComputationFacade {
 			final boolean fullEstimation) {
 
 		var folderFactory = new FolderFactory();
-		Folder folder = folderFactory.create();
-
-		UnassignedModelFolder unassignedFolder = new UnassignedModelFolderFactory().create();
 
 		var foldedModels = origamiModels.stream()
-				.map(model -> model.isLocallyFlatFoldable()
-						? (model.isUnassigned() ? unassignedFolder.fold(model) : folder.fold(model, fullEstimation))
-						: folder.foldWithoutLineType(model))
+				.map(model -> folderFactory.create(model.getModelType()).fold(model, fullEstimation))
 				.collect(Collectors.toList());
 
 		return new ComputationResult(origamiModels, foldedModels);

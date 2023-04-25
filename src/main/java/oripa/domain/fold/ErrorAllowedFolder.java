@@ -18,29 +18,31 @@
  */
 package oripa.domain.fold;
 
-import oripa.domain.cptool.LineAdder;
-import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.domain.fold.subface.FacesToCreasePatternConverter;
-import oripa.domain.fold.subface.ParentFacesCollector;
-import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
+import java.util.List;
+
+import oripa.domain.fold.halfedge.OrigamiModel;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class UnassignedModelFolderFactory {
-	public UnassignedModelFolder create() {
-		var subfacesFactory = new SubfacesOneTimeFactory(
-				new FacesToCreasePatternConverter(
-						new CreasePatternFactory(),
-						new LineAdder()),
-				new OrigamiModelFactory(),
-				new SplitFacesToSubFacesConverter(),
-				new ParentFacesCollector());
+class ErrorAllowedFolder implements Folder {
 
-		return new UnassignedModelFolder(
-				new SimpleFolder(),
-				new LayerOrderEnumerator(subfacesFactory));
+	// helper object
+	private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
+
+	private final SimpleFolder simpleFolder;
+
+	public ErrorAllowedFolder(final SimpleFolder simpleFolder) {
+		this.simpleFolder = simpleFolder;
 	}
+
+	@Override
+	public FoldedModel fold(final OrigamiModel origamiModel, final boolean fullEstimation) {
+		simpleFolder.foldWithoutLineType(origamiModel);
+		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
+
+		return new FoldedModel(origamiModel, List.of());
+	}
+
 }

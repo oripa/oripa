@@ -67,7 +67,7 @@ public class CommandLineFolder {
 				throw new IllegalArgumentException("Input crease pattern is not locally flat foldable.");
 			}
 
-			var folder = new FolderFactory().create();
+			var folder = new FolderFactory().create(origamiModel.getModelType());
 			var foldedModel = folder.fold(origamiModel, true);
 
 			if (split) {

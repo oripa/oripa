@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor
+ * ORIPA - Origami Pattern Editor 
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,27 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
+package oripa.domain.fold.halfedge;
 
-import oripa.domain.fold.halfedge.OrigamiModel;
-
-/**
- * @author OUCHI Koji
- *
- */
-public interface Folder {
-
-	/**
-	 * Computes folded states.
-	 *
-	 * @param origamiModel
-	 *            half-edge based data structure before folding. It will be
-	 *            affected by this method.
-	 * @param fullEstimation
-	 *            whether the algorithm should compute all possible folded
-	 *            states or not.
-	 * @return folded model whose {@link FoldedModel#getOrigamiModel()} returns
-	 *         the given {@code origamiModel}.
-	 */
-	FoldedModel fold(OrigamiModel origamiModel, boolean fullEstimation);
+public enum ModelType {
+	ASSIGNED,
+	UNASSIGNED,
+	ERROR_CONTAINING
 }
