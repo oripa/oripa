@@ -20,6 +20,8 @@ package oripa.domain.fold;
 
 import oripa.domain.cptool.LineAdder;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.domain.fold.halfedge.ModelType;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.domain.fold.subface.FacesToCreasePatternConverter;
 import oripa.domain.fold.subface.ParentFacesCollector;
@@ -27,11 +29,44 @@ import oripa.domain.fold.subface.SplitFacesToSubFacesConverter;
 import oripa.domain.fold.subface.SubFacesFactory;
 
 /**
+ * Creates the Folder instance.
+ *
  * @author OUCHI Koji
  *
  */
 public class FolderFactory {
-	public Folder create() {
+
+	/**
+	 *
+	 * @param type
+	 * @return Instance of {@link Folder}. Note that the instance for
+	 *         {@link ModelType#UNASSIGNED} can be used repeatedly only for the
+	 *         same {@link OrigamiModel} instance since the folder creates
+	 *         subfaces only once to reduce computation time.
+	 */
+	public Folder create(final ModelType type) {
+		Folder folder;
+		switch (type) {
+		case ASSIGNED:
+			folder = createAssigned();
+			break;
+
+		case UNASSIGNED:
+			folder = createUnassigned();
+			break;
+
+		case ERROR_CONTAINING:
+			folder = createErrorContaining();
+			break;
+
+		default:
+			throw new IllegalArgumentException();
+		}
+
+		return folder;
+	}
+
+	private Folder createAssigned() {
 		var subfacesFactory = new SubFacesFactory(
 				new FacesToCreasePatternConverter(
 						new CreasePatternFactory(),
@@ -40,8 +75,27 @@ public class FolderFactory {
 				new SplitFacesToSubFacesConverter(),
 				new ParentFacesCollector());
 
-		return new Folder(
+		return new AssignedModelFolder(
 				new SimpleFolder(),
 				new LayerOrderEnumerator(subfacesFactory));
 	}
+
+	private Folder createUnassigned() {
+		var subfacesFactory = new SubfacesOneTimeFactory(
+				new FacesToCreasePatternConverter(
+						new CreasePatternFactory(),
+						new LineAdder()),
+				new OrigamiModelFactory(),
+				new SplitFacesToSubFacesConverter(),
+				new ParentFacesCollector());
+
+		return new UnassignedModelFolder(
+				new SimpleFolder(),
+				new LayerOrderEnumerator(subfacesFactory));
+	}
+
+	private Folder createErrorContaining() {
+		return new ErrorAllowedFolder(new SimpleFolder());
+	}
+
 }

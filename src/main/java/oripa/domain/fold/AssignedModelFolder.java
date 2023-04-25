@@ -1,7 +1,6 @@
 /**
  * ORIPA - Origami Pattern Editor
- * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
- * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+ * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,27 +15,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package oripa.domain.fold;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
 
-/**
- * @author OUCHI Koji
- *
- */
-class UnassignedModelFolder implements Folder {
+class AssignedModelFolder implements Folder {
+	// helper object
 	private final FaceDisplayModifier faceDisplayModifier = new FaceDisplayModifier();
-	private final SimpleFolder simpleFolder;
-	private final LayerOrderEnumerator layerOrderEnumerator;
 
-	public UnassignedModelFolder(final SimpleFolder simpleFolder,
+	private final SimpleFolder simpleFolder;
+
+	private final LayerOrderEnumerator enumerator;
+
+	public AssignedModelFolder(final SimpleFolder simpleFolder,
 			final LayerOrderEnumerator enumerator) {
 		this.simpleFolder = simpleFolder;
-		this.layerOrderEnumerator = enumerator;
+		this.enumerator = enumerator;
 	}
 
 	@Override
@@ -49,17 +46,15 @@ class UnassignedModelFolder implements Folder {
 			return new FoldedModel(origamiModel, List.of());
 		}
 
-		var foldedModels = new ArrayList<FoldedModel>();
+		var overlapRelations = enumerator.enumerate(origamiModel);
 
-		var assignmentEnumerator = new AssignmentEnumerator(model -> foldedModels.add(
-				new FoldedModel(origamiModel, layerOrderEnumerator.enumerate(origamiModel))));
+		var foldedModel = new FoldedModel(origamiModel, overlapRelations);
 
-		assignmentEnumerator.enumerate(origamiModel);
+		if (overlapRelations.isEmpty()) {
+			return foldedModel;
+		}
 
 		origamiModel.setFolded(true);
-
-		return new FoldedModel(origamiModel, foldedModels.stream()
-				.flatMap(model -> model.getOverlapRelations().stream())
-				.collect(Collectors.toList()));
+		return foldedModel;
 	}
 }

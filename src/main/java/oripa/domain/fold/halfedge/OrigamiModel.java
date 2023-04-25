@@ -183,6 +183,16 @@ public class OrigamiModel {
 		return edges.stream().anyMatch(edge -> edge.isUnassigned());
 	}
 
+	public ModelType getModelType() {
+		if (!isLocallyFlatFoldable()) {
+			return ModelType.ERROR_CONTAINING;
+		} else if (isUnassigned()) {
+			return ModelType.UNASSIGNED;
+		} else {
+			return ModelType.ASSIGNED;
+		}
+	}
+
 	@Override
 	public String toString() {
 		return "[" + faces.toString() + edges.toString() + vertices.toString() + "]";
