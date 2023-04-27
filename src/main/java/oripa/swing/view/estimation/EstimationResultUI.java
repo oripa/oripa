@@ -252,12 +252,12 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 					}
 				}
 
-				var list = orders.get(s).get(order);
-				if (list == null) {
-					list = Collections.synchronizedSet(new HashSet<Integer>());
-					orders.get(s).put(order, list);
+				var indices = orders.get(s).get(order);
+				if (indices == null) {
+					indices = Collections.synchronizedSet(new HashSet<Integer>());
+					orders.get(s).put(order, indices);
 				}
-				list.add(k);
+				indices.add(k);
 			});
 		});
 
@@ -350,18 +350,17 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 				setOverlapRelations(filter(subfaceIndex, suborderIndex));
 
-				if (filteredOverlapRelations.size() >= 1) {
-					selectOverlapRelation(0);
+				selectOverlapRelation(0);
 
-					var subface = foldedModel.getSubfaces().get(subfaceIndex);
+				var subface = foldedModel.getSubfaces().get(subfaceIndex);
 
-					if (true) {
-						screen.setSelectedSubface(subface.getOutline());
-					}
-
-					// update view
-					prepareSuborderIndexCombo(subfaceIndex);
+				// TODO show/hide subface drawing
+				if (true) {
+					screen.setSelectedSubface(subface.getOutline());
 				}
+
+				// update view
+				prepareSuborderIndexCombo(subfaceIndex);
 			}
 		});
 
@@ -370,12 +369,10 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				var subfaceIndex = (Integer) subfaceIndexCombo.getSelectedItem();
 				var suborderIndex = (Integer) e.getItem();
 				filterSelectionMap.put(subfaceIndex, suborderIndex);
-				filteredOverlapRelations = filter(subfaceIndex, suborderIndex);
-				setOverlapRelations(filteredOverlapRelations);
 
-				if (filteredOverlapRelations.size() >= 1) {
-					selectOverlapRelation(0);
-				}
+				setOverlapRelations(filter(subfaceIndex, suborderIndex));
+
+				selectOverlapRelation(0);
 			}
 		});
 
