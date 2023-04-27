@@ -19,6 +19,8 @@
 package oripa.util.collection;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author OUCHI Koji
@@ -27,5 +29,9 @@ import java.util.List;
 public class CollectionUtil {
 	public static <T> T getCircular(final List<T> list, final int index) {
 		return list.get((index + list.size()) % list.size());
+	}
+
+	public static <T> Set<T> newConcurrentHashSet() {
+		return ConcurrentHashMap.newKeySet();
 	}
 }

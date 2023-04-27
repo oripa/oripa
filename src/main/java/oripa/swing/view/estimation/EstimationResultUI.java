@@ -24,7 +24,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,6 +61,7 @@ import oripa.swing.view.util.ListItemSelectionPanel;
 import oripa.swing.view.util.TitledBorderFactory;
 import oripa.util.Pair;
 import oripa.util.StopWatch;
+import oripa.util.collection.CollectionUtil;
 
 public class EstimationResultUI extends JPanel implements EstimationResultUIView {
 	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUI.class);
@@ -246,7 +246,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 			IntStream.range(0, subfaces.size()).forEach(s -> {
 				var subface = subfaces.get(s);
-				var order = Collections.synchronizedSet(new HashSet<OrderValue>());
+				Set<OrderValue> order = CollectionUtil.newConcurrentHashSet();
 
 				for (int i = 0; i < subface.getParentFaceCount(); i++) {
 					var face_i = subface.getParentFace(i);
@@ -265,7 +265,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 				var indices = orders.get(s).get(order);
 				if (indices == null) {
-					indices = Collections.synchronizedSet(new HashSet<Integer>());
+					indices = CollectionUtil.newConcurrentHashSet();
 					orders.get(s).put(order, indices);
 				}
 				indices.add(k);
