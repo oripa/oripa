@@ -46,13 +46,15 @@ class UnassignedModelFolder implements Folder {
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
-			return new FoldedModel(origamiModel, List.of());
+			return new FoldedModel(origamiModel, List.of(), List.of());
 		}
 
 		var foldedModels = new ArrayList<FoldedModel>();
 
-		var assignmentEnumerator = new AssignmentEnumerator(model -> foldedModels.add(
-				new FoldedModel(origamiModel, layerOrderEnumerator.enumerate(origamiModel))));
+		var assignmentEnumerator = new AssignmentEnumerator(model -> {
+			var result = layerOrderEnumerator.enumerate(origamiModel);
+			foldedModels.add(new FoldedModel(origamiModel, result.getOverlapRelations(), result.getSubfaces()));
+		});
 
 		assignmentEnumerator.enumerate(origamiModel);
 
@@ -60,6 +62,7 @@ class UnassignedModelFolder implements Folder {
 
 		return new FoldedModel(origamiModel, foldedModels.stream()
 				.flatMap(model -> model.getOverlapRelations().stream())
-				.collect(Collectors.toList()));
+				.collect(Collectors.toList()),
+				foldedModels.get(0).getSubfaces());
 	}
 }

@@ -52,6 +52,29 @@ import oripa.util.StopWatch;
  *
  */
 public class LayerOrderEnumerator {
+
+	public static class Result {
+		private final List<OverlapRelation> overlapRelations;
+		private final List<SubFace> subfaces;
+
+		private Result(final List<OverlapRelation> overlapRelations, final List<SubFace> subfaces) {
+			this.overlapRelations = overlapRelations;
+			this.subfaces = subfaces;
+		}
+
+		public List<OverlapRelation> getOverlapRelations() {
+			return overlapRelations;
+		}
+
+		public List<SubFace> getSubfaces() {
+			return subfaces;
+		}
+
+		public boolean isEmpty() {
+			return overlapRelations.isEmpty();
+		}
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(LayerOrderEnumerator.class);
 
 	private List<SubFace> subFaces;
@@ -64,7 +87,7 @@ public class LayerOrderEnumerator {
 		this.subFacesFactory = subFacesFactory;
 	}
 
-	public List<OverlapRelation> enumerate(final OrigamiModel origamiModel) {
+	public Result enumerate(final OrigamiModel origamiModel) {
 		var faces = origamiModel.getFaces();
 		var edges = origamiModel.getEdges();
 
@@ -80,7 +103,7 @@ public class LayerOrderEnumerator {
 			overlapRelation = new OverlapRelationFactory().createOverlapRelationByLineType(faces, eps);
 		} catch (Exception e) {
 			logger.debug("found unfoldable when constructing overlap relation.");
-			return List.of();
+			return new Result(List.of(), List.of());
 		}
 
 		var watch = new StopWatch(true);
@@ -105,7 +128,7 @@ public class LayerOrderEnumerator {
 
 		if (estimationResult == EstimationResult.UNFOLDABLE) {
 			logger.debug("found unfoldable before searching.");
-			return List.of();
+			return new Result(List.of(), List.of());
 		}
 
 		var undefinedRelationCount = countUndefinedRelations(overlapRelation);
@@ -132,7 +155,7 @@ public class LayerOrderEnumerator {
 		logger.debug("#call = {}", callCount);
 		logger.debug("time = {}[ms]", time);
 
-		return overlapRelations;
+		return new Result(overlapRelations, subFaces);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -22,6 +22,7 @@ import java.util.List;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.domain.fold.subface.SubFace;
 
 /**
  * An entity of folded model.
@@ -32,13 +33,16 @@ import oripa.domain.fold.origeom.OverlapRelation;
 public class FoldedModel {
 	private final OrigamiModel origamiModel;
 	private final List<OverlapRelation> overlapRelations;
+	private final List<SubFace> subfaces;
 
 	/**
 	 * Constructor
 	 */
-	public FoldedModel(final OrigamiModel origamiModel, final List<OverlapRelation> overlapRelations) {
+	public FoldedModel(final OrigamiModel origamiModel, final List<OverlapRelation> overlapRelations,
+			final List<SubFace> subfaces) {
 		this.origamiModel = origamiModel;
 		this.overlapRelations = overlapRelations;
+		this.subfaces = subfaces;
 	}
 
 	/**
@@ -61,6 +65,10 @@ public class FoldedModel {
 	 */
 	public int getFoldablePatternCount() {
 		return overlapRelations.size();
+	}
+
+	public List<SubFace> getSubfaces() {
+		return subfaces;
 	}
 
 	/**
