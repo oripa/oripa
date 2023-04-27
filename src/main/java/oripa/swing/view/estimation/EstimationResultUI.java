@@ -114,7 +114,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	private FoldedModel foldedModel;
 	private OverlapRelation overlapRelation;
-	private int overlapRelationIndex = 0;
+
+	private List<OverlapRelation> filteredOverlapRelations;
 
 	/**
 	 * < index of selected subface, index of selected suborder >
@@ -169,7 +170,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		});
 
 		prepareSubfaceIndexCombo();
-		prepareSubordreIndexCombo(0);
+		prepareSuborderIndexCombo(0);
 
 	}
 
@@ -183,7 +184,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		subfaceIndexCombo.setSelectedIndex(0);
 	}
 
-	private void prepareSubordreIndexCombo(final int subfaceIndex) {
+	private void prepareSuborderIndexCombo(final int subfaceIndex) {
 		suborderIndexCombo.removeAllItems();
 		subfaceToOverlapRelationIndices.get(subfaceIndex)
 				.forEach((order, indices) -> suborderIndexCombo.addItem(order));
@@ -191,7 +192,13 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	private void setOverlapRelations(final List<OverlapRelation> overlapRelations) {
+		filteredOverlapRelations = overlapRelations;
 		answerSelectionPanel.setItemCount(overlapRelations.size());
+	}
+
+	private void selectOverlapRelation(final int index) {
+		overlapRelation = filteredOverlapRelations.get(index);
+		screen.setOverlapRelation(filteredOverlapRelations.get(index));
 	}
 
 	@Override
@@ -311,9 +318,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private void addActionListenersToComponents() {
 		answerSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX,
 				e -> {
-					overlapRelationIndex = (int) e.getNewValue();
-					overlapRelation = foldedModel.getOverlapRelations().get(overlapRelationIndex);
-					screen.setOverlapRelation(overlapRelation);
+					selectOverlapRelation((int) e.getNewValue());
 				});
 
 		filterEnabledCheckBox.addActionListener(e -> {
@@ -321,10 +326,19 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				initializeFilterComponents();
 				subfaceIndexCombo.setEnabled(true);
 				suborderIndexCombo.setEnabled(true);
+
 				setOverlapRelations(filter(0, 0));
+				selectOverlapRelation(0);
+
+				screen.setSelectedSubface(foldedModel.getSubfaces().get(0).getOutline());
 			} else {
 				subfaceIndexCombo.setEnabled(false);
 				suborderIndexCombo.setEnabled(false);
+
+				setOverlapRelations(foldedModel.getOverlapRelations());
+				selectOverlapRelation(0);
+
+				screen.setSelectedSubface(null);
 			}
 		});
 
@@ -333,15 +347,20 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				var subfaceIndex = (Integer) e.getItem();
 				var suborderIndex = filterSelectionMap.get(subfaceIndex);
 				filterSelectionMap.put(subfaceIndex, suborderIndex);
-				var relations = filter(subfaceIndex, suborderIndex);
-				setOverlapRelations(relations);
 
-				if (relations.size() >= 1) {
-					overlapRelation = relations.get(0);
-					screen.setOverlapRelation(relations.get(0));
+				setOverlapRelations(filter(subfaceIndex, suborderIndex));
+
+				if (filteredOverlapRelations.size() >= 1) {
+					selectOverlapRelation(0);
+
+					var subface = foldedModel.getSubfaces().get(subfaceIndex);
+
+					if (true) {
+						screen.setSelectedSubface(subface.getOutline());
+					}
 
 					// update view
-					prepareSubordreIndexCombo(subfaceIndex);
+					prepareSuborderIndexCombo(subfaceIndex);
 				}
 			}
 		});
@@ -351,12 +370,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				var subfaceIndex = (Integer) subfaceIndexCombo.getSelectedItem();
 				var suborderIndex = (Integer) e.getItem();
 				filterSelectionMap.put(subfaceIndex, suborderIndex);
-				var relations = filter(subfaceIndex, suborderIndex);
-				setOverlapRelations(relations);
+				filteredOverlapRelations = filter(subfaceIndex, suborderIndex);
+				setOverlapRelations(filteredOverlapRelations);
 
-				if (relations.size() >= 1) {
-					overlapRelation = relations.get(0);
-					screen.setOverlapRelation(relations.get(0));
+				if (filteredOverlapRelations.size() >= 1) {
+					selectOverlapRelation(0);
 				}
 			}
 		});
@@ -510,7 +528,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	@Override
 	public int getOverlapRelationIndex() {
-		return overlapRelationIndex;
+		return foldedModel.getOverlapRelations().indexOf(overlapRelation);
 	}
 
 	@Override

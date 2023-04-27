@@ -43,11 +43,13 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.origeom.OverlapRelationValues;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.estimation.DefaultColors;
+import oripa.swing.drawer.java2d.GraphicItemConverter;
 import oripa.swing.view.util.MouseUtility;
 
 /**
@@ -100,6 +102,7 @@ public class FoldedModelScreen extends JPanel
 
 	private OrigamiModel origamiModel = null;
 	private OverlapRelation overlapRelation;
+	private OriFace selectedSubface = null;
 
 	private RectangleDomain domain;
 
@@ -302,6 +305,12 @@ public class FoldedModelScreen extends JPanel
 		redrawOrigami();
 	}
 
+	void setSelectedSubface(final OriFace face) {
+		selectedSubface = face;
+
+		redrawOrigami();
+	}
+
 	public void setOverlapRelation(final OverlapRelation overlapRelation) {
 		this.overlapRelation = overlapRelation;
 		redrawOrigami();
@@ -339,6 +348,11 @@ public class FoldedModelScreen extends JPanel
 		if (renderImage != null) {
 			g2d.drawImage(renderImage, 0, 0, null);
 		}
+
+		if (selectedSubface != null) {
+			drawSubface(g2d);
+		}
+
 		g.drawImage(bufferImage, 0, 0, this);
 	}
 
@@ -362,6 +376,7 @@ public class FoldedModelScreen extends JPanel
 		if (ambientOcclusion) {
 			applyAmbientOcculusion();
 		}
+
 		long time1 = System.currentTimeMillis();
 
 		System.out.println("render time = " + (time1 - time0) + "ms");
@@ -369,24 +384,36 @@ public class FoldedModelScreen extends JPanel
 		renderImage = createImage(new MemoryImageSource(BUFFERW, BUFFERH, pbuf, 0, BUFFERW));
 	}
 
+	private void drawSubface(final Graphics2D g2d) {
+		var convertedSubface = selectedSubface.halfedgeStream()
+				.map(OriHalfedge::getPosition)
+				.map(this::convertCoordinate)
+				.collect(Collectors.toList());
+
+		var itemConverter = new GraphicItemConverter();
+		var path2d = itemConverter.toPath2D(convertedSubface);
+		g2d.setColor(new Color(255, 255, 255, 128));
+		g2d.draw(path2d);
+	}
+
 	private void drawFace(final OriFace face) {
-		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
-		final double localScale = scaleRate * Math.min(
-				BUFFERW / (domain.getWidth()),
-				BUFFERH / (domain.getHeight())) * 0.95;
-		final double angle = rotAngle * Math.PI / 180;
+		if (useColor) {
+			drawFace(face, frontColor, backColor);
+		} else {
+			drawFace(face, singleColor, singleColor);
+		}
+	}
+
+	private void drawFace(final OriFace face, final Color frontColor, final Color backColor) {
 
 		var paperDomain = origamiModel.createPaperDomain();
 
 		List<Double> frontColorFactor;
 		List<Double> backColorFactor;
-		if (useColor) {
-			frontColorFactor = createColorFactor(frontColor);
-			backColorFactor = createColorFactor(backColor);
-		} else {
-			frontColorFactor = createColorFactor(singleColor);
-			backColorFactor = createColorFactor(singleColor);
-		}
+
+		frontColorFactor = createColorFactor(frontColor);
+		backColorFactor = createColorFactor(backColor);
+
 		var vertexColorMapFactory = new VertexColorMapFactory();
 		var colorMap = vertexColorMapFactory.createVertexColors(
 				face,
@@ -401,16 +428,28 @@ public class FoldedModelScreen extends JPanel
 		triangles.stream().forEach(tri -> {
 			for (int i = 0; i < 3; i++) {
 				var pos = tri.getPosition(i);
-				double x = (pos.x - center.x) * localScale;
-				double y = (pos.y - center.y) * localScale;
+				var newPos = convertCoordinate(pos);
 
-				double rotX = x * Math.cos(angle) + y * Math.sin(angle) + BUFFERW * 0.5;
-				double rotY = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
-
-				tri.setPosition(i, rotX, rotY);
+				tri.setPosition(i, newPos.getX(), newPos.getY());
 			}
 			drawTriangle(tri, face.getFaceID());
 		});
+
+	}
+
+	private Vector2d convertCoordinate(final Vector2d pos) {
+		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
+		final double localScale = scaleRate * Math.min(
+				BUFFERW / (domain.getWidth()),
+				BUFFERH / (domain.getHeight())) * 0.95;
+		final double angle = rotAngle * Math.PI / 180;
+		double x = (pos.x - center.x) * localScale;
+		double y = (pos.y - center.y) * localScale;
+
+		double rotX = x * Math.cos(angle) + y * Math.sin(angle) + BUFFERW * 0.5;
+		double rotY = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
+
+		return new Vector2d(rotX, rotY);
 	}
 
 	private List<Double> createColorFactor(final Color color) {

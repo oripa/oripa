@@ -232,7 +232,7 @@ public class SubFace {
 		return outline.getCentroid();
 	}
 
-	OriFace getOutline() {
+	public OriFace getOutline() {
 		return outline;
 	}
 
