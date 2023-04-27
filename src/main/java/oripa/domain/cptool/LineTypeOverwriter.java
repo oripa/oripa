@@ -24,12 +24,12 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import oripa.domain.cptool.compgeom.AnalyticLine;
 import oripa.geom.GeomUtil;
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -56,7 +56,7 @@ public class LineTypeOverwriter {
 		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
 		var addedLineSet = new HashSet<>(addedLines);
-		Set<OriLine> allLineSet = ConcurrentHashMap.newKeySet();
+		Set<OriLine> allLineSet = CollectionUtil.newConcurrentHashSet();
 		allLineSet.addAll(allLines);
 
 		overlapGroups.parallelStream().forEach(overlaps -> {
