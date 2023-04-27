@@ -451,8 +451,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		filterPanel.add(suborderIndexCombo);
 
 		answerShiftPanel.add(filterEnabledCheckBox, gbBuilder.getNextField());
-		answerShiftPanel.add(filterPanel, gbBuilder.getNextField());
 		answerShiftPanel.add(subfaceVisibleCheckBox, gbBuilder.getNextField());
+		answerShiftPanel.add(filterPanel, gbBuilder.getNextField());
 
 		return answerShiftPanel;
 	}
