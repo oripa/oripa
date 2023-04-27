@@ -40,6 +40,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.event.ChangeListener;
 
 import org.slf4j.Logger;
@@ -164,17 +165,28 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	private void initializeFilterComponents() {
-		subfaceToOverlapRelationIndices = createSubfaceToOverlapRelationIndices(foldedModel);
+		var worker = new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				subfaceToOverlapRelationIndices = createSubfaceToOverlapRelationIndices(foldedModel);
+				subfaceToOverlapRelationIndices.forEach((s, indicesMap) -> {
+					filterSelectionMap.put(s, 0);
+				});
+				return null;
+			}
+		};
 
-		subfaceToOverlapRelationIndices.forEach((s, indicesMap) -> {
-			filterSelectionMap.put(s, 0);
-		});
+		worker.execute();
 
-		prepareSubfaceIndexCombo();
-		prepareSuborderIndexCombo(0);
+		try {
+			worker.get();
+			prepareSubfaceIndexCombo();
+			prepareSuborderIndexCombo(0);
 
-		subfaceIndexCombo.setSelectedIndex(0);
-		suborderIndexCombo.setSelectedIndex(0);
+			subfaceIndexCombo.setSelectedIndex(0);
+			suborderIndexCombo.setSelectedIndex(0);
+		} catch (Exception e) {
+		}
 
 	}
 

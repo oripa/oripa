@@ -1333,7 +1333,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		dialogWhileFolding.setVisible(true);
 
 		try {
-			worker.get();
+//			worker.get();
 
 			// this action moves the main window to front.
 			setBuildButtonEnabled(true);
