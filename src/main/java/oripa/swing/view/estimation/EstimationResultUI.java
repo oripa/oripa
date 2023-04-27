@@ -32,7 +32,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -220,7 +219,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private class OrderValue extends Pair<List<Integer>, Byte> {
 
 		public OrderValue(final int i, final int j, final byte value) {
-			super(Stream.of(i, j).sorted().collect(Collectors.toList()), value);
+			super(List.of(i, j), value);
 		}
 	}
 
@@ -230,7 +229,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		var watch = new StopWatch(true);
 		logger.debug("createSubfaceToOverlapRelationIndices() start");
 
-		var map = new HashMap<Integer, Map<Integer, Set<Integer>>>();
+		var map = new ConcurrentHashMap<Integer, Map<Integer, Set<Integer>>>();
 		var orders = new ConcurrentHashMap<Integer, Map<Set<OrderValue>, Set<Integer>>>();
 
 		var subfaces = foldedModel.getSubfaces();
@@ -246,7 +245,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 			IntStream.range(0, subfaces.size()).forEach(s -> {
 				var subface = subfaces.get(s);
-				var order = new HashSet<OrderValue>();
+				var order = Collections.synchronizedSet(new HashSet<OrderValue>());
 
 				for (int i = 0; i < subface.getParentFaceCount(); i++) {
 					var face_i = subface.getParentFace(i);
@@ -272,8 +271,9 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			});
 		});
 
-		orders.forEach((s, orderToOverlapRelationIndices) -> {
-			map.put(s, new HashMap<>());
+		IntStream.range(0, subfaces.size()).parallel().forEach(s -> {
+			var orderToOverlapRelationIndices = orders.get(s);
+			map.put(s, Collections.synchronizedMap(new HashMap<>()));
 
 			int index = 0;
 			for (var order : orderToOverlapRelationIndices.keySet()) {
