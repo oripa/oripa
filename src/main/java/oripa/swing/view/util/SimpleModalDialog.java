@@ -16,25 +16,46 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.swing.view.main;
+package oripa.swing.view.util;
 
+import java.awt.GridBagLayout;
+
+import javax.swing.JDialog;
 import javax.swing.JFrame;
-
-import oripa.resource.ResourceHolder;
-import oripa.resource.ResourceKey;
-import oripa.resource.StringID;
-import oripa.swing.view.util.SimpleModalDialog;
+import javax.swing.JLabel;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class DialogWhileFolding extends SimpleModalDialog {
+public class SimpleModalDialog extends JDialog {
 
-	public DialogWhileFolding(final JFrame parent, final ResourceHolder resources) {
-		super(parent,
-				resources.getString(ResourceKey.INFO, StringID.Information.NOW_FOLDING_TITLE_ID),
-				resources.getString(ResourceKey.INFO, StringID.Information.NOW_FOLDING_ID));
+//	private SwingWorker<List<JFrame>, Void> worker;
+	private final int WIDTH = 200;
+	private final int HEIGHT = 100;
+
+	public SimpleModalDialog(final JFrame parent, final String title, final String text) {
+		super(parent, true);
+
+		setTitle(title);
+
+		setLayout(new GridBagLayout());
+		add(new JLabel(text));
+
+		setSize(WIDTH, HEIGHT);
+		setLocationRelativeTo(parent);
+
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+//		addWindowListener(new WindowAdapter() {
+//			@Override
+//			public void windowClosed(final WindowEvent e) {
+//				worker.cancel(true); // doesn't work so far.
+//			}
+//		});
 	}
 
+//	public void setWorker(final SwingWorker<List<JFrame>, Void> worker) {
+//		this.worker = worker;
+//	}
 }

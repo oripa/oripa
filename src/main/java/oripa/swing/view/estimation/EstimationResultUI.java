@@ -32,15 +32,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 import javax.swing.event.ChangeListener;
 
 import org.slf4j.Logger;
@@ -59,6 +51,7 @@ import oripa.swing.view.util.ColorRGBPanel;
 import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ListItemSelectionPanel;
+import oripa.swing.view.util.SimpleModalDialog;
 import oripa.swing.view.util.TitledBorderFactory;
 import oripa.util.Pair;
 import oripa.util.StopWatch;
@@ -77,6 +70,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	// setup components used
 	private final ListItemSelectionPanel answerSelectionPanel = new ListItemSelectionPanel("");
 
+	// TODO use string resource
 	private final JCheckBox filterEnabledCheckBox = new JCheckBox("Use subface filter");
 	private final JComboBox<Integer> subfaceIndexCombo = new JComboBox<>();
 	private final JComboBox<Integer> suborderIndexCombo = new JComboBox<Integer>();
@@ -107,6 +101,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final JButton exportButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
 
+	// TODO use string resource
 	private final JLabel svgFaceStrokeWidthLabel = new JLabel("face stroke-width:");
 	private final JTextField svgFaceStrokeWidthField = new JTextField();
 	private final JLabel svgPrecreaseStrokeWidthLabel = new JLabel("crease stroke-width:");
@@ -165,6 +160,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	private void initializeFilterComponents() {
+		var frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+		// TODO use string resource
+		var dialog = new SimpleModalDialog(frame, "Now computing...", "Please wait.");
+
 		var worker = new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
@@ -176,10 +176,19 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			}
 		};
 
+		worker.addPropertyChangeListener(e -> {
+			if ("state".equals(e.getPropertyName())
+					&& SwingWorker.StateValue.DONE == e.getNewValue()) {
+				dialog.setVisible(false);
+				dialog.dispose();
+			}
+		});
+
 		worker.execute();
 
 		try {
-			worker.get();
+			dialog.setVisible(true);
+
 			prepareSubfaceIndexCombo();
 			prepareSuborderIndexCombo(0);
 
