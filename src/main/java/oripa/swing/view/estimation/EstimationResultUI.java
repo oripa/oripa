@@ -22,15 +22,13 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -53,9 +51,6 @@ import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ListItemSelectionPanel;
 import oripa.swing.view.util.SimpleModalDialog;
 import oripa.swing.view.util.TitledBorderFactory;
-import oripa.util.Pair;
-import oripa.util.StopWatch;
-import oripa.util.collection.CollectionUtil;
 
 public class EstimationResultUI extends JPanel implements EstimationResultUIView {
 	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUI.class);
@@ -126,6 +121,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	private BiConsumer<Color, Color> saveColorsListener;
 
+	private Function<FoldedModel, Map<Integer, Map<Integer, Set<Integer>>>> filterInitializationListener;
+
 	/**
 	 * This is the default constructor
 	 */
@@ -168,7 +165,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		var worker = new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				subfaceToOverlapRelationIndices = createSubfaceToOverlapRelationIndices(foldedModel);
+				subfaceToOverlapRelationIndices = filterInitializationListener.apply(foldedModel);
 				subfaceToOverlapRelationIndices.forEach((s, indicesMap) -> {
 					filterSelectionMap.put(s, 0);
 				});
@@ -236,77 +233,6 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	@Override
 	public FoldedModel getModel() {
 		return foldedModel;
-	}
-
-	private class OrderValue extends Pair<List<Integer>, Byte> {
-
-		public OrderValue(final int i, final int j, final byte value) {
-			super(List.of(i, j), value);
-		}
-	}
-
-	private Map<Integer, Map<Integer, Set<Integer>>> createSubfaceToOverlapRelationIndices(
-			final FoldedModel foldedModel) {
-
-		var watch = new StopWatch(true);
-		logger.debug("createSubfaceToOverlapRelationIndices() start");
-
-		var map = new ConcurrentHashMap<Integer, Map<Integer, Set<Integer>>>();
-		var orders = new ConcurrentHashMap<Integer, Map<Set<OrderValue>, Set<Integer>>>();
-
-		var subfaces = foldedModel.getSubfaces();
-		var overlapRelations = foldedModel.getOverlapRelations();
-
-		// initialize
-		for (int s = 0; s < subfaces.size(); s++) {
-			orders.put(s, new ConcurrentHashMap<>());
-		}
-
-		IntStream.range(0, overlapRelations.size()).parallel().forEach(k -> {
-			var overlapRelation = overlapRelations.get(k);
-
-			IntStream.range(0, subfaces.size()).forEach(s -> {
-				var subface = subfaces.get(s);
-				Set<OrderValue> order = CollectionUtil.newConcurrentHashSet();
-
-				for (int i = 0; i < subface.getParentFaceCount(); i++) {
-					var face_i = subface.getParentFace(i);
-					for (int j = i + 1; j < subface.getParentFaceCount(); j++) {
-						var face_j = subface.getParentFace(j);
-
-						var smallerIndex = Math.min(face_i.getFaceID(), face_j.getFaceID());
-						var largerIndex = Math.max(face_i.getFaceID(), face_j.getFaceID());
-						var relation = overlapRelation.get(smallerIndex, largerIndex);
-
-						var value = new OrderValue(smallerIndex, largerIndex, relation);
-
-						order.add(value);
-					}
-				}
-
-				var indices = orders.get(s).get(order);
-				if (indices == null) {
-					indices = CollectionUtil.newConcurrentHashSet();
-					orders.get(s).put(order, indices);
-				}
-				indices.add(k);
-			});
-		});
-
-		IntStream.range(0, subfaces.size()).parallel().forEach(s -> {
-			var orderToOverlapRelationIndices = orders.get(s);
-			map.put(s, Collections.synchronizedMap(new HashMap<>()));
-
-			int index = 0;
-			for (var order : orderToOverlapRelationIndices.keySet()) {
-				var indices = orderToOverlapRelationIndices.get(order);
-				map.get(s).put(index++, indices);
-			}
-		});
-
-		logger.debug("createSubfaceToOverlapRelationIndices() end: {}[ms]", watch.getMilliSec());
-
-		return map;
 	}
 
 	private List<OverlapRelation> filter(final Integer subfaceIndex, final Integer suborderIndex) {
@@ -593,6 +519,12 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	@Override
 	public void setSVGPrecreaseStrokeWidth(final double strokeWidth) {
 		svgPrecreaseStrokeWidthField.setText(Double.toString(strokeWidth));
+	}
+
+	@Override
+	public void setFilterInitializationListener(
+			final Function<FoldedModel, Map<Integer, Map<Integer, Set<Integer>>>> listener) {
+		filterInitializationListener = listener;
 	}
 
 	@Override

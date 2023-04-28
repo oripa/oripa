@@ -18,13 +18,21 @@
  */
 package oripa.gui.presenter.estimation;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.application.estimation.FoldedModelSVGConfigFileAccess;
+import oripa.domain.fold.FoldedModel;
 import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
@@ -35,6 +43,9 @@ import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
 import oripa.persistence.entity.FoldedModelFileTypeKey;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
+import oripa.util.Pair;
+import oripa.util.StopWatch;
+import oripa.util.collection.CollectionUtil;
 
 /**
  * @author OUCHI Koji
@@ -72,6 +83,7 @@ public class EstimationResultUIPresenter {
 	private void addListener() {
 		view.addSaveSVGCofigButtonListener(this::saveSVGConfig);
 		view.addExportButtonListener(this::export);
+		view.setFilterInitializationListener(this::createSubfaceToOverlapRelationIndices);
 	}
 
 	/**
@@ -136,4 +148,76 @@ public class EstimationResultUIPresenter {
 			view.showErrorMessage(e);
 		}
 	}
+
+	private class OrderValue extends Pair<List<Integer>, Byte> {
+
+		public OrderValue(final int i, final int j, final byte value) {
+			super(List.of(i, j), value);
+		}
+	}
+
+	private Map<Integer, Map<Integer, Set<Integer>>> createSubfaceToOverlapRelationIndices(
+			final FoldedModel foldedModel) {
+
+		var watch = new StopWatch(true);
+		logger.debug("createSubfaceToOverlapRelationIndices() start");
+
+		var map = new ConcurrentHashMap<Integer, Map<Integer, Set<Integer>>>();
+		var orders = new ConcurrentHashMap<Integer, Map<Set<OrderValue>, Set<Integer>>>();
+
+		var subfaces = foldedModel.getSubfaces();
+		var overlapRelations = foldedModel.getOverlapRelations();
+
+		// initialize
+		for (int s = 0; s < subfaces.size(); s++) {
+			orders.put(s, new ConcurrentHashMap<>());
+		}
+
+		IntStream.range(0, overlapRelations.size()).parallel().forEach(k -> {
+			var overlapRelation = overlapRelations.get(k);
+
+			IntStream.range(0, subfaces.size()).forEach(s -> {
+				var subface = subfaces.get(s);
+				Set<OrderValue> order = CollectionUtil.newConcurrentHashSet();
+
+				for (int i = 0; i < subface.getParentFaceCount(); i++) {
+					var face_i = subface.getParentFace(i);
+					for (int j = i + 1; j < subface.getParentFaceCount(); j++) {
+						var face_j = subface.getParentFace(j);
+
+						var smallerIndex = Math.min(face_i.getFaceID(), face_j.getFaceID());
+						var largerIndex = Math.max(face_i.getFaceID(), face_j.getFaceID());
+						var relation = overlapRelation.get(smallerIndex, largerIndex);
+
+						var value = new OrderValue(smallerIndex, largerIndex, relation);
+
+						order.add(value);
+					}
+				}
+
+				var indices = orders.get(s).get(order);
+				if (indices == null) {
+					indices = CollectionUtil.newConcurrentHashSet();
+					orders.get(s).put(order, indices);
+				}
+				indices.add(k);
+			});
+		});
+
+		IntStream.range(0, subfaces.size()).parallel().forEach(s -> {
+			var orderToOverlapRelationIndices = orders.get(s);
+			map.put(s, Collections.synchronizedMap(new HashMap<>()));
+
+			int index = 0;
+			for (var order : orderToOverlapRelationIndices.keySet()) {
+				var indices = orderToOverlapRelationIndices.get(order);
+				map.get(s).put(index++, indices);
+			}
+		});
+
+		logger.debug("createSubfaceToOverlapRelationIndices() end: {}[ms]", watch.getMilliSec());
+
+		return map;
+	}
+
 }
