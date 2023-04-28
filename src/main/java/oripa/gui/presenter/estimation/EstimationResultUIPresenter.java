@@ -18,8 +18,8 @@
  */
 package oripa.gui.presenter.estimation;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -156,13 +156,13 @@ public class EstimationResultUIPresenter {
 		}
 	}
 
-	private Map<Integer, Map<Integer, Set<Integer>>> createSubfaceToOverlapRelationIndices(
+	private Map<Integer, List<Set<Integer>>> createSubfaceToOverlapRelationIndices(
 			final FoldedModel foldedModel) {
 
 		var watch = new StopWatch(true);
 		logger.debug("createSubfaceToOverlapRelationIndices() start");
 
-		var map = new ConcurrentHashMap<Integer, Map<Integer, Set<Integer>>>();
+		var map = new ConcurrentHashMap<Integer, List<Set<Integer>>>();
 		var orders = new ConcurrentHashMap<Integer, Map<Set<OrderValue>, Set<Integer>>>();
 
 		var subfaces = foldedModel.getSubfaces();
@@ -206,12 +206,11 @@ public class EstimationResultUIPresenter {
 
 		IntStream.range(0, subfaces.size()).parallel().forEach(s -> {
 			var orderToOverlapRelationIndices = orders.get(s);
-			map.put(s, Collections.synchronizedMap(new HashMap<>()));
+			map.put(s, Collections.synchronizedList(new ArrayList<>()));
 
-			int index = 0;
 			for (var order : orderToOverlapRelationIndices.keySet()) {
 				var indices = orderToOverlapRelationIndices.get(order);
-				map.get(s).put(index++, indices);
+				map.get(s).add(indices);
 			}
 		});
 

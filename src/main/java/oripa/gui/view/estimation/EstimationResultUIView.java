@@ -18,6 +18,7 @@
  */
 package oripa.gui.view.estimation;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -65,7 +66,7 @@ public interface EstimationResultUIView extends View {
 	 *            Output type: < index of subface, map< index of order, overlap
 	 *            relation indices > >
 	 */
-	void setFilterInitializationListener(Function<FoldedModel, Map<Integer, Map<Integer, Set<Integer>>>> listener);
+	void setFilterInitializationListener(Function<FoldedModel, Map<Integer, List<Set<Integer>>>> listener);
 
 	void showExportErrorMessage(Exception e);
 

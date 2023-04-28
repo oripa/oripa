@@ -117,11 +117,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	/**
 	 * < index of subface, map< index of order, overlap relation indices > >
 	 */
-	private Map<Integer, Map<Integer, Set<Integer>>> subfaceToOverlapRelationIndices;
+	private Map<Integer, List<Set<Integer>>> subfaceToOverlapRelationIndices;
 
 	private BiConsumer<Color, Color> saveColorsListener;
 
-	private Function<FoldedModel, Map<Integer, Map<Integer, Set<Integer>>>> filterInitializationListener;
+	private Function<FoldedModel, Map<Integer, List<Set<Integer>>>> filterInitializationListener;
 
 	/**
 	 * This is the default constructor
@@ -207,8 +207,10 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	private void prepareSuborderIndexCombo(final int subfaceIndex) {
 		suborderIndexCombo.removeAllItems();
-		subfaceToOverlapRelationIndices.get(subfaceIndex)
-				.forEach((order, indices) -> suborderIndexCombo.addItem(order));
+
+		for (int order = 0; order < subfaceToOverlapRelationIndices.get(subfaceIndex).size(); order++) {
+			suborderIndexCombo.addItem(order);
+		}
 	}
 
 	private void setSubfaceToScreen(final SubFace subface) {
@@ -523,7 +525,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	@Override
 	public void setFilterInitializationListener(
-			final Function<FoldedModel, Map<Integer, Map<Integer, Set<Integer>>>> listener) {
+			final Function<FoldedModel, Map<Integer, List<Set<Integer>>>> listener) {
 		filterInitializationListener = listener;
 	}
 
