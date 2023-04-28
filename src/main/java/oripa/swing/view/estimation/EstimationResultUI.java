@@ -115,7 +115,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final Map<Integer, Integer> filterSelectionMap = new HashMap<>();
 
 	/**
-	 * < index of subface, map< index of order, overlap relation indices > >
+	 * < index of subface, list< overlap relation indices > >
 	 */
 	private Map<Integer, List<Set<Integer>>> subfaceToOverlapRelationIndices;
 

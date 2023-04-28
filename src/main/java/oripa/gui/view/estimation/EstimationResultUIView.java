@@ -63,8 +63,8 @@ public interface EstimationResultUIView extends View {
 
 	/**
 	 * @param listener
-	 *            Output type: < index of subface, map< index of order, overlap
-	 *            relation indices > >
+	 *            Output type: < index of subface, list< overlap relation
+	 *            indices > >
 	 */
 	void setFilterInitializationListener(Function<FoldedModel, Map<Integer, List<Set<Integer>>>> listener);
 
