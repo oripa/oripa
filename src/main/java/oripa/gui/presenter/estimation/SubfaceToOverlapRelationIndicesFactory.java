@@ -19,7 +19,6 @@
 package oripa.gui.presenter.estimation;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -96,10 +95,10 @@ class SubfaceToOverlapRelationIndicesFactory {
 
 		IntStream.range(0, subfaces.size()).parallel().forEach(s -> {
 			var orderToOverlapRelationIndices = orders.get(s);
-			map.put(s, Collections.synchronizedList(new ArrayList<>()));
+			map.put(s, new ArrayList<>());
 
-			for (var order : orderToOverlapRelationIndices.keySet()) {
-				var indices = orderToOverlapRelationIndices.get(order);
+			for (var orderKey : orderToOverlapRelationIndices.keySet()) {
+				var indices = orderToOverlapRelationIndices.get(orderKey);
 				map.get(s).add(indices);
 			}
 		});
@@ -110,7 +109,7 @@ class SubfaceToOverlapRelationIndicesFactory {
 	}
 
 	private Set<OrderValue> createOrderKey(final SubFace subface, final OverlapRelation overlapRelation) {
-		Set<OrderValue> order = CollectionUtil.newConcurrentHashSet();
+		var order = new HashSet<OrderValue>();
 
 		for (int i = 0; i < subface.getParentFaceCount(); i++) {
 			var face_i = subface.getParentFace(i);
