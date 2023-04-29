@@ -18,49 +18,23 @@
  */
 package oripa.swing.view.main;
 
-import java.awt.GridBagLayout;
-
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.swing.view.util.SimpleModalDialog;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class DialogWhileFolding extends JDialog {
-
-//	private SwingWorker<List<JFrame>, Void> worker;
-	private final int WIDTH = 200;
-	private final int HEIGHT = 100;
+public class DialogWhileFolding extends SimpleModalDialog {
 
 	public DialogWhileFolding(final JFrame parent, final ResourceHolder resources) {
-		super(parent, true);
-		setTitle(resources.getString(ResourceKey.INFO, StringID.Information.NOW_FOLDING_TITLE_ID));
-
-		setLayout(new GridBagLayout());
-		add(new JLabel(resources.getString(
-				ResourceKey.INFO,
-				StringID.Information.NOW_FOLDING_ID)));
-
-		setSize(WIDTH, HEIGHT);
-		setLocationRelativeTo(parent);
-
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-//		addWindowListener(new WindowAdapter() {
-//			@Override
-//			public void windowClosed(final WindowEvent e) {
-//				worker.cancel(true); // doesn't work so far.
-//			}
-//		});
+		super(parent,
+				resources.getString(ResourceKey.INFO, StringID.Information.NOW_FOLDING_TITLE_ID),
+				resources.getString(ResourceKey.INFO, StringID.Information.NOW_FOLDING_ID));
 	}
 
-//	public void setWorker(final SwingWorker<List<JFrame>, Void> worker) {
-//		this.worker = worker;
-//	}
 }

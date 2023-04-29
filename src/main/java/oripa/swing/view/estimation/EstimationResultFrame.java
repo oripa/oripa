@@ -59,7 +59,7 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 
 	public EstimationResultFrame() {
 		setTitle(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
-		setBounds(0, 0, 800, 650);
+		setBounds(0, 0, 800, 750);
 		setLayout(new BorderLayout());
 
 		ui.setScreen(screen);

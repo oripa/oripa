@@ -59,6 +59,6 @@ public class FoldedModelEntity {
 	}
 
 	public FoldedModel toFoldedModel() {
-		return new FoldedModel(origamiModel, overlapRelations);
+		return new FoldedModel(origamiModel, overlapRelations, List.of());
 	}
 }

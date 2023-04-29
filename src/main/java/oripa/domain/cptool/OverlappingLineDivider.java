@@ -23,12 +23,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
 import oripa.geom.GeomUtil;
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
 /**
@@ -60,7 +60,7 @@ public class OverlappingLineDivider {
 		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
 		Set<OriLine> dividerLineSet = new HashSet<>(dividerLines);
-		Set<OriLine> lineSet = ConcurrentHashMap.newKeySet();
+		Set<OriLine> lineSet = CollectionUtil.newConcurrentHashSet();
 
 		lineSet.addAll(lines);
 
@@ -87,8 +87,8 @@ public class OverlappingLineDivider {
 	private void divideLinesIfOverlap(final OriLine dividerLine, final Collection<OriLine> lines,
 			final double pointEps) {
 
-		Set<OriLine> targettedLines = ConcurrentHashMap.newKeySet();
-		Set<OriLine> splitLines = ConcurrentHashMap.newKeySet();
+		Set<OriLine> targettedLines = CollectionUtil.newConcurrentHashSet();
+		Set<OriLine> splitLines = CollectionUtil.newConcurrentHashSet();
 
 		lines.parallelStream()
 				.forEach(line -> {

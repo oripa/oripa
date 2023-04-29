@@ -18,6 +18,11 @@
  */
 package oripa.gui.view.estimation;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.gui.view.View;
@@ -55,6 +60,13 @@ public interface EstimationResultUIView extends View {
 	void addExportButtonListener(Runnable listener);
 
 	void addSaveSVGCofigButtonListener(Runnable listener);
+
+	/**
+	 * @param listener
+	 *            Output type: < index of subface, list< overlap relation
+	 *            indices > >
+	 */
+	void setFilterInitializationListener(Function<FoldedModel, Map<Integer, List<Set<Integer>>>> listener);
 
 	void showExportErrorMessage(Exception e);
 

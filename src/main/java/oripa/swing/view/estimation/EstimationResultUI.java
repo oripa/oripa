@@ -22,11 +22,20 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -38,6 +47,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.domain.fold.subface.SubFace;
 import oripa.gui.view.View;
 import oripa.gui.view.estimation.DefaultColors;
 import oripa.gui.view.estimation.EstimationResultUIView;
@@ -48,6 +58,8 @@ import oripa.swing.view.util.ColorRGBPanel;
 import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ListItemSelectionPanel;
+import oripa.swing.view.util.SimpleModalDialog;
+import oripa.swing.view.util.SimpleModalWorker;
 import oripa.swing.view.util.TitledBorderFactory;
 
 public class EstimationResultUI extends JPanel implements EstimationResultUIView {
@@ -62,6 +74,12 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	// setup components used
 	private final ListItemSelectionPanel answerSelectionPanel = new ListItemSelectionPanel("");
+
+	// TODO use string resource
+	private final JCheckBox filterEnabledCheckBox = new JCheckBox("Use subface filter");
+	private final JComboBox<Integer> subfaceIndexCombo = new JComboBox<>();
+	private final JComboBox<String> suborderIndexCombo = new JComboBox<>();
+	private final JCheckBox subfaceVisibleCheckBox = new JCheckBox("Show subface");
 
 	private final JCheckBox orderCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ORDER_FLIP_ID));
@@ -88,6 +106,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final JButton exportButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
 
+	// TODO use string resource
 	private final JLabel svgFaceStrokeWidthLabel = new JLabel("face stroke-width:");
 	private final JTextField svgFaceStrokeWidthField = new JTextField();
 	private final JLabel svgPrecreaseStrokeWidthLabel = new JLabel("crease stroke-width:");
@@ -97,9 +116,22 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	private FoldedModel foldedModel;
 	private OverlapRelation overlapRelation;
-	private int overlapRelationIndex = 0;
+
+	private List<OverlapRelation> filteredOverlapRelations;
+
+	/**
+	 * < index of selected subface, index of selected suborder >
+	 */
+	private final Map<Integer, Integer> filterSelectionMap = new HashMap<>();
+
+	/**
+	 * < index of subface, list< overlap relation indices > >
+	 */
+	private Map<Integer, List<Set<Integer>>> subfaceToOverlapRelationIndices;
 
 	private BiConsumer<Color, Color> saveColorsListener;
+
+	private Function<FoldedModel, Map<Integer, List<Set<Integer>>>> filterInitializationListener;
 
 	/**
 	 * This is the default constructor
@@ -130,12 +162,99 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	@Override
 	public void setModel(final FoldedModel foldedModel) {
 		this.foldedModel = foldedModel;
-		answerSelectionPanel.setItemCount(foldedModel.getOverlapRelations().size());
+
+		setOverlapRelations(foldedModel.getOverlapRelations());
+	}
+
+	private void initializeFilterComponents() {
+		var frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+		// TODO use string resource
+		var dialog = new SimpleModalDialog(frame, "Now computing...", "Please wait.");
+
+		var worker = new SimpleModalWorker(dialog, () -> {
+			subfaceToOverlapRelationIndices = filterInitializationListener.apply(foldedModel);
+			subfaceToOverlapRelationIndices.forEach((s, orders) -> filterSelectionMap.put(s, 0));
+		});
+
+		worker.executeModal();
+
+		prepareSubfaceIndexCombo();
+		prepareSuborderIndexCombo(0);
+
+		subfaceIndexCombo.setSelectedIndex(0);
+		suborderIndexCombo.setSelectedIndex(0);
+
+	}
+
+	private void prepareSubfaceIndexCombo() {
+		subfaceIndexCombo.removeAllItems();
+		subfaceToOverlapRelationIndices.forEach((s, orders) -> {
+			if (orders.size() > 2) {
+				subfaceIndexCombo.addItem(s);
+			}
+		});
+
+		if (subfaceIndexCombo.getItemCount() == 0) {
+			subfaceIndexCombo.addItem(0);
+		}
+	}
+
+	private void prepareSuborderIndexCombo(final int subfaceIndex) {
+		suborderIndexCombo.removeAllItems();
+
+		var orders = subfaceToOverlapRelationIndices.get(subfaceIndex);
+		for (int order = 0; order < orders.size(); order++) {
+			suborderIndexCombo.addItem(order == 0 ? "none" : Integer.toString(order));
+		}
+	}
+
+	private void setSubfaceToScreen(final SubFace subface) {
+		if (subface == null) {
+			screen.setSelectedSubface(null);
+			return;
+		}
+
+		screen.setSelectedSubface(subfaceVisibleCheckBox.isSelected() ? subface.getOutline() : null);
+	}
+
+	private void setOverlapRelations(final List<OverlapRelation> overlapRelations) {
+		filteredOverlapRelations = overlapRelations;
+		answerSelectionPanel.setItemCount(overlapRelations.size());
+	}
+
+	private void selectOverlapRelation(final int index) {
+		if (filteredOverlapRelations.size() > 0) {
+			overlapRelation = filteredOverlapRelations.get(index);
+		}
+		screen.setOverlapRelation(overlapRelation);
 	}
 
 	@Override
 	public FoldedModel getModel() {
 		return foldedModel;
+	}
+
+	private List<OverlapRelation> filter() {
+		// use a set for fast computation
+		var filteredIndices = new HashSet<Integer>();
+		for (int k = 0; k < foldedModel.getOverlapRelations().size(); k++) {
+			filteredIndices.add(k);
+		}
+
+		filterSelectionMap.forEach((subfaceIndex, suborderIndex) -> {
+			var selectedIndices = subfaceToOverlapRelationIndices.get(subfaceIndex).get(suborderIndex);
+			filteredIndices.retainAll(selectedIndices);
+		});
+
+		return filteredIndices.stream().map(k -> foldedModel.getOverlapRelations().get(k)).collect(Collectors.toList());
+	}
+
+	private void setFilterEnabled(final boolean enabled) {
+		subfaceIndexCombo.setEnabled(enabled);
+		suborderIndexCombo.setEnabled(enabled);
+		subfaceVisibleCheckBox.setEnabled(enabled);
+
 	}
 
 	/**
@@ -164,7 +283,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				.setAnchor(GridBagConstraints.LAST_LINE_START);
 		add(exportButton, gbBuilder.getLineField());
 
-		initialCheckBoxSetting();
+		initializeComponentSetting();
 		addActionListenersToComponents();
 	}
 
@@ -174,10 +293,63 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private void addActionListenersToComponents() {
 		answerSelectionPanel.addPropertyChangeListener(ListItemSelectionPanel.INDEX,
 				e -> {
-					overlapRelationIndex = (int) e.getNewValue();
-					overlapRelation = foldedModel.getOverlapRelations().get(overlapRelationIndex);
-					screen.setOverlapRelation(overlapRelation);
+					selectOverlapRelation((int) e.getNewValue());
 				});
+
+		filterEnabledCheckBox.addActionListener(e -> {
+			if (filterEnabledCheckBox.isSelected()) {
+				initializeFilterComponents();
+
+				setFilterEnabled(true);
+
+				setOverlapRelations(filter());
+				selectOverlapRelation(0);
+
+				var subface = foldedModel.getSubfaces().get(0);
+				setSubfaceToScreen(subface);
+			} else {
+				setFilterEnabled(false);
+
+				setOverlapRelations(foldedModel.getOverlapRelations());
+				selectOverlapRelation(0);
+
+				setSubfaceToScreen(null);
+			}
+		});
+
+		subfaceIndexCombo.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				var subfaceIndex = (Integer) e.getItem();
+				var suborderIndex = filterSelectionMap.get(subfaceIndex);
+
+				setOverlapRelations(filter());
+				selectOverlapRelation(0);
+
+				var subface = foldedModel.getSubfaces().get(subfaceIndex);
+				setSubfaceToScreen(subface);
+
+				prepareSuborderIndexCombo(subfaceIndex);
+				suborderIndexCombo.setSelectedIndex(suborderIndex);
+			}
+		});
+
+		suborderIndexCombo.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				var subfaceIndex = (Integer) subfaceIndexCombo.getSelectedItem();
+				var suborderIndex = suborderIndexCombo.getSelectedIndex();
+				filterSelectionMap.put(subfaceIndex, suborderIndex);
+
+				setOverlapRelations(filter());
+				selectOverlapRelation(0);
+			}
+		});
+
+		subfaceVisibleCheckBox.addActionListener(e -> {
+			var subfaceIndex = (Integer) subfaceIndexCombo.getSelectedItem();
+			var subface = foldedModel.getSubfaces().get(subfaceIndex);
+
+			setSubfaceToScreen(subface);
+		});
 
 		orderCheckBox.addItemListener(e -> {
 			screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
@@ -208,7 +380,12 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				e -> saveColorsListener.accept(frontColorRGBPanel.getColor(), backColorRGBPanel.getColor()));
 	}
 
-	private void initialCheckBoxSetting() {
+	private void initializeComponentSetting() {
+		filterEnabledCheckBox.setSelected(false);
+		setFilterEnabled(false);
+
+		subfaceVisibleCheckBox.setSelected(true);
+
 		useColorCheckBox.setSelected(true);
 		edgeCheckBox.setSelected(true);
 		fillFaceCheckBox.setSelected(true);
@@ -217,11 +394,21 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private JPanel createAnswerShiftPanel() {
 		var answerShiftPanel = new JPanel();
 
+		var gbBuilder = new GridBagConstraintsBuilder(1);
+
 		answerShiftPanel.setLayout(new GridBagLayout());
 		answerShiftPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
 				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ANSWERS_PANEL_ID)));
 
-		answerShiftPanel.add(answerSelectionPanel);
+		answerShiftPanel.add(answerSelectionPanel, gbBuilder.getNextField());
+
+		var filterPanel = new JPanel();
+		filterPanel.add(subfaceIndexCombo);
+		filterPanel.add(suborderIndexCombo);
+
+		answerShiftPanel.add(filterEnabledCheckBox, gbBuilder.getNextField());
+		answerShiftPanel.add(subfaceVisibleCheckBox, gbBuilder.getNextField());
+		answerShiftPanel.add(filterPanel, gbBuilder.getNextField());
 
 		return answerShiftPanel;
 	}
@@ -315,7 +502,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	@Override
 	public int getOverlapRelationIndex() {
-		return overlapRelationIndex;
+		return foldedModel.getOverlapRelations().indexOf(overlapRelation);
 	}
 
 	@Override
@@ -341,6 +528,12 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	@Override
 	public void setSVGPrecreaseStrokeWidth(final double strokeWidth) {
 		svgPrecreaseStrokeWidthField.setText(Double.toString(strokeWidth));
+	}
+
+	@Override
+	public void setFilterInitializationListener(
+			final Function<FoldedModel, Map<Integer, List<Set<Integer>>>> listener) {
+		filterInitializationListener = listener;
 	}
 
 	@Override

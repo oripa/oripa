@@ -42,7 +42,7 @@ class ErrorAllowedFolder implements Folder {
 		simpleFolder.foldWithoutLineType(origamiModel);
 		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
-		return new FoldedModel(origamiModel, List.of());
+		return new FoldedModel(origamiModel, List.of(), List.of());
 	}
 
 }

@@ -18,6 +18,9 @@
  */
 package oripa.gui.presenter.estimation;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
@@ -25,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.application.estimation.EstimationResultFileAccess;
 import oripa.application.estimation.FoldedModelSVGConfigFileAccess;
+import oripa.domain.fold.FoldedModel;
 import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
@@ -72,6 +76,7 @@ public class EstimationResultUIPresenter {
 	private void addListener() {
 		view.addSaveSVGCofigButtonListener(this::saveSVGConfig);
 		view.addExportButtonListener(this::export);
+		view.setFilterInitializationListener(this::createSubfaceToOverlapRelationIndices);
 	}
 
 	/**
@@ -136,4 +141,10 @@ public class EstimationResultUIPresenter {
 			view.showErrorMessage(e);
 		}
 	}
+
+	private Map<Integer, List<Set<Integer>>> createSubfaceToOverlapRelationIndices(
+			final FoldedModel foldedModel) {
+		return new SubfaceToOverlapRelationIndicesFactory().create(foldedModel);
+	}
+
 }

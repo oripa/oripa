@@ -71,6 +71,7 @@ import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ImageResourceLoader;
 import oripa.swing.view.util.KeyStrokes;
+import oripa.swing.view.util.SimpleModalWorker;
 import oripa.swing.view.util.TitledBorderFactory;
 
 public class UIPanel extends JPanel implements UIPanelView {
@@ -1304,36 +1305,19 @@ public class UIPanel extends JPanel implements UIPanelView {
 		// modal dialog while folding
 		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
 
-		var worker = new SwingWorker<Void, Void>() {
-			@Override
-			protected Void doInBackground() throws Exception {
-				try {
-					modelComputationListener.run();
-				} catch (Exception e) {
-					logger.error("error when folding", e);
-					showErrorMessage(e);
-				}
-				return null;
-			}
-		};
-
-//		dialogWhileFolding.setWorker(worker);
-
-		worker.addPropertyChangeListener(e -> {
-			if ("state".equals(e.getPropertyName())
-					&& SwingWorker.StateValue.DONE == e.getNewValue()) {
-				dialogWhileFolding.setVisible(false);
-				dialogWhileFolding.dispose();
+		var worker = new SimpleModalWorker(dialogWhileFolding, () -> {
+			try {
+				modelComputationListener.run();
+			} catch (Exception e) {
+				logger.error("error when folding", e);
+				showErrorMessage(e);
 			}
 		});
 
-		worker.execute();
-
 		setBuildButtonEnabled(false);
-		dialogWhileFolding.setVisible(true);
+		worker.executeModal();
 
 		try {
-			worker.get();
 
 			// this action moves the main window to front.
 			setBuildButtonEnabled(true);

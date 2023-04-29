@@ -16,22 +16,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.collection;
+package oripa.swing.view.util;
 
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.swing.SwingWorker;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CollectionUtil {
-	public static <T> T getCircular(final List<T> list, final int index) {
-		return list.get((index + list.size()) % list.size());
+public class SimpleModalWorker extends SwingWorker<Void, Void> {
+	private final SimpleModalDialog dialog;
+	private final Runnable action;
+
+	public SimpleModalWorker(final SimpleModalDialog dialog, final Runnable action) {
+		this.dialog = dialog;
+		this.action = action;
+
+		addPropertyChangeListener(e -> {
+			if ("state".equals(e.getPropertyName())
+					&& SwingWorker.StateValue.DONE == e.getNewValue()) {
+				dialog.setVisible(false);
+				dialog.dispose();
+			}
+		});
+
 	}
 
-	public static <T> Set<T> newConcurrentHashSet() {
-		return ConcurrentHashMap.newKeySet();
+	@Override
+	protected Void doInBackground() throws Exception {
+		action.run();
+		return null;
+	}
+
+	public void executeModal() {
+		execute();
+		dialog.setVisible(true);
 	}
 }

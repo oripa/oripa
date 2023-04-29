@@ -16,22 +16,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.collection;
+package oripa.swing.view.util;
 
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.awt.GridBagLayout;
+
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CollectionUtil {
-	public static <T> T getCircular(final List<T> list, final int index) {
-		return list.get((index + list.size()) % list.size());
-	}
+public class SimpleModalDialog extends JDialog {
 
-	public static <T> Set<T> newConcurrentHashSet() {
-		return ConcurrentHashMap.newKeySet();
+	private final int WIDTH = 200;
+	private final int HEIGHT = 100;
+
+	public SimpleModalDialog(final JFrame parent, final String title, final String text) {
+		super(parent, true);
+
+		setTitle(title);
+
+		setLayout(new GridBagLayout());
+		add(new JLabel(text));
+
+		setSize(WIDTH, HEIGHT);
+		setLocationRelativeTo(parent);
+
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 }

@@ -43,14 +43,15 @@ class AssignedModelFolder implements Folder {
 
 		if (!fullEstimation) {
 			origamiModel.setFolded(true);
-			return new FoldedModel(origamiModel, List.of());
+			return new FoldedModel(origamiModel, List.of(), List.of());
 		}
 
-		var overlapRelations = enumerator.enumerate(origamiModel);
+		var enumerationResult = enumerator.enumerate(origamiModel);
 
-		var foldedModel = new FoldedModel(origamiModel, overlapRelations);
+		var foldedModel = new FoldedModel(origamiModel, enumerationResult.getOverlapRelations(),
+				enumerationResult.getSubfaces());
 
-		if (overlapRelations.isEmpty()) {
+		if (enumerationResult.isEmpty()) {
 			return foldedModel;
 		}
 

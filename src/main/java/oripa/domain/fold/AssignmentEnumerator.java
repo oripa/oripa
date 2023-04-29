@@ -122,19 +122,20 @@ public class AssignmentEnumerator {
 			return;
 		}
 
-		var mountainCount = vertex.edgeStream().filter(OriEdge::isMountain).count();
-		var valleyCount = vertex.edgeStream().filter(OriEdge::isValley).count();
-
 		var originalAssignment = toAssignmentMap(vertex);
 
 		List<Map<List<OriVertex>, OriLine.Type>> assignments = null;
+
 		if (assignmentMemos.keySet().contains(originalAssignment)) {
 			assignments = assignmentMemos.get(originalAssignment);
 		} else {
-			assignments = createAssignments(vertex, 0,
-					mountainCount, valleyCount);
+			var mountainCount = vertex.edgeStream().filter(OriEdge::isMountain).count();
+			var valleyCount = vertex.edgeStream().filter(OriEdge::isValley).count();
+
+			assignments = createAssignments(vertex, 0, mountainCount, valleyCount);
 			assignmentMemos.put(originalAssignment, assignments);
 		}
+
 		for (var assignment : assignments) {
 			logger.trace("go next. vertex@{} = {}, assignment = {}", vertexIndex, vertex.getPositionBeforeFolding(),
 					assignment);
