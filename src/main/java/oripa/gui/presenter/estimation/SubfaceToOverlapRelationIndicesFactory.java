@@ -95,12 +95,10 @@ class SubfaceToOverlapRelationIndicesFactory {
 
 		IntStream.range(0, subfaces.size()).parallel().forEach(s -> {
 			var orderToOverlapRelationIndices = orders.get(s);
-			map.put(s, new ArrayList<>());
+			var list = new ArrayList<Set<Integer>>();
+			map.put(s, list);
 
-			for (var orderKey : orderToOverlapRelationIndices.keySet()) {
-				var indices = orderToOverlapRelationIndices.get(orderKey);
-				map.get(s).add(indices);
-			}
+			orderToOverlapRelationIndices.forEach((orderKey, indices) -> list.add(indices));
 		});
 
 		logger.debug("end: {}[ms]", watch.getMilliSec());
@@ -120,9 +118,7 @@ class SubfaceToOverlapRelationIndicesFactory {
 				var largerIndex = Math.max(face_i.getFaceID(), face_j.getFaceID());
 				var relation = overlapRelation.get(smallerIndex, largerIndex);
 
-				var value = new OrderValue(smallerIndex, largerIndex, relation);
-
-				order.add(value);
+				order.add(new OrderValue(smallerIndex, largerIndex, relation));
 			}
 		}
 
