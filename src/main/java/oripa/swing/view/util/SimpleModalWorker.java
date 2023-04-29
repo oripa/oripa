@@ -18,32 +18,38 @@
  */
 package oripa.swing.view.util;
 
-import java.awt.GridBagLayout;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.SwingWorker;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SimpleModalDialog extends JDialog {
+public class SimpleModalWorker extends SwingWorker<Void, Void> {
+	private final SimpleModalDialog dialog;
+	private final Runnable action;
 
-	private final int WIDTH = 200;
-	private final int HEIGHT = 100;
+	public SimpleModalWorker(final SimpleModalDialog dialog, final Runnable action) {
+		this.dialog = dialog;
+		this.action = action;
 
-	public SimpleModalDialog(final JFrame parent, final String title, final String text) {
-		super(parent, true);
+		addPropertyChangeListener(e -> {
+			if ("state".equals(e.getPropertyName())
+					&& SwingWorker.StateValue.DONE == e.getNewValue()) {
+				dialog.setVisible(false);
+				dialog.dispose();
+			}
+		});
 
-		setTitle(title);
+	}
 
-		setLayout(new GridBagLayout());
-		add(new JLabel(text));
+	@Override
+	protected Void doInBackground() throws Exception {
+		action.run();
+		return null;
+	}
 
-		setSize(WIDTH, HEIGHT);
-		setLocationRelativeTo(parent);
-
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	public void executeModal() {
+		execute();
+		dialog.setVisible(true);
 	}
 }

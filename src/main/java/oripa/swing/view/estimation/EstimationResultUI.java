@@ -31,7 +31,15 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 
 import org.slf4j.Logger;
@@ -51,6 +59,7 @@ import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ListItemSelectionPanel;
 import oripa.swing.view.util.SimpleModalDialog;
+import oripa.swing.view.util.SimpleModalWorker;
 import oripa.swing.view.util.TitledBorderFactory;
 
 public class EstimationResultUI extends JPanel implements EstimationResultUIView {
@@ -163,37 +172,18 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		// TODO use string resource
 		var dialog = new SimpleModalDialog(frame, "Now computing...", "Please wait.");
 
-		var worker = new SwingWorker<Void, Void>() {
-			@Override
-			protected Void doInBackground() throws Exception {
-				subfaceToOverlapRelationIndices = filterInitializationListener.apply(foldedModel);
-				subfaceToOverlapRelationIndices.forEach((s, orders) -> {
-					filterSelectionMap.put(s, 0);
-				});
-				return null;
-			}
-		};
-
-		worker.addPropertyChangeListener(e -> {
-			if ("state".equals(e.getPropertyName())
-					&& SwingWorker.StateValue.DONE == e.getNewValue()) {
-				dialog.setVisible(false);
-				dialog.dispose();
-			}
+		var worker = new SimpleModalWorker(dialog, () -> {
+			subfaceToOverlapRelationIndices = filterInitializationListener.apply(foldedModel);
+			subfaceToOverlapRelationIndices.forEach((s, orders) -> filterSelectionMap.put(s, 0));
 		});
 
-		worker.execute();
+		worker.executeModal();
 
-		try {
-			dialog.setVisible(true);
+		prepareSubfaceIndexCombo();
+		prepareSuborderIndexCombo(0);
 
-			prepareSubfaceIndexCombo();
-			prepareSuborderIndexCombo(0);
-
-			subfaceIndexCombo.setSelectedIndex(0);
-			suborderIndexCombo.setSelectedIndex(0);
-		} catch (Exception e) {
-		}
+		subfaceIndexCombo.setSelectedIndex(0);
+		suborderIndexCombo.setSelectedIndex(0);
 
 	}
 
