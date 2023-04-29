@@ -19,6 +19,7 @@
 package oripa.gui.presenter.estimation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ class SubfaceToOverlapRelationIndicesFactory {
 		var watch = new StopWatch(true);
 		logger.debug("start");
 
-		var map = new ConcurrentHashMap<Integer, List<Set<Integer>>>();
+		var map = new HashMap<Integer, List<Set<Integer>>>();
 		var orders = new ConcurrentHashMap<Integer, Map<Set<OrderValue>, Set<Integer>>>();
 
 		var subfaces = foldedModel.getSubfaces();
@@ -119,12 +120,12 @@ class SubfaceToOverlapRelationIndicesFactory {
 		var orderKey = new HashSet<OrderValue>();
 
 		for (int i = 0; i < subface.getParentFaceCount(); i++) {
-			var face_i = subface.getParentFace(i);
+			var faceID_i = subface.getParentFace(i).getFaceID();
 			for (int j = i + 1; j < subface.getParentFaceCount(); j++) {
-				var face_j = subface.getParentFace(j);
+				var faceID_j = subface.getParentFace(j).getFaceID();
 
-				var smallerIndex = Math.min(face_i.getFaceID(), face_j.getFaceID());
-				var largerIndex = Math.max(face_i.getFaceID(), face_j.getFaceID());
+				var smallerIndex = Math.min(faceID_i, faceID_j);
+				var largerIndex = Math.max(faceID_i, faceID_j);
 				var relation = overlapRelation.get(smallerIndex, largerIndex);
 
 				orderKey.add(new OrderValue(smallerIndex, largerIndex, relation));
