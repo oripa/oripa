@@ -116,7 +116,7 @@ class SubfaceToOverlapRelationIndicesFactory {
 	}
 
 	private Set<OrderValue> createOrderKey(final SubFace subface, final OverlapRelation overlapRelation) {
-		var order = new HashSet<OrderValue>();
+		var orderKey = new HashSet<OrderValue>();
 
 		for (int i = 0; i < subface.getParentFaceCount(); i++) {
 			var face_i = subface.getParentFace(i);
@@ -127,10 +127,10 @@ class SubfaceToOverlapRelationIndicesFactory {
 				var largerIndex = Math.max(face_i.getFaceID(), face_j.getFaceID());
 				var relation = overlapRelation.get(smallerIndex, largerIndex);
 
-				order.add(new OrderValue(smallerIndex, largerIndex, relation));
+				orderKey.add(new OrderValue(smallerIndex, largerIndex, relation));
 			}
 		}
 
-		return order;
+		return orderKey;
 	}
 }
