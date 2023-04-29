@@ -204,6 +204,10 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				subfaceIndexCombo.addItem(s);
 			}
 		});
+
+		if (subfaceIndexCombo.getItemCount() == 0) {
+			subfaceIndexCombo.addItem(0);
+		}
 	}
 
 	private void prepareSuborderIndexCombo(final int subfaceIndex) {
