@@ -64,17 +64,22 @@ class SubfaceToOverlapRelationIndicesFactory {
 		// initialize
 		for (int s = 0; s < subfaces.size(); s++) {
 			orders.put(s, new ConcurrentHashMap<>());
+			map.put(s, new ArrayList<Set<Integer>>());
 		}
+
+		// set "no ordering" option
+		IntStream.range(0, subfaces.size()).forEach(s -> {
+			var list = map.get(s);
+			var indices = new HashSet<Integer>();
+			for (int k = 0; k < overlapRelations.size(); k++) {
+				indices.add(k);
+			}
+			list.add(indices);
+		});
 
 		// shortcut
 		if (subfaces.size() == 1) {
-			var list = new ArrayList<Set<Integer>>();
-			map.put(0, list);
-			var set = new HashSet<Integer>();
-			list.add(set);
-			for (int k = 0; k < overlapRelations.size(); k++) {
-				set.add(k);
-			}
+			logger.debug("shortcut (only one subface)");
 			return map;
 		}
 
@@ -93,12 +98,9 @@ class SubfaceToOverlapRelationIndicesFactory {
 			});
 		});
 
-		IntStream.range(0, subfaces.size()).parallel().forEach(s -> {
-			var orderToOverlapRelationIndices = orders.get(s);
-			var list = new ArrayList<Set<Integer>>();
-			map.put(s, list);
-
-			orderToOverlapRelationIndices.forEach((orderKey, indices) -> list.add(indices));
+		IntStream.range(0, subfaces.size()).forEach(s -> {
+			var list = map.get(s);
+			orders.get(s).forEach((orderKey, indices) -> list.add(indices));
 		});
 
 		logger.debug("end: {}[ms]", watch.getMilliSec());

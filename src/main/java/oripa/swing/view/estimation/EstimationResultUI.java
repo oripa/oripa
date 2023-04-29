@@ -23,6 +23,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,7 +69,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	// TODO use string resource
 	private final JCheckBox filterEnabledCheckBox = new JCheckBox("Use subface filter");
 	private final JComboBox<Integer> subfaceIndexCombo = new JComboBox<>();
-	private final JComboBox<Integer> suborderIndexCombo = new JComboBox<Integer>();
+	private final JComboBox<String> suborderIndexCombo = new JComboBox<>();
 	private final JCheckBox subfaceVisibleCheckBox = new JCheckBox("Show subface");
 
 	private final JCheckBox orderCheckBox = new JCheckBox(
@@ -166,7 +167,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			@Override
 			protected Void doInBackground() throws Exception {
 				subfaceToOverlapRelationIndices = filterInitializationListener.apply(foldedModel);
-				subfaceToOverlapRelationIndices.forEach((s, indicesMap) -> {
+				subfaceToOverlapRelationIndices.forEach((s, orders) -> {
 					filterSelectionMap.put(s, 0);
 				});
 				return null;
@@ -198,8 +199,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	private void prepareSubfaceIndexCombo() {
 		subfaceIndexCombo.removeAllItems();
-		subfaceToOverlapRelationIndices.forEach((s, relationIndicesMap) -> {
-			if (relationIndicesMap.size() > 1) {
+		subfaceToOverlapRelationIndices.forEach((s, orders) -> {
+			if (orders.size() > 2) {
 				subfaceIndexCombo.addItem(s);
 			}
 		});
@@ -208,8 +209,9 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private void prepareSuborderIndexCombo(final int subfaceIndex) {
 		suborderIndexCombo.removeAllItems();
 
-		for (int order = 0; order < subfaceToOverlapRelationIndices.get(subfaceIndex).size(); order++) {
-			suborderIndexCombo.addItem(order);
+		var orders = subfaceToOverlapRelationIndices.get(subfaceIndex);
+		for (int order = 0; order < orders.size(); order++) {
+			suborderIndexCombo.addItem(order == 0 ? "none" : Integer.toString(order));
 		}
 	}
 
@@ -228,7 +230,9 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	private void selectOverlapRelation(final int index) {
-		overlapRelation = filteredOverlapRelations.get(index);
+		if (filteredOverlapRelations.size() > 0) {
+			overlapRelation = filteredOverlapRelations.get(index);
+		}
 		screen.setOverlapRelation(overlapRelation);
 	}
 
@@ -237,10 +241,20 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		return foldedModel;
 	}
 
-	private List<OverlapRelation> filter(final Integer subfaceIndex, final Integer suborderIndex) {
+	private List<OverlapRelation> filter() {
+		var filteredIndices = new HashSet<Integer>();
+		for (int k = 0; k < foldedModel.getOverlapRelations().size(); k++) {
+			filteredIndices.add(k);
+		}
 
-		return subfaceToOverlapRelationIndices.get(subfaceIndex).get(suborderIndex).stream()
-				.map(k -> foldedModel.getOverlapRelations().get(k)).collect(Collectors.toList());
+		filterSelectionMap.forEach((subfaceIndex, suborderIndex) -> {
+			var selectedIndices = subfaceToOverlapRelationIndices.get(subfaceIndex).get(suborderIndex);
+			filteredIndices.retainAll(selectedIndices);
+		});
+
+		return filteredIndices.stream().map(k -> foldedModel.getOverlapRelations().get(k)).collect(Collectors.toList());
+//		return subfaceToOverlapRelationIndices.get(subfaceIndex).get(suborderIndex).stream()
+//				.map(k -> foldedModel.getOverlapRelations().get(k)).collect(Collectors.toList());
 	}
 
 	private void setFilterEnabled(final boolean enabled) {
@@ -295,7 +309,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 				setFilterEnabled(true);
 
-				setOverlapRelations(filter(0, 0));
+				setOverlapRelations(filter());
 				selectOverlapRelation(0);
 
 				var subface = foldedModel.getSubfaces().get(0);
@@ -315,24 +329,24 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				var subfaceIndex = (Integer) e.getItem();
 				var suborderIndex = filterSelectionMap.get(subfaceIndex);
 
-				setOverlapRelations(filter(subfaceIndex, suborderIndex));
+				setOverlapRelations(filter());
 				selectOverlapRelation(0);
 
 				var subface = foldedModel.getSubfaces().get(subfaceIndex);
 				setSubfaceToScreen(subface);
 
 				prepareSuborderIndexCombo(subfaceIndex);
-				suborderIndexCombo.setSelectedItem(suborderIndex);
+				suborderIndexCombo.setSelectedIndex(suborderIndex);
 			}
 		});
 
 		suborderIndexCombo.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				var subfaceIndex = (Integer) subfaceIndexCombo.getSelectedItem();
-				var suborderIndex = (Integer) e.getItem();
+				var suborderIndex = suborderIndexCombo.getSelectedIndex();
 				filterSelectionMap.put(subfaceIndex, suborderIndex);
 
-				setOverlapRelations(filter(subfaceIndex, suborderIndex));
+				setOverlapRelations(filter());
 				selectOverlapRelation(0);
 			}
 		});

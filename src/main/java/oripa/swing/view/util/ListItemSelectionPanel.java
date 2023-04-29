@@ -65,6 +65,9 @@ public class ListItemSelectionPanel extends JPanel {
 		this.itemCount = itemCount;
 		if (itemCount > 0) {
 			selectItem(0);
+		} else {
+			selectionIndex = -1;
+			updateSelectionIndexLabel();
 		}
 	}
 
@@ -87,7 +90,7 @@ public class ListItemSelectionPanel extends JPanel {
 		add(nextButton);
 
 		prevButton.addActionListener(e -> {
-			if (selectionIndex == 0) {
+			if (selectionIndex <= 0) {
 				return;
 			}
 			selectItem(selectionIndex - 1);
