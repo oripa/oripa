@@ -242,6 +242,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	private List<OverlapRelation> filter() {
+		// use a set for fast computation
 		var filteredIndices = new HashSet<Integer>();
 		for (int k = 0; k < foldedModel.getOverlapRelations().size(); k++) {
 			filteredIndices.add(k);
@@ -253,8 +254,6 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		});
 
 		return filteredIndices.stream().map(k -> foldedModel.getOverlapRelations().get(k)).collect(Collectors.toList());
-//		return subfaceToOverlapRelationIndices.get(subfaceIndex).get(suborderIndex).stream()
-//				.map(k -> foldedModel.getOverlapRelations().get(k)).collect(Collectors.toList());
 	}
 
 	private void setFilterEnabled(final boolean enabled) {

@@ -50,6 +50,13 @@ class SubfaceToOverlapRelationIndicesFactory {
 		}
 	}
 
+	/**
+	 *
+	 * @param foldedModel
+	 * @return mapping subface index to a list of index sets on overlap relation
+	 *         list. the first set of each list contains all indices as a "no
+	 *         filtering" option.
+	 */
 	public Map<Integer, List<Set<Integer>>> create(final FoldedModel foldedModel) {
 
 		var watch = new StopWatch(true);
@@ -67,7 +74,7 @@ class SubfaceToOverlapRelationIndicesFactory {
 			map.put(s, new ArrayList<Set<Integer>>());
 		}
 
-		// set "no ordering" option
+		// set "no filtering" option
 		IntStream.range(0, subfaces.size()).forEach(s -> {
 			var list = map.get(s);
 			var indices = new HashSet<Integer>();
