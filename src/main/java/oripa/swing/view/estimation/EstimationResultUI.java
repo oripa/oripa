@@ -242,6 +242,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			filteredIndices.add(k);
 		}
 
+		// take AND of all selected filters
 		filterSelectionMap.forEach((subfaceIndex, suborderIndex) -> {
 			var selectedIndices = subfaceToOverlapRelationIndices.get(subfaceIndex).get(suborderIndex);
 			filteredIndices.retainAll(selectedIndices);
