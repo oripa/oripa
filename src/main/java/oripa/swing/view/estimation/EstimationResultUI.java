@@ -58,7 +58,6 @@ import oripa.swing.view.util.ColorRGBPanel;
 import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ListItemSelectionPanel;
-import oripa.swing.view.util.SimpleModalDialog;
 import oripa.swing.view.util.SimpleModalWorker;
 import oripa.swing.view.util.TitledBorderFactory;
 
@@ -75,11 +74,12 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	// setup components used
 	private final ListItemSelectionPanel answerSelectionPanel = new ListItemSelectionPanel("");
 
-	// TODO use string resource
-	private final JCheckBox filterEnabledCheckBox = new JCheckBox("Use subface filter");
+	private final JCheckBox filterEnabledCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.USE_FILTER_ID));
+	private final JCheckBox subfaceVisibleCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SHOW_SUBFACE_ID));
 	private final JComboBox<Integer> subfaceIndexCombo = new JComboBox<>();
 	private final JComboBox<String> suborderIndexCombo = new JComboBox<>();
-	private final JCheckBox subfaceVisibleCheckBox = new JCheckBox("Show subface");
 
 	private final JCheckBox orderCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ORDER_FLIP_ID));
@@ -106,10 +106,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final JButton exportButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
 
-	// TODO use string resource
-	private final JLabel svgFaceStrokeWidthLabel = new JLabel("face stroke-width:");
+	private final JLabel svgFaceStrokeWidthLabel = new JLabel(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_FACE_STROKEWIDTH_ID));
 	private final JTextField svgFaceStrokeWidthField = new JTextField();
-	private final JLabel svgPrecreaseStrokeWidthLabel = new JLabel("crease stroke-width:");
+	private final JLabel svgPrecreaseStrokeWidthLabel = new JLabel(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_CREASE_STROKEWIDTH_ID));
 	private final JTextField svgPrecreaseStrokeWidthField = new JTextField();
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
@@ -169,8 +170,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private void initializeFilterComponents() {
 		var frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-		// TODO use string resource
-		var dialog = new SimpleModalDialog(frame, "Now computing...", "Please wait.");
+		var dialog = new DialogWhileComputing(frame, resources);
 
 		var worker = new SimpleModalWorker(dialog, () -> {
 			subfaceToOverlapRelationIndices = filterInitializationListener.apply(foldedModel);
@@ -242,6 +242,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			filteredIndices.add(k);
 		}
 
+		// take AND of all selected filters
 		filterSelectionMap.forEach((subfaceIndex, suborderIndex) -> {
 			var selectedIndices = subfaceToOverlapRelationIndices.get(subfaceIndex).get(suborderIndex);
 			filteredIndices.retainAll(selectedIndices);
@@ -454,7 +455,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		var svgPanel = new JPanel();
 
 		svgPanel.setLayout(new GridBagLayout());
-		svgPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this, "SVG config"));
+		svgPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
+				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_CONFIG_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
 				.setWeight(1.0, 0.0);

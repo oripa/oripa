@@ -108,6 +108,8 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.EstimationResultUI.NEXT_RESULT_ID, "Next" },
 			{ StringID.EstimationResultUI.PREV_RESULT_ID, "Prev" },
 			{ StringID.EstimationResultUI.INDEX_ID, "Folded model" },
+			{ StringID.EstimationResultUI.USE_FILTER_ID, "Use intersection order filter" },
+			{ StringID.EstimationResultUI.SHOW_SUBFACE_ID, "Show intersection" },
 
 			{ StringID.EstimationResultUI.DRAWING_CONFIG_PANEL_ID, "Drawing Config" },
 			{ StringID.EstimationResultUI.ORDER_FLIP_ID, "Flip" },
@@ -121,7 +123,12 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.EstimationResultUI.FACE_COLOR_BACK_ID, "Choose Back Color" },
 
 			{ StringID.EstimationResultUI.SAVE_COLORS_ID, "Save Colors" },
+
+			{ StringID.EstimationResultUI.SVG_CONFIG_PANEL_ID, "SVG Config" },
+			{ StringID.EstimationResultUI.SVG_FACE_STROKEWIDTH_ID, "Face stroke-width:" },
+			{ StringID.EstimationResultUI.SVG_CREASE_STROKEWIDTH_ID, "Crease stroke-width:" },
 			{ StringID.EstimationResultUI.SAVE_SVG_CONFIG_ID, "Save Config" },
+
 			{ StringID.EstimationResultUI.EXPORT_ID, "Export" },
 
 			{ StringID.EstimationResultUI.HINT_LABEL_ID, "L: Rotate / Wheel: Zoom / R: Move" },

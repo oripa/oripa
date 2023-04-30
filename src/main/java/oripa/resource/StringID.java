@@ -83,6 +83,10 @@ public class StringID {
 		public static final String FOLD_ALGORITHM_TITLE_ID = "Info_FoldAlgorithmTitle";
 		public static final String NOW_FOLDING_TITLE_ID = "Info_NowFoldingTitle";
 		public static final String NOW_FOLDING_ID = "Info_NowFolding";
+
+		public static final String NOW_COMPUITNG_TITLE_ID = "Info_NowComputingTitle";
+		public static final String NOW_COMPUITNG_ID = "Info_NowComputing";
+
 	}
 
 	public static class Default {
@@ -142,6 +146,8 @@ public class StringID {
 		public static final String NEXT_RESULT_ID = "ER_Next_Result";
 		public static final String PREV_RESULT_ID = "ER_Prev_Result";
 		public static final String INDEX_ID = "ER_Index";
+		public static final String USE_FILTER_ID = "ER_Use_Filter";
+		public static final String SHOW_SUBFACE_ID = "ER_Show_Subface";
 
 		public static final String DRAWING_CONFIG_PANEL_ID = "ER_Drawing_Conf_Panel";
 		public static final String ORDER_FLIP_ID = "ER_Order_Flip";
@@ -154,6 +160,10 @@ public class StringID {
 		public static final String FACE_COLOR_FRONT_ID = "ER_FaceColor_Front";
 		public static final String FACE_COLOR_BACK_ID = "ER_FaceColor_Back";
 		public static final String SAVE_COLORS_ID = "ER_Save_Colors";
+
+		public static final String SVG_CONFIG_PANEL_ID = "ER_SVG_Config";
+		public static final String SVG_FACE_STROKEWIDTH_ID = "ER_SVG_Face_Strokewidth";
+		public static final String SVG_CREASE_STROKEWIDTH_ID = "ER_SVG_Crease_Strokewidth";
 		public static final String SAVE_SVG_CONFIG_ID = "ER_Save_SVG_Config";
 
 		public static final String EXPORT_ID = "ER_Export";
