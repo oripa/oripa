@@ -107,9 +107,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
 
 	// TODO use string resource
-	private final JLabel svgFaceStrokeWidthLabel = new JLabel("face stroke-width:");
+	private final JLabel svgFaceStrokeWidthLabel = new JLabel(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_FACE_STROKEWIDTH_ID));
 	private final JTextField svgFaceStrokeWidthField = new JTextField();
-	private final JLabel svgPrecreaseStrokeWidthLabel = new JLabel("crease stroke-width:");
+	private final JLabel svgPrecreaseStrokeWidthLabel = new JLabel(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_CREASE_STROKEWIDTH_ID));
 	private final JTextField svgPrecreaseStrokeWidthField = new JTextField();
 
 	private final TitledBorderFactory titledBorderFactory = new TitledBorderFactory();
@@ -454,7 +456,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		var svgPanel = new JPanel();
 
 		svgPanel.setLayout(new GridBagLayout());
-		svgPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this, "SVG config"));
+		svgPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
+				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_CONFIG_PANEL_ID)));
 
 		var gbBuilder = new GridBagConstraintsBuilder(2).setAnchor(GridBagConstraints.CENTER)
 				.setWeight(1.0, 0.0);

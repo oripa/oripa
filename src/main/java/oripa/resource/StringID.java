@@ -154,6 +154,10 @@ public class StringID {
 		public static final String FACE_COLOR_FRONT_ID = "ER_FaceColor_Front";
 		public static final String FACE_COLOR_BACK_ID = "ER_FaceColor_Back";
 		public static final String SAVE_COLORS_ID = "ER_Save_Colors";
+
+		public static final String SVG_CONFIG_PANEL_ID = "ER_SVG_Config";
+		public static final String SVG_FACE_STROKEWIDTH_ID = "ER_SVG_Face_Strokewidth";
+		public static final String SVG_CREASE_STROKEWIDTH_ID = "ER_SVG_Crease_Strokewidth";
 		public static final String SAVE_SVG_CONFIG_ID = "ER_Save_SVG_Config";
 
 		public static final String EXPORT_ID = "ER_Export";
