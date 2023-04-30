@@ -94,14 +94,16 @@ class SubfaceToOverlapRelationIndicesFactory {
 		IntStream.range(0, overlapRelations.size()).parallel().forEach(k -> {
 			var overlapRelation = overlapRelations.get(k);
 
-			IntStream.range(0, subfaces.size()).parallel().forEach(s -> {
+			// Parallelization on s is overkilling for usual PC since
+			// parallelization on k works very well.
+			IntStream.range(0, subfaces.size()).forEach(s -> {
 
 				var orderKey = createOrderKey(subfaces.get(s), overlapRelation);
-				var indices = orders.get(s).get(orderKey);
-				if (indices == null) {
-					indices = CollectionUtil.newConcurrentHashSet();
-					orders.get(s).put(orderKey, indices);
-				}
+
+				var order = orders.get(s);
+				order.putIfAbsent(orderKey, CollectionUtil.newConcurrentHashSet());
+				var indices = order.get(orderKey);
+
 				indices.add(k);
 			});
 		});
