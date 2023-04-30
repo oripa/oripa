@@ -142,6 +142,8 @@ public class StringID {
 		public static final String NEXT_RESULT_ID = "ER_Next_Result";
 		public static final String PREV_RESULT_ID = "ER_Prev_Result";
 		public static final String INDEX_ID = "ER_Index";
+		public static final String USE_FILTER_ID = "ER_Use_Filter";
+		public static final String SHOW_SUBFACE_ID = "ER_Show_Subface";
 
 		public static final String DRAWING_CONFIG_PANEL_ID = "ER_Drawing_Conf_Panel";
 		public static final String ORDER_FLIP_ID = "ER_Order_Flip";

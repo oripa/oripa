@@ -76,10 +76,12 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final ListItemSelectionPanel answerSelectionPanel = new ListItemSelectionPanel("");
 
 	// TODO use string resource
-	private final JCheckBox filterEnabledCheckBox = new JCheckBox("Use subface filter");
+	private final JCheckBox filterEnabledCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.USE_FILTER_ID));
+	private final JCheckBox subfaceVisibleCheckBox = new JCheckBox(
+			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SHOW_SUBFACE_ID));
 	private final JComboBox<Integer> subfaceIndexCombo = new JComboBox<>();
 	private final JComboBox<String> suborderIndexCombo = new JComboBox<>();
-	private final JCheckBox subfaceVisibleCheckBox = new JCheckBox("Show subface");
 
 	private final JCheckBox orderCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.ORDER_FLIP_ID));
@@ -106,7 +108,6 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final JButton exportButton = new JButton(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EXPORT_ID));
 
-	// TODO use string resource
 	private final JLabel svgFaceStrokeWidthLabel = new JLabel(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.SVG_FACE_STROKEWIDTH_ID));
 	private final JTextField svgFaceStrokeWidthField = new JTextField();

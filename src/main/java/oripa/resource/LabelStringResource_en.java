@@ -108,6 +108,8 @@ public class LabelStringResource_en extends ListResourceBundle {
 			{ StringID.EstimationResultUI.NEXT_RESULT_ID, "Next" },
 			{ StringID.EstimationResultUI.PREV_RESULT_ID, "Prev" },
 			{ StringID.EstimationResultUI.INDEX_ID, "Folded model" },
+			{ StringID.EstimationResultUI.USE_FILTER_ID, "Use intersection order filter" },
+			{ StringID.EstimationResultUI.SHOW_SUBFACE_ID, "Show intersection" },
 
 			{ StringID.EstimationResultUI.DRAWING_CONFIG_PANEL_ID, "Drawing Config" },
 			{ StringID.EstimationResultUI.ORDER_FLIP_ID, "Flip" },
