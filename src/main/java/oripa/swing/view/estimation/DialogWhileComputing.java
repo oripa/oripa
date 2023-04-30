@@ -16,40 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.resource;
+package oripa.swing.view.estimation;
 
-import java.util.ListResourceBundle;
+import javax.swing.JFrame;
+
+import oripa.resource.ResourceHolder;
+import oripa.resource.ResourceKey;
+import oripa.resource.StringID;
+import oripa.swing.view.util.SimpleModalDialog;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class InformationStringResource_en extends ListResourceBundle {
-
-	private static final Object[][] strings = {
-			{ StringID.Information.SIMPLIFYING_CP_ID,
-					"edge duplications with the same position are removed." },
-			{ StringID.Information.NO_ANSWER_ID,
-					"No answer was found." },
-
-			{ StringID.Information.SIMPLIFYING_CP_TITLE_ID,
-					"Simplifying CP" },
-			{ StringID.Information.FOLD_ALGORITHM_TITLE_ID,
-					"Fold algorithm" },
-			{ StringID.Information.NOW_FOLDING_TITLE_ID,
-					"Now folding..." },
-			{ StringID.Information.NOW_FOLDING_ID,
-					"Please wait." },
-
-			{ StringID.Information.NOW_COMPUITNG_TITLE_ID,
-					"Now computing..." },
-			{ StringID.Information.NOW_COMPUITNG_ID,
-					"Please wait." },
-
-	};
-
-	@Override
-	protected Object[][] getContents() {
-		return strings;
+class DialogWhileComputing extends SimpleModalDialog {
+	public DialogWhileComputing(final JFrame frame, final ResourceHolder resources) {
+		super(frame,
+				resources.getString(ResourceKey.INFO, StringID.Information.NOW_COMPUITNG_TITLE_ID),
+				resources.getString(ResourceKey.INFO, StringID.Information.NOW_COMPUITNG_ID));
 	}
 }

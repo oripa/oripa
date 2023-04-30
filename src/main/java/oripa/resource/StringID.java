@@ -83,6 +83,10 @@ public class StringID {
 		public static final String FOLD_ALGORITHM_TITLE_ID = "Info_FoldAlgorithmTitle";
 		public static final String NOW_FOLDING_TITLE_ID = "Info_NowFoldingTitle";
 		public static final String NOW_FOLDING_ID = "Info_NowFolding";
+
+		public static final String NOW_COMPUITNG_TITLE_ID = "Info_NowComputingTitle";
+		public static final String NOW_COMPUITNG_ID = "Info_NowComputing";
+
 	}
 
 	public static class Default {

@@ -58,7 +58,6 @@ import oripa.swing.view.util.ColorRGBPanel;
 import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ListItemSelectionPanel;
-import oripa.swing.view.util.SimpleModalDialog;
 import oripa.swing.view.util.SimpleModalWorker;
 import oripa.swing.view.util.TitledBorderFactory;
 
@@ -75,7 +74,6 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	// setup components used
 	private final ListItemSelectionPanel answerSelectionPanel = new ListItemSelectionPanel("");
 
-	// TODO use string resource
 	private final JCheckBox filterEnabledCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.USE_FILTER_ID));
 	private final JCheckBox subfaceVisibleCheckBox = new JCheckBox(
@@ -172,8 +170,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private void initializeFilterComponents() {
 		var frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-		// TODO use string resource
-		var dialog = new SimpleModalDialog(frame, "Now computing...", "Please wait.");
+		var dialog = new DialogWhileComputing(frame, resources);
 
 		var worker = new SimpleModalWorker(dialog, () -> {
 			subfaceToOverlapRelationIndices = filterInitializationListener.apply(foldedModel);
