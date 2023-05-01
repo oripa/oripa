@@ -55,7 +55,8 @@ public class AssignmentEnumerator {
 
 	private Map<Map<List<OriVertex>, OriLine.Type>, List<Map<List<OriVertex>, OriLine.Type>>> assignmentMemos;
 
-	private int callCount = 0;
+	private int assignmentCallCount = 0;
+	private int enumerationCallCount = 0;
 	private int answerCount = 0;
 
 	public AssignmentEnumerator(final Consumer<OrigamiModel> answerConsumer) {
@@ -63,10 +64,9 @@ public class AssignmentEnumerator {
 	}
 
 	/**
-	 * Enumerates all locally-flat-foldable assignments on vertices of given
-	 * origamiModel. This method calls {@code answerConsumer}, which is given at
-	 * construction, every time the algorithm finds a locally-flat-foldable
-	 * assignment.
+	 * Enumerates all locally-flat-foldable assignments of given origamiModel.
+	 * This method calls {@code answerConsumer}, which is given at construction,
+	 * every time the algorithm finds a locally-flat-foldable assignment.
 	 *
 	 * @param origamiModel
 	 */
@@ -82,22 +82,28 @@ public class AssignmentEnumerator {
 
 		assignmentMemos = new HashMap<>();
 
-		callCount = 0;
+		enumerationCallCount = 0;
+		assignmentCallCount = 0;
 		answerCount = 0;
 
 		var watch = new StopWatch(true);
-		enumerateImpl(origamiModel, 0);
+
+		var sortedVertices = sort(origamiModel.getVertices());
+
+		enumerateImpl(origamiModel, sortedVertices);
 
 		logger.debug("time: {}[ms]", watch.getMilliSec());
 
-		logger.debug("callCount = {}, answerCount = {}", callCount, answerCount);
+		logger.debug("enumerationCallCount = {}, assignmentCallCount = {}, assignmentAnswerCount = {}",
+				enumerationCallCount, assignmentCallCount, answerCount);
 	}
 
 	private void enumerateImpl(final OrigamiModel origamiModel,
-			final int vertexIndex) {
-		var vertices = origamiModel.getVertices();
+			final List<OriVertex> candidateVertices) {
 
-		if (vertexIndex == vertices.size()) {
+		enumerationCallCount++;
+
+		if (candidateVertices.isEmpty()) {
 //			if (origamiModel.isUnassigned()) {
 //				logger.debug("wrong answer. {}", origamiModel);
 //			}
@@ -106,10 +112,12 @@ public class AssignmentEnumerator {
 			return;
 		}
 
-		var vertex = vertices.get(vertexIndex);
+		var vertex = candidateVertices.get(0);
 
 		if (originallyAssigned.contains(vertex)) {
-			enumerateImpl(origamiModel, vertexIndex + 1);
+			var nextCandidateVertices = new ArrayList<OriVertex>(
+					candidateVertices.subList(1, candidateVertices.size()));
+			enumerateImpl(origamiModel, nextCandidateVertices);
 			return;
 		}
 
@@ -117,7 +125,9 @@ public class AssignmentEnumerator {
 			// vertex can be fully assigned but sometimes not foldable if
 			// connected other vertex is assigned previously.
 			if (foldability.holds(vertex)) {
-				enumerateImpl(origamiModel, vertexIndex + 1);
+				var nextCandidateVertices = new ArrayList<OriVertex>(
+						candidateVertices.subList(1, candidateVertices.size()));
+				enumerateImpl(origamiModel, nextCandidateVertices);
 			}
 			return;
 		}
@@ -136,21 +146,34 @@ public class AssignmentEnumerator {
 			assignmentMemos.put(originalAssignment, assignments);
 		}
 
+		var nextCandidateVertices = sort(candidateVertices.subList(1, candidateVertices.size()));
+
 		for (var assignment : assignments) {
-			logger.trace("go next. vertex@{} = {}, assignment = {}", vertexIndex, vertex.getPositionBeforeFolding(),
+			logger.trace("go next. vertex@{} = {}, assignment = {}", vertex.getVertexID(),
+					vertex.getPositionBeforeFolding(),
 					assignment);
 			apply(assignment);
 			logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).collect(Collectors.toList()));
 
-			enumerateImpl(origamiModel, vertexIndex + 1);
+			enumerateImpl(origamiModel, nextCandidateVertices);
 
-			logger.trace("get back. vertex@{} = {}, assignment = {}", vertexIndex, vertex.getPositionBeforeFolding(),
+			logger.trace("get back. vertex@{} = {}, assignment = {}", vertex.getVertexID(),
+					vertex.getPositionBeforeFolding(),
 					assignment);
 			apply(originalAssignment);
 			logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).collect(Collectors.toList()));
 
 		}
 
+	}
+
+	private List<OriVertex> sort(final List<OriVertex> vertices) {
+		return vertices;
+
+		// maybe this sort avoids the worst case.
+//		return vertices.stream()
+//				.sorted(Comparator.comparing(OriVertex::countUnassignedEdges))
+//				.collect(Collectors.toList());
 	}
 
 	private Map<List<OriVertex>, OriLine.Type> toAssignmentMap(final OriVertex vertex) {
@@ -179,7 +202,7 @@ public class AssignmentEnumerator {
 			final int edgeIndex,
 			final long mountainCount, final long valleyCount) {
 
-		callCount++;
+		assignmentCallCount++;
 
 		logger.trace("createAssignments(): vertex={}, edgeIndex={}", vertex, edgeIndex);
 

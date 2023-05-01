@@ -158,6 +158,10 @@ public class OriVertex implements Comparable<OriVertex> {
 		return edgeStream().anyMatch(edge -> edge.isUnassigned());
 	}
 
+	public long countUnassignedEdges() {
+		return edgeStream().filter(OriEdge::isUnassigned).count();
+	}
+
 	/**
 	 * @return vertexID
 	 */
