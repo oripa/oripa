@@ -89,7 +89,28 @@
 
 
 	<!-- Run "mvn package" to build a runnable jar -->
+	<!-- Run "mvn jpackage:jpackage" to make an installer. On Windows, WiX 3.14 or above has to be installed. -->
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.github.akman</groupId>
+					<artifactId>jpackage-maven-plugin</artifactId>
+					<version>0.1.5</version>
+					<configuration>
+						<vendor>${project.groupId}</vendor>
+						<name>${project.name}</name>
+						<appversion>${project.version}</appversion>
+						<windirchooser>true</windirchooser>
+
+						<input>${project.build.directory}</input>
+						<mainjar>${project.artifactId}-${project.version}.jar</mainjar>
+						<mainclass>oripa.ORIPA</mainclass>
+					</configuration>
+				</plugin>
+			</plugins>	
+		</pluginManagement>
+		
 
 		<plugins>
 			<plugin>
@@ -132,6 +153,22 @@
 					</archive>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.github.akman</groupId>
+				<artifactId>jpackage-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+							<goals>
+								<goal>jpackage</goal>
+							</goals>
+							<configuration>
+								
+							</configuration>
+					</execution>
+ 				</executions>
 			</plugin>
 
 		</plugins>
