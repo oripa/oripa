@@ -101,7 +101,9 @@
 						<vendor>${project.groupId}</vendor>
 						<name>${project.name}</name>
 						<appversion>${project.version}</appversion>
-						<windirchooser>true</windirchooser>
+
+						<!-- Windows only. It causes error on other OS. -->
+						<!-- <windirchooser>true</windirchooser> -->
 
 						<input>${project.build.directory}</input>
 						<mainjar>${project.artifactId}-${project.version}.jar</mainjar>
