@@ -141,7 +141,7 @@
 					</execution>
 				</executions>
 				<configuration>
-x					<descriptorRefs>
+					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<archive>
