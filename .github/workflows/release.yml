@@ -57,7 +57,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Build with Maven
+      - name: Build installer with Maven
         run: mvn -B jpackage:jpackage --file pom.xml
 
       - name: Run Linux Build
