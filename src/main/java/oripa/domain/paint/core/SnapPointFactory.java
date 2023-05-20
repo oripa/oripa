@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
 import oripa.value.OriLine;
@@ -34,9 +37,13 @@ import oripa.value.OriLine;
  *
  */
 public class SnapPointFactory {
+	private static final Logger logger = LoggerFactory.getLogger(SnapPointFactory.class);
+
 	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment line,
 			final double pointEps) {
 		Collection<Vector2d> snapPoints = new ArrayList<>();
+
+		logger.trace("eps = {}", pointEps);
 
 		// snap on cross points of line and creases.
 		snapPoints.addAll(
