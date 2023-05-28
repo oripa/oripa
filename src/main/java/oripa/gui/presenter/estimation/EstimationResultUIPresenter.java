@@ -74,7 +74,7 @@ public class EstimationResultUIPresenter {
 	}
 
 	private void addListener() {
-		view.addSaveSVGCofigButtonListener(this::saveSVGConfig);
+		view.addSaveSVGConfigButtonListener(this::saveSVGConfig);
 		view.addExportButtonListener(this::export);
 		view.setFilterInitializationListener(this::createSubfaceToOverlapRelationIndices);
 	}

@@ -59,7 +59,7 @@ public interface EstimationResultUIView extends View {
 
 	void addExportButtonListener(Runnable listener);
 
-	void addSaveSVGCofigButtonListener(Runnable listener);
+	void addSaveSVGConfigButtonListener(Runnable listener);
 
 	/**
 	 * @param listener

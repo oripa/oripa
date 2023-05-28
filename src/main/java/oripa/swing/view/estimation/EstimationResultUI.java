@@ -484,7 +484,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	@Override
-	public void addSaveSVGCofigButtonListener(final Runnable listener) {
+	public void addSaveSVGConfigButtonListener(final Runnable listener) {
 		addButtonListener(saveSVGConfigButton, listener);
 	}
 
