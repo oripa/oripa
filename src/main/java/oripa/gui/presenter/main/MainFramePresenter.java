@@ -56,6 +56,7 @@ import oripa.gui.view.main.PainterScreenSetting;
 import oripa.gui.view.main.SubFrameFactory;
 import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
+import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -272,8 +273,8 @@ public class MainFramePresenter {
 
 		view.setEstimationResultSaveColorsListener((front, back) -> {
 			var property = document.getProperty();
-			property.putFrontColorCode(convertColorToCode(front));
-			property.putBackColorCode(convertColorToCode(back));
+			property.putFrontColorCode(ColorUtil.convertColorToCode(front));
+			property.putBackColorCode(ColorUtil.convertColorToCode(back));
 
 		});
 
@@ -605,10 +606,6 @@ public class MainFramePresenter {
 			view.showLoadFailureErrorMessage(e);
 			return document.getDataFilePath();
 		}
-	}
-
-	private String convertColorToCode(final Color color) {
-		return String.format("#%06X", color.getRGB() & 0x00FFFFFF);
 	}
 
 	private Color convertCodeToColor(final String code) {

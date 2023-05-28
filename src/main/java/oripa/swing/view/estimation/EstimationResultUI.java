@@ -484,7 +484,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	@Override
-	public void addSaveSVGCofigButtonListener(final Runnable listener) {
+	public void addSaveSVGConfigButtonListener(final Runnable listener) {
 		addButtonListener(saveSVGConfigButton, listener);
 	}
 
@@ -536,6 +536,16 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	public void setFilterInitializationListener(
 			final Function<FoldedModel, Map<Integer, List<Set<Integer>>>> listener) {
 		filterInitializationListener = listener;
+	}
+
+	@Override
+	public Color getFrontColor() {
+		return frontColorRGBPanel.getColor();
+	}
+
+	@Override
+	public Color getBackColor() {
+		return backColorRGBPanel.getColor();
 	}
 
 	@Override

@@ -26,6 +26,10 @@ public class FoldedModelSVGConfig {
 	private double faceStrokeWidth = 2;
 	private double precreaseStrokeWidth = 1;
 
+	// don't serialize these.
+	private transient String frontFillColorCode = "#B3B3B3";
+	private transient String backFillColorCode = "#FFFFFF";
+
 	public double getFaceStrokeWidth() {
 		return faceStrokeWidth;
 	}
@@ -50,6 +54,22 @@ public class FoldedModelSVGConfig {
 	 */
 	public void setPrecreaseStrokeWidth(final double precreaseStrokeWidth) {
 		this.precreaseStrokeWidth = precreaseStrokeWidth;
+	}
+
+	public String getFrontFillColorCode() {
+		return frontFillColorCode;
+	}
+
+	public void setFrontFillColorCode(final String frontFillColorCode) {
+		this.frontFillColorCode = frontFillColorCode;
+	}
+
+	public String getBackFillColorCode() {
+		return backFillColorCode;
+	}
+
+	public void setBackFillColorCode(final String backFillColorCode) {
+		this.backFillColorCode = backFillColorCode;
 	}
 
 }

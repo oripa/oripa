@@ -71,12 +71,19 @@ public class SVGUtils {
 
 	public static final String THIN_LINE_STYLE = getPrecreasePathStyle(0.25).toString();
 
-	public static StringBuilder getFrontPathStyle(final double strokeWidth) {
-		return getFacePathStyle(strokeWidth, "url(#Gradient1)", 1.0);
+	/**
+	 *
+	 * @param strokeWidth
+	 * @param fillColorCode
+	 *            in the style of "#000000"
+	 * @return
+	 */
+	public static StringBuilder getFrontPathStyle(final double strokeWidth, final String fillColorCode) {
+		return getFacePathStyle(strokeWidth, fillColorCode, 1.0);
 	}
 
-	public static StringBuilder getBackPathStyle(final double strokeWidth) {
-		return getFacePathStyle(strokeWidth, "url(#Gradient2)", 1.0);
+	public static StringBuilder getBackPathStyle(final double strokeWidth, final String fillColorCode) {
+		return getFacePathStyle(strokeWidth, fillColorCode, 1.0);
 	}
 
 	private static StringBuilder getFacePathStyle(final double strokeWidth, final String fillColorCode,

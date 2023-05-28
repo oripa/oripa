@@ -78,12 +78,17 @@ public class FoldedModelExporterSVG implements Exporter<FoldedModelEntity> {
 		double faceStrokeWidth = config.getFaceStrokeWidth();
 		double precreaseStrokeWidth = config.getPrecreaseStrokeWidth();
 
+		String frontFillColorCode = config.getFrontFillColorCode();
+		String backFillColorCode = config.getBackFillColorCode();
+
 		if (faceOrderFlip) {
-			facesToSvgConverter.setFaceStyles(getBackPathStyle(faceStrokeWidth).toString(),
-					getFrontPathStyle(faceStrokeWidth).toString());
+			facesToSvgConverter.setFaceStyles(
+					getBackPathStyle(faceStrokeWidth, backFillColorCode).toString(),
+					getFrontPathStyle(faceStrokeWidth, frontFillColorCode).toString());
 		} else {
-			facesToSvgConverter.setFaceStyles(getFrontPathStyle(faceStrokeWidth).toString(),
-					getBackPathStyle(faceStrokeWidth).toString());
+			facesToSvgConverter.setFaceStyles(
+					getFrontPathStyle(faceStrokeWidth, frontFillColorCode).toString(),
+					getBackPathStyle(faceStrokeWidth, backFillColorCode).toString());
 		}
 		facesToSvgConverter.setPrecreaseLineStyle(
 				getPrecreasePathStyle(precreaseStrokeWidth).toString());
