@@ -18,6 +18,7 @@
  */
 package oripa.gui.view.estimation;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +57,10 @@ public interface EstimationResultUIView extends View {
 	double getSVGPrecreaseStrokeWidth();
 
 	void setSVGPrecreaseStrokeWidth(double strokeWidth);
+
+	Color getFrontColor();
+
+	Color getBackColor();
 
 	void addExportButtonListener(Runnable listener);
 

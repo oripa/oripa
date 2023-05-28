@@ -539,6 +539,16 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	@Override
+	public Color getFrontColor() {
+		return frontColorRGBPanel.getColor();
+	}
+
+	@Override
+	public Color getBackColor() {
+		return backColorRGBPanel.getColor();
+	}
+
+	@Override
 	public void showExportErrorMessage(final Exception e) {
 		Dialogs.showErrorDialog(this, resources.getString(
 				ResourceKey.ERROR, StringID.Error.SAVE_FAILED_ID), e);

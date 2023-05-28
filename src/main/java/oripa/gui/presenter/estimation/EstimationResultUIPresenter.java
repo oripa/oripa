@@ -34,6 +34,7 @@ import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
+import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.entity.FoldedModelDAO;
 import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
@@ -116,6 +117,9 @@ public class EstimationResultUIPresenter {
 
 		svgConfig.setFaceStrokeWidth(view.getSVGFaceStrokeWidth());
 		svgConfig.setPrecreaseStrokeWidth(view.getSVGPrecreaseStrokeWidth());
+
+		svgConfig.setFrontFillColorCode(ColorUtil.convertColorToCode(view.getFrontColor()));
+		svgConfig.setBackFillColorCode(ColorUtil.convertColorToCode(view.getBackColor()));
 
 		return svgConfig;
 	}
