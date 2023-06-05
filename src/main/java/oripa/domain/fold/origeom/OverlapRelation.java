@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold.origeom;
 
+import java.util.stream.Collectors;
+
 import oripa.util.ByteDenseMatrix;
 import oripa.util.ByteMatrix;
 import oripa.util.ByteSparseMatrix;
@@ -247,6 +249,22 @@ public class OverlapRelation {
 		}
 
 		return EstimationResult.NOT_CHANGED;
+	}
+
+	@Override
+	public String toString() {
+		var builder = new StringBuilder();
+
+		for (int i = 0; i < getSize(); i++) {
+			var line = String.join(" ",
+					overlapRelation.getRow(i).stream()
+							.map(b -> b.toString())
+							.collect(Collectors.toList()));
+			builder.append(line);
+			builder.append(System.lineSeparator());
+		}
+
+		return builder.toString();
 	}
 
 }

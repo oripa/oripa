@@ -288,21 +288,22 @@ public class LayerOrderEnumerator {
 			var nextOverlapRelation = overlapRelation.clone();
 
 			// determine overlap relations according to local layer order
-			IntStream.range(0, size).forEach(i -> {
+			for (int i = 0; i < size; i++) {
 				int index_i = localLayerOrder.get(i).getFaceID();
 				for (int j = i + 1; j < size; j++) {
 					int index_j = localLayerOrder.get(j).getFaceID();
-					if (nextOverlapRelation.isUndefined(index_i, index_j)) {
-						// if index on local layer order is 0, the face is at
-						// the top of layer order (looking down the folded model
-						// on a table).
-						// therefore a face with smaller index i on layer order
-						// should be UPPER than a face with index j on layer
-						// order.
-						nextOverlapRelation.setUpper(index_i, index_j);
+					// if index on local layer order is 0, the face is at
+					// the top of layer order (looking down the folded model
+					// on a table).
+					// therefore a face with smaller index i on layer order
+					// should be UPPER than a face with index j on layer
+					// order.
+					var result = nextOverlapRelation.setUpperIfPossible(index_i, index_j);
+					if (result == EstimationResult.UNFOLDABLE) {
+						return;
 					}
 				}
-			});
+			}
 
 			findAnswer(faces, overlapRelations, subFaceIndex + 1,
 					nextOverlapRelation);

@@ -18,6 +18,9 @@
  */
 package oripa.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author OUCHI Koji
  *
@@ -27,6 +30,14 @@ public interface ByteMatrix {
 	void set(int i, int j, byte value);
 
 	byte get(int i, int j);
+
+	default List<Byte> getRow(final int i) {
+		var row = new ArrayList<Byte>();
+		for (int j = 0; j < columnCount(); j++) {
+			row.add(get(i, j));
+		}
+		return row;
+	}
 
 	ByteMatrix clone();
 
