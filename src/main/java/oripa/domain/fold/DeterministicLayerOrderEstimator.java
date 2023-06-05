@@ -85,7 +85,7 @@ class DeterministicLayerOrderEstimator {
 
 		var watch = new StopWatch(true);
 
-		logger.debug("initial state" + System.lineSeparator() + overlapRelation.toString());
+		logger.trace("initial state" + System.lineSeparator() + overlapRelation.toString());
 
 		EstimationResult changed;
 		do {
