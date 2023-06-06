@@ -85,6 +85,8 @@ class DeterministicLayerOrderEstimator {
 
 		var watch = new StopWatch(true);
 
+		logger.trace("initial state" + System.lineSeparator() + overlapRelation.toString());
+
 		EstimationResult changed;
 		do {
 			changed = EstimationResult.NOT_CHANGED;
@@ -92,14 +94,26 @@ class DeterministicLayerOrderEstimator {
 			var result = estimateBy3FaceCover(overlapRelation);
 			changed = result.or(changed);
 
+			logger.trace("3 face cover" + System.lineSeparator() + overlapRelation.toString());
+
 			result = estimateBy3FaceTransitiveRelation(overlapRelation);
 			changed = result.or(changed);
+
+			logger.trace("transitivity" + System.lineSeparator() + overlapRelation.toString());
 
 			result = estimateBy4FaceStackCondition(overlapRelation);
 			changed = result.or(changed);
 
+			logger.trace("4 face condition" + System.lineSeparator() + overlapRelation.toString());
+
 			result = estimateBy4FaceCover(overlapRelation);
 			changed = result.or(changed);
+
+			logger.trace("4 face cover" + System.lineSeparator() + overlapRelation.toString());
+
+			if (!isCorrect(overlapRelation)) {
+				return EstimationResult.UNFOLDABLE;
+			}
 
 			estimationLoopCount++;
 		} while (changed == EstimationResult.CHANGED);
@@ -107,6 +121,32 @@ class DeterministicLayerOrderEstimator {
 		logger.debug("estimation time {}[ms]", watch.getMilliSec());
 
 		return changed;
+	}
+
+	private boolean isCorrect(final OverlapRelation overlapRelation) {
+
+		// check transitivity
+		for (int i = 0; i < faces.size(); i++) {
+			for (int j = 0; j < faces.size(); j++) {
+				if (i == j) {
+					continue;
+				}
+
+				var overlaps = overlappingFaceIndexIntersections[i][j];
+
+				for (int k : overlaps) {
+					if (overlapRelation.isUpper(i, k) && overlapRelation.isUpper(k, j)) {
+						if (overlapRelation.isLower(i, j)) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		// and others as well?
+
+		return true;
 	}
 
 	/**
