@@ -114,10 +114,19 @@ public class LayerOrderEnumerator {
 		var overlappingFaceIndexIntersections = createOverlappingFaceIndexIntersections(faces, overlapRelation);
 		var faceIndicesOnHalfedge = createFaceIndicesOnHalfEdge(faces, eps);
 
-		holdCondition3s(faces, overlapRelation, subFacesOfEachFace, overlappingFaceIndexIntersections,
-				faceIndicesOnHalfedge);
+//		holdCondition3s(faces, overlapRelation, subFacesOfEachFace, overlappingFaceIndexIntersections,
+//				faceIndicesOnHalfedge);
 
-		var condition4s = holdCondition4s(faces, edges, overlapRelation, subFacesOfEachFace, eps);
+		var condition3Factory = new StackConditionOf3FaceFactory();
+		var condition3s = condition3Factory.createAll(faces, overlapRelation, overlappingFaceIndexIntersections,
+				faceIndicesOnHalfedge);
+		setConditionOf3facesToSubfaces(condition3s, subFaces);
+
+//		var condition4s = holdCondition4s(faces, edges, overlapRelation, subFacesOfEachFace, eps);
+
+		var condition4Factory = new StackConditionOf4FaceFactory();
+		var condition4s = condition4Factory.createAll(faces, edges, overlapRelation, subFacesOfEachFace, eps);
+		setConditionOf4facesToSubfaces(condition4s, subFaces);
 
 		var estimator = new DeterministicLayerOrderEstimator(
 				faces, subFaces,
@@ -469,6 +478,42 @@ public class LayerOrderEnumerator {
 		logger.debug("condition4s computation time {}[ms]", watch.getMilliSec());
 
 		return condition4s;
+	}
+
+	private void setConditionOf3facesToSubfaces(
+			final List<StackConditionOf3Faces> conditions,
+			final List<SubFace> subFaces) {
+
+		int count = 0;
+
+		for (var subface : subFaces) {
+			for (var condition : conditions) {
+				if (subface.isRelatedTo(condition)) {
+					subface.addStackConditionOf3Faces(condition);
+					count++;
+				}
+			}
+		}
+
+		logger.debug("condtion3 set count ={}", count);
+	}
+
+	private void setConditionOf4facesToSubfaces(
+			final List<StackConditionOf4Faces> conditions,
+			final List<SubFace> subFaces) {
+
+		int count = 0;
+
+		for (var subface : subFaces) {
+			for (var condition : conditions) {
+				if (subface.isRelatedTo(condition)) {
+					subface.addStackConditionOf4Faces(condition);
+					count++;
+				}
+			}
+		}
+
+		logger.debug("condtion4 set count ={}", count);
 	}
 
 	private Map<OriFace, Set<SubFace>> createSubFacesOfEachFace(final List<OriFace> faces) {

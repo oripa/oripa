@@ -1,0 +1,124 @@
+/**
+ * ORIPA - Origami Pattern Editor
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package oripa.domain.fold;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import oripa.domain.fold.halfedge.OriEdge;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.domain.fold.stackcond.StackConditionOf4Faces;
+import oripa.domain.fold.subface.SubFace;
+import oripa.geom.GeomUtil;
+import oripa.util.StopWatch;
+
+/**
+ * @author OUCHI Koji
+ *
+ */
+public class StackConditionOf4FaceFactory {
+	private static final Logger logger = LoggerFactory.getLogger(StackConditionOf4FaceFactory.class);
+
+	public List<StackConditionOf4Faces> createAll(final List<OriFace> faces,
+			final List<OriEdge> edges, final OverlapRelation overlapRelation,
+			final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
+			final double eps) {
+		var condition4s = new ArrayList<StackConditionOf4Faces>();
+
+		int edgeNum = edges.size();
+		logger.debug("edgeNum = " + edgeNum);
+
+		var watch = new StopWatch(true);
+
+		for (int i = 0; i < edgeNum; i++) {
+			OriEdge e0 = edges.get(i);
+			var e0Left = e0.getLeft();
+			var e0Right = e0.getRight();
+
+			if (e0Left == null || e0Right == null) {
+				continue;
+			}
+
+			for (int j = i + 1; j < edgeNum; j++) {
+				OriEdge e1 = edges.get(j);
+				var e1Left = e1.getLeft();
+				var e1Right = e1.getRight();
+				if (e1Left == null || e1Right == null) {
+					continue;
+				}
+
+				if (!GeomUtil.isOverlap(e0.toSegment(), e1.toSegment(), eps)) {
+					continue;
+				}
+
+				var e0LeftFace = e0Left.getFace();
+				var e0RightFace = e0Right.getFace();
+				var e1LeftFace = e1Left.getFace();
+				var e1RightFace = e1Right.getFace();
+
+				var intersectionSubfaces = subFacesOfEachFace.get(e0LeftFace).stream()
+						.filter(s -> subFacesOfEachFace.get(e0RightFace).contains(s))
+						.filter(s -> subFacesOfEachFace.get(e1LeftFace).contains(s))
+						.filter(s -> subFacesOfEachFace.get(e1RightFace).contains(s))
+						.collect(Collectors.toList());
+
+				if (intersectionSubfaces.isEmpty()) {
+					continue;
+				}
+
+				StackConditionOf4Faces cond = new StackConditionOf4Faces();
+
+				var e0LeftFaceID = e0LeftFace.getFaceID();
+				var e0RightFaceID = e0RightFace.getFaceID();
+				var e1LeftFaceID = e1LeftFace.getFaceID();
+				var e1RightFaceID = e1RightFace.getFaceID();
+
+				if (overlapRelation.isUpper(e0LeftFaceID, e0RightFaceID)) {
+					cond.upper1 = e0RightFaceID;
+					cond.lower1 = e0LeftFaceID;
+				} else {
+					cond.upper1 = e0LeftFaceID;
+					cond.lower1 = e0RightFaceID;
+				}
+				if (overlapRelation.isUpper(e1LeftFaceID, e1RightFaceID)) {
+					cond.upper2 = e1RightFaceID;
+					cond.lower2 = e1LeftFaceID;
+				} else {
+					cond.upper2 = e1LeftFaceID;
+					cond.lower2 = e1RightFaceID;
+				}
+
+				condition4s.add(cond);
+			}
+		}
+
+		logger.debug("#condition4 = {}", condition4s.size());
+		logger.debug("condition4s computation time {}[ms]", watch.getMilliSec());
+
+		return condition4s;
+	}
+
+}

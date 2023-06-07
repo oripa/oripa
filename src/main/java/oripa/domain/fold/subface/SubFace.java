@@ -278,6 +278,22 @@ public class SubFace {
 				.allMatch(face -> sub.parentFaces.contains(face));
 	}
 
+	public boolean isRelatedTo(final StackConditionOf3Faces condition) {
+		var indices = parentFaces.stream()
+				.map(OriFace::getFaceID)
+				.collect(Collectors.toList());
+		return indices.contains(condition.lower) && indices.contains(condition.upper) &&
+				indices.contains(condition.other);
+	}
+
+	public boolean isRelatedTo(final StackConditionOf4Faces condition) {
+		var indices = parentFaces.stream()
+				.map(OriFace::getFaceID)
+				.collect(Collectors.toList());
+		return indices.contains(condition.lower1) && indices.contains(condition.lower2) &&
+				indices.contains(condition.upper1) && indices.contains(condition.upper2);
+	}
+
 	public int getAllCountOfConditionsOf2Faces(final OverlapRelation overlapRelation) {
 		var stackConditionAggregate = new StackConditionAggregate();
 
