@@ -70,8 +70,6 @@ public class LayerOrderEnumerator {
 
 	private static final Logger logger = LoggerFactory.getLogger(LayerOrderEnumerator.class);
 
-	private List<SubFace> subFaces;
-
 	private AtomicInteger callCount;
 
 	private final SubFacesFactory subFacesFactory;
@@ -87,8 +85,8 @@ public class LayerOrderEnumerator {
 		// construct the subfaces
 		final double paperSize = origamiModel.getPaperSize();
 		final double eps = OriGeomUtil.pointEps(paperSize);
-		subFaces = subFacesFactory.createSubFaces(faces, paperSize, eps);
-		logger.debug("subFaces.size() = " + subFaces.size());
+		var subfaces = subFacesFactory.createSubFaces(faces, paperSize, eps);
+		logger.debug("subFaces.size() = " + subfaces.size());
 
 		// Set overlap relations based on valley/mountain folds information
 		OverlapRelation overlapRelation;
@@ -103,19 +101,19 @@ public class LayerOrderEnumerator {
 
 		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
 
-		var conditionFactory = new StackConditionFactoryFacade(faces, edges, overlapRelation, subFaces, eps);
+		var conditionFactory = new StackConditionFactoryFacade(faces, edges, overlapRelation, subfaces, eps);
 
 		var overlappingFaceIndexIntersections = conditionFactory.getOverlappingFaceIndexIntersections();
 		var faceIndicesOnHalfedge = conditionFactory.getFaceIndicesOnHalfedge();
 
 		var condition3s = conditionFactory.create3FaceConditions();
-		setConditionOf3facesToSubfaces(condition3s, subFaces);
+		setConditionOf3facesToSubfaces(condition3s, subfaces);
 
 		var condition4s = conditionFactory.create4FaceCondtions();
-		setConditionOf4facesToSubfaces(condition4s, subFaces);
+		setConditionOf4facesToSubfaces(condition4s, subfaces);
 
 		var estimator = new DeterministicLayerOrderEstimator(
-				faces, subFaces,
+				faces, subfaces,
 				overlappingFaceIndexIntersections,
 				faceIndicesOnHalfedge,
 				condition4s);
@@ -132,9 +130,11 @@ public class LayerOrderEnumerator {
 		watch.start();
 		// heuristic: apply the heuristic in local layer ordering to global
 		// subface ordering.
-		subFaces = subFaces.stream()
+		subfaces = subfaces.stream()
 				.sorted(Comparator
 						.comparingInt((final SubFace sub) -> sub.getAllCountOfConditionsOf2Faces(overlapRelation))
+						.thenComparingInt((final SubFace sub) -> sub.getAllCountOfConditionsOf3Faces(overlapRelation))
+						.thenComparingInt((final SubFace sub) -> sub.getAllCountOfConditionsOf4Faces(overlapRelation))
 						.reversed())
 				.collect(Collectors.toList());
 		logger.debug("subface ordering = {}[ms]", watch.getMilliSec());
@@ -144,13 +144,13 @@ public class LayerOrderEnumerator {
 		watch.start();
 
 		callCount = new AtomicInteger();
-		findAnswer(faces, overlapRelations, 0, overlapRelation);
+		findAnswer(faces, overlapRelations, subfaces, overlapRelation);
 		var time = watch.getMilliSec();
 
 		logger.debug("#call = {}", callCount);
 		logger.debug("time = {}[ms]", time);
 
-		return new Result(overlapRelations, subFaces);
+		return new Result(overlapRelations, subfaces);
 	}
 
 	private int countUndefinedRelations(final OverlapRelation overlapRelation) {
@@ -184,31 +184,36 @@ public class LayerOrderEnumerator {
 	 *            IDs of faces whose overlap relation changed. should contain
 	 *            all face IDs for the first call.
 	 */
-	private void findAnswer(
+	private int findAnswer(
 			final List<OriFace> faces,
-			final List<OverlapRelation> overlapRelations, final int subFaceIndex,
+			final List<OverlapRelation> overlapRelations,
+			final List<SubFace> subfaces,
 			final OverlapRelation overlapRelation) {
 		callCount.incrementAndGet();
 
-		if (subFaceIndex == subFaces.size()) {
+		if (subfaces.isEmpty()) {
 			var answer = overlapRelation.clone();
 			overlapRelations.add(answer);
-			return;
+
+			return 1;
 		}
 
-		SubFace sub = subFaces.get(subFaceIndex);
+		SubFace sub = subfaces.get(0);
 
 		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, false);
 
 		if (localLayerOrders == null) {
-			findAnswer(faces, overlapRelations, subFaceIndex + 1, overlapRelation);
-			return;
+			var nextSubfaces = subList(subfaces);
+			return findAnswer(faces, overlapRelations, nextSubfaces, overlapRelation);
 		}
+
+		var successCount = new AtomicInteger();
 
 		// Parallel search. It is fast but can exceed memory for
 		// complex model because of copying overlapRelation (a large matrix).
 		localLayerOrders.parallelStream().forEach(localLayerOrder -> {
 			int size = localLayerOrder.size();
+			var nextSubfaces = subList(subfaces);
 			var nextOverlapRelation = overlapRelation.clone();
 
 			// determine overlap relations according to local layer order
@@ -229,10 +234,22 @@ public class LayerOrderEnumerator {
 				}
 			}
 
-			findAnswer(faces, overlapRelations, subFaceIndex + 1,
-					nextOverlapRelation);
+			sub.incrementCallCount();
+			successCount.addAndGet(findAnswer(faces, overlapRelations, nextSubfaces, nextOverlapRelation));
 		});
 
+		sub.addSuccessCount(successCount.get());
+
+		return successCount.get();
+	}
+
+	private List<SubFace> subList(final List<SubFace> subfaces) {
+		var sublist = new ArrayList<>(subfaces.subList(1, subfaces.size()));
+
+		// sort sublist for speeding up
+		sublist.sort(Comparator.comparing(SubFace::getSuccessRate).reversed());
+
+		return sublist;
 	}
 
 	private void setConditionOf3facesToSubfaces(
