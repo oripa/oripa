@@ -21,21 +21,15 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.fold.halfedge.OriEdge;
+import oripa.domain.fold.condfac.StackConditionFactoryFacade;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.EstimationResult;
 import oripa.domain.fold.origeom.OriGeomUtil;
@@ -44,7 +38,6 @@ import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
-import oripa.geom.GeomUtil;
 import oripa.util.StopWatch;
 
 /**
@@ -110,22 +103,15 @@ public class LayerOrderEnumerator {
 
 		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
 
-		var subFacesOfEachFace = createSubFacesOfEachFace(faces);
-		var overlappingFaceIndexIntersections = createOverlappingFaceIndexIntersections(faces, overlapRelation);
-		var faceIndicesOnHalfedge = createFaceIndicesOnHalfEdge(faces, eps);
+		var conditionFactory = new StackConditionFactoryFacade(faces, edges, overlapRelation, subFaces, eps);
 
-//		holdCondition3s(faces, overlapRelation, subFacesOfEachFace, overlappingFaceIndexIntersections,
-//				faceIndicesOnHalfedge);
+		var overlappingFaceIndexIntersections = conditionFactory.getOverlappingFaceIndexIntersections();
+		var faceIndicesOnHalfedge = conditionFactory.getFaceIndicesOnHalfedge();
 
-		var condition3Factory = new StackConditionOf3FaceFactory();
-		var condition3s = condition3Factory.createAll(faces, overlapRelation, overlappingFaceIndexIntersections,
-				faceIndicesOnHalfedge);
+		var condition3s = conditionFactory.create3FaceConditions();
 		setConditionOf3facesToSubfaces(condition3s, subFaces);
 
-//		var condition4s = holdCondition4s(faces, edges, overlapRelation, subFacesOfEachFace, eps);
-
-		var condition4Factory = new StackConditionOf4FaceFactory();
-		var condition4s = condition4Factory.createAll(faces, edges, overlapRelation, subFacesOfEachFace, eps);
+		var condition4s = conditionFactory.create4FaceCondtions();
 		setConditionOf4facesToSubfaces(condition4s, subFaces);
 
 		var estimator = new DeterministicLayerOrderEstimator(
@@ -165,77 +151,6 @@ public class LayerOrderEnumerator {
 		logger.debug("time = {}[ms]", time);
 
 		return new Result(overlapRelations, subFaces);
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<Integer>[][] createOverlappingFaceIndexIntersections(
-			final List<OriFace> faces,
-			final OverlapRelation overlapRelation) {
-		List<Set<Integer>> indices = IntStream.range(0, faces.size())
-				.mapToObj(i -> new HashSet<Integer>())
-				.collect(Collectors.toList());
-
-		// prepare pair indices of overlapping faces.
-		for (var face : faces) {
-			for (var other : faces) {
-				var index_i = face.getFaceID();
-				var index_j = other.getFaceID();
-				if (!overlapRelation.isNoOverlap(index_i, index_j)) {
-					indices.get(index_i).add(index_j);
-				}
-			}
-		}
-
-		// extract overlapping-face indices shared by face pair.
-		var indexIntersections = new List[faces.size()][faces.size()];
-		for (var face : faces) {
-			for (var other : faces) {
-				var index_i = face.getFaceID();
-				var index_j = other.getFaceID();
-
-				if (index_i == index_j) {
-					continue;
-				}
-
-				var overlappingFaces_i = indices.get(index_i);
-				var overlappingFaces_j = indices.get(index_j);
-
-				indexIntersections[index_i][index_j] = overlappingFaces_i.stream()
-						.filter(index -> overlappingFaces_j.contains(index))
-						.collect(Collectors.toList());
-			}
-		}
-
-		return indexIntersections;
-	}
-
-	private Map<OriHalfedge, Set<Integer>> createFaceIndicesOnHalfEdge(
-			final List<OriFace> faces,
-			final double eps) {
-
-		Map<OriHalfedge, Set<Integer>> indices = new HashMap<>();
-
-		for (var face : faces) {
-			for (var halfedge : face.halfedgeIterable()) {
-				Set<Integer> indexSet = new HashSet<Integer>();
-				indices.put(halfedge, indexSet);
-			}
-		}
-		for (var face : faces) {
-			for (var halfedge : face.halfedgeIterable()) {
-				var indexSet = indices.get(halfedge);
-				for (var other : faces) {
-					if (other == face) {
-						continue;
-					}
-					if (OriGeomUtil.isHalfedgeCrossFace(other, halfedge, eps)) {
-						indexSet.add(other.getFaceID());
-					}
-				}
-			}
-		}
-
-		return indices;
 	}
 
 	private int countUndefinedRelations(final OverlapRelation overlapRelation) {
@@ -320,166 +235,6 @@ public class LayerOrderEnumerator {
 
 	}
 
-	/**
-	 * Creates 3-face condition and sets to subfaces: If face[i] and face[j]
-	 * touching edge are covered by face[k] then OR[i][k] = OR[j][k]
-	 *
-	 * @param faces
-	 *            all faces of the model
-	 * @param overlapRelation
-	 *            overlap relation matrix
-	 */
-	private void holdCondition3s(
-			final List<OriFace> faces, final OverlapRelation overlapRelation,
-			final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
-			final List<Integer>[][] overlappingFaceIndexIntersections,
-			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge) {
-
-		int conditionCount = 0;
-
-		var watch = new StopWatch(true);
-
-		for (OriFace f_i : faces) {
-			var index_i = f_i.getFaceID();
-			for (OriHalfedge he : f_i.halfedgeIterable()) {
-				var pair = he.getPair();
-				if (pair == null) {
-					continue;
-				}
-
-				OriFace f_j = pair.getFace();
-				var index_j = f_j.getFaceID();
-				if (!overlapRelation.isLower(index_i, index_j)) {
-					continue;
-				}
-
-				var intersectionSubFaces = subFacesOfEachFace.get(f_i).stream()
-						.filter(s -> subFacesOfEachFace.get(f_j).contains(s))
-						.collect(Collectors.toList());
-
-				var indices = overlappingFaceIndexIntersections[index_i][index_j];
-				for (var index_k : indices) {
-					if (index_i == index_k || index_j == index_k) {
-						continue;
-					}
-					if (!faceIndicesOnHalfedge.get(he).contains(index_k)) {
-						continue;
-					}
-					OriFace f_k = faces.get(index_k);
-
-					StackConditionOf3Faces cond = new StackConditionOf3Faces();
-					cond.upper = index_i;
-					cond.lower = index_j;
-					cond.other = index_k;
-
-					var filteredSubFaces = intersectionSubFaces.stream()
-							.filter(s -> subFacesOfEachFace.get(f_k).contains(s))
-							.collect(Collectors.toList());
-					// Add condition to all subfaces of the 3 faces
-					for (SubFace sub : filteredSubFaces) {
-						sub.addStackConditionOf3Faces(cond);
-						conditionCount++;
-					}
-				}
-			}
-		}
-
-		logger.debug("#condition3 = {}", conditionCount);
-		logger.debug("condition3s computation time {}[ms]", watch.getMilliSec());
-	}
-
-	/**
-	 * Creates 4-face condition and sets to subfaces.
-	 *
-	 * @param faces
-	 *            all faces of the model
-	 * @param edges
-	 *            all edges of the model
-	 * @param overlapRelation
-	 *            overlap relation matrix
-	 */
-	private List<StackConditionOf4Faces> holdCondition4s(final List<OriFace> faces,
-			final List<OriEdge> edges, final OverlapRelation overlapRelation,
-			final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
-			final double eps) {
-		var condition4s = new ArrayList<StackConditionOf4Faces>();
-
-		int edgeNum = edges.size();
-		logger.debug("edgeNum = " + edgeNum);
-
-		var watch = new StopWatch(true);
-
-		for (int i = 0; i < edgeNum; i++) {
-			OriEdge e0 = edges.get(i);
-			var e0Left = e0.getLeft();
-			var e0Right = e0.getRight();
-
-			if (e0Left == null || e0Right == null) {
-				continue;
-			}
-
-			for (int j = i + 1; j < edgeNum; j++) {
-				OriEdge e1 = edges.get(j);
-				var e1Left = e1.getLeft();
-				var e1Right = e1.getRight();
-				if (e1Left == null || e1Right == null) {
-					continue;
-				}
-
-				if (!GeomUtil.isOverlap(e0.toSegment(), e1.toSegment(), eps)) {
-					continue;
-				}
-
-				var e0LeftFace = e0Left.getFace();
-				var e0RightFace = e0Right.getFace();
-				var e1LeftFace = e1Left.getFace();
-				var e1RightFace = e1Right.getFace();
-
-				var intersectionSubfaces = subFacesOfEachFace.get(e0LeftFace).stream()
-						.filter(s -> subFacesOfEachFace.get(e0RightFace).contains(s))
-						.filter(s -> subFacesOfEachFace.get(e1LeftFace).contains(s))
-						.filter(s -> subFacesOfEachFace.get(e1RightFace).contains(s))
-						.collect(Collectors.toList());
-
-				if (intersectionSubfaces.isEmpty()) {
-					continue;
-				}
-
-				StackConditionOf4Faces cond = new StackConditionOf4Faces();
-
-				var e0LeftFaceID = e0LeftFace.getFaceID();
-				var e0RightFaceID = e0RightFace.getFaceID();
-				var e1LeftFaceID = e1LeftFace.getFaceID();
-				var e1RightFaceID = e1RightFace.getFaceID();
-
-				if (overlapRelation.isUpper(e0LeftFaceID, e0RightFaceID)) {
-					cond.upper1 = e0RightFaceID;
-					cond.lower1 = e0LeftFaceID;
-				} else {
-					cond.upper1 = e0LeftFaceID;
-					cond.lower1 = e0RightFaceID;
-				}
-				if (overlapRelation.isUpper(e1LeftFaceID, e1RightFaceID)) {
-					cond.upper2 = e1RightFaceID;
-					cond.lower2 = e1LeftFaceID;
-				} else {
-					cond.upper2 = e1LeftFaceID;
-					cond.lower2 = e1RightFaceID;
-				}
-
-				for (var sub : intersectionSubfaces) {
-					sub.addStackConditionOf4Faces(cond);
-				}
-				condition4s.add(cond);
-			}
-		}
-
-		logger.debug("#condition4 = {}", condition4s.size());
-		logger.debug("condition4s computation time {}[ms]", watch.getMilliSec());
-
-		return condition4s;
-	}
-
 	private void setConditionOf3facesToSubfaces(
 			final List<StackConditionOf3Faces> conditions,
 			final List<SubFace> subFaces) {
@@ -514,19 +269,5 @@ public class LayerOrderEnumerator {
 		}
 
 		logger.debug("condtion4 set count ={}", count);
-	}
-
-	private Map<OriFace, Set<SubFace>> createSubFacesOfEachFace(final List<OriFace> faces) {
-		Map<OriFace, Set<SubFace>> subFacesOfEachFace = new HashMap<>();
-
-		faces.forEach(face -> subFacesOfEachFace.put(face, new HashSet<>()));
-
-		for (var subFace : subFaces) {
-			for (var face : subFace.ParentFacesIterable()) {
-				subFacesOfEachFace.get(face).add(subFace);
-			}
-		}
-
-		return subFacesOfEachFace;
 	}
 }

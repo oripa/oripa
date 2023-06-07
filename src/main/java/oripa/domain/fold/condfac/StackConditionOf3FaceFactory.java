@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
+package oripa.domain.fold.condfac;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +40,8 @@ public class StackConditionOf3FaceFactory {
 	private static final Logger logger = LoggerFactory.getLogger(StackConditionOf3FaceFactory.class);
 
 	/**
-	 * Creates 3-face condition and sets to subfaces: If face[i] and face[j]
-	 * touching edge are covered by face[k] then OR[i][k] = OR[j][k]
+	 * Creates 3-face condition: If face[i] and face[j] touching edge are
+	 * covered by face[k] then OR[i][k] = OR[j][k]
 	 *
 	 * @param faces
 	 *            all faces of the model

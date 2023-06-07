@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold;
+package oripa.domain.fold.condfac;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +42,18 @@ import oripa.util.StopWatch;
 public class StackConditionOf4FaceFactory {
 	private static final Logger logger = LoggerFactory.getLogger(StackConditionOf4FaceFactory.class);
 
+	/**
+	 * Creates 4-face condition.
+	 *
+	 * @param faces
+	 *            all faces of the model
+	 * @param edges
+	 *            all edges of the model
+	 * @param overlapRelation
+	 *            overlap relation matrix
+	 * @param subFacesOfEachFace
+	 *            mapping face to subface set
+	 */
 	public List<StackConditionOf4Faces> createAll(final List<OriFace> faces,
 			final List<OriEdge> edges, final OverlapRelation overlapRelation,
 			final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
