@@ -72,10 +72,10 @@ public class LayerOrderEnumerator {
 
 	private AtomicInteger callCount;
 
-	private final SubFacesFactory subFacesFactory;
+	private final SubFacesFactory subfacesFactory;
 
-	public LayerOrderEnumerator(final SubFacesFactory subFacesFactory) {
-		this.subFacesFactory = subFacesFactory;
+	public LayerOrderEnumerator(final SubFacesFactory subfacesFactory) {
+		this.subfacesFactory = subfacesFactory;
 	}
 
 	public Result enumerate(final OrigamiModel origamiModel) {
@@ -85,7 +85,7 @@ public class LayerOrderEnumerator {
 		// construct the subfaces
 		final double paperSize = origamiModel.getPaperSize();
 		final double eps = OriGeomUtil.pointEps(paperSize);
-		var subfaces = subFacesFactory.createSubFaces(faces, paperSize, eps);
+		var subfaces = subfacesFactory.createSubFaces(faces, paperSize, eps);
 		logger.debug("subFaces.size() = " + subfaces.size());
 
 		// Set overlap relations based on valley/mountain folds information
@@ -203,7 +203,7 @@ public class LayerOrderEnumerator {
 		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, false);
 
 		if (localLayerOrders == null) {
-			var nextSubfaces = subList(subfaces);
+			var nextSubfaces = popAndSort(subfaces);
 			return findAnswer(faces, overlapRelations, nextSubfaces, overlapRelation);
 		}
 
@@ -213,7 +213,7 @@ public class LayerOrderEnumerator {
 		// complex model because of copying overlapRelation (a large matrix).
 		localLayerOrders.parallelStream().forEach(localLayerOrder -> {
 			int size = localLayerOrder.size();
-			var nextSubfaces = subList(subfaces);
+			var nextSubfaces = popAndSort(subfaces);
 			var nextOverlapRelation = overlapRelation.clone();
 
 			// determine overlap relations according to local layer order
@@ -243,7 +243,7 @@ public class LayerOrderEnumerator {
 		return successCount.get();
 	}
 
-	private List<SubFace> subList(final List<SubFace> subfaces) {
+	private List<SubFace> popAndSort(final List<SubFace> subfaces) {
 		var sublist = new ArrayList<>(subfaces.subList(1, subfaces.size()));
 
 		// sort sublist for speeding up
@@ -254,11 +254,11 @@ public class LayerOrderEnumerator {
 
 	private void setConditionOf3facesToSubfaces(
 			final List<StackConditionOf3Faces> conditions,
-			final List<SubFace> subFaces) {
+			final List<SubFace> subfaces) {
 
 		int count = 0;
 
-		for (var subface : subFaces) {
+		for (var subface : subfaces) {
 			for (var condition : conditions) {
 				if (subface.isRelatedTo(condition)) {
 					subface.addStackConditionOf3Faces(condition);
@@ -272,11 +272,11 @@ public class LayerOrderEnumerator {
 
 	private void setConditionOf4facesToSubfaces(
 			final List<StackConditionOf4Faces> conditions,
-			final List<SubFace> subFaces) {
+			final List<SubFace> subfaces) {
 
 		int count = 0;
 
-		for (var subface : subFaces) {
+		for (var subface : subfaces) {
 			for (var condition : conditions) {
 				if (subface.isRelatedTo(condition)) {
 					subface.addStackConditionOf4Faces(condition);
