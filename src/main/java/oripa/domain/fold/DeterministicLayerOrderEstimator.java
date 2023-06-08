@@ -42,7 +42,7 @@ class DeterministicLayerOrderEstimator {
 	private static final Logger logger = LoggerFactory.getLogger(DeterministicLayerOrderEstimator.class);
 
 	private final List<OriFace> faces;
-	private final List<SubFace> subFaces;
+	private final List<SubFace> subfaces;
 	private final List<Integer>[][] overlappingFaceIndexIntersections;
 	private final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge;
 	private final List<StackConditionOf4Faces> condition4s;
@@ -65,7 +65,7 @@ class DeterministicLayerOrderEstimator {
 			final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge,
 			final List<StackConditionOf4Faces> condition4s) {
 		this.faces = faces;
-		this.subFaces = subFaces;
+		this.subfaces = subFaces;
 		this.overlappingFaceIndexIntersections = overlappingFaceIndexIntersections;
 		this.faceIndicesOnHalfedge = faceIndicesOnHalfedge;
 		this.condition4s = condition4s;
@@ -248,7 +248,7 @@ class DeterministicLayerOrderEstimator {
 	private EstimationResult estimateBy3FaceTransitiveRelation(final OverlapRelation overlapRelation) {
 		var changed = EstimationResult.NOT_CHANGED;
 
-		for (SubFace sub : subFaces) {
+		for (SubFace sub : subfaces) {
 			while (true) {
 				changed = updateOverlapRelationBy3FaceTransitiveRelation(sub, overlapRelation);
 				if (changed != EstimationResult.CHANGED) {
