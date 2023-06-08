@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import javax.vecmath.Vector2d;
@@ -46,6 +47,9 @@ public class SubFace {
 	private final List<StackConditionOf3Faces> condition3s = new ArrayList<>();
 
 	private List<OriFace> modelFaces;
+
+	private final AtomicInteger callCount = new AtomicInteger(0);
+	private final AtomicInteger successCount = new AtomicInteger(0);
 
 	/**
 	 *
@@ -113,7 +117,10 @@ public class SubFace {
 		// the search tree.
 		// (earlier failure is better.)
 		var candidateFaces = parentFaces.stream()
-				.sorted(Comparator.comparing(stackConditionAggregate::getCountOfConditionsOf2Faces).reversed())
+				.sorted(Comparator.comparing(stackConditionAggregate::getCountOfConditionsOf2Faces)
+						.thenComparing(stackConditionAggregate::getCountOfConditionsOf3Faces)
+						.thenComparing(stackConditionAggregate::getCountOfConditionsOf4Faces)
+						.reversed())
 				.collect(Collectors.toList());
 
 		// From the bottom
@@ -278,11 +285,63 @@ public class SubFace {
 				.allMatch(face -> sub.parentFaces.contains(face));
 	}
 
+	public boolean isRelatedTo(final StackConditionOf3Faces condition) {
+		var indices = parentFaces.stream()
+				.map(OriFace::getFaceID)
+				.collect(Collectors.toList());
+		return indices.contains(condition.lower) && indices.contains(condition.upper) &&
+				indices.contains(condition.other);
+	}
+
+	public boolean isRelatedTo(final StackConditionOf4Faces condition) {
+		var indices = parentFaces.stream()
+				.map(OriFace::getFaceID)
+				.collect(Collectors.toList());
+		return indices.contains(condition.lower1) && indices.contains(condition.lower2) &&
+				indices.contains(condition.upper1) && indices.contains(condition.upper2);
+	}
+
+	public void incrementCallCount() {
+		callCount.incrementAndGet();
+	}
+
+	public double getSuccessRate() {
+		if (callCount.get() == 0) {
+			return 0;
+		}
+
+		return successCount.doubleValue() / callCount.doubleValue();
+	}
+
+	public int getSuccessCount() {
+		return successCount.get();
+	}
+
+	public void addSuccessCount(final int value) {
+		successCount.addAndGet(value);
+	}
+
 	public int getAllCountOfConditionsOf2Faces(final OverlapRelation overlapRelation) {
 		var stackConditionAggregate = new StackConditionAggregate();
 
 		stackConditionAggregate.prepareConditionsOf2Faces(parentFaces, overlapRelation);
 
 		return stackConditionAggregate.getAllCountOfConditionsOf2Faces();
+	}
+
+	public int getAllCountOfConditionsOf3Faces(final OverlapRelation overlapRelation) {
+		var stackConditionAggregate = new StackConditionAggregate();
+
+		stackConditionAggregate.prepareConditionsOf3Faces(parentFaces, overlapRelation, condition3s);
+
+		return stackConditionAggregate.getAllCountOfConditionsOf3Faces();
+	}
+
+	public int getAllCountOfConditionsOf4Faces(final OverlapRelation overlapRelation) {
+		var stackConditionAggregate = new StackConditionAggregate();
+
+		stackConditionAggregate.prepareConditionsOf4Faces(parentFaces, overlapRelation, condition4s);
+
+		return stackConditionAggregate.getAllCountOfConditionsOf4Faces();
 	}
 }

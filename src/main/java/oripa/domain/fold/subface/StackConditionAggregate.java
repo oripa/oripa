@@ -221,8 +221,24 @@ class StackConditionAggregate {
 		return stackConditionsOf2Faces.get(face).size();
 	}
 
+	int getCountOfConditionsOf3Faces(final OriFace face) {
+		return stackConditionsOf3Faces.get(face).size();
+	}
+
+	int getCountOfConditionsOf4Faces(final OriFace face) {
+		return stackConditionsOf4Faces.get(face).size();
+	}
+
 	int getAllCountOfConditionsOf2Faces() {
 		return stackConditionsOf2Faces.values().stream().mapToInt(List::size).sum();
+	}
+
+	int getAllCountOfConditionsOf3Faces() {
+		return stackConditionsOf3Faces.values().stream().mapToInt(List::size).sum();
+	}
+
+	int getAllCountOfConditionsOf4Faces() {
+		return stackConditionsOf4Faces.values().stream().mapToInt(List::size).sum();
 	}
 
 }
