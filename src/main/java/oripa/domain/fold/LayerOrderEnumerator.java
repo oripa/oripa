@@ -38,6 +38,7 @@ import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
+import oripa.util.IntPair;
 import oripa.util.StopWatch;
 
 /**
@@ -74,8 +75,11 @@ public class LayerOrderEnumerator {
 
 	private final SubFacesFactory subfacesFactory;
 
-	public LayerOrderEnumerator(final SubFacesFactory subfacesFactory) {
+	private final boolean shouldLogStats;
+
+	public LayerOrderEnumerator(final SubFacesFactory subfacesFactory, final boolean shouldLogStats) {
 		this.subfacesFactory = subfacesFactory;
+		this.shouldLogStats = shouldLogStats;
 	}
 
 	public Result enumerate(final OrigamiModel origamiModel) {
@@ -149,6 +153,10 @@ public class LayerOrderEnumerator {
 
 		logger.debug("#call = {}", callCount);
 		logger.debug("time = {}[ms]", time);
+
+		if (shouldLogStats) {
+			logStats(subfaces, overlapRelation);
+		}
 
 		return new Result(overlapRelations, subfaces);
 	}
@@ -286,5 +294,53 @@ public class LayerOrderEnumerator {
 		}
 
 		logger.debug("condtion4 set count ={}", count);
+	}
+
+	private void logStats(final List<SubFace> subfaces, final OverlapRelation overlapRelation) {
+
+		// logConditionCountDistribution(subfaces.get(0), overlapRelation);
+
+		for (int i = 0; i < subfaces.size(); i++) {
+			var subface = subfaces.get(i);
+
+			if (subface.getSuccessCount() == 0) {
+				continue;
+			}
+
+			var mostUsedFirstFaceEntry = subface.getFirstFaceCounts().entrySet().stream()
+					.max(Comparator.comparing(entry -> entry.getValue().get()))
+					.get();
+			var firstFace = mostUsedFirstFaceEntry.getKey();
+
+			logger.debug("@{} #face {}", i, subface.getParentFaceCount());
+			logger.debug("@{} (firstFace, count, #2FacesCondition) = ({}, {}, {})", i,
+					mostUsedFirstFaceEntry.getKey().getFaceID(),
+					mostUsedFirstFaceEntry.getValue(),
+					subface.getCountOfConditionsOf2Faces(firstFace, overlapRelation));
+			logger.debug("@{} success rate {}", i, subface.getSuccessRate());
+			logger.debug("@{} #2FacesFailure {}", i, subface.getFailureCountOf2Faces());
+			logger.debug("@{} #3FacesFailure {}", i, subface.getFailureCountOf3Faces());
+			logger.debug("@{} #4FacesFailure {}", i, subface.getFailureCountOf4Faces());
+		}
+
+	}
+
+	private void logConditionCountDistribution(final SubFace subface, final OverlapRelation overlapRelation) {
+		var faceIndexAndCountPairs = new ArrayList<IntPair>();
+
+		for (int i = 0; i < subface.getParentFaceCount(); i++) {
+			var face = subface.getParentFace(i);
+			var pair = new IntPair(face.getFaceID(),
+					subface.getCountOfConditionsOf2Faces(face, overlapRelation));
+
+			faceIndexAndCountPairs.add(pair);
+		}
+
+		faceIndexAndCountPairs.sort(Comparator.comparing(IntPair::getV2));
+
+		faceIndexAndCountPairs.forEach(pair -> logger.debug("@{} (face, #2FacesCondition) = ({}, {})", 0,
+				pair.getV1(),
+				pair.getV2()));
+
 	}
 }
