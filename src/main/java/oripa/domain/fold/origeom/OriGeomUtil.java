@@ -204,7 +204,7 @@ public class OriGeomUtil {
 	 *
 	 * @param v
 	 * @param index
-	 * @return 0 to pi between i-th edge and (i+1)-th edge
+	 * @return 0 to 2 * pi between i-th edge and (i+1)-th edge
 	 */
 	public static double getAngleDifference(final OriVertex v, final int index) {
 		return getAngleDifference(
