@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,12 @@ public class SubFace {
 
 	private final AtomicInteger callCount = new AtomicInteger(0);
 	private final AtomicInteger successCount = new AtomicInteger(0);
+
+	private final AtomicInteger failureCountOf2Faces = new AtomicInteger();
+	private final AtomicInteger failureCountOf3Faces = new AtomicInteger();
+	private final AtomicInteger failureCountOf4Faces = new AtomicInteger();
+
+	private final Map<OriFace, AtomicInteger> firstFaceCounts = new ConcurrentHashMap<>();
 
 	/**
 	 *
@@ -123,6 +130,9 @@ public class SubFace {
 						.reversed())
 				.collect(Collectors.toList());
 
+		var firstFace = candidateFaces.get(0);
+		firstFaceCounts.get(firstFace).incrementAndGet();
+
 		// From the bottom
 		sort(candidateFaces,
 				localLayerOrders,
@@ -132,6 +142,10 @@ public class SubFace {
 				stackConditionAggregate,
 				0,
 				parallel);
+
+		failureCountOf2Faces.addAndGet(stackConditionAggregate.getFailureCountOf2Faces());
+		failureCountOf3Faces.addAndGet(stackConditionAggregate.getFailureCountOf3Faces());
+		failureCountOf4Faces.addAndGet(stackConditionAggregate.getFailureCountOf4Faces());
 
 		return localLayerOrders;
 	}
@@ -257,6 +271,7 @@ public class SubFace {
 	}
 
 	public boolean addParentFaces(final Collection<OriFace> faces) {
+		faces.forEach(face -> firstFaceCounts.put(face, new AtomicInteger()));
 		return parentFaces.addAll(faces);
 	}
 
@@ -344,4 +359,29 @@ public class SubFace {
 
 		return stackConditionAggregate.getAllCountOfConditionsOf4Faces();
 	}
+
+	public int getCountOfConditionsOf2Faces(final OriFace face, final OverlapRelation overlapRelation) {
+		var stackConditionAggregate = new StackConditionAggregate();
+
+		stackConditionAggregate.prepareConditionsOf2Faces(parentFaces, overlapRelation);
+
+		return stackConditionAggregate.getCountOfConditionsOf2Faces(face);
+	}
+
+	public int getFailureCountOf2Faces() {
+		return failureCountOf2Faces.get();
+	}
+
+	public int getFailureCountOf3Faces() {
+		return failureCountOf3Faces.get();
+	}
+
+	public int getFailureCountOf4Faces() {
+		return failureCountOf4Faces.get();
+	}
+
+	public Map<OriFace, AtomicInteger> getFirstFaceCounts() {
+		return firstFaceCounts;
+	}
+
 }

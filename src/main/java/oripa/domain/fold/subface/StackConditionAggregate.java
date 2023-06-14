@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.origeom.OverlapRelation;
@@ -40,6 +41,10 @@ class StackConditionAggregate {
 	private final HashMap<OriFace, List<Integer>> stackConditionsOf2Faces = new HashMap<>();
 	private final HashMap<OriFace, List<StackConditionOf3Faces>> stackConditionsOf3Faces = new HashMap<>();
 	private final HashMap<OriFace, List<StackConditionOf4Faces>> stackConditionsOf4Faces = new HashMap<>();
+
+	private final AtomicInteger failureCountOf2Faces = new AtomicInteger();
+	private final AtomicInteger failureCountOf3Faces = new AtomicInteger();
+	private final AtomicInteger failureCountOf4Faces = new AtomicInteger();
 
 	/**
 	 * Creates stack conditions of 2 faces for a subface and stores in
@@ -136,8 +141,12 @@ class StackConditionAggregate {
 	boolean satisfiesConditionsOf2Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final OriFace f) {
-		return stackConditionsOf2Faces.get(f).stream()
-				.allMatch(i -> alreadyInLocalLayerOrder[i]);
+		if (stackConditionsOf2Faces.get(f).stream()
+				.allMatch(i -> alreadyInLocalLayerOrder[i])) {
+			return true;
+		}
+		failureCountOf2Faces.incrementAndGet();
+		return false;
 	}
 
 	/**
@@ -156,6 +165,7 @@ class StackConditionAggregate {
 			final OriFace face) {
 		if (stackConditionsOf3Faces.get(face).stream().anyMatch(cond -> alreadyInLocalLayerOrder[cond.lower]
 				&& !alreadyInLocalLayerOrder[cond.upper])) {
+			failureCountOf3Faces.incrementAndGet();
 			return false;
 		}
 
@@ -196,6 +206,7 @@ class StackConditionAggregate {
 				&& !alreadyInLocalLayerOrder[cond.upper1]
 				&& indexOnOrdering.get(modelFaces.get(cond.lower2)) < indexOnOrdering
 						.get(modelFaces.get(cond.lower1)))) {
+			failureCountOf4Faces.incrementAndGet();
 			return false;
 		}
 
@@ -205,6 +216,7 @@ class StackConditionAggregate {
 				&& !alreadyInLocalLayerOrder[cond.upper2]
 				&& indexOnOrdering.get(modelFaces.get(cond.lower1)) < indexOnOrdering.get(modelFaces
 						.get(cond.lower2)))) {
+			failureCountOf4Faces.incrementAndGet();
 			return false;
 		}
 
@@ -241,4 +253,15 @@ class StackConditionAggregate {
 		return stackConditionsOf4Faces.values().stream().mapToInt(List::size).sum();
 	}
 
+	int getFailureCountOf2Faces() {
+		return failureCountOf2Faces.get();
+	}
+
+	int getFailureCountOf3Faces() {
+		return failureCountOf3Faces.get();
+	}
+
+	int getFailureCountOf4Faces() {
+		return failureCountOf4Faces.get();
+	}
 }

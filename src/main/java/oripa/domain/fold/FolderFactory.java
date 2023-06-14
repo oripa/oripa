@@ -77,7 +77,7 @@ public class FolderFactory {
 
 		return new AssignedModelFolder(
 				new SimpleFolder(),
-				new LayerOrderEnumerator(subfacesFactory));
+				new LayerOrderEnumerator(subfacesFactory, true));
 	}
 
 	private Folder createUnassigned() {
@@ -91,7 +91,7 @@ public class FolderFactory {
 
 		return new UnassignedModelFolder(
 				new SimpleFolder(),
-				new LayerOrderEnumerator(subfacesFactory));
+				new LayerOrderEnumerator(subfacesFactory, false));
 	}
 
 	private Folder createErrorContaining() {
