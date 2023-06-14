@@ -232,9 +232,9 @@ public class LayerOrderEnumerator {
 					// if index on local layer order is 0, the face is at
 					// the top of layer order (looking down the folded model
 					// on a table).
-					// therefore a face with smaller index i on layer order
-					// should be UPPER than a face with index j on layer
-					// order.
+					// therefore a face with smaller index i on local layer
+					// order should be UPPER than a face with index j on local
+					// layer order.
 					var result = nextOverlapRelation.setUpperIfPossible(index_i, index_j);
 					if (result == EstimationResult.UNFOLDABLE) {
 						return;
