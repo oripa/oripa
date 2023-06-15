@@ -23,8 +23,9 @@ public abstract class AbstractSavingAction<Data> {
 		return result;
 	}
 
-	public void setConfig(final Supplier<Object> configSupplier) {
+	public AbstractSavingAction<Data> setConfig(final Supplier<Object> configSupplier) {
 		this.configSupplier = configSupplier;
+		return this;
 	}
 
 	protected abstract void beforeSave(Data data);

@@ -27,7 +27,6 @@ import oripa.application.main.DataFileAccess;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.geom.GeomUtil;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFileAccessSupportSelector;
 import oripa.persistence.entity.FoldedModelEntity;
@@ -41,7 +40,8 @@ import oripa.persistence.entity.exporter.FoldedModelSingleExporterFOLD;
 public class CommandLineFolder {
 	private static final Logger logger = LoggerFactory.getLogger(CommandLineFolder.class);
 
-	public void fold(final String inputFilePath, final boolean split, final String outputFilePath) {
+	public void fold(final String inputFilePath, final boolean split, final String outputFilePath,
+			final double pointEps) {
 
 		if (!outputFilePath.endsWith(".fold")) {
 			throw new IllegalArgumentException("Output format is not supported. acceptable format: fold");
@@ -52,8 +52,6 @@ public class CommandLineFolder {
 		try {
 			var creasePattern = creasePatternFileAccess.loadFile(inputFilePath).get().getCreasePattern();
 			var modelFactory = new TestedOrigamiModelFactory();
-
-			var pointEps = GeomUtil.pointEps();
 
 			List<OrigamiModel> origamiModels = modelFactory.createOrigamiModels(creasePattern, pointEps);
 

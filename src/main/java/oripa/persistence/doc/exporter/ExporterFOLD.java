@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.GsonBuilder;
 
 import oripa.doc.Doc;
-import oripa.geom.GeomUtil;
 import oripa.persistence.foldformat.CreasePatternElementConverter;
 import oripa.persistence.foldformat.CreasePatternFOLDFormat;
 import oripa.persistence.foldformat.PointsMerger;
@@ -51,7 +50,9 @@ public class ExporterFOLD implements DocExporter {
 			throws IOException, IllegalArgumentException {
 		logger.info("start exporting FOLD file.");
 
-		final double pointEps = GeomUtil.pointEps();
+		var config = (CreasePatternFOLDConfig) configObj;
+
+		final double pointEps = config.getEps();
 
 		var pointsMerger = new PointsMerger();
 		var creasePattern = pointsMerger.mergeClosePoints(doc.getCreasePattern(), pointEps);
@@ -81,7 +82,7 @@ public class ExporterFOLD implements DocExporter {
 			foldFormat.setFacesVertices(converter.toFacesVertices(creasePattern));
 			logger.info("size of faces_vertices: " + foldFormat.getFacesVertices().size());
 		} catch (IllegalArgumentException e) {
-			logger.info("Faces are not created.", e);
+			logger.info("Faces are not created. (eps = " + pointEps + ")", e);
 		}
 
 		try (var writer = Files.newBufferedWriter(Path.of(filePath))) {

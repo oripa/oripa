@@ -58,6 +58,7 @@ import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
+import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
@@ -476,7 +477,13 @@ public class MainFramePresenter {
 	 */
 	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeProperty<Doc> type) {
 		try {
-			new ProjectSavingAction(type.getExporter()).setPath(filePath).save(doc);
+			var action = new ProjectSavingAction(type.getExporter()).setPath(filePath);
+
+			if (type == CreasePatternFileTypeKey.FOLD) {
+				action.setConfig(this::createFOLDConfig);
+			}
+
+			action.save(doc);
 		} catch (IOException | IllegalArgumentException e) {
 			logger.error("Failed to save", e);
 			view.showSaveFailureErrorMessage(e);
@@ -491,6 +498,8 @@ public class MainFramePresenter {
 			final FileTypeProperty<Doc>... types) {
 
 		try {
+			dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
+
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 			File givenFile = new File(directory,
@@ -519,12 +528,21 @@ public class MainFramePresenter {
 		}
 	}
 
+	private CreasePatternFOLDConfig createFOLDConfig() {
+		var config = new CreasePatternFOLDConfig();
+		config.setEps(paintContext.getPointEps());
+
+		return config;
+	}
+
 	/**
 	 * Open Save File As Dialogue for specific file types {@code type}. Runs a
 	 * model check before saving.
 	 */
 	private void saveFileWithModelCheck(final CreasePatternFileTypeKey type) {
 		try {
+			dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
+
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),

@@ -23,6 +23,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
+import oripa.geom.GeomUtil;
+
 /**
  * @author OUCHI Koji
  *
@@ -104,6 +106,9 @@ public class CommandLineInterfaceMain {
 			var parser = new DefaultParser();
 			var line = parser.parse(options, args);
 
+			// TODO read from option
+			var pointEps = GeomUtil.pointEps();
+
 			if (line.hasOption(HELP)) {
 				var formatter = new HelpFormatter();
 				formatter.printHelp("ORIPA command line tool.", options);
@@ -120,7 +125,7 @@ public class CommandLineInterfaceMain {
 			if (line.hasOption(convertOption)) {
 				var outputFilePath = line.getOptionValue(convertOption);
 				var converter = new CreasePatternFileConverter();
-				converter.convert(inputFilePath, outputFilePath);
+				converter.convert(inputFilePath, outputFilePath, pointEps);
 
 			} else if (line.hasOption(imageOption)) {
 				if (!line.hasOption(indexOption)) {
@@ -136,7 +141,7 @@ public class CommandLineInterfaceMain {
 				var outputFilePath = line.getOptionValue(foldOption);
 				var folder = new CommandLineFolder();
 				var split = line.hasOption(splitOption);
-				folder.fold(inputFilePath, split, outputFilePath);
+				folder.fold(inputFilePath, split, outputFilePath, pointEps);
 
 			} else if (line.getOptions().length == 0) {
 				throw new IllegalArgumentException("No option is given. Hint: see help by -" + helpOption.getOpt());
