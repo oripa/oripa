@@ -405,6 +405,10 @@ public class GeomUtil {
 		return new Vector2d(sp.x + t * dir.x, sp.y + t * dir.y);
 	}
 
+	public static double distancePointToSegment(final Vector2d p, final Segment segment) {
+		return distancePointToSegment(p, segment.getP0(), segment.getP1());
+	}
+
 	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
 
@@ -420,6 +424,10 @@ public class GeomUtil {
 			dir.sub(sp);
 			return distance(sp.x + t * dir.x, sp.y + t * dir.y, p.x, p.y);
 		}
+	}
+
+	public static double distancePointToSegment(final Vector2d p, final Segment segment, final Vector2d nearestPoint) {
+		return distancePointToSegment(p, segment.getP0(), segment.getP1(), nearestPoint);
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,

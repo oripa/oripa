@@ -121,8 +121,7 @@ public class OverlappingLineDivider {
 		var points = new ArrayList<Vector2d>(List.of(line.getP0(), line.getP1()));
 
 		// is close to segment?
-		if (GeomUtil.distancePointToSegment(p, line.getP0(),
-				line.getP1()) > pointEps) {
+		if (GeomUtil.distancePointToSegment(p, line) > pointEps) {
 			return points;
 		}
 

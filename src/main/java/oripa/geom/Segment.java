@@ -61,6 +61,15 @@ public class Segment {
 		return new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
 	}
 
+	public double length() {
+		var p0 = getP0();
+		var p1 = getP1();
+
+		var dp = new Vector2d(p0);
+		dp.sub(p1);
+		return Math.sqrt(dp.getX() * dp.getX() + dp.getY() * dp.getY());
+	}
+
 	/**
 	 * Calculates the affine value on the line, at the {@code xTested}
 	 * coordinate using the y = ax + b expression

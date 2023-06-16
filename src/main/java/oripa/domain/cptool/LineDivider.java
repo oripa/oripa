@@ -30,7 +30,7 @@ public class LineDivider {
 		}
 
 		// far from the line
-		if (GeomUtil.distancePointToSegment(v, line.p0, line.p1) > pointEps) {
+		if (GeomUtil.distancePointToSegment(v, line) > pointEps) {
 			return null;
 		}
 

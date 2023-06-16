@@ -111,12 +111,10 @@ public class LineAdder {
 			}
 
 			// use end points on inputLine
-			if (GeomUtil.distancePointToSegment(line.p0, inputLine.p0,
-					inputLine.p1) < pointEps) {
+			if (GeomUtil.distancePointToSegment(line.p0, inputLine) < pointEps) {
 				points.add(line.p0);
 			}
-			if (GeomUtil.distancePointToSegment(line.p1, inputLine.p0,
-					inputLine.p1) < pointEps) {
+			if (GeomUtil.distancePointToSegment(line.p1, inputLine) < pointEps) {
 				points.add(line.p1);
 			}
 			points.add(crossPoint);

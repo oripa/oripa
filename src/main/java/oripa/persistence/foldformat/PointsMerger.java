@@ -41,7 +41,7 @@ public class PointsMerger {
 	 */
 	public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines, final double pointEps) {
 		var cleaned = lines.stream()
-				.filter(line -> GeomUtil.distance(line.getP0(), line.getP1()) > pointEps)
+				.filter(line -> line.length() >= pointEps)
 				.collect(Collectors.toList());
 
 		var pointSet = new TreeSet<OriPoint>(cleaned.stream()

@@ -59,7 +59,7 @@ public class NearestItemFinder {
 
 		var vertexAlongLine = new Vector2d();
 
-		GeomUtil.distancePointToSegment(viewContext.getLogicalMousePoint(), l.p0, l.p1, vertexAlongLine);
+		GeomUtil.distancePointToSegment(viewContext.getLogicalMousePoint(), l, vertexAlongLine);
 
 		return vertexAlongLine;
 	}
@@ -93,7 +93,7 @@ public class NearestItemFinder {
 		OriLine bestLine = null;
 
 		for (OriLine line : lines) {
-			double dist = GeomUtil.distancePointToSegment(mousePoint, line.p0, line.p1);
+			double dist = GeomUtil.distancePointToSegment(mousePoint, line);
 			if (dist < minDistance) {
 				minDistance = dist;
 				bestLine = line;
