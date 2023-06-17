@@ -52,8 +52,8 @@ class UnassignedModelFolder implements Folder {
 		var foldedModels = new ArrayList<FoldedModel>();
 
 		var assignmentEnumerator = new AssignmentEnumerator(model -> {
-			var result = layerOrderEnumerator.enumerate(origamiModel, eps);
-			foldedModels.add(new FoldedModel(origamiModel, result.getOverlapRelations(), result.getSubfaces()));
+			var result = layerOrderEnumerator.enumerate(model, eps);
+			foldedModels.add(new FoldedModel(model, result.getOverlapRelations(), result.getSubfaces()));
 		});
 
 		assignmentEnumerator.enumerate(origamiModel);
