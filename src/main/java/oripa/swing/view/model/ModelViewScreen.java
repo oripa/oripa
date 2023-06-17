@@ -43,7 +43,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.View;
 import oripa.gui.view.main.PainterScreenSetting;
@@ -85,7 +84,7 @@ public class ModelViewScreen extends JPanel
 	private final PainterScreenSetting mainScreenSetting;
 
 	private Consumer<ModelGraphics> paintComponentListener;
-	private Consumer<Double> scissorsLineChangeListener;
+	private Runnable scissorsLineChangeListener;
 
 	public ModelViewScreen(final PainterScreenSetting mainScreenSetting) {
 
@@ -230,7 +229,7 @@ public class ModelViewScreen extends JPanel
 	}
 
 	private void recalcScissorsLine() {
-		scissorsLineChangeListener.accept(OriGeomUtil.pointEps(origamiModel.getPaperSize()));
+		scissorsLineChangeListener.run();
 	}
 
 	@Override
@@ -350,7 +349,7 @@ public class ModelViewScreen extends JPanel
 	}
 
 	@Override
-	public void setScissorsLineChangeListener(final Consumer<Double> listener) {
+	public void setScissorsLineChangeListener(final Runnable listener) {
 		scissorsLineChangeListener = listener;
 	}
 

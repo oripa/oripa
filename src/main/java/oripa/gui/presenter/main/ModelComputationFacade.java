@@ -82,13 +82,17 @@ public class ModelComputationFacade {
 	private final Runnable showCleaningUpMessage;
 	private final Runnable showFailureMessage;
 
+	private final double eps;
+
 	public ModelComputationFacade(
 			final Supplier<Boolean> needCleaningUpDuplication,
 			final Runnable showCleaningUpMessage,
-			final Runnable showFailureMessage) {
+			final Runnable showFailureMessage,
+			final double eps) {
 		this.needCleaningUpDuplication = needCleaningUpDuplication;
 		this.showCleaningUpMessage = showCleaningUpMessage;
 		this.showFailureMessage = showFailureMessage;
+		this.eps = eps;
 	}
 
 	public ComputationResult computeModels(
@@ -98,7 +102,7 @@ public class ModelComputationFacade {
 		var folderFactory = new FolderFactory();
 
 		var foldedModels = origamiModels.stream()
-				.map(model -> folderFactory.create(model.getModelType()).fold(model, fullEstimation))
+				.map(model -> folderFactory.create(model.getModelType()).fold(model, eps, fullEstimation))
 				.collect(Collectors.toList());
 
 		return new ComputationResult(origamiModels, foldedModels);
@@ -110,38 +114,38 @@ public class ModelComputationFacade {
 	 *
 	 * @return Origami model before folding
 	 */
-	public List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern, final double pointEps) {
+	public List<OrigamiModel> buildOrigamiModels(final CreasePattern creasePattern) {
 
 		OrigamiModel wholeModel = modelFactory.createOrigamiModel(
-				creasePattern, pointEps);
+				creasePattern, eps);
 
 		logger.debug("Building origami model.");
 
 		if (wholeModel.isLocallyFlatFoldable()) {
 			logger.debug("No modification is needed.");
-			return modelFactory.createOrigamiModels(creasePattern, pointEps);
+			return modelFactory.createOrigamiModels(creasePattern, eps);
 		}
 
 		// ask if ORIPA should try to remove duplication.
 		if (!needCleaningUpDuplication.get()) {
 			// the answer is "no."
-			return modelFactory.createOrigamiModels(creasePattern, pointEps);
+			return modelFactory.createOrigamiModels(creasePattern, eps);
 		}
 
 		// clean up the crease pattern
-		if (creasePattern.cleanDuplicatedLines(pointEps)) {
+		if (creasePattern.cleanDuplicatedLines(eps)) {
 			showCleaningUpMessage.run();
 		}
 		// re-create the model data for simplified crease pattern
 		wholeModel = modelFactory
-				.createOrigamiModel(creasePattern, pointEps);
+				.createOrigamiModel(creasePattern, eps);
 
 		if (wholeModel.isLocallyFlatFoldable()) {
-			return modelFactory.createOrigamiModels(creasePattern, pointEps);
+			return modelFactory.createOrigamiModels(creasePattern, eps);
 		}
 
 		showFailureMessage.run();
 
-		return modelFactory.createOrigamiModels(creasePattern, pointEps);
+		return modelFactory.createOrigamiModels(creasePattern, eps);
 	}
 }

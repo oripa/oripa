@@ -40,7 +40,7 @@ class UnassignedModelFolder implements Folder {
 	}
 
 	@Override
-	public FoldedModel fold(final OrigamiModel origamiModel, final boolean fullEstimation) {
+	public FoldedModel fold(final OrigamiModel origamiModel, final double eps, final boolean fullEstimation) {
 		simpleFolder.simpleFoldWithoutZorder(origamiModel);
 		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
@@ -52,7 +52,7 @@ class UnassignedModelFolder implements Folder {
 		var foldedModels = new ArrayList<FoldedModel>();
 
 		var assignmentEnumerator = new AssignmentEnumerator(model -> {
-			var result = layerOrderEnumerator.enumerate(origamiModel);
+			var result = layerOrderEnumerator.enumerate(origamiModel, eps);
 			foldedModels.add(new FoldedModel(origamiModel, result.getOverlapRelations(), result.getSubfaces()));
 		});
 

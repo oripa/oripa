@@ -66,7 +66,7 @@ public class CommandLineFolder {
 			}
 
 			var folder = new FolderFactory().create(origamiModel.getModelType());
-			var foldedModel = folder.fold(origamiModel, true);
+			var foldedModel = folder.fold(origamiModel, pointEps, true);
 
 			if (split) {
 				var digitLength = Integer.toString(foldedModel.getFoldablePatternCount()).length();

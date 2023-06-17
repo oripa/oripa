@@ -32,7 +32,6 @@ import oripa.domain.fold.condfac.StackConditionFactoryFacade;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.EstimationResult;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
@@ -82,13 +81,12 @@ public class LayerOrderEnumerator {
 		this.shouldLogStats = shouldLogStats;
 	}
 
-	public Result enumerate(final OrigamiModel origamiModel) {
+	public Result enumerate(final OrigamiModel origamiModel, final double eps) {
 		var faces = origamiModel.getFaces();
 		var edges = origamiModel.getEdges();
 
 		// construct the subfaces
 		final double paperSize = origamiModel.getPaperSize();
-		final double eps = OriGeomUtil.pointEps(paperSize);
 		var subfaces = subfacesFactory.createSubFaces(faces, paperSize, eps);
 		logger.debug("subFaces.size() = " + subfaces.size());
 
