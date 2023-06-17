@@ -18,6 +18,7 @@
  */
 package oripa.util.collection;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,5 +34,9 @@ public class CollectionUtil {
 
 	public static <T> Set<T> newConcurrentHashSet() {
 		return ConcurrentHashMap.newKeySet();
+	}
+
+	public static <T> List<T> partialCopy(final List<T> list, final int fromIndex, final int toIndex) {
+		return new ArrayList<T>(list.subList(fromIndex, toIndex));
 	}
 }

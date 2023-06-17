@@ -39,6 +39,7 @@ import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.util.IntPair;
 import oripa.util.StopWatch;
+import oripa.util.collection.CollectionUtil;
 
 /**
  * @author OUCHI Koji
@@ -250,7 +251,7 @@ public class LayerOrderEnumerator {
 	}
 
 	private List<SubFace> popAndSort(final List<SubFace> subfaces) {
-		var sublist = new ArrayList<>(subfaces.subList(1, subfaces.size()));
+		var sublist = CollectionUtil.partialCopy(subfaces, 1, subfaces.size());
 
 		// sort sublist for speeding up
 		sublist.sort(Comparator.comparing(SubFace::getSuccessRate).reversed());
