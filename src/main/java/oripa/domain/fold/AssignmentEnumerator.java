@@ -45,7 +45,7 @@ import oripa.value.OriLine;
  * @author OUCHI Koji
  *
  */
-public class AssignmentEnumerator {
+class AssignmentEnumerator {
 	private static final Logger logger = LoggerFactory.getLogger(AssignmentEnumerator.class);
 
 	private final VertexFoldability foldability = new VertexFoldability();

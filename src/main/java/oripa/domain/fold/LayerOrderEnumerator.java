@@ -45,7 +45,7 @@ import oripa.util.collection.CollectionUtil;
  * @author OUCHI Koji
  *
  */
-public class LayerOrderEnumerator {
+class LayerOrderEnumerator {
 
 	public static class Result {
 		private final List<OverlapRelation> overlapRelations;

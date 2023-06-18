@@ -21,7 +21,7 @@ package oripa.domain.fold;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 
-public class FaceDisplayModifier {
+class FaceDisplayModifier {
 	public void setCurrentPositionsToDisplayPositions(final OrigamiModel origamiModel) {
 		origamiModel.getFaces().stream()
 				.flatMap(OriFace::halfedgeStream).forEach(he -> {
