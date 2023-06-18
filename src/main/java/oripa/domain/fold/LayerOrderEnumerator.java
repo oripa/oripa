@@ -82,6 +82,12 @@ class LayerOrderEnumerator {
 		this.shouldLogStats = shouldLogStats;
 	}
 
+	/**
+	 * @param origamiModel
+	 *            half-edge based data for origami model before folding.
+	 * @param eps
+	 *            max value of computation error.
+	 */
 	public Result enumerate(final OrigamiModel origamiModel, final double eps) {
 		var faces = origamiModel.getFaces();
 		var edges = origamiModel.getEdges();
@@ -147,7 +153,7 @@ class LayerOrderEnumerator {
 		watch.start();
 
 		callCount = new AtomicInteger();
-		findAnswer(faces, overlapRelations, subfaces, overlapRelation);
+		findAnswer(faces, subfaces, overlapRelation, overlapRelations);
 		var time = watch.getMilliSec();
 
 		logger.debug("#call = {}", callCount);
@@ -181,21 +187,18 @@ class LayerOrderEnumerator {
 	 *
 	 * @param faces
 	 *            all faces of the origami model.
-	 * @param overlapRelations
-	 *            an object to store the result
-	 * @param subFaceIndex
-	 *            the index of subface to be used
+	 * @param subfaces
+	 *            the subfaces to be used.
 	 * @param overlapRelation
-	 *            overlap relation matrix
-	 * @param changedFaceIDs
-	 *            IDs of faces whose overlap relation changed. should contain
-	 *            all face IDs for the first call.
+	 *            overlap relation matrix.
+	 * @param overlapRelations
+	 *            an object to store the result.
 	 */
 	private int findAnswer(
 			final List<OriFace> faces,
-			final List<OverlapRelation> overlapRelations,
 			final List<SubFace> subfaces,
-			final OverlapRelation overlapRelation) {
+			final OverlapRelation overlapRelation,
+			final List<OverlapRelation> overlapRelations) {
 		callCount.incrementAndGet();
 
 		if (subfaces.isEmpty()) {
@@ -211,7 +214,7 @@ class LayerOrderEnumerator {
 
 		if (localLayerOrders == null) {
 			var nextSubfaces = popAndSort(subfaces);
-			return findAnswer(faces, overlapRelations, nextSubfaces, overlapRelation);
+			return findAnswer(faces, nextSubfaces, overlapRelation, overlapRelations);
 		}
 
 		var successCount = new AtomicInteger();
@@ -242,7 +245,7 @@ class LayerOrderEnumerator {
 			}
 
 			sub.incrementCallCount();
-			successCount.addAndGet(findAnswer(faces, overlapRelations, nextSubfaces, nextOverlapRelation));
+			successCount.addAndGet(findAnswer(faces, nextSubfaces, nextOverlapRelation, overlapRelations));
 		});
 
 		sub.addSuccessCount(successCount.get());
