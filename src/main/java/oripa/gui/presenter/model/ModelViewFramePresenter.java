@@ -59,14 +59,16 @@ public class ModelViewFramePresenter {
 			final PainterScreenSetting mainScreenSetting,
 			final List<OrigamiModel> origamiModels,
 			final CutModelOutlinesHolder lineHolder,
-			final CallbackOnUpdate onUpdateScissorsLine) {
+			final CallbackOnUpdate onUpdateScissorsLine,
+			final double eps) {
 		this.view = view;
 		this.fileChooserFactory = fileChooserFactory;
 
 		this.mainScreenSetting = mainScreenSetting;
 		this.origamiModels = origamiModels;
 
-		var screenPresenter = new ModelViewScreenPresenter(view.getModelScreenView(), lineHolder, onUpdateScissorsLine);
+		var screenPresenter = new ModelViewScreenPresenter(view.getModelScreenView(), lineHolder, onUpdateScissorsLine,
+				eps);
 
 		addListenersToComponents();
 

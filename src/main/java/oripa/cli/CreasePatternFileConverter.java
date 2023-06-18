@@ -22,8 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.main.DataFileAccess;
+import oripa.persistence.doc.CreasePatternFileTypeKey;
 import oripa.persistence.doc.DocDAO;
 import oripa.persistence.doc.DocFileAccessSupportSelector;
+import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 
 /**
  * @author OUCHI Koji
@@ -32,10 +34,16 @@ import oripa.persistence.doc.DocFileAccessSupportSelector;
 public class CreasePatternFileConverter {
 	private static final Logger logger = LoggerFactory.getLogger(CreasePatternFileConverter.class);
 
-	public void convert(final String inputFilePath, final String outputFilePath) {
+	public void convert(final String inputFilePath, final String outputFilePath, final double eps) {
 		var creasePatternFileAccess = new DataFileAccess(new DocDAO(new DocFileAccessSupportSelector()));
 
 		try {
+			creasePatternFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD,
+					() -> {
+						var config = new CreasePatternFOLDConfig();
+						config.setEps(eps);
+						return config;
+					});
 			var input = creasePatternFileAccess.loadFile(inputFilePath);
 			creasePatternFileAccess.saveFile(input.get(), outputFilePath);
 		} catch (Exception e) {

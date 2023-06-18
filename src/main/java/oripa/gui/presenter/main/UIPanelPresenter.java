@@ -345,11 +345,12 @@ public class UIPanelPresenter {
 				// clean up the crease pattern
 				view::showCleaningUpMessage,
 				// folding failed.
-				view::showFoldFailureMessage);
+				view::showFoldFailureMessage,
+				paintContext.getPointEps());
 
 		CreasePattern creasePattern = paintContext.getCreasePattern();
 
-		var origamiModels = modelComputation.buildOrigamiModels(creasePattern, paintContext.getPointEps());
+		var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
 
 		computationResult = modelComputation.computeModels(
 				origamiModels,
@@ -377,7 +378,8 @@ public class UIPanelPresenter {
 				mainScreenSetting,
 				origamiModels,
 				cutOutlinesHolder,
-				screenUpdater::updateScreen);
+				screenUpdater::updateScreen,
+				paintContext.getPointEps());
 		modelViewPresenter.setViewVisible(true);
 
 		EstimationResultFrameView resultFrame = null;

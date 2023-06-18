@@ -45,16 +45,19 @@ public class ModelViewScreenPresenter {
 	private final CutModelOutlinesHolder lineHolder;
 	private final CallbackOnUpdate onUpdateScissorsLine;
 
-	private double pointEps;
+	private final double pointEps;
 
 	public ModelViewScreenPresenter(
 			final ModelViewScreenView view,
 			final CutModelOutlinesHolder lineHolder,
-			final CallbackOnUpdate onUpdateScissorsLine) {
+			final CallbackOnUpdate onUpdateScissorsLine,
+			final double pointEps) {
 		this.view = view;
 
 		this.lineHolder = lineHolder;
 		this.onUpdateScissorsLine = onUpdateScissorsLine;
+
+		this.pointEps = pointEps;
 
 		addListeners();
 	}
@@ -90,7 +93,7 @@ public class ModelViewScreenPresenter {
 		m.drawBufferImage();
 	}
 
-	private void recalcScissorsLine(final double pointEps) {
+	private void recalcScissorsLine() {
 		scissorsLine = new OriLine();
 
 		var scissorsLineAngleDegree = view.getScissorsLineAngleDegree();

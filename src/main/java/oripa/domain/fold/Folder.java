@@ -32,11 +32,13 @@ public interface Folder {
 	 * @param origamiModel
 	 *            half-edge based data structure before folding. It will be
 	 *            affected by this method.
+	 * @param eps
+	 *            eps for point equality measured by distance.
 	 * @param fullEstimation
 	 *            whether the algorithm should compute all possible folded
 	 *            states or not.
 	 * @return folded model whose {@link FoldedModel#getOrigamiModel()} returns
 	 *         the given {@code origamiModel}.
 	 */
-	FoldedModel fold(OrigamiModel origamiModel, boolean fullEstimation);
+	FoldedModel fold(OrigamiModel origamiModel, double eps, boolean fullEstimation);
 }

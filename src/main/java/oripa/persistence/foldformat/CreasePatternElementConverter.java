@@ -172,6 +172,7 @@ public class CreasePatternElementConverter {
 		verticesVertices.stream()
 				.forEach(vertices -> {
 					if (vertices.size() < 2) {
+						logger.debug("vertices@{}: {}", verticesVertices.indexOf(vertices), vertices);
 						throw new IllegalArgumentException(
 								"Crease pattern is wrong. (A vertex with degree 1 or 0 occurs.)\n"
 										+ "Make all edges connected.");

@@ -38,13 +38,14 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.MathUtil;
 import oripa.util.StopWatch;
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class AssignmentEnumerator {
+class AssignmentEnumerator {
 	private static final Logger logger = LoggerFactory.getLogger(AssignmentEnumerator.class);
 
 	private final VertexFoldability foldability = new VertexFoldability();
@@ -115,8 +116,8 @@ public class AssignmentEnumerator {
 		var vertex = candidateVertices.get(0);
 
 		if (originallyAssigned.contains(vertex)) {
-			var nextCandidateVertices = new ArrayList<OriVertex>(
-					candidateVertices.subList(1, candidateVertices.size()));
+			var nextCandidateVertices = CollectionUtil.partialCopy(
+					candidateVertices, 1, candidateVertices.size());
 			enumerateImpl(origamiModel, nextCandidateVertices);
 			return;
 		}
@@ -125,8 +126,8 @@ public class AssignmentEnumerator {
 			// vertex can be fully assigned but sometimes not foldable if
 			// connected other vertex is assigned previously.
 			if (foldability.holds(vertex)) {
-				var nextCandidateVertices = new ArrayList<OriVertex>(
-						candidateVertices.subList(1, candidateVertices.size()));
+				var nextCandidateVertices = CollectionUtil.partialCopy(
+						candidateVertices, 1, candidateVertices.size());
 				enumerateImpl(origamiModel, nextCandidateVertices);
 			}
 			return;

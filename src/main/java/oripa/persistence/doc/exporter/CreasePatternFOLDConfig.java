@@ -16,43 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.model;
-
-import java.util.function.Consumer;
-
-import javax.vecmath.Vector2d;
-
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.gui.view.ScreenView;
-import oripa.gui.view.util.CallbackOnUpdate;
+package oripa.persistence.doc.exporter;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface ModelViewScreenView extends ScreenView {
+public class CreasePatternFOLDConfig {
+	private double eps;
 
-	void setModelDisplayMode(ModelDisplayMode mode);
+	public double getEps() {
+		return eps;
+	}
 
-	ModelDisplayMode getModelDisplayMode();
+	public void setEps(final double eps) {
+		this.eps = eps;
+	}
 
-	boolean isScissorsLineVisible();
-
-	double getScale();
-
-	double getScissorsLineAngleDegree();
-
-	double getScissorsLinePosition();
-
-	Vector2d getModelCenter();
-
-	void setModel(OrigamiModel origamiModel, int boundSize);
-
-	OrigamiModel getModel();
-
-	void setPaintComponentListener(Consumer<ModelGraphics> listener);
-
-	void setScissorsLineChangeListener(Runnable listener);
-
-	void setCallbackOnUpdateScissorsLine(CallbackOnUpdate listener);
 }

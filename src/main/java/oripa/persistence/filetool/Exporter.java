@@ -32,7 +32,7 @@ public interface Exporter<Data> {
 	 * @param configObj
 	 *            an object for configuration. The actual type is specified by
 	 *            the implementation class of this interface. null if no
-	 *            configuration is provided.
+	 *            configuration is provided and the implementation accepts it.
 	 * @return true if the action succeeds, otherwise false.
 	 * @throws IOException
 	 *             Error on file access.

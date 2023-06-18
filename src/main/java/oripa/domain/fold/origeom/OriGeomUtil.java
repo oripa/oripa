@@ -35,9 +35,9 @@ import oripa.util.MathUtil;
  */
 public class OriGeomUtil {
 
-	public static double pointEps(final double paperSize) {
-		return paperSize * 1e-7;
-	}
+//	public static double pointEps(final double paperSize) {
+//		return paperSize * 1e-7;
+//	}
 
 	/**
 	 * Whether {@code face0} and {@code face1} overlap partially or entirely

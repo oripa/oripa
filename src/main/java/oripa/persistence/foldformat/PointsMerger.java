@@ -20,6 +20,7 @@ package oripa.persistence.foldformat;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import oripa.geom.GeomUtil;
@@ -40,35 +41,35 @@ public class PointsMerger {
 	 */
 	public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines, final double pointEps) {
 		var cleaned = lines.stream()
-				.filter(line -> GeomUtil.distance(line.p0, line.p1) > pointEps)
+				.filter(line -> line.length() >= pointEps)
 				.collect(Collectors.toList());
 
+		var pointSet = new TreeSet<OriPoint>(cleaned.stream()
+				.flatMap(OriLine::oriPointStream)
+				.collect(Collectors.toList()));
+
 		final var merged = new ArrayList<OriLine>();
-		cleaned.stream()
-				.forEach(line -> merged.add(new OriLine(line.p0, line.p1, line.getType())));
 
-		for (int i = 0; i < merged.size(); i++) {
-			var p00 = merged.get(i).p0;
-			var p01 = merged.get(i).p1;
-			for (int j = i + 1; j < merged.size(); j++) {
-				var p10 = merged.get(j).p0;
-				var p11 = merged.get(j).p1;
+		for (var line : cleaned) {
+			var p0 = find(pointSet, line.p0, pointEps);
+			var p1 = find(pointSet, line.p1, pointEps);
 
-				substituteToP1IfClose(p00, p10, pointEps);
-				substituteToP1IfClose(p00, p11, pointEps);
-
-				substituteToP1IfClose(p01, p10, pointEps);
-				substituteToP1IfClose(p01, p11, pointEps);
-			}
+			merged.add(new OriLine(p0, p1, line.getType()));
 		}
 
 		return merged;
 	}
 
-	private void substituteToP1IfClose(final OriPoint p0, final OriPoint p1, final double pointEps) {
-		if (GeomUtil.distance(p0, p1) <= pointEps) {
-			p1.x = p0.x;
-			p1.y = p0.y;
-		}
+	private OriPoint find(final TreeSet<OriPoint> pointSet, final OriPoint p, final double pointEps) {
+		var boundSet = pointSet
+				.headSet(new OriPoint(p.getX() + pointEps, p.getY() + pointEps), true)
+				.tailSet(new OriPoint(p.getX() - pointEps, p.getY() - pointEps));
+
+		var neighbors = boundSet.stream()
+				.filter(point -> GeomUtil.areEqual(point, p, pointEps))
+				.sorted()
+				.collect(Collectors.toList());
+
+		return neighbors.get(0);
 	}
 }
