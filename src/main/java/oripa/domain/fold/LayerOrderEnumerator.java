@@ -84,7 +84,7 @@ class LayerOrderEnumerator {
 
 	/**
 	 * @param origamiModel
-	 *            half-edge based data for origami model before folding.
+	 *            half-edge based data for origami model after moving faces.
 	 * @param eps
 	 *            max value of computation error.
 	 */
