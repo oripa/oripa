@@ -39,11 +39,11 @@ import oripa.persistence.foldformat.PointsMerger;
 public class ExporterFOLD implements DocExporter {
 	private static final Logger logger = LoggerFactory.getLogger(ExporterFOLD.class);
 
-	/*
-	 * (non Javadoc)
+	/**
+	 * {@code configObj} is required.
 	 *
-	 * @see oripa.persistent.doc.Exporter#export(java.lang.Object,
-	 * java.lang.String)
+	 * @param configObj
+	 *            {@link CreasePatternFOLDConfig} instance.
 	 */
 	@Override
 	public boolean export(final Doc doc, final String filePath, final Object configObj)
