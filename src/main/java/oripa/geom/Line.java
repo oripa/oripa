@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -22,12 +22,12 @@ import javax.vecmath.Vector2d;
 
 public class Line {
 
-    public Vector2d p;   // Passing through point
-    public Vector2d dir; // Unit direction vector
+	public Vector2d p; // Passing through point
+	public Vector2d dir; // Unit direction vector
 
-    public Line(Vector2d p, Vector2d dir) {
-        this.p = p;
-        this.dir = dir;
-        dir.normalize();
-    }
+	public Line(final Vector2d p, final Vector2d dir) {
+		this.p = p;
+		this.dir = dir;
+		dir.normalize();
+	}
 }
