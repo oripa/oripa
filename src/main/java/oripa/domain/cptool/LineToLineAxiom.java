@@ -67,7 +67,7 @@ public class LineToLineAxiom {
 
 	/**
 	 * For version compatibility: Probably won't happen on recent versions since
-	 * current ORIPA always make a cross point after input.
+	 * current ORIPA always makes a cross point after input.
 	 *
 	 * @param s0
 	 * @param s1

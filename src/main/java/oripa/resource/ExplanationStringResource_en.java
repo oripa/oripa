@@ -20,6 +20,8 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 
 			{ StringID.BISECTOR_ID, "Input a bisector. Specify 3 points and a segment." },
 
+			{ StringID.LINE_TO_LINE_ID, "Fold in half. Specify 2 segments and select end points." },
+
 			{ StringID.VERTICAL_ID, "Input a vertical line. Specify a point and a line." },
 
 			{ StringID.MIRROR_ID,
