@@ -20,35 +20,20 @@ package oripa.domain.paint.line;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.AbstractActionState;
 import oripa.domain.paint.core.PickedVerticesConnectionLineAdderCommand;
+import oripa.domain.paint.core.PickingVertex;
 import oripa.util.Command;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SelectingSecondEndPoint extends AbstractActionState {
+public class SelectingSecondEndPoint extends PickingVertex {
 	@Override
 	protected void initialize() {
 		setPreviousClass(SelectingFirstEndPoint.class);
 		setNextClass(SelectingFirstVertexForLine.class);
-	}
-
-	@Override
-	protected boolean onAct(final PaintContext context, final Vector2d currentPoint, final boolean doSpecial) {
-		var picked = context.getCandidateVertexToPick();
-
-		if (picked == null) {
-			return false;
-		}
-
-		context.pushVertex(picked);
-
-		return true;
 	}
 
 	@Override
@@ -65,10 +50,4 @@ public class SelectingSecondEndPoint extends AbstractActionState {
 		Command command = new PickedVerticesConnectionLineAdderCommand(context);
 		command.execute();
 	}
-
-	@Override
-	protected void undoAction(final PaintContext context) {
-		context.popVertex();
-	}
-
 }

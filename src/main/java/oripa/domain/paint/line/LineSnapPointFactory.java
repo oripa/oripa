@@ -43,7 +43,7 @@ public class LineSnapPointFactory {
 		var snapPointFactory = new SnapPointFactory();
 
 		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(creasePattern, segment,
-				creasePattern.getPaperSize());
+				context.getPointEps());
 
 		snapPoints.add(p0);
 		snapPoints.add(p1);

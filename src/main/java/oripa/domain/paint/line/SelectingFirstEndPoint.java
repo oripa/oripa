@@ -18,34 +18,19 @@
  */
 package oripa.domain.paint.line;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.AbstractActionState;
+import oripa.domain.paint.core.PickingVertex;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class SelectingFirstEndPoint extends AbstractActionState {
+public class SelectingFirstEndPoint extends PickingVertex {
 
 	@Override
 	protected void initialize() {
 		setPreviousClass(SelectingSecondVertexForLine.class);
 		setNextClass(SelectingSecondEndPoint.class);
-	}
-
-	@Override
-	protected boolean onAct(final PaintContext context, final Vector2d currentPoint, final boolean doSpecial) {
-		var picked = context.getCandidateVertexToPick();
-
-		if (picked == null) {
-			return false;
-		}
-
-		context.pushVertex(picked);
-
-		return true;
 	}
 
 	@Override
