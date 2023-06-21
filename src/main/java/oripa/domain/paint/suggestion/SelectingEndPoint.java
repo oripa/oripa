@@ -18,11 +18,9 @@
  */
 package oripa.domain.paint.suggestion;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.AbstractActionState;
 import oripa.domain.paint.core.PickedVerticesConnectionLineAdderCommand;
+import oripa.domain.paint.core.PickingVertex;
 import oripa.domain.suggestion.MaekawaTheoremSuggester;
 import oripa.util.Command;
 
@@ -30,25 +28,11 @@ import oripa.util.Command;
  * @author OUCHI Koji
  *
  */
-public class SelectingEndPoint extends AbstractActionState {
+public class SelectingEndPoint extends PickingVertex {
 	@Override
 	protected void initialize() {
 		setPreviousClass(SelectingStartPoint.class);
 		setNextClass(SelectingStartPoint.class);
-	}
-
-	@Override
-	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
-			final boolean doSpecial) {
-		var picked = context.getCandidateVertexToPick();
-
-		if (picked == null) {
-			return false;
-		}
-
-		context.pushVertex(picked);
-
-		return true;
 	}
 
 	@Override
