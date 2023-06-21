@@ -208,6 +208,9 @@ public class UIPanelPresenter {
 		view.addLineInputAngleBisectorButtonListener(angleBisectorState::performActions,
 				keyProcessing);
 
+		var lineToLineState = bindingFactory.createState(StringID.LINE_TO_LINE_ID);
+		view.addLineInputLineToLineAxiomButtonListener(lineToLineState::performActions, keyProcessing);
+
 		var triangleSplitState = bindingFactory.createState(StringID.TRIANGLE_ID);
 		view.addLineInputTriangleSplitButtonListener(triangleSplitState::performActions,
 				keyProcessing);

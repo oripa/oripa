@@ -34,6 +34,7 @@ public enum ButtonIcon implements ButtonIconResource {
 	ON_V("line"),
 	PERPENDICULAR_BISECTOR("pbisector"),
 	BISECTOR("bisector"),
+	LINE_TO_LINE("linetoline"),
 	TRIANGLE("incenter"),
 	VERTICAL("vertical"),
 	SYMMETRIC("symmetry"),

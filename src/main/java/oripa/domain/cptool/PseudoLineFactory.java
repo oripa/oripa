@@ -20,6 +20,7 @@ package oripa.domain.cptool;
 
 import javax.vecmath.Vector2d;
 
+import oripa.geom.Line;
 import oripa.geom.Segment;
 
 /**
@@ -30,11 +31,15 @@ public class PseudoLineFactory {
 	public Segment create(
 			final Vector2d v0, final Vector2d v1, final double paperSize) {
 
-		Vector2d dir = new Vector2d(v0);
-		dir.sub(v1);
+		return create(new Segment(v0, v1).getLine(), paperSize);
+	}
+
+	public Segment create(final Line line, final double paperSize) {
+		var dir = new Vector2d(line.dir);
 		dir.normalize();
 		dir.scale(paperSize * 8);
 
+		var v0 = line.p;
 		Vector2d sv = new Vector2d(v0);
 		sv.sub(dir);
 
@@ -42,8 +47,6 @@ public class PseudoLineFactory {
 		ev.add(dir);
 
 		// create new line
-		Segment line = new Segment(sv, ev);
-
-		return line;
+		return new Segment(sv, ev);
 	}
 }

@@ -1,6 +1,7 @@
 /**
  * ORIPA - Origami Pattern Editor
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,19 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package oripa.domain.paint.linetoline;
 
-package oripa.geom;
+import oripa.domain.paint.PaintContext;
+import oripa.domain.paint.core.PickingLine;
 
-import javax.vecmath.Vector2d;
+/**
+ * @author OUCHI Koji
+ *
+ */
+public class SelectingFirstLine extends PickingLine {
 
-public class Line {
-
-	public Vector2d p; // Passing through point
-	public Vector2d dir; // Unit direction vector
-
-	public Line(final Vector2d p, final Vector2d dir) {
-		this.p = p;
-		this.dir = dir;
-		dir.normalize();
+	@Override
+	protected void initialize() {
+		setNextClass(SelectingSecondLine.class);
 	}
+
+	@Override
+	protected void onResult(final PaintContext context, final boolean doSpecial) {
+
+	}
+
 }

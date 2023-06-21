@@ -211,6 +211,10 @@ public class PaintBoundStateFactory {
 			return stateFactory.create(
 					new AngleBisectorAction(), changeHint, null);
 
+		case StringID.LINE_TO_LINE_ID:
+			return stateFactory.create(
+					new LineToLineAxiomAction(), changeHint, null);
+
 		case StringID.TRIANGLE_ID:
 			return stateFactory.create(
 					new TriangleSplitAction(), changeHint, null);
