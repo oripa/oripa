@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +127,7 @@ class DeterministicLayerOrderEstimator {
 	private boolean isCorrect(final OverlapRelation overlapRelation) {
 
 		// check transitivity
-		for (int i = 0; i < faces.size(); i++) {
+		var correct = IntStream.range(0, faces.size()).parallel().allMatch(i -> {
 			for (int j = 0; j < faces.size(); j++) {
 				if (i == j) {
 					continue;
@@ -142,11 +143,12 @@ class DeterministicLayerOrderEstimator {
 					}
 				}
 			}
-		}
+			return true;
+		});
 
 		// and others as well?
 
-		return true;
+		return correct;
 	}
 
 	/**
