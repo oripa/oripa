@@ -266,16 +266,16 @@ class LayerOrderEnumerator {
 			final List<StackConditionOf3Faces> conditions,
 			final List<SubFace> subfaces) {
 
-		int count = 0;
+		var count = new AtomicInteger();
 
-		for (var subface : subfaces) {
+		subfaces.parallelStream().forEach(subface -> {
 			for (var condition : conditions) {
 				if (subface.isRelatedTo(condition)) {
 					subface.addStackConditionOf3Faces(condition);
-					count++;
+					count.incrementAndGet();
 				}
 			}
-		}
+		});
 
 		logger.debug("condtion3 set count ={}", count);
 	}
@@ -284,16 +284,16 @@ class LayerOrderEnumerator {
 			final List<StackConditionOf4Faces> conditions,
 			final List<SubFace> subfaces) {
 
-		int count = 0;
+		var count = new AtomicInteger();
 
-		for (var subface : subfaces) {
+		subfaces.parallelStream().forEach(subface -> {
 			for (var condition : conditions) {
 				if (subface.isRelatedTo(condition)) {
 					subface.addStackConditionOf4Faces(condition);
-					count++;
+					count.incrementAndGet();
 				}
 			}
-		}
+		});
 
 		logger.debug("condtion4 set count ={}", count);
 	}
