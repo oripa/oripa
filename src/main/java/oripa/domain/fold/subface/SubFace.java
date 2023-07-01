@@ -23,8 +23,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -43,6 +45,7 @@ public class SubFace {
 	 * faces containing this subface.
 	 */
 	private final List<OriFace> parentFaces = new ArrayList<>();
+	private final Set<Integer> parentFaceIndices = new HashSet<>();
 
 	private final List<StackConditionOf4Faces> condition4s = new ArrayList<>();
 	private final List<StackConditionOf3Faces> condition3s = new ArrayList<>();
@@ -272,6 +275,9 @@ public class SubFace {
 
 	public boolean addParentFaces(final Collection<OriFace> faces) {
 		faces.forEach(face -> firstFaceCounts.put(face, new AtomicInteger()));
+
+		parentFaceIndices.addAll(faces.stream().map(OriFace::getFaceID).collect(Collectors.toList()));
+
 		return parentFaces.addAll(faces);
 	}
 
@@ -301,19 +307,13 @@ public class SubFace {
 	}
 
 	public boolean isRelatedTo(final StackConditionOf3Faces condition) {
-		var indices = parentFaces.stream()
-				.map(OriFace::getFaceID)
-				.collect(Collectors.toList());
-		return indices.contains(condition.lower) && indices.contains(condition.upper) &&
-				indices.contains(condition.other);
+		return parentFaceIndices.contains(condition.lower) && parentFaceIndices.contains(condition.upper) &&
+				parentFaceIndices.contains(condition.other);
 	}
 
 	public boolean isRelatedTo(final StackConditionOf4Faces condition) {
-		var indices = parentFaces.stream()
-				.map(OriFace::getFaceID)
-				.collect(Collectors.toList());
-		return indices.contains(condition.lower1) && indices.contains(condition.lower2) &&
-				indices.contains(condition.upper1) && indices.contains(condition.upper2);
+		return parentFaceIndices.contains(condition.lower1) && parentFaceIndices.contains(condition.lower2) &&
+				parentFaceIndices.contains(condition.upper1) && parentFaceIndices.contains(condition.upper2);
 	}
 
 	public void incrementCallCount() {
