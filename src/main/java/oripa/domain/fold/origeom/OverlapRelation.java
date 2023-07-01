@@ -20,6 +20,7 @@ package oripa.domain.fold.origeom;
 
 import java.util.stream.Collectors;
 
+import oripa.util.AtomicByteDenseMatrix;
 import oripa.util.ByteDenseMatrix;
 import oripa.util.ByteMatrix;
 import oripa.util.ByteSparseMatrix;
@@ -47,12 +48,34 @@ public class OverlapRelation {
 		overlapRelation = mat.clone();
 	}
 
+	private OverlapRelation() {
+
+	}
+
 	/**
 	 * @return deep copy of this instance.
 	 */
 	@Override
 	public OverlapRelation clone() {
 		return new OverlapRelation(overlapRelation);
+	}
+
+	public OverlapRelation cloneAtomic() {
+		var cloned = new OverlapRelation();
+
+		cloned.overlapRelation = new AtomicByteDenseMatrix(getSize(), getSize());
+
+		copyTo(cloned);
+
+		return cloned;
+	}
+
+	public void copyTo(final OverlapRelation o) {
+		for (int i = 0; i < getSize(); i++) {
+			for (int j = i; j < getSize(); j++) {
+				o.set(i, j, get(i, j));
+			}
+		}
 	}
 
 	public void switchToSparseMatrix() {
