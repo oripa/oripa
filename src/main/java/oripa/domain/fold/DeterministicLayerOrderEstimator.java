@@ -18,7 +18,6 @@
  */
 package oripa.domain.fold;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -89,40 +88,36 @@ class DeterministicLayerOrderEstimator {
 
 		logger.trace("initial state" + System.lineSeparator() + overlapRelation.toString());
 
-		var atomicOverlapRelation = overlapRelation.cloneAtomic();
-
 		EstimationResult changed;
 		do {
 			changed = EstimationResult.NOT_CHANGED;
 
-			var result = estimateBy3FaceCover(atomicOverlapRelation);
+			var result = estimateBy3FaceCover(overlapRelation);
 			changed = result.or(changed);
 
-			logger.trace("3 face cover" + System.lineSeparator() + atomicOverlapRelation.toString());
+			logger.trace("3 face cover" + System.lineSeparator() + overlapRelation.toString());
 
-			result = estimateBy3FaceTransitiveRelation(atomicOverlapRelation);
+			result = estimateBy3FaceTransitiveRelation(overlapRelation);
 			changed = result.or(changed);
 
-			logger.trace("transitivity" + System.lineSeparator() + atomicOverlapRelation.toString());
+			logger.trace("transitivity" + System.lineSeparator() + overlapRelation.toString());
 
-			result = estimateBy4FaceStackCondition(atomicOverlapRelation);
+			result = estimateBy4FaceStackCondition(overlapRelation);
 			changed = result.or(changed);
 
-			logger.trace("4 face condition" + System.lineSeparator() + atomicOverlapRelation.toString());
+			logger.trace("4 face condition" + System.lineSeparator() + overlapRelation.toString());
 
-			result = estimateBy4FaceCover(atomicOverlapRelation);
+			result = estimateBy4FaceCover(overlapRelation);
 			changed = result.or(changed);
 
-			logger.trace("4 face cover" + System.lineSeparator() + atomicOverlapRelation.toString());
+			logger.trace("4 face cover" + System.lineSeparator() + overlapRelation.toString());
 
-			if (!isCorrect(atomicOverlapRelation)) {
+			if (!isCorrect(overlapRelation)) {
 				return EstimationResult.UNFOLDABLE;
 			}
 
 			estimationLoopCount++;
 		} while (changed == EstimationResult.CHANGED);
-
-		atomicOverlapRelation.copyTo(overlapRelation);
 
 		logger.debug("#estimation = {}", estimationLoopCount);
 		logger.debug("estimation time {}[ms]", watch.getMilliSec());
@@ -254,27 +249,19 @@ class DeterministicLayerOrderEstimator {
 	 *         unfoldable.
 	 */
 	private EstimationResult estimateBy3FaceTransitiveRelation(final OverlapRelation overlapRelation) {
+		var changed = EstimationResult.NOT_CHANGED;
 
-		var results = new ArrayList<EstimationResult>();
-		for (int i = 0; i < subfaces.size(); i++) {
-			results.add(EstimationResult.NOT_CHANGED);
-		}
-
-		IntStream.range(0, subfaces.size()).parallel().forEach(i -> {
-			var sub = subfaces.get(i);
-
-			EstimationResult result;
+		for (SubFace sub : subfaces) {
 			while (true) {
-				result = updateOverlapRelationBy3FaceTransitiveRelation(sub, overlapRelation);
-				if (result != EstimationResult.CHANGED) {
+				changed = updateOverlapRelationBy3FaceTransitiveRelation(sub, overlapRelation);
+				if (changed != EstimationResult.CHANGED) {
 					break;
 				}
 			}
-			results.set(i, result);
-		});
-
-		var changed = results.parallelStream().reduce(EstimationResult::or).get();
-
+			if (changed == EstimationResult.UNFOLDABLE) {
+				return EstimationResult.UNFOLDABLE;
+			}
+		}
 		return changed;
 	}
 
@@ -334,14 +321,15 @@ class DeterministicLayerOrderEstimator {
 	 */
 	private EstimationResult estimateBy3FaceCover(final OverlapRelation overlapRelation) {
 
-		var results = new ArrayList<EstimationResult>();
-		for (int i = 0; i < faces.size(); i++) {
-			results.add(EstimationResult.NOT_CHANGED);
+		var changed = EstimationResult.NOT_CHANGED;
+
+		for (OriFace f_i : faces) {
+			var result = updateBy3FaceCover(f_i, overlapRelation);
+			changed = result.or(changed);
+			if (changed == EstimationResult.UNFOLDABLE) {
+				return EstimationResult.UNFOLDABLE;
+			}
 		}
-
-		faces.parallelStream().forEach(f_i -> results.set(f_i.getFaceID(), updateBy3FaceCover(f_i, overlapRelation)));
-
-		var changed = results.parallelStream().reduce(EstimationResult::or).get();
 
 		return changed;
 	}
@@ -388,14 +376,14 @@ class DeterministicLayerOrderEstimator {
 
 	private EstimationResult estimateBy4FaceCover(final OverlapRelation overlapRelation) {
 
-		var results = new ArrayList<EstimationResult>();
-		for (int i = 0; i < faces.size(); i++) {
-			results.add(EstimationResult.NOT_CHANGED);
+		var changed = EstimationResult.NOT_CHANGED;
+		for (OriFace f_i : faces) {
+			var result = updateBy4FaceCover(f_i, overlapRelation);
+			changed = result.or(changed);
+			if (changed == EstimationResult.UNFOLDABLE) {
+				return EstimationResult.UNFOLDABLE;
+			}
 		}
-
-		faces.parallelStream().forEach(f_i -> results.set(f_i.getFaceID(), updateBy4FaceCover(f_i, overlapRelation)));
-
-		var changed = results.parallelStream().reduce(EstimationResult::or).get();
 
 		return changed;
 	}

@@ -60,6 +60,13 @@ public class OverlapRelation {
 		return new OverlapRelation(overlapRelation);
 	}
 
+	/**
+	 * Returns clone for parallel computing. Incomplete implementation so far:
+	 * returned object doesn't have atomicity for setXXX().
+	 *
+	 * @return
+	 */
+	@Deprecated
 	public OverlapRelation cloneAtomic() {
 		var cloned = new OverlapRelation();
 
