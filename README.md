@@ -25,6 +25,7 @@ To find out more about using the software, visit the [ORIPA project's website](h
 
 ### Download
 ------------
+#### Executable jar
 You can download the executable jar file at the [release page](https://github.com/oripa/oripa/releases).
 
 To run ORIPA, **you need install JDK 11 or above.**
@@ -34,10 +35,22 @@ Once downloaded, to run ORIPA in a terminal just run:
 ```sh
 java -jar ./oripa-1.50.jar
 ```
+
+#### Executable binary
+Ver. 1.67 or above are also compiled into executable binary file for each platform.
+We offer installer files of those. In this case, you don't have to install JDK.
+
+The installation directory is platform-specific:
+
+* On Linux, it is /opt/oripa
+* On macOS, it is /Applications/oripa
+* On Windows, it is c:\Program Files\oripa
+
+
 ### Command line interface (CLI)
 ---------------------------
 If you give some command line option to ORIPA ver.1.64 or above, ORIPA will run as a command line application.
-The CLI mode is designed as a file I/O application. The order of command arguments is interchangeable.
+The CLI mode is designed as a file I/O application and available on jar only. The order of command arguments is interchangeable.
 
 Examples:
 
