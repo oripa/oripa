@@ -40,6 +40,9 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 
 	private static final Logger logger = LoggerFactory.getLogger(VertexFoldability.class);
 
+	private final AngleMinimalityHelper helper = new AngleMinimalityHelper();
+	private final MinimalAngleFolder folder = new MinimalAngleFolder();
+
 	@Override
 	public boolean holds(final OriVertex vertex) {
 
@@ -52,30 +55,34 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 		}
 
 		var ring = createRing(vertex);
-		var minimalIndices = new MinimalAngleIndexManager(ring);
-		var helper = new AngleMinimalityHelper();
+		var minimalIndices = new MinimalAngleIndexManager(ring, helper);
 
 		int minimalIndex;
 
 		logger.trace(ring.toString());
 
 		while (ring.size() > 2) {
-			do {
-				do {
-					if (minimalIndices.isEmpty()) {
-						return false;
-					}
-					minimalIndex = minimalIndices.pop();
-				} while (!ring.exists(minimalIndex));
-			} while (!helper.isMinimal(ring, minimalIndex));
+
+//			do {
+			if (minimalIndices.isEmpty()) {
+				return false;
+			}
+			minimalIndex = minimalIndices.pop();
+//			} while (!helper.isMinimal(ring, minimalIndex));
 
 			logger.trace("fold {}th gap", minimalIndex);
 
-			var mergedRingIndex = helper.foldPartially(ring, minimalIndex);
+			// this operation keeps the index manager not having old
+			// information.
+			var mergedRingIndex = folder.foldPartially(ring, minimalIndex, minimalIndices);
 
-			minimalIndices.pushIfMinimal(ring, mergedRingIndex);
-			minimalIndices.pushIfMinimal(ring, ring.getNext(mergedRingIndex).getRingIndex());
-			minimalIndices.pushIfMinimal(ring, ring.getPrevious(mergedRingIndex).getRingIndex());
+			var nextRingIndex = ring.getNext(mergedRingIndex).getRingIndex();
+			var previousRingIndex = ring.getPrevious(mergedRingIndex).getRingIndex();
+
+			// update minimality information.
+			addIfMinimal(minimalIndices, ring, mergedRingIndex);
+			addIfMinimal(minimalIndices, ring, nextRingIndex);
+			addIfMinimal(minimalIndices, ring, previousRingIndex);
 
 		}
 
@@ -99,6 +106,18 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 		}
 
 		return true;
+	}
+
+	private void addIfMinimal(final MinimalAngleIndexManager indices, final RingArrayList<LineGap> ring,
+			final int ringIndex) {
+		if (!helper.isMinimal(ring, ringIndex)) {
+			return;
+		}
+		if (indices.exists(ringIndex)) {
+			return;
+		}
+
+		indices.add(ringIndex);
 	}
 
 	private RingArrayList<LineGap> createRing(final OriVertex vertex) {

@@ -41,20 +41,4 @@ class AngleMinimalityHelper {
 				next.getAngleGap() - target.getAngleGap() > -EPS;
 	}
 
-	public int foldPartially(final RingArrayList<LineGap> ring, final int index) {
-		var previousElement = ring.getPrevious(index);
-		var targetElement = ring.getElement(index);
-		var nextElement = ring.getNext(index);
-
-		var previous = previousElement.getValue();
-		var target = targetElement.getValue();
-		var next = nextElement.getValue();
-
-		previous.setAngleGap(previous.getAngleGap() + next.getAngleGap() - target.getAngleGap());
-
-		ring.dropConnection(nextElement.getRingIndex());
-		ring.dropConnection(targetElement.getRingIndex());
-
-		return previousElement.getRingIndex();
-	}
 }
