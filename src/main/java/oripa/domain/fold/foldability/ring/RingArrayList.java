@@ -71,7 +71,7 @@ public class RingArrayList<Data> {
 	public Data dropConnection(final int index) {
 
 		if (!exists(index)) {
-			throw new IllegalArgumentException("does not not exist.");
+			throw new IllegalArgumentException("does not exist.");
 		}
 
 		var element = getElement(index);

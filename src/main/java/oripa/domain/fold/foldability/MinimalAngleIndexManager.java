@@ -18,9 +18,8 @@
  */
 package oripa.domain.fold.foldability;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import oripa.domain.fold.foldability.ring.RingArrayList;
 
@@ -29,42 +28,34 @@ import oripa.domain.fold.foldability.ring.RingArrayList;
  *
  */
 class MinimalAngleIndexManager {
-	private final List<Boolean> existences = new ArrayList<>();
-	private final AngleMinimalityHelper helper = new AngleMinimalityHelper();
+	private final Set<Integer> indices = new HashSet<>();
 
-	private final LinkedList<Integer> indices = new LinkedList<>();
-
-	public MinimalAngleIndexManager(final RingArrayList<LineGap> ring) {
+	public MinimalAngleIndexManager(final RingArrayList<LineGap> ring, final AngleMinimalityHelper helper) {
 		for (int i = 0; i < ring.size(); i++) {
-			var minimal = helper.isMinimal(ring, i);
-			if (minimal) {
+			if (helper.isMinimal(ring, i)) {
 				indices.add(i);
 			}
-			existences.add(minimal);
 		}
 	}
 
 	public boolean exists(final int ringIndex) {
-		return existences.get(ringIndex);
+		return indices.contains(ringIndex);
 	}
 
-	public void pushIfMinimal(final RingArrayList<LineGap> ring, final int ringIndex) {
-		if (!helper.isMinimal(ring, ringIndex)) {
-			return;
-		}
-		if (exists(ringIndex)) {
-			return;
-		}
-
+	public void add(final int ringIndex) {
 		indices.add(ringIndex);
-		existences.set(ringIndex, true);
 	}
 
 	public int pop() {
-		int index = indices.pop();
-		existences.set(index, false);
+		var iterator = indices.iterator();
+		int index = iterator.next();
+		iterator.remove();
 
 		return index;
+	}
+
+	public void remove(final int ringIndex) {
+		indices.remove(ringIndex);
 	}
 
 	public boolean isEmpty() {
