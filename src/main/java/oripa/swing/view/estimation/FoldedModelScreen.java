@@ -44,6 +44,7 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
+import javax.vecmath.Vector3d;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OriFace;
@@ -113,7 +114,10 @@ public class FoldedModelScreen extends JPanel
 
 	private RectangleDomain domain;
 
-	private Vector2d distortionParameter = new Vector2d(0, 0);
+	private Vector2d cameraXY = new Vector2d(0, 0);
+	private final double cameraZ = 10;
+	private final double zDiff = 1;
+
 	private Map<OriVertex, Integer> vertexDepths;
 
 	public FoldedModelScreen() {
@@ -183,7 +187,7 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public void setDistortionParameter(final Vector2d d) {
-		distortionParameter = d;
+		cameraXY = d;
 
 		redrawOrigami();
 	}
@@ -583,9 +587,18 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	private Vector2d distort(final Vector2d pos, final int depth) {
+		var d = new Vector3d(
+				pos.getX() - cameraXY.getX(),
+				pos.getY() - cameraXY.getY(),
+				cameraZ + depth * zDiff);
+
+		d.normalize();
+
+		d.scale(cameraZ / d.getZ());
+
 		return new Vector2d(
-				pos.getX() + depth * distortionParameter.getX(),
-				pos.getY() + depth * distortionParameter.getY());
+				cameraXY.getX() + d.getX(),
+				cameraXY.getY() + d.getY());
 	}
 
 	private List<Double> createColorFactor(final Color color) {

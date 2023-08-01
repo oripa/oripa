@@ -84,9 +84,9 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final JCheckBox fillFaceCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FILL_FACE_ID));
 
-	private final int DISTORTION_MAX = 50;
-	private final int DISTORTION_MIN = -50;
-	private final int DISTORTION_DIFF = 5;
+	private final int DISTORTION_MAX = 500;
+	private final int DISTORTION_MIN = -500;
+	private final int DISTORTION_DIFF = 50;
 
 	private final JSlider xDistortionSlider = new JSlider(JSlider.HORIZONTAL, DISTORTION_MIN, DISTORTION_MAX,
 			DISTORTION_MIN);
