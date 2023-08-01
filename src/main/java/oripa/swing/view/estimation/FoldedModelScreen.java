@@ -118,6 +118,8 @@ public class FoldedModelScreen extends JPanel
 	private final double cameraZ = 10;
 	private final double zDiff = 1;
 
+	private boolean distortionEnabled = false;
+
 	private Map<OriVertex, Integer> vertexDepths;
 
 	public FoldedModelScreen() {
@@ -189,6 +191,11 @@ public class FoldedModelScreen extends JPanel
 	public void setDistortionParameter(final Vector2d d) {
 		cameraXY = d;
 
+		redrawOrigami();
+	}
+
+	public void setDistortionEnabled(final boolean enabled) {
+		distortionEnabled = enabled;
 		redrawOrigami();
 	}
 
@@ -575,7 +582,7 @@ public class FoldedModelScreen extends JPanel
 		double x = (pos.x - center.x) * localScale;
 		double y = (pos.y - center.y) * localScale;
 
-		var distorted = distort(new Vector2d(x, y), depth);
+		var distorted = distortionEnabled ? distort(new Vector2d(x, y), depth) : new Vector2d(x, y);
 
 		double disX = distorted.getX();
 		double disY = distorted.getY();

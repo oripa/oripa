@@ -93,6 +93,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final JSlider yDistortionSlider = new JSlider(JSlider.HORIZONTAL, DISTORTION_MIN, DISTORTION_MAX,
 			DISTORTION_MIN);
 
+	private final JCheckBox distortionCheckBox = new JCheckBox("Enable");
+
 	private final ColorRGBPanel frontColorRGBPanel = new ColorRGBPanel(this, DefaultColors.FRONT,
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_FRONT_ID));
 	private final ColorRGBPanel backColorRGBPanel = new ColorRGBPanel(this, DefaultColors.BACK,
@@ -362,6 +364,10 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			setDistortionParameterToScreen();
 		});
 
+		distortionCheckBox.addItemListener(e -> {
+			screen.setDistortionEnabled(e.getStateChange() == ItemEvent.SELECTED);
+		});
+
 		orderCheckBox.addItemListener(e -> {
 			screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
 		});
@@ -407,6 +413,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 		xDistortionSlider.setValue(0);
 		yDistortionSlider.setValue(0);
+		distortionCheckBox.setSelected(false);
 	}
 
 	private JPanel createAnswerShiftPanel() {
@@ -440,6 +447,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		distortionPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
 				"Distortion"));
 
+		distortionPanel.add(distortionCheckBox, gbBuilder.getNextField());
 		distortionPanel.add(xDistortionSlider, gbBuilder.getNextField());
 		distortionPanel.add(yDistortionSlider, gbBuilder.getNextField());
 
