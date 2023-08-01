@@ -26,6 +26,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.RectangleDomain;
 
 public class TriangleFace {
@@ -53,10 +54,11 @@ public class TriangleFace {
 	 * Sets the current position of face vertices, which are expected to be the
 	 * ones after fold, to each vertex of this triangle face.
 	 */
-	public void initializePositions() {
+	public void initializePositions(final Map<OriVertex, Integer> depthMap) {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
 			var he = face.getHalfedge(halfEdgeIndices.get(i));
 			v[i].p = new Vector2d(he.getPosition());
+			v[i].depth = depthMap.get(he.getVertex());
 		}
 	}
 
@@ -82,6 +84,14 @@ public class TriangleFace {
 	 */
 	public Vector2d getPosition(final int index) {
 		return v[index].p;
+	}
+
+	public void setDepth(final int index, final int depth) {
+		v[index].depth = depth;
+	}
+
+	public int getDepth(final int index) {
+		return v[index].depth;
 	}
 
 	/**
