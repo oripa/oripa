@@ -20,6 +20,7 @@ package oripa.swing.view.estimation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
@@ -30,6 +31,8 @@ import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.gui.view.FrameView;
@@ -64,8 +67,13 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 
 		ui.setScreen(screen);
 
+		JScrollPane uiScroll = new JScrollPane(ui, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		uiScroll.setPreferredSize(new Dimension(255, 800));
+		uiScroll.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+
 		add(modelSelectionPanel, BorderLayout.NORTH);
-		add(ui, BorderLayout.WEST);
+		add(uiScroll, BorderLayout.WEST);
 		add(screen, BorderLayout.CENTER);
 		add(hintLabel, BorderLayout.SOUTH);
 

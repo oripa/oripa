@@ -113,7 +113,7 @@ public class FoldedModelScreen extends JPanel
 
 	private RectangleDomain domain;
 
-	private Vector2d distortionParameter = new Vector2d(10, 10);
+	private Vector2d distortionParameter = new Vector2d(0, 0);
 	private Map<OriVertex, Integer> vertexDepths;
 
 	public FoldedModelScreen() {
@@ -184,6 +184,8 @@ public class FoldedModelScreen extends JPanel
 
 	public void setDistortionParameter(final Vector2d d) {
 		distortionParameter = d;
+
+		redrawOrigami();
 	}
 
 	public void drawEdge(final boolean bEdge) {

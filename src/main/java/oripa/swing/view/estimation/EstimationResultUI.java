@@ -18,7 +18,6 @@
 package oripa.swing.view.estimation;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
@@ -31,16 +30,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ChangeListener;
+import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +83,15 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.EDGE_ID));
 	private final JCheckBox fillFaceCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FILL_FACE_ID));
+
+	private final int DISTORTION_MAX = 50;
+	private final int DISTORTION_MIN = -50;
+	private final int DISTORTION_DIFF = 5;
+
+	private final JSlider xDistortionSlider = new JSlider(JSlider.HORIZONTAL, DISTORTION_MIN, DISTORTION_MAX,
+			DISTORTION_MIN);
+	private final JSlider yDistortionSlider = new JSlider(JSlider.HORIZONTAL, DISTORTION_MIN, DISTORTION_MAX,
+			DISTORTION_MIN);
 
 	private final ColorRGBPanel frontColorRGBPanel = new ColorRGBPanel(this, DefaultColors.FRONT,
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_FRONT_ID));
@@ -266,12 +267,13 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private void initialize() {
 
 		this.setLayout(new GridBagLayout());
-		this.setPreferredSize(new Dimension(216, 200));
+		// this.setPreferredSize(new Dimension(216, 800));
 
 		var gbBuilder = new GridBagConstraintsBuilder(1).setAnchor(GridBagConstraints.FIRST_LINE_START)
 				.setFill(GridBagConstraints.HORIZONTAL).setWeight(1, 0.0);
 
 		add(createAnswerShiftPanel(), gbBuilder.getLineField());
+		add(createDistortionPanel(), gbBuilder.getLineField());
 		add(createConfigPanel(), gbBuilder.getLineField());
 		add(createColorPanel(), gbBuilder.getLineField());
 
@@ -352,6 +354,14 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			setSubfaceToScreen(subface);
 		});
 
+		xDistortionSlider.addChangeListener(e -> {
+			setDistortionParameterToScreen();
+		});
+
+		yDistortionSlider.addChangeListener(e -> {
+			setDistortionParameterToScreen();
+		});
+
 		orderCheckBox.addItemListener(e -> {
 			screen.flipFaces(e.getStateChange() == ItemEvent.SELECTED);
 		});
@@ -381,6 +391,10 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				e -> saveColorsListener.accept(frontColorRGBPanel.getColor(), backColorRGBPanel.getColor()));
 	}
 
+	private void setDistortionParameterToScreen() {
+		screen.setDistortionParameter(new Vector2d(xDistortionSlider.getValue(), yDistortionSlider.getValue()));
+	}
+
 	private void initializeComponentSetting() {
 		filterEnabledCheckBox.setSelected(false);
 		setFilterEnabled(false);
@@ -390,6 +404,9 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		useColorCheckBox.setSelected(true);
 		edgeCheckBox.setSelected(true);
 		fillFaceCheckBox.setSelected(true);
+
+		xDistortionSlider.setValue(0);
+		yDistortionSlider.setValue(0);
 	}
 
 	private JPanel createAnswerShiftPanel() {
@@ -412,6 +429,28 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		answerShiftPanel.add(filterPanel, gbBuilder.getNextField());
 
 		return answerShiftPanel;
+	}
+
+	private JPanel createDistortionPanel() {
+		var distortionPanel = new JPanel();
+		var gbBuilder = new GridBagConstraintsBuilder(1);
+
+		distortionPanel.setLayout(new GridBagLayout());
+
+		distortionPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
+				"Distortion"));
+
+		distortionPanel.add(xDistortionSlider, gbBuilder.getNextField());
+		distortionPanel.add(yDistortionSlider, gbBuilder.getNextField());
+
+		xDistortionSlider.setMinorTickSpacing(DISTORTION_DIFF);
+		yDistortionSlider.setMinorTickSpacing(DISTORTION_DIFF);
+
+		xDistortionSlider.setSnapToTicks(true);
+		yDistortionSlider.setSnapToTicks(true);
+
+		return distortionPanel;
+
 	}
 
 	private JPanel createConfigPanel() {
