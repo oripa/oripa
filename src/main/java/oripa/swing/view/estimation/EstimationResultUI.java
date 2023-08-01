@@ -365,7 +365,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		});
 
 		distortionCheckBox.addItemListener(e -> {
-			screen.setDistortionEnabled(e.getStateChange() == ItemEvent.SELECTED);
+			var enabled = e.getStateChange() == ItemEvent.SELECTED;
+			setDistortionEnabled(enabled);
 		});
 
 		orderCheckBox.addItemListener(e -> {
@@ -401,6 +402,14 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		screen.setDistortionParameter(new Vector2d(xDistortionSlider.getValue(), yDistortionSlider.getValue()));
 	}
 
+	private void setDistortionEnabled(final boolean enabled) {
+		if (screen != null) {
+			screen.setDistortionEnabled(enabled);
+		}
+		xDistortionSlider.setEnabled(enabled);
+		yDistortionSlider.setEnabled(enabled);
+	}
+
 	private void initializeComponentSetting() {
 		filterEnabledCheckBox.setSelected(false);
 		setFilterEnabled(false);
@@ -413,7 +422,8 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 		xDistortionSlider.setValue(0);
 		yDistortionSlider.setValue(0);
-		distortionCheckBox.setSelected(false);
+		setDistortionEnabled(false);
+
 	}
 
 	private JPanel createAnswerShiftPanel() {

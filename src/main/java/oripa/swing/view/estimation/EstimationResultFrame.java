@@ -62,14 +62,14 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 
 	public EstimationResultFrame() {
 		setTitle(resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.TITLE_ID));
-		setBounds(0, 0, 800, 750);
+		setBounds(0, 0, 850, 750);
 		setLayout(new BorderLayout());
 
 		ui.setScreen(screen);
 
 		JScrollPane uiScroll = new JScrollPane(ui, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		uiScroll.setPreferredSize(new Dimension(255, 800));
+		uiScroll.setPreferredSize(new Dimension(235, 800));
 		uiScroll.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 
 		add(modelSelectionPanel, BorderLayout.NORTH);

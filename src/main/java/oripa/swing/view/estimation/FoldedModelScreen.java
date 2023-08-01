@@ -116,7 +116,7 @@ public class FoldedModelScreen extends JPanel
 
 	private Vector2d cameraXY = new Vector2d(0, 0);
 	private final double cameraZ = 10;
-	private final double zDiff = 1;
+	private final double zDiff = 0.5;
 
 	private boolean distortionEnabled = false;
 
@@ -597,7 +597,7 @@ public class FoldedModelScreen extends JPanel
 		var d = new Vector3d(
 				pos.getX() - cameraXY.getX(),
 				pos.getY() - cameraXY.getY(),
-				cameraZ + depth * zDiff);
+				cameraZ + Math.log(1 + depth) * zDiff);
 
 		d.normalize();
 
