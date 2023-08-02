@@ -58,6 +58,7 @@ public class TriangleFace {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
 			var he = face.getHalfedge(halfEdgeIndices.get(i));
 			v[i].p = new Vector2d(he.getPosition());
+			v[i].positionBeforeFolding = new Vector2d(he.getPositionBeforeFolding());
 			v[i].depth = depthMap.get(he.getVertex());
 		}
 	}
@@ -84,6 +85,10 @@ public class TriangleFace {
 	 */
 	public Vector2d getPosition(final int index) {
 		return v[index].p;
+	}
+
+	public Vector2d getPositionBeforeFolding(final int index) {
+		return v[index].positionBeforeFolding;
 	}
 
 	public void setDepth(final int index, final int depth) {

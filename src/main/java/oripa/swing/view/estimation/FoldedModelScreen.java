@@ -48,7 +48,6 @@ import javax.vecmath.Vector3d;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
@@ -68,6 +67,12 @@ import oripa.value.OriPoint;
  */
 public class FoldedModelScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener {
+
+	public static enum DistortionMethod {
+		NONE,
+		DEPTH,
+		MORISUE
+	}
 
 	private BufferedImage bufferImage;
 	private Graphics2D bufferg;
@@ -114,11 +119,11 @@ public class FoldedModelScreen extends JPanel
 
 	private RectangleDomain domain;
 
-	private Vector2d cameraXY = new Vector2d(0, 0);
+	private Vector2d distortionParameter = new Vector2d(0, 0);
 	private final double cameraZ = 10;
 	private final double zDiff = 0.5;
 
-	private boolean distortionEnabled = false;
+	private DistortionMethod distortionMethod = DistortionMethod.NONE;
 
 	private Map<OriVertex, Integer> vertexDepths;
 
@@ -189,13 +194,13 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public void setDistortionParameter(final Vector2d d) {
-		cameraXY = d;
+		distortionParameter = d;
 
 		redrawOrigami();
 	}
 
-	public void setDistortionEnabled(final boolean enabled) {
-		distortionEnabled = enabled;
+	public void setDistortionMethod(final DistortionMethod method) {
+		distortionMethod = method;
 		redrawOrigami();
 	}
 
@@ -513,15 +518,14 @@ public class FoldedModelScreen extends JPanel
 
 		long time1 = System.currentTimeMillis();
 
-		System.out.println("render time = " + (time1 - time0) + "ms");
+		// System.out.println("render time = " + (time1 - time0) + "ms");
 
 		renderImage = createImage(new MemoryImageSource(BUFFERW, BUFFERH, pbuf, 0, BUFFERW));
 	}
 
 	private void drawSubface(final Graphics2D g2d) {
 		var convertedSubface = selectedSubface.halfedgeStream()
-				.map(OriHalfedge::getPosition)
-				.map(pos -> convertCoordinate(pos, 0))
+				.map(v -> convertCoordinate(v.getPosition(), 0, v.getPositionBeforeFolding()))
 				.collect(Collectors.toList());
 
 		var itemConverter = new GraphicItemConverter();
@@ -562,8 +566,9 @@ public class FoldedModelScreen extends JPanel
 		triangles.stream().forEach(tri -> {
 			for (int i = 0; i < 3; i++) {
 				var pos = tri.getPosition(i);
+				var cpPos = tri.getPositionBeforeFolding(i);
 				var depth = tri.getDepth(i);
-				var newPos = convertCoordinate(pos, depth);
+				var newPos = convertCoordinate(pos, depth, cpPos);
 
 				tri.setPosition(i, newPos.getX(), newPos.getY());
 			}
@@ -572,7 +577,7 @@ public class FoldedModelScreen extends JPanel
 
 	}
 
-	private Vector2d convertCoordinate(final Vector2d pos, final int depth) {
+	private Vector2d convertCoordinate(final Vector2d pos, final int depth, final Vector2d cpPos) {
 		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
 		final double localScale = scaleRate * Math.min(
 				BUFFERW / (domain.getWidth()),
@@ -582,7 +587,21 @@ public class FoldedModelScreen extends JPanel
 		double x = (pos.x - center.x) * localScale;
 		double y = (pos.y - center.y) * localScale;
 
-		var distorted = distortionEnabled ? distort(new Vector2d(x, y), depth) : new Vector2d(x, y);
+		Vector2d distorted = new Vector2d(x, y);
+
+		switch (distortionMethod) {
+		case DEPTH:
+			distorted = distortByDepth(new Vector2d(x, y), depth);
+			break;
+
+		case MORISUE:
+			distorted = distortByMorisueMethod(new Vector2d(x, y), cpPos);
+			break;
+		case NONE:
+			break;
+		default:
+			break;
+		}
 
 		double disX = distorted.getX();
 		double disY = distorted.getY();
@@ -593,7 +612,9 @@ public class FoldedModelScreen extends JPanel
 		return new Vector2d(rotX, rotY);
 	}
 
-	private Vector2d distort(final Vector2d pos, final int depth) {
+	private Vector2d distortByDepth(final Vector2d pos, final int depth) {
+		var cameraXY = this.distortionParameter;
+
 		var d = new Vector3d(
 				pos.getX() - cameraXY.getX(),
 				pos.getY() - cameraXY.getY(),
@@ -606,6 +627,32 @@ public class FoldedModelScreen extends JPanel
 		return new Vector2d(
 				cameraXY.getX() + d.getX(),
 				cameraXY.getY() + d.getY());
+	}
+
+	private Vector2d distortByMorisueMethod(final Vector2d pos, final Vector2d cpPos) {
+		var matrix = new double[2][2];
+
+		var theta = 0.1 * distortionParameter.getX() / BUFFERW;
+		var scale = 1 + distortionParameter.getY() / (BUFFERH * 5);
+
+		// need to find optimal matrix
+		matrix[0][0] = Math.cos(theta);
+		matrix[0][1] = -Math.sin(theta);
+		matrix[1][0] = Math.sin(theta);
+		matrix[1][1] = Math.cos(theta);
+
+		var diff = new Vector2d(
+				cpPos.getX() * matrix[0][0] + cpPos.getY() * matrix[0][1],
+				cpPos.getX() * matrix[1][0] + cpPos.getY() * matrix[1][1]);
+
+		diff.scale(scale);
+
+		diff.sub(cpPos);
+
+		var distorted = new Vector2d(pos);
+		distorted.add(diff);
+
+		return distorted;
 	}
 
 	private List<Double> createColorFactor(final Color color) {

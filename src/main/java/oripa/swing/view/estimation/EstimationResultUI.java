@@ -46,6 +46,7 @@ import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
+import oripa.swing.view.estimation.FoldedModelScreen.DistortionMethod;
 import oripa.swing.view.util.ColorRGBPanel;
 import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
@@ -88,12 +89,16 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final int DISTORTION_MIN = -500;
 	private final int DISTORTION_DIFF = 50;
 
+	private final JComboBox<DistortionMethod> distortionMethodCombo = new JComboBox<>(
+			new DistortionMethod[] {
+					DistortionMethod.NONE,
+					DistortionMethod.DEPTH,
+					DistortionMethod.MORISUE
+			});
 	private final JSlider xDistortionSlider = new JSlider(JSlider.HORIZONTAL, DISTORTION_MIN, DISTORTION_MAX,
 			DISTORTION_MIN);
 	private final JSlider yDistortionSlider = new JSlider(JSlider.HORIZONTAL, DISTORTION_MIN, DISTORTION_MAX,
 			DISTORTION_MIN);
-
-	private final JCheckBox distortionCheckBox = new JCheckBox("Enable");
 
 	private final ColorRGBPanel frontColorRGBPanel = new ColorRGBPanel(this, DefaultColors.FRONT,
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FACE_COLOR_FRONT_ID));
@@ -364,9 +369,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			setDistortionParameterToScreen();
 		});
 
-		distortionCheckBox.addItemListener(e -> {
-			var enabled = e.getStateChange() == ItemEvent.SELECTED;
-			setDistortionEnabled(enabled);
+		distortionMethodCombo.addActionListener(e -> {
+			if (screen == null) {
+				return;
+			}
+			screen.setDistortionMethod((DistortionMethod) distortionMethodCombo.getSelectedItem());
 		});
 
 		orderCheckBox.addItemListener(e -> {
@@ -402,14 +409,6 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		screen.setDistortionParameter(new Vector2d(xDistortionSlider.getValue(), yDistortionSlider.getValue()));
 	}
 
-	private void setDistortionEnabled(final boolean enabled) {
-		if (screen != null) {
-			screen.setDistortionEnabled(enabled);
-		}
-		xDistortionSlider.setEnabled(enabled);
-		yDistortionSlider.setEnabled(enabled);
-	}
-
 	private void initializeComponentSetting() {
 		filterEnabledCheckBox.setSelected(false);
 		setFilterEnabled(false);
@@ -420,9 +419,10 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		edgeCheckBox.setSelected(true);
 		fillFaceCheckBox.setSelected(true);
 
+		distortionMethodCombo.setSelectedItem(DistortionMethod.NONE);
 		xDistortionSlider.setValue(0);
 		yDistortionSlider.setValue(0);
-		setDistortionEnabled(false);
+		// setDistortionEnabled(false);
 
 	}
 
@@ -457,7 +457,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		distortionPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
 				"Distortion"));
 
-		distortionPanel.add(distortionCheckBox, gbBuilder.getNextField());
+		distortionPanel.add(distortionMethodCombo, gbBuilder.getNextField());
 		distortionPanel.add(xDistortionSlider, gbBuilder.getNextField());
 		distortionPanel.add(yDistortionSlider, gbBuilder.getNextField());
 

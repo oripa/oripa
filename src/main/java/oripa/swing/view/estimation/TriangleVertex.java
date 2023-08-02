@@ -22,7 +22,11 @@ import javax.vecmath.Vector2d;
 
 public class TriangleVertex {
 
+	// position after folding
 	public Vector2d p = new Vector2d();
+
+	public Vector2d positionBeforeFolding = new Vector2d();
+
 	public int depth = 0;
 	public Vector2d uv = new Vector2d();
 	public FloatingRGB color = new FloatingRGB(0, 0, 0);
