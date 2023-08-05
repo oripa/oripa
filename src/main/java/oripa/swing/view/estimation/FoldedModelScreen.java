@@ -639,6 +639,14 @@ public class FoldedModelScreen extends JPanel
 				cameraXY.getY() + d.getY());
 	}
 
+	/**
+	 * See
+	 * https://github.com/kei-morisue/flat-folder/blob/main/General_Distortion.pdf
+	 *
+	 * @param pos
+	 * @param cpPos
+	 * @return
+	 */
 	private Vector2d distortByMorisueMethod(final Vector2d pos, final Vector2d cpPos) {
 		var matrix = new double[2][2];
 
