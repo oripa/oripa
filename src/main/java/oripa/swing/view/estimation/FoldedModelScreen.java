@@ -120,7 +120,7 @@ public class FoldedModelScreen extends JPanel
 	private RectangleDomain domain;
 
 	private Vector2d distortionParameter = new Vector2d(0, 0);
-	private final double cameraZ = 10;
+	private final double cameraZ = 20;
 	private final double zDiff = 0.5;
 
 	private DistortionMethod distortionMethod = DistortionMethod.NONE;
@@ -193,6 +193,11 @@ public class FoldedModelScreen extends JPanel
 		redrawOrigami();
 	}
 
+	/**
+	 *
+	 * @param d
+	 *            d.x and d.y should be in [-1.0, 1.0] respectively.
+	 */
 	public void setDistortionParameter(final Vector2d d) {
 		distortionParameter = d;
 
@@ -577,15 +582,19 @@ public class FoldedModelScreen extends JPanel
 
 	}
 
-	private Vector2d convertCoordinate(final Vector2d pos, final int depth, final Vector2d cpPos) {
-		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
-		final double localScale = scaleRate * Math.min(
+	private double getFinalScale() {
+		return scaleRate * Math.min(
 				BUFFERW / (domain.getWidth()),
 				BUFFERH / (domain.getHeight())) * 0.95;
+	}
+
+	private Vector2d convertCoordinate(final Vector2d pos, final int depth, final Vector2d cpPos) {
+		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
+		final double finalScale = getFinalScale();
 
 		final double angle = rotAngle * Math.PI / 180;
-		double x = (pos.x - center.x) * localScale;
-		double y = (pos.y - center.y) * localScale;
+		double x = (pos.x - center.x) * finalScale;
+		double y = (pos.y - center.y) * finalScale;
 
 		Vector2d distorted = new Vector2d(x, y);
 
@@ -613,7 +622,8 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	private Vector2d distortByDepth(final Vector2d pos, final int depth) {
-		var cameraXY = this.distortionParameter;
+		var cameraXY = new Vector2d(this.distortionParameter);
+		cameraXY.scale(Math.max(domain.getWidth(), domain.getHeight()) * 4);
 
 		var d = new Vector3d(
 				pos.getX() - cameraXY.getX(),
@@ -632,8 +642,8 @@ public class FoldedModelScreen extends JPanel
 	private Vector2d distortByMorisueMethod(final Vector2d pos, final Vector2d cpPos) {
 		var matrix = new double[2][2];
 
-		var theta = 0.1 * distortionParameter.getX() / BUFFERW;
-		var scale = 1 + distortionParameter.getY() / (BUFFERH * 5);
+		var theta = 0.1 * distortionParameter.getX();
+		var scale = 1 + distortionParameter.getY() / 5;
 
 		// need to find optimal matrix
 		matrix[0][0] = Math.cos(theta);

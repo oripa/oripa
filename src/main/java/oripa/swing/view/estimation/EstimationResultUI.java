@@ -85,9 +85,9 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private final JCheckBox fillFaceCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.FILL_FACE_ID));
 
-	private final int DISTORTION_MAX = 500;
-	private final int DISTORTION_MIN = -500;
-	private final int DISTORTION_DIFF = 50;
+	private final int DISTORTION_MAX = 10;
+	private final int DISTORTION_MIN = -10;
+	private final int DISTORTION_DIFF = 1;
 
 	private final JComboBox<DistortionMethod> distortionMethodCombo = new JComboBox<>(
 			new DistortionMethod[] {
@@ -406,7 +406,10 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	private void setDistortionParameterToScreen() {
-		screen.setDistortionParameter(new Vector2d(xDistortionSlider.getValue(), yDistortionSlider.getValue()));
+		double distortionRange = DISTORTION_MAX - DISTORTION_MIN;
+		screen.setDistortionParameter(new Vector2d(
+				xDistortionSlider.getValue() / distortionRange,
+				yDistortionSlider.getValue() / distortionRange));
 	}
 
 	private void initializeComponentSetting() {
