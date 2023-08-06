@@ -229,8 +229,8 @@ public class FoldedModelScreen extends JPanel
 	private void updateAffineTransform() {
 		affineTransform.setToIdentity();
 		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
-		affineTransform.scale(scale, -scale);
-		affineTransform.translate(transX, -transY);
+		affineTransform.scale(scale, scale);
+		affineTransform.translate(transX, transY);
 		affineTransform.rotate(rotateAngle);
 		affineTransform.translate(-getWidth() * 0.5, -getHeight() * 0.5);
 	}
@@ -821,7 +821,7 @@ public class FoldedModelScreen extends JPanel
 		}
 
 		if (MouseUtility.isLeftButtonEvent(e)) {
-			rotateAngle -= (e.getX() - preMousePoint.getX()) / 100.0;
+			rotateAngle += (e.getX() - preMousePoint.getX()) / 100.0;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
