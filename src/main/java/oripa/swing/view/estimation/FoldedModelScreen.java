@@ -110,8 +110,6 @@ public class FoldedModelScreen extends JPanel
 	private RectangleDomain domain;
 
 	private Vector2d distortionParameter = new Vector2d(0, 0);
-	private final double cameraZ = 20;
-	private final double zDiff = 0.5;
 	private double eps = 1e-5;
 
 	private DistortionMethod distortionMethod = DistortionMethod.NONE;
