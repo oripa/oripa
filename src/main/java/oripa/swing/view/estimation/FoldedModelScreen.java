@@ -99,14 +99,13 @@ public class FoldedModelScreen extends JPanel
 	private boolean fillFaces = true;
 	private boolean ambientOcclusion = false;
 	private boolean faceOrderFlip = false;
-	private final double rotAngle = 0;
 	private final double scaleRate = 0.8;
 	private boolean drawEdges = true;
 	private Image renderImage;
-	double rotateAngle;
-	double scale;
-	double transX;
-	double transY;
+	private double rotateAngle;
+	private double scale;
+	private double transX;
+	private double transY;
 	private Point2D preMousePoint;
 	private final AffineTransform affineTransform;
 	private BufferedImage textureImage = null;
@@ -659,7 +658,6 @@ public class FoldedModelScreen extends JPanel
 		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
 		final double finalScale = getFinalScale();
 
-		final double angle = rotAngle * Math.PI / 180;
 		double x = (pos.x - center.x) * finalScale;
 		double y = (pos.y - center.y) * finalScale;
 
@@ -668,10 +666,10 @@ public class FoldedModelScreen extends JPanel
 		double disX = distorted.getX();
 		double disY = distorted.getY();
 
-		double rotX = disX * Math.cos(angle) + disY * Math.sin(angle) + BUFFERW * 0.5;
-		double rotY = disX * Math.sin(angle) - disY * Math.cos(angle) + BUFFERW * 0.5;
+		double tX = disX + BUFFERW * 0.5;
+		double tY = disY + BUFFERW * 0.5;
 
-		return new Vector2d(rotX, rotY);
+		return new Vector2d(tX, tY);
 	}
 
 	private Vector2d distort(final Vector2d pos, final int depth, final Vector2d cpPos) {
@@ -1025,14 +1023,19 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if (MouseUtility.isLeftButtonEvent(e)) {
-			rotateAngle -= (e.getX() - preMousePoint.getX()) / 100.0;
+		if (MouseUtility.isRightButtonEvent(e) ||
+				MouseUtility.isLeftButtonEvent(e) && MouseUtility.isShiftKeyDown(e)) {
+			transX += (e.getX() - preMousePoint.getX()) / scale;
+			transY += (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
-		} else if (MouseUtility.isRightButtonEvent(e)) {
-			transX += (e.getX() - preMousePoint.getX()) / scale;
-			transY += (e.getY() - preMousePoint.getY()) / scale;
+
+			return;
+		}
+
+		if (MouseUtility.isLeftButtonEvent(e)) {
+			rotateAngle -= (e.getX() - preMousePoint.getX()) / 100.0;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
