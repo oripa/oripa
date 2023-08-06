@@ -407,6 +407,7 @@ public class UIPanelPresenter {
 						resultFrame,
 						fileChooserFactory,
 						foldedModels,
+						paintContext.getPointEps(),
 						lastResultFilePath,
 						path -> lastResultFilePath = path);
 

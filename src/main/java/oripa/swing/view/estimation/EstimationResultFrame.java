@@ -99,13 +99,13 @@ public class EstimationResultFrame extends JFrame implements EstimationResultFra
 	}
 
 	@Override
-	public void setModel(final FoldedModel foldedModel) {
+	public void setModel(final FoldedModel foldedModel, final double eps) {
 		if (foldedModel.getFoldablePatternCount() == 0) {
-			screen.setModel(null);
+			screen.setModel(null, eps);
 			ui.setModel(null);
 			return;
 		}
-		screen.setModel(foldedModel);
+		screen.setModel(foldedModel, eps);
 		ui.setModel(foldedModel);
 	}
 

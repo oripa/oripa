@@ -26,18 +26,20 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
-import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.RectangleDomain;
 
 public class TriangleFace {
 
 	public TriangleVertex[] v;
-	private final OriFace face;
+	private final OriFace originalFace;
+	private final OriFace convertedFace;
 
 	private final List<Integer> halfEdgeIndices;
 
-	public TriangleFace(final OriFace f, final List<Integer> halfEdgeIndices) {
-		face = f;
+	public TriangleFace(final Face f, final List<Integer> halfEdgeIndices) {
+		originalFace = f.getOriginalFace();
+		convertedFace = f.getConvertedFace();
+
 		v = new TriangleVertex[3];
 		for (int i = 0; i < 3; i++) {
 			v[i] = new TriangleVertex();
@@ -54,12 +56,10 @@ public class TriangleFace {
 	 * Sets the current position of face vertices, which are expected to be the
 	 * ones after fold, to each vertex of this triangle face.
 	 */
-	public void initializePositions(final Map<OriVertex, Integer> depthMap) {
+	public void initializePositions() {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
-			var he = face.getHalfedge(halfEdgeIndices.get(i));
+			var he = convertedFace.getHalfedge(halfEdgeIndices.get(i));
 			v[i].p = new Vector2d(he.getPosition());
-			v[i].positionBeforeFolding = new Vector2d(he.getPositionBeforeFolding());
-			v[i].depth = depthMap.get(he.getVertex());
 		}
 	}
 
@@ -87,18 +87,6 @@ public class TriangleFace {
 		return v[index].p;
 	}
 
-	public Vector2d getPositionBeforeFolding(final int index) {
-		return v[index].positionBeforeFolding;
-	}
-
-	public void setDepth(final int index, final int depth) {
-		v[index].depth = depth;
-	}
-
-	public int getDepth(final int index) {
-		return v[index].depth;
-	}
-
 	/**
 	 * Sets the normalized color and parameters for rendering to the vertices of
 	 * this triangle face.
@@ -112,7 +100,7 @@ public class TriangleFace {
 	 */
 	public void prepareColor(final Map<OriHalfedge, FloatingRGB> colorMap, final RectangleDomain paperDomain) {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
-			var he = face.getHalfedge(halfEdgeIndices.get(i));
+			var he = originalFace.getHalfedge(halfEdgeIndices.get(i));
 			v[i].color = new FloatingRGB(colorMap.get(he));
 
 			double x = (he.getPositionBeforeFolding().x - paperDomain.getCenterX()) / paperDomain.getWidth();
@@ -123,6 +111,6 @@ public class TriangleFace {
 	}
 
 	public boolean isFaceFront() {
-		return face.isFaceFront();
+		return originalFace.isFaceFront();
 	}
 }

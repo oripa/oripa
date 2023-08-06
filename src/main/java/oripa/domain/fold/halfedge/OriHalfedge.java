@@ -72,7 +72,7 @@ public class OriHalfedge {
 	 * @param next
 	 *            Sets next
 	 */
-	void setNext(final OriHalfedge next) {
+	public void setNext(final OriHalfedge next) {
 		this.next = next;
 	}
 

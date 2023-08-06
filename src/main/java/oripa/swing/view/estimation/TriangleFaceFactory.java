@@ -20,17 +20,13 @@ package oripa.swing.view.estimation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriVertex;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class TriangleFaceFactory {
-	public List<TriangleFace> createAll(final OriFace face, final Map<OriVertex, Integer> depthMap) {
+	public List<TriangleFace> createAll(final Face face) {
 		var triangles = new ArrayList<TriangleFace>();
 
 		int heNum = face.halfedgeCount();
@@ -39,7 +35,7 @@ public class TriangleFaceFactory {
 			triangles.add(tri);
 		}
 
-		triangles.forEach(triangle -> triangle.initializePositions(depthMap));
+		triangles.forEach(triangle -> triangle.initializePositions());
 
 		return triangles;
 	}
