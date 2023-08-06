@@ -644,11 +644,7 @@ public class FoldedModelScreen extends JPanel
 		triangles.forEach(triangle -> triangle.prepareColor(colorMap, paperDomain));
 
 		triangles.stream().forEach(tri -> {
-			for (int i = 0; i < 3; i++) {
-				var pos = tri.getPosition(i);
-				tri.setPosition(i, pos.getX(), pos.getY());
-			}
-			drawTriangle(tri, face.getOriginalFace().getFaceID());
+			drawTriangle(tri, face.getFaceID());
 		});
 
 	}
