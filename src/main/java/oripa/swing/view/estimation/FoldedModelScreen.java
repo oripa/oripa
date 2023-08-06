@@ -34,33 +34,26 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.origeom.OverlapRelationValues;
-import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.estimation.DefaultColors;
 import oripa.swing.drawer.java2d.GraphicItemConverter;
 import oripa.swing.view.util.MouseUtility;
 import oripa.util.collection.CollectionUtil;
-import oripa.value.OriPoint;
 
 /**
  * A screen to show the folded state of origami.
@@ -70,12 +63,6 @@ import oripa.value.OriPoint;
  */
 public class FoldedModelScreen extends JPanel
 		implements MouseListener, MouseMotionListener, MouseWheelListener {
-
-	public static enum DistortionMethod {
-		NONE,
-		DEPTH,
-		MORISUE
-	}
 
 	private BufferedImage bufferImage;
 	private Graphics2D bufferg;
@@ -375,96 +362,7 @@ public class FoldedModelScreen extends JPanel
 	 * @return < vertex, depth >
 	 */
 	private Map<OriVertex, Integer> computeVertexDepths() {
-
-		var depthMap = new HashMap<OriVertex, Integer>();
-
-		var vertexToFaces = createVertexToFaces();
-
-		var samePositionVertices = new TreeMap<OriPoint, List<OriVertex>>();
-
-		// build samePositionVertices
-		for (var vertex : origamiModel.getVertices()) {
-			double x = vertex.getPosition().getX();
-			double y = vertex.getPosition().getY();
-			final double EPS = 1e-5;
-			var boundMap = samePositionVertices.headMap(new OriPoint(x + EPS, y + EPS))
-					.tailMap(new OriPoint(x - EPS, y - EPS));
-
-			var v = new OriPoint(x, y);
-			var posOpt = boundMap.keySet().stream()
-					.filter(p -> GeomUtil.areEqual(p, v, EPS))
-					.findFirst();
-			if (posOpt.isEmpty()) {
-				var list = new ArrayList<OriVertex>();
-				samePositionVertices.put(v, list);
-				list.add(vertex);
-			} else {
-				var list = samePositionVertices.get(posOpt.get());
-				list.add(vertex);
-			}
-		}
-
-		// sort by depth
-		samePositionVertices.forEach((position, vertices) -> {
-			var sorted = new ArrayList<OriVertex>();
-			for (var vertex : vertices) {
-				int i = vertexToFaces.get(vertex).get(0).getFaceID();
-				for (int k = 0; k <= sorted.size(); k++) {
-					if (k == sorted.size()) {
-						sorted.add(vertex);
-						break;
-					}
-
-					int j = vertexToFaces.get(sorted.get(k)).get(0).getFaceID();
-					if (overlapRelation.isUpper(i, j)) {
-						sorted.add(k, vertex);
-						break;
-					}
-				}
-			}
-			for (var vertex : vertices) {
-				depthMap.put(vertex, sorted.indexOf(vertex));
-			}
-		});
-
-		return depthMap;
-	}
-
-	private Map<OriVertex, List<OriFace>> createVertexToFaces() {
-		var vertexToFaces = new HashMap<OriVertex, List<OriFace>>();
-		var sortedVertexToFaces = new HashMap<OriVertex, List<OriFace>>();
-
-		for (var face : origamiModel.getFaces()) {
-			for (var halfedge : face.halfedgeIterable()) {
-				var vertex = halfedge.getVertex();
-				vertexToFaces.putIfAbsent(vertex, new ArrayList<>());
-				vertexToFaces.get(vertex).add(face);
-			}
-		}
-
-		vertexToFaces.forEach((vertex, faces) -> {
-			var sorted = new ArrayList<OriFace>();
-
-			for (int i = 0; i < faces.size(); i++) {
-				var face_i = faces.get(i);
-				for (int j = 0; j <= sorted.size(); j++) {
-					if (j == sorted.size()) {
-						sorted.add(face_i);
-						break;
-					}
-					var face_j = sorted.get(j);
-
-					if (overlapRelation.isUpper(face_i.getFaceID(), face_j.getFaceID())) {
-						sorted.add(j, face_i);
-						break;
-					}
-				}
-			}
-
-			sortedVertexToFaces.put(vertex, sorted);
-		});
-
-		return sortedVertexToFaces;
+		return new VertexDepthMapFactory().create(origamiModel, overlapRelation, eps);
 	}
 
 	void setColors(final Color front, final Color back) {
@@ -507,6 +405,16 @@ public class FoldedModelScreen extends JPanel
 		g.drawImage(bufferImage, 0, 0, this);
 	}
 
+	private CoordinateConverter createCoordinateConverter() {
+		var converter = new CoordinateConverter(domain, BUFFERW, BUFFERH);
+
+		converter.setDistortionMethod(distortionMethod);
+		converter.setDistortionParameter(distortionParameter);
+		converter.setScale(getFinalScale());
+
+		return converter;
+	}
+
 	public void drawOrigami() {
 		if (origamiModel == null || overlapRelation == null) {
 			return;
@@ -517,11 +425,12 @@ public class FoldedModelScreen extends JPanel
 		}
 		long time0 = System.currentTimeMillis();
 
+		var converter = createCoordinateConverter();
 		var faces = origamiModel.getFaces().stream()
-				.map(face -> new Face(face, convertCoordinate(face)))
+				.map(face -> new Face(face, convertCoordinate(face, converter)))
 				.collect(Collectors.toList());
 
-		interpolateOverlapRelation(faces);
+		interpolatedOverlapRelation = new OverlapRelationInterpolater().interpolate(overlapRelation, faces, eps);
 
 		faces.forEach(this::drawFace);
 
@@ -540,13 +449,14 @@ public class FoldedModelScreen extends JPanel
 		renderImage = createImage(new MemoryImageSource(BUFFERW, BUFFERH, pbuf, 0, BUFFERW));
 	}
 
-	private OriFace convertCoordinate(final OriFace face) {
+	private OriFace convertCoordinate(final OriFace face, final CoordinateConverter converter) {
 		var convertedFace = new OriFace();
 		convertedFace.setFaceID(face.getFaceID());
 
 		var convertedHalfedges = face.halfedgeStream()
 				.map(OriHalfedge::getVertex)
-				.map(v -> convertCoordinate(v.getPosition(), vertexDepths.get(v), v.getPositionBeforeFolding()))
+				.map(v -> converter.convert(v.getPosition(), vertexDepths.get(v),
+						v.getPositionBeforeFolding()))
 				.map(p -> new OriHalfedge(new OriVertex(p), convertedFace))
 				.collect(Collectors.toList());
 
@@ -562,49 +472,10 @@ public class FoldedModelScreen extends JPanel
 		return convertedFace;
 	}
 
-	private void interpolateOverlapRelation(final List<Face> faces) {
-
-		interpolatedOverlapRelation = overlapRelation.clone();
-
-		for (int i = 0; i < faces.size(); i++) {
-			var face_i = faces.get(i);
-			var index_i = face_i.getFaceID();
-			for (int j = 0; j < faces.size(); j++) {
-				if (i == j) {
-					continue;
-				}
-
-				var face_j = faces.get(j);
-				var index_j = face_j.getFaceID();
-
-				if (!overlapRelation.isNoOverlap(index_i, index_j)) {
-					continue;
-				}
-
-				if (OriGeomUtil.isFaceOverlap(face_i.getConvertedFace(), face_j.getConvertedFace(), eps)) {
-					for (var midFace : faces) {
-						var index_mid = midFace.getFaceID();
-
-						if (index_i == index_mid || index_j == index_mid) {
-							continue;
-						}
-
-						if (overlapRelation.isUpper(index_i, index_mid)
-								&& overlapRelation.isUpper(index_mid, index_j)) {
-
-							interpolatedOverlapRelation.setUpper(index_i, index_j);
-							break;
-						}
-					}
-				}
-			}
-		}
-
-	}
-
 	private void drawSubface(final Graphics2D g2d) {
+		var converter = createCoordinateConverter();
 		var convertedSubface = selectedSubface.halfedgeStream()
-				.map(v -> convertCoordinate(v.getPosition(), 0, v.getPositionBeforeFolding()))
+				.map(v -> converter.convert(v.getPosition(), 0, v.getPositionBeforeFolding()))
 				.collect(Collectors.toList());
 
 		var itemConverter = new GraphicItemConverter();
@@ -652,91 +523,6 @@ public class FoldedModelScreen extends JPanel
 		return scaleRate * Math.min(
 				BUFFERW / (domain.getWidth()),
 				BUFFERH / (domain.getHeight())) * 0.95;
-	}
-
-	private Vector2d convertCoordinate(final Vector2d pos, final int depth, final Vector2d cpPos) {
-		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
-		final double finalScale = getFinalScale();
-
-		double x = (pos.x - center.x) * finalScale;
-		double y = (pos.y - center.y) * finalScale;
-
-		Vector2d distorted = distort(new Vector2d(x, y), depth, cpPos);
-
-		double disX = distorted.getX();
-		double disY = distorted.getY();
-
-		double tX = disX + BUFFERW * 0.5;
-		double tY = disY + BUFFERW * 0.5;
-
-		return new Vector2d(tX, tY);
-	}
-
-	private Vector2d distort(final Vector2d pos, final int depth, final Vector2d cpPos) {
-		switch (distortionMethod) {
-		case DEPTH:
-			return distortByDepth(pos, depth);
-
-		case MORISUE:
-			return distortByMorisueMethod(pos, cpPos);
-		case NONE:
-			return pos;
-		default:
-			return pos;
-		}
-
-	}
-
-	private Vector2d distortByDepth(final Vector2d pos, final int depth) {
-		var cameraXY = new Vector2d(this.distortionParameter);
-		cameraXY.scale(Math.max(domain.getWidth(), domain.getHeight()) * 4);
-
-		var d = new Vector3d(
-				pos.getX() - cameraXY.getX(),
-				pos.getY() - cameraXY.getY(),
-				cameraZ + Math.log(1 + depth) * zDiff);
-
-		d.normalize();
-
-		d.scale(cameraZ / d.getZ());
-
-		return new Vector2d(
-				cameraXY.getX() + d.getX(),
-				cameraXY.getY() + d.getY());
-	}
-
-	/**
-	 * See
-	 * https://github.com/kei-morisue/flat-folder/blob/main/General_Distortion.pdf
-	 *
-	 * @param pos
-	 * @param cpPos
-	 * @return
-	 */
-	private Vector2d distortByMorisueMethod(final Vector2d pos, final Vector2d cpPos) {
-		var matrix = new double[2][2];
-
-		var theta = 0.1 * distortionParameter.getX();
-		var scale = 1 + distortionParameter.getY() / 5;
-
-		// need to find optimal matrix
-		matrix[0][0] = Math.cos(theta);
-		matrix[0][1] = -Math.sin(theta);
-		matrix[1][0] = Math.sin(theta);
-		matrix[1][1] = Math.cos(theta);
-
-		var diff = new Vector2d(
-				cpPos.getX() * matrix[0][0] + cpPos.getY() * matrix[0][1],
-				cpPos.getX() * matrix[1][0] + cpPos.getY() * matrix[1][1]);
-
-		diff.scale(scale);
-
-		diff.sub(cpPos);
-
-		var distorted = new Vector2d(pos);
-		distorted.add(diff);
-
-		return distorted;
 	}
 
 	private List<Double> createColorFactor(final Color color) {

@@ -1,0 +1,133 @@
+/**
+ * ORIPA - Origami Pattern Editor
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package oripa.swing.view.estimation;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriVertex;
+import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.domain.fold.origeom.OverlapRelation;
+import oripa.geom.GeomUtil;
+import oripa.value.OriPoint;
+
+/**
+ * @author OUCHI Koji
+ *
+ */
+class VertexDepthMapFactory {
+	public Map<OriVertex, Integer> create(final OrigamiModel origamiModel, final OverlapRelation overlapRelation,
+			final double eps) {
+		var depthMap = new HashMap<OriVertex, Integer>();
+
+		var vertexToFaces = createVertexToFaces(origamiModel, overlapRelation);
+
+		var samePositionVertices = new TreeMap<OriPoint, List<OriVertex>>();
+
+		// build samePositionVertices
+		for (var vertex : origamiModel.getVertices()) {
+			double x = vertex.getPosition().getX();
+			double y = vertex.getPosition().getY();
+
+			var boundMap = samePositionVertices.headMap(new OriPoint(x + eps, y + eps))
+					.tailMap(new OriPoint(x - eps, y - eps));
+
+			var v = new OriPoint(x, y);
+			var posOpt = boundMap.keySet().stream()
+					.filter(p -> GeomUtil.areEqual(p, v, eps))
+					.findFirst();
+			if (posOpt.isEmpty()) {
+				var list = new ArrayList<OriVertex>();
+				samePositionVertices.put(v, list);
+				list.add(vertex);
+			} else {
+				var list = samePositionVertices.get(posOpt.get());
+				list.add(vertex);
+			}
+		}
+
+		// sort by depth
+		samePositionVertices.forEach((position, vertices) -> {
+			var sorted = new ArrayList<OriVertex>();
+			for (var vertex : vertices) {
+				int i = vertexToFaces.get(vertex).get(0).getFaceID();
+				for (int k = 0; k <= sorted.size(); k++) {
+					if (k == sorted.size()) {
+						sorted.add(vertex);
+						break;
+					}
+
+					int j = vertexToFaces.get(sorted.get(k)).get(0).getFaceID();
+					if (overlapRelation.isUpper(i, j)) {
+						sorted.add(k, vertex);
+						break;
+					}
+				}
+			}
+			for (var vertex : vertices) {
+				depthMap.put(vertex, sorted.indexOf(vertex));
+			}
+		});
+
+		return depthMap;
+	}
+
+	private Map<OriVertex, List<OriFace>> createVertexToFaces(final OrigamiModel origamiModel,
+			final OverlapRelation overlapRelation) {
+		var vertexToFaces = new HashMap<OriVertex, List<OriFace>>();
+		var sortedVertexToFaces = new HashMap<OriVertex, List<OriFace>>();
+
+		for (var face : origamiModel.getFaces()) {
+			for (var halfedge : face.halfedgeIterable()) {
+				var vertex = halfedge.getVertex();
+				vertexToFaces.putIfAbsent(vertex, new ArrayList<>());
+				vertexToFaces.get(vertex).add(face);
+			}
+		}
+
+		vertexToFaces.forEach((vertex, faces) -> {
+			var sorted = new ArrayList<OriFace>();
+
+			for (int i = 0; i < faces.size(); i++) {
+				var face_i = faces.get(i);
+				for (int j = 0; j <= sorted.size(); j++) {
+					if (j == sorted.size()) {
+						sorted.add(face_i);
+						break;
+					}
+					var face_j = sorted.get(j);
+
+					if (overlapRelation.isUpper(face_i.getFaceID(), face_j.getFaceID())) {
+						sorted.add(j, face_i);
+						break;
+					}
+				}
+			}
+
+			sortedVertexToFaces.put(vertex, sorted);
+		});
+
+		return sortedVertexToFaces;
+	}
+
+}

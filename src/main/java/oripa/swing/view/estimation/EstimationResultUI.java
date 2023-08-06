@@ -46,7 +46,6 @@ import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
-import oripa.swing.view.estimation.FoldedModelScreen.DistortionMethod;
 import oripa.swing.view.util.ColorRGBPanel;
 import oripa.swing.view.util.Dialogs;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
