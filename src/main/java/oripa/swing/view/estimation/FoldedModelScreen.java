@@ -44,7 +44,6 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
@@ -53,7 +52,6 @@ import oripa.geom.RectangleDomain;
 import oripa.gui.view.estimation.DefaultColors;
 import oripa.swing.drawer.java2d.GraphicItemConverter;
 import oripa.swing.view.util.MouseUtility;
-import oripa.util.collection.CollectionUtil;
 
 /**
  * A screen to show the folded state of origami.
@@ -352,15 +350,7 @@ public class FoldedModelScreen extends JPanel
 
 		this.overlapRelation = overlapRelation;
 
-		vertexDepths = computeVertexDepths();
-	}
-
-	/**
-	 *
-	 * @return < vertex, depth >
-	 */
-	private Map<OriVertex, Integer> computeVertexDepths() {
-		return new VertexDepthMapFactory().create(origamiModel, overlapRelation, eps);
+		vertexDepths = new VertexDepthMapFactory().create(origamiModel, overlapRelation, eps);
 	}
 
 	void setColors(final Color front, final Color back) {
@@ -423,9 +413,9 @@ public class FoldedModelScreen extends JPanel
 		}
 		long time0 = System.currentTimeMillis();
 
-		var converter = createCoordinateConverter();
+		var factory = new FaceFactory(createCoordinateConverter(), vertexDepths);
 		var faces = origamiModel.getFaces().stream()
-				.map(face -> new Face(face, convertCoordinate(face, converter)))
+				.map(factory::create)
 				.collect(Collectors.toList());
 
 		interpolatedOverlapRelation = new OverlapRelationInterpolater().interpolate(overlapRelation, faces, eps);
@@ -445,29 +435,6 @@ public class FoldedModelScreen extends JPanel
 		// System.out.println("render time = " + (time1 - time0) + "ms");
 
 		renderImage = createImage(new MemoryImageSource(BUFFERW, BUFFERH, pbuf, 0, BUFFERW));
-	}
-
-	private OriFace convertCoordinate(final OriFace face, final CoordinateConverter converter) {
-		var convertedFace = new OriFace();
-		convertedFace.setFaceID(face.getFaceID());
-
-		var convertedHalfedges = face.halfedgeStream()
-				.map(OriHalfedge::getVertex)
-				.map(v -> converter.convert(v.getPosition(), vertexDepths.get(v),
-						v.getPositionBeforeFolding()))
-				.map(p -> new OriHalfedge(new OriVertex(p), convertedFace))
-				.collect(Collectors.toList());
-
-		for (int i = 0; i < convertedHalfedges.size(); i++) {
-			var he = convertedHalfedges.get(i);
-			he.setNext(CollectionUtil.getCircular(convertedHalfedges, i + 1));
-		}
-
-		for (var he : convertedHalfedges) {
-			convertedFace.addHalfedge(he);
-		}
-
-		return convertedFace;
 	}
 
 	private void drawSubface(final Graphics2D g2d) {

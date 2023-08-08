@@ -29,6 +29,7 @@ import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.geom.GeomUtil;
+import oripa.util.IntPair;
 import oripa.value.OriPoint;
 
 /**
@@ -66,18 +67,34 @@ class VertexDepthMapFactory {
 			}
 		}
 
+		var allFaces = origamiModel.getFaces();
+		boolean[][] facesIntersect = new boolean[allFaces.size()][allFaces.size()];
+
+		for (var f0 : allFaces) {
+			int i = f0.getFaceID();
+			for (var f1 : allFaces) {
+				int j = f1.getFaceID();
+				facesIntersect[i][j] = !overlapRelation.isNoOverlap(i, j);
+			}
+		}
+
 		// sort by depth
 		samePositionVertices.forEach((position, vertices) -> {
+
 			var sorted = new ArrayList<OriVertex>();
+
 			for (var vertex : vertices) {
-				int i = vertexToFaces.get(vertex).get(0).getFaceID();
+
 				for (int k = 0; k <= sorted.size(); k++) {
 					if (k == sorted.size()) {
 						sorted.add(vertex);
 						break;
 					}
 
-					int j = vertexToFaces.get(sorted.get(k)).get(0).getFaceID();
+					var faceIndices = findTopFaceIndices(vertex, sorted.get(k), vertexToFaces, overlapRelation);
+					int i = faceIndices.getV1();
+					int j = faceIndices.getV2();
+
 					if (overlapRelation.isUpper(i, j)) {
 						sorted.add(k, vertex);
 						break;
@@ -90,6 +107,38 @@ class VertexDepthMapFactory {
 		});
 
 		return depthMap;
+	}
+
+	/**
+	 * Finds the smallest indices of faces with intersection.
+	 *
+	 * @param v0
+	 * @param v1
+	 * @param vertexToFaces
+	 * @param overlapRelation
+	 * @return
+	 */
+	private IntPair findTopFaceIndices(final OriVertex v0, final OriVertex v1,
+			final Map<OriVertex, List<OriFace>> vertexToFaces,
+			final OverlapRelation overlapRelation) {
+
+		var faces0 = vertexToFaces.get(v0);
+		var faces1 = vertexToFaces.get(v1);
+
+		for (int f0Index = 0; f0Index < vertexToFaces.get(v0).size(); f0Index++) {
+			int i = faces0.get(f0Index).getFaceID();
+
+			var jOpt = faces1.stream()
+					.map(OriFace::getFaceID)
+					.filter(j -> !overlapRelation.isNoOverlap(i, j))
+					.findFirst();
+
+			if (jOpt.isPresent()) {
+				return new IntPair(i, jOpt.get());
+			}
+
+		}
+		return new IntPair(faces0.get(0).getFaceID(), faces1.get(0).getFaceID());
 	}
 
 	private Map<OriVertex, List<OriFace>> createVertexToFaces(final OrigamiModel origamiModel,
