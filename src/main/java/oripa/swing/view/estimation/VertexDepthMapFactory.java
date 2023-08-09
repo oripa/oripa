@@ -39,44 +39,12 @@ import oripa.value.OriPoint;
 class VertexDepthMapFactory {
 	public Map<OriVertex, Integer> create(final OrigamiModel origamiModel, final OverlapRelation overlapRelation,
 			final double eps) {
-		var depthMap = new HashMap<OriVertex, Integer>();
 
 		var vertexToFaces = createVertexToFaces(origamiModel, overlapRelation);
 
-		var samePositionVertices = new TreeMap<OriPoint, List<OriVertex>>();
+		var samePositionVertices = createSamePositionVertices(origamiModel.getVertices(), eps);
 
-		// build samePositionVertices
-		for (var vertex : origamiModel.getVertices()) {
-			double x = vertex.getPosition().getX();
-			double y = vertex.getPosition().getY();
-
-			var boundMap = samePositionVertices.headMap(new OriPoint(x + eps, y + eps))
-					.tailMap(new OriPoint(x - eps, y - eps));
-
-			var v = new OriPoint(x, y);
-			var posOpt = boundMap.keySet().stream()
-					.filter(p -> GeomUtil.areEqual(p, v, eps))
-					.findFirst();
-			if (posOpt.isEmpty()) {
-				var list = new ArrayList<OriVertex>();
-				samePositionVertices.put(v, list);
-				list.add(vertex);
-			} else {
-				var list = samePositionVertices.get(posOpt.get());
-				list.add(vertex);
-			}
-		}
-
-		var allFaces = origamiModel.getFaces();
-		boolean[][] facesIntersect = new boolean[allFaces.size()][allFaces.size()];
-
-		for (var f0 : allFaces) {
-			int i = f0.getFaceID();
-			for (var f1 : allFaces) {
-				int j = f1.getFaceID();
-				facesIntersect[i][j] = !overlapRelation.isNoOverlap(i, j);
-			}
-		}
+		var depthMap = new HashMap<OriVertex, Integer>();
 
 		// sort by depth
 		samePositionVertices.forEach((position, vertices) -> {
@@ -107,6 +75,36 @@ class VertexDepthMapFactory {
 		});
 
 		return depthMap;
+	}
+
+	private TreeMap<OriPoint, List<OriVertex>> createSamePositionVertices(final List<OriVertex> vertices,
+			final double eps) {
+
+		var samePositionVertices = new TreeMap<OriPoint, List<OriVertex>>();
+
+		// build samePositionVertices
+		for (var vertex : vertices) {
+			double x = vertex.getPosition().getX();
+			double y = vertex.getPosition().getY();
+
+			var boundMap = samePositionVertices.headMap(new OriPoint(x + eps, y + eps))
+					.tailMap(new OriPoint(x - eps, y - eps));
+
+			var v = new OriPoint(x, y);
+			var posOpt = boundMap.keySet().stream()
+					.filter(p -> GeomUtil.areEqual(p, v, eps))
+					.findFirst();
+			if (posOpt.isEmpty()) {
+				var list = new ArrayList<OriVertex>();
+				samePositionVertices.put(v, list);
+				list.add(vertex);
+			} else {
+				var list = samePositionVertices.get(posOpt.get());
+				list.add(vertex);
+			}
+		}
+
+		return samePositionVertices;
 	}
 
 	/**
