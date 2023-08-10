@@ -31,41 +31,53 @@ class OverlapRelationInterpolater {
 	public OverlapRelation interpolate(final OverlapRelation overlapRelation, final List<Face> faces,
 			final double eps) {
 		var interpolatedOverlapRelation = overlapRelation.clone();
+		boolean changed = false;
 
-		for (int i = 0; i < faces.size(); i++) {
-			var face_i = faces.get(i);
-			var index_i = face_i.getFaceID();
-			for (int j = 0; j < faces.size(); j++) {
-				if (i == j) {
+		do {
+			changed = false;
+			for (int i = 0; i < faces.size(); i++) {
+				for (int j = 0; j < faces.size(); j++) {
+					changed |= interpolate(interpolatedOverlapRelation, faces, i, j, eps);
+				}
+			}
+		} while (changed);
+
+		return interpolatedOverlapRelation;
+	}
+
+	private boolean interpolate(final OverlapRelation interpolatedOverlapRelation, final List<Face> faces, final int i,
+			final int j, final double eps) {
+		var face_i = faces.get(i);
+		var index_i = face_i.getFaceID();
+
+		var face_j = faces.get(j);
+		var index_j = face_j.getFaceID();
+
+		if (i == j) {
+			return false;
+		}
+
+		if (!interpolatedOverlapRelation.isNoOverlap(index_i, index_j)) {
+			return false;
+		}
+
+		if (OriGeomUtil.isFaceOverlap(face_i.getConvertedFace(), face_j.getConvertedFace(), eps)) {
+
+			for (var midFace : faces) {
+				var index_mid = midFace.getFaceID();
+
+				if (index_i == index_mid || index_j == index_mid) {
 					continue;
 				}
 
-				var face_j = faces.get(j);
-				var index_j = face_j.getFaceID();
+				if (interpolatedOverlapRelation.isUpper(index_i, index_mid)
+						&& interpolatedOverlapRelation.isUpper(index_mid, index_j)) {
 
-				if (!overlapRelation.isNoOverlap(index_i, index_j)) {
-					continue;
-				}
-
-				if (OriGeomUtil.isFaceOverlap(face_i.getConvertedFace(), face_j.getConvertedFace(), eps)) {
-					for (var midFace : faces) {
-						var index_mid = midFace.getFaceID();
-
-						if (index_i == index_mid || index_j == index_mid) {
-							continue;
-						}
-
-						if (overlapRelation.isUpper(index_i, index_mid)
-								&& overlapRelation.isUpper(index_mid, index_j)) {
-
-							interpolatedOverlapRelation.setUpper(index_i, index_j);
-							break;
-						}
-					}
+					interpolatedOverlapRelation.setUpper(index_i, index_j);
+					return true;
 				}
 			}
 		}
-
-		return interpolatedOverlapRelation;
+		return false;
 	}
 }
