@@ -457,7 +457,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		distortionPanel.setLayout(new GridBagLayout());
 
 		distortionPanel.setBorder(titledBorderFactory.createTitledBorderFrame(this,
-				"Distortion"));
+				resources.getString(ResourceKey.LABEL, StringID.EstimationResultUI.DISTORTION_ID)));
 
 		distortionPanel.add(distortionMethodCombo, gbBuilder.getNextField());
 		distortionPanel.add(xDistortionSlider, gbBuilder.getNextField());
