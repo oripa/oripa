@@ -31,12 +31,15 @@ import oripa.geom.RectangleDomain;
 public class TriangleFace {
 
 	public TriangleVertex[] v;
-	private final OriFace face;
+	private final OriFace originalFace;
+	private final OriFace convertedFace;
 
 	private final List<Integer> halfEdgeIndices;
 
-	public TriangleFace(final OriFace f, final List<Integer> halfEdgeIndices) {
-		face = f;
+	public TriangleFace(final Face f, final List<Integer> halfEdgeIndices) {
+		originalFace = f.getOriginalFace();
+		convertedFace = f.getConvertedFace();
+
 		v = new TriangleVertex[3];
 		for (int i = 0; i < 3; i++) {
 			v[i] = new TriangleVertex();
@@ -55,7 +58,7 @@ public class TriangleFace {
 	 */
 	public void initializePositions() {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
-			var he = face.getHalfedge(halfEdgeIndices.get(i));
+			var he = convertedFace.getHalfedge(halfEdgeIndices.get(i));
 			v[i].p = new Vector2d(he.getPosition());
 		}
 	}
@@ -97,7 +100,7 @@ public class TriangleFace {
 	 */
 	public void prepareColor(final Map<OriHalfedge, FloatingRGB> colorMap, final RectangleDomain paperDomain) {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
-			var he = face.getHalfedge(halfEdgeIndices.get(i));
+			var he = originalFace.getHalfedge(halfEdgeIndices.get(i));
 			v[i].color = new FloatingRGB(colorMap.get(he));
 
 			double x = (he.getPositionBeforeFolding().x - paperDomain.getCenterX()) / paperDomain.getWidth();
@@ -108,6 +111,6 @@ public class TriangleFace {
 	}
 
 	public boolean isFaceFront() {
-		return face.isFaceFront();
+		return originalFace.isFaceFront();
 	}
 }

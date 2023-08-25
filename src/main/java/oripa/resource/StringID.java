@@ -149,6 +149,8 @@ public class StringID {
 		public static final String USE_FILTER_ID = "ER_Use_Filter";
 		public static final String SHOW_SUBFACE_ID = "ER_Show_Subface";
 
+		public static final String DISTORTION_ID = "ER_Distortion";
+
 		public static final String DRAWING_CONFIG_PANEL_ID = "ER_Drawing_Conf_Panel";
 		public static final String ORDER_FLIP_ID = "ER_Order_Flip";
 		public static final String SHADOW_ID = "ER_Shadow";

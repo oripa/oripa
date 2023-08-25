@@ -35,6 +35,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
@@ -43,7 +44,7 @@ import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.origeom.OverlapRelationValues;
@@ -83,14 +84,13 @@ public class FoldedModelScreen extends JPanel
 	private boolean fillFaces = true;
 	private boolean ambientOcclusion = false;
 	private boolean faceOrderFlip = false;
-	private final double rotAngle = 0;
 	private final double scaleRate = 0.8;
 	private boolean drawEdges = true;
 	private Image renderImage;
-	double rotateAngle;
-	double scale;
-	double transX;
-	double transY;
+	private double rotateAngle;
+	private double scale;
+	private double transX;
+	private double transY;
 	private Point2D preMousePoint;
 	private final AffineTransform affineTransform;
 	private BufferedImage textureImage = null;
@@ -102,9 +102,17 @@ public class FoldedModelScreen extends JPanel
 
 	private OrigamiModel origamiModel = null;
 	private OverlapRelation overlapRelation;
+	private OverlapRelation interpolatedOverlapRelation;
 	private OriFace selectedSubface = null;
 
 	private RectangleDomain domain;
+
+	private Vector2d distortionParameter = new Vector2d(0, 0);
+	private double eps = 1e-5;
+
+	private DistortionMethod distortionMethod = DistortionMethod.NONE;
+
+	private Map<OriVertex, Integer> vertexDepths;
 
 	public FoldedModelScreen() {
 		addMouseListener(this);
@@ -172,6 +180,22 @@ public class FoldedModelScreen extends JPanel
 		redrawOrigami();
 	}
 
+	/**
+	 *
+	 * @param d
+	 *            d.x and d.y should be in [-1.0, 1.0] respectively.
+	 */
+	public void setDistortionParameter(final Vector2d d) {
+		distortionParameter = d;
+
+		redrawOrigami();
+	}
+
+	public void setDistortionMethod(final DistortionMethod method) {
+		distortionMethod = method;
+		redrawOrigami();
+	}
+
 	public void drawEdge(final boolean bEdge) {
 		drawEdges = bEdge;
 		redrawOrigami();
@@ -201,8 +225,8 @@ public class FoldedModelScreen extends JPanel
 	private void updateAffineTransform() {
 		affineTransform.setToIdentity();
 		affineTransform.translate(getWidth() * 0.5, getHeight() * 0.5);
-		affineTransform.scale(scale, -scale);
-		affineTransform.translate(transX, -transY);
+		affineTransform.scale(scale, scale);
+		affineTransform.translate(transX, transY);
 		affineTransform.rotate(rotateAngle);
 		affineTransform.translate(-getWidth() * 0.5, -getHeight() * 0.5);
 	}
@@ -287,7 +311,9 @@ public class FoldedModelScreen extends JPanel
 //		return ret;
 //	}
 
-	public void setModel(final FoldedModel foldedModel) {
+	public void setModel(final FoldedModel foldedModel, final double eps) {
+		this.eps = eps;
+
 		if (foldedModel == null) {
 			this.origamiModel = null;
 		} else {
@@ -297,7 +323,7 @@ public class FoldedModelScreen extends JPanel
 			if (overlapRelations == null || overlapRelations.isEmpty()) {
 				overlapRelation = null;
 			} else {
-				overlapRelation = overlapRelations.get(0);
+				updateOverlapRelation(overlapRelation);
 			}
 		}
 
@@ -312,8 +338,19 @@ public class FoldedModelScreen extends JPanel
 	}
 
 	public void setOverlapRelation(final OverlapRelation overlapRelation) {
-		this.overlapRelation = overlapRelation;
+		updateOverlapRelation(overlapRelation);
 		redrawOrigami();
+	}
+
+	private void updateOverlapRelation(final OverlapRelation overlapRelation) {
+		if (overlapRelation == null) {
+			this.overlapRelation = null;
+			return;
+		}
+
+		this.overlapRelation = overlapRelation;
+
+		vertexDepths = new VertexDepthMapFactory().create(origamiModel, overlapRelation, eps);
 	}
 
 	void setColors(final Color front, final Color back) {
@@ -356,6 +393,16 @@ public class FoldedModelScreen extends JPanel
 		g.drawImage(bufferImage, 0, 0, this);
 	}
 
+	private CoordinateConverter createCoordinateConverter() {
+		var converter = new CoordinateConverter(domain, BUFFERW, BUFFERH);
+
+		converter.setDistortionMethod(distortionMethod);
+		converter.setDistortionParameter(distortionParameter);
+		converter.setScale(getFinalScale());
+
+		return converter;
+	}
+
 	public void drawOrigami() {
 		if (origamiModel == null || overlapRelation == null) {
 			return;
@@ -366,8 +413,14 @@ public class FoldedModelScreen extends JPanel
 		}
 		long time0 = System.currentTimeMillis();
 
-		List<OriFace> faces = origamiModel.getFaces();
-		faces.forEach(face -> drawFace(face));
+		var factory = new FaceFactory(createCoordinateConverter(), vertexDepths);
+		var faces = origamiModel.getFaces().stream()
+				.map(factory::create)
+				.collect(Collectors.toList());
+
+		interpolatedOverlapRelation = new OverlapRelationInterpolater().interpolate(overlapRelation, faces, eps);
+
+		faces.forEach(this::drawFace);
 
 		if (drawEdges) {
 			drawEdges();
@@ -379,15 +432,15 @@ public class FoldedModelScreen extends JPanel
 
 		long time1 = System.currentTimeMillis();
 
-		System.out.println("render time = " + (time1 - time0) + "ms");
+		// System.out.println("render time = " + (time1 - time0) + "ms");
 
 		renderImage = createImage(new MemoryImageSource(BUFFERW, BUFFERH, pbuf, 0, BUFFERW));
 	}
 
 	private void drawSubface(final Graphics2D g2d) {
+		var converter = createCoordinateConverter();
 		var convertedSubface = selectedSubface.halfedgeStream()
-				.map(OriHalfedge::getPosition)
-				.map(this::convertCoordinate)
+				.map(v -> converter.convert(v.getPosition(), 0, v.getPositionBeforeFolding()))
 				.collect(Collectors.toList());
 
 		var itemConverter = new GraphicItemConverter();
@@ -396,7 +449,7 @@ public class FoldedModelScreen extends JPanel
 		g2d.draw(path2d);
 	}
 
-	private void drawFace(final OriFace face) {
+	private void drawFace(final Face face) {
 		if (useColor) {
 			drawFace(face, frontColor, backColor);
 		} else {
@@ -404,7 +457,7 @@ public class FoldedModelScreen extends JPanel
 		}
 	}
 
-	private void drawFace(final OriFace face, final Color frontColor, final Color backColor) {
+	private void drawFace(final Face face, final Color frontColor, final Color backColor) {
 
 		var paperDomain = origamiModel.createPaperDomain();
 
@@ -416,7 +469,7 @@ public class FoldedModelScreen extends JPanel
 
 		var vertexColorMapFactory = new VertexColorMapFactory();
 		var colorMap = vertexColorMapFactory.createVertexColors(
-				face,
+				face.getOriginalFace(),
 				frontColorFactor,
 				backColorFactor,
 				isFaceOrderFlipped());
@@ -426,30 +479,15 @@ public class FoldedModelScreen extends JPanel
 		triangles.forEach(triangle -> triangle.prepareColor(colorMap, paperDomain));
 
 		triangles.stream().forEach(tri -> {
-			for (int i = 0; i < 3; i++) {
-				var pos = tri.getPosition(i);
-				var newPos = convertCoordinate(pos);
-
-				tri.setPosition(i, newPos.getX(), newPos.getY());
-			}
 			drawTriangle(tri, face.getFaceID());
 		});
 
 	}
 
-	private Vector2d convertCoordinate(final Vector2d pos) {
-		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
-		final double localScale = scaleRate * Math.min(
+	private double getFinalScale() {
+		return scaleRate * Math.min(
 				BUFFERW / (domain.getWidth()),
 				BUFFERH / (domain.getHeight())) * 0.95;
-		final double angle = rotAngle * Math.PI / 180;
-		double x = (pos.x - center.x) * localScale;
-		double y = (pos.y - center.y) * localScale;
-
-		double rotX = x * Math.cos(angle) + y * Math.sin(angle) + BUFFERW * 0.5;
-		double rotY = x * Math.sin(angle) - y * Math.cos(angle) + BUFFERW * 0.5;
-
-		return new Vector2d(rotX, rotY);
 	}
 
 	private List<Double> createColorFactor(final Color color) {
@@ -538,7 +576,7 @@ public class FoldedModelScreen extends JPanel
 				byte renderFace = isFaceOrderFlipped() ? OverlapRelationValues.UPPER
 						: OverlapRelationValues.LOWER;
 
-				if (zbuf[p] == -1 || overlapRelation.get(zbuf[p], id) == renderFace) {
+				if (zbuf[p] == -1 || interpolatedOverlapRelation.get(zbuf[p], id) == renderFace) {
 
 					int tr = r >> 16;
 					int tg = g >> 16;
@@ -685,7 +723,7 @@ public class FoldedModelScreen extends JPanel
 						if (f_id == -1 && f_id2 != -1) {
 							cnt++;
 						} else {
-							if (f_id2 != -1 && overlapRelation.get(f_id, f_id2) == renderFace) {
+							if (f_id2 != -1 && interpolatedOverlapRelation.get(f_id, f_id2) == renderFace) {
 								cnt++;
 							}
 						}
@@ -736,14 +774,19 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if (MouseUtility.isLeftButtonEvent(e)) {
-			rotateAngle -= (e.getX() - preMousePoint.getX()) / 100.0;
+		if (MouseUtility.isRightButtonEvent(e) ||
+				MouseUtility.isLeftButtonEvent(e) && MouseUtility.isShiftKeyDown(e)) {
+			transX += (e.getX() - preMousePoint.getX()) / scale;
+			transY += (e.getY() - preMousePoint.getY()) / scale;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();
-		} else if (MouseUtility.isRightButtonEvent(e)) {
-			transX += (e.getX() - preMousePoint.getX()) / scale;
-			transY += (e.getY() - preMousePoint.getY()) / scale;
+
+			return;
+		}
+
+		if (MouseUtility.isLeftButtonEvent(e)) {
+			rotateAngle += (e.getX() - preMousePoint.getX()) / 100.0;
 			preMousePoint = e.getPoint();
 			updateAffineTransform();
 			repaint();

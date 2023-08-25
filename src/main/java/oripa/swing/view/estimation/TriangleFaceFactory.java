@@ -21,14 +21,12 @@ package oripa.swing.view.estimation;
 import java.util.ArrayList;
 import java.util.List;
 
-import oripa.domain.fold.halfedge.OriFace;
-
 /**
  * @author OUCHI Koji
  *
  */
 public class TriangleFaceFactory {
-	public List<TriangleFace> createAll(final OriFace face) {
+	public List<TriangleFace> createAll(final Face face) {
 		var triangles = new ArrayList<TriangleFace>();
 
 		int heNum = face.halfedgeCount();

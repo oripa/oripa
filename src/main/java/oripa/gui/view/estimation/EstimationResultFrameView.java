@@ -48,5 +48,5 @@ public interface EstimationResultFrameView extends FrameView {
 
 	public void addModelSwitchListener(final Consumer<Integer> listener);
 
-	public void setModel(final FoldedModel foldedModel);
+	public void setModel(final FoldedModel foldedModel, double eps);
 }

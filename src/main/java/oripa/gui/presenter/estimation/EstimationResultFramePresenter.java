@@ -33,16 +33,20 @@ public class EstimationResultFramePresenter {
 	private final EstimationResultFrameView view;
 	private final List<FoldedModel> foldedModels;
 	private FoldedModel foldedModel;
+	private final double eps;
 
 	public EstimationResultFramePresenter(
 			final EstimationResultFrameView view,
 			final FileChooserFactory fileChooserFactory,
 			final List<FoldedModel> foldedModels,
+			final double eps,
 			final String lastFilePath,
 			final Consumer<String> lastFilePathChangeListener) {
 		this.view = view;
 
 		this.foldedModels = foldedModels;
+
+		this.eps = eps;
 
 		var uiPresenter = new EstimationResultUIPresenter(view.getUI(), fileChooserFactory, lastFilePath,
 				lastFilePathChangeListener);
@@ -59,7 +63,7 @@ public class EstimationResultFramePresenter {
 	private void addListeners() {
 		view.addModelSwitchListener(index -> {
 			foldedModel = foldedModels.get(index);
-			view.setModel(foldedModel);
+			view.setModel(foldedModel, eps);
 		});
 	}
 

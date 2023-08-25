@@ -1,6 +1,7 @@
 /**
  * ORIPA - Origami Pattern Editor
- * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
+ * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
+ * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,16 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package oripa.swing.view.estimation;
 
-import javax.vecmath.Vector2d;
+import oripa.domain.fold.halfedge.OriFace;
 
-public class TriangleVertex {
+/**
+ * @author OUCHI Koji
+ *
+ */
+public class Face {
+	private final OriFace originalFace;
+	private final OriFace convertedFace;
 
-	// position after folding
-	public Vector2d p = new Vector2d();
+	public Face(final OriFace original, final OriFace converted) {
+		originalFace = original;
+		convertedFace = converted;
+	}
 
-	public Vector2d uv = new Vector2d();
-	public FloatingRGB color = new FloatingRGB(0, 0, 0);
+	public OriFace getOriginalFace() {
+		return originalFace;
+	}
+
+	public OriFace getConvertedFace() {
+		return convertedFace;
+	}
+
+	public int halfedgeCount() {
+		return originalFace.halfedgeCount();
+	}
+
+	public int getFaceID() {
+		return originalFace.getFaceID();
+	}
 }
