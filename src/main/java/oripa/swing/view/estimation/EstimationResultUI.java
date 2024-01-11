@@ -130,7 +130,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	/**
 	 * < index of selected subface, index of selected suborder >
 	 */
-	private final Map<Integer, Integer> filterSelectionMap = new HashMap<>();
+	private Map<Integer, Integer> filterSelectionMap = new HashMap<>();
 
 	/**
 	 * < index of subface, list< overlap relation indices > >
@@ -164,20 +164,24 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		screen = s;
 	}
 
-	/* (non Javadoc)
-	 * @see oripa.gui.view.estimation.EstimationResultUIView#setModel(oripa.domain.fold.FoldedModel)
-	 */
 	@Override
 	public void setModel(final FoldedModel foldedModel) {
 		this.foldedModel = foldedModel;
 
 		setOverlapRelations(foldedModel.getOverlapRelations());
+
+		// automatically turn off filtering
+		if (filterEnabledCheckBox.isSelected()) {
+			filterEnabledCheckBox.doClick();
+		}
 	}
 
 	private void initializeFilterComponents() {
 		var frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
 		var dialog = new DialogWhileComputing(frame, resources);
+
+		filterSelectionMap = new HashMap<>();
 
 		var worker = new SimpleModalWorker(dialog, () -> {
 			subfaceToOverlapRelationIndices = filterInitializationListener.apply(foldedModel);
@@ -189,7 +193,11 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		prepareSubfaceIndexCombo();
 		prepareSuborderIndexCombo(0);
 
+		// re-select to invoke selection listener for initializing
+		subfaceIndexCombo.setSelectedIndex(-1);
 		subfaceIndexCombo.setSelectedIndex(0);
+
+		suborderIndexCombo.setSelectedIndex(-1);
 		suborderIndexCombo.setSelectedIndex(0);
 
 	}
@@ -307,15 +315,19 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 		filterEnabledCheckBox.addActionListener(e -> {
 			if (filterEnabledCheckBox.isSelected()) {
-				initializeFilterComponents();
+				try {
+					initializeFilterComponents();
 
-				setFilterEnabled(true);
+					setFilterEnabled(true);
 
-				setOverlapRelations(filter());
-				selectOverlapRelation(0);
+					setOverlapRelations(filter());
+					selectOverlapRelation(0);
 
-				var subface = foldedModel.getSubfaces().get(0);
-				setSubfaceToScreen(subface);
+					var subface = foldedModel.getSubfaces().get(0);
+					setSubfaceToScreen(subface);
+				} catch (Exception ex) {
+					logger.error("Error on enabling filter.", ex);
+				}
 			} else {
 				setFilterEnabled(false);
 

@@ -311,7 +311,7 @@ public class FoldedModelScreen extends JPanel
 //		return ret;
 //	}
 
-	public void setModel(final FoldedModel foldedModel, final double eps) {
+	public void setModel(final FoldedModel foldedModel, final int overlapRelationIndex, final double eps) {
 		this.eps = eps;
 
 		if (foldedModel == null) {
@@ -323,7 +323,7 @@ public class FoldedModelScreen extends JPanel
 			if (overlapRelations == null || overlapRelations.isEmpty()) {
 				overlapRelation = null;
 			} else {
-				updateOverlapRelation(overlapRelation);
+				updateOverlapRelation(overlapRelations.get(overlapRelationIndex));
 			}
 		}
 
