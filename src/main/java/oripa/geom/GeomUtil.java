@@ -502,25 +502,48 @@ public class GeomUtil {
 				(s, t) -> range.includes(s) && range.includes(t));
 	}
 
+	/**
+	 * Let p = p1 - p0, q = q1 - q0 and d = q0 - p0. Here we assume the cross
+	 * point is c = (a, b). We have two parameters s and t such that p0 + sp =
+	 * q0 + tq = c. Then we obtain tq - sp + d = 0. This equation can be
+	 * described with Ax = -d where
+	 *
+	 * <pre>
+	 * {@code
+	 * A = [-px qx] and x = [s]
+	 *     [-py qy]         [t]
+	 * }
+	 * </pre>
+	 *
+	 * This method solves the equation above and returns the s and t as a list
+	 * of Double.
+	 *
+	 * @param p0
+	 * @param p1
+	 * @param q0
+	 * @param q1
+	 * @param answerPredicate
+	 * @return
+	 */
 	private static Optional<List<Double>> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1, final BiPredicate<Double, Double> answerPredicate) {
 
 		var answer = new ArrayList<Double>();
 
-		Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
-		Vector2d d1 = new Vector2d(q1.x - q0.x, q1.y - q0.y);
-		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
-		double det = d1.x * d0.y - d1.y * d0.x;
+		Vector2d p = new Vector2d(p1.x - p0.x, p1.y - p0.y);
+		Vector2d q = new Vector2d(q1.x - q0.x, q1.y - q0.y);
+		Vector2d d = new Vector2d(q0.x - p0.x, q0.y - p0.y);
+		double det = q.x * p.y - q.y * p.x;
 
 		final double eps = MathUtil.normalizedValueEps();
 
-		if (det * det <= eps * d0.lengthSquared() * d1.lengthSquared()) {
+		if (det * det <= eps * p.lengthSquared() * q.lengthSquared()) {
 			return Optional.empty();
 		}
 
 		// Lines intersect in a single point.
-		double s = (d1.x * diff.y - d1.y * diff.x) / det;
-		double t = (d0.x * diff.y - d0.y * diff.x) / det;
+		double s = (q.x * d.y - q.y * d.x) / det;
+		double t = (p.x * d.y - p.y * d.x) / det;
 
 		if (!answerPredicate.test(s, t)) {
 			return Optional.empty();
