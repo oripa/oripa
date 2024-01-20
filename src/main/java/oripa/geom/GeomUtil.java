@@ -209,6 +209,14 @@ public class GeomUtil {
 		return vc;
 	}
 
+	/**
+	 * Computes the angle bisector direction of v0 - v1 and v2 - v1.
+	 *
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @return
+	 */
 	public static Vector2d getBisectorVec(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
 		Vector2d v0_v1 = new Vector2d();
 		v0_v1.sub(v0, v1);
