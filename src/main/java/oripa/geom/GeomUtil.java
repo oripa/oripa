@@ -161,7 +161,7 @@ public class GeomUtil {
 
 	/**
 	 * Both distances between the extremities of the lines should be less than
-	 * the threshold The lines can be reversed, so the test has to be done both
+	 * the threshold. The lines can be reversed, so the test has to be done both
 	 * ways
 	 *
 	 * @param l0
@@ -188,14 +188,14 @@ public class GeomUtil {
 		double y1 = line.getP1().y;
 		double px = v.x;
 		double py = v.y;
-		Vector2d sub0, sub, sub0b;
+		Vector2d sub0, sub;
 
-		sub0 = new Vector2d(x0 - px, y0 - py);
-		sub0b = new Vector2d(-sub0.x, -sub0.y);
+		sub0 = new Vector2d(px - x0, py - y0);
 		sub = new Vector2d(x1 - x0, y1 - y0);
 
-		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
-				/ ((sub.x * sub.x) + (sub.y * sub.y));
+		// cross point = sub * (sub dot sub0)/|sub|^2
+
+		double t = sub.dot(sub0) / sub.lengthSquared();
 
 		return new Segment(x0 + t * sub.x, y0 + t * sub.y, px, py);
 	}
