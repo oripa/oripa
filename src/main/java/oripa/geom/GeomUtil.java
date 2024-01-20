@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
@@ -162,7 +161,7 @@ public class GeomUtil {
 
 	/**
 	 * Both distances between the extremities of the lines should be less than
-	 * the threshold The lines can be reversed, so the test has to be done both
+	 * the threshold. The lines can be reversed, so the test has to be done both
 	 * ways
 	 *
 	 * @param l0
@@ -182,52 +181,6 @@ public class GeomUtil {
 		return false;
 	}
 
-	/**
-	 *
-	 * @param l
-	 *            is assumed to be long enough.
-	 * @param domain
-	 *            defines clip area.
-	 * @return Optional of clipped segment. Empty if failed.
-	 */
-	public static Optional<Segment> clipLine(final Segment l, final RectangleDomain domain, final double pointEps) {
-
-		double left = domain.getLeft();
-		double right = domain.getRight();
-
-		double top = domain.getTop();
-		double bottom = domain.getBottom();
-
-		var leftSegment = new Segment(left, top, left, bottom);
-		var rightSegment = new Segment(right, top, right, bottom);
-
-		var topSegment = new Segment(left, top, right, top);
-		var bottomSegment = new Segment(left, bottom, right, bottom);
-
-		final List<Vector2d> crossPoints = new ArrayList<>();
-
-		Consumer<Vector2d> addIfDistinct = cp -> {
-			if (cp == null) {
-				return;
-			}
-			if (crossPoints.stream().allMatch(v -> distance(v, cp) > pointEps)) {
-				crossPoints.add(cp);
-			}
-		};
-
-		addIfDistinct.accept(getCrossPoint(l, leftSegment));
-		addIfDistinct.accept(getCrossPoint(l, rightSegment));
-		addIfDistinct.accept(getCrossPoint(l, topSegment));
-		addIfDistinct.accept(getCrossPoint(l, bottomSegment));
-
-		if (crossPoints.size() == 2) {
-
-			return Optional.of(new Segment(crossPoints.get(0), crossPoints.get(1)));
-		}
-
-		return Optional.empty();
-	}
-
 	public static Segment getVerticalLine(final Vector2d v, final Segment line) {
 		double x0 = line.getP0().x;
 		double y0 = line.getP0().y;
@@ -235,14 +188,11 @@ public class GeomUtil {
 		double y1 = line.getP1().y;
 		double px = v.x;
 		double py = v.y;
-		Vector2d sub0, sub, sub0b;
+		Vector2d sub;
 
-		sub0 = new Vector2d(x0 - px, y0 - py);
-		sub0b = new Vector2d(-sub0.x, -sub0.y);
 		sub = new Vector2d(x1 - x0, y1 - y0);
 
-		double t = ((sub.x * sub0b.x) + (sub.y * sub0b.y))
-				/ ((sub.x * sub.x) + (sub.y * sub.y));
+		double t = computeParameterForNearestPointToLine(v, line.getP0(), line.getP1());
 
 		return new Segment(x0 + t * sub.x, y0 + t * sub.y, px, py);
 	}
@@ -259,6 +209,14 @@ public class GeomUtil {
 		return vc;
 	}
 
+	/**
+	 * Computes the angle bisector direction of v0 - v1 and v2 - v1.
+	 *
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @return
+	 */
 	public static Vector2d getBisectorVec(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
 		Vector2d v0_v1 = new Vector2d();
 		v0_v1.sub(v0, v1);
@@ -294,8 +252,14 @@ public class GeomUtil {
 		return new Vector2d(2 * cp.x - p.x, 2 * cp.y - p.y);
 	}
 
-	// Returns the intersection of the semi straight line and the line segment.
-	// Null if not intersect
+	/**
+	 * Returns the intersection of the semi-straight line and the line segment.
+	 * Null if not intersect.
+	 *
+	 * @param ray
+	 * @param seg
+	 * @return
+	 */
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
 		Vector2d p0 = new Vector2d(ray.p);
 		Vector2d p1 = new Vector2d();
@@ -311,10 +275,8 @@ public class GeomUtil {
 		}
 
 		double t = answerOpt.get().get(1);
-		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * segP0.x + t * segP1.x;
-		cp.y = (1.0 - t) * segP0.y + t * segP1.y;
-		return cp;
+
+		return computeCrossPointUsingParameter(t, segP0, segP1);
 	}
 
 	private static Optional<List<Double>> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
@@ -324,7 +286,13 @@ public class GeomUtil {
 				(s, t) -> new ClosedRange(0, 1, eps).includes(t) && s >= -eps);
 	}
 
-	// Compute the intersection of straight lines
+	/**
+	 * Compute the intersection of straight lines
+	 *
+	 * @param l0
+	 * @param l1
+	 * @return
+	 */
 	public static Vector2d getCrossPoint(final Line l0, final Line l1) {
 		var p0 = new Vector2d(l0.p);
 		var p1 = new Vector2d();
@@ -342,11 +310,7 @@ public class GeomUtil {
 
 		var t = answerOpt.get().get(1);
 
-		// cp = (1 - t) * q0 + t * q1
-		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * q0.x + t * q1.x;
-		cp.y = (1.0 - t) * q0.y + t * q1.y;
-		return cp;
+		return computeCrossPointUsingParameter(t, q0, q1);
 	}
 
 	private static Optional<List<Double>> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
@@ -426,12 +390,20 @@ public class GeomUtil {
 		}
 	}
 
+	/**
+	 * Computes distance and the nearest point. The nearest point is returned by
+	 * side-effect.
+	 *
+	 * @param p
+	 * @param segment
+	 * @param nearestPoint
+	 *            stores returned value.
+	 * @return
+	 */
 	public static double distancePointToSegment(final Vector2d p, final Segment segment, final Vector2d nearestPoint) {
-		return distancePointToSegment(p, segment.getP0(), segment.getP1(), nearestPoint);
-	}
 
-	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
-			final Vector2d ep, final Vector2d nearestPoint) {
+		var sp = segment.getP0();
+		var ep = segment.getP1();
 
 		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
@@ -446,7 +418,7 @@ public class GeomUtil {
 			Vector2d dir = new Vector2d(ep);
 			dir.sub(sp);
 			nearestPoint.set(sp.x + t * dir.x, sp.y + t * dir.y);
-			return distance(sp.x + t * dir.x, sp.y + t * dir.y, p.x, p.y);
+			return distance(nearestPoint, p);
 		}
 	}
 
@@ -474,11 +446,7 @@ public class GeomUtil {
 
 		var t = parametersOpt.get().get(1);
 
-		// cp = (1 - t) * q0 + t * q1
-		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * q0.x + t * q1.x;
-		cp.y = (1.0 - t) * q0.y + t * q1.y;
-		return cp;
+		return computeCrossPointUsingParameter(t, q0, q1);
 	}
 
 	/**
@@ -502,25 +470,48 @@ public class GeomUtil {
 				(s, t) -> range.includes(s) && range.includes(t));
 	}
 
+	/**
+	 * Let p = p1 - p0, q = q1 - q0 and d = q0 - p0. Here we assume the cross
+	 * point is c = (a, b). We have two parameters s and t such that p0 + sp =
+	 * q0 + tq = c. Then we obtain tq - sp + d = 0. This equation can be
+	 * described with Ax = -d where
+	 *
+	 * <pre>
+	 * {@code
+	 * A = [-px qx] and x = [s]
+	 *     [-py qy]         [t]
+	 * }
+	 * </pre>
+	 *
+	 * This method solves the equation above and returns the s and t as a list
+	 * of Double.
+	 *
+	 * @param p0
+	 * @param p1
+	 * @param q0
+	 * @param q1
+	 * @param answerPredicate
+	 * @return
+	 */
 	private static Optional<List<Double>> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1, final BiPredicate<Double, Double> answerPredicate) {
 
 		var answer = new ArrayList<Double>();
 
-		Vector2d d0 = new Vector2d(p1.x - p0.x, p1.y - p0.y);
-		Vector2d d1 = new Vector2d(q1.x - q0.x, q1.y - q0.y);
-		Vector2d diff = new Vector2d(q0.x - p0.x, q0.y - p0.y);
-		double det = d1.x * d0.y - d1.y * d0.x;
+		Vector2d p = new Vector2d(p1.x - p0.x, p1.y - p0.y);
+		Vector2d q = new Vector2d(q1.x - q0.x, q1.y - q0.y);
+		Vector2d d = new Vector2d(q0.x - p0.x, q0.y - p0.y);
+		double det = q.x * p.y - q.y * p.x;
 
 		final double eps = MathUtil.normalizedValueEps();
 
-		if (det * det <= eps * d0.lengthSquared() * d1.lengthSquared()) {
+		if (det * det <= eps * p.lengthSquared() * q.lengthSquared()) {
 			return Optional.empty();
 		}
 
 		// Lines intersect in a single point.
-		double s = (d1.x * diff.y - d1.y * diff.x) / det;
-		double t = (d0.x * diff.y - d0.y * diff.x) / det;
+		double s = (q.x * d.y - q.y * d.x) / det;
+		double t = (p.x * d.y - p.y * d.x) / det;
 
 		if (!answerPredicate.test(s, t)) {
 			return Optional.empty();
@@ -530,6 +521,14 @@ public class GeomUtil {
 		answer.add(t);
 
 		return Optional.of(answer);
+	}
+
+	private static Vector2d computeCrossPointUsingParameter(final double t, final Vector2d q0, final Vector2d q1) {
+		// cp = (1 - t) * q0 + t * q1
+		Vector2d cp = new Vector2d();
+		cp.x = (1.0 - t) * q0.x + t * q1.x;
+		cp.y = (1.0 - t) * q0.y + t * q1.y;
+		return cp;
 	}
 
 	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
