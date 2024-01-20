@@ -188,14 +188,11 @@ public class GeomUtil {
 		double y1 = line.getP1().y;
 		double px = v.x;
 		double py = v.y;
-		Vector2d sub0, sub;
+		Vector2d sub;
 
-		sub0 = new Vector2d(px - x0, py - y0);
 		sub = new Vector2d(x1 - x0, y1 - y0);
 
-		// cross point = sub * (sub dot sub0)/|sub|^2
-
-		double t = sub.dot(sub0) / sub.lengthSquared();
+		double t = computeParameterForNearestPointToLine(v, line.getP0(), line.getP1());
 
 		return new Segment(x0 + t * sub.x, y0 + t * sub.y, px, py);
 	}
@@ -247,8 +244,14 @@ public class GeomUtil {
 		return new Vector2d(2 * cp.x - p.x, 2 * cp.y - p.y);
 	}
 
-	// Returns the intersection of the semi straight line and the line segment.
-	// Null if not intersect
+	/**
+	 * Returns the intersection of the semi-straight line and the line segment.
+	 * Null if not intersect.
+	 *
+	 * @param ray
+	 * @param seg
+	 * @return
+	 */
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
 		Vector2d p0 = new Vector2d(ray.p);
 		Vector2d p1 = new Vector2d();
@@ -379,6 +382,16 @@ public class GeomUtil {
 		}
 	}
 
+	/**
+	 * Computes distance and the nearest point. The nearest point is returned by
+	 * side-effect.
+	 *
+	 * @param p
+	 * @param segment
+	 * @param nearestPoint
+	 *            stores returned value.
+	 * @return
+	 */
 	public static double distancePointToSegment(final Vector2d p, final Segment segment, final Vector2d nearestPoint) {
 
 		var sp = segment.getP0();
