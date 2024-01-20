@@ -275,10 +275,8 @@ public class GeomUtil {
 		}
 
 		double t = answerOpt.get().get(1);
-		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * segP0.x + t * segP1.x;
-		cp.y = (1.0 - t) * segP0.y + t * segP1.y;
-		return cp;
+
+		return computeCrossPointUsingParameter(t, segP0, segP1);
 	}
 
 	private static Optional<List<Double>> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
@@ -288,7 +286,13 @@ public class GeomUtil {
 				(s, t) -> new ClosedRange(0, 1, eps).includes(t) && s >= -eps);
 	}
 
-	// Compute the intersection of straight lines
+	/**
+	 * Compute the intersection of straight lines
+	 *
+	 * @param l0
+	 * @param l1
+	 * @return
+	 */
 	public static Vector2d getCrossPoint(final Line l0, final Line l1) {
 		var p0 = new Vector2d(l0.p);
 		var p1 = new Vector2d();
@@ -306,11 +310,7 @@ public class GeomUtil {
 
 		var t = answerOpt.get().get(1);
 
-		// cp = (1 - t) * q0 + t * q1
-		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * q0.x + t * q1.x;
-		cp.y = (1.0 - t) * q0.y + t * q1.y;
-		return cp;
+		return computeCrossPointUsingParameter(t, q0, q1);
 	}
 
 	private static Optional<List<Double>> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
@@ -446,11 +446,7 @@ public class GeomUtil {
 
 		var t = parametersOpt.get().get(1);
 
-		// cp = (1 - t) * q0 + t * q1
-		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * q0.x + t * q1.x;
-		cp.y = (1.0 - t) * q0.y + t * q1.y;
-		return cp;
+		return computeCrossPointUsingParameter(t, q0, q1);
 	}
 
 	/**
@@ -525,6 +521,14 @@ public class GeomUtil {
 		answer.add(t);
 
 		return Optional.of(answer);
+	}
+
+	private static Vector2d computeCrossPointUsingParameter(final double t, final Vector2d q0, final Vector2d q1) {
+		// cp = (1 - t) * q0 + t * q1
+		Vector2d cp = new Vector2d();
+		cp.x = (1.0 - t) * q0.x + t * q1.x;
+		cp.y = (1.0 - t) * q0.y + t * q1.y;
+		return cp;
 	}
 
 	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
