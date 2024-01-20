@@ -380,11 +380,9 @@ public class GeomUtil {
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Segment segment, final Vector2d nearestPoint) {
-		return distancePointToSegment(p, segment.getP0(), segment.getP1(), nearestPoint);
-	}
 
-	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
-			final Vector2d ep, final Vector2d nearestPoint) {
+		var sp = segment.getP0();
+		var ep = segment.getP1();
 
 		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
@@ -399,7 +397,7 @@ public class GeomUtil {
 			Vector2d dir = new Vector2d(ep);
 			dir.sub(sp);
 			nearestPoint.set(sp.x + t * dir.x, sp.y + t * dir.y);
-			return distance(sp.x + t * dir.x, sp.y + t * dir.y, p.x, p.y);
+			return distance(nearestPoint, p);
 		}
 	}
 
