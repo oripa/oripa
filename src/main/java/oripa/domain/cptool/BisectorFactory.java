@@ -44,7 +44,7 @@ public class BisectorFactory {
 				cp.x - dir.x, cp.y - dir.y,
 				cp.x + dir.x, cp.y + dir.y);
 
-		return new OriLine(GeomUtil.clipLine(bisector, domain, pointEps).orElse(bisector), lineType);
+		return new OriLine(bisector, lineType);
 	}
 
 	/**

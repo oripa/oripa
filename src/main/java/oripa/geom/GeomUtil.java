@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
 import javax.vecmath.Vector2d;
 
@@ -180,52 +179,6 @@ public class GeomUtil {
 		}
 
 		return false;
-	}
-
-	/**
-	 *
-	 * @param l
-	 *            is assumed to be long enough.
-	 * @param domain
-	 *            defines clip area.
-	 * @return Optional of clipped segment. Empty if failed.
-	 */
-	public static Optional<Segment> clipLine(final Segment l, final RectangleDomain domain, final double pointEps) {
-
-		double left = domain.getLeft();
-		double right = domain.getRight();
-
-		double top = domain.getTop();
-		double bottom = domain.getBottom();
-
-		var leftSegment = new Segment(left, top, left, bottom);
-		var rightSegment = new Segment(right, top, right, bottom);
-
-		var topSegment = new Segment(left, top, right, top);
-		var bottomSegment = new Segment(left, bottom, right, bottom);
-
-		final List<Vector2d> crossPoints = new ArrayList<>();
-
-		Consumer<Vector2d> addIfDistinct = cp -> {
-			if (cp == null) {
-				return;
-			}
-			if (crossPoints.stream().allMatch(v -> distance(v, cp) > pointEps)) {
-				crossPoints.add(cp);
-			}
-		};
-
-		addIfDistinct.accept(getCrossPoint(l, leftSegment));
-		addIfDistinct.accept(getCrossPoint(l, rightSegment));
-		addIfDistinct.accept(getCrossPoint(l, topSegment));
-		addIfDistinct.accept(getCrossPoint(l, bottomSegment));
-
-		if (crossPoints.size() == 2) {
-
-			return Optional.of(new Segment(crossPoints.get(0), crossPoints.get(1)));
-		}
-
-		return Optional.empty();
 	}
 
 	public static Segment getVerticalLine(final Vector2d v, final Segment line) {
