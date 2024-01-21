@@ -18,10 +18,9 @@
  */
 package oripa.gui.presenter.creasepattern.enlarge;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -56,9 +55,6 @@ class CornerOriginEnlarger extends AbstractEnlarger {
 
 		var currentPoint = scalePosition(mouseStartPoint, mousePoint, originOfEnlargement, mouseStartPoint);
 
-		var diff = new Vector2d();
-		diff.sub(currentPoint, originOfEnlargement);
-
 		return new RectangleDomain(
 				originOfEnlargement.getX(), originOfEnlargement.getY(),
 				currentPoint.getX(), currentPoint.getY());
@@ -74,21 +70,18 @@ class CornerOriginEnlarger extends AbstractEnlarger {
 		double signX = Math.signum(scales.getX());
 		double signY = Math.signum(scales.getY());
 
-		var scaledDiff = new Vector2d();
-		scaledDiff.setX(Math.abs(p.getX() - originOfEnlargement.getX()) * absScale * signX);
-		scaledDiff.setY(Math.abs(p.getY() - originOfEnlargement.getY()) * absScale * signY);
+		var scaledDiffX = (Math.abs(p.getX() - originOfEnlargement.getX()) * absScale * signX);
+		var scaledDiffY = (Math.abs(p.getY() - originOfEnlargement.getY()) * absScale * signY);
+		var scaledDiff = new Vector2d(scaledDiffX, scaledDiffY);
 
-		var scaled = new Vector2d();
-		scaled.add(originOfEnlargement, scaledDiff);
+		var scaled = originOfEnlargement.addition(scaledDiff);
 
 		return scaled;
 	}
 
 	private Vector2d computeScales(final Vector2d mousePoint, final Vector2d originOfEnlargement,
 			final Vector2d mouseStartPoint) {
-		var diff = new Vector2d();
-
-		diff.sub(mousePoint, originOfEnlargement);
+		var diff = mousePoint.subtract(originOfEnlargement);
 
 		double scaleX = diff.getX() / Math.abs(mouseStartPoint.getX() - originOfEnlargement.getX());
 		double scaleY = diff.getY() / Math.abs(mouseStartPoint.getY() - originOfEnlargement.getY());

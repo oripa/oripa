@@ -51,8 +51,8 @@ public class PointsMerger {
 		final var merged = new ArrayList<OriLine>();
 
 		for (var line : cleaned) {
-			var p0 = find(pointSet, line.p0, pointEps);
-			var p1 = find(pointSet, line.p1, pointEps);
+			var p0 = find(pointSet, line.getOriPoint0(), pointEps);
+			var p1 = find(pointSet, line.getOriPoint1(), pointEps);
 
 			merged.add(new OriLine(p0, p1, line.getType()));
 		}

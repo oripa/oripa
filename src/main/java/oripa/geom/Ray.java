@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2005-2009 Jun Mitani http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
@@ -18,15 +18,15 @@
 
 package oripa.geom;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 public class Ray {
 
-    public Vector2d p;
-    public Vector2d dir;
+	public Vector2d p;
+	public Vector2d dir;
 
-    public Ray(Vector2d p, Vector2d dir) {
-        this.p = p;
-        this.dir = dir;
-    }
+	public Ray(final Vector2d p, final Vector2d dir) {
+		this.p = p;
+		this.dir = dir;
+	}
 }

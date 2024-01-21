@@ -1,9 +1,9 @@
 package oripa.gui.presenter.creasepattern.geometry;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 public class NearestPoint {
-	public Vector2d point = new Vector2d();
+	public Vector2d point = new Vector2d(0, 0);
 	public double distance = Double.MAX_VALUE;
 
 	/**
@@ -14,7 +14,7 @@ public class NearestPoint {
 
 	public NearestPoint(final NearestPoint p) {
 		if (p != null) {
-			point.set(p.point);
+			point = p.point;
 			distance = p.distance;
 		}
 	}

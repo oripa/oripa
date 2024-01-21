@@ -24,9 +24,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.Segment;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

@@ -23,12 +23,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
 import oripa.persistence.filetool.Exporter;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author Koji
@@ -53,9 +52,6 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 		try (var fw = new FileWriter(filePath);
 				var bw = new BufferedWriter(fw);) {
 
-			// Align the center of the model, combine scales
-			Vector2d modelCenter = new Vector2d();
-
 			List<OriFace> faces = origamiModel.getFaces();
 
 			var domain = new RectangleDomain();
@@ -65,8 +61,8 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 				});
 			}
 
-			modelCenter.x = domain.getCenterX();
-			modelCenter.y = domain.getCenterY();
+			// Align the center of the model, combine scales
+			Vector2d modelCenter = domain.getCenter();
 
 			bw.write("  0\n");
 			bw.write("SECTION\n");
@@ -101,22 +97,22 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 					bw.write("" + colorNumber + "\n");
 					bw.write(" 10\n");
 					bw.write(""
-							+ ((position.x - modelCenter.x)
+							+ ((position.getX() - modelCenter.getX())
 									* scale + center)
 							+ "\n");
 					bw.write(" 20\n");
 					bw.write(""
-							+ (-(position.y - modelCenter.y)
+							+ (-(position.getY() - modelCenter.getY())
 									* scale + center)
 							+ "\n");
 					bw.write(" 11\n");
 					bw.write(""
-							+ ((nextPosition.x - modelCenter.x)
+							+ ((nextPosition.getX() - modelCenter.getX())
 									* scale + center)
 							+ "\n");
 					bw.write(" 21\n");
 					bw.write(""
-							+ (-(nextPosition.y - modelCenter.y)
+							+ (-(nextPosition.getY() - modelCenter.getY())
 									* scale + center)
 							+ "\n");
 				}

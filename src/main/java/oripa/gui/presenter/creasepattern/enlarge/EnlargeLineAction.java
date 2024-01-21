@@ -21,8 +21,6 @@ package oripa.gui.presenter.creasepattern.enlarge;
 import java.util.Collection;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.selectline.SelectingLine;
 import oripa.geom.RectangleDomain;
@@ -33,6 +31,7 @@ import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

@@ -18,7 +18,7 @@
 
 package oripa.geom;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 public class Line {
 
@@ -27,7 +27,6 @@ public class Line {
 
 	public Line(final Vector2d p, final Vector2d dir) {
 		this.p = p;
-		this.dir = dir;
-		dir.normalize();
+		this.dir = dir.normalization();
 	}
 }

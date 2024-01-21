@@ -27,8 +27,6 @@ import static org.mockito.Mockito.*;
 import java.util.Collection;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -39,6 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -74,12 +73,13 @@ class OutsideLineRemoverTest {
 
 		var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
 
-		when(isOnTempOutlineLoop.execute(eq(outlineVertices), not(or(eq(l2.p1), eq(l4.p1))), anyDouble()))
+		when(isOnTempOutlineLoop.execute(eq(outlineVertices), not(or(eq(l2.getP1()), eq(l4.getP1()))), anyDouble()))
 				.thenReturn(true);
-		when(isOnTempOutlineLoop.execute(eq(outlineVertices), or(eq(l2.p1), eq(l4.p1)), anyDouble())).thenReturn(false);
+		when(isOnTempOutlineLoop.execute(eq(outlineVertices), or(eq(l2.getP1()), eq(l4.getP1())), anyDouble()))
+				.thenReturn(false);
 
-		when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), not(eq(l2.p1)))).thenReturn(false);
-		when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), eq(l2.p1))).thenReturn(true);
+		when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), not(eq(l2.getP1())))).thenReturn(false);
+		when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), eq(l2.getP1()))).thenReturn(true);
 
 		remover.removeLinesOutsideOfOutlines(painter, outlineVertices);
 

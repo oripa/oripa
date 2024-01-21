@@ -22,11 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
+import oripa.vecmath.Vector2d;
 
 public class TriangleFace {
 
@@ -73,8 +72,7 @@ public class TriangleFace {
 	 *            y-coordinate value to be set.
 	 */
 	public void setPosition(final int index, final double x, final double y) {
-		v[index].p.x = x;
-		v[index].p.y = y;
+		v[index].p.set(x, y);
 	}
 
 	/**
@@ -103,8 +101,8 @@ public class TriangleFace {
 			var he = originalFace.getHalfedge(halfEdgeIndices.get(i));
 			v[i].color = new FloatingRGB(colorMap.get(he));
 
-			double x = (he.getPositionBeforeFolding().x - paperDomain.getCenterX()) / paperDomain.getWidth();
-			double y = (he.getPositionBeforeFolding().y - paperDomain.getCenterY()) / paperDomain.getHeight();
+			double x = (he.getPositionBeforeFolding().getX() - paperDomain.getCenterX()) / paperDomain.getWidth();
+			double y = (he.getPositionBeforeFolding().getY() - paperDomain.getCenterY()) / paperDomain.getHeight();
 
 			v[i].uv = new Vector2d(x + 0.5, y + 0.5);
 		}

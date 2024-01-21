@@ -52,7 +52,7 @@ public class OrigamiModelExporterOBJ implements Exporter<OrigamiModel> {
 			int id = 1;
 			for (OriVertex vertex : vertices) {
 				var position = vertex.getPosition();
-				bw.write("v " + position.x + " " + position.y + " 0.0\n");
+				bw.write("v " + position.getX() + " " + position.getY() + " 0.0\n");
 				vertex.setVertexID(id);
 				id++;
 			}

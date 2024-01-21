@@ -2,8 +2,6 @@ package oripa.gui.presenter.creasepattern.copypaste;
 
 import java.util.Collection;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
@@ -12,6 +10,7 @@ import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class ChangeOriginAction extends AbstractGraphicMouseAction {
 
@@ -65,8 +64,8 @@ public class ChangeOriginAction extends AbstractGraphicMouseAction {
 		drawer.selectAssistLineColor();
 
 		for (OriLine line : lines) {
-			this.drawVertex(drawer, viewContext, paintContext, line.p0);
-			this.drawVertex(drawer, viewContext, paintContext, line.p1);
+			this.drawVertex(drawer, viewContext, paintContext, line.getP0());
+			this.drawVertex(drawer, viewContext, paintContext, line.getP1());
 		}
 
 		this.drawPickCandidateVertex(drawer, viewContext, paintContext);

@@ -25,9 +25,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.util.ClosedRange;
+import oripa.vecmath.Vector2d;
 
 /**
  * A rectangle domain fitting to given lines.
@@ -88,10 +87,10 @@ public class RectangleDomain {
 	 * @param v
 	 */
 	public void enlarge(final Vector2d v) {
-		left = min(left, v.x);
-		right = max(right, v.x);
-		top = min(top, v.y);
-		bottom = max(bottom, v.y);
+		left = min(left, v.getX());
+		right = max(right, v.getX());
+		top = min(top, v.getY());
+		bottom = max(bottom, v.getY());
 	}
 
 	/**

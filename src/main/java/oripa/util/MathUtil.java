@@ -18,7 +18,7 @@
  */
 package oripa.util;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

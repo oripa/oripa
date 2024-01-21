@@ -20,9 +20,8 @@ package oripa.gui.view.model;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

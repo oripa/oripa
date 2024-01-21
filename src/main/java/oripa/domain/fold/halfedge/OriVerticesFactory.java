@@ -45,8 +45,8 @@ public class OriVerticesFactory {
 		int edgeCount = 0;
 
 		for (OriLine l : creasePatternWithoutAux) {
-			OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.p0, pointEps);
-			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.p1, pointEps);
+			OriVertex sv = addAndGetVertexFromVVec(verticesMap, l.getOriPoint0(), pointEps);
+			OriVertex ev = addAndGetVertexFromVVec(verticesMap, l.getOriPoint1(), pointEps);
 			OriEdge eg = new OriEdge(sv, ev, l.getType().toInt());
 			edgeCount++;
 			sv.addEdge(eg);

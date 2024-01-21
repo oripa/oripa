@@ -21,9 +21,8 @@ package oripa.gui.presenter.creasepattern.enlarge;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

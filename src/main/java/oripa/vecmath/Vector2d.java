@@ -26,8 +26,8 @@ import java.util.Objects;
  */
 public class Vector2d {
 
-	private final double x;
-	private final double y;
+	private double x;
+	private double y;
 
 	public Vector2d(final double x, final double y) {
 		this.x = x;
@@ -44,6 +44,26 @@ public class Vector2d {
 
 	public double getY() {
 		return y;
+	}
+
+	/**
+	 * This method should be removed eventually.
+	 *
+	 * @param x
+	 * @param y
+	 */
+	public void set(final double x, final double y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	/**
+	 * This method should be removed eventually.
+	 *
+	 */
+	public void set(final Vector2d v) {
+		this.x = v.x;
+		this.y = v.y;
 	}
 
 	/**
@@ -82,7 +102,16 @@ public class Vector2d {
 	}
 
 	public double angle(final Vector2d v) {
-		return dot(v) / (length() * v.length());
+		var cos = dot(v) / (length() * v.length());
+
+		if (cos < -1.0) {
+			cos = -1.0;
+		}
+		if (cos > 1.0) {
+			cos = 1.0;
+		}
+
+		return Math.acos(cos);
 	}
 
 	@Override
@@ -99,5 +128,10 @@ public class Vector2d {
 	@Override
 	public int hashCode() {
 		return Objects.hash(x, y);
+	}
+
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
 	}
 }

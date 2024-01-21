@@ -1,13 +1,12 @@
 package oripa.gui.presenter.creasepattern.byvalue;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.byvalue.SelectingVertexToDrawLine;
 import oripa.domain.paint.byvalue.ByValueContext;
+import oripa.domain.paint.byvalue.SelectingVertexToDrawLine;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
+import oripa.vecmath.Vector2d;
 
 public class LineByValueAction extends AbstractGraphicMouseAction {
 
@@ -48,10 +47,8 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 					paintContext.getLineTypeOfNewLines(),
 					viewContext.getScale(), viewContext.isZeroLineWidth());
 
-			Vector2d dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle));
-			dir.scale(length);
-			var w = new Vector2d(v);
-			w.add(dir);
+			Vector2d dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle)).multiply(length);
+			var w = v.addition(dir);
 			drawer.drawLine(v, w);
 		} catch (Exception e) {
 			e.printStackTrace();

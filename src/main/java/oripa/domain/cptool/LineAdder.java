@@ -12,8 +12,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +20,7 @@ import oripa.geom.RectangleDomain;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
+import oripa.vecmath.Vector2d;
 
 public class LineAdder {
 	private static final Logger logger = LoggerFactory.getLogger(LineAdder.class);
@@ -71,8 +70,8 @@ public class LineAdder {
 						}
 					};
 
-					addIfLineCanBeSplit.accept(line.p0);
-					addIfLineCanBeSplit.accept(line.p1);
+					addIfLineCanBeSplit.accept(line.getP0());
+					addIfLineCanBeSplit.accept(line.getP1());
 				});
 
 		currentLines.removeAll(toBeRemoved);
@@ -94,8 +93,8 @@ public class LineAdder {
 			final Map<OriPoint, OriLine> crossMap,
 			final double pointEps) {
 		var points = new ArrayList<Vector2d>();
-		points.add(inputLine.p0);
-		points.add(inputLine.p1);
+		points.add(inputLine.getP0());
+		points.add(inputLine.getP1());
 
 		// divide input line by already known points and lines
 		crossMap.forEach((crossPoint, line) -> {
@@ -103,19 +102,19 @@ public class LineAdder {
 				return;
 			}
 			// If the intersection is on the end of the line, skip
-			if (GeomUtil.areEqual(inputLine.p0, line.p0, pointEps) ||
-					GeomUtil.areEqual(inputLine.p0, line.p1, pointEps) ||
-					GeomUtil.areEqual(inputLine.p1, line.p0, pointEps) ||
-					GeomUtil.areEqual(inputLine.p1, line.p1, pointEps)) {
+			if (GeomUtil.areEqual(inputLine.getP0(), line.getP0(), pointEps) ||
+					GeomUtil.areEqual(inputLine.getP0(), line.getP1(), pointEps) ||
+					GeomUtil.areEqual(inputLine.getP1(), line.getP0(), pointEps) ||
+					GeomUtil.areEqual(inputLine.getP1(), line.getP1(), pointEps)) {
 				return;
 			}
 
 			// use end points on inputLine
-			if (GeomUtil.distancePointToSegment(line.p0, inputLine) < pointEps) {
-				points.add(line.p0);
+			if (GeomUtil.distancePointToSegment(line.getP0(), inputLine) < pointEps) {
+				points.add(line.getP0());
 			}
-			if (GeomUtil.distancePointToSegment(line.p1, inputLine) < pointEps) {
-				points.add(line.p1);
+			if (GeomUtil.distancePointToSegment(line.getP1(), inputLine) < pointEps) {
+				points.add(line.getP1());
 			}
 			points.add(crossPoint);
 		});

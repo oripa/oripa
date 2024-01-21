@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
-import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +51,7 @@ import oripa.swing.view.util.GridBagConstraintsBuilder;
 import oripa.swing.view.util.ListItemSelectionPanel;
 import oripa.swing.view.util.SimpleModalWorker;
 import oripa.swing.view.util.TitledBorderFactory;
+import oripa.vecmath.Vector2d;
 
 public class EstimationResultUI extends JPanel implements EstimationResultUIView {
 	private static final Logger logger = LoggerFactory.getLogger(EstimationResultUI.class);

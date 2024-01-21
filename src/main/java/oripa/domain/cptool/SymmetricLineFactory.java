@@ -3,11 +3,10 @@ package oripa.domain.cptool;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.geom.Ray;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class SymmetricLineFactory {
 
@@ -89,7 +88,7 @@ public class SymmetricLineFactory {
 		BestPair bestPair = new BestPair();
 
 		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
-		Ray ray = new Ray(v1, new Vector2d(v3.x - v1.x, v3.y - v1.y));
+		Ray ray = new Ray(v1, new Vector2d(v3.getX() - v1.getX(), v3.getY() - v1.getY()));
 
 		double minDist = Double.MAX_VALUE;
 		for (OriLine l : creasePattern) {
@@ -183,7 +182,7 @@ public class SymmetricLineFactory {
 		}
 
 		addSymmetricLineAutoWalk(
-				v1, bestPoint, bestLine.p0, stepCount, startV,
+				v1, bestPoint, bestLine.getP0(), stepCount, startV,
 				creasePattern, autoWalkLines, lineType, pointEps);
 
 	}

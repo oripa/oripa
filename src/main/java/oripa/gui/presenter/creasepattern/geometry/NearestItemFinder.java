@@ -3,13 +3,12 @@ package oripa.gui.presenter.creasepattern.geometry;
 import java.util.Collection;
 import java.util.Optional;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.geom.GeomUtil;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * Logics using ORIPA data and mouse point in geometric form.
@@ -57,9 +56,7 @@ public class NearestItemFinder {
 			return null;
 		}
 
-		var vertexAlongLine = new Vector2d();
-
-		GeomUtil.distancePointToSegment(viewContext.getLogicalMousePoint(), l, vertexAlongLine);
+		var vertexAlongLine = GeomUtil.computeNearestPointToSegment(viewContext.getLogicalMousePoint(), l);
 
 		return vertexAlongLine;
 	}

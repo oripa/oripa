@@ -4,11 +4,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
+import oripa.vecmath.Vector2d;
 
 public class LineMirror {
 	/**
@@ -43,8 +42,8 @@ public class LineMirror {
 	private OriLine createMirroredLine(
 			final OriLine line, final OriLine baseOriLine) {
 
-		OriPoint q0 = createMirroredVertex(line.p0, baseOriLine);
-		OriPoint q1 = createMirroredVertex(line.p1, baseOriLine);
+		var q0 = createMirroredVertex(line.getP0(), baseOriLine);
+		var q1 = createMirroredVertex(line.getP1(), baseOriLine);
 
 		OriLine mirroredLine = new OriLine(q0, q1, line.getType());
 
@@ -60,10 +59,10 @@ public class LineMirror {
 	 *            a line to be axis of symmetry
 	 * @return
 	 */
-	private OriPoint createMirroredVertex(
-			final OriPoint vertex, final OriLine baseOriLine) {
+	private Vector2d createMirroredVertex(
+			final Vector2d vertex, final OriLine baseOriLine) {
 
-		Vector2d mirrored = GeomUtil.getSymmetricPoint(vertex, baseOriLine.p0, baseOriLine.p1);
+		Vector2d mirrored = GeomUtil.getSymmetricPoint(vertex, baseOriLine.getP0(), baseOriLine.getP1());
 		return new OriPoint(mirrored);
 	}
 }

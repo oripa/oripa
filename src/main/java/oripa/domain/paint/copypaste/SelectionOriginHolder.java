@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -18,9 +18,8 @@
  */
 package oripa.domain.paint.copypaste;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

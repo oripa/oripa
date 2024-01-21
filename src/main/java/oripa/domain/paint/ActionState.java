@@ -1,6 +1,6 @@
 package oripa.domain.paint;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 /**
  * An interface for (modified) State pattern with undo. Implementation of this

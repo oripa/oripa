@@ -54,11 +54,11 @@ public class PointAndLine {
 	}
 
 	public double getX() {
-		return point.x;
+		return point.getX();
 	}
 
 	public double getY() {
-		return point.y;
+		return point.getY();
 	}
 
 	/**

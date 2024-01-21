@@ -18,8 +18,6 @@
  */
 package oripa.gui.presenter.model;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +27,8 @@ import oripa.gui.view.model.ModelGraphics;
 import oripa.gui.view.model.ModelViewScreenView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.value.OriLine;
+import oripa.value.OriLine.Type;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -94,21 +94,23 @@ public class ModelViewScreenPresenter {
 	}
 
 	private void recalcScissorsLine() {
-		scissorsLine = new OriLine();
 
 		var scissorsLineAngleDegree = view.getScissorsLineAngleDegree();
 		var scissorsLinePosition = view.getScissorsLinePosition();
 		var modelCenter = view.getModelCenter();
 
-		Vector2d dir = new Vector2d(Math.cos(Math.PI * scissorsLineAngleDegree / 180.0),
+		var dir = new Vector2d(Math.cos(Math.PI * scissorsLineAngleDegree / 180.0),
 				Math.sin(Math.PI * scissorsLineAngleDegree / 180.0));
-		scissorsLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);
-		scissorsLine.p1.set(modelCenter.x + dir.x * 300, modelCenter.y + dir.y * 300);
-		Vector2d moveVec = new Vector2d(-dir.y, dir.x);
-		moveVec.normalize();
-		moveVec.scale(scissorsLinePosition);
-		scissorsLine.p0.add(moveVec);
-		scissorsLine.p1.add(moveVec);
+		var p0 = new Vector2d(modelCenter.getX() - dir.getX() * 300, modelCenter.getY() - dir.getY() * 300);
+		var p1 = new Vector2d(modelCenter.getY() + dir.getX() * 300, modelCenter.getY() + dir.getY() * 300);
+//		scissorsLine.p0.set(modelCenter.x - dir.x * 300, modelCenter.y - dir.y * 300);
+//		scissorsLine.p1.set(modelCenter.x + dir.x * 300, modelCenter.y + dir.y * 300);
+		var moveVec = new Vector2d(-dir.getY(), dir.getX()).normalization().multiply(scissorsLinePosition);
+		scissorsLine = new OriLine(p0.addition(moveVec), p1.addition(moveVec), Type.AUX);
+//		moveVec.normalize();
+//		moveVec.scale(scissorsLinePosition);
+//		scissorsLine.p0.add(moveVec);
+//		scissorsLine.p1.add(moveVec);
 
 		var factory = new CutModelOutlinesFactory();
 		lineHolder.setOutlines(factory.createOutlines(scissorsLine, view.getModel(), pointEps));

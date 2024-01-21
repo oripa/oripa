@@ -21,13 +21,12 @@ package oripa.gui.presenter.creasepattern;
 import java.util.Collection;
 import java.util.Comparator;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * This class provides a drawing method for crease pattern and some utilities.
@@ -197,8 +196,8 @@ public class CreasePatternGraphicDrawer {
 				continue;
 			}
 
-			drawer.drawVertex(line.p0);
-			drawer.drawVertex(line.p1);
+			drawer.drawVertex(line.getP0());
+			drawer.drawVertex(line.getP1());
 		}
 	}
 
@@ -215,7 +214,7 @@ public class CreasePatternGraphicDrawer {
 		if (candidate == null) {
 			return;
 		}
-		drawer.drawString("(" + candidate.x + "," + candidate.y + ")", 0, 10);
+		drawer.drawString("(" + candidate.getX() + "," + candidate.getY() + ")", 0, 10);
 	}
 
 	/**

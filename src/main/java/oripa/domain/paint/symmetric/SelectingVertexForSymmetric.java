@@ -1,10 +1,9 @@
 package oripa.domain.paint.symmetric;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.util.Command;
+import oripa.vecmath.Vector2d;
 
 public class SelectingVertexForSymmetric extends PickingVertex {
 

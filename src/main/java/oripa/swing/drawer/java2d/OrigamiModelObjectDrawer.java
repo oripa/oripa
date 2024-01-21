@@ -22,10 +22,9 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.gui.view.model.ObjectGraphicDrawer;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

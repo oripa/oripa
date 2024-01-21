@@ -5,12 +5,11 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import org.junit.jupiter.api.Test;
 
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 class VertexFoldabilityTest {
 	private final double UNIT_ANGLE = Math.PI / 8;

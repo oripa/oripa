@@ -28,22 +28,22 @@ class TestCreasePatternFactory {
 		double partSize = size / 2;
 
 		OriLine slashLeftTop = new OriLine(
-				new OriPoint(center.x - partSize, center.y - partSize),
+				new OriPoint(center.getX() - partSize, center.getY() - partSize),
 				center,
 				OriLine.Type.MOUNTAIN);
 
 		OriLine slashRightTop = new OriLine(
-				new OriPoint(center.x + partSize, center.y - partSize),
+				new OriPoint(center.getX() + partSize, center.getY() - partSize),
 				center,
 				OriLine.Type.MOUNTAIN);
 
 		OriLine slashRightBottom = new OriLine(
-				new OriPoint(center.x + partSize, center.y + partSize),
+				new OriPoint(center.getX() + partSize, center.getY() + partSize),
 				center,
 				OriLine.Type.MOUNTAIN);
 
 		OriLine slashLeftBottom = new OriLine(
-				new OriPoint(center.x - partSize, center.y + partSize),
+				new OriPoint(center.getX() - partSize, center.getY() + partSize),
 				center,
 				OriLine.Type.MOUNTAIN);
 

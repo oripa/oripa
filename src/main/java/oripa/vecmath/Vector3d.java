@@ -16,42 +16,44 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.model;
-
-import java.util.function.Consumer;
-
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.gui.view.ScreenView;
-import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.vecmath.Vector2d;
+package oripa.vecmath;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface ModelViewScreenView extends ScreenView {
+public class Vector3d {
+	private final double x;
+	private final double y;
+	private final double z;
 
-	void setModelDisplayMode(ModelDisplayMode mode);
+	public Vector3d(final double x, final double y, final double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
-	ModelDisplayMode getModelDisplayMode();
+	public double getX() {
+		return x;
+	}
 
-	boolean isScissorsLineVisible();
+	public double getY() {
+		return y;
+	}
 
-	double getScale();
+	public double getZ() {
+		return z;
+	}
 
-	double getScissorsLineAngleDegree();
+	public double length() {
+		return Math.sqrt(x * x + y * y + z * z);
+	}
 
-	double getScissorsLinePosition();
+	public Vector3d multiply(final double a) {
+		return new Vector3d(a * x, a * y, a * z);
+	}
 
-	Vector2d getModelCenter();
-
-	void setModel(OrigamiModel origamiModel, int boundSize);
-
-	OrigamiModel getModel();
-
-	void setPaintComponentListener(Consumer<ModelGraphics> listener);
-
-	void setScissorsLineChangeListener(Runnable listener);
-
-	void setCallbackOnUpdateScissorsLine(CallbackOnUpdate listener);
+	public Vector3d normalization() {
+		return multiply(1.0 / length());
+	}
 }

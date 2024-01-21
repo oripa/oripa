@@ -18,11 +18,10 @@
  */
 package oripa.domain.paint.symmetric;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.ValidatablePaintCommand;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

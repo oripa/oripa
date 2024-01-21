@@ -42,7 +42,8 @@ public class CreasePatternToSvgConverter extends SvgConverter {
 
 	public String getSvgCreasePattern() {
 		return creasePatternInterface.stream()
-				.map(oriLine -> getLinePathTag(mapToDomain(oriLine.p0), mapToDomain(oriLine.p1), getLineStyle(oriLine)))
+				.map(oriLine -> getLinePathTag(mapToDomain(oriLine.getOriPoint0()), mapToDomain(oriLine.getOriPoint1()),
+						getLineStyle(oriLine)))
 				.map(stringBuilder -> stringBuilder.insert(0, SPACE))
 				.map(StringBuilder::toString)
 				.collect(Collectors.joining(""));

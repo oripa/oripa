@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor
+ * ORIPA - Origami Pattern Editor 
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,42 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.model;
+package oripa.persistence.doc.loader;
 
-import java.util.function.Consumer;
-
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.gui.view.ScreenView;
-import oripa.gui.view.util.CallbackOnUpdate;
+import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
-/**
- * @author OUCHI Koji
- *
- */
-public interface ModelViewScreenView extends ScreenView {
+class LineDto {
+	OriLine.Type type;
+	double p0x, p0y, p1x, p1y;
 
-	void setModelDisplayMode(ModelDisplayMode mode);
+	Vector2d getP0() {
+		return new Vector2d(p0x, p0y);
+	}
 
-	ModelDisplayMode getModelDisplayMode();
-
-	boolean isScissorsLineVisible();
-
-	double getScale();
-
-	double getScissorsLineAngleDegree();
-
-	double getScissorsLinePosition();
-
-	Vector2d getModelCenter();
-
-	void setModel(OrigamiModel origamiModel, int boundSize);
-
-	OrigamiModel getModel();
-
-	void setPaintComponentListener(Consumer<ModelGraphics> listener);
-
-	void setScissorsLineChangeListener(Runnable listener);
-
-	void setCallbackOnUpdateScissorsLine(CallbackOnUpdate listener);
+	Vector2d getP1() {
+		return new Vector2d(p1x, p1y);
+	}
 }

@@ -20,7 +20,7 @@ package oripa.domain.creasepattern;
 
 import java.util.Collection;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author Koji

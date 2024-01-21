@@ -21,11 +21,10 @@ package oripa.domain.paint.core;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.cptool.PseudoRayFactory;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

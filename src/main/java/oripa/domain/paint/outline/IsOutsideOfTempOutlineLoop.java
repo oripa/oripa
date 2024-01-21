@@ -3,13 +3,12 @@ package oripa.domain.paint.outline;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.util.PairLoop;
 import oripa.geom.GeomUtil;
+import oripa.vecmath.Vector2d;
 
 public class IsOutsideOfTempOutlineLoop {
 	private static final Logger logger = LoggerFactory.getLogger(IsOutsideOfTempOutlineLoop.class);

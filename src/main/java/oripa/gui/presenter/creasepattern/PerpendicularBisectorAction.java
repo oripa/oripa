@@ -1,11 +1,10 @@
 package oripa.gui.presenter.creasepattern;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.pbisec.SelectingFirstVertexForBisector;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
+import oripa.vecmath.Vector2d;
 
 public class PerpendicularBisectorAction extends AbstractGraphicMouseAction {
 

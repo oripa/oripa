@@ -22,12 +22,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.ValidatablePaintCommand;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -63,7 +62,7 @@ public class LinePasterCommand extends ValidatablePaintCommand {
 
 		Painter painter = context.getPainter();
 		painter.addLines(
-				shiftLines(context.getPickedLines(), offset.x, offset.y));
+				shiftLines(context.getPickedLines(), offset.getX(), offset.getY()));
 	}
 
 	private List<OriLine> shiftLines(final Collection<OriLine> lines,

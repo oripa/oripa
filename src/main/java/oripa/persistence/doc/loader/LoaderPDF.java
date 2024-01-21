@@ -22,21 +22,14 @@ import java.io.FileReader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
-import javax.vecmath.Vector2d;
-
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
 public class LoaderPDF implements DocLoader {
 
 	@Override
 	public Doc load(final String filePath) {
-		var lines = new ArrayList<OriLine>();
-
-		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
+		var dtos = new ArrayList<LineDto>();
 
 		try (var r = new FileReader(filePath)) {
 			StreamTokenizer st = new StreamTokenizer(r);
@@ -52,7 +45,7 @@ public class LoaderPDF implements DocLoader {
 
 			int token;
 
-			OriLine line;
+			LineDto line;
 			int status = 0;
 			while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
 				if (token == StreamTokenizer.TT_WORD && st.sval.equals("stream")) {
@@ -64,28 +57,28 @@ public class LoaderPDF implements DocLoader {
 					continue;
 				}
 				if (status == 1) {
-					line = new OriLine();
-					lines.add(line);
+					line = new LineDto();
+					dtos.add(line);
 					System.out.println("new Line " + st.sval);
-					line.setType(Integer.parseInt(st.sval) == 1 ? OriLine.Type.MOUNTAIN
-							: OriLine.Type.VALLEY);
+					line.type = Integer.parseInt(st.sval) == 1 ? OriLine.Type.MOUNTAIN
+							: OriLine.Type.VALLEY;
 
-					System.out.println("line type " + line.getType().toInt());
+					System.out.println("line type " + line.type.toInt());
 					token = st.nextToken(); // eat "w"
 
 					token = st.nextToken();
-					line.p0.x = Double.parseDouble(st.sval);
+					line.p0x = Double.parseDouble(st.sval);
 
 					token = st.nextToken();
-					line.p0.y = Double.parseDouble(st.sval);
+					line.p0y = Double.parseDouble(st.sval);
 
 					token = st.nextToken(); // eat "m"
 
 					token = st.nextToken();
-					line.p1.x = Double.parseDouble(st.sval);
+					line.p1x = Double.parseDouble(st.sval);
 
 					token = st.nextToken();
-					line.p1.y = Double.parseDouble(st.sval);
+					line.p1y = Double.parseDouble(st.sval);
 
 					token = st.nextToken(); // eat "l"
 					token = st.nextToken(); // eat "S"
@@ -98,64 +91,55 @@ public class LoaderPDF implements DocLoader {
 			e.printStackTrace();
 		}
 
-		double size = 400;
-		Doc doc = new Doc(size);
-		CreasePattern creasePattern = doc.getCreasePattern();
-		creasePattern.clear();
+//		Doc doc = new Doc(size);
+//		double size = 400;
+//		CreasePattern creasePattern = doc.getCreasePattern();
+//		creasePattern.clear();
+//
+//		for (var l : lines) {
+//			creasePattern.add(l);
+//		}
+//
+//		// size normalization
+//
+//		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
+//		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
+//		for (OriLine line : creasePattern) {
+//			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
+//			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
+//			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
+//			line.p1.y = (line.p1.y - center.y) / bboxSize * size;
+//		}
+//
+//		// Delete duplicate lines
+//
+//		ArrayList<OriLine> delLines = new ArrayList<>();
+//		int lineNum = creasePattern.size();
+//
+//		OriLine[] linesArray = new OriLine[lineNum];
+//		creasePattern.toArray(linesArray);
+//
+//		for (int i = 0; i < lineNum; i++) {
+//			for (int j = i + 1; j < lineNum; j++) {
+//				OriLine l0 = linesArray[i];
+//				OriLine l1 = linesArray[j];
+//
+//				if ((GeomUtil.distance(l0.p0, l1.p0) < 0.01
+//						&& GeomUtil.distance(l0.p1, l1.p1) < 0.01)
+//						|| (GeomUtil.distance(l0.p1, l1.p0) < 0.01
+//								&& GeomUtil.distance(l0.p0, l1.p1) < 0.01)) {
+//
+//					delLines.add(l0);
+//				}
+//			}
+//		}
+//
+//		for (OriLine delLine : delLines) {
+//			creasePattern.remove(delLine);
+//		}
 
-		for (OriLine l : lines) {
-			creasePattern.add(l);
-		}
-
-		for (OriLine line : creasePattern) {
-			minV.x = Math.min(minV.x, line.p0.x);
-			minV.x = Math.min(minV.x, line.p1.x);
-			minV.y = Math.min(minV.y, line.p0.y);
-			minV.y = Math.min(minV.y, line.p1.y);
-
-			maxV.x = Math.max(maxV.x, line.p0.x);
-			maxV.x = Math.max(maxV.x, line.p1.x);
-			maxV.y = Math.max(maxV.y, line.p0.y);
-			maxV.y = Math.max(maxV.y, line.p1.y);
-		}
-
-		// size normalization
-
-		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
-		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
-		for (OriLine line : creasePattern) {
-			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
-			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
-			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
-			line.p1.y = (line.p1.y - center.y) / bboxSize * size;
-		}
-
-		// Delete duplicate lines
-
-		ArrayList<OriLine> delLines = new ArrayList<>();
-		int lineNum = creasePattern.size();
-
-		OriLine[] linesArray = new OriLine[lineNum];
-		creasePattern.toArray(linesArray);
-
-		for (int i = 0; i < lineNum; i++) {
-			for (int j = i + 1; j < lineNum; j++) {
-				OriLine l0 = linesArray[i];
-				OriLine l1 = linesArray[j];
-
-				if ((GeomUtil.distance(l0.p0, l1.p0) < 0.01
-						&& GeomUtil.distance(l0.p1, l1.p1) < 0.01)
-						|| (GeomUtil.distance(l0.p1, l1.p0) < 0.01
-								&& GeomUtil.distance(l0.p0, l1.p1) < 0.01)) {
-
-					delLines.add(l0);
-				}
-			}
-		}
-
-		for (OriLine delLine : delLines) {
-			creasePattern.remove(delLine);
-		}
+		var doc = new Doc();
+		doc.setCreasePattern(new LineDtoConverter().convert(dtos));
 
 		return doc;
 

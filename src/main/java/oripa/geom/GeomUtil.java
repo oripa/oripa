@@ -25,11 +25,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-import javax.vecmath.Vector2d;
-
 import oripa.util.ClosedRange;
 import oripa.util.MathUtil;
 import oripa.value.CalculationResource;
+import oripa.vecmath.Vector2d;
 
 public class GeomUtil {
 
@@ -47,7 +46,7 @@ public class GeomUtil {
 	}
 
 	public static double distance(final Vector2d p0, final Vector2d p1) {
-		return distance(p0.x, p0.y, p1.x, p1.y);
+		return distance(p0.getX(), p0.getY(), p1.getX(), p1.getY());
 	}
 
 	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
@@ -70,10 +69,8 @@ public class GeomUtil {
 	public static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1, final double pointEps) {
 		// Whether or not is parallel
-		Vector2d dir0 = new Vector2d(e0);
-		dir0.sub(s0);
-		Vector2d dir1 = new Vector2d(e1);
-		dir1.sub(s1);
+		Vector2d dir0 = e0.subtract(s0);
+		Vector2d dir1 = e1.subtract(s1);
 
 		if (!isParallel(dir0, dir1)) {
 			return 0;
@@ -182,19 +179,17 @@ public class GeomUtil {
 	}
 
 	public static Segment getVerticalLine(final Vector2d v, final Segment line) {
-		double x0 = line.getP0().x;
-		double y0 = line.getP0().y;
-		double x1 = line.getP1().x;
-		double y1 = line.getP1().y;
-		double px = v.x;
-		double py = v.y;
-		Vector2d sub;
 
-		sub = new Vector2d(x1 - x0, y1 - y0);
+		var p0 = line.getP0();
+		var p1 = line.getP1();
+
+		var sub = p1.subtract(p0);
 
 		double t = computeParameterForNearestPointToLine(v, line.getP0(), line.getP1());
 
-		return new Segment(x0 + t * sub.x, y0 + t * sub.y, px, py);
+		var cp = p0.addition(sub.multiply(t));
+
+		return new Segment(cp, v);
 	}
 
 	public static Vector2d getIncenter(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
@@ -202,11 +197,14 @@ public class GeomUtil {
 		double l1 = distance(v0, v2);
 		double l2 = distance(v0, v1);
 
-		Vector2d vc = new Vector2d();
-		vc.x = (v0.x * l0 + v1.x * l1 + v2.x * l2) / (l0 + l1 + l2);
-		vc.y = (v0.y * l0 + v1.y * l1 + v2.y * l2) / (l0 + l1 + l2);
+		// c = (v0 * l0 + v1 * l1 + v2 * l2) / (l0 + l1 + l2);
+		var c = v0.multiply(l0).addition(v1.multiply(l1)).addition(v2.multiply(l2)).multiply(1.0 / (l0 + l1 + l2));
 
-		return vc;
+		return c;
+//		var x = (v0.getX() * l0 + v1.getX() * l1 + v2.getX() * l2) / (l0 + l1 + l2);
+//		var y = (v0.getY() * l0 + v1.getY() * l1 + v2.getY() * l2) / (l0 + l1 + l2);
+//
+//		return new Vector2d(x, y);
 	}
 
 	/**
@@ -218,12 +216,9 @@ public class GeomUtil {
 	 * @return
 	 */
 	public static Vector2d getBisectorVec(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
-		Vector2d v0_v1 = new Vector2d();
-		v0_v1.sub(v0, v1);
-		v0_v1.normalize();
-		Vector2d v2_v1 = new Vector2d();
-		v2_v1.sub(v2, v1);
-		v2_v1.normalize();
+
+		var v0_v1 = v0.subtract(v1).normalization();
+		var v2_v1 = v2.subtract(v1).normalization();
 
 		// a dot b = |a||b| cos(theta)
 		double angle = Math.acos(v0_v1.dot(v2_v1));
@@ -233,7 +228,7 @@ public class GeomUtil {
 			return new Vector2d(Math.cos(bisectorAngle), Math.sin(bisectorAngle));
 		}
 
-		return new Vector2d(v0_v1.x + v2_v1.x, v0_v1.y + v2_v1.y);
+		return v0_v1.addition(v2_v1);
 	}
 
 	/**
@@ -249,7 +244,8 @@ public class GeomUtil {
 	public static Vector2d getSymmetricPoint(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
 		Vector2d cp = getNearestPointToLine(p, sp, ep);
-		return new Vector2d(2 * cp.x - p.x, 2 * cp.y - p.y);
+		return cp.multiply(2).subtract(p);
+//		return new Vector2d(2 * cp.getX() - p.getX(), 2 * cp.getY() - p.getY());
 	}
 
 	/**
@@ -261,12 +257,11 @@ public class GeomUtil {
 	 * @return
 	 */
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
-		Vector2d p0 = new Vector2d(ray.p);
-		Vector2d p1 = new Vector2d();
-		p1.add(p0, ray.dir);
+		var p0 = new Vector2d(ray.p);
+		var p1 = p0.addition(ray.dir);
 
-		Vector2d segP0 = seg.getP0();
-		Vector2d segP1 = seg.getP1();
+		var segP0 = seg.getP0();
+		var segP1 = seg.getP1();
 
 		var answerOpt = solveRayCrossPointVectorEquation(p0, p1, segP0, segP1);
 
@@ -295,12 +290,10 @@ public class GeomUtil {
 	 */
 	public static Vector2d getCrossPoint(final Line l0, final Line l1) {
 		var p0 = new Vector2d(l0.p);
-		var p1 = new Vector2d();
-		p1.add(p0, l0.dir);
+		var p1 = p0.addition(l0.dir);
 
 		var q0 = new Vector2d(l1.p);
-		var q1 = new Vector2d();
-		q1.add(q0, l1.dir);
+		var q1 = q0.addition(l1.dir);
 
 		var answerOpt = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);
 
@@ -320,10 +313,10 @@ public class GeomUtil {
 
 	public static Segment getLineByValue(final Vector2d sv, final double length,
 			final double deg_angle) {
-		Vector2d ev = new Vector2d(sv);
 		double rad_angle = Math.toRadians(deg_angle);
 		Vector2d dir = new Vector2d(length * Math.cos(rad_angle), length * Math.sin(rad_angle));
-		ev.add(dir);
+		Vector2d ev = sv.addition(dir);
+
 		return new Segment(sv, ev);
 	}
 
@@ -340,18 +333,11 @@ public class GeomUtil {
 	 */
 	private static double computeParameterForNearestPointToLine(
 			final Vector2d p, final Vector2d sp, final Vector2d ep) {
-		double x0 = sp.x;
-		double y0 = sp.y;
-		double x1 = ep.x;
-		double y1 = ep.y;
-		double px = p.x;
-		double py = p.y;
-		Vector2d dir, sub0;
 
-		sub0 = new Vector2d(px - x0, py - y0);
+		var sub0 = p.subtract(sp);
 
 		// direction of the line
-		dir = new Vector2d(x1 - x0, y1 - y0);
+		var dir = ep.subtract(sp);
 
 		// t = |sub0| * cos(\theta) / |dir|
 		return dir.dot(sub0) / dir.lengthSquared();
@@ -361,12 +347,11 @@ public class GeomUtil {
 			final Vector2d p, final Vector2d sp, final Vector2d ep) {
 
 		// direction of the line
-		Vector2d dir = new Vector2d(ep);
-		dir.sub(sp);
+		Vector2d dir = ep.subtract(sp);
 
 		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
-		return new Vector2d(sp.x + t * dir.x, sp.y + t * dir.y);
+		return sp.addition(dir.multiply(t));
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Segment segment) {
@@ -384,15 +369,14 @@ public class GeomUtil {
 			return distance(p, ep);
 		} else {
 			// direction of the line
-			Vector2d dir = new Vector2d(ep);
-			dir.sub(sp);
-			return distance(sp.x + t * dir.x, sp.y + t * dir.y, p.x, p.y);
+			Vector2d dir = ep.subtract(sp);
+
+			return distance(sp.addition(dir.multiply(t)), p);
 		}
 	}
 
 	/**
-	 * Computes distance and the nearest point. The nearest point is returned by
-	 * side-effect.
+	 * Computes the nearest point.
 	 *
 	 * @param p
 	 * @param segment
@@ -400,7 +384,7 @@ public class GeomUtil {
 	 *            stores returned value.
 	 * @return
 	 */
-	public static double distancePointToSegment(final Vector2d p, final Segment segment, final Vector2d nearestPoint) {
+	public static Vector2d computeNearestPointToSegment(final Vector2d p, final Segment segment) {
 
 		var sp = segment.getP0();
 		var ep = segment.getP1();
@@ -408,24 +392,19 @@ public class GeomUtil {
 		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
 		if (t < 0.0) {
-			nearestPoint.set(sp);
-			return distance(p, sp);
+			return sp;
 		} else if (t > 1.0) {
-			nearestPoint.set(ep);
-			return distance(p, ep);
+			return ep;
 		} else {
 			// direction of the line
-			Vector2d dir = new Vector2d(ep);
-			dir.sub(sp);
-			nearestPoint.set(sp.x + t * dir.x, sp.y + t * dir.y);
-			return distance(nearestPoint, p);
+			var dir = ep.subtract(sp);
+			return sp.addition(dir.multiply(t));
 		}
 	}
 
 	public static double distancePointToLine(final Vector2d p, final Line line) {
 		Vector2d sp = line.p;
-		Vector2d ep = new Vector2d(sp);
-		ep.add(line.dir);
+		Vector2d ep = sp.addition(line.dir);
 
 		return distance(getNearestPointToLine(p, sp, ep), p);
 	}
@@ -498,10 +477,10 @@ public class GeomUtil {
 
 		var answer = new ArrayList<Double>();
 
-		Vector2d p = new Vector2d(p1.x - p0.x, p1.y - p0.y);
-		Vector2d q = new Vector2d(q1.x - q0.x, q1.y - q0.y);
-		Vector2d d = new Vector2d(q0.x - p0.x, q0.y - p0.y);
-		double det = q.x * p.y - q.y * p.x;
+		var p = p1.subtract(p0);
+		var q = q1.subtract(q0);
+		var d = q0.subtract(p0);
+		double det = q.getX() * p.getY() - q.getY() * p.getX();
 
 		final double eps = MathUtil.normalizedValueEps();
 
@@ -510,8 +489,8 @@ public class GeomUtil {
 		}
 
 		// Lines intersect in a single point.
-		double s = (q.x * d.y - q.y * d.x) / det;
-		double t = (p.x * d.y - p.y * d.x) / det;
+		double s = (q.getX() * d.getY() - q.getY() * d.getX()) / det;
+		double t = (p.getX() * d.getY() - p.getY() * d.getX()) / det;
 
 		if (!answerPredicate.test(s, t)) {
 			return Optional.empty();
@@ -523,12 +502,9 @@ public class GeomUtil {
 		return Optional.of(answer);
 	}
 
-	private static Vector2d computeCrossPointUsingParameter(final double t, final Vector2d q0, final Vector2d q1) {
+	public static Vector2d computeCrossPointUsingParameter(final double t, final Vector2d q0, final Vector2d q1) {
 		// cp = (1 - t) * q0 + t * q1
-		Vector2d cp = new Vector2d();
-		cp.x = (1.0 - t) * q0.x + t * q1.x;
-		cp.y = (1.0 - t) * q0.y + t * q1.y;
-		return cp;
+		return q0.multiply(1.0 - t).addition(q1.multiply(t));
 	}
 
 	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
@@ -537,9 +513,9 @@ public class GeomUtil {
 
 	public static double distance(final Vector2d p, final Line line, final double[] param) {
 
-		Vector2d sp = line.p;
-		Vector2d ep = new Vector2d(sp);
-		ep.add(line.dir);
+		var sp = line.p;
+		var ep = sp.addition(line.dir);
+
 		param[0] = computeParameterForNearestPointToLine(p, sp, ep);
 		return distancePointToLine(p, line);
 	}
@@ -578,13 +554,9 @@ public class GeomUtil {
 	private static double computeCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		double dx1, dx2, dy1, dy2;
 
-		var d1 = new Vector2d(p1);
-		d1.sub(p0);
-		d1.normalize();
+		var d1 = p1.subtract(p0).normalization();
 
-		var d2 = new Vector2d(q);
-		d2.sub(p0);
-		d2.normalize();
+		var d2 = q.subtract(p0).normalization();
 
 		dx1 = d1.getX();
 		dy1 = d1.getY();
@@ -599,11 +571,11 @@ public class GeomUtil {
 	}
 
 	public static Vector2d computeCentroid(final Collection<Vector2d> points) {
-		var centroid = new Vector2d();
-		points.forEach(centroid::add);
-		centroid.scale(1.0 / points.size());
 
-		return centroid;
+		var sum = points.stream()
+				.reduce((result, x) -> result.addition(x))
+				.get();
+		return sum.multiply(1.0 / points.size());
 	}
 
 }

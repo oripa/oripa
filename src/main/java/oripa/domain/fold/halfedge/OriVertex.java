@@ -23,10 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import javax.vecmath.Vector2d;
-
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriPoint;
+import oripa.vecmath.Vector2d;
 
 /**
  * Vertex of crease pattern (or graph, more abstractly) with reference to edges
@@ -42,12 +41,12 @@ public class OriVertex implements Comparable<OriVertex> {
 	 * given position is assumed to be for before fold. This field is assumed to
 	 * follow the change by folding. Hence this will be the position after fold.
 	 */
-	private final Vector2d position = new Vector2d();
+	private final Vector2d position = new Vector2d(0, 0);
 
 	/**
 	 * position before fold
 	 */
-	private final Vector2d positionBeforeFolding = new Vector2d();
+	private final Vector2d positionBeforeFolding = new Vector2d(0, 0);
 
 	private final ArrayList<OriEdge> edges = new ArrayList<>();
 	private final Map<OriVertex, OriEdge> edgeMap = new HashMap<>();

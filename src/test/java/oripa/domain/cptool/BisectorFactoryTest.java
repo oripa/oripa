@@ -18,8 +18,6 @@
  */
 package oripa.domain.cptool;
 
-import javax.vecmath.Vector2d;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import oripa.geom.GeomUtil;
 import oripa.test.util.AssertionUtil;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

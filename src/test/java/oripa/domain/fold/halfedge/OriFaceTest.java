@@ -21,12 +21,12 @@ package oripa.domain.fold.halfedge;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import javax.vecmath.Vector2d;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -64,7 +64,7 @@ class OriFaceTest {
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.fold.halfedge.OriFace#isOnFaceInclusively(javax.vecmath.Vector2d)}.
+	 * {@link oripa.domain.fold.halfedge.OriFace#isOnFaceInclusively(oripa.vecmath.Vector2d)}.
 	 */
 	@Test
 	void testIsOnFaceInclusively() {
@@ -75,7 +75,7 @@ class OriFaceTest {
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.fold.halfedge.OriFace#isOnFaceExclusively(javax.vecmath.Vector2d, double)}.
+	 * {@link oripa.domain.fold.halfedge.OriFace#isOnFaceExclusively(oripa.vecmath.Vector2d, double)}.
 	 */
 	@Test
 	void testIsOnFaceExclusively() {

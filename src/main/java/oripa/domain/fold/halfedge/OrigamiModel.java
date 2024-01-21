@@ -22,9 +22,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.RectangleDomain;
+import oripa.vecmath.Vector2d;
 
 /**
  * Entity for folding-estimation
@@ -157,7 +156,9 @@ public class OrigamiModel {
 		double centerX = domain.getCenterX();
 
 		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
-			he.getPositionForDisplay().x = 2 * centerX - he.getPositionForDisplay().x;
+			var x = 2 * centerX - he.getPositionForDisplay().getX();
+			var y = he.getPositionForDisplay().getY();
+			he.getPositionForDisplay().set(x, y);
 		});
 	}
 

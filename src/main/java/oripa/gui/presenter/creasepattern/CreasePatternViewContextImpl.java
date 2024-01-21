@@ -18,10 +18,9 @@
  */
 package oripa.gui.presenter.creasepattern;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.gui.view.main.InitialVisibilities;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -31,7 +30,7 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 
 	private final PaintContext paintContext;
 
-	private Vector2d logicalPoint = new Vector2d();
+	private Vector2d logicalPoint = new Vector2d(0, 0);
 
 	private double scale;
 

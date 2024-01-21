@@ -20,11 +20,10 @@ package oripa.domain.cptool;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.Segment;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -59,8 +58,7 @@ public class LineToLineAxiom {
 
 		var crossPoint = GeomUtil.getCrossPoint(verticalLine, line1);
 
-		var midPoint = new Vector2d(point.getX() + crossPoint.getX(), point.getY() + crossPoint.getY());
-		midPoint.scale(0.5);
+		var midPoint = point.addition(crossPoint).multiply(0.5);
 
 		return List.of(new Line(midPoint, dir0));
 	}
@@ -88,16 +86,12 @@ public class LineToLineAxiom {
 		var line0 = s0.getLine();
 		var line1 = s1.getLine();
 
-		var pointOnLine0 = new Vector2d(segmentCrossPoint);
-		pointOnLine0.add(line0.dir);
+		var pointOnLine0 = segmentCrossPoint.addition(line0.dir);
 
-		var pointOnLine1 = new Vector2d(segmentCrossPoint);
-		pointOnLine1.add(line1.dir);
+		var pointOnLine1 = segmentCrossPoint.addition(line1.dir);
 
-		var pointOnLine1Reversed = new Vector2d(segmentCrossPoint);
-		var reversedDir = new Vector2d(line1.dir);
-		reversedDir.scale(-1);
-		pointOnLine1Reversed.add(reversedDir);
+		var reversedDir = new Vector2d(line1.dir).multiply(-1);
+		var pointOnLine1Reversed = segmentCrossPoint.addition(reversedDir);
 
 		var foldLineDir0 = GeomUtil.getBisectorVec(pointOnLine0, segmentCrossPoint, pointOnLine1);
 

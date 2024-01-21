@@ -19,6 +19,35 @@
 
 package oripa.geom;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+import oripa.vecmath.Vector2d;
+
 class GeomUtilTest {
 
+	@Test
+	void test_getCrossPoint_Line_Line() {
+		var l0 = new Line(new Vector2d(1, 0), new Vector2d(-1, 1));
+		var l1 = new Line(new Vector2d(0, 0), new Vector2d(1, 1));
+
+		var cp = GeomUtil.getCrossPoint(l0, l1);
+
+		assertEquals(0.5, cp.getX(), 1e-8);
+		assertEquals(0.5, cp.getY(), 1e-8);
+
+	}
+
+	@Test
+	void test_getBisectorVec() {
+		var v0 = new Vector2d(1, 0);
+		var v1 = new Vector2d(0, 0);
+		var v2 = new Vector2d(0, 1);
+
+		var bisector = GeomUtil.getBisectorVec(v0, v1, v2);
+
+		assertEquals(1.0, bisector.getX(), 1e-8);
+		assertEquals(1.0, bisector.getY(), 1e-8);
+	}
 }

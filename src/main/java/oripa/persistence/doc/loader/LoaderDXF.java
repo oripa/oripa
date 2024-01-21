@@ -23,11 +23,7 @@ import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
-import javax.vecmath.Vector2d;
-
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 
@@ -35,10 +31,8 @@ public class LoaderDXF implements DocLoader {
 
 	@Override
 	public Doc load(final String filePath) {
-		var lines = new ArrayList<OriLine>();
+		var dtos = new ArrayList<LineDto>();
 
-		Vector2d minV = new Vector2d(Double.MAX_VALUE, Double.MAX_VALUE);
-		Vector2d maxV = new Vector2d(-Double.MAX_VALUE, -Double.MAX_VALUE);
 		try (var r = new FileReader(filePath)) {
 			StreamTokenizer st = new StreamTokenizer(r);
 			st.resetSyntax();
@@ -53,16 +47,16 @@ public class LoaderDXF implements DocLoader {
 
 			int token;
 
-			OriLine line;
+			LineDto dto;
 			while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
 				if (token == StreamTokenizer.TT_WORD && st.sval.equals("LINE")) {
-					line = new OriLine();
+					dto = new LineDto();
 					System.out.println("new Line");
 
 					while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
 						if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("0")) {
-							lines.add(line);
+							dtos.add(dto);
 							break;
 						} else if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("62")) {
@@ -71,49 +65,37 @@ public class LoaderDXF implements DocLoader {
 							System.out.println("color = " + color);
 							if (color == 1 || (9 < color && color < 40)) {
 								// Reds are mountains
-								line.setType(OriLine.Type.MOUNTAIN);
+								dto.type = OriLine.Type.MOUNTAIN;
 							} else if (color == 2 || color == 5
 									|| (139 < color && color < 200)) {
 								// Blues are valleys
-								line.setType(OriLine.Type.VALLEY);
+								dto.type = OriLine.Type.VALLEY;
 							} else if (color == 3
 									|| (59 < color && color < 130)) {
 								// greens are cuts
-								line.setType(OriLine.Type.CUT);
+								dto.type = OriLine.Type.CUT;
 							} else {
-								line.setType(OriLine.Type.AUX);
+								dto.type = OriLine.Type.AUX;
 							}
 						} else if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("10")) {
 							st.nextToken();
-							line.p0.x = Double.parseDouble(st.sval);
-							minV.x = Math.min(line.p0.x, minV.x);
-							maxV.x = Math.max(line.p0.x, maxV.x);
+							dto.p0x = Double.parseDouble(st.sval);
 						} else if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("20")) {
 							st.nextToken();
-							line.p0.y = Double.parseDouble(st.sval);
-							minV.y = Math.min(line.p0.y, minV.y);
-							maxV.y = Math.max(line.p0.y, maxV.y);
+							dto.p0y = Double.parseDouble(st.sval);
 						} else if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("11")) {
 							st.nextToken();
-							line.p1.x = Double.parseDouble(st.sval);
-							minV.x = Math.min(line.p1.x, minV.x);
-							maxV.x = Math.max(line.p1.x, maxV.x);
+							dto.p1x = Double.parseDouble(st.sval);
 						} else if (token == StreamTokenizer.TT_WORD
 								&& st.sval.equals("21")) {
 							st.nextToken();
-							line.p1.y = Double.parseDouble(st.sval);
-							minV.y = Math.min(line.p1.y, minV.y);
-							maxV.y = Math.max(line.p1.y, maxV.y);
+							dto.p1y = Double.parseDouble(st.sval);
 
-							System.out.println("line " + line.p0 + ", "
-									+ line.p1);
-
-							if (GeomUtil.distance(line.p0, line.p1) < 0.001) {
-								System.out.println("########### NULL EDGE");
-								lines.remove(line);
+							if (GeomUtil.distance(dto.getP0(), dto.getP1()) < 0.001) {
+								dtos.remove(dto);
 							}
 
 						} else {
@@ -129,49 +111,51 @@ public class LoaderDXF implements DocLoader {
 			return null;
 		}
 
-		if (lines.isEmpty()) {
+		if (dtos.isEmpty()) {
 			return null;
 		}
 
-		final double size = 400;
-		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0,
-				(minV.y + maxV.y) / 2.0);
-		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
-		// size normalization
-		for (OriLine line : lines) {
-			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
-			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
-			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
-			line.p1.y = (line.p1.y - center.y) / bboxSize * size;
-		}
-
-		ArrayList<OriLine> delLines = new ArrayList<>();
-		int lineNum = lines.size();
-
-		for (int i = 0; i < lineNum; i++) {
-			for (int j = i + 1; j < lineNum; j++) {
-				OriLine l0 = lines.get(i);
-				OriLine l1 = lines.get(j);
-
-				if ((GeomUtil.distance(l0.p0, l1.p0) < 0.01 && GeomUtil
-						.distance(l0.p1, l1.p1) < 0.01)
-						|| (GeomUtil.distance(l0.p1, l1.p0) < 0.01 && GeomUtil
-								.distance(l0.p0, l1.p1) < 0.01)) {
-
-					delLines.add(l0);
-				}
-			}
-		}
-
-		for (OriLine delLine : delLines) {
-			lines.remove(delLine);
-		}
-
-		CreasePatternFactory factory = new CreasePatternFactory();
-		CreasePattern creasePattern = factory
-				.createCreasePattern(lines);
-		Doc doc = new Doc();
-		doc.setCreasePattern(creasePattern);
+//		final double size = 400;
+//
+//		var center = new Vector2d((minV.x + maxV.x) / 2.0,
+//				(minV.y + maxV.y) / 2.0);
+//		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
+//		// size normalization
+//		for (LineDto dto : dtos) {
+//			dto.p0x = (dto.p0x - center.getX()) / bboxSize * size;
+//			dto.p0y = (dto.p0y - center.getY()) / bboxSize * size;
+//			dto.p1x = (dto.p1x - center.getX()) / bboxSize * size;
+//			dto.p1y = (dto.p1y - center.getY()) / bboxSize * size;
+//		}
+//
+//		var delLines = new ArrayList<LineDto>();
+//		int lineNum = dtos.size();
+//
+//		for (int i = 0; i < lineNum; i++) {
+//			for (int j = i + 1; j < lineNum; j++) {
+//				var l0 = dtos.get(i);
+//				var l1 = dtos.get(j);
+//
+//				if ((GeomUtil.distance(l0.getP0(), l1.getP0()) < 0.01 && GeomUtil
+//						.distance(l0.getP1(), l1.getP1()) < 0.01)
+//						|| (GeomUtil.distance(l0.getP1(), l1.getP0()) < 0.01 && GeomUtil
+//								.distance(l0.getP0(), l1.getP1()) < 0.01)) {
+//
+//					delLines.add(l0);
+//				}
+//			}
+//		}
+//
+//		for (LineDto delLine : delLines) {
+//			dtos.remove(delLine);
+//		}
+//
+//		CreasePatternFactory factory = new CreasePatternFactory();
+//		CreasePattern creasePattern = factory
+//				.createCreasePattern(dtos.stream().map(d -> new OriLine(d.p0x, d.p0y, d.p1x, d.p1y, d.type))
+//						.collect(Collectors.toList()));
+		var doc = new Doc();
+		doc.setCreasePattern(new LineDtoConverter().convert(dtos));
 
 		return doc;
 	}

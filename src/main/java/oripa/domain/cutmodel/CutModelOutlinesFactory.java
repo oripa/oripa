@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class CutModelOutlinesFactory {
 
@@ -45,8 +44,8 @@ public class CutModelOutlinesFactory {
 		face.halfedgeStream().forEach(he -> {
 			var position = he.getPositionForDisplay();
 			var nextPosition = he.getNext().getPositionForDisplay();
-			OriLine l = new OriLine(position.x, position.y,
-					nextPosition.x, nextPosition.y, OriLine.Type.AUX);
+			OriLine l = new OriLine(position.getX(), position.getY(),
+					nextPosition.getX(), nextPosition.getY(), OriLine.Type.AUX);
 
 			var parametersOpt = GeomUtil.solveSegmentsCrossPointVectorEquation(
 					cutLine.getP0(), cutLine.getP1(), l.getP0(), l.getP1());
@@ -54,11 +53,12 @@ public class CutModelOutlinesFactory {
 			parametersOpt.ifPresent(parameters -> {
 				// use the parameter for a face edge.
 				var param = parameters.get(1);
-				Vector2d crossV = new Vector2d();
 				var positionBefore = he.getPositionBeforeFolding();
 				var nextPositionBefore = he.getNext().getPositionBeforeFolding();
-				crossV.x = (1.0 - param) * positionBefore.getX() + param * nextPositionBefore.getX();
-				crossV.y = (1.0 - param) * positionBefore.getY() + param * nextPositionBefore.getY();
+				var crossV = GeomUtil.computeCrossPointUsingParameter(param, positionBefore, nextPositionBefore);
+//				var crossVX = (1.0 - param) * positionBefore.getX() + param * nextPositionBefore.getX();
+//				var crossVY = (1.0 - param) * positionBefore.getY() + param * nextPositionBefore.getY();
+//				Vector2d crossV = new Vector2d(crossVX, crossVY);
 
 				if (crossPoints.stream()
 						.noneMatch(cp -> GeomUtil.areEqual(cp, crossV, pointEps))) {

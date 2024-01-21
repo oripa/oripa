@@ -23,11 +23,10 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

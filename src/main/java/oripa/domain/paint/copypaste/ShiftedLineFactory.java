@@ -18,9 +18,8 @@
  */
 package oripa.domain.paint.copypaste;
 
-import javax.vecmath.Vector2d;
-
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -28,20 +27,17 @@ import oripa.value.OriLine;
  */
 public class ShiftedLineFactory {
 	public OriLine createShiftedLine(final OriLine line, final double diffX, final double diffY) {
-		OriLine shifted = new OriLine();
 
-		shifted.p0.x = line.p0.x + diffX;
-		shifted.p0.y = line.p0.y + diffY;
+		var p0x = line.getP0().getX() + diffX;
+		var p0y = line.getP0().getY() + diffY;
 
-		shifted.p1.x = line.p1.x + diffX;
-		shifted.p1.y = line.p1.y + diffY;
+		var p1x = line.getP1().getX() + diffX;
+		var p1y = line.getP1().getY() + diffY;
 
-		shifted.setType(line.getType());
-
-		return shifted;
+		return new OriLine(p0x, p0y, p1x, p1y, line.getType());
 	}
 
 	public Vector2d createOffset(final Vector2d origin, final Vector2d point) {
-		return new Vector2d(point.x - origin.x, point.y - origin.y);
+		return point.subtract(origin);
 	}
 }

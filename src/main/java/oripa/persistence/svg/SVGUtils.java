@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji / BETTINELLI Jean-Noel
@@ -143,10 +143,10 @@ public class SVGUtils {
 		pathBuilder.append(style);
 		pathBuilder.append(" d=\"M ");
 
-		pathBuilder.append(startPoint.x).append(",").append(startPoint.y).append(" ");
+		pathBuilder.append(startPoint.getX()).append(",").append(startPoint.getY()).append(" ");
 
 		pathBuilder.append("L ");
-		pathBuilder.append(endPoint.x).append(",").append(endPoint.y);
+		pathBuilder.append(endPoint.getX()).append(",").append(endPoint.getY());
 
 		pathBuilder.append("\" />\n");
 
@@ -164,7 +164,7 @@ public class SVGUtils {
 		pathBuilder.append(style);
 		pathBuilder.append(" d=\"M ");
 
-		points.forEach(point -> pathBuilder.append(point.x).append(",").append(point.y).append(" "));
+		points.forEach(point -> pathBuilder.append(point.getX()).append(",").append(point.getY()).append(" "));
 
 		pathBuilder.append(" z\" />\n");
 

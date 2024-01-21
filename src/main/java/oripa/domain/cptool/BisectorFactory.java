@@ -1,12 +1,11 @@
 package oripa.domain.cptool;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.RectangleDomain;
 import oripa.geom.Segment;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class BisectorFactory {
 
@@ -27,22 +26,19 @@ public class BisectorFactory {
 			final Vector2d v0, final Vector2d v1,
 			final RectangleDomain domain, final OriLine.Type lineType, final double pointEps) {
 
-		Vector2d cp = new Vector2d(v0);
-		cp.add(v1);
-		cp.scale(0.5);
+		Vector2d cp = v0.addition(v1).multiply(0.5);
 
 		double paperSize = domain.maxWidthHeight();
 
-		Vector2d dir = new Vector2d();
-		dir.sub(v0, v1);
-		double tmp = dir.y;
-		dir.y = -dir.x;
-		dir.x = tmp;
-		dir.scale(paperSize * 8);
+		Vector2d dir = v0.subtract(v1);
+		double tmp = dir.getY();
+		dir = new Vector2d(tmp, -dir.getX());
+
+		dir.multiply(paperSize * 8);
 
 		Segment bisector = new Segment(
-				cp.x - dir.x, cp.y - dir.y,
-				cp.x + dir.x, cp.y + dir.y);
+				cp.subtract(dir),
+				cp.addition(dir));
 
 		return new OriLine(bisector, lineType);
 	}

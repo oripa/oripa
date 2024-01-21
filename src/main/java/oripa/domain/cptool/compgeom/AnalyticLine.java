@@ -34,10 +34,10 @@ public class AnalyticLine {
 	public AnalyticLine(final OriLine line) {
 		this.line = line;
 
-		var p0 = line.p0;
-		var p1 = line.p1;
+		var p0 = line.getP0();
+		var p1 = line.getP1();
 
-		var angle = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+		var angle = Math.atan2(p1.getY() - p0.getY(), p1.getX() - p0.getX());
 		// limit the angle 0 to PI.
 		if (angle < 0) {
 			angle += Math.PI;
@@ -50,11 +50,11 @@ public class AnalyticLine {
 
 		if (isVertical()) {
 			// use x-intercept
-			intercept = p0.x;
+			intercept = p0.getX();
 		} else {
 			// use y-intercept
 			intercept = line.getAffineYValueAt(0);
-//			intercept = p0.y - (p1.y - p0.y) / (p1.x - p0.x) * p0.x;
+//			intercept = p0.getY() - (p1.getY() - p0.getY()) / (p1.getX() - p0.getX()) * p0.getX();
 		}
 	}
 

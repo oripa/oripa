@@ -22,13 +22,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.Painter;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -56,8 +55,8 @@ public class OutsideLineRemover {
 				continue;
 			}
 			double eps = creasePattern.getPaperSize() * 0.001;
-			var onPoint0 = isOnTempOutlineLoop.execute(outlineVertices, line.p0, eps);
-			var onPoint1 = isOnTempOutlineLoop.execute(outlineVertices, line.p1, eps);
+			var onPoint0 = isOnTempOutlineLoop.execute(outlineVertices, line.getP0(), eps);
+			var onPoint1 = isOnTempOutlineLoop.execute(outlineVertices, line.getP1(), eps);
 
 			logger.debug("line = " + line);
 			logger.debug("onPoint0 = " + onPoint0);
@@ -68,8 +67,8 @@ public class OutsideLineRemover {
 //				logger.debug("line is removed: it's on contour.");
 //			}
 
-			var isOutsideP0 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.p0);
-			var isOutsideP1 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.p1);
+			var isOutsideP0 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.getP0());
+			var isOutsideP1 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.getP1());
 
 			logger.debug(String.join(",", outlineVertices.stream()
 					.map(v -> v.toString()).collect(Collectors.toList())));

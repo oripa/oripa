@@ -20,11 +20,10 @@ package oripa.domain.paint.pbisec;
 
 import java.util.Collection;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.cptool.BisectorFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.SnapPointFactory;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

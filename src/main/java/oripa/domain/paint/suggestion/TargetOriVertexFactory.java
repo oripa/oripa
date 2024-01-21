@@ -18,13 +18,12 @@
  */
 package oripa.domain.paint.suggestion;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
 import oripa.geom.GeomUtil;
 import oripa.gui.presenter.creasepattern.geometry.NearestPoint;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

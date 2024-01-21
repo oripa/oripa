@@ -3,11 +3,10 @@ package oripa.gui.presenter.creasepattern.geometry;
 import java.util.Collection;
 import java.util.Optional;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class NearestVertexFinder {
 	/**
@@ -54,8 +53,8 @@ public class NearestVertexFinder {
 
 		for (OriLine line : lines) {
 
-			findNearestOf(p, minPosition, line.p0);
-			findNearestOf(p, minPosition, line.p1);
+			findNearestOf(p, minPosition, line.getP0());
+			findNearestOf(p, minPosition, line.getP1());
 
 		}
 
@@ -104,7 +103,7 @@ public class NearestVertexFinder {
 		var currentPoint = mousePoint;
 
 		Collection<Collection<Vector2d>> vertices = creasePattern.getVerticesInArea(
-				currentPoint.x, currentPoint.y, distance);
+				currentPoint.getX(), currentPoint.getY(), distance);
 
 		for (Collection<Vector2d> locals : vertices) {
 			var nearestOpt = findNearestVertex(currentPoint, locals);

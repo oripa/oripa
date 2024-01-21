@@ -1,12 +1,11 @@
 package oripa.domain.paint.core;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.ActionState;
 import oripa.domain.paint.PaintContext;
+import oripa.vecmath.Vector2d;
 
 /**
  * a framework of (modified) State pattern with undo, which can get back to

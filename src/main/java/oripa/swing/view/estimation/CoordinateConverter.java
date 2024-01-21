@@ -18,10 +18,9 @@
  */
 package oripa.swing.view.estimation;
 
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector3d;
-
 import oripa.geom.RectangleDomain;
+import oripa.vecmath.Vector2d;
+import oripa.vecmath.Vector3d;
 
 /**
  * @author OUCHI Koji
@@ -49,10 +48,9 @@ class CoordinateConverter {
 	public Vector2d convert(final Vector2d pos, final int depth, final Vector2d cpPos) {
 		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
 
-		double x = (pos.x - center.x) * scale;
-		double y = (pos.y - center.y) * scale;
+		var p = pos.subtract(center).multiply(scale);
 
-		Vector2d distorted = distort(new Vector2d(x, y), depth, cpPos);
+		Vector2d distorted = distort(p, depth, cpPos);
 
 		double disX = distorted.getX();
 		double disY = distorted.getY();
@@ -79,17 +77,16 @@ class CoordinateConverter {
 	}
 
 	private Vector2d distortByDepth(final Vector2d pos, final int depth) {
-		var cameraXY = new Vector2d(this.distortionParameter);
-		cameraXY.scale(Math.max(domain.getWidth(), domain.getHeight()) * 4);
+		var cameraXY = new Vector2d(this.distortionParameter)
+				.multiply(Math.max(domain.getWidth(), domain.getHeight()) * 4);
 
 		var d = new Vector3d(
 				pos.getX() - cameraXY.getX(),
 				pos.getY() - cameraXY.getY(),
-				cameraZ + Math.log(1 + depth) * zDiff);
+				cameraZ + Math.log(1 + depth) * zDiff)
+						.normalization();
 
-		d.normalize();
-
-		d.scale(cameraZ / d.getZ());
+		d = d.multiply(cameraZ / d.getZ());
 
 		return new Vector2d(
 				cameraXY.getX() + d.getX(),
@@ -118,14 +115,11 @@ class CoordinateConverter {
 
 		var diff = new Vector2d(
 				cpPos.getX() * matrix[0][0] + cpPos.getY() * matrix[0][1],
-				cpPos.getX() * matrix[1][0] + cpPos.getY() * matrix[1][1]);
+				cpPos.getX() * matrix[1][0] + cpPos.getY() * matrix[1][1])
+						.multiply(scale)
+						.subtract(cpPos);
 
-		diff.scale(scale);
-
-		diff.sub(cpPos);
-
-		var distorted = new Vector2d(pos);
-		distorted.add(diff);
+		var distorted = new Vector2d(pos).addition(diff);
 
 		return distorted;
 	}

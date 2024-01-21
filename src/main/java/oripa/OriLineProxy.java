@@ -18,9 +18,8 @@
 
 package oripa;
 
-import javax.vecmath.Vector2d;
-
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 //TODO: Move this class to the package of persistence layer in order to remove circular dependency.
 //This change disables to read old opx file since serialization target becomes different.
@@ -35,10 +34,10 @@ public class OriLineProxy {
 	}
 
 	public OriLineProxy(final OriLine l) {
-		x0 = l.p0.x;
-		y0 = l.p0.y;
-		x1 = l.p1.x;
-		y1 = l.p1.y;
+		x0 = l.getP0().getX();
+		y0 = l.getP0().getY();
+		x1 = l.getP1().getX();
+		y1 = l.getP1().getY();
 		type = l.getType().toInt();
 	}
 

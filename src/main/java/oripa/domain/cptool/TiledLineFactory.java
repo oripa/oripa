@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class TiledLineFactory {
 
@@ -90,13 +91,19 @@ public class TiledLineFactory {
 					continue;
 				}
 
+				var interval = new Vector2d(interX * x, interY * y);
+
 				// copies the selected lines
 				for (OriLine l : selectedLines) {
-					OriLine cl = new OriLine(l);
-					cl.p0.x += interX * x;
-					cl.p0.y += interY * y;
-					cl.p1.x += interX * x;
-					cl.p1.y += interY * y;
+					var clP0 = l.getP0().addition(interval);
+					var clP1 = l.getP1().addition(interval);
+//					OriLine cl = new OriLine(l);
+//					cl.p0.x += interX * x;
+//					cl.p0.y += interY * y;
+//					cl.p1.x += interX * x;
+//					cl.p1.y += interY * y;
+
+					var cl = new OriLine(clP0, clP1, l.getType());
 
 					if (clipper.clip(cl)) {
 						copiedLines.add(cl);

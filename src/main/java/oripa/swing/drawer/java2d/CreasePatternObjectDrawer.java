@@ -5,11 +5,10 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
+import oripa.vecmath.Vector2d;
 
 public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
 	// private final static Logger logger =

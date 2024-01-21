@@ -6,13 +6,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 class PaintContextImpl implements PaintContext {
 
@@ -24,8 +23,8 @@ class PaintContextImpl implements PaintContext {
 	private final LinkedList<OriLine> pickedLines = new LinkedList<>();
 	private boolean isPasting = false;
 
-	private Vector2d candidateVertexToPick = new Vector2d();
-	private OriLine candidateLineToPick = new OriLine();
+	private Vector2d candidateVertexToPick = new Vector2d(0, 0);
+	private OriLine candidateLineToPick = null;
 
 	private OriLine.Type lineTypeOfNewLines;
 

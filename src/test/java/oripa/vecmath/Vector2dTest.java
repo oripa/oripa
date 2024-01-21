@@ -16,42 +16,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.view.model;
+package oripa.vecmath;
 
-import java.util.function.Consumer;
+import static org.junit.jupiter.api.Assertions.*;
 
-import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.gui.view.ScreenView;
-import oripa.gui.view.util.CallbackOnUpdate;
-import oripa.vecmath.Vector2d;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface ModelViewScreenView extends ScreenView {
+class Vector2dTest {
 
-	void setModelDisplayMode(ModelDisplayMode mode);
+	/**
+	 * Test method for {@link oripa.vecmath.Vector2d#normalization()}.
+	 */
+	@Test
+	void testNormalization() {
+		var v = new Vector2d(1, 1).normalization();
 
-	ModelDisplayMode getModelDisplayMode();
+		assertEquals(Math.sqrt(2) / 2, v.getX(), 1e-8);
+		assertEquals(Math.sqrt(2) / 2, v.getY(), 1e-8);
+	}
 
-	boolean isScissorsLineVisible();
-
-	double getScale();
-
-	double getScissorsLineAngleDegree();
-
-	double getScissorsLinePosition();
-
-	Vector2d getModelCenter();
-
-	void setModel(OrigamiModel origamiModel, int boundSize);
-
-	OrigamiModel getModel();
-
-	void setPaintComponentListener(Consumer<ModelGraphics> listener);
-
-	void setScissorsLineChangeListener(Runnable listener);
-
-	void setCallbackOnUpdateScissorsLine(CallbackOnUpdate listener);
 }
