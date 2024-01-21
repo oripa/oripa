@@ -30,11 +30,9 @@ public class BisectorFactory {
 
 		double paperSize = domain.maxWidthHeight();
 
-		Vector2d dir = v0.subtract(v1);
+		Vector2d dir = v0.subtract(v1).normalization();
 		double tmp = dir.getY();
-		dir = new Vector2d(tmp, -dir.getX());
-
-		dir.multiply(paperSize * 8);
+		dir = new Vector2d(tmp, -dir.getX()).multiply(paperSize * 8);
 
 		Segment bisector = new Segment(
 				cp.subtract(dir),
