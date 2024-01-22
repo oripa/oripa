@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.geom.GeomUtil;
+import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
-import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -35,25 +35,16 @@ import oripa.vecmath.Vector2d;
 class LineDtoConverter {
 	CreasePattern convert(final List<LineDto> dtos) {
 
-		var minV = new MutablePoint(Double.MAX_VALUE, Double.MAX_VALUE);
-		var maxV = new MutablePoint(-Double.MAX_VALUE, -Double.MAX_VALUE);
+		var domain = new RectangleDomain();
 
-		for (var line : dtos) {
-			minV.x = Math.min(minV.x, line.p0x);
-			minV.x = Math.min(minV.x, line.p1x);
-			minV.y = Math.min(minV.y, line.p0y);
-			minV.y = Math.min(minV.y, line.p1y);
-
-			maxV.x = Math.max(maxV.x, line.p0x);
-			maxV.x = Math.max(maxV.x, line.p1x);
-			maxV.y = Math.max(maxV.y, line.p0y);
-			maxV.y = Math.max(maxV.y, line.p1y);
+		for (var dto : dtos) {
+			domain.enlarge(dto.getP0());
+			domain.enlarge(dto.getP1());
 		}
 
 		final double size = 400;
-		var center = new Vector2d((minV.x + maxV.x) / 2.0,
-				(minV.y + maxV.y) / 2.0);
-		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
+		var center = domain.getCenter();
+		double bboxSize = domain.maxWidthHeight();
 		// size normalization
 		for (LineDto dto : dtos) {
 			dto.p0x = (dto.p0x - center.getX()) / bboxSize * size;
