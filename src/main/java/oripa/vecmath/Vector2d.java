@@ -67,13 +67,11 @@ public class Vector2d {
 	}
 
 	/**
-	 * intentionally violates naming convention to make migration from
-	 * javax.vecmath easy.
 	 *
 	 * @param v
 	 * @return this + v
 	 */
-	public Vector2d addition(final Vector2d v) {
+	public Vector2d add(final Vector2d v) {
 		return new Vector2d(x + v.x, y + v.y);
 	}
 
@@ -93,7 +91,7 @@ public class Vector2d {
 		return x * x + y * y;
 	}
 
-	public Vector2d normalization() {
+	public Vector2d normalize() {
 		return multiply(1.0 / length());
 	}
 

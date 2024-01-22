@@ -144,7 +144,7 @@ class SimpleFolder {
 
 		// compute foot cross point from vertex to moved mirror axis line (or
 		// the crease)
-		Vector2d footV = new Vector2d(afterOrigin).addition(afterDir.multiply(d1));
+		Vector2d footV = new Vector2d(afterOrigin).add(afterDir.multiply(d1));
 
 		// compute a direction vector perpendicular to the crease.
 		// the vector directs the right side of the crease halfedge
@@ -153,7 +153,7 @@ class SimpleFolder {
 		Vector2d afterDirFromFoot = new Vector2d(afterDir.getY(), -afterDir.getX());
 
 		// set moved vertex coordinates
-		vertex.set(footV.addition(afterDirFromFoot.multiply(d0)));
+		vertex.set(footV.add(afterDirFromFoot.multiply(d0)));
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
@@ -171,7 +171,7 @@ class SimpleFolder {
 		// Creates the base unit vector for after the rotation
 		var baseHeNext = baseHe.getNext();
 		var afterDir = baseHeNext.getPositionWhileFolding().subtract(baseHe.getPositionWhileFolding())
-				.normalization();
+				.normalize();
 
 		Line preLine = new Line(preOrigin, baseDir);
 

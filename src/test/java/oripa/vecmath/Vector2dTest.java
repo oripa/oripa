@@ -29,11 +29,11 @@ import org.junit.jupiter.api.Test;
 class Vector2dTest {
 
 	/**
-	 * Test method for {@link oripa.vecmath.Vector2d#normalization()}.
+	 * Test method for {@link oripa.vecmath.Vector2d#normalize()}.
 	 */
 	@Test
 	void testNormalization() {
-		var v = new Vector2d(1, 1).normalization();
+		var v = new Vector2d(1, 1).normalize();
 
 		assertEquals(Math.sqrt(2) / 2, v.getX(), 1e-8);
 		assertEquals(Math.sqrt(2) / 2, v.getY(), 1e-8);

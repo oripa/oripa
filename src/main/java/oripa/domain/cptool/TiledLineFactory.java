@@ -95,8 +95,8 @@ public class TiledLineFactory {
 
 				// copies the selected lines
 				for (OriLine l : selectedLines) {
-					var clP0 = l.getP0().addition(interval);
-					var clP1 = l.getP1().addition(interval);
+					var clP0 = l.getP0().add(interval);
+					var clP1 = l.getP1().add(interval);
 //					OriLine cl = new OriLine(l);
 //					cl.p0.x += interX * x;
 //					cl.p0.y += interY * y;

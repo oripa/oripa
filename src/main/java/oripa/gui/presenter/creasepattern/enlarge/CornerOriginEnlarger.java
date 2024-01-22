@@ -74,7 +74,7 @@ class CornerOriginEnlarger extends AbstractEnlarger {
 		var scaledDiffY = (Math.abs(p.getY() - originOfEnlargement.getY()) * absScale * signY);
 		var scaledDiff = new Vector2d(scaledDiffX, scaledDiffY);
 
-		var scaled = originOfEnlargement.addition(scaledDiff);
+		var scaled = originOfEnlargement.add(scaledDiff);
 
 		return scaled;
 	}

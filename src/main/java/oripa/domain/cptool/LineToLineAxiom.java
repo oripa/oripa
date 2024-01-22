@@ -58,7 +58,7 @@ public class LineToLineAxiom {
 
 		var crossPoint = GeomUtil.getCrossPoint(verticalLine, line1);
 
-		var midPoint = point.addition(crossPoint).multiply(0.5);
+		var midPoint = point.add(crossPoint).multiply(0.5);
 
 		return List.of(new Line(midPoint, dir0));
 	}
@@ -86,12 +86,12 @@ public class LineToLineAxiom {
 		var line0 = s0.getLine();
 		var line1 = s1.getLine();
 
-		var pointOnLine0 = segmentCrossPoint.addition(line0.dir);
+		var pointOnLine0 = segmentCrossPoint.add(line0.dir);
 
-		var pointOnLine1 = segmentCrossPoint.addition(line1.dir);
+		var pointOnLine1 = segmentCrossPoint.add(line1.dir);
 
 		var reversedDir = new Vector2d(line1.dir).multiply(-1);
-		var pointOnLine1Reversed = segmentCrossPoint.addition(reversedDir);
+		var pointOnLine1Reversed = segmentCrossPoint.add(reversedDir);
 
 		var foldLineDir0 = GeomUtil.getBisectorVec(pointOnLine0, segmentCrossPoint, pointOnLine1);
 

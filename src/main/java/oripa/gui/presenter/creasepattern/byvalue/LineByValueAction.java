@@ -48,7 +48,7 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 					viewContext.getScale(), viewContext.isZeroLineWidth());
 
 			Vector2d dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle)).multiply(length);
-			var w = v.addition(dir);
+			var w = v.add(dir);
 			drawer.drawLine(v, w);
 		} catch (Exception e) {
 			e.printStackTrace();

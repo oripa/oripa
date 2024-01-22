@@ -337,7 +337,7 @@ class CreasePatternImpl implements CreasePattern {
 
 		var d = new Vector2d(dx, dy);
 		this.forEach(line -> {
-			lines.add(new OriLine(line.getP0().addition(d), line.getP1().addition(d), line.getType()));
+			lines.add(new OriLine(line.getP0().add(d), line.getP1().add(d), line.getType()));
 		});
 
 		// rebuild vertices info

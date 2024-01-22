@@ -28,9 +28,9 @@ import oripa.vecmath.Vector2d;
 public class PseudoRayFactory {
 
 	public Segment create(final Vector2d v, final Vector2d dir, final double paperSize) {
-		var d = dir.normalization().multiply(paperSize * 4);
+		var d = dir.normalize().multiply(paperSize * 4);
 
-		var ev = v.addition(d);
+		var ev = v.add(d);
 
 		return new Segment(v, ev);
 	}

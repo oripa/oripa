@@ -116,8 +116,8 @@ public class ElementRemover {
 		}
 
 		// Check if the lines have the same angle
-		var dir0 = l0.getP1().subtract(l0.getP0()).normalization();
-		var dir1 = l1.getP1().subtract(l1.getP0()).normalization();
+		var dir0 = l0.getP1().subtract(l0.getP0()).normalize();
+		var dir1 = l1.getP1().subtract(l1.getP0()).normalize();
 
 //		Vector2d dir0 = new Vector2d(l0.getP1().getX() - l0.getP0().getX(), l0.getP1().y - l0.getP0().y);
 //		Vector2d dir1 = new Vector2d(l1.getP1().getX() - l1.getP0().getX(), l1.getP1().y - l1.getP0().y);

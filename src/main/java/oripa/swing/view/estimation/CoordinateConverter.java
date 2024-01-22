@@ -119,7 +119,7 @@ class CoordinateConverter {
 						.multiply(scale)
 						.subtract(cpPos);
 
-		var distorted = new Vector2d(pos).addition(diff);
+		var distorted = new Vector2d(pos).add(diff);
 
 		return distorted;
 	}

@@ -187,7 +187,7 @@ public class GeomUtil {
 
 		double t = computeParameterForNearestPointToLine(v, line.getP0(), line.getP1());
 
-		var cp = p0.addition(sub.multiply(t));
+		var cp = p0.add(sub.multiply(t));
 
 		return new Segment(cp, v);
 	}
@@ -198,7 +198,7 @@ public class GeomUtil {
 		double l2 = distance(v0, v1);
 
 		// c = (v0 * l0 + v1 * l1 + v2 * l2) / (l0 + l1 + l2);
-		var c = v0.multiply(l0).addition(v1.multiply(l1)).addition(v2.multiply(l2)).multiply(1.0 / (l0 + l1 + l2));
+		var c = v0.multiply(l0).add(v1.multiply(l1)).add(v2.multiply(l2)).multiply(1.0 / (l0 + l1 + l2));
 
 		return c;
 //		var x = (v0.getX() * l0 + v1.getX() * l1 + v2.getX() * l2) / (l0 + l1 + l2);
@@ -217,8 +217,8 @@ public class GeomUtil {
 	 */
 	public static Vector2d getBisectorVec(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
 
-		var v0_v1 = v0.subtract(v1).normalization();
-		var v2_v1 = v2.subtract(v1).normalization();
+		var v0_v1 = v0.subtract(v1).normalize();
+		var v2_v1 = v2.subtract(v1).normalize();
 
 		// a dot b = |a||b| cos(theta)
 		double angle = Math.acos(v0_v1.dot(v2_v1));
@@ -228,7 +228,7 @@ public class GeomUtil {
 			return new Vector2d(Math.cos(bisectorAngle), Math.sin(bisectorAngle));
 		}
 
-		return v0_v1.addition(v2_v1);
+		return v0_v1.add(v2_v1);
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class GeomUtil {
 	 */
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
 		var p0 = new Vector2d(ray.p);
-		var p1 = p0.addition(ray.dir);
+		var p1 = p0.add(ray.dir);
 
 		var segP0 = seg.getP0();
 		var segP1 = seg.getP1();
@@ -290,10 +290,10 @@ public class GeomUtil {
 	 */
 	public static Vector2d getCrossPoint(final Line l0, final Line l1) {
 		var p0 = new Vector2d(l0.p);
-		var p1 = p0.addition(l0.dir);
+		var p1 = p0.add(l0.dir);
 
 		var q0 = new Vector2d(l1.p);
-		var q1 = q0.addition(l1.dir);
+		var q1 = q0.add(l1.dir);
 
 		var answerOpt = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);
 
@@ -315,7 +315,7 @@ public class GeomUtil {
 			final double deg_angle) {
 		double rad_angle = Math.toRadians(deg_angle);
 		Vector2d dir = new Vector2d(length * Math.cos(rad_angle), length * Math.sin(rad_angle));
-		Vector2d ev = sv.addition(dir);
+		Vector2d ev = sv.add(dir);
 
 		return new Segment(sv, ev);
 	}
@@ -351,7 +351,7 @@ public class GeomUtil {
 
 		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
-		return sp.addition(dir.multiply(t));
+		return sp.add(dir.multiply(t));
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Segment segment) {
@@ -371,7 +371,7 @@ public class GeomUtil {
 			// direction of the line
 			Vector2d dir = ep.subtract(sp);
 
-			return distance(sp.addition(dir.multiply(t)), p);
+			return distance(sp.add(dir.multiply(t)), p);
 		}
 	}
 
@@ -398,13 +398,13 @@ public class GeomUtil {
 		} else {
 			// direction of the line
 			var dir = ep.subtract(sp);
-			return sp.addition(dir.multiply(t));
+			return sp.add(dir.multiply(t));
 		}
 	}
 
 	public static double distancePointToLine(final Vector2d p, final Line line) {
 		Vector2d sp = line.p;
-		Vector2d ep = sp.addition(line.dir);
+		Vector2d ep = sp.add(line.dir);
 
 		return distance(getNearestPointToLine(p, sp, ep), p);
 	}
@@ -504,7 +504,7 @@ public class GeomUtil {
 
 	public static Vector2d computeCrossPointUsingParameter(final double t, final Vector2d q0, final Vector2d q1) {
 		// cp = (1 - t) * q0 + t * q1
-		return q0.multiply(1.0 - t).addition(q1.multiply(t));
+		return q0.multiply(1.0 - t).add(q1.multiply(t));
 	}
 
 	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
@@ -514,7 +514,7 @@ public class GeomUtil {
 	public static double distance(final Vector2d p, final Line line, final double[] param) {
 
 		var sp = line.p;
-		var ep = sp.addition(line.dir);
+		var ep = sp.add(line.dir);
 
 		param[0] = computeParameterForNearestPointToLine(p, sp, ep);
 		return distancePointToLine(p, line);
@@ -554,9 +554,9 @@ public class GeomUtil {
 	private static double computeCCW(final Vector2d p0, final Vector2d p1, final Vector2d q) {
 		double dx1, dx2, dy1, dy2;
 
-		var d1 = p1.subtract(p0).normalization();
+		var d1 = p1.subtract(p0).normalize();
 
-		var d2 = q.subtract(p0).normalization();
+		var d2 = q.subtract(p0).normalize();
 
 		dx1 = d1.getX();
 		dy1 = d1.getY();
@@ -573,7 +573,7 @@ public class GeomUtil {
 	public static Vector2d computeCentroid(final Collection<Vector2d> points) {
 
 		var sum = points.stream()
-				.reduce((result, x) -> result.addition(x))
+				.reduce((result, x) -> result.add(x))
 				.get();
 		return sum.multiply(1.0 / points.size());
 	}

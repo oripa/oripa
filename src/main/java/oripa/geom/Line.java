@@ -27,6 +27,6 @@ public class Line {
 
 	public Line(final Vector2d p, final Vector2d dir) {
 		this.p = p;
-		this.dir = dir.normalization();
+		this.dir = dir.normalize();
 	}
 }

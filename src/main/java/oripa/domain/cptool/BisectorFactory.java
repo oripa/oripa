@@ -26,17 +26,17 @@ public class BisectorFactory {
 			final Vector2d v0, final Vector2d v1,
 			final RectangleDomain domain, final OriLine.Type lineType, final double pointEps) {
 
-		Vector2d cp = v0.addition(v1).multiply(0.5);
+		Vector2d cp = v0.add(v1).multiply(0.5);
 
 		double paperSize = domain.maxWidthHeight();
 
-		Vector2d dir = v0.subtract(v1).normalization();
+		Vector2d dir = v0.subtract(v1).normalize();
 		double tmp = dir.getY();
 		dir = new Vector2d(tmp, -dir.getX()).multiply(paperSize * 8);
 
 		Segment bisector = new Segment(
 				cp.subtract(dir),
-				cp.addition(dir));
+				cp.add(dir));
 
 		return new OriLine(bisector, lineType);
 	}
