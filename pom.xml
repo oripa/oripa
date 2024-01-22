@@ -17,14 +17,6 @@
 
 	<dependencies>
 
-		<!-- Temporary dependency. Re-implementing Vector2d/Vector3d is preferred
-		because the development of this artifact is inactive. -->
-		<dependency>
-			<groupId>javax.vecmath</groupId>
-			<artifactId>vecmath</artifactId>
-			<version>1.5.2</version>
-		</dependency>
-
 <!-- removed since codes using java3d has been killed and seems no longer to be activated. -->
 <!--
 		<dependency>
