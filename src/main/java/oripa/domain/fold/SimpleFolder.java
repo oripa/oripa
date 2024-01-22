@@ -153,7 +153,7 @@ class SimpleFolder {
 		Vector2d afterDirFromFoot = new Vector2d(afterDir.getY(), -afterDir.getX());
 
 		// set moved vertex coordinates
-		vertex.set(footV.addition(afterDir.multiply(d0)));
+		vertex.set(footV.addition(afterDirFromFoot.multiply(d0)));
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
@@ -161,16 +161,16 @@ class SimpleFolder {
 		var baseHePairNext = baseHePair.getNext();
 
 		// baseHe.pair keeps the position before folding.
-		Vector2d preOrigin = new Vector2d(baseHePairNext.getPositionWhileFolding());
-		Vector2d afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
+		var preOrigin = new Vector2d(baseHePairNext.getPositionWhileFolding());
+		var afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
 
 		// Creates the base unit vector for before the rotation
 		// (reversed direction)
-		Vector2d baseDir = baseHePair.getPositionWhileFolding().subtract(baseHePairNext.getPositionWhileFolding());
+		var baseDir = baseHePair.getPositionWhileFolding().subtract(baseHePairNext.getPositionWhileFolding());
 
 		// Creates the base unit vector for after the rotation
 		var baseHeNext = baseHe.getNext();
-		Vector2d afterDir = baseHeNext.getPositionWhileFolding().subtract(baseHe.getPositionWhileFolding())
+		var afterDir = baseHeNext.getPositionWhileFolding().subtract(baseHe.getPositionWhileFolding())
 				.normalization();
 
 		Line preLine = new Line(preOrigin, baseDir);
@@ -188,8 +188,8 @@ class SimpleFolder {
 
 		// add mirror effect if necessary
 		if (face.isFaceFront() == baseHe.getFace().isFaceFront()) {
-			Vector2d ep = baseHeNext.getPositionWhileFolding();
-			Vector2d sp = baseHe.getPositionWhileFolding();
+			var ep = baseHeNext.getPositionWhileFolding();
+			var sp = baseHe.getPositionWhileFolding();
 
 			face.halfedgeStream().forEach(he -> {
 				flipVertex(he.getPositionWhileFolding(), sp, ep);
