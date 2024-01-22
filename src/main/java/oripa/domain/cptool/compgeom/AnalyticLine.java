@@ -54,7 +54,6 @@ public class AnalyticLine {
 		} else {
 			// use y-intercept
 			intercept = line.getAffineYValueAt(0);
-//			intercept = p0.getY() - (p1.getY() - p0.getY()) / (p1.getX() - p0.getX()) * p0.getX();
 		}
 	}
 

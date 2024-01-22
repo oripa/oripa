@@ -63,11 +63,8 @@ public class RotatedLineFactory {
 			final double angleRad) {
 
 		var shiftedToCenter = p.subtract(center);
-//		var shiftedToCenter = new OriPoint(p.x - center.x, p.y - center.y);
 
 		var rotated = rotate(shiftedToCenter, angleRad).add(center);
-
-//		rotated.add(center);
 
 		return rotated.add(center);
 	}

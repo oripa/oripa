@@ -91,53 +91,6 @@ public class LoaderPDF implements DocLoader {
 			e.printStackTrace();
 		}
 
-//		Doc doc = new Doc(size);
-//		double size = 400;
-//		CreasePattern creasePattern = doc.getCreasePattern();
-//		creasePattern.clear();
-//
-//		for (var l : lines) {
-//			creasePattern.add(l);
-//		}
-//
-//		// size normalization
-//
-//		Vector2d center = new Vector2d((minV.x + maxV.x) / 2.0, (minV.y + maxV.y) / 2.0);
-//		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
-//		for (OriLine line : creasePattern) {
-//			line.p0.x = (line.p0.x - center.x) / bboxSize * size;
-//			line.p0.y = (line.p0.y - center.y) / bboxSize * size;
-//			line.p1.x = (line.p1.x - center.x) / bboxSize * size;
-//			line.p1.y = (line.p1.y - center.y) / bboxSize * size;
-//		}
-//
-//		// Delete duplicate lines
-//
-//		ArrayList<OriLine> delLines = new ArrayList<>();
-//		int lineNum = creasePattern.size();
-//
-//		OriLine[] linesArray = new OriLine[lineNum];
-//		creasePattern.toArray(linesArray);
-//
-//		for (int i = 0; i < lineNum; i++) {
-//			for (int j = i + 1; j < lineNum; j++) {
-//				OriLine l0 = linesArray[i];
-//				OriLine l1 = linesArray[j];
-//
-//				if ((GeomUtil.distance(l0.p0, l1.p0) < 0.01
-//						&& GeomUtil.distance(l0.p1, l1.p1) < 0.01)
-//						|| (GeomUtil.distance(l0.p1, l1.p0) < 0.01
-//								&& GeomUtil.distance(l0.p0, l1.p1) < 0.01)) {
-//
-//					delLines.add(l0);
-//				}
-//			}
-//		}
-//
-//		for (OriLine delLine : delLines) {
-//			creasePattern.remove(delLine);
-//		}
-
 		var doc = new Doc();
 		doc.setCreasePattern(new LineDtoConverter().convert(dtos));
 

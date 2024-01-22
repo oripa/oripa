@@ -115,45 +115,6 @@ public class LoaderDXF implements DocLoader {
 			return null;
 		}
 
-//		final double size = 400;
-//
-//		var center = new Vector2d((minV.x + maxV.x) / 2.0,
-//				(minV.y + maxV.y) / 2.0);
-//		double bboxSize = Math.max(maxV.x - minV.x, maxV.y - minV.y);
-//		// size normalization
-//		for (LineDto dto : dtos) {
-//			dto.p0x = (dto.p0x - center.getX()) / bboxSize * size;
-//			dto.p0y = (dto.p0y - center.getY()) / bboxSize * size;
-//			dto.p1x = (dto.p1x - center.getX()) / bboxSize * size;
-//			dto.p1y = (dto.p1y - center.getY()) / bboxSize * size;
-//		}
-//
-//		var delLines = new ArrayList<LineDto>();
-//		int lineNum = dtos.size();
-//
-//		for (int i = 0; i < lineNum; i++) {
-//			for (int j = i + 1; j < lineNum; j++) {
-//				var l0 = dtos.get(i);
-//				var l1 = dtos.get(j);
-//
-//				if ((GeomUtil.distance(l0.getP0(), l1.getP0()) < 0.01 && GeomUtil
-//						.distance(l0.getP1(), l1.getP1()) < 0.01)
-//						|| (GeomUtil.distance(l0.getP1(), l1.getP0()) < 0.01 && GeomUtil
-//								.distance(l0.getP0(), l1.getP1()) < 0.01)) {
-//
-//					delLines.add(l0);
-//				}
-//			}
-//		}
-//
-//		for (LineDto delLine : delLines) {
-//			dtos.remove(delLine);
-//		}
-//
-//		CreasePatternFactory factory = new CreasePatternFactory();
-//		CreasePattern creasePattern = factory
-//				.createCreasePattern(dtos.stream().map(d -> new OriLine(d.p0x, d.p0y, d.p1x, d.p1y, d.type))
-//						.collect(Collectors.toList()));
 		var doc = new Doc();
 		doc.setCreasePattern(new LineDtoConverter().convert(dtos));
 

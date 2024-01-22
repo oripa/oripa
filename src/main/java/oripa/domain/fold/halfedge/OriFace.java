@@ -212,9 +212,6 @@ public class OriFace {
 		double rate = 0.5;
 		return halfedgeStream()
 				.map(he -> he.getPositionBeforeFolding().multiply(rate).add(centerP.multiply(1.0 - rate)))
-//				.map(he -> new Vector2d(
-//						he.getPositionBeforeFolding().x * rate + centerP.x * (1.0 - rate),
-//						he.getPositionBeforeFolding().y * rate + centerP.y * (1.0 - rate)))
 				.collect(Collectors.toList());
 	}
 

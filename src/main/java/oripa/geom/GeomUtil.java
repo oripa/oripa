@@ -201,10 +201,6 @@ public class GeomUtil {
 		var c = v0.multiply(l0).add(v1.multiply(l1)).add(v2.multiply(l2)).multiply(1.0 / (l0 + l1 + l2));
 
 		return c;
-//		var x = (v0.getX() * l0 + v1.getX() * l1 + v2.getX() * l2) / (l0 + l1 + l2);
-//		var y = (v0.getY() * l0 + v1.getY() * l1 + v2.getY() * l2) / (l0 + l1 + l2);
-//
-//		return new Vector2d(x, y);
 	}
 
 	/**
