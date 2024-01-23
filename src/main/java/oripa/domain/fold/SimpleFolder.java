@@ -154,7 +154,7 @@ class SimpleFolder {
 		// halfedge.
 		Vector2d afterDirFromFoot = new Vector2d(afterDir.getY(), -afterDir.getX());
 
-		// set moved vertex coordinates
+		// compute moved vertex coordinates
 		return footV.add(afterDirFromFoot.multiply(d0));
 	}
 
