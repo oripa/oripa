@@ -128,7 +128,7 @@ class SimpleFolder {
 	 * is based on geometric interpretation without affine transformation.
 	 *
 	 * @param vertex
-	 *            vertex to be moved. there will be a side effect.
+	 *            vertex to be moved.
 	 * @param preLine
 	 *            crease line before folding.
 	 * @param afterOrigin
@@ -136,7 +136,7 @@ class SimpleFolder {
 	 * @param afterDir
 	 *            clockwise direction vector of the moved crease line.
 	 */
-	private void transformVertex(final Vector2d vertex, final Line preLine,
+	private Vector2d transformVertex(final Vector2d vertex, final Line preLine,
 			final Vector2d afterOrigin, final Vector2d afterDir) {
 		double param[] = new double[1];
 		double d0 = GeomUtil.distance(vertex, preLine, param);
@@ -155,7 +155,7 @@ class SimpleFolder {
 		Vector2d afterDirFromFoot = new Vector2d(afterDir.getY(), -afterDir.getX());
 
 		// set moved vertex coordinates
-		vertex.set(footV.add(afterDirFromFoot.multiply(d0)));
+		return footV.add(afterDirFromFoot.multiply(d0));
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
@@ -180,13 +180,14 @@ class SimpleFolder {
 		// move the vertices of the face to keep the face connection
 		// on baseHe
 		face.halfedgeStream().forEach(he -> {
-			transformVertex(he.getPositionWhileFolding(), preLine, afterOrigin, afterDir);
+			he.setPositionWhileFolding(transformVertex(he.getPositionWhileFolding(), preLine, afterOrigin, afterDir));
 		});
 
-		face.precreaseStream().forEach(precrease -> {
-			transformVertex(precrease.getP0(), preLine, afterOrigin, afterDir);
-			transformVertex(precrease.getP1(), preLine, afterOrigin, afterDir);
-		});
+		face.setPrecreases(face.precreaseStream().map(precrease -> new OriLine(
+				transformVertex(precrease.getP0(), preLine, afterOrigin, afterDir),
+				transformVertex(precrease.getP1(), preLine, afterOrigin, afterDir),
+				OriLine.Type.AUX))
+				.collect(Collectors.toList()));
 
 		// add mirror effect if necessary
 		if (face.isFaceFront() == baseHe.getFace().isFaceFront()) {
