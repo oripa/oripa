@@ -22,12 +22,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -40,7 +40,7 @@ class IsOutsideOfTempOutlineLoopTest {
 
 	/**
 	 * Test method for
-	 * {@link oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop#execute(java.util.Collection, javax.vecmath.Vector2d)}.
+	 * {@link oripa.domain.paint.outline.IsOutsideOfTempOutlineLoop#execute(java.util.Collection, oripa.vecmath.Vector2d)}.
 	 */
 	@Test
 	void testExecute_outside() {

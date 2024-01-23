@@ -40,10 +40,14 @@ public class ExporterEPS implements DocExporter {
 			bw.write("\n");
 
 			CreasePattern creasePattern = doc.getCreasePattern();
+
 			for (OriLine line : creasePattern) {
+				var p0 = line.getP0();
+				var p1 = line.getP1();
+
 				bw.write("[] 0 setdash\n");
-				bw.write("" + line.p0.x + " " + line.p0.y + " moveto\n");
-				bw.write("" + line.p1.x + " " + line.p1.y + " lineto\n");
+				bw.write("" + p0.getX() + " " + p0.getY() + " moveto\n");
+				bw.write("" + p1.getX() + " " + p1.getY() + " lineto\n");
 				bw.write("stroke\n");
 			}
 		}

@@ -18,9 +18,8 @@
  */
 package oripa.domain.cptool;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.Segment;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -29,12 +28,9 @@ import oripa.geom.Segment;
 public class PseudoRayFactory {
 
 	public Segment create(final Vector2d v, final Vector2d dir, final double paperSize) {
-		var d = new Vector2d(dir);
-		d.normalize();
-		d.scale(paperSize * 4);
+		var d = dir.normalize().multiply(paperSize * 4);
 
-		var ev = new Vector2d(v);
-		ev.add(d);
+		var ev = v.add(d);
 
 		return new Segment(v, ev);
 	}

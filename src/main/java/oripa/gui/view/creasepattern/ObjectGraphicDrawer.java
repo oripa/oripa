@@ -20,9 +20,8 @@ package oripa.gui.view.creasepattern;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * An interface for drawing on view. This encapsulates the detail of view

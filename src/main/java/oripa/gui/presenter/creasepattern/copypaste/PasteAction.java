@@ -1,7 +1,5 @@
 package oripa.gui.presenter.creasepattern.copypaste;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.PastingOnVertex;
@@ -14,6 +12,7 @@ import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class PasteAction extends AbstractGraphicMouseAction {
 
@@ -108,7 +107,7 @@ public class PasteAction extends AbstractGraphicMouseAction {
 
 		// shift and draw the lines to be pasted.
 		for (OriLine l : paintContext.getPickedLines()) {
-			var shifted = factory.createShiftedLine(l, offset.x, offset.y);
+			var shifted = factory.createShiftedLine(l, offset.getX(), offset.getY());
 			drawer.drawLine(shifted);
 		}
 	}

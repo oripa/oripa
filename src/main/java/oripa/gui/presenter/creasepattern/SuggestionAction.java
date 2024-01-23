@@ -18,12 +18,11 @@
  */
 package oripa.gui.presenter.creasepattern;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.suggestion.SelectingStartPoint;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

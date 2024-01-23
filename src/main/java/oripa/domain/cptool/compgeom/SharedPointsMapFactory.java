@@ -43,8 +43,8 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 		var points = new ArrayList<P>(lines.size() * 2);
 
 		for (var line : lines) {
-			points.add(factory.apply(line.p0, line));
-			points.add(factory.apply(line.p1, line));
+			points.add(factory.apply(line.getOriPoint0(), line));
+			points.add(factory.apply(line.getOriPoint1(), line));
 		}
 
 		points.sort(Comparator.comparing(PointAndLine::getX));
@@ -57,7 +57,7 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 	 * the end point and the line. The map key is ordered by x-coordinate first
 	 * and then by y-coordinate. In the values of each key are ordered by
 	 * y-coordinate. The lines in returned map values and the one given to the
-	 * factory are canonicalized, i.e., line.p0 is smaller than line.p1.
+	 * factory are canonicalized, i.e., line.getP0() is smaller than line.p1.
 	 *
 	 * @param creasePattern
 	 * @param factory

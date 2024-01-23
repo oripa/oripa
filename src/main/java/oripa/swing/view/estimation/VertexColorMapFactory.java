@@ -22,11 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -87,7 +86,7 @@ public class VertexColorMapFactory {
 			double v = (0.75 + vv * 0.25);
 
 			var position = he.getPosition();
-			var d = new Vector2d(position.x - minX, position.y - minY).length();
+			var d = new Vector2d(position.getX() - minX, position.getY() - minY).length();
 			v *= 0.9 + 0.15 * d / faceWidth;
 
 			v = Math.min(1, v);

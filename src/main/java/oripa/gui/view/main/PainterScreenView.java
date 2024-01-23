@@ -21,11 +21,10 @@ package oripa.gui.view.main;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.ScreenView;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

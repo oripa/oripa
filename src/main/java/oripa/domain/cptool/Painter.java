@@ -3,11 +3,10 @@ package oripa.domain.cptool;
 import java.util.Collection;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * A tool to modify crease pattern (or line collection)

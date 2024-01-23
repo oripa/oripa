@@ -21,11 +21,10 @@ package oripa.domain.paint.line;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.cptool.PseudoLineFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.SnapPointFactory;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

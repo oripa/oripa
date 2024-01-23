@@ -23,8 +23,8 @@ import java.io.StreamTokenizer;
 import java.util.ArrayList;
 
 import oripa.doc.Doc;
-import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.value.OriLine;
 
 public class LoaderCP implements DocLoader {
@@ -50,38 +50,37 @@ public class LoaderCP implements DocLoader {
 
 			OriLine line;
 			while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
-				line = new OriLine();
-				lines.add(line);
-
+				OriLine.Type lineType;
 				try {
-					var lineType = OriLine.Type.fromInt(Integer.parseInt(st.sval));
+					lineType = OriLine.Type.fromInt(Integer.parseInt(st.sval));
 					switch (lineType) {
 					case CUT:
 					case MOUNTAIN:
 					case VALLEY:
-						line.setType(lineType);
 						break;
 					default:
-						line.setType(OriLine.Type.AUX);
+						lineType = OriLine.Type.AUX;
 						break;
 					}
 				} catch (IllegalArgumentException e) {
-					line.setType(OriLine.Type.AUX);
+					lineType = OriLine.Type.AUX;
 				}
 //				System.out.println("line type " + line.getType());
 
 				token = st.nextToken();
-				line.p0.x = Double.parseDouble(st.sval);
+				var p0x = Double.parseDouble(st.sval);
 
 				token = st.nextToken();
-				line.p0.y = Double.parseDouble(st.sval);
+				var p0y = Double.parseDouble(st.sval);
 
 				token = st.nextToken();
-				line.p1.x = Double.parseDouble(st.sval);
+				var p1x = Double.parseDouble(st.sval);
 
 				token = st.nextToken();
-				line.p1.y = Double.parseDouble(st.sval);
+				var p1y = Double.parseDouble(st.sval);
 
+				line = new OriLine(p0x, p0y, p1x, p1y, lineType);
+				lines.add(line);
 			}
 
 			System.out.println("end");

@@ -31,12 +31,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
+import oripa.vecmath.Vector2d;
 
 public class SubFace {
 

@@ -18,8 +18,7 @@
  */
 package oripa.domain.paint;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +57,7 @@ public class CreasePatternUndoManagerTest {
 		var lines = createOriLines(count, count, count, count);
 		for (int i = count - 1; i >= 0; i--) {
 			lines = manager.undo(lines).getInfo();
-			assertEquals(i, ((OriLine) lines.toArray()[0]).p0.x);
+			assertEquals(i, ((OriLine) lines.toArray()[0]).getP0().getX());
 		}
 
 		assertFalse(manager.canUndo());
@@ -77,13 +76,13 @@ public class CreasePatternUndoManagerTest {
 		var lines = createOriLines(count, count, count, count);
 		for (int i = count - 1; i >= 0; i--) {
 			lines = manager.undo(lines).getInfo();
-			var p0x = ((OriLine) lines.toArray()[0]).p0.x;
+			var p0x = ((OriLine) lines.toArray()[0]).getP0().getX();
 			logger.debug("undo result: " + p0x);
 		}
 
 		for (int i = 0; i < count; i++) {
 			var l = manager.redo().getInfo();
-			var p0x = ((OriLine) l.toArray()[0]).p0.x;
+			var p0x = ((OriLine) l.toArray()[0]).getP0().getX();
 			assertEquals(i + 1, p0x);
 			logger.debug("redo result: " + p0x);
 		}

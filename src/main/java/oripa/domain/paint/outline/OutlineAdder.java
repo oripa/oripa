@@ -21,12 +21,11 @@ package oripa.domain.paint.outline;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.util.PairLoop;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

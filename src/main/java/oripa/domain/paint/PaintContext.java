@@ -3,10 +3,9 @@ package oripa.domain.paint;
 import java.util.Collection;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.cptool.Painter;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * This interface holds current state of GUI interaction for paint inputting.

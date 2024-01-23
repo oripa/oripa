@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * Crease pattern
@@ -53,8 +52,8 @@ class CreasePatternImpl implements CreasePattern {
 		@Override
 		public void remove() {
 			lineIter.remove();
-			vertices.remove(current.p0);
-			vertices.remove(current.p1);
+			vertices.remove(current.getP0());
+			vertices.remove(current.getP1());
 		}
 
 	}
@@ -140,8 +139,8 @@ class CreasePatternImpl implements CreasePattern {
 	@Override
 	public boolean add(final OriLine e) {
 		if (lines.add(e)) {
-			vertices.add(e.p0);
-			vertices.add(e.p1);
+			vertices.add(e.getP0());
+			vertices.add(e.getP1());
 			return true;
 		}
 		return false;
@@ -158,8 +157,8 @@ class CreasePatternImpl implements CreasePattern {
 		OriLine l = (OriLine) o;
 
 		if (lines.remove(o)) {
-			vertices.remove(l.p0);
-			vertices.remove(l.p1);
+			vertices.remove(l.getP0());
+			vertices.remove(l.getP1());
 			return true;
 		}
 
@@ -292,8 +291,8 @@ class CreasePatternImpl implements CreasePattern {
 			// all of its elements that are not contained in the specified
 			// collection c.
 			if (!collection.contains(line)) {
-				vertices.remove(line.p0);
-				vertices.remove(line.p1);
+				vertices.remove(line.getP0());
+				vertices.remove(line.getP1());
 			}
 		}
 
@@ -334,12 +333,11 @@ class CreasePatternImpl implements CreasePattern {
 	public void move(final double dx, final double dy) {
 		var lines = new ArrayList<OriLine>();
 
-		lines.addAll(this);
+//		lines.addAll(this);
 
 		var d = new Vector2d(dx, dy);
-		lines.forEach(line -> {
-			line.getP0().add(d);
-			line.getP1().add(d);
+		this.forEach(line -> {
+			lines.add(new OriLine(line.getP0().add(d), line.getP1().add(d), line.getType()));
 		});
 
 		// rebuild vertices info

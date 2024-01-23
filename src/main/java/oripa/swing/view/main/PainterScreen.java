@@ -39,7 +39,6 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +52,7 @@ import oripa.gui.view.main.PainterScreenView;
 import oripa.swing.drawer.java2d.CreasePatternGraphics;
 import oripa.swing.view.util.AffineCamera;
 import oripa.swing.view.util.MouseUtility;
+import oripa.vecmath.Vector2d;
 
 public class PainterScreen extends JPanel
 		implements PainterScreenView, MouseListener, MouseMotionListener, MouseWheelListener,

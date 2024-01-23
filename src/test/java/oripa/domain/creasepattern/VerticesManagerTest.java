@@ -1,15 +1,13 @@
 package oripa.domain.creasepattern;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collection;
-
-import javax.vecmath.Vector2d;
 
 import org.junit.jupiter.api.Test;
 
 import oripa.value.OriPoint;
+import oripa.vecmath.Vector2d;
 
 public class VerticesManagerTest {
 

@@ -20,10 +20,9 @@ package oripa.gui.presenter.creasepattern.enlarge;
 
 import java.util.Collection;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

@@ -4,13 +4,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.Painter;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class CloseTempOutline {
 	private static final Logger logger = LoggerFactory.getLogger(CloseTempOutline.class);

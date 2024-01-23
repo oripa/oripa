@@ -22,11 +22,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -59,8 +58,7 @@ public class FoldableLineAngleSuggester {
 
 			vertex.edgeStream().forEach(e -> sv.addEdge(new OriEdge(sv, e.oppositeVertex(vertex), e.getType())));
 
-			var ep = new Vector2d(sp);
-			ep.add(new Vector2d(Math.cos(angle), Math.sin(angle)));
+			var ep = sp.add(new Vector2d(Math.cos(angle), Math.sin(angle)));
 
 			var ev = new OriVertex(ep);
 			var edge = new OriEdge(sv, ev, type.toInt());

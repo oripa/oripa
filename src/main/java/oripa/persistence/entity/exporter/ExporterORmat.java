@@ -56,8 +56,8 @@ public class ExporterORmat implements Exporter<FoldedModelEntity> {
 			for (OriVertex vertex : vertices) {
 				var positionBefore = vertex.getPositionBeforeFolding();
 				var positionAfter = vertex.getPosition();
-				bw.write("v " + positionBefore.x + " " + positionBefore.y + " "
-						+ positionAfter.x + " " + positionAfter.y + "\n");
+				bw.write("v " + positionBefore.getX() + " " + positionBefore.getY() + " "
+						+ positionAfter.getX() + " " + positionAfter.getY() + "\n");
 				vertex.setVertexID(id);
 				id++;
 			}

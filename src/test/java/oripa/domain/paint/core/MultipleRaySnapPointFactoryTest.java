@@ -5,13 +5,12 @@ import static oripa.test.util.AssertionUtil.*;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import org.junit.jupiter.api.Test;
 
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 class MultipleRaySnapPointFactoryTest {
 

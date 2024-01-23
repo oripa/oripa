@@ -22,9 +22,8 @@ package oripa.value;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.Segment;
+import oripa.vecmath.Vector2d;
 
 public class OriLine extends Segment implements Comparable<OriLine> {
 
@@ -84,30 +83,30 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 	private Type type = Type.AUX;
 
 	public boolean selected;
-	public OriPoint p0 = new OriPoint();
-	public OriPoint p1 = new OriPoint();
-
-	public OriLine() {
-	}
+	private final OriPoint p0;
+	private final OriPoint p1;
 
 	public OriLine(final OriLine l) {
+		super(l.p0, l.p1);
+		p0 = l.p0;
+		p1 = l.p1;
 		selected = l.selected;
-		p0.set(l.p0);
-		p1.set(l.p1);
 		type = l.type;
 	}
 
 	public OriLine(final Vector2d p0, final Vector2d p1, final Type type) {
+		super(p0, p1);
+		this.p0 = new OriPoint(p0);
+		this.p1 = new OriPoint(p1);
 		this.type = type;
-		this.p0.set(p0);
-		this.p1.set(p1);
 	}
 
 	public OriLine(final double x0, final double y0, final double x1, final double y1,
 			final Type type) {
+		super(new OriPoint(x0, y0), new OriPoint(x1, y1));
 		this.type = type;
-		this.p0.set(x0, y0);
-		this.p1.set(x1, y1);
+		this.p0 = new OriPoint(x0, y0);
+		this.p1 = new OriPoint(x1, y1);
 	}
 
 	public OriLine(final Segment segment, final Type type) {
@@ -182,8 +181,16 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		return p0;
 	}
 
+	public OriPoint getOriPoint0() {
+		return p0;
+	}
+
 	@Override
 	public Vector2d getP1() {
+		return p1;
+	}
+
+	public OriPoint getOriPoint1() {
 		return p1;
 	}
 

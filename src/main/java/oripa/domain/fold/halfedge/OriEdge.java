@@ -18,11 +18,10 @@
 
 package oripa.domain.fold.halfedge;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.Segment;
 import oripa.util.MathUtil;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * Undirected edge of crease pattern (or graph, more abstractly) with reference
@@ -114,8 +113,7 @@ public class OriEdge {
 	 */
 	public double getAngle(final OriVertex sv) {
 		var ev = oppositeVertex(sv);
-		Vector2d dir = new Vector2d(ev.getPositionBeforeFolding());
-		dir.sub(sv.getPositionBeforeFolding());
+		Vector2d dir = ev.getPositionBeforeFolding().subtract(sv.getPositionBeforeFolding());
 
 		return MathUtil.angleOf(dir);
 	}

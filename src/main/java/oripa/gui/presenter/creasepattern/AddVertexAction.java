@@ -1,10 +1,9 @@
 package oripa.gui.presenter.creasepattern;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.addvertex.AddingVertex;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
+import oripa.vecmath.Vector2d;
 
 public class AddVertexAction extends AbstractGraphicMouseAction {
 

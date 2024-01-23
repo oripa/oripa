@@ -43,13 +43,13 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 	private boolean validateKeyPoints(final OriPoint keyPoint,
 			final OriPoint oppositeKeyPoint, final OriLine line,
 			final double eps) {
-		if (GeomUtil.distance(line.p0, keyPoint) < eps
-				&& GeomUtil.distance(line.p1, oppositeKeyPoint) < eps) {
+		if (GeomUtil.distance(line.getP0(), keyPoint) < eps
+				&& GeomUtil.distance(line.getP1(), oppositeKeyPoint) < eps) {
 			return true;
 		}
 
-		if (GeomUtil.distance(line.p0, oppositeKeyPoint) < eps
-				&& GeomUtil.distance(line.p1, keyPoint) < eps) {
+		if (GeomUtil.distance(line.getP0(), oppositeKeyPoint) < eps
+				&& GeomUtil.distance(line.getP1(), keyPoint) < eps) {
 			return true;
 		}
 
@@ -58,9 +58,9 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 
 	private OriPoint findOppositeCandidate(final OriLine line, final OriPoint keyPoint,
 			final double eps) {
-		var oppositeKeyPoint = GeomUtil.distance(line.p0, keyPoint) < eps
-				? findKeyPoint(line.p1, eps)
-				: findKeyPoint(line.p0, eps);
+		var oppositeKeyPoint = GeomUtil.distance(line.getP0(), keyPoint) < eps
+				? findKeyPoint(line.getOriPoint1(), eps)
+				: findKeyPoint(line.getOriPoint0(), eps);
 
 		if (validateKeyPoints(keyPoint, oppositeKeyPoint, line, eps)) {
 			return oppositeKeyPoint;

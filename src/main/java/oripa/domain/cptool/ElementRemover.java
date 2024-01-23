@@ -8,8 +8,6 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +18,7 @@ import oripa.geom.GeomUtil;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
+import oripa.vecmath.Vector2d;
 
 /**
  * This class defines how to remove line/vertex from crease pattern.
@@ -42,17 +41,17 @@ public class ElementRemover {
 		creasePattern.remove(l);
 
 		// merge the lines if possible, to prevent unnecessary vertices
-		var sharedLines = createSharedLines(l.p0, creasePattern, pointEps);
-		merge2LinesAt(l.p0, sharedLines, creasePattern, pointEps);
-		sharedLines = createSharedLines(l.p1, creasePattern, pointEps);
-		merge2LinesAt(l.p1, sharedLines, creasePattern, pointEps);
+		var sharedLines = createSharedLines(l.getP0(), creasePattern, pointEps);
+		merge2LinesAt(l.getP0(), sharedLines, creasePattern, pointEps);
+		sharedLines = createSharedLines(l.getP1(), creasePattern, pointEps);
+		merge2LinesAt(l.getP1(), sharedLines, creasePattern, pointEps);
 	}
 
 	private List<OriLine> createSharedLines(final Vector2d p,
 			final Collection<OriLine> creasePattern, final double pointEps) {
 		return creasePattern.parallelStream()
-				.filter(line -> isConnectionPoint(line.p0, p, pointEps)
-						|| isConnectionPoint(line.p1, p, pointEps))
+				.filter(line -> isConnectionPoint(line.getP0(), p, pointEps)
+						|| isConnectionPoint(line.getP1(), p, pointEps))
 				.collect(Collectors.toList());
 	}
 
@@ -117,11 +116,8 @@ public class ElementRemover {
 		}
 
 		// Check if the lines have the same angle
-		Vector2d dir0 = new Vector2d(l0.p1.x - l0.p0.x, l0.p1.y - l0.p0.y);
-		Vector2d dir1 = new Vector2d(l1.p1.x - l1.p0.x, l1.p1.y - l1.p0.y);
-
-		dir0.normalize();
-		dir1.normalize();
+		var dir0 = l0.getP1().subtract(l0.getP0()).normalize();
+		var dir1 = l1.getP1().subtract(l1.getP0()).normalize();
 
 		if (!GeomUtil.isParallel(dir0, dir1)) {
 			return false;
@@ -131,18 +127,18 @@ public class ElementRemover {
 	}
 
 	private OriLine merge(final Vector2d connectionPoint, final OriLine l0, final OriLine l1, final double pointEps) {
-		Vector2d p0 = new Vector2d();
-		Vector2d p1 = new Vector2d();
+		Vector2d p0;
+		Vector2d p1;
 
-		if (GeomUtil.areEqual(l0.p0, connectionPoint, pointEps)) {
-			p0.set(l0.p1);
+		if (GeomUtil.areEqual(l0.getP0(), connectionPoint, pointEps)) {
+			p0 = l0.getP1();
 		} else {
-			p0.set(l0.p0);
+			p0 = l0.getP0();
 		}
-		if (GeomUtil.areEqual(l1.p0, connectionPoint, pointEps)) {
-			p1.set(l1.p1);
+		if (GeomUtil.areEqual(l1.getP0(), connectionPoint, pointEps)) {
+			p1 = l1.getP1();
 		} else {
-			p1.set(l1.p0);
+			p1 = l1.getP0();
 		}
 
 		return (new OriLine(p0, p1, l0.getType())).createCanonical();
@@ -165,8 +161,8 @@ public class ElementRemover {
 			final OriLine line,
 			final SharedPointsMap<PointAndLine> sharedPointsMap, final double pointEps) {
 		var keyPoints = List.of(
-				sharedPointsMap.findKeyPoint(line.p0, pointEps),
-				sharedPointsMap.findKeyPoint(line.p1, pointEps));
+				sharedPointsMap.findKeyPoint(line.getOriPoint0(), pointEps),
+				sharedPointsMap.findKeyPoint(line.getOriPoint1(), pointEps));
 
 		var endPoints = keyPoints.stream()
 				.map(keyPoint -> new PointAndLine(keyPoint, line))

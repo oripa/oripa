@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.halfedge.OriFace;
@@ -52,6 +51,7 @@ import oripa.geom.RectangleDomain;
 import oripa.gui.view.estimation.DefaultColors;
 import oripa.swing.drawer.java2d.GraphicItemConverter;
 import oripa.swing.view.util.MouseUtility;
+import oripa.vecmath.Vector2d;
 
 /**
  * A screen to show the folded state of origami.
@@ -183,7 +183,7 @@ public class FoldedModelScreen extends JPanel
 	/**
 	 *
 	 * @param d
-	 *            d.x and d.y should be in [-1.0, 1.0] respectively.
+	 *            d.getX() and d.getY() should be in [-1.0, 1.0] respectively.
 	 */
 	public void setDistortionParameter(final Vector2d d) {
 		distortionParameter = d;
@@ -505,23 +505,23 @@ public class FoldedModelScreen extends JPanel
 		// (For speed) set the range of use of the buffer
 		int top = Integer.MAX_VALUE; // Integer.MAX_VALUE;
 		int btm = Integer.MIN_VALUE;// Integer.MIN_VALUE;
-		if (top > (int) tri.v[0].p.y) {
-			top = (int) tri.v[0].p.y;
+		if (top > (int) tri.v[0].p.getY()) {
+			top = (int) tri.v[0].p.getY();
 		}
-		if (top > (int) tri.v[1].p.y) {
-			top = (int) tri.v[1].p.y;
+		if (top > (int) tri.v[1].p.getY()) {
+			top = (int) tri.v[1].p.getY();
 		}
-		if (top > (int) tri.v[2].p.y) {
-			top = (int) tri.v[2].p.y;
+		if (top > (int) tri.v[2].p.getY()) {
+			top = (int) tri.v[2].p.getY();
 		}
-		if (btm < (int) tri.v[0].p.y) {
-			btm = (int) tri.v[0].p.y;
+		if (btm < (int) tri.v[0].p.getY()) {
+			btm = (int) tri.v[0].p.getY();
 		}
-		if (btm < (int) tri.v[1].p.y) {
-			btm = (int) tri.v[1].p.y;
+		if (btm < (int) tri.v[1].p.getY()) {
+			btm = (int) tri.v[1].p.getY();
 		}
-		if (btm < (int) tri.v[2].p.y) {
-			btm = (int) tri.v[2].p.y;
+		if (btm < (int) tri.v[2].p.getY()) {
+			btm = (int) tri.v[2].p.getY();
 		}
 		if (top < 0) {
 			top = 0;
@@ -618,27 +618,27 @@ public class FoldedModelScreen extends JPanel
 	// --------------------------------------------------------------------
 	private void ScanEdge(final TriangleVertex v1, final TriangleVertex v2) {
 
-		int l = Math.abs((int) (v2.p.y - v1.p.y)) + 1;
+		int l = Math.abs((int) (v2.p.getY() - v1.p.getY())) + 1;
 
 		// Increment calculation
-		int addx = (int) ((v2.p.x - v1.p.x) * 0xffff) / l;
-		int addy = (int) ((v2.p.y - v1.p.y) * 0xffff) / l;
+		int addx = (int) ((v2.p.getX() - v1.p.getX()) * 0xffff) / l;
+		int addy = (int) ((v2.p.getY() - v1.p.getY()) * 0xffff) / l;
 
 		int addr = (int) (255 * 0xffff * (v2.color.getR() - v1.color.getR()) / l);
 		int addg = (int) (255 * 0xffff * (v2.color.getG() - v1.color.getG()) / l);
 		int addb = (int) (255 * 0xffff * (v2.color.getB() - v1.color.getB()) / l);
 
-		double addu = (v2.uv.x - v1.uv.x) / l;
-		double addv = (v2.uv.y - v1.uv.y) / l;
+		double addu = (v2.uv.getX() - v1.uv.getX()) / l;
+		double addv = (v2.uv.getY() - v1.uv.getY()) / l;
 
 		// Initial value setting
-		int x = (int) (v1.p.x * 0xffff);
-		int y = (int) (v1.p.y * 0xffff);
+		int x = (int) (v1.p.getX() * 0xffff);
+		int y = (int) (v1.p.getY() * 0xffff);
 		int r = (int) (255 * 0xffff * v1.color.getR());
 		int g = (int) (255 * 0xffff * v1.color.getG());
 		int b = (int) (255 * 0xffff * v1.color.getB());
-		double u = v1.uv.x;
-		double v = v1.uv.y;
+		double u = v1.uv.getX();
+		double v = v1.uv.getY();
 
 		// Scan
 		for (int i = 0; i < l; i++, x += addx, y += addy, r += addr, g += addg, b += addb, u += addu, v += addv) {

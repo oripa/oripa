@@ -106,14 +106,14 @@ public class CreasePatternExporterDXF implements Exporter<CreasePattern> {
 
 				bw.write("" + colorNumber + "\n");
 				bw.write(" 10\n");
-				bw.write("" + (line.p0.x * scale + center) + "\n");
+				bw.write("" + (line.getP0().getX() * scale + center) + "\n");
 				bw.write(" 20\n");
-				bw.write("" + ((paperSize / 2 - line.p0.y) * scale + center)
+				bw.write("" + ((paperSize / 2 - line.getP0().getY()) * scale + center)
 						+ "\n");
 				bw.write(" 11\n");
-				bw.write("" + (line.p1.x * scale + center) + "\n");
+				bw.write("" + (line.getP1().getX() * scale + center) + "\n");
 				bw.write(" 21\n");
-				bw.write("" + ((paperSize / 2 - line.p1.y) * scale + center)
+				bw.write("" + ((paperSize / 2 - line.getP1().getY()) * scale + center)
 						+ "\n");
 			}
 

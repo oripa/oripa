@@ -4,14 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.stream.Collectors;
 
-import javax.vecmath.Vector2d;
-
 import org.junit.jupiter.api.Test;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
 import oripa.test.util.AssertionUtil;
 import oripa.util.MathUtil;
+import oripa.vecmath.Vector2d;
 
 class LineToLineAxiomTest {
 	double EPS = 1e-5;

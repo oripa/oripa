@@ -42,9 +42,11 @@ public class ExporterCP implements DocExporter {
 				if (line.isAux()) {
 					continue;
 				}
+				var p0 = line.getP0();
+				var p1 = line.getP1();
 				bw.write(
-						line.getType().toInt() + " " + line.p0.x + " " + line.p0.y + " " + line.p1.x
-								+ " " + line.p1.y + "\n");
+						line.getType().toInt() + " " + p0.getX() + " " + p0.getY() + " " + p1.getX()
+								+ " " + p1.getY() + "\n");
 			}
 		}
 

@@ -70,7 +70,7 @@ public class CreasePatternElementConverter {
 	}
 
 	private List<Double> vertexToList(final OriPoint p) {
-		return List.of(p.x, p.y);
+		return List.of(p.getX(), p.getY());
 	}
 
 	/**
@@ -88,8 +88,8 @@ public class CreasePatternElementConverter {
 		}
 		edgesVertices = lines.parallelStream()
 				.map(line -> List.of(
-						coords.indexOf(vertexToList(line.p0)),
-						coords.indexOf(vertexToList(line.p1))))
+						coords.indexOf(vertexToList(line.getOriPoint0())),
+						coords.indexOf(vertexToList(line.getOriPoint1()))))
 				.collect(Collectors.toList());
 
 		return edgesVertices;

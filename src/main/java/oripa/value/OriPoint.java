@@ -1,6 +1,6 @@
 package oripa.value;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 /**
  * Comparable vertex
@@ -15,10 +15,6 @@ public class OriPoint extends Vector2d implements Comparable<Vector2d> {
 	 */
 	private static final long serialVersionUID = -6753157628675186598L;
 
-	public OriPoint() {
-		super();
-	}
-
 	public OriPoint(final Vector2d p) {
 		super(p);
 	}
@@ -29,9 +25,15 @@ public class OriPoint extends Vector2d implements Comparable<Vector2d> {
 
 	@Override
 	public int compareTo(final Vector2d o) {
-		if (this.x == o.x) {
-			return (int) Math.signum(this.y - o.y);
+		var x = getX();
+		var y = getY();
+
+		var ox = o.getX();
+		var oy = o.getY();
+
+		if (x == ox) {
+			return (int) Math.signum(y - oy);
 		}
-		return (int) Math.signum(this.x - o.x);
+		return (int) Math.signum(x - ox);
 	}
 }

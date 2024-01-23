@@ -18,10 +18,9 @@
  */
 package oripa.domain.paint.byvalue;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.ValidatablePaintCommand;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -46,10 +45,8 @@ public class AngleMeasureCommand extends ValidatablePaintCommand {
 		Vector2d second = context.getVertex(1);
 		Vector2d third = context.getVertex(2);
 
-		Vector2d dir1 = new Vector2d(third);
-		Vector2d dir2 = new Vector2d(first);
-		dir1.sub(second);
-		dir2.sub(second);
+		Vector2d dir1 = new Vector2d(third).subtract(second);
+		Vector2d dir2 = new Vector2d(first).subtract(second);
 
 		double deg_angle = Math.toDegrees(dir1.angle(dir2));
 

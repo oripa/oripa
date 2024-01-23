@@ -1,10 +1,9 @@
 package oripa.domain.paint.addvertex;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class AddingVertex extends PickingVertex {
 	@Override

@@ -20,8 +20,6 @@ package oripa.domain.fold;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +29,7 @@ import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -145,21 +144,16 @@ class SimpleFolder {
 
 		// compute foot cross point from vertex to moved mirror axis line (or
 		// the crease)
-		Vector2d footV = new Vector2d(afterOrigin);
-		footV.x += d1 * afterDir.x;
-		footV.y += d1 * afterDir.y;
+		Vector2d footV = new Vector2d(afterOrigin).add(afterDir.multiply(d1));
 
 		// compute a direction vector perpendicular to the crease.
 		// the vector directs the right side of the crease halfedge
 		// since all vertices of the face are on the right side of the crease
 		// halfedge.
-		Vector2d afterDirFromFoot = new Vector2d();
-		afterDirFromFoot.x = afterDir.y;
-		afterDirFromFoot.y = -afterDir.x;
+		Vector2d afterDirFromFoot = new Vector2d(afterDir.getY(), -afterDir.getX());
 
 		// set moved vertex coordinates
-		vertex.x = footV.x + d0 * afterDirFromFoot.x;
-		vertex.y = footV.y + d0 * afterDirFromFoot.y;
+		vertex.set(footV.add(afterDirFromFoot.multiply(d0)));
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
@@ -167,19 +161,17 @@ class SimpleFolder {
 		var baseHePairNext = baseHePair.getNext();
 
 		// baseHe.pair keeps the position before folding.
-		Vector2d preOrigin = new Vector2d(baseHePairNext.getPositionWhileFolding());
-		Vector2d afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
+		var preOrigin = new Vector2d(baseHePairNext.getPositionWhileFolding());
+		var afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
 
 		// Creates the base unit vector for before the rotation
 		// (reversed direction)
-		Vector2d baseDir = new Vector2d();
-		baseDir.sub(baseHePair.getPositionWhileFolding(), baseHePairNext.getPositionWhileFolding());
+		var baseDir = baseHePair.getPositionWhileFolding().subtract(baseHePairNext.getPositionWhileFolding());
 
 		// Creates the base unit vector for after the rotation
 		var baseHeNext = baseHe.getNext();
-		Vector2d afterDir = new Vector2d();
-		afterDir.sub(baseHeNext.getPositionWhileFolding(), baseHe.getPositionWhileFolding());
-		afterDir.normalize();
+		var afterDir = baseHeNext.getPositionWhileFolding().subtract(baseHe.getPositionWhileFolding())
+				.normalize();
 
 		Line preLine = new Line(preOrigin, baseDir);
 
@@ -190,21 +182,21 @@ class SimpleFolder {
 		});
 
 		face.precreaseStream().forEach(precrease -> {
-			transformVertex(precrease.p0, preLine, afterOrigin, afterDir);
-			transformVertex(precrease.p1, preLine, afterOrigin, afterDir);
+			transformVertex(precrease.getP0(), preLine, afterOrigin, afterDir);
+			transformVertex(precrease.getP1(), preLine, afterOrigin, afterDir);
 		});
 
 		// add mirror effect if necessary
 		if (face.isFaceFront() == baseHe.getFace().isFaceFront()) {
-			Vector2d ep = baseHeNext.getPositionWhileFolding();
-			Vector2d sp = baseHe.getPositionWhileFolding();
+			var ep = baseHeNext.getPositionWhileFolding();
+			var sp = baseHe.getPositionWhileFolding();
 
 			face.halfedgeStream().forEach(he -> {
 				flipVertex(he.getPositionWhileFolding(), sp, ep);
 			});
 			face.precreaseStream().forEach(precrease -> {
-				flipVertex(precrease.p0, sp, ep);
-				flipVertex(precrease.p1, sp, ep);
+				flipVertex(precrease.getP0(), sp, ep);
+				flipVertex(precrease.getP1(), sp, ep);
 
 			});
 			face.invertFaceFront();
@@ -214,8 +206,7 @@ class SimpleFolder {
 	private void flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d ep) {
 		var v = GeomUtil.getSymmetricPoint(vertex, sp, ep);
 
-		vertex.x = v.x;
-		vertex.y = v.y;
+		vertex.set(v);
 	}
 
 }

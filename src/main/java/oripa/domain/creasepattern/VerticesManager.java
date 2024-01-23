@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 /**
  * For a fast access to vertex
@@ -40,8 +40,8 @@ class VerticesManager implements NearVerticesGettable {
 		 * doubles point to index
 		 */
 		public AreaPosition(final Vector2d v) {
-			x = toDiv(v.x, paperLeft);
-			y = toDiv(v.y, paperTop);
+			x = toDiv(v.getX(), paperLeft);
+			y = toDiv(v.getY(), paperTop);
 		}
 	}
 

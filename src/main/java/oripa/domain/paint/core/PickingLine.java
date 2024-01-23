@@ -1,9 +1,8 @@
 package oripa.domain.paint.core;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * abstract class specified for picking line.

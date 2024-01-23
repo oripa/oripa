@@ -22,8 +22,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,6 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

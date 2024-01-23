@@ -48,9 +48,9 @@ public final class Geometry {
 					vCoord.get(0) - uCoord.get(0),
 					vCoord.get(1) - uCoord.get(1));
 
-			angle = Math.atan2(dir.y, dir.x);
+			angle = Math.atan2(dir.getY(), dir.getX());
 
-			logger.trace("dir = (" + dir.x + ", " + dir.y + ")");
+			logger.trace("dir = (" + dir.getX() + ", " + dir.getY() + ")");
 			logger.trace("angle = " + angle);
 		}
 

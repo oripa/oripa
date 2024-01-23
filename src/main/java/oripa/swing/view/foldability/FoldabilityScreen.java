@@ -39,7 +39,6 @@ import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.vecmath.Vector2d;
 
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
@@ -50,6 +49,7 @@ import oripa.swing.drawer.java2d.CreasePatternGraphics;
 import oripa.swing.view.util.AffineCamera;
 import oripa.swing.view.util.MouseUtility;
 import oripa.value.CalculationResource;
+import oripa.vecmath.Vector2d;
 
 /**
  * A screen to show whether Maekawa theorem and Kawasaki theorem (and others)

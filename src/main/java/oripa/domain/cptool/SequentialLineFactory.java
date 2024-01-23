@@ -21,10 +21,9 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

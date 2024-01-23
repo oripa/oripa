@@ -20,17 +20,12 @@ package oripa.geom;
 
 import java.util.stream.Stream;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 public class Segment {
 
 	private final Vector2d p0;
 	private final Vector2d p1;
-
-	public Segment() {
-		p0 = new Vector2d();
-		p1 = new Vector2d();
-	}
 
 	public Segment(final Vector2d p0, final Vector2d p1) {
 		this.p0 = p0;
@@ -38,9 +33,8 @@ public class Segment {
 	}
 
 	public Segment(final double x0, final double y0, final double x1, final double y1) {
-		this();
-		this.p0.set(x0, y0);
-		this.p1.set(x1, y1);
+		this.p0 = new Vector2d(x0, y0);
+		this.p1 = new Vector2d(x1, y1);
 	}
 
 	public Vector2d getP0() {
@@ -58,16 +52,16 @@ public class Segment {
 	public Line getLine() {
 		var p0 = getP0();
 		var p1 = getP1();
-		return new Line(p0, new Vector2d(p1.x - p0.x, p1.y - p0.y));
+		return new Line(p0, p1.subtract(p0));
 	}
 
 	public double length() {
 		var p0 = getP0();
 		var p1 = getP1();
 
-		var dp = new Vector2d(p0);
-		dp.sub(p1);
-		return Math.sqrt(dp.getX() * dp.getX() + dp.getY() * dp.getY());
+		var dp = p0.subtract(p1);
+
+		return dp.length();
 	}
 
 	/**
@@ -77,7 +71,10 @@ public class Segment {
 	 * @param xTested
 	 */
 	public double getAffineYValueAt(final double xTested) {
-		return (getP1().y - getP0().y) * (xTested - getP0().x) / (getP1().x - getP0().x) + getP0().y;
+		var p0 = getP0();
+		var p1 = getP1();
+		return (p1.getY() - p0.getY()) * (xTested - p0.getX()) / (p1.getX() - p0.getX())
+				+ p0.getY();
 	}
 
 	/**
@@ -87,6 +84,8 @@ public class Segment {
 	 * @param yTested
 	 */
 	public double getAffineXValueAt(final double yTested) {
-		return (getP1().x - getP0().x) * (yTested - getP0().y) / (getP1().y - getP0().y) + getP0().x;
+		var p0 = getP0();
+		var p1 = getP1();
+		return (p1.getX() - p0.getX()) * (yTested - p0.getY()) / (p1.getY() - p0.getY()) + p0.getX();
 	}
 }

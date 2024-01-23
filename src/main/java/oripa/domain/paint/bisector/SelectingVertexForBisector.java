@@ -1,9 +1,8 @@
 package oripa.domain.paint.bisector;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
+import oripa.vecmath.Vector2d;
 
 public class SelectingVertexForBisector extends PickingVertex {
 

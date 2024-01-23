@@ -3,10 +3,9 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public class LineDivider {
 	/**
@@ -24,8 +23,8 @@ public class LineDivider {
 
 		// Normally you don't want to add a vertex too close to the end of the
 		// line
-		if (GeomUtil.distance(line.p0, v) < pointEps
-				|| GeomUtil.distance(line.p1, v) < pointEps) {
+		if (GeomUtil.distance(line.getP0(), v) < pointEps
+				|| GeomUtil.distance(line.getP1(), v) < pointEps) {
 			return null;
 		}
 
@@ -34,8 +33,8 @@ public class LineDivider {
 			return null;
 		}
 
-		divided.add(new OriLine(line.p0, v, line.getType()));
-		divided.add(new OriLine(v, line.p1, line.getType()));
+		divided.add(new OriLine(line.getP0(), v, line.getType()));
+		divided.add(new OriLine(v, line.getP1(), line.getType()));
 
 		return divided;
 	}

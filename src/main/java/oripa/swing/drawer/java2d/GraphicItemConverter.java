@@ -23,9 +23,8 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -34,39 +33,43 @@ import oripa.value.OriLine;
 public class GraphicItemConverter {
 	public Line2D.Double toLine2D(final OriLine line) {
 		var g2dLine = new Line2D.Double();
-		g2dLine.x1 = line.p0.x;
-		g2dLine.y1 = line.p0.y;
 
-		g2dLine.x2 = line.p1.x;
-		g2dLine.y2 = line.p1.y;
+		var p0 = line.getP0();
+		var p1 = line.getP1();
+
+		g2dLine.x1 = p0.getX();
+		g2dLine.y1 = p0.getY();
+
+		g2dLine.x2 = p1.getX();
+		g2dLine.y2 = p1.getY();
 
 		return g2dLine;
 	}
 
 	public Line2D.Double toLine2D(final Vector2d p0, final Vector2d p1) {
-		return new Line2D.Double(p0.x, p0.y, p1.x, p1.y);
+		return new Line2D.Double(p0.getX(), p0.getY(), p1.getX(), p1.getY());
 	}
 
 	public Rectangle2D.Double toRectangle2D(final Vector2d vertex, final double vertexSize) {
 		final double vertexHalfSize = vertexSize / 2;
 		return new Rectangle2D.Double(
-				vertex.x - vertexHalfSize, vertex.y - vertexHalfSize,
+				vertex.getX() - vertexHalfSize, vertex.getY() - vertexHalfSize,
 				vertexSize, vertexSize);
 	}
 
 	public Rectangle2D.Double toRectangle2D(final Vector2d p0, final Vector2d p1) {
-		double sx = Math.min(p0.x, p1.x);
-		double sy = Math.min(p0.y, p1.y);
-		double w = Math.abs(p0.x - p1.x);
-		double h = Math.abs(p0.y - p1.y);
+		double sx = Math.min(p0.getX(), p1.getX());
+		double sy = Math.min(p0.getY(), p1.getY());
+		double w = Math.abs(p0.getX() - p1.getX());
+		double h = Math.abs(p0.getY() - p1.getY());
 		return new Rectangle2D.Double(sx, sy, w, h);
 	}
 
 	public Path2D.Double toPath2D(final List<Vector2d> vertices) {
 		var path = new Path2D.Double();
-		path.moveTo(vertices.get(0).x, vertices.get(0).y);
+		path.moveTo(vertices.get(0).getX(), vertices.get(0).getY());
 		for (int i = 1; i < vertices.size(); i++) {
-			path.lineTo(vertices.get(i).x, vertices.get(i).y);
+			path.lineTo(vertices.get(i).getX(), vertices.get(i).getY());
 		}
 		path.closePath();
 		return path;

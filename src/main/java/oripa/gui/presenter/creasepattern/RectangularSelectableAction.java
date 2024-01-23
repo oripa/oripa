@@ -3,8 +3,6 @@ package oripa.gui.presenter.creasepattern;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.vecmath.Vector2d;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +11,7 @@ import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 public abstract class RectangularSelectableAction extends AbstractGraphicMouseAction {
 	private static final Logger logger = LoggerFactory.getLogger(RectangularSelectableAction.class);
@@ -64,10 +63,10 @@ public abstract class RectangularSelectableAction extends AbstractGraphicMouseAc
 
 		try {
 			RectangleClipper clipper = new RectangleClipper(
-					Math.min(startPoint.x, draggingPoint.x),
-					Math.min(startPoint.y, draggingPoint.y),
-					Math.max(startPoint.x, draggingPoint.x),
-					Math.max(startPoint.y, draggingPoint.y));
+					Math.min(startPoint.getX(), draggingPoint.getX()),
+					Math.min(startPoint.getY(), draggingPoint.getY()),
+					Math.max(startPoint.getX(), draggingPoint.getX()),
+					Math.max(startPoint.getY(), draggingPoint.getY()));
 
 			CreasePattern creasePattern = paintContext.getCreasePattern();
 			selectedLines = clipper.selectByArea(creasePattern);

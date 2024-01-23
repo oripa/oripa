@@ -18,14 +18,13 @@
  */
 package oripa.domain.fold.origeom;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
 import oripa.util.MathUtil;
+import oripa.vecmath.Vector2d;
 
 /**
  * Mathematical operations related to half-edge data structure elements.
@@ -180,12 +179,9 @@ public class OriGeomUtil {
 	 */
 	private static double getAngleDifference(
 			final OriVertex v1, final OriVertex v2, final OriVertex v3) {
-		var preP = new Vector2d(v1.getPositionBeforeFolding());
 		var p = new Vector2d(v2.getPositionBeforeFolding());
-		var nxtP = new Vector2d(v3.getPositionBeforeFolding());
-
-		nxtP.sub(p);
-		preP.sub(p);
+		var preP = new Vector2d(v1.getPositionBeforeFolding()).subtract(p);
+		var nxtP = new Vector2d(v3.getPositionBeforeFolding()).subtract(p);
 
 		var prePAngle = MathUtil.angleOf(preP);
 		var nxtPAngle = MathUtil.angleOf(nxtP);

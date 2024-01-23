@@ -26,11 +26,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.vecmath.Vector2d;
-
 import oripa.geom.GeomUtil;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * Face of crease pattern (or graph, more abstractly) with reference to
@@ -212,9 +211,7 @@ public class OriFace {
 		Vector2d centerP = getCentroidBeforeFolding();
 		double rate = 0.5;
 		return halfedgeStream()
-				.map(he -> new Vector2d(
-						he.getPositionBeforeFolding().x * rate + centerP.x * (1.0 - rate),
-						he.getPositionBeforeFolding().y * rate + centerP.y * (1.0 - rate)))
+				.map(he -> he.getPositionBeforeFolding().multiply(rate).add(centerP.multiply(1.0 - rate)))
 				.collect(Collectors.toList());
 	}
 

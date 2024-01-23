@@ -18,13 +18,13 @@
 
 package oripa.swing.view.estimation;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 public class TriangleVertex {
 
 	// position after folding
-	public Vector2d p = new Vector2d();
+	public Vector2d p = new Vector2d(0, 0);
 
-	public Vector2d uv = new Vector2d();
+	public Vector2d uv = new Vector2d(0, 0);
 	public FloatingRGB color = new FloatingRGB(0, 0, 0);
 }

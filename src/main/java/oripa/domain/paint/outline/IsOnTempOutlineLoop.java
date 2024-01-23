@@ -2,10 +2,9 @@ package oripa.domain.paint.outline;
 
 import java.util.Collection;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.util.PairLoop;
 import oripa.geom.GeomUtil;
+import oripa.vecmath.Vector2d;
 
 public class IsOnTempOutlineLoop {
 	public boolean execute(

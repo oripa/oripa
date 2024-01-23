@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
+import oripa.vecmath.Vector2d;
 
 public class RotatedLineFactory {
 
@@ -52,29 +53,28 @@ public class RotatedLineFactory {
 
 	private OriLine createRotatedLine(final OriLine line, final OriPoint center,
 			final double angleRad) {
-		OriPoint r0 = rotateAroundCenter(line.p0, center, angleRad);
-		OriPoint r1 = rotateAroundCenter(line.p1, center, angleRad);
+		var r0 = rotateAroundCenter(line.getP0(), center, angleRad);
+		var r1 = rotateAroundCenter(line.getP1(), center, angleRad);
 
 		return new OriLine(r0, r1, line.getType());
 	}
 
-	private OriPoint rotateAroundCenter(final OriPoint p, final OriPoint center,
+	private Vector2d rotateAroundCenter(final Vector2d p, final Vector2d center,
 			final double angleRad) {
 
-		OriPoint shiftedToCenter = new OriPoint(p.x - center.x, p.y - center.y);
+		var shiftedToCenter = p.subtract(center);
 
-		OriPoint rotated = rotate(shiftedToCenter, angleRad);
+		var rotated = rotate(shiftedToCenter, angleRad).add(center);
 
-		rotated.add(center);
-
-		return rotated;
+		return rotated.add(center);
 	}
 
-	private OriPoint rotate(final OriPoint p, final double angleRad) {
-		OriPoint rotated = new OriPoint();
+	private OriPoint rotate(final Vector2d p, final double angleRad) {
 
-		rotated.x = p.x * Math.cos(angleRad) - p.y * Math.sin(angleRad);
-		rotated.y = p.x * Math.sin(angleRad) + p.y * Math.cos(angleRad);
+		var rotatedX = p.getX() * Math.cos(angleRad) - p.getY() * Math.sin(angleRad);
+		var rotatedY = p.getX() * Math.sin(angleRad) + p.getY() * Math.cos(angleRad);
+
+		OriPoint rotated = new OriPoint(rotatedX, rotatedY);
 
 		return rotated;
 	}

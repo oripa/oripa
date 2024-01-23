@@ -18,7 +18,7 @@
 
 package oripa.domain.fold.halfedge;
 
-import javax.vecmath.Vector2d;
+import oripa.vecmath.Vector2d;
 
 /**
  * A half-edge is a directed edge on an undirected edge. Half-edge has a pair,
@@ -48,12 +48,12 @@ public class OriHalfedge {
 	/**
 	 * temporary position while folding
 	 */
-	private final Vector2d positionWhileFolding = new Vector2d();
+	private final Vector2d positionWhileFolding = new Vector2d(0, 0);
 
 	/**
 	 * position for display after fold.
 	 */
-	private final Vector2d positionForDisplay = new Vector2d();
+	private final Vector2d positionForDisplay = new Vector2d(0, 0);
 
 	public OriHalfedge(final OriVertex v, final OriFace f) {
 		vertex = v;

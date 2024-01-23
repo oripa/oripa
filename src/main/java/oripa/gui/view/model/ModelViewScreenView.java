@@ -20,11 +20,10 @@ package oripa.gui.view.model;
 
 import java.util.function.Consumer;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.ScreenView;
 import oripa.gui.view.util.CallbackOnUpdate;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

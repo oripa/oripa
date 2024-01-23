@@ -37,7 +37,6 @@ import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.vecmath.Vector2d;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +51,7 @@ import oripa.gui.view.model.ModelViewScreenView;
 import oripa.gui.view.util.CallbackOnUpdate;
 import oripa.swing.drawer.java2d.XRayModelGraphics;
 import oripa.swing.view.util.MouseUtility;
+import oripa.vecmath.Vector2d;
 
 /**
  * Screen to show the silhouette of origami which is the result of face
@@ -70,7 +70,7 @@ public class ModelViewScreen extends JPanel
 	private double scale = 1;
 	private double transX = 0;
 	private double transY = 0;
-	private final Vector2d modelCenter = new Vector2d();
+	private final Vector2d modelCenter = new Vector2d(0, 0);
 	private double rotateAngle = 0;
 	private final AffineTransform affineTransform = new AffineTransform();
 
@@ -150,8 +150,7 @@ public class ModelViewScreen extends JPanel
 		} else {
 			// Align the center of the model, combined scale
 			var domain = origamiModel.createDomainOfFoldedModel();
-			modelCenter.x = domain.getCenterX();
-			modelCenter.y = domain.getCenterY();
+			modelCenter.set(domain.getCenter());
 
 			logger.debug("model center = {}", modelCenter);
 
@@ -170,7 +169,7 @@ public class ModelViewScreen extends JPanel
 		affineTransform.scale(scale, scale);
 		affineTransform.translate(transX, transY);
 		affineTransform.rotate(rotateAngle);
-		affineTransform.translate(-modelCenter.x, -modelCenter.y);
+		affineTransform.translate(-modelCenter.getX(), -modelCenter.getY());
 	}
 
 	private void buildBufferImage() {

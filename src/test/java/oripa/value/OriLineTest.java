@@ -20,11 +20,10 @@ package oripa.value;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javax.vecmath.Vector2d;
-
 import org.junit.jupiter.api.Test;
 
 import oripa.geom.Segment;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -41,12 +40,10 @@ class OriLineTest {
 		assertNotEquals(line1.hashCode(), line2.hashCode());
 
 		// test reversed direction
-		line2.p0.set(2, 3);
-		line2.p1.set(0, 1);
-		line2.setType(OriLine.Type.VALLEY);
+		var line2Reversed = new OriLine(2, 3, 0, 1, OriLine.Type.VALLEY);
 
-		assertEquals(line1, line2);
-		assertEquals(line1.hashCode(), line2.hashCode());
+		assertEquals(line1, line2Reversed);
+		assertEquals(line1.hashCode(), line2Reversed.hashCode());
 
 	}
 

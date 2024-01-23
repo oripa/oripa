@@ -22,10 +22,9 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.MultipleRaySnapPointFactory;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

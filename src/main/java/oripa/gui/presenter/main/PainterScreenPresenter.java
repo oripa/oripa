@@ -18,8 +18,6 @@
  */
 package oripa.gui.presenter.main;
 
-import javax.vecmath.Vector2d;
-
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.geom.RectangleDomain;
@@ -34,6 +32,7 @@ import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
 import oripa.gui.view.main.PainterScreenView;
 import oripa.gui.view.main.ViewUpdateSupport;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
