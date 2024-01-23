@@ -46,7 +46,7 @@ public class OriVertex implements Comparable<OriVertex> {
 	/**
 	 * position before fold
 	 */
-	private final Vector2d positionBeforeFolding = new Vector2d(0, 0);
+	private final Vector2d positionBeforeFolding;
 
 	private final ArrayList<OriEdge> edges = new ArrayList<>();
 	private final Map<OriVertex, OriEdge> edgeMap = new HashMap<>();
@@ -57,13 +57,12 @@ public class OriVertex implements Comparable<OriVertex> {
 	private int vertexID = 0;
 
 	public OriVertex(final Vector2d position) {
-		this.position.set(position);
-		positionBeforeFolding.set(position);
+		this.position = position;
+		positionBeforeFolding = position;
 	}
 
 	public OriVertex(final double x, final double y) {
-		position.set(x, y);
-		positionBeforeFolding.set(position);
+		this(new Vector2d(x, y));
 	}
 
 	/**
