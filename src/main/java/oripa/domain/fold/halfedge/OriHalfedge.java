@@ -53,7 +53,7 @@ public class OriHalfedge {
 	/**
 	 * position for display after fold.
 	 */
-	private final Vector2d positionForDisplay = new Vector2d(0, 0);
+	private Vector2d positionForDisplay = new Vector2d(0, 0);
 
 	public OriHalfedge(final OriVertex v, final OriFace f) {
 		vertex = v;
@@ -185,6 +185,10 @@ public class OriHalfedge {
 	 */
 	public Vector2d getPositionForDisplay() {
 		return positionForDisplay;
+	}
+
+	public void setPositionForDisplay(final Vector2d v) {
+		positionForDisplay = v;
 	}
 
 	/**
