@@ -83,11 +83,11 @@ class SimpleFolder {
 			var sv = e.getStartVertex();
 			var ev = e.getEndVertex();
 
-			sv.getPosition().set(e.getLeft().getPositionWhileFolding());
+			sv.setPosition(new Vector2d(e.getLeft().getPositionWhileFolding()));
 
 			var right = e.getRight();
 			if (right != null) {
-				ev.getPosition().set(right.getPositionWhileFolding());
+				ev.setPosition(new Vector2d(right.getPositionWhileFolding()));
 			}
 		}
 

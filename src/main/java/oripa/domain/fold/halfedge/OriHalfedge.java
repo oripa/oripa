@@ -58,7 +58,7 @@ public class OriHalfedge {
 	public OriHalfedge(final OriVertex v, final OriFace f) {
 		vertex = v;
 		face = f;
-		positionWhileFolding.set(v.getPosition());
+		positionWhileFolding = new Vector2d(v.getPosition());
 	}
 
 	/**
