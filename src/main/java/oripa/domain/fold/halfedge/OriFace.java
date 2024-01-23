@@ -49,7 +49,7 @@ public class OriFace {
 	 */
 	private final List<OriHalfedge> halfedges = new ArrayList<>();
 
-	private final List<OriLine> precreases = new ArrayList<>();
+	private List<OriLine> precreases = new ArrayList<>();
 
 	private boolean faceFront = true;
 
@@ -135,6 +135,10 @@ public class OriFace {
 	 */
 	public Stream<OriLine> precreaseStream() {
 		return precreases.stream();
+	}
+
+	public void setPrecreases(final Collection<OriLine> precreases) {
+		this.precreases = new ArrayList<>(precreases);
 	}
 
 	public void addAllPrecreases(final Collection<OriLine> precreases) {

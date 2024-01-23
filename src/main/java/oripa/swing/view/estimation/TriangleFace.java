@@ -72,7 +72,7 @@ public class TriangleFace {
 	 *            y-coordinate value to be set.
 	 */
 	public void setPosition(final int index, final double x, final double y) {
-		v[index].p.set(x, y);
+		v[index].p = new Vector2d(x, y);
 	}
 
 	/**

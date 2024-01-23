@@ -70,7 +70,7 @@ public class ModelViewScreen extends JPanel
 	private double scale = 1;
 	private double transX = 0;
 	private double transY = 0;
-	private final Vector2d modelCenter = new Vector2d(0, 0);
+	private Vector2d modelCenter = new Vector2d(0, 0);
 	private double rotateAngle = 0;
 	private final AffineTransform affineTransform = new AffineTransform();
 
@@ -150,7 +150,7 @@ public class ModelViewScreen extends JPanel
 		} else {
 			// Align the center of the model, combined scale
 			var domain = origamiModel.createDomainOfFoldedModel();
-			modelCenter.set(domain.getCenter());
+			modelCenter = domain.getCenter();
 
 			logger.debug("model center = {}", modelCenter);
 

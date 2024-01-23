@@ -48,17 +48,17 @@ public class OriHalfedge {
 	/**
 	 * temporary position while folding
 	 */
-	private final Vector2d positionWhileFolding = new Vector2d(0, 0);
+	private Vector2d positionWhileFolding = new Vector2d(0, 0);
 
 	/**
 	 * position for display after fold.
 	 */
-	private final Vector2d positionForDisplay = new Vector2d(0, 0);
+	private Vector2d positionForDisplay = new Vector2d(0, 0);
 
 	public OriHalfedge(final OriVertex v, final OriFace f) {
 		vertex = v;
 		face = f;
-		positionWhileFolding.set(v.getPosition());
+		positionWhileFolding = new Vector2d(v.getPosition());
 	}
 
 	/**
@@ -171,6 +171,10 @@ public class OriHalfedge {
 		return positionWhileFolding;
 	}
 
+	public void setPositionWhileFolding(final Vector2d v) {
+		positionWhileFolding = v;
+	}
+
 	/**
 	 * Gets current position of the start point of this half-edge.
 	 *
@@ -185,6 +189,10 @@ public class OriHalfedge {
 	 */
 	public Vector2d getPositionForDisplay() {
 		return positionForDisplay;
+	}
+
+	public void setPositionForDisplay(final Vector2d v) {
+		positionForDisplay = v;
 	}
 
 	/**

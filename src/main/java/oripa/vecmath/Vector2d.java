@@ -26,8 +26,8 @@ import java.util.Objects;
  */
 public class Vector2d {
 
-	private double x;
-	private double y;
+	private final double x;
+	private final double y;
 
 	public Vector2d(final double x, final double y) {
 		this.x = x;
@@ -44,26 +44,6 @@ public class Vector2d {
 
 	public double getY() {
 		return y;
-	}
-
-	/**
-	 * This method should be removed eventually.
-	 *
-	 * @param x
-	 * @param y
-	 */
-	public void set(final double x, final double y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	/**
-	 * This method should be removed eventually.
-	 *
-	 */
-	public void set(final Vector2d v) {
-		this.x = v.x;
-		this.y = v.y;
 	}
 
 	/**
