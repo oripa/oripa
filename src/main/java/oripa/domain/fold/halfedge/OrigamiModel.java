@@ -158,7 +158,7 @@ public class OrigamiModel {
 		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
 			var x = 2 * centerX - he.getPositionForDisplay().getX();
 			var y = he.getPositionForDisplay().getY();
-			he.getPositionForDisplay().set(x, y);
+			he.setPositionForDisplay(new Vector2d(x, y));
 		});
 	}
 
