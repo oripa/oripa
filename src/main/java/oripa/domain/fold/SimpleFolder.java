@@ -19,6 +19,7 @@
 package oripa.domain.fold;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
+import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -192,21 +194,19 @@ class SimpleFolder {
 			var sp = baseHe.getPositionWhileFolding();
 
 			face.halfedgeStream().forEach(he -> {
-				flipVertex(he.getPositionWhileFolding(), sp, ep);
+				he.setPositionWhileFolding(flipVertex(he.getPositionWhileFolding(), sp, ep));
 			});
-			face.precreaseStream().forEach(precrease -> {
-				flipVertex(precrease.getP0(), sp, ep);
-				flipVertex(precrease.getP1(), sp, ep);
-
-			});
+			face.setPrecreases(face.precreaseStream().map(precrease -> new OriLine(
+					flipVertex(precrease.getP0(), sp, ep),
+					flipVertex(precrease.getP1(), sp, ep),
+					OriLine.Type.AUX))
+					.collect(Collectors.toList()));
 			face.invertFaceFront();
 		}
 	}
 
-	private void flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d ep) {
-		var v = GeomUtil.getSymmetricPoint(vertex, sp, ep);
-
-		vertex.set(v);
+	private Vector2d flipVertex(final Vector2d vertex, final Vector2d sp, final Vector2d ep) {
+		return GeomUtil.getSymmetricPoint(vertex, sp, ep);
 	}
 
 }

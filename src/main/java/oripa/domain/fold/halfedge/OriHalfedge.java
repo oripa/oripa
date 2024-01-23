@@ -48,7 +48,7 @@ public class OriHalfedge {
 	/**
 	 * temporary position while folding
 	 */
-	private final Vector2d positionWhileFolding = new Vector2d(0, 0);
+	private Vector2d positionWhileFolding = new Vector2d(0, 0);
 
 	/**
 	 * position for display after fold.
@@ -169,6 +169,10 @@ public class OriHalfedge {
 	 */
 	public Vector2d getPositionWhileFolding() {
 		return positionWhileFolding;
+	}
+
+	public void setPositionWhileFolding(final Vector2d v) {
+		positionWhileFolding = v;
 	}
 
 	/**
