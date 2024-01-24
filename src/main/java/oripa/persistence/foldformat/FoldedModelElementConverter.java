@@ -286,7 +286,7 @@ public class FoldedModelElementConverter {
 					.map(edge -> new OriLine(edge.toSegment(), OriLine.Type.AUX))
 					.collect(Collectors.toList());
 
-			face.addAllPrecreases(precreases);
+			face.setPrecreases(precreases);
 		}
 	}
 }

@@ -206,7 +206,7 @@ public class OrigamiModelFactory {
 
 		// attach precrease lines to faces
 		for (OriFace face : faces) {
-			face.addAllPrecreases(modelPrecreases.stream()
+			face.setPrecreases(modelPrecreases.stream()
 					.filter(precrease -> OriGeomUtil.isSegmentIncludedInFace(face, precrease, pointEps))
 					.collect(Collectors.toList()));
 		}
