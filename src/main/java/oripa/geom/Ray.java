@@ -27,7 +27,7 @@ public class Ray {
 
 	public Ray(final Vector2d p, final Vector2d dir) {
 		this.p = p;
-		this.dir = dir;
+		this.dir = dir.normalize();
 	}
 
 	public Vector2d getEndPoint() {
