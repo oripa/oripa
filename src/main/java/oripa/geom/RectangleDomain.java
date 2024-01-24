@@ -70,7 +70,7 @@ public class RectangleDomain {
 	/**
 	 * Create minimum sized domain
 	 */
-	public RectangleDomain() {
+	private RectangleDomain() {
 		this(Collections.emptyList());
 	}
 
