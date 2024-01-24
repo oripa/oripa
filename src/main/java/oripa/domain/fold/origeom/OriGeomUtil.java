@@ -34,10 +34,6 @@ import oripa.vecmath.Vector2d;
  */
 public class OriGeomUtil {
 
-//	public static double pointEps(final double paperSize) {
-//		return paperSize * 1e-7;
-//	}
-
 	/**
 	 * Whether {@code face0} and {@code face1} overlap partially or entirely
 	 * after fold.

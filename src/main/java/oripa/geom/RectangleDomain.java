@@ -40,7 +40,7 @@ public class RectangleDomain {
 	private double top;
 	private double bottom;
 
-	// These factory methods seems redundant but are needed because
+	// These factory methods seem redundant but are needed because
 	// Java can't distinguish the difference of generic type for the parameter
 	// collection, e.g, T for Collection<T>, when we overload methods.
 
