@@ -34,9 +34,9 @@ public class PseudoLineFactory {
 	}
 
 	public Segment create(final Line line, final double paperSize) {
-		var dir = line.dir.multiply(paperSize * 8);
+		var dir = line.getDirection().multiply(paperSize * 8);
 
-		var v0 = line.p;
+		var v0 = line.getPoint();
 		Vector2d sv = v0.subtract(dir);
 
 		Vector2d ev = v0.add(dir);

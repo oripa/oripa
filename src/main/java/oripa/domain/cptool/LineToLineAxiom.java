@@ -35,7 +35,7 @@ public class LineToLineAxiom {
 		var line0 = s0.getLine();
 		var line1 = s1.getLine();
 
-		if (GeomUtil.isParallel(line0.dir, line1.dir)) {
+		if (GeomUtil.isParallel(line0.getDirection(), line1.getDirection())) {
 			return createForParallelSegments(line0, line1);
 		} else {
 
@@ -51,9 +51,9 @@ public class LineToLineAxiom {
 
 	private List<Line> createForParallelSegments(final Line line0, final Line line1) {
 
-		var point = line0.p;
+		var point = line0.getPoint();
 
-		var dir0 = line0.dir;
+		var dir0 = line0.getDirection();
 		var verticalLine = new Line(point, new Vector2d(-dir0.getY(), dir0.getX()));
 
 		var crossPoint = GeomUtil.getCrossPoint(verticalLine, line1);
@@ -86,11 +86,11 @@ public class LineToLineAxiom {
 		var line0 = s0.getLine();
 		var line1 = s1.getLine();
 
-		var pointOnLine0 = segmentCrossPoint.add(line0.dir);
+		var pointOnLine0 = segmentCrossPoint.add(line0.getDirection());
 
-		var pointOnLine1 = segmentCrossPoint.add(line1.dir);
+		var pointOnLine1 = segmentCrossPoint.add(line1.getDirection());
 
-		var reversedDir = line1.dir.multiply(-1);
+		var reversedDir = line1.getDirection().multiply(-1);
 		var pointOnLine1Reversed = segmentCrossPoint.add(reversedDir);
 
 		var foldLineDir0 = GeomUtil.getBisectorVec(pointOnLine0, segmentCrossPoint, pointOnLine1);

@@ -22,11 +22,19 @@ import oripa.vecmath.Vector2d;
 
 public class Line {
 
-	public Vector2d p; // Passing through point
-	public Vector2d dir; // Unit direction vector
+	private final Vector2d p; // Passing through point
+	private final Vector2d dir; // Unit direction vector
 
 	public Line(final Vector2d p, final Vector2d dir) {
 		this.p = p;
 		this.dir = dir.normalize();
+	}
+
+	public Vector2d getPoint() {
+		return p;
+	}
+
+	public Vector2d getDirection() {
+		return dir;
 	}
 }

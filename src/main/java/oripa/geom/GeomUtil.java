@@ -285,11 +285,11 @@ public class GeomUtil {
 	 * @return
 	 */
 	public static Vector2d getCrossPoint(final Line l0, final Line l1) {
-		var p0 = l0.p;
-		var p1 = p0.add(l0.dir);
+		var p0 = l0.getPoint();
+		var p1 = p0.add(l0.getDirection());
 
-		var q0 = l1.p;
-		var q1 = q0.add(l1.dir);
+		var q0 = l1.getPoint();
+		var q1 = q0.add(l1.getDirection());
 
 		var answerOpt = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);
 
@@ -399,8 +399,8 @@ public class GeomUtil {
 	}
 
 	public static double distancePointToLine(final Vector2d p, final Line line) {
-		Vector2d sp = line.p;
-		Vector2d ep = sp.add(line.dir);
+		Vector2d sp = line.getPoint();
+		Vector2d ep = sp.add(line.getDirection());
 
 		return distance(getNearestPointToLine(p, sp, ep), p);
 	}
@@ -509,8 +509,8 @@ public class GeomUtil {
 
 	public static double distance(final Vector2d p, final Line line, final double[] param) {
 
-		var sp = line.p;
-		var ep = sp.add(line.dir);
+		var sp = line.getPoint();
+		var ep = sp.add(line.getDirection());
 
 		param[0] = computeParameterForNearestPointToLine(p, sp, ep);
 		return distancePointToLine(p, line);

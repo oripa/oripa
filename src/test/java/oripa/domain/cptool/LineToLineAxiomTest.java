@@ -22,7 +22,7 @@ class LineToLineAxiomTest {
 
 		var line = new LineToLineAxiom().createFoldLines(s0, s1, EPS).get(0);
 
-		var dir = line.dir;
+		var dir = line.getDirection();
 
 		assertEquals(1.0, dir.getX(), EPS);
 		assertEquals(0, dir.getY(), EPS);
@@ -37,7 +37,7 @@ class LineToLineAxiomTest {
 
 		var line = new LineToLineAxiom().createFoldLines(s0, s1, EPS).get(0);
 
-		var dir = line.dir;
+		var dir = line.getDirection();
 
 		assertEquals(Math.cos(Math.PI / 8), dir.getX(), EPS);
 		assertEquals(Math.sin(Math.PI / 8), dir.getY(), EPS);
@@ -52,7 +52,7 @@ class LineToLineAxiomTest {
 
 		var line = new LineToLineAxiom().createFoldLines(s0, s1, EPS).get(0);
 
-		var dir = line.dir;
+		var dir = line.getDirection();
 
 		assertEquals(Math.cos(Math.PI / 8), dir.getX(), EPS);
 		assertEquals(Math.sin(Math.PI / 8), dir.getY(), EPS);
@@ -70,7 +70,7 @@ class LineToLineAxiomTest {
 		assertEquals(2, lines.size());
 
 		var angles = lines.stream()
-				.map(line -> line.dir.angle(new Vector2d(1, 0)))
+				.map(line -> line.getDirection().angle(new Vector2d(1, 0)))
 				.collect(Collectors.toList());
 
 		AssertionUtil.assertAnyMatch(Math.PI / 8, angles,
