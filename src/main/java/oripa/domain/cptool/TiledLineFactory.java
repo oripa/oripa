@@ -24,7 +24,7 @@ public class TiledLineFactory {
 			final Collection<OriLine> selectedLines,
 			final Collection<OriLine> creasePattern, final double paperSize) {
 
-		var selectionDomain = new RectangleDomain(selectedLines);
+		var selectionDomain = RectangleDomain.createFromSegments(selectedLines);
 
 		int startRow = (int) (-paperSize / selectionDomain.getHeight());
 		int startCol = (int) (-paperSize / selectionDomain.getWidth());
@@ -82,7 +82,7 @@ public class TiledLineFactory {
 
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
-		var domain = new RectangleDomain(creasePattern);
+		var domain = RectangleDomain.createFromSegments(creasePattern);
 		var clipper = new RectangleClipper(domain);
 
 		for (int x = startCol; x < endCol; x++) {

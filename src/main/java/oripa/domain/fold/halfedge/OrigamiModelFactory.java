@@ -217,9 +217,7 @@ public class OrigamiModelFactory {
 
 	private double computePaperSize(final List<OriVertex> vertices) {
 
-		var domain = new RectangleDomain();
-
-		domain.enlarge(vertices.stream()
+		var domain = RectangleDomain.createFromPoints(vertices.stream()
 				.map(v -> v.getPosition())
 				.collect(Collectors.toList()));
 

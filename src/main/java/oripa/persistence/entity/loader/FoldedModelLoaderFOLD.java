@@ -92,8 +92,7 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModelEntity> {
 		}
 
 		var positions = vertices.stream().map(OriVertex::getPosition).collect(Collectors.toList());
-		var domain = new RectangleDomain();
-		domain.enlarge(positions);
+		var domain = RectangleDomain.createFromPoints(positions);
 
 		// tentative value
 		var origamiModel = new OrigamiModel(domain.maxWidthHeight() * 1.1);

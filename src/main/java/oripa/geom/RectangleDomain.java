@@ -40,12 +40,24 @@ public class RectangleDomain {
 	private double top;
 	private double bottom;
 
+	public static RectangleDomain createFromSegments(final Collection<? extends Segment> target) {
+		return new RectangleDomain(target);
+	}
+
+	public static RectangleDomain createFromPoints(final Collection<? extends Vector2d> target) {
+		var domain = new RectangleDomain();
+
+		domain.enlarge(target);
+
+		return domain;
+	}
+
 	/**
 	 * construct this instance fit to given {@code target} lines
 	 *
 	 * @param target
 	 */
-	public RectangleDomain(final Collection<? extends Segment> target) {
+	private RectangleDomain(final Collection<? extends Segment> target) {
 
 		initialize();
 
@@ -86,7 +98,7 @@ public class RectangleDomain {
 	 *
 	 * @param v
 	 */
-	public void enlarge(final Vector2d v) {
+	private void enlarge(final Vector2d v) {
 		left = min(left, v.getX());
 		right = max(right, v.getX());
 		top = min(top, v.getY());
@@ -98,7 +110,7 @@ public class RectangleDomain {
 	 *
 	 * @param points
 	 */
-	public void enlarge(final Collection<Vector2d> points) {
+	private void enlarge(final Collection<? extends Vector2d> points) {
 		points.forEach(this::enlarge);
 	}
 

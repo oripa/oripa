@@ -21,6 +21,7 @@ package oripa.swing.view.estimation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -54,10 +55,11 @@ public class VertexColorMapFactory {
 			final List<Double> frontColorFactor,
 			final List<Double> backColorFactor,
 			final boolean flip) {
-		var domain = new RectangleDomain();
-		for (OriHalfedge he : face.halfedgeIterable()) {
-			domain.enlarge(he.getPosition());
-		}
+		var domain = RectangleDomain.createFromPoints(
+				face.halfedgeStream()
+						.map(OriHalfedge::getPosition)
+						.collect(Collectors.toList()));
+
 		double minX = domain.getLeft();
 		double minY = domain.getTop();
 

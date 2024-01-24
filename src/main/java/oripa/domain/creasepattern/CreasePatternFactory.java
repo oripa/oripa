@@ -51,7 +51,7 @@ public class CreasePatternFactory {
 				-paperSize / 2.0, OriLine.Type.CUT);
 
 		var lines = List.of(l0, l1, l2, l3);
-		var domain = new RectangleDomain(lines);
+		var domain = RectangleDomain.createFromSegments(lines);
 
 		CreasePattern creasePattern = new CreasePatternImpl(domain);
 
@@ -68,7 +68,7 @@ public class CreasePatternFactory {
 	 */
 	public CreasePattern createCreasePattern(final Collection<OriLine> lines) {
 		// To get paper size, consider boundary only
-		var domain = new RectangleDomain(
+		var domain = RectangleDomain.createFromSegments(
 				lines.stream()
 						.filter(line -> line.isBoundary())
 						.collect(Collectors.toList()));

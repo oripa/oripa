@@ -19,7 +19,7 @@ public class CreasePatternTest {
 				new OriLine(10.0, 10.0, 100.0, 100.0, OriLine.Type.MOUNTAIN),
 				new OriLine(20.0, 20.0, 100.0, 100.0, OriLine.Type.MOUNTAIN));
 
-		var domain = new RectangleDomain(lines);
+		var domain = RectangleDomain.createFromSegments(lines);
 		CreasePatternImpl cp = new CreasePatternImpl(domain);
 		cp.addAll(lines);
 

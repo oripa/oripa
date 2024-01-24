@@ -160,7 +160,7 @@ public class LineAdder {
 
 		// input domain can limit the current lines to be divided.
 		RectangleClipper inputDomainClipper = new RectangleClipper(
-				new RectangleDomain(nonExistingNewLines),
+				RectangleDomain.createFromSegments(nonExistingNewLines),
 				pointEps);
 		// use a hash set for avoiding worst case of computation time. (list
 		// takes O(n) time for deletion while hash set takes O(1) time.)

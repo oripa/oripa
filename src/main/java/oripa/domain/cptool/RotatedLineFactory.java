@@ -33,7 +33,7 @@ public class RotatedLineFactory {
 
 		ArrayList<OriLine> rotatedLines = new ArrayList<OriLine>();
 
-		var domain = new RectangleDomain(creasePattern);
+		var domain = RectangleDomain.createFromSegments(creasePattern);
 		var clipper = new RectangleClipper(domain);
 
 		double angle = angleDeg * Math.PI / 180.0;
