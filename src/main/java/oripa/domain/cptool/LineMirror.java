@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
-import oripa.value.OriPoint;
 import oripa.vecmath.Vector2d;
 
 public class LineMirror {
@@ -63,6 +62,6 @@ public class LineMirror {
 			final Vector2d vertex, final OriLine baseOriLine) {
 
 		Vector2d mirrored = GeomUtil.getSymmetricPoint(vertex, baseOriLine.getP0(), baseOriLine.getP1());
-		return new OriPoint(mirrored);
+		return mirrored;
 	}
 }

@@ -21,6 +21,8 @@ package oripa.vecmath;
 import java.util.Objects;
 
 /**
+ * Immutable 2D vector with fluent interface.
+ *
  * @author OUCHI Koji
  *
  */
@@ -32,10 +34,6 @@ public class Vector2d {
 	public Vector2d(final double x, final double y) {
 		this.x = x;
 		this.y = y;
-	}
-
-	public Vector2d(final Vector2d v) {
-		this(v.x, v.y);
 	}
 
 	public double getX() {

@@ -77,7 +77,7 @@ class CoordinateConverter {
 	}
 
 	private Vector2d distortByDepth(final Vector2d pos, final int depth) {
-		var cameraXY = new Vector2d(this.distortionParameter)
+		var cameraXY = this.distortionParameter
 				.multiply(Math.max(domain.getWidth(), domain.getHeight()) * 4);
 
 		var d = new Vector3d(
@@ -119,7 +119,7 @@ class CoordinateConverter {
 						.multiply(scale)
 						.subtract(cpPos);
 
-		var distorted = new Vector2d(pos).add(diff);
+		var distorted = pos.add(diff);
 
 		return distorted;
 	}

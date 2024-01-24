@@ -58,7 +58,7 @@ public class TriangleFace {
 	public void initializePositions() {
 		for (int i = 0; i < halfEdgeIndices.size(); i++) {
 			var he = convertedFace.getHalfedge(halfEdgeIndices.get(i));
-			v[i].p = new Vector2d(he.getPosition());
+			v[i].p = he.getPosition();
 		}
 	}
 

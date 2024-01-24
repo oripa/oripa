@@ -253,7 +253,7 @@ public class GeomUtil {
 	 * @return
 	 */
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
-		var p0 = new Vector2d(ray.p);
+		var p0 = ray.p;
 		var p1 = p0.add(ray.dir);
 
 		var segP0 = seg.getP0();
@@ -285,10 +285,10 @@ public class GeomUtil {
 	 * @return
 	 */
 	public static Vector2d getCrossPoint(final Line l0, final Line l1) {
-		var p0 = new Vector2d(l0.p);
+		var p0 = l0.p;
 		var p1 = p0.add(l0.dir);
 
-		var q0 = new Vector2d(l1.p);
+		var q0 = l1.p;
 		var q1 = q0.add(l1.dir);
 
 		var answerOpt = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);

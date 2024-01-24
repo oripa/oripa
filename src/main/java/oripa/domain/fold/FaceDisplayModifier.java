@@ -20,13 +20,12 @@ package oripa.domain.fold;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.vecmath.Vector2d;
 
 class FaceDisplayModifier {
 	public void setCurrentPositionsToDisplayPositions(final OrigamiModel origamiModel) {
 		origamiModel.getFaces().stream()
 				.flatMap(OriFace::halfedgeStream).forEach(he -> {
-					he.setPositionForDisplay(new Vector2d(he.getPosition()));
+					he.setPositionForDisplay(he.getPosition());
 				});
 	}
 }

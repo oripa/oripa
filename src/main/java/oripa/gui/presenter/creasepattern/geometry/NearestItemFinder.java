@@ -33,7 +33,7 @@ public class NearestItemFinder {
 				scaleThreshold(viewContext));
 
 		if (nearestPosition != null) {
-			return new Vector2d(nearestPosition.point);
+			return nearestPosition.point;
 		}
 
 		return null;

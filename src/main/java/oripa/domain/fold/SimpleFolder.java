@@ -83,11 +83,11 @@ class SimpleFolder {
 			var sv = e.getStartVertex();
 			var ev = e.getEndVertex();
 
-			sv.setPosition(new Vector2d(e.getLeft().getPositionWhileFolding()));
+			sv.setPosition(e.getLeft().getPositionWhileFolding());
 
 			var right = e.getRight();
 			if (right != null) {
-				ev.setPosition(new Vector2d(right.getPositionWhileFolding()));
+				ev.setPosition(right.getPositionWhileFolding());
 			}
 		}
 
@@ -146,7 +146,7 @@ class SimpleFolder {
 
 		// compute foot cross point from vertex to moved mirror axis line (or
 		// the crease)
-		Vector2d footV = new Vector2d(afterOrigin).add(afterDir.multiply(d1));
+		Vector2d footV = afterOrigin.add(afterDir.multiply(d1));
 
 		// compute a direction vector perpendicular to the crease.
 		// the vector directs the right side of the crease halfedge
@@ -163,8 +163,8 @@ class SimpleFolder {
 		var baseHePairNext = baseHePair.getNext();
 
 		// baseHe.pair keeps the position before folding.
-		var preOrigin = new Vector2d(baseHePairNext.getPositionWhileFolding());
-		var afterOrigin = new Vector2d(baseHe.getPositionWhileFolding());
+		var preOrigin = baseHePairNext.getPositionWhileFolding();
+		var afterOrigin = baseHe.getPositionWhileFolding();
 
 		// Creates the base unit vector for before the rotation
 		// (reversed direction)

@@ -90,7 +90,7 @@ public class LineToLineAxiom {
 
 		var pointOnLine1 = segmentCrossPoint.add(line1.dir);
 
-		var reversedDir = new Vector2d(line1.dir).multiply(-1);
+		var reversedDir = line1.dir.multiply(-1);
 		var pointOnLine1Reversed = segmentCrossPoint.add(reversedDir);
 
 		var foldLineDir0 = GeomUtil.getBisectorVec(pointOnLine0, segmentCrossPoint, pointOnLine1);
