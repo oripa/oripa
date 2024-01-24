@@ -29,7 +29,7 @@ import oripa.util.ClosedRange;
 import oripa.vecmath.Vector2d;
 
 /**
- * A rectangle domain fitting to given lines.
+ * A rectangle domain fitting to given shape(s).
  *
  * Position coordinate is the same as screen. (top is smaller)
  */
@@ -39,6 +39,10 @@ public class RectangleDomain {
 	private double right;
 	private double top;
 	private double bottom;
+
+	// These factory methods seems redundant but are needed because
+	// Java can't distinguish the difference of generic type for the parameter
+	// collection, e.g, T for Collection<T>, when we overload methods.
 
 	public static RectangleDomain createFromSegments(final Collection<? extends Segment> target) {
 		return new RectangleDomain(target);
