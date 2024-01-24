@@ -253,8 +253,8 @@ public class GeomUtil {
 	 * @return
 	 */
 	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
-		var p0 = ray.p;
-		var p1 = p0.add(ray.dir);
+		var p0 = ray.getEndPoint();
+		var p1 = p0.add(ray.getDirection());
 
 		var segP0 = seg.getP0();
 		var segP1 = seg.getP1();
