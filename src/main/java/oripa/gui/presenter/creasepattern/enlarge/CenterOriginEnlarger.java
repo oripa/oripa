@@ -55,7 +55,7 @@ class CenterOriginEnlarger extends AbstractEnlarger {
 
 		var scaledDiff = p.subtract(originOfEnlargement).multiply(absScale);
 
-		var scaled = originOfEnlargement.subtract(scaledDiff);
+		var scaled = originOfEnlargement.add(scaledDiff);
 
 		return scaled;
 	}
