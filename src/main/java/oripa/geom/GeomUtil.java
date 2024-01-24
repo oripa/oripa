@@ -241,7 +241,6 @@ public class GeomUtil {
 			final Vector2d ep) {
 		Vector2d cp = getNearestPointToLine(p, sp, ep);
 		return cp.multiply(2).subtract(p);
-//		return new Vector2d(2 * cp.getX() - p.getX(), 2 * cp.getY() - p.getY());
 	}
 
 	/**

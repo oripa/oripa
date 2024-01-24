@@ -104,7 +104,7 @@ public class ModelViewScreenPresenter {
 		var p0 = new Vector2d(modelCenter.getX() - dir.getX() * 300, modelCenter.getY() - dir.getY() * 300);
 		var p1 = new Vector2d(modelCenter.getX() + dir.getX() * 300, modelCenter.getY() + dir.getY() * 300);
 
-		var moveVec = new Vector2d(-dir.getY(), dir.getX()).normalize().multiply(scissorsLinePosition);
+		var moveVec = new Vector2d(-dir.getY(), dir.getX()).multiply(scissorsLinePosition);
 		scissorsLine = new OriLine(p0.add(moveVec), p1.add(moveVec), Type.AUX);
 
 		var factory = new CutModelOutlinesFactory();

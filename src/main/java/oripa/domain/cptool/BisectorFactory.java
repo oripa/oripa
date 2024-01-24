@@ -30,13 +30,10 @@ public class BisectorFactory {
 
 		double paperSize = domain.maxWidthHeight();
 
-		Vector2d dir = v0.subtract(v1).normalize();
-		double tmp = dir.getY();
-		dir = new Vector2d(tmp, -dir.getX()).multiply(paperSize * 8);
+		var dir = v0.subtract(v1);
+		var perpendicularDir = new Vector2d(dir.getY(), -dir.getX());
 
-		Segment bisector = new Segment(
-				cp.subtract(dir),
-				cp.add(dir));
+		Segment bisector = new PseudoLineFactory().create(new Line(cp, perpendicularDir), paperSize);
 
 		return new OriLine(bisector, lineType);
 	}
