@@ -22,11 +22,19 @@ import oripa.vecmath.Vector2d;
 
 public class Ray {
 
-	public Vector2d p;
-	public Vector2d dir;
+	private final Vector2d p;
+	private final Vector2d dir;
 
 	public Ray(final Vector2d p, final Vector2d dir) {
 		this.p = p;
-		this.dir = dir;
+		this.dir = dir.normalize();
+	}
+
+	public Vector2d getEndPoint() {
+		return p;
+	}
+
+	public Vector2d getDirection() {
+		return dir;
 	}
 }

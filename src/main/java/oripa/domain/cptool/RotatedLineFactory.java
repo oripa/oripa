@@ -33,7 +33,7 @@ public class RotatedLineFactory {
 
 		ArrayList<OriLine> rotatedLines = new ArrayList<OriLine>();
 
-		var domain = new RectangleDomain(creasePattern);
+		var domain = RectangleDomain.createFromSegments(creasePattern);
 		var clipper = new RectangleClipper(domain);
 
 		double angle = angleDeg * Math.PI / 180.0;
@@ -62,9 +62,9 @@ public class RotatedLineFactory {
 	private Vector2d rotateAroundCenter(final Vector2d p, final Vector2d center,
 			final double angleRad) {
 
-		var shiftedToCenter = p.subtract(center);
+		var shiftedToOrigin = p.subtract(center);
 
-		var rotated = rotate(shiftedToCenter, angleRad).add(center);
+		var rotated = rotate(shiftedToOrigin, angleRad).add(center);
 
 		return rotated.add(center);
 	}

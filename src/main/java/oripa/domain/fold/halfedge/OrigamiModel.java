@@ -147,11 +147,11 @@ public class OrigamiModel {
 	 * Flips x coordinates of the positions for display.
 	 */
 	public void flipXCoordinates() {
-		var domain = new RectangleDomain();
-
-		faces.stream().flatMap(f -> f.halfedgeStream()).forEach(he -> {
-			domain.enlarge(he.getPosition());
-		});
+		var domain = RectangleDomain.createFromPoints(
+				faces.stream()
+						.flatMap(OriFace::halfedgeStream)
+						.map(OriHalfedge::getPosition)
+						.collect(Collectors.toList()));
 
 		double centerX = domain.getCenterX();
 
@@ -171,11 +171,11 @@ public class OrigamiModel {
 	}
 
 	private RectangleDomain createDomain(final Function<OriHalfedge, Vector2d> positionExtractor) {
-		var paperDomain = new RectangleDomain();
-		paperDomain.enlarge(faces.stream()
-				.flatMap(OriFace::halfedgeStream)
-				.map(positionExtractor)
-				.collect(Collectors.toList()));
+		var paperDomain = RectangleDomain.createFromPoints(
+				faces.stream()
+						.flatMap(OriFace::halfedgeStream)
+						.map(positionExtractor)
+						.collect(Collectors.toList()));
 
 		return paperDomain;
 	}

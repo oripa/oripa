@@ -43,12 +43,13 @@ public class FacesToSvgConverter extends SvgConverter {
 	String precreaseLineStyle = "";
 
 	public void initDomain(final List<OriFace> faces, final double paperSize) {
-		domain = new RectangleDomain();
+		domain = RectangleDomain.createFromPoints(
+				faces.stream()
+						.flatMap(OriFace::halfedgeStream)
+						.map(OriHalfedge::getPosition)
+						.collect(Collectors.toList()));
+
 		scaleToFitDomain = SVG_SIZE / paperSize;
-		faces.stream()
-				.flatMap(OriFace::halfedgeStream)
-				.map(OriHalfedge::getPosition)
-				.forEach(domain::enlarge);
 	}
 
 	public void setFaceStyles(final String bothFacesStyle) {

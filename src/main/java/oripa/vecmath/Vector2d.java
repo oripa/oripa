@@ -21,6 +21,8 @@ package oripa.vecmath;
 import java.util.Objects;
 
 /**
+ * Immutable 2D vector with fluent interface.
+ *
  * @author OUCHI Koji
  *
  */
@@ -32,10 +34,6 @@ public class Vector2d {
 	public Vector2d(final double x, final double y) {
 		this.x = x;
 		this.y = y;
-	}
-
-	public Vector2d(final Vector2d v) {
-		this(v.x, v.y);
 	}
 
 	public double getX() {
@@ -61,6 +59,16 @@ public class Vector2d {
 
 	public Vector2d multiply(final double a) {
 		return new Vector2d(a * x, a * y);
+	}
+
+	/**
+	 * Returns perpendicular vector (y, -x) directing right side of this vector
+	 * in mathematical coordinate system (not screen coordinate system).
+	 *
+	 * @return (y, -x)
+	 */
+	public Vector2d getRightSidePerpendicular() {
+		return new Vector2d(y, -x);
 	}
 
 	public double length() {

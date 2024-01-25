@@ -45,8 +45,8 @@ public class AngleMeasureCommand extends ValidatablePaintCommand {
 		Vector2d second = context.getVertex(1);
 		Vector2d third = context.getVertex(2);
 
-		Vector2d dir1 = new Vector2d(third).subtract(second);
-		Vector2d dir2 = new Vector2d(first).subtract(second);
+		Vector2d dir1 = third.subtract(second);
+		Vector2d dir2 = first.subtract(second);
 
 		double deg_angle = Math.toDegrees(dir1.angle(dir2));
 

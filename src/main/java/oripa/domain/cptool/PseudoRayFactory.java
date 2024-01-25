@@ -18,6 +18,7 @@
  */
 package oripa.domain.cptool;
 
+import oripa.geom.Ray;
 import oripa.geom.Segment;
 import oripa.vecmath.Vector2d;
 
@@ -27,8 +28,9 @@ import oripa.vecmath.Vector2d;
  */
 public class PseudoRayFactory {
 
-	public Segment create(final Vector2d v, final Vector2d dir, final double paperSize) {
-		var d = dir.normalize().multiply(paperSize * 4);
+	public Segment create(final Ray ray, final double paperSize) {
+		var v = ray.getEndPoint();
+		var d = ray.getDirection().multiply(paperSize * 4);
 
 		var ev = v.add(d);
 
@@ -36,6 +38,6 @@ public class PseudoRayFactory {
 	}
 
 	public Segment create(final Vector2d v, final double angle, final double paperSize) {
-		return create(v, new Vector2d(Math.cos(angle), Math.sin(angle)), paperSize);
+		return create(new Ray(v, new Vector2d(Math.cos(angle), Math.sin(angle))), paperSize);
 	}
 }

@@ -16,7 +16,7 @@ public class OriPoint extends Vector2d implements Comparable<Vector2d> {
 	private static final long serialVersionUID = -6753157628675186598L;
 
 	public OriPoint(final Vector2d p) {
-		super(p);
+		super(p.getX(), p.getY());
 	}
 
 	public OriPoint(final double x, final double y) {

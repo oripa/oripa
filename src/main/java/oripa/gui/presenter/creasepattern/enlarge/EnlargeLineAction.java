@@ -79,7 +79,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	}
 
 	private RectangleDomain createDomain(final Collection<OriLine> lines) {
-		return lines.isEmpty() ? null : new RectangleDomain(lines);
+		return lines.isEmpty() ? null : RectangleDomain.createFromSegments(lines);
 	}
 
 	@Override

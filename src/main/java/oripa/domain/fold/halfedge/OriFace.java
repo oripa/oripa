@@ -141,10 +141,6 @@ public class OriFace {
 		this.precreases = new ArrayList<>(precreases);
 	}
 
-	public void addAllPrecreases(final Collection<OriLine> precreases) {
-		this.precreases.addAll(precreases);
-	}
-
 	public boolean hasPrecreases() {
 		return !precreases.isEmpty();
 	}

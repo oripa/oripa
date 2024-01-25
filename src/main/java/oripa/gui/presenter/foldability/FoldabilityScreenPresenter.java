@@ -83,7 +83,7 @@ public class FoldabilityScreenPresenter {
 		var overlappingLineExtractor = new OverlappingLineExtractor();
 		overlappingLines = overlappingLineExtractor.extract(creasePattern, pointEps);
 
-		var domain = new RectangleDomain(creasePattern);
+		var domain = RectangleDomain.createFromSegments(creasePattern);
 		view.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
 
 	}

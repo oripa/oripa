@@ -21,7 +21,7 @@ public class RectangleDomainTestWithXShapeLines {
 		Collection<OriLine> xLines = factory.createCrossedLines(100, center);
 
 		// the lines should be in regular rectangle (0, 100, 0, 100)
-		RectangleDomain domain = new RectangleDomain(xLines);
+		RectangleDomain domain = RectangleDomain.createFromSegments(xLines);
 
 		final double delta = 1e-8;
 		assertEquals(100, domain.getRight(), delta);

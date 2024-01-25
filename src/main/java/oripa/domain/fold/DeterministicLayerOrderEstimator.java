@@ -311,7 +311,7 @@ class DeterministicLayerOrderEstimator {
 	}
 
 	/**
-	 * If face[i] and face[j] touching edge is covered by face[k] then
+	 * If face[i] and face[j] touching edge are covered by face[k] then
 	 * overlapRelation[i][k] = overlapRelation[j][k].
 	 *
 	 * @param overlapRelation

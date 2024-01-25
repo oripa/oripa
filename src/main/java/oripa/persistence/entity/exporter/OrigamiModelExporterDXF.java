@@ -22,8 +22,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.RectangleDomain;
 import oripa.persistence.filetool.Exporter;
@@ -54,12 +56,11 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 
 			List<OriFace> faces = origamiModel.getFaces();
 
-			var domain = new RectangleDomain();
-			for (OriFace face : faces) {
-				face.halfedgeStream().forEach(he -> {
-					domain.enlarge(he.getPosition());
-				});
-			}
+			var domain = RectangleDomain.createFromPoints(
+					faces.stream()
+							.flatMap(face -> face.halfedgeStream())
+							.map(OriHalfedge::getPosition)
+							.collect(Collectors.toList()));
 
 			// Align the center of the model, combine scales
 			Vector2d modelCenter = domain.getCenter();
