@@ -139,8 +139,8 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public OriLine peekLine() {
-		return pickedLines.peekLast();
+	public Optional<OriLine> peekLine() {
+		return Optional.ofNullable(pickedLines.peekLast());
 	}
 
 	@Override
@@ -154,8 +154,8 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public Vector2d getCandidateVertexToPick() {
-		return candidateVertexToPick;
+	public Optional<Vector2d> getCandidateVertexToPick() {
+		return Optional.ofNullable(candidateVertexToPick);
 	}
 
 	@Override

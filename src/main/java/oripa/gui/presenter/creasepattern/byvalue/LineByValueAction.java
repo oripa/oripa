@@ -32,10 +32,12 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 
 		super.onDraw(drawer, viewContext, paintContext);
 
-		Vector2d v = paintContext.getCandidateVertexToPick();
-		if (v == null) {
+		var vOpt = paintContext.getCandidateVertexToPick();
+		if (vOpt.isEmpty()) {
 			return;
 		}
+
+		var v = vOpt.get();
 		try {
 			var angle = byValueContext.getAngle();
 			var length = byValueContext.getLength();

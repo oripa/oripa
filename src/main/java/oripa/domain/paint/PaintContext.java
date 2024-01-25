@@ -122,7 +122,7 @@ public interface PaintContext extends CreasePatternHolder {
 	 *
 	 * @return the latest line
 	 */
-	public abstract OriLine peekLine();
+	public abstract Optional<OriLine> peekLine();
 
 	/**
 	 *
@@ -151,7 +151,7 @@ public interface PaintContext extends CreasePatternHolder {
 
 	public abstract void setCandidateVertexToPick(Vector2d pickCandidateV);
 
-	public abstract Vector2d getCandidateVertexToPick();
+	public abstract Optional<Vector2d> getCandidateVertexToPick();
 
 	public abstract CreasePatternUndoer creasePatternUndo();
 

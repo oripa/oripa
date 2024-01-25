@@ -177,12 +177,12 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	private Vector2d getMousePoint(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 		setCandidateVertexOnMove(viewContext, paintContext, false);
 
-		var mousePoint = paintContext.getCandidateVertexToPick();
-		if (mousePoint == null) {
-			mousePoint = viewContext.getLogicalMousePoint();
+		var mousePointOpt = paintContext.getCandidateVertexToPick();
+		if (mousePointOpt.isEmpty()) {
+			return viewContext.getLogicalMousePoint();
 		}
 
-		return mousePoint;
+		return mousePointOpt.get();
 	}
 
 	@Override

@@ -124,8 +124,8 @@ public class PainterScreenPresenter {
 
 		p.drawBufferImage();
 
-		drawer.drawCandidatePositionString(objDrawer,
-				paintContext.getCandidateVertexToPick());
+		paintContext.getCandidateVertexToPick()
+				.ifPresent(candidate -> drawer.drawCandidatePositionString(objDrawer, candidate));
 	}
 
 	private void drawPaperDomainOfModel(final ObjectGraphicDrawer objDrawer) {

@@ -56,27 +56,19 @@ public class PasteAction extends AbstractGraphicMouseAction {
 	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
-		var closeVertex = paintContext.getCandidateVertexToPick();
+		setCandidateVertexOnMove(viewContext, paintContext, false);
+		var closeVertexOpt = paintContext.getCandidateVertexToPick();
 
 		// to get the vertex which disappeared by cutting.
 		var closeVertexOfLinesOpt = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
 
-		if (closeVertex == null) {
-			closeVertex = closeVertexOfLinesOpt.orElse(null);
-		}
-
 		var current = viewContext.getLogicalMousePoint();
-		if (closeVertex != null && closeVertexOfLinesOpt.isPresent()) {
-			// get the nearest to current
-			closeVertex = NearestVertexFinder.findNearestOf(
-					current, closeVertex, closeVertexOfLinesOpt.get());
-
-		}
-
-		if (closeVertex == null) {
-			closeVertex = viewContext.getLogicalMousePoint();
-		}
+		var closeVertex = closeVertexOpt
+				.map(closeV -> closeVertexOfLinesOpt
+						.map(closeVertexOfLines -> NearestVertexFinder.findNearestOf(
+								current, closeV, closeVertexOfLines))
+						.orElse(closeV))
+				.orElse(closeVertexOfLinesOpt.orElse(current));
 
 		paintContext.setCandidateVertexToPick(closeVertex);
 
@@ -100,10 +92,10 @@ public class PasteAction extends AbstractGraphicMouseAction {
 		drawer.selectSelectedItemColor();
 		drawVertex(drawer, viewContext, paintContext, origin);
 
-		var candidateVertex = paintContext.getCandidateVertexToPick();
+		var candidateVertexOpt = paintContext.getCandidateVertexToPick();
 
-		Vector2d offset = candidateVertex == null ? factory.createOffset(origin, viewContext.getLogicalMousePoint())
-				: factory.createOffset(origin, candidateVertex);
+		var point = candidateVertexOpt.orElse(viewContext.getLogicalMousePoint());
+		var offset = factory.createOffset(origin, point);
 
 		drawer.selectAssistLineColor();
 

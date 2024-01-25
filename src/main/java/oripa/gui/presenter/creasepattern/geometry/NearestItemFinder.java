@@ -105,9 +105,9 @@ public class NearestItemFinder {
 	public static Vector2d getCandidateVertexOrMousePoint(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 
-		Vector2d candidate = paintContext.getCandidateVertexToPick();
+		var candidateOpt = paintContext.getCandidateVertexToPick();
 
-		return candidate == null ? viewContext.getLogicalMousePoint() : candidate;
+		return candidateOpt.orElse(viewContext.getLogicalMousePoint());
 	}
 
 	public static Optional<Vector2d> getNearestInSnapPoints(final CreasePatternViewContext viewContext,

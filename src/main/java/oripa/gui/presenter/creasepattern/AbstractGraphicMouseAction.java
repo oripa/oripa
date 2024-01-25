@@ -139,9 +139,17 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
 		setCandidateLineOnMove(viewContext, paintContext);
 
-		return Optional.ofNullable(paintContext.getCandidateVertexToPick());
+		return paintContext.getCandidateVertexToPick();
 	}
 
+	/**
+	 *
+	 * @param viewContext
+	 * @param paintContext
+	 * @param differentAction
+	 *            true to set vertex along line, otherwise this method will set
+	 *            the vertex in crease pattern nearest to mouse point.
+	 */
 	protected final void setCandidateVertexOnMove(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
@@ -222,11 +230,11 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 
 	protected void drawPickCandidateVertex(final ObjectGraphicDrawer drawer,
 			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
-		Vector2d candidate = paintContext.getCandidateVertexToPick();
-		if (candidate != null) {
+		var candidateOpt = paintContext.getCandidateVertexToPick();
+		candidateOpt.ifPresent(candidate -> {
 			drawer.selectCandidateItemColor();
 			drawVertex(drawer, viewContext, paintContext, candidate);
-		}
+		});
 	}
 
 	protected void drawLine(final ObjectGraphicDrawer drawer, final OriLine line) {
