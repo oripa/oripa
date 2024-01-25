@@ -46,14 +46,15 @@ public class ModelViewSwingFrameFactory implements ModelViewFrameFactory {
 			final FrameView parent,
 			final PropertyChangeListener onChangePaperDomain) {
 
-		ModelViewFrame frame = childFrameManager.find(parent,
+		var frameOpt = childFrameManager.find(parent,
 				ModelViewFrame.class);
 
-		if (frame != null) {
+		frameOpt.ifPresent(frame -> {
 			removeFromChildFrameManager(frame);
 			frame.dispose();
-		}
-		frame = new ModelViewFrame(400, 400, mainScreenSetting);
+		});
+
+		var frame = new ModelViewFrame(400, 400, mainScreenSetting);
 
 		frame.putPaperDomainChangeListener(parent, onChangePaperDomain);
 

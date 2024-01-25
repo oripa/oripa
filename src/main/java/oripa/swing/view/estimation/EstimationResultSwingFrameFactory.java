@@ -20,14 +20,15 @@ public class EstimationResultSwingFrameFactory implements EstimationResultFrameF
 	public EstimationResultFrameView createFrame(
 			final FrameView parent) {
 
-		EstimationResultFrame frame = childFrameManager.find(parent,
+		var frameOpt = childFrameManager.find(parent,
 				EstimationResultFrame.class);
 
-		if (frame != null) {
+		frameOpt.ifPresent(frame -> {
 			removeFromChildFrameManager(frame);
 			frame.dispose();
-		}
-		frame = new EstimationResultFrame();
+		});
+
+		var frame = new EstimationResultFrame();
 
 		frame.setOnCloseListener(this::removeFromChildFrameManager);
 		childFrameManager.putChild(parent, frame);

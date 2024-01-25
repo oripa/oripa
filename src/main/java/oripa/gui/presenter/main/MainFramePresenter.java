@@ -626,6 +626,13 @@ public class MainFramePresenter {
 		}
 	}
 
+	/**
+	 * Can return null because the returned value will be passed to other
+	 * method.
+	 *
+	 * @param code
+	 * @return
+	 */
 	private Color convertCodeToColor(final String code) {
 		if (code == null) {
 			return null;

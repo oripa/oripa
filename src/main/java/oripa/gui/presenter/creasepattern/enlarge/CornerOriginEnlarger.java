@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.creasepattern.enlarge;
 
+import java.util.Optional;
+
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.vecmath.Vector2d;
@@ -29,24 +31,25 @@ import oripa.vecmath.Vector2d;
 class CornerOriginEnlarger extends AbstractEnlarger {
 
 	@Override
-	public Vector2d createOriginOfEnlargement(final RectangleDomain originalDomain, final Vector2d mouseStartPoint) {
+	public Optional<Vector2d> createOriginOfEnlargement(final RectangleDomain originalDomain,
+			final Vector2d mouseStartPoint) {
 		// It is natural to fix the epsilon for mouse interaction.
 		final double eps = 1e-5;
 		return getOppositePoint(originalDomain, mouseStartPoint, eps);
 	}
 
-	private Vector2d getOppositePoint(final RectangleDomain domain, final Vector2d p, final double eps) {
+	private Optional<Vector2d> getOppositePoint(final RectangleDomain domain, final Vector2d p, final double eps) {
 		if (GeomUtil.areEqual(p, domain.getLeftTop(), eps)) {
-			return domain.getRightBottom();
+			return Optional.of(domain.getRightBottom());
 		} else if (GeomUtil.areEqual(p, domain.getLeftBottom(), eps)) {
-			return domain.getRightTop();
+			return Optional.of(domain.getRightTop());
 		} else if (GeomUtil.areEqual(p, domain.getRightTop(), eps)) {
-			return domain.getLeftBottom();
+			return Optional.of(domain.getLeftBottom());
 		} else if (GeomUtil.areEqual(p, domain.getRightBottom(), eps)) {
-			return domain.getLeftTop();
+			return Optional.of(domain.getLeftTop());
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 	@Override

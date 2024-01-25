@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.creasepattern.enlarge;
 
+import java.util.Optional;
+
 import oripa.geom.RectangleDomain;
 import oripa.vecmath.Vector2d;
 
@@ -28,9 +30,10 @@ import oripa.vecmath.Vector2d;
 class CenterOriginEnlarger extends AbstractEnlarger {
 
 	@Override
-	public Vector2d createOriginOfEnlargement(final RectangleDomain originalDomain, final Vector2d mouseStartPoint) {
+	public Optional<Vector2d> createOriginOfEnlargement(final RectangleDomain originalDomain,
+			final Vector2d mouseStartPoint) {
 
-		return originalDomain.getCenter();
+		return Optional.of(originalDomain.getCenter());
 	}
 
 	@Override

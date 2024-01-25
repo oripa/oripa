@@ -21,6 +21,7 @@ package oripa.gui.view.util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,17 +69,17 @@ public class ChildFrameManager {
 		relationMap.keySet().forEach(parentFrame -> removeChild(parentFrame, childFrame));
 	}
 
-	public <TFrame extends FrameView> TFrame find(final FrameView parentFrame, final Class<TFrame> clazz) {
+	public <TFrame extends FrameView> Optional<TFrame> find(final FrameView parentFrame, final Class<TFrame> clazz) {
 		var children = getChildren(parentFrame);
 		logger.info("{} children of  {}: {}", children.size(), parentFrame, children);
 		for (var child : children) {
 			if (clazz.isInstance(child)) {
 				logger.info("child(class = " + clazz.getName() + ") is found.");
-				return clazz.cast(child);
+				return Optional.of(clazz.cast(child));
 			}
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 	/**

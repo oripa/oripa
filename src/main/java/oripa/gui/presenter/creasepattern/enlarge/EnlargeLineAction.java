@@ -158,7 +158,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 
 	private void switchEnlarger(final boolean differentAction) {
 		enlarger = differentAction ? new CenterOriginEnlarger() : new CornerOriginEnlarger();
-		originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint);
+		originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint).orElse(null);
 	}
 
 	@Override
