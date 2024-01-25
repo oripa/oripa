@@ -409,18 +409,18 @@ public class GeomUtil {
 	 *
 	 * @return cross point. null if the segments don't cross.
 	 */
-	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
+	public static Optional<Vector2d> getCrossPoint(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
 
 		var parametersOpt = solveSegmentsCrossPointVectorEquation(p0, p1, q0, q1);
 
 		if (parametersOpt.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 
 		var t = parametersOpt.get().get(1);
 
-		return computeCrossPointUsingParameter(t, q0, q1);
+		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
 	}
 
 	/**
@@ -502,7 +502,7 @@ public class GeomUtil {
 		return q0.multiply(1.0 - t).add(q1.multiply(t));
 	}
 
-	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
+	public static Optional<Vector2d> getCrossPoint(final Segment l0, final Segment l1) {
 		return getCrossPoint(l0.getP0(), l0.getP1(), l1.getP0(), l1.getP1());
 	}
 

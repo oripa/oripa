@@ -39,12 +39,12 @@ public class LineToLineAxiom {
 			return createForParallelSegments(line0, line1);
 		} else {
 
-			var segmentCrossPoint = GeomUtil.getCrossPoint(s0, s1);
+			var segmentCrossPointOpt = GeomUtil.getCrossPoint(s0, s1);
 
-			if (segmentCrossPoint == null) {
-				return createForSegmentsWithoutCross(s0, s1, pointEps);
+			if (segmentCrossPointOpt.isPresent()) {
+				return createForSegmentsWithCross(s0, s1, segmentCrossPointOpt.get(), pointEps);
 			} else {
-				return createForSegmentsWithCross(s0, s1, segmentCrossPoint, pointEps);
+				return createForSegmentsWithoutCross(s0, s1, pointEps);
 			}
 		}
 	}

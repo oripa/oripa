@@ -20,7 +20,7 @@ package oripa.domain.paint.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -48,7 +48,8 @@ public class SnapPointFactory {
 		snapPoints.addAll(
 				creasePattern.stream()
 						.map(crease -> GeomUtil.getCrossPoint(line, crease))
-						.filter(Objects::nonNull)
+						.filter(Optional::isPresent)
+						.map(Optional::get)
 						.collect(Collectors.toList()));
 
 		// snap on end points of overlapping creases.
