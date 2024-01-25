@@ -251,7 +251,7 @@ public class GeomUtil {
 	 * @param seg
 	 * @return
 	 */
-	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
+	public static Optional<Vector2d> getCrossPoint(final Ray ray, final Segment seg) {
 		var p0 = ray.getEndPoint();
 		var p1 = p0.add(ray.getDirection());
 
@@ -261,12 +261,12 @@ public class GeomUtil {
 		var answerOpt = solveRayCrossPointVectorEquation(p0, p1, segP0, segP1);
 
 		if (answerOpt.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 
 		double t = answerOpt.get().get(1);
 
-		return computeCrossPointUsingParameter(t, segP0, segP1);
+		return Optional.of(computeCrossPointUsingParameter(t, segP0, segP1));
 	}
 
 	private static Optional<List<Double>> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
