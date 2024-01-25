@@ -2,6 +2,7 @@ package oripa.domain.paint;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import oripa.domain.cptool.Painter;
 import oripa.value.OriLine;
@@ -87,7 +88,7 @@ public interface PaintContext extends CreasePatternHolder {
 	 *
 	 * @return popped line. null if no line is pushed.
 	 */
-	public abstract OriLine popLine();
+	public abstract Optional<OriLine> popLine();
 
 	/**
 	 *
@@ -101,7 +102,7 @@ public interface PaintContext extends CreasePatternHolder {
 	 *
 	 * @return popped vertex. null if no vertex is pushed.
 	 */
-	public abstract Vector2d popVertex();
+	public abstract Optional<Vector2d> popVertex();
 
 	/**
 	 * performs the same as {@link List#remove(Object o)}.
@@ -115,7 +116,7 @@ public interface PaintContext extends CreasePatternHolder {
 	 *
 	 * @return the latest vertex
 	 */
-	public abstract Vector2d peekVertex();
+	public abstract Optional<Vector2d> peekVertex();
 
 	/**
 	 *

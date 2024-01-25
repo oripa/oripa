@@ -48,7 +48,7 @@ public class LinePasterCommand extends ValidatablePaintCommand {
 	public void execute() {
 		validateThat(() -> context.getVertexCount() == 1, "Wrong state. There should be 1 pickedVertices.");
 
-		Vector2d v = context.popVertex();
+		Vector2d v = context.popVertex().get();
 
 		if (context.getLineCount() == 0) {
 			return;

@@ -261,19 +261,17 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	protected void drawTemporaryLine(final ObjectGraphicDrawer drawer,
 			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
-		if (paintContext.getVertexCount() == 0) {
-			return;
-		}
+		var pickedOpt = paintContext.peekVertex();
 
-		Vector2d picked = paintContext.peekVertex();
+		pickedOpt.ifPresent(picked -> {
+			drawer.selectColor(paintContext.getLineTypeOfNewLines());
 
-		drawer.selectColor(paintContext.getLineTypeOfNewLines());
+			drawer.selectStroke(paintContext.getLineTypeOfNewLines(),
+					viewContext.getScale(), viewContext.isZeroLineWidth());
 
-		drawer.selectStroke(paintContext.getLineTypeOfNewLines(),
-				viewContext.getScale(), viewContext.isZeroLineWidth());
-
-		drawLine(drawer, picked,
-				NearestItemFinder.getCandidateVertexOrMousePoint(viewContext, paintContext));
+			drawLine(drawer, picked,
+					NearestItemFinder.getCandidateVertexOrMousePoint(viewContext, paintContext));
+		});
 
 	}
 

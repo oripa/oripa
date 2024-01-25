@@ -49,7 +49,7 @@ public class LineByValueCommand extends ValidatablePaintCommand {
 		final int correctLineCount = 0;
 		validateCounts(context, correctVertexCount, correctLineCount);
 
-		Vector2d vertex = context.popVertex();
+		Vector2d vertex = context.popVertex().get();
 
 		try {
 			var length = valueSetting.getLength();

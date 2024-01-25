@@ -21,7 +21,6 @@ package oripa.domain.paint.mirror;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.ValidatablePaintCommand;
-import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -40,10 +39,10 @@ public class LineMirrorCommand extends ValidatablePaintCommand {
 
 		context.creasePatternUndo().pushUndoInfo();
 
-		final OriLine axis = context.popLine();
+		var axisOpt = context.popLine();
 
 		Painter painter = context.getPainter();
-		painter.mirrorCopyBy(axis, context.getPickedLines());
+		painter.mirrorCopyBy(axisOpt.get(), context.getPickedLines());
 
 		context.clear(true);
 	}

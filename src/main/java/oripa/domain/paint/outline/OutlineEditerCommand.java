@@ -50,14 +50,14 @@ public class OutlineEditerCommand extends ValidatablePaintCommand {
 		logger.debug("# of picked vertices (before): " + context.getPickedVertices().size());
 		validateThat(() -> context.getVertexCount() > 0, "Wrong state. There should be one or more pickedVertices.");
 
-		Vector2d v = context.peekVertex();
+		var vOpt = context.peekVertex();
 
 		var pickedVertices = context.getPickedVertices().subList(0, context.getVertexCount() - 1).stream()
 				.distinct()
 				.collect(Collectors.toList());
 
 		if (pickedVertices.stream()
-				.anyMatch(tv -> GeomUtil.distance(v, tv) < context.getPointEps())) {
+				.anyMatch(tv -> GeomUtil.distance(vOpt.get(), tv) < context.getPointEps())) {
 			if (pickedVertices.size() > 2) {
 				// finish editing
 				context.creasePatternUndo().pushUndoInfo();

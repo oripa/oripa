@@ -42,7 +42,7 @@ public class VertexDeleterCommand extends ValidatablePaintCommand {
 		context.creasePatternUndo().pushUndoInfo();
 
 		Painter painter = context.getPainter();
-		painter.removeVertex(context.popVertex());
+		painter.removeVertex(context.popVertex().get());
 
 		context.clear(false);
 	}
