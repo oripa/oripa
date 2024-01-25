@@ -1,5 +1,7 @@
 package oripa.gui.presenter.creasepattern;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,14 +132,14 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(
+	public Optional<Vector2d> onMove(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
 		setCandidateLineOnMove(viewContext, paintContext);
 
-		return paintContext.getCandidateVertexToPick();
+		return Optional.of(paintContext.getCandidateVertexToPick());
 	}
 
 	protected final void setCandidateVertexOnMove(

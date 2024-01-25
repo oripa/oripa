@@ -1,5 +1,7 @@
 package oripa.gui.presenter.creasepattern.copypaste;
 
+import java.util.Optional;
+
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
@@ -94,7 +96,7 @@ public class CopyAndPasteAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean changingOrigin) {
 
 		changeAction(changingOrigin);

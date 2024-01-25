@@ -1,5 +1,7 @@
 package oripa.gui.presenter.creasepattern.copypaste;
 
+import java.util.Optional;
+
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.PastingOnVertex;
@@ -51,24 +53,24 @@ public class PasteAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
-		Vector2d closeVertex = paintContext.getCandidateVertexToPick();
+		var closeVertex = paintContext.getCandidateVertexToPick();
 
 		// to get the vertex which disappeared by cutting.
-		Vector2d closeVertexOfLines = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
+		var closeVertexOfLinesOpt = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
 
 		if (closeVertex == null) {
-			closeVertex = closeVertexOfLines;
+			closeVertex = closeVertexOfLinesOpt.orElse(null);
 		}
 
 		var current = viewContext.getLogicalMousePoint();
-		if (closeVertex != null && closeVertexOfLines != null) {
+		if (closeVertex != null && closeVertexOfLinesOpt.isPresent()) {
 			// get the nearest to current
 			closeVertex = NearestVertexFinder.findNearestOf(
-					current, closeVertex, closeVertexOfLines);
+					current, closeVertex, closeVertexOfLinesOpt.get());
 
 		}
 
@@ -78,7 +80,7 @@ public class PasteAction extends AbstractGraphicMouseAction {
 
 		paintContext.setCandidateVertexToPick(closeVertex);
 
-		return closeVertex;
+		return Optional.ofNullable(closeVertex);
 	}
 
 	@Override

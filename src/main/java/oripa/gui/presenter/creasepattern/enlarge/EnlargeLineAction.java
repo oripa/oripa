@@ -20,6 +20,7 @@ package oripa.gui.presenter.creasepattern.enlarge;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.selectline.SelectingLine;
@@ -83,7 +84,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		super.onMove(viewContext, paintContext, false);
 
@@ -94,7 +95,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		}
 
 		if (originalDomain.isVoid()) {
-			return null;
+			return Optional.empty();
 		}
 
 		var points = List.of(
@@ -103,8 +104,10 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 				originalDomain.getRightTop(),
 				originalDomain.getRightBottom());
 
-		mouseStartPoint = NearestItemFinder.getNearestVertex(viewContext, points);
-		return mouseStartPoint;
+		var mouseStartPointOpt = NearestItemFinder.getNearestVertex(viewContext, points);
+		mouseStartPoint = mouseStartPointOpt.orElse(null);
+
+		return mouseStartPointOpt;
 	}
 
 	@Override

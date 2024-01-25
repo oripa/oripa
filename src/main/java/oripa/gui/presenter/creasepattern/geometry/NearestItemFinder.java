@@ -65,17 +65,17 @@ public class NearestItemFinder {
 	 * Returns a vertex sufficiently close to mouse point among end points of
 	 * picked lines. Returns {@code null} if no such vertex exists.
 	 */
-	public static Vector2d pickVertexFromPickedLines(final CreasePatternViewContext viewContext,
+	public static Optional<Vector2d> pickVertexFromPickedLines(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		NearestPoint nearestPosition = NearestVertexFinder.findNearestVertexFromLines(
 				viewContext.getLogicalMousePoint(),
 				paintContext.getPickedLines());
 
 		if (nearestPosition.distance < scaleThreshold(viewContext)) {
-			return nearestPosition.point;
+			return Optional.of(nearestPosition.point);
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 	/**
@@ -126,20 +126,16 @@ public class NearestItemFinder {
 		return nearestOpt.map(nearest -> nearest.point);
 	}
 
-	public static Vector2d getNearestVertex(final CreasePatternViewContext viewContext,
+	public static Optional<Vector2d> getNearestVertex(final CreasePatternViewContext viewContext,
 			final Collection<Vector2d> vertices) {
 		var nearestOpt = NearestVertexFinder.findNearestVertex(
 				viewContext.getLogicalMousePoint(), vertices);
 
 		if (nearestOpt.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 
-		var nearest = nearestOpt.get();
-		if (nearest.distance < scaleThreshold(viewContext)) {
-			return nearest.point;
-		}
-
-		return null;
+		return nearestOpt.filter(nearest -> nearest.distance < scaleThreshold(viewContext))
+				.map(nearest -> nearest.point);
 	}
 }

@@ -1,5 +1,7 @@
 package oripa.gui.presenter.creasepattern;
 
+import java.util.Optional;
+
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.pbisec.SelectingFirstVertexForBisector;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
@@ -19,7 +21,7 @@ public class PerpendicularBisectorAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		if (paintContext.getVertexCount() < 2) {
 			return super.onMove(viewContext, paintContext, differentAction);
@@ -27,13 +29,9 @@ public class PerpendicularBisectorAction extends AbstractGraphicMouseAction {
 
 		var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
 
-		if (snapPointOpt.isEmpty()) {
-			return null;
-		}
+		snapPointOpt.ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
 
-		var snapPoint = snapPointOpt.get();
-		paintContext.setCandidateVertexToPick(snapPoint);
-		return snapPoint;
+		return snapPointOpt;
 	}
 
 	@Override

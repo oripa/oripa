@@ -1,6 +1,7 @@
 package oripa.gui.presenter.creasepattern.copypaste;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
@@ -42,16 +43,14 @@ public class ChangeOriginAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		Vector2d closeVertex = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
-		paintContext.setCandidateVertexToPick(closeVertex);
+		var closeVertexOpt = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
+		paintContext.setCandidateVertexToPick(closeVertexOpt.orElse(null));
 
-		if (closeVertex != null) {
-			holder.setOrigin(closeVertex);
-		}
+		closeVertexOpt.ifPresent(closeVertex -> holder.setOrigin(closeVertex));
 
-		return closeVertex;
+		return closeVertexOpt;
 	}
 
 	@Override
