@@ -18,6 +18,8 @@
  */
 package oripa.domain.suggestion;
 
+import java.util.Optional;
+
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
 
@@ -33,19 +35,19 @@ public class MaekawaTheoremSuggester {
 	 *         inside of paper or the lines can't be interpolated to satisfy the
 	 *         theorem.
 	 */
-	public OriLine.Type suggest(final OriVertex vertex) {
+	public Optional<OriLine.Type> suggest(final OriVertex vertex) {
 		double edgeCount = vertex.edgeCount();
 
 		if (edgeCount % 2 == 0) {
-			return null;
+			return Optional.empty();
 		}
 
 		if (!vertex.isInsideOfPaper()) {
-			return null;
+			return Optional.empty();
 		}
 
 		if (vertex.hasUnassignedEdge()) {
-			return null;
+			return Optional.empty();
 		}
 
 		int mountainCount = 0;
@@ -61,15 +63,15 @@ public class MaekawaTheoremSuggester {
 		int diff = mountainCount - valleyCount;
 		switch (diff) {
 		case 3:
-			return OriLine.Type.VALLEY;
+			return Optional.of(OriLine.Type.VALLEY);
 		case -3:
-			return OriLine.Type.MOUNTAIN;
+			return Optional.of(OriLine.Type.MOUNTAIN);
 		case 1:
-			return OriLine.Type.MOUNTAIN;
+			return Optional.of(OriLine.Type.MOUNTAIN);
 		case -1:
-			return OriLine.Type.VALLEY;
+			return Optional.of(OriLine.Type.VALLEY);
 		default:
-			return null;
+			return Optional.empty();
 		}
 	}
 

@@ -40,11 +40,13 @@ public class FoldableLineAngleSuggester {
 	 *         need to interpolate.
 	 */
 	public Collection<Double> suggest(final OriVertex vertex) {
-		var type = new MaekawaTheoremSuggester().suggest(vertex);
+		var typeOpt = new MaekawaTheoremSuggester().suggest(vertex);
 
-		if (type == null) {
+		if (typeOpt.isEmpty()) {
 			return List.of();
 		}
+
+		var type = typeOpt.get();
 
 		var kawasakiAngles = new KawasakiTheoremSuggester().suggest(vertex);
 

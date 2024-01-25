@@ -44,10 +44,12 @@ public class SelectingEndPoint extends PickingVertex {
 
 		var vertex = new TargetOriVertexFactory().create(context.getCreasePattern(), context.getVertex(0),
 				context.getPointEps());
-		var type = new MaekawaTheoremSuggester().suggest(vertex);
+		var typeOpt = new MaekawaTheoremSuggester().suggest(vertex);
 
-		Command command = new PickedVerticesConnectionLineAdderCommand(context, type);
-		command.execute();
+		typeOpt.ifPresentOrElse(type -> {
+			Command command = new PickedVerticesConnectionLineAdderCommand(context, type);
+			command.execute();
+		}, () -> context.clear(false));
 	}
 
 	@Override

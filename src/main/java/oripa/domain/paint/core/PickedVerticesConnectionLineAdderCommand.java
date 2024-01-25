@@ -52,7 +52,7 @@ public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCo
 		var p0 = context.popVertex().get();
 		var p1 = context.popVertex().get();
 
-		if (type == null || p0 == null || p1 == null) {
+		if (type == null) {
 			context.clear(false);
 			return;
 		}
