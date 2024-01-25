@@ -147,7 +147,7 @@ public interface PaintContext extends CreasePatternHolder {
 
 	public abstract void setCandidateLineToPick(OriLine pickCandidateL);
 
-	public abstract OriLine getCandidateLineToPick();
+	public abstract Optional<OriLine> getCandidateLineToPick();
 
 	public abstract void setCandidateVertexToPick(Vector2d pickCandidateV);
 

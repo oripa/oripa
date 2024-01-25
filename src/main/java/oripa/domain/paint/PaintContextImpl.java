@@ -164,8 +164,8 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public OriLine getCandidateLineToPick() {
-		return candidateLineToPick;
+	public Optional<OriLine> getCandidateLineToPick() {
+		return Optional.ofNullable(candidateLineToPick);
 	}
 
 	@Override

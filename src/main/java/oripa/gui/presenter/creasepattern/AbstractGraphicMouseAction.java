@@ -248,14 +248,14 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 
 	protected void drawPickCandidateLine(final ObjectGraphicDrawer drawer,
 			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
-		OriLine candidate = paintContext.getCandidateLineToPick();
-		if (candidate != null) {
+		var candidateOpt = paintContext.getCandidateLineToPick();
+		candidateOpt.ifPresent(candidate -> {
 			drawer.selectCandidateItemColor();
 			drawer.selectCandidateLineStroke(
 					viewContext.getScale(), viewContext.isZeroLineWidth());
 
 			drawLine(drawer, candidate);
-		}
+		});
 	}
 
 	/**

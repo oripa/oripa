@@ -2,7 +2,6 @@ package oripa.domain.paint.addvertex;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 public class AddingVertex extends PickingVertex {
@@ -18,13 +17,11 @@ public class AddingVertex extends PickingVertex {
 		boolean result = super.onAct(context, currentPoint, true);
 
 		if (result == true) {
-			OriLine line = context.getCandidateLineToPick();
+			var lineOpt = context.getCandidateLineToPick();
 
-			if (line != null) {
-				context.pushLine(line);
-			} else {
-				result = false;
-			}
+			lineOpt.ifPresent(line -> context.pushLine(line));
+
+			return lineOpt.isPresent();
 		}
 
 		return result;
