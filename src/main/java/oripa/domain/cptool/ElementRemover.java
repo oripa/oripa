@@ -116,8 +116,8 @@ public class ElementRemover {
 		}
 
 		// Check if the lines have the same angle
-		var dir0 = l0.getP1().subtract(l0.getP0()).normalize();
-		var dir1 = l1.getP1().subtract(l1.getP0()).normalize();
+		var dir0 = l0.getLine().getDirection();
+		var dir1 = l1.getLine().getDirection();
 
 		if (!GeomUtil.isParallel(dir0, dir1)) {
 			return false;
