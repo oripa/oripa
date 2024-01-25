@@ -26,16 +26,22 @@ public class BisectorFactory {
 			final Vector2d v0, final Vector2d v1,
 			final RectangleDomain domain, final OriLine.Type lineType, final double pointEps) {
 
-		Vector2d cp = v0.add(v1).multiply(0.5);
-
 		double paperSize = domain.maxWidthHeight();
 
-		var dir = v0.subtract(v1);
-		var perpendicularDir = new Vector2d(dir.getY(), -dir.getX());
-
-		Segment bisector = new PseudoLineFactory().create(new Line(cp, perpendicularDir), paperSize);
+		Segment bisector = new PseudoLineFactory().create(
+				createPerpendicularBisector(v0, v1), paperSize);
 
 		return new OriLine(bisector, lineType);
+	}
+
+	public Line createPerpendicularBisector(
+			final Vector2d v0, final Vector2d v1) {
+		Vector2d cp = v0.add(v1).multiply(0.5);
+
+		var dir = v0.subtract(v1);
+		var perpendicularDir = dir.getRightSidePerpendicular();
+
+		return new Line(cp, perpendicularDir);
 	}
 
 	/**

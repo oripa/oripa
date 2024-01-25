@@ -54,7 +54,7 @@ public class LineToLineAxiom {
 		var point = line0.getPoint();
 
 		var dir0 = line0.getDirection();
-		var verticalLine = new Line(point, new Vector2d(-dir0.getY(), dir0.getX()));
+		var verticalLine = new Line(point, dir0.getRightSidePerpendicular());
 
 		var crossPoint = GeomUtil.getCrossPoint(verticalLine, line1);
 

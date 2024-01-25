@@ -61,6 +61,16 @@ public class Vector2d {
 		return new Vector2d(a * x, a * y);
 	}
 
+	/**
+	 * Returns perpendicular vector (y, -x) directing right side of this vector
+	 * in mathematical coordinate system (not screen coordinate system).
+	 *
+	 * @return (y, -x)
+	 */
+	public Vector2d getRightSidePerpendicular() {
+		return new Vector2d(y, -x);
+	}
+
 	public double length() {
 		return Math.sqrt(x * x + y * y);
 	}

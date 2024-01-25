@@ -152,7 +152,7 @@ class SimpleFolder {
 		// the vector directs the right side of the crease halfedge
 		// since all vertices of the face are on the right side of the crease
 		// halfedge.
-		Vector2d afterDirFromFoot = new Vector2d(afterDir.getY(), -afterDir.getX());
+		Vector2d afterDirFromFoot = afterDir.getRightSidePerpendicular();
 
 		// compute moved vertex coordinates
 		return footV.add(afterDirFromFoot.multiply(d0));
