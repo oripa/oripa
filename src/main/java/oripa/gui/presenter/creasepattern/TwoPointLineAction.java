@@ -35,10 +35,6 @@ public class TwoPointLineAction extends AbstractGraphicMouseAction {
 
 		var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
 
-		if (snapPointOpt.isEmpty()) {
-			return null;
-		}
-
 		snapPointOpt.ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
 
 		return snapPointOpt;
