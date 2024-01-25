@@ -26,17 +26,14 @@ public class NearestItemFinder {
 	 * Returns a vertex sufficiently close to mouse point among the vertices of
 	 * crease pattern. Returns {@code null} if no such vertex exists.
 	 */
-	public static Vector2d pickVertex(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+	public static Optional<Vector2d> pickVertex(final CreasePatternViewContext viewContext,
+			final PaintContext paintContext) {
 
-		NearestPoint nearestPosition = NearestVertexFinder.findAround(
+		var nearestPositionOpt = NearestVertexFinder.findAround(
 				viewContext.getLogicalMousePoint(), paintContext.getCreasePattern(), paintContext.getGrids(),
 				scaleThreshold(viewContext));
 
-		if (nearestPosition != null) {
-			return nearestPosition.point;
-		}
-
-		return null;
+		return nearestPositionOpt.map(nearestPosition -> nearestPosition.point);
 	}
 
 	/**
@@ -44,21 +41,16 @@ public class NearestItemFinder {
 	 * on the lines of crease pattern. Returns {@code null} if no such vertex
 	 * exists.
 	 */
-	public static Vector2d pickVertexAlongLine(final CreasePatternViewContext viewContext,
+	public static Optional<Vector2d> pickVertexAlongLine(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		var picked = pickVertex(viewContext, paintContext);
-		if (picked != null) {
+		if (picked.isPresent()) {
 			return picked;
 		}
 
-		OriLine l = pickLine(viewContext, paintContext);
-		if (l == null) {
-			return null;
-		}
+		var lineOpt = pickLine(viewContext, paintContext);
 
-		var vertexAlongLine = GeomUtil.computeNearestPointToSegment(viewContext.getLogicalMousePoint(), l);
-
-		return vertexAlongLine;
+		return lineOpt.map(line -> GeomUtil.computeNearestPointToSegment(viewContext.getLogicalMousePoint(), line));
 	}
 
 	/**
@@ -82,7 +74,8 @@ public class NearestItemFinder {
 	 * Returns a OriLine sufficiently close to mouse point. Returns {@code null}
 	 * if no such line exists.
 	 */
-	public static OriLine pickLine(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+	public static Optional<OriLine> pickLine(final CreasePatternViewContext viewContext,
+			final PaintContext paintContext) {
 		var lines = paintContext.getCreasePattern();
 		var mousePoint = viewContext.getLogicalMousePoint();
 
@@ -98,9 +91,9 @@ public class NearestItemFinder {
 		}
 
 		if (minDistance < scaleThreshold(viewContext)) {
-			return bestLine;
+			return Optional.of(bestLine);
 		} else {
-			return null;
+			return Optional.empty();
 		}
 	}
 

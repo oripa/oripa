@@ -93,12 +93,12 @@ public class NearestVertexFinder {
 	 * @param distance
 	 * @return nearestPoint in the limit. null if there are no such vertex.
 	 */
-	public static NearestPoint findAround(
+	public static Optional<NearestPoint> findAround(
 			final Vector2d mousePoint,
 			final CreasePattern creasePattern,
 			final Collection<Vector2d> grids,
 			final double distance) {
-		NearestPoint nearestPosition = new NearestPoint();
+		var nearestPosition = new NearestPoint();
 
 		var currentPoint = mousePoint;
 
@@ -130,7 +130,7 @@ public class NearestVertexFinder {
 		}
 
 		if (nearestPosition.distance >= distance) {
-			return null;
+			return Optional.empty();
 		} else {
 
 //			System.out.println("#area " + vertices.size() +
@@ -139,6 +139,6 @@ public class NearestVertexFinder {
 
 		}
 
-		return nearestPosition;
+		return Optional.of(nearestPosition);
 	}
 }

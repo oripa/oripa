@@ -139,25 +139,25 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
 		setCandidateLineOnMove(viewContext, paintContext);
 
-		return Optional.of(paintContext.getCandidateVertexToPick());
+		return Optional.ofNullable(paintContext.getCandidateVertexToPick());
 	}
 
 	protected final void setCandidateVertexOnMove(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		Vector2d v;
+		Optional<Vector2d> vOpt;
 		if (differentAction) {
-			v = NearestItemFinder.pickVertexAlongLine(viewContext, paintContext);
+			vOpt = NearestItemFinder.pickVertexAlongLine(viewContext, paintContext);
 		} else {
-			v = NearestItemFinder.pickVertex(viewContext, paintContext);
+			vOpt = NearestItemFinder.pickVertex(viewContext, paintContext);
 		}
-		paintContext.setCandidateVertexToPick(v);
+		paintContext.setCandidateVertexToPick(vOpt.orElse(null));
 	}
 
 	protected final void setCandidateLineOnMove(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		paintContext.setCandidateLineToPick(
-				NearestItemFinder.pickLine(viewContext, paintContext));
+				NearestItemFinder.pickLine(viewContext, paintContext).orElse(null));
 	}
 
 	@Override
