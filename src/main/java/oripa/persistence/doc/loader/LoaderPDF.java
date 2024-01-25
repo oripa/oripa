@@ -21,6 +21,7 @@ package oripa.persistence.doc.loader;
 import java.io.FileReader;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import oripa.doc.Doc;
 import oripa.value.OriLine;
@@ -28,7 +29,7 @@ import oripa.value.OriLine;
 public class LoaderPDF implements DocLoader {
 
 	@Override
-	public Doc load(final String filePath) {
+	public Optional<Doc> load(final String filePath) {
 		var dtos = new ArrayList<LineDto>();
 
 		try (var r = new FileReader(filePath)) {
@@ -94,7 +95,7 @@ public class LoaderPDF implements DocLoader {
 		var doc = new Doc();
 		doc.setCreasePattern(new LineDtoConverter().convert(dtos));
 
-		return doc;
+		return Optional.of(doc);
 
 	}
 }

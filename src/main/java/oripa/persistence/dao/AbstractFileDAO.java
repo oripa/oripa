@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	}
 
 	@Override
-	public Data load(final String path)
+	public Optional<Data> load(final String path)
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException {
 		var canonicalPath = nullableCanonicalPath(path);

@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class LoaderDXF implements DocLoader {
 	private static Logger logger = LoggerFactory.getLogger(LoaderDXF.class);
 
 	@Override
-	public Doc load(final String filePath) throws WrongDataFormatException {
+	public Optional<Doc> load(final String filePath) throws WrongDataFormatException {
 		var dtos = new ArrayList<LineDto>();
 
 		try (var r = new FileReader(filePath)) {
@@ -118,13 +119,13 @@ public class LoaderDXF implements DocLoader {
 		}
 
 		if (dtos.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 
 		var doc = new Doc();
 		doc.setCreasePattern(new LineDtoConverter().convert(dtos));
 
-		return doc;
+		return Optional.of(doc);
 	}
 
 }

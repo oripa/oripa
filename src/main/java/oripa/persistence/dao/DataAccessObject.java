@@ -20,6 +20,7 @@ package oripa.persistence.dao;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
 
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
@@ -46,7 +47,7 @@ public interface DataAccessObject<Data> {
 	 *             {@code path} is not correct.
 	 * @throws WrongDataFormatException
 	 */
-	Data load(String path)
+	Optional<Data> load(String path)
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException;
 

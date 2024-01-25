@@ -76,6 +76,6 @@ public class DataFileAccess extends FileAccessService<Doc> {
 			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
 			IOException, FileNotFoundException {
 
-		return Optional.of(dao.load(filePath));
+		return dao.load(filePath);
 	}
 }

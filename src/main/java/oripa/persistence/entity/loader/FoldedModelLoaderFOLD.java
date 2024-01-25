@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
@@ -50,7 +51,7 @@ import oripa.persistence.foldformat.FrameClass;
 public class FoldedModelLoaderFOLD implements Loader<FoldedModelEntity> {
 
 	@Override
-	public FoldedModelEntity load(final String filePath)
+	public Optional<FoldedModelEntity> load(final String filePath)
 			throws FileVersionError, IOException, WrongDataFormatException {
 		var gson = new Gson();
 		FoldedModelFOLDFormat foldFormat;
@@ -110,7 +111,7 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModelEntity> {
 			}
 		}
 
-		return new FoldedModelEntity(new FoldedModel(origamiModel, overlapRelations, List.of()));
+		return Optional.of(new FoldedModelEntity(new FoldedModel(origamiModel, overlapRelations, List.of())));
 	}
 
 }
