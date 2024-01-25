@@ -2,6 +2,8 @@ package oripa.gui.presenter.creasepattern.geometry;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
@@ -98,36 +100,20 @@ public class NearestVertexFinder {
 			final CreasePattern creasePattern,
 			final Collection<Vector2d> grids,
 			final double distance) {
-		var nearestPosition = new NearestPoint();
 
 		var currentPoint = mousePoint;
 
 		Collection<Collection<Vector2d>> vertices = creasePattern.getVerticesInArea(
 				currentPoint.getX(), currentPoint.getY(), distance);
 
-		for (Collection<Vector2d> locals : vertices) {
-			var nearestOpt = findNearestVertex(currentPoint, locals);
+		var targetVertices = Stream
+				.concat(vertices.stream().flatMap(Collection::stream),
+						grids.stream())
+				.collect(Collectors.toList());
 
-			if (nearestOpt.isEmpty()) {
-				continue;
-			}
+		var nearestOpt = findNearestVertex(currentPoint, targetVertices);
 
-			var nearest = nearestOpt.get();
-
-			if (nearest.distance < nearestPosition.distance) {
-				nearestPosition = nearest;
-			}
-		}
-
-		var nearestGridOpt = findNearestVertex(
-				currentPoint, grids);
-
-		if (nearestGridOpt.isPresent()) {
-			NearestPoint nearestGrid = nearestGridOpt.get();
-			if (nearestGrid.distance < nearestPosition.distance) {
-				nearestPosition = nearestGrid;
-			}
-		}
+		var nearestPosition = nearestOpt.orElseGet(NearestPoint::new);
 
 		if (nearestPosition.distance >= distance) {
 			return Optional.empty();
