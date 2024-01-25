@@ -22,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Optional;
 
 /**
  * @author OUCHI Koji
@@ -97,7 +98,7 @@ public class AffineCamera {
 	 * @return Affine transform for translating. {@code null} if the mouse event
 	 *         is not for translating.
 	 */
-	public AffineTransform updateTranslateByMouseDragged(
+	public Optional<AffineTransform> updateTranslateByMouseDragged(
 			final MouseEvent e, final Point2D preMousePoint) {
 
 		// move camera
@@ -107,10 +108,10 @@ public class AffineCamera {
 					+ (e.getX() - preMousePoint.getX()) / getScale();
 			double transY = getTranslateYOfPaper()
 					+ (e.getY() - preMousePoint.getY()) / getScale();
-			return updateTranslateOfPaper(transX, transY);
+			return Optional.of(updateTranslateOfPaper(transX, transY));
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 	/**
@@ -120,7 +121,7 @@ public class AffineCamera {
 	 * @return Affine transform for scaling. {@code null} if the mouse event is
 	 *         not for scaling.
 	 */
-	public AffineTransform updateScaleByMouseDragged(
+	public Optional<AffineTransform> updateScaleByMouseDragged(
 			final MouseEvent e, final Point2D preMousePoint) {
 
 		// zoom
@@ -133,10 +134,10 @@ public class AffineCamera {
 			if (scale < 0.01) {
 				scale = 0.01;
 			}
-			return updateScale(scale);
+			return Optional.of(updateScale(scale));
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 	public AffineTransform updateScaleByMouseWheel(final MouseWheelEvent e) {
