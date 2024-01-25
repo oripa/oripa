@@ -41,8 +41,8 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	private Vector2d mouseStartPoint;
 	private Vector2d originOfEnlargement;
 
-	private RectangleDomain originalDomain;
-	private RectangleDomain enlargedDomain;
+	private RectangleDomain originalDomain = RectangleDomain.voidDomain();
+	private RectangleDomain enlargedDomain = RectangleDomain.voidDomain();
 
 	private Enlarger enlarger;
 
@@ -79,7 +79,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	}
 
 	private RectangleDomain createDomain(final Collection<OriLine> lines) {
-		return lines.isEmpty() ? null : RectangleDomain.createFromSegments(lines);
+		return lines.isEmpty() ? RectangleDomain.voidDomain() : RectangleDomain.createFromSegments(lines);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			throw new RuntimeException("wrong execution path.");
 		}
 
-		if (originalDomain == null) {
+		if (originalDomain.isVoid()) {
 			return null;
 		}
 
@@ -196,8 +196,8 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		originOfEnlargement = null;
 
 		mouseStartPoint = null;
-		originalDomain = null;
-		enlargedDomain = null;
+		originalDomain = RectangleDomain.voidDomain();
+		enlargedDomain = RectangleDomain.voidDomain();
 
 		enlarger = null;
 	}
@@ -228,13 +228,13 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			drawer.drawVertex(mouseStartPoint);
 		}
 
-		if (originalDomain != null) {
+		if (!originalDomain.isVoid()) {
 			drawer.selectAreaSelectionStroke(viewContext.getScale());
 			drawer.selectAreaSelectionColor();
 			drawer.drawRectangle(originalDomain.getLeftTop(), originalDomain.getRightBottom());
 		}
 
-		if (enlargedDomain != null) {
+		if (!enlargedDomain.isVoid()) {
 			this.drawPickCandidateVertex(drawer, viewContext, paintContext);
 
 			drawer.selectCandidateLineStroke(viewContext.getScale(), viewContext.isZeroLineWidth());
