@@ -86,7 +86,7 @@ public class FaceMaker {
 	public List<Integer> makeFace(final List<Integer> edge) {
 
 		if (!unusedDirectedEdges.contains(edge)) {
-			return null;
+			return List.of();
 		}
 
 		var face = new ArrayList<Integer>(edge);
@@ -99,7 +99,7 @@ public class FaceMaker {
 		var w = getLeftSideNeighbor(u, v);
 
 		if (!makeFace(face, List.of(v, w))) {
-			return null;
+			return List.of();
 		}
 
 		return face;

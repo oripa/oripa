@@ -186,11 +186,11 @@ public class CreasePatternElementConverter {
 		for (var edge : edgesVertices) {
 			try {
 				var face = faceMaker.makeFace(edge);
-				if (face != null) {
+				if (!face.isEmpty()) {
 					facesVertices.add(face);
 				}
 				face = faceMaker.makeFace(reverseEdge(edge));
-				if (face != null) {
+				if (face.isEmpty()) {
 					facesVertices.add(face);
 				}
 			} catch (Exception e) {
