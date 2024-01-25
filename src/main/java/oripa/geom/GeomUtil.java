@@ -283,7 +283,7 @@ public class GeomUtil {
 	 * @param l1
 	 * @return
 	 */
-	public static Vector2d getCrossPoint(final Line l0, final Line l1) {
+	public static Optional<Vector2d> getCrossPoint(final Line l0, final Line l1) {
 		var p0 = l0.getPoint();
 		var p1 = p0.add(l0.getDirection());
 
@@ -293,12 +293,12 @@ public class GeomUtil {
 		var answerOpt = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);
 
 		if (answerOpt.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 
 		var t = answerOpt.get().get(1);
 
-		return computeCrossPointUsingParameter(t, q0, q1);
+		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
 	}
 
 	private static Optional<List<Double>> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,

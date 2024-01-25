@@ -32,7 +32,7 @@ class GeomUtilTest {
 		var l0 = new Line(new Vector2d(1, 0), new Vector2d(-1, 1));
 		var l1 = new Line(new Vector2d(0, 0), new Vector2d(1, 1));
 
-		var cp = GeomUtil.getCrossPoint(l0, l1);
+		var cp = GeomUtil.getCrossPoint(l0, l1).get();
 
 		assertEquals(0.5, cp.getX(), 1e-8);
 		assertEquals(0.5, cp.getY(), 1e-8);

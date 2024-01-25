@@ -64,13 +64,12 @@ public class BisectorFactory {
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
 			final OriLine l, final OriLine.Type lineType) {
 
-		Vector2d dir = GeomUtil.getBisectorVec(v0, v1, v2);
-		Vector2d cp = GeomUtil.getCrossPoint(
+		var dir = GeomUtil.getBisectorVec(v0, v1, v2);
+		var cpOpt = GeomUtil.getCrossPoint(
 				l.getLine(),
 				new Line(v1, dir));
 
-		OriLine bisector = new OriLine(v1, cp, lineType);
-		return bisector;
+		return cpOpt.map(cp -> new OriLine(v1, cpOpt.get(), lineType)).get();
 
 	}
 
