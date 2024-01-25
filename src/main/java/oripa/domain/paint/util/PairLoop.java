@@ -1,6 +1,7 @@
 package oripa.domain.paint.util;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 public class PairLoop {
 
@@ -15,7 +16,7 @@ public class PairLoop {
 	 * @return The first element of the last pair, in other word, i of (i, i+1).
 	 *         null if {@code block} never made a break by returning false.
 	 */
-	public static <Element> Element iterateFrom(final Iterator<Element> begin,
+	public static <Element> Optional<Element> iterateFrom(final Iterator<Element> begin,
 			final Iterable<Element> elements, final Block<Element> block) {
 
 		Iterator<Element> iterator = begin;
@@ -25,17 +26,17 @@ public class PairLoop {
 			Element e2 = iterator.next();
 
 			if (block.yield(e1, e2) == false) {
-				return e1;
+				return Optional.of(e1);
 			}
 
 			e1 = e2;
 		}
 
 		if (block.yield(e1, elements.iterator().next()) == false) {
-			return e1;
+			return Optional.of(e1);
 		}
 
-		return null;
+		return Optional.empty();
 
 	}
 
@@ -49,7 +50,7 @@ public class PairLoop {
 	 * @return The first element of the last pair, in other word, i of (i, i+1).
 	 *         null if {@code block} never made a break by returning false.
 	 */
-	public static <Element> Element iterateAll(
+	public static <Element> Optional<Element> iterateAll(
 			final Iterable<Element> elements, final Block<Element> block) {
 		return iterateFrom(elements.iterator(), elements, block);
 	}
@@ -68,7 +69,7 @@ public class PairLoop {
 	 *         null if {@code block} never made a break by returning false.
 	 */
 
-	public static <Element> Element iterateWithCount(
+	public static <Element> Optional<Element> iterateWithCount(
 			final Iterable<Element> elements, int count, final Block<Element> block) {
 
 		if (count <= 0) {
@@ -82,14 +83,14 @@ public class PairLoop {
 			Element e2 = iterator.next();
 
 			if (block.yield(e1, e2) == false) {
-				return e1;
+				return Optional.of(e1);
 			}
 
 			e1 = e2;
 			count--;
 		}
 
-		return null;
+		return Optional.empty();
 
 	}
 

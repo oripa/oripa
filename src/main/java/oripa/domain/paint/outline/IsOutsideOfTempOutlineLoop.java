@@ -29,7 +29,7 @@ public class IsOutsideOfTempOutlineLoop {
 			var ccwValue = GeomUtil.CCWcheck(p, q, target);
 			logger.trace(p + "," + q + "," + target + " -> " + ccwValue);
 			return ccwFlag == ccwValue;
-		}) != null;
+		}).isPresent();
 
 	}
 }

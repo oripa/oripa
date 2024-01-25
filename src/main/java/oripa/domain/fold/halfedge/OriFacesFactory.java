@@ -168,6 +168,16 @@ public class OriFacesFactory {
 				});
 	}
 
+	/**
+	 * Can return null. Wrapping with Optional is not comfortable for caller
+	 * since the caller uses this method to create elements of collection.
+	 *
+	 * @param startingVertex
+	 * @param startingEdge
+	 * @param maxCount
+	 * @param getNextEdge
+	 * @return
+	 */
 	private OriFace makeFace(final OriVertex startingVertex, final OriEdge startingEdge, final int maxCount,
 			final BiFunction<OriVertex, OriEdge, OriEdge> getNextEdge) {
 		OriFace face = new OriFace();
