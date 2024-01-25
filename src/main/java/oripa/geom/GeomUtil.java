@@ -258,18 +258,18 @@ public class GeomUtil {
 		var segP0 = seg.getP0();
 		var segP1 = seg.getP1();
 
-		var answerOpt = solveRayCrossPointVectorEquation(p0, p1, segP0, segP1);
+		var answer = solveRayCrossPointVectorEquation(p0, p1, segP0, segP1);
 
-		if (answerOpt.isEmpty()) {
+		if (answer.isEmpty()) {
 			return Optional.empty();
 		}
 
-		double t = answerOpt.get().get(1);
+		double t = answer.get(1);
 
 		return Optional.of(computeCrossPointUsingParameter(t, segP0, segP1));
 	}
 
-	private static Optional<List<Double>> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	private static List<Double> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d segP0, final Vector2d segP1) {
 		final double eps = MathUtil.normalizedValueEps();
 		return solveCrossPointVectorEquation(p0, p1, segP0, segP1,
@@ -290,18 +290,18 @@ public class GeomUtil {
 		var q0 = l1.getPoint();
 		var q1 = q0.add(l1.getDirection());
 
-		var answerOpt = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);
+		var answer = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);
 
-		if (answerOpt.isEmpty()) {
+		if (answer.isEmpty()) {
 			return Optional.empty();
 		}
 
-		var t = answerOpt.get().get(1);
+		var t = answer.get(1);
 
 		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
 	}
 
-	private static Optional<List<Double>> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	private static List<Double> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
 		return solveCrossPointVectorEquation(p0, p1, q0, q1, (s, t) -> true);
 	}
@@ -412,13 +412,13 @@ public class GeomUtil {
 	public static Optional<Vector2d> getCrossPoint(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
 
-		var parametersOpt = solveSegmentsCrossPointVectorEquation(p0, p1, q0, q1);
+		var parameters = solveSegmentsCrossPointVectorEquation(p0, p1, q0, q1);
 
-		if (parametersOpt.isEmpty()) {
+		if (parameters.isEmpty()) {
 			return Optional.empty();
 		}
 
-		var t = parametersOpt.get().get(1);
+		var t = parameters.get(1);
 
 		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
 	}
@@ -434,7 +434,7 @@ public class GeomUtil {
 	 *         one at 1 is t for q0 and q1 equation. Empty if answer doesn't
 	 *         exist.
 	 */
-	public static Optional<List<Double>> solveSegmentsCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	public static List<Double> solveSegmentsCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
 
 		final double eps = MathUtil.normalizedValueEps();
@@ -467,7 +467,7 @@ public class GeomUtil {
 	 * @param answerPredicate
 	 * @return
 	 */
-	private static Optional<List<Double>> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	private static List<Double> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1, final BiPredicate<Double, Double> answerPredicate) {
 
 		var answer = new ArrayList<Double>();
@@ -480,7 +480,7 @@ public class GeomUtil {
 		final double eps = MathUtil.normalizedValueEps();
 
 		if (det * det <= eps * p.lengthSquared() * q.lengthSquared()) {
-			return Optional.empty();
+			return List.of();
 		}
 
 		// Lines intersect in a single point.
@@ -488,13 +488,13 @@ public class GeomUtil {
 		double t = (p.getX() * d.getY() - p.getY() * d.getX()) / det;
 
 		if (!answerPredicate.test(s, t)) {
-			return Optional.empty();
+			return List.of();
 		}
 
 		answer.add(s);
 		answer.add(t);
 
-		return Optional.of(answer);
+		return List.of(s, t);
 	}
 
 	public static Vector2d computeCrossPointUsingParameter(final double t, final Vector2d q0, final Vector2d q1) {

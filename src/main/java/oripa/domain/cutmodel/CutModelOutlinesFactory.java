@@ -47,10 +47,10 @@ public class CutModelOutlinesFactory {
 			OriLine l = new OriLine(position.getX(), position.getY(),
 					nextPosition.getX(), nextPosition.getY(), OriLine.Type.AUX);
 
-			var parametersOpt = GeomUtil.solveSegmentsCrossPointVectorEquation(
+			var parameters = GeomUtil.solveSegmentsCrossPointVectorEquation(
 					cutLine.getP0(), cutLine.getP1(), l.getP0(), l.getP1());
 
-			parametersOpt.ifPresent(parameters -> {
+			if (!parameters.isEmpty()) {
 				// use the parameter for a face edge.
 				var param = parameters.get(1);
 				var positionBefore = he.getPositionBeforeFolding();
@@ -61,7 +61,7 @@ public class CutModelOutlinesFactory {
 						.noneMatch(cp -> GeomUtil.areEqual(cp, crossV, pointEps))) {
 					crossPoints.add(crossV);
 				}
-			});
+			}
 		});
 
 		return crossPoints;
