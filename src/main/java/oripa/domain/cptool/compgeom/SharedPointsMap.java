@@ -56,20 +56,20 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 		return false;
 	}
 
-	private OriPoint findOppositeCandidate(final OriLine line, final OriPoint keyPoint,
+	private Optional<OriPoint> findOppositeCandidate(final OriLine line, final OriPoint keyPoint,
 			final double eps) {
 		var oppositeKeyPoint = GeomUtil.distance(line.getP0(), keyPoint) < eps
 				? findKeyPoint(line.getOriPoint1(), eps)
 				: findKeyPoint(line.getOriPoint0(), eps);
 
 		if (validateKeyPoints(keyPoint, oppositeKeyPoint, line, eps)) {
-			return oppositeKeyPoint;
+			return Optional.of(oppositeKeyPoint);
 		} else {
 			logger.trace("failed to get opposite key point quickly: line: " + line
 					+ " oppositeKeyPoint: " + oppositeKeyPoint);
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 	public OriPoint findKeyPoint(final OriPoint p, final double eps) {
@@ -86,9 +86,9 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 	public Optional<OriPoint> findOppositeKeyPoint(final P point, final OriPoint keyPoint,
 			final double eps) {
 
-		var oppositeKeyPoint = findOppositeCandidate(point.getLine(), keyPoint, eps);
-		if (oppositeKeyPoint != null) {
-			return Optional.of(oppositeKeyPoint);
+		var oppositeKeyPointOpt = findOppositeCandidate(point.getLine(), keyPoint, eps);
+		if (oppositeKeyPointOpt.isPresent()) {
+			return oppositeKeyPointOpt;
 		}
 
 		return this.keySet().parallelStream()
