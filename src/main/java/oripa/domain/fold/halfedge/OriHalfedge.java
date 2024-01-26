@@ -18,6 +18,8 @@
 
 package oripa.domain.fold.halfedge;
 
+import java.util.Optional;
+
 import oripa.vecmath.Vector2d;
 
 /**
@@ -94,8 +96,8 @@ public class OriHalfedge {
 	/**
 	 * @return pair of this half-edge.
 	 */
-	public OriHalfedge getPair() {
-		return pair;
+	public Optional<OriHalfedge> getPair() {
+		return Optional.ofNullable(pair);
 	}
 
 	/**

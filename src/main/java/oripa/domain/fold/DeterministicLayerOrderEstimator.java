@@ -341,10 +341,13 @@ class DeterministicLayerOrderEstimator {
 
 		var changed = EstimationResult.NOT_CHANGED;
 		for (OriHalfedge he : f_i.halfedgeIterable()) {
-			var pair = he.getPair();
-			if (pair == null) {
+			var pairOpt = he.getPair();
+			if (pairOpt.isEmpty()) {
 				continue;
 			}
+
+			var pair = pairOpt.get();
+
 			int index_j = pair.getFace().getFaceID();
 
 			var indices = overlappingFaceIndexIntersections[index_i][index_j];
@@ -404,17 +407,23 @@ class DeterministicLayerOrderEstimator {
 
 		var changed = EstimationResult.NOT_CHANGED;
 		for (OriHalfedge he : f_i.halfedgeIterable()) {
-			var pair = he.getPair();
-			if (pair == null) {
+			var pairOpt = he.getPair();
+			if (pairOpt.isEmpty()) {
 				continue;
 			}
+
+			var pair = pairOpt.get();
+
 			int index_j = pair.getFace().getFaceID();
 
 			for (OriHalfedge he2 : pair.getFace().halfedgeIterable()) {
-				var pair2 = he2.getPair();
-				if (pair2 == null) {
+				var pair2Opt = he2.getPair();
+				if (pair2Opt.isEmpty()) {
 					continue;
 				}
+
+				var pair2 = pair2Opt.get();
+
 				int index_k = pair2.getFace().getFaceID();
 				if (index_i == index_k || index_j == index_k) {
 					continue;

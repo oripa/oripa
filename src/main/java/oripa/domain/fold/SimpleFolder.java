@@ -108,10 +108,12 @@ class SimpleFolder {
 		}
 
 		face.halfedgeStream().forEach(he -> {
-			var pair = he.getPair();
-			if (pair == null) {
+			var pairOpt = he.getPair();
+			if (pairOpt.isEmpty()) {
 				return;
 			}
+
+			var pair = pairOpt.get();
 			var pairFace = pair.getFace();
 			if (pairFace.isMovedByFold()) {
 				return;
@@ -159,7 +161,7 @@ class SimpleFolder {
 	}
 
 	private void flipFace(final OriFace face, final OriHalfedge baseHe) {
-		var baseHePair = baseHe.getPair();
+		var baseHePair = baseHe.getPair().orElseThrow();
 		var baseHePairNext = baseHePair.getNext();
 
 		// baseHe.pair keeps the position before folding.

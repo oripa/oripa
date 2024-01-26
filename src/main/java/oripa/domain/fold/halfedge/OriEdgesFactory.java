@@ -63,7 +63,8 @@ public class OriEdgesFactory {
 		// directions are opposite (that's the definition of edge).
 		halfedges.values().forEach(hes -> {
 			for (var he0 : hes) {
-				if (he0.getPair() != null) {
+				var pairOpt = he0.getPair();
+				if (pairOpt.isPresent()) {
 					continue;
 				}
 
@@ -80,7 +81,8 @@ public class OriEdgesFactory {
 		// If the pair wasn't found it should be boundary of paper
 		halfedges.values().forEach(hes -> {
 			for (var he : hes) {
-				if (he.getPair() == null) {
+				var pairOpt = he.getPair();
+				if (pairOpt.isEmpty()) {
 					edges.add(makeBoundary(he));
 				}
 			}

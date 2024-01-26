@@ -59,11 +59,12 @@ public class OrigamiModelGraphicDrawer {
 
 			drawer.selectEdgeColor();
 			face.halfedgeStream().forEach(he -> {
-				if (he.getPair() == null) {
-					drawer.selectPaperBoundaryStroke(scale);
-				} else {
-					drawer.selectFaceEdgeStroke(scale);
-				}
+				var pairOpt = he.getPair();
+
+				pairOpt.ifPresentOrElse(
+						pair -> drawer.selectFaceEdgeStroke(scale),
+						() -> drawer.selectPaperBoundaryStroke(scale));
+
 				var position = he.getPositionForDisplay();
 				var nextPosition = he.getNext().getPositionForDisplay();
 				drawer.drawLine(position, nextPosition);

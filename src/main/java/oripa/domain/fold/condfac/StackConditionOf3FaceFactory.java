@@ -60,10 +60,12 @@ public class StackConditionOf3FaceFactory {
 		for (OriFace f_i : faces) {
 			var index_i = f_i.getFaceID();
 			for (OriHalfedge he : f_i.halfedgeIterable()) {
-				var pair = he.getPair();
-				if (pair == null) {
+				var pairOpt = he.getPair();
+				if (pairOpt.isEmpty()) {
 					continue;
 				}
+
+				var pair = pairOpt.get();
 
 				OriFace f_j = pair.getFace();
 				var index_j = f_j.getFaceID();

@@ -50,10 +50,13 @@ class OverlapRelationFactory {
 		var overlapRelation = createOverlapRelation(faces, eps);
 		for (OriFace face : faces) {
 			for (OriHalfedge he : face.halfedgeIterable()) {
-				var pair = he.getPair();
-				if (pair == null) {
+				var pairOpt = he.getPair();
+				if (pairOpt.isEmpty()) {
 					continue;
 				}
+
+				var pair = pairOpt.get();
+
 				OriFace pairFace = pair.getFace();
 				var faceID = face.getFaceID();
 				var pairFaceID = pairFace.getFaceID();
