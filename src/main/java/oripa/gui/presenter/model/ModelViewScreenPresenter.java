@@ -70,27 +70,29 @@ public class ModelViewScreenPresenter {
 
 	public void paintComponent(final ModelGraphics m) {
 
-		var origamiModel = view.getModel();
+		var origamiModelOpt = view.getModel();
 
-		if (origamiModel == null) {
+		if (origamiModelOpt.isEmpty()) {
 			logger.info("null origamiModel.");
 			return;
 		}
 
-		if (!origamiModel.hasModel()) {
-			logger.info("origamiModel does not have a model data.");
-			return;
-		}
+		origamiModelOpt.ifPresent(origamiModel -> {
+			if (!origamiModel.hasModel()) {
+				logger.info("origamiModel does not have a model data.");
+				return;
+			}
 
-		var objDrawer = m.getBufferObjectDrawer();
+			var objDrawer = m.getBufferObjectDrawer();
 
-		var drawer = new OrigamiModelGraphicDrawer();
+			var drawer = new OrigamiModelGraphicDrawer();
 
-		drawer.draw(objDrawer, origamiModel, view.isScissorsLineVisible() ? scissorsLine : null,
-				view.getModelDisplayMode(),
-				view.getScale());
+			drawer.draw(objDrawer, origamiModel, view.isScissorsLineVisible() ? scissorsLine : null,
+					view.getModelDisplayMode(),
+					view.getScale());
 
-		m.drawBufferImage();
+			m.drawBufferImage();
+		});
 	}
 
 	private void recalcScissorsLine() {
@@ -108,7 +110,7 @@ public class ModelViewScreenPresenter {
 		scissorsLine = new OriLine(p0.add(moveVec), p1.add(moveVec), Type.AUX);
 
 		var factory = new CutModelOutlinesFactory();
-		lineHolder.setOutlines(factory.createOutlines(scissorsLine, view.getModel(), pointEps));
+		lineHolder.setOutlines(factory.createOutlines(scissorsLine, view.getModel().orElseThrow(), pointEps));
 
 		view.repaint();
 
