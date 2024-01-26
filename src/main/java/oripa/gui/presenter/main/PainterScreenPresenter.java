@@ -25,7 +25,6 @@ import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
@@ -100,10 +99,10 @@ public class PainterScreenPresenter {
 
 		bufferObjDrawer.setAntiAlias(!viewContext.isZeroLineWidth());
 
-		GraphicMouseAction action = mouseActionHolder.getMouseAction();
+		var actionOpt = mouseActionHolder.getMouseAction();
 
 		drawer.draw(bufferObjDrawer, viewContext, paintContext,
-				action == null ? false : action.getEditMode() == EditMode.VERTEX);
+				actionOpt.isEmpty() ? false : actionOpt.get().getEditMode() == EditMode.VERTEX);
 
 		if (paperDomainOfModel != null) {
 			drawPaperDomainOfModel(bufferObjDrawer);
@@ -115,12 +114,12 @@ public class PainterScreenPresenter {
 					viewContext.isZeroLineWidth());
 		}
 
-		if (action == null) {
+		if (actionOpt.isEmpty()) {
 			p.drawBufferImage();
 			return;
 		}
 
-		action.onDraw(bufferObjDrawer, viewContext, paintContext);
+		actionOpt.get().onDraw(bufferObjDrawer, viewContext, paintContext);
 
 		p.drawBufferImage();
 
@@ -138,51 +137,35 @@ public class PainterScreenPresenter {
 	}
 
 	private void mouseLeftClicked(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
-		final GraphicMouseAction action = mouseActionHolder.getMouseAction();
+		final var actionOpt = mouseActionHolder.getMouseAction();
 
-		if (action == null) {
-			return;
-		}
-
-		mouseActionHolder.setMouseAction(action.onLeftClick(
-				viewContext, paintContext, isCtrlKeyDown));
+		actionOpt.ifPresent(action -> mouseActionHolder.setMouseAction(action.onLeftClick(
+				viewContext, paintContext, isCtrlKeyDown)));
 	}
 
 	private void mouseRightClicked(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
-		final GraphicMouseAction action = mouseActionHolder.getMouseAction();
+		final var actionOpt = mouseActionHolder.getMouseAction();
 
-		if (action == null) {
-			return;
-		}
-
-		action.onRightClick(viewContext, paintContext, isCtrlKeyDown);
+		actionOpt.ifPresent(action -> action.onRightClick(viewContext, paintContext, isCtrlKeyDown));
 	}
 
 	private void mousePressed(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
-		GraphicMouseAction action = mouseActionHolder.getMouseAction();
+		final var actionOpt = mouseActionHolder.getMouseAction();
 
-		if (action == null) {
-			return;
-		}
-
-		action.onPress(viewContext, paintContext, isCtrlKeyDown);
+		actionOpt.ifPresent(action -> action.onPress(viewContext, paintContext, isCtrlKeyDown));
 	}
 
 	private void mouseReleased(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
-		GraphicMouseAction action = mouseActionHolder.getMouseAction();
+		var actionOpt = mouseActionHolder.getMouseAction();
 
-		if (action == null) {
-			return;
-		}
-
-		action.onRelease(viewContext, paintContext, isCtrlKeyDown);
+		actionOpt.ifPresent(action -> action.onRelease(viewContext, paintContext, isCtrlKeyDown));
 	}
 
 	private void mouseDragged(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
-		GraphicMouseAction action = mouseActionHolder.getMouseAction();
-
 		viewContext.setLogicalMousePoint(mousePoint);
-		action.onDrag(viewContext, paintContext, isCtrlKeyDown);
+
+		var actionOpt = mouseActionHolder.getMouseAction();
+		actionOpt.ifPresent(action -> action.onDrag(viewContext, paintContext, isCtrlKeyDown));
 	}
 
 	private void updateCameraScale(final Double scale) {
@@ -197,12 +180,8 @@ public class PainterScreenPresenter {
 
 		viewContext.setLogicalMousePoint(mousePoint);
 
-		final GraphicMouseAction action = mouseActionHolder.getMouseAction();
-		if (action == null) {
-			return;
-		}
-
-		action.onMove(viewContext, paintContext, isCtrlKeyDown);
+		final var actionOpt = mouseActionHolder.getMouseAction();
+		actionOpt.ifPresent(action -> action.onMove(viewContext, paintContext, isCtrlKeyDown));
 	}
 
 	public void setPaperDomainOfModel(final RectangleDomain domain) {
@@ -211,7 +190,7 @@ public class PainterScreenPresenter {
 	}
 
 	private void updateUsingCtrlKeyOnDrag() {
-		view.setUsingCtrlKeyOnDrag(mouseActionHolder.getMouseAction().isUsingCtrlKeyOnDrag());
+		view.setUsingCtrlKeyOnDrag(mouseActionHolder.getMouseAction().get().isUsingCtrlKeyOnDrag());
 	}
 
 }

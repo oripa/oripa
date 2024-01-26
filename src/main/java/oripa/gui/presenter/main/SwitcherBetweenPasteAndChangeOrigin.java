@@ -45,7 +45,7 @@ public class SwitcherBetweenPasteAndChangeOrigin implements Consumer<Boolean> {
 	 */
 	@Override
 	public void accept(final Boolean changingOrigin) {
-		GraphicMouseAction action = mouseActionHolder.getMouseAction();
+		GraphicMouseAction action = mouseActionHolder.getMouseAction().get();
 		if (action instanceof CopyAndPasteAction) {
 			CopyAndPasteAction casted = (CopyAndPasteAction) action;
 			casted.changeAction(changingOrigin);

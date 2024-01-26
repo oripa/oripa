@@ -59,10 +59,12 @@ public class UnselectAllItemsActionListener implements Runnable {
 
 		command.execute();
 
-		var currentAction = actionHolder.getMouseAction();
-		if (currentAction == null) {
+		var currentActionOpt = actionHolder.getMouseAction();
+		if (currentActionOpt.isEmpty()) {
 			return;
 		}
+
+		var currentAction = currentActionOpt.get();
 
 		currentAction.destroy(context);
 		currentAction.recover(context);

@@ -30,7 +30,7 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 		// It's the time to get back to previous graphic action.
 		if (isActionPerformed(vertexCountBeforeAction, vertexCountAfterAction)) {
 			popPreviousState();
-			next = actionHolder.getMouseAction();
+			next = actionHolder.getMouseAction().get();
 		}
 
 		return next;
