@@ -18,6 +18,8 @@
 
 package oripa.domain.fold.halfedge;
 
+import java.util.Optional;
+
 import oripa.geom.Segment;
 import oripa.util.MathUtil;
 import oripa.value.OriLine;
@@ -61,8 +63,8 @@ public class OriEdge {
 	/**
 	 * @return left
 	 */
-	public OriHalfedge getLeft() {
-		return left;
+	public Optional<OriHalfedge> getLeft() {
+		return Optional.ofNullable(left);
 	}
 
 	/**
@@ -76,8 +78,8 @@ public class OriEdge {
 	/**
 	 * @return right
 	 */
-	public OriHalfedge getRight() {
-		return right;
+	public Optional<OriHalfedge> getRight() {
+		return Optional.ofNullable(right);
 	}
 
 	/**

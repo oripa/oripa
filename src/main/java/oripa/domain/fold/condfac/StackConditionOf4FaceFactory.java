@@ -67,18 +67,18 @@ public class StackConditionOf4FaceFactory {
 
 		for (int i = 0; i < edgeNum; i++) {
 			OriEdge e0 = edges.get(i);
-			var e0Left = e0.getLeft();
-			var e0Right = e0.getRight();
+			var e0LeftOpt = e0.getLeft();
+			var e0RightOpt = e0.getRight();
 
-			if (e0Left == null || e0Right == null) {
+			if (e0LeftOpt.isEmpty() || e0RightOpt.isEmpty()) {
 				continue;
 			}
 
 			for (int j = i + 1; j < edgeNum; j++) {
 				OriEdge e1 = edges.get(j);
-				var e1Left = e1.getLeft();
-				var e1Right = e1.getRight();
-				if (e1Left == null || e1Right == null) {
+				var e1LeftOpt = e1.getLeft();
+				var e1RightOpt = e1.getRight();
+				if (e1LeftOpt.isEmpty() || e1RightOpt.isEmpty()) {
 					continue;
 				}
 
@@ -86,10 +86,10 @@ public class StackConditionOf4FaceFactory {
 					continue;
 				}
 
-				var e0LeftFace = e0Left.getFace();
-				var e0RightFace = e0Right.getFace();
-				var e1LeftFace = e1Left.getFace();
-				var e1RightFace = e1Right.getFace();
+				var e0LeftFace = e0LeftOpt.get().getFace();
+				var e0RightFace = e0RightOpt.get().getFace();
+				var e1LeftFace = e1LeftOpt.get().getFace();
+				var e1RightFace = e1RightOpt.get().getFace();
 
 				var intersectionSubfaces = subFacesOfEachFace.get(e0LeftFace).stream()
 						.filter(s -> subFacesOfEachFace.get(e0RightFace).contains(s))

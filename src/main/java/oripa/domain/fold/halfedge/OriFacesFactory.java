@@ -106,11 +106,11 @@ public class OriFacesFactory {
 		}
 
 		if (v == e.getStartVertex()) {
-			if (e.getLeft() != null) {
+			if (e.getLeft().isPresent()) {
 				return false;
 			}
 		} else {
-			if (e.getRight() != null) {
+			if (e.getRight().isPresent()) {
 				return false;
 			}
 		}
@@ -143,7 +143,7 @@ public class OriFacesFactory {
 			return false;
 		}
 
-		if (e.getLeft() != null || e.getRight() != null) {
+		if (e.getLeft().isPresent() || e.getRight().isPresent()) {
 			return false;
 		}
 

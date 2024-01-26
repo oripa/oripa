@@ -93,9 +93,7 @@ public class OriEdgesFactory {
 
 	private void allocateAndPut(final OriVertex vertex, final OriHalfedge he,
 			final Map<OriVertex, List<OriHalfedge>> halfedges) {
-		if (halfedges.get(vertex) == null) {
-			halfedges.put(vertex, new ArrayList<>());
-		}
+		halfedges.putIfAbsent(vertex, new ArrayList<>());
 		halfedges.get(vertex).add(he);
 	}
 
