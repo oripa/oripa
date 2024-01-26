@@ -1,5 +1,7 @@
 package oripa.domain.paint.copypaste;
 
+import java.util.Optional;
+
 import oripa.domain.paint.PaintContext;
 import oripa.vecmath.Vector2d;
 
@@ -25,10 +27,10 @@ public class SelectionOriginHolderImpl implements SelectionOriginHolder {
 	}
 
 	@Override
-	public Vector2d getOrigin(final PaintContext context) {
+	public Optional<Vector2d> getOrigin(final PaintContext context) {
 		resetOrigin(context);
 
-		return origin;
+		return Optional.ofNullable(origin);
 	}
 
 }

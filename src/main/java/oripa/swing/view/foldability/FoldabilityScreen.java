@@ -297,8 +297,8 @@ public class FoldabilityScreen extends JPanel
 	}
 
 	@Override
-	public OriVertex getPickedViolatingVertex() {
-		return pickedViolatingVertex;
+	public Optional<OriVertex> getPickedViolatingVertex() {
+		return Optional.ofNullable(pickedViolatingVertex);
 	}
 
 }

@@ -56,7 +56,7 @@ public class LinePasterCommand extends ValidatablePaintCommand {
 
 		context.creasePatternUndo().pushUndoInfo();
 
-		Vector2d origin = originHolder.getOrigin(context);
+		Vector2d origin = originHolder.getOrigin(context).orElseThrow();
 
 		var offset = factory.createOffset(origin, v);
 

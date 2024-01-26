@@ -129,15 +129,12 @@ public class FoldabilityScreenPresenter {
 	}
 
 	private void drawVertexViolationNames(final ObjectGraphicDrawer drawer) {
-		var pickedViolatingVertex = view.getPickedViolatingVertex();
+		var pickedViolatingVertexOpt = view.getPickedViolatingVertex();
 
-		if (pickedViolatingVertex == null) {
-			return;
-		}
-
-		var violationNames = foldabilityChecker.getVertexViolationNames(pickedViolatingVertex);
-
-		drawer.drawString("error(s): " + String.join(", ", violationNames), 0, 10);
+		pickedViolatingVertexOpt.ifPresent(pickedViolatingVertex -> {
+			var violationNames = foldabilityChecker.getVertexViolationNames(pickedViolatingVertex);
+			drawer.drawString("error(s): " + String.join(", ", violationNames), 0, 10);
+		});
 	}
 
 	public void setViewVisible(final boolean visible) {

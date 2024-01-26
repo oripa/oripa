@@ -18,6 +18,8 @@
  */
 package oripa.domain.paint.copypaste;
 
+import java.util.Optional;
+
 import oripa.domain.paint.PaintContext;
 import oripa.vecmath.Vector2d;
 
@@ -31,6 +33,6 @@ public interface SelectionOriginHolder {
 
 	void resetOrigin(PaintContext context);
 
-	Vector2d getOrigin(PaintContext context);
+	Optional<Vector2d> getOrigin(PaintContext context);
 
 }
