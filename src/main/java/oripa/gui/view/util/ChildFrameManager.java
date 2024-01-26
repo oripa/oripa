@@ -41,11 +41,8 @@ public class ChildFrameManager {
 	}
 
 	public Collection<FrameView> getChildren(final FrameView parentFrame) {
+		relationMap.putIfAbsent(parentFrame, new HashSet<>());
 		var children = relationMap.get(parentFrame);
-		if (children == null) {
-			children = new HashSet<>();
-			relationMap.put(parentFrame, children);
-		}
 
 		return children;
 	}
