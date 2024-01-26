@@ -111,8 +111,7 @@ class SimpleFolder {
 				return;
 			}
 
-			var pair = pairOpt.get();
-			var pairFace = pair.getFace();
+			var pairFace = pairOpt.get().getFace();
 			if (pairFace.isMovedByFold()) {
 				return;
 			}

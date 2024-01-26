@@ -18,10 +18,10 @@
  */
 package oripa.domain.paint.core;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
@@ -35,25 +35,17 @@ import oripa.vecmath.Vector2d;
 public class RaySnapPointFactory {
 	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment ray,
 			final double eps) {
-		Collection<Vector2d> snapPoints = new ArrayList<>();
-
-		// snap on cross points of line and creases.
-		snapPoints.addAll(
+		return Stream.concat(
+				// snap on cross points of line and creases.
 				creasePattern.stream()
 						.map(crease -> GeomUtil.getCrossPoint(ray, crease))
-						.filter(Optional::isPresent)
-						.map(Optional::get)
-						.collect(Collectors.toList()));
+						.flatMap(Optional::stream),
 
-		// snap on end points of overlapping creases.
-		creasePattern.stream()
-				.filter(crease -> overlapsEntirely(crease, ray, eps))
-				.flatMap(crease -> crease.pointStream())
-				.forEach(point -> {
-					snapPoints.add(point);
-				});
-
-		return snapPoints;
+				// snap on end points of overlapping creases.
+				creasePattern.stream()
+						.filter(crease -> overlapsEntirely(crease, ray, eps))
+						.flatMap(crease -> crease.pointStream()))
+				.collect(Collectors.toList());
 	}
 
 	private boolean sharesEndPoint(final Segment s1, final Segment s2, final double eps) {

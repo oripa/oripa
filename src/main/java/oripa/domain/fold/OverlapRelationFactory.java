@@ -55,9 +55,7 @@ class OverlapRelationFactory {
 					continue;
 				}
 
-				var pair = pairOpt.get();
-
-				OriFace pairFace = pair.getFace();
+				OriFace pairFace = pairOpt.get().getFace();
 				var faceID = face.getFaceID();
 				var pairFaceID = pairFace.getFaceID();
 

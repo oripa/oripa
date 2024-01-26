@@ -65,9 +65,7 @@ public class StackConditionOf3FaceFactory {
 					continue;
 				}
 
-				var pair = pairOpt.get();
-
-				OriFace f_j = pair.getFace();
+				OriFace f_j = pairOpt.get().getFace();
 				var index_j = f_j.getFaceID();
 				if (!overlapRelation.isLower(index_i, index_j)) {
 					continue;

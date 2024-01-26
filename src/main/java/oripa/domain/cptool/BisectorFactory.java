@@ -69,7 +69,7 @@ public class BisectorFactory {
 				l.getLine(),
 				new Line(v1, dir));
 
-		return cpOpt.map(cp -> new OriLine(v1, cpOpt.get(), lineType)).get();
+		return cpOpt.map(cp -> new OriLine(v1, cp, lineType)).get();
 
 	}
 

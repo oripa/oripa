@@ -38,22 +38,19 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 		}
 
 		var v = vOpt.get();
-		try {
-			var angle = byValueContext.getAngle();
-			var length = byValueContext.getLength();
 
-			var radianAngle = Math.toRadians(angle);
+		double angle = byValueContext.getAngle();
+		double length = byValueContext.getLength();
 
-			drawer.selectColor(paintContext.getLineTypeOfNewLines());
-			drawer.selectStroke(
-					paintContext.getLineTypeOfNewLines(),
-					viewContext.getScale(), viewContext.isZeroLineWidth());
+		double radianAngle = Math.toRadians(angle);
 
-			Vector2d dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle)).multiply(length);
-			var w = v.add(dir);
-			drawer.drawLine(v, w);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		drawer.selectColor(paintContext.getLineTypeOfNewLines());
+		drawer.selectStroke(
+				paintContext.getLineTypeOfNewLines(),
+				viewContext.getScale(), viewContext.isZeroLineWidth());
+
+		var dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle)).multiply(length);
+		var w = v.add(dir);
+		drawer.drawLine(v, w);
 	}
 }

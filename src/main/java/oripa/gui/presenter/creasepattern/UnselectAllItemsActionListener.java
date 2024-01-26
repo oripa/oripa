@@ -47,12 +47,6 @@ public class UnselectAllItemsActionListener implements Runnable {
 		screenUpdater = updater;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	@Override
 	public void run() {
 		Command command = new AllItemUnselecterCommand(context);
@@ -60,21 +54,18 @@ public class UnselectAllItemsActionListener implements Runnable {
 		command.execute();
 
 		var currentActionOpt = actionHolder.getMouseAction();
-		if (currentActionOpt.isEmpty()) {
-			return;
-		}
 
-		var currentAction = currentActionOpt.get();
+		currentActionOpt.ifPresent(currentAction -> {
+			currentAction.destroy(context);
+			currentAction.recover(context);
 
-		currentAction.destroy(context);
-		currentAction.recover(context);
+			if (currentAction.getEditMode() == EditMode.COPY ||
+					currentAction.getEditMode() == EditMode.CUT) {
+				statePopper.run();
+			}
 
-		if (currentAction.getEditMode() == EditMode.COPY ||
-				currentAction.getEditMode() == EditMode.CUT) {
-			statePopper.run();
-		}
-
-		screenUpdater.updateScreen();
+			screenUpdater.updateScreen();
+		});
 	}
 
 }

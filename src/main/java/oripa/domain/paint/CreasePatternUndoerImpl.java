@@ -45,10 +45,7 @@ public class CreasePatternUndoerImpl implements CreasePatternUndoer {
 	public synchronized void undo() {
 		var infoOpt = undoManager.undo(owner.getCreasePattern());
 
-		infoOpt.ifPresent(info -> {
-			var creasePattern = owner.getCreasePattern();
-			creasePattern.replaceWith(info.getInfo());
-		});
+		infoOpt.ifPresent(info -> owner.getCreasePattern().replaceWith(info.getInfo()));
 	}
 
 	@Override
@@ -60,10 +57,7 @@ public class CreasePatternUndoerImpl implements CreasePatternUndoer {
 	public synchronized void redo() {
 		var infoOpt = undoManager.redo();
 
-		infoOpt.ifPresent(info -> {
-			var creasePattern = owner.getCreasePattern();
-			creasePattern.replaceWith(info.getInfo());
-		});
+		infoOpt.ifPresent(info -> owner.getCreasePattern().replaceWith(info.getInfo()));
 	}
 
 	@Override

@@ -113,18 +113,6 @@ public class NearestVertexFinder {
 
 		var nearestOpt = findNearestVertex(currentPoint, targetVertices);
 
-		var nearestPosition = nearestOpt.orElseGet(NearestPoint::new);
-
-		if (nearestPosition.distance >= distance) {
-			return Optional.empty();
-		} else {
-
-//			System.out.println("#area " + vertices.size() +
-//					", #v(area1) " + vertices.iterator().next().size() +
-//					", scaled limit = " + distance);
-
-		}
-
-		return Optional.of(nearestPosition);
+		return nearestOpt.filter(nearest -> nearest.distance < distance);
 	}
 }

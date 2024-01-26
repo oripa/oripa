@@ -72,12 +72,7 @@ public class ModelViewScreenPresenter {
 
 		var origamiModelOpt = view.getModel();
 
-		if (origamiModelOpt.isEmpty()) {
-			logger.info("null origamiModel.");
-			return;
-		}
-
-		origamiModelOpt.ifPresent(origamiModel -> {
+		origamiModelOpt.ifPresentOrElse(origamiModel -> {
 			if (!origamiModel.hasModel()) {
 				logger.info("origamiModel does not have a model data.");
 				return;
@@ -92,7 +87,7 @@ public class ModelViewScreenPresenter {
 					view.getScale());
 
 			m.drawBufferImage();
-		});
+		}, () -> logger.info("null origamiModel."));
 	}
 
 	private void recalcScissorsLine() {

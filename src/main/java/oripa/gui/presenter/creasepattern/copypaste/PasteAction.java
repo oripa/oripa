@@ -72,7 +72,7 @@ public class PasteAction extends AbstractGraphicMouseAction {
 
 		paintContext.setCandidateVertexToPick(closeVertex);
 
-		return Optional.ofNullable(closeVertex);
+		return Optional.of(closeVertex);
 	}
 
 	@Override

@@ -101,8 +101,11 @@ public class PainterScreenPresenter {
 
 		var actionOpt = mouseActionHolder.getMouseAction();
 
-		drawer.draw(bufferObjDrawer, viewContext, paintContext,
-				actionOpt.isEmpty() ? false : actionOpt.get().getEditMode() == EditMode.VERTEX);
+		var forceShowingVertex = actionOpt
+				.map(action -> action.getEditMode() == EditMode.VERTEX)
+				.orElse(false);
+
+		drawer.draw(bufferObjDrawer, viewContext, paintContext, forceShowingVertex);
 
 		if (paperDomainOfModel != null) {
 			drawPaperDomainOfModel(bufferObjDrawer);
@@ -114,17 +117,15 @@ public class PainterScreenPresenter {
 					viewContext.isZeroLineWidth());
 		}
 
-		if (actionOpt.isEmpty()) {
+		actionOpt.ifPresentOrElse(action -> {
+			action.onDraw(bufferObjDrawer, viewContext, paintContext);
+
 			p.drawBufferImage();
-			return;
-		}
 
-		actionOpt.get().onDraw(bufferObjDrawer, viewContext, paintContext);
+			paintContext.getCandidateVertexToPick()
+					.ifPresent(candidate -> drawer.drawCandidatePositionString(objDrawer, candidate));
 
-		p.drawBufferImage();
-
-		paintContext.getCandidateVertexToPick()
-				.ifPresent(candidate -> drawer.drawCandidatePositionString(objDrawer, candidate));
+		}, () -> p.drawBufferImage());
 	}
 
 	private void drawPaperDomainOfModel(final ObjectGraphicDrawer objDrawer) {
