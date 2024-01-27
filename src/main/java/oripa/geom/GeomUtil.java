@@ -54,19 +54,7 @@ public class GeomUtil {
 		return angle < MathUtil.angleRadianEps() || angle > Math.PI - MathUtil.angleRadianEps();
 	}
 
-	/**
-	 *
-	 * this method returns the count of end points on other segment for each
-	 * segment.
-	 * <ul>
-	 * <li>If the count is 0 or 1, then they are not overlapping.</li>
-	 * <li>If the count is 2, then they partially overlap.</li>
-	 * <li>If the count is 3, then one segment overlaps entirely and an end
-	 * point is shared with the other segment.</li>
-	 * <li>If the count is 4, then the two segments are equal.</li>
-	 * </ul>
-	 */
-	public static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
+	private static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1, final double pointEps) {
 		// Whether or not is parallel
 		Vector2d dir0 = e0.subtract(s0);
@@ -92,21 +80,23 @@ public class GeomUtil {
 		return cnt;
 	}
 
+	/**
+	 *
+	 * this method returns the count of end points on other segment for each
+	 * segment.
+	 * <ul>
+	 * <li>If the count is 0 or 1, then they are not overlapping.</li>
+	 * <li>If the count is 2, then they partially overlap.</li>
+	 * <li>If the count is 3, then one segment overlaps entirely and an end
+	 * point is shared with the other segment.</li>
+	 * <li>If the count is 4, then the two segments are equal.</li>
+	 * </ul>
+	 */
 	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
 		return distinguishLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
 	}
 
-	/**
-	 *
-	 * @param s0
-	 * @param e0
-	 * @param s1
-	 * @param e1
-	 * @return {@code true} if end points of both lines are on the other line.
-	 *         Note that this method returns {@code true} if the lines touch at
-	 *         end points and does not share other part.
-	 */
-	public static boolean isRelaxedOverlap(final Vector2d s0, final Vector2d e0,
+	private static boolean isRelaxedOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1, final double pointEps) {
 		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1, pointEps);
 		return cnt >= 2;
@@ -245,7 +235,7 @@ public class GeomUtil {
 
 	/**
 	 * Returns the intersection of the semi-straight line and the line segment.
-	 * Null if not intersect.
+	 * Empty if not intersect.
 	 *
 	 * @param ray
 	 * @param seg
@@ -407,7 +397,7 @@ public class GeomUtil {
 	/**
 	 * Computes cross point of segments p0-p1 and q0-q1.
 	 *
-	 * @return cross point. null if the segments don't cross.
+	 * @return cross point. Empty if the segments don't cross.
 	 */
 	public static Optional<Vector2d> getCrossPoint(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {

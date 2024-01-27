@@ -21,8 +21,6 @@ public class NearestVertexFinder {
 	 *            current nearest point to p
 	 * @param other
 	 *            new point to be tested
-	 *
-	 * @return nearest point to p
 	 */
 	private static void findNearestOf(
 			final Vector2d p, final NearestPoint nearest, final Vector2d other) {
@@ -93,7 +91,7 @@ public class NearestVertexFinder {
 	 *
 	 * @param context
 	 * @param distance
-	 * @return nearestPoint in the limit. null if there are no such vertex.
+	 * @return nearestPoint in the limit. Empty if there are no such vertex.
 	 */
 	public static Optional<NearestPoint> findAround(
 			final Vector2d mousePoint,

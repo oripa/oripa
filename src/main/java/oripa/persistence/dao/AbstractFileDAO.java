@@ -48,12 +48,9 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	public abstract AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
 
 	public void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
-		var support = getFileAccessSupportSelector().getFileAccessSupport(key);
-		if (support == null) {
-			return;
-		}
+		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
 
-		support.setConfigToSavingAction(configSupplier);
+		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
 	}
 
 	public boolean canLoad(final String filePath) {

@@ -86,7 +86,7 @@ public interface PaintContext extends CreasePatternHolder {
 	/**
 	 * pop the last pushed line and mark it unselected.
 	 *
-	 * @return popped line. null if no line is pushed.
+	 * @return popped line. empty if no line is pushed.
 	 */
 	public abstract Optional<OriLine> popLine();
 
@@ -100,7 +100,7 @@ public interface PaintContext extends CreasePatternHolder {
 	/**
 	 * pop the last pushed vertex.
 	 *
-	 * @return popped vertex. null if no vertex is pushed.
+	 * @return popped vertex. empty if no vertex is pushed.
 	 */
 	public abstract Optional<Vector2d> popVertex();
 

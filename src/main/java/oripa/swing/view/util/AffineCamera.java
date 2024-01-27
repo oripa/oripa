@@ -95,8 +95,8 @@ public class AffineCamera {
 	 *
 	 * @param e
 	 * @param preMousePoint
-	 * @return Affine transform for translating. {@code null} if the mouse event
-	 *         is not for translating.
+	 * @return Affine transform for translating. {@code empty} if the mouse
+	 *         event is not for translating.
 	 */
 	public Optional<AffineTransform> updateTranslateByMouseDragged(
 			final MouseEvent e, final Point2D preMousePoint) {
@@ -118,7 +118,7 @@ public class AffineCamera {
 	 *
 	 * @param e
 	 * @param preMousePoint
-	 * @return Affine transform for scaling. {@code null} if the mouse event is
+	 * @return Affine transform for scaling. {@code empty} if the mouse event is
 	 *         not for scaling.
 	 */
 	public Optional<AffineTransform> updateScaleByMouseDragged(

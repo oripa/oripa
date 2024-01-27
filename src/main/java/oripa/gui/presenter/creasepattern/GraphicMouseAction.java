@@ -82,7 +82,7 @@ public interface GraphicMouseAction {
 	 * @param viewContext
 	 * @param paintContext
 	 * @param differentAction
-	 * @return close vertex. null if not found.
+	 * @return close vertex. Empty if not found.
 	 */
 	public abstract Optional<Vector2d> onMove(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext, boolean differentAction);

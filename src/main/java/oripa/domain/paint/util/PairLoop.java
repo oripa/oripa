@@ -14,7 +14,7 @@ public class PairLoop {
 	 * @param block
 	 *            What to do for the pairs
 	 * @return The first element of the last pair, in other word, i of (i, i+1).
-	 *         null if {@code block} never made a break by returning false.
+	 *         empty if {@code block} never made a break by returning false.
 	 */
 	public static <Element> Optional<Element> iterateFrom(final Iterator<Element> begin,
 			final Iterable<Element> elements, final Block<Element> block) {
@@ -48,7 +48,7 @@ public class PairLoop {
 	 * @param block
 	 *            What to do for the pairs
 	 * @return The first element of the last pair, in other word, i of (i, i+1).
-	 *         null if {@code block} never made a break by returning false.
+	 *         empty if {@code block} never made a break by returning false.
 	 */
 	public static <Element> Optional<Element> iterateAll(
 			final Iterable<Element> elements, final Block<Element> block) {
@@ -66,7 +66,7 @@ public class PairLoop {
 	 * @param block
 	 *            What to do for the pairs
 	 * @return The first element of the last pair, in other word, i of (i, i+1).
-	 *         null if {@code block} never made a break by returning false.
+	 *         empty if {@code block} never made a break by returning false.
 	 */
 
 	public static <Element> Optional<Element> iterateWithCount(

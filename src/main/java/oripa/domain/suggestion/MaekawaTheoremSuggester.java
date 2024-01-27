@@ -20,6 +20,7 @@ package oripa.domain.suggestion;
 
 import java.util.Optional;
 
+import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
 
@@ -31,7 +32,7 @@ public class MaekawaTheoremSuggester {
 	/**
 	 *
 	 * @param vertex
-	 * @return type to be used for new line. null if {@code vertex} is not at
+	 * @return type to be used for new line. empty if {@code vertex} is not at
 	 *         inside of paper or the lines can't be interpolated to satisfy the
 	 *         theorem.
 	 */
@@ -50,16 +51,9 @@ public class MaekawaTheoremSuggester {
 			return Optional.empty();
 		}
 
-		int mountainCount = 0;
-		int valleyCount = 0;
+		int mountainCount = (int) vertex.edgeStream().filter(OriEdge::isMountain).count();
+		int valleyCount = (int) vertex.edgeStream().filter(OriEdge::isValley).count();
 
-		for (int i = 0; i < edgeCount; i++) {
-			if (vertex.getEdge(i).isMountain()) {
-				mountainCount++;
-			} else {
-				valleyCount++;
-			}
-		}
 		int diff = mountainCount - valleyCount;
 		switch (diff) {
 		case 3:

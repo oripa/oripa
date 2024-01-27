@@ -24,7 +24,7 @@ public class NearestItemFinder {
 
 	/**
 	 * Returns a vertex sufficiently close to mouse point among the vertices of
-	 * crease pattern. Returns {@code null} if no such vertex exists.
+	 * crease pattern. Returns {@code empty} if no such vertex exists.
 	 */
 	public static Optional<Vector2d> pickVertex(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
@@ -38,7 +38,7 @@ public class NearestItemFinder {
 
 	/**
 	 * Returns a vertex sufficiently close to mouse point among the any points
-	 * on the lines of crease pattern. Returns {@code null} if no such vertex
+	 * on the lines of crease pattern. Returns {@code empty} if no such vertex
 	 * exists.
 	 */
 	public static Optional<Vector2d> pickVertexAlongLine(final CreasePatternViewContext viewContext,
@@ -55,7 +55,7 @@ public class NearestItemFinder {
 
 	/**
 	 * Returns a vertex sufficiently close to mouse point among end points of
-	 * picked lines. Returns {@code null} if no such vertex exists.
+	 * picked lines. Returns {@code empty} if no such vertex exists.
 	 */
 	public static Optional<Vector2d> pickVertexFromPickedLines(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
@@ -71,8 +71,8 @@ public class NearestItemFinder {
 	}
 
 	/**
-	 * Returns a OriLine sufficiently close to mouse point. Returns {@code null}
-	 * if no such line exists.
+	 * Returns a OriLine sufficiently close to mouse point. Returns
+	 * {@code empty} if no such line exists.
 	 */
 	public static Optional<OriLine> pickLine(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
@@ -110,6 +110,13 @@ public class NearestItemFinder {
 		return candidateOpt.orElse(viewContext.getLogicalMousePoint());
 	}
 
+	/**
+	 * Returns the vertex nearest to mouse point among snap points.
+	 *
+	 * @param viewContext
+	 * @param paintContext
+	 * @return
+	 */
 	public static Optional<Vector2d> getNearestInSnapPoints(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		var nearestOpt = NearestVertexFinder.findNearestVertex(
@@ -119,6 +126,14 @@ public class NearestItemFinder {
 		return nearestOpt.map(nearest -> nearest.point);
 	}
 
+	/**
+	 * Returns a vertex sufficiently close to mouse point among end points of
+	 * given vertices. Returns {@code empty} if no such vertex exists.
+	 *
+	 * @param viewContext
+	 * @param vertices
+	 * @return
+	 */
 	public static Optional<Vector2d> getNearestVertex(final CreasePatternViewContext viewContext,
 			final Collection<Vector2d> vertices) {
 		var nearestOpt = NearestVertexFinder.findNearestVertex(
