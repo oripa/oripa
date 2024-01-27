@@ -44,12 +44,8 @@ public class RaySnapPointFactory {
 				// snap on end points of overlapping creases.
 				creasePattern.stream()
 						.filter(crease -> overlapsEntirely(crease, ray, eps))
-						.flatMap(crease -> crease.pointStream()))
+						.flatMap(OriLine::pointStream))
 				.collect(Collectors.toList());
-	}
-
-	private boolean sharesEndPoint(final Segment s1, final Segment s2, final double eps) {
-		return findSharedEndPoint(s1, s2, eps).isPresent();
 	}
 
 	private boolean overlapsEntirely(final Segment crease, final Segment ray, final double eps) {
@@ -58,6 +54,10 @@ public class RaySnapPointFactory {
 		}
 
 		return !sharesEndPoint(crease, ray, eps) || GeomUtil.distinguishLineSegmentsOverlap(ray, crease, eps) >= 3;
+	}
+
+	private boolean sharesEndPoint(final Segment s1, final Segment s2, final double eps) {
+		return findSharedEndPoint(s1, s2, eps).isPresent();
 	}
 
 	private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2, final double eps) {

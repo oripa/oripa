@@ -54,32 +54,6 @@ public class GeomUtil {
 		return angle < MathUtil.angleRadianEps() || angle > Math.PI - MathUtil.angleRadianEps();
 	}
 
-	private static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
-			final Vector2d s1, final Vector2d e1, final double pointEps) {
-		// Whether or not is parallel
-		Vector2d dir0 = e0.subtract(s0);
-		Vector2d dir1 = e1.subtract(s1);
-
-		if (!isParallel(dir0, dir1)) {
-			return 0;
-		}
-
-		int cnt = 0;
-		if (distancePointToSegment(s0, s1, e1) < pointEps) {
-			cnt++;
-		}
-		if (distancePointToSegment(e0, s1, e1) < pointEps) {
-			cnt++;
-		}
-		if (distancePointToSegment(s1, s0, e0) < pointEps) {
-			cnt++;
-		}
-		if (distancePointToSegment(e1, s0, e0) < pointEps) {
-			cnt++;
-		}
-		return cnt;
-	}
-
 	/**
 	 *
 	 * this method returns the count of end points on other segment for each
@@ -93,14 +67,24 @@ public class GeomUtil {
 	 * </ul>
 	 */
 	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
-		return distinguishLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
-	}
+		if (!isParallel(seg0.getLine().getDirection(), seg1.getLine().getDirection())) {
+			return 0;
+		}
 
-	private static boolean isRelaxedOverlap(final Vector2d s0, final Vector2d e0,
-			final Vector2d s1, final Vector2d e1, final double pointEps) {
-		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1, pointEps);
-		return cnt >= 2;
-
+		int cnt = 0;
+		if (distancePointToSegment(seg0.getP0(), seg1) < pointEps) {
+			cnt++;
+		}
+		if (distancePointToSegment(seg0.getP1(), seg1) < pointEps) {
+			cnt++;
+		}
+		if (distancePointToSegment(seg1.getP0(), seg0) < pointEps) {
+			cnt++;
+		}
+		if (distancePointToSegment(seg1.getP1(), seg0) < pointEps) {
+			cnt++;
+		}
+		return cnt;
 	}
 
 	/**
@@ -112,7 +96,8 @@ public class GeomUtil {
 	 *         end points and does not share other part.
 	 */
 	public static boolean isRelaxedOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
-		return isRelaxedOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
+		var overlapCount = distinguishLineSegmentsOverlap(seg0, seg1, pointEps);
+		return overlapCount >= 2;
 	}
 
 	/**
