@@ -212,7 +212,7 @@ class LayerOrderEnumerator {
 
 		var localLayerOrders = sub.createLocalLayerOrders(faces, overlapRelation, false);
 
-		if (localLayerOrders.isEmpty()) {
+		if (localLayerOrders == null) {
 			var nextSubfaces = popAndSort(subfaces);
 			return findAnswer(faces, nextSubfaces, overlapRelation, overlapRelations);
 		}

@@ -95,7 +95,7 @@ public class SubFace {
 
 		// Exit if the order is already settled
 		if (isLocalLayerOrderDeterminedByGlobal(overlapRelation)) {
-			return List.of();
+			return null;
 		}
 
 		// A list of orders of faces where the faces include this subface. Each
