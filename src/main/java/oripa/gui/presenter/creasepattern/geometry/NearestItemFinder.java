@@ -43,9 +43,9 @@ public class NearestItemFinder {
 	 */
 	public static Optional<Vector2d> pickVertexAlongLine(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
-		var picked = pickVertex(viewContext, paintContext);
-		if (picked.isPresent()) {
-			return picked;
+		var pickedOpt = pickVertex(viewContext, paintContext);
+		if (pickedOpt.isPresent()) {
+			return pickedOpt;
 		}
 
 		var lineOpt = pickLine(viewContext, paintContext);
@@ -123,10 +123,6 @@ public class NearestItemFinder {
 			final Collection<Vector2d> vertices) {
 		var nearestOpt = NearestVertexFinder.findNearestVertex(
 				viewContext.getLogicalMousePoint(), vertices);
-
-		if (nearestOpt.isEmpty()) {
-			return Optional.empty();
-		}
 
 		return nearestOpt.filter(nearest -> nearest.distance < scaleThreshold(viewContext))
 				.map(nearest -> nearest.point);
