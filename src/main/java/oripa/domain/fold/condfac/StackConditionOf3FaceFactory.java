@@ -19,6 +19,7 @@
 package oripa.domain.fold.condfac;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,37 +62,44 @@ public class StackConditionOf3FaceFactory {
 			var index_i = f_i.getFaceID();
 			for (OriHalfedge he : f_i.halfedgeIterable()) {
 				var pairOpt = he.getPair();
-				if (pairOpt.isEmpty()) {
-					continue;
-				}
 
-				OriFace f_j = pairOpt.get().getFace();
-				var index_j = f_j.getFaceID();
-				if (!overlapRelation.isLower(index_i, index_j)) {
-					continue;
-				}
-
-				var indices = overlappingFaceIndexIntersections[index_i][index_j];
-				for (var index_k : indices) {
-					if (index_i == index_k || index_j == index_k) {
-						continue;
-					}
-					if (!faceIndicesOnHalfedge.get(he).contains(index_k)) {
-						continue;
-					}
-
-					StackConditionOf3Faces cond = new StackConditionOf3Faces();
-					cond.upper = index_i;
-					cond.lower = index_j;
-					cond.other = index_k;
-
-					conditions.add(cond);
-				}
+				pairOpt.map(OriHalfedge::getFace)
+						.map(OriFace::getFaceID)
+						.filter(index_j -> overlapRelation.isLower(index_i, index_j))
+						.ifPresent(index_j -> conditions.addAll(createForIandJ(index_i, index_j,
+								overlappingFaceIndexIntersections,
+								faceIndicesOnHalfedge.get(he))));
 			}
 		}
 
 		logger.debug("#condition3 = {}", conditions.size());
 		logger.debug("condition3s computation time {}[ms]", watch.getMilliSec());
+
+		return conditions;
+	}
+
+	private Collection<StackConditionOf3Faces> createForIandJ(
+			final int index_i, final int index_j,
+			final List<Integer>[][] overlappingFaceIndexIntersections,
+			final Set<Integer> faceIndicesOnHalfedge) {
+
+		var conditions = new ArrayList<StackConditionOf3Faces>();
+		var indices = overlappingFaceIndexIntersections[index_i][index_j];
+		for (var index_k : indices) {
+			if (index_i == index_k || index_j == index_k) {
+				continue;
+			}
+			if (!faceIndicesOnHalfedge.contains(index_k)) {
+				continue;
+			}
+
+			StackConditionOf3Faces cond = new StackConditionOf3Faces();
+			cond.upper = index_i;
+			cond.lower = index_j;
+			cond.other = index_k;
+
+			conditions.add(cond);
+		}
 
 		return conditions;
 	}

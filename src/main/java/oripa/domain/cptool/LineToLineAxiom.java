@@ -41,7 +41,8 @@ public class LineToLineAxiom {
 
 			var segmentCrossPointOpt = GeomUtil.getCrossPoint(s0, s1);
 
-			return segmentCrossPointOpt.map(crossPoint -> createForSegmentsWithCross(s0, s1, crossPoint, pointEps))
+			return segmentCrossPointOpt
+					.map(crossPoint -> createForSegmentsWithCross(s0, s1, crossPoint, pointEps))
 					.orElse(createForSegmentsWithoutCross(s0, s1, pointEps));
 		}
 	}
