@@ -24,65 +24,58 @@ public class NearestItemFinder {
 
 	/**
 	 * Returns a vertex sufficiently close to mouse point among the vertices of
-	 * crease pattern. Returns {@code null} if no such vertex exists.
+	 * crease pattern. Returns {@code empty} if no such vertex exists.
 	 */
-	public static Vector2d pickVertex(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+	public static Optional<Vector2d> pickVertex(final CreasePatternViewContext viewContext,
+			final PaintContext paintContext) {
 
-		NearestPoint nearestPosition = NearestVertexFinder.findAround(
+		var nearestPositionOpt = NearestVertexFinder.findAround(
 				viewContext.getLogicalMousePoint(), paintContext.getCreasePattern(), paintContext.getGrids(),
 				scaleThreshold(viewContext));
 
-		if (nearestPosition != null) {
-			return nearestPosition.point;
-		}
-
-		return null;
+		return nearestPositionOpt.map(nearestPosition -> nearestPosition.point);
 	}
 
 	/**
 	 * Returns a vertex sufficiently close to mouse point among the any points
-	 * on the lines of crease pattern. Returns {@code null} if no such vertex
+	 * on the lines of crease pattern. Returns {@code empty} if no such vertex
 	 * exists.
 	 */
-	public static Vector2d pickVertexAlongLine(final CreasePatternViewContext viewContext,
+	public static Optional<Vector2d> pickVertexAlongLine(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
-		var picked = pickVertex(viewContext, paintContext);
-		if (picked != null) {
-			return picked;
+		var pickedOpt = pickVertex(viewContext, paintContext);
+		if (pickedOpt.isPresent()) {
+			return pickedOpt;
 		}
 
-		OriLine l = pickLine(viewContext, paintContext);
-		if (l == null) {
-			return null;
-		}
+		var lineOpt = pickLine(viewContext, paintContext);
 
-		var vertexAlongLine = GeomUtil.computeNearestPointToSegment(viewContext.getLogicalMousePoint(), l);
-
-		return vertexAlongLine;
+		return lineOpt.map(line -> GeomUtil.computeNearestPointToSegment(viewContext.getLogicalMousePoint(), line));
 	}
 
 	/**
 	 * Returns a vertex sufficiently close to mouse point among end points of
-	 * picked lines. Returns {@code null} if no such vertex exists.
+	 * picked lines. Returns {@code empty} if no such vertex exists.
 	 */
-	public static Vector2d pickVertexFromPickedLines(final CreasePatternViewContext viewContext,
+	public static Optional<Vector2d> pickVertexFromPickedLines(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		NearestPoint nearestPosition = NearestVertexFinder.findNearestVertexFromLines(
 				viewContext.getLogicalMousePoint(),
 				paintContext.getPickedLines());
 
 		if (nearestPosition.distance < scaleThreshold(viewContext)) {
-			return nearestPosition.point;
+			return Optional.of(nearestPosition.point);
 		}
 
-		return null;
+		return Optional.empty();
 	}
 
 	/**
-	 * Returns a OriLine sufficiently close to mouse point. Returns {@code null}
-	 * if no such line exists.
+	 * Returns a OriLine sufficiently close to mouse point. Returns
+	 * {@code empty} if no such line exists.
 	 */
-	public static OriLine pickLine(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+	public static Optional<OriLine> pickLine(final CreasePatternViewContext viewContext,
+			final PaintContext paintContext) {
 		var lines = paintContext.getCreasePattern();
 		var mousePoint = viewContext.getLogicalMousePoint();
 
@@ -98,9 +91,9 @@ public class NearestItemFinder {
 		}
 
 		if (minDistance < scaleThreshold(viewContext)) {
-			return bestLine;
+			return Optional.of(bestLine);
 		} else {
-			return null;
+			return Optional.empty();
 		}
 	}
 
@@ -112,11 +105,18 @@ public class NearestItemFinder {
 	public static Vector2d getCandidateVertexOrMousePoint(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 
-		Vector2d candidate = paintContext.getCandidateVertexToPick();
+		var candidateOpt = paintContext.getCandidateVertexToPick();
 
-		return candidate == null ? viewContext.getLogicalMousePoint() : candidate;
+		return candidateOpt.orElse(viewContext.getLogicalMousePoint());
 	}
 
+	/**
+	 * Returns the vertex nearest to mouse point among snap points.
+	 *
+	 * @param viewContext
+	 * @param paintContext
+	 * @return
+	 */
 	public static Optional<Vector2d> getNearestInSnapPoints(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		var nearestOpt = NearestVertexFinder.findNearestVertex(
@@ -126,20 +126,20 @@ public class NearestItemFinder {
 		return nearestOpt.map(nearest -> nearest.point);
 	}
 
-	public static Vector2d getNearestVertex(final CreasePatternViewContext viewContext,
+	/**
+	 * Returns a vertex sufficiently close to mouse point among end points of
+	 * given vertices. Returns {@code empty} if no such vertex exists.
+	 *
+	 * @param viewContext
+	 * @param vertices
+	 * @return
+	 */
+	public static Optional<Vector2d> getNearestVertex(final CreasePatternViewContext viewContext,
 			final Collection<Vector2d> vertices) {
 		var nearestOpt = NearestVertexFinder.findNearestVertex(
 				viewContext.getLogicalMousePoint(), vertices);
 
-		if (nearestOpt.isEmpty()) {
-			return null;
-		}
-
-		var nearest = nearestOpt.get();
-		if (nearest.distance < scaleThreshold(viewContext)) {
-			return nearest.point;
-		}
-
-		return null;
+		return nearestOpt.filter(nearest -> nearest.distance < scaleThreshold(viewContext))
+				.map(nearest -> nearest.point);
 	}
 }

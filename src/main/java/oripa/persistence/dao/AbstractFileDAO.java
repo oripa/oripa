@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -47,12 +48,9 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	public abstract AbstractFileAccessSupportSelector<Data> getFileAccessSupportSelector();
 
 	public void setConfigToSavingAction(final FileTypeProperty<Data> key, final Supplier<Object> configSupplier) {
-		var support = getFileAccessSupportSelector().getFileAccessSupport(key);
-		if (support == null) {
-			return;
-		}
+		var supportOpt = getFileAccessSupportSelector().getFileAccessSupport(key);
 
-		support.setConfigToSavingAction(configSupplier);
+		supportOpt.ifPresent(support -> support.setConfigToSavingAction(configSupplier));
 	}
 
 	public boolean canLoad(final String filePath) {
@@ -65,7 +63,7 @@ public abstract class AbstractFileDAO<Data> implements DataAccessObject<Data> {
 	}
 
 	@Override
-	public Data load(final String path)
+	public Optional<Data> load(final String path)
 			throws FileVersionError, IOException, FileNotFoundException, IllegalArgumentException,
 			WrongDataFormatException {
 		var canonicalPath = nullableCanonicalPath(path);

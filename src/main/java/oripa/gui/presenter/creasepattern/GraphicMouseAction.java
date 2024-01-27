@@ -1,5 +1,7 @@
 package oripa.gui.presenter.creasepattern;
 
+import java.util.Optional;
+
 import oripa.domain.paint.PaintContext;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.vecmath.Vector2d;
@@ -80,9 +82,9 @@ public interface GraphicMouseAction {
 	 * @param viewContext
 	 * @param paintContext
 	 * @param differentAction
-	 * @return close vertex. null if not found.
+	 * @return close vertex. Empty if not found.
 	 */
-	public abstract Vector2d onMove(final CreasePatternViewContext viewContext,
+	public abstract Optional<Vector2d> onMove(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext, boolean differentAction);
 
 	public abstract void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,

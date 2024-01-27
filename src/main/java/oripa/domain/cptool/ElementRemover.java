@@ -3,6 +3,7 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -69,19 +70,19 @@ public class ElementRemover {
 		merge2LinesAt(v, sharedLines, creasePattern, pointEps);
 	}
 
-	private OriLine merge2LinesAt(
+	private Optional<OriLine> merge2LinesAt(
 			final Vector2d connectionPoint, final List<OriLine> sharedLines,
 			final Collection<OriLine> creasePattern, final double pointEps) {
 
 		if (sharedLines.size() != 2) {
-			return null;
+			return Optional.empty();
 		}
 
 		OriLine l0 = sharedLines.get(0);
 		OriLine l1 = sharedLines.get(1);
 
 		if (!isMergePossible(l0, l1)) {
-			return null;
+			return Optional.empty();
 		}
 
 		// Merge possibility found
@@ -91,10 +92,10 @@ public class ElementRemover {
 		creasePattern.remove(l1);
 		creasePattern.add(line);
 
-		return line;
+		return Optional.of(line);
 	}
 
-	private OriLine merge2LinesAt(
+	private Optional<OriLine> merge2LinesAt(
 			final Vector2d connectionPoint, final ArrayList<PointAndLine> sharedPoints,
 			final Collection<OriLine> creasePattern, final double pointEps) {
 
@@ -211,25 +212,23 @@ public class ElementRemover {
 
 				logger.trace("can merge at: " + shared);
 			}
-			var mergedLine = merge2LinesAt(shared, sharedPoints, creasePattern, pointEps);
+			var mergedLineOpt = merge2LinesAt(shared, sharedPoints, creasePattern, pointEps);
 
-			if (mergedLine == null) {
-				return;
-			}
+			mergedLineOpt.ifPresent(mergedLine -> {
+				// if the lines are merged, the consumed old lines have to be
+				// deleted from the map and the new merged line has to be added
+				// to the map.
 
-			// if the lines are merged, the consumed old lines have to be
-			// deleted from the map and the new merged line has to be added
-			// to the map.
+				var points = List.of(sharedPoints.get(0), sharedPoints.get(1));
 
-			var points = List.of(sharedPoints.get(0), sharedPoints.get(1));
+				// remove old lines
+				points.forEach(point -> {
+					removeBothSidesFromMap(point, sharedPointsMap);
+				});
 
-			// remove old lines
-			points.forEach(point -> {
-				removeBothSidesFromMap(point, sharedPointsMap);
+				// add merged line
+				addBothSidesOfLineToMap(mergedLine, sharedPointsMap, pointEps);
 			});
-
-			// add merged line
-			addBothSidesOfLineToMap(mergedLine, sharedPointsMap, pointEps);
 		});
 
 	}

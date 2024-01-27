@@ -24,15 +24,11 @@ public abstract class PickingVertex extends AbstractActionState {
 	@Override
 	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
 			final boolean freeSelection) {
-		var picked = context.getCandidateVertexToPick();
+		var pickedOpt = context.getCandidateVertexToPick();
 
-		if (picked == null) {
-			return false;
-		}
+		pickedOpt.ifPresent(picked -> context.pushVertex(picked));
 
-		context.pushVertex(picked);
-
-		return true;
+		return pickedOpt.isPresent();
 	}
 
 	/**

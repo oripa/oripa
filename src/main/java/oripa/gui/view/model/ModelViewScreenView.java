@@ -18,6 +18,7 @@
  */
 package oripa.gui.view.model;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -47,7 +48,7 @@ public interface ModelViewScreenView extends ScreenView {
 
 	void setModel(OrigamiModel origamiModel, int boundSize);
 
-	OrigamiModel getModel();
+	Optional<OrigamiModel> getModel();
 
 	void setPaintComponentListener(Consumer<ModelGraphics> listener);
 

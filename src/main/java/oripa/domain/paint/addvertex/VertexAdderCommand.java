@@ -44,7 +44,7 @@ public class VertexAdderCommand extends ValidatablePaintCommand {
 		Painter painter = context.getPainter();
 
 		if (!painter.addVertexOnLine(
-				context.popLine(), context.popVertex())) {
+				context.popLine().get(), context.popVertex().get())) {
 			context.creasePatternUndo().undo();
 		}
 

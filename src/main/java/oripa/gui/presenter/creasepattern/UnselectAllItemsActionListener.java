@@ -47,23 +47,18 @@ public class UnselectAllItemsActionListener implements Runnable {
 		screenUpdater = updater;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	@Override
 	public void run() {
 		Command command = new AllItemUnselecterCommand(context);
 
 		command.execute();
 
-		var currentAction = actionHolder.getMouseAction();
-		if (currentAction == null) {
-			return;
-		}
+		var currentActionOpt = actionHolder.getMouseAction();
 
+		currentActionOpt.ifPresent(currentAction -> unselectAll(currentAction));
+	}
+
+	private void unselectAll(final GraphicMouseAction currentAction) {
 		currentAction.destroy(context);
 		currentAction.recover(context);
 

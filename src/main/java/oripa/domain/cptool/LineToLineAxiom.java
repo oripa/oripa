@@ -39,13 +39,11 @@ public class LineToLineAxiom {
 			return createForParallelSegments(line0, line1);
 		} else {
 
-			var segmentCrossPoint = GeomUtil.getCrossPoint(s0, s1);
+			var segmentCrossPointOpt = GeomUtil.getCrossPoint(s0, s1);
 
-			if (segmentCrossPoint == null) {
-				return createForSegmentsWithoutCross(s0, s1, pointEps);
-			} else {
-				return createForSegmentsWithCross(s0, s1, segmentCrossPoint, pointEps);
-			}
+			return segmentCrossPointOpt
+					.map(crossPoint -> createForSegmentsWithCross(s0, s1, crossPoint, pointEps))
+					.orElse(createForSegmentsWithoutCross(s0, s1, pointEps));
 		}
 	}
 
@@ -56,11 +54,12 @@ public class LineToLineAxiom {
 		var dir0 = line0.getDirection();
 		var verticalLine = new Line(point, dir0.getRightSidePerpendicular());
 
-		var crossPoint = GeomUtil.getCrossPoint(verticalLine, line1);
+		var crossPointOpt = GeomUtil.getCrossPoint(verticalLine, line1);
 
-		var midPoint = point.add(crossPoint).multiply(0.5);
-
-		return List.of(new Line(midPoint, dir0));
+		return crossPointOpt.map(crossPoint -> {
+			var midPoint = point.add(crossPoint).multiply(0.5);
+			return List.of(new Line(midPoint, dir0));
+		}).get();
 	}
 
 	/**
@@ -104,14 +103,16 @@ public class LineToLineAxiom {
 	private List<Line> createForSegmentsWithoutCross(final Segment s0, final Segment s1, final double pointEps) {
 		var line0 = s0.getLine();
 		var line1 = s1.getLine();
-		var lineCrossPoint = GeomUtil.getCrossPoint(line0, line1);
+		var lineCrossPointOpt = GeomUtil.getCrossPoint(line0, line1);
 
-		var point0 = selectFarEndPoint(s0, lineCrossPoint);
-		var point1 = selectFarEndPoint(s1, lineCrossPoint);
+		return lineCrossPointOpt.map(lineCrossPoint -> {
+			var point0 = selectFarEndPoint(s0, lineCrossPoint);
+			var point1 = selectFarEndPoint(s1, lineCrossPoint);
 
-		var foldLineDir = GeomUtil.getBisectorVec(point0, lineCrossPoint, point1);
+			var foldLineDir = GeomUtil.getBisectorVec(point0, lineCrossPoint, point1);
 
-		return List.of(new Line(lineCrossPoint, foldLineDir));
+			return List.of(new Line(lineCrossPoint, foldLineDir));
+		}).get();
 	}
 
 	private Vector2d selectFarEndPoint(final Segment s, final Vector2d p) {

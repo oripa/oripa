@@ -22,6 +22,7 @@ import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class LoaderXML implements DocLoader {
 	}
 
 	@Override
-	public Doc load(final String filePath) throws FileVersionError, WrongDataFormatException, IOException {
+	public Optional<Doc> load(final String filePath) throws FileVersionError, WrongDataFormatException, IOException {
 
 		DataSet data;
 
@@ -61,7 +62,7 @@ public class LoaderXML implements DocLoader {
 			throw new FileVersionError();
 		}
 
-		return data.recover(filePath);
+		return Optional.of(data.recover(filePath));
 
 	}
 }

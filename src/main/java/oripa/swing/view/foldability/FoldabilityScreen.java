@@ -33,6 +33,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -196,11 +197,13 @@ public class FoldabilityScreen extends JPanel
 	}
 
 	private boolean doCameraDragAction(final MouseEvent e,
-			final BiFunction<MouseEvent, Point2D, AffineTransform> onDrag) {
-		var affine = onDrag.apply(e, preMousePoint);
-		if (affine == null) {
+			final BiFunction<MouseEvent, Point2D, Optional<AffineTransform>> onDrag) {
+		var affineOpt = onDrag.apply(e, preMousePoint);
+		if (affineOpt.isEmpty()) {
 			return false;
 		}
+
+		var affine = affineOpt.get();
 		preMousePoint = e.getPoint();
 		affineTransform = affine;
 		repaint();
@@ -294,8 +297,8 @@ public class FoldabilityScreen extends JPanel
 	}
 
 	@Override
-	public OriVertex getPickedViolatingVertex() {
-		return pickedViolatingVertex;
+	public Optional<OriVertex> getPickedViolatingVertex() {
+		return Optional.ofNullable(pickedViolatingVertex);
 	}
 
 }

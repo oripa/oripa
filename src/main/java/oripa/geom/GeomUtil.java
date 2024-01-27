@@ -54,19 +54,7 @@ public class GeomUtil {
 		return angle < MathUtil.angleRadianEps() || angle > Math.PI - MathUtil.angleRadianEps();
 	}
 
-	/**
-	 *
-	 * this method returns the count of end points on other segment for each
-	 * segment.
-	 * <ul>
-	 * <li>If the count is 0 or 1, then they are not overlapping.</li>
-	 * <li>If the count is 2, then they partially overlap.</li>
-	 * <li>If the count is 3, then one segment overlaps entirely and an end
-	 * point is shared with the other segment.</li>
-	 * <li>If the count is 4, then the two segments are equal.</li>
-	 * </ul>
-	 */
-	public static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
+	private static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1, final double pointEps) {
 		// Whether or not is parallel
 		Vector2d dir0 = e0.subtract(s0);
@@ -92,21 +80,23 @@ public class GeomUtil {
 		return cnt;
 	}
 
+	/**
+	 *
+	 * this method returns the count of end points on other segment for each
+	 * segment.
+	 * <ul>
+	 * <li>If the count is 0 or 1, then they are not overlapping.</li>
+	 * <li>If the count is 2, then they partially overlap.</li>
+	 * <li>If the count is 3, then one segment overlaps entirely and an end
+	 * point is shared with the other segment.</li>
+	 * <li>If the count is 4, then the two segments are equal.</li>
+	 * </ul>
+	 */
 	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
 		return distinguishLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
 	}
 
-	/**
-	 *
-	 * @param s0
-	 * @param e0
-	 * @param s1
-	 * @param e1
-	 * @return {@code true} if end points of both lines are on the other line.
-	 *         Note that this method returns {@code true} if the lines touch at
-	 *         end points and does not share other part.
-	 */
-	public static boolean isRelaxedOverlap(final Vector2d s0, final Vector2d e0,
+	private static boolean isRelaxedOverlap(final Vector2d s0, final Vector2d e0,
 			final Vector2d s1, final Vector2d e1, final double pointEps) {
 		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1, pointEps);
 		return cnt >= 2;
@@ -245,31 +235,31 @@ public class GeomUtil {
 
 	/**
 	 * Returns the intersection of the semi-straight line and the line segment.
-	 * Null if not intersect.
+	 * Empty if not intersect.
 	 *
 	 * @param ray
 	 * @param seg
 	 * @return
 	 */
-	public static Vector2d getCrossPoint(final Ray ray, final Segment seg) {
+	public static Optional<Vector2d> getCrossPoint(final Ray ray, final Segment seg) {
 		var p0 = ray.getEndPoint();
 		var p1 = p0.add(ray.getDirection());
 
 		var segP0 = seg.getP0();
 		var segP1 = seg.getP1();
 
-		var answerOpt = solveRayCrossPointVectorEquation(p0, p1, segP0, segP1);
+		var answer = solveRayCrossPointVectorEquation(p0, p1, segP0, segP1);
 
-		if (answerOpt.isEmpty()) {
-			return null;
+		if (answer.isEmpty()) {
+			return Optional.empty();
 		}
 
-		double t = answerOpt.get().get(1);
+		double t = answer.get(1);
 
-		return computeCrossPointUsingParameter(t, segP0, segP1);
+		return Optional.of(computeCrossPointUsingParameter(t, segP0, segP1));
 	}
 
-	private static Optional<List<Double>> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	private static List<Double> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d segP0, final Vector2d segP1) {
 		final double eps = MathUtil.normalizedValueEps();
 		return solveCrossPointVectorEquation(p0, p1, segP0, segP1,
@@ -283,25 +273,25 @@ public class GeomUtil {
 	 * @param l1
 	 * @return
 	 */
-	public static Vector2d getCrossPoint(final Line l0, final Line l1) {
+	public static Optional<Vector2d> getCrossPoint(final Line l0, final Line l1) {
 		var p0 = l0.getPoint();
 		var p1 = p0.add(l0.getDirection());
 
 		var q0 = l1.getPoint();
 		var q1 = q0.add(l1.getDirection());
 
-		var answerOpt = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);
+		var answer = solveLinesCrossPointVectorEquation(p0, p1, q0, q1);
 
-		if (answerOpt.isEmpty()) {
-			return null;
+		if (answer.isEmpty()) {
+			return Optional.empty();
 		}
 
-		var t = answerOpt.get().get(1);
+		var t = answer.get(1);
 
-		return computeCrossPointUsingParameter(t, q0, q1);
+		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
 	}
 
-	private static Optional<List<Double>> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	private static List<Double> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
 		return solveCrossPointVectorEquation(p0, p1, q0, q1, (s, t) -> true);
 	}
@@ -407,20 +397,20 @@ public class GeomUtil {
 	/**
 	 * Computes cross point of segments p0-p1 and q0-q1.
 	 *
-	 * @return cross point. null if the segments don't cross.
+	 * @return cross point. Empty if the segments don't cross.
 	 */
-	public static Vector2d getCrossPoint(final Vector2d p0, final Vector2d p1,
+	public static Optional<Vector2d> getCrossPoint(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
 
-		var parametersOpt = solveSegmentsCrossPointVectorEquation(p0, p1, q0, q1);
+		var parameters = solveSegmentsCrossPointVectorEquation(p0, p1, q0, q1);
 
-		if (parametersOpt.isEmpty()) {
-			return null;
+		if (parameters.isEmpty()) {
+			return Optional.empty();
 		}
 
-		var t = parametersOpt.get().get(1);
+		var t = parameters.get(1);
 
-		return computeCrossPointUsingParameter(t, q0, q1);
+		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
 	}
 
 	/**
@@ -434,7 +424,7 @@ public class GeomUtil {
 	 *         one at 1 is t for q0 and q1 equation. Empty if answer doesn't
 	 *         exist.
 	 */
-	public static Optional<List<Double>> solveSegmentsCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	public static List<Double> solveSegmentsCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1) {
 
 		final double eps = MathUtil.normalizedValueEps();
@@ -467,7 +457,7 @@ public class GeomUtil {
 	 * @param answerPredicate
 	 * @return
 	 */
-	private static Optional<List<Double>> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	private static List<Double> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1, final BiPredicate<Double, Double> answerPredicate) {
 
 		var answer = new ArrayList<Double>();
@@ -480,7 +470,7 @@ public class GeomUtil {
 		final double eps = MathUtil.normalizedValueEps();
 
 		if (det * det <= eps * p.lengthSquared() * q.lengthSquared()) {
-			return Optional.empty();
+			return List.of();
 		}
 
 		// Lines intersect in a single point.
@@ -488,13 +478,13 @@ public class GeomUtil {
 		double t = (p.getX() * d.getY() - p.getY() * d.getX()) / det;
 
 		if (!answerPredicate.test(s, t)) {
-			return Optional.empty();
+			return List.of();
 		}
 
 		answer.add(s);
 		answer.add(t);
 
-		return Optional.of(answer);
+		return List.of(s, t);
 	}
 
 	public static Vector2d computeCrossPointUsingParameter(final double t, final Vector2d q0, final Vector2d q1) {
@@ -502,7 +492,7 @@ public class GeomUtil {
 		return q0.multiply(1.0 - t).add(q1.multiply(t));
 	}
 
-	public static Vector2d getCrossPoint(final Segment l0, final Segment l1) {
+	public static Optional<Vector2d> getCrossPoint(final Segment l0, final Segment l1) {
 		return getCrossPoint(l0.getP0(), l0.getP1(), l1.getP0(), l1.getP1());
 	}
 

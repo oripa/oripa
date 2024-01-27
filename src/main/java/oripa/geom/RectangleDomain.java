@@ -57,6 +57,16 @@ public class RectangleDomain {
 	}
 
 	/**
+	 * All methods of the instance returned by this factory method return
+	 * meaningless values, excepting {@link #isVoid()}.
+	 *
+	 * @return
+	 */
+	public static RectangleDomain voidDomain() {
+		return new RectangleDomain();
+	}
+
+	/**
 	 * construct this instance fit to given {@code target} lines
 	 *
 	 * @param target
@@ -127,6 +137,10 @@ public class RectangleDomain {
 	public boolean contains(final Vector2d point) {
 		return new ClosedRange(left, right).includes(point.getX()) &&
 				new ClosedRange(top, bottom).includes(point.getY());
+	}
+
+	public boolean isVoid() {
+		return left > right && top > bottom;
 	}
 
 	public Vector2d getLeftTop() {

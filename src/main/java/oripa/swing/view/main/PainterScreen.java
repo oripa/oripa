@@ -32,6 +32,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -255,11 +256,14 @@ public class PainterScreen extends JPanel
 	}
 
 	private boolean doCameraDragAction(final MouseEvent e,
-			final BiFunction<MouseEvent, Point2D, AffineTransform> onDrag) {
-		var affine = onDrag.apply(e, preMousePoint);
-		if (affine == null) {
+			final BiFunction<MouseEvent, Point2D, Optional<AffineTransform>> onDrag) {
+		var affineOpt = onDrag.apply(e, preMousePoint);
+		if (affineOpt.isEmpty()) {
 			return false;
 		}
+
+		var affine = affineOpt.get();
+
 		preMousePoint = e.getPoint();
 		affineTransform = affine;
 		repaint();

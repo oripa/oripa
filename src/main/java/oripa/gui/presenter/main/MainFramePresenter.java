@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -231,26 +232,22 @@ public class MainFramePresenter {
 
 		view.addUndoButtonListener(() -> {
 			try {
-				actionHolder.getMouseAction().undo(paintContext);
-			} catch (NullPointerException ex) {
-				if (actionHolder.getMouseAction() == null) {
-					logger.error("mouseAction should not be null.", ex);
-				} else {
-					logger.error("Wrong implementation.", ex);
-				}
+				actionHolder.getMouseAction().orElseThrow().undo(paintContext);
+			} catch (NoSuchElementException ex) {
+				logger.error("mouseAction should not be null.", ex);
+			} catch (Exception ex) {
+				logger.error("Wrong implementation.", ex);
 			}
 			screenUpdater.updateScreen();
 		});
 
 		view.addRedoButtonListener(() -> {
 			try {
-				actionHolder.getMouseAction().redo(paintContext);
-			} catch (NullPointerException ex) {
-				if (actionHolder.getMouseAction() == null) {
-					logger.error("mouseAction should not be null.", ex);
-				} else {
-					logger.error("Wrong implementation.", ex);
-				}
+				actionHolder.getMouseAction().orElseThrow().redo(paintContext);
+			} catch (NoSuchElementException ex) {
+				logger.error("mouseAction should not be null.", ex);
+			} catch (Exception ex) {
+				logger.error("Wrong implementation.", ex);
 			}
 			screenUpdater.updateScreen();
 		});
@@ -626,6 +623,13 @@ public class MainFramePresenter {
 		}
 	}
 
+	/**
+	 * Can return null because the returned value will be passed to other
+	 * method.
+	 *
+	 * @param code
+	 * @return
+	 */
 	private Color convertCodeToColor(final String code) {
 		if (code == null) {
 			return null;

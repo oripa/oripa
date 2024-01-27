@@ -19,6 +19,7 @@
 package oripa.domain.paint.angle;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -34,13 +35,16 @@ class AngleSnapPointFactory {
 	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
 		var step = context.getAngleStep();
 
-		var sp = context.peekVertex();
+		var spOpt = context.peekVertex();
 		var angles = IntStream.range(0, step.getDivNum() * 2)
 				.mapToDouble(i -> i * step.getRadianStep())
 				.boxed()
 				.collect(Collectors.toList());
 
-		return new MultipleRaySnapPointFactory().createSnapPoints(context.getCreasePattern(), sp, angles,
-				context.getPointEps());
+		return spOpt
+				.map(sp -> new MultipleRaySnapPointFactory()
+						.createSnapPoints(context.getCreasePattern(), sp, angles,
+								context.getPointEps()))
+				.orElse(List.of());
 	}
 }

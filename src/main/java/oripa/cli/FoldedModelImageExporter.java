@@ -47,8 +47,9 @@ public class FoldedModelImageExporter {
 		var outputFileExporter = new FoldedModelExporterSVG(reverse);
 
 		try {
-			var inputModelEntity = inputFileLoader.load(inputFilePath);
-			var entity = new FoldedModelEntity(inputModelEntity.toFoldedModel(), index);
+			var inputModelEntityOpt = inputFileLoader.load(inputFilePath);
+
+			var entity = new FoldedModelEntity(inputModelEntityOpt.orElseThrow().toFoldedModel(), index);
 
 			outputFileExporter.export(entity, outputFilePath, null);
 

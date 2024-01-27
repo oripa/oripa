@@ -19,6 +19,7 @@
 package oripa.gui.view.foldability;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import oripa.domain.fold.halfedge.OriVertex;
@@ -37,7 +38,7 @@ public interface FoldabilityScreenView extends ScreenView {
 
 	void setViolatingVertices(Collection<OriVertex> vertices);
 
-	OriVertex getPickedViolatingVertex();
+	Optional<OriVertex> getPickedViolatingVertex();
 
 //	void setViolatingVertices(Collection<OriVertex> vertices);
 //

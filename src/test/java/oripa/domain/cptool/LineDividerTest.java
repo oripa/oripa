@@ -46,7 +46,7 @@ class LineDividerTest {
 
 		var divided = divider.divideLine(line, dividingPoint, EPS);
 
-		assertNotNull(divided);
+		assertFalse(divided.isEmpty());
 		assertEquals(2, divided.size());
 	}
 
@@ -59,7 +59,7 @@ class LineDividerTest {
 
 		var divided = divider.divideLine(line, dividingPoint, EPS);
 
-		assertNull(divided);
+		assertTrue(divided.isEmpty());
 	}
 
 	@Test
@@ -71,7 +71,7 @@ class LineDividerTest {
 
 		var divided = divider.divideLine(line, dividingPoint, EPS);
 
-		assertNull(divided);
+		assertTrue(divided.isEmpty());
 	}
 
 }

@@ -21,6 +21,7 @@ package oripa.persistence.doc.loader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -44,7 +45,7 @@ public class LoaderFOLD implements DocLoader {
 	 * @see oripa.persistent.doc.Loader#load(java.lang.String)
 	 */
 	@Override
-	public Doc load(final String filePath) throws IOException, WrongDataFormatException {
+	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
 
 		var gson = new Gson();
 		CreasePatternFOLDFormat foldFormat;
@@ -92,7 +93,7 @@ public class LoaderFOLD implements DocLoader {
 		property.setMemo(foldFormat.getFrameDescription());
 		property.setDataFilePath(filePath);
 
-		return doc;
+		return Optional.of(doc);
 	}
 
 }

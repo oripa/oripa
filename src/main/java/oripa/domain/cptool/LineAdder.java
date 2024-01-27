@@ -48,30 +48,29 @@ public class LineAdder {
 				.forEach(line -> {
 					logger.trace("current line: {}", line);
 
-					Vector2d crossPoint = GeomUtil.getCrossPoint(inputLine, line);
+					var crossPointOpt = GeomUtil.getCrossPoint(inputLine, line);
 
-					// skip if lines are parallel
-					if (crossPoint == null) {
-						return;
-					}
+					crossPointOpt.ifPresent(crossPoint -> {
+						logger.trace("cross point: {}", crossPoint);
 
-					logger.trace("cross point: {}", crossPoint);
+						crossMap.put(new OriPoint(crossPoint), line);
 
-					crossMap.put(new OriPoint(crossPoint), line);
+						toBeRemoved.add(line);
 
-					toBeRemoved.add(line);
+						Consumer<Vector2d> addIfLineCanBeSplit = v -> {
+							if (GeomUtil.distance(v, crossPoint) > pointEps) {
+								var l = new OriLine(v, crossPoint, line.getType());
+								// keep selection not to change the target of
+								// copy.
+								l.selected = line.selected;
+								toBeAdded.add(l);
+							}
+						};
 
-					Consumer<Vector2d> addIfLineCanBeSplit = v -> {
-						if (GeomUtil.distance(v, crossPoint) > pointEps) {
-							var l = new OriLine(v, crossPoint, line.getType());
-							// keep selection not to change the target of copy.
-							l.selected = line.selected;
-							toBeAdded.add(l);
-						}
-					};
+						addIfLineCanBeSplit.accept(line.getP0());
+						addIfLineCanBeSplit.accept(line.getP1());
+					});
 
-					addIfLineCanBeSplit.accept(line.getP0());
-					addIfLineCanBeSplit.accept(line.getP1());
 				});
 
 		currentLines.removeAll(toBeRemoved);

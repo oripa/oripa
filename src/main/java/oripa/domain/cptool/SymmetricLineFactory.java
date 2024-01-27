@@ -92,10 +92,13 @@ public class SymmetricLineFactory {
 
 		double minDist = Double.MAX_VALUE;
 		for (OriLine l : creasePattern) {
-			Vector2d crossPoint = GeomUtil.getCrossPoint(ray, l);
-			if (crossPoint == null) {
+			var crossPointOpt = GeomUtil.getCrossPoint(ray, l);
+			if (crossPointOpt.isEmpty()) {
 				continue;
 			}
+
+			var crossPoint = crossPointOpt.get();
+
 			double distance = GeomUtil.distance(crossPoint, v1);
 			if (distance < pointEps) {
 				continue;

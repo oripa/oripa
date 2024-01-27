@@ -127,12 +127,14 @@ public class OriGeomUtil {
 		Vector2d preCrossPoint = null;
 		for (OriHalfedge he : face.halfedgeIterable()) {
 			// Checks if the line crosses any of the edges of the face
-			Vector2d cp = GeomUtil.getCrossPoint(he.getPosition(),
+			var cpOpt = GeomUtil.getCrossPoint(he.getPosition(),
 					he.getNext().getPosition(), heg.getPosition(),
 					heg.getNext().getPosition());
-			if (cp == null) {
+			if (cpOpt.isEmpty()) {
 				continue;
 			}
+
+			var cp = cpOpt.get();
 
 			if (preCrossPoint == null) {
 				preCrossPoint = cp;

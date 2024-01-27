@@ -56,7 +56,7 @@ public class CreasePatternUndoManagerTest {
 
 		var lines = createOriLines(count, count, count, count);
 		for (int i = count - 1; i >= 0; i--) {
-			lines = manager.undo(lines).getInfo();
+			lines = manager.undo(lines).get().getInfo();
 			assertEquals(i, ((OriLine) lines.toArray()[0]).getP0().getX());
 		}
 
@@ -75,13 +75,13 @@ public class CreasePatternUndoManagerTest {
 
 		var lines = createOriLines(count, count, count, count);
 		for (int i = count - 1; i >= 0; i--) {
-			lines = manager.undo(lines).getInfo();
+			lines = manager.undo(lines).get().getInfo();
 			var p0x = ((OriLine) lines.toArray()[0]).getP0().getX();
 			logger.debug("undo result: " + p0x);
 		}
 
 		for (int i = 0; i < count; i++) {
-			var l = manager.redo().getInfo();
+			var l = manager.redo().get().getInfo();
 			var p0x = ((OriLine) l.toArray()[0]).getP0().getX();
 			assertEquals(i + 1, p0x);
 			logger.debug("redo result: " + p0x);
@@ -100,13 +100,13 @@ public class CreasePatternUndoManagerTest {
 
 		var lines = createOriLines(5, 5, 5, 5);
 		for (int i = 2; i >= 0; i--) {
-			lines = manager.undo(lines).getInfo();
+			lines = manager.undo(lines).get().getInfo();
 //			assertTrue(manager.canRedo());
 		}
 
 		manager.push(createOriLines(9, 9, 9, 9));
 
 		assertFalse(manager.canRedo());
-		assertEquals(null, manager.redo());
+		assertTrue(manager.redo().isEmpty());
 	}
 }

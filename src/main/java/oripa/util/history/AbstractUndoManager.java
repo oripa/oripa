@@ -21,6 +21,7 @@ package oripa.util.history;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,10 +75,10 @@ public abstract class AbstractUndoManager<Backup> {
 	 *            sequence.
 	 * @return
 	 */
-	public synchronized UndoInfo<Backup> undo(final Backup info) {
+	public synchronized Optional<UndoInfo<Backup>> undo(final Backup info) {
 		if (!canUndo()) {
 			logger.debug("can't undo: " + indexLog());
-			return null;
+			return Optional.empty();
 		}
 
 		changed = true;
@@ -90,20 +91,20 @@ public abstract class AbstractUndoManager<Backup> {
 
 		logger.debug("before undo: " + indexLog());
 
-		return undoList.get(--index);
+		return Optional.of(undoList.get(--index));
 	}
 
-	public synchronized UndoInfo<Backup> redo() {
+	public synchronized Optional<UndoInfo<Backup>> redo() {
 		if (!canRedo()) {
 			logger.debug("can't redo: " + indexLog());
-			return null;
+			return Optional.empty();
 		}
 
 		changed = true;
 
 		logger.debug("before redo: " + indexLog());
 
-		return undoList.get(++index);
+		return Optional.of(undoList.get(++index));
 	}
 
 	public boolean isChanged() {

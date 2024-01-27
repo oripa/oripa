@@ -28,11 +28,9 @@ public class MouseActionSetter implements Runnable {
 	@Override
 	public void run() {
 
-		GraphicMouseAction currentAction = actionHolder
-				.getMouseAction();
-		if (currentAction != null) {
-			currentAction.destroy(context);
-		}
+		var currentActionOpt = actionHolder.getMouseAction();
+		currentActionOpt.ifPresent(currentAction -> currentAction.destroy(context));
+
 		mouseAction.recover(context);
 
 		actionHolder.setMouseAction(mouseAction);

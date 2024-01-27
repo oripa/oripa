@@ -1,5 +1,7 @@
 package oripa.gui.presenter.creasepattern;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,7 +132,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(
+	public Optional<Vector2d> onMove(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
@@ -140,22 +142,27 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		return paintContext.getCandidateVertexToPick();
 	}
 
+	/**
+	 *
+	 * @param viewContext
+	 * @param paintContext
+	 * @param differentAction
+	 *            true to set vertex along line, otherwise this method will set
+	 *            the vertex in crease pattern nearest to mouse point.
+	 */
 	protected final void setCandidateVertexOnMove(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		Vector2d v;
-		if (differentAction) {
-			v = NearestItemFinder.pickVertexAlongLine(viewContext, paintContext);
-		} else {
-			v = NearestItemFinder.pickVertex(viewContext, paintContext);
-		}
-		paintContext.setCandidateVertexToPick(v);
+		Optional<Vector2d> vOpt = differentAction ? NearestItemFinder.pickVertexAlongLine(viewContext, paintContext)
+				: NearestItemFinder.pickVertex(viewContext, paintContext);
+
+		paintContext.setCandidateVertexToPick(vOpt.orElse(null));
 	}
 
 	protected final void setCandidateLineOnMove(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
 		paintContext.setCandidateLineToPick(
-				NearestItemFinder.pickLine(viewContext, paintContext));
+				NearestItemFinder.pickLine(viewContext, paintContext).orElse(null));
 	}
 
 	@Override
@@ -220,11 +227,11 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 
 	protected void drawPickCandidateVertex(final ObjectGraphicDrawer drawer,
 			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
-		Vector2d candidate = paintContext.getCandidateVertexToPick();
-		if (candidate != null) {
+		var candidateOpt = paintContext.getCandidateVertexToPick();
+		candidateOpt.ifPresent(candidate -> {
 			drawer.selectCandidateItemColor();
 			drawVertex(drawer, viewContext, paintContext, candidate);
-		}
+		});
 	}
 
 	protected void drawLine(final ObjectGraphicDrawer drawer, final OriLine line) {
@@ -238,14 +245,14 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 
 	protected void drawPickCandidateLine(final ObjectGraphicDrawer drawer,
 			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
-		OriLine candidate = paintContext.getCandidateLineToPick();
-		if (candidate != null) {
+		var candidateOpt = paintContext.getCandidateLineToPick();
+		candidateOpt.ifPresent(candidate -> {
 			drawer.selectCandidateItemColor();
 			drawer.selectCandidateLineStroke(
 					viewContext.getScale(), viewContext.isZeroLineWidth());
 
 			drawLine(drawer, candidate);
-		}
+		});
 	}
 
 	/**
@@ -259,19 +266,17 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	protected void drawTemporaryLine(final ObjectGraphicDrawer drawer,
 			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 
-		if (paintContext.getVertexCount() == 0) {
-			return;
-		}
+		var pickedOpt = paintContext.peekVertex();
 
-		Vector2d picked = paintContext.peekVertex();
+		pickedOpt.ifPresent(picked -> {
+			drawer.selectColor(paintContext.getLineTypeOfNewLines());
 
-		drawer.selectColor(paintContext.getLineTypeOfNewLines());
+			drawer.selectStroke(paintContext.getLineTypeOfNewLines(),
+					viewContext.getScale(), viewContext.isZeroLineWidth());
 
-		drawer.selectStroke(paintContext.getLineTypeOfNewLines(),
-				viewContext.getScale(), viewContext.isZeroLineWidth());
-
-		drawLine(drawer, picked,
-				NearestItemFinder.getCandidateVertexOrMousePoint(viewContext, paintContext));
+			drawLine(drawer, picked,
+					NearestItemFinder.getCandidateVertexOrMousePoint(viewContext, paintContext));
+		});
 
 	}
 

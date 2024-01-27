@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -104,10 +105,10 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	 *
 	 * @param key
 	 *            A value that describes the file type you want.
-	 * @return A support object for given key. null if no support for the key.
+	 * @return A support object for given key. Empty if no support for the key.
 	 */
-	public FileAccessSupport<Data> getFileAccessSupport(final FileTypeProperty<Data> key) {
-		return getFileAccessSupports().get(key);
+	public Optional<FileAccessSupport<Data>> getFileAccessSupport(final FileTypeProperty<Data> key) {
+		return Optional.ofNullable(getFileAccessSupports().get(key));
 	}
 
 	/**

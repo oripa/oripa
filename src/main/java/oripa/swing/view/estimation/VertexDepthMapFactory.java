@@ -94,14 +94,15 @@ class VertexDepthMapFactory {
 			var posOpt = boundMap.keySet().stream()
 					.filter(p -> GeomUtil.areEqual(p, v, eps))
 					.findFirst();
-			if (posOpt.isEmpty()) {
+
+			posOpt.ifPresentOrElse(pos -> {
+				var list = samePositionVertices.get(pos);
+				list.add(vertex);
+			}, () -> {
 				var list = new ArrayList<OriVertex>();
+				list.add(vertex);
 				samePositionVertices.put(v, list);
-				list.add(vertex);
-			} else {
-				var list = samePositionVertices.get(posOpt.get());
-				list.add(vertex);
-			}
+			});
 		}
 
 		return samePositionVertices;

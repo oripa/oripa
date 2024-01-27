@@ -1,5 +1,7 @@
 package oripa.gui.presenter.creasepattern.copypaste;
 
+import java.util.Optional;
+
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.PastingOnVertex;
@@ -51,34 +53,26 @@ public class PasteAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
-		setCandidateVertexOnMove(viewContext, paintContext, differentAction);
-		Vector2d closeVertex = paintContext.getCandidateVertexToPick();
+		setCandidateVertexOnMove(viewContext, paintContext, false);
+		var closeVertexOpt = paintContext.getCandidateVertexToPick();
 
 		// to get the vertex which disappeared by cutting.
-		Vector2d closeVertexOfLines = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
-
-		if (closeVertex == null) {
-			closeVertex = closeVertexOfLines;
-		}
+		var closeVertexOfLinesOpt = NearestItemFinder.pickVertexFromPickedLines(viewContext, paintContext);
 
 		var current = viewContext.getLogicalMousePoint();
-		if (closeVertex != null && closeVertexOfLines != null) {
-			// get the nearest to current
-			closeVertex = NearestVertexFinder.findNearestOf(
-					current, closeVertex, closeVertexOfLines);
-
-		}
-
-		if (closeVertex == null) {
-			closeVertex = viewContext.getLogicalMousePoint();
-		}
+		var closeVertex = closeVertexOpt
+				.map(closeV -> closeVertexOfLinesOpt
+						.map(closeVertexOfLines -> NearestVertexFinder.findNearestOf(
+								current, closeV, closeVertexOfLines))
+						.orElse(closeV))
+				.orElse(closeVertexOfLinesOpt.orElse(current));
 
 		paintContext.setCandidateVertexToPick(closeVertex);
 
-		return closeVertex;
+		return Optional.of(closeVertex);
 	}
 
 	@Override
@@ -89,19 +83,21 @@ public class PasteAction extends AbstractGraphicMouseAction {
 
 		drawPickCandidateVertex(drawer, viewContext, paintContext);
 
-		Vector2d origin = originHolder.getOrigin(paintContext);
+		var originOpt = originHolder.getOrigin(paintContext);
 
-		if (origin == null) {
+		if (originOpt.isEmpty()) {
 			return;
 		}
+
+		var origin = originOpt.get();
 
 		drawer.selectSelectedItemColor();
 		drawVertex(drawer, viewContext, paintContext, origin);
 
-		var candidateVertex = paintContext.getCandidateVertexToPick();
+		var candidateVertexOpt = paintContext.getCandidateVertexToPick();
 
-		Vector2d offset = candidateVertex == null ? factory.createOffset(origin, viewContext.getLogicalMousePoint())
-				: factory.createOffset(origin, candidateVertex);
+		var point = candidateVertexOpt.orElse(viewContext.getLogicalMousePoint());
+		var offset = factory.createOffset(origin, point);
 
 		drawer.selectAssistLineColor();
 

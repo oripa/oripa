@@ -37,11 +37,15 @@ public class LineSelectionTogglerCommand implements Command {
 	public void execute() {
 		context.creasePatternUndo().pushUndoInfo();
 
-		final OriLine line = context.peekLine();
+		var lineOpt = context.peekLine();
 
-		// toggle selection
+		lineOpt.ifPresent(line -> toggleSelection(line));
+	}
+
+	private void toggleSelection(final OriLine line) {
 		if (line.selected) {
-			// in this case, the context has two reference to the selected line:
+			// in this case, the context has two reference to the selected
+			// line:
 			// at the last position and other somewhere.
 
 			// clear the selection done by onAct().

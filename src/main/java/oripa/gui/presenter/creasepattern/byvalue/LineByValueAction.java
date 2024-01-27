@@ -32,26 +32,25 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 
 		super.onDraw(drawer, viewContext, paintContext);
 
-		Vector2d v = paintContext.getCandidateVertexToPick();
-		if (v == null) {
+		var vOpt = paintContext.getCandidateVertexToPick();
+		if (vOpt.isEmpty()) {
 			return;
 		}
-		try {
-			var angle = byValueContext.getAngle();
-			var length = byValueContext.getLength();
 
-			var radianAngle = Math.toRadians(angle);
+		var v = vOpt.get();
 
-			drawer.selectColor(paintContext.getLineTypeOfNewLines());
-			drawer.selectStroke(
-					paintContext.getLineTypeOfNewLines(),
-					viewContext.getScale(), viewContext.isZeroLineWidth());
+		double angle = byValueContext.getAngle();
+		double length = byValueContext.getLength();
 
-			Vector2d dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle)).multiply(length);
-			var w = v.add(dir);
-			drawer.drawLine(v, w);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		double radianAngle = Math.toRadians(angle);
+
+		drawer.selectColor(paintContext.getLineTypeOfNewLines());
+		drawer.selectStroke(
+				paintContext.getLineTypeOfNewLines(),
+				viewContext.getScale(), viewContext.isZeroLineWidth());
+
+		var dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle)).multiply(length);
+		var w = v.add(dir);
+		drawer.drawLine(v, w);
 	}
 }

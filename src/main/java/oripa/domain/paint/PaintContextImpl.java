@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePattern;
@@ -106,23 +107,24 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public Vector2d popVertex() {
+	public Optional<Vector2d> popVertex() {
 		if (pickedVertices.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 
-		return pickedVertices.removeLast();
+		return Optional.of(pickedVertices.removeLast());
 	}
 
 	@Override
-	public OriLine popLine() {
+	public Optional<OriLine> popLine() {
 		if (pickedLines.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 
 		OriLine line = pickedLines.removeLast();
 		line.selected = false;
-		return line;
+
+		return Optional.of(line);
 	}
 
 	@Override
@@ -132,13 +134,13 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public Vector2d peekVertex() {
-		return pickedVertices.peekLast();
+	public Optional<Vector2d> peekVertex() {
+		return Optional.ofNullable(pickedVertices.peekLast());
 	}
 
 	@Override
-	public OriLine peekLine() {
-		return pickedLines.peekLast();
+	public Optional<OriLine> peekLine() {
+		return Optional.ofNullable(pickedLines.peekLast());
 	}
 
 	@Override
@@ -152,8 +154,8 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public Vector2d getCandidateVertexToPick() {
-		return candidateVertexToPick;
+	public Optional<Vector2d> getCandidateVertexToPick() {
+		return Optional.ofNullable(candidateVertexToPick);
 	}
 
 	@Override
@@ -162,8 +164,8 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public OriLine getCandidateLineToPick() {
-		return candidateLineToPick;
+	public Optional<OriLine> getCandidateLineToPick() {
+		return Optional.ofNullable(candidateLineToPick);
 	}
 
 	@Override

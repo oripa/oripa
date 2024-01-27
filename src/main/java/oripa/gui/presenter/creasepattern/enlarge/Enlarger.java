@@ -19,6 +19,7 @@
 package oripa.gui.presenter.creasepattern.enlarge;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -30,7 +31,7 @@ import oripa.vecmath.Vector2d;
  */
 interface Enlarger {
 
-	Vector2d createOriginOfEnlargement(RectangleDomain originalDomain, Vector2d mouseStartPoint);
+	Optional<Vector2d> createOriginOfEnlargement(RectangleDomain originalDomain, Vector2d mouseStartPoint);
 
 	RectangleDomain createEnlargedDomain(Vector2d mousePoint, Vector2d originOfEnlargement,
 			Vector2d mouseStartPoint);

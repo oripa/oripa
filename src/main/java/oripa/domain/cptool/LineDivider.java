@@ -2,6 +2,7 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -13,7 +14,7 @@ public class LineDivider {
 	 * @param line
 	 * @param v
 	 * @return collection containing 2 lines that are the result of division.
-	 *         null if not need to divides
+	 *         empty if not need to divides
 	 */
 	public Collection<OriLine> divideLine(
 			final OriLine line, final Vector2d v,
@@ -25,12 +26,12 @@ public class LineDivider {
 		// line
 		if (GeomUtil.distance(line.getP0(), v) < pointEps
 				|| GeomUtil.distance(line.getP1(), v) < pointEps) {
-			return null;
+			return List.of();
 		}
 
 		// far from the line
 		if (GeomUtil.distancePointToSegment(v, line) > pointEps) {
-			return null;
+			return List.of();
 		}
 
 		divided.add(new OriLine(line.getP0(), v, line.getType()));

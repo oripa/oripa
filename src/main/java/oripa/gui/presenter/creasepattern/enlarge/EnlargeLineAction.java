@@ -20,6 +20,7 @@ package oripa.gui.presenter.creasepattern.enlarge;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.selectline.SelectingLine;
@@ -41,8 +42,8 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	private Vector2d mouseStartPoint;
 	private Vector2d originOfEnlargement;
 
-	private RectangleDomain originalDomain;
-	private RectangleDomain enlargedDomain;
+	private RectangleDomain originalDomain = RectangleDomain.voidDomain();
+	private RectangleDomain enlargedDomain = RectangleDomain.voidDomain();
 
 	private Enlarger enlarger;
 
@@ -79,11 +80,11 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	}
 
 	private RectangleDomain createDomain(final Collection<OriLine> lines) {
-		return lines.isEmpty() ? null : RectangleDomain.createFromSegments(lines);
+		return lines.isEmpty() ? RectangleDomain.voidDomain() : RectangleDomain.createFromSegments(lines);
 	}
 
 	@Override
-	public Vector2d onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		super.onMove(viewContext, paintContext, false);
 
@@ -93,8 +94,8 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			throw new RuntimeException("wrong execution path.");
 		}
 
-		if (originalDomain == null) {
-			return null;
+		if (originalDomain.isVoid()) {
+			return Optional.empty();
 		}
 
 		var points = List.of(
@@ -103,8 +104,10 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 				originalDomain.getRightTop(),
 				originalDomain.getRightBottom());
 
-		mouseStartPoint = NearestItemFinder.getNearestVertex(viewContext, points);
-		return mouseStartPoint;
+		var mouseStartPointOpt = NearestItemFinder.getNearestVertex(viewContext, points);
+		mouseStartPoint = mouseStartPointOpt.orElse(null);
+
+		return mouseStartPointOpt;
 	}
 
 	@Override
@@ -155,7 +158,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 
 	private void switchEnlarger(final boolean differentAction) {
 		enlarger = differentAction ? new CenterOriginEnlarger() : new CornerOriginEnlarger();
-		originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint);
+		originOfEnlargement = enlarger.createOriginOfEnlargement(originalDomain, mouseStartPoint).orElse(null);
 	}
 
 	@Override
@@ -174,12 +177,12 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	private Vector2d getMousePoint(final CreasePatternViewContext viewContext, final PaintContext paintContext) {
 		setCandidateVertexOnMove(viewContext, paintContext, false);
 
-		var mousePoint = paintContext.getCandidateVertexToPick();
-		if (mousePoint == null) {
-			mousePoint = viewContext.getLogicalMousePoint();
+		var mousePointOpt = paintContext.getCandidateVertexToPick();
+		if (mousePointOpt.isEmpty()) {
+			return viewContext.getLogicalMousePoint();
 		}
 
-		return mousePoint;
+		return mousePointOpt.get();
 	}
 
 	@Override
@@ -196,8 +199,8 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		originOfEnlargement = null;
 
 		mouseStartPoint = null;
-		originalDomain = null;
-		enlargedDomain = null;
+		originalDomain = RectangleDomain.voidDomain();
+		enlargedDomain = RectangleDomain.voidDomain();
 
 		enlarger = null;
 	}
@@ -228,13 +231,13 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 			drawer.drawVertex(mouseStartPoint);
 		}
 
-		if (originalDomain != null) {
+		if (!originalDomain.isVoid()) {
 			drawer.selectAreaSelectionStroke(viewContext.getScale());
 			drawer.selectAreaSelectionColor();
 			drawer.drawRectangle(originalDomain.getLeftTop(), originalDomain.getRightBottom());
 		}
 
-		if (enlargedDomain != null) {
+		if (!enlargedDomain.isVoid()) {
 			this.drawPickCandidateVertex(drawer, viewContext, paintContext);
 
 			drawer.selectCandidateLineStroke(viewContext.getScale(), viewContext.isZeroLineWidth());

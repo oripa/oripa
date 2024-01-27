@@ -49,10 +49,10 @@ public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCo
 		final int correctLineCount = 0;
 		validateCounts(context, correctVertexCount, correctLineCount);
 
-		var p0 = context.popVertex();
-		var p1 = context.popVertex();
+		var p0 = context.popVertex().get();
+		var p1 = context.popVertex().get();
 
-		if (type == null || p0 == null || p1 == null) {
+		if (type == null) {
 			context.clear(false);
 			return;
 		}

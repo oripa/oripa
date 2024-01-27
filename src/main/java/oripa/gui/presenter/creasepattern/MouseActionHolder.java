@@ -18,6 +18,8 @@
  */
 package oripa.gui.presenter.creasepattern;
 
+import java.util.Optional;
+
 /**
  * @author Koji
  *
@@ -42,7 +44,7 @@ public class MouseActionHolder {
 	 *
 	 * @return current mouse action behavior
 	 */
-	public GraphicMouseAction getMouseAction() {
-		return action;
+	public Optional<GraphicMouseAction> getMouseAction() {
+		return Optional.ofNullable(action);
 	}
 }

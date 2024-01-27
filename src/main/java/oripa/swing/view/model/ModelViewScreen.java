@@ -33,6 +33,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
@@ -338,8 +339,8 @@ public class ModelViewScreen extends JPanel
 	}
 
 	@Override
-	public OrigamiModel getModel() {
-		return origamiModel;
+	public Optional<OrigamiModel> getModel() {
+		return Optional.ofNullable(origamiModel);
 	}
 
 	@Override

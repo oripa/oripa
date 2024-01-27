@@ -168,7 +168,7 @@ public class Painter {
 		Collection<OriLine> dividedLines = lineDivider.divideLine(line, v,
 				getPointEps());
 
-		if (dividedLines == null) {
+		if (dividedLines.isEmpty()) {
 			return false;
 		}
 		elementRemover.removeLine(line, creasePattern, getPointEps());

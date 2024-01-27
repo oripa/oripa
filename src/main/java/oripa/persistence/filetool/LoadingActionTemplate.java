@@ -19,6 +19,7 @@
 package oripa.persistence.filetool;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @author OUCHI Koji
@@ -33,7 +34,7 @@ public class LoadingActionTemplate<Data> extends AbstractLoadingAction<Data> {
 	}
 
 	@Override
-	public Data load() throws FileVersionError, IOException, WrongDataFormatException {
+	public Optional<Data> load() throws FileVersionError, IOException, WrongDataFormatException {
 		return loader.load(getPath());
 	}
 

@@ -20,9 +20,7 @@ package oripa.domain.paint;
 
 import java.util.Collection;
 
-import oripa.domain.creasepattern.CreasePattern;
 import oripa.util.history.AbstractUndoManager;
-import oripa.util.history.UndoInfo;
 import oripa.value.OriLine;
 
 /**
@@ -38,95 +36,45 @@ public class CreasePatternUndoerImpl implements CreasePatternUndoer {
 		owner = aOwner;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#pushUndoInfo()
-	 */
 	@Override
 	public synchronized void pushUndoInfo() {
 		undoManager.push(owner.getCreasePattern());
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#loadUndoInfo()
-	 */
 	@Override
 	public synchronized void undo() {
-		UndoInfo<Collection<OriLine>> info = undoManager.undo(owner.getCreasePattern());
+		var infoOpt = undoManager.undo(owner.getCreasePattern());
 
-		if (info == null) {
-			return;
-		}
-
-		CreasePattern creasePattern = owner.getCreasePattern();
-		creasePattern.replaceWith(info.getInfo());
+		infoOpt.ifPresent(info -> owner.getCreasePattern().replaceWith(info.getInfo()));
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#canUndo()
-	 */
 	@Override
 	public boolean canUndo() {
 		return undoManager.canUndo();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#redo()
-	 */
 	@Override
 	public synchronized void redo() {
-		UndoInfo<Collection<OriLine>> info = undoManager.redo();
+		var infoOpt = undoManager.redo();
 
-		if (info == null) {
-			return;
-		}
-
-		CreasePattern creasePattern = owner.getCreasePattern();
-		creasePattern.replaceWith(info.getInfo());
+		infoOpt.ifPresent(info -> owner.getCreasePattern().replaceWith(info.getInfo()));
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#canRedo()
-	 */
 	@Override
 	public boolean canRedo() {
 		return undoManager.canRedo();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#isChanged()
-	 */
 	@Override
 	public boolean changeExists() {
 		return undoManager.isChanged();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#clearChanged()
-	 */
 	@Override
 	public void clearChanged() {
 		undoManager.clearChanged();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.paint.CreasePatternUndoerInterface#clear()
-	 */
 	@Override
 	public void clear() {
 		undoManager.clear();

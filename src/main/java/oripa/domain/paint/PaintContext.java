@@ -2,6 +2,7 @@ package oripa.domain.paint;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import oripa.domain.cptool.Painter;
 import oripa.value.OriLine;
@@ -85,9 +86,9 @@ public interface PaintContext extends CreasePatternHolder {
 	/**
 	 * pop the last pushed line and mark it unselected.
 	 *
-	 * @return popped line. null if no line is pushed.
+	 * @return popped line. empty if no line is pushed.
 	 */
-	public abstract OriLine popLine();
+	public abstract Optional<OriLine> popLine();
 
 	/**
 	 *
@@ -99,9 +100,9 @@ public interface PaintContext extends CreasePatternHolder {
 	/**
 	 * pop the last pushed vertex.
 	 *
-	 * @return popped vertex. null if no vertex is pushed.
+	 * @return popped vertex. empty if no vertex is pushed.
 	 */
-	public abstract Vector2d popVertex();
+	public abstract Optional<Vector2d> popVertex();
 
 	/**
 	 * performs the same as {@link List#remove(Object o)}.
@@ -115,13 +116,13 @@ public interface PaintContext extends CreasePatternHolder {
 	 *
 	 * @return the latest vertex
 	 */
-	public abstract Vector2d peekVertex();
+	public abstract Optional<Vector2d> peekVertex();
 
 	/**
 	 *
 	 * @return the latest line
 	 */
-	public abstract OriLine peekLine();
+	public abstract Optional<OriLine> peekLine();
 
 	/**
 	 *
@@ -146,11 +147,11 @@ public interface PaintContext extends CreasePatternHolder {
 
 	public abstract void setCandidateLineToPick(OriLine pickCandidateL);
 
-	public abstract OriLine getCandidateLineToPick();
+	public abstract Optional<OriLine> getCandidateLineToPick();
 
 	public abstract void setCandidateVertexToPick(Vector2d pickCandidateV);
 
-	public abstract Vector2d getCandidateVertexToPick();
+	public abstract Optional<Vector2d> getCandidateVertexToPick();
 
 	public abstract CreasePatternUndoer creasePatternUndo();
 

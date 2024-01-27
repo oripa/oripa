@@ -18,6 +18,9 @@
  */
 package oripa.domain.suggestion;
 
+import java.util.Optional;
+
+import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.value.OriLine;
 
@@ -29,47 +32,40 @@ public class MaekawaTheoremSuggester {
 	/**
 	 *
 	 * @param vertex
-	 * @return type to be used for new line. null if {@code vertex} is not at
+	 * @return type to be used for new line. empty if {@code vertex} is not at
 	 *         inside of paper or the lines can't be interpolated to satisfy the
 	 *         theorem.
 	 */
-	public OriLine.Type suggest(final OriVertex vertex) {
+	public Optional<OriLine.Type> suggest(final OriVertex vertex) {
 		double edgeCount = vertex.edgeCount();
 
 		if (edgeCount % 2 == 0) {
-			return null;
+			return Optional.empty();
 		}
 
 		if (!vertex.isInsideOfPaper()) {
-			return null;
+			return Optional.empty();
 		}
 
 		if (vertex.hasUnassignedEdge()) {
-			return null;
+			return Optional.empty();
 		}
 
-		int mountainCount = 0;
-		int valleyCount = 0;
+		int mountainCount = (int) vertex.edgeStream().filter(OriEdge::isMountain).count();
+		int valleyCount = (int) vertex.edgeStream().filter(OriEdge::isValley).count();
 
-		for (int i = 0; i < edgeCount; i++) {
-			if (vertex.getEdge(i).isMountain()) {
-				mountainCount++;
-			} else {
-				valleyCount++;
-			}
-		}
 		int diff = mountainCount - valleyCount;
 		switch (diff) {
 		case 3:
-			return OriLine.Type.VALLEY;
+			return Optional.of(OriLine.Type.VALLEY);
 		case -3:
-			return OriLine.Type.MOUNTAIN;
+			return Optional.of(OriLine.Type.MOUNTAIN);
 		case 1:
-			return OriLine.Type.MOUNTAIN;
+			return Optional.of(OriLine.Type.MOUNTAIN);
 		case -1:
-			return OriLine.Type.VALLEY;
+			return Optional.of(OriLine.Type.VALLEY);
 		default:
-			return null;
+			return Optional.empty();
 		}
 	}
 
