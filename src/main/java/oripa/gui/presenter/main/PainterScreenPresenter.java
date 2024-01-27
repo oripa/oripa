@@ -25,6 +25,7 @@ import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
+import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionHolder;
 import oripa.gui.view.ViewScreenUpdater;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
@@ -117,15 +118,21 @@ public class PainterScreenPresenter {
 					viewContext.isZeroLineWidth());
 		}
 
-		actionOpt.ifPresentOrElse(action -> {
-			action.onDraw(bufferObjDrawer, viewContext, paintContext);
+		actionOpt.ifPresentOrElse(
+				action -> drawByAction(action, bufferObjDrawer, objDrawer, p),
+				() -> p.drawBufferImage());
+	}
 
-			p.drawBufferImage();
+	private void drawByAction(final GraphicMouseAction action,
+			final ObjectGraphicDrawer bufferObjDrawer, final ObjectGraphicDrawer objDrawer,
+			final PaintComponentGraphics p) {
+		action.onDraw(bufferObjDrawer, viewContext, paintContext);
 
-			paintContext.getCandidateVertexToPick()
-					.ifPresent(candidate -> drawer.drawCandidatePositionString(objDrawer, candidate));
+		p.drawBufferImage();
 
-		}, () -> p.drawBufferImage());
+		paintContext.getCandidateVertexToPick()
+				.ifPresent(candidate -> drawer.drawCandidatePositionString(objDrawer, candidate));
+
 	}
 
 	private void drawPaperDomainOfModel(final ObjectGraphicDrawer objDrawer) {
@@ -178,7 +185,6 @@ public class PainterScreenPresenter {
 	}
 
 	private void mouseMoved(final Vector2d mousePoint, final boolean isCtrlKeyDown) {
-
 		viewContext.setLogicalMousePoint(mousePoint);
 
 		final var actionOpt = mouseActionHolder.getMouseAction();

@@ -83,10 +83,11 @@ class SimpleFolder {
 			var sv = e.getStartVertex();
 			var ev = e.getEndVertex();
 
-			sv.setPosition(e.getLeft().get().getPositionWhileFolding());
+			sv.setPosition(e.getLeft().orElseThrow().getPositionWhileFolding());
 
 			var rightOpt = e.getRight();
-			rightOpt.ifPresent(right -> ev.setPosition(right.getPositionWhileFolding()));
+			rightOpt.map(OriHalfedge::getPositionWhileFolding)
+					.ifPresent(position -> ev.setPosition(position));
 		}
 
 	}

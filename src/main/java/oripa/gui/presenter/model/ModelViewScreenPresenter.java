@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.cutmodel.CutModelOutlinesFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.model.ModelGraphics;
 import oripa.gui.view.model.ModelViewScreenView;
 import oripa.gui.view.util.CallbackOnUpdate;
@@ -72,22 +73,27 @@ public class ModelViewScreenPresenter {
 
 		var origamiModelOpt = view.getModel();
 
-		origamiModelOpt.ifPresentOrElse(origamiModel -> {
-			if (!origamiModel.hasModel()) {
-				logger.info("origamiModel does not have a model data.");
-				return;
-			}
+		origamiModelOpt.ifPresentOrElse(
+				origamiModel -> draw(origamiModel, m),
+				() -> logger.info("null origamiModel."));
+	}
 
-			var objDrawer = m.getBufferObjectDrawer();
+	private void draw(final OrigamiModel origamiModel, final ModelGraphics m) {
+		if (!origamiModel.hasModel()) {
+			logger.info("origamiModel does not have a model data.");
+			return;
+		}
 
-			var drawer = new OrigamiModelGraphicDrawer();
+		var objDrawer = m.getBufferObjectDrawer();
 
-			drawer.draw(objDrawer, origamiModel, view.isScissorsLineVisible() ? scissorsLine : null,
-					view.getModelDisplayMode(),
-					view.getScale());
+		var drawer = new OrigamiModelGraphicDrawer();
 
-			m.drawBufferImage();
-		}, () -> logger.info("null origamiModel."));
+		drawer.draw(objDrawer, origamiModel, view.isScissorsLineVisible() ? scissorsLine : null,
+				view.getModelDisplayMode(),
+				view.getScale());
+
+		m.drawBufferImage();
+
 	}
 
 	private void recalcScissorsLine() {

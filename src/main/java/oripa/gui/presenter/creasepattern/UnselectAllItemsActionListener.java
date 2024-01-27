@@ -55,17 +55,19 @@ public class UnselectAllItemsActionListener implements Runnable {
 
 		var currentActionOpt = actionHolder.getMouseAction();
 
-		currentActionOpt.ifPresent(currentAction -> {
-			currentAction.destroy(context);
-			currentAction.recover(context);
+		currentActionOpt.ifPresent(currentAction -> unselectAll(currentAction));
+	}
 
-			if (currentAction.getEditMode() == EditMode.COPY ||
-					currentAction.getEditMode() == EditMode.CUT) {
-				statePopper.run();
-			}
+	private void unselectAll(final GraphicMouseAction currentAction) {
+		currentAction.destroy(context);
+		currentAction.recover(context);
 
-			screenUpdater.updateScreen();
-		});
+		if (currentAction.getEditMode() == EditMode.COPY ||
+				currentAction.getEditMode() == EditMode.CUT) {
+			statePopper.run();
+		}
+
+		screenUpdater.updateScreen();
 	}
 
 }
