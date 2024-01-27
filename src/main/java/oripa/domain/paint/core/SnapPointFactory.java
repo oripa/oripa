@@ -48,8 +48,7 @@ public class SnapPointFactory {
 		snapPoints.addAll(
 				creasePattern.stream()
 						.map(crease -> GeomUtil.getCrossPoint(line, crease))
-						.filter(Optional::isPresent)
-						.map(Optional::get)
+						.flatMap(Optional::stream)
 						.collect(Collectors.toList()));
 
 		// snap on end points of overlapping creases.

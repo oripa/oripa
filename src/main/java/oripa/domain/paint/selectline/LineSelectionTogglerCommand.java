@@ -20,6 +20,7 @@ package oripa.domain.paint.selectline;
 
 import oripa.domain.paint.PaintContext;
 import oripa.util.Command;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -38,21 +39,22 @@ public class LineSelectionTogglerCommand implements Command {
 
 		var lineOpt = context.peekLine();
 
-		lineOpt.ifPresent(line -> {
-			// toggle selection
-			if (line.selected) {
-				// in this case, the context has two reference to the selected
-				// line:
-				// at the last position and other somewhere.
+		lineOpt.ifPresent(line -> toggleSelection(line));
+	}
 
-				// clear the selection done by onAct().
-				context.popLine();
-				// remove the line which has been already stored.
-				context.removeLine(line);
-			} else {
-				line.selected = true;
-			}
-		});
+	private void toggleSelection(final OriLine line) {
+		if (line.selected) {
+			// in this case, the context has two reference to the selected
+			// line:
+			// at the last position and other somewhere.
+
+			// clear the selection done by onAct().
+			context.popLine();
+			// remove the line which has been already stored.
+			context.removeLine(line);
+		} else {
+			line.selected = true;
+		}
 	}
 
 }
