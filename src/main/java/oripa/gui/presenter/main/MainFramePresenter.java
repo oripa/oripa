@@ -295,7 +295,7 @@ public class MainFramePresenter {
 						.ifPresent(otherDoc -> {
 							paintContext.getPainter().resetSelectedOriLines();
 							var otherCreasePattern = otherDoc.getCreasePattern();
-							otherCreasePattern.forEach(l -> l.selected = true);
+							otherCreasePattern.forEach(l -> l.setSelected(true));
 							paintContext.getCreasePattern().addAll(otherCreasePattern);
 						});
 

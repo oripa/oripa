@@ -45,7 +45,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 		}
 
 		creasePattern.stream()
-				.filter(line -> line.selected)
+				.filter(line -> line.isSelected())
 				.forEach(line -> context.pushLine(line));
 	}
 
@@ -73,7 +73,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 			}
 
 			if (paintContext.getPickedLines().contains(line) == false) {
-				line.selected = true;
+				line.setSelected(true);
 				paintContext.pushLine(line);
 			}
 

@@ -37,7 +37,7 @@ public class AllLineSelecterCommand implements Command {
 		context.creasePatternUndo().pushUndoInfo();
 		context.getPainter().selectAllOriLines();
 		context.getCreasePattern().stream()
-				.filter(l -> l.selected)
+				.filter(l -> l.isSelected())
 				.forEach(context::pushLine);
 	}
 }
