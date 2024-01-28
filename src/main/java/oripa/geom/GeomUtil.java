@@ -512,7 +512,7 @@ public class GeomUtil {
 	 *         counterclockwise position in right-handed coordinate system), 0
 	 *         if p0-p1 and p0-q is collinear, otherwise -1;
 	 */
-	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q, final double eps) {
+	private static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q, final double eps) {
 		var value = computeCCW(p0, p1, q);
 		if (value > eps) {
 			return 1;
