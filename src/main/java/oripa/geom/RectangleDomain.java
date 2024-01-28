@@ -59,7 +59,7 @@ public class RectangleDomain {
 	 *
 	 * @param target
 	 * @return A rectangle domain fit to the given points. Void domain is
-	 *         returned if the segment collection is empty.
+	 *         returned if the point collection is empty.
 	 */
 	public static RectangleDomain createFromPoints(final Collection<? extends Vector2d> target) {
 		var domain = new RectangleDomain();
