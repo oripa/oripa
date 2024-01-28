@@ -22,6 +22,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 	@Override
 	public void undo(final PaintContext context) {
 		context.creasePatternUndo().undo();
+		context.refreshCreasePattern();
 
 		recover(context);
 	}
@@ -29,6 +30,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 	@Override
 	public void redo(final PaintContext context) {
 		context.creasePatternUndo().redo();
+		context.refreshCreasePattern();
 
 		recover(context);
 	}

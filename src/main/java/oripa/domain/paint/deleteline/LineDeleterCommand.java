@@ -48,5 +48,7 @@ public class LineDeleterCommand extends ValidatablePaintCommand {
 		context.creasePatternUndo().pushUndoInfo();
 		Painter painter = context.getPainter();
 		painter.removeLines(lines);
+
+		context.refreshCreasePattern();
 	}
 }

@@ -3,6 +3,7 @@ package oripa.domain.creasepattern;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
@@ -64,38 +65,29 @@ class CreasePatternImpl implements CreasePattern {
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -6919017534440930379L;
 
-	private LineManager lines;
+	private final LineManager lines;
 	private VerticesManager vertices;
-	private final RectangleDomain paperDomain;
-	private final double paperSize;
-
-	@SuppressWarnings("unused")
-	private CreasePatternImpl() {
-		paperSize = 0;
-		paperDomain = null;
-	}
+	private RectangleDomain paperDomain;
 
 	/**
 	 * @param paperDomain
 	 *            rectangle domain of paper.
 	 */
 	public CreasePatternImpl(final RectangleDomain paperDomain) {
-		this.paperDomain = paperDomain;
-		paperSize = paperDomain.maxWidthHeight();
-
 		lines = new LineManager();
-		vertices = new VerticesManager(
-				paperSize, paperDomain.getLeft(), paperDomain.getTop());
+		vertices = createVerticesManager(paperDomain);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#getPaperSize()
-	 */
+	private VerticesManager createVerticesManager(final RectangleDomain domain) {
+		paperDomain = domain;
+		return new VerticesManager(
+				domain.maxWidthHeight(), domain.getLeft(), domain.getTop());
+
+	}
+
 	@Override
 	public double getPaperSize() {
-		return paperSize;
+		return paperDomain.maxWidthHeight();
 	}
 
 	/*
@@ -349,6 +341,24 @@ class CreasePatternImpl implements CreasePattern {
 	public void replaceWith(final Collection<OriLine> lines) {
 		clear();
 		addAll(lines);
+	}
+
+	@Override
+	public void refresh(final double pointEps) {
+		var boundaries = stream()
+				.filter(OriLine::isBoundary)
+				.collect(Collectors.toList());
+
+		var currentDomain = RectangleDomain.createFromSegments(boundaries);
+
+		if (!paperDomain.equals(currentDomain, pointEps)) {
+			var lines = new ArrayList<OriLine>(this);
+
+			clear();
+
+			vertices = createVerticesManager(currentDomain);
+			addAll(lines);
+		}
 	}
 
 	/*

@@ -64,6 +64,8 @@ public class OutlineEditerCommand extends ValidatablePaintCommand {
 				closeTmpOutline(pickedVertices, context.getPainter());
 
 				context.clear(false);
+
+				context.refreshCreasePattern();
 			}
 		}
 

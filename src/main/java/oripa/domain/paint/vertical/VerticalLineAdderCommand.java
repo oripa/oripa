@@ -50,6 +50,8 @@ public class VerticalLineAdderCommand extends ValidatablePaintCommand {
 		painter.addLine(vl);
 
 		context.clear(false);
+
+		context.refreshCreasePattern();
 	}
 
 }

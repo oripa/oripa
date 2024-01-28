@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import oripa.util.ClosedRange;
+import oripa.util.MathUtil;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -201,5 +202,13 @@ public class RectangleDomain {
 
 	private double computeGap(final double a, final double b) {
 		return max(a, b) - min(a, b);
+	}
+
+	public boolean equals(final RectangleDomain other, final double eps) {
+		return MathUtil.areEqual(left, other.left, eps) &&
+				MathUtil.areEqual(right, other.right, eps) &&
+				MathUtil.areEqual(top, other.top, eps) &&
+				MathUtil.areEqual(bottom, other.bottom, eps);
+
 	}
 }

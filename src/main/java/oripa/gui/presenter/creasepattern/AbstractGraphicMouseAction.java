@@ -129,6 +129,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		destroy(context);
 		recover(context);
 		context.creasePatternUndo().redo();
+		context.refreshCreasePattern();
 	}
 
 	@Override

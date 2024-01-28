@@ -155,6 +155,8 @@ public interface PaintContext extends CreasePatternHolder {
 
 	public abstract CreasePatternUndoer creasePatternUndo();
 
+	void refreshCreasePattern();
+
 	public abstract void setAngleStep(AngleStep step);
 
 	public abstract AngleStep getAngleStep();

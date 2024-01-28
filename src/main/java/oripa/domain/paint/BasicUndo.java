@@ -18,6 +18,7 @@ public class BasicUndo {
 		}
 
 		context.creasePatternUndo().undo();
+		context.refreshCreasePattern();
 
 		return state;
 	}

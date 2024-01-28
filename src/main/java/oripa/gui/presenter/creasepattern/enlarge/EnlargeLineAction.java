@@ -134,6 +134,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	@Override
 	public void undo(final PaintContext context) {
 		context.creasePatternUndo().undo();
+		context.refreshCreasePattern();
 
 		recover(context);
 	}
@@ -141,6 +142,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 	@Override
 	public void redo(final PaintContext context) {
 		context.creasePatternUndo().redo();
+		context.refreshCreasePattern();
 
 		recover(context);
 	}
@@ -214,6 +216,9 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 				paintContext.getPickedLines()));
 
 		paintContext.clear(true);
+
+		paintContext.refreshCreasePattern();
+
 	}
 
 	@Override
