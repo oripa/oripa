@@ -325,24 +325,13 @@ public class GeomUtil {
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Segment segment) {
-		return distancePointToSegment(p, segment.getP0(), segment.getP1());
+		return distance(getNearestPointToSegment(p, segment), p);
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
 
-		double t = computeParameterForNearestPointToLine(p, sp, ep);
-
-		if (t < 0.0) {
-			return distance(p, sp);
-		} else if (t > 1.0) {
-			return distance(p, ep);
-		} else {
-			// direction of the line
-			Vector2d dir = ep.subtract(sp);
-
-			return distance(sp.add(dir.multiply(t)), p);
-		}
+		return distance(getNearestPointToSegment(p, new Segment(sp, ep)), p);
 	}
 
 	/**
@@ -354,7 +343,7 @@ public class GeomUtil {
 	 *            stores returned value.
 	 * @return
 	 */
-	public static Vector2d computeNearestPointToSegment(final Vector2d p, final Segment segment) {
+	public static Vector2d getNearestPointToSegment(final Vector2d p, final Segment segment) {
 
 		var sp = segment.getP0();
 		var ep = segment.getP1();
@@ -440,6 +429,8 @@ public class GeomUtil {
 	 * @param q0
 	 * @param q1
 	 * @param answerPredicate
+	 *            returns true if the s and t are acceptable, otherwise it
+	 *            should returns false.
 	 * @return
 	 */
 	private static List<Double> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
