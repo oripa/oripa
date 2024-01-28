@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import oripa.util.collection.CollectionUtil;
 import oripa.vecmath.Vector2d;
@@ -73,7 +74,7 @@ class VerticesManager implements NearVerticesGettable {
 	/**
 	 * count existence of same values.
 	 */
-	private final Map<Vector2d, Integer> counts = new ConcurrentHashMap<>();
+	private final Map<Vector2d, AtomicInteger> counts = new ConcurrentHashMap<>();
 
 	/**
 	 * Constructor to initialize fields.
@@ -140,14 +141,12 @@ class VerticesManager implements NearVerticesGettable {
 
 		// v is a new value
 		if (vertices.add(v)) {
-			counts.put(v, 1);
+			counts.put(v, new AtomicInteger(1));
 			return;
 		}
 
 		// count duplication.
-		Integer count = counts.get(v);
-		counts.put(v, count + 1);
-
+		counts.get(v).incrementAndGet();
 	}
 
 	/*
@@ -170,22 +169,22 @@ class VerticesManager implements NearVerticesGettable {
 	 */
 	public void remove(final Vector2d v) {
 		AreaPosition ap = new AreaPosition(v);
-		Integer count = counts.get(v);
+		var count = counts.get(v);
 
 		// should never happen.
-		if (count <= 0) {
+		if (count.get() <= 0) {
 			throw new IllegalStateException("Nothing to remove");
 		}
 
 		// No longer same vertices exist.s
-		if (count == 1) {
+		if (count.get() == 1) {
 			getVertices(ap).remove(v);
 			counts.remove(v);
 			return;
 		}
 
 		// decrement existence.
-		counts.put(v, count - 1);
+		count.decrementAndGet();
 	}
 
 	/*

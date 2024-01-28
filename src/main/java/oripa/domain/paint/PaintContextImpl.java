@@ -196,7 +196,9 @@ class PaintContextImpl implements PaintContext {
 	@Override
 	public void refreshCreasePattern() {
 		creasePattern.refresh(pointEps);
-		updateGrids();
+		if (!gridPoints.isEmpty()) {
+			updateGrids();
+		}
 	}
 
 	@Override
