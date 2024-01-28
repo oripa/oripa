@@ -241,7 +241,7 @@ public class GeomUtil {
 
 		double t = answer.get(1);
 
-		return Optional.of(computeCrossPointUsingParameter(t, segP0, segP1));
+		return Optional.of(computeDividingPoint(t, segP0, segP1));
 	}
 
 	private static List<Double> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
@@ -273,7 +273,7 @@ public class GeomUtil {
 
 		var t = answer.get(1);
 
-		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
+		return Optional.of(computeDividingPoint(t, q0, q1));
 	}
 
 	private static List<Double> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
@@ -384,7 +384,7 @@ public class GeomUtil {
 
 		var t = parameters.get(1);
 
-		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
+		return Optional.of(computeDividingPoint(t, q0, q1));
 	}
 
 	/**
@@ -463,7 +463,18 @@ public class GeomUtil {
 		return List.of(s, t);
 	}
 
-	public static Vector2d computeCrossPointUsingParameter(final double t, final Vector2d q0, final Vector2d q1) {
+	/**
+	 * Computes the point that divides the segment q0 -> q1 into t : 1-t. If t
+	 * is negative, the point is the result of external division |t| : 1+|t|.
+	 *
+	 * @param t
+	 *            the result of solving cross point problem equation for p0 ->
+	 *            p1 and q0 -> q1.
+	 * @param q0
+	 * @param q1
+	 * @return
+	 */
+	public static Vector2d computeDividingPoint(final double t, final Vector2d q0, final Vector2d q1) {
 		// cp = (1 - t) * q0 + t * q1
 		return q0.multiply(1.0 - t).add(q1.multiply(t));
 	}
