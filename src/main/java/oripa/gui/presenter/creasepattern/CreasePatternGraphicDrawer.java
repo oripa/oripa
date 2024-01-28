@@ -244,7 +244,7 @@ public class CreasePatternGraphicDrawer {
 		int lineNum = gridDivNum;
 		double step = paperSize / lineNum;
 
-		for (int i = 1; i < lineNum; i++) {
+		for (int i = 0; i < lineNum + 1; i++) {
 			drawer.drawLine(
 					step * i + domain.getLeft(), domain.getTop(),
 					step * i + domain.getLeft(), domain.getTop() + paperSize);
