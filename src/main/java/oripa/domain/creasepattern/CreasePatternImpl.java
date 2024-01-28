@@ -3,7 +3,6 @@ package oripa.domain.creasepattern;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.stream.Collectors;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
@@ -90,44 +89,21 @@ class CreasePatternImpl implements CreasePattern {
 		return paperDomain.maxWidthHeight();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#getPaperDomain()
-	 */
 	@Override
 	public RectangleDomain getPaperDomain() {
 		return paperDomain;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.creasepattern.CreasePatternInterface#contains(java.lang.
-	 * Object)
-	 */
 	@Override
 	public boolean contains(final Object o) {
 		return lines.contains(o);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#size()
-	 */
 	@Override
 	public int size() {
 		return lines.size();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#add(oripa.value.
-	 * OriLine)
-	 */
 	@Override
 	public boolean add(final OriLine e) {
 		if (lines.add(e)) {
@@ -138,12 +114,6 @@ class CreasePatternImpl implements CreasePattern {
 		return false;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#remove(java.lang.
-	 * Object)
-	 */
 	@Override
 	public boolean remove(final Object o) {
 		OriLine l = (OriLine) o;
@@ -157,42 +127,22 @@ class CreasePatternImpl implements CreasePattern {
 		return false;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#clear()
-	 */
 	@Override
 	public void clear() {
 		lines.clear();
 		vertices.clear();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#toArray()
-	 */
 	@Override
 	public Object[] toArray() {
 		return lines.toArray();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#toArray(T[])
-	 */
 	@Override
 	public <T> T[] toArray(final T[] a) {
 		return lines.toArray(a);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#isEmpty()
-	 */
 	@Override
 	public boolean isEmpty() {
 
@@ -206,34 +156,16 @@ class CreasePatternImpl implements CreasePattern {
 		return false;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#iterator()
-	 */
 	@Override
 	public Iterator<OriLine> iterator() {
 		return new CreasePatternIterator(lines.iterator());
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.creasepattern.CreasePatternInterface#containsAll(java.util.
-	 * Collection)
-	 */
 	@Override
 	public boolean containsAll(final Collection<?> c) {
 		return lines.containsAll(c);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#addAll(java.util.
-	 * Collection)
-	 */
 	@Override
 	public boolean addAll(final Collection<? extends OriLine> c) {
 
@@ -246,13 +178,6 @@ class CreasePatternImpl implements CreasePattern {
 		return added;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.creasepattern.CreasePatternInterface#removeAll(java.util.
-	 * Collection)
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean removeAll(final Collection<?> c) {
@@ -266,13 +191,6 @@ class CreasePatternImpl implements CreasePattern {
 		return changed;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.creasepattern.CreasePatternInterface#retainAll(java.util.
-	 * Collection)
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean retainAll(final Collection<?> c) {
@@ -291,24 +209,11 @@ class CreasePatternImpl implements CreasePattern {
 		return lines.retainAll(c);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.creasepattern.CreasePatternInterface#getVerticesAround(javax
-	 * .vecmath.Vector2d)
-	 */
 	@Override
 	public Collection<Vector2d> getVerticesAround(final Vector2d v) {
 		return vertices.getVerticesAround(v);
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.CreasePatternInterface#getVerticesInArea(
-	 * double, double, double)
-	 */
 	@Override
 	public Collection<Collection<Vector2d>> getVerticesInArea(
 			final double x, final double y, final double distance) {
@@ -345,13 +250,9 @@ class CreasePatternImpl implements CreasePattern {
 
 	@Override
 	public void refresh(final double pointEps) {
-		var boundaries = stream()
-				.filter(OriLine::isBoundary)
-				.collect(Collectors.toList());
+		var currentDomain = RectangleDomain.createFromSegments(this);
 
-		var currentDomain = RectangleDomain.createFromSegments(boundaries);
-
-		if (!paperDomain.equals(currentDomain, pointEps)) {
+		if (!paperDomain.equals(currentDomain, pointEps) && !currentDomain.isVoid()) {
 			var lines = new ArrayList<OriLine>(this);
 
 			clear();
@@ -361,12 +262,6 @@ class CreasePatternImpl implements CreasePattern {
 		}
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.creasepattern.CreasePatternInterface#removeDuplicatedLines()
-	 */
 	@Override
 	public boolean cleanDuplicatedLines(final double pointEps) {
 		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(size());
