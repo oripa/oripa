@@ -14,7 +14,7 @@ import oripa.vecmath.Vector2d;
  * Call doAction() to perform the action of the state. The flow of processing
  * is:
  * <ul>
- * <li>doAction(): onAct() -> quit proccessing if onAct() returns false ->
+ * <li>doAction(): onAct() -> quit processing if onAct() returns false ->
  * onResult() -> finish!;</li>
  * <li>undo(): undoAction() -> finish!</li>
  * </ul>

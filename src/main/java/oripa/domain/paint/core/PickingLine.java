@@ -33,8 +33,6 @@ public abstract class PickingLine extends AbstractActionState {
 
 	/**
 	 * delete from context the latest picked line.
-	 *
-	 * @return Previous state
 	 */
 	@Override
 	protected void undoAction(final PaintContext context) {

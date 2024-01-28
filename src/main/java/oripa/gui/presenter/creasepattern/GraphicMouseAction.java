@@ -6,24 +6,38 @@ import oripa.domain.paint.PaintContext;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.vecmath.Vector2d;
 
+/**
+ * Interface for GUI interaction specified for ORIPA.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public interface GraphicMouseAction {
 
 	/**
-	 * True if the inherited class uses line-selected marks set by previous
+	 * True if the implementation uses line-selected marks set by previous
 	 * action. default is false.
 	 *
 	 * @return
 	 */
 	public abstract boolean needSelect();
 
+	/**
+	 * True if the implementation uses Ctrl key to switch behavior on drag.
+	 *
+	 * @return
+	 */
 	public default boolean isUsingCtrlKeyOnDrag() {
 		return false;
 	}
 
+	/**
+	 * The type of this action.
+	 */
 	public abstract EditMode getEditMode();
 
 	/**
-	 * define action on destroy. This method is expected to be called when the
+	 * Define action on destroy. This method is expected to be called when the
 	 * action is switched, before recover() of new action.
 	 *
 	 * @param context
@@ -31,7 +45,7 @@ public interface GraphicMouseAction {
 	public abstract void destroy(PaintContext context);
 
 	/**
-	 * Defines action for recovering the status of this object with given
+	 * Define action for recovering the status of this object with given
 	 * context. This method should be called when the action is switched, after
 	 * destroy() of old action.
 	 *
@@ -40,7 +54,8 @@ public interface GraphicMouseAction {
 	public abstract void recover(PaintContext context);
 
 	/**
-	 * performs action.
+	 * Performs action. The default implementation calls @link
+	 * #doAction(PaintContext, Vector2d, boolean).
 	 *
 	 * @param viewContext
 	 * @param paintContext
@@ -48,11 +63,18 @@ public interface GraphicMouseAction {
 	 *
 	 * @return Next mouse action.
 	 */
-	public GraphicMouseAction onLeftClick(
+	public default GraphicMouseAction onLeftClick(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction);
+			final boolean differentAction) {
+		var clickPoint = viewContext.getLogicalMousePoint();
+
+		doAction(paintContext, clickPoint, differentAction);
+		return this;
+	}
 
 	/**
+	 * Do the current state's action and keep the next state.
+	 *
 	 * @param context
 	 * @param point
 	 * @param differntAction
@@ -61,44 +83,67 @@ public interface GraphicMouseAction {
 			boolean differntAction);
 
 	/**
-	 * undo action.
+	 * Does undo action. The default implementation calls
+	 * {@link #undo(PaintContext)}.
 	 *
 	 * @param viewContext
 	 * @param paintContext
 	 * @param differentAction
 	 */
-	public abstract void onRightClick(CreasePatternViewContext viewContext, PaintContext paintContext,
-			boolean differentAction);
+	public default void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+			final boolean doSpecial) {
+		undo(paintContext);
+	}
 
 	public abstract void undo(PaintContext context);
 
 	public abstract void redo(PaintContext context);
 
 	/**
-	 * searches a vertex and a line close enough to the mouse cursor. The result
-	 * is stored into candidateVertexToPick and candidateLineToPick properties
-	 * of paintContext.
+	 * Defines the behavior when the mouse moves. At least this method should
+	 * search a vertex close enough to the mouse cursor. The result must be
+	 * stored into candidateVertexToPick properties of {@code paintContext}.
 	 *
 	 * @param viewContext
 	 * @param paintContext
 	 * @param differentAction
-	 * @return close vertex. Empty if not found.
+	 * @return candidate vertex. Empty if not found.
 	 */
 	public abstract Optional<Vector2d> onMove(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext, boolean differentAction);
 
+	/**
+	 * Defines the behavior when the left mouse button gets down.
+	 *
+	 * @param viewContext
+	 * @param paintContext
+	 * @param differentAction
+	 */
 	public abstract void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			boolean differentAction);
 
+	/**
+	 * Defines the behavior when the mouse is dragged with left button.
+	 *
+	 * @param viewContext
+	 * @param paintContext
+	 * @param differentAction
+	 */
 	public abstract void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			boolean differentAction);
 
+	/**
+	 * Defines the behavior when the left mouse button gets released.
+	 *
+	 * @param viewContext
+	 * @param paintContext
+	 * @param differentAction
+	 */
 	public abstract void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			boolean differentAction);
 
 	/**
-	 * draws selected lines and selected vertices as selected state. Override
-	 * for more drawing.
+	 * Draw the result of event processing using {@code drawer}.
 	 *
 	 * @param drawer
 	 * @param viewContext
