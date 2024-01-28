@@ -54,32 +54,6 @@ public class GeomUtil {
 		return angle < MathUtil.angleRadianEps() || angle > Math.PI - MathUtil.angleRadianEps();
 	}
 
-	private static int distinguishLineSegmentsOverlap(final Vector2d s0, final Vector2d e0,
-			final Vector2d s1, final Vector2d e1, final double pointEps) {
-		// Whether or not is parallel
-		Vector2d dir0 = e0.subtract(s0);
-		Vector2d dir1 = e1.subtract(s1);
-
-		if (!isParallel(dir0, dir1)) {
-			return 0;
-		}
-
-		int cnt = 0;
-		if (distancePointToSegment(s0, s1, e1) < pointEps) {
-			cnt++;
-		}
-		if (distancePointToSegment(e0, s1, e1) < pointEps) {
-			cnt++;
-		}
-		if (distancePointToSegment(s1, s0, e0) < pointEps) {
-			cnt++;
-		}
-		if (distancePointToSegment(e1, s0, e0) < pointEps) {
-			cnt++;
-		}
-		return cnt;
-	}
-
 	/**
 	 *
 	 * this method returns the count of end points on other segment for each
@@ -93,14 +67,24 @@ public class GeomUtil {
 	 * </ul>
 	 */
 	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
-		return distinguishLineSegmentsOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
-	}
+		if (!isParallel(seg0.getLine().getDirection(), seg1.getLine().getDirection())) {
+			return 0;
+		}
 
-	private static boolean isRelaxedOverlap(final Vector2d s0, final Vector2d e0,
-			final Vector2d s1, final Vector2d e1, final double pointEps) {
-		var cnt = distinguishLineSegmentsOverlap(s0, e0, s1, e1, pointEps);
-		return cnt >= 2;
-
+		int cnt = 0;
+		if (distancePointToSegment(seg0.getP0(), seg1) < pointEps) {
+			cnt++;
+		}
+		if (distancePointToSegment(seg0.getP1(), seg1) < pointEps) {
+			cnt++;
+		}
+		if (distancePointToSegment(seg1.getP0(), seg0) < pointEps) {
+			cnt++;
+		}
+		if (distancePointToSegment(seg1.getP1(), seg0) < pointEps) {
+			cnt++;
+		}
+		return cnt;
 	}
 
 	/**
@@ -112,7 +96,8 @@ public class GeomUtil {
 	 *         end points and does not share other part.
 	 */
 	public static boolean isRelaxedOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
-		return isRelaxedOverlap(seg0.getP0(), seg0.getP1(), seg1.getP0(), seg1.getP1(), pointEps);
+		var overlapCount = distinguishLineSegmentsOverlap(seg0, seg1, pointEps);
+		return overlapCount >= 2;
 	}
 
 	/**
@@ -256,7 +241,7 @@ public class GeomUtil {
 
 		double t = answer.get(1);
 
-		return Optional.of(computeCrossPointUsingParameter(t, segP0, segP1));
+		return Optional.of(computeDividingPoint(t, segP0, segP1));
 	}
 
 	private static List<Double> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
@@ -288,7 +273,7 @@ public class GeomUtil {
 
 		var t = answer.get(1);
 
-		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
+		return Optional.of(computeDividingPoint(t, q0, q1));
 	}
 
 	private static List<Double> solveLinesCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
@@ -340,24 +325,13 @@ public class GeomUtil {
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Segment segment) {
-		return distancePointToSegment(p, segment.getP0(), segment.getP1());
+		return distance(getNearestPointToSegment(p, segment), p);
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
 
-		double t = computeParameterForNearestPointToLine(p, sp, ep);
-
-		if (t < 0.0) {
-			return distance(p, sp);
-		} else if (t > 1.0) {
-			return distance(p, ep);
-		} else {
-			// direction of the line
-			Vector2d dir = ep.subtract(sp);
-
-			return distance(sp.add(dir.multiply(t)), p);
-		}
+		return distance(getNearestPointToSegment(p, new Segment(sp, ep)), p);
 	}
 
 	/**
@@ -369,7 +343,7 @@ public class GeomUtil {
 	 *            stores returned value.
 	 * @return
 	 */
-	public static Vector2d computeNearestPointToSegment(final Vector2d p, final Segment segment) {
+	public static Vector2d getNearestPointToSegment(final Vector2d p, final Segment segment) {
 
 		var sp = segment.getP0();
 		var ep = segment.getP1();
@@ -410,7 +384,7 @@ public class GeomUtil {
 
 		var t = parameters.get(1);
 
-		return Optional.of(computeCrossPointUsingParameter(t, q0, q1));
+		return Optional.of(computeDividingPoint(t, q0, q1));
 	}
 
 	/**
@@ -455,6 +429,8 @@ public class GeomUtil {
 	 * @param q0
 	 * @param q1
 	 * @param answerPredicate
+	 *            returns true if the s and t are acceptable, otherwise it
+	 *            should returns false.
 	 * @return
 	 */
 	private static List<Double> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
@@ -487,7 +463,18 @@ public class GeomUtil {
 		return List.of(s, t);
 	}
 
-	public static Vector2d computeCrossPointUsingParameter(final double t, final Vector2d q0, final Vector2d q1) {
+	/**
+	 * Computes the point that divides the segment q0 -> q1 into t : 1-t. If t
+	 * is negative, the point is the result of external division |t| : 1+|t|.
+	 *
+	 * @param t
+	 *            the result of solving cross point problem equation for p0 ->
+	 *            p1 and q0 -> q1.
+	 * @param q0
+	 * @param q1
+	 * @return
+	 */
+	public static Vector2d computeDividingPoint(final double t, final Vector2d q0, final Vector2d q1) {
 		// cp = (1 - t) * q0 + t * q1
 		return q0.multiply(1.0 - t).add(q1.multiply(t));
 	}
@@ -525,7 +512,7 @@ public class GeomUtil {
 	 *         counterclockwise position in right-handed coordinate system), 0
 	 *         if p0-p1 and p0-q is collinear, otherwise -1;
 	 */
-	public static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q, final double eps) {
+	private static int CCWcheck(final Vector2d p0, final Vector2d p1, final Vector2d q, final double eps) {
 		var value = computeCCW(p0, p1, q);
 		if (value > eps) {
 			return 1;

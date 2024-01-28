@@ -18,10 +18,10 @@
  */
 package oripa.domain.paint.core;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,25 +40,19 @@ public class SnapPointFactory {
 
 	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment line,
 			final double pointEps) {
-		Collection<Vector2d> snapPoints = new ArrayList<>();
 
 		logger.trace("eps = {}", pointEps);
 
-		// snap on cross points of line and creases.
-		snapPoints.addAll(
+		return Stream.concat(
+				// snap on cross points of line and creases.
 				creasePattern.stream()
 						.map(crease -> GeomUtil.getCrossPoint(line, crease))
-						.flatMap(Optional::stream)
-						.collect(Collectors.toList()));
+						.flatMap(Optional::stream),
 
-		// snap on end points of overlapping creases.
-		creasePattern.stream()
-				.filter(crease -> GeomUtil.isRelaxedOverlap(line, crease, pointEps))
-				.forEach(crease -> {
-					snapPoints.add(crease.getP0());
-					snapPoints.add(crease.getP1());
-				});
-
-		return snapPoints;
+				// snap on end points of overlapping creases.
+				creasePattern.stream()
+						.filter(crease -> GeomUtil.isRelaxedOverlap(line, crease, pointEps))
+						.flatMap(OriLine::pointStream))
+				.collect(Collectors.toList());
 	}
 }

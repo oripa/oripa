@@ -55,7 +55,7 @@ public class CutModelOutlinesFactory {
 				var param = parameters.get(1);
 				var positionBefore = he.getPositionBeforeFolding();
 				var nextPositionBefore = he.getNext().getPositionBeforeFolding();
-				var crossV = GeomUtil.computeCrossPointUsingParameter(param, positionBefore, nextPositionBefore);
+				var crossV = GeomUtil.computeDividingPoint(param, positionBefore, nextPositionBefore);
 
 				if (crossPoints.stream()
 						.noneMatch(cp -> GeomUtil.areEqual(cp, crossV, pointEps))) {

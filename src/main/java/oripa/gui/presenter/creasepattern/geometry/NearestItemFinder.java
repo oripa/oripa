@@ -50,7 +50,7 @@ public class NearestItemFinder {
 
 		var lineOpt = pickLine(viewContext, paintContext);
 
-		return lineOpt.map(line -> GeomUtil.computeNearestPointToSegment(viewContext.getLogicalMousePoint(), line));
+		return lineOpt.map(line -> GeomUtil.getNearestPointToSegment(viewContext.getLogicalMousePoint(), line));
 	}
 
 	/**
