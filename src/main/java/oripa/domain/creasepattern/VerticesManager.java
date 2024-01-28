@@ -1,12 +1,12 @@
 package oripa.domain.creasepattern;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import oripa.util.collection.CollectionUtil;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -95,8 +95,7 @@ class VerticesManager implements NearVerticesGettable {
 		// allocate memory for each area
 		for (int x = 0; x < divNum; x++) {
 			for (int y = 0; y < divNum; y++) {
-				vertices[x][y] = Collections.newSetFromMap(
-						new ConcurrentHashMap<Vector2d, Boolean>());
+				vertices[x][y] = CollectionUtil.newConcurrentHashSet();
 			}
 		}
 
