@@ -33,7 +33,7 @@ public class LineSelectionModifier {
 	 * @return the number of lines in the {@code creasePattern}.
 	 */
 	public int countSelectedLines(final Collection<OriLine> creasePattern) {
-		return (int) creasePattern.stream().filter(l -> l.isSelected()).count();
+		return (int) creasePattern.stream().filter(OriLine::isSelected).count();
 	}
 
 }

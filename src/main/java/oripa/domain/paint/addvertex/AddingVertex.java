@@ -19,7 +19,7 @@ public class AddingVertex extends PickingVertex {
 		if (result == true) {
 			var lineOpt = context.getCandidateLineToPick();
 
-			lineOpt.ifPresent(line -> context.pushLine(line));
+			lineOpt.ifPresent(context::pushLine);
 
 			return lineOpt.isPresent();
 		}

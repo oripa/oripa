@@ -271,7 +271,7 @@ public class ElementRemover {
 			final Collection<OriLine> creasePattern, final double pointEps) {
 
 		List<OriLine> selectedLines = creasePattern.parallelStream()
-				.filter(line -> line.isSelected())
+				.filter(OriLine::isSelected)
 				.collect(Collectors.toList());
 
 		removeLines(selectedLines, creasePattern, pointEps);

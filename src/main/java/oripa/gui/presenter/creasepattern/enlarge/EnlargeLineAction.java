@@ -73,7 +73,7 @@ public class EnlargeLineAction extends AbstractGraphicMouseAction {
 		}
 
 		creasePattern.stream()
-				.filter(line -> line.isSelected())
+				.filter(OriLine::isSelected)
 				.forEach(context::pushLine);
 
 		originalDomain = createDomain(context.getPickedLines());

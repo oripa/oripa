@@ -45,8 +45,8 @@ public class SelectLineAction extends RectangularSelectableAction {
 		}
 
 		creasePattern.stream()
-				.filter(line -> line.isSelected())
-				.forEach(line -> context.pushLine(line));
+				.filter(OriLine::isSelected)
+				.forEach(context::pushLine);
 	}
 
 	@Override

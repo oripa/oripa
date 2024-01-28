@@ -39,8 +39,8 @@ public class PasteAction extends AbstractGraphicMouseAction {
 		CreasePattern creasePattern = context.getCreasePattern();
 
 		creasePattern.stream()
-				.filter(line -> line.isSelected())
-				.forEach(line -> context.pushLine(line));
+				.filter(OriLine::isSelected)
+				.forEach(context::pushLine);
 	}
 
 	/**

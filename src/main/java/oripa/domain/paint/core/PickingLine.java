@@ -26,7 +26,7 @@ public abstract class PickingLine extends AbstractActionState {
 			final boolean doSpecial) {
 		var pickedOpt = context.getCandidateLineToPick();
 
-		pickedOpt.ifPresent(picked -> context.pushLine(picked));
+		pickedOpt.ifPresent(context::pushLine);
 
 		return pickedOpt.isPresent();
 	}
