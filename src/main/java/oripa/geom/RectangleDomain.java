@@ -45,10 +45,22 @@ public class RectangleDomain {
 	// Java can't distinguish the difference of generic type for the parameter
 	// collection, e.g, T for Collection<T>, when we overload methods.
 
+	/**
+	 *
+	 * @param target
+	 * @return A rectangle domain fit to the given segments. Void domain is
+	 *         returned if the segment collection is empty.
+	 */
 	public static RectangleDomain createFromSegments(final Collection<? extends Segment> target) {
 		return new RectangleDomain(target);
 	}
 
+	/**
+	 *
+	 * @param target
+	 * @return A rectangle domain fit to the given points. Void domain is
+	 *         returned if the segment collection is empty.
+	 */
 	public static RectangleDomain createFromPoints(final Collection<? extends Vector2d> target) {
 		var domain = new RectangleDomain();
 
@@ -140,6 +152,10 @@ public class RectangleDomain {
 				new ClosedRange(top, bottom).includes(point.getY());
 	}
 
+	/**
+	 *
+	 * @return true if this domain was created with nothing to fit.
+	 */
 	public boolean isVoid() {
 		return left > right && top > bottom;
 	}
