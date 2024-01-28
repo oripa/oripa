@@ -21,7 +21,8 @@ public class LineTypeChangeAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+			final CreasePatternViewContext viewContext, final PaintContext paintContext,
+			final boolean differentAction) {
 
 		if (selectedLines.isEmpty()) {
 			return;
