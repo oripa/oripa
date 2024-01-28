@@ -54,8 +54,6 @@ public interface PainterScreenView extends ScreenView {
 
 	void setCameraScaleUpdateListener(Consumer<Double> listener);
 
-	void setCameraCenterUpdateListener(Runnable listener);
-
 	void setUsingCtrlKeyOnDragListener(Runnable listener);
 
 	void setZeroLineWidthUpdateListener(Consumer<Boolean> listener);

@@ -47,6 +47,9 @@ public class LineTypeChangerCommand extends ValidatablePaintCommand {
 
 		var painter = context.getPainter();
 		painter.alterLineTypes(lines, setting.getTypeFrom(), setting.getTypeTo());
+
+		context.refreshCreasePattern();
+
 	}
 
 }

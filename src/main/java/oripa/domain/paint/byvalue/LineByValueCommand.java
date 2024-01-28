@@ -68,6 +68,9 @@ public class LineByValueCommand extends ValidatablePaintCommand {
 
 			Painter painter = context.getPainter();
 			painter.addLine(vl);
+
+			context.refreshCreasePattern();
+
 		} catch (Exception ex) {
 			logger.error("unknown error: ", ex);
 		}

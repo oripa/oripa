@@ -22,6 +22,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 	@Override
 	public void undo(final PaintContext context) {
 		context.creasePatternUndo().undo();
+		context.refreshCreasePattern();
 
 		recover(context);
 	}
@@ -29,6 +30,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 	@Override
 	public void redo(final PaintContext context) {
 		context.creasePatternUndo().redo();
+		context.refreshCreasePattern();
 
 		recover(context);
 	}
@@ -49,7 +51,8 @@ public class SelectLineAction extends RectangularSelectableAction {
 
 	@Override
 	protected void afterRectangularSelection(final Collection<OriLine> selectedLines,
-			final CreasePatternViewContext viewContext, final PaintContext paintContext) {
+			final CreasePatternViewContext viewContext, final PaintContext paintContext,
+			final boolean differentAction) {
 
 		if (selectedLines.isEmpty()) {
 			return;
@@ -58,7 +61,7 @@ public class SelectLineAction extends RectangularSelectableAction {
 		paintContext.creasePatternUndo().pushUndoInfo();
 
 		for (OriLine line : selectedLines) {
-			if (line.isBoundary()) {
+			if (!differentAction && line.isBoundary()) {
 				continue;
 			}
 			// Don't select if the line is hidden

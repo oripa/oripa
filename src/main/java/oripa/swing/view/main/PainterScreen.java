@@ -79,7 +79,6 @@ public class PainterScreen extends JPanel
 	private BiConsumer<Vector2d, Boolean> mouseMoveListener;
 
 	private Consumer<Double> cameraScaleUpdateListener;
-	private Runnable cameraCenterUpdateListener;
 
 	private Runnable usingCtrlKeyOnDragListener;
 
@@ -135,8 +134,6 @@ public class PainterScreen extends JPanel
 		// Clears the image buffer
 		bufferg.setColor(Color.WHITE);
 		bufferg.fillRect(0, 0, getWidth(), getHeight());
-
-		cameraCenterUpdateListener.run();
 
 		// set the AffineTransform of buffer
 		bufferg.setTransform(affineTransform);
@@ -411,11 +408,6 @@ public class PainterScreen extends JPanel
 	@Override
 	public void setCameraScaleUpdateListener(final Consumer<Double> listener) {
 		cameraScaleUpdateListener = listener;
-	}
-
-	@Override
-	public void setCameraCenterUpdateListener(final Runnable listener) {
-		cameraCenterUpdateListener = listener;
 	}
 
 	@Override

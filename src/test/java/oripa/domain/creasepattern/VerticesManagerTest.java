@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
 
+import oripa.geom.RectangleDomain;
 import oripa.value.OriPoint;
 import oripa.vecmath.Vector2d;
 
@@ -15,7 +16,8 @@ public class VerticesManagerTest {
 	public void testAddVertex() {
 		final double paperSize = 400;
 
-		VerticesManager manager = new VerticesManager(paperSize, -paperSize / 2, -paperSize / 2);
+		VerticesManager manager = new VerticesManager(
+				new RectangleDomain(-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2));
 
 		double interval = manager.getInterval();
 		addAndCheckContains(manager, new Vector2d(0, 0));
@@ -52,7 +54,8 @@ public class VerticesManagerTest {
 	public void testDuplicationManagement() {
 		final double paperSize = 400;
 
-		VerticesManager manager = new VerticesManager(paperSize, -paperSize / 2, -paperSize / 2);
+		VerticesManager manager = new VerticesManager(
+				new RectangleDomain(-paperSize / 2, -paperSize / 2, paperSize / 2, paperSize / 2));
 
 		OriPoint p = new OriPoint(10, 10);
 

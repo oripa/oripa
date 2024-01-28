@@ -610,6 +610,7 @@ public class MainFramePresenter {
 						paintContextModification
 								.setCreasePatternToPaintContext(
 										document.getCreasePattern(), paintContext);
+						screenPresenter.updateCameraCenter();
 						return document.getDataFilePath();
 					}).orElse(null);
 		} catch (UserCanceledException e) {

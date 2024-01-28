@@ -89,7 +89,7 @@ public class PainterScreenPresenter {
 		view.setCrossLineVisibleUpdateListener(viewContext::setCrossLineVisible);
 
 		view.setCameraScaleUpdateListener(this::updateCameraScale);
-		view.setCameraCenterUpdateListener(this::updateCameraCenter);
+		// view.setCameraCenterUpdateListener(this::updateCameraCenter);
 
 		view.setUsingCtrlKeyOnDragListener(this::updateUsingCtrlKeyOnDrag);
 	}
@@ -180,7 +180,7 @@ public class PainterScreenPresenter {
 		viewContext.setScale(scale);
 	}
 
-	private void updateCameraCenter() {
+	public void updateCameraCenter() {
 		view.updateCameraCenter(paintContext.getPaperDomain());
 	}
 

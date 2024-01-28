@@ -4,7 +4,7 @@ import java.util.ListResourceBundle;
 
 public class ExplanationStringResource_en extends ListResourceBundle {
 
-	private static final String SELECT_LINE_TEXT = "Select/Unselect lines by left click or left drag.";
+	private static final String SELECT_LINE_TEXT = "Select/Unselect lines by left click or left drag. [Ctrl] enables to select boundaries on drag.";
 	private static final String COPY_PASTE_TEXT = "Left click for paste. [Ctrl] allows you to change the origin of pasting.";
 
 	static final Object[][] strings = {

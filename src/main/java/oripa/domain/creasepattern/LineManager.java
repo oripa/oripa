@@ -1,11 +1,10 @@
 package oripa.domain.creasepattern;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 
 /**
@@ -20,8 +19,7 @@ class LineManager implements Set<OriLine> {
 	// HashSet is fast to access but does not guarantee that the order is always
 	// same.
 
-	private final Set<OriLine> lines = Collections.newSetFromMap(
-			new ConcurrentHashMap<OriLine, Boolean>());
+	private final Set<OriLine> lines = CollectionUtil.newConcurrentHashSet();
 
 	@Override
 	public boolean contains(final Object o) {

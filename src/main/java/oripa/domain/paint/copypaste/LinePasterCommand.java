@@ -63,6 +63,8 @@ public class LinePasterCommand extends ValidatablePaintCommand {
 		Painter painter = context.getPainter();
 		painter.addLines(
 				shiftLines(context.getPickedLines(), offset.getX(), offset.getY()));
+
+		context.refreshCreasePattern();
 	}
 
 	private List<OriLine> shiftLines(final Collection<OriLine> lines,

@@ -45,6 +45,8 @@ public class LineMirrorCommand extends ValidatablePaintCommand {
 		painter.mirrorCopyBy(axisOpt.get(), context.getPickedLines());
 
 		context.clear(true);
+
+		context.refreshCreasePattern();
 	}
 
 }

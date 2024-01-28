@@ -63,5 +63,7 @@ public class PickedVerticesConnectionLineAdderCommand extends ValidatablePaintCo
 				new OriLine(p0, p1, type));
 
 		context.clear(false);
+
+		context.refreshCreasePattern();
 	}
 }

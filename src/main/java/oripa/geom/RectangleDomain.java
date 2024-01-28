@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import oripa.util.ClosedRange;
+import oripa.util.MathUtil;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -44,10 +45,22 @@ public class RectangleDomain {
 	// Java can't distinguish the difference of generic type for the parameter
 	// collection, e.g, T for Collection<T>, when we overload methods.
 
+	/**
+	 *
+	 * @param target
+	 * @return A rectangle domain fit to the given segments. Void domain is
+	 *         returned if the segment collection is empty.
+	 */
 	public static RectangleDomain createFromSegments(final Collection<? extends Segment> target) {
 		return new RectangleDomain(target);
 	}
 
+	/**
+	 *
+	 * @param target
+	 * @return A rectangle domain fit to the given points. Void domain is
+	 *         returned if the point collection is empty.
+	 */
 	public static RectangleDomain createFromPoints(final Collection<? extends Vector2d> target) {
 		var domain = new RectangleDomain();
 
@@ -139,6 +152,10 @@ public class RectangleDomain {
 				new ClosedRange(top, bottom).includes(point.getY());
 	}
 
+	/**
+	 *
+	 * @return true if this domain was created with nothing to fit.
+	 */
 	public boolean isVoid() {
 		return left > right && top > bottom;
 	}
@@ -201,5 +218,13 @@ public class RectangleDomain {
 
 	private double computeGap(final double a, final double b) {
 		return max(a, b) - min(a, b);
+	}
+
+	public boolean equals(final RectangleDomain other, final double eps) {
+		return MathUtil.areEqual(left, other.left, eps) &&
+				MathUtil.areEqual(right, other.right, eps) &&
+				MathUtil.areEqual(top, other.top, eps) &&
+				MathUtil.areEqual(bottom, other.bottom, eps);
+
 	}
 }

@@ -2,6 +2,7 @@ package oripa.gui.presenter.creasepattern;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cptool.RectangleClipper;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
+import oripa.geom.RectangleDomain;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -34,11 +36,16 @@ public abstract class RectangularSelectableAction extends AbstractGraphicMouseAc
 	}
 
 	@Override
+	public boolean isUsingCtrlKeyOnDrag() {
+		return draggingPoint != null;
+	}
+
+	@Override
 	public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 		if (startPoint != null && draggingPoint != null) {
-			selectByRectangularArea(viewContext, paintContext);
+			selectByRectangularArea(viewContext, paintContext, differentAction);
 		}
 
 		startPoint = null;
@@ -55,18 +62,15 @@ public abstract class RectangularSelectableAction extends AbstractGraphicMouseAc
 	 */
 	protected abstract void afterRectangularSelection(
 			Collection<OriLine> selectedLines, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext);
+			final PaintContext paintContext, boolean differentAction);
 
-	protected final void selectByRectangularArea(final CreasePatternViewContext viewContext,
-			final PaintContext paintContext) {
+	private void selectByRectangularArea(final CreasePatternViewContext viewContext,
+			final PaintContext paintContext, final boolean differentAction) {
 		Collection<OriLine> selectedLines = new ArrayList<>();
 
 		try {
-			RectangleClipper clipper = new RectangleClipper(
-					Math.min(startPoint.getX(), draggingPoint.getX()),
-					Math.min(startPoint.getY(), draggingPoint.getY()),
-					Math.max(startPoint.getX(), draggingPoint.getX()),
-					Math.max(startPoint.getY(), draggingPoint.getY()));
+			var domain = RectangleDomain.createFromPoints(List.of(startPoint, draggingPoint));
+			RectangleClipper clipper = new RectangleClipper(domain);
 
 			CreasePattern creasePattern = paintContext.getCreasePattern();
 			selectedLines = clipper.selectByArea(creasePattern);
@@ -74,7 +78,7 @@ public abstract class RectangularSelectableAction extends AbstractGraphicMouseAc
 			logger.error("failed to select rectangularly", ex);
 		}
 
-		afterRectangularSelection(selectedLines, viewContext, paintContext);
+		afterRectangularSelection(selectedLines, viewContext, paintContext, differentAction);
 	}
 
 	@Override
