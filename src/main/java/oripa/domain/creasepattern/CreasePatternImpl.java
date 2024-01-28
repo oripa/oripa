@@ -66,7 +66,6 @@ class CreasePatternImpl implements CreasePattern {
 
 	private final LineManager lines;
 	private VerticesManager vertices;
-	private RectangleDomain paperDomain;
 
 	/**
 	 * @param paperDomain
@@ -74,24 +73,17 @@ class CreasePatternImpl implements CreasePattern {
 	 */
 	public CreasePatternImpl(final RectangleDomain paperDomain) {
 		lines = new LineManager();
-		vertices = createVerticesManager(paperDomain);
-	}
-
-	private VerticesManager createVerticesManager(final RectangleDomain domain) {
-		paperDomain = domain;
-		return new VerticesManager(
-				domain.maxWidthHeight(), domain.getLeft(), domain.getTop());
-
+		vertices = new VerticesManager(paperDomain);
 	}
 
 	@Override
 	public double getPaperSize() {
-		return paperDomain.maxWidthHeight();
+		return vertices.getDomainSize();
 	}
 
 	@Override
 	public RectangleDomain getPaperDomain() {
-		return paperDomain;
+		return vertices.getDomain();
 	}
 
 	@Override
@@ -252,12 +244,12 @@ class CreasePatternImpl implements CreasePattern {
 	public void refresh(final double pointEps) {
 		var currentDomain = RectangleDomain.createFromSegments(this);
 
-		if (!paperDomain.equals(currentDomain, pointEps) && !currentDomain.isVoid()) {
+		if (!getPaperDomain().equals(currentDomain, pointEps) && !currentDomain.isVoid()) {
 			var lines = new ArrayList<OriLine>(this);
 
 			clear();
 
-			vertices = createVerticesManager(currentDomain);
+			vertices = new VerticesManager(currentDomain);
 			addAll(lines);
 		}
 	}

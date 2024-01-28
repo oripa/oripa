@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import oripa.geom.RectangleDomain;
 import oripa.util.collection.CollectionUtil;
 import oripa.vecmath.Vector2d;
 
@@ -24,8 +25,8 @@ class VerticesManager implements NearVerticesGettable {
 	public static final int divNum = 32;
 
 	private final double interval;
-//	private double paperCenter;
-	private final double paperLeft, paperTop;
+
+	private final RectangleDomain domain;
 
 	/**
 	 * the index of divided paper area. A given point is converted to the index
@@ -41,8 +42,8 @@ class VerticesManager implements NearVerticesGettable {
 		 * doubles point to index
 		 */
 		public AreaPosition(final Vector2d v) {
-			x = toDiv(v.getX(), paperLeft);
-			y = toDiv(v.getY(), paperTop);
+			x = toDiv(v.getX(), domainLeft());
+			y = toDiv(v.getY(), domainTop());
 		}
 	}
 
@@ -88,10 +89,10 @@ class VerticesManager implements NearVerticesGettable {
 	 *            the smaller y coordinate of the corners of the rectangle sheet
 	 *            of paper
 	 */
-	public VerticesManager(final double paperSize, final double paperLeft, final double paperTop) {
-		interval = paperSize / divNum;
-		this.paperLeft = paperLeft;
-		this.paperTop = paperTop;
+	public VerticesManager(final RectangleDomain domain) {
+		this.domain = domain;
+
+		interval = getDomainSize() / divNum;
 
 		// allocate memory for each area
 		for (int x = 0; x < divNum; x++) {
@@ -100,6 +101,22 @@ class VerticesManager implements NearVerticesGettable {
 			}
 		}
 
+	}
+
+	public RectangleDomain getDomain() {
+		return domain;
+	}
+
+	public double getDomainSize() {
+		return domain.maxWidthHeight();
+	}
+
+	private double domainLeft() {
+		return domain.getLeft();
+	}
+
+	private double domainTop() {
+		return domain.getTop();
 	}
 
 	double getInterval() {
@@ -149,13 +166,6 @@ class VerticesManager implements NearVerticesGettable {
 		counts.get(v).incrementAndGet();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.creasepattern.NearVerticesGettable#getAround(javax.vecmath.
-	 * Vector2d)
-	 */
 	@Override
 	public Collection<Vector2d> getVerticesAround(final Vector2d v) {
 		AreaPosition ap = new AreaPosition(v);
@@ -187,22 +197,16 @@ class VerticesManager implements NearVerticesGettable {
 		count.decrementAndGet();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see oripa.domain.creasepattern.NearVerticesGettable#getArea(double,
-	 * double, double)
-	 */
 	@Override
 	public Collection<Collection<Vector2d>> getVerticesInArea(
 			final double x, final double y, final double distance) {
 
 		Collection<Collection<Vector2d>> result = new LinkedList<>();
 
-		int leftDiv = toDiv(x - distance, paperLeft);
-		int rightDiv = toDiv(x + distance, paperLeft);
-		int topDiv = toDiv(y - distance, paperTop);
-		int bottomDiv = toDiv(y + distance, paperTop);
+		int leftDiv = toDiv(x - distance, domainLeft());
+		int rightDiv = toDiv(x + distance, domainLeft());
+		int topDiv = toDiv(y - distance, domainTop());
+		int bottomDiv = toDiv(y + distance, domainTop());
 
 		for (int xDiv = leftDiv; xDiv <= rightDiv; xDiv++) {
 			for (int yDiv = topDiv; yDiv <= bottomDiv; yDiv++) {
