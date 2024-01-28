@@ -63,7 +63,7 @@ class PaintContextImpl implements PaintContext {
 	public void clear(final boolean unselect) {
 
 		if (unselect) {
-			pickedLines.stream().forEach(l -> l.selected = false);
+			pickedLines.stream().forEach(l -> l.setSelected(false));
 		}
 
 		pickedLines.clear();
@@ -122,7 +122,7 @@ class PaintContextImpl implements PaintContext {
 		}
 
 		OriLine line = pickedLines.removeLast();
-		line.selected = false;
+		line.setSelected(false);
 
 		return Optional.of(line);
 	}

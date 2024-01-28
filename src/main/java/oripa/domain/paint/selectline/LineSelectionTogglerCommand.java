@@ -43,7 +43,7 @@ public class LineSelectionTogglerCommand implements Command {
 	}
 
 	private void toggleSelection(final OriLine line) {
-		if (line.selected) {
+		if (line.isSelected()) {
 			// in this case, the context has two reference to the selected
 			// line:
 			// at the last position and other somewhere.
@@ -53,7 +53,7 @@ public class LineSelectionTogglerCommand implements Command {
 			// remove the line which has been already stored.
 			context.removeLine(line);
 		} else {
-			line.selected = true;
+			line.setSelected(true);
 		}
 	}
 

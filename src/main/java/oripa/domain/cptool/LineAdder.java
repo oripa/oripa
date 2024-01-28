@@ -62,7 +62,7 @@ public class LineAdder {
 								var l = new OriLine(v, crossPoint, line.getType());
 								// keep selection not to change the target of
 								// copy.
-								l.selected = line.selected;
+								l.setSelected(line.isSelected());
 								toBeAdded.add(l);
 							}
 						};

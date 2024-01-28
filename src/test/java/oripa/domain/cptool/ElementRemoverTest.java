@@ -163,9 +163,9 @@ class ElementRemoverTest {
 	@Test
 	void testRemoveSelectedLines() {
 		var toBeRemoved1 = new OriLine(0, 50, 50, 50, OriLine.Type.VALLEY);
-		toBeRemoved1.selected = true;
+		toBeRemoved1.setSelected(true);
 		var toBeRemoved2 = new OriLine(50, 50, 100, 100, OriLine.Type.MOUNTAIN);
-		toBeRemoved2.selected = true;
+		toBeRemoved2.setSelected(true);
 
 		var creasePattern = new ArrayList<OriLine>(List.of(
 				new OriLine(0, 0, 0, 50, OriLine.Type.MOUNTAIN),

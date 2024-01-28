@@ -20,6 +20,7 @@ package oripa.domain.paint.selectline;
 
 import oripa.domain.paint.PaintContext;
 import oripa.util.Command;
+import oripa.value.OriLine;
 
 /**
  * @author OUCHI Koji
@@ -37,7 +38,7 @@ public class AllLineSelecterCommand implements Command {
 		context.creasePatternUndo().pushUndoInfo();
 		context.getPainter().selectAllOriLines();
 		context.getCreasePattern().stream()
-				.filter(l -> l.selected)
+				.filter(OriLine::isSelected)
 				.forEach(context::pushLine);
 	}
 }

@@ -11,7 +11,7 @@ public class LineSelectionModifier {
 	 * @param creasePattern
 	 */
 	public void resetSelectedOriLines(final Collection<OriLine> creasePattern) {
-		creasePattern.forEach(line -> line.selected = false);
+		creasePattern.forEach(line -> line.setSelected(false));
 	}
 
 	/**
@@ -23,7 +23,7 @@ public class LineSelectionModifier {
 	public void selectAllOriLines(final Collection<OriLine> creasePattern) {
 		creasePattern.stream()
 				.filter(l -> !l.isBoundary())
-				.forEach(l -> l.selected = true);
+				.forEach(l -> l.setSelected(true));
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class LineSelectionModifier {
 	 * @return the number of lines in the {@code creasePattern}.
 	 */
 	public int countSelectedLines(final Collection<OriLine> creasePattern) {
-		return (int) creasePattern.stream().filter(l -> l.selected).count();
+		return (int) creasePattern.stream().filter(OriLine::isSelected).count();
 	}
 
 }

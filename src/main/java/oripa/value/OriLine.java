@@ -82,7 +82,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 
 	private Type type = Type.AUX;
 
-	public boolean selected;
+	private boolean selected;
 	private final OriPoint p0;
 	private final OriPoint p1;
 
@@ -194,6 +194,14 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		return p1;
 	}
 
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(final boolean selected) {
+		this.selected = selected;
+	}
+
 	public void setType(final Type type) {
 		this.type = type;
 	}
@@ -223,9 +231,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		return "" + p0 + "" + p1 + "," + type + "," + hashCode();
 	}
 
-	/* (non Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		// assure that the order of points is the same
