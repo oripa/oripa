@@ -186,7 +186,7 @@ class VerticesManager implements NearVerticesGettable {
 			throw new IllegalStateException("Nothing to remove");
 		}
 
-		// No longer same vertices exist.s
+		// No longer same vertices exists.
 		if (count.get() == 1) {
 			getVertices(ap).remove(v);
 			counts.remove(v);
