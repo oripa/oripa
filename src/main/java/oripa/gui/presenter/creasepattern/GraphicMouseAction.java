@@ -26,6 +26,7 @@ public interface GraphicMouseAction {
 
 	/**
 	 * True if the implementation uses Ctrl key to switch behavior on drag.
+	 * default is false.
 	 *
 	 * @return
 	 */
