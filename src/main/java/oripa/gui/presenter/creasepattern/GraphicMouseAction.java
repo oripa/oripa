@@ -73,10 +73,11 @@ public interface GraphicMouseAction {
 	}
 
 	/**
-	 * Do the current state's action and keep the next state.
+	 * Do the action for left click.
 	 *
 	 * @param context
 	 * @param point
+	 *            the point that button is clicked at.
 	 * @param differntAction
 	 */
 	public abstract void doAction(PaintContext context, Vector2d point,
