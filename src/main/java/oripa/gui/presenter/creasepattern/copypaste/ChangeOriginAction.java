@@ -63,8 +63,8 @@ public class ChangeOriginAction extends AbstractGraphicMouseAction {
 		drawer.selectAssistLineColor();
 
 		for (OriLine line : lines) {
-			this.drawVertex(drawer, viewContext, paintContext, line.getP0());
-			this.drawVertex(drawer, viewContext, paintContext, line.getP1());
+			this.drawVertex(drawer, viewContext, line.getP0());
+			this.drawVertex(drawer, viewContext, line.getP1());
 		}
 
 		this.drawPickCandidateVertex(drawer, viewContext, paintContext);

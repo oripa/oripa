@@ -92,7 +92,7 @@ public class PasteAction extends AbstractGraphicMouseAction {
 		var origin = originOpt.get();
 
 		drawer.selectSelectedItemColor();
-		drawVertex(drawer, viewContext, paintContext, origin);
+		drawVertex(drawer, viewContext, origin);
 
 		var candidateVertexOpt = paintContext.getCandidateVertexToPick();
 

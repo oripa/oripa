@@ -18,7 +18,6 @@ public abstract class PickingVertex extends AbstractActionState {
 	/**
 	 * Picks the nearest vertex and push it into context.
 	 *
-	 * @return true if the action succeed, false otherwise.
 	 */
 
 	@Override

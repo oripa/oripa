@@ -29,6 +29,9 @@ import oripa.gui.view.main.UIPanelSetting;
 import oripa.gui.viewchange.ChangeViewSetting;
 
 /**
+ * Interface for plug-in. It is recommended to implement
+ * {@link AbstractGraphicMouseActionPlugin} rather than this.
+ *
  * @author OUCHI Koji
  *
  */
@@ -37,9 +40,11 @@ public interface GraphicMouseActionPlugin {
 
 	void setUIPanelSetting(UIPanelSetting setting);
 
+	/**
+	 *
+	 * @return the text shown in the UI panel.
+	 */
 	String getName();
-
-	String getHint();
 
 	/**
 	 *
@@ -69,8 +74,8 @@ public interface GraphicMouseActionPlugin {
 	 * </ul>
 	 *
 	 * It is recommended to extend {@link AbstractGraphicMouseAction} and use
-	 * {@link ActionState}, which offer a variant of State pattern to follow the
-	 * requirements easily.
+	 * {@link ActionState}, which offers a variant of State pattern to follow
+	 * the requirements easily.
 	 *
 	 * @return {@link GraphicMouseAction}.
 	 */

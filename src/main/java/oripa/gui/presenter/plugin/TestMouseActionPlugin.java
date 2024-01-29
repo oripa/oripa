@@ -20,7 +20,7 @@ package oripa.gui.presenter.plugin;
 
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.TwoPointSegmentAction;
-import oripa.gui.viewchange.ChangeViewSetting;
+import oripa.gui.view.main.UIPanelSetting;
 
 /**
  * @author OUCHI Koji
@@ -34,22 +34,18 @@ public class TestMouseActionPlugin extends AbstractGraphicMouseActionPlugin {
 	}
 
 	@Override
-	public String getHint() {
+	protected String getHint() {
 		return "Draws a segment between selected points.";
 	}
 
 	@Override
-	public ChangeViewSetting getChangeOnSelected() {
-		return () -> {
-			var uiPanelSetting = getUIPanelSetting();
+	protected void configureChangeOnSelected(final UIPanelSetting uiPanelSetting) {
+		uiPanelSetting.setAlterLineTypePanelVisible(false);
+		uiPanelSetting.setAngleStepPanelVisible(false);
+		uiPanelSetting.setByValuePanelVisible(false);
+		uiPanelSetting.setLineSelectionPanelVisible(false);
 
-			uiPanelSetting.setAlterLineTypePanelVisible(false);
-			uiPanelSetting.setAngleStepPanelVisible(false);
-			uiPanelSetting.setByValuePanelVisible(false);
-			uiPanelSetting.setLineSelectionPanelVisible(false);
-
-			uiPanelSetting.setLineInputPanelVisible(true);
-		};
+		uiPanelSetting.setLineInputPanelVisible(true);
 	}
 
 	@Override

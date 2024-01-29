@@ -2,9 +2,6 @@ package oripa.gui.presenter.creasepattern;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import oripa.domain.paint.ActionState;
 import oripa.domain.paint.BasicUndo;
 import oripa.domain.paint.PaintContext;
@@ -13,9 +10,16 @@ import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
+/**
+ * Template for mouse action implementation. The constructor of the
+ * implementation should set the initial action state by
+ * {@link #setActionState(ActionState)}. Typical item-drawing methods are
+ * provided as protected ones.
+ *
+ * @author OUCHI Koji
+ *
+ */
 public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
-
-	private static Logger logger = LoggerFactory.getLogger(AbstractGraphicMouseAction.class);
 
 	private EditMode editMode = EditMode.INPUT;
 	private boolean needSelect = false;
@@ -48,8 +52,8 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	}
 
 	/**
-	 * define action on destroy. default does clear context selection keeping
-	 * line-selected marks.
+	 * Clears context selection keeping line-selected marks by default. Override
+	 * if more actions are needed.
 	 *
 	 * @param context
 	 */
@@ -70,7 +74,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	}
 
 	/**
-	 * calls {@link #recoverImpl(PaintContext)}, and if {@link #needSelect()}
+	 * Calls {@link #recoverImpl(PaintContext)}, and if {@link #needSelect()}
 	 * returns false, then calls
 	 * {@code context.getPainter().resetSelectedOriLines()}.
 	 */
@@ -85,16 +89,6 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	}
 
 	@Override
-	public GraphicMouseAction onLeftClick(
-			final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean differentAction) {
-		var clickPoint = viewContext.getLogicalMousePoint();
-
-		doAction(paintContext, clickPoint, differentAction);
-		return this;
-	}
-
-	@Override
 	public void doAction(final PaintContext context, final Vector2d point,
 			final boolean differntAction) {
 
@@ -103,24 +97,19 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 
 	}
 
-	@Override
-	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
-			final boolean doSpecial) {
-
-		logger.info(this.getClass().getName());
-		logger.info("before undo " + paintContext.toString());
-
-		undo(paintContext);
-
-		logger.info("after undo " + paintContext.toString());
-
-	}
-
+	/**
+	 * Calls {@link BasicUndo#undo(ActionState, PaintContext)} by default.
+	 */
 	@Override
 	public void undo(final PaintContext context) {
 		state = BasicUndo.undo(state, context);
 	}
 
+	/**
+	 * Restores previous crease pattern if possible, and behaves as if this
+	 * action is reset: this method calls {@link #destroy(PaintContext)} and
+	 * {@link #recover(PaintContext)}, then executes redo of crease pattern.
+	 */
 	@Override
 	public void redo(final PaintContext context) {
 		if (!context.creasePatternUndo().canRedo()) {
@@ -132,6 +121,16 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		context.refreshCreasePattern();
 	}
 
+	/**
+	 * Searches a vertex and a line close enough to the mouse cursor. The result
+	 * is stored into candidateVertexToPick and candidateLineToPick properties
+	 * of paintContext. Override for more details.
+	 *
+	 * @param viewContext
+	 * @param paintContext
+	 * @param differentAction
+	 * @return close vertex. Empty if not found.
+	 */
 	@Override
 	public Optional<Vector2d> onMove(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
@@ -166,24 +165,41 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 				NearestItemFinder.pickLine(viewContext, paintContext).orElse(null));
 	}
 
+	/**
+	 * Does nothing by default.
+	 */
 	@Override
 	public void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 	}
 
+	/**
+	 * Does nothing by default.
+	 */
 	@Override
 	public void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 	}
 
+	/**
+	 * Does nothing by default.
+	 */
 	@Override
 	public void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 
 	}
 
+	/**
+	 * Draws selected lines and selected vertices as selected state. Override
+	 * for more drawing.
+	 *
+	 * @param drawer
+	 * @param viewContext
+	 * @param paintContext
+	 */
 	@Override
 	public void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext) {
@@ -210,7 +226,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		for (Vector2d vertex : paintContext.getPickedVertices()) {
 			drawer.selectColor(lineType);
 
-			drawVertex(drawer, viewContext, paintContext, vertex);
+			drawVertex(drawer, viewContext, vertex);
 		}
 	}
 
@@ -218,7 +234,6 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	 * Draws the given vertex as an small rectangle.
 	 */
 	protected void drawVertex(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext,
 			final Vector2d vertex) {
 		double scale = viewContext.getScale();
 		drawer.selectMouseActionVertexSize(scale);
@@ -231,7 +246,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		var candidateOpt = paintContext.getCandidateVertexToPick();
 		candidateOpt.ifPresent(candidate -> {
 			drawer.selectCandidateItemColor();
-			drawVertex(drawer, viewContext, paintContext, candidate);
+			drawVertex(drawer, viewContext, candidate);
 		});
 	}
 
@@ -286,7 +301,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		drawer.selectAssistLineColor();
 
 		paintContext.getSnapPoints()
-				.forEach(p -> drawVertex(drawer, viewContext, paintContext, p));
+				.forEach(p -> drawVertex(drawer, viewContext, p));
 	}
 
 }
