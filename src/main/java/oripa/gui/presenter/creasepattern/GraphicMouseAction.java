@@ -143,7 +143,10 @@ public interface GraphicMouseAction {
 			boolean differentAction);
 
 	/**
-	 * Draw the result of event processing using {@code drawer}.
+	 * Draw the result of event processing using {@code drawer}. Basically the
+	 * implementation should draw the lines and vertices in {@code paintContext}
+	 * and doesn't have to draw existing lines and vertices. Of course other
+	 * drawing is allowed to make the interaction fancier.
 	 *
 	 * @param drawer
 	 * @param viewContext
