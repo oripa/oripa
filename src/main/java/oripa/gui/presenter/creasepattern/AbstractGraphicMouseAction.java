@@ -226,7 +226,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		for (Vector2d vertex : paintContext.getPickedVertices()) {
 			drawer.selectColor(lineType);
 
-			drawVertex(drawer, viewContext, paintContext, vertex);
+			drawVertex(drawer, viewContext, vertex);
 		}
 	}
 
@@ -234,7 +234,6 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	 * Draws the given vertex as an small rectangle.
 	 */
 	protected void drawVertex(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
-			final PaintContext paintContext,
 			final Vector2d vertex) {
 		double scale = viewContext.getScale();
 		drawer.selectMouseActionVertexSize(scale);
@@ -247,7 +246,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		var candidateOpt = paintContext.getCandidateVertexToPick();
 		candidateOpt.ifPresent(candidate -> {
 			drawer.selectCandidateItemColor();
-			drawVertex(drawer, viewContext, paintContext, candidate);
+			drawVertex(drawer, viewContext, candidate);
 		});
 	}
 
@@ -302,7 +301,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		drawer.selectAssistLineColor();
 
 		paintContext.getSnapPoints()
-				.forEach(p -> drawVertex(drawer, viewContext, paintContext, p));
+				.forEach(p -> drawVertex(drawer, viewContext, p));
 	}
 
 }
