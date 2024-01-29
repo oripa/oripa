@@ -20,7 +20,9 @@ public interface GraphicMouseAction {
 	 *
 	 * @return
 	 */
-	public abstract boolean needSelect();
+	public default boolean needSelect() {
+		return false;
+	}
 
 	/**
 	 * True if the implementation uses Ctrl key to switch behavior on drag.
