@@ -42,20 +42,14 @@ public class AssignmentConverter {
 	}
 
 	public String toFOLD(final OriLine.Type type) {
-		switch (type) {
-		case AUX:
-			return "F";
-		case CUT:
-			return "B";
-		case MOUNTAIN:
-			return "M";
-		case VALLEY:
-			return "V";
-		case UNASSIGNED:
-			return "U";
-		default:
-			return null;
-		}
+		return switch (type) {
+		case AUX -> "F";
+		case CUT -> "B";
+		case MOUNTAIN -> "M";
+		case VALLEY -> "V";
+		case UNASSIGNED -> "U";
+		default -> null;
+		};
 	}
 
 	public OriLine.Type fromFOLD(final String assignment) {

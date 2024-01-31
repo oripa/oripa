@@ -55,18 +55,14 @@ public class MaekawaTheoremSuggester {
 		int valleyCount = (int) vertex.edgeStream().filter(OriEdge::isValley).count();
 
 		int diff = mountainCount - valleyCount;
-		switch (diff) {
-		case 3:
-			return Optional.of(OriLine.Type.VALLEY);
-		case -3:
-			return Optional.of(OriLine.Type.MOUNTAIN);
-		case 1:
-			return Optional.of(OriLine.Type.MOUNTAIN);
-		case -1:
-			return Optional.of(OriLine.Type.VALLEY);
-		default:
-			return Optional.empty();
-		}
+
+		var type = switch (diff) {
+		case 3, -1 -> OriLine.Type.VALLEY;
+		case 1, -3 -> OriLine.Type.MOUNTAIN;
+		default -> null;
+		};
+
+		return Optional.ofNullable(type);
 	}
 
 }

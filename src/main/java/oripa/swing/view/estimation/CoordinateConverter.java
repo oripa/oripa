@@ -62,17 +62,12 @@ class CoordinateConverter {
 	}
 
 	private Vector2d distort(final Vector2d pos, final int depth, final Vector2d cpPos) {
-		switch (distortionMethod) {
-		case DEPTH:
-			return distortByDepth(pos, depth);
-
-		case MORISUE:
-			return distortByMorisueMethod(pos, cpPos);
-		case NONE:
-			return pos;
-		default:
-			return pos;
-		}
+		return switch (distortionMethod) {
+		case DEPTH -> distortByDepth(pos, depth);
+		case MORISUE -> distortByMorisueMethod(pos, cpPos);
+		case NONE -> pos;
+		default -> pos;
+		};
 
 	}
 

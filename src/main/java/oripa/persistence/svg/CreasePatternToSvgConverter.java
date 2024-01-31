@@ -50,18 +50,13 @@ public class CreasePatternToSvgConverter extends SvgConverter {
 	}
 
 	private String getLineStyle(final OriLine line) {
-		switch (line.getType()) {
-		case CUT:
-			return getLinePathStyle(4, "black").toString();
-		case MOUNTAIN:
-			return getLinePathStyle(2, "red").toString();
-		case VALLEY:
-			return getLinePathStyle(2, "blue").toString();
-		case UNASSIGNED:
-			return getLinePathStyle(2, "orange").toString();
-		default:
-			return getLinePathStyle(1, "gray").toString();
-		}
+		return switch (line.getType()) {
+		case CUT -> getLinePathStyle(4, "black").toString();
+		case MOUNTAIN -> getLinePathStyle(2, "red").toString();
+		case VALLEY -> getLinePathStyle(2, "blue").toString();
+		case UNASSIGNED -> getLinePathStyle(2, "orange").toString();
+		default -> getLinePathStyle(1, "gray").toString();
+		};
 	}
 
 }

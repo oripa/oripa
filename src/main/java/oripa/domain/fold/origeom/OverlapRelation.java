@@ -135,8 +135,7 @@ public class OverlapRelation {
 		case OverlapRelationValues.UPPER:
 			overlapRelation.set(j, i, OverlapRelationValues.LOWER);
 			break;
-		case OverlapRelationValues.UNDEFINED:
-		case OverlapRelationValues.NO_OVERLAP:
+		case OverlapRelationValues.UNDEFINED, OverlapRelationValues.NO_OVERLAP:
 			overlapRelation.set(j, i, value);
 			break;
 

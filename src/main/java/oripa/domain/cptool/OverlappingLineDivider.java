@@ -96,8 +96,7 @@ public class OverlappingLineDivider {
 					int overlapCount = GeomUtil.distinguishLineSegmentsOverlap(dividerLine, line, pointEps);
 
 					switch (overlapCount) {
-					case 2:
-					case 3:
+					case 2, 3:
 						splitPoints.addAll(createSplitPoints(line, dividerLine.getP0(), pointEps));
 						splitPoints.addAll(createSplitPoints(line, dividerLine.getP1(), pointEps));
 						break;

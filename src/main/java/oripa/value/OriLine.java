@@ -54,29 +54,22 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		}
 
 		public static Type fromInt(final int val) throws IllegalArgumentException {
-			switch (val) {
+			return switch (val) {
 
-			case TYPE_CUT:
-				return CUT;
+			case TYPE_CUT -> CUT;
 
-			case TYPE_MOUNTAIN:
-				return MOUNTAIN;
+			case TYPE_MOUNTAIN -> MOUNTAIN;
 
-			case TYPE_VALLEY:
-				return VALLEY;
+			case TYPE_VALLEY -> VALLEY;
 
-			case TYPE_CUT_MODEL:
-				return CUT_MODEL;
+			case TYPE_CUT_MODEL -> CUT_MODEL;
 
-			case TYPE_UNASSIGNED:
-				return UNASSIGNED;
+			case TYPE_UNASSIGNED -> UNASSIGNED;
 
-			case TYPE_AUX:
-				return AUX;
+			case TYPE_AUX -> AUX;
 
-			default:
-				throw new IllegalArgumentException();
-			}
+			default -> throw new IllegalArgumentException();
+			};
 		}
 	}
 
