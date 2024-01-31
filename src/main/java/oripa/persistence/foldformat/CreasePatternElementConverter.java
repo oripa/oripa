@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -244,16 +245,14 @@ public class CreasePatternElementConverter {
 				.map(coord -> new OriPoint(coord.get(0), coord.get(1)))
 				.toList();
 
-		var lines = edgesVertices.stream()
-				.map(edge -> new OriLine(
-						points.get(edge.get(0)), points.get(edge.get(1)),
-						OriLine.Type.AUX))
+		var lines = IntStream.range(0, edgesVertices.size())
+				.mapToObj(i -> {
+					var edge = edgesVertices.get(i);
+					var type = assignmentConverter.fromFOLD(edgesAssignment.get(i));
+					return new OriLine(
+							points.get(edge.get(0)), points.get(edge.get(1)), type);
+				})
 				.toList();
-
-		for (int i = 0; i < lines.size(); i++) {
-			var line = lines.get(i);
-			line.setType(assignmentConverter.fromFOLD(edgesAssignment.get(i)));
-		}
 
 		return lines;
 	}
