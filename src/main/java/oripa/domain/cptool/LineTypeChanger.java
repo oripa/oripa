@@ -2,7 +2,6 @@ package oripa.domain.cptool;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import oripa.value.OriLine;
 
@@ -71,7 +70,7 @@ public class LineTypeChanger {
 			final double pointEps) {
 		var filtered = toBeChanged.stream()
 				.filter(line -> isTarget(line, from))
-				.collect(Collectors.toList());
+				.toList();
 
 		if (to == TypeForChange.DELETE) {
 			remover.removeLines(filtered, lines, pointEps);

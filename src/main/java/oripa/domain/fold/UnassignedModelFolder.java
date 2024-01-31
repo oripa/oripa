@@ -20,7 +20,6 @@ package oripa.domain.fold;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OrigamiModel;
 
@@ -62,7 +61,7 @@ class UnassignedModelFolder implements Folder {
 
 		return new FoldedModel(origamiModel, foldedModels.stream()
 				.flatMap(model -> model.getOverlapRelations().stream())
-				.collect(Collectors.toList()),
+				.toList(),
 				foldedModels.get(0).getSubfaces());
 	}
 }

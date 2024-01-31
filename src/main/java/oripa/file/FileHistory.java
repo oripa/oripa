@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.resource.Constants;
 
@@ -115,7 +114,7 @@ public class FileHistory {
 		var mruList = Arrays.asList(ini.getMRUFiles())
 				.subList(0, Math.min(maxSize, ini.getMRUFiles().length)).stream()
 				.filter(fileName -> fileName != null && !fileName.isEmpty())
-				.collect(Collectors.toList());
+				.toList();
 
 		setHistory(mruList);
 	}

@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,7 +144,7 @@ class LayerOrderEnumerator {
 						.thenComparingInt((final SubFace sub) -> sub.getAllCountOfConditionsOf3Faces(overlapRelation))
 						.thenComparingInt((final SubFace sub) -> sub.getAllCountOfConditionsOf4Faces(overlapRelation))
 						.reversed())
-				.collect(Collectors.toList());
+				.toList();
 		logger.debug("subface ordering = {}[ms]", watch.getMilliSec());
 
 		var overlapRelations = Collections.synchronizedList(new ArrayList<OverlapRelation>());

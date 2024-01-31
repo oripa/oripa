@@ -19,7 +19,6 @@
 package oripa.gui.presenter.creasepattern.enlarge;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -39,7 +38,7 @@ abstract class AbstractEnlarger implements Enlarger {
 						scalePosition(line.getP0(), mousePoint, originOfEnlargement, mouseStartPoint),
 						scalePosition(line.getP1(), mousePoint, originOfEnlargement, mouseStartPoint),
 						line.getType()))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	protected abstract Vector2d scalePosition(final Vector2d p, final Vector2d mousePoint,

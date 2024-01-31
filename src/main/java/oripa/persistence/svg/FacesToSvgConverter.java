@@ -22,7 +22,6 @@ package oripa.persistence.svg;
 import static oripa.persistence.svg.SVGUtils.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -47,7 +46,7 @@ public class FacesToSvgConverter extends SvgConverter {
 				faces.stream()
 						.flatMap(OriFace::halfedgeStream)
 						.map(OriHalfedge::getPosition)
-						.collect(Collectors.toList()));
+						.toList());
 
 		scaleToFitDomain = SVG_SIZE / paperSize;
 	}
@@ -96,7 +95,7 @@ public class FacesToSvgConverter extends SvgConverter {
 				.map(OriHalfedge::getPosition)
 				.map(this::mapToDomain)
 				.distinct()
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	/**

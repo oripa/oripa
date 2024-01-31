@@ -21,7 +21,6 @@ package oripa.gui.presenter.file;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +131,7 @@ public class FileAccessPresenter<Data> {
 		return supports.stream()
 				.map(support -> new FileFilterProperty(
 						support.getTargetType().getKeyText(), support.getDescription(), support.getExtensions()))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private String replaceExtension(final String path, final String ext) {

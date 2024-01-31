@@ -108,7 +108,7 @@ public class FoldedModelElementConverter {
 		return faces.stream()
 				.map(face -> face.halfedgeStream()
 						.map(he -> he.getVertex().getVertexID())
-						.collect(Collectors.toList()))
+						.toList())
 				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
@@ -251,11 +251,11 @@ public class FoldedModelElementConverter {
 				.map(precrease -> new OriEdge(
 						new OriVertex(precrease.getP0()), new OriVertex(precrease.getP1()),
 						precrease.getType().toInt()))
-				.collect(Collectors.toList());
+				.toList();
 
 		var precreaseVertices = precreaseEdges.stream()
 				.flatMap(edge -> Stream.of(edge.getStartVertex(), edge.getEndVertex()))
-				.collect(Collectors.toList());
+				.toList();
 
 		var vertexCount = verticesCoords.size();
 
@@ -284,7 +284,7 @@ public class FoldedModelElementConverter {
 					.filter(precrease -> precrease.get(0) == faceID)
 					.map(precrease -> edges.get(precrease.get(1)))
 					.map(edge -> new OriLine(edge.toSegment(), OriLine.Type.AUX))
-					.collect(Collectors.toList());
+					.toList();
 
 			face.setPrecreases(precreases);
 		}

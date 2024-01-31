@@ -19,7 +19,6 @@
 package oripa.domain.paint.core;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import oripa.domain.cptool.PseudoRayFactory;
 import oripa.domain.creasepattern.CreasePattern;
@@ -47,6 +46,6 @@ public class MultipleRaySnapPointFactory {
 				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray, pointEps)
 						.stream())
 				.filter(point -> !GeomUtil.areEqual(point, v, pointEps))
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

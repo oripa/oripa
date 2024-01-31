@@ -20,7 +20,6 @@ package oripa.domain.paint.core;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import oripa.geom.GeomUtil;
@@ -45,7 +44,7 @@ public class RaySnapPointFactory {
 				creasePattern.stream()
 						.filter(crease -> overlapsEntirely(crease, ray, eps))
 						.flatMap(OriLine::pointStream))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private boolean overlapsEntirely(final Segment crease, final Segment ray, final double eps) {

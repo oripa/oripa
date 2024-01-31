@@ -19,7 +19,6 @@
 package oripa.gui.presenter.foldability;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import oripa.domain.cptool.OverlappingLineExtractor;
 import oripa.domain.fold.foldability.FoldabilityChecker;
@@ -61,7 +60,7 @@ public class FoldabilityScreenPresenter {
 
 		this.origamiModel = origamiModel;
 		this.creasePattern = creasePattern.stream()
-				.map(line -> new OriLine(line)).collect(Collectors.toList());
+				.map(line -> new OriLine(line)).toList();
 		this.zeroLineWidth = zeroLineWidth;
 		this.pointEps = pointEps;
 

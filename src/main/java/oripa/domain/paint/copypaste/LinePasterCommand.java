@@ -20,7 +20,6 @@ package oripa.domain.paint.copypaste;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
@@ -72,6 +71,6 @@ public class LinePasterCommand extends ValidatablePaintCommand {
 
 		return lines.stream()
 				.map(l -> factory.createShiftedLine(l, diffX, diffY))
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

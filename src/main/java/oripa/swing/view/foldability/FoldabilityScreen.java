@@ -36,7 +36,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -225,7 +224,7 @@ public class FoldabilityScreen extends JPanel
 				mousePoint,
 				violatingVertices.stream()
 						.map(v -> v.getPositionBeforeFolding())
-						.collect(Collectors.toList()));
+						.toList());
 
 		if (nearestOpt.isEmpty()) {
 			return;

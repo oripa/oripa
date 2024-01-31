@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
@@ -88,7 +87,7 @@ public class OverlappingLineExtractor {
 
 		var overlappingLines = extractOverlapsGroupedBySupport(lines, pointEps).stream()
 				.flatMap(List::stream)
-				.collect(Collectors.toList());
+				.toList();
 
 		logger.debug("extract(): " + watch.getMilliSec() + "[ms]");
 
@@ -104,6 +103,6 @@ public class OverlappingLineExtractor {
 	public Collection<OriLine> extract(final Collection<OriLine> lines, final OriLine target, final double pointEps) {
 		return lines.parallelStream()
 				.filter(l -> GeomUtil.isOverlap(l, target, pointEps))
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

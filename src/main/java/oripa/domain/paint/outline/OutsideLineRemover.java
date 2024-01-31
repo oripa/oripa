@@ -20,7 +20,6 @@ package oripa.domain.paint.outline;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +70,7 @@ public class OutsideLineRemover {
 			var isOutsideP1 = isOutsideOfTempOutlineLoop.execute(outlineVertices, line.getP1());
 
 			logger.debug(String.join(",", outlineVertices.stream()
-					.map(v -> v.toString()).collect(Collectors.toList())));
+					.map(v -> v.toString()).toList()));
 			logger.debug("isOutsideP0 = " + isOutsideP0);
 			logger.debug("isOutsideP1 = " + isOutsideP1);
 

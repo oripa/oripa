@@ -21,7 +21,6 @@ package oripa.gui.presenter.main;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +102,7 @@ public class ModelComputationFacade {
 
 		var foldedModels = origamiModels.stream()
 				.map(model -> folderFactory.create(model.getModelType()).fold(model, eps, fullEstimation))
-				.collect(Collectors.toList());
+				.toList();
 
 		return new ComputationResult(origamiModels, foldedModels);
 	}

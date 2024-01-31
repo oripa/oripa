@@ -19,7 +19,6 @@
 package oripa.domain.fold;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,7 +186,7 @@ class SimpleFolder {
 				transformVertex(precrease.getP0(), preLine, afterOrigin, afterDir),
 				transformVertex(precrease.getP1(), preLine, afterOrigin, afterDir),
 				OriLine.Type.AUX))
-				.collect(Collectors.toList()));
+				.toList());
 
 		// add mirror effect if necessary
 		if (face.isFaceFront() == baseHe.getFace().isFaceFront()) {
@@ -201,7 +200,7 @@ class SimpleFolder {
 					flipVertex(precrease.getP0(), sp, ep),
 					flipVertex(precrease.getP1(), sp, ep),
 					OriLine.Type.AUX))
-					.collect(Collectors.toList()));
+					.toList());
 			face.invertFaceFront();
 		}
 	}

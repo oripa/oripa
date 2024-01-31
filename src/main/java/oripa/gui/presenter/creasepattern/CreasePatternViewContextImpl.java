@@ -121,7 +121,7 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 		if (gridVisible) {
 			paintContext.updateGrids();
 		} else {
-			paintContext.getGrids().clear();
+			paintContext.clearGrids();
 		}
 	}
 

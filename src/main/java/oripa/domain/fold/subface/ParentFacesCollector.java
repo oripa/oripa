@@ -19,7 +19,6 @@
 package oripa.domain.fold.subface;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
 
@@ -34,6 +33,6 @@ public class ParentFacesCollector {
 
 		return faces.stream()
 				.filter(face -> face.isOnFaceExclusively(innerPoint, eps))
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

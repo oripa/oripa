@@ -20,7 +20,6 @@ package oripa.domain.paint.core;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -53,6 +52,6 @@ public class SnapPointFactory {
 				creasePattern.stream()
 						.filter(crease -> GeomUtil.isRelaxedOverlap(line, crease, pointEps))
 						.flatMap(OriLine::pointStream))
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

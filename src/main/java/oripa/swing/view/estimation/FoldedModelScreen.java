@@ -36,7 +36,6 @@ import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -416,7 +415,7 @@ public class FoldedModelScreen extends JPanel
 		var factory = new FaceFactory(createCoordinateConverter(), vertexDepths);
 		var faces = origamiModel.getFaces().stream()
 				.map(factory::create)
-				.collect(Collectors.toList());
+				.toList();
 
 		interpolatedOverlapRelation = new OverlapRelationInterpolater().interpolate(overlapRelation, faces, eps);
 
@@ -441,7 +440,7 @@ public class FoldedModelScreen extends JPanel
 		var converter = createCoordinateConverter();
 		var convertedSubface = selectedSubface.halfedgeStream()
 				.map(v -> converter.convert(v.getPosition(), 0, v.getPositionBeforeFolding()))
-				.collect(Collectors.toList());
+				.toList();
 
 		var itemConverter = new GraphicItemConverter();
 		var path2d = itemConverter.toPath2D(convertedSubface);
@@ -493,7 +492,7 @@ public class FoldedModelScreen extends JPanel
 	private List<Double> createColorFactor(final Color color) {
 		return List.of(color.getRed(), color.getGreen(), color.getBlue()).stream()
 				.map(c -> c / 255.0)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	// --------------------------------------------------------------------

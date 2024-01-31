@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
@@ -192,7 +191,8 @@ public class LineAdder {
 
 		logger.trace("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
-		List<OriLine> splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists, pointEps);
+		List<OriLine> splitNewLines = new ArrayList<>(
+				getSplitNewLines(nonExistingNewLines, pointLists, pointEps));
 		divider.divideIfOverlap(crossingCurrentLines, splitNewLines, pointEps);
 
 		currentLines.addAll(splitNewLines);
@@ -219,6 +219,6 @@ public class LineAdder {
 				.mapToObj(j -> sequentialLineFactory.createSequentialLines(pointLists.get(j),
 						nonExistingNewLines.get(j).getType(), pointEps))
 				.flatMap(Collection::stream)
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

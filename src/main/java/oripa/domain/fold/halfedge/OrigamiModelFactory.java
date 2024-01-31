@@ -161,7 +161,7 @@ public class OrigamiModelFactory {
 
 		var boundaryCreasePattern = simplifiedCreasePattern.stream()
 				.filter(line -> line.isBoundary())
-				.collect(Collectors.toList());
+				.toList();
 
 		var wholeVertices = new ArrayList<OriVertex>();
 		buildVertices(simplifiedCreasePattern, wholeVertices, pointEps);
@@ -208,7 +208,7 @@ public class OrigamiModelFactory {
 		for (OriFace face : faces) {
 			face.setPrecreases(modelPrecreases.stream()
 					.filter(precrease -> OriGeomUtil.isSegmentIncludedInFace(face, precrease, pointEps))
-					.collect(Collectors.toList()));
+					.toList());
 		}
 		origamiModel.setHasModel(true);
 
@@ -219,7 +219,7 @@ public class OrigamiModelFactory {
 
 		var domain = RectangleDomain.createFromPoints(vertices.stream()
 				.map(v -> v.getPosition())
-				.collect(Collectors.toList()));
+				.toList());
 
 		return domain.maxWidthHeight();
 	}
@@ -234,6 +234,6 @@ public class OrigamiModelFactory {
 		return creasePattern.stream()
 				.filter(line -> line.isAux())
 				.map(line -> new OriLine(line))
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

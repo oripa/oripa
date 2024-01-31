@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +63,7 @@ public class CreasePatternElementConverter {
 				.flatMap(line -> line.oriPointStream())
 				.distinct()
 				.map(point -> vertexToList(point))
-				.collect(Collectors.toList());
+				.toList();
 
 		return verticesCoords;
 	}
@@ -90,7 +89,7 @@ public class CreasePatternElementConverter {
 				.map(line -> List.of(
 						coords.indexOf(vertexToList(line.getOriPoint0())),
 						coords.indexOf(vertexToList(line.getOriPoint1()))))
-				.collect(Collectors.toList());
+				.toList();
 
 		return edgesVertices;
 	}
@@ -108,7 +107,7 @@ public class CreasePatternElementConverter {
 		}
 		edgesAssignment = lines.parallelStream()
 				.map(line -> assignmentConverter.toFOLD(line.getType()))
-				.collect(Collectors.toList());
+				.toList();
 
 		return edgesAssignment;
 	}
@@ -210,7 +209,7 @@ public class CreasePatternElementConverter {
 				}
 			}
 			return false;
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 	/**
@@ -243,13 +242,13 @@ public class CreasePatternElementConverter {
 
 		var points = verticesCoords.stream()
 				.map(coord -> new OriPoint(coord.get(0), coord.get(1)))
-				.collect(Collectors.toList());
+				.toList();
 
 		var lines = edgesVertices.stream()
 				.map(edge -> new OriLine(
 						points.get(edge.get(0)), points.get(edge.get(1)),
 						OriLine.Type.AUX))
-				.collect(Collectors.toList());
+				.toList();
 
 		for (int i = 0; i < lines.size(); i++) {
 			var line = lines.get(i);

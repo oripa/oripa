@@ -1,7 +1,5 @@
 package oripa.domain.paint.linetoline;
 
-import java.util.stream.Collectors;
-
 import oripa.domain.cptool.LineToLineAxiom;
 import oripa.domain.cptool.PseudoLineFactory;
 import oripa.domain.paint.PaintContext;
@@ -34,7 +32,7 @@ public class LineToLineAxiomSnapPointSetterCommand extends ValidatablePaintComma
 				.map(line -> pseudoLineFactory.create(line, context.getCreasePattern().getPaperSize()))
 				.flatMap(line -> snapPointFactory
 						.createSnapPoints(context.getCreasePattern(), line, context.getPointEps()).stream())
-				.collect(Collectors.toList());
+				.toList();
 
 		context.setSnapPoints(snapPoints);
 	}

@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ public class OriFacesFactory {
 		if (createdFaces.stream().anyMatch(Objects::isNull)) {
 			createdFaces = createdFaces.stream()
 					.filter(Objects::nonNull)
-					.collect(Collectors.toList());
+					.toList();
 			valid = false;
 		}
 
@@ -84,7 +83,7 @@ public class OriFacesFactory {
 			var createdFaces = v.edgeStream()
 					.filter(e -> isTarget(v, e))
 					.map(e -> makeFace(v, e))
-					.collect(Collectors.toList());
+					.toList();
 
 			faces.addAll(createdFaces);
 		}
@@ -126,11 +125,11 @@ public class OriFacesFactory {
 			var createdFaces = v.edgeStream()
 					.filter(e -> isTargetBoundary(v, e))
 					.map(e -> makeBoundaryFace(v, e))
-					.collect(Collectors.toList());
+					.toList();
 
 			boundaryFaces.addAll(createdFaces.stream()
 					.filter(Objects::nonNull)
-					.collect(Collectors.toList()));
+					.toList());
 		}
 
 		logger.debug("boundary faces: {}", boundaryFaces);

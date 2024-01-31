@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +94,7 @@ public class StackConditionOf4FaceFactory {
 						.filter(s -> subFacesOfEachFace.get(e0RightFace).contains(s))
 						.filter(s -> subFacesOfEachFace.get(e1LeftFace).contains(s))
 						.filter(s -> subFacesOfEachFace.get(e1RightFace).contains(s))
-						.collect(Collectors.toList());
+						.toList();
 
 				if (intersectionSubfaces.isEmpty()) {
 					continue;

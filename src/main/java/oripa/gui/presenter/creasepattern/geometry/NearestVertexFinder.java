@@ -2,7 +2,6 @@ package oripa.gui.presenter.creasepattern.geometry;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import oripa.domain.creasepattern.CreasePattern;
@@ -107,7 +106,7 @@ public class NearestVertexFinder {
 		var targetVertices = Stream
 				.concat(vertices.stream().flatMap(Collection::stream),
 						grids.stream())
-				.collect(Collectors.toList());
+				.toList();
 
 		var nearestOpt = findNearestVertex(currentPoint, targetVertices);
 

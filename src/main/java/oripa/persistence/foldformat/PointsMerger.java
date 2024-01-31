@@ -21,7 +21,6 @@ package oripa.persistence.foldformat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -42,11 +41,11 @@ public class PointsMerger {
 	public Collection<OriLine> mergeClosePoints(final Collection<OriLine> lines, final double pointEps) {
 		var cleaned = lines.stream()
 				.filter(line -> line.length() >= pointEps)
-				.collect(Collectors.toList());
+				.toList();
 
 		var pointSet = new TreeSet<OriPoint>(cleaned.stream()
 				.flatMap(OriLine::oriPointStream)
-				.collect(Collectors.toList()));
+				.toList());
 
 		final var merged = new ArrayList<OriLine>();
 
@@ -68,7 +67,7 @@ public class PointsMerger {
 		var neighbors = boundSet.stream()
 				.filter(point -> GeomUtil.areEqual(point, p, pointEps))
 				.sorted()
-				.collect(Collectors.toList());
+				.toList();
 
 		return neighbors.get(0);
 	}

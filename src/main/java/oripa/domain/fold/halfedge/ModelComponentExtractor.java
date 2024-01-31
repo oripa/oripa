@@ -20,7 +20,6 @@ package oripa.domain.fold.halfedge;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.value.OriLine;
@@ -36,7 +35,7 @@ public class ModelComponentExtractor {
 
 		return wholeVertices.stream()
 				.filter(vertex -> boundaryFace.isOnFaceInclusively(vertex.getPosition(), eps))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public List<OriLine> extractByBoundary(final Collection<OriLine> wholePrecreases,
@@ -44,7 +43,7 @@ public class ModelComponentExtractor {
 
 		return wholePrecreases.stream()
 				.filter(p -> OriGeomUtil.isSegmentIncludedInFace(boundaryFace, p, eps))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 }

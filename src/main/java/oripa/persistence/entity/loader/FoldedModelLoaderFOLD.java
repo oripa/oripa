@@ -24,7 +24,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -92,7 +91,7 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModelEntity> {
 			converter.restorePrecreases(precreases, edges, faces);
 		}
 
-		var positions = vertices.stream().map(OriVertex::getPosition).collect(Collectors.toList());
+		var positions = vertices.stream().map(OriVertex::getPosition).toList();
 		var domain = RectangleDomain.createFromPoints(positions);
 
 		// tentative value

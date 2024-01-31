@@ -32,7 +32,7 @@ class PaintContextImpl implements PaintContext {
 	private AngleStep angleStep;
 
 	private int gridDivNum;
-	private ArrayList<Vector2d> gridPoints;
+	private List<Vector2d> gridPoints;
 
 	private Collection<Vector2d> snapPoints = new ArrayList<Vector2d>();
 
@@ -72,7 +72,7 @@ class PaintContextImpl implements PaintContext {
 		candidateLineToPick = null;
 		candidateVertexToPick = null;
 
-		snapPoints.clear();
+		snapPoints = List.of();
 	}
 
 	@Override
@@ -228,7 +228,7 @@ class PaintContextImpl implements PaintContext {
 
 	@Override
 	public void setSnapPoints(final Collection<Vector2d> points) {
-		snapPoints = points;
+		snapPoints = Collections.unmodifiableList(new ArrayList<>(points));
 	}
 
 	@Override
@@ -237,8 +237,13 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
+	public void clearSnapPoint() {
+		snapPoints = List.of();
+	}
+
+	@Override
 	public void updateGrids() {
-		gridPoints = new ArrayList<>();
+		var points = new ArrayList<Vector2d>();
 		double paperSize = getCreasePattern().getPaperSize();
 
 		double step = paperSize / gridDivNum;
@@ -248,9 +253,11 @@ class PaintContextImpl implements PaintContext {
 				double x = paperDomain.getLeft() + step * ix;
 				double y = paperDomain.getTop() + step * iy;
 
-				gridPoints.add(new Vector2d(x, y));
+				points.add(new Vector2d(x, y));
 			}
 		}
+
+		gridPoints = Collections.unmodifiableList(points);
 	}
 
 	@Override
@@ -266,7 +273,12 @@ class PaintContextImpl implements PaintContext {
 
 	@Override
 	public Collection<Vector2d> getGrids() {
-		return gridPoints;
+		return Collections.unmodifiableList(gridPoints);
+	}
+
+	@Override
+	public void clearGrids() {
+		gridPoints = List.of();
 	}
 
 	@Override

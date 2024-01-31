@@ -21,7 +21,6 @@ package oripa.domain.cptool;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import oripa.geom.RectangleDomain;
 import oripa.util.MathUtil;
@@ -84,7 +83,7 @@ public class RectangleClipper {
 	public Collection<OriLine> selectByArea(final Collection<OriLine> lines) {
 		return lines.stream()
 				.filter(this::clip)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	/**

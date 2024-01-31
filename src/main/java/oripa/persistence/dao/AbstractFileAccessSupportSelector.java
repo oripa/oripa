@@ -20,13 +20,13 @@ package oripa.persistence.dao;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import oripa.persistence.filetool.FileAccessSupport;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -131,7 +131,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 	 *         support object accepting all available types.
 	 */
 	public List<FileAccessSupport<Data>> getLoadablesWithMultiType() {
-		var loadables = getLoadables();
+		var loadables = new ArrayList<>(getLoadables());
 
 		var multi = new MultiTypeAcceptableFileLoadingSupport<Data>(
 				loadables, "Any type");
@@ -150,7 +150,7 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 		return getFileAccessSupports().values().stream()
 				.filter(support -> support.getLoadingAction() != null)
 				.sorted()
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	/**
@@ -192,13 +192,13 @@ public abstract class AbstractFileAccessSupportSelector<Data> {
 		return getFileAccessSupports().values().stream()
 				.filter(support -> support.getSavingAction() != null)
 				.sorted()
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public List<FileAccessSupport<Data>> getSavablesOf(final Collection<FileTypeProperty<Data>> types) {
 		return getSavables().stream()
 				.filter(support -> types.contains(support.getTargetType()))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	/**
