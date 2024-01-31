@@ -60,6 +60,7 @@ public class PropertyDialogPresenter {
 		prop.setReference(view.getReference());
 		prop.setMemo(view.getMemo());
 
+		document.setProperty(prop);
 	}
 
 	public void setViewVisible(final boolean visible) {
