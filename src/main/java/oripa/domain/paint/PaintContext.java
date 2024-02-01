@@ -170,7 +170,10 @@ public interface PaintContext extends CreasePatternHolder {
 	 */
 	public abstract Collection<Vector2d> getSnapPoints();
 
-	void clearSnapPoint();
+	/**
+	 * Makes the snap points empty.
+	 */
+	void clearSnapPoints();
 
 	/**
 	 * sets division number of grid. should update grid points for

@@ -237,7 +237,7 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public void clearSnapPoint() {
+	public void clearSnapPoints() {
 		snapPoints = List.of();
 	}
 
