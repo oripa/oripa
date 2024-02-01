@@ -46,8 +46,8 @@ public class LineTypeChanger {
 	}
 
 	/**
-	 * removes the given line and adds to {@code lines} a copied line with
-	 * selection.
+	 * removes the given line and adds to {@code lines} a copied line with type
+	 * change.
 	 *
 	 * @param l
 	 * @param type
