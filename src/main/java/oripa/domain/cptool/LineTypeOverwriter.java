@@ -50,8 +50,11 @@ public class LineTypeOverwriter {
 	 *            points.
 	 * @param allLines
 	 *            is the result of adding lines and splitting at cross points.
+	 * @return all lines that each line is from either {@code addedLines} if the
+	 *         line overlaps or {@code allLines} if it has no overlaps.
 	 */
-	public void overwriteLineTypes(final Collection<OriLine> addedLines, final Collection<OriLine> allLines,
+	public Collection<OriLine> overwriteLineTypes(final Collection<OriLine> addedLines,
+			final Collection<OriLine> allLines,
 			final double pointEps) {
 		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
@@ -63,8 +66,7 @@ public class LineTypeOverwriter {
 			determineLineTypes(overlaps, addedLineSet, allLineSet, pointEps);
 		});
 
-		allLines.clear();
-		allLines.addAll(allLineSet);
+		return allLineSet;
 	}
 
 	private void determineLineTypes(final Collection<OriLine> overlaps, final Set<OriLine> addedLines,

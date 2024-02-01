@@ -198,7 +198,10 @@ public class LineAdder {
 		currentLines.addAll(splitNewLines);
 
 		var lineTypeOverwriter = new LineTypeOverwriter();
-		lineTypeOverwriter.overwriteLineTypes(splitNewLines, currentLines, pointEps);
+		var overwrittens = lineTypeOverwriter.overwriteLineTypes(splitNewLines, currentLines, pointEps);
+
+		currentLines.clear();
+		currentLines.addAll(overwrittens);
 
 		logger.trace("addAll(): {}[ms]", watch.getMilliSec());
 	}
