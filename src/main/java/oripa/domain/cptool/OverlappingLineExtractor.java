@@ -18,11 +18,9 @@
  */
 package oripa.domain.cptool;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
@@ -40,13 +38,13 @@ import oripa.value.OriLine;
 public class OverlappingLineExtractor {
 	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
 
-	public Collection<List<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines,
+	public Collection<Collection<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines,
 			final double pointEps) {
 		// make a data structure for fast computation.
 		var hashFactory = new AnalyticLineHashFactory(pointEps);
 		var hash = hashFactory.create(lines);
 
-		var overlapGroups = new ConcurrentLinkedDeque<List<OriLine>>();
+		var overlapGroups = new ConcurrentLinkedDeque<Collection<OriLine>>();
 
 		// for each angle and intercept, try all pairs of lines and find
 		// overlaps.
@@ -54,7 +52,7 @@ public class OverlappingLineExtractor {
 			var byAngle = hash.get(angle_i);
 			IntStream.range(0, byAngle.size()).parallel().forEach(intercept_i -> {
 				var byIntercept = byAngle.get(intercept_i);
-				List<OriLine> overlaps = Collections.synchronizedList(new ArrayList<OriLine>());
+				Collection<OriLine> overlaps = new ConcurrentLinkedQueue<OriLine>();
 				// for each line
 				IntStream.range(0, byIntercept.size()).parallel().forEach(i -> {
 					var line0 = byIntercept.get(i).getLine();
@@ -86,7 +84,7 @@ public class OverlappingLineExtractor {
 		var watch = new StopWatch(true);
 
 		var overlappingLines = extractOverlapsGroupedBySupport(lines, pointEps).stream()
-				.flatMap(List::stream)
+				.flatMap(Collection::stream)
 				.toList();
 
 		logger.debug("extract(): " + watch.getMilliSec() + "[ms]");

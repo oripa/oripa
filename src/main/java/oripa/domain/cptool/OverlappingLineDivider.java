@@ -48,8 +48,9 @@ public class OverlappingLineDivider {
 	 *            lines dividing elements of {@code lines}
 	 * @param lines
 	 *            lines to be divided
+	 * @return division result.
 	 */
-	public void divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines,
+	public Collection<OriLine> divideIfOverlap(final Collection<OriLine> dividerLines, final Collection<OriLine> lines,
 			final double pointEps) {
 		var extractor = new OverlappingLineExtractor();
 
@@ -59,18 +60,16 @@ public class OverlappingLineDivider {
 		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
 		Set<OriLine> dividerLineSet = new HashSet<>(dividerLines);
-		Set<OriLine> lineSet = CollectionUtil.newConcurrentHashSet();
-
-		lineSet.addAll(lines);
+		Set<OriLine> lineSet = CollectionUtil.newConcurrentHashSet(lines);
 
 		overlapGroups.parallelStream().forEach(overlaps -> {
 			var dividerOverlaps = overlaps.stream()
 					.filter(ov -> dividerLineSet.contains(ov))
-					.collect(Collectors.toSet());
+					.collect(Collectors.toCollection(HashSet::new));
 
 			var lineOverlaps = overlaps.stream()
 					.filter(ov -> !dividerOverlaps.contains(ov))
-					.collect(Collectors.toSet());
+					.collect(Collectors.toCollection(HashSet::new));
 
 			lineSet.removeAll(lineOverlaps);
 
@@ -79,10 +78,17 @@ public class OverlappingLineDivider {
 			lineSet.addAll(lineOverlaps);
 		});
 
-		lines.clear();
-		lines.addAll(lineSet);
+		return lineSet;
 	}
 
+	/**
+	 *
+	 * @param dividerLine
+	 * @param lines
+	 *            will be updated as each line is divided by the end point(s) of
+	 *            {@code dividerLine}
+	 * @param pointEps
+	 */
 	private void divideLinesIfOverlap(final OriLine dividerLine, final Collection<OriLine> lines,
 			final double pointEps) {
 

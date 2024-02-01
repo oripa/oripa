@@ -2,12 +2,11 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
@@ -38,8 +37,8 @@ public class LineAdder {
 	private Map<OriPoint, OriLine> divideCurrentLines(final OriLine inputLine,
 			final Collection<OriLine> currentLines, final double pointEps) {
 
-		var toBeAdded = Collections.synchronizedList(new LinkedList<OriLine>());
-		var toBeRemoved = Collections.synchronizedList(new LinkedList<OriLine>());
+		var toBeAdded = new ConcurrentLinkedQueue<OriLine>();
+		var toBeRemoved = new ConcurrentLinkedQueue<OriLine>();
 
 		var crossMap = new ConcurrentHashMap<OriPoint, OriLine>();
 
@@ -164,7 +163,11 @@ public class LineAdder {
 		// takes O(n) time for deletion while hash set takes O(1) time.)
 		HashSet<OriLine> crossingCurrentLines = new HashSet<>(
 				inputDomainClipper.selectByArea(currentLines));
-		currentLines.removeAll(crossingCurrentLines);
+
+		Collection<OriLine> insideLines = new HashSet<OriLine>();
+		Collection<OriLine> outsideLines = new HashSet<OriLine>();
+		outsideLines.addAll(currentLines);
+		outsideLines.removeAll(crossingCurrentLines);
 
 		logger.trace("addAll() divideCurrentLines() start: {}[ms]", watch.getMilliSec());
 
@@ -172,36 +175,38 @@ public class LineAdder {
 		// crossing with the input line.
 		Map<OriLine, Map<OriPoint, OriLine>> crossMaps = new ConcurrentHashMap<>();
 
+		// build crossMaps and crossingCurrentLines. Cannot be in parallel since
+		// a line might be divided by multiple input lines.
 		nonExistingNewLines
 				.forEach(inputLine -> crossMaps.put(inputLine,
 						divideCurrentLines(inputLine, crossingCurrentLines, pointEps)));
 
-		divider.divideIfOverlap(nonExistingNewLines, crossingCurrentLines, pointEps);
+		var dividedCrossingCurrentLines = divider.divideIfOverlap(nonExistingNewLines, crossingCurrentLines, pointEps);
 
 		// feed back the result of line divisions
-		currentLines.addAll(crossingCurrentLines);
+		insideLines.addAll(dividedCrossingCurrentLines);
 
 		logger.trace("addAll() createInputLinePoints() start: {}[ms]", watch.getMilliSec());
 
-		ArrayList<List<Vector2d>> pointLists = new ArrayList<>();
-
-		nonExistingNewLines
-				.forEach(inputLine -> pointLists
-						.add(createInputLinePoints(inputLine, crossMaps.get(inputLine), pointEps)));
+		List<List<Vector2d>> pointLists = nonExistingNewLines.parallelStream()
+				.map(inputLine -> createInputLinePoints(inputLine, crossMaps.get(inputLine), pointEps))
+				.toList();
 
 		logger.trace("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
-		List<OriLine> splitNewLines = new ArrayList<>(
-				getSplitNewLines(nonExistingNewLines, pointLists, pointEps));
-		divider.divideIfOverlap(crossingCurrentLines, splitNewLines, pointEps);
+		var splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists, pointEps);
+		var dividedSplitNewLines = divider.divideIfOverlap(dividedCrossingCurrentLines, splitNewLines, pointEps);
 
-		currentLines.addAll(splitNewLines);
+		// feed back the result of line divisions allowing overlaps
+		insideLines.addAll(dividedSplitNewLines);
 
+		// reduce overlaps by overwriting types
 		var lineTypeOverwriter = new LineTypeOverwriter();
-		var overwrittens = lineTypeOverwriter.overwriteLineTypes(splitNewLines, currentLines, pointEps);
+		var insideOverwrittens = lineTypeOverwriter.overwriteLineTypes(dividedSplitNewLines, insideLines, pointEps);
 
 		currentLines.clear();
-		currentLines.addAll(overwrittens);
+		currentLines.addAll(outsideLines);
+		currentLines.addAll(insideOverwrittens);
 
 		logger.trace("addAll(): {}[ms]", watch.getMilliSec());
 	}
@@ -217,7 +222,7 @@ public class LineAdder {
 	 * @return collection of all new lists
 	 */
 	private List<OriLine> getSplitNewLines(final List<OriLine> nonExistingNewLines,
-			final ArrayList<List<Vector2d>> pointLists, final double pointEps) {
+			final List<List<Vector2d>> pointLists, final double pointEps) {
 		return IntStream.range(0, nonExistingNewLines.size()).parallel()
 				.mapToObj(j -> sequentialLineFactory.createSequentialLines(pointLists.get(j),
 						nonExistingNewLines.get(j).getType(), pointEps))

@@ -59,8 +59,7 @@ public class LineTypeOverwriter {
 		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
 		var addedLineSet = new HashSet<>(addedLines);
-		Set<OriLine> allLineSet = CollectionUtil.newConcurrentHashSet();
-		allLineSet.addAll(allLines);
+		Set<OriLine> allLineSet = CollectionUtil.newConcurrentHashSet(allLines);
 
 		overlapGroups.parallelStream().forEach(overlaps -> {
 			determineLineTypes(overlaps, addedLineSet, allLineSet, pointEps);
