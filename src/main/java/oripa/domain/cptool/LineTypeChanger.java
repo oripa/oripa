@@ -1,7 +1,6 @@
 package oripa.domain.cptool;
 
 import java.util.Collection;
-import java.util.Set;
 
 import oripa.value.OriLine;
 
@@ -55,13 +54,18 @@ public class LineTypeChanger {
 	 * @param lines
 	 */
 	private void setType(final OriLine l, final OriLine.Type type, final Collection<OriLine> lines) {
-		if (lines instanceof Set) {
-			lines.remove(l);
-		}
-		l.setType(type);
-		if (lines instanceof Set) {
-			lines.add(l);
-		}
+
+		lines.remove(l);
+
+		lines.add(new OriLine(l.getP0(), l.getP1(), type));
+
+//		if (lines instanceof Set) {
+//			lines.remove(l);
+//		}
+//		l.setType(type);
+//		if (lines instanceof Set) {
+//			lines.add(l);
+//		}
 	}
 
 	public void alterLineTypes(final Collection<OriLine> toBeChanged,

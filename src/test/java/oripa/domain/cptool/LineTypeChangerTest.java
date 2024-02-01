@@ -89,8 +89,18 @@ class LineTypeChangerTest {
 	private void testChangeable(final LineTypeChanger changer, final OriLine line,
 			final Collection<OriLine> lines, final TypeForChange from, final TypeForChange to) {
 		changer.alterLineType(line, lines, from, to, EPS);
-		assertEquals(to.getOriLineType(), line.getType());
-		assertNotNull(line.getType());
+
+		var afterLine = getLine(line, lines);
+
+		assertEquals(to.getOriLineType(), afterLine.getType());
+		assertNotNull(afterLine.getType());
+	}
+
+	private OriLine getLine(final OriLine line, final Collection<OriLine> lines) {
+		return lines.stream()
+				.filter(l -> l.getP0().equals(line.getP0()) && l.getP1().equals(line.getP1()))
+				.findFirst()
+				.get();
 	}
 
 	@Test
@@ -115,13 +125,13 @@ class LineTypeChangerTest {
 		var line = findLine(lines, OriLine.Type.MOUNTAIN);
 
 		changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
-		assertEquals(OriLine.Type.VALLEY, line.getType());
+		assertEquals(OriLine.Type.VALLEY, getLine(line, lines).getType());
 
 		lines = createChangeableLines();
 		line = findLine(lines, OriLine.Type.VALLEY);
 
 		changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
-		assertEquals(OriLine.Type.MOUNTAIN, line.getType());
+		assertEquals(OriLine.Type.MOUNTAIN, getLine(line, lines).getType());
 
 		// doesn't change if the type is aux or cut
 
@@ -129,13 +139,13 @@ class LineTypeChangerTest {
 		line = findLine(lines, OriLine.Type.AUX);
 
 		changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
-		assertEquals(OriLine.Type.AUX, line.getType());
+		assertEquals(OriLine.Type.AUX, getLine(line, lines).getType());
 
 		lines = createChangeableLines();
 		line = findLine(lines, OriLine.Type.CUT);
 
 		changer.alterLineType(line, lines, TypeForChange.EMPTY, TypeForChange.FLIP, EPS);
-		assertEquals(OriLine.Type.CUT, line.getType());
+		assertEquals(OriLine.Type.CUT, getLine(line, lines).getType());
 	}
 
 	/**

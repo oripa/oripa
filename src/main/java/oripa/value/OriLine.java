@@ -73,7 +73,7 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		}
 	}
 
-	private Type type = Type.AUX;
+	private final Type type;
 
 	private boolean selected;
 	private final OriPoint p0;
@@ -193,10 +193,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 
 	public void setSelected(final boolean selected) {
 		this.selected = selected;
-	}
-
-	public void setType(final Type type) {
-		this.type = type;
 	}
 
 	public Type getType() {
