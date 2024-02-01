@@ -46,8 +46,8 @@ public class LineTypeChanger {
 	}
 
 	/**
-	 * We need to remove and add element to be updated if {@code lines} is a
-	 * hash set.
+	 * removes the given line and adds to {@code lines} a copied line with
+	 * selection.
 	 *
 	 * @param l
 	 * @param type
