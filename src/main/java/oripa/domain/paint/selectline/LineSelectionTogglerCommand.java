@@ -39,7 +39,7 @@ public class LineSelectionTogglerCommand implements Command {
 
 		var lineOpt = context.peekLine();
 
-		lineOpt.ifPresent(line -> toggleSelection(line));
+		lineOpt.ifPresent(this::toggleSelection);
 	}
 
 	private void toggleSelection(final OriLine line) {
