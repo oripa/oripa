@@ -73,7 +73,7 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 
 		var canonicalLines = creasePattern.stream()
 				.map(line -> line.createCanonical())
-				.collect(Collectors.toCollection(() -> new ArrayList<>()));
+				.collect(Collectors.toCollection(ArrayList::new));
 
 		var xOrderPoints = createXOrderPoints(canonicalLines, factory);
 		var hashFactory = new HashFactory();

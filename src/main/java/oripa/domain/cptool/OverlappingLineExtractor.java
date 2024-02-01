@@ -18,6 +18,7 @@
  */
 package oripa.domain.cptool;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -71,7 +72,7 @@ public class OverlappingLineExtractor {
 			});
 		});
 
-		return overlapGroups;
+		return new ArrayList<>(overlapGroups);
 	}
 
 	/**

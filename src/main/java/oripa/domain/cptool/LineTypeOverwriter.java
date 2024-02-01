@@ -91,16 +91,14 @@ public class LineTypeOverwriter {
 		for (var splitLine : splitLines) {
 
 			Function<Collection<OriLine>, Boolean> find = overlapsForFilter -> {
-				var filteredOverlap = overlapsForFilter.stream()
+				return overlapsForFilter.stream()
 						.filter(line -> GeomUtil.isOverlap(splitLine, line, pointEps))
-						.findFirst();
-
-				if (filteredOverlap.isPresent()) {
-					linesToBeUsed.add(filteredOverlap.get());
-
-					return true;
-				}
-				return false;
+						.findFirst()
+						.map(overlap -> {
+							linesToBeUsed.add(overlap);
+							return true;
+						})
+						.orElse(false);
 			};
 
 			if (find.apply(addedOverlaps)) {

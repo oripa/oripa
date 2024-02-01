@@ -201,8 +201,8 @@ public class LineAdder {
 		insideLines.addAll(dividedSplitNewLines);
 
 		// reduce overlaps by overwriting types
-		var lineTypeOverwriter = new LineTypeOverwriter();
-		var insideOverwrittens = lineTypeOverwriter.overwriteLineTypes(dividedSplitNewLines, insideLines, pointEps);
+		var insideOverwrittens = new LineTypeOverwriter().overwriteLineTypes(
+				dividedSplitNewLines, insideLines, pointEps);
 
 		currentLines.clear();
 		currentLines.addAll(outsideLines);
