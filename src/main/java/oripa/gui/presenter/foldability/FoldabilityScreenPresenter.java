@@ -60,7 +60,7 @@ public class FoldabilityScreenPresenter {
 
 		this.origamiModel = origamiModel;
 		this.creasePattern = creasePattern.stream()
-				.map(line -> new OriLine(line)).toList();
+				.map(OriLine::new).toList();
 		this.zeroLineWidth = zeroLineWidth;
 		this.pointEps = pointEps;
 
