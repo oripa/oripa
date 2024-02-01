@@ -29,7 +29,7 @@ public class CloseTempOutline {
 
 		// Delete the current outline
 		List<OriLine> outlines = creasePattern.stream()
-				.filter(line -> line.isBoundary()).toList();
+				.filter(OriLine::isBoundary).toList();
 		creasePattern.removeAll(outlines);
 
 		adder.addOutlines(painter, outlineVertices);
