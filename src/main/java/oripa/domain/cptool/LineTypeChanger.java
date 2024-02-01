@@ -58,14 +58,6 @@ public class LineTypeChanger {
 		lines.remove(l);
 
 		lines.add(new OriLine(l.getP0(), l.getP1(), type));
-
-//		if (lines instanceof Set) {
-//			lines.remove(l);
-//		}
-//		l.setType(type);
-//		if (lines instanceof Set) {
-//			lines.add(l);
-//		}
 	}
 
 	public void alterLineTypes(final Collection<OriLine> toBeChanged,
