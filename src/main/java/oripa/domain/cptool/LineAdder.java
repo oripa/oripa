@@ -161,8 +161,7 @@ public class LineAdder {
 				pointEps);
 		// use a hash set for avoiding worst case of computation time. (list
 		// takes O(n) time for deletion while hash set takes O(1) time.)
-		HashSet<OriLine> crossingCurrentLines = new HashSet<>(
-				inputDomainClipper.selectByArea(currentLines));
+		var crossingCurrentLines = new HashSet<>(inputDomainClipper.selectByArea(currentLines));
 
 		Collection<OriLine> insideLines = new HashSet<OriLine>();
 		Collection<OriLine> outsideLines = new HashSet<OriLine>();
@@ -188,14 +187,14 @@ public class LineAdder {
 
 		logger.trace("addAll() createInputLinePoints() start: {}[ms]", watch.getMilliSec());
 
-		List<List<Vector2d>> pointLists = nonExistingNewLines.parallelStream()
+		var pointLists = nonExistingNewLines.parallelStream()
 				.map(inputLine -> createInputLinePoints(inputLine, crossMaps.get(inputLine), pointEps))
 				.toList();
 
 		logger.trace("addAll() adding new lines start: {}[ms]", watch.getMilliSec());
 
 		var splitNewLines = getSplitNewLines(nonExistingNewLines, pointLists, pointEps);
-		var dividedSplitNewLines = divider.divideIfOverlap(dividedCrossingCurrentLines, splitNewLines, pointEps);
+		var dividedSplitNewLines = divider.divideIfOverlap(crossingCurrentLines, splitNewLines, pointEps);
 
 		// feed back the result of line divisions allowing overlaps
 		insideLines.addAll(dividedSplitNewLines);
