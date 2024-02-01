@@ -113,12 +113,12 @@ public class LineTypeOverwriter {
 	}
 
 	private List<OriPoint> sortLineEndPoints(final Collection<OriLine> overlaps) {
-		var points = new ArrayList<>(
-				overlaps.stream()
-						.flatMap(line -> line.oriPointStream())
-						.toList());
 		var analyticLine = new AnalyticLine(overlaps.stream().findFirst().get());
-		points.sort(Comparator.comparing(analyticLine.isVertical() ? OriPoint::getY : OriPoint::getX));
+
+		var points = overlaps.stream()
+				.flatMap(line -> line.oriPointStream())
+				.sorted(Comparator.comparing(analyticLine.isVertical() ? OriPoint::getY : OriPoint::getX))
+				.toList();
 
 		return points;
 	}
