@@ -117,9 +117,7 @@ public class LineAdder {
 		});
 
 		// sort in order to make points sequential
-		pointSorter.sortPointsOnLine(points, inputLine);
-
-		return points;
+		return pointSorter.sortPointsOnLine(points, inputLine);
 	}
 
 	/**

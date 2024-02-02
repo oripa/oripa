@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import oripa.geom.GeomUtil;
 import oripa.util.collection.CollectionUtil;
@@ -73,6 +74,8 @@ public class OverlappingLineDivider {
 
 			lineSet.removeAll(lineOverlaps);
 
+			// Cannot be done in parallel since two or more dividers might
+			// divides the same line.
 			dividerOverlaps.forEach(divider -> divideLinesIfOverlap(divider, lineOverlaps, pointEps));
 
 			lineSet.addAll(lineOverlaps);
@@ -89,7 +92,7 @@ public class OverlappingLineDivider {
 	 *            {@code dividerLine}
 	 * @param pointEps
 	 */
-	private void divideLinesIfOverlap(final OriLine dividerLine, final Collection<OriLine> lines,
+	private void divideLinesIfOverlap(final OriLine dividerLine, final Set<OriLine> lines,
 			final double pointEps) {
 
 		Set<OriLine> targettedLines = CollectionUtil.newConcurrentHashSet();
@@ -110,11 +113,11 @@ public class OverlappingLineDivider {
 						return;
 					}
 
-					pointSorter.sortPointsOnLine(splitPoints, line);
+					var sortedPoints = pointSorter.sortPointsOnLine(splitPoints, line);
 
 					targettedLines.add(line);
 					splitLines.addAll(
-							sequentialLineFactory.createSequentialLines(splitPoints, line.getType(), pointEps));
+							sequentialLineFactory.createSequentialLines(sortedPoints, line.getType(), pointEps));
 				});
 
 		lines.removeAll(targettedLines);
@@ -122,17 +125,15 @@ public class OverlappingLineDivider {
 	}
 
 	private List<Vector2d> createSplitPoints(final OriLine line, final Vector2d p, final double pointEps) {
-		var points = new ArrayList<Vector2d>(List.of(line.getP0(), line.getP1()));
+		var points = List.of(line.getP0(), line.getP1());
 
 		// is close to segment?
 		if (GeomUtil.distancePointToSegment(p, line) > pointEps) {
 			return points;
 		}
 
-		if (GeomUtil.distance(p, line.getP0()) >= pointEps) {
-			points.add(p);
-		} else if (GeomUtil.distance(p, line.getP1()) >= pointEps) {
-			points.add(p);
+		if (points.stream().anyMatch(q -> GeomUtil.distance(p, q) >= pointEps)) {
+			return Stream.concat(points.stream(), Stream.of(p)).toList();
 		}
 
 		return points;
