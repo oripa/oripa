@@ -145,24 +145,20 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		if (obj == this) {
 			return true;
 		}
-		if (!(obj instanceof OriLine)) {
-			return false;
-		}
+		if (obj instanceof OriLine that) {
+			// same direction?
+			int comparison00 = this.p0.compareTo(that.p0);
+			int comparison11 = this.p1.compareTo(that.p1);
+			if (comparison00 == 0 && comparison11 == 0) {
+				return this.type.equals(that.type);
+			}
 
-		OriLine that = (OriLine) obj;
-
-		// same direction?
-		int comparison00 = this.p0.compareTo(that.p0);
-		int comparison11 = this.p1.compareTo(that.p1);
-		if (comparison00 == 0 && comparison11 == 0) {
-			return this.type.equals(that.type);
-		}
-
-		// reversed direction?
-		int comparison01 = this.p0.compareTo(that.p1);
-		int comparison10 = this.p1.compareTo(that.p0);
-		if (comparison01 == 0 && comparison10 == 0) {
-			return this.type.equals(that.type);
+			// reversed direction?
+			int comparison01 = this.p0.compareTo(that.p1);
+			int comparison10 = this.p1.compareTo(that.p0);
+			if (comparison01 == 0 && comparison10 == 0) {
+				return this.type.equals(that.type);
+			}
 		}
 
 		// differs

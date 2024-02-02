@@ -102,13 +102,11 @@ public class Vector2d {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (!(o instanceof Vector2d)) {
-			return false;
+		if (o instanceof Vector2d v) {
+			return x == v.x && y == v.y;
 		}
+		return false;
 
-		var v = (Vector2d) o;
-
-		return x == v.x && y == v.y;
 	}
 
 	@Override

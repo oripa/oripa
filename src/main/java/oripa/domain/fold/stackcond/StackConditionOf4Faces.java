@@ -71,14 +71,14 @@ public class StackConditionOf4Faces {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (!(obj instanceof StackConditionOf4Faces)) {
-			return false;
+		if (obj instanceof StackConditionOf4Faces o) {
+			return upper1 == o.upper1 &&
+					lower1 == o.lower1 &&
+					upper2 == o.upper2 &&
+					lower2 == o.lower2;
 		}
-		var o = (StackConditionOf4Faces) obj;
-		return upper1 == o.upper1 &&
-				lower1 == o.lower1 &&
-				upper2 == o.upper2 &&
-				lower2 == o.lower2;
+
+		return false;
 	}
 
 	@Override
