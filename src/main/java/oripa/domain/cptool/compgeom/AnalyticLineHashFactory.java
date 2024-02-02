@@ -81,19 +81,17 @@ public class AnalyticLineHashFactory {
 	private ArrayList<ArrayList<ArrayList<AnalyticLine>>> createInterceptHash(
 			final ArrayList<ArrayList<AnalyticLine>> angleHash) {
 
-		var hash = new ArrayList<ArrayList<ArrayList<AnalyticLine>>>();
+		return angleHash.stream()
+				.map(byAngle -> {
+					var sorted = byAngle.stream()
+							.sorted(Comparator.comparing(AnalyticLine::getIntercept))
+							.collect(Collectors.toCollection(ArrayList::new));
 
-		for (int i = 0; i < angleHash.size(); i++) {
-			var byAngle = angleHash.get(i).stream()
-					.sorted(Comparator.comparing(AnalyticLine::getIntercept))
-					.collect(Collectors.toCollection(ArrayList::new));
+					var byIntercept = createHash(sorted, AnalyticLine::getIntercept);
 
-			var byIntercept = createHash(byAngle, AnalyticLine::getIntercept);
-
-			hash.add(byIntercept);
-
-		}
-		return hash;
+					return byIntercept;
+				})
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	/**

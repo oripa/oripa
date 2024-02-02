@@ -1,6 +1,5 @@
 package oripa.domain.cptool;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,8 +19,6 @@ public class LineDivider {
 			final OriLine line, final Vector2d v,
 			final double pointEps) {
 
-		ArrayList<OriLine> divided = new ArrayList<>(2);
-
 		// Normally you don't want to add a vertex too close to the end of the
 		// line
 		if (GeomUtil.distance(line.getP0(), v) < pointEps
@@ -34,10 +31,9 @@ public class LineDivider {
 			return List.of();
 		}
 
-		divided.add(new OriLine(line.getP0(), v, line.getType()));
-		divided.add(new OriLine(v, line.getP1(), line.getType()));
-
-		return divided;
+		return List.of(
+				new OriLine(line.getP0(), v, line.getType()),
+				new OriLine(v, line.getP1(), line.getType()));
 	}
 
 }
