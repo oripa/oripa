@@ -28,12 +28,12 @@ To find out more about using the software, visit the [ORIPA project's website](h
 #### Executable jar
 You can download the executable jar file at the [release page](https://github.com/oripa/oripa/releases).
 
-To run ORIPA, **you need install JDK 11 or above.**
+To run ORIPA, **you need install JDK 21 or above.** (ver. 1.69 or older can be run on JDK 11.)
 
 Once downloaded, to run ORIPA in a terminal just run:
 
 ```sh
-java -jar ./oripa-1.50.jar
+java -jar ./oripa-1.70.jar
 ```
 
 #### Executable binary
@@ -56,27 +56,27 @@ Examples:
 
 ```sh
 # Show help.
-java -jar ./oripa-1.65.jar --help
+java -jar ./oripa-1.70.jar --help
 ```
 
 ```sh
 # Crease pattern file format conversion.
-java -jar ./oripa-1.65.jar --convert converted.fold cp.opx
+java -jar ./oripa-1.70.jar --convert converted.fold cp.opx
 # Short version with a different order of options.
-java -jar ./oripa-1.65.jar cp.opx -c converted.fold 
+java -jar ./oripa-1.70.jar cp.opx -c converted.fold 
 
 # FOLD is also acceptable input. Image conversion is available.
-java -jar ./oripa-1.65.jar --convert converted.png cp.fold
+java -jar ./oripa-1.70.jar --convert converted.png cp.fold
 ```
 
 ```sh
 # Fold the crease pattern and output as a multiple frame FOLD.
-java -jar ./oripa-1.65.jar --fold folded.fold cp.opx
+java -jar ./oripa-1.70.jar --fold folded.fold cp.opx
 ```
 
 ```sh
 # Output an image of the folded model at the given index.
-java -jar ./oripa-1.65.jar --image folded.svg -n 0 folded.fold
+java -jar ./oripa-1.70.jar --image folded.svg -n 0 folded.fold
 ```
 
 
@@ -88,8 +88,8 @@ You can add a line-input functionality by:
 
 * Implement `oripa.gui.presenter.plugin.GraphicMouseActionPlugin` in a project different from the ORIPA's main project. If you use Maven, you need install ORIPA into your Maven local repository by `mvn install` and add the dependency in your plug-in project's pom.xml.
 * Add resources/META-INF/services/oripa.gui.presenter.plugin.GraphicMouseActionPlugin that contains
-  the FQN of your implementation class(es).
-* Make a jar and add it to classpath. The command will be like: `java -cp oripa-1.63.jar;your-plugin.jar oripa.ORIPA`.
+  the FQN of your implementation class(es) of the interface.
+* Make a jar and add it to classpath. The command will be like: `java -cp oripa-1.70.jar;your-plugin.jar oripa.ORIPA`.
 
 ### Next challenge(s)
 --------
