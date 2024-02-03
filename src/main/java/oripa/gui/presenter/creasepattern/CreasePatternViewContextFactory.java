@@ -18,14 +18,12 @@
  */
 package oripa.gui.presenter.creasepattern;
 
-import oripa.domain.paint.PaintContext;
-
 /**
  * @author OUCHI Koji
  *
  */
 public class CreasePatternViewContextFactory {
-	public CreasePatternViewContext create(final PaintContext paintContext) {
-		return new CreasePatternViewContextImpl(paintContext);
+	public CreasePatternViewContext create() {
+		return new CreasePatternViewContextImpl();
 	}
 }

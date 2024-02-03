@@ -85,7 +85,14 @@ public class PainterScreenPresenter {
 		view.setVertexVisibleUpdateListener(viewContext::setVertexVisible);
 		view.setMVLineVisibleUpdateListener(viewContext::setMVLineVisible);
 		view.setAuxLineVisibleUpdateListener(viewContext::setAuxLineVisible);
-		view.setGridVisibleUpdateListener(viewContext::setGridVisible);
+		view.setGridVisibleUpdateListener(gridVisible -> {
+			viewContext.setGridVisible(gridVisible);
+			if (gridVisible) {
+				paintContext.updateGrids();
+			} else {
+				paintContext.clearGrids();
+			}
+		});
 		view.setCrossLineVisibleUpdateListener(viewContext::setCrossLineVisible);
 
 		view.setCameraScaleUpdateListener(this::updateCameraScale);

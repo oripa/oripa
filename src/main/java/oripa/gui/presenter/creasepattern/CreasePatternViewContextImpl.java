@@ -18,7 +18,6 @@
  */
 package oripa.gui.presenter.creasepattern;
 
-import oripa.domain.paint.PaintContext;
 import oripa.gui.view.main.InitialVisibilities;
 import oripa.vecmath.Vector2d;
 
@@ -27,8 +26,6 @@ import oripa.vecmath.Vector2d;
  *
  */
 class CreasePatternViewContextImpl implements CreasePatternViewContext {
-
-	private final PaintContext paintContext;
 
 	private Vector2d logicalPoint = new Vector2d(0, 0);
 
@@ -42,8 +39,7 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 	private boolean crossLineVisible = InitialVisibilities.CROSS;
 	private boolean zeroLineWidth = InitialVisibilities.ZERO_LINE_WIDTH;
 
-	public CreasePatternViewContextImpl(final PaintContext paintContext) {
-		this.paintContext = paintContext;
+	public CreasePatternViewContextImpl() {
 	}
 
 	@Override
@@ -118,11 +114,6 @@ class CreasePatternViewContextImpl implements CreasePatternViewContext {
 	@Override
 	public void setGridVisible(final boolean gridVisible) {
 		this.gridVisible = gridVisible;
-		if (gridVisible) {
-			paintContext.updateGrids();
-		} else {
-			paintContext.clearGrids();
-		}
 	}
 
 	@Override

@@ -117,7 +117,7 @@ public class ORIPA {
 			// Construct the presenter
 
 			var paintContext = new PaintContextFactory().createContext();
-			var viewContext = new CreasePatternViewContextFactory().create(paintContext);
+			var viewContext = new CreasePatternViewContextFactory().create();
 
 			var dialogFactory = new MainFrameSwingDialogFactory(
 					new ArrayCopyDialogFactory(),
