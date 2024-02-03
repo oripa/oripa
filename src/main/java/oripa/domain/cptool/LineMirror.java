@@ -2,7 +2,6 @@ package oripa.domain.cptool;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
@@ -24,7 +23,7 @@ public class LineMirror {
 		List<OriLine> copiedLines = lines.stream()
 				.filter(line -> !line.equals(baseLine))
 				.map(line -> createMirroredLine(line, baseLine))
-				.collect(Collectors.toList());
+				.toList();
 
 		return copiedLines;
 	}

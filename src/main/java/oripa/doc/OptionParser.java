@@ -19,7 +19,6 @@
 package oripa.doc;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.util.Pair;
 
@@ -61,7 +60,7 @@ public class OptionParser {
 	public List<Pair<String, String>> parse(final List<String> lines) {
 		return lines.stream()
 				.map(this::parse)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public String createLine(final Pair<String, String> option) {
@@ -71,6 +70,6 @@ public class OptionParser {
 	public List<String> createLines(final List<Pair<String, String>> options) {
 		return options.stream()
 				.map(this::createLine)
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

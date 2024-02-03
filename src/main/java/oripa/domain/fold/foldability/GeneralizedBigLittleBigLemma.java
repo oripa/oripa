@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
@@ -117,12 +116,12 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 
 		final List<Double> angles = IntStream.range(0, edgeNum)
 				.mapToObj(i -> OriGeomUtil.getAngleDifference(vertex, i))
-				.collect(Collectors.toList());
+				.toList();
 
 		logger.trace("angles = "
 				+ String.join(",", angles.stream()
 						.map(a -> Double.toString(Math.toDegrees(a)))
-						.collect(Collectors.toList())));
+						.toList()));
 
 		Function<Integer, Double> getAngle = i -> CollectionUtil.getCircular(angles, i);
 

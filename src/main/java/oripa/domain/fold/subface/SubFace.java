@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.origeom.OverlapRelation;
@@ -130,7 +129,7 @@ public class SubFace {
 						.thenComparing(stackConditionAggregate::getCountOfConditionsOf3Faces)
 						.thenComparing(stackConditionAggregate::getCountOfConditionsOf4Faces)
 						.reversed())
-				.collect(Collectors.toList());
+				.toList();
 
 		var firstFace = candidateFaces.get(0);
 		firstFaceCounts.get(firstFace).incrementAndGet();
@@ -184,7 +183,7 @@ public class SubFace {
 
 		var facesToBePut = candidateFaces.stream()
 				.filter(f -> !alreadyInLocalLayerOrder[f.getFaceID()])
-				.collect(Collectors.toList());
+				.toList();
 		var facesToBePutStream = facesToBePut.stream();
 
 		// Avoids overhead of insane parallelization.
@@ -275,7 +274,7 @@ public class SubFace {
 	public boolean addParentFaces(final Collection<OriFace> faces) {
 		faces.forEach(face -> firstFaceCounts.put(face, new AtomicInteger()));
 
-		parentFaceIndices.addAll(faces.stream().map(OriFace::getFaceID).collect(Collectors.toList()));
+		parentFaceIndices.addAll(faces.stream().map(OriFace::getFaceID).toList());
 
 		return parentFaces.addAll(faces);
 	}

@@ -20,8 +20,6 @@ package oripa.domain.fold.condfac;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import oripa.domain.fold.halfedge.OriFace;
@@ -37,9 +35,9 @@ public class OverlappingFaceIndexIntersectionFactory {
 	public List<Integer>[][] create(
 			final List<OriFace> faces,
 			final OverlapRelation overlapRelation) {
-		List<Set<Integer>> indices = IntStream.range(0, faces.size())
+		var indices = IntStream.range(0, faces.size())
 				.mapToObj(i -> new HashSet<Integer>())
-				.collect(Collectors.toList());
+				.toList();
 
 		// prepare pair indices of overlapping faces.
 		for (var face : faces) {
@@ -68,7 +66,7 @@ public class OverlappingFaceIndexIntersectionFactory {
 
 				indexIntersections[index_i][index_j] = overlappingFaces_i.stream()
 						.filter(index -> overlappingFaces_j.contains(index))
-						.collect(Collectors.toList());
+						.toList();
 			}
 		}
 

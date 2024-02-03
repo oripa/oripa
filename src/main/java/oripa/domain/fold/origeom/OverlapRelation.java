@@ -18,8 +18,6 @@
  */
 package oripa.domain.fold.origeom;
 
-import java.util.stream.Collectors;
-
 import oripa.util.AtomicByteDenseMatrix;
 import oripa.util.ByteDenseMatrix;
 import oripa.util.ByteMatrix;
@@ -137,8 +135,7 @@ public class OverlapRelation {
 		case OverlapRelationValues.UPPER:
 			overlapRelation.set(j, i, OverlapRelationValues.LOWER);
 			break;
-		case OverlapRelationValues.UNDEFINED:
-		case OverlapRelationValues.NO_OVERLAP:
+		case OverlapRelationValues.UNDEFINED, OverlapRelationValues.NO_OVERLAP:
 			overlapRelation.set(j, i, value);
 			break;
 
@@ -289,7 +286,7 @@ public class OverlapRelation {
 			var line = String.join(" ",
 					overlapRelation.getRow(i).stream()
 							.map(b -> b.toString())
-							.collect(Collectors.toList()));
+							.toList());
 			builder.append(line);
 			builder.append(System.lineSeparator());
 		}

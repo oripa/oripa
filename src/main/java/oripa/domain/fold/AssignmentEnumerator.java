@@ -154,7 +154,7 @@ class AssignmentEnumerator {
 					vertex.getPositionBeforeFolding(),
 					assignment);
 			apply(assignment);
-			logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).collect(Collectors.toList()));
+			logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).toList());
 
 			enumerateImpl(origamiModel, nextCandidateVertices);
 
@@ -162,7 +162,7 @@ class AssignmentEnumerator {
 					vertex.getPositionBeforeFolding(),
 					assignment);
 			apply(originalAssignment);
-			logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).collect(Collectors.toList()));
+			logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).toList());
 
 		}
 
@@ -174,7 +174,7 @@ class AssignmentEnumerator {
 		// maybe this sort avoids the worst case.
 //		return vertices.stream()
 //				.sorted(Comparator.comparing(OriVertex::countUnassignedEdges))
-//				.collect(Collectors.toList());
+//				.toList();
 	}
 
 	private Map<List<OriVertex>, OriLine.Type> toAssignmentMap(final OriVertex vertex) {
@@ -183,7 +183,7 @@ class AssignmentEnumerator {
 	}
 
 	private List<OriVertex> edgeToKey(final OriEdge edge) {
-		return Stream.of(edge.getStartVertex(), edge.getEndVertex()).sorted().collect(Collectors.toList());
+		return Stream.of(edge.getStartVertex(), edge.getEndVertex()).sorted().toList();
 	}
 
 	private void apply(final Map<List<OriVertex>, OriLine.Type> assignment) {
@@ -211,7 +211,7 @@ class AssignmentEnumerator {
 
 		if (edgeIndex == edgeCount) {
 			if (!foldability.holds(vertex)) {
-				logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).collect(Collectors.toList()));
+				logger.trace("edges: {}", vertex.edgeStream().map(OriEdge::getType).toList());
 				logger.trace("return empty assignments. ({})", vertex);
 				return List.of();
 			}

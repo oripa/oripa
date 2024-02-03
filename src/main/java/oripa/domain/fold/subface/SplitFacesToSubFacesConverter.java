@@ -20,7 +20,6 @@ package oripa.domain.fold.subface;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
@@ -42,6 +41,6 @@ public class SplitFacesToSubFacesConverter {
 		return new ArrayList<SubFace>(
 				splitFaces.stream()
 						.map(face -> new SubFace(face))
-						.collect(Collectors.toList()));
+						.toList());
 	}
 }

@@ -19,7 +19,6 @@
 package oripa.domain.paint.outline;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +53,7 @@ public class OutlineEditerCommand extends ValidatablePaintCommand {
 
 		var pickedVertices = context.getPickedVertices().subList(0, context.getVertexCount() - 1).stream()
 				.distinct()
-				.collect(Collectors.toList());
+				.toList();
 
 		if (pickedVertices.stream()
 				.anyMatch(tv -> GeomUtil.distance(vOpt.get(), tv) < context.getPointEps())) {

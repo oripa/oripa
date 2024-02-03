@@ -48,7 +48,7 @@ public class AnalyticLineHashFactory {
 		return lineArray.parallelStream()
 				.map(line -> new AnalyticLine(line))
 				.sorted(Comparator.comparing(AnalyticLine::getAngle))
-				.collect(Collectors.toCollection(() -> new ArrayList<>()));
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	private ArrayList<ArrayList<AnalyticLine>> createHash(
@@ -81,19 +81,12 @@ public class AnalyticLineHashFactory {
 	private ArrayList<ArrayList<ArrayList<AnalyticLine>>> createInterceptHash(
 			final ArrayList<ArrayList<AnalyticLine>> angleHash) {
 
-		var hash = new ArrayList<ArrayList<ArrayList<AnalyticLine>>>();
-
-		for (int i = 0; i < angleHash.size(); i++) {
-			var byAngle = angleHash.get(i).stream()
-					.sorted(Comparator.comparing(AnalyticLine::getIntercept))
-					.collect(Collectors.toCollection(() -> new ArrayList<>()));
-
-			var byIntercept = createHash(byAngle, AnalyticLine::getIntercept);
-
-			hash.add(byIntercept);
-
-		}
-		return hash;
+		return angleHash.stream()
+				.map(byAngle -> byAngle.stream()
+						.sorted(Comparator.comparing(AnalyticLine::getIntercept))
+						.collect(Collectors.toCollection(ArrayList::new)))
+				.map(sorted -> createHash(sorted, AnalyticLine::getIntercept))
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	/**

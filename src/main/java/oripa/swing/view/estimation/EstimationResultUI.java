@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -263,7 +262,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			filteredIndices.retainAll(selectedIndices);
 		});
 
-		return filteredIndices.stream().map(k -> foldedModel.getOverlapRelations().get(k)).collect(Collectors.toList());
+		return filteredIndices.stream().map(k -> foldedModel.getOverlapRelations().get(k)).toList();
 	}
 
 	private void setFilterEnabled(final boolean enabled) {

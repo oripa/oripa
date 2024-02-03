@@ -39,12 +39,10 @@ public class Pair<V1, V2> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (!(obj instanceof Pair)) {
-			return false;
+		if (obj instanceof Pair o) {
+			return v1.equals(o.v1) && v2.equals(o.v2);
 		}
-		@SuppressWarnings("unchecked")
-		var o = (Pair<V1, V2>) obj;
-		return v1.equals(o.v1) && v2.equals(o.v2);
+		return false;
 	}
 
 	@Override

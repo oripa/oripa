@@ -20,7 +20,6 @@ package oripa.persistence.doc.loader;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import oripa.domain.creasepattern.CreasePattern;
@@ -39,7 +38,7 @@ class LineDtoConverter {
 		var domain = RectangleDomain.createFromPoints(
 				dtos.stream()
 						.flatMap(dto -> Stream.of(dto.getP0(), dto.getP1()))
-						.collect(Collectors.toList()));
+						.toList());
 
 		final double size = 400;
 		var center = domain.getCenter();
@@ -76,8 +75,9 @@ class LineDtoConverter {
 
 		var factory = new CreasePatternFactory();
 		var creasePattern = factory
-				.createCreasePattern(dtos.stream().map(d -> new OriLine(d.p0x, d.p0y, d.p1x, d.p1y, d.type))
-						.collect(Collectors.toList()));
+				.createCreasePattern(dtos.stream()
+						.map(d -> new OriLine(d.p0x, d.p0y, d.p1x, d.p1y, d.type))
+						.toList());
 
 		return creasePattern;
 	}

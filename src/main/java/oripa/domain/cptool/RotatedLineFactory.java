@@ -2,7 +2,6 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -45,7 +44,7 @@ public class RotatedLineFactory {
 			rotatedLines.addAll(selectedLines.stream()
 					.map(l -> createRotatedLine(l, center, angleRad))
 					.filter(rl -> clipper.clip(rl))
-					.collect(Collectors.toList()));
+					.toList());
 		}
 
 		return rotatedLines;

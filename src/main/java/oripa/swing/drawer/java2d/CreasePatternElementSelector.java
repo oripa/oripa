@@ -9,41 +9,33 @@ public class CreasePatternElementSelector {
 
 	public Color getColor(final OriLine.Type lineType) {
 
-		switch (lineType) {
-		case AUX:
-			return Color.LIGHT_GRAY;
-		case CUT:
-			return Color.BLACK;
-		case MOUNTAIN:
-			return Color.RED;
-		case VALLEY:
-			return Color.BLUE;
-		case UNASSIGNED:
-			return Color.ORANGE;
-		case CUT_MODEL:
-			return Color.MAGENTA;
-		default:
-			return Color.BLACK;
-		}
+		return switch (lineType) {
+		case AUX -> Color.LIGHT_GRAY;
+		case CUT -> Color.BLACK;
+		case MOUNTAIN -> Color.RED;
+		case VALLEY -> Color.BLUE;
+		case UNASSIGNED -> Color.ORANGE;
+		case CUT_MODEL -> Color.MAGENTA;
+		default -> Color.BLACK;
+		};
 	}
 
 	public BasicStroke createStroke(final OriLine.Type lineType, final double scale,
 			final boolean zeroWidth) {
-		switch (lineType) {
-		case AUX:
-		case CUT:
-		case MOUNTAIN:
-		case VALLEY:
-		case UNASSIGNED:
-			return new BasicStroke(createThinLineWidth(scale, zeroWidth), BasicStroke.CAP_BUTT,
-					BasicStroke.JOIN_MITER);
-		case CUT_MODEL:
-			return new BasicStroke(createThickLineWidth(scale), BasicStroke.CAP_BUTT,
-					BasicStroke.JOIN_MITER);
-		default:
-			return new BasicStroke(createThinLineWidth(scale, zeroWidth), BasicStroke.CAP_BUTT,
-					BasicStroke.JOIN_MITER);
-		}
+		return switch (lineType) {
+		case AUX, CUT, MOUNTAIN, VALLEY, UNASSIGNED -> new BasicStroke(
+				createThinLineWidth(scale, zeroWidth),
+				BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
+		case CUT_MODEL -> new BasicStroke(
+				createThickLineWidth(scale),
+				BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
+		default -> new BasicStroke(
+				createThinLineWidth(scale, zeroWidth),
+				BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER);
+		};
 	}
 
 	private float createVeryThickLineWidth(final double scale) {

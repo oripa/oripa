@@ -43,12 +43,10 @@ public class IntPair {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (!(obj instanceof IntPair)) {
-			return false;
+		if (obj instanceof IntPair o) {
+			return v1 == o.v1 && v2 == o.v2;
 		}
-
-		var o = (IntPair) obj;
-		return v1 == o.v1 && v2 == o.v2;
+		return false;
 	}
 
 	@Override

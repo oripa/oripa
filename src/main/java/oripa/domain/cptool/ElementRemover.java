@@ -53,7 +53,7 @@ public class ElementRemover {
 		return creasePattern.parallelStream()
 				.filter(line -> isConnectionPoint(line.getP0(), p, pointEps)
 						|| isConnectionPoint(line.getP1(), p, pointEps))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class ElementRemover {
 				connectionPoint,
 				sharedPoints.stream()
 						.map(point -> point.getLine())
-						.collect(Collectors.toList()),
+						.toList(),
 				creasePattern, pointEps);
 	}
 
@@ -149,7 +149,7 @@ public class ElementRemover {
 		logger.trace(msg + String.join("|",
 				lines.stream()
 						.map(l -> l.toString())
-						.collect(Collectors.toList())));
+						.toList()));
 	}
 
 	private void removeBothSidesFromMap(final PointAndLine point,
@@ -167,7 +167,7 @@ public class ElementRemover {
 
 		var endPoints = keyPoints.stream()
 				.map(keyPoint -> new PointAndLine(keyPoint, line))
-				.collect(Collectors.toList());
+				.toList();
 
 		endPoints.get(0).setKeyPoint(keyPoints.get(0));
 		endPoints.get(0).setOppositeKeyPoint(keyPoints.get(1));
@@ -196,7 +196,7 @@ public class ElementRemover {
 			trace("sharedLines@" + shared + ": " + "#=" + sharedPoints.size(),
 					sharedPoints.stream()
 							.map(s -> s.getLine())
-							.collect(Collectors.toList()));
+							.toList());
 
 			if (removedLinePoints != null) {
 				var boundRemovedPoints = removedLinePoints
@@ -272,7 +272,7 @@ public class ElementRemover {
 
 		List<OriLine> selectedLines = creasePattern.parallelStream()
 				.filter(OriLine::isSelected)
-				.collect(Collectors.toList());
+				.toList();
 
 		removeLines(selectedLines, creasePattern, pointEps);
 	}

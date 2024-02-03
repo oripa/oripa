@@ -45,25 +45,15 @@ public class FolderFactory {
 	 *         subfaces only once to reduce computation time.
 	 */
 	public Folder create(final ModelType type) {
-		Folder folder;
-		switch (type) {
-		case ASSIGNED:
-			folder = createAssigned();
-			break;
+		return switch (type) {
+		case ASSIGNED -> createAssigned();
 
-		case UNASSIGNED:
-			folder = createUnassigned();
-			break;
+		case UNASSIGNED -> createUnassigned();
 
-		case ERROR_CONTAINING:
-			folder = createErrorContaining();
-			break;
+		case ERROR_CONTAINING -> createErrorContaining();
 
-		default:
-			throw new IllegalArgumentException();
-		}
-
-		return folder;
+		default -> throw new IllegalArgumentException();
+		};
 	}
 
 	private Folder createAssigned() {

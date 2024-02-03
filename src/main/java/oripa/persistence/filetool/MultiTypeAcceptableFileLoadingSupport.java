@@ -20,7 +20,6 @@ package oripa.persistence.filetool;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -57,7 +56,7 @@ public class MultiTypeAcceptableFileLoadingSupport<Data>
 		super(new MultiTypeProperty<Data>(
 				supports.stream()
 						.map(support -> support.getTargetType())
-						.collect(Collectors.toList())),
+						.toList()),
 				msg);
 
 		supports.forEach(support -> {
@@ -89,6 +88,7 @@ public class MultiTypeAcceptableFileLoadingSupport<Data>
 	public String[] getExtensions() {
 		return fileAccessSupports.stream()
 				.flatMap(support -> Stream.of(support.getExtensions()))
-				.collect(Collectors.toList()).toArray(new String[0]);
+				.toList()
+				.toArray(new String[0]);
 	}
 }

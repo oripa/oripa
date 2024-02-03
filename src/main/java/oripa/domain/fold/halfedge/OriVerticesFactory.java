@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +67,7 @@ public class OriVerticesFactory {
 
 		var neighbors = boundMap.keySet().stream()
 				.filter(point -> GeomUtil.areEqual(point, p, pointEps))
-				.collect(Collectors.toList());
+				.toList();
 
 		if (neighbors.isEmpty()) {
 			var vtx = new OriVertex(p);

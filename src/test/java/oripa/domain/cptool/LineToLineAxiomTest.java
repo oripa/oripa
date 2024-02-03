@@ -2,8 +2,6 @@ package oripa.domain.cptool;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.Test;
 
 import oripa.geom.GeomUtil;
@@ -71,7 +69,7 @@ class LineToLineAxiomTest {
 
 		var angles = lines.stream()
 				.map(line -> line.getDirection().angle(new Vector2d(1, 0)))
-				.collect(Collectors.toList());
+				.toList();
 
 		AssertionUtil.assertAnyMatch(Math.PI / 8, angles,
 				(expected, actual) -> MathUtil.areEqual(expected, actual, EPS));

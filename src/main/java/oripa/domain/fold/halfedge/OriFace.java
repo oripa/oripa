@@ -204,7 +204,7 @@ public class OriFace {
 	public List<Vector2d> createOutlineVerticesAfterFolding() {
 		return halfedgeStream()
 				.map(OriHalfedge::getPositionForDisplay)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public List<Vector2d> createOutlineVerticesBeforeFolding() {
@@ -212,7 +212,7 @@ public class OriFace {
 		double rate = 0.5;
 		return halfedgeStream()
 				.map(he -> he.getPositionBeforeFolding().multiply(rate).add(centerP.multiply(1.0 - rate)))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class OriFace {
 	public Vector2d getCentroidBeforeFolding() {
 		return GeomUtil.computeCentroid(halfedges.stream()
 				.map(OriHalfedge::getPositionBeforeFolding)
-				.collect(Collectors.toList()));
+				.toList());
 	}
 
 	/**
@@ -235,7 +235,7 @@ public class OriFace {
 	public Vector2d getCentroid() {
 		return GeomUtil.computeCentroid(halfedges.stream()
 				.map(OriHalfedge::getPosition)
-				.collect(Collectors.toList()));
+				.toList());
 	}
 
 	/**

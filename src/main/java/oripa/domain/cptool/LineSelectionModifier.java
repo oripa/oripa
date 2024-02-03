@@ -1,6 +1,7 @@
 package oripa.domain.cptool;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import oripa.value.OriLine;
 
@@ -22,7 +23,7 @@ public class LineSelectionModifier {
 	 */
 	public void selectAllOriLines(final Collection<OriLine> creasePattern) {
 		creasePattern.stream()
-				.filter(l -> !l.isBoundary())
+				.filter(Predicate.not(OriLine::isBoundary))
 				.forEach(l -> l.setSelected(true));
 	}
 

@@ -20,7 +20,6 @@ package oripa.domain.fold.foldability;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -102,7 +101,7 @@ public class FoldabilityChecker {
 
 		var result = Arrays.asList(VertexRule.values()).parallelStream()
 				.flatMap(rule -> rule.getConjunction().findViolations(vertices).parallelStream())
-				.collect(Collectors.toList());
+				.toList();
 
 		logger.debug("findViolatingVertices: " + watch.getMilliSec() + "[ms]");
 
@@ -113,7 +112,7 @@ public class FoldabilityChecker {
 		return Arrays.asList(VertexRule.values()).stream()
 				.filter(rule -> rule.getRule().violates(vertex))
 				.map(rule -> rule.getName())
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public Collection<OriFace> findViolatingFaces(final Collection<OriFace> faces) {

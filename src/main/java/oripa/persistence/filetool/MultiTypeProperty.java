@@ -20,7 +20,6 @@ package oripa.persistence.filetool;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * @author OUCHI Koji
@@ -48,7 +47,7 @@ public class MultiTypeProperty<Data> implements FileTypeProperty<Data> {
 	public String[] getExtensions() {
 		return properties.stream()
 				.flatMap(p -> Arrays.asList(p.getExtensions()).stream())
-				.collect(Collectors.toList()).toArray(new String[0]);
+				.toList().toArray(new String[0]);
 	}
 
 	@Override

@@ -20,7 +20,6 @@ package oripa.domain.fold.halfedge;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import oripa.geom.RectangleDomain;
 import oripa.vecmath.Vector2d;
@@ -151,7 +150,7 @@ public class OrigamiModel {
 				faces.stream()
 						.flatMap(OriFace::halfedgeStream)
 						.map(OriHalfedge::getPosition)
-						.collect(Collectors.toList()));
+						.toList());
 
 		double centerX = domain.getCenterX();
 
@@ -175,7 +174,7 @@ public class OrigamiModel {
 				faces.stream()
 						.flatMap(OriFace::halfedgeStream)
 						.map(positionExtractor)
-						.collect(Collectors.toList()));
+						.toList());
 
 		return paperDomain;
 	}

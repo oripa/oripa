@@ -22,7 +22,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -60,7 +59,7 @@ public class OrigamiModelExporterDXF implements Exporter<OrigamiModel> {
 					faces.stream()
 							.flatMap(face -> face.halfedgeStream())
 							.map(OriHalfedge::getPosition)
-							.collect(Collectors.toList()));
+							.toList());
 
 			// Align the center of the model, combine scales
 			Vector2d modelCenter = domain.getCenter();

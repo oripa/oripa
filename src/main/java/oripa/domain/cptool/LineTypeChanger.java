@@ -1,8 +1,6 @@
 package oripa.domain.cptool;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import oripa.value.OriLine;
 
@@ -48,21 +46,18 @@ public class LineTypeChanger {
 	}
 
 	/**
-	 * We need to remove and add element to be updated if {@code lines} is a
-	 * hash set.
+	 * removes the given line and adds to {@code lines} a copied line with type
+	 * change.
 	 *
 	 * @param l
 	 * @param type
 	 * @param lines
 	 */
 	private void setType(final OriLine l, final OriLine.Type type, final Collection<OriLine> lines) {
-		if (lines instanceof Set) {
-			lines.remove(l);
-		}
-		l.setType(type);
-		if (lines instanceof Set) {
-			lines.add(l);
-		}
+
+		lines.remove(l);
+
+		lines.add(new OriLine(l.getP0(), l.getP1(), type));
 	}
 
 	public void alterLineTypes(final Collection<OriLine> toBeChanged,
@@ -71,7 +66,7 @@ public class LineTypeChanger {
 			final double pointEps) {
 		var filtered = toBeChanged.stream()
 				.filter(line -> isTarget(line, from))
-				.collect(Collectors.toList());
+				.toList();
 
 		if (to == TypeForChange.DELETE) {
 			remover.removeLines(filtered, lines, pointEps);

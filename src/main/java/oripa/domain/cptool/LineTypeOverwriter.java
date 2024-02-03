@@ -50,21 +50,22 @@ public class LineTypeOverwriter {
 	 *            points.
 	 * @param allLines
 	 *            is the result of adding lines and splitting at cross points.
+	 * @return all lines that each line is from either {@code addedLines} if the
+	 *         line overlaps or {@code allLines} if it has no overlaps.
 	 */
-	public void overwriteLineTypes(final Collection<OriLine> addedLines, final Collection<OriLine> allLines,
+	public Collection<OriLine> overwriteLineTypes(final Collection<OriLine> addedLines,
+			final Collection<OriLine> allLines,
 			final double pointEps) {
 		var overlapGroups = extractor.extractOverlapsGroupedBySupport(allLines, pointEps);
 
 		var addedLineSet = new HashSet<>(addedLines);
-		Set<OriLine> allLineSet = CollectionUtil.newConcurrentHashSet();
-		allLineSet.addAll(allLines);
+		Set<OriLine> allLineSet = CollectionUtil.newConcurrentHashSet(allLines);
 
 		overlapGroups.parallelStream().forEach(overlaps -> {
 			determineLineTypes(overlaps, addedLineSet, allLineSet, pointEps);
 		});
 
-		allLines.clear();
-		allLines.addAll(allLineSet);
+		return allLineSet;
 	}
 
 	private void determineLineTypes(final Collection<OriLine> overlaps, final Set<OriLine> addedLines,
@@ -90,16 +91,14 @@ public class LineTypeOverwriter {
 		for (var splitLine : splitLines) {
 
 			Function<Collection<OriLine>, Boolean> find = overlapsForFilter -> {
-				var filteredOverlap = overlapsForFilter.stream()
+				return overlapsForFilter.stream()
 						.filter(line -> GeomUtil.isOverlap(splitLine, line, pointEps))
-						.findFirst();
-
-				if (filteredOverlap.isPresent()) {
-					linesToBeUsed.add(filteredOverlap.get());
-
-					return true;
-				}
-				return false;
+						.findFirst()
+						.map(overlap -> {
+							linesToBeUsed.add(overlap);
+							return true;
+						})
+						.orElse(false);
 			};
 
 			if (find.apply(addedOverlaps)) {
@@ -113,15 +112,12 @@ public class LineTypeOverwriter {
 	}
 
 	private List<OriPoint> sortLineEndPoints(final Collection<OriLine> overlaps) {
+		var analyticLine = new AnalyticLine(overlaps.stream().findFirst().get());
+
 		var points = overlaps.stream()
 				.flatMap(line -> line.oriPointStream())
-				.collect(Collectors.toList());
-		var analyticLine = new AnalyticLine(overlaps.stream().findFirst().get());
-		if (analyticLine.isVertical()) {
-			points.sort(Comparator.comparing(OriPoint::getY));
-		} else {
-			points.sort(Comparator.comparing(OriPoint::getX));
-		}
+				.sorted(Comparator.comparing(analyticLine.isVertical() ? OriPoint::getY : OriPoint::getX))
+				.toList();
 
 		return points;
 	}

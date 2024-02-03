@@ -20,7 +20,6 @@ package oripa.domain.paint.angle;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import oripa.domain.paint.PaintContext;
@@ -39,7 +38,7 @@ class AngleSnapPointFactory {
 		var angles = IntStream.range(0, step.getDivNum() * 2)
 				.mapToDouble(i -> i * step.getRadianStep())
 				.boxed()
-				.collect(Collectors.toList());
+				.toList();
 
 		return spOpt
 				.map(sp -> new MultipleRaySnapPointFactory()

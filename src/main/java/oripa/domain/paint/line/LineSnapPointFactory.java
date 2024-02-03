@@ -18,8 +18,8 @@
  */
 package oripa.domain.paint.line;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import oripa.domain.cptool.PseudoLineFactory;
 import oripa.domain.paint.PaintContext;
@@ -41,13 +41,14 @@ public class LineSnapPointFactory {
 
 		var snapPointFactory = new SnapPointFactory();
 
-		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(creasePattern, segment,
-				context.getPointEps());
+		Collection<Vector2d> snapPoints = new ArrayList<>(
+				snapPointFactory.createSnapPoints(creasePattern, segment,
+						context.getPointEps()));
 
 		snapPoints.add(p0);
 		snapPoints.add(p1);
 
-		return snapPoints.stream().distinct().collect(Collectors.toList());
+		return snapPoints.stream().distinct().toList();
 	}
 
 }

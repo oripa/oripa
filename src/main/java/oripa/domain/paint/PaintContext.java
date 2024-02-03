@@ -163,7 +163,17 @@ public interface PaintContext extends CreasePatternHolder {
 
 	public abstract void setSnapPoints(Collection<Vector2d> points);
 
+	/**
+	 * Returns unmodifiable collection.
+	 *
+	 * @return
+	 */
 	public abstract Collection<Vector2d> getSnapPoints();
+
+	/**
+	 * Makes the snap points empty.
+	 */
+	void clearSnapPoints();
 
 	/**
 	 * sets division number of grid. should update grid points for
@@ -178,11 +188,13 @@ public interface PaintContext extends CreasePatternHolder {
 	public abstract void updateGrids();
 
 	/**
-	 * gets current grids.
+	 * Returns unmodifiable list.
 	 *
 	 * @return
 	 */
 	public abstract Collection<Vector2d> getGrids();
+
+	void clearGrids();
 
 	public void setCircleCopyParameter(CircleCopyParameter p);
 

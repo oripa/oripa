@@ -19,7 +19,6 @@
 package oripa.swing.view.estimation;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -53,7 +52,7 @@ class FaceFactory {
 				.map(v -> converter.convert(v.getPosition(), vertexDepths.get(v),
 						v.getPositionBeforeFolding()))
 				.map(p -> new OriHalfedge(new OriVertex(p), convertedFace))
-				.collect(Collectors.toList());
+				.toList();
 
 		for (int i = 0; i < convertedHalfedges.size(); i++) {
 			var he = convertedHalfedges.get(i);

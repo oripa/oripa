@@ -19,7 +19,6 @@
 package oripa.persistence.foldformat;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +81,7 @@ public final class Geometry {
 				.map(v -> new AngleWithIndices(vertex, v, coords))
 				.sorted((a1, a2) -> (int) Math.signum(a1.angle - a2.angle))
 				.map(a -> a.v)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 }

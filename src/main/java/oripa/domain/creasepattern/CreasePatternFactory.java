@@ -20,7 +20,6 @@ package oripa.domain.creasepattern;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
@@ -71,7 +70,7 @@ public class CreasePatternFactory {
 		var domain = RectangleDomain.createFromSegments(
 				lines.stream()
 						.filter(line -> line.isBoundary())
-						.collect(Collectors.toList()));
+						.toList());
 
 		// Construct CP
 		CreasePattern creasePattern = new CreasePatternImpl(domain);

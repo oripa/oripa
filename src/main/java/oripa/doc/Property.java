@@ -19,7 +19,6 @@
 package oripa.doc;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import oripa.doc.OptionParser.Keys;
 import oripa.util.Pair;
@@ -177,7 +176,7 @@ public class Property {
 		var optionLines = memo.lines()
 				.filter(line -> !parser.matchHeadCommentStart(line))
 				.filter(line -> parser.matchOptionStart(line))
-				.collect(Collectors.toList());
+				.toList();
 
 		var keyValueOpt = parser.parse(optionLines).stream()
 				.filter(option -> option.getV1().equals(key))
@@ -213,7 +212,7 @@ public class Property {
 		});
 
 		// update
-		var options = parser.parse(optionLines);
+		var options = new ArrayList<>(parser.parse(optionLines));
 		boolean updated = false;
 		for (int i = 0; i < options.size(); i++) {
 			var option = options.get(i);

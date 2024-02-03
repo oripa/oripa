@@ -54,33 +54,26 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		}
 
 		public static Type fromInt(final int val) throws IllegalArgumentException {
-			switch (val) {
+			return switch (val) {
 
-			case TYPE_CUT:
-				return CUT;
+			case TYPE_CUT -> CUT;
 
-			case TYPE_MOUNTAIN:
-				return MOUNTAIN;
+			case TYPE_MOUNTAIN -> MOUNTAIN;
 
-			case TYPE_VALLEY:
-				return VALLEY;
+			case TYPE_VALLEY -> VALLEY;
 
-			case TYPE_CUT_MODEL:
-				return CUT_MODEL;
+			case TYPE_CUT_MODEL -> CUT_MODEL;
 
-			case TYPE_UNASSIGNED:
-				return UNASSIGNED;
+			case TYPE_UNASSIGNED -> UNASSIGNED;
 
-			case TYPE_AUX:
-				return AUX;
+			case TYPE_AUX -> AUX;
 
-			default:
-				throw new IllegalArgumentException();
-			}
+			default -> throw new IllegalArgumentException();
+			};
 		}
 	}
 
-	private Type type = Type.AUX;
+	private final Type type;
 
 	private boolean selected;
 	private final OriPoint p0;
@@ -152,24 +145,20 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 		if (obj == this) {
 			return true;
 		}
-		if (!(obj instanceof OriLine)) {
-			return false;
-		}
+		if (obj instanceof OriLine that) {
+			// same direction?
+			int comparison00 = this.p0.compareTo(that.p0);
+			int comparison11 = this.p1.compareTo(that.p1);
+			if (comparison00 == 0 && comparison11 == 0) {
+				return this.type.equals(that.type);
+			}
 
-		OriLine that = (OriLine) obj;
-
-		// same direction?
-		int comparison00 = this.p0.compareTo(that.p0);
-		int comparison11 = this.p1.compareTo(that.p1);
-		if (comparison00 == 0 && comparison11 == 0) {
-			return this.type.equals(that.type);
-		}
-
-		// reversed direction?
-		int comparison01 = this.p0.compareTo(that.p1);
-		int comparison10 = this.p1.compareTo(that.p0);
-		if (comparison01 == 0 && comparison10 == 0) {
-			return this.type.equals(that.type);
+			// reversed direction?
+			int comparison01 = this.p0.compareTo(that.p1);
+			int comparison10 = this.p1.compareTo(that.p0);
+			if (comparison01 == 0 && comparison10 == 0) {
+				return this.type.equals(that.type);
+			}
 		}
 
 		// differs
@@ -200,10 +189,6 @@ public class OriLine extends Segment implements Comparable<OriLine> {
 
 	public void setSelected(final boolean selected) {
 		this.selected = selected;
-	}
-
-	public void setType(final Type type) {
-		this.type = type;
 	}
 
 	public Type getType() {

@@ -18,8 +18,8 @@
  */
 package oripa.domain.cptool;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -29,15 +29,14 @@ import oripa.vecmath.Vector2d;
  *
  */
 class PointSorter {
-	public void sortPointsOnLine(final ArrayList<Vector2d> points, final OriLine line) {
+	public List<Vector2d> sortPointsOnLine(final List<Vector2d> points, final OriLine line) {
 		var p0 = line.getP0();
 		var p1 = line.getP1();
 		boolean sortByX = Math.abs(p0.getX() - p1.getX()) > Math.abs(p0.getY() - p1.getY());
-		if (sortByX) {
-			points.sort(Comparator.comparing(Vector2d::getX));
-		} else {
-			points.sort(Comparator.comparing(Vector2d::getY));
-		}
+
+		return points.stream()
+				.sorted(Comparator.comparing(sortByX ? Vector2d::getX : Vector2d::getY))
+				.toList();
 	}
 
 }
