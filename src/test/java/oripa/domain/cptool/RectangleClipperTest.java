@@ -75,4 +75,20 @@ class RectangleClipperTest {
 
 	}
 
+	@Test
+	void testIntersects_segmentTouchesRectangle() {
+		// mid point touches the corner (100, 100)
+		assertIntersects(new Segment(0, 200, 200, 0));
+
+		// end point touches the corner (0, 0)
+		assertIntersects(new Segment(-10, 0, 0, 0));
+
+		// end point touches the left edge
+		assertIntersects(new Segment(-10, 10, 0, 9));
+	}
+
+	void assertIntersects(final Segment segment) {
+		assertTrue(clipper.intersects(new OriLine(segment, OriLine.Type.MOUNTAIN)));
+	}
+
 }
