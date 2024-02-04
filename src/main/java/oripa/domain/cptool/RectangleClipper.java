@@ -100,7 +100,8 @@ public class RectangleClipper {
 	 *
 	 * @param line
 	 *            to be clipped.
-	 * @return a clipped line.
+	 * @return a clipped line. It can be zero-length line if the given line
+	 *         touches the rectangle.
 	 */
 	public Optional<OriLine> clip(final OriLine line) {
 		var p0 = line.getP0();
