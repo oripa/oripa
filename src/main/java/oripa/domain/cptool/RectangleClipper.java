@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import oripa.geom.RectangleDomain;
+import oripa.geom.Segment;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -101,11 +102,27 @@ public class RectangleClipper {
 	 * @param line
 	 *            to be clipped.
 	 * @return a clipped line. It can be zero-length line if the given line
-	 *         touches the rectangle.
+	 *         touches the rectangle. empty if no intersection.
 	 */
 	public Optional<OriLine> clip(final OriLine line) {
-		var p0 = line.getP0();
-		var p1 = line.getP1();
+		return clip((Segment) line)
+				.map(clipped -> new OriLine(clipped, line.getType()));
+
+		// very short line is not preferable but such test disables to detect a
+		// diagonal line touching the corner of the rectangle.
+		// return clippedOpt.filter(clipped -> clipped.length() >= eps);
+	}
+
+	/**
+	 * Segment version of {@link #clip(OriLine)}.
+	 *
+	 * @param segment
+	 *            to be clipped.
+	 * @return clipped segment. if no intersection.
+	 */
+	public Optional<Segment> clip(final Segment segment) {
+		var p0 = segment.getP0();
+		var p1 = segment.getP1();
 
 		// first to avoid parameter modification
 		final int p0Code = calcCode(p0.getX(), p0.getY());
@@ -113,7 +130,7 @@ public class RectangleClipper {
 
 		// the line is in the rectangle
 		if ((p0Code == 0) && (p1Code == 0)) {
-			return Optional.of(line);
+			return Optional.of(segment);
 		}
 
 		// the line is in the {left, right, top, bottom} area.
@@ -121,27 +138,27 @@ public class RectangleClipper {
 			return Optional.empty();
 		}
 
-		var cp0Opt = calcClippedPointOptional(p0Code, line);
-		var cp1Opt = calcClippedPointOptional(p1Code, line);
+		var cp0Opt = createClippedPointOptional(p0Code, segment);
+		var cp1Opt = createClippedPointOptional(p1Code, segment);
 
-		Optional<OriLine> clippedOpt = Optional.empty();
+		Optional<Segment> clippedOpt = Optional.empty();
 
 		if (p0Code != 0 && p1Code != 0) {
 			// p0 and p1 are in the outside of the rectangle and
 			// the line may cross the two edges of the rectangle.
-			clippedOpt = cp0Opt.map(cp0 -> cp1Opt.map(cp1 -> new OriLine(cp0, cp1, line.getType())).orElse(null));
+			clippedOpt = cp0Opt.map(cp0 -> cp1Opt.map(cp1 -> new Segment(cp0, cp1)).orElse(null));
 		} else if (p0Code != 0) {
 			// p0 is in the outside of the rectangle and p1 is inside of the
 			// rectangle.
 			// The line may cross the {left, right, top, bottom} edge of the
 			// rectangle.
-			clippedOpt = cp0Opt.map(cp0 -> new OriLine(cp0, p1, line.getType()));
+			clippedOpt = cp0Opt.map(cp0 -> new Segment(cp0, p1));
 		} else if (p1Code != 0) {
 			// p1 is in the outside of the rectangle and p0 is inside the
 			// rectangle.
 			// The line may cross the {left, right, top, bottom} edge of the
 			// rectangle.
-			clippedOpt = cp1Opt.map(cp1 -> new OriLine(p0, cp1, line.getType()));
+			clippedOpt = cp1Opt.map(cp1 -> new Segment(p0, cp1));
 		}
 
 		return clippedOpt;
@@ -185,52 +202,54 @@ public class RectangleClipper {
 	 *            line to be clipped
 	 * @return clipped point. Empty if The line doesn't intersect the rectangle.
 	 */
-	private Optional<Vector2d> calcClippedPointOptional(final int code, final OriLine l) {
-		double cx, cy;
+	private Optional<Vector2d> createClippedPointOptional(final int code, final Segment l) {
 
-		var yRange = relaxedDomain.getYRange();
 		// Outside from the left edge of the window
 		if ((code & LEFT) != 0) {
-			cy = l.getAffineYValueAt(domain.getLeft());
-			if (yRange.includes(cy)) {
-				double px = domain.getLeft();
-				double py = cy;
-				return Optional.of(new Vector2d(px, py));
-			}
+			return createPointClippedByX(l, domain.getLeft());
 		}
 
 		// Outside the right edge of the window
 		if ((code & RIGHT) != 0) {
-			cy = l.getAffineYValueAt(domain.getRight());
-			if (yRange.includes(cy)) {
-				double px = domain.getRight();
-				double py = cy;
-				return Optional.of(new Vector2d(px, py));
-			}
+			return createPointClippedByX(l, domain.getRight());
 		}
 
-		var xRange = relaxedDomain.getXRange();
 		// Outside from the top of the window
 		if ((code & TOP) != 0) {
-			cx = l.getAffineXValueAt(domain.getTop());
-			if (xRange.includes(cx)) {
-				double px = cx;
-				double py = domain.getTop();
-				return Optional.of(new Vector2d(px, py));
-			}
+			return createPointClippedByY(l, domain.getTop());
 		}
 
 		// Outside from the bottom of the window
 		if ((code & BOTTOM) != 0) {
-			cx = l.getAffineXValueAt(domain.getBottom());
-			if (xRange.includes(cx)) {
-				double px = cx;
-				double py = domain.getBottom();
-				return Optional.of(new Vector2d(px, py));
-			}
+			return createPointClippedByY(l, domain.getBottom());
 		}
 
-		// If it is not clipping, line segment is completely invisible
+		return Optional.empty();
+	}
+
+	private Optional<Vector2d> createPointClippedByX(final Segment l, final double clipX) {
+		var yRange = relaxedDomain.getYRange();
+
+		var cy = l.getAffineYValueAt(clipX);
+		if (yRange.includes(cy)) {
+			double px = clipX;
+			double py = cy;
+			return Optional.of(new Vector2d(px, py));
+		}
+
+		return Optional.empty();
+	}
+
+	private Optional<Vector2d> createPointClippedByY(final Segment l, final double clipY) {
+		var xRange = relaxedDomain.getXRange();
+
+		var cx = l.getAffineXValueAt(clipY);
+		if (xRange.includes(cx)) {
+			double px = cx;
+			double py = clipY;
+			return Optional.of(new Vector2d(px, py));
+		}
+
 		return Optional.empty();
 	}
 
