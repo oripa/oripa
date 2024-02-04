@@ -88,7 +88,7 @@ public class SymmetricLineFactory {
 		BestPair bestPair = new BestPair();
 
 		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
-		Ray ray = new Ray(v1, new Vector2d(v3.getX() - v1.getX(), v3.getY() - v1.getY()));
+		Ray ray = new Ray(v1, v3.subtract(v1));
 
 		double minDist = Double.MAX_VALUE;
 		for (OriLine l : creasePattern) {
@@ -153,15 +153,11 @@ public class SymmetricLineFactory {
 	 * @param autoWalkLines
 	 */
 	private void addSymmetricLineAutoWalk(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2, int stepCount,
+			final Vector2d v0, final Vector2d v1, final Vector2d v2, final int stepCount,
 			final Vector2d startV,
 			final Collection<OriLine> creasePattern, final Collection<OriLine> autoWalkLines,
 			final OriLine.Type lineType, final double pointEps) {
 
-		// FIXME this method does not detect loop path. it causes meaningless
-		// recursion.
-
-		stepCount++;
 		if (stepCount > 36) {
 			return;
 		}
@@ -184,8 +180,11 @@ public class SymmetricLineFactory {
 			return;
 		}
 
+		var p0 = bestLine.getP0();
+		var p1 = bestLine.getP1();
+
 		addSymmetricLineAutoWalk(
-				v1, bestPoint, bestLine.getP0(), stepCount, startV,
+				v1, bestPoint, GeomUtil.areEqual(p0, bestPoint, pointEps) ? p1 : p0, stepCount + 1, startV,
 				creasePattern, autoWalkLines, lineType, pointEps);
 
 	}
