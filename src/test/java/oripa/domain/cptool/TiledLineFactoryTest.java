@@ -41,7 +41,9 @@ class TiledLineFactoryTest {
 		var creasePattern = new DefaultPaperFactory().create();
 
 		var lines = List.of(
+				// vertical segment
 				new OriLine(-100, -200, -100, -100, Type.MOUNTAIN),
+				// horizontal segment
 				new OriLine(-200, -100, -100, -100, Type.MOUNTAIN));
 
 		var tiledLines = factory.createFullyTiledLines(
