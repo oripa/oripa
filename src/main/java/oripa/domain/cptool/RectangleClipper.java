@@ -96,8 +96,7 @@ public class RectangleClipper {
 	}
 
 	/**
-	 * Returns a new line that is the result of intersection with the rectangle.
-	 * The test is inclusive.
+	 * OriLine version of {@link #clip(Segment)}.
 	 *
 	 * @param line
 	 *            to be clipped.
@@ -107,18 +106,16 @@ public class RectangleClipper {
 	public Optional<OriLine> clip(final OriLine line) {
 		return clip((Segment) line)
 				.map(clipped -> new OriLine(clipped, line.getType()));
-
-		// very short line is not preferable but such test disables to detect a
-		// diagonal line touching the corner of the rectangle.
-		// return clippedOpt.filter(clipped -> clipped.length() >= eps);
 	}
 
 	/**
-	 * Segment version of {@link #clip(OriLine)}.
+	 * Returns a new segment that is the result of intersection with the
+	 * rectangle. The test is inclusive.
 	 *
 	 * @param segment
 	 *            to be clipped.
-	 * @return clipped segment. if no intersection.
+	 * @return clipped segment. It can be zero-length segment if the given line
+	 *         touches the rectangle. empty if no intersection.
 	 */
 	public Optional<Segment> clip(final Segment segment) {
 		var p0 = segment.getP0();
