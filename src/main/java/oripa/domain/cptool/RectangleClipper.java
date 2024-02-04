@@ -89,8 +89,7 @@ public class RectangleClipper {
 
 	/**
 	 * Tells us whether the given line {@code line} intersects the rectangle.
-	 * The test is inclusive but lines along the border of the rectangle will
-	 * result in empty.
+	 * The test is inclusive.
 	 *
 	 * @param line
 	 *            to be tested.
