@@ -75,7 +75,7 @@ public class RectangleClipper {
 	 * @param lines
 	 * @return Subset of {@code lines}
 	 */
-	public Collection<OriLine> selectByArea(final Collection<OriLine> lines) {
+	public <T extends Segment> Collection<T> selectByArea(final Collection<T> lines) {
 		return lines.stream()
 				.filter(this::intersects)
 				.toList();
@@ -91,7 +91,7 @@ public class RectangleClipper {
 	 * @return {@code true} if {@code line} is included in or crosses the
 	 *         clipping rectangle.
 	 */
-	public boolean intersects(final OriLine line) {
+	public boolean intersects(final Segment line) {
 		return clip(line).isPresent();
 	}
 
