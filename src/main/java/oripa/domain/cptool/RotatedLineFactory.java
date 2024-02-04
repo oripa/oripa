@@ -3,6 +3,7 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -35,15 +36,21 @@ public class RotatedLineFactory {
 		var domain = RectangleDomain.createFromSegments(creasePattern);
 		var clipper = new RectangleClipper(domain, eps);
 
-		double angle = angleDeg * Math.PI / 180.0;
+		var boundaries = creasePattern.stream()
+				.filter(OriLine::isBoundary)
+				.toList();
+
+		double angleStep = angleDeg * Math.PI / 180.0;
 
 		for (int i = 0; i < repetitionCount; i++) {
-			double angleRad = angle * (i + 1);
+			double angleRad = angleStep * (i + 1);
 			OriPoint center = new OriPoint(cx, cy);
 
 			rotatedLines.addAll(selectedLines.stream()
 					.map(l -> createRotatedLine(l, center, angleRad))
 					.flatMap(rl -> clipper.clip(rl).stream())
+					.filter(rl -> boundaries.stream()
+							.noneMatch(boundary -> GeomUtil.isOverlap(rl, boundary, eps)))
 					.toList());
 		}
 
@@ -63,7 +70,7 @@ public class RotatedLineFactory {
 
 		var shiftedToOrigin = p.subtract(center);
 
-		var rotated = rotate(shiftedToOrigin, angleRad).add(center);
+		var rotated = rotate(shiftedToOrigin, angleRad);
 
 		return rotated.add(center);
 	}

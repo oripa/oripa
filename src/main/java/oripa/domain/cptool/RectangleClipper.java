@@ -23,8 +23,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 import oripa.geom.RectangleDomain;
-import oripa.geom.Segment;
-import oripa.util.MathUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -106,18 +104,13 @@ public class RectangleClipper {
 
 	/**
 	 * Returns a new line that is the result of intersection with the rectangle.
-	 * The test is inclusive but lines along the border of the rectangle will
-	 * result in empty.
+	 * The test is inclusive.
 	 *
 	 * @param line
 	 *            to be clipped.
 	 * @return a clipped line.
 	 */
 	public Optional<OriLine> clip(final OriLine line) {
-		if (lineOverlapsBorder(line)) {
-			return Optional.empty();
-		}
-
 		var p0 = line.getP0();
 		var p1 = line.getP1();
 
@@ -165,35 +158,38 @@ public class RectangleClipper {
 		// return clippedOpt.filter(clipped -> clipped.length() >= eps);
 	}
 
-	/**
-	 * Check if {@code line} overlaps with border of RectangelDomain
-	 *
-	 * @param line
-	 * @return {@code true} if {@code line} overlaps with border
-	 */
-	private boolean lineOverlapsBorder(final Segment line) {
-		// the line is along the left
-		if (MathUtil.areEqualInclusive(line.getP0().getX(), m_minX, eps)
-				&& MathUtil.areEqualInclusive(line.getP1().getX(), m_minX, eps)) {
-			return true;
-		}
-		// the line is along the right
-		if (MathUtil.areEqualInclusive(line.getP0().getX(), m_maxX, eps)
-				&& MathUtil.areEqualInclusive(line.getP1().getX(), m_maxX, eps)) {
-			return true;
-		}
-		// the line is along the top
-		if (MathUtil.areEqualInclusive(line.getP0().getY(), m_minY, eps)
-				&& MathUtil.areEqualInclusive(line.getP1().getY(), m_minY, eps)) {
-			return true;
-		}
-		// the line is along the bottom
-		if (MathUtil.areEqualInclusive(line.getP0().getY(), m_maxY, eps)
-				&& MathUtil.areEqualInclusive(line.getP1().getY(), m_maxY, eps)) {
-			return true;
-		}
-		return false;
-	}
+//	/**
+//	 * Check if {@code line} overlaps with border of RectangelDomain
+//	 *
+//	 * @param line
+//	 * @return {@code true} if {@code line} overlaps with border
+//	 */
+//	private boolean lineOverlapsBorder(final Segment line) {
+//		var p0 = line.getP0();
+//		var p1 = line.getP1();
+//
+//		// the line is along the left
+//		if (MathUtil.areEqualInclusive(p0.getX(), m_minX, eps)
+//				&& MathUtil.areEqualInclusive(p1.getX(), m_minX, eps)) {
+//			return true;
+//		}
+//		// the line is along the right
+//		if (MathUtil.areEqualInclusive(p0.getX(), m_maxX, eps)
+//				&& MathUtil.areEqualInclusive(p1.getX(), m_maxX, eps)) {
+//			return true;
+//		}
+//		// the line is along the top
+//		if (MathUtil.areEqualInclusive(p0.getY(), m_minY, eps)
+//				&& MathUtil.areEqualInclusive(p1.getY(), m_minY, eps)) {
+//			return true;
+//		}
+//		// the line is along the bottom
+//		if (MathUtil.areEqualInclusive(p0.getY(), m_maxY, eps)
+//				&& MathUtil.areEqualInclusive(p1.getY(), m_maxY, eps)) {
+//			return true;
+//		}
+//		return false;
+//	}
 
 	/**
 	 * Calculate quadrant in which Point {@code x, y} lies

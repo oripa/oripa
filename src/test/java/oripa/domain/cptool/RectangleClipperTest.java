@@ -43,6 +43,10 @@ class RectangleClipperTest {
 		var segmentInRectangle = new Segment(1, 1, 99, 99);
 		assertClip(segmentInRectangle, segmentInRectangle);
 
+		// touches two edges
+		var segmentTouchingRectangle = new Segment(0, 1, 100, 99);
+		assertClip(segmentTouchingRectangle, segmentTouchingRectangle);
+
 		// left to inside
 		assertClip(new Segment(0, 50, 50, 50), new Segment(-1, 50, 50, 50));
 

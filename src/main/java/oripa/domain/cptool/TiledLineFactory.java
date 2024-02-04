@@ -3,6 +3,7 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -85,6 +86,11 @@ public class TiledLineFactory {
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
 		var domain = RectangleDomain.createFromSegments(creasePattern);
+
+		var boundaries = creasePattern.stream()
+				.filter(OriLine::isBoundary)
+				.toList();
+
 		var clipper = new RectangleClipper(domain, eps);
 
 		for (int x = startCol; x < endCol; x++) {
@@ -100,7 +106,9 @@ public class TiledLineFactory {
 					var clP0 = l.getP0().add(interval);
 					var clP1 = l.getP1().add(interval);
 
-					var clOpt = clipper.clip(new OriLine(clP0, clP1, l.getType()));
+					var clOpt = clipper.clip(new OriLine(clP0, clP1, l.getType()))
+							.filter(cl -> boundaries.stream()
+									.noneMatch(boundary -> GeomUtil.isOverlap(cl, boundary, eps)));
 
 					clOpt.ifPresent(copiedLines::add);
 				}
