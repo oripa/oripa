@@ -45,6 +45,12 @@ public class GeomUtil {
 		return distance(p0, p1) < eps;
 	}
 
+	public static boolean areEqual(final Line line0, final Line line1, final double eps) {
+		return isParallel(line0.getDirection(), line1.getDirection())
+				&& (areEqual(line0.getPoint(), line1.getPoint(), eps)
+						|| isParallel(line0.getPoint().subtract(line1.getPoint()), line0.getDirection()));
+	}
+
 	public static double distance(final Vector2d p0, final Vector2d p1) {
 		return distance(p0.getX(), p0.getY(), p1.getX(), p1.getY());
 	}
