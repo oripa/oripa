@@ -41,19 +41,13 @@ public class RectangleClipper {
 	private static final int TOP = 1 << 2;
 	private static final int BOTTOM = 1 << 3;
 
-	private final double eps;
-
 	private final RectangleDomain domain;
-
-	private final double m_minX;
-	private final double m_minY;
-	private final double m_maxX;
-	private final double m_maxY;
+	private final RectangleDomain relaxedDomain;
 
 	/**
 	 *
-	 * Relaxed version. The domain for clipping is slightly larger than given
-	 * domain. The margin of the relaxation is determined by epsilon.
+	 * The domain for clipping is slightly larger than given domain. The margin
+	 * of the relaxation is determined by epsilon.
 	 *
 	 * @param domain
 	 *            Rectangle domain for clipping
@@ -61,14 +55,13 @@ public class RectangleClipper {
 	 *            Margin
 	 */
 	public RectangleClipper(final RectangleDomain domain, final double epsilon) {
-		eps = epsilon;
-
-		m_minX = domain.getLeft() - epsilon;
-		m_minY = domain.getTop() - epsilon;
-		m_maxX = domain.getRight() + epsilon;
-		m_maxY = domain.getBottom() + epsilon;
+		double minX = domain.getLeft() - epsilon;
+		double minY = domain.getTop() - epsilon;
+		double maxX = domain.getRight() + epsilon;
+		double maxY = domain.getBottom() + epsilon;
 
 		this.domain = domain;
+		relaxedDomain = new RectangleDomain(minX, minY, maxX, maxY);
 	}
 
 	public RectangleClipper(final double x0, final double y0, final double x1, final double y1, final double epsilon) {
@@ -114,35 +107,35 @@ public class RectangleClipper {
 		var p1 = line.getP1();
 
 		// first to avoid parameter modification
-		final int s_code = calcCode(p0.getX(), p0.getY());
-		final int e_code = calcCode(p1.getX(), p1.getY());
+		final int p0Code = calcCode(p0.getX(), p0.getY());
+		final int p1Code = calcCode(p1.getX(), p1.getY());
 
 		// the line is in the rectangle
-		if ((s_code == 0) && (e_code == 0)) {
+		if ((p0Code == 0) && (p1Code == 0)) {
 			return Optional.of(line);
 		}
 
 		// the line is in the {left, right, top, bottom} area.
-		if ((s_code & e_code) != 0) {
+		if ((p0Code & p1Code) != 0) {
 			return Optional.empty();
 		}
 
-		var cp0Opt = calcClippedPointOptional(s_code, line);
-		var cp1Opt = calcClippedPointOptional(e_code, line);
+		var cp0Opt = calcClippedPointOptional(p0Code, line);
+		var cp1Opt = calcClippedPointOptional(p1Code, line);
 
 		Optional<OriLine> clippedOpt = Optional.empty();
 
-		if (s_code != 0 && e_code != 0) {
+		if (p0Code != 0 && p1Code != 0) {
 			// p0 and p1 are in the outside of the rectangle and
 			// the line may cross the two edges of the rectangle.
 			clippedOpt = cp0Opt.map(cp0 -> cp1Opt.map(cp1 -> new OriLine(cp0, cp1, line.getType())).orElse(null));
-		} else if (s_code != 0) {
+		} else if (p0Code != 0) {
 			// p0 is in the outside of the rectangle and p1 is inside of the
 			// rectangle.
 			// The line may cross the {left, right, top, bottom} edge of the
 			// rectangle.
 			clippedOpt = cp0Opt.map(cp0 -> new OriLine(cp0, p1, line.getType()));
-		} else if (e_code != 0) {
+		} else if (p1Code != 0) {
 			// p1 is in the outside of the rectangle and p0 is inside the
 			// rectangle.
 			// The line may cross the {left, right, top, bottom} edge of the
@@ -157,39 +150,6 @@ public class RectangleClipper {
 		// return clippedOpt.filter(clipped -> clipped.length() >= eps);
 	}
 
-//	/**
-//	 * Check if {@code line} overlaps with border of RectangelDomain
-//	 *
-//	 * @param line
-//	 * @return {@code true} if {@code line} overlaps with border
-//	 */
-//	private boolean lineOverlapsBorder(final Segment line) {
-//		var p0 = line.getP0();
-//		var p1 = line.getP1();
-//
-//		// the line is along the left
-//		if (MathUtil.areEqualInclusive(p0.getX(), m_minX, eps)
-//				&& MathUtil.areEqualInclusive(p1.getX(), m_minX, eps)) {
-//			return true;
-//		}
-//		// the line is along the right
-//		if (MathUtil.areEqualInclusive(p0.getX(), m_maxX, eps)
-//				&& MathUtil.areEqualInclusive(p1.getX(), m_maxX, eps)) {
-//			return true;
-//		}
-//		// the line is along the top
-//		if (MathUtil.areEqualInclusive(p0.getY(), m_minY, eps)
-//				&& MathUtil.areEqualInclusive(p1.getY(), m_minY, eps)) {
-//			return true;
-//		}
-//		// the line is along the bottom
-//		if (MathUtil.areEqualInclusive(p0.getY(), m_maxY, eps)
-//				&& MathUtil.areEqualInclusive(p1.getY(), m_maxY, eps)) {
-//			return true;
-//		}
-//		return false;
-//	}
-
 	/**
 	 * Calculate quadrant in which Point {@code x, y} lies
 	 *
@@ -199,16 +159,16 @@ public class RectangleClipper {
 	 */
 	private int calcCode(final double x, final double y) {
 		int code = 0;
-		if (x < m_minX) {
+		if (x < relaxedDomain.getLeft()) {
 			code += LEFT;
 		}
-		if (x > m_maxX) {
+		if (x > relaxedDomain.getRight()) {
 			code += RIGHT;
 		}
-		if (y < m_minY) {
+		if (y < relaxedDomain.getTop()) {
 			code += TOP;
 		}
-		if (y > m_maxY) {
+		if (y > relaxedDomain.getBottom()) {
 			code += BOTTOM;
 		}
 
@@ -219,18 +179,19 @@ public class RectangleClipper {
 	 * finds the coordinates after clipping.
 	 *
 	 * @param code
-	 *            flag bits of a end point of the given line
+	 *            flag bits of an end point of the given line
 	 * @param l
 	 *            line to be clipped
-	 * @return clipped line. Empty if The line doesn't intersect the rectangle.
+	 * @return clipped point. Empty if The line doesn't intersect the rectangle.
 	 */
 	private Optional<Vector2d> calcClippedPointOptional(final int code, final OriLine l) {
 		double cx, cy;
 
+		var yRange = relaxedDomain.getYRange();
 		// Outside from the left edge of the window
 		if ((code & LEFT) != 0) {
 			cy = l.getAffineYValueAt(domain.getLeft());
-			if ((cy >= m_minY) && (cy <= m_maxY)) {
+			if (yRange.includes(cy)) {
 				double px = domain.getLeft();
 				double py = cy;
 				return Optional.of(new Vector2d(px, py));
@@ -240,17 +201,18 @@ public class RectangleClipper {
 		// Outside the right edge of the window
 		if ((code & RIGHT) != 0) {
 			cy = l.getAffineYValueAt(domain.getRight());
-			if ((cy >= m_minY) && (cy <= m_maxY)) {
+			if (yRange.includes(cy)) {
 				double px = domain.getRight();
 				double py = cy;
 				return Optional.of(new Vector2d(px, py));
 			}
 		}
 
+		var xRange = relaxedDomain.getXRange();
 		// Outside from the top of the window
 		if ((code & TOP) != 0) {
 			cx = l.getAffineXValueAt(domain.getTop());
-			if ((cx >= m_minX) && (cx <= m_maxX)) {
+			if (xRange.includes(cx)) {
 				double px = cx;
 				double py = domain.getTop();
 				return Optional.of(new Vector2d(px, py));
@@ -260,7 +222,7 @@ public class RectangleClipper {
 		// Outside from the bottom of the window
 		if ((code & BOTTOM) != 0) {
 			cx = l.getAffineXValueAt(domain.getBottom());
-			if ((cx >= m_minX) && (cx <= m_maxX)) {
+			if (xRange.includes(cx)) {
 				double px = cx;
 				double py = domain.getBottom();
 				return Optional.of(new Vector2d(px, py));

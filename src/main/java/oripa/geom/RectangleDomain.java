@@ -149,8 +149,16 @@ public class RectangleDomain {
 	 * @return true if {@code point} is in this domain.
 	 */
 	public boolean contains(final Vector2d point) {
-		return new ClosedRange(left, right).includes(point.getX()) &&
-				new ClosedRange(top, bottom).includes(point.getY());
+		return getXRange().includes(point.getX()) &&
+				getYRange().includes(point.getY());
+	}
+
+	public ClosedRange getXRange() {
+		return new ClosedRange(left, right);
+	}
+
+	public ClosedRange getYRange() {
+		return new ClosedRange(top, bottom);
 	}
 
 	/**
