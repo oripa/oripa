@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import oripa.geom.RectangleDomain;
+import oripa.geom.Segment;
 import oripa.util.MathUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -38,7 +39,7 @@ public class RectangleClipper {
 	private static final int TOP = 4;
 	private static final int BOTTOM = 8;
 
-	private static final double EPSILON = 1.0e-6;
+	private final double eps;
 
 	private final RectangleDomain domain;
 
@@ -58,6 +59,8 @@ public class RectangleClipper {
 	 *            Margin
 	 */
 	public RectangleClipper(final RectangleDomain domain, final double epsilon) {
+		eps = epsilon;
+
 		m_minX = domain.getLeft() - epsilon;
 		m_minY = domain.getTop() - epsilon;
 		m_maxX = domain.getRight() + epsilon;
@@ -66,12 +69,8 @@ public class RectangleClipper {
 		this.domain = domain;
 	}
 
-	public RectangleClipper(final RectangleDomain domain) {
-		this(domain, 0);
-	}
-
-	public RectangleClipper(final double x0, final double y0, final double x1, final double y1) {
-		this(new RectangleDomain(x0, y0, x1, y1));
+	public RectangleClipper(final double x0, final double y0, final double x1, final double y1, final double epsilon) {
+		this(new RectangleDomain(x0, y0, x1, y1), epsilon);
 	}
 
 	/**
@@ -82,55 +81,81 @@ public class RectangleClipper {
 	 */
 	public Collection<OriLine> selectByArea(final Collection<OriLine> lines) {
 		return lines.stream()
-				.filter(this::clip)
+				.filter(this::intersects)
 				.toList();
 	}
 
 	/**
-	 * tells us whether the given line {@code line} intersects the rectangle.
+	 * Tells us whether the given line {@code line} intersects the rectangle.
+	 * The test is inclusive but lines along the border of the rectangle will
+	 * result in empty.
 	 *
 	 * @param line
-	 *            an end point of {@code line} will be substituted with the
-	 *            cross point of {@code l} and the edge of clipping rectangle.
+	 *            to be tested.
 	 *
 	 * @return {@code true} if {@code line} is included in or crosses the
 	 *         clipping rectangle.
 	 */
-	public boolean clip(final OriLine line) {
+	public boolean intersects(final OriLine line) {
+		return clip(line).isPresent();
+	}
+
+	/**
+	 * Returns a new line that is the result of intersection with the rectangle.
+	 * The test is inclusive but lines along the border of the rectangle will
+	 * result in empty.
+	 *
+	 * @param line
+	 *            to be clipped.
+	 * @return a clipped line.
+	 */
+	public Optional<OriLine> clip(final OriLine line) {
 		if (lineOverlapsBorder(line)) {
-			return false;
+			return Optional.empty();
 		}
 
+		var p0 = line.getP0();
+		var p1 = line.getP1();
+
 		// first to avoid parameter modification
-		int s_code = calcCode(line.getP0().getX(), line.getP0().getY());
-		int e_code = calcCode(line.getP1().getX(), line.getP1().getY());
+		final int s_code = calcCode(p0.getX(), p0.getY());
+		final int e_code = calcCode(p1.getX(), p1.getY());
+
 		// the line is in the rectangle
 		if ((s_code == 0) && (e_code == 0)) {
-			return true;
+			return Optional.of(line);
 		}
 
 		// the line is in the {left, right, top, bottom} area.
 		if ((s_code & e_code) != 0) {
-			return false;
+			return Optional.empty();
 		}
 
-		// p0 is in the outside of the rectangle and
-		// the line may cross the {left, right, top, bottom} edge of the
-		// rectangle.
-		if (s_code != 0) {
-			if (calcClippedPoint(s_code, line) < 0) {
-				return false;
-			}
+		var cp0Opt = calcClippedPointOptional(s_code, line);
+		var cp1Opt = calcClippedPointOptional(e_code, line);
+
+		Optional<OriLine> clippedOpt = Optional.empty();
+
+		if (s_code != 0 && e_code != 0) {
+			// p0 and p1 are in the outside of the rectangle and
+			// the line may cross the two edges of the rectangle.
+			clippedOpt = cp0Opt.map(cp0 -> cp1Opt.map(cp1 -> new OriLine(cp0, cp1, line.getType())).orElse(null));
+		} else if (s_code != 0) {
+			// p0 is in the outside of the rectangle and p1 is inside of the
+			// rectangle.
+			// The line may cross the {left, right, top, bottom} edge of the
+			// rectangle.
+			clippedOpt = cp0Opt.map(cp0 -> new OriLine(cp0, p1, line.getType()));
+		} else if (e_code != 0) {
+			// p1 is in the outside of the rectangle and p0 is inside the
+			// rectangle.
+			// The line may cross the {left, right, top, bottom} edge of the
+			// rectangle.
+			clippedOpt = cp1Opt.map(cp1 -> new OriLine(p0, cp1, line.getType()));
 		}
 
-		// p1 is in the outside of the rectangle and
-		// the line may cross the {left, right, top, bottom} edge of the
-		// rectangle.
-		if (e_code != 0) {
-			return calcClippedPoint(e_code, line) >= 0;
-		}
-
-		return true;
+		// very short line is not preferable.
+		return clippedOpt.filter(clipped -> clipped.length() >= eps);
 	}
 
 	/**
@@ -139,21 +164,25 @@ public class RectangleClipper {
 	 * @param line
 	 * @return {@code true} if {@code line} overlaps with border
 	 */
-	private boolean lineOverlapsBorder(final OriLine line) {
-		if (MathUtil.areEqual(line.getP0().getX(), m_minX, EPSILON)
-				&& MathUtil.areEqual(line.getP1().getX(), m_minX, EPSILON)) {
+	private boolean lineOverlapsBorder(final Segment line) {
+		// the line is along the left
+		if (MathUtil.areEqualInclusive(line.getP0().getX(), m_minX, eps)
+				&& MathUtil.areEqualInclusive(line.getP1().getX(), m_minX, eps)) {
 			return true;
 		}
-		if (MathUtil.areEqual(line.getP0().getX(), m_maxX, EPSILON)
-				&& MathUtil.areEqual(line.getP1().getX(), m_maxX, EPSILON)) {
+		// the line is along the right
+		if (MathUtil.areEqualInclusive(line.getP0().getX(), m_maxX, eps)
+				&& MathUtil.areEqualInclusive(line.getP1().getX(), m_maxX, eps)) {
 			return true;
 		}
-		if (MathUtil.areEqual(line.getP0().getY(), m_minY, EPSILON)
-				&& MathUtil.areEqual(line.getP1().getY(), m_minY, EPSILON)) {
+		// the line is along the top
+		if (MathUtil.areEqualInclusive(line.getP0().getY(), m_minY, eps)
+				&& MathUtil.areEqualInclusive(line.getP1().getY(), m_minY, eps)) {
 			return true;
 		}
-		if (MathUtil.areEqual(line.getP0().getY(), m_maxY, EPSILON)
-				&& MathUtil.areEqual(line.getP1().getY(), m_maxY, EPSILON)) {
+		// the line is along the bottom
+		if (MathUtil.areEqualInclusive(line.getP0().getY(), m_maxY, eps)
+				&& MathUtil.areEqualInclusive(line.getP1().getY(), m_maxY, eps)) {
 			return true;
 		}
 		return false;
@@ -184,10 +213,6 @@ public class RectangleClipper {
 		return code;
 	}
 
-	private int calcClippedPoint(final int code, final OriLine l) {
-		return calcClippedPointOptional(code, l).isPresent() ? 1 : -1;
-	}
-
 	/**
 	 * finds the coordinates after clipping.
 	 *
@@ -203,8 +228,8 @@ public class RectangleClipper {
 		if ((code & LEFT) != 0) {
 			cy = l.getAffineYValueAt(domain.getLeft());
 			if ((cy >= m_minY) && (cy <= m_maxY)) {
-				var px = domain.getLeft();
-				var py = cy;
+				double px = domain.getLeft();
+				double py = cy;
 				return Optional.of(new Vector2d(px, py));
 			}
 		}
@@ -213,8 +238,8 @@ public class RectangleClipper {
 		if ((code & RIGHT) != 0) {
 			cy = l.getAffineYValueAt(domain.getRight());
 			if ((cy >= m_minY) && (cy <= m_maxY)) {
-				var px = domain.getRight();
-				var py = cy;
+				double px = domain.getRight();
+				double py = cy;
 				return Optional.of(new Vector2d(px, py));
 			}
 		}
@@ -223,8 +248,8 @@ public class RectangleClipper {
 		if ((code & TOP) != 0) {
 			cx = l.getAffineXValueAt(domain.getTop());
 			if ((cx >= m_minX) && (cx <= m_maxX)) {
-				var px = cx;
-				var py = domain.getTop();
+				double px = cx;
+				double py = domain.getTop();
 				return Optional.of(new Vector2d(px, py));
 			}
 		}
@@ -233,15 +258,14 @@ public class RectangleClipper {
 		if ((code & BOTTOM) != 0) {
 			cx = l.getAffineXValueAt(domain.getBottom());
 			if ((cx >= m_minX) && (cx <= m_maxX)) {
-				var px = cx;
-				var py = domain.getBottom();
+				double px = cx;
+				double py = domain.getBottom();
 				return Optional.of(new Vector2d(px, py));
 			}
 		}
 
-		return Optional.empty(); // If it is not clipping, line segment is
-									// completely
-		// invisible
+		// If it is not clipping, line segment is completely invisible
+		return Optional.empty();
 	}
 
 }

@@ -28,12 +28,12 @@ public class RotatedLineFactory {
 	 */
 	public Collection<OriLine> createRotatedLines(
 			final double cx, final double cy, final double angleDeg, final int repetitionCount,
-			final Collection<OriLine> selectedLines, final Collection<OriLine> creasePattern) {
+			final Collection<OriLine> selectedLines, final Collection<OriLine> creasePattern, final double eps) {
 
 		ArrayList<OriLine> rotatedLines = new ArrayList<OriLine>();
 
 		var domain = RectangleDomain.createFromSegments(creasePattern);
-		var clipper = new RectangleClipper(domain);
+		var clipper = new RectangleClipper(domain, eps);
 
 		double angle = angleDeg * Math.PI / 180.0;
 
@@ -43,7 +43,7 @@ public class RotatedLineFactory {
 
 			rotatedLines.addAll(selectedLines.stream()
 					.map(l -> createRotatedLine(l, center, angleRad))
-					.filter(rl -> clipper.clip(rl))
+					.flatMap(rl -> clipper.clip(rl).stream())
 					.toList());
 		}
 

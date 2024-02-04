@@ -337,7 +337,7 @@ public class Painter {
 			final Collection<OriLine> selectedLines) {
 		Collection<OriLine> copiedLines = rotationFactory.createRotatedLines(
 				cx, cy, angleDeg, repetitionCount,
-				selectedLines, creasePattern);
+				selectedLines, creasePattern, getPointEps());
 
 		addLines(copiedLines);
 	}
@@ -361,7 +361,7 @@ public class Painter {
 			final Collection<OriLine> selectedLines) {
 		Collection<OriLine> copiedLines = tileFactory.createTiledLines(
 				row, col, interX, interY,
-				selectedLines, creasePattern);
+				selectedLines, creasePattern, getPointEps());
 
 		addLines(copiedLines);
 	}
@@ -374,7 +374,7 @@ public class Painter {
 	public void fillUp(final Collection<OriLine> selectedLines) {
 		Collection<OriLine> copiedLines = tileFactory.createFullyTiledLines(
 				selectedLines, creasePattern,
-				creasePattern.getPaperSize());
+				creasePattern.getPaperSize(), getPointEps());
 
 		addLines(copiedLines);
 	}
