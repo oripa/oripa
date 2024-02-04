@@ -31,13 +31,17 @@ import oripa.vecmath.Vector2d;
 /**
  * Manages OriLine intersection testing (clipping) with Rectangle Domain
  */
-//TODO:	cleanup + comments (last three functions)
 public class RectangleClipper {
 
+	// This implementation encodes to flag bits the position of the end points
+	// of the given line. Each bit is 1 if the point is outside of the border
+	// line of the rectangle. For example, if LEFT bit is 1 then the point is on
+	// the left outside of the rectangle. A point is inside of the rectangle if
+	// all bits are 0.
 	private static final int LEFT = 1;
-	private static final int RIGHT = 2;
-	private static final int TOP = 4;
-	private static final int BOTTOM = 8;
+	private static final int RIGHT = 1 << 1;
+	private static final int TOP = 1 << 2;
+	private static final int BOTTOM = 1 << 3;
 
 	private final double eps;
 
@@ -154,8 +158,11 @@ public class RectangleClipper {
 			clippedOpt = cp1Opt.map(cp1 -> new OriLine(p0, cp1, line.getType()));
 		}
 
-		// very short line is not preferable.
-		return clippedOpt.filter(clipped -> clipped.length() >= eps);
+		return clippedOpt;
+
+		// very short line is not preferable but such test disables to detect a
+		// diagonal line touching the corner of the rectangle.
+		// return clippedOpt.filter(clipped -> clipped.length() >= eps);
 	}
 
 	/**
