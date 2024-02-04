@@ -26,6 +26,7 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
+@Deprecated
 public class PseudoRayFactory {
 
 	public Segment create(final Ray ray, final double paperSize) {
@@ -38,6 +39,6 @@ public class PseudoRayFactory {
 	}
 
 	public Segment create(final Vector2d v, final double angle, final double paperSize) {
-		return create(new Ray(v, new Vector2d(Math.cos(angle), Math.sin(angle))), paperSize);
+		return create(new Ray(v, angle), paperSize);
 	}
 }

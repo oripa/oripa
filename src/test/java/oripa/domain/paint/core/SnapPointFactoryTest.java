@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.geom.GeomUtil;
+import oripa.geom.Line;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -27,7 +28,7 @@ class SnapPointFactoryTest {
 
 		var creasePattern = new CreasePatternFactory().createCreasePattern(creases);
 
-		var line = new OriLine(-1, 0, 10, 0, OriLine.Type.MOUNTAIN);
+		var line = new Line(new Vector2d(0, 0), new Vector2d(1, 0));
 
 		var points = factory.createSnapPoints(creasePattern, line, EPS);
 

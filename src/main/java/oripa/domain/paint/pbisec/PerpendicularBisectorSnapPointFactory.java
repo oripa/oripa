@@ -21,7 +21,6 @@ package oripa.domain.paint.pbisec;
 import java.util.Collection;
 
 import oripa.domain.cptool.BisectorFactory;
-import oripa.domain.cptool.PseudoLineFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.SnapPointFactory;
 import oripa.vecmath.Vector2d;
@@ -39,9 +38,7 @@ public class PerpendicularBisectorSnapPointFactory {
 		var eps = context.getPainter().getPointEps();
 
 		var bisectorFactory = new BisectorFactory();
-		var pbisecLine = bisectorFactory.createPerpendicularBisector(p0, p1);
-
-		var pbisec = new PseudoLineFactory().create(pbisecLine, context.getCreasePattern().getPaperSize());
+		var pbisec = bisectorFactory.createPerpendicularBisector(p0, p1);
 
 		var snapPointFactory = new SnapPointFactory();
 

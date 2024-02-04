@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.geom.GeomUtil;
+import oripa.geom.Line;
 import oripa.geom.Segment;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -37,6 +38,25 @@ import oripa.vecmath.Vector2d;
 public class SnapPointFactory {
 	private static final Logger logger = LoggerFactory.getLogger(SnapPointFactory.class);
 
+	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Line line,
+			final double pointEps) {
+
+		logger.trace("eps = {}", pointEps);
+
+		return Stream.concat(
+				// snap on cross points of line and creases.
+				creasePattern.stream()
+						.map(crease -> GeomUtil.getCrossPoint(line, crease))
+						.flatMap(Optional::stream),
+
+				// snap on end points of overlapping creases.
+				creasePattern.stream()
+						.filter(crease -> GeomUtil.isOverlap(line, crease, pointEps))
+						.flatMap(OriLine::pointStream))
+				.toList();
+	}
+
+	@Deprecated
 	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment line,
 			final double pointEps) {
 

@@ -19,10 +19,11 @@
 package oripa.domain.paint.core;
 
 import java.util.Collection;
+import java.util.function.Function;
 
-import oripa.domain.cptool.PseudoRayFactory;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
+import oripa.geom.Ray;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -37,12 +38,11 @@ public class MultipleRaySnapPointFactory {
 			final Collection<Double> angles,
 			final double pointEps) {
 
-		var paperSize = creasePattern.getPaperSize();
 		var snapPointFactory = new RaySnapPointFactory();
-		var rayFactory = new PseudoRayFactory();
+		Function<Double, Ray> createRay = angle -> new Ray(v, angle);
 
 		return angles.stream()
-				.map(angle -> rayFactory.create(v, angle, paperSize))
+				.map(createRay)
 				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray, pointEps)
 						.stream())
 				.filter(point -> !GeomUtil.areEqual(point, v, pointEps))

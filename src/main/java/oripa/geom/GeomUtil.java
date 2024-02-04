@@ -108,6 +108,24 @@ public class GeomUtil {
 
 	/**
 	 *
+	 * @param ray
+	 * @param seg
+	 * @param pointEps
+	 * @return {@code true} if end points of the ray and segment are on the
+	 *         other. Note that this method returns {@code true} if the they
+	 *         touch at end points and does not share other part.
+	 */
+	public static boolean isRelaxedOverlap(final Ray ray, final Segment seg, final double pointEps) {
+		return isParallel(ray.getDirection(), seg.getLine().getDirection())
+				&& seg.pointStream().anyMatch(p -> distancePointToRay(p, ray) < pointEps);
+	}
+
+	public static boolean isOverlap(final Line line, final Segment seg, final double pointEps) {
+		return areEqual(line, seg.getLine(), pointEps);
+	}
+
+	/**
+	 *
 	 * @param seg0
 	 * @param seg1
 	 * @param pointEps
@@ -258,6 +276,52 @@ public class GeomUtil {
 	}
 
 	/**
+	 * Returns the intersection of a straight line and a segment. Empty if not
+	 * intersect.
+	 *
+	 * @param line
+	 * @param seg
+	 * @return
+	 */
+	public static Optional<Vector2d> getCrossPoint(final Line line, final Segment seg) {
+		var p0 = line.getPoint();
+		var p1 = p0.add(line.getDirection());
+
+		var segP0 = seg.getP0();
+		var segP1 = seg.getP1();
+
+		var answer = solveLineAndSegmentCrossPointVectorEquation(p0, p1, segP0, segP1);
+
+		if (answer.isEmpty()) {
+			return Optional.empty();
+		}
+
+		double t = answer.get(1);
+
+		return Optional.of(computeDividingPoint(t, segP0, segP1));
+
+	}
+
+	/**
+	 *
+	 * @param p0
+	 *            point on the line
+	 * @param p1
+	 *            point on the line
+	 * @param segP0
+	 *            end point of the segment
+	 * @param segP1
+	 *            end point of the segment
+	 * @return
+	 */
+	private static List<Double> solveLineAndSegmentCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+			final Vector2d segP0, final Vector2d segP1) {
+		final double eps = MathUtil.normalizedValueEps();
+		return solveCrossPointVectorEquation(p0, p1, segP0, segP1,
+				(s, t) -> new ClosedRange(0, 1, eps).includes(t));
+	}
+
+	/**
 	 * Compute the intersection of straight lines
 	 *
 	 * @param l0
@@ -290,8 +354,8 @@ public class GeomUtil {
 	public static Segment getLineByValue(final Vector2d sv, final double length,
 			final double deg_angle) {
 		double rad_angle = Math.toRadians(deg_angle);
-		Vector2d dir = new Vector2d(length * Math.cos(rad_angle), length * Math.sin(rad_angle));
-		Vector2d ev = sv.add(dir);
+		var dir = new Vector2d(length * Math.cos(rad_angle), length * Math.sin(rad_angle));
+		var ev = sv.add(dir);
 
 		return new Segment(sv, ev);
 	}
@@ -323,7 +387,7 @@ public class GeomUtil {
 			final Vector2d p, final Vector2d sp, final Vector2d ep) {
 
 		// direction of the line
-		Vector2d dir = ep.subtract(sp);
+		var dir = ep.subtract(sp);
 
 		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
@@ -368,10 +432,29 @@ public class GeomUtil {
 	}
 
 	public static double distancePointToLine(final Vector2d p, final Line line) {
-		Vector2d sp = line.getPoint();
-		Vector2d ep = sp.add(line.getDirection());
+		var sp = line.getPoint();
+		var ep = sp.add(line.getDirection());
 
 		return distance(getNearestPointToLine(p, sp, ep), p);
+	}
+
+	public static double distancePointToRay(final Vector2d p, final Ray ray) {
+		return distance(getNearestPointToRay(p, ray), p);
+	}
+
+	public static Vector2d getNearestPointToRay(final Vector2d p, final Ray ray) {
+		var sp = ray.getEndPoint();
+		var dir = ray.getDirection();
+		var ep = sp.add(dir);
+
+		double t = computeParameterForNearestPointToLine(p, sp, ep);
+
+		if (t <= 0.0) {
+			return sp;
+		}
+
+		return sp.add(dir.multiply(t));
+
 	}
 
 	/**
