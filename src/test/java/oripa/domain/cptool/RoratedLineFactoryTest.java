@@ -24,8 +24,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -40,14 +42,22 @@ class RoratedLineFactoryTest {
 		var creasePattern = new DefaultPaperFactory().create();
 
 		// a line on 45 degree steps touching the boundary.
-		var line = new OriLine(-100, -200, -200, -100, Type.MOUNTAIN);
+		var p0 = new Vector2d(-200, -100);
+		var p1 = new Vector2d(-100, -200);
+		var line = new OriLine(p0, p1, Type.MOUNTAIN);
 
 		creasePattern.add(line);
 
-		var rotatedLines = factory.createRotatedLines(-100, -200, 45, 8, List.of(line), creasePattern, EPS);
+		// rotates around the end point
+		var center = p1;
+		var rotatedLines = factory.createRotatedLines(
+				center.getX(), center.getY(), 45, 8,
+				List.of(line), creasePattern,
+				EPS);
 
 		assertEquals(3, rotatedLines.stream()
 				.filter(rl -> rl.length() > EPS)
+				.filter(rl -> rl.pointStream().anyMatch(p -> GeomUtil.areEqual(center, p, EPS)))
 				.count());
 	}
 
