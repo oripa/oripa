@@ -46,6 +46,7 @@ class TiledLineFactoryTest {
 				// horizontal segment
 				new OriLine(-200, -100, -100, -100, Type.MOUNTAIN));
 
+		// creates 4x4 grids
 		var tiledLines = factory.createFullyTiledLines(
 				lines, creasePattern,
 				RectangleDomain.createFromSegments(creasePattern).maxWidthHeight(), EPS);
