@@ -223,10 +223,11 @@ public class RectangleClipper {
 	/**
 	 * finds the coordinates after clipping.
 	 *
-	 * @param p
-	 *            will be substituted with the cross point of {@code l} and the
-	 *            edge of clipping rectangle.
-	 * @return 1 if {@code l} crosses the edge of the rectangle, -1 otherwise.
+	 * @param code
+	 *            flag bits of a end point of the given line
+	 * @param l
+	 *            line to be clipped
+	 * @return clipped line. Empty if The line doesn't intersect the rectangle.
 	 */
 	private Optional<Vector2d> calcClippedPointOptional(final int code, final OriLine l) {
 		double cx, cy;
