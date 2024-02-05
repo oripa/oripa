@@ -87,7 +87,8 @@ public abstract class AbstractActionState implements ActionState {
 	 *            Deprecated. This will be deleted in the future release.
 	 * @param doSpecial
 	 *            Deprecated. This will be deleted in the future release.
-	 * @return true if the action succeeded, otherwise false.
+	 * @return true if the action succeeded and should return the next state,
+	 *         otherwise false.
 	 */
 	protected abstract boolean onAct(PaintContext context,
 			Vector2d currentPoint, boolean doSpecial);
