@@ -24,11 +24,19 @@ package oripa.util;
  */
 public class MathUtil {
 
+	/**
+	 *
+	 * @param angle
+	 * @return converted angle whose range is between 0 and 2 * pi.
+	 */
 	public static double normalizeAngle(final double angle) {
 		final double TWO_PI = 2 * Math.PI;
 		return (TWO_PI + angle) % TWO_PI;
 	}
 
+	/**
+	 * For error limit of a radian value between 0 and 2 * pi.
+	 */
 	public static double angleRadianEps() {
 		return 1e-5;
 	}
@@ -48,6 +56,9 @@ public class MathUtil {
 		return Math.toDegrees(angleRadianEps());
 	}
 
+	/**
+	 * For error limit of a value between 0 and 1.
+	 */
 	public static double normalizedValueEps() {
 		return 1e-6;
 	}
