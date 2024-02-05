@@ -12,9 +12,14 @@ public interface ActionState {
 	/**
 	 * Performs the action of this state and returns the next state. Action can
 	 * vary by context like first action selects a vertex and second action
-	 * selects another vertex and draw line between them. This method should
-	 * clear selection of vertices and lines if the final action is performed.
+	 * selects a line. This method should clear selection of vertices and lines
+	 * if the final action is performed.
 	 *
+	 * @param context
+	 * @param currentPoint
+	 *            Deprecated. This will be deleted in the future release.
+	 * @param differentAction
+	 *            Deprecated. This will be deleted in the future release.
 	 * @return next state.
 	 */
 	public ActionState doAction(PaintContext context,

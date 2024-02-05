@@ -57,8 +57,8 @@ public interface GraphicMouseAction {
 	public abstract void recover(PaintContext context);
 
 	/**
-	 * Performs action. The default implementation calls @link
-	 * #doAction(PaintContext, Vector2d, boolean).
+	 * Performs action. The default implementation calls
+	 * {@link #doAction(PaintContext, Vector2d, boolean)}.
 	 *
 	 * @param viewContext
 	 * @param paintContext

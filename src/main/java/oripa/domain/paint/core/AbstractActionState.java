@@ -84,9 +84,9 @@ public abstract class AbstractActionState implements ActionState {
 	 * @param context
 	 *            information relating mouse action.
 	 * @param currentPoint
-	 *            current point of mouse cursor.
+	 *            Deprecated. This will be deleted in the future release.
 	 * @param doSpecial
-	 *            true if you want switch the action.
+	 *            Deprecated. This will be deleted in the future release.
 	 * @return true if the action succeeded, otherwise false.
 	 */
 	protected abstract boolean onAct(PaintContext context,
