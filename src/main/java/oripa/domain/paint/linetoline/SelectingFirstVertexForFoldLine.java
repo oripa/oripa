@@ -18,7 +18,7 @@ public class SelectingFirstVertexForFoldLine extends PickingVertex {
 
 	@Override
 	protected void undoAction(final PaintContext context) {
-		context.getSnapPoints().clear();
+		context.clearSnapPoints();
 		context.popLine();
 	}
 

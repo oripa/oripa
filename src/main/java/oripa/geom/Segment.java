@@ -18,12 +18,13 @@
 
 package oripa.geom;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
+import oripa.util.MathUtil;
 import oripa.vecmath.Vector2d;
 
 public class Segment {
-
 	private final Vector2d p0;
 	private final Vector2d p1;
 
@@ -68,11 +69,20 @@ public class Segment {
 	 * Calculates the affine value on the line, at the {@code xTested}
 	 * coordinate using the y = ax + b expression
 	 *
-	 * @param xTested
+	 * @param xTested.
+	 *            {@linkplain Double#NaN} if this segment is vertical.
 	 */
 	public double getAffineYValueAt(final double xTested) {
 		var p0 = getP0();
 		var p1 = getP1();
+
+		// vertical line does not have y value.
+		var angle = MathUtil.angleOf(p0.subtract(p1));
+		if (MathUtil.areEqual(angle, Math.PI / 2, MathUtil.angleRadianEps())
+				|| MathUtil.areEqual(angle, 3 * Math.PI / 2, MathUtil.angleRadianEps())) {
+			return Double.NaN;
+		}
+
 		return (p1.getY() - p0.getY()) * (xTested - p0.getX()) / (p1.getX() - p0.getX())
 				+ p0.getY();
 	}
@@ -81,11 +91,20 @@ public class Segment {
 	 * Calculates the affine value on the line, at the {@code yTested}
 	 * coordinate using the x = ay + b expression
 	 *
-	 * @param yTested
+	 * @param yTested.
+	 *            {@linkplain Double#NaN} if this segment is horizontal.
 	 */
 	public double getAffineXValueAt(final double yTested) {
 		var p0 = getP0();
 		var p1 = getP1();
+
+		// horizontal line does not have x value.
+		var angle = MathUtil.angleOf(p0.subtract(p1));
+		if (MathUtil.areEqual(angle, 0, MathUtil.angleRadianEps())
+				|| MathUtil.areEqual(angle, Math.PI, MathUtil.angleRadianEps())) {
+			return Double.NaN;
+		}
+
 		return (p1.getX() - p0.getX()) * (yTested - p0.getY()) / (p1.getY() - p0.getY()) + p0.getX();
 	}
 
@@ -119,7 +138,16 @@ public class Segment {
 	 *         of the given segment.
 	 */
 	public boolean sharesEndPoint(final Segment s, final double pointEps) {
-		return pointStream().anyMatch(p -> s.pointStream().anyMatch(q -> p.equals(q, pointEps)));
+		return getSharedEndPoint(s, pointEps).isPresent();
+	}
+
+	public Optional<Vector2d> getSharedEndPoint(final Segment s, final double pointEps) {
+		return pointStream().filter(p -> s.pointStream().anyMatch(q -> p.equals(q, pointEps))).findFirst();
+	}
+
+	@Override
+	public String toString() {
+		return "(" + p0 + ", " + p1 + ")";
 	}
 
 }

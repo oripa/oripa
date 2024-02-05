@@ -41,7 +41,7 @@ public class SelectingFirstEndPoint extends PickingVertex {
 	@Override
 	protected void undoAction(final PaintContext context) {
 		context.popVertex();
-		context.getSnapPoints().clear();
+		context.clearSnapPoints();
 	}
 
 }
