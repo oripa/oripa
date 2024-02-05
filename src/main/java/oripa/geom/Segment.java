@@ -88,4 +88,25 @@ public class Segment {
 		var p1 = getP1();
 		return (p1.getX() - p0.getX()) * (yTested - p0.getY()) / (p1.getY() - p0.getY()) + p0.getX();
 	}
+
+	/**
+	 * Both distances between the extremities of the lines should be less than
+	 * the threshold. The lines can be reversed, so the test has to be done both
+	 * ways
+	 *
+	 * @param s
+	 *            segment to compare
+	 * @return true if both segments are (at least almost) equals
+	 */
+	public boolean equals(final Segment s, final double pointEps) {
+		if (getP0().equals(s.getP0(), pointEps) && getP1().equals(s.getP1(), pointEps)) {
+			return true;
+		}
+		if (getP0().equals(s.getP1(), pointEps) && getP1().equals(s.getP0(), pointEps)) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

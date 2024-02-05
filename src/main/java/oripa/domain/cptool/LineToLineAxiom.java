@@ -35,7 +35,7 @@ public class LineToLineAxiom {
 		var line0 = s0.getLine();
 		var line1 = s1.getLine();
 
-		if (GeomUtil.isParallel(line0.getDirection(), line1.getDirection())) {
+		if (line0.isParallel(line1)) {
 			return createForParallelSegments(line0, line1);
 		} else {
 

@@ -37,4 +37,14 @@ public class Line {
 	public Vector2d getDirection() {
 		return dir;
 	}
+
+	public boolean isParallel(final Line line) {
+		return dir.isParallel(line.dir);
+	}
+
+	public boolean equals(final Line line, final double eps) {
+		return dir.isParallel(line.dir)
+				&& (p.equals(line.p, eps) || p.subtract(line.p).isParallel(line.dir));
+	}
+
 }

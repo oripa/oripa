@@ -41,27 +41,47 @@ public class GeomUtil {
 		return CalculationResource.POINT_EPS;
 	}
 
+	/**
+	 * Equivalent to {@code p0.equals(p1, eps)}.
+	 *
+	 * @see {@link Vector2d#equals(Vector2d, double)}
+	 * @return
+	 */
 	public static boolean areEqual(final Vector2d p0, final Vector2d p1, final double eps) {
-		return distance(p0, p1) < eps;
-	}
-
-	public static boolean areEqual(final Line line0, final Line line1, final double eps) {
-		return isParallel(line0.getDirection(), line1.getDirection())
-				&& (areEqual(line0.getPoint(), line1.getPoint(), eps)
-						|| isParallel(line0.getPoint().subtract(line1.getPoint()), line0.getDirection()));
-	}
-
-	public static double distance(final Vector2d p0, final Vector2d p1) {
-		return distance(p0.getX(), p0.getY(), p1.getX(), p1.getY());
-	}
-
-	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
-		double angle = dir0.angle(dir1);
-		return angle < MathUtil.angleRadianEps() || angle > Math.PI - MathUtil.angleRadianEps();
+		return p0.equals(p1, eps);
 	}
 
 	/**
+	 * Equivalent to {@code line0.equals(line1, eps)}
 	 *
+	 * @see {@link Line#equals(Line, double)}
+	 * @return
+	 */
+	public static boolean areEqual(final Line line0, final Line line1, final double eps) {
+		return line0.equals(line1, eps);
+	}
+
+	/**
+	 * Equivalent to {@code p0.distance(p1)}
+	 *
+	 * @see {@link Vector2d#distance(Vector2d)}
+	 * @return
+	 */
+	public static double distance(final Vector2d p0, final Vector2d p1) {
+		return p0.distance(p1);
+	}
+
+	/**
+	 * Equivalent to {@code dir0.isParallel(dir1)}
+	 *
+	 * @see {@link Vector2d#isParallel(Vector2d)}
+	 * @return
+	 */
+	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
+		return dir0.isParallel(dir1);
+	}
+
+	/**
 	 * this method returns the count of end points on other segment for each
 	 * segment.
 	 * <ul>
@@ -73,7 +93,7 @@ public class GeomUtil {
 	 * </ul>
 	 */
 	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
-		if (!isParallel(seg0.getLine().getDirection(), seg1.getLine().getDirection())) {
+		if (!seg0.getLine().isParallel(seg1.getLine())) {
 			return 0;
 		}
 
@@ -167,14 +187,7 @@ public class GeomUtil {
 	 * @return true if both segments are (at least almost) equals
 	 */
 	public static boolean isSameLineSegment(final Segment l0, final Segment l1, final double pointEps) {
-		if (areEqual(l0.getP0(), l1.getP0(), pointEps) && areEqual(l0.getP1(), l1.getP1(), pointEps)) {
-			return true;
-		}
-		if (areEqual(l0.getP0(), l1.getP1(), pointEps) && areEqual(l0.getP1(), l1.getP0(), pointEps)) {
-			return true;
-		}
-
-		return false;
+		return l0.equals(l1, pointEps);
 	}
 
 	public static Segment getVerticalLine(final Vector2d v, final Segment line) {
@@ -625,10 +638,6 @@ public class GeomUtil {
 		dy2 = d2.getY();
 
 		return dx1 * dy2 - dy1 * dx2;
-	}
-
-	private static double distance(final double x0, final double y0, final double x1, final double y1) {
-		return Math.sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
 	}
 
 	public static Vector2d computeCentroid(final Collection<Vector2d> points) {
