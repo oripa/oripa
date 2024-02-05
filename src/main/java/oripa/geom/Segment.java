@@ -109,6 +109,15 @@ public class Segment {
 		return false;
 	}
 
+	/**
+	 * Returns {@code true} if an end point of this segment is close enough to
+	 * the given segment's end point.
+	 *
+	 * @param s
+	 * @param pointEps
+	 * @return {@code true} if one of the end point of this segment equals that
+	 *         of the given segment.
+	 */
 	public boolean sharesEndPoint(final Segment s, final double pointEps) {
 		return pointStream().anyMatch(p -> s.pointStream().anyMatch(q -> p.equals(q, pointEps)));
 	}
