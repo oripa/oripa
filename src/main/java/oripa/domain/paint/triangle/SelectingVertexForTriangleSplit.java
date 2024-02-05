@@ -3,7 +3,6 @@ package oripa.domain.paint.triangle;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
 import oripa.util.Command;
-import oripa.vecmath.Vector2d;
 
 public class SelectingVertexForTriangleSplit extends PickingVertex {
 
@@ -16,23 +15,11 @@ public class SelectingVertexForTriangleSplit extends PickingVertex {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
-			final boolean doSpecial) {
-		boolean vertexIsSelected = super.onAct(context, currentPoint, doSpecial);
-
-		if (!vertexIsSelected) {
-			return false;
-		}
-
-		if (context.getVertexCount() < 3) {
-			return false;
-		}
-
-		return true;
-	}
-
-	@Override
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
+		if (context.getVertexCount() < 3) {
+			return;
+		}
+
 		Command command = new TriangleSplitAdderCommand(context);
 		command.execute();
 	}
