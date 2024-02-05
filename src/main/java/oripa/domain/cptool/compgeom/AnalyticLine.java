@@ -58,7 +58,7 @@ public class AnalyticLine {
 	}
 
 	public boolean isVertical() {
-		return MathUtil.areEqual(Math.PI / 2, angle, MathUtil.angleRadianEps());
+		return MathUtil.areRadianEqual(Math.PI / 2, angle);
 	}
 
 	/**

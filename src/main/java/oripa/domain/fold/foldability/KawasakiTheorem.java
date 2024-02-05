@@ -66,8 +66,7 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 			}
 		}
 
-		final double eps = MathUtil.angleRadianEps();
-		if (!MathUtil.areEqual(oddSum, Math.PI, eps)) {
+		if (!MathUtil.areRadianEqual(oddSum, Math.PI)) {
 			logger.trace("edge angle sum invalid");
 			return false;
 		}

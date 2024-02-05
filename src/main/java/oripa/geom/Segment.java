@@ -69,7 +69,7 @@ public class Segment {
 	 * Calculates the affine value on the line, at the {@code xTested}
 	 * coordinate using the y = ax + b expression
 	 *
-	 * @param xTested.
+	 * @param xTested
 	 *            {@linkplain Double#NaN} if this segment is vertical.
 	 */
 	public double getAffineYValueAt(final double xTested) {
@@ -77,9 +77,9 @@ public class Segment {
 		var p1 = getP1();
 
 		// vertical line does not have y value.
-		var angle = MathUtil.angleOf(p0.subtract(p1));
-		if (MathUtil.areEqual(angle, Math.PI / 2, MathUtil.angleRadianEps())
-				|| MathUtil.areEqual(angle, 3 * Math.PI / 2, MathUtil.angleRadianEps())) {
+		var angle = p0.subtract(p1).ownAngle();
+		if (MathUtil.areRadianEqual(angle, Math.PI / 2)
+				|| MathUtil.areRadianEqual(angle, 3 * Math.PI / 2)) {
 			return Double.NaN;
 		}
 
@@ -91,7 +91,7 @@ public class Segment {
 	 * Calculates the affine value on the line, at the {@code yTested}
 	 * coordinate using the x = ay + b expression
 	 *
-	 * @param yTested.
+	 * @param yTested
 	 *            {@linkplain Double#NaN} if this segment is horizontal.
 	 */
 	public double getAffineXValueAt(final double yTested) {
@@ -99,9 +99,10 @@ public class Segment {
 		var p1 = getP1();
 
 		// horizontal line does not have x value.
-		var angle = MathUtil.angleOf(p0.subtract(p1));
-		if (MathUtil.areEqual(angle, 0, MathUtil.angleRadianEps())
-				|| MathUtil.areEqual(angle, Math.PI, MathUtil.angleRadianEps())) {
+		var angle = p0.subtract(p1).ownAngle();
+		if (MathUtil.areRadianEqual(angle, 0)
+				|| MathUtil.areRadianEqual(angle, Math.PI)
+				|| MathUtil.areRadianEqual(angle, 2 * Math.PI)) {
 			return Double.NaN;
 		}
 

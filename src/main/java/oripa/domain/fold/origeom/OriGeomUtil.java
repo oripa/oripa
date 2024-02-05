@@ -23,7 +23,6 @@ import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
-import oripa.util.MathUtil;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -181,8 +180,8 @@ public class OriGeomUtil {
 		var preP = v1.getPositionBeforeFolding().subtract(p);
 		var nxtP = v3.getPositionBeforeFolding().subtract(p);
 
-		var prePAngle = MathUtil.angleOf(preP);
-		var nxtPAngle = MathUtil.angleOf(nxtP);
+		var prePAngle = preP.ownAngle();
+		var nxtPAngle = nxtP.ownAngle();
 
 		if (prePAngle > nxtPAngle) {
 			nxtPAngle += 2 * Math.PI;

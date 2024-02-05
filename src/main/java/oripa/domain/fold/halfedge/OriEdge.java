@@ -21,7 +21,6 @@ package oripa.domain.fold.halfedge;
 import java.util.Optional;
 
 import oripa.geom.Segment;
-import oripa.util.MathUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -111,13 +110,13 @@ public class OriEdge {
 	 *
 	 * @param sv
 	 *            start vertex of the direction
-	 * @return arc tangent of direction vector
+	 * @return arc tangent of direction vector between 0 and pi.
 	 */
 	public double getAngle(final OriVertex sv) {
 		var ev = oppositeVertex(sv);
 		Vector2d dir = ev.getPositionBeforeFolding().subtract(sv.getPositionBeforeFolding());
 
-		return MathUtil.angleOf(dir);
+		return dir.ownAngle();
 	}
 
 	public boolean isBoundary() {

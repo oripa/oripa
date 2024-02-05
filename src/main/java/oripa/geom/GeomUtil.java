@@ -206,7 +206,7 @@ public class GeomUtil {
 	 * @param v0
 	 * @param v1
 	 * @param v2
-	 * @return
+	 * @return Direction vector. Not normalized.
 	 */
 	public static Vector2d getBisectorVec(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
 
@@ -216,8 +216,8 @@ public class GeomUtil {
 		// a dot b = |a||b| cos(theta)
 		double angle = Math.acos(v0_v1.dot(v2_v1));
 
-		if (MathUtil.areEqual(angle, Math.PI, MathUtil.angleRadianEps())) {
-			double bisectorAngle = MathUtil.angleOf(v0_v1) + Math.PI / 2;
+		if (MathUtil.areRadianEqual(angle, Math.PI)) {
+			double bisectorAngle = v0_v1.ownAngle() + Math.PI / 2;
 			return new Vector2d(Math.cos(bisectorAngle), Math.sin(bisectorAngle));
 		}
 

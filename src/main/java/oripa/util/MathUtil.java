@@ -18,35 +18,47 @@
  */
 package oripa.util;
 
-import oripa.vecmath.Vector2d;
-
 /**
  * @author OUCHI Koji
  *
  */
 public class MathUtil {
+
+	/**
+	 *
+	 * @param angle
+	 * @return converted angle whose range is between 0 and 2 * pi.
+	 */
 	public static double normalizeAngle(final double angle) {
 		final double TWO_PI = 2 * Math.PI;
 		return (TWO_PI + angle) % TWO_PI;
 	}
 
 	/**
-	 *
-	 * @param v
-	 * @return between 0 and 2 * PI
+	 * For error limit of a radian value between 0 and 2 * pi.
 	 */
-	public static double angleOf(final Vector2d v) {
-		return normalizeAngle(Math.atan2(v.getY(), v.getX()));
-	}
-
 	public static double angleRadianEps() {
 		return 1e-5;
+	}
+
+	/**
+	 * Returns {@code true} if the difference is smaller than
+	 * {@link MathUtil#angleRadianEps()}.
+	 *
+	 * @param a0
+	 * @param a1
+	 */
+	public static boolean areRadianEqual(final double a0, final double a1) {
+		return areEqual(a0, a1, angleRadianEps());
 	}
 
 	public static double angleDegreeEps() {
 		return Math.toDegrees(angleRadianEps());
 	}
 
+	/**
+	 * For error limit of a value between 0 and 1.
+	 */
 	public static double normalizedValueEps() {
 		return 1e-6;
 	}
@@ -58,7 +70,8 @@ public class MathUtil {
 	 * @param v0
 	 * @param v1
 	 * @param eps
-	 * @return
+	 * @return {@code true} if the difference is between {@code -eps} and
+	 *         {@code eps}.
 	 */
 	public static boolean areEqual(final double v0, final double v1, final double eps) {
 		return Math.abs(v1 - v0) < eps;
@@ -71,7 +84,8 @@ public class MathUtil {
 	 * @param v0
 	 * @param v1
 	 * @param eps
-	 * @return
+	 * @return {@code true} if the difference is between {@code -eps} and
+	 *         {@code eps}.
 	 */
 	public static boolean areEqualInclusive(final double v0, final double v1, final double eps) {
 		return Math.abs(v1 - v0) <= eps;
