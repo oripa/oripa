@@ -69,7 +69,7 @@ public class MathUtil {
 	 * @return
 	 */
 	public static boolean areEqualInclusive(final double v0, final double v1, final double eps) {
-		return Math.abs(v1 - v0) < eps;
+		return Math.abs(v1 - v0) <= eps;
 	}
 
 }
