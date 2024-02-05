@@ -86,7 +86,6 @@ public abstract class AbstractActionState implements ActionState {
 	 * @param currentPoint
 	 *            Deprecated. This will be deleted in the future release.
 	 * @param doSpecial
-	 *            Deprecated. This will be deleted in the future release.
 	 * @return true if the action succeeded and should return the next state,
 	 *         otherwise false.
 	 */

@@ -19,7 +19,6 @@ public interface ActionState {
 	 * @param currentPoint
 	 *            Deprecated. This will be deleted in the future release.
 	 * @param differentAction
-	 *            Deprecated. This will be deleted in the future release.
 	 * @return next state.
 	 */
 	public ActionState doAction(PaintContext context,
