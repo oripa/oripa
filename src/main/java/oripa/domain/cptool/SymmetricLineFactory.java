@@ -5,19 +5,20 @@ import java.util.LinkedList;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.Ray;
+import oripa.geom.Segment;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 public class SymmetricLineFactory {
 
 	private class BestPair {
-		private OriLine bestLine = null;
+		private Segment bestLine = null;
 		private Vector2d bestPoint = null;
 
 		/**
 		 * @return bestLine
 		 */
-		public OriLine getBestLine() {
+		public Segment getBestLine() {
 			return bestLine;
 		}
 
@@ -25,7 +26,7 @@ public class SymmetricLineFactory {
 		 * @param bestLine
 		 *            sets bestLine
 		 */
-		public void setBestLine(final OriLine bestLine) {
+		public void setBestLine(final Segment bestLine) {
 			this.bestLine = bestLine;
 		}
 
@@ -91,7 +92,7 @@ public class SymmetricLineFactory {
 		Ray ray = new Ray(v1, v3.subtract(v1));
 
 		double minDist = Double.MAX_VALUE;
-		for (OriLine l : creasePattern) {
+		for (var l : creasePattern) {
 			var crossPointOpt = GeomUtil.getCrossPoint(ray, l);
 			if (crossPointOpt.isEmpty()) {
 				continue;
@@ -130,15 +131,15 @@ public class SymmetricLineFactory {
 	 * @throws PainterCommandFailedException
 	 */
 	public Collection<OriLine> createSymmetricLineAutoWalk(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2, final Vector2d startV,
+			final Vector2d v0, final Vector2d v1, final Vector2d v2,
 			final Collection<OriLine> creasePattern, final OriLine.Type lineType, final double pointEps)
 			throws PainterCommandFailedException {
 
-		LinkedList<OriLine> autoWalkLines = new LinkedList<>();
+		var autoWalkLines = new LinkedList<Segment>();
 
-		addSymmetricLineAutoWalk(v0, v1, v2, 0, startV, creasePattern, autoWalkLines, lineType, pointEps);
+		addSymmetricLineAutoWalk(v0, v1, v2, 0, v0, creasePattern, autoWalkLines, pointEps);
 
-		return autoWalkLines;
+		return autoWalkLines.stream().map(l -> new OriLine(l, lineType)).toList();
 	}
 
 	/**
@@ -155,8 +156,8 @@ public class SymmetricLineFactory {
 	private void addSymmetricLineAutoWalk(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2, final int stepCount,
 			final Vector2d startV,
-			final Collection<OriLine> creasePattern, final Collection<OriLine> autoWalkLines,
-			final OriLine.Type lineType, final double pointEps) {
+			final Collection<OriLine> creasePattern, final Collection<Segment> autoWalkLines,
+			final double pointEps) {
 
 		if (stepCount > 36) {
 			return;
@@ -164,15 +165,14 @@ public class SymmetricLineFactory {
 
 		BestPair pair = findBestPair(v0, v1, v2, creasePattern, pointEps);
 
-		Vector2d bestPoint = pair.getBestPoint();
-		OriLine bestLine = pair.getBestLine();
+		var bestPoint = pair.getBestPoint();
+		var bestLine = pair.getBestLine();
 
 		if (bestPoint == null) {
 			return;
 		}
 
-		OriLine autoWalk = new OriLine(
-				v1, bestPoint, lineType);
+		var autoWalk = new Segment(v1, bestPoint);
 
 		autoWalkLines.add(autoWalk);
 
@@ -185,7 +185,7 @@ public class SymmetricLineFactory {
 
 		addSymmetricLineAutoWalk(
 				v1, bestPoint, GeomUtil.areEqual(p0, bestPoint, pointEps) ? p1 : p0, stepCount + 1, startV,
-				creasePattern, autoWalkLines, lineType, pointEps);
+				creasePattern, autoWalkLines, pointEps);
 
 	}
 

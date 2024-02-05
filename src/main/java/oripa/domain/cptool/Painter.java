@@ -306,7 +306,7 @@ public class Painter {
 		Collection<OriLine> autoWalkLines;
 		try {
 			autoWalkLines = symmetricFactory.createSymmetricLineAutoWalk(
-					v0, v1, v2, v0, creasePattern, lineType, getPointEps());
+					v0, v1, v2, creasePattern, lineType, getPointEps());
 
 		} catch (PainterCommandFailedException comEx) {
 			return false;
