@@ -132,7 +132,7 @@ public class OverlappingLineDivider {
 			return points;
 		}
 
-		if (points.stream().anyMatch(q -> GeomUtil.distance(p, q) >= pointEps)) {
+		if (points.stream().allMatch(q -> GeomUtil.distance(p, q) >= pointEps)) {
 			return Stream.concat(points.stream(), Stream.of(p)).toList();
 		}
 

@@ -23,34 +23,32 @@ import java.util.Collection;
 import java.util.Optional;
 
 import oripa.geom.RectangleDomain;
-import oripa.util.MathUtil;
+import oripa.geom.Segment;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 /**
  * Manages OriLine intersection testing (clipping) with Rectangle Domain
  */
-//TODO:	cleanup + comments (last three functions)
 public class RectangleClipper {
 
+	// This implementation encodes to flag bits the position of the end points
+	// of the given line. Each bit is 1 if the point is outside of the border
+	// line of the rectangle. For example, if LEFT bit is 1 then the point is on
+	// the left outside of the rectangle. A point is inside of the rectangle if
+	// all bits are 0.
 	private static final int LEFT = 1;
-	private static final int RIGHT = 2;
-	private static final int TOP = 4;
-	private static final int BOTTOM = 8;
-
-	private static final double EPSILON = 1.0e-6;
+	private static final int RIGHT = 1 << 1;
+	private static final int TOP = 1 << 2;
+	private static final int BOTTOM = 1 << 3;
 
 	private final RectangleDomain domain;
-
-	private final double m_minX;
-	private final double m_minY;
-	private final double m_maxX;
-	private final double m_maxY;
+	private final RectangleDomain relaxedDomain;
 
 	/**
 	 *
-	 * Relaxed version. The domain for clipping is slightly larger than given
-	 * domain. The margin of the relaxation is determined by epsilon.
+	 * The domain for clipping is slightly larger than given domain. The margin
+	 * of the relaxation is determined by epsilon.
 	 *
 	 * @param domain
 	 *            Rectangle domain for clipping
@@ -58,20 +56,17 @@ public class RectangleClipper {
 	 *            Margin
 	 */
 	public RectangleClipper(final RectangleDomain domain, final double epsilon) {
-		m_minX = domain.getLeft() - epsilon;
-		m_minY = domain.getTop() - epsilon;
-		m_maxX = domain.getRight() + epsilon;
-		m_maxY = domain.getBottom() + epsilon;
+		double minX = domain.getLeft() - epsilon;
+		double minY = domain.getTop() - epsilon;
+		double maxX = domain.getRight() + epsilon;
+		double maxY = domain.getBottom() + epsilon;
 
 		this.domain = domain;
+		relaxedDomain = new RectangleDomain(minX, minY, maxX, maxY);
 	}
 
-	public RectangleClipper(final RectangleDomain domain) {
-		this(domain, 0);
-	}
-
-	public RectangleClipper(final double x0, final double y0, final double x1, final double y1) {
-		this(new RectangleDomain(x0, y0, x1, y1));
+	public RectangleClipper(final double x0, final double y0, final double x1, final double y1, final double epsilon) {
+		this(new RectangleDomain(x0, y0, x1, y1), epsilon);
 	}
 
 	/**
@@ -80,83 +75,94 @@ public class RectangleClipper {
 	 * @param lines
 	 * @return Subset of {@code lines}
 	 */
-	public Collection<OriLine> selectByArea(final Collection<OriLine> lines) {
+	public <T extends Segment> Collection<T> selectByArea(final Collection<T> lines) {
 		return lines.stream()
-				.filter(this::clip)
+				.filter(this::intersects)
 				.toList();
 	}
 
 	/**
-	 * tells us whether the given line {@code line} intersects the rectangle.
+	 * Tells us whether the given line {@code line} intersects the rectangle.
+	 * The test is inclusive.
 	 *
 	 * @param line
-	 *            an end point of {@code line} will be substituted with the
-	 *            cross point of {@code l} and the edge of clipping rectangle.
+	 *            to be tested.
 	 *
 	 * @return {@code true} if {@code line} is included in or crosses the
 	 *         clipping rectangle.
 	 */
-	public boolean clip(final OriLine line) {
-		if (lineOverlapsBorder(line)) {
-			return false;
-		}
-
-		// first to avoid parameter modification
-		int s_code = calcCode(line.getP0().getX(), line.getP0().getY());
-		int e_code = calcCode(line.getP1().getX(), line.getP1().getY());
-		// the line is in the rectangle
-		if ((s_code == 0) && (e_code == 0)) {
-			return true;
-		}
-
-		// the line is in the {left, right, top, bottom} area.
-		if ((s_code & e_code) != 0) {
-			return false;
-		}
-
-		// p0 is in the outside of the rectangle and
-		// the line may cross the {left, right, top, bottom} edge of the
-		// rectangle.
-		if (s_code != 0) {
-			if (calcClippedPoint(s_code, line) < 0) {
-				return false;
-			}
-		}
-
-		// p1 is in the outside of the rectangle and
-		// the line may cross the {left, right, top, bottom} edge of the
-		// rectangle.
-		if (e_code != 0) {
-			return calcClippedPoint(e_code, line) >= 0;
-		}
-
-		return true;
+	public boolean intersects(final Segment line) {
+		return clip(line).isPresent();
 	}
 
 	/**
-	 * Check if {@code line} overlaps with border of RectangelDomain
+	 * OriLine version of {@link #clip(Segment)}.
 	 *
 	 * @param line
-	 * @return {@code true} if {@code line} overlaps with border
+	 *            to be clipped.
+	 * @return a clipped line. It can be zero-length line if the given line
+	 *         touches the rectangle. empty if no intersection.
 	 */
-	private boolean lineOverlapsBorder(final OriLine line) {
-		if (MathUtil.areEqual(line.getP0().getX(), m_minX, EPSILON)
-				&& MathUtil.areEqual(line.getP1().getX(), m_minX, EPSILON)) {
-			return true;
+	public Optional<OriLine> clip(final OriLine line) {
+		return clip((Segment) line)
+				.map(clipped -> new OriLine(clipped, line.getType()));
+	}
+
+	/**
+	 * Returns a new segment that is the result of intersection with the
+	 * rectangle. The test is inclusive.
+	 *
+	 * @param segment
+	 *            to be clipped.
+	 * @return clipped segment. It can be zero-length segment if the given line
+	 *         touches the rectangle. empty if no intersection.
+	 */
+	public Optional<Segment> clip(final Segment segment) {
+		var p0 = segment.getP0();
+		var p1 = segment.getP1();
+
+		// first to avoid parameter modification
+		final int p0Code = calcCode(p0.getX(), p0.getY());
+		final int p1Code = calcCode(p1.getX(), p1.getY());
+
+		// the line is in the rectangle
+		if ((p0Code == 0) && (p1Code == 0)) {
+			return Optional.of(segment);
 		}
-		if (MathUtil.areEqual(line.getP0().getX(), m_maxX, EPSILON)
-				&& MathUtil.areEqual(line.getP1().getX(), m_maxX, EPSILON)) {
-			return true;
+
+		// the line is in the {left, right, top, bottom} area.
+		if ((p0Code & p1Code) != 0) {
+			return Optional.empty();
 		}
-		if (MathUtil.areEqual(line.getP0().getY(), m_minY, EPSILON)
-				&& MathUtil.areEqual(line.getP1().getY(), m_minY, EPSILON)) {
-			return true;
+
+		var cp0Opt = createClippedPointOptional(p0Code, segment);
+		var cp1Opt = createClippedPointOptional(p1Code, segment);
+
+		Optional<Segment> clippedOpt = Optional.empty();
+
+		if (p0Code != 0 && p1Code != 0) {
+			// p0 and p1 are in the outside of the rectangle and
+			// the line may cross the two edges of the rectangle.
+			clippedOpt = cp0Opt.map(cp0 -> cp1Opt.map(cp1 -> new Segment(cp0, cp1)).orElse(null));
+		} else if (p0Code != 0) {
+			// p0 is in the outside of the rectangle and p1 is inside of the
+			// rectangle.
+			// The line may cross the {left, right, top, bottom} edge of the
+			// rectangle.
+			clippedOpt = cp0Opt.map(cp0 -> new Segment(cp0, p1));
+		} else if (p1Code != 0) {
+			// p1 is in the outside of the rectangle and p0 is inside the
+			// rectangle.
+			// The line may cross the {left, right, top, bottom} edge of the
+			// rectangle.
+			clippedOpt = cp1Opt.map(cp1 -> new Segment(p0, cp1));
 		}
-		if (MathUtil.areEqual(line.getP0().getY(), m_maxY, EPSILON)
-				&& MathUtil.areEqual(line.getP1().getY(), m_maxY, EPSILON)) {
-			return true;
-		}
-		return false;
+
+		return clippedOpt;
+
+		// very short line is not preferable but such test disables to detect a
+		// diagonal line touching the corner of the rectangle.
+		// return clippedOpt.filter(clipped -> clipped.length() >= eps);
 	}
 
 	/**
@@ -168,80 +174,80 @@ public class RectangleClipper {
 	 */
 	private int calcCode(final double x, final double y) {
 		int code = 0;
-		if (x < m_minX) {
+		if (x < relaxedDomain.getLeft()) {
 			code += LEFT;
 		}
-		if (x > m_maxX) {
+		if (x > relaxedDomain.getRight()) {
 			code += RIGHT;
 		}
-		if (y < m_minY) {
+		if (y < relaxedDomain.getTop()) {
 			code += TOP;
 		}
-		if (y > m_maxY) {
+		if (y > relaxedDomain.getBottom()) {
 			code += BOTTOM;
 		}
 
 		return code;
 	}
 
-	private int calcClippedPoint(final int code, final OriLine l) {
-		return calcClippedPointOptional(code, l).isPresent() ? 1 : -1;
-	}
-
 	/**
 	 * finds the coordinates after clipping.
 	 *
-	 * @param p
-	 *            will be substituted with the cross point of {@code l} and the
-	 *            edge of clipping rectangle.
-	 * @return 1 if {@code l} crosses the edge of the rectangle, -1 otherwise.
+	 * @param code
+	 *            flag bits of an end point of the given line
+	 * @param l
+	 *            line to be clipped
+	 * @return clipped point. Empty if The line doesn't intersect the rectangle.
 	 */
-	private Optional<Vector2d> calcClippedPointOptional(final int code, final OriLine l) {
-		double cx, cy;
+	private Optional<Vector2d> createClippedPointOptional(final int code, final Segment l) {
 
 		// Outside from the left edge of the window
 		if ((code & LEFT) != 0) {
-			cy = l.getAffineYValueAt(domain.getLeft());
-			if ((cy >= m_minY) && (cy <= m_maxY)) {
-				var px = domain.getLeft();
-				var py = cy;
-				return Optional.of(new Vector2d(px, py));
-			}
+			return createPointClippedByX(l, domain.getLeft());
 		}
 
 		// Outside the right edge of the window
 		if ((code & RIGHT) != 0) {
-			cy = l.getAffineYValueAt(domain.getRight());
-			if ((cy >= m_minY) && (cy <= m_maxY)) {
-				var px = domain.getRight();
-				var py = cy;
-				return Optional.of(new Vector2d(px, py));
-			}
+			return createPointClippedByX(l, domain.getRight());
 		}
 
 		// Outside from the top of the window
 		if ((code & TOP) != 0) {
-			cx = l.getAffineXValueAt(domain.getTop());
-			if ((cx >= m_minX) && (cx <= m_maxX)) {
-				var px = cx;
-				var py = domain.getTop();
-				return Optional.of(new Vector2d(px, py));
-			}
+			return createPointClippedByY(l, domain.getTop());
 		}
 
 		// Outside from the bottom of the window
 		if ((code & BOTTOM) != 0) {
-			cx = l.getAffineXValueAt(domain.getBottom());
-			if ((cx >= m_minX) && (cx <= m_maxX)) {
-				var px = cx;
-				var py = domain.getBottom();
-				return Optional.of(new Vector2d(px, py));
-			}
+			return createPointClippedByY(l, domain.getBottom());
 		}
 
-		return Optional.empty(); // If it is not clipping, line segment is
-									// completely
-		// invisible
+		return Optional.empty();
+	}
+
+	private Optional<Vector2d> createPointClippedByX(final Segment l, final double clipX) {
+		var yRange = relaxedDomain.getYRange();
+
+		var cy = l.getAffineYValueAt(clipX);
+		if (yRange.includes(cy)) {
+			double px = clipX;
+			double py = cy;
+			return Optional.of(new Vector2d(px, py));
+		}
+
+		return Optional.empty();
+	}
+
+	private Optional<Vector2d> createPointClippedByY(final Segment l, final double clipY) {
+		var xRange = relaxedDomain.getXRange();
+
+		var cx = l.getAffineXValueAt(clipY);
+		if (xRange.includes(cx)) {
+			double px = cx;
+			double py = clipY;
+			return Optional.of(new Vector2d(px, py));
+		}
+
+		return Optional.empty();
 	}
 
 }

@@ -22,6 +22,7 @@ public class BisectorFactory {
 	 *            the type of the bisector line
 	 * @return perpendicular bisector line
 	 */
+	@Deprecated
 	public OriLine createPerpendicularBisector(
 			final Vector2d v0, final Vector2d v1,
 			final RectangleDomain domain, final OriLine.Type lineType, final double pointEps) {

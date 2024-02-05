@@ -21,9 +21,9 @@ package oripa.domain.paint.line;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import oripa.domain.cptool.PseudoLineFactory;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.SnapPointFactory;
+import oripa.geom.Line;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -37,12 +37,11 @@ public class LineSnapPointFactory {
 		p1 = context.getVertex(1);
 
 		var creasePattern = context.getCreasePattern();
-		var segment = new PseudoLineFactory().create(p0, p1, creasePattern.getPaperSize());
 
 		var snapPointFactory = new SnapPointFactory();
 
 		Collection<Vector2d> snapPoints = new ArrayList<>(
-				snapPointFactory.createSnapPoints(creasePattern, segment,
+				snapPointFactory.createSnapPoints(creasePattern, new Line(p0, p0.subtract(p1)),
 						context.getPointEps()));
 
 		snapPoints.add(p0);

@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import oripa.geom.GeomUtil;
+import oripa.geom.Ray;
 import oripa.geom.Segment;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -32,6 +33,24 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class RaySnapPointFactory {
+
+	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Ray ray,
+			final double eps) {
+		return Stream.concat(
+				// snap on cross points of line and creases.
+				creasePattern.stream()
+						.map(crease -> GeomUtil.getCrossPoint(ray, crease))
+						.flatMap(Optional::stream),
+
+				// snap on end points of overlapping creases.
+				creasePattern.stream()
+						.filter(crease -> overlapsEntirely(crease, ray, eps))
+						.flatMap(OriLine::pointStream))
+				.filter(p -> !GeomUtil.areEqual(p, ray.getEndPoint(), eps))
+				.toList();
+	}
+
+	@Deprecated
 	public Collection<Vector2d> createSnapPoints(final Collection<OriLine> creasePattern, final Segment ray,
 			final double eps) {
 		return Stream.concat(
@@ -45,6 +64,10 @@ public class RaySnapPointFactory {
 						.filter(crease -> overlapsEntirely(crease, ray, eps))
 						.flatMap(OriLine::pointStream))
 				.toList();
+	}
+
+	private boolean overlapsEntirely(final Segment crease, final Ray ray, final double eps) {
+		return crease.pointStream().allMatch(p -> GeomUtil.distancePointToRay(p, ray) < eps);
 	}
 
 	private boolean overlapsEntirely(final Segment crease, final Segment ray, final double eps) {

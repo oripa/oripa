@@ -46,8 +46,30 @@ public class MathUtil {
 		return 1e-6;
 	}
 
+	/**
+	 * Returns {@code true} if the given values are equal allowing error
+	 * {@code eps}. The test is exclusive.
+	 *
+	 * @param v0
+	 * @param v1
+	 * @param eps
+	 * @return
+	 */
 	public static boolean areEqual(final double v0, final double v1, final double eps) {
 		return Math.abs(v1 - v0) < eps;
+	}
+
+	/**
+	 * Returns {@code true} if the given values are equal allowing error
+	 * {@code eps}. The test is inclusive.
+	 *
+	 * @param v0
+	 * @param v1
+	 * @param eps
+	 * @return
+	 */
+	public static boolean areEqualInclusive(final double v0, final double v1, final double eps) {
+		return Math.abs(v1 - v0) <= eps;
 	}
 
 }

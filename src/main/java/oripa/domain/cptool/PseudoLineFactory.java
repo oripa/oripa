@@ -26,6 +26,7 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
+@Deprecated
 public class PseudoLineFactory {
 	public Segment create(
 			final Vector2d v0, final Vector2d v1, final double paperSize) {

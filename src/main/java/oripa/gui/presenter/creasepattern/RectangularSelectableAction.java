@@ -70,7 +70,7 @@ public abstract class RectangularSelectableAction extends AbstractGraphicMouseAc
 
 		try {
 			var domain = RectangleDomain.createFromPoints(List.of(startPoint, draggingPoint));
-			RectangleClipper clipper = new RectangleClipper(domain);
+			RectangleClipper clipper = new RectangleClipper(domain, paintContext.getPointEps());
 
 			CreasePattern creasePattern = paintContext.getCreasePattern();
 			selectedLines = clipper.selectByArea(creasePattern);

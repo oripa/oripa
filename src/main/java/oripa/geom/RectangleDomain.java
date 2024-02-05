@@ -142,14 +142,34 @@ public class RectangleDomain {
 	}
 
 	/**
-	 * Check if this domain contains given {@code point}
+	 * Checks if this domain contains given {@code point}. The test is
+	 * inclusive.
 	 *
 	 * @param point
-	 * @return true if {@code point} is in domain
+	 * @return true if {@code point} is in this domain.
 	 */
 	public boolean contains(final Vector2d point) {
-		return new ClosedRange(left, right).includes(point.getX()) &&
-				new ClosedRange(top, bottom).includes(point.getY());
+		return getXRange().includes(point.getX()) &&
+				getYRange().includes(point.getY());
+	}
+
+	public ClosedRange getXRange() {
+		return new ClosedRange(left, right);
+	}
+
+	public ClosedRange getYRange() {
+		return new ClosedRange(top, bottom);
+	}
+
+	/**
+	 * Checks if this domain contains given {@code segment}. The test is
+	 * inclusive.
+	 *
+	 * @param segment
+	 * @return true if {@code segment} is in this domain.
+	 */
+	public boolean contains(final Segment segment) {
+		return segment.pointStream().allMatch(this::contains);
 	}
 
 	/**

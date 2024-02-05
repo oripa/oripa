@@ -75,10 +75,8 @@ public class LineToLineAxiom {
 	private List<Line> createForSegmentsWithCross(final Segment s0, final Segment s1,
 			final Vector2d segmentCrossPoint, final double pointEps) {
 
-		if (GeomUtil.areEqual(s0.getP0(), s1.getP0(), pointEps) ||
-				GeomUtil.areEqual(s0.getP0(), s1.getP1(), pointEps) ||
-				GeomUtil.areEqual(s0.getP1(), s1.getP0(), pointEps) ||
-				GeomUtil.areEqual(s0.getP1(), s1.getP1(), pointEps)) {
+		// shares end point?
+		if (s0.pointStream().anyMatch(p -> s1.pointStream().anyMatch(q -> GeomUtil.areEqual(p, q, pointEps)))) {
 			return createForSegmentsWithoutCross(s0, s1, pointEps);
 		}
 

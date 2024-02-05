@@ -5,19 +5,20 @@ import java.util.LinkedList;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.Ray;
+import oripa.geom.Segment;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 public class SymmetricLineFactory {
 
 	private class BestPair {
-		private OriLine bestLine = null;
+		private Segment bestLine = null;
 		private Vector2d bestPoint = null;
 
 		/**
 		 * @return bestLine
 		 */
-		public OriLine getBestLine() {
+		public Segment getBestLine() {
 			return bestLine;
 		}
 
@@ -25,7 +26,7 @@ public class SymmetricLineFactory {
 		 * @param bestLine
 		 *            sets bestLine
 		 */
-		public void setBestLine(final OriLine bestLine) {
+		public void setBestLine(final Segment bestLine) {
 			this.bestLine = bestLine;
 		}
 
@@ -47,7 +48,7 @@ public class SymmetricLineFactory {
 	}
 
 	/**
-	 * v1-v2 is the symmetry line, v0-v1 is the subject to be copied.
+	 * v1-v2 is the symmetry base line, v0-v1 is the subject to be copied.
 	 *
 	 * @param v0
 	 * @param v1
@@ -79,8 +80,8 @@ public class SymmetricLineFactory {
 	 * @param v1
 	 * @param v2
 	 * @param creasePattern
-	 * @return a line to be the next base line of symmetry and the cross point
-	 *         of new symmetric line and the base.
+	 * @return a pair of line to be the next base line of symmetry and the cross
+	 *         point of new symmetric line on the next base.
 	 */
 	private BestPair findBestPair(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
@@ -88,10 +89,10 @@ public class SymmetricLineFactory {
 		BestPair bestPair = new BestPair();
 
 		Vector2d v3 = GeomUtil.getSymmetricPoint(v0, v1, v2);
-		Ray ray = new Ray(v1, new Vector2d(v3.getX() - v1.getX(), v3.getY() - v1.getY()));
+		Ray ray = new Ray(v1, v3.subtract(v1));
 
 		double minDist = Double.MAX_VALUE;
-		for (OriLine l : creasePattern) {
+		for (var l : creasePattern) {
 			var crossPointOpt = GeomUtil.getCrossPoint(ray, l);
 			if (crossPointOpt.isEmpty()) {
 				continue;
@@ -120,25 +121,25 @@ public class SymmetricLineFactory {
 	 * @param v0
 	 *            terminal point of the line to be copied
 	 * @param v1
-	 *            connecting point of symmetry line and the line to be copied.
+	 *            connecting point of symmetry base line and the line to be
+	 *            copied.
 	 * @param v2
-	 *            terminal point of symmetry line
-	 * @param startV
+	 *            terminal point of symmetry base line
 	 * @param creasePattern
 	 *
-	 * @return a collection of auto walk line
+	 * @return a collection of auto walk lines
 	 * @throws PainterCommandFailedException
 	 */
 	public Collection<OriLine> createSymmetricLineAutoWalk(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2, final Vector2d startV,
+			final Vector2d v0, final Vector2d v1, final Vector2d v2,
 			final Collection<OriLine> creasePattern, final OriLine.Type lineType, final double pointEps)
 			throws PainterCommandFailedException {
 
-		LinkedList<OriLine> autoWalkLines = new LinkedList<>();
+		var autoWalkLines = new LinkedList<Segment>();
 
-		addSymmetricLineAutoWalk(v0, v1, v2, 0, startV, creasePattern, autoWalkLines, lineType, pointEps);
+		addSymmetricLineAutoWalk(v0, v1, v2, 0, v0, creasePattern, autoWalkLines, pointEps);
 
-		return autoWalkLines;
+		return autoWalkLines.stream().map(l -> new OriLine(l, lineType)).toList();
 	}
 
 	/**
@@ -153,30 +154,25 @@ public class SymmetricLineFactory {
 	 * @param autoWalkLines
 	 */
 	private void addSymmetricLineAutoWalk(
-			final Vector2d v0, final Vector2d v1, final Vector2d v2, int stepCount,
+			final Vector2d v0, final Vector2d v1, final Vector2d v2, final int stepCount,
 			final Vector2d startV,
-			final Collection<OriLine> creasePattern, final Collection<OriLine> autoWalkLines,
-			final OriLine.Type lineType, final double pointEps) {
+			final Collection<OriLine> creasePattern, final Collection<Segment> autoWalkLines,
+			final double pointEps) {
 
-		// FIXME this method does not detect loop path. it causes meaningless
-		// recursion.
-
-		stepCount++;
 		if (stepCount > 36) {
 			return;
 		}
 
 		BestPair pair = findBestPair(v0, v1, v2, creasePattern, pointEps);
 
-		Vector2d bestPoint = pair.getBestPoint();
-		OriLine bestLine = pair.getBestLine();
+		var bestPoint = pair.getBestPoint();
+		var bestLine = pair.getBestLine();
 
 		if (bestPoint == null) {
 			return;
 		}
 
-		OriLine autoWalk = new OriLine(
-				v1, bestPoint, lineType);
+		var autoWalk = new Segment(v1, bestPoint);
 
 		autoWalkLines.add(autoWalk);
 
@@ -184,9 +180,12 @@ public class SymmetricLineFactory {
 			return;
 		}
 
+		var p0 = bestLine.getP0();
+		var p1 = bestLine.getP1();
+
 		addSymmetricLineAutoWalk(
-				v1, bestPoint, bestLine.getP0(), stepCount, startV,
-				creasePattern, autoWalkLines, lineType, pointEps);
+				v1, bestPoint, GeomUtil.areEqual(p0, bestPoint, pointEps) ? p1 : p0, stepCount + 1, startV,
+				creasePattern, autoWalkLines, pointEps);
 
 	}
 

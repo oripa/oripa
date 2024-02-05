@@ -3,6 +3,7 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -22,7 +23,7 @@ public class TiledLineFactory {
 	 */
 	public Collection<OriLine> createFullyTiledLines(
 			final Collection<OriLine> selectedLines,
-			final Collection<OriLine> creasePattern, final double paperSize) {
+			final Collection<OriLine> creasePattern, final double paperSize, final double eps) {
 
 		var selectionDomain = RectangleDomain.createFromSegments(selectedLines);
 
@@ -34,7 +35,7 @@ public class TiledLineFactory {
 		return createTiledLinesImpl(
 				startRow, startCol, endRow, endCol,
 				selectionDomain.getWidth(), selectionDomain.getHeight(),
-				selectedLines, creasePattern);
+				selectedLines, creasePattern, eps);
 	}
 
 	/**
@@ -58,7 +59,8 @@ public class TiledLineFactory {
 	public Collection<OriLine> createTiledLines(
 			final int row, final int col, final double interX, final double interY,
 			final Collection<OriLine> selectedLines,
-			final Collection<OriLine> creasePattern) {
+			final Collection<OriLine> creasePattern,
+			final double eps) {
 
 		int startRow = 0;
 		int startCol = 0;
@@ -68,14 +70,15 @@ public class TiledLineFactory {
 		return createTiledLinesImpl(
 				startRow, startCol, endRow, endCol,
 				interX, interY,
-				selectedLines, creasePattern);
+				selectedLines, creasePattern, eps);
 	}
 
 	private Collection<OriLine> createTiledLinesImpl(
 			final int startRow, final int startCol, final int endRow, final int endCol,
 			final double interX, final double interY,
 			final Collection<OriLine> selectedLines,
-			final Collection<OriLine> creasePattern) {
+			final Collection<OriLine> creasePattern,
+			final double eps) {
 
 		System.out.println("startRow=" + startRow + " startCol=" + startCol + " endRow=" + endRow
 				+ " endCol=" + endCol);
@@ -83,7 +86,12 @@ public class TiledLineFactory {
 		ArrayList<OriLine> copiedLines = new ArrayList<OriLine>();
 
 		var domain = RectangleDomain.createFromSegments(creasePattern);
-		var clipper = new RectangleClipper(domain);
+
+		var boundaries = creasePattern.stream()
+				.filter(OriLine::isBoundary)
+				.toList();
+
+		var clipper = new RectangleClipper(domain, eps);
 
 		for (int x = startCol; x < endCol; x++) {
 			for (int y = startRow; y < endRow; y++) {
@@ -98,11 +106,11 @@ public class TiledLineFactory {
 					var clP0 = l.getP0().add(interval);
 					var clP1 = l.getP1().add(interval);
 
-					var cl = new OriLine(clP0, clP1, l.getType());
+					var clOpt = clipper.clip(new OriLine(clP0, clP1, l.getType()))
+							.filter(cl -> boundaries.stream()
+									.noneMatch(boundary -> GeomUtil.isOverlap(cl, boundary, eps)));
 
-					if (clipper.clip(cl)) {
-						copiedLines.add(cl);
-					}
+					clOpt.ifPresent(copiedLines::add);
 				}
 			}
 		}

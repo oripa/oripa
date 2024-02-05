@@ -20,7 +20,6 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.IntStream;
 
@@ -39,13 +38,22 @@ import oripa.value.OriLine;
 public class OverlappingLineExtractor {
 	private static final Logger logger = LoggerFactory.getLogger(OverlappingLineExtractor.class);
 
+	/**
+	 * Returns a collection of lines grouped by their support lines, i.e., lines
+	 * are in the same group if the angle and intercept are respectively the
+	 * same among the lines.
+	 *
+	 * @param lines
+	 * @param pointEps
+	 * @return grouping by support line
+	 */
 	public Collection<Collection<OriLine>> extractOverlapsGroupedBySupport(final Collection<OriLine> lines,
 			final double pointEps) {
 		// make a data structure for fast computation.
 		var hashFactory = new AnalyticLineHashFactory(pointEps);
 		var hash = hashFactory.create(lines);
 
-		var overlapGroups = new ConcurrentLinkedDeque<Collection<OriLine>>();
+		var overlapGroups = new ConcurrentLinkedQueue<Collection<OriLine>>();
 
 		// for each angle and intercept, try all pairs of lines and find
 		// overlaps.

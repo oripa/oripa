@@ -94,10 +94,7 @@ public class LineTypeOverwriter {
 				return overlapsForFilter.stream()
 						.filter(line -> GeomUtil.isOverlap(splitLine, line, pointEps))
 						.findFirst()
-						.map(overlap -> {
-							linesToBeUsed.add(overlap);
-							return true;
-						})
+						.map(linesToBeUsed::add)
 						.orElse(false);
 			};
 

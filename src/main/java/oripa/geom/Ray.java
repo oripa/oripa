@@ -30,6 +30,10 @@ public class Ray {
 		this.dir = dir.normalize();
 	}
 
+	public Ray(final Vector2d v, final double angle) {
+		this(v, new Vector2d(Math.cos(angle), Math.sin(angle)));
+	}
+
 	public Vector2d getEndPoint() {
 		return p;
 	}

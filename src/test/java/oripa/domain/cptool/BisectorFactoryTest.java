@@ -18,13 +18,15 @@
  */
 package oripa.domain.cptool;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import oripa.geom.GeomUtil;
-import oripa.geom.RectangleDomain;
+import oripa.geom.Line;
 import oripa.test.util.AssertionUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -45,12 +47,10 @@ class BisectorFactoryTest {
 		var v0 = new Vector2d(-1, 0);
 		var v1 = new Vector2d(1, 0);
 
-		var domain = new RectangleDomain(-5, -5, 5, 5); // 10 * 10
+		var bisector = factory.createPerpendicularBisector(v0, v1);
 
-		var bisector = factory.createPerpendicularBisector(v0, v1, domain, OriLine.Type.MOUNTAIN, EPS);
-
-		var expected = new OriLine(0, 80, 0, -80, OriLine.Type.MOUNTAIN);
-		AssertionUtil.assertSegmentEquals(expected, bisector, (a, b) -> GeomUtil.distance(a, b) < EPS);
+		var expected = new Line(new Vector2d(0, 0), new Vector2d(0, 1));
+		assertTrue(GeomUtil.areEqual(expected, bisector, EPS));
 
 	}
 

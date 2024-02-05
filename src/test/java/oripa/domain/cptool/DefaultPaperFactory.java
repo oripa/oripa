@@ -16,36 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.core;
+package oripa.domain.cptool;
 
-import java.util.Collection;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
 
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.geom.GeomUtil;
-import oripa.geom.Ray;
+import oripa.value.OriLine;
+import oripa.value.OriLine.Type;
 import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class MultipleRaySnapPointFactory {
+class DefaultPaperFactory {
 
-	public Collection<Vector2d> createSnapPoints(
-			final CreasePattern creasePattern,
-			final Vector2d v,
-			final Collection<Double> angles,
-			final double pointEps) {
+	/**
+	 * Returns boundary of square ((-200, -200), (200, 200))
+	 *
+	 * @return
+	 */
+	public List<OriLine> create() {
+		var leftTop = new Vector2d(-200, -200);
+		var rightTop = new Vector2d(200, -200);
+		var leftBottom = new Vector2d(-200, 200);
+		var rightBottom = new Vector2d(200, 200);
 
-		var snapPointFactory = new RaySnapPointFactory();
-		Function<Double, Ray> createRay = angle -> new Ray(v, angle);
+		// Square paper
+		var creasePattern = new ArrayList<>(List.of(
+				new OriLine(leftTop, rightTop, Type.CUT),
+				new OriLine(leftTop, leftBottom, Type.CUT),
+				new OriLine(leftBottom, rightBottom, Type.CUT),
+				new OriLine(rightTop, rightBottom, Type.CUT)));
 
-		return angles.stream()
-				.map(createRay)
-				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray, pointEps)
-						.stream())
-				.filter(point -> !GeomUtil.areEqual(point, v, pointEps))
-				.toList();
+		return creasePattern;
 	}
 }

@@ -18,27 +18,43 @@
  */
 package oripa.domain.cptool;
 
-import oripa.geom.Ray;
-import oripa.geom.Segment;
-import oripa.vecmath.Vector2d;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import oripa.geom.RectangleDomain;
+import oripa.value.OriLine;
+import oripa.value.OriLine.Type;
 
 /**
  * @author OUCHI Koji
  *
  */
-@Deprecated
-public class PseudoRayFactory {
+class TiledLineFactoryTest {
+	TiledLineFactory factory = new TiledLineFactory();
+	static final double EPS = 1e-8;
 
-	public Segment create(final Ray ray, final double paperSize) {
-		var v = ray.getEndPoint();
-		var d = ray.getDirection().multiply(paperSize * 4);
+	@Test
+	void test() {
+		var creasePattern = new DefaultPaperFactory().create();
 
-		var ev = v.add(d);
+		var lines = List.of(
+				// vertical segment
+				new OriLine(-100, -200, -100, -100, Type.MOUNTAIN),
+				// horizontal segment
+				new OriLine(-200, -100, -100, -100, Type.MOUNTAIN));
 
-		return new Segment(v, ev);
+		// creates 4x4 grids
+		var tiledLines = factory.createFullyTiledLines(
+				lines, creasePattern,
+				RectangleDomain.createFromSegments(creasePattern).maxWidthHeight(), EPS);
+
+		// tiledLines doesn't contain the given lines
+		assertEquals(22, tiledLines.stream()
+				.filter(tl -> tl.length() > EPS)
+				.count());
 	}
 
-	public Segment create(final Vector2d v, final double angle, final double paperSize) {
-		return create(new Ray(v, angle), paperSize);
-	}
 }
