@@ -20,6 +20,8 @@ package oripa.vecmath;
 
 import java.util.Objects;
 
+import oripa.util.MathUtil;
+
 /**
  * Immutable 2D vector with fluent interface.
  *
@@ -100,6 +102,20 @@ public class Vector2d {
 		return Math.acos(cos);
 	}
 
+	/**
+	 *
+	 * @param v
+	 * @return Euclidean distance between the given vector and this vector.
+	 */
+	public double distance(final Vector2d v) {
+		return Math.sqrt((x - v.x) * (x - v.x) + (y - v.y) * (y - v.y));
+	}
+
+	public boolean isParallel(final Vector2d v) {
+		double angle = angle(v);
+		return angle < MathUtil.angleRadianEps() || angle > Math.PI - MathUtil.angleRadianEps();
+	}
+
 	@Override
 	public boolean equals(final Object o) {
 		if (o instanceof Vector2d v) {
@@ -107,6 +123,18 @@ public class Vector2d {
 		}
 		return false;
 
+	}
+
+	/**
+	 * Returns {@code true} if the Euclidean distance is less than {@code eps}.
+	 *
+	 * @param v
+	 * @param eps
+	 * @return true if the distance between this object and the given object is
+	 *         close enough.
+	 */
+	public boolean equals(final Vector2d v, final double eps) {
+		return distance(v) < eps;
 	}
 
 	@Override

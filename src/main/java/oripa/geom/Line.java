@@ -37,4 +37,22 @@ public class Line {
 	public Vector2d getDirection() {
 		return dir;
 	}
+
+	public boolean isParallel(final Line line) {
+		return dir.isParallel(line.dir);
+	}
+
+	/**
+	 * Returns {@code true} if the given line is parallel to this line and the
+	 * point on the given line is also on this line.
+	 *
+	 * @param line
+	 * @param eps
+	 * @return {@code true} if the given line is equal to this line.
+	 */
+	public boolean equals(final Line line, final double eps) {
+		return dir.isParallel(line.dir)
+				&& (p.equals(line.p, eps) || p.subtract(line.p).isParallel(line.dir));
+	}
+
 }

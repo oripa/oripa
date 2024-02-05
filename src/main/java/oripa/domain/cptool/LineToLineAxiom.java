@@ -35,7 +35,7 @@ public class LineToLineAxiom {
 		var line0 = s0.getLine();
 		var line1 = s1.getLine();
 
-		if (GeomUtil.isParallel(line0.getDirection(), line1.getDirection())) {
+		if (line0.isParallel(line1)) {
 			return createForParallelSegments(line0, line1);
 		} else {
 
@@ -59,7 +59,7 @@ public class LineToLineAxiom {
 		return crossPointOpt.map(crossPoint -> {
 			var midPoint = point.add(crossPoint).multiply(0.5);
 			return List.of(new Line(midPoint, dir0));
-		}).get();
+		}).orElse(List.of());
 	}
 
 	/**
@@ -75,8 +75,7 @@ public class LineToLineAxiom {
 	private List<Line> createForSegmentsWithCross(final Segment s0, final Segment s1,
 			final Vector2d segmentCrossPoint, final double pointEps) {
 
-		// shares end point?
-		if (s0.pointStream().anyMatch(p -> s1.pointStream().anyMatch(q -> GeomUtil.areEqual(p, q, pointEps)))) {
+		if (s0.sharesEndPoint(s1, pointEps)) {
 			return createForSegmentsWithoutCross(s0, s1, pointEps);
 		}
 
@@ -110,7 +109,7 @@ public class LineToLineAxiom {
 			var foldLineDir = GeomUtil.getBisectorVec(point0, lineCrossPoint, point1);
 
 			return List.of(new Line(lineCrossPoint, foldLineDir));
-		}).get();
+		}).orElse(List.of());
 	}
 
 	private Vector2d selectFarEndPoint(final Segment s, final Vector2d p) {

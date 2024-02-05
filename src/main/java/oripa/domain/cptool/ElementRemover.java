@@ -116,15 +116,7 @@ public class ElementRemover {
 			return false;
 		}
 
-		// Check if the lines have the same angle
-		var dir0 = l0.getLine().getDirection();
-		var dir1 = l1.getLine().getDirection();
-
-		if (!GeomUtil.isParallel(dir0, dir1)) {
-			return false;
-		}
-
-		return true;
+		return l0.getLine().isParallel(l1.getLine());
 	}
 
 	private OriLine merge(final Vector2d connectionPoint, final OriLine l0, final OriLine l1, final double pointEps) {

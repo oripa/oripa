@@ -88,4 +88,38 @@ public class Segment {
 		var p1 = getP1();
 		return (p1.getX() - p0.getX()) * (yTested - p0.getY()) / (p1.getY() - p0.getY()) + p0.getX();
 	}
+
+	/**
+	 * Both distances between the extremities of the lines should be less than
+	 * the threshold. The lines can be reversed, so the test has to be done both
+	 * ways
+	 *
+	 * @param s
+	 *            segment to compare
+	 * @return true if both segments are (at least almost) equals
+	 */
+	public boolean equals(final Segment s, final double pointEps) {
+		if (getP0().equals(s.getP0(), pointEps) && getP1().equals(s.getP1(), pointEps)) {
+			return true;
+		}
+		if (getP0().equals(s.getP1(), pointEps) && getP1().equals(s.getP0(), pointEps)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns {@code true} if an end point of this segment is close enough to
+	 * the given segment's end point.
+	 *
+	 * @param s
+	 * @param pointEps
+	 * @return {@code true} if one of the end point of this segment equals that
+	 *         of the given segment.
+	 */
+	public boolean sharesEndPoint(final Segment s, final double pointEps) {
+		return pointStream().anyMatch(p -> s.pointStream().anyMatch(q -> p.equals(q, pointEps)));
+	}
+
 }
