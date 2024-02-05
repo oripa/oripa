@@ -59,7 +59,7 @@ public class LineToLineAxiom {
 		return crossPointOpt.map(crossPoint -> {
 			var midPoint = point.add(crossPoint).multiply(0.5);
 			return List.of(new Line(midPoint, dir0));
-		}).get();
+		}).orElse(List.of());
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class LineToLineAxiom {
 			var foldLineDir = GeomUtil.getBisectorVec(point0, lineCrossPoint, point1);
 
 			return List.of(new Line(lineCrossPoint, foldLineDir));
-		}).get();
+		}).orElse(List.of());
 	}
 
 	private Vector2d selectFarEndPoint(final Segment s, final Vector2d p) {
