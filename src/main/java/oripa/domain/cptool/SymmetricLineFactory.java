@@ -48,7 +48,7 @@ public class SymmetricLineFactory {
 	}
 
 	/**
-	 * v1-v2 is the symmetry line, v0-v1 is the subject to be copied.
+	 * v1-v2 is the symmetry base line, v0-v1 is the subject to be copied.
 	 *
 	 * @param v0
 	 * @param v1
@@ -80,8 +80,8 @@ public class SymmetricLineFactory {
 	 * @param v1
 	 * @param v2
 	 * @param creasePattern
-	 * @return a line to be the next base line of symmetry and the cross point
-	 *         of new symmetric line and the base.
+	 * @return a pair of line to be the next base line of symmetry and the cross
+	 *         point of new symmetric line on the next base.
 	 */
 	private BestPair findBestPair(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
@@ -121,13 +121,13 @@ public class SymmetricLineFactory {
 	 * @param v0
 	 *            terminal point of the line to be copied
 	 * @param v1
-	 *            connecting point of symmetry line and the line to be copied.
+	 *            connecting point of symmetry base line and the line to be
+	 *            copied.
 	 * @param v2
-	 *            terminal point of symmetry line
-	 * @param startV
+	 *            terminal point of symmetry base line
 	 * @param creasePattern
 	 *
-	 * @return a collection of auto walk line
+	 * @return a collection of auto walk lines
 	 * @throws PainterCommandFailedException
 	 */
 	public Collection<OriLine> createSymmetricLineAutoWalk(

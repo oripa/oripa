@@ -295,7 +295,6 @@ public class Painter {
 	 * @param v2
 	 *            the end point of symmetry line not connected to the subject
 	 *            line
-	 * @param startV
 	 * @param lineType
 	 *            the type of the symmetric lines
 	 * @return true if lines are added
