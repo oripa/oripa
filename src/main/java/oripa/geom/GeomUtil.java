@@ -176,15 +176,9 @@ public class GeomUtil {
 	}
 
 	/**
-	 * Both distances between the extremities of the lines should be less than
-	 * the threshold. The lines can be reversed, so the test has to be done both
-	 * ways
+	 * Equivalent to {@code l0.equals(l1, pointEps)}
 	 *
-	 * @param l0
-	 *            First line to compare
-	 * @param l1
-	 *            Second line to compare
-	 * @return true if both segments are (at least almost) equals
+	 * @see {@link Segment#equals(Segment, double)}
 	 */
 	public static boolean isSameLineSegment(final Segment l0, final Segment l1, final double pointEps) {
 		return l0.equals(l1, pointEps);
