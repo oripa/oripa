@@ -104,6 +104,14 @@ public class Vector2d {
 
 	/**
 	 *
+	 * @return arc tangent of this vector between 0 and 2 * PI
+	 */
+	public double ownAngle() {
+		return MathUtil.normalizeAngle(Math.atan2(y, x));
+	}
+
+	/**
+	 *
 	 * @param v
 	 * @return Euclidean distance between the given vector and this vector.
 	 */

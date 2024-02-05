@@ -84,11 +84,9 @@ class KawasakiTheoremSuggesterTest {
 	}
 
 	private boolean angleEquals(final double a1, final double a2) {
+		double diff = Math.abs(a1 - a2);
 
-		var angle1 = MathUtil.normalizeAngle(a1);
-		var angle2 = MathUtil.normalizeAngle(a2);
-
-		return Math.abs(angle1 - angle2) < 1e-5;
+		return diff < MathUtil.angleRadianEps() || MathUtil.areRadianEqual(diff, 2 * Math.PI);
 	}
 
 	private OriEdge createEdge(final OriVertex start, final int angle, final OriLine.Type type) {

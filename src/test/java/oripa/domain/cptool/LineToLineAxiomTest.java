@@ -80,7 +80,7 @@ class LineToLineAxiomTest {
 		assertEquals(2, lines.size());
 
 		var angles = lines.stream()
-				.map(line -> MathUtil.angleOf(line.getDirection()))
+				.map(line -> line.getDirection().ownAngle())
 				.toList();
 
 		AssertionUtil.assertAnyMatch(7 * Math.PI / 8, angles,
@@ -100,7 +100,7 @@ class LineToLineAxiomTest {
 		assertEquals(2, lines.size());
 
 		var angles = lines.stream()
-				.map(line -> MathUtil.angleOf(line.getDirection()))
+				.map(line -> line.getDirection().ownAngle())
 				.toList();
 
 		AssertionUtil.assertAnyMatch(Math.PI / 8, angles,
