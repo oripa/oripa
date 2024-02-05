@@ -25,7 +25,7 @@ public abstract class PickingVertex extends AbstractActionState {
 			final boolean freeSelection) {
 		var pickedOpt = context.getCandidateVertexToPick();
 
-		pickedOpt.ifPresent(picked -> context.pushVertex(picked));
+		pickedOpt.ifPresent(context::pushVertex);
 
 		return pickedOpt.isPresent();
 	}
