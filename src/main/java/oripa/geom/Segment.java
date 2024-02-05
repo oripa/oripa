@@ -109,4 +109,8 @@ public class Segment {
 		return false;
 	}
 
+	public boolean sharesEndPoint(final Segment s, final double pointEps) {
+		return pointStream().anyMatch(p -> s.pointStream().anyMatch(q -> p.equals(q, pointEps)));
+	}
+
 }

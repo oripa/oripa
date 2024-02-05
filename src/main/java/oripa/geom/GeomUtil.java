@@ -159,17 +159,8 @@ public class GeomUtil {
 			return true;
 		}
 		if (overlapCount == 2) {
-			if (areEqual(seg0.getP0(), seg1.getP0(), pointEps)) {
-				return false;
-			} else if (areEqual(seg0.getP0(), seg1.getP1(), pointEps)) {
-				return false;
-			} else if (areEqual(seg0.getP1(), seg1.getP0(), pointEps)) {
-				return false;
-			} else if (areEqual(seg0.getP1(), seg1.getP1(), pointEps)) {
-				return false;
-			} else {
-				return true;
-			}
+			// any end point should not touch other end point.
+			return !seg0.sharesEndPoint(seg1, pointEps);
 		}
 
 		return false;
