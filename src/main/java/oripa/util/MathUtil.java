@@ -30,6 +30,11 @@ public class MathUtil {
 		return (TWO_PI + angle) % TWO_PI;
 	}
 
+	/**
+	 *
+	 * @param v
+	 * @return between 0 and 2 * PI
+	 */
 	public static double angleOf(final Vector2d v) {
 		return normalizeAngle(Math.atan2(v.getY(), v.getX()));
 	}

@@ -418,9 +418,9 @@ public class GeomUtil {
 
 		double t = computeParameterForNearestPointToLine(p, sp, ep);
 
-		if (t < 0.0) {
+		if (t <= 0.0) {
 			return sp;
-		} else if (t > 1.0) {
+		} else if (t >= 1.0) {
 			return ep;
 		} else {
 			// direction of the line
@@ -631,6 +631,10 @@ public class GeomUtil {
 				.reduce((result, x) -> result.add(x))
 				.get();
 		return sum.multiply(1.0 / points.size());
+	}
+
+	public static boolean isInterior(final Segment s, final Vector2d p, final double pointEps) {
+		return s.pointStream().noneMatch(q -> p.equals(q, pointEps)) && distancePointToSegment(p, s) < pointEps;
 	}
 
 }

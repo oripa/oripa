@@ -18,7 +18,11 @@ class LineToLineAxiomTest {
 		var s0 = new Segment(new Vector2d(-100, 100), new Vector2d(100, 100));
 		var s1 = new Segment(new Vector2d(-50, 0), new Vector2d(0, 0));
 
-		var line = new LineToLineAxiom().createFoldLines(s0, s1, EPS).get(0);
+		var lines = new LineToLineAxiom().createFoldLines(s0, s1, EPS);
+
+		assertEquals(1, lines.size());
+
+		var line = lines.get(0);
 
 		var dir = line.getDirection();
 
@@ -31,9 +35,13 @@ class LineToLineAxiomTest {
 	@Test
 	void testCreateFoldLinesIndependent() {
 		var s0 = new Segment(new Vector2d(50, 50), new Vector2d(100, 100));
-		var s1 = new Segment(new Vector2d(0, 0), new Vector2d(100, 0));
+		var s1 = new Segment(new Vector2d(50, 0), new Vector2d(100, 0));
 
-		var line = new LineToLineAxiom().createFoldLines(s0, s1, EPS).get(0);
+		var lines = new LineToLineAxiom().createFoldLines(s0, s1, EPS);
+
+		assertEquals(1, lines.size());
+
+		var line = lines.get(0);
 
 		var dir = line.getDirection();
 
@@ -48,7 +56,11 @@ class LineToLineAxiomTest {
 		var s0 = new Segment(new Vector2d(0, 0), new Vector2d(100, 100));
 		var s1 = new Segment(new Vector2d(0, 0), new Vector2d(100, 0));
 
-		var line = new LineToLineAxiom().createFoldLines(s0, s1, EPS).get(0);
+		var lines = new LineToLineAxiom().createFoldLines(s0, s1, EPS);
+
+		assertEquals(1, lines.size());
+
+		var line = lines.get(0);
 
 		var dir = line.getDirection();
 
@@ -56,6 +68,26 @@ class LineToLineAxiomTest {
 		assertEquals(Math.sin(Math.PI / 8), dir.getY(), EPS);
 
 		assertEquals(0, GeomUtil.distancePointToLine(new Vector2d(0, 0), line), EPS);
+	}
+
+	@Test
+	void testCreateFoldLinesPotentiallyCross() {
+		var s0 = new Segment(new Vector2d(-200, -200), new Vector2d(-100, -100));
+		var s1 = new Segment(new Vector2d(0, -200), new Vector2d(0, 200));
+
+		var lines = new LineToLineAxiom().createFoldLines(s0, s1, EPS);
+
+		assertEquals(2, lines.size());
+
+		var angles = lines.stream()
+				.map(line -> MathUtil.angleOf(line.getDirection()))
+				.toList();
+
+		AssertionUtil.assertAnyMatch(7 * Math.PI / 8, angles,
+				(expected, actual) -> MathUtil.areEqual(expected, actual, EPS));
+
+		AssertionUtil.assertAnyMatch(11 * Math.PI / 8, angles,
+				(expected, actual) -> MathUtil.areEqual(expected, actual, EPS));
 	}
 
 	@Test
@@ -68,7 +100,7 @@ class LineToLineAxiomTest {
 		assertEquals(2, lines.size());
 
 		var angles = lines.stream()
-				.map(line -> line.getDirection().angle(new Vector2d(1, 0)))
+				.map(line -> MathUtil.angleOf(line.getDirection()))
 				.toList();
 
 		AssertionUtil.assertAnyMatch(Math.PI / 8, angles,
