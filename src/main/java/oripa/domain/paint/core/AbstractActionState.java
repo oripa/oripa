@@ -126,20 +126,16 @@ public abstract class AbstractActionState implements ActionState {
 	}
 
 	private ActionState createInstance(final Class<? extends ActionState> c) {
-		ActionState state = null;
-
 		if (c == null) {
 			return this;
 		}
 
 		try {
-			state = c.getConstructor().newInstance();
+			return c.getConstructor().newInstance();
 		} catch (Exception e) {
 			logger.error("failed to create next/previous state", e);
 			throw new RuntimeException(e);
 		}
-
-		return state;
 	}
 
 }
