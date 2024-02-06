@@ -66,15 +66,16 @@ public abstract class AbstractActionState implements ActionState {
 
 		onResult(context, doSpecial);
 
-		ActionState nextState = getNextState();
-
-		return nextState;
+		return getNextState();
 	}
 
 	/**
 	 * defines what to do after onAct() succeeded.
 	 *
 	 * @param context
+	 *            storage for user interaction
+	 * @param doSpecial
+	 *            true if action should be changed.
 	 */
 	protected abstract void onResult(PaintContext context, final boolean doSpecial);
 
@@ -82,7 +83,7 @@ public abstract class AbstractActionState implements ActionState {
 	 * defines the job of this class.
 	 *
 	 * @param context
-	 *            information relating mouse action.
+	 *            storage for user interaction
 	 * @param currentPoint
 	 *            Deprecated. This will be deleted in the future release.
 	 * @param doSpecial
@@ -96,6 +97,8 @@ public abstract class AbstractActionState implements ActionState {
 	/**
 	 * cancel the current actions and returns previous state.
 	 *
+	 * @param context
+	 *            storage for user interaction
 	 * @return Previous state
 	 */
 	@Override
@@ -103,26 +106,22 @@ public abstract class AbstractActionState implements ActionState {
 
 		undoAction(context);
 
-		ActionState prevState = getPreviousState();
-
-		return prevState;
+		return getPreviousState();
 	}
 
 	/**
-	 * implement undo action. clean up the garbages! (and change previous state
-	 * class if you need.)
+	 * implement undo action. clean up the garbages!
 	 *
 	 * @param context
+	 *            storage for user interaction
 	 */
 	protected abstract void undoAction(PaintContext context);
 
-	@Override
-	public ActionState getNextState() {
+	private ActionState getNextState() {
 		return createInstance(next);
 	}
 
-	@Override
-	public ActionState getPreviousState() {
+	private ActionState getPreviousState() {
 		return createInstance(prev);
 	}
 
