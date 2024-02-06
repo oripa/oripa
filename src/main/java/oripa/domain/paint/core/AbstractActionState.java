@@ -34,8 +34,8 @@ public abstract class AbstractActionState implements ActionState {
 
 	/**
 	 * Set next state class and previous state class here. If you do nothing,
-	 * {@link #getNextState()} and {@link #getPreviousState()} will return
-	 * {@code this} object.
+	 * {@link #doAction(PaintContext, Vector2d, boolean)} and
+	 * {@link #undo(PaintContext)} will return {@code this} object.
 	 */
 	protected abstract void initialize();
 
