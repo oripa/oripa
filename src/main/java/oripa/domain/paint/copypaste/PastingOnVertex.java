@@ -22,7 +22,6 @@ public class PastingOnVertex extends PickingVertex {
 
 	@Override
 	protected void undoAction(final PaintContext context) {
-		// context.setMissionCompleted(false);
 		context.creasePatternUndo().undo();
 	}
 
