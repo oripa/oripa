@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.doc.Doc;
-import oripa.geom.GeomUtil;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.value.OriLine;
 
@@ -101,7 +100,7 @@ public class LoaderDXF implements DocLoader {
 							st.nextToken();
 							dto.p1y = Double.parseDouble(st.sval);
 
-							if (GeomUtil.distance(dto.getP0(), dto.getP1()) < 0.001) {
+							if (dto.getP0().distance(dto.getP1()) < 0.001) {
 								dtos.remove(dto);
 							}
 

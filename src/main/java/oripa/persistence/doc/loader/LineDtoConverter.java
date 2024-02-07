@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 
@@ -59,10 +58,8 @@ class LineDtoConverter {
 				var l0 = dtos.get(i);
 				var l1 = dtos.get(j);
 
-				if ((GeomUtil.distance(l0.getP0(), l1.getP0()) < 0.01 && GeomUtil
-						.distance(l0.getP1(), l1.getP1()) < 0.01)
-						|| (GeomUtil.distance(l0.getP1(), l1.getP0()) < 0.01 && GeomUtil
-								.distance(l0.getP0(), l1.getP1()) < 0.01)) {
+				if ((l0.getP0().distance(l1.getP0()) < 0.01 && l0.getP1().distance(l1.getP1()) < 0.01)
+						|| (l0.getP1().distance(l1.getP0()) < 0.01 && l0.getP0().distance(l1.getP1()) < 0.01)) {
 
 					delLines.add(l0);
 				}

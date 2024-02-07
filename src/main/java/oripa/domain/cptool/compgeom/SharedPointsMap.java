@@ -25,7 +25,6 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -43,13 +42,11 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 	private boolean validateKeyPoints(final OriPoint keyPoint,
 			final OriPoint oppositeKeyPoint, final OriLine line,
 			final double eps) {
-		if (GeomUtil.distance(line.getP0(), keyPoint) < eps
-				&& GeomUtil.distance(line.getP1(), oppositeKeyPoint) < eps) {
+		if (line.getP0().equals(keyPoint, eps) && line.getP1().equals(oppositeKeyPoint, eps)) {
 			return true;
 		}
 
-		if (GeomUtil.distance(line.getP0(), oppositeKeyPoint) < eps
-				&& GeomUtil.distance(line.getP1(), keyPoint) < eps) {
+		if (line.getP0().equals(oppositeKeyPoint, eps) && line.getP1().equals(keyPoint, eps)) {
 			return true;
 		}
 
@@ -58,7 +55,7 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 
 	private Optional<OriPoint> findOppositeCandidate(final OriLine line, final OriPoint keyPoint,
 			final double eps) {
-		var oppositeKeyPoint = GeomUtil.distance(line.getP0(), keyPoint) < eps
+		var oppositeKeyPoint = line.getP0().equals(keyPoint, eps)
 				? findKeyPoint(line.getOriPoint1(), eps)
 				: findKeyPoint(line.getOriPoint0(), eps);
 
@@ -79,7 +76,7 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 			return p;
 		}
 		return boundMap.keySet().stream()
-				.filter(key -> GeomUtil.distance(key, p) < eps)
+				.filter(key -> key.equals(p, eps))
 				.findFirst().get();
 	}
 

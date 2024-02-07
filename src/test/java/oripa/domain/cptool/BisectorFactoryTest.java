@@ -25,7 +25,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.test.util.AssertionUtil;
 import oripa.value.OriLine;
@@ -50,7 +49,7 @@ class BisectorFactoryTest {
 		var bisector = factory.createPerpendicularBisector(v0, v1);
 
 		var expected = new Line(new Vector2d(0, 0), new Vector2d(0, 1));
-		assertTrue(GeomUtil.areEqual(expected, bisector, EPS));
+		assertTrue(expected.equals(bisector, EPS));
 
 	}
 
@@ -66,7 +65,7 @@ class BisectorFactoryTest {
 
 		var expected = new OriLine(0, 0, 0.5, 0.5, OriLine.Type.MOUNTAIN);
 
-		AssertionUtil.assertSegmentEquals(expected, bisector, (a, b) -> GeomUtil.distance(a, b) < EPS);
+		AssertionUtil.assertSegmentEquals(expected, bisector, (a, b) -> a.equals(b, EPS));
 	}
 
 	@Test
@@ -81,7 +80,7 @@ class BisectorFactoryTest {
 
 		var expected = new OriLine(0, 0, 0.5, Math.sqrt(3) / 2, OriLine.Type.MOUNTAIN);
 
-		AssertionUtil.assertSegmentEquals(expected, bisector, (a, b) -> GeomUtil.distance(a, b) < EPS);
+		AssertionUtil.assertSegmentEquals(expected, bisector, (a, b) -> a.equals(b, EPS));
 	}
 
 	@Test
@@ -96,7 +95,7 @@ class BisectorFactoryTest {
 
 		var expected = new OriLine(0, 0, 0, 1, OriLine.Type.MOUNTAIN);
 
-		AssertionUtil.assertSegmentEquals(expected, bisector, (a, b) -> GeomUtil.distance(a, b) < EPS);
+		AssertionUtil.assertSegmentEquals(expected, bisector, (a, b) -> a.equals(b, EPS));
 	}
 
 }

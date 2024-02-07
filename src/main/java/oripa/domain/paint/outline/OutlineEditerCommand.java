@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cptool.Painter;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.ValidatablePaintCommand;
-import oripa.geom.GeomUtil;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -56,7 +55,7 @@ public class OutlineEditerCommand extends ValidatablePaintCommand {
 				.toList();
 
 		if (pickedVertices.stream()
-				.anyMatch(tv -> GeomUtil.distance(vOpt.get(), tv) < context.getPointEps())) {
+				.anyMatch(tv -> tv.equals(vOpt.get(), context.getPointEps()))) {
 			if (pickedVertices.size() > 2) {
 				// finish editing
 				context.creasePatternUndo().pushUndoInfo();

@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import oripa.domain.creasepattern.CreasePattern;
-import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -24,7 +23,7 @@ public class NearestVertexFinder {
 	private static void findNearestOf(
 			final Vector2d p, final NearestPoint nearest, final Vector2d other) {
 
-		double dist = GeomUtil.distance(p, other);
+		double dist = p.distance(other);
 		if (dist < nearest.distance) {
 			nearest.point = other;
 			nearest.distance = dist;
@@ -37,7 +36,7 @@ public class NearestVertexFinder {
 
 		NearestPoint nearestPoint = new NearestPoint();
 		nearestPoint.point = nearest;
-		nearestPoint.distance = GeomUtil.distance(p, nearest);
+		nearestPoint.distance = p.distance(nearest);
 
 		NearestVertexFinder.findNearestOf(
 				p, nearestPoint, other);

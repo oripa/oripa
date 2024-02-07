@@ -100,7 +100,7 @@ public class SymmetricLineFactory {
 
 			var crossPoint = crossPointOpt.get();
 
-			double distance = GeomUtil.distance(crossPoint, v1);
+			double distance = crossPoint.distance(v1);
 			if (distance < pointEps) {
 				continue;
 			}

@@ -196,8 +196,8 @@ public class ElementRemover {
 						.tailSet(new OriPoint(shared.getX() - pointEps, shared.getY() - pointEps));
 				if (boundRemovedPoints.contains(shared)) {
 					logger.trace("exists in boundRemovedPoints: " + shared);
-				} else if (!boundRemovedPoints.stream()
-						.anyMatch(p -> GeomUtil.distance(p, shared) < pointEps)) {
+				} else if (boundRemovedPoints.stream()
+						.noneMatch(p -> p.equals(shared, pointEps))) {
 					logger.trace("not to be merged: " + shared);
 					return;
 				}

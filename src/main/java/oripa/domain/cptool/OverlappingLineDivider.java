@@ -127,12 +127,12 @@ public class OverlappingLineDivider {
 	private List<Vector2d> createSplitPoints(final OriLine line, final Vector2d p, final double pointEps) {
 		var points = List.of(line.getP0(), line.getP1());
 
-		// is close to segment?
+		// don't split if the point is far from the segment.
 		if (GeomUtil.distancePointToSegment(p, line) > pointEps) {
 			return points;
 		}
 
-		if (points.stream().allMatch(q -> GeomUtil.distance(p, q) >= pointEps)) {
+		if (points.stream().allMatch(q -> !p.equals(q, pointEps))) {
 			return Stream.concat(points.stream(), Stream.of(p)).toList();
 		}
 
