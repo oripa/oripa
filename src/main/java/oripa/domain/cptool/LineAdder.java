@@ -56,7 +56,7 @@ public class LineAdder {
 						toBeRemoved.add(line);
 
 						Consumer<Vector2d> addIfLineCanBeSplit = v -> {
-							if (GeomUtil.distance(v, crossPoint) > pointEps) {
+							if (!v.equals(crossPoint, pointEps)) {
 								var l = new OriLine(v, crossPoint, line.getType());
 								// keep selection not to change the target of
 								// copy.
@@ -99,10 +99,7 @@ public class LineAdder {
 				return;
 			}
 			// If the intersection is on the end of the line, skip
-			if (GeomUtil.areEqual(inputLine.getP0(), line.getP0(), pointEps) ||
-					GeomUtil.areEqual(inputLine.getP0(), line.getP1(), pointEps) ||
-					GeomUtil.areEqual(inputLine.getP1(), line.getP0(), pointEps) ||
-					GeomUtil.areEqual(inputLine.getP1(), line.getP1(), pointEps)) {
+			if (inputLine.sharesEndPoint(line, pointEps)) {
 				return;
 			}
 
