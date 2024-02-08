@@ -80,6 +80,7 @@ public class GeomUtil {
 	 * @see {@link Vector2d#isParallel(Vector2d)}
 	 * @return
 	 */
+	@Deprecated
 	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
 		return dir0.isParallel(dir1);
 	}
@@ -139,7 +140,7 @@ public class GeomUtil {
 	 *         touch at end points and does not share other part.
 	 */
 	public static boolean isRelaxedOverlap(final Ray ray, final Segment seg, final double pointEps) {
-		return isParallel(ray.getDirection(), seg.getLine().getDirection())
+		return ray.getDirection().isParallel(seg.getLine().getDirection())
 				&& seg.pointStream().anyMatch(p -> distancePointToRay(p, ray) < pointEps);
 	}
 
@@ -174,6 +175,7 @@ public class GeomUtil {
 	 *
 	 * @see {@link Segment#equals(Segment, double)}
 	 */
+	@Deprecated
 	public static boolean isSameLineSegment(final Segment l0, final Segment l1, final double pointEps) {
 		return l0.equals(l1, pointEps);
 	}
