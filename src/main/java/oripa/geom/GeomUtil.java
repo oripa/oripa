@@ -47,6 +47,7 @@ public class GeomUtil {
 	 * @see {@link Vector2d#equals(Vector2d, double)}
 	 * @return
 	 */
+	@Deprecated
 	public static boolean areEqual(final Vector2d p0, final Vector2d p1, final double eps) {
 		return p0.equals(p1, eps);
 	}
@@ -57,6 +58,7 @@ public class GeomUtil {
 	 * @see {@link Line#equals(Line, double)}
 	 * @return
 	 */
+	@Deprecated
 	public static boolean areEqual(final Line line0, final Line line1, final double eps) {
 		return line0.equals(line1, eps);
 	}
@@ -141,7 +143,7 @@ public class GeomUtil {
 	}
 
 	public static boolean isOverlap(final Line line, final Segment seg, final double pointEps) {
-		return areEqual(line, seg.getLine(), pointEps);
+		return line.equals(seg.getLine(), pointEps);
 	}
 
 	/**

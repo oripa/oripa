@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.cptool.compgeom.PointAndLine;
 import oripa.domain.cptool.compgeom.SharedPointsMap;
 import oripa.domain.cptool.compgeom.SharedPointsMapFactory;
-import oripa.geom.GeomUtil;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
@@ -102,13 +101,13 @@ public class ElementRemover {
 		return merge2LinesAt(
 				connectionPoint,
 				sharedPoints.stream()
-						.map(point -> point.getLine())
+						.map(PointAndLine::getLine)
 						.toList(),
 				creasePattern, pointEps);
 	}
 
 	private boolean isConnectionPoint(final Vector2d p, final Vector2d q, final double pointEps) {
-		return GeomUtil.areEqual(p, q, pointEps);
+		return p.equals(q, pointEps);
 	}
 
 	private boolean isMergePossible(final OriLine l0, final OriLine l1) {
@@ -123,12 +122,12 @@ public class ElementRemover {
 		Vector2d p0;
 		Vector2d p1;
 
-		if (GeomUtil.areEqual(l0.getP0(), connectionPoint, pointEps)) {
+		if (l0.getP0().equals(connectionPoint, pointEps)) {
 			p0 = l0.getP1();
 		} else {
 			p0 = l0.getP0();
 		}
-		if (GeomUtil.areEqual(l1.getP0(), connectionPoint, pointEps)) {
+		if (l1.getP0().equals(connectionPoint, pointEps)) {
 			p1 = l1.getP1();
 		} else {
 			p1 = l1.getP0();

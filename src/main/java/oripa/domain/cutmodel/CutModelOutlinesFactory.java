@@ -7,6 +7,7 @@ import java.util.List;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.geom.GeomUtil;
+import oripa.geom.Segment;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -44,8 +45,7 @@ public class CutModelOutlinesFactory {
 		face.halfedgeStream().forEach(he -> {
 			var position = he.getPositionForDisplay();
 			var nextPosition = he.getNext().getPositionForDisplay();
-			OriLine l = new OriLine(position.getX(), position.getY(),
-					nextPosition.getX(), nextPosition.getY(), OriLine.Type.AUX);
+			var l = new Segment(position, nextPosition);
 
 			var parameters = GeomUtil.solveSegmentsCrossPointVectorEquation(
 					cutLine.getP0(), cutLine.getP1(), l.getP0(), l.getP1());
@@ -58,7 +58,7 @@ public class CutModelOutlinesFactory {
 				var crossV = GeomUtil.computeDividingPoint(param, positionBefore, nextPositionBefore);
 
 				if (crossPoints.stream()
-						.noneMatch(cp -> GeomUtil.areEqual(cp, crossV, pointEps))) {
+						.noneMatch(cp -> cp.equals(crossV, pointEps))) {
 					crossPoints.add(crossV);
 				}
 			}

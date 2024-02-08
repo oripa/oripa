@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -37,7 +36,7 @@ class SnapPointFactoryTest {
 		assertEquals(expectedPoints.size(), points.size());
 
 		expectedPoints.forEach(
-				expected -> assertAnyMatch(expected, points, (p1, p2) -> GeomUtil.areEqual(p1, p2, EPS)));
+				expected -> assertAnyMatch(expected, points, (p1, p2) -> p1.equals(p2, EPS)));
 	}
 
 }
