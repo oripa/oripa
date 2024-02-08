@@ -187,7 +187,7 @@ public class GeomUtil {
 
 		var sub = p1.subtract(p0);
 
-		double t = computeParameterForNearestPointToLine(v, line.getP0(), line.getP1());
+		double t = computeParameterForNearestPointToLine(v, p0, p1);
 
 		var cp = p0.add(sub.multiply(t));
 
