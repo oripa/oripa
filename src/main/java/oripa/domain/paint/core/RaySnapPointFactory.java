@@ -46,7 +46,7 @@ public class RaySnapPointFactory {
 				creasePattern.stream()
 						.filter(crease -> overlapsEntirely(crease, ray, eps))
 						.flatMap(OriLine::pointStream))
-				.filter(p -> !GeomUtil.areEqual(p, ray.getEndPoint(), eps))
+				.filter(p -> !p.equals(ray.getEndPoint(), eps))
 				.toList();
 	}
 
@@ -85,7 +85,7 @@ public class RaySnapPointFactory {
 	private Optional<Vector2d> findSharedEndPoint(final Segment s1, final Segment s2, final double eps) {
 		return s1.pointStream()
 				.filter(p -> s2.pointStream()
-						.anyMatch(q -> GeomUtil.areEqual(p, q, eps)))
+						.anyMatch(q -> p.equals(q, eps)))
 				.findFirst();
 	}
 }

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
 
-import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -65,7 +64,7 @@ public class PointsMerger {
 				.tailSet(new OriPoint(p.getX() - pointEps, p.getY() - pointEps));
 
 		var neighbors = boundSet.stream()
-				.filter(point -> GeomUtil.areEqual(point, p, pointEps))
+				.filter(point -> point.equals(p, pointEps))
 				.sorted()
 				.toList();
 

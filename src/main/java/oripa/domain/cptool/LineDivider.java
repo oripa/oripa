@@ -21,7 +21,7 @@ public class LineDivider {
 
 		// Usually you don't want to add a vertex too close to the end of the
 		// line
-		if (line.pointStream().anyMatch(p -> GeomUtil.areEqual(p, v, pointEps))) {
+		if (line.pointStream().anyMatch(p -> p.equals(v, pointEps))) {
 			return List.of();
 		}
 

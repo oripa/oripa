@@ -47,6 +47,7 @@ public class GeomUtil {
 	 * @see {@link Vector2d#equals(Vector2d, double)}
 	 * @return
 	 */
+	@Deprecated
 	public static boolean areEqual(final Vector2d p0, final Vector2d p1, final double eps) {
 		return p0.equals(p1, eps);
 	}
@@ -57,6 +58,7 @@ public class GeomUtil {
 	 * @see {@link Line#equals(Line, double)}
 	 * @return
 	 */
+	@Deprecated
 	public static boolean areEqual(final Line line0, final Line line1, final double eps) {
 		return line0.equals(line1, eps);
 	}
@@ -67,6 +69,7 @@ public class GeomUtil {
 	 * @see {@link Vector2d#distance(Vector2d)}
 	 * @return
 	 */
+	@Deprecated
 	public static double distance(final Vector2d p0, final Vector2d p1) {
 		return p0.distance(p1);
 	}
@@ -77,6 +80,7 @@ public class GeomUtil {
 	 * @see {@link Vector2d#isParallel(Vector2d)}
 	 * @return
 	 */
+	@Deprecated
 	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
 		return dir0.isParallel(dir1);
 	}
@@ -136,12 +140,12 @@ public class GeomUtil {
 	 *         touch at end points and does not share other part.
 	 */
 	public static boolean isRelaxedOverlap(final Ray ray, final Segment seg, final double pointEps) {
-		return isParallel(ray.getDirection(), seg.getLine().getDirection())
+		return ray.getDirection().isParallel(seg.getLine().getDirection())
 				&& seg.pointStream().anyMatch(p -> distancePointToRay(p, ray) < pointEps);
 	}
 
 	public static boolean isOverlap(final Line line, final Segment seg, final double pointEps) {
-		return areEqual(line, seg.getLine(), pointEps);
+		return line.equals(seg.getLine(), pointEps);
 	}
 
 	/**
@@ -171,6 +175,7 @@ public class GeomUtil {
 	 *
 	 * @see {@link Segment#equals(Segment, double)}
 	 */
+	@Deprecated
 	public static boolean isSameLineSegment(final Segment l0, final Segment l1, final double pointEps) {
 		return l0.equals(l1, pointEps);
 	}
@@ -182,7 +187,7 @@ public class GeomUtil {
 
 		var sub = p1.subtract(p0);
 
-		double t = computeParameterForNearestPointToLine(v, line.getP0(), line.getP1());
+		double t = computeParameterForNearestPointToLine(v, p0, p1);
 
 		var cp = p0.add(sub.multiply(t));
 
@@ -190,9 +195,9 @@ public class GeomUtil {
 	}
 
 	public static Vector2d getIncenter(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
-		double l0 = distance(v1, v2);
-		double l1 = distance(v0, v2);
-		double l2 = distance(v0, v1);
+		double l0 = v1.distance(v2);
+		double l1 = v0.distance(v2);
+		double l2 = v0.distance(v1);
 
 		// c = (v0 * l0 + v1 * l1 + v2 * l2) / (l0 + l1 + l2);
 		var c = v0.multiply(l0).add(v1.multiply(l1)).add(v2.multiply(l2)).multiply(1.0 / (l0 + l1 + l2));
@@ -393,13 +398,13 @@ public class GeomUtil {
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Segment segment) {
-		return distance(getNearestPointToSegment(p, segment), p);
+		return p.distance(getNearestPointToSegment(p, segment));
 	}
 
 	public static double distancePointToSegment(final Vector2d p, final Vector2d sp,
 			final Vector2d ep) {
 
-		return distance(getNearestPointToSegment(p, new Segment(sp, ep)), p);
+		return p.distance(getNearestPointToSegment(p, new Segment(sp, ep)));
 	}
 
 	/**
@@ -433,11 +438,11 @@ public class GeomUtil {
 		var sp = line.getPoint();
 		var ep = sp.add(line.getDirection());
 
-		return distance(getNearestPointToLine(p, sp, ep), p);
+		return p.distance(getNearestPointToLine(p, sp, ep));
 	}
 
 	public static double distancePointToRay(final Vector2d p, final Ray ray) {
-		return distance(getNearestPointToRay(p, ray), p);
+		return p.distance(getNearestPointToRay(p, ray));
 	}
 
 	public static Vector2d getNearestPointToRay(final Vector2d p, final Ray ray) {

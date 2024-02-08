@@ -26,7 +26,6 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -66,7 +65,7 @@ public class OriVerticesFactory {
 				.tailMap(new OriPoint(p.getX() - pointEps, p.getY() - pointEps));
 
 		var neighbors = boundMap.keySet().stream()
-				.filter(point -> GeomUtil.areEqual(point, p, pointEps))
+				.filter(point -> point.equals(p, pointEps))
 				.toList();
 
 		if (neighbors.isEmpty()) {

@@ -100,7 +100,7 @@ public class SymmetricLineFactory {
 
 			var crossPoint = crossPointOpt.get();
 
-			double distance = GeomUtil.distance(crossPoint, v1);
+			double distance = crossPoint.distance(v1);
 			if (distance < pointEps) {
 				continue;
 			}
@@ -176,7 +176,7 @@ public class SymmetricLineFactory {
 
 		autoWalkLines.add(autoWalk);
 
-		if (GeomUtil.areEqual(bestPoint, startV, pointEps)) {
+		if (bestPoint.equals(startV, pointEps)) {
 			return;
 		}
 
@@ -184,7 +184,7 @@ public class SymmetricLineFactory {
 		var p1 = bestLine.getP1();
 
 		addSymmetricLineAutoWalk(
-				v1, bestPoint, GeomUtil.areEqual(p0, bestPoint, pointEps) ? p1 : p0, stepCount + 1, startV,
+				v1, bestPoint, p0.equals(bestPoint, pointEps) ? p1 : p0, stepCount + 1, startV,
 				creasePattern, autoWalkLines, pointEps);
 
 	}

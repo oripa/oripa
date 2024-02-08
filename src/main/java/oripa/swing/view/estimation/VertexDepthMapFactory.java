@@ -28,7 +28,6 @@ import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
-import oripa.geom.GeomUtil;
 import oripa.util.IntPair;
 import oripa.value.OriPoint;
 
@@ -92,7 +91,7 @@ class VertexDepthMapFactory {
 
 			var v = new OriPoint(x, y);
 			var posOpt = boundMap.keySet().stream()
-					.filter(p -> GeomUtil.areEqual(p, v, eps))
+					.filter(p -> p.equals(v, eps))
 					.findFirst();
 
 			posOpt.ifPresentOrElse(pos -> {

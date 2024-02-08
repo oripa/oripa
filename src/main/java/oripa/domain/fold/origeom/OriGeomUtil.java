@@ -138,7 +138,7 @@ public class OriGeomUtil {
 			if (preCrossPoint == null) {
 				preCrossPoint = cp;
 			} else {
-				if (GeomUtil.distance(cp, preCrossPoint) > eps) {
+				if (!cp.equals(preCrossPoint, eps)) {
 					return true;
 				}
 			}

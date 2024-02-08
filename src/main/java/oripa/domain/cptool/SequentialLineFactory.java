@@ -21,7 +21,6 @@ package oripa.domain.cptool;
 import java.util.ArrayList;
 import java.util.List;
 
-import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -50,7 +49,7 @@ public class SequentialLineFactory {
 		for (int i = 1; i < points.size(); i++) {
 			Vector2d p = points.get(i);
 			// remove very short line
-			if (GeomUtil.distance(prePoint, p) < pointEps) {
+			if (prePoint.equals(p, pointEps)) {
 				continue;
 			}
 

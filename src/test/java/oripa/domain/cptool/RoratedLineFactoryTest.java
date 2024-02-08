@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
 import oripa.vecmath.Vector2d;
@@ -57,7 +56,7 @@ class RoratedLineFactoryTest {
 
 		assertEquals(3, rotatedLines.stream()
 				.filter(rl -> rl.length() > EPS)
-				.filter(rl -> rl.pointStream().anyMatch(p -> GeomUtil.areEqual(center, p, EPS)))
+				.filter(rl -> rl.pointStream().anyMatch(p -> center.equals(p, EPS)))
 				.count());
 	}
 

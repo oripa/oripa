@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -259,7 +258,7 @@ class CreasePatternImpl implements CreasePattern {
 		ArrayList<OriLine> tmpLines = new ArrayList<OriLine>(size());
 		for (OriLine l : this) {
 			if (tmpLines.stream()
-					.noneMatch(line -> GeomUtil.isSameLineSegment(line, l, pointEps))) {
+					.noneMatch(line -> line.equals(l, pointEps))) {
 				tmpLines.add(l);
 			}
 		}

@@ -21,8 +21,6 @@ package oripa.domain.paint.suggestion;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModelFactory;
-import oripa.geom.GeomUtil;
-import oripa.gui.presenter.creasepattern.geometry.NearestPoint;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -31,26 +29,30 @@ import oripa.vecmath.Vector2d;
  */
 public class TargetOriVertexFactory {
 
+	private class NearestVertex {
+		public OriVertex vertex;
+		public double distance = Double.MAX_VALUE;
+	}
+
 	public OriVertex create(final CreasePattern creasePattern, final Vector2d target, final double pointEps) {
 		var origamiModelFactory = new OrigamiModelFactory();
 		var origamiModel = origamiModelFactory.createOrigamiModel(
 				creasePattern,
 				pointEps);
 
-		var nearest = new NearestPoint();
-		var vertex = origamiModel.getVertices().get(0);
+		var nearest = new NearestVertex();
+		nearest.vertex = origamiModel.getVertices().get(0);
 
 		for (var v : origamiModel.getVertices()) {
 			var p = v.getPositionBeforeFolding();
-			var distance = GeomUtil.distance(p, target);
+			var distance = p.distance(target);
 			if (distance < nearest.distance) {
-				nearest.point = p;
+				nearest.vertex = v;
 				nearest.distance = distance;
-				vertex = v;
 			}
 		}
 
-		return vertex;
+		return nearest.vertex;
 	}
 
 }

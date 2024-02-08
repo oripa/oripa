@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
 import oripa.test.util.AssertionUtil;
 import oripa.value.OriLine;
@@ -70,7 +69,7 @@ class RectangleClipperTest {
 	void assertClip(final Segment expected, final Segment segment) {
 		var clippedOpt = clipper.clip(new OriLine(segment, OriLine.Type.MOUNTAIN));
 		AssertionUtil.assertSegmentEquals(
-				expected, clippedOpt.orElseThrow(), (a, b) -> GeomUtil.areEqual(a, b, EPS));
+				expected, clippedOpt.orElseThrow(), (a, b) -> a.equals(b, EPS));
 	}
 
 	void assertClipFails(final Segment segment) {

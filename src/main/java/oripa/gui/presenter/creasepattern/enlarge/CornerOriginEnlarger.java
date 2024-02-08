@@ -20,7 +20,6 @@ package oripa.gui.presenter.creasepattern.enlarge;
 
 import java.util.Optional;
 
-import oripa.geom.GeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.vecmath.Vector2d;
 
@@ -39,13 +38,16 @@ class CornerOriginEnlarger extends AbstractEnlarger {
 	}
 
 	private Optional<Vector2d> getOppositePoint(final RectangleDomain domain, final Vector2d p, final double eps) {
-		if (GeomUtil.areEqual(p, domain.getLeftTop(), eps)) {
+		if (p.equals(domain.getLeftTop(), eps)) {
 			return Optional.of(domain.getRightBottom());
-		} else if (GeomUtil.areEqual(p, domain.getLeftBottom(), eps)) {
+
+		} else if (p.equals(domain.getLeftBottom(), eps)) {
 			return Optional.of(domain.getRightTop());
-		} else if (GeomUtil.areEqual(p, domain.getRightTop(), eps)) {
+
+		} else if (p.equals(domain.getRightTop(), eps)) {
 			return Optional.of(domain.getLeftBottom());
-		} else if (GeomUtil.areEqual(p, domain.getRightBottom(), eps)) {
+
+		} else if (p.equals(domain.getRightBottom(), eps)) {
 			return Optional.of(domain.getLeftTop());
 		}
 

@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import oripa.domain.creasepattern.CreasePattern;
-import oripa.geom.GeomUtil;
 import oripa.geom.Ray;
 import oripa.vecmath.Vector2d;
 
@@ -45,7 +44,7 @@ public class MultipleRaySnapPointFactory {
 				.map(createRay)
 				.flatMap(ray -> snapPointFactory.createSnapPoints(creasePattern, ray, pointEps)
 						.stream())
-				.filter(point -> !GeomUtil.areEqual(point, v, pointEps))
+				.filter(point -> !point.equals(v, pointEps))
 				.toList();
 	}
 }

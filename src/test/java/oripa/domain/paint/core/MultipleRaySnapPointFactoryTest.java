@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.geom.GeomUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -39,7 +38,7 @@ class MultipleRaySnapPointFactoryTest {
 
 		assertEquals(expectedPoints.size(), points.size());
 		expectedPoints
-				.forEach(expected -> assertAnyMatch(expected, points, (p1, p2) -> GeomUtil.distance(p1, p2) < 1e-6));
+				.forEach(expected -> assertAnyMatch(expected, points, (p1, p2) -> p1.equals(p2, POINT_EPS)));
 	}
 
 	@Test
@@ -64,7 +63,7 @@ class MultipleRaySnapPointFactoryTest {
 
 		assertEquals(expectedPoints.size(), points.size());
 		expectedPoints
-				.forEach(expected -> assertAnyMatch(expected, points, (p1, p2) -> GeomUtil.distance(p1, p2) < 1e-6));
+				.forEach(expected -> assertAnyMatch(expected, points, (p1, p2) -> p1.equals(p2, POINT_EPS)));
 	}
 
 }

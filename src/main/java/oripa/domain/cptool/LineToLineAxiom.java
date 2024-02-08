@@ -157,7 +157,7 @@ public class LineToLineAxiom {
 	}
 
 	private Vector2d selectFarEndPoint(final Segment s, final Vector2d p) {
-		return GeomUtil.distance(s.getP0(), p) > GeomUtil.distance(s.getP1(), p)
+		return s.getP0().distance(p) > s.getP1().distance(p)
 				? s.getP0()
 				: s.getP1();
 	}
