@@ -550,9 +550,10 @@ public class GeomUtil {
 	}
 
 	/**
-	 * Computes the point that divides the segment q0 -> q1 into t : 1-t. If t
-	 * is negative, the point is the result of external division |t| : 1+|t|. If
-	 * t is larger than 1, the point is the result of external division t : t-1.
+	 * Computes p = q0 + t * (q1 - p0). p is the point that divides the segment
+	 * q0 -> q1 into t : 1-t. If t is negative, the point is the result of
+	 * external division |t| : 1+|t|. If t is larger than 1, the point is the
+	 * result of external division t : t-1.
 	 *
 	 * @param t
 	 *            ratio parameter.
