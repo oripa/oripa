@@ -211,7 +211,7 @@ public class OriFace {
 		Vector2d centerP = getCentroidBeforeFolding();
 		double rate = 0.5;
 		return halfedgeStream()
-				.map(he -> he.getPositionBeforeFolding().multiply(rate).add(centerP.multiply(1.0 - rate)))
+				.map(he -> GeomUtil.computeDividingPoint(rate, he.getPositionBeforeFolding(), centerP))
 				.toList();
 	}
 

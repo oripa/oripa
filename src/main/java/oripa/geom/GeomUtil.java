@@ -19,7 +19,6 @@
 
 package oripa.geom;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -528,8 +527,6 @@ public class GeomUtil {
 	private static List<Double> solveCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
 			final Vector2d q0, final Vector2d q1, final BiPredicate<Double, Double> answerPredicate) {
 
-		var answer = new ArrayList<Double>();
-
 		var p = p1.subtract(p0);
 		var q = q1.subtract(q0);
 		var d = q0.subtract(p0);
@@ -549,19 +546,17 @@ public class GeomUtil {
 			return List.of();
 		}
 
-		answer.add(s);
-		answer.add(t);
-
 		return List.of(s, t);
 	}
 
 	/**
-	 * Computes the point that divides the segment q0 -> q1 into t : 1-t. If t
-	 * is negative, the point is the result of external division |t| : 1+|t|.
+	 * Computes p = q0 + t * (q1 - p0). p is the point that divides the segment
+	 * q0 -> q1 into t : 1-t. If t is negative, the point is the result of
+	 * external division |t| : 1+|t|. If t is larger than 1, the point is the
+	 * result of external division t : t-1.
 	 *
 	 * @param t
-	 *            the result of solving cross point problem equation for p0 ->
-	 *            p1 and q0 -> q1.
+	 *            ratio parameter.
 	 * @param q0
 	 * @param q1
 	 * @return
