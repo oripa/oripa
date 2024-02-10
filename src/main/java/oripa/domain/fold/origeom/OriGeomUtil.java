@@ -20,13 +20,14 @@ package oripa.domain.fold.origeom;
 
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
-import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
 import oripa.vecmath.Vector2d;
 
 /**
- * Mathematical operations related to half-edge data structure elements.
+ * Mathematical operations related to half-edge data structure elements. This
+ * class contains complex methods or methods that responsibility among related
+ * objects is ambiguous.
  *
  * @author OUCHI Koji
  *
@@ -153,43 +154,4 @@ public class OriGeomUtil {
 				|| face.isOnFaceExclusively(heg.getNext().getPosition(), eps);
 	}
 
-	/**
-	 * The angle between edges v1-v2 and v2-v3.
-	 *
-	 * @param v1
-	 * @param v2
-	 * @param v3
-	 * @return 0 to 2 * pi between edges v1-v2 and v2-v3
-	 */
-	private static double getAngleDifference(
-			final OriVertex v1, final OriVertex v2, final OriVertex v3) {
-		var p = v2.getPositionBeforeFolding();
-		var preP = v1.getPositionBeforeFolding().subtract(p);
-		var nxtP = v3.getPositionBeforeFolding().subtract(p);
-
-		var prePAngle = preP.ownAngle();
-		var nxtPAngle = nxtP.ownAngle();
-
-		if (prePAngle > nxtPAngle) {
-			nxtPAngle += 2 * Math.PI;
-		}
-
-		return nxtPAngle - prePAngle;
-
-//		return preP.angle(nxtP); // fails if a concave face exists.
-	}
-
-	/**
-	 * The angle between i-th edge and (i+1)-th edge incident to {@code v}.
-	 *
-	 * @param v
-	 * @param index
-	 * @return 0 to 2 * pi between i-th edge and (i+1)-th edge
-	 */
-	public static double getAngleDifference(final OriVertex v, final int index) {
-		return getAngleDifference(
-				v.getOppositeVertex(index),
-				v,
-				v.getOppositeVertex(index + 1));
-	}
 }

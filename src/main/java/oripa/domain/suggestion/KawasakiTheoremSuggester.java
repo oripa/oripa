@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.List;
 
 import oripa.domain.fold.halfedge.OriVertex;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.MathUtil;
 
 /**
@@ -55,17 +54,17 @@ public class KawasakiTheoremSuggester {
 		double evenSum = 0;
 
 		for (int i = 0; i < angleCount; i += 2) {
-			evenSum += OriGeomUtil.getAngleDifference(vertex, i);
+			evenSum += vertex.getAngleDifference(i);
 		}
 
 		double oddSum = 2 * Math.PI - evenSum;
 
-		evenSum -= OriGeomUtil.getAngleDifference(vertex, 0);
+		evenSum -= vertex.getAngleDifference(0);
 
 		// computes as if indices are re-assigned as current i-th is the new
 		// 0th.
 		for (var i = 0; i < angleCount; i++) {
-			double theta = OriGeomUtil.getAngleDifference(vertex, i);
+			double theta = vertex.getAngleDifference(i);
 			double t = evenSum + theta - Math.PI;
 
 			final double EPS = MathUtil.angleRadianEps();
@@ -75,7 +74,7 @@ public class KawasakiTheoremSuggester {
 			}
 
 			var tmpEvenSum = evenSum;
-			evenSum = oddSum + theta - OriGeomUtil.getAngleDifference(vertex, i + 1);
+			evenSum = oddSum + theta - vertex.getAngleDifference(i + 1);
 			oddSum = tmpEvenSum;
 		}
 

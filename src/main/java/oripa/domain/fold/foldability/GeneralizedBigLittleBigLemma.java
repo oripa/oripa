@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.MathUtil;
 import oripa.util.collection.CollectionUtil;
 import oripa.util.rule.AbstractRule;
@@ -115,7 +114,7 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 		var edgeNum = vertex.edgeCount();
 
 		final List<Double> angles = IntStream.range(0, edgeNum)
-				.mapToObj(i -> OriGeomUtil.getAngleDifference(vertex, i))
+				.mapToObj(vertex::getAngleDifference)
 				.toList();
 
 		logger.trace("angles = "

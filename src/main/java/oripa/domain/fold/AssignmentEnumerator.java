@@ -35,7 +35,6 @@ import oripa.domain.fold.foldability.VertexFoldability;
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.MathUtil;
 import oripa.util.StopWatch;
 import oripa.util.collection.CollectionUtil;
@@ -225,9 +224,9 @@ class AssignmentEnumerator {
 		if (!edge.isUnassigned()) {
 			if (vertex.isInsideOfPaper() && vertex.edgeCount() >= 4) {
 				// big-little-big lemma
-				var prevAngle = OriGeomUtil.getAngleDifference(vertex, edgeIndex - 2);
-				var angle = OriGeomUtil.getAngleDifference(vertex, edgeIndex - 1);
-				var nextAngle = OriGeomUtil.getAngleDifference(vertex, edgeIndex);
+				var prevAngle = vertex.getAngleDifference(edgeIndex - 2);
+				var angle = vertex.getAngleDifference(edgeIndex - 1);
+				var nextAngle = vertex.getAngleDifference(edgeIndex);
 				if (prevAngle > angle + MathUtil.angleRadianEps()
 						&& nextAngle > angle + MathUtil.angleRadianEps()) {
 					if (edge.getType() == vertex.getEdge(edgeIndex - 1).getType()) {

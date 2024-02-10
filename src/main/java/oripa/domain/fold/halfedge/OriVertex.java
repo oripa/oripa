@@ -179,6 +179,45 @@ public class OriVertex implements Comparable<OriVertex> {
 		this.vertexID = vertexID;
 	}
 
+	/**
+	 * The angle between edges v1-v2 and v2-v3.
+	 *
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 * @return 0 to 2 * pi between edges v1-v2 and v2-v3
+	 */
+	private double getAngleDifference(
+			final OriVertex v1, final OriVertex v2, final OriVertex v3) {
+		var p = v2.getPositionBeforeFolding();
+		var preP = v1.getPositionBeforeFolding().subtract(p);
+		var nxtP = v3.getPositionBeforeFolding().subtract(p);
+
+		var prePAngle = preP.ownAngle();
+		var nxtPAngle = nxtP.ownAngle();
+
+		if (prePAngle > nxtPAngle) {
+			nxtPAngle += 2 * Math.PI;
+		}
+
+		return nxtPAngle - prePAngle;
+
+//		return preP.angle(nxtP); // fails if a concave face exists.
+	}
+
+	/**
+	 * The angle between i-th edge and (i+1)-th edge incident to this vertex.
+	 *
+	 * @param index
+	 * @return 0 to 2 * pi between i-th edge and (i+1)-th edge
+	 */
+	public double getAngleDifference(final int index) {
+		return getAngleDifference(
+				getOppositeVertex(index),
+				this,
+				getOppositeVertex(index + 1));
+	}
+
 	@Override
 	public int compareTo(final OriVertex o) {
 		return new OriPoint(positionBeforeFolding).compareTo(new OriPoint(o.positionBeforeFolding));
