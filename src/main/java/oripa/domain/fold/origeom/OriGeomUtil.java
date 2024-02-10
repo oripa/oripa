@@ -18,15 +18,18 @@
  */
 package oripa.domain.fold.origeom;
 
+import java.util.function.Predicate;
+
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
-import oripa.domain.fold.halfedge.OriVertex;
 import oripa.geom.GeomUtil;
 import oripa.geom.Segment;
 import oripa.vecmath.Vector2d;
 
 /**
- * Mathematical operations related to half-edge data structure elements.
+ * Mathematical operations related to half-edge data structure elements. This
+ * class contains complex methods or methods that responsibility among related
+ * objects is ambiguous.
  *
  * @author OUCHI Koji
  *
@@ -118,8 +121,10 @@ public class OriGeomUtil {
 		Vector2d p2 = heg.getNext().getPosition();
 		var heLine = new Segment(p1, p2).getLine();
 
-		return face.halfedgeStream().anyMatch(he -> GeomUtil.distancePointToLine(he.getPosition(), heLine) < eps
-				&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < eps);
+		Predicate<Vector2d> isOnLine = p -> GeomUtil.distancePointToLine(p, heLine) < eps;
+
+		return face.halfedgeStream().anyMatch(he -> isOnLine.test(he.getPosition())
+				&& isOnLine.test(he.getNext().getPosition()));
 	}
 
 	private static boolean isHalfedgeCrossTwoEdgesOfFace(final OriFace face, final OriHalfedge heg, final double eps) {
@@ -147,62 +152,10 @@ public class OriGeomUtil {
 	}
 
 	private static boolean isHalfedgeCrossEdgeOrIncluded(final OriFace face, final OriHalfedge heg, final double eps) {
-		// If at least one of the endpoints is fully contained
+		// If at least one of the end points is fully contained
 
 		return face.isOnFaceExclusively(heg.getPosition(), eps)
 				|| face.isOnFaceExclusively(heg.getNext().getPosition(), eps);
 	}
 
-	/**
-	 * Whether {@code face} includes {@code line} entirely. The inclusion test
-	 * is inclusive.
-	 *
-	 * @param face
-	 * @param line
-	 * @return {@code true} if {@code face} includes {@code line} entirely.
-	 */
-	public static boolean isSegmentIncludedInFace(final OriFace face, final Segment line, final double eps) {
-		return face.isOnFaceInclusively(line.getP0(), eps)
-				&& face.isOnFaceInclusively(line.getP1(), eps);
-	}
-
-	/**
-	 * The angle between edges v1-v2 and v2-v3.
-	 *
-	 * @param v1
-	 * @param v2
-	 * @param v3
-	 * @return 0 to 2 * pi between edges v1-v2 and v2-v3
-	 */
-	private static double getAngleDifference(
-			final OriVertex v1, final OriVertex v2, final OriVertex v3) {
-		var p = v2.getPositionBeforeFolding();
-		var preP = v1.getPositionBeforeFolding().subtract(p);
-		var nxtP = v3.getPositionBeforeFolding().subtract(p);
-
-		var prePAngle = preP.ownAngle();
-		var nxtPAngle = nxtP.ownAngle();
-
-		if (prePAngle > nxtPAngle) {
-			nxtPAngle += 2 * Math.PI;
-		}
-
-		return nxtPAngle - prePAngle;
-
-//		return preP.angle(nxtP); // fails if a concave face exists.
-	}
-
-	/**
-	 * The angle between i-th edge and (i+1)-th edge incident to {@code v}.
-	 *
-	 * @param v
-	 * @param index
-	 * @return 0 to 2 * pi between i-th edge and (i+1)-th edge
-	 */
-	public static double getAngleDifference(final OriVertex v, final int index) {
-		return getAngleDifference(
-				v.getOppositeVertex(index),
-				v,
-				v.getOppositeVertex(index + 1));
-	}
 }

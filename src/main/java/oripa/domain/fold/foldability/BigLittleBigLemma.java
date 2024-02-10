@@ -19,7 +19,6 @@
 package oripa.domain.fold.foldability;
 
 import oripa.domain.fold.halfedge.OriVertex;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.MathUtil;
 import oripa.util.rule.AbstractRule;
 
@@ -56,9 +55,9 @@ public class BigLittleBigLemma extends AbstractRule<OriVertex> {
 				continue;
 			}
 
-			var a1 = OriGeomUtil.getAngleDifference(vertex, i);
-			var a2 = OriGeomUtil.getAngleDifference(vertex, i + 1);
-			var a3 = OriGeomUtil.getAngleDifference(vertex, i + 2);
+			var a1 = vertex.getAngleDifference(i);
+			var a2 = vertex.getAngleDifference(i + 1);
+			var a3 = vertex.getAngleDifference(i + 2);
 
 			if (a1 - a2 > EPS && a3 - a2 > EPS) {
 				lemmaHolds &= e2.getType() != e3.getType();

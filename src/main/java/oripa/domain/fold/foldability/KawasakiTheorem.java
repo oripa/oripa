@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.halfedge.OriVertex;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.MathUtil;
 import oripa.util.rule.AbstractRule;
 
@@ -59,7 +58,7 @@ public class KawasakiTheorem extends AbstractRule<OriVertex> {
 		double oddSum = 0;
 
 		for (int i = 0; i < vertex.edgeCount(); i++) {
-			double angle = OriGeomUtil.getAngleDifference(vertex, i);
+			double angle = vertex.getAngleDifference(i);
 
 			if (i % 2 == 0) {
 				oddSum += angle;

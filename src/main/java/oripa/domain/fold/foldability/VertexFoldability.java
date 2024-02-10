@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.foldability.ring.RingArrayList;
 import oripa.domain.fold.halfedge.OriVertex;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.util.MathUtil;
 import oripa.util.rule.AbstractRule;
 
@@ -124,7 +123,7 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 		var gaps = new ArrayList<LineGap>();
 
 		for (int i = 0; i < vertex.edgeCount(); i++) {
-			gaps.add(new LineGap(OriGeomUtil.getAngleDifference(vertex, i),
+			gaps.add(new LineGap(vertex.getAngleDifference(i),
 					vertex.getEdge(i).getType()));
 		}
 
