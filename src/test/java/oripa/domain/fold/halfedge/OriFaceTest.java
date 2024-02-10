@@ -67,7 +67,7 @@ class OriFaceTest {
 	 * {@link oripa.domain.fold.halfedge.OriFace#isOnFaceInclusively(oripa.vecmath.Vector2d)}.
 	 */
 	@Test
-	void testIsOnFaceInclusively() {
+	void testIsOnFaceInclusively_vertex() {
 		assertTrue(face.isOnFaceInclusively(new Vector2d(5, 5), 1e-6));
 		assertTrue(face.isOnFaceInclusively(new Vector2d(5, 10 + 1e-8), 1e-6));
 		assertFalse(face.isOnFaceInclusively(new Vector2d(5, 10.1), 1e-6));
