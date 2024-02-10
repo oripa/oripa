@@ -57,10 +57,10 @@ class ParentFacesCollectorTest {
 		var innerPoint = new Vector2d(8, 8);
 		when(subface.getInnerPoint()).thenReturn(innerPoint);
 
-		when(face1.isOnFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
-		when(face2.isOnFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
-		when(face3.isOnFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
-		when(face4.isOnFaceExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
+		when(face1.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
+		when(face2.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
+		when(face3.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(false);
+		when(face4.includesExclusively(eq(innerPoint), anyDouble())).thenReturn(true);
 
 		var parents = collector.collect(faces, subface, 1e-6);
 

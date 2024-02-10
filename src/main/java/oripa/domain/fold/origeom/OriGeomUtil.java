@@ -49,36 +49,23 @@ public class OriGeomUtil {
 	public static boolean isFaceOverlap(final OriFace face0, final OriFace face1,
 			final double eps) {
 
+		return testFaceOverlap(face0, face1, eps) || testFaceOverlap(face1, face0, eps);
+	}
+
+	private static boolean testFaceOverlap(final OriFace face0, final OriFace face1, final double eps) {
 		// If the vertices of face0 are on face1, true
-		if (face0.halfedgeStream().anyMatch(he -> face1.isOnFaceExclusively(he.getPosition(), eps))) {
+		if (face0.halfedgeStream().anyMatch(he -> face1.includesExclusively(he.getPosition(), eps))) {
 			return true;
 		}
-
-		// If the vertices of face1 are on face0, true
-		if (face1.halfedgeStream().anyMatch(he -> face0.isOnFaceExclusively(he.getPosition(), eps))) {
-			return true;
-		}
-
-		Vector2d center0 = face0.getCentroid();
-		Vector2d center1 = face1.getCentroid();
 
 		// If the gravity center of face0 is on face1, true
-		if (face1.isOnFaceExclusively(center0, eps)) {
-			return true;
-		}
-
-		// If the gravity center of face1 is on face0, true
-		if (face0.isOnFaceExclusively(center1, eps)) {
+		Vector2d center0 = face0.getCentroid();
+		if (face1.includesExclusively(center0, eps)) {
 			return true;
 		}
 
 		// If the outline of face0 intersects face1's, true
 		if (face0.halfedgeStream().anyMatch(he0 -> isHalfedgeCrossFace(face1, he0, eps))) {
-			return true;
-		}
-
-		// If the outline of face1 intersects face0's, true
-		if (face1.halfedgeStream().anyMatch(he1 -> isHalfedgeCrossFace(face0, he1, eps))) {
 			return true;
 		}
 
@@ -154,8 +141,8 @@ public class OriGeomUtil {
 	private static boolean isHalfedgeCrossEdgeOrIncluded(final OriFace face, final OriHalfedge heg, final double eps) {
 		// If at least one of the end points is fully contained
 
-		return face.isOnFaceExclusively(heg.getPosition(), eps)
-				|| face.isOnFaceExclusively(heg.getNext().getPosition(), eps);
+		return face.includesExclusively(heg.getPosition(), eps)
+				|| face.includesExclusively(heg.getNext().getPosition(), eps);
 	}
 
 }

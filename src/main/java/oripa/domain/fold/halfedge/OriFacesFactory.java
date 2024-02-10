@@ -67,7 +67,7 @@ public class OriFacesFactory {
 		// find boundary face with no internal vertex
 		boundaryFaces.removeIf(
 				face -> vertices.stream().anyMatch(
-						vertex -> face.isOnFaceExclusively(vertex.getPosition(), eps)));
+						vertex -> face.includesExclusively(vertex.getPosition(), eps)));
 
 		faces.addAll(createdFaces);
 		faces.addAll(boundaryFaces);

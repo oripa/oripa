@@ -248,7 +248,7 @@ public class OriFace {
 	 *            point to be tested.
 	 * @return true if v is inside or on the edges of this face.
 	 */
-	public boolean isOnFaceInclusively(final Vector2d v, final double eps) {
+	public boolean includesInclusively(final Vector2d v, final double eps) {
 		// If it's on the face's edge, return true
 		if (isOnEdge(v, eps, OriHalfedge::getPosition)) {
 			return true;
@@ -265,7 +265,7 @@ public class OriFace {
 	 *            point to be tested.
 	 * @return true if v is strictly inside of this face.
 	 */
-	public boolean isOnFaceExclusively(final Vector2d v, final double eps) {
+	public boolean includesExclusively(final Vector2d v, final double eps) {
 		// If it's on the face's edge, return false
 		if (isOnEdge(v, eps, OriHalfedge::getPosition)) {
 			return false;
@@ -330,15 +330,15 @@ public class OriFace {
 	}
 
 	/**
-	 * Whether this face includes {@code line} entirely. The inclusion test is
-	 * inclusive.
+	 * Whether this face includes {@code line} entirely. This method uses
+	 * current position. The inclusion test is inclusive.
 	 *
 	 * @param segment
 	 * @return {@code true} if {@code face} includes {@code line} entirely.
 	 */
-	public boolean isOnFaceInclusively(final Segment segment, final double eps) {
-		return isOnFaceInclusively(segment.getP0(), eps)
-				&& isOnFaceInclusively(segment.getP1(), eps);
+	public boolean includesInclusively(final Segment segment, final double eps) {
+		return includesInclusively(segment.getP0(), eps)
+				&& includesInclusively(segment.getP1(), eps);
 	}
 
 	/* (non Javadoc)

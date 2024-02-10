@@ -32,7 +32,7 @@ public class ParentFacesCollector {
 		var innerPoint = sub.getInnerPoint();
 
 		return faces.stream()
-				.filter(face -> face.isOnFaceExclusively(innerPoint, eps))
+				.filter(face -> face.includesExclusively(innerPoint, eps))
 				.toList();
 	}
 }

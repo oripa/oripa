@@ -33,7 +33,7 @@ public class ModelComponentExtractor {
 			final OriFace boundaryFace, final double eps) {
 
 		return wholeVertices.stream()
-				.filter(vertex -> boundaryFace.isOnFaceInclusively(vertex.getPosition(), eps))
+				.filter(vertex -> boundaryFace.includesInclusively(vertex.getPosition(), eps))
 				.toList();
 	}
 
@@ -41,7 +41,7 @@ public class ModelComponentExtractor {
 			final OriFace boundaryFace, final double eps) {
 
 		return wholePrecreases.stream()
-				.filter(p -> boundaryFace.isOnFaceInclusively(p, eps))
+				.filter(p -> boundaryFace.includesInclusively(p, eps))
 				.toList();
 	}
 
