@@ -154,19 +154,6 @@ public class OriGeomUtil {
 	}
 
 	/**
-	 * Whether {@code face} includes {@code line} entirely. The inclusion test
-	 * is inclusive.
-	 *
-	 * @param face
-	 * @param line
-	 * @return {@code true} if {@code face} includes {@code line} entirely.
-	 */
-	public static boolean isSegmentIncludedInFace(final OriFace face, final Segment line, final double eps) {
-		return face.isOnFaceInclusively(line.getP0(), eps)
-				&& face.isOnFaceInclusively(line.getP1(), eps);
-	}
-
-	/**
 	 * The angle between edges v1-v2 and v2-v3.
 	 *
 	 * @param v1

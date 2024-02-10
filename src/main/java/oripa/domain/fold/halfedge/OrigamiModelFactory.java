@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.ElementRemover;
-import oripa.domain.fold.origeom.OriGeomUtil;
 import oripa.geom.RectangleDomain;
 import oripa.util.StopWatch;
 import oripa.value.OriLine;
@@ -207,7 +206,7 @@ public class OrigamiModelFactory {
 		// attach precrease lines to faces
 		for (OriFace face : faces) {
 			face.setPrecreases(modelPrecreases.stream()
-					.filter(precrease -> OriGeomUtil.isSegmentIncludedInFace(face, precrease, pointEps))
+					.filter(precrease -> face.isOnFaceInclusively(precrease, pointEps))
 					.toList());
 		}
 		origamiModel.setHasModel(true);

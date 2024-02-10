@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import oripa.geom.GeomUtil;
+import oripa.geom.Segment;
 import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -326,6 +327,18 @@ public class OriFace {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Whether {@code face} includes {@code line} entirely. The inclusion test
+	 * is inclusive.
+	 *
+	 * @param segment
+	 * @return {@code true} if {@code face} includes {@code line} entirely.
+	 */
+	public boolean isOnFaceInclusively(final Segment segment, final double eps) {
+		return isOnFaceInclusively(segment.getP0(), eps)
+				&& isOnFaceInclusively(segment.getP1(), eps);
 	}
 
 	/* (non Javadoc)
