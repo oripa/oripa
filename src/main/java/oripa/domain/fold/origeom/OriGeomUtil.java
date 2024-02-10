@@ -53,14 +53,13 @@ public class OriGeomUtil {
 	}
 
 	private static boolean testFaceOverlap(final OriFace face0, final OriFace face1, final double eps) {
-		Vector2d center0 = face0.getCentroid();
-
 		// If the vertices of face0 are on face1, true
 		if (face0.halfedgeStream().anyMatch(he -> face1.includesExclusively(he.getPosition(), eps))) {
 			return true;
 		}
 
 		// If the gravity center of face0 is on face1, true
+		Vector2d center0 = face0.getCentroid();
 		if (face1.includesExclusively(center0, eps)) {
 			return true;
 		}
