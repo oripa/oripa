@@ -330,8 +330,8 @@ public class OriFace {
 	}
 
 	/**
-	 * Whether this face includes {@code line} entirely. The inclusion test is
-	 * inclusive.
+	 * Whether this face includes {@code line} entirely. This method uses
+	 * current position. The inclusion test is inclusive.
 	 *
 	 * @param segment
 	 * @return {@code true} if {@code face} includes {@code line} entirely.
