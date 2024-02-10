@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold.origeom;
 
+import java.util.function.Predicate;
+
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.GeomUtil;
@@ -119,8 +121,10 @@ public class OriGeomUtil {
 		Vector2d p2 = heg.getNext().getPosition();
 		var heLine = new Segment(p1, p2).getLine();
 
-		return face.halfedgeStream().anyMatch(he -> GeomUtil.distancePointToLine(he.getPosition(), heLine) < eps
-				&& GeomUtil.distancePointToLine(he.getNext().getPosition(), heLine) < eps);
+		Predicate<Vector2d> isOnLine = p -> GeomUtil.distancePointToLine(p, heLine) < eps;
+
+		return face.halfedgeStream().anyMatch(he -> isOnLine.test(he.getPosition())
+				&& isOnLine.test(he.getNext().getPosition()));
 	}
 
 	private static boolean isHalfedgeCrossTwoEdgesOfFace(final OriFace face, final OriHalfedge heg, final double eps) {
@@ -148,7 +152,7 @@ public class OriGeomUtil {
 	}
 
 	private static boolean isHalfedgeCrossEdgeOrIncluded(final OriFace face, final OriHalfedge heg, final double eps) {
-		// If at least one of the endpoints is fully contained
+		// If at least one of the end points is fully contained
 
 		return face.isOnFaceExclusively(heg.getPosition(), eps)
 				|| face.isOnFaceExclusively(heg.getNext().getPosition(), eps);
