@@ -54,6 +54,10 @@ public class ComplexActionFactory {
 		return copyPasteFactory.createCutAndPaste();
 	}
 
+	public GraphicMouseAction createImport() {
+		return copyPasteFactory.createImport();
+	}
+
 	public GraphicMouseAction createByValue() {
 		return new LineByValueAction(byValueContext);
 	}

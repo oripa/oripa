@@ -293,10 +293,7 @@ public class MainFramePresenter {
 
 				presenter.loadUsingGUI(fileHistory.getLastPath())
 						.ifPresent(otherDoc -> {
-							paintContext.getPainter().resetSelectedOriLines();
-							var otherCreasePattern = otherDoc.getCreasePattern();
-							otherCreasePattern.forEach(l -> l.setSelected(true));
-							paintContext.getCreasePattern().addAll(otherCreasePattern);
+							paintContextModification.setToImportedLines(otherDoc.getCreasePattern(), paintContext);
 						});
 
 				state.performActions();

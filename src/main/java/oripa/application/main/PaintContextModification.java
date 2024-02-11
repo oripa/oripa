@@ -18,8 +18,11 @@
  */
 package oripa.application.main;
 
+import java.util.Collection;
+
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.paint.PaintContext;
+import oripa.value.OriLine;
 
 /**
  * A service object to update {@link PaintContext} appropriately.
@@ -40,6 +43,14 @@ public class PaintContextModification {
 		paintContext.clear(true);
 		paintContext.setCreasePattern(creasePattern);
 		paintContext.creasePatternUndo().clear();
+	}
+
+	public void setToImportedLines(final Collection<OriLine> lines, final PaintContext paintContext) {
+		paintContext.getPainter().resetSelectedOriLines();
+
+		lines.forEach(l -> l.setSelected(true));
+		paintContext.SetImportedLines(lines);
+
 	}
 
 }

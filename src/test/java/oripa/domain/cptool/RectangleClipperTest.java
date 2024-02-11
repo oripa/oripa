@@ -59,7 +59,10 @@ class RectangleClipperTest {
 		assertClip(new Segment(50, 100, 50, 50), new Segment(50, 50, 50, 101));
 
 		// outside to outside with intersection
+		// - diagonal
 		assertClip(new Segment(0, 0, 100, 100), new Segment(-1, -1, 101, 101));
+		// - vertical
+		assertClip(new Segment(50, 0, 50, 100), new Segment(50, -1, 50, 101));
 
 		// outside to outside without intersection
 		assertClipFails(new Segment(-100, -100, 100, -1));
@@ -88,6 +91,13 @@ class RectangleClipperTest {
 
 		// end point touches the left edge
 		assertIntersects(new Segment(-10, 10, 0, 9));
+
+	}
+
+	@Test
+	void testIntersects_segmentCrossesDifferentEdges() {
+		// top to right
+		assertIntersects(new Segment(50, -1, 101, 60));
 	}
 
 	void assertIntersects(final Segment segment) {

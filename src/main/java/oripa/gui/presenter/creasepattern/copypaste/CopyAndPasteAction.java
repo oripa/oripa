@@ -19,11 +19,11 @@ public class CopyAndPasteAction extends AbstractGraphicMouseAction {
 
 	private GraphicMouseAction action;
 
-	public CopyAndPasteAction(final SelectionOriginHolder originHolder) {
+	public CopyAndPasteAction(final SelectionOriginHolder originHolder, final PasteAction pasteAction) {
 		this.originHolder = originHolder;
 
 		originAction = new ChangeOriginAction(originHolder);
-		pasteAction = new PasteAction(originHolder);
+		this.pasteAction = pasteAction;
 
 		action = pasteAction;
 

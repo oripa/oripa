@@ -36,6 +36,8 @@ class PaintContextImpl implements PaintContext {
 
 	private Collection<Vector2d> snapPoints = new ArrayList<Vector2d>();
 
+	private Collection<OriLine> importedLines = List.of();
+
 	private CircleCopyParameter circleCopyParameter;
 	private ArrayCopyParameter arrayCopyParameter;
 
@@ -239,6 +241,21 @@ class PaintContextImpl implements PaintContext {
 	@Override
 	public void clearSnapPoints() {
 		snapPoints = List.of();
+	}
+
+	@Override
+	public void SetImportedLines(final Collection<OriLine> lines) {
+		importedLines = Collections.unmodifiableList(new ArrayList<>(lines));
+	}
+
+	@Override
+	public void loadFromImportedLines() {
+		pickedLines.addAll(importedLines);
+	}
+
+	@Override
+	public void clearImportedLines() {
+		importedLines = List.of();
 	}
 
 	@Override
