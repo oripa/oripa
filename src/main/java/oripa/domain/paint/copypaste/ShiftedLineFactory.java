@@ -26,15 +26,12 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class ShiftedLineFactory {
-	public OriLine createShiftedLine(final OriLine line, final double diffX, final double diffY) {
+	public OriLine createShiftedLine(final OriLine line, final Vector2d offset) {
 
-		var p0x = line.getP0().getX() + diffX;
-		var p0y = line.getP0().getY() + diffY;
+		var p0 = line.getP0().add(offset);
+		var p1 = line.getP1().add(offset);
 
-		var p1x = line.getP1().getX() + diffX;
-		var p1y = line.getP1().getY() + diffY;
-
-		return new OriLine(p0x, p0y, p1x, p1y, line.getType());
+		return new OriLine(p0, p1, line.getType());
 	}
 
 	public Vector2d createOffset(final Vector2d origin, final Vector2d point) {

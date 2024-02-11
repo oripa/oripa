@@ -103,7 +103,7 @@ public class PasteAction extends AbstractGraphicMouseAction {
 
 		// shift and draw the lines to be pasted.
 		for (OriLine l : paintContext.getPickedLines()) {
-			var shifted = factory.createShiftedLine(l, offset.getX(), offset.getY());
+			var shifted = factory.createShiftedLine(l, offset);
 			drawer.drawLine(shifted);
 		}
 	}

@@ -61,16 +61,16 @@ public class LinePasterCommand extends ValidatablePaintCommand {
 
 		Painter painter = context.getPainter();
 		painter.addLines(
-				shiftLines(context.getPickedLines(), offset.getX(), offset.getY()));
+				shiftLines(context.getPickedLines(), offset));
 
 		context.refreshCreasePattern();
 	}
 
 	private List<OriLine> shiftLines(final Collection<OriLine> lines,
-			final double diffX, final double diffY) {
+			final Vector2d offset) {
 
 		return lines.stream()
-				.map(l -> factory.createShiftedLine(l, diffX, diffY))
+				.map(l -> factory.createShiftedLine(l, offset))
 				.toList();
 	}
 }
