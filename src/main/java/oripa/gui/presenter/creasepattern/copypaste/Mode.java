@@ -18,35 +18,23 @@
  */
 package oripa.gui.presenter.creasepattern.copypaste;
 
-import oripa.appstate.StateManager;
-import oripa.domain.paint.copypaste.SelectionOriginHolder;
-import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
-
 /**
  * @author OUCHI Koji
  *
  */
-public class CopyAndPasteActionFactory {
+enum Mode {
+	COPY(false),
+	CUT(true),
+	IMPORT(true);
 
-	private final StateManager<EditMode> stateManager;
-	private final SelectionOriginHolder originHolder;
+	private final boolean isCut;
 
-	public CopyAndPasteActionFactory(final StateManager<EditMode> stateManager,
-			final SelectionOriginHolder originHolder) {
-		this.stateManager = stateManager;
-		this.originHolder = originHolder;
+	private Mode(final boolean isCut) {
+		this.isCut = isCut;
 	}
 
-	public GraphicMouseAction createCopyAndPaste() {
-		return new CopyAndPasteActionWrapper(stateManager, originHolder);
+	public boolean isCut() {
+		return isCut;
 	}
 
-	public GraphicMouseAction createCutAndPaste() {
-		return new CutAndPasteActionWrapper(stateManager, originHolder);
-	}
-
-	public GraphicMouseAction createImport() {
-		return new ImportActionWapper(stateManager, originHolder);
-	}
 }

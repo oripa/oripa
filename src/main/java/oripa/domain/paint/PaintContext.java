@@ -176,6 +176,25 @@ public interface PaintContext extends CreasePatternHolder {
 	void clearSnapPoints();
 
 	/**
+	 * Keeps the lines in a temporary place.
+	 *
+	 * @param lines
+	 */
+	void SetImportedLines(Collection<OriLine> lines);
+
+	/**
+	 * Adds all imported lines to picked lines.
+	 *
+	 * @param lines
+	 */
+	void loadFromImportedLines();
+
+	/**
+	 * Makes the imported lines empty.
+	 */
+	void clearImportedLines();
+
+	/**
 	 * sets division number of grid. should update grid points for
 	 * {@link #getGrids()}.
 	 *

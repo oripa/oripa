@@ -19,34 +19,42 @@
 package oripa.gui.presenter.creasepattern.copypaste;
 
 import oripa.appstate.StateManager;
+import oripa.appstate.StatePopper;
+import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
+import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class CopyAndPasteActionFactory {
+public class ImportActionWapper extends CopyAndPasteAction {
 
 	private final StateManager<EditMode> stateManager;
-	private final SelectionOriginHolder originHolder;
 
-	public CopyAndPasteActionFactory(final StateManager<EditMode> stateManager,
+	public ImportActionWapper(
+			final StateManager<EditMode> stateManager,
 			final SelectionOriginHolder originHolder) {
+
+		super(originHolder, new ImportAction(originHolder));
+
 		this.stateManager = stateManager;
-		this.originHolder = originHolder;
+
+		setEditMode(EditMode.CUT);
 	}
 
-	public GraphicMouseAction createCopyAndPaste() {
-		return new CopyAndPasteActionWrapper(stateManager, originHolder);
+	@Override
+	protected void recoverImpl(final PaintContext context) {
+		super.recoverImpl(context);
+
+		context.creasePatternUndo().pushUndoInfo();
 	}
 
-	public GraphicMouseAction createCutAndPaste() {
-		return new CutAndPasteActionWrapper(stateManager, originHolder);
+	@Override
+	public void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+			final boolean differentAction) {
+		new StatePopper<>(stateManager).run();
 	}
 
-	public GraphicMouseAction createImport() {
-		return new ImportActionWapper(stateManager, originHolder);
-	}
 }
