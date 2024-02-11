@@ -203,22 +203,34 @@ public class RectangleClipper {
 
 		// Outside from the left edge of the window
 		if ((code & LEFT) != 0) {
-			return createPointClippedByX(l, domain.getLeft());
+			var cpOpt = createPointClippedByX(l, domain.getLeft());
+			if (cpOpt.isPresent()) {
+				return cpOpt;
+			}
 		}
 
 		// Outside the right edge of the window
 		if ((code & RIGHT) != 0) {
-			return createPointClippedByX(l, domain.getRight());
+			var cpOpt = createPointClippedByX(l, domain.getRight());
+			if (cpOpt.isPresent()) {
+				return cpOpt;
+			}
 		}
 
 		// Outside from the top of the window
 		if ((code & TOP) != 0) {
-			return createPointClippedByY(l, domain.getTop());
+			var cpOpt = createPointClippedByY(l, domain.getTop());
+			if (cpOpt.isPresent()) {
+				return cpOpt;
+			}
 		}
 
 		// Outside from the bottom of the window
 		if ((code & BOTTOM) != 0) {
-			return createPointClippedByY(l, domain.getBottom());
+			var cpOpt = createPointClippedByY(l, domain.getBottom());
+			if (cpOpt.isPresent()) {
+				return cpOpt;
+			}
 		}
 
 		return Optional.empty();
