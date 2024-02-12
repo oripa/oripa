@@ -25,6 +25,7 @@ import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionSetter;
 import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
+import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 
 /**
  * @author OUCHI Koji
@@ -33,11 +34,14 @@ import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
 public class BindingObjectFactoryFacade {
 	private final PaintBoundStateFactory stateFactory;
 	private final MouseActionSetterFactory setterFactory;
+	private final PluginPaintBoundStateFactory pluginFactory;
 
 	public BindingObjectFactoryFacade(final PaintBoundStateFactory stateFactory,
-			final MouseActionSetterFactory setterFactory) {
+			final MouseActionSetterFactory setterFactory,
+			final PluginPaintBoundStateFactory pluginFactory) {
 		this.stateFactory = stateFactory;
 		this.setterFactory = setterFactory;
+		this.pluginFactory = pluginFactory;
 	}
 
 	public ApplicationState<EditMode> createState(
@@ -52,8 +56,9 @@ public class BindingObjectFactoryFacade {
 		return stateFactory.create(id, null, null);
 	}
 
-	public MouseActionSetterFactory getSetterFactory() {
-		return setterFactory;
+	public ApplicationState<EditMode> createState(
+			final GraphicMouseActionPlugin plugin) {
+		return pluginFactory.create(plugin);
 	}
 
 	public MouseActionSetter createActionSetter(final GraphicMouseAction action) {

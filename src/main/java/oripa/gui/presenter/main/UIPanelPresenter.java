@@ -24,8 +24,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.appstate.CommandStatePopper;
-import oripa.appstate.StateManager;
+import oripa.appstate.StatePopperFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
@@ -34,7 +33,6 @@ import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.byvalue.ByValueContext;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
-import oripa.gui.bind.state.PluginPaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.EditMode;
@@ -82,7 +80,7 @@ public class UIPanelPresenter {
 	final CutModelOutlinesHolder cutOutlinesHolder;
 	final PainterScreenSetting mainScreenSetting;
 
-	private final StateManager<EditMode> stateManager;
+	private final StatePopperFactory<EditMode> statePopperFactory;
 	private final ViewScreenUpdater screenUpdater;
 	private final KeyProcessing keyProcessing;
 	private final PaintContext paintContext;
@@ -99,7 +97,7 @@ public class UIPanelPresenter {
 	public UIPanelPresenter(final UIPanelView view,
 			final SubFrameFactory subFrameFactory,
 			final FileChooserFactory fileChooserFactory,
-			final StateManager<EditMode> stateManager,
+			final StatePopperFactory<EditMode> statePopperFactory,
 			final ViewUpdateSupport viewUpdateSupport,
 			final CreasePatternPresentationContext presentationContext,
 			final PaintDomainContext domainContext,
@@ -118,7 +116,7 @@ public class UIPanelPresenter {
 		this.paintContext = domainContext.getPaintContext();
 		this.viewContext = presentationContext.getViewContext();
 
-		this.stateManager = stateManager;
+		this.statePopperFactory = statePopperFactory;
 
 		this.bindingFactory = bindingFactory;
 
@@ -143,11 +141,8 @@ public class UIPanelPresenter {
 	}
 
 	public void addPlugins(final List<GraphicMouseActionPlugin> plugins) {
-		var stateFactory = new PluginPaintBoundStateFactory(stateManager, bindingFactory.getSetterFactory());
-
 		for (var plugin : plugins) {
-			var state = stateFactory.create(plugin.getGraphicMouseAction(), plugin.getChangeHint(),
-					plugin.getChangeOnSelected());
+			var state = bindingFactory.createState(plugin);
 
 			view.addMouseActionPluginListener(plugin.getName(), state::performActions, keyProcessing);
 		}
@@ -158,11 +153,11 @@ public class UIPanelPresenter {
 		// edit mode buttons
 
 		view.addEditModeInputLineButtonListener(
-				new CommandStatePopper<EditMode>(stateManager, EditMode.INPUT),
+				statePopperFactory.createForCommand(EditMode.INPUT),
 				keyProcessing);
 
 		view.addEditModeLineSelectionButtonListener(
-				new CommandStatePopper<EditMode>(stateManager, EditMode.SELECT),
+				statePopperFactory.createForCommand(EditMode.SELECT),
 				keyProcessing);
 
 		var deleteLineState = bindingFactory.createState(StringID.DELETE_LINE_ID);

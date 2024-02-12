@@ -1,17 +1,16 @@
 package oripa.gui.presenter.creasepattern;
 
-import oripa.appstate.StateManager;
 import oripa.appstate.StatePopper;
 import oripa.domain.paint.PaintContext;
 
 public class EditOutlineActionWrapper extends EditOutlineAction {
 
-	private final StateManager<EditMode> stateManager;
+	private final StatePopper<EditMode> statePopper;
 	private final MouseActionHolder actionHolder;
 
-	public EditOutlineActionWrapper(final StateManager<EditMode> stateManager,
+	public EditOutlineActionWrapper(final StatePopper<EditMode> statePopper,
 			final MouseActionHolder actionHolder) {
-		this.stateManager = stateManager;
+		this.statePopper = statePopper;
 		this.actionHolder = actionHolder;
 	}
 
@@ -48,7 +47,7 @@ public class EditOutlineActionWrapper extends EditOutlineAction {
 	}
 
 	private void popPreviousState() {
-		new StatePopper<>(stateManager).run();
+		statePopper.run();
 	}
 
 }

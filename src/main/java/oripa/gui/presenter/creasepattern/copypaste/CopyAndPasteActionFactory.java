@@ -18,7 +18,7 @@
  */
 package oripa.gui.presenter.creasepattern.copypaste;
 
-import oripa.appstate.StateManager;
+import oripa.appstate.StatePopper;
 import oripa.domain.paint.copypaste.SelectionOriginHolder;
 import oripa.gui.presenter.creasepattern.EditMode;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;
@@ -29,24 +29,24 @@ import oripa.gui.presenter.creasepattern.GraphicMouseAction;
  */
 public class CopyAndPasteActionFactory {
 
-	private final StateManager<EditMode> stateManager;
+	private final StatePopper<EditMode> statePopper;
 	private final SelectionOriginHolder originHolder;
 
-	public CopyAndPasteActionFactory(final StateManager<EditMode> stateManager,
+	public CopyAndPasteActionFactory(final StatePopper<EditMode> statePopper,
 			final SelectionOriginHolder originHolder) {
-		this.stateManager = stateManager;
+		this.statePopper = statePopper;
 		this.originHolder = originHolder;
 	}
 
 	public GraphicMouseAction createCopyAndPaste() {
-		return new CopyAndPasteActionWrapper(stateManager, originHolder);
+		return new CopyAndPasteActionWrapper(statePopper, originHolder);
 	}
 
 	public GraphicMouseAction createCutAndPaste() {
-		return new CutAndPasteActionWrapper(stateManager, originHolder);
+		return new CutAndPasteActionWrapper(statePopper, originHolder);
 	}
 
 	public GraphicMouseAction createImport() {
-		return new ImportActionWapper(stateManager, originHolder);
+		return new ImportActionWapper(statePopper, originHolder);
 	}
 }

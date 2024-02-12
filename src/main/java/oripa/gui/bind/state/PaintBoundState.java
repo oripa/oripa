@@ -27,13 +27,6 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	/**
 	 * set paint action and hint updater without error handler.
 	 *
-	 * @param mouseAction
-	 *            paint action
-	 * @param changeHint
-	 *            event handler for hint.
-	 * @param actions
-	 *            additional actions. These will be performed before state
-	 *            changes.
 	 */
 	public PaintBoundState(
 			final StateManager<EditMode> stateManager,
@@ -49,17 +42,10 @@ public class PaintBoundState extends ApplicationState<EditMode> {
 	/**
 	 * set paint action and hint updater.
 	 *
-	 * @param stateManager
-	 *            state manager.
 	 * @param errorDetecter
 	 *            Detects error. returns true if an error occurs.
 	 * @param errorHandler
 	 *            a callback for error handling.
-	 * @param changeHint
-	 *            event handler for hint.
-	 * @param actions
-	 *            additional actions. These will be performed before state
-	 *            changes.
 	 */
 	public PaintBoundState(
 			final StateManager<EditMode> stateManager,

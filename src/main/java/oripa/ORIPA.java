@@ -26,6 +26,7 @@ import javax.swing.SwingUtilities;
 
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
+import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
 import oripa.doc.Doc;
 import oripa.domain.paint.PaintContextFactory;
@@ -38,6 +39,7 @@ import oripa.file.InitDataFileWriter;
 import oripa.gui.bind.state.BindingObjectFactoryFacade;
 import oripa.gui.bind.state.EditModeStateManager;
 import oripa.gui.bind.state.PaintBoundStateFactory;
+import oripa.gui.bind.state.PluginPaintBoundStateFactory;
 import oripa.gui.presenter.creasepattern.ComplexActionFactory;
 import oripa.gui.presenter.creasepattern.CreasePatternPresentationContext;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContextFactory;
@@ -140,17 +142,20 @@ public class ORIPA {
 			var setterFactory = new MouseActionSetterFactory(
 					mouseActionHolder, screenUpdater::updateScreen, paintContext);
 
+			var statePopperFactory = new StatePopperFactory<>(stateManager);
 			var stateFactory = new PaintBoundStateFactory(
 					stateManager,
 					setterFactory,
 					mainViewSetting,
 					new ComplexActionFactory(
-							new EditOutlineActionFactory(stateManager, mouseActionHolder),
-							new CopyAndPasteActionFactory(stateManager, domainContext.getSelectionOriginHolder()),
+							new EditOutlineActionFactory(statePopperFactory.createForState(), mouseActionHolder),
+							new CopyAndPasteActionFactory(statePopperFactory.createForState(),
+									domainContext.getSelectionOriginHolder()),
 							domainContext.getByValueContext(),
 							presentationContext.getTypeForChangeContext()));
 
-			var bindingFactory = new BindingObjectFactoryFacade(stateFactory, setterFactory);
+			var bindingFactory = new BindingObjectFactoryFacade(stateFactory, setterFactory,
+					new PluginPaintBoundStateFactory(stateManager, setterFactory));
 
 			var presenter = new MainFramePresenter(
 					mainFrame,
@@ -168,7 +173,7 @@ public class ORIPA {
 					new Doc(),
 					domainContext,
 					presentationContext,
-					stateManager,
+					statePopperFactory,
 					new FileHistory(Constants.MRUFILE_NUM),
 					new IniFileAccess(
 							new InitDataFileReader(), new InitDataFileWriter()),
