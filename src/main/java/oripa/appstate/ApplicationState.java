@@ -49,7 +49,7 @@ public class ApplicationState<GroupEnum> implements GroupMember<GroupEnum> {
 			return;
 		}
 
-		actions.forEach(action -> action.run());
+		actions.forEach(Runnable::run);
 	}
 
 	@Override
