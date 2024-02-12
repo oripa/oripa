@@ -3,9 +3,8 @@ package oripa.gui.bind.state;
 import oripa.appstate.ApplicationState;
 import oripa.appstate.StateManager;
 import oripa.gui.presenter.creasepattern.EditMode;
-import oripa.gui.presenter.creasepattern.GraphicMouseAction;
 import oripa.gui.presenter.creasepattern.MouseActionSetterFactory;
-import oripa.gui.viewchange.ChangeViewSetting;
+import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 
 public class PluginPaintBoundStateFactory {
 
@@ -20,15 +19,12 @@ public class PluginPaintBoundStateFactory {
 	}
 
 	public ApplicationState<EditMode> create(
-			final GraphicMouseAction mouseAction,
-			final ChangeViewSetting changeHint,
-			final ChangeViewSetting changeOnSelected) {
+			final GraphicMouseActionPlugin plugin) {
+		var mouseAction = plugin.getGraphicMouseAction();
 
 		ApplicationState<EditMode> state = new PaintBoundState(
-				stateManager, mouseAction.getEditMode(), setterFactory.create(mouseAction), changeHint,
-				null);
-
-		state.addActions(new Runnable[] { changeOnSelected::changeViewSetting });
+				stateManager, mouseAction.getEditMode(), setterFactory.create(mouseAction), plugin.getChangeHint(),
+				new Runnable[] { plugin.getChangeOnSelected()::changeViewSetting });
 
 		return state;
 

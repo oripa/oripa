@@ -32,8 +32,7 @@ import org.slf4j.LoggerFactory;
 import oripa.application.main.DataFileAccess;
 import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
-import oripa.appstate.StateManager;
-import oripa.appstate.StatePopper;
+import oripa.appstate.StatePopperFactory;
 import oripa.doc.Doc;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
@@ -87,7 +86,7 @@ public class MainFramePresenter {
 	// shared objects
 	private final ResourceHolder resourceHolder = ResourceHolder.getInstance();
 
-	private final StateManager<EditMode> stateManager;
+	private final StatePopperFactory<EditMode> statePopperFactory;
 
 	private final ViewScreenUpdater screenUpdater;
 	private final PainterScreenSetting screenSetting;
@@ -121,7 +120,7 @@ public class MainFramePresenter {
 			final Doc document,
 			final PaintDomainContext domainContext,
 			final CreasePatternPresentationContext presentationContext,
-			final StateManager<EditMode> stateManager,
+			final StatePopperFactory<EditMode> statePopperFactory,
 			final FileHistory fileHistory,
 			final IniFileAccess iniFileAccess,
 			final DataFileAccess dataFileAccess,
@@ -138,7 +137,7 @@ public class MainFramePresenter {
 		this.paintContext = domainContext.getPaintContext();
 		this.viewContext = presentationContext.getViewContext();
 		this.actionHolder = presentationContext.getActionHolder();
-		this.stateManager = stateManager;
+		this.statePopperFactory = statePopperFactory;
 		this.fileHistory = fileHistory;
 		this.iniFileAccess = iniFileAccess;
 		this.dataFileAccess = dataFileAccess;
@@ -163,7 +162,7 @@ public class MainFramePresenter {
 				uiPanel,
 				subFrameFactory,
 				fileChooserFactory,
-				stateManager,
+				statePopperFactory,
 				viewUpdateSupport,
 				presentationContext,
 				domainContext,
@@ -334,7 +333,7 @@ public class MainFramePresenter {
 				detectCopyPasteError, view::showCopyPasteErrorMessage);
 		view.addCutAndPasteButtonListener(cutPasteState::performActions);
 
-		var statePopper = new StatePopper<EditMode>(stateManager);
+		var statePopper = statePopperFactory.createForState();
 		var unselectListener = new UnselectAllItemsActionListener(actionHolder, paintContext, statePopper,
 				screenUpdater::updateScreen);
 		view.addUnselectAllButtonListener(unselectListener);

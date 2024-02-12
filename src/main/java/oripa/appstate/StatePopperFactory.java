@@ -16,25 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.gui.presenter.creasepattern;
-
-import oripa.appstate.StatePopper;
+package oripa.appstate;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class EditOutlineActionFactory {
+public class StatePopperFactory<GroupEnum> {
+	private final StateManager<GroupEnum> stateManager;
 
-	private final StatePopper<EditMode> statePopper;
-	private final MouseActionHolder actionHolder;
-
-	public EditOutlineActionFactory(final StatePopper<EditMode> statePopper, final MouseActionHolder actionHolder) {
-		this.statePopper = statePopper;
-		this.actionHolder = actionHolder;
+	public StatePopperFactory(final StateManager<GroupEnum> stateManager) {
+		this.stateManager = stateManager;
 	}
 
-	public GraphicMouseAction create() {
-		return new EditOutlineActionWrapper(statePopper, actionHolder);
+	public StatePopper<GroupEnum> createForState() {
+		return new StatePopper<>(stateManager);
 	}
+
+	public CommandStatePopper<GroupEnum> createForCommand(final GroupEnum mode) {
+		return new CommandStatePopper<>(stateManager, mode);
+	}
+
 }
