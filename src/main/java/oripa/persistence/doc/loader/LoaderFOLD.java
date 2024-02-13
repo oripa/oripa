@@ -84,8 +84,7 @@ public class LoaderFOLD implements DocLoader {
 
 		var factory = new CreasePatternFactory();
 		var cp = factory.createCreasePattern(lines);
-		var doc = new Doc();
-		doc.setCreasePattern(cp);
+		var doc = new Doc(cp);
 
 		var property = doc.getProperty();
 		property.setEditorName(foldFormat.getFileAuthor());

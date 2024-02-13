@@ -22,11 +22,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.CreasePatternHolder;
-import oripa.resource.Constants;
 import oripa.value.OriLine;
 
 /**
@@ -49,12 +48,12 @@ public class Doc implements CutModelOutlinesHolder, CreasePatternHolder {
 	 */
 	private Property property = new Property("");
 
-	public Doc() {
-		initialize(Constants.DEFAULT_PAPER_SIZE);
-	}
-
 	public Doc(final double size) {
 		initialize(size);
+	}
+
+	public Doc(final CreasePattern creasePattern) {
+		this.creasePattern = creasePattern;
 	}
 
 	public void set(final Doc doc) {

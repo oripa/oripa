@@ -92,8 +92,7 @@ public class LoaderPDF implements DocLoader {
 			e.printStackTrace();
 		}
 
-		var doc = new Doc();
-		doc.setCreasePattern(new LineDtoConverter().convert(dtos));
+		var doc = new Doc(new LineDtoConverter().convert(dtos));
 
 		return Optional.of(doc);
 
