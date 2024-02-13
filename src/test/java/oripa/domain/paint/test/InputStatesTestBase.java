@@ -18,10 +18,13 @@
  */
 package oripa.domain.paint.test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import oripa.domain.paint.ActionState;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.value.OriLine;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -29,6 +32,7 @@ import oripa.value.OriLine;
  */
 public class InputStatesTestBase {
 	protected PaintContext context;
+	protected int cpLineCount;
 	protected ActionState state;
 
 	protected <FirstState extends ActionState> void setUp(final Class<FirstState> stateClass) {
@@ -40,6 +44,21 @@ public class InputStatesTestBase {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected void doAction(final Vector2d candidate) {
+		cpLineCount = context.getCreasePattern().size();
+		context.setCandidateVertexToPick(candidate);
+		state = state.doAction(context, null, false);
+
+	}
+
+	protected void assertSnapPointExists() {
+		assertTrue(context.getSnapPoints().size() > 0);
+	}
+
+	protected void assertNewLineInputted() {
+		assertTrue(context.getCreasePattern().size() > cpLineCount);
 	}
 
 }

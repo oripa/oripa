@@ -32,8 +32,7 @@ class SegmentInputStatesTest extends InputStatesTestBase {
 
 		@BeforeEach
 		void doAction() {
-			context.setCandidateVertexToPick(candidate1);
-			state = state.doAction(context, null, false);
+			SegmentInputStatesTest.this.doAction(candidate1);
 		}
 
 		@Test
@@ -50,32 +49,26 @@ class SegmentInputStatesTest extends InputStatesTestBase {
 		@Nested
 		class SecondEndPointIsSelected {
 			Vector2d candidate2 = new Vector2d(2, 2);
-			int cpLineCount = Integer.MAX_VALUE;
 
 			@BeforeEach
 			void doAction() {
-				cpLineCount = context.getCreasePattern().size();
-				context.setCandidateVertexToPick(candidate2);
-				state = state.doAction(context, null, false);
+				SegmentInputStatesTest.this.doAction(candidate2);
 			}
 
 			@Test
 			void testAfterDoAction_NewLineShouldBePut() {
 				assertCurrentState(0, SelectingFirstVertexForSegment.class);
-				assertTrue(context.getCreasePattern().size() > cpLineCount);
+				assertNewLineInputted();
 			}
 		}
 
 		@Nested
 		class SecondEndPointIsNotSelected {
 			Vector2d candidate2 = null;
-			int cpLineCount = Integer.MAX_VALUE;
 
 			@BeforeEach
 			void doAction() {
-				cpLineCount = context.getCreasePattern().size();
-				context.setCandidateVertexToPick(candidate2);
-				state = state.doAction(context, null, false);
+				SegmentInputStatesTest.this.doAction(candidate2);
 			}
 
 			@Test
@@ -91,8 +84,7 @@ class SegmentInputStatesTest extends InputStatesTestBase {
 
 		@BeforeEach
 		void doAction() {
-			context.setCandidateVertexToPick(null);
-			state = state.doAction(context, null, false);
+			SegmentInputStatesTest.this.doAction(null);
 		}
 
 		@Test

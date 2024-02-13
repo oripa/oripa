@@ -55,8 +55,7 @@ class LineInputStatesTest extends InputStatesTestBase {
 
 		@BeforeEach
 		void doAction() {
-			context.setCandidateVertexToPick(candidate1);
-			state = state.doAction(context, null, false);
+			LineInputStatesTest.this.doAction(candidate1);
 		}
 
 		@Test
@@ -76,14 +75,13 @@ class LineInputStatesTest extends InputStatesTestBase {
 
 			@BeforeEach
 			void doAction() {
-				context.setCandidateVertexToPick(candidate2);
-				state = state.doAction(context, null, false);
+				LineInputStatesTest.this.doAction(candidate2);
 			}
 
 			@Test
 			void testAfterDoAction() {
 				assertCurrentState(2, SelectingFirstEndPoint.class);
-				assertTrue(context.getSnapPoints().size() > 0);
+				assertSnapPointExists();
 			}
 
 			@Test
@@ -98,8 +96,7 @@ class LineInputStatesTest extends InputStatesTestBase {
 
 				@BeforeEach
 				void doAction() {
-					context.setCandidateVertexToPick(candidate3);
-					state = state.doAction(context, null, false);
+					LineInputStatesTest.this.doAction(candidate3);
 				}
 
 				@Test
@@ -119,13 +116,13 @@ class LineInputStatesTest extends InputStatesTestBase {
 
 					@BeforeEach
 					void doAction() {
-						context.setCandidateVertexToPick(candidate4);
-						state = state.doAction(context, null, false);
+						LineInputStatesTest.this.doAction(candidate4);
 					}
 
 					@Test
 					void testAfterDoAction() {
 						assertCurrentState(0, SelectingFirstVertexForLine.class);
+						assertNewLineInputted();
 					}
 				}
 
