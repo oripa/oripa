@@ -6,22 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import oripa.domain.paint.ActionState;
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.PaintContextFactory;
-import oripa.value.OriLine;
+import oripa.domain.paint.test.InputStatesTestBase;
 import oripa.vecmath.Vector2d;
 
-class SegmentInputStatesTest {
-	PaintContext context;
-	ActionState state;
-
+class SegmentInputStatesTest extends InputStatesTestBase {
 	@BeforeEach
 	void setUp() {
-		context = new PaintContextFactory().createContext();
-		context.setLineTypeOfNewLines(OriLine.Type.MOUNTAIN);
-
-		state = new SelectingFirstVertexForSegment();
+		setUp(SelectingFirstVertexForSegment.class);
 	}
 
 	private <T> void assertCurrentState(final int expectedVertexCount, final Class<T> expectedClass) {
