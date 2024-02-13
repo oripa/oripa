@@ -170,7 +170,7 @@ public class ORIPA {
 					childFrameManager,
 					mainViewSetting,
 					bindingFactory,
-					new Doc(),
+					new Doc(paintContext.getCreasePattern()),
 					domainContext,
 					presentationContext,
 					statePopperFactory,

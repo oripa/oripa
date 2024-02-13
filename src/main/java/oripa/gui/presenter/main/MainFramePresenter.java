@@ -144,8 +144,6 @@ public class MainFramePresenter {
 
 		this.screenSetting = viewSetting.getPainterScreenSetting();
 
-		document.setCreasePattern(paintContext.getCreasePattern());
-
 		var screen = view.getPainterScreenView();
 		this.screenUpdater = viewUpdateSupport.getViewScreenUpdater();
 

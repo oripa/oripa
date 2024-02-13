@@ -22,8 +22,8 @@ import java.util.ArrayList;
 
 import oripa.doc.Doc;
 import oripa.doc.Property;
-import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
@@ -90,8 +90,7 @@ public class DataSet {
 		CreasePattern creasePattern = factory
 				.createCreasePattern(oriLines);
 
-		Doc doc = new Doc(creasePattern.getPaperSize());
-		doc.setCreasePattern(creasePattern);
+		Doc doc = new Doc(creasePattern);
 
 		doc.setProperty(createProperty(filePath));
 
