@@ -84,6 +84,7 @@ class LineToLineInputStatesTest extends InputStatesTestBase {
 			@Test
 			void testAfterDoAction() {
 				assertCurrentState(0, 2, SelectingFirstVertexForFoldLine.class);
+				assertSnapPointExists();
 			}
 
 			@Test
