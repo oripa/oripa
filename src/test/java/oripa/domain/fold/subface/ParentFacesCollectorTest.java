@@ -29,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import oripa.domain.fold.subface.test.OriFaceFactoryForTest;
 import oripa.vecmath.Vector2d;
 
 /**

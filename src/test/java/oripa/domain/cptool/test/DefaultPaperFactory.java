@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.cptool;
+package oripa.domain.cptool.test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
-class DefaultPaperFactory {
+public class DefaultPaperFactory {
 
 	/**
 	 * Returns boundary of square ((-200, -200), (200, 200))

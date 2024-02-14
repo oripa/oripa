@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import oripa.domain.cptool.test.DefaultPaperFactory;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
 import oripa.vecmath.Vector2d;

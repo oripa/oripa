@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
 
+import oripa.geom.test.TestCreasePatternFactory;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 

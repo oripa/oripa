@@ -33,6 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import oripa.domain.cptool.LineAdder;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.domain.fold.subface.test.OriFaceFactoryForTest;
 
 /**
  * @author OUCHI Koji
