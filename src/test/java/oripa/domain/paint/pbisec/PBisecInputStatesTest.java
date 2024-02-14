@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.linetoline;
+package oripa.domain.paint.pbisec;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,18 +25,17 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import oripa.domain.paint.test.InputStatesTestBase;
-import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
  *
  */
-class LineToLineInputStatesTest extends InputStatesTestBase {
+class PBisecInputStatesTest extends InputStatesTestBase {
 
 	@BeforeEach
 	void setUp() {
-		setUp(SelectingFirstLine.class);
+		setUp(SelectingFirstVertexForBisector.class);
 	}
 
 	private <T> void assertCurrentState(final int expectedVertexCount, final int expectedLineCount,
@@ -47,50 +46,50 @@ class LineToLineInputStatesTest extends InputStatesTestBase {
 	}
 
 	@Test
-	void testUndo_firstLineState() {
+	void testUndo_firstPointState() {
 		state = state.undo(context);
-		assertCurrentState(0, 0, SelectingFirstLine.class);
+		assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
 	}
 
 	@Nested
-	class FirstLineIsSelected {
-		OriLine candidate1 = new OriLine(0, 0, 1, 1, OriLine.Type.MOUNTAIN);
+	class FirstPointIsSelected {
+		Vector2d candidate1 = new Vector2d(0, 0);
 
 		@BeforeEach
 		void doAction() {
-			LineToLineInputStatesTest.this.doAction(candidate1);
+			PBisecInputStatesTest.this.doAction(candidate1);
 		}
 
 		@Test
 		void testAfterDoAction() {
-			assertCurrentState(0, 1, SelectingSecondLine.class);
+			assertCurrentState(1, 0, SelectingSecondVertexForBisector.class);
 		}
 
 		@Test
-		void testUndo_secondLineState() {
+		void testUndo_secondPointState() {
 			state = state.undo(context);
-			assertCurrentState(0, 0, SelectingFirstLine.class);
+			assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
 		}
 
 		@Nested
-		class SecondLineIsSelected {
-			OriLine candidate2 = new OriLine(0, 0, 1, 10, OriLine.Type.MOUNTAIN);
+		class SecondPointIsSelected {
+			Vector2d candidate2 = new Vector2d(2, 0);
 
 			@BeforeEach
 			void doAction() {
-				LineToLineInputStatesTest.this.doAction(candidate2);
+				PBisecInputStatesTest.this.doAction(candidate2);
 			}
 
 			@Test
 			void testAfterDoAction() {
-				assertCurrentState(0, 2, SelectingFirstVertexForFoldLine.class);
+				assertCurrentState(2, 0, SelectingFirstEndPoint.class);
 				assertSnapPointExists();
 			}
 
 			@Test
 			void testUndo_firstSnapState() {
 				state = state.undo(context);
-				assertCurrentState(0, 1, SelectingSecondLine.class);
+				assertCurrentState(1, 0, SelectingSecondVertexForBisector.class);
 			}
 
 			@Nested
@@ -99,18 +98,18 @@ class LineToLineInputStatesTest extends InputStatesTestBase {
 
 				@BeforeEach
 				void doAction() {
-					LineToLineInputStatesTest.this.doAction(candidate3);
+					PBisecInputStatesTest.this.doAction(candidate3);
 				}
 
 				@Test
 				void testAfterDoAction() {
-					assertCurrentState(1, 2, SelectingSecondVertexForFoldLine.class);
+					assertCurrentState(3, 0, SelectingSecondEndPoint.class);
 				}
 
 				@Test
 				void testUndo_secondSnapState() {
 					state = state.undo(context);
-					assertCurrentState(0, 2, SelectingFirstVertexForFoldLine.class);
+					assertCurrentState(2, 0, SelectingFirstEndPoint.class);
 				}
 
 				@Nested
@@ -119,12 +118,12 @@ class LineToLineInputStatesTest extends InputStatesTestBase {
 
 					@BeforeEach
 					void doAction() {
-						LineToLineInputStatesTest.this.doAction(candidate4);
+						PBisecInputStatesTest.this.doAction(candidate4);
 					}
 
 					@Test
 					void testAfterDoAction() {
-						assertCurrentState(0, 0, SelectingFirstLine.class);
+						assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
 						assertNewLineInputted();
 					}
 				}
@@ -132,5 +131,4 @@ class LineToLineInputStatesTest extends InputStatesTestBase {
 
 		}
 	}
-
 }
