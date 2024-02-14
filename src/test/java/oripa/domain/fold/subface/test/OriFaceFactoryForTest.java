@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.fold.subface;
+package oripa.domain.fold.subface.test;
 
 import static org.mockito.Mockito.*;
 
@@ -31,7 +31,7 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
-class OriFaceFactoryForTest {
+public class OriFaceFactoryForTest {
 	/**
 	 *
 	 * @param left
@@ -40,7 +40,7 @@ class OriFaceFactoryForTest {
 	 *            smaller y coordinate of the square
 	 * @return
 	 */
-	static OriFace create10PxSquareMock(final double left, final double top) {
+	public static OriFace create10PxSquareMock(final double left, final double top) {
 		return createRectangleMock(left, top, left + 10, top + 10);
 	}
 
@@ -56,7 +56,7 @@ class OriFaceFactoryForTest {
 	 *            larger y coordinate of the square
 	 * @return
 	 */
-	static OriFace createRectangleMock(final double left, final double top,
+	public static OriFace createRectangleMock(final double left, final double top,
 			final double right, final double bottom) {
 		var face = mock(OriFace.class);
 		var he1 = createHalfEdgeSpy(left, bottom, face);
