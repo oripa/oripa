@@ -50,6 +50,12 @@ public class InputStatesTestBase {
 		cpLineCount = context.getCreasePattern().size();
 		context.setCandidateVertexToPick(candidate);
 		state = state.doAction(context, null, false);
+	}
+
+	protected void doAction(final OriLine candidate) {
+		cpLineCount = context.getCreasePattern().size();
+		context.setCandidateLineToPick(candidate);
+		state = state.doAction(context, null, false);
 
 	}
 

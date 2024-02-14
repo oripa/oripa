@@ -84,7 +84,7 @@ class SegmentInputStatesTest extends InputStatesTestBase {
 
 		@BeforeEach
 		void doAction() {
-			SegmentInputStatesTest.this.doAction(null);
+			SegmentInputStatesTest.this.doAction((Vector2d) null);
 		}
 
 		@Test

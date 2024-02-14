@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.line;
+package oripa.domain.paint.linetoline;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,109 +25,111 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import oripa.domain.paint.test.InputStatesTestBase;
+import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
  *
  */
-class LineInputStatesTest extends InputStatesTestBase {
+class LineToLineInputStatesTest extends InputStatesTestBase {
 
 	@BeforeEach
 	void setUp() {
-		setUp(SelectingFirstVertexForLine.class);
+		setUp(SelectingFirstLine.class);
 	}
 
-	private <T> void assertCurrentState(final int expectedVertexCount, final Class<T> expectedClass) {
+	private <T> void assertCurrentState(final int expectedVertexCount, final int expectedLineCount,
+			final Class<T> expectedClass) {
 		assertEquals(expectedVertexCount, context.getVertexCount());
+		assertEquals(expectedLineCount, context.getLineCount());
 		assertInstanceOf(expectedClass, state);
 	}
 
 	@Test
 	void testUndo_firstPointState() {
 		state = state.undo(context);
-		assertCurrentState(0, SelectingFirstVertexForLine.class);
+		assertCurrentState(0, 0, SelectingFirstLine.class);
 	}
 
 	@Nested
-	class FirstPointIsSelected {
-		Vector2d candidate1 = new Vector2d(1, 1);
+	class FirstLineIsSelected {
+		OriLine candidate1 = new OriLine(0, 0, 1, 1, OriLine.Type.MOUNTAIN);
 
 		@BeforeEach
 		void doAction() {
-			LineInputStatesTest.this.doAction(candidate1);
+			LineToLineInputStatesTest.this.doAction(candidate1);
 		}
 
 		@Test
 		void testAfterDoAction() {
-			assertCurrentState(1, SelectingSecondVertexForLine.class);
+			assertCurrentState(0, 1, SelectingSecondLine.class);
 		}
 
 		@Test
-		void testUndo_secondPointState() {
+		void testUndo_secondLineState() {
 			state = state.undo(context);
-			assertCurrentState(0, SelectingFirstVertexForLine.class);
+			assertCurrentState(0, 0, SelectingFirstLine.class);
 		}
 
 		@Nested
-		class SecondPointIsSelected {
-			Vector2d candidate2 = new Vector2d(2, 2);
+		class SecondLineIsSelected {
+			OriLine candidate2 = new OriLine(0, 0, 1, 10, OriLine.Type.MOUNTAIN);
 
 			@BeforeEach
 			void doAction() {
-				LineInputStatesTest.this.doAction(candidate2);
+				LineToLineInputStatesTest.this.doAction(candidate2);
 			}
 
 			@Test
 			void testAfterDoAction() {
-				assertCurrentState(2, SelectingFirstEndPoint.class);
-				assertSnapPointExists();
+				assertCurrentState(0, 2, SelectingFirstVertexForFoldLine.class);
 			}
 
 			@Test
 			void testUndo_firstSnapState() {
 				state = state.undo(context);
-				assertCurrentState(1, SelectingSecondVertexForLine.class);
+				assertCurrentState(0, 1, SelectingSecondLine.class);
 			}
 
 			@Nested
 			class FirstSnapIsSelected {
-				Vector2d candidate3 = new Vector2d(3, 3);
+				Vector2d candidate3 = new Vector2d(0, 0);
 
 				@BeforeEach
 				void doAction() {
-					LineInputStatesTest.this.doAction(candidate3);
+					LineToLineInputStatesTest.this.doAction(candidate3);
 				}
 
 				@Test
 				void testAfterDoAction() {
-					assertCurrentState(3, SelectingSecondEndPoint.class);
+					assertCurrentState(1, 2, SelectingSecondVertexForFoldLine.class);
 				}
 
 				@Test
-				void testUndo_firstSnapState() {
+				void testUndo_secondSnapState() {
 					state = state.undo(context);
-					assertCurrentState(2, SelectingFirstEndPoint.class);
+					assertCurrentState(0, 2, SelectingFirstVertexForFoldLine.class);
 				}
 
 				@Nested
 				class SecondSnapIsSelected {
-					Vector2d candidate4 = new Vector2d(4, 4);
+					Vector2d candidate4 = new Vector2d(1, 5);
 
 					@BeforeEach
 					void doAction() {
-						LineInputStatesTest.this.doAction(candidate4);
+						LineToLineInputStatesTest.this.doAction(candidate4);
 					}
 
 					@Test
 					void testAfterDoAction() {
-						assertCurrentState(0, SelectingFirstVertexForLine.class);
+						assertCurrentState(0, 0, SelectingFirstLine.class);
 						assertNewLineInputted();
 					}
 				}
-
 			}
 
 		}
 	}
+
 }
