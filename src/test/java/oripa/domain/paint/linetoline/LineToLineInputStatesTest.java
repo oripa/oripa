@@ -125,7 +125,7 @@ class LineToLineInputStatesTest extends InputStatesTestBase {
 					@Test
 					void testAfterDoAction() {
 						assertCurrentState(0, 0, SelectingFirstLine.class);
-						assertNewLineInputted();
+						assertNewLineInput();
 					}
 				}
 			}

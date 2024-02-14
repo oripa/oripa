@@ -63,7 +63,7 @@ public class InputStatesTestBase {
 		assertTrue(context.getSnapPoints().size() > 0);
 	}
 
-	protected void assertNewLineInputted() {
+	protected void assertNewLineInput() {
 		assertTrue(context.getCreasePattern().size() > cpLineCount);
 	}
 

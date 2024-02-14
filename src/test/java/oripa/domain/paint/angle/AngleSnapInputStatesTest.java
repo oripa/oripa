@@ -83,7 +83,7 @@ class AngleSnapInputStatesTest extends InputStatesTestBase {
 			@Test
 			void testAfterDoAction_NewLineShouldBePut() {
 				assertCurrentState(0, SelectingStartPoint.class);
-				assertNewLineInputted();
+				assertNewLineInput();
 			}
 		}
 

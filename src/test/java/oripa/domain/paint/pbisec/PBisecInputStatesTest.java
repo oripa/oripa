@@ -124,7 +124,7 @@ class PBisecInputStatesTest extends InputStatesTestBase {
 					@Test
 					void testAfterDoAction() {
 						assertCurrentState(0, 0, SelectingFirstVertexForBisector.class);
-						assertNewLineInputted();
+						assertNewLineInput();
 					}
 				}
 			}

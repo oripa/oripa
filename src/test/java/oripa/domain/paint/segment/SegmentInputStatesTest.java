@@ -58,7 +58,7 @@ class SegmentInputStatesTest extends InputStatesTestBase {
 			@Test
 			void testAfterDoAction_NewLineShouldBePut() {
 				assertCurrentState(0, SelectingFirstVertexForSegment.class);
-				assertNewLineInputted();
+				assertNewLineInput();
 			}
 		}
 

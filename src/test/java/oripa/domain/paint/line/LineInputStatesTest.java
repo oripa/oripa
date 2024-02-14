@@ -122,7 +122,7 @@ class LineInputStatesTest extends InputStatesTestBase {
 					@Test
 					void testAfterDoAction() {
 						assertCurrentState(0, SelectingFirstVertexForLine.class);
-						assertNewLineInputted();
+						assertNewLineInput();
 					}
 				}
 
