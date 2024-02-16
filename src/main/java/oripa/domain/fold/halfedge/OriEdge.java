@@ -110,7 +110,7 @@ public class OriEdge {
 	 *
 	 * @param sv
 	 *            start vertex of the direction
-	 * @return arc tangent of direction vector between 0 and pi.
+	 * @return arc tangent of direction vector between 0 and 2 * pi.
 	 */
 	public double getAngle(final OriVertex sv) {
 		var ev = oppositeVertex(sv);
