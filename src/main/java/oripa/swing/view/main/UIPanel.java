@@ -1317,14 +1317,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 		// modal dialog while folding
 		var dialogWhileFolding = new DialogWhileFolding(frame, resources);
 
-		var worker = new SimpleModalWorker(dialogWhileFolding, () -> {
-			try {
-				modelComputationListener.run();
-			} catch (Exception e) {
-				logger.error("error when folding", e);
-				showErrorMessage(e);
-			}
-		});
+		var worker = new SimpleModalWorker(dialogWhileFolding, () -> modelComputationListener.run(),
+				(e) -> {
+					logger.error("error when folding", e);
+					showErrorMessage(e);
+				});
 
 		setBuildButtonEnabled(false);
 		worker.executeModal();

@@ -18,6 +18,8 @@
  */
 package oripa.swing.view.util;
 
+import java.util.function.Consumer;
+
 import javax.swing.SwingWorker;
 
 /**
@@ -27,10 +29,13 @@ import javax.swing.SwingWorker;
 public class SimpleModalWorker extends SwingWorker<Void, Void> {
 	private final SimpleModalDialog dialog;
 	private final Runnable action;
+	private final Consumer<Exception> errorHandler;
 
-	public SimpleModalWorker(final SimpleModalDialog dialog, final Runnable action) {
+	public SimpleModalWorker(final SimpleModalDialog dialog, final Runnable action,
+			final Consumer<Exception> errorHandler) {
 		this.dialog = dialog;
 		this.action = action;
+		this.errorHandler = errorHandler;
 
 		addPropertyChangeListener(e -> {
 			if ("state".equals(e.getPropertyName())
@@ -46,6 +51,16 @@ public class SimpleModalWorker extends SwingWorker<Void, Void> {
 	protected Void doInBackground() throws Exception {
 		action.run();
 		return null;
+	}
+
+	@Override
+	protected void done() {
+		try {
+			get();
+		} catch (Exception e) {
+			errorHandler.accept(e);
+			cancel(true);
+		}
 	}
 
 	public void executeModal() {
