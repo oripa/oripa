@@ -44,6 +44,15 @@ public class CollectionUtil {
 		return set;
 	}
 
+	/**
+	 * Returns a shallow copy of the specified range of the given list. The copy
+	 * is modifiable.
+	 *
+	 * @param fromIndex
+	 *            inclusive.
+	 * @param toIndex
+	 *            exclusive.
+	 */
 	public static <T> List<T> partialCopy(final List<T> list, final int fromIndex, final int toIndex) {
 		return new ArrayList<T>(list.subList(fromIndex, toIndex));
 	}

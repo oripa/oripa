@@ -187,7 +187,6 @@ public class SubFace {
 		var facesToBePutStream = facesToBePut.stream();
 
 		// Avoids overhead of insane parallelization.
-		// At most 8! = 40320 calls for each process.
 		final int PARALLELIZATION_LOWER_BOUND = 8;
 		boolean doParallel = parallel && facesToBePut.size() > PARALLELIZATION_LOWER_BOUND;
 		if (doParallel) {

@@ -147,6 +147,42 @@ class DeterministicLayerOrderEstimator {
 			return true;
 		});
 
+		// penetration
+		correct &= faces.stream().allMatch(f_i -> {
+			int i = f_i.getFaceID();
+
+			for (var he : f_i.halfedgeIterable()) {
+				var pairOpt = he.getPair();
+				if (pairOpt.isEmpty()) {
+					continue;
+				}
+				var f_j = pairOpt.get().getFace();
+				var j = f_j.getFaceID();
+
+				var indices = overlappingFaceIndexIntersections[i][j];
+
+				for (int k : indices) {
+					if (i == k || j == k) {
+						continue;
+					}
+
+					if (!faceIndicesOnHalfedge.get(he).contains(k)) {
+						continue;
+					}
+
+					if (overlapRelation.isUndefined(i, k) || overlapRelation.isUndefined(j, k)) {
+						continue;
+					}
+
+					if (overlapRelation.get(i, k) != overlapRelation.get(j, k)) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		});
+
 		// and others as well?
 
 		return correct;

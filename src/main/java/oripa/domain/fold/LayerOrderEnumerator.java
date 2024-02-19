@@ -37,8 +37,8 @@ import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
 import oripa.domain.fold.subface.SubFacesFactory;
 import oripa.util.IntPair;
+import oripa.util.Pair;
 import oripa.util.StopWatch;
-import oripa.util.collection.CollectionUtil;
 
 /**
  * @author OUCHI Koji
@@ -253,12 +253,17 @@ class LayerOrderEnumerator {
 	}
 
 	private List<SubFace> popAndSort(final List<SubFace> subfaces) {
-		var sublist = CollectionUtil.partialCopy(subfaces, 1, subfaces.size());
+		// parallel processing causes different rate value on the same subface.
+		// copy the subfaces and rates to temporary to fix the rate.
+		var sublist = subfaces.subList(1, subfaces.size()).stream()
+				.map(subface -> new Pair<Double, SubFace>(subface.getSuccessRate(), subface))
+				.toList();
 
 		// sort sublist for speeding up
-		sublist.sort(Comparator.comparing(SubFace::getSuccessRate).reversed());
-
-		return sublist;
+		return sublist.stream()
+				.sorted(Comparator.comparing((final Pair<Double, SubFace> pair) -> pair.getV1()).reversed())
+				.map(Pair::getV2)
+				.toList();
 	}
 
 	private void setConditionOf3facesToSubfaces(

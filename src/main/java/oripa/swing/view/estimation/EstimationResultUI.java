@@ -185,7 +185,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 		var worker = new SimpleModalWorker(dialog, () -> {
 			subfaceToOverlapRelationIndices = filterInitializationListener.apply(foldedModel);
 			subfaceToOverlapRelationIndices.forEach((s, orders) -> filterSelectionMap.put(s, 0));
-		});
+		}, (e) -> showErrorMessage(e));
 
 		worker.executeModal();
 
