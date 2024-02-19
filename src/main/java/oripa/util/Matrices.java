@@ -51,6 +51,12 @@ public class Matrices {
 		}
 	}
 
+	public static void copy(final long[][] from, final long[][] to) {
+		for (int i = 0; i < from.length; i++) {
+			System.arraycopy(from[i], 0, to[i], 0, from[i].length);
+		}
+	}
+
 	/**
 	 * creates a new matrix and copy the values of {@code from} to the new one.
 	 *

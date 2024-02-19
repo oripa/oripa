@@ -19,7 +19,7 @@
 package oripa.domain.fold.origeom;
 
 import oripa.util.AtomicByteDenseMatrix;
-import oripa.util.ByteDenseMatrix;
+import oripa.util.BitBlockByteMatrix;
 import oripa.util.ByteMatrix;
 import oripa.util.ByteSparseMatrix;
 
@@ -32,6 +32,32 @@ import oripa.util.ByteSparseMatrix;
 public class OverlapRelation {
 	private ByteMatrix overlapRelation;
 
+	private static final byte NO_OVERLAP = 0;
+	private static final byte UPPER = 1;
+	private static final byte LOWER = 2;
+	private static final byte UNDEFINED = 3;
+
+	private byte toInternal(final byte value) {
+		return switch (value) {
+		case OverlapRelationValues.NO_OVERLAP -> NO_OVERLAP;
+		case OverlapRelationValues.UPPER -> UPPER;
+		case OverlapRelationValues.LOWER -> LOWER;
+		case OverlapRelationValues.UNDEFINED -> UNDEFINED;
+		default -> throw new IllegalArgumentException("Unexpected value: " + value);
+		};
+	}
+
+	private byte toExternal(final byte value) {
+		return switch (value) {
+		case NO_OVERLAP -> OverlapRelationValues.NO_OVERLAP;
+		case UPPER -> OverlapRelationValues.UPPER;
+		case LOWER -> OverlapRelationValues.LOWER;
+		case UNDEFINED -> OverlapRelationValues.UNDEFINED;
+		default -> throw new IllegalArgumentException("Unexpected value: " + value);
+		};
+
+	}
+
 	/**
 	 * Internally creates a n x n matrix where n is the given {@code faceCount}.
 	 *
@@ -39,7 +65,8 @@ public class OverlapRelation {
 	 *            the number of faces of the model.
 	 */
 	public OverlapRelation(final int faceCount) {
-		overlapRelation = new ByteDenseMatrix(faceCount, faceCount);
+		overlapRelation = new BitBlockByteMatrix(faceCount, faceCount, 2);
+//		overlapRelation = new ByteDenseMatrix(faceCount, faceCount);
 	}
 
 	private OverlapRelation(final ByteMatrix mat) {
@@ -102,7 +129,7 @@ public class OverlapRelation {
 	 * @return [i][j] value.
 	 */
 	public byte get(final int i, final int j) {
-		return overlapRelation.get(i, j);
+		return toExternal(overlapRelation.get(i, j));
 	}
 
 	/**
@@ -126,17 +153,18 @@ public class OverlapRelation {
 	 *             when {@code value} is not of {@link OverlapRelationValues}.
 	 */
 	public void set(final int i, final int j, final byte value) throws IllegalArgumentException {
-		overlapRelation.set(i, j, value);
+		var internalValue = toInternal(value);
+		overlapRelation.set(i, j, internalValue);
 
-		switch (value) {
-		case OverlapRelationValues.LOWER:
-			overlapRelation.set(j, i, OverlapRelationValues.UPPER);
+		switch (internalValue) {
+		case LOWER:
+			overlapRelation.set(j, i, UPPER);
 			break;
-		case OverlapRelationValues.UPPER:
-			overlapRelation.set(j, i, OverlapRelationValues.LOWER);
+		case UPPER:
+			overlapRelation.set(j, i, LOWER);
 			break;
-		case OverlapRelationValues.UNDEFINED, OverlapRelationValues.NO_OVERLAP:
-			overlapRelation.set(j, i, value);
+		case UNDEFINED, NO_OVERLAP:
+			overlapRelation.set(j, i, internalValue);
 			break;
 
 		default:
@@ -226,7 +254,7 @@ public class OverlapRelation {
 	 *         {@link OverlapRelationValues#LOWER}.
 	 */
 	public boolean isLower(final int i, final int j) {
-		return overlapRelation.get(i, j) == OverlapRelationValues.LOWER;
+		return overlapRelation.get(i, j) == LOWER;
 	}
 
 	/**
@@ -235,7 +263,7 @@ public class OverlapRelation {
 	 *         {@link OverlapRelationValues#UPPER}.
 	 */
 	public boolean isUpper(final int i, final int j) {
-		return overlapRelation.get(i, j) == OverlapRelationValues.UPPER;
+		return overlapRelation.get(i, j) == UPPER;
 	}
 
 	/**
@@ -244,7 +272,7 @@ public class OverlapRelation {
 	 *         {@link OverlapRelationValues#UNDEFINED}.
 	 */
 	public boolean isUndefined(final int i, final int j) {
-		return overlapRelation.get(i, j) == OverlapRelationValues.UNDEFINED;
+		return overlapRelation.get(i, j) == UNDEFINED;
 	}
 
 	/**
@@ -253,7 +281,7 @@ public class OverlapRelation {
 	 *         {@link OverlapRelationValues#NO_OVERLAP}.
 	 */
 	public boolean isNoOverlap(final int i, final int j) {
-		return overlapRelation.get(i, j) == OverlapRelationValues.NO_OVERLAP;
+		return overlapRelation.get(i, j) == NO_OVERLAP;
 	}
 
 	public EstimationResult setLowerIfPossible(final int i, final int j) {
