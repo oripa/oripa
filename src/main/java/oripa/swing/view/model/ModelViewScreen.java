@@ -129,7 +129,7 @@ public class ModelViewScreen extends JPanel
 
 	@Override
 	public void setModel(final OrigamiModel origamiModel, final int boundSize) {
-		logger.debug("set origami model {}", origamiModel);
+		logger.trace("set origami model {}", origamiModel);
 		this.origamiModel = origamiModel;
 		resetViewMatrix(boundSize);
 	}

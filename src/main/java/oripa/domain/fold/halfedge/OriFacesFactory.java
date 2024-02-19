@@ -53,7 +53,7 @@ public class OriFacesFactory {
 
 		var createdFaces = createFaces(vertices);
 
-		logger.debug("created faces: {}", createdFaces);
+		logger.trace("created faces: {}", createdFaces);
 
 		if (createdFaces.stream().anyMatch(Objects::isNull)) {
 			createdFaces = createdFaces.stream()

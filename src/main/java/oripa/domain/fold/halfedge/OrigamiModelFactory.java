@@ -181,7 +181,7 @@ public class OrigamiModelFactory {
 			origamiModels.add(create(modelVertices, modelPrecreases, pointEps));
 		}
 
-		logger.debug("create origami models: {}", origamiModels);
+		logger.trace("create origami models: {}", origamiModels);
 
 		return origamiModels;
 	}
