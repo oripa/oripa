@@ -19,9 +19,10 @@
 package oripa.domain.fold;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -101,7 +102,7 @@ class LayerOrderEnumerator {
 		try {
 			overlapRelation = new OverlapRelationFactory().createOverlapRelationByLineType(faces, eps);
 		} catch (Exception e) {
-			logger.debug("found unfoldable when constructing overlap relation.");
+			logger.info("found unfoldable when constructing overlap relation.");
 			return new Result(List.of(), List.of());
 		}
 
@@ -147,7 +148,7 @@ class LayerOrderEnumerator {
 				.toList();
 		logger.debug("subface ordering = {}[ms]", watch.getMilliSec());
 
-		var overlapRelations = Collections.synchronizedList(new ArrayList<OverlapRelation>());
+		var overlapRelations = new ConcurrentLinkedQueue<OverlapRelation>();
 
 		watch.start();
 
@@ -162,7 +163,7 @@ class LayerOrderEnumerator {
 			logStats(subfaces, overlapRelation);
 		}
 
-		return new Result(overlapRelations, subfaces);
+		return new Result(new ArrayList<>(overlapRelations), subfaces);
 	}
 
 	private int countUndefinedRelations(final OverlapRelation overlapRelation) {
@@ -197,7 +198,7 @@ class LayerOrderEnumerator {
 			final List<OriFace> faces,
 			final List<SubFace> subfaces,
 			final OverlapRelation overlapRelation,
-			final List<OverlapRelation> overlapRelations) {
+			final Collection<OverlapRelation> overlapRelations) {
 		callCount.incrementAndGet();
 
 		if (subfaces.isEmpty()) {
@@ -253,14 +254,12 @@ class LayerOrderEnumerator {
 	}
 
 	private List<SubFace> popAndSort(final List<SubFace> subfaces) {
-		// parallel processing causes different rate value on the same subface.
-		// copy the subfaces and rates to temporary to fix the rate.
-		var sublist = subfaces.subList(1, subfaces.size()).stream()
+		return subfaces.subList(1, subfaces.size()).stream()
+				// parallel processing causes different rate value on the same
+				// subface.
+				// copy the subfaces and rates to temporary to fix the rate.
 				.map(subface -> new Pair<Double, SubFace>(subface.getSuccessRate(), subface))
-				.toList();
-
-		// sort sublist for speeding up
-		return sublist.stream()
+				// sort sublist for speeding up
 				.sorted(Comparator.comparing((final Pair<Double, SubFace> pair) -> pair.getV1()).reversed())
 				.map(Pair::getV2)
 				.toList();
