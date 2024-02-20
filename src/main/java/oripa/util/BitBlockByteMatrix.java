@@ -30,6 +30,18 @@ public class BitBlockByteMatrix implements ByteMatrix {
 	private final int rowCount, columnCount;
 	private final int blockLength;
 
+	private static final boolean[] BLOCK_LENGTH_AVAILABLE = new boolean[] {
+			false, // 0
+			true, // 1
+			true, // 2
+			false, // 3
+			true, // 4
+			false, // 5
+			false, // 6
+			false, // 7
+			true, // 8
+	};
+
 	private final long mask;
 
 	public BitBlockByteMatrix(final int rowCount, final int columnCount, final int blockLength) {
@@ -38,6 +50,10 @@ public class BitBlockByteMatrix implements ByteMatrix {
 		if (blockLength > 8) {
 			throw new IllegalArgumentException("block length should be less than or equal to 8.");
 		}
+		if (!BLOCK_LENGTH_AVAILABLE[blockLength]) {
+			throw new IllegalArgumentException("block length should be 1,2,4 or 8.");
+		}
+
 		this.blockLength = blockLength;
 
 		int necessaryBits = columnCount * blockLength;
