@@ -141,12 +141,12 @@ class LayerOrderEnumerator {
 		// subface ordering.
 		subfaces = subfaces.stream()
 				.sorted(Comparator
-						.comparingInt((final SubFace sub) -> sub.getAllCountOfConditionsOf2Faces(overlapRelation)
-								/ sub.getParentFaceCount())
-						.thenComparingInt((final SubFace sub) -> sub.getAllCountOfConditionsOf3Faces(overlapRelation)
-								/ sub.getParentFaceCount())
-						.thenComparingInt((final SubFace sub) -> sub.getAllCountOfConditionsOf4Faces(overlapRelation)
-								/ sub.getParentFaceCount())
+						.comparingDouble((final SubFace sub) -> sub.getAllCountOfConditionsOf2Faces(overlapRelation)
+								/ (double) sub.getParentFaceCount())
+						.thenComparingDouble((final SubFace sub) -> sub.getAllCountOfConditionsOf3Faces(overlapRelation)
+								/ (double) sub.getParentFaceCount())
+						.thenComparingDouble((final SubFace sub) -> sub.getAllCountOfConditionsOf4Faces(overlapRelation)
+								/ (double) sub.getParentFaceCount())
 						.reversed())
 				.toList();
 		logger.debug("subface ordering = {}[ms]", watch.getMilliSec());
