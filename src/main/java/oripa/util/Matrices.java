@@ -20,12 +20,21 @@ package oripa.util;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class Matrices {
+
+	public static <T> void fill(final T[][] matrix, final Supplier<T> initialValueFactory) {
+		for (int row = 0; row < matrix.length; row++) {
+			for (int column = 0; column < matrix[row].length; column++) {
+				matrix[row][column] = initialValueFactory.get();
+			}
+		}
+	}
 
 	/**
 	 * copies {@code from} matrix to {@code to} matrix.
