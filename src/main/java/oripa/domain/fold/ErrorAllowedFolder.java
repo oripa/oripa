@@ -38,7 +38,7 @@ class ErrorAllowedFolder implements Folder {
 	}
 
 	@Override
-	public FoldedModel fold(final OrigamiModel origamiModel, final double eps, final boolean fullEstimation) {
+	public FoldedModel fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
 		simpleFolder.foldWithoutLineType(origamiModel);
 		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 

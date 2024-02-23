@@ -190,10 +190,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JCheckBox dispVertexCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.SHOW_VERTICES_ID),
 			InitialVisibilities.VERTEX);
-	private final JCheckBox doFullEstimationCheckBox = new JCheckBox(
-			resources.getString(ResourceKey.LABEL,
-					StringID.UI.FULL_ESTIMATION_ID),
-			false);
+	private final JComboBox<String> computationTypeCombo = new JComboBox<String>();
 	private final JCheckBox zeroLineWidthCheckBox = new JCheckBox(
 			resources.getString(ResourceKey.LABEL, StringID.UI.ZERO_LINE_WIDTH_ID),
 			InitialVisibilities.ZERO_LINE_WIDTH);
@@ -300,7 +297,8 @@ public class UIPanel extends JPanel implements UIPanelView {
 	}
 
 	@Override
-	public void initializeButtonSelection(final String angleStep, final String typeFrom, final String typeTo) {
+	public void initializeButtonSelection(final String angleStep, final String typeFrom, final String typeTo,
+			final String computationType) {
 		// -------------------------------------------------
 		// Initialize selection
 		// -------------------------------------------------
@@ -315,7 +313,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		alterLineComboFrom.setSelectedItem(typeFrom);
 		alterLineComboTo.setSelectedItem(typeTo);
 
-		doFullEstimationCheckBox.setSelected(true);
+		computationTypeCombo.setSelectedItem(computationType);
 		lineTypeMountainButton.doClick();
 
 	}
@@ -605,7 +603,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 
 		var gbBuilder = new GridBagConstraintsBuilder(3);
 
-		buttonsPanel.add(doFullEstimationCheckBox, gbBuilder.getLineField());
+		buttonsPanel.add(computationTypeCombo, gbBuilder.getLineField());
 
 		buttonsPanel.add(checkWindowButton, gbBuilder.getLineField());
 		buttonsPanel.add(buildButton, gbBuilder.getLineField());
@@ -823,6 +821,16 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addItemOfAngleStepCombo(final String item) {
 		angleStepCombo.addItem(item);
+	}
+
+	@Override
+	public void addItemOfComputationTypeCombo(final String item) {
+		computationTypeCombo.addItem(item);
+	}
+
+	@Override
+	public String getComputationType() {
+		return (String) computationTypeCombo.getSelectedItem();
 	}
 
 	@Override
@@ -1228,11 +1236,6 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public BiConsumer<Color, Color> getEstimationResultSaveColorsListener() {
 		return estimationResultSaveColorsListener;
-	}
-
-	@Override
-	public boolean isFullEstimation() {
-		return doFullEstimationCheckBox.isSelected();
 	}
 
 	@Override

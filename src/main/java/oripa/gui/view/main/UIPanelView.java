@@ -33,7 +33,7 @@ public interface UIPanelView extends View {
 
 	// UIPanelSetting getUIPanelSetting();
 
-	void initializeButtonSelection(String angleStep, String typeFrom, String typeTo);
+	void initializeButtonSelection(String angleStep, String typeFrom, String typeTo, String computationType);
 
 	void addItemOfAlterLineComboFrom(String item);
 
@@ -47,6 +47,8 @@ public interface UIPanelView extends View {
 
 	void addGridChangeButtonListener(Consumer<Integer> listener);
 
+	void addItemOfComputationTypeCombo(String item);
+
 	void setGridDivNum(int gridDivNum);
 
 	void setEstimationResultColors(Color front, Color back);
@@ -57,7 +59,7 @@ public interface UIPanelView extends View {
 
 	void setByValueLength(double length);
 
-	boolean isFullEstimation();
+	String getComputationType();
 
 	Color getEstimationResultFrontColor();
 

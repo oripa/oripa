@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.application.main.DataFileAccess;
+import oripa.domain.fold.Folder;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -66,7 +67,7 @@ public class CommandLineFolder {
 			}
 
 			var folder = new FolderFactory().create(origamiModel.getModelType());
-			var foldedModel = folder.fold(origamiModel, pointEps, true);
+			var foldedModel = folder.fold(origamiModel, pointEps, Folder.EstimationType.FULL);
 
 			if (split) {
 				var digitLength = Integer.toString(foldedModel.getFoldablePatternCount()).length();

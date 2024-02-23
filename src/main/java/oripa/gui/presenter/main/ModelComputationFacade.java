@@ -18,8 +18,10 @@
  */
 package oripa.gui.presenter.main;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -27,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.FoldedModel;
+import oripa.domain.fold.Folder.EstimationType;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.domain.fold.halfedge.OrigamiModel;
@@ -37,6 +40,39 @@ import oripa.domain.fold.halfedge.OrigamiModel;
  */
 public class ModelComputationFacade {
 	private static final Logger logger = LoggerFactory.getLogger(ModelComputationFacade.class);
+
+	public enum ComputationType {
+		FULL(EstimationType.FULL, "All folded states", true),
+		FIRST_ONLY(EstimationType.FIRST_ONLY, "First folded state", true),
+		X_RAY(EstimationType.X_RAY, "X-Ray", false);
+
+		private final EstimationType estimationType;
+		private final String name;
+		private final boolean isLayerOrdering;
+
+		private ComputationType(final EstimationType estimationType, final String name, final boolean isLayerOrdering) {
+			this.estimationType = estimationType;
+			this.name = name;
+			this.isLayerOrdering = isLayerOrdering;
+		}
+
+		public boolean isLayerOrdering() {
+			return isLayerOrdering;
+		}
+
+		EstimationType toEstimationType() {
+			return estimationType;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+
+		public static Optional<ComputationType> fromString(final String s) {
+			return Arrays.stream(values()).filter(v -> v.toString().equals(s)).findFirst();
+		}
+	}
 
 	public class ComputationResult {
 		private final List<OrigamiModel> origamiModels;
@@ -96,12 +132,12 @@ public class ModelComputationFacade {
 
 	public ComputationResult computeModels(
 			final List<OrigamiModel> origamiModels,
-			final boolean fullEstimation) {
+			final ComputationType type) {
 
 		var folderFactory = new FolderFactory();
 
 		var foldedModels = origamiModels.stream()
-				.map(model -> folderFactory.create(model.getModelType()).fold(model, eps, fullEstimation))
+				.map(model -> folderFactory.create(model.getModelType()).fold(model, eps, type.toEstimationType()))
 				.toList();
 
 		return new ComputationResult(origamiModels, foldedModels);

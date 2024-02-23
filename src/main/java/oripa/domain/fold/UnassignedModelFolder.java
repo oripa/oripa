@@ -39,11 +39,11 @@ class UnassignedModelFolder implements Folder {
 	}
 
 	@Override
-	public FoldedModel fold(final OrigamiModel origamiModel, final double eps, final boolean fullEstimation) {
+	public FoldedModel fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
 		simpleFolder.simpleFoldWithoutZorder(origamiModel);
 		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
-		if (!fullEstimation) {
+		if (estimationType == EstimationType.X_RAY) {
 			origamiModel.setFolded(true);
 			return new FoldedModel(origamiModel, List.of(), List.of());
 		}
@@ -51,7 +51,7 @@ class UnassignedModelFolder implements Folder {
 		var foldedModels = new ArrayList<FoldedModel>();
 
 		var assignmentEnumerator = new AssignmentEnumerator(model -> {
-			var result = layerOrderEnumerator.enumerate(model, eps);
+			var result = layerOrderEnumerator.enumerate(model, eps, estimationType == EstimationType.FIRST_ONLY);
 			foldedModels.add(new FoldedModel(model, result.getOverlapRelations(), result.getSubfaces()));
 		});
 

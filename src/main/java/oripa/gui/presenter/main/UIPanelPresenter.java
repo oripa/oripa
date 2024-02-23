@@ -41,6 +41,7 @@ import oripa.gui.presenter.creasepattern.byvalue.AngleMeasuringAction;
 import oripa.gui.presenter.creasepattern.byvalue.LengthMeasuringAction;
 import oripa.gui.presenter.estimation.EstimationResultFramePresenter;
 import oripa.gui.presenter.main.ModelComputationFacade.ComputationResult;
+import oripa.gui.presenter.main.ModelComputationFacade.ComputationType;
 import oripa.gui.presenter.model.ModelViewFramePresenter;
 import oripa.gui.presenter.plugin.GraphicMouseActionPlugin;
 import oripa.gui.view.FrameView;
@@ -74,6 +75,9 @@ public class UIPanelPresenter {
 	private final TypeForChange[] alterLineComboDataTo = {
 			TypeForChange.FLIP, TypeForChange.MOUNTAIN, TypeForChange.VALLEY, TypeForChange.UNASSIGNED,
 			TypeForChange.AUX, TypeForChange.CUT, TypeForChange.DELETE, };
+
+	private final ComputationType[] computationTypeComboData = {
+			ComputationType.FULL, ComputationType.FIRST_ONLY, ComputationType.X_RAY };
 
 	private final ByValueContext byValueContext;
 
@@ -125,7 +129,7 @@ public class UIPanelPresenter {
 
 		Stream.of(alterLineComboDataFrom).forEach(item -> view.addItemOfAlterLineComboFrom(item.toString()));
 		Stream.of(alterLineComboDataTo).forEach(item -> view.addItemOfAlterLineComboTo(item.toString()));
-
+		Stream.of(computationTypeComboData).forEach(item -> view.addItemOfComputationTypeCombo(item.toString()));
 		Stream.of(AngleStep.values()).forEach(item -> view.addItemOfAngleStepCombo(item.toString()));
 
 		addListeners();
@@ -135,7 +139,8 @@ public class UIPanelPresenter {
 
 		view.initializeButtonSelection(AngleStep.PI_OVER_8.toString(),
 				typeForChangeContext.getTypeFrom().toString(),
-				typeForChangeContext.getTypeTo().toString());
+				typeForChangeContext.getTypeTo().toString(),
+				ComputationType.FULL.toString());
 
 		updateValuePanelFractionDigits();
 	}
@@ -354,7 +359,11 @@ public class UIPanelPresenter {
 
 		computationResult = modelComputation.computeModels(
 				origamiModels,
-				view.isFullEstimation());
+				getComputationType());
+	}
+
+	private ComputationType getComputationType() {
+		return ComputationType.fromString(view.getComputationType()).get();
 	}
 
 	private void showFoldedModelWindows() {
@@ -388,7 +397,7 @@ public class UIPanelPresenter {
 
 		EstimationResultFrameView resultFrame = null;
 
-		if (view.isFullEstimation()) {
+		if (getComputationType().isLayerOrdering()) {
 			var count = computationResult.countFoldablePatterns();
 			if (count == 0) {
 				// no answer is found.

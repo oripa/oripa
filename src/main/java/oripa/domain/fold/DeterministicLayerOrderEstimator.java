@@ -148,7 +148,7 @@ class DeterministicLayerOrderEstimator {
 		});
 
 		// penetration
-		correct &= faces.stream().allMatch(f_i -> {
+		correct &= faces.parallelStream().allMatch(f_i -> {
 			int i = f_i.getFaceID();
 
 			for (var he : f_i.halfedgeIterable()) {

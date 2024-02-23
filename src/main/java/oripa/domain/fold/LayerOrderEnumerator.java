@@ -72,10 +72,13 @@ class LayerOrderEnumerator {
 	private static final Logger logger = LoggerFactory.getLogger(LayerOrderEnumerator.class);
 
 	private AtomicInteger callCount;
+	private AtomicInteger localLayerOrderCount;
 
 	private final SubFacesFactory subfacesFactory;
 
 	private final boolean shouldLogStats;
+
+	private boolean firstOnly;
 
 	public LayerOrderEnumerator(final SubFacesFactory subfacesFactory, final boolean shouldLogStats) {
 		this.subfacesFactory = subfacesFactory;
@@ -87,10 +90,14 @@ class LayerOrderEnumerator {
 	 *            half-edge based data for origami model after moving faces.
 	 * @param eps
 	 *            max value of computation error.
+	 * @param firstOnly
+	 *            true for only one state.
 	 */
-	public Result enumerate(final OrigamiModel origamiModel, final double eps) {
+	public Result enumerate(final OrigamiModel origamiModel, final double eps, final boolean firstOnly) {
 		var faces = origamiModel.getFaces();
 		var edges = origamiModel.getEdges();
+
+		this.firstOnly = firstOnly;
 
 		// construct the subfaces
 		final double paperSize = origamiModel.getPaperSize();
@@ -137,9 +144,10 @@ class LayerOrderEnumerator {
 		logger.debug("#undefined = {}", undefinedRelationCount);
 
 		watch.start();
+
 		// heuristic: apply the heuristic in local layer ordering to global
 		// subface ordering.
-		subfaces = subfaces.stream()
+		var sortedSubfaces = subfaces.stream()
 				.sorted(Comparator
 						.comparingDouble((final SubFace sub) -> sub.getAllCountOfConditionsOf2Faces(overlapRelation)
 								/ (double) sub.getParentFaceCount())
@@ -156,17 +164,19 @@ class LayerOrderEnumerator {
 		watch.start();
 
 		callCount = new AtomicInteger();
-		findAnswer(faces, subfaces, overlapRelation, overlapRelations);
+		localLayerOrderCount = new AtomicInteger();
+		findAnswer(faces, sortedSubfaces, overlapRelation, overlapRelations);
 		var time = watch.getMilliSec();
 
 		logger.debug("#call = {}", callCount);
+		logger.debug("#LLO = {}", localLayerOrderCount);
 		logger.debug("time = {}[ms]", time);
 
 		if (shouldLogStats) {
-			logStats(subfaces, overlapRelation);
+			logStats(sortedSubfaces, overlapRelation);
 		}
 
-		return new Result(new ArrayList<>(overlapRelations), subfaces);
+		return new Result(new ArrayList<>(overlapRelations), sortedSubfaces);
 	}
 
 	private int countUndefinedRelations(final OverlapRelation overlapRelation) {
@@ -204,6 +214,10 @@ class LayerOrderEnumerator {
 			final Collection<OverlapRelation> overlapRelations) {
 		callCount.incrementAndGet();
 
+		if (firstOnly && !overlapRelations.isEmpty()) {
+			return 0;
+		}
+
 		if (subfaces.isEmpty()) {
 			var answer = overlapRelation.clone();
 			overlapRelations.add(answer);
@@ -219,6 +233,8 @@ class LayerOrderEnumerator {
 			var nextSubfaces = popAndSort(subfaces);
 			return findAnswer(faces, nextSubfaces, overlapRelation, overlapRelations);
 		}
+
+		localLayerOrderCount.addAndGet(localLayerOrders.size());
 
 		var successCount = new AtomicInteger();
 
@@ -258,14 +274,20 @@ class LayerOrderEnumerator {
 
 	private List<SubFace> popAndSort(final List<SubFace> subfaces) {
 		return subfaces.subList(1, subfaces.size()).stream()
-				// parallel processing causes different rate value on the same
+				// parallel processing causes different score values on the same
 				// subface.
-				// copy the subfaces and rates to temporary to fix the rate.
-				.map(subface -> new Pair<Double, SubFace>(subface.getSuccessRate(), subface))
+				// copy the pairs of subface and score to the temporary to fix
+				// the score.
+				.map(subface -> new Pair<Double, SubFace>(score(subface), subface))
 				// sort sublist for speeding up
-				.sorted(Comparator.comparing((final Pair<Double, SubFace> pair) -> pair.getV1()).reversed())
+				.sorted(Comparator.comparing((final Pair<Double, SubFace> pair) -> pair.getV1())
+						.reversed())
 				.map(Pair::getV2)
 				.toList();
+	}
+
+	private double score(final SubFace subface) {
+		return subface.getSuccessRate();
 	}
 
 	private void setConditionOf3facesToSubfaces(
@@ -308,8 +330,12 @@ class LayerOrderEnumerator {
 
 		// logConditionCountDistribution(subfaces.get(0), overlapRelation);
 
-		for (int i = 0; i < subfaces.size(); i++) {
-			var subface = subfaces.get(i);
+		var sortedSubfaces = subfaces.stream()
+				.sorted(Comparator.comparing(SubFace::getSuccessRate).reversed())
+				.toList();
+
+		for (int i = 0; i < sortedSubfaces.size(); i++) {
+			var subface = sortedSubfaces.get(i);
 
 			if (subface.getSuccessCount() == 0) {
 				continue;
