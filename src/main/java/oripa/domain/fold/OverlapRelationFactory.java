@@ -108,7 +108,7 @@ class OverlapRelationFactory {
 		logger.debug("sparsity of overlap relation matrix = {}", rate);
 		// One element in dictionary of keys for byte value needs at least 16
 		// bytes.
-		if (rate > 15.0 / 16) {
+		if (rate > 0.99) {
 			logger.debug("use sparse matrix for overlap relation.");
 			overlapRelation.switchToSparseMatrix();
 		}

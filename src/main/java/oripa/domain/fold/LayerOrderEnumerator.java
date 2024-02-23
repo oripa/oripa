@@ -72,6 +72,7 @@ class LayerOrderEnumerator {
 	private static final Logger logger = LoggerFactory.getLogger(LayerOrderEnumerator.class);
 
 	private AtomicInteger callCount;
+	private AtomicInteger localLayerOrderCount;
 
 	private final SubFacesFactory subfacesFactory;
 
@@ -137,9 +138,10 @@ class LayerOrderEnumerator {
 		logger.debug("#undefined = {}", undefinedRelationCount);
 
 		watch.start();
+
 		// heuristic: apply the heuristic in local layer ordering to global
 		// subface ordering.
-		subfaces = subfaces.stream()
+		var sortedSubfaces = subfaces.stream()
 				.sorted(Comparator
 						.comparingDouble((final SubFace sub) -> sub.getAllCountOfConditionsOf2Faces(overlapRelation)
 								/ (double) sub.getParentFaceCount())
@@ -156,17 +158,19 @@ class LayerOrderEnumerator {
 		watch.start();
 
 		callCount = new AtomicInteger();
-		findAnswer(faces, subfaces, overlapRelation, overlapRelations);
+		localLayerOrderCount = new AtomicInteger();
+		findAnswer(faces, sortedSubfaces, overlapRelation, overlapRelations);
 		var time = watch.getMilliSec();
 
 		logger.debug("#call = {}", callCount);
+		logger.debug("#LLO = {}", localLayerOrderCount);
 		logger.debug("time = {}[ms]", time);
 
 		if (shouldLogStats) {
-			logStats(subfaces, overlapRelation);
+			logStats(sortedSubfaces, overlapRelation);
 		}
 
-		return new Result(new ArrayList<>(overlapRelations), subfaces);
+		return new Result(new ArrayList<>(overlapRelations), sortedSubfaces);
 	}
 
 	private int countUndefinedRelations(final OverlapRelation overlapRelation) {
@@ -220,6 +224,8 @@ class LayerOrderEnumerator {
 			return findAnswer(faces, nextSubfaces, overlapRelation, overlapRelations);
 		}
 
+		localLayerOrderCount.addAndGet(localLayerOrders.size());
+
 		var successCount = new AtomicInteger();
 
 		// Parallel search. It is fast but can exceed memory for
@@ -258,14 +264,20 @@ class LayerOrderEnumerator {
 
 	private List<SubFace> popAndSort(final List<SubFace> subfaces) {
 		return subfaces.subList(1, subfaces.size()).stream()
-				// parallel processing causes different rate value on the same
+				// parallel processing causes different score values on the same
 				// subface.
-				// copy the subfaces and rates to temporary to fix the rate.
-				.map(subface -> new Pair<Double, SubFace>(subface.getSuccessRate(), subface))
+				// copy the pairs of subface and score to the temporary to fix
+				// the score.
+				.map(subface -> new Pair<Double, SubFace>(score(subface), subface))
 				// sort sublist for speeding up
-				.sorted(Comparator.comparing((final Pair<Double, SubFace> pair) -> pair.getV1()).reversed())
+				.sorted(Comparator.comparing((final Pair<Double, SubFace> pair) -> pair.getV1())
+						.reversed())
 				.map(Pair::getV2)
 				.toList();
+	}
+
+	private double score(final SubFace subface) {
+		return subface.getSuccessRate();
 	}
 
 	private void setConditionOf3facesToSubfaces(
@@ -308,8 +320,12 @@ class LayerOrderEnumerator {
 
 		// logConditionCountDistribution(subfaces.get(0), overlapRelation);
 
-		for (int i = 0; i < subfaces.size(); i++) {
-			var subface = subfaces.get(i);
+		var sortedSubfaces = subfaces.stream()
+				.sorted(Comparator.comparing(SubFace::getSuccessRate).reversed())
+				.toList();
+
+		for (int i = 0; i < sortedSubfaces.size(); i++) {
+			var subface = sortedSubfaces.get(i);
 
 			if (subface.getSuccessCount() == 0) {
 				continue;
