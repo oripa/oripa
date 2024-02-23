@@ -51,7 +51,7 @@ class UnassignedModelFolder implements Folder {
 		var foldedModels = new ArrayList<FoldedModel>();
 
 		var assignmentEnumerator = new AssignmentEnumerator(model -> {
-			var result = layerOrderEnumerator.enumerate(model, eps, estimationType == EstimationType.FITST_ONLY);
+			var result = layerOrderEnumerator.enumerate(model, eps, estimationType == EstimationType.FIRST_ONLY);
 			foldedModels.add(new FoldedModel(model, result.getOverlapRelations(), result.getSubfaces()));
 		});
 

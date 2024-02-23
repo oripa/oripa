@@ -46,7 +46,7 @@ class AssignedModelFolder implements Folder {
 			return new FoldedModel(origamiModel, List.of(), List.of());
 		}
 
-		var enumerationResult = enumerator.enumerate(origamiModel, eps, estimationType == EstimationType.FITST_ONLY);
+		var enumerationResult = enumerator.enumerate(origamiModel, eps, estimationType == EstimationType.FIRST_ONLY);
 
 		var foldedModel = new FoldedModel(origamiModel, enumerationResult.getOverlapRelations(),
 				enumerationResult.getSubfaces());

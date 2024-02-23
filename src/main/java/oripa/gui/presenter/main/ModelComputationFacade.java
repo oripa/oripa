@@ -43,7 +43,7 @@ public class ModelComputationFacade {
 
 	public enum ComputationType {
 		FULL(EstimationType.FULL, "All folded states", true),
-		FIRST_ONLY(EstimationType.FITST_ONLY, "First folded state", true),
+		FIRST_ONLY(EstimationType.FIRST_ONLY, "First folded state", true),
 		X_RAY(EstimationType.X_RAY, "X-Ray", false);
 
 		private final EstimationType estimationType;

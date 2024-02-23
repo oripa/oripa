@@ -27,7 +27,7 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 public interface Folder {
 	enum EstimationType {
 		FULL,
-		FITST_ONLY,
+		FIRST_ONLY,
 		X_RAY
 	}
 
