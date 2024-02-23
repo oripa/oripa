@@ -78,6 +78,8 @@ class LayerOrderEnumerator {
 
 	private final boolean shouldLogStats;
 
+	private boolean firstOnly;
+
 	public LayerOrderEnumerator(final SubFacesFactory subfacesFactory, final boolean shouldLogStats) {
 		this.subfacesFactory = subfacesFactory;
 		this.shouldLogStats = shouldLogStats;
@@ -88,10 +90,14 @@ class LayerOrderEnumerator {
 	 *            half-edge based data for origami model after moving faces.
 	 * @param eps
 	 *            max value of computation error.
+	 * @param firstOnly
+	 *            true for only one state.
 	 */
-	public Result enumerate(final OrigamiModel origamiModel, final double eps) {
+	public Result enumerate(final OrigamiModel origamiModel, final double eps, final boolean firstOnly) {
 		var faces = origamiModel.getFaces();
 		var edges = origamiModel.getEdges();
+
+		this.firstOnly = firstOnly;
 
 		// construct the subfaces
 		final double paperSize = origamiModel.getPaperSize();
@@ -207,6 +213,10 @@ class LayerOrderEnumerator {
 			final OverlapRelation overlapRelation,
 			final Collection<OverlapRelation> overlapRelations) {
 		callCount.incrementAndGet();
+
+		if (firstOnly && !overlapRelations.isEmpty()) {
+			return 0;
+		}
 
 		if (subfaces.isEmpty()) {
 			var answer = overlapRelation.clone();

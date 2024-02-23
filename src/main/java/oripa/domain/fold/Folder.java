@@ -25,6 +25,11 @@ import oripa.domain.fold.halfedge.OrigamiModel;
  *
  */
 public interface Folder {
+	enum EstimationType {
+		FULL,
+		FITST_ONLY,
+		X_RAY
+	}
 
 	/**
 	 * Computes folded states.
@@ -40,5 +45,5 @@ public interface Folder {
 	 * @return folded model whose {@link FoldedModel#getOrigamiModel()} returns
 	 *         the given {@code origamiModel}.
 	 */
-	FoldedModel fold(OrigamiModel origamiModel, double eps, boolean fullEstimation);
+	FoldedModel fold(OrigamiModel origamiModel, double eps, EstimationType estimationType);
 }
