@@ -112,7 +112,7 @@ class DeterministicLayerOrderEstimator {
 
 			logger.trace("4 face cover" + System.lineSeparator() + overlapRelation.toString());
 
-			result = isCorrect(overlapRelation);
+			result = checkCorrectness(overlapRelation);
 			changed = result.or(changed);
 			if (changed.isUnfoldable()) {
 				return changed;
@@ -127,7 +127,7 @@ class DeterministicLayerOrderEstimator {
 		return changed;
 	}
 
-	private EstimationResultRules isCorrect(final OverlapRelation overlapRelation) {
+	private EstimationResultRules checkCorrectness(final OverlapRelation overlapRelation) {
 		var result = new EstimationResultRules(EstimationResult.NOT_CHANGED);
 
 		// check transitivity
