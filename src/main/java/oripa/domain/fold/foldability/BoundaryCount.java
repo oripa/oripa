@@ -28,6 +28,10 @@ import oripa.util.rule.AbstractRule;
  */
 public class BoundaryCount extends AbstractRule<OriVertex> {
 
+	public BoundaryCount() {
+		super("BoundaryCount");
+	}
+
 	@Override
 	public boolean holds(final OriVertex vertex) {
 		var count = vertex.edgeStream().filter(OriEdge::isBoundary).count();

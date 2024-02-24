@@ -58,6 +58,10 @@ public class GeneralizedBigLittleBigLemma extends AbstractRule<OriVertex> {
 		}
 	}
 
+	public GeneralizedBigLittleBigLemma() {
+		super("gen. Big-little-big");
+	}
+
 	/*
 	 * (non Javadoc)
 	 *

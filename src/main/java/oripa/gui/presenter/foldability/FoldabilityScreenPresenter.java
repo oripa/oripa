@@ -19,8 +19,14 @@
 package oripa.gui.presenter.foldability;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.OverlappingLineExtractor;
+import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.foldability.FoldabilityChecker;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
@@ -30,6 +36,7 @@ import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
 import oripa.gui.view.foldability.FoldabilityScreenView;
+import oripa.util.rule.Rule;
 import oripa.value.OriLine;
 
 /**
@@ -37,6 +44,8 @@ import oripa.value.OriLine;
  *
  */
 public class FoldabilityScreenPresenter {
+	private static final Logger logger = LoggerFactory.getLogger(FoldabilityScreenPresenter.class);
+
 	private final FoldabilityScreenView view;
 	private final OrigamiModel origamiModel;
 	private final Collection<OriLine> creasePattern;
@@ -46,6 +55,8 @@ public class FoldabilityScreenPresenter {
 	private Collection<OriFace> violatingFaces;
 	private Collection<OriLine> overlappingLines;
 
+	private final EstimationResultRules estimationResultRules;
+
 	private final FoldabilityChecker foldabilityChecker = new FoldabilityChecker();
 
 	private final double pointEps;
@@ -53,6 +64,7 @@ public class FoldabilityScreenPresenter {
 	public FoldabilityScreenPresenter(
 			final FoldabilityScreenView view,
 			final OrigamiModel origamiModel,
+			final EstimationResultRules estimationResultRules,
 			final Collection<OriLine> creasePattern,
 			final boolean zeroLineWidth,
 			final double pointEps) {
@@ -61,6 +73,9 @@ public class FoldabilityScreenPresenter {
 		this.origamiModel = origamiModel;
 		this.creasePattern = creasePattern.stream()
 				.map(OriLine::new).toList();
+
+		this.estimationResultRules = estimationResultRules;
+
 		this.zeroLineWidth = zeroLineWidth;
 		this.pointEps = pointEps;
 
@@ -76,8 +91,24 @@ public class FoldabilityScreenPresenter {
 
 		view.setViolatingVertices(violatingVertices);
 
-		violatingFaces = foldabilityChecker.findViolatingFaces(
-				origamiModel.getFaces());
+		var faces = origamiModel.getFaces();
+
+		List<Rule<OriFace>> estimationViolationRules = estimationResultRules == null ? List.of()
+				: estimationResultRules.getAllRules();
+
+		logger.debug("# of est. rules = {}", estimationViolationRules.size());
+
+		var estimationViolationFaces = estimationViolationRules.stream()
+				.flatMap(rule -> faces.stream().filter(rule::violates))
+				.toList();
+
+		logger.debug("# of est. violation faces = {}", estimationViolationFaces.size());
+
+		violatingFaces = Stream.concat(
+				foldabilityChecker.findViolatingFaces(faces).stream(),
+				estimationViolationFaces.stream())
+				.distinct()
+				.toList();
 
 		var overlappingLineExtractor = new OverlappingLineExtractor();
 		overlappingLines = overlappingLineExtractor.extract(creasePattern, pointEps);

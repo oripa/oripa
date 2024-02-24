@@ -33,6 +33,10 @@ import oripa.util.rule.AbstractRule;
 public class BigLittleBigLemma extends AbstractRule<OriVertex> {
 	private static final double EPS = MathUtil.angleRadianEps();
 
+	public BigLittleBigLemma() {
+		super("Big-little-big");
+	}
+
 	/*
 	 * (non Javadoc)
 	 *

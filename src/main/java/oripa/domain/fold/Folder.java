@@ -31,6 +31,24 @@ public interface Folder {
 		X_RAY
 	}
 
+	static class Result {
+		private final FoldedModel foldedModel;
+		private final EstimationResultRules estimationRules;
+
+		public Result(final FoldedModel foldedModel, final EstimationResultRules estimationRules) {
+			this.foldedModel = foldedModel;
+			this.estimationRules = estimationRules;
+		}
+
+		public FoldedModel getFoldedModel() {
+			return foldedModel;
+		}
+
+		public EstimationResultRules getEstimationResultRules() {
+			return estimationRules;
+		}
+	}
+
 	/**
 	 * Computes folded states.
 	 *
@@ -44,5 +62,5 @@ public interface Folder {
 	 * @return folded model whose {@link FoldedModel#getOrigamiModel()} returns
 	 *         the given {@code origamiModel}.
 	 */
-	FoldedModel fold(OrigamiModel origamiModel, double eps, EstimationType estimationType);
+	Result fold(OrigamiModel origamiModel, double eps, EstimationType estimationType);
 }

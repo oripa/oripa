@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -24,6 +24,10 @@ package oripa.util.rule;
  */
 public interface Rule<Variable> {
 	boolean holds(Variable var);
+
 	boolean violates(Variable var);
+
 	Rule<Variable> asDenied();
+
+	String getName();
 }

@@ -21,6 +21,7 @@ package oripa.gui.view.foldability;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.FrameView;
 import oripa.value.OriLine;
@@ -35,6 +36,7 @@ public interface FoldabilityCheckFrameView extends FrameView {
 
 	void setModel(
 			OrigamiModel origamiModel,
+			EstimationResultRules estimationRules,
 			Collection<OriLine> creasePattern,
 			boolean zeroLineWidth,
 			double pointEps);

@@ -16,37 +16,42 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util.rule;
+package oripa.domain.fold;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
+
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.util.rule.AbstractRule;
 
 /**
- * @author Koji
+ * For visualization.
+ *
+ * @author OUCHI Koji
  *
  */
-public class SingleRuleConjunction<Variable> extends AbstractRule<Collection<Variable>> {
+class LayerOrderRule extends AbstractRule<OriFace> {
 
-	private final Rule<Variable> rule;
+	private final List<OriFace> violatingFaces;
 
-	/**
-	 *
-	 * @param rule
-	 */
-	public SingleRuleConjunction(final Rule<Variable> rule) {
-		super(rule.getName());
-		this.rule = rule;
+	public LayerOrderRule(final String name, final List<OriFace> violatingFaces) {
+		super(name);
+		this.violatingFaces = violatingFaces;
 	}
 
 	@Override
-	public boolean holds(final Collection<Variable> inputs) {
-		return inputs.stream().allMatch(input -> rule.holds(input));
+	public boolean holds(final OriFace face) {
+		return violatingFaces.stream().noneMatch(violation -> face.equals(violation));
 	}
 
-	public Set<Variable> findViolations(final Collection<Variable> inputs) {
-		return inputs.stream()
-				.filter(input -> rule.violates(input))
-				.collect(Collectors.toSet());
+	@Override
+	public String toString() {
+		return getName() + ":[" +
+				String.join(",",
+						violatingFaces.stream()
+								.mapToInt(OriFace::getFaceID)
+								.boxed()
+								.map(id -> id.toString())
+								.toList())
+				+ "]";
 	}
 }

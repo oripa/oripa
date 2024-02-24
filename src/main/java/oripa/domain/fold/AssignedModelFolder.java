@@ -37,13 +37,13 @@ class AssignedModelFolder implements Folder {
 	}
 
 	@Override
-	public FoldedModel fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
+	public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
 		simpleFolder.simpleFoldWithoutZorder(origamiModel);
 		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
 		if (estimationType == EstimationType.X_RAY) {
 			origamiModel.setFolded(true);
-			return new FoldedModel(origamiModel, List.of(), List.of());
+			return new Result(new FoldedModel(origamiModel, List.of(), List.of()), new EstimationResultRules());
 		}
 
 		var enumerationResult = enumerator.enumerate(origamiModel, eps, estimationType == EstimationType.FIRST_ONLY);
@@ -52,10 +52,10 @@ class AssignedModelFolder implements Folder {
 				enumerationResult.getSubfaces());
 
 		if (enumerationResult.isEmpty()) {
-			return foldedModel;
+			return new Result(foldedModel, enumerationResult.getRules());
 		}
 
 		origamiModel.setFolded(true);
-		return foldedModel;
+		return new Result(foldedModel, enumerationResult.getRules());
 	}
 }

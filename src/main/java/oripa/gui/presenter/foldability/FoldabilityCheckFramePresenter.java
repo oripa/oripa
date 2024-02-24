@@ -20,6 +20,7 @@ package oripa.gui.presenter.foldability;
 
 import java.util.Collection;
 
+import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.view.foldability.FoldabilityCheckFrameView;
 import oripa.value.OriLine;
@@ -35,6 +36,7 @@ public class FoldabilityCheckFramePresenter {
 	public FoldabilityCheckFramePresenter(
 			final FoldabilityCheckFrameView view,
 			final OrigamiModel origamiModel,
+			final EstimationResultRules estimationRules,
 			final Collection<OriLine> creasePattern,
 			final boolean zeroLineWidth,
 			final double pointEps) {
@@ -44,6 +46,7 @@ public class FoldabilityCheckFramePresenter {
 		var screenPresenter = new FoldabilityScreenPresenter(
 				view.getFoldabilityScreenView(),
 				origamiModel,
+				estimationRules,
 				creasePattern,
 				zeroLineWidth,
 				pointEps);

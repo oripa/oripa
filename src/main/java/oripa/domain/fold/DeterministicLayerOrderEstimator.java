@@ -78,7 +78,7 @@ class DeterministicLayerOrderEstimator {
 	 * @param overlapRelation
 	 *            overlap relation matrix
 	 */
-	public EstimationResult estimate(
+	public EstimationResultRules estimate(
 			final OverlapRelation overlapRelation,
 			final double eps) {
 
@@ -88,9 +88,9 @@ class DeterministicLayerOrderEstimator {
 
 		logger.trace("initial state" + System.lineSeparator() + overlapRelation.toString());
 
-		EstimationResult changed;
+		EstimationResultRules changed;
 		do {
-			changed = EstimationResult.NOT_CHANGED;
+			changed = new EstimationResultRules(EstimationResult.NOT_CHANGED);
 
 			var result = estimateBy3FaceCover(overlapRelation);
 			changed = result.or(changed);
@@ -112,12 +112,14 @@ class DeterministicLayerOrderEstimator {
 
 			logger.trace("4 face cover" + System.lineSeparator() + overlapRelation.toString());
 
-			if (!isCorrect(overlapRelation)) {
-				return EstimationResult.UNFOLDABLE;
+			result = isCorrect(overlapRelation);
+			changed = result.or(changed);
+			if (changed.isUnfoldable()) {
+				return changed;
 			}
 
 			estimationLoopCount++;
-		} while (changed == EstimationResult.CHANGED);
+		} while (changed.getEstimationResult() == EstimationResult.CHANGED);
 
 		logger.debug("#estimation = {}", estimationLoopCount);
 		logger.debug("estimation time {}[ms]", watch.getMilliSec());
@@ -125,10 +127,11 @@ class DeterministicLayerOrderEstimator {
 		return changed;
 	}
 
-	private boolean isCorrect(final OverlapRelation overlapRelation) {
+	private EstimationResultRules isCorrect(final OverlapRelation overlapRelation) {
+		var result = new EstimationResultRules(EstimationResult.NOT_CHANGED);
 
 		// check transitivity
-		var correct = IntStream.range(0, faces.size()).parallel().allMatch(i -> {
+		IntStream.range(0, faces.size()).parallel().forEach(i -> {
 			for (int j = 0; j < faces.size(); j++) {
 				if (i == j) {
 					continue;
@@ -139,16 +142,21 @@ class DeterministicLayerOrderEstimator {
 				for (int k : overlaps) {
 					if (overlapRelation.isUpper(i, k) && overlapRelation.isUpper(k, j)) {
 						if (overlapRelation.isLower(i, j)) {
-							return false;
+							result.setEstimationResult(EstimationResult.UNFOLDABLE);
+							result.addTransitivityViolation(toFaces(List.of(i, k, j)));
+							return;
 						}
 					}
 				}
 			}
-			return true;
 		});
 
+		if (result.isUnfoldable()) {
+			return result;
+		}
+
 		// penetration
-		correct &= faces.parallelStream().allMatch(f_i -> {
+		faces.parallelStream().forEach(f_i -> {
 			int i = f_i.getFaceID();
 
 			for (var he : f_i.halfedgeIterable()) {
@@ -175,17 +183,17 @@ class DeterministicLayerOrderEstimator {
 					}
 
 					if (overlapRelation.get(i, k) != overlapRelation.get(j, k)) {
-						return false;
+						result.setEstimationResult(EstimationResult.UNFOLDABLE);
+						result.addTransitivityViolation(toFaces(List.of(i, k, j)));
+						return;
 					}
 				}
 			}
-
-			return true;
 		});
 
 		// and others as well?
 
-		return correct;
+		return result;
 	}
 
 	/**
@@ -195,7 +203,7 @@ class DeterministicLayerOrderEstimator {
 	 * @return whether overlapRelation is changed or not, or the model is
 	 *         unfoldable.
 	 */
-	private EstimationResult estimateBy4FaceStackCondition(
+	private EstimationResultRules estimateBy4FaceStackCondition(
 			final OverlapRelation overlapRelation) {
 
 		var changed = EstimationResult.NOT_CHANGED;
@@ -268,12 +276,15 @@ class DeterministicLayerOrderEstimator {
 			}
 
 			if (changed == EstimationResult.UNFOLDABLE) {
-				return EstimationResult.UNFOLDABLE;
+				var result = new EstimationResultRules(EstimationResult.UNFOLDABLE);
+				result.addStackCondition4FacesViolation(
+						toFaces(List.of(cond.upper1, cond.lower1, cond.upper2, cond.lower2)));
+				return result;
 			}
 
 		}
 
-		return changed;
+		return new EstimationResultRules(changed);
 	}
 
 	/**
@@ -284,18 +295,18 @@ class DeterministicLayerOrderEstimator {
 	 * @return whether overlapRelation is changed or not, or the model is
 	 *         unfoldable.
 	 */
-	private EstimationResult estimateBy3FaceTransitiveRelation(final OverlapRelation overlapRelation) {
-		var changed = EstimationResult.NOT_CHANGED;
+	private EstimationResultRules estimateBy3FaceTransitiveRelation(final OverlapRelation overlapRelation) {
+		var changed = new EstimationResultRules(EstimationResult.NOT_CHANGED);
 
 		for (SubFace sub : subfaces) {
 			while (true) {
 				changed = updateOverlapRelationBy3FaceTransitiveRelation(sub, overlapRelation);
-				if (changed != EstimationResult.CHANGED) {
+				if (changed.getEstimationResult() != EstimationResult.CHANGED) {
 					break;
 				}
 			}
-			if (changed == EstimationResult.UNFOLDABLE) {
-				return EstimationResult.UNFOLDABLE;
+			if (changed.isUnfoldable()) {
+				return changed;
 			}
 		}
 		return changed;
@@ -310,7 +321,7 @@ class DeterministicLayerOrderEstimator {
 	 *            overlap relation matrix.
 	 * @return true if an update happens.
 	 */
-	private EstimationResult updateOverlapRelationBy3FaceTransitiveRelation(final SubFace sub,
+	private EstimationResultRules updateOverlapRelationBy3FaceTransitiveRelation(final SubFace sub,
 			final OverlapRelation overlapRelation) {
 
 		for (int i = 0; i < sub.getParentFaceCount(); i++) {
@@ -334,16 +345,24 @@ class DeterministicLayerOrderEstimator {
 
 					if (overlapRelation.isUpper(index_i, index_k)
 							&& overlapRelation.isUpper(index_k, index_j)) {
-						return overlapRelation.setUpperIfPossible(index_i, index_j);
+						var result = new EstimationResultRules(overlapRelation.setUpperIfPossible(index_i, index_j));
+						if (result.isUnfoldable()) {
+							result.addTransitivityViolation(toFaces(List.of(index_i, index_k, index_j)));
+						}
+						return result;
 					}
 					if (overlapRelation.isLower(index_i, index_k)
 							&& overlapRelation.isLower(index_k, index_j)) {
-						return overlapRelation.setLowerIfPossible(index_i, index_j);
+						var result = new EstimationResultRules(overlapRelation.setLowerIfPossible(index_i, index_j));
+						if (result.isUnfoldable()) {
+							result.addTransitivityViolation(toFaces(List.of(index_i, index_k, index_j)));
+						}
+						return result;
 					}
 				}
 			}
 		}
-		return EstimationResult.NOT_CHANGED;
+		return new EstimationResultRules(EstimationResult.NOT_CHANGED);
 	}
 
 	/**
@@ -355,22 +374,22 @@ class DeterministicLayerOrderEstimator {
 	 * @return whether overlapRelation is changed or not, or the model is
 	 *         unfoldable.
 	 */
-	private EstimationResult estimateBy3FaceCover(final OverlapRelation overlapRelation) {
+	private EstimationResultRules estimateBy3FaceCover(final OverlapRelation overlapRelation) {
 
-		var changed = EstimationResult.NOT_CHANGED;
+		var changed = new EstimationResultRules(EstimationResult.NOT_CHANGED);
 
 		for (OriFace f_i : faces) {
 			var result = updateBy3FaceCover(f_i, overlapRelation);
 			changed = result.or(changed);
-			if (changed == EstimationResult.UNFOLDABLE) {
-				return EstimationResult.UNFOLDABLE;
+			if (changed.isUnfoldable()) {
+				return changed;
 			}
 		}
 
 		return changed;
 	}
 
-	private EstimationResult updateBy3FaceCover(
+	private EstimationResultRules updateBy3FaceCover(
 			final OriFace f_i,
 			final OverlapRelation overlapRelation) {
 		int index_i = f_i.getFaceID();
@@ -402,23 +421,25 @@ class DeterministicLayerOrderEstimator {
 				}
 
 				if (changed == EstimationResult.UNFOLDABLE) {
-					return EstimationResult.UNFOLDABLE;
+					var result = new EstimationResultRules(EstimationResult.UNFOLDABLE);
+					result.addCover3FacesViolation(toFaces(List.of(index_i, index_j, index_k)));
+					return result;
 				}
 
 			}
 		}
 
-		return changed;
+		return new EstimationResultRules(changed);
 	}
 
-	private EstimationResult estimateBy4FaceCover(final OverlapRelation overlapRelation) {
+	private EstimationResultRules estimateBy4FaceCover(final OverlapRelation overlapRelation) {
 
-		var changed = EstimationResult.NOT_CHANGED;
+		var changed = new EstimationResultRules(EstimationResult.NOT_CHANGED);
 		for (OriFace f_i : faces) {
 			var result = updateBy4FaceCover(f_i, overlapRelation);
 			changed = result.or(changed);
-			if (changed == EstimationResult.UNFOLDABLE) {
-				return EstimationResult.UNFOLDABLE;
+			if (changed.isUnfoldable()) {
+				return changed;
 			}
 		}
 
@@ -434,7 +455,7 @@ class DeterministicLayerOrderEstimator {
 	 * @param overlapRelation
 	 * @return
 	 */
-	private EstimationResult updateBy4FaceCover(
+	private EstimationResultRules updateBy4FaceCover(
 			final OriFace f_i,
 			final OverlapRelation overlapRelation) {
 		int index_i = f_i.getFaceID();
@@ -485,13 +506,22 @@ class DeterministicLayerOrderEstimator {
 					}
 
 					if (changed == EstimationResult.UNFOLDABLE) {
-						return EstimationResult.UNFOLDABLE;
+						var result = new EstimationResultRules(EstimationResult.UNFOLDABLE);
+						result.addCover4FacesViolation(
+								toFaces(List.of(index_i, index_j, index_k, index_x)));
+						return result;
 					}
 				}
 			}
 		}
 
-		return changed;
+		return new EstimationResultRules(changed);
+	}
+
+	private List<OriFace> toFaces(final List<Integer> faceIDs) {
+		return faceIDs.stream()
+				.map(id -> faces.get(id))
+				.toList();
 	}
 
 }

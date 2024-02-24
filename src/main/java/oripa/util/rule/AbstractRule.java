@@ -63,9 +63,19 @@ public abstract class AbstractRule<Variable> implements Rule<Variable> {
 		public boolean violates(final Variable var) {
 			return rule.holds(var);
 		}
+
+		@Override
+		public String getName() {
+			return rule.getName();
+		}
 	}
 
+	private final String name;
 	private final Denied deniedRule = new Denied(this);
+
+	public AbstractRule(final String name) {
+		this.name = name;
+	}
 
 	@Override
 	public boolean violates(final Variable var) {
@@ -80,5 +90,10 @@ public abstract class AbstractRule<Variable> implements Rule<Variable> {
 	@Override
 	public Rule<Variable> asDenied() {
 		return deniedRule;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

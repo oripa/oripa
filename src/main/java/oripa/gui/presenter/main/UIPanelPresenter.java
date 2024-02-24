@@ -28,6 +28,8 @@ import oripa.appstate.StatePopperFactory;
 import oripa.domain.cptool.TypeForChange;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.cutmodel.CutModelOutlinesHolder;
+import oripa.domain.fold.EstimationResultRules;
+import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.paint.AngleStep;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
@@ -287,7 +289,7 @@ public class UIPanelPresenter {
 		// ------------------------------------------------------------
 		// fold
 
-		view.addCheckWindowButtonListener(this::showCheckerWindow);
+		view.addCheckWindowButtonListener(() -> showCheckerWindow());
 		view.setModelComputationListener(this::computeModels);
 		view.setShowFoldedModelWindowsListener(this::showFoldedModelWindows);
 	}
@@ -338,6 +340,13 @@ public class UIPanelPresenter {
 	private void showCheckerWindow() {
 		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), subFrameFactory);
 		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), viewContext.isZeroLineWidth(),
+				paintContext.getPointEps());
+	}
+
+	private void showCheckerWindow(final OrigamiModel origamiModel, final EstimationResultRules estimationRules) {
+		var windowOpener = new CheckerWindowOpener((FrameView) view.getTopLevelView(), subFrameFactory);
+		windowOpener.showCheckerWindow(paintContext.getCreasePattern(), origamiModel, estimationRules,
+				viewContext.isZeroLineWidth(),
 				paintContext.getPointEps());
 	}
 
@@ -398,11 +407,13 @@ public class UIPanelPresenter {
 		EstimationResultFrameView resultFrame = null;
 
 		if (getComputationType().isLayerOrdering()) {
-			var count = computationResult.countFoldablePatterns();
-			if (count == 0) {
-				// no answer is found.
+			if (!computationResult.allGloballyFlatFoldable()) {
+				// wrong crease pattern exists.
 				view.showNoAnswerMessage();
-			} else if (count > 0) {
+				logger.debug("estimation rules: {}", computationResult.getEstimationResultRules());
+				showCheckerWindow(computationResult.getMergedOrigamiModel(),
+						computationResult.getEstimationResultRules());
+			} else {
 				logger.info("foldable layer layout is found.");
 
 				resultFrame = subFrameFactory.createResultFrame(parent);

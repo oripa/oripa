@@ -36,6 +36,29 @@ import oripa.domain.fold.origeom.OverlapRelation;
 class OverlapRelationFactory {
 	private static final Logger logger = LoggerFactory.getLogger(OverlapRelationFactory.class);
 
+	static class Result {
+		private final OverlapRelation overlapRelation;
+		private final EstimationResultRules rules;
+
+		Result(final OverlapRelation overlapRelation) {
+			this.overlapRelation = overlapRelation;
+			rules = new EstimationResultRules();
+		}
+
+		void addViolation(final List<OriFace> faces) {
+			rules.setEstimationResult(EstimationResult.UNFOLDABLE);
+			rules.addMVAssignmentViolation(faces);
+		}
+
+		public OverlapRelation getOverlapRelation() {
+			return overlapRelation;
+		}
+
+		public EstimationResultRules getRules() {
+			return rules;
+		}
+	}
+
 	/**
 	 * Determines the overlap relations by mountain/valley.
 	 *
@@ -45,7 +68,7 @@ class OverlapRelationFactory {
 	 * @throws IllegalArgumentException
 	 *             when there is a contradiction of face order.
 	 */
-	public OverlapRelation createOverlapRelationByLineType(
+	public Result createOverlapRelationByLineType(
 			final List<OriFace> faces, final double eps) throws IllegalArgumentException {
 		var overlapRelation = createOverlapRelation(faces, eps);
 		for (OriFace face : faces) {
@@ -68,12 +91,14 @@ class OverlapRelationFactory {
 					result = overlapRelation.setLowerIfPossible(faceID, pairFaceID);
 				}
 				if (result == EstimationResult.UNFOLDABLE) {
-					throw new IllegalArgumentException("impossible assignment.");
+					var ret = new Result(null);
+					ret.addViolation(List.of(face, pairFace));
+					return ret;
 				}
 			}
 		}
 
-		return overlapRelation;
+		return new Result(overlapRelation);
 	}
 
 	/**
