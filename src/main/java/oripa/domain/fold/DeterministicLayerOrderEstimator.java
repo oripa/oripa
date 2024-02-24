@@ -184,7 +184,7 @@ class DeterministicLayerOrderEstimator {
 
 					if (overlapRelation.get(i, k) != overlapRelation.get(j, k)) {
 						result.setEstimationResult(EstimationResult.UNFOLDABLE);
-						result.addTransitivityViolation(toFaces(List.of(i, k, j)));
+						result.addPenetrationViolation(toFaces(List.of(i, k, j)));
 						return;
 					}
 				}
