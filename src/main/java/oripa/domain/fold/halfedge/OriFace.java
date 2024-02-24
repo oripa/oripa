@@ -274,6 +274,15 @@ public class OriFace {
 		return isInside(v, OriHalfedge::getPosition);
 	}
 
+	public boolean includesExclusivelyBeforeFolding(final Vector2d v, final double eps) {
+		// If it's on the face's edge, return false
+		if (isOnEdge(v, eps, OriHalfedge::getPositionBeforeFolding)) {
+			return false;
+		}
+
+		return isInside(v, OriHalfedge::getPositionBeforeFolding);
+	}
+
 	/**
 	 * Whether v is on edge of face.
 	 *

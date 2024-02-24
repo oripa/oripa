@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.gui.view.ScreenView;
 import oripa.gui.view.creasepattern.PaintComponentGraphics;
@@ -40,9 +41,9 @@ public interface FoldabilityScreenView extends ScreenView {
 
 	Optional<OriVertex> getPickedViolatingVertex();
 
-//	void setViolatingVertices(Collection<OriVertex> vertices);
-//
-//	void setViolatingFaces(Collection<OriFace> faces);
+	Optional<OriFace> getPickedViolatingFace();
+
+	void setViolatingFaces(Collection<OriFace> faces);
 //
 //	void setOverlappingLines(Collection<OriLine> lines);
 

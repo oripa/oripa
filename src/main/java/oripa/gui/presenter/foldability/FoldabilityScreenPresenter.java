@@ -18,6 +18,7 @@
  */
 package oripa.gui.presenter.foldability;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -91,6 +92,25 @@ public class FoldabilityScreenPresenter {
 
 		view.setViolatingVertices(violatingVertices);
 
+		var estimationViolationFaces = getEstimationViolationFaces();
+
+		violatingFaces = Stream.concat(
+				foldabilityChecker.findViolatingFaces(origamiModel.getFaces()).stream(),
+				estimationViolationFaces.stream())
+				.distinct()
+				.toList();
+
+		view.setViolatingFaces(violatingFaces);
+
+		var overlappingLineExtractor = new OverlappingLineExtractor();
+		overlappingLines = overlappingLineExtractor.extract(creasePattern, pointEps);
+
+		var domain = RectangleDomain.createFromSegments(creasePattern);
+		view.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
+
+	}
+
+	private List<OriFace> getEstimationViolationFaces() {
 		var faces = origamiModel.getFaces();
 
 		List<Rule<OriFace>> estimationViolationRules = estimationResultRules == null ? List.of()
@@ -104,18 +124,7 @@ public class FoldabilityScreenPresenter {
 
 		logger.debug("# of est. violation faces = {}", estimationViolationFaces.size());
 
-		violatingFaces = Stream.concat(
-				foldabilityChecker.findViolatingFaces(faces).stream(),
-				estimationViolationFaces.stream())
-				.distinct()
-				.toList();
-
-		var overlappingLineExtractor = new OverlappingLineExtractor();
-		overlappingLines = overlappingLineExtractor.extract(creasePattern, pointEps);
-
-		var domain = RectangleDomain.createFromSegments(creasePattern);
-		view.updateCenterOfPaper(domain.getCenterX(), domain.getCenterY());
-
+		return estimationViolationFaces;
 	}
 
 	private void setListeners() {
@@ -161,10 +170,23 @@ public class FoldabilityScreenPresenter {
 	private void drawVertexViolationNames(final ObjectGraphicDrawer drawer) {
 		var pickedViolatingVertexOpt = view.getPickedViolatingVertex();
 
+		var texts = new ArrayList<String>();
+
 		pickedViolatingVertexOpt.ifPresent(pickedViolatingVertex -> {
 			var violationNames = foldabilityChecker.getVertexViolationNames(pickedViolatingVertex);
-			drawer.drawString("error(s): " + String.join(", ", violationNames), 0, 10);
+			texts.addAll(violationNames);
 		});
+
+		var pickedViolatingFaceOpt = view.getPickedViolatingFace();
+
+		pickedViolatingFaceOpt.ifPresent(pickedViolatingFace -> {
+			var violationNames = estimationResultRules.getViolationNames(pickedViolatingFace);
+
+			texts.addAll(violationNames);
+		});
+
+		drawer.drawString("error(s): " + String.join(", ", texts), 0, 10);
+
 	}
 
 	public void setViewVisible(final boolean visible) {

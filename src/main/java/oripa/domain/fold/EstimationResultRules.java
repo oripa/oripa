@@ -153,6 +153,13 @@ public class EstimationResultRules {
 		return new EstimationResultRules(EstimationResult.NOT_CHANGED);
 	}
 
+	public List<String> getViolationNames(final OriFace violatingFace) {
+		return getAllRules().stream()
+				.filter(rule -> rule.violates(violatingFace))
+				.map(Rule::toString)
+				.toList();
+	}
+
 	@Override
 	public String toString() {
 		return String.join(",", getAllRules().stream().map(Rule::toString).toList());
