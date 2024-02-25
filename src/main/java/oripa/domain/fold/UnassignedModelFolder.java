@@ -39,29 +39,33 @@ class UnassignedModelFolder implements Folder {
 	}
 
 	@Override
-	public FoldedModel fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
+	public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
 		simpleFolder.simpleFoldWithoutZorder(origamiModel);
 		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
 		if (estimationType == EstimationType.X_RAY) {
 			origamiModel.setFolded(true);
-			return new FoldedModel(origamiModel, List.of(), List.of());
+			return new Result(new FoldedModel(origamiModel, List.of(), List.of()), new EstimationResultRules());
 		}
 
 		var foldedModels = new ArrayList<FoldedModel>();
-
+		var rules = new ArrayList<EstimationResultRules>();
 		var assignmentEnumerator = new AssignmentEnumerator(model -> {
 			var result = layerOrderEnumerator.enumerate(model, eps, estimationType == EstimationType.FIRST_ONLY);
 			foldedModels.add(new FoldedModel(model, result.getOverlapRelations(), result.getSubfaces()));
+			rules.add(result.getRules());
 		});
 
 		assignmentEnumerator.enumerate(origamiModel);
 
 		origamiModel.setFolded(true);
 
-		return new FoldedModel(origamiModel, foldedModels.stream()
-				.flatMap(model -> model.getOverlapRelations().stream())
-				.toList(),
-				foldedModels.get(0).getSubfaces());
+		return new Result(
+				new FoldedModel(origamiModel, foldedModels.stream()
+						.flatMap(model -> model.getOverlapRelations().stream())
+						.toList(),
+						foldedModels.get(0).getSubfaces()),
+				rules.stream().reduce(new EstimationResultRules(), (a, b) -> a.or(b)));
+
 	}
 }

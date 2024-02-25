@@ -64,7 +64,7 @@ public class OriFace {
 	/**
 	 * ID of this face.
 	 */
-	private int faceID = 0;
+	private int faceID = -1;
 
 	public OriFace() {
 		int r = (int) (Math.random() * 255);
@@ -272,6 +272,15 @@ public class OriFace {
 		}
 
 		return isInside(v, OriHalfedge::getPosition);
+	}
+
+	public boolean includesExclusivelyBeforeFolding(final Vector2d v, final double eps) {
+		// If it's on the face's edge, return false
+		if (isOnEdge(v, eps, OriHalfedge::getPositionBeforeFolding)) {
+			return false;
+		}
+
+		return isInside(v, OriHalfedge::getPositionBeforeFolding);
 	}
 
 	/**

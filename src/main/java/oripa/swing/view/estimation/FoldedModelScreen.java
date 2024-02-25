@@ -157,6 +157,10 @@ public class FoldedModelScreen extends JPanel
 		rotateAngle = 0;
 		scale = 1;
 
+		if (origamiModel == null) {
+			return;
+		}
+
 		domain = origamiModel.createDomainOfFoldedModel();
 
 		updateAffineTransform();
@@ -404,6 +408,7 @@ public class FoldedModelScreen extends JPanel
 
 	public void drawOrigami() {
 		if (origamiModel == null || overlapRelation == null) {
+			renderImage = createImage(new MemoryImageSource(BUFFERW, BUFFERH, pbuf, 0, BUFFERW));
 			return;
 		}
 

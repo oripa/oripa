@@ -50,10 +50,13 @@ class LayerOrderEnumerator {
 	public static class Result {
 		private final List<OverlapRelation> overlapRelations;
 		private final List<SubFace> subfaces;
+		private final EstimationResultRules rules;
 
-		private Result(final List<OverlapRelation> overlapRelations, final List<SubFace> subfaces) {
+		private Result(final List<OverlapRelation> overlapRelations, final List<SubFace> subfaces,
+				final EstimationResultRules rules) {
 			this.overlapRelations = overlapRelations;
 			this.subfaces = subfaces;
+			this.rules = rules;
 		}
 
 		public List<OverlapRelation> getOverlapRelations() {
@@ -62,6 +65,10 @@ class LayerOrderEnumerator {
 
 		public List<SubFace> getSubfaces() {
 			return subfaces;
+		}
+
+		public EstimationResultRules getRules() {
+			return rules;
 		}
 
 		public boolean isEmpty() {
@@ -106,11 +113,12 @@ class LayerOrderEnumerator {
 
 		// Set overlap relations based on valley/mountain folds information
 		OverlapRelation overlapRelation;
-		try {
-			overlapRelation = new OverlapRelationFactory().createOverlapRelationByLineType(faces, eps);
-		} catch (Exception e) {
-			logger.info("found unfoldable when constructing overlap relation.");
-			return new Result(List.of(), List.of());
+		var result = new OverlapRelationFactory().createOverlapRelationByLineType(faces, eps);
+		overlapRelation = result.getOverlapRelation();
+		var rules = result.getRules();
+
+		if (rules.isUnfoldable()) {
+			return new Result(List.of(), List.of(), rules);
 		}
 
 		var watch = new StopWatch(true);
@@ -135,9 +143,9 @@ class LayerOrderEnumerator {
 				condition4s);
 		var estimationResult = estimator.estimate(overlapRelation, eps);
 
-		if (estimationResult == EstimationResult.UNFOLDABLE) {
+		if (estimationResult.isUnfoldable()) {
 			logger.debug("found unfoldable before searching.");
-			return new Result(List.of(), List.of());
+			return new Result(List.of(), List.of(), estimationResult);
 		}
 
 		var undefinedRelationCount = countUndefinedRelations(overlapRelation);
@@ -176,7 +184,8 @@ class LayerOrderEnumerator {
 			logStats(sortedSubfaces, overlapRelation);
 		}
 
-		return new Result(new ArrayList<>(overlapRelations), sortedSubfaces);
+		return new Result(new ArrayList<>(overlapRelations), sortedSubfaces,
+				new EstimationResultRules());
 	}
 
 	private int countUndefinedRelations(final OverlapRelation overlapRelation) {

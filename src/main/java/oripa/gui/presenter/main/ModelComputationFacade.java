@@ -23,16 +23,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.FoldedModel;
+import oripa.domain.fold.Folder;
 import oripa.domain.fold.Folder.EstimationType;
 import oripa.domain.fold.FolderFactory;
 import oripa.domain.fold.TestedOrigamiModelFactory;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
+import oripa.geom.RectangleDomain;
 
 /**
  * @author OUCHI Koji
@@ -77,14 +82,42 @@ public class ModelComputationFacade {
 	public class ComputationResult {
 		private final List<OrigamiModel> origamiModels;
 		private final List<FoldedModel> foldedModels;
+		private final List<EstimationResultRules> estimationRules;
 
-		public ComputationResult(final List<OrigamiModel> origamiModels, final List<FoldedModel> foldedModels) {
+		public ComputationResult(final List<OrigamiModel> origamiModels, final List<FoldedModel> foldedModels,
+				final List<EstimationResultRules> estimationRules) {
 			this.origamiModels = origamiModels;
 			this.foldedModels = foldedModels;
+			this.estimationRules = estimationRules;
 		}
 
 		public List<OrigamiModel> getOrigamiModels() {
 			return Collections.unmodifiableList(origamiModels);
+		}
+
+		public OrigamiModel getMergedOrigamiModel() {
+			var paperSize = RectangleDomain.createFromPoints(
+					origamiModels.stream()
+							.flatMap(model -> model.getVertices().stream())
+							.map(OriVertex::getPositionBeforeFolding)
+							.toList())
+					.maxWidthHeight();
+
+			var merged = new OrigamiModel(paperSize);
+
+			for (var model : origamiModels) {
+				merged.setVertices(Stream.concat(
+						merged.getVertices().stream(),
+						model.getVertices().stream()).toList());
+				merged.setEdges(Stream.concat(
+						merged.getEdges().stream(),
+						model.getEdges().stream()).toList());
+				merged.setFaces(Stream.concat(
+						merged.getFaces().stream(),
+						model.getFaces().stream()).toList());
+			}
+
+			return merged;
 		}
 
 		public List<FoldedModel> getFoldedModels() {
@@ -92,6 +125,10 @@ public class ModelComputationFacade {
 				return List.of();
 			}
 			return Collections.unmodifiableList(foldedModels);
+		}
+
+		public EstimationResultRules getEstimationResultRules() {
+			return estimationRules.stream().reduce(new EstimationResultRules(), (a, b) -> a.or(b));
 		}
 
 		/**
@@ -104,6 +141,10 @@ public class ModelComputationFacade {
 				return -1;
 			}
 			return foldedModels.stream().mapToInt(m -> m.getFoldablePatternCount()).sum();
+		}
+
+		public boolean allGloballyFlatFoldable() {
+			return foldedModels.stream().allMatch(m -> m.getFoldablePatternCount() > 0);
 		}
 
 		public boolean allLocallyFlatFoldable() {
@@ -136,11 +177,14 @@ public class ModelComputationFacade {
 
 		var folderFactory = new FolderFactory();
 
-		var foldedModels = origamiModels.stream()
+		var foldResults = origamiModels.stream()
 				.map(model -> folderFactory.create(model.getModelType()).fold(model, eps, type.toEstimationType()))
 				.toList();
 
-		return new ComputationResult(origamiModels, foldedModels);
+		var foldedModels = foldResults.stream().map(Folder.Result::getFoldedModel).toList();
+		var estimationRules = foldResults.stream().map(Folder.Result::getEstimationResultRules).toList();
+
+		return new ComputationResult(origamiModels, foldedModels, estimationRules);
 	}
 
 	/**

@@ -40,6 +40,7 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriVertex;
 import oripa.gui.presenter.creasepattern.geometry.NearestVertexFinder;
 import oripa.gui.view.View;
@@ -85,7 +86,9 @@ public class FoldabilityScreen extends JPanel
 	}
 
 	private Collection<OriVertex> violatingVertices = new ArrayList<>();
+	private Collection<OriFace> violatingFaces = new ArrayList<>();
 	private OriVertex pickedViolatingVertex;
+	private OriFace pickedViolatingFace;
 
 	private void buildBufferImage() {
 		bufferImage = createImage(getWidth(), getHeight());
@@ -220,6 +223,16 @@ public class FoldabilityScreen extends JPanel
 		var logicalPoint = MouseUtility.getLogicalPoint(affineTransform, e.getPoint());
 		var mousePoint = new Vector2d(logicalPoint.x, logicalPoint.y);
 
+		pickedViolatingFace = violatingFaces.stream()
+				.filter(face -> face.includesExclusivelyBeforeFolding(mousePoint, 1e-6))
+				.findFirst().orElse(null);
+
+		pickedViolatingVertex = pickViolatingVertex(mousePoint);
+
+		repaint();
+	}
+
+	private OriVertex pickViolatingVertex(final Vector2d mousePoint) {
 		var nearestOpt = NearestVertexFinder.findNearestVertex(
 				mousePoint,
 				violatingVertices.stream()
@@ -227,7 +240,7 @@ public class FoldabilityScreen extends JPanel
 						.toList());
 
 		if (nearestOpt.isEmpty()) {
-			return;
+			return null;
 		}
 
 		var nearest = nearestOpt.get();
@@ -235,14 +248,12 @@ public class FoldabilityScreen extends JPanel
 		if (nearest.distance >= scaleDistanceThreshold()) {
 			pickedViolatingVertex = null;
 			repaint();
-			return;
+			return null;
 		}
 
-		pickedViolatingVertex = violatingVertices.stream()
+		return violatingVertices.stream()
 				.filter(vertex -> vertex.getPositionBeforeFolding().equals(nearest.point))
 				.findFirst().get();
-
-		repaint();
 	}
 
 	private double scaleDistanceThreshold() {
@@ -281,6 +292,22 @@ public class FoldabilityScreen extends JPanel
 	}
 
 	@Override
+	public Optional<OriVertex> getPickedViolatingVertex() {
+		return Optional.ofNullable(pickedViolatingVertex);
+	}
+
+	@Override
+	public void setViolatingFaces(final Collection<OriFace> faces) {
+		violatingFaces = faces;
+	}
+
+	@Override
+	public Optional<OriFace> getPickedViolatingFace() {
+
+		return Optional.ofNullable(pickedViolatingFace);
+	}
+
+	@Override
 	public void setPaintComponentListener(final Consumer<PaintComponentGraphics> listener) {
 		paintComponentListener = listener;
 	}
@@ -293,11 +320,6 @@ public class FoldabilityScreen extends JPanel
 	@Override
 	public double getScale() {
 		return camera.getScale();
-	}
-
-	@Override
-	public Optional<OriVertex> getPickedViolatingVertex() {
-		return Optional.ofNullable(pickedViolatingVertex);
 	}
 
 }

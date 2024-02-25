@@ -40,20 +40,20 @@ public class FoldabilityChecker {
 	private static final Logger logger = LoggerFactory.getLogger(FoldabilityChecker.class);
 
 	private enum VertexRule {
-		BOUNDARY_COUNT(new BoundaryCount(), "BoundaryCount"),
-		MAEKAWA(new MaekawaTheorem(), "Maekawa"),
-		KAWASAKI(new KawasakiTheorem(), "Kawasaki"),
-		BIG_LITTLE_BIG(new BigLittleBigLemma(), "Big-little-big"),
-		GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma(), "gen. Big-little-big"),
-		FOLDABILITY(new VertexFoldability(), "foldability");
+		BOUNDARY_COUNT(new BoundaryCount()),
+		MAEKAWA(new MaekawaTheorem()),
+		KAWASAKI(new KawasakiTheorem()),
+		BIG_LITTLE_BIG(new BigLittleBigLemma()),
+		GEN_BIG_LITTLE_BIG(new GeneralizedBigLittleBigLemma()),
+		FOLDABILITY(new VertexFoldability());
 
 		private final Rule<OriVertex> rule;
 		private final String name;
 		private final SingleRuleParallelConjunction<OriVertex> conjunction;
 
-		private VertexRule(final Rule<OriVertex> rule, final String name) {
+		private VertexRule(final Rule<OriVertex> rule) {
 			this.rule = rule;
-			this.name = name;
+			this.name = rule.getName();
 			conjunction = new SingleRuleParallelConjunction<>(rule);
 		}
 

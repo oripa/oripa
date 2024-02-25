@@ -167,6 +167,10 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	public void setModel(final FoldedModel foldedModel) {
 		this.foldedModel = foldedModel;
 
+		if (foldedModel == null) {
+			return;
+		}
+
 		setOverlapRelations(foldedModel.getOverlapRelations());
 
 		// automatically turn off filtering

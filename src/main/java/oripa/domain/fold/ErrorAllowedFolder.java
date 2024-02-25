@@ -38,11 +38,11 @@ class ErrorAllowedFolder implements Folder {
 	}
 
 	@Override
-	public FoldedModel fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
+	public Result fold(final OrigamiModel origamiModel, final double eps, final EstimationType estimationType) {
 		simpleFolder.foldWithoutLineType(origamiModel);
 		faceDisplayModifier.setCurrentPositionsToDisplayPositions(origamiModel);
 
-		return new FoldedModel(origamiModel, List.of(), List.of());
+		return new Result(new FoldedModel(origamiModel, List.of(), List.of()), null);
 	}
 
 }

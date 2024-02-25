@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 
+import oripa.domain.fold.EstimationResultRules;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.gui.presenter.foldability.FoldabilityScreenPresenter;
 import oripa.gui.view.FrameView;
@@ -62,11 +63,13 @@ public class FoldabilityCheckFrame extends JFrame implements FoldabilityCheckFra
 	@Override
 	public void setModel(
 			final OrigamiModel origamiModel,
+			final EstimationResultRules estimationRules,
 			final Collection<OriLine> creasePattern,
 			final boolean zeroLineWidth,
 			final double pointEps) {
 
-		var presenter = new FoldabilityScreenPresenter(screen, origamiModel, creasePattern, zeroLineWidth, pointEps);
+		var presenter = new FoldabilityScreenPresenter(screen, origamiModel, estimationRules, creasePattern,
+				zeroLineWidth, pointEps);
 
 		presenter.setViewVisible(true);
 	}

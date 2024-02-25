@@ -43,6 +43,10 @@ import oripa.util.rule.AbstractRule;
 public class KawasakiTheorem extends AbstractRule<OriVertex> {
 	private static final Logger logger = LoggerFactory.getLogger(KawasakiTheorem.class);
 
+	public KawasakiTheorem() {
+		super("Kawasaki");
+	}
+
 	/**
 	 *
 	 * @param vertex

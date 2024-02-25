@@ -35,6 +35,7 @@ public class SingleRuleParallelConjunction<Variable> extends AbstractRule<Collec
 	 * @param rule
 	 */
 	public SingleRuleParallelConjunction(final Rule<Variable> rule) {
+		super(rule.getName());
 		this.rule = rule;
 	}
 

@@ -29,6 +29,10 @@ import oripa.util.rule.AbstractRule;
  */
 public class FaceIsConvex extends AbstractRule<OriFace> {
 
+	public FaceIsConvex() {
+		super("convex");
+	}
+
 	@Override
 	public boolean holds(final OriFace face) {
 

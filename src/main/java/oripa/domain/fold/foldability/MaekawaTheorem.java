@@ -31,6 +31,10 @@ import oripa.util.rule.AbstractRule;
 public class MaekawaTheorem extends AbstractRule<OriVertex> {
 	private static final Logger logger = LoggerFactory.getLogger(MaekawaTheorem.class);
 
+	public MaekawaTheorem() {
+		super("Maekawa");
+	}
+
 	@Override
 	public boolean holds(final OriVertex vertex) {
 		if (!vertex.isInsideOfPaper()) {

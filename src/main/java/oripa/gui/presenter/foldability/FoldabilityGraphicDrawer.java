@@ -46,6 +46,12 @@ public class FoldabilityGraphicDrawer {
 				drawer.selectNormalFaceColor();
 			}
 			drawer.fillFace(face.createOutlineVerticesBeforeFolding());
+
+			var id = face.getFaceID();
+			if (id >= 0) {
+				var centroid = face.getCentroidBeforeFolding();
+				drawer.drawString(Integer.toString(id), (float) centroid.getX(), (float) centroid.getY());
+			}
 		}
 
 		drawer.selectViolatingVertexColor();

@@ -42,6 +42,10 @@ public class VertexFoldability extends AbstractRule<OriVertex> {
 	private final AngleMinimalityHelper helper = new AngleMinimalityHelper();
 	private final MinimalAngleFolder folder = new MinimalAngleFolder();
 
+	public VertexFoldability() {
+		super("foldability");
+	}
+
 	@Override
 	public boolean holds(final OriVertex vertex) {
 
