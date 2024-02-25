@@ -18,7 +18,6 @@
  */
 package oripa.domain.fold;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -28,12 +27,8 @@ import oripa.util.rule.Rule;
 
 public class EstimationResultRules {
 	private EstimationResult estimationResult;
-	private List<LayerOrderRule> mvAssignment = List.of();
-	private List<LayerOrderRule> transitivity = List.of();
-	private List<LayerOrderRule> stackCondition4Faces = List.of();
-	private List<LayerOrderRule> penetration = List.of();
-	private List<LayerOrderRule> cover3Faces = List.of();
-	private List<LayerOrderRule> cover4Faces = List.of();
+
+	private List<Rule<OriFace>> rules = List.of();
 
 	public EstimationResultRules() {
 		estimationResult = EstimationResult.NOT_CHANGED;
@@ -43,68 +38,44 @@ public class EstimationResultRules {
 		estimationResult = result;
 	}
 
-	public List<LayerOrderRule> getMVAssignmentRules() {
-		return mvAssignment;
-	}
-
 	public void addMVAssignmentViolation(final List<OriFace> violatingFaces) {
-		mvAssignment = Stream.concat(
-				mvAssignment.stream(),
+		rules = Stream.concat(
+				rules.stream(),
 				Stream.of(new LayerOrderRule("MV", violatingFaces)))
 				.toList();
 	}
 
-	public List<LayerOrderRule> getTransitivityRules() {
-		return transitivity;
-	}
-
 	public void addTransitivityViolation(final List<OriFace> violatingFaces) {
-		transitivity = Stream.concat(
-				transitivity.stream(),
+		rules = Stream.concat(
+				rules.stream(),
 				Stream.of(new LayerOrderRule("transitivity", violatingFaces)))
 				.toList();
 	}
 
-	public List<LayerOrderRule> getPenetrationRules() {
-		return penetration;
-	}
-
 	public void addPenetrationViolation(final List<OriFace> violatingFaces) {
-		penetration = Stream.concat(
-				penetration.stream(),
+		rules = Stream.concat(
+				rules.stream(),
 				Stream.of(new LayerOrderRule("penetration", violatingFaces)))
 				.toList();
 	}
 
-	public List<LayerOrderRule> getStackCondition4FacesRules() {
-		return stackCondition4Faces;
-	}
-
 	public void addStackCondition4FacesViolation(final List<OriFace> violatingFaces) {
-		stackCondition4Faces = Stream.concat(
-				stackCondition4Faces.stream(),
+		rules = Stream.concat(
+				rules.stream(),
 				Stream.of(new LayerOrderRule("stack4Faces", violatingFaces)))
 				.toList();
 	}
 
-	public List<LayerOrderRule> getCover3FacesRules() {
-		return cover3Faces;
-	}
-
 	public void addCover3FacesViolation(final List<OriFace> violatingFaces) {
-		cover3Faces = Stream.concat(
-				cover3Faces.stream(),
+		rules = Stream.concat(
+				rules.stream(),
 				Stream.of(new LayerOrderRule("cover3Faces", violatingFaces)))
 				.toList();
 	}
 
-	public List<LayerOrderRule> getCover4FacesRules() {
-		return cover4Faces;
-	}
-
 	public void addCover4FacesViolation(final List<OriFace> violatingFaces) {
-		cover4Faces = Stream.concat(
-				cover4Faces.stream(),
+		rules = Stream.concat(
+				rules.stream(),
 				Stream.of(new LayerOrderRule("cover4Faces", violatingFaces)))
 				.toList();
 	}
@@ -122,27 +93,13 @@ public class EstimationResultRules {
 	}
 
 	public List<Rule<OriFace>> getAllRules() {
-		var rules = new ArrayList<Rule<OriFace>>();
-
-		rules.addAll(mvAssignment);
-		rules.addAll(cover3Faces);
-		rules.addAll(cover4Faces);
-		rules.addAll(stackCondition4Faces);
-		rules.addAll(transitivity);
-		rules.addAll(penetration);
-
 		return rules;
 	}
 
 	public EstimationResultRules or(final EstimationResultRules result) {
 		if (estimationResult.or(result.estimationResult) == EstimationResult.UNFOLDABLE) {
 			var ret = new EstimationResultRules(EstimationResult.UNFOLDABLE);
-			ret.transitivity = Stream.concat(transitivity.stream(), result.transitivity.stream()).toList();
-			ret.penetration = Stream.concat(penetration.stream(), result.penetration.stream()).toList();
-			ret.stackCondition4Faces = Stream
-					.concat(stackCondition4Faces.stream(), result.stackCondition4Faces.stream()).toList();
-			ret.cover3Faces = Stream.concat(cover3Faces.stream(), result.cover3Faces.stream()).toList();
-			ret.cover4Faces = Stream.concat(cover4Faces.stream(), result.cover4Faces.stream()).toList();
+			ret.rules = Stream.concat(rules.stream(), result.rules.stream()).toList();
 			return ret;
 		}
 
