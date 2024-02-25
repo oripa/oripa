@@ -18,6 +18,8 @@
  */
 package oripa.domain.fold;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -28,7 +30,7 @@ import oripa.util.rule.Rule;
 public class EstimationResultRules {
 	private EstimationResult estimationResult;
 
-	private List<Rule<OriFace>> rules = List.of();
+	private List<Rule<OriFace>> rules = Collections.synchronizedList(new ArrayList<>());
 
 	public EstimationResultRules() {
 		estimationResult = EstimationResult.NOT_CHANGED;
@@ -38,46 +40,28 @@ public class EstimationResultRules {
 		estimationResult = result;
 	}
 
-	public void addMVAssignmentViolation(final List<OriFace> violatingFaces) {
-		rules = Stream.concat(
-				rules.stream(),
-				Stream.of(new LayerOrderRule("MV", violatingFaces)))
-				.toList();
+	void addMVAssignmentViolation(final List<OriFace> violatingFaces) {
+		rules.add(new LayerOrderRule("MV", violatingFaces));
 	}
 
-	public void addTransitivityViolation(final List<OriFace> violatingFaces) {
-		rules = Stream.concat(
-				rules.stream(),
-				Stream.of(new LayerOrderRule("transitivity", violatingFaces)))
-				.toList();
+	void addTransitivityViolation(final List<OriFace> violatingFaces) {
+		rules.add(new LayerOrderRule("transitivity", violatingFaces));
 	}
 
-	public void addPenetrationViolation(final List<OriFace> violatingFaces) {
-		rules = Stream.concat(
-				rules.stream(),
-				Stream.of(new LayerOrderRule("penetration", violatingFaces)))
-				.toList();
+	void addPenetrationViolation(final List<OriFace> violatingFaces) {
+		rules.add(new LayerOrderRule("penetration", violatingFaces));
 	}
 
-	public void addStackCondition4FacesViolation(final List<OriFace> violatingFaces) {
-		rules = Stream.concat(
-				rules.stream(),
-				Stream.of(new LayerOrderRule("stack4Faces", violatingFaces)))
-				.toList();
+	void addStackCondition4FacesViolation(final List<OriFace> violatingFaces) {
+		rules.add(new LayerOrderRule("stack4Faces", violatingFaces));
 	}
 
-	public void addCover3FacesViolation(final List<OriFace> violatingFaces) {
-		rules = Stream.concat(
-				rules.stream(),
-				Stream.of(new LayerOrderRule("cover3Faces", violatingFaces)))
-				.toList();
+	void addCover3FacesViolation(final List<OriFace> violatingFaces) {
+		rules.add(new LayerOrderRule("cover3Faces", violatingFaces));
 	}
 
-	public void addCover4FacesViolation(final List<OriFace> violatingFaces) {
-		rules = Stream.concat(
-				rules.stream(),
-				Stream.of(new LayerOrderRule("cover4Faces", violatingFaces)))
-				.toList();
+	void addCover4FacesViolation(final List<OriFace> violatingFaces) {
+		rules.add(new LayerOrderRule("cover4Faces", violatingFaces));
 	}
 
 	EstimationResult getEstimationResult() {

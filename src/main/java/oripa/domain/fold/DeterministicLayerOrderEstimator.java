@@ -90,7 +90,7 @@ class DeterministicLayerOrderEstimator {
 
 		EstimationResultRules changed;
 		do {
-			changed = new EstimationResultRules(EstimationResult.NOT_CHANGED);
+			changed = new EstimationResultRules();
 
 			var result = estimateBy3FaceCover(overlapRelation);
 			changed = result.or(changed);
@@ -112,6 +112,10 @@ class DeterministicLayerOrderEstimator {
 
 			logger.trace("4 face cover" + System.lineSeparator() + overlapRelation.toString());
 
+			if (changed.isUnfoldable()) {
+				return changed;
+			}
+
 			result = checkCorrectness(overlapRelation);
 			changed = result.or(changed);
 			if (changed.isUnfoldable()) {
@@ -128,7 +132,7 @@ class DeterministicLayerOrderEstimator {
 	}
 
 	private EstimationResultRules checkCorrectness(final OverlapRelation overlapRelation) {
-		var result = new EstimationResultRules(EstimationResult.NOT_CHANGED);
+		var result = new EstimationResultRules();
 
 		// check transitivity
 		IntStream.range(0, faces.size()).parallel().forEach(i -> {
@@ -362,7 +366,7 @@ class DeterministicLayerOrderEstimator {
 				}
 			}
 		}
-		return new EstimationResultRules(EstimationResult.NOT_CHANGED);
+		return new EstimationResultRules();
 	}
 
 	/**
@@ -434,7 +438,7 @@ class DeterministicLayerOrderEstimator {
 
 	private EstimationResultRules estimateBy4FaceCover(final OverlapRelation overlapRelation) {
 
-		var changed = new EstimationResultRules(EstimationResult.NOT_CHANGED);
+		var changed = new EstimationResultRules();
 		for (OriFace f_i : faces) {
 			var result = updateBy4FaceCover(f_i, overlapRelation);
 			changed = result.or(changed);
