@@ -64,7 +64,7 @@ public class OriFace {
 	/**
 	 * ID of this face.
 	 */
-	private int faceID = 0;
+	private int faceID = -1;
 
 	public OriFace() {
 		int r = (int) (Math.random() * 255);
