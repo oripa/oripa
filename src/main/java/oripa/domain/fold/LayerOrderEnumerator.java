@@ -21,6 +21,7 @@ package oripa.domain.fold;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -155,14 +156,22 @@ class LayerOrderEnumerator {
 
 		// heuristic: apply the heuristic in local layer ordering to global
 		// subface ordering.
+		var scores2Faces = new HashMap<SubFace, Double>();
+		var scores3Faces = new HashMap<SubFace, Double>();
+		var scores4Faces = new HashMap<SubFace, Double>();
+		for (var sub : subfaces) {
+			scores2Faces.put(sub, sub.getAllCountOfConditionsOf2Faces(overlapRelation)
+					/ (double) sub.getParentFaceCount());
+			scores3Faces.put(sub, sub.getAllCountOfConditionsOf3Faces(overlapRelation)
+					/ (double) sub.getParentFaceCount());
+			scores4Faces.put(sub, sub.getAllCountOfConditionsOf4Faces(overlapRelation)
+					/ (double) sub.getParentFaceCount());
+		}
 		var sortedSubfaces = subfaces.stream()
 				.sorted(Comparator
-						.comparingDouble((final SubFace sub) -> sub.getAllCountOfConditionsOf2Faces(overlapRelation)
-								/ (double) sub.getParentFaceCount())
-						.thenComparingDouble((final SubFace sub) -> sub.getAllCountOfConditionsOf3Faces(overlapRelation)
-								/ (double) sub.getParentFaceCount())
-						.thenComparingDouble((final SubFace sub) -> sub.getAllCountOfConditionsOf4Faces(overlapRelation)
-								/ (double) sub.getParentFaceCount())
+						.comparingDouble((final SubFace sub) -> scores2Faces.get(sub))
+						.thenComparingDouble((final SubFace sub) -> scores3Faces.get(sub))
+						.thenComparingDouble((final SubFace sub) -> scores4Faces.get(sub))
 						.reversed())
 				.toList();
 		logger.debug("subface ordering = {}[ms]", watch.getMilliSec());
