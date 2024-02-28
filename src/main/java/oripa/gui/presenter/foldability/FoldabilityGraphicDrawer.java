@@ -50,7 +50,7 @@ public class FoldabilityGraphicDrawer {
 			var id = face.getFaceID();
 			if (id >= 0) {
 				var centroid = face.getCentroidBeforeFolding();
-				drawer.drawString(Integer.toString(id), (float) centroid.getX(), (float) centroid.getY());
+				drawer.drawString(Integer.toString(id), (float) centroid.getX(), (float) centroid.getY(), scale);
 			}
 		}
 

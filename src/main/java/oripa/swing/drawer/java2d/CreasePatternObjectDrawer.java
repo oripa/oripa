@@ -162,6 +162,15 @@ public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
 	}
 
 	@Override
+	public void drawString(final String text, final float x, final float y, final double scale) {
+		g2d.setColor(Color.BLACK);
+		var font = g2d.getFont();
+		g2d.setFont(font.deriveFont(font.getSize2D() / (float) scale));
+		g2d.drawString(text, x, y);
+		g2d.setFont(font);
+	}
+
+	@Override
 	public void setAntiAlias(final boolean antiAlias) {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				antiAlias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
