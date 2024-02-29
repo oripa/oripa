@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.fold.halfedge.OriEdge;
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
@@ -29,12 +32,15 @@ import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.stackcond.StackConditionOf3Faces;
 import oripa.domain.fold.stackcond.StackConditionOf4Faces;
 import oripa.domain.fold.subface.SubFace;
+import oripa.util.StopWatch;
 
 /**
  * @author OUCHI Koji
  *
  */
 public class StackConditionFactoryFacade {
+	private static final Logger logger = LoggerFactory.getLogger(StackConditionFactoryFacade.class);
+
 	private final Map<OriFace, Set<SubFace>> subFacesOfEachFace;
 	private final List<Integer>[][] overlappingFaceIndexIntersections;
 	private final Map<OriHalfedge, Set<Integer>> faceIndicesOnHalfedge;
@@ -53,10 +59,18 @@ public class StackConditionFactoryFacade {
 		this.overlapRelation = overlapRelation;
 		this.eps = eps;
 
+		var watch = new StopWatch(true);
 		subFacesOfEachFace = new FaceToSubfacesFactory().create(faces, subfaces);
+		logger.debug("create subfacesOfEeachFace {}[ms]", watch.getMilliSec());
+
+		watch.start();
 		overlappingFaceIndexIntersections = new OverlappingFaceIndexIntersectionFactory().create(
 				faces, overlapRelation);
+		logger.debug("create overlappingFaceIndexIntersections {}[ms]", watch.getMilliSec());
+
+		watch.start();
 		faceIndicesOnHalfedge = new FaceIndicesOnHalfEdgeFactory().create(faces, eps);
+		logger.debug("create faceIndicesOnHalfedge {}[ms]", watch.getMilliSec());
 
 	}
 

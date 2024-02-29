@@ -52,7 +52,7 @@ public class OverlappingFaceIndexIntersectionFactory {
 
 		// extract overlapping-face indices shared by face pair.
 		var indexIntersections = new List[faces.size()][faces.size()];
-		for (var face : faces) {
+		faces.parallelStream().forEach(face -> {
 			for (var other : faces) {
 				var index_i = face.getFaceID();
 				var index_j = other.getFaceID();
@@ -68,7 +68,7 @@ public class OverlappingFaceIndexIntersectionFactory {
 						.filter(index -> overlappingFaces_j.contains(index))
 						.toList();
 			}
-		}
+		});
 
 		return indexIntersections;
 	}

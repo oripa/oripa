@@ -124,12 +124,12 @@ class LayerOrderEnumerator {
 
 		var watch = new StopWatch(true);
 
-		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
-
 		var conditionFactory = new StackConditionFactoryFacade(faces, edges, overlapRelation, subfaces, eps);
 
 		var overlappingFaceIndexIntersections = conditionFactory.getOverlappingFaceIndexIntersections();
 		var faceIndicesOnHalfedge = conditionFactory.getFaceIndicesOnHalfedge();
+
+		logger.debug("preprocessing time = {}[ms]", watch.getMilliSec());
 
 		var condition3s = conditionFactory.create3FaceConditions();
 		setConditionOf3facesToSubfaces(condition3s, subfaces);
