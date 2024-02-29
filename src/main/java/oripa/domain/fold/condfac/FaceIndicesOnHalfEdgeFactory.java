@@ -18,6 +18,7 @@
  */
 package oripa.domain.fold.condfac;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,25 +41,24 @@ public class FaceIndicesOnHalfEdgeFactory {
 
 		Map<OriHalfedge, Set<Integer>> indices = new HashMap<>();
 
+		var halfedges = new ArrayList<OriHalfedge>();
+
 		for (var face : faces) {
 			for (var halfedge : face.halfedgeIterable()) {
+				halfedges.add(halfedge);
 				Set<Integer> indexSet = new HashSet<Integer>();
 				indices.put(halfedge, indexSet);
 			}
 		}
-		for (var face : faces) {
-			for (var halfedge : face.halfedgeIterable()) {
+
+		halfedges.parallelStream().forEach(halfedge -> {
+			for (var face : faces) {
 				var indexSet = indices.get(halfedge);
-				for (var other : faces) {
-					if (other == face) {
-						continue;
-					}
-					if (OriGeomUtil.isHalfedgeCrossFace(other, halfedge, eps)) {
-						indexSet.add(other.getFaceID());
-					}
+				if (OriGeomUtil.isHalfedgeCrossFace(face, halfedge, eps)) {
+					indexSet.add(face.getFaceID());
 				}
 			}
-		}
+		});
 
 		return indices;
 	}

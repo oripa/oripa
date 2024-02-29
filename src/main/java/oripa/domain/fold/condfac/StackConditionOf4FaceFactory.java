@@ -18,10 +18,11 @@
  */
 package oripa.domain.fold.condfac;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,20 +58,20 @@ public class StackConditionOf4FaceFactory {
 			final List<OriEdge> edges, final OverlapRelation overlapRelation,
 			final Map<OriFace, Set<SubFace>> subFacesOfEachFace,
 			final double eps) {
-		var condition4s = new ArrayList<StackConditionOf4Faces>();
+		var condition4s = new ConcurrentLinkedQueue<StackConditionOf4Faces>();
 
 		int edgeNum = edges.size();
 		logger.debug("edgeNum = " + edgeNum);
 
 		var watch = new StopWatch(true);
 
-		for (int i = 0; i < edgeNum; i++) {
+		IntStream.range(0, edgeNum).parallel().forEach(i -> {
 			OriEdge e0 = edges.get(i);
 			var e0LeftOpt = e0.getLeft();
 			var e0RightOpt = e0.getRight();
 
 			if (e0LeftOpt.isEmpty() || e0RightOpt.isEmpty()) {
-				continue;
+				return;
 			}
 
 			for (int j = i + 1; j < edgeNum; j++) {
@@ -124,12 +125,12 @@ public class StackConditionOf4FaceFactory {
 
 				condition4s.add(cond);
 			}
-		}
+		});
 
 		logger.debug("#condition4 = {}", condition4s.size());
 		logger.debug("condition4s computation time {}[ms]", watch.getMilliSec());
 
-		return condition4s;
+		return condition4s.stream().toList();
 	}
 
 }
