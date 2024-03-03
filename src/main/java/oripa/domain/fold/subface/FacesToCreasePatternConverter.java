@@ -63,17 +63,18 @@ public class FacesToCreasePatternConverter {
 
 		var lines = new ArrayList<OriLine>();
 		for (OriFace face : faces) {
-			face.halfedgeStream().forEach(he -> {
-				OriLine line = new OriLine(he.getPosition(), he.getNext().getPosition(),
-						OriLine.Type.MOUNTAIN);
-				// make cross every time to divide the faces.
-				// addLines() cannot make cross among given lines.
-				lineAdder.addLine(line, lines, pointEps);
-
-			});
+			var faceLines = face.halfedgeStream()
+					.map(he -> new OriLine(he.getPosition(), he.getNext().getPosition(),
+							OriLine.Type.MOUNTAIN))
+					.toList();
+			// make cross every time to divide the faces.
+			lineAdder.addAll(faceLines, lines, pointEps);
 		}
 		CreasePattern creasePattern = cpFactory.createCreasePattern(lines);
-		creasePattern.cleanDuplicatedLines(pointEps);
+
+		// The lineAdder overwrites lines, which eliminates the necessity to
+		// remove duplication.
+		// creasePattern.cleanDuplicatedLines(pointEps);
 
 		logger.debug("toCreasePattern(): end");
 

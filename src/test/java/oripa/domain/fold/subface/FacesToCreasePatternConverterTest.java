@@ -68,13 +68,7 @@ class FacesToCreasePatternConverterTest {
 		var converted = converter.convertToCreasePattern(faces, POINT_EPS);
 		assertSame(creasePattern, converted);
 
-		// tried to convert all half-edges?
-		verify(adder, times(
-				faces.stream()
-						.mapToInt(f -> f.halfedgeCount())
-						.sum()))
-								.addLine(any(), anyCollection(), anyDouble());
-
-		verify(creasePattern).cleanDuplicatedLines(POINT_EPS);
+		// tried to convert all faces?
+		verify(adder, times(faces.size())).addAll(any(), anyCollection(), anyDouble());
 	}
 }
