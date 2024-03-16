@@ -32,6 +32,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 import javax.swing.JPanel;
 
@@ -48,7 +50,7 @@ import oripa.renderer.estimation.FoldedModelPixelRenderer;
 import oripa.renderer.estimation.VertexDepthMapFactory;
 import oripa.swing.drawer.java2d.GraphicItemConverter;
 import oripa.swing.drawer.java2d.PixelDrawer;
-import oripa.swing.view.util.MouseUtility;
+import oripa.swing.view.util.AffineCamera;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -69,12 +71,11 @@ public class FoldedModelScreen extends JPanel
 	private boolean faceOrderFlip = false;
 	private final double scaleRate = 0.8;
 	private boolean drawEdges = true;
-	private double rotateAngle;
-	private double scale;
-	private double transX;
-	private double transY;
+
 	private Point2D preMousePoint;
-	private final AffineTransform affineTransform;
+	private AffineTransform affineTransform;
+
+	private final AffineCamera camera = new AffineCamera();
 
 	private Color frontColor = DefaultColors.FRONT;
 	private Color backColor = DefaultColors.BACK;
@@ -103,17 +104,19 @@ public class FoldedModelScreen extends JPanel
 
 		pixelRenderer = new FoldedModelPixelRenderer(BUFFERW, BUFFERH);
 
-		rotateAngle = 0;
-		scale = 1.0;
 		affineTransform = new AffineTransform();
 
-		bufferImage = new BufferedImage(pixelRenderer.width, pixelRenderer.height, BufferedImage.TYPE_INT_RGB);
+		bufferImage = new BufferedImage(BUFFERW, BUFFERH, BufferedImage.TYPE_INT_RGB);
+	}
+
+	public void initializeCamera() {
+		camera.updateRotateAngle(0);
+		camera.updateCameraPosition(BUFFERW / 2, BUFFERH / 2);
+		camera.updateScale(1);
+		camera.updateCenterOfPaper(BUFFERW / 2, BUFFERH / 2);
 	}
 
 	private void resetViewMatrix() {
-		rotateAngle = 0;
-		scale = 1;
-
 		if (origamiModel == null) {
 			return;
 		}
@@ -121,7 +124,8 @@ public class FoldedModelScreen extends JPanel
 		domain = origamiModel.createDomainOfFoldedModel();
 		distortion = new DistortionFacade(domain, BUFFERW, BUFFERH);
 
-		updateAffineTransform();
+		initializeCamera();
+
 		redrawOrigami();
 	}
 
@@ -169,15 +173,6 @@ public class FoldedModelScreen extends JPanel
 	public void shadeFaces(final boolean bShade) {
 		ambientOcclusion = bShade;
 		redrawOrigami();
-	}
-
-	private void updateAffineTransform() {
-		affineTransform.setToIdentity();
-		affineTransform.translate(pixelRenderer.width * 0.5, pixelRenderer.height * 0.5);
-		affineTransform.scale(scale, scale);
-		affineTransform.translate(transX, transY);
-		affineTransform.rotate(rotateAngle);
-		affineTransform.translate(-pixelRenderer.width * 0.5, -pixelRenderer.height * 0.5);
 	}
 
 	public void setModel(final FoldedModel foldedModel, final int overlapRelationIndex, final double eps) {
@@ -250,8 +245,7 @@ public class FoldedModelScreen extends JPanel
 
 		var drawer = new PixelDrawer();
 
-		drawer.draw(bufferg, pixelRenderer.getPixels(), pixelRenderer.width, pixelRenderer.height);
-//		bufferg.drawImage(modelImage, 0, 0, null);
+		drawer.draw(bufferg, pixelRenderer.getPixels(), BUFFERW, BUFFERH);
 
 		if (selectedSubface != null) {
 			drawSubface(bufferg);
@@ -301,12 +295,8 @@ public class FoldedModelScreen extends JPanel
 
 	private double getFinalScale() {
 		return scaleRate * Math.min(
-				pixelRenderer.width / (domain.getWidth()),
-				pixelRenderer.height / (domain.getHeight())) * 0.95;
-	}
-
-	public void setScale(final double newScale) {
-		scale = newScale;
+				BUFFERW / (domain.getWidth()),
+				BUFFERH / (domain.getHeight())) * 0.95;
 	}
 
 	@Override
@@ -336,23 +326,28 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		if (MouseUtility.isRightButtonEvent(e) ||
-				MouseUtility.isLeftButtonEvent(e) && MouseUtility.isShiftKeyDown(e)) {
-			transX += (e.getX() - preMousePoint.getX()) / scale;
-			transY += (e.getY() - preMousePoint.getY()) / scale;
-			preMousePoint = e.getPoint();
-			updateAffineTransform();
-			repaint();
-
+		if (doCameraDragAction(e, camera::updateTranslateByMouseDragged)) {
 			return;
 		}
 
-		if (MouseUtility.isLeftButtonEvent(e)) {
-			rotateAngle += (e.getX() - preMousePoint.getX()) / 100.0;
-			preMousePoint = e.getPoint();
-			updateAffineTransform();
-			repaint();
+		if (doCameraDragAction(e, camera::updateRotateByMouseDragged)) {
+			return;
 		}
+	}
+
+	private boolean doCameraDragAction(final MouseEvent e,
+			final BiFunction<MouseEvent, Point2D, Optional<AffineTransform>> onDrag) {
+		var affineOpt = onDrag.apply(e, preMousePoint);
+		if (affineOpt.isEmpty()) {
+			return false;
+		}
+
+		var affine = affineOpt.get();
+
+		preMousePoint = e.getPoint();
+		affineTransform = affine;
+		repaint();
+		return true;
 	}
 
 	@Override
@@ -362,9 +357,7 @@ public class FoldedModelScreen extends JPanel
 
 	@Override
 	public void mouseWheelMoved(final MouseWheelEvent e) {
-		double scale_ = (100.0 - e.getWheelRotation() * 5) / 100.0;
-		scale *= scale_;
-		updateAffineTransform();
+		affineTransform = camera.updateScaleByMouseWheel(e);
 		repaint();
 	}
 
