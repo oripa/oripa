@@ -1,5 +1,5 @@
 /**
- * ORIPA - Origami Pattern Editor 
+ * ORIPA - Origami Pattern Editor
  * Copyright (C) 2013-     ORIPA OSS Project  https://github.com/oripa/oripa
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
@@ -16,10 +16,37 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.swing.view.estimation;
+package oripa.renderer.estimation;
 
-public enum DistortionMethod {
-	NONE,
-	DEPTH,
-	MORISUE
+/**
+ * @author OUCHI Koji
+ *
+ */
+public class FloatingRGB {
+	private final double r, g, b;
+
+	public FloatingRGB(final double r, final double g, final double b) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
+
+	public FloatingRGB(final FloatingRGB rgb) {
+		r = rgb.r;
+		g = rgb.g;
+		b = rgb.b;
+	}
+
+	public double getR() {
+		return r;
+	}
+
+	public double getG() {
+		return g;
+	}
+
+	public double getB() {
+		return b;
+	}
+
 }

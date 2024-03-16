@@ -41,6 +41,7 @@ import oripa.domain.fold.subface.SubFace;
 import oripa.gui.view.View;
 import oripa.gui.view.estimation.DefaultColors;
 import oripa.gui.view.estimation.EstimationResultUIView;
+import oripa.renderer.estimation.DistortionMethod;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;

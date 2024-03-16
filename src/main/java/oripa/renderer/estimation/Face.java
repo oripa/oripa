@@ -16,27 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.swing.view.estimation;
+package oripa.renderer.estimation;
 
-import java.util.ArrayList;
-import java.util.List;
+import oripa.domain.fold.halfedge.OriFace;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class TriangleFaceFactory {
-	public List<TriangleFace> createAll(final Face face) {
-		var triangles = new ArrayList<TriangleFace>();
+public class Face {
+	private final OriFace originalFace;
+	private final OriFace convertedFace;
 
-		int heNum = face.halfedgeCount();
-		for (int i = 1; i < heNum - 1; i++) {
-			TriangleFace tri = new TriangleFace(face, List.of(0, i, i + 1));
-			triangles.add(tri);
-		}
+	public Face(final OriFace original, final OriFace converted) {
+		originalFace = original;
+		convertedFace = converted;
+	}
 
-		triangles.forEach(triangle -> triangle.initializePositions());
+	public OriFace getOriginalFace() {
+		return originalFace;
+	}
 
-		return triangles;
+	public OriFace getConvertedFace() {
+		return convertedFace;
+	}
+
+	public int halfedgeCount() {
+		return originalFace.halfedgeCount();
+	}
+
+	public int getFaceID() {
+		return originalFace.getFaceID();
 	}
 }
