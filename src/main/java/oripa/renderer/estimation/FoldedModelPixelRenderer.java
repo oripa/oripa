@@ -100,6 +100,15 @@ public class FoldedModelPixelRenderer {
 	private final boolean bUseTexture = false;
 	private BufferedImage textureImage = null;
 
+	/**
+	 *
+	 * Constructor
+	 *
+	 * @param width
+	 *            of image
+	 * @param height
+	 *            of image
+	 */
 	public FoldedModelPixelRenderer(final int width, final int height) {
 
 		this.width = width;
@@ -213,8 +222,8 @@ public class FoldedModelPixelRenderer {
 			final Option option) {
 
 		// (For speed) set the range of use of the buffer
-		int top = Integer.MAX_VALUE; // Integer.MAX_VALUE;
-		int btm = Integer.MIN_VALUE;// Integer.MIN_VALUE;
+		int top = Integer.MAX_VALUE;
+		int btm = Integer.MIN_VALUE;
 		if (top > (int) tri.v[0].p.getY()) {
 			top = (int) tri.v[0].p.getY();
 		}

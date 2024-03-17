@@ -55,6 +55,14 @@ public class DistortionFacade {
 	private final int width;
 	private final int height;
 
+	/**
+	 *
+	 * @param modelDomain
+	 * @param width
+	 *            of image
+	 * @param height
+	 *            of image
+	 */
 	public DistortionFacade(final RectangleDomain modelDomain, final int width, final int height) {
 		this.modelDomain = modelDomain;
 		this.width = width;
