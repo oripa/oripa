@@ -27,7 +27,7 @@ import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
 import oripa.vecmath.Vector2d;
 
-public class TriangleFace {
+class TriangleFace {
 
 	public TriangleVertex[] v;
 	private final OriFace originalFace;

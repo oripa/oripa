@@ -20,7 +20,7 @@ package oripa.renderer.estimation;
 
 import oripa.vecmath.Vector2d;
 
-public class TriangleVertex {
+class TriangleVertex {
 
 	// position after folding
 	public Vector2d p = new Vector2d(0, 0);

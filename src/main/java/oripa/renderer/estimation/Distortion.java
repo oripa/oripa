@@ -31,7 +31,7 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
-public class DistortionFacade {
+public class Distortion {
 
 	public static class Result {
 		private final List<Face> faces;
@@ -63,7 +63,7 @@ public class DistortionFacade {
 	 * @param height
 	 *            of image
 	 */
-	public DistortionFacade(final RectangleDomain modelDomain, final int width, final int height) {
+	public Distortion(final RectangleDomain modelDomain, final int width, final int height) {
 		this.modelDomain = modelDomain;
 		this.width = width;
 		this.height = height;

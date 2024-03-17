@@ -44,7 +44,7 @@ import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.geom.RectangleDomain;
 import oripa.gui.view.estimation.DefaultColors;
-import oripa.renderer.estimation.DistortionFacade;
+import oripa.renderer.estimation.Distortion;
 import oripa.renderer.estimation.DistortionMethod;
 import oripa.renderer.estimation.FoldedModelPixelRenderer;
 import oripa.renderer.estimation.VertexDepthMapFactory;
@@ -93,7 +93,7 @@ public class FoldedModelScreen extends JPanel
 	private double eps = 1e-5;
 
 	private DistortionMethod distortionMethod = DistortionMethod.NONE;
-	private DistortionFacade distortion;
+	private Distortion distortion;
 
 	private Map<OriVertex, Integer> vertexDepths;
 
@@ -122,7 +122,7 @@ public class FoldedModelScreen extends JPanel
 		}
 
 		domain = origamiModel.createDomainOfFoldedModel();
-		distortion = new DistortionFacade(domain, BUFFERW, BUFFERH);
+		distortion = new Distortion(domain, BUFFERW, BUFFERH);
 
 		initializeCamera();
 
