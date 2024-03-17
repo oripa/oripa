@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.fold.FoldedModel;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.subface.SubFace;
 import oripa.gui.view.View;
@@ -388,7 +389,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			if (screen == null) {
 				return;
 			}
-			screen.setDistortionMethod((DistortionMethod) distortionMethodCombo.getSelectedItem());
+			screen.setDistortionMethod(getDistortionMethod());
 		});
 
 		orderCheckBox.addItemListener(e -> {
@@ -421,10 +422,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	}
 
 	private void setDistortionParameterToScreen() {
-		double distortionRange = DISTORTION_MAX - DISTORTION_MIN;
-		screen.setDistortionParameter(new Vector2d(
-				xDistortionSlider.getValue() / distortionRange,
-				yDistortionSlider.getValue() / distortionRange));
+		screen.setDistortionParameter(getDistortionParameter());
 	}
 
 	private void initializeComponentSetting() {
@@ -584,7 +582,55 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	@Override
 	public boolean isFaceOrderFlipped() {
-		return screen.isFaceOrderFlipped();
+		return orderCheckBox.isSelected();
+	}
+
+	@Override
+	public boolean isFillFace() {
+		return fillFaceCheckBox.isSelected();
+	}
+
+	@Override
+	public boolean isDrawEdges() {
+		return edgeCheckBox.isSelected();
+	}
+
+	@Override
+	public boolean isFaceShade() {
+		return shadowCheckBox.isSelected();
+	}
+
+	@Override
+	public boolean isUseColor() {
+		return useColorCheckBox.isSelected();
+	}
+
+	@Override
+	public double getRotateAngle() {
+		return screen.getRotateAngle();
+	}
+
+	@Override
+	public DistortionMethod getDistortionMethod() {
+		return (DistortionMethod) distortionMethodCombo.getSelectedItem();
+	}
+
+	@Override
+	public Vector2d getDistortionParameter() {
+		double distortionRange = DISTORTION_MAX - DISTORTION_MIN;
+		return new Vector2d(
+				xDistortionSlider.getValue() / distortionRange,
+				yDistortionSlider.getValue() / distortionRange);
+	}
+
+	@Override
+	public Map<OriVertex, Integer> getVertexDepths() {
+		return screen.getVertexDepths();
+	}
+
+	@Override
+	public double getEps() {
+		return screen.getEps();
 	}
 
 	@Override

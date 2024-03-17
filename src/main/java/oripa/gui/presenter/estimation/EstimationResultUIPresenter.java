@@ -32,6 +32,7 @@ import oripa.domain.fold.FoldedModel;
 import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
+import oripa.gui.view.estimation.DefaultColors;
 import oripa.gui.view.estimation.EstimationResultUIView;
 import oripa.gui.view.file.FileChooserFactory;
 import oripa.gui.view.util.ColorUtil;
@@ -39,6 +40,7 @@ import oripa.persistence.entity.FoldedModelDAO;
 import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.FoldedModelFileAccessSupportSelector;
 import oripa.persistence.entity.FoldedModelFileTypeKey;
+import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
 import oripa.persistence.entity.exporter.FoldedModelSVGConfig;
 
 /**
@@ -94,6 +96,9 @@ public class EstimationResultUIPresenter {
 			fileAccessService.setConfigToSavingAction(
 					FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP, this::createSVGConfig);
 
+			fileAccessService.setConfigToSavingAction(
+					FoldedModelFileTypeKey.PICTURE, this::createPictureConfig);
+
 			var foldedModel = view.getModel();
 
 			var entity = new FoldedModelEntity(foldedModel, view.getOverlapRelationIndex());
@@ -144,6 +149,26 @@ public class EstimationResultUIPresenter {
 		} catch (Exception e) {
 			view.showErrorMessage(e);
 		}
+	}
+
+	private FoldedModelPictureConfig createPictureConfig() {
+		var pictureConfig = new FoldedModelPictureConfig();
+
+		pictureConfig.setAmbientOcclusion(view.isFaceShade());
+		pictureConfig.setFillFaces(view.isFillFace());
+		pictureConfig.setDrawEdges(view.isDrawEdges());
+
+		pictureConfig.setColors(view.isUseColor() ? view.getFrontColor() : DefaultColors.WHITE,
+				view.isUseColor() ? view.getBackColor() : DefaultColors.WHITE);
+
+		pictureConfig.setDistortionMethod(view.getDistortionMethod());
+		pictureConfig.setDistortionParameter(view.getDistortionParameter());
+		pictureConfig.setVertexDepths(view.getVertexDepths());
+		pictureConfig.setEps(view.getEps());
+
+		pictureConfig.setRotateAngle(view.getRotateAngle());
+
+		return pictureConfig;
 	}
 
 	private Map<Integer, List<Set<Integer>>> createSubfaceToOverlapRelationIndices(
