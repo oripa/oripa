@@ -91,7 +91,7 @@ public class FoldedModelPictureExporter implements Exporter<FoldedModelEntity> {
 		// Clear image
 		g.setTransform(new AffineTransform());
 		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, WIDTH, WIDTH);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
 
 		g.setTransform(camera.getAffineTransform());
 
