@@ -37,21 +37,14 @@ public class FoldedModelPixelRenderer {
 
 	public static class Option {
 		private boolean faceOrderFlipped;
-		private boolean useColor;
 		private boolean fillFaces;
 		private boolean drawEdges;
 		private boolean ambientOcclusion;
 		private Color frontColor;
 		private Color backColor;
-		private Color singleColor;
 
 		public Option setFaceOrderFlipped(final boolean faceOrderFlipped) {
 			this.faceOrderFlipped = faceOrderFlipped;
-			return this;
-		}
-
-		public Option setUseColor(final boolean b) {
-			useColor = b;
 			return this;
 		}
 
@@ -70,10 +63,9 @@ public class FoldedModelPixelRenderer {
 			return this;
 		}
 
-		public Option setColors(final Color front, final Color back, final Color single) {
+		public Option setColors(final Color front, final Color back) {
 			frontColor = front;
 			backColor = back;
-			singleColor = single;
 
 			return this;
 		}
@@ -169,23 +161,12 @@ public class FoldedModelPixelRenderer {
 	private void drawFace(final Face face, final OverlapRelation overlapRelation,
 			final Option option,
 			final RectangleDomain paperDomain) {
-		if (option.useColor) {
-			drawFace(face, option.frontColor, option.backColor, overlapRelation, option, paperDomain);
-		} else {
-			drawFace(face, option.singleColor, option.singleColor, overlapRelation, option, paperDomain);
-		}
-	}
-
-	private void drawFace(final Face face, final Color frontColor, final Color backColor,
-			final OverlapRelation overlapRelation,
-			final Option option,
-			final RectangleDomain paperDomain) {
 
 		List<Double> frontColorFactor;
 		List<Double> backColorFactor;
 
-		frontColorFactor = createColorFactor(frontColor);
-		backColorFactor = createColorFactor(backColor);
+		frontColorFactor = createColorFactor(option.frontColor);
+		backColorFactor = createColorFactor(option.backColor);
 
 		var vertexColorMapFactory = new VertexColorMapFactory();
 		var colorMap = vertexColorMapFactory.createVertexColors(

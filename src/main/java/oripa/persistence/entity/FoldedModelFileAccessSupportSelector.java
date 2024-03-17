@@ -53,6 +53,9 @@ public class FoldedModelFileAccessSupportSelector extends AbstractFileAccessSupp
 			key = FoldedModelFileTypeKey.SVG_FOLDED_MODEL;
 			putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
 		}
+
+		key = FoldedModelFileTypeKey.PICTURE;
+		putFileAccessSupport(key, createDescription(key, StringID.ModelUI.FILE_ID));
 	}
 
 	@Override

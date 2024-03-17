@@ -94,6 +94,10 @@ public class AffineCamera {
 		return updateAffineTransform();
 	}
 
+	public double getRotateAngle() {
+		return rotateAngle;
+	}
+
 	public AffineTransform updateRotateAngle(final double angle) {
 		rotateAngle = angle;
 

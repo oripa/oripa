@@ -277,8 +277,7 @@ public class FoldedModelScreen extends JPanel
 						.setDrawEdges(drawEdges)
 						.setFaceOrderFlipped(faceOrderFlip)
 						.setFillFace(fillFaces)
-						.setUseColor(useColor)
-						.setColors(frontColor, backColor, singleColor));
+						.setColors(useColor ? frontColor : singleColor, useColor ? backColor : singleColor));
 	}
 
 	private void drawSubface(final Graphics2D g2d) {
@@ -363,5 +362,17 @@ public class FoldedModelScreen extends JPanel
 
 	public boolean isFaceOrderFlipped() {
 		return faceOrderFlip;
+	}
+
+	public double getRotateAngle() {
+		return camera.getRotateAngle();
+	}
+
+	public Map<OriVertex, Integer> getVertexDepths() {
+		return vertexDepths;
+	}
+
+	public double getEps() {
+		return eps;
 	}
 }

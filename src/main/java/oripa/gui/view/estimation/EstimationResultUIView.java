@@ -25,8 +25,11 @@ import java.util.Set;
 import java.util.function.Function;
 
 import oripa.domain.fold.FoldedModel;
+import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.gui.view.View;
+import oripa.renderer.estimation.DistortionMethod;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -49,6 +52,24 @@ public interface EstimationResultUIView extends View {
 	int getOverlapRelationIndex();
 
 	boolean isFaceOrderFlipped();
+
+	boolean isFaceShade();
+
+	boolean isDrawEdges();
+
+	boolean isFillFace();
+
+	boolean isUseColor();
+
+	double getRotateAngle();
+
+	double getEps();
+
+	DistortionMethod getDistortionMethod();
+
+	Vector2d getDistortionParameter();
+
+	Map<OriVertex, Integer> getVertexDepths();
 
 	double getSVGFaceStrokeWidth();
 
