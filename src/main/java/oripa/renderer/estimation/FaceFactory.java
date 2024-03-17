@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.swing.view.estimation;
+package oripa.renderer.estimation;
 
 import java.util.Map;
 
@@ -29,7 +29,7 @@ import oripa.util.collection.CollectionUtil;
  * @author OUCHI Koji
  *
  */
-class FaceFactory {
+public class FaceFactory {
 
 	private final CoordinateConverter converter;
 	private final Map<OriVertex, Integer> vertexDepths;

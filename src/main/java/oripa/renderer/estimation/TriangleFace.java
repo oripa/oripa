@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package oripa.swing.view.estimation;
+package oripa.renderer.estimation;
 
 import java.util.ArrayList;
 import java.util.List;

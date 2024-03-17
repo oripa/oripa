@@ -34,6 +34,7 @@ public class AffineCamera {
 	private double transXOfPaper, transYOfPaper;
 	private double centerXOfPaper, centerYOfPaper;
 	private double scale;
+	private double rotateAngle;
 
 	public AffineCamera() {
 
@@ -43,7 +44,9 @@ public class AffineCamera {
 		affineTransform.setToIdentity();
 		affineTransform.translate(cameraX, cameraY);
 		affineTransform.scale(scale, scale);
-		affineTransform.translate(transXOfPaper - centerXOfPaper, transYOfPaper - centerYOfPaper);
+		affineTransform.translate(transXOfPaper, transYOfPaper);
+		affineTransform.rotate(rotateAngle);
+		affineTransform.translate(-centerXOfPaper, -centerYOfPaper);
 
 		return affineTransform;
 	}
@@ -87,6 +90,12 @@ public class AffineCamera {
 	public AffineTransform updateCenterOfPaper(final double cx, final double cy) {
 		centerXOfPaper = cx;
 		centerYOfPaper = cy;
+
+		return updateAffineTransform();
+	}
+
+	public AffineTransform updateRotateAngle(final double angle) {
+		rotateAngle = angle;
 
 		return updateAffineTransform();
 	}
@@ -135,6 +144,16 @@ public class AffineCamera {
 				scale = 0.01;
 			}
 			return Optional.of(updateScale(scale));
+		}
+
+		return Optional.empty();
+	}
+
+	public Optional<AffineTransform> updateRotateByMouseDragged(final MouseEvent e, final Point2D preMousePoint) {
+		if (MouseUtility.isLeftButtonEvent(e)) {
+
+			var rotateAngle = this.rotateAngle + (e.getX() - preMousePoint.getX()) / 100.0;
+			return Optional.of(updateRotateAngle(rotateAngle));
 		}
 
 		return Optional.empty();
