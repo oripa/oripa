@@ -88,7 +88,7 @@ public class FoldedModelPictureExporter implements Exporter<FoldedModelEntity> {
 		camera.updateCameraPosition(WIDTH / 2, HEIGHT / 2);
 		camera.updateCenterOfPaper(WIDTH / 2, HEIGHT / 2);
 		camera.updateRotateAngle(config.getRotateAngle());
-		camera.updateScale(computeScale(modelDomain));
+		camera.updateScale(1);
 
 		var image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		var g = image.createGraphics();

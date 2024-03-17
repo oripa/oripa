@@ -160,7 +160,7 @@ public class FoldedModelScreen extends JPanel
 		redrawOrigami();
 	}
 
-	public void drawEdge(final boolean bEdge) {
+	public void drawEdges(final boolean bEdge) {
 		drawEdges = bEdge;
 		redrawOrigami();
 	}
