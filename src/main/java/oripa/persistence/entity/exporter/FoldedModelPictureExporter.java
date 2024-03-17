@@ -29,7 +29,7 @@ import javax.imageio.ImageIO;
 import oripa.geom.RectangleDomain;
 import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.filetool.Exporter;
-import oripa.renderer.estimation.DistortionFacade;
+import oripa.renderer.estimation.Distortion;
 import oripa.renderer.estimation.FoldedModelPixelRenderer;
 import oripa.swing.drawer.java2d.PixelDrawer;
 import oripa.swing.view.util.AffineCamera;
@@ -69,7 +69,7 @@ public class FoldedModelPictureExporter implements Exporter<FoldedModelEntity> {
 
 		var pixelRenderer = new FoldedModelPixelRenderer(WIDTH, HEIGHT);
 
-		var distortion = new DistortionFacade(modelDomain, WIDTH, HEIGHT);
+		var distortion = new Distortion(modelDomain, WIDTH, HEIGHT);
 		var converter = distortion.createCoordinateConverter(config.getDistortionMethod(),
 				config.getDistortionParameter(),
 				computeScale(modelDomain));

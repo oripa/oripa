@@ -25,7 +25,7 @@ import java.util.List;
  * @author OUCHI Koji
  *
  */
-public class TriangleFaceFactory {
+class TriangleFaceFactory {
 	public List<TriangleFace> createAll(final Face face) {
 		var triangles = new ArrayList<TriangleFace>();
 

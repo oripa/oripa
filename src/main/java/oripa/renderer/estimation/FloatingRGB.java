@@ -22,7 +22,7 @@ package oripa.renderer.estimation;
  * @author OUCHI Koji
  *
  */
-public class FloatingRGB {
+class FloatingRGB {
 	private final double r, g, b;
 
 	public FloatingRGB(final double r, final double g, final double b) {

@@ -29,7 +29,7 @@ import oripa.util.collection.CollectionUtil;
  * @author OUCHI Koji
  *
  */
-public class FaceFactory {
+class FaceFactory {
 
 	private final CoordinateConverter converter;
 	private final Map<OriVertex, Integer> vertexDepths;

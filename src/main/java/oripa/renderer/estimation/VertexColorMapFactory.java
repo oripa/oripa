@@ -31,7 +31,7 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
-public class VertexColorMapFactory {
+class VertexColorMapFactory {
 	/**
 	 *
 	 * @param face

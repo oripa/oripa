@@ -27,7 +27,7 @@ import oripa.domain.fold.origeom.OverlapRelation;
  * @author OUCHI Koji
  *
  */
-public class OverlapRelationInterpolater {
+class OverlapRelationInterpolater {
 	public OverlapRelation interpolate(final OverlapRelation overlapRelation, final List<Face> faces,
 			final double eps) {
 		var interpolatedOverlapRelation = overlapRelation.clone();
