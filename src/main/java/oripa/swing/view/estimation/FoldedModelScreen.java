@@ -85,7 +85,7 @@ public class FoldedModelScreen extends JPanel
 	private OverlapRelation overlapRelation;
 	private OriFace selectedSubface = null;
 
-	FoldedModelPixelRenderer pixelRenderer;
+	private final FoldedModelPixelRenderer pixelRenderer;
 
 	private RectangleDomain domain;
 
@@ -236,7 +236,7 @@ public class FoldedModelScreen extends JPanel
 				RenderingHints.VALUE_ANTIALIAS_ON);
 
 		bufferg.setTransform(new AffineTransform());
-//		// Clear image
+		// Clear image
 		bufferg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		bufferg.setColor(Color.WHITE);
 		bufferg.fillRect(0, 0, getWidth(), getHeight());
