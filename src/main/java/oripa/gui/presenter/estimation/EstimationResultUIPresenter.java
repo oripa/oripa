@@ -157,6 +157,7 @@ public class EstimationResultUIPresenter {
 		pictureConfig.setAmbientOcclusion(view.isFaceShade());
 		pictureConfig.setFillFaces(view.isFillFace());
 		pictureConfig.setDrawEdges(view.isDrawEdges());
+		pictureConfig.setFaceOrderFlipped(view.isFaceOrderFlipped());
 
 		pictureConfig.setColors(view.isUseColor() ? view.getFrontColor() : DefaultColors.WHITE,
 				view.isUseColor() ? view.getBackColor() : DefaultColors.WHITE);

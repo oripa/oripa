@@ -402,7 +402,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			screen.setUseColor(e.getStateChange() == ItemEvent.SELECTED);
 		});
 		edgeCheckBox.addItemListener(e -> {
-			screen.drawEdge(e.getStateChange() == ItemEvent.SELECTED);
+			screen.drawEdges(e.getStateChange() == ItemEvent.SELECTED);
 		});
 		fillFaceCheckBox.addItemListener(e -> {
 			screen.setFillFace(e.getStateChange() == ItemEvent.SELECTED);
