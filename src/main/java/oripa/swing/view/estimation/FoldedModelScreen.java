@@ -360,10 +360,6 @@ public class FoldedModelScreen extends JPanel
 		repaint();
 	}
 
-	public boolean isFaceOrderFlipped() {
-		return faceOrderFlip;
-	}
-
 	public double getRotateAngle() {
 		return camera.getRotateAngle();
 	}
