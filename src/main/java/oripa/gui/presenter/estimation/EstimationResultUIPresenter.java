@@ -96,7 +96,8 @@ public class EstimationResultUIPresenter {
 			fileAccessService.setConfigToSavingAction(
 					FoldedModelFileTypeKey.SVG_FOLDED_MODEL_FLIP, this::createSVGConfig);
 
-			fileAccessService.setConfigToSavingAction(FoldedModelFileTypeKey.PICTURE, this::createPictureConfig);
+			fileAccessService.setConfigToSavingAction(
+					FoldedModelFileTypeKey.PICTURE, this::createPictureConfig);
 
 			var foldedModel = view.getModel();
 

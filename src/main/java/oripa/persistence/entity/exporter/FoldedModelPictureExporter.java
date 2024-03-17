@@ -42,6 +42,10 @@ public class FoldedModelPictureExporter implements Exporter<FoldedModelEntity> {
 	private final int WIDTH = 600;
 	private final int HEIGHT = 600;
 
+	/**
+	 * @param configObj
+	 *            should be an instance of {@link FoldedModelPictureConfig}.
+	 */
 	@Override
 	public boolean export(final FoldedModelEntity foldedModel, final String filePath, final Object configObj)
 			throws IOException, IllegalArgumentException {
