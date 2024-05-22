@@ -57,7 +57,6 @@ public class LoaderXML implements DocLoader {
 
 			// parse opx version
 			var datasetNode = (Node) xpath.evaluate("/java/object", xmlDocument, XPathConstants.NODE);
-
 			dataset.setMainVersion(loadVersionFieldValue(datasetNode, "mainVersion"));
 			dataset.setSubVersion(loadVersionFieldValue(datasetNode, "subVersion"));
 
@@ -90,8 +89,8 @@ public class LoaderXML implements DocLoader {
 	private int loadVersionFieldValue(final Node datasetNode, final String fieldName)
 			throws XPathExpressionException {
 
-		return parseInt((Node) xpath.evaluate(createObjectPropertyExpression(fieldName, INT_NODE_NAME),
-				datasetNode, XPathConstants.NODE));
+		return parseInt((Node) xpath
+				.evaluate(createIntExpression(fieldName), datasetNode, XPathConstants.NODE));
 	}
 
 	private String loadPropertyFieldValue(final NodeList fieldNodes, final String fieldName)
@@ -100,9 +99,8 @@ public class LoaderXML implements DocLoader {
 		for (int i = 0; i < fieldNodes.getLength(); i++) {
 			var fieldNode = fieldNodes.item(i).cloneNode(true);
 
-			var nodeName = parseString((Node) xpath.evaluate(STRING_NODE_NAME, fieldNode, XPathConstants.NODE));
-
-			logger.debug("nodeName={}", nodeName);
+			var nodeName = parseString((Node) xpath
+					.evaluate(STRING_NODE_NAME, fieldNode, XPathConstants.NODE));
 
 			if (nodeName.equals(fieldName)) {
 				return parseString(
@@ -122,23 +120,17 @@ public class LoaderXML implements DocLoader {
 		for (int i = 0; i < lineProxyNodes.getLength(); i++) {
 			var lineProxyNode = lineProxyNodes.item(i).cloneNode(true);
 
-			var type = parseInt(
-					(Node) xpath.evaluate(createObjectPropertyExpression("type", INT_NODE_NAME),
-							lineProxyNode,
-							XPathConstants.NODE));
+			var type = parseInt((Node) xpath
+					.evaluate(createIntExpression("type"), lineProxyNode, XPathConstants.NODE));
 
-			var x0 = parseDouble(
-					(Node) xpath.evaluate(createObjectPropertyExpression("x0", DOUBLE_NODE_NAME), lineProxyNode,
-							XPathConstants.NODE));
-			var y0 = parseDouble(
-					(Node) xpath.evaluate(createObjectPropertyExpression("y0", DOUBLE_NODE_NAME), lineProxyNode,
-							XPathConstants.NODE));
-			var x1 = parseDouble(
-					(Node) xpath.evaluate(createObjectPropertyExpression("x1", DOUBLE_NODE_NAME), lineProxyNode,
-							XPathConstants.NODE));
-			var y1 = parseDouble(
-					(Node) xpath.evaluate(createObjectPropertyExpression("y1", DOUBLE_NODE_NAME), lineProxyNode,
-							XPathConstants.NODE));
+			var x0 = parseDouble((Node) xpath
+					.evaluate(createDoubleExpression("x0"), lineProxyNode, XPathConstants.NODE));
+			var y0 = parseDouble((Node) xpath
+					.evaluate(createDoubleExpression("y0"), lineProxyNode, XPathConstants.NODE));
+			var x1 = parseDouble((Node) xpath
+					.evaluate(createDoubleExpression("x1"), lineProxyNode, XPathConstants.NODE));
+			var y1 = parseDouble((Node) xpath
+					.evaluate(createDoubleExpression("y1"), lineProxyNode, XPathConstants.NODE));
 
 			var proxy = new OriLineProxy();
 			proxy.setType(type);
@@ -151,6 +143,14 @@ public class LoaderXML implements DocLoader {
 		}
 
 		return proxies;
+	}
+
+	private String createIntExpression(final String name) {
+		return createObjectPropertyExpression(name, INT_NODE_NAME);
+	}
+
+	private String createDoubleExpression(final String name) {
+		return createObjectPropertyExpression(name, DOUBLE_NODE_NAME);
 	}
 
 	private String createObjectPropertyExpression(final String propertyName, final String type) {
