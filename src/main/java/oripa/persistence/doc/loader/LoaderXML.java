@@ -18,10 +18,7 @@
 
 package oripa.persistence.doc.loader;
 
-import java.beans.XMLDecoder;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -35,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import oripa.DataSet;
 import oripa.OriLineProxy;
@@ -49,6 +47,7 @@ public class LoaderXML implements DocLoader {
 
 	private static final String INT_NODE_NAME = "int";
 	private static final String DOUBLE_NODE_NAME = "double";
+	private static final String STRING_NODE_NAME = "string";
 
 	private DataSet loadAsDataSet(final String filePath) throws IOException, WrongDataFormatException {
 		DataSet dataset = new DataSet();
@@ -75,12 +74,15 @@ public class LoaderXML implements DocLoader {
 
 			// parse line proxies
 			dataset.lines = loadOriLineProxies(xmlDocument);
-
+		} catch (SAXException e) {
+			logger.error("Invalid format.", e);
+			throw new WrongDataFormatException("The file is not in XML format.", e);
 		} catch (XPathExpressionException e) {
 			logger.error("Bad implementation.", e);
 			throw new RuntimeException(e);
 		} catch (Exception e) {
-			logger.error(filePath, e);
+			logger.error("Unknown error.", e);
+			throw new RuntimeException(e);
 		}
 		return dataset;
 	}
@@ -96,18 +98,16 @@ public class LoaderXML implements DocLoader {
 			throws XPathExpressionException {
 
 		for (int i = 0; i < fieldNodes.getLength(); i++) {
-			var fieldNode = fieldNodes.item(i);
+			var fieldNode = fieldNodes.item(i).cloneNode(true);
 
-			var nodeName = parseString((Node) xpath.evaluate("string", fieldNode, XPathConstants.NODE));
+			var nodeName = parseString((Node) xpath.evaluate(STRING_NODE_NAME, fieldNode, XPathConstants.NODE));
 
 			logger.debug("nodeName={}", nodeName);
 
 			if (nodeName.equals(fieldName)) {
-				// needs for speeding up
-				fieldNode.getParentNode().removeChild(fieldNode);
-
 				return parseString(
-						(Node) xpath.evaluate("void[@method='set']/string", fieldNode, XPathConstants.NODE));
+						(Node) xpath.evaluate("void[@method='set']/" + STRING_NODE_NAME, fieldNode,
+								XPathConstants.NODE));
 			}
 		}
 		return null;
@@ -120,10 +120,7 @@ public class LoaderXML implements DocLoader {
 		var proxies = new OriLineProxy[lineProxyNodes.getLength()];
 
 		for (int i = 0; i < lineProxyNodes.getLength(); i++) {
-			var lineProxyNode = lineProxyNodes.item(i);
-
-			// needs for speeding up
-			lineProxyNode.getParentNode().removeChild(lineProxyNode);
+			var lineProxyNode = lineProxyNodes.item(i).cloneNode(true);
 
 			var type = parseInt(
 					(Node) xpath.evaluate(createObjectPropertyExpression("type", INT_NODE_NAME),
@@ -158,17 +155,6 @@ public class LoaderXML implements DocLoader {
 
 	private String createObjectPropertyExpression(final String propertyName, final String type) {
 		return "void[@property='" + propertyName + "']/" + type;
-	}
-
-	private DataSet loadAsDataSetOld(final String filePath) throws IOException {
-		DataSet dataset;
-		try (var fis = new FileInputStream(filePath);
-				var bis = new BufferedInputStream(fis);
-				var dec = new XMLDecoder(bis)) {
-			dataset = (DataSet) dec.readObject();
-		}
-
-		return dataset;
 	}
 
 	private String parseString(final Node node) {
