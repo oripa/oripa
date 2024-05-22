@@ -19,6 +19,7 @@
 package oripa.persistence.doc.loader;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -26,12 +27,13 @@ import java.util.Optional;
 import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.value.OriLine;
 
 public class LoaderCP implements DocLoader {
 
 	@Override
-	public Optional<Doc> load(final String filePath) {
+	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
 		var lines = new ArrayList<OriLine>();
 
 		try (var r = new FileReader(filePath)) {
@@ -47,10 +49,8 @@ public class LoaderCP implements DocLoader {
 			st.whitespaceChars('\n', '\n');
 			st.whitespaceChars('\r', '\r');
 
-			int token;
-
 			OriLine line;
-			while ((token = st.nextToken()) != StreamTokenizer.TT_EOF) {
+			while (st.nextToken() != StreamTokenizer.TT_EOF) {
 				OriLine.Type lineType;
 				try {
 					lineType = OriLine.Type.fromInt(Integer.parseInt(st.sval));
@@ -64,18 +64,17 @@ public class LoaderCP implements DocLoader {
 				} catch (IllegalArgumentException e) {
 					lineType = OriLine.Type.AUX;
 				}
-//				System.out.println("line type " + line.getType());
 
-				token = st.nextToken();
+				st.nextToken();
 				var p0x = Double.parseDouble(st.sval);
 
-				token = st.nextToken();
+				st.nextToken();
 				var p0y = Double.parseDouble(st.sval);
 
-				token = st.nextToken();
+				st.nextToken();
 				var p1x = Double.parseDouble(st.sval);
 
-				token = st.nextToken();
+				st.nextToken();
 				var p1y = Double.parseDouble(st.sval);
 
 				line = new OriLine(p0x, p0y, p1x, p1y, lineType);
@@ -84,8 +83,8 @@ public class LoaderCP implements DocLoader {
 
 			System.out.println("end");
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			throw new WrongDataFormatException("Parse error.", e);
 		}
 
 		// for (OriLine l : lines) {
