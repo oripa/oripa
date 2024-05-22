@@ -23,13 +23,12 @@ import java.io.IOException;
 import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -42,7 +41,6 @@ import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.resource.Version;
 
 public class LoaderXML implements DocLoader {
-	private static final Logger logger = LoggerFactory.getLogger(LoaderXML.class);
 	private final XPath xpath = XPathFactory.newInstance().newXPath();
 
 	private static final String INT_NODE_NAME = "int";
@@ -74,14 +72,9 @@ public class LoaderXML implements DocLoader {
 			// parse line proxies
 			dataset.lines = loadOriLineProxies(xmlDocument);
 		} catch (SAXException e) {
-			logger.error("Invalid format.", e);
 			throw new WrongDataFormatException("The file is not in XML format.", e);
-		} catch (XPathExpressionException e) {
-			logger.error("Bad implementation.", e);
-			throw new RuntimeException(e);
-		} catch (Exception e) {
-			logger.error("Unknown error.", e);
-			throw new RuntimeException(e);
+		} catch (ParserConfigurationException | XPathExpressionException e) {
+			throw new RuntimeException("Bad implementation.", e);
 		}
 		return dataset;
 	}
@@ -183,11 +176,7 @@ public class LoaderXML implements DocLoader {
 
 		DataSet data;
 
-		try {
-			data = loadAsDataSet(filePath);
-		} catch (RuntimeException e) {
-			throw new WrongDataFormatException("failed to load " + filePath);
-		}
+		data = loadAsDataSet(filePath);
 
 		if (data.getMainVersion() > Version.FILE_MAJOR_VERSION) {
 			throw new FileVersionError();

@@ -19,17 +19,19 @@
 package oripa.persistence.doc.loader;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import oripa.doc.Doc;
+import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.value.OriLine;
 
 public class LoaderPDF implements DocLoader {
 
 	@Override
-	public Optional<Doc> load(final String filePath) {
+	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
 		var dtos = new ArrayList<LineDto>();
 
 		try (var r = new FileReader(filePath)) {
@@ -88,8 +90,8 @@ public class LoaderPDF implements DocLoader {
 
 			System.out.println("end");
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			throw new WrongDataFormatException("Parse error.", e);
 		}
 
 		var doc = new Doc(new LineDtoConverter().convert(dtos));

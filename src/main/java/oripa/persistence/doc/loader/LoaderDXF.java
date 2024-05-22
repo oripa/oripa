@@ -24,19 +24,14 @@ import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import oripa.doc.Doc;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.value.OriLine;
 
 public class LoaderDXF implements DocLoader {
 
-	private static Logger logger = LoggerFactory.getLogger(LoaderDXF.class);
-
 	@Override
-	public Optional<Doc> load(final String filePath) throws WrongDataFormatException {
+	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
 		var dtos = new ArrayList<LineDto>();
 
 		try (var r = new FileReader(filePath)) {
@@ -112,9 +107,8 @@ public class LoaderDXF implements DocLoader {
 				}
 			}
 
-		} catch (IOException | NumberFormatException e) {
-			logger.error("parse error", e);
-			throw new WrongDataFormatException("parse error", e);
+		} catch (NumberFormatException e) {
+			throw new WrongDataFormatException("Parse error.", e);
 		}
 
 		if (dtos.isEmpty()) {
