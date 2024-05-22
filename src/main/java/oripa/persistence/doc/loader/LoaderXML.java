@@ -73,6 +73,8 @@ public class LoaderXML implements DocLoader {
 			dataset.lines = loadOriLineProxies(xmlDocument);
 		} catch (SAXException e) {
 			throw new WrongDataFormatException("The file is not in XML format.", e);
+		} catch (NumberFormatException e) {
+			throw new WrongDataFormatException("Parse error.", e);
 		} catch (ParserConfigurationException | XPathExpressionException e) {
 			throw new RuntimeException("Bad implementation.", e);
 		}
