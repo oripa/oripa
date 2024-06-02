@@ -37,6 +37,7 @@ public class CommandLineInterfaceMain {
 	private static final String REVERSE = "reverse";
 	private static final String SPLIT = "split";
 	private static final String FOLD = "fold";
+	private static final String ANY = "any";
 	private static final String HELP = "help";
 
 	private static final String CP_FILE = "cp-file";
@@ -96,6 +97,13 @@ public class CommandLineInterfaceMain {
 				.build();
 		options.addOption(foldOption);
 
+		var anyOption = Option.builder("a")
+				.longOpt(ANY)
+				.desc("Put this option if --" + FOLD
+						+ " should stop the computation as soon as it found the first folded model.")
+				.build();
+		options.addOption(anyOption);
+
 		var helpOption = Option.builder("h")
 				.longOpt(HELP)
 				.desc("Show help.")
@@ -111,7 +119,9 @@ public class CommandLineInterfaceMain {
 
 			if (line.hasOption(HELP)) {
 				var formatter = new HelpFormatter();
-				formatter.printHelp("ORIPA command line tool.", options);
+				formatter.printHelp(System.lineSeparator() +
+						"  command line: java -jar oripa-x.yz.jar inputFilePath [options]" + System.lineSeparator()
+						+ "  GUI: java -jar oripa-x.yz.jar", options);
 				return;
 			}
 
@@ -141,7 +151,8 @@ public class CommandLineInterfaceMain {
 				var outputFilePath = line.getOptionValue(foldOption);
 				var folder = new CommandLineFolder();
 				var split = line.hasOption(splitOption);
-				folder.fold(inputFilePath, split, outputFilePath, pointEps);
+				var any = line.hasOption(anyOption);
+				folder.fold(inputFilePath, any, split, outputFilePath, pointEps);
 
 			} else if (line.getOptions().length == 0) {
 				throw new IllegalArgumentException("No option is given. Hint: see help by -" + helpOption.getOpt());
