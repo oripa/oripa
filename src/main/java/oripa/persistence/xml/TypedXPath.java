@@ -21,12 +21,17 @@ package oripa.persistence.xml;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class TypedXPath {
 	private final XPath xpath;
+
+	public TypedXPath() {
+		this(XPathFactory.newInstance().newXPath());
+	}
 
 	public TypedXPath(final XPath xpath) {
 		this.xpath = xpath;

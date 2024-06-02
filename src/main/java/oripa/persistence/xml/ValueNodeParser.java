@@ -22,7 +22,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.w3c.dom.Node;
 
-public class ValueNodeParser {
+class ValueNodeParser {
 	private final TypedXPath xpath;
 	private static final String INT_NODE_NAME = "int";
 	private static final String DOUBLE_NODE_NAME = "double";

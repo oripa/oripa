@@ -25,49 +25,44 @@ import java.util.Optional;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import oripa.DataSet;
-import oripa.OriLineProxy;
 import oripa.doc.Doc;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
+import oripa.persistence.xml.ElementLoader;
 import oripa.persistence.xml.TypedXPath;
-import oripa.persistence.xml.ValueNodeParser;
 import oripa.resource.Version;
 
 public class LoaderXML implements DocLoader {
 
-	private final TypedXPath xpath = new TypedXPath(XPathFactory.newInstance().newXPath());
-	final ValueNodeParser parser = new ValueNodeParser(xpath);
-
 	private DataSet loadAsDataSet(final String filePath) throws IOException, WrongDataFormatException {
+		var elementLoader = new ElementLoader(new TypedXPath());
+
 		DataSet dataset = new DataSet();
 		try {
 			var builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			var xmlDocument = builder.parse(new File(filePath));
 
 			// parse opx version
-			var datasetNode = xpath.evaluateAsNode("/java/object", xmlDocument);
-			dataset.setMainVersion(loadVersionFieldValue("mainVersion", datasetNode));
-			dataset.setSubVersion(loadVersionFieldValue("subVersion", datasetNode));
+			var datasetNode = elementLoader.findDataSetNode(xmlDocument);
+			dataset.setMainVersion(elementLoader.loadVersionFieldValue("mainVersion", datasetNode));
+			dataset.setSubVersion(elementLoader.loadVersionFieldValue("subVersion", datasetNode));
 
 			// get object fields
-			var fieldNodes = xpath.evaluateAsNodeList("//void[@method='getField']", xmlDocument);
+			var fieldNodes = elementLoader.findFieldNodes(xmlDocument);
 
 			// parse property values
-			dataset.title = loadPropertyFieldValue("title", fieldNodes);
-			dataset.editorName = loadPropertyFieldValue("editorName", fieldNodes);
-			dataset.originalAuthorName = loadPropertyFieldValue("originalAuthorName", fieldNodes);
-			dataset.reference = loadPropertyFieldValue("reference", fieldNodes);
-			dataset.memo = loadPropertyFieldValue("memo", fieldNodes);
+			dataset.title = elementLoader.loadPropertyFieldValue("title", fieldNodes);
+			dataset.editorName = elementLoader.loadPropertyFieldValue("editorName", fieldNodes);
+			dataset.originalAuthorName = elementLoader.loadPropertyFieldValue("originalAuthorName", fieldNodes);
+			dataset.reference = elementLoader.loadPropertyFieldValue("reference", fieldNodes);
+			dataset.memo = elementLoader.loadPropertyFieldValue("memo", fieldNodes);
 
 			// parse line proxies
-			dataset.lines = loadOriLineProxies(xmlDocument);
+			dataset.lines = elementLoader.loadOriLineProxies(xmlDocument);
 		} catch (SAXException e) {
 			throw new WrongDataFormatException("The file is not in XML format.", e);
 		} catch (NumberFormatException e) {
@@ -76,49 +71,6 @@ public class LoaderXML implements DocLoader {
 			throw new RuntimeException("Bad implementation.", e);
 		}
 		return dataset;
-	}
-
-	private int loadVersionFieldValue(final String fieldName, final Node datasetNode)
-			throws XPathExpressionException {
-
-		return parser.parseIntProperty(fieldName, datasetNode);
-	}
-
-	private String loadPropertyFieldValue(final String fieldName, final NodeList fieldNodes)
-			throws XPathExpressionException {
-
-		for (int i = 0; i < fieldNodes.getLength(); i++) {
-			var fieldNode = fieldNodes.item(i).cloneNode(true);
-
-			var nodeName = parser.parseObjectName(fieldNode);
-
-			if (nodeName.equals(fieldName)) {
-				return parser.parseStringValue(fieldNode);
-			}
-		}
-		return null;
-	}
-
-	private OriLineProxy[] loadOriLineProxies(final Node rootNode) throws XPathExpressionException {
-		var lineExpression = "//object[@class='oripa.OriLineProxy']";
-		var lineProxyNodes = xpath.evaluateAsNodeList(lineExpression, rootNode);
-
-		var proxies = new OriLineProxy[lineProxyNodes.getLength()];
-
-		for (int i = 0; i < lineProxyNodes.getLength(); i++) {
-			var lineProxyNode = lineProxyNodes.item(i).cloneNode(true);
-
-			var proxy = new OriLineProxy();
-			proxy.setType(parser.parseIntProperty("type", lineProxyNode));
-			proxy.setX0(parser.parseDoubleProperty("x0", lineProxyNode));
-			proxy.setY0(parser.parseDoubleProperty("y0", lineProxyNode));
-			proxy.setX1(parser.parseDoubleProperty("x1", lineProxyNode));
-			proxy.setY1(parser.parseDoubleProperty("y1", lineProxyNode));
-
-			proxies[i] = proxy;
-		}
-
-		return proxies;
 	}
 
 	@Override
