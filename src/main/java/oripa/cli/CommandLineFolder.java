@@ -41,7 +41,7 @@ import oripa.persistence.entity.exporter.FoldedModelSingleExporterFOLD;
 public class CommandLineFolder {
 	private static final Logger logger = LoggerFactory.getLogger(CommandLineFolder.class);
 
-	public void fold(final String inputFilePath, final boolean split, final String outputFilePath,
+	public void fold(final String inputFilePath, final boolean any, final boolean split, final String outputFilePath,
 			final double pointEps) {
 
 		if (!outputFilePath.endsWith(".fold")) {
@@ -67,7 +67,9 @@ public class CommandLineFolder {
 			}
 
 			var folder = new FolderFactory().create(origamiModel.getModelType());
-			var foldedModel = folder.fold(origamiModel, pointEps, Folder.EstimationType.FULL).getFoldedModel();
+			var foldedModel = any
+					? folder.fold(origamiModel, pointEps, Folder.EstimationType.FIRST_ONLY).getFoldedModel()
+					: folder.fold(origamiModel, pointEps, Folder.EstimationType.FULL).getFoldedModel();
 
 			if (split) {
 				var digitLength = Integer.toString(foldedModel.getFoldablePatternCount()).length();
