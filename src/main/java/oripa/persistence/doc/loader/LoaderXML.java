@@ -24,8 +24,6 @@ import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
@@ -38,14 +36,14 @@ import oripa.OriLineProxy;
 import oripa.doc.Doc;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.WrongDataFormatException;
+import oripa.persistence.xml.TypedXPath;
+import oripa.persistence.xml.ValueNodeParser;
 import oripa.resource.Version;
 
 public class LoaderXML implements DocLoader {
-	private final XPath xpath = XPathFactory.newInstance().newXPath();
 
-	private static final String INT_NODE_NAME = "int";
-	private static final String DOUBLE_NODE_NAME = "double";
-	private static final String STRING_NODE_NAME = "string";
+	private final TypedXPath xpath = new TypedXPath(XPathFactory.newInstance().newXPath());
+	final ValueNodeParser parser = new ValueNodeParser(xpath);
 
 	private DataSet loadAsDataSet(final String filePath) throws IOException, WrongDataFormatException {
 		DataSet dataset = new DataSet();
@@ -54,20 +52,19 @@ public class LoaderXML implements DocLoader {
 			var xmlDocument = builder.parse(new File(filePath));
 
 			// parse opx version
-			var datasetNode = (Node) xpath.evaluate("/java/object", xmlDocument, XPathConstants.NODE);
-			dataset.setMainVersion(loadVersionFieldValue(datasetNode, "mainVersion"));
-			dataset.setSubVersion(loadVersionFieldValue(datasetNode, "subVersion"));
+			var datasetNode = xpath.evaluateAsNode("/java/object", xmlDocument);
+			dataset.setMainVersion(loadVersionFieldValue("mainVersion", datasetNode));
+			dataset.setSubVersion(loadVersionFieldValue("subVersion", datasetNode));
 
 			// get object fields
-			var fieldNodes = (NodeList) xpath.evaluate("//void[@method='getField']", xmlDocument,
-					XPathConstants.NODESET);
+			var fieldNodes = xpath.evaluateAsNodeList("//void[@method='getField']", xmlDocument);
 
 			// parse property values
-			dataset.title = loadPropertyFieldValue(fieldNodes, "title");
-			dataset.editorName = loadPropertyFieldValue(fieldNodes, "editorName");
-			dataset.originalAuthorName = loadPropertyFieldValue(fieldNodes, "originalAuthorName");
-			dataset.reference = loadPropertyFieldValue(fieldNodes, "reference");
-			dataset.memo = loadPropertyFieldValue(fieldNodes, "memo");
+			dataset.title = loadPropertyFieldValue("title", fieldNodes);
+			dataset.editorName = loadPropertyFieldValue("editorName", fieldNodes);
+			dataset.originalAuthorName = loadPropertyFieldValue("originalAuthorName", fieldNodes);
+			dataset.reference = loadPropertyFieldValue("reference", fieldNodes);
+			dataset.memo = loadPropertyFieldValue("memo", fieldNodes);
 
 			// parse line proxies
 			dataset.lines = loadOriLineProxies(xmlDocument);
@@ -81,26 +78,22 @@ public class LoaderXML implements DocLoader {
 		return dataset;
 	}
 
-	private int loadVersionFieldValue(final Node datasetNode, final String fieldName)
+	private int loadVersionFieldValue(final String fieldName, final Node datasetNode)
 			throws XPathExpressionException {
 
-		return parseInt((Node) xpath
-				.evaluate(createIntExpression(fieldName), datasetNode, XPathConstants.NODE));
+		return parser.parseIntProperty(fieldName, datasetNode);
 	}
 
-	private String loadPropertyFieldValue(final NodeList fieldNodes, final String fieldName)
+	private String loadPropertyFieldValue(final String fieldName, final NodeList fieldNodes)
 			throws XPathExpressionException {
 
 		for (int i = 0; i < fieldNodes.getLength(); i++) {
 			var fieldNode = fieldNodes.item(i).cloneNode(true);
 
-			var nodeName = parseString((Node) xpath
-					.evaluate(STRING_NODE_NAME, fieldNode, XPathConstants.NODE));
+			var nodeName = parser.parseObjectName(fieldNode);
 
 			if (nodeName.equals(fieldName)) {
-				return parseString(
-						(Node) xpath.evaluate("void[@method='set']/" + STRING_NODE_NAME, fieldNode,
-								XPathConstants.NODE));
+				return parser.parseStringValue(fieldNode);
 			}
 		}
 		return null;
@@ -108,69 +101,24 @@ public class LoaderXML implements DocLoader {
 
 	private OriLineProxy[] loadOriLineProxies(final Node rootNode) throws XPathExpressionException {
 		var lineExpression = "//object[@class='oripa.OriLineProxy']";
-		var lineProxyNodes = (NodeList) xpath.evaluate(lineExpression, rootNode, XPathConstants.NODESET);
+		var lineProxyNodes = xpath.evaluateAsNodeList(lineExpression, rootNode);
 
 		var proxies = new OriLineProxy[lineProxyNodes.getLength()];
 
 		for (int i = 0; i < lineProxyNodes.getLength(); i++) {
 			var lineProxyNode = lineProxyNodes.item(i).cloneNode(true);
 
-			var type = parseInt((Node) xpath
-					.evaluate(createIntExpression("type"), lineProxyNode, XPathConstants.NODE));
-
-			var x0 = parseDouble((Node) xpath
-					.evaluate(createDoubleExpression("x0"), lineProxyNode, XPathConstants.NODE));
-			var y0 = parseDouble((Node) xpath
-					.evaluate(createDoubleExpression("y0"), lineProxyNode, XPathConstants.NODE));
-			var x1 = parseDouble((Node) xpath
-					.evaluate(createDoubleExpression("x1"), lineProxyNode, XPathConstants.NODE));
-			var y1 = parseDouble((Node) xpath
-					.evaluate(createDoubleExpression("y1"), lineProxyNode, XPathConstants.NODE));
-
 			var proxy = new OriLineProxy();
-			proxy.setType(type);
-			proxy.setX0(x0);
-			proxy.setY0(y0);
-			proxy.setX1(x1);
-			proxy.setY1(y1);
+			proxy.setType(parser.parseIntProperty("type", lineProxyNode));
+			proxy.setX0(parser.parseDoubleProperty("x0", lineProxyNode));
+			proxy.setY0(parser.parseDoubleProperty("y0", lineProxyNode));
+			proxy.setX1(parser.parseDoubleProperty("x1", lineProxyNode));
+			proxy.setY1(parser.parseDoubleProperty("y1", lineProxyNode));
 
 			proxies[i] = proxy;
 		}
 
 		return proxies;
-	}
-
-	private String createIntExpression(final String name) {
-		return createObjectPropertyExpression(name, INT_NODE_NAME);
-	}
-
-	private String createDoubleExpression(final String name) {
-		return createObjectPropertyExpression(name, DOUBLE_NODE_NAME);
-	}
-
-	private String createObjectPropertyExpression(final String propertyName, final String type) {
-		return "void[@property='" + propertyName + "']/" + type;
-	}
-
-	private String parseString(final Node node) {
-		if (node == null) {
-			return "";
-		}
-		return node.getTextContent();
-	}
-
-	private int parseInt(final Node node) {
-		if (node == null) {
-			return 0;
-		}
-		return Integer.parseInt(node.getTextContent());
-	}
-
-	private double parseDouble(final Node node) {
-		if (node == null) {
-			return 0;
-		}
-		return Double.parseDouble(node.getTextContent());
 	}
 
 	@Override
