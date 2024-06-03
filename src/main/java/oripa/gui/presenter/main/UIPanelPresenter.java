@@ -364,8 +364,6 @@ public class UIPanelPresenter {
 
 		var origamiModels = modelComputation.buildOrigamiModels(creasePattern);
 
-		computationResult = null;
-
 		computationResult = modelComputation.computeModels(
 				origamiModels,
 				getComputationType());
@@ -377,10 +375,6 @@ public class UIPanelPresenter {
 
 	private void showFoldedModelWindows() {
 		var parent = (FrameView) view.getTopLevelView();
-
-		if (computationResult == null) {
-			view.showFoldFailureMessage();
-		}
 
 		if (!computationResult.allLocallyFlatFoldable()) {
 			view.showLocalFlatFoldabilityViolationMessage();

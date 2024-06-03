@@ -95,6 +95,11 @@ public class ModelComputationFacade {
 			return Collections.unmodifiableList(origamiModels);
 		}
 
+		/**
+		 * Returns a {@link OrigamiModel} that contains all elements of each
+		 * model. The references by IDs will be broken since the elements are
+		 * mixed.
+		 */
 		public OrigamiModel getMergedOrigamiModel() {
 			var paperSize = RectangleDomain.createFromPoints(
 					origamiModels.stream()
@@ -132,21 +137,15 @@ public class ModelComputationFacade {
 		}
 
 		/**
-		 *
-		 * @return the sum of the number of the foldable patterns for each
-		 *         crease pattern. -1 if some model is not foldable.
+		 * Returns true if all models are globally flat foldable.
 		 */
-		public int countFoldablePatterns() {
-			if (!allLocallyFlatFoldable()) {
-				return -1;
-			}
-			return foldedModels.stream().mapToInt(m -> m.getFoldablePatternCount()).sum();
-		}
-
 		public boolean allGloballyFlatFoldable() {
 			return foldedModels.stream().allMatch(m -> m.getFoldablePatternCount() > 0);
 		}
 
+		/**
+		 * Returns true if all models are locally flat foldable.
+		 */
 		public boolean allLocallyFlatFoldable() {
 			return origamiModels.stream().allMatch(OrigamiModel::isLocallyFlatFoldable);
 		}
