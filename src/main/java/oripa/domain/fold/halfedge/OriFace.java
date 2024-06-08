@@ -360,6 +360,6 @@ public class OriFace {
 				.map(he -> he.getPosition().toString())
 				.collect(Collectors.joining(","));
 
-		return str;
+		return str + " id=" + faceID;
 	}
 }

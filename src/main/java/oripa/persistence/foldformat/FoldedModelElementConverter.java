@@ -166,7 +166,8 @@ public class FoldedModelElementConverter {
 		return edges;
 	}
 
-	public List<OriFace> fromFacesVertices(final List<List<Integer>> facesVertices, final List<OriVertex> vertices) {
+	public List<OriFace> fromFacesVertices(final List<List<Integer>> facesVertices,
+			final List<List<Integer>> edgesVertices, final List<OriVertex> vertices, final List<OriEdge> edges) {
 		var faces = new ArrayList<OriFace>();
 
 		for (int i = 0; i < facesVertices.size(); i++) {
@@ -180,6 +181,19 @@ public class FoldedModelElementConverter {
 			});
 			face.makeHalfedgeLoop();
 
+			final int vertexCount = faceVertices.size();
+			for (int j = 0; j < vertexCount; j++) {
+				var target = List.of(faceVertices.get(j), faceVertices.get((j + 1) % vertexCount));
+				var edgeIndex = edgesVertices.indexOf(target);
+				if (edgeIndex == -1) {
+					edgeIndex = edgesVertices.indexOf(target.reversed());
+				}
+				if (edgeIndex == -1) {
+					throw new IllegalArgumentException("no edgeVertices match.");
+				}
+				face.getHalfedge(j).setEdge(edges.get(edgeIndex));
+			}
+
 			if (!GeomUtil.isCCW(
 					face.getHalfedge(0).getPosition(),
 					face.getHalfedge(1).getPosition(),
@@ -187,6 +201,7 @@ public class FoldedModelElementConverter {
 				face.invertFaceFront();
 			}
 
+			face.setFaceID(i);
 			faces.add(face);
 		}
 

@@ -18,12 +18,20 @@
  */
 package oripa.cli;
 
+import java.awt.Color;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.persistence.entity.FoldedModelEntity;
 import oripa.persistence.entity.exporter.FoldedModelExporterSVG;
+import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
+import oripa.persistence.entity.exporter.FoldedModelPictureExporter;
 import oripa.persistence.entity.loader.FoldedModelLoaderFOLD;
+import oripa.renderer.estimation.DistortionMethod;
+import oripa.renderer.estimation.VertexDepthMapFactory;
 
 /**
  * @author OUCHI Koji
@@ -32,26 +40,60 @@ import oripa.persistence.entity.loader.FoldedModelLoaderFOLD;
 public class FoldedModelImageExporter {
 	private static final Logger logger = LoggerFactory.getLogger(FoldedModelImageExporter.class);
 
-	public void export(final String inputFilePath, final int index, final boolean reverse,
-			final String outputFilePath) {
+	static final String SVG_EXTENSION = ".svg";
+	static final String JPG_EXTENSION = ".jpg";
+	static final String PNG_EXTENSION = ".png";
 
-		if (!inputFilePath.endsWith(".fold")) {
+	static final List<String> AVAILABLE_EXTENSIONS = List.of(SVG_EXTENSION, JPG_EXTENSION, PNG_EXTENSION);
+
+	public void export(final String inputFilePath, final int index, final boolean reverse,
+			final String outputFilePath, final double eps) {
+
+		final var lowerInputFilePath = inputFilePath.toLowerCase();
+		final var lowerOutputFilePath = outputFilePath.toLowerCase();
+
+		if (!lowerInputFilePath.endsWith(".fold")) {
 			throw new IllegalArgumentException("Input format is not supported. acceptable format: fold");
 		}
 
-		if (!outputFilePath.endsWith(".svg")) {
-			throw new IllegalArgumentException("Output format is not supported. acceptable format: svg");
+		if (AVAILABLE_EXTENSIONS.stream().noneMatch(lowerOutputFilePath::endsWith)) {
+			throw new IllegalArgumentException("Output format is not supported. acceptable format: "
+					+ String.join(",", AVAILABLE_EXTENSIONS));
 		}
 
 		var inputFileLoader = new FoldedModelLoaderFOLD();
-		var outputFileExporter = new FoldedModelExporterSVG(reverse);
+
+		var regex = Pattern.compile("[.][\\w]+$");
+		var matcher = regex.matcher(lowerOutputFilePath);
+		if (!matcher.find()) {
+			throw new RuntimeException("Wrong implementation.");
+		}
+		var outputExtension = matcher.toMatchResult().group();
+
+		var outputFileExporter = switch (outputExtension) {
+		case (SVG_EXTENSION) -> new FoldedModelExporterSVG(reverse);
+		default -> new FoldedModelPictureExporter();
+		};
 
 		try {
 			var inputModelEntityOpt = inputFileLoader.load(inputFilePath);
 
 			var entity = new FoldedModelEntity(inputModelEntityOpt.orElseThrow().toFoldedModel(), index);
 
-			outputFileExporter.export(entity, outputFilePath, null);
+			Object config = switch (outputExtension) {
+			case (SVG_EXTENSION) -> null;
+			default -> new FoldedModelPictureConfig()
+					.setAmbientOcclusion(false)
+					.setColors(Color.GRAY, Color.WHITE)
+					.setDistortionMethod(DistortionMethod.NONE)
+					.setDrawEdges(true)
+					.setFaceOrderFlipped(reverse)
+					.setFillFaces(true)
+					.setVertexDepths(new VertexDepthMapFactory().create(
+							entity.getOrigamiModel(), entity.getOverlapRelation(), eps))
+					.setEps(eps);
+			};
+			outputFileExporter.export(entity, outputFilePath, config);
 
 		} catch (Exception e) {
 			logger.error("image error", e);
