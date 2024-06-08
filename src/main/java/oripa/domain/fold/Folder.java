@@ -35,7 +35,7 @@ public interface Folder {
 		private final FoldedModel foldedModel;
 		private final EstimationResultRules estimationRules;
 
-		public Result(final FoldedModel foldedModel, final EstimationResultRules estimationRules) {
+		Result(final FoldedModel foldedModel, final EstimationResultRules estimationRules) {
 			this.foldedModel = foldedModel;
 			this.estimationRules = estimationRules;
 		}
