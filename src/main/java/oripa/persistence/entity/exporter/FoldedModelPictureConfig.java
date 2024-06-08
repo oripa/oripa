@@ -49,93 +49,105 @@ public class FoldedModelPictureConfig {
 		return eps;
 	}
 
-	public void setEps(final double eps) {
+	public FoldedModelPictureConfig setEps(final double eps) {
 		this.eps = eps;
+		return this;
 	}
 
 	public boolean isFaceOrderFlipped() {
 		return faceOrderFlipped;
 	}
 
-	public void setFaceOrderFlipped(final boolean faceOrderFlipped) {
+	public FoldedModelPictureConfig setFaceOrderFlipped(final boolean faceOrderFlipped) {
 		this.faceOrderFlipped = faceOrderFlipped;
+		return this;
 	}
 
 	public boolean isFillFaces() {
 		return fillFaces;
 	}
 
-	public void setFillFaces(final boolean fillFaces) {
+	public FoldedModelPictureConfig setFillFaces(final boolean fillFaces) {
 		this.fillFaces = fillFaces;
+		return this;
 	}
 
 	public boolean isDrawEdges() {
 		return drawEdges;
 	}
 
-	public void setDrawEdges(final boolean drawEdges) {
+	public FoldedModelPictureConfig setDrawEdges(final boolean drawEdges) {
 		this.drawEdges = drawEdges;
+		return this;
 	}
 
 	public boolean isAmbientOcclusion() {
 		return ambientOcclusion;
 	}
 
-	public void setAmbientOcclusion(final boolean ambientOcclusion) {
+	public FoldedModelPictureConfig setAmbientOcclusion(final boolean ambientOcclusion) {
 		this.ambientOcclusion = ambientOcclusion;
+		return this;
 	}
 
-	public void setColors(final Color front, final Color back) {
+	public FoldedModelPictureConfig setColors(final Color front, final Color back) {
 		frontColor = front;
 		backColor = back;
+		return this;
 	}
 
 	public Color getFrontColor() {
 		return frontColor;
 	}
 
-	public void setFrontColor(final Color frontColor) {
+	public FoldedModelPictureConfig setFrontColor(final Color frontColor) {
 		this.frontColor = frontColor;
+		return this;
 	}
 
 	public Color getBackColor() {
 		return backColor;
 	}
 
-	public void setBackColor(final Color backColor) {
+	public FoldedModelPictureConfig setBackColor(final Color backColor) {
 		this.backColor = backColor;
+		return this;
 	}
 
 	public double getRotateAngle() {
 		return rotateAngle;
 	}
 
-	public void setRotateAngle(final double rotateAngle) {
+	public FoldedModelPictureConfig setRotateAngle(final double rotateAngle) {
 		this.rotateAngle = rotateAngle;
+		return this;
 	}
 
 	public DistortionMethod getDistortionMethod() {
 		return distortionMethod;
 	}
 
-	public void setDistortionMethod(final DistortionMethod distortionMethod) {
+	public FoldedModelPictureConfig setDistortionMethod(final DistortionMethod distortionMethod) {
 		this.distortionMethod = distortionMethod;
+		return this;
 	}
 
 	public Vector2d getDistortionParameter() {
 		return distortionParameter;
 	}
 
-	public void setDistortionParameter(final Vector2d distortionParameter) {
+	public FoldedModelPictureConfig setDistortionParameter(final Vector2d distortionParameter) {
 		this.distortionParameter = distortionParameter;
+		return this;
 	}
 
 	public Map<OriVertex, Integer> getVertexDepths() {
 		return vertexDepths;
 	}
 
-	public void setVertexDepths(final Map<OriVertex, Integer> vertexDepths) {
+	public FoldedModelPictureConfig setVertexDepths(final Map<OriVertex, Integer> vertexDepths) {
 		this.vertexDepths = vertexDepths;
+		return this;
 	}
 
 }

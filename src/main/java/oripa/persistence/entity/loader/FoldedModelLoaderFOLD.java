@@ -84,7 +84,8 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModelEntity> {
 
 		var vertices = converter.fromVerticesCoords(foldFormat.getVerticesCoords());
 		var edges = converter.fromEdges(foldFormat.getEdgesVertices(), foldFormat.getEdgesAssignment(), vertices);
-		var faces = converter.fromFacesVertices(foldFormat.getFacesVertices(), vertices);
+		var faces = converter.fromFacesVertices(foldFormat.getFacesVertices(), foldFormat.getEdgesVertices(),
+				vertices, edges);
 
 		var precreases = foldFormat.getFacesPrecreases();
 		if (precreases != null) {
@@ -98,6 +99,7 @@ public class FoldedModelLoaderFOLD implements Loader<FoldedModelEntity> {
 		var origamiModel = new OrigamiModel(domain.maxWidthHeight() * 1.1);
 
 		origamiModel.setVertices(vertices);
+		converter.setVertexIDs(origamiModel);
 		origamiModel.setEdges(edges);
 		origamiModel.setFaces(faces);
 

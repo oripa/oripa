@@ -121,7 +121,7 @@ public class OriHalfedge {
 	 * @param edge
 	 *            Sets the underlying edge
 	 */
-	void setEdge(final OriEdge edge) {
+	public void setEdge(final OriEdge edge) {
 		this.edge = edge;
 	}
 

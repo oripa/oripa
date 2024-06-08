@@ -244,6 +244,6 @@ public class OriVertex implements Comparable<OriVertex> {
 
 	@Override
 	public String toString() {
-		return "OriVertex@" + position;
+		return "OriVertex@" + position + ", id=" + vertexID;
 	}
 }

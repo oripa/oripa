@@ -145,7 +145,7 @@ public class CommandLineInterfaceMain {
 				var index = Integer.parseInt(line.getOptionValue(indexOption));
 				var reverse = line.hasOption(reverseOption);
 				var converter = new FoldedModelImageExporter();
-				converter.export(inputFilePath, index, reverse, outputFilePath);
+				converter.export(inputFilePath, index, reverse, outputFilePath, pointEps);
 
 			} else if (line.hasOption(foldOption)) {
 				var outputFilePath = line.getOptionValue(foldOption);

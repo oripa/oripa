@@ -51,6 +51,11 @@ public class VertexDepthMapFactory {
 			var sorted = new ArrayList<OriVertex>();
 
 			for (var vertex : vertices) {
+				// can happen by numerical error
+				if (!vertexToFaces.containsKey(vertex)) {
+					sorted.add(vertex);
+					continue;
+				}
 
 				for (int k = 0; k <= sorted.size(); k++) {
 					if (k == sorted.size()) {
@@ -123,7 +128,14 @@ public class VertexDepthMapFactory {
 		var faces0 = vertexToFaces.get(v0);
 		var faces1 = vertexToFaces.get(v1);
 
-		for (int f0Index = 0; f0Index < vertexToFaces.get(v0).size(); f0Index++) {
+		if (faces0 == null) {
+			throw new IllegalArgumentException("no faces for vertex " + v0.toString());
+		}
+		if (faces1 == null) {
+			throw new IllegalArgumentException("no faces for vertex " + v1.toString());
+		}
+
+		for (int f0Index = 0; f0Index < faces0.size(); f0Index++) {
 			int i = faces0.get(f0Index).getFaceID();
 
 			var jOpt = faces1.stream()
