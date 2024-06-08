@@ -48,10 +48,15 @@ class UnassignedModelFolder implements Folder {
 			return new Result(new FoldedModel(origamiModel, List.of(), List.of()), new EstimationResultRules());
 		}
 
+		var firstOnly = estimationType == EstimationType.FIRST_ONLY;
+
 		var foldedModels = new ArrayList<FoldedModel>();
 		var rules = new ArrayList<EstimationResultRules>();
 		var assignmentEnumerator = new AssignmentEnumerator(model -> {
-			var result = layerOrderEnumerator.enumerate(model, eps, estimationType == EstimationType.FIRST_ONLY);
+			var result = layerOrderEnumerator.enumerate(model, eps, firstOnly);
+			if (firstOnly && foldedModels.stream().anyMatch(m -> m.getFoldablePatternCount() > 0)) {
+				return;
+			}
 			foldedModels.add(new FoldedModel(model, result.getOverlapRelations(), result.getSubfaces()));
 			rules.add(result.getRules());
 		});
