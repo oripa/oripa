@@ -77,7 +77,7 @@ class LayerOrderEnumerator {
 		}
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(LayerOrderEnumerator.class);
+	private final static Logger logger = LoggerFactory.getLogger(LayerOrderEnumerator.class);
 
 	private AtomicInteger callCount;
 	private AtomicInteger localLayerOrderCount;
@@ -110,7 +110,11 @@ class LayerOrderEnumerator {
 		// construct the subfaces
 		final double paperSize = origamiModel.getPaperSize();
 		var subfaces = subfacesFactory.createSubFaces(faces, paperSize, eps);
-		logger.debug("subFaces.size() = " + subfaces.size());
+
+		logger.debug("#subface={}", subfaces.size());
+		// addKeyValue() seems not to work... See:
+		// https://jira.qos.ch/browse/SLF4J-600
+//		logger.atDebug().addKeyValue("subfaces.size()", subfaces.size()).log();
 
 		// Set overlap relations based on valley/mountain folds information
 		OverlapRelation overlapRelation;
