@@ -64,8 +64,8 @@ class AssignmentEnumerator {
 
 	/**
 	 * Enumerates all locally-flat-foldable assignments of given origamiModel.
-	 * This method calls {@code answerConsumer}, which is given at construction,
-	 * every time the algorithm finds a locally-flat-foldable assignment.
+	 * This method calls {@code answerConsumer} every time the algorithm finds a
+	 * locally-flat-foldable assignment.
 	 *
 	 * @param origamiModel
 	 */
