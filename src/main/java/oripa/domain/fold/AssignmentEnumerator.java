@@ -48,7 +48,7 @@ class AssignmentEnumerator {
 	private static final Logger logger = LoggerFactory.getLogger(AssignmentEnumerator.class);
 
 	private final VertexFoldability foldability = new VertexFoldability();
-	private final Consumer<OrigamiModel> answerConsumer;
+	private Consumer<OrigamiModel> answerConsumer = null;
 
 	private Map<List<OriVertex>, OriEdge> edgeMap;
 	private Set<OriVertex> originallyAssigned;
@@ -59,19 +59,20 @@ class AssignmentEnumerator {
 	private int enumerationCallCount = 0;
 	private int answerCount = 0;
 
-	public AssignmentEnumerator(final Consumer<OrigamiModel> answerConsumer) {
-		this.answerConsumer = answerConsumer;
+	public AssignmentEnumerator() {
 	}
 
 	/**
 	 * Enumerates all locally-flat-foldable assignments of given origamiModel.
-	 * This method calls {@code answerConsumer}, which is given at construction,
-	 * every time the algorithm finds a locally-flat-foldable assignment.
+	 * This method calls {@code answerConsumer} every time the algorithm finds a
+	 * locally-flat-foldable assignment.
 	 *
 	 * @param origamiModel
 	 */
-	public void enumerate(final OrigamiModel origamiModel) {
+	public void enumerate(final OrigamiModel origamiModel, final Consumer<OrigamiModel> answerConsumer) {
 		var edges = origamiModel.getEdges();
+
+		this.answerConsumer = answerConsumer;
 
 		edgeMap = new HashMap<>();
 		edges.forEach(edge -> edgeMap.put(edgeToKey(edge), edge));

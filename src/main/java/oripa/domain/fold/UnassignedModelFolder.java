@@ -50,27 +50,29 @@ class UnassignedModelFolder implements Folder {
 
 		var firstOnly = estimationType == EstimationType.FIRST_ONLY;
 
-		var foldedModels = new ArrayList<FoldedModel>();
-		var rules = new ArrayList<EstimationResultRules>();
-		var assignmentEnumerator = new AssignmentEnumerator(model -> {
-			var result = layerOrderEnumerator.enumerate(model, eps, firstOnly);
-			if (firstOnly && foldedModels.stream().anyMatch(m -> m.getFoldablePatternCount() > 0)) {
-				return;
-			}
-			foldedModels.add(new FoldedModel(model, result.getOverlapRelations(), result.getSubfaces()));
-			rules.add(result.getRules());
-		});
+		var assignmentEnumerator = new AssignmentEnumerator();
 
-		assignmentEnumerator.enumerate(origamiModel);
+		var results = new ArrayList<LayerOrderEnumerator.Result>();
+
+		assignmentEnumerator.enumerate(origamiModel,
+				assignedModel -> {
+					if (firstOnly && results.stream().anyMatch(result -> !result.isEmpty())) {
+						return;
+					}
+					results.add(layerOrderEnumerator.enumerate(assignedModel, eps, firstOnly));
+				});
 
 		origamiModel.setFolded(true);
 
 		return new Result(
-				new FoldedModel(origamiModel, foldedModels.stream()
-						.flatMap(model -> model.getOverlapRelations().stream())
-						.toList(),
-						foldedModels.get(0).getSubfaces()),
-				rules.stream().reduce(new EstimationResultRules(), (a, b) -> a.or(b)));
+				new FoldedModel(origamiModel,
+						results.stream()
+								.flatMap(result -> result.getOverlapRelations().stream())
+								.toList(),
+						results.get(0).getSubfaces()),
+				results.stream()
+						.map(result -> result.getRules())
+						.reduce(new EstimationResultRules(), (a, b) -> a.or(b)));
 
 	}
 }
