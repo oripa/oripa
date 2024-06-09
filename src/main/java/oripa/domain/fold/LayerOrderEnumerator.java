@@ -149,7 +149,7 @@ class LayerOrderEnumerator {
 		var estimationResult = estimator.estimate(overlapRelation, eps);
 
 		if (estimationResult.isUnfoldable()) {
-			logger.debug("found unfoldable before searching.");
+			logger.info("found unfoldable before searching.");
 			return new Result(List.of(), List.of(), estimationResult);
 		}
 
