@@ -11,7 +11,9 @@ Cambridge University Press.
 
 ## Line suggestion
 
-See https://github.com/oripa/oripa/issues/203 for the problem definition and the proposed algorithm.
+See this [pdf](https://github.com/oripa/oripa/files/9242593/flatten_by_kawasaki_theorem.pdf)
+for the problem definition and the proposed algorithm.
+After applying the algorithm, we filter the lines by the local flat foldability test.
 
 ## Fold algorithm
 
@@ -45,10 +47,10 @@ $A$ is above/under $B$ and $C$.
 ORIPA tests such conditions (there are some other conditions) repeatedly 
 until no change happens to the overlap relation matrix.
 
-### Step 4: enumerate all possible overlap relation matrices by backtracking.
+### Step 4: enumerate all foldable overlap relation matrices by backtracking.
 
 After step 2, there are smaller faces surrounded by the edges. We call them subfaces.
-Each face consists of one or more subfaces and a subface is a shared area of the moved faces.
+Each face consists of one or more subfaces and a subface is an area shared with the moved faces.
 Here we consider "subface stack", which is a list of faces that share a subface. 
 There can be many ,really many, patterns for a stack. ORIPA reduces the patterns by
 some conditions on stacking, For example, if face $A$ is put to the list and it has a neighbor $B$
