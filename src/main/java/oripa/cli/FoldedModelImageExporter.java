@@ -51,7 +51,7 @@ public class FoldedModelImageExporter {
 		final var lowerOutputFilePath = outputFilePath.toLowerCase();
 
 		if (!lowerInputFilePath.endsWith(".fold")) {
-			throw new IllegalArgumentException("Input format is not supported. acceptable format: fold");
+			throw new IllegalArgumentException("Input format is not supported. acceptable format: .fold");
 		}
 
 		if (AVAILABLE_EXTENSIONS.stream().noneMatch(lowerOutputFilePath::endsWith)) {
@@ -61,12 +61,7 @@ public class FoldedModelImageExporter {
 
 		var inputFileLoader = new FoldedModelLoaderFOLD();
 
-		var regex = Pattern.compile("[.][\\w]+$");
-		var matcher = regex.matcher(lowerOutputFilePath);
-		if (!matcher.find()) {
-			throw new RuntimeException("Wrong implementation.");
-		}
-		var outputExtension = matcher.toMatchResult().group();
+		var outputExtension = findExtension(outputFilePath);
 
 		var outputFileExporter = switch (outputExtension) {
 		case (SVG_EXTENSION) -> new FoldedModelExporterSVG(reverse);
@@ -93,5 +88,15 @@ public class FoldedModelImageExporter {
 		} catch (Exception e) {
 			logger.error("image error", e);
 		}
+	}
+
+	private String findExtension(final String filePath) {
+		var regex = Pattern.compile("[.][\\w]+$");
+		var matcher = regex.matcher(filePath);
+		if (!matcher.find()) {
+			throw new RuntimeException("Wrong implementation.");
+		}
+
+		return matcher.toMatchResult().group().toLowerCase();
 	}
 }
