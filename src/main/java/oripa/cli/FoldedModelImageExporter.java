@@ -30,8 +30,6 @@ import oripa.persistence.entity.exporter.FoldedModelExporterSVG;
 import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
 import oripa.persistence.entity.exporter.FoldedModelPictureExporter;
 import oripa.persistence.entity.loader.FoldedModelLoaderFOLD;
-import oripa.renderer.estimation.DistortionMethod;
-import oripa.renderer.estimation.VertexDepthMapFactory;
 
 /**
  * @author OUCHI Koji
@@ -53,7 +51,7 @@ public class FoldedModelImageExporter {
 		final var lowerOutputFilePath = outputFilePath.toLowerCase();
 
 		if (!lowerInputFilePath.endsWith(".fold")) {
-			throw new IllegalArgumentException("Input format is not supported. acceptable format: fold");
+			throw new IllegalArgumentException("Input format is not supported. acceptable format: .fold");
 		}
 
 		if (AVAILABLE_EXTENSIONS.stream().noneMatch(lowerOutputFilePath::endsWith)) {
@@ -63,12 +61,7 @@ public class FoldedModelImageExporter {
 
 		var inputFileLoader = new FoldedModelLoaderFOLD();
 
-		var regex = Pattern.compile("[.][\\w]+$");
-		var matcher = regex.matcher(lowerOutputFilePath);
-		if (!matcher.find()) {
-			throw new RuntimeException("Wrong implementation.");
-		}
-		var outputExtension = matcher.toMatchResult().group();
+		var outputExtension = findExtension(outputFilePath);
 
 		var outputFileExporter = switch (outputExtension) {
 		case (SVG_EXTENSION) -> new FoldedModelExporterSVG(reverse);
@@ -84,13 +77,10 @@ public class FoldedModelImageExporter {
 			case (SVG_EXTENSION) -> null;
 			default -> new FoldedModelPictureConfig()
 					.setAmbientOcclusion(false)
-					.setColors(Color.GRAY, Color.WHITE)
-					.setDistortionMethod(DistortionMethod.NONE)
+					.setColors(Color.GRAY.brighter(), Color.WHITE)
 					.setDrawEdges(true)
 					.setFaceOrderFlipped(reverse)
 					.setFillFaces(true)
-					.setVertexDepths(new VertexDepthMapFactory().create(
-							entity.getOrigamiModel(), entity.getOverlapRelation(), eps))
 					.setEps(eps);
 			};
 			outputFileExporter.export(entity, outputFilePath, config);
@@ -98,5 +88,15 @@ public class FoldedModelImageExporter {
 		} catch (Exception e) {
 			logger.error("image error", e);
 		}
+	}
+
+	private String findExtension(final String filePath) {
+		var regex = Pattern.compile("[.][\\w]+$");
+		var matcher = regex.matcher(filePath);
+		if (!matcher.find()) {
+			throw new RuntimeException("Wrong implementation.");
+		}
+
+		return matcher.toMatchResult().group().toLowerCase();
 	}
 }

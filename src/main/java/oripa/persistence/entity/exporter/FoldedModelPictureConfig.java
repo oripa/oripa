@@ -19,6 +19,7 @@
 package oripa.persistence.entity.exporter;
 
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.Map;
 
 import oripa.domain.fold.halfedge.OriVertex;
@@ -123,8 +124,12 @@ public class FoldedModelPictureConfig {
 		return this;
 	}
 
+	/**
+	 *
+	 * @return given value. NONE if any value is given or null is set.
+	 */
 	public DistortionMethod getDistortionMethod() {
-		return distortionMethod;
+		return distortionMethod == null ? DistortionMethod.NONE : distortionMethod;
 	}
 
 	public FoldedModelPictureConfig setDistortionMethod(final DistortionMethod distortionMethod) {
@@ -132,19 +137,41 @@ public class FoldedModelPictureConfig {
 		return this;
 	}
 
+	/**
+	 *
+	 * @return given parameter. null if any parameter is given.
+	 */
 	public Vector2d getDistortionParameter() {
 		return distortionParameter;
 	}
 
+	/**
+	 * This is an optional property. This can be null if distortion method is
+	 * {@link DistortionMethod#NONE}.
+	 *
+	 * @param distortionParameter
+	 * @return
+	 */
 	public FoldedModelPictureConfig setDistortionParameter(final Vector2d distortionParameter) {
 		this.distortionParameter = distortionParameter;
 		return this;
 	}
 
+	/**
+	 *
+	 * @return given map. empty map if any map is given or null is set.
+	 */
 	public Map<OriVertex, Integer> getVertexDepths() {
-		return vertexDepths;
+		return vertexDepths == null ? new HashMap<>() : vertexDepths;
 	}
 
+	/**
+	 * This is an optional property. This can be null if distortion method is
+	 * not {@link DistortionMethod#DEPTH}.
+	 *
+	 * @param vertexDepths
+	 * @return
+	 */
 	public FoldedModelPictureConfig setVertexDepths(final Map<OriVertex, Integer> vertexDepths) {
 		this.vertexDepths = vertexDepths;
 		return this;

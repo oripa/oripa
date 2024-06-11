@@ -34,6 +34,12 @@ class FaceFactory {
 	private final CoordinateConverter converter;
 	private final Map<OriVertex, Integer> vertexDepths;
 
+	/**
+	 *
+	 * @param converter
+	 * @param vertexDepths
+	 *            can be empty map if converter does not use.
+	 */
 	public FaceFactory(final CoordinateConverter converter, final Map<OriVertex, Integer> vertexDepths) {
 		this.converter = converter;
 		this.vertexDepths = vertexDepths;
