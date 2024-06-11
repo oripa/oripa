@@ -80,6 +80,16 @@ public class Distortion {
 		return converter;
 	}
 
+	/**
+	 *
+	 * @param origamiModel
+	 * @param overlapRelation
+	 * @param converter
+	 * @param vertexDepths
+	 *            can be empty map if converter does not use.
+	 * @param eps
+	 * @return
+	 */
 	public Result apply(final OrigamiModel origamiModel, final OverlapRelation overlapRelation,
 			final CoordinateConverter converter,
 			final Map<OriVertex, Integer> vertexDepths, final double eps) {

@@ -30,8 +30,6 @@ import oripa.persistence.entity.exporter.FoldedModelExporterSVG;
 import oripa.persistence.entity.exporter.FoldedModelPictureConfig;
 import oripa.persistence.entity.exporter.FoldedModelPictureExporter;
 import oripa.persistence.entity.loader.FoldedModelLoaderFOLD;
-import oripa.renderer.estimation.DistortionMethod;
-import oripa.renderer.estimation.VertexDepthMapFactory;
 
 /**
  * @author OUCHI Koji
@@ -84,13 +82,10 @@ public class FoldedModelImageExporter {
 			case (SVG_EXTENSION) -> null;
 			default -> new FoldedModelPictureConfig()
 					.setAmbientOcclusion(false)
-					.setColors(Color.GRAY, Color.WHITE)
-					.setDistortionMethod(DistortionMethod.NONE)
+					.setColors(Color.GRAY.brighter(), Color.WHITE)
 					.setDrawEdges(true)
 					.setFaceOrderFlipped(reverse)
 					.setFillFaces(true)
-					.setVertexDepths(new VertexDepthMapFactory().create(
-							entity.getOrigamiModel(), entity.getOverlapRelation(), eps))
 					.setEps(eps);
 			};
 			outputFileExporter.export(entity, outputFilePath, config);

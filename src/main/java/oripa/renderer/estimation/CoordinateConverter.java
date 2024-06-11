@@ -45,7 +45,7 @@ public class CoordinateConverter {
 		this.imageHeight = imageHeight;
 	}
 
-	public Vector2d convert(final Vector2d pos, final int depth, final Vector2d cpPos) {
+	public Vector2d convert(final Vector2d pos, final Integer depth, final Vector2d cpPos) {
 		Vector2d center = new Vector2d(domain.getCenterX(), domain.getCenterY());
 
 		var p = pos.subtract(center).multiply(scale);
@@ -61,7 +61,7 @@ public class CoordinateConverter {
 		return new Vector2d(tX, tY);
 	}
 
-	private Vector2d distort(final Vector2d pos, final int depth, final Vector2d cpPos) {
+	private Vector2d distort(final Vector2d pos, final Integer depth, final Vector2d cpPos) {
 		return switch (distortionMethod) {
 		case DEPTH -> distortByDepth(pos, depth);
 		case MORISUE -> distortByMorisueMethod(pos, cpPos);
