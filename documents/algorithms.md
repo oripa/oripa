@@ -57,6 +57,6 @@ some conditions on stacking, For example, if face $A$ is put to the list and it 
 that should be under $A$, then we can stop pattern generation when $B$ gets above $A$.
 
 We generate a list $S$ of stacks for each subface and 
-check that there is no contraction on the overlap relation matrix
+check that there is no contradiction on the overlap relation matrix
 if a stack $s \in S$ is applied.
 The algorithm outputs the overlap relation matrix when the matrix is fulfilled.
