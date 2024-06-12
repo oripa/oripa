@@ -19,7 +19,7 @@ After applying the algorithm, we filter the lines by the local flat foldability 
 ## Fold algorithm
 
 Japanese text is written by J. Mitani as a part of https://mitani.cs.tsukuba.ac.jp/origami/.
-Here we don't translate it but summarizes the essence of the algorithm.
+Here we don't translate it but summarize the essence of the algorithm.
 The implementation leverages parallel computation heavily to reduce computation time.
 ORIPA finds all possible folded states while [Oriedita](https://github.com/oriedita/oriedita) doesn't for some cases.
 

@@ -1,5 +1,4 @@
-ORIPA: Origami Pattern Editor
-=============================
+# ORIPA: Origami Pattern Editor
 
 ORIPA is a drawing software dedicated to designing the crease patterns of origami. The unique feature of ORIPA is calculation of the folded shape from the pattern.
 
@@ -8,10 +7,10 @@ The first version of ORIPA was released in 2005. ORIPA was made open source in 2
 To find out more about using the software, visit the [ORIPA project's website](http://mitani.cs.tsukuba.ac.jp/oripa/).
 
 
-### Functionalities
-------------------
+## Functionalities
+
 * Various methods to input lines.
-* You can save your crease pattern as a JPG or PNG image file.
+* You can save your crease pattern and folded model as a JPG or PNG image file.
 * Cut by Ctrl + x or copy by Ctrl + c, paste by clicking left mouse button.
   On pasting mode, you can select the origin vertex by pressing Ctrl key.
 * Importing other crease pattern is available for any acceptable files such as .opx and .cp.
@@ -23,9 +22,10 @@ To find out more about using the software, visit the [ORIPA project's website](h
 * The folded shape can be saved as SVG. In the output, each face keeps the pre-creases (Auxiliary lines) on it.
 * Multiple crease patterns are supported. However, note that you need to save as single crease pattern if you would like to export the data as other than .opx.
 
-### Download
-------------
-#### Executable jar
+## Download
+
+### Executable jar
+
 You can download the executable jar file at the [release page](https://github.com/oripa/oripa/releases).
 
 To run ORIPA, **you need install JDK 21 or above.** (ver. 1.69 or older can be run on JDK 11.)
@@ -36,7 +36,8 @@ Once downloaded, to run ORIPA in a terminal just run:
 java -jar ./oripa-1.70.jar
 ```
 
-#### Executable binary
+### Executable binary
+
 Ver. 1.67 or above are also compiled into executable binary file for each platform.
 We offer installer files of those. In this case, you don't have to install JDK.
 
@@ -47,8 +48,8 @@ The installation directory is platform-specific:
 * On Windows, it is c:\Program Files\oripa
 
 
-### Command line interface (CLI)
----------------------------
+## Command line interface (CLI)
+
 If you give some command line option to ORIPA ver.1.64 or above, ORIPA will run as a command line application.
 The CLI mode is designed as a file I/O application and available on jar only. The order of command arguments is interchangeable.
 
@@ -81,8 +82,8 @@ java -jar ./oripa-1.70.jar --image folded.svg -n 0 folded.fold
 
 
 
-### Plug-in system
---------
+## Plug-in system
+
 ORIPA ver.1.63 or above provides plug-in system using Java's default `ServiceLoader`.
 You can add a line-input functionality by:
 
@@ -91,15 +92,17 @@ You can add a line-input functionality by:
   the FQN of your implementation class(es) of the interface.
 * Make a jar and add it to classpath. The command will be like: `java -cp oripa-1.70.jar;your-plugin.jar oripa.ORIPA`.
 
-### Next challenge(s)
---------
+## Algorithms
+
+See [here](https://github.com/oripa/oripa/blob/master/documents/algorithms.md).
+
+## Next challenge(s)
+
 * Dividing lines by an input circle.
 * Drawing copyright on saved picture.
-* Screenshot of folded model.
 
+# The original read-me text by MITANI Jun:
 
-The original read-me text by MITANI Jun:
-----
 ORIPA v0.35 (2012/06/17) by Jun Mitani (jmitani@gmail.com)
 
 Distribution version
