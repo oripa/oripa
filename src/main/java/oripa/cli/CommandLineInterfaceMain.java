@@ -61,7 +61,7 @@ public class CommandLineInterfaceMain {
 				.longOpt(IMAGE)
 				.hasArg()
 				.argName(IMAGE_FILE)
-				.desc("Output image file (svg) of folded forms in multiple frame FOLD format. "
+				.desc("Output image file (svg, jpg, png) of folded forms in multiple frame FOLD format. "
 						+ "The argument is output file path."
 						+ "This option requires --" + INDEX + " option.")
 				.build();
@@ -100,7 +100,7 @@ public class CommandLineInterfaceMain {
 		var anyOption = Option.builder("a")
 				.longOpt(ANY)
 				.desc("Put this option if --" + FOLD
-						+ " should stop the computation as soon as it found the first folded model.")
+						+ " should stop the computation as soon as it finds the first folded model.")
 				.build();
 		options.addOption(anyOption);
 
