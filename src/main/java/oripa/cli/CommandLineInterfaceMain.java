@@ -38,6 +38,7 @@ public class CommandLineInterfaceMain {
 	private static final String SPLIT = "split";
 	private static final String FOLD = "fold";
 	private static final String ANY = "any";
+	private static final String COUNT = "count";
 	private static final String HELP = "help";
 
 	private static final String CP_FILE = "cp-file";
@@ -104,6 +105,12 @@ public class CommandLineInterfaceMain {
 				.build();
 		options.addOption(anyOption);
 
+		var countOption = Option.builder("C")
+				.longOpt(COUNT)
+				.desc("Count the folded models in the given FOLD format file and print it. -1 if something is wrong.")
+				.build();
+		options.addOption(countOption);
+
 		var helpOption = Option.builder("h")
 				.longOpt(HELP)
 				.desc("Show help.")
@@ -153,6 +160,10 @@ public class CommandLineInterfaceMain {
 				var split = line.hasOption(splitOption);
 				var any = line.hasOption(anyOption);
 				folder.fold(inputFilePath, any, split, outputFilePath, pointEps);
+
+			} else if (line.hasOption(countOption)) {
+				var counter = new FoldedModelCounter();
+				System.out.println(counter.count(inputFilePath));
 
 			} else if (line.getOptions().length == 0) {
 				throw new IllegalArgumentException("No option is given. Hint: see help by -" + helpOption.getOpt());
