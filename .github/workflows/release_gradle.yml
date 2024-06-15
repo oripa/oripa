@@ -47,30 +47,31 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run Linux Build (fat jar)
+        if: matrix.os == 'ubuntu-latest'        
+        run: ./gradlew shadowJar
+
+      - name: Release (fat jar)
+        if: matrix.os == 'ubuntu-latest'        
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          tag_name: ${{ needs.create_release.outputs.tag-name }}
+          files: build/libs/oripa*-all.jar
+
       - name: Run Linux Build
         if: matrix.os == 'ubuntu-latest'
-        - name: Build fat jar with Gradle
-          uses: gradle/actions/setup-gradle@v3
-          run: ./gradlew shadowJar
-          # I guess attaching jar should be done only once. So I put it as a linux-limited action.
-          uses: softprops/action-gh-release@v0.1.15
-          with:
-            tag_name: ${{ needs.create_release.outputs.tag-name }}
-            files: build/libs/oripa*-all.jar
-        - name: Build installer with Gradle on Ubuntu
-          run: ./gradlew clean jpackage
+        run: ./gradlew clean jpackage
 
       - name: Run Mac Build
         if: matrix.os == 'macos-latest'
-        - name: Build installer with Gradle on Mac
-          uses: gradle/actions/setup-gradle@v3
-          run: ./gradlew clean jpackage
+        run: ./gradlew clean jpackage
 
       - name: Run Windows Build
         if: matrix.os == 'windows-latest'
-        - name: Build installer with Gradle on Windows
-          uses: gradle/actions/setup-gradle@v3
-          run: ./gradlew.bat clean jpackage
+        run: ./gradlew.bat clean jpackage
 
       - name: Release
         uses: softprops/action-gh-release@v0.1.15
