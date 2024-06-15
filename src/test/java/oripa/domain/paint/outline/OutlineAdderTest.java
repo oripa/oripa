@@ -30,6 +30,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -54,6 +55,11 @@ class OutlineAdderTest {
 
 	@Mock
 	private Painter painter;
+
+	@Captor
+	private ArgumentCaptor<Collection<OriLine>> removedLinesCaptor;
+	@Captor
+	private ArgumentCaptor<Collection<OriLine>> addedLinesCaptor;
 
 	/**
 	 * Test method for
@@ -83,9 +89,6 @@ class OutlineAdderTest {
 				.thenReturn(List.of());
 
 		var outlineVertices = List.of(new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(1, 1));
-
-		var removedLinesCaptor = ArgumentCaptor.forClass(Collection.class);
-		var addedLinesCaptor = ArgumentCaptor.forClass(Collection.class);
 
 		adder.addOutlines(painter, outlineVertices);
 

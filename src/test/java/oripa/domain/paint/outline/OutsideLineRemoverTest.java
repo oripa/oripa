@@ -30,6 +30,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -53,6 +54,8 @@ class OutsideLineRemoverTest {
 	private IsOutsideOfTempOutlineLoop isOutsideOfTempOutlineLoop;
 	@Mock
 	private Painter painter;
+	@Captor
+	private ArgumentCaptor<Collection<OriLine>> linesCaptor;
 
 	/**
 	 * Test method for
@@ -82,8 +85,6 @@ class OutsideLineRemoverTest {
 		when(isOutsideOfTempOutlineLoop.execute(eq(outlineVertices), eq(l2.getP1()))).thenReturn(true);
 
 		remover.removeLinesOutsideOfOutlines(painter, outlineVertices);
-
-		var linesCaptor = ArgumentCaptor.forClass(Collection.class);
 
 		verify(painter).removeLines(linesCaptor.capture());
 		assertEquals(2, linesCaptor.getValue().size());

@@ -19,7 +19,8 @@ dependencies {
     api(libs.org.apache.logging.log4j.log4j.core)
     api(libs.com.google.code.gson.gson)
     api(libs.commons.cli.commons.cli)
-    testImplementation(libs.org.junit.jupiter.junit.jupiter)
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation(libs.org.mockito.mockito.core)
     testImplementation(libs.org.mockito.mockito.junit.jupiter)
 }
@@ -45,27 +46,36 @@ tasks.withType<Jar> {
 
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
+    options.compilerArgs.add("-Xlint:unchecked")
 }
 
 tasks.withType<Javadoc>() {
     options.encoding = "UTF-8"
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 task("copyDependencies", Copy::class) {
-    from(configurations.runtimeClasspath).into("$buildDir/jars")
+	val buildDirectory = layout.buildDirectory.get()
+    from(configurations.runtimeClasspath).into("$buildDirectory/jars")
 }
 
 task("copyJar", Copy::class) {
-    from(tasks.jar).into("$buildDir/jars")
+	val buildDirectory = layout.buildDirectory.get()
+    from(tasks.jar).into("$buildDirectory/jars")
 }
 
 // run: gradle clean jpackage
 // installer will be created in build/dist.
 tasks.jpackage {
+	val buildDirectory = layout.buildDirectory.get()
+
     dependsOn("build", "copyDependencies", "copyJar")
 
-    input  = "$buildDir/jars"
-    destination = "$buildDir/dist"
+    input  = "$buildDirectory/jars"
+    destination = "$buildDirectory/dist"
 
     appName = "oripa"
     vendor = "oripa"
