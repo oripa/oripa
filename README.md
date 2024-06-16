@@ -82,7 +82,20 @@ java -jar ./oripa-1.70.jar --image folded.svg -n 0 folded.fold
 
 
 
-## Plug-in system
+## For developers
+
+### Build ORIPA
+
+We use gradle to build ORIPA since ver. 1.74.
+Maven is used for older versions.
+`pom.xml` for Maven still exists in the project source 
+but it is not maintained and will be deleted someday.
+
+### Algorithms
+
+See [here](https://github.com/oripa/oripa/blob/master/documents/algorithms.md).
+
+### Plug-in system
 
 ORIPA ver.1.63 or above provides plug-in system using Java's default `ServiceLoader`.
 You can add a line-input functionality by:
@@ -91,10 +104,6 @@ You can add a line-input functionality by:
 * Add resources/META-INF/services/oripa.gui.presenter.plugin.GraphicMouseActionPlugin that contains
   the FQN of your implementation class(es) of the interface.
 * Make a jar and add it to classpath. The command will be like: `java -cp oripa-1.70.jar;your-plugin.jar oripa.ORIPA`.
-
-## Algorithms
-
-See [here](https://github.com/oripa/oripa/blob/master/documents/algorithms.md).
 
 ## Next challenge(s)
 

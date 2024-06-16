@@ -17,6 +17,9 @@
 
 	<dependencies>
 
+<!-- NOTE: THIS FILE IS NOT MAINTAINED. Please use gradle for build. -->
+
+
 <!-- removed since codes using java3d has been killed and seems no longer to be activated. -->
 <!--
 		<dependency>

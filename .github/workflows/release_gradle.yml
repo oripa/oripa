@@ -1,0 +1,81 @@
+# based on https://jon.sprig.gs/blog/post/2442 .
+
+name: Auto Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          name: ORIPA ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+
+  build_release:
+    name: Build Release
+    needs: create_release
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+#        include:
+#          - os: ubuntu-latest
+#            release_suffix: ubuntu
+#          - os: macos-latest
+#            release_suffix: mac
+#          - os: windows-latest
+#            release_suffix: windows
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run Linux Build (fat jar)
+        if: matrix.os == 'ubuntu-latest'        
+        run: ./gradlew shadowJar
+
+      - name: Release (fat jar)
+        if: matrix.os == 'ubuntu-latest'        
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          tag_name: ${{ needs.create_release.outputs.tag-name }}
+          files: build/libs/oripa*-all.jar
+
+      - name: Run Linux Build
+        if: matrix.os == 'ubuntu-latest'
+        run: ./gradlew clean jpackage
+
+      - name: Run Mac Build
+        if: matrix.os == 'macos-latest'
+        run: ./gradlew clean jpackage
+
+      - name: Run Windows Build
+        if: matrix.os == 'windows-latest'
+        run: ./gradlew.bat clean jpackage
+
+      - name: Release
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          tag_name: ${{ needs.create_release.outputs.tag-name }}
+          files: build/dist/*
+            
