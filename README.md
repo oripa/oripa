@@ -86,14 +86,14 @@ java -jar ./oripa-1.70.jar --image folded.svg -n 0 folded.fold
 
 ### Build ORIPA
 
-We use gradle to build ORIPA since ver. 1.74.
+We use Gradle to build ORIPA since ver. 1.74.
 Maven is used for older versions.
 `pom.xml` for Maven still exists in the project source 
 but it is not maintained and will be deleted someday.
 
 ### Algorithms
 
-See [here](https://github.com/oripa/oripa/blob/master/documents/algorithms.md).
+See [here](documents/algorithms.md).
 
 ### Plug-in system
 

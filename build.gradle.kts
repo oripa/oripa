@@ -36,7 +36,7 @@ publishing {
     }
 }
 
-// run: gradle shadowJar
+// run: gradlew shadowJar
 // fat jar will be created in build/libs as oripa-x.yz-all.jar
 tasks.withType<Jar> {
     manifest {
@@ -67,7 +67,7 @@ task("copyJar", Copy::class) {
     from(tasks.jar).into("$buildDirectory/jars")
 }
 
-// run: gradle clean jpackage
+// run: gradlew clean jpackage
 // installer will be created in build/dist.
 tasks.jpackage {
 	val buildDirectory = layout.buildDirectory.get()
