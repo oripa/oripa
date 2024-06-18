@@ -4,8 +4,7 @@
 
 Local flat foldability means whether area around a vertex is foldable or not.
 Note that combining Kawasaki's theorem, Maekawa's theorem and big-little-big lemma
-is not sufficient to check the foldability. (If we also apply "generalized" big-little-big lemma,
-then it is sufficient.)
+is not sufficient to check the foldability.
 ORIPA implements the linear time algorithm by E. Demaine and J. O'Rourke
 described in their book "Geometric Folding Algorithms: Linkages, Origami, Polyhedra",
 Cambridge University Press.
@@ -20,7 +19,7 @@ After applying the algorithm, we filter the lines by the local flat foldability 
 
 Japanese text is written by J. Mitani as a part of https://mitani.cs.tsukuba.ac.jp/origami/.
 Here we don't translate it but summarize the essence of the algorithm.
-The implementation leverages parallel computation heavily to reduce computation time.
+The implementation leverages parallel computing heavily to reduce computation time.
 ORIPA finds all possible folded states while [Oriedita](https://github.com/oriedita/oriedita) doesn't for some cases.
 
 ### Step 1: check local flat foldability for each vertex.
@@ -46,6 +45,7 @@ $B$ and $C$. $A$ penetrates the sheet if $A$ is between $B$ and $C$, otherwise w
 $A$ is above/under $B$ and $C$.
 ORIPA tests such conditions (there are some other conditions) repeatedly 
 until no change happens to the overlap relation matrix that stores "above"/"under" of each pair of the faces.
+Note that some relations are still undetermined after this step.
 
 ### Step 4: enumerate all foldable overlap relation matrices by backtracking.
 
@@ -57,6 +57,6 @@ We generate a list $S$ of stacks for each subface and
 check that there is no contradiction on the overlap relation matrix
 if a stack $s \in S$ is applied.
 There can be many, really many, patterns for a stack of certain subface. ORIPA reduces the patterns with
-some conditions on stacking: for example, if a face $A$ is put to the list and it has a neighbor face $B$
+some conditions on stacking: for example, if a face $A$ is put to the list and there is a face $B$
 that should be under $A$, then we can stop pattern generation when $B$ gets above $A$.
 The algorithm outputs the overlap relation matrix when the matrix is fulfilled.
