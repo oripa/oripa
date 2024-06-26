@@ -5,9 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import oripa.geom.Line;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
@@ -15,8 +12,6 @@ import oripa.value.OriLine.Type;
 import oripa.vecmath.Vector2d;
 
 public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
-	private final static Logger logger = LoggerFactory.getLogger(CreasePatternObjectDrawer.class);
-
 	private double vertexSize;
 
 	private final CreasePatternElementSelector selector = new CreasePatternElementSelector();
@@ -151,8 +146,6 @@ public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
 	@Override
 	public void drawLine(final Line line) {
 		var size = 1000 * 5;
-
-		logger.debug("screen size = {}", size);
 
 		var dir = line.getDirection().multiply(size);
 		var p0 = line.getPoint().subtract(dir);

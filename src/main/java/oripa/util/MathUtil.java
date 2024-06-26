@@ -129,14 +129,14 @@ public class MathUtil {
 			double f_x = f.apply(x);
 
 			if (MathUtil.areEqual(f_x, 0, pointEps)) {
-				logger.debug("answer found: f_x = {}, x = {}", f_x, x);
+				logger.debug("answer found @ {}: f_x = {}, x = {}", i, f_x, x);
 				return x;
 			}
 
 			x = x - f_x * delta / (f.apply(x + delta) - f_x);
 
 			if (i % 10 == 0) {
-				logger.debug("f_x = {}, x = {}", f_x, x);
+				logger.trace("f_x = {}, x = {}", f_x, x);
 			}
 		}
 
