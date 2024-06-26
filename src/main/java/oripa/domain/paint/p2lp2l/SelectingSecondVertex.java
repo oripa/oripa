@@ -38,4 +38,9 @@ public class SelectingSecondVertex extends PickingVertex {
 
 	}
 
+	@Override
+	protected void undoAction(final PaintContext context) {
+		context.popLine();
+	}
+
 }

@@ -55,4 +55,9 @@ public class Line {
 				&& (p.equals(line.p, eps) || p.subtract(line.p).isParallel(line.dir));
 	}
 
+	@Override
+	public String toString() {
+		return "[p=" + p + ", dir=" + dir + "]";
+	}
+
 }

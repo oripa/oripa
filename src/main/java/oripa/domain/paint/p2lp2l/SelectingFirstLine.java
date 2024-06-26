@@ -37,4 +37,9 @@ public class SelectingFirstLine extends PickingLine {
 	protected void onResult(final PaintContext context, final boolean doSpecial) {
 
 	}
+
+	@Override
+	protected void undoAction(final PaintContext context) {
+		context.popVertex();
+	}
 }

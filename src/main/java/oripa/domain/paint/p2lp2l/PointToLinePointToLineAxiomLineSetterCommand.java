@@ -18,6 +18,9 @@
  */
 package oripa.domain.paint.p2lp2l;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.cptool.PointToLinePointToLineAxiom;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.ValidatablePaintCommand;
@@ -27,6 +30,7 @@ import oripa.domain.paint.core.ValidatablePaintCommand;
  *
  */
 public class PointToLinePointToLineAxiomLineSetterCommand extends ValidatablePaintCommand {
+	private static Logger logger = LoggerFactory.getLogger(PointToLinePointToLineAxiomLineSetterCommand.class);
 
 	private final PaintContext context;
 
@@ -50,8 +54,12 @@ public class PointToLinePointToLineAxiomLineSetterCommand extends ValidatablePai
 		var paperSize = context.getCreasePattern().getPaperSize();
 		var range = paperSize * 2;
 
+		logger.debug("search range: {}", range);
+
 		var foldLines = new PointToLinePointToLineAxiom().createFoldLines(
 				p0, s0, p1, s1, range, context.getPointEps());
+
+		logger.debug("solution lines: {}", foldLines);
 
 		context.setSolutionLines(foldLines);
 

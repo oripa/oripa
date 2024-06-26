@@ -39,4 +39,9 @@ public class SelectingSecondLine extends PickingLine {
 
 		command.execute();
 	}
+
+	@Override
+	protected void undoAction(final PaintContext context) {
+		context.popVertex();
+	}
 }

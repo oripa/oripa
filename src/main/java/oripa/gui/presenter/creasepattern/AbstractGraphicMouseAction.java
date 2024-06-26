@@ -301,7 +301,15 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 		drawer.selectAssistLineColor();
 
 		paintContext.getSolutionLines()
-				.forEach(line -> drawer.drawLine(line));
+				.forEach(drawer::drawLine);
+	}
+
+	protected void drawSolutionCandidateLine(final ObjectGraphicDrawer drawer,
+			final CreasePatternViewContext viewContext,
+			final PaintContext paintContext) {
+		drawer.selectSelectedItemColor();
+
+		paintContext.getSolutionLineToPick().ifPresent(drawer::drawLine);
 	}
 
 	protected void drawSnapPoints(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,

@@ -73,7 +73,7 @@ public class PointToLinePointToLineAxiom {
 		var results = new ArrayList<Pair<Double, Line>>();
 
 		double initialX0Inverted = rotate(new double[] { p0Moved.getX(), p0Moved.getY() }, -theta0)[0];
-		for (double d = 0; d < range; d += range / 100) {
+		for (double d = 0; d < range; d += range / 50) {
 			double x0Inverted_d = initialX0Inverted - range / 2 + d;
 
 			Function<Double, Double> discriminant = (
@@ -81,7 +81,7 @@ public class PointToLinePointToLineAxiom {
 							p1Moved.getX(), p1Moved.getY(), pointEps).discriminant;
 
 			try {
-				var x0Answer = MathUtil.newtonMethod(discriminant, x0Inverted_d, pointEps, pointEps * 0.1);
+				var x0Answer = MathUtil.newtonMethod(discriminant, x0Inverted_d, pointEps, 1e-10 * range);
 
 				if (results.stream().anyMatch(r -> MathUtil.areEqual(x0Answer, r.getV1(), pointEps))) {
 					continue;

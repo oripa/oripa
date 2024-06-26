@@ -125,7 +125,7 @@ public class MathUtil {
 			final double pointEps) {
 
 		double x = initialX;
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 50; i++) {
 			double f_x = f.apply(x);
 
 			if (MathUtil.areEqual(f_x, 0, pointEps)) {

@@ -50,6 +50,9 @@ public class SelectingSecondVertexForFoldLine extends PickingVertex {
 
 		command.execute();
 
+		context.clearSolutionLines();
+		context.clearSnapPoints();
+
 	}
 
 }

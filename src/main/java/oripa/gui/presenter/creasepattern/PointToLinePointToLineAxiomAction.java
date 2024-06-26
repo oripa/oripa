@@ -20,8 +20,10 @@ package oripa.gui.presenter.creasepattern;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.linetoline.SelectingFirstLine;
 import oripa.domain.paint.p2lp2l.SelectingFirstVertex;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
@@ -32,6 +34,7 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseAction {
+	private static Logger logger = LoggerFactory.getLogger(PointToLinePointToLineAxiomAction.class);
 
 	public PointToLinePointToLineAxiomAction() {
 		setActionState(new SelectingFirstVertex());
@@ -40,7 +43,7 @@ public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseActio
 	@Override
 	protected void recoverImpl(final PaintContext context) {
 		super.recoverImpl(context);
-		setActionState(new SelectingFirstLine());
+		setActionState(new SelectingFirstVertex());
 	}
 
 	@Override
@@ -86,10 +89,12 @@ public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseActio
 
 		if (!paintContext.getSolutionLines().isEmpty()) {
 			drawSolutionLines(drawer, viewContext, paintContext);
+			drawSolutionCandidateLine(drawer, viewContext, paintContext);
 		}
 
 		if (!paintContext.getSnapPoints().isEmpty()) {
 			drawSnapPoints(drawer, viewContext, paintContext);
+			drawPickCandidateVertex(drawer, viewContext, paintContext);
 		}
 
 		if (paintContext.getVertexCount() == 3) {

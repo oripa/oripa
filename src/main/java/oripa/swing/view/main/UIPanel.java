@@ -447,18 +447,22 @@ public class UIPanel extends JPanel implements UIPanelView {
 		lineInputPanel.add(lineInputOnVButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputPBisectorButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputAngleBisectorButton, gbBuilder.getNextField());
+
 		lineInputPanel.add(lineInputLineToLineButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputP2LP2LButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputTriangleSplitButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputVerticalLineButton, gbBuilder.getNextField());
+
 		lineInputPanel.add(lineInputSymmetricButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputMirrorButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputByValueButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputAngleSnapButton, gbBuilder.getNextField());
-		lineInputPanel.add(lineInputSuggestionButton, gbBuilder.getNextField());
 
+		lineInputPanel.add(lineInputSuggestionButton, gbBuilder.getNextField());
 		// dummies to align buttons left
-//		lineInputPanel.add(new JPanel(), gbBuilder.getNextField());
+		lineInputPanel.add(new JPanel(), gbBuilder.getNextField());
+		lineInputPanel.add(new JPanel(), gbBuilder.getNextField());
+		lineInputPanel.add(new JPanel(), gbBuilder.getNextField());
 
 		setLineInputButtonIcons();
 
