@@ -30,7 +30,7 @@ public class SelectingFirstVertexForFoldLine extends PickingVertex {
 	@Override
 	protected void initialize() {
 		setPreviousClass(SelectingSolutionLine.class);
-		setNextClass(null);
+		setNextClass(SelectingSecondVertexForFoldLine.class);
 	}
 
 	@Override
