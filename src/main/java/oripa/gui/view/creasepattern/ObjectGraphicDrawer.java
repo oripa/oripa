@@ -20,6 +20,7 @@ package oripa.gui.view.creasepattern;
 
 import java.util.List;
 
+import oripa.geom.Line;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -80,6 +81,8 @@ public interface ObjectGraphicDrawer {
 	void drawLine(Vector2d p0, Vector2d p1);
 
 	void drawLine(double x0, double y0, double x1, double y1);
+
+	void drawLine(Line line);
 
 	void drawRectangle(final Vector2d p0, final Vector2d p1);
 

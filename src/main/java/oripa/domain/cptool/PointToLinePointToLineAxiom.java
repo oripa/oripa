@@ -22,9 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.Segment;
@@ -39,7 +36,6 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class PointToLinePointToLineAxiom {
-	private static Logger logger = LoggerFactory.getLogger(PointToLinePointToLineAxiom.class);
 
 	/**
 	 *
@@ -47,6 +43,7 @@ public class PointToLinePointToLineAxiom {
 	 * @param s0
 	 * @param p1
 	 * @param s1
+	 * @param range
 	 * @param pointEps
 	 * @return
 	 */
@@ -79,14 +76,12 @@ public class PointToLinePointToLineAxiom {
 		for (double d = 0; d < range; d += range / 100) {
 			double x0Inverted_d = initialX0Inverted - range / 2 + d;
 
-			logger.debug("x0Inverted_d = {}", x0Inverted_d);
-
 			Function<Double, Double> discriminant = (
 					x0Inverted) -> solve(x0Inverted, theta0, theta1, p0Moved.getX(), p0Moved.getY(),
 							p1Moved.getX(), p1Moved.getY(), pointEps).discriminant;
 
 			try {
-				var x0Answer = MathUtil.newtonMethod(discriminant, x0Inverted_d, 1e-4, pointEps);
+				var x0Answer = MathUtil.newtonMethod(discriminant, x0Inverted_d, pointEps, pointEps);
 
 				if (results.stream().anyMatch(r -> MathUtil.areEqual(x0Answer, r.getV1(), pointEps))) {
 					continue;
