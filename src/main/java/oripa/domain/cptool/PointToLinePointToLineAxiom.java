@@ -97,7 +97,31 @@ public class PointToLinePointToLineAxiom {
 
 			}
 		}
-		return results.stream().map(r -> r.getV2()).toList();
+		return filterPossibleLines(p0, s0, p1, s1,
+				results.stream().map(r -> r.getV2()).toList(), pointEps);
+	}
+
+	private List<Line> filterPossibleLines(final Vector2d p0, final Segment s0, final Vector2d p1, final Segment s1,
+			final List<Line> lines, final double pointEps) {
+
+		return lines.stream()
+				.filter(line -> {
+					var p0Folded = GeomUtil.getSymmetricPoint(p0, line.getPoint(),
+							line.getPoint().add(line.getDirection()));
+					var p1Folded = GeomUtil.getSymmetricPoint(p1, line.getPoint(),
+							line.getPoint().add(line.getDirection()));
+
+					if (GeomUtil.distancePointToSegment(p0Folded, s0) > pointEps) {
+						return false;
+					}
+
+					if (GeomUtil.distancePointToSegment(p1Folded, s1) > pointEps) {
+						return false;
+					}
+
+					return true;
+
+				}).toList();
 	}
 
 	private double computeSlope(final double x, final double p, final double q) {
