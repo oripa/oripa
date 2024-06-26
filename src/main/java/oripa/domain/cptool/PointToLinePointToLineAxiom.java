@@ -81,7 +81,7 @@ public class PointToLinePointToLineAxiom {
 							p1Moved.getX(), p1Moved.getY(), pointEps).discriminant;
 
 			try {
-				var x0Answer = MathUtil.newtonMethod(discriminant, x0Inverted_d, pointEps, pointEps);
+				var x0Answer = MathUtil.newtonMethod(discriminant, x0Inverted_d, pointEps, pointEps * 0.1);
 
 				if (results.stream().anyMatch(r -> MathUtil.areEqual(x0Answer, r.getV1(), pointEps))) {
 					continue;
@@ -147,6 +147,8 @@ public class PointToLinePointToLineAxiom {
 
 		var y0Inverted = computeYInverted(x0Inverted, p0Inverted, q0Inverted);
 		var xy0Inverted1 = rotate(new double[] { x0Inverted, y0Inverted }, theta0 - theta1);
+		var x0Inverted1 = xy0Inverted1[0];
+		var y0Inverted1 = xy0Inverted1[1];
 
 		if (MathUtil.areEqual(q1Inverted, 0, pointEps)) {
 			throw new IllegalArgumentException("q1Inverted is 0.");
@@ -154,8 +156,8 @@ public class PointToLinePointToLineAxiom {
 
 		var a = -1.0 / (2 * q1Inverted);
 		var b = slope1Inverted + p1Inverted / q1Inverted;
-		var c = xy0Inverted1[1] - slope1Inverted * x0Inverted + q1Inverted / 2
-				+ p1Inverted * p1Inverted / (2 * q1Inverted);
+		var c = y0Inverted1 - slope1Inverted * x0Inverted1 - q1Inverted / 2
+				- p1Inverted * p1Inverted / (2 * q1Inverted);
 
 		var discriminant = b * b - 4.0 * a * c;
 

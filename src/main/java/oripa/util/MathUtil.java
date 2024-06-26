@@ -129,6 +129,7 @@ public class MathUtil {
 			double f_x = f.apply(x);
 
 			if (MathUtil.areEqual(f_x, 0, pointEps)) {
+				logger.debug("answer found: f_x = {}, x = {}", f_x, x);
 				return x;
 			}
 

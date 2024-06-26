@@ -33,20 +33,20 @@ class PointToLinePointToLineAxiomTest {
 
 	@Test
 	void testXCubicMinus2Eq0() {
-		var p0 = new Vector2d(-1, 2);
-		var s0 = new Segment(new Vector2d(-2, 1), new Vector2d(2, 1));
-		var p1 = new Vector2d(-2, 1.5);
-		var s1 = new Segment(new Vector2d(0, -2), new Vector2d(0, 2));
+		var p0 = new Vector2d(0, 1);
+		var s0 = new Segment(new Vector2d(-10, -1), new Vector2d(10, -1));
+		var p1 = new Vector2d(-2, 0);
+		var s1 = new Segment(new Vector2d(2, -10), new Vector2d(2, 10));
 
 		var axiom = new PointToLinePointToLineAxiom();
 
-		var lines = axiom.createFoldLines(p0, s0, p1, s1, 10, 1e-5);
+		var lines = axiom.createFoldLines(p0, s0, p1, s1, 10, 1e-6);
 
 		assertEquals(1, lines.size());
 
 		var dir = lines.get(0).getDirection();
 		double slope = dir.getY() / dir.getX();
-		assertEquals(Math.pow(2, 1.0 / 3), slope, 1e-5);
+		assertEquals(Math.pow(2, 1.0 / 3), slope, 1e-6);
 
 	}
 
