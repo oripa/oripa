@@ -188,7 +188,7 @@ public class MainFrame extends JFrame implements MainFrameView, ComponentListene
 
 		JScrollPane uiScroll = new JScrollPane(uiPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		uiScroll.setPreferredSize(new Dimension(255, 800));// setPreferredSize(new
+		uiScroll.setPreferredSize(new Dimension(255, 900));// setPreferredSize(new
 															// Dimension(uiPanel.getPreferredSize().width
 															// + 25,
 		// uiPanel.getPreferredSize().height));

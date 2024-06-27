@@ -213,6 +213,9 @@ public class UIPanelPresenter {
 		var lineToLineState = bindingFactory.createState(StringID.LINE_TO_LINE_ID);
 		view.addLineInputLineToLineAxiomButtonListener(lineToLineState::performActions, keyProcessing);
 
+		var p2lp2lState = bindingFactory.createState(StringID.POINT_TO_LINE_POINT_TO_LINE_ID);
+		view.addLineInputP2LP2LAxiomButtonListener(p2lp2lState::performActions, keyProcessing);
+
 		var triangleSplitState = bindingFactory.createState(StringID.TRIANGLE_ID);
 		view.addLineInputTriangleSplitButtonListener(triangleSplitState::performActions,
 				keyProcessing);

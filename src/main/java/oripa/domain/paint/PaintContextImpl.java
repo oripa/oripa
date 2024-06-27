@@ -10,6 +10,7 @@ import java.util.Optional;
 import oripa.domain.cptool.Painter;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.GeomUtil;
+import oripa.geom.Line;
 import oripa.geom.RectangleDomain;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
@@ -26,6 +27,7 @@ class PaintContextImpl implements PaintContext {
 
 	private Vector2d candidateVertexToPick = new Vector2d(0, 0);
 	private OriLine candidateLineToPick = null;
+	private Line solutionLineToPick = null;
 
 	private OriLine.Type lineTypeOfNewLines;
 
@@ -34,6 +36,7 @@ class PaintContextImpl implements PaintContext {
 	private int gridDivNum;
 	private List<Vector2d> gridPoints;
 
+	private Collection<Line> solutionLines = new ArrayList<>();
 	private Collection<Vector2d> snapPoints = new ArrayList<Vector2d>();
 
 	private Collection<OriLine> importedLines = List.of();
@@ -73,8 +76,10 @@ class PaintContextImpl implements PaintContext {
 
 		candidateLineToPick = null;
 		candidateVertexToPick = null;
+		solutionLineToPick = null;
 
-		snapPoints = List.of();
+		clearSnapPoints();
+		clearSolutionLines();
 	}
 
 	@Override
@@ -176,6 +181,16 @@ class PaintContextImpl implements PaintContext {
 	}
 
 	@Override
+	public void setSolutionLineToPick(final Line solutionLine) {
+		solutionLineToPick = solutionLine;
+	}
+
+	@Override
+	public Optional<Line> getSolutionLineToPick() {
+		return Optional.ofNullable(solutionLineToPick);
+	}
+
+	@Override
 	public void setLineTypeOfNewLines(final OriLine.Type lineType) {
 		lineTypeOfNewLines = lineType;
 	}
@@ -226,6 +241,21 @@ class PaintContextImpl implements PaintContext {
 	@Override
 	public AngleStep getAngleStep() {
 		return angleStep;
+	}
+
+	@Override
+	public void setSolutionLines(final Collection<Line> lines) {
+		solutionLines = Collections.unmodifiableList(new ArrayList<>(lines));
+	}
+
+	@Override
+	public Collection<Line> getSolutionLines() {
+		return solutionLines;
+	}
+
+	@Override
+	public void clearSolutionLines() {
+		solutionLines = List.of();
 	}
 
 	@Override

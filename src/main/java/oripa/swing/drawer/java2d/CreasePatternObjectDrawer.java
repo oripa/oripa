@@ -5,15 +5,13 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.List;
 
+import oripa.geom.Line;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
 import oripa.vecmath.Vector2d;
 
 public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
-	// private final static Logger logger =
-	// LoggerFactory.getLogger(Java2DGraphicDrawer.class);
-
 	private double vertexSize;
 
 	private final CreasePatternElementSelector selector = new CreasePatternElementSelector();
@@ -143,6 +141,17 @@ public class CreasePatternObjectDrawer implements ObjectGraphicDrawer {
 	@Override
 	public void drawLine(final double x0, final double y0, final double x1, final double y1) {
 		g2d.draw(converter.toLine2D(new Vector2d(x0, y0), new Vector2d(x1, y1)));
+	}
+
+	@Override
+	public void drawLine(final Line line) {
+		var size = 1000 * 5;
+
+		var dir = line.getDirection().multiply(size);
+		var p0 = line.getPoint().subtract(dir);
+		var p1 = line.getPoint().add(dir);
+
+		drawLine(p0, p1);
 	}
 
 	@Override

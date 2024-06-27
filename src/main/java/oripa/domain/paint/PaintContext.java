@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import oripa.domain.cptool.Painter;
+import oripa.geom.Line;
 import oripa.value.OriLine;
 import oripa.vecmath.Vector2d;
 
@@ -153,6 +154,10 @@ public interface PaintContext extends CreasePatternHolder {
 
 	public abstract Optional<Vector2d> getCandidateVertexToPick();
 
+	void setSolutionLineToPick(Line solutionLine);
+
+	Optional<Line> getSolutionLineToPick();
+
 	public abstract CreasePatternUndoer creasePatternUndo();
 
 	void refreshCreasePattern();
@@ -160,6 +165,20 @@ public interface PaintContext extends CreasePatternHolder {
 	public abstract void setAngleStep(AngleStep step);
 
 	public abstract AngleStep getAngleStep();
+
+	void setSolutionLines(Collection<Line> lines);
+
+	/**
+	 * Returns unmodifiable collection.
+	 *
+	 * @return
+	 */
+	Collection<Line> getSolutionLines();
+
+	/**
+	 * Makes the solution lines empty.
+	 */
+	void clearSolutionLines();
 
 	public abstract void setSnapPoints(Collection<Vector2d> points);
 

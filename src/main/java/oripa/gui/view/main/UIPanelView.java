@@ -95,6 +95,8 @@ public interface UIPanelView extends View {
 
 	void addLineInputLineToLineAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
+	void addLineInputP2LP2LAxiomButtonListener(Runnable listener, KeyProcessing keyProcessing);
+
 	void addLineInputTriangleSplitButtonListener(Runnable listener, KeyProcessing keyProcessing);
 
 	void addLineInputSymmetricButtonListener(Runnable listener, KeyProcessing keyProcessing);

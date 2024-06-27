@@ -22,6 +22,9 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 
 			{ StringID.LINE_TO_LINE_ID, "Fold in half. Specify 2 segments and select end points." },
 
+			{ StringID.POINT_TO_LINE_POINT_TO_LINE_ID,
+					"Specify point and line twice, select crease, and select end points." },
+
 			{ StringID.VERTICAL_ID, "Input a vertical line. Specify a point and a line." },
 
 			{ StringID.MIRROR_ID,

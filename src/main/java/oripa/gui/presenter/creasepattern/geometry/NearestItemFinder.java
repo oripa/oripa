@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import oripa.domain.paint.PaintContext;
 import oripa.geom.GeomUtil;
+import oripa.geom.Line;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.value.CalculationResource;
 import oripa.value.OriLine;
@@ -108,6 +109,29 @@ public class NearestItemFinder {
 		var candidateOpt = paintContext.getCandidateVertexToPick();
 
 		return candidateOpt.orElse(viewContext.getLogicalMousePoint());
+	}
+
+	public static Optional<Line> getNearestInSolutionLines(final CreasePatternViewContext viewContext,
+			final PaintContext paintContext) {
+
+		var mousePoint = viewContext.getLogicalMousePoint();
+
+		double minDistance = Double.MAX_VALUE;
+		Line bestLine = null;
+
+		for (var line : paintContext.getSolutionLines()) {
+			double dist = GeomUtil.distancePointToLine(mousePoint, line);
+			if (dist < minDistance) {
+				minDistance = dist;
+				bestLine = line;
+			}
+		}
+
+		if (minDistance < scaleThreshold(viewContext)) {
+			return Optional.of(bestLine);
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	/**

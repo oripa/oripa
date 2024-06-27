@@ -18,11 +18,17 @@
  */
 package oripa.util;
 
+import java.util.function.Function;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author OUCHI Koji
  *
  */
 public class MathUtil {
+	private static Logger logger = LoggerFactory.getLogger(MathUtil.class);
 
 	/**
 	 *
@@ -89,6 +95,52 @@ public class MathUtil {
 	 */
 	public static boolean areEqualInclusive(final double v0, final double v1, final double eps) {
 		return Math.abs(v1 - v0) <= eps;
+	}
+
+	public static double[] product(final double[][] matrix, final double[] vector) {
+		var prod = new double[vector.length];
+
+		for (int i = 0; i < matrix.length; i++) {
+			prod[i] = 0;
+			for (int j = 0; j < matrix.length; j++) {
+				prod[i] += matrix[i][j] * vector[j];
+			}
+		}
+
+		return prod;
+	}
+
+	public static double[][] rotationMatrix(final double angle) {
+		var r = new double[2][2];
+
+		r[0][0] = Math.cos(angle);
+		r[0][1] = -Math.sin(angle);
+		r[1][0] = Math.sin(angle);
+		r[1][1] = Math.cos(angle);
+
+		return r;
+	}
+
+	public static double newtonMethod(final Function<Double, Double> f, final double initialX, final double delta,
+			final double pointEps) throws IllegalStateException {
+
+		double x = initialX;
+		for (int i = 0; i < 50; i++) {
+			double f_x = f.apply(x);
+
+			if (MathUtil.areEqual(f_x, 0, pointEps)) {
+				logger.debug("answer found @ {}: f_x = {}, x = {}", i, f_x, x);
+				return x;
+			}
+
+			x = x - f_x * delta / (f.apply(x + delta) - f_x);
+
+			if (i % 10 == 0) {
+				logger.trace("f_x = {}, x = {}", f_x, x);
+			}
+		}
+
+		throw new IllegalStateException("approximation failed.");
 	}
 
 }

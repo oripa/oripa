@@ -120,6 +120,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 	private final JRadioButton lineInputVerticalLineButton = new JRadioButton();
 	private final JRadioButton lineInputAngleBisectorButton = new JRadioButton();
 	private final JRadioButton lineInputLineToLineButton = new JRadioButton();
+	private final JRadioButton lineInputP2LP2LButton = new JRadioButton();
 	private final JRadioButton lineInputTriangleSplitButton = new JRadioButton();
 	private final JRadioButton lineInputSymmetricButton = new JRadioButton();
 	private final JRadioButton lineInputMirrorButton = new JRadioButton();
@@ -409,6 +410,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		lineInputGroup.add(lineInputTriangleSplitButton);
 		lineInputGroup.add(lineInputAngleBisectorButton);
 		lineInputGroup.add(lineInputLineToLineButton);
+		lineInputGroup.add(lineInputP2LP2LButton);
 		lineInputGroup.add(lineInputVerticalLineButton);
 		lineInputGroup.add(lineInputSymmetricButton);
 		lineInputGroup.add(lineInputMirrorButton);
@@ -445,17 +447,22 @@ public class UIPanel extends JPanel implements UIPanelView {
 		lineInputPanel.add(lineInputOnVButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputPBisectorButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputAngleBisectorButton, gbBuilder.getNextField());
+
 		lineInputPanel.add(lineInputLineToLineButton, gbBuilder.getNextField());
+		lineInputPanel.add(lineInputP2LP2LButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputTriangleSplitButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputVerticalLineButton, gbBuilder.getNextField());
+
 		lineInputPanel.add(lineInputSymmetricButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputMirrorButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputByValueButton, gbBuilder.getNextField());
 		lineInputPanel.add(lineInputAngleSnapButton, gbBuilder.getNextField());
-		lineInputPanel.add(lineInputSuggestionButton, gbBuilder.getNextField());
 
+		lineInputPanel.add(lineInputSuggestionButton, gbBuilder.getNextField());
 		// dummies to align buttons left
-//		lineInputPanel.add(new JPanel(), gbBuilder.getNextField());
+		lineInputPanel.add(new JPanel(), gbBuilder.getNextField());
+		lineInputPanel.add(new JPanel(), gbBuilder.getNextField());
+		lineInputPanel.add(new JPanel(), gbBuilder.getNextField());
 
 		setLineInputButtonIcons();
 
@@ -659,6 +666,9 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineInputGlobalShortcut(lineInputLineToLineButton, KeyStrokes.get(KeyEvent.VK_H),
 				StringID.LINE_TO_LINE_ID);
 
+		setLineInputGlobalShortcut(lineInputP2LP2LButton, KeyStrokes.get(KeyEvent.VK_6),
+				StringID.POINT_TO_LINE_POINT_TO_LINE_ID);
+
 		setLineInputGlobalShortcut(lineInputTriangleSplitButton, KeyStrokes.get(KeyEvent.VK_R),
 				StringID.TRIANGLE_ID);
 
@@ -792,6 +802,7 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setButtonIcon(lineInputPBisectorButton, ButtonIcon.PERPENDICULAR_BISECTOR);
 		setButtonIcon(lineInputAngleBisectorButton, ButtonIcon.BISECTOR);
 		setButtonIcon(lineInputLineToLineButton, ButtonIcon.LINE_TO_LINE);
+		setButtonIcon(lineInputP2LP2LButton, ButtonIcon.POINT_TO_LINE_POINT_TO_LINE);
 		setButtonIcon(lineInputTriangleSplitButton, ButtonIcon.TRIANGLE);
 		setButtonIcon(lineInputVerticalLineButton, ButtonIcon.VERTICAL);
 		setButtonIcon(lineInputSymmetricButton, ButtonIcon.SYMMETRIC);
@@ -915,6 +926,11 @@ public class UIPanel extends JPanel implements UIPanelView {
 	@Override
 	public void addLineInputLineToLineAxiomButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
 		addButtonListener(lineInputLineToLineButton, listener, keyProcessing);
+	}
+
+	@Override
+	public void addLineInputP2LP2LAxiomButtonListener(final Runnable listener, final KeyProcessing keyProcessing) {
+		addButtonListener(lineInputP2LP2LButton, listener, keyProcessing);
 	}
 
 	@Override

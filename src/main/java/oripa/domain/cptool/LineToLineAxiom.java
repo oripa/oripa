@@ -30,6 +30,8 @@ import oripa.geom.Segment;
 import oripa.vecmath.Vector2d;
 
 /**
+ * Origami axiom 3
+ *
  * @author OUCHI Koji
  *
  */
