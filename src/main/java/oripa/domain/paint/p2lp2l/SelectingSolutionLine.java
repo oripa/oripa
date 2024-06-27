@@ -57,6 +57,7 @@ public class SelectingSolutionLine extends AbstractActionState {
 	@Override
 	protected void undoAction(final PaintContext context) {
 		context.clearSolutionLines();
+		context.setSolutionLineToPick(null);
 		context.popLine();
 	}
 

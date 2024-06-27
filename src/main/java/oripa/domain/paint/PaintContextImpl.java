@@ -76,8 +76,10 @@ class PaintContextImpl implements PaintContext {
 
 		candidateLineToPick = null;
 		candidateVertexToPick = null;
+		solutionLineToPick = null;
 
-		snapPoints = List.of();
+		clearSnapPoints();
+		clearSolutionLines();
 	}
 
 	@Override

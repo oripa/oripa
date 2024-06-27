@@ -20,9 +20,6 @@ package oripa.gui.presenter.creasepattern;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.p2lp2l.SelectingFirstVertex;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
@@ -34,7 +31,6 @@ import oripa.vecmath.Vector2d;
  *
  */
 public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseAction {
-	private static Logger logger = LoggerFactory.getLogger(PointToLinePointToLineAxiomAction.class);
 
 	public PointToLinePointToLineAxiomAction() {
 		setActionState(new SelectingFirstVertex());
@@ -59,6 +55,7 @@ public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseActio
 			if (solutionLineOpt.isPresent()) {
 				paintContext.setSolutionLineToPick(solutionLineOpt.orElseThrow());
 			} else {
+				paintContext.setSolutionLineToPick(null);
 				return Optional.empty();
 			}
 		}

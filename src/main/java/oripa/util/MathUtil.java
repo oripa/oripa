@@ -122,7 +122,7 @@ public class MathUtil {
 	}
 
 	public static double newtonMethod(final Function<Double, Double> f, final double initialX, final double delta,
-			final double pointEps) {
+			final double pointEps) throws IllegalStateException {
 
 		double x = initialX;
 		for (int i = 0; i < 50; i++) {
