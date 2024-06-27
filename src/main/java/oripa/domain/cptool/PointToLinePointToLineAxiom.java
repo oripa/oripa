@@ -77,8 +77,7 @@ public class PointToLinePointToLineAxiom {
 			double x0Inverted_d = initialX0Inverted - range / 2 + d;
 
 			Function<Double, Double> discriminant = (
-					x0Inverted) -> solve(x0Inverted, theta0, theta1, p0Moved.getX(), p0Moved.getY(),
-							p1Moved.getX(), p1Moved.getY(), pointEps).discriminant;
+					x0Inverted) -> solve(x0Inverted, theta0, theta1, p0Moved, p1Moved, pointEps).discriminant;
 
 			try {
 				var x0Answer = MathUtil.newtonMethod(discriminant, x0Inverted_d, pointEps, 1e-10 * range);
@@ -87,8 +86,7 @@ public class PointToLinePointToLineAxiom {
 					continue;
 				}
 
-				var solution = solve(x0Answer, theta0, theta1, p0Moved.getX(), p0Moved.getY(),
-						p1Moved.getX(), p1Moved.getY(), pointEps);
+				var solution = solve(x0Answer, theta0, theta1, p0Moved, p1Moved, pointEps);
 
 				results.add(new Pair<Double, Line>(x0Answer, new Line(
 						new Vector2d(solution.xy[0], solution.xy[1]).add(crossPoint),
@@ -149,12 +147,36 @@ public class PointToLinePointToLineAxiom {
 		}
 	}
 
+	/**
+	 * Assumes the given values are translated as the cross point of the
+	 * specified lines line0 and line1 becomes (0,0), and computes the tangent
+	 * line of the parabola0 induced by the point0 and line0. The returned value
+	 * includes a discriminant to see how deeply the line crosses the parabola1.
+	 * It is known that this axiom is to fold such that the crease touches two
+	 * parabolas whose foci and directrixes are the specified points and the
+	 * specified lines, respectively. In this method, first we rotate the
+	 * coordinate as the line0 becomes x = 0. Here we call it "inversion" with
+	 * line0. Then we compute slope of the parabola0 at given x0 in the inverted
+	 * coordinate and rotate it again to invert with line1. We can get the slope
+	 * of the tangent line in the rotated coordinate easily. After that, we
+	 * consider the simultaneous equations of parabola1 and the tangent line
+	 * that fall into quadratic formula. To make the line tangent, we need D =
+	 * b^2 - 4ac = 0 for the quadratic equation, which is potentially cubic
+	 * formula of x0 and hard to derive the answer analytically.
+	 *
+	 * @param x0Inverted
+	 * @param theta0
+	 * @param theta1
+	 * @param p0
+	 * @param p1
+	 * @param pointEps
+	 * @return
+	 */
 	private Solution solve(final double x0Inverted,
-			final double theta0, final double theta1, final double p0, final double q0, final double p1,
-			final double q1, final double pointEps) {
+			final double theta0, final double theta1, final Vector2d p0, final Vector2d p1, final double pointEps) {
 
-		var point0 = new double[] { p0, q0 };
-		var point1 = new double[] { p1, q1 };
+		var point0 = new double[] { p0.getX(), p0.getY() };
+		var point1 = new double[] { p1.getX(), p1.getY() };
 
 		var point0Inverted = rotate(point0, -theta0);
 		var point1Inverted = rotate(point1, -theta1);
