@@ -60,7 +60,7 @@ public class FoldableLineAngleSuggester {
 
 			vertex.edgeStream().forEach(e -> sv.addEdge(new OriEdge(sv, e.oppositeVertex(vertex), e.getType())));
 
-			var ep = sp.add(new Vector2d(Math.cos(angle), Math.sin(angle)));
+			var ep = sp.add(Vector2d.unitVector(angle));
 
 			var ev = new OriVertex(ep);
 			var edge = new OriEdge(sv, ev, type.toInt());

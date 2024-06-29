@@ -31,7 +31,7 @@ public class Ray {
 	}
 
 	public Ray(final Vector2d v, final double angle) {
-		this(v, new Vector2d(Math.cos(angle), Math.sin(angle)));
+		this(v, Vector2d.unitVector(angle));
 	}
 
 	public Vector2d getEndPoint() {

@@ -70,18 +70,9 @@ public class RotatedLineFactory {
 
 		var shiftedToOrigin = p.subtract(center);
 
-		var rotated = rotate(shiftedToOrigin, angleRad);
+		var rotated = shiftedToOrigin.rotate(angleRad);
 
 		return rotated.add(center);
 	}
 
-	private OriPoint rotate(final Vector2d p, final double angleRad) {
-
-		var rotatedX = p.getX() * Math.cos(angleRad) - p.getY() * Math.sin(angleRad);
-		var rotatedY = p.getX() * Math.sin(angleRad) + p.getY() * Math.cos(angleRad);
-
-		OriPoint rotated = new OriPoint(rotatedX, rotatedY);
-
-		return rotated;
-	}
 }

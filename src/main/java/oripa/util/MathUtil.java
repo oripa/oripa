@@ -102,7 +102,7 @@ public class MathUtil {
 
 		for (int i = 0; i < matrix.length; i++) {
 			prod[i] = 0;
-			for (int j = 0; j < matrix.length; j++) {
+			for (int j = 0; j < matrix[i].length; j++) {
 				prod[i] += matrix[i][j] * vector[j];
 			}
 		}
@@ -110,7 +110,7 @@ public class MathUtil {
 		return prod;
 	}
 
-	public static double[][] rotationMatrix(final double angle) {
+	public static double[][] rotationMatrix2D(final double angle) {
 		var r = new double[2][2];
 
 		r[0][0] = Math.cos(angle);
@@ -122,13 +122,13 @@ public class MathUtil {
 	}
 
 	public static double newtonMethod(final Function<Double, Double> f, final double initialX, final double delta,
-			final double pointEps) throws IllegalStateException {
+			final double eps) throws IllegalStateException {
 
 		double x = initialX;
 		for (int i = 0; i < 50; i++) {
 			double f_x = f.apply(x);
 
-			if (MathUtil.areEqual(f_x, 0, pointEps)) {
+			if (MathUtil.areEqual(f_x, 0, eps)) {
 				logger.debug("answer found @ {}: f_x = {}, x = {}", i, f_x, x);
 				return x;
 			}

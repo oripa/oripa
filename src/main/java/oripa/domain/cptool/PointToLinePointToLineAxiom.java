@@ -72,7 +72,7 @@ public class PointToLinePointToLineAxiom {
 
 		var results = new ArrayList<Pair<Double, Line>>();
 
-		double initialX0Inverted = rotate(new double[] { p0Moved.getX(), p0Moved.getY() }, -theta0)[0];
+		double initialX0Inverted = p0Moved.rotate(-theta0).getX();
 		for (double d = 0; d < range; d += range / 50) {
 			double x0Inverted_d = initialX0Inverted - range / 2 + d;
 
@@ -89,7 +89,7 @@ public class PointToLinePointToLineAxiom {
 				var solution = solve(x0Answer, theta0, theta1, p0Moved, p1Moved, pointEps);
 
 				results.add(new Pair<Double, Line>(x0Answer, new Line(
-						new Vector2d(solution.xy[0], solution.xy[1]).add(crossPoint),
+						Vector2d.fromArray(solution.xy).add(crossPoint),
 						new Vector2d(1, solution.slope))));
 			} catch (Exception e) {
 
@@ -175,8 +175,8 @@ public class PointToLinePointToLineAxiom {
 	private Solution solve(final double x0Inverted,
 			final double theta0, final double theta1, final Vector2d p0, final Vector2d p1, final double pointEps) {
 
-		var point0 = new double[] { p0.getX(), p0.getY() };
-		var point1 = new double[] { p1.getX(), p1.getY() };
+		var point0 = p0.toArray();
+		var point1 = p1.toArray();
 
 		var point0Inverted = rotate(point0, -theta0);
 		var point1Inverted = rotate(point1, -theta1);
@@ -211,8 +211,8 @@ public class PointToLinePointToLineAxiom {
 	}
 
 	private double[] rotate(final double[] vector, final double theta) {
-		var inverseMatrix = MathUtil.rotationMatrix(theta);
-		return MathUtil.product(inverseMatrix, new double[] { vector[0], vector[1] });
+		var matrix = MathUtil.rotationMatrix2D(theta);
+		return MathUtil.product(matrix, vector);
 	}
 
 }

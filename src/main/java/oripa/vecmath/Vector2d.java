@@ -33,9 +33,21 @@ public class Vector2d {
 	private final double x;
 	private final double y;
 
+	public static Vector2d fromArray(final double[] xy) {
+		return new Vector2d(xy[0], xy[1]);
+	}
+
+	public static Vector2d unitVector(final double angle) {
+		return new Vector2d(Math.cos(angle), Math.sin(angle));
+	}
+
 	public Vector2d(final double x, final double y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public double[] toArray() {
+		return new double[] { x, y };
 	}
 
 	public double getX() {
@@ -100,6 +112,13 @@ public class Vector2d {
 		}
 
 		return Math.acos(cos);
+	}
+
+	public Vector2d rotate(final double theta) {
+		var matrix = MathUtil.rotationMatrix2D(theta);
+
+		return fromArray(MathUtil.product(matrix, toArray()));
+
 	}
 
 	/**
