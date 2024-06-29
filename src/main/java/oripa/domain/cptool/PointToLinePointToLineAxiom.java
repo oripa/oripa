@@ -76,8 +76,8 @@ public class PointToLinePointToLineAxiom {
 		for (double d = 0; d < range; d += range / 50) {
 			double x0Inverted_d = initialX0Inverted - range / 2 + d;
 
-			Function<Double, Double> discriminant = (
-					x0Inverted) -> solve(x0Inverted, theta0, theta1, p0Moved, p1Moved, pointEps).discriminant;
+			Function<Double, Double> discriminant = x0Inverted -> solve(
+					x0Inverted, theta0, theta1, p0Moved, p1Moved, pointEps).discriminant;
 
 			try {
 				var x0Answer = MathUtil.newtonMethod(discriminant, x0Inverted_d, pointEps, 1e-10 * range);
