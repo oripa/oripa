@@ -89,7 +89,7 @@ public class PointToLinePointToLineAxiom {
 				var solution = solve(x0Answer, theta0, theta1, p0Moved, p1Moved, pointEps);
 
 				results.add(new Pair<Double, Line>(x0Answer, new Line(
-						Vector2d.fromArray(solution.xy).add(crossPoint),
+						solution.xy.add(crossPoint),
 						new Vector2d(1, solution.slope))));
 			} catch (Exception e) {
 
@@ -137,10 +137,10 @@ public class PointToLinePointToLineAxiom {
 
 	private static class Solution {
 		public double slope;
-		public double[] xy;
+		public Vector2d xy;
 		public double discriminant;
 
-		public Solution(final double slope, final double[] xy, final double discriminant) {
+		public Solution(final double slope, final Vector2d xy, final double discriminant) {
 			this.slope = slope;
 			this.xy = xy;
 			this.discriminant = discriminant;
@@ -175,26 +175,23 @@ public class PointToLinePointToLineAxiom {
 	private Solution solve(final double x0Inverted,
 			final double theta0, final double theta1, final Vector2d p0, final Vector2d p1, final double pointEps) {
 
-		var point0 = p0.toArray();
-		var point1 = p1.toArray();
+		var point0Inverted = p0.rotate(-theta0);
+		var point1Inverted = p1.rotate(-theta1);
 
-		var point0Inverted = rotate(point0, -theta0);
-		var point1Inverted = rotate(point1, -theta1);
+		var p0Inverted = point0Inverted.getX();
+		var q0Inverted = point0Inverted.getY();
 
-		var p0Inverted = point0Inverted[0];
-		var q0Inverted = point0Inverted[1];
-
-		var p1Inverted = point1Inverted[0];
-		var q1Inverted = point1Inverted[1];
+		var p1Inverted = point1Inverted.getX();
+		var q1Inverted = point1Inverted.getY();
 
 		var slope0Inverted = computeSlope(x0Inverted, p0Inverted, q0Inverted);
 
 		var slope1Inverted = rotateSlope(slope0Inverted, theta0 - theta1);
 
 		var y0Inverted = computeYInverted(x0Inverted, p0Inverted, q0Inverted);
-		var xy0Inverted1 = rotate(new double[] { x0Inverted, y0Inverted }, theta0 - theta1);
-		var x0Inverted1 = xy0Inverted1[0];
-		var y0Inverted1 = xy0Inverted1[1];
+		var xy0Inverted1 = new Vector2d(x0Inverted, y0Inverted).rotate(theta0 - theta1);
+		var x0Inverted1 = xy0Inverted1.getX();
+		var y0Inverted1 = xy0Inverted1.getY();
 
 		if (MathUtil.areEqual(q1Inverted, 0, pointEps)) {
 			throw new IllegalArgumentException("q1Inverted is 0.");
@@ -207,12 +204,7 @@ public class PointToLinePointToLineAxiom {
 
 		var discriminant = b * b - 4.0 * a * c;
 
-		return new Solution(rotateSlope(slope1Inverted, theta1), rotate(xy0Inverted1, theta1), discriminant);
-	}
-
-	private double[] rotate(final double[] vector, final double theta) {
-		var matrix = MathUtil.rotationMatrix2D(theta);
-		return MathUtil.product(matrix, vector);
+		return new Solution(rotateSlope(slope1Inverted, theta1), xy0Inverted1.rotate(theta1), discriminant);
 	}
 
 }
