@@ -538,19 +538,13 @@ public class GeomUtil {
 
 		var inverseOpt = matrix.inverse();
 
-		if (inverseOpt.isEmpty()) {
-			return List.of();
-		}
+		var parameters = inverseOpt
+				.map(inv -> inv.product(d.multiply(-1)))
+				.filter(x -> answerPredicate.test(x.getX(), x.getY()))
+				.map(x -> List.of(x.getX(), x.getY()))
+				.orElse(List.of());
 
-		var x = inverseOpt.orElseThrow().product(d.multiply(-1));
-		double s = x.getX();
-		double t = x.getY();
-
-		if (!answerPredicate.test(s, t)) {
-			return List.of();
-		}
-
-		return List.of(s, t);
+		return parameters;
 	}
 
 	/**
