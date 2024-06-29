@@ -102,10 +102,10 @@ public class ModelViewScreenPresenter {
 		var scissorsLinePosition = view.getScissorsLinePosition();
 		var modelCenter = view.getModelCenter();
 
-		var dir = new Vector2d(Math.cos(Math.PI * scissorsLineAngleDegree / 180.0),
-				Math.sin(Math.PI * scissorsLineAngleDegree / 180.0));
-		var p0 = new Vector2d(modelCenter.getX() - dir.getX() * 300, modelCenter.getY() - dir.getY() * 300);
-		var p1 = new Vector2d(modelCenter.getX() + dir.getX() * 300, modelCenter.getY() + dir.getY() * 300);
+		var dir = Vector2d.unitVector(Math.PI * scissorsLineAngleDegree / 180.0);
+
+		var p0 = modelCenter.subtract(dir.multiply(300));
+		var p1 = modelCenter.add(dir.multiply(300));
 
 		var moveVec = new Vector2d(-dir.getY(), dir.getX()).multiply(scissorsLinePosition);
 		scissorsLine = new OriLine(p0.add(moveVec), p1.add(moveVec), Type.AUX);

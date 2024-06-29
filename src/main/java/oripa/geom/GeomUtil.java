@@ -222,7 +222,7 @@ public class GeomUtil {
 
 		if (MathUtil.areRadianEqual(angle, Math.PI)) {
 			double bisectorAngle = v0_v1.ownAngle() + Math.PI / 2;
-			return new Vector2d(Math.cos(bisectorAngle), Math.sin(bisectorAngle));
+			return Vector2d.unitVector(bisectorAngle);
 		}
 
 		return v0_v1.add(v2_v1);
@@ -356,7 +356,7 @@ public class GeomUtil {
 	public static Segment getLineByValue(final Vector2d sv, final double length,
 			final double deg_angle) {
 		double rad_angle = Math.toRadians(deg_angle);
-		var dir = new Vector2d(length * Math.cos(rad_angle), length * Math.sin(rad_angle));
+		var dir = Vector2d.unitVector(rad_angle).multiply(length);
 		var ev = sv.add(dir);
 
 		return new Segment(sv, ev);

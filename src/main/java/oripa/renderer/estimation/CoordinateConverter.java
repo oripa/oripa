@@ -97,22 +97,14 @@ public class CoordinateConverter {
 	 * @return
 	 */
 	private Vector2d distortByMorisueMethod(final Vector2d pos, final Vector2d cpPos) {
-		var matrix = new double[2][2];
 
-		var theta = 0.1 * distortionParameter.getX();
-		var scale = 1 + distortionParameter.getY() / 5;
+		double theta = 0.1 * distortionParameter.getX();
+		double scale = 1 + distortionParameter.getY() / 5;
 
-		// need to find optimal matrix
-		matrix[0][0] = Math.cos(theta);
-		matrix[0][1] = -Math.sin(theta);
-		matrix[1][0] = Math.sin(theta);
-		matrix[1][1] = Math.cos(theta);
-
-		var diff = new Vector2d(
-				cpPos.getX() * matrix[0][0] + cpPos.getY() * matrix[0][1],
-				cpPos.getX() * matrix[1][0] + cpPos.getY() * matrix[1][1])
-						.multiply(scale)
-						.subtract(cpPos);
+		// rotation part can be arbitrary matrix but rotation is good so far.
+		var diff = cpPos.rotate(theta)
+				.multiply(scale)
+				.subtract(cpPos);
 
 		var distorted = pos.add(diff);
 
