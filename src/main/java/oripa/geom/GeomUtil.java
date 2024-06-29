@@ -27,6 +27,7 @@ import java.util.function.BiPredicate;
 import oripa.util.ClosedRange;
 import oripa.util.MathUtil;
 import oripa.value.CalculationResource;
+import oripa.vecmath.Matrix2d;
 import oripa.vecmath.Vector2d;
 
 public class GeomUtil {
@@ -507,8 +508,8 @@ public class GeomUtil {
 	 *
 	 * <pre>
 	 * {@code
-	 * A = [-px qx] and x = [s]
-	 *     [-py qy]         [t]
+	 * A = [-p_x q_x] and x = [s]
+	 *     [-p_y q_y]         [t]
 	 * }
 	 * </pre>
 	 *
@@ -530,17 +531,20 @@ public class GeomUtil {
 		var p = p1.subtract(p0);
 		var q = q1.subtract(q0);
 		var d = q0.subtract(p0);
-		double det = q.getX() * p.getY() - q.getY() * p.getX();
 
-		final double eps = MathUtil.normalizedValueEps();
+		var matrix = new Matrix2d(
+				-p.getX(), q.getX(),
+				-p.getY(), q.getY());
 
-		if (det * det <= eps * p.lengthSquared() * q.lengthSquared()) {
+		var inverseOpt = matrix.inverse();
+
+		if (inverseOpt.isEmpty()) {
 			return List.of();
 		}
 
-		// Lines intersect in a single point.
-		double s = (q.getX() * d.getY() - q.getY() * d.getX()) / det;
-		double t = (p.getX() * d.getY() - p.getY() * d.getX()) / det;
+		var x = inverseOpt.orElseThrow().product(d.multiply(-1));
+		double s = x.getX();
+		double t = x.getY();
 
 		if (!answerPredicate.test(s, t)) {
 			return List.of();
