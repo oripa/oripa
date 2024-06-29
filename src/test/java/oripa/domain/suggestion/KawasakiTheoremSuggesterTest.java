@@ -98,8 +98,6 @@ class KawasakiTheoremSuggesterTest {
 	}
 
 	private Vector2d createPoint(final OriVertex start, final int angle) {
-		return new Vector2d(
-				start.getPosition().getX() + Math.cos(UNIT_ANGLE * angle),
-				start.getPosition().getY() + Math.sin(UNIT_ANGLE * angle));
+		return start.getPosition().add(Vector2d.unitVector(UNIT_ANGLE * angle));
 	}
 }

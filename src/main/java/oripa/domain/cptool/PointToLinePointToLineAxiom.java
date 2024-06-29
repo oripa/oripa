@@ -167,16 +167,17 @@ public class PointToLinePointToLineAxiom {
 	 * @param x0Inverted
 	 * @param theta0
 	 * @param theta1
-	 * @param p0
-	 * @param p1
+	 * @param point0
+	 * @param point1
 	 * @param pointEps
 	 * @return
 	 */
 	private Solution solve(final double x0Inverted,
-			final double theta0, final double theta1, final Vector2d p0, final Vector2d p1, final double pointEps) {
+			final double theta0, final double theta1, final Vector2d point0, final Vector2d point1,
+			final double pointEps) {
 
-		var point0Inverted = p0.rotate(-theta0);
-		var point1Inverted = p1.rotate(-theta1);
+		var point0Inverted = point0.rotate(-theta0);
+		var point1Inverted = point1.rotate(-theta1);
 
 		var p0Inverted = point0Inverted.getX();
 		var q0Inverted = point0Inverted.getY();
