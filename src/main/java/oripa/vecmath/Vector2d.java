@@ -115,10 +115,11 @@ public class Vector2d {
 	}
 
 	public Vector2d rotate(final double theta) {
-		var matrix = MathUtil.rotationMatrix2D(theta);
 
-		return fromArray(MathUtil.product(matrix, toArray()));
+		double cos = Math.cos(theta);
+		double sin = Math.sin(theta);
 
+		return new Vector2d(cos * x - sin * y, sin * x + cos * y);
 	}
 
 	/**

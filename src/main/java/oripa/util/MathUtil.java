@@ -97,30 +97,6 @@ public class MathUtil {
 		return Math.abs(v1 - v0) <= eps;
 	}
 
-	public static double[] product(final double[][] matrix, final double[] vector) {
-		var prod = new double[vector.length];
-
-		for (int i = 0; i < matrix.length; i++) {
-			prod[i] = 0;
-			for (int j = 0; j < matrix[i].length; j++) {
-				prod[i] += matrix[i][j] * vector[j];
-			}
-		}
-
-		return prod;
-	}
-
-	public static double[][] rotationMatrix2D(final double angle) {
-		var r = new double[2][2];
-
-		r[0][0] = Math.cos(angle);
-		r[0][1] = -Math.sin(angle);
-		r[1][0] = Math.sin(angle);
-		r[1][1] = Math.cos(angle);
-
-		return r;
-	}
-
 	public static double newtonMethod(final Function<Double, Double> f, final double initialX, final double delta,
 			final double eps) throws IllegalStateException {
 
