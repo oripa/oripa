@@ -45,9 +45,10 @@ class GeomUtilTest {
 		var v1 = new Vector2d(0, 0);
 		var v2 = new Vector2d(0, 1);
 
-		var bisector = GeomUtil.getBisectorVec(v0, v1, v2);
+		// normalize to remove uncertainty of the vector length
+		var bisector = GeomUtil.getBisectorVec(v0, v1, v2).normalize();
 
-		assertEquals(1.0, bisector.getX(), 1e-8);
-		assertEquals(1.0, bisector.getY(), 1e-8);
+		assertEquals(Math.sqrt(2) / 2, bisector.getX(), 1e-8);
+		assertEquals(Math.sqrt(2) / 2, bisector.getY(), 1e-8);
 	}
 }
