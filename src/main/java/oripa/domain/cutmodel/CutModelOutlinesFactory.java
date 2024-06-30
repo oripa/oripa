@@ -47,10 +47,10 @@ public class CutModelOutlinesFactory {
 			var nextPosition = he.getNext().getPositionForDisplay();
 			var l = new Segment(position, nextPosition);
 
-			var parameters = GeomUtil.solveSegmentsCrossPointVectorEquation(
+			var parametersOpt = GeomUtil.solveSegmentsCrossPointVectorEquation(
 					cutLine.getP0(), cutLine.getP1(), l.getP0(), l.getP1());
 
-			if (!parameters.isEmpty()) {
+			parametersOpt.ifPresent(parameters -> {
 				// use the parameter for a face edge.
 				var param = parameters.get(1);
 				var positionBefore = he.getPositionBeforeFolding();
@@ -61,7 +61,8 @@ public class CutModelOutlinesFactory {
 						.noneMatch(cp -> cp.equals(crossV, pointEps))) {
 					crossPoints.add(crossV);
 				}
-			}
+
+			});
 		});
 
 		return crossPoints;
