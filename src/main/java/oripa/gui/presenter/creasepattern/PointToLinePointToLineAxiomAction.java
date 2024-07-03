@@ -56,8 +56,8 @@ public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseActio
 				paintContext.setSolutionLineToPick(solutionLineOpt.orElseThrow());
 			} else {
 				paintContext.setSolutionLineToPick(null);
-				return Optional.empty();
 			}
+			return Optional.empty();
 		}
 
 		var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);

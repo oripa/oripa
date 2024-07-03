@@ -25,6 +25,9 @@ public class ExplanationStringResource_en extends ListResourceBundle {
 			{ StringID.POINT_TO_LINE_POINT_TO_LINE_ID,
 					"Specify point and line twice, select crease, and select end points." },
 
+			{ StringID.POINT_TO_LINE_THROUGH_POINT_ID,
+					"Specify point and line to meet, specify a point that crease passes, select crease, and select end points." },
+
 			{ StringID.VERTICAL_ID, "Input a vertical line. Specify a point and a line." },
 
 			{ StringID.MIRROR_ID,

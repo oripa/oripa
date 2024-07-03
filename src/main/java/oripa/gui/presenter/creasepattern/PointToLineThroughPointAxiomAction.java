@@ -32,7 +32,13 @@ import oripa.vecmath.Vector2d;
  */
 public class PointToLineThroughPointAxiomAction extends AbstractGraphicMouseAction {
 
-	PointToLineThroughPointAxiomAction() {
+	public PointToLineThroughPointAxiomAction() {
+		setActionState(new SelectingFirstVertex());
+	}
+
+	@Override
+	protected void recoverImpl(final PaintContext context) {
+		super.recoverImpl(context);
 		setActionState(new SelectingFirstVertex());
 	}
 
@@ -50,13 +56,19 @@ public class PointToLineThroughPointAxiomAction extends AbstractGraphicMouseActi
 				paintContext.setSolutionLineToPick(solutionLineOpt.orElseThrow());
 			} else {
 				paintContext.setSolutionLineToPick(null);
-				return Optional.empty();
 			}
+			return Optional.empty();
 		}
+
+		var nearestOpt = super.onMove(viewContext, paintContext, differentAction);
 
 		var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
 
-		snapPointOpt.ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
+		var mousePoint = viewContext.getLogicalMousePoint();
+		snapPointOpt
+				.filter(snapPoint -> nearestOpt.isEmpty()
+						|| snapPoint.distance(mousePoint) < nearestOpt.orElseThrow().distance(mousePoint))
+				.ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
 
 		return snapPointOpt;
 	}
