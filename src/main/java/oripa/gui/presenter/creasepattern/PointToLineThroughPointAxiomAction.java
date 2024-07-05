@@ -21,7 +21,7 @@ package oripa.gui.presenter.creasepattern;
 import java.util.Optional;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.p2lp2l.SelectingFirstVertex;
+import oripa.domain.paint.p2ltp.SelectingFirstVertex;
 import oripa.gui.presenter.creasepattern.geometry.NearestItemFinder;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.vecmath.Vector2d;
@@ -30,9 +30,9 @@ import oripa.vecmath.Vector2d;
  * @author OUCHI Koji
  *
  */
-public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseAction {
+public class PointToLineThroughPointAxiomAction extends AbstractGraphicMouseAction {
 
-	public PointToLinePointToLineAxiomAction() {
+	public PointToLineThroughPointAxiomAction() {
 		setActionState(new SelectingFirstVertex());
 	}
 
@@ -45,11 +45,11 @@ public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseActio
 	@Override
 	public Optional<Vector2d> onMove(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		if (paintContext.getVertexCount() <= 2 && paintContext.getLineCount() < 2) {
+		if (paintContext.getVertexCount() <= 1 && paintContext.getLineCount() <= 1) {
 			return super.onMove(viewContext, paintContext, differentAction);
 		}
 
-		if (paintContext.getVertexCount() == 2 && paintContext.getLineCount() == 2
+		if (paintContext.getVertexCount() == 2 && paintContext.getLineCount() == 1
 				&& paintContext.getSnapPoints().isEmpty()) {
 			var solutionLineOpt = NearestItemFinder.getNearestInSolutionLines(viewContext, paintContext);
 			if (solutionLineOpt.isPresent()) {
@@ -60,9 +60,15 @@ public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseActio
 			return Optional.empty();
 		}
 
+		var nearestOpt = super.onMove(viewContext, paintContext, differentAction);
+
 		var snapPointOpt = NearestItemFinder.getNearestInSnapPoints(viewContext, paintContext);
 
-		snapPointOpt.ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
+		var mousePoint = viewContext.getLogicalMousePoint();
+		snapPointOpt
+				.filter(snapPoint -> nearestOpt.isEmpty()
+						|| snapPoint.distance(mousePoint) < nearestOpt.orElseThrow().distance(mousePoint))
+				.ifPresent(snapPoint -> paintContext.setCandidateVertexToPick(snapPoint));
 
 		return snapPointOpt;
 	}
@@ -80,9 +86,6 @@ public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseActio
 		if (paintContext.getVertexCount() == 1 && paintContext.getLineCount() == 1) {
 			drawPickCandidateVertex(drawer, viewContext, paintContext);
 		}
-		if (paintContext.getVertexCount() == 2 && paintContext.getLineCount() == 1) {
-			drawPickCandidateLine(drawer, viewContext, paintContext);
-		}
 
 		if (!paintContext.getSolutionLines().isEmpty()) {
 			drawSolutionLines(drawer, viewContext, paintContext);
@@ -99,6 +102,5 @@ public class PointToLinePointToLineAxiomAction extends AbstractGraphicMouseActio
 		}
 
 		super.onDraw(drawer, viewContext, paintContext);
-
 	}
 }

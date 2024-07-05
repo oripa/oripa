@@ -183,6 +183,7 @@ public class StringID {
 	public static final String BISECTOR_ID = "Bisector";
 	public static final String LINE_TO_LINE_ID = "LineToLine";
 	public static final String POINT_TO_LINE_POINT_TO_LINE_ID = "PointToLinePointToLine";
+	public static final String POINT_TO_LINE_THROUGH_POINT_ID = "PointToLineThroughPoint";
 	public static final String VERTICAL_ID = "VerticalLine";
 	public static final String MIRROR_ID = "Mirror";
 	public static final String BY_VALUE_ID = "ByValue";
