@@ -16,36 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.pbisec;
+package oripa.domain.cptool;
 
-import java.util.Collection;
-
-import oripa.domain.cptool.PerpendicularBisectorFactory;
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.SnapPointFactory;
+import oripa.geom.Line;
 import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class PerpendicularBisectorSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
-		Vector2d p0, p1;
-		p0 = context.getVertex(0);
-		p1 = context.getVertex(1);
+public class PerpendicularBisectorFactory {
+	public Line create(
+			final Vector2d v0, final Vector2d v1) {
+		Vector2d cp = v0.add(v1).multiply(0.5);
 
-		var eps = context.getPainter().getPointEps();
+		var dir = v0.subtract(v1);
+		var perpendicularDir = dir.getRightSidePerpendicular();
 
-		var bisectorFactory = new PerpendicularBisectorFactory();
-		var pbisec = bisectorFactory.create(p0, p1);
-
-		var snapPointFactory = new SnapPointFactory();
-
-		var creasePattern = context.getCreasePattern();
-		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(creasePattern, pbisec,
-				eps);
-
-		return snapPoints;
+		return new Line(cp, perpendicularDir);
 	}
+
 }

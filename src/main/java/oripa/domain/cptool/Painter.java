@@ -27,7 +27,7 @@ public class Painter {
 	private final LineMirror lineMirror = new LineMirror();
 	private final LineDivider lineDivider = new LineDivider();
 	private final LineTypeChanger typeChanger = new LineTypeChanger();
-	private final BisectorFactory bisectorFactory = new BisectorFactory();
+	private final AngleBisectorFactory bisectorFactory = new AngleBisectorFactory();
 	private final SymmetricLineFactory symmetricFactory = new SymmetricLineFactory();
 	private final RotatedLineFactory rotationFactory = new RotatedLineFactory();
 	private final TiledLineFactory tileFactory = new TiledLineFactory();
@@ -217,7 +217,7 @@ public class Painter {
 	public void addBisectorLine(
 			final Vector2d v0, final Vector2d v1, final Vector2d v2,
 			final OriLine l, final OriLine.Type lineType) {
-		OriLine bisector = bisectorFactory.createAngleBisectorLine(v0, v1, v2, l, lineType);
+		OriLine bisector = bisectorFactory.create(v0, v1, v2, l, lineType);
 
 		addLine(bisector);
 	}

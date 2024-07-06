@@ -37,6 +37,7 @@ public enum ButtonIcon implements ButtonIconResource {
 	LINE_TO_LINE("linetoline"),
 	POINT_TO_LINE_POINT_TO_LINE("p2lp2l"),
 	POINT_TO_LINE_THROUGH_POINT("p2ltp"),
+	POINT_TO_LINE_LINE_PERPENDICULAR("p2ll"),
 	TRIANGLE("incenter"),
 	VERTICAL("vertical"),
 	SYMMETRIC("symmetry"),

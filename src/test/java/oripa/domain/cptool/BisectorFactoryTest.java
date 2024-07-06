@@ -37,7 +37,10 @@ import oripa.vecmath.Vector2d;
 @ExtendWith(MockitoExtension.class)
 class BisectorFactoryTest {
 	@InjectMocks
-	BisectorFactory factory;
+	AngleBisectorFactory angleFactory;
+
+	@InjectMocks
+	PerpendicularBisectorFactory perpendicularfactory;
 
 	final double EPS = 1e-6;
 
@@ -46,7 +49,7 @@ class BisectorFactoryTest {
 		var v0 = new Vector2d(-1, 0);
 		var v1 = new Vector2d(1, 0);
 
-		var bisector = factory.createPerpendicularBisector(v0, v1);
+		var bisector = perpendicularfactory.create(v0, v1);
 
 		var expected = new Line(new Vector2d(0, 0), new Vector2d(0, 1));
 		assertTrue(expected.equals(bisector, EPS));
@@ -61,7 +64,7 @@ class BisectorFactoryTest {
 
 		var line = new OriLine(1, 0, 0, 1, OriLine.Type.VALLEY);
 
-		var bisector = factory.createAngleBisectorLine(v0, v1, v2, line, OriLine.Type.MOUNTAIN);
+		var bisector = angleFactory.create(v0, v1, v2, line, OriLine.Type.MOUNTAIN);
 
 		var expected = new OriLine(0, 0, 0.5, 0.5, OriLine.Type.MOUNTAIN);
 
@@ -76,7 +79,7 @@ class BisectorFactoryTest {
 
 		var line = new OriLine(1, 0, 0.5, Math.sqrt(3) / 2, OriLine.Type.MOUNTAIN);
 
-		var bisector = factory.createAngleBisectorLine(v0, v1, v2, line, OriLine.Type.MOUNTAIN);
+		var bisector = angleFactory.create(v0, v1, v2, line, OriLine.Type.MOUNTAIN);
 
 		var expected = new OriLine(0, 0, 0.5, Math.sqrt(3) / 2, OriLine.Type.MOUNTAIN);
 
@@ -91,7 +94,7 @@ class BisectorFactoryTest {
 
 		var line = new OriLine(1, 1, -1, 1, OriLine.Type.AUX);
 
-		var bisector = factory.createAngleBisectorLine(v0, v1, v2, line, OriLine.Type.MOUNTAIN);
+		var bisector = angleFactory.create(v0, v1, v2, line, OriLine.Type.MOUNTAIN);
 
 		var expected = new OriLine(0, 0, 0, 1, OriLine.Type.MOUNTAIN);
 
