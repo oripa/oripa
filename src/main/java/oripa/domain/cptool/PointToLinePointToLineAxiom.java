@@ -194,7 +194,7 @@ public class PointToLinePointToLineAxiom {
 		var x0Inverted1 = xy0Inverted1.getX();
 		var y0Inverted1 = xy0Inverted1.getY();
 
-		if (MathUtil.areEqual(q1Inverted, 0, pointEps)) {
+		if (MathUtil.isZero(q1Inverted, pointEps)) {
 			throw new IllegalArgumentException("q1Inverted is 0.");
 		}
 
