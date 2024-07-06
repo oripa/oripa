@@ -16,36 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.pbisec;
+package oripa.domain.cptool;
 
-import java.util.Collection;
+import static org.junit.jupiter.api.Assertions.*;
 
-import oripa.domain.cptool.PerpendicularBisectorFactory;
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.SnapPointFactory;
+import org.junit.jupiter.api.Test;
+
+import oripa.geom.Segment;
 import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class PerpendicularBisectorSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
-		Vector2d p0, p1;
-		p0 = context.getVertex(0);
-		p1 = context.getVertex(1);
+class PointToLineLinePerpendicularAxiomTest {
 
-		var eps = context.getPainter().getPointEps();
+	@Test
+	void test45Degrees() {
 
-		var bisectorFactory = new PerpendicularBisectorFactory();
-		var pbisec = bisectorFactory.create(p0, p1);
+		var p = new Vector2d(0, 5);
+		var s = new Segment(new Vector2d(-10, 0), new Vector2d(10, 0));
+		var perpendicular = new Segment(new Vector2d(0, 10), new Vector2d(10, 0));
 
-		var snapPointFactory = new SnapPointFactory();
+		var lineOpt = new PointToLineLinePerpendicularAxiom().createFoldLine(p, s, perpendicular);
 
-		var creasePattern = context.getCreasePattern();
-		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(creasePattern, pbisec,
-				eps);
+		assertTrue(lineOpt.isPresent());
 
-		return snapPoints;
+		assertEquals(1, lineOpt.get().getDirection().getSlope(), 1e-8);
 	}
 }

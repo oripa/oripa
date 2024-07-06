@@ -16,36 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.domain.paint.pbisec;
+package oripa.domain.cptool;
 
-import java.util.Collection;
+import java.util.Optional;
 
-import oripa.domain.cptool.PerpendicularBisectorFactory;
-import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.core.SnapPointFactory;
+import oripa.geom.GeomUtil;
+import oripa.geom.Line;
+import oripa.geom.Segment;
 import oripa.vecmath.Vector2d;
 
 /**
+ * Axiom 7.
+ *
  * @author OUCHI Koji
  *
  */
-public class PerpendicularBisectorSnapPointFactory {
-	public Collection<Vector2d> createSnapPoints(final PaintContext context) {
-		Vector2d p0, p1;
-		p0 = context.getVertex(0);
-		p1 = context.getVertex(1);
+public class PointToLineLinePerpendicularAxiom {
+	public Optional<Line> createFoldLine(final Vector2d p, final Segment s, final Segment perpendicular) {
 
-		var eps = context.getPainter().getPointEps();
+		if (s.getLine().isParallel(perpendicular.getLine())) {
+			return Optional.empty();
+		}
 
-		var bisectorFactory = new PerpendicularBisectorFactory();
-		var pbisec = bisectorFactory.create(p0, p1);
+		var perpendicularDirection = perpendicular.getLine().getDirection();
 
-		var snapPointFactory = new SnapPointFactory();
+		var motionLine = new Line(p, perpendicularDirection);
 
-		var creasePattern = context.getCreasePattern();
-		Collection<Vector2d> snapPoints = snapPointFactory.createSnapPoints(creasePattern, pbisec,
-				eps);
+		var crossPointOpt = GeomUtil.getCrossPoint(motionLine, s);
 
-		return snapPoints;
+		return crossPointOpt
+				.map(crossPoint -> new PerpendicularBisectorFactory().create(p, crossPoint))
+				.filter(line -> GeomUtil.getCrossPoint(line, perpendicular).isPresent());
 	}
 }
