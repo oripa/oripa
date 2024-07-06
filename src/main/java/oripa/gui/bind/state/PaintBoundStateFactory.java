@@ -175,6 +175,9 @@ public class PaintBoundStateFactory {
 		case StringID.POINT_TO_LINE_THROUGH_POINT_ID -> stateFactory.create(
 				new PointToLineThroughPointAxiomAction(), changeHint, null);
 
+		case StringID.POINT_TO_LINE_LINE_PERPENDICULAR_ID -> stateFactory.create(
+				new PointToLineLinePerpendicularAxiomAction(), changeHint, null);
+
 		case StringID.TRIANGLE_ID -> stateFactory.create(
 				new TriangleSplitAction(), changeHint, null);
 

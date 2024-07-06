@@ -48,7 +48,7 @@ public class PointToLineLinePerpendicularAxiomAction extends AbstractGraphicMous
 			drawPickCandidateLine(drawer, viewContext, paintContext);
 		}
 
-		if (paintContext.getVertexCount() == 1 && paintContext.getLineCount() == 2) {
+		if (paintContext.getVertexCount() >= 1 && paintContext.getLineCount() == 2) {
 			drawSnapPoints(drawer, viewContext, paintContext);
 			drawPickCandidateVertex(drawer, viewContext, paintContext);
 		}
