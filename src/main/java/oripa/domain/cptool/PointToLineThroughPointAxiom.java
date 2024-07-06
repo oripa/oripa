@@ -63,7 +63,7 @@ public class PointToLineThroughPointAxiom {
 				.filter(line -> {
 					var folded = GeomUtil.getSymmetricPoint(p, line.getPoint(),
 							line.getPoint().add(line.getDirection()));
-					return MathUtil.areEqual(GeomUtil.distancePointToSegment(folded, s), 0, pointEps);
+					return MathUtil.isZero(GeomUtil.distancePointToSegment(folded, s), pointEps);
 				})
 				.toList();
 	}
@@ -87,7 +87,7 @@ public class PointToLineThroughPointAxiom {
 		if (discriminant < -eps) {
 			return List.of();
 		}
-		if (MathUtil.areEqual(discriminant, 0, eps)) {
+		if (MathUtil.isZero(discriminant, eps)) {
 			return List.of(-b / (2 * a));
 		}
 

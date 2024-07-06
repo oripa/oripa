@@ -84,6 +84,17 @@ public class MathUtil {
 	}
 
 	/**
+	 * A shorthand for {@code areEqual(v, 0, eps)}.
+	 *
+	 * @param v
+	 * @param eps
+	 * @return
+	 */
+	public static boolean isZero(final double v, final double eps) {
+		return areEqual(v, 0, eps);
+	}
+
+	/**
 	 * Returns {@code true} if the given values are equal allowing error
 	 * {@code eps}. The test is inclusive.
 	 *
@@ -104,7 +115,7 @@ public class MathUtil {
 		for (int i = 0; i < 50; i++) {
 			double f_x = f.apply(x);
 
-			if (MathUtil.areEqual(f_x, 0, eps)) {
+			if (isZero(f_x, eps)) {
 				logger.debug("answer found @ {}: f_x = {}, x = {}", i, f_x, x);
 				return x;
 			}
