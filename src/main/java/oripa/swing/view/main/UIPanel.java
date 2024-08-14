@@ -670,13 +670,13 @@ public class UIPanel extends JPanel implements UIPanelView {
 		setLineInputGlobalShortcut(lineInputLineToLineButton, KeyStrokes.get(KeyEvent.VK_H),
 				StringID.LINE_TO_LINE_ID);
 
-		setLineInputGlobalShortcut(lineInputP2LTPButton, KeyStrokes.get(KeyEvent.VK_5),
+		setLineInputGlobalShortcut(lineInputP2LTPButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_5),
 				StringID.POINT_TO_LINE_THROUGH_POINT_ID);
 
-		setLineInputGlobalShortcut(lineInputP2LP2LButton, KeyStrokes.get(KeyEvent.VK_6),
+		setLineInputGlobalShortcut(lineInputP2LP2LButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_6),
 				StringID.POINT_TO_LINE_POINT_TO_LINE_ID);
 
-		setLineInputGlobalShortcut(lineInputP2LLButton, KeyStrokes.get(KeyEvent.VK_7),
+		setLineInputGlobalShortcut(lineInputP2LLButton, KeyStrokes.getWithShiftDown(KeyEvent.VK_7),
 				StringID.POINT_TO_LINE_LINE_PERPENDICULAR_ID);
 
 		setLineInputGlobalShortcut(lineInputTriangleSplitButton, KeyStrokes.get(KeyEvent.VK_R),
