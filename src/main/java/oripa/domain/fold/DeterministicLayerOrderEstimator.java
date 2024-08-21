@@ -18,7 +18,6 @@
  */
 package oripa.domain.fold;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -107,7 +106,7 @@ class DeterministicLayerOrderEstimator {
 
 			logger.trace("4 face condition" + System.lineSeparator() + overlapRelation.toString());
 
-			result = estimateBy4FaceCover(overlapRelation);
+//			result = estimateBy4FaceCover(overlapRelation);
 			changed = result.or(changed);
 
 			logger.trace("4 face cover" + System.lineSeparator() + overlapRelation.toString());
@@ -436,91 +435,92 @@ class DeterministicLayerOrderEstimator {
 		return new EstimationResultRules(changed);
 	}
 
-	private EstimationResultRules estimateBy4FaceCover(final OverlapRelation overlapRelation) {
-
-		var changed = new EstimationResultRules();
-		for (OriFace f_i : faces) {
-			var result = updateBy4FaceCover(f_i, overlapRelation);
-			changed = result.or(changed);
-			if (changed.isUnfoldable()) {
-				return changed;
-			}
-		}
-
-		return changed;
-	}
-
-	/**
-	 * Assuming 3 face cover relation is determined, this method determines
-	 * X-ABC relation where X is a face independent of ABC and ABC are faces
-	 * connected by edges.
-	 *
-	 * @param f_i
-	 * @param overlapRelation
-	 * @return
-	 */
-	private EstimationResultRules updateBy4FaceCover(
-			final OriFace f_i,
-			final OverlapRelation overlapRelation) {
-		int index_i = f_i.getFaceID();
-
-		var changed = EstimationResult.NOT_CHANGED;
-		for (OriHalfedge he : f_i.halfedgeIterable()) {
-			var pairOpt = he.getPair();
-			if (pairOpt.isEmpty()) {
-				continue;
-			}
-
-			var pair = pairOpt.get();
-
-			int index_j = pairOpt.get().getFace().getFaceID();
-
-			for (OriHalfedge he2 : pair.getFace().halfedgeIterable()) {
-				var pair2Opt = he2.getPair();
-				if (pair2Opt.isEmpty()) {
-					continue;
-				}
-
-				int index_k = pair2Opt.get().getFace().getFaceID();
-				if (index_i == index_k || index_j == index_k) {
-					continue;
-				}
-
-				var indices = new HashSet<>(overlappingFaceIndexIntersections[index_i][index_j]);
-				var indices2 = new HashSet<>(overlappingFaceIndexIntersections[index_j][index_k]);
-
-				// apply an AND operation
-				indices.retainAll(indices2);
-
-				for (var index_x : indices) {
-					if (index_i == index_x || index_j == index_x || index_k == index_x) {
-						continue;
-					}
-					if (!faceIndicesOnHalfedge.get(he).contains(index_x)) {
-						continue;
-					}
-					if (!faceIndicesOnHalfedge.get(he2).contains(index_x)) {
-						continue;
-					}
-
-					if (!overlapRelation.isUndefined(index_i, index_x)) {
-						var result = overlapRelation.setIfPossible(index_k, index_x,
-								overlapRelation.get(index_i, index_x));
-						changed = result.or(changed);
-					}
-
-					if (changed == EstimationResult.UNFOLDABLE) {
-						var result = new EstimationResultRules(EstimationResult.UNFOLDABLE);
-						result.addCover4FacesViolation(
-								toFaces(List.of(index_i, index_j, index_k, index_x)));
-						return result;
-					}
-				}
-			}
-		}
-
-		return new EstimationResultRules(changed);
-	}
+	// this constraint doesn't seem to reduce the computation time.
+//	private EstimationResultRules estimateBy4FaceCover(final OverlapRelation overlapRelation) {
+//
+//		var changed = new EstimationResultRules();
+//		for (OriFace f_i : faces) {
+//			var result = updateBy4FaceCover(f_i, overlapRelation);
+//			changed = result.or(changed);
+//			if (changed.isUnfoldable()) {
+//				return changed;
+//			}
+//		}
+//
+//		return changed;
+//	}
+//
+//	/**
+//	 * Assuming 3 face cover relation is determined, this method determines
+//	 * X-ABC relation where X is a face independent of ABC and ABC are faces
+//	 * connected by edges.
+//	 *
+//	 * @param f_i
+//	 * @param overlapRelation
+//	 * @return
+//	 */
+//	private EstimationResultRules updateBy4FaceCover(
+//			final OriFace f_i,
+//			final OverlapRelation overlapRelation) {
+//		int index_i = f_i.getFaceID();
+//
+//		var changed = EstimationResult.NOT_CHANGED;
+//		for (OriHalfedge he : f_i.halfedgeIterable()) {
+//			var pairOpt = he.getPair();
+//			if (pairOpt.isEmpty()) {
+//				continue;
+//			}
+//
+//			var pair = pairOpt.get();
+//
+//			int index_j = pairOpt.get().getFace().getFaceID();
+//
+//			for (OriHalfedge he2 : pair.getFace().halfedgeIterable()) {
+//				var pair2Opt = he2.getPair();
+//				if (pair2Opt.isEmpty()) {
+//					continue;
+//				}
+//
+//				int index_k = pair2Opt.get().getFace().getFaceID();
+//				if (index_i == index_k || index_j == index_k) {
+//					continue;
+//				}
+//
+//				var indices = new HashSet<>(overlappingFaceIndexIntersections[index_i][index_j]);
+//				var indices2 = new HashSet<>(overlappingFaceIndexIntersections[index_j][index_k]);
+//
+//				// apply an AND operation
+//				indices.retainAll(indices2);
+//
+//				for (var index_x : indices) {
+//					if (index_i == index_x || index_j == index_x || index_k == index_x) {
+//						continue;
+//					}
+//					if (!faceIndicesOnHalfedge.get(he).contains(index_x)) {
+//						continue;
+//					}
+//					if (!faceIndicesOnHalfedge.get(he2).contains(index_x)) {
+//						continue;
+//					}
+//
+//					if (!overlapRelation.isUndefined(index_i, index_x)) {
+//						var result = overlapRelation.setIfPossible(index_k, index_x,
+//								overlapRelation.get(index_i, index_x));
+//						changed = result.or(changed);
+//					}
+//
+//					if (changed == EstimationResult.UNFOLDABLE) {
+//						var result = new EstimationResultRules(EstimationResult.UNFOLDABLE);
+//						result.addCover4FacesViolation(
+//								toFaces(List.of(index_i, index_j, index_k, index_x)));
+//						return result;
+//					}
+//				}
+//			}
+//		}
+//
+//		return new EstimationResultRules(changed);
+//	}
 
 	private List<OriFace> toFaces(final List<Integer> faceIDs) {
 		return faceIDs.stream()
