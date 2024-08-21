@@ -60,9 +60,9 @@ public class EstimationResultRules {
 		rules.add(new LayerOrderRule("cover3Faces", violatingFaces));
 	}
 
-	void addCover4FacesViolation(final List<OriFace> violatingFaces) {
-		rules.add(new LayerOrderRule("cover4Faces", violatingFaces));
-	}
+//	void addCover4FacesViolation(final List<OriFace> violatingFaces) {
+//		rules.add(new LayerOrderRule("cover4Faces", violatingFaces));
+//	}
 
 	EstimationResult getEstimationResult() {
 		return estimationResult;
