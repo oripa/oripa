@@ -26,7 +26,7 @@ dependencies {
 }
 
 group = "oripa"
-version = "1.73"
+version = "1.74"
 description = "oripa"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
