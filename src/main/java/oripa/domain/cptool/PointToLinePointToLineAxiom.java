@@ -155,7 +155,7 @@ public class PointToLinePointToLineAxiom {
 	 * It is known that this axiom is to fold such that the crease touches two
 	 * parabolas whose foci and directrixes are the specified points and the
 	 * specified lines, respectively. In this method, first we rotate the
-	 * coordinate as the line0 becomes x = 0. Here we call it "inversion" with
+	 * coordinate as the line0 becomes y = 0. Here we call it "inversion" with
 	 * line0. Then we compute slope of the parabola0 at given x0 in the inverted
 	 * coordinate and rotate it again to invert with line1. We can get the slope
 	 * of the tangent line in the rotated coordinate easily. After that, we
