@@ -16,10 +16,10 @@ repositories {
 }
 
 dependencies {
-    api(libs.slf4j.api)
-    api(libs.bundles.log4j)
-    api(libs.gson)
-    api(libs.commons.cli)
+    implementation(libs.slf4j.api)
+    implementation(libs.bundles.log4j)
+    implementation(libs.gson)
+    implementation(libs.commons.cli)
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.bundles.mockito)
