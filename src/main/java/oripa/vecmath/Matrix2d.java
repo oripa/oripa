@@ -18,9 +18,9 @@
  */
 package oripa.vecmath;
 
-import java.util.Optional;
-
 import oripa.util.MathUtil;
+
+import java.util.Optional;
 
 /**
  * @author OUCHI Koji
@@ -47,7 +47,7 @@ public class Matrix2d {
 		return new Vector2d(p.dot(v), q.dot(v));
 	}
 
-	private Vector2d rowVector(final int i) {
+	Vector2d rowVector(final int i) {
 		return new Vector2d(m[i][0], m[i][1]);
 	}
 

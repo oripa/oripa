@@ -18,12 +18,12 @@
  */
 package oripa.domain.fold.condfac;
 
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.origeom.OverlapRelation;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.IntStream;
-
-import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.origeom.OverlapRelation;
 
 /**
  * @author OUCHI Koji

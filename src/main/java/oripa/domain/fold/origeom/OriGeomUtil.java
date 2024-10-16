@@ -28,7 +28,7 @@ import oripa.vecmath.Vector2d;
 
 /**
  * Mathematical operations related to half-edge data structure elements. This
- * class contains complex methods or methods that responsibility among related
+ * class contains complex methods or methods whose responsibility among related
  * objects is ambiguous.
  *
  * @author OUCHI Koji

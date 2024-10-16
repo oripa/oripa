@@ -18,6 +18,9 @@
  */
 package oripa.vecmath;
 
+
+import static java.lang.Math.sqrt;
+
 /**
  * @author OUCHI Koji
  *
@@ -46,7 +49,7 @@ public class Vector3d {
 	}
 
 	public double length() {
-		return Math.sqrt(x * x + y * y + z * z);
+		return sqrt(x * x + y * y + z * z);
 	}
 
 	public Vector3d multiply(final double a) {
