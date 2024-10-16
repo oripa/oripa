@@ -28,17 +28,17 @@ public interface PaintContext extends CreasePatternHolder {
 	 *
 	 * @return true if user is trying to paste selected lines
 	 */
-	public abstract boolean isPasting();
+	boolean isPasting();
 
 	/**
 	 * notify the painting algorithm that the user started pasting.
 	 */
-	public abstract void startPasting();
+	void startPasting();
 
 	/**
 	 * notify the painting algorithm that the user finished pasting.
 	 */
-	public abstract void finishPasting();
+	void finishPasting();
 
 	// ---------------------------------------------------------------
 	// Values Picked by User
@@ -49,61 +49,61 @@ public interface PaintContext extends CreasePatternHolder {
 	 * @param unselect
 	 *            true if the removed lines should be marked as unselected.
 	 */
-	public abstract void clear(boolean unselect);
+	void clear(boolean unselect);
 
 	/**
 	 *
 	 * @return unmodifiable list of lines which user picked.
 	 */
-	public abstract List<OriLine> getPickedLines();
+	List<OriLine> getPickedLines();
 
 	/**
 	 *
 	 * @return unmodifiable list of vertices which user picked.
 	 */
-	public abstract List<Vector2d> getPickedVertices();
+	List<Vector2d> getPickedVertices();
 
 	/**
 	 *
 	 * @param index
 	 * @return a line at specified position in the order of user selection
 	 */
-	public abstract OriLine getLine(int index);
+	OriLine getLine(int index);
 
 	/**
 	 *
 	 * @param index
 	 * @return a vertex at specified position in the order of user selection
 	 */
-	public abstract Vector2d getVertex(int index);
+	Vector2d getVertex(int index);
 
 	/**
 	 *
 	 * @param picked
 	 *            line to be stored as the latest
 	 */
-	public abstract void pushLine(OriLine picked);
+	void pushLine(OriLine picked);
 
 	/**
 	 * pop the last pushed line and mark it unselected.
 	 *
 	 * @return popped line. empty if no line is pushed.
 	 */
-	public abstract Optional<OriLine> popLine();
+	Optional<OriLine> popLine();
 
 	/**
 	 *
 	 * @param picked
 	 *            vertex to be stored as the latest
 	 */
-	public abstract void pushVertex(Vector2d picked);
+	void pushVertex(Vector2d picked);
 
 	/**
 	 * pop the last pushed vertex.
 	 *
 	 * @return popped vertex. empty if no vertex is pushed.
 	 */
-	public abstract Optional<Vector2d> popVertex();
+	Optional<Vector2d> popVertex();
 
 	/**
 	 * performs the same as {@link List#remove(Object o)}.
@@ -111,60 +111,60 @@ public interface PaintContext extends CreasePatternHolder {
 	 * @param line
 	 * @return
 	 */
-	public abstract boolean removeLine(OriLine line);
+	boolean removeLine(OriLine line);
 
 	/**
 	 *
 	 * @return the latest vertex
 	 */
-	public abstract Optional<Vector2d> peekVertex();
+	Optional<Vector2d> peekVertex();
 
 	/**
 	 *
 	 * @return the latest line
 	 */
-	public abstract Optional<OriLine> peekLine();
+	Optional<OriLine> peekLine();
 
 	/**
 	 *
 	 * @return count of lines in this context
 	 */
-	public abstract int getLineCount();
+	int getLineCount();
 
 	/**
 	 *
 	 * @return count of vertices in this context
 	 */
-	public abstract int getVertexCount();
+	int getVertexCount();
 
 	// ---------------------------------------------------------------
 	// Misc
 
-	public abstract Painter getPainter();
+	Painter getPainter();
 
 	void setLineTypeOfNewLines(OriLine.Type lineType);
 
 	OriLine.Type getLineTypeOfNewLines();
 
-	public abstract void setCandidateLineToPick(OriLine pickCandidateL);
+	void setCandidateLineToPick(OriLine pickCandidateL);
 
-	public abstract Optional<OriLine> getCandidateLineToPick();
+	Optional<OriLine> getCandidateLineToPick();
 
-	public abstract void setCandidateVertexToPick(Vector2d pickCandidateV);
+	void setCandidateVertexToPick(Vector2d pickCandidateV);
 
-	public abstract Optional<Vector2d> getCandidateVertexToPick();
+	Optional<Vector2d> getCandidateVertexToPick();
 
 	void setSolutionLineToPick(Line solutionLine);
 
 	Optional<Line> getSolutionLineToPick();
 
-	public abstract CreasePatternUndoer creasePatternUndo();
+	CreasePatternUndoer creasePatternUndo();
 
 	void refreshCreasePattern();
 
-	public abstract void setAngleStep(AngleStep step);
+	void setAngleStep(AngleStep step);
 
-	public abstract AngleStep getAngleStep();
+	AngleStep getAngleStep();
 
 	void setSolutionLines(Collection<Line> lines);
 
@@ -180,14 +180,14 @@ public interface PaintContext extends CreasePatternHolder {
 	 */
 	void clearSolutionLines();
 
-	public abstract void setSnapPoints(Collection<Vector2d> points);
+	void setSnapPoints(Collection<Vector2d> points);
 
 	/**
 	 * Returns unmodifiable collection.
 	 *
 	 * @return
 	 */
-	public abstract Collection<Vector2d> getSnapPoints();
+	Collection<Vector2d> getSnapPoints();
 
 	/**
 	 * Makes the snap points empty.
@@ -219,18 +219,18 @@ public interface PaintContext extends CreasePatternHolder {
 	 *
 	 * @param divNum
 	 */
-	public abstract void setGridDivNum(int divNum);
+	void setGridDivNum(int divNum);
 
-	public abstract int getGridDivNum();
+	int getGridDivNum();
 
-	public abstract void updateGrids();
+	void updateGrids();
 
 	/**
 	 * Returns unmodifiable list.
 	 *
 	 * @return
 	 */
-	public abstract Collection<Vector2d> getGrids();
+	Collection<Vector2d> getGrids();
 
 	void clearGrids();
 

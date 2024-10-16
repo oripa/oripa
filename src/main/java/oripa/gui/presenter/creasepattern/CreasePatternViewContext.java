@@ -31,26 +31,25 @@ public interface CreasePatternViewContext {
 	// =================================================================================
 	// ---------------------------------------------------------------
 	// Mouse position
-
 	/**
 	 *
 	 * @return the point of mouse on screen
 	 */
-	public abstract Vector2d getLogicalMousePoint();
+	Vector2d getLogicalMousePoint();
 
 	/**
 	 *
 	 * @param logicalPoint
 	 *            set the point of mouse on screen
 	 */
-	public abstract void setLogicalMousePoint(Vector2d logicalPoint);
+	void setLogicalMousePoint(Vector2d logicalPoint);
 
 	// ---------------------------------------------------------------
 	// View-related things
 
-	public abstract void setScale(double scale);
+	void setScale(double scale);
 
-	public abstract double getScale();
+	double getScale();
 
 	/**
 	 * Should update grid by calling {@link PaintContext#updateGrids()} if
@@ -59,27 +58,27 @@ public interface CreasePatternViewContext {
 	 *
 	 * @param dispGrid
 	 */
-	public abstract void setGridVisible(boolean gridVisible);
+	void setGridVisible(boolean gridVisible);
 
-	public abstract boolean isGridVisible();
+	boolean isGridVisible();
 
-	public abstract void setMVLineVisible(boolean visible);
+	void setMVLineVisible(boolean visible);
 
-	public abstract boolean isMVLineVisible();
+	boolean isMVLineVisible();
 
-	public abstract void setVertexVisible(boolean visible);
+	void setVertexVisible(boolean visible);
 
-	public abstract boolean isVertexVisible();
+	boolean isVertexVisible();
 
-	public abstract void setAuxLineVisible(boolean visible);
+	void setAuxLineVisible(boolean visible);
 
-	public abstract boolean isAuxLineVisible();
+	boolean isAuxLineVisible();
 
-	public abstract void setCrossLineVisible(boolean visible);
+	void setCrossLineVisible(boolean visible);
 
-	public abstract boolean isCrossLineVisible();
+	boolean isCrossLineVisible();
 
-	public abstract void setZeroLineWidth(final boolean zeroLineWidth);
+	void setZeroLineWidth(final boolean zeroLineWidth);
 
-	public abstract boolean isZeroLineWidth();
+	boolean isZeroLineWidth();
 }

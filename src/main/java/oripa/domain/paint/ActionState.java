@@ -22,7 +22,7 @@ public interface ActionState {
 	 *            true if action should be changed.
 	 * @return next state.
 	 */
-	public ActionState doAction(PaintContext context,
+	ActionState doAction(PaintContext context,
 			Vector2d currentPoint, boolean differentAction);
 
 	/**
@@ -30,5 +30,5 @@ public interface ActionState {
 	 *
 	 * @return previous state.
 	 */
-	public ActionState undo(PaintContext context);
+	ActionState undo(PaintContext context);
 }

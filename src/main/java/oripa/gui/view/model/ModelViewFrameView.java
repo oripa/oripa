@@ -4,16 +4,16 @@
  * Copyright (C) 2005-2009 Jun Mitani         http://mitani.cs.tsukuba.ac.jp/
 
     This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
+    it under the terms of the GNU General License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    GNU General License for more details.
 
-    You should have received a copy of the GNU General Public License
+    You should have received a copy of the GNU General License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package oripa.gui.view.model;
@@ -30,39 +30,39 @@ import oripa.gui.view.FrameView;
  */
 public interface ModelViewFrameView extends FrameView {
 
-	public ModelViewScreenView getModelScreenView();
+	ModelViewScreenView getModelScreenView();
 
-	public void setModelCount(int count);
+	void setModelCount(int count);
 
-	public void setModel(final OrigamiModel origamiModel);
+	void setModel(final OrigamiModel origamiModel);
 
-	public void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
+	void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
-	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
+	void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
-	public void setOnCloseListener(final Consumer<FrameView> listener);
+	void setOnCloseListener(final Consumer<FrameView> listener);
 
-	public void selectModel(final int index);
+	void selectModel(final int index);
 
-	public void addFlipModelButtonListener(Runnable listener);
+	void addFlipModelButtonListener(Runnable listener);
 
-	public void addCrossLineButtonListener(Runnable listener);
+	void addCrossLineButtonListener(Runnable listener);
 
-	public void addExportDXFButtonListener(Runnable listener);
+	void addExportDXFButtonListener(Runnable listener);
 
-	public void addExportOBJButtonListener(Runnable listener);
+	void addExportOBJButtonListener(Runnable listener);
 
-	public void addExportSVGButtonListener(Runnable listener);
+	void addExportSVGButtonListener(Runnable listener);
 
-	public void addFillAlphaButtonListener(Runnable listener);
+	void addFillAlphaButtonListener(Runnable listener);
 
-	public void addFillNoneButtonListener(Runnable listener);
+	void addFillNoneButtonListener(Runnable listener);
 
-	public boolean isCrossLineVisible();
+	boolean isCrossLineVisible();
 
-	public void setModelDisplayMode(ModelDisplayMode mode);
+	void setModelDisplayMode(ModelDisplayMode mode);
 
-	public void addModelSwitchListener(Consumer<Integer> listener);
+	void addModelSwitchListener(Consumer<Integer> listener);
 
-	public void showExportErrorMessage(Exception e);
+	void showExportErrorMessage(Exception e);
 }

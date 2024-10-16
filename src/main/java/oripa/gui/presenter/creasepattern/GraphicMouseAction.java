@@ -20,7 +20,7 @@ public interface GraphicMouseAction {
 	 *
 	 * @return
 	 */
-	public default boolean needSelect() {
+	default boolean needSelect() {
 		return false;
 	}
 
@@ -30,14 +30,14 @@ public interface GraphicMouseAction {
 	 *
 	 * @return
 	 */
-	public default boolean isUsingCtrlKeyOnDrag() {
+	default boolean isUsingCtrlKeyOnDrag() {
 		return false;
 	}
 
 	/**
 	 * The type of this action.
 	 */
-	public abstract EditMode getEditMode();
+	abstract EditMode getEditMode();
 
 	/**
 	 * Define action on destroy. This method is expected to be called when the
@@ -45,7 +45,7 @@ public interface GraphicMouseAction {
 	 *
 	 * @param context
 	 */
-	public abstract void destroy(PaintContext context);
+	abstract void destroy(PaintContext context);
 
 	/**
 	 * Define action for recovering the status of this object with given
@@ -54,7 +54,7 @@ public interface GraphicMouseAction {
 	 *
 	 * @param context
 	 */
-	public abstract void recover(PaintContext context);
+	abstract void recover(PaintContext context);
 
 	/**
 	 * Performs action. The default implementation calls
@@ -66,7 +66,7 @@ public interface GraphicMouseAction {
 	 *
 	 * @return Next mouse action.
 	 */
-	public default GraphicMouseAction onLeftClick(
+	default GraphicMouseAction onLeftClick(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
 		var clickPoint = viewContext.getLogicalMousePoint();
@@ -83,7 +83,7 @@ public interface GraphicMouseAction {
 	 *            the point that button is clicked at.
 	 * @param differntAction
 	 */
-	public abstract void doAction(PaintContext context, Vector2d point,
+	abstract void doAction(PaintContext context, Vector2d point,
 			boolean differntAction);
 
 	/**
@@ -94,14 +94,14 @@ public interface GraphicMouseAction {
 	 * @param paintContext
 	 * @param differentAction
 	 */
-	public default void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	default void onRightClick(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean doSpecial) {
 		undo(paintContext);
 	}
 
-	public abstract void undo(PaintContext context);
+	abstract void undo(PaintContext context);
 
-	public abstract void redo(PaintContext context);
+	abstract void redo(PaintContext context);
 
 	/**
 	 * Defines the behavior when the mouse moves. At least this method should
@@ -113,7 +113,7 @@ public interface GraphicMouseAction {
 	 * @param differentAction
 	 * @return candidate vertex. Empty if not found.
 	 */
-	public abstract Optional<Vector2d> onMove(final CreasePatternViewContext viewContext,
+	abstract Optional<Vector2d> onMove(final CreasePatternViewContext viewContext,
 			final PaintContext paintContext, boolean differentAction);
 
 	/**
@@ -123,7 +123,7 @@ public interface GraphicMouseAction {
 	 * @param paintContext
 	 * @param differentAction
 	 */
-	public abstract void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	abstract void onPress(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			boolean differentAction);
 
 	/**
@@ -133,7 +133,7 @@ public interface GraphicMouseAction {
 	 * @param paintContext
 	 * @param differentAction
 	 */
-	public abstract void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	abstract void onDrag(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			boolean differentAction);
 
 	/**
@@ -143,7 +143,7 @@ public interface GraphicMouseAction {
 	 * @param paintContext
 	 * @param differentAction
 	 */
-	public abstract void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
+	abstract void onRelease(final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			boolean differentAction);
 
 	/**
@@ -156,7 +156,7 @@ public interface GraphicMouseAction {
 	 * @param viewContext
 	 * @param paintContext
 	 */
-	public abstract void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
+	abstract void onDraw(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final PaintContext paintContext);
 
 }

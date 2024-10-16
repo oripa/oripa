@@ -24,19 +24,19 @@ package oripa.domain.paint;
  */
 public interface CreasePatternUndoer {
 
-	public abstract void pushUndoInfo();
+	void pushUndoInfo();
 
-	public abstract void undo();
+	void undo();
 
-	public abstract boolean canUndo();
+	boolean canUndo();
 
-	public abstract void redo();
+	void redo();
 
-	public abstract boolean canRedo();
+	boolean canRedo();
 
-	public abstract boolean changeExists();
+	boolean changeExists();
 
-	public abstract void clearChanged();
+	void clearChanged();
 
-	public abstract void clear();
+	void clear();
 }

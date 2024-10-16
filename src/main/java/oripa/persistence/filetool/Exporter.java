@@ -40,6 +40,6 @@ public interface Exporter<Data> {
 	 *             thrown if the {@code data} cannot be converted to the aimed
 	 *             data format.
 	 */
-	public abstract boolean export(Data data, String filePath, Object configObj)
+	boolean export(Data data, String filePath, Object configObj)
 			throws IOException, IllegalArgumentException;
 }
