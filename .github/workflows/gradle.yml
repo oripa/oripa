@@ -22,6 +22,8 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
     - name: Build with Gradle (CI)
       run: ./gradlew build
+    - name: Run tests
+      run: ./gradlew test
     - name: Create fat jar
       run: ./gradlew shadowJar
 
