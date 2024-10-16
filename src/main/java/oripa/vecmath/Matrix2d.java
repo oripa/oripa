@@ -27,17 +27,16 @@ import java.util.Optional;
  *
  */
 public class Matrix2d {
-	private final double[][] m = new double[2][2];
+	private final double v00;
+	private final double v01;
+	private final double v10;
+	private final double v11;
 
 	public Matrix2d(final double v00, final double v01, final double v10, final double v11) {
-		m[0][0] = v00;
-		m[0][1] = v01;
-		m[1][0] = v10;
-		m[1][1] = v11;
-	}
-
-	public Matrix2d(final double[][] matrix) {
-		this(matrix[0][0], matrix[0][1], matrix[1][0], matrix[1][1]);
+		this.v00 = v00;
+		this.v01 = v01;
+		this.v10 = v10;
+		this.v11 = v11;
 	}
 
 	public Vector2d product(final Vector2d v) {
@@ -48,11 +47,17 @@ public class Matrix2d {
 	}
 
 	Vector2d rowVector(final int i) {
-		return new Vector2d(m[i][0], m[i][1]);
+		if (i == 0) {
+			return new Vector2d(v00, v01);
+		} else if (i == 1) {
+			return new Vector2d(v10, v11);
+		} else {
+			throw new IllegalArgumentException("This matrix only has 2 rows");
+		}
 	}
 
 	public double determinant() {
-		return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+		return v00 * v11 - v01 * v10;
 	}
 
 	public boolean isRegular() {
@@ -69,16 +74,14 @@ public class Matrix2d {
 			return Optional.empty();
 		}
 
-		var inverse = new double[2][2];
-
 		var det = determinant();
 
-		inverse[0][0] = m[1][1] / det;
-		inverse[0][1] = -m[0][1] / det;
-		inverse[1][0] = -m[1][0] / det;
-		inverse[1][1] = m[0][0] / det;
-
-		return Optional.of(new Matrix2d(inverse));
+		return Optional.of(new Matrix2d(
+			v11 / det,
+			-v01 / det,
+			-v10 / det,
+			v00 / det
+		));
 	}
 
 }
