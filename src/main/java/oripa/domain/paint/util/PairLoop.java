@@ -111,7 +111,7 @@ public class PairLoop {
 		 * @param nextElement
 		 * @return true if the loop continues, otherwise false.
 		 */
-		public boolean yield(Element element, Element nextElement);
+		boolean yield(Element element, Element nextElement);
 	}
 
 }

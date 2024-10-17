@@ -35,7 +35,7 @@ public interface NearVerticesGettable {
 	 *            vertex
 	 * @return
 	 */
-	public abstract Collection<Vector2d> getVerticesAround(Vector2d v);
+	Collection<Vector2d> getVerticesAround(Vector2d v);
 
 	/**
 	 * similar to {@link #getVerticesAround(Vector2d v)}. this method returns
@@ -47,7 +47,7 @@ public interface NearVerticesGettable {
 	 * @param distance
 	 * @return
 	 */
-	public abstract Collection<Collection<Vector2d>> getVerticesInArea(double x,
+	Collection<Collection<Vector2d>> getVerticesInArea(double x,
 			double y, double distance);
 
 }

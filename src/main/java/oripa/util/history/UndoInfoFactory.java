@@ -23,5 +23,5 @@ package oripa.util.history;
  *
  */
 public interface UndoInfoFactory<Info> {
-	public UndoInfo<Info> create(Info info);
+	UndoInfo<Info> create(Info info);
 }

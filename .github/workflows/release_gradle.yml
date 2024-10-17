@@ -51,7 +51,7 @@ jobs:
         uses: gradle/actions/wrapper-validation@v3
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Run Linux Build (fat jar)
         if: matrix.os == 'ubuntu-latest'        

@@ -24,5 +24,5 @@ package oripa.gui.view;
  */
 public interface DialogView extends FrameView {
 
-	public void setModal(boolean modal);
+	void setModal(boolean modal);
 }

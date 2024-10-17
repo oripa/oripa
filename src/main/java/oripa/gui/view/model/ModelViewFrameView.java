@@ -30,39 +30,39 @@ import oripa.gui.view.FrameView;
  */
 public interface ModelViewFrameView extends FrameView {
 
-	public ModelViewScreenView getModelScreenView();
+	ModelViewScreenView getModelScreenView();
 
-	public void setModelCount(int count);
+	void setModelCount(int count);
 
-	public void setModel(final OrigamiModel origamiModel);
+	void setModel(final OrigamiModel origamiModel);
 
-	public void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
+	void putPaperDomainChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
-	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
+	void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
-	public void setOnCloseListener(final Consumer<FrameView> listener);
+	void setOnCloseListener(final Consumer<FrameView> listener);
 
-	public void selectModel(final int index);
+	void selectModel(final int index);
 
-	public void addFlipModelButtonListener(Runnable listener);
+	void addFlipModelButtonListener(Runnable listener);
 
-	public void addCrossLineButtonListener(Runnable listener);
+	void addCrossLineButtonListener(Runnable listener);
 
-	public void addExportDXFButtonListener(Runnable listener);
+	void addExportDXFButtonListener(Runnable listener);
 
-	public void addExportOBJButtonListener(Runnable listener);
+	void addExportOBJButtonListener(Runnable listener);
 
-	public void addExportSVGButtonListener(Runnable listener);
+	void addExportSVGButtonListener(Runnable listener);
 
-	public void addFillAlphaButtonListener(Runnable listener);
+	void addFillAlphaButtonListener(Runnable listener);
 
-	public void addFillNoneButtonListener(Runnable listener);
+	void addFillNoneButtonListener(Runnable listener);
 
-	public boolean isCrossLineVisible();
+	boolean isCrossLineVisible();
 
-	public void setModelDisplayMode(ModelDisplayMode mode);
+	void setModelDisplayMode(ModelDisplayMode mode);
 
-	public void addModelSwitchListener(Consumer<Integer> listener);
+	void addModelSwitchListener(Consumer<Integer> listener);
 
-	public void showExportErrorMessage(Exception e);
+	void showExportErrorMessage(Exception e);
 }

@@ -32,7 +32,7 @@ import oripa.vecmath.Vector2d;
  */
 public interface PainterScreenView extends ScreenView {
 
-	static final double INITIAL_CAMERA_SCALE = 1.5;
+	double INITIAL_CAMERA_SCALE = 1.5;
 
 	// PainterScreenSetting getMainScreenSetting();
 

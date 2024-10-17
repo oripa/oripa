@@ -32,21 +32,21 @@ import oripa.gui.view.FrameView;
  */
 public interface EstimationResultFrameView extends FrameView {
 
-	public EstimationResultUIView getUI();
+	EstimationResultUIView getUI();
 
-	public void setModelCount(int count);
+	void setModelCount(int count);
 
-	public void setColors(final Color front, final Color back);
+	void setColors(final Color front, final Color back);
 
-	public void setSaveColorsListener(final BiConsumer<Color, Color> listener);
+	void setSaveColorsListener(final BiConsumer<Color, Color> listener);
 
-	public void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
+	void putModelIndexChangeListener(final Object parentOfListener, final PropertyChangeListener listener);
 
-	public void setOnCloseListener(final Consumer<FrameView> listener);
+	void setOnCloseListener(final Consumer<FrameView> listener);
 
-	public void selectModel(final int index);
+	void selectModel(final int index);
 
-	public void addModelSwitchListener(final Consumer<Integer> listener);
+	void addModelSwitchListener(final Consumer<Integer> listener);
 
-	public void setModel(final FoldedModel foldedModel, double eps);
+	void setModel(final FoldedModel foldedModel, double eps);
 }

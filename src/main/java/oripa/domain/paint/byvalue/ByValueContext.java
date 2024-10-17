@@ -26,11 +26,11 @@ import java.beans.PropertyChangeListener;
  */
 public interface ByValueContext {
 
-	public void addPropertyChangeListener(
+	void addPropertyChangeListener(
 			final String propertyName, final PropertyChangeListener listener);
 
-	public static final String LENGTH = "length";
-	public static final String ANGLE = "angle";
+	String LENGTH = "length";
+	String ANGLE = "angle";
 
 	double getLength();
 

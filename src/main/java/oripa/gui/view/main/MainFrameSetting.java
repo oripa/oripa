@@ -25,7 +25,7 @@ import java.beans.PropertyChangeListener;
  *
  */
 public interface MainFrameSetting {
-	public static String HINT = "hint";
+	String HINT = "hint";
 
 	void addPropertyChangeListener(String propertyName,
 			PropertyChangeListener listener);

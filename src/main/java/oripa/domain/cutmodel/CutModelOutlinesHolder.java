@@ -34,11 +34,11 @@ public interface CutModelOutlinesHolder {
 	 *
 	 * @param scissorLine
 	 */
-	public abstract void setOutlines(Collection<OriLine> outlines);
+	void setOutlines(Collection<OriLine> outlines);
 
 	/**
 	 * @return crossLines
 	 */
-	public abstract Collection<OriLine> getOutlines();
+	Collection<OriLine> getOutlines();
 
 }
