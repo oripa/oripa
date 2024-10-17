@@ -8,6 +8,8 @@ import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
 import oripa.vecmath.Vector2d;
 
+import static java.lang.Math.*;
+
 public class LineByValueAction extends AbstractGraphicMouseAction {
 
 	private final ByValueContext byValueContext;
@@ -42,14 +44,14 @@ public class LineByValueAction extends AbstractGraphicMouseAction {
 		double angle = byValueContext.getAngle();
 		double length = byValueContext.getLength();
 
-		double radianAngle = Math.toRadians(angle);
+		double radianAngle = toRadians(angle);
 
 		drawer.selectColor(paintContext.getLineTypeOfNewLines());
 		drawer.selectStroke(
 				paintContext.getLineTypeOfNewLines(),
 				viewContext.getScale(), viewContext.isZeroLineWidth());
 
-		var dir = new Vector2d(Math.cos(radianAngle), -Math.sin(radianAngle)).multiply(length);
+		var dir = new Vector2d(cos(radianAngle), -sin(radianAngle)).multiply(length);
 		var w = v.add(dir);
 		drawer.drawLine(v, w);
 	}

@@ -18,6 +18,8 @@
  */
 package oripa.util;
 
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+
 /**
  * @author OUCHI Koji
  *
@@ -32,13 +34,13 @@ public class StopWatch {
 	}
 
 	public void start() {
-		startTime = System.currentTimeMillis();
+		startTime = System.nanoTime();
 	}
 
 	public long getMilliSec() {
 		if (startTime == Long.MAX_VALUE) {
 			throw new IllegalStateException("do start()!");
 		}
-		return System.currentTimeMillis() - startTime;
+		return NANOSECONDS.toMillis(System.nanoTime() - startTime);
 	}
 }

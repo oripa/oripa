@@ -18,9 +18,11 @@
  */
 package oripa.vecmath;
 
+import oripa.util.MathUtil;
+
 import java.util.Objects;
 
-import oripa.util.MathUtil;
+import static java.lang.Math.*;
 
 /**
  * Immutable 2D vector with fluent interface.
@@ -38,7 +40,7 @@ public class Vector2d {
 	}
 
 	public static Vector2d unitVector(final double angle) {
-		return new Vector2d(Math.cos(angle), Math.sin(angle));
+		return new Vector2d(cos(angle), sin(angle));
 	}
 
 	public Vector2d(final double x, final double y) {
@@ -90,7 +92,7 @@ public class Vector2d {
 	}
 
 	public double length() {
-		return Math.sqrt(x * x + y * y);
+		return sqrt(x * x + y * y);
 	}
 
 	public double lengthSquared() {
@@ -115,13 +117,13 @@ public class Vector2d {
 			cos = 1.0;
 		}
 
-		return Math.acos(cos);
+		return acos(cos);
 	}
 
 	public Vector2d rotate(final double theta) {
 
-		double cos = Math.cos(theta);
-		double sin = Math.sin(theta);
+		double cos = cos(theta);
+		double sin = sin(theta);
 
 		return new Vector2d(cos * x - sin * y, sin * x + cos * y);
 	}
@@ -131,7 +133,7 @@ public class Vector2d {
 	 * @return arc tangent of this vector between 0 and 2 * PI
 	 */
 	public double ownAngle() {
-		return MathUtil.normalizeAngle(Math.atan2(y, x));
+		return MathUtil.normalizeAngle(atan2(y, x));
 	}
 
 	/**
@@ -140,12 +142,12 @@ public class Vector2d {
 	 * @return Euclidean distance between the given vector and this vector.
 	 */
 	public double distance(final Vector2d v) {
-		return Math.sqrt((x - v.x) * (x - v.x) + (y - v.y) * (y - v.y));
+		return sqrt((x - v.x) * (x - v.x) + (y - v.y) * (y - v.y));
 	}
 
 	public boolean isParallel(final Vector2d v) {
 		double angle = angle(v);
-		return angle < MathUtil.angleRadianEps() || angle > Math.PI - MathUtil.angleRadianEps();
+		return angle < MathUtil.angleRadianEps() || angle > PI - MathUtil.angleRadianEps();
 	}
 
 	@Override

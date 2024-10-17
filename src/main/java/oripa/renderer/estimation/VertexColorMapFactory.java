@@ -18,14 +18,16 @@
  */
 package oripa.renderer.estimation;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import oripa.domain.fold.halfedge.OriFace;
 import oripa.domain.fold.halfedge.OriHalfedge;
 import oripa.geom.RectangleDomain;
 import oripa.vecmath.Vector2d;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.lang.Math.sqrt;
 
 /**
  * @author OUCHI Koji
@@ -62,7 +64,7 @@ class VertexColorMapFactory {
 		double minX = domain.getLeft();
 		double minY = domain.getTop();
 
-		double faceWidth = Math.sqrt(domain.getWidth() * domain.getWidth()
+		double faceWidth = sqrt(domain.getWidth() * domain.getWidth()
 				+ domain.getHeight() * domain.getHeight());
 
 		var map = new HashMap<OriHalfedge, FloatingRGB>();

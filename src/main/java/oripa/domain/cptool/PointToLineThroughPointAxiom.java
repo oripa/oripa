@@ -18,13 +18,15 @@
  */
 package oripa.domain.cptool;
 
-import java.util.List;
-
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.Segment;
 import oripa.util.MathUtil;
 import oripa.vecmath.Vector2d;
+
+import java.util.List;
+
+import static java.lang.Math.sqrt;
 
 /**
  * Axiom 5
@@ -91,6 +93,6 @@ public class PointToLineThroughPointAxiom {
 			return List.of(-b / (2 * a));
 		}
 
-		return List.of((-b + Math.sqrt(discriminant)) / (2 * a), (-b - Math.sqrt(discriminant)) / (2 * a));
+		return List.of((-b + sqrt(discriminant)) / (2 * a), (-b - sqrt(discriminant)) / (2 * a));
 	}
 }
