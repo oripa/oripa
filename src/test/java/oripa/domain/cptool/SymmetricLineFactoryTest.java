@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import oripa.value.OriLine;
 import oripa.value.OriLine.Type;
-import oripa.vecmath.Vector2d;;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

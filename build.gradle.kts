@@ -54,6 +54,7 @@ spotless {
 
   java {
     eclipse().configFile(file("eclipse_formatter.xml"))
+    importOrder("java", "javax", "org", "com")
   }
 }
 

@@ -18,9 +18,9 @@
  */
 package oripa.vecmath;
 
-import oripa.util.MathUtil;
-
 import java.util.Optional;
+
+import oripa.util.MathUtil;
 
 /**
  * @author OUCHI Koji

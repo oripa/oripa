@@ -18,16 +18,16 @@
  */
 package oripa.renderer.estimation;
 
-import oripa.domain.fold.halfedge.OriFace;
-import oripa.domain.fold.halfedge.OriHalfedge;
-import oripa.geom.RectangleDomain;
-import oripa.vecmath.Vector2d;
+import static java.lang.Math.sqrt;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Math.sqrt;
+import oripa.domain.fold.halfedge.OriFace;
+import oripa.domain.fold.halfedge.OriHalfedge;
+import oripa.geom.RectangleDomain;
+import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji

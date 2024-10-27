@@ -18,11 +18,11 @@
  */
 package oripa.vecmath;
 
-import oripa.util.MathUtil;
+import static java.lang.Math.*;
 
 import java.util.Objects;
 
-import static java.lang.Math.*;
+import oripa.util.MathUtil;
 
 /**
  * Immutable 2D vector with fluent interface.
