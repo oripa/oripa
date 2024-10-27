@@ -43,9 +43,9 @@ class Vector2dTest {
 
 	@ParameterizedTest
 	@CsvSource({
-		"1, 1,   1, -1,  0",
-		"1, 0,   0, 1,   0",
-		"1, 2,   2, 1,   4"
+			"1, 1,   1, -1,  0",
+			"1, 0,   0, 1,   0",
+			"1, 2,   2, 1,   4"
 	})
 	void testDotProduct(double x1, double y1, double x2, double y2, double expected) {
 		var v0 = new Vector2d(x1, y1);
@@ -56,10 +56,10 @@ class Vector2dTest {
 
 	@ParameterizedTest
 	@CsvSource({
-		"1, 0,   0,   1, 0",
-		"1, 0,   45,  0.70710678, 0.70710678",
-		"0.70710678, 0.70710678,   45,  0, 1",
-		"0, 1,   45, -0.70710678, 0.70710678",
+			"1, 0,   0,   1, 0",
+			"1, 0,   45,  0.70710678, 0.70710678",
+			"0.70710678, 0.70710678,   45,  0, 1",
+			"0, 1,   45, -0.70710678, 0.70710678",
 	})
 	void testRotate(double x, double y, double angleDegrees, double expectedX, double expectedY) {
 		var v = new Vector2d(x, y).rotate(Math.toRadians(angleDegrees));
@@ -70,11 +70,11 @@ class Vector2dTest {
 
 	@ParameterizedTest
 	@CsvSource({
-		"1, 0,   1, 0,   0",
-		"1, 0,   5, 0,   0",
-		"1, 0,   0, 1,   90",
-		"1, 0,   0.70710678, 0.70710678,   45",
-		"0.8660254038, 0.5,   0.5, 0.8660254038,   30",
+			"1, 0,   1, 0,   0",
+			"1, 0,   5, 0,   0",
+			"1, 0,   0, 1,   90",
+			"1, 0,   0.70710678, 0.70710678,   45",
+			"0.8660254038, 0.5,   0.5, 0.8660254038,   30",
 	})
 	void testAngle(double x1, double y1, double x2, double y2, double expectedAngleDegrees) {
 		var angle1 = new Vector2d(x1, y1).angle(new Vector2d(x2, y2));
@@ -86,10 +86,10 @@ class Vector2dTest {
 
 	@ParameterizedTest
 	@CsvSource({
-		"1, 0,   0",
-		"0, 5,   90",
-		"0.70710678, 0.70710678,   45",
-		"0.8660254038, 0.5,   30",
+			"1, 0,   0",
+			"0, 5,   90",
+			"0.70710678, 0.70710678,   45",
+			"0.8660254038, 0.5,   30",
 	})
 	void testOwnAngle(double x, double y, double expectedAngleDegrees) {
 		var angle = new Vector2d(x, y).ownAngle();

@@ -19,5 +19,6 @@
 package oripa.gui.view.model;
 
 public enum ModelDisplayMode {
-	FILL_ALPHA, FILL_NONE
+	FILL_ALPHA,
+	FILL_NONE
 }
