@@ -7,6 +7,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 plugins {
     `java-library`
     `maven-publish`
+    alias(libs.plugins.spotless)
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.panteleyev.jpackageplugin") version "1.6.0"
 }
@@ -47,6 +48,13 @@ tasks.withType<Jar> {
     manifest {
         attributes["Main-Class"] = "oripa.ORIPA"
     }
+}
+
+spotless {
+
+  java {
+    eclipse().configFile(file("eclipse_formatter.xml"))
+  }
 }
 
 tasks.withType<JavaCompile>() {

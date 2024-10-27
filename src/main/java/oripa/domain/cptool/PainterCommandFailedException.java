@@ -2,8 +2,8 @@ package oripa.domain.cptool;
 
 public class PainterCommandFailedException extends Exception {
 
-	public PainterCommandFailedException(String message) {
+	public PainterCommandFailedException(final String message) {
 		super(message);
 	}
-	
+
 }
