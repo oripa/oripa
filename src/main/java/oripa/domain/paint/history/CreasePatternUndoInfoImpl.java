@@ -14,7 +14,7 @@ class CreasePatternUndoInfoImpl implements UndoInfo<Collection<OriLine>> {
 	private CreasePatternUndoInfoImpl() {
 	}
 
-	public CreasePatternUndoInfoImpl(Collection<OriLine> lines) {
+	public CreasePatternUndoInfoImpl(final Collection<OriLine> lines) {
 		setInfo(lines);
 	}
 
@@ -24,7 +24,7 @@ class CreasePatternUndoInfoImpl implements UndoInfo<Collection<OriLine>> {
 	}
 
 	@Override
-	public void setInfo(Collection<OriLine> lines) {
+	public void setInfo(final Collection<OriLine> lines) {
 		this.lines = new ArrayList<>(lines.size());
 		for (OriLine l : lines) {
 			this.lines.add(new OriLine(l));
