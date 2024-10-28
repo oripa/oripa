@@ -8,8 +8,8 @@ plugins {
     `java-library`
     `maven-publish`
     alias(libs.plugins.spotless)
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("org.panteleyev.jpackageplugin") version "1.6.0"
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.jpackage)
 }
 
 repositories {
@@ -51,7 +51,6 @@ tasks.withType<Jar> {
 }
 
 spotless {
-
   java {
     eclipse().configFile(file("eclipse_formatter.xml"))
     importOrder("java", "javax", "org", "com")
