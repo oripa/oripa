@@ -18,15 +18,14 @@
  */
 package oripa.util.history;
 
-
 /**
  * @author Koji
  *
  */
 public interface UndoInfo<Info> {
 
-
 	Info getInfo();
+
 	void setInfo(Info info);
 
 }

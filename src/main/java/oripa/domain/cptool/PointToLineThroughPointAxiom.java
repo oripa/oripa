@@ -18,15 +18,15 @@
  */
 package oripa.domain.cptool;
 
+import static java.lang.Math.sqrt;
+
+import java.util.List;
+
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.Segment;
 import oripa.util.MathUtil;
 import oripa.vecmath.Vector2d;
-
-import java.util.List;
-
-import static java.lang.Math.sqrt;
 
 /**
  * Axiom 5

@@ -1,8 +1,8 @@
 package oripa.gui.presenter.creasepattern.byvalue;
 
 import oripa.domain.paint.PaintContext;
-import oripa.domain.paint.byvalue.SelectingVertexForAngle;
 import oripa.domain.paint.byvalue.ByValueContext;
+import oripa.domain.paint.byvalue.SelectingVertexForAngle;
 import oripa.gui.presenter.creasepattern.AbstractGraphicMouseAction;
 import oripa.gui.presenter.creasepattern.CreasePatternViewContext;
 import oripa.gui.presenter.creasepattern.GraphicMouseAction;

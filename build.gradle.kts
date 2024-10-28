@@ -7,8 +7,9 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 plugins {
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("org.panteleyev.jpackageplugin") version "1.6.0"
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.jpackage)
 }
 
 repositories {
@@ -49,9 +50,17 @@ tasks.withType<Jar> {
     }
 }
 
+spotless {
+  java {
+    eclipse().configFile(file("eclipse_formatter.xml"))
+    importOrder("java", "javax", "org", "com")
+  }
+}
+
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
     options.compilerArgs.add("-Xlint:unchecked")
+    dependsOn("spotlessApply")
 }
 
 tasks.withType<Javadoc>() {

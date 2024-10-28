@@ -18,9 +18,9 @@
  */
 package oripa.vecmath;
 
-import oripa.util.MathUtil;
-
 import java.util.Optional;
+
+import oripa.util.MathUtil;
 
 /**
  * @author OUCHI Koji
@@ -77,11 +77,10 @@ public class Matrix2d {
 		var det = determinant();
 
 		return Optional.of(new Matrix2d(
-			v11 / det,
-			-v01 / det,
-			-v10 / det,
-			v00 / det
-		));
+				v11 / det,
+				-v01 / det,
+				-v10 / det,
+				v00 / det));
 	}
 
 }

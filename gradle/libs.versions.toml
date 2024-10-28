@@ -6,6 +6,15 @@ junit-jupiter = "5.11.2"
 mockito = "5.14.2"
 slf4j-api = "2.0.16"
 
+spotless = "7.0.0.BETA4"
+shadow = "8.1.1"
+jpackage = "1.6.0"
+
+[plugins]
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+jpackage ={ id = "org.panteleyev.jpackageplugin", version.ref = "jpackage" }
+
 [libraries]
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 commons-cli = { module = "commons-cli:commons-cli", version.ref = "commons-cli" }

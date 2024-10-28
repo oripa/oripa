@@ -84,9 +84,16 @@ java -jar ./oripa-1.70.jar --image folded.svg -n 0 folded.fold
 
 ## For developers
 
+### Environment
+
+We recommend to use Eclipse IDE.
+If you use other IDE, please import [eclipse_formatter.xml](eclipse_formatter.xml) as format setting if possible.
+
 ### Build ORIPA
 
 We use Gradle to build ORIPA since ver. 1.74.
+We have configured the `compileJava` task to format source code automatically.
+
 Maven is used for older versions.
 `pom.xml` for Maven still exists in the project source 
 but it is not maintained and will be deleted someday.

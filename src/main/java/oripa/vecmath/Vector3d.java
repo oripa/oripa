@@ -18,7 +18,6 @@
  */
 package oripa.vecmath;
 
-
 import static java.lang.Math.sqrt;
 
 /**
