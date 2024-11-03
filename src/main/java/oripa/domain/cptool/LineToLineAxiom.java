@@ -43,16 +43,33 @@ public class LineToLineAxiom {
 		var line0 = s0.getLine();
 		var line1 = s1.getLine();
 
+		if (line0.equals(line1, pointEps)) {
+			if (GeomUtil.isOverlap(s0, s1, pointEps)) {
+				// out of consideration.
+				return List.of();
+			}
+			return createForSegmentsOnTheSameLine(s0, s1);
+		}
+
 		if (line0.isParallel(line1)) {
 			return createForParallelSegments(line0, line1);
-		} else {
-
-			var segmentCrossPointOpt = GeomUtil.getCrossPoint(s0, s1);
-
-			return segmentCrossPointOpt
-					.map(crossPoint -> createForSegmentsWithCross(s0, s1, crossPoint, pointEps))
-					.orElse(createForSegmentsWithoutCross(s0, s1, pointEps));
 		}
+
+		var segmentCrossPointOpt = GeomUtil.getCrossPoint(s0, s1);
+
+		return segmentCrossPointOpt
+				.map(crossPoint -> createForSegmentsWithCross(s0, s1, crossPoint, pointEps))
+				.orElse(createForSegmentsWithoutCross(s0, s1, pointEps));
+
+	}
+
+	private List<Line> createForSegmentsOnTheSameLine(final Segment s0, final Segment s1) {
+		var p0 = GeomUtil.getNearestPointToSegment(s1.getP0(), s0);
+		var p1 = GeomUtil.getNearestPointToSegment(s0.getP0(), s1);
+
+		var p = p0.add(p1).multiply(0.5);
+
+		return List.of(new Line(p, s0.getLine().getDirection().getRightSidePerpendicular()));
 	}
 
 	private List<Line> createForParallelSegments(final Line line0, final Line line1) {
