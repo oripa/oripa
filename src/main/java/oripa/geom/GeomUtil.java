@@ -126,10 +126,19 @@ public class GeomUtil {
 		return false;
 	}
 
-	public static Segment getVerticalSegment(final Vector2d v, final Segment line) {
+	/**
+	 * Returns a segment vertical to the given segment, whose end points are the
+	 * cross point and given {@code v}.
+	 *
+	 * @param v
+	 * @param segment
+	 * @return a vertical segment whose end points are the cross point and
+	 *         {@code v}.
+	 */
+	public static Segment getVerticalSegment(final Vector2d v, final Segment segment) {
 
-		var p0 = line.getP0();
-		var p1 = line.getP1();
+		var p0 = segment.getP0();
+		var p1 = segment.getP1();
 
 		var sub = p1.subtract(p0);
 
