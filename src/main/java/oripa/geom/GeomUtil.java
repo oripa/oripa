@@ -126,10 +126,19 @@ public class GeomUtil {
 		return false;
 	}
 
-	public static Segment getVerticalLine(final Vector2d v, final Segment line) {
+	/**
+	 * Returns a segment vertical to the given segment, whose end points are the
+	 * cross point and given {@code v}.
+	 *
+	 * @param v
+	 * @param segment
+	 * @return a vertical segment whose end points are the cross point and
+	 *         {@code v}.
+	 */
+	public static Segment getVerticalSegment(final Vector2d v, final Segment segment) {
 
-		var p0 = line.getP0();
-		var p1 = line.getP1();
+		var p0 = segment.getP0();
+		var p1 = segment.getP1();
 
 		var sub = p1.subtract(p0);
 
@@ -155,11 +164,14 @@ public class GeomUtil {
 	 * Computes the angle bisector direction of v0 - v1 and v2 - v1.
 	 *
 	 * @param v0
+	 *            the end point of the direction vector.
 	 * @param v1
+	 *            the shared start point of the direction vectors.
 	 * @param v2
+	 *            the end point of another direction vector.
 	 * @return Direction vector. Not normalized.
 	 */
-	public static Vector2d getBisectorVec(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
+	private static Vector2d getBisectorVec(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
 
 		var v0_v1 = v0.subtract(v1).normalize();
 		var v2_v1 = v2.subtract(v1).normalize();
@@ -172,6 +184,21 @@ public class GeomUtil {
 		}
 
 		return v0_v1.add(v2_v1);
+	}
+
+	/**
+	 * Computes the angle bisector line of v0 - v1 and v2 - v1.
+	 *
+	 * @param v0
+	 *            the end point of the direction vector.
+	 * @param v1
+	 *            the shared start point of the direction vectors.
+	 * @param v2
+	 *            the end point of another direction vector.
+	 * @return angle bisector line on v1.
+	 */
+	public static Line getBisectorLine(final Vector2d v0, final Vector2d v1, final Vector2d v2) {
+		return new Line(v1, getBisectorVec(v0, v1, v2));
 	}
 
 	/**
@@ -205,11 +232,12 @@ public class GeomUtil {
 		var segP0 = seg.getP0();
 		var segP1 = seg.getP1();
 
-		return solveRayCrossPointVectorEquation(p0, p1, segP0, segP1)
+		return solveRayAndSegmentCrossPointVectorEquation(p0, p1, segP0, segP1)
 				.map(parameters -> computeDividingPoint(parameters.get(1), segP0, segP1));
 	}
 
-	private static Optional<List<Double>> solveRayCrossPointVectorEquation(final Vector2d p0, final Vector2d p1,
+	private static Optional<List<Double>> solveRayAndSegmentCrossPointVectorEquation(
+			final Vector2d p0, final Vector2d p1,
 			final Vector2d segP0, final Vector2d segP1) {
 		final double eps = MathUtil.normalizedValueEps();
 		return solveCrossPointVectorEquation(p0, p1, segP0, segP1,
@@ -248,8 +276,8 @@ public class GeomUtil {
 	 *            end point of the segment
 	 * @return
 	 */
-	private static Optional<List<Double>> solveLineAndSegmentCrossPointVectorEquation(final Vector2d p0,
-			final Vector2d p1,
+	private static Optional<List<Double>> solveLineAndSegmentCrossPointVectorEquation(
+			final Vector2d p0, final Vector2d p1,
 			final Vector2d segP0, final Vector2d segP1) {
 		final double eps = MathUtil.normalizedValueEps();
 		return solveCrossPointVectorEquation(p0, p1, segP0, segP1,

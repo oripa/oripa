@@ -97,12 +97,9 @@ public class LineToLineAxiom {
 					var reversedDir = line1.getDirection().multiply(-1);
 					var pointOnLine1Reversed = segmentCrossPoint.add(reversedDir);
 
-					var foldLineDir0 = GeomUtil.getBisectorVec(pointOnLine0, segmentCrossPoint, pointOnLine1);
-
-					var foldLineDir1 = GeomUtil.getBisectorVec(pointOnLine0, segmentCrossPoint, pointOnLine1Reversed);
-
-					return List.of(new Line(segmentCrossPoint, foldLineDir0),
-							new Line(segmentCrossPoint, foldLineDir1));
+					return List.of(
+							GeomUtil.getBisectorLine(pointOnLine0, segmentCrossPoint, pointOnLine1),
+							GeomUtil.getBisectorLine(pointOnLine0, segmentCrossPoint, pointOnLine1Reversed));
 
 				});
 	}
@@ -141,21 +138,16 @@ public class LineToLineAxiom {
 		var point0b = segmentIncludingCrossPoint.getP1();
 		var point1 = selectFarEndPoint(s, lineCrossPoint);
 
-		var foldLineDir0 = GeomUtil.getBisectorVec(point0a, lineCrossPoint, point1);
-		var foldLineDir1 = GeomUtil.getBisectorVec(point0b, lineCrossPoint, point1);
-
 		return List.of(
-				new Line(lineCrossPoint, foldLineDir0),
-				new Line(lineCrossPoint, foldLineDir1));
+				GeomUtil.getBisectorLine(point0a, lineCrossPoint, point1),
+				GeomUtil.getBisectorLine(point0b, lineCrossPoint, point1));
 	}
 
 	private List<Line> createUsingCrossPoint(final Segment s0, final Segment s1, final Vector2d crossPoint) {
 		var point0 = selectFarEndPoint(s0, crossPoint);
 		var point1 = selectFarEndPoint(s1, crossPoint);
 
-		var foldLineDir = GeomUtil.getBisectorVec(point0, crossPoint, point1);
-
-		return List.of(new Line(crossPoint, foldLineDir));
+		return List.of(GeomUtil.getBisectorLine(point0, crossPoint, point1));
 	}
 
 	private Vector2d selectFarEndPoint(final Segment s, final Vector2d p) {
