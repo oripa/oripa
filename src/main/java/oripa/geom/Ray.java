@@ -34,10 +34,20 @@ public class Ray {
 		this(v, Vector2d.unitVector(angle));
 	}
 
+	/**
+	 * Returns the end point of this ray.
+	 *
+	 * @return
+	 */
 	public Vector2d getEndPoint() {
 		return p;
 	}
 
+	/**
+	 * Returns unit vector of this ray's direction.
+	 *
+	 * @return
+	 */
 	public Vector2d getDirection() {
 		return dir;
 	}

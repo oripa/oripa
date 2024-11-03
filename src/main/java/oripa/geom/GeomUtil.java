@@ -42,50 +42,6 @@ public class GeomUtil {
 	}
 
 	/**
-	 * Equivalent to {@code p0.equals(p1, eps)}.
-	 *
-	 * @see {@link Vector2d#equals(Vector2d, double)}
-	 * @return
-	 */
-	@Deprecated
-	public static boolean areEqual(final Vector2d p0, final Vector2d p1, final double eps) {
-		return p0.equals(p1, eps);
-	}
-
-	/**
-	 * Equivalent to {@code line0.equals(line1, eps)}
-	 *
-	 * @see {@link Line#equals(Line, double)}
-	 * @return
-	 */
-	@Deprecated
-	public static boolean areEqual(final Line line0, final Line line1, final double eps) {
-		return line0.equals(line1, eps);
-	}
-
-	/**
-	 * Equivalent to {@code p0.distance(p1)}
-	 *
-	 * @see {@link Vector2d#distance(Vector2d)}
-	 * @return
-	 */
-	@Deprecated
-	public static double distance(final Vector2d p0, final Vector2d p1) {
-		return p0.distance(p1);
-	}
-
-	/**
-	 * Equivalent to {@code dir0.isParallel(dir1)}
-	 *
-	 * @see {@link Vector2d#isParallel(Vector2d)}
-	 * @return
-	 */
-	@Deprecated
-	public static boolean isParallel(final Vector2d dir0, final Vector2d dir1) {
-		return dir0.isParallel(dir1);
-	}
-
-	/**
 	 * this method returns the count of end points on other segment for each
 	 * segment.
 	 * <ul>
