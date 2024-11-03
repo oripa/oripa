@@ -41,7 +41,7 @@ public class VerticalLineAdderCommand extends ValidatablePaintCommand {
 		final int correctLineCount = 1;
 		validateCounts(context, correctVertexCount, correctLineCount);
 
-		OriLine vl = new OriLine(GeomUtil.getVerticalLine(
+		OriLine vl = new OriLine(GeomUtil.getVerticalSegment(
 				context.getVertex(0), context.getLine(0)), context.getLineTypeOfNewLines());
 
 		context.creasePatternUndo().pushUndoInfo();

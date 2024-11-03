@@ -40,15 +40,20 @@ class GeomUtilTest {
 	}
 
 	@Test
-	void test_getBisectorVec() {
+	void test_getBisectorLine() {
 		var v0 = new Vector2d(1, 0);
 		var v1 = new Vector2d(0, 0);
 		var v2 = new Vector2d(0, 1);
 
-		// normalize to remove uncertainty of the vector length
-		var bisector = GeomUtil.getBisectorVec(v0, v1, v2).normalize();
+		var bisector = GeomUtil.getBisectorLine(v0, v1, v2);
 
-		assertEquals(Math.sqrt(2) / 2, bisector.getX(), 1e-8);
-		assertEquals(Math.sqrt(2) / 2, bisector.getY(), 1e-8);
+		var point = bisector.getPoint();
+		var direction = bisector.getDirection();
+
+		assertEquals(v1.getX(), point.getX(), 1e-8);
+		assertEquals(v1.getY(), point.getY(), 1e-8);
+
+		assertEquals(Math.sqrt(2) / 2, direction.getX(), 1e-8);
+		assertEquals(Math.sqrt(2) / 2, direction.getY(), 1e-8);
 	}
 }
