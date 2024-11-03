@@ -61,7 +61,7 @@ public class LineByValueCommand extends ValidatablePaintCommand {
 				return;
 			}
 
-			OriLine vl = new OriLine(GeomUtil.getLineByValue(vertex, length, -angle),
+			OriLine vl = new OriLine(GeomUtil.getSegmentByValue(vertex, length, -angle),
 					context.getLineTypeOfNewLines());
 
 			context.creasePatternUndo().pushUndoInfo();

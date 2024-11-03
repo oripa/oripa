@@ -52,7 +52,7 @@ public class GeomUtil {
 	 * <li>If the count is 4, then the two segments are equal.</li>
 	 * </ul>
 	 */
-	public static int distinguishLineSegmentsOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
+	public static int distinguishSegmentsOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
 		if (!seg0.getLine().isParallel(seg1.getLine())) {
 			return 0;
 		}
@@ -82,7 +82,7 @@ public class GeomUtil {
 	 *         end points and does not share other part.
 	 */
 	public static boolean isRelaxedOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
-		var overlapCount = distinguishLineSegmentsOverlap(seg0, seg1, pointEps);
+		var overlapCount = distinguishSegmentsOverlap(seg0, seg1, pointEps);
 		return overlapCount >= 2;
 	}
 
@@ -114,7 +114,7 @@ public class GeomUtil {
 	 *         end points and does not share other part.
 	 */
 	public static boolean isOverlap(final Segment seg0, final Segment seg1, final double pointEps) {
-		var overlapCount = distinguishLineSegmentsOverlap(seg0, seg1, pointEps);
+		var overlapCount = distinguishSegmentsOverlap(seg0, seg1, pointEps);
 		if (overlapCount >= 3) {
 			return true;
 		}
@@ -124,16 +124,6 @@ public class GeomUtil {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Equivalent to {@code l0.equals(l1, pointEps)}
-	 *
-	 * @see {@link Segment#equals(Segment, double)}
-	 */
-	@Deprecated
-	public static boolean isSameLineSegment(final Segment l0, final Segment l1, final double pointEps) {
-		return l0.equals(l1, pointEps);
 	}
 
 	public static Segment getVerticalLine(final Vector2d v, final Segment line) {
@@ -289,7 +279,7 @@ public class GeomUtil {
 		return solveCrossPointVectorEquation(p0, p1, q0, q1, (s, t) -> true);
 	}
 
-	public static Segment getLineByValue(final Vector2d sv, final double length,
+	public static Segment getSegmentByValue(final Vector2d sv, final double length,
 			final double deg_angle) {
 		double rad_angle = Math.toRadians(deg_angle);
 		var dir = Vector2d.unitVector(rad_angle).multiply(length);
