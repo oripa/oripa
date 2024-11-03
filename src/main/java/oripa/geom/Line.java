@@ -30,14 +30,30 @@ public class Line {
 		this.dir = dir.normalize();
 	}
 
+	/**
+	 * Returns a reference point on this line.
+	 *
+	 * @return
+	 */
 	public Vector2d getPoint() {
 		return p;
 	}
 
+	/**
+	 * Returns unit vector of this line's direction.
+	 *
+	 * @return
+	 */
 	public Vector2d getDirection() {
 		return dir;
 	}
 
+	/**
+	 * True if the given line is parallel to this line.
+	 *
+	 * @param line
+	 * @return
+	 */
 	public boolean isParallel(final Line line) {
 		return dir.isParallel(line.dir);
 	}
