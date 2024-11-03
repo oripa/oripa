@@ -63,6 +63,14 @@ public class LineToLineAxiom {
 
 	}
 
+	/**
+	 * Extended interpretation of the axiom. This method returns the
+	 * perpendicular bisector of the closest points between the given segments.
+	 *
+	 * @param s0
+	 * @param s1
+	 * @return
+	 */
 	private List<Line> createForSegmentsOnTheSameLine(final Segment s0, final Segment s1) {
 		var p0 = GeomUtil.getNearestPointToSegment(s1.getP0(), s0);
 		var p1 = GeomUtil.getNearestPointToSegment(s0.getP0(), s1);
