@@ -14,6 +14,26 @@ class LineToLineAxiomTest {
 	double EPS = 1e-5;
 
 	@Test
+	void testCreateFoldLinesOnTheSameLine() {
+		var s0 = new Segment(new Vector2d(-100, 0), new Vector2d(-50, 0));
+		var s1 = new Segment(new Vector2d(50, 0), new Vector2d(100, 0));
+
+		var lines = new LineToLineAxiom().createFoldLines(s0, s1, EPS);
+
+		assertEquals(1, lines.size());
+
+		var line = lines.get(0);
+
+		var dir = line.getDirection();
+
+		assertEquals(0, dir.getX(), EPS);
+		assertEquals(-1, dir.getY(), EPS);
+
+		assertEquals(0, GeomUtil.distancePointToLine(new Vector2d(0, 0), line), EPS);
+
+	}
+
+	@Test
 	void testCreateFoldLinesParallel() {
 		var s0 = new Segment(new Vector2d(-100, 100), new Vector2d(100, 100));
 		var s1 = new Segment(new Vector2d(-50, 0), new Vector2d(0, 0));
