@@ -75,7 +75,7 @@ public class RaySnapPointFactory {
 			return false;
 		}
 
-		return !sharesEndPoint(crease, ray, eps) || GeomUtil.distinguishLineSegmentsOverlap(ray, crease, eps) >= 3;
+		return !sharesEndPoint(crease, ray, eps) || GeomUtil.distinguishSegmentsOverlap(ray, crease, eps) >= 3;
 	}
 
 	private boolean sharesEndPoint(final Segment s1, final Segment s2, final double eps) {
