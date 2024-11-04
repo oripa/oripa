@@ -29,6 +29,7 @@ import oripa.domain.fold.halfedge.OriVertex;
 import oripa.domain.fold.halfedge.OrigamiModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.util.IntPair;
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriPoint;
 
 /**
@@ -91,8 +92,10 @@ public class VertexDepthMapFactory {
 			double x = vertex.getPosition().getX();
 			double y = vertex.getPosition().getY();
 
-			var boundMap = samePositionVertices.headMap(new OriPoint(x + eps, y + eps))
-					.tailMap(new OriPoint(x - eps, y - eps));
+			var boundMap = CollectionUtil.rangeMap(
+					samePositionVertices,
+					new OriPoint(x - eps, y - eps),
+					new OriPoint(x + eps, y + eps));
 
 			var v = new OriPoint(x, y);
 			var posOpt = boundMap.keySet().stream()

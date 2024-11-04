@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -60,9 +61,9 @@ public class OriVerticesFactory {
 
 	private OriVertex addAndGetVertexFromVVec(
 			final TreeMap<OriPoint, OriVertex> verticesMap, final OriPoint p, final double pointEps) {
-		var boundMap = verticesMap
-				.headMap(new OriPoint(p.getX() + pointEps, p.getY() + pointEps), true)
-				.tailMap(new OriPoint(p.getX() - pointEps, p.getY() - pointEps));
+		var boundMap = CollectionUtil.rangeMapInclusive(verticesMap,
+				new OriPoint(p.getX() - pointEps, p.getY() - pointEps),
+				new OriPoint(p.getX() + pointEps, p.getY() + pointEps));
 
 		var neighbors = boundMap.keySet().stream()
 				.filter(point -> point.equals(p, pointEps))
