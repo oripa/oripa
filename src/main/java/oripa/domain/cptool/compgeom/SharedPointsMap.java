@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -70,8 +71,11 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 	}
 
 	public OriPoint findKeyPoint(final OriPoint p, final double eps) {
-		var boundMap = this.headMap(new OriPoint(p.getX() + eps, p.getY() + eps))
-				.tailMap(new OriPoint(p.getX() - eps, p.getY() - eps));
+		var boundMap = CollectionUtil.rangeMap(
+				this,
+				new OriPoint(p.getX() - eps, p.getY() - eps),
+				new OriPoint(p.getX() + eps, p.getY() + eps));
+
 		if (boundMap.containsKey(p)) {
 			return p;
 		}

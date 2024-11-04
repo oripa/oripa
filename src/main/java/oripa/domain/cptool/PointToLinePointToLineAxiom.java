@@ -20,13 +20,14 @@ package oripa.domain.cptool;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 import oripa.geom.GeomUtil;
 import oripa.geom.Line;
 import oripa.geom.Segment;
 import oripa.util.MathUtil;
-import oripa.util.Pair;
+import oripa.util.collection.CollectionUtil;
 import oripa.vecmath.Vector2d;
 
 /**
@@ -70,7 +71,7 @@ public class PointToLinePointToLineAxiom {
 		var theta0 = dir0.ownAngle();
 		var theta1 = dir1.ownAngle();
 
-		var results = new ArrayList<Pair<Double, Line>>();
+		var results = new TreeMap<Double, Line>();
 
 		double initialX0Inverted = p0Moved.rotate(-theta0).getX();
 		for (double d = 0; d < range; d += range / 50) {
@@ -82,21 +83,21 @@ public class PointToLinePointToLineAxiom {
 			try {
 				var x0Answer = MathUtil.newtonMethod(discriminant, x0Inverted_d, pointEps, 1e-10 * range);
 
-				if (results.stream().anyMatch(r -> MathUtil.areEqual(x0Answer, r.getV1(), pointEps))) {
+				if (!CollectionUtil.rangeMapExclusive(results, x0Answer - pointEps, x0Answer + pointEps).isEmpty()) {
 					continue;
 				}
 
 				var solution = solve(x0Answer, theta0, theta1, p0Moved, p1Moved, pointEps);
 
-				results.add(new Pair<Double, Line>(x0Answer, new Line(
-						solution.xy.add(crossPoint),
-						new Vector2d(1, solution.slope))));
+				results.put(
+						x0Answer,
+						new Line(solution.xy.add(crossPoint), new Vector2d(1, solution.slope)));
 			} catch (Exception e) {
 
 			}
 		}
 		return filterPossibleLines(p0, s0, p1, s1,
-				results.stream().map(r -> r.getV2()).toList(), pointEps);
+				new ArrayList<>(results.values()), pointEps);
 	}
 
 	private List<Line> filterPossibleLines(final Vector2d p0, final Segment s0, final Vector2d p1, final Segment s1,

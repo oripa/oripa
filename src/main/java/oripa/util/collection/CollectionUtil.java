@@ -21,6 +21,7 @@ package oripa.util.collection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NavigableMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,4 +57,64 @@ public class CollectionUtil {
 	public static <T> List<T> partialCopy(final List<T> list, final int fromIndex, final int toIndex) {
 		return new ArrayList<T>(list.subList(fromIndex, toIndex));
 	}
+
+	/**
+	 * Returns a view of the portion of the given map whose keys are greater
+	 * than or equal to {@code fromKey} and strictly less than {@code toKey}.
+	 * Changes in the returned map are reflected in the given map, and
+	 * vice-versa.
+	 *
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @param fromKey
+	 *            inclusive.
+	 * @param toKey
+	 *            exclusive.
+	 * @return
+	 */
+	public static <K, V> NavigableMap<K, V> rangeMap(final NavigableMap<K, V> map,
+			final K fromKey, final K toKey) {
+		return map.subMap(fromKey, true, toKey, false);
+	}
+
+	/**
+	 * Returns a view of the portion of the given map whose keys are greater
+	 * than or equal to {@code fromKey} and less than or equal to {@code toKey}.
+	 * Changes in the returned map are reflected in the given map, and
+	 * vice-versa.
+	 *
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @param fromKey
+	 *            inclusive.
+	 * @param toKey
+	 *            inclusive.
+	 * @return
+	 */
+	public static <K, V> NavigableMap<K, V> rangeMapInclusive(final NavigableMap<K, V> map,
+			final K fromKey, final K toKey) {
+		return map.subMap(fromKey, true, toKey, true);
+	}
+
+	/**
+	 * Returns a view of the portion of the given map whose keys are greater
+	 * than {@code fromKey} and less than {@code toKey}. Changes in the returned
+	 * map are reflected in the given map, and vice-versa.
+	 *
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @param fromKey
+	 *            exclusive.
+	 * @param toKey
+	 *            exclusive.
+	 * @return
+	 */
+	public static <K, V> NavigableMap<K, V> rangeMapExclusive(final NavigableMap<K, V> map,
+			final K fromKey, final K toKey) {
+		return map.subMap(fromKey, false, toKey, false);
+	}
+
 }
