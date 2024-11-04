@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NavigableMap;
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -117,4 +118,19 @@ public class CollectionUtil {
 		return map.subMap(fromKey, false, toKey, false);
 	}
 
+	/**
+	 * Returns a view of the portion of the given set whose values are greater
+	 * than {@code from} and less than {@code to}. Changes in the returned set
+	 * are reflected in the given set, and vice-versa.
+	 *
+	 * @param <T>
+	 * @param set
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	public static <T> NavigableSet<T> rangeSetInclusive(final NavigableSet<T> set,
+			final T from, final T to) {
+		return set.subSet(from, true, to, true);
+	}
 }
