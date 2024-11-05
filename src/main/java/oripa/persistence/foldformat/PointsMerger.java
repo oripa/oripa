@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
 
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
@@ -59,9 +60,10 @@ public class PointsMerger {
 	}
 
 	private OriPoint find(final TreeSet<OriPoint> pointSet, final OriPoint p, final double pointEps) {
-		var boundSet = pointSet
-				.headSet(new OriPoint(p.getX() + pointEps, p.getY() + pointEps), true)
-				.tailSet(new OriPoint(p.getX() - pointEps, p.getY() - pointEps));
+		var boundSet = CollectionUtil.rangeSetInclusive(
+				pointSet,
+				new OriPoint(p.getX() - pointEps, p.getY() - pointEps),
+				new OriPoint(p.getX() + pointEps, p.getY() + pointEps));
 
 		var neighbors = boundSet.stream()
 				.filter(point -> point.equals(p, pointEps))

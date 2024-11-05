@@ -16,6 +16,7 @@ import oripa.domain.cptool.compgeom.PointAndLine;
 import oripa.domain.cptool.compgeom.SharedPointsMap;
 import oripa.domain.cptool.compgeom.SharedPointsMapFactory;
 import oripa.util.StopWatch;
+import oripa.util.collection.CollectionUtil;
 import oripa.value.OriLine;
 import oripa.value.OriPoint;
 import oripa.vecmath.Vector2d;
@@ -190,9 +191,9 @@ public class ElementRemover {
 							.toList());
 
 			if (removedLinePoints != null) {
-				var boundRemovedPoints = removedLinePoints
-						.headSet(new OriPoint(shared.getX() + pointEps, shared.getY() + pointEps), true)
-						.tailSet(new OriPoint(shared.getX() - pointEps, shared.getY() - pointEps));
+				var boundRemovedPoints = CollectionUtil.rangeSetInclusive(removedLinePoints,
+						new OriPoint(shared.getX() - pointEps, shared.getY() - pointEps),
+						new OriPoint(shared.getX() + pointEps, shared.getY() + pointEps));
 				if (boundRemovedPoints.contains(shared)) {
 					logger.trace("exists in boundRemovedPoints: " + shared);
 				} else if (boundRemovedPoints.stream()
