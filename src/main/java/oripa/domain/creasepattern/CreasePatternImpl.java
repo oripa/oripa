@@ -218,22 +218,6 @@ class CreasePatternImpl implements CreasePattern {
 	}
 
 	@Override
-	public void move(final double dx, final double dy) {
-		var lines = new ArrayList<OriLine>();
-
-//		lines.addAll(this);
-
-		var d = new Vector2d(dx, dy);
-		this.forEach(line -> {
-			lines.add(new OriLine(line.getP0().add(d), line.getP1().add(d), line.getType()));
-		});
-
-		// rebuild vertices info
-		this.clear();
-		this.addAll(lines);
-	}
-
-	@Override
 	public void replaceWith(final Collection<OriLine> lines) {
 		clear();
 		addAll(lines);

@@ -47,16 +47,6 @@ public interface CreasePattern
 		return stream().anyMatch(line -> line.isUnassigned());
 	}
 
-	/**
-	 * move all creases as the coordinate (x, y) becomes (x + dx, y + dx).
-	 *
-	 * @param dx
-	 *            amount of movement on x coordinate
-	 * @param dy
-	 *            amount of movement on y coordinate
-	 */
-	void move(final double dx, final double dy);
-
 	void replaceWith(final Collection<OriLine> lines);
 
 	void refresh(double pointEps);
