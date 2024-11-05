@@ -120,13 +120,16 @@ public class CollectionUtil {
 
 	/**
 	 * Returns a view of the portion of the given set whose values are greater
-	 * than {@code from} and less than {@code to}. Changes in the returned set
-	 * are reflected in the given set, and vice-versa.
+	 * than or equal to {@code from} and less than or equal to {@code to}.
+	 * Changes in the returned set are reflected in the given set, and
+	 * vice-versa.
 	 *
 	 * @param <T>
 	 * @param set
 	 * @param from
+	 *            inclusive.
 	 * @param to
+	 *            inclusive.
 	 * @return
 	 */
 	public static <T> NavigableSet<T> rangeSetInclusive(final NavigableSet<T> set,
