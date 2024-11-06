@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import oripa.domain.cptool.compgeom.PointAndLine;
-import oripa.domain.cptool.compgeom.SharedPointsMap;
 import oripa.domain.cptool.compgeom.SharedPointsMapFactory;
 import oripa.util.StopWatch;
 import oripa.util.collection.CollectionUtil;
@@ -144,34 +141,6 @@ public class ElementRemover {
 						.toList()));
 	}
 
-	private void removeBothSidesFromMap(final PointAndLine point,
-			final TreeMap<OriPoint, ArrayList<PointAndLine>> sharedPointsMap) {
-		sharedPointsMap.get(point.getKeyPoint()).remove(point);
-		sharedPointsMap.get(point.getOppositeKeyPoint()).remove(point);
-	}
-
-	private void addBothSidesOfLineToMap(
-			final OriLine line,
-			final SharedPointsMap<PointAndLine> sharedPointsMap, final double pointEps) {
-		var keyPoints = List.of(
-				sharedPointsMap.findKeyPoint(line.getOriPoint0(), pointEps),
-				sharedPointsMap.findKeyPoint(line.getOriPoint1(), pointEps));
-
-		var endPoints = keyPoints.stream()
-				.map(keyPoint -> new PointAndLine(keyPoint, line))
-				.toList();
-
-		endPoints.get(0).setKeyPoint(keyPoints.get(0));
-		endPoints.get(0).setOppositeKeyPoint(keyPoints.get(1));
-		endPoints.get(1).setKeyPoint(keyPoints.get(1));
-		endPoints.get(1).setOppositeKeyPoint(keyPoints.get(0));
-
-		IntStream.range(0, endPoints.size()).forEach(i -> {
-			sharedPointsMap.get(keyPoints.get(i)).add(endPoints.get(i));
-		});
-
-	}
-
 	private void removeMeaninglessVertices(final Collection<OriLine> creasePattern,
 			final TreeSet<OriPoint> removedLinePoints, final double pointEps) {
 		// Sweep-line approach
@@ -181,7 +150,7 @@ public class ElementRemover {
 		// end point and the line.
 		var mapFactory = new SharedPointsMapFactory<PointAndLine>();
 		var sharedPointsMap = mapFactory.create(creasePattern,
-				(point, line) -> new PointAndLine(point, line), pointEps);
+				PointAndLine::new, pointEps);
 
 		// try merge for each line group connected at the key of the map
 		sharedPointsMap.forEach((shared, sharedPoints) -> {
@@ -215,11 +184,11 @@ public class ElementRemover {
 
 				// remove old lines
 				points.forEach(point -> {
-					removeBothSidesFromMap(point, sharedPointsMap);
+					sharedPointsMap.removeBothSides(point);
 				});
 
 				// add merged line
-				addBothSidesOfLineToMap(mergedLine, sharedPointsMap, pointEps);
+				sharedPointsMap.addBothSidesOfLine(mergedLine, pointEps);
 			});
 		});
 

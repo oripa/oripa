@@ -57,7 +57,8 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 	 * the end point and the line. The map key is ordered by x-coordinate first
 	 * and then by y-coordinate. In the values of each key are ordered by
 	 * y-coordinate. The lines in returned map values and the one given to the
-	 * factory are canonicalized, i.e., line.getP0() is smaller than line.p1.
+	 * factory are canonicalized, i.e., line.getP0() is smaller than
+	 * line.getP1().
 	 *
 	 * @param creasePattern
 	 * @param factory
@@ -85,7 +86,7 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 
 		// this map keeps the both sides of each line as an object holding the
 		// end point and the line.
-		var sharedPointsMap = new SharedPointsMap<P>();
+		var sharedPointsMap = new SharedPointsMap<P>(factory);
 
 		// build a map and set keyPoint
 		for (var byX : xOrderHash) {
@@ -94,9 +95,9 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 				if (xyPoints.isEmpty()) {
 					continue;
 				}
-				P point0 = xyPoints.get(0);
-				sharedPointsMap.put(point0.getPoint(), xyPoints);
-				xyPoints.forEach(p -> p.setKeyPoint(point0.getPoint()));
+				var keyPoint = xyPoints.get(0).getPoint();
+				sharedPointsMap.put(keyPoint, xyPoints);
+				xyPoints.forEach(p -> p.setKeyPoint(keyPoint));
 			}
 		}
 

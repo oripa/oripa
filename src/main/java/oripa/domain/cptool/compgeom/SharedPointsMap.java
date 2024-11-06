@@ -19,8 +19,11 @@
 package oripa.domain.cptool.compgeom;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.BiFunction;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +33,19 @@ import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
 /**
+ * Create this instance via {@link SharedPointsMapFactory}.
+ *
  * @author OUCHI Koji
  *
  */
 public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, ArrayList<P>> {
 	private static final Logger logger = LoggerFactory.getLogger(SharedPointsMap.class);
 
-	public SharedPointsMap() {
+	private final BiFunction<OriPoint, OriLine, P> factory;
+
+	SharedPointsMap(final BiFunction<OriPoint, OriLine, P> factory) {
 		super();
+		this.factory = factory;
 	}
 
 	private boolean validateKeyPoints(final OriPoint keyPoint,
@@ -92,7 +100,7 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 			return oppositeKeyPointOpt;
 		}
 
-		return this.keySet().parallelStream()
+		return keySet().parallelStream()
 				.filter(opposite -> validateKeyPoints(keyPoint, opposite, point.getLine(), eps))
 				.findFirst()
 				.map(opposite -> {
@@ -100,6 +108,33 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 							+ " oppositeKeyPoint: " + opposite);
 					return opposite;
 				});
+	}
+
+	public void removeBothSides(final P point) {
+		get(point.getKeyPoint()).remove(point);
+		get(point.getOppositeKeyPoint()).remove(point);
+	}
+
+	public void addBothSidesOfLine(
+			final OriLine line,
+			final double pointEps) {
+		var keyPoints = List.of(
+				findKeyPoint(line.getOriPoint0(), pointEps),
+				findKeyPoint(line.getOriPoint1(), pointEps));
+
+		var endPoints = keyPoints.stream()
+				.map(keyPoint -> factory.apply(keyPoint, line))
+				.toList();
+
+		endPoints.get(0).setKeyPoint(keyPoints.get(0));
+		endPoints.get(0).setOppositeKeyPoint(keyPoints.get(1));
+		endPoints.get(1).setKeyPoint(keyPoints.get(1));
+		endPoints.get(1).setOppositeKeyPoint(keyPoints.get(0));
+
+		IntStream.range(0, endPoints.size()).forEach(i -> {
+			get(keyPoints.get(i)).add(endPoints.get(i));
+		});
+
 	}
 
 }
