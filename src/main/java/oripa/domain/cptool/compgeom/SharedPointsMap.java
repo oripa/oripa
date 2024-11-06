@@ -38,7 +38,7 @@ import oripa.value.OriPoint;
  * @author OUCHI Koji
  *
  */
-public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, ArrayList<P>> {
+public class SharedPointsMap<P extends PointAndOriLine> extends TreeMap<OriPoint, ArrayList<P>> {
 	private static final Logger logger = LoggerFactory.getLogger(SharedPointsMap.class);
 
 	private final BiFunction<OriPoint, OriLine, P> factory;
@@ -62,12 +62,11 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 		return false;
 	}
 
-	private Optional<OriPoint> findOppositeCandidate(final OriLine line, final OriPoint keyPoint,
+	private Optional<OriPoint> findOppositeCandidate(final P point, final OriPoint keyPoint,
 			final double eps) {
-		var oppositeKeyPoint = line.getP0().equals(keyPoint, eps)
-				? findKeyPoint(line.getOriPoint1(), eps)
-				: findKeyPoint(line.getOriPoint0(), eps);
+		var oppositeKeyPoint = findKeyPoint(point.getOppsitePoint(keyPoint, eps), eps);
 
+		var line = point.getLine();
 		if (validateKeyPoints(keyPoint, oppositeKeyPoint, line, eps)) {
 			return Optional.of(oppositeKeyPoint);
 		} else {
@@ -95,7 +94,7 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 	public Optional<OriPoint> findOppositeKeyPoint(final P point, final OriPoint keyPoint,
 			final double eps) {
 
-		var oppositeKeyPointOpt = findOppositeCandidate(point.getLine(), keyPoint, eps);
+		var oppositeKeyPointOpt = findOppositeCandidate(point, keyPoint, eps);
 		if (oppositeKeyPointOpt.isPresent()) {
 			return oppositeKeyPointOpt;
 		}
@@ -110,11 +109,23 @@ public class SharedPointsMap<P extends PointAndLine> extends TreeMap<OriPoint, A
 				});
 	}
 
+	/**
+	 * Removes {@code point} from this object using the effect of OriLine-only
+	 * comparison of {@link PointAndOriLine#equals(Object)}.
+	 *
+	 * @param point
+	 */
 	public void removeBothSides(final P point) {
 		get(point.getKeyPoint()).remove(point);
 		get(point.getOppositeKeyPoint()).remove(point);
 	}
 
+	/**
+	 * Adds both sides of given {@code line} to this object.
+	 *
+	 * @param line
+	 * @param pointEps
+	 */
 	public void addBothSidesOfLine(
 			final OriLine line,
 			final double pointEps) {

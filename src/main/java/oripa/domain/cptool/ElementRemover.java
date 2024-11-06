@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.domain.cptool.compgeom.PointAndLine;
+import oripa.domain.cptool.compgeom.PointAndOriLine;
 import oripa.domain.cptool.compgeom.SharedPointsMapFactory;
 import oripa.util.StopWatch;
 import oripa.util.collection.CollectionUtil;
@@ -93,13 +93,13 @@ public class ElementRemover {
 	}
 
 	private Optional<OriLine> merge2LinesAt(
-			final Vector2d connectionPoint, final ArrayList<PointAndLine> sharedPoints,
+			final Vector2d connectionPoint, final ArrayList<PointAndOriLine> sharedPoints,
 			final Collection<OriLine> creasePattern, final double pointEps) {
 
 		return merge2LinesAt(
 				connectionPoint,
 				sharedPoints.stream()
-						.map(PointAndLine::getLine)
+						.map(PointAndOriLine::getLine)
 						.toList(),
 				creasePattern, pointEps);
 	}
@@ -148,15 +148,15 @@ public class ElementRemover {
 
 		// this map keeps the both sides of each line as an object holding the
 		// end point and the line.
-		var mapFactory = new SharedPointsMapFactory<PointAndLine>();
+		var mapFactory = new SharedPointsMapFactory<PointAndOriLine>();
 		var sharedPointsMap = mapFactory.create(creasePattern,
-				PointAndLine::new, pointEps);
+				PointAndOriLine::new, pointEps);
 
 		// try merge for each line group connected at the key of the map
 		sharedPointsMap.forEach((shared, sharedPoints) -> {
 			trace("sharedLines@" + shared + ": " + "#=" + sharedPoints.size(),
 					sharedPoints.stream()
-							.map(s -> s.getLine())
+							.map(PointAndOriLine::getLine)
 							.toList());
 
 			if (removedLinePoints != null) {
@@ -173,22 +173,25 @@ public class ElementRemover {
 
 				logger.trace("can merge at: " + shared);
 			}
-			var mergedLineOpt = merge2LinesAt(shared, sharedPoints, creasePattern, pointEps);
+			var mergeResultOpt = merge2LinesAt(shared, sharedPoints, creasePattern, pointEps);
 
-			mergedLineOpt.ifPresent(mergedLine -> {
+			mergeResultOpt.ifPresent(mergeResult -> {
 				// if the lines are merged, the consumed old lines have to be
 				// deleted from the map and the new merged line has to be added
 				// to the map.
 
+				if (sharedPoints.size() != 2) {
+					throw new IllegalStateException(
+							"sharedPoints should contain exactly two elements if merge happens.");
+				}
+
 				var points = List.of(sharedPoints.get(0), sharedPoints.get(1));
 
 				// remove old lines
-				points.forEach(point -> {
-					sharedPointsMap.removeBothSides(point);
-				});
+				points.forEach(sharedPointsMap::removeBothSides);
 
 				// add merged line
-				sharedPointsMap.addBothSidesOfLine(mergedLine, pointEps);
+				sharedPointsMap.addBothSidesOfLine(mergeResult, pointEps);
 			});
 		});
 
@@ -208,11 +211,11 @@ public class ElementRemover {
 			final Collection<OriLine> creasePattern, final double pointEps) {
 		var watch = new StopWatch(true);
 
-		linesToBeRemoved.forEach(creasePattern::remove);
+		creasePattern.removeAll(linesToBeRemoved);
 
 		var removedPoints = linesToBeRemoved.stream()
-				.flatMap(line -> line.oriPointStream())
-				.collect(Collectors.toCollection(() -> new TreeSet<>()));
+				.flatMap(OriLine::oriPointStream)
+				.collect(Collectors.toCollection(TreeSet::new));
 
 		// merge lines after removing all lines to be removed.
 		// merging while removing makes some lines not to be removed.

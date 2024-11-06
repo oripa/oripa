@@ -22,21 +22,27 @@ import oripa.value.OriLine;
 import oripa.value.OriPoint;
 
 /**
- * For efficient computation. keyPoint0 is an OriPoint for the end point as a
- * key of SharedPointsMap. keyPoint1 is the one for the opposite side.
+ * For efficient computation. keyPoint is an OriPoint for the end point as a key
+ * of SharedPointsMap. oppositeKeyPoint is the one for the opposite side.
+ * Equality comparison between instances of this class is done by only
+ * {@link OriLine}'s equality.
  *
  * @author OUCHI Koji
  *
  */
-public class PointAndLine {
+public class PointAndOriLine {
 	private final OriPoint point;
 	private OriPoint keyPoint;
-	private OriPoint oppositKeyPoint;
+	private OriPoint oppositeKeyPoint;
 	private final OriLine line;
 
-	public PointAndLine(final OriPoint point, final OriLine line) {
+	public PointAndOriLine(final OriPoint point, final OriLine line) {
 		this.point = point;
 		this.line = line;
+
+		if (line.pointStream().noneMatch(point::equals)) {
+			throw new IllegalArgumentException("point should be equal to the one of the segment end point.");
+		}
 	}
 
 	/**
@@ -44,6 +50,10 @@ public class PointAndLine {
 	 */
 	public OriPoint getPoint() {
 		return point;
+	}
+
+	public OriPoint getOppsitePoint(final OriPoint p, final double eps) {
+		return p.equals(line.getOriPoint0(), eps) ? line.getOriPoint1() : line.getOriPoint0();
 	}
 
 	/**
@@ -80,7 +90,7 @@ public class PointAndLine {
 	 * @return keyPoint
 	 */
 	public OriPoint getOppositeKeyPoint() {
-		return oppositKeyPoint;
+		return oppositeKeyPoint;
 	}
 
 	/**
@@ -88,27 +98,16 @@ public class PointAndLine {
 	 *            Sets keyPoint
 	 */
 	public void setOppositeKeyPoint(final OriPoint keyPoint) {
-		this.oppositKeyPoint = keyPoint;
+		this.oppositeKeyPoint = keyPoint;
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((line == null) ? 0 : line.hashCode());
-		result = prime * result + ((point == null) ? 0 : point.hashCode());
-		return result;
+		return line.hashCode();
 	}
 
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * This comparison cares the {@link OriLine} equality only.
 	 */
 	@Override
 	public boolean equals(final Object obj) {
@@ -118,24 +117,17 @@ public class PointAndLine {
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		PointAndLine other = (PointAndLine) obj;
-		if (line == null) {
-			if (other.line != null) {
+
+		if (obj instanceof PointAndOriLine other) {
+			if (line == null) {
+				if (other.line != null) {
+					return false;
+				}
+			} else if (!line.equals(other.line)) {
 				return false;
 			}
-		} else if (!line.equals(other.line)) {
-			return false;
+
 		}
-//			if (point == null) {
-//				if (other.point != null) {
-//					return false;
-//				}
-//			} else if (!point.equals(other.point)) {
-//				return false;
-//			}
 		return true;
 	}
 

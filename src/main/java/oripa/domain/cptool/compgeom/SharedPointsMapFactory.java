@@ -34,7 +34,7 @@ import oripa.value.OriPoint;
  * @author OUCHI Koji
  *
  */
-public class SharedPointsMapFactory<P extends PointAndLine> {
+public class SharedPointsMapFactory<P extends PointAndOriLine> {
 	private static final Logger logger = LoggerFactory.getLogger(SharedPointsMapFactory.class);
 
 	private ArrayList<P> createXOrderPoints(
@@ -47,7 +47,7 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 			points.add(factory.apply(line.getOriPoint1(), line));
 		}
 
-		points.sort(Comparator.comparing(PointAndLine::getX));
+		points.sort(Comparator.comparing(PointAndOriLine::getX));
 
 		return points;
 	}
@@ -73,7 +73,7 @@ public class SharedPointsMapFactory<P extends PointAndLine> {
 		// (sweep along x axis)
 
 		var canonicalLines = creasePattern.stream()
-				.map(line -> line.createCanonical())
+				.map(OriLine::createCanonical)
 				.collect(Collectors.toCollection(ArrayList::new));
 
 		var xOrderPoints = createXOrderPoints(canonicalLines, factory);
