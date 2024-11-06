@@ -110,14 +110,14 @@ public class SharedPointsMap<P extends PointAndOriLine> extends TreeMap<OriPoint
 	}
 
 	/**
-	 * Removes {@code point} from this object using the effect of OriLine-only
-	 * comparison of {@link PointAndOriLine#equals(Object)}.
+	 * Removes {@code point} and its opposite from this object using OriLine
+	 * quality.
 	 *
 	 * @param point
 	 */
 	public void removeBothSides(final P point) {
-		get(point.getKeyPoint()).remove(point);
-		get(point.getOppositeKeyPoint()).remove(point);
+		get(point.getKeyPoint()).removeIf(point::lineEquals);
+		get(point.getOppositeKeyPoint()).removeIf(point::lineEquals);
 	}
 
 	/**

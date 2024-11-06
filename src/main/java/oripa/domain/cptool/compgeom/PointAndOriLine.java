@@ -101,6 +101,10 @@ public class PointAndOriLine {
 		this.oppositeKeyPoint = keyPoint;
 	}
 
+	public boolean lineEquals(final PointAndOriLine other) {
+		return line.equals(other.line);
+	}
+
 	@Override
 	public int hashCode() {
 		return line.hashCode();
