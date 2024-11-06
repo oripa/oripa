@@ -68,10 +68,11 @@ class VerticesManager implements NearVerticesGettable {
 	}
 
 	/**
-	 * [div_x][div_y] is a vertices in the divided area.
+	 * [div_x][div_y] is a set of vertices in the divided area.
 	 */
 	@SuppressWarnings("unchecked")
 	private final Set<Vector2d>[][] vertices = new Set[divNum][divNum];
+
 	/**
 	 * count existence of same values.
 	 */
@@ -80,14 +81,10 @@ class VerticesManager implements NearVerticesGettable {
 	/**
 	 * Constructor to initialize fields.
 	 *
-	 * @param paperSize
-	 *            paper size in double.
-	 * @param paperLeft
-	 *            the smaller x coordinate of the corners of the rectangle sheet
-	 *            of paper
-	 * @param paperTop
-	 *            the smaller y coordinate of the corners of the rectangle sheet
-	 *            of paper
+	 * @param domain
+	 *            rectangle domain that will include vertices to be managed.
+	 *            Degradation of performance will happen if many vertices are
+	 *            out of the domain.
 	 */
 	public VerticesManager(final RectangleDomain domain) {
 		this.domain = domain;
@@ -150,7 +147,7 @@ class VerticesManager implements NearVerticesGettable {
 	 * add given vertex to appropriate area.
 	 *
 	 * @param v
-	 *            vertex to be managed by this class.
+	 *            vertex to be managed by this object.
 	 */
 	public void add(final Vector2d v) {
 
@@ -173,7 +170,7 @@ class VerticesManager implements NearVerticesGettable {
 	}
 
 	/**
-	 * remove the given vertex from this class.
+	 * remove the given vertex from this object.
 	 *
 	 * @param v
 	 */
