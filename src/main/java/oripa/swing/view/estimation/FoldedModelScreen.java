@@ -268,8 +268,8 @@ public class FoldedModelScreen extends JPanel
 
 		var distortionResult = distortion.apply(origamiModel, overlapRelation, converter, vertexDepths, eps);
 
-		var faces = distortionResult.getFaces();
-		var interpolatedOverlapRelation = distortionResult.getInterpolatedOverlapRelation();
+		var faces = distortionResult.faces();
+		var interpolatedOverlapRelation = distortionResult.interpolatedOverlapRelation();
 
 		pixelRenderer.render(faces, interpolatedOverlapRelation, origamiModel.createPaperDomain(),
 				new FoldedModelPixelRenderer.Option()

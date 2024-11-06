@@ -77,8 +77,8 @@ public class FoldedModelPictureExporter implements Exporter<FoldedModelEntity> {
 		var distortionResult = distortion.apply(origamiModel, overlapRelation,
 				converter, config.getVertexDepths(), config.getEps());
 
-		var faces = distortionResult.getFaces();
-		var interpolatedOverlapRelation = distortionResult.getInterpolatedOverlapRelation();
+		var faces = distortionResult.faces();
+		var interpolatedOverlapRelation = distortionResult.interpolatedOverlapRelation();
 
 		pixelRenderer.render(faces, interpolatedOverlapRelation, origamiModel.createPaperDomain(),
 				rendererOption);

@@ -18,6 +18,7 @@
  */
 package oripa.renderer.estimation;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -33,22 +34,9 @@ import oripa.vecmath.Vector2d;
  */
 public class Distortion {
 
-	public static class Result {
-		private final List<Face> faces;
-		private final OverlapRelation interpolatedOverlapRelation;
-
-		public Result(final List<Face> faces, final OverlapRelation interpolatedOverlapRelation) {
-			this.faces = faces;
-			this.interpolatedOverlapRelation = interpolatedOverlapRelation;
-		}
-
-		public List<Face> getFaces() {
-			return faces;
-		}
-
-		public OverlapRelation getInterpolatedOverlapRelation() {
-			return interpolatedOverlapRelation;
-		}
+	public record Result(
+			List<Face> faces,
+			OverlapRelation interpolatedOverlapRelation) {
 	}
 
 	private final RectangleDomain modelDomain;
@@ -101,6 +89,6 @@ public class Distortion {
 
 		var interpolated = new OverlapRelationInterpolater().interpolate(overlapRelation, faces, eps);
 
-		return new Result(faces, interpolated);
+		return new Result(Collections.unmodifiableList(faces), interpolated);
 	}
 }

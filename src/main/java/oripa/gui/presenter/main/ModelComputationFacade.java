@@ -79,20 +79,19 @@ public class ModelComputationFacade {
 		}
 	}
 
-	public class ComputationResult {
-		private final List<OrigamiModel> origamiModels;
-		private final List<FoldedModel> foldedModels;
-		private final List<EstimationResultRules> estimationRules;
+	public record ComputationResult(
+			List<OrigamiModel> origamiModels,
+			List<FoldedModel> foldedModels,
+			List<EstimationResultRules> estimationRules
 
-		public ComputationResult(final List<OrigamiModel> origamiModels, final List<FoldedModel> foldedModels,
+	) {
+		public ComputationResult(
+				final List<OrigamiModel> origamiModels,
+				final List<FoldedModel> foldedModels,
 				final List<EstimationResultRules> estimationRules) {
-			this.origamiModels = origamiModels;
-			this.foldedModels = foldedModels;
-			this.estimationRules = estimationRules;
-		}
-
-		public List<OrigamiModel> getOrigamiModels() {
-			return Collections.unmodifiableList(origamiModels);
+			this.origamiModels = Collections.unmodifiableList(origamiModels);
+			this.foldedModels = Collections.unmodifiableList(foldedModels);
+			this.estimationRules = Collections.unmodifiableList(estimationRules);
 		}
 
 		/**
@@ -125,7 +124,8 @@ public class ModelComputationFacade {
 			return merged;
 		}
 
-		public List<FoldedModel> getFoldedModels() {
+		@Override
+		public List<FoldedModel> foldedModels() {
 			if (foldedModels == null) {
 				return List.of();
 			}
@@ -180,8 +180,8 @@ public class ModelComputationFacade {
 				.map(model -> folderFactory.create(model.getModelType()).fold(model, eps, type.toEstimationType()))
 				.toList();
 
-		var foldedModels = foldResults.stream().map(Folder.Result::getFoldedModel).toList();
-		var estimationRules = foldResults.stream().map(Folder.Result::getEstimationResultRules).toList();
+		var foldedModels = foldResults.stream().map(Folder.Result::foldedModel).toList();
+		var estimationRules = foldResults.stream().map(Folder.Result::estimationRules).toList();
 
 		return new ComputationResult(origamiModels, foldedModels, estimationRules);
 	}

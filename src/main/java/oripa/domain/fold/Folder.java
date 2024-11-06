@@ -31,22 +31,11 @@ public interface Folder {
 		X_RAY
 	}
 
-	static class Result {
-		private final FoldedModel foldedModel;
-		private final EstimationResultRules estimationRules;
+	record Result(
+			FoldedModel foldedModel,
+			EstimationResultRules estimationRules
 
-		Result(final FoldedModel foldedModel, final EstimationResultRules estimationRules) {
-			this.foldedModel = foldedModel;
-			this.estimationRules = estimationRules;
-		}
-
-		public FoldedModel getFoldedModel() {
-			return foldedModel;
-		}
-
-		public EstimationResultRules getEstimationResultRules() {
-			return estimationRules;
-		}
+	) {
 	}
 
 	/**
