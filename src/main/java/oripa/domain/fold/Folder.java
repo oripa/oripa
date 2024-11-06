@@ -31,6 +31,13 @@ public interface Folder {
 		X_RAY
 	}
 
+	/**
+	 * The fields are mutable. I know using record for mutable objects is bad
+	 * but it gets very simple...
+	 *
+	 * @author OUCHI Koji
+	 *
+	 */
 	record Result(
 			FoldedModel foldedModel,
 			EstimationResultRules estimationRules

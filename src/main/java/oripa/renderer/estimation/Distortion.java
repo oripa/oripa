@@ -34,9 +34,23 @@ import oripa.vecmath.Vector2d;
  */
 public class Distortion {
 
+	/**
+	 * The {@code faces} is a immutable list but note that the elements are
+	 * mutable. {@code interpolatedOverlapRelation} is also a mutable object.
+	 *
+	 * @author OUCHI Koji
+	 *
+	 */
 	public record Result(
 			List<Face> faces,
 			OverlapRelation interpolatedOverlapRelation) {
+
+		public Result(final List<Face> faces,
+				final OverlapRelation interpolatedOverlapRelation) {
+			this.faces = Collections.unmodifiableList(faces);
+			this.interpolatedOverlapRelation = interpolatedOverlapRelation;
+
+		}
 	}
 
 	private final RectangleDomain modelDomain;

@@ -79,6 +79,13 @@ public class ModelComputationFacade {
 		}
 	}
 
+	/**
+	 * Each field is a immutable list but note that the elements of the lists
+	 * are mutable.
+	 *
+	 * @author OUCHI Koji
+	 *
+	 */
 	public record ComputationResult(
 			List<OrigamiModel> origamiModels,
 			List<FoldedModel> foldedModels,
@@ -122,14 +129,6 @@ public class ModelComputationFacade {
 			}
 
 			return merged;
-		}
-
-		@Override
-		public List<FoldedModel> foldedModels() {
-			if (foldedModels == null) {
-				return List.of();
-			}
-			return Collections.unmodifiableList(foldedModels);
 		}
 
 		public EstimationResultRules getEstimationResultRules() {
