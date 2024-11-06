@@ -68,8 +68,8 @@ public class CommandLineFolder {
 
 			var folder = new FolderFactory().create(origamiModel.getModelType());
 			var foldedModel = any
-					? folder.fold(origamiModel, pointEps, Folder.EstimationType.FIRST_ONLY).getFoldedModel()
-					: folder.fold(origamiModel, pointEps, Folder.EstimationType.FULL).getFoldedModel();
+					? folder.fold(origamiModel, pointEps, Folder.EstimationType.FIRST_ONLY).foldedModel()
+					: folder.fold(origamiModel, pointEps, Folder.EstimationType.FULL).foldedModel();
 
 			if (split) {
 				var digitLength = Integer.toString(foldedModel.getFoldablePatternCount()).length();

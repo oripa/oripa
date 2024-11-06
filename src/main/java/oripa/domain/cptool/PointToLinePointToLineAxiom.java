@@ -136,16 +136,11 @@ public class PointToLinePointToLineAxiom {
 		return (x - p) * (x - p) / (2 * q) + q / 2;
 	}
 
-	private static class Solution {
-		public double slope;
-		public Vector2d xy;
-		public double discriminant;
+	private record Solution(
+			double slope,
+			Vector2d xy,
+			double discriminant) {
 
-		public Solution(final double slope, final Vector2d xy, final double discriminant) {
-			this.slope = slope;
-			this.xy = xy;
-			this.discriminant = discriminant;
-		}
 	}
 
 	/**

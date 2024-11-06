@@ -391,8 +391,8 @@ public class UIPanelPresenter {
 			return;
 		}
 
-		var origamiModels = computationResult.getOrigamiModels();
-		var foldedModels = computationResult.getFoldedModels();
+		var origamiModels = computationResult.origamiModels();
+		var foldedModels = computationResult.foldedModels();
 
 		ModelViewFrameView modelViewFrame = subFrameFactory.createModelViewFrame(parent,
 				view.getPaperDomainOfModelChangeListener());
