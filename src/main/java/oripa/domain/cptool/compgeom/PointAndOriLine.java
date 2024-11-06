@@ -40,10 +40,10 @@ public class PointAndOriLine {
 		this.point = point;
 		this.line = line;
 
-//		if (line.pointStream().noneMatch(point::equals)) {
-//			throw new IllegalArgumentException(
-//					"point " + point + " should be equal to the one of the segment " + line + " end point.");
-//		}
+		if (line.pointStream().noneMatch(point::equals)) {
+			throw new IllegalArgumentException(
+					"point " + point + " should be equal to the one of the segment " + line + " end point.");
+		}
 	}
 
 	/**
