@@ -91,8 +91,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	@Override
 	public void doAction(final PaintContext context, final boolean differntAction) {
 
-		state = state.doAction(context,
-				differntAction);
+		state = state.doAction(context, differntAction);
 
 	}
 
@@ -230,7 +229,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	}
 
 	/**
-	 * Draws the given vertex as an small rectangle.
+	 * Draws the given vertex as a small square.
 	 */
 	protected void drawVertex(final ObjectGraphicDrawer drawer, final CreasePatternViewContext viewContext,
 			final Vector2d vertex) {
