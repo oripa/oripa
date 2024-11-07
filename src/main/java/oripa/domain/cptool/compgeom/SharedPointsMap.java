@@ -19,7 +19,6 @@
 package oripa.domain.cptool.compgeom;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
@@ -129,12 +128,12 @@ public class SharedPointsMap<P extends PointAndOriLine> extends TreeMap<OriPoint
 	public void addBothSidesOfLine(
 			final OriLine line,
 			final double pointEps) {
-		var keyPoints = List.of(
-				findKeyPoint(line.getOriPoint0(), pointEps),
-				findKeyPoint(line.getOriPoint1(), pointEps));
+		var endPoints = line.oriPointStream()
+				.map(point -> factory.apply(point, line))
+				.toList();
 
-		var endPoints = keyPoints.stream()
-				.map(keyPoint -> factory.apply(keyPoint, line))
+		var keyPoints = line.oriPointStream()
+				.map(point -> findKeyPoint(point, pointEps))
 				.toList();
 
 		endPoints.get(0).setKeyPoint(keyPoints.get(0));
