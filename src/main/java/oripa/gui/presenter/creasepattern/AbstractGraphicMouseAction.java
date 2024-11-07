@@ -93,7 +93,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 			final boolean differntAction) {
 
 		state = state.doAction(context,
-				point, differntAction);
+				differntAction);
 
 	}
 

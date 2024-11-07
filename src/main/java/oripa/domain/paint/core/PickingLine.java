@@ -1,7 +1,6 @@
 package oripa.domain.paint.core;
 
 import oripa.domain.paint.PaintContext;
-import oripa.vecmath.Vector2d;
 
 /**
  * abstract class specified for picking line.
@@ -22,8 +21,7 @@ public abstract class PickingLine extends AbstractActionState {
 	 */
 
 	@Override
-	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
-			final boolean doSpecial) {
+	protected boolean onAct(final PaintContext context, final boolean doSpecial) {
 		var pickedOpt = context.getCandidateLineToPick();
 
 		pickedOpt.ifPresent(context::pushLine);
