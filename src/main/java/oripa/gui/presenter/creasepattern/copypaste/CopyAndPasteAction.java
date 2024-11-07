@@ -59,9 +59,8 @@ public class CopyAndPasteAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public void doAction(final PaintContext context, final Vector2d point,
-			final boolean differentAction) {
-		action.doAction(context, point, differentAction);
+	public void doAction(final PaintContext context, final boolean differentAction) {
+		action.doAction(context, differentAction);
 	}
 
 	@Override

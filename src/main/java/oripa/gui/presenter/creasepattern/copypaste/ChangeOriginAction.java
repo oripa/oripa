@@ -33,8 +33,7 @@ public class ChangeOriginAction extends AbstractGraphicMouseAction {
 	}
 
 	@Override
-	public void doAction(final PaintContext context, final Vector2d point,
-			final boolean differntAction) {
+	public void doAction(final PaintContext context, final boolean differntAction) {
 
 	}
 

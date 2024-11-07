@@ -89,8 +89,7 @@ public abstract class AbstractGraphicMouseAction implements GraphicMouseAction {
 	}
 
 	@Override
-	public void doAction(final PaintContext context, final Vector2d point,
-			final boolean differntAction) {
+	public void doAction(final PaintContext context, final boolean differntAction) {
 
 		state = state.doAction(context,
 				differntAction);
