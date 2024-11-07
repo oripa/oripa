@@ -1,7 +1,6 @@
 package oripa.domain.paint.core;
 
 import oripa.domain.paint.PaintContext;
-import oripa.vecmath.Vector2d;
 
 /**
  * abstract class specified for picking vertex.
@@ -21,8 +20,7 @@ public abstract class PickingVertex extends AbstractActionState {
 	 */
 
 	@Override
-	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
-			final boolean freeSelection) {
+	protected boolean onAct(final PaintContext context, final boolean freeSelection) {
 		var pickedOpt = context.getCandidateVertexToPick();
 
 		pickedOpt.ifPresent(context::pushVertex);

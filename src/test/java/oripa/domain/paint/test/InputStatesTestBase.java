@@ -49,13 +49,13 @@ public class InputStatesTestBase {
 	protected void doAction(final Vector2d candidate) {
 		cpLineCount = context.getCreasePattern().size();
 		context.setCandidateVertexToPick(candidate);
-		state = state.doAction(context, null, false);
+		state = state.doAction(context, false);
 	}
 
 	protected void doAction(final OriLine candidate) {
 		cpLineCount = context.getCreasePattern().size();
 		context.setCandidateLineToPick(candidate);
-		state = state.doAction(context, null, false);
+		state = state.doAction(context, false);
 
 	}
 

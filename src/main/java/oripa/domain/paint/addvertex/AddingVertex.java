@@ -2,7 +2,6 @@ package oripa.domain.paint.addvertex;
 
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.PickingVertex;
-import oripa.vecmath.Vector2d;
 
 public class AddingVertex extends PickingVertex {
 	@Override
@@ -11,10 +10,9 @@ public class AddingVertex extends PickingVertex {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContext context, final Vector2d currentPoint,
-			final boolean freeSelection) {
+	protected boolean onAct(final PaintContext context, final boolean freeSelection) {
 
-		boolean result = super.onAct(context, currentPoint, true);
+		boolean result = super.onAct(context, true);
 
 		if (result == true) {
 			var lineOpt = context.getCandidateLineToPick();

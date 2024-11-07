@@ -21,7 +21,6 @@ package oripa.domain.paint.p2lp2l;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.core.AbstractActionState;
 import oripa.domain.paint.core.SnapPointFactory;
-import oripa.vecmath.Vector2d;
 
 /**
  * @author OUCHI Koji
@@ -37,7 +36,7 @@ public class SelectingSolutionLine extends AbstractActionState {
 	}
 
 	@Override
-	protected boolean onAct(final PaintContext context, final Vector2d currentPoint, final boolean doSpecial) {
+	protected boolean onAct(final PaintContext context, final boolean doSpecial) {
 		var solutionOpt = context.getSolutionLineToPick();
 		if (solutionOpt.isPresent()) {
 			return true;

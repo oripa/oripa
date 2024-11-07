@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import oripa.domain.paint.ActionState;
 import oripa.domain.paint.PaintContext;
-import oripa.vecmath.Vector2d;
 
 /**
  * a framework of (modified) State pattern with undo, which can get back to
@@ -34,8 +33,8 @@ public abstract class AbstractActionState implements ActionState {
 
 	/**
 	 * Set next state class and previous state class here. If you do nothing,
-	 * {@link #doAction(PaintContext, Vector2d, boolean)} and
-	 * {@link #undo(PaintContext)} will return {@code this} object.
+	 * {@link #doAction(PaintContext, boolean)} and {@link #undo(PaintContext)}
+	 * will return {@code this} object.
 	 */
 	protected abstract void initialize();
 
@@ -56,9 +55,9 @@ public abstract class AbstractActionState implements ActionState {
 	 */
 	@Override
 	public final ActionState doAction(final PaintContext context,
-			final Vector2d currentPoint, final boolean doSpecial) {
+			final boolean doSpecial) {
 
-		boolean success = onAct(context, currentPoint, doSpecial);
+		boolean success = onAct(context, doSpecial);
 
 		if (!success) {
 			return this;
@@ -84,15 +83,12 @@ public abstract class AbstractActionState implements ActionState {
 	 *
 	 * @param context
 	 *            storage for user interaction
-	 * @param currentPoint
-	 *            Deprecated. This will be deleted in the future release.
 	 * @param doSpecial
 	 *            true if action should be changed.
 	 * @return true if the action succeeded and should return the next state,
 	 *         otherwise false.
 	 */
-	protected abstract boolean onAct(PaintContext context,
-			Vector2d currentPoint, boolean doSpecial);
+	protected abstract boolean onAct(PaintContext context, boolean doSpecial);
 
 	/**
 	 * cancel the current actions and returns previous state.

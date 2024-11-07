@@ -58,7 +58,7 @@ public interface GraphicMouseAction {
 
 	/**
 	 * Performs action. The default implementation calls
-	 * {@link #doAction(PaintContext, Vector2d, boolean)}.
+	 * {@link #doAction(PaintContext, boolean)}.
 	 *
 	 * @param viewContext
 	 * @param paintContext
@@ -69,9 +69,8 @@ public interface GraphicMouseAction {
 	default GraphicMouseAction onLeftClick(
 			final CreasePatternViewContext viewContext, final PaintContext paintContext,
 			final boolean differentAction) {
-		var clickPoint = viewContext.getLogicalMousePoint();
 
-		doAction(paintContext, clickPoint, differentAction);
+		doAction(paintContext, differentAction);
 		return this;
 	}
 
@@ -79,12 +78,9 @@ public interface GraphicMouseAction {
 	 * Do the action for left click.
 	 *
 	 * @param context
-	 * @param point
-	 *            the point that button is clicked at.
 	 * @param differntAction
 	 */
-	abstract void doAction(PaintContext context, Vector2d point,
-			boolean differntAction);
+	abstract void doAction(PaintContext context, boolean differntAction);
 
 	/**
 	 * Does undo action. The default implementation calls
