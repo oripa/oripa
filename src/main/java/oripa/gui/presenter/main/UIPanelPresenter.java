@@ -107,7 +107,7 @@ public class UIPanelPresenter {
 			final ViewUpdateSupport viewUpdateSupport,
 			final CreasePatternPresentationContext presentationContext,
 			final PaintDomainContext domainContext,
-			final CutModelOutlinesHolder cutOutlinesHolder,
+			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final BindingObjectFactoryFacade bindingFactory,
 			final PainterScreenSetting mainScreenSetting) {
 		this.view = view;
@@ -127,7 +127,7 @@ public class UIPanelPresenter {
 		this.bindingFactory = bindingFactory;
 
 		this.mainScreenSetting = mainScreenSetting;
-		this.cutOutlinesHolder = cutOutlinesHolder;
+		this.cutOutlinesHolder = cutModelOutlinesHolder;
 
 		Stream.of(alterLineComboDataFrom).forEach(item -> view.addItemOfAlterLineComboFrom(item.toString()));
 		Stream.of(alterLineComboDataTo).forEach(item -> view.addItemOfAlterLineComboTo(item.toString()));

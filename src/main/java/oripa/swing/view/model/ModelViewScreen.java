@@ -96,7 +96,6 @@ public class ModelViewScreen extends JPanel
 		addMouseWheelListener(this);
 		addComponentListener(this);
 
-//		scissorsLine = new OriLine();
 		scale = 1.0;
 		rotateAngle = 0;
 		setBackground(Color.white);

@@ -34,6 +34,7 @@ import oripa.application.main.IniFileAccess;
 import oripa.application.main.PaintContextModification;
 import oripa.appstate.StatePopperFactory;
 import oripa.doc.Doc;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.exception.UserCanceledException;
@@ -100,6 +101,7 @@ public class MainFramePresenter {
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
 	private final MouseActionHolder actionHolder;
+	private final CutModelOutlinesHolder cutModelOutlinesHolder;
 
 	// data access
 	private final IniFileAccess iniFileAccess;
@@ -119,6 +121,7 @@ public class MainFramePresenter {
 			final BindingObjectFactoryFacade bindingFactory,
 			final Doc document,
 			final PaintDomainContext domainContext,
+			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final CreasePatternPresentationContext presentationContext,
 			final StatePopperFactory<EditMode> statePopperFactory,
 			final FileHistory fileHistory,
@@ -136,6 +139,8 @@ public class MainFramePresenter {
 		this.document = document;
 		this.paintContext = domainContext.getPaintContext();
 		this.viewContext = presentationContext.getViewContext();
+		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
+
 		this.actionHolder = presentationContext.getActionHolder();
 		this.statePopperFactory = statePopperFactory;
 		this.fileHistory = fileHistory;
@@ -154,7 +159,7 @@ public class MainFramePresenter {
 				viewUpdateSupport,
 				presentationContext,
 				paintContext,
-				document);
+				cutModelOutlinesHolder);
 
 		uiPanelPresenter = new UIPanelPresenter(
 				uiPanel,
@@ -164,7 +169,7 @@ public class MainFramePresenter {
 				viewUpdateSupport,
 				presentationContext,
 				domainContext,
-				document,
+				cutModelOutlinesHolder,
 				bindingFactory,
 				screenSetting);
 
@@ -408,7 +413,7 @@ public class MainFramePresenter {
 		document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
 
 		paintContextModification
-				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext);
+				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext, cutModelOutlinesHolder);
 
 		screenSetting.setGridVisible(true);
 
@@ -603,7 +608,7 @@ public class MainFramePresenter {
 						screenSetting.setGridVisible(false);
 						paintContextModification
 								.setCreasePatternToPaintContext(
-										document.getCreasePattern(), paintContext);
+										document.getCreasePattern(), paintContext, cutModelOutlinesHolder);
 						screenPresenter.updateCameraCenter();
 						return document.getDataFilePath();
 					}).orElse(null);

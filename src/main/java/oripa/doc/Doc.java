@@ -19,14 +19,10 @@
 package oripa.doc;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.CreasePatternHolder;
-import oripa.value.OriLine;
 
 /**
  * Manages all result of this app's action.
@@ -34,14 +30,12 @@ import oripa.value.OriLine;
  * @author Koji
  *
  */
-public class Doc implements CutModelOutlinesHolder, CreasePatternHolder {
+public class Doc implements CreasePatternHolder {
 
 	/**
 	 * Crease Pattern
 	 */
 	private CreasePattern creasePattern = null;
-
-	private Collection<OriLine> outlines = new ArrayList<OriLine>();
 
 	/**
 	 * Project data
@@ -59,8 +53,6 @@ public class Doc implements CutModelOutlinesHolder, CreasePatternHolder {
 	public void set(final Doc doc) {
 		setCreasePattern(doc.getCreasePattern());
 		setProperty(doc.getProperty());
-
-		outlines = doc.getOutlines();
 	}
 
 	private void initialize(final double size) {
@@ -85,29 +77,6 @@ public class Doc implements CutModelOutlinesHolder, CreasePatternHolder {
 	}
 
 	// ===================================================================================================
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.cutmodel.SheetCutOutlinesHolder#updateSheetCutOutlines(oripa
-	 * .value.OriLine)
-	 */
-	@Override
-	public void setOutlines(final Collection<OriLine> outlines) {
-		this.outlines = outlines;
-	}
-
-	/*
-	 * (non Javadoc)
-	 *
-	 * @see
-	 * oripa.domain.cutmodel.doc.SheetCutOutlinesHolder#getSheetCutOutlines()
-	 */
-	@Override
-	public Collection<OriLine> getOutlines() {
-		return outlines;
-	}
 
 	@Override
 	public CreasePattern getCreasePattern() {

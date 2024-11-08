@@ -19,8 +19,10 @@
 package oripa.application.main;
 
 import java.util.Collection;
+import java.util.List;
 
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.cutmodel.CutModelOutlinesHolder;
 import oripa.domain.paint.PaintContext;
 import oripa.value.OriLine;
 
@@ -39,10 +41,11 @@ public class PaintContextModification {
 	 * @param paintContext
 	 */
 	public void setCreasePatternToPaintContext(final CreasePattern creasePattern,
-			final PaintContext paintContext) {
+			final PaintContext paintContext, final CutModelOutlinesHolder cutModelOutlinesHolder) {
 		paintContext.clear(true);
 		paintContext.setCreasePattern(creasePattern);
 		paintContext.creasePatternUndo().clear();
+		cutModelOutlinesHolder.setOutlines(List.of());
 	}
 
 	public void setToImportedLines(final Collection<OriLine> lines, final PaintContext paintContext) {
