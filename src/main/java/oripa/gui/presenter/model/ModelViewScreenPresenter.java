@@ -40,7 +40,6 @@ public class ModelViewScreenPresenter {
 
 	private final ModelViewScreenView view;
 
-	// private OrigamiModel origamiModel;
 	private OriLine scissorsLine = null;
 
 	private final CutModelOutlinesHolder lineHolder;
