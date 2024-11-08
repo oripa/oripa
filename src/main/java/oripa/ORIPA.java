@@ -29,6 +29,7 @@ import oripa.application.main.IniFileAccess;
 import oripa.appstate.StatePopperFactory;
 import oripa.cli.CommandLineInterfaceMain;
 import oripa.doc.Doc;
+import oripa.domain.cutmodel.DefaultCutModelOutlinesHolder;
 import oripa.domain.paint.PaintContextFactory;
 import oripa.domain.paint.PaintDomainContext;
 import oripa.domain.paint.byvalue.ByValueContextImpl;
@@ -172,6 +173,7 @@ public class ORIPA {
 					bindingFactory,
 					new Doc(paintContext.getCreasePattern()),
 					domainContext,
+					new DefaultCutModelOutlinesHolder(),
 					presentationContext,
 					statePopperFactory,
 					new FileHistory(Constants.MRUFILE_NUM),
