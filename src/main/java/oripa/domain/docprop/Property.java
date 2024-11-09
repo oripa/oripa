@@ -58,8 +58,9 @@ public class Property {
 	 * @param title
 	 *            Sets title
 	 */
-	public void setTitle(final String title) {
+	public Property setTitle(final String title) {
 		this.title = title;
+		return this;
 	}
 
 	/**
@@ -73,8 +74,9 @@ public class Property {
 	 * @param editorName
 	 *            Sets editorName
 	 */
-	public void setEditorName(final String editorName) {
+	public Property setEditorName(final String editorName) {
 		this.editorName = editorName;
+		return this;
 	}
 
 	/**
@@ -88,8 +90,9 @@ public class Property {
 	 * @param originalAuthorName
 	 *            Sets originalAuthorName
 	 */
-	public void setOriginalAuthorName(final String originalAuthorName) {
+	public Property setOriginalAuthorName(final String originalAuthorName) {
 		this.originalAuthorName = originalAuthorName;
+		return this;
 	}
 
 	/**
@@ -103,8 +106,9 @@ public class Property {
 	 * @param reference
 	 *            Sets reference
 	 */
-	public void setReference(final String reference) {
+	public Property setReference(final String reference) {
 		this.reference = reference;
+		return this;
 	}
 
 	/**
@@ -118,8 +122,9 @@ public class Property {
 	 * @param memo
 	 *            Sets memo
 	 */
-	public void setMemo(final String memo) {
+	public Property setMemo(final String memo) {
 		this.memo = memo;
+		return this;
 	}
 
 	public String extractFrontColorCode() {

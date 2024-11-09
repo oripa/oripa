@@ -54,11 +54,11 @@ public class PropertyDialogPresenter {
 	private void setValuesToDomain() {
 		var prop = new Property();
 
-		prop.setTitle(view.getModelTitle());
-		prop.setEditorName(view.getEditorName());
-		prop.setOriginalAuthorName(view.getOriginalAuthor());
-		prop.setReference(view.getReference());
-		prop.setMemo(view.getMemo());
+		prop.setTitle(view.getModelTitle())
+				.setEditorName(view.getEditorName())
+				.setOriginalAuthorName(view.getOriginalAuthor())
+				.setReference(view.getReference())
+				.setMemo(view.getMemo());
 
 		propertyHolder.setProperty(prop);
 	}

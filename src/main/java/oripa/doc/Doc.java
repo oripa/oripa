@@ -47,22 +47,23 @@ public class Doc implements CreasePatternHolder, PropertyHolder {
 	private String dataFilePath = "";
 
 	public Doc(final double size) {
-		initialize(size);
+		this(new CreasePatternFactory().createCreasePattern(size));
 	}
 
 	public Doc(final CreasePattern creasePattern) {
-		this.creasePattern = creasePattern;
+		this(creasePattern, new Property(), "");
+	}
+
+	public Doc(final CreasePattern creasePattern, final Property property, final String filePath) {
+		setCreasePattern(creasePattern);
+		setProperty(property);
+		setDataFilePath(filePath);
 	}
 
 	public void set(final Doc doc) {
 		setCreasePattern(doc.getCreasePattern());
 		setProperty(doc.getProperty());
 		setDataFilePath(doc.dataFilePath);
-	}
-
-	private void initialize(final double size) {
-
-		creasePattern = (new CreasePatternFactory()).createCreasePattern(size);
 	}
 
 	public void setDataFilePath(final String path) {

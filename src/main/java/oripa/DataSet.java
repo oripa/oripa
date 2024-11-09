@@ -90,21 +90,18 @@ public class DataSet {
 		CreasePattern creasePattern = factory
 				.createCreasePattern(oriLines);
 
-		Doc doc = new Doc(creasePattern);
-		doc.setDataFilePath(filePath);
-
-		doc.setProperty(createProperty());
+		Doc doc = new Doc(creasePattern, createProperty(), filePath);
 
 		return doc;
 	}
 
 	private Property createProperty() {
-		Property property = new Property();
-		property.setTitle(title);
-		property.setEditorName(editorName);
-		property.setOriginalAuthorName(originalAuthorName);
-		property.setReference(reference);
-		property.setMemo(memo);
+		Property property = new Property()
+				.setTitle(title)
+				.setEditorName(editorName)
+				.setOriginalAuthorName(originalAuthorName)
+				.setReference(reference)
+				.setMemo(memo);
 
 		return property;
 	}
