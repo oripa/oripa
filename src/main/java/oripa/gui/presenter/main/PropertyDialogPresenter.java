@@ -52,9 +52,8 @@ public class PropertyDialogPresenter {
 	}
 
 	private void setValuesToDomain() {
-		var prop = new Property();
-
-		prop.setTitle(view.getModelTitle())
+		var prop = new Property()
+				.setTitle(view.getModelTitle())
 				.setEditorName(view.getEditorName())
 				.setOriginalAuthorName(view.getOriginalAuthor())
 				.setReference(view.getReference())

@@ -96,14 +96,12 @@ public class DataSet {
 	}
 
 	private Property createProperty() {
-		Property property = new Property()
+		return new Property()
 				.setTitle(title)
 				.setEditorName(editorName)
 				.setOriginalAuthorName(originalAuthorName)
 				.setReference(reference)
 				.setMemo(memo);
-
-		return property;
 	}
 
 	public void setPaperSize(final double d) {
