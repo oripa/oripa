@@ -18,39 +18,12 @@
  */
 package oripa.util;
 
-import java.util.Objects;
-
 /**
  * @author OUCHI Koji
  *
  */
-public class IntPair {
-	private final int v1;
-	private final int v2;
+public record IntPair(
+		int v1,
+		int v2) {
 
-	public IntPair(final int v1, final int v2) {
-		this.v1 = v1;
-		this.v2 = v2;
-	}
-
-	public int getV1() {
-		return v1;
-	}
-
-	public int getV2() {
-		return v2;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof IntPair o) {
-			return v1 == o.v1 && v2 == o.v2;
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(v1, v2);
-	}
 }

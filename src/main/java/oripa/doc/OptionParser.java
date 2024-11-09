@@ -64,7 +64,7 @@ public class OptionParser {
 	}
 
 	public String createLine(final Pair<String, String> option) {
-		return OPTION_START + option.getV1() + ":" + option.getV2();
+		return OPTION_START + option.v1() + ":" + option.v2();
 	}
 
 	public List<String> createLines(final List<Pair<String, String>> options) {

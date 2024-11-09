@@ -179,14 +179,14 @@ public class Property {
 				.toList();
 
 		var keyValueOpt = parser.parse(optionLines).stream()
-				.filter(option -> option.getV1().equals(key))
+				.filter(option -> option.v1().equals(key))
 				.findFirst();
 
 		if (keyValueOpt.isEmpty()) {
 			return null;
 		}
 
-		return keyValueOpt.get().getV2();
+		return keyValueOpt.get().v2();
 	}
 
 	private void putOption(final String key, final String value) {
@@ -216,7 +216,7 @@ public class Property {
 		boolean updated = false;
 		for (int i = 0; i < options.size(); i++) {
 			var option = options.get(i);
-			if (option.getV1().equals(key)) {
+			if (option.v1().equals(key)) {
 				options.set(i, new Pair<>(key, value));
 				updated = true;
 				break;

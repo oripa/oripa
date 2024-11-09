@@ -33,8 +33,8 @@ class OptionParserTest {
 		var parser = new OptionParser();
 		var option = parser.parse("// test : #008888");
 
-		assertEquals("test", option.getV1());
-		assertEquals("#008888", option.getV2());
+		assertEquals("test", option.v1());
+		assertEquals("#008888", option.v2());
 	}
 
 }

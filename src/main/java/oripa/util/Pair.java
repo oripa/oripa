@@ -18,35 +18,8 @@
  */
 package oripa.util;
 
-import java.util.Objects;
+public record Pair<V1, V2>(
+		V1 v1,
+		V2 v2) {
 
-public class Pair<V1, V2> {
-	private final V1 v1;
-	private final V2 v2;
-
-	public Pair(final V1 v1, final V2 v2) {
-		this.v1 = v1;
-		this.v2 = v2;
-	}
-
-	public V1 getV1() {
-		return v1;
-	}
-
-	public V2 getV2() {
-		return v2;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof Pair o) {
-			return v1.equals(o.v1) && v2.equals(o.v2);
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(v1, v2);
-	}
 }
