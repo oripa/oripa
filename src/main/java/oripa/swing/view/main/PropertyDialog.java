@@ -41,7 +41,8 @@ import oripa.resource.StringID;
 import oripa.swing.view.util.GridBagConstraintsBuilder;
 
 /**
- * Provides JDialog with input fields for {@link oripa.doc.Property} values.
+ * Provides JDialog with input fields for {@link oripa.domain.docprop.Property}
+ * values.
  *
  */
 public class PropertyDialog extends JDialog implements

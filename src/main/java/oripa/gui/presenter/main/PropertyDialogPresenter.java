@@ -19,7 +19,7 @@
 package oripa.gui.presenter.main;
 
 import oripa.doc.Doc;
-import oripa.doc.Property;
+import oripa.domain.docprop.Property;
 import oripa.gui.view.main.PropertyDialogView;
 
 /**
@@ -52,7 +52,7 @@ public class PropertyDialogPresenter {
 	}
 
 	private void setValuesToDomain() {
-		Property prop = new Property(document.getProperty().getDataFilePath());
+		Property prop = new Property();
 
 		prop.setTitle(view.getModelTitle());
 		prop.setEditorName(view.getEditorName());

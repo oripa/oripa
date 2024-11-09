@@ -22,6 +22,8 @@ import java.io.File;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.domain.docprop.Property;
+import oripa.domain.docprop.PropertyHolder;
 import oripa.domain.paint.CreasePatternHolder;
 
 /**
@@ -30,7 +32,7 @@ import oripa.domain.paint.CreasePatternHolder;
  * @author Koji
  *
  */
-public class Doc implements CreasePatternHolder {
+public class Doc implements CreasePatternHolder, PropertyHolder {
 
 	/**
 	 * Crease Pattern
@@ -38,9 +40,11 @@ public class Doc implements CreasePatternHolder {
 	private CreasePattern creasePattern = null;
 
 	/**
-	 * Project data
+	 * Project property
 	 */
-	private Property property = new Property("");
+	private Property property = new Property();
+
+	private String dataFilePath = "";
 
 	public Doc(final double size) {
 		initialize(size);
@@ -53,6 +57,7 @@ public class Doc implements CreasePatternHolder {
 	public void set(final Doc doc) {
 		setCreasePattern(doc.getCreasePattern());
 		setProperty(doc.getProperty());
+		setDataFilePath(doc.dataFilePath);
 	}
 
 	private void initialize(final double size) {
@@ -61,15 +66,15 @@ public class Doc implements CreasePatternHolder {
 	}
 
 	public void setDataFilePath(final String path) {
-		property.setDataFilePath(path);
+		dataFilePath = path;
 	}
 
 	public String getDataFilePath() {
-		return property.getDataFilePath();
+		return dataFilePath;
 	}
 
 	public String getDataFileName() {
-		File file = new File(property.getDataFilePath());
+		File file = new File(dataFilePath);
 		String fileName = file.getName();
 
 		return fileName;
@@ -91,6 +96,7 @@ public class Doc implements CreasePatternHolder {
 	/**
 	 * @return property
 	 */
+	@Override
 	public Property getProperty() {
 		return property;
 	}
@@ -99,6 +105,7 @@ public class Doc implements CreasePatternHolder {
 	 * @param property
 	 *            Sets property
 	 */
+	@Override
 	public void setProperty(final Property property) {
 		this.property = property;
 	}

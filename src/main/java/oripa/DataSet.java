@@ -21,9 +21,9 @@ package oripa;
 import java.util.ArrayList;
 
 import oripa.doc.Doc;
-import oripa.doc.Property;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.domain.docprop.Property;
 import oripa.resource.Version;
 import oripa.value.OriLine;
 
@@ -91,14 +91,15 @@ public class DataSet {
 				.createCreasePattern(oriLines);
 
 		Doc doc = new Doc(creasePattern);
+		doc.setDataFilePath(filePath);
 
-		doc.setProperty(createProperty(filePath));
+		doc.setProperty(createProperty());
 
 		return doc;
 	}
 
-	private Property createProperty(final String filePath) {
-		Property property = new Property(filePath);
+	private Property createProperty() {
+		Property property = new Property();
 		property.setTitle(title);
 		property.setEditorName(editorName);
 		property.setOriginalAuthorName(originalAuthorName);

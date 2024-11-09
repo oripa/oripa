@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.doc;
+package oripa.domain.docprop;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +35,7 @@ class PropertyTest {
 
 	@BeforeEach
 	void setup() {
-		property = new Property("dummyPath");
+		property = new Property();
 	}
 
 	@Test

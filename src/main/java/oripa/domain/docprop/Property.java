@@ -16,20 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.doc;
+package oripa.domain.docprop;
 
 import java.util.ArrayList;
 
-import oripa.doc.OptionParser.Keys;
+import oripa.domain.docprop.OptionParser.Keys;
 
 /**
  * @author Koji
  */
 public class Property {
-	/**
-	 *
-	 */
-	private String dataFilePath;
 	/**
 	 *
 	 */
@@ -50,28 +46,6 @@ public class Property {
 	 *
 	 */
 	private String memo;
-
-	/**
-	 * Constructor
-	 */
-	public Property(final String dataFilePath) {
-		this.dataFilePath = dataFilePath;
-	}
-
-	/**
-	 * @return dataFilePath
-	 */
-	public String getDataFilePath() {
-		return dataFilePath;
-	}
-
-	/**
-	 * @param dataFilePath
-	 *            Sets dataFilePath
-	 */
-	public void setDataFilePath(final String dataFilePath) {
-		this.dataFilePath = dataFilePath;
-	}
 
 	/**
 	 * @return title
