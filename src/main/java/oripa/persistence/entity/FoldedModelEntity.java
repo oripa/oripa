@@ -34,8 +34,8 @@ public class FoldedModelEntity {
 	private final int index;
 
 	public FoldedModelEntity(final FoldedModel foldedModel, final int index) {
-		this.origamiModel = foldedModel.getOrigamiModel();
-		this.overlapRelations = foldedModel.getOverlapRelations();
+		this.origamiModel = foldedModel.origamiModel();
+		this.overlapRelations = foldedModel.overlapRelations();
 		this.index = index;
 	}
 

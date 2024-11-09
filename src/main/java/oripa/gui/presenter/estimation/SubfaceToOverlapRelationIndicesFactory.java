@@ -66,8 +66,8 @@ class SubfaceToOverlapRelationIndicesFactory {
 		var map = new HashMap<Integer, List<Set<Integer>>>();
 		var orders = new ConcurrentHashMap<Integer, Map<Set<OrderValue>, Set<Integer>>>();
 
-		var subfaces = foldedModel.getSubfaces();
-		var overlapRelations = foldedModel.getOverlapRelations();
+		var subfaces = foldedModel.subfaces();
+		var overlapRelations = foldedModel.overlapRelations();
 
 		// initialize
 		for (int s = 0; s < subfaces.size(); s++) {

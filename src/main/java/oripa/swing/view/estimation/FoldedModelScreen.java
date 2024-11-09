@@ -181,9 +181,9 @@ public class FoldedModelScreen extends JPanel
 		if (foldedModel == null) {
 			this.origamiModel = null;
 		} else {
-			this.origamiModel = foldedModel.getOrigamiModel();
+			this.origamiModel = foldedModel.origamiModel();
 
-			var overlapRelations = foldedModel.getOverlapRelations();
+			var overlapRelations = foldedModel.overlapRelations();
 			if (overlapRelations == null || overlapRelations.isEmpty()) {
 				overlapRelation = null;
 			} else {
