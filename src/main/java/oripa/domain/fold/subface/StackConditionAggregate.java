@@ -92,7 +92,7 @@ class StackConditionAggregate {
 
 			var faceID = f.getFaceID();
 			for (StackConditionOf3Faces cond : condition3s) {
-				if (faceID == cond.other) {
+				if (faceID == cond.other()) {
 					stackConditionsOf3Faces.get(f).add(cond);
 				}
 			}
@@ -163,8 +163,8 @@ class StackConditionAggregate {
 	boolean satisfiesConditionsOf3Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final OriFace face) {
-		if (stackConditionsOf3Faces.get(face).stream().anyMatch(cond -> alreadyInLocalLayerOrder[cond.lower]
-				&& !alreadyInLocalLayerOrder[cond.upper])) {
+		if (stackConditionsOf3Faces.get(face).stream().anyMatch(cond -> alreadyInLocalLayerOrder[cond.lower()]
+				&& !alreadyInLocalLayerOrder[cond.upper()])) {
 			failureCountOf3Faces.incrementAndGet();
 			return false;
 		}

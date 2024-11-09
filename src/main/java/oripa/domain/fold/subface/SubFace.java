@@ -304,8 +304,8 @@ public class SubFace {
 	}
 
 	public boolean isRelatedTo(final StackConditionOf3Faces condition) {
-		return parentFaceIndices.contains(condition.lower) && parentFaceIndices.contains(condition.upper) &&
-				parentFaceIndices.contains(condition.other);
+		return parentFaceIndices.contains(condition.lower()) && parentFaceIndices.contains(condition.upper()) &&
+				parentFaceIndices.contains(condition.other());
 	}
 
 	public boolean isRelatedTo(final StackConditionOf4Faces condition) {
