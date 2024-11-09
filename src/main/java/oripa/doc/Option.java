@@ -18,23 +18,10 @@
  */
 package oripa.doc;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
-
 /**
  * @author OUCHI Koji
  *
  */
-class OptionParserTest {
-
-	@Test
-	void testParseLine() {
-		var parser = new OptionParser();
-		var option = parser.parse("// test : #008888");
-
-		assertEquals("test", option.key());
-		assertEquals("#008888", option.value());
-	}
+record Option(String key, String value) {
 
 }

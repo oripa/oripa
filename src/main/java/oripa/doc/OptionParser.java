@@ -20,8 +20,6 @@ package oripa.doc;
 
 import java.util.List;
 
-import oripa.util.Pair;
-
 /**
  * Key-value style option.
  *
@@ -30,7 +28,7 @@ import oripa.util.Pair;
  * @author OUCHI Koji
  *
  */
-public class OptionParser {
+class OptionParser {
 	public static class Keys {
 		public static final String FRONT_COLOR = "frontColor";
 		public static final String BACK_COLOR = "backColor";
@@ -50,24 +48,24 @@ public class OptionParser {
 		return line.startsWith(OPTION_START);
 	}
 
-	public Pair<String, String> parse(final String line) {
+	public Option parse(final String line) {
 		var trimmed = line.split(OPTION_START)[1].trim();
 		var keyValue = trimmed.split("\\s*:\\s*");
 
-		return new Pair<String, String>(keyValue[0], keyValue[1]);
+		return new Option(keyValue[0], keyValue[1]);
 	}
 
-	public List<Pair<String, String>> parse(final List<String> lines) {
+	public List<Option> parse(final List<String> lines) {
 		return lines.stream()
 				.map(this::parse)
 				.toList();
 	}
 
-	public String createLine(final Pair<String, String> option) {
-		return OPTION_START + option.v1() + ":" + option.v2();
+	public String createLine(final Option option) {
+		return OPTION_START + option.key() + ":" + option.value();
 	}
 
-	public List<String> createLines(final List<Pair<String, String>> options) {
+	public List<String> createLines(final List<Option> options) {
 		return options.stream()
 				.map(this::createLine)
 				.toList();
