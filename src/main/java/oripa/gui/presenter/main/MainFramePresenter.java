@@ -96,7 +96,7 @@ public class MainFramePresenter {
 
 	private final ChildFrameManager childFrameManager;
 
-	private final Doc document;
+	private Doc document;
 
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
@@ -410,7 +410,7 @@ public class MainFramePresenter {
 	}
 
 	private void clear() {
-		document.set(new Doc(Constants.DEFAULT_PAPER_SIZE));
+		document = new Doc(Constants.DEFAULT_PAPER_SIZE);
 
 		paintContextModification
 				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext, cutModelOutlinesHolder);
@@ -595,10 +595,7 @@ public class MainFramePresenter {
 
 			return docOpt
 					.map(doc -> {
-						// we can't substitute a loaded object because
-						// the document object is referred by screen and UI
-						// panel as a Holder.
-						document.set(doc);
+						document = doc;
 
 						var property = document.getProperty();
 						view.getUIPanelView().setEstimationResultColors(

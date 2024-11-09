@@ -60,12 +60,6 @@ public class Doc implements CreasePatternHolder, PropertyHolder {
 		setDataFilePath(filePath);
 	}
 
-	public void set(final Doc doc) {
-		setCreasePattern(doc.getCreasePattern());
-		setProperty(doc.getProperty());
-		setDataFilePath(doc.dataFilePath);
-	}
-
 	public void setDataFilePath(final String path) {
 		dataFilePath = path;
 	}
