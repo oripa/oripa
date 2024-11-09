@@ -2,8 +2,8 @@ package oripa.persistence.doc.exporter;
 
 import java.io.IOException;
 
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.persistence.doc.DocEntity;
 import oripa.persistence.entity.exporter.CreasePatternExporterSVG;
 
 public class ExporterSVGFactory {
@@ -11,7 +11,7 @@ public class ExporterSVGFactory {
 	private static class CreasePatternExporter implements DocExporter {
 
 		@Override
-		public boolean export(final Doc doc, final String filepath, final Object configObj)
+		public boolean export(final DocEntity doc, final String filepath, final Object configObj)
 				throws IOException, IllegalArgumentException {
 			CreasePattern creasePattern = doc.getCreasePattern();
 

@@ -30,11 +30,11 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.geom.RectangleDomain;
 import oripa.gui.presenter.creasepattern.CreasePatternGraphicDrawer;
 import oripa.gui.view.creasepattern.ObjectGraphicDrawer;
+import oripa.persistence.doc.DocEntity;
 import oripa.swing.drawer.java2d.CreasePatternObjectDrawer;
 import oripa.swing.view.util.AffineCamera;
 
@@ -53,7 +53,7 @@ public class PictureExporter implements DocExporter {
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean export(final Doc doc, final String filePath, final Object configObj) throws IOException {
+	public boolean export(final DocEntity doc, final String filePath, final Object configObj) throws IOException {
 		CreasePattern creasePattern = doc.getCreasePattern();
 		var domain = RectangleDomain.createFromSegments(creasePattern);
 		double gWidth = domain.getWidth() * 2;

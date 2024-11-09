@@ -22,14 +22,14 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
+import oripa.persistence.doc.DocEntity;
 import oripa.value.OriLine;
 
 public class ExporterEPS implements DocExporter {
 
 	@Override
-	public boolean export(final Doc doc, final String filepath, final Object configObj)
+	public boolean export(final DocEntity doc, final String filepath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 		try (var fw = new FileWriter(filepath);
 				var bw = new BufferedWriter(fw);) {

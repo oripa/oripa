@@ -24,16 +24,16 @@ import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
+import oripa.persistence.doc.DocEntity;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.value.OriLine;
 
 public class LoaderCP implements DocLoader {
 
 	@Override
-	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
+	public Optional<DocEntity> load(final String filePath) throws IOException, WrongDataFormatException {
 		var lines = new ArrayList<OriLine>();
 
 		try (var r = new FileReader(filePath)) {
@@ -94,7 +94,7 @@ public class LoaderCP implements DocLoader {
 		CreasePatternFactory factory = new CreasePatternFactory();
 		CreasePattern creasePattern = factory
 				.createCreasePattern(lines);
-		Doc doc = new Doc(creasePattern);
+		var doc = new DocEntity(creasePattern);
 		return Optional.of(doc);
 
 	}

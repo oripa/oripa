@@ -24,25 +24,25 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import oripa.application.FileAccessService;
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.fold.TestedOrigamiModelFactory;
 import oripa.exception.UserCanceledException;
 import oripa.gui.presenter.file.FileAccessPresenter;
 import oripa.gui.view.FrameView;
 import oripa.gui.view.file.FileChooserFactory;
+import oripa.persistence.doc.DocEntity;
 import oripa.persistence.filetool.FileTypeProperty;
 
 /**
  * @author OUCHI Koji
  *
  */
-public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
+public class DocFileAccessPresenter extends FileAccessPresenter<DocEntity> {
 
 	public DocFileAccessPresenter(
 			final FrameView parent,
 			final FileChooserFactory chooserFactory,
-			final FileAccessService<Doc> fileAccessService) {
+			final FileAccessService<DocEntity> fileAccessService) {
 		super(parent, chooserFactory, fileAccessService);
 	}
 
@@ -59,9 +59,9 @@ public class DocFileAccessPresenter extends FileAccessPresenter<Doc> {
 	 * @throws IOException
 	 * @throws UserCanceledException
 	 */
-	public void saveFileWithModelCheck(final Doc doc,
+	public void saveFileWithModelCheck(final DocEntity doc,
 			final String directory,
-			final FileTypeProperty<Doc> type, final FrameView owner,
+			final FileTypeProperty<DocEntity> type, final FrameView owner,
 			final Supplier<Boolean> acceptModelError,
 			final double pointEps)
 			throws IOException, UserCanceledException {

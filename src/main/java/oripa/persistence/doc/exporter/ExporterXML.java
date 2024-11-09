@@ -24,12 +24,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import oripa.DataSet;
-import oripa.doc.Doc;
+import oripa.persistence.doc.DocEntity;
 
 public class ExporterXML implements DocExporter {
 
 	@Override
-	public boolean export(final Doc doc, final String filePath, final Object configObj) throws IOException {
+	public boolean export(final DocEntity doc, final String filePath, final Object configObj) throws IOException {
 		DataSet dataset = new DataSet(doc);
 
 		try (var fos = new FileOutputStream(filePath);

@@ -16,9 +16,9 @@ import oripa.resource.StringID;
  * @author OUCHI Koji
  *
  */
-public class DocFileAccessSupportSelector extends AbstractFileAccessSupportSelector<Doc> {
+public class DocFileAccessSupportSelector extends AbstractFileAccessSupportSelector<DocEntity> {
 
-	private final SortedMap<FileTypeProperty<Doc>, FileAccessSupport<Doc>> filters = new TreeMap<>();
+	private final SortedMap<FileTypeProperty<DocEntity>, FileAccessSupport<DocEntity>> filters = new TreeMap<>();
 
 	/**
 	 * A constructor that puts default filters into this instance.
@@ -49,7 +49,7 @@ public class DocFileAccessSupportSelector extends AbstractFileAccessSupportSelec
 	}
 
 	@Override
-	protected SortedMap<FileTypeProperty<Doc>, FileAccessSupport<Doc>> getFileAccessSupports() {
+	protected SortedMap<FileTypeProperty<DocEntity>, FileAccessSupport<DocEntity>> getFileAccessSupports() {
 		return filters;
 	}
 }

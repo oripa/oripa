@@ -24,14 +24,14 @@ import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import oripa.doc.Doc;
+import oripa.persistence.doc.DocEntity;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.value.OriLine;
 
 public class LoaderDXF implements DocLoader {
 
 	@Override
-	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
+	public Optional<DocEntity> load(final String filePath) throws IOException, WrongDataFormatException {
 		var dtos = new ArrayList<LineDto>();
 
 		try (var r = new FileReader(filePath)) {
@@ -115,7 +115,7 @@ public class LoaderDXF implements DocLoader {
 			return Optional.empty();
 		}
 
-		var doc = new Doc(new LineDtoConverter().convert(dtos));
+		var doc = new DocEntity(new LineDtoConverter().convert(dtos));
 
 		return Optional.of(doc);
 	}

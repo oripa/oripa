@@ -26,9 +26,9 @@ import java.util.Optional;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import oripa.doc.Doc;
 import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.docprop.Property;
+import oripa.persistence.doc.DocEntity;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.persistence.foldformat.CreasePatternElementConverter;
 import oripa.persistence.foldformat.CreasePatternFOLDFormat;
@@ -46,7 +46,7 @@ public class LoaderFOLD implements DocLoader {
 	 * @see oripa.persistent.doc.Loader#load(java.lang.String)
 	 */
 	@Override
-	public Optional<Doc> load(final String filePath) throws IOException, WrongDataFormatException {
+	public Optional<DocEntity> load(final String filePath) throws IOException, WrongDataFormatException {
 
 		var gson = new Gson();
 		CreasePatternFOLDFormat foldFormat;
@@ -91,7 +91,7 @@ public class LoaderFOLD implements DocLoader {
 				.setTitle(foldFormat.getFrameTitle())
 				.setMemo(foldFormat.getFrameDescription());
 
-		var doc = new Doc(cp, property, filePath);
+		var doc = new DocEntity(cp, property);
 
 		return Optional.of(doc);
 	}

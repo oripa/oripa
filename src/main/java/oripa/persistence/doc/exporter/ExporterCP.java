@@ -22,13 +22,13 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import oripa.doc.Doc;
+import oripa.persistence.doc.DocEntity;
 import oripa.value.OriLine;
 
 public class ExporterCP implements DocExporter {
 
 	@Override
-	public boolean export(final Doc doc, final String filepath, final Object configObj)
+	public boolean export(final DocEntity doc, final String filepath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 
 		if (doc.getCreasePattern().isUnassigned()) {

@@ -16,15 +16,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.persistence.doc.loader;
+package oripa.persistence.doc;
 
-import oripa.persistence.doc.DocEntity;
-import oripa.persistence.filetool.Loader;
+import oripa.domain.creasepattern.CreasePattern;
+import oripa.domain.docprop.Property;
 
 /**
  * @author OUCHI Koji
  *
  */
-public interface DocLoader extends Loader<DocEntity> {
+public class DocEntity {
+	/**
+	 * Crease Pattern
+	 */
+	private final CreasePattern creasePattern;
+
+	/**
+	 * Project property
+	 */
+	private final Property property;
+
+	public DocEntity(final CreasePattern creasePattern) {
+		this(creasePattern, new Property());
+	}
+
+	public DocEntity(final CreasePattern creasePattern, final Property property) {
+		this.creasePattern = creasePattern;
+		this.property = property;
+	}
+
+	public CreasePattern getCreasePattern() {
+		return creasePattern;
+	}
+
+	public Property getProperty() {
+		return property;
+	}
 
 }

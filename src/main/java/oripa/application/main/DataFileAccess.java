@@ -29,6 +29,7 @@ import oripa.application.FileAccessService;
 import oripa.doc.Doc;
 import oripa.persistence.dao.AbstractFileDAO;
 import oripa.persistence.dao.DataAccessObject;
+import oripa.persistence.doc.DocEntity;
 import oripa.persistence.filetool.AbstractSavingAction;
 import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
@@ -40,17 +41,20 @@ import oripa.persistence.filetool.WrongDataFormatException;
  * @author OUCHI Koji
  *
  */
-public class DataFileAccess extends FileAccessService<Doc> {
+public class DataFileAccess extends FileAccessService<DocEntity> {
 	private static final Logger logger = LoggerFactory.getLogger(DataFileAccess.class);
 
-	private final AbstractFileDAO<Doc> dao;
+	private final AbstractFileDAO<DocEntity> dao;
 
 	public DataFileAccess(
-			final AbstractFileDAO<Doc> dao) {
+			final AbstractFileDAO<DocEntity> dao) {
 		this.dao = dao;
 	}
 
-	public void setFileSavingAction(final AbstractSavingAction<Doc> action, final FileTypeProperty<Doc> type) {
+	public void setFileSavingAction(
+			final AbstractSavingAction<DocEntity> action,
+			final FileTypeProperty<DocEntity> type) {
+
 		dao.getFileAccessSupportSelector()
 				.getFileAccessSupport(type)
 				.orElseThrow(() -> new IllegalArgumentException("The type is not supported."))
@@ -58,13 +62,13 @@ public class DataFileAccess extends FileAccessService<Doc> {
 	}
 
 	@Override
-	protected AbstractFileDAO<Doc> getFileDAO() {
+	protected AbstractFileDAO<DocEntity> getFileDAO() {
 		return dao;
 	}
 
 	@Override
-	public final void saveFile(final Doc document,
-			final String path, final FileTypeProperty<Doc> type)
+	public final void saveFile(final DocEntity document,
+			final String path, final FileTypeProperty<DocEntity> type)
 			throws IOException, IllegalArgumentException {
 
 		if (type == null) {
@@ -75,7 +79,7 @@ public class DataFileAccess extends FileAccessService<Doc> {
 	}
 
 	@Override
-	public Optional<Doc> loadFile(final String filePath)
+	public Optional<DocEntity> loadFile(final String filePath)
 			throws FileVersionError, IllegalArgumentException, WrongDataFormatException,
 			IOException, FileNotFoundException {
 

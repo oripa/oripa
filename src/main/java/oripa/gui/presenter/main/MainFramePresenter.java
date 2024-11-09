@@ -59,6 +59,7 @@ import oripa.gui.view.main.ViewUpdateSupport;
 import oripa.gui.view.util.ChildFrameManager;
 import oripa.gui.view.util.ColorUtil;
 import oripa.persistence.doc.CreasePatternFileTypeKey;
+import oripa.persistence.doc.DocEntity;
 import oripa.persistence.doc.exporter.CreasePatternFOLDConfig;
 import oripa.persistence.filetool.Exporter;
 import oripa.persistence.filetool.FileTypeProperty;
@@ -208,9 +209,9 @@ public class MainFramePresenter {
 		view.addSaveButtonListener(() -> {
 			var filePath = document.getDataFilePath();
 			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, CreasePatternFileTypeKey.OPX);
+				saveProjectFile(filePath, CreasePatternFileTypeKey.OPX);
 			} else if (CreasePatternFileTypeKey.FOLD.extensionsMatch(filePath)) {
-				saveProjectFile(document, filePath, CreasePatternFileTypeKey.FOLD);
+				saveProjectFile(filePath, CreasePatternFileTypeKey.FOLD);
 			} else {
 				saveAnyTypeUsingGUI();
 			}
@@ -352,16 +353,16 @@ public class MainFramePresenter {
 		setProjectSavingAction(CreasePatternFileTypeKey.FOLD);
 	}
 
-	private class ProjectSavingAction extends SavingActionTemplate<Doc> {
+	private class ProjectSavingAction extends SavingActionTemplate<DocEntity> {
 
-		public ProjectSavingAction(final Exporter<Doc> exporter) {
+		public ProjectSavingAction(final Exporter<DocEntity> exporter) {
 			super(exporter);
 		}
 
 		@Override
-		protected void afterSave(final Doc data) {
+		protected void afterSave(final DocEntity data) {
 			var path = getPath();
-			data.setDataFilePath(path);
+			document.setDataFilePath(path);
 			paintContext.creasePatternUndo().clearChanged();
 
 			updateMenu(path);
@@ -471,7 +472,9 @@ public class MainFramePresenter {
 	/**
 	 * saves project without opening a dialog
 	 */
-	private void saveProjectFile(final Doc doc, final String filePath, final FileTypeProperty<Doc> type) {
+	private void saveProjectFile(final String filePath, final FileTypeProperty<DocEntity> type) {
+		var doc = new DocEntity(paintContext.getCreasePattern(), document.getProperty());
+
 		try {
 			var action = new ProjectSavingAction(type.getExporter()).setPath(filePath);
 
@@ -491,7 +494,7 @@ public class MainFramePresenter {
 	 */
 	@SafeVarargs
 	private String saveFileUsingGUI(final String directory, final String fileName,
-			final FileTypeProperty<Doc>... types) {
+			final FileTypeProperty<DocEntity>... types) {
 
 		try {
 			dataFileAccess.setConfigToSavingAction(CreasePatternFileTypeKey.FOLD, this::createFOLDConfig);
@@ -506,9 +509,13 @@ public class MainFramePresenter {
 			Optional<String> pathOpt;
 
 			if (types == null || types.length == 0) {
-				pathOpt = presenter.saveUsingGUI(document, filePath);
+				pathOpt = presenter.saveUsingGUI(
+						new DocEntity(paintContext.getCreasePattern(), document.getProperty()),
+						filePath);
 			} else {
-				pathOpt = presenter.saveUsingGUI(document, filePath, List.of(types));
+				pathOpt = presenter.saveUsingGUI(
+						new DocEntity(paintContext.getCreasePattern(), document.getProperty()),
+						filePath, List.of(types));
 			}
 
 			return pathOpt
@@ -541,7 +548,9 @@ public class MainFramePresenter {
 
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
-			presenter.saveFileWithModelCheck(document, fileHistory.getLastDirectory(),
+			presenter.saveFileWithModelCheck(
+					new DocEntity(paintContext.getCreasePattern(), document.getProperty()),
+					fileHistory.getLastDirectory(),
 					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
 
 		} catch (UserCanceledException e) {
@@ -585,17 +594,17 @@ public class MainFramePresenter {
 		childFrameManager.closeAll(view);
 
 		try {
-			Optional<Doc> docOpt;
+			Optional<DocEntity> docEntityOpt;
 			if (filePath != null) {
-				docOpt = dataFileAccess.loadFile(filePath);
+				docEntityOpt = dataFileAccess.loadFile(filePath);
 			} else {
 				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
-				docOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
+				docEntityOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
 			}
 
-			return docOpt
+			return docEntityOpt
 					.map(doc -> {
-						document = doc;
+						document = new Doc(doc.getCreasePattern(), doc.getProperty(), filePath);
 
 						var property = document.getProperty();
 						view.getUIPanelView().setEstimationResultColors(

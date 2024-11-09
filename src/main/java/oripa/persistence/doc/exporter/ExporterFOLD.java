@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.GsonBuilder;
 
-import oripa.doc.Doc;
+import oripa.persistence.doc.DocEntity;
 import oripa.persistence.foldformat.CreasePatternElementConverter;
 import oripa.persistence.foldformat.CreasePatternFOLDFormat;
 import oripa.persistence.foldformat.PointsMerger;
@@ -46,7 +46,7 @@ public class ExporterFOLD implements DocExporter {
 	 *            {@link CreasePatternFOLDConfig} instance.
 	 */
 	@Override
-	public boolean export(final Doc doc, final String filePath, final Object configObj)
+	public boolean export(final DocEntity doc, final String filePath, final Object configObj)
 			throws IOException, IllegalArgumentException {
 		logger.info("start exporting FOLD file.");
 
