@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 import oripa.domain.creasepattern.CreasePattern;
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.docprop.Property;
+import oripa.domain.projectprop.Property;
 import oripa.persistence.doc.Doc;
 import oripa.resource.Version;
 import oripa.value.OriLine;

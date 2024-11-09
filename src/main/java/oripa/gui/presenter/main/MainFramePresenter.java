@@ -96,7 +96,7 @@ public class MainFramePresenter {
 
 	private final ChildFrameManager childFrameManager;
 
-	private Project document;
+	private Project project;
 
 	private final PaintContext paintContext;
 	private final CreasePatternViewContext viewContext;
@@ -119,7 +119,7 @@ public class MainFramePresenter {
 			final ChildFrameManager childFrameManager,
 			final MainViewSetting viewSetting,
 			final BindingObjectFactoryFacade bindingFactory,
-			final Project document,
+			final Project project,
 			final PaintDomainContext domainContext,
 			final CutModelOutlinesHolder cutModelOutlinesHolder,
 			final CreasePatternPresentationContext presentationContext,
@@ -136,7 +136,7 @@ public class MainFramePresenter {
 
 		this.bindingFactory = bindingFactory;
 
-		this.document = document;
+		this.project = project;
 		this.paintContext = domainContext.getPaintContext();
 		this.viewContext = presentationContext.getViewContext();
 		this.cutModelOutlinesHolder = cutModelOutlinesHolder;
@@ -206,7 +206,7 @@ public class MainFramePresenter {
 		addImportActionListener();
 
 		view.addSaveButtonListener(() -> {
-			var filePath = document.getDataFilePath();
+			var filePath = project.getDataFilePath();
 			if (CreasePatternFileTypeKey.OPX.extensionsMatch(filePath)) {
 				saveProjectFile(filePath, CreasePatternFileTypeKey.OPX);
 			} else if (CreasePatternFileTypeKey.FOLD.extensionsMatch(filePath)) {
@@ -220,13 +220,13 @@ public class MainFramePresenter {
 
 		view.addExportFOLDButtonListener(() -> {
 			String lastDirectory = fileHistory.getLastDirectory();
-			saveFileUsingGUI(lastDirectory, document.getDataFileName(),
+			saveFileUsingGUI(lastDirectory, project.getDataFileName(),
 					CreasePatternFileTypeKey.FOLD);
 		});
 
 		view.addSaveAsImageButtonListener(() -> {
 			String lastDirectory = fileHistory.getLastDirectory();
-			saveFileUsingGUI(lastDirectory, document.getDataFileName(),
+			saveFileUsingGUI(lastDirectory, project.getDataFileName(),
 					CreasePatternFileTypeKey.PICT);
 		});
 
@@ -272,7 +272,7 @@ public class MainFramePresenter {
 		view.addMRUFilesMenuItemUpdateListener(this::updateMRUFilesMenuItem);
 
 		view.setEstimationResultSaveColorsListener((front, back) -> {
-			var property = document.getProperty();
+			var property = project.getProperty();
 			property.putFrontColorCode(ColorUtil.convertColorToCode(front));
 			property.putBackColorCode(ColorUtil.convertColorToCode(back));
 
@@ -361,7 +361,7 @@ public class MainFramePresenter {
 		@Override
 		protected void afterSave(final Doc data) {
 			var path = getPath();
-			document.setDataFilePath(path);
+			project.setDataFilePath(path);
 			paintContext.creasePatternUndo().clearChanged();
 
 			updateMenu(path);
@@ -398,7 +398,7 @@ public class MainFramePresenter {
 	private void saveAnyTypeUsingGUI() {
 		String lastDirectory = fileHistory.getLastDirectory();
 
-		String path = saveFileUsingGUI(lastDirectory, document.getDataFileName());
+		String path = saveFileUsingGUI(lastDirectory, project.getDataFileName());
 
 		updateMenu(path);
 		updateTitleText();
@@ -423,7 +423,7 @@ public class MainFramePresenter {
 	private void showPropertyDialog() {
 		var dialog = dialogFactory.createPropertyDialog(view);
 
-		var presenter = new PropertyDialogPresenter(dialog, document);
+		var presenter = new PropertyDialogPresenter(dialog, project);
 
 		presenter.setViewVisible(true);
 	}
@@ -456,10 +456,10 @@ public class MainFramePresenter {
 
 	private void updateTitleText() {
 		String fileName;
-		if (document.getDataFilePath().isEmpty()) {
+		if (project.getDataFilePath().isEmpty()) {
 			fileName = resourceHolder.getString(ResourceKey.DEFAULT, StringID.Default.FILE_NAME_ID);
 		} else {
-			fileName = document.getDataFileName();
+			fileName = project.getDataFileName();
 		}
 
 		view.setFileNameToTitle(fileName);
@@ -469,7 +469,7 @@ public class MainFramePresenter {
 	 * saves project without opening a dialog
 	 */
 	private void saveProjectFile(final String filePath, final FileTypeProperty<Doc> type) {
-		var doc = new Doc(paintContext.getCreasePattern(), document.getProperty());
+		var doc = new Doc(paintContext.getCreasePattern(), project.getProperty());
 
 		try {
 			var action = new ProjectSavingAction(type.getExporter()).setPath(filePath);
@@ -506,11 +506,11 @@ public class MainFramePresenter {
 
 			if (types == null || types.length == 0) {
 				pathOpt = presenter.saveUsingGUI(
-						new Doc(paintContext.getCreasePattern(), document.getProperty()),
+						new Doc(paintContext.getCreasePattern(), project.getProperty()),
 						filePath);
 			} else {
 				pathOpt = presenter.saveUsingGUI(
-						new Doc(paintContext.getCreasePattern(), document.getProperty()),
+						new Doc(paintContext.getCreasePattern(), project.getProperty()),
 						filePath, List.of(types));
 			}
 
@@ -519,11 +519,11 @@ public class MainFramePresenter {
 						paintContext.creasePatternUndo().clearChanged();
 						return path;
 					})
-					.orElse(document.getDataFilePath());
+					.orElse(project.getDataFilePath());
 
 		} catch (UserCanceledException e) {
 			// ignore
-			return document.getDataFilePath();
+			return project.getDataFilePath();
 		}
 	}
 
@@ -545,7 +545,7 @@ public class MainFramePresenter {
 			var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
 
 			presenter.saveFileWithModelCheck(
-					new Doc(paintContext.getCreasePattern(), document.getProperty()),
+					new Doc(paintContext.getCreasePattern(), project.getProperty()),
 					fileHistory.getLastDirectory(),
 					type, view, view::showModelBuildFailureDialog, paintContext.getPointEps());
 
@@ -590,19 +590,19 @@ public class MainFramePresenter {
 		childFrameManager.closeAll(view);
 
 		try {
-			Optional<Doc> docEntityOpt;
+			Optional<Doc> docOpt;
 			if (filePath != null) {
-				docEntityOpt = dataFileAccess.loadFile(filePath);
+				docOpt = dataFileAccess.loadFile(filePath);
 			} else {
 				var presenter = new DocFileAccessPresenter(view, fileChooserFactory, dataFileAccess);
-				docEntityOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
+				docOpt = presenter.loadUsingGUI(fileHistory.getLastPath());
 			}
 
-			return docEntityOpt
-					.map(docEntity -> {
-						document = new Project(docEntity.getProperty(), filePath);
+			return docOpt
+					.map(doc -> {
+						project = new Project(doc.getProperty(), filePath);
 
-						var property = document.getProperty();
+						var property = project.getProperty();
 						view.getUIPanelView().setEstimationResultColors(
 								convertCodeToColor(property.extractFrontColorCode()),
 								convertCodeToColor(property.extractBackColorCode()));
@@ -610,18 +610,18 @@ public class MainFramePresenter {
 						screenSetting.setGridVisible(false);
 						paintContextModification
 								.setCreasePatternToPaintContext(
-										docEntity.getCreasePattern(), paintContext, cutModelOutlinesHolder);
+										doc.getCreasePattern(), paintContext, cutModelOutlinesHolder);
 						screenPresenter.updateCameraCenter();
-						return document.getDataFilePath();
+						return project.getDataFilePath();
 					}).orElse(null);
 		} catch (UserCanceledException e) {
 			// ignore
-			return document.getDataFilePath();
+			return project.getDataFilePath();
 		} catch (FileVersionError | IllegalArgumentException | WrongDataFormatException
 				| IOException e) {
 			logger.error("failed to load", e);
 			view.showLoadFailureErrorMessage(e);
-			return document.getDataFilePath();
+			return project.getDataFilePath();
 		}
 	}
 
@@ -676,7 +676,7 @@ public class MainFramePresenter {
 			if (view.showSaveOnCloseDialog()) {
 
 				String path = saveFileUsingGUI(fileHistory.getLastDirectory(),
-						document.getDataFileName());
+						project.getDataFileName());
 				if (path == null) {
 
 				}

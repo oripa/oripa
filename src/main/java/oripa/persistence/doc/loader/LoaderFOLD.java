@@ -27,7 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import oripa.domain.creasepattern.CreasePatternFactory;
-import oripa.domain.docprop.Property;
+import oripa.domain.projectprop.Property;
 import oripa.persistence.doc.Doc;
 import oripa.persistence.filetool.WrongDataFormatException;
 import oripa.persistence.foldformat.CreasePatternElementConverter;

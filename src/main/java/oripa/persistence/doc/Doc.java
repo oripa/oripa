@@ -19,7 +19,7 @@
 package oripa.persistence.doc;
 
 import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.docprop.Property;
+import oripa.domain.projectprop.Property;
 
 /**
  * @author OUCHI Koji

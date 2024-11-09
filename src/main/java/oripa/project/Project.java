@@ -20,8 +20,8 @@ package oripa.project;
 
 import java.io.File;
 
-import oripa.domain.docprop.Property;
-import oripa.domain.docprop.PropertyHolder;
+import oripa.domain.projectprop.Property;
+import oripa.domain.projectprop.PropertyHolder;
 
 /**
  * Manages project data.
