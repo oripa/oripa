@@ -93,10 +93,10 @@ public class StackConditionOf3FaceFactory {
 				continue;
 			}
 
-			StackConditionOf3Faces cond = new StackConditionOf3Faces();
-			cond.upper = index_i;
-			cond.lower = index_j;
-			cond.other = index_k;
+			var upper = index_i;
+			var lower = index_j;
+			var other = index_k;
+			StackConditionOf3Faces cond = new StackConditionOf3Faces(lower, upper, other);
 
 			conditions.add(cond);
 		}

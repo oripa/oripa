@@ -21,7 +21,6 @@ package oripa.doc;
 import java.util.ArrayList;
 
 import oripa.doc.OptionParser.Keys;
-import oripa.util.Pair;
 
 /**
  * @author Koji
@@ -179,14 +178,14 @@ public class Property {
 				.toList();
 
 		var keyValueOpt = parser.parse(optionLines).stream()
-				.filter(option -> option.getV1().equals(key))
+				.filter(option -> option.key().equals(key))
 				.findFirst();
 
 		if (keyValueOpt.isEmpty()) {
 			return null;
 		}
 
-		return keyValueOpt.get().getV2();
+		return keyValueOpt.get().value();
 	}
 
 	private void putOption(final String key, final String value) {
@@ -216,8 +215,8 @@ public class Property {
 		boolean updated = false;
 		for (int i = 0; i < options.size(); i++) {
 			var option = options.get(i);
-			if (option.getV1().equals(key)) {
-				options.set(i, new Pair<>(key, value));
+			if (option.key().equals(key)) {
+				options.set(i, new Option(key, value));
 				updated = true;
 				break;
 			}
@@ -225,7 +224,7 @@ public class Property {
 
 		// insert
 		if (!updated) {
-			options.add(new Pair<>(key, value));
+			options.add(new Option(key, value));
 		}
 
 		String lineSep = System.lineSeparator();

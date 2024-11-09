@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import oripa.domain.fold.FoldedModel;
 import oripa.domain.fold.origeom.OverlapRelation;
 import oripa.domain.fold.subface.SubFace;
-import oripa.util.Pair;
 import oripa.util.StopWatch;
 import oripa.util.collection.CollectionUtil;
 
@@ -44,10 +43,10 @@ import oripa.util.collection.CollectionUtil;
 class SubfaceToOverlapRelationIndicesFactory {
 	private static final Logger logger = LoggerFactory.getLogger(SubfaceToOverlapRelationIndicesFactory.class);
 
-	private class OrderValue extends Pair<List<Integer>, Byte> {
+	private record OrderValue(List<Integer> v1, Byte v2) {
 
-		public OrderValue(final int i, final int j, final byte value) {
-			super(List.of(i, j), value);
+		public static OrderValue create(final int i, final int j, final byte value) {
+			return new OrderValue(List.of(i, j), value);
 		}
 	}
 
@@ -66,8 +65,8 @@ class SubfaceToOverlapRelationIndicesFactory {
 		var map = new HashMap<Integer, List<Set<Integer>>>();
 		var orders = new ConcurrentHashMap<Integer, Map<Set<OrderValue>, Set<Integer>>>();
 
-		var subfaces = foldedModel.getSubfaces();
-		var overlapRelations = foldedModel.getOverlapRelations();
+		var subfaces = foldedModel.subfaces();
+		var overlapRelations = foldedModel.overlapRelations();
 
 		// initialize
 		for (int s = 0; s < subfaces.size(); s++) {
@@ -130,7 +129,7 @@ class SubfaceToOverlapRelationIndicesFactory {
 				var largerIndex = Math.max(faceID_i, faceID_j);
 				var relation = overlapRelation.get(smallerIndex, largerIndex);
 
-				orderKey.add(new OrderValue(smallerIndex, largerIndex, relation));
+				orderKey.add(OrderValue.create(smallerIndex, largerIndex, relation));
 			}
 		}
 

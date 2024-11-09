@@ -56,10 +56,10 @@ public class CircleCopyDialogPresenter {
 			return;
 		}
 
-		view.setCenterX(parameter.getCenterX());
-		view.setCenterY(parameter.getCenterY());
-		view.setAngleDegree(parameter.getAngleDegree());
-		view.setCopyCount(parameter.getCopyCount());
+		view.setCenterX(parameter.centerX());
+		view.setCenterY(parameter.centerY());
+		view.setAngleDegree(parameter.angleDegree());
+		view.setCopyCount(parameter.copyCount());
 
 	}
 
@@ -67,7 +67,7 @@ public class CircleCopyDialogPresenter {
 		var parameter = new CircleCopyParameter(
 				view.getCenterX(), view.getCenterY(), view.getAngleDegree(), view.getCopyCount());
 
-		if (parameter.getCopyCount() <= 0) {
+		if (parameter.copyCount() <= 0) {
 			view.showWrongCopyCountMessage();
 			return false;
 		}

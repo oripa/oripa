@@ -21,34 +21,14 @@ package oripa.domain.paint;
 /**
  * @author OUCHI Koji
  *
+ * @param centerX
+ * @param centerY
+ * @param angleDegree
+ * @param copyCount
  */
-public class CircleCopyParameter {
-	private final int copyCount;
-	private final double centerX;
-	private final double centerY;
-	private final double angleDegree;
-
-	public CircleCopyParameter(final double cx, final double cy, final double angleDeg, final int copyCount) {
-		centerX = cx;
-		centerY = cy;
-		angleDegree = angleDeg;
-		this.copyCount = copyCount;
-	}
-
-	public int getCopyCount() {
-		return copyCount;
-	}
-
-	public double getCenterX() {
-		return centerX;
-	}
-
-	public double getCenterY() {
-		return centerY;
-	}
-
-	public double getAngleDegree() {
-		return angleDegree;
-	}
-
+public record CircleCopyParameter(
+		double centerX,
+		double centerY,
+		double angleDegree,
+		int copyCount) {
 }

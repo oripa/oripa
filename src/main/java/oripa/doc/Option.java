@@ -16,14 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package oripa.util;
+package oripa.doc;
 
 /**
  * @author OUCHI Koji
  *
  */
-public record IntPair(
-		int v1,
-		int v2) {
+record Option(String key, String value) {
 
 }

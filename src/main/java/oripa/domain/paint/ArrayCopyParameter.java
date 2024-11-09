@@ -21,41 +21,17 @@ package oripa.domain.paint;
 /**
  * @author OUCHI Koji
  *
+ * @param fillUp
+ * @param rowCount
+ * @param columnCount
+ * @param intervalX
+ * @param intervalY
  */
-public class ArrayCopyParameter {
-	private final boolean fillUp;
-	private final int rowCount;
-	private final int columnCount;
-	private final double intervalX;
-	private final double intervalY;
-
-	public ArrayCopyParameter(final boolean fillUp, final int rowCount, final int columnCount,
-			final double intervalX, final double intervalY) {
-		this.fillUp = fillUp;
-		this.rowCount = rowCount;
-		this.columnCount = columnCount;
-		this.intervalX = intervalX;
-		this.intervalY = intervalY;
-	}
-
-	public boolean shouldFillUp() {
-		return fillUp;
-	}
-
-	public int getRowCount() {
-		return rowCount;
-	}
-
-	public int getColumnCount() {
-		return columnCount;
-	}
-
-	public double getIntervalX() {
-		return intervalX;
-	}
-
-	public double getIntervalY() {
-		return intervalY;
-	}
+public record ArrayCopyParameter(
+		boolean fillUp,
+		int rowCount,
+		int columnCount,
+		double intervalX,
+		double intervalY) {
 
 }

@@ -65,8 +65,8 @@ public class VertexDepthMapFactory {
 					}
 
 					var faceIndices = findTopFaceIndices(vertex, sorted.get(k), vertexToFaces, overlapRelation);
-					int i = faceIndices.getV1();
-					int j = faceIndices.getV2();
+					int i = faceIndices.v1();
+					int j = faceIndices.v2();
 
 					if (overlapRelation.isUpper(i, j)) {
 						sorted.add(k, vertex);

@@ -173,7 +173,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			return;
 		}
 
-		setOverlapRelations(foldedModel.getOverlapRelations());
+		setOverlapRelations(foldedModel.overlapRelations());
 
 		// automatically turn off filtering
 		if (filterEnabledCheckBox.isSelected()) {
@@ -258,7 +258,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 	private List<OverlapRelation> filter() {
 		// use a set for fast computation
 		var filteredIndices = new HashSet<Integer>();
-		for (int k = 0; k < foldedModel.getOverlapRelations().size(); k++) {
+		for (int k = 0; k < foldedModel.overlapRelations().size(); k++) {
 			filteredIndices.add(k);
 		}
 
@@ -268,7 +268,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			filteredIndices.retainAll(selectedIndices);
 		});
 
-		return filteredIndices.stream().map(k -> foldedModel.getOverlapRelations().get(k)).toList();
+		return filteredIndices.stream().map(k -> foldedModel.overlapRelations().get(k)).toList();
 	}
 
 	private void setFilterEnabled(final boolean enabled) {
@@ -328,7 +328,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 					setOverlapRelations(filter());
 					selectOverlapRelation(0);
 
-					var subface = foldedModel.getSubfaces().get(0);
+					var subface = foldedModel.subfaces().get(0);
 					setSubfaceToScreen(subface);
 				} catch (Exception ex) {
 					logger.error("Error on enabling filter.", ex);
@@ -336,7 +336,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 			} else {
 				setFilterEnabled(false);
 
-				setOverlapRelations(foldedModel.getOverlapRelations());
+				setOverlapRelations(foldedModel.overlapRelations());
 				selectOverlapRelation(0);
 
 				setSubfaceToScreen(null);
@@ -351,7 +351,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 				setOverlapRelations(filter());
 				selectOverlapRelation(0);
 
-				var subface = foldedModel.getSubfaces().get(subfaceIndex);
+				var subface = foldedModel.subfaces().get(subfaceIndex);
 				setSubfaceToScreen(subface);
 
 				prepareSuborderIndexCombo(subfaceIndex);
@@ -372,7 +372,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 		subfaceVisibleCheckBox.addActionListener(e -> {
 			var subfaceIndex = (Integer) subfaceIndexCombo.getSelectedItem();
-			var subface = foldedModel.getSubfaces().get(subfaceIndex);
+			var subface = foldedModel.subfaces().get(subfaceIndex);
 
 			setSubfaceToScreen(subface);
 		});
@@ -577,7 +577,7 @@ public class EstimationResultUI extends JPanel implements EstimationResultUIView
 
 	@Override
 	public int getOverlapRelationIndex() {
-		return foldedModel.getOverlapRelations().indexOf(overlapRelation);
+		return foldedModel.overlapRelations().indexOf(overlapRelation);
 	}
 
 	@Override

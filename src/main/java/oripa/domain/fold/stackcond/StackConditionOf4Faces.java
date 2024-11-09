@@ -18,8 +18,6 @@
 
 package oripa.domain.fold.stackcond;
 
-import java.util.Objects;
-
 import oripa.domain.fold.origeom.OverlapRelation;
 
 /**
@@ -27,38 +25,41 @@ import oripa.domain.fold.origeom.OverlapRelation;
  * overlapping. Consider that upper1 and lower1 are connected at e0 and upper2
  * and lower2 are connected at e1.
  *
+ * @param upper1
+ *            ID of face of upper side sharing 1st overlapping edge. "upper"
+ *            means "larger index in the face stack of subface", which is
+ *            reversed order of overlap relation matrix values. Therefore, if
+ *            face_i is LOWER than face_j in overlap relation matrix, then
+ *            Condition4.upper1 = i.
+ * @param lower1
+ *            ID of face of lower side sharing 1st overlapping edge. "lower"
+ *            means "smaller index in the face stack of subface", which is
+ *            reversed order of overlap relation matrix values. Therefore, if
+ *            face_i is UPPER than face_j in overlap relation matrix, then
+ *            Condition4.lower1 = i.
+ * @param upper2
+ *            ID of face of upper side sharing 2nd overlapping edge. "upper"
+ *            means "larger index in the face stack of subface", which is
+ *            reversed order of overlap relation matrix values. Therefore, if
+ *            face_i is LOWER than face_j in overlap relation matrix, then
+ *            Condition4.upper2 = i.
+ * @param lower2
+ *            ID of face of lower side sharing 2nd overlapping edge. "lower"
+ *            means "smaller index in the face stack of subface", which is
+ *            reversed order of overlap relation matrix values. Therefore, if
+ *            face_i is UPPER than face_j in overlap relation matrix, then
+ *            Condition4.lower2 = i.
+ *
  * @author OUCHI Koji
  *
  */
-public class StackConditionOf4Faces {
-	/**
-	 * ID of face of upper side sharing 1st overlapping edge. "upper" means
-	 * "larger index in the face stack of subface", which is reversed order of
-	 * overlap relation matrix values. Therefore, if face_i is LOWER than face_j
-	 * in overlap relation matrix, then Condition4.upper1 = i.
-	 */
-	public int upper1;
-	/**
-	 * ID of face of lower side sharing 1st overlapping edge. "lower" means
-	 * "smaller index in the face stack of subface", which is reversed order of
-	 * overlap relation matrix values. Therefore, if face_i is UPPER than face_j
-	 * in overlap relation matrix, then Condition4.lower1 = i.
-	 */
-	public int lower1;
-	/**
-	 * ID of face of upper side sharing 2nd overlapping edge. "upper" means
-	 * "larger index in the face stack of subface", which is reversed order of
-	 * overlap relation matrix values. Therefore, if face_i is LOWER than face_j
-	 * in overlap relation matrix, then Condition4.upper2 = i.
-	 */
-	public int upper2;
-	/**
-	 * ID of face of lower side sharing 2nd overlapping edge. "lower" means
-	 * "smaller index in the face stack of subface", which is reversed order of
-	 * overlap relation matrix values. Therefore, if face_i is UPPER than face_j
-	 * in overlap relation matrix, then Condition4.lower2 = i.
-	 */
-	public int lower2;
+public record StackConditionOf4Faces(
+		int upper1,
+		int lower1,
+		int upper2,
+		int lower2
+
+) {
 
 	public boolean isDetermined(final OverlapRelation overlapRelation) {
 		return !overlapRelation.isUndefined(lower1, upper1) &&
@@ -67,23 +68,6 @@ public class StackConditionOf4Faces {
 				!overlapRelation.isUndefined(upper1, lower2) &&
 				!overlapRelation.isUndefined(upper1, upper2) &&
 				!overlapRelation.isUndefined(lower2, upper2);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof StackConditionOf4Faces o) {
-			return upper1 == o.upper1 &&
-					lower1 == o.lower1 &&
-					upper2 == o.upper2 &&
-					lower2 == o.lower2;
-		}
-
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(upper1, lower1, upper2, lower2);
 	}
 
 }

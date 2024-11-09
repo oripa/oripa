@@ -304,13 +304,13 @@ public class SubFace {
 	}
 
 	public boolean isRelatedTo(final StackConditionOf3Faces condition) {
-		return parentFaceIndices.contains(condition.lower) && parentFaceIndices.contains(condition.upper) &&
-				parentFaceIndices.contains(condition.other);
+		return parentFaceIndices.contains(condition.lower()) && parentFaceIndices.contains(condition.upper()) &&
+				parentFaceIndices.contains(condition.other());
 	}
 
 	public boolean isRelatedTo(final StackConditionOf4Faces condition) {
-		return parentFaceIndices.contains(condition.lower1) && parentFaceIndices.contains(condition.lower2) &&
-				parentFaceIndices.contains(condition.upper1) && parentFaceIndices.contains(condition.upper2);
+		return parentFaceIndices.contains(condition.lower1()) && parentFaceIndices.contains(condition.lower2()) &&
+				parentFaceIndices.contains(condition.upper1()) && parentFaceIndices.contains(condition.upper2());
 	}
 
 	public void incrementCallCount() {

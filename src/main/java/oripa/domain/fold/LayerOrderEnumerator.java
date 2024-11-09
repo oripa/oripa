@@ -302,9 +302,9 @@ class LayerOrderEnumerator {
 				// the score.
 				.map(subface -> new Pair<Double, SubFace>(score(subface), subface))
 				// sort sublist for speeding up
-				.sorted(Comparator.comparing((final Pair<Double, SubFace> pair) -> pair.getV1())
+				.sorted(Comparator.comparing((final Pair<Double, SubFace> pair) -> pair.v1())
 						.reversed())
-				.map(Pair::getV2)
+				.map(Pair::v2)
 				.toList();
 	}
 
@@ -392,11 +392,11 @@ class LayerOrderEnumerator {
 			faceIndexAndCountPairs.add(pair);
 		}
 
-		faceIndexAndCountPairs.sort(Comparator.comparing(IntPair::getV2));
+		faceIndexAndCountPairs.sort(Comparator.comparing(IntPair::v2));
 
 		faceIndexAndCountPairs.forEach(pair -> logger.debug("@{} (face, #2FacesCondition) = ({}, {})", 0,
-				pair.getV1(),
-				pair.getV2()));
+				pair.v1(),
+				pair.v2()));
 
 	}
 }

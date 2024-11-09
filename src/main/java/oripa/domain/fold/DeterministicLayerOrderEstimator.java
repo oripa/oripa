@@ -215,73 +215,73 @@ class DeterministicLayerOrderEstimator {
 
 			// if: lower1 > upper2, then: upper1 > upper2, upper1 > lower2,
 			// lower1 > lower2
-			if (overlapRelation.isLower(cond.lower1, cond.upper2)) {
-				var result = overlapRelation.setLowerIfPossible(cond.upper1, cond.upper2);
+			if (overlapRelation.isLower(cond.lower1(), cond.upper2())) {
+				var result = overlapRelation.setLowerIfPossible(cond.upper1(), cond.upper2());
 				changed = result.or(changed);
 
-				result = overlapRelation.setLowerIfPossible(cond.upper1, cond.lower2);
+				result = overlapRelation.setLowerIfPossible(cond.upper1(), cond.lower2());
 				changed = result.or(changed);
 
-				result = overlapRelation.setLowerIfPossible(cond.lower1, cond.lower2);
+				result = overlapRelation.setLowerIfPossible(cond.lower1(), cond.lower2());
 				changed = result.or(changed);
 			}
 			// if: lower2 > upper1, then: upper2 > upper1, upper2 > lower1,
 			// lower2 > lower1
-			else if (overlapRelation.isLower(cond.lower2, cond.upper1)) {
-				var result = overlapRelation.setLowerIfPossible(cond.upper2, cond.upper1);
+			else if (overlapRelation.isLower(cond.lower2(), cond.upper1())) {
+				var result = overlapRelation.setLowerIfPossible(cond.upper2(), cond.upper1());
 				changed = result.or(changed);
 
-				result = overlapRelation.setLowerIfPossible(cond.upper2, cond.lower1);
+				result = overlapRelation.setLowerIfPossible(cond.upper2(), cond.lower1());
 				changed = result.or(changed);
 
-				result = overlapRelation.setLowerIfPossible(cond.lower2, cond.lower1);
+				result = overlapRelation.setLowerIfPossible(cond.lower2(), cond.lower1());
 				changed = result.or(changed);
 			}
 			// if: upper1 > upper2 > lower1, then: upper1 > lower2, lower2 >
 			// lower1
-			else if (overlapRelation.isLower(cond.upper1, cond.upper2)
-					&& overlapRelation.isLower(cond.upper2, cond.lower1)) {
-				var result = overlapRelation.setLowerIfPossible(cond.upper1, cond.lower2);
+			else if (overlapRelation.isLower(cond.upper1(), cond.upper2())
+					&& overlapRelation.isLower(cond.upper2(), cond.lower1())) {
+				var result = overlapRelation.setLowerIfPossible(cond.upper1(), cond.lower2());
 				changed = result.or(changed);
 
-				result = overlapRelation.setLowerIfPossible(cond.lower2, cond.lower1);
+				result = overlapRelation.setLowerIfPossible(cond.lower2(), cond.lower1());
 				changed = result.or(changed);
 			}
 			// if: upper1 > lower2 > lower1, then: upper1 > upper2, upper2 >
 			// lower1
-			else if (overlapRelation.isLower(cond.upper1, cond.lower2)
-					&& overlapRelation.isLower(cond.lower2, cond.lower1)) {
-				var result = overlapRelation.setLowerIfPossible(cond.upper1, cond.upper2);
+			else if (overlapRelation.isLower(cond.upper1(), cond.lower2())
+					&& overlapRelation.isLower(cond.lower2(), cond.lower1())) {
+				var result = overlapRelation.setLowerIfPossible(cond.upper1(), cond.upper2());
 				changed = result.or(changed);
 
-				result = overlapRelation.setLowerIfPossible(cond.upper2, cond.lower1);
+				result = overlapRelation.setLowerIfPossible(cond.upper2(), cond.lower1());
 				changed = result.or(changed);
 			}
 			// if: upper2 > upper1 > lower2, then: upper2 > lower1, lower1 >
 			// lower2
-			else if (overlapRelation.isLower(cond.upper2, cond.upper1)
-					&& overlapRelation.isLower(cond.upper1, cond.lower2)) {
-				var result = overlapRelation.setLowerIfPossible(cond.upper2, cond.lower1);
+			else if (overlapRelation.isLower(cond.upper2(), cond.upper1())
+					&& overlapRelation.isLower(cond.upper1(), cond.lower2())) {
+				var result = overlapRelation.setLowerIfPossible(cond.upper2(), cond.lower1());
 				changed = result.or(changed);
 
-				result = overlapRelation.setLowerIfPossible(cond.lower1, cond.lower2);
+				result = overlapRelation.setLowerIfPossible(cond.lower1(), cond.lower2());
 				changed = result.or(changed);
 			}
 			// if: upper2 > lower1 > lower2, then: upper2 > upper1, upper1 >
 			// lower2
-			else if (overlapRelation.isLower(cond.upper2, cond.lower1)
-					&& overlapRelation.isLower(cond.lower1, cond.lower2)) {
-				var result = overlapRelation.setLowerIfPossible(cond.upper2, cond.upper1);
+			else if (overlapRelation.isLower(cond.upper2(), cond.lower1())
+					&& overlapRelation.isLower(cond.lower1(), cond.lower2())) {
+				var result = overlapRelation.setLowerIfPossible(cond.upper2(), cond.upper1());
 				changed = result.or(changed);
 
-				result = overlapRelation.setLowerIfPossible(cond.upper1, cond.lower2);
+				result = overlapRelation.setLowerIfPossible(cond.upper1(), cond.lower2());
 				changed = result.or(changed);
 			}
 
 			if (changed == EstimationResult.UNFOLDABLE) {
 				var result = new EstimationResultRules(EstimationResult.UNFOLDABLE);
 				result.addStackCondition4FacesViolation(
-						toFaces(List.of(cond.upper1, cond.lower1, cond.upper2, cond.lower2)));
+						toFaces(List.of(cond.upper1(), cond.lower1(), cond.upper2(), cond.lower2())));
 				return result;
 			}
 

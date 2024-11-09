@@ -92,7 +92,7 @@ class StackConditionAggregate {
 
 			var faceID = f.getFaceID();
 			for (StackConditionOf3Faces cond : condition3s) {
-				if (faceID == cond.other) {
+				if (faceID == cond.other()) {
 					stackConditionsOf3Faces.get(f).add(cond);
 				}
 			}
@@ -120,7 +120,7 @@ class StackConditionAggregate {
 
 			var faceID = f.getFaceID();
 			for (StackConditionOf4Faces cond : condition4s) {
-				if (faceID == cond.upper1 || faceID == cond.upper2) {
+				if (faceID == cond.upper1() || faceID == cond.upper2()) {
 					stackConditionsOf4Faces.get(f).add(cond);
 				}
 			}
@@ -163,8 +163,8 @@ class StackConditionAggregate {
 	boolean satisfiesConditionsOf3Faces(
 			final boolean[] alreadyInLocalLayerOrder,
 			final OriFace face) {
-		if (stackConditionsOf3Faces.get(face).stream().anyMatch(cond -> alreadyInLocalLayerOrder[cond.lower]
-				&& !alreadyInLocalLayerOrder[cond.upper])) {
+		if (stackConditionsOf3Faces.get(face).stream().anyMatch(cond -> alreadyInLocalLayerOrder[cond.lower()]
+				&& !alreadyInLocalLayerOrder[cond.upper()])) {
 			failureCountOf3Faces.incrementAndGet();
 			return false;
 		}
@@ -200,22 +200,22 @@ class StackConditionAggregate {
 		// stack lower1 < lower2, without upper2 being stacked, dont stack
 		// upper1
 
-		if (stackConditionsOf4Faces.get(face).stream().anyMatch(cond -> face.getFaceID() == cond.upper2
-				&& alreadyInLocalLayerOrder[cond.lower2]
-				&& alreadyInLocalLayerOrder[cond.lower1]
-				&& !alreadyInLocalLayerOrder[cond.upper1]
-				&& indexOnOrdering.get(modelFaces.get(cond.lower2)) < indexOnOrdering
-						.get(modelFaces.get(cond.lower1)))) {
+		if (stackConditionsOf4Faces.get(face).stream().anyMatch(cond -> face.getFaceID() == cond.upper2()
+				&& alreadyInLocalLayerOrder[cond.lower2()]
+				&& alreadyInLocalLayerOrder[cond.lower1()]
+				&& !alreadyInLocalLayerOrder[cond.upper1()]
+				&& indexOnOrdering.get(modelFaces.get(cond.lower2())) < indexOnOrdering
+						.get(modelFaces.get(cond.lower1())))) {
 			failureCountOf4Faces.incrementAndGet();
 			return false;
 		}
 
-		if (stackConditionsOf4Faces.get(face).stream().anyMatch(cond -> face.getFaceID() == cond.upper1
-				&& alreadyInLocalLayerOrder[cond.lower2]
-				&& alreadyInLocalLayerOrder[cond.lower1]
-				&& !alreadyInLocalLayerOrder[cond.upper2]
-				&& indexOnOrdering.get(modelFaces.get(cond.lower1)) < indexOnOrdering.get(modelFaces
-						.get(cond.lower2)))) {
+		if (stackConditionsOf4Faces.get(face).stream().anyMatch(cond -> face.getFaceID() == cond.upper1()
+				&& alreadyInLocalLayerOrder[cond.lower2()]
+				&& alreadyInLocalLayerOrder[cond.lower1()]
+				&& !alreadyInLocalLayerOrder[cond.upper2()]
+				&& indexOnOrdering.get(modelFaces.get(cond.lower1())) < indexOnOrdering.get(modelFaces
+						.get(cond.lower2())))) {
 			failureCountOf4Faces.incrementAndGet();
 			return false;
 		}

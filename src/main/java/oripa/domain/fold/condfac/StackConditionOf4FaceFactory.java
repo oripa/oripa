@@ -101,29 +101,29 @@ public class StackConditionOf4FaceFactory {
 					continue;
 				}
 
-				StackConditionOf4Faces cond = new StackConditionOf4Faces();
-
 				var e0LeftFaceID = e0LeftFace.getFaceID();
 				var e0RightFaceID = e0RightFace.getFaceID();
 				var e1LeftFaceID = e1LeftFace.getFaceID();
 				var e1RightFaceID = e1RightFace.getFaceID();
 
+				int upper1, lower1, upper2, lower2;
+
 				if (overlapRelation.isUpper(e0LeftFaceID, e0RightFaceID)) {
-					cond.upper1 = e0RightFaceID;
-					cond.lower1 = e0LeftFaceID;
+					upper1 = e0RightFaceID;
+					lower1 = e0LeftFaceID;
 				} else {
-					cond.upper1 = e0LeftFaceID;
-					cond.lower1 = e0RightFaceID;
+					upper1 = e0LeftFaceID;
+					lower1 = e0RightFaceID;
 				}
 				if (overlapRelation.isUpper(e1LeftFaceID, e1RightFaceID)) {
-					cond.upper2 = e1RightFaceID;
-					cond.lower2 = e1LeftFaceID;
+					upper2 = e1RightFaceID;
+					lower2 = e1LeftFaceID;
 				} else {
-					cond.upper2 = e1LeftFaceID;
-					cond.lower2 = e1RightFaceID;
+					upper2 = e1LeftFaceID;
+					lower2 = e1RightFaceID;
 				}
 
-				condition4s.add(cond);
+				condition4s.add(new StackConditionOf4Faces(upper1, lower1, upper2, lower2));
 			}
 		});
 
