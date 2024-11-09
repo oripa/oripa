@@ -20,26 +20,24 @@ package oripa.domain.fold.stackcond;
 
 /**
  * If face[i] and face[j] touching edge is covered by face[k] then OR[i][k] =
- * OR[j][k]. Constructor's parameters : (lower, upper, other)
+ * OR[j][k].
+ *
+ * @param lower
+ *            ID of lower face. "lower" means "smaller index in the face stack
+ *            of subface", which is reversed order of overlap relation matrix
+ *            values. Therefore, if face_i is UPPER than face_j in overlap
+ *            relation matrix, then Condition3.lower = i.
+ * @param upper
+ *            ID of upper face. "upper" means "larger index in the face stack of
+ *            subface", which is reversed order of overlap relation matrix
+ *            values. Therefore, if face_i is LOWER than face_j in overlap
+ *            relation matrix, then Condition3.upper = i.
+ * @param other
+ *            ID of a face covering both upper and lower.
  */
 public record StackConditionOf3Faces(
-		/**
-		 * ID of lower face. "lower" means "smaller index in the face stack of
-		 * subface", which is reversed order of overlap relation matrix values.
-		 * Therefore, if face_i is UPPER than face_j in overlap relation matrix,
-		 * then Condition3.lower = i.
-		 */
 		int lower,
-		/**
-		 * ID of upper face. "upper" means "larger index in the face stack of
-		 * subface", which is reversed order of overlap relation matrix values.
-		 * Therefore, if face_i is LOWER than face_j in overlap relation matrix,
-		 * then Condition3.upper = i.
-		 */
 		int upper,
-		/**
-		 * ID of a face covering both upper and lower.
-		 */
 		int other
 
 ) {
