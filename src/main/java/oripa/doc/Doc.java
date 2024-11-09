@@ -20,24 +20,16 @@ package oripa.doc;
 
 import java.io.File;
 
-import oripa.domain.creasepattern.CreasePattern;
-import oripa.domain.creasepattern.CreasePatternFactory;
 import oripa.domain.docprop.Property;
 import oripa.domain.docprop.PropertyHolder;
-import oripa.domain.paint.CreasePatternHolder;
 
 /**
- * Manages all result of this app's action.
+ * Manages project data.
  *
  * @author Koji
  *
  */
-public class Doc implements CreasePatternHolder, PropertyHolder {
-
-	/**
-	 * Crease Pattern
-	 */
-	private CreasePattern creasePattern = null;
+public class Doc implements PropertyHolder {
 
 	/**
 	 * Project property
@@ -46,16 +38,10 @@ public class Doc implements CreasePatternHolder, PropertyHolder {
 
 	private String dataFilePath = "";
 
-	public Doc(final double size) {
-		this(new CreasePatternFactory().createCreasePattern(size));
+	public Doc() {
 	}
 
-	public Doc(final CreasePattern creasePattern) {
-		this(creasePattern, new Property(), "");
-	}
-
-	public Doc(final CreasePattern creasePattern, final Property property, final String filePath) {
-		setCreasePattern(creasePattern);
+	public Doc(final Property property, final String filePath) {
 		setProperty(property);
 		setDataFilePath(filePath);
 	}
@@ -74,18 +60,6 @@ public class Doc implements CreasePatternHolder, PropertyHolder {
 
 		return fileName;
 
-	}
-
-	// ===================================================================================================
-
-	@Override
-	public CreasePattern getCreasePattern() {
-		return creasePattern;
-	}
-
-	@Override
-	public void setCreasePattern(final CreasePattern cp) {
-		creasePattern = cp;
 	}
 
 	/**

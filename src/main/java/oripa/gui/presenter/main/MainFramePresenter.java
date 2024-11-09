@@ -66,7 +66,6 @@ import oripa.persistence.filetool.FileTypeProperty;
 import oripa.persistence.filetool.FileVersionError;
 import oripa.persistence.filetool.SavingActionTemplate;
 import oripa.persistence.filetool.WrongDataFormatException;
-import oripa.resource.Constants;
 import oripa.resource.ResourceHolder;
 import oripa.resource.ResourceKey;
 import oripa.resource.StringID;
@@ -411,10 +410,7 @@ public class MainFramePresenter {
 	}
 
 	private void clear() {
-		document = new Doc(Constants.DEFAULT_PAPER_SIZE);
-
-		paintContextModification
-				.setCreasePatternToPaintContext(document.getCreasePattern(), paintContext, cutModelOutlinesHolder);
+		paintContextModification.clear(paintContext, cutModelOutlinesHolder);
 
 		screenSetting.setGridVisible(true);
 
@@ -603,8 +599,8 @@ public class MainFramePresenter {
 			}
 
 			return docEntityOpt
-					.map(doc -> {
-						document = new Doc(doc.getCreasePattern(), doc.getProperty(), filePath);
+					.map(docEntity -> {
+						document = new Doc(docEntity.getProperty(), filePath);
 
 						var property = document.getProperty();
 						view.getUIPanelView().setEstimationResultColors(
@@ -614,7 +610,7 @@ public class MainFramePresenter {
 						screenSetting.setGridVisible(false);
 						paintContextModification
 								.setCreasePatternToPaintContext(
-										document.getCreasePattern(), paintContext, cutModelOutlinesHolder);
+										docEntity.getCreasePattern(), paintContext, cutModelOutlinesHolder);
 						screenPresenter.updateCameraCenter();
 						return document.getDataFilePath();
 					}).orElse(null);
@@ -678,8 +674,6 @@ public class MainFramePresenter {
 		if (paintContext.creasePatternUndo().changeExists()) {
 			// confirm saving edited opx
 			if (view.showSaveOnCloseDialog()) {
-
-				document.setCreasePattern(paintContext.getCreasePattern());
 
 				String path = saveFileUsingGUI(fileHistory.getLastDirectory(),
 						document.getDataFileName());

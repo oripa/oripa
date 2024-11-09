@@ -171,7 +171,7 @@ public class ORIPA {
 					childFrameManager,
 					mainViewSetting,
 					bindingFactory,
-					new Doc(paintContext.getCreasePattern()),
+					new Doc(),
 					domainContext,
 					new DefaultCutModelOutlinesHolder(),
 					presentationContext,
