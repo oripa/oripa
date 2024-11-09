@@ -55,11 +55,11 @@ public class ArrayCopyDialogPresenter {
 			return;
 		}
 
-		view.setFillUp(parameter.shouldFillUp());
-		view.setRowCount(parameter.getRowCount());
-		view.setColumnCount(parameter.getColumnCount());
-		view.setIntervalX(parameter.getIntervalX());
-		view.setIntervalY(parameter.getIntervalY());
+		view.setFillUp(parameter.fillUp());
+		view.setRowCount(parameter.rowCount());
+		view.setColumnCount(parameter.columnCount());
+		view.setIntervalX(parameter.intervalX());
+		view.setIntervalY(parameter.intervalY());
 	}
 
 	private boolean doArrayCopy() {

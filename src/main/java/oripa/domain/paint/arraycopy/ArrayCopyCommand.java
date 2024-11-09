@@ -43,14 +43,14 @@ public class ArrayCopyCommand extends ValidatablePaintCommand {
 
 		var parameter = context.getArrayCopyParameter();
 
-		if (parameter.shouldFillUp()) {
+		if (parameter.fillUp()) {
 			painter.fillUp(context.getPickedLines());
 		} else {
-			int row = parameter.getRowCount();
-			int col = parameter.getColumnCount();
+			int row = parameter.rowCount();
+			int col = parameter.columnCount();
 
-			double interX = parameter.getIntervalX();
-			double interY = parameter.getIntervalY();
+			double interX = parameter.intervalX();
+			double interY = parameter.intervalY();
 
 			painter.copyWithTiling(row, col, interX, interY, context.getPickedLines());
 		}
